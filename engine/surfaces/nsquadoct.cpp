@@ -62,7 +62,7 @@ MatrixInt* NNormalSurfaceVectorQuadOct::makeMatchingEquations(
 
     // Run through each internal edge and add the corresponding
     // equation.
-    NPerm4 perm;
+    NPerm<4> perm;
     unsigned long tetIndex;
     for (NTriangulation::EdgeIterator eit = triangulation->edges().begin();
             eit != triangulation->edges().end(); eit++) {
@@ -168,7 +168,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
     std::deque<NEdgeEmbedding>::const_iterator eembit, backupit,
         endit, beginit;
     NTetrahedron* tet;
-    NPerm4 tetPerm, adjPerm;
+    NPerm<4> tetPerm, adjPerm;
     unsigned long tetIndex, adjIndex;
     LargeInteger expect;
     for (NTriangulation::VertexIterator vit = triang->vertices().begin();

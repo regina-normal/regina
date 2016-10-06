@@ -592,7 +592,7 @@ int NCompactSearcher::mergeVertexClasses() {
     int vRep, wRep;
     int vNext[2], wNext[2];
     char vTwist[2], wTwist[2];
-    NPerm4 p = gluingPerm(face);
+    NPerm<4> p = gluingPerm(face);
     char parentTwists, hasTwist, tmpTwist;
     for (v = 0; v < 4; v++) {
         if (v == face.facet)
@@ -841,7 +841,7 @@ void NCompactSearcher::splitVertexClasses() {
     int vIdx, wIdx;
     unsigned orderIdx;
     int rep, subRep;
-    NPerm4 p = gluingPerm(face);
+    NPerm<4> p = gluingPerm(face);
     // Do everything in reverse.  This includes the loop over vertices.
     for (v = 3; v >= 0; v--) {
         if (v == face.facet)
@@ -930,7 +930,7 @@ bool NCompactSearcher::mergeEdgeClasses() {
 
     bool retVal = false;
 
-    NPerm4 p = gluingPerm(face);
+    NPerm<4> p = gluingPerm(face);
     int v1, w1, v2, w2;
     int e, f;
     int orderIdx;

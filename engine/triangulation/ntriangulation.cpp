@@ -99,7 +99,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
     NTetrahedron* adjTet;
     unsigned tetPos;
     int face, vertex, start, end;
-    NPerm4 adjPerm;
+    NPerm<4> adjPerm;
 
     out << "Tetrahedron gluing:\n";
     out << "  Tet  |  glued to:      (012)      (013)      (023)      (123)\n";
@@ -330,7 +330,7 @@ NTriangulation* Triangulation<3>::enterTextTriangulation(std::istream& in,
         }
 
         tet->join(face, altTet,
-            NPerm4(vertices[0], vertices[3], vertices[1], vertices[4],
+            NPerm<4>(vertices[0], vertices[3], vertices[1], vertices[4],
                 vertices[2], vertices[5], face, altFace));
         out << '\n';
     }
@@ -391,7 +391,7 @@ void Triangulation<3>::cloneFrom(const NTriangulation& X) {
     long tetPos, adjPos;
     NTetrahedron* tet;
     NTetrahedron* adjTet;
-    NPerm4 adjPerm;
+    NPerm<4> adjPerm;
     int face;
     tetPos = 0;
     for (it = X.simplices_.begin(); it != X.simplices_.end(); it++) {
@@ -544,7 +544,7 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
     // Write face gluings.
     NTriangle* f;
     NTetrahedron* tet;
-    NPerm4 vert;
+    NPerm<4> vert;
     for (unsigned i = 0; i < countTriangles(); ++i) {
         f = triangle(i);
 

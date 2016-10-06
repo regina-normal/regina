@@ -82,7 +82,7 @@ namespace {
      */
     struct TriangleMap {
         NTetrahedron* dest;
-        NPerm4 vertexMap;
+        NPerm<4> vertexMap;
     };
 
     /**
@@ -122,7 +122,7 @@ namespace {
      * into the position that really belongs to vertex y.
      */
     void adjustQuadMaps(TriangleMap& map0, TriangleMap& map1,
-            NPerm4 err, NTriangulation* tri) {
+            NPerm<4> err, NTriangulation* tri) {
         if (err.isIdentity()) {
             // The mappings are already correct.
             return;
@@ -130,45 +130,45 @@ namespace {
 
         NTetrahedron* oldd0 = map0.dest;
         NTetrahedron* oldd1 = map1.dest;
-        NPerm4 oldv0 = map0.vertexMap;
-        NPerm4 oldv1 = map1.vertexMap;
+        NPerm<4> oldv0 = map0.vertexMap;
+        NPerm<4> oldv1 = map1.vertexMap;
 
-        if (err == NPerm4(1,0,3,2)) {
+        if (err == NPerm<4>(1,0,3,2)) {
             // Rotate by 180 degrees.
             map0.dest = oldd1;
             map1.dest = oldd0;
-            map0.vertexMap = oldv1 * NPerm4(0,2);
-            map1.vertexMap = oldv0 * NPerm4(0,2);
+            map0.vertexMap = oldv1 * NPerm<4>(0,2);
+            map1.vertexMap = oldv0 * NPerm<4>(0,2);
             return;
         }
 
-        if (err == NPerm4(1,0)) {
+        if (err == NPerm<4>(1,0)) {
             // Reflect A,B.
             // This requires a layering.
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->join(1, oldd0, oldv0 * NPerm4(1,3));
+            tet->join(1, oldd0, oldv0 * NPerm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
             map0.dest = map1.dest = tet;
-            map0.vertexMap = NPerm4(1,2,3,0);
-            map1.vertexMap = NPerm4(1,0,3,2);
+            map0.vertexMap = NPerm<4>(1,2,3,0);
+            map1.vertexMap = NPerm<4>(1,0,3,2);
             return;
         }
 
-        if (err == NPerm4(2,3)) {
+        if (err == NPerm<4>(2,3)) {
             // Reflect C,D.
             // This again requires a layering.
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->join(1, oldd0, oldv0 * NPerm4(1,3));
+            tet->join(1, oldd0, oldv0 * NPerm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
             map0.dest = map1.dest = tet;
-            map0.vertexMap = NPerm4(3,0,1,2);
-            map1.vertexMap = NPerm4(3,2,1,0);
+            map0.vertexMap = NPerm<4>(3,0,1,2);
+            map1.vertexMap = NPerm<4>(3,2,1,0);
             return;
         }
 
-        if (err == NPerm4(2,3,0,1)) {
+        if (err == NPerm<4>(2,3,0,1)) {
             // Switch (A,B) with (C,D).
             // This is a reflection across the diagonal edge.
             map0.dest = oldd1;
@@ -178,37 +178,37 @@ namespace {
             return;
         }
 
-        if (err == NPerm4(3,2,1,0)) {
+        if (err == NPerm<4>(3,2,1,0)) {
             // Switch (A,B) with (C,D) and reflect both pairs.
             // This is a reflection across the off-diagonal.
-            map0.vertexMap = oldv0 * NPerm4(0,2);
-            map1.vertexMap = oldv1 * NPerm4(0,2);
+            map0.vertexMap = oldv0 * NPerm<4>(0,2);
+            map1.vertexMap = oldv1 * NPerm<4>(0,2);
             return;
         }
 
-        if (err == NPerm4(2,3,1,0)) {
+        if (err == NPerm<4>(2,3,1,0)) {
             // Rotate the quadrilateral.
             // This requires a layering.
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->join(1, oldd0, oldv0 * NPerm4(1,3));
+            tet->join(1, oldd0, oldv0 * NPerm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
             map0.dest = map1.dest = tet;
-            map0.vertexMap = NPerm4(1,0,3,2);
-            map1.vertexMap = NPerm4(1,2,3,0);
+            map0.vertexMap = NPerm<4>(1,0,3,2);
+            map1.vertexMap = NPerm<4>(1,2,3,0);
             return;
         }
 
-        if (err == NPerm4(3,2,0,1)) {
+        if (err == NPerm<4>(3,2,0,1)) {
             // Rotate the quadrilateral in the other direction.
             // This also requires a layering.
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->join(1, oldd0, oldv0 * NPerm4(1,3));
+            tet->join(1, oldd0, oldv0 * NPerm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
             map0.dest = map1.dest = tet;
-            map0.vertexMap = NPerm4(3,2,1,0);
-            map1.vertexMap = NPerm4(3,0,1,2);
+            map0.vertexMap = NPerm<4>(3,2,1,0);
+            map1.vertexMap = NPerm<4>(3,0,1,2);
             return;
         }
 
@@ -326,7 +326,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                     triData = discData->data; // Only one triangle.
                     triData->map[triData->nMaps].dest = innerTet[0];
-                    triData->map[triData->nMaps].vertexMap = NPerm4::contract(
+                    triData->map[triData->nMaps].vertexMap = NPerm<4>::contract(
                         NPerm<5>(4, type) *
                         outerTetEmb *
                         NPerm<5>(3, outerTetDisc.type) *
@@ -356,8 +356,8 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 innerTet[0] = inner->newTetrahedron();
                 innerTet[1] = inner->newTetrahedron();
                 innerTet[2] = inner->newTetrahedron();
-                innerTet[0]->join(0, innerTet[1], NPerm4());
-                innerTet[2]->join(1, innerTet[1], NPerm4());
+                innerTet[0]->join(0, innerTet[1], NPerm<4>());
+                innerTet[2]->join(1, innerTet[1], NPerm<4>());
 
                 // First pick off the triangles at the ends of the prism.
 
@@ -376,7 +376,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 triData = discData->data; // Only one triangle.
                 triData->map[triData->nMaps].dest = innerTet[0];
-                triData->map[triData->nMaps].vertexMap = NPerm4::contract(
+                triData->map[triData->nMaps].vertexMap = NPerm<4>::contract(
                         NPerm<5>(f0, f1, f2, e1, e0).inverse() *
                         outerTetEmb *
                         NPerm<5>(3, outerTetDisc.type));
@@ -398,7 +398,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 triData = discData->data; // Only one triangle.
                 triData->map[triData->nMaps].dest = innerTet[2];
-                triData->map[triData->nMaps].vertexMap = NPerm4::contract(
+                triData->map[triData->nMaps].vertexMap = NPerm<4>::contract(
                         NPerm<5>(f1, f2, e0, f0, e1).inverse() *
                         outerTetEmb *
                         NPerm<5>(3, outerTetDisc.type));
@@ -442,13 +442,13 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Set things up to be correct if A,B,C,D == e0,e1,f1,f2.
                 triData = discData->data; // First triangle.
                 triData->map[triData->nMaps].dest = innerTet[2];
-                triData->map[triData->nMaps].vertexMap = NPerm4();
+                triData->map[triData->nMaps].vertexMap = NPerm<4>();
                 ++triData->nMaps;
                 assert(triData->nMaps <= 2);
 
                 triData = discData->data + 1; // Second triangle.
                 triData->map[triData->nMaps].dest = innerTet[1];
-                triData->map[triData->nMaps].vertexMap = NPerm4();
+                triData->map[triData->nMaps].vertexMap = NPerm<4>();
                 ++triData->nMaps;
                 assert(triData->nMaps <= 2);
 
@@ -456,7 +456,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 adjustQuadMaps(
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
-                    NPerm4::contract(
+                    NPerm<4>::contract(
                         NPerm<5>(e0, e1, f1, f2, f0).inverse() * roles),
                     inner);
 
@@ -493,13 +493,13 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Set things up to be correct if A,B,C,D == e0,e1,f0,f2.
                 triData = discData->data; // First triangle.
                 triData->map[triData->nMaps].dest = innerTet[2];
-                triData->map[triData->nMaps].vertexMap = NPerm4(0, 3);
+                triData->map[triData->nMaps].vertexMap = NPerm<4>(0, 3);
                 ++triData->nMaps;
                 assert(triData->nMaps <= 2);
 
                 triData = discData->data + 1; // Second triangle.
                 triData->map[triData->nMaps].dest = innerTet[0];
-                triData->map[triData->nMaps].vertexMap = NPerm4(3, 0, 2, 1);
+                triData->map[triData->nMaps].vertexMap = NPerm<4>(3, 0, 2, 1);
                 ++triData->nMaps;
                 assert(triData->nMaps <= 2);
 
@@ -507,7 +507,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 adjustQuadMaps(
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
-                    NPerm4::contract(
+                    NPerm<4>::contract(
                         NPerm<5>(e0, e1, f0, f2, f1).inverse() * roles),
                     inner);
 
@@ -545,13 +545,13 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Set things up to be correct if A,B,C,D == e0,e1,f0,f1.
                 triData = discData->data; // First triangle.
                 triData->map[triData->nMaps].dest = innerTet[1];
-                triData->map[triData->nMaps].vertexMap = NPerm4(3, 0, 1, 2);
+                triData->map[triData->nMaps].vertexMap = NPerm<4>(3, 0, 1, 2);
                 ++triData->nMaps;
                 assert(triData->nMaps <= 2);
 
                 triData = discData->data + 1; // Second triangle.
                 triData->map[triData->nMaps].dest = innerTet[0];
-                triData->map[triData->nMaps].vertexMap = NPerm4(3, 0, 1, 2);
+                triData->map[triData->nMaps].vertexMap = NPerm<4>(3, 0, 1, 2);
                 ++triData->nMaps;
                 assert(triData->nMaps <= 2);
 
@@ -559,7 +559,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 adjustQuadMaps(
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
-                    NPerm4::contract(
+                    NPerm<4>::contract(
                         NPerm<5>(e0, e1, f0, f1, f2).inverse() * roles),
                     inner);
             }

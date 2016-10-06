@@ -91,8 +91,8 @@ void NNormalSurface::calculateOrientable() const {
                          //     which an adjacent disc might may be glued.
 
     NDiscSpec* adjDisc;  // The disc to which the current disc is glued.
-    NPerm4 arc[8];       // Holds each gluing arc for the current disc.
-    NPerm4 adjArc;       // Represents the corresponding gluing arc on the
+    NPerm<4> arc[8];       // Holds each gluing arc for the current disc.
+    NPerm<4> adjArc;       // Represents the corresponding gluing arc on the
                          //     adjacent disc.
 
     bool myOrient, yourOrient, sameOrient;

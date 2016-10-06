@@ -97,9 +97,9 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
             /**< The top tetrahedron of this layered chain. */
         unsigned long index_;
             /**< The number of tetrahedra in this layered chain. */
-        NPerm4 bottomVertexRoles_;
+        NPerm<4> bottomVertexRoles_;
             /**< The permutation described by bottomVertexRoles(). */
-        NPerm4 topVertexRoles_;
+        NPerm<4> topVertexRoles_;
             /**< The permutation described by topVertexRoles(). */
 
     public:
@@ -116,7 +116,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * in the same format as the permutation returned by
          * bottomVertexRoles() and topVertexRoles().
          */
-        NLayeredChain(NTetrahedron* tet, NPerm4 vertexRoles);
+        NLayeredChain(NTetrahedron* tet, NPerm<4> vertexRoles);
 
         /**
          * Creates a new layered chain that is a clone of the given
@@ -166,7 +166,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the bottom tetrahedron.
          */
-        NPerm4 bottomVertexRoles() const;
+        NPerm<4> bottomVertexRoles() const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -184,7 +184,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the top tetrahedron.
          */
-        NPerm4 topVertexRoles() const;
+        NPerm<4> topVertexRoles() const;
 
         /**
          * Checks to see whether this layered chain can be extended to
@@ -259,7 +259,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
 
 // Inline functions for NLayeredChain
 
-inline NLayeredChain::NLayeredChain(NTetrahedron* tet, NPerm4 vertexRoles) :
+inline NLayeredChain::NLayeredChain(NTetrahedron* tet, NPerm<4> vertexRoles) :
         bottom_(tet), top_(tet), index_(1), bottomVertexRoles_(vertexRoles),
         topVertexRoles_(vertexRoles) {
 }
@@ -281,10 +281,10 @@ inline unsigned long NLayeredChain::index() const {
     return index_;
 }
 
-inline NPerm4 NLayeredChain::bottomVertexRoles() const {
+inline NPerm<4> NLayeredChain::bottomVertexRoles() const {
     return bottomVertexRoles_;
 }
-inline NPerm4 NLayeredChain::topVertexRoles() const {
+inline NPerm<4> NLayeredChain::topVertexRoles() const {
     return topVertexRoles_;
 }
 

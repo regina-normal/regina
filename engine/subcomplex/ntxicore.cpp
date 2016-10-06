@@ -70,32 +70,32 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
         t[i] = core_.newTetrahedron();
 
     // Glue together the pairs of triangles in the central surface.
-    t[0]->join(0, t[1], NPerm4(0, 2, 1, 3));
-    t[size_ - 2]->join(0, t[size_ - 1], NPerm4(0, 2, 1, 3));
+    t[0]->join(0, t[1], NPerm<4>(0, 2, 1, 3));
+    t[size_ - 2]->join(0, t[size_ - 1], NPerm<4>(0, 2, 1, 3));
 
     // Glue together the long diagonal line of quads, and hook the ends
     // together using the first pair of triangles.
-    t[0]->join(1, t[3], NPerm4(2, 3, 1, 0));
+    t[0]->join(1, t[3], NPerm<4>(2, 3, 1, 0));
     for (i = 3; i < size_ - 3; i++)
-        t[i]->join(0, t[i + 1], NPerm4(0, 3));
-    t[size_ - 3]->join(0, t[1], NPerm4(1, 0, 2, 3));
+        t[i]->join(0, t[i + 1], NPerm<4>(0, 3));
+    t[size_ - 3]->join(0, t[1], NPerm<4>(1, 0, 2, 3));
 
     // Glue the quadrilateral and double-triangular bulges to their
     // horizontal neighbours.
-    t[1]->join(2, t[2], NPerm4());
-    t[2]->join(3, t[0], NPerm4(1, 0, 3, 2));
-    t[size_ - 1]->join(2, t[size_ - 2 - k_], NPerm4(3, 0, 1, 2));
-    t[size_ - 2]->join(2, t[size_ - 2 - k_], NPerm4(0, 3, 2, 1));
+    t[1]->join(2, t[2], NPerm<4>());
+    t[2]->join(3, t[0], NPerm<4>(1, 0, 3, 2));
+    t[size_ - 1]->join(2, t[size_ - 2 - k_], NPerm<4>(3, 0, 1, 2));
+    t[size_ - 2]->join(2, t[size_ - 2 - k_], NPerm<4>(0, 3, 2, 1));
 
     // Glue in the lower edge of each bulges.
     if (k_ == size_ - 5)
-        t[2]->join(0, t[size_ - 2], NPerm4(1, 3, 2, 0));
+        t[2]->join(0, t[size_ - 2], NPerm<4>(1, 3, 2, 0));
     else
-        t[2]->join(0, t[3], NPerm4(2, 1, 3, 0));
+        t[2]->join(0, t[3], NPerm<4>(2, 1, 3, 0));
     if (k_ == 1)
-        t[size_ - 1]->join(1, t[2], NPerm4(2, 1, 3, 0));
+        t[size_ - 1]->join(1, t[2], NPerm<4>(2, 1, 3, 0));
     else
-        t[size_ - 1]->join(1, t[size_ - 1 - k_], NPerm4(3, 2, 0, 1));
+        t[size_ - 1]->join(1, t[size_ - 1 - k_], NPerm<4>(3, 2, 0, 1));
 
     // Glue in the lower edge of each quadrilateral.
     for (i = 3; i <= size_ - 3; i++) {
@@ -103,11 +103,11 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
             continue;
 
         if (i == size_ - 3)
-            t[i]->join(1, t[2], NPerm4(3, 1, 0, 2));
+            t[i]->join(1, t[2], NPerm<4>(3, 1, 0, 2));
         else if (i == size_ - 3 - k_)
-            t[i]->join(1, t[size_ - 2], NPerm4(0, 1, 3, 2));
+            t[i]->join(1, t[size_ - 2], NPerm<4>(0, 1, 3, 2));
         else
-            t[i]->join(1, t[i + 1], NPerm4(1, 2));
+            t[i]->join(1, t[i + 1], NPerm<4>(1, 2));
     }
 
     delete[] t;
@@ -134,16 +134,16 @@ NTxIParallelCore::NTxIParallelCore() {
     for (i = 0; i < 6; i++)
         t[i] = core_.newTetrahedron();
 
-    t[0]->join(0, t[1], NPerm4(1, 2));
-    t[4]->join(0, t[5], NPerm4(1, 2));
-    t[1]->join(2, t[2], NPerm4());
-    t[5]->join(2, t[3], NPerm4());
-    t[0]->join(2, t[2], NPerm4(1, 0, 3, 2));
-    t[4]->join(2, t[3], NPerm4(1, 0, 3, 2));
-    t[1]->join(1, t[3], NPerm4(2, 0, 3, 1));
-    t[5]->join(1, t[2], NPerm4(2, 0, 3, 1));
-    t[0]->join(1, t[3], NPerm4(0, 3));
-    t[4]->join(1, t[2], NPerm4(0, 3));
+    t[0]->join(0, t[1], NPerm<4>(1, 2));
+    t[4]->join(0, t[5], NPerm<4>(1, 2));
+    t[1]->join(2, t[2], NPerm<4>());
+    t[5]->join(2, t[3], NPerm<4>());
+    t[0]->join(2, t[2], NPerm<4>(1, 0, 3, 2));
+    t[4]->join(2, t[3], NPerm<4>(1, 0, 3, 2));
+    t[1]->join(1, t[3], NPerm<4>(2, 0, 3, 1));
+    t[5]->join(1, t[2], NPerm<4>(2, 0, 3, 1));
+    t[0]->join(1, t[3], NPerm<4>(0, 3));
+    t[4]->join(1, t[2], NPerm<4>(0, 3));
 
     delete[] t;
 }

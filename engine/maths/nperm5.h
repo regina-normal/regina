@@ -167,13 +167,13 @@ class REGINA_API NPerm<5> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm4, NPerm<5> and so on), the
+         * For all permutation classes (NPerm<4>, NPerm<5> and so on), the
          * S4 array stores the same permutations in the same order (but
          * of course using different data types).
          *
          * Note that the permutations are not necessarily in
          * lexicographical order.  For the corresponding inverse array,
-         * see NPerm4::invS4.
+         * see NPerm<4>::invS4.
          */
         static const NPerm<5> S4[24];
 
@@ -198,7 +198,7 @@ class REGINA_API NPerm<5> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm4, NPerm<5> and so on), the
+         * For all permutation classes (NPerm<4>, NPerm<5> and so on), the
          * S3 array stores the same permutations in the same order (but
          * of course using different data types).
          *
@@ -223,7 +223,7 @@ class REGINA_API NPerm<5> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm4, NPerm<5> and so on), the
+         * For all permutation classes (NPerm<4>, NPerm<5> and so on), the
          * S2 array stores the same permutations in the same order (but
          * of course using different data types).
          *

@@ -41,7 +41,7 @@
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NEdge;
-using regina::NPerm4;
+using regina::NPerm;
 using regina::NSimpleSurfaceBundle;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -69,12 +69,12 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         void setUp() {
             NTetrahedron* r = base.newTetrahedron();
             NTetrahedron* s = base.newTetrahedron();
-            r->join(0, s, NPerm4());
-            r->join(1, s, NPerm4());
+            r->join(0, s, NPerm<4>());
+            r->join(1, s, NPerm<4>());
 
             baseKB.insertTriangulation(base);
             baseKB.tetrahedron(0)->join(2,
-                baseKB.tetrahedron(1), NPerm4(1, 2, 3, 0));
+                baseKB.tetrahedron(1), NPerm<4>(1, 2, 3, 0));
         }
 
         void tearDown() {
@@ -153,9 +153,9 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTriangulation t;
                 t.insertTriangulation(base);
                 NTetrahedron* tet = t.tetrahedron(0);
-                tet->join(2, tet, NPerm4(2, 3));
+                tet->join(2, tet, NPerm<4>(2, 3));
                 NTetrahedron* tet2 = t.newTetrahedron();
-                t.tetrahedron(1)->join(2, tet2, NPerm4());
+                t.tetrahedron(1)->join(2, tet2, NPerm<4>());
 
                 NEdge* e = tet->edge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
@@ -175,8 +175,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTriangulation orig;
                 orig.insertLayeredSolidTorus(4, 7);
                 NTetrahedron* top = orig.newTetrahedron();
-                orig.tetrahedron(0)->join(2, top, NPerm4(2, 3, 0, 1));
-                orig.tetrahedron(0)->join(3, top, NPerm4(2, 3, 0, 1));
+                orig.tetrahedron(0)->join(2, top, NPerm<4>(2, 3, 0, 1));
+                orig.tetrahedron(0)->join(3, top, NPerm<4>(2, 3, 0, 1));
 
                 NTriangulation lst;
                 lst.insertLayeredSolidTorus(3, 4);
@@ -298,7 +298,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTriangulation t;
                 t.insertTriangulation(baseKB);
                 t.insertTriangulation(baseKB);
-                t.tetrahedron(0)->join(3, t.tetrahedron(2), NPerm4());
+                t.tetrahedron(0)->join(3, t.tetrahedron(2), NPerm<4>());
 
                 verify20Edge(&t, 3, &baseKB, "bdry-cross-tet");
             }
@@ -332,10 +332,10 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* q = t.newTetrahedron();
                 NTetrahedron* r = t.newTetrahedron();
                 NTetrahedron* s = t.newTetrahedron();
-                t.tetrahedron(0)->join(2, p, NPerm4());
-                t.tetrahedron(0)->join(3, q, NPerm4());
-                t.tetrahedron(1)->join(2, r, NPerm4());
-                t.tetrahedron(1)->join(3, s, NPerm4());
+                t.tetrahedron(0)->join(2, p, NPerm<4>());
+                t.tetrahedron(0)->join(3, q, NPerm<4>());
+                t.tetrahedron(1)->join(2, r, NPerm<4>());
+                t.tetrahedron(1)->join(3, s, NPerm<4>());
 
                 verify20EdgeInvalid(&t, "boundary-edges");
             }
@@ -349,12 +349,12 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* q = t.newTetrahedron();
                 NTetrahedron* r = t.newTetrahedron();
                 NTetrahedron* s = t.newTetrahedron();
-                t.tetrahedron(0)->join(2, p, NPerm4());
-                t.tetrahedron(0)->join(3, q, NPerm4());
-                t.tetrahedron(1)->join(2, r, NPerm4());
-                t.tetrahedron(1)->join(3, s, NPerm4());
-                p->join(3, r, NPerm4());
-                q->join(2, s, NPerm4());
+                t.tetrahedron(0)->join(2, p, NPerm<4>());
+                t.tetrahedron(0)->join(3, q, NPerm<4>());
+                t.tetrahedron(1)->join(2, r, NPerm<4>());
+                t.tetrahedron(1)->join(3, s, NPerm<4>());
+                p->join(3, r, NPerm<4>());
+                q->join(2, s, NPerm<4>());
 
                 NEdge* e = t.tetrahedron(0)->edge(
                     NEdge::edgeNumber[0][1]);
@@ -375,12 +375,12 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* q = t.newTetrahedron();
                 NTetrahedron* r = t.newTetrahedron();
                 NTetrahedron* s = t.newTetrahedron();
-                t.tetrahedron(0)->join(2, p, NPerm4());
-                t.tetrahedron(0)->join(3, q, NPerm4());
-                t.tetrahedron(1)->join(2, r, NPerm4());
-                t.tetrahedron(1)->join(3, s, NPerm4());
-                p->join(3, r, NPerm4(0, 1));
-                q->join(2, s, NPerm4(0, 1));
+                t.tetrahedron(0)->join(2, p, NPerm<4>());
+                t.tetrahedron(0)->join(3, q, NPerm<4>());
+                t.tetrahedron(1)->join(2, r, NPerm<4>());
+                t.tetrahedron(1)->join(3, s, NPerm<4>());
+                p->join(3, r, NPerm<4>(0, 1));
+                q->join(2, s, NPerm<4>(0, 1));
 
                 NEdge* e = t.tetrahedron(0)->edge(
                     NEdge::edgeNumber[0][1]);
@@ -397,7 +397,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTriangulation t;
                 t.insertTriangulation(base);
                 NTetrahedron* tet = t.tetrahedron(0);
-                tet->join(2, tet, NPerm4(2, 3));
+                tet->join(2, tet, NPerm<4>(2, 3));
 
                 NEdge* e = tet->edge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
@@ -455,8 +455,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 orig.insertTriangulation(base);
 
                 NTetrahedron* top = orig.tetrahedron(0);
-                orig.tetrahedron(3)->join(3, top, NPerm4(1,2,0,3));
-                orig.tetrahedron(4)->join(2, top, NPerm4(0,3,2,1));
+                orig.tetrahedron(3)->join(3, top, NPerm<4>(1,2,0,3));
+                orig.tetrahedron(4)->join(2, top, NPerm<4>(0,3,2,1));
 
                 verify20EdgeInvalid(&orig, "boundary-diag");
             }

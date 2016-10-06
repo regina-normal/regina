@@ -70,7 +70,7 @@ NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
 
     // Now make sure the edges all match up and with the correct
     // permutations.
-    NPerm4 perm = tri2->edgeMapping(joinTo0) *
+    NPerm<4> perm = tri2->edgeMapping(joinTo0) *
         tri1->edgeMapping(0).inverse();
     for (i = 1; i < 3; i++) {
         if (edge[0][i] != edge[1][perm[i]])

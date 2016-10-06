@@ -181,7 +181,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     int newAdjTet;
-    regina::NPerm4 newAdjPerm;
+    regina::NPerm<4> newAdjPerm;
 
     // Find the proposed new gluing.
     QString text = value.toString().trimmed();
@@ -253,7 +253,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
 QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
         unsigned long destTet, const QString& destFace,
-        regina::NPerm4* gluing) {
+        regina::NPerm<4>* gluing) {
     if (destTet >= tri_->size())
         return tr("There is no tetrahedron number %1.").arg(destTet);
 
@@ -268,7 +268,7 @@ QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
         return tr("%1 is not a valid tetrahedron face.  The three vertices "
             "forming the face must be distinct.").arg(destFace);
 
-    regina::NPerm4 foundGluing = faceStringToPerm(srcFace, destFace);
+    regina::NPerm<4> foundGluing = faceStringToPerm(srcFace, destFace);
     if (srcTet == destTet && foundGluing[srcFace] == srcFace)
         return tr("A face cannot be glued to itself.");
 
@@ -287,7 +287,7 @@ void GluingsModel::showError(const QString& message) {
 }
 
 QString GluingsModel::destString(int srcFace, regina::NTetrahedron* destTet,
-        const regina::NPerm4& gluing) {
+        const regina::NPerm<4>& gluing) {
     if (! destTet)
         return "";
     else
@@ -296,7 +296,7 @@ QString GluingsModel::destString(int srcFace, regina::NTetrahedron* destTet,
             ')';
 }
 
-regina::NPerm4 GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
+regina::NPerm<4> GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
     int destVertex[4];
 
     destVertex[3] = 6; // This will be adjusted in a moment.
@@ -307,7 +307,7 @@ regina::NPerm4 GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
         destVertex[3] -= destVertex[i];
     }
 
-    return regina::NPerm4(destVertex[0], destVertex[1], destVertex[2],
+    return regina::NPerm<4>(destVertex[0], destVertex[1], destVertex[2],
         destVertex[3]) * regina::NTriangle::ordering(srcFace).inverse();
 }
 

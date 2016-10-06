@@ -572,8 +572,8 @@ class REGINA_API FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<4> ordering(unsigned face) {
             return (face % 2 == 0 ?
-                NPerm4(face, (face + 1) % 4, (face + 2) % 4, (face + 3) % 4) :
-                NPerm4(face, (face + 3) % 4, (face + 2) % 4, (face + 1) % 4));
+                NPerm<4>(face, (face + 1) % 4, (face + 2) % 4, (face + 3) % 4) :
+                NPerm<4>(face, (face + 3) % 4, (face + 2) % 4, (face + 1) % 4));
         }
 
         static unsigned faceNumber(NPerm<4> vertices) {

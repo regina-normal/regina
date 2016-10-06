@@ -58,7 +58,6 @@ namespace regina {
     template <int> class Isomorphism;
     template <int> class NPerm;
     template <int> class Triangulation;
-    typedef NPerm<4> NPerm4;
     typedef Triangulation<3> NTriangulation;
 };
 
@@ -160,7 +159,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         static QString edgeString(unsigned long tetIndex, int edge1,
             int edge2);
         static QString edgeString(unsigned long tetIndex,
-            const regina::NPerm4& roles, int startPreimage, int endPreimage);
+            const regina::NPerm<4>& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::Matrix2& matrix);
 };
 

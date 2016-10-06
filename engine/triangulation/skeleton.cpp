@@ -77,9 +77,9 @@ void NTriangulation::checkPermutations() {
             NTetrahedron * adjacent = (*it) -> adjacentTetrahedron(face);
 
             if (adjacent) {
-                NPerm4 perm = (*it) -> adjacentGluing(face);
+                NPerm<4> perm = (*it) -> adjacentGluing(face);
 
-                NPerm4 adj_perm = adjacent -> adjacentGluing(perm[face]);
+                NPerm<4> adj_perm = adjacent -> adjacentGluing(perm[face]);
 
                 if (!(perm*adj_perm).isIdentity()) {
                     valid_ = false;
@@ -131,7 +131,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
     triangleQueue.push(firstTriangle);
 
     NTetrahedron* tet;
-    NPerm4 tetVertices;
+    NPerm<4> tetVertices;
     int tetFace;
     int i,j;
     NVertex* vertex;
@@ -140,10 +140,10 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
     NTriangle* triangle;
     NTriangle* nextTriangle;
     int nextFaceNumber;
-    NPerm4 nextFacePerm;
+    NPerm<4> nextFacePerm;
     NTetrahedron* nextTet;
     int followFromFace;
-    NPerm4 switchPerm;
+    NPerm<4> switchPerm;
     int yourOrientation;
 
     while (! triangleQueue.empty()) {
@@ -179,9 +179,9 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
 
                 // Label the adjacent boundary triangle with the same label.
                 followFromFace = 6 - tetVertices[i] - tetVertices[j] - tetFace;
-                switchPerm = NPerm4(followFromFace, tetFace);
+                switchPerm = NPerm<4>(followFromFace, tetFace);
                 nextFaceNumber = followFromFace;
-                nextFacePerm = NPerm4();
+                nextFacePerm = NPerm<4>();
                 nextTet = tet;
                 while (nextTet->adjacentTetrahedron(nextFaceNumber)) {
                     nextFacePerm = nextTet->adjacentGluing(

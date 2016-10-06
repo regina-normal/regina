@@ -46,10 +46,10 @@ bool NLayeredChain::extendAbove() {
         return false;
 
     // Check the gluings.
-    NPerm4 adjRoles = top_->adjacentGluing(topVertexRoles_[0]) *
-        topVertexRoles_ * NPerm4(0, 1);
+    NPerm<4> adjRoles = top_->adjacentGluing(topVertexRoles_[0]) *
+        topVertexRoles_ * NPerm<4>(0, 1);
     if (adjRoles != top_->adjacentGluing(topVertexRoles_[3]) *
-            topVertexRoles_ * NPerm4(2, 3))
+            topVertexRoles_ * NPerm<4>(2, 3))
         return false;
 
     // We can extend the layered chain.
@@ -67,10 +67,10 @@ bool NLayeredChain::extendBelow() {
         return false;
 
     // Check the gluings.
-    NPerm4 adjRoles = bottom_->adjacentGluing(bottomVertexRoles_[1])
-        * bottomVertexRoles_ * NPerm4(0, 1);
+    NPerm<4> adjRoles = bottom_->adjacentGluing(bottomVertexRoles_[1])
+        * bottomVertexRoles_ * NPerm<4>(0, 1);
     if (adjRoles != bottom_->adjacentGluing(bottomVertexRoles_[2])
-            * bottomVertexRoles_ * NPerm4(2, 3))
+            * bottomVertexRoles_ * NPerm<4>(2, 3))
         return false;
 
     // We can extend the layered chain.
@@ -94,14 +94,14 @@ void NLayeredChain::reverse() {
     top_ = bottom_;
     bottom_ = tmp;
 
-    NPerm4 pTmp = topVertexRoles_ * NPerm4(1, 0, 3, 2);
-    topVertexRoles_ = bottomVertexRoles_ * NPerm4(1, 0, 3, 2);
+    NPerm<4> pTmp = topVertexRoles_ * NPerm<4>(1, 0, 3, 2);
+    topVertexRoles_ = bottomVertexRoles_ * NPerm<4>(1, 0, 3, 2);
     bottomVertexRoles_ = pTmp;
 }
 
 void NLayeredChain::invert() {
-    topVertexRoles_ = topVertexRoles_ * NPerm4(3, 2, 1, 0);
-    bottomVertexRoles_ = bottomVertexRoles_ * NPerm4(3, 2, 1, 0);
+    topVertexRoles_ = topVertexRoles_ * NPerm<4>(3, 2, 1, 0);
+    bottomVertexRoles_ = bottomVertexRoles_ * NPerm<4>(3, 2, 1, 0);
 }
 
 NManifold* NLayeredChain::manifold() const {

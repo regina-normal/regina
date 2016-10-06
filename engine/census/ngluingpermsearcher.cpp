@@ -432,11 +432,11 @@ bool NGluingPermSearcher::badEdgeLink(const NTetFace& face) const {
     // Run around all three edges bounding the face.
     NTetFace adj;
     unsigned tet;
-    NPerm4 current;
-    NPerm4 start(face.facet, 3);
+    NPerm<4> current;
+    NPerm<4> start(face.facet, 3);
     bool started, incomplete;
     for (unsigned permIdx = 0; permIdx < 3; permIdx++) {
-        start = start * NPerm4(1, 2, 0, 3);
+        start = start * NPerm<4>(1, 2, 0, 3);
 
         // start maps (0,1,2) to the three vertices of face, with
         // (0,1) mapped to the edge that we wish to examine.
@@ -462,7 +462,7 @@ bool NGluingPermSearcher::badEdgeLink(const NTetFace& face) const {
 
             // Push through the current tetrahedron.
             started = true;
-            current = current * NPerm4(2, 3);
+            current = current * NPerm<4>(2, 3);
 
             // Push across a face.
             if (pairing_->isUnmatched(tet, current[3])) {
@@ -497,12 +497,12 @@ bool NGluingPermSearcher::lowDegreeEdge(const NTetFace& face,
     // Run around all three edges bounding the face.
     NTetFace adj;
     unsigned tet;
-    NPerm4 current;
-    NPerm4 start(face.facet, 3);
+    NPerm<4> current;
+    NPerm<4> start(face.facet, 3);
     bool started, incomplete;
     unsigned size;
     for (unsigned permIdx = 0; permIdx < 3; permIdx++) {
-        start = start * NPerm4(1, 2, 0, 3);
+        start = start * NPerm<4>(1, 2, 0, 3);
 
         // start maps (0,1,2) to the three vertices of face, with
         // (0,1) mapped to the edge that we wish to examine.
@@ -531,7 +531,7 @@ bool NGluingPermSearcher::lowDegreeEdge(const NTetFace& face,
             }
 
             // Push through the current tetrahedron.
-            current = current * NPerm4(2, 3);
+            current = current * NPerm<4>(2, 3);
 
             // Push across a face.
             if (pairing_->isUnmatched(tet, current[3])) {

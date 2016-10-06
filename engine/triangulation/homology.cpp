@@ -155,7 +155,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
 
     // Run through each triangle and put the relations in the matrix.
     NTetrahedron* currTet;
-    NPerm4 currTetVertices;
+    NPerm<4> currTetVertices;
     long edgeGenIndex;
     i = 0;
     int triEdge, currEdgeStart, currEdgeEnd, currEdge;

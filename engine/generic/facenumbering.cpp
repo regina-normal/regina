@@ -66,13 +66,13 @@ namespace regina { namespace detail {
         NPerm<3>(0,1,2),
     };
 
-    const NPerm4 FaceNumberingImpl<3, 1, true>::ordering_[6] = {
-        NPerm4(0, 1, 2, 3),
-        NPerm4(0, 2, 3, 1),
-        NPerm4(0, 3, 1, 2),
-        NPerm4(1, 2, 0, 3),
-        NPerm4(1, 3, 2, 0),
-        NPerm4(2, 3, 0, 1)
+    const NPerm<4> FaceNumberingImpl<3, 1, true>::ordering_[6] = {
+        NPerm<4>(0, 1, 2, 3),
+        NPerm<4>(0, 2, 3, 1),
+        NPerm<4>(0, 3, 1, 2),
+        NPerm<4>(1, 2, 0, 3),
+        NPerm<4>(1, 3, 2, 0),
+        NPerm<4>(2, 3, 0, 1)
     };
 
     const int FaceNumberingImpl<3, 1, true>::edgeNumber[4][4] = {
@@ -91,11 +91,11 @@ namespace regina { namespace detail {
         { 2, 3 }
     };
 
-    const NPerm4 FaceNumberingImpl<3, 2, false>::ordering_[4] = {
-        NPerm4(1, 2, 3, 0),
-        NPerm4(0, 2, 3, 1),
-        NPerm4(0, 1, 3, 2),
-        NPerm4(0, 1, 2, 3)
+    const NPerm<4> FaceNumberingImpl<3, 2, false>::ordering_[4] = {
+        NPerm<4>(1, 2, 3, 0),
+        NPerm<4>(0, 2, 3, 1),
+        NPerm<4>(0, 1, 3, 2),
+        NPerm<4>(0, 1, 2, 3)
     };
 
     const NPerm<5> FaceNumberingImpl<4, 1, true>::ordering_[10] = {

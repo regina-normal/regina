@@ -2278,10 +2278,10 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             NTriangulation tri;
             NTetrahedron* t0 = tri.newTetrahedron();
             NTetrahedron* t1 = tri.newTetrahedron();
-            t0->join(0, t1, regina::NPerm4(1,3,0,2));
-            t0->join(1, t1, regina::NPerm4(1,2,3,0));
-            t0->join(2, t1, regina::NPerm4(1,2,3,0));
-            t0->join(3, t1, regina::NPerm4(1,2,3,0));
+            t0->join(0, t1, regina::NPerm<4>(1,3,0,2));
+            t0->join(1, t1, regina::NPerm<4>(1,2,3,0));
+            t0->join(2, t1, regina::NPerm<4>(1,2,3,0));
+            t0->join(3, t1, regina::NPerm<4>(1,2,3,0));
             tri.setLabel("Hand-coded L(3,1)");
             verifyBundleWithMonodromy(&tri);
         }

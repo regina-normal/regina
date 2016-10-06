@@ -349,7 +349,7 @@ class NPerm2Test : public CppUnit::TestFixture {
                 }
             }
 
-            // An indirect test (using NPerm4 to verify).
+            // An indirect test (using NPerm<4> to verify).
             int a, d;
             for (a = 0; a < 2; ++a) {
                 NPerm<2> x = NPerm<2>::S2[a]; // 0 -> a, 1 -> 1-a.
@@ -358,9 +358,9 @@ class NPerm2Test : public CppUnit::TestFixture {
                     NPerm<2> y = NPerm<2>::S2[d]; // 0 -> d, 1 -> 1-d.
 
                     NPerm<2> product2 = x * y;
-                    regina::NPerm4 product4 =
-                        regina::NPerm4(a, 1 - a, 2, 3) *
-                        regina::NPerm4(d, 1 - d, 2, 3);
+                    regina::NPerm<4> product4 =
+                        regina::NPerm<4>(a, 1 - a, 2, 3) *
+                        regina::NPerm<4>(d, 1 - d, 2, 3);
 
                     if (product2[0] != product4[0] ||
                             product2[1] != product4[1]) {

@@ -36,7 +36,7 @@
 #include "maths/nperm4.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
-using regina::NPerm4;
+using regina::NPerm;
 
 class NPerm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NPerm4Test);
@@ -62,11 +62,11 @@ class NPerm4Test : public CppUnit::TestFixture {
 
         void inverse() {
             for (int i = 0; i < 24; i++) {
-                if (NPerm4::S4[i].inverse() != NPerm4::S4[NPerm4::invS4[i]]) {
+                if (NPerm<4>::S4[i].inverse() != NPerm<4>::S4[NPerm<4>::invS4[i]]) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " was found to have "
-                        "inverse " << NPerm4::S4[i].inverse() << " instead of "
-                        << NPerm4::S4[NPerm4::invS4[i]] << ".";
+                        "inverse " << NPerm<4>::S4[i].inverse() << " instead of "
+                        << NPerm<4>::S4[NPerm<4>::invS4[i]] << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -76,10 +76,10 @@ class NPerm4Test : public CppUnit::TestFixture {
             int expected;
             for (int i = 0; i < 24; i++) {
                 expected = (i % 2 == 0 ? 1 : -1);
-                if (NPerm4::S4[i].sign() != expected) {
+                if (NPerm<4>::S4[i].sign() != expected) {
                     std::ostringstream msg;
                     msg << "Permutation #" << i << " was found to have "
-                        "sign " << NPerm4::S4[i].sign()
+                        "sign " << NPerm<4>::S4[i].sign()
                         << " instead of " << expected << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -88,49 +88,49 @@ class NPerm4Test : public CppUnit::TestFixture {
 
         void index() {
             for (int i = 0; i < 24; ++i) {
-                if (NPerm4::S4[i].S4Index() != i) {
+                if (NPerm<4>::S4[i].S4Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation S4[" << i << "] gives an "
                         "incorrect S4 index of "
-                        << NPerm4::S4[i].S4Index() << ".";
+                        << NPerm<4>::S4[i].S4Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (NPerm4::orderedS4[i].orderedS4Index() != i) {
+                if (NPerm<4>::orderedS4[i].orderedS4Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation orderedS4[" << i << "] gives an "
                         "incorrect orderedS4 index of "
-                        << NPerm4::orderedS4[i].orderedS4Index() << ".";
+                        << NPerm<4>::orderedS4[i].orderedS4Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
         }
 
-        bool looksLikeIdentity(const NPerm4& p) {
-            return (p.isIdentity() && p == NPerm4() &&
+        bool looksLikeIdentity(const NPerm<4>& p) {
+            return (p.isIdentity() && p == NPerm<4>() &&
                 p.permCode() == 228 && p.permCode2() == 0 &&
                 p.str() == "0123");
         }
 
-        bool looksEqual(const NPerm4& p, const NPerm4& q) {
+        bool looksEqual(const NPerm<4>& p, const NPerm<4>& q) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
                 p.permCode() == q.permCode() &&
                 p.permCode2() == q.permCode2());
         }
 
-        bool looksEqual(const NPerm4& p, const NPerm4& q,
+        bool looksEqual(const NPerm<4>& p, const NPerm<4>& q,
                 const std::string& qStr) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
                 p.permCode() == q.permCode() &&
                 p.permCode2() == q.permCode2() && p.str() == qStr);
         }
 
-        bool looksDistinct(const NPerm4& p, const NPerm4& q) {
+        bool looksDistinct(const NPerm<4>& p, const NPerm<4>& q) {
             return (p != q && (! (p == q)) && p.str() != q.str() &&
                 p.permCode() != q.permCode() &&
                 p.permCode2() != q.permCode2());
         }
 
-        int expectedSign(const NPerm4& p) {
+        int expectedSign(const NPerm<4>& p) {
             // Count the number of reorderings.
             int reorderings = 0;
 
@@ -144,12 +144,12 @@ class NPerm4Test : public CppUnit::TestFixture {
         }
 
         void testPerm(int a, int b, int c, int d) {
-            NPerm4 p(a, b, c, d);
+            NPerm<4> p(a, b, c, d);
 
             std::ostringstream name;
             name << a << b << c << d;
 
-            NPerm4 p0 = NPerm4::fromPermCode(p.permCode());
+            NPerm<4> p0 = NPerm<4>::fromPermCode(p.permCode());
             if (! looksEqual(p0, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The first-generation code constructor fails for "
@@ -157,7 +157,7 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm4 p1 = NPerm4::fromPermCode2(p.permCode2());
+            NPerm<4> p1 = NPerm<4>::fromPermCode2(p.permCode2());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The second-generation code constructor fails for "
@@ -165,7 +165,7 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm4 p2(3, d, 2, c, 0, a, 1, b);
+            NPerm<4> p2(3, d, 2, c, 0, a, 1, b);
             if (! looksEqual(p2, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The 8-argument constructor fails for "
@@ -175,7 +175,7 @@ class NPerm4Test : public CppUnit::TestFixture {
 
             {
                 int arr[4] = { a, b, c, d };
-                NPerm4 parr(arr);
+                NPerm<4> parr(arr);
                 if (! looksEqual(parr, p, name.str())) {
                     std::ostringstream msg;
                     msg << "The array constructor fails for "
@@ -187,7 +187,7 @@ class NPerm4Test : public CppUnit::TestFixture {
             {
                 int arrA[4] = { 1, 3, 2, 0 };
                 int arrB[4] = { b, d, c, a };
-                NPerm4 parr2(arrA, arrB);
+                NPerm<4> parr2(arrA, arrB);
                 if (! looksEqual(parr2, p, name.str())) {
                     std::ostringstream msg;
                     msg << "The two-array constructor fails for "
@@ -196,7 +196,7 @@ class NPerm4Test : public CppUnit::TestFixture {
                 }
             }
 
-            NPerm4 p3(p);
+            NPerm<4> p3(p);
             if (! looksEqual(p3, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The copy constructor fails for "
@@ -204,7 +204,7 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm4 p4(2, 3, 1, 0);
+            NPerm<4> p4(2, 3, 1, 0);
             if (! (a == 2 && b == 3 && c == 1 && d == 0)) {
                 if (! looksDistinct(p4, p)) {
                     std::ostringstream msg;
@@ -222,7 +222,7 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm4 p5(2, 3, 1, 0);
+            NPerm<4> p5(2, 3, 1, 0);
             p5.setPermCode(p3.permCode());
             if (! looksEqual(p5, p, name.str())) {
                 std::ostringstream msg;
@@ -231,7 +231,7 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm4 p6(3, 2, 0, 1);
+            NPerm<4> p6(3, 2, 0, 1);
             p6.setPermCode2(p3.permCode2());
             if (! looksEqual(p6, p, name.str())) {
                 std::ostringstream msg;
@@ -240,57 +240,57 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! NPerm4::isPermCode(p.permCode())) {
+            if (! NPerm<4>::isPermCode(p.permCode())) {
                 std::ostringstream msg;
                 msg << "Routine isPermCode() suggests that the permutation "
                     << name.str() << " has an invalid first-generation code.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! NPerm4::isPermCode2(p.permCode2())) {
+            if (! NPerm<4>::isPermCode2(p.permCode2())) {
                 std::ostringstream msg;
                 msg << "Routine isPermCode2() suggests that the permutation "
                     << name.str() << " has an invalid second-generation code.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (NPerm4::isPermCode(0))
+            if (NPerm<4>::isPermCode(0))
                 CPPUNIT_FAIL("Routine isPermCode() suggests that 0 is a "
                     "valid first-generation code (which it is not).");
 
-            if (! NPerm4::isPermCode2(0))
+            if (! NPerm<4>::isPermCode2(0))
                 CPPUNIT_FAIL("Routine isPermCode2() suggests that 0 is not a "
                     "valid second-generation code (which it is).");
 
-            if (! looksEqual(p * NPerm4(), p)) {
+            if (! looksEqual(p * NPerm<4>(), p)) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by the identity does not give " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(NPerm4() * p, p)) {
+            if (! looksEqual(NPerm<4>() * p, p)) {
                 std::ostringstream msg;
                 msg << "Multiplying the identity by permutation " << name.str()
                     << " does not give " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(p * NPerm4(0, 1), NPerm4(b, a, c, d))) {
+            if (! looksEqual(p * NPerm<4>(0, 1), NPerm<4>(b, a, c, d))) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by (0 <--> 1) does not give the expected result.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(p * NPerm4(1, 2), NPerm4(a, c, b, d))) {
+            if (! looksEqual(p * NPerm<4>(1, 2), NPerm<4>(a, c, b, d))) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by (1 <--> 2) does not give the expected result.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! looksEqual(p * NPerm4(2, 3), NPerm4(a, b, d, c))) {
+            if (! looksEqual(p * NPerm<4>(2, 3), NPerm<4>(a, b, d, c))) {
                 std::ostringstream msg;
                 msg << "Multiplying permutation " << name.str()
                     << " by (2 <--> 3) does not give the expected result.";
@@ -311,7 +311,7 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm4 inv = p.inverse();
+            NPerm<4> inv = p.inverse();
             if (inv[a] != 0 || inv[b] != 1 || inv[c] != 2 || inv[d] != 3) {
                 std::ostringstream msg;
                 msg << "The inverse of permutation " << name.str()
@@ -343,7 +343,7 @@ class NPerm4Test : public CppUnit::TestFixture {
             }
 
             if (a != 0 || b != 1 || c != 2 || d != 3) {
-                NPerm4 id;
+                NPerm<4> id;
                 if (p.compareWith(id) != 1 || id.compareWith(p) != -1) {
                     std::ostringstream msg;
                     msg << "Permutation " << name.str()
@@ -361,7 +361,7 @@ class NPerm4Test : public CppUnit::TestFixture {
             }
 
             if (a != 3 || b != 2 || c != 1 || d != 0) {
-                NPerm4 last(3, 2, 1, 0);
+                NPerm<4> last(3, 2, 1, 0);
                 if (p.compareWith(last) != -1 || last.compareWith(p) != 1) {
                     std::ostringstream msg;
                     msg << "Permutation " << name.str()
@@ -388,13 +388,13 @@ class NPerm4Test : public CppUnit::TestFixture {
         }
 
         void exhaustive() {
-            NPerm4 id;
+            NPerm<4> id;
             if (! looksLikeIdentity(id))
-                CPPUNIT_FAIL("The default NPerm4 constructor does not "
+                CPPUNIT_FAIL("The default NPerm<4> constructor does not "
                     "appear to give the identity permutation.");
 
             for (int i = 0; i < 4; ++i) {
-                NPerm4 p(i, i);
+                NPerm<4> p(i, i);
                 if (! looksLikeIdentity(p)) {
                     std::ostringstream msg;
                     msg << "The permutation that swaps " << i
@@ -426,12 +426,12 @@ class NPerm4Test : public CppUnit::TestFixture {
 
         void products() {
             unsigned i, j, x;
-            NPerm4 p, q, r;
+            NPerm<4> p, q, r;
 
             for (i = 0; i < 24; ++i) {
-                p = NPerm4::S4[i];
+                p = NPerm<4>::S4[i];
                 for (j = 0; j < 24; ++j) {
-                    q = NPerm4::S4[j];
+                    q = NPerm<4>::S4[j];
 
                     r = p * q;
                     for (x = 0; x < 4; ++x) {
@@ -448,10 +448,10 @@ class NPerm4Test : public CppUnit::TestFixture {
 
         void compareWith() {
             unsigned i, j;
-            NPerm4 p, q;
+            NPerm<4> p, q;
 
             for (i = 0; i < 24; ++i) {
-                p = NPerm4::orderedS4[i];
+                p = NPerm<4>::orderedS4[i];
                 if (p.compareWith(p) != 0) {
                     std::ostringstream msg;
                     msg << "Routine compareWith() does not conclude that "
@@ -461,9 +461,9 @@ class NPerm4Test : public CppUnit::TestFixture {
             }
 
             for (i = 0; i < 24; ++i) {
-                p = NPerm4::orderedS4[i];
+                p = NPerm<4>::orderedS4[i];
                 for (j = i + 1; j < 24; ++j) {
-                    q = NPerm4::orderedS4[j];
+                    q = NPerm<4>::orderedS4[j];
 
                     if (p.compareWith(q) != -1) {
                         std::ostringstream msg;
@@ -483,8 +483,8 @@ class NPerm4Test : public CppUnit::TestFixture {
 
         void reverse() {
             for (int i = 0; i < 24; i++) {
-                NPerm4 p = NPerm4::S4[i];
-                NPerm4 r = p.reverse();
+                NPerm<4> p = NPerm<4>::S4[i];
+                NPerm<4> r = p.reverse();
 
                 if (! looksEqual(p, r.reverse())) {
                     std::ostringstream msg;
@@ -514,17 +514,17 @@ class NPerm4Test : public CppUnit::TestFixture {
         void databases() {
             unsigned i;
             for (i = 0; i < 6; ++i) {
-                if (NPerm4::S3[i] != NPerm4::extend(regina::NPerm<3>::S3[i]))
-                    CPPUNIT_FAIL("NPerm4 and NPerm<3> do not agree on S3.");
+                if (NPerm<4>::S3[i] != NPerm<4>::extend(regina::NPerm<3>::S3[i]))
+                    CPPUNIT_FAIL("NPerm<4> and NPerm<3> do not agree on S3.");
             }
             for (i = 0; i < 6; ++i) {
-                if (NPerm4::orderedS3[i] !=
-                        NPerm4::extend(regina::NPerm<3>::orderedS3[i]))
-                    CPPUNIT_FAIL("NPerm4 and NPerm<3> do not agree on orderedS3.");
+                if (NPerm<4>::orderedS3[i] !=
+                        NPerm<4>::extend(regina::NPerm<3>::orderedS3[i]))
+                    CPPUNIT_FAIL("NPerm<4> and NPerm<3> do not agree on orderedS3.");
             }
             for (i = 0; i < 2; ++i) {
-                if (NPerm4::S2[i] != NPerm4::extend(regina::NPerm<3>::S2[i]))
-                    CPPUNIT_FAIL("NPerm4 and NPerm<3> do not agree on S2.");
+                if (NPerm<4>::S2[i] != NPerm<4>::extend(regina::NPerm<3>::S2[i]))
+                    CPPUNIT_FAIL("NPerm<4> and NPerm<3> do not agree on S2.");
             }
         }
 
@@ -532,12 +532,12 @@ class NPerm4Test : public CppUnit::TestFixture {
             unsigned i;
 
             for (i = 0; i < 24; ++i)
-                if (NPerm4::S4[i] != NPerm4::Sn[i])
-                    CPPUNIT_FAIL("Arrays S4 and Sn disagree for NPerm4.");
+                if (NPerm<4>::S4[i] != NPerm<4>::Sn[i])
+                    CPPUNIT_FAIL("Arrays S4 and Sn disagree for NPerm<4>.");
 
             for (i = 0; i < 6; ++i)
-                if (NPerm4::S3[i] != NPerm4::Sn_1[i])
-                    CPPUNIT_FAIL("Arrays S3 and Sn_1 disagree for NPerm4.");
+                if (NPerm<4>::S3[i] != NPerm<4>::Sn_1[i])
+                    CPPUNIT_FAIL("Arrays S3 and Sn_1 disagree for NPerm<4>.");
         }
 };
 

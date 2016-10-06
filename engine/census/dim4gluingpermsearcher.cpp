@@ -375,7 +375,7 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = NPerm4::invS4[permIndex(facet)];
+        permIndex(adj) = NPerm<4>::invS4[permIndex(facet)];
 
 #ifndef DIM4_NO_UNION_FIND
         // Merge triangle links and run corresponding tests.

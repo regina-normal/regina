@@ -110,7 +110,7 @@ class REGINA_API NPerm<3> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm<3>, NPerm4 and so on),
+         * For all permutation classes (NPerm<3>, NPerm<4> and so on),
          * the S3 array stores the same permutations in the same order
          * (but of course using different data types).
          *
@@ -162,7 +162,7 @@ class REGINA_API NPerm<3> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm<3>, NPerm4 and so on),
+         * For all permutation classes (NPerm<3>, NPerm<4> and so on),
          * the S2 array stores the same permutations in the same order
          * (but of course using different data types).
          *

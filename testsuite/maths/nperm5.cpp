@@ -496,26 +496,26 @@ class NPerm5Test : public CppUnit::TestFixture {
         void databases() {
             unsigned i;
             for (i = 0; i < 24; ++i) {
-                if (NPerm<5>::S4[i] != NPerm<5>::extend(regina::NPerm4::S4[i]))
-                    CPPUNIT_FAIL("NPerm<5> and NPerm4 do not agree on S4.");
+                if (NPerm<5>::S4[i] != NPerm<5>::extend(regina::NPerm<4>::S4[i]))
+                    CPPUNIT_FAIL("NPerm<5> and NPerm<4> do not agree on S4.");
             }
             for (i = 0; i < 24; ++i) {
                 if (NPerm<5>::orderedS4[i] !=
-                        NPerm<5>::extend(regina::NPerm4::orderedS4[i]))
-                    CPPUNIT_FAIL("NPerm<5> and NPerm4 do not agree on orderedS4.");
+                        NPerm<5>::extend(regina::NPerm<4>::orderedS4[i]))
+                    CPPUNIT_FAIL("NPerm<5> and NPerm<4> do not agree on orderedS4.");
             }
             for (i = 0; i < 6; ++i) {
-                if (NPerm<5>::S3[i] != NPerm<5>::extend(regina::NPerm4::S3[i]))
-                    CPPUNIT_FAIL("NPerm<5> and NPerm4 do not agree on S3.");
+                if (NPerm<5>::S3[i] != NPerm<5>::extend(regina::NPerm<4>::S3[i]))
+                    CPPUNIT_FAIL("NPerm<5> and NPerm<4> do not agree on S3.");
             }
             for (i = 0; i < 6; ++i) {
                 if (NPerm<5>::orderedS3[i] !=
-                        NPerm<5>::extend(regina::NPerm4::orderedS3[i]))
-                    CPPUNIT_FAIL("NPerm<5> and NPerm4 do not agree on orderedS3.");
+                        NPerm<5>::extend(regina::NPerm<4>::orderedS3[i]))
+                    CPPUNIT_FAIL("NPerm<5> and NPerm<4> do not agree on orderedS3.");
             }
             for (i = 0; i < 2; ++i) {
-                if (NPerm<5>::S2[i] != NPerm<5>::extend(regina::NPerm4::S2[i]))
-                    CPPUNIT_FAIL("NPerm4 and NPerm4 do not agree on S2.");
+                if (NPerm<5>::S2[i] != NPerm<5>::extend(regina::NPerm<4>::S2[i]))
+                    CPPUNIT_FAIL("NPerm<4> and NPerm<4> do not agree on S2.");
             }
         }
 

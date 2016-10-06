@@ -374,7 +374,7 @@ class NPerm3Test : public CppUnit::TestFixture {
                 }
             }
 
-            // An indirect test (using NPerm4 to verify).
+            // An indirect test (using NPerm<4> to verify).
             int a, b, c, d, e, f;
             for (a = 0; a < 3; ++a)
                 for (b = 0; b < 3; ++b) {
@@ -391,9 +391,9 @@ class NPerm3Test : public CppUnit::TestFixture {
                             NPerm<3> y(d, e, f);
 
                             NPerm<3> product3 = x * y;
-                            regina::NPerm4 product4 =
-                                regina::NPerm4(a, b, c, 3) *
-                                regina::NPerm4(d, e, f, 3);
+                            regina::NPerm<4> product4 =
+                                regina::NPerm<4>(a, b, c, 3) *
+                                regina::NPerm<4>(d, e, f, 3);
 
                             if (product3[0] != product4[0] ||
                                     product3[1] != product4[1] ||

@@ -318,7 +318,7 @@ int NHyperbolicMinSearcher::mergeEdgeClasses() {
 
     int retVal = 0;
 
-    NPerm4 p = gluingPerm(face);
+    NPerm<4> p = gluingPerm(face);
     int v1, w1, v2, w2;
     int e, f;
     int orderIdx;

@@ -219,7 +219,7 @@ NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
             annulus.tet[1])
         return 0;
 
-    NPerm4 annulusGluing = annulus.roles[1].inverse() *
+    NPerm<4> annulusGluing = annulus.roles[1].inverse() *
         annulus.tet[0]->adjacentGluing(annulus.roles[0][3]) *
         annulus.roles[0];
 
@@ -230,11 +230,11 @@ NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
     // (orientable) permutations?
 
     int position = -1;
-    if (annulusGluing == NPerm4(0, 1))
+    if (annulusGluing == NPerm<4>(0, 1))
         position = 2; // Vertical
-    else if (annulusGluing == NPerm4(0, 2))
+    else if (annulusGluing == NPerm<4>(0, 2))
         position = 1; // Horizontal
-    else if (annulusGluing == NPerm4(1, 2))
+    else if (annulusGluing == NPerm<4>(1, 2))
         position = 0; // Diagonal
 
     if (position < 0) {
@@ -308,8 +308,8 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
         NFacePair(annulus.roles[0][3], annulus.roles[1][3]).complement();
 
     if (annulus.roles[1] !=
-            NPerm4(annulus.roles[0][3], annulus.roles[1][3]) *
-            NPerm4(centralEdge.upper(), centralEdge.lower()) *
+            NPerm<4>(annulus.roles[0][3], annulus.roles[1][3]) *
+            NPerm<4>(centralEdge.upper(), centralEdge.lower()) *
             annulus.roles[0])
         return 0;
 
@@ -320,7 +320,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
         return 0;
 
     // Make sure we're not about to create a (0,k) curve.
-    NPerm4 lstRoles(
+    NPerm<4> lstRoles(
         lst->topEdgeGroup(
             NEdge::edgeNumber[annulus.roles[0][0]][annulus.roles[0][1]]),
         lst->topEdgeGroup(
@@ -422,7 +422,7 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
             annulus.tet[1])
         return 0;
     if (annulus.tet[0]->adjacentGluing(annulus.roles[0][0]) *
-            annulus.roles[0] * NPerm4(1, 2) != annulus.roles[1])
+            annulus.roles[0] * NPerm<4>(1, 2) != annulus.roles[1])
         return 0;
 
     // The two tetrahedra forming the annulus are joined together as
@@ -435,21 +435,21 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
     if (isBad(adj, avoidTets))
         return 0;
 
-    NPerm4 adjRoles =
+    NPerm<4> adjRoles =
         annulus.tet[0]->adjacentGluing(annulus.roles[0][1]) *
-        annulus.roles[0] * NPerm4(0, 3);
+        annulus.roles[0] * NPerm<4>(0, 3);
 
     if (annulus.tet[1]->adjacentTetrahedron(annulus.roles[1][1]) != adj)
         return 0;
     if (annulus.tet[1]->adjacentGluing(annulus.roles[1][1]) *
-            annulus.roles[1] * NPerm4(1, 3, 0, 2) != adjRoles)
+            annulus.roles[1] * NPerm<4>(1, 3, 0, 2) != adjRoles)
         return 0;
 
     // All three tetrahedra are joined together as expected!
 
     NSatTriPrism* ans = new NSatTriPrism(true);
 
-    const NPerm4 pairSwap(1, 0, 3, 2);
+    const NPerm<4> pairSwap(1, 0, 3, 2);
     ans->annulus_[0] = annulus;
     ans->annulus_[1].tet[0] = annulus.tet[1];
     ans->annulus_[1].tet[1] = adj;
@@ -471,14 +471,14 @@ NSatTriPrism* NSatTriPrism::insertBlock(NTriangulation& tri, bool major) {
     NTetrahedron* a = tri.newTetrahedron();
     NTetrahedron* b = tri.newTetrahedron();
     NTetrahedron* c = tri.newTetrahedron();
-    a->join(1, c, NPerm4(2, 0, 3, 1));
-    b->join(1, a, NPerm4(2, 0, 3, 1));
-    c->join(1, b, NPerm4(2, 0, 3, 1));
+    a->join(1, c, NPerm<4>(2, 0, 3, 1));
+    b->join(1, a, NPerm<4>(2, 0, 3, 1));
+    c->join(1, b, NPerm<4>(2, 0, 3, 1));
 
     NSatTriPrism* ans = new NSatTriPrism(major);
 
-    const NPerm4 id;
-    const NPerm4 pairSwap(1, 0, 3, 2);
+    const NPerm<4> id;
+    const NPerm<4> pairSwap(1, 0, 3, 2);
     ans->annulus_[0].tet[0] = a;
     ans->annulus_[0].tet[1] = b;
     ans->annulus_[0].roles[0] = id;
@@ -525,9 +525,9 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
             isBad(central0, avoidTets))
         return 0;
 
-    NPerm4 roles0 = annulus.tet[0]->adjacentGluing(
+    NPerm<4> roles0 = annulus.tet[0]->adjacentGluing(
         annulus.roles[0][0]) * annulus.roles[0];
-    NPerm4 roles1 = annulus.tet[0]->adjacentGluing(
+    NPerm<4> roles1 = annulus.tet[0]->adjacentGluing(
         annulus.roles[0][1]) * annulus.roles[0];
 
     // We've got the two central tetrahedra.  Now look for the remaining
@@ -540,20 +540,20 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
             central1)
         return 0;
     if (annulus.tet[1]->adjacentGluing(annulus.roles[1][0]) *
-            annulus.roles[1] * NPerm4(3, 2, 1, 0) != roles0)
+            annulus.roles[1] * NPerm<4>(3, 2, 1, 0) != roles0)
         return 0;
     if (annulus.tet[1]->adjacentGluing(annulus.roles[1][1]) *
-            annulus.roles[1] * NPerm4(2, 3, 0, 1) != roles1)
+            annulus.roles[1] * NPerm<4>(2, 3, 0, 1) != roles1)
         return 0;
 
     // We've got the two tetrahedra from the annulus boundary completely
     // sorted out.  Just the two new boundary tetrahedra to go.
 
     NTetrahedron* bdry2 = central0->adjacentTetrahedron(roles0[1]);
-    NPerm4 roles2 = central0->adjacentGluing(roles0[1]) * roles0;
+    NPerm<4> roles2 = central0->adjacentGluing(roles0[1]) * roles0;
 
     NTetrahedron* bdry3 = central0->adjacentTetrahedron(roles0[2]);
-    NPerm4 roles3 = central0->adjacentGluing(roles0[2]) * roles0;
+    NPerm<4> roles3 = central0->adjacentGluing(roles0[2]) * roles0;
 
     if (bdry2 == 0 || bdry2 == annulus.tet[0] || bdry2 == annulus.tet[1] ||
             bdry2 == central0 || bdry2 == central1 ||
@@ -570,27 +570,27 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
     if (central1->adjacentGluing(roles1[0]) * roles1 != roles2)
         return 0;
     if (central1->adjacentGluing(roles1[2]) * roles1 *
-            NPerm4(1, 0, 3, 2) != roles3)
+            NPerm<4>(1, 0, 3, 2) != roles3)
         return 0;
 
     // All looking good!
 
     NSatCube* ans = new NSatCube();
 
-    const NPerm4 id;
+    const NPerm<4> id;
     ans->annulus_[0] = annulus;
     ans->annulus_[1].tet[0] = annulus.tet[1];
     ans->annulus_[1].tet[1] = bdry2;
-    ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm4(1, 0, 3, 2);
+    ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm<4>(1, 0, 3, 2);
     ans->annulus_[1].roles[1] = roles2;
     ans->annulus_[2].tet[0] = bdry2;
     ans->annulus_[2].tet[1] = bdry3;
-    ans->annulus_[2].roles[0] = roles2 * NPerm4(1, 0, 3, 2);
-    ans->annulus_[2].roles[1] = roles3 * NPerm4(2, 3, 0, 1);
+    ans->annulus_[2].roles[0] = roles2 * NPerm<4>(1, 0, 3, 2);
+    ans->annulus_[2].roles[1] = roles3 * NPerm<4>(2, 3, 0, 1);
     ans->annulus_[3].tet[0] = bdry3;
     ans->annulus_[3].tet[1] = annulus.tet[0];
-    ans->annulus_[3].roles[0] = roles3 * NPerm4(3, 2, 1, 0);
-    ans->annulus_[3].roles[1] = annulus.roles[0] * NPerm4(1, 0, 3, 2);
+    ans->annulus_[3].roles[0] = roles3 * NPerm<4>(3, 2, 1, 0);
+    ans->annulus_[3].roles[1] = annulus.roles[0] * NPerm<4>(1, 0, 3, 2);
 
     avoidTets.insert(annulus.tet[0]);
     avoidTets.insert(annulus.tet[1]);
@@ -610,15 +610,15 @@ NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
     NTetrahedron* central0 = tri.newTetrahedron();
     NTetrahedron* central1 = tri.newTetrahedron();
 
-    const NPerm4 id;
+    const NPerm<4> id;
     bdry0->join(1, central0, id);
-    bdry0->join(0, central1, NPerm4(0, 1));
-    bdry1->join(2, central0, NPerm4(2, 1, 3, 0));
-    bdry1->join(0, central1, NPerm4(0, 3));
+    bdry0->join(0, central1, NPerm<4>(0, 1));
+    bdry1->join(2, central0, NPerm<4>(2, 1, 3, 0));
+    bdry1->join(0, central1, NPerm<4>(0, 3));
     bdry2->join(0, central0, id);
-    bdry2->join(1, central1, NPerm4(0, 1));
-    bdry3->join(3, central0, NPerm4(0, 3, 1, 2));
-    bdry3->join(1, central1, NPerm4(1, 2));
+    bdry2->join(1, central1, NPerm<4>(0, 1));
+    bdry3->join(3, central0, NPerm<4>(0, 3, 1, 2));
+    bdry3->join(1, central1, NPerm<4>(1, 2));
 
     NSatCube* ans = new NSatCube();
 
@@ -631,14 +631,14 @@ NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
     ans->annulus_[3].tet[0] = bdry3;
     ans->annulus_[3].tet[1] = bdry0;
 
-    ans->annulus_[0].roles[0] = NPerm4(0, 1);
-    ans->annulus_[0].roles[1] = NPerm4(2, 0, 3, 1);
-    ans->annulus_[1].roles[0] = NPerm4(1, 2);
-    ans->annulus_[1].roles[1] = NPerm4(0, 1);
-    ans->annulus_[2].roles[0] = NPerm4(2, 3);
-    ans->annulus_[2].roles[1] = NPerm4(0, 3);
-    ans->annulus_[3].roles[0] = NPerm4(1, 3, 0, 2);
-    ans->annulus_[3].roles[1] = NPerm4(2, 3);
+    ans->annulus_[0].roles[0] = NPerm<4>(0, 1);
+    ans->annulus_[0].roles[1] = NPerm<4>(2, 0, 3, 1);
+    ans->annulus_[1].roles[0] = NPerm<4>(1, 2);
+    ans->annulus_[1].roles[1] = NPerm<4>(0, 1);
+    ans->annulus_[2].roles[0] = NPerm<4>(2, 3);
+    ans->annulus_[2].roles[1] = NPerm<4>(0, 3);
+    ans->annulus_[3].roles[0] = NPerm<4>(1, 3, 0, 2);
+    ans->annulus_[3].roles[1] = NPerm<4>(2, 3);
 
     return ans;
 }
@@ -660,8 +660,8 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
 
     NTetrahedron* middle = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][0]);
-    NPerm4 middleRoles = annulus.tet[0]->adjacentGluing(
-        annulus.roles[0][0]) * annulus.roles[0] * NPerm4(3, 1, 0, 2);
+    NPerm<4> middleRoles = annulus.tet[0]->adjacentGluing(
+        annulus.roles[0][0]) * annulus.roles[0] * NPerm<4>(3, 1, 0, 2);
 
     if (notUnique(middle, annulus.tet[0], annulus.tet[1]) ||
             isBad(middle, avoidTets))
@@ -676,13 +676,13 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             annulus.roles[1][1]))
         return 0;
     if (middleRoles != annulus.tet[0]->adjacentGluing(
-            annulus.roles[0][1]) * annulus.roles[0] * NPerm4(1, 3))
+            annulus.roles[0][1]) * annulus.roles[0] * NPerm<4>(1, 3))
         return 0;
     if (middleRoles != annulus.tet[1]->adjacentGluing(
-            annulus.roles[1][0]) * annulus.roles[1] * NPerm4(0, 2, 3, 1))
+            annulus.roles[1][0]) * annulus.roles[1] * NPerm<4>(0, 2, 3, 1))
         return 0;
     if (middleRoles != annulus.tet[1]->adjacentGluing(
-            annulus.roles[1][1]) * annulus.roles[1] * NPerm4(0, 2))
+            annulus.roles[1][1]) * annulus.roles[1] * NPerm<4>(0, 2))
         return 0;
 
     // We've found the initial segment.
@@ -691,7 +691,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             annulus.tet[1]) {
         // It's either length one or nothing.
         if (annulus.roles[1] == annulus.tet[0]->adjacentGluing(
-                annulus.roles[0][2]) * annulus.roles[0] * NPerm4(0, 1)) {
+                annulus.roles[0][2]) * annulus.roles[0] * NPerm<4>(0, 1)) {
             // Got one that's untwisted.
             NSatReflectorStrip* ans = new NSatReflectorStrip(1, false);
             ans->annulus_[0] = annulus;
@@ -732,7 +732,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
 
     // Also make a list of tetrahedron vertex roles for the two
     // tetrahedra in each segment that meet the boundary annuli.
-    std::list<NPerm4> rolesSoFar;
+    std::list<NPerm<4>> rolesSoFar;
     rolesSoFar.push_back(annulus.roles[0]);
     rolesSoFar.push_back(annulus.roles[1]);
 
@@ -740,20 +740,20 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     bool twisted = false;
 
     NTetrahedron *nextLeft, *nextMiddle, *nextRight;
-    NPerm4 nextLeftRoles, nextMiddleRoles, nextRightRoles;
+    NPerm<4> nextLeftRoles, nextMiddleRoles, nextRightRoles;
 
     while (1) {
         // Run off the right hand side looking for the next tetrahedron.
         nextLeft = foundSoFar.back()->adjacentTetrahedron(
             rolesSoFar.back()[2]);
         nextLeftRoles = foundSoFar.back()->adjacentGluing(
-            rolesSoFar.back()[2]) * rolesSoFar.back() * NPerm4(0, 1);
+            rolesSoFar.back()[2]) * rolesSoFar.back() * NPerm<4>(0, 1);
 
         if (nextLeft == annulus.tet[0]) {
             // The right _might_ have completed!
             if (nextLeftRoles == annulus.roles[0]) {
                 // All good!  An untwisted strip.
-            } else if (nextLeftRoles == annulus.roles[0] * NPerm4(0, 1)) {
+            } else if (nextLeftRoles == annulus.roles[0] * NPerm<4>(0, 1)) {
                 // A complete twisted strip.
                 twisted = true;
             } else {
@@ -767,7 +767,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
                 std::inserter(avoidTets, avoidTets.begin()));
 
             std::list<NTetrahedron*>::const_iterator tit = foundSoFar.begin();
-            std::list<NPerm4>::const_iterator pit = rolesSoFar.begin();
+            std::list<NPerm<4>>::const_iterator pit = rolesSoFar.begin();
             for (unsigned i = 0; i < length; i++) {
                 ans->annulus_[i].tet[0] = *tit++;
                 tit++; // Skip the middle tetrahedron from each block.
@@ -787,7 +787,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
 
         nextMiddle = nextLeft->adjacentTetrahedron(nextLeftRoles[0]);
         nextMiddleRoles = nextLeft->adjacentGluing(
-            nextLeftRoles[0]) * nextLeftRoles * NPerm4(3, 1, 0, 2);
+            nextLeftRoles[0]) * nextLeftRoles * NPerm<4>(3, 1, 0, 2);
 
         if (notUnique(nextMiddle, nextLeft) ||
                 isBad(nextMiddle, avoidTets) || isBad(nextMiddle, foundSoFar))
@@ -796,12 +796,12 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
         if (nextMiddle != nextLeft->adjacentTetrahedron(nextLeftRoles[1]))
             return 0;
         if (nextMiddleRoles != nextLeft->adjacentGluing(
-                nextLeftRoles[1]) * nextLeftRoles * NPerm4(1, 3))
+                nextLeftRoles[1]) * nextLeftRoles * NPerm<4>(1, 3))
             return 0;
 
         nextRight = nextMiddle->adjacentTetrahedron(nextMiddleRoles[0]);
         nextRightRoles = nextMiddle->adjacentGluing(
-            nextMiddleRoles[0]) * nextMiddleRoles * NPerm4(0, 3, 1, 2);
+            nextMiddleRoles[0]) * nextMiddleRoles * NPerm<4>(0, 3, 1, 2);
 
         if (notUnique(nextRight, nextLeft, nextMiddle) ||
                 isBad(nextRight, avoidTets) || isBad(nextRight, foundSoFar))
@@ -810,7 +810,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
         if (nextRight != nextMiddle->adjacentTetrahedron(nextMiddleRoles[1]))
             return 0;
         if (nextRightRoles != nextMiddle->adjacentGluing(
-                nextMiddleRoles[1]) * nextMiddleRoles * NPerm4(0, 2))
+                nextMiddleRoles[1]) * nextMiddleRoles * NPerm<4>(0, 2))
             return 0;
 
         // Yup, we have a new block.
@@ -832,7 +832,7 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
         unsigned length, bool twisted) {
     NSatReflectorStrip* ans = new NSatReflectorStrip(length, twisted);
 
-    const NPerm4 id;
+    const NPerm<4> id;
     NTetrahedron *upper, *lower, *middle;
     NTetrahedron *prevRight = 0, *firstLeft = 0;
     for (unsigned i = 0; i < length; i++) {
@@ -841,15 +841,15 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
         lower = tri.newTetrahedron();
         middle = tri.newTetrahedron();
 
-        upper->join(0, middle, NPerm4(2, 1, 3, 0));
-        lower->join(0, middle, NPerm4(0, 3, 1, 2));
-        upper->join(1, middle, NPerm4(1, 3));
-        lower->join(1, middle, NPerm4(0, 2));
+        upper->join(0, middle, NPerm<4>(2, 1, 3, 0));
+        lower->join(0, middle, NPerm<4>(0, 3, 1, 2));
+        upper->join(1, middle, NPerm<4>(1, 3));
+        lower->join(1, middle, NPerm<4>(0, 2));
 
         if (i == 0)
             firstLeft = upper;
         else
-            upper->join(2, prevRight, NPerm4(0, 1));
+            upper->join(2, prevRight, NPerm<4>(0, 1));
 
         prevRight = lower;
 
@@ -862,7 +862,7 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
     if (twisted)
         firstLeft->join(2, prevRight, id);
     else
-        firstLeft->join(2, prevRight, NPerm4(0, 1));
+        firstLeft->join(2, prevRight, NPerm<4>(0, 1));
 
     return ans;
 }
@@ -890,8 +890,8 @@ NSatLayering* NSatLayering::isBlockLayering(const NSatAnnulus& annulus,
         NSatLayering* ans = new NSatLayering(true);
         ans->annulus_[0] = annulus;
         ans->annulus_[1].tet[0] = ans->annulus_[1].tet[1] = annulus.tet[0];
-        ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm4(1, 0, 3, 2);
-        ans->annulus_[1].roles[1] = annulus.roles[0] * NPerm4(1, 0, 3, 2);
+        ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm<4>(1, 0, 3, 2);
+        ans->annulus_[1].roles[1] = annulus.roles[0] * NPerm<4>(1, 0, 3, 2);
 
         return ans;
     }
@@ -904,8 +904,8 @@ NSatLayering* NSatLayering::isBlockLayering(const NSatAnnulus& annulus,
         NSatLayering* ans = new NSatLayering(false);
         ans->annulus_[0] = annulus;
         ans->annulus_[1].tet[0] = ans->annulus_[1].tet[1] = annulus.tet[0];
-        ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm4(1, 0, 3, 2);
-        ans->annulus_[1].roles[1] = annulus.roles[0] * NPerm4(1, 0, 3, 2);
+        ans->annulus_[1].roles[0] = annulus.roles[1] * NPerm<4>(1, 0, 3, 2);
+        ans->annulus_[1].roles[1] = annulus.roles[0] * NPerm<4>(1, 0, 3, 2);
 
         return ans;
     }

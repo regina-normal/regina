@@ -39,18 +39,18 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm4;
+using regina::NPerm;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<NPerm4> NPerm4_S4_arr(NPerm4::S4, 24);
-    GlobalArray<unsigned> NPerm4_invS4_arr(NPerm4::invS4, 24);
-    GlobalArray<NPerm4> NPerm4_orderedS4_arr(NPerm4::orderedS4, 24);
-    GlobalArray<NPerm4> NPerm4_S3_arr(NPerm4::S3, 6);
-    GlobalArray<NPerm4> NPerm4_orderedS3_arr(NPerm4::orderedS3, 6);
-    GlobalArray<NPerm4> NPerm4_S2_arr(NPerm4::S2, 2);
+    GlobalArray<NPerm<4>> NPerm4_S4_arr(NPerm<4>::S4, 24);
+    GlobalArray<unsigned> NPerm4_invS4_arr(NPerm<4>::invS4, 24);
+    GlobalArray<NPerm<4>> NPerm4_orderedS4_arr(NPerm<4>::orderedS4, 24);
+    GlobalArray<NPerm<4>> NPerm4_S3_arr(NPerm<4>::S3, 6);
+    GlobalArray<NPerm<4>> NPerm4_orderedS3_arr(NPerm<4>::orderedS3, 6);
+    GlobalArray<NPerm<4>> NPerm4_S2_arr(NPerm<4>::S2, 2);
 
-    int (NPerm4::*S4Index_void)() const = &NPerm4::S4Index;
+    int (NPerm<4>::*S4Index_void)() const = &NPerm<4>::S4Index;
 
     template <int k>
     struct NPerm4_contract : boost::python::def_visitor<NPerm4_contract<k>> {
@@ -58,7 +58,7 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm4::contract<k>);
+            c.def("contract", &NPerm<4>::contract<k>);
             c.def(NPerm4_contract<k+1>());
         }
     };
@@ -70,46 +70,46 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm4::contract<16>);
+            c.def("contract", &NPerm<4>::contract<16>);
         }
     };
 }
 
 void addNPerm4() {
-    scope s = class_<NPerm4>("NPerm4")
+    scope s = class_<NPerm<4>>("NPerm4")
         .def(init<int, int>())
         .def(init<int, int, int, int>())
         .def(init<int, int, int, int, int, int, int, int>())
-        .def(init<const NPerm4&>())
-        .def("permCode", &NPerm4::permCode)
-        .def("permCode2", &NPerm4::permCode2)
-        .def("setPermCode", &NPerm4::setPermCode)
-        .def("setPermCode2", &NPerm4::setPermCode2)
-        .def("fromPermCode", &NPerm4::fromPermCode)
-        .def("fromPermCode2", &NPerm4::fromPermCode2)
-        .def("isPermCode", &NPerm4::isPermCode)
-        .def("isPermCode2", &NPerm4::isPermCode2)
+        .def(init<const NPerm<4>&>())
+        .def("permCode", &NPerm<4>::permCode)
+        .def("permCode2", &NPerm<4>::permCode2)
+        .def("setPermCode", &NPerm<4>::setPermCode)
+        .def("setPermCode2", &NPerm<4>::setPermCode2)
+        .def("fromPermCode", &NPerm<4>::fromPermCode)
+        .def("fromPermCode2", &NPerm<4>::fromPermCode2)
+        .def("isPermCode", &NPerm<4>::isPermCode)
+        .def("isPermCode2", &NPerm<4>::isPermCode2)
         .def(self * self)
-        .def("inverse", &NPerm4::inverse)
-        .def("reverse", &NPerm4::reverse)
-        .def("sign", &NPerm4::sign)
-        .def("__getitem__", &NPerm4::operator[])
-        .def("preImageOf", &NPerm4::preImageOf)
-        .def("compareWith", &NPerm4::compareWith)
-        .def("isIdentity", &NPerm4::isIdentity)
-        .def("atIndex", &NPerm4::atIndex)
-        .def("index", &NPerm4::index)
-        .def("rand", &NPerm4::rand)
-        .def("trunc", &NPerm4::trunc)
-        .def("trunc2", &NPerm4::trunc2)
-        .def("trunc3", &NPerm4::trunc3)
+        .def("inverse", &NPerm<4>::inverse)
+        .def("reverse", &NPerm<4>::reverse)
+        .def("sign", &NPerm<4>::sign)
+        .def("__getitem__", &NPerm<4>::operator[])
+        .def("preImageOf", &NPerm<4>::preImageOf)
+        .def("compareWith", &NPerm<4>::compareWith)
+        .def("isIdentity", &NPerm<4>::isIdentity)
+        .def("atIndex", &NPerm<4>::atIndex)
+        .def("index", &NPerm<4>::index)
+        .def("rand", &NPerm<4>::rand)
+        .def("trunc", &NPerm<4>::trunc)
+        .def("trunc2", &NPerm<4>::trunc2)
+        .def("trunc3", &NPerm<4>::trunc3)
         .def("S4Index", S4Index_void)
-        .def("orderedS4Index", &NPerm4::orderedS4Index)
-        .def("orderedSnIndex", &NPerm4::orderedS4Index)
-        .def("extend", &NPerm4::extend<2>)
-        .def("extend", &NPerm4::extend<3>)
+        .def("orderedS4Index", &NPerm<4>::orderedS4Index)
+        .def("orderedSnIndex", &NPerm<4>::orderedS4Index)
+        .def("extend", &NPerm<4>::extend<2>)
+        .def("extend", &NPerm<4>::extend<3>)
         .def(NPerm4_contract<5>())
-        .def("__repr__", &NPerm4::str)
+        .def("__repr__", &NPerm<4>::str)
         .def(regina::python::add_output_basic())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
@@ -122,8 +122,8 @@ void addNPerm4() {
         .staticmethod("contract")
     ;
 
-    s.attr("nPerms") = NPerm4::nPerms;
-    s.attr("nPerms_1") = NPerm4::nPerms_1;
+    s.attr("nPerms") = NPerm<4>::nPerms;
+    s.attr("nPerms_1") = NPerm<4>::nPerms_1;
 
     s.attr("S4") = &NPerm4_S4_arr;
     s.attr("Sn") = &NPerm4_S4_arr;

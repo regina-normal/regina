@@ -99,13 +99,13 @@ class REGINA_API Isomorphism<3> : public detail::IsomorphismBase<3> {
          *
          * See facetPerm() for further information.
          */
-        NPerm4& facePerm(unsigned sourceTet);
+        NPerm<4>& facePerm(unsigned sourceTet);
         /**
          * A dimension-specific alias for facetPerm().
          *
          * See facetPerm() for further information.
          */
-        NPerm4 facePerm(unsigned sourceTet) const;
+        NPerm<4> facePerm(unsigned sourceTet) const;
 };
 
 /**
@@ -133,10 +133,10 @@ inline int Isomorphism<3>::tetImage(unsigned sourceTet) const {
     return simpImage_[sourceTet];
 }
 
-inline NPerm4& Isomorphism<3>::facePerm(unsigned sourceTet) {
+inline NPerm<4>& Isomorphism<3>::facePerm(unsigned sourceTet) {
     return facetPerm_[sourceTet];
 }
-inline NPerm4 Isomorphism<3>::facePerm(unsigned sourceTet) const {
+inline NPerm<4> Isomorphism<3>::facePerm(unsigned sourceTet) const {
     return facetPerm_[sourceTet];
 }
 

@@ -562,10 +562,10 @@
     for (i = 0; i < nTets; i++) {
         tet = self.packet->tetrahedron(i);
         for (whichPerm = 0; whichPerm < 24 ; ++whichPerm) {
-            if (regina::NPerm4::S4[whichPerm][0] > regina::NPerm4::S4[whichPerm][3])
+            if (regina::NPerm<4>::S4[whichPerm][0] > regina::NPerm<4>::S4[whichPerm][3])
                 continue;
             
-            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet, regina::NPerm4::S4[whichPerm]);
+            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet, regina::NPerm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
             if (! spiral->isCanonical(self.packet)) {
@@ -714,7 +714,7 @@
     }
 }
                  
-+ (NSString*)edgeStringForTet:(unsigned long)tetIndex roles:(const regina::NPerm4&)roles start:(int)startPreimage end:(int)endPreimage
++ (NSString*)edgeStringForTet:(unsigned long)tetIndex roles:(const regina::NPerm<4>&)roles start:(int)startPreimage end:(int)endPreimage
 {
     return [NSString stringWithFormat:@"%ld (%d%d)", tetIndex, roles[startPreimage], roles[endPreimage]];
 }

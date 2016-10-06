@@ -180,7 +180,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
     int face;
     unsigned long adjIndex;
     const NTetrahedron *tet, *adjTet;
-    NPerm4 map;
+    NPerm<4> map;
 
     for (i = 0; i < 2 * n; ++i)
         pent[i] = ans->newPentachoron();
@@ -228,7 +228,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
     int face;
     unsigned long adjIndex;
     const NTetrahedron *tet, *adjTet;
-    NPerm4 map;
+    NPerm<4> map;
     for (i = 0; i < n; ++i) {
         pent[i] = ans->newPentachoron();
 
@@ -368,7 +368,7 @@ namespace {
         /**
          * Glue the walls of two adjacent prisms together.
          */
-        void glueAdjacent(Prism& adj, unsigned face, const NPerm4& gluing) {
+        void glueAdjacent(Prism& adj, unsigned face, const NPerm<4>& gluing) {
             NPerm<5> gluing5 = NPerm<5>::extend(gluing);
             unsigned i, k, l;
             for (i = 0; i < 2; ++i) {
