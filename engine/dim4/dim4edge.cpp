@@ -112,7 +112,7 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
                     break; // Sets adjIndex to the right value.
 
             ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
-                NPerm3::contract(adj->triangleMapping(adjEdge).inverse() *
+                NPerm<3>::contract(adj->triangleMapping(adjEdge).inverse() *
                     adjGluing *
                     pent->triangleMapping(e)));
         }

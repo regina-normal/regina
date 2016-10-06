@@ -187,7 +187,7 @@ class REGINA_API NPerm<4> {
          *
          * Note that the permutations are not necessarily in
          * lexicographical order.  For the corresponding inverse array,
-         * see NPerm3::invS3.
+         * see NPerm<3>::invS3.
          */
         static const NPerm<4> S3[6];
 

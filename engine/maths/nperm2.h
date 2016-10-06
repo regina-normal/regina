@@ -62,13 +62,13 @@ namespace regina {
  * NPerm<n> template for this trivial case.
  *
  * As with all NPerm template classes, these objects are small enough to
- * pass about by value instead of by reference.  Moreover, NPerm2 in
+ * pass about by value instead of by reference.  Moreover, NPerm<2> in
  * particular is extremely fast to work with.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
- * objects to and from the engine.  For NPerm2, the internal code is 0 for
+ * objects to and from the engine.  For NPerm<2>, the internal code is 0 for
  * the identity permutation, or 1 for the (unique) non-identity permutation.
  *
  * \warning Every permutation class NPerm<n> provides a transposition
@@ -78,7 +78,7 @@ namespace regina {
  * <tt>NPerm<5>(a,b,c,d,e)</tt>.  For NPerm<2>, these two constructors would
  * be indistinguishable (since both would take two integer arguments).
  * Here NPerm<2> takes an approach that is consistent with the generic NPerm<n>
- * class: <tt>NPerm2(a,b)</tt> is interpreted as the \e transposition of
+ * class: <tt>NPerm<2>(a,b)</tt> is interpreted as the \e transposition of
  * \a a and \a b.  In particular, <tt>NPerm(0,1)</tt> is \e not the
  * identity permutation.
  *
@@ -529,7 +529,10 @@ class REGINA_API NPerm<2> {
 };
 
 /**
- * A convenience typedef for NPerm<2>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NPerm2 has now been renamed to Perm<2>.
  */
 typedef NPerm<2> NPerm2;
 

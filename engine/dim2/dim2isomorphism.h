@@ -102,14 +102,14 @@ class REGINA_API Isomorphism<2> : public detail::IsomorphismBase<2> {
          *
          * See facetPerm() for further information.
          */
-        NPerm3& edgePerm(unsigned sourceTriangle);
+        NPerm<3>& edgePerm(unsigned sourceTriangle);
 
         /**
          * A dimension-specific alias for facetPerm().
          *
          * See facetPerm() for further information.
          */
-        NPerm3 edgePerm(unsigned sourceTriangle) const;
+        NPerm<3> edgePerm(unsigned sourceTriangle) const;
 };
 
 /**
@@ -137,10 +137,10 @@ inline int Isomorphism<2>::triImage(unsigned sourceTriangle) const {
     return simpImage_[sourceTriangle];
 }
 
-inline NPerm3& Isomorphism<2>::edgePerm(unsigned sourceTriangle) {
+inline NPerm<3>& Isomorphism<2>::edgePerm(unsigned sourceTriangle) {
     return facetPerm_[sourceTriangle];
 }
-inline NPerm3 Isomorphism<2>::edgePerm(unsigned sourceTriangle) const {
+inline NPerm<3> Isomorphism<2>::edgePerm(unsigned sourceTriangle) const {
     return facetPerm_[sourceTriangle];
 }
 

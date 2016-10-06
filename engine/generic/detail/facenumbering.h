@@ -495,7 +495,7 @@ class REGINA_API FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<2> ordering(unsigned face) {
-            return NPerm2::fromPermCode(face);
+            return NPerm<2>::fromPermCode(face);
         }
 
         static unsigned faceNumber(NPerm<2> vertices) {

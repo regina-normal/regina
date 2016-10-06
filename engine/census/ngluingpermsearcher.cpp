@@ -33,7 +33,6 @@
 #include <algorithm>
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
-#include "maths/nperm3.h" // for NPerm3::invS3
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
@@ -189,7 +188,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = NPerm3::invS3[permIndex(face)];
+        permIndex(adj) = NPerm<3>::invS3[permIndex(face)];
 
         // Is this going to lead to an unwanted triangulation?
         //

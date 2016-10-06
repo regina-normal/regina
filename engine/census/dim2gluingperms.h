@@ -56,7 +56,7 @@ namespace regina {
  * particular pairwise matching of triangle edges.  Given a
  * pairwise matching of edges (as described by class Dim2EdgePairing), each
  * edge that is matched with some other edge will have an associated
- * permutation of three elements (as described by class NPerm3).
+ * permutation of three elements (as described by class NPerm<3>).
  *
  * If an edge is matched with some other edge, the two associated
  * permutations in this set will be inverses.  If an edge is left

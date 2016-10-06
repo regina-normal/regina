@@ -89,7 +89,7 @@ template <>
 inline NPerm<3> NPerm<3>::contract(NPerm<4> p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
     NPerm4::Code c = p.permCode2();
-    return NPerm3::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
+    return NPerm<3>::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
 }
 
 template <>

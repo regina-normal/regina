@@ -595,9 +595,9 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
                 tri[1][2] == tri[0][0])
             return false;
         for (i = 0; i < 6; ++i)
-            if (tri[0][NPerm3::S3[i][0]] == tri[0][NPerm3::S3[i][1]] &&
-                    tri[1][NPerm3::S3[i][1]] == tri[1][NPerm3::S3[i][2]] &&
-                    tri[0][NPerm3::S3[i][2]] == tri[1][NPerm3::S3[i][0]])
+            if (tri[0][NPerm<3>::S3[i][0]] == tri[0][NPerm<3>::S3[i][1]] &&
+                    tri[1][NPerm<3>::S3[i][1]] == tri[1][NPerm<3>::S3[i][2]] &&
+                    tri[0][NPerm<3>::S3[i][2]] == tri[1][NPerm<3>::S3[i][0]])
                 return false;
         // Bounded loops not already covered by the earlier edge-based test:
         for (i = 0; i < 3; ++i) {
@@ -611,15 +611,15 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
                 return false;
         }
         for (i = 0; i < 6; ++i) {
-            if (tri[0][NPerm3::S3[i][0]]->isBoundary() &&
-                    tri[1][NPerm3::S3[i][0]] == tri[1][NPerm3::S3[i][1]] &&
-                    tri[0][NPerm3::S3[i][1]] == tri[1][NPerm3::S3[i][2]] &&
-                    tri[0][NPerm3::S3[i][2]]->isBoundary())
+            if (tri[0][NPerm<3>::S3[i][0]]->isBoundary() &&
+                    tri[1][NPerm<3>::S3[i][0]] == tri[1][NPerm<3>::S3[i][1]] &&
+                    tri[0][NPerm<3>::S3[i][1]] == tri[1][NPerm<3>::S3[i][2]] &&
+                    tri[0][NPerm<3>::S3[i][2]]->isBoundary())
                 return false;
-            if (tri[1][NPerm3::S3[i][0]]->isBoundary() &&
-                    tri[0][NPerm3::S3[i][0]] == tri[0][NPerm3::S3[i][1]] &&
-                    tri[1][NPerm3::S3[i][1]] == tri[0][NPerm3::S3[i][2]] &&
-                    tri[1][NPerm3::S3[i][2]]->isBoundary())
+            if (tri[1][NPerm<3>::S3[i][0]]->isBoundary() &&
+                    tri[0][NPerm<3>::S3[i][0]] == tri[0][NPerm<3>::S3[i][1]] &&
+                    tri[1][NPerm<3>::S3[i][1]] == tri[0][NPerm<3>::S3[i][2]] &&
+                    tri[1][NPerm<3>::S3[i][2]]->isBoundary())
                 return false;
         }
 

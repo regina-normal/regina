@@ -346,7 +346,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
                      root of the corresponding object tree; other
                      objects in the tree will have older values to
                      facilitate backtracking. */
-            NPerm3 twistUp;
+            NPerm<3> twistUp;
                 /**< The vertices of each pentachoron triangle can be labelled
                      (0,1,2) by running through the underlying pentachoron
                      vertices from smallest index to largest index.
@@ -853,7 +853,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findTriangleClass(int triID, NPerm3& twist) const;
+        int findTriangleClass(int triID, NPerm<3>& twist) const;
 
         /**
          * Merges the classes of pentachoron edges as required by the
@@ -1132,7 +1132,7 @@ inline int Dim4GluingPermSearcher::findTriangleClass(int triID) const {
     return triID;
 }
 
-inline int Dim4GluingPermSearcher::findTriangleClass(int triID, NPerm3& twist)
+inline int Dim4GluingPermSearcher::findTriangleClass(int triID, NPerm<3>& twist)
         const {
     for ( ; triState_[triID].parent >= 0; triID = triState_[triID].parent)
         twist = triState_[triID].twistUp * twist;

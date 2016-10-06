@@ -62,13 +62,13 @@ namespace regina {
  * simplices of a 2-manifold triangulation are glued together.
  *
  * As with all NPerm template classes, these objects are small enough to
- * pass about by value instead of by reference.  Moreover, NPerm3 in
+ * pass about by value instead of by reference.  Moreover, NPerm<3> in
  * particular is extremely fast to work with.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
- * objects to and from the engine.  For NPerm3, the internal code is an
+ * objects to and from the engine.  For NPerm<3>, the internal code is an
  * integer between 0 and 5 inclusive that gives the index of the
  * permutation in the array NPerm<3>::S3.
  *
@@ -626,7 +626,10 @@ class REGINA_API NPerm<3> {
 };
 
 /**
- * A convenience typedef for NPerm<3>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NPerm3 has now been renamed to Perm<3>.
  */
 typedef NPerm<3> NPerm3;
 

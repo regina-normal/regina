@@ -195,7 +195,7 @@ bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
         return false;
     if (bBounded != 1 && bBounded != 0)
         return false;
-    if (! NPerm3::isPermCode(static_cast<unsigned char>(twist)))
+    if (! NPerm<3>::isPermCode(static_cast<unsigned char>(twist)))
         return false;
     if (bRank != 1 && bRank != 0)
         return false;
@@ -1278,7 +1278,7 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
     v1 = facet.facet;
     w1 = p[v1];
 
-    NPerm3 directTwist;
+    NPerm<3> directTwist;
     for (v2 = 0; v2 < 5; ++v2) {
         if (v2 == v1)
             continue;
@@ -1297,25 +1297,25 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
                 Dim4Triangle::triangleVertex[f][0]) {
             if (p[Dim4Triangle::triangleVertex[e][1]] ==
                     Dim4Triangle::triangleVertex[f][1])
-                directTwist.setPermCode(NPerm3::code012);
+                directTwist.setPermCode(NPerm<3>::code012);
             else
-                directTwist.setPermCode(NPerm3::code021);
+                directTwist.setPermCode(NPerm<3>::code021);
         } else if (p[Dim4Triangle::triangleVertex[e][0]] ==
                 Dim4Triangle::triangleVertex[f][1]) {
             if (p[Dim4Triangle::triangleVertex[e][1]] ==
                     Dim4Triangle::triangleVertex[f][0])
-                directTwist.setPermCode(NPerm3::code102);
+                directTwist.setPermCode(NPerm<3>::code102);
             else
-                directTwist.setPermCode(NPerm3::code120);
+                directTwist.setPermCode(NPerm<3>::code120);
         } else {
             if (p[Dim4Triangle::triangleVertex[e][1]] ==
                     Dim4Triangle::triangleVertex[f][0])
-                directTwist.setPermCode(NPerm3::code201);
+                directTwist.setPermCode(NPerm<3>::code201);
             else
-                directTwist.setPermCode(NPerm3::code210);
+                directTwist.setPermCode(NPerm<3>::code210);
         }
 
-        NPerm3 eTwist, fTwist; /* Initialise to identity permutations. */
+        NPerm<3> eTwist, fTwist; /* Initialise to identity permutations. */
         eRep = findTriangleClass(e + 10 * facet.simp, eTwist);
         fRep = findTriangleClass(f + 10 * adj.simp, fTwist);
 

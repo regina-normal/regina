@@ -60,10 +60,10 @@ namespace regina { namespace detail {
         choose15, choose16
     };
 
-    const NPerm3 FaceNumberingImpl<2, 1, false>::ordering_[3] = {
-        NPerm3(1,2,0),
-        NPerm3(0,2,1),
-        NPerm3(0,1,2),
+    const NPerm<3> FaceNumberingImpl<2, 1, false>::ordering_[3] = {
+        NPerm<3>(1,2,0),
+        NPerm<3>(0,2,1),
+        NPerm<3>(0,1,2),
     };
 
     const NPerm4 FaceNumberingImpl<3, 1, true>::ordering_[6] = {

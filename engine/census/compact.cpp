@@ -32,7 +32,6 @@
 
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
-#include "maths/nperm3.h" // for NPerm3::invS3
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
@@ -328,7 +327,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = NPerm3::invS3[permIndex(face)];
+        permIndex(adj) = NPerm<3>::invS3[permIndex(face)];
 
         // Merge edge links and run corresponding tests.
         if (mergeEdgeClasses()) {

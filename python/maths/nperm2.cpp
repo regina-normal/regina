@@ -39,13 +39,13 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm2;
+using regina::NPerm<2>;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<NPerm2> NPerm2_S2_arr(NPerm2::S2, 2);
-    GlobalArray<unsigned> NPerm2_invS2_arr(NPerm2::invS2, 2);
-    GlobalArray<NPerm2> NPerm2_S1_arr(NPerm2::S1, 1);
+    GlobalArray<NPerm<2>> NPerm2_S2_arr(NPerm<2>::S2, 2);
+    GlobalArray<unsigned> NPerm2_invS2_arr(NPerm<2>::invS2, 2);
+    GlobalArray<NPerm<2>> NPerm2_S1_arr(NPerm<2>::S1, 1);
 
     template <int k>
     struct NPerm2_contract : boost::python::def_visitor<NPerm2_contract<k>> {
@@ -53,7 +53,7 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm2::contract<k>);
+            c.def("contract", &NPerm<2>::contract<k>);
             c.def(NPerm2_contract<k+1>());
         }
     };
@@ -65,36 +65,36 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm2::contract<16>);
+            c.def("contract", &NPerm<2>::contract<16>);
         }
     };
 }
 
 void addNPerm2() {
-    scope s = class_<NPerm2>("NPerm2")
+    scope s = class_<NPerm<2>>("NPerm2")
         .def(init<int, int>())
-        .def(init<const NPerm2&>())
-        .def("permCode", &NPerm2::permCode)
-        .def("setPermCode", &NPerm2::setPermCode)
-        .def("fromPermCode", &NPerm2::fromPermCode)
-        .def("isPermCode", &NPerm2::isPermCode)
+        .def(init<const NPerm<2>&>())
+        .def("permCode", &NPerm<2>::permCode)
+        .def("setPermCode", &NPerm<2>::setPermCode)
+        .def("fromPermCode", &NPerm<2>::fromPermCode)
+        .def("isPermCode", &NPerm<2>::isPermCode)
         .def(self * self)
-        .def("inverse", &NPerm2::inverse)
-        .def("reverse", &NPerm2::reverse)
-        .def("sign", &NPerm2::sign)
-        .def("__getitem__", &NPerm2::operator[])
-        .def("preImageOf", &NPerm2::preImageOf)
-        .def("compareWith", &NPerm2::compareWith)
-        .def("isIdentity", &NPerm2::isIdentity)
-        .def("atIndex", &NPerm2::atIndex)
-        .def("index", &NPerm2::index)
-        .def("rand", &NPerm2::rand)
-        .def("trunc", &NPerm2::trunc)
-        .def("S2Index", &NPerm2::S2Index)
-        .def("orderedS2Index", &NPerm2::orderedS2Index)
-        .def("orderedSnIndex", &NPerm2::orderedS2Index)
+        .def("inverse", &NPerm<2>::inverse)
+        .def("reverse", &NPerm<2>::reverse)
+        .def("sign", &NPerm<2>::sign)
+        .def("__getitem__", &NPerm<2>::operator[])
+        .def("preImageOf", &NPerm<2>::preImageOf)
+        .def("compareWith", &NPerm<2>::compareWith)
+        .def("isIdentity", &NPerm<2>::isIdentity)
+        .def("atIndex", &NPerm<2>::atIndex)
+        .def("index", &NPerm<2>::index)
+        .def("rand", &NPerm<2>::rand)
+        .def("trunc", &NPerm<2>::trunc)
+        .def("S2Index", &NPerm<2>::S2Index)
+        .def("orderedS2Index", &NPerm<2>::orderedS2Index)
+        .def("orderedSnIndex", &NPerm<2>::orderedS2Index)
         .def(NPerm2_contract<3>())
-        .def("__repr__", &NPerm2::str)
+        .def("__repr__", &NPerm<2>::str)
         .def(regina::python::add_output_basic())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
@@ -104,8 +104,8 @@ void addNPerm2() {
         .staticmethod("contract")
     ;
 
-    s.attr("nPerms") = NPerm2::nPerms;
-    s.attr("nPerms_1") = NPerm2::nPerms_1;
+    s.attr("nPerms") = NPerm<2>::nPerms;
+    s.attr("nPerms_1") = NPerm<2>::nPerms_1;
 
     s.attr("S2") = &NPerm2_S2_arr;
     s.attr("Sn") = &NPerm2_S2_arr;

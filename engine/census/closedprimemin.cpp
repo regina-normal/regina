@@ -33,7 +33,6 @@
 #include <boost/next_prior.hpp>
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
-#include "maths/nperm3.h" // for NPerm3::invS3
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
@@ -439,7 +438,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = NPerm3::invS3[permIndex(face)];
+        permIndex(adj) = NPerm<3>::invS3[permIndex(face)];
 
         // In the following code we use several results from
         // "Face pairing graphs and 3-manifold enumeration", B. A. Burton,
