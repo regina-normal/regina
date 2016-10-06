@@ -18,6 +18,7 @@ Version 5.1  [ (under development) ]
             + NEnumConstraintList becomes EnumConstraints.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
             + NNormalSurfaceList becomes NormalSurfaces.
+            + maths/nmatrixint.h is now merged into maths/matrix.h.
             + utilities/nbooleans.h becomes utilities/boolset.h.
             + Some internal classes do not have backward compatible headers or
               typedefs.  None of these internal classes are exposed to Python,
