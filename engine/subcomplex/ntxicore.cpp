@@ -59,9 +59,9 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
     // All bdryRoles permutations are identities.
     // No need to change them here.
 
-    bdryReln_[0] = NMatrix2(1, 0, 0, 1);
-    bdryReln_[1] = NMatrix2(-1, 0, 0, 1);
-    parallelReln_ = NMatrix2(1, size_ - 6, 0, 1);
+    bdryReln_[0] = Matrix2(1, 0, 0, 1);
+    bdryReln_[1] = Matrix2(-1, 0, 0, 1);
+    parallelReln_ = Matrix2(1, size_ - 6, 0, 1);
 
     // Off we go!
     unsigned i;
@@ -124,7 +124,7 @@ NTxIParallelCore::NTxIParallelCore() {
     // All bdryRoles permutations are identities.
     // No need to change them here.
 
-    bdryReln_[0] = bdryReln_[1] = parallelReln_ = NMatrix2(1, 0, 0, 1);
+    bdryReln_[0] = bdryReln_[1] = parallelReln_ = Matrix2(1, 0, 0, 1);
 
     // Off we go!
     // Just hard-code it.  It's only one triangulation, and it's highly

@@ -43,8 +43,8 @@ print g.str()
 print g.utf8()
 print g.detail()
 
-m = NMatrixInt(2, 2)
-n = NMatrixInt(2, 2)
+m = MatrixInt(2, 2)
+n = MatrixInt(2, 2)
 g = NMarkedAbelianGroup(m, n)
 print g
 print g.str()

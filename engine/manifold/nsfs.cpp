@@ -828,7 +828,7 @@ NAbelianGroup* NSFSpace::homology() const {
         // We ignore a_i and b_i, and just add extra rank 2g at the end.
         // Generators in the matrix are q_1, ..., q_r, h, z_1, ..., z_t,
         //                              y_1, ..., y_t.
-        NMatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
+        MatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
             nFibres_ + 1 + 2 * nRef);
 
         unsigned long which = 0;
@@ -870,7 +870,7 @@ NAbelianGroup* NSFSpace::homology() const {
         //
         // Generators in the matrix are q_1, ..., q_r, v_1, ..., v_g, h,
         //                              z_1, ..., z_t, y_1, ..., y_t.
-        NMatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
+        MatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
             nFibres_ + genus_ + 1 + 2 * nRef);
 
         unsigned long which = 0;

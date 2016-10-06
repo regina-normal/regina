@@ -738,7 +738,7 @@
                 regina::NEdge::edgeVertex[second][1]];
 }
 
-+ (NSString*)matrixString:(const regina::NMatrix2&)matrix
++ (NSString*)matrixString:(const regina::Matrix2&)matrix
 {
     return [NSString stringWithFormat:@"[ %ld %ld | %ld %ld ]",
             matrix[0][0], matrix[0][1], matrix[1][0], matrix[1][1]];

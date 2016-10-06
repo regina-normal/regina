@@ -73,7 +73,7 @@ NAbelianGroup* NGraphLoop::homology() const {
     if (sfs_->baseOrientable())
         genus *= 2;
 
-    NMatrixInt m(fibres + ref + 5, genus + fibres + 2 * ref + 5);
+    MatrixInt m(fibres + ref + 5, genus + fibres + 2 * ref + 5);
 
     unsigned long i, f;
     // The relation for the base orbifold:
@@ -164,11 +164,11 @@ void NGraphLoop::reduce() {
     // up to zero again.
     // TODO: For non-orientable manifolds, reflect()/reduce() may yield
     // better results.
-    NMatrix2 compMatch =
-        NMatrix2(1, 0, sfs_->fibreCount(), 1) *
-        NMatrix2(1, 0, 0, -1) *
+    Matrix2 compMatch =
+        Matrix2(1, 0, sfs_->fibreCount(), 1) *
+        Matrix2(1, 0, 0, -1) *
         matchingReln_ *
-        NMatrix2(1, 0, 0, -1);
+        Matrix2(1, 0, 0, -1);
     reduce(compMatch);
 
     if (simpler(compMatch, matchingReln_)) {
@@ -178,19 +178,19 @@ void NGraphLoop::reduce() {
     }
 }
 
-void NGraphLoop::reduce(NMatrix2& reln) {
+void NGraphLoop::reduce(Matrix2& reln) {
     // Reduce both the original and the inverse, and see who comes out
     // on top.
     reduceBasis(reln);
 
-    NMatrix2 inv = reln.inverse();
+    Matrix2 inv = reln.inverse();
     reduceBasis(inv);
 
     if (simpler(inv, reln))
         reln = inv;
 }
 
-void NGraphLoop::reduceBasis(NMatrix2& reln) {
+void NGraphLoop::reduceBasis(Matrix2& reln) {
     // Use (1,1) / (1,-1) pairs to make the top-left element of the
     // matrix as close to zero as possible.
     if (reln[0][1] != 0 && reln[0][0] != 0) {
@@ -218,7 +218,7 @@ void NGraphLoop::reduceBasis(NMatrix2& reln) {
         // If abs(0,0) is half abs(0,1) then we might do better with yet
         // another operation.  Check with simpler() in this case.
         if (labs(reln[0][0]) * 2 == labs(reln[0][1])) {
-            NMatrix2 alt = reln;
+            Matrix2 alt = reln;
 
             if ((alt[0][0] > 0 && alt[0][1] > 0) ||
                     (alt[0][0] < 0 && alt[0][1] < 0)) {

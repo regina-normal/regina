@@ -458,7 +458,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             return cell;
         case PROP_BDRY:
             if (! s->isCompact()) {
-                regina::NMatrixInt* slopes = s->boundaryIntersections();
+                regina::MatrixInt* slopes = s->boundaryIntersections();
                 if (slopes) {
                     NSMutableString* bdry = [NSMutableString stringWithString:@"Spun:"];
                     // Display each boundary slope as (nu(L), -nu(M)).

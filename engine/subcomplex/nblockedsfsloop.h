@@ -106,7 +106,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
     private:
         NSatRegion* region_;
             /**< The saturated region whose two torus boundaries are joined. */
-        NMatrix2 matchingReln_;
+        Matrix2 matchingReln_;
             /**< Specifies how the two boundary tori are joined, as described
                  in the class notes above. */
 
@@ -137,7 +137,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          * @return the matrix describing how the boundaries of the
          * region are joined.
          */
-        const NMatrix2& matchingReln() const;
+        const Matrix2& matchingReln() const;
 
         NManifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
@@ -170,7 +170,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          * @param matchingReln describes how the two boundaries of the
          * region are joined, as described in the class notes above.
          */
-        NBlockedSFSLoop(NSatRegion* region, const NMatrix2& matchingReln);
+        NBlockedSFSLoop(NSatRegion* region, const Matrix2& matchingReln);
 };
 
 /*@}*/
@@ -178,7 +178,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
 // Inline functions for NBlockedSFSLoop
 
 inline NBlockedSFSLoop::NBlockedSFSLoop(NSatRegion* region,
-        const NMatrix2& matchingReln) :
+        const Matrix2& matchingReln) :
         region_(region), matchingReln_(matchingReln) {
 }
 
@@ -186,7 +186,7 @@ inline const NSatRegion& NBlockedSFSLoop::region() const {
     return *region_;
 }
 
-inline const NMatrix2& NBlockedSFSLoop::matchingReln() const {
+inline const Matrix2& NBlockedSFSLoop::matchingReln() const {
     return matchingReln_;
 }
 

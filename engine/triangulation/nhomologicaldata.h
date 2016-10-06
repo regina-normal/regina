@@ -329,49 +329,49 @@ private:
 
     /** 0th term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<NMatrixInt> A0;
+    std::unique_ptr<MatrixInt> A0;
     /** 1st term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<NMatrixInt> A1;
+    std::unique_ptr<MatrixInt> A1;
     /** 2nd term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<NMatrixInt> A2;
+    std::unique_ptr<MatrixInt> A2;
     /** 3rd term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<NMatrixInt> A3;
+    std::unique_ptr<MatrixInt> A3;
     /** 4th term in chain complex for cellular homology, using standard
         CW-complex struc */
-    std::unique_ptr<NMatrixInt> A4;
+    std::unique_ptr<MatrixInt> A4;
 
     /** 0-th term in chain complex for dual cellular homology */
-    std::unique_ptr<NMatrixInt> B0_; // B0 is #defined in some system headers :/
+    std::unique_ptr<MatrixInt> B0_; // B0 is #defined in some system headers :/
     /** 1st term in chain complex for dual cellular homology */
-    std::unique_ptr<NMatrixInt> B1;
+    std::unique_ptr<MatrixInt> B1;
     /** 2nd term in chain complex for dual cellular homology */
-    std::unique_ptr<NMatrixInt> B2;
+    std::unique_ptr<MatrixInt> B2;
     /** 3rd term in chain complex for dual cellular homology */
-    std::unique_ptr<NMatrixInt> B3;
+    std::unique_ptr<MatrixInt> B3;
     /** 4th term in chain complex for dual cellular homology */
-    std::unique_ptr<NMatrixInt> B4;
+    std::unique_ptr<MatrixInt> B4;
 
     /** 0th term in chain complex for boundary cellular homology */
-    std::unique_ptr<NMatrixInt> Bd0;
+    std::unique_ptr<MatrixInt> Bd0;
     /** 1st term in chain complex for boundary cellular homology */
-    std::unique_ptr<NMatrixInt> Bd1;
+    std::unique_ptr<MatrixInt> Bd1;
     /** 2nd term in chain complex for boundary cellular homology */
-    std::unique_ptr<NMatrixInt> Bd2;
+    std::unique_ptr<MatrixInt> Bd2;
     /** 3rd term in chain complex for boundary cellular homology */
-    std::unique_ptr<NMatrixInt> Bd3;
+    std::unique_ptr<MatrixInt> Bd3;
 
     /** Chain map from C_0 boundary to C_0 manifold, standard coords */
-    std::unique_ptr<NMatrixInt> B0Incl;
+    std::unique_ptr<MatrixInt> B0Incl;
     /** Chain map from C_1 boundary to C_1 manifold, standard coords */
-    std::unique_ptr<NMatrixInt> B1Incl;
+    std::unique_ptr<MatrixInt> B1Incl;
     /** Chain map from C_2 boundary to C_2 manifold, standard coords */
-    std::unique_ptr<NMatrixInt> B2Incl;
+    std::unique_ptr<MatrixInt> B2Incl;
 
     /** Isomorphism from C_1 dual to C_1 standard */
-    std::unique_ptr<NMatrixInt> H1map;
+    std::unique_ptr<MatrixInt> H1map;
 
     /** Call this routine to demand the indexing of the chain complexes. */
     void computeccIndexing();
@@ -417,7 +417,7 @@ private:
         h1PrimePowerDecomp;
     /** p-primary decomposition of the torsion linking form as needed to
      ** construct the Kawauchi-Kojima invariants. */
-    std::vector< NMatrixRing<Rational>* > linkingFormPD;
+    std::vector< MatrixRing<Rational>* > linkingFormPD;
 
     /** True if torsion linking form is `hyperbolic'.   */
     bool torsionLinkingFormIsHyperbolic;
@@ -847,7 +847,7 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
         h1PrimePowerDecomp = g.h1PrimePowerDecomp;
         linkingFormPD.resize( g.linkingFormPD.size(), 0 );
         for (unsigned long i=0; i<linkingFormPD.size(); i++)
-            linkingFormPD[i] = new NMatrixRing<Rational> (*g.linkingFormPD[i]);
+            linkingFormPD[i] = new MatrixRing<Rational> (*g.linkingFormPD[i]);
         torsionLinkingFormIsHyperbolic = g.torsionLinkingFormIsHyperbolic;
         torsionLinkingFormIsSplit = g.torsionLinkingFormIsSplit;
         torsionLinkingFormSatisfiesKKtwoTorCondition =

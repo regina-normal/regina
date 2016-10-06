@@ -40,19 +40,19 @@ namespace regina {
      * matrix.  This allows us to write m[i][j] in Python for a 2-by-2
      * matrix m.
      */
-    class NMatrix2Row {
+    class Matrix2Row {
         private:
             long* row;
 
         public:
-            NMatrix2Row(NMatrix2& matrix, int whichRow) :
+            Matrix2Row(Matrix2& matrix, int whichRow) :
                     row(matrix[whichRow]) {
             }
 
             long getItem(int whichCol) {
                 if (whichCol < 0 || whichCol > 1) {
                     PyErr_SetString(PyExc_IndexError,
-                        "NMatrix2 column index out of range");
+                        "Matrix2 column index out of range");
                     ::boost::python::throw_error_already_set();
                 }
                 return row[whichCol];
@@ -61,17 +61,17 @@ namespace regina {
             void setItem(int whichCol, long value) {
                 if (whichCol < 0 || whichCol > 1) {
                     PyErr_SetString(PyExc_IndexError,
-                        "NMatrix2 column index out of range");
+                        "Matrix2 column index out of range");
                     ::boost::python::throw_error_already_set();
                 }
                 row[whichCol] = value;
             }
 
-            bool operator == (const NMatrix2Row& other) const {
+            bool operator == (const Matrix2Row& other) const {
                 return (row[0] == other.row[0] && row[1] == other.row[1]);
             }
 
-            bool operator != (const NMatrix2Row& other) const {
+            bool operator != (const Matrix2Row& other) const {
                 return (row[0] != other.row[0] || row[1] != other.row[1]);
             }
     };
@@ -89,62 +89,65 @@ namespace {
     /**
      * Return a new object for accessing the given row of the given matrix.
      */
-    regina::NMatrix2Row* NMatrix2_getRow(regina::NMatrix2& m, int whichRow) {
+    regina::Matrix2Row* Matrix2_getRow(regina::Matrix2& m, int whichRow) {
         if (whichRow < 0 || whichRow > 1) {
             PyErr_SetString(PyExc_IndexError,
-                "NMatrix2 row index out of range");
+                "Matrix2 row index out of range");
             ::boost::python::throw_error_already_set();
         }
-        return new regina::NMatrix2Row(m, whichRow);
+        return new regina::Matrix2Row(m, whichRow);
     }
 }
 
 using namespace boost::python;
-using regina::NMatrix2;
-using regina::NMatrix2Row;
+using regina::Matrix2;
+using regina::Matrix2Row;
 
 namespace {
-    bool (*simpler1)(const NMatrix2&, const NMatrix2&) = &regina::simpler;
-    bool (*simpler2)(const NMatrix2&, const NMatrix2&,
-        const NMatrix2&, const NMatrix2&) = &regina::simpler;
+    bool (*simpler1)(const Matrix2&, const Matrix2&) = &regina::simpler;
+    bool (*simpler2)(const Matrix2&, const Matrix2&,
+        const Matrix2&, const Matrix2&) = &regina::simpler;
 }
 
-void addNMatrix2() {
-    class_<NMatrix2Row>("NMatrix2Row", ::boost::python::no_init)
-        .def("__getitem__", &NMatrix2Row::getItem)
-        .def("__setitem__", &NMatrix2Row::setItem)
-        .def("__len__", size2<NMatrix2Row>)
+void addMatrix2() {
+    class_<Matrix2Row>("Matrix2Row", ::boost::python::no_init)
+        .def("__getitem__", &Matrix2Row::getItem)
+        .def("__setitem__", &Matrix2Row::setItem)
+        .def("__len__", size2<Matrix2Row>)
         .def(regina::python::add_eq_operators())
         ;
 
-    class_<NMatrix2>("NMatrix2")
-        .def(init<const NMatrix2&>())
+    class_<Matrix2>("Matrix2")
+        .def(init<const Matrix2&>())
         .def(init<long, long, long, long>())
-        .def("__getitem__", NMatrix2_getRow,
+        .def("__getitem__", Matrix2_getRow,
             return_value_policy<manage_new_object,
             with_custodian_and_ward_postcall<0, 1> >())
-        .def("__len__", &size2<regina::NMatrix2>)
+        .def("__len__", &size2<regina::Matrix2>)
         .def(self * self)
         .def(self * long())
         .def(self + self)
         .def(self - self)
         .def(- self)
-        .def("transpose", &NMatrix2::transpose)
-        .def("inverse", &NMatrix2::inverse)
+        .def("transpose", &Matrix2::transpose)
+        .def("inverse", &Matrix2::inverse)
         .def(self += self)
         .def(self -= self)
         .def(self *= self)
         .def(self *= long())
-        .def("negate", &NMatrix2::negate)
-        .def("invert", &NMatrix2::invert)
-        .def("determinant", &NMatrix2::determinant)
-        .def("isIdentity", &NMatrix2::isIdentity)
-        .def("isZero", &NMatrix2::isZero)
+        .def("negate", &Matrix2::negate)
+        .def("invert", &Matrix2::invert)
+        .def("determinant", &Matrix2::determinant)
+        .def("isIdentity", &Matrix2::isIdentity)
+        .def("isZero", &Matrix2::isZero)
         .def(self_ns::str(self))
         .def(regina::python::add_eq_operators())
     ;
 
     def("simpler", simpler1);
     def("simpler", simpler2);
+
+    scope().attr("NMatrix2Row") = scope().attr("Matrix2Row");
+    scope().attr("NMatrix2") = scope().attr("Matrix2");
 }
 

@@ -47,7 +47,7 @@ typedef std::vector<AngleStructure*>::const_iterator StructureIteratorConst;
 void AngleStructures::enumerateInternal(NTriangulation* triang,
         ProgressTracker* tracker) {
     // Form the matching equations.
-    NMatrixInt* eqns = AngleStructureVector::makeAngleEquations(triang);
+    MatrixInt* eqns = AngleStructureVector::makeAngleEquations(triang);
 
     if (tautOnly_ && (! triang->isEmpty())) {
         // For now just stick to arbitrary precision arithmetic.
@@ -111,7 +111,7 @@ AngleStructures* AngleStructures::enumerateTautDD(
     AngleStructures* ans = new AngleStructures(true /* taut only */);
 
     // Form the matching equations.
-    NMatrixInt* eqns = AngleStructureVector::makeAngleEquations(owner);
+    MatrixInt* eqns = AngleStructureVector::makeAngleEquations(owner);
 
     // Form the taut constraints.
     EnumConstraints* constraints = new EnumConstraints(owner->size());

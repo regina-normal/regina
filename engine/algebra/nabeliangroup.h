@@ -47,8 +47,8 @@
 
 namespace regina {
 
-template <typename> class NMatrixIntDomain;
-typedef NMatrixIntDomain<Integer> NMatrixInt;
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 /**
  * \addtogroup algebra Algebraic Structures
@@ -105,7 +105,7 @@ class REGINA_API NAbelianGroup :
          *
          * @author Ryan Budney
          */
-        NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
+        NAbelianGroup(const MatrixInt& M, const MatrixInt& N);
         /**
          * Creates an abelian group as the homology of a chain complex,
          * using mod-\a p coefficients.
@@ -120,11 +120,11 @@ class REGINA_API NAbelianGroup :
          * @param p the modulus, which may be any Integer.
          * Zero is interpreted as a request for integer coefficents,
          * which will give the same result as the
-         * NAbelianGroup(const NMatrixInt&, const NMatrixInt&) constructor.
+         * NAbelianGroup(const MatrixInt&, const MatrixInt&) constructor.
          *
          * @author Ryan Budney
          */
-        NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
+        NAbelianGroup(const MatrixInt& M, const MatrixInt& N,
             const Integer &p);
 
         /**
@@ -206,7 +206,7 @@ class REGINA_API NAbelianGroup :
          * added to this group, where each column represents a generator
          * and each row a relation.
          */
-        void addGroup(const NMatrixInt& presentation);
+        void addGroup(const MatrixInt& presentation);
         /**
          * Adds the given abelian group to this group.
          * Note that this routine might be slow since calculating the
@@ -368,7 +368,7 @@ class REGINA_API NAbelianGroup :
          * where each column represents a generator
          * and each row a relation.
          */
-        void replaceTorsion(const NMatrixInt& matrix);
+        void replaceTorsion(const MatrixInt& matrix);
 };
 
 /*@}*/

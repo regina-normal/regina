@@ -57,7 +57,7 @@ class MatchingModel : public QAbstractItemModel {
         /**
          * Details of the matching equations being displayed
          */
-        std::unique_ptr<regina::NMatrixInt> eqns_;
+        std::unique_ptr<regina::MatrixInt> eqns_;
         regina::NormalSurfaces* surfaces_;
 
     public:

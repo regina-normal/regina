@@ -54,7 +54,7 @@ void NAbelianGroup::addTorsionElement(const Integer& degree,
 
     // Build a presentation matrix for the torsion.
     size_t len = invariantFactors.size() + mult;
-    NMatrixInt a(len, len);
+    MatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
     unsigned i=0;
@@ -79,7 +79,7 @@ void NAbelianGroup::addTorsionElements(const std::multiset<Integer>&
         torsion) {
     // Build a presentation matrix for the torsion.
     size_t len = invariantFactors.size() + torsion.size();
-    NMatrixInt a(len, len);
+    MatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
     unsigned i=0;
@@ -100,10 +100,10 @@ void NAbelianGroup::addTorsionElements(const std::multiset<Integer>&
     replaceTorsion(a);
 }
 
-void NAbelianGroup::addGroup(const NMatrixInt& presentation) {
+void NAbelianGroup::addGroup(const MatrixInt& presentation) {
     // Prepare to calculate invariant factors.
     size_t len = invariantFactors.size();
-    NMatrixInt a(len + presentation.rows(), len + presentation.columns());
+    MatrixInt a(len + presentation.rows(), len + presentation.columns());
 
     // Fill in the complete presentation matrix.
     // Fill the bottom half of the matrix with the presentation.
@@ -139,7 +139,7 @@ void NAbelianGroup::addGroup(const NAbelianGroup& group) {
 
     // We will have to calculate the invariant factors ourselves.
     size_t len = invariantFactors.size() + group.invariantFactors.size();
-    NMatrixInt a(len, len);
+    MatrixInt a(len, len);
 
     // Put our own invariant factors in the top.
     unsigned i = 0;
@@ -221,7 +221,7 @@ void NAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
         out << '0';
 }
 
-void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
+void NAbelianGroup::replaceTorsion(const MatrixInt& matrix) {
     // Delete any preexisting torsion.
     invariantFactors.clear();
 
@@ -257,9 +257,9 @@ void NAbelianGroup::writeXMLData(std::ostream& out) const {
 }
 
 // ---N--> CC --M-->  ie: M*N = 0.
-NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) {
+NAbelianGroup::NAbelianGroup(const MatrixInt& M, const MatrixInt& N) {
     rank_ = N.rows();
-    NMatrixInt tempN(N);
+    MatrixInt tempN(N);
     metricalSmithNormalForm(tempN);
     unsigned long lim =
         (tempN.rows() < tempN.columns() ? tempN.rows() : tempN.columns() );
@@ -273,7 +273,7 @@ NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) {
     }
     addTorsionElements(torsion);
 
-    NMatrixInt tempM(M);
+    MatrixInt tempM(M);
     metricalSmithNormalForm(tempM);
     lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns());
     for (unsigned long i=0; i<lim; ++i) {
@@ -282,12 +282,12 @@ NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) {
     }
 }
 
-NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
+NAbelianGroup::NAbelianGroup(const MatrixInt& M, const MatrixInt& N,
         const Integer &p) {
     Integer cof(p.abs());
     rank_ = N.rows();
 
-    NMatrixInt tempN(N);
+    MatrixInt tempN(N);
     metricalSmithNormalForm(tempN);
     unsigned long lim =
         (tempN.rows() < tempN.columns() ? tempN.rows() : tempN.columns() );
@@ -310,7 +310,7 @@ NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
             }
     }
 
-    NMatrixInt tempM(M);
+    MatrixInt tempM(M);
     metricalSmithNormalForm(tempM);
     lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns() );
     for (unsigned long i=0; i<lim; i++) {

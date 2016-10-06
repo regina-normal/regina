@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NMatrix2;
+class Matrix2;
 
 template <int> class Isomorphism;
 template <int> class Simplex;
@@ -366,7 +366,7 @@ struct REGINA_API NSatAnnulus {
      * @return \c true if this and the given annulus are found to be
      * joined, or \c false if they are not.
      */
-    bool isJoined(const NSatAnnulus& other, NMatrix2& matching) const;
+    bool isJoined(const NSatAnnulus& other, Matrix2& matching) const;
 
     /**
      * Determines whether this annulus has its boundaries identified to

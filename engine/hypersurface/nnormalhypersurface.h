@@ -62,8 +62,8 @@ namespace regina {
 class EnumConstraints;
 class NXMLNormalHypersurfaceReader;
 
-template <typename> class NMatrixIntDomain;
-typedef NMatrixIntDomain<Integer> NMatrixInt;
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 template <int, int> class Face;
@@ -181,7 +181,7 @@ struct HyperInfo;
  *   your implementation must compute the appropriate sum.</li>
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const Dim4Triangulation*)</tt>,
- *   <tt>NMatrixInt* makeMatchingEquations(const Dim4Triangulation*)</tt> and
+ *   <tt>MatrixInt* makeMatchingEquations(const Dim4Triangulation*)</tt> and
  *   makeEmbeddedConstraints(const Dim4Triangulation*) must be
  *   declared and implemented.</li>
  * </ul>
@@ -362,7 +362,7 @@ class REGINA_API NNormalHypersurfaceVector : public Ray {
          * @return a newly allocated set of matching equations.
          */
         #ifdef __DOXYGEN
-            static NMatrixInt* makeMatchingEquations(
+            static MatrixInt* makeMatchingEquations(
                 const Dim4Triangulation* triangulation);
         #endif
         /**

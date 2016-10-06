@@ -68,12 +68,12 @@ namespace regina {
  *
  * @param matrix the matrix to transform.
  */
-REGINA_API void smithNormalForm(NMatrixInt& matrix);
+REGINA_API void smithNormalForm(MatrixInt& matrix);
 
 /**
  * A Smith normal form algorithm that also returns change of basis matrices.
  *
- * This is a modification of the one-argument smithNormalForm(NMatrixInt&).
+ * This is a modification of the one-argument smithNormalForm(MatrixInt&).
  * As well as converting the given matrix \a matrix into Smith normal form,
  * it also returns the appropriate change-of-basis matrices corresponding
  * to all the row and column operations that were performed.
@@ -112,9 +112,9 @@ REGINA_API void smithNormalForm(NMatrixInt& matrix);
  *
  * \author Ryan Budney
  */
-REGINA_API void smithNormalForm(NMatrixInt& matrix,
-        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
-        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv);
+REGINA_API void smithNormalForm(MatrixInt& matrix,
+        MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
+        MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv);
 
 /**
  * An alternative Smith normal form algorithm that also returns change of
@@ -158,9 +158,9 @@ REGINA_API void smithNormalForm(NMatrixInt& matrix,
  *
  * \author Ryan Budney
  */
-REGINA_API void metricalSmithNormalForm(NMatrixInt& matrix,
-        NMatrixInt *rowSpaceBasis=0, NMatrixInt *rowSpaceBasisInv=0,
-        NMatrixInt *colSpaceBasis=0, NMatrixInt *colSpaceBasisInv=0);
+REGINA_API void metricalSmithNormalForm(MatrixInt& matrix,
+        MatrixInt *rowSpaceBasis=0, MatrixInt *rowSpaceBasisInv=0,
+        MatrixInt *colSpaceBasis=0, MatrixInt *colSpaceBasisInv=0);
 
 /**
  * Find a basis for the row space of the given matrix.
@@ -178,7 +178,7 @@ REGINA_API void metricalSmithNormalForm(NMatrixInt& matrix,
  * @param matrix the matrix to examine and rearrange.
  * @return the rank of the given matrix.
  */
-REGINA_API unsigned rowBasis(NMatrixInt& matrix);
+REGINA_API unsigned rowBasis(MatrixInt& matrix);
 
 /**
  * Finds a basis for the row space of the given matrix, as well as an
@@ -215,8 +215,8 @@ REGINA_API unsigned rowBasis(NMatrixInt& matrix);
  * "incremental" basis for the orthogonal complement of \a input.
  * @return the rank of the given matrix \a input.
  */
-REGINA_API unsigned rowBasisAndOrthComp(NMatrixInt& input,
-    NMatrixInt& complement);
+REGINA_API unsigned rowBasisAndOrthComp(MatrixInt& input,
+    MatrixInt& complement);
 
 /**
  * Transforms a given matrix into column echelon form with respect to a
@@ -272,7 +272,7 @@ REGINA_API unsigned rowBasisAndOrthComp(NMatrixInt& input,
  *
  * \author Ryan Budney
  */
-REGINA_API void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
+REGINA_API void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<unsigned> &rowList);
 
 /**
@@ -304,7 +304,7 @@ REGINA_API void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  *
  * \author Ryan Budney
  */
-REGINA_API std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
+REGINA_API std::unique_ptr<MatrixInt> preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& sublattice);
 
 /**
@@ -333,8 +333,8 @@ REGINA_API std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
  *
  * \author Ryan Budney
  */
-REGINA_API std::unique_ptr<NMatrixInt> torsionAutInverse(
-    const NMatrixInt& input, const std::vector<Integer> &invF);
+REGINA_API std::unique_ptr<MatrixInt> torsionAutInverse(
+    const MatrixInt& input, const std::vector<Integer> &invF);
 
 /*@}*/
 

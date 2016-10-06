@@ -211,7 +211,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
 template <typename Coords>
 void NormalSurfaces::Enumerator::fillVertexDD() {
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
+    MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
@@ -247,7 +247,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // The matching equation matrix that will be used by the tree traversal
     // tableaux, which is always based on NS_STANDARD or NSQUAD (even
     // for almost normal surfaces):
-    NMatrixInt* eqns;
+    MatrixInt* eqns;
 
     // The maximum number of columns in the tableaux that could be added
     // to form the right hand side, as a consequence of either
@@ -431,7 +431,7 @@ void NormalSurfaces::Enumerator::fillFundamentalDual() {
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
+    MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
@@ -451,7 +451,7 @@ void NormalSurfaces::Enumerator::fillFundamentalCD() {
         tracker_->newStage(
             "Enumerating Hilbert basis\n(Contejean-Devie method)");
 
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
+    MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
@@ -511,7 +511,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         tracker_->newStage(
             "Enumerating Hilbert basis of full cone", 0.8);
 
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
+    MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     unsigned rank = rowBasis(*eqns);
     unsigned long dim = eqns->columns();

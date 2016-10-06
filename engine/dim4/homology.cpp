@@ -64,7 +64,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH1() const {
         + static_cast<long>(countComponents());
     long nRels = static_cast<long>(countTriangles()) - nBdryTriangles;
 
-    NMatrixInt pres(nRels, nGens);
+    MatrixInt pres(nRels, nGens);
 
     // Find out which tetrahedron corresponds to which generator.
     long* genIndex = new long[countTetrahedra()];
@@ -169,7 +169,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     //
     // Rows: Internal dual polyhedra
     // Cols: Internal dual triangles
-    NMatrixInt bdry32(nEdgesInternal, nTrianglesInternal);
+    MatrixInt bdry32(nEdgesInternal, nTrianglesInternal);
 
     // Build the boundary map, one dual triangle at a time.
     col = 0;
@@ -211,7 +211,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     //
     // Rows: Internal dual 2-faces
     // Cols: Internal dual edges
-    NMatrixInt bdry21(nTrianglesInternal, nTetrahedraInternal);
+    MatrixInt bdry21(nTrianglesInternal, nTetrahedraInternal);
 
     // Build the boundary map, one dual edge at a time.
     col = 0;

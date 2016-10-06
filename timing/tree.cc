@@ -69,7 +69,7 @@ bool writeTypesAndVerify(
     */
 
     NNormalSurface* s = tree.buildSurface();
-    if (! tree.verify(s, static_cast<const NMatrixInt*>(eqns)))
+    if (! tree.verify(s, static_cast<const MatrixInt*>(eqns)))
         std::cout << "ERROR: Verification failed." << std::endl;
 
     return true;
@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
                     std::cerr << "ERROR: Constraints broken." << std::endl;
                 else {
                     // Build the matching equations for sanity checking.
-                    NMatrixInt* eqns = regina::makeMatchingEquations(t, coords);
+                    MatrixInt* eqns = regina::makeMatchingEquations(t, coords);
 
                     search.run(&writeTypesAndVerify<LPConstraintNone,
                         BanNone>, eqns);

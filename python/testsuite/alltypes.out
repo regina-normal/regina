@@ -1164,13 +1164,13 @@ Equality type : BY_REFERENCE
 NMarkedAbelianGroup : class
 Equality type : BY_REFERENCE
 
-NMatrix2 : class
+Matrix2 : class
 Equality type : BY_VALUE
 
-NMatrix2Row : class
+Matrix2Row : class
 Equality type : BY_VALUE
 
-NMatrixInt : class
+MatrixInt : class
 Equality type : BY_VALUE
 
 NNormalHypersurface : class

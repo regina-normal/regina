@@ -35,17 +35,17 @@
 
 namespace regina {
 
-NMatrix2 NMatrix2::inverse() const {
+Matrix2 Matrix2::inverse() const {
     long det = data[0][0] * data[1][1] - data[0][1] * data[1][0];
     if (det == 1)
-        return NMatrix2(data[1][1], -data[0][1], -data[1][0], data[0][0]);
+        return Matrix2(data[1][1], -data[0][1], -data[1][0], data[0][0]);
     else if (det == -1)
-        return NMatrix2(-data[1][1], data[0][1], data[1][0], -data[0][0]);
+        return Matrix2(-data[1][1], data[0][1], data[1][0], -data[0][0]);
     else
-        return NMatrix2();
+        return Matrix2();
 }
 
-NMatrix2& NMatrix2::operator *= (const NMatrix2& other) {
+Matrix2& Matrix2::operator *= (const Matrix2& other) {
     long tmp00 = data[0][0] * other.data[0][0] + data[0][1] * other.data[1][0];
     long tmp01 = data[0][0] * other.data[0][1] + data[0][1] * other.data[1][1];
     long tmp10 = data[1][0] * other.data[0][0] + data[1][1] * other.data[1][0];
@@ -59,7 +59,7 @@ NMatrix2& NMatrix2::operator *= (const NMatrix2& other) {
     return *this;
 }
 
-bool NMatrix2::invert() {
+bool Matrix2::invert() {
     long det = data[0][0] * data[1][1] - data[0][1] * data[1][0];
     if (det == 1) {
         long tmp = data[0][0];
@@ -77,7 +77,7 @@ bool NMatrix2::invert() {
         return false;
 }
 
-bool simpler(const NMatrix2& m1, const NMatrix2& m2) {
+bool simpler(const Matrix2& m1, const Matrix2& m2) {
     long maxAbs1 = 0, maxAbs2 = 0;
     unsigned nZeroes1 = 0, nZeroes2 = 0;
     unsigned nNeg1 = 0, nNeg2 = 0;
@@ -131,8 +131,8 @@ bool simpler(const NMatrix2& m1, const NMatrix2& m2) {
     return false;
 }
 
-bool simpler(const NMatrix2& pair1first, const NMatrix2& pair1second,
-        const NMatrix2& pair2first, const NMatrix2& pair2second) {
+bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
+        const Matrix2& pair2first, const Matrix2& pair2second) {
     long maxAbs0 = 0, maxAbs1 = 0;
     unsigned nZeroes0 = 0, nZeroes1 = 0;
     unsigned nNeg0 = 0, nNeg1 = 0;

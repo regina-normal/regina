@@ -404,7 +404,7 @@ class REGINA_API AngleStructures : public Packet {
  * equations will be based.
  * @return a newly allocated set of equations.
  */
-REGINA_API NMatrixInt* makeAngleEquations(const NTriangulation* tri);
+REGINA_API MatrixInt* makeAngleEquations(const NTriangulation* tri);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -508,7 +508,7 @@ inline AngleStructures::StructureInserter&
     return *this;
 }
 
-inline NMatrixInt* makeAngleEquations(const NTriangulation* tri) {
+inline MatrixInt* makeAngleEquations(const NTriangulation* tri) {
     return AngleStructureVector::makeAngleEquations(tri);
 }
 

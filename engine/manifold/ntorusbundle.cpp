@@ -37,7 +37,7 @@
 namespace regina {
 
 NAbelianGroup* NTorusBundle::homology() const {
-    NMatrixInt relns(2, 2);
+    MatrixInt relns(2, 2);
 
     relns.entry(0, 0) = monodromy_[0][0] - 1;
     relns.entry(0, 1) = monodromy_[0][1];
@@ -231,8 +231,8 @@ void NTorusBundle::reduce() {
     // Run through a cycle of equivalent matrices, and choose the nicest.
     // I'm pretty sure I can prove that this is a cycle, but the proof
     // really should be written down.
-    NMatrix2 start = monodromy_;
-    NMatrix2 best = monodromy_;
+    Matrix2 start = monodromy_;
+    Matrix2 best = monodromy_;
     while (1) {
         // INV: monodromy has all non-negative entries.
         // INV: best contains the best seen matrix, including the current one.
@@ -311,7 +311,7 @@ void NTorusBundle::reduce() {
         monodromy_.negate();
 }
 
-bool NTorusBundle::simplerNonNeg(const NMatrix2& m1, const NMatrix2& m2) {
+bool NTorusBundle::simplerNonNeg(const Matrix2& m1, const Matrix2& m2) {
     // Value symmetric matrices above all else.
     if (m1[0][1] == m1[1][0] && m2[0][1] != m2[1][0])
         return true;

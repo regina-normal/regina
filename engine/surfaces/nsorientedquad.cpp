@@ -47,7 +47,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeZeroVector(
         6 * triangulation->size());
 }
 
-NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
+MatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
         const NTriangulation* triangulation) {
     size_t nCoords = 6 * triangulation->size();
     // Two equation per non-boundary edge.
@@ -57,7 +57,7 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
             bit != triangulation->boundaryComponents().end(); bit++)
         nEquations -= 2*(*bit)->countEdges();
 
-    NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
+    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
     size_t row = 0;
 
     // Run through each internal edge and add the corresponding

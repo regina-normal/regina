@@ -36,27 +36,27 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NMatrixInt;
+using regina::MatrixInt;
 
 namespace {
-    regina::Integer& (NMatrixInt::*entry_non_const)(unsigned long,
-        unsigned long) = &NMatrixInt::entry;
-    void (NMatrixInt::*addRow_triple)(unsigned long, unsigned long,
-        regina::Integer) = &NMatrixInt::addRow;
-    void (NMatrixInt::*addCol_triple)(unsigned long, unsigned long,
-        regina::Integer) = &NMatrixInt::addCol;
+    regina::Integer& (MatrixInt::*entry_non_const)(unsigned long,
+        unsigned long) = &MatrixInt::entry;
+    void (MatrixInt::*addRow_triple)(unsigned long, unsigned long,
+        regina::Integer) = &MatrixInt::addRow;
+    void (MatrixInt::*addCol_triple)(unsigned long, unsigned long,
+        regina::Integer) = &MatrixInt::addCol;
 
-    std::unique_ptr<NMatrixInt> multiply(const NMatrixInt& m1,
-            const NMatrixInt& m2) {
-        return m1.multiplyAs<NMatrixInt>(m2);
+    std::unique_ptr<MatrixInt> multiply(const MatrixInt& m1,
+            const MatrixInt& m2) {
+        return m1.multiplyAs<MatrixInt>(m2);
     }
 
-    void setEntry(NMatrixInt& matrix, unsigned long row, unsigned long column,
+    void setEntry(MatrixInt& matrix, unsigned long row, unsigned long column,
             const regina::Integer& value) {
         matrix.entry(row, column) = value;
     }
 
-    void initialise_list(NMatrixInt& matrix, boost::python::list values) {
+    void initialise_list(MatrixInt& matrix, boost::python::list values) {
         if (boost::python::len(values) != matrix.rows() * matrix.columns()) {
             PyErr_SetString(PyExc_IndexError,
                 "Initialisation list does not contain the "
@@ -97,44 +97,48 @@ namespace {
     }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRow,
-        NMatrixInt::addRow, 2, 3);
+        MatrixInt::addRow, 2, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addCol,
-        NMatrixInt::addCol, 2, 3);
+        MatrixInt::addCol, 2, 3);
 }
 
-void addNMatrixInt() {
-    scope s = class_<NMatrixInt,
-            std::auto_ptr<NMatrixInt>, boost::noncopyable>("NMatrixInt",
-            init<unsigned long, unsigned long>())
-        .def(init<const NMatrixInt&>())
-        .def("initialise", &NMatrixInt::initialise)
-        .def("initialise", initialise_list)
-        .def("rows", &NMatrixInt::rows)
-        .def("columns", &NMatrixInt::columns)
-        .def("entry", entry_non_const, return_internal_reference<>())
-        .def("set", setEntry)
-        .def("isIdentity", &NMatrixInt::isIdentity)
-        .def("isZero", &NMatrixInt::isZero)
-        .def("swapRows", &NMatrixInt::swapRows)
-        .def("swapColumns", &NMatrixInt::swapColumns)
-        .def("makeIdentity", &NMatrixInt::makeIdentity)
-        .def("addRow", addRow_triple, OL_addRow())
-        .def("addCol", addCol_triple, OL_addCol())
-        .def("multRow", &NMatrixInt::multRow)
-        .def("multCol", &NMatrixInt::multCol)
-        .def("det", &NMatrixInt::det)
-        .def("divRowExact", &NMatrixInt::divRowExact)
-        .def("divColExact", &NMatrixInt::divColExact)
-        .def("gcdRow", &NMatrixInt::gcdRow)
-        .def("gcdCol", &NMatrixInt::gcdCol)
-        .def("reduceRow", &NMatrixInt::reduceRow)
-        .def("reduceCol", &NMatrixInt::reduceCol)
-        .def("__mul__", multiply)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-    ;
+void addMatrixInt() {
+    {
+        scope s = class_<MatrixInt,
+                std::auto_ptr<MatrixInt>, boost::noncopyable>("MatrixInt",
+                init<unsigned long, unsigned long>())
+            .def(init<const MatrixInt&>())
+            .def("initialise", &MatrixInt::initialise)
+            .def("initialise", initialise_list)
+            .def("rows", &MatrixInt::rows)
+            .def("columns", &MatrixInt::columns)
+            .def("entry", entry_non_const, return_internal_reference<>())
+            .def("set", setEntry)
+            .def("isIdentity", &MatrixInt::isIdentity)
+            .def("isZero", &MatrixInt::isZero)
+            .def("swapRows", &MatrixInt::swapRows)
+            .def("swapColumns", &MatrixInt::swapColumns)
+            .def("makeIdentity", &MatrixInt::makeIdentity)
+            .def("addRow", addRow_triple, OL_addRow())
+            .def("addCol", addCol_triple, OL_addCol())
+            .def("multRow", &MatrixInt::multRow)
+            .def("multCol", &MatrixInt::multCol)
+            .def("det", &MatrixInt::det)
+            .def("divRowExact", &MatrixInt::divRowExact)
+            .def("divColExact", &MatrixInt::divColExact)
+            .def("gcdRow", &MatrixInt::gcdRow)
+            .def("gcdCol", &MatrixInt::gcdCol)
+            .def("reduceRow", &MatrixInt::reduceRow)
+            .def("reduceCol", &MatrixInt::reduceCol)
+            .def("__mul__", multiply)
+            .def(regina::python::add_output())
+            .def(regina::python::add_eq_operators())
+        ;
 
-    s.attr("zero") = NMatrixInt::zero;
-    s.attr("one") = NMatrixInt::one;
+        s.attr("zero") = MatrixInt::zero;
+        s.attr("one") = MatrixInt::one;
+    }
+
+    scope().attr("NMatrixInt") = scope().attr("MatrixInt");
 }
 

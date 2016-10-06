@@ -49,7 +49,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
     if (b)
         data_[0]->insertFibre(1, -b);
 
-    conversion_[0] = NMatrix2(1, 0, -b, 1);
+    conversion_[0] = Matrix2(1, 0, -b, 1);
     reflected_[0] = false;
 
     /**
@@ -82,7 +82,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
         data_[0]->insertFibre(2, 1);
         data_[0]->insertFibre(2, 1);
 
-        conversion_[0] = NMatrix2(0, -1, 1, -1) * conversion_[0];
+        conversion_[0] = Matrix2(0, -1, 1, -1) * conversion_[0];
     }
 
     // Using data_[0] as a foundation, try now for a reflection.
@@ -92,7 +92,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
 
     b = data_[1]->obstruction();
     data_[1]->insertFibre(1, -b);
-    conversion_[1] = NMatrix2(1, 0, -b, -1) * conversion_[0];
+    conversion_[1] = Matrix2(1, 0, -b, -1) * conversion_[0];
     reflected_[1] = true;
 
     size_ = 2;
@@ -113,7 +113,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
 
         b = data_[2]->obstruction();
         data_[2]->insertFibre(1, -b);
-        conversion_[2] = NMatrix2(1, 0, -b + 1, 1) * conversion_[0];
+        conversion_[2] = Matrix2(1, 0, -b + 1, 1) * conversion_[0];
         reflected_[2] = false;
 
         // And do it again with an added reflection.
@@ -124,7 +124,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
 
         b = data_[3]->obstruction();
         data_[3]->insertFibre(1, -b);
-        conversion_[3] = NMatrix2(1, 0, -b - 1, -1) * conversion_[0];
+        conversion_[3] = Matrix2(1, 0, -b - 1, -1) * conversion_[0];
         reflected_[3] = true;
 
         size_ = 4;

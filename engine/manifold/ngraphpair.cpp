@@ -93,7 +93,7 @@ NAbelianGroup* NGraphPair::homology() const {
     if (sfs_[1]->baseOrientable())
         genus1 *= 2;
 
-    NMatrixInt m(fibres0 + fibres1 + ref0 + ref1 + 8,
+    MatrixInt m(fibres0 + fibres1 + ref0 + ref1 + 8,
         genus0 + fibres0 + 2 * ref0 + genus1 + fibres1 + 2 * ref1 + 6);
 
     unsigned long i, f;
@@ -223,9 +223,9 @@ void NGraphPair::reduce() {
     // matching relation.
     NSFSpace* use0 = 0;
     NSFSpace* use1 = 0;
-    NMatrix2 useReln;
+    Matrix2 useReln;
 
-    NMatrix2 tryReln;
+    Matrix2 tryReln;
     unsigned i, j;
     for (i = 0; i < alt0.size(); i++)
         for (j = 0; j < alt1.size(); j++) {
@@ -299,7 +299,7 @@ void NGraphPair::reduce() {
     // the relevant non-orientable cases.
 }
 
-void NGraphPair::reduceSign(NMatrix2& reln) {
+void NGraphPair::reduceSign(Matrix2& reln) {
     // All we can do is negate the entire matrix (180 degree rotation
     // along the join).
     if (simpler(- reln, reln))

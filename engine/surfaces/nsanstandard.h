@@ -117,7 +117,7 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(
+        static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const NTriangulation* triangulation);

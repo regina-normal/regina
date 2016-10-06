@@ -51,7 +51,7 @@ class QTreeWidget;
 class QTreeWidgetItem;
 
 namespace regina {
-    class NMatrix2;
+    class Matrix2;
     class Packet;
     class NSatRegion;
     class NStandardTriangulation;
@@ -161,7 +161,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
             int edge2);
         static QString edgeString(unsigned long tetIndex,
             const regina::NPerm4& roles, int startPreimage, int endPreimage);
-        static QString matrixString(const regina::NMatrix2& matrix);
+        static QString matrixString(const regina::Matrix2& matrix);
 };
 
 inline PacketEditIface* NTriCompositionUI::getEditIface() {

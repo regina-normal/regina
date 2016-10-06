@@ -300,8 +300,8 @@ std::string NGroupPresentation::recogniseGroup(bool moreUtf8) const {
 std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
 {
     // create presentation matrices to pass to NAbelianGroup(M, N)
-    NMatrixInt M(1, countGenerators() ); // zero matrix
-    NMatrixInt N(countGenerators(), countRelations() );
+    MatrixInt M(1, countGenerators() ); // zero matrix
+    MatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
     for (unsigned long j=0; j<countRelations(); j++) {
         NGroupExpression Rj ( relation(j) );
@@ -315,8 +315,8 @@ std::unique_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianisation()
 const
 {
     // create presentation matrices to pass to NMarkedAbelianGroup(M, N)
-    NMatrixInt M(1, countGenerators() ); // zero matrix
-    NMatrixInt N(countGenerators(), countRelations() );
+    MatrixInt M(1, countGenerators() ); // zero matrix
+    MatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
     for (unsigned long j=0; j<countRelations(); j++) {
         NGroupExpression Rj ( relation(j) );
@@ -1122,7 +1122,7 @@ NGroupPresentation::homologicalAlignmentDetail()
     std::unique_ptr<NHomGroupPresentation> retval; // only allocate if appropriate.
     // step 1: compute abelianization and how generators map to abelianization.
     std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
-    NMatrixInt abMat( abelianized->minNumberOfGenerators(),
+    MatrixInt abMat( abelianized->minNumberOfGenerators(),
                       countGenerators() );
 
     for (unsigned long j=0; j<countGenerators(); j++) {

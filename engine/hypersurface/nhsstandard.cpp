@@ -69,14 +69,14 @@ NNormalHypersurfaceVector* NNormalHypersurfaceVectorStandard::makeZeroVector(
     return new NNormalHypersurfaceVectorStandard(15 * triangulation->size());
 }
 
-NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
+MatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
         const Dim4Triangulation* triangulation) {
     size_t nCoords = 15 * triangulation->size();
     // Seven equations per non-boundary facet.
     // T_boundary + 2 T_internal = 5 P
     long nEquations = 7 * (5 * long(triangulation->size()) -
         long(triangulation->countTetrahedra()));
-    NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
+    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
 
     // Run through each internal facet and add the corresponding seven
     // equations.

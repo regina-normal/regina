@@ -156,12 +156,12 @@ AngleStructure* TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const NNormalSurface* s, const NMatrixInt* matchingEqns) const {
+        const NNormalSurface* s, const MatrixInt* matchingEqns) const {
     if (coords_ == NS_ANGLE)
         return false;
 
     // Rebuild the matching equations if necessary.
-    NMatrixInt* tmpEqns = 0;
+    MatrixInt* tmpEqns = 0;
     if (! matchingEqns) {
         tmpEqns = regina::makeMatchingEquations(
             origTableaux_.tri(), coords_);
@@ -187,12 +187,12 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const AngleStructure* s, const NMatrixInt* angleEqns) const {
+        const AngleStructure* s, const MatrixInt* angleEqns) const {
     if (coords_ != NS_ANGLE)
         return false;
 
     // Rebuild the matching equations if necessary.
-    NMatrixInt* tmpEqns = 0;
+    MatrixInt* tmpEqns = 0;
     if (! angleEqns) {
         tmpEqns = AngleStructureVector::makeAngleEquations(
             origTableaux_.tri());

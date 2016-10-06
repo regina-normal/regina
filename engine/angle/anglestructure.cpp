@@ -42,7 +42,7 @@ const unsigned long AngleStructure::flagTaut = 2;
 const unsigned long AngleStructure::flagCalculatedType = 4;
 const unsigned long AngleStructure::flagVeering = 8;
 
-NMatrixInt* AngleStructureVector::makeAngleEquations(
+MatrixInt* AngleStructureVector::makeAngleEquations(
         const NTriangulation* tri) {
     size_t n = tri->size();
     size_t cols = 3 * n + 1;
@@ -54,7 +54,7 @@ NMatrixInt* AngleStructureVector::makeAngleEquations(
             bit != tri->boundaryComponents().end(); bit++)
         rows -= (*bit)->countEdges();
 
-    NMatrixInt* eqns = new NMatrixInt(rows, cols);
+    MatrixInt* eqns = new MatrixInt(rows, cols);
     size_t row = 0;
 
     size_t index;

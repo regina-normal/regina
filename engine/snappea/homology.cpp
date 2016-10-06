@@ -49,7 +49,7 @@ const NAbelianGroup* SnapPeaTriangulation::homologyFilled() const {
         return (h1Filled_ = 0);
 
     // Pass the relations to Regina.
-    NMatrixInt rRelns(sRelns.num_rows, sRelns.num_columns);
+    MatrixInt rRelns(sRelns.num_rows, sRelns.num_columns);
     unsigned i, j;
     for (i = 0; i < sRelns.num_rows; ++i)
         for (j = 0; j < sRelns.num_columns; ++j)

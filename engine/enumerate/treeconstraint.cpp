@@ -91,7 +91,7 @@ bool LPConstraintNonSpun::addRows(
 
     // Compute the two slope equations for the torus cusp, if we can.
     SnapPeaTriangulation snapPea(*tri, false);
-    NMatrixInt* coeffs = snapPea.slopeEquations();
+    MatrixInt* coeffs = snapPea.slopeEquations();
     if (! coeffs)
         return false;
 

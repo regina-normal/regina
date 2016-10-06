@@ -60,7 +60,7 @@ namespace regina {
 
 template <class BitmaskType>
 DoubleDescription::RaySpec<BitmaskType>::RaySpec(unsigned long axis,
-        const NMatrixInt& subspace, const long* hypOrder) :
+        const MatrixInt& subspace, const long* hypOrder) :
         Ray(subspace.rows()),
         facets_(subspace.columns()) {
     size_t i;
@@ -93,7 +93,7 @@ DoubleDescription::RaySpec<BitmaskType>::RaySpec(
 
 template <class BitmaskType>
 void DoubleDescription::RaySpec<BitmaskType>::recover(
-        Ray& dest, const NMatrixInt& subspace) const {
+        Ray& dest, const MatrixInt& subspace) const {
     unsigned long i, j;
 
     unsigned long rows = subspace.rows();
@@ -208,7 +208,7 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
 
 template <class RayClass, class OutputIterator>
 void DoubleDescription::enumerateExtremalRays(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     unsigned long nFacets = subspace.columns();
 
@@ -249,7 +249,7 @@ void DoubleDescription::enumerateExtremalRays(OutputIterator results,
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();

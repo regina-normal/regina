@@ -1897,7 +1897,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             size_t gen = pi1->countGenerators();
             size_t rel = pi1->countRelations();
 
-            regina::NMatrixInt m(rel, gen);
+            regina::MatrixInt m(rel, gen);
             size_t i, j;
             for (i = 0; i < rel; ++i) {
                 const regina::NGroupExpression& r = pi1->relation(i);

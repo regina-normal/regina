@@ -93,7 +93,7 @@ class REGINA_API NGraphLoop : public NManifold {
     private:
         NSFSpace* sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */
-        NMatrix2 matchingReln_;
+        Matrix2 matchingReln_;
             /**< The matrix describing how the two boundary tori are joined;
                  see the class notes for details. */
 
@@ -150,7 +150,7 @@ class REGINA_API NGraphLoop : public NManifold {
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        NGraphLoop(NSFSpace* sfs, const NMatrix2& matchingReln);
+        NGraphLoop(NSFSpace* sfs, const Matrix2& matchingReln);
         /**
          * Destroys this structure along with the bounded Seifert
          * fibred space and the matching matrix.
@@ -172,7 +172,7 @@ class REGINA_API NGraphLoop : public NManifold {
          *
          * @return a reference to the matching matrix.
          */
-        const NMatrix2& matchingReln() const;
+        const Matrix2& matchingReln() const;
 
         /**
          * Determines in a fairly ad-hoc fashion whether this
@@ -214,7 +214,7 @@ class REGINA_API NGraphLoop : public NManifold {
          *
          * @param reln the matching matrix to simplify.
          */
-        static void reduce(NMatrix2& reln);
+        static void reduce(Matrix2& reln);
 
         /**
          * Uses (1,1) twists to make the given matching matrix more
@@ -224,7 +224,7 @@ class REGINA_API NGraphLoop : public NManifold {
          *
          * @param reln the matching matrix to simplify.
          */
-        static void reduceBasis(NMatrix2& reln);
+        static void reduceBasis(Matrix2& reln);
 };
 
 /*@}*/
@@ -237,7 +237,7 @@ inline NGraphLoop::NGraphLoop(NSFSpace* sfs,
     reduce();
 }
 
-inline NGraphLoop::NGraphLoop(NSFSpace* sfs, const NMatrix2& matchingReln) :
+inline NGraphLoop::NGraphLoop(NSFSpace* sfs, const Matrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
     reduce();
 }
@@ -246,7 +246,7 @@ inline const NSFSpace& NGraphLoop::sfs() const {
     return *sfs_;
 }
 
-inline const NMatrix2& NGraphLoop::matchingReln() const {
+inline const Matrix2& NGraphLoop::matchingReln() const {
     return matchingReln_;
 }
 

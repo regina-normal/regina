@@ -35,7 +35,7 @@
 
 namespace regina {
 
-void smithNormalForm(NMatrixInt& matrix) {
+void smithNormalForm(MatrixInt& matrix) {
     unsigned long currStage = 0;
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
@@ -158,9 +158,9 @@ void smithNormalForm(NMatrixInt& matrix) {
 }
 
 
-void smithNormalForm(NMatrixInt& matrix,
-        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
-        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv) {
+void smithNormalForm(MatrixInt& matrix,
+        MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
+        MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
     unsigned long currStage = 0;
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
@@ -333,11 +333,11 @@ void smithNormalForm(NMatrixInt& matrix,
 
 }
 
-unsigned rowBasis(NMatrixInt& matrix) {
+unsigned rowBasis(MatrixInt& matrix) {
     unsigned n = matrix.columns();
 
     // Make a copy of the input matrix, and reduce it to row echelon form.
-    NMatrixInt echelon(matrix);
+    MatrixInt echelon(matrix);
 
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
@@ -354,7 +354,7 @@ unsigned rowBasis(NMatrixInt& matrix) {
 
         // Find the first non-zero entry in row doneRows.
         for (c = doneRows; c < n; ++c)
-            if (echelon.entry(doneRows, lead[c]) != NMatrixInt::zero)
+            if (echelon.entry(doneRows, lead[c]) != MatrixInt::zero)
                 break;
 
         if (c == n) {
@@ -377,7 +377,7 @@ unsigned rowBasis(NMatrixInt& matrix) {
 
             for (r = doneRows + 1; r < rank; ++r) {
                 coeff2 = echelon.entry(r, lead[doneRows]);
-                if (coeff2 != NMatrixInt::zero) {
+                if (coeff2 != MatrixInt::zero) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
 
@@ -394,11 +394,11 @@ unsigned rowBasis(NMatrixInt& matrix) {
     return rank;
 }
 
-unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
+unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     unsigned n = input.columns();
 
     // Make a copy of the input matrix, and reduce it to row echelon form.
-    NMatrixInt echelon(input);
+    MatrixInt echelon(input);
 
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
@@ -415,7 +415,7 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
 
         // Find the first non-zero entry in row doneRows.
         for (c = doneRows; c < n; ++c)
-            if (echelon.entry(doneRows, lead[c]) != NMatrixInt::zero)
+            if (echelon.entry(doneRows, lead[c]) != MatrixInt::zero)
                 break;
 
         if (c == n) {
@@ -438,7 +438,7 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
 
             for (r = doneRows + 1; r < rank; ++r) {
                 coeff2 = echelon.entry(r, lead[doneRows]);
-                if (coeff2 != NMatrixInt::zero) {
+                if (coeff2 != MatrixInt::zero) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
 
@@ -451,7 +451,7 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
     }
 
     // Now form the basis for the orthogonal complement.
-    complement.initialise(NMatrixInt::zero);
+    complement.initialise(MatrixInt::zero);
 
     Integer lcmLead = 1;
     for (r = 0; r < n; ++r) {
@@ -471,7 +471,7 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
 
             for (tmp = 0; tmp < r; ++tmp) {
                 coeff2 = echelon.entry(tmp, lead[r]);
-                if (coeff2 != NMatrixInt::zero) {
+                if (coeff2 != MatrixInt::zero) {
                     echelon.multRow(tmp, coeff1);
                     echelon.addRow(r, tmp, -coeff2);
 
@@ -489,7 +489,7 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
     return rank;
 }
 
-void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
+void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<unsigned> &rowList) {
     unsigned i,j;
 
@@ -628,7 +628,7 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
 }
 
 
-std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
+std::unique_ptr<MatrixInt> preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& L) {
     // there are two main steps to this algorithm.
     // 1) find a basis for the domain which splits into a) vectors sent to the
@@ -642,13 +642,13 @@ std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
 
     unsigned i,j;
 
-    NMatrixInt basis(hom.columns(), hom.columns() );
+    MatrixInt basis(hom.columns(), hom.columns() );
     basis.makeIdentity();
-    NMatrixInt basisi(hom.columns(), hom.columns() );
+    MatrixInt basisi(hom.columns(), hom.columns() );
     basisi.makeIdentity();
     // and we proceed to modify it solely via column operations.
     // one for every column operation performed on homModL
-    NMatrixInt homModL(hom);
+    MatrixInt homModL(hom);
 
     // set up two lists: the coordinates that correspond to free generators
     // of the range and coordinates corresponding to torsion generators.
@@ -681,11 +681,11 @@ std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
     // set up a new matrix consisting of columns being sent to the primitive
     // subspace generated by the torsion lattice.
 
-    NMatrixInt tHom( homModL.rows(), torCol.size() );
-    std::unique_ptr<NMatrixInt> tBasis(
-        new NMatrixInt( basis.rows(), torCol.size() )); // this will be the
+    MatrixInt tHom( homModL.rows(), torCol.size() );
+    std::unique_ptr<MatrixInt> tBasis(
+        new MatrixInt( basis.rows(), torCol.size() )); // this will be the
                                                         // eventual retval.
-    NMatrixInt dummy( torCol.size(), 0 ); // needed when we call
+    MatrixInt dummy( torCol.size(), 0 ); // needed when we call
     // columnEchelonForm. choosing it to have 0 columns speeds up
     // the algorithm.
 
@@ -824,11 +824,11 @@ std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
 //          assemble inverse. Notice it's all standard Gaussian elimination, 
 //          just done in a funny order and with some modular arithmatic
 //          stuffed in there. 
-std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
+std::unique_ptr<MatrixInt> torsionAutInverse(const MatrixInt& input,
         const std::vector<Integer> &invF) {
     // inductive step begins right away. Start at bottom row.
-    NMatrixInt workMat( input );
-    NMatrixInt colOps( input.rows(), input.columns() );
+    MatrixInt workMat( input );
+    MatrixInt colOps( input.rows(), input.columns() );
     colOps.makeIdentity();
 
     unsigned long wRow = input.rows();
@@ -900,7 +900,7 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
         //  as I haven't screwed up.
     }
 
-    NMatrixInt rowOps( input.rows(), input.columns() );
+    MatrixInt rowOps( input.rows(), input.columns() );
     rowOps.makeIdentity();
 
     // step 5 upper triang -> identity.  Use row i to kill i-th entry of row j.
@@ -920,7 +920,7 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
         }
     }
 
-    NMatrixInt* retval = new NMatrixInt( input.rows(), input.columns() );
+    MatrixInt* retval = new MatrixInt( input.rows(), input.columns() );
     for (unsigned long i=0; i<colOps.rows(); i++) 
      for (unsigned long j=0; j<rowOps.columns(); j++)
     {
@@ -931,11 +931,11 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
     }
 
     // done
-    return std::unique_ptr<NMatrixInt>(retval);
+    return std::unique_ptr<MatrixInt>(retval);
 }
 
 
-bool metricFindPivot(const unsigned long &currStage, const NMatrixInt &matrix, 
+bool metricFindPivot(const unsigned long &currStage, const MatrixInt &matrix, 
         unsigned long &pr, unsigned long &pc,
         const std::vector<Integer> &rowNorm,
         const std::vector<Integer> &colNorm, 
@@ -988,7 +988,7 @@ bool metricFindPivot(const unsigned long &currStage, const NMatrixInt &matrix,
 // switch rows i and j in matrix.  Keep track of change-of-basis
 void metricSwitchRows(const unsigned long &currStage, const unsigned long &i, 
                       const unsigned long &j, 
-        NMatrixInt &matrix, NMatrixInt *colBasis, NMatrixInt *colBasisInv, 
+        MatrixInt &matrix, MatrixInt *colBasis, MatrixInt *colBasisInv, 
         std::vector<Integer> &rowNorm, std::vector<Integer> &rowGCD)
 {
     rowNorm[i].swap(rowNorm[j]); rowGCD[i].swap(rowGCD[j]);
@@ -1001,7 +1001,7 @@ void metricSwitchRows(const unsigned long &currStage, const unsigned long &i,
 // switch columns i and j in matrix.  Keep track of change-of-basis matrix
 void metricSwitchCols(const unsigned long &currStage, const unsigned long &i, 
         const unsigned long &j, 
-        NMatrixInt &matrix, NMatrixInt *rowBasis, NMatrixInt *rowBasisInv, 
+        MatrixInt &matrix, MatrixInt *rowBasis, MatrixInt *rowBasisInv, 
         std::vector<Integer> &colNorm)
 {
     colNorm[i].swap(colNorm[j]); 
@@ -1013,10 +1013,10 @@ void metricSwitchCols(const unsigned long &currStage, const unsigned long &i,
 
 // columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
 void metricColOp(const unsigned long &currStage, const unsigned long &i,
-        const unsigned long &j, NMatrixInt &matrix, 
+        const unsigned long &j, MatrixInt &matrix, 
         const Integer a, const Integer b, 
         const Integer c, const Integer d, 
-        NMatrixInt *rowBasis, NMatrixInt *rowBasisInv, 
+        MatrixInt *rowBasis, MatrixInt *rowBasisInv, 
         std::vector<Integer> &rowNorm, 
         std::vector<Integer> &colNorm)
 {
@@ -1049,10 +1049,10 @@ void metricColOp(const unsigned long &currStage, const unsigned long &i,
 
 // row operation using 2x2-matrix [a b|c d] on rows i, j resp.
 void metricRowOp(const unsigned long &currStage, const unsigned long &i, 
-    const unsigned long &j, NMatrixInt &matrix, 
+    const unsigned long &j, MatrixInt &matrix, 
     const Integer a, const Integer b, 
     const Integer c, const Integer d, 
-    NMatrixInt *colBasis, NMatrixInt *colBasisInv, 
+    MatrixInt *colBasis, MatrixInt *colBasisInv, 
     std::vector<Integer> &rowNorm, std::vector<Integer> &colNorm,
     std::vector<Integer> &rowGCD)
 {
@@ -1088,7 +1088,7 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
 
 /**
  *  This routine converts mxn matrix "matrix" into its Smith Normal Form.
- * It assumes rowSpaceBasis and rowSpaceBasisInv are pointers to NMatrixInts, 
+ * It assumes rowSpaceBasis and rowSpaceBasisInv are pointers to MatrixInts, 
  * if alloceted, having dimension mxm, and colSpaceBasis and colSpaceBasisInv
  * has dimensions nxn.  These matrices record the row and columns operations
  * used to convert between "matrix" and its Smith Normal Form.  Specifically, 
@@ -1115,9 +1115,9 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
  *  Markowitz. The elimination form of the inverse and its application to linear
  * programming. Management Sci. 3:255--269 (1957).
  */
-void metricalSmithNormalForm(NMatrixInt& matrix,
-        NMatrixInt *rowSpaceBasis, NMatrixInt *rowSpaceBasisInv,
-        NMatrixInt *colSpaceBasis, NMatrixInt *colSpaceBasisInv) {
+void metricalSmithNormalForm(MatrixInt& matrix,
+        MatrixInt *rowSpaceBasis, MatrixInt *rowSpaceBasisInv,
+        MatrixInt *colSpaceBasis, MatrixInt *colSpaceBasisInv) {
     if (rowSpaceBasis) rowSpaceBasis->makeIdentity();    
     if (rowSpaceBasisInv) rowSpaceBasisInv->makeIdentity();
     if (colSpaceBasis) colSpaceBasis->makeIdentity();    

@@ -126,7 +126,7 @@ NAbelianGroup* NGraphTriple::homology() const {
     start[1] = gens[0];
     start[2] = gens[0] + gens[1];
 
-    NMatrixInt m(fibres[0] + fibres[1] + fibres[2] +
+    MatrixInt m(fibres[0] + fibres[1] + fibres[2] +
         ref[0] + ref[1] + ref[2] + 13, gens[0] + gens[1] + gens[2]);
 
     unsigned long i, f;
@@ -207,7 +207,7 @@ std::ostream& NGraphTriple::writeName(std::ostream& out) const {
     out << " U/n ";
     end_[1]->writeName(out);
 
-    NMatrix2 m0 = matchingReln_[0].inverse();
+    Matrix2 m0 = matchingReln_[0].inverse();
     out << ", m = [ " <<
         m0[0][0] << ',' << m0[0][1] << " | " <<
         m0[1][0] << ',' << m0[1][1] << " ]";
@@ -219,7 +219,7 @@ std::ostream& NGraphTriple::writeName(std::ostream& out) const {
 
 std::ostream& NGraphTriple::writeTeXName(std::ostream& out) const {
     end_[0]->writeTeXName(out);
-    NMatrix2 m0 = matchingReln_[0].inverse();
+    Matrix2 m0 = matchingReln_[0].inverse();
     out << " \\bigcup_{\\homtwo{" <<
         m0[0][0] << "}{" << m0[0][1] << "}{" <<
         m0[1][0] << "}{" << m0[1][1] << "}} ";
@@ -270,9 +270,9 @@ void NGraphTriple::reduce() {
     NSFSpace* use0 = 0;
     NSFSpace* use1 = 0;
     NSFSpace* useCentre = 0;
-    NMatrix2 useReln[2];
+    Matrix2 useReln[2];
 
-    NMatrix2 tryReln[2], tmpReln;
+    Matrix2 tryReln[2], tmpReln;
     unsigned i0, i1, c;
 
     for (i0 = 0; i0 < alt0.size(); i0++)
@@ -285,7 +285,7 @@ void NGraphTriple::reduce() {
 
                 if (altCentre.reflected(c))
                     tryReln[1] = alt1.conversion(i1) * matchingReln_[1] *
-                        NMatrix2(1, 0, 0, -1);
+                        Matrix2(1, 0, 0, -1);
                 else
                     tryReln[1] = alt1.conversion(i1) * matchingReln_[1];
 
@@ -381,7 +381,7 @@ void NGraphTriple::reduce() {
     // TODO: More reductions!
 }
 
-void NGraphTriple::reduceBasis(NMatrix2& reln0, NMatrix2& reln1) {
+void NGraphTriple::reduceBasis(Matrix2& reln0, Matrix2& reln1) {
     /**
      * The operation we allow here is to add a (1,1) / (1,-1) pair of
      * twists to centre_, which means:
@@ -400,18 +400,18 @@ void NGraphTriple::reduceBasis(NMatrix2& reln0, NMatrix2& reln1) {
     // Go for the local minimum.
     // TODO: We can certainly do better than this (both in terms of being
     // faster [use division] and simpler matrices coming out the end).
-    NMatrix2 alt0, alt1;
+    Matrix2 alt0, alt1;
     while (true) {
-        alt0 = reln0 * NMatrix2(1, 0, 1, 1);
-        alt1 = reln1 * NMatrix2(1, 0, -1, 1);
+        alt0 = reln0 * Matrix2(1, 0, 1, 1);
+        alt1 = reln1 * Matrix2(1, 0, -1, 1);
         if (simpler(alt0, alt1, reln0, reln1)) {
             reln0 = alt0;
             reln1 = alt1;
             continue;
         }
 
-        alt0 = reln0 * NMatrix2(1, 0, -1, 1);
-        alt1 = reln1 * NMatrix2(1, 0, 1, 1);
+        alt0 = reln0 * Matrix2(1, 0, -1, 1);
+        alt1 = reln1 * Matrix2(1, 0, 1, 1);
         if (simpler(alt0, alt1, reln0, reln1)) {
             reln0 = alt0;
             reln1 = alt1;
@@ -427,7 +427,7 @@ void NGraphTriple::reduceBasis(NMatrix2& reln0, NMatrix2& reln1) {
     reduceSign(reln1);
 }
 
-void NGraphTriple::reduceSign(NMatrix2& reln) {
+void NGraphTriple::reduceSign(Matrix2& reln) {
     // Make the first non-zero entry positive.
     int i, j;
     for (i = 0; i < 2; i++)

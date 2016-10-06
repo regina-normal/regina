@@ -50,7 +50,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 }
 @property (weak, nonatomic) IBOutlet UISwitch *compact;
 @property (weak, nonatomic) IBOutlet MDSpreadView *grid;
-@property (assign, nonatomic) regina::NMatrixInt* matrix;
+@property (assign, nonatomic) regina::MatrixInt* matrix;
 @end
 
 @implementation HypersurfacesMatching

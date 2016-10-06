@@ -72,7 +72,7 @@ namespace regina {
  */
 class PosOrder {
     private:
-        const NMatrixInt& matrix_;
+        const MatrixInt& matrix_;
             /**< The \a subspace matrix as passed to the enumeration routine. */
 
     public:
@@ -82,7 +82,7 @@ class PosOrder {
          * @param matrix the \a subspace matrix as passed to
          * the normal surface enumeration routine.
          */
-        inline PosOrder(const NMatrixInt& matrix);
+        inline PosOrder(const MatrixInt& matrix);
 
         /**
          * Determines whether the hyperplane described by
@@ -114,7 +114,7 @@ REGINA_DEPRECATED typedef PosOrder NPosOrder;
 
 // Inline functions for PosOrder
 
-inline PosOrder::PosOrder(const NMatrixInt& matrix) :
+inline PosOrder::PosOrder(const MatrixInt& matrix) :
         matrix_(matrix) {
 }
 

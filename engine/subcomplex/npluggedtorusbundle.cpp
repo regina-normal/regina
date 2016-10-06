@@ -236,7 +236,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
 
             // Hope like hell that this meets up with the lower layering
             // boundary.  Note that this will force it to be a torus also.
-            NMatrix2 upperRolesToLower;
+            Matrix2 upperRolesToLower;
             if (! lowerAnnulus.isJoined(bdryAnnulus, upperRolesToLower)) {
                 delete region;
                 continue;
@@ -247,17 +247,17 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
 
             // Mapping from fibre/base curves (f0, o0) to upperAnnulus
             // edges (first triangle: 01, first triangle: 02).
-            NMatrix2 curvesToUpperAnnulus(-1, 0, 0, 1);
+            Matrix2 curvesToUpperAnnulus(-1, 0, 0, 1);
 
             // Mapping from upperAnnulus edges (first: 01, first: 02) to
             // upper layering boundary roles (first: 01, first: 02).
-            NMatrix2 upperAnnulusToUpperLayer;
+            Matrix2 upperAnnulusToUpperLayer;
             if (regionPos == 0)
-                upperAnnulusToUpperLayer = NMatrix2(1, 0, 0, 1);
+                upperAnnulusToUpperLayer = Matrix2(1, 0, 0, 1);
             else if (regionPos == 1)
-                upperAnnulusToUpperLayer = NMatrix2(0, -1, 1, -1);
+                upperAnnulusToUpperLayer = Matrix2(0, -1, 1, -1);
             else
-                upperAnnulusToUpperLayer = NMatrix2(-1, 1, -1, 0);
+                upperAnnulusToUpperLayer = Matrix2(-1, 1, -1, 0);
 
             // Mapping from upper layering boundary roles
             // (first: 01, first: 02) to the bundle boundary 0 roles
@@ -282,7 +282,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
 
             // SO: Here comes the mapping from fibre/base curves (f0, o0)
             // to lower annulus boundary roles (first: 01, first: 02):
-            NMatrix2 curvesToLowerAnnulus =
+            Matrix2 curvesToLowerAnnulus =
                 layerLower.boundaryReln() *
                 bundle.bdryReln(1).inverse() *
                 bundle.parallelReln() *
@@ -294,7 +294,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             // Now let's work out the mapping from fibre/base curves (f1, o1)
             // to bdryAnnulus roles (first: 01, first: 02).  This is
             // rather simpler.
-            NMatrix2 curvesToBdryAnnulus(bdryRefVert ? 1 : -1, 0, 0,
+            Matrix2 curvesToBdryAnnulus(bdryRefVert ? 1 : -1, 0, 0,
                 bdryRefHoriz ? -1 : 1);
 
             // Finally, we already know how the two annuli are joined

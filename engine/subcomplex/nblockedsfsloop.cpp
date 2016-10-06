@@ -50,7 +50,7 @@ struct NBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
         /**< The bounded saturated region, if the entire NBlockedSFSLoop
              structure has been successfully found; otherwise, 0 if we are
              still searching. */
-    NMatrix2 matchingReln;
+    Matrix2 matchingReln;
         /**< The matrix describing how the two boundary annuli of the
              saturated region are joined together.  This matrix expresses
              the fibre/base curves on one boundary annulus in terms of the
@@ -184,7 +184,7 @@ bool NBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
         bdry0.tet[1], bdry0.roles[1]);
 
     NSatAnnulus layerTop;
-    NMatrix2 layerToBdry1;
+    Matrix2 layerToBdry1;
     while (true) {
         layerTop.tet[0] = layering.newBoundaryTet(0);
         layerTop.tet[1] = layering.newBoundaryTet(1);
@@ -222,9 +222,9 @@ bool NBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     // First find mappings from the fibre/base curves (fi, oi) to
     // annulus #i edges (first triangle: 01, first triangle: 02).
     // Note that each of these matrices is self-inverse.
-    NMatrix2 curves0ToAnnulus0(bdryRefVert[0] ? 1 : -1, 0, 0,
+    Matrix2 curves0ToAnnulus0(bdryRefVert[0] ? 1 : -1, 0, 0,
         bdryRefHoriz[0] ? -1 : 1);
-    NMatrix2 curves1ToAnnulus1(bdryRefVert[1] ? 1 : -1, 0, 0,
+    Matrix2 curves1ToAnnulus1(bdryRefVert[1] ? 1 : -1, 0, 0,
         bdryRefHoriz[1] ? -1 : 1);
 
     // Put it all together.

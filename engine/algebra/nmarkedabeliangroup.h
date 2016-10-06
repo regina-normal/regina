@@ -94,13 +94,13 @@ class REGINA_API NMarkedAbelianGroup :
         public boost::noncopyable {
     private:
         /** Internal original M */
-        NMatrixInt OM; // copy of initializing M
+        MatrixInt OM; // copy of initializing M
         /** Internal original N */
-        NMatrixInt ON; // copy of initializing N assumes M*N == 0
+        MatrixInt ON; // copy of initializing N assumes M*N == 0
         /** Internal change of basis. SNF(OM) == OMC*OM*OMR */
-        NMatrixInt OMR, OMC;
+        MatrixInt OMR, OMC;
         /** Internal change of basis. OM = OMCi*SNF(OM)*OMRi */
-        NMatrixInt OMRi, OMCi;
+        MatrixInt OMRi, OMCi;
         /** Internal rank of M */
         unsigned long rankOM; // this is the index of the first zero entry
                               // in SNF(OM)
@@ -111,13 +111,13 @@ class REGINA_API NMarkedAbelianGroup :
         // first rankOM rows.
 
         /** Internal change of basis. ornC * ORN * ornR is the SNF(ORN). */
-        std::unique_ptr<NMatrixInt> ornR, ornC;
+        std::unique_ptr<MatrixInt> ornR, ornC;
         /** Internal change of basis. These are the inverses of ornR and ornC
             respectively. */
-        std::unique_ptr<NMatrixInt> ornRi, ornCi; 
+        std::unique_ptr<MatrixInt> ornRi, ornCi; 
         /** Internal change of basis matrix for homology with coefficents.
             otC * tensorPres * otR == SNF(tensorPres) */
-        std::unique_ptr<NMatrixInt> otR, otC, otRi, otCi;
+        std::unique_ptr<MatrixInt> otR, otC, otRi, otCi;
 
         /** Internal list of invariant factors. */
         std::vector<Integer> InvFacList;
@@ -168,7 +168,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
          */
-        NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
+        NMarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N);
 
         /**
          * Creates a marked abelian group from a chain complex with
@@ -185,7 +185,7 @@ class REGINA_API NMarkedAbelianGroup :
          * \a pcoeff >= 0.  If you know beforehand that \a pcoeff=0, it's
          * more efficient to use the previous constructor.
          */
-        NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
+        NMarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N,
             const Integer &pcoeff);
 
         /**
@@ -645,7 +645,7 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return a reference to the defining matrix M.
          */
-        const NMatrixInt& M() const;
+        const MatrixInt& M() const;
         /**
          * Returns the `left' matrix used in defining the chain complex.
          * Our group was defined as the kernel of \a M mod the image of \a N.
@@ -657,7 +657,7 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return a reference to the defining matrix N.
          */
-        const NMatrixInt& N() const;
+        const MatrixInt& N() const;
         /**
          * Returns the coefficients used for the computation of homology.
          * That is, this routine returns the integer \a p where we use
@@ -736,7 +736,7 @@ class REGINA_API NHomMarkedAbelianGroup :
         /** matrix describing map from domain to range, in the coordinates
             of the chain complexes used to construct domain and range, see
             above description */
-        NMatrixInt matrix;
+        MatrixInt matrix;
 
         /** short description of matrix in SNF coordinates -- this means we've
             conjugated matrix by the relevant change-of-basis maps in both the
@@ -745,7 +745,7 @@ class REGINA_API NHomMarkedAbelianGroup :
             reducedMatrix will not have the same dimensions as matrix. This
             means the torsion factors appear first, followed by the free
             factors. */
-        NMatrixInt* reducedMatrix_;
+        MatrixInt* reducedMatrix_;
         /** pointer to kernel of map */
         NMarkedAbelianGroup* kernel_;
         /** pointer to coKernel of map */
@@ -754,7 +754,7 @@ class REGINA_API NHomMarkedAbelianGroup :
         NMarkedAbelianGroup* image_;
         /** pointer to a lattice which describes the kernel of the
             homomorphism. */
-        NMatrixInt* reducedKernelLattice;
+        MatrixInt* reducedKernelLattice;
 
         /** compute the ReducedKernelLattice */
         void computeReducedKernelLattice();
@@ -797,7 +797,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          */
         NHomMarkedAbelianGroup(const NMarkedAbelianGroup& dom,
                 const NMarkedAbelianGroup& ran,
-                const NMatrixInt &mat);
+                const MatrixInt &mat);
 
         /**
          * Copy constructor.
@@ -937,7 +937,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @return the matrix that was used to define the homomorphism.
          */
-        const NMatrixInt& definingMatrix() const;
+        const MatrixInt& definingMatrix() const;
 
         /**
          * Returns the internal reduced matrix representing the homomorphism.
@@ -955,7 +955,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @return a copy of the internal representation of the homomorphism.
          */
-        const NMatrixInt& reducedMatrix() const;
+        const MatrixInt& reducedMatrix() const;
 
         /**
          * Evaluate the image of a vector under this homomorphism, using
@@ -1058,7 +1058,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * \todo Erase completely once made obsolete by right/left inverse.
          */
-        NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat,
+        NHomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
                 const NMarkedAbelianGroup &dom, 
                 const NMarkedAbelianGroup &ran);
 };
@@ -1126,10 +1126,10 @@ inline bool NMarkedAbelianGroup::isIsomorphicTo(
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
 }
 
-inline const NMatrixInt& NMarkedAbelianGroup::M() const {
+inline const MatrixInt& NMarkedAbelianGroup::M() const {
     return OM;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::N() const {
+inline const MatrixInt& NMarkedAbelianGroup::N() const {
     return ON;
 }
 inline const Integer& NMarkedAbelianGroup::coefficients() const {
@@ -1141,7 +1141,7 @@ inline const Integer& NMarkedAbelianGroup::coefficients() const {
 inline NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(
         const NMarkedAbelianGroup& dom,
         const NMarkedAbelianGroup& ran,
-        const NMatrixInt &mat) :
+        const MatrixInt &mat) :
         domain_(dom), range_(ran), matrix(mat),
         reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0),
         reducedKernelLattice(0) {
@@ -1166,11 +1166,11 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::domain() const {
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::range() const {
     return range_;
 }
-inline const NMatrixInt& NHomMarkedAbelianGroup::definingMatrix() const {
+inline const MatrixInt& NHomMarkedAbelianGroup::definingMatrix() const {
     return matrix;
 }
 
-inline const NMatrixInt& NHomMarkedAbelianGroup::reducedMatrix() const {
+inline const MatrixInt& NHomMarkedAbelianGroup::reducedMatrix() const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.

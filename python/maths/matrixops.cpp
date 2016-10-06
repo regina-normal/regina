@@ -35,15 +35,15 @@
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;
-using regina::NMatrixInt;
+using regina::MatrixInt;
 
 namespace {
-    void (*SNF_nobasis)(NMatrixInt&) = regina::smithNormalForm;
-    void (*SNF_basis)(NMatrixInt&, NMatrixInt&, NMatrixInt&,
-        NMatrixInt&, NMatrixInt&) = regina::smithNormalForm;
+    void (*SNF_nobasis)(MatrixInt&) = regina::smithNormalForm;
+    void (*SNF_basis)(MatrixInt&, MatrixInt&, MatrixInt&,
+        MatrixInt&, MatrixInt&) = regina::smithNormalForm;
 
-    void columnEchelonForm_list(NMatrixInt& m, NMatrixInt& r,
-            NMatrixInt& rInv, boost::python::list rowList) {
+    void columnEchelonForm_list(MatrixInt& m, MatrixInt& r,
+            MatrixInt& rInv, boost::python::list rowList) {
         std::vector<unsigned> rowListVector;
 
         long len = boost::python::len(rowList);
@@ -63,7 +63,7 @@ namespace {
         regina::columnEchelonForm(m, r, rInv, rowListVector);
     }
 
-    std::unique_ptr<NMatrixInt> preImageOfLattice_list(const NMatrixInt& m,
+    std::unique_ptr<MatrixInt> preImageOfLattice_list(const MatrixInt& m,
             boost::python::list l) {
         if (boost::python::len(l) != m.rows()) {
             PyErr_SetString(PyExc_IndexError,
@@ -101,7 +101,7 @@ namespace {
         return regina::preImageOfLattice(m, lVector);
     }
 
-    std::unique_ptr<NMatrixInt> torsionAutInverse_list(const NMatrixInt& m,
+    std::unique_ptr<MatrixInt> torsionAutInverse_list(const MatrixInt& m,
             boost::python::list l) {
         if (boost::python::len(l) != m.rows()) {
             PyErr_SetString(PyExc_IndexError,

@@ -131,7 +131,7 @@ class HilbertCD {
          */
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
-            const NMatrixInt& subspace, const EnumConstraints* constraints);
+            const MatrixInt& subspace, const EnumConstraints* constraints);
 
     private:
         /**
@@ -179,7 +179,7 @@ class HilbertCD {
          */
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
-            const NMatrixInt& subspace, const EnumConstraints* constraints);
+            const MatrixInt& subspace, const EnumConstraints* constraints);
 
         /**
          * Private constructor to ensure that objects of this class are

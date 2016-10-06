@@ -134,7 +134,7 @@ class REGINA_API DoubleDescription {
          */
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
-            const NMatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker = 0, unsigned long initialRows = 0);
 
     private:
@@ -202,7 +202,7 @@ class REGINA_API DoubleDescription {
                  * <i>i</i>th hyperplane to intersect must be described
                  * by row <tt>hypOrder[i]</tt> of \a subspace.
                  */
-                inline RaySpec(unsigned long axis, const NMatrixInt& subspace,
+                inline RaySpec(unsigned long axis, const MatrixInt& subspace,
                     const long* hypOrder);
 
                 /**
@@ -293,7 +293,7 @@ class REGINA_API DoubleDescription {
                  * hyperplanes that were intersected with the original cone
                  * (one hyperplane for each row of the matrix).
                  */
-                void recover(Ray& dest, const NMatrixInt& subspace) const;
+                void recover(Ray& dest, const MatrixInt& subspace) const;
         };
 
         /**
@@ -319,7 +319,7 @@ class REGINA_API DoubleDescription {
          */
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
-            const NMatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker, unsigned long initialRows);
 
         /**

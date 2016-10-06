@@ -49,8 +49,8 @@ namespace regina {
 
 class XMLAngleStructureReader;
 
-template <typename> class NMatrixIntDomain;
-typedef NMatrixIntDomain<Integer> NMatrixInt;
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -121,7 +121,7 @@ class REGINA_API AngleStructureVector : public Ray {
          * equations will be based.
          * @return a newly allocated set of equations.
          */
-        static NMatrixInt* makeAngleEquations(const NTriangulation* tri);
+        static MatrixInt* makeAngleEquations(const NTriangulation* tri);
 };
 
 /**

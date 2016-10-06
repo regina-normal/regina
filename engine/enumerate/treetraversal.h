@@ -441,7 +441,7 @@ class TreeTraversal : public BanConstraint {
          * (indicating a problem or error).
          */
         bool verify(const NNormalSurface* s,
-                const NMatrixInt* matchingEqns = 0) const;
+                const MatrixInt* matchingEqns = 0) const;
 
         /**
          * Ensures that the given angle structure satisfies
@@ -481,7 +481,7 @@ class TreeTraversal : public BanConstraint {
          * (indicating a problem or error).
          */
         bool verify(const AngleStructure* s,
-                const NMatrixInt* angleEqns = 0) const;
+                const MatrixInt* angleEqns = 0) const;
 
     protected:
         /**

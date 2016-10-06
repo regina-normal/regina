@@ -1074,7 +1074,7 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
         arg(roles[endPreimage]);
 }
 
-QString NTriCompositionUI::matrixString(const regina::NMatrix2& matrix) {
+QString NTriCompositionUI::matrixString(const regina::Matrix2& matrix) {
     return QString("[ %1 %2 | %3 %4 ]").
         arg(matrix[0][0]).arg(matrix[0][1]).arg(matrix[1][0]).arg(matrix[1][1]);
 }

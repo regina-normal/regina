@@ -109,7 +109,7 @@ bool NSatAnnulus::isAdjacent(const NSatAnnulus& other, bool* refVert,
     return false;
 }
 
-bool NSatAnnulus::isJoined(const NSatAnnulus& other, NMatrix2& matching) const {
+bool NSatAnnulus::isJoined(const NSatAnnulus& other, Matrix2& matching) const {
     if (other.meetsBoundary())
         return false;
 
@@ -142,17 +142,17 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, NMatrix2& matching) const {
 
     // It's a match.  We just need to work out the matching matrix.
     if        (roleMap == NPerm4(0, 1, 2, 3)) {
-        matching = NMatrix2(1, 0, 0, 1);
+        matching = Matrix2(1, 0, 0, 1);
     } else if (roleMap == NPerm4(1, 2, 0, 3)) {
-        matching = NMatrix2(-1, 1, -1, 0);
+        matching = Matrix2(-1, 1, -1, 0);
     } else if (roleMap == NPerm4(2, 0, 1, 3)) {
-        matching = NMatrix2(0, -1, 1, -1);
+        matching = Matrix2(0, -1, 1, -1);
     } else if (roleMap == NPerm4(0, 2, 1, 3)) {
-        matching = NMatrix2(0, 1, 1, 0);
+        matching = Matrix2(0, 1, 1, 0);
     } else if (roleMap == NPerm4(2, 1, 0, 3)) {
-        matching = NMatrix2(1, -1, 0, -1);
+        matching = Matrix2(1, -1, 0, -1);
     } else if (roleMap == NPerm4(1, 0, 2, 3)) {
-        matching = NMatrix2(-1, 0, -1, 1);
+        matching = Matrix2(-1, 0, -1, 1);
     }
     if (swapTriangles)
         matching.negate();

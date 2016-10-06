@@ -94,7 +94,7 @@ class REGINA_API NGraphPair : public NManifold {
         NSFSpace* sfs_[2];
             /**< The two bounded Seifert fibred spaces that are joined
                  together. */
-        NMatrix2 matchingReln_;
+        Matrix2 matchingReln_;
             /**< The matrix describing how the two spaces are joined;
                  see the class notes for details. */
 
@@ -153,7 +153,7 @@ class REGINA_API NGraphPair : public NManifold {
          * @param matchingReln the 2-by-2 matching matrix.
          */
         NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
-            const NMatrix2& matchingReln);
+            const Matrix2& matchingReln);
         /**
          * Destroys this structure along with the component Seifert
          * fibred spaces and the matching matrix.
@@ -176,7 +176,7 @@ class REGINA_API NGraphPair : public NManifold {
          *
          * @return a reference to the matching matrix.
          */
-        const NMatrix2& matchingReln() const;
+        const Matrix2& matchingReln() const;
 
         /**
          * Determines in a fairly ad-hoc fashion whether this
@@ -218,7 +218,7 @@ class REGINA_API NGraphPair : public NManifold {
          *
          * @param reln the matching matrix to simplify.
          */
-        static void reduceSign(NMatrix2& reln);
+        static void reduceSign(Matrix2& reln);
 };
 
 /*@}*/
@@ -235,7 +235,7 @@ inline NGraphPair::NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
 }
 
 inline NGraphPair::NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
-        const NMatrix2& matchingReln) : matchingReln_(matchingReln) {
+        const Matrix2& matchingReln) : matchingReln_(matchingReln) {
     sfs_[0] = sfs0;
     sfs_[1] = sfs1;
 
@@ -246,7 +246,7 @@ inline const NSFSpace& NGraphPair::sfs(unsigned which) const {
     return *sfs_[which];
 }
 
-inline const NMatrix2& NGraphPair::matchingReln() const {
+inline const Matrix2& NGraphPair::matchingReln() const {
     return matchingReln_;
 }
 

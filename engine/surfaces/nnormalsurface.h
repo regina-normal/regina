@@ -204,8 +204,8 @@ REGINA_API extern const NPerm4 __octDiscArcs[24];
 class EnumConstraints;
 class NXMLNormalSurfaceReader;
 
-template <typename> class NMatrixIntDomain;
-typedef NMatrixIntDomain<Integer> NMatrixInt;
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 template <int, int> class Face;
@@ -346,7 +346,7 @@ struct NormalInfo;
  *   Otherwise you can use the default implementations (which returns zero).
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const NTriangulation*)</tt>,
- *   <tt>NMatrixInt* makeMatchingEquations(const NTriangulation*)</tt> and
+ *   <tt>MatrixInt* makeMatchingEquations(const NTriangulation*)</tt> and
  *   makeEmbeddedConstraints(const NTriangulation*) must be
  *   declared and implemented.</li>
  * </ul>
@@ -704,7 +704,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @return a newly allocated set of matching equations.
          */
         #ifdef __DOXYGEN
-            static NMatrixInt* makeMatchingEquations(
+            static MatrixInt* makeMatchingEquations(
                 const NTriangulation* triangulation);
         #endif
         /**
@@ -1582,7 +1582,7 @@ class REGINA_API NNormalSurface :
          * is not of type SnapPeaTriangulation, or if it fails to meet the
          * preconditions outlined above).
          */
-        NMatrixInt* boundaryIntersections() const;
+        MatrixInt* boundaryIntersections() const;
 
         /**
          * Gives read-only access to the raw vector that sits beneath this

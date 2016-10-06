@@ -42,7 +42,7 @@
 using regina::Integer;
 using regina::NMarkedAbelianGroup;
 using regina::NHomMarkedAbelianGroup;
-using regina::NMatrixInt;
+using regina::MatrixInt;
 using regina::NGroupPresentation;
 using regina::NGroupExpression;
 using regina::NHomGroupPresentation;

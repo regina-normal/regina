@@ -54,8 +54,8 @@ namespace regina {
 
 class Ray;
 
-template <typename> class NMatrixIntDomain;
-typedef NMatrixIntDomain<Integer> NMatrixInt;
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -494,7 +494,7 @@ class LPInitialTableaux {
             /**< The coordinate system used for the matrix of matching
                  equations; this must be one of NS_QUAD, NS_STANDARD,
                  or NS_ANGLE. */
-        NMatrixInt* eqns_;
+        MatrixInt* eqns_;
             /**< The adjusted matching equation matrix, in dense form.
                  The precise adjustments that we make are described in the
                  LPInitialTableaux class notes. */

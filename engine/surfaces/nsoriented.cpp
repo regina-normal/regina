@@ -78,14 +78,14 @@ NNormalSurfaceVector* NNormalSurfaceVectorOriented::makeZeroVector(
         14 * triangulation->size());
 }
 
-NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
+MatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
         const NTriangulation* triangulation) {
     size_t nCoords = 14 * triangulation->size();
     // Six equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 6 * (4 * long(triangulation->size()) -
         long(triangulation->countTriangles()));
-    NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
+    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
 
     // Run through each internal triangle and add the corresponding three
     // equations.

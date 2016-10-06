@@ -36,7 +36,7 @@
 #include "maths/matrix.h"
 #include "testsuite/maths/testmaths.h"
 
-using regina::NMatrixInt;
+using regina::MatrixInt;
 
 class MatrixOpsTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(MatrixOpsTest);
@@ -48,38 +48,38 @@ class MatrixOpsTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        NMatrixInt zero34;
+        MatrixInt zero34;
             /**< A zero 3-by-4 matrix. */
 
-        NMatrixInt zero43;
+        MatrixInt zero43;
             /**< A zero 4-by-3 matrix. */
 
-        NMatrixInt identity3;
+        MatrixInt identity3;
             /**< A 3-by-3 identity matrix. */
 
-        NMatrixInt square3;
+        MatrixInt square3;
             /**< A simple 3-by-3 integer matrix given as an example in the
                  Smith normal form page on Wikipedia (September 2007).
                  The Smith normal form has diagonal (2, 6, 12). */
 
-        NMatrixInt rect34;
+        MatrixInt rect34;
             /**< A more complex 3-by-4 example whose Smith normal form has
                  diagonal (1, 1, 6). */
 
-        NMatrixInt rect43;
+        MatrixInt rect43;
             /**< A 4-by-3 matrix, filled with the same data as \a rect34 but
                  wrapping to a new row every third element instead of every
                  fourth.  The Smith normal form has diagonal (1, 1, 12). */
 
-        NMatrixInt red43;
+        MatrixInt red43;
             /**< A 4-by-3 matrix with both redundant rows and columns.
                  The Smith normal form has diagonal (1, 4, 0). */
 
-        NMatrixInt dup34;
+        MatrixInt dup34;
             /**< A 3-by-4 matrix with a trivial duplicate row and a Smith
                  normal form with diagonal (1, 1, 1). */
 
-        NMatrixInt dup43;
+        MatrixInt dup43;
             /**< The exact transpose of \a dup34. */
 
     public:
@@ -134,9 +134,9 @@ class MatrixOpsTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        static void checkSNF3(const NMatrixInt& m, const char* name,
+        static void checkSNF3(const MatrixInt& m, const char* name,
                 long d0, long d1, long d2) {
-            NMatrixInt ans(m);
+            MatrixInt ans(m);
             regina::smithNormalForm(ans);
 
             if (ans.rows() != m.rows() || ans.columns() != m.columns()) {
@@ -232,7 +232,7 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             checkSNF3(dup43, "duplicated 4x3 example", 1, 1, 1);
         }
 
-        static void checkSNFBasis(const NMatrixInt& m, const char* name) {
+        static void checkSNFBasis(const MatrixInt& m, const char* name) {
             // Assume here that the one-argument smithNormalForm() is known to
             // be working.
             //
@@ -240,16 +240,16 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             // verify that they behave as advertised.
 
             // Get the SNF result from the one-argument routine.
-            NMatrixInt snf(m);
+            MatrixInt snf(m);
             regina::smithNormalForm(snf);
 
             // Do it now with the five-argument routine, to collect
             // change of basis matrices.
-            NMatrixInt snfBasis(m);
-            NMatrixInt R(m.columns(), m.columns());
-            NMatrixInt C(m.rows(), m.rows());
-            NMatrixInt invR(R);
-            NMatrixInt invC(C);
+            MatrixInt snfBasis(m);
+            MatrixInt R(m.columns(), m.columns());
+            MatrixInt C(m.rows(), m.rows());
+            MatrixInt invR(R);
+            MatrixInt invC(C);
 
             regina::smithNormalForm(snfBasis, R, invR, C, invC);
 
@@ -290,7 +290,7 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             checkSNFBasis(dup43, "duplicated 4x3 example");
         }
 
-        static void checkMetricalSNF(const NMatrixInt& m, const char* name) {
+        static void checkMetricalSNF(const MatrixInt& m, const char* name) {
             // Assume here that the one-argument smithNormalForm() is known to
             // be working.
             //
@@ -298,16 +298,16 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             // verify that they behave as advertised.
 
             // Get the SNF result from the one-argument routine.
-            NMatrixInt snf(m);
+            MatrixInt snf(m);
             regina::smithNormalForm(snf);
 
             // Do it now with the five-argument routine, to collect
             // change of basis matrices.
-            NMatrixInt snfBasis(m);
-            NMatrixInt R(m.columns(), m.columns());
-            NMatrixInt C(m.rows(), m.rows());
-            NMatrixInt invR(R);
-            NMatrixInt invC(C);
+            MatrixInt snfBasis(m);
+            MatrixInt R(m.columns(), m.columns());
+            MatrixInt C(m.rows(), m.rows());
+            MatrixInt invR(R);
+            MatrixInt invC(C);
 
             regina::metricalSmithNormalForm(snfBasis, &R, &invR, &C, &invC);
 

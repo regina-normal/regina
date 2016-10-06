@@ -39,7 +39,7 @@
 using namespace boost::python;
 using regina::NHomMarkedAbelianGroup;
 using regina::NMarkedAbelianGroup;
-using regina::NMatrixInt;
+using regina::MatrixInt;
 using regina::Integer;
 
 namespace {
@@ -138,9 +138,9 @@ namespace {
 void addNMarkedAbelianGroup() {
     class_<NMarkedAbelianGroup, std::auto_ptr<NMarkedAbelianGroup>,
             boost::noncopyable> ( "NMarkedAbelianGroup",
-            init<const NMatrixInt&, const NMatrixInt&>())
+            init<const MatrixInt&, const MatrixInt&>())
         .def(init<const NMarkedAbelianGroup&>())
-        .def(init<const NMatrixInt&, const NMatrixInt&, const Integer&>())
+        .def(init<const MatrixInt&, const MatrixInt&, const Integer&>())
         .def(init<unsigned long, const Integer&>())
         .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
         .def("rank", &NMarkedAbelianGroup::rank)
@@ -179,7 +179,7 @@ void addNMarkedAbelianGroup() {
     class_<NHomMarkedAbelianGroup, std::auto_ptr<NHomMarkedAbelianGroup>,
             boost::noncopyable>( "NHomMarkedAbelianGroup",
             init<const NMarkedAbelianGroup&, const NMarkedAbelianGroup&,
-                const NMatrixInt&>())
+                const MatrixInt&>())
         .def(init<const NHomMarkedAbelianGroup&>())
         .def("isChainMap", &NHomMarkedAbelianGroup::isChainMap)
         .def("isCycleMap", &NHomMarkedAbelianGroup::isCycleMap)

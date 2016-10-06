@@ -126,7 +126,7 @@ unsigned long NLayering::extend() {
 }
 
 bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm4 upperRoles0,
-        NTetrahedron* upperBdry1, NPerm4 upperRoles1, NMatrix2& upperReln)
+        NTetrahedron* upperBdry1, NPerm4 upperRoles1, Matrix2& upperReln)
         const {
     // We can cut half our cases by assuming that upperBdry0 meets with
     // newBdryTet[0] and that upperBdry1 meets with newBdryTet[1].
@@ -176,23 +176,23 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, NPerm4 upperRoles0,
     } else if (cross == NPerm4(0, 2, 1, 3)) {
         // new a = + old b
         // new b = + old a
-        upperReln = NMatrix2(0, 1, 1, 0) * reln;
+        upperReln = Matrix2(0, 1, 1, 0) * reln;
     } else if (cross == NPerm4(1, 0, 2, 3)) {
         // new a = - old a
         // new b = - old a + old b
-        upperReln = NMatrix2(-1, 0, -1, 1) * reln;
+        upperReln = Matrix2(-1, 0, -1, 1) * reln;
     } else if (cross == NPerm4(1, 2, 0, 3)) {
         // new a = - old a + old b
         // new b = - old a
-        upperReln = NMatrix2(-1, 1, -1, 0) * reln;
+        upperReln = Matrix2(-1, 1, -1, 0) * reln;
     } else if (cross == NPerm4(2, 0, 1, 3)) {
         // new a = - old b
         // new b = + old a - old b
-        upperReln = NMatrix2(0, -1, 1, -1) * reln;
+        upperReln = Matrix2(0, -1, 1, -1) * reln;
     } else if (cross == NPerm4(2, 1, 0, 3)) {
         // new a = + old a - old b
         // new b = - old b
-        upperReln = NMatrix2(1, -1, 0, -1) * reln;
+        upperReln = Matrix2(1, -1, 0, -1) * reln;
     }
 
     // Don't forget to account for the 180 degree rotation if it

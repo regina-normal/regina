@@ -129,7 +129,7 @@ class REGINA_API NLayering : public boost::noncopyable {
             /**< The corresponding two permutations of the new boundary.
                  See the class notes for details. */
 
-        NMatrix2 reln;
+        Matrix2 reln;
             /**< A matrix that expresses the new boundary curves in terms
                  of the old, assuming that the old boundary is in fact a
                  torus as described in the class notes.  The first row of
@@ -278,7 +278,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          *
          * @return the matrix relating the old and new boundary curves.
          */
-        const NMatrix2& boundaryReln() const;
+        const Matrix2& boundaryReln() const;
 
         /**
          * Examines whether a single additional tetrahedron has been
@@ -403,7 +403,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          */
         bool matchesTop(NTetrahedron* upperBdry0, NPerm4 upperRoles0,
             NTetrahedron* upperBdry1, NPerm4 upperRoles1,
-            NMatrix2& upperReln) const;
+            Matrix2& upperReln) const;
 };
 
 /*@}*/
@@ -430,7 +430,7 @@ inline NPerm4 NLayering::newBoundaryRoles(unsigned which) const {
     return newBdryRoles_[which];
 }
 
-inline const NMatrix2& NLayering::boundaryReln() const {
+inline const Matrix2& NLayering::boundaryReln() const {
     return reln;
 }
 

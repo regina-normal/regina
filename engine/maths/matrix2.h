@@ -51,14 +51,14 @@ namespace regina {
 
 /**
  * Represents a 2-by-2 integer matrix.  The advantages of using this
- * class over the larger NMatrixInt and friends is that this class has
+ * class over the larger MatrixInt and friends is that this class has
  * less overhead and offers additional mathematical support routines
  * that the larger classes do not.
  *
  * This class only contains four long integers, and so it may be considered
  * small enough to pass about by value.
  */
-class REGINA_API NMatrix2 {
+class REGINA_API Matrix2 {
     private:
         long data[2][2];
             /**< The four entries in this matrix, indexed by row and
@@ -68,13 +68,13 @@ class REGINA_API NMatrix2 {
         /**
          * Initialises to the zero matrix.
          */
-        NMatrix2();
+        Matrix2();
         /**
          * Initialises to a copy of the given matrix.
          *
          * @param cloneMe the matrix to be copied.
          */
-        NMatrix2(const NMatrix2& cloneMe);
+        Matrix2(const Matrix2& cloneMe);
         /**
          * Initialises to the given integer values.
          *
@@ -85,7 +85,7 @@ class REGINA_API NMatrix2 {
          *
          * @param values the four values to insert into the new matrix.
          */
-        NMatrix2(const long values[2][2]);
+        Matrix2(const long values[2][2]);
         /**
          * Initialises to the given integer values.
          *
@@ -94,7 +94,7 @@ class REGINA_API NMatrix2 {
          * @param val10 the value to place in row 1, column 0.
          * @param val11 the value to place in row 1, column 1.
          */
-        NMatrix2(long val00, long val01, long val10, long val11);
+        Matrix2(long val00, long val01, long val10, long val11);
 
         /**
          * Sets this matrix to be a copy of the given matrix.
@@ -102,7 +102,7 @@ class REGINA_API NMatrix2 {
          * @param cloneMe the matrix to be copied.
          * @return a reference to this matrix.
          */
-        NMatrix2& operator = (const NMatrix2& cloneMe);
+        Matrix2& operator = (const Matrix2& cloneMe);
         /**
          * Sets the elements of this matrix to the given integer values.
          *
@@ -114,7 +114,7 @@ class REGINA_API NMatrix2 {
          * @param values the four values to copy into this matrix.
          * @return a reference to this matrix.
          */
-        NMatrix2& operator = (const long values[2][2]);
+        Matrix2& operator = (const long values[2][2]);
 
         /**
          * Returns a single row of this matrix.
@@ -148,7 +148,7 @@ class REGINA_API NMatrix2 {
          * @param other the matrix that this should be multiplied by.
          * @return the product \a this * \a other.
          */
-        NMatrix2 operator * (const NMatrix2& other) const;
+        Matrix2 operator * (const Matrix2& other) const;
         /**
          * Calculates the scalar product of this matrix and the given
          * integer.  This matrix is not changed.
@@ -156,7 +156,7 @@ class REGINA_API NMatrix2 {
          * @param scalar the integer that this matrix should be multiplied by.
          * @return the product \a this * \a scalar.
          */
-        NMatrix2 operator * (long scalar) const;
+        Matrix2 operator * (long scalar) const;
         /**
          * Calculates the sum of two matrices.
          * Neither this nor the given matrix is changed.
@@ -164,7 +164,7 @@ class REGINA_API NMatrix2 {
          * @param other the matrix to add to this.
          * @return the sum \a this + \a other.
          */
-        NMatrix2 operator + (const NMatrix2& other) const;
+        Matrix2 operator + (const Matrix2& other) const;
         /**
          * Calculates the difference of two matrices.
          * Neither this nor the given matrix is changed.
@@ -172,21 +172,21 @@ class REGINA_API NMatrix2 {
          * @param other the matrix to subtract from this.
          * @return the difference \a this - \a other.
          */
-        NMatrix2 operator - (const NMatrix2& other) const;
+        Matrix2 operator - (const Matrix2& other) const;
         /**
          * Determines the negative of this matrix.
          * This matrix is not changed.
          *
          * @return the negative of this matrix.
          */
-        NMatrix2 operator - () const;
+        Matrix2 operator - () const;
         /**
          * Returns the transpose of this matrix.
          * This matrix is not changed.
          *
          * @return the transpose of this matrix.
          */
-        NMatrix2 transpose() const;
+        Matrix2 transpose() const;
         /**
          * Calculates the inverse of this matrix.
          * This matrix is not changed.
@@ -198,7 +198,7 @@ class REGINA_API NMatrix2 {
          * have determinant +1 or -1, the zero matrix will be returned
          * instead.
          */
-        NMatrix2 inverse() const;
+        Matrix2 inverse() const;
 
         /**
          * Adds the given matrix to this.
@@ -207,7 +207,7 @@ class REGINA_API NMatrix2 {
          * @param other the matrix to add to this.
          * @return a reference to this matrix with its new value.
          */
-        NMatrix2& operator += (const NMatrix2& other);
+        Matrix2& operator += (const Matrix2& other);
         /**
          * Subtracts the given matrix from this.
          * This matrix is changed to reflect the result.
@@ -215,7 +215,7 @@ class REGINA_API NMatrix2 {
          * @param other the matrix to subtract from this.
          * @return a reference to this matrix with its new value.
          */
-        NMatrix2& operator -= (const NMatrix2& other);
+        Matrix2& operator -= (const Matrix2& other);
         /**
          * Multiplies this by the given matrix.
          * This matrix is changed to reflect the result.
@@ -223,7 +223,7 @@ class REGINA_API NMatrix2 {
          * @param other the matrix by which this should be multiplied.
          * @return a reference to this matrix with its new value.
          */
-        NMatrix2& operator *= (const NMatrix2& other);
+        Matrix2& operator *= (const Matrix2& other);
         /**
          * Multiplies this by the given scalar.
          * This matrix is changed to reflect the result.
@@ -231,7 +231,7 @@ class REGINA_API NMatrix2 {
          * @param scalar the scalar by which this should be multiplied.
          * @return a reference to this matrix with its new value.
          */
-        NMatrix2& operator *= (long scalar);
+        Matrix2& operator *= (long scalar);
         /**
          * Negates this matrix.
          * This matrix is changed to reflect the result.
@@ -254,7 +254,7 @@ class REGINA_API NMatrix2 {
          * @param compare the matrix with which this will be compared.
          * @return \c true if and only if this matrix is equal to \a compare.
          */
-        bool operator == (const NMatrix2& compare) const;
+        bool operator == (const Matrix2& compare) const;
         /**
          * Determines if this is not equal to the given matrix.
          *
@@ -262,7 +262,7 @@ class REGINA_API NMatrix2 {
          * @return \c true if and only if this matrix is not equal to
          * \a compare.
          */
-        bool operator != (const NMatrix2& compare) const;
+        bool operator != (const Matrix2& compare) const;
 
         /**
          * Returns the determinant of this matrix.
@@ -285,7 +285,7 @@ class REGINA_API NMatrix2 {
          */
         bool isZero() const;
 
-    friend std::ostream& operator << (std::ostream& out, const NMatrix2& mat);
+    friend std::ostream& operator << (std::ostream& out, const Matrix2& mat);
 };
 
 /**
@@ -297,7 +297,7 @@ class REGINA_API NMatrix2 {
  * @param mat the matrix to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const NMatrix2& mat);
+REGINA_API std::ostream& operator << (std::ostream& out, const Matrix2& mat);
 
 /**
  * Determines whether the first given matrix is more aesthetically
@@ -311,7 +311,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NMatrix2& mat);
  * or \c false if either the matrices are equal or \a m2 is more
  * pleasing than \a m1.
  */
-REGINA_API bool simpler(const NMatrix2& m1, const NMatrix2& m2);
+REGINA_API bool simpler(const Matrix2& m1, const Matrix2& m2);
 
 /**
  * Determines whether the first given pair of matrices is more aesthetically
@@ -330,136 +330,144 @@ REGINA_API bool simpler(const NMatrix2& m1, const NMatrix2& m2);
  * the second pair, or \c false if either the ordered pairs are equal or
  * the second pair is more pleasing than the first.
  */
-REGINA_API bool simpler(const NMatrix2& pair1first, const NMatrix2& pair1second,
-        const NMatrix2& pair2first, const NMatrix2& pair2second);
+REGINA_API bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
+        const Matrix2& pair2first, const Matrix2& pair2second);
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NMatrix2 has now been renamed to Matrix2.
+ */
+REGINA_DEPRECATED typedef Matrix2 NMatrix2;
 
 /*@}*/
 
-// Inline functions for NMatrix2
+// Inline functions for Matrix2
 
-inline NMatrix2::NMatrix2() {
+inline Matrix2::Matrix2() {
     data[0][0] = data[0][1] = data[1][0] = data[1][1] = 0;
 }
 
-inline NMatrix2::NMatrix2(const NMatrix2& cloneMe) {
+inline Matrix2::Matrix2(const Matrix2& cloneMe) {
     data[0][0] = cloneMe.data[0][0]; data[0][1] = cloneMe.data[0][1];
     data[1][0] = cloneMe.data[1][0]; data[1][1] = cloneMe.data[1][1];
 }
 
-inline NMatrix2::NMatrix2(const long values[2][2]) {
+inline Matrix2::Matrix2(const long values[2][2]) {
     data[0][0] = values[0][0]; data[0][1] = values[0][1];
     data[1][0] = values[1][0]; data[1][1] = values[1][1];
 }
 
-inline NMatrix2::NMatrix2(long val00, long val01, long val10, long val11) {
+inline Matrix2::Matrix2(long val00, long val01, long val10, long val11) {
     data[0][0] = val00; data[0][1] = val01;
     data[1][0] = val10; data[1][1] = val11;
 }
 
-inline NMatrix2& NMatrix2::operator = (const NMatrix2& cloneMe) {
+inline Matrix2& Matrix2::operator = (const Matrix2& cloneMe) {
     data[0][0] = cloneMe.data[0][0]; data[0][1] = cloneMe.data[0][1];
     data[1][0] = cloneMe.data[1][0]; data[1][1] = cloneMe.data[1][1];
     return *this;
 }
 
-inline NMatrix2& NMatrix2::operator = (const long values[2][2]) {
+inline Matrix2& Matrix2::operator = (const long values[2][2]) {
     data[0][0] = values[0][0]; data[0][1] = values[0][1];
     data[1][0] = values[1][0]; data[1][1] = values[1][1];
     return *this;
 }
 
-inline const long* NMatrix2::operator [] (unsigned row) const {
+inline const long* Matrix2::operator [] (unsigned row) const {
     return data[row];
 }
 
-inline long* NMatrix2::operator [] (unsigned row) {
+inline long* Matrix2::operator [] (unsigned row) {
     return data[row];
 }
 
-inline NMatrix2 NMatrix2::operator * (const NMatrix2& other) const {
-    return NMatrix2(
+inline Matrix2 Matrix2::operator * (const Matrix2& other) const {
+    return Matrix2(
         data[0][0] * other.data[0][0] + data[0][1] * other.data[1][0],
         data[0][0] * other.data[0][1] + data[0][1] * other.data[1][1],
         data[1][0] * other.data[0][0] + data[1][1] * other.data[1][0],
         data[1][0] * other.data[0][1] + data[1][1] * other.data[1][1]);
 }
 
-inline NMatrix2 NMatrix2::operator * (long scalar) const {
-    return NMatrix2(
+inline Matrix2 Matrix2::operator * (long scalar) const {
+    return Matrix2(
         data[0][0] * scalar, data[0][1] * scalar,
         data[1][0] * scalar, data[1][1] * scalar);
 }
 
-inline NMatrix2 NMatrix2::operator + (const NMatrix2& other) const {
-    return NMatrix2(
+inline Matrix2 Matrix2::operator + (const Matrix2& other) const {
+    return Matrix2(
         data[0][0] + other.data[0][0], data[0][1] + other.data[0][1],
         data[1][0] + other.data[1][0], data[1][1] + other.data[1][1]);
 }
 
-inline NMatrix2 NMatrix2::operator - (const NMatrix2& other) const {
-    return NMatrix2(
+inline Matrix2 Matrix2::operator - (const Matrix2& other) const {
+    return Matrix2(
         data[0][0] - other.data[0][0], data[0][1] - other.data[0][1],
         data[1][0] - other.data[1][0], data[1][1] - other.data[1][1]);
 }
 
-inline NMatrix2 NMatrix2::operator - () const {
-    return NMatrix2(-data[0][0], -data[0][1], -data[1][0], -data[1][1]);
+inline Matrix2 Matrix2::operator - () const {
+    return Matrix2(-data[0][0], -data[0][1], -data[1][0], -data[1][1]);
 }
 
-inline NMatrix2 NMatrix2::transpose() const {
-    return NMatrix2(data[0][0], data[1][0], data[0][1], data[1][1]);
+inline Matrix2 Matrix2::transpose() const {
+    return Matrix2(data[0][0], data[1][0], data[0][1], data[1][1]);
 }
 
-inline NMatrix2& NMatrix2::operator += (const NMatrix2& other) {
+inline Matrix2& Matrix2::operator += (const Matrix2& other) {
     data[0][0] += other.data[0][0]; data[0][1] += other.data[0][1];
     data[1][0] += other.data[1][0]; data[1][1] += other.data[1][1];
     return *this;
 }
 
-inline NMatrix2& NMatrix2::operator -= (const NMatrix2& other) {
+inline Matrix2& Matrix2::operator -= (const Matrix2& other) {
     data[0][0] -= other.data[0][0]; data[0][1] -= other.data[0][1];
     data[1][0] -= other.data[1][0]; data[1][1] -= other.data[1][1];
     return *this;
 }
 
-inline NMatrix2& NMatrix2::operator *= (long scalar) {
+inline Matrix2& Matrix2::operator *= (long scalar) {
     data[0][0] *= scalar; data[0][1] *= scalar;
     data[1][0] *= scalar; data[1][1] *= scalar;
     return *this;
 }
 
-inline void NMatrix2::negate() {
+inline void Matrix2::negate() {
     data[0][0] = -data[0][0]; data[0][1] = -data[0][1];
     data[1][0] = -data[1][0]; data[1][1] = -data[1][1];
 }
 
-inline bool NMatrix2::operator == (const NMatrix2& compare) const {
+inline bool Matrix2::operator == (const Matrix2& compare) const {
     return (
         data[0][0] == compare.data[0][0] && data[0][1] == compare.data[0][1] &&
         data[1][0] == compare.data[1][0] && data[1][1] == compare.data[1][1]);
 }
 
-inline bool NMatrix2::operator != (const NMatrix2& compare) const {
+inline bool Matrix2::operator != (const Matrix2& compare) const {
     return (
         data[0][0] != compare.data[0][0] || data[0][1] != compare.data[0][1] ||
         data[1][0] != compare.data[1][0] || data[1][1] != compare.data[1][1]);
 }
 
-inline long NMatrix2::determinant() const {
+inline long Matrix2::determinant() const {
     return data[0][0] * data[1][1] - data[0][1] * data[1][0];
 }
 
-inline bool NMatrix2::isIdentity() const {
+inline bool Matrix2::isIdentity() const {
     return (data[0][0] == 1 && data[0][1] == 0 &&
             data[1][0] == 0 && data[1][1] == 1);
 }
 
-inline bool NMatrix2::isZero() const {
+inline bool Matrix2::isZero() const {
     return (data[0][0] == 0 && data[0][1] == 0 &&
             data[1][0] == 0 && data[1][1] == 0);
 }
 
-inline std::ostream& operator << (std::ostream& out, const NMatrix2& mat) {
+inline std::ostream& operator << (std::ostream& out, const Matrix2& mat) {
     return out << "[[ " << mat.data[0][0] << ' ' << mat.data[0][1]
         << " ] [ " << mat.data[1][0] << ' ' << mat.data[1][1] << " ]]";
 }

@@ -93,14 +93,14 @@ class REGINA_API NTxICore :
             /**< Describes which tetrahedron vertices play which roles
                  in the upper and lower boundary triangles.  See bdryRoles()
                  for details. */
-        NMatrix2 bdryReln_[2];
+        Matrix2 bdryReln_[2];
             /**< Expresses the \a alpha and \a beta curves for each
                  torus boundary in terms of specific tetrahedron edges and
                  vertices.  The elements \a bdryReln_[0] and \a bdryReln_[1]
                  refer to the upper and lower boundaries respectively,
                  and each of these matrices must have determinant +1 or -1.
                  See bdryReln() for further details. */
-        NMatrix2 parallelReln_;
+        Matrix2 parallelReln_;
             /**< Expresses the lower \a alpha and \a beta curves in
                  terms of the upper \a alpha and \a beta curves.  See
                  parallelReln() for details. */
@@ -214,7 +214,7 @@ class REGINA_API NTxICore :
          * @return the relationship between the boundary curves and
          * tetrahedron edges.
          */
-        const NMatrix2& bdryReln(unsigned whichBdry) const;
+        const Matrix2& bdryReln(unsigned whichBdry) const;
         /**
          * Returns a 2-by-2 matrix describing the parallel relationship
          * between the upper and lower boundary curves.
@@ -242,7 +242,7 @@ class REGINA_API NTxICore :
          *
          * @return the relationship between the upper and lower boundary curves.
          */
-        const NMatrix2& parallelReln() const;
+        const Matrix2& parallelReln() const;
 
         /**
          * Returns the name of this specific triangulation of
@@ -477,11 +477,11 @@ inline NPerm4 NTxICore::bdryRoles(unsigned whichBdry, unsigned whichTri)
     return bdryRoles_[whichBdry][whichTri];
 }
 
-inline const NMatrix2& NTxICore::bdryReln(unsigned whichBdry) const {
+inline const Matrix2& NTxICore::bdryReln(unsigned whichBdry) const {
     return bdryReln_[whichBdry];
 }
 
-inline const NMatrix2& NTxICore::parallelReln() const {
+inline const Matrix2& NTxICore::parallelReln() const {
     return parallelReln_;
 }
 

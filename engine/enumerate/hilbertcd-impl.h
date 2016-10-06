@@ -55,7 +55,7 @@ namespace regina {
 
 template <class RayClass, class OutputIterator>
 void HilbertCD::enumerateHilbertBasis(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints) {
+        const MatrixInt& subspace, const EnumConstraints* constraints) {
     // Get the dimension of the space.
     size_t dim = subspace.columns();
     if (dim == 0)
@@ -93,7 +93,7 @@ void HilbertCD::enumerateHilbertBasis(OutputIterator results,
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void HilbertCD::enumerateUsingBitmask(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints) {
+        const MatrixInt& subspace, const EnumConstraints* constraints) {
     // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
     size_t dim = subspace.columns();
     size_t nEqns = subspace.rows();

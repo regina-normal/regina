@@ -58,8 +58,8 @@ class ProgressTracker;
 class NXMLNormalHypersurfaceListReader;
 class XMLPacketReader;
 
-template <typename> class NMatrixIntDomain;
-typedef NMatrixIntDomain<Integer> NMatrixInt;
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 // We *must* declare the specialisation here; otherwise this header has
@@ -280,7 +280,7 @@ class REGINA_API NNormalHypersurfaceList : public Packet {
          * @return the matching equations used to create this normal
          * hypersurface list.
          */
-        NMatrixInt* recreateMatchingEquations() const;
+        MatrixInt* recreateMatchingEquations() const;
 
         /**
          * An iterator that gives access to the raw vectors for hypersurfaces
@@ -704,7 +704,7 @@ REGINA_API NNormalHypersurfaceVector* makeZeroVector(
  * constants in NNormalHypersurfaceList.
  * @return a newly allocated set of matching equations.
  */
-REGINA_API NMatrixInt* makeMatchingEquations(
+REGINA_API MatrixInt* makeMatchingEquations(
     const Dim4Triangulation* triangulation, HyperCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
@@ -761,7 +761,7 @@ inline bool NNormalHypersurfaceList::dependsOnParent() const {
     return true;
 }
 
-inline NMatrixInt* NNormalHypersurfaceList::recreateMatchingEquations() const {
+inline MatrixInt* NNormalHypersurfaceList::recreateMatchingEquations() const {
     return makeMatchingEquations(triangulation(), coords_);
 }
 

@@ -56,7 +56,7 @@ const NAbelianGroup& NTriangulation::homology() const {
     long nGens = countTriangles() - countBoundaryFacets()
         + countComponents() - size();
     long nRels = countEdges() - nBdryEdges;
-    NMatrixInt pres(nRels, nGens);
+    MatrixInt pres(nRels, nGens);
 
     // Find out which triangle corresponds to which generator.
     long* genIndex = new long[countTriangles()];
@@ -137,7 +137,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
         - countVertices() + nBdryVertices
         + nClosedComponents;
     long nRels = countTriangles() - countBoundaryFacets();
-    NMatrixInt pres(nRels, nGens);
+    MatrixInt pres(nRels, nGens);
 
     // Find out which edge corresponds to which generator.
     long* genIndex = new long[countEdges()];

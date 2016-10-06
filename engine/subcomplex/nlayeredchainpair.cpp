@@ -208,7 +208,7 @@ NAbelianGroup* NLayeredChainPair::homology() const {
     // This is established simply by examining the edges on the boundary
     // of each layered chain.
     NAbelianGroup* ans = new NAbelianGroup();
-    NMatrixInt mat(3, 3);
+    MatrixInt mat(3, 3);
     mat.initialise(1);
     mat.entry(0, 1) = mat.entry(2, 2) = -1;
     mat.entry(1, 0) = chain_[0]->index();

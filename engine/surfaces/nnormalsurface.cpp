@@ -426,7 +426,7 @@ void NNormalSurface::calculateRealBoundary() const {
     realBoundary = false;
 }
 
-NMatrixInt* NNormalSurface::boundaryIntersections() const {
+MatrixInt* NNormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const SnapPeaTriangulation* snapPea =
         dynamic_cast<const SnapPeaTriangulation*>(triangulation());
@@ -448,13 +448,13 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
             return 0;
     }
 
-    NMatrixInt* equations = snapPea->slopeEquations();
+    MatrixInt* equations = snapPea->slopeEquations();
     if (! equations)
         return 0;
 
     size_t cusps = equations->rows() / 2;
     size_t numTet = snapPea->size();
-    NMatrixInt* slopes = new NMatrixInt(cusps, 2);
+    MatrixInt* slopes = new MatrixInt(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
         Integer meridian; // constructor sets this to 0
         Integer longitude; // constructor sets this to 0

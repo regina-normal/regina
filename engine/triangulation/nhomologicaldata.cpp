@@ -225,28 +225,28 @@ void NHomologicalData::computeChainComplexes() {
     chainComplexesComputed = true;
 
     // need to convert this so that it does not use tri
-    B0_.reset(new NMatrixInt(1, numDualCells[0]));
-    B1.reset(new NMatrixInt(numDualCells[0], numDualCells[1]));
-    B2.reset(new NMatrixInt(numDualCells[1], numDualCells[2]));
-    B3.reset(new NMatrixInt(numDualCells[2], numDualCells[3]));
-    B4.reset(new NMatrixInt(numDualCells[3], 1));
+    B0_.reset(new MatrixInt(1, numDualCells[0]));
+    B1.reset(new MatrixInt(numDualCells[0], numDualCells[1]));
+    B2.reset(new MatrixInt(numDualCells[1], numDualCells[2]));
+    B3.reset(new MatrixInt(numDualCells[2], numDualCells[3]));
+    B4.reset(new MatrixInt(numDualCells[3], 1));
 
-    A0.reset(new NMatrixInt(1, numStandardCells[0]));
-    A1.reset(new NMatrixInt(numStandardCells[0], numStandardCells[1]));
-    A2.reset(new NMatrixInt(numStandardCells[1], numStandardCells[2]));
-    A3.reset(new NMatrixInt(numStandardCells[2], numStandardCells[3]));
-    A4.reset(new NMatrixInt(numStandardCells[3], 1));
+    A0.reset(new MatrixInt(1, numStandardCells[0]));
+    A1.reset(new MatrixInt(numStandardCells[0], numStandardCells[1]));
+    A2.reset(new MatrixInt(numStandardCells[1], numStandardCells[2]));
+    A3.reset(new MatrixInt(numStandardCells[2], numStandardCells[3]));
+    A4.reset(new MatrixInt(numStandardCells[3], 1));
 
-    H1map.reset(new NMatrixInt(numStandardCells[1], numDualCells[1]));
+    H1map.reset(new MatrixInt(numStandardCells[1], numDualCells[1]));
 
-    Bd0.reset(new NMatrixInt(1, numBdryCells[0]));
-    Bd1.reset(new NMatrixInt(numBdryCells[0], numBdryCells[1]));
-    Bd2.reset(new NMatrixInt(numBdryCells[1], numBdryCells[2]));
-    Bd3.reset(new NMatrixInt(numBdryCells[2], 1));
+    Bd0.reset(new MatrixInt(1, numBdryCells[0]));
+    Bd1.reset(new MatrixInt(numBdryCells[0], numBdryCells[1]));
+    Bd2.reset(new MatrixInt(numBdryCells[1], numBdryCells[2]));
+    Bd3.reset(new MatrixInt(numBdryCells[2], 1));
 
-    B0Incl.reset(new NMatrixInt(numStandardCells[0], numBdryCells[0]));
-    B1Incl.reset(new NMatrixInt(numStandardCells[1], numBdryCells[1]));
-    B2Incl.reset(new NMatrixInt(numStandardCells[2], numBdryCells[2]));
+    B0Incl.reset(new MatrixInt(numStandardCells[0], numBdryCells[0]));
+    B1Incl.reset(new MatrixInt(numStandardCells[1], numBdryCells[1]));
+    B2Incl.reset(new MatrixInt(numStandardCells[2], numBdryCells[2]));
 
     long int temp;
     unsigned long i,j;
@@ -1210,8 +1210,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
     //           for every pvList vector, find corresponding standard vector.
 
 
-    NMatrixInt standardBasis( numStandardCells[1], pvList.size() );
-    const NMatrixInt& dualtostandard(h1CellApComputed.definingMatrix());
+    MatrixInt standardBasis( numStandardCells[1], pvList.size() );
+    const MatrixInt& dualtostandard(h1CellApComputed.definingMatrix());
 
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
@@ -1224,11 +1224,11 @@ void NHomologicalData::computeTorsionLinkingForm() {
     //           ppList[j] bounds, so find a chain with that boundary and
     //           put its info in a matrix.
 
-    NMatrixInt ON(mHomology1->N());
-    NMatrixInt R(ON.columns(),ON.columns());
-    NMatrixInt Ri(ON.columns(),ON.columns());
-    NMatrixInt C(ON.rows(),ON.rows());
-    NMatrixInt Ci(ON.rows(),ON.rows());
+    MatrixInt ON(mHomology1->N());
+    MatrixInt R(ON.columns(),ON.columns());
+    MatrixInt Ri(ON.columns(),ON.columns());
+    MatrixInt C(ON.rows(),ON.rows());
+    MatrixInt Ci(ON.rows(),ON.rows());
 
     smithNormalForm(ON, R, Ri, C, Ci);
     // boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
@@ -1236,13 +1236,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
     //                  ---------------- stepb ---
     //               ----stepc----
     // first I guess we need to determine rank of ON?
-    NMatrixInt areboundariesM( standardBasis );
+    MatrixInt areboundariesM( standardBasis );
 
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
             areboundariesM.entry(i,j) *= ppList[j];
 
-    NMatrixInt stepa( areboundariesM.rows(), areboundariesM.columns() );
+    MatrixInt stepa( areboundariesM.rows(), areboundariesM.columns() );
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
             for (k=0; k<C.columns(); k++)
@@ -1252,13 +1252,13 @@ void NHomologicalData::computeTorsionLinkingForm() {
     for (i=0; ((i<ON.rows()) && (i<ON.columns())); i++)
         if (ON.entry(i,i) != Integer::zero) rankON++;
 
-    NMatrixInt stepb( R.columns(), stepa.columns() );
+    MatrixInt stepb( R.columns(), stepa.columns() );
 
     for (i=0; i<rankON; i++)
         for (j=0; j<stepb.columns(); j++)
             stepb.entry(i,j) = stepa.entry(i,j).divByExact(ON.entry(i,i));
 
-    NMatrixInt boundingMat( stepb.rows(), stepb.columns() );
+    MatrixInt boundingMat( stepb.rows(), stepb.columns() );
 
     for (i=0; i<stepb.rows(); i++)
         for (j=0; j<stepb.columns(); j++)
@@ -1267,7 +1267,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     // step 4: intersect, construct matrix.
 
-    NMatrixRing<Rational> torsionLinkingFormPresentationMat(
+    MatrixRing<Rational> torsionLinkingFormPresentationMat(
         pvList.size(), pvList.size() );
 
     Integer tN,tD,tR;
@@ -1326,7 +1326,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         for (j=0; j<it1->second.size(); j++)
             h1PrimePowerDecomp[i].second[j] = it1->second[j].first;
 
-        linkingFormPD[i] = new NMatrixRing<Rational>(it1->second.size(),
+        linkingFormPD[i] = new MatrixRing<Rational>(it1->second.size(),
                 it1->second.size() );
         for (j=0; j<it1->second.size(); j++)
             for (k=0; k<it1->second.size(); k++)
@@ -1519,7 +1519,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         }
 
     // step 3: Seifert odd p-torsion legendre symbol invariant (done)
-    //           to do this I need to add a determinant to NMatrixRing class
+    //           to do this I need to add a determinant to MatrixRing class
     //           this invariant will be expressed as a
     //           std::vector< std::pair< Integer, std::vector< int > > >
     //           storing the odd prime, list of Legendre symbols -1, 0, 1.
@@ -1548,7 +1548,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         // dimensions of p^{j+1} subspace
         {
             // initialize a torRankV[i].second[j] square matrix.
-            NMatrixInt tempM(torRankV[i].second[j], torRankV[i].second[j]);
+            MatrixInt tempM(torRankV[i].second[j], torRankV[i].second[j]);
 
             // tempM will be the torRankV[i].second[j] square submatrix
             // starting at curri, multiplied by tI == p^j
@@ -1627,7 +1627,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         // std::vector< std::pair< Integer,
         //     std::vector<unsigned long> > > h1PrimePowerDecomp;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
-        //std::vector< NMatrixRing<Rational>* > linkingFormPD;
+        //std::vector< MatrixRing<Rational>* > linkingFormPD;
         for (i=0; i<h1PrimePowerDecomp[0].second.size(); i++) {
             // run down diagonal of linkingFormPD[0], for each (i,i) entry
             // multiply it by 2^{h1PrimePowerDecomp[0].second[i]-1} check if

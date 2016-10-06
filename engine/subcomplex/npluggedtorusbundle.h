@@ -136,7 +136,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
                  triangulation.  This region is owned by this object, and
                  refers to tetrahedra within this triangulation. */
 
-        NMatrix2 matchingReln_;
+        Matrix2 matchingReln_;
             /**< Describes how the two torus boundaries of the saturated
                  region are joined, as discussed in the class notes above. */
 
@@ -195,7 +195,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          *
          * @return the matching relation between the two region boundaries.
          */
-        const NMatrix2& matchingReln() const;
+        const Matrix2& matchingReln() const;
 
         NManifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
@@ -238,7 +238,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * I-bundle and layerings, as described in the class notes above.
          */
         NPluggedTorusBundle(const NTxICore& bundle, NIsomorphism* bundleIso,
-            NSatRegion* region, const NMatrix2& matchingReln);
+            NSatRegion* region, const Matrix2& matchingReln);
 
         /**
          * Determines whether the given triangulation is of the form
@@ -273,7 +273,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
 
 inline NPluggedTorusBundle::NPluggedTorusBundle(const NTxICore& bundle,
         NIsomorphism* bundleIso, NSatRegion* region,
-        const NMatrix2& matchingReln) :
+        const Matrix2& matchingReln) :
         bundle_(bundle), bundleIso_(bundleIso), region_(region),
         matchingReln_(matchingReln) {
 }
@@ -290,7 +290,7 @@ inline const NSatRegion& NPluggedTorusBundle::region() const {
     return *region_;
 }
 
-inline const NMatrix2& NPluggedTorusBundle::matchingReln() const {
+inline const Matrix2& NPluggedTorusBundle::matchingReln() const {
     return matchingReln_;
 }
 

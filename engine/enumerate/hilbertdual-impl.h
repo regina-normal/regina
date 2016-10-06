@@ -54,7 +54,7 @@ namespace regina {
 
 template <class RayClass, class OutputIterator>
 void HilbertDual::enumerateHilbertBasis(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     size_t dim = subspace.columns();
@@ -95,7 +95,7 @@ void HilbertDual::enumerateHilbertBasis(OutputIterator results,
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void HilbertDual::enumerateUsingBitmask(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
@@ -297,7 +297,7 @@ void HilbertDual::reduceBasis(std::list<VecSpec<BitmaskType>*>& reduce,
 
 template <class BitmaskType>
 void HilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
-        const NMatrixInt& subspace,
+        const MatrixInt& subspace,
         unsigned row,
         const BitmaskType* constraintsBegin,
         const BitmaskType* constraintsEnd) {

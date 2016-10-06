@@ -57,8 +57,8 @@ class ProgressTracker;
 class XMLPacketReader;
 class NXMLNormalSurfaceListReader;
 
-template <typename> class NMatrixIntDomain;
-typedef NMatrixIntDomain<Integer> NMatrixInt;
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 // We *must* declare the specialisation here; otherwise this header has
@@ -684,7 +684,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * @return the matching equations used to create this normal
          * surface list.
          */
-        NMatrixInt* recreateMatchingEquations() const;
+        MatrixInt* recreateMatchingEquations() const;
 
         /**
          * Exports this list of normal surfaces as a plain text CSV
@@ -1398,7 +1398,7 @@ REGINA_API NNormalSurfaceVector* makeZeroVector(
  * @param coords the coordinate system to be used.
  * @return a newly allocated set of matching equations.
  */
-REGINA_API NMatrixInt* makeMatchingEquations(
+REGINA_API MatrixInt* makeMatchingEquations(
     const NTriangulation* triangulation, NormalCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that

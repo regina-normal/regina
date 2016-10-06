@@ -64,7 +64,7 @@ namespace regina {
  * \ifacespython Not present, although the typedef MatrixInt is.
  */
 template <class T>
-class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
+class Matrix : public Output<Matrix<T> >, public boost::noncopyable {
     protected:
         unsigned long nRows;
             /**< The number of rows in the matrix. */
@@ -87,7 +87,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
          * @param rows the number of rows in the new matrix.
          * @param cols the number of columns in the new matrix.
          */
-        NMatrix(unsigned long rows, unsigned long cols) :
+        Matrix(unsigned long rows, unsigned long cols) :
                 nRows(rows), nCols(cols), data(new T*[rows]){
             for (unsigned long i = 0; i < rows; i++)
                 data[i] = new T[cols];
@@ -97,7 +97,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
          *
          * @param cloneMe the matrix to clone.
          */
-        NMatrix(const NMatrix& cloneMe) : nRows(cloneMe.nRows),
+        Matrix(const Matrix& cloneMe) : nRows(cloneMe.nRows),
                 nCols(cloneMe.nCols), data(new T*[cloneMe.nRows]) {
             unsigned long r, c;
             for (r = 0; r < nRows; r++) {
@@ -109,7 +109,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
         /**
          * Destroys this matrix.
          */
-        ~NMatrix() {
+        ~Matrix() {
             for (unsigned long i = 0; i < nRows; i++)
                 delete[] data[i];
             delete[] data;
@@ -221,7 +221,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
          * @return \c true if the matrices are equal as described above,
          * or \c false otherwise.
          */
-        bool operator == (const NMatrix<T>& other) const {
+        bool operator == (const Matrix<T>& other) const {
             if (nRows != other.nRows || nCols != other.nCols)
                 return false;
 
@@ -254,7 +254,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
          * @return \c true if the matrices are different as described above,
          * or \c false otherwise.
          */
-        bool operator != (const NMatrix<T>& other) const {
+        bool operator != (const Matrix<T>& other) const {
             return ! ((*this) == other);
         }
 
@@ -264,7 +264,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
          * Each row will be written on a separate line with elements in
          * each row separated by single spaces.
          *
-         * \ifacespython Not present, even if a subclass of NMatrix
+         * \ifacespython Not present, even if a subclass of Matrix
          * is mirrored and its inherited routines are mirrored also.
          *
          * @param out the output stream to which to write.
@@ -341,7 +341,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
  * Represents a matrix of elements from a given ring \a T.
  *
  * Note that many important functions (such as entry()) are inherited
- * from the parent class NMatrix, and are not documented again here.
+ * from the parent class Matrix, and are not documented again here.
  *
  * \pre Type \a T has a default constructor and overloads the assignment
  * (<tt>=</tt>) operator.
@@ -357,7 +357,7 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
  * \ifacespython Not present, although the typedef MatrixInt is.
  */
 template <class T>
-class NMatrixRing : public NMatrix<T> {
+class MatrixRing : public Matrix<T> {
     public:
         static T zero;
             /**< Zero in the underlying ring.
@@ -381,16 +381,16 @@ class NMatrixRing : public NMatrix<T> {
          * @param rows the number of rows in the new matrix.
          * @param cols the number of columns in the new matrix.
          */
-        NMatrixRing(unsigned long rows, unsigned long cols) :
-                NMatrix<T>(rows, cols) {
+        MatrixRing(unsigned long rows, unsigned long cols) :
+                Matrix<T>(rows, cols) {
         }
         /**
          * Creates a new matrix that is a clone of the given matrix.
          *
          * @param cloneMe the matrix to clone.
          */
-        NMatrixRing(const NMatrix<T>& cloneMe) :
-                NMatrix<T>(cloneMe) {
+        MatrixRing(const Matrix<T>& cloneMe) :
+                Matrix<T>(cloneMe) {
         }
 
         /**
@@ -551,12 +551,12 @@ class NMatrixRing : public NMatrix<T> {
          * of rows in the given matrix.
          *
          * \warning The returned matrix will be of the exact class
-         * NMatrixRing<T>, even if both this and \a other are of some common
-         * subclass of NMatrixRing<T>.  If you need a subclass to be returned,
+         * MatrixRing<T>, even if both this and \a other are of some common
+         * subclass of MatrixRing<T>.  If you need a subclass to be returned,
          * consider calling multiplyAs() instead.
          *
          * \ifacespython The multiplication operator for a subclass (such as
-         * NMatrixIntDomain) will return a new matrix of that same subclass.
+         * MatrixIntDomain) will return a new matrix of that same subclass.
          * That is, the python multiplication operator really calls
          * multiplyAs(), not this routine.
          *
@@ -564,9 +564,9 @@ class NMatrixRing : public NMatrix<T> {
          * @return a newly allocated matrix representing
          * <tt>this * other</tt>.
          */
-        std::unique_ptr<NMatrixRing<T>> operator * (const NMatrixRing<T>& other)
+        std::unique_ptr<MatrixRing<T>> operator * (const MatrixRing<T>& other)
                 const {
-            std::unique_ptr<NMatrixRing<T> > ans(new NMatrixRing<T>(
+            std::unique_ptr<MatrixRing<T> > ans(new MatrixRing<T>(
                 this->nRows, other.nCols));
 
             unsigned long row, col, k;
@@ -587,7 +587,7 @@ class NMatrixRing : public NMatrix<T> {
          *
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
-         * \pre The class \a MatrixClass is a subclass of NMatrixRing<T>,
+         * \pre The class \a MatrixClass is a subclass of MatrixRing<T>,
          * and can be fully initialised by calling the two-argument constructor
          * (passing the row and column counts) and then settng individual
          * elements via \a data[r][c].  In particular, there should not be any
@@ -601,7 +601,7 @@ class NMatrixRing : public NMatrix<T> {
          * <tt>this * other</tt>.
          */
         template <class MatrixClass>
-        std::unique_ptr<MatrixClass> multiplyAs(const NMatrixRing<T>& other)
+        std::unique_ptr<MatrixClass> multiplyAs(const MatrixRing<T>& other)
                 const {
             std::unique_ptr<MatrixClass> ans(new MatrixClass(
                 this->nRows, other.nCols));
@@ -692,8 +692,8 @@ class NMatrixRing : public NMatrix<T> {
  * Represents a matrix of elements from a given integral domain \a T.
  *
  * Note that many important functions (such as entry()) are inherited
- * from the superclasses NMatrix and NMatrixRing, and are not documented
- * again here.  Many other algorithms that work on NMatrixIntDomain<Integer>
+ * from the superclasses Matrix and MatrixRing, and are not documented
+ * again here.  Many other algorithms that work on MatrixIntDomain<Integer>
  * are available in the maths/matrixops.h file. 
  *
  * \pre Type \a T has a default constructor and overloads the assignment
@@ -715,13 +715,13 @@ class NMatrixRing : public NMatrix<T> {
  * \ifacespython Not present, although the typedef MatrixInt is.
  */
 template <typename T>
-class NMatrixIntDomain : public NMatrixRing<T> {
+class MatrixIntDomain : public MatrixRing<T> {
     public:
         /**
          * Creates a new matrix of the given size.
          * All entries will be initialised using their default constructors.
          *
-         * Note that, for NMatrixIntDomain<Integer>, this means that all
+         * Note that, for MatrixIntDomain<Integer>, this means that all
          * entries will be initialised to zero.
          *
          * \pre The given number of rows and columns are
@@ -730,13 +730,13 @@ class NMatrixIntDomain : public NMatrixRing<T> {
          * @param rows the number of rows in the new matrix.
          * @param cols the number of columns in the new matrix.
          */
-        NMatrixIntDomain(unsigned long rows, unsigned long cols);
+        MatrixIntDomain(unsigned long rows, unsigned long cols);
         /**
          * Creates a new matrix that is a clone of the given matrix.
          *
          * @param cloneMe the matrix to clone.
          */
-        NMatrixIntDomain(const NMatrixIntDomain<T>& cloneMe);
+        MatrixIntDomain(const MatrixIntDomain<T>& cloneMe);
 
         /**
          * Divides all elements of the given row by the given integer.
@@ -832,85 +832,111 @@ class NMatrixIntDomain : public NMatrixRing<T> {
  * Most but not all inherited functions are implemented; see the individual
  * members' documentation for exceptions where they arise.
  */
-typedef NMatrixIntDomain<Integer> NMatrixInt;
+typedef MatrixIntDomain<Integer> MatrixInt;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NMatrix has now been renamed to Matrix.
+ */
+template <class T>
+using NMatrix REGINA_DEPRECATED = Matrix<T>;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NMatrixRing has now been renamed to MatrixRing.
+ */
+template <class T>
+using NMatrixRing REGINA_DEPRECATED = MatrixRing<T>;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NMatrixInt has now been renamed to MatrixInt.
+ */
+REGINA_DEPRECATED typedef MatrixInt NMatrixInt;
 
 /*@}*/
 
-// Constants for NMatrixRing
+// Constants for MatrixRing
 
 template <class T>
-T NMatrixRing<T>::zero(0L);
+T MatrixRing<T>::zero(0L);
     /**< Zero in the underlying ring.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
 template <class T>
-T NMatrixRing<T>::one(1L);
+T MatrixRing<T>::one(1L);
     /**< One (the multiplicative identity) in the underlying ring.
      *   This would be \c const if it weren't for the fact that
      *   some compilers don't like this.  It should never be
      *   modified! */
 
-// Implementation details for NMatrixIntDomain
+// Implementation details for MatrixIntDomain
 
 template <typename T>
-inline NMatrixIntDomain<T>::NMatrixIntDomain(unsigned long rows, unsigned long cols) :
-        NMatrixRing<T>(rows, cols) {
+inline MatrixIntDomain<T>::MatrixIntDomain(unsigned long rows, unsigned long cols) :
+        MatrixRing<T>(rows, cols) {
 }
 template <typename T>
-inline NMatrixIntDomain<T>::NMatrixIntDomain(const NMatrixIntDomain<T>& cloneMe) :
-        NMatrixRing<T>(cloneMe) {
+inline MatrixIntDomain<T>::MatrixIntDomain(const MatrixIntDomain<T>& cloneMe) :
+        MatrixRing<T>(cloneMe) {
 }
 
 template <typename T>
-void NMatrixIntDomain<T>::divRowExact(unsigned long row, const T& divBy) {
-    for (T* x = this->data[row]; x != this->data[row] + NMatrix<T>::nCols; ++x)
+void MatrixIntDomain<T>::divRowExact(unsigned long row, const T& divBy) {
+    for (T* x = this->data[row]; x != this->data[row] + Matrix<T>::nCols; ++x)
         x->divByExact(divBy);
 }
 
 template <typename T>
-void NMatrixIntDomain<T>::divColExact(unsigned long col, const T& divBy) {
-    for (T** row = this->data; row != this->data + NMatrix<T>::nRows; ++row)
+void MatrixIntDomain<T>::divColExact(unsigned long col, const T& divBy) {
+    for (T** row = this->data; row != this->data + Matrix<T>::nRows; ++row)
         (*row)[col].divByExact(divBy);
 }
 
 template <typename T>
-T NMatrixIntDomain<T>::gcdRow(unsigned long row) {
+T MatrixIntDomain<T>::gcdRow(unsigned long row) {
     T* x = this->data[row];
 
     T gcd = *x++;
-    while (x != this->data[row] + NMatrix<T>::nCols && gcd != 1 && gcd != -1)
+    while (x != this->data[row] + Matrix<T>::nCols && gcd != 1L && gcd != -1L)
         gcd = gcd.gcd(*x++);
 
-    if (gcd < 0)
+    if (gcd < 0L)
         gcd.negate();
     return gcd;
 }
 
 template <typename T>
-T NMatrixIntDomain<T>::gcdCol(unsigned long col) {
+T MatrixIntDomain<T>::gcdCol(unsigned long col) {
     T** row = this->data;
 
     T gcd = (*row++)[col];
-    while (row != this->data + NMatrix<T>::nRows && gcd != 1 && gcd != -1)
+    while (row != this->data + Matrix<T>::nRows && gcd != 1L && gcd != -1L)
         gcd = gcd.gcd((*row++)[col]);
 
-    if (gcd < 0)
+    if (gcd < 0L)
         gcd.negate();
     return gcd;
 }
 
 template <typename T>
-void NMatrixIntDomain<T>::reduceRow(unsigned long row) {
+void MatrixIntDomain<T>::reduceRow(unsigned long row) {
     T gcd = gcdRow(row);
-    if (gcd != 0 && gcd != 1)
+    if (gcd != 0L && gcd != 1L)
         divRowExact(row, gcd);
 }
 
 template <typename T>
-inline void NMatrixIntDomain<T>::reduceCol(unsigned long col) {
+inline void MatrixIntDomain<T>::reduceCol(unsigned long col) {
     T gcd = gcdCol(col);
-    if (gcd != 0 && gcd != 1)
+    if (gcd != 0L && gcd != 1L)
         divColExact(col, gcd);
 }
 

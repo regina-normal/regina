@@ -163,7 +163,7 @@ class HilbertDual {
          */
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
-            const NMatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker = 0, unsigned initialRows = 0);
 
     private:
@@ -240,7 +240,7 @@ class HilbertDual {
                  * @param row the row of the given matrix that stores
                  * the specific hyperplane in which we are interested.
                  */
-                inline void initNextHyp(const NMatrixInt& subspace,
+                inline void initNextHyp(const MatrixInt& subspace,
                     unsigned row);
 
                 /**
@@ -338,7 +338,7 @@ class HilbertDual {
          */
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
-            const NMatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker, unsigned initialRows);
 
         /**
@@ -437,7 +437,7 @@ class HilbertDual {
         template <class BitmaskType>
         static void intersectHyperplane(
             std::vector<VecSpec<BitmaskType>*>& list,
-            const NMatrixInt& subspace, unsigned row,
+            const MatrixInt& subspace, unsigned row,
             const BitmaskType* constraintsBegin,
             const BitmaskType* constraintsEnd);
 };
@@ -488,7 +488,7 @@ inline HilbertDual::VecSpec<BitmaskType>::VecSpec(
 
 template <class BitmaskType>
 inline void HilbertDual::VecSpec<BitmaskType>::initNextHyp(
-        const NMatrixInt& subspace, unsigned row) {
+        const MatrixInt& subspace, unsigned row) {
     nextHyp_ = LargeInteger::zero;
 
     LargeInteger tmp;
