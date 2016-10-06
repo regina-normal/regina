@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "maths/nperm.h"
+#include "maths/perm.h"
 #include "generic/facenumbering.h"
 #include "generic/alias/face.h"
 #include "generic/alias/facenumber.h"

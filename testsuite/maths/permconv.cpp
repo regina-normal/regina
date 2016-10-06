@@ -32,7 +32,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "maths/nperm.h"
+#include "maths/perm.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NPerm;

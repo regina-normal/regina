@@ -848,6 +848,7 @@
 		053CAB1D1DA4D0F500A92F98 /* ninteger.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB1C1DA4D0F500A92F98 /* ninteger.h */; };
 		053CAB201DA63C8900A92F98 /* nmatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB1E1DA63C8900A92F98 /* nmatrix.h */; };
 		053CAB211DA63C8900A92F98 /* nmatrix2.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB1F1DA63C8900A92F98 /* nmatrix2.h */; };
+		053CAB231DA6F69D00A92F98 /* nperm.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB221DA6F69D00A92F98 /* nperm.h */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -886,7 +887,7 @@
 		05431F271C40F260009BC072 /* isosig-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1D1C40F260009BC072 /* isosig-impl.h */; };
 		05431F281C40F260009BC072 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1E1C40F260009BC072 /* simplex.h */; };
 		05431F291C40F260009BC072 /* triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1F1C40F260009BC072 /* triangulation.h */; };
-		05431F2D1C40F2DB009BC072 /* nperm.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F2A1C40F2DB009BC072 /* nperm.h */; };
+		05431F2D1C40F2DB009BC072 /* perm.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F2A1C40F2DB009BC072 /* perm.h */; };
 		05431F2E1C40F2DB009BC072 /* nperm2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F2B1C40F2DB009BC072 /* nperm2.cpp */; };
 		05431F2F1C40F2DB009BC072 /* nperm2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F2C1C40F2DB009BC072 /* nperm2.h */; };
 		05431F301C40F2E4009BC072 /* nperm2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F2B1C40F2DB009BC072 /* nperm2.cpp */; };
@@ -2715,6 +2716,7 @@
 		053CAB1C1DA4D0F500A92F98 /* ninteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ninteger.h; sourceTree = "<group>"; };
 		053CAB1E1DA63C8900A92F98 /* nmatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmatrix.h; sourceTree = "<group>"; };
 		053CAB1F1DA63C8900A92F98 /* nmatrix2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmatrix2.h; sourceTree = "<group>"; };
+		053CAB221DA6F69D00A92F98 /* nperm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nperm.h; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -2751,7 +2753,7 @@
 		05431F1D1C40F260009BC072 /* isosig-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "isosig-impl.h"; sourceTree = "<group>"; };
 		05431F1E1C40F260009BC072 /* simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
 		05431F1F1C40F260009BC072 /* triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
-		05431F2A1C40F2DB009BC072 /* nperm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nperm.h; sourceTree = "<group>"; };
+		05431F2A1C40F2DB009BC072 /* perm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm.h; sourceTree = "<group>"; };
 		05431F2B1C40F2DB009BC072 /* nperm2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nperm2.cpp; sourceTree = "<group>"; };
 		05431F2C1C40F2DB009BC072 /* nperm2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nperm2.h; sourceTree = "<group>"; };
 		05431F311C40F363009BC072 /* nfacepairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nfacepairing.cpp; sourceTree = "<group>"; };
@@ -4477,7 +4479,7 @@
 				053CAB1E1DA63C8900A92F98 /* nmatrix.h */,
 				053CAB1F1DA63C8900A92F98 /* nmatrix2.h */,
 				052F9CE9180600FA00FAE4DF /* nmatrixint.h */,
-				05431F2A1C40F2DB009BC072 /* nperm.h */,
+				053CAB221DA6F69D00A92F98 /* nperm.h */,
 				057EE4341C6009A700C4D155 /* nperm-impl.h */,
 				05431F2B1C40F2DB009BC072 /* nperm2.cpp */,
 				05431F2C1C40F2DB009BC072 /* nperm2.h */,
@@ -4494,6 +4496,7 @@
 				052F9CF6180600FA00FAE4DF /* numbertheory.cpp */,
 				052F9CF7180600FA00FAE4DF /* numbertheory.h */,
 				05074A7B1DA47E060007773C /* nvector.h */,
+				05431F2A1C40F2DB009BC072 /* perm.h */,
 				0541AF4A1B8BE2F5002E166B /* polynomial.h */,
 				052F9CF0180600FA00FAE4DF /* primes.cpp */,
 				052F9CF1180600FA00FAE4DF /* primes.h */,
@@ -6157,6 +6160,7 @@
 				0591E7F41C4F75C300793A9C /* dim4gluingpermsearcher.h in Headers */,
 				052F9EB5180600FB00FAE4DF /* dim2triangle.h in Headers */,
 				050C64CD1DA3311100C9420F /* ntreelp-impl.h in Headers */,
+				053CAB231DA6F69D00A92F98 /* nperm.h in Headers */,
 				050C64D41DA335DE00C9420F /* ntreetraversal.h in Headers */,
 				052F9FED180600FB00FAE4DF /* nblockedsfspair.h in Headers */,
 				052F9F33180600FB00FAE4DF /* nsnappeacensusmfd.h in Headers */,
@@ -6254,7 +6258,7 @@
 				052FA07A180600FB00FAE4DF /* nxmltrireader.h in Headers */,
 				0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */,
 				0541AF501B8BE32E002E166B /* output.h in Headers */,
-				05431F2D1C40F2DB009BC072 /* nperm.h in Headers */,
+				05431F2D1C40F2DB009BC072 /* perm.h in Headers */,
 				052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* snappeatriangulation.h in Headers */,

@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/nperm4.h"
+#include "maths/perm.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {

@@ -48,7 +48,7 @@
 #include <thread>
 #include <vector>
 #include "generic/facetpairing.h"
-#include "maths/nperm.h"
+#include "maths/perm.h"
 #include "utilities/memutils.h"
 #include "utilities/stringutils.h"
 

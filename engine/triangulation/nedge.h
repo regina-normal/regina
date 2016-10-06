@@ -41,7 +41,6 @@
 
 #include "regina-core.h"
 #include "generic/face.h"
-#include "maths/nperm4.h"
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {

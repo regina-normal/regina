@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "maths/matrix2.h"
-#include "maths/nperm4.h"
+#include "maths/perm.h"
 
 namespace regina {
 

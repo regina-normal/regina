@@ -34,9 +34,8 @@
  *  \brief Contains some of the implementation details for the various
  *  NPerm class templates.
  *
- *  This file is automatically included from nperm2.h, nperm3.h, nperm4.h,
- *  nperm5.h and nperm.h; there is no need for end users to include it
- *  explicitly.
+ *  This file is automatically included from perm.h; there is no need for
+ *  end users to include it explicitly.
  */
 
 #ifndef __DOXYGEN
@@ -45,7 +44,7 @@
 #ifndef __NPERM_IMPL_H
 #define __NPERM_IMPL_H
 
-#include "maths/nperm.h"
+#include "maths/perm.h"
 #include "maths/nperm2.h"
 #include "maths/nperm3.h"
 #include "maths/nperm4.h"

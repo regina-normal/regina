@@ -42,7 +42,6 @@
 
 #include "regina-core.h"
 #include "census/dim4gluingperms.h"
-#include "maths/nperm3.h"
 
 namespace regina {
 

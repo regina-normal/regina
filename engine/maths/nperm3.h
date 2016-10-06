@@ -34,9 +34,9 @@
  *  \brief Deals with permutations of {0,1,2}.
  */
 
-// We include nperm.h before the header guard, to ensure that the
+// We include perm.h before the header guard, to ensure that the
 // various nperm*.h headers are processed in exactly the right order.
-#include "maths/nperm.h"
+#include "maths/perm.h"
 
 #ifndef __NPERM3_H
 #ifndef __DOXYGEN

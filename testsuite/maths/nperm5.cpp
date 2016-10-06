@@ -33,8 +33,7 @@
 #include <algorithm>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "maths/nperm4.h"
-#include "maths/nperm5.h"
+#include "maths/perm.h"
 #include "testsuite/maths/testmaths.h"
 
 using regina::NPerm;

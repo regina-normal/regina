@@ -52,7 +52,6 @@
 #include "generic/simplex.h"
 #include "generic/alias/face.h"
 #include "generic/alias/simplex.h"
-#include "maths/nperm.h"
 
 namespace regina {
 

@@ -42,7 +42,6 @@
 #include "regina-core.h"
 #include "generic/facetspec.h"
 #include "generic/isomorphism.h"
-#include "maths/nperm3.h"
 
 namespace regina {
 

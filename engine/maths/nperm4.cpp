@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <sstream>
-#include "maths/nperm4.h"
+#include "maths/perm.h"
 
 namespace regina {
 

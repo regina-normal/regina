@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nperm4.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nisomorphism.h"

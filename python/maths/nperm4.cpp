@@ -34,7 +34,7 @@
 // that breaks boost.python on MacOSX.
 #include "Python.h"
 #include <boost/python.hpp>
-#include "maths/nperm4.h"
+#include "maths/perm.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 

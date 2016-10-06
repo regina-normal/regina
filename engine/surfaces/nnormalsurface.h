@@ -43,7 +43,7 @@
 #include <utility>
 #include "regina-core.h"
 #include "output.h"
-#include "maths/nperm4.h"
+#include "maths/perm.h"
 #include "maths/ray.h"
 #include "surfaces/ndisctype.h"
 #include "surfaces/normalcoords.h"

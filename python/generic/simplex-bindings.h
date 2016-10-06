@@ -33,7 +33,6 @@
 #include <boost/python.hpp>
 #include "generic/simplex.h"
 #include "generic/triangulation.h"
-#include "maths/nperm5.h" // Specialisation needed for 4-D case.
 #include "../helpers.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"

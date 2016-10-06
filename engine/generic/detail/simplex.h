@@ -44,7 +44,6 @@
 #include "output.h"
 #include "generic/facenumbering.h"
 #include "generic/alias/face.h"
-#include "maths/nperm.h"
 #include "utilities/markedvector.h"
 #include <cassert>
 #include <boost/noncopyable.hpp>

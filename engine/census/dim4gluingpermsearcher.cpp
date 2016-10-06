@@ -35,7 +35,6 @@
 #include "census/dim4gluingpermsearcher.h"
 #include "dim4/dim4edge.h"
 #include "dim4/dim4triangle.h"
-#include "maths/nperm4.h"
 #include "utilities/memutils.h"
 
 // If this symbol is uncommented, then the algorithm will become fairly

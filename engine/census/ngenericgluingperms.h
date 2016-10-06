@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "generic/facetspec.h"
-#include "maths/nperm.h"
+#include "maths/perm.h"
 
 namespace regina {
 

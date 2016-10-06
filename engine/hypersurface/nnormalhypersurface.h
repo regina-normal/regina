@@ -45,7 +45,6 @@
 #include "output.h"
 #include "algebra/nabeliangroup.h"
 #include "hypersurface/hypercoords.h"
-#include "maths/nperm5.h"
 #include "maths/ray.h"
 #include "utilities/boolset.h"
 #include "utilities/property.h"

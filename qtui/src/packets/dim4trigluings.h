@@ -39,7 +39,6 @@
 
 #include "../packettabui.h"
 #include "reginaprefset.h"
-#include "maths/nperm5.h"
 
 #include <QAbstractItemModel>
 

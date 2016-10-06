@@ -34,10 +34,7 @@
 // that breaks boost.python on MacOSX.
 #include "Python.h"
 
-#include "maths/nperm2.h"
-#include "maths/nperm3.h"
-#include "maths/nperm4.h"
-#include "maths/nperm5.h"
+#include "maths/perm.h"
 #include "globalarray.h"
 
 void addGlobalArray() {

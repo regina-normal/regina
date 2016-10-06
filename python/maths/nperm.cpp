@@ -34,11 +34,7 @@
 // that breaks boost.python on MacOSX.
 #include "Python.h"
 #include <boost/python.hpp>
-#include "maths/nperm.h"
-#include "maths/nperm5.h"
-#include "maths/nperm4.h"
-#include "maths/nperm3.h"
-#include "maths/nperm2.h"
+#include "maths/perm.h"
 #include "../helpers.h"
 
 using namespace boost::python;

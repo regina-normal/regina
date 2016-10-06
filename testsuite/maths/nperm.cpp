@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "maths/nperm.h"
+#include "maths/perm.h"
 #include "testsuite/maths/testmaths.h"
 
 static const int64_t increment[] = {

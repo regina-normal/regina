@@ -42,13 +42,7 @@
 
 #include <algorithm>
 #include "regina-core.h"
-#include <algorithm>
-
-// Permutation headers required for template specialisations.
-#include "maths/nperm2.h"
-#include "maths/nperm3.h"
-#include "maths/nperm4.h"
-#include "maths/nperm5.h"
+#include "maths/perm.h"
 
 namespace regina {
 namespace detail {
