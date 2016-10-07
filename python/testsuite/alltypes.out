@@ -925,31 +925,31 @@ Equality type : BY_VALUE
 FileInfo : class
 Equality type : BY_REFERENCE
 
-GlobalArray2D_NPerm4 : class
+GlobalArray2D_Perm4 : class
 Equality type : BY_REFERENCE
 
-GlobalArray2D_NPerm5 : class
+GlobalArray2D_Perm5 : class
 Equality type : BY_REFERENCE
 
 GlobalArray2D_int : class
 Equality type : BY_REFERENCE
 
-GlobalArray3D_NPerm5 : class
+GlobalArray3D_Perm5 : class
 Equality type : BY_REFERENCE
 
 GlobalArray3D_int : class
 Equality type : BY_REFERENCE
 
-GlobalArray_NPerm2 : class
+GlobalArray_Perm2 : class
 Equality type : BY_REFERENCE
 
-GlobalArray_NPerm3 : class
+GlobalArray_Perm3 : class
 Equality type : BY_REFERENCE
 
-GlobalArray_NPerm4 : class
+GlobalArray_Perm4 : class
 Equality type : BY_REFERENCE
 
-GlobalArray_NPerm5 : class
+GlobalArray_Perm5 : class
 Equality type : BY_REFERENCE
 
 GlobalArray_char_string : class
@@ -968,6 +968,9 @@ HyperAlg : class
 Equality type : BY_VALUE
 
 HyperList : class
+Equality type : BY_VALUE
+
+Integer : class
 Equality type : BY_VALUE
 
 Isomorphism10 : class
@@ -1012,6 +1015,9 @@ Equality type : BY_REFERENCE
 Isomorphism9 : class
 Equality type : BY_REFERENCE
 
+LargeInteger : class
+Equality type : BY_VALUE
+
 Laurent : class
 Equality type : BY_VALUE
 
@@ -1023,6 +1029,15 @@ Equality type : BY_REFERENCE
 
 Locale : class
 Equality type : NEVER_INSTANTIATED
+
+Matrix2 : class
+Equality type : BY_VALUE
+
+Matrix2Row : class
+Equality type : BY_VALUE
+
+MatrixInt : class
+Equality type : BY_VALUE
 
 NAbelianGroup : class
 Equality type : BY_VALUE
@@ -1138,16 +1153,14 @@ Equality type : BY_REFERENCE
 NHomologicalData : class
 Equality type : BY_REFERENCE
 
-NInteger : class
-Equality type : BY_VALUE
+NInteger : typedef ->  Integer
 
 NIsomorphism : typedef ->  Isomorphism3
 
 NL31Pillow : class
 Equality type : BY_REFERENCE
 
-NLargeInteger : class
-Equality type : BY_VALUE
+NLargeInteger : typedef ->  LargeInteger
 
 NLayeredChain : class
 Equality type : BY_REFERENCE
@@ -1179,14 +1192,11 @@ Equality type : BY_REFERENCE
 NMarkedAbelianGroup : class
 Equality type : BY_REFERENCE
 
-NMatrix2 : class
-Equality type : BY_VALUE
+NMatrix2 : typedef ->  Matrix2
 
-NMatrix2Row : class
-Equality type : BY_VALUE
+NMatrix2Row : typedef ->  Matrix2Row
 
-NMatrixInt : class
-Equality type : BY_VALUE
+NMatrixInt : typedef ->  MatrixInt
 
 NNormalHypersurface : class
 Equality type : BY_REFERENCE
@@ -1203,50 +1213,35 @@ NPDF : typedef ->  PDF
 
 NPacket : typedef ->  Packet
 
-NPerm10 : class
-Equality type : BY_VALUE
+NPerm10 : typedef ->  Perm10
 
-NPerm11 : class
-Equality type : BY_VALUE
+NPerm11 : typedef ->  Perm11
 
-NPerm12 : class
-Equality type : BY_VALUE
+NPerm12 : typedef ->  Perm12
 
-NPerm13 : class
-Equality type : BY_VALUE
+NPerm13 : typedef ->  Perm13
 
-NPerm14 : class
-Equality type : BY_VALUE
+NPerm14 : typedef ->  Perm14
 
-NPerm15 : class
-Equality type : BY_VALUE
+NPerm15 : typedef ->  Perm15
 
-NPerm16 : class
-Equality type : BY_VALUE
+NPerm16 : typedef ->  Perm16
 
-NPerm2 : class
-Equality type : BY_VALUE
+NPerm2 : typedef ->  Perm2
 
-NPerm3 : class
-Equality type : BY_VALUE
+NPerm3 : typedef ->  Perm3
 
-NPerm4 : class
-Equality type : BY_VALUE
+NPerm4 : typedef ->  Perm4
 
-NPerm5 : class
-Equality type : BY_VALUE
+NPerm5 : typedef ->  Perm5
 
-NPerm6 : class
-Equality type : BY_VALUE
+NPerm6 : typedef ->  Perm6
 
-NPerm7 : class
-Equality type : BY_VALUE
+NPerm7 : typedef ->  Perm7
 
-NPerm8 : class
-Equality type : BY_VALUE
+NPerm8 : typedef ->  Perm8
 
-NPerm9 : class
-Equality type : BY_VALUE
+NPerm9 : typedef ->  Perm9
 
 NPillowTwoSphere : class
 Equality type : BY_REFERENCE
@@ -1257,11 +1252,9 @@ Equality type : BY_REFERENCE
 NPluggedTorusBundle : class
 Equality type : BY_REFERENCE
 
-NPolynomial : class
-Equality type : BY_VALUE
+NPolynomial : typedef ->  Polynomial
 
-NPrimes : class
-Equality type : NEVER_INSTANTIATED
+NPrimes : typedef ->  Primes
 
 NPrismSpec : class
 Equality type : BY_VALUE
@@ -1270,8 +1263,7 @@ NProgressTracker : typedef ->  ProgressTracker
 
 NProgressTrackerOpen : typedef ->  ProgressTrackerOpen
 
-NRational : class
-Equality type : BY_VALUE
+NRational : typedef ->  Rational
 
 NSFSFibre : class
 Equality type : BY_VALUE
@@ -1402,11 +1394,65 @@ Equality type : BY_REFERENCE
 Packet : class
 Equality type : BY_REFERENCE
 
+Perm10 : class
+Equality type : BY_VALUE
+
+Perm11 : class
+Equality type : BY_VALUE
+
+Perm12 : class
+Equality type : BY_VALUE
+
+Perm13 : class
+Equality type : BY_VALUE
+
+Perm14 : class
+Equality type : BY_VALUE
+
+Perm15 : class
+Equality type : BY_VALUE
+
+Perm16 : class
+Equality type : BY_VALUE
+
+Perm2 : class
+Equality type : BY_VALUE
+
+Perm3 : class
+Equality type : BY_VALUE
+
+Perm4 : class
+Equality type : BY_VALUE
+
+Perm5 : class
+Equality type : BY_VALUE
+
+Perm6 : class
+Equality type : BY_VALUE
+
+Perm7 : class
+Equality type : BY_VALUE
+
+Perm8 : class
+Equality type : BY_VALUE
+
+Perm9 : class
+Equality type : BY_VALUE
+
+Polynomial : class
+Equality type : BY_VALUE
+
+Primes : class
+Equality type : NEVER_INSTANTIATED
+
 ProgressTracker : class
 Equality type : BY_REFERENCE
 
 ProgressTrackerOpen : class
 Equality type : BY_REFERENCE
+
+Rational : class
+Equality type : BY_VALUE
 
 Script : class
 Equality type : BY_REFERENCE

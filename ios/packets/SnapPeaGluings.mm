@@ -86,7 +86,7 @@
     [self.tetrahedra reloadData];
 }
 
-+ (NSString*)destStringFromFace:(int)srcFace dest:(regina::NTetrahedron*)destTet gluing:(const regina::NPerm4&)gluing
++ (NSString*)destStringFromFace:(int)srcFace dest:(regina::NTetrahedron*)destTet gluing:(const regina::Perm<4>&)gluing
 {
     if (! destTet)
         return @" ";

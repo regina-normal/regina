@@ -52,7 +52,6 @@
 #include "generic/simplex.h"
 #include "generic/alias/face.h"
 #include "generic/alias/simplex.h"
-#include "maths/nperm.h"
 
 namespace regina {
 
@@ -1443,7 +1442,7 @@ class TriangulationBase :
          * constructed for the correct number of simplices.
          * @return the candidate isomorphism signature.
          */
-        std::string isoSigFrom(size_t simp, const NPerm<dim+1>& vertices,
+        std::string isoSigFrom(size_t simp, const Perm<dim+1>& vertices,
             Isomorphism<dim>* relabelling) const;
 
         /**
@@ -1944,7 +1943,7 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
         for (f = 0; f <= dim; ++f) {
             if (adjacencies[i][f] >= 0) {
                 s->adj_[f] = simplices_[nOrig + adjacencies[i][f]];
-                s->gluing_[f] = NPerm<dim+1>(gluings[i][f]);
+                s->gluing_[f] = Perm<dim+1>(gluings[i][f]);
             } else
                 s->adj_[f] = 0;
         }
@@ -1985,7 +1984,7 @@ std::string TriangulationBase<dim>::dumpConstruction() const {
 
     size_t nSimplices = simplices_.size();
     Simplex<dim>* s;
-    NPerm<dim+1> perm;
+    Perm<dim+1> perm;
     size_t p;
     int f, i;
 
@@ -2210,7 +2209,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
     Face<dim, dim-2>* f;
     Simplex<dim> *simp, *adj;
     int adjFace;
-    NPerm<dim+1> map, adjMap;
+    Perm<dim+1> map, adjMap;
     int dir, exitFacet;
     for (auto s : simplices_) {
         for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces; ++start) {
@@ -2243,7 +2242,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
                         break;
 
                     adjMap = simp->adjacentGluing(exitFacet) * map *
-                        NPerm<dim+1>(dim - 1, dim);
+                        Perm<dim+1>(dim - 1, dim);
                     adjFace = Face<dim, dim-2>::faceNumber(adjMap);
 
                     if (adj->SimplexFaces<dim, dim-2>::face_[adjFace]) {
@@ -2326,7 +2325,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
 
             Simplex<dim> *simp, *adj;
             int face, adjFace;
-            NPerm<dim + 1> adjMap;
+            Perm<dim + 1> adjMap;
             int facet;
 
             while (queueStart < queueEnd) {
@@ -2346,7 +2345,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                         // possible if the link of the face is orientable.
                         adjMap = simp->adjacentGluing(facet) *
                             simp->SimplexFaces<dim, subdim>::mapping_[face] *
-                            NPerm<dim + 1>(dim - 1, dim);
+                            Perm<dim + 1>(dim - 1, dim);
                         adjFace = Face<dim, subdim>::faceNumber(adjMap);
 
                         if (adj->SimplexFaces<dim, subdim>::face_[adjFace]) {
@@ -2447,13 +2446,13 @@ void TriangulationBase<dim>::orient() {
                         // The adjacent simplex is also being flipped.
                         // Fix the gluing from this side now, and fix it from
                         // the other side when we process the other simplex.
-                        s->gluing_[f] = NPerm<dim + 1>(dim - 1, dim) *
-                            s->gluing_[f] * NPerm<dim + 1>(dim - 1, dim);
+                        s->gluing_[f] = Perm<dim + 1>(dim - 1, dim) *
+                            s->gluing_[f] * Perm<dim + 1>(dim - 1, dim);
                     } else {
                         // The adjacent simplex will be left intact.
                         // Fix the gluing from both sides now.
                         s->gluing_[f] = s->gluing_[f] *
-                            NPerm<dim + 1>(dim - 1, dim);
+                            Perm<dim + 1>(dim - 1, dim);
                         s->adj_[f]->gluing_[s->gluing_[f][f]] =
                             s->gluing_[f].inverse();
                     }
@@ -2502,7 +2501,7 @@ void TriangulationBase<dim>::makeDoubleCover() {
     size_t upperAdj;
     Simplex<dim>* lowerAdj;
     int lowerAdjOrientation;
-    NPerm<dim + 1> gluing;
+    Perm<dim + 1> gluing;
     for (i = 0; i < sheetSize; i++)
         if (upper[i]->orientation_ == 0) {
             // We've found a new component.
@@ -2576,7 +2575,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
     size_t nFaces = countFaces<dim - 1>();
 
     Simplex<dim>** bdry = new Simplex<dim>*[nFaces];
-    NPerm<dim + 1>* bdryPerm = new NPerm<dim + 1>[nFaces];
+    Perm<dim + 1>* bdryPerm = new Perm<dim + 1>[nFaces];
     Simplex<dim>** cone = new Simplex<dim>*[nFaces];
 
     Triangulation<dim> staging;
@@ -2596,7 +2595,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
     // Glue the new simplices to each other.
     Face<dim, dim - 1> *facet1, *facet2;
-    NPerm<dim + 1> f1Perm, f2Perm;
+    Perm<dim + 1> f1Perm, f2Perm;
     for (auto ridge : faces<dim - 2>()) {
         // Is this (dim-2)-face on a real boundary component?
         // Look for the boundary facets at either end.
@@ -2611,7 +2610,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 
         f1Perm = bdryPerm[facet1->index()].inverse() * e1.vertices();
         f2Perm = bdryPerm[facet2->index()].inverse() * e2.vertices() *
-            NPerm<dim + 1>(dim - 1, dim);
+            Perm<dim + 1>(dim - 1, dim);
 
         cone[facet1->index()]->join(f1Perm[dim - 1],
             cone[facet2->index()], f2Perm * f1Perm.inverse());
@@ -2659,7 +2658,7 @@ size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
     Simplex<dim>** newSimp = new Simplex<dim>*[size()];
     Simplex<dim> *simp, *adj;
     size_t simpPos, adjPos;
-    NPerm<dim + 1> adjPerm;
+    Perm<dim + 1> adjPerm;
     int facet;
 
     for (simpPos = 0; simpPos < size(); ++simpPos)

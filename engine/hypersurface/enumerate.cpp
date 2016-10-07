@@ -37,7 +37,7 @@
 #include "enumerate/hilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hscoordregistry.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "utilities/xmlutils.h"
 
@@ -105,7 +105,7 @@ void NNormalHypersurfaceList::Enumerator::fillVertex() {
 
 template <typename Coords>
 void NNormalHypersurfaceList::Enumerator::fillVertexDD() {
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
+    MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
@@ -190,7 +190,7 @@ void NNormalHypersurfaceList::Enumerator::fillFundamentalDual() {
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
-    NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
+    MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);

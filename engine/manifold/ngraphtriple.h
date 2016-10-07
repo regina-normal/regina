@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "manifold/nmanifold.h"
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 
 namespace regina {
 
@@ -147,7 +147,7 @@ class REGINA_API NGraphTriple : public NManifold {
         NSFSpace* centre_;
             /**< The central space, i.e., the Seifert fibred space with
                  two boundary tori that meets both end spaces. */
-        NMatrix2 matchingReln_[2];
+        Matrix2 matchingReln_[2];
             /**< The matrices describing how the various spaces are joined.
                  In particular, matrix \a matchingReln_[i] describes how
                  the central space is joined to end space \a i.  See the
@@ -183,7 +183,7 @@ class REGINA_API NGraphTriple : public NManifold {
          * specifies how spaces \a end1 and \a centre are joined.
          */
         NGraphTriple(NSFSpace* end0, NSFSpace* centre, NSFSpace* end1,
-            const NMatrix2& matchingReln0, const NMatrix2& matchingReln1);
+            const Matrix2& matchingReln0, const Matrix2& matchingReln1);
         /**
          * Destroys this structure along with the component Seifert
          * fibred spaces and matching matrices.
@@ -227,7 +227,7 @@ class REGINA_API NGraphTriple : public NManifold {
          * examined; this should be 0 or 1 as described above.
          * @return a reference to the requested matching matrix.
          */
-        const NMatrix2& matchingReln(unsigned which) const;
+        const Matrix2& matchingReln(unsigned which) const;
 
         /**
          * Determines in a fairly ad-hoc fashion whether this
@@ -270,7 +270,7 @@ class REGINA_API NGraphTriple : public NManifold {
          * @param reln0 the first matching matrix in the pair to simplify.
          * @param reln1 the second matching matrix in the pair to simplify.
          */
-        static void reduceBasis(NMatrix2& reln0, NMatrix2& reln1);
+        static void reduceBasis(Matrix2& reln0, Matrix2& reln1);
 
         /**
          * Uses 180 degree rotation to make the given matching matrix
@@ -280,7 +280,7 @@ class REGINA_API NGraphTriple : public NManifold {
          *
          * @param reln the matching matrix to simplify.
          */
-        static void reduceSign(NMatrix2& reln);
+        static void reduceSign(Matrix2& reln);
 };
 
 /*@}*/
@@ -288,8 +288,8 @@ class REGINA_API NGraphTriple : public NManifold {
 // Inline functions for NGraphTriple
 
 inline NGraphTriple::NGraphTriple(NSFSpace* end0, NSFSpace* centre,
-        NSFSpace* end1, const NMatrix2& matchingReln0,
-        const NMatrix2& matchingReln1) {
+        NSFSpace* end1, const Matrix2& matchingReln0,
+        const Matrix2& matchingReln1) {
     end_[0] = end0;
     centre_ = centre;
     end_[1] = end1;
@@ -308,7 +308,7 @@ inline const NSFSpace& NGraphTriple::centre() const {
     return *centre_;
 }
 
-inline const NMatrix2& NGraphTriple::matchingReln(unsigned which) const {
+inline const Matrix2& NGraphTriple::matchingReln(unsigned which) const {
     return matchingReln_[which];
 }
 

@@ -37,7 +37,7 @@
 #ifndef __NSURFACEMATCHINGUI_H
 #define __NSURFACEMATCHINGUI_H
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "../packettabui.h"
 
 #include <memory>
@@ -46,7 +46,6 @@
 class QTreeView;
 
 namespace regina {
-    class NMatrixInt;
     class NormalSurfaces;
     class Packet;
     template <int> class Triangulation;
@@ -58,7 +57,7 @@ class MatchingModel : public QAbstractItemModel {
         /**
          * Details of the matching equations being displayed
          */
-        std::unique_ptr<regina::NMatrixInt> eqns_;
+        std::unique_ptr<regina::MatrixInt> eqns_;
         regina::NormalSurfaces* surfaces_;
 
     public:

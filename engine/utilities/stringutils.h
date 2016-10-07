@@ -47,7 +47,7 @@ namespace regina {
 class BoolSet;
 
 template <bool>
-class NIntegerBase;
+class IntegerBase;
 
 /**
  * \weakgroup utilities
@@ -287,7 +287,7 @@ REGINA_API bool valueOf(const std::string& str, unsigned long long& dest);
  * otherwise.
  */
 template <bool supportInfinity>
-bool valueOf(const std::string& str, NIntegerBase<supportInfinity>& dest);
+bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest);
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.
@@ -386,10 +386,10 @@ REGINA_API std::string stringToToken(const std::string& str);
  *
  * \pre The template argument \a T is either (i) a native C++ integer type,
  * for which the standard C++11 library routine std::to_string(T) is defined;
- * or (ii) a const reference to NInteger or NLargeInteger.
+ * or (ii) a const reference to Integer or LargeInteger.
  *
  * \ifacespython This template function is instantiated in Python for types
- * \a T = \c long, as well as const references to NInteger and NLargeInteger.
+ * \a T = \c long, as well as const references to Integer and LargeInteger.
  */
 template <typename T>
 std::string superscript(T value);
@@ -401,10 +401,10 @@ std::string superscript(T value);
  *
  * \pre The template argument \a T is either (i) a native C++ integer type,
  * for which the standard C++11 library routine std::to_string(T) is defined;
- * or (ii) a const reference to NInteger or NLargeInteger.
+ * or (ii) a const reference to Integer or LargeInteger.
  *
  * \ifacespython This template function is instantiated in Python for types
- * \a T = \c long, as well as const references to NInteger and NLargeInteger.
+ * \a T = \c long, as well as const references to Integer and LargeInteger.
  */
 template <typename T>
 std::string subscript(T value);

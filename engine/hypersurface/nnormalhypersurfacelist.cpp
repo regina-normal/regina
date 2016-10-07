@@ -38,7 +38,7 @@
 #include "enumerate/hilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hscoordregistry.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "utilities/xmlutils.h"
 
@@ -60,15 +60,15 @@ NNormalHypersurfaceVector* makeZeroVector(
 }
 
 namespace {
-    struct MatchingEquations : public Returns<NMatrixInt*> {
+    struct MatchingEquations : public Returns<MatrixInt*> {
         template <typename Coords>
-        inline NMatrixInt* operator() (const Dim4Triangulation* tri) {
+        inline MatrixInt* operator() (const Dim4Triangulation* tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
-NMatrixInt* makeMatchingEquations(const Dim4Triangulation* triangulation,
+MatrixInt* makeMatchingEquations(const Dim4Triangulation* triangulation,
         HyperCoords coords) {
     return forCoords(coords, MatchingEquations(), 0, triangulation);
 }

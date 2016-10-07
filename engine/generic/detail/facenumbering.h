@@ -42,13 +42,7 @@
 
 #include <algorithm>
 #include "regina-core.h"
-#include <algorithm>
-
-// Permutation headers required for template specialisations.
-#include "maths/nperm2.h"
-#include "maths/nperm3.h"
-#include "maths/nperm4.h"
-#include "maths/nperm5.h"
+#include "maths/perm.h"
 
 namespace regina {
 namespace detail {
@@ -148,7 +142,7 @@ class FaceNumberingAPI {
          * 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
          * @return the corresponding canonical ordering of the simplex vertices.
          */
-        static NPerm<dim + 1> ordering(unsigned face);
+        static Perm<dim + 1> ordering(unsigned face);
 
         /**
          * Identifies which <i>subdim</i>-face in a <i>dim</i>-dimensional
@@ -165,7 +159,7 @@ class FaceNumberingAPI {
          * <i>dim</i>-simplex.  This will be between 0 and
          * (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
          */
-        static unsigned faceNumber(NPerm<dim + 1> vertices);
+        static unsigned faceNumber(Perm<dim + 1> vertices);
 
         /**
          * Tests whether the given <i>subdim</i>-face of a
@@ -239,7 +233,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<dim + 1> ordering(unsigned face) {
+        static Perm<dim + 1> ordering(unsigned face) {
             // We can assume here that we are numbering faces in forward
             // lexicographical order (i.e., the face dimension subdim is small).
 
@@ -319,10 +313,10 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
               idx++;
             }
 
-            return NPerm<dim + 1>(perm);
+            return Perm<dim + 1>(perm);
         }
 
-        static unsigned faceNumber(NPerm<dim + 1> vertices) {
+        static unsigned faceNumber(Perm<dim + 1> vertices) {
             // We can assume here that we are numbering faces in forward
             // lexicographical order (i.e., the face dimension subdim is small).
 
@@ -430,12 +424,12 @@ class FaceNumberingImpl<dim, subdim, false> :
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<dim + 1> ordering(unsigned face) {
+        static Perm<dim + 1> ordering(unsigned face) {
             return FaceNumberingImpl<dim, dim - subdim - 1, true>::
                 ordering(face).reverse();
         }
 
-        static unsigned faceNumber(NPerm<dim + 1> vertices) {
+        static unsigned faceNumber(Perm<dim + 1> vertices) {
             return FaceNumberingImpl<dim, dim - subdim - 1, true>::
                 faceNumber(vertices.reverse());
         }
@@ -461,7 +455,7 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<dim + 1> ordering(unsigned face) {
+        static Perm<dim + 1> ordering(unsigned face) {
             int p[dim + 1];
             p[0] = face;
 
@@ -471,10 +465,10 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
             for (i = face + 1; i <= dim; ++i)
                 p[dim - i + 1] = i;
 
-            return NPerm<dim + 1>(p);
+            return Perm<dim + 1>(p);
         }
 
-        static unsigned faceNumber(NPerm<dim + 1> vertices) {
+        static unsigned faceNumber(Perm<dim + 1> vertices) {
             return vertices[0];
         }
 
@@ -494,11 +488,11 @@ class REGINA_API FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<2> ordering(unsigned face) {
-            return NPerm2::fromPermCode(face);
+        static Perm<2> ordering(unsigned face) {
+            return Perm<2>::fromPermCode(face);
         }
 
-        static unsigned faceNumber(NPerm<2> vertices) {
+        static unsigned faceNumber(Perm<2> vertices) {
             return vertices[0];
         }
 
@@ -518,11 +512,11 @@ class REGINA_API FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<3> ordering(unsigned face) {
-            return NPerm<3>(face, (face + 1) % 3, (face + 2) % 3);
+        static Perm<3> ordering(unsigned face) {
+            return Perm<3>(face, (face + 1) % 3, (face + 2) % 3);
         }
 
-        static unsigned faceNumber(NPerm<3> vertices) {
+        static unsigned faceNumber(Perm<3> vertices) {
             return vertices[0];
         }
 
@@ -535,7 +529,7 @@ class REGINA_API FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
 template <>
 class REGINA_API FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> {
     private:
-        static const NPerm<3> ordering_[3];
+        static const Perm<3> ordering_[3];
             /**< A hard-coded list of all return values for ordering(). */
 
     public:
@@ -546,11 +540,11 @@ class REGINA_API FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> 
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<3> ordering(unsigned face) {
+        static Perm<3> ordering(unsigned face) {
             return ordering_[face];
         }
 
-        static unsigned faceNumber(NPerm<3> vertices) {
+        static unsigned faceNumber(Perm<3> vertices) {
             return vertices[2];
         }
 
@@ -570,13 +564,13 @@ class REGINA_API FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<4> ordering(unsigned face) {
+        static Perm<4> ordering(unsigned face) {
             return (face % 2 == 0 ?
-                NPerm4(face, (face + 1) % 4, (face + 2) % 4, (face + 3) % 4) :
-                NPerm4(face, (face + 3) % 4, (face + 2) % 4, (face + 1) % 4));
+                Perm<4>(face, (face + 1) % 4, (face + 2) % 4, (face + 3) % 4) :
+                Perm<4>(face, (face + 3) % 4, (face + 2) % 4, (face + 1) % 4));
         }
 
-        static unsigned faceNumber(NPerm<4> vertices) {
+        static unsigned faceNumber(Perm<4> vertices) {
             return vertices[0];
         }
 
@@ -625,7 +619,7 @@ class REGINA_API FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
         static const int edgeVertex[6][2];
 
     private:
-        static const NPerm<4> ordering_[6];
+        static const Perm<4> ordering_[6];
             /**< A hard-coded list of all return values for ordering(). */
 
     public:
@@ -636,11 +630,11 @@ class REGINA_API FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<4> ordering(unsigned face) {
+        static Perm<4> ordering(unsigned face) {
             return ordering_[face];
         }
 
-        static unsigned faceNumber(NPerm<4> vertices) {
+        static unsigned faceNumber(Perm<4> vertices) {
             return edgeNumber[vertices[0]][vertices[1]];
         }
 
@@ -654,7 +648,7 @@ class REGINA_API FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
 template <>
 class REGINA_API FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> {
     private:
-        static const NPerm<4> ordering_[4];
+        static const Perm<4> ordering_[4];
             /**< A hard-coded list of all return values for ordering(). */
 
     public:
@@ -665,11 +659,11 @@ class REGINA_API FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> 
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<4> ordering(unsigned face) {
+        static Perm<4> ordering(unsigned face) {
             return ordering_[face];
         }
 
-        static unsigned faceNumber(NPerm<4> vertices) {
+        static unsigned faceNumber(Perm<4> vertices) {
             return vertices[3];
         }
 
@@ -689,12 +683,12 @@ class REGINA_API FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<5> ordering(unsigned face) {
-            return NPerm5(face, (face + 1) % 5, (face + 2) % 5,
+        static Perm<5> ordering(unsigned face) {
+            return Perm<5>(face, (face + 1) % 5, (face + 2) % 5,
                 (face + 3) % 5, (face + 4) % 5);
         }
 
-        static unsigned faceNumber(NPerm<5> vertices) {
+        static unsigned faceNumber(Perm<5> vertices) {
             return vertices[0];
         }
 
@@ -743,7 +737,7 @@ class REGINA_API FaceNumberingImpl<4, 1, true> : public FaceNumberingAPI<4, 1> {
         static const int edgeVertex[10][2];
 
     private:
-        static const NPerm<5> ordering_[10];
+        static const Perm<5> ordering_[10];
             /**< A hard-coded list of all return values for ordering(). */
 
     public:
@@ -754,11 +748,11 @@ class REGINA_API FaceNumberingImpl<4, 1, true> : public FaceNumberingAPI<4, 1> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<5> ordering(unsigned face) {
+        static Perm<5> ordering(unsigned face) {
             return ordering_[face];
         }
 
-        static unsigned faceNumber(NPerm<5> vertices) {
+        static unsigned faceNumber(Perm<5> vertices) {
             return edgeNumber[vertices[0]][vertices[1]];
         }
 
@@ -809,7 +803,7 @@ class REGINA_API FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> 
         static const int triangleVertex[10][3];
 
     private:
-        static const NPerm<5> ordering_[10];
+        static const Perm<5> ordering_[10];
             /**< A hard-coded list of all return values for ordering(). */
 
     public:
@@ -820,11 +814,11 @@ class REGINA_API FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> 
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<5> ordering(unsigned face) {
+        static Perm<5> ordering(unsigned face) {
             return ordering_[face];
         }
 
-        static unsigned faceNumber(NPerm<5> vertices) {
+        static unsigned faceNumber(Perm<5> vertices) {
             return triangleNumber[vertices[0]][vertices[1]][vertices[2]];
         }
 
@@ -839,7 +833,7 @@ class REGINA_API FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> 
 template <>
 class REGINA_API FaceNumberingImpl<4, 3, false> : public FaceNumberingAPI<4, 3> {
     private:
-        static const NPerm<5> ordering_[5];
+        static const Perm<5> ordering_[5];
             /**< A hard-coded list of all return values for ordering(). */
 
     public:
@@ -850,11 +844,11 @@ class REGINA_API FaceNumberingImpl<4, 3, false> : public FaceNumberingAPI<4, 3> 
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static NPerm<5> ordering(unsigned face) {
+        static Perm<5> ordering(unsigned face) {
             return ordering_[face];
         }
 
-        static unsigned faceNumber(NPerm<5> vertices) {
+        static unsigned faceNumber(Perm<5> vertices) {
             return vertices[4];
         }
 

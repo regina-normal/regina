@@ -116,15 +116,15 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
             for (tet = 0; tet < n && dominates; ++tet)
                 for (quad = 0; quad < Variant::reducedPerTet; ++quad)
                     if ((*use[i])[Variant::stdPos(tet, 4 + quad)] ==
-                                NLargeInteger::zero &&
+                                LargeInteger::zero &&
                             (*use[j])[Variant::stdPos(tet, 4 + quad)] !=
-                                NLargeInteger::zero) {
+                                LargeInteger::zero) {
                         dominates = false;
                         break;
                     } else if ((*use[i])[Variant::stdPos(tet, 4 + quad)] !=
-                                NLargeInteger::zero &&
+                                LargeInteger::zero &&
                             (*use[j])[Variant::stdPos(tet, 4 + quad)] ==
-                                NLargeInteger::zero) {
+                                LargeInteger::zero) {
                         // If this *does* turn out to be a domination of
                         // zero sets, we know it's strict.
                         strict = true;

@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nperm4.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nisomorphism.h"
@@ -53,7 +52,7 @@ void reorder_fatal_error(const char* msg) {
 // perm_from_edges returns the permutation that needs to be applied to the
 // tetrahedron to achieve this.
 
-NPerm4 perm_from_edges(const int edge_orientations_on_tet[6]) {
+Perm<4> perm_from_edges(const int edge_orientations_on_tet[6]) {
     // p[i] = number of edge_orientations pointing to vertex i
     int p[4] = {0, 0, 0, 0};
     for(int i = 0; i < 6; i++)
@@ -71,7 +70,7 @@ NPerm4 perm_from_edges(const int edge_orientations_on_tet[6]) {
                 reorder_fatal_error("bad permutation in reorder.cpp");
     }
 
-    return NPerm4(p[0],p[1],p[2],p[3]);
+    return Perm<4>(p[0],p[1],p[2],p[3]);
 }
 
 // edge_orientations[i] is the edge orientation of the i-th edge in
@@ -97,7 +96,7 @@ void edge_orientations_on_tet(const NTriangulation &trig,
         // a tetrahedron's edge might be identified with the edge in the
         // triangulation in a way that the edge orientation is not consistent
 
-        NPerm4 perm = tet->edgeMapping(i);
+        Perm<4> perm = tet->edgeMapping(i);
         if(perm[0] > perm[1])
             orientation = - orientation;
         edge_orientations_tet[i] = orientation;
@@ -166,7 +165,7 @@ bool check_consistency_on_tet(const NTriangulation &trig,
 
     // check for valid orientation
 
-    NPerm4 p = perm_from_edges(edge_orientations_tet);
+    Perm<4> p = perm_from_edges(edge_orientations_tet);
     if(p.sign() * tet->orientation() == -1)
         return false;
 
@@ -275,7 +274,7 @@ bool NTriangulation::isOrdered() const {
         for(int face = 0; face < 4; face++)
 
             if((*it)->adj_[face]) {
-                NPerm4 perm = (*it) -> gluing_[face];
+                Perm<4> perm = (*it) -> gluing_[face];
 
                 // check that the permutation is order preserving on the face
                 int last = -1;

@@ -52,7 +52,7 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
 
     std::vector<Dim4EdgeEmbedding>::const_iterator it, adjIt;
     Dim2Triangle* tTri;
-    NPerm5 perm;
+    Perm<5> perm;
     int i;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {
         tTri = ans->newTriangle();
@@ -68,12 +68,12 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
             if (perm[3] == it->pentachoron()->edgeMapping(it->edge())[0])
                 (*inclusion)->facetPerm(i) = perm;
             else
-                (*inclusion)->facetPerm(i) = perm * NPerm5(3, 4);
+                (*inclusion)->facetPerm(i) = perm * Perm<5>(3, 4);
         }
     }
 
     Dim4Pentachoron *pent, *adj;
-    NPerm5 adjGluing;
+    Perm<5> adjGluing;
     int exitTet, e;
     int edgeInLink;
     int adjIndex;
@@ -112,7 +112,7 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
                     break; // Sets adjIndex to the right value.
 
             ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
-                NPerm3::contract(adj->triangleMapping(adjEdge).inverse() *
+                Perm<3>::contract(adj->triangleMapping(adjEdge).inverse() *
                     adjGluing *
                     pent->triangleMapping(e)));
         }

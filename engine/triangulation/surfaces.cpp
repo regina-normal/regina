@@ -79,7 +79,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
 
     // Use combinatorial optimisation if we can.
     if (isValid() && countVertices() == 1) {
-        // For now, just use the safe arbitrary-precision NInteger type.
+        // For now, just use the safe arbitrary-precision Integer type.
         TreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
         if (tree.find()) {
             NNormalSurface* s = tree.buildSurface();
@@ -142,7 +142,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // enumeration is usually faster.  Still, the big problems are the
     // ones we need to be more fussy about.
     if (countVertices() == 1) {
-        // For now, just use the safe arbitrary-precision NInteger type.
+        // For now, just use the safe arbitrary-precision Integer type.
         TreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
         if (tree.find()) {
             // Since our preconditions ensure the triangulation is
@@ -172,7 +172,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     unsigned long tet;
     unsigned oct;
     bool found, broken;
-    NLargeInteger coord;
+    LargeInteger coord;
     for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
         s = surfaces->surface(i);
 
@@ -253,7 +253,7 @@ bool NTriangulation::hasSplittingSurface() {
     // Run through all vertex surfaces.
     unsigned long nSurfaces = surfaces->size();
     const NNormalSurface* s;
-    NLargeInteger chi;
+    LargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
         s = surfaces->surface(i);
 

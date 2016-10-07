@@ -32,13 +32,13 @@
 
 #include "enumerate/enumconstraints.h"
 #include "surfaces/nsanstandard.h"
-#include "maths/nmatrixint.h"
-#include "maths/nrational.h"
+#include "maths/matrix.h"
+#include "maths/rational.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
+LargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
         size_t edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
@@ -48,7 +48,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
 
     // Add up the triangles, quads and octagons meeting that edge.
     // Triangles:
-    NLargeInteger ans((*this)[10 * tetIndex + start]);
+    LargeInteger ans((*this)[10 * tetIndex + start]);
     ans += (*this)[10 * tetIndex + end];
     // Quads:
     ans += (*this)[10 * tetIndex + 4 + quadMeeting[start][end][0]];
@@ -61,7 +61,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
     return ans;
 }
 
-NLargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
+LargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->triangles()[triIndex]->front();
@@ -71,7 +71,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
 
     // Add up the discs meeting that triangle in that required arc.
     // Triangles:
-    NLargeInteger ans((*this)[10 * tetIndex + vertex]);
+    LargeInteger ans((*this)[10 * tetIndex + vertex]);
     // Quads:
     ans += (*this)[10 * tetIndex + 4 + quadSeparating[vertex][backOfFace]];
     // Octagons:
@@ -85,21 +85,21 @@ NNormalSurfaceVector* NNormalSurfaceVectorANStandard::makeZeroVector(
     return new NNormalSurfaceVectorANStandard(10 * triangulation->size());
 }
 
-NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
+MatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
         const NTriangulation* triangulation) {
     size_t nCoords = 10 * triangulation->size();
     // Three equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 3 * (4 * long(triangulation->size()) -
         long(triangulation->countTriangles()));
-    NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
+    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
 
     // Run through each internal triangle and add the corresponding three
     // equations.
     unsigned row = 0;
     int i;
     size_t tet0, tet1;
-    NPerm4 perm0, perm1;
+    Perm<4> perm0, perm1;
     for (auto fit = triangulation->triangles().begin();
             fit != triangulation->triangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {

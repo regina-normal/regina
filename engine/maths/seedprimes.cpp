@@ -30,15 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nprimes.h"
+#include "maths/primes.h"
 
 namespace regina {
 
 // Keep the seed primes in a separate file so they're nicely out of the
 // way of everything else.
 
-const unsigned long NPrimes::numPrimeSeeds = 10000;
-const unsigned long NPrimes::primeSeedList[] = {
+const unsigned long Primes::numPrimeSeeds = 10000;
+const unsigned long Primes::primeSeedList[] = {
       2,      3,      5,      7,     11,     13,     17,     19,     23,     29,
      31,     37,     41,     43,     47,     53,     59,     61,     67,     71,
      73,     79,     83,     89,     97,    101,    103,    107,    109,    113,

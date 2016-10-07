@@ -19,22 +19,41 @@ Version 5.1  [ (under development) ]
             + NEnumConstraintList becomes EnumConstraints.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
             + NNormalSurfaceList becomes NormalSurfaces.
+            + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
+            + maths/nmatrixint.h is now merged into maths/matrix.h.
             + utilities/nbooleans.h becomes utilities/boolset.h.
             + Some internal classes do not have backward compatible headers or
               typedefs.  None of these internal classes are exposed to Python,
               and typical C++ users would have no reason to use them either.
     ENGINE:
+        Class AbelianGroup, MarkedAbelianGroup, HomMarkedAbelianGroup:
+            - Now works with type Integer, not LargeInteger.
         Class Crossing, CrossingStrand:
             - Supporting classes for the new Link packet class.
+        Class HomologicalData:
+            - Now works with type Integer instead of LargeInteger for all
+              member functions except for torsionSigmaVector().
         Class Laurent, Laurent2:
             - New classes for Laurent polynomials in one and two variables.
         Class Link:
             - New packet class for knots and links in the 3-sphere.
+        Class MatrixInt:
+            - Now stores elements of type Integer, not LargeInteger.  If
+              you need support for infinity, you can always use the class
+              MatrixIntDomain<LargeInteger> instead.
+            - This is now a typedef, not a class in its own right.
+        Class MatrixIntDomain:
+            - New generalisation of MatrixInt for working in other
+              integral domains.
+        Class Primes:
+            - Now works with type Integer, not LargeInteger.
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
               and PACKET_ANGLESTRUCTURELIST to PACKET_ANGLESTRUCTURES.
               The old names are kept but deprecated.
+        Routine preImageOfLattice(), torsionAutInverse():
+            - Now works with type Integer instead of LargeInteger.
         Routine isZero, isNonZero, isPositive, isNegative, isNonPositive,
                 isNonNegative:
             - Deprecated, with no replacements.  This is because the methods

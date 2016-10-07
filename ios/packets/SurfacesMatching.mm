@@ -35,7 +35,7 @@
 #import "SurfacesMatching.h"
 #import "SurfacesViewController.h"
 #import "MDSpreadViewClasses.h"
-#import "maths/nmatrixint.h"
+#import "maths/matrix.h"
 #import "surfaces/normalsurfaces.h"
 #import "triangulation/ntriangulation.h"
 
@@ -50,7 +50,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 }
 @property (weak, nonatomic) IBOutlet UISwitch *compact;
 @property (weak, nonatomic) IBOutlet MDSpreadView *grid;
-@property (assign, nonatomic) regina::NMatrixInt* matrix;
+@property (assign, nonatomic) regina::MatrixInt* matrix;
 @end
 
 @implementation SurfacesMatching
@@ -134,7 +134,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    regina::NLargeInteger entry = self.matrix->entry(rowPath.row, columnPath.column);
+    regina::LargeInteger entry = self.matrix->entry(rowPath.row, columnPath.column);
     if (entry.isZero())
         return @"";
     else

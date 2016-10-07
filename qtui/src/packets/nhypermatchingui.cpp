@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 
 // UI includes:
@@ -65,7 +65,7 @@ QVariant HyperMatchingModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 
     if (role == Qt::DisplayRole) {
-        regina::NLargeInteger ans = eqns_->entry(index.row(), index.column());
+        regina::Integer ans = eqns_->entry(index.row(), index.column());
         if (ans == 0)
             return QVariant();
         else

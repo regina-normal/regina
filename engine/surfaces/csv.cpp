@@ -32,7 +32,7 @@
 
 #include <fstream>
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
@@ -107,7 +107,7 @@ namespace {
         }
         if (fields & surfaceExportBdry) {
             if (! s->isCompact()) {
-                regina::NMatrixInt* slopes = s->boundaryIntersections();
+                regina::MatrixInt* slopes = s->boundaryIntersections();
                 if (slopes) {
                     out << "\"spun:";
                     for (unsigned i = 0; i < slopes->rows(); ++i)
@@ -146,7 +146,7 @@ namespace {
             if (s->isSplitting())
                 out << "\"Splitting\"";
             else {
-                NLargeInteger tot = s->isCentral();
+                LargeInteger tot = s->isCentral();
                 if (tot != 0)
                     out << "\"Central (" << tot << ")\"";
             }

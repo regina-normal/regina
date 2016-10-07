@@ -37,7 +37,7 @@
 
 using namespace boost::python;
 using regina::NGraphLoop;
-using regina::NMatrix2;
+using regina::Matrix2;
 using regina::NSFSpace;
 
 namespace {
@@ -46,7 +46,7 @@ namespace {
         return new NGraphLoop(new NSFSpace(s), a, b, c, d);
     }
 
-    NGraphLoop* createNGraphLoop_matrix(const NSFSpace& s, const NMatrix2& m) {
+    NGraphLoop* createNGraphLoop_matrix(const NSFSpace& s, const Matrix2& m) {
         return new NGraphLoop(new NSFSpace(s), m);
     }
 }

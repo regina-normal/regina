@@ -147,7 +147,7 @@ struct CountSet {
     CGFloat headerHeight, cellHeight;
     
     CountSet nClosed, nBounded;
-    std::map<regina::NLargeInteger, CountSet> eulerClosed, eulerBounded;
+    std::map<regina::LargeInteger, CountSet> eulerClosed, eulerBounded;
     unsigned long nSpun;
 }
 @property (weak, nonatomic) IBOutlet UITableView *table;
@@ -177,7 +177,7 @@ struct CountSet {
     
     unsigned long n = self.packet->size();
     const regina::NNormalSurface* s;
-    regina::NLargeInteger euler;
+    regina::LargeInteger euler;
     for (unsigned long i = 0; i < n; ++i) {
         s = self.packet->surface(i);
         if (! s->isCompact())
@@ -288,7 +288,7 @@ struct CountSet {
                 cell.count3.text = nClosed.fieldTitle(nClosed.mask, 3);
             } else {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Count" forIndexPath:indexPath];
-                std::map<regina::NLargeInteger, CountSet>::const_reverse_iterator it = eulerClosed.rbegin();
+                std::map<regina::LargeInteger, CountSet>::const_reverse_iterator it = eulerClosed.rbegin();
                 advance(it, indexPath.row - 1);
                 cell.euler.text = [NSString stringWithFormat:@"χ = %s", it->first.stringValue().c_str()];
                 cell.count0.text = it->second.fieldString(nClosed.mask, 0);
@@ -311,7 +311,7 @@ struct CountSet {
                 cell.count3.text = nBounded.fieldTitle(nBounded.mask, 3);
             } else {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Count" forIndexPath:indexPath];
-                std::map<regina::NLargeInteger, CountSet>::const_reverse_iterator it = eulerBounded.rbegin();
+                std::map<regina::LargeInteger, CountSet>::const_reverse_iterator it = eulerBounded.rbegin();
                 advance(it, indexPath.row - 1);
                 cell.euler.text = [NSString stringWithFormat:@"χ = %s", it->first.stringValue().c_str()];
                 cell.count0.text = it->second.fieldString(nBounded.mask, 0);

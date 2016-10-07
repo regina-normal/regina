@@ -70,26 +70,26 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             ans = new NTriangulation();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
-            r->join(0, s, NPerm4(0, 1, 3, 2));
-            r->join(1, s, NPerm4(2, 3, 1, 0));
-            r->join(2, s, NPerm4(3, 2, 1, 0));
-            r->join(3, s, NPerm4(1, 0, 3, 2));
+            r->join(0, s, Perm<4>(0, 1, 3, 2));
+            r->join(1, s, Perm<4>(2, 3, 1, 0));
+            r->join(2, s, Perm<4>(3, 2, 1, 0));
+            r->join(3, s, Perm<4>(1, 0, 3, 2));
         } else if (index_ == 2) {
             ans = new NTriangulation();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
-            r->join(0, s, NPerm4(0, 1, 3, 2));
-            r->join(1, s, NPerm4(3, 1, 2, 0));
-            r->join(2, s, NPerm4(2, 1, 3, 0));
-            r->join(3, s, NPerm4(3, 1, 0, 2));
+            r->join(0, s, Perm<4>(0, 1, 3, 2));
+            r->join(1, s, Perm<4>(3, 1, 2, 0));
+            r->join(2, s, Perm<4>(2, 1, 3, 0));
+            r->join(3, s, Perm<4>(3, 1, 0, 2));
         } else if (index_ == 3) {
             ans = new NTriangulation();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
-            r->join(0, s, NPerm4(0, 1, 3, 2));
-            r->join(1, s, NPerm4(2, 1, 0, 3));
-            r->join(2, s, NPerm4(0, 3, 2, 1));
-            r->join(3, s, NPerm4(1, 0, 2, 3));
+            r->join(0, s, Perm<4>(0, 1, 3, 2));
+            r->join(1, s, Perm<4>(2, 1, 0, 3));
+            r->join(2, s, Perm<4>(0, 3, 2, 1));
+            r->join(3, s, Perm<4>(1, 0, 2, 3));
         } else if (index_ == 4) {
             ans = NExampleTriangulation::figureEight();
             ans->setLabel("");
@@ -191,7 +191,7 @@ NAbelianGroup* NSnapPeaCensusManifold::homology() const {
     ans->addRank(val);
 
     // The remaining characters represent torsion.
-    std::multiset<NLargeInteger> torsion;
+    std::multiset<Integer> torsion;
     for (c = hom + 1; *c; ++c) {
         val = homDecode(*c);
         if (val < 0) {

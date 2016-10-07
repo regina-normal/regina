@@ -49,7 +49,7 @@ namespace {
 // to the specialised Triangulation<3>.  A forward declaration of the
 // specialisation is not enough to stop it.  I wish I understood how to
 // avoid this, but in the meantime, here we are.
-NMatrixInt* NormalSurfaces::recreateMatchingEquations() const {
+MatrixInt* NormalSurfaces::recreateMatchingEquations() const {
     return makeMatchingEquations(triangulation(), coords_);
 }
 
@@ -77,15 +77,15 @@ NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
 }
 
 namespace {
-    struct MatchingEquations : public Returns<NMatrixInt*> {
+    struct MatchingEquations : public Returns<MatrixInt*> {
         template <typename Coords>
-        inline NMatrixInt* operator() (const NTriangulation* tri) {
+        inline MatrixInt* operator() (const NTriangulation* tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
-NMatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
+MatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
         NormalCoords coords) {
     return forCoords(coords, MatchingEquations(), 0, triangulation);
 }

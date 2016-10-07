@@ -133,7 +133,7 @@ namespace {
                     basicTokenise(back_inserter(tokens),
                         dynamic_cast<XMLCharsReader*>(subReader)->chars());
 
-                    NLargeInteger val;
+                    LargeInteger val;
                     for (std::list<std::string>::const_iterator it =
                             tokens.begin(); it != tokens.end(); it++)
                         if (valueOf(*it, val))

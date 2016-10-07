@@ -63,12 +63,12 @@
 
 namespace regina {
 
-template <typename Integer>
-void LPMatrix<Integer>::combRow(const Integer& destCoeff, unsigned dest,
-        const Integer& srcCoeff, unsigned src, const Integer& div) {
-    Integer* ps = dat_ + src * cols_;
-    Integer* pd = dat_ + dest * cols_;
-    Integer tmp; // Use this to avoid spurious temporary Integers.
+template <typename IntType>
+void LPMatrix<IntType>::combRow(const IntType& destCoeff, unsigned dest,
+        const IntType& srcCoeff, unsigned src, const IntType& div) {
+    IntType* ps = dat_ + src * cols_;
+    IntType* pd = dat_ + dest * cols_;
+    IntType tmp; // Use this to avoid spurious temporary IntTypes.
     for (unsigned i = 0; i < cols_; ++i) {
         *pd *= destCoeff;
         tmp = srcCoeff;
@@ -78,13 +78,13 @@ void LPMatrix<Integer>::combRow(const Integer& destCoeff, unsigned dest,
     }
 }
 
-template <typename Integer>
-Integer LPMatrix<Integer>::combRowAndNorm(const Integer& destCoeff,
-        unsigned dest, const Integer& srcCoeff, unsigned src) {
-    Integer gcdRow; // Initialised to zero.
-    Integer* ps = dat_ + src * cols_;
-    Integer* pd = dat_ + dest * cols_;
-    Integer tmp; // Use this to avoid spurious temporary Integers.
+template <typename IntType>
+IntType LPMatrix<IntType>::combRowAndNorm(const IntType& destCoeff,
+        unsigned dest, const IntType& srcCoeff, unsigned src) {
+    IntType gcdRow; // Initialised to zero.
+    IntType* ps = dat_ + src * cols_;
+    IntType* pd = dat_ + dest * cols_;
+    IntType tmp; // Use this to avoid spurious temporary IntTypes.
     unsigned i;
     for (i = 0; i < cols_; ++i, ++pd, ++ps) {
         *pd *= destCoeff;
@@ -102,8 +102,8 @@ Integer LPMatrix<Integer>::combRowAndNorm(const Integer& destCoeff,
     return gcdRow;
 }
 
-template <typename Integer>
-void LPMatrix<Integer>::dump(std::ostream& out) const {
+template <typename IntType>
+void LPMatrix<IntType>::dump(std::ostream& out) const {
     out << "---------------------------------" << std::endl;
     unsigned r, c;
     for (r = 0; r < rows_; ++r) {
@@ -431,8 +431,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
 }
 #endif
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::initStart() {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::initStart() {
     // In this routine we rely on the fact that the
     // LPInitialTableaux constructor ensures that the original
     // tableaux has full rank.
@@ -455,8 +455,8 @@ void LPData<LPConstraint, Integer>::initStart() {
     LPConstraint::constrain(*this, origTableaux_->columns());
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::initClone(const LPData& parent) {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::initClone(const LPData& parent) {
     // If the parent tableaux is infeasible, mark this tableaux as
     // infeasible also and abort.
     feasible_ = parent.feasible_;
@@ -473,8 +473,8 @@ void LPData<LPConstraint, Integer>::initClone(const LPData& parent) {
     octSecondary_ = parent.octSecondary_;
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::constrainZero(unsigned pos) {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::constrainZero(unsigned pos) {
     // If the variable has already been deactivated, there is
     // nothing to do.
     if (! isActive(pos))
@@ -579,8 +579,8 @@ void LPData<LPConstraint, Integer>::constrainZero(unsigned pos) {
 #endif
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::constrainPositive(unsigned pos) {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::constrainPositive(unsigned pos) {
     // If the variable has already been deactivated, it cannot
     // be positive.
     if (! isActive(pos)) {
@@ -600,7 +600,7 @@ void LPData<LPConstraint, Integer>::constrainPositive(unsigned pos) {
     // right-hand side could become negative, we must remember to
     // pivot back to feasibility.
     int r = basisRow_[pos];
-    Integer tmp;
+    IntType tmp;
     if (r >= 0) {
         // This variable is in the basis, and so there is only
         // one non-zero entry in column pos.
@@ -621,8 +621,8 @@ void LPData<LPConstraint, Integer>::constrainPositive(unsigned pos) {
     }
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::constrainOct(
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::constrainOct(
         unsigned quad1, unsigned quad2) {
     // If either variable has already been deactivated, it cannot
     // be positive.
@@ -730,7 +730,7 @@ void LPData<LPConstraint, Integer>::constrainOct(
         // look like anything.  We need to repair it so it
         // contains all zeroes except for cell (row1, quad1),
         // which must be strictly positive.
-        Integer e1;
+        IntType e1;
         entry(row1, quad1, e1);
         if (! e1.isZero()) {
             // The (row1, quad1) entry is non-zero.
@@ -744,12 +744,12 @@ void LPData<LPConstraint, Integer>::constrainOct(
                 rowOps_.negateRow(row1);
             }
 
-            Integer coeff, gcdRow;
+            IntType coeff, gcdRow;
             for (int r = 0; r < rank_; ++r) {
                 if (r == row1)
                     continue;
 
-                // We will reuse coeff, to avoid too many temporary Integers.
+                // We will reuse coeff, to avoid too many temporary IntTypes.
                 // We first set coeff here, and then we reuse and alter it
                 // within the IF block below.
                 entry(r, quad1, coeff);
@@ -832,8 +832,8 @@ void LPData<LPConstraint, Integer>::constrainOct(
     }
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::dump(std::ostream& out) const {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::dump(std::ostream& out) const {
     unsigned r, c;
     out << "========================" << std::endl;
     for (r = 0; r < rank_; ++r)
@@ -848,9 +848,9 @@ void LPData<LPConstraint, Integer>::dump(std::ostream& out) const {
     out << "========================" << std::endl;
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::extractSolution(
-        NRay& v, const char* type) const {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::extractSolution(
+        Ray& v, const char* type) const {
     // Fetch details on how to undo the column permutation.
     const int* columnPerm = origTableaux_->columnPerm();
 
@@ -862,9 +862,9 @@ void LPData<LPConstraint, Integer>::extractSolution(
     //
     // First compute this lcm.
     unsigned i;
-    NLargeInteger lcm(1);
+    LargeInteger lcm(1);
     for (i = 0; i < rank_; ++i)
-        lcm = lcm.lcm(NLargeInteger(entry(i, basis_[i])));
+        lcm = lcm.lcm(LargeInteger(entry(i, basis_[i])));
 
     // Now compute (lcm * the solution vector).  We do not yet
     // take into account the change of variables x_i -> x_i - 1
@@ -880,13 +880,13 @@ void LPData<LPConstraint, Integer>::extractSolution(
     // Because we are multiplying everything by lcm, the
     // divisions in the following code are all perfectly safe
     // (and give precise integer results).
-    NLargeInteger coord;
+    LargeInteger coord;
     for (i = 0; i < rank_; ++i) {
         if (basis_[i] >= v.size())
             continue;
         coord = lcm;
-        coord *= NLargeInteger(rhs_[i]);
-        coord /= NLargeInteger(entry(i, basis_[i]));
+        coord *= LargeInteger(rhs_[i]);
+        coord /= LargeInteger(entry(i, basis_[i]));
         v.setElement(columnPerm[basis_[i]], coord);
     }
 
@@ -944,15 +944,15 @@ void LPData<LPConstraint, Integer>::extractSolution(
     v.scaleDown();
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::pivot(unsigned outCol, unsigned inCol) {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::pivot(unsigned outCol, unsigned inCol) {
     unsigned defRow = basisRow_[outCol];
     basisRow_[outCol] = -1;
     basisRow_[inCol] = defRow;
     basis_[defRow] = inCol;
 
     // Make sure that inCol has a positive coefficient in row defRow.
-    Integer base;
+    IntType base;
     entry(defRow, inCol, base);
     if (base < 0) {
         base.negate();
@@ -963,13 +963,13 @@ void LPData<LPConstraint, Integer>::pivot(unsigned outCol, unsigned inCol) {
     // Walk through the entire tableaux and perform row operations
     // to ensure that the only non-zero entry in column \a inCol
     // is the entry base in row defRow (as extracted above).
-    Integer coeff, gcdRow;
+    IntType coeff, gcdRow;
     unsigned r;
     for (r = 0; r < rank_; ++r) {
         if (r == defRow)
             continue;
 
-        // We will reuse coeff, to avoid too many temporary Integers.
+        // We will reuse coeff, to avoid too many temporary IntTypes.
         // We first set coeff here, and then we reuse and alter it within the
         // IF block below.
         entry(r, inCol, coeff);
@@ -989,15 +989,15 @@ void LPData<LPConstraint, Integer>::pivot(unsigned outCol, unsigned inCol) {
     }
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::findInitialBasis() {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::findInitialBasis() {
     // Start with all variables active but non-basic.
     std::fill(basisRow_, basisRow_ + origTableaux_->columns(), -1);
 
     // We find our initial basis using Gauss-Jordan elimination.
     // Until we sit down and prove some results about the magnitude of
     // the intermediate integers that appear, we will need to do this
-    // entire process using the arbitrary-precision NInteger class.
+    // entire process using the arbitrary-precision Integer class.
 
     // We do not touch rhs_ at all, since our preconditions ensure that
     // rhs_ is the zero vector.
@@ -1008,10 +1008,10 @@ void LPData<LPConstraint, Integer>::findInitialBasis() {
 
     // Build a dense copy of the starting tableaux, which we
     // will work with as we perform our Gauss-Jordan elimination.
-    LPMatrix<NInteger> tab(rank_, origTableaux_->columns());
+    LPMatrix<Integer> tab(rank_, origTableaux_->columns());
     origTableaux_->fillInitialTableaux(tab);
 
-    LPMatrix<NInteger> ops(rank_, rank_);
+    LPMatrix<Integer> ops(rank_, rank_);
     ops.initIdentity(rank_);
 
     // Off we go with our Gauss-Jordan elimination.
@@ -1019,8 +1019,8 @@ void LPData<LPConstraint, Integer>::findInitialBasis() {
     // advance that every row will define some basic variable.
     unsigned row;
     unsigned r, c;
-    NInteger base, coeff;
-    NInteger gcdRow;
+    Integer base, coeff;
+    Integer gcdRow;
     for (row = 0; row < rank_; ++row) {
         // Find the first non-zero entry in this row.
         // The corresponding column will become our next basic variable.
@@ -1078,13 +1078,13 @@ void LPData<LPConstraint, Integer>::findInitialBasis() {
     // Copy the final tableaux into our own rowOps_ matrix.
     for (r = 0; r < rank_; ++r)
         for (c = 0; c < rank_; ++c)
-            rowOps_.entry(r, c) = Integer(ops.entry(r, c));
+            rowOps_.entry(r, c) = IntType(ops.entry(r, c));
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::makeFeasible() {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::makeFeasible() {
     int r, c, outCol, outRow;
-    Integer outEntry, tmp, v1, v2;
+    IntType outEntry, tmp, v1, v2;
 
     // Variables for detecting cycling.
     //
@@ -1180,8 +1180,8 @@ void LPData<LPConstraint, Integer>::makeFeasible() {
     }
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::makeFeasibleAntiCycling() {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::makeFeasibleAntiCycling() {
     int r, c, outCol;
     while (true) {
         // Locate a variable in the basis with negative value.
@@ -1215,8 +1215,8 @@ void LPData<LPConstraint, Integer>::makeFeasibleAntiCycling() {
     }
 }
 
-template <class LPConstraint, typename Integer>
-void LPData<LPConstraint, Integer>::verify() const {
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::verify() const {
     unsigned r, c;
     for (r = 0; r < rank_; ++r) {
         // Check that rowOps_ is an inverse matrix.
@@ -1227,7 +1227,7 @@ void LPData<LPConstraint, Integer>::verify() const {
             }
 
         // Check that each row has gcd = 1.
-        Integer g; // Initialised to zero.
+        IntType g; // Initialised to zero.
         for (c = 0; c < rowOps_.columns(); ++c)
             g.gcdWith(rowOps_.entry(r, c));
         if (g != 1) {

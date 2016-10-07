@@ -130,7 +130,7 @@ NTriangulation* Triangulation<3>::readSnapPea(std::istream& in) {
         // Perform the gluings.
         for (j=0; j<4; j++)
             tet[i]->join(j, tet[g[j]],
-                NPerm4(p[j][0], p[j][1], p[j][2], p[j][3]));
+                Perm<4>(p[j][0], p[j][1], p[j][2], p[j][3]));
 
         // Read in junk.
         for (j=0; j<4; j++)

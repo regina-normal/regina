@@ -35,13 +35,13 @@
 #include "dim4/dim4triangulation.h"
 #include "enumerate/enumconstraints.h"
 #include "hypersurface/nhsstandard.h"
-#include "maths/nmatrixint.h"
-#include "maths/nrational.h"
+#include "maths/matrix.h"
+#include "maths/rational.h"
 #include "surfaces/nnormalsurface.h" // for quadDefn[][].
 
 namespace regina {
 
-NLargeInteger NNormalHypersurfaceVectorStandard::edgeWeight(
+LargeInteger NNormalHypersurfaceVectorStandard::edgeWeight(
         size_t edgeIndex, const Dim4Triangulation* triang) const {
     // Find a pentachoron next to the edge in question.
     const Dim4EdgeEmbedding& emb = triang->edge(edgeIndex)->front();
@@ -51,7 +51,7 @@ NLargeInteger NNormalHypersurfaceVectorStandard::edgeWeight(
 
     // Add up the tetrahedra and prisms meeting that edge.
     // Tetrahedra:
-    NLargeInteger ans((*this)[15 * pentIndex + start]);
+    LargeInteger ans((*this)[15 * pentIndex + start]);
     ans += (*this)[15 * pentIndex + end];
     // Prisms:
     unsigned e = Dim4Edge::edgeNumber[start][end];
@@ -69,21 +69,21 @@ NNormalHypersurfaceVector* NNormalHypersurfaceVectorStandard::makeZeroVector(
     return new NNormalHypersurfaceVectorStandard(15 * triangulation->size());
 }
 
-NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
+MatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
         const Dim4Triangulation* triangulation) {
     size_t nCoords = 15 * triangulation->size();
     // Seven equations per non-boundary facet.
     // T_boundary + 2 T_internal = 5 P
     long nEquations = 7 * (5 * long(triangulation->size()) -
         long(triangulation->countTetrahedra()));
-    NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
+    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
 
     // Run through each internal facet and add the corresponding seven
     // equations.
     size_t row = 0;
     int i;
     size_t pent0, pent1;
-    NPerm5 perm0, perm1;
+    Perm<5> perm0, perm1;
     for (Dim4Triangulation::TetrahedronIterator tit =
             triangulation->tetrahedra().begin();
             tit != triangulation->tetrahedra().end(); tit++) {

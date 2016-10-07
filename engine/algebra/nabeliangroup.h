@@ -41,13 +41,14 @@
 
 #include <set>
 #include "regina-core.h"
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "output.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
-class NMatrixInt;
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 /**
  * \addtogroup algebra Algebraic Structures
@@ -76,7 +77,7 @@ class REGINA_API NAbelianGroup :
     protected:
         unsigned rank_;
             /**< The rank of the group (the number of Z components). */
-        std::multiset<NLargeInteger> invariantFactors;
+        std::multiset<Integer> invariantFactors;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
              *   described in the NAbelianGroup notes. */
 
@@ -104,7 +105,7 @@ class REGINA_API NAbelianGroup :
          *
          * @author Ryan Budney
          */
-        NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N);
+        NAbelianGroup(const MatrixInt& M, const MatrixInt& N);
         /**
          * Creates an abelian group as the homology of a chain complex,
          * using mod-\a p coefficients.
@@ -116,15 +117,15 @@ class REGINA_API NAbelianGroup :
          * the matrix that one takes the kernel of when computing homology.
          * @param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
-         * @param p the modulus, which may be any NLargeInteger.
+         * @param p the modulus, which may be any Integer.
          * Zero is interpreted as a request for integer coefficents,
          * which will give the same result as the
-         * NAbelianGroup(const NMatrixInt&, const NMatrixInt&) constructor.
+         * NAbelianGroup(const MatrixInt&, const MatrixInt&) constructor.
          *
          * @author Ryan Budney
          */
-        NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
-            const NLargeInteger &p);
+        NAbelianGroup(const MatrixInt& M, const MatrixInt& N,
+            const Integer &p);
 
         /**
          * Increments the rank of the group by the given integer.
@@ -156,7 +157,7 @@ class REGINA_API NAbelianGroup :
          * @param mult the multiplicity <i>m</i>, where we are adding
          * precisely <i>m</i> copies of <i>Z_d</i>; this defaults to 1.
          */
-        void addTorsionElement(const NLargeInteger& degree, unsigned mult = 1);
+        void addTorsionElement(const Integer& degree, unsigned mult = 1);
         /**
          * Adds the given torsion element to the group.
          * Note that this routine might be slow since calculating the
@@ -194,7 +195,7 @@ class REGINA_API NAbelianGroup :
          * @param torsion a list containing the torsion elements to add,
          * as described above.
          */
-        void addTorsionElements(const std::multiset<NLargeInteger>& torsion);
+        void addTorsionElements(const std::multiset<Integer>& torsion);
         /**
          * Adds the abelian group defined by the given presentation to this
          * group.
@@ -205,7 +206,7 @@ class REGINA_API NAbelianGroup :
          * added to this group, where each column represents a generator
          * and each row a relation.
          */
-        void addGroup(const NMatrixInt& presentation);
+        void addGroup(const MatrixInt& presentation);
         /**
          * Adds the given abelian group to this group.
          * Note that this routine might be slow since calculating the
@@ -238,7 +239,7 @@ class REGINA_API NAbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned torsionRank(const NLargeInteger& degree) const;
+        unsigned torsionRank(const Integer& degree) const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
          * If the given degree is <i>d</i>, this routine will return the
@@ -277,7 +278,7 @@ class REGINA_API NAbelianGroup :
          * this must be between 0 and countInvariantFactors()-1 inclusive.
          * @return the requested invariant factor.
          */
-        const NLargeInteger& invariantFactor(size_t index) const;
+        const Integer& invariantFactor(size_t index) const;
 
         /**
          * Determines whether this is the trivial (zero) group.
@@ -367,7 +368,7 @@ class REGINA_API NAbelianGroup :
          * where each column represents a generator
          * and each row a relation.
          */
-        void replaceTorsion(const NMatrixInt& matrix);
+        void replaceTorsion(const MatrixInt& matrix);
 };
 
 /*@}*/
@@ -387,7 +388,7 @@ inline void NAbelianGroup::addRank(int extraRank) {
 
 inline void NAbelianGroup::addTorsionElement(unsigned long degree,
         unsigned mult) {
-    addTorsionElement(NLargeInteger(degree), mult);
+    addTorsionElement(Integer(degree), mult);
 }
 
 inline unsigned NAbelianGroup::rank() const {
@@ -395,7 +396,7 @@ inline unsigned NAbelianGroup::rank() const {
 }
 
 inline unsigned NAbelianGroup::torsionRank(unsigned long degree) const {
-    return torsionRank(NLargeInteger(degree));
+    return torsionRank(Integer(degree));
 }
 
 inline size_t NAbelianGroup::countInvariantFactors() const {

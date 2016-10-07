@@ -45,7 +45,7 @@ using regina::Isomorphism;
 namespace {
     int (Dim2Isomorphism::*simpImage_const)(unsigned) const =
         &Dim2Isomorphism::simpImage;
-    regina::NPerm3 (Dim2Isomorphism::*facetPerm_const)(unsigned) const =
+    regina::Perm<3> (Dim2Isomorphism::*facetPerm_const)(unsigned) const =
         &Dim2Isomorphism::facetPerm;
 }
 

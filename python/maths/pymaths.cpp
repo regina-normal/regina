@@ -32,39 +32,39 @@
 
 void addMatrixOps();
 void addCyclotomic();
-void addNInteger();
-void addNLargeInteger();
+void addInteger();
+void addLargeInteger();
 void addLaurent();
 void addLaurent2();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm2();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPerm();
-void addNPolynomial();
-void addNPrimes();
-void addNRational();
+void addMatrix2();
+void addMatrixInt();
+void addPerm2();
+void addPerm3();
+void addPerm4();
+void addPerm5();
+void addPerm();
+void addPolynomial();
+void addPrimes();
+void addRational();
 void addNumberTheory();
 
 void addMathsClasses() {
     addMatrixOps();
     addCyclotomic();
-    addNInteger();
-    addNLargeInteger();
+    addInteger();
+    addLargeInteger();
     addLaurent();
     addLaurent2();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm2();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPerm();
-    addNPolynomial();
-    addNPrimes();
-    addNRational();
+    addMatrix2();
+    addMatrixInt();
+    addPerm2();
+    addPerm3();
+    addPerm4();
+    addPerm5();
+    addPerm();
+    addPolynomial();
+    addPrimes();
+    addRational();
     addNumberTheory();
 }
 

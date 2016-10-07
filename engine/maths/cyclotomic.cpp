@@ -33,14 +33,14 @@
 #define _USE_MATH_DEFINES // for M_PI, which is non-standard
 
 #include "maths/cyclotomic.h"
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include <cmath>
 #include <vector>
 
 namespace regina {
 
 namespace {
-    std::vector<NPolynomial<NInteger> > cyclotomicCache;
+    std::vector<Polynomial<Integer> > cyclotomicCache;
 }
 
 std::complex<double> Cyclotomic::evaluate(size_t whichRoot) const {
@@ -56,8 +56,8 @@ std::complex<double> Cyclotomic::evaluate(size_t whichRoot) const {
 }
 
 void Cyclotomic::invert() {
-    NPolynomial<NRational>* self = polynomial();
-    NPolynomial<NRational> gcd, u, v;
+    Polynomial<Rational>* self = polynomial();
+    Polynomial<Rational> gcd, u, v;
 
     self->gcdWithCoeffs(cyclotomic(field_), gcd, u, v);
 
@@ -71,10 +71,10 @@ void Cyclotomic::invert() {
 }
 
 Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
-    const NPolynomial<NInteger>& cyc = cyclotomic(field_);
+    const Polynomial<Integer>& cyc = cyclotomic(field_);
 
     size_t i, j;
-    NRational* tmp = new NRational[degree_ * 2 - 1];
+    Rational* tmp = new Rational[degree_ * 2 - 1];
     for (i = 0; i < degree_; ++i)
         for (j = 0; j < degree_; ++j)
             tmp[i + j] += (coeff_[i] * other.coeff_[j]);
@@ -90,7 +90,7 @@ Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
     return *this;
 }
 
-const NPolynomial<NInteger>& Cyclotomic::cyclotomic(size_t n) {
+const Polynomial<Integer>& Cyclotomic::cyclotomic(size_t n) {
     if (cyclotomicCache.size() < n)
         cyclotomicCache.resize(n);
     if (cyclotomicCache[n - 1].degree() == 0) {

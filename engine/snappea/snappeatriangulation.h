@@ -50,9 +50,11 @@ namespace snappea {
     struct Triangulation;
 }
 
-class NMatrixInt;
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;
+
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -725,7 +727,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * \a number_of_cusps) rows and (3 * \a number_of_tetrahedra) columns
          * as described above, or 0 if this is a null triangulation.
          */
-        NMatrixInt* gluingEquations() const;
+        MatrixInt* gluingEquations() const;
 
         /**
          * Returns a matrix describing Thurston's gluing equations in a
@@ -758,7 +760,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * \a number_of_cusps) rows and (2 * \a number_of_tetrahedra + 1)
          * columns as described above, or 0 if this is a null triangulation.
          */
-        NMatrixInt* gluingEquationsRect() const;
+        MatrixInt* gluingEquationsRect() const;
 
         /*@}*/
         /**
@@ -1011,7 +1013,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * and (3 * \a number_of_tetrahedra) columns as described above,
          * or 0 if this is a null triangulation.
          */
-        NMatrixInt* slopeEquations() const;
+        MatrixInt* slopeEquations() const;
 
         /*@}*/
         /**

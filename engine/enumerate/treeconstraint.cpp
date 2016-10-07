@@ -41,7 +41,7 @@ bool LPConstraintEuler::addRows(
         const int* columnPerm, const NTriangulation* tri) {
     int* obj = new int[7 * tri->size()];
     unsigned tet, i;
-    NPerm4 p;
+    Perm<4> p;
     for (i = 0; i < 7 * tri->size(); ++i)
         obj[i] = 1;
     for (i = 0; i < tri->countTriangles(); ++i) {
@@ -91,7 +91,7 @@ bool LPConstraintNonSpun::addRows(
 
     // Compute the two slope equations for the torus cusp, if we can.
     SnapPeaTriangulation snapPea(*tri, false);
-    NMatrixInt* coeffs = snapPea.slopeEquations();
+    MatrixInt* coeffs = snapPea.slopeEquations();
     if (! coeffs)
         return false;
 

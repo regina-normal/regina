@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {
@@ -141,7 +141,7 @@ class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
         NSatRegion* centre_;
             /**< The central region, i.e., the saturated region with two
                  boundary annuli that meets both end regions. */
-        NMatrix2 matchingReln_[2];
+        Matrix2 matchingReln_[2];
             /**< Specifies how the various region boundaries are joined
                  (possibly via layerings), as described in the class notes
                  above.  In particular, \a matchingReln_[i] describes how
@@ -196,7 +196,7 @@ class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
          * @return the matrix describing how the requested region
          * boundaries are joined.
          */
-        const NMatrix2& matchingReln(int which) const;
+        const Matrix2& matchingReln(int which) const;
 
         NManifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
@@ -234,8 +234,8 @@ class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
          * joined to the central region.
          */
         NBlockedSFSTriple(NSatRegion* end0, NSatRegion* centre,
-            NSatRegion* end1, const NMatrix2& matchingReln0,
-            const NMatrix2& matchingReln1);
+            NSatRegion* end1, const Matrix2& matchingReln0,
+            const Matrix2& matchingReln1);
 };
 
 /*@}*/
@@ -243,8 +243,8 @@ class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
 // Inline functions for NBlockedSFSTriple
 
 inline NBlockedSFSTriple::NBlockedSFSTriple(NSatRegion* end0,
-        NSatRegion* centre, NSatRegion* end1, const NMatrix2& matchingReln0,
-        const NMatrix2& matchingReln1) {
+        NSatRegion* centre, NSatRegion* end1, const Matrix2& matchingReln0,
+        const Matrix2& matchingReln1) {
     end_[0] = end0;
     centre_ = centre;
     end_[1] = end1;
@@ -260,7 +260,7 @@ inline const NSatRegion& NBlockedSFSTriple::centre() const {
     return *centre_;
 }
 
-inline const NMatrix2& NBlockedSFSTriple::matchingReln(int which) const {
+inline const Matrix2& NBlockedSFSTriple::matchingReln(int which) const {
     return matchingReln_[which];
 }
 

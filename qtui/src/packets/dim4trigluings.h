@@ -39,7 +39,6 @@
 
 #include "../packettabui.h"
 #include "reginaprefset.h"
-#include "maths/nperm5.h"
 
 #include <QAbstractItemModel>
 
@@ -49,6 +48,7 @@ class QToolBar;
 namespace regina {
     class Packet;
 
+    template <int> class Perm;
     template <int> class Simplex;
     template <int> class Triangulation;
     typedef Simplex<4> Dim4Pentachoron;
@@ -109,7 +109,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
          */
         QString isFacetStringValid(unsigned long srcPent, int srcFacet,
             unsigned long destPent, const QString& destFacet,
-            regina::NPerm5* gluing);
+            regina::Perm<5>* gluing);
 
         /**
          * Return a short string describing the destination of a
@@ -118,7 +118,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
          */
         static QString destString(int srcFacet,
             regina::Dim4Pentachoron* destPent,
-            const regina::NPerm5& gluing);
+            const regina::Perm<5>& gluing);
 
         /**
          * Convert a facet string (e.g., "1304") to a facet permutation.
@@ -126,7 +126,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
          * The given facet string must be valid; otherwise the results
          * could be unpredictable (and indeed a crash could result).
          */
-        static regina::NPerm5 facetStringToPerm(int srcFacet,
+        static regina::Perm<5> facetStringToPerm(int srcFacet,
             const QString& str);
 
         /**

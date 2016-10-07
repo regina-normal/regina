@@ -86,8 +86,8 @@ struct CanonicalHelper {
         size_t adjTriIndex, adjTriIndexBest;
         size_t finalImage, finalImageBest;
 
-        NPerm<dim+1> gluingPerm, gluingPermBest;
-        NPerm<dim+1> finalGluing, finalGluingBest;
+        Perm<dim+1> gluingPerm, gluingPermBest;
+        Perm<dim+1> finalGluing, finalGluingBest;
         int comp;
 
         bool justAssigned;
@@ -190,19 +190,19 @@ bool TriangulationBase<dim>::makeCanonical() {
     size_t simp, inner;
     for (simp = 0; simp < nSimp; ++simp) {
         best.simpImage(simp) = bestInv.simpImage(simp) = simp;
-        best.facetPerm(simp) = bestInv.facetPerm(simp) = NPerm<dim+1>();
+        best.facetPerm(simp) = bestInv.facetPerm(simp) = Perm<dim+1>();
     }
 
     // Run through potential preimages of simplex 0.
-    typename NPerm<dim+1>::Index perm;
+    typename Perm<dim+1>::Index perm;
     for (simp = 0; simp < nSimp; ++simp) {
-        for (perm = 0; perm < NPerm<dim+1>::nPerms; ++perm) {
+        for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
             // Build a "perhaps canonical" isomorphism based on this
             // preimage of simplex 0.
             current.simpImage(simp) = 0;
             currentInv.simpImage(0) = simp;
 
-            currentInv.facetPerm(0) = NPerm<dim+1>::atIndex(perm);
+            currentInv.facetPerm(0) = Perm<dim+1>::atIndex(perm);
             current.facetPerm(simp) = currentInv.facetPerm(0).inverse();
 
             if (CanonicalHelper::extendIsomorphism<dim>(this, current,
@@ -269,8 +269,8 @@ size_t TriangulationBase<dim>::findIsomorphisms(
     size_t* startSimp = new size_t[nComponents];
     std::fill(startSimp, startSimp + nComponents, 0);
 
-    typename NPerm<dim+1>::Index* startPerm =
-        new typename NPerm<dim+1>::Index[nComponents];
+    typename Perm<dim+1>::Index* startPerm =
+        new typename Perm<dim+1>::Index[nComponents];
     std::fill(startPerm, startPerm + nComponents, 0);
 
     // The simplices whose neighbours must be processed when filling
@@ -285,7 +285,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
     Simplex<dim>* destAdj;
     size_t myIndex, adjIndex;
     size_t destIndex, destAdjIndex;
-    NPerm<dim+1> myPerm, adjPerm;
+    Perm<dim+1> myPerm, adjPerm;
     int facet;
     bool broken;
 
@@ -324,7 +324,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
         }
 
         // Sort out the results of any previous startPerm++.
-        if (startPerm[comp] == NPerm<dim+1>::nPerms) {
+        if (startPerm[comp] == Perm<dim+1>::nPerms) {
             // Move on to the next destination simplex.
             startSimp[comp]++;
             startPerm[comp] = 0;
@@ -383,7 +383,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
 
         whichComp[startSimp[comp]] = comp;
         iso.simpImage(myIndex) = startSimp[comp];
-        iso.facetPerm(myIndex) = NPerm<dim+1>::atIndex(startPerm[comp]);
+        iso.facetPerm(myIndex) = Perm<dim+1>::atIndex(startPerm[comp]);
         toProcess.push(myIndex);
 
         broken = false;

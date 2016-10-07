@@ -58,7 +58,7 @@ struct NBlockedSFSTripleSearcher : public NSatBlockStarterSearcher {
         /**< The central region of the NBlockedSFSTriple structure,
              if such a structure has been successfully found; otherwise,
              a null pointer if we are still searching. */
-    NMatrix2 matchingReln[2];
+    Matrix2 matchingReln[2];
         /**< The matrices describing how the various region boundaries are
              joined together.  Here matrix \a matchingReln[i] expresses the
              fibre/base curves on region \a end[i] in terms of the fibre/base
@@ -258,18 +258,18 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
     // Start looking for the end regions.
     int plugPos;
     NSatBlock* otherStarter;
-    NMatrix2 curvesCentreToLayering, layeringToEndAnnulus;
+    Matrix2 curvesCentreToLayering, layeringToEndAnnulus;
 
     for (e = 0; e < 2; e++) {
         // Relation from centre fibre/orbifold to layering first triangle
         // markings 01/02:
         curvesCentreToLayering = layering[e]->boundaryReln() *
-            NMatrix2(-1, 0, 0, bdryRef[e] ? -1 : 1);
+            Matrix2(-1, 0, 0, bdryRef[e] ? -1 : 1);
 
         // We make the shell of an other-side boundary annulus; we will fill
         // in the precise vertex role permutations later on.
-        NSatAnnulus otherSide(layering[e]->newBoundaryTet(0), NPerm4(),
-            layering[e]->newBoundaryTet(1), NPerm4());
+        NSatAnnulus otherSide(layering[e]->newBoundaryTet(0), Perm<4>(),
+            layering[e]->newBoundaryTet(1), Perm<4>());
 
         if (otherSide.meetsBoundary()) {
             delete centre;
@@ -295,19 +295,19 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
             if (plugPos == 0) {
                 otherSide.roles[0] = layering[e]->newBoundaryRoles(0);
                 otherSide.roles[1] = layering[e]->newBoundaryRoles(1);
-                layeringToEndAnnulus = NMatrix2(1, 0, 0, 1);
+                layeringToEndAnnulus = Matrix2(1, 0, 0, 1);
             } else if (plugPos == 1) {
                 otherSide.roles[0] = layering[e]->newBoundaryRoles(0) *
-                    NPerm4(1, 2, 0, 3);
+                    Perm<4>(1, 2, 0, 3);
                 otherSide.roles[1] = layering[e]->newBoundaryRoles(1) *
-                    NPerm4(1, 2, 0, 3);
-                layeringToEndAnnulus = NMatrix2(-1, 1, -1, 0);
+                    Perm<4>(1, 2, 0, 3);
+                layeringToEndAnnulus = Matrix2(-1, 1, -1, 0);
             } else {
                 otherSide.roles[0] = layering[e]->newBoundaryRoles(0) *
-                    NPerm4(2, 0, 1, 3);
+                    Perm<4>(2, 0, 1, 3);
                 otherSide.roles[1] = layering[e]->newBoundaryRoles(1) *
-                    NPerm4(2, 0, 1, 3);
-                layeringToEndAnnulus = NMatrix2(0, -1, 1, -1);
+                    Perm<4>(2, 0, 1, 3);
+                layeringToEndAnnulus = Matrix2(0, -1, 1, -1);
             }
 
             // Clear out the used tetrahedron list.  Everything between the
@@ -331,7 +331,7 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
                     // Got it!
                     // Do a final conversion from annulus first triangle
                     // markings 01/02 and move onto the next end space.
-                    matchingReln[e] = NMatrix2(-1, 0, 0, 1) *
+                    matchingReln[e] = Matrix2(-1, 0, 0, 1) *
                         layeringToEndAnnulus * curvesCentreToLayering;
                     break;
                 }

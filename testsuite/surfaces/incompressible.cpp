@@ -43,7 +43,7 @@
 using regina::NExampleTriangulation;
 using regina::NNormalSurface;
 using regina::NormalSurfaces;
-using regina::NPerm4;
+using regina::Perm;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
@@ -170,14 +170,14 @@ class IncompressibleTest : public CppUnit::TestFixture {
             tri = new NTriangulation();
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
-            tet[0]->join(0, tet[1], NPerm4());
-            tet[0]->join(1, tet[1], NPerm4());
-            tet[0]->join(2, tet[1], NPerm4());
+            tet[0]->join(0, tet[1], Perm<4>());
+            tet[0]->join(1, tet[1], Perm<4>());
+            tet[0]->join(2, tet[1], Perm<4>());
             delete verifyNoCompressingDisc(tri, "Triangular pillow");
 
             tri = new NTriangulation();
             tet[0] = tri->newTetrahedron();
-            tet[0]->join(0, tet[0], NPerm4(3, 1, 2, 0));
+            tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
             delete verifyNoCompressingDisc(tri, "Snapped tetrahedron");
 
             tri = new NTriangulation();
@@ -185,12 +185,12 @@ class IncompressibleTest : public CppUnit::TestFixture {
             tet[1] = tri->newTetrahedron();
             tet[2] = tri->newTetrahedron();
             tet[3] = tri->newTetrahedron();
-            tet[0]->join(2, tet[0], NPerm4(0,2));
-            tet[0]->join(1, tet[1], NPerm4(2,0,1,3));
-            tet[1]->join(2, tet[2], NPerm4());
-            tet[1]->join(1, tet[2], NPerm4(2,0,1,3));
-            tet[2]->join(1, tet[3], NPerm4(2,0,1,3));
-            tet[3]->join(2, tet[3], NPerm4(1,2));
+            tet[0]->join(2, tet[0], Perm<4>(0,2));
+            tet[0]->join(1, tet[1], Perm<4>(2,0,1,3));
+            tet[1]->join(2, tet[2], Perm<4>());
+            tet[1]->join(1, tet[2], Perm<4>(2,0,1,3));
+            tet[2]->join(1, tet[3], Perm<4>(2,0,1,3));
+            tet[3]->join(2, tet[3], Perm<4>(1,2));
             delete verifyNoCompressingDisc(tri, "4-tetrahedron ball");
 
             tri = NExampleTriangulation::figureEight();

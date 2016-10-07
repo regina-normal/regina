@@ -43,7 +43,7 @@ def vecToString(v):
 	return ans + ' ]'
 
 def makeMatrix(rows, cols, values):
-	m = regina.NMatrixInt(rows, cols)
+	m = regina.MatrixInt(rows, cols)
 	m.initialise(values)
 	return m
 

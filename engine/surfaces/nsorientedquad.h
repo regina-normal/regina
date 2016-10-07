@@ -44,7 +44,6 @@
 
 namespace regina {
 
-class NMatrixInt;
 class NNormalSurfaceVectorOrientedQuad;
 
 /**
@@ -103,23 +102,23 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorOrientedQuad(const NVector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorOrientedQuad(const Vector<LargeInteger>& cloneMe);
 
         virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
 
         virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
 
-        virtual NLargeInteger quads(size_t tetIndex,
+        virtual LargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger orientedQuads(size_t tetIndex,
+        virtual LargeInteger orientedQuads(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
-        virtual NLargeInteger octs(size_t tetIndex,
+        virtual LargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(
+        static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const NTriangulation* triangulation);
@@ -133,17 +132,17 @@ inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
         size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
 inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 
-inline NLargeInteger NNormalSurfaceVectorOrientedQuad::quads(
+inline LargeInteger NNormalSurfaceVectorOrientedQuad::quads(
         size_t tetIndex, int quadType, const NTriangulation* tri) const {
     return orientedQuads(tetIndex, quadType, tri, true)
            + orientedQuads(tetIndex, quadType, tri, false);
 }
 
-inline NLargeInteger NNormalSurfaceVectorOrientedQuad::orientedQuads(
+inline LargeInteger NNormalSurfaceVectorOrientedQuad::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
     return (*this)[6 * tetIndex + 2 * quadType +
@@ -156,7 +155,7 @@ inline const NVertex* NNormalSurfaceVectorOrientedQuad::isVertexLink(
     return 0;
 }
 
-inline NLargeInteger NNormalSurfaceVectorOrientedQuad::octs(
+inline LargeInteger NNormalSurfaceVectorOrientedQuad::octs(
         size_t, int, const NTriangulation*) const {
     return zero;
 }

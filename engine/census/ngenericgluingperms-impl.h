@@ -84,23 +84,23 @@ Triangulation<dim>* NGenericGluingPerms<dim>::triangulate() const {
 
 template <int dim>
 int NGenericGluingPerms<dim>::gluingToIndex(const FacetSpec<dim>& source,
-        const NPerm<dim+1>& gluing) const {
-    NPerm<dim+1> permSn_1 = NPerm<dim+1>(pairing_->dest(source).facet, dim)
-        * gluing * NPerm<dim+1>(source.facet, dim);
-    return (std::find(NPerm<dim+1>::Sn_1,
-        NPerm<dim+1>::Sn_1 + NPerm<dim+1>::nPerms_1, permSn_1)
-        - NPerm<dim+1>::Sn_1);
+        const Perm<dim+1>& gluing) const {
+    Perm<dim+1> permSn_1 = Perm<dim+1>(pairing_->dest(source).facet, dim)
+        * gluing * Perm<dim+1>(source.facet, dim);
+    return (std::find(Perm<dim+1>::Sn_1,
+        Perm<dim+1>::Sn_1 + Perm<dim+1>::nPerms_1, permSn_1)
+        - Perm<dim+1>::Sn_1);
 }
 
 template <int dim>
 int NGenericGluingPerms<dim>::gluingToIndex(unsigned simp, unsigned facet,
-        const NPerm<dim+1>& gluing) const {
-    NPerm<dim+1> permSn_1 =
-        NPerm<dim+1>(pairing_->dest(simp, facet).facet, dim) * gluing *
-        NPerm<dim+1>(facet, dim);
-    return (std::find(NPerm<dim+1>::Sn_1,
-        NPerm<dim+1>::Sn_1 + NPerm<dim+1>::nPerms_1, permSn_1)
-        - NPerm<dim+1>::Sn_1);
+        const Perm<dim+1>& gluing) const {
+    Perm<dim+1> permSn_1 =
+        Perm<dim+1>(pairing_->dest(simp, facet).facet, dim) * gluing *
+        Perm<dim+1>(facet, dim);
+    return (std::find(Perm<dim+1>::Sn_1,
+        Perm<dim+1>::Sn_1 + Perm<dim+1>::nPerms_1, permSn_1)
+        - Perm<dim+1>::Sn_1);
 }
 
 template <int dim>

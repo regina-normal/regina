@@ -83,7 +83,7 @@ std::unique_ptr< NHomMarkedAbelianGroup >
 {
  std::unique_ptr<NMarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
  std::unique_ptr<NMarkedAbelianGroup> RAN( range_->markedAbelianisation() );
- NMatrixInt ccMat( RAN->rankCC(), DOM->rankCC() );
+ MatrixInt ccMat( RAN->rankCC(), DOM->rankCC() );
  for (unsigned long j=0; j<ccMat.columns(); j++)
   {
    NGroupExpression COLj( evaluate(j) );

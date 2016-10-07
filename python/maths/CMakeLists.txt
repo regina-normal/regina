@@ -6,20 +6,20 @@ SET ( FILES
   laurent2
   matrixops
   cyclotomic
-  ninteger
-  nlargeinteger
-  nmatrixint
-  nmatrix2
-  nperm
-  nperm2
-  nperm3
-  nperm4
-  nperm5
-  npolynomial
-  nprimes
-  nrational
+  integer
+  largeinteger
+  matrix2
+  matrixint
   numbertheory
+  perm
+  perm2
+  perm3
+  perm4
+  perm5
+  polynomial
+  primes
   pymaths
+  rational
   )
 
 # Prepend folder name

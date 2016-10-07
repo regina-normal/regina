@@ -35,14 +35,14 @@
 
 namespace regina {
 
-void smithNormalForm(NMatrixInt& matrix) {
+void smithNormalForm(MatrixInt& matrix) {
     unsigned long currStage = 0;
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
     bool flag;
     unsigned long i, j, k;
-    NLargeInteger d, u, v, a, b;
-    NLargeInteger tmp;
+    Integer d, u, v, a, b;
+    Integer tmp;
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
         loopStart:
 
@@ -158,16 +158,16 @@ void smithNormalForm(NMatrixInt& matrix) {
 }
 
 
-void smithNormalForm(NMatrixInt& matrix,
-        NMatrixInt& rowSpaceBasis, NMatrixInt& rowSpaceBasisInv,
-        NMatrixInt& colSpaceBasis, NMatrixInt& colSpaceBasisInv) {
+void smithNormalForm(MatrixInt& matrix,
+        MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
+        MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
     unsigned long currStage = 0;
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
     bool flag;
     unsigned long i, j, k;
-    NLargeInteger d, u, v, a, b;
-    NLargeInteger tmp;
+    Integer d, u, v, a, b;
+    Integer tmp;
 
     rowSpaceBasis.makeIdentity();
     rowSpaceBasisInv.makeIdentity();
@@ -333,11 +333,11 @@ void smithNormalForm(NMatrixInt& matrix,
 
 }
 
-unsigned rowBasis(NMatrixInt& matrix) {
+unsigned rowBasis(MatrixInt& matrix) {
     unsigned n = matrix.columns();
 
     // Make a copy of the input matrix, and reduce it to row echelon form.
-    NMatrixInt echelon(matrix);
+    MatrixInt echelon(matrix);
 
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
@@ -347,14 +347,14 @@ unsigned rowBasis(NMatrixInt& matrix) {
     for (c = 0; c < n; ++c)
         lead[c] = c;
 
-    NLargeInteger coeff1, coeff2;
+    Integer coeff1, coeff2;
     while (doneRows < rank) {
         // INV: For i < doneRows, echelon[i, lead[i]] is non-zero, and
         // every other entry echelon[j, lead[i]] is zero for j > i.
 
         // Find the first non-zero entry in row doneRows.
         for (c = doneRows; c < n; ++c)
-            if (echelon.entry(doneRows, lead[c]) != NMatrixInt::zero)
+            if (echelon.entry(doneRows, lead[c]) != MatrixInt::zero)
                 break;
 
         if (c == n) {
@@ -371,13 +371,13 @@ unsigned rowBasis(NMatrixInt& matrix) {
 
             // Make all lower entries in column lead[doneRows] equal to zero.
             // Do this with only integer arithmetic.  This could lead to
-            // some very large matrix entries, though we're using NLargeInteger
+            // some very large matrix entries, though we're using Integer
             // so the worst that can happen is that things get slow.
             coeff1 = echelon.entry(doneRows, lead[doneRows]);
 
             for (r = doneRows + 1; r < rank; ++r) {
                 coeff2 = echelon.entry(r, lead[doneRows]);
-                if (coeff2 != NMatrixInt::zero) {
+                if (coeff2 != MatrixInt::zero) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
 
@@ -394,11 +394,11 @@ unsigned rowBasis(NMatrixInt& matrix) {
     return rank;
 }
 
-unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
+unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     unsigned n = input.columns();
 
     // Make a copy of the input matrix, and reduce it to row echelon form.
-    NMatrixInt echelon(input);
+    MatrixInt echelon(input);
 
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
@@ -408,14 +408,14 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
     for (c = 0; c < n; ++c)
         lead[c] = c;
 
-    NLargeInteger coeff1, coeff2;
+    Integer coeff1, coeff2;
     while (doneRows < rank) {
         // INV: For i < doneRows, echelon[i, lead[i]] is non-zero, and
         // every other entry echelon[j, lead[i]] is zero for j > i.
 
         // Find the first non-zero entry in row doneRows.
         for (c = doneRows; c < n; ++c)
-            if (echelon.entry(doneRows, lead[c]) != NMatrixInt::zero)
+            if (echelon.entry(doneRows, lead[c]) != MatrixInt::zero)
                 break;
 
         if (c == n) {
@@ -432,13 +432,13 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
 
             // Make all lower entries in column lead[doneRows] equal to zero.
             // Do this with only integer arithmetic.  This could lead to
-            // some very large matrix entries, though we're using NLargeInteger
+            // some very large matrix entries, though we're using Integer
             // so the worst that can happen is that things get slow.
             coeff1 = echelon.entry(doneRows, lead[doneRows]);
 
             for (r = doneRows + 1; r < rank; ++r) {
                 coeff2 = echelon.entry(r, lead[doneRows]);
-                if (coeff2 != NMatrixInt::zero) {
+                if (coeff2 != MatrixInt::zero) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
 
@@ -451,9 +451,9 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
     }
 
     // Now form the basis for the orthogonal complement.
-    complement.initialise(NMatrixInt::zero);
+    complement.initialise(MatrixInt::zero);
 
-    NLargeInteger lcmLead = 1;
+    Integer lcmLead = 1;
     for (r = 0; r < n; ++r) {
         complement.entry(r, lead[r]) = lcmLead;
         complement.entry(r, lead[r]).negate();
@@ -471,7 +471,7 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
 
             for (tmp = 0; tmp < r; ++tmp) {
                 coeff2 = echelon.entry(tmp, lead[r]);
-                if (coeff2 != NMatrixInt::zero) {
+                if (coeff2 != MatrixInt::zero) {
                     echelon.multRow(tmp, coeff1);
                     echelon.addRow(r, tmp, -coeff2);
 
@@ -489,7 +489,7 @@ unsigned rowBasisAndOrthComp(NMatrixInt& input, NMatrixInt& complement) {
     return rank;
 }
 
-void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
+void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<unsigned> &rowList) {
     unsigned i,j;
 
@@ -504,11 +504,11 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
                                      // list of column coordinates
                                      // for the non-zero entries.
 
-    NLargeInteger d,r; // given two NLargeIntegers a and b, we will represent
-                       // a/b by d and a % b by r in the algorithm.
-    NLargeInteger u,v,gcd, a,b; // for column operations u,v,a,b represent
-                                // a 2x2 matrix.
-    NLargeInteger tmp;
+    Integer d,r; // given two Integers a and b, we will represent
+                 // a/b by d and a % b by r in the algorithm.
+    Integer u,v,gcd, a,b; // for column operations u,v,a,b represent
+                          // a 2x2 matrix.
+    Integer tmp;
 
     // the algorithm will think of itself as working top to bottom.
     while ( (CR<rowList.size()) && (CC<M.columns())) {
@@ -628,8 +628,8 @@ void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
 }
 
 
-std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
-        const std::vector<NLargeInteger>& L) {
+std::unique_ptr<MatrixInt> preImageOfLattice(const MatrixInt& hom,
+        const std::vector<Integer>& L) {
     // there are two main steps to this algorithm.
     // 1) find a basis for the domain which splits into a) vectors sent to the
     //    complement of the primitive subspace generated by the range lattice
@@ -642,13 +642,13 @@ std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
 
     unsigned i,j;
 
-    NMatrixInt basis(hom.columns(), hom.columns() );
+    MatrixInt basis(hom.columns(), hom.columns() );
     basis.makeIdentity();
-    NMatrixInt basisi(hom.columns(), hom.columns() );
+    MatrixInt basisi(hom.columns(), hom.columns() );
     basisi.makeIdentity();
     // and we proceed to modify it solely via column operations.
     // one for every column operation performed on homModL
-    NMatrixInt homModL(hom);
+    MatrixInt homModL(hom);
 
     // set up two lists: the coordinates that correspond to free generators
     // of the range and coordinates corresponding to torsion generators.
@@ -681,11 +681,11 @@ std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
     // set up a new matrix consisting of columns being sent to the primitive
     // subspace generated by the torsion lattice.
 
-    NMatrixInt tHom( homModL.rows(), torCol.size() );
-    std::unique_ptr<NMatrixInt> tBasis(
-        new NMatrixInt( basis.rows(), torCol.size() )); // this will be the
+    MatrixInt tHom( homModL.rows(), torCol.size() );
+    std::unique_ptr<MatrixInt> tBasis(
+        new MatrixInt( basis.rows(), torCol.size() )); // this will be the
                                                         // eventual retval.
-    NMatrixInt dummy( torCol.size(), 0 ); // needed when we call
+    MatrixInt dummy( torCol.size(), 0 ); // needed when we call
     // columnEchelonForm. choosing it to have 0 columns speeds up
     // the algorithm.
 
@@ -712,11 +712,11 @@ std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
     std::vector<unsigned> rowNZlist; // in the current row, this is the list
     // of column coordinates for the non-zero entries.
 
-    NLargeInteger d,r; // given two NLargeIntegers a and b, we will represent
+    Integer d,r; // given two Integers a and b, we will represent
     // a/b by d and a % b by r in the algorithm.
-    NLargeInteger u,v,gcd, a,b; // for column operations u,v,a,b represent
+    Integer u,v,gcd, a,b; // for column operations u,v,a,b represent
     // a 2x2 matrix.
-    NLargeInteger tmp;
+    Integer tmp;
 
     while (CR<torList.size()) {
         // build rowNZlist
@@ -824,11 +824,11 @@ std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
 //          assemble inverse. Notice it's all standard Gaussian elimination, 
 //          just done in a funny order and with some modular arithmatic
 //          stuffed in there. 
-std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
-        const std::vector<NLargeInteger> &invF) {
+std::unique_ptr<MatrixInt> torsionAutInverse(const MatrixInt& input,
+        const std::vector<Integer> &invF) {
     // inductive step begins right away. Start at bottom row.
-    NMatrixInt workMat( input );
-    NMatrixInt colOps( input.rows(), input.columns() );
+    MatrixInt workMat( input );
+    MatrixInt colOps( input.rows(), input.columns() );
     colOps.makeIdentity();
 
     unsigned long wRow = input.rows();
@@ -837,8 +837,8 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
         wRow--;
         // step 1 modular reduction on the current row. And find last non-zero 
         // entry in this row up to wRow column
-        NLargeInteger R; // divisionAlg needs a remainder so we give it one, 
-                         //  although we discard it.
+        Integer R; // divisionAlg needs a remainder so we give it one, 
+                   //  although we discard it.
         unsigned long pivCol=0; 
         for (unsigned long i=0; i<=wRow; i++)
         {
@@ -861,10 +861,10 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
         while (wCol > 0)
         {
             wCol--;
-            NLargeInteger g, l1, l2;
+            Integer g, l1, l2;
             g = workMat.entry( wRow, wCol ).gcdWithCoeffs( 
                                workMat.entry(wRow, pivCol), l1, l2 );
-            NLargeInteger u1, u2;
+            Integer u1, u2;
             u1 = workMat.entry(wRow, wCol).divExact(g); 
             u2 = workMat.entry(wRow, pivCol).divExact(g); 
             // u1 l1 + u2 l2 = 1
@@ -872,7 +872,7 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
             for (unsigned long i=0; i<workMat.rows(); i++)
             {
              // wCol -> u2 wCol - u1 pivCol, pivCol -> l1 wCol + l2 pivCol
-             NLargeInteger W(workMat.entry(i, wCol)), 
+             Integer W(workMat.entry(i, wCol)), 
                            P(workMat.entry(i, pivCol));
              workMat.entry(i, wCol) = u2*W - u1*P; 
              workMat.entry(i, pivCol) = l1*W + l2*P;
@@ -883,7 +883,7 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
         }
         // now workMat.entry(wRow, pivCol) is a unit mod invF[pivCol], 
         //  so find its inverse
-        NLargeInteger g, a1, a2;
+        Integer g, a1, a2;
         g= workMat.entry( wRow, pivCol ).gcdWithCoeffs( invF[pivCol], a1, a2 );
         // a1 represents this multiplicative inverse so multiply column by it. 
         for (unsigned long i=0; i<workMat.rows(); i++)
@@ -900,14 +900,14 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
         //  as I haven't screwed up.
     }
 
-    NMatrixInt rowOps( input.rows(), input.columns() );
+    MatrixInt rowOps( input.rows(), input.columns() );
     rowOps.makeIdentity();
 
     // step 5 upper triang -> identity.  Use row i to kill i-th entry of row j.
     for (unsigned long i=1; i<workMat.columns(); i++) 
      for (unsigned long j=0; j<i; j++)
     {
-        NLargeInteger X(workMat.entry(j, i)); 
+        Integer X(workMat.entry(j, i)); 
         // now subtract X times row i from row j in both
         // workMat and retval. I guess we could eventually
         // avoid the ops on workMat since it won't affect
@@ -920,7 +920,7 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
         }
     }
 
-    NMatrixInt* retval = new NMatrixInt( input.rows(), input.columns() );
+    MatrixInt* retval = new MatrixInt( input.rows(), input.columns() );
     for (unsigned long i=0; i<colOps.rows(); i++) 
      for (unsigned long j=0; j<rowOps.columns(); j++)
     {
@@ -931,18 +931,18 @@ std::unique_ptr<NMatrixInt> torsionAutInverse(const NMatrixInt& input,
     }
 
     // done
-    return std::unique_ptr<NMatrixInt>(retval);
+    return std::unique_ptr<MatrixInt>(retval);
 }
 
 
-bool metricFindPivot(const unsigned long &currStage, const NMatrixInt &matrix, 
+bool metricFindPivot(const unsigned long &currStage, const MatrixInt &matrix, 
         unsigned long &pr, unsigned long &pc,
-        const std::vector<NLargeInteger> &rowNorm,
-        const std::vector<NLargeInteger> &colNorm, 
-        const std::vector<NLargeInteger> &rowGCD) {
+        const std::vector<Integer> &rowNorm,
+        const std::vector<Integer> &colNorm, 
+        const std::vector<Integer> &rowGCD) {
     bool pivotFound = false;
     // find the smallest positive rowGCD
-    NLargeInteger SProwGCD(NLargeInteger::zero);
+    Integer SProwGCD(Integer::zero);
 
     for (unsigned long i=currStage; i<matrix.rows(); i++)
         if (rowGCD[i] != 0) {
@@ -988,8 +988,8 @@ bool metricFindPivot(const unsigned long &currStage, const NMatrixInt &matrix,
 // switch rows i and j in matrix.  Keep track of change-of-basis
 void metricSwitchRows(const unsigned long &currStage, const unsigned long &i, 
                       const unsigned long &j, 
-        NMatrixInt &matrix, NMatrixInt *colBasis, NMatrixInt *colBasisInv, 
-        std::vector<NLargeInteger> &rowNorm, std::vector<NLargeInteger> &rowGCD)
+        MatrixInt &matrix, MatrixInt *colBasis, MatrixInt *colBasisInv, 
+        std::vector<Integer> &rowNorm, std::vector<Integer> &rowGCD)
 {
     rowNorm[i].swap(rowNorm[j]); rowGCD[i].swap(rowGCD[j]);
     if (colBasis) colBasis->swapRows(i, j); 
@@ -1001,8 +1001,8 @@ void metricSwitchRows(const unsigned long &currStage, const unsigned long &i,
 // switch columns i and j in matrix.  Keep track of change-of-basis matrix
 void metricSwitchCols(const unsigned long &currStage, const unsigned long &i, 
         const unsigned long &j, 
-        NMatrixInt &matrix, NMatrixInt *rowBasis, NMatrixInt *rowBasisInv, 
-        std::vector<NLargeInteger> &colNorm)
+        MatrixInt &matrix, MatrixInt *rowBasis, MatrixInt *rowBasisInv, 
+        std::vector<Integer> &colNorm)
 {
     colNorm[i].swap(colNorm[j]); 
     if (rowBasis) rowBasis->swapColumns(i, j); 
@@ -1013,16 +1013,16 @@ void metricSwitchCols(const unsigned long &currStage, const unsigned long &i,
 
 // columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
 void metricColOp(const unsigned long &currStage, const unsigned long &i,
-        const unsigned long &j, NMatrixInt &matrix, 
-        const NLargeInteger a, const NLargeInteger b, 
-        const NLargeInteger c, const NLargeInteger d, 
-        NMatrixInt *rowBasis, NMatrixInt *rowBasisInv, 
-        std::vector<NLargeInteger> &rowNorm, 
-        std::vector<NLargeInteger> &colNorm)
+        const unsigned long &j, MatrixInt &matrix, 
+        const Integer a, const Integer b, 
+        const Integer c, const Integer d, 
+        MatrixInt *rowBasis, MatrixInt *rowBasisInv, 
+        std::vector<Integer> &rowNorm, 
+        std::vector<Integer> &colNorm)
 {
-    NLargeInteger t1, t2;
+    Integer t1, t2;
     // smart rowMetric recomputation and transformation
-    colNorm[i] = NLargeInteger::zero; colNorm[j] = NLargeInteger::zero;
+    colNorm[i] = Integer::zero; colNorm[j] = Integer::zero;
     for (unsigned long k=currStage; k<matrix.rows(); k++)
     {
         t1 = a*matrix.entry(k, i) + c*matrix.entry(k, j);
@@ -1049,17 +1049,17 @@ void metricColOp(const unsigned long &currStage, const unsigned long &i,
 
 // row operation using 2x2-matrix [a b|c d] on rows i, j resp.
 void metricRowOp(const unsigned long &currStage, const unsigned long &i, 
-    const unsigned long &j, NMatrixInt &matrix, 
-    const NLargeInteger a, const NLargeInteger b, 
-    const NLargeInteger c, const NLargeInteger d, 
-    NMatrixInt *colBasis, NMatrixInt *colBasisInv, 
-    std::vector<NLargeInteger> &rowNorm, std::vector<NLargeInteger> &colNorm,
-    std::vector<NLargeInteger> &rowGCD)
+    const unsigned long &j, MatrixInt &matrix, 
+    const Integer a, const Integer b, 
+    const Integer c, const Integer d, 
+    MatrixInt *colBasis, MatrixInt *colBasisInv, 
+    std::vector<Integer> &rowNorm, std::vector<Integer> &colNorm,
+    std::vector<Integer> &rowGCD)
 {
-    NLargeInteger t1, t2;
+    Integer t1, t2;
     // smart norm recomputation and transformation
-    rowNorm[i] = NLargeInteger::zero; rowNorm[j] = NLargeInteger::zero;
-    rowGCD[i] = NLargeInteger::zero;  rowGCD[j] = NLargeInteger::zero;
+    rowNorm[i] = Integer::zero; rowNorm[j] = Integer::zero;
+    rowGCD[i] = Integer::zero;  rowGCD[j] = Integer::zero;
     for (unsigned long k=currStage; k<matrix.columns(); k++)
     {
         t1 = a*matrix.entry(i, k) + b*matrix.entry(j, k);
@@ -1088,7 +1088,7 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
 
 /**
  *  This routine converts mxn matrix "matrix" into its Smith Normal Form.
- * It assumes rowSpaceBasis and rowSpaceBasisInv are pointers to NMatrixInts, 
+ * It assumes rowSpaceBasis and rowSpaceBasisInv are pointers to MatrixInts, 
  * if alloceted, having dimension mxm, and colSpaceBasis and colSpaceBasisInv
  * has dimensions nxn.  These matrices record the row and columns operations
  * used to convert between "matrix" and its Smith Normal Form.  Specifically, 
@@ -1115,17 +1115,17 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
  *  Markowitz. The elimination form of the inverse and its application to linear
  * programming. Management Sci. 3:255--269 (1957).
  */
-void metricalSmithNormalForm(NMatrixInt& matrix,
-        NMatrixInt *rowSpaceBasis, NMatrixInt *rowSpaceBasisInv,
-        NMatrixInt *colSpaceBasis, NMatrixInt *colSpaceBasisInv) {
+void metricalSmithNormalForm(MatrixInt& matrix,
+        MatrixInt *rowSpaceBasis, MatrixInt *rowSpaceBasisInv,
+        MatrixInt *colSpaceBasis, MatrixInt *colSpaceBasisInv) {
     if (rowSpaceBasis) rowSpaceBasis->makeIdentity();    
     if (rowSpaceBasisInv) rowSpaceBasisInv->makeIdentity();
     if (colSpaceBasis) colSpaceBasis->makeIdentity();    
     if (colSpaceBasisInv) colSpaceBasisInv->makeIdentity();
     // set up metrics. 
-    std::vector<NLargeInteger> rowNorm(matrix.rows(), NLargeInteger::zero);
-    std::vector<NLargeInteger> colNorm(matrix.columns(), NLargeInteger::zero);
-    std::vector<NLargeInteger> rowGCD(matrix.rows(), NLargeInteger::zero);
+    std::vector<Integer> rowNorm(matrix.rows(), Integer::zero);
+    std::vector<Integer> colNorm(matrix.columns(), Integer::zero);
+    std::vector<Integer> rowGCD(matrix.rows(), Integer::zero);
     for (unsigned long i=0; i<matrix.rows(); i++) 
      for (unsigned long j=0; j<matrix.columns(); j++)
       { rowNorm[i] += matrix.entry(i,j).abs();
@@ -1141,7 +1141,7 @@ void metricalSmithNormalForm(NMatrixInt& matrix,
                     matrix, colSpaceBasis, colSpaceBasisInv, rowNorm, rowGCD);
             if (j != currStage) metricSwitchCols(currStage, currStage, j, 
                     matrix, rowSpaceBasis, rowSpaceBasisInv, colNorm);
-            NLargeInteger g, u, v;
+            Integer g, u, v;
 rowMuckerLoop: 
         // we come back here if the column operations later on mess 
         // up row currStage first we do the col ops, eliminating 
@@ -1184,7 +1184,7 @@ rowMuckerLoop:
      //  matrix.entry(cs,cs). if not, record row and gcd( matrix.entry(cs,cs), 
      //  rowGCD[this row],  pick the row with the lowest of these gcds...
             unsigned long rowT=currStage;
-            NLargeInteger bestGCD(matrix.entry(currStage, currStage).abs());       
+            Integer bestGCD(matrix.entry(currStage, currStage).abs());       
             for (i=currStage+1; i<matrix.rows(); i++)       
             {
                 g = matrix.entry(currStage, currStage).gcd(rowGCD[i]).abs();
@@ -1194,8 +1194,8 @@ rowMuckerLoop:
             if ( rowT > currStage )
             {
                 metricRowOp(currStage, currStage, rowT, matrix, 
-                        NLargeInteger::one, NLargeInteger::one, 
-                        NLargeInteger::zero, NLargeInteger::one, colSpaceBasis, 
+                        Integer::one, Integer::one, 
+                        Integer::zero, Integer::one, colSpaceBasis, 
                         colSpaceBasisInv, rowNorm, colNorm, rowGCD);
                 goto rowMuckerLoop;
             }

@@ -43,7 +43,7 @@
 
 namespace regina {
 
-template <int> class NPerm;
+template <int> class Perm;
 template <int, int> class Face;
 
 namespace detail {
@@ -64,7 +64,7 @@ namespace alias {
  *
  * This is inherited by the class \a Derived, which must provide template
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
- * and <tt>NPerm<dim+1> faceMapping<subdim>(int) const</tt>,
+ * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * again for all facial dimensions \a subdim &le; \a maxdim.
  *
  * The names of the aliases are determined by the facial dimensions \a subdim,
@@ -92,7 +92,7 @@ class FaceOfSimplex<Derived, dim, -1> {
  *
  * This is inherited by the class \a Derived, which must provide template
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
- * and <tt>NPerm<dim+1> faceMapping<subdim>(int) const</tt>,
+ * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for facial dimension \a subdim = 0.
  */
 template <class Derived, int dim>
@@ -112,7 +112,7 @@ class FaceOfSimplex<Derived, dim, 0> {
          *
          * See faceMapping() for further information.
          */
-        NPerm<dim + 1> vertexMapping(int i) const {
+        Perm<dim + 1> vertexMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<0>(i);
         }
@@ -124,7 +124,7 @@ class FaceOfSimplex<Derived, dim, 0> {
  *
  * This is inherited by the class \a Derived, which must provide template
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
- * and <tt>NPerm<dim+1> faceMapping<subdim>(int) const</tt>,
+ * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for all facial dimensions \a subdim &le; 1.
  */
 template <class Derived, int dim>
@@ -144,7 +144,7 @@ class FaceOfSimplex<Derived, dim, 1> : public FaceOfSimplex<Derived, dim, 0> {
          *
          * See faceMapping() for further information.
          */
-        NPerm<dim + 1> edgeMapping(int i) const {
+        Perm<dim + 1> edgeMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<1>(i);
         }
@@ -156,7 +156,7 @@ class FaceOfSimplex<Derived, dim, 1> : public FaceOfSimplex<Derived, dim, 0> {
  *
  * This is inherited by the class \a Derived, which must provide template
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
- * and <tt>NPerm<dim+1> faceMapping<subdim>(int) const</tt>,
+ * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for all facial dimensions \a subdim &le; 2.
  */
 template <class Derived, int dim>
@@ -176,7 +176,7 @@ class FaceOfSimplex<Derived, dim, 2> : public FaceOfSimplex<Derived, dim, 1> {
          *
          * See faceMapping() for further information.
          */
-        NPerm<dim + 1> triangleMapping(int i) const {
+        Perm<dim + 1> triangleMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<2>(i);
         }
@@ -188,7 +188,7 @@ class FaceOfSimplex<Derived, dim, 2> : public FaceOfSimplex<Derived, dim, 1> {
  *
  * This is inherited by the class \a Derived, which must provide template
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
- * and <tt>NPerm<dim+1> faceMapping<subdim>(int) const</tt>,
+ * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for all facial dimensions \a subdim &le; 3.
  */
 template <class Derived, int dim>
@@ -208,7 +208,7 @@ class FaceOfSimplex<Derived, dim, 3> : public FaceOfSimplex<Derived, dim, 2> {
          *
          * See faceMapping() for further information.
          */
-        NPerm<dim + 1> tetrahedronMapping(int i) const {
+        Perm<dim + 1> tetrahedronMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<3>(i);
         }
@@ -220,7 +220,7 @@ class FaceOfSimplex<Derived, dim, 3> : public FaceOfSimplex<Derived, dim, 2> {
  *
  * This is inherited by the class \a Derived, which must provide template
  * functions of the form <tt>Face<dim, subdim>* face<subdim>(int) const</tt>
- * and <tt>NPerm<dim+1> faceMapping<subdim>(int) const</tt>,
+ * and <tt>Perm<dim+1> faceMapping<subdim>(int) const</tt>,
  * for all facial dimensions \a subdim &le; 4.
  */
 template <class Derived, int dim>
@@ -240,7 +240,7 @@ class FaceOfSimplex<Derived, dim, 4> : public FaceOfSimplex<Derived, dim, 3> {
          *
          * See faceMapping() for further information.
          */
-        NPerm<dim + 1> pentachoronMapping(int i) const {
+        Perm<dim + 1> pentachoronMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<4>(i);
         }

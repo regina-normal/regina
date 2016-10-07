@@ -44,7 +44,6 @@
 #include "surfaces/nnormalsurface.h"
 
 namespace regina {
-class NMatrixInt;
 class NNormalSurfaceVectorOriented;
 
 /**
@@ -102,26 +101,26 @@ class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorOriented(const NVector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorOriented(const Vector<LargeInteger>& cloneMe);
 
-        virtual NLargeInteger triangles(size_t tetIndex,
+        virtual LargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
-        virtual NLargeInteger quads(size_t tetIndex,
+        virtual LargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger orientedTriangles(size_t tetIndex,
+        virtual LargeInteger orientedTriangles(size_t tetIndex,
             int vertex, const NTriangulation* triang, bool orientation) const;
-        virtual NLargeInteger orientedQuads(size_t tetIndex,
+        virtual LargeInteger orientedQuads(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
-        virtual NLargeInteger octs(size_t tetIndex,
+        virtual LargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
-        virtual NLargeInteger edgeWeight(size_t edgeIndex,
+        virtual LargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
-        virtual NLargeInteger arcs(size_t triIndex,
+        virtual LargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(
+        static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const NTriangulation* triangulation);
@@ -135,34 +134,34 @@ inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
         size_t length) : NNormalSurfaceVector(length) {
 }
 inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVector(cloneMe) {
 }
 
-inline NLargeInteger NNormalSurfaceVectorOriented::triangles(
+inline LargeInteger NNormalSurfaceVectorOriented::triangles(
         size_t tetIndex, int vertex, const NTriangulation* tri) const {
     return orientedTriangles(tetIndex,vertex,tri, true)
            + orientedTriangles(tetIndex,vertex,tri, false);
 }
-inline NLargeInteger NNormalSurfaceVectorOriented::quads(
+inline LargeInteger NNormalSurfaceVectorOriented::quads(
         size_t tetIndex, int quadType, const NTriangulation* tri) const {
     return orientedQuads(tetIndex,quadType,tri, true)
            + orientedQuads(tetIndex,quadType,tri, false);
 }
 
-inline NLargeInteger NNormalSurfaceVectorOriented::orientedTriangles(
+inline LargeInteger NNormalSurfaceVectorOriented::orientedTriangles(
         size_t tetIndex, int vertex, const NTriangulation*,
         bool orientation) const {
     return (*this)[14 * tetIndex + 2 * vertex +
         (orientation ? 0 : 1)];
 }
-inline NLargeInteger NNormalSurfaceVectorOriented::orientedQuads(
+inline LargeInteger NNormalSurfaceVectorOriented::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
     return (*this)[14 * tetIndex + 8 + 2 * quadType +
         (orientation ? 0 : 1)];
 }
-inline NLargeInteger NNormalSurfaceVectorOriented::octs(
+inline LargeInteger NNormalSurfaceVectorOriented::octs(
         size_t, int, const NTriangulation*) const {
     return zero;
 }

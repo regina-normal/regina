@@ -41,7 +41,7 @@
 
 #include <memory>
 #include "regina-core.h"
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
@@ -88,7 +88,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
                  <tt>T x I</tt> triangulation returned by NTxICore::core()
                  map to the tetrahedra and vertices of the larger layered
                  torus bundle under consideration. */
-        NMatrix2 reln_;
+        Matrix2 reln_;
             /**< Describes how the layering of tetrahedra maps the
                  lower boundary curves to the upper boundary curves.
                  See layeringReln() for details. */
@@ -201,7 +201,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * @return the relationship through the layering between the
          * upper and lower boundary curves of the core <tt>T x I</tt>.
          */
-        const NMatrix2& layeringReln() const;
+        const Matrix2& layeringReln() const;
 
         /**
          * Determines if the given triangulation is a layered surface bundle.
@@ -277,7 +277,7 @@ inline const NIsomorphism* NLayeredTorusBundle::coreIso() const {
     return coreIso_;
 }
 
-inline const NMatrix2& NLayeredTorusBundle::layeringReln() const {
+inline const Matrix2& NLayeredTorusBundle::layeringReln() const {
     return reln_;
 }
 

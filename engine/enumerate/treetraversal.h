@@ -140,18 +140,18 @@ typedef Triangulation<3> NTriangulation;
  * in your setting, you should call constraintsBroken() to test for this
  * once the TreeTraversal object has been constructed.
  *
- * The template argument \a Integer indicates the integer type that
+ * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
  * LPConstraintBase and BanConstraintBase respectively.  See the
  * LPConstraintBase and BanConstraintBase class notes for further details.
  *
- * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * \pre The default constructor for the template class IntType must
+ * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -164,7 +164,7 @@ typedef Triangulation<3> NTriangulation;
  *
  * \ifacespython Not present.
  */
-template <class LPConstraint, typename BanConstraint, typename Integer>
+template <class LPConstraint, typename BanConstraint, typename IntType>
 class TreeTraversal : public BanConstraint {
     protected:
         // Global information about the search:
@@ -215,7 +215,7 @@ class TreeTraversal : public BanConstraint {
                  allow octagons at all), then \a octLevel_ = \a nTypes_.
                  If we are allowing almost normal surfaces but we have not yet
                  chosen an octagon type, then \a octLevel_ = -1. */
-        LPData<LPConstraint, Integer>* lp_;
+        LPData<LPConstraint, IntType>* lp_;
             /**< Stores tableaux for linear programming at various nodes
                  in the search tree.  We only store a limited number of
                  tableaux at any given time, and as the search
@@ -229,7 +229,7 @@ class TreeTraversal : public BanConstraint {
                  that we have pre-prepared for future processing.  See the
                  documentation within routines such as TreeEnumeration::next()
                  for details of when and how these tableaux are constructed. */
-        LPData<LPConstraint, Integer>** lpSlot_;
+        LPData<LPConstraint, IntType>** lpSlot_;
             /**< Recall from above that the array \a lp_ stores tableaux
                  for the current node in the search tree and all of its
                  ancestors.  This means we have one tableaux for the
@@ -244,7 +244,7 @@ class TreeTraversal : public BanConstraint {
                  within routines such as TreeEnumeration::next() for details
                  of when and how these tableaux are constructed and later
                  overwritten. */
-        LPData<LPConstraint, Integer>** nextSlot_;
+        LPData<LPConstraint, IntType>** nextSlot_;
             /**< Points to the next available tableaux in lp_ that is free to
                  use at each level of the search tree.  Specifically:
                  nextSlot_[0] points to the next free tableaux at the root
@@ -259,7 +259,7 @@ class TreeTraversal : public BanConstraint {
                  have visited thus far.  This may grow much faster than the
                  number of solutions, since it also counts traversals
                  through "dead ends" in the search tree. */
-        LPData<LPConstraint, Integer> tmpLP_[4];
+        LPData<LPConstraint, IntType> tmpLP_[4];
             /**< Temporary tableaux used by the function feasibleBranches()
                  to determine which quadrilateral types or angle types have
                  good potential for pruning the search tree.
@@ -441,7 +441,7 @@ class TreeTraversal : public BanConstraint {
          * (indicating a problem or error).
          */
         bool verify(const NNormalSurface* s,
-                const NMatrixInt* matchingEqns = 0) const;
+                const MatrixInt* matchingEqns = 0) const;
 
         /**
          * Ensures that the given angle structure satisfies
@@ -481,7 +481,7 @@ class TreeTraversal : public BanConstraint {
          * (indicating a problem or error).
          */
         bool verify(const AngleStructure* s,
-                const NMatrixInt* angleEqns = 0) const;
+                const MatrixInt* angleEqns = 0) const;
 
     protected:
         /**
@@ -647,10 +647,10 @@ class TreeTraversal : public BanConstraint {
  * See the LPConstraintBase and BanConstraintBase class notes for
  * details.
  *
- * The template argument \a Integer indicates the integer type that
+ * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
@@ -659,8 +659,8 @@ class TreeTraversal : public BanConstraint {
  * See the LPConstraintBase, LPConstraintSubspace and BanConstraintBase
  * class notes for further details.
  *
- * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * \pre The default constructor for the template class IntType must
+ * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \warning Although the tree traversal algorithm can run in standard
@@ -683,32 +683,32 @@ class TreeTraversal : public BanConstraint {
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename Integer = NInteger>
+          typename IntType = Integer>
 class TreeEnumeration :
-        public TreeTraversal<LPConstraint, BanConstraint, Integer> {
+        public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes;
 
     protected:
         // Since we have a template base class, we need to explicitly
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::level_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::lp_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::lpSlot_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nextSlot_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nTets_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nTypes_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nVisited_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::octLevel_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::type_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::typeOrder_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::level_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::lp_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::lpSlot_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nextSlot_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nTets_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nTypes_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nVisited_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::octLevel_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::type_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::typeOrder_;
 
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::
             feasibleBranches;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::percent;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::percent;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext;
 
     private:
         TypeTrie<7> solns_;
@@ -947,10 +947,10 @@ class TreeEnumeration :
  * angles to be zero.  See the LPConstraintBase and BanConstraintBase
  * class notes for details.
  *
- * The template argument \a Integer indicates the integer type that
+ * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
@@ -959,8 +959,8 @@ class TreeEnumeration :
  * See the LPConstraintBase, LPConstraintSubspace and BanConstraintBase
  * class notes for further details.
  *
- * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * \pre The default constructor for the template class IntType must
+ * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -975,31 +975,31 @@ class TreeEnumeration :
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename Integer = NInteger>
+          typename IntType = Integer>
 class TautEnumeration :
-        public TreeTraversal<LPConstraint, BanConstraint, Integer> {
+        public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes;
 
     protected:
         // Since we have a template base class, we need to explicitly
         // list the inherited member variables that we use.
         // Note that these are all protected in the base class, and so
         // we are not changing any access restrictions here.
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::level_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::lp_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::lpSlot_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nextSlot_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nTets_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nTypes_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nVisited_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::level_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::lp_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::lpSlot_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nextSlot_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nTets_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nTypes_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nVisited_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::
             origTableaux_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::type_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::typeOrder_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::type_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::typeOrder_;
 
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::percent;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::percent;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext;
 
     private:
         unsigned long nSolns_;
@@ -1250,10 +1250,10 @@ class TautEnumeration :
  * but we only allow at most one octagon \e type in the entire triangulation.
  * No coordinate systems other than these are supported.
  *
- * The template argument \a Integer indicates the integer type that
+ * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
  * \warning Typically one should only use this class with \e one-vertex
@@ -1274,8 +1274,8 @@ class TautEnumeration :
  * LPConstraintBase and BanConstraintBase respectively.  See the
  * LPConstraintBase and BanConstraintBase class notes for further details.
  *
- * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * \pre The default constructor for the template class IntType must
+ * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -1290,33 +1290,33 @@ class TautEnumeration :
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename Integer = NInteger>
+          typename IntType = Integer>
 class TreeSingleSoln :
-        public TreeTraversal<LPConstraint, BanConstraint, Integer> {
+        public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes;
 
     protected:
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::level_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::lp_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::lpSlot_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nextSlot_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nTets_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nTypes_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::nVisited_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::octLevel_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::level_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::lp_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::lpSlot_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nextSlot_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nTets_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nTypes_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::nVisited_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::octLevel_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::
             origTableaux_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::tmpLP_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::type_;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::typeOrder_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::tmpLP_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::type_;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::typeOrder_;
 
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::
             feasibleBranches;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::
             nextUnmarkedTriangleType;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::percent;
-        using TreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::percent;
+        using TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext;
 
     private:
         int nextZeroLevel_;
@@ -1411,9 +1411,9 @@ class TreeSingleSoln :
  *
  * \deprecated The class NTreeTraversal has now been renamed to TreeTraversal.
  */
-template <class LPConstraint, typename BanConstraint, typename Integer>
+template <class LPConstraint, typename BanConstraint, typename IntType>
 using NTreeTraversal REGINA_DEPRECATED =
-    TreeTraversal<LPConstraint, BanConstraint, Integer>;
+    TreeTraversal<LPConstraint, BanConstraint, IntType>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1424,9 +1424,9 @@ using NTreeTraversal REGINA_DEPRECATED =
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename Integer = NInteger>
+          typename IntType = Integer>
 using NTreeEnumeration REGINA_DEPRECATED =
-    TreeEnumeration<LPConstraint, BanConstraint, Integer>;
+    TreeEnumeration<LPConstraint, BanConstraint, IntType>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1437,9 +1437,9 @@ using NTreeEnumeration REGINA_DEPRECATED =
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename Integer = NInteger>
+          typename IntType = Integer>
 using NTautEnumeration REGINA_DEPRECATED =
-    TautEnumeration<LPConstraint, BanConstraint, Integer>;
+    TautEnumeration<LPConstraint, BanConstraint, IntType>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1449,54 +1449,54 @@ using NTautEnumeration REGINA_DEPRECATED =
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename Integer = NInteger>
+          typename IntType = Integer>
 using NTreeSingleSoln REGINA_DEPRECATED =
-    TreeSingleSoln<LPConstraint, BanConstraint, Integer>;
+    TreeSingleSoln<LPConstraint, BanConstraint, IntType>;
 
 /*@}*/
 
 // Help the compiler by noting which explicit instantiations we offer.
 extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
     NNativeLong>;
 extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
     NNativeLong>;
 extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
     NNativeLong>;
 
 extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
     NNativeLong>;
 extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
     NNativeLong>;
 
 #ifdef INT128_AVAILABLE
 extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 
 extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 #endif
 
 
 // Inline functions
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline bool TreeTraversal<LPConstraint, BanConstraint, Integer>::supported(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline bool TreeTraversal<LPConstraint, BanConstraint, IntType>::supported(
         NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD ||
         coords == NS_QUAD || coords == NS_AN_QUAD_OCT || coords == NS_ANGLE) &&
@@ -1504,27 +1504,27 @@ inline bool TreeTraversal<LPConstraint, BanConstraint, Integer>::supported(
         BanConstraint::supported(coords);
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline bool TreeTraversal<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline bool TreeTraversal<LPConstraint, BanConstraint, IntType>::
         constraintsBroken() const {
     return origTableaux_.constraintsBroken();
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline unsigned long TreeTraversal<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline unsigned long TreeTraversal<LPConstraint, BanConstraint, IntType>::
         nVisited() const {
     return nVisited_;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline void TreeTraversal<LPConstraint, BanConstraint, Integer>::dumpTypes(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline void TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes(
         std::ostream& out) const {
     for (unsigned i = 0; i < nTypes_; ++i)
         out << static_cast<int>(type_[i]);
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline int TreeTraversal<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline int TreeTraversal<LPConstraint, BanConstraint, IntType>::
         nextUnmarkedTriangleType(int startFrom) {
     while (startFrom < nTypes_ &&
             BanConstraint::marked_[2 * nTets_ + startFrom])
@@ -1532,10 +1532,10 @@ inline int TreeTraversal<LPConstraint, BanConstraint, Integer>::
     return (startFrom == nTypes_ ? -1 : startFrom);
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline TreeEnumeration<LPConstraint, BanConstraint, Integer>::TreeEnumeration(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
         const NTriangulation* tri, NormalCoords coords) :
-        TreeTraversal<LPConstraint, BanConstraint, Integer>(tri, coords,
+        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              7 : 4) /* branches per quad */,
             2 /* branches per triangle */,
@@ -1544,22 +1544,22 @@ inline TreeEnumeration<LPConstraint, BanConstraint, Integer>::TreeEnumeration(
         lastNonZero_(-1) {
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline unsigned long TreeEnumeration<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline unsigned long TreeEnumeration<LPConstraint, BanConstraint, IntType>::
         nSolns() const {
     return nSolns_;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline void TreeEnumeration<LPConstraint, BanConstraint, Integer>::run(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline void TreeEnumeration<LPConstraint, BanConstraint, IntType>::run(
         bool (*useSoln)(const TreeEnumeration&, void*), void* arg) {
     while (next())
         if (! useSoln(*this, arg))
             return;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline bool TreeEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
         const TreeEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     tree.dumpTypes(std::cout);
@@ -1567,8 +1567,8 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
     return true;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline bool TreeEnumeration<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
         writeSurface(const TreeEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     NNormalSurface* f = tree.buildSurface();
@@ -1577,32 +1577,32 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, Integer>::
     return true;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline TautEnumeration<LPConstraint, BanConstraint, Integer>::TautEnumeration(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
         const NTriangulation* tri) :
-        TreeTraversal<LPConstraint, BanConstraint, Integer>(tri, NS_ANGLE,
+        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, NS_ANGLE,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
             true /* enumeration */),
         nSolns_(0) {
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline unsigned long TautEnumeration<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline unsigned long TautEnumeration<LPConstraint, BanConstraint, IntType>::
         nSolns() const {
     return nSolns_;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline void TautEnumeration<LPConstraint, BanConstraint, Integer>::run(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline void TautEnumeration<LPConstraint, BanConstraint, IntType>::run(
         bool (*useSoln)(const TautEnumeration&, void*), void* arg) {
     while (next())
         if (! useSoln(*this, arg))
             return;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline bool TautEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
         const TautEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     tree.dumpTypes(std::cout);
@@ -1610,10 +1610,10 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, Integer>::writeTypes(
     return true;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline TreeSingleSoln<LPConstraint, BanConstraint, Integer>::TreeSingleSoln(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline TreeSingleSoln<LPConstraint, BanConstraint, IntType>::TreeSingleSoln(
         const NTriangulation* tri, NormalCoords coords) :
-        TreeTraversal<LPConstraint, BanConstraint, Integer>(tri, coords,
+        TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              6 : 3) /* branches per quad */,
             2 /* branches per triangle */,
@@ -1622,14 +1622,14 @@ inline TreeSingleSoln<LPConstraint, BanConstraint, Integer>::TreeSingleSoln(
         cancelled_(false) {
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline void TreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancel() {
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline void TreeSingleSoln<LPConstraint, BanConstraint, IntType>::cancel() {
     std::lock_guard<std::mutex> lock(mCancel_);
     cancelled_ = true;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-inline bool TreeSingleSoln<LPConstraint, BanConstraint, Integer>::cancelled() {
+template <class LPConstraint, typename BanConstraint, typename IntType>
+inline bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::cancelled() {
     std::lock_guard<std::mutex> lock(mCancel_);
     return cancelled_;
 }

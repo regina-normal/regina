@@ -1,20 +1,18 @@
 # maths 
 
+ADD_SUBDIRECTORY("spec")
+
 # Files to compile
 SET ( FILES
   approx
-  matrixops
   cyclotomic
-  ninteger
-  nmatrix2
-  nperm2
-  nperm3
-  nperm4
-  nperm5
-  nprimes
-  nrational
-  nray
+  integer
+  matrix2
+  matrixops
   numbertheory
+  primes
+  rational
+  ray
   seedprimes
   )
 
@@ -28,8 +26,11 @@ if (${REGINA_INSTALL_DEV})
   INSTALL( FILES
     approx.h
     cyclotomic.h
+    integer.h
     laurent.h
     laurent2.h
+    matrix.h
+    matrix2.h
     matrixops.h
     ncyclotomic.h
     ninteger.h
@@ -48,5 +49,12 @@ if (${REGINA_INSTALL_DEV})
     nray.h
     numbertheory.h
     nvector.h
+    perm.h
+    perm-impl.h
+    polynomial.h
+    primes.h
+    rational.h
+    ray.h
+    vector.h
     DESTINATION ${INCLUDEDIR}/maths COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

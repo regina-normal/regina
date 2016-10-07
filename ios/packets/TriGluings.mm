@@ -121,7 +121,7 @@
     [self.tetrahedra reloadData];
 }
 
-+ (NSString*)destStringFromFacet:(int)srcFacet dest:(regina::NTetrahedron*)destTet gluing:(const regina::NPerm4&)gluing
++ (NSString*)destStringFromFacet:(int)srcFacet dest:(regina::NTetrahedron*)destTet gluing:(const regina::Perm<4>&)gluing
 {
     if (! destTet)
         return @" "; // Use a space to ensure the label has enough height to pick up touches.
@@ -637,7 +637,7 @@
                 [alert show];
                 goto cleanUpGluing;
             }
-            regina::NPerm4 destGluing = regina::NPerm4(adj0, adj1, adj2, (6 - adj0 - adj1 - adj2)) *
+            regina::Perm<4> destGluing = regina::Perm<4>(adj0, adj1, adj2, (6 - adj0 - adj1 - adj2)) *
                 regina::NTriangle::ordering(editFacet).inverse();
             
             // Are we gluing the facet to itself?

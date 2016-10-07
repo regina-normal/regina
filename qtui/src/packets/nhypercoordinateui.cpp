@@ -149,7 +149,7 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
                 return QVariant();
         } else {
             // The default case:
-            regina::NLargeInteger ans = Coordinates::getCoordinate(coordSystem_,
+            regina::LargeInteger ans = Coordinates::getCoordinate(coordSystem_,
                 *s, index.column() - propertyColCount());
             if (ans == (long)0)
                 return QVariant();

@@ -37,7 +37,7 @@
 
 using namespace boost::python;
 using regina::NGraphPair;
-using regina::NMatrix2;
+using regina::Matrix2;
 using regina::NSFSpace;
 
 namespace {
@@ -47,7 +47,7 @@ namespace {
     }
 
     NGraphPair* createNGraphPair_matrix(const NSFSpace& s1, const NSFSpace& s2,
-            const NMatrix2& m) {
+            const Matrix2& m) {
         return new NGraphPair(new NSFSpace(s1), new NSFSpace(s2), m);
     }
 }

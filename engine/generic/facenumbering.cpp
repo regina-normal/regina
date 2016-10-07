@@ -60,19 +60,19 @@ namespace regina { namespace detail {
         choose15, choose16
     };
 
-    const NPerm3 FaceNumberingImpl<2, 1, false>::ordering_[3] = {
-        NPerm3(1,2,0),
-        NPerm3(0,2,1),
-        NPerm3(0,1,2),
+    const Perm<3> FaceNumberingImpl<2, 1, false>::ordering_[3] = {
+        Perm<3>(1,2,0),
+        Perm<3>(0,2,1),
+        Perm<3>(0,1,2),
     };
 
-    const NPerm4 FaceNumberingImpl<3, 1, true>::ordering_[6] = {
-        NPerm4(0, 1, 2, 3),
-        NPerm4(0, 2, 3, 1),
-        NPerm4(0, 3, 1, 2),
-        NPerm4(1, 2, 0, 3),
-        NPerm4(1, 3, 2, 0),
-        NPerm4(2, 3, 0, 1)
+    const Perm<4> FaceNumberingImpl<3, 1, true>::ordering_[6] = {
+        Perm<4>(0, 1, 2, 3),
+        Perm<4>(0, 2, 3, 1),
+        Perm<4>(0, 3, 1, 2),
+        Perm<4>(1, 2, 0, 3),
+        Perm<4>(1, 3, 2, 0),
+        Perm<4>(2, 3, 0, 1)
     };
 
     const int FaceNumberingImpl<3, 1, true>::edgeNumber[4][4] = {
@@ -91,24 +91,24 @@ namespace regina { namespace detail {
         { 2, 3 }
     };
 
-    const NPerm4 FaceNumberingImpl<3, 2, false>::ordering_[4] = {
-        NPerm4(1, 2, 3, 0),
-        NPerm4(0, 2, 3, 1),
-        NPerm4(0, 1, 3, 2),
-        NPerm4(0, 1, 2, 3)
+    const Perm<4> FaceNumberingImpl<3, 2, false>::ordering_[4] = {
+        Perm<4>(1, 2, 3, 0),
+        Perm<4>(0, 2, 3, 1),
+        Perm<4>(0, 1, 3, 2),
+        Perm<4>(0, 1, 2, 3)
     };
 
-    const NPerm5 FaceNumberingImpl<4, 1, true>::ordering_[10] = {
-        NPerm5(0, 1, 2, 3, 4),
-        NPerm5(0, 2, 1, 4, 3),
-        NPerm5(0, 3, 1, 2, 4),
-        NPerm5(0, 4, 1, 3, 2),
-        NPerm5(1, 2, 0, 3, 4),
-        NPerm5(1, 3, 0, 4, 2),
-        NPerm5(1, 4, 0, 2, 3),
-        NPerm5(2, 3, 0, 1, 4),
-        NPerm5(2, 4, 0, 3, 1),
-        NPerm5(3, 4, 0, 1, 2)
+    const Perm<5> FaceNumberingImpl<4, 1, true>::ordering_[10] = {
+        Perm<5>(0, 1, 2, 3, 4),
+        Perm<5>(0, 2, 1, 4, 3),
+        Perm<5>(0, 3, 1, 2, 4),
+        Perm<5>(0, 4, 1, 3, 2),
+        Perm<5>(1, 2, 0, 3, 4),
+        Perm<5>(1, 3, 0, 4, 2),
+        Perm<5>(1, 4, 0, 2, 3),
+        Perm<5>(2, 3, 0, 1, 4),
+        Perm<5>(2, 4, 0, 3, 1),
+        Perm<5>(3, 4, 0, 1, 2)
     };
 
     const int FaceNumberingImpl<4, 1, true>::edgeNumber[5][5] = {
@@ -130,17 +130,17 @@ namespace regina { namespace detail {
         { 2, 4 },
         { 3, 4 }};
 
-    const NPerm5 FaceNumberingImpl<4, 2, false>::ordering_[10] = {
-        NPerm5(2, 3, 4, 0, 1),
-        NPerm5(1, 3, 4, 2, 0),
-        NPerm5(1, 2, 4, 0, 3),
-        NPerm5(1, 2, 3, 4, 0),
-        NPerm5(0, 3, 4, 1, 2),
-        NPerm5(0, 2, 4, 3, 1),
-        NPerm5(0, 2, 3, 1, 4),
-        NPerm5(0, 1, 4, 2, 3),
-        NPerm5(0, 1, 3, 4, 2),
-        NPerm5(0, 1, 2, 3, 4)
+    const Perm<5> FaceNumberingImpl<4, 2, false>::ordering_[10] = {
+        Perm<5>(2, 3, 4, 0, 1),
+        Perm<5>(1, 3, 4, 2, 0),
+        Perm<5>(1, 2, 4, 0, 3),
+        Perm<5>(1, 2, 3, 4, 0),
+        Perm<5>(0, 3, 4, 1, 2),
+        Perm<5>(0, 2, 4, 3, 1),
+        Perm<5>(0, 2, 3, 1, 4),
+        Perm<5>(0, 1, 4, 2, 3),
+        Perm<5>(0, 1, 3, 4, 2),
+        Perm<5>(0, 1, 2, 3, 4)
     };
 
     const int FaceNumberingImpl<4, 2, false>::triangleNumber[5][5][5] = {
@@ -186,12 +186,12 @@ namespace regina { namespace detail {
         { 0, 1, 3 },
         { 0, 1, 2 } };
 
-    const NPerm5 FaceNumberingImpl<4, 3, false>::ordering_[5] = {
-        NPerm5(1,2,3,4,0),
-        NPerm5(0,2,3,4,1),
-        NPerm5(0,1,3,4,2),
-        NPerm5(0,1,2,4,3),
-        NPerm5(0,1,2,3,4)
+    const Perm<5> FaceNumberingImpl<4, 3, false>::ordering_[5] = {
+        Perm<5>(1,2,3,4,0),
+        Perm<5>(0,2,3,4,1),
+        Perm<5>(0,1,3,4,2),
+        Perm<5>(0,1,2,4,3),
+        Perm<5>(0,1,2,3,4)
     };
 
 } } // namespace regina::detail

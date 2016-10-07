@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file maths/nray.h
- *  \brief Provides a fast class for rational rays rooted at the origin.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NRAY_H
@@ -39,96 +39,9 @@
 #define __NRAY_H
 #endif
 
-#include "regina-core.h"
-#include "maths/ninteger.h"
-#include "maths/nvector.h"
+#warning This header is deprecated; please use maths/ray.h instead.
 
-namespace regina {
-
-/**
- * \weakgroup maths
- * @{
- */
-
-/**
- * A fast class for storing a ray rooted at the origin whose
- * coordinates are rational.  Such a ray is a half-line beginning at
- * the origin and is represented by an integer point that it passes through.
- * Positive scalar multiples of a ray are considered to represent the same ray.
- *
- * This class is intended for serious computation, and as a result it
- * has a streamlined implementation with no virtual methods.  It can be
- * subclassed, but since there are no virtual methods, type information
- * must generally be known at compile time.  Nevertheless, in many respects,
- * different subclasses of NRay can happily interact with one another.
- *
- * \warning As of Regina 4.90, this class merges the old functionality
- * of NFastRay and NRay from Regina 4.6.  Since functions are no longer
- * virtual, the old clone() method and intersect() function are gone
- * completely.  Instead you can just use the copy constructor and standard
- * linear operators respectively.
- *
- * \ifacespython Not present.
- */
-class REGINA_API NRay : public NVector<NLargeInteger> {
-    public:
-        /**
-         * Creates a new ray all of whose coordinates are initialised to zero.
-         *
-         * @param length the number of elements in the new vector.
-         */
-        NRay(size_t length);
-        /**
-         * Creates a new ray that is a clone of the given ray.
-         *
-         * @param cloneMe the ray to clone.
-         */
-        NRay(const NVector<NLargeInteger>& cloneMe);
-
-        /**
-         * Scales this vector down by the greatest common divisor of all
-         * its elements.  The resulting vector will be the smallest
-         * multiple of the original that maintains integral entries, and
-         * these entries will have the same signs as the originals.
-         *
-         * This routine thus reduces a ray to its smallest possible
-         * representation.
-         *
-         * This routine poses no problem for vectors containing infinite
-         * elements; such elements are simply ignored and left at
-         * infinity.
-         */
-        void scaleDown();
-
-        /**
-         * Negates every element of this vector.
-         *
-         * This is an optimised implementation that overrides
-         * NVector<NLargeInteger>::negate().
-         */
-        inline void negate();
-};
-
-/*@}*/
-
-// Inline functions for NRay
-
-inline NRay::NRay(size_t length) : NVector<NLargeInteger>(length) {
-    // Don't bother passing zero to the parent constructor, since the
-    // default NLargeInteger constructor already sets elements to zero.
-}
-
-inline NRay::NRay(const NVector<NLargeInteger>& cloneMe) :
-        NVector<NLargeInteger>(cloneMe) {
-}
-
-inline void NRay::negate() {
-    // Slightly more efficient than the default implementation.
-    for (NLargeInteger* e = elements; e < end; ++e)
-        e->negate();
-}
-
-} // namespace regina
+#include "maths/ray.h"
 
 #endif
 

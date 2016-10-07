@@ -317,11 +317,11 @@ void NSurfaceFilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
 }
 
 QString NSurfaceFilterPropUI::filterECList() {
-    const std::set<regina::NLargeInteger>& ecs(filter->eulerChars());
+    const std::set<regina::LargeInteger>& ecs(filter->eulerChars());
     if (ecs.empty())
         return QString();
 
-    std::set<regina::NLargeInteger>::reverse_iterator it = ecs.rbegin();
+    std::set<regina::LargeInteger>::reverse_iterator it = ecs.rbegin();
     QString ans = (*it).stringValue().c_str();
     for (++it; it != ecs.rend(); ++it) {
         ans.append(", ");

@@ -33,7 +33,7 @@
 #include "algebra/nabeliangroup.h"
 #include "dim4/dim4triangulation.h"
 #include "maths/matrixops.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 
 namespace regina {
 
@@ -64,7 +64,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH1() const {
         + static_cast<long>(countComponents());
     long nRels = static_cast<long>(countTriangles()) - nBdryTriangles;
 
-    NMatrixInt pres(nRels, nGens);
+    MatrixInt pres(nRels, nGens);
 
     // Find out which tetrahedron corresponds to which generator.
     long* genIndex = new long[countTetrahedra()];
@@ -135,7 +135,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     Dim4Edge* e;
     Dim4Triangle* t;
     Dim4Tetrahedron* tet;
-    NPerm5 perm, tmpPerm;
+    Perm<5> perm, tmpPerm;
     int pentEdge, pentTriangle;
 
     unsigned long nEdges = countEdges();
@@ -169,7 +169,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     //
     // Rows: Internal dual polyhedra
     // Cols: Internal dual triangles
-    NMatrixInt bdry32(nEdgesInternal, nTrianglesInternal);
+    MatrixInt bdry32(nEdgesInternal, nTrianglesInternal);
 
     // Build the boundary map, one dual triangle at a time.
     col = 0;
@@ -192,13 +192,13 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
             row = edgeInternalIndex[e->index()];
             pentEdge = Dim4Edge::edgeNumber[perm[(j+1) % 3]][perm[(j+2) % 3]];
 
-            tmpPerm = NPerm5(2, j) * perm.inverse() *
+            tmpPerm = Perm<5>(2, j) * perm.inverse() *
                 pent->edgeMapping(pentEdge);
             // tmpPerm maps (2,3,4) -> (2,3,4), and maps the dual edge into
             // the dual 2-face with the correct orientation.
             // Force (0,1) to map to (0,1), and then read off the sign.
             if (tmpPerm[0] != 0)
-                tmpPerm = tmpPerm * NPerm5(0, 1);
+                tmpPerm = tmpPerm * Perm<5>(0, 1);
             bdry32.entry(row, col) += tmpPerm.sign();
         }
 
@@ -211,7 +211,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     //
     // Rows: Internal dual 2-faces
     // Cols: Internal dual edges
-    NMatrixInt bdry21(nTrianglesInternal, nTetrahedraInternal);
+    MatrixInt bdry21(nTrianglesInternal, nTetrahedraInternal);
 
     // Build the boundary map, one dual edge at a time.
     col = 0;

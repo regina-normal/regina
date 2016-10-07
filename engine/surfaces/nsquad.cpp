@@ -35,8 +35,8 @@
 #include "enumerate/enumconstraints.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsstandard.h"
-#include "maths/nmatrixint.h"
-#include "maths/nrational.h"
+#include "maths/matrix.h"
+#include "maths/rational.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -47,7 +47,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeZeroVector(
         3 * triangulation->size());
 }
 
-NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
+MatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
         const NTriangulation* triangulation) {
     unsigned long nCoords = 3 * triangulation->size();
     // One equation per non-boundary edge.
@@ -57,12 +57,12 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
             bit != triangulation->boundaryComponents().end(); bit++)
         nEquations -= (*bit)->countEdges();
 
-    NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
+    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
     unsigned long row = 0;
 
     // Run through each internal edge and add the corresponding
     // equation.
-    NPerm4 perm;
+    Perm<4> perm;
     unsigned long tetIndex;
     for (NTriangulation::EdgeIterator eit = triangulation->edges().begin();
             eit != triangulation->edges().end(); eit++) {
@@ -132,7 +132,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     int i;
     for (row = 0; row < nRows; row+=7)
         for (i = 0; i < 4; i++)
-            ans->setElement(row + i, NLargeInteger::infinity);
+            ans->setElement(row + i, LargeInteger::infinity);
     for (row = 0; 7 * row < nRows; row++)
         for (i = 0; i < 3; i++)
             ans->setElement(7 * row + 4 + i, (*this)[3 * row + i]);
@@ -142,7 +142,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     std::set<NEdge*> usedEdges[2];
         // usedEdges[i] contains the edges for which we have already
         // examined end i.
-    NLargeInteger min;
+    LargeInteger min;
         // The minimum coordinate that has been assigned about this
         // vertex.
     std::deque<EdgeEnd> examine;
@@ -154,9 +154,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
     std::deque<NEdgeEmbedding>::const_iterator eembit, backupit,
         endit, beginit;
     NTetrahedron* tet;
-    NPerm4 tetPerm, adjPerm;
+    Perm<4> tetPerm, adjPerm;
     unsigned long tetIndex, adjIndex;
-    NLargeInteger expect;
+    LargeInteger expect;
     for (NTriangulation::VertexIterator vit = triang->vertices().begin();
             vit != triang->vertices().end(); vit++) {
         usedEdges[0].clear(); usedEdges[1].clear();
@@ -166,9 +166,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         // Pick some triangular disc and set it to zero.
         const NVertexEmbedding& vemb = (*vit)->front();
         row = 7 * vemb.tetrahedron()->index() + vemb.vertex();
-        ans->setElement(row, NLargeInteger::zero);
+        ans->setElement(row, LargeInteger::zero);
 
-        min = NLargeInteger::zero;
+        min = LargeInteger::zero;
 
         // Mark the three surrounding edge ends for examination.
         for (i=0; i<4; i++) {
@@ -290,7 +290,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         for (auto& emb : **vit) {
             row = 7 * emb.tetrahedron()->index() + emb.vertex();
             if (broken)
-                ans->setElement(row, NLargeInteger::infinity);
+                ans->setElement(row, LargeInteger::infinity);
             else
                 ans->setElement(row, (*ans)[row] - min);
         }

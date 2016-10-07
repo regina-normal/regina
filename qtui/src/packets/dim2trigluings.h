@@ -39,7 +39,6 @@
 
 #include "../packettabui.h"
 #include "reginaprefset.h"
-#include "maths/nperm3.h"
 
 #include <QAbstractItemModel>
 
@@ -48,6 +47,7 @@ class QToolBar;
 
 namespace regina {
     class Packet;
+    template <int> class Perm;
     template <int> class Simplex;
     template <int> class Triangulation;
 };
@@ -106,7 +106,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
          */
         QString isEdgeStringValid(unsigned long srcTri, int srcEdge,
             unsigned long destTri, const QString& destEdge,
-            regina::NPerm3* gluing);
+            regina::Perm<3>* gluing);
 
         /**
          * Return a short string describing the destination of an
@@ -114,7 +114,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
          * non-boundary edges.
          */
         static QString destString(int srcEdge, regina::Simplex<2>* destTri,
-            const regina::NPerm3& gluing);
+            const regina::Perm<3>& gluing);
 
         /**
          * Convert an edge string (e.g., "20") to an edge permutation.
@@ -122,7 +122,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
          * The given edge string must be valid; otherwise the results
          * could be unpredictable (and indeed a crash could result).
          */
-        static regina::NPerm3 edgeStringToPerm(int srcEdge, const QString& str);
+        static regina::Perm<3> edgeStringToPerm(int srcEdge, const QString& str);
 
         /**
          * Display the given error to the user.

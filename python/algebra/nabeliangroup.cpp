@@ -32,27 +32,27 @@
 
 #include <boost/python.hpp>
 #include "algebra/nabeliangroup.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "../helpers.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;
 using regina::NAbelianGroup;
-using regina::NLargeInteger;
-using regina::NMatrixInt;
+using regina::Integer;
+using regina::MatrixInt;
 
 namespace {
     void (NAbelianGroup::*addTorsionElement_large)(
-        const regina::NLargeInteger&, unsigned) =
+        const regina::Integer&, unsigned) =
         &NAbelianGroup::addTorsionElement;
     void (NAbelianGroup::*addTorsionElement_long)(unsigned long,
         unsigned) = &NAbelianGroup::addTorsionElement;
-    void (NAbelianGroup::*addGroup_matrix)(const NMatrixInt&) =
+    void (NAbelianGroup::*addGroup_matrix)(const MatrixInt&) =
         &NAbelianGroup::addGroup;
     void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
         &NAbelianGroup::addGroup;
     unsigned (NAbelianGroup::*torsionRank_large)(
-        const regina::NLargeInteger&) const = &NAbelianGroup::torsionRank;
+        const regina::Integer&) const = &NAbelianGroup::torsionRank;
     unsigned (NAbelianGroup::*torsionRank_long)(unsigned long)
         const = &NAbelianGroup::torsionRank;
 
@@ -63,13 +63,13 @@ namespace {
 
     void addTorsionElements_dict(NAbelianGroup& g,
             boost::python::list elements) {
-        std::multiset<regina::NLargeInteger> set;
+        std::multiset<regina::Integer> set;
 
         long len = boost::python::len(elements);
         for (long i = 0; i < len; i++) {
             // Accept any type that we know how to convert to a large
             // integer.
-            extract<regina::NLargeInteger&> x_large(elements[i]);
+            extract<regina::Integer&> x_large(elements[i]);
             if (x_large.check()) {
                 set.insert(x_large());
                 continue;
@@ -97,8 +97,8 @@ void addNAbelianGroup() {
     class_<NAbelianGroup, std::auto_ptr<NAbelianGroup>, boost::noncopyable>
             ("NAbelianGroup")
         .def(init<const NAbelianGroup&>())
-        .def(init<const NMatrixInt&, const NMatrixInt&>())
-        .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
+        .def(init<const MatrixInt&, const MatrixInt&>())
+        .def(init<const MatrixInt&, const MatrixInt&, const Integer&>())
         .def("addRank", &NAbelianGroup::addRank, OL_addRank())
         .def("addTorsionElement", addTorsionElement_large,
             OL_addTorsionElement())

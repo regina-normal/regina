@@ -81,7 +81,7 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
             else
                 return QVariant();
         } else {
-            regina::NRational angle = s->angle((index.column() - 1) / 3,
+            regina::Rational angle = s->angle((index.column() - 1) / 3,
                 (index.column() - 1) % 3);
             if (angle == 0)
                 return QVariant();

@@ -45,7 +45,6 @@
 
 namespace regina {
 
-class NMatrixInt;
 class NNormalSurfaceVectorStandard;
 
 /**
@@ -100,22 +99,22 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorStandard(const NVector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorStandard(const Vector<LargeInteger>& cloneMe);
 
-        virtual NLargeInteger triangles(size_t tetIndex,
+        virtual LargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
-        virtual NLargeInteger quads(size_t tetIndex,
+        virtual LargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger octs(size_t tetIndex,
+        virtual LargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
-        virtual NLargeInteger edgeWeight(size_t edgeIndex,
+        virtual LargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
-        virtual NLargeInteger arcs(size_t triIndex,
+        virtual LargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(
+        static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const NTriangulation* triangulation);
@@ -129,19 +128,19 @@ inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
         size_t length) : NNormalSurfaceVector(length) {
 }
 inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVector(cloneMe) {
 }
 
-inline NLargeInteger NNormalSurfaceVectorStandard::triangles(
+inline LargeInteger NNormalSurfaceVectorStandard::triangles(
         size_t tetIndex, int vertex, const NTriangulation*) const {
     return (*this)[7 * tetIndex + vertex];
 }
-inline NLargeInteger NNormalSurfaceVectorStandard::quads(
+inline LargeInteger NNormalSurfaceVectorStandard::quads(
         size_t tetIndex, int quadType, const NTriangulation*) const {
     return (*this)[7 * tetIndex + 4 + quadType];
 }
-inline NLargeInteger NNormalSurfaceVectorStandard::octs(
+inline LargeInteger NNormalSurfaceVectorStandard::octs(
         size_t, int, const NTriangulation*) const {
     return zero;
 }

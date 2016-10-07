@@ -44,7 +44,6 @@
 
 namespace regina {
 
-class NMatrixInt;
 class NNormalSurfaceVectorQuadOct;
 
 /**
@@ -100,7 +99,7 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorQuadOct(const NVector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorQuadOct(const Vector<LargeInteger>& cloneMe);
 
         virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
@@ -109,7 +108,7 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
 
         static NNormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(
+        static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const NTriangulation* triangulation);
@@ -123,7 +122,7 @@ inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
         size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
 inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 

@@ -458,7 +458,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             return cell;
         case PROP_BDRY:
             if (! s->isCompact()) {
-                regina::NMatrixInt* slopes = s->boundaryIntersections();
+                regina::MatrixInt* slopes = s->boundaryIntersections();
                 if (slopes) {
                     NSMutableString* bdry = [NSMutableString stringWithString:@"Spun:"];
                     // Display each boundary slope as (nu(L), -nu(M)).
@@ -498,7 +498,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         }
         case PROP_TYPE:
         {
-            regina::NLargeInteger tot;
+            regina::LargeInteger tot;
             if (s->isSplitting())
                 cell.textLabel.text = @"Splitting";
             else if (! (tot = s->isCentral()).isZero())
@@ -518,7 +518,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
                 return cell;
             }
 
-            regina::NLargeInteger tot = s->octs(oct.tetIndex, oct.type);
+            regina::LargeInteger tot = s->octs(oct.tetIndex, oct.type);
             if (tot == 1) {
                 cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"K%ld: %s (1 oct)",
                                                                          oct.tetIndex,
@@ -537,7 +537,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             --coord;
     }
 
-    regina::NLargeInteger val = [Coordinates getCoordinate:viewCoords surface:*s whichCoord:coord];
+    regina::LargeInteger val = [Coordinates getCoordinate:viewCoords surface:*s whichCoord:coord];
     if (val.isZero())
         cell.textLabel.text = @"";
     else if (val.isInfinite())

@@ -42,16 +42,15 @@
 
 #include "regina-core.h"
 #include "enumerate/ordering.h"
-#include "maths/nray.h"
-#include "maths/nmatrixint.h"
+#include "maths/ray.h"
+#include "maths/matrix.h"
 #include <iterator>
 #include <vector>
 
 namespace regina {
 
 class EnumConstraints;
-class NMatrixInt;
-class NRay;
+class Ray;
 class ProgressTracker;
 
 /**
@@ -113,8 +112,8 @@ class REGINA_API DoubleDescription {
          * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
          *
-         * \pre The template argument RayClass is derived from NRay (or
-         * may possibly be NRay itself).
+         * \pre The template argument RayClass is derived from Ray (or
+         * may possibly be Ray itself).
          *
          * @param results the output iterator to which the resulting extremal
          * rays will be written; this must accept objects of type
@@ -135,7 +134,7 @@ class REGINA_API DoubleDescription {
          */
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
-            const NMatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker = 0, unsigned long initialRows = 0);
 
     private:
@@ -153,7 +152,7 @@ class REGINA_API DoubleDescription {
          *   ray belongs to.
          *
          * The dot products are stored as coordinates of the
-         * superclass NRay.  Dot products are only stored
+         * superclass Ray.  Dot products are only stored
          * for hyperplanes that have not yet been intersected (thus
          * the vector length becomes smaller as the main algorithm progresses).
          * Dot products are stored in the order in which hyperplanes are
@@ -175,7 +174,7 @@ class REGINA_API DoubleDescription {
          * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
          */
         template <class BitmaskType>
-        class RaySpec : private NRay {
+        class RaySpec : private Ray {
             private:
                 BitmaskType facets_;
                     /**< A bitmask listing which original facets this ray
@@ -203,7 +202,7 @@ class REGINA_API DoubleDescription {
                  * <i>i</i>th hyperplane to intersect must be described
                  * by row <tt>hypOrder[i]</tt> of \a subspace.
                  */
-                inline RaySpec(unsigned long axis, const NMatrixInt& subspace,
+                inline RaySpec(unsigned long axis, const MatrixInt& subspace,
                     const long* hypOrder);
 
                 /**
@@ -294,7 +293,7 @@ class REGINA_API DoubleDescription {
                  * hyperplanes that were intersected with the original cone
                  * (one hyperplane for each row of the matrix).
                  */
-                void recover(NRay& dest, const NMatrixInt& subspace) const;
+                void recover(Ray& dest, const MatrixInt& subspace) const;
         };
 
         /**
@@ -320,7 +319,7 @@ class REGINA_API DoubleDescription {
          */
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
-            const NMatrixInt& subspace, const EnumConstraints* constraints,
+            const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker, unsigned long initialRows);
 
         /**
@@ -401,16 +400,16 @@ REGINA_DEPRECATED typedef DoubleDescription NDoubleDescription;
 template <class BitmaskType>
 inline DoubleDescription::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& trunc) :
-        NRay(trunc.size() - 1),
+        Ray(trunc.size() - 1),
         facets_(trunc.facets_) {
     std::copy(trunc.elements + 1, trunc.end, elements);
 }
 
 template <class BitmaskType>
 inline int DoubleDescription::RaySpec<BitmaskType>::sign() const {
-    if (*elements < NLargeInteger::zero)
+    if (*elements < LargeInteger::zero)
         return -1;
-    if (*elements > NLargeInteger::zero)
+    if (*elements > LargeInteger::zero)
         return 1;
     return 0;
 }

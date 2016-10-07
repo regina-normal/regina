@@ -541,7 +541,7 @@ void Triangulation<dim>::writeTextLong(std::ostream& out) const {
     Simplex<dim>* adj;
     size_t pos;
     int j;
-    NPerm<dim+1> gluing;
+    Perm<dim+1> gluing;
 
     out << "  Simplex  |  glued to:";
     for (i = dim; i >= 0; --i) {
@@ -603,8 +603,8 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
     // We will send permutation codes directly to the output stream.
     // This requires them to be numeric types (not character types).
     static_assert(! (
-            std::is_same<typename NPerm<dim + 1>::Code, char>::value ||
-            std::is_same<typename NPerm<dim + 1>::Code, unsigned char>::value
+            std::is_same<typename Perm<dim + 1>::Code, char>::value ||
+            std::is_same<typename Perm<dim + 1>::Code, unsigned char>::value
         ),
         "The generic implementation of Triangulation<dim>::writeXMLPacketData "
         "requires permutation codes to be numeric types.");

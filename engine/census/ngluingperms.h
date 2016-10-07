@@ -56,7 +56,7 @@ namespace regina {
  * particular pairwise matching of tetrahedron faces.  Given a
  * pairwise matching of faces (as described by class NFacePairing), each
  * face that is matched with some other face will have an associated
- * permutation of four elements (as described by class NPerm4).
+ * permutation of four elements (as described by class Perm<4>).
  *
  * If a face is matched with some other face, the two associated
  * permutations in this set will be inverses.  If a face is left

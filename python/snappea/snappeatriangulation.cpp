@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"

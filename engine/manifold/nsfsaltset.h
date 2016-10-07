@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 
 namespace regina {
 
@@ -110,7 +110,7 @@ class REGINA_API NSFSAltSet {
         NSFSpace* data_[4];
             /**< The list of alternative representations of this Seifert
                  fibred space. */
-        NMatrix2 conversion_[4];
+        Matrix2 conversion_[4];
             /**< A list of conversion matrices for each alternative
                  representation, as described in the class notes above. */
         bool reflected_[4];
@@ -207,7 +207,7 @@ class REGINA_API NSFSAltSet {
          * @return the conversion matrix for the requested alternative
          * space.
          */
-        const NMatrix2& conversion(unsigned which) const;
+        const Matrix2& conversion(unsigned which) const;
         /**
          * Returns whether or not a reflection was used when creating
          * the requested alternative space.  This determines the
@@ -245,7 +245,7 @@ inline NSFSpace* NSFSAltSet::operator [] (unsigned which) const {
     return data_[which];
 }
 
-inline const NMatrix2& NSFSAltSet::conversion(unsigned which) const {
+inline const Matrix2& NSFSAltSet::conversion(unsigned which) const {
     return conversion_[which];
 }
 

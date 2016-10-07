@@ -45,7 +45,6 @@
 
 namespace regina {
 
-class NMatrixInt;
 class NNormalHypersurfaceVectorStandard;
 
 /**
@@ -95,18 +94,18 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
          * @param cloneMe the vector to clone.
          */
         NNormalHypersurfaceVectorStandard(
-            const NVector<NLargeInteger>& cloneMe);
+            const Vector<LargeInteger>& cloneMe);
 
-        virtual NLargeInteger tetrahedra(size_t pentIndex,
+        virtual LargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Dim4Triangulation* triang) const;
-        virtual NLargeInteger prisms(size_t pentIndex,
+        virtual LargeInteger prisms(size_t pentIndex,
             int prismType, const Dim4Triangulation* triang) const;
-        virtual NLargeInteger edgeWeight(size_t edgeIndex,
+        virtual LargeInteger edgeWeight(size_t edgeIndex,
             const Dim4Triangulation* triang) const;
 
         static NNormalHypersurfaceVector* makeZeroVector(
             const Dim4Triangulation* triangulation);
-        static NMatrixInt* makeMatchingEquations(
+        static MatrixInt* makeMatchingEquations(
             const Dim4Triangulation* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const Dim4Triangulation* triangulation);
@@ -120,15 +119,15 @@ inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
         size_t length) : NNormalHypersurfaceVector(length) {
 }
 inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<LargeInteger>& cloneMe) :
         NNormalHypersurfaceVector(cloneMe) {
 }
 
-inline NLargeInteger NNormalHypersurfaceVectorStandard::tetrahedra(
+inline LargeInteger NNormalHypersurfaceVectorStandard::tetrahedra(
         size_t pentIndex, int vertex, const Dim4Triangulation*) const {
     return (*this)[15 * pentIndex + vertex];
 }
-inline NLargeInteger NNormalHypersurfaceVectorStandard::prisms(
+inline LargeInteger NNormalHypersurfaceVectorStandard::prisms(
         size_t pentIndex, int prismType, const Dim4Triangulation*) const {
     return (*this)[15 * pentIndex + 5 + prismType];
 }

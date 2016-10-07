@@ -50,7 +50,7 @@
 #include "enumerate/doubledescription.h"
 #include "enumerate/enumconstraints.h"
 #include "maths/matrixops.h"
-#include "maths/nray.h"
+#include "maths/ray.h"
 #include "progress/progresstracker.h"
 #include "utilities/memutils.h"
 #include "utilities/bitmask.h"
@@ -60,8 +60,8 @@ namespace regina {
 
 template <class BitmaskType>
 DoubleDescription::RaySpec<BitmaskType>::RaySpec(unsigned long axis,
-        const NMatrixInt& subspace, const long* hypOrder) :
-        NRay(subspace.rows()),
+        const MatrixInt& subspace, const long* hypOrder) :
+        Ray(subspace.rows()),
         facets_(subspace.columns()) {
     size_t i;
 
@@ -77,7 +77,7 @@ template <class BitmaskType>
 DoubleDescription::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& first,
         const RaySpec<BitmaskType>& second) :
-        NRay(second.size() - 1),
+        Ray(second.size() - 1),
         facets_(second.facets_) {
     for (size_t i = 0; i < size(); ++i)
         elements[i] = second.elements[i + 1] * (*first.elements) -
@@ -93,7 +93,7 @@ DoubleDescription::RaySpec<BitmaskType>::RaySpec(
 
 template <class BitmaskType>
 void DoubleDescription::RaySpec<BitmaskType>::recover(
-        NRay& dest, const NMatrixInt& subspace) const {
+        Ray& dest, const MatrixInt& subspace) const {
     unsigned long i, j;
 
     unsigned long rows = subspace.rows();
@@ -104,7 +104,7 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     for (i = 0, j = 0; i < subspace.columns(); ++i)
         if (facets_.get(i)) {
             // We know in advance that this coordinate will be zero.
-            dest.setElement(i, NLargeInteger::zero);
+            dest.setElement(i, LargeInteger::zero);
         } else {
             use[j++] = i;
         }
@@ -122,7 +122,7 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     // non-trivial equation relating them.
 
     // Form a submatrix for the equations, looking only at non-zero coordinates.
-    NLargeInteger* m = new NLargeInteger[rows * cols];
+    LargeInteger* m = new LargeInteger[rows * cols];
     for (i = 0; i < rows; ++i)
         for (j = 0; j < cols; ++j)
             m[i * cols + j] = subspace.entry(i, use[j]);
@@ -138,11 +138,11 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     // See rowBasisAndOrthComp() for further details on how this works.
     unsigned long done = 0;
     unsigned long tmp;
-    NLargeInteger coeff1, coeff2, common;
+    LargeInteger coeff1, coeff2, common;
     while (done < rows) {
         // Find the first non-zero entry in row done.
         for (i = done; i < cols; ++i)
-            if (m[done * cols + lead[i]] != NLargeInteger::zero)
+            if (m[done * cols + lead[i]] != LargeInteger::zero)
                 break;
 
         if (i == cols) {
@@ -164,17 +164,17 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
                     continue;
 
                 coeff2 = m[i * cols + lead[done]];
-                common = NLargeInteger::zero;
-                if (coeff2 != NLargeInteger::zero) {
+                common = LargeInteger::zero;
+                if (coeff2 != LargeInteger::zero) {
                     for (j = 0; j < cols; ++j) {
                         m[i * cols + j] = m[i * cols + j] * coeff1
                             - m[done * cols + j] * coeff2;
                         common = common.gcd(m[i * cols + j]);
                     }
                 }
-                if (common < NLargeInteger::zero)
+                if (common < LargeInteger::zero)
                     common.negate();
-                if (common > NLargeInteger::one)
+                if (common > LargeInteger::one)
                     for (j = 0; j < cols; ++j)
                         m[i * cols + j].divByExact(common);
             }
@@ -187,10 +187,10 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     // know this because we know that our solution must be one-dimensional).
     //
     // Form a solution!
-    common = NLargeInteger::one;
+    common = LargeInteger::one;
     for (i = 0; i < rows; ++i)
         common = common.lcm(m[i * cols + lead[i]]);
-    if (common < NLargeInteger::zero)
+    if (common < LargeInteger::zero)
         common.negate();
 
     for (i = 0; i < rows; ++i)
@@ -208,7 +208,7 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
 
 template <class RayClass, class OutputIterator>
 void DoubleDescription::enumerateExtremalRays(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     unsigned long nFacets = subspace.columns();
 
@@ -249,7 +249,7 @@ void DoubleDescription::enumerateExtremalRays(OutputIterator results,
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints,
+        const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();
@@ -261,7 +261,7 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
         RayClass* ans;
         for (unsigned long i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
-            ans->setElement(i, NLargeInteger::one);
+            ans->setElement(i, LargeInteger::one);
             *results++ = ans;
         }
 

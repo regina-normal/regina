@@ -36,13 +36,13 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NMatrix2;
+using regina::Matrix2;
 using regina::NTorusBundle;
 
 void addNTorusBundle() {
     class_<NTorusBundle, bases<regina::NManifold>,
             std::auto_ptr<NTorusBundle> >("NTorusBundle")
-        .def(init<const NMatrix2&>())
+        .def(init<const Matrix2&>())
         .def(init<long, long, long, long>())
         .def(init<const NTorusBundle&>())
         .def("monodromy", &NTorusBundle::monodromy,

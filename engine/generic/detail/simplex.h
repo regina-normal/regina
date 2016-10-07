@@ -44,7 +44,6 @@
 #include "output.h"
 #include "generic/facenumbering.h"
 #include "generic/alias/face.h"
-#include "maths/nperm.h"
 #include "utilities/markedvector.h"
 #include <cassert>
 #include <boost/noncopyable.hpp>
@@ -92,7 +91,7 @@ class SimplexFaces {
             /**< The faces of the underlying triangulation that form the
                  individual <i>subdim</i>-faces of this simplex. */
 
-        NPerm<dim+1> mapping_[FaceNumbering<dim, subdim>::nFaces];
+        Perm<dim+1> mapping_[FaceNumbering<dim, subdim>::nFaces];
             /**< For each <i>subdim</i>-face of this simplex, maps vertices
                  (0,1,...,\a subdim) of the underlying <i>subdim</i>-face of
                  the triangulation to the corresponding vertices of this
@@ -120,7 +119,7 @@ class SimplexFaces {
          * as its image in \a other under the relabelling \a p.
          */
         bool sameDegrees(const SimplexFaces<dim, subdim>& other,
-            NPerm<dim + 1> p) const;
+            Perm<dim + 1> p) const;
 };
 
 /**
@@ -150,7 +149,7 @@ class SimplexFacesSuite :
          * the relabelling \a p.
          */
         bool sameDegrees(const SimplexFacesSuite<dim, subdim>& other,
-            NPerm<dim + 1> p) const;
+            Perm<dim + 1> p) const;
 };
 
 #ifndef __DOXYGEN
@@ -159,7 +158,7 @@ template <int dim>
 class SimplexFacesSuite<dim, 0> : protected SimplexFaces<dim, 0> {
     protected:
         bool sameDegrees(const SimplexFacesSuite<dim, 0>& other,
-            NPerm<dim + 1> p) const;
+            Perm<dim + 1> p) const;
 };
 
 #endif // __DOXYGEN
@@ -201,7 +200,7 @@ class SimplexBase :
                  simplex.  Specifically, <tt>adj_[f]</tt> represents the
                  simplex joined to facet \a f of this simplex, or is 0
                  if facet \a f lies on the triangulation boundary. */
-        NPerm<dim+1> gluing_[dim + 1];
+        Perm<dim+1> gluing_[dim + 1];
             /**< Indicates how vertices map to each other across each gluing.
                  Specifically, if facet \a f is joined to some other simplex
                  (i.e., it is not boundary), then \a gluing_[\a f] represents
@@ -302,7 +301,7 @@ class SimplexBase :
          * @return a permutation that maps the vertices of this simplex to the
          * vertices of the adjacent simplex, as described above.
          */
-        NPerm<dim+1> adjacentGluing(int facet) const;
+        Perm<dim+1> adjacentGluing(int facet) const;
         /**
          * If the given facet of this simplex is glued to facet \a f of
          * some adjacent simplex, then this routine returns the adjacent
@@ -360,7 +359,7 @@ class SimplexBase :
          * new gluing.  This permutation should be in the form described
          * by adjacentGluing().
          */
-        void join(int myFacet, Simplex<dim>* you, NPerm<dim+1> gluing);
+        void join(int myFacet, Simplex<dim>* you, Perm<dim+1> gluing);
         /**
          * Unglues the given facet of this simplex from whatever it is
          * joined to.  As a result, the given facet of this simplex
@@ -505,7 +504,7 @@ class SimplexBase :
          * this simplex.
          */
         template <int subdim>
-        NPerm<dim + 1> faceMapping(int face) const;
+        Perm<dim + 1> faceMapping(int face) const;
 
         /**
          * Returns the orientation of this simplex in the
@@ -608,7 +607,7 @@ inline void SimplexFaces<dim, subdim>::clear() {
 
 template <int dim, int subdim>
 bool SimplexFaces<dim, subdim>::sameDegrees(
-        const SimplexFaces<dim, subdim>& other, NPerm<dim + 1> p) const {
+        const SimplexFaces<dim, subdim>& other, Perm<dim + 1> p) const {
     for (size_t i = 0; i < FaceNumbering<dim, subdim>::nFaces; ++i)
         if (face_[i]->degree() != other.face_[
                 FaceNumbering<dim, subdim>::faceNumber(
@@ -621,14 +620,14 @@ bool SimplexFaces<dim, subdim>::sameDegrees(
 
 template <int dim, int subdim>
 inline bool SimplexFacesSuite<dim, subdim>::sameDegrees(
-        const SimplexFacesSuite<dim, subdim>& other, NPerm<dim + 1> p) const {
+        const SimplexFacesSuite<dim, subdim>& other, Perm<dim + 1> p) const {
     return SimplexFacesSuite<dim, subdim - 1>::sameDegrees(other, p) &&
         SimplexFaces<dim, subdim>::sameDegrees(other, p);
 }
 
 template <int dim>
 inline bool SimplexFacesSuite<dim, 0>::sameDegrees(
-        const SimplexFacesSuite<dim, 0>& other, NPerm<dim + 1> p) const {
+        const SimplexFacesSuite<dim, 0>& other, Perm<dim + 1> p) const {
     return SimplexFaces<dim, 0>::sameDegrees(other, p);
 }
 
@@ -675,7 +674,7 @@ inline int SimplexBase<dim>::adjacentFacet(int facet) const {
 }
 
 template <int dim>
-inline NPerm<dim+1> SimplexBase<dim>::adjacentGluing(int face) const {
+inline Perm<dim+1> SimplexBase<dim>::adjacentGluing(int face) const {
     return gluing_[face];
 }
 
@@ -699,7 +698,7 @@ inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
 
 template <int dim>
 template <int subdim>
-inline NPerm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
+inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
     triangulation()->ensureSkeleton();
     return SimplexFaces<dim, subdim>::mapping_[face];
 }
@@ -757,7 +756,7 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
 
 template <int dim>
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
-        NPerm<dim+1> gluing) {
+        Perm<dim+1> gluing) {
     typename Triangulation<dim>::ChangeEventSpan span(tri_);
 
     assert(tri_ == you->tri_);

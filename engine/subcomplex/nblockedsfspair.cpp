@@ -50,7 +50,7 @@ struct NBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
         /**< The two bounded saturated regions that are joined together,
              if the entire NBlockedSFSPair structure has been successfully
              found; otherwise, two null pointers if we are still searching. */
-    NMatrix2 matchingReln;
+    Matrix2 matchingReln;
         /**< The matrix describing how the region boundaries are joined
              together.  This matrix expresses the fibre/base curves on the
              second region boundary in terms of the fibre/base curves on
@@ -200,13 +200,13 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     layering.extend();
 
     // Relation from fibre/orbifold to layering first triangle markings 01/02:
-    NMatrix2 curves0ToLayering = layering.boundaryReln() *
-        NMatrix2(-1, 0, 0, firstRegionReflected ? -1 : 1);
+    Matrix2 curves0ToLayering = layering.boundaryReln() *
+        Matrix2(-1, 0, 0, firstRegionReflected ? -1 : 1);
 
     // We make the shell of an other-side boundary annulus; we will fill
     // in the precise vertex role permutations later on.
-    NSatAnnulus otherSide(layering.newBoundaryTet(0), NPerm4(),
-        layering.newBoundaryTet(1), NPerm4());
+    NSatAnnulus otherSide(layering.newBoundaryTet(0), Perm<4>(),
+        layering.newBoundaryTet(1), Perm<4>());
 
     if (otherSide.meetsBoundary()) {
         delete region[0];
@@ -217,7 +217,7 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     // Mapping from (layering first triangle markings 01/02) to
     // (other side annulus first triangle markings 01/02).  Like the other
     // side vertex roles, this mapping will be filled in later.
-    NMatrix2 layeringToAnnulus1;
+    Matrix2 layeringToAnnulus1;
 
     // Try the three possible orientations for fibres on the other side.
     NSatBlock* otherStarter;
@@ -231,19 +231,19 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         if (plugPos == 0) {
             otherSide.roles[0] = layering.newBoundaryRoles(0);
             otherSide.roles[1] = layering.newBoundaryRoles(1);
-            layeringToAnnulus1 = NMatrix2(1, 0, 0, 1);
+            layeringToAnnulus1 = Matrix2(1, 0, 0, 1);
         } else if (plugPos == 1) {
             otherSide.roles[0] = layering.newBoundaryRoles(0) *
-                NPerm4(1, 2, 0, 3);
+                Perm<4>(1, 2, 0, 3);
             otherSide.roles[1] = layering.newBoundaryRoles(1) *
-                NPerm4(1, 2, 0, 3);
-            layeringToAnnulus1 = NMatrix2(-1, 1, -1, 0);
+                Perm<4>(1, 2, 0, 3);
+            layeringToAnnulus1 = Matrix2(-1, 1, -1, 0);
         } else {
             otherSide.roles[0] = layering.newBoundaryRoles(0) *
-                NPerm4(2, 0, 1, 3);
+                Perm<4>(2, 0, 1, 3);
             otherSide.roles[1] = layering.newBoundaryRoles(1) *
-                NPerm4(2, 0, 1, 3);
-            layeringToAnnulus1 = NMatrix2(0, -1, 1, -1);
+                Perm<4>(2, 0, 1, 3);
+            layeringToAnnulus1 = Matrix2(0, -1, 1, -1);
         }
 
         // Clear out the used tetrahedron list.  Everything before the new
@@ -265,7 +265,7 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
                 // This is it!  Stop searching.
                 // Do a final conversion from annulus first triangle markings
                 // 01/02 and exit.
-                matchingReln = NMatrix2(-1, 0, 0, 1) * layeringToAnnulus1 *
+                matchingReln = Matrix2(-1, 0, 0, 1) * layeringToAnnulus1 *
                     curves0ToLayering;
                 return false;
             }

@@ -41,14 +41,16 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "maths/nrational.h"
-#include "maths/nray.h"
+#include "maths/rational.h"
+#include "maths/ray.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
-class NMatrixInt;
 class XMLAngleStructureReader;
+
+template <typename> class MatrixIntDomain;
+typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -83,7 +85,7 @@ typedef Triangulation<3> NTriangulation;
  *
  * \ifacespython Not present.
  */
-class REGINA_API AngleStructureVector : public NRay {
+class REGINA_API AngleStructureVector : public Ray {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -97,7 +99,7 @@ class REGINA_API AngleStructureVector : public NRay {
          *
          * @param cloneMe the vector to clone.
          */
-        AngleStructureVector(const NVector<NLargeInteger>& cloneMe);
+        AngleStructureVector(const Vector<LargeInteger>& cloneMe);
 
         /**
          * Creates a new set of angle structure equations for the given
@@ -119,7 +121,7 @@ class REGINA_API AngleStructureVector : public NRay {
          * equations will be based.
          * @return a newly allocated set of equations.
          */
-        static NMatrixInt* makeAngleEquations(const NTriangulation* tri);
+        static MatrixInt* makeAngleEquations(const NTriangulation* tri);
 };
 
 /**
@@ -197,7 +199,7 @@ class REGINA_API AngleStructure :
          * the requested angle, as described above; this should be 0, 1 or 2.
          * @return the requested angle scaled down by <i>pi</i>.
          */
-        NRational angle(size_t tetIndex, int edgePair) const;
+        Rational angle(size_t tetIndex, int edgePair) const;
 
         /**
          * Returns the triangulation on which this angle structure lies.
@@ -330,11 +332,11 @@ REGINA_DEPRECATED typedef AngleStructure NAngleStructure;
 // Inline functions for AngleStructureVector
 
 inline AngleStructureVector::AngleStructureVector(size_t length) :
-        NRay(length) {
+        Ray(length) {
 }
 
 inline AngleStructureVector::AngleStructureVector(
-        const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
+        const Vector<LargeInteger>& cloneMe) : Ray(cloneMe) {
 }
 
 // Inline functions for AngleStructure

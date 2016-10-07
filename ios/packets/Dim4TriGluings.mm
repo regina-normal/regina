@@ -117,7 +117,7 @@
     [self.pentachora reloadData];
 }
 
-+ (NSString*)destStringFromFacet:(int)srcFacet dest:(regina::Dim4Pentachoron*)destSimp gluing:(const regina::NPerm5&)gluing
++ (NSString*)destStringFromFacet:(int)srcFacet dest:(regina::Dim4Pentachoron*)destSimp gluing:(const regina::Perm<5>&)gluing
 {
     if (! destSimp)
         return @" "; // Use a space to ensure the label has enough height to pick up touches.
@@ -534,7 +534,7 @@
                 [alert show];
                 goto cleanUpGluing;
             }
-            regina::NPerm5 destGluing = regina::NPerm5(adj0, adj1, adj2, adj3, (10 - adj0 - adj1 - adj2 - adj3)) *
+            regina::Perm<5> destGluing = regina::Perm<5>(adj0, adj1, adj2, adj3, (10 - adj0 - adj1 - adj2 - adj3)) *
                 regina::Dim4Tetrahedron::ordering(editFacet).inverse();
             
             // Are we gluing the facet to itself?

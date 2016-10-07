@@ -37,13 +37,13 @@
 
 using namespace boost::python;
 using regina::NGraphTriple;
-using regina::NMatrix2;
+using regina::Matrix2;
 using regina::NSFSpace;
 
 namespace {
     NGraphTriple* createNGraphTriple(const NSFSpace& s1,
             const NSFSpace& s2, const NSFSpace& s3,
-            const NMatrix2& m1, const NMatrix2& m2) {
+            const Matrix2& m1, const Matrix2& m2) {
         return new NGraphTriple(
             new NSFSpace(s1), new NSFSpace(s2), new NSFSpace(s3), m1, m2);
     }

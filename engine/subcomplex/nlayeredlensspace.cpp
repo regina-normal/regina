@@ -84,7 +84,7 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
             NLayeredLensSpace* ans = new NLayeredLensSpace();
             ans->torus_ = torus;
 
-            NPerm4 perm = tet->adjacentGluing(tf0);
+            Perm<4> perm = tet->adjacentGluing(tf0);
             if (perm[tf1] == tf0) {
                 // Snapped shut.
                 ans->mobiusBoundaryGroup_ = torus->topEdgeGroup(

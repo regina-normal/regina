@@ -125,7 +125,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         return 0;
 
     // Run through each isomorphism and look for the corresponding layering.
-    NMatrix2 matchReln;
+    Matrix2 matchReln;
     for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
         // Apply the layering to the lower boundary and see if it

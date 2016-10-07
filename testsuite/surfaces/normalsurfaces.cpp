@@ -52,7 +52,7 @@ using regina::NNormalSurface;
 using regina::NormalSurfaces;
 using regina::NNormalSurfaceVector;
 using regina::Packet;
-using regina::NPerm4;
+using regina::Perm;
 using regina::NSignature;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -223,11 +223,11 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             r = twistedKxI.newTetrahedron();
             s = twistedKxI.newTetrahedron();
             t = twistedKxI.newTetrahedron();
-            r->join(0, s, NPerm4(0, 1, 2, 3));
-            r->join(1, t, NPerm4(2, 1, 0, 3));
-            r->join(2, t, NPerm4(1, 3, 2, 0));
-            s->join(1, t, NPerm4(0, 3, 2, 1));
-            s->join(2, t, NPerm4(3, 1, 0, 2));
+            r->join(0, s, Perm<4>(0, 1, 2, 3));
+            r->join(1, t, Perm<4>(2, 1, 0, 3));
+            r->join(2, t, Perm<4>(1, 3, 2, 0));
+            s->join(1, t, Perm<4>(0, 3, 2, 1));
+            s->join(2, t, Perm<4>(3, 1, 0, 2));
             twistedKxI.setLabel("Twisted KxI");
 
             // Build the 9-tetrahedron SFS from its dehydration string;

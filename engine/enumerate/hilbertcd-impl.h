@@ -46,8 +46,8 @@
 #include "regina-config.h"
 #include "enumerate/enumconstraints.h"
 #include "enumerate/hilbertcd.h"
-#include "maths/nmatrixint.h"
-#include "maths/nray.h"
+#include "maths/matrix.h"
+#include "maths/ray.h"
 #include "utilities/bitmask.h"
 #include <list>
 
@@ -55,7 +55,7 @@ namespace regina {
 
 template <class RayClass, class OutputIterator>
 void HilbertCD::enumerateHilbertBasis(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints) {
+        const MatrixInt& subspace, const EnumConstraints* constraints) {
     // Get the dimension of the space.
     size_t dim = subspace.columns();
     if (dim == 0)
@@ -93,7 +93,7 @@ void HilbertCD::enumerateHilbertBasis(OutputIterator results,
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void HilbertCD::enumerateUsingBitmask(OutputIterator results,
-        const NMatrixInt& subspace, const EnumConstraints* constraints) {
+        const MatrixInt& subspace, const EnumConstraints* constraints) {
     // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
     size_t dim = subspace.columns();
     size_t nEqns = subspace.rows();
@@ -117,19 +117,19 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
     std::list<VecSpec<BitmaskType>*> basis;
     typename std::list<VecSpec<BitmaskType>*>::iterator bit;
 
-    NRay** unitMatch = new NRay*[dim];
+    Ray** unitMatch = new Ray*[dim];
     int i, j;
     for (i = 0; i < dim; ++i) {
-        unitMatch[i] = new NRay(nEqns);
+        unitMatch[i] = new Ray(nEqns);
         for (j = 0; j < nEqns; ++j)
-            unitMatch[i]->setElement(j, subspace.entry(j, i));
+            unitMatch[i]->setElement(j, LargeInteger(subspace.entry(j, i)));
     }
 
     unsigned stackSize;
     // All vectors/rays are created and destroyed.
     // Bitmasks on the other hand are reused.
     VecSpec<BitmaskType>** coord = new VecSpec<BitmaskType>*[dim];
-    NRay** match = new NRay*[dim];
+    Ray** match = new Ray*[dim];
     BitmaskType* frozen = new BitmaskType[dim];
 
     for (i = 0; i < dim; ++i)
@@ -137,12 +137,12 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
     
     // Push the zero vector.
     coord[0] = new VecSpec<BitmaskType>(dim);
-    match[0] = new NRay(nEqns);
+    match[0] = new Ray(nEqns);
     stackSize = 1; // The zero vector is already on top.
     bool first = true;
 
     VecSpec<BitmaskType> *c;
-    NRay *m;
+    Ray *m;
     BitmaskType f(dim);
     BitmaskType mask(dim), tmpMask(dim);
     BitmaskType* constraint;
@@ -238,7 +238,7 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
             coord[stackSize]->setElement(i, (*coord[stackSize])[i] + 1);
             coord[stackSize]->mask_.set(i, true);
 
-            match[stackSize] = new NRay(*m);
+            match[stackSize] = new Ray(*m);
             (*match[stackSize]) += (*unitMatch[i]);
 
             frozen[stackSize] = f;

@@ -41,8 +41,8 @@
 
 namespace regina {
 
-NLargeInteger NSurfaceFilterProperties::eulerChar(size_t index) const {
-    std::set<NLargeInteger>::const_iterator it = eulerChar_.begin();
+LargeInteger NSurfaceFilterProperties::eulerChar(size_t index) const {
+    std::set<LargeInteger>::const_iterator it = eulerChar_.begin();
     advance(it, index);
     return *it;
 }

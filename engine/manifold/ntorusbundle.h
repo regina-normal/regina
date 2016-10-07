@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "manifold/nmanifold.h"
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 
 namespace regina {
 
@@ -76,7 +76,7 @@ namespace regina {
  */
 class REGINA_API NTorusBundle : public NManifold {
     private:
-        NMatrix2 monodromy_;
+        Matrix2 monodromy_;
             /**< The monodromy describing how the two torus boundaries
                  are identified.  See the class notes for details. */
 
@@ -96,7 +96,7 @@ class REGINA_API NTorusBundle : public NManifold {
          * @param newMonodromy describes precisely how the upper and lower
          * torus boundaries are identified.  See the class notes for details.
          */
-        NTorusBundle(const NMatrix2& newMonodromy);
+        NTorusBundle(const Matrix2& newMonodromy);
         /**
          * Creates a new torus bundle over the circle using the given
          * monodromy.  The four elements of the monodromy matrix are
@@ -131,7 +131,7 @@ class REGINA_API NTorusBundle : public NManifold {
          *
          * @return the monodromy for this torus bundle.
          */
-        const NMatrix2& monodromy() const;
+        const Matrix2& monodromy() const;
 
         NAbelianGroup* homology() const;
         bool isHyperbolic() const;
@@ -197,7 +197,7 @@ class REGINA_API NTorusBundle : public NManifold {
          * author, and is subject to change in future versions of Regina.
          *
          * Note that this routine is not equivalent to the global
-         * simpler(const NMatrix2&, const NMatrix2&).  This routine is
+         * simpler(const Matrix2&, const Matrix2&).  This routine is
          * tweaked specifically for use with torus bundle monodromies.
          *
          * \pre Both matrices consist entirely of non-negative elements.
@@ -208,7 +208,7 @@ class REGINA_API NTorusBundle : public NManifold {
          * or \c false if either the matrices are equal or \a m2 is more
          * pleasing than \a m1.
          */
-        static bool simplerNonNeg(const NMatrix2& m1, const NMatrix2& m2);
+        static bool simplerNonNeg(const Matrix2& m1, const Matrix2& m2);
 };
 
 /*@}*/
@@ -219,7 +219,7 @@ inline NTorusBundle::NTorusBundle() :
         monodromy_(1, 0, 0, 1) {
 }
 
-inline NTorusBundle::NTorusBundle(const NMatrix2& newMonodromy) :
+inline NTorusBundle::NTorusBundle(const Matrix2& newMonodromy) :
         monodromy_(newMonodromy) {
     reduce();
 }
@@ -233,7 +233,7 @@ inline NTorusBundle::NTorusBundle(const NTorusBundle& cloneMe) :
         NManifold(), monodromy_(cloneMe.monodromy_) {
 }
 
-inline const NMatrix2& NTorusBundle::monodromy() const {
+inline const Matrix2& NTorusBundle::monodromy() const {
     return monodromy_;
 }
 

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"
@@ -70,26 +70,26 @@ const char quadString[3][6] = { "01/23", "02/13", "03/12" };
 
 // The following three arrays cannot be made 2-D because of a g++-2.95 bug.
 
-const NPerm4 __triDiscArcs[12] = {
-    NPerm4(0,1,2,3), NPerm4(0,2,3,1), NPerm4(0,3,1,2),
-    NPerm4(1,0,3,2), NPerm4(1,3,2,0), NPerm4(1,2,0,3),
-    NPerm4(2,3,0,1), NPerm4(2,0,1,3), NPerm4(2,1,3,0),
-    NPerm4(3,2,1,0), NPerm4(3,1,0,2), NPerm4(3,0,2,1)
+const Perm<4> __triDiscArcs[12] = {
+    Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(0,3,1,2),
+    Perm<4>(1,0,3,2), Perm<4>(1,3,2,0), Perm<4>(1,2,0,3),
+    Perm<4>(2,3,0,1), Perm<4>(2,0,1,3), Perm<4>(2,1,3,0),
+    Perm<4>(3,2,1,0), Perm<4>(3,1,0,2), Perm<4>(3,0,2,1)
 };
 
-const NPerm4 __quadDiscArcs[12] = {
-    NPerm4(0,2,3,1), NPerm4(3,0,1,2), NPerm4(1,3,2,0), NPerm4(2,1,0,3),
-    NPerm4(0,3,1,2), NPerm4(1,0,2,3), NPerm4(2,1,3,0), NPerm4(3,2,0,1),
-    NPerm4(0,1,2,3), NPerm4(2,0,3,1), NPerm4(3,2,1,0), NPerm4(1,3,0,2)
+const Perm<4> __quadDiscArcs[12] = {
+    Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(1,3,2,0), Perm<4>(2,1,0,3),
+    Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(2,1,3,0), Perm<4>(3,2,0,1),
+    Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(3,2,1,0), Perm<4>(1,3,0,2)
 };
 
-const NPerm4 __octDiscArcs[24] = {
-    NPerm4(0,3,1,2), NPerm4(0,1,2,3), NPerm4(2,0,3,1), NPerm4(2,3,1,0),
-    NPerm4(1,2,0,3), NPerm4(1,0,3,2), NPerm4(3,1,2,0), NPerm4(3,2,0,1),
-    NPerm4(0,1,2,3), NPerm4(0,2,3,1), NPerm4(3,0,1,2), NPerm4(3,1,2,0),
-    NPerm4(2,3,0,1), NPerm4(2,0,1,3), NPerm4(1,2,3,0), NPerm4(1,3,0,2),
-    NPerm4(0,2,3,1), NPerm4(0,3,1,2), NPerm4(1,0,2,3), NPerm4(1,2,3,0),
-    NPerm4(3,1,0,2), NPerm4(3,0,2,1), NPerm4(2,3,1,0), NPerm4(2,1,0,3)
+const Perm<4> __octDiscArcs[24] = {
+    Perm<4>(0,3,1,2), Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(2,3,1,0),
+    Perm<4>(1,2,0,3), Perm<4>(1,0,3,2), Perm<4>(3,1,2,0), Perm<4>(3,2,0,1),
+    Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(3,1,2,0),
+    Perm<4>(2,3,0,1), Perm<4>(2,0,1,3), Perm<4>(1,2,3,0), Perm<4>(1,3,0,2),
+    Perm<4>(0,2,3,1), Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(1,2,3,0),
+    Perm<4>(3,1,0,2), Perm<4>(3,0,2,1), Perm<4>(2,3,1,0), Perm<4>(2,1,0,3)
 };
 
 NNormalSurface* NNormalSurface::clone() const {
@@ -160,7 +160,7 @@ bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
         const {
     size_t nTets = triang->size();
     int oct;
-    NLargeInteger coord;
+    LargeInteger coord;
     for (size_t tet=0; tet<nTets; tet++)
         for (oct=0; oct<3; oct++) {
             coord = octs(tet, oct, triang);
@@ -199,7 +199,7 @@ bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
     size_t nTets = triang->size();
     size_t tet;
     int type;
-    NLargeInteger tot;
+    LargeInteger tot;
     for (tet = 0; tet < nTets; tet++) {
         for (type = 0; type < 4; type++)
             if (triangles(tet, type, triang) != 0)
@@ -218,12 +218,12 @@ bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
     return true;
 }
 
-NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
+LargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
         const {
     size_t nTets = triang->size();
     size_t tet;
     int type;
-    NLargeInteger tot, tetTot;
+    LargeInteger tot, tetTot;
     for (tet = 0; tet < nTets; tet++) {
         tetTot = 0L;
         for (type = 0; type < 4; type++)
@@ -233,7 +233,7 @@ NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
         for (type = 0; type < 3; type++)
             tetTot += octs(tet, type, triang);
         if (tetTot > 1)
-            return NLargeInteger::zero;
+            return LargeInteger::zero;
         tot += tetTot;
     }
     return tot;
@@ -353,7 +353,7 @@ void NNormalSurface::calculateOctPosition() const {
 void NNormalSurface::calculateEulerChar() const {
     size_t index, tot;
     int type;
-    NLargeInteger ans = NLargeInteger::zero;
+    LargeInteger ans = LargeInteger::zero;
 
     // Add vertices.
     tot = triangulation_->countEdges();
@@ -426,7 +426,7 @@ void NNormalSurface::calculateRealBoundary() const {
     realBoundary = false;
 }
 
-NMatrixInt* NNormalSurface::boundaryIntersections() const {
+MatrixInt* NNormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const SnapPeaTriangulation* snapPea =
         dynamic_cast<const SnapPeaTriangulation*>(triangulation());
@@ -448,25 +448,25 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
             return 0;
     }
 
-    NMatrixInt* equations = snapPea->slopeEquations();
+    MatrixInt* equations = snapPea->slopeEquations();
     if (! equations)
         return 0;
 
     size_t cusps = equations->rows() / 2;
     size_t numTet = snapPea->size();
-    NMatrixInt* slopes = new NMatrixInt(cusps, 2);
+    MatrixInt* slopes = new MatrixInt(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
-        NLargeInteger meridian; // constructor sets this to 0
-        NLargeInteger longitude; // constructor sets this to 0
+        Integer meridian; // constructor sets this to 0
+        Integer longitude; // constructor sets this to 0
         for(unsigned int j=0; j < numTet; j++) {
             meridian += 
-                equations->entry(2*i, 3*j)*quads(j, quadSeparating[0][1]) +
-                equations->entry(2*i, 3*j+1)*quads(j, quadSeparating[0][2]) +
-                equations->entry(2*i, 3*j+2)*quads(j, quadSeparating[0][3]); 
+                equations->entry(2*i, 3*j) * Integer(quads(j, quadSeparating[0][1])) +
+                equations->entry(2*i, 3*j+1) * Integer(quads(j, quadSeparating[0][2])) +
+                equations->entry(2*i, 3*j+2) * Integer(quads(j, quadSeparating[0][3]));
             longitude += 
-                equations->entry(2*i+1, 3*j)*quads(j, quadSeparating[0][1]) +
-                equations->entry(2*i+1, 3*j+1)*quads(j, quadSeparating[0][2]) +
-                equations->entry(2*i+1, 3*j+2)*quads(j, quadSeparating[0][3]); 
+                equations->entry(2*i+1, 3*j) * Integer(quads(j, quadSeparating[0][1])) +
+                equations->entry(2*i+1, 3*j+1) * Integer(quads(j, quadSeparating[0][2])) +
+                equations->entry(2*i+1, 3*j+2) * Integer(quads(j, quadSeparating[0][3]));
         }
         slopes->entry(i,0) = meridian;
         slopes->entry(i,1) = longitude;
@@ -485,7 +485,7 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
         << xmlEncodeSpecialChars(name_) << "\">";
 
     // Write all non-zero entries.
-    NLargeInteger entry;
+    LargeInteger entry;
     for (size_t i = 0; i < vecLen; i++) {
         entry = (*vector)[i];
         if (entry != 0)
@@ -512,14 +512,14 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
-NLargeInteger NNormalSurfaceVector::orientedTriangles(
+LargeInteger NNormalSurfaceVector::orientedTriangles(
         size_t, int, const NTriangulation*, bool) const {
-    return NLargeInteger::zero;
+    return LargeInteger::zero;
 };
 
-NLargeInteger NNormalSurfaceVector::orientedQuads(
+LargeInteger NNormalSurfaceVector::orientedQuads(
         size_t, int, const NTriangulation*, bool) const {
-    return NLargeInteger::zero;
+    return LargeInteger::zero;
 };
 
 } // namespace regina

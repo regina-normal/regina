@@ -32,8 +32,8 @@
 
 #include "regina-config.h"
 #include "enumerate/doubledescription.h"
-#include "maths/nmatrixint.h"
-#include "maths/nray.h"
+#include "maths/matrix.h"
+#include "maths/ray.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/nsstandard.h"
@@ -98,7 +98,7 @@ namespace {
      * solution sets, describing a single ray (which is typically a
      * vertex in some partial solution space).
      *
-     * This class derives from NRay, which stores the coordinates of
+     * This class derives from Ray, which stores the coordinates of
      * the ray itself in standard coordinates.  This RaySpec class also
      * stores a bitmask indicating which of these coordinates are set to zero.
      *
@@ -116,7 +116,7 @@ namespace {
      * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
      */
     template <class BitmaskType>
-    class RaySpec : private NRay {
+    class RaySpec : private Ray {
         private:
             BitmaskType facets_;
                 /**< A bitmask listing which coordinates of this ray are
@@ -130,9 +130,9 @@ namespace {
              * @param v the vector to clone.
              */
             RaySpec(const NNormalSurfaceVector* v) :
-                    NRay(v->size()), facets_(v->size()) {
+                    Ray(v->size()), facets_(v->size()) {
                 // Note that the vector is initialised to zero since
-                // this is what NLargeInteger's default constructor does.
+                // this is what LargeInteger's default constructor does.
                 for (size_t i = 0; i < v->size(); ++i)
                     if ((elements[i] = (*v)[i]) == zero)
                         facets_.set(i, true);
@@ -153,10 +153,10 @@ namespace {
              */
             RaySpec(const NTriangulation* tri, unsigned long whichLink,
                     unsigned coordsPerTet) :
-                    NRay(coordsPerTet * tri->size()),
+                    Ray(coordsPerTet * tri->size()),
                     facets_(coordsPerTet * tri->size()) {
                 // Note that the vector is initialised to zero since
-                // this is what NLargeInteger's default constructor does.
+                // this is what LargeInteger's default constructor does.
                 for (size_t i = 0; i < size(); ++i)
                     if (i % coordsPerTet > 3) {
                         // Not a triangular coordinate.
@@ -189,15 +189,15 @@ namespace {
              * to zero to form the intersecting hyperplane.
              */
             RaySpec(const RaySpec& pos, const RaySpec& neg, size_t coord) :
-                    NRay(pos.size()), facets_(pos.facets_) {
+                    Ray(pos.size()), facets_(pos.facets_) {
                 facets_ &= neg.facets_;
 
                 // Note that we may need to re-enable some bits in \a facets_,
                 // since we may end up setting some triangle coordinates
                 // to zero that were not zero in either \a pos or \a neg.
 
-                NLargeInteger posDiff = pos[coord];
-                NLargeInteger negDiff = neg[coord];
+                LargeInteger posDiff = pos[coord];
+                LargeInteger negDiff = neg[coord];
 
                 for (size_t i = 0; i < size(); ++i)
                     if ((elements[i] = neg[i] * posDiff - pos[i] * negDiff)
@@ -258,13 +258,20 @@ namespace {
                 if (! (facets_ <= link.facets_))
                     return;
 
-                NLargeInteger max = NLargeInteger::infinity;
+                bool start = true;
+                LargeInteger max; // max we are allowed to subtract
                 size_t i;
                 for (i = 0; i < size(); ++i)
-                    if (! link.facets_.get(i))
-                        if (max > elements[i])
+                    if (! link.facets_.get(i)) {
+                        if (start) {
                             max = elements[i];
+                            start = false;
+                        } else if (max > elements[i])
+                            max = elements[i];
+                    }
 
+                // If start == true then this next loop is harmless, since
+                // link.facets_.get(i) must always be true.
                 for (i = 0; i < size(); ++i)
                     if (! link.facets_.get(i))
                         if ((elements[i] -= max) == zero)
@@ -303,7 +310,7 @@ namespace {
                 return (elements[index] > zero ? 1 : -1);
             }
 
-            using NRay::scaleDown;
+            using Ray::scaleDown;
     };
 } // anonymous namespace
 

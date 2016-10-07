@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/nsurfacefilter.h"
 #include "triangulation/ntriangulation.h"
@@ -163,7 +163,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact()) {
-                regina::NMatrixInt* slopes = s->boundaryIntersections();
+                regina::MatrixInt* slopes = s->boundaryIntersections();
                 if (slopes) {
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).
@@ -197,7 +197,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return QVariant();
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 5)) {
-            regina::NLargeInteger tot;
+            regina::LargeInteger tot;
             if (s->isSplitting())
                 return tr("Splitting");
             else if ((tot = s->isCentral()) != 0)
@@ -211,7 +211,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             if (oct == regina::NDiscType::NONE)
                 return QVariant();
             else {
-                regina::NLargeInteger tot = s->octs(oct.tetIndex, oct.type);
+                regina::LargeInteger tot = s->octs(oct.tetIndex, oct.type);
                 if (tot == 1) {
                     return tr("K%1: %2 (1 oct)").
                         arg(oct.tetIndex).
@@ -225,7 +225,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             }
         } else {
             // The default case:
-            regina::NLargeInteger ans = Coordinates::getCoordinate(coordSystem_,
+            regina::LargeInteger ans = Coordinates::getCoordinate(coordSystem_,
                 *s, index.column() - propertyColCount());
             if (ans == (long)0)
                 return QVariant();

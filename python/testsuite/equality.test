@@ -32,7 +32,7 @@
 # MA 02110-1301, USA.
 
 print NAbelianGroup.equalityType
-print NInteger.equalityType
+print Integer.equalityType
 print NTriangulation.equalityType
 
 # Test == and != for objects that are equal by value but have different
@@ -41,9 +41,9 @@ print NTriangulation.equalityType
 
 # Cases that should be reported as equal (by value):
 
-print 'NInteger:'
-a = NInteger(3)
-b = NInteger(3)
+print 'Integer:'
+a = Integer(3)
+b = Integer(3)
 print a == b, a != b
 
 print 'NAbelianGroup:'

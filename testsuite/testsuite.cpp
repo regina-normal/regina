@@ -109,14 +109,14 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addBitmask(runner);
 
     // Maths:
-    addNInteger(runner);
-    addNRational(runner);
-    addNPerm2(runner);
-    addNPerm3(runner);
-    addNPerm4(runner);
-    addNPerm5(runner);
-    addNPerm(runner);
-    addNPrimes(runner);
+    addInteger(runner);
+    addRational(runner);
+    addPerm2(runner);
+    addPerm3(runner);
+    addPerm4(runner);
+    addPerm5(runner);
+    addPerm(runner);
+    addPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);
     addPermConv(runner);

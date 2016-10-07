@@ -32,7 +32,7 @@
 
 #include "algebra/nabeliangroup.h"
 #include "manifold/nsfs.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayeredchainpair.h"
@@ -76,10 +76,10 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     NTetrahedron* firstTop;
     NTetrahedron* secondBottom;
     NTetrahedron* secondTop;
-    NPerm4 firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
+    Perm<4> firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
 
     for (int p = 0; p < 6; p++) {
-        first = new NLayeredChain(base, NPerm4::S3[p]);
+        first = new NLayeredChain(base, Perm<4>::S3[p]);
         first->extendMaximal();
 
         firstTop = first->top();
@@ -97,7 +97,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
             if (longChain->extendBelow())
                 if (longChain->bottom() == firstTop &&
                         longChain->bottomVertexRoles() ==
-                        firstTopRoles * NPerm4(3, 2, 1, 0)) {
+                        firstTopRoles * Perm<4>(3, 2, 1, 0)) {
                     // We've got a layered loop!
                     NLayeredChainPair* ans = new NLayeredChainPair();
                     if (nTet == 2) {
@@ -116,7 +116,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                             firstBottomRoles[0]),
                         firstBottom->adjacentGluing(
                             firstBottomRoles[0]) * firstBottomRoles *
-                            NPerm4(0, 2, 1, 3));
+                            Perm<4>(0, 2, 1, 3));
 
                     delete first;
                     return ans;
@@ -137,7 +137,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
 
         second = new NLayeredChain(secondBottom,
             firstTop->adjacentGluing(firstTopRoles[3]) *
-            firstTopRoles * NPerm4(1, 3, 0, 2));
+            firstTopRoles * Perm<4>(1, 3, 0, 2));
         while (second->extendAbove())
             ;
 
@@ -160,13 +160,13 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                 secondTop == firstBottom->adjacentTetrahedron(
                     firstBottomRoles[1]) &&
                 secondTopRoles == firstTop->adjacentGluing(
-                    firstTopRoles[0]) * firstTopRoles * NPerm4(0, 2, 1, 3) &&
+                    firstTopRoles[0]) * firstTopRoles * Perm<4>(0, 2, 1, 3) &&
                 secondBottomRoles == firstBottom->adjacentGluing(
                     firstBottomRoles[2]) * firstBottomRoles *
-                    NPerm4(3, 1, 2, 0) &&
+                    Perm<4>(3, 1, 2, 0) &&
                 secondTopRoles == firstBottom->adjacentGluing(
                     firstBottomRoles[1]) * firstBottomRoles *
-                    NPerm4(2, 0, 3, 1)) {
+                    Perm<4>(2, 0, 3, 1)) {
             // We found one!
             NLayeredChainPair* ans = new NLayeredChainPair();
             if (first->index() > second->index()) {
@@ -208,7 +208,7 @@ NAbelianGroup* NLayeredChainPair::homology() const {
     // This is established simply by examining the edges on the boundary
     // of each layered chain.
     NAbelianGroup* ans = new NAbelianGroup();
-    NMatrixInt mat(3, 3);
+    MatrixInt mat(3, 3);
     mat.initialise(1);
     mat.entry(0, 1) = mat.entry(2, 2) = -1;
     mat.entry(1, 0) = chain_[0]->index();

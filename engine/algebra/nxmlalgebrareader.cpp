@@ -109,8 +109,8 @@ void NXMLAbelianGroupReader::initialChars(const std::string& chars) {
     if (group_) {
         std::list<std::string> tokens;
         if (basicTokenise(back_inserter(tokens), chars) > 0) {
-            std::multiset<NLargeInteger> torsion;
-            NLargeInteger val;
+            std::multiset<Integer> torsion;
+            Integer val;
 
             for (std::list<std::string>::const_iterator it = tokens.begin();
                     it != tokens.end(); it++)

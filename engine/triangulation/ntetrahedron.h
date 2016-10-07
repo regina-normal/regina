@@ -41,7 +41,6 @@
 
 #include "regina-core.h"
 #include "generic/simplex.h"
-#include "maths/nperm4.h"
 #include "utilities/markedvector.h"
 // NOTE: More #includes follow after the class declarations.
 

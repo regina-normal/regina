@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "generic/facetspec.h"
-#include "maths/nperm.h"
+#include "maths/perm.h"
 
 namespace regina {
 
@@ -94,7 +94,7 @@ class NGenericGluingPerms {
                  This is guaranteed to be the minimal representative of
                  its facet pairing isomorphism class. */
         int* permIndices_;
-            /**< The index into array NPerm<dim+1>::Sn_1 describing how each
+            /**< The index into array Perm<dim+1>::Sn_1 describing how each
                  simplex facet is glued to its partner.  Note that this
                  is not a gluing permutation as such but rather a permutation
                  of 0,...,\a dim-1 only (see the routines gluingToIndex() and
@@ -180,7 +180,7 @@ class NGenericGluingPerms {
          * @param source the simplex facet under investigation.
          * @return the associated gluing permutation.
          */
-        NPerm<dim+1> gluingPerm(const FacetSpec<dim>& source) const;
+        Perm<dim+1> gluingPerm(const FacetSpec<dim>& source) const;
 
         /**
          * Returns the gluing permutation associated with the given
@@ -196,7 +196,7 @@ class NGenericGluingPerms {
          * investigation (between 0 and \a dim inclusive).
          * @return the associated gluing permutation.
          */
-        NPerm<dim+1> gluingPerm(unsigned simp, unsigned facet) const;
+        Perm<dim+1> gluingPerm(unsigned simp, unsigned facet) const;
 
         /**
          * Returns a newly created triangulation as modelled by this set
@@ -256,7 +256,7 @@ class NGenericGluingPerms {
         NGenericGluingPerms(const FacetPairing<dim>* pairing);
 
         /**
-         * Returns the index into array NPerm<dim+1>::Sn_1 describing how the
+         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
          * the given facet is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -272,7 +272,7 @@ class NGenericGluingPerms {
         int& permIndex(const FacetSpec<dim>& source);
 
         /**
-         * Returns the index into array NPerm<dim+1>::Sn_1 describing how the
+         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
          * the given facet is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -289,7 +289,7 @@ class NGenericGluingPerms {
         int& permIndex(unsigned simp, unsigned facet);
 
         /**
-         * Returns the index into array NPerm<dim+1>::Sn_1 describing how the
+         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
          * the given facet is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -305,7 +305,7 @@ class NGenericGluingPerms {
         const int& permIndex(const FacetSpec<dim>& source) const;
 
         /**
-         * Returns the index into array NPerm<dim+1>::Sn_1 describing how the
+         * Returns the index into array Perm<dim+1>::Sn_1 describing how the
          * the given facet is joined to its partner.
          *
          * Note that this permutation is not a gluing permutation as such,
@@ -322,12 +322,12 @@ class NGenericGluingPerms {
         const int& permIndex(unsigned simp, unsigned facet) const;
 
         /**
-         * Returns the index into array NPerm<dim+1>::Sn_1 corresponding to
+         * Returns the index into array Perm<dim+1>::Sn_1 corresponding to
          * the given gluing permutation from the given facet to its
-         * partner.  This need not be the index into NPerm<dim+1>::Sn_1 that
+         * partner.  This need not be the index into Perm<dim+1>::Sn_1 that
          * is currently stored for the given facet.
          *
-         * Indices into array NPerm<dim+1>::Sn_1 are stored internally in the
+         * Indices into array Perm<dim+1>::Sn_1 are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -341,20 +341,20 @@ class NGenericGluingPerms {
          * @param gluing a possible gluing permutation from the given
          * simplex facet to its partner according to the underlying
          * facet pairing.
-         * @return the index into NPerm<dim+1>::Sn_1 corresponding to the
+         * @return the index into Perm<dim+1>::Sn_1 corresponding to the
          * given gluing permutation; this will be between 0 and \a dim!-1
          * inclusive.
          */
         int gluingToIndex(const FacetSpec<dim>& source,
-            const NPerm<dim+1>& gluing) const;
+            const Perm<dim+1>& gluing) const;
 
         /**
-         * Returns the index into array NPerm<dim+1>::Sn_1 corresponding to
+         * Returns the index into array Perm<dim+1>::Sn_1 corresponding to
          * the given gluing permutation from the given facet to its
-         * partner.  This need not be the index into NPerm<dim+1>::Sn_1 that
+         * partner.  This need not be the index into Perm<dim+1>::Sn_1 that
          * is currently stored for the given facet.
          *
-         * Indices into array NPerm<dim+1>::Sn_1 are stored internally in the
+         * Indices into array Perm<dim+1>::Sn_1 are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -372,20 +372,20 @@ class NGenericGluingPerms {
          * @param gluing a possible gluing permutation from the given
          * simplex facet to its partner according to the underlying
          * facet pairing.
-         * @return the index into NPerm<dim+1>::Sn_1 corresponding to the
+         * @return the index into Perm<dim+1>::Sn_1 corresponding to the
          * given gluing permutation; this will be between 0 and \a dim!-1
          * inclusive.
          */
         int gluingToIndex(unsigned simp, unsigned facet,
-            const NPerm<dim+1>& gluing) const;
+            const Perm<dim+1>& gluing) const;
 
         /**
          * Returns the gluing permutation from the given facet to its
          * partner that corresponds to the given index into array
-         * NPerm<dim+1>::Sn_1.  This index into NPerm<dim+1>::Sn_1 need not
+         * Perm<dim+1>::Sn_1.  This index into Perm<dim+1>::Sn_1 need not
          * be the index that is currently stored for the given facet.
          *
-         * Indices into array NPerm<dim+1>::Sn_1 are stored internally in the
+         * Indices into array Perm<dim+1>::Sn_1 are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -398,21 +398,21 @@ class NGenericGluingPerms {
          * the underlying facet pairing, i.e., is not a boundary facet.
          *
          * @param source the simplex facet under investigation.
-         * @param index an index into NPerm<dim+1>::Sn_1; this must be
+         * @param index an index into Perm<dim+1>::Sn_1; this must be
          * between 0 and \a dim!-1 inclusive.
          * @return the gluing permutation corresponding to the given
-         * index into NPerm<dim+1>::Sn_1.
+         * index into Perm<dim+1>::Sn_1.
          */
-        NPerm<dim+1> indexToGluing(const FacetSpec<dim>& source, int index)
+        Perm<dim+1> indexToGluing(const FacetSpec<dim>& source, int index)
             const;
 
         /**
          * Returns the gluing permutation from the given facet to its
          * partner that corresponds to the given index into array
-         * NPerm<dim+1>::Sn_1.  This index into NPerm<dim+1>::Sn_1 need not
+         * Perm<dim+1>::Sn_1.  This index into Perm<dim+1>::Sn_1 need not
          * be the index that is currently stored for the given facet.
          *
-         * Indices into array NPerm<dim+1>::Sn_1 are stored internally in the
+         * Indices into array Perm<dim+1>::Sn_1 are stored internally in the
          * array \a permIndices_.  Full gluing permutations on the other
          * hand are used in constructing triangulations.
          *
@@ -429,12 +429,12 @@ class NGenericGluingPerms {
          * consideration.
          * @param facet the facet of the given simplex under
          * investigation; this must be between 0 and \a dim inclusive.
-         * @param index an index into NPerm<dim+1>::Sn_1; this must be
+         * @param index an index into Perm<dim+1>::Sn_1; this must be
          * between 0 and \a dim!-1 inclusive.
          * @return the gluing permutation corresponding to the given
-         * index into NPerm<dim+1>::Sn_1.
+         * index into Perm<dim+1>::Sn_1.
          */
-        NPerm<dim+1> indexToGluing(unsigned simp, unsigned facet, int index)
+        Perm<dim+1> indexToGluing(unsigned simp, unsigned facet, int index)
             const;
 };
 
@@ -479,13 +479,13 @@ inline const FacetPairing<dim>* NGenericGluingPerms<dim>::facetPairing()
 }
 
 template <int dim>
-inline NPerm<dim+1> NGenericGluingPerms<dim>::gluingPerm(
+inline Perm<dim+1> NGenericGluingPerms<dim>::gluingPerm(
         const FacetSpec<dim>& source) const {
     return indexToGluing(source, permIndex(source));
 }
 
 template <int dim>
-inline NPerm<dim+1> NGenericGluingPerms<dim>::gluingPerm(
+inline Perm<dim+1> NGenericGluingPerms<dim>::gluingPerm(
         unsigned simp, unsigned facet) const {
     return indexToGluing(simp, facet, permIndex(simp, facet));
 }
@@ -513,17 +513,17 @@ inline const int& NGenericGluingPerms<dim>::permIndex(
 }
 
 template <int dim>
-inline NPerm<dim+1> NGenericGluingPerms<dim>::indexToGluing(
+inline Perm<dim+1> NGenericGluingPerms<dim>::indexToGluing(
         const FacetSpec<dim>& source, int index) const {
-    return NPerm<dim+1>(pairing_->dest(source).facet, dim) *
-        NPerm<dim+1>::Sn_1[index] * NPerm<dim+1>(source.facet, dim);
+    return Perm<dim+1>(pairing_->dest(source).facet, dim) *
+        Perm<dim+1>::Sn_1[index] * Perm<dim+1>(source.facet, dim);
 }
 
 template <int dim>
-inline NPerm<dim+1> NGenericGluingPerms<dim>::indexToGluing(
+inline Perm<dim+1> NGenericGluingPerms<dim>::indexToGluing(
         unsigned simp, unsigned facet, int index) const {
-    return NPerm<dim+1>(pairing_->dest(simp, facet).facet, dim) *
-        NPerm<dim+1>::Sn_1[index] * NPerm<dim+1>(facet, dim);
+    return Perm<dim+1>(pairing_->dest(simp, facet).facet, dim) *
+        Perm<dim+1>::Sn_1[index] * Perm<dim+1>(facet, dim);
 }
 
 } // namespace regina

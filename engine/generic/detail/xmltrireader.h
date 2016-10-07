@@ -281,8 +281,8 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
         return;
 
     long simpIndex;
-    typename NPerm<dim + 1>::Code permCode;
-    NPerm<dim + 1> perm;
+    typename Perm<dim + 1>::Code permCode;
+    Perm<dim + 1> perm;
     Simplex<dim>* adjSimp;
     int adjFacet;
     for (int k = 0; k <= dim; ++k) {
@@ -293,7 +293,7 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
 
         if (simpIndex < 0 || simpIndex >= static_cast<long>(tri_->size()))
             continue;
-        if (! NPerm<dim + 1>::isPermCode(permCode))
+        if (! Perm<dim + 1>::isPermCode(permCode))
             continue;
 
         perm.setPermCode(permCode);

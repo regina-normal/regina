@@ -70,20 +70,20 @@ class FaceNumberingTest : public CppUnit::TestFixture {
     private:
         static const int n = dim + 1;
 
-        typedef regina::NPerm<n> NPerm;
-        typedef typename NPerm::Index Index;
+        typedef regina::Perm<n> Perm;
+        typedef typename Perm::Index Index;
 
         Index* idx;
         Index nIdx;
 
     public:
         void setUp() {
-            idx = new Index[(NPerm::nPerms / increment[n]) + 2];
+            idx = new Index[(Perm::nPerms / increment[n]) + 2];
             nIdx = 0;
-            for (Index i = 0; i < NPerm::nPerms; i += increment[n])
+            for (Index i = 0; i < Perm::nPerms; i += increment[n])
                 idx[nIdx++] = i;
-            if (idx[nIdx - 1] != NPerm::nPerms - 1)
-                idx[nIdx++] = NPerm::nPerms - 1;
+            if (idx[nIdx - 1] != Perm::nPerms - 1)
+                idx[nIdx++] = Perm::nPerms - 1;
         }
 
         void tearDown() {
@@ -92,7 +92,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
 
         void ordering() {
             for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
-                NPerm p = FaceNumbering<dim, subdim>::ordering(f);
+                Perm p = FaceNumbering<dim, subdim>::ordering(f);
 
                 for (int i = 0; i < subdim; ++i)
                     if (p[i] >= p[i + 1]) {
@@ -108,7 +108,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
 
         void faceNumber() {
             for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
-                NPerm p = FaceNumbering<dim, subdim>::ordering(f);
+                Perm p = FaceNumbering<dim, subdim>::ordering(f);
 
                 if (FaceNumbering<dim, subdim>::faceNumber(p) != f) {
                     std::ostringstream msg;
@@ -123,7 +123,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
         void containsVertex() {
             int v;
             for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
-                NPerm p = FaceNumbering<dim, subdim>::ordering(f);
+                Perm p = FaceNumbering<dim, subdim>::ordering(f);
 
                 for (v = 0; v <= subdim; ++v)
                     if (! FaceNumbering<dim, subdim>::containsVertex(f, p[v])) {

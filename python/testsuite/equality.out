@@ -1,7 +1,7 @@
 BY_VALUE
 BY_VALUE
 BY_REFERENCE
-NInteger:
+Integer:
 True False
 NAbelianGroup:
 True False

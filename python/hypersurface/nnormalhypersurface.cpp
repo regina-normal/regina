@@ -69,7 +69,7 @@ namespace {
         for (long i = 0; i < len; i++) {
             // Accept any type that we know how to convert to a large
             // integer.
-            extract<regina::NLargeInteger&> x_large(values[i]);
+            extract<regina::LargeInteger&> x_large(values[i]);
             if (x_large.check()) {
                 v->setElement(i, x_large());
                 continue;

@@ -34,7 +34,7 @@
 #include <cstring>
 #include <mutex>
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "snappea/snappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
@@ -456,11 +456,11 @@ void SnapPeaTriangulation::randomize() {
     sync();
 }
 
-NMatrixInt* SnapPeaTriangulation::gluingEquations() const {
+MatrixInt* SnapPeaTriangulation::gluingEquations() const {
     if (! data_)
         return 0;
 
-    NMatrixInt* matrix = new NMatrixInt(
+    MatrixInt* matrix = new MatrixInt(
         countEdges() + data_->num_cusps + countCompleteCusps(),
         3 * size());
 
@@ -504,13 +504,13 @@ NMatrixInt* SnapPeaTriangulation::gluingEquations() const {
     return matrix;
 }
 
-NMatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
+MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
     if (! data_)
         return 0;
 
     unsigned n = size();
 
-    NMatrixInt* matrix = new NMatrixInt(
+    MatrixInt* matrix = new MatrixInt(
         countEdges() + data_->num_cusps + countCompleteCusps(),
         2 * n + 1);
     // Note: all entries are automatically initialised to zero.
@@ -592,12 +592,12 @@ NMatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
 /**
  * Written by William Pettersson, 2011.
  */
-NMatrixInt* SnapPeaTriangulation::slopeEquations() const {
+MatrixInt* SnapPeaTriangulation::slopeEquations() const {
     if (! data_)
         return 0;
 
-    NMatrixInt* matrix =
-        new NMatrixInt(2*data_->num_cusps, 3*data_->num_tetrahedra);
+    MatrixInt* matrix =
+        new MatrixInt(2*data_->num_cusps, 3*data_->num_tetrahedra);
     int i,j;
     for(i=0; i< data_->num_cusps; i++) {
         int numRows;
@@ -867,7 +867,7 @@ void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
             if (! tet[i]->adjacentTetrahedron(j))
                 tet[i]->join(j,
                     tet[tData->tetrahedron_data[i].neighbor_index[j]],
-                    NPerm4(tData->tetrahedron_data[i].gluing[j]));
+                    Perm<4>(tData->tetrahedron_data[i].gluing[j]));
 
     delete[] tet;
     regina::snappea::free_triangulation_data(tData);

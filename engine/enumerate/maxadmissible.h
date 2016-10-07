@@ -96,7 +96,7 @@ class MaxAdmissible {
          * interior of \a F has <tt>x[i] &gt; 0</tt>.
          *
          * \pre The template argument RayIterator should be an iterator
-         * type that, when dereferenced, can be cast to a const NRay*.
+         * type that, when dereferenced, can be cast to a const Ray*.
          *
          * \pre The template argument BitmaskType is one of the bitmask
          * types Bitmask, Bitmask1 or Bitmask2.

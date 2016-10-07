@@ -388,7 +388,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
         }
     }
 
-    regina::NLargeInteger val = [HyperCoordinates getCoordinate:viewCoords surface:*s whichCoord:coord];
+    regina::LargeInteger val = [HyperCoordinates getCoordinate:viewCoords surface:*s whichCoord:coord];
     if (val.isZero())
         cell.textLabel.text = @"";
     else if (val.isInfinite())

@@ -62,7 +62,7 @@ void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
         return;
 
     long pos;
-    NLargeInteger value;
+    LargeInteger value;
     for (size_t i = 0; i < tokens.size(); i += 2) {
         if (valueOf(tokens[i], pos))
             if (valueOf(tokens[i + 1], value))

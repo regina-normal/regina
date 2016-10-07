@@ -562,10 +562,10 @@
     for (i = 0; i < nTets; i++) {
         tet = self.packet->tetrahedron(i);
         for (whichPerm = 0; whichPerm < 24 ; ++whichPerm) {
-            if (regina::NPerm4::S4[whichPerm][0] > regina::NPerm4::S4[whichPerm][3])
+            if (regina::Perm<4>::S4[whichPerm][0] > regina::Perm<4>::S4[whichPerm][3])
                 continue;
             
-            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet, regina::NPerm4::S4[whichPerm]);
+            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet, regina::Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
             if (! spiral->isCanonical(self.packet)) {
@@ -714,7 +714,7 @@
     }
 }
                  
-+ (NSString*)edgeStringForTet:(unsigned long)tetIndex roles:(const regina::NPerm4&)roles start:(int)startPreimage end:(int)endPreimage
++ (NSString*)edgeStringForTet:(unsigned long)tetIndex roles:(const regina::Perm<4>&)roles start:(int)startPreimage end:(int)endPreimage
 {
     return [NSString stringWithFormat:@"%ld (%d%d)", tetIndex, roles[startPreimage], roles[endPreimage]];
 }
@@ -738,7 +738,7 @@
                 regina::NEdge::edgeVertex[second][1]];
 }
 
-+ (NSString*)matrixString:(const regina::NMatrix2&)matrix
++ (NSString*)matrixString:(const regina::Matrix2&)matrix
 {
     return [NSString stringWithFormat:@"[ %ld %ld | %ld %ld ]",
             matrix[0][0], matrix[0][1], matrix[1][0], matrix[1][1]];

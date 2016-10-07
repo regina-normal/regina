@@ -44,7 +44,7 @@ using regina::NIsomorphism;
 namespace {
     int (NIsomorphism::*simpImage_const)(unsigned) const =
         &NIsomorphism::simpImage;
-    regina::NPerm4 (NIsomorphism::*facetPerm_const)(unsigned) const =
+    regina::Perm<4> (NIsomorphism::*facetPerm_const)(unsigned) const =
         &NIsomorphism::facetPerm;
 }
 

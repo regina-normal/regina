@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
@@ -60,9 +60,9 @@ namespace {
     GlobalArray2D<int> quadDefn_arr(regina::quadDefn, 3);
     GlobalArray2D<int> quadPartner_arr(regina::quadPartner, 3);
     GlobalArray<const char*> quadString_arr(quadString_1D, 3);
-    GlobalArray2D<regina::NPerm4> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
-    GlobalArray2D<regina::NPerm4> quadDiscArcs_arr(regina::__quadDiscArcs, 3, 4);
-    GlobalArray2D<regina::NPerm4> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
+    GlobalArray2D<regina::Perm<4>> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
+    GlobalArray2D<regina::Perm<4>> quadDiscArcs_arr(regina::__quadDiscArcs, 3, 4);
+    GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
 
     /**
      * A python-only constructor that lets users build a normal surface
@@ -84,7 +84,7 @@ namespace {
         for (long i = 0; i < len; i++) {
             // Accept any type that we know how to convert to a large
             // integer.
-            extract<regina::NLargeInteger&> x_large(values[i]);
+            extract<regina::LargeInteger&> x_large(values[i]);
             if (x_large.check()) {
                 v->setElement(i, x_large());
                 continue;

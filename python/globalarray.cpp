@@ -34,10 +34,7 @@
 // that breaks boost.python on MacOSX.
 #include "Python.h"
 
-#include "maths/nperm2.h"
-#include "maths/nperm3.h"
-#include "maths/nperm4.h"
-#include "maths/nperm5.h"
+#include "maths/perm.h"
 #include "globalarray.h"
 
 void addGlobalArray() {
@@ -46,12 +43,12 @@ void addGlobalArray() {
     regina::python::GlobalArray3D<int>::wrapClass("GlobalArray3D_int");
     regina::python::GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
     regina::python::GlobalArray<const char*>::wrapClass("GlobalArray_char_string");
-    regina::python::GlobalArray<regina::NPerm2>::wrapClass("GlobalArray_NPerm2");
-    regina::python::GlobalArray<regina::NPerm3>::wrapClass("GlobalArray_NPerm3");
-    regina::python::GlobalArray<regina::NPerm4>::wrapClass("GlobalArray_NPerm4");
-    regina::python::GlobalArray2D<regina::NPerm4>::wrapClass("GlobalArray2D_NPerm4");
-    regina::python::GlobalArray<regina::NPerm5>::wrapClass("GlobalArray_NPerm5");
-    regina::python::GlobalArray2D<regina::NPerm5>::wrapClass("GlobalArray2D_NPerm5");
-    regina::python::GlobalArray3D<regina::NPerm5>::wrapClass("GlobalArray3D_NPerm5");
+    regina::python::GlobalArray<regina::Perm<2>>::wrapClass("GlobalArray_Perm2");
+    regina::python::GlobalArray<regina::Perm<3>>::wrapClass("GlobalArray_Perm3");
+    regina::python::GlobalArray<regina::Perm<4>>::wrapClass("GlobalArray_Perm4");
+    regina::python::GlobalArray2D<regina::Perm<4>>::wrapClass("GlobalArray2D_Perm4");
+    regina::python::GlobalArray<regina::Perm<5>>::wrapClass("GlobalArray_Perm5");
+    regina::python::GlobalArray2D<regina::Perm<5>>::wrapClass("GlobalArray2D_Perm5");
+    regina::python::GlobalArray3D<regina::Perm<5>>::wrapClass("GlobalArray3D_Perm5");
 }
 
