@@ -1636,6 +1636,10 @@ class REGINA_API Link : public Packet {
          *   indicates that you pass under crossing \a i.  Empty lists
          *   are allowed (these denote separate unknot components).
          *
+         * - If a component has no crossings, then you should pass the
+         *   list { 0 }, not the empty list.  (This is because the
+         *   C++ compiler cannot deduce the type of an empty list.)
+         *
          * Be aware that, once the link has been constructed, the crossings
          * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
          * (since every Link object numbers its crossings starting from 0).

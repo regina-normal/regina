@@ -131,12 +131,8 @@ class LinkTest : public CppUnit::TestFixture {
 
             borromean = ExampleLink::borromean();
 
-            // Um.  How to pass an empty initialiser list that lets the
-            // compiler deduce the type?
-            // trefoil_unknot0 = Link::fromData(
-            //     { +1, +1, +1 }, { 1, -2, 3, -1, 2, -3 }, { });
-            trefoil_unknot0 = Link::fromJenkins(
-                "2   6 0 1 1 -1 2 1 0 -1 1 1 2 -1   0   0 1 1 1 2 1");
+            trefoil_unknot0 = Link::fromData({ 1, 1, 1 },
+                { 1, -2, 3, -1, 2, -3 }, { 0 });
             trefoil_unknot0->setLabel("Trefoil U unknot (separate)");
 
             trefoil_unknot1 = Link::fromData(
@@ -1489,13 +1485,8 @@ class LinkTest : public CppUnit::TestFixture {
                 "-+-+++ ( ^2 ^3 ) ( _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 _4 )");
             delete l;
 
-            l = Link::fromJenkins(
-                "4 "
-                "0 "
-                "10  0 -1  1 1  3 -1  2 1  1 -1  0 1  2 -1  3 1  4 1  4 -1 "
-                "0 "
-                "0 "
-                "0 1   1 1   2 -1   3 -1   4 -1");
+            l = Link::fromData({ 1, 1, -1, -1, -1 },
+                { 0 }, { -1, 2, -4, 3, -2, 1, -3, 4, 5, -5 }, { 0 }, { 0 });
             l->setLabel("Figure eight with twist and three unknots");
             verifyR1Up(l, -1, 0, 0, -1,
                 "++---- ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
