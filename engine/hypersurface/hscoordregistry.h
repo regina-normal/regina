@@ -46,9 +46,9 @@
  *  system in the registry.
  */
 
-#ifndef __HSFLAVOURREGISTRY_H
+#ifndef __HSCOORDREGISTRY_H
 #ifndef __DOXYGEN
-#define __HSFLAVOURREGISTRY_H
+#define __HSCOORDREGISTRY_H
 #endif
 
 #include "hypersurface/hypercoords.h"
