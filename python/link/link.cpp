@@ -131,7 +131,7 @@ void addLink() {
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<Link, bases<regina::NPacket>, SafeHeldType<Link>,
+    scope s = class_<Link, bases<regina::Packet>, SafeHeldType<Link>,
             boost::noncopyable>("Link", init<>())
         .def(init<size_t>())
         .def(init<const Link&>())
@@ -185,5 +185,5 @@ void addLink() {
     s.attr("homflyLMVarX") = Link::homflyLMVarX;
     s.attr("homflyLMVarY") = Link::homflyLMVarY;
 
-    implicitly_convertible<SafeHeldType<Link>, SafeHeldType<regina::NPacket>>();
+    implicitly_convertible<SafeHeldType<Link>, SafeHeldType<regina::Packet>>();
 }
