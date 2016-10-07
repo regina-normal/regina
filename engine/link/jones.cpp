@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "maths/ninteger.h"
 #include "maths/laurent.h"
 
 namespace regina {

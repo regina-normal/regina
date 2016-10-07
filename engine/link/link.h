@@ -42,8 +42,8 @@
 #include <vector>
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
+#include "maths/integer.h"
 #include "packet/packet.h"
-#include "maths/ninteger.h"
 #include "utilities/markedvector.h"
 
 namespace regina {

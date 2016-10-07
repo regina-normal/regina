@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "maths/ninteger.h"
 #include "maths/laurent2.h"
 
 // #define DUMP_STATES
