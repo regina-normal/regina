@@ -99,8 +99,8 @@ Triangulation<3>* Link::complement(bool simplify) const {
     // Empty link?  Just return the 3-sphere.
     if (components_.empty()) {
         NTetrahedron* t = ans->newTetrahedron();
-        t->join(0, t, NPerm4(0,1));
-        t->join(2, t, NPerm4(2,3));
+        t->join(0, t, Perm<4>(0,1));
+        t->join(2, t, Perm<4>(2,3));
         return ans;
     }
 
@@ -134,15 +134,15 @@ Triangulation<3>* Link::complement(bool simplify) const {
         for (j = 0; j < 4; ++j)
             ctet[i].tet[j] = ans->newTetrahedron();
         if (crossing(i)->sign() > 0) {
-            ctet[i].tet[0]->join(0, ctet[i].tet[1], NPerm4(2,3));
-            ctet[i].tet[1]->join(1, ctet[i].tet[2], NPerm4(2,3));
-            ctet[i].tet[2]->join(0, ctet[i].tet[3], NPerm4(2,3));
-            ctet[i].tet[3]->join(1, ctet[i].tet[0], NPerm4(2,3));
+            ctet[i].tet[0]->join(0, ctet[i].tet[1], Perm<4>(2,3));
+            ctet[i].tet[1]->join(1, ctet[i].tet[2], Perm<4>(2,3));
+            ctet[i].tet[2]->join(0, ctet[i].tet[3], Perm<4>(2,3));
+            ctet[i].tet[3]->join(1, ctet[i].tet[0], Perm<4>(2,3));
         } else {
-            ctet[i].tet[0]->join(1, ctet[i].tet[1], NPerm4(2,3));
-            ctet[i].tet[1]->join(0, ctet[i].tet[2], NPerm4(2,3));
-            ctet[i].tet[2]->join(1, ctet[i].tet[3], NPerm4(2,3));
-            ctet[i].tet[3]->join(0, ctet[i].tet[0], NPerm4(2,3));
+            ctet[i].tet[0]->join(1, ctet[i].tet[1], Perm<4>(2,3));
+            ctet[i].tet[1]->join(0, ctet[i].tet[2], Perm<4>(2,3));
+            ctet[i].tet[2]->join(1, ctet[i].tet[3], Perm<4>(2,3));
+            ctet[i].tet[3]->join(0, ctet[i].tet[0], Perm<4>(2,3));
         }
     }
 
@@ -164,21 +164,21 @@ Triangulation<3>* Link::complement(bool simplify) const {
         adj = s.crossing();
         if ((adj->sign() > 0 && s.strand() == 1) ||
                 (adj->sign() < 0 && s.strand() == 0)) {
-            ctet[i].tet[3]->join(2, ctet[adj->index()].tet[3], NPerm4(2,3));
-            ctet[i].tet[0]->join(3, ctet[adj->index()].tet[2], NPerm4(2,3));
+            ctet[i].tet[3]->join(2, ctet[adj->index()].tet[3], Perm<4>(2,3));
+            ctet[i].tet[0]->join(3, ctet[adj->index()].tet[2], Perm<4>(2,3));
         } else {
-            ctet[i].tet[3]->join(2, ctet[adj->index()].tet[2], NPerm4(2,3));
-            ctet[i].tet[0]->join(3, ctet[adj->index()].tet[1], NPerm4(2,3));
+            ctet[i].tet[3]->join(2, ctet[adj->index()].tet[2], Perm<4>(2,3));
+            ctet[i].tet[0]->join(3, ctet[adj->index()].tet[1], Perm<4>(2,3));
         }
 
         adj = t.crossing();
         if ((adj->sign() > 0 && t.strand() == 1) ||
                 (adj->sign() < 0 && t.strand() == 0)) {
-            ctet[i].tet[0]->join(2, ctet[adj->index()].tet[3], NPerm4(2,3));
-            ctet[i].tet[1]->join(3, ctet[adj->index()].tet[2], NPerm4(2,3));
+            ctet[i].tet[0]->join(2, ctet[adj->index()].tet[3], Perm<4>(2,3));
+            ctet[i].tet[1]->join(3, ctet[adj->index()].tet[2], Perm<4>(2,3));
         } else {
-            ctet[i].tet[0]->join(2, ctet[adj->index()].tet[2], NPerm4(2,3));
-            ctet[i].tet[1]->join(3, ctet[adj->index()].tet[1], NPerm4(2,3));
+            ctet[i].tet[0]->join(2, ctet[adj->index()].tet[2], Perm<4>(2,3));
+            ctet[i].tet[1]->join(3, ctet[adj->index()].tet[1], Perm<4>(2,3));
         }
     }
 
@@ -194,8 +194,8 @@ Triangulation<3>* Link::complement(bool simplify) const {
         // Build a 3-sphere for now; we will pick up the missing unknot
         // components shortly.
         NTetrahedron* t = ans->newTetrahedron();
-        t->join(0, t, NPerm4(0,1));
-        t->join(2, t, NPerm4(2,3));
+        t->join(0, t, Perm<4>(0,1));
+        t->join(2, t, Perm<4>(2,3));
     }
 
     if (! ans->isConnected()) {
@@ -241,9 +241,9 @@ Triangulation<3>* Link::complement(bool simplify) const {
 
         NTriangle* f = ans->triangle(0);
         NTetrahedron* tet0 = f->embedding(0).simplex();
-        NPerm4 vert0 = f->embedding(0).vertices();
+        Perm<4> vert0 = f->embedding(0).vertices();
         NTetrahedron* tet1 = f->embedding(1).simplex();
-        NPerm4 vert1 = f->embedding(1).vertices();
+        Perm<4> vert1 = f->embedding(1).vertices();
 
         ans->insertConstruction(6, puncturedUnknotAdjacencies,
             puncturedUnknotGluings);
@@ -251,8 +251,8 @@ Triangulation<3>* Link::complement(bool simplify) const {
         // Boundary triangles are 013 and 213.
 
         tet0->unjoin(vert0[3]);
-        unknotBdry->join(2, tet0, vert0 * NPerm4(3,2));
-        unknotBdry->join(0, tet1, vert1 * NPerm4(3,1,0,2));
+        unknotBdry->join(2, tet0, vert0 * Perm<4>(3,2));
+        unknotBdry->join(0, tet1, vert1 * Perm<4>(3,1,0,2));
 
         ++idealVertices;
     }
