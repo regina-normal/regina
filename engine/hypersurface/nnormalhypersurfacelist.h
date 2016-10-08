@@ -55,7 +55,6 @@ namespace regina {
 class NNormalHypersurface;
 class NNormalHypersurfaceList;
 class ProgressTracker;
-class NXMLNormalHypersurfaceListReader;
 class XMLPacketReader;
 
 template <typename> class MatrixIntDomain;
@@ -664,7 +663,7 @@ class REGINA_API NNormalHypersurfaceList : public Packet {
                 void fillFundamentalDual();
         };
 
-    friend class regina::NXMLNormalHypersurfaceListReader;
+    friend class XMLNormalHypersurfacesReader;
 };
 
 /**

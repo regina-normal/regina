@@ -49,7 +49,7 @@ class NNormalSurface;
 class NormalSurfaces;
 class NSurfaceFilter;
 class XMLPacketReader;
-class NXMLFilterReader;
+class XMLFilterReader;
 
 /**
  * \weakgroup surfaces
@@ -228,7 +228,7 @@ class REGINA_API NSurfaceFilter : public Packet {
          * tree matriarch.
          * @return the newly created XML filter reader.
          */
-        static NXMLFilterReader* xmlFilterReader(Packet* parent);
+        static XMLFilterReader* xmlFilterReader(Packet* parent);
 
         virtual void writeTextShort(std::ostream& out) const;
         static XMLPacketReader* xmlReader(Packet* parent,

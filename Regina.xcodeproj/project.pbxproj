@@ -548,11 +548,11 @@
 		052FA045180600FB00FAE4DF /* nsurfacefilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1F180600FB00FAE4DF /* nsurfacefilter.h */; };
 		052FA046180600FB00FAE4DF /* nsurfacesubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E20180600FB00FAE4DF /* nsurfacesubset.cpp */; };
 		052FA047180600FB00FAE4DF /* nsurfacesubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E21180600FB00FAE4DF /* nsurfacesubset.h */; };
-		052FA048180600FB00FAE4DF /* nxmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* nxmlfilterreader.cpp */; };
-		052FA049180600FB00FAE4DF /* nxmlfilterreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E23180600FB00FAE4DF /* nxmlfilterreader.h */; };
-		052FA04A180600FB00FAE4DF /* nxmlfilterreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E24180600FB00FAE4DF /* nxmlfilterreaders.cpp */; };
-		052FA04B180600FB00FAE4DF /* nxmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* nxmlsurfacereader.cpp */; };
-		052FA04C180600FB00FAE4DF /* nxmlsurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E26180600FB00FAE4DF /* nxmlsurfacereader.h */; };
+		052FA048180600FB00FAE4DF /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */; };
+		052FA049180600FB00FAE4DF /* xmlfilterreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E23180600FB00FAE4DF /* xmlfilterreader.h */; };
+		052FA04A180600FB00FAE4DF /* xmlfilterreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E24180600FB00FAE4DF /* xmlfilterreaders.cpp */; };
+		052FA04B180600FB00FAE4DF /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */; };
+		052FA04C180600FB00FAE4DF /* xmlsurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E26180600FB00FAE4DF /* xmlsurfacereader.h */; };
 		052FA04D180600FB00FAE4DF /* orientable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E27180600FB00FAE4DF /* orientable.cpp */; };
 		052FA04E180600FB00FAE4DF /* quadtostd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E28180600FB00FAE4DF /* quadtostd.cpp */; };
 		052FA04F180600FB00FAE4DF /* sfcombination.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E29180600FB00FAE4DF /* sfcombination.cpp */; };
@@ -760,9 +760,9 @@
 		052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1C180600FB00FAE4DF /* nsstandard.cpp */; };
 		052FA1E41806129B00FAE4DF /* nsurfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* nsurfacefilter.cpp */; };
 		052FA1E51806129B00FAE4DF /* nsurfacesubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E20180600FB00FAE4DF /* nsurfacesubset.cpp */; };
-		052FA1E61806129B00FAE4DF /* nxmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* nxmlfilterreader.cpp */; };
-		052FA1E71806129B00FAE4DF /* nxmlfilterreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E24180600FB00FAE4DF /* nxmlfilterreaders.cpp */; };
-		052FA1E81806129B00FAE4DF /* nxmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* nxmlsurfacereader.cpp */; };
+		052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */; };
+		052FA1E71806129B00FAE4DF /* xmlfilterreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E24180600FB00FAE4DF /* xmlfilterreaders.cpp */; };
+		052FA1E81806129B00FAE4DF /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */; };
 		052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E27180600FB00FAE4DF /* orientable.cpp */; };
 		052FA1EA1806129B00FAE4DF /* quadtostd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E28180600FB00FAE4DF /* quadtostd.cpp */; };
 		052FA1EB1806129B00FAE4DF /* sfcombination.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E29180600FB00FAE4DF /* sfcombination.cpp */; };
@@ -1353,14 +1353,14 @@
 		0591E7E11C4F750200793A9C /* nnormalhypersurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D31C4F750200793A9C /* nnormalhypersurface.h */; };
 		0591E7E21C4F750200793A9C /* nnormalhypersurfacelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */; };
 		0591E7E31C4F750200793A9C /* nnormalhypersurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D51C4F750200793A9C /* nnormalhypersurfacelist.h */; };
-		0591E7E41C4F750200793A9C /* nxmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* nxmlhypersurfacereader.cpp */; };
-		0591E7E51C4F750200793A9C /* nxmlhypersurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D71C4F750200793A9C /* nxmlhypersurfacereader.h */; };
+		0591E7E41C4F750200793A9C /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */; };
+		0591E7E51C4F750200793A9C /* xmlhypersurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */; };
 		0591E7E61C4F750200793A9C /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D81C4F750200793A9C /* triangulate.cpp */; };
 		0591E7E71C4F751B00793A9C /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7CE1C4F750200793A9C /* links.cpp */; };
 		0591E7E81C4F751B00793A9C /* nhsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* nhsstandard.cpp */; };
 		0591E7E91C4F751B00793A9C /* nnormalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* nnormalhypersurface.cpp */; };
 		0591E7EA1C4F751B00793A9C /* nnormalhypersurfacelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */; };
-		0591E7EB1C4F751B00793A9C /* nxmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* nxmlhypersurfacereader.cpp */; };
+		0591E7EB1C4F751B00793A9C /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */; };
 		0591E7EC1C4F751B00793A9C /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D81C4F750200793A9C /* triangulate.cpp */; };
 		0591E7F21C4F75C300793A9C /* dim4gluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7EE1C4F75C300793A9C /* dim4gluingperms.h */; };
 		0591E7F31C4F75C300793A9C /* dim4gluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7EF1C4F75C300793A9C /* dim4gluingpermsearcher.cpp */; };
@@ -2582,11 +2582,11 @@
 		052F9E1F180600FB00FAE4DF /* nsurfacefilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacefilter.h; sourceTree = "<group>"; };
 		052F9E20180600FB00FAE4DF /* nsurfacesubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacesubset.cpp; sourceTree = "<group>"; };
 		052F9E21180600FB00FAE4DF /* nsurfacesubset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacesubset.h; sourceTree = "<group>"; };
-		052F9E22180600FB00FAE4DF /* nxmlfilterreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlfilterreader.cpp; sourceTree = "<group>"; };
-		052F9E23180600FB00FAE4DF /* nxmlfilterreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlfilterreader.h; sourceTree = "<group>"; };
-		052F9E24180600FB00FAE4DF /* nxmlfilterreaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlfilterreaders.cpp; sourceTree = "<group>"; };
-		052F9E25180600FB00FAE4DF /* nxmlsurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlsurfacereader.cpp; sourceTree = "<group>"; };
-		052F9E26180600FB00FAE4DF /* nxmlsurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlsurfacereader.h; sourceTree = "<group>"; };
+		052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlfilterreader.cpp; sourceTree = "<group>"; };
+		052F9E23180600FB00FAE4DF /* xmlfilterreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlfilterreader.h; sourceTree = "<group>"; };
+		052F9E24180600FB00FAE4DF /* xmlfilterreaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlfilterreaders.cpp; sourceTree = "<group>"; };
+		052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlsurfacereader.cpp; sourceTree = "<group>"; };
+		052F9E26180600FB00FAE4DF /* xmlsurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlsurfacereader.h; sourceTree = "<group>"; };
 		052F9E27180600FB00FAE4DF /* orientable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = orientable.cpp; sourceTree = "<group>"; };
 		052F9E28180600FB00FAE4DF /* quadtostd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quadtostd.cpp; sourceTree = "<group>"; };
 		052F9E29180600FB00FAE4DF /* sfcombination.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sfcombination.cpp; sourceTree = "<group>"; };
@@ -3267,8 +3267,8 @@
 		0591E7D31C4F750200793A9C /* nnormalhypersurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurface.h; sourceTree = "<group>"; };
 		0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nnormalhypersurfacelist.cpp; sourceTree = "<group>"; };
 		0591E7D51C4F750200793A9C /* nnormalhypersurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurfacelist.h; sourceTree = "<group>"; };
-		0591E7D61C4F750200793A9C /* nxmlhypersurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlhypersurfacereader.cpp; sourceTree = "<group>"; };
-		0591E7D71C4F750200793A9C /* nxmlhypersurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlhypersurfacereader.h; sourceTree = "<group>"; };
+		0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlhypersurfacereader.cpp; sourceTree = "<group>"; };
+		0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlhypersurfacereader.h; sourceTree = "<group>"; };
 		0591E7D81C4F750200793A9C /* triangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulate.cpp; sourceTree = "<group>"; };
 		0591E7EE1C4F75C300793A9C /* dim4gluingperms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4gluingperms.h; sourceTree = "<group>"; };
 		0591E7EF1C4F75C300793A9C /* dim4gluingpermsearcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4gluingpermsearcher.cpp; sourceTree = "<group>"; };
@@ -4832,11 +4832,6 @@
 				052F9E1F180600FB00FAE4DF /* nsurfacefilter.h */,
 				052F9E20180600FB00FAE4DF /* nsurfacesubset.cpp */,
 				052F9E21180600FB00FAE4DF /* nsurfacesubset.h */,
-				052F9E22180600FB00FAE4DF /* nxmlfilterreader.cpp */,
-				052F9E23180600FB00FAE4DF /* nxmlfilterreader.h */,
-				052F9E24180600FB00FAE4DF /* nxmlfilterreaders.cpp */,
-				052F9E25180600FB00FAE4DF /* nxmlsurfacereader.cpp */,
-				052F9E26180600FB00FAE4DF /* nxmlsurfacereader.h */,
 				052F9E27180600FB00FAE4DF /* orientable.cpp */,
 				052F9E28180600FB00FAE4DF /* quadtostd.cpp */,
 				052F9E29180600FB00FAE4DF /* sfcombination.cpp */,
@@ -4845,6 +4840,11 @@
 				052F9E2C180600FB00FAE4DF /* sfproperties.h */,
 				052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */,
 				055DDCEE1808575300C973FB /* surfacefiltertype.h */,
+				052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */,
+				052F9E23180600FB00FAE4DF /* xmlfilterreader.h */,
+				052F9E24180600FB00FAE4DF /* xmlfilterreaders.cpp */,
+				052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */,
+				052F9E26180600FB00FAE4DF /* xmlsurfacereader.h */,
 			);
 			path = surfaces;
 			sourceTree = "<group>";
@@ -5804,9 +5804,9 @@
 				0591E7D31C4F750200793A9C /* nnormalhypersurface.h */,
 				0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */,
 				0591E7D51C4F750200793A9C /* nnormalhypersurfacelist.h */,
-				0591E7D61C4F750200793A9C /* nxmlhypersurfacereader.cpp */,
-				0591E7D71C4F750200793A9C /* nxmlhypersurfacereader.h */,
 				0591E7D81C4F750200793A9C /* triangulate.cpp */,
+				0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */,
+				0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */,
 			);
 			path = hypersurface;
 			sourceTree = "<group>";
@@ -6103,7 +6103,7 @@
 				05431F141C40F257009BC072 /* simplex.h in Headers */,
 				052FA061180600FB00FAE4DF /* nedge.h in Headers */,
 				053CAB2E1DA710FE00A92F98 /* perm4.h in Headers */,
-				052FA049180600FB00FAE4DF /* nxmlfilterreader.h in Headers */,
+				052FA049180600FB00FAE4DF /* xmlfilterreader.h in Headers */,
 				052F9EC6180600FB00FAE4DF /* hilbertcd-impl.h in Headers */,
 				052F9EFB180600FB00FAE4DF /* treetraversal.h in Headers */,
 				052F9FA4180600FB00FAE4DF /* triangulation.h in Headers */,
@@ -6154,7 +6154,7 @@
 				052FA098180600FB00FAE4DF /* tritmask.h in Headers */,
 				052F9EFE180600FB00FAE4DF /* typetrie.h in Headers */,
 				050C64C01DA32E7D00C9420F /* nhilbertcd.h in Headers */,
-				052FA04C180600FB00FAE4DF /* nxmlsurfacereader.h in Headers */,
+				052FA04C180600FB00FAE4DF /* xmlsurfacereader.h in Headers */,
 				050C64C21DA32E7D00C9420F /* nhilbertdual.h in Headers */,
 				052FA031180600FB00FAE4DF /* normalcoords.h in Headers */,
 				052FA024180600FB00FAE4DF /* filterregistry.h in Headers */,
@@ -6277,7 +6277,7 @@
 				052F9F38180600FB00FAE4DF /* approx.h in Headers */,
 				050C64B21DA3085C00C9420F /* nbooleans.h in Headers */,
 				052FA03B180600FB00FAE4DF /* nsoriented.h in Headers */,
-				0591E7E51C4F750200793A9C /* nxmlhypersurfacereader.h in Headers */,
+				0591E7E51C4F750200793A9C /* xmlhypersurfacereader.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,
 				052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */,
 				05074A7C1DA47E060007773C /* nvector.h in Headers */,
@@ -7229,7 +7229,7 @@
 				052FA1931806129B00FAE4DF /* nmanifold.cpp in Sources */,
 				052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */,
 				0591E84E1C4F777000793A9C /* dim4facetpairing.cpp in Sources */,
-				052FA1E61806129B00FAE4DF /* nxmlfilterreader.cpp in Sources */,
+				052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
 				05D1174319EE01A1003BEC55 /* dim2census.cpp in Sources */,
 				053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */,
@@ -7413,7 +7413,7 @@
 				052FA226180612DD00FAE4DF /* gluing_equations.c in Sources */,
 				052FA222180612DD00FAE4DF /* filling.c in Sources */,
 				05D1174819EE01AA003BEC55 /* ngrouppresentation.cpp in Sources */,
-				052FA1E81806129B00FAE4DF /* nxmlsurfacereader.cpp in Sources */,
+				052FA1E81806129B00FAE4DF /* xmlsurfacereader.cpp in Sources */,
 				052FA18F1806129B00FAE4DF /* ngraphpair.cpp in Sources */,
 				05C064731C56E460006E6483 /* Dim4TriSkeleton.mm in Sources */,
 				05D1173A19EE0197003BEC55 /* integer.cpp in Sources */,
@@ -7426,7 +7426,7 @@
 				057F317419B8935800D30520 /* Example.mm in Sources */,
 				052FA1991806129B00FAE4DF /* order.cpp in Sources */,
 				055B7316181D7CF800449D14 /* dim2vertex.cpp in Sources */,
-				052FA1E71806129B00FAE4DF /* nxmlfilterreaders.cpp in Sources */,
+				052FA1E71806129B00FAE4DF /* xmlfilterreaders.cpp in Sources */,
 				05D1174119EE0197003BEC55 /* permconv.cpp in Sources */,
 				0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */,
 				052FA1B21806129B00FAE4DF /* nsigcensus.cpp in Sources */,
@@ -7475,7 +7475,7 @@
 				0591E7C71C4F74E100793A9C /* simplifyglobal.cpp in Sources */,
 				054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */,
 				05D1173119EE0172003BEC55 /* ntriangulation.cpp in Sources */,
-				0591E7EB1C4F751B00793A9C /* nxmlhypersurfacereader.cpp in Sources */,
+				0591E7EB1C4F751B00793A9C /* xmlhypersurfacereader.cpp in Sources */,
 				052FA216180612DD00FAE4DF /* chern_simons.c in Sources */,
 				05FEA07B19C1890900A31924 /* examplesnappea.cpp in Sources */,
 				052FA238180612DD00FAE4DF /* tidy_peripheral_curves.c in Sources */,
@@ -7875,7 +7875,7 @@
 				052FA07C180600FB00FAE4DF /* simplify.cpp in Sources */,
 				052FA040180600FB00FAE4DF /* nsquadoct.cpp in Sources */,
 				052F9FE0180600FB00FAE4DF /* nsigcensus.cpp in Sources */,
-				052FA04A180600FB00FAE4DF /* nxmlfilterreaders.cpp in Sources */,
+				052FA04A180600FB00FAE4DF /* xmlfilterreaders.cpp in Sources */,
 				05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */,
 				052F9F34180600FB00FAE4DF /* ntorusbundle.cpp in Sources */,
 				052F9F6C180600FB00FAE4DF /* canonize.c in Sources */,
@@ -7944,7 +7944,7 @@
 				052F9EA9180600FB00FAE4DF /* ngluingpermsearcher.cpp in Sources */,
 				05A73CAD19B2EFF90099C617 /* open.cpp in Sources */,
 				052F9F59180600FB00FAE4DF /* pdf.cpp in Sources */,
-				052FA04B180600FB00FAE4DF /* nxmlsurfacereader.cpp in Sources */,
+				052FA04B180600FB00FAE4DF /* xmlsurfacereader.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* nfacepair.cpp in Sources */,
 				052F9F5D180600FB00FAE4DF /* text.cpp in Sources */,
 				0591E7B71C4F74C400793A9C /* simplify.cpp in Sources */,
@@ -7973,7 +7973,7 @@
 				0528AA121D9A36C1000CAC20 /* snappea.cpp in Sources */,
 				052FA059180600FB00FAE4DF /* homology.cpp in Sources */,
 				052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */,
-				0591E7E41C4F750200793A9C /* nxmlhypersurfacereader.cpp in Sources */,
+				0591E7E41C4F750200793A9C /* xmlhypersurfacereader.cpp in Sources */,
 				052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */,
 				052F9E89180600FB00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
 				05A73CA419B2EF5A0099C617 /* Moebius_transformations.c in Sources */,
@@ -8024,7 +8024,7 @@
 				050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
 				052FA042180600FB00FAE4DF /* nsstandard.cpp in Sources */,
-				052FA048180600FB00FAE4DF /* nxmlfilterreader.cpp in Sources */,
+				052FA048180600FB00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				052FA04F180600FB00FAE4DF /* sfcombination.cpp in Sources */,
 				052FA07D180600FB00FAE4DF /* simplifyglobal.cpp in Sources */,
 				052F9F7D180600FB00FAE4DF /* Dehn_coefficients.c in Sources */,

@@ -202,7 +202,6 @@ REGINA_API extern const Perm<4> __octDiscArcs[24];
 #endif
 
 class EnumConstraints;
-class NXMLNormalSurfaceReader;
 
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
@@ -1632,7 +1631,7 @@ class REGINA_API NNormalSurface :
          */
         void calculateRealBoundary() const;
 
-    friend class regina::NXMLNormalSurfaceReader;
+    friend class XMLNormalSurfaceReader;
 };
 
 /*@}*/

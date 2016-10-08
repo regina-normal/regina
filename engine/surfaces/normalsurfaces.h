@@ -55,7 +55,6 @@ namespace regina {
 class NormalSurfaces;
 class ProgressTracker;
 class XMLPacketReader;
-class NXMLNormalSurfaceListReader;
 
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
@@ -1362,7 +1361,7 @@ class REGINA_API NormalSurfaces : public Packet {
                 void fillFundamentalFullCone();
         };
 
-    friend class regina::NXMLNormalSurfaceListReader;
+    friend class XMLNormalSurfacesReader;
 };
 
 /**

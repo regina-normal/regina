@@ -21,9 +21,9 @@ SET ( FILES
   nsstandard
   nsurfacefilter
   nsurfacesubset
-  nxmlfilterreader
-  nxmlfilterreaders
-  nxmlsurfacereader
+  xmlfilterreader
+  xmlfilterreaders
+  xmlsurfacereader
   orientable
   quadtostd
   sfcombination
@@ -63,8 +63,8 @@ if (${REGINA_INSTALL_DEV})
     nsstandard.h
     nsurfacefilter.h
     nsurfacesubset.h
-    nxmlfilterreader.h
-    nxmlsurfacereader.h
+    xmlfilterreader.h
+    xmlsurfacereader.h
     sfcombination.h
     sfproperties.h
     surfacefiltertype.h

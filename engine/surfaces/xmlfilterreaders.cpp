@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <list>
-#include "surfaces/nxmlfilterreader.h"
+#include "surfaces/xmlfilterreader.h"
 #include "surfaces/sfcombination.h"
 #include "surfaces/sfproperties.h"
 #include "utilities/stringutils.h"
@@ -45,12 +45,12 @@ namespace {
     /**
      * Reads a plain (non-subclassed) NSurfaceFilter.
      */
-    class NPlainFilterReader : public NXMLFilterReader {
+    class PlainFilterReader : public XMLFilterReader {
         private:
             NSurfaceFilter* filter_;
 
         public:
-            NPlainFilterReader() : filter_(new NSurfaceFilter()) {
+            PlainFilterReader() : filter_(new NSurfaceFilter()) {
             }
 
             virtual NSurfaceFilter* filter() {
@@ -61,12 +61,12 @@ namespace {
     /**
      * Reads a NSurfaceFilterCombination filter.
      */
-    class NCombinationReader : public NXMLFilterReader {
+    class CombinationReader : public XMLFilterReader {
         private:
             NSurfaceFilterCombination* filter_;
 
         public:
-            NCombinationReader() : filter_(0) {
+            CombinationReader() : filter_(0) {
             }
 
             virtual NSurfaceFilter* filter() {
@@ -93,12 +93,12 @@ namespace {
     /**
      * Reads a NSurfaceFilterProperties filter.
      */
-    class NPropertiesReader : public NXMLFilterReader {
+    class PropertiesReader : public XMLFilterReader {
         private:
             NSurfaceFilterProperties* filter_;
 
         public:
-            NPropertiesReader() : filter_(new NSurfaceFilterProperties()) {
+            PropertiesReader() : filter_(new NSurfaceFilterProperties()) {
             }
 
             virtual NSurfaceFilter* filter() {
@@ -143,16 +143,16 @@ namespace {
     };
 }
 
-NXMLFilterReader* NSurfaceFilter::xmlFilterReader(Packet*) {
-    return new NPlainFilterReader();
+XMLFilterReader* NSurfaceFilter::xmlFilterReader(Packet*) {
+    return new PlainFilterReader();
 }
 
-NXMLFilterReader* NSurfaceFilterCombination::xmlFilterReader(Packet*) {
-    return new NCombinationReader();
+XMLFilterReader* NSurfaceFilterCombination::xmlFilterReader(Packet*) {
+    return new CombinationReader();
 }
 
-NXMLFilterReader* NSurfaceFilterProperties::xmlFilterReader(Packet*) {
-    return new NPropertiesReader();
+XMLFilterReader* NSurfaceFilterProperties::xmlFilterReader(Packet*) {
+    return new PropertiesReader();
 }
 
 } // namespace regina

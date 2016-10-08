@@ -30,61 +30,62 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/nxmlsurfacereader.h
- *  \brief Deals with parsing XML data for normal surface lists.
+/*! \file hypersurface/xmlhypersurfacereader.h
+ *  \brief Deals with parsing XML data for normal hypersurface lists.
  */
 
-#ifndef __NXMLSURFACEREADER_H
+#ifndef __XMLHYPERSURFACEREADER_H
 #ifndef __DOXYGEN
-#define __NXMLSURFACEREADER_H
+#define __XMLHYPERSURFACEREADER_H
 #endif
 
 #include "regina-core.h"
+#include "hypersurface/nnormalhypersurfacelist.h"
 #include "packet/xmlpacketreader.h"
-#include "surfaces/normalsurfaces.h"
 
 namespace regina {
 
 /**
- * \weakgroup surfaces
+ * \weakgroup hypersurface
  * @{
  */
 
 /**
- * An XML element reader that reads a single normal surface.
+ * An XML element reader that reads a single normal hypersurface in a
+ * 4-manifold triangulation.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLNormalSurfaceReader : public XMLElementReader {
+class REGINA_API XMLNormalHypersurfaceReader : public XMLElementReader {
     private:
-        NNormalSurface* surface_;
-            /**< The normal surface currently being read. */
-        const NTriangulation* tri;
-            /**< The triangulation in which this surface lives. */
-        NormalCoords coords;
-            /**< The coordinate system used by this surface. */
-        long vecLen;
-            /**< The length of corresponding normal surface vector. */
-        std::string name;
-            /**< The optional name associated with this normal surface. */
+        NNormalHypersurface* surface_;
+            /**< The normal hypersurface currently being read. */
+        const Dim4Triangulation* tri_;
+            /**< The triangulation in which this hypersurface lives. */
+        HyperCoords coords_;
+            /**< The coordinate system used by this hypersurface. */
+        long vecLen_;
+            /**< The length of corresponding normal hypersurface vector. */
+        std::string name_;
+            /**< The optional name associated with this normal hypersurface. */
 
     public:
         /**
-         * Creates a new normal surface reader.
+         * Creates a new normal hypersurface reader.
          *
-         * @param newTri the triangulation in which this normal surface lives.
-         * @param newCoords the coordinate system used by this normal surface.
+         * @param tri the triangulation in which this normal hypersurface lives.
+         * @param coords the coordinate system used by this normal hypersurface.
          */
-        NXMLNormalSurfaceReader(const NTriangulation* newTri,
-            NormalCoords newCoords);
+        XMLNormalHypersurfaceReader(const Dim4Triangulation* tri,
+            HyperCoords coords);
 
         /**
-         * Returns the normal surface that has been read.
+         * Returns the normal hypersurface that has been read.
          *
-         * @return the newly allocated normal surface, or 0 if an error
+         * @return the newly allocated normal hypersurface, or 0 if an error
          * occurred.
          */
-        NNormalSurface* surface();
+        NNormalHypersurface* hypersurface();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -96,29 +97,30 @@ class REGINA_API NXMLNormalSurfaceReader : public XMLElementReader {
 };
 
 /**
- * An XML packet reader that reads a single normal surface list.
+ * An XML packet reader that reads a single normal hypersurface list.
  *
  * \pre The parent XML element reader is in fact an
  * NXMLTriangulationReader.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLNormalSurfaceListReader : public XMLPacketReader {
+class REGINA_API XMLNormalHypersurfacesReader : public XMLPacketReader {
     private:
-        NormalSurfaces* list;
-            /**< The normal surface list currently being read. */
-        const NTriangulation* tri;
-            /**< The triangulation in which these normal surfaces live. */
+        NNormalHypersurfaceList* list_;
+            /**< The normal hypersurface list currently being read. */
+        const Dim4Triangulation* tri_;
+            /**< The triangulation in which these normal hypersurfaces live. */
 
     public:
         /**
-         * Creates a new normal surface list reader.
+         * Creates a new normal hypersurface list reader.
          *
-         * @param newTri the triangulation in which these normal surfaces live.
+         * @param tri the triangulation in which these normal hypersurfaces
+         * live.
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLNormalSurfaceListReader(const NTriangulation* newTri,
+        XMLNormalHypersurfacesReader(const Dim4Triangulation* tri,
             XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
@@ -131,26 +133,26 @@ class REGINA_API NXMLNormalSurfaceListReader : public XMLPacketReader {
 
 /*@}*/
 
-// Inline functions for NXMLNormalSurfaceReader
+// Inline functions for XMLNormalHypersurfaceReader
 
-inline NXMLNormalSurfaceReader::NXMLNormalSurfaceReader(
-        const NTriangulation* newTri, NormalCoords newCoords) :
-        surface_(0), tri(newTri), coords(newCoords), vecLen(-1) {
+inline XMLNormalHypersurfaceReader::XMLNormalHypersurfaceReader(
+        const Dim4Triangulation* tri, HyperCoords coords) :
+        surface_(0), tri_(tri), coords_(coords), vecLen_(-1) {
 }
 
-inline NNormalSurface* NXMLNormalSurfaceReader::surface() {
+inline NNormalHypersurface* XMLNormalHypersurfaceReader::hypersurface() {
     return surface_;
 }
 
-// Inline functions for NXMLNormalSurfaceListReader
+// Inline functions for XMLNormalHypersurfacesReader
 
-inline NXMLNormalSurfaceListReader::NXMLNormalSurfaceListReader(
-        const NTriangulation* newTri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), list(0), tri(newTri) {
+inline XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
+        const Dim4Triangulation* tri, XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), list_(0), tri_(tri) {
 }
 
-inline Packet* NXMLNormalSurfaceListReader::packet() {
-    return list;
+inline Packet* XMLNormalHypersurfacesReader::packet() {
+    return list_;
 }
 
 } // namespace regina

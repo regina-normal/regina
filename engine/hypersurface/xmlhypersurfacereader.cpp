@@ -31,23 +31,23 @@
  **************************************************************************/
 
 #include <vector>
-#include "surfaces/coordregistry.h"
-#include "surfaces/nxmlsurfacereader.h"
-#include "triangulation/ntriangulation.h"
+#include "dim4/dim4triangulation.h"
+#include "hypersurface/xmlhypersurfacereader.h"
+#include "hypersurface/hscoordregistry.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
 
-void NXMLNormalSurfaceReader::startElement(const std::string&,
+void XMLNormalHypersurfaceReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
         XMLElementReader*) {
-    if (! valueOf(props.lookup("len"), vecLen))
-        vecLen = -1;
-    name = props.lookup("name");
+    if (! valueOf(props.lookup("len"), vecLen_))
+        vecLen_ = -1;
+    name_ = props.lookup("name");
 }
 
-void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
-    if (vecLen < 0 || tri == 0)
+void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
+    if (vecLen_ < 0 || tri_ == 0)
         return;
 
     std::vector<std::string> tokens;
@@ -56,20 +56,17 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
 
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the coordinate system registry...
-    NNormalSurfaceVector* vec;
-    if (coords == NS_AN_LEGACY)
-        vec = new NNormalSurfaceVectorANStandard(vecLen);
-    else
-        vec = forCoords(coords, NewFunction<NNormalSurfaceVector>(), 0, vecLen);
+    NNormalHypersurfaceVector* vec = forCoords(coords_,
+        NewFunction<NNormalHypersurfaceVector>(), 0, vecLen_);
     if (! vec)
         return;
 
     long pos;
     LargeInteger value;
-    for (unsigned long i = 0; i < tokens.size(); i += 2) {
+    for (size_t i = 0; i < tokens.size(); i += 2) {
         if (valueOf(tokens[i], pos))
             if (valueOf(tokens[i + 1], value))
-                if (pos >= 0 && pos < vecLen) {
+                if (pos >= 0 && pos < vecLen_) {
                     // All looks valid.
                     vec->setElement(pos, value);
                     continue;
@@ -80,54 +77,38 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
     }
 
-    surface_ = new NNormalSurface(tri, vec);
-    if (! name.empty())
-        surface_->setName(name);
+    surface_ = new NNormalHypersurface(tri_, vec);
+    if (! name_.empty())
+        surface_->setName(name_);
 }
 
-XMLElementReader* NXMLNormalSurfaceReader::startSubElement(
+XMLElementReader* XMLNormalHypersurfaceReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (! surface_)
         return new XMLElementReader();
 
-    if (subTagName == "euler") {
-        LargeInteger val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->eulerChar_ = val;
-    } else if (subTagName == "orbl") {
+    if (subTagName == "realbdry") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface_->orientable = val;
-    } else if (subTagName == "twosided") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->twoSided = val;
-    } else if (subTagName == "connected") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->connected = val;
-    } else if (subTagName == "realbdry") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->realBoundary = val;
+            surface_->realBoundary_ = val;
     } else if (subTagName == "compact") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface_->compact = val;
+            surface_->compact_ = val;
     }
     return new XMLElementReader();
 }
 
-XMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
+XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if (list) {
-        // The surface list has already been created.
-        if (subTagName == "surface")
-            return new NXMLNormalSurfaceReader(tri, list->coords_);
+    if (list_) {
+        // The hypersurface list has already been created.
+        if (subTagName == "hypersurface")
+            return new XMLNormalHypersurfaceReader(tri_, list_->coords_);
     } else {
-        // The surface list has not yet been created.
+        // The hypersurface list has not yet been created.
         if (subTagName == "params") {
             long coords;
             int listType, algorithm;
@@ -136,17 +117,17 @@ XMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list = new NormalSurfaces(
-                        static_cast<NormalCoords>(coords),
-                        NormalList::fromInt(listType),
-                        NormalAlg::fromInt(algorithm));
+                    list_ = new NNormalHypersurfaceList(
+                        static_cast<HyperCoords>(coords),
+                        HyperList::fromInt(listType),
+                        HyperAlg::fromInt(algorithm));
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
-                    // Parameters look sane but use the old format.
-                    list = new NormalSurfaces(
-                        static_cast<NormalCoords>(coords),
-                        NS_LEGACY | (embedded ?
-                            NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-                        NS_ALG_LEGACY);
+                    // Parameters look sane but use the old prerelease format.
+                    list_ = new NNormalHypersurfaceList(
+                        static_cast<HyperCoords>(coords),
+                        HS_LEGACY | (embedded ?
+                            HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
+                        HS_ALG_LEGACY);
                 }
             }
         }
@@ -154,21 +135,21 @@ XMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
     return new XMLElementReader();
 }
 
-void NXMLNormalSurfaceListReader::endContentSubElement(
+void XMLNormalHypersurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (list)
-        if (subTagName == "surface")
-            if (NNormalSurface* s =
-                    dynamic_cast<NXMLNormalSurfaceReader*>(subReader)->
-                    surface())
-                list->surfaces.push_back(s);
+    if (list_)
+        if (subTagName == "hypersurface")
+            if (NNormalHypersurface* s =
+                    dynamic_cast<XMLNormalHypersurfaceReader*>(subReader)->
+                    hypersurface())
+                list_->surfaces_.push_back(s);
 }
 
-XMLPacketReader* NormalSurfaces::xmlReader(Packet* parent,
+XMLPacketReader* NNormalHypersurfaceList::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
-    return new NXMLNormalSurfaceListReader(
-        dynamic_cast<NTriangulation*>(parent), resolver);
+    return new XMLNormalHypersurfacesReader(
+        dynamic_cast<Dim4Triangulation*>(parent), resolver);
 }
 
 } // namespace regina

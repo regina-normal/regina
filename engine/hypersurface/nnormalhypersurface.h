@@ -59,7 +59,6 @@ namespace regina {
  */
 
 class EnumConstraints;
-class NXMLNormalHypersurfaceReader;
 
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
@@ -877,7 +876,7 @@ class REGINA_API NNormalHypersurface :
          */
         void calculateFromTriangulation() const;
 
-    friend class regina::NXMLNormalHypersurfaceReader;
+    friend class XMLNormalHypersurfaceReader;
 };
 
 /*@}*/

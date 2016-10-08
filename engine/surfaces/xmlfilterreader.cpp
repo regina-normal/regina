@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/nxmlfilterreader.h"
+#include "surfaces/xmlfilterreader.h"
 #include "surfaces/filterregistry.h"
 #include "utilities/stringutils.h"
 
@@ -45,7 +45,7 @@ namespace {
     };
 }
 
-XMLElementReader* NXMLFilterPacketReader::startContentSubElement(
+XMLElementReader* XMLFilterPacketReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (! filter_)
@@ -58,23 +58,23 @@ XMLElementReader* NXMLFilterPacketReader::startContentSubElement(
                 if (ans)
                     return ans;
                 else
-                    return new NXMLFilterReader();
+                    return new XMLFilterReader();
             }
         }
     return new XMLElementReader();
 }
 
-void NXMLFilterPacketReader::endContentSubElement(
+void XMLFilterPacketReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (! filter_)
         if (subTagName == "filter")
-            filter_ = dynamic_cast<NXMLFilterReader*>(subReader)->filter();
+            filter_ = dynamic_cast<XMLFilterReader*>(subReader)->filter();
 }
 
 XMLPacketReader* NSurfaceFilter::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
-    return new NXMLFilterPacketReader(parent, resolver);
+    return new XMLFilterPacketReader(parent, resolver);
 }
 
 } // namespace regina
