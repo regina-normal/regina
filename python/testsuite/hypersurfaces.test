@@ -54,13 +54,13 @@ def dumpSurfaces(name, slist):
 
 def surfaceStats(tri):
 	dumpSurfaces('Vertex hypersurfaces (std)',
-		regina.NNormalHypersurfaceList.enumerate(tri,
+		regina.NormalHypersurfaces.enumerate(tri,
 		regina.HS_STANDARD, regina.HS_VERTEX))
 	dumpSurfaces('Fundamental surfaces (std, primal)',
-		regina.NNormalHypersurfaceList.enumerate(tri,
+		regina.NormalHypersurfaces.enumerate(tri,
 			regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_PRIMAL))
 	dumpSurfaces('Fundamental surfaces (std, dual)',
-		regina.NNormalHypersurfaceList.enumerate(tri,
+		regina.NormalHypersurfaces.enumerate(tri,
 		regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL))
 
 t = regina.Dim4Triangulation()
