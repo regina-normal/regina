@@ -37,11 +37,11 @@
 // UI includes:
 #include "coordinates.h"
 #include "dim4triui.h"
-#include "nhypersurfaceui.h"
-#include "nhypercompatui.h"
-#include "nhypercoordinateui.h"
-#include "nhypermatchingui.h"
-#include "nhypersummaryui.h"
+#include "hyperui.h"
+#include "hypercompatui.h"
+#include "hypercoordinateui.h"
+#include "hypermatchingui.h"
+#include "hypersummaryui.h"
 #include "reginamain.h"
 
 #include <QLabel>
@@ -51,36 +51,36 @@
 using regina::Packet;
 using regina::NNormalHypersurface;
 
-NHyperSurfaceUI::NHyperSurfaceUI(regina::NNormalHypersurfaceList* packet,
+HyperUI::HyperUI(regina::NNormalHypersurfaceList* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabHypersurfaceList) {
-    NHyperHeaderUI* header = new NHyperHeaderUI(packet, this);
+    HyperHeaderUI* header = new HyperHeaderUI(packet, this);
     addHeader(header);
 
     // WARNING: If these tabs are reordered, the code below that sets
     // the default tab must be updated accordingly.
-    addTab(new NHyperSummaryUI(packet, this), tr("&Summary"));
+    addTab(new HyperSummaryUI(packet, this), tr("&Summary"));
 
-    coords = new NHyperCoordinateUI(packet, this,
+    coords = new HyperCoordinateUI(packet, this,
         newEnclosingPane->isReadWrite());
     addTab(coords, tr("Hypersurface &Coordinates"));
 
-    addTab(new NHyperMatchingUI(packet, this), tr("&Matching Equations"));
+    addTab(new HyperMatchingUI(packet, this), tr("&Matching Equations"));
 
-    compat = new NHyperCompatibilityUI(packet, this);
+    compat = new HyperCompatibilityUI(packet, this);
     addTab(compat, tr("Com&patibility"));
 }
 
-const QLinkedList<QAction*>& NHyperSurfaceUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& HyperUI::getPacketTypeActions() {
     return coords->getPacketTypeActions();
 }
 
-QString NHyperSurfaceUI::getPacketMenuText() const {
+QString HyperUI::getPacketMenuText() const {
     return tr("&Normal Hypersurfaces");
 }
 
-NHyperHeaderUI::NHyperHeaderUI(regina::NNormalHypersurfaceList* packet,
+HyperHeaderUI::HyperHeaderUI(regina::NNormalHypersurfaceList* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet) {
     header = new QLabel(0);
@@ -101,15 +101,15 @@ NHyperHeaderUI::NHyperHeaderUI(regina::NNormalHypersurfaceList* packet,
     packet->triangulation()->listen(this);
 }
 
-regina::Packet* NHyperHeaderUI::getPacket() {
+regina::Packet* HyperHeaderUI::getPacket() {
     return surfaces;
 }
 
-QWidget* NHyperHeaderUI::getInterface() {
+QWidget* HyperHeaderUI::getInterface() {
     return ui;
 }
 
-void NHyperHeaderUI::refresh() {
+void HyperHeaderUI::refresh() {
     regina::HyperList which = surfaces->which();
 
     QString sEmb, sType;
@@ -152,12 +152,12 @@ void NHyperHeaderUI::refresh() {
             toHtmlEscaped()));
 }
 
-void NHyperHeaderUI::viewTriangulation() {
+void HyperHeaderUI::viewTriangulation() {
     enclosingPane->getMainWindow()->packetView(surfaces->triangulation(),
         false /* visible in tree */, false /* select in tree */);
 }
 
-void NHyperHeaderUI::packetWasRenamed(regina::Packet*) {
+void HyperHeaderUI::packetWasRenamed(regina::Packet*) {
     // Assume it is the parent triangulation.
     refresh();
 }

@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nhypercoordinateui.h
+/*! \file hypercoordinateui.h
  *  \brief Provides a normal hypersurface coordinate viewer.
  */
 
-#ifndef __NHYPERCOODINATEUI_H
-#define __NHYPERCOODINATEUI_H
+#ifndef __HYPERCOODINATEUI_H
+#define __HYPERCOODINATEUI_H
 
 #include "dim4/dim4triangulation.h" // To avoid generic Triangulation<4>.
 #include "hypersurface/nnormalhypersurfacelist.h"
@@ -116,7 +116,7 @@ class HyperModel : public QAbstractItemModel {
 /**
  * A normal surface page for viewing surface coordinates.
  */
-class NHyperCoordinateUI : public QObject, public PacketEditorTab {
+class HyperCoordinateUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
@@ -149,9 +149,9 @@ class NHyperCoordinateUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        NHyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
+        HyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
             PacketTabbedUI* useParentUI, bool readWrite);
-        ~NHyperCoordinateUI();
+        ~HyperCoordinateUI();
 
         /**
          * PacketEditorTab overrides.

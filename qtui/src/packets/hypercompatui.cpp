@@ -36,9 +36,9 @@
 
 // UI includes:
 #include "compatcanvas.h"
+#include "hypercompatui.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "nhypercompatui.h"
 #include "reginamain.h"
 #include "messagelayer.h"
 
@@ -55,7 +55,7 @@
 using regina::NNormalHypersurfaceList;
 using regina::Packet;
 
-NHyperCompatibilityUI::NHyperCompatibilityUI(
+HyperCompatibilityUI::HyperCompatibilityUI(
         regina::NNormalHypersurfaceList* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(0), layerLocal(0), requestedCalculation(false) {
@@ -109,7 +109,7 @@ NHyperCompatibilityUI::NHyperCompatibilityUI(
     refresh();
 }
 
-NHyperCompatibilityUI::~NHyperCompatibilityUI() {
+HyperCompatibilityUI::~HyperCompatibilityUI() {
     // Make sure the canvas *views* go first.
     if (matrixLocal) {
         delete layerLocal;
@@ -117,21 +117,21 @@ NHyperCompatibilityUI::~NHyperCompatibilityUI() {
     }
 }
 
-void NHyperCompatibilityUI::updatePreferences() {
+void HyperCompatibilityUI::updatePreferences() {
     if ((! matrixLocal) && surfaces->size() <= 
             ReginaPrefSet::global().surfacesCompatThreshold)
         refresh();
 }
 
-regina::Packet* NHyperCompatibilityUI::getPacket() {
+regina::Packet* HyperCompatibilityUI::getPacket() {
     return surfaces;
 }
 
-QWidget* NHyperCompatibilityUI::getInterface() {
+QWidget* HyperCompatibilityUI::getInterface() {
     return ui;
 }
 
-void NHyperCompatibilityUI::refresh() {
+void HyperCompatibilityUI::refresh() {
     chooseMatrix->setEnabled(false);
     btnCalculate->setEnabled(false);
 
@@ -189,7 +189,7 @@ void NHyperCompatibilityUI::refresh() {
     chooseMatrix->setEnabled(true);
 }
 
-void NHyperCompatibilityUI::setMessage(MessageIndex msg) {
+void HyperCompatibilityUI::setMessage(MessageIndex msg) {
     switch (msg) {
         case TOO_LARGE:
             layerNone->setText(tr("<qt>The compatibility matrices "
@@ -214,7 +214,7 @@ void NHyperCompatibilityUI::setMessage(MessageIndex msg) {
     }
 }
 
-void NHyperCompatibilityUI::changeLayer(int index) {
+void HyperCompatibilityUI::changeLayer(int index) {
     if (! matrixLocal)
         return;
 
@@ -227,7 +227,7 @@ void NHyperCompatibilityUI::changeLayer(int index) {
     }
 }
 
-void NHyperCompatibilityUI::calculate() {
+void HyperCompatibilityUI::calculate() {
     requestedCalculation = true;
 
     if (! matrixLocal)

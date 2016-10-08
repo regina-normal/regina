@@ -36,7 +36,7 @@
 
 // UI includes:
 #include "coordinates.h"
-#include "nhypermatchingui.h"
+#include "hypermatchingui.h"
 
 #include <QHeaderView>
 #include <QTreeView>
@@ -96,7 +96,7 @@ QVariant HyperMatchingModel::headerData(int section,
         return QVariant();
 }
 
-NHyperMatchingUI::NHyperMatchingUI(regina::NNormalHypersurfaceList* packet,
+HyperMatchingUI::HyperMatchingUI(regina::NNormalHypersurfaceList* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         currentlyAutoResizing(false), everRefreshed(false) {
     model = new HyperMatchingModel(packet);
@@ -134,19 +134,19 @@ NHyperMatchingUI::NHyperMatchingUI(regina::NNormalHypersurfaceList* packet,
     ui = table;
 }
 
-NHyperMatchingUI::~NHyperMatchingUI() {
+HyperMatchingUI::~HyperMatchingUI() {
     delete model;
 }
 
-regina::Packet* NHyperMatchingUI::getPacket() {
+regina::Packet* HyperMatchingUI::getPacket() {
     return model->surfaces();
 }
 
-QWidget* NHyperMatchingUI::getInterface() {
+QWidget* HyperMatchingUI::getInterface() {
     return ui;
 }
 
-void NHyperMatchingUI::refresh() {
+void HyperMatchingUI::refresh() {
     // Regenerate the equations.
     model->rebuild();
 
@@ -161,7 +161,7 @@ void NHyperMatchingUI::refresh() {
     everRefreshed = true;
 }
 
-void NHyperMatchingUI::columnResized(int, int, int newSize) {
+void HyperMatchingUI::columnResized(int, int, int newSize) {
     if (currentlyAutoResizing)
         return;
 

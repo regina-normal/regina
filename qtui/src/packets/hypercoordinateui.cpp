@@ -37,7 +37,7 @@
 
 // UI includes:
 #include "coordinatechooser.h"
-#include "nhypercoordinateui.h"
+#include "hypercoordinateui.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 #include "reginamain.h"
@@ -338,7 +338,7 @@ QString HyperModel::propertyColDesc(int whichCol) const {
     return tr("Unknown");
 }
 
-NHyperCoordinateUI::NHyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
+HyperCoordinateUI::HyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), surfaces(packet),
         isReadWrite(readWrite), currentlyResizing(false) {
@@ -429,26 +429,26 @@ NHyperCoordinateUI::NHyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
         this, SLOT(updatePreferences()));
 }
 
-NHyperCoordinateUI::~NHyperCoordinateUI() {
+HyperCoordinateUI::~HyperCoordinateUI() {
     // Make sure the actions, including separators, are all deleted.
     surfaceActionList.clear();
 
     delete model;
 }
 
-const QLinkedList<QAction*>& NHyperCoordinateUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& HyperCoordinateUI::getPacketTypeActions() {
     return surfaceActionList;
 }
 
-regina::Packet* NHyperCoordinateUI::getPacket() {
+regina::Packet* HyperCoordinateUI::getPacket() {
     return surfaces;
 }
 
-QWidget* NHyperCoordinateUI::getInterface() {
+QWidget* HyperCoordinateUI::getInterface() {
     return ui;
 }
 
-void NHyperCoordinateUI::refresh() {
+void HyperCoordinateUI::refresh() {
     // Rebuild the underlying data model.
     regina::HyperCoords selectedSystem = coords->getCurrentSystem();
     bool coordsChanged = (model->coordSystem() != selectedSystem);
@@ -463,14 +463,14 @@ void NHyperCoordinateUI::refresh() {
     }
 }
 
-void NHyperCoordinateUI::setReadWrite(bool readWrite) {
+void HyperCoordinateUI::setReadWrite(bool readWrite) {
     isReadWrite = readWrite;
 
     model->setReadWrite(readWrite);
     updateActionStates();
 }
 
-void NHyperCoordinateUI::triangulate() {
+void HyperCoordinateUI::triangulate() {
     if (table->selectionModel()->selectedIndexes().empty()) {
         ReginaSupport::info(ui,
             tr("Please select a normal hypersurface to triangulate."));
@@ -498,14 +498,14 @@ void NHyperCoordinateUI::triangulate() {
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
-void NHyperCoordinateUI::updateActionStates() {
+void HyperCoordinateUI::updateActionStates() {
     actTriangulate->setEnabled(
         isReadWrite &&
         table->selectionModel()->hasSelection() &&
         surfaces->isEmbeddedOnly());
 }
 
-void NHyperCoordinateUI::columnResized(int section, int, int newSize) {
+void HyperCoordinateUI::columnResized(int section, int, int newSize) {
     int nNonCoordSections = model->propertyColCount();
     if (currentlyResizing || section < nNonCoordSections)
         return;
@@ -518,7 +518,7 @@ void NHyperCoordinateUI::columnResized(int section, int, int newSize) {
     currentlyResizing = false;
 }
 
-void NHyperCoordinateUI::updatePreferences() {
+void HyperCoordinateUI::updatePreferences() {
     // If we've changed the unicode setting, then we may need some redrawing.
     model->rebuildUnicode();
 }

@@ -46,7 +46,7 @@
 #include "packets/filterprop.h"
 #include "packets/generictriui.h"
 #include "packets/containerui.h"
-#include "packets/nhypersurfaceui.h"
+#include "packets/hyperui.h"
 #include "packets/pdfui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
@@ -162,7 +162,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
             return new SurfacesUI(
                 dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
         case PACKET_NORMALHYPERSURFACELIST:
-            return new NHyperSurfaceUI(
+            return new HyperUI(
                 dynamic_cast<NNormalHypersurfaceList*>(packet), enclosingPane);
         case PACKET_SCRIPT:
             return new ScriptUI(

@@ -30,106 +30,49 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nhypercompatui.h
- *  \brief Provides a viewer for pairwise compatibility of normal hypersurfaces.
+/*! \file hypercreator.h
+ *  \brief Allows the creation of normal hypersurface lists in
+ *  4-manifold triangulations.
  */
 
-#ifndef __NHYPERCOMPATUI_H
-#define __NHYPERCOMPATUI_H
+#ifndef __HYPERCREATOR_H
+#define __HYPERCREATOR_H
 
-#include "packet/packetlistener.h"
+#include "../packetcreator.h"
 
-#include "../packettabui.h"
-
-class MessageLayer;
-class CompatCanvas;
-class QPushButton;
-class QGraphicsView;
+class HyperCoordinateChooser;
+class QCheckBox;
 class QComboBox;
-class QStackedWidget;
-
-namespace regina {
-    class Packet;
-    class NNormalHypersurfaceList;
-};
 
 /**
- * A normal surface page for viewing surface coordinates.
+ * An interface for creating normal hypersurface lists in 4-manifold
+ * triangulations.
  */
-class NHyperCompatibilityUI : public QObject, public PacketViewerTab,
-        public regina::PacketListener {
-    Q_OBJECT
-
+class HyperCreator : public PacketCreator {
     private:
-        /**
-         * Constants for the various "computer says no" messages that can be
-         * displayed.
-         */
-        enum MessageIndex { TOO_LARGE, NON_EMBEDDED, EMPTY_LIST };
-
-        /**
-         * Packet details
-         */
-        regina::NNormalHypersurfaceList* surfaces;
-
-        /**
-         * Compatibility matrices
-         *
-         * These are null if there are too many surfaces, or real objects
-         * if we aim to display the matrices.  Note that, even if these
-         * are real objects, we do not \e fill the canvases with data
-         * points until the user actually tries to display them.
-         */
-        CompatCanvas* matrixLocal;
-        QGraphicsView* layerLocal;
-
         /**
          * Internal components
          */
         QWidget* ui;
-        QStackedWidget* stack;
-        MessageLayer* layerNone;
-        QComboBox* chooseMatrix;
-        QPushButton* btnCalculate;
-
-        /**
-         * Properties
-         */
-        bool requestedCalculation;
+        HyperCoordinateChooser* coords;
+        QComboBox* basis;
+        QCheckBox* embedded;
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        NHyperCompatibilityUI(regina::NNormalHypersurfaceList* packet,
-            PacketTabbedUI* useParentUI);
-        ~NHyperCompatibilityUI();
+        HyperCreator();
 
         /**
-         * PacketViewerTab overrides.
+         * PacketCreator overrides.
          */
-        regina::Packet* getPacket();
         QWidget* getInterface();
-        void refresh();
-
-    public slots:
-        /**
-         * Notify that preferences have changed.
-         */
-        void updatePreferences();
-
-    private:
-        /**
-         * Change the display to show the given message.
-         */
-        void setMessage(MessageIndex msg);
-
-    private slots:
-        /**
-         * Compute or change matrices.
-         */
-        void changeLayer(int index);
-        void calculate();
+        QString parentPrompt();
+        QString parentWhatsThis();
+        regina::Packet* createPacket(regina::Packet* parentPacket,
+            QWidget* parentWidget);
+        void explainNoParents();
 };
 
 #endif

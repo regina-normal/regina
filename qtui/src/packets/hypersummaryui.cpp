@@ -36,7 +36,7 @@
 #include "hypersurface/nnormalhypersurfacelist.h"
 
 // UI includes:
-#include "nhypersummaryui.h"
+#include "hypersummaryui.h"
 #include "reginaprefset.h"
 
 #include <QLabel>
@@ -74,7 +74,7 @@ namespace {
     }
 }
 
-NHyperSummaryUI::NHyperSummaryUI(
+HyperSummaryUI::HyperSummaryUI(
         regina::NNormalHypersurfaceList* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
     QScrollArea* scroller = new QScrollArea();
@@ -150,18 +150,18 @@ NHyperSummaryUI::NHyperSummaryUI(
         this, SLOT(updatePreferences()));
 }
 
-NHyperSummaryUI::~NHyperSummaryUI() {
+HyperSummaryUI::~HyperSummaryUI() {
 }
 
-regina::Packet* NHyperSummaryUI::getPacket() {
+regina::Packet* HyperSummaryUI::getPacket() {
     return surfaces;
 }
 
-QWidget* NHyperSummaryUI::getInterface() {
+QWidget* HyperSummaryUI::getInterface() {
     return ui;
 }
 
-void NHyperSummaryUI::refresh() {
+void HyperSummaryUI::refresh() {
     size_t n = surfaces->size();
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
@@ -341,7 +341,7 @@ void NHyperSummaryUI::refresh() {
 #endif
 }
 
-void NHyperSummaryUI::updatePreferences() {
+void HyperSummaryUI::updatePreferences() {
     // It's possible that the unicode flag has changed.
     // Redraw everything.
     refresh();

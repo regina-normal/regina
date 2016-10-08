@@ -45,7 +45,7 @@
 #include "packets/dim4tricreator.h"
 #include "packets/anglescreator.h"
 #include "packets/filtercreator.h"
-#include "packets/nhypersurfacecreator.h"
+#include "packets/hypercreator.h"
 #include "packets/ntriangulationcreator.h"
 #include "packets/snappeacreator.h"
 #include "packets/surfacescreator.h"
@@ -83,7 +83,7 @@ void ReginaMain::newNormalSurfaces() {
 }
 
 void ReginaMain::newNormalHypersurfaces() {
-    newPacket(new NHypersurfaceCreator(),
+    newPacket(new HyperCreator(),
         new SubclassFilter<regina::Dim4Triangulation>(),
         tr("New Normal Hypersurface List"));
 }

@@ -30,57 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nhypersurfaceui.h
- *  \brief Provides an interface for viewing normal hypersurface lists.
+/*! \file hypersummaryui.h
+ *  \brief Provides a tab that summarises all normal hypersurfaces in a list.
  */
 
-#ifndef __NHYPERSURFACEUI_H
-#define __NHYPERSURFACEUI_H
+#ifndef __HYPERSUMMARYUI_H
+#define __HYPERSUMMARYUI_H
 
-#include "packettabui.h"
-#include "reginamain.h"
+#include "packet/packetlistener.h"
 
-#include <QLinkedList>
-
-class NHyperCompatibilityUI;
-class NHyperCoordinateUI;
-class QLabel;
+#include "../packettabui.h"
 
 namespace regina {
+    class Packet;
     class NNormalHypersurfaceList;
 };
 
-/**
- * A packet interface for viewing normal surface lists.
- */
-class NHyperSurfaceUI : public PacketTabbedUI {
-    Q_OBJECT
-
-    private:
-        /**
-         * Internal components
-         */
-        NHyperCoordinateUI* coords;
-        NHyperCompatibilityUI* compat;
-
-    public:
-        /**
-         * Constructor.
-         */
-        NHyperSurfaceUI(regina::NNormalHypersurfaceList* packet,
-            PacketPane* newEnclosingPane);
-
-        /**
-         * PacketUI overrides.
-         */
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-};
+class QTreeWidget;
 
 /**
- * A header for the normal surface list viewer.
+ * A normal surface page for viewing surface coordinates.
  */
-class NHyperHeaderUI : public QObject, public PacketViewerTab,
+class HyperSummaryUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
     Q_OBJECT
 
@@ -94,14 +65,21 @@ class NHyperHeaderUI : public QObject, public PacketViewerTab,
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
+        QWidget* pane;
+        QLabel* tot;
+        QLabel* totClosed;
+        QLabel* totBounded;
+        QLabel* totSpun;
+        QTreeWidget* tableClosed;
+        QTreeWidget* tableBounded;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        NHyperHeaderUI(regina::NNormalHypersurfaceList* packet,
-                PacketTabbedUI* useParentUI);
+        HyperSummaryUI(regina::NNormalHypersurfaceList* packet,
+            PacketTabbedUI* useParentUI);
+        ~HyperSummaryUI();
 
         /**
          * PacketViewerTab overrides.
@@ -110,16 +88,11 @@ class NHyperHeaderUI : public QObject, public PacketViewerTab,
         QWidget* getInterface();
         void refresh();
 
+    public slots:
         /**
-         * PacketListener overrides.
+         * Notify that preferences have changed.
          */
-        void packetWasRenamed(regina::Packet* packet);
-
-    private slots:
-        /**
-         * View the underlying triangulation.
-         */
-        void viewTriangulation();
+        void updatePreferences();
 };
 
 #endif

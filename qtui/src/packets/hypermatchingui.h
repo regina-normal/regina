@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nhypermatchingui.h
+/*! \file hypermatchingui.h
  *  \brief Provides a matching equation viewer for normal hypersurface lists.
  */
 
-#ifndef __NHYPERMATCHINGUI_H
-#define __NHYPERMATCHINGUI_H
+#ifndef __HYPERMATCHINGUI_H
+#define __HYPERMATCHINGUI_H
 
 #include "maths/matrix.h"
 #include "../packettabui.h"
@@ -92,7 +92,7 @@ class HyperMatchingModel : public QAbstractItemModel {
 /**
  * A hypersurface list page for viewing matching equations.
  */
-class NHyperMatchingUI : public QObject, public PacketViewerTab {
+class HyperMatchingUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -117,9 +117,9 @@ class NHyperMatchingUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        NHyperMatchingUI(regina::NNormalHypersurfaceList* packet,
+        HyperMatchingUI(regina::NNormalHypersurfaceList* packet,
                 PacketTabbedUI* useParentUI);
-        ~NHyperMatchingUI();
+        ~HyperMatchingUI();
 
         /**
          * PacketViewerTab overrides.

@@ -38,7 +38,7 @@
 // UI includes:
 #include "coordinatechooser.h"
 #include "coordinates.h"
-#include "nhypersurfacecreator.h"
+#include "hypercreator.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 #include "../progressdialogs.h"
@@ -61,7 +61,7 @@ namespace {
     };
 }
 
-NHypersurfaceCreator::NHypersurfaceCreator() {
+HyperCreator::HyperCreator() {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -112,20 +112,20 @@ NHypersurfaceCreator::NHypersurfaceCreator() {
     layout->addWidget(embedded);
 }
 
-QWidget* NHypersurfaceCreator::getInterface() {
+QWidget* HyperCreator::getInterface() {
     return ui;
 }
 
-QString NHypersurfaceCreator::parentPrompt() {
+QString HyperCreator::parentPrompt() {
     return ui->tr("Triangulation:");
 }
 
-QString NHypersurfaceCreator::parentWhatsThis() {
+QString HyperCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your "
         "normal hypersurfaces.");
 }
 
-regina::Packet* NHypersurfaceCreator::createPacket(regina::Packet* parent,
+regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
     if (! dynamic_cast<regina::Dim4Triangulation*>(parent)) {
         ReginaSupport::sorry(ui,
@@ -214,7 +214,7 @@ regina::Packet* NHypersurfaceCreator::createPacket(regina::Packet* parent,
     }
 }
 
-void NHypersurfaceCreator::explainNoParents() {
+void HyperCreator::explainNoParents() {
     ReginaSupport::sorry(ui,
         ui->tr("There are no triangulations to work with."),
         ui->tr("Normal hypersurfaces must live within a 4-manifold "

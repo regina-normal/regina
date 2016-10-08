@@ -21,12 +21,12 @@ SET ( FILES
   gaprunner
   generictriui
   groupwidget
-  nhypercompatui
-  nhypercoordinateui
-  nhypermatchingui
-  nhypersurfacecreator
-  nhypersummaryui
-  nhypersurfaceui
+  hypercompatui
+  hypercoordinateui
+  hypercreator
+  hypermatchingui
+  hypersummaryui
+  hyperui
   ntrialgebra
   ntriangulationcreator
   ntriangulationui
