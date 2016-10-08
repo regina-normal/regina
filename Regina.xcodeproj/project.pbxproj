@@ -4011,8 +4011,8 @@
 				050F5D7A1B9BAB9C00C1F681 /* normalsurfaces.cpp */,
 				050F5D7D1B9BAB9C00C1F681 /* nprism.cpp */,
 				050F5D7E1B9BAB9C00C1F681 /* surfacefilter.cpp */,
-				050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */,
 				050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */,
+				050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */,
 			);
 			path = surfaces;
 			sourceTree = "<group>";
