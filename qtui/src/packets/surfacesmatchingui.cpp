@@ -36,7 +36,7 @@
 
 // UI includes:
 #include "coordinates.h"
-#include "nsurfacematchingui.h"
+#include "surfacesmatchingui.h"
 
 #include <QHeaderView>
 #include <QTreeView>
@@ -96,7 +96,7 @@ QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NormalSurfaces* packet,
+SurfacesMatchingUI::SurfacesMatchingUI(regina::NormalSurfaces* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         currentlyAutoResizing(false), everRefreshed(false) {
     model = new MatchingModel(packet);
@@ -134,19 +134,19 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NormalSurfaces* packet,
     ui = table;
 }
 
-NSurfaceMatchingUI::~NSurfaceMatchingUI() {
+SurfacesMatchingUI::~SurfacesMatchingUI() {
     delete model;
 }
 
-regina::Packet* NSurfaceMatchingUI::getPacket() {
+regina::Packet* SurfacesMatchingUI::getPacket() {
     return model->surfaces();
 }
 
-QWidget* NSurfaceMatchingUI::getInterface() {
+QWidget* SurfacesMatchingUI::getInterface() {
     return ui;
 }
 
-void NSurfaceMatchingUI::refresh() {
+void SurfacesMatchingUI::refresh() {
     // Regenerate the equations.
     model->rebuild();
 
@@ -161,7 +161,7 @@ void NSurfaceMatchingUI::refresh() {
     everRefreshed = true;
 }
 
-void NSurfaceMatchingUI::columnResized(int, int, int newSize) {
+void SurfacesMatchingUI::columnResized(int, int, int newSize) {
     if (currentlyAutoResizing)
         return;
 

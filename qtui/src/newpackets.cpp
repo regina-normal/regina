@@ -77,7 +77,7 @@ void ReginaMain::newFilter() {
 }
 
 void ReginaMain::newNormalSurfaces() {
-    newPacket(new NNormalSurfaceCreator(),
+    newPacket(new SurfacesCreator(),
         new SubclassFilter<regina::NTriangulation>(),
         tr("New Normal Surface List"));
 }

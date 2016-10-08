@@ -30,56 +30,96 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsurfacesummaryui.h
- *  \brief Provides a tab that summarises all normal surfaces in a list.
+/*! \file surfacesmatchingui.h
+ *  \brief Provides a matching equation viewer for normal surface lists.
  */
 
-#ifndef __NSURFACESUMMARYUI_H
-#define __NSURFACESUMMARYUI_H
+#ifndef __SURFACESMATCHINGUI_H
+#define __SURFACESMATCHINGUI_H
 
-#include "packet/packetlistener.h"
-
+#include "maths/matrix.h"
 #include "../packettabui.h"
 
+#include <memory>
+#include <qabstractitemmodel.h>
+
+class QTreeView;
+
 namespace regina {
-    class Packet;
     class NormalSurfaces;
+    class Packet;
+    template <int> class Triangulation;
+    typedef Triangulation<3> NTriangulation;
 };
 
-class QTreeWidget;
+class MatchingModel : public QAbstractItemModel {
+    protected:
+        /**
+         * Details of the matching equations being displayed
+         */
+        std::unique_ptr<regina::MatrixInt> eqns_;
+        regina::NormalSurfaces* surfaces_;
+
+    public:
+        /**
+         * Constructor.
+         */
+        MatchingModel(regina::NormalSurfaces* surfaces);
+
+        /**
+         * Data retrieval.
+         */
+        regina::NormalSurfaces* surfaces() const;
+
+        /**
+         * Rebuild the model from scratch.
+         */
+        void rebuild();
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        QModelIndex index(int row, int column,
+                const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+            int role) const;
+};
 
 /**
- * A normal surface page for viewing surface coordinates.
+ * A surface list page for viewing matching equations.
  */
-class NSurfaceSummaryUI : public QObject, public PacketViewerTab,
-        public regina::PacketListener {
+class SurfacesMatchingUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
-         * Packet details
+         * Matrix details
          */
-        regina::NormalSurfaces* surfaces;
+        MatchingModel* model;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QWidget* pane;
-        QLabel* tot;
-        QLabel* totClosed;
-        QLabel* totBounded;
-        QLabel* totSpun;
-        QTreeWidget* tableClosed;
-        QTreeWidget* tableBounded;
+        QTreeView* table;
+
+        /**
+         * Status of any ongoing actions.
+         */
+        bool currentlyAutoResizing;
+        bool everRefreshed;
 
     public:
         /**
          * Constructor and destructor.
          */
-        NSurfaceSummaryUI(regina::NormalSurfaces* packet,
-            PacketTabbedUI* useParentUI);
-        ~NSurfaceSummaryUI();
+        SurfacesMatchingUI(regina::NormalSurfaces* packet,
+                PacketTabbedUI* useParentUI);
+        ~SurfacesMatchingUI();
 
         /**
          * PacketViewerTab overrides.
@@ -87,6 +127,34 @@ class NSurfaceSummaryUI : public QObject, public PacketViewerTab,
         regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
+
+    protected slots:
+        /**
+         * Provides auto-resizing of columns.
+         */
+        void columnResized(int section, int oldSize, int newSize);
 };
+
+inline MatchingModel::MatchingModel(regina::NormalSurfaces* surfaces) :
+        surfaces_(surfaces) {
+}
+
+inline regina::NormalSurfaces* MatchingModel::surfaces() const {
+    return surfaces_;
+}
+
+inline QModelIndex MatchingModel::index(int row, int column,
+        const QModelIndex& /* unused parent */) const {
+    if (eqns_.get())
+        return createIndex(row, column,
+            quintptr(eqns_->columns() * row + column));
+    else
+        return createIndex(row, column, quintptr(0));
+}
+
+inline QModelIndex MatchingModel::parent(const QModelIndex& /* unused index */) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 #endif

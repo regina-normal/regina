@@ -36,11 +36,11 @@
 
 // UI includes:
 #include "coordinates.h"
-#include "nnormalsurfaceui.h"
-#include "nsurfacecompatui.h"
-#include "nsurfacecoordinateui.h"
-#include "nsurfacematchingui.h"
-#include "nsurfacesummaryui.h"
+#include "surfacesui.h"
+#include "surfacescompatui.h"
+#include "surfacescoordinateui.h"
+#include "surfacesmatchingui.h"
+#include "surfacessummaryui.h"
 #include "ntriangulationui.h"
 #include "reginamain.h"
 
@@ -51,36 +51,36 @@
 using regina::Packet;
 using regina::NNormalSurface;
 
-NNormalSurfaceUI::NNormalSurfaceUI(regina::NormalSurfaces* packet,
+SurfacesUI::SurfacesUI(regina::NormalSurfaces* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabSurfaceList) {
-    NSurfaceHeaderUI* header = new NSurfaceHeaderUI(packet, this);
+    SurfacesHeaderUI* header = new SurfacesHeaderUI(packet, this);
     addHeader(header);
 
     // WARNING: If these tabs are reordered, the code below that sets
     // the default tab must be updated accordingly.
-    addTab(new NSurfaceSummaryUI(packet, this), tr("&Summary"));
+    addTab(new SurfacesSummaryUI(packet, this), tr("&Summary"));
 
-    coords = new NSurfaceCoordinateUI(packet, this,
+    coords = new SurfacesCoordinateUI(packet, this,
         newEnclosingPane->isReadWrite());
     addTab(coords, tr("Surface &Coordinates"));
 
-    addTab(new NSurfaceMatchingUI(packet, this), tr("&Matching Equations"));
+    addTab(new SurfacesMatchingUI(packet, this), tr("&Matching Equations"));
 
-    compat = new NSurfaceCompatibilityUI(packet, this);
+    compat = new SurfacesCompatibilityUI(packet, this);
     addTab(compat, tr("Com&patibility"));
 }
 
-const QLinkedList<QAction*>& NNormalSurfaceUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& SurfacesUI::getPacketTypeActions() {
     return coords->getPacketTypeActions();
 }
 
-QString NNormalSurfaceUI::getPacketMenuText() const {
+QString SurfacesUI::getPacketMenuText() const {
     return tr("&Normal Surfaces");
 }
 
-NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NormalSurfaces* packet,
+SurfacesHeaderUI::SurfacesHeaderUI(regina::NormalSurfaces* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet) {
     header = new QLabel(0);
@@ -101,15 +101,15 @@ NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NormalSurfaces* packet,
     packet->triangulation()->listen(this);
 }
 
-regina::Packet* NSurfaceHeaderUI::getPacket() {
+regina::Packet* SurfacesHeaderUI::getPacket() {
     return surfaces;
 }
 
-QWidget* NSurfaceHeaderUI::getInterface() {
+QWidget* SurfacesHeaderUI::getInterface() {
     return ui;
 }
 
-void NSurfaceHeaderUI::refresh() {
+void SurfacesHeaderUI::refresh() {
     regina::NormalList which = surfaces->which();
 
     QString sEmb, sType;
@@ -152,12 +152,12 @@ void NSurfaceHeaderUI::refresh() {
             toHtmlEscaped()));
 }
 
-void NSurfaceHeaderUI::viewTriangulation() {
+void SurfacesHeaderUI::viewTriangulation() {
     enclosingPane->getMainWindow()->packetView(surfaces->triangulation(),
         false /* visible in tree */, false /* select in tree */);
 }
 
-void NSurfaceHeaderUI::packetWasRenamed(regina::Packet*) {
+void SurfacesHeaderUI::packetWasRenamed(regina::Packet*) {
     // Assume it is the parent triangulation.
     refresh();
 }

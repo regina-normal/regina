@@ -30,82 +30,78 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsurfacecompatui.h
- *  \brief Provides a viewer for pairwise compatibility of normal surfaces.
+/*! \file surfacesui.h
+ *  \brief Provides an interface for viewing normal surface lists.
  */
 
-#ifndef __NSURFACECOMPATUI_H
-#define __NSURFACECOMPATUI_H
+#ifndef __SURFACESUI_H
+#define __SURFACESUI_H
 
-#include "packet/packetlistener.h"
+#include "packettabui.h"
+#include "reginamain.h"
 
-#include "../packettabui.h"
+#include <QLinkedList>
 
-class MessageLayer;
-class CompatCanvas;
-class QPushButton;
-class QGraphicsView;
-class QComboBox;
-class QStackedWidget;
+class SurfacesCompatibilityUI;
+class SurfacesCoordinateUI;
+class QLabel;
 
 namespace regina {
-    class Packet;
     class NormalSurfaces;
 };
 
 /**
- * A normal surface page for viewing surface coordinates.
+ * A packet interface for viewing normal surface lists.
  */
-class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
-        public regina::PacketListener {
+class SurfacesUI : public PacketTabbedUI {
     Q_OBJECT
 
     private:
         /**
-         * Constants for the various "computer says no" messages that can be
-         * displayed.
+         * Internal components
          */
-        enum MessageIndex { TOO_LARGE, NON_EMBEDDED, EMPTY_LIST };
+        SurfacesCoordinateUI* coords;
+        SurfacesCompatibilityUI* compat;
 
+    public:
+        /**
+         * Constructor.
+         */
+        SurfacesUI(regina::NormalSurfaces* packet,
+            PacketPane* newEnclosingPane);
+
+        /**
+         * PacketUI overrides.
+         */
+        const QLinkedList<QAction*>& getPacketTypeActions();
+        QString getPacketMenuText() const;
+};
+
+/**
+ * A header for the normal surface list viewer.
+ */
+class SurfacesHeaderUI : public QObject, public PacketViewerTab,
+        public regina::PacketListener {
+    Q_OBJECT
+
+    private:
         /**
          * Packet details
          */
         regina::NormalSurfaces* surfaces;
 
         /**
-         * Compatibility matrices
-         *
-         * These are null if there are too many surfaces, or real objects
-         * if we aim to display the matrices.  Note that, even if these
-         * are real objects, we do not \e fill the canvases with data
-         * points until the user actually tries to display them.
-         */
-        CompatCanvas* matrixLocal;
-        CompatCanvas* matrixGlobal;
-        QGraphicsView* layerLocal;
-        QGraphicsView* layerGlobal;
-
-        /**
          * Internal components
          */
         QWidget* ui;
-        QStackedWidget* stack;
-        MessageLayer* layerNone;
-        QComboBox* chooseMatrix;
-        QPushButton* btnCalculate;
-
-        /**
-         * Properties
-         */
-        bool requestedCalculation;
+        QLabel* header;
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        NSurfaceCompatibilityUI(regina::NormalSurfaces* packet,
-            PacketTabbedUI* useParentUI);
-        ~NSurfaceCompatibilityUI();
+        SurfacesHeaderUI(regina::NormalSurfaces* packet,
+                PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -114,24 +110,16 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
         QWidget* getInterface();
         void refresh();
 
-    public slots:
         /**
-         * Notify that preferences have changed.
+         * PacketListener overrides.
          */
-        void updatePreferences();
-
-    private:
-        /**
-         * Change the display to show the given message.
-         */
-        void setMessage(MessageIndex msg);
+        void packetWasRenamed(regina::Packet* packet);
 
     private slots:
         /**
-         * Compute or change matrices.
+         * View the underlying triangulation.
          */
-        void changeLayer(int index);
-        void calculate();
+        void viewTriangulation();
 };
 
 #endif

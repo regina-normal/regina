@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsurfacecoordinateui.h
+/*! \file surfacescoordinateui.h
  *  \brief Provides a normal surface coordinate viewer.
  */
 
-#ifndef __NSURFACECOODINATEUI_H
-#define __NSURFACECOODINATEUI_H
+#ifndef __SURFACESCOORDINATEUI_H
+#define __SURFACESCOORDINATEUI_H
 
 #include "packet/packetlistener.h"
 #include "surfaces/normalsurfaces.h"
@@ -129,7 +129,7 @@ class SurfaceModel : public QAbstractItemModel {
 /**
  * A normal surface page for viewing surface coordinates.
  */
-class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
+class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         public regina::PacketListener {
     Q_OBJECT
 
@@ -166,9 +166,9 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Constructor and destructor.
          */
-        NSurfaceCoordinateUI(regina::NormalSurfaces* packet,
+        SurfacesCoordinateUI(regina::NormalSurfaces* packet,
             PacketTabbedUI* useParentUI, bool readWrite);
-        ~NSurfaceCoordinateUI();
+        ~SurfacesCoordinateUI();
 
         /**
          * PacketEditorTab overrides.

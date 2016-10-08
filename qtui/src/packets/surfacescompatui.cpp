@@ -38,7 +38,7 @@
 #include "compatcanvas.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "nsurfacecompatui.h"
+#include "surfacescompatui.h"
 #include "reginamain.h"
 #include "messagelayer.h"
 
@@ -55,7 +55,7 @@
 using regina::NormalSurfaces;
 using regina::Packet;
 
-NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
+SurfacesCompatibilityUI::SurfacesCompatibilityUI(
         regina::NormalSurfaces* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(0), matrixGlobal(0), layerLocal(0), layerGlobal(0),
@@ -115,7 +115,7 @@ NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
     refresh();
 }
 
-NSurfaceCompatibilityUI::~NSurfaceCompatibilityUI() {
+SurfacesCompatibilityUI::~SurfacesCompatibilityUI() {
     // Make sure the canvas *views* go first.
     if (matrixLocal) {
         delete layerLocal;
@@ -125,21 +125,21 @@ NSurfaceCompatibilityUI::~NSurfaceCompatibilityUI() {
     }
 }
 
-void NSurfaceCompatibilityUI::updatePreferences() {
+void SurfacesCompatibilityUI::updatePreferences() {
     if ((! matrixLocal) && surfaces->size() <= 
             ReginaPrefSet::global().surfacesCompatThreshold)
         refresh();
 }
 
-regina::Packet* NSurfaceCompatibilityUI::getPacket() {
+regina::Packet* SurfacesCompatibilityUI::getPacket() {
     return surfaces;
 }
 
-QWidget* NSurfaceCompatibilityUI::getInterface() {
+QWidget* SurfacesCompatibilityUI::getInterface() {
     return ui;
 }
 
-void NSurfaceCompatibilityUI::refresh() {
+void SurfacesCompatibilityUI::refresh() {
     chooseMatrix->setEnabled(false);
     btnCalculate->setEnabled(false);
 
@@ -218,7 +218,7 @@ void NSurfaceCompatibilityUI::refresh() {
     chooseMatrix->setEnabled(true);
 }
 
-void NSurfaceCompatibilityUI::setMessage(MessageIndex msg) {
+void SurfacesCompatibilityUI::setMessage(MessageIndex msg) {
     switch (msg) {
         case TOO_LARGE:
             layerNone->setText(tr("<qt>The compatibility matrices "
@@ -242,7 +242,7 @@ void NSurfaceCompatibilityUI::setMessage(MessageIndex msg) {
     }
 }
 
-void NSurfaceCompatibilityUI::changeLayer(int index) {
+void SurfacesCompatibilityUI::changeLayer(int index) {
     if (! matrixLocal)
         return;
 
@@ -259,7 +259,7 @@ void NSurfaceCompatibilityUI::changeLayer(int index) {
     }
 }
 
-void NSurfaceCompatibilityUI::calculate() {
+void SurfacesCompatibilityUI::calculate() {
     requestedCalculation = true;
 
     if (! matrixLocal)

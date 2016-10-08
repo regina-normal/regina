@@ -38,7 +38,7 @@
 // UI includes:
 #include "coordinatechooser.h"
 #include "coordinates.h"
-#include "nnormalsurfacecreator.h"
+#include "surfacescreator.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 #include "../progressdialogs.h"
@@ -61,7 +61,7 @@ namespace {
     };
 }
 
-NNormalSurfaceCreator::NNormalSurfaceCreator() {
+SurfacesCreator::SurfacesCreator() {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -108,19 +108,19 @@ NNormalSurfaceCreator::NNormalSurfaceCreator() {
     layout->addWidget(embedded);
 }
 
-QWidget* NNormalSurfaceCreator::getInterface() {
+QWidget* SurfacesCreator::getInterface() {
     return ui;
 }
 
-QString NNormalSurfaceCreator::parentPrompt() {
+QString SurfacesCreator::parentPrompt() {
     return ui->tr("Triangulation:");
 }
 
-QString NNormalSurfaceCreator::parentWhatsThis() {
+QString SurfacesCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your normal surfaces.");
 }
 
-regina::Packet* NNormalSurfaceCreator::createPacket(regina::Packet* parent,
+regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
     // Note that parent may be either NTriangulation or SnapPeaTriangulation.
     if (! dynamic_cast<regina::NTriangulation*>(parent)) {
@@ -225,7 +225,7 @@ regina::Packet* NNormalSurfaceCreator::createPacket(regina::Packet* parent,
     }
 }
 
-void NNormalSurfaceCreator::explainNoParents() {
+void SurfacesCreator::explainNoParents() {
     ReginaSupport::sorry(ui,
         ui->tr("There are no triangulations to work with."),
         ui->tr("Normal surfaces must live within a 3-manifold "

@@ -30,48 +30,108 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nnormalsurfacecreator.h
- *  \brief Allows the creation of normal surface lists in 3-manifold
- *  triangulations.
+/*! \file surfacescompatui.h
+ *  \brief Provides a viewer for pairwise compatibility of normal surfaces.
  */
 
-#ifndef __NNORMALSURFACECREATOR_H
-#define __NNORMALSURFACECREATOR_H
+#ifndef __SURFACESCOMPATUI_H
+#define __SURFACESCOMPATUI_H
 
-#include "../packetcreator.h"
+#include "packet/packetlistener.h"
 
-class CoordinateChooser;
-class QCheckBox;
+#include "../packettabui.h"
+
+class MessageLayer;
+class CompatCanvas;
+class QPushButton;
+class QGraphicsView;
 class QComboBox;
+class QStackedWidget;
+
+namespace regina {
+    class Packet;
+    class NormalSurfaces;
+};
 
 /**
- * An interface for creating normal surface lists in 3-manifold triangulations.
+ * A normal surface page for viewing surface coordinates.
  */
-class NNormalSurfaceCreator : public PacketCreator {
+class SurfacesCompatibilityUI : public QObject, public PacketViewerTab,
+        public regina::PacketListener {
+    Q_OBJECT
+
     private:
+        /**
+         * Constants for the various "computer says no" messages that can be
+         * displayed.
+         */
+        enum MessageIndex { TOO_LARGE, NON_EMBEDDED, EMPTY_LIST };
+
+        /**
+         * Packet details
+         */
+        regina::NormalSurfaces* surfaces;
+
+        /**
+         * Compatibility matrices
+         *
+         * These are null if there are too many surfaces, or real objects
+         * if we aim to display the matrices.  Note that, even if these
+         * are real objects, we do not \e fill the canvases with data
+         * points until the user actually tries to display them.
+         */
+        CompatCanvas* matrixLocal;
+        CompatCanvas* matrixGlobal;
+        QGraphicsView* layerLocal;
+        QGraphicsView* layerGlobal;
+
         /**
          * Internal components
          */
         QWidget* ui;
-        CoordinateChooser* coords;
-        QComboBox* basis;
-        QCheckBox* embedded;
+        QStackedWidget* stack;
+        MessageLayer* layerNone;
+        QComboBox* chooseMatrix;
+        QPushButton* btnCalculate;
+
+        /**
+         * Properties
+         */
+        bool requestedCalculation;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        NNormalSurfaceCreator();
+        SurfacesCompatibilityUI(regina::NormalSurfaces* packet,
+            PacketTabbedUI* useParentUI);
+        ~SurfacesCompatibilityUI();
 
         /**
-         * PacketCreator overrides.
+         * PacketViewerTab overrides.
          */
+        regina::Packet* getPacket();
         QWidget* getInterface();
-        QString parentPrompt();
-        QString parentWhatsThis();
-        regina::Packet* createPacket(regina::Packet* parentPacket,
-            QWidget* parentWidget);
-        void explainNoParents();
+        void refresh();
+
+    public slots:
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
+
+    private:
+        /**
+         * Change the display to show the given message.
+         */
+        void setMessage(MessageIndex msg);
+
+    private slots:
+        /**
+         * Compute or change matrices.
+         */
+        void changeLayer(int index);
+        void calculate();
 };
 
 #endif

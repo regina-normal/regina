@@ -24,15 +24,9 @@ SET ( FILES
   nhypersurfacecreator
   nhypersummaryui
   nhypersurfaceui
-  nnormalsurfacecreator
-  nnormalsurfaceui
-  nsurfacecompatui
-  nsurfacecoordinateui
-  surfacefiltercomb
-  surfacefiltercreator
-  surfacefilterprop
-  nsurfacematchingui
-  nsurfacesummaryui
+  nsurfacefiltercomb
+  nsurfacefiltercreator
+  nsurfacefilterprop
   ntrialgebra
   ntriangulationcreator
   ntriangulationui
@@ -51,6 +45,12 @@ SET ( FILES
   snappeagluings
   snappeashapes
   snappeaui
+  surfacescompatui
+  surfacescoordinateui
+  surfacescreator
+  surfacesmatchingui
+  surfacessummaryui
+  surfacesui
   textui
   )
 

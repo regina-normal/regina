@@ -36,7 +36,7 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
-#include "nsurfacesummaryui.h"
+#include "surfacessummaryui.h"
 
 #include <QLabel>
 #include <QLayout>
@@ -73,7 +73,7 @@ namespace {
     }
 }
 
-NSurfaceSummaryUI::NSurfaceSummaryUI(
+SurfacesSummaryUI::SurfacesSummaryUI(
         regina::NormalSurfaces* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
     QScrollArea* scroller = new QScrollArea();
@@ -145,18 +145,18 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
     paneLayout->addStretch(1);
 }
 
-NSurfaceSummaryUI::~NSurfaceSummaryUI() {
+SurfacesSummaryUI::~SurfacesSummaryUI() {
 }
 
-regina::Packet* NSurfaceSummaryUI::getPacket() {
+regina::Packet* SurfacesSummaryUI::getPacket() {
     return surfaces;
 }
 
-QWidget* NSurfaceSummaryUI::getInterface() {
+QWidget* SurfacesSummaryUI::getInterface() {
     return ui;
 }
 
-void NSurfaceSummaryUI::refresh() {
+void SurfacesSummaryUI::refresh() {
     unsigned long n = surfaces->size();
 
     unsigned long spun = 0;

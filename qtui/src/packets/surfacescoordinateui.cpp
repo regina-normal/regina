@@ -38,7 +38,7 @@
 
 // UI includes:
 #include "coordinatechooser.h"
-#include "nsurfacecoordinateui.h"
+#include "surfacescoordinateui.h"
 #include "reginasupport.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
@@ -446,7 +446,7 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
     return tr("Unknown");
 }
 
-NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NormalSurfaces* packet,
+SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
         isReadWrite(readWrite), currentlyResizing(false) {
@@ -573,26 +573,26 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NormalSurfaces* packet,
         this, SLOT(updatePreferences()));
 }
 
-NSurfaceCoordinateUI::~NSurfaceCoordinateUI() {
+SurfacesCoordinateUI::~SurfacesCoordinateUI() {
     // Make sure the actions, including separators, are all deleted.
     surfaceActionList.clear();
 
     delete model;
 }
 
-const QLinkedList<QAction*>& NSurfaceCoordinateUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& SurfacesCoordinateUI::getPacketTypeActions() {
     return surfaceActionList;
 }
 
-regina::Packet* NSurfaceCoordinateUI::getPacket() {
+regina::Packet* SurfacesCoordinateUI::getPacket() {
     return surfaces;
 }
 
-QWidget* NSurfaceCoordinateUI::getInterface() {
+QWidget* SurfacesCoordinateUI::getInterface() {
     return ui;
 }
 
-void NSurfaceCoordinateUI::refresh() {
+void SurfacesCoordinateUI::refresh() {
     // Update the current filter.
     filter->refreshContents();
 
@@ -624,20 +624,20 @@ void NSurfaceCoordinateUI::refresh() {
     }
 }
 
-void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
+void SurfacesCoordinateUI::setReadWrite(bool readWrite) {
     isReadWrite = readWrite;
 
     model->setReadWrite(readWrite);
     updateActionStates();
 }
 
-void NSurfaceCoordinateUI::packetToBeDestroyed(Packet*) {
+void SurfacesCoordinateUI::packetToBeDestroyed(Packet*) {
     // Our currently applied filter is about to be destroyed.
     filter->setCurrentIndex(0); // (i.e., None)
     refresh();
 }
 
-void NSurfaceCoordinateUI::cutAlong() {
+void SurfacesCoordinateUI::cutAlong() {
     if (table->selectionModel()->selectedIndexes().empty()) {
         ReginaSupport::info(ui,
             tr("Please select a normal surface to cut along."));
@@ -667,7 +667,7 @@ void NSurfaceCoordinateUI::cutAlong() {
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
-void NSurfaceCoordinateUI::crush() {
+void SurfacesCoordinateUI::crush() {
     if (table->selectionModel()->selectedIndexes().empty()) {
         ReginaSupport::info(ui,
             tr("Please select a normal surface to crush."));
@@ -695,7 +695,7 @@ void NSurfaceCoordinateUI::crush() {
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
-void NSurfaceCoordinateUI::updateActionStates() {
+void SurfacesCoordinateUI::updateActionStates() {
     bool canCrushOrCut = isReadWrite &&
         table->selectionModel()->hasSelection() &&
         (! surfaces->allowsAlmostNormal()) && surfaces->isEmbeddedOnly();
@@ -704,7 +704,7 @@ void NSurfaceCoordinateUI::updateActionStates() {
     actCrush->setEnabled(canCrushOrCut);
 }
 
-void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
+void SurfacesCoordinateUI::columnResized(int section, int, int newSize) {
     int nNonCoordSections = model->propertyColCount();
     if (currentlyResizing || section < nNonCoordSections)
         return;
@@ -717,7 +717,7 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
     currentlyResizing = false;
 }
 
-void NSurfaceCoordinateUI::updatePreferences() {
+void SurfacesCoordinateUI::updatePreferences() {
     // If we've changed the unicode setting, then we may need some redrawing.
     model->rebuildUnicode();
 }

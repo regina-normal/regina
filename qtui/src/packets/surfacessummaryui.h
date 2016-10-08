@@ -30,57 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nnormalsurfaceui.h
- *  \brief Provides an interface for viewing normal surface lists.
+/*! \file surfacessummaryui.h
+ *  \brief Provides a tab that summarises all normal surfaces in a list.
  */
 
-#ifndef __NNORMALSURFACEUI_H
-#define __NNORMALSURFACEUI_H
+#ifndef __SURFACESSUMMARYUI_H
+#define __SURFACESSUMMARYUI_H
 
-#include "packettabui.h"
-#include "reginamain.h"
+#include "packet/packetlistener.h"
 
-#include <QLinkedList>
-
-class NSurfaceCompatibilityUI;
-class NSurfaceCoordinateUI;
-class QLabel;
+#include "../packettabui.h"
 
 namespace regina {
+    class Packet;
     class NormalSurfaces;
 };
 
-/**
- * A packet interface for viewing normal surface lists.
- */
-class NNormalSurfaceUI : public PacketTabbedUI {
-    Q_OBJECT
-
-    private:
-        /**
-         * Internal components
-         */
-        NSurfaceCoordinateUI* coords;
-        NSurfaceCompatibilityUI* compat;
-
-    public:
-        /**
-         * Constructor.
-         */
-        NNormalSurfaceUI(regina::NormalSurfaces* packet,
-            PacketPane* newEnclosingPane);
-
-        /**
-         * PacketUI overrides.
-         */
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-};
+class QTreeWidget;
 
 /**
- * A header for the normal surface list viewer.
+ * A normal surface page for viewing surface coordinates.
  */
-class NSurfaceHeaderUI : public QObject, public PacketViewerTab,
+class SurfacesSummaryUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
     Q_OBJECT
 
@@ -94,14 +65,21 @@ class NSurfaceHeaderUI : public QObject, public PacketViewerTab,
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
+        QWidget* pane;
+        QLabel* tot;
+        QLabel* totClosed;
+        QLabel* totBounded;
+        QLabel* totSpun;
+        QTreeWidget* tableClosed;
+        QTreeWidget* tableBounded;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        NSurfaceHeaderUI(regina::NormalSurfaces* packet,
-                PacketTabbedUI* useParentUI);
+        SurfacesSummaryUI(regina::NormalSurfaces* packet,
+            PacketTabbedUI* useParentUI);
+        ~SurfacesSummaryUI();
 
         /**
          * PacketViewerTab overrides.
@@ -109,17 +87,6 @@ class NSurfaceHeaderUI : public QObject, public PacketViewerTab,
         regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
-
-        /**
-         * PacketListener overrides.
-         */
-        void packetWasRenamed(regina::Packet* packet);
-
-    private slots:
-        /**
-         * View the underlying triangulation.
-         */
-        void viewTriangulation();
 };
 
 #endif
