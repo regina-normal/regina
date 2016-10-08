@@ -33,8 +33,7 @@
 #import "NewFilterController.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "surfaces/sfcombination.h"
-#import "surfaces/sfproperties.h"
+#import "surfaces/nsurfacefilter.h"
 
 #define KEY_LAST_TYPE @"NewFilterType"
 

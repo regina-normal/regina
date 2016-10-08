@@ -31,8 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "surfaces/sfcombination.h"
-#include "surfaces/sfproperties.h"
+#include "surfaces/nsurfacefilter.h"
 
 // UI includes:
 #include "iconcache.h"

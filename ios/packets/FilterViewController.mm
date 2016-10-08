@@ -34,8 +34,7 @@
 #import "NewPacketController.h"
 #import "PacketManagerIOS.h"
 #import "ReginaHelper.h"
-#import "surfaces/sfcombination.h"
-#import "surfaces/sfproperties.h"
+#import "surfaces/nsurfacefilter.h"
 
 static NSArray* orientabilityText;
 static NSArray* compactnessText;

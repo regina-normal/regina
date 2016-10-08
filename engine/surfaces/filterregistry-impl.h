@@ -51,8 +51,6 @@
 #endif
 
 #include "surfaces/nsurfacefilter.h"
-#include "surfaces/sfproperties.h"
-#include "surfaces/sfcombination.h"
 
 namespace regina {
 

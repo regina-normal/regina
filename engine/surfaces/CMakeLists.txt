@@ -25,8 +25,6 @@ SET ( FILES
   xmlsurfacereader
   orientable
   quadtostd
-  sfcombination
-  sfproperties
   stdtoquad
   )
 

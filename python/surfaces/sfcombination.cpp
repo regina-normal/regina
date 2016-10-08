@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/sfcombination.h"
+#include "surfaces/nsurfacefilter.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 

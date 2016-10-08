@@ -32,8 +32,6 @@
 
 #include "surfaces/xmlfilterreader.h"
 #include "surfaces/filterregistry.h"
-#include "surfaces/sfcombination.h"
-#include "surfaces/sfproperties.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
