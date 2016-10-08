@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <list>
 #include "surfaces/xmlfilterreader.h"
 #include "surfaces/filterregistry.h"
 #include "utilities/stringutils.h"
