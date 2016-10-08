@@ -32,11 +32,119 @@
 
 #include "surfaces/xmlfilterreader.h"
 #include "surfaces/filterregistry.h"
+#include "surfaces/sfcombination.h"
+#include "surfaces/sfproperties.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
 
+/**
+ * A unique namespace containing XML readers for specific filter types.
+ */
 namespace {
+    /**
+     * Reads a plain (non-subclassed) NSurfaceFilter.
+     */
+    class PlainFilterReader : public XMLFilterReader {
+        private:
+            NSurfaceFilter* filter_;
+
+        public:
+            PlainFilterReader() : filter_(new NSurfaceFilter()) {
+            }
+
+            virtual NSurfaceFilter* filter() {
+                return filter_;
+            }
+    };
+
+    /**
+     * Reads a NSurfaceFilterCombination filter.
+     */
+    class CombinationReader : public XMLFilterReader {
+        private:
+            NSurfaceFilterCombination* filter_;
+
+        public:
+            CombinationReader() : filter_(0) {
+            }
+
+            virtual NSurfaceFilter* filter() {
+                return filter_;
+            }
+
+            XMLElementReader* startSubElement(const std::string& subTagName,
+                    const regina::xml::XMLPropertyDict& props) {
+                if (! filter_)
+                    if (subTagName == "op") {
+                        std::string type = props.lookup("type");
+                        if (type == "and") {
+                            filter_ = new NSurfaceFilterCombination();
+                            filter_->setUsesAnd(true);
+                        } else if (type == "or") {
+                            filter_ = new NSurfaceFilterCombination();
+                            filter_->setUsesAnd(false);
+                        }
+                    }
+                return new XMLElementReader();
+            }
+    };
+
+    /**
+     * Reads a NSurfaceFilterProperties filter.
+     */
+    class PropertiesReader : public XMLFilterReader {
+        private:
+            NSurfaceFilterProperties* filter_;
+
+        public:
+            PropertiesReader() : filter_(new NSurfaceFilterProperties()) {
+            }
+
+            virtual NSurfaceFilter* filter() {
+                return filter_;
+            }
+
+            XMLElementReader* startSubElement(const std::string& subTagName,
+                    const regina::xml::XMLPropertyDict& props) {
+                if (subTagName == "euler") {
+                    return new XMLCharsReader();
+                } else if (subTagName == "orbl") {
+                    BoolSet b;
+                    if (valueOf(props.lookup("value"), b))
+                        filter_->setOrientability(b);
+                } else if (subTagName == "compact") {
+                    BoolSet b;
+                    if (valueOf(props.lookup("value"), b))
+                        filter_->setCompactness(b);
+                } else if (subTagName == "realbdry") {
+                    BoolSet b;
+                    if (valueOf(props.lookup("value"), b))
+                        filter_->setRealBoundary(b);
+                }
+                return new XMLElementReader();
+            }
+
+            void endSubElement(
+                    const std::string& subTagName,
+                    XMLElementReader* subReader) {
+                if (subTagName == "euler") {
+                    std::list<std::string> tokens;
+                    basicTokenise(back_inserter(tokens),
+                        dynamic_cast<XMLCharsReader*>(subReader)->chars());
+
+                    LargeInteger val;
+                    for (std::list<std::string>::const_iterator it =
+                            tokens.begin(); it != tokens.end(); it++)
+                        if (valueOf(*it, val))
+                            filter_->addEulerChar(val);
+                }
+            }
+    };
+
+    /**
+     * Helper class for using forFilter().
+     */
     struct XMLReaderFunction : public Returns<XMLElementReader*> {
         template <typename Filter>
         inline XMLElementReader* operator() (Packet* parent) {
@@ -75,6 +183,18 @@ void XMLFilterPacketReader::endContentSubElement(
 XMLPacketReader* NSurfaceFilter::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new XMLFilterPacketReader(parent, resolver);
+}
+
+XMLFilterReader* NSurfaceFilter::xmlFilterReader(Packet*) {
+    return new PlainFilterReader();
+}
+
+XMLFilterReader* NSurfaceFilterCombination::xmlFilterReader(Packet*) {
+    return new CombinationReader();
+}
+
+XMLFilterReader* NSurfaceFilterProperties::xmlFilterReader(Packet*) {
+    return new PropertiesReader();
 }
 
 } // namespace regina

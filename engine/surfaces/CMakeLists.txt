@@ -22,7 +22,6 @@ SET ( FILES
   nsurfacefilter
   nsurfacesubset
   xmlfilterreader
-  xmlfilterreaders
   xmlsurfacereader
   orientable
   quadtostd
