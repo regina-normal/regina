@@ -10,7 +10,6 @@ SET ( FILES
   normalsurfaces
   nprism
   nsurfacefilter
-  nsurfacesubset
   surfacefiltertype
   pysurfaces
   )

@@ -18,8 +18,11 @@ Version 5.1  [ (under development) ]
             + NEnumConstraintList becomes EnumConstraints.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
             + NNormalSurfaceList becomes NormalSurfaces.
+            + NSurfaceSubset has been removed entirely (see below).
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
+            + surfaces/sf{combination,properties}.h are both merged into
+              surfaces/surfacefilter.h.
             + utilities/nbooleans.h becomes utilities/boolset.h.
             + Some internal classes do not have backward compatible headers or
               typedefs.  None of these internal classes are exposed to Python,
@@ -40,6 +43,10 @@ Version 5.1  [ (under development) ]
               integral domains.
         Class Primes:
             - Now works with type Integer, not LargeInteger.
+        Class SurfaceSubset:
+            - Removed entirely.  This class has been unused for several years,
+              and was just a trivial wrapper for iterating through a surface
+              list with a filter.
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,

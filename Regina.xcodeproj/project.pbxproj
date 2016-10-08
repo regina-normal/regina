@@ -168,7 +168,6 @@
 		050F5E371B9BAB9C00C1F681 /* normalflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7C1B9BAB9C00C1F681 /* normalflags.cpp */; };
 		050F5E381B9BAB9C00C1F681 /* nprism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7D1B9BAB9C00C1F681 /* nprism.cpp */; };
 		050F5E391B9BAB9C00C1F681 /* nsurfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7E1B9BAB9C00C1F681 /* nsurfacefilter.cpp */; };
-		050F5E3A1B9BAB9C00C1F681 /* nsurfacesubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7F1B9BAB9C00C1F681 /* nsurfacesubset.cpp */; };
 		050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */; };
 		050F5E3E1B9BAB9C00C1F681 /* surfacefiltertype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */; };
 		050F5E3F1B9BAB9C00C1F681 /* treedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA81B9BAB9C00C1F681 /* treedecomposition.cpp */; };
@@ -544,8 +543,6 @@
 		052FA043180600FB00FAE4DF /* nsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1D180600FB00FAE4DF /* nsstandard.h */; };
 		052FA044180600FB00FAE4DF /* nsurfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* nsurfacefilter.cpp */; };
 		052FA045180600FB00FAE4DF /* nsurfacefilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1F180600FB00FAE4DF /* nsurfacefilter.h */; };
-		052FA046180600FB00FAE4DF /* nsurfacesubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E20180600FB00FAE4DF /* nsurfacesubset.cpp */; };
-		052FA047180600FB00FAE4DF /* nsurfacesubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E21180600FB00FAE4DF /* nsurfacesubset.h */; };
 		052FA048180600FB00FAE4DF /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */; };
 		052FA049180600FB00FAE4DF /* xmlfilterreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E23180600FB00FAE4DF /* xmlfilterreader.h */; };
 		052FA04B180600FB00FAE4DF /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */; };
@@ -754,7 +751,6 @@
 		052FA1E21806129B00FAE4DF /* nsquadoct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1A180600FB00FAE4DF /* nsquadoct.cpp */; };
 		052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1C180600FB00FAE4DF /* nsstandard.cpp */; };
 		052FA1E41806129B00FAE4DF /* nsurfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* nsurfacefilter.cpp */; };
-		052FA1E51806129B00FAE4DF /* nsurfacesubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E20180600FB00FAE4DF /* nsurfacesubset.cpp */; };
 		052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */; };
 		052FA1E81806129B00FAE4DF /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */; };
 		052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E27180600FB00FAE4DF /* orientable.cpp */; };
@@ -2098,7 +2094,6 @@
 		050F5D7C1B9BAB9C00C1F681 /* normalflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalflags.cpp; sourceTree = "<group>"; };
 		050F5D7D1B9BAB9C00C1F681 /* nprism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprism.cpp; sourceTree = "<group>"; };
 		050F5D7E1B9BAB9C00C1F681 /* nsurfacefilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacefilter.cpp; sourceTree = "<group>"; };
-		050F5D7F1B9BAB9C00C1F681 /* nsurfacesubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacesubset.cpp; sourceTree = "<group>"; };
 		050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysurfaces.cpp; sourceTree = "<group>"; };
 		050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefiltertype.cpp; sourceTree = "<group>"; };
 		050F5D851B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -2570,8 +2565,6 @@
 		052F9E1D180600FB00FAE4DF /* nsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsstandard.h; sourceTree = "<group>"; };
 		052F9E1E180600FB00FAE4DF /* nsurfacefilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacefilter.cpp; sourceTree = "<group>"; };
 		052F9E1F180600FB00FAE4DF /* nsurfacefilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacefilter.h; sourceTree = "<group>"; };
-		052F9E20180600FB00FAE4DF /* nsurfacesubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacesubset.cpp; sourceTree = "<group>"; };
-		052F9E21180600FB00FAE4DF /* nsurfacesubset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacesubset.h; sourceTree = "<group>"; };
 		052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlfilterreader.cpp; sourceTree = "<group>"; };
 		052F9E23180600FB00FAE4DF /* xmlfilterreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlfilterreader.h; sourceTree = "<group>"; };
 		052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlsurfacereader.cpp; sourceTree = "<group>"; };
@@ -4016,7 +4009,6 @@
 				050F5D7A1B9BAB9C00C1F681 /* normalsurfaces.cpp */,
 				050F5D7D1B9BAB9C00C1F681 /* nprism.cpp */,
 				050F5D7E1B9BAB9C00C1F681 /* nsurfacefilter.cpp */,
-				050F5D7F1B9BAB9C00C1F681 /* nsurfacesubset.cpp */,
 				050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */,
 				050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */,
 			);
@@ -4815,8 +4807,6 @@
 				052F9E1D180600FB00FAE4DF /* nsstandard.h */,
 				052F9E1E180600FB00FAE4DF /* nsurfacefilter.cpp */,
 				052F9E1F180600FB00FAE4DF /* nsurfacefilter.h */,
-				052F9E20180600FB00FAE4DF /* nsurfacesubset.cpp */,
-				052F9E21180600FB00FAE4DF /* nsurfacesubset.h */,
 				052F9E27180600FB00FAE4DF /* orientable.cpp */,
 				052F9E28180600FB00FAE4DF /* quadtostd.cpp */,
 				052F9E2A180600FB00FAE4DF /* sfcombination.h */,
@@ -6072,7 +6062,6 @@
 				052FA08B180600FB00FAE4DF /* bitmask.h in Headers */,
 				050C64C41DA32E7D00C9420F /* nhilbertprimal.h in Headers */,
 				052FA00F180600FB00FAE4DF /* nsatregion.h in Headers */,
-				052FA047180600FB00FAE4DF /* nsurfacesubset.h in Headers */,
 				0591E7A81C4F74C400793A9C /* dim4isomorphism.h in Headers */,
 				05431F291C40F260009BC072 /* triangulation.h in Headers */,
 				05431F001C40F1F6009BC072 /* facetpairing.h in Headers */,
@@ -7062,7 +7051,6 @@
 				057EE4E91C600A3600C4D155 /* facetpairing14.cpp in Sources */,
 				057EE4CF1C600A3600C4D155 /* triangulation12.cpp in Sources */,
 				057EE4D21C600A3600C4D155 /* triangulation15.cpp in Sources */,
-				050F5E3A1B9BAB9C00C1F681 /* nsurfacesubset.cpp in Sources */,
 				050F5E111B9BAB9C00C1F681 /* snappeatriangulation.cpp in Sources */,
 				057EE4D81C600A3600C4D155 /* isomorphism10.cpp in Sources */,
 				050F5E161B9BAB9C00C1F681 /* nblockedsfs.cpp in Sources */,
@@ -7354,7 +7342,6 @@
 				050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */,
 				0591E7C61C4F74E100793A9C /* simplify.cpp in Sources */,
 				052FA212180612DD00FAE4DF /* canonize_part_1.c in Sources */,
-				052FA1E51806129B00FAE4DF /* nsurfacesubset.cpp in Sources */,
 				052FA1D21806129B00FAE4DF /* components.cpp in Sources */,
 				0589FAC3181484860064CD57 /* TriGluings.mm in Sources */,
 				052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */,
@@ -7957,7 +7944,6 @@
 				052FA018180600FB00FAE4DF /* nstandardtri.cpp in Sources */,
 				052F9FA7180600FB00FAE4DF /* unix_file_io.c in Sources */,
 				052FA029180600FB00FAE4DF /* ndisc.cpp in Sources */,
-				052FA046180600FB00FAE4DF /* nsurfacesubset.cpp in Sources */,
 				052FA081180600FB00FAE4DF /* turaevviro.cpp in Sources */,
 				0591E7A01C4F74C400793A9C /* dim4boundarycomponent.cpp in Sources */,
 				052F9F98180600FB00FAE4DF /* simplify_triangulation.c in Sources */,

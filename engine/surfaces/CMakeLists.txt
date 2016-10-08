@@ -20,7 +20,6 @@ SET ( FILES
   nsquadoct
   nsstandard
   nsurfacefilter
-  nsurfacesubset
   xmlfilterreader
   xmlsurfacereader
   orientable
@@ -59,7 +58,6 @@ if (${REGINA_INSTALL_DEV})
     nsquadoct.h
     nsstandard.h
     nsurfacefilter.h
-    nsurfacesubset.h
     xmlfilterreader.h
     xmlsurfacereader.h
     sfcombination.h

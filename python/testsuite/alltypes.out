@@ -1323,9 +1323,6 @@ Equality type : BY_REFERENCE
 NSurfaceFilterProperties : class
 Equality type : BY_REFERENCE
 
-NSurfaceSubset : class
-Equality type : BY_REFERENCE
-
 NTetFace : typedef ->  FacetSpec3
 
 NTetrahedron : typedef ->  Simplex3
