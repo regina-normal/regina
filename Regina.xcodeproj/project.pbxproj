@@ -170,8 +170,6 @@
 		050F5E391B9BAB9C00C1F681 /* nsurfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7E1B9BAB9C00C1F681 /* nsurfacefilter.cpp */; };
 		050F5E3A1B9BAB9C00C1F681 /* nsurfacesubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7F1B9BAB9C00C1F681 /* nsurfacesubset.cpp */; };
 		050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */; };
-		050F5E3C1B9BAB9C00C1F681 /* sfcombination.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D811B9BAB9C00C1F681 /* sfcombination.cpp */; };
-		050F5E3D1B9BAB9C00C1F681 /* sfproperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D821B9BAB9C00C1F681 /* sfproperties.cpp */; };
 		050F5E3E1B9BAB9C00C1F681 /* surfacefiltertype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */; };
 		050F5E3F1B9BAB9C00C1F681 /* treedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA81B9BAB9C00C1F681 /* treedecomposition.cpp */; };
 		050F5E401B9BAB9C00C1F681 /* pytreewidth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA91B9BAB9C00C1F681 /* pytreewidth.cpp */; };
@@ -2102,8 +2100,6 @@
 		050F5D7E1B9BAB9C00C1F681 /* nsurfacefilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacefilter.cpp; sourceTree = "<group>"; };
 		050F5D7F1B9BAB9C00C1F681 /* nsurfacesubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacesubset.cpp; sourceTree = "<group>"; };
 		050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysurfaces.cpp; sourceTree = "<group>"; };
-		050F5D811B9BAB9C00C1F681 /* sfcombination.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sfcombination.cpp; sourceTree = "<group>"; };
-		050F5D821B9BAB9C00C1F681 /* sfproperties.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sfproperties.cpp; sourceTree = "<group>"; };
 		050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefiltertype.cpp; sourceTree = "<group>"; };
 		050F5D851B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D861B9BAB9C00C1F681 /* cube.orb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.orb; sourceTree = "<group>"; };
@@ -4022,8 +4018,6 @@
 				050F5D7E1B9BAB9C00C1F681 /* nsurfacefilter.cpp */,
 				050F5D7F1B9BAB9C00C1F681 /* nsurfacesubset.cpp */,
 				050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */,
-				050F5D811B9BAB9C00C1F681 /* sfcombination.cpp */,
-				050F5D821B9BAB9C00C1F681 /* sfproperties.cpp */,
 				050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */,
 			);
 			path = surfaces;
@@ -6903,7 +6897,6 @@
 				05CAFB531C4CEA160001C253 /* face15.cpp in Sources */,
 				057EE4C31C600A3600C4D155 /* simplex11.cpp in Sources */,
 				0591E8281C4F764F00793A9C /* nnormalhypersurface.cpp in Sources */,
-				050F5E3D1B9BAB9C00C1F681 /* sfproperties.cpp in Sources */,
 				050F5DE41B9BAB9C00C1F681 /* pydim2.cpp in Sources */,
 				050F5E241B9BAB9C00C1F681 /* nplugtrisolidtorus.cpp in Sources */,
 				050F5E331B9BAB9C00C1F681 /* ndisctype.cpp in Sources */,
@@ -7050,7 +7043,6 @@
 				052942D91C5CDCCB0011C1E6 /* safeheldtype.cpp in Sources */,
 				057EE4CB1C600A3600C4D155 /* triangulation8.cpp in Sources */,
 				050F5DFF1B9BAB9C00C1F681 /* primes.cpp in Sources */,
-				050F5E3C1B9BAB9C00C1F681 /* sfcombination.cpp in Sources */,
 				050C64801DA10A0700C9420F /* anglestructures.cpp in Sources */,
 				050F5E4E1B9BAB9C00C1F681 /* i18nutils.cpp in Sources */,
 				050F5E141B9BAB9C00C1F681 /* pysplit.cpp in Sources */,

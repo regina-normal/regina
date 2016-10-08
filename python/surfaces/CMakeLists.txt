@@ -11,8 +11,6 @@ SET ( FILES
   nprism
   nsurfacefilter
   nsurfacesubset
-  sfcombination
-  sfproperties
   surfacefiltertype
   pysurfaces
   )
