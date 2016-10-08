@@ -31,9 +31,18 @@
  **************************************************************************/
 
 #include "surfaces/nsurfacefilter.h"
+#include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/filterregistry.h"
 #include "utilities/xmlutils.h"
+
+#define TYPE_AND 1
+#define TYPE_OR 2
+
+#define PROPSF_EULER 1001
+#define PROPSF_ORIENT 1002
+#define PROPSF_COMPACT 1003
+#define PROPSF_REALBDRY 1004
 
 namespace regina {
 
@@ -45,6 +54,89 @@ void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
     writeXMLFilterData(out);
 
     out << "  </filter>\n";
+}
+
+bool NSurfaceFilterCombination::accept(const NNormalSurface& surface) const {
+    if (usesAnd_) {
+        // Combine all child filters using AND.
+        for (Packet* child = firstChild(); child; child = child->nextSibling())
+            if (child->type() == PACKET_SURFACEFILTER)
+                if (! (dynamic_cast<NSurfaceFilter*>(child)->accept(surface)))
+                    return false;
+        return true;
+    } else {
+        // Combine all child filters using OR.
+        for (Packet* child = firstChild(); child; child = child->nextSibling())
+            if (child->type() == PACKET_SURFACEFILTER)
+                if (dynamic_cast<NSurfaceFilter*>(child)->accept(surface))
+                    return true;
+        return false;
+    }
+}
+
+void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
+    out << "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n";
+}
+
+LargeInteger NSurfaceFilterProperties::eulerChar(size_t index) const {
+    std::set<LargeInteger>::const_iterator it = eulerChar_.begin();
+    advance(it, index);
+    return *it;
+}
+
+bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
+    if (! realBoundary_.contains(surface.hasRealBoundary()))
+        return false;
+    if (! compactness_.contains(surface.isCompact()))
+        return false;
+
+    // Some properties may only be calculated for compact surfaces.
+    if (surface.isCompact()) {
+        if (! orientability_.contains(surface.isOrientable()))
+            return false;
+
+        if (! eulerChar_.empty())
+            if (! eulerChar_.count(surface.eulerChar()))
+                return false;
+    }
+
+    // All tests passed.
+    return true;
+}
+
+void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
+    o << "Filter normal surfaces with restrictions:\n";
+
+    if (eulerChar_.size() > 0) {
+        o << "    Euler characteristic:";
+        for (auto it = eulerChar_.rbegin(); it != eulerChar_.rend(); ++it)
+            o << ' ' << *it;
+        o << '\n';
+    }
+    if (orientability_ != BoolSet::sBoth)
+        o << "    Orientability: " << orientability_ << '\n';
+    if (compactness_ != BoolSet::sBoth)
+        o << "    Compactness: " << compactness_ << '\n';
+    if (realBoundary_ != BoolSet::sBoth)
+        o << "    Has real boundary: " << realBoundary_ << '\n';
+}
+
+void NSurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
+    using regina::xml::xmlValueTag;
+
+    if (! eulerChar_.empty()) {
+        out << "    <euler> ";
+        for (auto it = eulerChar_.begin(); it != eulerChar_.end(); ++it)
+            out << (*it) << ' ';
+        out << "</euler>\n";
+    }
+
+    if (orientability_ != BoolSet::sBoth)
+        out << "    " << xmlValueTag("orbl", orientability_) << '\n';
+    if (compactness_ != BoolSet::sBoth)
+        out << "    " << xmlValueTag("compact", compactness_) << '\n';
+    if (realBoundary_ != BoolSet::sBoth)
+        out << "    " << xmlValueTag("realbdry", realBoundary_) << '\n';
 }
 
 } // namespace regina

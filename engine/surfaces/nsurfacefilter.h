@@ -39,15 +39,20 @@
 #define __NSURFACEFILTER_H
 #endif
 
+#include <set>
 #include "regina-core.h"
+#include "maths/integer.h"
 #include "packet/packet.h"
 #include "surfaces/surfacefiltertype.h"
+#include "utilities/boolset.h"
 
 namespace regina {
 
 class NNormalSurface;
 class NormalSurfaces;
 class NSurfaceFilter;
+class NSurfaceFilterCombination;
+class NSurfaceFilterProperties;
 class XMLPacketReader;
 class XMLFilterReader;
 
@@ -121,6 +126,22 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
     typedef NSurfaceFilter Class;
     inline static const char* name() {
         return "Default filter";
+    }
+};
+
+template <>
+struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
+    typedef NSurfaceFilterCombination Class;
+    inline static const char* name() {
+        return "Combination filter";
+    }
+};
+
+template <>
+struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
+    typedef NSurfaceFilterProperties Class;
+    inline static const char* name() {
+        return "Filter by basic properties";
     }
 };
 #endif
@@ -252,6 +273,230 @@ class REGINA_API NSurfaceFilter : public Packet {
         virtual void writeXMLPacketData(std::ostream& out) const;
 };
 
+/**
+ * A normal surface filter that simply combines other filters.
+ * This filter will combine, using boolean \a and or \a or, all of the
+ * filters that are immediate children of this packet.  This packet may
+ * have children that are not normal surface filters; such children will
+ * simply be ignored.
+ *
+ * If there are no immediate child filters, a normal surface will be
+ * accepted if this is an \a and filter and rejected if this is an \a or
+ * filter.
+ */
+class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
+    REGINA_SURFACE_FILTER(NSurfaceFilterCombination, NS_FILTER_COMBINATION)
+
+    private:
+        bool usesAnd_;
+            /**< \c true if children are combined using boolean \a and, or
+                 \c false if children are combined using boolean \a or. */
+
+    public:
+        /**
+         * Creates a new surface filter that accepts all normal surfaces.
+         * This will be an \a and filter.
+         */
+        NSurfaceFilterCombination();
+        /**
+         * Creates a new surface filter that is a clone of the given
+         * surface filter.
+         *
+         * @param cloneMe the surface filter to clone.
+         */
+        NSurfaceFilterCombination(const NSurfaceFilterCombination& cloneMe);
+
+        /**
+         * Determines whether this is an \a and or an \a or combination.
+         *
+         * @return \c true if this is an \a and combination, or \c false
+         * if this is an \a or combination.
+         */
+        bool usesAnd() const;
+        /**
+         * Sets whether this is an \a and or an \a or combination.
+         *
+         * @param value \c true if this is to be an \a and combination,
+         * or \c false if this is to be an \a or combination.
+         */
+        void setUsesAnd(bool value);
+
+        virtual bool accept(const NNormalSurface& surface) const;
+        virtual void writeTextLong(std::ostream& out) const;
+        static XMLFilterReader* xmlFilterReader(Packet* parent);
+
+    protected:
+        virtual Packet* internalClonePacket(Packet* parent) const;
+        virtual void writeXMLFilterData(std::ostream& out) const;
+};
+
+/**
+ * A normal surface filter that filters by basic properties of the normal
+ * surface.
+ *
+ * If a property of the surface (such as Euler characteristic or
+ * orientability) cannot be determined, the surface will pass any test
+ * based on that particular property.  For instance, say a surface is
+ * required to be both orientable and compact, and say that orientability
+ * cannot be determined.  Then the surface will be accepted solely on the
+ * basis of whether or not it is compact.
+ */
+class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
+    REGINA_SURFACE_FILTER(NSurfaceFilterProperties, NS_FILTER_PROPERTIES)
+
+    private:
+        std::set<LargeInteger> eulerChar_;
+            /**< The set of allowable Euler characteristics.  An empty
+                 set signifies that any Euler characteristic is allowed. */
+        BoolSet orientability_;
+            /**< The set of allowable orientability properties. */
+        BoolSet compactness_;
+            /**< The set of allowable compactness properties. */
+        BoolSet realBoundary_;
+            /**< The set of allowable has-real-boundary properties. */
+
+    public:
+        /**
+         * Creates a new surface filter that accepts all normal surfaces.
+         */
+        NSurfaceFilterProperties();
+        /**
+         * Creates a new surface filter that is a clone of the given
+         * surface filter.
+         *
+         * @param cloneMe the surface filter to clone.
+         */
+        NSurfaceFilterProperties(const NSurfaceFilterProperties& cloneMe);
+
+        /**
+         * Returns the set of allowable Euler characteristics.  Any
+         * surface whose Euler characteristic is not in this set will not
+         * be accepted by this filter.  The set will be given in
+         * ascending order with no element repeated.
+         *
+         * If this set is empty, all Euler characteristics will be
+         * accepted.
+         *
+         * \ifacespython This routine returns a python sequence.
+         *
+         * @return the set of allowable Euler characteristics.
+         */
+        const std::set<LargeInteger>& eulerChars() const;
+        /**
+         * Returns the number of allowable Euler characteristics.
+         * See eulerChars() for further details.
+         *
+         * @return the number of allowable Euler characteristics.
+         */
+        size_t countEulerChars() const;
+        /**
+         * Returns the allowable Euler characteristic at the given index
+         * in the set.  See eulerChars() for further details.
+         *
+         * @param index the index in the set of allowable Euler
+         * characteristics; this must be between 0 and countEulerChars()-1
+         * inclusive.
+         * @return the requested allowable Euler characteristic.
+         */
+        LargeInteger eulerChar(size_t index) const;
+        /**
+         * Returns the set of allowable orientabilities.  Note that this
+         * is a subset of <tt>{ true, false }</tt>.
+         * Any surface whose orientability is not in this set will not be
+         * accepted by this filter.
+         *
+         * @return the set of allowable orientabilities.
+         */
+        BoolSet orientability() const;
+        /**
+         * Returns the set of allowable compactness properties.
+         * Note that this is a subset of <tt>{ true, false }</tt>.
+         * Any surface whose compactness property is not in this set will
+         * not be accepted by this filter.
+         *
+         * @return the set of allowable compactness properties.
+         */
+        BoolSet compactness() const;
+        /**
+         * Returns the set of allowable has-real-boundary properties.
+         * Note that this is a subset of <tt>{ true, false }</tt>.
+         * Any surface whose has-real-boundary property is not in this set
+         * will not be accepted by this filter.
+         *
+         * @return the set of allowable has-real-boundary properties.
+         */
+        BoolSet realBoundary() const;
+
+        /**
+         * Sets the allowable Euler characteristics to the given set.
+         * See eulerChars() for further details.
+         *
+         * \ifaces Not present.
+         *
+         * @param s the new set of allowable Euler characteristics.
+         */
+        void setEulerChars(const std::set<LargeInteger>& s);
+
+        /**
+         * Adds the given Euler characteristic to the set of allowable
+         * Euler characteristics.  See eulerChars() for further details.
+         *
+         * @param ec the new allowable Euler characteristic.
+         */
+        void addEulerChar(const LargeInteger& ec);
+        /**
+         * Removes the given Euler characteristic from the set of allowable
+         * Euler characteristics.  See eulerChars() for further details.
+         *
+         * Note that if the allowable set is completely emptied, this
+         * filter will allow <i>any</i> Euler characteristic to pass.
+         *
+         * \pre The given Euler characteristic is currently in the
+         * allowable set.
+         *
+         * @param ec the allowable Euler characteristic to remove.
+         */
+        void removeEulerChar(const LargeInteger& ec);
+        /**
+         * Empties the set of allowable Euler characteristics.  See
+         * eulerChars() for further details.
+         *
+         * Note that this will mean that this filter will allow
+         * <i>any</i> Euler characteristic to pass.
+         */
+        void removeAllEulerChars();
+        /**
+         * Sets the set of allowable orientabilities.
+         * See orientability() for further details.
+         *
+         * @param value the new set of allowable orientabilities.
+         */
+        void setOrientability(const BoolSet& value);
+        /**
+         * Sets the set of allowable compactness properties.
+         * See compactness() for further details.
+         *
+         * @param value the new set of allowable compactness properties.
+         */
+        void setCompactness(const BoolSet& value);
+        /**
+         * Sets the set of allowable has-real-boundary properties.
+         * See realBoundary() for further details.
+         *
+         * @param value the new set of allowable has-real-boundary
+         * properties.
+         */
+        void setRealBoundary(const BoolSet& value);
+
+        virtual bool accept(const NNormalSurface& surface) const;
+        virtual void writeTextLong(std::ostream& out) const;
+        static XMLFilterReader* xmlFilterReader(Packet* parent);
+
+    protected:
+        virtual Packet* internalClonePacket(Packet* parent) const;
+        virtual void writeXMLFilterData(std::ostream& out) const;
+};
+
 /*@}*/
 
 // Inline functions for NSurfaceFilter
@@ -280,6 +525,108 @@ inline bool NSurfaceFilter::dependsOnParent() const {
 
 inline Packet* NSurfaceFilter::internalClonePacket(Packet*) const {
     return new NSurfaceFilter();
+}
+
+// Inline functions for NSurfaceFilterCombination
+
+inline NSurfaceFilterCombination::NSurfaceFilterCombination() : usesAnd_(true) {
+}
+inline NSurfaceFilterCombination::NSurfaceFilterCombination(
+        const NSurfaceFilterCombination& cloneMe) : NSurfaceFilter(),
+        usesAnd_(cloneMe.usesAnd_) {
+}
+
+inline bool NSurfaceFilterCombination::usesAnd() const {
+    return usesAnd_;
+}
+inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
+    if (usesAnd_ != value) {
+        ChangeEventSpan span(this);
+        usesAnd_ = value;
+    }
+}
+
+inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {
+    o << (usesAnd_ ? "AND" : "OR") << " combination normal surface filter\n";
+}
+
+inline Packet* NSurfaceFilterCombination::internalClonePacket(Packet*) const {
+    return new NSurfaceFilterCombination(*this);
+}
+
+// Inline functions for NSurfaceFilterProperties
+
+inline NSurfaceFilterProperties::NSurfaceFilterProperties() :
+        orientability_(BoolSet::sBoth),
+        compactness_(BoolSet::sBoth),
+        realBoundary_(BoolSet::sBoth) {
+}
+inline NSurfaceFilterProperties::NSurfaceFilterProperties(
+        const NSurfaceFilterProperties& cloneMe) :
+        NSurfaceFilter(),
+        eulerChar_(cloneMe.eulerChar_),
+        orientability_(cloneMe.orientability_),
+        compactness_(cloneMe.compactness_),
+        realBoundary_(cloneMe.realBoundary_) {
+}
+
+inline const std::set<LargeInteger>& NSurfaceFilterProperties::eulerChars()
+        const {
+    return eulerChar_;
+}
+inline size_t NSurfaceFilterProperties::countEulerChars() const {
+    return eulerChar_.size();
+}
+inline BoolSet NSurfaceFilterProperties::orientability() const {
+    return orientability_;
+}
+inline BoolSet NSurfaceFilterProperties::compactness() const {
+    return compactness_;
+}
+inline BoolSet NSurfaceFilterProperties::realBoundary() const {
+    return realBoundary_;
+}
+
+inline void NSurfaceFilterProperties::setEulerChars(
+        const std::set<LargeInteger>& s) {
+    if (eulerChar_ != s) {
+        ChangeEventSpan span(this);
+        eulerChar_ = s;
+    }
+}
+inline void NSurfaceFilterProperties::addEulerChar(const LargeInteger& ec) {
+    ChangeEventSpan span(this);
+    eulerChar_.insert(ec);
+}
+inline void NSurfaceFilterProperties::removeEulerChar(const LargeInteger& ec) {
+    ChangeEventSpan span(this);
+    eulerChar_.erase(ec);
+}
+inline void NSurfaceFilterProperties::removeAllEulerChars() {
+    ChangeEventSpan span(this);
+    eulerChar_.clear();
+}
+inline void NSurfaceFilterProperties::setOrientability(const BoolSet& value) {
+    if (orientability_ != value) {
+        ChangeEventSpan span(this);
+        orientability_ = value;
+    }
+}
+inline void NSurfaceFilterProperties::setCompactness(const BoolSet& value) {
+    if (compactness_ != value) {
+        ChangeEventSpan span(this);
+        compactness_ = value;
+    }
+}
+inline void NSurfaceFilterProperties::setRealBoundary(const BoolSet& value) {
+    if (realBoundary_ != value) {
+        ChangeEventSpan span(this);
+        realBoundary_ = value;
+    }
+}
+
+inline Packet* NSurfaceFilterProperties::internalClonePacket(Packet*) const {
+    return new NSurfaceFilterProperties(*this);
 }
 
 } // namespace regina
