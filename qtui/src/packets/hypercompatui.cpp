@@ -31,8 +31,8 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "hypersurface/nnormalhypersurface.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurface.h"
+#include "hypersurface/normalhypersurfaces.h"
 
 // UI includes:
 #include "compatcanvas.h"
@@ -52,11 +52,11 @@
 #include <QVBoxLayout>
 #include <QStackedWidget>
 
-using regina::NNormalHypersurfaceList;
+using regina::NormalHypersurfaces;
 using regina::Packet;
 
 HyperCompatibilityUI::HyperCompatibilityUI(
-        regina::NNormalHypersurfaceList* packet, PacketTabbedUI* useParentUI) :
+        regina::NormalHypersurfaces* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(0), layerLocal(0), requestedCalculation(false) {
     ui = new QWidget();

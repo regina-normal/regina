@@ -32,8 +32,8 @@
 
 // Regina core includes:
 #include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurface.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurface.h"
+#include "hypersurface/normalhypersurfaces.h"
 
 // UI includes:
 #include "hypersummaryui.h"
@@ -75,7 +75,7 @@ namespace {
 }
 
 HyperSummaryUI::HyperSummaryUI(
-        regina::NNormalHypersurfaceList* packet, PacketTabbedUI* useParentUI) :
+        regina::NormalHypersurfaces* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);

@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 
 // UI includes:
 #include "coordinates.h"
@@ -51,7 +51,7 @@
 using regina::Packet;
 using regina::NNormalHypersurface;
 
-HyperUI::HyperUI(regina::NNormalHypersurfaceList* packet,
+HyperUI::HyperUI(regina::NormalHypersurfaces* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabHypersurfaceList) {
@@ -80,7 +80,7 @@ QString HyperUI::getPacketMenuText() const {
     return tr("&Normal Hypersurfaces");
 }
 
-HyperHeaderUI::HyperHeaderUI(regina::NNormalHypersurfaceList* packet,
+HyperHeaderUI::HyperHeaderUI(regina::NormalHypersurfaces* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet) {
     header = new QLabel(0);

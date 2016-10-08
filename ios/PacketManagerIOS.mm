@@ -48,7 +48,7 @@
         return [UIImage imageNamed:@"Document"];
 
     switch (p->type()) {
-        case regina::PACKET_ANGLESTRUCTURELIST:
+        case regina::PACKET_ANGLESTRUCTURES:
             return [UIImage imageNamed:@"Angles"];
         case regina::PACKET_CONTAINER:
             return [UIImage imageNamed:@"Container"];
@@ -58,9 +58,9 @@
             return [UIImage imageNamed:@"Triangulation"];
         case regina::PACKET_DIM4TRIANGULATION:
             return [UIImage imageNamed:@"Dim4Triangulation"];
-        case regina::PACKET_NORMALSURFACELIST:
+        case regina::PACKET_NORMALSURFACES:
             return [UIImage imageNamed:@"Surfaces"];
-        case regina::PACKET_NORMALHYPERSURFACELIST:
+        case regina::PACKET_NORMALHYPERSURFACES:
             return [UIImage imageNamed:@"Hypersurfaces"];
         case regina::PACKET_PDF:
             return [UIImage imageNamed:@"PDF"];
@@ -101,11 +101,11 @@
 
 + (NSString *)viewerFor:(regina::Packet *)p {
     switch (p->type()) {
-        case regina::PACKET_ANGLESTRUCTURELIST: return @"viewAngles";
+        case regina::PACKET_ANGLESTRUCTURES: return @"viewAngles";
         case regina::PACKET_DIM2TRIANGULATION: return @"viewDim2Triangulation";
         case regina::PACKET_DIM4TRIANGULATION: return @"viewDim4Triangulation";
-        case regina::PACKET_NORMALSURFACELIST: return @"viewSurfaces";
-        case regina::PACKET_NORMALHYPERSURFACELIST: return @"viewHypersurfaces";
+        case regina::PACKET_NORMALSURFACES: return @"viewSurfaces";
+        case regina::PACKET_NORMALHYPERSURFACES: return @"viewHypersurfaces";
         case regina::PACKET_SCRIPT: return @"viewScript";
         case regina::PACKET_SNAPPEATRIANGULATION: return @"viewSnapPea";
         case regina::PACKET_SURFACEFILTER:
@@ -169,13 +169,13 @@
         case regina::PACKET_DIM4TRIANGULATION:
             [PacketManagerIOS newPacket:spec formSheet:@"newDim4Triangulation"];
             break;
-        case regina::PACKET_NORMALSURFACELIST:
+        case regina::PACKET_NORMALSURFACES:
             [PacketManagerIOS newPacket:spec formSheet:@"newSurfaces"];
             break;
-        case regina::PACKET_NORMALHYPERSURFACELIST:
+        case regina::PACKET_NORMALHYPERSURFACES:
             [PacketManagerIOS newPacket:spec formSheet:@"newHypersurfaces"];
             break;
-        case regina::PACKET_ANGLESTRUCTURELIST:
+        case regina::PACKET_ANGLESTRUCTURES:
             [PacketManagerIOS newPacket:spec formSheet:@"newAngles"];
             break;
         case regina::PACKET_SNAPPEATRIANGULATION:

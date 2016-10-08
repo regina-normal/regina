@@ -47,7 +47,7 @@ class HyperCoordinateUI;
 class QLabel;
 
 namespace regina {
-    class NNormalHypersurfaceList;
+    class NormalHypersurfaces;
 };
 
 /**
@@ -67,7 +67,7 @@ class HyperUI : public PacketTabbedUI {
         /**
          * Constructor.
          */
-        HyperUI(regina::NNormalHypersurfaceList* packet,
+        HyperUI(regina::NormalHypersurfaces* packet,
             PacketPane* newEnclosingPane);
 
         /**
@@ -88,7 +88,7 @@ class HyperHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NNormalHypersurfaceList* surfaces;
+        regina::NormalHypersurfaces* surfaces;
 
         /**
          * Internal components
@@ -100,7 +100,7 @@ class HyperHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        HyperHeaderUI(regina::NNormalHypersurfaceList* packet,
+        HyperHeaderUI(regina::NormalHypersurfaces* packet,
                 PacketTabbedUI* useParentUI);
 
         /**

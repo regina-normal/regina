@@ -50,7 +50,7 @@ class QStackedWidget;
 
 namespace regina {
     class Packet;
-    class NNormalHypersurfaceList;
+    class NormalHypersurfaces;
 };
 
 /**
@@ -70,7 +70,7 @@ class HyperCompatibilityUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NNormalHypersurfaceList* surfaces;
+        regina::NormalHypersurfaces* surfaces;
 
         /**
          * Compatibility matrices
@@ -101,7 +101,7 @@ class HyperCompatibilityUI : public QObject, public PacketViewerTab,
         /**
          * Constructor and destructor.
          */
-        HyperCompatibilityUI(regina::NNormalHypersurfaceList* packet,
+        HyperCompatibilityUI(regina::NormalHypersurfaces* packet,
             PacketTabbedUI* useParentUI);
         ~HyperCompatibilityUI();
 

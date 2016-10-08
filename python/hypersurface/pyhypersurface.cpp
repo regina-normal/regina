@@ -33,12 +33,12 @@
 void addHyperCoords();
 void addHyperFlags();
 void addNNormalHypersurface();
-void addNNormalHypersurfaceList();
+void addNormalHypersurfaces();
 
 void addHypersurfaceClasses() {
     addHyperCoords();
     addHyperFlags();
     addNNormalHypersurface();
-    addNNormalHypersurfaceList();
+    addNormalHypersurfaces();
 }
 

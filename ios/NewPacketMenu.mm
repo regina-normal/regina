@@ -83,13 +83,13 @@ static NSArray* _allRows;
                     [NewPacketRow rowWithType:regina::PACKET_DIM4TRIANGULATION
                                         label:@"4-D triangulation"
                                          icon:@"Dim4Triangulation"],
-                    [NewPacketRow rowWithType:regina::PACKET_NORMALSURFACELIST
+                    [NewPacketRow rowWithType:regina::PACKET_NORMALSURFACES
                                         label:@"Normal surfaces (3-D)"
                                          icon:@"Surfaces"],
-                    [NewPacketRow rowWithType:regina::PACKET_NORMALHYPERSURFACELIST
+                    [NewPacketRow rowWithType:regina::PACKET_NORMALHYPERSURFACES
                                         label:@"Normal hypersurfaces (4-D)"
                                          icon:@"Hypersurfaces"],
-                    [NewPacketRow rowWithType:regina::PACKET_ANGLESTRUCTURELIST
+                    [NewPacketRow rowWithType:regina::PACKET_ANGLESTRUCTURES
                                         label:@"Angle structures"
                                          icon:@"Angles"],
                     [NewPacketRow rowWithType:regina::PACKET_SNAPPEATRIANGULATION

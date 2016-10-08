@@ -5,8 +5,8 @@ SET ( FILES
   enumerate
   links
   nhsstandard
-  nnormalhypersurface
-  nnormalhypersurfacelist
+  normalhypersurface
+  normalhypersurfaces
   xmlhypersurfacereader
   triangulate
   )
@@ -29,6 +29,8 @@ if (${REGINA_INSTALL_DEV})
     nhsstandard.h
     nnormalhypersurface.h
     nnormalhypersurfacelist.h
+    normalhypersurface.h
+    normalhypersurfaces.h
     xmlhypersurfacereader.h
     DESTINATION ${INCLUDEDIR}/hypersurface COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -32,8 +32,8 @@
 
 #import "HyperSummary.h"
 #import "TextHelper.h"
-#import "hypersurface/nnormalhypersurface.h"
-#import "hypersurface/nnormalhypersurfacelist.h"
+#import "hypersurface/normalhypersurface.h"
+#import "hypersurface/normalhypersurfaces.h"
 #import <iterator>
 #import <map>
 

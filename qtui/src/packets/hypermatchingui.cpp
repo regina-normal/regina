@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "maths/matrix.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 
 // UI includes:
 #include "coordinates.h"
@@ -43,7 +43,7 @@
 
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
-using regina::NNormalHypersurfaceList;
+using regina::NormalHypersurfaces;
 using regina::Packet;
 
 void HyperMatchingModel::rebuild() {
@@ -96,7 +96,7 @@ QVariant HyperMatchingModel::headerData(int section,
         return QVariant();
 }
 
-HyperMatchingUI::HyperMatchingUI(regina::NNormalHypersurfaceList* packet,
+HyperMatchingUI::HyperMatchingUI(regina::NormalHypersurfaces* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         currentlyAutoResizing(false), everRefreshed(false) {
     model = new HyperMatchingModel(packet);

@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "hypersurface/nnormalhypersurface.h"
+#include "hypersurface/normalhypersurface.h"
 
 namespace regina {
 

@@ -32,8 +32,8 @@
 
 #include <boost/python.hpp>
 #include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurface.h"
-#include "hypersurface/nnormalhypersurfacelist.h" // for makeZeroVector()
+#include "hypersurface/normalhypersurface.h"
+#include "hypersurface/normalhypersurfaces.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"

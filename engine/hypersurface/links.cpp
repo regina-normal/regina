@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurface.h"
+#include "hypersurface/normalhypersurface.h"
 
 namespace regina {
 

@@ -111,7 +111,7 @@ enum PacketType {
      */
     PACKET_DIM4TRIANGULATION = 11,
     /**
-     * Represents a normal hypersurface list, of class NNormalHypersurfaceList.
+     * Represents a normal hypersurface list, of class NormalHypersurfaces.
      */
     PACKET_NORMALHYPERSURFACES = 13,
     /**

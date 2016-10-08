@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "../safeheldtype.h"
@@ -43,40 +43,40 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::HyperCoords;
-using regina::NNormalHypersurfaceList;
+using regina::NormalHypersurfaces;
 
 namespace {
     // Write manual overload wrappers since these are static member functions.
-    NNormalHypersurfaceList* unified_2(regina::Dim4Triangulation* owner,
+    NormalHypersurfaces* unified_2(regina::Dim4Triangulation* owner,
             regina::HyperCoords coords) {
-        return NNormalHypersurfaceList::enumerate(owner, coords);
+        return NormalHypersurfaces::enumerate(owner, coords);
     }
-    NNormalHypersurfaceList* unified_3(regina::Dim4Triangulation* owner,
+    NormalHypersurfaces* unified_3(regina::Dim4Triangulation* owner,
             regina::HyperCoords coords, regina::HyperList which) {
-        return NNormalHypersurfaceList::enumerate(owner, coords, which);
+        return NormalHypersurfaces::enumerate(owner, coords, which);
     }
-    NNormalHypersurfaceList* unified_4(regina::Dim4Triangulation* owner,
+    NormalHypersurfaces* unified_4(regina::Dim4Triangulation* owner,
             regina::HyperCoords coords, regina::HyperList which,
             regina::HyperAlg algHints) {
-        return NNormalHypersurfaceList::enumerate(owner, coords, which,
+        return NormalHypersurfaces::enumerate(owner, coords, which,
             algHints);
     }
-    NNormalHypersurfaceList* unified_5(regina::Dim4Triangulation* owner,
+    NormalHypersurfaces* unified_5(regina::Dim4Triangulation* owner,
             regina::HyperCoords coords, regina::HyperList which,
             regina::HyperAlg algHints, regina::ProgressTracker* tracker) {
-        return NNormalHypersurfaceList::enumerate(owner, coords, which,
+        return NormalHypersurfaces::enumerate(owner, coords, which,
             algHints, tracker);
     }
 }
 
-void addNNormalHypersurfaceList() {
+void addNormalHypersurfaces() {
     def("makeMatchingEquations",
         regina::makeMatchingEquations,
         return_value_policy<manage_new_object>());
 
-    scope s = class_<NNormalHypersurfaceList, bases<regina::Packet>,
-            SafeHeldType<NNormalHypersurfaceList>, boost::noncopyable>
-            ("NNormalHypersurfaceList", no_init)
+    scope s = class_<NormalHypersurfaces, bases<regina::Packet>,
+            SafeHeldType<NormalHypersurfaces>, boost::noncopyable>
+            ("NormalHypersurfaces", no_init)
         .def("enumerate", unified_2,
             return_value_policy<to_held_type<>>())
         .def("enumerate", unified_3,
@@ -86,25 +86,25 @@ void addNNormalHypersurfaceList() {
         .def("enumerate", unified_5,
             return_value_policy<to_held_type<>>())
         .def("recreateMatchingEquations",
-            &NNormalHypersurfaceList::recreateMatchingEquations,
+            &NormalHypersurfaces::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
-        .def("coords", &NNormalHypersurfaceList::coords)
-        .def("which", &NNormalHypersurfaceList::which)
-        .def("algorithm", &NNormalHypersurfaceList::algorithm)
-        .def("isEmbeddedOnly", &NNormalHypersurfaceList::isEmbeddedOnly)
-        .def("triangulation", &NNormalHypersurfaceList::triangulation,
+        .def("coords", &NormalHypersurfaces::coords)
+        .def("which", &NormalHypersurfaces::which)
+        .def("algorithm", &NormalHypersurfaces::algorithm)
+        .def("isEmbeddedOnly", &NormalHypersurfaces::isEmbeddedOnly)
+        .def("triangulation", &NormalHypersurfaces::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("size", &NNormalHypersurfaceList::size)
-        .def("hypersurface", &NNormalHypersurfaceList::hypersurface,
+        .def("size", &NormalHypersurfaces::size)
+        .def("hypersurface", &NormalHypersurfaces::hypersurface,
             return_internal_reference<>())
         .staticmethod("enumerate")
     ;
 
-    s.attr("typeID") = regina::PACKET_NORMALHYPERSURFACELIST;
+    s.attr("typeID") = regina::PACKET_NORMALHYPERSURFACES;
 
-    implicitly_convertible<SafeHeldType<NNormalHypersurfaceList>,
+    implicitly_convertible<SafeHeldType<NormalHypersurfaces>,
         SafeHeldType<regina::Packet> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(NNormalHypersurfaceList);
+    FIX_REGINA_BOOST_CONVERTERS(NormalHypersurfaces);
 }
 

@@ -38,7 +38,7 @@
 #define __HYPERCOODINATEUI_H
 
 #include "dim4/dim4triangulation.h" // To avoid generic Triangulation<4>.
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 
 #include "../packettabui.h"
 #include "coordinates.h"
@@ -52,7 +52,7 @@ class QTreeView;
 
 namespace regina {
     class Packet;
-    class NNormalHypersurfaceList;
+    class NormalHypersurfaces;
 };
 
 class HyperModel : public QAbstractItemModel {
@@ -60,7 +60,7 @@ class HyperModel : public QAbstractItemModel {
         /**
          * Details of the normal hypersurfaces being displayed
          */
-        regina::NNormalHypersurfaceList* surfaces_;
+        regina::NormalHypersurfaces* surfaces_;
         regina::HyperCoords coordSystem_;
 
         /**
@@ -72,12 +72,12 @@ class HyperModel : public QAbstractItemModel {
         /**
          * Constructor and destructor.
          */
-        HyperModel(regina::NNormalHypersurfaceList* surfaces, bool readWrite);
+        HyperModel(regina::NormalHypersurfaces* surfaces, bool readWrite);
 
         /**
          * Data retrieval.
          */
-        regina::NNormalHypersurfaceList* surfaces() const;
+        regina::NormalHypersurfaces* surfaces() const;
         regina::HyperCoords coordSystem() const;
 
         /**
@@ -124,7 +124,7 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         HyperModel* model;
-        regina::NNormalHypersurfaceList* surfaces;
+        regina::NormalHypersurfaces* surfaces;
 
         /**
          * Internal components
@@ -149,7 +149,7 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        HyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
+        HyperCoordinateUI(regina::NormalHypersurfaces* packet,
             PacketTabbedUI* useParentUI, bool readWrite);
         ~HyperCoordinateUI();
 
@@ -189,14 +189,14 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         void updatePreferences();
 };
 
-inline HyperModel::HyperModel(regina::NNormalHypersurfaceList* surfaces,
+inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces,
         bool readWrite) :
         surfaces_(surfaces),
         coordSystem_(surfaces->coords()),
         isReadWrite(readWrite) {
 }
 
-inline regina::NNormalHypersurfaceList* HyperModel::surfaces() const {
+inline regina::NormalHypersurfaces* HyperModel::surfaces() const {
     return surfaces_;
 }
 

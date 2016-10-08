@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -48,7 +48,7 @@
 #include <QStyle>
 #include <QTreeView>
 
-using regina::NNormalHypersurfaceList;
+using regina::NormalHypersurfaces;
 using regina::Packet;
 
 void HyperModel::rebuild(regina::HyperCoords coordSystem) {
@@ -338,7 +338,7 @@ QString HyperModel::propertyColDesc(int whichCol) const {
     return tr("Unknown");
 }
 
-HyperCoordinateUI::HyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
+HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), surfaces(packet),
         isReadWrite(readWrite), currentlyResizing(false) {

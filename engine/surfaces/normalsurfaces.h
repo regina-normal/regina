@@ -142,7 +142,7 @@ enum SurfaceExportFields {
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
-struct PacketInfo<PACKET_NORMALSURFACELIST> {
+struct PacketInfo<PACKET_NORMALSURFACES> {
     typedef NormalSurfaces Class;
     inline static const char* name() {
         return "Normal Surface List";
@@ -169,7 +169,7 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  * embedded surfaces.
  */
 class REGINA_API NormalSurfaces : public Packet {
-    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACELIST)
+    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACES)
 
     public:
         class VectorIterator;

@@ -36,7 +36,7 @@
 #include "enumerate/doubledescription.h"
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "hypersurface/hscoordregistry.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
@@ -87,7 +87,7 @@ EnumConstraints* makeEmbeddedConstraints(
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-Dim4Triangulation* NNormalHypersurfaceList::triangulation() const {
+Dim4Triangulation* NormalHypersurfaces::triangulation() const {
     return dynamic_cast<Dim4Triangulation*>(parent());
 }
 
@@ -98,7 +98,7 @@ namespace {
     };
 }
 
-void NNormalHypersurfaceList::writeTextShort(std::ostream& out) const {
+void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
     out << surfaces_.size();
 
     if (which_.has(regina::HS_EMBEDDED_ONLY))
@@ -125,7 +125,7 @@ void NNormalHypersurfaceList::writeTextShort(std::ostream& out) const {
     out << " (" << forCoords(coords_, NameFunction(), "Unknown") << ')';
 }
 
-void NNormalHypersurfaceList::writeTextLong(std::ostream& out) const {
+void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
     if (which_.has(regina::HS_EMBEDDED_ONLY))
         out << "Embedded,";
     else if (which_.has(regina::HS_IMMERSED_SINGULAR))
@@ -157,7 +157,7 @@ void NNormalHypersurfaceList::writeTextLong(std::ostream& out) const {
     }
 }
 
-void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
+void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
     out << "  <params "
         << "type=\"" << which_.intValue() << "\" "
@@ -173,9 +173,9 @@ void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
         (*it)->writeXMLData(out);
 }
 
-Packet* NNormalHypersurfaceList::internalClonePacket(Packet* /* parent */)
+Packet* NormalHypersurfaces::internalClonePacket(Packet* /* parent */)
         const {
-    NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
+    NormalHypersurfaces* ans = new NormalHypersurfaces(
         coords_, which_, algorithm_);
     transform(surfaces_.begin(), surfaces_.end(), back_inserter(ans->surfaces_),
         FuncNewClonePtr<NNormalHypersurface>());

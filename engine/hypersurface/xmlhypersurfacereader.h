@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "packet/xmlpacketreader.h"
 
 namespace regina {
@@ -106,7 +106,7 @@ class REGINA_API XMLNormalHypersurfaceReader : public XMLElementReader {
  */
 class REGINA_API XMLNormalHypersurfacesReader : public XMLPacketReader {
     private:
-        NNormalHypersurfaceList* list_;
+        NormalHypersurfaces* list_;
             /**< The normal hypersurface list currently being read. */
         const Dim4Triangulation* tri_;
             /**< The triangulation in which these normal hypersurfaces live. */

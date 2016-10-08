@@ -143,7 +143,7 @@ void addNormalSurfaces() {
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
             OL_saveCSVEdgeWeight())
         .staticmethod("enumerate")
-        .attr("typeID") = regina::PACKET_NORMALSURFACELIST;
+        .attr("typeID") = regina::PACKET_NORMALSURFACES;
     ;
 
     implicitly_convertible<SafeHeldType<NormalSurfaces>,

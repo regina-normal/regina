@@ -34,7 +34,7 @@
 #import "ReginaHelper.h"
 #import "HyperViewController.h"
 #import "dim4/dim4triangulation.h"
-#import "hypersurface/nnormalhypersurfacelist.h"
+#import "hypersurface/normalhypersurfaces.h"
 
 #pragma mark - Hypersurfaces view controller
 

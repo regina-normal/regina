@@ -33,7 +33,7 @@
 // Regina core includes:
 #include "dim4/dim4triangulation.h"
 #include "progress/progresstracker.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 
 // UI includes:
 #include "coordinatechooser.h"
@@ -49,7 +49,7 @@
 #include <QMessageBox>
 #include <QWhatsThis>
 
-using regina::NNormalHypersurfaceList;
+using regina::NormalHypersurfaces;
 
 namespace {
     /**
@@ -173,7 +173,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating vertex normal hypersurfaces"),
             parentWidget);
 
-        NNormalHypersurfaceList* ans = NNormalHypersurfaceList::enumerate(
+        NormalHypersurfaces* ans = NormalHypersurfaces::enumerate(
             dynamic_cast<regina::Dim4Triangulation*>(parent),
             coordSystem,
             regina::HS_VERTEX | (embedded->isChecked() ?
@@ -195,7 +195,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating fundamental normal hypersurfaces"),
             parentWidget);
 
-        NNormalHypersurfaceList* ans = NNormalHypersurfaceList::enumerate(
+        NormalHypersurfaces* ans = NormalHypersurfaces::enumerate(
             dynamic_cast<regina::Dim4Triangulation*>(parent),
             coordSystem,
             regina::HS_FUNDAMENTAL | (embedded->isChecked() ?

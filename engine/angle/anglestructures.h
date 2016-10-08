@@ -63,7 +63,7 @@ class XMLAngleStructuresReader;
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
-struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
+struct PacketInfo<PACKET_ANGLESTRUCTURES> {
     typedef AngleStructures Class;
     inline static const char* name() {
         return "Angle Structure List";
@@ -81,7 +81,7 @@ struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
  * which is new as of Regina 3.95.
  */
 class REGINA_API AngleStructures : public Packet {
-    REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURELIST)
+    REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES)
 
     private:
         std::vector<AngleStructure*> structures;

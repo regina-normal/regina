@@ -17,6 +17,7 @@ Version 5.1  [ (under development) ]
             + NAngleStructureList becomes AngleStructures.
             + NEnumConstraintList becomes EnumConstraints.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
+            + NNormalHypersurfaceList becomes NormalHypersurfaces.
             + NNormalSurfaceList becomes NormalSurfaces.
             + NSurfaceSubset has been removed entirely (see below).
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.

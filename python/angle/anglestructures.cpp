@@ -83,7 +83,7 @@ void addAngleStructures() {
             return_value_policy<to_held_type<> >())
         .staticmethod("enumerate")
         .staticmethod("enumerateTautDD")
-        .attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST
+        .attr("typeID") = regina::PACKET_ANGLESTRUCTURES
     ;
 
     implicitly_convertible<SafeHeldType<AngleStructures>,

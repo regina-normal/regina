@@ -46,7 +46,7 @@
 class QTreeView;
 
 namespace regina {
-    class NNormalHypersurfaceList;
+    class NormalHypersurfaces;
     class Packet;
     template <int> class Triangulation;
     typedef Triangulation<4> Dim4Triangulation;
@@ -58,18 +58,18 @@ class HyperMatchingModel : public QAbstractItemModel {
          * Details of the matching equations being displayed
          */
         std::unique_ptr<regina::MatrixInt> eqns_;
-        regina::NNormalHypersurfaceList* surfaces_;
+        regina::NormalHypersurfaces* surfaces_;
 
     public:
         /**
          * Constructor.
          */
-        HyperMatchingModel(regina::NNormalHypersurfaceList* surfaces);
+        HyperMatchingModel(regina::NormalHypersurfaces* surfaces);
 
         /**
          * Data retrieval.
          */
-        regina::NNormalHypersurfaceList* surfaces() const;
+        regina::NormalHypersurfaces* surfaces() const;
 
         /**
          * Rebuild the model from scratch.
@@ -117,7 +117,7 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        HyperMatchingUI(regina::NNormalHypersurfaceList* packet,
+        HyperMatchingUI(regina::NormalHypersurfaces* packet,
                 PacketTabbedUI* useParentUI);
         ~HyperMatchingUI();
 
@@ -136,11 +136,11 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
 };
 
 inline HyperMatchingModel::HyperMatchingModel(
-        regina::NNormalHypersurfaceList* surfaces) :
+        regina::NormalHypersurfaces* surfaces) :
         surfaces_(surfaces) {
 }
 
-inline regina::NNormalHypersurfaceList* HyperMatchingModel::surfaces() const {
+inline regina::NormalHypersurfaces* HyperMatchingModel::surfaces() const {
     return surfaces_;
 }
 

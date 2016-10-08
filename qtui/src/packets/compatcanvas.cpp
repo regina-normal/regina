@@ -31,8 +31,8 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "hypersurface/nnormalhypersurface.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurface.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"
 
@@ -52,7 +52,7 @@
 #include <QGraphicsSimpleTextItem>
 
 using regina::NNormalHypersurface;
-using regina::NNormalHypersurfaceList;
+using regina::NormalHypersurfaces;
 using regina::NNormalSurface;
 using regina::NormalSurfaces;
 
@@ -295,7 +295,7 @@ void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
     update();
 }
 
-void CompatCanvas::fillLocal(const NNormalHypersurfaceList& surfaces) {
+void CompatCanvas::fillLocal(const NormalHypersurfaces& surfaces) {
     if (filled)
         return;
 

@@ -117,13 +117,13 @@ XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list_ = new NNormalHypersurfaceList(
+                    list_ = new NormalHypersurfaces(
                         static_cast<HyperCoords>(coords),
                         HyperList::fromInt(listType),
                         HyperAlg::fromInt(algorithm));
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old prerelease format.
-                    list_ = new NNormalHypersurfaceList(
+                    list_ = new NormalHypersurfaces(
                         static_cast<HyperCoords>(coords),
                         HS_LEGACY | (embedded ?
                             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
@@ -146,7 +146,7 @@ void XMLNormalHypersurfacesReader::endContentSubElement(
                 list_->surfaces_.push_back(s);
 }
 
-XMLPacketReader* NNormalHypersurfaceList::xmlReader(Packet* parent,
+XMLPacketReader* NormalHypersurfaces::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new XMLNormalHypersurfacesReader(
         dynamic_cast<Dim4Triangulation*>(parent), resolver);

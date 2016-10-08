@@ -43,7 +43,7 @@
 
 namespace regina {
     class Packet;
-    class NNormalHypersurfaceList;
+    class NormalHypersurfaces;
 };
 
 class QTreeWidget;
@@ -59,7 +59,7 @@ class HyperSummaryUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NNormalHypersurfaceList* surfaces;
+        regina::NormalHypersurfaces* surfaces;
 
         /**
          * Internal components
@@ -77,7 +77,7 @@ class HyperSummaryUI : public QObject, public PacketViewerTab,
         /**
          * Constructor and destructor.
          */
-        HyperSummaryUI(regina::NNormalHypersurfaceList* packet,
+        HyperSummaryUI(regina::NormalHypersurfaces* packet,
             PacketTabbedUI* useParentUI);
         ~HyperSummaryUI();
 

@@ -62,7 +62,7 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
     IconCache::IconID id;
 
     switch (packet->type()) {
-        case PACKET_ANGLESTRUCTURELIST :
+        case PACKET_ANGLESTRUCTURES :
             id = IconCache::packet_angles;
             break;
         case PACKET_CONTAINER :
@@ -97,10 +97,10 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
         case PACKET_SNAPPEATRIANGULATION :
             id = IconCache::packet_snappea;
             break;
-        case PACKET_NORMALSURFACELIST :
+        case PACKET_NORMALSURFACES :
             id = IconCache::packet_surfaces;
             break;
-        case PACKET_NORMALHYPERSURFACELIST :
+        case PACKET_NORMALHYPERSURFACES :
             id = IconCache::packet_hypersurfaces;
             break;
         case PACKET_TEXT :
@@ -146,7 +146,7 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
 PacketUI* PacketManager::createUI(regina::Packet* packet,
         PacketPane* enclosingPane) {
     switch (packet->type()) {
-        case PACKET_ANGLESTRUCTURELIST:
+        case PACKET_ANGLESTRUCTURES:
             return new AngleStructureUI(
                 dynamic_cast<AngleStructures*>(packet), enclosingPane);
         case PACKET_CONTAINER:
@@ -158,12 +158,12 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_DIM4TRIANGULATION:
             return new Dim4TriangulationUI(
                 dynamic_cast<Dim4Triangulation*>(packet), enclosingPane);
-        case PACKET_NORMALSURFACELIST:
+        case PACKET_NORMALSURFACES:
             return new SurfacesUI(
                 dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
-        case PACKET_NORMALHYPERSURFACELIST:
+        case PACKET_NORMALHYPERSURFACES:
             return new HyperUI(
-                dynamic_cast<NNormalHypersurfaceList*>(packet), enclosingPane);
+                dynamic_cast<NormalHypersurfaces*>(packet), enclosingPane);
         case PACKET_SCRIPT:
             return new ScriptUI(
                 dynamic_cast<Script*>(packet), enclosingPane);

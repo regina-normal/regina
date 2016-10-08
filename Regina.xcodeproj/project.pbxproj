@@ -843,6 +843,8 @@
 		053CAB2E1DA710FE00A92F98 /* perm4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB2A1DA710FE00A92F98 /* perm4.h */; };
 		053CAB2F1DA710FE00A92F98 /* perm5.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB2B1DA710FE00A92F98 /* perm5.h */; };
 		053CAB311DA8D6B100A92F98 /* nsurfacefilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB301DA8D6B100A92F98 /* nsurfacefilter.h */; };
+		053CAB341DA9B47D00A92F98 /* nnormalhypersurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */; };
+		053CAB351DA9B47D00A92F98 /* nnormalhypersurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB331DA9B47D00A92F98 /* nnormalhypersurfacelist.h */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -1338,17 +1340,17 @@
 		0591E7DD1C4F750200793A9C /* nhsmirrored.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CF1C4F750200793A9C /* nhsmirrored.h */; };
 		0591E7DE1C4F750200793A9C /* nhsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* nhsstandard.cpp */; };
 		0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D11C4F750200793A9C /* nhsstandard.h */; };
-		0591E7E01C4F750200793A9C /* nnormalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* nnormalhypersurface.cpp */; };
-		0591E7E11C4F750200793A9C /* nnormalhypersurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D31C4F750200793A9C /* nnormalhypersurface.h */; };
-		0591E7E21C4F750200793A9C /* nnormalhypersurfacelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */; };
-		0591E7E31C4F750200793A9C /* nnormalhypersurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D51C4F750200793A9C /* nnormalhypersurfacelist.h */; };
+		0591E7E01C4F750200793A9C /* normalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* normalhypersurface.cpp */; };
+		0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D31C4F750200793A9C /* normalhypersurface.h */; };
+		0591E7E21C4F750200793A9C /* normalhypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */; };
+		0591E7E31C4F750200793A9C /* normalhypersurfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D51C4F750200793A9C /* normalhypersurfaces.h */; };
 		0591E7E41C4F750200793A9C /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */; };
 		0591E7E51C4F750200793A9C /* xmlhypersurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */; };
 		0591E7E61C4F750200793A9C /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D81C4F750200793A9C /* triangulate.cpp */; };
 		0591E7E71C4F751B00793A9C /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7CE1C4F750200793A9C /* links.cpp */; };
 		0591E7E81C4F751B00793A9C /* nhsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* nhsstandard.cpp */; };
-		0591E7E91C4F751B00793A9C /* nnormalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* nnormalhypersurface.cpp */; };
-		0591E7EA1C4F751B00793A9C /* nnormalhypersurfacelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */; };
+		0591E7E91C4F751B00793A9C /* normalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* normalhypersurface.cpp */; };
+		0591E7EA1C4F751B00793A9C /* normalhypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */; };
 		0591E7EB1C4F751B00793A9C /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */; };
 		0591E7EC1C4F751B00793A9C /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D81C4F750200793A9C /* triangulate.cpp */; };
 		0591E7F21C4F75C300793A9C /* dim4gluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7EE1C4F75C300793A9C /* dim4gluingperms.h */; };
@@ -1367,8 +1369,8 @@
 		0591E81C1C4F763B00793A9C /* dim4vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8041C4F763600793A9C /* dim4vertex.cpp */; };
 		0591E81D1C4F763B00793A9C /* pydim4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8051C4F763600793A9C /* pydim4.cpp */; };
 		0591E8271C4F764F00793A9C /* hypercoords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E81F1C4F764800793A9C /* hypercoords.cpp */; };
-		0591E8281C4F764F00793A9C /* nnormalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8201C4F764800793A9C /* nnormalhypersurface.cpp */; };
-		0591E8291C4F764F00793A9C /* nnormalhypersurfacelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8211C4F764800793A9C /* nnormalhypersurfacelist.cpp */; };
+		0591E8281C4F764F00793A9C /* normalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8201C4F764800793A9C /* normalhypersurface.cpp */; };
+		0591E8291C4F764F00793A9C /* normalhypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8211C4F764800793A9C /* normalhypersurfaces.cpp */; };
 		0591E82A1C4F764F00793A9C /* pyhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8221C4F764800793A9C /* pyhypersurface.cpp */; };
 		0591E83F1C4F769100793A9C /* dim4trialgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82B1C4F767300793A9C /* dim4trialgebra.cpp */; };
 		0591E8401C4F769100793A9C /* dim4tricreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82D1C4F767300793A9C /* dim4tricreator.cpp */; };
@@ -2710,6 +2712,8 @@
 		053CAB2A1DA710FE00A92F98 /* perm4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm4.h; sourceTree = "<group>"; };
 		053CAB2B1DA710FE00A92F98 /* perm5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm5.h; sourceTree = "<group>"; };
 		053CAB301DA8D6B100A92F98 /* nsurfacefilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacefilter.h; sourceTree = "<group>"; };
+		053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurface.h; sourceTree = "<group>"; };
+		053CAB331DA9B47D00A92F98 /* nnormalhypersurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurfacelist.h; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -3245,10 +3249,10 @@
 		0591E7CF1C4F750200793A9C /* nhsmirrored.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhsmirrored.h; sourceTree = "<group>"; };
 		0591E7D01C4F750200793A9C /* nhsstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhsstandard.cpp; sourceTree = "<group>"; };
 		0591E7D11C4F750200793A9C /* nhsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhsstandard.h; sourceTree = "<group>"; };
-		0591E7D21C4F750200793A9C /* nnormalhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nnormalhypersurface.cpp; sourceTree = "<group>"; };
-		0591E7D31C4F750200793A9C /* nnormalhypersurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurface.h; sourceTree = "<group>"; };
-		0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nnormalhypersurfacelist.cpp; sourceTree = "<group>"; };
-		0591E7D51C4F750200793A9C /* nnormalhypersurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurfacelist.h; sourceTree = "<group>"; };
+		0591E7D21C4F750200793A9C /* normalhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurface.cpp; sourceTree = "<group>"; };
+		0591E7D31C4F750200793A9C /* normalhypersurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalhypersurface.h; sourceTree = "<group>"; };
+		0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurfaces.cpp; sourceTree = "<group>"; };
+		0591E7D51C4F750200793A9C /* normalhypersurfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalhypersurfaces.h; sourceTree = "<group>"; };
 		0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlhypersurfacereader.cpp; sourceTree = "<group>"; };
 		0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlhypersurfacereader.h; sourceTree = "<group>"; };
 		0591E7D81C4F750200793A9C /* triangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulate.cpp; sourceTree = "<group>"; };
@@ -3269,8 +3273,8 @@
 		0591E8051C4F763600793A9C /* pydim4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pydim4.cpp; sourceTree = "<group>"; };
 		0591E81E1C4F764800793A9C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0591E81F1C4F764800793A9C /* hypercoords.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercoords.cpp; sourceTree = "<group>"; };
-		0591E8201C4F764800793A9C /* nnormalhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nnormalhypersurface.cpp; sourceTree = "<group>"; };
-		0591E8211C4F764800793A9C /* nnormalhypersurfacelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nnormalhypersurfacelist.cpp; sourceTree = "<group>"; };
+		0591E8201C4F764800793A9C /* normalhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurface.cpp; sourceTree = "<group>"; };
+		0591E8211C4F764800793A9C /* normalhypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurfaces.cpp; sourceTree = "<group>"; };
 		0591E8221C4F764800793A9C /* pyhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyhypersurface.cpp; sourceTree = "<group>"; };
 		0591E82B1C4F767300793A9C /* dim4trialgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4trialgebra.cpp; sourceTree = "<group>"; };
 		0591E82C1C4F767300793A9C /* dim4trialgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4trialgebra.h; sourceTree = "<group>"; };
@@ -5775,10 +5779,12 @@
 				0591E7CF1C4F750200793A9C /* nhsmirrored.h */,
 				0591E7D01C4F750200793A9C /* nhsstandard.cpp */,
 				0591E7D11C4F750200793A9C /* nhsstandard.h */,
-				0591E7D21C4F750200793A9C /* nnormalhypersurface.cpp */,
-				0591E7D31C4F750200793A9C /* nnormalhypersurface.h */,
-				0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */,
-				0591E7D51C4F750200793A9C /* nnormalhypersurfacelist.h */,
+				053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */,
+				053CAB331DA9B47D00A92F98 /* nnormalhypersurfacelist.h */,
+				0591E7D21C4F750200793A9C /* normalhypersurface.cpp */,
+				0591E7D31C4F750200793A9C /* normalhypersurface.h */,
+				0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */,
+				0591E7D51C4F750200793A9C /* normalhypersurfaces.h */,
 				0591E7D81C4F750200793A9C /* triangulate.cpp */,
 				0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */,
 				0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */,
@@ -5811,8 +5817,8 @@
 				0591E81E1C4F764800793A9C /* CMakeLists.txt */,
 				0591E81F1C4F764800793A9C /* hypercoords.cpp */,
 				0591E8611C50D2A900793A9C /* hyperflags.cpp */,
-				0591E8201C4F764800793A9C /* nnormalhypersurface.cpp */,
-				0591E8211C4F764800793A9C /* nnormalhypersurfacelist.cpp */,
+				0591E8201C4F764800793A9C /* normalhypersurface.cpp */,
+				0591E8211C4F764800793A9C /* normalhypersurfaces.cpp */,
 				0591E8221C4F764800793A9C /* pyhypersurface.cpp */,
 			);
 			path = hypersurface;
@@ -6110,7 +6116,7 @@
 				052F9F41180600FB00FAE4DF /* nmatrixint.h in Headers */,
 				052FA08F180600FB00FAE4DF /* markedvector.h in Headers */,
 				05A73C7D19B2EDFC0099C617 /* xmlelementreader.h in Headers */,
-				0591E7E11C4F750200793A9C /* nnormalhypersurface.h in Headers */,
+				0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */,
 				052F9EC9180600FB00FAE4DF /* hilbertdual-impl.h in Headers */,
 				052F9FE5180600FB00FAE4DF /* nsignature.h in Headers */,
 				055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */,
@@ -6128,6 +6134,7 @@
 				052FA098180600FB00FAE4DF /* tritmask.h in Headers */,
 				052F9EFE180600FB00FAE4DF /* typetrie.h in Headers */,
 				050C64C01DA32E7D00C9420F /* nhilbertcd.h in Headers */,
+				053CAB351DA9B47D00A92F98 /* nnormalhypersurfacelist.h in Headers */,
 				052FA04C180600FB00FAE4DF /* xmlsurfacereader.h in Headers */,
 				050C64C21DA32E7D00C9420F /* nhilbertdual.h in Headers */,
 				052FA031180600FB00FAE4DF /* normalcoords.h in Headers */,
@@ -6217,7 +6224,7 @@
 				0513753E1809B8D3002E525B /* coordregistry.h in Headers */,
 				052FA072180600FB00FAE4DF /* ntetrahedron.h in Headers */,
 				050C64C71DA3302900C9420F /* nmaxadmissible-impl.h in Headers */,
-				0591E7E31C4F750200793A9C /* nnormalhypersurfacelist.h in Headers */,
+				0591E7E31C4F750200793A9C /* normalhypersurfaces.h in Headers */,
 				052F9F77180600FB00FAE4DF /* covers.h in Headers */,
 				05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */,
 				0591E7A11C4F74C400793A9C /* dim4boundarycomponent.h in Headers */,
@@ -6294,6 +6301,7 @@
 				05431F7E1C40F3C9009BC072 /* offload_handler.h in Headers */,
 				052F9ED0180600FB00FAE4DF /* maxadmissible.h in Headers */,
 				052F9F9E180600FB00FAE4DF /* tables.h in Headers */,
+				053CAB341DA9B47D00A92F98 /* nnormalhypersurface.h in Headers */,
 				053CAB2C1DA710FE00A92F98 /* perm2.h in Headers */,
 				053CAB2F1DA710FE00A92F98 /* perm5.h in Headers */,
 				052FA00B180600FB00FAE4DF /* nsatblockstarter.h in Headers */,
@@ -6889,7 +6897,7 @@
 				0591E8631C50D2B000793A9C /* hyperflags.cpp in Sources */,
 				05CAFB531C4CEA160001C253 /* face15.cpp in Sources */,
 				057EE4C31C600A3600C4D155 /* simplex11.cpp in Sources */,
-				0591E8281C4F764F00793A9C /* nnormalhypersurface.cpp in Sources */,
+				0591E8281C4F764F00793A9C /* normalhypersurface.cpp in Sources */,
 				050F5DE41B9BAB9C00C1F681 /* pydim2.cpp in Sources */,
 				050F5E241B9BAB9C00C1F681 /* nplugtrisolidtorus.cpp in Sources */,
 				050F5E331B9BAB9C00C1F681 /* ndisctype.cpp in Sources */,
@@ -6946,7 +6954,7 @@
 				050F5E2D1B9BAB9C00C1F681 /* nstandardtri.cpp in Sources */,
 				050F5DDF1B9BAB9C00C1F681 /* dim2isomorphism.cpp in Sources */,
 				057EE4D41C600A3600C4D155 /* isomorphism6.cpp in Sources */,
-				0591E8291C4F764F00793A9C /* nnormalhypersurfacelist.cpp in Sources */,
+				0591E8291C4F764F00793A9C /* normalhypersurfaces.cpp in Sources */,
 				050F5E1A1B9BAB9C00C1F681 /* nl31pillow.cpp in Sources */,
 				057EE4E51C600A3600C4D155 /* facetpairing10.cpp in Sources */,
 				050F5E501B9BAB9C00C1F681 /* osutils.cpp in Sources */,
@@ -7156,7 +7164,7 @@
 				052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */,
 				05431F901C40F40E009BC072 /* libnormaliz-templated.cpp in Sources */,
 				05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
-				0591E7EA1C4F751B00793A9C /* nnormalhypersurfacelist.cpp in Sources */,
+				0591E7EA1C4F751B00793A9C /* normalhypersurfaces.cpp in Sources */,
 				0541AF4E1B8BE30B002E166B /* cyclotomic.cpp in Sources */,
 				050C646E1DA101A900C9420F /* anglestructures.cpp in Sources */,
 				05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */,
@@ -7243,7 +7251,7 @@
 				052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */,
 				05937AD519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m in Sources */,
 				058FADBD19D506160001B5B5 /* TriSnapPea.mm in Sources */,
-				0591E7E91C4F751B00793A9C /* nnormalhypersurface.cpp in Sources */,
+				0591E7E91C4F751B00793A9C /* normalhypersurface.cpp in Sources */,
 				052FA1F41806129B00FAE4DF /* hydrate.cpp in Sources */,
 				058FADBC19D506160001B5B5 /* TriSkeleton.mm in Sources */,
 				052FA1F31806129B00FAE4DF /* homotopy.cpp in Sources */,
@@ -7794,7 +7802,7 @@
 				052F9F61180600FB00FAE4DF /* xmlpacketreaders.cpp in Sources */,
 				055B7315181D7CF800449D14 /* dim2vertex.cpp in Sources */,
 				052F9EBA180600FB00FAE4DF /* nxmldim2trireader.cpp in Sources */,
-				0591E7E01C4F750200793A9C /* nnormalhypersurface.cpp in Sources */,
+				0591E7E01C4F750200793A9C /* normalhypersurface.cpp in Sources */,
 				052FA037180600FB00FAE4DF /* nsanstandard.cpp in Sources */,
 				052FA073180600FB00FAE4DF /* ntriangle.cpp in Sources */,
 				0583655D18DB882B008B08D9 /* simplify.cpp in Sources */,
@@ -7882,7 +7890,7 @@
 				05431F8B1C40F40D009BC072 /* libnormaliz-templated.cpp in Sources */,
 				052F9F79180600FB00FAE4DF /* cusp_cross_sections.c in Sources */,
 				052FA008180600FB00FAE4DF /* nsatblock.cpp in Sources */,
-				0591E7E21C4F750200793A9C /* nnormalhypersurfacelist.cpp in Sources */,
+				0591E7E21C4F750200793A9C /* normalhypersurfaces.cpp in Sources */,
 				052F9F73180600FB00FAE4DF /* choose_generators.c in Sources */,
 				052FA04D180600FB00FAE4DF /* orientable.cpp in Sources */,
 				052F9F90180600FB00FAE4DF /* my_malloc.c in Sources */,
