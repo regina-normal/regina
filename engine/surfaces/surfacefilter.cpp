@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/filterregistry.h"
@@ -46,7 +46,7 @@
 
 namespace regina {
 
-void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
+void SurfaceFilter::writeXMLPacketData(std::ostream& out) const {
     out << "  <filter type=\""
         << regina::xml::xmlEncodeSpecialChars(filterTypeName())
         << "\" typeid=\"" << filterType() << "\">\n";
@@ -56,35 +56,35 @@ void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
     out << "  </filter>\n";
 }
 
-bool NSurfaceFilterCombination::accept(const NNormalSurface& surface) const {
+bool SurfaceFilterCombination::accept(const NNormalSurface& surface) const {
     if (usesAnd_) {
         // Combine all child filters using AND.
         for (Packet* child = firstChild(); child; child = child->nextSibling())
             if (child->type() == PACKET_SURFACEFILTER)
-                if (! (dynamic_cast<NSurfaceFilter*>(child)->accept(surface)))
+                if (! (dynamic_cast<SurfaceFilter*>(child)->accept(surface)))
                     return false;
         return true;
     } else {
         // Combine all child filters using OR.
         for (Packet* child = firstChild(); child; child = child->nextSibling())
             if (child->type() == PACKET_SURFACEFILTER)
-                if (dynamic_cast<NSurfaceFilter*>(child)->accept(surface))
+                if (dynamic_cast<SurfaceFilter*>(child)->accept(surface))
                     return true;
         return false;
     }
 }
 
-void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
+void SurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
     out << "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n";
 }
 
-LargeInteger NSurfaceFilterProperties::eulerChar(size_t index) const {
+LargeInteger SurfaceFilterProperties::eulerChar(size_t index) const {
     std::set<LargeInteger>::const_iterator it = eulerChar_.begin();
     advance(it, index);
     return *it;
 }
 
-bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
+bool SurfaceFilterProperties::accept(const NNormalSurface& surface) const {
     if (! realBoundary_.contains(surface.hasRealBoundary()))
         return false;
     if (! compactness_.contains(surface.isCompact()))
@@ -104,7 +104,7 @@ bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
     return true;
 }
 
-void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
+void SurfaceFilterProperties::writeTextLong(std::ostream& o) const {
     o << "Filter normal surfaces with restrictions:\n";
 
     if (eulerChar_.size() > 0) {
@@ -121,7 +121,7 @@ void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
         o << "    Has real boundary: " << realBoundary_ << '\n';
 }
 
-void NSurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
+void SurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     if (! eulerChar_.empty()) {

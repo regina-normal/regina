@@ -39,7 +39,7 @@
 #import "packet/container.h"
 #import "packet/packet.h"
 #import "packet/text.h"
-#import "surfaces/nsurfacefilter.h"
+#import "surfaces/surfacefilter.h"
 
 @implementation PacketManagerIOS
 
@@ -109,7 +109,7 @@
         case regina::PACKET_SCRIPT: return @"viewScript";
         case regina::PACKET_SNAPPEATRIANGULATION: return @"viewSnapPea";
         case regina::PACKET_SURFACEFILTER:
-            switch (static_cast<regina::NSurfaceFilter*>(p)->filterType()) {
+            switch (static_cast<regina::SurfaceFilter*>(p)->filterType()) {
                 case regina::NS_FILTER_PROPERTIES: return @"viewFilterProperties";
                 case regina::NS_FILTER_COMBINATION: return @"viewFilterCombination";
                 default: return @"viewDefault";

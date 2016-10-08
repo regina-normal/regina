@@ -28,9 +28,9 @@ SET ( FILES
   nnormalsurfaceui
   nsurfacecompatui
   nsurfacecoordinateui
-  nsurfacefiltercomb
-  nsurfacefiltercreator
-  nsurfacefilterprop
+  surfacefiltercomb
+  surfacefiltercreator
+  surfacefilterprop
   nsurfacematchingui
   nsurfacesummaryui
   ntrialgebra

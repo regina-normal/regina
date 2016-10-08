@@ -57,17 +57,17 @@ namespace regina {
  */
 enum SurfaceFilterType {
     /**
-     * Represents the NSurfaceFilter class: a do-nothing filter that
+     * Represents the SurfaceFilter class: a do-nothing filter that
      * accepts any normal surface.
      */
     NS_FILTER_DEFAULT = 0,
     /**
-     * Represents the NSurfaceFilterProperties subclass: a filter that
+     * Represents the SurfaceFilterProperties subclass: a filter that
      * examines simple properties of a normal surface.
      */
     NS_FILTER_PROPERTIES = 1,
     /**
-     * Represents the NSurfaceFilterCombination subclass: a filter that
+     * Represents the SurfaceFilterCombination subclass: a filter that
      * combines other filters using boolean AND or OR.
      */
     NS_FILTER_COMBINATION = 2

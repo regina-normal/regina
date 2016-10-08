@@ -31,10 +31,10 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 
 // UI includes:
-#include "nsurfacefiltercomb.h"
+#include "surfacefiltercomb.h"
 #include "../packetmanager.h"
 
 #include <QButtonGroup>
@@ -49,9 +49,9 @@ namespace {
 }
 
 using regina::Packet;
-using regina::NSurfaceFilterCombination;
+using regina::SurfaceFilterCombination;
 
-NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
+SurfaceFilterCombUI::SurfaceFilterCombUI(SurfaceFilterCombination* packet,
         PacketPane* enclosingPane) : PacketUI(enclosingPane), filter(packet) {
     bool readWrite = enclosingPane->isReadWrite();
 
@@ -151,57 +151,57 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     filter->listen(this);
 }
 
-NSurfaceFilterCombUI::~NSurfaceFilterCombUI() {
+SurfaceFilterCombUI::~SurfaceFilterCombUI() {
     delete boolType;
 }
 
-regina::Packet* NSurfaceFilterCombUI::getPacket() {
+regina::Packet* SurfaceFilterCombUI::getPacket() {
     return filter;
 }
 
-QWidget* NSurfaceFilterCombUI::getInterface() {
+QWidget* SurfaceFilterCombUI::getInterface() {
     return ui;
 }
 
-QString NSurfaceFilterCombUI::getPacketMenuText() const {
+QString SurfaceFilterCombUI::getPacketMenuText() const {
     return tr("Surface F&ilter");
 }
 
-void NSurfaceFilterCombUI::refresh() {
+void SurfaceFilterCombUI::refresh() {
     boolType->button(filter->usesAnd() ? ID_AND : ID_OR)->setChecked(true);
 }
 
-void NSurfaceFilterCombUI::setReadWrite(bool readWrite) {
+void SurfaceFilterCombUI::setReadWrite(bool readWrite) {
     typeAnd->setEnabled(readWrite);
     typeOr->setEnabled(readWrite);
 }
 
-void NSurfaceFilterCombUI::packetWasRenamed(Packet* p) {
+void SurfaceFilterCombUI::packetWasRenamed(Packet* p) {
     if (p->parent() == filter)
         refreshChildList();
 }
 
-void NSurfaceFilterCombUI::childWasAdded(Packet* p, Packet*) {
+void SurfaceFilterCombUI::childWasAdded(Packet* p, Packet*) {
     if (p == filter)
         refreshChildList();
 }
 
-void NSurfaceFilterCombUI::childWasRemoved(Packet* p, Packet*,
+void SurfaceFilterCombUI::childWasRemoved(Packet* p, Packet*,
         bool inParentDestructor) {
     if ((! inParentDestructor) && p == filter)
         refreshChildList();
 }
 
-void NSurfaceFilterCombUI::childrenWereReordered(Packet* p) {
+void SurfaceFilterCombUI::childrenWereReordered(Packet* p) {
     if (p == filter)
         refreshChildList();
 }
 
-void NSurfaceFilterCombUI::notifyBoolTypeChanged() {
+void SurfaceFilterCombUI::notifyBoolTypeChanged() {
     filter->setUsesAnd(boolType->checkedId() == ID_AND ? true : false);
 }
 
-void NSurfaceFilterCombUI::refreshChildList() {
+void SurfaceFilterCombUI::refreshChildList() {
     children->clear();
 
     // Add the items in reverse order since the QListViewItem

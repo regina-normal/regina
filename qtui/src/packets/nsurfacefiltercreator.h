@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsurfacefiltercreator.h
+/*! \file surfacefiltercreator.h
  *  \brief Allows the creation of normal surface filters.
  */
 
@@ -44,7 +44,7 @@ class QButtonGroup;
 /**
  * An interface for creating normal surface filters.
  */
-class NSurfaceFilterCreator : public PacketCreator {
+class SurfaceFilterCreator : public PacketCreator {
     private:
         /**
          * Internal components.
@@ -56,8 +56,8 @@ class NSurfaceFilterCreator : public PacketCreator {
         /**
          * Constructor and destructor.
          */
-        NSurfaceFilterCreator();
-        ~NSurfaceFilterCreator();
+        SurfaceFilterCreator();
+        ~SurfaceFilterCreator();
 
         /**
          * PacketCreator overrides.

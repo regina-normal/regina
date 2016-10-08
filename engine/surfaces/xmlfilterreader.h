@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "packet/xmlpacketreader.h"
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 
 namespace regina {
 
@@ -88,7 +88,7 @@ class REGINA_API XMLFilterReader : public XMLElementReader {
          * is incomplete, the filter should be ignored or an error
          * occurred.
          */
-        virtual NSurfaceFilter* filter();
+        virtual SurfaceFilter* filter();
 };
 
 /**
@@ -102,7 +102,7 @@ class REGINA_API XMLFilterReader : public XMLElementReader {
  */
 class REGINA_API XMLFilterPacketReader : public XMLPacketReader {
     private:
-        NSurfaceFilter* filter_;
+        SurfaceFilter* filter_;
             /**< The surface filter currently being read. */
         Packet* parent_;
             /**< The parent packet of the filter currently being read. */
@@ -133,7 +133,7 @@ class REGINA_API XMLFilterPacketReader : public XMLPacketReader {
 inline XMLFilterReader::XMLFilterReader() {
 }
 
-inline NSurfaceFilter* XMLFilterReader::filter() {
+inline SurfaceFilter* XMLFilterReader::filter() {
     return 0;
 }
 

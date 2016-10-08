@@ -37,7 +37,7 @@ void addNormalSurfaces();
 void addNormalCoords();
 void addNormalFlags();
 void addNPrism();
-void addNSurfaceFilter();
+void addSurfaceFilter();
 void addSurfaceFilterType();
 
 void addSurfacesClasses() {
@@ -51,6 +51,6 @@ void addSurfacesClasses() {
     addNNormalSurface();
     addNormalSurfaces();
     addNPrism();
-    addNSurfaceFilter();
+    addSurfaceFilter();
 }
 

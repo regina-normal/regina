@@ -31,10 +31,10 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 
 // UI includes:
-#include "nsurfacefilterprop.h"
+#include "surfacefilterprop.h"
 #include "reginasupport.h"
 
 #include <QButtonGroup>
@@ -49,7 +49,7 @@
 
 using regina::BoolSet;
 using regina::Packet;
-using regina::NSurfaceFilterProperties;
+using regina::SurfaceFilterProperties;
 
 namespace {
     /**
@@ -67,7 +67,7 @@ namespace {
     QRegExp reECList("\\s*(?:(?:(-?\\d+)\\s*[,|\\s]\\s*)*(-?\\d+))?\\s*");
 }
 
-NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
+SurfaceFilterPropUI::SurfaceFilterPropUI(SurfaceFilterProperties* packet,
         PacketPane* enclosingPane) :
         PacketUI(enclosingPane), filter(packet),
         allowReadWrite(enclosingPane->isReadWrite()), inNotify(false) {
@@ -194,26 +194,26 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
         this, SLOT(notifyOptionsChanged()));
 }
 
-regina::Packet* NSurfaceFilterPropUI::getPacket() {
+regina::Packet* SurfaceFilterPropUI::getPacket() {
     return filter;
 }
 
-QWidget* NSurfaceFilterPropUI::getInterface() {
+QWidget* SurfaceFilterPropUI::getInterface() {
     return ui;
 }
 
-QString NSurfaceFilterPropUI::getPacketMenuText() const {
+QString SurfaceFilterPropUI::getPacketMenuText() const {
     return tr("Surface F&ilter");
 }
 
-void NSurfaceFilterPropUI::refresh() {
+void SurfaceFilterPropUI::refresh() {
     setBoolSet(useOrient, optOrient, filter->orientability());
     setBoolSet(useCompact, optCompact, filter->compactness());
     setBoolSet(useBdry, optBdry, filter->realBoundary());
     eulerList->setText(filterECList());
 }
 
-void NSurfaceFilterPropUI::setReadWrite(bool readWrite) {
+void SurfaceFilterPropUI::setReadWrite(bool readWrite) {
     allowReadWrite = readWrite;
 
     useOrient->setEnabled(readWrite);
@@ -228,7 +228,7 @@ void NSurfaceFilterPropUI::setReadWrite(bool readWrite) {
     eulerExpln->setEnabled(allowReadWrite);
 }
 
-bool NSurfaceFilterPropUI::notifyOptionsChanged() {
+bool SurfaceFilterPropUI::notifyOptionsChanged() {
     // Sometimes notifyOptionsChanged() calls itself; this seems to be a
     // side-effect of the message box from ReginaSupport::info()
     // interacting with the signal QLineEdit::editingFinished().
@@ -278,19 +278,19 @@ bool NSurfaceFilterPropUI::notifyOptionsChanged() {
     return success;
 }
 
-void NSurfaceFilterPropUI::enableDisableOrient() {
+void SurfaceFilterPropUI::enableDisableOrient() {
     optOrient->setEnabled(allowReadWrite && useOrient->isChecked());
 }
 
-void NSurfaceFilterPropUI::enableDisableCompact() {
+void SurfaceFilterPropUI::enableDisableCompact() {
     optCompact->setEnabled(allowReadWrite && useCompact->isChecked());
 }
 
-void NSurfaceFilterPropUI::enableDisableBdry() {
+void SurfaceFilterPropUI::enableDisableBdry() {
     optBdry->setEnabled(allowReadWrite && useBdry->isChecked());
 }
 
-BoolSet NSurfaceFilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
+BoolSet SurfaceFilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
     if (use->isChecked()) {
         // Restrict to a single boolean value.
         // Assume that TRUE is the first combo box option.
@@ -301,7 +301,7 @@ BoolSet NSurfaceFilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
     }
 }
 
-void NSurfaceFilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
+void SurfaceFilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
         BoolSet set) {
     if (set == BoolSet::sBoth || set == BoolSet::sNone) {
         // No restrictions.
@@ -316,7 +316,7 @@ void NSurfaceFilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
     }
 }
 
-QString NSurfaceFilterPropUI::filterECList() {
+QString SurfaceFilterPropUI::filterECList() {
     const std::set<regina::LargeInteger>& ecs(filter->eulerChars());
     if (ecs.empty())
         return QString();

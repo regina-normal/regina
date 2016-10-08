@@ -42,33 +42,33 @@ namespace regina {
  */
 namespace {
     /**
-     * Reads a plain (non-subclassed) NSurfaceFilter.
+     * Reads a plain (non-subclassed) SurfaceFilter.
      */
     class PlainFilterReader : public XMLFilterReader {
         private:
-            NSurfaceFilter* filter_;
+            SurfaceFilter* filter_;
 
         public:
-            PlainFilterReader() : filter_(new NSurfaceFilter()) {
+            PlainFilterReader() : filter_(new SurfaceFilter()) {
             }
 
-            virtual NSurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() {
                 return filter_;
             }
     };
 
     /**
-     * Reads a NSurfaceFilterCombination filter.
+     * Reads a SurfaceFilterCombination filter.
      */
     class CombinationReader : public XMLFilterReader {
         private:
-            NSurfaceFilterCombination* filter_;
+            SurfaceFilterCombination* filter_;
 
         public:
             CombinationReader() : filter_(0) {
             }
 
-            virtual NSurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() {
                 return filter_;
             }
 
@@ -78,10 +78,10 @@ namespace {
                     if (subTagName == "op") {
                         std::string type = props.lookup("type");
                         if (type == "and") {
-                            filter_ = new NSurfaceFilterCombination();
+                            filter_ = new SurfaceFilterCombination();
                             filter_->setUsesAnd(true);
                         } else if (type == "or") {
-                            filter_ = new NSurfaceFilterCombination();
+                            filter_ = new SurfaceFilterCombination();
                             filter_->setUsesAnd(false);
                         }
                     }
@@ -90,17 +90,17 @@ namespace {
     };
 
     /**
-     * Reads a NSurfaceFilterProperties filter.
+     * Reads a SurfaceFilterProperties filter.
      */
     class PropertiesReader : public XMLFilterReader {
         private:
-            NSurfaceFilterProperties* filter_;
+            SurfaceFilterProperties* filter_;
 
         public:
-            PropertiesReader() : filter_(new NSurfaceFilterProperties()) {
+            PropertiesReader() : filter_(new SurfaceFilterProperties()) {
             }
 
-            virtual NSurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() {
                 return filter_;
             }
 
@@ -179,20 +179,20 @@ void XMLFilterPacketReader::endContentSubElement(
             filter_ = dynamic_cast<XMLFilterReader*>(subReader)->filter();
 }
 
-XMLPacketReader* NSurfaceFilter::xmlReader(Packet* parent,
+XMLPacketReader* SurfaceFilter::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new XMLFilterPacketReader(parent, resolver);
 }
 
-XMLFilterReader* NSurfaceFilter::xmlFilterReader(Packet*) {
+XMLFilterReader* SurfaceFilter::xmlFilterReader(Packet*) {
     return new PlainFilterReader();
 }
 
-XMLFilterReader* NSurfaceFilterCombination::xmlFilterReader(Packet*) {
+XMLFilterReader* SurfaceFilterCombination::xmlFilterReader(Packet*) {
     return new CombinationReader();
 }
 
-XMLFilterReader* NSurfaceFilterProperties::xmlFilterReader(Packet*) {
+XMLFilterReader* SurfaceFilterProperties::xmlFilterReader(Packet*) {
     return new PropertiesReader();
 }
 

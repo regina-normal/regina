@@ -33,7 +33,7 @@
 // Regina core includes:
 #include "maths/matrix.h"
 #include "surfaces/normalsurfaces.h"
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -76,7 +76,7 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem) {
 }
 
 void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
-        regina::NSurfaceFilter* filter) {
+        regina::SurfaceFilter* filter) {
     beginResetModel();
 
     coordSystem_ = coordSystem;
@@ -478,7 +478,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NormalSurfaces* packet,
     label = new QLabel(tr("Apply filter:"));
     hdrLayout->addWidget(label);
     filter = new PacketChooser(surfaces->root(),
-        new SingleTypeFilter<regina::NSurfaceFilter>(),
+        new SingleTypeFilter<regina::SurfaceFilter>(),
         PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     filter->setAutoUpdate(true);
     connect(filter, SIGNAL(activated(int)), this, SLOT(refresh()));
@@ -601,7 +601,7 @@ void NSurfaceCoordinateUI::refresh() {
         filterChanged = true;
         if (appliedFilter)
             appliedFilter->unlisten(this);
-        appliedFilter = dynamic_cast<regina::NSurfaceFilter*>(
+        appliedFilter = dynamic_cast<regina::SurfaceFilter*>(
             filter->selectedPacket());
         if (appliedFilter)
             appliedFilter->listen(this);

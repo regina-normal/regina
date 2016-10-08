@@ -39,9 +39,9 @@
 #define __SFCOMBINATION_H
 #endif
 
-#warning This header is deprecated; please use surfaces/nsurfacefilter.h instead.
+#warning This header is deprecated; please use surfaces/surfacefilter.h instead.
 
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 
 #endif
 

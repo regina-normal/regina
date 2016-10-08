@@ -19,7 +19,7 @@ SET ( FILES
   nsquad
   nsquadoct
   nsstandard
-  nsurfacefilter
+  surfacefilter
   xmlfilterreader
   xmlsurfacereader
   orientable
@@ -58,10 +58,11 @@ if (${REGINA_INSTALL_DEV})
     nsquadoct.h
     nsstandard.h
     nsurfacefilter.h
-    xmlfilterreader.h
-    xmlsurfacereader.h
     sfcombination.h
     sfproperties.h
+    surfacefilter.h
     surfacefiltertype.h
+    xmlfilterreader.h
+    xmlsurfacereader.h
     DESTINATION ${INCLUDEDIR}/surfaces COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

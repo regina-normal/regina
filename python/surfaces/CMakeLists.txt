@@ -9,7 +9,7 @@ SET ( FILES
   normalflags
   normalsurfaces
   nprism
-  nsurfacefilter
+  surfacefilter
   surfacefiltertype
   pysurfaces
   )

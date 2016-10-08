@@ -46,7 +46,7 @@
 #include "packets/anglescreator.h"
 #include "packets/nhypersurfacecreator.h"
 #include "packets/nnormalsurfacecreator.h"
-#include "packets/nsurfacefiltercreator.h"
+#include "packets/surfacefiltercreator.h"
 #include "packets/ntriangulationcreator.h"
 #include "packets/snappeacreator.h"
 
@@ -72,7 +72,7 @@ void ReginaMain::newDim4Triangulation() {
 }
 
 void ReginaMain::newFilter() {
-    newPacket(new NSurfaceFilterCreator(), 0,
+    newPacket(new SurfaceFilterCreator(), 0,
         tr("New Normal Surface Filter"));
 }
 

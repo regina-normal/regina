@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsurfacefiltercomb.h
+/*! \file surfacefiltercomb.h
  *  \brief Provides an interface for working with combination surface filters.
  */
 
@@ -46,14 +46,14 @@ class QListWidget;
 class QRadioButton;
 
 namespace regina {
-    class NSurfaceFilterCombination;
+    class SurfaceFilterCombination;
     class Packet;
 };
 
 /**
  * A packet interface for working with combination surface filters.
  */
-class NSurfaceFilterCombUI : public QObject, public PacketUI,
+class SurfaceFilterCombUI : public QObject, public PacketUI,
         public regina::PacketListener {
     Q_OBJECT
 
@@ -61,7 +61,7 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
         /**
          * Packet details
          */
-        regina::NSurfaceFilterCombination* filter;
+        regina::SurfaceFilterCombination* filter;
 
         /**
          * Internal components
@@ -76,9 +76,9 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
         /**
          * Constructor and destructor.
          */
-        NSurfaceFilterCombUI(regina::NSurfaceFilterCombination* packet,
+        SurfaceFilterCombUI(regina::SurfaceFilterCombination* packet,
                 PacketPane* newEnclosingPane);
-        ~NSurfaceFilterCombUI();
+        ~SurfaceFilterCombUI();
 
         /**
          * PacketUI overrides.

@@ -53,7 +53,7 @@ class QTreeView;
 namespace regina {
     class Packet;
     class NormalSurfaces;
-    class NSurfaceFilter;
+    class SurfaceFilter;
 };
 
 class SurfaceModel : public QAbstractItemModel {
@@ -96,7 +96,7 @@ class SurfaceModel : public QAbstractItemModel {
          */
         void rebuild(regina::NormalCoords coordSystem_);
         void rebuild(regina::NormalCoords coordSystem_,
-            regina::NSurfaceFilter* filter);
+            regina::SurfaceFilter* filter);
         void rebuildUnicode();
 
         /**
@@ -139,7 +139,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          */
         SurfaceModel* model;
         regina::NormalSurfaces* surfaces;
-        regina::NSurfaceFilter* appliedFilter;
+        regina::SurfaceFilter* appliedFilter;
 
         /**
          * Internal components

@@ -49,8 +49,8 @@
 #include "packets/pdfui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
-#include "packets/nsurfacefiltercomb.h"
-#include "packets/nsurfacefilterprop.h"
+#include "packets/surfacefiltercomb.h"
+#include "packets/surfacefilterprop.h"
 #include "packets/textui.h"
 #include "packets/ntriangulationui.h"
 
@@ -79,7 +79,7 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
             id = IconCache::packet_pdf;
             break;
         case PACKET_SURFACEFILTER :
-            switch (((NSurfaceFilter*)packet)->filterType()) {
+            switch (((SurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION :
                     id = IconCache::filter_comb;
                     break;
@@ -171,14 +171,14 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
             return new SnapPeaUI(
                 dynamic_cast<SnapPeaTriangulation*>(packet), enclosingPane);
         case PACKET_SURFACEFILTER:
-            switch (((NSurfaceFilter*)packet)->filterType()) {
+            switch (((SurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION:
-                    return new NSurfaceFilterCombUI(
-                        dynamic_cast<NSurfaceFilterCombination*>(packet),
+                    return new SurfaceFilterCombUI(
+                        dynamic_cast<SurfaceFilterCombination*>(packet),
                         enclosingPane);
                 case NS_FILTER_PROPERTIES:
-                    return new NSurfaceFilterPropUI(
-                        dynamic_cast<NSurfaceFilterProperties*>(packet),
+                    return new SurfaceFilterPropUI(
+                        dynamic_cast<SurfaceFilterProperties*>(packet),
                         enclosingPane);
                 default:
                     return new DefaultPacketUI(packet, enclosingPane);

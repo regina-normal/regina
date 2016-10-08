@@ -31,11 +31,11 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 
 // UI includes:
 #include "iconcache.h"
-#include "nsurfacefiltercreator.h"
+#include "surfacefiltercreator.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -52,7 +52,7 @@ namespace {
     const int ID_COMB = 1;
 }
 
-NSurfaceFilterCreator::NSurfaceFilterCreator() {
+SurfaceFilterCreator::SurfaceFilterCreator() {
     ui = new QWidget();
     QGridLayout* layout = new QGridLayout(ui);//, 2, 2, 5);
     layout->setColumnStretch(1, 1);
@@ -97,21 +97,21 @@ NSurfaceFilterCreator::NSurfaceFilterCreator() {
     group->button(ID_PROPS)->setChecked(true);
 }
 
-NSurfaceFilterCreator::~NSurfaceFilterCreator() {
+SurfaceFilterCreator::~SurfaceFilterCreator() {
     delete group;
 }
 
-QWidget* NSurfaceFilterCreator::getInterface() {
+QWidget* SurfaceFilterCreator::getInterface() {
     return ui;
 }
 
-regina::Packet* NSurfaceFilterCreator::createPacket(regina::Packet*,
+regina::Packet* SurfaceFilterCreator::createPacket(regina::Packet*,
         QWidget*) {
     regina::Packet* ans;
     if (group->checkedId() == ID_COMB)
-        ans = new regina::NSurfaceFilterCombination();
+        ans = new regina::SurfaceFilterCombination();
     else
-        ans = new regina::NSurfaceFilterProperties();
+        ans = new regina::SurfaceFilterProperties();
 
     ans->setLabel("Surface filter");
     return ans;

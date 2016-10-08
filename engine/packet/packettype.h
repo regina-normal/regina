@@ -85,7 +85,7 @@ enum PacketType {
      */
     PACKET_SCRIPT = 7,
     /**
-     * Represents a normal surface filter, of class NSurfaceFilter or
+     * Represents a normal surface filter, of class SurfaceFilter or
      * one of its descendant classes.
      */
     PACKET_SURFACEFILTER = 8,

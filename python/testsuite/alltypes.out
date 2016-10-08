@@ -1314,13 +1314,13 @@ Equality type : BY_REFERENCE
 NStandardTriangulation : class
 Equality type : BY_REFERENCE
 
-NSurfaceFilter : class
+SurfaceFilter : class
 Equality type : BY_REFERENCE
 
-NSurfaceFilterCombination : class
+SurfaceFilterCombination : class
 Equality type : BY_REFERENCE
 
-NSurfaceFilterProperties : class
+SurfaceFilterProperties : class
 Equality type : BY_REFERENCE
 
 NTetFace : typedef ->  FacetSpec3

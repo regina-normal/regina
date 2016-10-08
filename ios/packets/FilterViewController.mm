@@ -34,7 +34,7 @@
 #import "NewPacketController.h"
 #import "PacketManagerIOS.h"
 #import "ReginaHelper.h"
-#import "surfaces/nsurfacefilter.h"
+#import "surfaces/surfacefilter.h"
 
 static NSArray* orientabilityText;
 static NSArray* compactnessText;
@@ -54,7 +54,7 @@ static NSMutableCharacterSet* eulerSeparators;
 @property (weak, nonatomic) IBOutlet UILabel *boundaryExpln;
 @property (weak, nonatomic) IBOutlet UITextField *euler;
 @property (weak, nonatomic) IBOutlet UILabel *eulerExpln;
-@property (assign, nonatomic) regina::NSurfaceFilterProperties* packet;
+@property (assign, nonatomic) regina::SurfaceFilterProperties* packet;
 @end
 
 @implementation FilterPropertiesViewController
@@ -228,7 +228,7 @@ static NSMutableCharacterSet* eulerSeparators;
 }
 @property (weak, nonatomic) IBOutlet UITableView *children;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *type;
-@property (assign, nonatomic) regina::NSurfaceFilterCombination* packet;
+@property (assign, nonatomic) regina::SurfaceFilterCombination* packet;
 @end
 
 @implementation FilterCombinationViewController

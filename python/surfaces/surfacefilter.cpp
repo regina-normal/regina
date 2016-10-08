@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
@@ -40,12 +40,12 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NSurfaceFilter;
-using regina::NSurfaceFilterCombination;
-using regina::NSurfaceFilterProperties;
+using regina::SurfaceFilter;
+using regina::SurfaceFilterCombination;
+using regina::SurfaceFilterProperties;
 
 namespace {
-    boost::python::list eulerChars_list(const NSurfaceFilterProperties& f) {
+    boost::python::list eulerChars_list(const SurfaceFilterProperties& f) {
         boost::python::list ans;
         for (auto& e : f.eulerChars())
             ans.append(e);
@@ -53,61 +53,61 @@ namespace {
     }
 }
 
-void addNSurfaceFilter() {
+void addSurfaceFilter() {
     {
-        scope s = class_<NSurfaceFilter, bases<regina::Packet>,
-                SafeHeldType<NSurfaceFilter>, boost::noncopyable>
-                ("NSurfaceFilter")
-            .def(init<const NSurfaceFilter&>())
-            .def("accept", &NSurfaceFilter::accept)
-            .def("filterType", &NSurfaceFilter::filterType)
-            .def("filterTypeName", &NSurfaceFilter::filterTypeName)
+        scope s = class_<SurfaceFilter, bases<regina::Packet>,
+                SafeHeldType<SurfaceFilter>, boost::noncopyable>
+                ("SurfaceFilter")
+            .def(init<const SurfaceFilter&>())
+            .def("accept", &SurfaceFilter::accept)
+            .def("filterType", &SurfaceFilter::filterType)
+            .def("filterTypeName", &SurfaceFilter::filterTypeName)
         ;
 
         s.attr("typeID") = regina::PACKET_SURFACEFILTER;
         s.attr("filterTypeID") = regina::NS_FILTER_DEFAULT;
     }
 
-    class_<NSurfaceFilterCombination, bases<regina::NSurfaceFilter>,
-            SafeHeldType<NSurfaceFilterCombination>, boost::noncopyable>
-            ("NSurfaceFilterCombination")
-        .def(init<const NSurfaceFilterCombination&>())
-        .def("usesAnd", &NSurfaceFilterCombination::usesAnd)
-        .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
+    class_<SurfaceFilterCombination, bases<regina::SurfaceFilter>,
+            SafeHeldType<SurfaceFilterCombination>, boost::noncopyable>
+            ("SurfaceFilterCombination")
+        .def(init<const SurfaceFilterCombination&>())
+        .def("usesAnd", &SurfaceFilterCombination::usesAnd)
+        .def("setUsesAnd", &SurfaceFilterCombination::setUsesAnd)
         .attr("filterTypeID") = regina::NS_FILTER_COMBINATION;
     ;
 
-    class_<NSurfaceFilterProperties, bases<regina::NSurfaceFilter>,
-            SafeHeldType<NSurfaceFilterProperties>, boost::noncopyable>
-            ("NSurfaceFilterProperties")
-        .def(init<const NSurfaceFilterProperties&>())
+    class_<SurfaceFilterProperties, bases<regina::SurfaceFilter>,
+            SafeHeldType<SurfaceFilterProperties>, boost::noncopyable>
+            ("SurfaceFilterProperties")
+        .def(init<const SurfaceFilterProperties&>())
         .def("eulerChars", eulerChars_list)
-        .def("countEulerChars", &NSurfaceFilterProperties::countEulerChars)
-        .def("eulerChar", &NSurfaceFilterProperties::eulerChar)
-        .def("orientability", &NSurfaceFilterProperties::orientability)
-        .def("compactness", &NSurfaceFilterProperties::compactness)
-        .def("realBoundary", &NSurfaceFilterProperties::realBoundary)
-        .def("addEulerChar", &NSurfaceFilterProperties::addEulerChar)
-        .def("removeEulerChar", &NSurfaceFilterProperties::removeEulerChar)
+        .def("countEulerChars", &SurfaceFilterProperties::countEulerChars)
+        .def("eulerChar", &SurfaceFilterProperties::eulerChar)
+        .def("orientability", &SurfaceFilterProperties::orientability)
+        .def("compactness", &SurfaceFilterProperties::compactness)
+        .def("realBoundary", &SurfaceFilterProperties::realBoundary)
+        .def("addEulerChar", &SurfaceFilterProperties::addEulerChar)
+        .def("removeEulerChar", &SurfaceFilterProperties::removeEulerChar)
         .def("removeAllEulerChars",
-            &NSurfaceFilterProperties::removeAllEulerChars)
-        .def("setOrientability", &NSurfaceFilterProperties::setOrientability)
-        .def("setCompactness", &NSurfaceFilterProperties::setCompactness)
-        .def("setRealBoundary", &NSurfaceFilterProperties::setRealBoundary)
+            &SurfaceFilterProperties::removeAllEulerChars)
+        .def("setOrientability", &SurfaceFilterProperties::setOrientability)
+        .def("setCompactness", &SurfaceFilterProperties::setCompactness)
+        .def("setRealBoundary", &SurfaceFilterProperties::setRealBoundary)
         .attr("filterTypeID") = regina::NS_FILTER_PROPERTIES;
     ;
 
-    implicitly_convertible<SafeHeldType<NSurfaceFilter>,
+    implicitly_convertible<SafeHeldType<SurfaceFilter>,
         SafeHeldType<regina::Packet> >();
 
-    implicitly_convertible<SafeHeldType<NSurfaceFilterCombination>,
-        SafeHeldType<regina::NSurfaceFilter> >();
+    implicitly_convertible<SafeHeldType<SurfaceFilterCombination>,
+        SafeHeldType<regina::SurfaceFilter> >();
 
-    implicitly_convertible<SafeHeldType<NSurfaceFilterProperties>,
-        SafeHeldType<regina::NSurfaceFilter> >();
+    implicitly_convertible<SafeHeldType<SurfaceFilterProperties>,
+        SafeHeldType<regina::SurfaceFilter> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(NSurfaceFilter);
-    FIX_REGINA_BOOST_CONVERTERS(NSurfaceFilterCombination);
-    FIX_REGINA_BOOST_CONVERTERS(NSurfaceFilterProperties);
+    FIX_REGINA_BOOST_CONVERTERS(SurfaceFilter);
+    FIX_REGINA_BOOST_CONVERTERS(SurfaceFilterCombination);
+    FIX_REGINA_BOOST_CONVERTERS(SurfaceFilterProperties);
 }
 

@@ -54,7 +54,7 @@
 #include "triangulation/ntriangulation.h"
 #include "surfaces/normalsurfaces.h"
 #include "packet/script.h"
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 #include "angle/anglestructures.h"
 #include "packet/pdf.h"
 #include "dim2/dim2triangulation.h"

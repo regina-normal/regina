@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsurfacefilterprop.h
+/*! \file surfacefilterprop.h
  *  \brief Provides an interface for working with property-based surface
  *  filters.
  */
@@ -48,21 +48,21 @@ class QLabel;
 class QLineEdit;
 
 namespace regina {
-    class NSurfaceFilterProperties;
+    class SurfaceFilterProperties;
     class Packet;
 };
 
 /**
  * A packet interface for working with property-based surface filters.
  */
-class NSurfaceFilterPropUI : public QObject, public PacketUI {
+class SurfaceFilterPropUI : public QObject, public PacketUI {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::NSurfaceFilterProperties* filter;
+        regina::SurfaceFilterProperties* filter;
 
         /**
          * Internal components
@@ -88,7 +88,7 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
         /**
          * Constructor and destructor.
          */
-        NSurfaceFilterPropUI(regina::NSurfaceFilterProperties* packet,
+        SurfaceFilterPropUI(regina::SurfaceFilterProperties* packet,
                 PacketPane* newEnclosingPane);
 
         /**
