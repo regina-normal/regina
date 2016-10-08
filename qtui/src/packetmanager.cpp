@@ -39,18 +39,18 @@
 #include "packetmanager.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "packets/anglesui.h"
 #include "packets/dim2triui.h"
 #include "packets/dim4triui.h"
+#include "packets/filtercomb.h"
+#include "packets/filterprop.h"
 #include "packets/generictriui.h"
-#include "packets/anglesui.h"
 #include "packets/containerui.h"
 #include "packets/nhypersurfaceui.h"
-#include "packets/nnormalsurfaceui.h"
 #include "packets/pdfui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
-#include "packets/surfacefiltercomb.h"
-#include "packets/surfacefilterprop.h"
+#include "packets/surfacesui.h"
 #include "packets/textui.h"
 #include "packets/ntriangulationui.h"
 
@@ -173,11 +173,11 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_SURFACEFILTER:
             switch (((SurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION:
-                    return new SurfaceFilterCombUI(
+                    return new FilterCombUI(
                         dynamic_cast<SurfaceFilterCombination*>(packet),
                         enclosingPane);
                 case NS_FILTER_PROPERTIES:
-                    return new SurfaceFilterPropUI(
+                    return new FilterPropUI(
                         dynamic_cast<SurfaceFilterProperties*>(packet),
                         enclosingPane);
                 default:

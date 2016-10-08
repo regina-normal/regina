@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfacefilterprop.h
+/*! \file filterprop.h
  *  \brief Provides an interface for working with property-based surface
  *  filters.
  */
 
-#ifndef __NSURFACEFILTERPROP_H
-#define __NSURFACEFILTERPROP_H
+#ifndef __FILTERPROP_H
+#define __FILTERPROP_H
 
 #include "utilities/boolset.h"
 
@@ -55,7 +55,7 @@ namespace regina {
 /**
  * A packet interface for working with property-based surface filters.
  */
-class SurfaceFilterPropUI : public QObject, public PacketUI {
+class FilterPropUI : public QObject, public PacketUI {
     Q_OBJECT
 
     private:
@@ -88,7 +88,7 @@ class SurfaceFilterPropUI : public QObject, public PacketUI {
         /**
          * Constructor and destructor.
          */
-        SurfaceFilterPropUI(regina::SurfaceFilterProperties* packet,
+        FilterPropUI(regina::SurfaceFilterProperties* packet,
                 PacketPane* newEnclosingPane);
 
         /**

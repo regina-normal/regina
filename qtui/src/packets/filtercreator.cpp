@@ -35,7 +35,7 @@
 
 // UI includes:
 #include "iconcache.h"
-#include "surfacefiltercreator.h"
+#include "filtercreator.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -52,7 +52,7 @@ namespace {
     const int ID_COMB = 1;
 }
 
-SurfaceFilterCreator::SurfaceFilterCreator() {
+FilterCreator::FilterCreator() {
     ui = new QWidget();
     QGridLayout* layout = new QGridLayout(ui);//, 2, 2, 5);
     layout->setColumnStretch(1, 1);
@@ -97,15 +97,15 @@ SurfaceFilterCreator::SurfaceFilterCreator() {
     group->button(ID_PROPS)->setChecked(true);
 }
 
-SurfaceFilterCreator::~SurfaceFilterCreator() {
+FilterCreator::~FilterCreator() {
     delete group;
 }
 
-QWidget* SurfaceFilterCreator::getInterface() {
+QWidget* FilterCreator::getInterface() {
     return ui;
 }
 
-regina::Packet* SurfaceFilterCreator::createPacket(regina::Packet*,
+regina::Packet* FilterCreator::createPacket(regina::Packet*,
         QWidget*) {
     regina::Packet* ans;
     if (group->checkedId() == ID_COMB)

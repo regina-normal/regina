@@ -44,11 +44,11 @@
 #include "packets/dim2tricreator.h"
 #include "packets/dim4tricreator.h"
 #include "packets/anglescreator.h"
+#include "packets/filtercreator.h"
 #include "packets/nhypersurfacecreator.h"
-#include "packets/nnormalsurfacecreator.h"
-#include "packets/surfacefiltercreator.h"
 #include "packets/ntriangulationcreator.h"
 #include "packets/snappeacreator.h"
+#include "packets/surfacescreator.h"
 
 void ReginaMain::newAngleStructures() {
     newPacket(new AngleStructureCreator(),
@@ -72,7 +72,7 @@ void ReginaMain::newDim4Triangulation() {
 }
 
 void ReginaMain::newFilter() {
-    newPacket(new SurfaceFilterCreator(), 0,
+    newPacket(new FilterCreator(), 0,
         tr("New Normal Surface Filter"));
 }
 

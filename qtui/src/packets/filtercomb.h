@@ -30,41 +30,85 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfacefiltercreator.h
- *  \brief Allows the creation of normal surface filters.
+/*! \file filtercomb.h
+ *  \brief Provides an interface for working with combination surface filters.
  */
 
-#ifndef __NSURFACEFILTERCREATOR_H
-#define __NSURFACEFILTERCREATOR_H
+#ifndef __FILTERCOMB_H
+#define __FILTERCOMB_H
 
-#include "../packetcreator.h"
+#include "packet/packetlistener.h"
+
+#include "../packetui.h"
 
 class QButtonGroup;
+class QListWidget;
+class QRadioButton;
+
+namespace regina {
+    class SurfaceFilterCombination;
+    class Packet;
+};
 
 /**
- * An interface for creating normal surface filters.
+ * A packet interface for working with combination surface filters.
  */
-class SurfaceFilterCreator : public PacketCreator {
+class FilterCombUI : public QObject, public PacketUI,
+        public regina::PacketListener {
+    Q_OBJECT
+
     private:
         /**
-         * Internal components.
+         * Packet details
          */
-        QButtonGroup* group;
+        regina::SurfaceFilterCombination* filter;
+
+        /**
+         * Internal components
+         */
         QWidget* ui;
+        QButtonGroup* boolType;
+        QRadioButton* typeAnd;
+        QRadioButton* typeOr;
+        QListWidget* children;
 
     public:
         /**
          * Constructor and destructor.
          */
-        SurfaceFilterCreator();
-        ~SurfaceFilterCreator();
+        FilterCombUI(regina::SurfaceFilterCombination* packet,
+                PacketPane* newEnclosingPane);
+        ~FilterCombUI();
 
         /**
-         * PacketCreator overrides.
+         * PacketUI overrides.
          */
+        regina::Packet* getPacket();
         QWidget* getInterface();
-        regina::Packet* createPacket(regina::Packet* parentPacket,
-            QWidget* parentWidget);
+        QString getPacketMenuText() const;
+        void refresh();
+        void setReadWrite(bool readWrite);
+
+        /**
+         * PacketListener overrides.
+         */
+        void packetWasRenamed(regina::Packet* packet);
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
+            bool inParentDestructor);
+        void childrenWereReordered(regina::Packet* packet);
+
+    public slots:
+        /**
+         * Notification that the boolean type has been changed.
+         */
+        void notifyBoolTypeChanged();
+
+    private:
+        /**
+         * Refresh the list of child filters.
+         */
+        void refreshChildList();
 };
 
 #endif

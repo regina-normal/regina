@@ -958,8 +958,8 @@
 		0543AEAC1811E12A002758F8 /* scriptui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A51811D920002CC2AE /* scriptui.h */; };
 		0543AEAD1811E12A002758F8 /* surfacescompatui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A71811D920002CC2AE /* surfacescompatui.h */; };
 		0543AEAE1811E12A002758F8 /* surfacescoordinateui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A91811D920002CC2AE /* surfacescoordinateui.h */; };
-		0543AEAF1811E12A002758F8 /* nsurfacefiltercomb.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AB1811D920002CC2AE /* nsurfacefiltercomb.h */; };
-		0543AEB01811E12A002758F8 /* nsurfacefilterprop.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AF1811D920002CC2AE /* nsurfacefilterprop.h */; };
+		0543AEAF1811E12A002758F8 /* filtercomb.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AB1811D920002CC2AE /* filtercomb.h */; };
+		0543AEB01811E12A002758F8 /* filterprop.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AF1811D920002CC2AE /* filterprop.h */; };
 		0543AEB11811E12A002758F8 /* surfacesmatchingui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B11811D920002CC2AE /* surfacesmatchingui.h */; };
 		0543AEB21811E12A002758F8 /* surfacessummaryui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B31811D920002CC2AE /* surfacessummaryui.h */; };
 		0543AEB31811E12A002758F8 /* textui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B51811D920002CC2AE /* textui.h */; };
@@ -1141,9 +1141,9 @@
 		0564A95B1811D921002CC2AE /* scriptui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A41811D920002CC2AE /* scriptui.cpp */; };
 		0564A95C1811D921002CC2AE /* surfacescompatui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A61811D920002CC2AE /* surfacescompatui.cpp */; };
 		0564A95D1811D921002CC2AE /* surfacescoordinateui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A81811D920002CC2AE /* surfacescoordinateui.cpp */; };
-		0564A95E1811D921002CC2AE /* nsurfacefiltercomb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AA1811D920002CC2AE /* nsurfacefiltercomb.cpp */; };
-		0564A95F1811D921002CC2AE /* nsurfacefiltercreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AC1811D920002CC2AE /* nsurfacefiltercreator.cpp */; };
-		0564A9601811D921002CC2AE /* nsurfacefilterprop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AE1811D920002CC2AE /* nsurfacefilterprop.cpp */; };
+		0564A95E1811D921002CC2AE /* filtercomb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AA1811D920002CC2AE /* filtercomb.cpp */; };
+		0564A95F1811D921002CC2AE /* filtercreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AC1811D920002CC2AE /* filtercreator.cpp */; };
+		0564A9601811D921002CC2AE /* filterprop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AE1811D920002CC2AE /* filterprop.cpp */; };
 		0564A9611811D921002CC2AE /* surfacesmatchingui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B01811D920002CC2AE /* surfacesmatchingui.cpp */; };
 		0564A9621811D921002CC2AE /* surfacessummaryui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B21811D920002CC2AE /* surfacessummaryui.cpp */; };
 		0564A9631811D921002CC2AE /* textui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B41811D920002CC2AE /* textui.cpp */; };
@@ -2989,12 +2989,12 @@
 		0564A5A71811D920002CC2AE /* surfacescompatui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacescompatui.h; sourceTree = "<group>"; };
 		0564A5A81811D920002CC2AE /* surfacescoordinateui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacescoordinateui.cpp; sourceTree = "<group>"; };
 		0564A5A91811D920002CC2AE /* surfacescoordinateui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacescoordinateui.h; sourceTree = "<group>"; };
-		0564A5AA1811D920002CC2AE /* nsurfacefiltercomb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacefiltercomb.cpp; sourceTree = "<group>"; };
-		0564A5AB1811D920002CC2AE /* nsurfacefiltercomb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacefiltercomb.h; sourceTree = "<group>"; };
-		0564A5AC1811D920002CC2AE /* nsurfacefiltercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacefiltercreator.cpp; sourceTree = "<group>"; };
-		0564A5AD1811D920002CC2AE /* nsurfacefiltercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacefiltercreator.h; sourceTree = "<group>"; };
-		0564A5AE1811D920002CC2AE /* nsurfacefilterprop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacefilterprop.cpp; sourceTree = "<group>"; };
-		0564A5AF1811D920002CC2AE /* nsurfacefilterprop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacefilterprop.h; sourceTree = "<group>"; };
+		0564A5AA1811D920002CC2AE /* filtercomb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = filtercomb.cpp; sourceTree = "<group>"; };
+		0564A5AB1811D920002CC2AE /* filtercomb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filtercomb.h; sourceTree = "<group>"; };
+		0564A5AC1811D920002CC2AE /* filtercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = filtercreator.cpp; sourceTree = "<group>"; };
+		0564A5AD1811D920002CC2AE /* filtercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filtercreator.h; sourceTree = "<group>"; };
+		0564A5AE1811D920002CC2AE /* filterprop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = filterprop.cpp; sourceTree = "<group>"; };
+		0564A5AF1811D920002CC2AE /* filterprop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filterprop.h; sourceTree = "<group>"; };
 		0564A5B01811D920002CC2AE /* surfacesmatchingui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacesmatchingui.cpp; sourceTree = "<group>"; };
 		0564A5B11811D920002CC2AE /* surfacesmatchingui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacesmatchingui.h; sourceTree = "<group>"; };
 		0564A5B21811D920002CC2AE /* surfacessummaryui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacessummaryui.cpp; sourceTree = "<group>"; };
@@ -5562,6 +5562,12 @@
 				0564A5911811D920002CC2AE /* eltmovedialog.h */,
 				0564A5921811D920002CC2AE /* facetgraphtab.cpp */,
 				0564A5931811D920002CC2AE /* facetgraphtab.h */,
+				0564A5AA1811D920002CC2AE /* filtercomb.cpp */,
+				0564A5AB1811D920002CC2AE /* filtercomb.h */,
+				0564A5AC1811D920002CC2AE /* filtercreator.cpp */,
+				0564A5AD1811D920002CC2AE /* filtercreator.h */,
+				0564A5AE1811D920002CC2AE /* filterprop.cpp */,
+				0564A5AF1811D920002CC2AE /* filterprop.h */,
 				0564A5941811D920002CC2AE /* gaprunner.cpp */,
 				0564A5951811D920002CC2AE /* gaprunner.h */,
 				0554CA761C5983730053461B /* generictriui.cpp */,
@@ -5580,12 +5586,6 @@
 				052774111C55743E00140918 /* nhypersurfacecreator.h */,
 				051691AB1C5AD59000DC69EC /* nhypersurfaceui.cpp */,
 				051691AC1C5AD59000DC69EC /* nhypersurfaceui.h */,
-				0564A5AA1811D920002CC2AE /* nsurfacefiltercomb.cpp */,
-				0564A5AB1811D920002CC2AE /* nsurfacefiltercomb.h */,
-				0564A5AC1811D920002CC2AE /* nsurfacefiltercreator.cpp */,
-				0564A5AD1811D920002CC2AE /* nsurfacefiltercreator.h */,
-				0564A5AE1811D920002CC2AE /* nsurfacefilterprop.cpp */,
-				0564A5AF1811D920002CC2AE /* nsurfacefilterprop.h */,
 				0564A5B61811D920002CC2AE /* ntrialgebra.cpp */,
 				0564A5B71811D920002CC2AE /* ntrialgebra.h */,
 				0564A5B81811D920002CC2AE /* ntriangulationcreator.cpp */,
@@ -7617,8 +7617,8 @@
 				05A73CE619B2F9DC0099C617 /* snappeaui.h in Sources */,
 				0543AEAD1811E12A002758F8 /* surfacescompatui.h in Sources */,
 				0543AEAE1811E12A002758F8 /* surfacescoordinateui.h in Sources */,
-				0543AEAF1811E12A002758F8 /* nsurfacefiltercomb.h in Sources */,
-				0543AEB01811E12A002758F8 /* nsurfacefilterprop.h in Sources */,
+				0543AEAF1811E12A002758F8 /* filtercomb.h in Sources */,
+				0543AEB01811E12A002758F8 /* filterprop.h in Sources */,
 				0543AEB11811E12A002758F8 /* surfacesmatchingui.h in Sources */,
 				0543AEB21811E12A002758F8 /* surfacessummaryui.h in Sources */,
 				05B1EF181C54299C008E7B49 /* dim4boundarycomponentchooser.cpp in Sources */,
@@ -7648,7 +7648,7 @@
 				0543AEC41811E12A002758F8 /* reginapref.h in Sources */,
 				0543AEC51811E12A002758F8 /* reginaprefset.h in Sources */,
 				0543AEC61811E12A002758F8 /* shortrunner.h in Sources */,
-				0564A95F1811D921002CC2AE /* nsurfacefiltercreator.cpp in Sources */,
+				0564A95F1811D921002CC2AE /* filtercreator.cpp in Sources */,
 				0564A9561811D921002CC2AE /* compatcanvas.cpp in Sources */,
 				0564A9401811D921002CC2AE /* introdialog.cpp in Sources */,
 				0564A9611811D921002CC2AE /* surfacesmatchingui.cpp in Sources */,
@@ -7678,7 +7678,7 @@
 				0564A80B1811D921002CC2AE /* importdialog.cpp in Sources */,
 				0564A80E1811D921002CC2AE /* pdfhandler.cpp in Sources */,
 				0564A9781811D921002CC2AE /* recentfilesaction.cpp in Sources */,
-				0564A9601811D921002CC2AE /* nsurfacefilterprop.cpp in Sources */,
+				0564A9601811D921002CC2AE /* filterprop.cpp in Sources */,
 				0564A9821811D921002CC2AE /* reginaprefset.cpp in Sources */,
 				0564A8091811D921002CC2AE /* dehydrationhandler.cpp in Sources */,
 				0591E8431C4F769100793A9C /* dim4triui.cpp in Sources */,
@@ -7694,7 +7694,7 @@
 				0591E8421C4F769100793A9C /* dim4triskeleton.cpp in Sources */,
 				0564A9711811D921002CC2AE /* progressdialogs.cpp in Sources */,
 				0564A9801811D921002CC2AE /* reginamanager.cpp in Sources */,
-				0564A95E1811D921002CC2AE /* nsurfacefiltercomb.cpp in Sources */,
+				0564A95E1811D921002CC2AE /* filtercomb.cpp in Sources */,
 				0564A95B1811D921002CC2AE /* scriptui.cpp in Sources */,
 				0564A96A1811D921002CC2AE /* ntrisnappea.cpp in Sources */,
 				0564A9651811D921002CC2AE /* ntriangulationcreator.cpp in Sources */,

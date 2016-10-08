@@ -15,6 +15,9 @@ SET ( FILES
   dim4triui
   eltmovedialog
   facetgraphtab
+  filtercomb
+  filtercreator
+  filterprop
   gaprunner
   generictriui
   groupwidget
@@ -24,9 +27,6 @@ SET ( FILES
   nhypersurfacecreator
   nhypersummaryui
   nhypersurfaceui
-  nsurfacefiltercomb
-  nsurfacefiltercreator
-  nsurfacefilterprop
   ntrialgebra
   ntriangulationcreator
   ntriangulationui
