@@ -1186,9 +1186,6 @@ NMatrixInt : typedef ->  MatrixInt
 NNormalHypersurface : class
 Equality type : BY_REFERENCE
 
-NNormalHypersurfaceList : class
-Equality type : BY_REFERENCE
-
 NNormalSurface : class
 Equality type : BY_REFERENCE
 
@@ -1314,15 +1311,6 @@ Equality type : BY_REFERENCE
 NStandardTriangulation : class
 Equality type : BY_REFERENCE
 
-SurfaceFilter : class
-Equality type : BY_REFERENCE
-
-SurfaceFilterCombination : class
-Equality type : BY_REFERENCE
-
-SurfaceFilterProperties : class
-Equality type : BY_REFERENCE
-
 NTetFace : typedef ->  FacetSpec3
 
 NTetrahedron : typedef ->  Simplex3
@@ -1363,6 +1351,9 @@ NVertexEmbedding : typedef ->  FaceEmbedding3_0
 
 NormalAlg : class
 Equality type : BY_VALUE
+
+NormalHypersurfaces : class
+Equality type : BY_REFERENCE
 
 NormalList : class
 Equality type : BY_VALUE
@@ -1482,6 +1473,15 @@ Simplex9 : class
 Equality type : BY_REFERENCE
 
 SnapPeaTriangulation : class
+Equality type : BY_REFERENCE
+
+SurfaceFilter : class
+Equality type : BY_REFERENCE
+
+SurfaceFilterCombination : class
+Equality type : BY_REFERENCE
+
+SurfaceFilterProperties : class
 Equality type : BY_REFERENCE
 
 Text : class
