@@ -53,6 +53,7 @@ using regina::NormalSurfaces;
 using regina::NNormalSurfaceVector;
 using regina::Packet;
 using regina::Perm;
+using regina::Ray;
 using regina::NSignature;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -454,8 +455,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE(msg.str(), expectedCount == tot);
         }
 
-        static bool lexLess(const NNormalSurfaceVector* a,
-                const NNormalSurfaceVector* b) {
+        static bool lexLess(const Ray* a, const Ray* b) {
             for (unsigned i = 0; i < a->size(); ++i) {
                 if ((*a)[i] < (*b)[i])
                     return true;
@@ -1917,13 +1917,6 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             runCensusAllIdeal(&testDisjoint);
         }
 
-        static NNormalSurface* doubleSurface(const NNormalSurface* s) {
-            NNormalSurfaceVector* v =
-                static_cast<NNormalSurfaceVector*>(s->rawVector()->clone());
-            (*v) *= 2;
-            return new NNormalSurface(s->triangulation(), v);
-        }
-
         /**
          * PRE: tri is valid with only one component, and all vertex
          * links are spheres or discs.
@@ -2084,7 +2077,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 comp.reset(new Container());
                 nComp = t->splitIntoComponents(comp.get(), false);
 
-                sDouble.reset(doubleSurface(s));
+                sDouble.reset(s->doubleSurface());
                 tDouble.reset(sDouble->cutAlong());
                 tDouble->intelligentSimplify();
                 compDouble.reset(new Container());
