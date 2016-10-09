@@ -86,7 +86,7 @@ typedef Face<4, 1> Dim4Edge;
  * At a bare minimum, each specialisation of this template must provide:
  *
  * - a typedef \a Class that represents the corresponding
- *   NNormalHypersurfaceVector subclass;
+ *   NormalHypersurfaceVector subclass;
  * - a static function name() that returns a C-style string giving the
  *   human-readable name of the coordinate system.
  *
@@ -100,9 +100,9 @@ struct HyperInfo;
 
 /**
  * Defines various constants, types and virtual functions for a subclass
- * of NNormalHypersurfaceVector.
+ * of NormalHypersurfaceVector.
  *
- * Every subclass of NNormalHypersurfaceVector \a must include
+ * Every subclass of NormalHypersurfaceVector \a must include
  * REGINA_NORMAL_HYPERSURFACE_FLAVOUR at the beginning of the class definition.
  *
  * This macro provides the class with:
@@ -112,22 +112,22 @@ struct HyperInfo;
  * - a typedef \a Info, which refers to the corresponding specialisation 
  *   of the HyperInfo<> tempate;
  * - declarations and implementations of the virtual function
- *   NNormalHypersurfaceVector::clone().
+ *   NormalHypersurfaceVector::clone().
  *
- * @param class_ the name of this subclass of NNormalHypersurfaceVector.
+ * @param class_ the name of this subclass of NormalHypersurfaceVector.
  * @param id the corresponding NNormalCoords constant.
  */
 #define REGINA_NORMAL_HYPERSURFACE_FLAVOUR(class_, id) \
     public: \
         typedef HyperInfo<id> Info; \
         static constexpr const HyperCoords coordsID = id; \
-        inline virtual NNormalHypersurfaceVector* clone() const { \
+        inline virtual NormalHypersurfaceVector* clone() const { \
             return new class_(*this); \
         }
 
 /**
  * Stores the vector of a single normal hypersurface in a 4-manifold
- * triangulation.  The different subclasses of NNormalHypersurfaceVector use
+ * triangulation.  The different subclasses of NormalHypersurfaceVector use
  * different underlying coordinate systems for the normal solution space.
  * However, the various coordinate retrieval routines will return values
  * that are independent of the underlying coordinate system.  Thus the
@@ -139,7 +139,7 @@ struct HyperInfo;
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * should return LargeInteger::infinity where appropriate.
  *
- * All subclasses of NNormalHypersurfaceVector <b>must</b> have the following
+ * All subclasses of NormalHypersurfaceVector <b>must</b> have the following
  * properties:
  *
  * - Normal hypersurfaces can be enumerated by intersecting the non-negative
@@ -148,7 +148,7 @@ struct HyperInfo;
  * - Adding two normal hypersurfaces corresponds to adding the two underlying
  *   vectors.
  *
- * <b>When deriving classes from NNormalHypersurfaceVector:</b>
+ * <b>When deriving classes from NormalHypersurfaceVector:</b>
  * <ul>
  *   <li>A new value must be added to the HyperCoords enum in hypercoords.h
  *   to represent the new coordinate system.</li>
@@ -180,7 +180,7 @@ struct HyperInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalHypersurfaceVector {
+class REGINA_API NormalHypersurfaceVector {
     protected:
         Ray coords_;
             /** The raw vector of normal coordinates. */
@@ -192,19 +192,19 @@ class REGINA_API NNormalHypersurfaceVector {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalHypersurfaceVector(size_t length);
+        NormalHypersurfaceVector(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalHypersurfaceVector(const Vector<LargeInteger>& cloneMe);
+        NormalHypersurfaceVector(const Vector<LargeInteger>& cloneMe);
 
         /**
          * A virtual destructor.  This is required because here we
          * introduce virtual functions into the Ray hierarchy.
          */
-        virtual ~NNormalHypersurfaceVector();
+        virtual ~NormalHypersurfaceVector();
 
         /**
          * Gives read-only access to the underlying vector of coordinates.
@@ -215,10 +215,10 @@ class REGINA_API NNormalHypersurfaceVector {
 
         /**
          * Creates a newly allocated clone of this vector.
-         * The clone will be of the same subclass of NNormalHypersurfaceVector
+         * The clone will be of the same subclass of NormalHypersurfaceVector
          * as this vector.
          */
-        virtual NNormalHypersurfaceVector* clone() const = 0;
+        virtual NormalHypersurfaceVector* clone() const = 0;
 
         /**
          * Returns the number of coordinates in the underlying vector.
@@ -262,7 +262,7 @@ class REGINA_API NNormalHypersurfaceVector {
          *
          * @param other the vector to add to this vector.
          */
-        virtual void operator += (const NNormalHypersurfaceVector& other);
+        virtual void operator += (const NormalHypersurfaceVector& other);
 
         /**
          * Scales this vector down by the greatest common divisor of all
@@ -287,7 +287,7 @@ class REGINA_API NNormalHypersurfaceVector {
          * The default implementation for this routine simply runs
          * through every piece type until a piece type with infinite piece
          * count is found or all piece types have been examined.
-         * Subclasses of NNormalHypersurfaceVector should override this if
+         * Subclasses of NormalHypersurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal hypersurface
@@ -304,7 +304,7 @@ class REGINA_API NNormalHypersurfaceVector {
          * The default implementation for this routine simply runs
          * through every non-tetrahedron piece type ensuring that each
          * has no corresponding pieces.
-         * Subclasses of NNormalHypersurfaceVector should override this if
+         * Subclasses of NormalHypersurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal hypersurface
@@ -335,7 +335,7 @@ class REGINA_API NNormalHypersurfaceVector {
          *
          * The default implementation for this routine involves counting the
          * number of pieces of every type.
-         * Subclasses of NNormalHypersurfaceVector should override this if
+         * Subclasses of NormalHypersurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal hypersurface
@@ -349,7 +349,7 @@ class REGINA_API NNormalHypersurfaceVector {
         /**
          * Returns the number of tetrahedron pieces of the given type in
          * this normal hypersurface.
-         * See NNormalHypersurface::tetrahedra() for further details.
+         * See NormalHypersurface::tetrahedra() for further details.
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested tetrahedron pieces reside;
@@ -366,7 +366,7 @@ class REGINA_API NNormalHypersurfaceVector {
         /**
          * Returns the number of prism pieces of the given type
          * in this normal hypersurface.
-         * See NNormalHypersurface::prisms() for further details.
+         * See NormalHypersurface::prisms() for further details.
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prism pieces reside;
@@ -383,7 +383,7 @@ class REGINA_API NNormalHypersurfaceVector {
         /**
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
-         * See NNormalHypersurface::edgeWeight() for further details.
+         * See NormalHypersurface::edgeWeight() for further details.
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
@@ -399,7 +399,7 @@ class REGINA_API NNormalHypersurfaceVector {
         /**
          * Returns a new normal hypersurface vector of the appropriate length
          * for the given triangulation and for the coordinate
-         * system corresponding to this subclass of NNormalHypersurfaceVector.
+         * system corresponding to this subclass of NormalHypersurfaceVector.
          * All elements of the new vector will be initialised to zero.
          *
          * See ::makeZeroVector() for further details.
@@ -409,14 +409,14 @@ class REGINA_API NNormalHypersurfaceVector {
          * @return a new zero vector of the correct class and length.
          */
         #ifdef __DOXYGEN
-            static NNormalHypersurfaceVector* makeZeroVector(
+            static NormalHypersurfaceVector* makeZeroVector(
                 const Dim4Triangulation* triangulation);
         #endif
         /**
          * Creates a new set of normal hypersurface matching equations for
          * the given triangulation using the coordinate
          * system corresponding to this particular subclass of
-         * NNormalHypersurfaceVector.
+         * NormalHypersurfaceVector.
          *
          * See ::makeMatchingEquations() for further details.
          *
@@ -433,7 +433,7 @@ class REGINA_API NNormalHypersurfaceVector {
          * the condition that normal hypersurfaces be embedded.  The
          * validity constraints will be expressed relative to the
          * coordinate system corresponding to this particular
-         * subclass of NNormalHypersurfaceVector.
+         * subclass of NormalHypersurfaceVector.
          *
          * @param triangulation the triangulation upon which these
          * validity constraints will be based.
@@ -452,18 +452,18 @@ class REGINA_API NNormalHypersurfaceVector {
  *
  * The information provided by the various query methods is independent
  * of the underlying coordinate system being used.
- * See the NNormalHypersurfaceVector class notes for details of what to do
+ * See the NormalHypersurfaceVector class notes for details of what to do
  * when introducing a new coordinate system.
  *
  * Note that non-compact surfaces (surfaces with infinitely many pieces,
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * will return LargeInteger::infinity where appropriate.
  */
-class REGINA_API NNormalHypersurface :
-        public ShortOutput<NNormalHypersurface>,
+class REGINA_API NormalHypersurface :
+        public ShortOutput<NormalHypersurface>,
         public boost::noncopyable {
     protected:
-        NNormalHypersurfaceVector* vector_;
+        NormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in
              *   whichever space is appropriate. */
         const Dim4Triangulation* triangulation_;
@@ -507,8 +507,8 @@ class REGINA_API NNormalHypersurface :
          * @param vector a vector containing the coordinates of the
          * normal hypersurface in whichever space is appropriate.
          */
-        NNormalHypersurface(const Dim4Triangulation* triangulation,
-            NNormalHypersurfaceVector* vector);
+        NormalHypersurface(const Dim4Triangulation* triangulation,
+            NormalHypersurfaceVector* vector);
         /**
          * A Python-only routine that creates a new normal hypersurface
          * inside the given triangulation with the given coordinate vector.
@@ -532,14 +532,14 @@ class REGINA_API NNormalHypersurface :
          * converted internally to LargeInteger objects.
          */
         #ifdef __DOXYGEN
-        NNormalHypersurface(const Dim4Triangulation* triang,
+        NormalHypersurface(const Dim4Triangulation* triang,
             HyperCoords coordSystem, List allCoords);
         #endif
         /**
          * Destroys this normal hypersurface.
          * The underlying vector of coordinates will also be deallocated.
          */
-        ~NNormalHypersurface();
+        ~NormalHypersurface();
 
         /**
          * Creates a newly allocated clone of this normal hypersurface.
@@ -549,7 +549,7 @@ class REGINA_API NNormalHypersurface :
          *
          * @return a clone of this normal hypersurface.
          */
-        NNormalHypersurface* clone() const;
+        NormalHypersurface* clone() const;
 
         /**
          * Creates a newly allocated hypersurface that is the double of this
@@ -557,7 +557,7 @@ class REGINA_API NNormalHypersurface :
          *
          * @return the double of this normal hypersurface.
          */
-        NNormalHypersurface* doubleHypersurface() const;
+        NormalHypersurface* doubleHypersurface() const;
 
         /**
          * Returns the number of tetrahedron pieces of the given type in
@@ -866,7 +866,7 @@ class REGINA_API NNormalHypersurface :
          * @return \c true if both hypersurfaces represent the same normal
          * hypersurface, or \c false if not.
          */
-        bool sameSurface(const NNormalHypersurface& other) const;
+        bool sameSurface(const NormalHypersurface& other) const;
 
         /**
          * Determines whether this hypersurface is embedded.  This is true if
@@ -906,7 +906,7 @@ class REGINA_API NNormalHypersurface :
          * @return \c true if the two hypersurfaces are locally compatible, or
          * \c false if they are not.
          */
-        bool locallyCompatible(const NNormalHypersurface& other) const;
+        bool locallyCompatible(const NormalHypersurface& other) const;
 
         /**
          * Gives read-only access to the raw vector that sits beneath this
@@ -916,12 +916,12 @@ class REGINA_API NNormalHypersurface :
          * provided here in case the need should arise (e.g., for reasons
          * of efficiency).
          *
-         * \warning An NNormalHypersurface does not know what underlying
+         * \warning An NormalHypersurface does not know what underlying
          * coordinate system its raw vector uses.  Unless you already know
          * the coordinate system in advance (i.e., you created the hypersurface
          * yourself), it is best to keep to the coordinate-system-agnostic
-         * access functions such as NNormalHypersurfaceVector::tetrahedra() and
-         * NNormalHypersurfaceVector::prisms().
+         * access functions such as NormalHypersurfaceVector::tetrahedra() and
+         * NormalHypersurfaceVector::prisms().
          *
          * \ifacespython Not present.
          *
@@ -944,131 +944,149 @@ class REGINA_API NNormalHypersurface :
     friend class XMLNormalHypersurfaceReader;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalHypersurfaceVector has now been renamed to
+ * NormalHypersurfaceVector.
+ */
+REGINA_DEPRECATED typedef NormalHypersurfaceVector NNormalHypersurfaceVector;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalHypersurface has now been renamed to
+ * NormalHypersurface.
+ */
+REGINA_DEPRECATED typedef NormalHypersurface NNormalHypersurface;
+
 /*@}*/
 
-// Inline functions for NNormalHypersurfaceVector
+// Inline functions for NormalHypersurfaceVector
 
-inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(size_t length) :
+inline NormalHypersurfaceVector::NormalHypersurfaceVector(size_t length) :
         coords_(length) {
 }
-inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(
+inline NormalHypersurfaceVector::NormalHypersurfaceVector(
         const Vector<LargeInteger>& cloneMe) : coords_(cloneMe) {
 }
-inline NNormalHypersurfaceVector::~NNormalHypersurfaceVector() {
+inline NormalHypersurfaceVector::~NormalHypersurfaceVector() {
 }
 
-inline const Ray& NNormalHypersurfaceVector::coords() const {
+inline const Ray& NormalHypersurfaceVector::coords() const {
     return coords_;
 }
 
-inline size_t NNormalHypersurfaceVector::size() const {
+inline size_t NormalHypersurfaceVector::size() const {
     return coords_.size();
 }
 
-inline const NLargeInteger& NNormalHypersurfaceVector::operator []
+inline const NLargeInteger& NormalHypersurfaceVector::operator []
         (size_t index) const {
     return coords_[index];
 }
 
-inline void NNormalHypersurfaceVector::setElement(size_t index,
+inline void NormalHypersurfaceVector::setElement(size_t index,
         const LargeInteger& value) {
     coords_.setElement(index, value);
 }
 
-inline void NNormalHypersurfaceVector::operator += (
-        const NNormalHypersurfaceVector& other) {
+inline void NormalHypersurfaceVector::operator += (
+        const NormalHypersurfaceVector& other) {
     coords_ += other.coords_;
 }
 
-inline void NNormalHypersurfaceVector::scaleDown() {
+inline void NormalHypersurfaceVector::scaleDown() {
     coords_.scaleDown();
 }
 
-// Inline functions for NNormalHypersurface
+// Inline functions for NormalHypersurface
 
-inline NNormalHypersurface::~NNormalHypersurface() {
+inline NormalHypersurface::~NormalHypersurface() {
     delete vector_;
 }
 
-inline LargeInteger NNormalHypersurface::tetrahedra(
+inline LargeInteger NormalHypersurface::tetrahedra(
         size_t pentIndex, int vertex) const {
     return vector_->tetrahedra(pentIndex, vertex, triangulation_);
 }
-inline LargeInteger NNormalHypersurface::prisms(
+inline LargeInteger NormalHypersurface::prisms(
         size_t pentIndex, int prismType) const {
     return vector_->prisms(pentIndex, prismType, triangulation_);
 }
-inline LargeInteger NNormalHypersurface::edgeWeight(size_t edgeIndex) const {
+inline LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
     return vector_->edgeWeight(edgeIndex, triangulation_);
 }
 
-inline size_t NNormalHypersurface::countCoords() const {
+inline size_t NormalHypersurface::countCoords() const {
     return vector_->size();
 }
-inline const Dim4Triangulation* NNormalHypersurface::triangulation() const {
+inline const Dim4Triangulation* NormalHypersurface::triangulation() const {
     return triangulation_;
 }
 
-inline const std::string& NNormalHypersurface::name() const {
+inline const std::string& NormalHypersurface::name() const {
     return name_;
 }
-inline void NNormalHypersurface::setName(const std::string& name) {
+inline void NormalHypersurface::setName(const std::string& name) {
     name_ = name;
 }
 
-inline void NNormalHypersurface::writeRawVector(std::ostream& out) const {
+inline void NormalHypersurface::writeRawVector(std::ostream& out) const {
     out << vector_->coords();
 }
 
-inline bool NNormalHypersurface::isCompact() const {
+inline bool NormalHypersurface::isCompact() const {
     if (! compact_.known())
         compact_ = vector_->isCompact(triangulation_);
     return compact_.value();
 }
 
-inline bool NNormalHypersurface::isOrientable() const {
+inline bool NormalHypersurface::isOrientable() const {
     if (! orientable_.known())
         calculateFromTriangulation();
     return orientable_.value();
 }
 
-inline bool NNormalHypersurface::isTwoSided() const {
+inline bool NormalHypersurface::isTwoSided() const {
     if (! twoSided_.known())
         calculateFromTriangulation();
     return twoSided_.value();
 }
 
-inline bool NNormalHypersurface::isConnected() const {
+inline bool NormalHypersurface::isConnected() const {
     if (! connected_.known())
         calculateFromTriangulation();
     return connected_.value();
 }
 
-inline bool NNormalHypersurface::hasRealBoundary() const {
+inline bool NormalHypersurface::hasRealBoundary() const {
     if (! realBoundary_.known())
         calculateRealBoundary();
     return realBoundary_.value();
 }
 
-inline const NAbelianGroup& NNormalHypersurface::homology() const {
+inline const NAbelianGroup& NormalHypersurface::homology() const {
     if (! H1_.known())
         calculateFromTriangulation();
     return *H1_.value();
 }
 
-inline bool NNormalHypersurface::isVertexLinking() const {
+inline bool NormalHypersurface::isVertexLinking() const {
     return vector_->isVertexLinking(triangulation_);
 }
 
-inline const Dim4Vertex* NNormalHypersurface::isVertexLink() const {
+inline const Dim4Vertex* NormalHypersurface::isVertexLink() const {
     return vector_->isVertexLink(triangulation_);
 }
 
-inline const Dim4Edge* NNormalHypersurface::isThinEdgeLink() const {
+inline const Dim4Edge* NormalHypersurface::isThinEdgeLink() const {
     return vector_->isThinEdgeLink(triangulation_);
 }
 
-inline const Ray& NNormalHypersurface::rawVector() const {
+inline const Ray& NormalHypersurface::rawVector() const {
     return vector_->coords();
 }
 

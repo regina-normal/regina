@@ -63,7 +63,7 @@ struct HyperCountSet {
         n1sOr = n2sOr = n1sNor = n2sNor = tot = mask = 0;
     }
     
-    void append(const regina::NNormalHypersurface* s) {
+    void append(const regina::NormalHypersurface* s) {
         if (s->isOrientable()) {
             if (s->isTwoSided()) {
                 ++n2sOr;
@@ -176,7 +176,7 @@ struct HyperCountSet {
     nSpun = 0;
     
     size_t n = self.packet->size();
-    const regina::NNormalHypersurface* s;
+    const regina::NormalHypersurface* s;
     std::string homology;
     for (size_t i = 0; i < n; ++i) {
         s = self.packet->hypersurface(i);

@@ -44,7 +44,7 @@
 
 namespace regina {
 
-bool NNormalHypersurfaceVector::isCompact(const Dim4Triangulation* triang)
+bool NormalHypersurfaceVector::isCompact(const Dim4Triangulation* triang)
         const {
     size_t nPents = triang->size();
     size_t pent;
@@ -60,14 +60,14 @@ bool NNormalHypersurfaceVector::isCompact(const Dim4Triangulation* triang)
     return true;
 }
 
-NNormalHypersurface::NNormalHypersurface(const Dim4Triangulation* triangulation,
-        NNormalHypersurfaceVector* vector) :
+NormalHypersurface::NormalHypersurface(const Dim4Triangulation* triangulation,
+        NormalHypersurfaceVector* vector) :
         vector_(vector), triangulation_(triangulation) {
 }
 
-NNormalHypersurface* NNormalHypersurface::clone() const {
-    NNormalHypersurface* ans = new NNormalHypersurface(triangulation_,
-        dynamic_cast<NNormalHypersurfaceVector*>(vector_->clone()));
+NormalHypersurface* NormalHypersurface::clone() const {
+    NormalHypersurface* ans = new NormalHypersurface(triangulation_,
+        dynamic_cast<NormalHypersurfaceVector*>(vector_->clone()));
 
     ans->realBoundary_ = realBoundary_;
     ans->compact_ = compact_;
@@ -75,9 +75,9 @@ NNormalHypersurface* NNormalHypersurface::clone() const {
     return ans;
 }
 
-NNormalHypersurface* NNormalHypersurface::doubleHypersurface() const {
-    NNormalHypersurface* ans = new NNormalHypersurface(triangulation_,
-        dynamic_cast<NNormalHypersurfaceVector*>(vector_->clone()));
+NormalHypersurface* NormalHypersurface::doubleHypersurface() const {
+    NormalHypersurface* ans = new NormalHypersurface(triangulation_,
+        dynamic_cast<NormalHypersurfaceVector*>(vector_->clone()));
 
     *(ans->vector_) += *(ans->vector_);
 
@@ -89,7 +89,7 @@ NNormalHypersurface* NNormalHypersurface::doubleHypersurface() const {
     return ans;
 }
 
-void NNormalHypersurface::writeTextShort(std::ostream& out) const {
+void NormalHypersurface::writeTextShort(std::ostream& out) const {
     size_t nPents = triangulation_->size();
     size_t pent;
     unsigned j;
@@ -104,7 +104,7 @@ void NNormalHypersurface::writeTextShort(std::ostream& out) const {
     }
 }
 
-void NNormalHypersurface::writeXMLData(std::ostream& out) const {
+void NormalHypersurface::writeXMLData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
@@ -131,7 +131,7 @@ void NNormalHypersurface::writeXMLData(std::ostream& out) const {
     out << " </hypersurface>\n";
 }
 
-bool NNormalHypersurface::isEmpty() const {
+bool NormalHypersurface::isEmpty() const {
     size_t nPents = triangulation_->size();
 
     size_t p;
@@ -150,7 +150,7 @@ bool NNormalHypersurface::isEmpty() const {
     return true;
 }
 
-bool NNormalHypersurface::sameSurface(const NNormalHypersurface& other) const {
+bool NormalHypersurface::sameSurface(const NormalHypersurface& other) const {
     size_t nPents = triangulation_->size();
 
     size_t p;
@@ -169,7 +169,7 @@ bool NNormalHypersurface::sameSurface(const NNormalHypersurface& other) const {
     return true;
 }
 
-bool NNormalHypersurface::embedded() const {
+bool NormalHypersurface::embedded() const {
     size_t nPent = triangulation_->size();
 
     int type;
@@ -197,7 +197,7 @@ bool NNormalHypersurface::embedded() const {
     return true;
 }
 
-bool NNormalHypersurface::locallyCompatible(const NNormalHypersurface& other)
+bool NormalHypersurface::locallyCompatible(const NormalHypersurface& other)
         const {
     size_t nPent = triangulation_->size();
 
@@ -226,7 +226,7 @@ bool NNormalHypersurface::locallyCompatible(const NNormalHypersurface& other)
     return true;
 }
 
-void NNormalHypersurface::calculateRealBoundary() const {
+void NormalHypersurface::calculateRealBoundary() const {
     if (triangulation_->isClosed()) {
         realBoundary_ = false;
         return;
@@ -265,7 +265,7 @@ void NNormalHypersurface::calculateRealBoundary() const {
     realBoundary_ = false;
 }
 
-void NNormalHypersurface::calculateFromTriangulation() const {
+void NormalHypersurface::calculateFromTriangulation() const {
     orientable_.clear();
     twoSided_.clear();
     connected_.clear();
@@ -278,7 +278,7 @@ void NNormalHypersurface::calculateFromTriangulation() const {
     size_t nComp = me->countComponents();
     delete me;
 
-    NNormalHypersurface* twice = doubleHypersurface();
+    NormalHypersurface* twice = doubleHypersurface();
     NTriangulation* cover = twice->triangulate();
     twoSided_ = (cover->countComponents() == 2 * nComp);
     delete cover;

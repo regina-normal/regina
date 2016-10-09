@@ -40,7 +40,7 @@ namespace regina {
     typedef Triangulation<3> NTriangulation;
     typedef Triangulation<4> Dim4Triangulation;
 
-    class NNormalHypersurface;
+    class NormalHypersurface;
     class NNormalSurface;
 }
 
@@ -125,6 +125,6 @@ namespace regina {
  * Return a particular coordinate of a normal surface in the given
  * coordinate system.
  */
-+ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord;
++ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NormalHypersurface&)surface whichCoord:(size_t)whichCoord;
 
 @end

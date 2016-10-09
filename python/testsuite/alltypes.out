@@ -1183,8 +1183,9 @@ NMatrix2Row : typedef ->  Matrix2Row
 
 NMatrixInt : typedef ->  MatrixInt
 
-NNormalHypersurface : class
-Equality type : BY_REFERENCE
+NNormalHypersurface : typedef ->  NormalHypersurface
+
+NNormalHypersurfaceList : typedef ->  NormalHypersurfaces
 
 NNormalSurface : class
 Equality type : BY_REFERENCE
@@ -1351,6 +1352,9 @@ NVertexEmbedding : typedef ->  FaceEmbedding3_0
 
 NormalAlg : class
 Equality type : BY_VALUE
+
+NormalHypersurface : class
+Equality type : BY_REFERENCE
 
 NormalHypersurfaces : class
 Equality type : BY_REFERENCE

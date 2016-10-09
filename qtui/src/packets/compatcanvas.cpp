@@ -51,7 +51,7 @@
 #include <qcolor.h>
 #include <QGraphicsSimpleTextItem>
 
-using regina::NNormalHypersurface;
+using regina::NormalHypersurface;
 using regina::NormalHypersurfaces;
 using regina::NNormalSurface;
 using regina::NormalSurfaces;
@@ -304,7 +304,7 @@ void CompatCanvas::fillLocal(const NormalHypersurfaces& surfaces) {
     QBrush fill(Qt::darkCyan);
 
     unsigned i, j;
-    const NNormalHypersurface *s, *t;
+    const NormalHypersurface *s, *t;
     for (i = 0; i < nSurfaces; ++i) {
         s = surfaces.hypersurface(i);
 

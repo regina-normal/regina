@@ -461,7 +461,7 @@ namespace Coordinates {
     }
 
     regina::LargeInteger getCoordinate(HyperCoords coordSystem,
-            const regina::NNormalHypersurface& surface, size_t whichCoord) {
+            const regina::NormalHypersurface& surface, size_t whichCoord) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)
                 return surface.tetrahedra(whichCoord / 15, whichCoord % 15);

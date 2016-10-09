@@ -40,11 +40,11 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NNormalHypersurface;
+using regina::NormalHypersurface;
 using regina::Dim4Triangulation;
 
 namespace {
-    void writeRawVector_stdio(const NNormalHypersurface& s) {
+    void writeRawVector_stdio(const NormalHypersurface& s) {
         s.writeRawVector(std::cout);
     }
 
@@ -52,9 +52,9 @@ namespace {
      * A python-only constructor that lets users build a normal hypersurface
      * from a hand-crafted list of integers.
      */
-    NNormalHypersurface* fromCoordinates(Dim4Triangulation* t,
+    NormalHypersurface* fromCoordinates(Dim4Triangulation* t,
             regina::HyperCoords coords, boost::python::list values) {
-        regina::NNormalHypersurfaceVector* v =
+        regina::NormalHypersurfaceVector* v =
             regina::makeZeroVector(t, coords);
 
         long len = boost::python::len(values);
@@ -89,48 +89,50 @@ namespace {
             x_large();
         }
 
-        return new NNormalHypersurface(t, v);
+        return new NormalHypersurface(t, v);
     }
 }
 
-void addNNormalHypersurface() {
-    class_<NNormalHypersurface, std::auto_ptr<NNormalHypersurface>,
-            boost::noncopyable>("NNormalHypersurface", no_init)
+void addNormalHypersurface() {
+    class_<NormalHypersurface, std::auto_ptr<NormalHypersurface>,
+            boost::noncopyable>("NormalHypersurface", no_init)
         .def("__init__", make_constructor(fromCoordinates))
-        .def("clone", &NNormalHypersurface::clone,
+        .def("clone", &NormalHypersurface::clone,
             return_value_policy<manage_new_object>())
-        .def("doubleHypersurface", &NNormalHypersurface::doubleHypersurface,
+        .def("doubleHypersurface", &NormalHypersurface::doubleHypersurface,
             return_value_policy<manage_new_object>())
-        .def("tetrahedra", &NNormalHypersurface::tetrahedra)
-        .def("prisms", &NNormalHypersurface::prisms)
-        .def("edgeWeight", &NNormalHypersurface::edgeWeight)
-        .def("countCoords", &NNormalHypersurface::countCoords)
-        .def("triangulation", &NNormalHypersurface::triangulation,
+        .def("tetrahedra", &NormalHypersurface::tetrahedra)
+        .def("prisms", &NormalHypersurface::prisms)
+        .def("edgeWeight", &NormalHypersurface::edgeWeight)
+        .def("countCoords", &NormalHypersurface::countCoords)
+        .def("triangulation", &NormalHypersurface::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("name", &NNormalHypersurface::name,
+        .def("name", &NormalHypersurface::name,
             return_value_policy<return_by_value>())
-        .def("setName", &NNormalHypersurface::setName)
+        .def("setName", &NormalHypersurface::setName)
         .def("writeRawVector", writeRawVector_stdio)
-        .def("isEmpty", &NNormalHypersurface::isEmpty)
-        .def("isCompact", &NNormalHypersurface::isCompact)
-        .def("isOrientable", &NNormalHypersurface::isOrientable)
-        .def("isTwoSided", &NNormalHypersurface::isTwoSided)
-        .def("isConnected", &NNormalHypersurface::isConnected)
-        .def("hasRealBoundary", &NNormalHypersurface::hasRealBoundary)
-        .def("isVertexLinking", &NNormalHypersurface::isVertexLinking)
-        .def("isVertexLink", &NNormalHypersurface::isVertexLink,
+        .def("isEmpty", &NormalHypersurface::isEmpty)
+        .def("isCompact", &NormalHypersurface::isCompact)
+        .def("isOrientable", &NormalHypersurface::isOrientable)
+        .def("isTwoSided", &NormalHypersurface::isTwoSided)
+        .def("isConnected", &NormalHypersurface::isConnected)
+        .def("hasRealBoundary", &NormalHypersurface::hasRealBoundary)
+        .def("isVertexLinking", &NormalHypersurface::isVertexLinking)
+        .def("isVertexLink", &NormalHypersurface::isVertexLink,
             return_value_policy<reference_existing_object>())
-        .def("isThinEdgeLink", &NNormalHypersurface::isThinEdgeLink,
+        .def("isThinEdgeLink", &NormalHypersurface::isThinEdgeLink,
             return_value_policy<reference_existing_object>())
-        .def("homology", &NNormalHypersurface::homology,
+        .def("homology", &NormalHypersurface::homology,
             return_internal_reference<>())
-        .def("triangulate", &NNormalHypersurface::triangulate,
+        .def("triangulate", &NormalHypersurface::triangulate,
             return_value_policy<to_held_type<>>())
-        .def("sameSurface", &NNormalHypersurface::sameSurface)
-        .def("embedded", &NNormalHypersurface::embedded)
-        .def("locallyCompatible", &NNormalHypersurface::locallyCompatible)
+        .def("sameSurface", &NormalHypersurface::sameSurface)
+        .def("embedded", &NormalHypersurface::embedded)
+        .def("locallyCompatible", &NormalHypersurface::locallyCompatible)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NNormalHypersurface") = scope().attr("NormalHypersurface");
 }
 

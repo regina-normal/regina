@@ -173,7 +173,7 @@ void HyperSummaryUI::refresh() {
     std::set<std::string> allHomClosed, allHomBounded;
     std::set<std::pair<int, int> > allTypesClosed, allTypesBounded;
 
-    const regina::NNormalHypersurface* s;
+    const regina::NormalHypersurface* s;
     std::string homology;
     std::pair<int, int> type;
     for (size_t i = 0; i < n; ++i) {

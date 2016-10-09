@@ -338,7 +338,7 @@ using regina::NTriangle;
     }
 }
 
-+ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord
++ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NormalHypersurface&)surface whichCoord:(size_t)whichCoord
 {
     if (coordSystem == regina::HS_STANDARD) {
         if (whichCoord % 15 < 5)

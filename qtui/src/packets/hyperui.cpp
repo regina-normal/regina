@@ -49,7 +49,7 @@
 #include <QWhatsThis>
 
 using regina::Packet;
-using regina::NNormalHypersurface;
+using regina::NormalHypersurface;
 
 HyperUI::HyperUI(regina::NormalHypersurfaces* packet,
         PacketPane* newEnclosingPane) :

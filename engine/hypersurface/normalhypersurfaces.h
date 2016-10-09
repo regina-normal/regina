@@ -52,7 +52,7 @@
 
 namespace regina {
 
-class NNormalHypersurface;
+class NormalHypersurface;
 class NormalHypersurfaces;
 class ProgressTracker;
 class XMLPacketReader;
@@ -87,7 +87,7 @@ struct PacketInfo<PACKET_NORMALHYPERSURFACES> {
  * triangulation from which the surfaces were obtained.  If this triangulation
  * changes, the information contained in this packet will become invalid.
  *
- * See the NNormalHypersurfaceVector class notes for details of what to do
+ * See the NormalHypersurfaceVector class notes for details of what to do
  * when introducing a new coordinate system.
  *
  * Normal hypersurface lists should be created using the routine enumerate().
@@ -99,7 +99,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
         class VectorIterator;
 
     protected:
-        std::vector<NNormalHypersurface*> surfaces_;
+        std::vector<NormalHypersurface*> surfaces_;
             /**< Contains the normal hypersurfaces stored in this packet. */
         HyperCoords coords_;
             /**< Stores which coordinate system is being
@@ -256,7 +256,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
          *
          * @return the normal hypersurface at the requested index in this list.
          */
-        const NNormalHypersurface* hypersurface(size_t index) const;
+        const NormalHypersurface* hypersurface(size_t index) const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -311,7 +311,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
         class VectorIterator : public std::iterator<
                 std::bidirectional_iterator_tag, Ray> {
             private:
-                std::vector<NNormalHypersurface*>::const_iterator it_;
+                std::vector<NormalHypersurface*>::const_iterator it_;
                     /**< An iterator into the underlying list of
                          hypersurfaces. */
 
@@ -403,7 +403,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * the internal list of normal hypersurfaces.
                  */
                 VectorIterator(
-                    const std::vector<NNormalHypersurface*>::const_iterator& i);
+                    const std::vector<NormalHypersurface*>::const_iterator& i);
 
             friend class NormalHypersurfaces;
         };
@@ -430,13 +430,13 @@ class REGINA_API NormalHypersurfaces : public Packet {
          * An output iterator used to insert hypersurfaces into an
          * NormalHypersurfaces.
          *
-         * Objects of type <tt>NNormalHypersurface*</tt> and
-         * <tt>NNormalHypersurfaceVector*</tt> can be assigned to this
-         * iterator.  In the latter case, a surrounding NNormalHypersurface
+         * Objects of type <tt>NormalHypersurface*</tt> and
+         * <tt>NormalHypersurfaceVector*</tt> can be assigned to this
+         * iterator.  In the latter case, a surrounding NormalHypersurface
          * will be automatically created.
          */
         struct HypersurfaceInserter : public std::iterator<
-                std::output_iterator_tag, NNormalHypersurfaceVector*> {
+                std::output_iterator_tag, NormalHypersurfaceVector*> {
             NormalHypersurfaces* list_;
                 /**< The list into which hypersurfaces will be inserted. */
             Dim4Triangulation* owner_;
@@ -483,7 +483,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
              * @return this output iterator.
              */
             HypersurfaceInserter& operator = (
-                NNormalHypersurface* hypersurface);
+                NormalHypersurface* hypersurface);
             /**
              * Appends the normal hypersurface corresponding to the given
              * vector to the end of the appropriate hypersurface list.
@@ -497,7 +497,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
              * @return this output iterator.
              */
             HypersurfaceInserter& operator = (
-                NNormalHypersurfaceVector* vector);
+                NormalHypersurfaceVector* vector);
 
             /**
              * Returns a reference to this output iterator.
@@ -670,7 +670,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
  * given triangulation and the given coordinate system.
  * All elements of this vector will be initialised to zero.
  *
- * The new vector will be of the subclass of NNormalHypersurfaceVector
+ * The new vector will be of the subclass of NormalHypersurfaceVector
  * corresponding to the given coordinate system.  The caller
  * of this routine is responsible for destroying the new vector.
  *
@@ -683,7 +683,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
  * constants in NormalHypersurfaces.
  * @return a new zero vector of the correct class and length.
  */
-REGINA_API NNormalHypersurfaceVector* makeZeroVector(
+REGINA_API NormalHypersurfaceVector* makeZeroVector(
     const Dim4Triangulation* triangulation, HyperCoords coords);
 /**
  * Creates a new set of normal hypersurface matching equations for the
@@ -721,13 +721,22 @@ REGINA_API MatrixInt* makeMatchingEquations(
 REGINA_API EnumConstraints* makeEmbeddedConstraints(
     const Dim4Triangulation* triangulation, HyperCoords coords);
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalHypersurfaceList has now been renamed to
+ * NormalHypersurfaces.
+ */
+REGINA_DEPRECATED typedef NormalHypersurfaces NNormalHypersurfaceList;
+
 /*@}*/
 
 // Inline functions for NormalHypersurfaces
 
 inline NormalHypersurfaces::~NormalHypersurfaces() {
     for_each(surfaces_.begin(), surfaces_.end(),
-        FuncDelete<NNormalHypersurface>());
+        FuncDelete<NormalHypersurface>());
 }
 
 inline HyperCoords NormalHypersurfaces::coords() const {
@@ -750,7 +759,7 @@ inline size_t NormalHypersurfaces::size() const {
     return surfaces_.size();
 }
 
-inline const NNormalHypersurface* NormalHypersurfaces::hypersurface(
+inline const NormalHypersurface* NormalHypersurfaces::hypersurface(
         size_t index) const {
     return surfaces_[index];
 }
@@ -815,7 +824,7 @@ inline NormalHypersurfaces::VectorIterator
 }
 
 inline NormalHypersurfaces::VectorIterator::VectorIterator(
-        const std::vector<NNormalHypersurface*>::const_iterator& i) : it_(i) {
+        const std::vector<NormalHypersurface*>::const_iterator& i) : it_(i) {
 }
 
 inline NormalHypersurfaces::VectorIterator
@@ -849,15 +858,15 @@ inline NormalHypersurfaces::HypersurfaceInserter&
 
 inline NormalHypersurfaces::HypersurfaceInserter&
         NormalHypersurfaces::HypersurfaceInserter::operator =(
-        NNormalHypersurface* surface) {
+        NormalHypersurface* surface) {
     list_->surfaces_.push_back(surface);
     return *this;
 }
 
 inline NormalHypersurfaces::HypersurfaceInserter&
         NormalHypersurfaces::HypersurfaceInserter::operator =(
-        NNormalHypersurfaceVector* vector) {
-    list_->surfaces_.push_back(new NNormalHypersurface(owner_, vector));
+        NormalHypersurfaceVector* vector) {
+    list_->surfaces_.push_back(new NormalHypersurface(owner_, vector));
     return *this;
 }
 

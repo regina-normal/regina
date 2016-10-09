@@ -47,7 +47,7 @@
 
 namespace regina {
     class NNormalSurface;
-    class NNormalHypersurface;
+    class NormalHypersurface;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
     typedef Triangulation<4> Dim4Triangulation;
@@ -145,7 +145,7 @@ namespace Coordinates {
      * coordinate system.
      */
     regina::LargeInteger getCoordinate(regina::HyperCoords coordSystem,
-        const regina::NNormalHypersurface& surface, size_t whichCoord);
+        const regina::NormalHypersurface& surface, size_t whichCoord);
 };
 
 #endif

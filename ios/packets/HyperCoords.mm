@@ -203,7 +203,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalHypersurface* s = self.packet->hypersurface(selectedRow - 1);
+    const regina::NormalHypersurface* s = self.packet->hypersurface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Hypersurface Not Compact"
                                                         message:@"I can only triangulate compact hypersurfaces, not spun-normal hypersurfaces."
@@ -314,7 +314,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
             cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
 
-    const regina::NNormalHypersurface* s = self.packet->hypersurface(rowPath.row);
+    const regina::NormalHypersurface* s = self.packet->hypersurface(rowPath.row);
 
     int prop = PROP_NONE;
     int coord = columnPath.column;

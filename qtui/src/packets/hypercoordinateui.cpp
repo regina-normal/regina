@@ -96,7 +96,7 @@ int HyperModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant HyperModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NNormalHypersurface* s =
+        const regina::NormalHypersurface* s =
             surfaces_->hypersurface(index.row());
 
         if (index.column() == 0)
@@ -172,7 +172,7 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NNormalHypersurface* s =
+        const regina::NormalHypersurface* s =
             surfaces_->hypersurface(index.row());
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
@@ -264,11 +264,11 @@ Qt::ItemFlags HyperModel::flags(const QModelIndex& index) const {
 bool HyperModel::setData(const QModelIndex& index, const QVariant& value,
         int role) {
     if (index.column() == 1 && role == Qt::EditRole) {
-        // At present, NNormalHypersurface::setName() does not fire a change
+        // At present, NormalHypersurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
         regina::Packet::ChangeEventSpan span(surfaces_);
-        const_cast<regina::NNormalHypersurface*>(
+        const_cast<regina::NormalHypersurface*>(
             surfaces_->hypersurface(index.row()))->
             setName(value.toString().toUtf8().constData());
         return true;
@@ -479,7 +479,7 @@ void HyperCoordinateUI::triangulate() {
 
     size_t whichSurface =
         table->selectionModel()->selectedIndexes().front().row();
-    const regina::NNormalHypersurface* use = model->surfaces()->hypersurface(
+    const regina::NormalHypersurface* use = model->surfaces()->hypersurface(
         whichSurface);
     if (! use->isCompact()) {
         ReginaSupport::info(ui,

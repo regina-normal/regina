@@ -41,7 +41,7 @@
 namespace regina {
 
 /**
- * This file contains the implementation for NNormalHypersurface::triangulate().
+ * This file contains the implementation for NormalHypersurface::triangulate().
  *
  * As part of the triangulation process, we track the following information:
  *
@@ -221,7 +221,7 @@ namespace {
 // Implementation of triangulate()
 // ------------------------------------------------------------------------
 
-NTriangulation* NNormalHypersurface::triangulate() const {
+NTriangulation* NormalHypersurface::triangulate() const {
     const Dim4Triangulation* outer = triangulation();
     NTriangulation* inner = new NTriangulation();
 

@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NNormalHypersurfaceVectorStandard;
+class NormalHypersurfaceVectorStandard;
 
 /**
  * \weakgroup hypersurface
@@ -55,7 +55,7 @@ class NNormalHypersurfaceVectorStandard;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct HyperInfo<HS_STANDARD> {
-    typedef NNormalHypersurfaceVectorStandard Class;
+    typedef NormalHypersurfaceVectorStandard Class;
     inline static const char* name() {
         return "Standard normal (tet-prism)";
     }
@@ -72,13 +72,13 @@ struct HyperInfo<HS_STANDARD> {
  * pentachoron, the first five represent the number of
  * tetrahedron pieces about vertex 0,...,4, and the next
  * ten represent the number of prism pieces of type 0,...,9
- * (see NNormalHypersurface::prisms() for details).
+ * (see NormalHypersurface::prisms() for details).
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalHypersurfaceVectorStandard :
-        public NNormalHypersurfaceVector {
-    REGINA_NORMAL_HYPERSURFACE_FLAVOUR(NNormalHypersurfaceVectorStandard, HS_STANDARD)
+class REGINA_API NormalHypersurfaceVectorStandard :
+        public NormalHypersurfaceVector {
+    REGINA_NORMAL_HYPERSURFACE_FLAVOUR(NormalHypersurfaceVectorStandard, HS_STANDARD)
 
     public:
         /**
@@ -87,13 +87,13 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalHypersurfaceVectorStandard(size_t length);
+        NormalHypersurfaceVectorStandard(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalHypersurfaceVectorStandard(
+        NormalHypersurfaceVectorStandard(
             const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger tetrahedra(size_t pentIndex,
@@ -103,7 +103,7 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
         virtual LargeInteger edgeWeight(size_t edgeIndex,
             const Dim4Triangulation* triang) const;
 
-        static NNormalHypersurfaceVector* makeZeroVector(
+        static NormalHypersurfaceVector* makeZeroVector(
             const Dim4Triangulation* triangulation);
         static MatrixInt* makeMatchingEquations(
             const Dim4Triangulation* triangulation);
@@ -113,21 +113,21 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
 
 /*@}*/
 
-// Inline functions for NNormalHypersurfaceVectorStandard
+// Inline functions for NormalHypersurfaceVectorStandard
 
-inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
-        size_t length) : NNormalHypersurfaceVector(length) {
+inline NormalHypersurfaceVectorStandard::NormalHypersurfaceVectorStandard(
+        size_t length) : NormalHypersurfaceVector(length) {
 }
-inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
+inline NormalHypersurfaceVectorStandard::NormalHypersurfaceVectorStandard(
         const Vector<LargeInteger>& cloneMe) :
-        NNormalHypersurfaceVector(cloneMe) {
+        NormalHypersurfaceVector(cloneMe) {
 }
 
-inline LargeInteger NNormalHypersurfaceVectorStandard::tetrahedra(
+inline LargeInteger NormalHypersurfaceVectorStandard::tetrahedra(
         size_t pentIndex, int vertex, const Dim4Triangulation*) const {
     return coords_[15 * pentIndex + vertex];
 }
-inline LargeInteger NNormalHypersurfaceVectorStandard::prisms(
+inline LargeInteger NormalHypersurfaceVectorStandard::prisms(
         size_t pentIndex, int prismType, const Dim4Triangulation*) const {
     return coords_[15 * pentIndex + 5 + prismType];
 }

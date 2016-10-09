@@ -45,16 +45,16 @@
 namespace regina {
 
 namespace {
-    struct ZeroVector : public Returns<NNormalHypersurfaceVector*> {
+    struct ZeroVector : public Returns<NormalHypersurfaceVector*> {
         template <typename Coords>
-        inline NNormalHypersurfaceVector* operator() (
+        inline NormalHypersurfaceVector* operator() (
                 const Dim4Triangulation* tri) {
             return Coords::Class::makeZeroVector(tri);
         }
     };
 }
 
-NNormalHypersurfaceVector* makeZeroVector(
+NormalHypersurfaceVector* makeZeroVector(
         const Dim4Triangulation* triangulation, HyperCoords coords) {
     return forCoords(coords, ZeroVector(), 0, triangulation);
 }
@@ -168,8 +168,7 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
            coords_, NameFunction(), "Unknown")) << "\"/>\n";
 
     // Write the individual hypersurfaces.
-    std::vector<NNormalHypersurface*>::const_iterator it;
-    for (it = surfaces_.begin(); it != surfaces_.end(); it++)
+    for (auto it = surfaces_.begin(); it != surfaces_.end(); it++)
         (*it)->writeXMLData(out);
 }
 
@@ -178,7 +177,7 @@ Packet* NormalHypersurfaces::internalClonePacket(Packet* /* parent */)
     NormalHypersurfaces* ans = new NormalHypersurfaces(
         coords_, which_, algorithm_);
     transform(surfaces_.begin(), surfaces_.end(), back_inserter(ans->surfaces_),
-        FuncNewClonePtr<NNormalHypersurface>());
+        FuncNewClonePtr<NormalHypersurface>());
     return ans;
 }
 

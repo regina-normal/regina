@@ -56,8 +56,8 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
 
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the coordinate system registry...
-    NNormalHypersurfaceVector* vec = forCoords(coords_,
-        NewFunction<NNormalHypersurfaceVector>(), 0, vecLen_);
+    NormalHypersurfaceVector* vec = forCoords(coords_,
+        NewFunction<NormalHypersurfaceVector>(), 0, vecLen_);
     if (! vec)
         return;
 
@@ -77,7 +77,7 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
         return;
     }
 
-    surface_ = new NNormalHypersurface(tri_, vec);
+    surface_ = new NormalHypersurface(tri_, vec);
     if (! name_.empty())
         surface_->setName(name_);
 }
@@ -140,7 +140,7 @@ void XMLNormalHypersurfacesReader::endContentSubElement(
         XMLElementReader* subReader) {
     if (list_)
         if (subTagName == "hypersurface")
-            if (NNormalHypersurface* s =
+            if (NormalHypersurface* s =
                     dynamic_cast<XMLNormalHypersurfaceReader*>(subReader)->
                     hypersurface())
                 list_->surfaces_.push_back(s);

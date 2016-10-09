@@ -93,7 +93,7 @@
     size_t n = self.packet->size();
     size_t i, j;
     NSMutableArray* row;
-    const regina::NNormalHypersurface* s;
+    const regina::NormalHypersurface* s;
     
     local = [[NSMutableArray alloc] initWithCapacity:n];
     for (i = 0; i < n; ++i) {
