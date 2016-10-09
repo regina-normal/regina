@@ -25,7 +25,6 @@ if (${REGINA_INSTALL_DEV})
     hscoordregistry-impl.h
     hypercoords.h
     hyperflags.h
-    nhsmirrored.h
     nhsstandard.h
     nnormalhypersurface.h
     nnormalhypersurfacelist.h

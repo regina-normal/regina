@@ -18,8 +18,9 @@ Version 5.1  [ (under development) ]
             + NEnumConstraintList becomes EnumConstraints.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
             + NNormalHypersurfaceList becomes NormalHypersurfaces.
+            + NNormalHypersurfaceVectorMirrored is removed entirely (see below).
             + NNormalSurfaceList becomes NormalSurfaces.
-            + NSurfaceSubset has been removed entirely (see below).
+            + NSurfaceSubset is removed entirely (see below).
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into
@@ -63,6 +64,8 @@ Version 5.1  [ (under development) ]
               of these functions that were inherited from Ray).
             - Function rawVector() now returns a Ray&, not a pointer to a
               NNormal{Surface,Hypersurface}Vector.
+        Class NormalHypersurfaceVectorMirrored:
+            - Removed, since this is never used (at present).
         Class NormalSurfaceVectorMirrored:
             - The real work has now moved to a static makeMirror() function,
               which subclasses must also implement.

@@ -1337,7 +1337,6 @@
 		0591E7DA1C4F750200793A9C /* hscoordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CC1C4F750200793A9C /* hscoordregistry.h */; };
 		0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CD1C4F750200793A9C /* hypercoords.h */; };
 		0591E7DC1C4F750200793A9C /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7CE1C4F750200793A9C /* links.cpp */; };
-		0591E7DD1C4F750200793A9C /* nhsmirrored.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CF1C4F750200793A9C /* nhsmirrored.h */; };
 		0591E7DE1C4F750200793A9C /* nhsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* nhsstandard.cpp */; };
 		0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D11C4F750200793A9C /* nhsstandard.h */; };
 		0591E7E01C4F750200793A9C /* normalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* normalhypersurface.cpp */; };
@@ -3246,7 +3245,6 @@
 		0591E7CC1C4F750200793A9C /* hscoordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hscoordregistry.h; sourceTree = "<group>"; };
 		0591E7CD1C4F750200793A9C /* hypercoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercoords.h; sourceTree = "<group>"; };
 		0591E7CE1C4F750200793A9C /* links.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links.cpp; sourceTree = "<group>"; };
-		0591E7CF1C4F750200793A9C /* nhsmirrored.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhsmirrored.h; sourceTree = "<group>"; };
 		0591E7D01C4F750200793A9C /* nhsstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhsstandard.cpp; sourceTree = "<group>"; };
 		0591E7D11C4F750200793A9C /* nhsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhsstandard.h; sourceTree = "<group>"; };
 		0591E7D21C4F750200793A9C /* normalhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurface.cpp; sourceTree = "<group>"; };
@@ -5776,7 +5774,6 @@
 				0591E7CD1C4F750200793A9C /* hypercoords.h */,
 				0591E85D1C50D28700793A9C /* hyperflags.h */,
 				0591E7CE1C4F750200793A9C /* links.cpp */,
-				0591E7CF1C4F750200793A9C /* nhsmirrored.h */,
 				0591E7D01C4F750200793A9C /* nhsstandard.cpp */,
 				0591E7D11C4F750200793A9C /* nhsstandard.h */,
 				053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */,
@@ -6241,7 +6238,6 @@
 				052F9F63180600FB00FAE4DF /* packetregistry.h in Headers */,
 				050C64B81DA32B1400C9420F /* nenumconstraint.h in Headers */,
 				05431F6E1C40F3C9009BC072 /* general.h in Headers */,
-				0591E7DD1C4F750200793A9C /* nhsmirrored.h in Headers */,
 				052FA05F180600FB00FAE4DF /* ncomponent.h in Headers */,
 				050C64C31DA32E7D00C9420F /* nhilbertprimal-impl.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
