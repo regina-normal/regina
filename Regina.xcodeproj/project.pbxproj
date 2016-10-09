@@ -845,6 +845,7 @@
 		053CAB311DA8D6B100A92F98 /* nsurfacefilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB301DA8D6B100A92F98 /* nsurfacefilter.h */; };
 		053CAB341DA9B47D00A92F98 /* nnormalhypersurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */; };
 		053CAB351DA9B47D00A92F98 /* nnormalhypersurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB331DA9B47D00A92F98 /* nnormalhypersurfacelist.h */; };
+		053CAB371DAAEF0F00A92F98 /* nhsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB361DAAEF0F00A92F98 /* nhsstandard.h */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -1337,8 +1338,8 @@
 		0591E7DA1C4F750200793A9C /* hscoordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CC1C4F750200793A9C /* hscoordregistry.h */; };
 		0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CD1C4F750200793A9C /* hypercoords.h */; };
 		0591E7DC1C4F750200793A9C /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7CE1C4F750200793A9C /* links.cpp */; };
-		0591E7DE1C4F750200793A9C /* nhsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* nhsstandard.cpp */; };
-		0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D11C4F750200793A9C /* nhsstandard.h */; };
+		0591E7DE1C4F750200793A9C /* hsvectorstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* hsvectorstandard.cpp */; };
+		0591E7DF1C4F750200793A9C /* hsvectorstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D11C4F750200793A9C /* hsvectorstandard.h */; };
 		0591E7E01C4F750200793A9C /* normalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* normalhypersurface.cpp */; };
 		0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D31C4F750200793A9C /* normalhypersurface.h */; };
 		0591E7E21C4F750200793A9C /* normalhypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */; };
@@ -1347,7 +1348,7 @@
 		0591E7E51C4F750200793A9C /* xmlhypersurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */; };
 		0591E7E61C4F750200793A9C /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D81C4F750200793A9C /* triangulate.cpp */; };
 		0591E7E71C4F751B00793A9C /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7CE1C4F750200793A9C /* links.cpp */; };
-		0591E7E81C4F751B00793A9C /* nhsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* nhsstandard.cpp */; };
+		0591E7E81C4F751B00793A9C /* hsvectorstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* hsvectorstandard.cpp */; };
 		0591E7E91C4F751B00793A9C /* normalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* normalhypersurface.cpp */; };
 		0591E7EA1C4F751B00793A9C /* normalhypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */; };
 		0591E7EB1C4F751B00793A9C /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */; };
@@ -2713,6 +2714,7 @@
 		053CAB301DA8D6B100A92F98 /* nsurfacefilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacefilter.h; sourceTree = "<group>"; };
 		053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurface.h; sourceTree = "<group>"; };
 		053CAB331DA9B47D00A92F98 /* nnormalhypersurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurfacelist.h; sourceTree = "<group>"; };
+		053CAB361DAAEF0F00A92F98 /* nhsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhsstandard.h; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -3245,8 +3247,8 @@
 		0591E7CC1C4F750200793A9C /* hscoordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hscoordregistry.h; sourceTree = "<group>"; };
 		0591E7CD1C4F750200793A9C /* hypercoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercoords.h; sourceTree = "<group>"; };
 		0591E7CE1C4F750200793A9C /* links.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links.cpp; sourceTree = "<group>"; };
-		0591E7D01C4F750200793A9C /* nhsstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhsstandard.cpp; sourceTree = "<group>"; };
-		0591E7D11C4F750200793A9C /* nhsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhsstandard.h; sourceTree = "<group>"; };
+		0591E7D01C4F750200793A9C /* hsvectorstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hsvectorstandard.cpp; sourceTree = "<group>"; };
+		0591E7D11C4F750200793A9C /* hsvectorstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hsvectorstandard.h; sourceTree = "<group>"; };
 		0591E7D21C4F750200793A9C /* normalhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurface.cpp; sourceTree = "<group>"; };
 		0591E7D31C4F750200793A9C /* normalhypersurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalhypersurface.h; sourceTree = "<group>"; };
 		0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurfaces.cpp; sourceTree = "<group>"; };
@@ -5774,8 +5776,9 @@
 				0591E7CD1C4F750200793A9C /* hypercoords.h */,
 				0591E85D1C50D28700793A9C /* hyperflags.h */,
 				0591E7CE1C4F750200793A9C /* links.cpp */,
-				0591E7D01C4F750200793A9C /* nhsstandard.cpp */,
-				0591E7D11C4F750200793A9C /* nhsstandard.h */,
+				0591E7D01C4F750200793A9C /* hsvectorstandard.cpp */,
+				0591E7D11C4F750200793A9C /* hsvectorstandard.h */,
+				053CAB361DAAEF0F00A92F98 /* nhsstandard.h */,
 				053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */,
 				053CAB331DA9B47D00A92F98 /* nnormalhypersurfacelist.h */,
 				0591E7D21C4F750200793A9C /* normalhypersurface.cpp */,
@@ -6125,6 +6128,7 @@
 				053CAB211DA63C8900A92F98 /* nmatrix2.h in Headers */,
 				052FA052180600FB00FAE4DF /* sfproperties.h in Headers */,
 				052F9F8C180600FB00FAE4DF /* kernel.h in Headers */,
+				053CAB371DAAEF0F00A92F98 /* nhsstandard.h in Headers */,
 				0591E7AF1C4F74C400793A9C /* dim4triangulation.h in Headers */,
 				052FA009180600FB00FAE4DF /* nsatblock.h in Headers */,
 				05431F7A1C40F3C9009BC072 /* matrix.h in Headers */,
@@ -6262,7 +6266,7 @@
 				053CAB311DA8D6B100A92F98 /* nsurfacefilter.h in Headers */,
 				052FA07A180600FB00FAE4DF /* nxmltrireader.h in Headers */,
 				053CAB251DA6F9FE00A92F98 /* nperm-impl.h in Headers */,
-				0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */,
+				0591E7DF1C4F750200793A9C /* hsvectorstandard.h in Headers */,
 				0541AF501B8BE32E002E166B /* output.h in Headers */,
 				05431F2D1C40F2DB009BC072 /* perm.h in Headers */,
 				052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */,
@@ -7412,7 +7416,7 @@
 				054535BC19D90C3A00BED767 /* Skeleton.mm in Sources */,
 				052FA1D31806129B00FAE4DF /* crushandcut.cpp in Sources */,
 				052FA2081806129B00FAE4DF /* base64.cpp in Sources */,
-				0591E7E81C4F751B00793A9C /* nhsstandard.cpp in Sources */,
+				0591E7E81C4F751B00793A9C /* hsvectorstandard.cpp in Sources */,
 				052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */,
 				052FA23A180612DD00FAE4DF /* triangulations.c in Sources */,
 				052FA1BF1806129B00FAE4DF /* nlayeredsolidtorus.cpp in Sources */,
@@ -7780,7 +7784,7 @@
 				052F9F3B180600FB00FAE4DF /* integer.cpp in Sources */,
 				052F9F9B180600FB00FAE4DF /* subdivide.c in Sources */,
 				052FA05A180600FB00FAE4DF /* homotopy.cpp in Sources */,
-				0591E7DE1C4F750200793A9C /* nhsstandard.cpp in Sources */,
+				0591E7DE1C4F750200793A9C /* hsvectorstandard.cpp in Sources */,
 				052FA012180600FB00FAE4DF /* nsnappedball.cpp in Sources */,
 				052F9F25180600FB00FAE4DF /* nhandlebody.cpp in Sources */,
 				05A73C8E19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */,

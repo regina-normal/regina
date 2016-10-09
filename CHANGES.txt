@@ -19,6 +19,7 @@ Version 5.1  [ (under development) ]
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
             + NNormalHypersurfaceList becomes NormalHypersurfaces.
             + NNormalHypersurfaceVectorMirrored is removed entirely (see below).
+            + NNormalHypersurfaceVectorStandard becomes HSVectorStandard.
             + NNormalSurfaceList becomes NormalSurfaces.
             + NSurfaceSubset is removed entirely (see below).
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.

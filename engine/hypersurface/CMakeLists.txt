@@ -4,7 +4,7 @@
 SET ( FILES
   enumerate
   links
-  nhsstandard
+  hsvectorstandard
   normalhypersurface
   normalhypersurfaces
   xmlhypersurfacereader
@@ -23,6 +23,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     hscoordregistry.h
     hscoordregistry-impl.h
+    hsvectorstandard.h
     hypercoords.h
     hyperflags.h
     nhsstandard.h
