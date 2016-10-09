@@ -216,6 +216,7 @@ class Vector {
         }
         /**
          * Adds the given vector to this vector.
+         * This behaves correctly in the case where \a other is \c this.
          *
          * \pre This and the given vector have the same size.
          *
@@ -229,6 +230,7 @@ class Vector {
         }
         /**
          * Subtracts the given vector from this vector.
+         * This behaves correctly in the case where \a other is \c this.
          *
          * \pre This and the given vector have the same size.
          *
@@ -301,6 +303,7 @@ class Vector {
         }
         /**
          * Adds the given multiple of the given vector to this vector.
+         * This behaves correctly in the case where \a other is \c this.
          *
          * \pre This and the given vector have the same size.
          *
@@ -327,6 +330,7 @@ class Vector {
         }
         /**
          * Subtracts the given multiple of the given vector to this vector.
+         * This behaves correctly in the case where \a other is \c this.
          *
          * \pre This and the given vector have the same size.
          *
