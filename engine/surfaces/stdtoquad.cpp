@@ -82,14 +82,14 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     }
 
     // We need to get rid of vertex links entirely before we start.
-    typedef const NNormalSurfaceVector* VectorPtr;
+    typedef const Ray* VectorPtr;
     VectorPtr* use = new VectorPtr[surfaces.size()];
     unsigned long nUse = 0;
 
     std::vector<NNormalSurface*>::const_iterator it;
     for (it = surfaces.begin(); it != surfaces.end(); ++it)
         if (! (*it)->isVertexLinking())
-            use[nUse++] = (*it)->rawVector();
+            use[nUse++] = &(*it)->rawVector();
 
     // We want to take all surfaces with maximal zero sets in quad space.
     // That is, we want surface S if and only if there is no other surface T

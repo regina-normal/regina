@@ -135,12 +135,6 @@ struct HyperInfo;
  * determined without knowledge of the specific underlying coordinate
  * system being used.
  *
- * Note that if a mirrored vector class is being used (see
- * NNormalHypersurfaceVectorMirrored), the vector <b>may not change</b> once
- * the first coordinate lookup routine (such as tetrahedra() and
- * the like) has been called.  See
- * NNormalHypersurfaceVectorMirrored for further explanation.
- *
  * Note that non-compact hypersurfaces (surfaces with infinitely many pieces)
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * should return LargeInteger::infinity where appropriate.
@@ -151,8 +145,8 @@ struct HyperInfo;
  * - Normal hypersurfaces can be enumerated by intersecting the non-negative
  *   orthant of the underlying vector space with some linear subspace;
  *
- * - Multiplying a normal hypersurface by \a k corresponds to multiplying
- *   the underlying vector by \a k for any non-negative integer \a k.
+ * - Adding two normal hypersurfaces corresponds to adding the two underlying
+ *   vectors.
  *
  * <b>When deriving classes from NNormalHypersurfaceVector:</b>
  * <ul>
@@ -186,7 +180,11 @@ struct HyperInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalHypersurfaceVector : public Ray {
+class REGINA_API NNormalHypersurfaceVector {
+    protected:
+        Ray coords_;
+            /** The raw vector of normal coordinates. */
+
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -209,11 +207,78 @@ class REGINA_API NNormalHypersurfaceVector : public Ray {
         virtual ~NNormalHypersurfaceVector();
 
         /**
+         * Gives read-only access to the underlying vector of coordinates.
+         *
+         * @return the vector of coordinates.
+         */
+        const Ray& coords() const;
+
+        /**
          * Creates a newly allocated clone of this vector.
          * The clone will be of the same subclass of NNormalHypersurfaceVector
          * as this vector.
          */
         virtual NNormalHypersurfaceVector* clone() const = 0;
+
+        /**
+         * Returns the number of coordinates in the underlying vector.
+         *
+         * @return the number of coordinates.
+         */
+        size_t size() const;
+
+        /**
+         * Returns the given coordinate from the underlying vector.
+         *
+         * @param index the index of the coordinate to retrieve; this
+         * must be between 0 and size()-1 inclusive.
+         * @return the coordinate at the given index.
+         */
+        const NLargeInteger& operator [] (size_t index) const;
+
+        /**
+         * Sets the given normal coordinate to the given value.
+         *
+         * The default implementation simply sets the coordinate in the
+         * underlying vector.  Subclasses should reimplement this if they
+         * carry any additional information that also need adjusting.
+         *
+         * @param index the index of the coordinate to set; this must e
+         * between 0 and size()-1 inclusive.
+         * @param value the new value to assign to the given coordinate.
+         */
+        virtual void setElement(size_t index, const LargeInteger& value);
+
+        /**
+         * Adds the given vector to this vector.
+         * This behaves correctly in the case where \a other is \c this.
+         *
+         * The default implementation simply adds the coordinates of the
+         * underlying vectors.  Subclasses should reimplement this if they
+         * carry any additional information that also need adjusting.
+         *
+         * \pre This and the given vector represent normal hypersurfaces in
+         * the same triangulation, and use the same normal coordinate system.
+         *
+         * @param other the vector to add to this vector.
+         */
+        virtual void operator += (const NNormalHypersurfaceVector& other);
+
+        /**
+         * Scales this vector down by the greatest common divisor of all
+         * its elements.  The resulting vector will be the smallest
+         * multiple of the original that maintains integral entries, and
+         * these entries will have the same signs as the originals.
+         *
+         * This routine poses no problem for vectors containing infinite
+         * elements; such elements are simply ignored and left at
+         * infinity.
+         *
+         * The default implementation simply scales down the underlying vector.
+         * Subclasses should reimplement this if they carry any additional
+         * information that also needs adjusting.
+         */
+        virtual void scaleDown();
 
         /**
          * Determines if the normal hypersurface represented is compact (has
@@ -862,7 +927,7 @@ class REGINA_API NNormalHypersurface :
          *
          * @return the underlying raw vector.
          */
-        const NNormalHypersurfaceVector* rawVector() const;
+        const Ray& rawVector() const;
 
     protected:
         /**
@@ -884,12 +949,39 @@ class REGINA_API NNormalHypersurface :
 // Inline functions for NNormalHypersurfaceVector
 
 inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(size_t length) :
-        Ray(length) {
+        coords_(length) {
 }
 inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(
-        const Vector<LargeInteger>& cloneMe) : Ray(cloneMe) {
+        const Vector<LargeInteger>& cloneMe) : coords_(cloneMe) {
 }
 inline NNormalHypersurfaceVector::~NNormalHypersurfaceVector() {
+}
+
+inline const Ray& NNormalHypersurfaceVector::coords() const {
+    return coords_;
+}
+
+inline size_t NNormalHypersurfaceVector::size() const {
+    return coords_.size();
+}
+
+inline const NLargeInteger& NNormalHypersurfaceVector::operator []
+        (size_t index) const {
+    return coords_[index];
+}
+
+inline void NNormalHypersurfaceVector::setElement(size_t index,
+        const LargeInteger& value) {
+    coords_.setElement(index, value);
+}
+
+inline void NNormalHypersurfaceVector::operator += (
+        const NNormalHypersurfaceVector& other) {
+    coords_ += other.coords_;
+}
+
+inline void NNormalHypersurfaceVector::scaleDown() {
+    coords_.scaleDown();
 }
 
 // Inline functions for NNormalHypersurface
@@ -925,7 +1017,7 @@ inline void NNormalHypersurface::setName(const std::string& name) {
 }
 
 inline void NNormalHypersurface::writeRawVector(std::ostream& out) const {
-    out << *vector_;
+    out << vector_->coords();
 }
 
 inline bool NNormalHypersurface::isCompact() const {
@@ -976,8 +1068,8 @@ inline const Dim4Edge* NNormalHypersurface::isThinEdgeLink() const {
     return vector_->isThinEdgeLink(triangulation_);
 }
 
-inline const NNormalHypersurfaceVector* NNormalHypersurface::rawVector() const {
-    return vector_;
+inline const Ray& NNormalHypersurface::rawVector() const {
+    return vector_->coords();
 }
 
 } // namespace regina

@@ -309,8 +309,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
          * \ifacespython Not present.
          */
         class VectorIterator : public std::iterator<
-                std::bidirectional_iterator_tag,
-                const NNormalHypersurfaceVector*> {
+                std::bidirectional_iterator_tag, Ray> {
             private:
                 std::vector<NNormalHypersurface*>::const_iterator it_;
                     /**< An iterator into the underlying list of
@@ -366,7 +365,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  *
                  * @return the corresponding normal hypersurface vector.
                  */
-                const NNormalHypersurfaceVector* operator *() const;
+                const Ray& operator *() const;
 
                 /**
                  * The preincrement operator.
@@ -789,8 +788,7 @@ inline bool NormalHypersurfaces::VectorIterator::operator !=(
     return (it_ != other.it_);
 }
 
-inline const NNormalHypersurfaceVector*
-        NormalHypersurfaces::VectorIterator::operator *() const {
+inline const Ray& NormalHypersurfaces::VectorIterator::operator *() const {
     return (*it_)->rawVector();
 }
 

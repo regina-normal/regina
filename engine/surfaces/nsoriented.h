@@ -152,18 +152,18 @@ inline LargeInteger NNormalSurfaceVectorOriented::quads(
 inline LargeInteger NNormalSurfaceVectorOriented::orientedTriangles(
         size_t tetIndex, int vertex, const NTriangulation*,
         bool orientation) const {
-    return (*this)[14 * tetIndex + 2 * vertex +
+    return coords_[14 * tetIndex + 2 * vertex +
         (orientation ? 0 : 1)];
 }
 inline LargeInteger NNormalSurfaceVectorOriented::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
-    return (*this)[14 * tetIndex + 8 + 2 * quadType +
+    return coords_[14 * tetIndex + 8 + 2 * quadType +
         (orientation ? 0 : 1)];
 }
 inline LargeInteger NNormalSurfaceVectorOriented::octs(
         size_t, int, const NTriangulation*) const {
-    return zero;
+    return Ray::zero;
 }
 
 } // namespace regina

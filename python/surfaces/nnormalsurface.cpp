@@ -171,6 +171,10 @@ void addNNormalSurface() {
         .def("disjoint", &NNormalSurface::disjoint)
         .def("boundaryIntersections", &NNormalSurface::boundaryIntersections,
             return_value_policy<manage_new_object>())
+        .def("systemAllowsAlmostNormal",
+            &NNormalSurface::systemAllowsAlmostNormal)
+        .def("systemAllowsSpun", &NNormalSurface::systemAllowsSpun)
+        .def("systemAllowsOriented", &NNormalSurface::systemAllowsOriented)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

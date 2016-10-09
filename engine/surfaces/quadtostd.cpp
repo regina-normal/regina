@@ -129,12 +129,11 @@ namespace {
              *
              * @param v the vector to clone.
              */
-            RaySpec(const NNormalSurfaceVector* v) :
-                    Ray(v->size()), facets_(v->size()) {
+            RaySpec(const Ray& v) : Ray(v.size()), facets_(v.size()) {
                 // Note that the vector is initialised to zero since
                 // this is what LargeInteger's default constructor does.
-                for (size_t i = 0; i < v->size(); ++i)
-                    if ((elements[i] = (*v)[i]) == zero)
+                for (size_t i = 0; i < v.size(); ++i)
+                    if ((elements[i] = v[i]) == zero)
                         facets_.set(i, true);
             }
 
@@ -427,10 +426,8 @@ void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
     NNormalSurfaceVector* v;
     std::vector<NNormalSurface*>::const_iterator qit;
     for (qit = reducedList.begin(); qit != reducedList.end(); ++qit) {
-        v = static_cast<const typename Variant::ReducedVector*>(
-            (*qit)->rawVector())->makeMirror(owner);
-        list[0].push_back(new RaySpec<BitmaskType>(
-            static_cast<typename Variant::StandardVector*>(v)));
+        v = Variant::ReducedVector::makeMirror((*qit)->rawVector(), owner);
+        list[0].push_back(new RaySpec<BitmaskType>(v->coords()));
         delete v;
     }
 
@@ -459,7 +456,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
     unsigned long slices = 0;
     unsigned iterations;
     for (vtx = 0; vtx < llen; ++vtx) {
-        linkSpec = new RaySpec<BitmaskType>(link[vtx]);
+        linkSpec = new RaySpec<BitmaskType>(link[vtx]->coords());
         delete link[vtx];
 
         list[workingList].push_back(new RaySpec<BitmaskType>(owner, vtx,
@@ -587,7 +584,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
         for (it = list[workingList].begin(); it != list[workingList].end();
                 ++it) {
             for (i = vtx + 1; i < llen; ++i)
-                (*it)->reduce(link[i]);
+                (*it)->reduce(link[i]->coords());
             (*it)->scaleDown();
         }
     }

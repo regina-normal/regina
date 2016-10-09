@@ -191,7 +191,7 @@ namespace {
 
         NNormalSurfaceVector* vec;
         long coord;
-        if (s.rawVector()->allowsAlmostNormal()) {
+        if (s.systemAllowsAlmostNormal()) {
             for (i = 0; i < compID; ++i)
                 ans[i] = new NNormalSurfaceVectorANStandard(
                     10 * tri->size());

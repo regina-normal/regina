@@ -110,7 +110,7 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
     NNormalSurface* ans = new NNormalSurface(triangulation_,
         dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
 
-    (*(ans->vector)) *= 2;
+    *(ans->vector) += *(ans->vector);
 
     // Some properties can be copied straight across.
     ans->realBoundary = realBoundary;

@@ -101,6 +101,8 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
          */
         NNormalSurfaceVectorQuadOct(const Vector<LargeInteger>& cloneMe);
 
+        static NNormalSurfaceVector* makeMirror(const Ray& original,
+            const NTriangulation* triang);
         virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
 
@@ -124,6 +126,11 @@ inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
 inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
         const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
+}
+
+inline NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
+        const NTriangulation* triang) const {
+    return makeMirror(coords(), triang);
 }
 
 inline const NVertex* NNormalSurfaceVectorQuadOct::isVertexLink(

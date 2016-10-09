@@ -474,14 +474,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             if (n == 0)
                 return true;
 
-            typedef const NNormalSurfaceVector* VecPtr;
+            typedef const Ray* VecPtr;
             VecPtr* lhsRaw = new VecPtr[n];
             VecPtr* rhsRaw = new VecPtr[n];
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = lhs->surface(i)->rawVector();
-                rhsRaw[i] = rhs->surface(i)->rawVector();
+                lhsRaw[i] = &lhs->surface(i)->rawVector();
+                rhsRaw[i] = &rhs->surface(i)->rawVector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);

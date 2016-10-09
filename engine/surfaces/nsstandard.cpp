@@ -48,11 +48,11 @@ LargeInteger NNormalSurfaceVectorStandard::edgeWeight(
 
     // Add up the triangles and quads meeting that edge.
     // Triangles:
-    LargeInteger ans((*this)[7 * tetIndex + start]);
-    ans += (*this)[7 * tetIndex + end];
+    LargeInteger ans(coords_[7 * tetIndex + start]);
+    ans += coords_[7 * tetIndex + end];
     // Quads:
-    ans += (*this)[7 * tetIndex + 4 + quadMeeting[start][end][0]];
-    ans += (*this)[7 * tetIndex + 4 + quadMeeting[start][end][1]];
+    ans += coords_[7 * tetIndex + 4 + quadMeeting[start][end][0]];
+    ans += coords_[7 * tetIndex + 4 + quadMeeting[start][end][1]];
     return ans;
 }
 
@@ -66,9 +66,9 @@ LargeInteger NNormalSurfaceVectorStandard::arcs(size_t triIndex,
 
     // Add up the triangles and quads meeting that triangle in the required arc.
     // Triangles:
-    LargeInteger ans((*this)[7 * tetIndex + vertex]);
+    LargeInteger ans(coords_[7 * tetIndex + vertex]);
     // Quads:
-    ans += (*this)[7 * tetIndex + 4 + quadSeparating[vertex][backOfFace]];
+    ans += coords_[7 * tetIndex + 4 + quadSeparating[vertex][backOfFace]];
     return ans;
 }
 

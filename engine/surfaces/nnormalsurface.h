@@ -296,12 +296,6 @@ struct NormalInfo;
  * determined without knowledge of the specific underlying coordinate
  * system being used.
  *
- * Note that if a mirrored vector class is being used (see
- * NNormalSurfaceVectorMirrored), the vector <b>may not change</b> once
- * the first coordinate lookup routine (such as triangles() and
- * the like) has been called.  See
- * NNormalSurfaceVectorMirrored for further explanation.
- *
  * Note that non-compact surfaces (surfaces with infinitely many discs,
  * such as spun-normal surfaces) are allowed; in these cases, the
  * corresponding coordinate lookup routines should return
@@ -313,8 +307,8 @@ struct NormalInfo;
  * - Normal surfaces can be enumerated by intersecting the non-negative
  *   orthant of the underlying vector space with some linear subspace;
  *
- * - Multiplying a normal surface by \a k corresponds to multiplying
- *   the underlying vector by \a k for any non-negative integer \a k.
+ * - Adding two normal surfaces corresponds to adding the two underlying
+ *   vectors.
  *
  * <b>When deriving classes from NNormalSurfaceVector:</b>
  * <ul>
@@ -354,7 +348,11 @@ struct NormalInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVector : public Ray {
+class REGINA_API NNormalSurfaceVector {
+    protected:
+        Ray coords_;
+            /** The raw vector of normal coordinates. */
+
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -377,11 +375,78 @@ class REGINA_API NNormalSurfaceVector : public Ray {
         virtual ~NNormalSurfaceVector();
 
         /**
+         * Gives read-only access to the underlying vector of coordinates.
+         *
+         * @return the vector of coordinates.
+         */
+        const Ray& coords() const;
+
+        /**
          * Creates a newly allocated clone of this vector.
          * The clone will be of the same subclass of NNormalSurfaceVector
          * as this vector.
          */
         virtual NNormalSurfaceVector* clone() const = 0;
+
+        /**
+         * Returns the number of coordinates in the underlying vector.
+         *
+         * @return the number of coordinates.
+         */
+        size_t size() const;
+
+        /**
+         * Returns the given coordinate from the underlying vector.
+         *
+         * @param index the index of the coordinate to retrieve; this
+         * must be between 0 and size()-1 inclusive.
+         * @return the coordinate at the given index.
+         */
+        const NLargeInteger& operator [] (size_t index) const;
+
+        /**
+         * Sets the given normal coordinate to the given value.
+         *
+         * The default implementation simply sets the coordinate in the
+         * underlying vector.  Subclasses should reimplement this if they
+         * carry any additional information that also need adjusting.
+         *
+         * @param index the index of the coordinate to set; this must be
+         * between 0 and size()-1 inclusive.
+         * @param value the new value to assign to the given coordinate.
+         */
+        virtual void setElement(size_t index, const LargeInteger& value);
+
+        /**
+         * Adds the given vector to this vector.
+         * This behaves correctly in the case where \a other is \a this.
+         *
+         * The default implementation simply adds the coordinates of the
+         * underlying vectors.  Subclasses should reimplement this if they
+         * carry any additional information that also needs adjusting.
+         *
+         * \pre This and the given vector represent normal surfaces in
+         * the same triangulation, and use the same normal coordinate system.
+         *
+         * @param other the vector to add to this vector.
+         */
+        virtual void operator += (const NNormalSurfaceVector& other);
+
+        /**
+         * Scales this vector down by the greatest common divisor of all
+         * its elements.  The resulting vector will be the smallest
+         * multiple of the original that maintains integral entries, and
+         * these entries will have the same signs as the originals.
+         *
+         * This routine poses no problem for vectors containing infinite
+         * elements; such elements are simply ignored and left at
+         * infinity.
+         *
+         * The default implementation simply scales down the underlying vector.
+         * Subclasses should reimplement this if they carry any additional
+         * information that also needs adjusting.
+         */
+        virtual void scaleDown();
 
         /**
          * Determines if the specific underlying coordinate system
@@ -1602,7 +1667,44 @@ class REGINA_API NNormalSurface :
          *
          * @return the underlying raw vector.
          */
-        const NNormalSurfaceVector* rawVector() const;
+        const Ray& rawVector() const;
+
+        /**
+         * Determines if the underlying coordinate system being used
+         * allows for almost normal surfaces, that is, allows for
+         * octagonal discs.
+         *
+         * This is a property of the coordinate system in which this surface
+         * is natively stored, \e not a property of the surface itself.
+         * For example, if this surface has no octagons but is stored using
+         * standard almost normal coordinates, then this routine will return
+         * \c true.
+         *
+         * @return \c true if and only if almost normal surfaces are
+         * allowed in the underlying coordinate system.
+         */
+        bool systemAllowsAlmostNormal() const;
+        /**
+         * Determines if the underlying coordinate system being used
+         * allows for spun normal surfaces.
+         *
+         * This is a property of the coordinate system in which this surface
+         * is natively stored, \e not a property of the surface itself.
+         * For example, if this surface is compact but is stored using
+         * quad coordinates, then this routine will return \c true.
+         *
+         * @return \c true if and only if spun normal surface are
+         * supported in the underlying coordinate system.
+         */
+        bool systemAllowsSpun() const;
+        /**
+         * Determines if the underlying coordinate system being used
+         * allows for transversely oriented normal surfaces.
+         *
+         * @return \c true if and only if transverse orientations are
+         * supported in the underlying coordinate system.
+         */
+        bool systemAllowsOriented() const;
 
     protected:
         /**
@@ -1639,12 +1741,39 @@ class REGINA_API NNormalSurface :
 // Inline functions for NNormalSurfaceVector
 
 inline NNormalSurfaceVector::NNormalSurfaceVector(size_t length) :
-        Ray(length) {
+        coords_(length) {
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
-        const Vector<LargeInteger>& cloneMe) : Ray(cloneMe) {
+        const Vector<LargeInteger>& cloneMe) : coords_(cloneMe) {
 }
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
+}
+
+inline const Ray& NNormalSurfaceVector::coords() const {
+    return coords_;
+}
+
+inline size_t NNormalSurfaceVector::size() const {
+    return coords_.size();
+}
+
+inline const NLargeInteger& NNormalSurfaceVector::operator [](size_t index)
+        const {
+    return coords_[index];
+}
+
+inline void NNormalSurfaceVector::setElement(size_t index,
+        const LargeInteger& value) {
+    coords_.setElement(index, value);
+}
+
+inline void NNormalSurfaceVector::operator += (
+        const NNormalSurfaceVector& other) {
+    coords_ += other.coords_;
+}
+
+inline void NNormalSurfaceVector::scaleDown() {
+    coords_.scaleDown();
 }
 
 // Inline functions for NNormalSurface
@@ -1704,7 +1833,7 @@ inline void NNormalSurface::setName(const std::string& newName) {
 }
 
 inline void NNormalSurface::writeRawVector(std::ostream& out) const {
-    out << *vector;
+    out << vector->coords();
 }
 
 inline bool NNormalSurface::isCompact() const {
@@ -1768,8 +1897,20 @@ inline bool NNormalSurface::normal() const {
     return (octPosition() == NDiscType::NONE);
 }
 
-inline const NNormalSurfaceVector* NNormalSurface::rawVector() const {
-    return vector;
+inline const Ray& NNormalSurface::rawVector() const {
+    return vector->coords();
+}
+
+inline bool NNormalSurface::systemAllowsAlmostNormal() const {
+    return vector->allowsAlmostNormal();
+}
+
+inline bool NNormalSurface::systemAllowsSpun() const {
+    return vector->allowsSpun();
+}
+
+inline bool NNormalSurface::systemAllowsOriented() const {
+    return vector->allowsOriented();
 }
 
 } // namespace regina

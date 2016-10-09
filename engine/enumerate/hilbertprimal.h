@@ -119,7 +119,7 @@ class HilbertPrimal {
          * \pre The template argument RayClass is derived from Ray (or
          * may possibly be Ray itself).
          * \pre The template argument RayIterator is a forward iterator type,
-         * and when dereferenced can be cast to (const Ray*).
+         * and when dereferenced can be cast to (const Ray&).
          *
          * \warning If a progress tracker is passed, be aware that the
          * present implementation updates percentage progress very infrequently,

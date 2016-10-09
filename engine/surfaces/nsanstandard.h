@@ -137,15 +137,15 @@ inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
 
 inline LargeInteger NNormalSurfaceVectorANStandard::triangles(
         size_t tetIndex, int vertex, const NTriangulation*) const {
-    return (*this)[10 * tetIndex + vertex];
+    return coords_[10 * tetIndex + vertex];
 }
 inline LargeInteger NNormalSurfaceVectorANStandard::quads(
         size_t tetIndex, int quadType, const NTriangulation*) const {
-    return (*this)[10 * tetIndex + 4 + quadType];
+    return coords_[10 * tetIndex + 4 + quadType];
 }
 inline LargeInteger NNormalSurfaceVectorANStandard::octs(
         size_t tetIndex, int octType, const NTriangulation*) const {
-    return (*this)[10 * tetIndex + 7 + octType];
+    return coords_[10 * tetIndex + 7 + octType];
 }
 
 } // namespace regina

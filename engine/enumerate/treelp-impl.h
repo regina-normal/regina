@@ -849,8 +849,9 @@ void LPData<LPConstraint, IntType>::dump(std::ostream& out) const {
 }
 
 template <class LPConstraint, typename IntType>
+template <class RayClass>
 void LPData<LPConstraint, IntType>::extractSolution(
-        Ray& v, const char* type) const {
+        RayClass& v, const char* type) const {
     // Fetch details on how to undo the column permutation.
     const int* columnPerm = origTableaux_->columnPerm();
 

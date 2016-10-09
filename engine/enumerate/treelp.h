@@ -52,6 +52,8 @@
 
 namespace regina {
 
+class AngleStructureVector;
+class NNormalSurfaceVector;
 class Ray;
 
 template <typename> class MatrixIntDomain;
@@ -1241,6 +1243,10 @@ class LPData {
          * additional columns arising from LPConstraint are exempt from
          * this requirement.
          *
+         * \tparam RayClass the class used to hold the output vector \a v.
+         * This should either be Ray, or some other class that provides
+         * analogous functions size(), setElement() and scaleDown().
+         *
          * @param v the vector into which the values of the variables
          * will be placed.
          * @param type the type vector corresponding to the current state of
@@ -1251,7 +1257,8 @@ class LPData {
          * one may pass \a type = 0, in which case this routine will
          * assume that \e every coordinate was constrained as positive.
          */
-        void extractSolution(Ray& v, const char* type) const;
+        template <class RayClass>
+        void extractSolution(RayClass& v, const char* type) const;
 
     private:
         /**
@@ -1434,17 +1441,77 @@ extern template class REGINA_API LPInitialTableaux<LPConstraintEuler>;
 extern template class REGINA_API LPInitialTableaux<LPConstraintNonSpun>;
 
 extern template class REGINA_API LPData<LPConstraintNone, Integer>;
+extern template REGINA_API void LPData<LPConstraintNone, Integer>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void LPData<LPConstraintNone, Integer>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
+
 extern template class REGINA_API LPData<LPConstraintNone, NNativeLong>;
+extern template REGINA_API void LPData<LPConstraintNone, NNativeLong>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void LPData<LPConstraintNone, NNativeLong>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
+
 extern template class REGINA_API LPData<LPConstraintEuler, Integer>;
+extern template REGINA_API void LPData<LPConstraintEuler, Integer>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void LPData<LPConstraintEuler, Integer>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
+
 extern template class REGINA_API LPData<LPConstraintEuler, NNativeLong>;
+extern template REGINA_API void LPData<LPConstraintEuler, NNativeLong>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void LPData<LPConstraintEuler, NNativeLong>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
+
 extern template class REGINA_API LPData<LPConstraintNonSpun, Integer>;
+extern template REGINA_API void LPData<LPConstraintNonSpun, Integer>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void LPData<LPConstraintNonSpun, Integer>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
+
 extern template class REGINA_API LPData<LPConstraintNonSpun, NNativeLong>;
+extern template REGINA_API void LPData<LPConstraintNonSpun, NNativeLong>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void LPData<LPConstraintNonSpun, NNativeLong>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
 
 #ifdef INT128_AVAILABLE
-extern template class REGINA_API LPData<LPConstraintNone, NativeInteger<16> >;
-extern template class REGINA_API LPData<LPConstraintEuler, NativeInteger<16> >;
-extern template class REGINA_API LPData<LPConstraintNonSpun,
-    NativeInteger<16> >;
+extern template class REGINA_API LPData<LPConstraintNone, NativeInteger<16>>;
+extern template REGINA_API void LPData<LPConstraintNone, NativeInteger<16>>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void REGINA_API LPData<LPConstraintNone, NativeInteger<16>>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
+
+extern template class REGINA_API LPData<LPConstraintEuler, NativeInteger<16>>;
+extern template REGINA_API void LPData<LPConstraintEuler, NativeInteger<16>>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void LPData<LPConstraintEuler, NativeInteger<16>>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
+
+extern template class REGINA_API LPData<LPConstraintNonSpun, NativeInteger<16>>;
+extern template REGINA_API void LPData<LPConstraintNonSpun, NativeInteger<16>>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+extern template REGINA_API void LPData<LPConstraintNonSpun, NativeInteger<16>>::
+    extractSolution<NNormalSurfaceVector>(
+    NNormalSurfaceVector&, const char*) const;
 #endif
 
 // Inline functions for LPMatrix

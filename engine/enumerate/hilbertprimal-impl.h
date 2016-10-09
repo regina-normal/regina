@@ -67,7 +67,7 @@ void HilbertPrimal::enumerateHilbertBasis(OutputIterator results,
     }
 
     // Get the dimension of the space.
-    size_t dim = (*raysBegin)->size();
+    size_t dim = (*raysBegin).size();
     if (dim == 0)
         return;
 
@@ -107,7 +107,7 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const EnumConstraints* constraints, ProgressTracker* tracker) {
     // We know at this point that the dimension is non-zero.
-    size_t dim = (*raysBegin)->size();
+    size_t dim = (*raysBegin).size();
 
     // First enumerate all maximal admissible faces.
     if (tracker)
@@ -131,15 +131,15 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         // Locate the extremal rays that generate this face.
         std::vector<std::vector<mpz_class> > input;
         for (rit = raysBegin; rit != raysEnd; ++rit)
-            if (inFace(**rit, *mit)) {
+            if (inFace(*rit, *mit)) {
                 input.push_back(std::vector<mpz_class>());
                 std::vector<mpz_class>& v(input.back());
                 v.reserve(dim);
                 for (i = 0; i < dim; ++i) {
-                    if ((**rit)[i].isNative())
-                        v.push_back(mpz_class((**rit)[i].longValue()));
+                    if ((*rit)[i].isNative())
+                        v.push_back(mpz_class((*rit)[i].longValue()));
                     else
-                        v.push_back(mpz_class((**rit)[i].rawData()));
+                        v.push_back(mpz_class((*rit)[i].rawData()));
                 }
             }
         libnormaliz::Cone<mpz_class> cone(

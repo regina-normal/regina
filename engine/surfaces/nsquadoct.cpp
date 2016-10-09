@@ -132,7 +132,7 @@ namespace {
 }
 
 NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
-        const NTriangulation* triang) const {
+        const Ray& original, const NTriangulation* triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
     unsigned long nRows = 10 * triang->size();
@@ -149,7 +149,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
             ans->setElement(row + i, LargeInteger::infinity);
     for (row = 0; 10 * row < nRows; ++row)
         for (i = 0; i < 6; i++)
-            ans->setElement(10 * row + 4 + i, (*this)[6 * row + i]);
+            ans->setElement(10 * row + 4 + i, original[6 * row + i]);
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.

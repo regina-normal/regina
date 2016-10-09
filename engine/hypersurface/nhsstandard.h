@@ -125,11 +125,11 @@ inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
 
 inline LargeInteger NNormalHypersurfaceVectorStandard::tetrahedra(
         size_t pentIndex, int vertex, const Dim4Triangulation*) const {
-    return (*this)[15 * pentIndex + vertex];
+    return coords_[15 * pentIndex + vertex];
 }
 inline LargeInteger NNormalHypersurfaceVectorStandard::prisms(
         size_t pentIndex, int prismType, const Dim4Triangulation*) const {
-    return (*this)[15 * pentIndex + 5 + prismType];
+    return coords_[15 * pentIndex + 5 + prismType];
 }
 
 } // namespace regina

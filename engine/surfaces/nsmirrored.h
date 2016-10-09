@@ -58,27 +58,19 @@ namespace regina {
  * vector will be done once only, and future coordinate lookups will be
  * performed through the pre-converted mirror vector.
  *
- * Once the first coordinate lookup has taken place (via
- * triangles() or the like), <b>this vector may
- * not change!</b>  The mirror will be created at this point and will
- * not change, so if the native coordinates change further then any
- * requests passed to the mirror will return incorrect results.
- *
  * Subclasses need not implement any of the coordinate lookup routines.
  * The default implementation will be to pass the lookup to the mirror.
  * If any particular lookup can be done more efficiently in the native
  * coordinate system, the corresponding routine should be overridden.
  *
- * Subclasses must however implement the routine makeMirror() which creates
- * the alternate mirror vector from this vector.
+ * Subclasses must however implement two variants of makeMirror():
  *
- * Note that cloning a vector of this class will \e not clone the
- * mirror.  Thus a clone may be safely modified before its first
- * coordinate lookup routine is called.
- *
- * \todo \prob Allow modification of the vector by overwriting
- * setValue(); this will require documentation changes in both this
- * class and in NNormalSurfaceVector.
+ * - a static function
+ *   NNormalSurfaceVector* makeMirror(const Ray&, const NTriangulation*),
+ *   which builds the mirror vector from the native vector;
+ * - a virtual function
+ *   NNormalSurfaceVector* makeMirror(const NTriangulation*) const,
+ *   which simply calls the static function described above.
  *
  * \ifacespython Not present.
  */
@@ -115,33 +107,73 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
 
         /**
          * Creates a new mirror vector corresponding to this vector.
-         * The mirror vector should represent the same normal surface as
-         * this vector, and should have fast coordinate lookup routines
-         * (triangles(), quads() and so on).  It is
-         * recommended that the mirror vector be a
-         * NNormalSurfaceVectorStandard or a NNormalSurfaceVectorANStandard.
          *
-         * @param triang the triangulation in which this normal surface
-         * lives.
-         * @return a newly created mirror vector.
+         * This function must return a newly created vector that describes
+         * this normal surface in the corresponding "standard" coordinate
+         * system (i.e., NNormalSurfaceVectorStandard if this subclass is
+         * NNormalSurfaceVectorQuad, or NNormalSurfaceVectorANStandard if
+         * this subclass is NNormalSurfaceVectorQuadOct, and so on.)
+         *
+         * Typically subclasses should implement this function by calling the
+         * corresponding static makeMirror() function, which does the real work.
+         *
+         * @param triang the triangulation in which this normal surface lives.
+         * @return a newly created vector that describes the same normal
+         * surface in a "standard" coordinate system, as described above.
          */
         virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const = 0;
 
+#ifdef __DOXYGEN
+        /**
+         * Creates a new mirror vector corresponding to the given vector.
+         * This function should be implemented by each subclass of
+         * NNormalSurfaceVectorMirrored.
+         *
+         * This function must return a newly created vector that describes
+         * the given normal surface in a different coordinate system:
+         *
+         * - The given vector must be in the coordinate system described
+         *   by the subclass in which this function is implemented.
+         *
+         * - The return vector must be in the corresponding "standard"
+         *   coordinate system (i.e., NNormalSurfaceVectorStandard if
+         *   this subclass is NNormalSurfaceVectorQuad, or
+         *   NNormalSurfaceVectorANStandard if this subclass is
+         *   NNormalSurfaceVectorQuadOct, and so on.)
+         *
+         * @param original a vector in the coordinate system corresponding to
+         * the subclass in which this function is implemented.
+         * @param triang the triangulation in which the corresponding
+         * normal surface lives.
+         * @return a newly created vector that describes the same normal
+         * surface in a "standard" coordinate system, as described above.
+         */
+        static NNormalSurfaceVector* makeMirror(const Ray& original,
+            const NTriangulation* triang);
+#endif
+
+        virtual void setElement(size_t index, const LargeInteger& value)
+            override;
+        virtual void operator += (const NNormalSurfaceVector& other) override;
+        virtual void scaleDown() override;
+
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang) const;
+            int vertex, const NTriangulation* triang) const override;
         virtual LargeInteger orientedTriangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang, bool orientation) const;
+            int vertex, const NTriangulation* triang, bool orientation) const
+            override;
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const NTriangulation* triang) const;
+            int quadType, const NTriangulation* triang) const override;
         virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const NTriangulation* triang, bool orientation) const;
+            int quadType, const NTriangulation* triang, bool orientation) const
+            override;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const;
+            int octType, const NTriangulation* triang) const override;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const NTriangulation* triang) const;
+            const NTriangulation* triang) const override;
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const NTriangulation* triang) const;
+            int triVertex, const NTriangulation* triang) const override;
 };
 
 /*@}*/
@@ -160,8 +192,24 @@ inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
         NNormalSurfaceVector(cloneMe), mirror(0) {
 }
 inline NNormalSurfaceVectorMirrored::~NNormalSurfaceVectorMirrored() {
-    if (mirror)
-        delete mirror;
+    delete mirror;
+}
+
+inline void NNormalSurfaceVectorMirrored::setElement(size_t index,
+        const LargeInteger& value) {
+    coords_.setElement(index, value);
+    delete mirror;
+}
+
+inline void NNormalSurfaceVectorMirrored::operator += (
+        const NNormalSurfaceVector& other) {
+    coords_ += other.coords();
+    delete mirror;
+}
+
+inline void NNormalSurfaceVectorMirrored::scaleDown() {
+    coords_.scaleDown();
+    delete mirror;
 }
 
 inline LargeInteger NNormalSurfaceVectorMirrored::triangles(

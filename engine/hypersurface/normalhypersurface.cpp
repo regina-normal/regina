@@ -79,7 +79,7 @@ NNormalHypersurface* NNormalHypersurface::doubleHypersurface() const {
     NNormalHypersurface* ans = new NNormalHypersurface(triangulation_,
         dynamic_cast<NNormalHypersurfaceVector*>(vector_->clone()));
 
-    (*(ans->vector_)) *= 2;
+    *(ans->vector_) += *(ans->vector_);
 
     // Some properties can be copied straight across.
     ans->realBoundary_ = realBoundary_;

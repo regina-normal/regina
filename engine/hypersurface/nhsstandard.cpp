@@ -51,14 +51,14 @@ LargeInteger NNormalHypersurfaceVectorStandard::edgeWeight(
 
     // Add up the tetrahedra and prisms meeting that edge.
     // Tetrahedra:
-    LargeInteger ans((*this)[15 * pentIndex + start]);
-    ans += (*this)[15 * pentIndex + end];
+    LargeInteger ans(coords_[15 * pentIndex + start]);
+    ans += coords_[15 * pentIndex + end];
     // Prisms:
     unsigned e = Dim4Edge::edgeNumber[start][end];
     for (unsigned i = 0; i < 3; ++i) {
-        ans += (*this)[15 * pentIndex + 5 +
+        ans += coords_[15 * pentIndex + 5 +
             Dim4Edge::edgeNumber[start][Dim4Triangle::triangleVertex[e][i]]];
-        ans += (*this)[15 * pentIndex + 5 +
+        ans += coords_[15 * pentIndex + 5 +
             Dim4Edge::edgeNumber[end][Dim4Triangle::triangleVertex[e][i]]];
     }
     return ans;

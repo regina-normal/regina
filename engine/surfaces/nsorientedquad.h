@@ -104,6 +104,8 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
          */
         NNormalSurfaceVectorOrientedQuad(const Vector<LargeInteger>& cloneMe);
 
+        static NNormalSurfaceVector* makeMirror(const Ray& original,
+            const NTriangulation* triang);
         virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
 
@@ -136,6 +138,11 @@ inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 
+inline NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
+        const NTriangulation* triang) const {
+    return makeMirror(coords(), triang);
+}
+
 inline LargeInteger NNormalSurfaceVectorOrientedQuad::quads(
         size_t tetIndex, int quadType, const NTriangulation* tri) const {
     return orientedQuads(tetIndex, quadType, tri, true)
@@ -145,7 +152,7 @@ inline LargeInteger NNormalSurfaceVectorOrientedQuad::quads(
 inline LargeInteger NNormalSurfaceVectorOrientedQuad::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
-    return (*this)[6 * tetIndex + 2 * quadType +
+    return coords_[6 * tetIndex + 2 * quadType +
         (orientation ? 0 : 1)];
 }
 
@@ -157,7 +164,7 @@ inline const NVertex* NNormalSurfaceVectorOrientedQuad::isVertexLink(
 
 inline LargeInteger NNormalSurfaceVectorOrientedQuad::octs(
         size_t, int, const NTriangulation*) const {
-    return zero;
+    return Ray::zero;
 }
 
 } // namespace regina

@@ -100,6 +100,8 @@ class REGINA_API NNormalSurfaceVectorQuad :
          */
         NNormalSurfaceVectorQuad(const Vector<LargeInteger>& cloneMe);
 
+        static NNormalSurfaceVector* makeMirror(const Ray& original,
+            const NTriangulation* triang);
         virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
 
@@ -128,6 +130,11 @@ inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 
+inline NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
+        const NTriangulation* triang) const {
+    return makeMirror(coords(), triang);
+}
+
 inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
         const NTriangulation*) const {
     // Quad space does not contain vertex links at all.
@@ -136,7 +143,7 @@ inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
 
 inline LargeInteger NNormalSurfaceVectorQuad::octs(
         size_t, int, const NTriangulation*) const {
-    return zero;
+    return Ray::zero;
 }
 
 } // namespace regina

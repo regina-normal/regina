@@ -134,15 +134,15 @@ inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
 
 inline LargeInteger NNormalSurfaceVectorStandard::triangles(
         size_t tetIndex, int vertex, const NTriangulation*) const {
-    return (*this)[7 * tetIndex + vertex];
+    return coords_[7 * tetIndex + vertex];
 }
 inline LargeInteger NNormalSurfaceVectorStandard::quads(
         size_t tetIndex, int quadType, const NTriangulation*) const {
-    return (*this)[7 * tetIndex + 4 + quadType];
+    return coords_[7 * tetIndex + 4 + quadType];
 }
 inline LargeInteger NNormalSurfaceVectorStandard::octs(
         size_t, int, const NTriangulation*) const {
-    return zero;
+    return Ray::zero;
 }
 
 } // namespace regina

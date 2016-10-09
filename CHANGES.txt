@@ -42,6 +42,32 @@ Version 5.1  [ (under development) ]
         Class MatrixIntDomain:
             - New generalisation of MatrixInt for working in other
               integral domains.
+        Class NormalSurface:
+            - New routines systemAllowsAlmostNormal(), systemAllowsSpun() and
+              systemAllowsOriented().
+        Class NormalSurfaces, NormalHypersurfaces:
+            - For the inner VectorIterator class, the dereference
+              operator * now returns a Ray&, not a pointer to a
+              NNormal{Surface,Hypersurface}Vector.
+        Class NormalSurfaceVector, NormalHypersurfaceVector:
+            - No longer inherits from Ray, and therefore many of the old
+              vector functions are no longer available.  (It was dangerous
+              to call these in the past, since "mirrored" vector classes
+              were not meant to be modified after their first query.)
+            - New member function coords() to access the underlying Ray
+              (but with const access only).
+            - New const access functions size() and operator [], to replace
+              functions that were lost by not inheriting from Ray.
+            - New non-const operations setElement(), += and scaleDown(), which
+              act correctly in all coordinate systems (unlike the old versions
+              of these functions that were inherited from Ray).
+            - Function rawVector() now returns a Ray&, not a pointer to a
+              NNormal{Surface,Hypersurface}Vector.
+        Class NormalSurfaceVectorMirrored:
+            - The real work has now moved to a static makeMirror() function,
+              which subclasses must also implement.
+            - Now behaves correctly when the vector is changed, even after
+              the mirror has been created.
         Class Primes:
             - Now works with type Integer, not LargeInteger.
         Class SurfaceSubset:

@@ -48,16 +48,16 @@ LargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
 
     // Add up the triangles, quads and octagons meeting that edge.
     // Triangles:
-    LargeInteger ans((*this)[10 * tetIndex + start]);
-    ans += (*this)[10 * tetIndex + end];
+    LargeInteger ans(coords_[10 * tetIndex + start]);
+    ans += coords_[10 * tetIndex + end];
     // Quads:
-    ans += (*this)[10 * tetIndex + 4 + quadMeeting[start][end][0]];
-    ans += (*this)[10 * tetIndex + 4 + quadMeeting[start][end][1]];
+    ans += coords_[10 * tetIndex + 4 + quadMeeting[start][end][0]];
+    ans += coords_[10 * tetIndex + 4 + quadMeeting[start][end][1]];
     // Octagons:
-    ans += (*this)[10 * tetIndex + 7];
-    ans += (*this)[10 * tetIndex + 8];
-    ans += (*this)[10 * tetIndex + 9];
-    ans += (*this)[10 * tetIndex + 7 + quadSeparating[start][end]];
+    ans += coords_[10 * tetIndex + 7];
+    ans += coords_[10 * tetIndex + 8];
+    ans += coords_[10 * tetIndex + 9];
+    ans += coords_[10 * tetIndex + 7 + quadSeparating[start][end]];
     return ans;
 }
 
@@ -71,12 +71,12 @@ LargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
 
     // Add up the discs meeting that triangle in that required arc.
     // Triangles:
-    LargeInteger ans((*this)[10 * tetIndex + vertex]);
+    LargeInteger ans(coords_[10 * tetIndex + vertex]);
     // Quads:
-    ans += (*this)[10 * tetIndex + 4 + quadSeparating[vertex][backOfFace]];
+    ans += coords_[10 * tetIndex + 4 + quadSeparating[vertex][backOfFace]];
     // Octagons:
-    ans += (*this)[10 * tetIndex + 7 + quadMeeting[vertex][backOfFace][0]];
-    ans += (*this)[10 * tetIndex + 7 + quadMeeting[vertex][backOfFace][1]];
+    ans += coords_[10 * tetIndex + 7 + quadMeeting[vertex][backOfFace][0]];
+    ans += coords_[10 * tetIndex + 7 + quadMeeting[vertex][backOfFace][1]];
     return ans;
 }
 
