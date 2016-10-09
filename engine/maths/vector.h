@@ -184,7 +184,6 @@ class Vector {
          *
          * @param index the vector index to examine.
          * @param value the new value to assign to the element.
-         * @return the vector element at the given index.
          */
         inline void setElement(size_t index, const T& value) {
             elements[index] = value;
