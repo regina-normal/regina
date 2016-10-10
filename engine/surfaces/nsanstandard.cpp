@@ -38,7 +38,7 @@
 
 namespace regina {
 
-LargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
+LargeInteger NSVectorANStandard::edgeWeight(
         size_t edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
@@ -61,7 +61,7 @@ LargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
     return ans;
 }
 
-LargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
+LargeInteger NSVectorANStandard::arcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->triangles()[triIndex]->front();
@@ -80,12 +80,12 @@ LargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
     return ans;
 }
 
-NNormalSurfaceVector* NNormalSurfaceVectorANStandard::makeZeroVector(
+NNormalSurfaceVector* NSVectorANStandard::makeZeroVector(
         const NTriangulation* triangulation) {
-    return new NNormalSurfaceVectorANStandard(10 * triangulation->size());
+    return new NSVectorANStandard(10 * triangulation->size());
 }
 
-MatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
+MatrixInt* NSVectorANStandard::makeMatchingEquations(
         const NTriangulation* triangulation) {
     size_t nCoords = 10 * triangulation->size();
     // Three equations per non-boundary triangle.
@@ -132,12 +132,11 @@ MatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
+EnumConstraints* NSVectorANStandard::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
     // At most one quad/oct per tetrahedron.
     // Also at most one oct type overall.
-    EnumConstraints* ans = new EnumConstraints(
-        triangulation->size() + 1);
+    EnumConstraints* ans = new EnumConstraints(triangulation->size() + 1);
 
     unsigned base = 0;
     for (unsigned c = 1; c < ans->size(); ++c) {

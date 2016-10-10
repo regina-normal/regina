@@ -44,7 +44,7 @@
 
 namespace regina {
 
-class NNormalSurfaceVectorQuadOct;
+class NSVectorQuadOct;
 
 /**
  * \weakgroup surfaces
@@ -54,7 +54,7 @@ class NNormalSurfaceVectorQuadOct;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_AN_QUAD_OCT> {
-    typedef NNormalSurfaceVectorQuadOct Class;
+    typedef NSVectorQuadOct Class;
     typedef NormalInfo<NS_AN_STANDARD> Standard;
     typedef NormalInfo<NS_AN_QUAD_OCT> Reduced;
     inline static const char* name() {
@@ -82,9 +82,9 @@ struct NormalInfo<NS_AN_QUAD_OCT> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVectorQuadOct :
+class REGINA_API NSVectorQuadOct :
         public NNormalSurfaceVectorMirrored {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorQuadOct, NS_AN_QUAD_OCT)
+    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuadOct, NS_AN_QUAD_OCT)
 
     public:
         /**
@@ -93,13 +93,13 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorQuadOct(size_t length);
+        NSVectorQuadOct(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorQuadOct(const Vector<LargeInteger>& cloneMe);
+        NSVectorQuadOct(const Vector<LargeInteger>& cloneMe);
 
         static NNormalSurfaceVector* makeMirror(const Ray& original,
             const NTriangulation* triang);
@@ -116,24 +116,33 @@ class REGINA_API NNormalSurfaceVectorQuadOct :
             const NTriangulation* triangulation);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalSurfaceVectorQuadOct has now been
+ * renamed to NSVectorQuadOct.
+ */
+REGINA_DEPRECATED typedef NSVectorQuadOct NNormalSurfaceVectorQuadOct;
+
 /*@}*/
 
-// Inline functions for NNormalSurfaceVectorQuadOct
+// Inline functions for NSVectorQuadOct
 
-inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
+inline NSVectorQuadOct::NSVectorQuadOct(
         size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
-inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
+inline NSVectorQuadOct::NSVectorQuadOct(
         const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 
-inline NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
+inline NNormalSurfaceVector* NSVectorQuadOct::makeMirror(
         const NTriangulation* triang) const {
     return makeMirror(coords(), triang);
 }
 
-inline const NVertex* NNormalSurfaceVectorQuadOct::isVertexLink(
+inline const NVertex* NSVectorQuadOct::isVertexLink(
         const NTriangulation*) const {
     // Quad-oct space does not contain vertex links at all.
     return 0;

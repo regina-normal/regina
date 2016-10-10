@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NNormalSurfaceVectorStandard;
+class NSVectorStandard;
 
 /**
  * \weakgroup surfaces
@@ -55,7 +55,7 @@ class NNormalSurfaceVectorStandard;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_STANDARD> {
-    typedef NNormalSurfaceVectorStandard Class;
+    typedef NSVectorStandard Class;
     typedef NormalInfo<NS_STANDARD> Standard;
     typedef NormalInfo<NS_QUAD> Reduced;
     inline static const char* name() {
@@ -83,8 +83,8 @@ struct NormalInfo<NS_STANDARD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorStandard, NS_STANDARD)
+class REGINA_API NSVectorStandard : public NNormalSurfaceVector {
+    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorStandard, NS_STANDARD)
 
     public:
         /**
@@ -93,13 +93,13 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorStandard(size_t length);
+        NSVectorStandard(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorStandard(const Vector<LargeInteger>& cloneMe);
+        NSVectorStandard(const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
@@ -120,27 +120,36 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
             const NTriangulation* triangulation);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalSurfaceVectorStandard has now been
+ * renamed to NSVectorStandard.
+ */
+REGINA_DEPRECATED typedef NSVectorStandard NNormalSurfaceVectorStandard;
+
 /*@}*/
 
-// Inline functions for NNormalSurfaceVectorStandard
+// Inline functions for NSVectorStandard
 
-inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
+inline NSVectorStandard::NSVectorStandard(
         size_t length) : NNormalSurfaceVector(length) {
 }
-inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
+inline NSVectorStandard::NSVectorStandard(
         const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVector(cloneMe) {
 }
 
-inline LargeInteger NNormalSurfaceVectorStandard::triangles(
+inline LargeInteger NSVectorStandard::triangles(
         size_t tetIndex, int vertex, const NTriangulation*) const {
     return coords_[7 * tetIndex + vertex];
 }
-inline LargeInteger NNormalSurfaceVectorStandard::quads(
+inline LargeInteger NSVectorStandard::quads(
         size_t tetIndex, int quadType, const NTriangulation*) const {
     return coords_[7 * tetIndex + 4 + quadType];
 }
-inline LargeInteger NNormalSurfaceVectorStandard::octs(
+inline LargeInteger NSVectorStandard::octs(
         size_t, int, const NTriangulation*) const {
     return Ray::zero;
 }

@@ -44,7 +44,7 @@
 
 namespace regina {
 
-class NNormalSurfaceVectorOrientedQuad;
+class NSVectorOrientedQuad;
 
 /**
  * \weakgroup surfaces
@@ -54,7 +54,7 @@ class NNormalSurfaceVectorOrientedQuad;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_ORIENTED_QUAD> {
-    typedef NNormalSurfaceVectorOrientedQuad Class;
+    typedef NSVectorOrientedQuad Class;
     typedef NormalInfo<NS_ORIENTED> Standard;
     typedef NormalInfo<NS_ORIENTED_QUAD> Reduced;
     inline static const char* name() {
@@ -77,7 +77,7 @@ struct NormalInfo<NS_ORIENTED_QUAD> {
  * For each \a i, coordinates 2<i>i</i> and 2<i>i</i>+1 represent
  * the \c true and \c false orientations for coordinate \a i in the
  * 3<i>t</i>-dimensional quadrilateral coordinate system.  See
- * NNormalSurfaceVectorQuad for further details.
+ * NSVectorQuad for further details.
  *
  * \warning Support for transversely oriented normal surfaces is still
  * experimental, and some features \b will break (e.g., testing
@@ -85,9 +85,9 @@ struct NormalInfo<NS_ORIENTED_QUAD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVectorOrientedQuad :
+class REGINA_API NSVectorOrientedQuad :
         public NNormalSurfaceVectorMirrored {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorOrientedQuad, NS_ORIENTED_QUAD)
+    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOrientedQuad, NS_ORIENTED_QUAD)
 
     public:
         /**
@@ -96,13 +96,13 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorOrientedQuad(size_t length);
+        NSVectorOrientedQuad(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorOrientedQuad(const Vector<LargeInteger>& cloneMe);
+        NSVectorOrientedQuad(const Vector<LargeInteger>& cloneMe);
 
         static NNormalSurfaceVector* makeMirror(const Ray& original,
             const NTriangulation* triang);
@@ -126,43 +126,52 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
             const NTriangulation* triangulation);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalSurfaceVectorOrientedQuad has now been
+ * renamed to NSVectorOrientedQuad.
+ */
+REGINA_DEPRECATED typedef NSVectorOrientedQuad NNormalSurfaceVectorOrientedQuad;
+
 /*@}*/
 
-// Inline functions for NNormalSurfaceVectorOrientedQuad
+// Inline functions for NSVectorOrientedQuad
 
-inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
+inline NSVectorOrientedQuad::NSVectorOrientedQuad(
         size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
-inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
+inline NSVectorOrientedQuad::NSVectorOrientedQuad(
         const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 
-inline NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
+inline NNormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
         const NTriangulation* triang) const {
     return makeMirror(coords(), triang);
 }
 
-inline LargeInteger NNormalSurfaceVectorOrientedQuad::quads(
+inline LargeInteger NSVectorOrientedQuad::quads(
         size_t tetIndex, int quadType, const NTriangulation* tri) const {
     return orientedQuads(tetIndex, quadType, tri, true)
            + orientedQuads(tetIndex, quadType, tri, false);
 }
 
-inline LargeInteger NNormalSurfaceVectorOrientedQuad::orientedQuads(
+inline LargeInteger NSVectorOrientedQuad::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
     return coords_[6 * tetIndex + 2 * quadType +
         (orientation ? 0 : 1)];
 }
 
-inline const NVertex* NNormalSurfaceVectorOrientedQuad::isVertexLink(
+inline const NVertex* NSVectorOrientedQuad::isVertexLink(
         const NTriangulation*) const {
     // Quad space does not contain vertex links at all.
     return 0;
 }
 
-inline LargeInteger NNormalSurfaceVectorOrientedQuad::octs(
+inline LargeInteger NSVectorOrientedQuad::octs(
         size_t, int, const NTriangulation*) const {
     return Ray::zero;
 }

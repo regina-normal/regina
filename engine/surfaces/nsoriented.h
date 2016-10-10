@@ -44,7 +44,7 @@
 #include "surfaces/nnormalsurface.h"
 
 namespace regina {
-class NNormalSurfaceVectorOriented;
+class NSVectorOriented;
 
 /**
  * \weakgroup surfaces
@@ -54,7 +54,7 @@ class NNormalSurfaceVectorOriented;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_ORIENTED> {
-    typedef NNormalSurfaceVectorOriented Class;
+    typedef NSVectorOriented Class;
     typedef NormalInfo<NS_ORIENTED> Standard;
     typedef NormalInfo<NS_ORIENTED_QUAD> Reduced;
     inline static const char* name() {
@@ -77,7 +77,7 @@ struct NormalInfo<NS_ORIENTED> {
  * For each \a i, coordinates 2<i>i</i> and 2<i>i</i>+1 represent
  * the \c true and \c false orientations for coordinate \a i in the
  * 7<i>t</i>-dimensional standard coordinate system.  See
- * NNormalSurfaceVectorStandard for further details.
+ * NSVectorStandard for further details.
  *
  * \warning Support for transversely oriented normal surfaces is still
  * experimental, and some features \b will break (e.g., testing
@@ -85,8 +85,8 @@ struct NormalInfo<NS_ORIENTED> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorOriented, NS_ORIENTED)
+class REGINA_API NSVectorOriented : public NNormalSurfaceVector {
+    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOriented, NS_ORIENTED)
 
     public:
         /**
@@ -95,13 +95,13 @@ class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorOriented(size_t length);
+        NSVectorOriented(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorOriented(const Vector<LargeInteger>& cloneMe);
+        NSVectorOriented(const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
@@ -126,42 +126,51 @@ class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
             const NTriangulation* triangulation);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalSurfaceVectorOriented has now been
+ * renamed to NSVectorOriented.
+ */
+REGINA_DEPRECATED typedef NSVectorOriented NNormalSurfaceVectorOriented;
+
 /*@}*/
 
-// Inline functions for NNormalSurfaceVectorOriented
+// Inline functions for NSVectorOriented
 
-inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
+inline NSVectorOriented::NSVectorOriented(
         size_t length) : NNormalSurfaceVector(length) {
 }
-inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
+inline NSVectorOriented::NSVectorOriented(
         const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVector(cloneMe) {
 }
 
-inline LargeInteger NNormalSurfaceVectorOriented::triangles(
+inline LargeInteger NSVectorOriented::triangles(
         size_t tetIndex, int vertex, const NTriangulation* tri) const {
     return orientedTriangles(tetIndex,vertex,tri, true)
            + orientedTriangles(tetIndex,vertex,tri, false);
 }
-inline LargeInteger NNormalSurfaceVectorOriented::quads(
+inline LargeInteger NSVectorOriented::quads(
         size_t tetIndex, int quadType, const NTriangulation* tri) const {
     return orientedQuads(tetIndex,quadType,tri, true)
            + orientedQuads(tetIndex,quadType,tri, false);
 }
 
-inline LargeInteger NNormalSurfaceVectorOriented::orientedTriangles(
+inline LargeInteger NSVectorOriented::orientedTriangles(
         size_t tetIndex, int vertex, const NTriangulation*,
         bool orientation) const {
     return coords_[14 * tetIndex + 2 * vertex +
         (orientation ? 0 : 1)];
 }
-inline LargeInteger NNormalSurfaceVectorOriented::orientedQuads(
+inline LargeInteger NSVectorOriented::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
     return coords_[14 * tetIndex + 8 + 2 * quadType +
         (orientation ? 0 : 1)];
 }
-inline LargeInteger NNormalSurfaceVectorOriented::octs(
+inline LargeInteger NSVectorOriented::octs(
         size_t, int, const NTriangulation*) const {
     return Ray::zero;
 }

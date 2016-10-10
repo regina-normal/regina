@@ -41,13 +41,12 @@
 
 namespace regina {
 
-NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeZeroVector(
+NNormalSurfaceVector* NSVectorQuadOct::makeZeroVector(
         const NTriangulation* triangulation) {
-    return new NNormalSurfaceVectorQuadOct(
-        6 * triangulation->size());
+    return new NSVectorQuadOct(6 * triangulation->size());
 }
 
-MatrixInt* NNormalSurfaceVectorQuadOct::makeMatchingEquations(
+MatrixInt* NSVectorQuadOct::makeMatchingEquations(
         const NTriangulation* triangulation) {
     unsigned long nCoords = 6 * triangulation->size();
     // One equation per non-boundary edge.
@@ -85,12 +84,11 @@ MatrixInt* NNormalSurfaceVectorQuadOct::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NNormalSurfaceVectorQuadOct::makeEmbeddedConstraints(
+EnumConstraints* NSVectorQuadOct::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
     // At most one quad/oct per tetrahedron.
     // At most one oct type overall.
-    EnumConstraints* ans = new EnumConstraints(
-        triangulation->size() + 1);
+    EnumConstraints* ans = new EnumConstraints(triangulation->size() + 1);
 
     unsigned base = 0;
     for (unsigned c = 1; c < ans->size(); ++c) {
@@ -131,13 +129,12 @@ namespace {
     };
 }
 
-NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
+NNormalSurfaceVector* NSVectorQuadOct::makeMirror(
         const Ray& original, const NTriangulation* triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
     unsigned long nRows = 10 * triang->size();
-    NNormalSurfaceVectorANStandard* ans =
-        new NNormalSurfaceVectorANStandard(nRows);
+    NSVectorANStandard* ans = new NSVectorANStandard(nRows);
 
     // Set every triangular coordinate in the answer to infinity.
     // For coordinates about vertices not enjoying infinitely many discs,

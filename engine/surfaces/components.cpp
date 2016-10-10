@@ -193,7 +193,7 @@ namespace {
         long coord;
         if (s.systemAllowsAlmostNormal()) {
             for (i = 0; i < compID; ++i)
-                ans[i] = new NNormalSurfaceVectorANStandard(
+                ans[i] = new NSVectorANStandard(
                     10 * tri->size());
 
             for (it.init(components); ! it.done(); ++it) {
@@ -203,7 +203,7 @@ namespace {
             }
         } else {
             for (i = 0; i < compID; ++i)
-                ans[i] = new NNormalSurfaceVectorStandard(
+                ans[i] = new NSVectorStandard(
                     7 * tri->size());
 
             for (it.init(components); ! it.done(); ++it) {

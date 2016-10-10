@@ -110,9 +110,8 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          *
          * This function must return a newly created vector that describes
          * this normal surface in the corresponding "standard" coordinate
-         * system (i.e., NNormalSurfaceVectorStandard if this subclass is
-         * NNormalSurfaceVectorQuad, or NNormalSurfaceVectorANStandard if
-         * this subclass is NNormalSurfaceVectorQuadOct, and so on.)
+         * system (i.e., NSVectorStandard if this subclass is NSVectorQuad, or
+         * NSVectorANStandard if this subclass is NSVectorQuadOct, and so on.)
          *
          * Typically subclasses should implement this function by calling the
          * corresponding static makeMirror() function, which does the real work.
@@ -137,10 +136,9 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          *   by the subclass in which this function is implemented.
          *
          * - The return vector must be in the corresponding "standard"
-         *   coordinate system (i.e., NNormalSurfaceVectorStandard if
-         *   this subclass is NNormalSurfaceVectorQuad, or
-         *   NNormalSurfaceVectorANStandard if this subclass is
-         *   NNormalSurfaceVectorQuadOct, and so on.)
+         *   coordinate system (i.e., NSVectorStandard if this subclass is
+         *   NSVectorQuad, or NSVectorANStandard if this subclass is
+         *   NSVectorQuadOct, and so on.)
          *
          * @param original a vector in the coordinate system corresponding to
          * the subclass in which this function is implemented.

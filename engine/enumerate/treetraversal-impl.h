@@ -93,9 +93,9 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
     // elements to zero, as required by LPData::extractSolution().
     NNormalSurfaceVector* v;
     if (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT)
-        v = new NNormalSurfaceVectorQuad(3 * nTets_);
+        v = new NSVectorQuad(3 * nTets_);
     else if (coords_ == NS_STANDARD || coords_ == NS_AN_STANDARD)
-        v = new NNormalSurfaceVectorStandard(7 * nTets_);
+        v = new NSVectorStandard(7 * nTets_);
     else
         return 0;
 
@@ -109,7 +109,7 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
     NNormalSurfaceVector* an;
     unsigned i, j;
     if (coords_ == NS_AN_QUAD_OCT) {
-        an = new NNormalSurfaceVectorQuadOct(6 * nTets_);
+        an = new NSVectorQuadOct(6 * nTets_);
         for (i = 0; i < nTets_; ++i)
             for (j = 0; j < 3; ++j)
                 an->setElement(6 * i + j, (*v)[3 * i + j]);
@@ -123,7 +123,7 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
                 an->setElement(6 * octTet + j, 0);
         }
     } else {
-        an = new NNormalSurfaceVectorANStandard(10 * nTets_);
+        an = new NSVectorANStandard(10 * nTets_);
         for (i = 0; i < nTets_; ++i)
             for (j = 0; j < 7; ++j)
                 an->setElement(10 * i + j, (*v)[7 * i + j]);
@@ -1196,7 +1196,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                     << ")" << std::endl;
 
                 NNormalSurfaceVector* v =
-                    new NNormalSurfaceVectorStandard(7 * nTets_);
+                    new NSVectorStandard(7 * nTets_);
                 lpSlot_[level_ + 1]->extractSolution(*v, type_);
                 NNormalSurface* f = new NNormalSurface(
                     origTableaux_.tri(), v);

@@ -38,7 +38,7 @@
 
 namespace regina {
 
-LargeInteger NNormalSurfaceVectorOriented::edgeWeight(
+LargeInteger NSVectorOriented::edgeWeight(
         size_t edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
@@ -56,7 +56,7 @@ LargeInteger NNormalSurfaceVectorOriented::edgeWeight(
     return ans;
 }
 
-LargeInteger NNormalSurfaceVectorOriented::arcs(size_t triIndex,
+LargeInteger NSVectorOriented::arcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->triangles()[triIndex]->front();
@@ -72,13 +72,12 @@ LargeInteger NNormalSurfaceVectorOriented::arcs(size_t triIndex,
     return ans;
 }
 
-NNormalSurfaceVector* NNormalSurfaceVectorOriented::makeZeroVector(
+NNormalSurfaceVector* NSVectorOriented::makeZeroVector(
         const NTriangulation* triangulation) {
-    return new NNormalSurfaceVectorOriented(
-        14 * triangulation->size());
+    return new NSVectorOriented(14 * triangulation->size());
 }
 
-MatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
+MatrixInt* NSVectorOriented::makeMatchingEquations(
         const NTriangulation* triangulation) {
     size_t nCoords = 14 * triangulation->size();
     // Six equations per non-boundary triangle.
@@ -136,12 +135,11 @@ MatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NNormalSurfaceVectorOriented::makeEmbeddedConstraints(
+EnumConstraints* NSVectorOriented::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
     // TODO: Must be a neater way of doing this, but might mean re-working
     // bitmasks.
-    EnumConstraints* ans = new EnumConstraints(
-        8 * triangulation->size());
+    EnumConstraints* ans = new EnumConstraints(8 * triangulation->size());
 
     unsigned base = 0;
     unsigned c = 0;

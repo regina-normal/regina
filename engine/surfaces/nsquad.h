@@ -44,7 +44,7 @@
 
 namespace regina {
 
-class NNormalSurfaceVectorQuad;
+class NSVectorQuad;
 
 /**
  * \weakgroup surfaces
@@ -54,7 +54,7 @@ class NNormalSurfaceVectorQuad;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct NormalInfo<NS_QUAD> {
-    typedef NNormalSurfaceVectorQuad Class;
+    typedef NSVectorQuad Class;
     typedef NormalInfo<NS_STANDARD> Standard;
     typedef NormalInfo<NS_QUAD> Reduced;
     inline static const char* name() {
@@ -81,9 +81,9 @@ struct NormalInfo<NS_QUAD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVectorQuad :
+class REGINA_API NSVectorQuad :
         public NNormalSurfaceVectorMirrored {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorQuad, NS_QUAD)
+    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuad, NS_QUAD)
 
     public:
         /**
@@ -92,13 +92,13 @@ class REGINA_API NNormalSurfaceVectorQuad :
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorQuad(size_t length);
+        NSVectorQuad(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorQuad(const Vector<LargeInteger>& cloneMe);
+        NSVectorQuad(const Vector<LargeInteger>& cloneMe);
 
         static NNormalSurfaceVector* makeMirror(const Ray& original,
             const NTriangulation* triang);
@@ -118,30 +118,39 @@ class REGINA_API NNormalSurfaceVectorQuad :
             const NTriangulation* triangulation);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalSurfaceVectorQuad has now been
+ * renamed to NSVectorQuad.
+ */
+REGINA_DEPRECATED typedef NSVectorQuad NNormalSurfaceVectorQuad;
+
 /*@}*/
 
-// Inline functions for NNormalSurfaceVectorQuad
+// Inline functions for NSVectorQuad
 
-inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
+inline NSVectorQuad::NSVectorQuad(
         size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
-inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
+inline NSVectorQuad::NSVectorQuad(
         const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 
-inline NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
+inline NNormalSurfaceVector* NSVectorQuad::makeMirror(
         const NTriangulation* triang) const {
     return makeMirror(coords(), triang);
 }
 
-inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
+inline const NVertex* NSVectorQuad::isVertexLink(
         const NTriangulation*) const {
     // Quad space does not contain vertex links at all.
     return 0;
 }
 
-inline LargeInteger NNormalSurfaceVectorQuad::octs(
+inline LargeInteger NSVectorQuad::octs(
         size_t, int, const NTriangulation*) const {
     return Ray::zero;
 }

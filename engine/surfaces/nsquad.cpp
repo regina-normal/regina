@@ -41,13 +41,12 @@
 
 namespace regina {
 
-NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeZeroVector(
+NNormalSurfaceVector* NSVectorQuad::makeZeroVector(
         const NTriangulation* triangulation) {
-    return new NNormalSurfaceVectorQuad(
-        3 * triangulation->size());
+    return new NSVectorQuad(3 * triangulation->size());
 }
 
-MatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
+MatrixInt* NSVectorQuad::makeMatchingEquations(
         const NTriangulation* triangulation) {
     unsigned long nCoords = 3 * triangulation->size();
     // One equation per non-boundary edge.
@@ -81,10 +80,9 @@ MatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NNormalSurfaceVectorQuad::makeEmbeddedConstraints(
+EnumConstraints* NSVectorQuad::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
-    EnumConstraints* ans = new EnumConstraints(
-        triangulation->size());
+    EnumConstraints* ans = new EnumConstraints(triangulation->size());
 
     unsigned long base = 0;
     for (unsigned c = 0; c < ans->size(); ++c) {
@@ -117,13 +115,12 @@ namespace {
     };
 }
 
-NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
+NNormalSurfaceVector* NSVectorQuad::makeMirror(
         const Ray& original, const NTriangulation* triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
     unsigned long nRows = 7 * triang->size();
-    NNormalSurfaceVectorStandard* ans =
-        new NNormalSurfaceVectorStandard(nRows);
+    NSVectorStandard* ans = new NSVectorStandard(nRows);
 
     // Set every triangular coordinate in the answer to infinity.
     // For coordinates about vertices not enjoying infinitely many discs,

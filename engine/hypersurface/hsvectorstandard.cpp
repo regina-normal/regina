@@ -131,8 +131,7 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
 
 EnumConstraints* HSVectorStandard::makeEmbeddedConstraints(
         const Dim4Triangulation* triangulation) {
-    EnumConstraints* ans = new EnumConstraints(
-        30 * triangulation->size());
+    EnumConstraints* ans = new EnumConstraints(30 * triangulation->size());
 
     size_t base = 5;
     unsigned edge1, edge2;
