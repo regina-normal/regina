@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <queue>
-#include "surfaces/ndisc.h"
+#include "surfaces/disc.h"
 
 namespace regina {
 

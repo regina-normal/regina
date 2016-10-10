@@ -30,11 +30,16 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/ndisctype.h"
+#include "surfaces/normalsurface.h"
+#include "surfaces/prism.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-const NDiscType NDiscType::NONE;
+std::ostream& operator << (std::ostream& out, const PrismSpec& spec) {
+    out << '(' << spec.tetIndex << ", " << spec.edge << ')';
+    return out;
+}
 
 } // namespace regina
 

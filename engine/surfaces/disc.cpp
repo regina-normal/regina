@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "surfaces/normalsurface.h"
-#include "surfaces/ndisc.h"
+#include "surfaces/disc.h"
 
 namespace regina {
 

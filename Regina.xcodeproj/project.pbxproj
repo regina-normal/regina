@@ -160,13 +160,13 @@
 		050F5E2F1B9BAB9C00C1F681 /* ntrivialtri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D721B9BAB9C00C1F681 /* ntrivialtri.cpp */; };
 		050F5E301B9BAB9C00C1F681 /* ntxicore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D731B9BAB9C00C1F681 /* ntxicore.cpp */; };
 		050F5E311B9BAB9C00C1F681 /* pysubcomplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D741B9BAB9C00C1F681 /* pysubcomplex.cpp */; };
-		050F5E321B9BAB9C00C1F681 /* ndisc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D771B9BAB9C00C1F681 /* ndisc.cpp */; };
-		050F5E331B9BAB9C00C1F681 /* ndisctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D781B9BAB9C00C1F681 /* ndisctype.cpp */; };
+		050F5E321B9BAB9C00C1F681 /* disc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D771B9BAB9C00C1F681 /* disc.cpp */; };
+		050F5E331B9BAB9C00C1F681 /* disctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D781B9BAB9C00C1F681 /* disctype.cpp */; };
 		050F5E341B9BAB9C00C1F681 /* normalsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D791B9BAB9C00C1F681 /* normalsurface.cpp */; };
 		050F5E351B9BAB9C00C1F681 /* normalsurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7A1B9BAB9C00C1F681 /* normalsurfaces.cpp */; };
 		050F5E361B9BAB9C00C1F681 /* normalcoords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7B1B9BAB9C00C1F681 /* normalcoords.cpp */; };
 		050F5E371B9BAB9C00C1F681 /* normalflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7C1B9BAB9C00C1F681 /* normalflags.cpp */; };
-		050F5E381B9BAB9C00C1F681 /* nprism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7D1B9BAB9C00C1F681 /* nprism.cpp */; };
+		050F5E381B9BAB9C00C1F681 /* prism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7D1B9BAB9C00C1F681 /* prism.cpp */; };
 		050F5E391B9BAB9C00C1F681 /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7E1B9BAB9C00C1F681 /* surfacefilter.cpp */; };
 		050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */; };
 		050F5E3E1B9BAB9C00C1F681 /* surfacefiltertype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */; };
@@ -515,10 +515,10 @@
 		052FA023180600FB00FAE4DF /* enumfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DFD180600FB00FAE4DF /* enumfilter.cpp */; };
 		052FA024180600FB00FAE4DF /* filterregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9DFE180600FB00FAE4DF /* filterregistry.h */; };
 		052FA028180600FB00FAE4DF /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E02180600FB00FAE4DF /* links.cpp */; };
-		052FA029180600FB00FAE4DF /* ndisc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E03180600FB00FAE4DF /* ndisc.cpp */; };
-		052FA02A180600FB00FAE4DF /* ndisc.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E04180600FB00FAE4DF /* ndisc.h */; };
-		052FA02B180600FB00FAE4DF /* ndisctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E05180600FB00FAE4DF /* ndisctype.cpp */; };
-		052FA02C180600FB00FAE4DF /* ndisctype.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E06180600FB00FAE4DF /* ndisctype.h */; };
+		052FA029180600FB00FAE4DF /* disc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E03180600FB00FAE4DF /* disc.cpp */; };
+		052FA02A180600FB00FAE4DF /* disc.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E04180600FB00FAE4DF /* disc.h */; };
+		052FA02B180600FB00FAE4DF /* disctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E05180600FB00FAE4DF /* disctype.cpp */; };
+		052FA02C180600FB00FAE4DF /* disctype.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E06180600FB00FAE4DF /* disctype.h */; };
 		052FA02D180600FB00FAE4DF /* normalsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E07180600FB00FAE4DF /* normalsurface.cpp */; };
 		052FA02E180600FB00FAE4DF /* normalsurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E08180600FB00FAE4DF /* normalsurface.h */; };
 		052FA02F180600FB00FAE4DF /* normalsurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E09180600FB00FAE4DF /* normalsurfaces.cpp */; };
@@ -526,8 +526,8 @@
 		052FA031180600FB00FAE4DF /* normalcoords.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0B180600FB00FAE4DF /* normalcoords.h */; };
 		052FA032180600FB00FAE4DF /* normalflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0C180600FB00FAE4DF /* normalflags.h */; };
 		052FA033180600FB00FAE4DF /* normalspec-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0D180600FB00FAE4DF /* normalspec-impl.h */; };
-		052FA035180600FB00FAE4DF /* nprism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* nprism.cpp */; };
-		052FA036180600FB00FAE4DF /* nprism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E10180600FB00FAE4DF /* nprism.h */; };
+		052FA035180600FB00FAE4DF /* prism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* prism.cpp */; };
+		052FA036180600FB00FAE4DF /* prism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E10180600FB00FAE4DF /* prism.h */; };
 		052FA037180600FB00FAE4DF /* nsvectoranstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */; };
 		052FA038180600FB00FAE4DF /* nsvectoranstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E12180600FB00FAE4DF /* nsvectoranstandard.h */; };
 		052FA039180600FB00FAE4DF /* nsvectormirrored.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E13180600FB00FAE4DF /* nsvectormirrored.h */; };
@@ -739,11 +739,11 @@
 		052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DFC180600FB00FAE4DF /* enumerator.cpp */; };
 		052FA1D51806129B00FAE4DF /* enumfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DFD180600FB00FAE4DF /* enumfilter.cpp */; };
 		052FA1D81806129B00FAE4DF /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E02180600FB00FAE4DF /* links.cpp */; };
-		052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E03180600FB00FAE4DF /* ndisc.cpp */; };
-		052FA1DA1806129B00FAE4DF /* ndisctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E05180600FB00FAE4DF /* ndisctype.cpp */; };
+		052FA1D91806129B00FAE4DF /* disc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E03180600FB00FAE4DF /* disc.cpp */; };
+		052FA1DA1806129B00FAE4DF /* disctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E05180600FB00FAE4DF /* disctype.cpp */; };
 		052FA1DB1806129B00FAE4DF /* normalsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E07180600FB00FAE4DF /* normalsurface.cpp */; };
 		052FA1DC1806129B00FAE4DF /* normalsurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E09180600FB00FAE4DF /* normalsurfaces.cpp */; };
-		052FA1DD1806129B00FAE4DF /* nprism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* nprism.cpp */; };
+		052FA1DD1806129B00FAE4DF /* prism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* prism.cpp */; };
 		052FA1DE1806129B00FAE4DF /* nsvectoranstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */; };
 		052FA1DF1806129B00FAE4DF /* nsvectororiented.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E14180600FB00FAE4DF /* nsvectororiented.cpp */; };
 		052FA1E01806129B00FAE4DF /* nsvectororientedquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E16180600FB00FAE4DF /* nsvectororientedquad.cpp */; };
@@ -854,6 +854,9 @@
 		053CAB431DAB408C00A92F98 /* nsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB3D1DAB408C00A92F98 /* nsstandard.h */; };
 		053CAB451DAB699A00A92F98 /* nsmirrored.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB441DAB699A00A92F98 /* nsmirrored.h */; };
 		053CAB471DAC41CF00A92F98 /* nnormalsurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB461DAC41CF00A92F98 /* nnormalsurface.h */; };
+		053CAB4B1DAC479300A92F98 /* ndisc.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB481DAC479300A92F98 /* ndisc.h */; };
+		053CAB4C1DAC479300A92F98 /* ndisctype.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB491DAC479300A92F98 /* ndisctype.h */; };
+		053CAB4D1DAC479300A92F98 /* nprism.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB4A1DAC479300A92F98 /* nprism.h */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -2097,13 +2100,13 @@
 		050F5D731B9BAB9C00C1F681 /* ntxicore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntxicore.cpp; sourceTree = "<group>"; };
 		050F5D741B9BAB9C00C1F681 /* pysubcomplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysubcomplex.cpp; sourceTree = "<group>"; };
 		050F5D761B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		050F5D771B9BAB9C00C1F681 /* ndisc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ndisc.cpp; sourceTree = "<group>"; };
-		050F5D781B9BAB9C00C1F681 /* ndisctype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ndisctype.cpp; sourceTree = "<group>"; };
+		050F5D771B9BAB9C00C1F681 /* disc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = disc.cpp; sourceTree = "<group>"; };
+		050F5D781B9BAB9C00C1F681 /* disctype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = disctype.cpp; sourceTree = "<group>"; };
 		050F5D791B9BAB9C00C1F681 /* normalsurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalsurface.cpp; sourceTree = "<group>"; };
 		050F5D7A1B9BAB9C00C1F681 /* normalsurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalsurfaces.cpp; sourceTree = "<group>"; };
 		050F5D7B1B9BAB9C00C1F681 /* normalcoords.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalcoords.cpp; sourceTree = "<group>"; };
 		050F5D7C1B9BAB9C00C1F681 /* normalflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalflags.cpp; sourceTree = "<group>"; };
-		050F5D7D1B9BAB9C00C1F681 /* nprism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprism.cpp; sourceTree = "<group>"; };
+		050F5D7D1B9BAB9C00C1F681 /* prism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = prism.cpp; sourceTree = "<group>"; };
 		050F5D7E1B9BAB9C00C1F681 /* surfacefilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefilter.cpp; sourceTree = "<group>"; };
 		050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysurfaces.cpp; sourceTree = "<group>"; };
 		050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefiltertype.cpp; sourceTree = "<group>"; };
@@ -2548,10 +2551,10 @@
 		052F9DFD180600FB00FAE4DF /* enumfilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enumfilter.cpp; sourceTree = "<group>"; };
 		052F9DFE180600FB00FAE4DF /* filterregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filterregistry.h; sourceTree = "<group>"; };
 		052F9E02180600FB00FAE4DF /* links.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links.cpp; sourceTree = "<group>"; };
-		052F9E03180600FB00FAE4DF /* ndisc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ndisc.cpp; sourceTree = "<group>"; };
-		052F9E04180600FB00FAE4DF /* ndisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisc.h; sourceTree = "<group>"; };
-		052F9E05180600FB00FAE4DF /* ndisctype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ndisctype.cpp; sourceTree = "<group>"; };
-		052F9E06180600FB00FAE4DF /* ndisctype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisctype.h; sourceTree = "<group>"; };
+		052F9E03180600FB00FAE4DF /* disc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = disc.cpp; sourceTree = "<group>"; };
+		052F9E04180600FB00FAE4DF /* disc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disc.h; sourceTree = "<group>"; };
+		052F9E05180600FB00FAE4DF /* disctype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = disctype.cpp; sourceTree = "<group>"; };
+		052F9E06180600FB00FAE4DF /* disctype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disctype.h; sourceTree = "<group>"; };
 		052F9E07180600FB00FAE4DF /* normalsurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalsurface.cpp; sourceTree = "<group>"; };
 		052F9E08180600FB00FAE4DF /* normalsurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalsurface.h; sourceTree = "<group>"; };
 		052F9E09180600FB00FAE4DF /* normalsurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalsurfaces.cpp; sourceTree = "<group>"; };
@@ -2559,8 +2562,8 @@
 		052F9E0B180600FB00FAE4DF /* normalcoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalcoords.h; sourceTree = "<group>"; };
 		052F9E0C180600FB00FAE4DF /* normalflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalflags.h; sourceTree = "<group>"; };
 		052F9E0D180600FB00FAE4DF /* normalspec-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "normalspec-impl.h"; sourceTree = "<group>"; };
-		052F9E0F180600FB00FAE4DF /* nprism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprism.cpp; sourceTree = "<group>"; };
-		052F9E10180600FB00FAE4DF /* nprism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprism.h; sourceTree = "<group>"; };
+		052F9E0F180600FB00FAE4DF /* prism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = prism.cpp; sourceTree = "<group>"; };
+		052F9E10180600FB00FAE4DF /* prism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prism.h; sourceTree = "<group>"; };
 		052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectoranstandard.cpp; sourceTree = "<group>"; };
 		052F9E12180600FB00FAE4DF /* nsvectoranstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectoranstandard.h; sourceTree = "<group>"; };
 		052F9E13180600FB00FAE4DF /* nsvectormirrored.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectormirrored.h; sourceTree = "<group>"; };
@@ -2731,6 +2734,9 @@
 		053CAB3D1DAB408C00A92F98 /* nsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsstandard.h; sourceTree = "<group>"; };
 		053CAB441DAB699A00A92F98 /* nsmirrored.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsmirrored.h; sourceTree = "<group>"; };
 		053CAB461DAC41CF00A92F98 /* nnormalsurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurface.h; sourceTree = "<group>"; };
+		053CAB481DAC479300A92F98 /* ndisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisc.h; sourceTree = "<group>"; };
+		053CAB491DAC479300A92F98 /* ndisctype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisctype.h; sourceTree = "<group>"; };
+		053CAB4A1DAC479300A92F98 /* nprism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprism.h; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -4023,13 +4029,13 @@
 			isa = PBXGroup;
 			children = (
 				050F5D761B9BAB9C00C1F681 /* CMakeLists.txt */,
-				050F5D771B9BAB9C00C1F681 /* ndisc.cpp */,
-				050F5D781B9BAB9C00C1F681 /* ndisctype.cpp */,
+				050F5D771B9BAB9C00C1F681 /* disc.cpp */,
+				050F5D781B9BAB9C00C1F681 /* disctype.cpp */,
 				050F5D7B1B9BAB9C00C1F681 /* normalcoords.cpp */,
 				050F5D7C1B9BAB9C00C1F681 /* normalflags.cpp */,
 				050F5D791B9BAB9C00C1F681 /* normalsurface.cpp */,
 				050F5D7A1B9BAB9C00C1F681 /* normalsurfaces.cpp */,
-				050F5D7D1B9BAB9C00C1F681 /* nprism.cpp */,
+				050F5D7D1B9BAB9C00C1F681 /* prism.cpp */,
 				050F5D7E1B9BAB9C00C1F681 /* surfacefilter.cpp */,
 				050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */,
 				050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */,
@@ -4795,15 +4801,17 @@
 				052F9DF9180600FB00FAE4DF /* cut-triprism.fig */,
 				052F9DFA180600FB00FAE4DF /* cut-trunchalftet.fig */,
 				052F9DFB180600FB00FAE4DF /* cut-trunctet.fig */,
+				052F9E03180600FB00FAE4DF /* disc.cpp */,
+				052F9E04180600FB00FAE4DF /* disc.h */,
+				052F9E05180600FB00FAE4DF /* disctype.cpp */,
+				052F9E06180600FB00FAE4DF /* disctype.h */,
 				052F9DFC180600FB00FAE4DF /* enumerator.cpp */,
 				052F9DFD180600FB00FAE4DF /* enumfilter.cpp */,
 				055DDCED1808575300C973FB /* filterregistry-impl.h */,
 				052F9DFE180600FB00FAE4DF /* filterregistry.h */,
 				052F9E02180600FB00FAE4DF /* links.cpp */,
-				052F9E03180600FB00FAE4DF /* ndisc.cpp */,
-				052F9E04180600FB00FAE4DF /* ndisc.h */,
-				052F9E05180600FB00FAE4DF /* ndisctype.cpp */,
-				052F9E06180600FB00FAE4DF /* ndisctype.h */,
+				053CAB481DAC479300A92F98 /* ndisc.h */,
+				053CAB491DAC479300A92F98 /* ndisctype.h */,
 				053CAB461DAC41CF00A92F98 /* nnormalsurface.h */,
 				05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */,
 				052F9E0B180600FB00FAE4DF /* normalcoords.h */,
@@ -4813,8 +4821,7 @@
 				052F9E08180600FB00FAE4DF /* normalsurface.h */,
 				052F9E09180600FB00FAE4DF /* normalsurfaces.cpp */,
 				052F9E0A180600FB00FAE4DF /* normalsurfaces.h */,
-				052F9E0F180600FB00FAE4DF /* nprism.cpp */,
-				052F9E10180600FB00FAE4DF /* nprism.h */,
+				053CAB4A1DAC479300A92F98 /* nprism.h */,
 				053CAB381DAB408C00A92F98 /* nsanstandard.h */,
 				053CAB441DAB699A00A92F98 /* nsmirrored.h */,
 				053CAB391DAB408C00A92F98 /* nsoriented.h */,
@@ -4837,6 +4844,8 @@
 				052F9E1C180600FB00FAE4DF /* nsvectorstandard.cpp */,
 				052F9E1D180600FB00FAE4DF /* nsvectorstandard.h */,
 				052F9E27180600FB00FAE4DF /* orientable.cpp */,
+				052F9E0F180600FB00FAE4DF /* prism.cpp */,
+				052F9E10180600FB00FAE4DF /* prism.h */,
 				052F9E28180600FB00FAE4DF /* quadtostd.cpp */,
 				052F9E2A180600FB00FAE4DF /* sfcombination.h */,
 				052F9E2C180600FB00FAE4DF /* sfproperties.h */,
@@ -6062,6 +6071,7 @@
 				052F9F11180600FB00FAE4DF /* orb.h in Headers */,
 				0591E7DA1C4F750200793A9C /* hscoordregistry.h in Headers */,
 				050C646A1DA1019B00C9420F /* anglestructure.h in Headers */,
+				053CAB4B1DAC479300A92F98 /* ndisc.h in Headers */,
 				052FA03F180600FB00FAE4DF /* nsvectorquad.h in Headers */,
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
 				05A73C9019B2EF130099C617 /* xmlsnappeareader.h in Headers */,
@@ -6194,6 +6204,7 @@
 				0591E7F41C4F75C300793A9C /* dim4gluingpermsearcher.h in Headers */,
 				052F9EB5180600FB00FAE4DF /* dim2triangle.h in Headers */,
 				050C64CD1DA3311100C9420F /* ntreelp-impl.h in Headers */,
+				053CAB4D1DAC479300A92F98 /* nprism.h in Headers */,
 				053CAB231DA6F69D00A92F98 /* nperm.h in Headers */,
 				050C64D41DA335DE00C9420F /* ntreetraversal.h in Headers */,
 				052F9FED180600FB00FAE4DF /* nblockedsfspair.h in Headers */,
@@ -6234,7 +6245,7 @@
 				0591E7A21C4F74C400793A9C /* dim4component.h in Headers */,
 				05431F241C40F260009BC072 /* facetpairing-impl.h in Headers */,
 				0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */,
-				052FA02A180600FB00FAE4DF /* ndisc.h in Headers */,
+				052FA02A180600FB00FAE4DF /* disc.h in Headers */,
 				05431F9E1C40F537009BC072 /* testgeneric.h in Headers */,
 				05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */,
 				053CAB201DA63C8900A92F98 /* nmatrix.h in Headers */,
@@ -6337,10 +6348,10 @@
 				052FA00B180600FB00FAE4DF /* nsatblockstarter.h in Headers */,
 				052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */,
 				053CAB1B1DA4AEC500A92F98 /* npolynomial.h in Headers */,
-				052FA02C180600FB00FAE4DF /* ndisctype.h in Headers */,
+				052FA02C180600FB00FAE4DF /* disctype.h in Headers */,
 				05A73CAC19B2EFF90099C617 /* xmltreeresolver.h in Headers */,
 				05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */,
-				052FA036180600FB00FAE4DF /* nprism.h in Headers */,
+				052FA036180600FB00FAE4DF /* prism.h in Headers */,
 				052FA015180600FB00FAE4DF /* nsnappedtwosphere.h in Headers */,
 				052F9EAA180600FB00FAE4DF /* ngluingpermsearcher.h in Headers */,
 				052F9EAF180600FB00FAE4DF /* dim2edge.h in Headers */,
@@ -6366,6 +6377,7 @@
 				05431F121C40F257009BC072 /* face.h in Headers */,
 				05431F281C40F260009BC072 /* simplex.h in Headers */,
 				0591E7A71C4F74C400793A9C /* dim4facetpairing.h in Headers */,
+				053CAB4C1DAC479300A92F98 /* ndisctype.h in Headers */,
 				053CAB451DAB699A00A92F98 /* nsmirrored.h in Headers */,
 				05431F351C40F363009BC072 /* nfacepairing.h in Headers */,
 				052FA089180600FB00FAE4DF /* intutils.h in Headers */,
@@ -6895,7 +6907,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				057EE4C91C600A3600C4D155 /* triangulation6.cpp in Sources */,
-				050F5E321B9BAB9C00C1F681 /* ndisc.cpp in Sources */,
+				050F5E321B9BAB9C00C1F681 /* disc.cpp in Sources */,
 				050F5DE81B9BAB9C00C1F681 /* pyfile.cpp in Sources */,
 				05CAFB511C4CEA160001C253 /* face13.cpp in Sources */,
 				050F5E0F1B9BAB9C00C1F681 /* pyprogress.cpp in Sources */,
@@ -6932,7 +6944,7 @@
 				0591E8281C4F764F00793A9C /* normalhypersurface.cpp in Sources */,
 				050F5DE41B9BAB9C00C1F681 /* pydim2.cpp in Sources */,
 				050F5E241B9BAB9C00C1F681 /* nplugtrisolidtorus.cpp in Sources */,
-				050F5E331B9BAB9C00C1F681 /* ndisctype.cpp in Sources */,
+				050F5E331B9BAB9C00C1F681 /* disctype.cpp in Sources */,
 				050F5DF71B9BAB9C00C1F681 /* integer.cpp in Sources */,
 				050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */,
 				050F5E311B9BAB9C00C1F681 /* pysubcomplex.cpp in Sources */,
@@ -6960,7 +6972,7 @@
 				050F5E4D1B9BAB9C00C1F681 /* pytriangulation.cpp in Sources */,
 				050F5E0E1B9BAB9C00C1F681 /* progresstracker.cpp in Sources */,
 				057EE4E81C600A3600C4D155 /* facetpairing13.cpp in Sources */,
-				050F5E381B9BAB9C00C1F681 /* nprism.cpp in Sources */,
+				050F5E381B9BAB9C00C1F681 /* prism.cpp in Sources */,
 				050F5E4C1B9BAB9C00C1F681 /* nvertex.cpp in Sources */,
 				05431FAA1C40F5A2009BC072 /* perm2.cpp in Sources */,
 				0591E81C1C4F763B00793A9C /* dim4vertex.cpp in Sources */,
@@ -7259,7 +7271,7 @@
 				05D1173F19EE0197003BEC55 /* rational.cpp in Sources */,
 				052FA23D180612DD00FAE4DF /* volume.c in Sources */,
 				052FA19A1806129B00FAE4DF /* approx.cpp in Sources */,
-				052FA1DD1806129B00FAE4DF /* nprism.cpp in Sources */,
+				052FA1DD1806129B00FAE4DF /* prism.cpp in Sources */,
 				052FA1B01806129B00FAE4DF /* snappeatriangulation.cpp in Sources */,
 				052FA1B31806129B00FAE4DF /* nsigisomorphism.cpp in Sources */,
 				052FA1961806129B00FAE4DF /* nsimplesurfacebundle.cpp in Sources */,
@@ -7309,7 +7321,7 @@
 				0591E7BF1C4F74E100793A9C /* dim4triangle.cpp in Sources */,
 				052FA1621806129B00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
 				05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */,
-				052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */,
+				052FA1D91806129B00FAE4DF /* disc.cpp in Sources */,
 				052FA1A91806129B00FAE4DF /* pdf.cpp in Sources */,
 				0591E7BC1C4F74E100793A9C /* dim4edge.cpp in Sources */,
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,
@@ -7382,7 +7394,7 @@
 				052FA1CD1806129B00FAE4DF /* nspiralsolidtorus.cpp in Sources */,
 				052FA230180612DD00FAE4DF /* positioned_tet.c in Sources */,
 				052FA1781806129B00FAE4DF /* nxmldim2trireader.cpp in Sources */,
-				052FA1DA1806129B00FAE4DF /* ndisctype.cpp in Sources */,
+				052FA1DA1806129B00FAE4DF /* disctype.cpp in Sources */,
 				050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */,
 				0591E7C61C4F74E100793A9C /* simplify.cpp in Sources */,
 				052FA212180612DD00FAE4DF /* canonize_part_1.c in Sources */,
@@ -7874,7 +7886,7 @@
 				052FA062180600FB00FAE4DF /* nexampletriangulation.cpp in Sources */,
 				052F9F5F180600FB00FAE4DF /* xmlpacketreader.cpp in Sources */,
 				052FA020180600FB00FAE4DF /* components.cpp in Sources */,
-				052FA035180600FB00FAE4DF /* nprism.cpp in Sources */,
+				052FA035180600FB00FAE4DF /* prism.cpp in Sources */,
 				052FA060180600FB00FAE4DF /* nedge.cpp in Sources */,
 				05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */,
 				052F9F93180600FB00FAE4DF /* peripheral_curves.c in Sources */,
@@ -7987,7 +7999,7 @@
 				052F9EF6180600FB00FAE4DF /* treelp.cpp in Sources */,
 				052FA018180600FB00FAE4DF /* nstandardtri.cpp in Sources */,
 				052F9FA7180600FB00FAE4DF /* unix_file_io.c in Sources */,
-				052FA029180600FB00FAE4DF /* ndisc.cpp in Sources */,
+				052FA029180600FB00FAE4DF /* disc.cpp in Sources */,
 				052FA081180600FB00FAE4DF /* turaevviro.cpp in Sources */,
 				0591E7A01C4F74C400793A9C /* dim4boundarycomponent.cpp in Sources */,
 				052F9F98180600FB00FAE4DF /* simplify_triangulation.c in Sources */,
@@ -8039,7 +8051,7 @@
 				052F9F91180600FB00FAE4DF /* o31_matrices.c in Sources */,
 				0591E7AA1C4F74C400793A9C /* dim4tetrahedron.cpp in Sources */,
 				052FA04E180600FB00FAE4DF /* quadtostd.cpp in Sources */,
-				052FA02B180600FB00FAE4DF /* ndisctype.cpp in Sources */,
+				052FA02B180600FB00FAE4DF /* disctype.cpp in Sources */,
 				052FA004180600FB00FAE4DF /* nplugtrisolidtorus.cpp in Sources */,
 				052F9FEC180600FB00FAE4DF /* nblockedsfspair.cpp in Sources */,
 			);

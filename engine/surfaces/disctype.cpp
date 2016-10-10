@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,22 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
-#include "surfaces/nprism.h"
-#include "surfaces/normalsurface.h"
-#include "../helpers.h"
+#include "surfaces/disctype.h"
 
-using namespace boost::python;
-using regina::NPrismSpec;
+namespace regina {
 
-void addNPrism() {
-    class_<NPrismSpec>("NPrismSpec")
-        .def(init<unsigned long, int>())
-        .def(init<const NPrismSpec&>())
-        .def_readwrite("tetIndex", &NPrismSpec::tetIndex)
-        .def_readwrite("edge", &NPrismSpec::edge)
-        .def(self_ns::str(self))
-        .def(regina::python::add_eq_operators())
-    ;
-}
+const NDiscType NDiscType::NONE;
+
+} // namespace regina
 

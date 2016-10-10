@@ -5,20 +5,20 @@ SET ( FILES
   components
   crushandcut
   csv
+  disc
+  disctype
   enumerator
   enumfilter
   links
-  ndisc
-  ndisctype
   normalsurface
   normalsurfaces
-  nprism
   nsvectoranstandard
   nsvectororiented
   nsvectororientedquad
   nsvectorquad
   nsvectorquadoct
   nsvectorstandard
+  prism
   surfacefilter
   xmlfilterreader
   xmlsurfacereader
@@ -39,6 +39,8 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     coordregistry.h
     coordregistry-impl.h
+    disc.h
+    disctype.h
     filterregistry.h
     filterregistry-impl.h
     ndisc.h
@@ -66,6 +68,7 @@ if (${REGINA_INSTALL_DEV})
     nsvectorquad.h
     nsvectorquadoct.h
     nsvectorstandard.h
+    prism.h
     sfcombination.h
     sfproperties.h
     surfacefilter.h

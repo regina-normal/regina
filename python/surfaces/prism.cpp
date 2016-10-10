@@ -31,67 +31,23 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "surfaces/ndisc.h"
+#include "surfaces/prism.h"
 #include "surfaces/normalsurface.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NDiscSpec;
-using regina::NDiscSetTet;
-using regina::NDiscSetSurface;
-using regina::NDiscSpecIterator;
+using regina::PrismSpec;
 
-namespace {
-    void inc_operator(NDiscSpecIterator& s) {
-        s++;
-    }
-    const NDiscSpec& deref_operator(NDiscSpecIterator& s) {
-        return *s;
-    }
-}
-
-void addNDisc() {
-    class_<NDiscSpec>("NDiscSpec")
-        .def(init<unsigned long, int, unsigned long>())
-        .def(init<const NDiscSpec&>())
-        .def_readwrite("tetIndex", &NDiscSpec::tetIndex)
-        .def_readwrite("type", &NDiscSpec::type)
-        .def_readwrite("number", &NDiscSpec::number)
+void addPrism() {
+    class_<PrismSpec>("PrismSpec")
+        .def(init<unsigned long, int>())
+        .def(init<const PrismSpec&>())
+        .def_readwrite("tetIndex", &PrismSpec::tetIndex)
+        .def_readwrite("edge", &PrismSpec::edge)
         .def(self_ns::str(self))
         .def(regina::python::add_eq_operators())
     ;
 
-    def("numberDiscsAwayFromVertex", regina::numberDiscsAwayFromVertex);
-    def("discOrientationFollowsEdge", regina::discOrientationFollowsEdge);
-
-    class_<NDiscSetTet, std::auto_ptr<NDiscSetTet>,
-            boost::noncopyable>("NDiscSetTet",
-            init<const regina::NormalSurface&, unsigned long>())
-        .def("nDiscs", &NDiscSetTet::nDiscs)
-        .def("arcFromDisc", &NDiscSetTet::arcFromDisc)
-        .def("discFromArc", &NDiscSetTet::discFromArc)
-        .def(regina::python::add_eq_operators())
-    ;
-
-    class_<NDiscSetSurface, std::auto_ptr<NDiscSetSurface>,
-            boost::noncopyable>("NDiscSetSurface",
-            init<const regina::NormalSurface&>())
-        .def("nTets", &NDiscSetSurface::nTets)
-        .def("nDiscs", &NDiscSetSurface::nDiscs)
-        .def("tetDiscs", &NDiscSetSurface::tetDiscs,
-            return_internal_reference<>())
-        .def("adjacentDisc", &NDiscSetSurface::adjacentDisc,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-    ;
-
-    class_<NDiscSpecIterator, boost::noncopyable>("NDiscSpecIterator")
-        .def(init<const NDiscSetSurface&>())
-        .def("init", &NDiscSpecIterator::init)
-        .def("inc", inc_operator)
-        .def("deref", deref_operator, return_value_policy<return_by_value>())
-        .def("done", &NDiscSpecIterator::done)
-        .def(regina::python::add_eq_operators())
-    ;
+    scope().attr("NPrismSpec") = scope().attr("PrismSpec");
 }
 

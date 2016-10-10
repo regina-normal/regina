@@ -1238,7 +1238,7 @@ NPolynomial : typedef ->  Polynomial
 
 NPrimes : typedef ->  Primes
 
-NPrismSpec : class
+PrismSpec : class
 Equality type : BY_VALUE
 
 NProgressTracker : typedef ->  ProgressTracker

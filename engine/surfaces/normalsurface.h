@@ -45,7 +45,7 @@
 #include "output.h"
 #include "maths/perm.h"
 #include "maths/ray.h"
-#include "surfaces/ndisctype.h"
+#include "surfaces/disctype.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/boolset.h"
 #include "utilities/property.h"

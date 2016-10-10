@@ -34,7 +34,7 @@
 #include <thread>
 #include "enumerate/treetraversal.h"
 #include "surfaces/normalsurface.h"
-#include "surfaces/nprism.h"
+#include "surfaces/prism.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
