@@ -111,16 +111,22 @@ struct HyperInfo;
  *   corresponding HyperCoords constant;
  * - a typedef \a Info, which refers to the corresponding specialisation 
  *   of the HyperInfo<> tempate;
+ * - a copy constructor that takes a vector of the same subclass;
  * - declarations and implementations of the virtual function
  *   NormalHypersurfaceVector::clone().
  *
  * @param class_ the name of this subclass of NormalHypersurfaceVector.
  * @param id the corresponding NNormalCoords constant.
+ * @param superclass the vector class from which \a class_ is derived.
+ * This is typically NormalHypersurfaceVector, though in some cases
+ * (e.g., prism coordinates) it may be different.
  */
-#define REGINA_NORMAL_HYPERSURFACE_FLAVOUR(class_, id) \
+#define REGINA_NORMAL_HYPERSURFACE_FLAVOUR(class_, id, superclass) \
     public: \
         typedef HyperInfo<id> Info; \
         static constexpr const HyperCoords coordsID = id; \
+        inline class_(const class_& cloneMe) : \
+                superclass(cloneMe.coords()) {} \
         inline virtual NormalHypersurfaceVector* clone() const { \
             return new class_(*this); \
         }
@@ -180,7 +186,7 @@ struct HyperInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NormalHypersurfaceVector {
+class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
     protected:
         Ray coords_;
             /** The raw vector of normal coordinates. */

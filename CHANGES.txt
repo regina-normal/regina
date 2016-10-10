@@ -66,6 +66,9 @@ Version 5.1  [ (under development) ]
               of these functions that were inherited from Ray).
             - Function rawVector() now returns a Ray&, not a pointer to a
               NNormal{Surface,Hypersurface}Vector.
+            - Now derives from boost::noncopyable, so the default copy
+              constructor is gone.  Instead, individual vector subclasses now
+              have a copy constructor that takes a member of that same subclass.
         Class NormalHypersurfaceVectorMirrored:
             - Removed, since this is never used (at present).
         Class NormalSurfaceVectorMirrored:
@@ -73,6 +76,7 @@ Version 5.1  [ (under development) ]
               which subclasses must also implement.
             - Now behaves correctly when the vector is changed, even after
               the mirror has been created.
+            - Removed the copy constructor.
         Class Primes:
             - Now works with type Integer, not LargeInteger.
         Class SurfaceSubset:
@@ -93,6 +97,8 @@ Version 5.1  [ (under development) ]
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old
               (and now removed) array vertexSplitDefn[][].
+        Macro REGINA_NORMAL_SURFACE_FLAVOUR, REGINA_NORMAL_HYPERSURFACE_FLAVOUR:
+            - Now takes a third argument, representing the parent vector class.
     PYTHON:
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The

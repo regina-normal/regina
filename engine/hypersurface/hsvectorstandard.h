@@ -78,7 +78,8 @@ struct HyperInfo<HS_STANDARD> {
  */
 class REGINA_API HSVectorStandard :
         public NormalHypersurfaceVector {
-    REGINA_NORMAL_HYPERSURFACE_FLAVOUR(HSVectorStandard, HS_STANDARD)
+    REGINA_NORMAL_HYPERSURFACE_FLAVOUR(HSVectorStandard, HS_STANDARD,
+        NormalHypersurfaceVector)
 
     public:
         /**

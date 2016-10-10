@@ -94,13 +94,6 @@ class REGINA_API NormalSurfaceVectorMirrored : public NormalSurfaceVector {
          */
         NormalSurfaceVectorMirrored(const Vector<LargeInteger>& cloneMe);
         /**
-         * Creates a new vector that is a clone of the given vector.
-         *
-         * @param cloneMe the vector to clone.
-         */
-        NormalSurfaceVectorMirrored(const NormalSurfaceVectorMirrored&
-            cloneMe);
-        /**
          * Destroys this vector and its mirror if appropriate.
          */
         virtual ~NormalSurfaceVectorMirrored();
@@ -193,10 +186,6 @@ inline NormalSurfaceVectorMirrored::NormalSurfaceVectorMirrored(
 }
 inline NormalSurfaceVectorMirrored::NormalSurfaceVectorMirrored(
         const Vector<LargeInteger>& cloneMe) :
-        NormalSurfaceVector(cloneMe), mirror(0) {
-}
-inline NormalSurfaceVectorMirrored::NormalSurfaceVectorMirrored(
-        const NormalSurfaceVectorMirrored& cloneMe) :
         NormalSurfaceVector(cloneMe), mirror(0) {
 }
 inline NormalSurfaceVectorMirrored::~NormalSurfaceVectorMirrored() {

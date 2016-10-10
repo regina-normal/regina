@@ -86,7 +86,8 @@ struct NormalInfo<NS_ORIENTED> {
  * \ifacespython Not present.
  */
 class REGINA_API NSVectorOriented : public NormalSurfaceVector {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOriented, NS_ORIENTED)
+    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOriented, NS_ORIENTED,
+        NormalSurfaceVector)
 
     public:
         /**

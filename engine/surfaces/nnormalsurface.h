@@ -260,6 +260,7 @@ struct NormalInfo;
  *   NormalCoords constant;
  * - a typedef \a Info, which refers to the corresponding specialisation
  *   of the NormalInfo<> template;
+ * - a copy constructor that takes a vector of the same subclass;
  * - declarations and implementations of the virtual functions
  *   NormalSurfaceVector::clone(),
  *   NormalSurfaceVector::allowsAlmostNormal(),
@@ -268,11 +269,16 @@ struct NormalInfo;
  *
  * @param class_ the name of this subclass of NormalSurfaceVector.
  * @param id the corresponding NNormalCoords constant.
+ * @param superclass the vector class from which \a class_ is derived.
+ * This is typically NormalSurfaceVector, though in some cases it may be
+ * different (e.g., NormalSurfaceVectorMirrored).
  */
-#define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
+#define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id, superclass) \
     public: \
         typedef NormalInfo<id> Info; \
         static constexpr const NormalCoords coordsID = id; \
+        inline class_(const class_& cloneMe) : \
+                superclass(cloneMe.coords()) {} \
         inline virtual NormalSurfaceVector* clone() const { \
             return new class_(*this); \
         } \
@@ -348,7 +354,7 @@ struct NormalInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NormalSurfaceVector {
+class REGINA_API NormalSurfaceVector : public boost::noncopyable {
     protected:
         Ray coords_;
             /** The raw vector of normal coordinates. */
