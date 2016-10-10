@@ -66,17 +66,17 @@ namespace regina {
  * Subclasses must however implement two variants of makeMirror():
  *
  * - a static function
- *   NNormalSurfaceVector* makeMirror(const Ray&, const NTriangulation*),
+ *   NormalSurfaceVector* makeMirror(const Ray&, const NTriangulation*),
  *   which builds the mirror vector from the native vector;
  * - a virtual function
- *   NNormalSurfaceVector* makeMirror(const NTriangulation*) const,
+ *   NormalSurfaceVector* makeMirror(const NTriangulation*) const,
  *   which simply calls the static function described above.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
+class REGINA_API NormalSurfaceVectorMirrored : public NormalSurfaceVector {
     private:
-        NNormalSurfaceVector* mirror;
+        NormalSurfaceVector* mirror;
             /**< The mirror vector. */
 
     public:
@@ -86,24 +86,24 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVectorMirrored(size_t length);
+        NormalSurfaceVectorMirrored(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorMirrored(const Vector<LargeInteger>& cloneMe);
+        NormalSurfaceVectorMirrored(const Vector<LargeInteger>& cloneMe);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorMirrored(const NNormalSurfaceVectorMirrored&
+        NormalSurfaceVectorMirrored(const NormalSurfaceVectorMirrored&
             cloneMe);
         /**
          * Destroys this vector and its mirror if appropriate.
          */
-        virtual ~NNormalSurfaceVectorMirrored();
+        virtual ~NormalSurfaceVectorMirrored();
 
         /**
          * Creates a new mirror vector corresponding to this vector.
@@ -120,14 +120,14 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          * @return a newly created vector that describes the same normal
          * surface in a "standard" coordinate system, as described above.
          */
-        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
+        virtual NormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const = 0;
 
 #ifdef __DOXYGEN
         /**
          * Creates a new mirror vector corresponding to the given vector.
          * This function should be implemented by each subclass of
-         * NNormalSurfaceVectorMirrored.
+         * NormalSurfaceVectorMirrored.
          *
          * This function must return a newly created vector that describes
          * the given normal surface in a different coordinate system:
@@ -147,13 +147,13 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          * @return a newly created vector that describes the same normal
          * surface in a "standard" coordinate system, as described above.
          */
-        static NNormalSurfaceVector* makeMirror(const Ray& original,
+        static NormalSurfaceVector* makeMirror(const Ray& original,
             const NTriangulation* triang);
 #endif
 
         virtual void setElement(size_t index, const LargeInteger& value)
             override;
-        virtual void operator += (const NNormalSurfaceVector& other) override;
+        virtual void operator += (const NormalSurfaceVector& other) override;
         virtual void scaleDown() override;
 
         virtual LargeInteger triangles(size_t tetIndex,
@@ -174,93 +174,103 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
             int triVertex, const NTriangulation* triang) const override;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalSurfaceVectorMirrored has now been renamed to
+ * NormalSurfaceVectorMirrored.
+ */
+REGINA_DEPRECATED typedef NormalSurfaceVectorMirrored
+    NNormalSurfaceVectorMirrored;
+
 /*@}*/
 
-// Inline functions for NNormalSurfaceVectorMirrored
+// Inline functions for NormalSurfaceVectorMirrored
 
-inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
-        size_t length) : NNormalSurfaceVector(length), mirror(0) {
+inline NormalSurfaceVectorMirrored::NormalSurfaceVectorMirrored(
+        size_t length) : NormalSurfaceVector(length), mirror(0) {
 }
-inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
+inline NormalSurfaceVectorMirrored::NormalSurfaceVectorMirrored(
         const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVector(cloneMe), mirror(0) {
+        NormalSurfaceVector(cloneMe), mirror(0) {
 }
-inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
-        const NNormalSurfaceVectorMirrored& cloneMe) :
-        NNormalSurfaceVector(cloneMe), mirror(0) {
+inline NormalSurfaceVectorMirrored::NormalSurfaceVectorMirrored(
+        const NormalSurfaceVectorMirrored& cloneMe) :
+        NormalSurfaceVector(cloneMe), mirror(0) {
 }
-inline NNormalSurfaceVectorMirrored::~NNormalSurfaceVectorMirrored() {
+inline NormalSurfaceVectorMirrored::~NormalSurfaceVectorMirrored() {
     delete mirror;
 }
 
-inline void NNormalSurfaceVectorMirrored::setElement(size_t index,
+inline void NormalSurfaceVectorMirrored::setElement(size_t index,
         const LargeInteger& value) {
     coords_.setElement(index, value);
     delete mirror;
 }
 
-inline void NNormalSurfaceVectorMirrored::operator += (
-        const NNormalSurfaceVector& other) {
+inline void NormalSurfaceVectorMirrored::operator += (
+        const NormalSurfaceVector& other) {
     coords_ += other.coords();
     delete mirror;
 }
 
-inline void NNormalSurfaceVectorMirrored::scaleDown() {
+inline void NormalSurfaceVectorMirrored::scaleDown() {
     coords_.scaleDown();
     delete mirror;
 }
 
-inline LargeInteger NNormalSurfaceVectorMirrored::triangles(
+inline LargeInteger NormalSurfaceVectorMirrored::triangles(
         size_t tetIndex, int vertex, const NTriangulation* triang) const {
     if (! mirror)
-        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+        const_cast<NormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->triangles(tetIndex, vertex, triang);
 }
-inline LargeInteger NNormalSurfaceVectorMirrored::orientedTriangles(
+inline LargeInteger NormalSurfaceVectorMirrored::orientedTriangles(
         size_t tetIndex, int vertex, const NTriangulation* triang,
         bool orientation) const {
     if (! mirror)
-        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+        const_cast<NormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->orientedTriangles(tetIndex, vertex, triang,
         orientation);
 }
-inline LargeInteger NNormalSurfaceVectorMirrored::quads(
+inline LargeInteger NormalSurfaceVectorMirrored::quads(
         size_t tetIndex, int quadType, const NTriangulation* triang) const {
     if (! mirror)
-        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+        const_cast<NormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->quads(tetIndex, quadType, triang);
 }
-inline LargeInteger NNormalSurfaceVectorMirrored::orientedQuads(
+inline LargeInteger NormalSurfaceVectorMirrored::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation* triang,
         bool orientation) const {
     if (! mirror)
-        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+        const_cast<NormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->orientedQuads(tetIndex, quadType, triang,
         orientation);
 }
-inline LargeInteger NNormalSurfaceVectorMirrored::octs(
+inline LargeInteger NormalSurfaceVectorMirrored::octs(
         size_t tetIndex, int octType, const NTriangulation* triang) const {
     if (! mirror)
-        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+        const_cast<NormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->octs(tetIndex, octType, triang);
 }
-inline LargeInteger NNormalSurfaceVectorMirrored::edgeWeight(
+inline LargeInteger NormalSurfaceVectorMirrored::edgeWeight(
         size_t edgeIndex, const NTriangulation* triang) const {
     if (! mirror)
-        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+        const_cast<NormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->edgeWeight(edgeIndex, triang);
 }
-inline LargeInteger NNormalSurfaceVectorMirrored::arcs(
+inline LargeInteger NormalSurfaceVectorMirrored::arcs(
         size_t triIndex, int triVertex,
         const NTriangulation* triang) const {
     if (! mirror)
-        const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
+        const_cast<NormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->arcs(triIndex, triVertex, triang);
 }

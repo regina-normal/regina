@@ -94,7 +94,7 @@ const Perm<4> __octDiscArcs[24] = {
 
 NNormalSurface* NNormalSurface::clone() const {
     NNormalSurface* ans = new NNormalSurface(triangulation_,
-        dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
+        dynamic_cast<NormalSurfaceVector*>(vector->clone()));
 
     ans->eulerChar_ = eulerChar_;
     ans->orientable = orientable;
@@ -108,7 +108,7 @@ NNormalSurface* NNormalSurface::clone() const {
 
 NNormalSurface* NNormalSurface::doubleSurface() const {
     NNormalSurface* ans = new NNormalSurface(triangulation_,
-        dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
+        dynamic_cast<NormalSurfaceVector*>(vector->clone()));
 
     *(ans->vector) += *(ans->vector);
 
@@ -130,7 +130,7 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
 }
 
 NNormalSurface::NNormalSurface(const NTriangulation* triang,
-        NNormalSurfaceVector* newVector) :
+        NormalSurfaceVector* newVector) :
         vector(newVector),
         triangulation_(triang) {
 }
@@ -156,7 +156,7 @@ void NNormalSurface::writeTextShort(std::ostream& out) const {
     }
 }
 
-bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
+bool NormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
         const {
     size_t nTets = triang->size();
     int oct;
@@ -175,7 +175,7 @@ bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
     return false;
 }
 
-bool NNormalSurfaceVector::isCompact(const NTriangulation* triang) const {
+bool NormalSurfaceVector::isCompact(const NTriangulation* triang) const {
     size_t nTets = triang->size();
     size_t tet;
     int type;
@@ -195,7 +195,7 @@ bool NNormalSurfaceVector::isCompact(const NTriangulation* triang) const {
     return true;
 }
 
-bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
+bool NormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
     size_t nTets = triang->size();
     size_t tet;
     int type;
@@ -218,7 +218,7 @@ bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
     return true;
 }
 
-LargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
+LargeInteger NormalSurfaceVector::isCentral(const NTriangulation* triang)
         const {
     size_t nTets = triang->size();
     size_t tet;
@@ -512,12 +512,12 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
-LargeInteger NNormalSurfaceVector::orientedTriangles(
+LargeInteger NormalSurfaceVector::orientedTriangles(
         size_t, int, const NTriangulation*, bool) const {
     return LargeInteger::zero;
 };
 
-LargeInteger NNormalSurfaceVector::orientedQuads(
+LargeInteger NormalSurfaceVector::orientedQuads(
         size_t, int, const NTriangulation*, bool) const {
     return LargeInteger::zero;
 };

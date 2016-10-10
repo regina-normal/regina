@@ -85,7 +85,7 @@ struct NormalInfo<NS_ORIENTED> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorOriented : public NNormalSurfaceVector {
+class REGINA_API NSVectorOriented : public NormalSurfaceVector {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOriented, NS_ORIENTED)
 
     public:
@@ -118,7 +118,7 @@ class REGINA_API NSVectorOriented : public NNormalSurfaceVector {
         virtual LargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
-        static NNormalSurfaceVector* makeZeroVector(
+        static NormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
         static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
@@ -140,11 +140,11 @@ REGINA_DEPRECATED typedef NSVectorOriented NNormalSurfaceVectorOriented;
 // Inline functions for NSVectorOriented
 
 inline NSVectorOriented::NSVectorOriented(
-        size_t length) : NNormalSurfaceVector(length) {
+        size_t length) : NormalSurfaceVector(length) {
 }
 inline NSVectorOriented::NSVectorOriented(
         const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVector(cloneMe) {
+        NormalSurfaceVector(cloneMe) {
 }
 
 inline LargeInteger NSVectorOriented::triangles(

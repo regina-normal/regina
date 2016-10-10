@@ -319,7 +319,7 @@ class REGINA_API NormalHypersurfaceVector {
          *
          * The default implementation for this routine involves counting the
          * number of pieces of every type.
-         * Subclasses of NNormalSurfaceVector should override this if
+         * Subclasses of NormalSurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal hypersurface

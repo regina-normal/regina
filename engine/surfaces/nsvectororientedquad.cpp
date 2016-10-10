@@ -41,7 +41,7 @@
 
 namespace regina {
 
-NNormalSurfaceVector* NSVectorOrientedQuad::makeZeroVector(
+NormalSurfaceVector* NSVectorOrientedQuad::makeZeroVector(
         const NTriangulation* triangulation) {
     return new NSVectorOrientedQuad(6 * triangulation->size());
 }
@@ -132,7 +132,7 @@ namespace {
     };
 }
 
-NNormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
+NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
         const Ray& original, const NTriangulation* triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.

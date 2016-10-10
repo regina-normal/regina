@@ -84,12 +84,12 @@ namespace {
      * so we subclass and provide the typedef ourselves.
      */
     class VectorInserter : public std::back_insert_iterator<
-            std::vector<NNormalSurfaceVector*> > {
+            std::vector<NormalSurfaceVector*> > {
         public:
-            typedef NNormalSurfaceVector* value_type;
-            VectorInserter(std::vector<NNormalSurfaceVector*>& v) :
+            typedef NormalSurfaceVector* value_type;
+            VectorInserter(std::vector<NormalSurfaceVector*>& v) :
                     std::back_insert_iterator<
-                        std::vector<NNormalSurfaceVector*> >(v) {
+                        std::vector<NormalSurfaceVector*> >(v) {
             }
     };
 
@@ -423,7 +423,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
     typedef std::vector<RaySpec<BitmaskType>*> RaySpecList;
     RaySpecList list[2];
 
-    NNormalSurfaceVector* v;
+    NormalSurfaceVector* v;
     std::vector<NNormalSurface*>::const_iterator qit;
     for (qit = reducedList.begin(); qit != reducedList.end(); ++qit) {
         v = Variant::ReducedVector::makeMirror((*qit)->rawVector(), owner);

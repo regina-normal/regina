@@ -41,7 +41,7 @@
 
 namespace regina {
 
-NNormalSurfaceVector* NSVectorQuadOct::makeZeroVector(
+NormalSurfaceVector* NSVectorQuadOct::makeZeroVector(
         const NTriangulation* triangulation) {
     return new NSVectorQuadOct(6 * triangulation->size());
 }
@@ -129,7 +129,7 @@ namespace {
     };
 }
 
-NNormalSurfaceVector* NSVectorQuadOct::makeMirror(
+NormalSurfaceVector* NSVectorQuadOct::makeMirror(
         const Ray& original, const NTriangulation* triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.

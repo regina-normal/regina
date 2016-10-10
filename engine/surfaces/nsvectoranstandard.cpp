@@ -80,7 +80,7 @@ LargeInteger NSVectorANStandard::arcs(size_t triIndex,
     return ans;
 }
 
-NNormalSurfaceVector* NSVectorANStandard::makeZeroVector(
+NormalSurfaceVector* NSVectorANStandard::makeZeroVector(
         const NTriangulation* triangulation) {
     return new NSVectorANStandard(10 * triangulation->size());
 }

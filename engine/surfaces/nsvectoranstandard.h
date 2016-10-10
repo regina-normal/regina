@@ -86,7 +86,7 @@ struct NormalInfo<NS_AN_STANDARD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorANStandard : public NNormalSurfaceVector {
+class REGINA_API NSVectorANStandard : public NormalSurfaceVector {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorANStandard, NS_AN_STANDARD)
 
     public:
@@ -115,7 +115,7 @@ class REGINA_API NSVectorANStandard : public NNormalSurfaceVector {
         virtual LargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
-        static NNormalSurfaceVector* makeZeroVector(
+        static NormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
         static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
@@ -137,11 +137,11 @@ REGINA_DEPRECATED typedef NSVectorANStandard NNormalSurfaceVectorANStandard;
 // Inline functions for NSVectorANStandard
 
 inline NSVectorANStandard::NSVectorANStandard(
-        size_t length) : NNormalSurfaceVector(length) {
+        size_t length) : NormalSurfaceVector(length) {
 }
 inline NSVectorANStandard::NSVectorANStandard(
         const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVector(cloneMe) {
+        NormalSurfaceVector(cloneMe) {
 }
 
 inline LargeInteger NSVectorANStandard::triangles(

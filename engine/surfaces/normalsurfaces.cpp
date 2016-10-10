@@ -63,15 +63,15 @@ void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
 }
 
 namespace {
-    struct ZeroVector : public Returns<NNormalSurfaceVector*> {
+    struct ZeroVector : public Returns<NormalSurfaceVector*> {
         template <typename Coords>
-        inline NNormalSurfaceVector* operator() (const NTriangulation* tri) {
+        inline NormalSurfaceVector* operator() (const NTriangulation* tri) {
             return Coords::Class::makeZeroVector(tri);
         }
     };
 }
 
-NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
+NormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
         NormalCoords coords) {
     return forCoords(coords, ZeroVector(), 0, triangulation);
 }

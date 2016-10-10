@@ -72,7 +72,7 @@ LargeInteger NSVectorOriented::arcs(size_t triIndex,
     return ans;
 }
 
-NNormalSurfaceVector* NSVectorOriented::makeZeroVector(
+NormalSurfaceVector* NSVectorOriented::makeZeroVector(
         const NTriangulation* triangulation) {
     return new NSVectorOriented(14 * triangulation->size());
 }

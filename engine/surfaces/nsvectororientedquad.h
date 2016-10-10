@@ -86,7 +86,7 @@ struct NormalInfo<NS_ORIENTED_QUAD> {
  * \ifacespython Not present.
  */
 class REGINA_API NSVectorOrientedQuad :
-        public NNormalSurfaceVectorMirrored {
+        public NormalSurfaceVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOrientedQuad, NS_ORIENTED_QUAD)
 
     public:
@@ -104,9 +104,9 @@ class REGINA_API NSVectorOrientedQuad :
          */
         NSVectorOrientedQuad(const Vector<LargeInteger>& cloneMe);
 
-        static NNormalSurfaceVector* makeMirror(const Ray& original,
+        static NormalSurfaceVector* makeMirror(const Ray& original,
             const NTriangulation* triang);
-        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
+        virtual NormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
 
         virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
@@ -118,7 +118,7 @@ class REGINA_API NSVectorOrientedQuad :
         virtual LargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
 
-        static NNormalSurfaceVector* makeZeroVector(
+        static NormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
         static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
@@ -140,14 +140,14 @@ REGINA_DEPRECATED typedef NSVectorOrientedQuad NNormalSurfaceVectorOrientedQuad;
 // Inline functions for NSVectorOrientedQuad
 
 inline NSVectorOrientedQuad::NSVectorOrientedQuad(
-        size_t length) : NNormalSurfaceVectorMirrored(length) {
+        size_t length) : NormalSurfaceVectorMirrored(length) {
 }
 inline NSVectorOrientedQuad::NSVectorOrientedQuad(
         const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVectorMirrored(cloneMe) {
+        NormalSurfaceVectorMirrored(cloneMe) {
 }
 
-inline NNormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
+inline NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
         const NTriangulation* triang) const {
     return makeMirror(coords(), triang);
 }

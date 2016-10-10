@@ -228,7 +228,7 @@ typedef Face<3, 1> NEdge;
  * At a bare minimum, each specialisation of this template must provide:
  *
  * - a typedef \a Class that represents the corresponding
- *   NNormalSurfaceVector subclass;
+ *   NormalSurfaceVector subclass;
  * - typedefs \a Standard and \a Reduced that identify NormalInfo templates
  *   for the corresponding coordinate systems with and without triangles
  *   (if this is not meaningful then both typedefs should just identify this
@@ -249,9 +249,9 @@ struct NormalInfo;
 
 /**
  * Defines various constants, types and virtual functions for a subclass
- * of NNormalSurfaceVector.
+ * of NormalSurfaceVector.
  *
- * Every subclass of NNormalSurfaceVector \a must include
+ * Every subclass of NormalSurfaceVector \a must include
  * REGINA_NORMAL_SURFACE_FLAVOUR at the beginning of the class definition.
  *
  * This macro provides the class with:
@@ -261,19 +261,19 @@ struct NormalInfo;
  * - a typedef \a Info, which refers to the corresponding specialisation
  *   of the NormalInfo<> template;
  * - declarations and implementations of the virtual functions
- *   NNormalSurfaceVector::clone(),
- *   NNormalSurfaceVector::allowsAlmostNormal(),
- *   NNormalSurfaceVector::allowsSpun(), and
- *   NNormalSurfaceVector::allowsOriented().
+ *   NormalSurfaceVector::clone(),
+ *   NormalSurfaceVector::allowsAlmostNormal(),
+ *   NormalSurfaceVector::allowsSpun(), and
+ *   NormalSurfaceVector::allowsOriented().
  *
- * @param class_ the name of this subclass of NNormalSurfaceVector.
+ * @param class_ the name of this subclass of NormalSurfaceVector.
  * @param id the corresponding NNormalCoords constant.
  */
 #define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
     public: \
         typedef NormalInfo<id> Info; \
         static constexpr const NormalCoords coordsID = id; \
-        inline virtual NNormalSurfaceVector* clone() const { \
+        inline virtual NormalSurfaceVector* clone() const { \
             return new class_(*this); \
         } \
         inline virtual bool allowsAlmostNormal() const { \
@@ -288,7 +288,7 @@ struct NormalInfo;
 
 /**
  * Stores the vector of a single normal surface in a 3-manifold.
- * The different subclasses of NNormalSurfaceVector use different
+ * The different subclasses of NormalSurfaceVector use different
  * underlying coordinate systems for the normal solution space.
  * However, the various coordinate retrieval routines will return values
  * that are independent of the underlying coordinate system.  Thus the
@@ -301,7 +301,7 @@ struct NormalInfo;
  * corresponding coordinate lookup routines should return
  * LargeInteger::infinity where appropriate.
  *
- * All subclasses of NNormalSurfaceVector <b>must</b> have the following
+ * All subclasses of NormalSurfaceVector <b>must</b> have the following
  * properties:
  *
  * - Normal surfaces can be enumerated by intersecting the non-negative
@@ -310,7 +310,7 @@ struct NormalInfo;
  * - Adding two normal surfaces corresponds to adding the two underlying
  *   vectors.
  *
- * <b>When deriving classes from NNormalSurfaceVector:</b>
+ * <b>When deriving classes from NormalSurfaceVector:</b>
  * <ul>
  *   <li>A new value must must be added to the NormalCoords enum in
  *   normalcoords.h to represent the new coordinate system.</li>
@@ -348,7 +348,7 @@ struct NormalInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVector {
+class REGINA_API NormalSurfaceVector {
     protected:
         Ray coords_;
             /** The raw vector of normal coordinates. */
@@ -360,19 +360,19 @@ class REGINA_API NNormalSurfaceVector {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalSurfaceVector(size_t length);
+        NormalSurfaceVector(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVector(const Vector<LargeInteger>& cloneMe);
+        NormalSurfaceVector(const Vector<LargeInteger>& cloneMe);
 
         /**
          * A virtual destructor.  This is required because here we introduce
          * virtual functions into the Ray hierarchy.
          */
-        virtual ~NNormalSurfaceVector();
+        virtual ~NormalSurfaceVector();
 
         /**
          * Gives read-only access to the underlying vector of coordinates.
@@ -383,10 +383,10 @@ class REGINA_API NNormalSurfaceVector {
 
         /**
          * Creates a newly allocated clone of this vector.
-         * The clone will be of the same subclass of NNormalSurfaceVector
+         * The clone will be of the same subclass of NormalSurfaceVector
          * as this vector.
          */
-        virtual NNormalSurfaceVector* clone() const = 0;
+        virtual NormalSurfaceVector* clone() const = 0;
 
         /**
          * Returns the number of coordinates in the underlying vector.
@@ -430,7 +430,7 @@ class REGINA_API NNormalSurfaceVector {
          *
          * @param other the vector to add to this vector.
          */
-        virtual void operator += (const NNormalSurfaceVector& other);
+        virtual void operator += (const NormalSurfaceVector& other);
 
         /**
          * Scales this vector down by the greatest common divisor of all
@@ -491,7 +491,7 @@ class REGINA_API NNormalSurfaceVector {
          * The default implementation for this routine simply calculates
          * all the octagonal coordinates and returns as soon as a
          * positive or negative result can be established.  Subclasses
-         * of NNormalSurfaceVector should override this if they can provide a
+         * of NormalSurfaceVector should override this if they can provide a
          * faster implementation.
          *
          * If a subclass does not allow for almost normal surfaces, this
@@ -514,7 +514,7 @@ class REGINA_API NNormalSurfaceVector {
          * The default implementation for this routine simply runs
          * through every disc type until a disc type with infinite disc
          * count is found or all disc types have been examined.
-         * Subclasses of NNormalSurfaceVector should override this if
+         * Subclasses of NormalSurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal surface lives.
@@ -530,7 +530,7 @@ class REGINA_API NNormalSurfaceVector {
          * The default implementation for this routine simply runs
          * through every non-triangular disc type ensuring that each
          * has no corresponding discs.
-         * Subclasses of NNormalSurfaceVector should override this if
+         * Subclasses of NormalSurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal surface lives.
@@ -544,7 +544,7 @@ class REGINA_API NNormalSurfaceVector {
          *
          * The default implementation for this routine involves counting the
          * number of discs of every type.
-         * Subclasses of NNormalSurfaceVector should override this if
+         * Subclasses of NormalSurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal surface lives.
@@ -567,7 +567,7 @@ class REGINA_API NNormalSurfaceVector {
          *
          * The default implementation for this routine involves counting the
          * number of discs of every type.
-         * Subclasses of NNormalSurfaceVector should override this if
+         * Subclasses of NormalSurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal surface lives.
@@ -585,7 +585,7 @@ class REGINA_API NNormalSurfaceVector {
          *
          * The default implementation for this routine simply runs
          * through and checks the count for each disc type.
-         * Subclasses of NNormalSurfaceVector should override this if
+         * Subclasses of NormalSurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal surface lives.
@@ -603,7 +603,7 @@ class REGINA_API NNormalSurfaceVector {
          *
          * The default implementation for this routine simply runs
          * through and checks the count for each disc type.
-         * Subclasses of NNormalSurfaceVector should override this if
+         * Subclasses of NormalSurfaceVector should override this if
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal surface lives.
@@ -742,7 +742,7 @@ class REGINA_API NNormalSurfaceVector {
         /**
          * Returns a new normal surface vector of the appropriate length
          * for the given triangulation and for the coordinate
-         * system corresponding to this subclass of NNormalSurfaceVector.
+         * system corresponding to this subclass of NormalSurfaceVector.
          * All elements of the new vector will be initialised to zero.
          *
          * See regina::makeZeroVector() for further details.
@@ -752,14 +752,14 @@ class REGINA_API NNormalSurfaceVector {
          * @return a new zero vector of the correct class and length.
          */
         #ifdef __DOXYGEN
-            static NNormalSurfaceVector* makeZeroVector(
+            static NormalSurfaceVector* makeZeroVector(
                 const NTriangulation* triangulation);
         #endif
         /**
          * Creates a new set of normal surface matching equations for
          * the given triangulation using the coordinate
          * system corresponding to this particular subclass of
-         * NNormalSurfaceVector.
+         * NormalSurfaceVector.
          *
          * See regina::makeMatchingEquations() for further details.
          *
@@ -776,7 +776,7 @@ class REGINA_API NNormalSurfaceVector {
          * the condition that normal surfaces be embedded.  The
          * validity constraints will be expressed relative to the
          * coordinate system corresponding to this particular
-         * subclass of NNormalSurfaceVector.
+         * subclass of NormalSurfaceVector.
          *
          * @param triangulation the triangulation upon which these
          * validity constraints will be based.
@@ -795,7 +795,7 @@ class REGINA_API NNormalSurfaceVector {
  *
  * The information provided by the various query methods is independent
  * of the underlying coordinate system being used.
- * See the NNormalSurfaceVector class notes for details of what to do
+ * See the NormalSurfaceVector class notes for details of what to do
  * when introducing a new coordinate system.
  *
  * Note that non-compact surfaces (surfaces with infinitely many discs,
@@ -812,7 +812,7 @@ class REGINA_API NNormalSurface :
         public ShortOutput<NNormalSurface>,
         public boost::noncopyable {
     protected:
-        NNormalSurfaceVector* vector;
+        NormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
              *   space is appropriate. */
         const NTriangulation* triangulation_;
@@ -861,7 +861,7 @@ class REGINA_API NNormalSurface :
          * normal surface in whichever space is appropriate.
          */
         NNormalSurface(const NTriangulation* triang,
-            NNormalSurfaceVector* newVector);
+            NormalSurfaceVector* newVector);
 
         /**
          * A Python-only routine that creates a new normal surface
@@ -1581,7 +1581,7 @@ class REGINA_API NNormalSurface :
          * same 3-manifold triangulation.
          * \pre Both this and the given normal surface are stored using
          * the same coordinate system (i.e., the same
-         * subclass of NNormalSurfaceVector).
+         * subclass of NormalSurfaceVector).
          * \pre Both this and the given surface are compact (have
          * finitely many discs), embedded, non-empty and connected.
          *
@@ -1660,8 +1660,8 @@ class REGINA_API NNormalSurface :
          * coordinate system its raw vector uses.  Unless you already know
          * the coordinate system in advance (i.e., you created the surface
          * yourself), it is best to keep to the coordinate-system-agnostic
-         * access functions such as NNormalSurfaceVector::triangles()
-         * and NNormalSurfaceVector::quads().
+         * access functions such as NormalSurfaceVector::triangles()
+         * and NormalSurfaceVector::quads().
          *
          * \ifacespython Not present.
          *
@@ -1736,43 +1736,52 @@ class REGINA_API NNormalSurface :
     friend class XMLNormalSurfaceReader;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNormalSurfaceVector has now been renamed to
+ * NormalSurfaceVector.
+ */
+REGINA_DEPRECATED typedef NormalSurfaceVector NNormalSurfaceVector;
+
 /*@}*/
 
-// Inline functions for NNormalSurfaceVector
+// Inline functions for NormalSurfaceVector
 
-inline NNormalSurfaceVector::NNormalSurfaceVector(size_t length) :
+inline NormalSurfaceVector::NormalSurfaceVector(size_t length) :
         coords_(length) {
 }
-inline NNormalSurfaceVector::NNormalSurfaceVector(
+inline NormalSurfaceVector::NormalSurfaceVector(
         const Vector<LargeInteger>& cloneMe) : coords_(cloneMe) {
 }
-inline NNormalSurfaceVector::~NNormalSurfaceVector() {
+inline NormalSurfaceVector::~NormalSurfaceVector() {
 }
 
-inline const Ray& NNormalSurfaceVector::coords() const {
+inline const Ray& NormalSurfaceVector::coords() const {
     return coords_;
 }
 
-inline size_t NNormalSurfaceVector::size() const {
+inline size_t NormalSurfaceVector::size() const {
     return coords_.size();
 }
 
-inline const NLargeInteger& NNormalSurfaceVector::operator [](size_t index)
+inline const NLargeInteger& NormalSurfaceVector::operator [](size_t index)
         const {
     return coords_[index];
 }
 
-inline void NNormalSurfaceVector::setElement(size_t index,
+inline void NormalSurfaceVector::setElement(size_t index,
         const LargeInteger& value) {
     coords_.setElement(index, value);
 }
 
-inline void NNormalSurfaceVector::operator += (
-        const NNormalSurfaceVector& other) {
+inline void NormalSurfaceVector::operator += (
+        const NormalSurfaceVector& other) {
     coords_ += other.coords_;
 }
 
-inline void NNormalSurfaceVector::scaleDown() {
+inline void NormalSurfaceVector::scaleDown() {
     coords_.scaleDown();
 }
 

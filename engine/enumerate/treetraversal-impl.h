@@ -91,7 +91,7 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildSurface() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
-    NNormalSurfaceVector* v;
+    NormalSurfaceVector* v;
     if (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT)
         v = new NSVectorQuad(3 * nTets_);
     else if (coords_ == NS_STANDARD || coords_ == NS_AN_STANDARD)
@@ -106,7 +106,7 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
     // We have an almost normal surface: restore the octagon
     // coordinates.
-    NNormalSurfaceVector* an;
+    NormalSurfaceVector* an;
     unsigned i, j;
     if (coords_ == NS_AN_QUAD_OCT) {
         an = new NSVectorQuadOct(6 * nTets_);
@@ -1195,7 +1195,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 std::cout << " (" << idx << " -> " << (int)type_[idx]
                     << ")" << std::endl;
 
-                NNormalSurfaceVector* v =
+                NormalSurfaceVector* v =
                     new NSVectorStandard(7 * nTets_);
                 lpSlot_[level_ + 1]->extractSolution(*v, type_);
                 NNormalSurface* f = new NNormalSurface(

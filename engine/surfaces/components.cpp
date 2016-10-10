@@ -187,9 +187,9 @@ namespace {
         // Create the set of normal surfaces!
         // Note that all vectors are automagically initialised to zero.
         const NTriangulation* tri = s.triangulation();
-        NNormalSurfaceVector** ans = new NNormalSurfaceVector*[compID];
+        NormalSurfaceVector** ans = new NormalSurfaceVector*[compID];
 
-        NNormalSurfaceVector* vec;
+        NormalSurfaceVector* vec;
         long coord;
         if (s.systemAllowsAlmostNormal()) {
             for (i = 0; i < compID; ++i)
@@ -237,8 +237,8 @@ bool NNormalSurface::disjoint(const NNormalSurface& other) const {
     // Now we know that the sum of both surfaces is an embedded surface.
     // Form the sum, pull it apart into connected components, and see
     // whether we get our original two surfaces back.
-    NNormalSurfaceVector* v =
-        static_cast<NNormalSurfaceVector*>(vector->clone());
+    NormalSurfaceVector* v =
+        static_cast<NormalSurfaceVector*>(vector->clone());
     (*v) += *(other.vector);
     NNormalSurface* sum = new NNormalSurface(triangulation_, v);
 

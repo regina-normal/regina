@@ -156,7 +156,7 @@ struct PacketInfo<PACKET_NORMALSURFACES> {
  * which the surfaces were obtained.  If this triangulation changes, the
  * information contained in this packet will become invalid.
  *
- * See the NNormalSurfaceVector class notes for details of what to do
+ * See the NormalSurfaceVector class notes for details of what to do
  * when introducing a new coordinate system.
  *
  * Normal surface lists should be created using the routine enumerate().
@@ -594,7 +594,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * \pre This list contains only embedded normal surfaces.  More
          * precisely, isEmbeddedOnly() must return \c true.
          * \pre All surfaces within this list are stored using the same
-         * coordinate system (i.e., the same subclass of NNormalSurfaceVector).
+         * coordinate system (i.e., the same subclass of NormalSurfaceVector).
          *
          * \warning If this list contains a vertex link (plus at least
          * one other surface), then the new list will be identical to
@@ -914,7 +914,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * NormalSurfaces.
          *
          * Objects of type <tt>NNormalSurface*</tt> and
-         * <tt>NNormalSurfaceVector*</tt> can be assigned to this
+         * <tt>NormalSurfaceVector*</tt> can be assigned to this
          * iterator.  In the latter case, a surrounding NNormalSurface
          * will be automatically created.
          *
@@ -929,7 +929,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * interface (and indeed are now optional, at the user's discretion).
          */
         struct SurfaceInserter : public std::iterator<
-                std::output_iterator_tag, NNormalSurfaceVector*> {
+                std::output_iterator_tag, NormalSurfaceVector*> {
             NormalSurfaces* list;
                 /**< The list into which surfaces will be inserted. */
             NTriangulation* owner;
@@ -990,7 +990,7 @@ class REGINA_API NormalSurfaces : public Packet {
              * @param vector the vector of the normal surface to insert.
              * @return this output iterator.
              */
-            SurfaceInserter& operator =(NNormalSurfaceVector* vector);
+            SurfaceInserter& operator =(NormalSurfaceVector* vector);
 
             /**
              * Returns a reference to this output iterator.
@@ -1369,7 +1369,7 @@ class REGINA_API NormalSurfaces : public Packet {
  * given triangulation and the given coordinate system.
  * All elements of this vector will be initialised to zero.
  *
- * The new vector will be of the subclass of NNormalSurfaceVector
+ * The new vector will be of the subclass of NormalSurfaceVector
  * corresponding to the given coordinate system.  The caller
  * of this routine is responsible for destroying the new vector.
  *
@@ -1380,7 +1380,7 @@ class REGINA_API NormalSurfaces : public Packet {
  * @param coords the coordinate system to be used.
  * @return a new zero vector of the correct class and length.
  */
-REGINA_API NNormalSurfaceVector* makeZeroVector(
+REGINA_API NormalSurfaceVector* makeZeroVector(
     const NTriangulation* triangulation, NormalCoords coords);
 /**
  * Creates a new set of normal surface matching equations for the
@@ -1552,7 +1552,7 @@ inline NormalSurfaces::SurfaceInserter&
 
 inline NormalSurfaces::SurfaceInserter&
         NormalSurfaces::SurfaceInserter::operator =(
-        NNormalSurfaceVector* vector) {
+        NormalSurfaceVector* vector) {
     list->surfaces.push_back(new NNormalSurface(owner, vector));
     return *this;
 }

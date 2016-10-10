@@ -56,11 +56,11 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
 
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the coordinate system registry...
-    NNormalSurfaceVector* vec;
+    NormalSurfaceVector* vec;
     if (coords == NS_AN_LEGACY)
         vec = new NSVectorANStandard(vecLen);
     else
-        vec = forCoords(coords, NewFunction<NNormalSurfaceVector>(), 0, vecLen);
+        vec = forCoords(coords, NewFunction<NormalSurfaceVector>(), 0, vecLen);
     if (! vec)
         return;
 

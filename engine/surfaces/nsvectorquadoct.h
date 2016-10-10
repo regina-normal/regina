@@ -83,7 +83,7 @@ struct NormalInfo<NS_AN_QUAD_OCT> {
  * \ifacespython Not present.
  */
 class REGINA_API NSVectorQuadOct :
-        public NNormalSurfaceVectorMirrored {
+        public NormalSurfaceVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuadOct, NS_AN_QUAD_OCT)
 
     public:
@@ -101,14 +101,14 @@ class REGINA_API NSVectorQuadOct :
          */
         NSVectorQuadOct(const Vector<LargeInteger>& cloneMe);
 
-        static NNormalSurfaceVector* makeMirror(const Ray& original,
+        static NormalSurfaceVector* makeMirror(const Ray& original,
             const NTriangulation* triang);
-        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
+        virtual NormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
 
         virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
 
-        static NNormalSurfaceVector* makeZeroVector(
+        static NormalSurfaceVector* makeZeroVector(
             const NTriangulation* triangulation);
         static MatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
@@ -130,14 +130,14 @@ REGINA_DEPRECATED typedef NSVectorQuadOct NNormalSurfaceVectorQuadOct;
 // Inline functions for NSVectorQuadOct
 
 inline NSVectorQuadOct::NSVectorQuadOct(
-        size_t length) : NNormalSurfaceVectorMirrored(length) {
+        size_t length) : NormalSurfaceVectorMirrored(length) {
 }
 inline NSVectorQuadOct::NSVectorQuadOct(
         const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVectorMirrored(cloneMe) {
+        NormalSurfaceVectorMirrored(cloneMe) {
 }
 
-inline NNormalSurfaceVector* NSVectorQuadOct::makeMirror(
+inline NormalSurfaceVector* NSVectorQuadOct::makeMirror(
         const NTriangulation* triang) const {
     return makeMirror(coords(), triang);
 }

@@ -50,7 +50,7 @@ using regina::NEdge;
 using regina::NExampleTriangulation;
 using regina::NNormalSurface;
 using regina::NormalSurfaces;
-using regina::NNormalSurfaceVector;
+using regina::NormalSurfaceVector;
 using regina::Packet;
 using regina::Perm;
 using regina::Ray;

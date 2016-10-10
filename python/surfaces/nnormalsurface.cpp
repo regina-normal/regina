@@ -70,7 +70,7 @@ namespace {
      */
     NNormalSurface* fromCoordinates(NTriangulation* t,
             regina::NormalCoords coords, boost::python::list values) {
-        regina::NNormalSurfaceVector* v = regina::makeZeroVector(t, coords);
+        regina::NormalSurfaceVector* v = regina::makeZeroVector(t, coords);
 
         long len = boost::python::len(values);
         if (len != v->size()) {
