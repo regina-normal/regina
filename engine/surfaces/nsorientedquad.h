@@ -31,152 +31,17 @@
  **************************************************************************/
 
 /*! \file surfaces/nsorientedquad.h
- *  \brief Implements normal surface vectors using
- *  transversely oriented quad coordinates.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NSORIENTEDQUAD_H
 #ifndef __DOXYGEN
 #define __NSORIENTEDQUAD_H
 #endif
-#include "regina-core.h"
-#include "surfaces/nsmirrored.h"
 
-namespace regina {
+#warning This header is deprecated; please use surfaces/nsvectororientedquad.h instead.
 
-class NSVectorOrientedQuad;
-
-/**
- * \weakgroup surfaces
- * @{
- */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct NormalInfo<NS_ORIENTED_QUAD> {
-    typedef NSVectorOrientedQuad Class;
-    typedef NormalInfo<NS_ORIENTED> Standard;
-    typedef NormalInfo<NS_ORIENTED_QUAD> Reduced;
-    inline static const char* name() {
-        return "Transversely oriented quad normal";
-    }
-    enum {
-        almostNormal = 0,
-        spun = 1,
-        oriented = 1
-    };
-};
-#endif
-
-/**
- * A normal surface vector using transversely oriented quadrilateral
- * coordinates.
- *
- * If there are \a t tetrahedra in the underlying
- * triangulation, there must be precisely 6<i>t</i> coordinates.
- * For each \a i, coordinates 2<i>i</i> and 2<i>i</i>+1 represent
- * the \c true and \c false orientations for coordinate \a i in the
- * 3<i>t</i>-dimensional quadrilateral coordinate system.  See
- * NSVectorQuad for further details.
- *
- * \warning Support for transversely oriented normal surfaces is still
- * experimental, and some features \b will break (e.g., testing
- * connectedness, disjointness or embeddedness).
- *
- * \ifacespython Not present.
- */
-class REGINA_API NSVectorOrientedQuad :
-        public NNormalSurfaceVectorMirrored {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOrientedQuad, NS_ORIENTED_QUAD)
-
-    public:
-        /**
-         * Creates a new vector all of whose entries are initialised to
-         * zero.
-         *
-         * @param length the number of elements in the new vector.
-         */
-        NSVectorOrientedQuad(size_t length);
-        /**
-         * Creates a new vector that is a clone of the given vector.
-         *
-         * @param cloneMe the vector to clone.
-         */
-        NSVectorOrientedQuad(const Vector<LargeInteger>& cloneMe);
-
-        static NNormalSurfaceVector* makeMirror(const Ray& original,
-            const NTriangulation* triang);
-        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
-            const;
-
-        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
-
-        virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const NTriangulation* triang) const;
-        virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const NTriangulation* triang, bool orientation) const;
-        virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const;
-
-        static NNormalSurfaceVector* makeZeroVector(
-            const NTriangulation* triangulation);
-        static MatrixInt* makeMatchingEquations(
-            const NTriangulation* triangulation);
-        static EnumConstraints* makeEmbeddedConstraints(
-            const NTriangulation* triangulation);
-};
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceVectorOrientedQuad has now been
- * renamed to NSVectorOrientedQuad.
- */
-REGINA_DEPRECATED typedef NSVectorOrientedQuad NNormalSurfaceVectorOrientedQuad;
-
-/*@}*/
-
-// Inline functions for NSVectorOrientedQuad
-
-inline NSVectorOrientedQuad::NSVectorOrientedQuad(
-        size_t length) : NNormalSurfaceVectorMirrored(length) {
-}
-inline NSVectorOrientedQuad::NSVectorOrientedQuad(
-        const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVectorMirrored(cloneMe) {
-}
-
-inline NNormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
-        const NTriangulation* triang) const {
-    return makeMirror(coords(), triang);
-}
-
-inline LargeInteger NSVectorOrientedQuad::quads(
-        size_t tetIndex, int quadType, const NTriangulation* tri) const {
-    return orientedQuads(tetIndex, quadType, tri, true)
-           + orientedQuads(tetIndex, quadType, tri, false);
-}
-
-inline LargeInteger NSVectorOrientedQuad::orientedQuads(
-        size_t tetIndex, int quadType, const NTriangulation*, 
-        bool orientation) const {
-    return coords_[6 * tetIndex + 2 * quadType +
-        (orientation ? 0 : 1)];
-}
-
-inline const NVertex* NSVectorOrientedQuad::isVertexLink(
-        const NTriangulation*) const {
-    // Quad space does not contain vertex links at all.
-    return 0;
-}
-
-inline LargeInteger NSVectorOrientedQuad::octs(
-        size_t, int, const NTriangulation*) const {
-    return Ray::zero;
-}
-
-} // namespace regina
+#include "surfaces/nsvectororientedquad.h"
 
 #endif
 

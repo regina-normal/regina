@@ -32,10 +32,10 @@
 
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "surfaces/nsstandard.h"
-#include "surfaces/nsquad.h"
-#include "surfaces/nsanstandard.h"
-#include "surfaces/nsquadoct.h"
+#include "surfaces/nsvectorstandard.h"
+#include "surfaces/nsvectorquad.h"
+#include "surfaces/nsvectoranstandard.h"
+#include "surfaces/nsvectorquadoct.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {

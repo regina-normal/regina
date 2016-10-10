@@ -528,19 +528,19 @@
 		052FA033180600FB00FAE4DF /* normalspec-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0D180600FB00FAE4DF /* normalspec-impl.h */; };
 		052FA035180600FB00FAE4DF /* nprism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* nprism.cpp */; };
 		052FA036180600FB00FAE4DF /* nprism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E10180600FB00FAE4DF /* nprism.h */; };
-		052FA037180600FB00FAE4DF /* nsanstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E11180600FB00FAE4DF /* nsanstandard.cpp */; };
-		052FA038180600FB00FAE4DF /* nsanstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E12180600FB00FAE4DF /* nsanstandard.h */; };
+		052FA037180600FB00FAE4DF /* nsvectoranstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */; };
+		052FA038180600FB00FAE4DF /* nsvectoranstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E12180600FB00FAE4DF /* nsvectoranstandard.h */; };
 		052FA039180600FB00FAE4DF /* nsmirrored.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E13180600FB00FAE4DF /* nsmirrored.h */; };
-		052FA03A180600FB00FAE4DF /* nsoriented.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E14180600FB00FAE4DF /* nsoriented.cpp */; };
-		052FA03B180600FB00FAE4DF /* nsoriented.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E15180600FB00FAE4DF /* nsoriented.h */; };
-		052FA03C180600FB00FAE4DF /* nsorientedquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E16180600FB00FAE4DF /* nsorientedquad.cpp */; };
-		052FA03D180600FB00FAE4DF /* nsorientedquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E17180600FB00FAE4DF /* nsorientedquad.h */; };
-		052FA03E180600FB00FAE4DF /* nsquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E18180600FB00FAE4DF /* nsquad.cpp */; };
-		052FA03F180600FB00FAE4DF /* nsquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E19180600FB00FAE4DF /* nsquad.h */; };
-		052FA040180600FB00FAE4DF /* nsquadoct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1A180600FB00FAE4DF /* nsquadoct.cpp */; };
-		052FA041180600FB00FAE4DF /* nsquadoct.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1B180600FB00FAE4DF /* nsquadoct.h */; };
-		052FA042180600FB00FAE4DF /* nsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1C180600FB00FAE4DF /* nsstandard.cpp */; };
-		052FA043180600FB00FAE4DF /* nsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1D180600FB00FAE4DF /* nsstandard.h */; };
+		052FA03A180600FB00FAE4DF /* nsvectororiented.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E14180600FB00FAE4DF /* nsvectororiented.cpp */; };
+		052FA03B180600FB00FAE4DF /* nsvectororiented.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E15180600FB00FAE4DF /* nsvectororiented.h */; };
+		052FA03C180600FB00FAE4DF /* nsvectororientedquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E16180600FB00FAE4DF /* nsvectororientedquad.cpp */; };
+		052FA03D180600FB00FAE4DF /* nsvectororientedquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E17180600FB00FAE4DF /* nsvectororientedquad.h */; };
+		052FA03E180600FB00FAE4DF /* nsvectorquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E18180600FB00FAE4DF /* nsvectorquad.cpp */; };
+		052FA03F180600FB00FAE4DF /* nsvectorquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E19180600FB00FAE4DF /* nsvectorquad.h */; };
+		052FA040180600FB00FAE4DF /* nsvectorquadoct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1A180600FB00FAE4DF /* nsvectorquadoct.cpp */; };
+		052FA041180600FB00FAE4DF /* nsvectorquadoct.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1B180600FB00FAE4DF /* nsvectorquadoct.h */; };
+		052FA042180600FB00FAE4DF /* nsvectorstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1C180600FB00FAE4DF /* nsvectorstandard.cpp */; };
+		052FA043180600FB00FAE4DF /* nsvectorstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1D180600FB00FAE4DF /* nsvectorstandard.h */; };
 		052FA044180600FB00FAE4DF /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */; };
 		052FA045180600FB00FAE4DF /* surfacefilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1F180600FB00FAE4DF /* surfacefilter.h */; };
 		052FA048180600FB00FAE4DF /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */; };
@@ -744,12 +744,12 @@
 		052FA1DB1806129B00FAE4DF /* nnormalsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E07180600FB00FAE4DF /* nnormalsurface.cpp */; };
 		052FA1DC1806129B00FAE4DF /* normalsurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E09180600FB00FAE4DF /* normalsurfaces.cpp */; };
 		052FA1DD1806129B00FAE4DF /* nprism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* nprism.cpp */; };
-		052FA1DE1806129B00FAE4DF /* nsanstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E11180600FB00FAE4DF /* nsanstandard.cpp */; };
-		052FA1DF1806129B00FAE4DF /* nsoriented.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E14180600FB00FAE4DF /* nsoriented.cpp */; };
-		052FA1E01806129B00FAE4DF /* nsorientedquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E16180600FB00FAE4DF /* nsorientedquad.cpp */; };
-		052FA1E11806129B00FAE4DF /* nsquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E18180600FB00FAE4DF /* nsquad.cpp */; };
-		052FA1E21806129B00FAE4DF /* nsquadoct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1A180600FB00FAE4DF /* nsquadoct.cpp */; };
-		052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1C180600FB00FAE4DF /* nsstandard.cpp */; };
+		052FA1DE1806129B00FAE4DF /* nsvectoranstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */; };
+		052FA1DF1806129B00FAE4DF /* nsvectororiented.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E14180600FB00FAE4DF /* nsvectororiented.cpp */; };
+		052FA1E01806129B00FAE4DF /* nsvectororientedquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E16180600FB00FAE4DF /* nsvectororientedquad.cpp */; };
+		052FA1E11806129B00FAE4DF /* nsvectorquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E18180600FB00FAE4DF /* nsvectorquad.cpp */; };
+		052FA1E21806129B00FAE4DF /* nsvectorquadoct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1A180600FB00FAE4DF /* nsvectorquadoct.cpp */; };
+		052FA1E31806129B00FAE4DF /* nsvectorstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1C180600FB00FAE4DF /* nsvectorstandard.cpp */; };
 		052FA1E41806129B00FAE4DF /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */; };
 		052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */; };
 		052FA1E81806129B00FAE4DF /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */; };
@@ -846,6 +846,12 @@
 		053CAB341DA9B47D00A92F98 /* nnormalhypersurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */; };
 		053CAB351DA9B47D00A92F98 /* nnormalhypersurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB331DA9B47D00A92F98 /* nnormalhypersurfacelist.h */; };
 		053CAB371DAAEF0F00A92F98 /* nhsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB361DAAEF0F00A92F98 /* nhsstandard.h */; };
+		053CAB3E1DAB408C00A92F98 /* nsanstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB381DAB408C00A92F98 /* nsanstandard.h */; };
+		053CAB3F1DAB408C00A92F98 /* nsoriented.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB391DAB408C00A92F98 /* nsoriented.h */; };
+		053CAB401DAB408C00A92F98 /* nsorientedquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB3A1DAB408C00A92F98 /* nsorientedquad.h */; };
+		053CAB411DAB408C00A92F98 /* nsquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB3B1DAB408C00A92F98 /* nsquad.h */; };
+		053CAB421DAB408C00A92F98 /* nsquadoct.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB3C1DAB408C00A92F98 /* nsquadoct.h */; };
+		053CAB431DAB408C00A92F98 /* nsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB3D1DAB408C00A92F98 /* nsstandard.h */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -2553,19 +2559,19 @@
 		052F9E0D180600FB00FAE4DF /* normalspec-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "normalspec-impl.h"; sourceTree = "<group>"; };
 		052F9E0F180600FB00FAE4DF /* nprism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprism.cpp; sourceTree = "<group>"; };
 		052F9E10180600FB00FAE4DF /* nprism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprism.h; sourceTree = "<group>"; };
-		052F9E11180600FB00FAE4DF /* nsanstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsanstandard.cpp; sourceTree = "<group>"; };
-		052F9E12180600FB00FAE4DF /* nsanstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsanstandard.h; sourceTree = "<group>"; };
+		052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectoranstandard.cpp; sourceTree = "<group>"; };
+		052F9E12180600FB00FAE4DF /* nsvectoranstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectoranstandard.h; sourceTree = "<group>"; };
 		052F9E13180600FB00FAE4DF /* nsmirrored.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsmirrored.h; sourceTree = "<group>"; };
-		052F9E14180600FB00FAE4DF /* nsoriented.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsoriented.cpp; sourceTree = "<group>"; };
-		052F9E15180600FB00FAE4DF /* nsoriented.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsoriented.h; sourceTree = "<group>"; };
-		052F9E16180600FB00FAE4DF /* nsorientedquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsorientedquad.cpp; sourceTree = "<group>"; };
-		052F9E17180600FB00FAE4DF /* nsorientedquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsorientedquad.h; sourceTree = "<group>"; };
-		052F9E18180600FB00FAE4DF /* nsquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsquad.cpp; sourceTree = "<group>"; };
-		052F9E19180600FB00FAE4DF /* nsquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsquad.h; sourceTree = "<group>"; };
-		052F9E1A180600FB00FAE4DF /* nsquadoct.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsquadoct.cpp; sourceTree = "<group>"; };
-		052F9E1B180600FB00FAE4DF /* nsquadoct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsquadoct.h; sourceTree = "<group>"; };
-		052F9E1C180600FB00FAE4DF /* nsstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsstandard.cpp; sourceTree = "<group>"; };
-		052F9E1D180600FB00FAE4DF /* nsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsstandard.h; sourceTree = "<group>"; };
+		052F9E14180600FB00FAE4DF /* nsvectororiented.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectororiented.cpp; sourceTree = "<group>"; };
+		052F9E15180600FB00FAE4DF /* nsvectororiented.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectororiented.h; sourceTree = "<group>"; };
+		052F9E16180600FB00FAE4DF /* nsvectororientedquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectororientedquad.cpp; sourceTree = "<group>"; };
+		052F9E17180600FB00FAE4DF /* nsvectororientedquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectororientedquad.h; sourceTree = "<group>"; };
+		052F9E18180600FB00FAE4DF /* nsvectorquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorquad.cpp; sourceTree = "<group>"; };
+		052F9E19180600FB00FAE4DF /* nsvectorquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorquad.h; sourceTree = "<group>"; };
+		052F9E1A180600FB00FAE4DF /* nsvectorquadoct.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorquadoct.cpp; sourceTree = "<group>"; };
+		052F9E1B180600FB00FAE4DF /* nsvectorquadoct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorquadoct.h; sourceTree = "<group>"; };
+		052F9E1C180600FB00FAE4DF /* nsvectorstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorstandard.cpp; sourceTree = "<group>"; };
+		052F9E1D180600FB00FAE4DF /* nsvectorstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorstandard.h; sourceTree = "<group>"; };
 		052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefilter.cpp; sourceTree = "<group>"; };
 		052F9E1F180600FB00FAE4DF /* surfacefilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefilter.h; sourceTree = "<group>"; };
 		052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlfilterreader.cpp; sourceTree = "<group>"; };
@@ -2715,6 +2721,12 @@
 		053CAB321DA9B47D00A92F98 /* nnormalhypersurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurface.h; sourceTree = "<group>"; };
 		053CAB331DA9B47D00A92F98 /* nnormalhypersurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalhypersurfacelist.h; sourceTree = "<group>"; };
 		053CAB361DAAEF0F00A92F98 /* nhsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhsstandard.h; sourceTree = "<group>"; };
+		053CAB381DAB408C00A92F98 /* nsanstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsanstandard.h; sourceTree = "<group>"; };
+		053CAB391DAB408C00A92F98 /* nsoriented.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsoriented.h; sourceTree = "<group>"; };
+		053CAB3A1DAB408C00A92F98 /* nsorientedquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsorientedquad.h; sourceTree = "<group>"; };
+		053CAB3B1DAB408C00A92F98 /* nsquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsquad.h; sourceTree = "<group>"; };
+		053CAB3C1DAB408C00A92F98 /* nsquadoct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsquadoct.h; sourceTree = "<group>"; };
+		053CAB3D1DAB408C00A92F98 /* nsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsstandard.h; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -4798,20 +4810,26 @@
 				052F9E0A180600FB00FAE4DF /* normalsurfaces.h */,
 				052F9E0F180600FB00FAE4DF /* nprism.cpp */,
 				052F9E10180600FB00FAE4DF /* nprism.h */,
-				052F9E11180600FB00FAE4DF /* nsanstandard.cpp */,
-				052F9E12180600FB00FAE4DF /* nsanstandard.h */,
+				053CAB381DAB408C00A92F98 /* nsanstandard.h */,
 				052F9E13180600FB00FAE4DF /* nsmirrored.h */,
-				052F9E14180600FB00FAE4DF /* nsoriented.cpp */,
-				052F9E15180600FB00FAE4DF /* nsoriented.h */,
-				052F9E16180600FB00FAE4DF /* nsorientedquad.cpp */,
-				052F9E17180600FB00FAE4DF /* nsorientedquad.h */,
-				052F9E18180600FB00FAE4DF /* nsquad.cpp */,
-				052F9E19180600FB00FAE4DF /* nsquad.h */,
-				052F9E1A180600FB00FAE4DF /* nsquadoct.cpp */,
-				052F9E1B180600FB00FAE4DF /* nsquadoct.h */,
-				052F9E1C180600FB00FAE4DF /* nsstandard.cpp */,
-				052F9E1D180600FB00FAE4DF /* nsstandard.h */,
+				053CAB391DAB408C00A92F98 /* nsoriented.h */,
+				053CAB3A1DAB408C00A92F98 /* nsorientedquad.h */,
+				053CAB3B1DAB408C00A92F98 /* nsquad.h */,
+				053CAB3C1DAB408C00A92F98 /* nsquadoct.h */,
+				053CAB3D1DAB408C00A92F98 /* nsstandard.h */,
 				053CAB301DA8D6B100A92F98 /* nsurfacefilter.h */,
+				052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */,
+				052F9E12180600FB00FAE4DF /* nsvectoranstandard.h */,
+				052F9E14180600FB00FAE4DF /* nsvectororiented.cpp */,
+				052F9E15180600FB00FAE4DF /* nsvectororiented.h */,
+				052F9E16180600FB00FAE4DF /* nsvectororientedquad.cpp */,
+				052F9E17180600FB00FAE4DF /* nsvectororientedquad.h */,
+				052F9E18180600FB00FAE4DF /* nsvectorquad.cpp */,
+				052F9E19180600FB00FAE4DF /* nsvectorquad.h */,
+				052F9E1A180600FB00FAE4DF /* nsvectorquadoct.cpp */,
+				052F9E1B180600FB00FAE4DF /* nsvectorquadoct.h */,
+				052F9E1C180600FB00FAE4DF /* nsvectorstandard.cpp */,
+				052F9E1D180600FB00FAE4DF /* nsvectorstandard.h */,
 				052F9E27180600FB00FAE4DF /* orientable.cpp */,
 				052F9E28180600FB00FAE4DF /* quadtostd.cpp */,
 				052F9E2A180600FB00FAE4DF /* sfcombination.h */,
@@ -6038,7 +6056,7 @@
 				052F9F11180600FB00FAE4DF /* orb.h in Headers */,
 				0591E7DA1C4F750200793A9C /* hscoordregistry.h in Headers */,
 				050C646A1DA1019B00C9420F /* anglestructure.h in Headers */,
-				052FA03F180600FB00FAE4DF /* nsquad.h in Headers */,
+				052FA03F180600FB00FAE4DF /* nsvectorquad.h in Headers */,
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
 				05A73C9019B2EF130099C617 /* xmlsnappeareader.h in Headers */,
 				050C64CE1DA3311100C9420F /* ntreelp.h in Headers */,
@@ -6059,6 +6077,7 @@
 				052F9ECA180600FB00FAE4DF /* hilbertdual.h in Headers */,
 				050C64971DA1301B00C9420F /* nexamplesnappeatriangulation.h in Headers */,
 				052FA078180600FB00FAE4DF /* nvertex.h in Headers */,
+				053CAB421DAB408C00A92F98 /* nsquadoct.h in Headers */,
 				052F9EAC180600FB00FAE4DF /* dim2boundarycomponent.h in Headers */,
 				052FA01F180600FB00FAE4DF /* ntxicore.h in Headers */,
 				05431F201C40F260009BC072 /* canonical-impl.h in Headers */,
@@ -6110,7 +6129,7 @@
 				052F9F24180600FB00FAE4DF /* ngraphtriple.h in Headers */,
 				05431F6A1C40F3C9009BC072 /* cone.h in Headers */,
 				052F9EBD180600FB00FAE4DF /* docs.h in Headers */,
-				052FA038180600FB00FAE4DF /* nsanstandard.h in Headers */,
+				052FA038180600FB00FAE4DF /* nsvectoranstandard.h in Headers */,
 				052FA013180600FB00FAE4DF /* nsnappedball.h in Headers */,
 				053CAB131DA4A27500A92F98 /* nrational.h in Headers */,
 				052F9F41180600FB00FAE4DF /* nmatrixint.h in Headers */,
@@ -6140,8 +6159,8 @@
 				050C64C21DA32E7D00C9420F /* nhilbertdual.h in Headers */,
 				052FA031180600FB00FAE4DF /* normalcoords.h in Headers */,
 				052FA024180600FB00FAE4DF /* filterregistry.h in Headers */,
-				052FA043180600FB00FAE4DF /* nsstandard.h in Headers */,
-				052FA03D180600FB00FAE4DF /* nsorientedquad.h in Headers */,
+				052FA043180600FB00FAE4DF /* nsvectorstandard.h in Headers */,
+				052FA03D180600FB00FAE4DF /* nsvectororientedquad.h in Headers */,
 				050C64AA1DA1C95700C9420F /* npacket.h in Headers */,
 				05431F681C40F3C9009BC072 /* cone_property.h in Headers */,
 				052F9FE1180600FB00FAE4DF /* nsigcensus.h in Headers */,
@@ -6174,6 +6193,7 @@
 				052F9FED180600FB00FAE4DF /* nblockedsfspair.h in Headers */,
 				052F9F33180600FB00FAE4DF /* nsnappeacensusmfd.h in Headers */,
 				052F9F20180600FB00FAE4DF /* ngraphloop.h in Headers */,
+				053CAB3E1DAB408C00A92F98 /* nsanstandard.h in Headers */,
 				0591E85B1C50527100793A9C /* xmltrireader.h in Headers */,
 				052FA050180600FB00FAE4DF /* sfcombination.h in Headers */,
 				052FA019180600FB00FAE4DF /* nstandardtri.h in Headers */,
@@ -6229,9 +6249,11 @@
 				052F9F77180600FB00FAE4DF /* covers.h in Headers */,
 				05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */,
 				0591E7A11C4F74C400793A9C /* dim4boundarycomponent.h in Headers */,
+				053CAB401DAB408C00A92F98 /* nsorientedquad.h in Headers */,
 				052FA09B180600FB00FAE4DF /* ptrutils.h in Headers */,
 				052F9F5A180600FB00FAE4DF /* pdf.h in Headers */,
 				052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */,
+				053CAB431DAB408C00A92F98 /* nsstandard.h in Headers */,
 				052F9F8B180600FB00FAE4DF /* isometry.h in Headers */,
 				052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */,
 				052F9F57180600FB00FAE4DF /* packetlistener.h in Headers */,
@@ -6257,7 +6279,7 @@
 				05431EFD1C40F1F6009BC072 /* face.h in Headers */,
 				052F9F38180600FB00FAE4DF /* approx.h in Headers */,
 				050C64B21DA3085C00C9420F /* nbooleans.h in Headers */,
-				052FA03B180600FB00FAE4DF /* nsoriented.h in Headers */,
+				052FA03B180600FB00FAE4DF /* nsvectororiented.h in Headers */,
 				0591E7E51C4F750200793A9C /* xmlhypersurfacereader.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,
 				052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */,
@@ -6279,7 +6301,7 @@
 				050C646C1DA1019B00C9420F /* anglestructures.h in Headers */,
 				052FA05E180600FB00FAE4DF /* nboundarycomponent.h in Headers */,
 				05431F021C40F1F6009BC072 /* simplex.h in Headers */,
-				052FA041180600FB00FAE4DF /* nsquadoct.h in Headers */,
+				052FA041180600FB00FAE4DF /* nsvectorquadoct.h in Headers */,
 				052F9FF9180600FB00FAE4DF /* nlayeredloop.h in Headers */,
 				057EE4351C6009A700C4D155 /* perm-impl.h in Headers */,
 				05431F771C40F3C9009BC072 /* list_operations.h in Headers */,
@@ -6295,6 +6317,7 @@
 				0591E7B11C4F74C400793A9C /* dim4vertex.h in Headers */,
 				05431F131C40F257009BC072 /* facenumber.h in Headers */,
 				0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */,
+				053CAB411DAB408C00A92F98 /* nsquad.h in Headers */,
 				052F9F3A180600FB00FAE4DF /* matrixops.h in Headers */,
 				052F9F95180600FB00FAE4DF /* positioned_tet.h in Headers */,
 				05431F641C40F3C9009BC072 /* bottom.h in Headers */,
@@ -6359,6 +6382,7 @@
 				052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */,
 				052FA092180600FB00FAE4DF /* property.h in Headers */,
 				052F9ECF180600FB00FAE4DF /* maxadmissible-impl.h in Headers */,
+				053CAB3F1DAB408C00A92F98 /* nsoriented.h in Headers */,
 				052F9FF3180600FB00FAE4DF /* nlayeredchain.h in Headers */,
 				052F9E86180600FB00FAE4DF /* ngrouppresentation.h in Headers */,
 				052FA076180600FB00FAE4DF /* ntriangulation.h in Headers */,
@@ -7206,7 +7230,7 @@
 				05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */,
 				050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */,
 				052FA1931806129B00FAE4DF /* nmanifold.cpp in Sources */,
-				052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */,
+				052FA1E31806129B00FAE4DF /* nsvectorstandard.cpp in Sources */,
 				0591E84E1C4F777000793A9C /* dim4facetpairing.cpp in Sources */,
 				052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
@@ -7219,8 +7243,8 @@
 				052FA1D11806129B00FAE4DF /* ntxicore.cpp in Sources */,
 				05D1C17219C7F95100CF92F2 /* EditableTableViewController.mm in Sources */,
 				058FADAB19D38BFC0001B5B5 /* SnapPeaViewController.mm in Sources */,
-				052FA1E01806129B00FAE4DF /* nsorientedquad.cpp in Sources */,
-				052FA1E21806129B00FAE4DF /* nsquadoct.cpp in Sources */,
+				052FA1E01806129B00FAE4DF /* nsvectororientedquad.cpp in Sources */,
+				052FA1E21806129B00FAE4DF /* nsvectorquadoct.cpp in Sources */,
 				052FA1C01806129B00FAE4DF /* nlayeredsurfacebundle.cpp in Sources */,
 				052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */,
 				052FA1901806129B00FAE4DF /* ngraphtriple.cpp in Sources */,
@@ -7366,7 +7390,7 @@
 				052FA1DB1806129B00FAE4DF /* nnormalsurface.cpp in Sources */,
 				05431F041C40F1F9009BC072 /* facenumbering.cpp in Sources */,
 				052FA21B180612DD00FAE4DF /* current_curve_basis.c in Sources */,
-				052FA1DE1806129B00FAE4DF /* nsanstandard.cpp in Sources */,
+				052FA1DE1806129B00FAE4DF /* nsvectoranstandard.cpp in Sources */,
 				05C064411C55922A006E6483 /* HyperViewController.mm in Sources */,
 				058FADC619D50DA10001B5B5 /* Coordinates.mm in Sources */,
 				05D1173B19EE0197003BEC55 /* perm3.cpp in Sources */,
@@ -7466,7 +7490,7 @@
 				052FA1951806129B00FAE4DF /* nsfsaltset.cpp in Sources */,
 				050313C41812DB1E007F0CBE /* DefaultPacketViewController.mm in Sources */,
 				05D1173819EE0192003BEC55 /* snappeatriangulation.cpp in Sources */,
-				052FA1E11806129B00FAE4DF /* nsquad.cpp in Sources */,
+				052FA1E11806129B00FAE4DF /* nsvectorquad.cpp in Sources */,
 				052FA223180612DD00FAE4DF /* find_cusp.c in Sources */,
 				05431F371C40F365009BC072 /* nfacepairing.cpp in Sources */,
 				0591E7C31C4F74E100793A9C /* homotopy.cpp in Sources */,
@@ -7488,7 +7512,7 @@
 				05D1174D19EE0460003BEC55 /* simplify.cpp in Sources */,
 				05A73C9B19B2EF5A0099C617 /* abelian_group.c in Sources */,
 				052FA1BC1806129B00FAE4DF /* nlayeredchainpair.cpp in Sources */,
-				052FA1DF1806129B00FAE4DF /* nsoriented.cpp in Sources */,
+				052FA1DF1806129B00FAE4DF /* nsvectororiented.cpp in Sources */,
 				052FA1B61806129B00FAE4DF /* nblockedsfs.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
@@ -7803,7 +7827,7 @@
 				055B7315181D7CF800449D14 /* dim2vertex.cpp in Sources */,
 				052F9EBA180600FB00FAE4DF /* nxmldim2trireader.cpp in Sources */,
 				0591E7E01C4F750200793A9C /* normalhypersurface.cpp in Sources */,
-				052FA037180600FB00FAE4DF /* nsanstandard.cpp in Sources */,
+				052FA037180600FB00FAE4DF /* nsvectoranstandard.cpp in Sources */,
 				052FA073180600FB00FAE4DF /* ntriangle.cpp in Sources */,
 				0583655D18DB882B008B08D9 /* simplify.cpp in Sources */,
 				052FA05B180600FB00FAE4DF /* hydrate.cpp in Sources */,
@@ -7849,7 +7873,7 @@
 				05431F2E1C40F2DB009BC072 /* perm2.cpp in Sources */,
 				052F9F70180600FB00FAE4DF /* canonize_result.c in Sources */,
 				052FA07C180600FB00FAE4DF /* simplify.cpp in Sources */,
-				052FA040180600FB00FAE4DF /* nsquadoct.cpp in Sources */,
+				052FA040180600FB00FAE4DF /* nsvectorquadoct.cpp in Sources */,
 				052F9FE0180600FB00FAE4DF /* nsigcensus.cpp in Sources */,
 				05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */,
 				052F9F34180600FB00FAE4DF /* ntorusbundle.cpp in Sources */,
@@ -7960,14 +7984,14 @@
 				0591E7A01C4F74C400793A9C /* dim4boundarycomponent.cpp in Sources */,
 				052F9F98180600FB00FAE4DF /* simplify_triangulation.c in Sources */,
 				0591E7AE1C4F74C400793A9C /* dim4triangulation.cpp in Sources */,
-				052FA03E180600FB00FAE4DF /* nsquad.cpp in Sources */,
+				052FA03E180600FB00FAE4DF /* nsvectorquad.cpp in Sources */,
 				052FA01A180600FB00FAE4DF /* ntrisolidtorus.cpp in Sources */,
 				052F9F9A180600FB00FAE4DF /* solve_equations.c in Sources */,
 				052F9EBC180600FB00FAE4DF /* skeleton.cpp in Sources */,
 				052F9FF6180600FB00FAE4DF /* nlayeredlensspace.cpp in Sources */,
 				052F9F48180600FB00FAE4DF /* primes.cpp in Sources */,
 				052FA022180600FB00FAE4DF /* enumerator.cpp in Sources */,
-				052FA03A180600FB00FAE4DF /* nsoriented.cpp in Sources */,
+				052FA03A180600FB00FAE4DF /* nsvectororiented.cpp in Sources */,
 				052F9FEE180600FB00FAE4DF /* nblockedsfstriple.cpp in Sources */,
 				052F9E9B180600FB00FAE4DF /* dim2gluingpermsearcher.cpp in Sources */,
 				052FA054180600FB00FAE4DF /* stdtoquad.cpp in Sources */,
@@ -7991,12 +8015,12 @@
 				052FA000180600FB00FAE4DF /* npillowtwosphere.cpp in Sources */,
 				05431F881C40F40D009BC072 /* bottom.cpp in Sources */,
 				052F9F10180600FB00FAE4DF /* orb.cpp in Sources */,
-				052FA03C180600FB00FAE4DF /* nsorientedquad.cpp in Sources */,
+				052FA03C180600FB00FAE4DF /* nsvectororientedquad.cpp in Sources */,
 				05A73C7A19B2EDFC0099C617 /* xmlcallback.cpp in Sources */,
 				052F9F0E180600FB00FAE4DF /* isosig.cpp in Sources */,
 				050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
-				052FA042180600FB00FAE4DF /* nsstandard.cpp in Sources */,
+				052FA042180600FB00FAE4DF /* nsvectorstandard.cpp in Sources */,
 				052FA048180600FB00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				052FA07D180600FB00FAE4DF /* simplifyglobal.cpp in Sources */,
 				052F9F7D180600FB00FAE4DF /* Dehn_coefficients.c in Sources */,

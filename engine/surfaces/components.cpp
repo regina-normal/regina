@@ -32,8 +32,8 @@
 
 #include <queue>
 #include "surfaces/ndisc.h"
-#include "surfaces/nsstandard.h"
-#include "surfaces/nsanstandard.h"
+#include "surfaces/nsvectorstandard.h"
+#include "surfaces/nsvectoranstandard.h"
 
 namespace regina {
 

@@ -13,12 +13,12 @@ SET ( FILES
   nnormalsurface
   normalsurfaces
   nprism
-  nsanstandard
-  nsoriented
-  nsorientedquad
-  nsquad
-  nsquadoct
-  nsstandard
+  nsvectoranstandard
+  nsvectororiented
+  nsvectororientedquad
+  nsvectorquad
+  nsvectorquadoct
+  nsvectorstandard
   surfacefilter
   xmlfilterreader
   xmlsurfacereader
@@ -58,6 +58,12 @@ if (${REGINA_INSTALL_DEV})
     nsquadoct.h
     nsstandard.h
     nsurfacefilter.h
+    nsvectoranstandard.h
+    nsvectororiented.h
+    nsvectororientedquad.h
+    nsvectorquad.h
+    nsvectorquadoct.h
+    nsvectorstandard.h
     sfcombination.h
     sfproperties.h
     surfacefilter.h

@@ -33,22 +33,22 @@
 #include <deque>
 #include <set>
 #include "enumerate/enumconstraints.h"
-#include "surfaces/nsquad.h"
-#include "surfaces/nsstandard.h"
+#include "surfaces/nsvectorquadoct.h"
+#include "surfaces/nsvectoranstandard.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NNormalSurfaceVector* NSVectorQuad::makeZeroVector(
+NNormalSurfaceVector* NSVectorQuadOct::makeZeroVector(
         const NTriangulation* triangulation) {
-    return new NSVectorQuad(3 * triangulation->size());
+    return new NSVectorQuadOct(6 * triangulation->size());
 }
 
-MatrixInt* NSVectorQuad::makeMatchingEquations(
+MatrixInt* NSVectorQuadOct::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 3 * triangulation->size();
+    unsigned long nCoords = 6 * triangulation->size();
     // One equation per non-boundary edge.
     long nEquations = long(triangulation->countEdges());
     for (NTriangulation::BoundaryComponentIterator bit = triangulation->
@@ -69,10 +69,14 @@ MatrixInt* NSVectorQuad::makeMatchingEquations(
             for (auto& emb : **eit) {
                 tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
-                ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[2]])
-                    += 1;
-                ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[3]])
-                    -= 1;
+                ans->entry(row, 6 * tetIndex +
+                    quadSeparating[perm[0]][perm[2]]) += 1;
+                ans->entry(row, 6 * tetIndex +
+                    quadSeparating[perm[0]][perm[3]]) -= 1;
+                ans->entry(row, 6 * tetIndex + 3 +
+                    quadSeparating[perm[0]][perm[2]]) -= 1;
+                ans->entry(row, 6 * tetIndex + 3 +
+                    quadSeparating[perm[0]][perm[3]]) += 1;
             }
             row++;
         }
@@ -80,16 +84,26 @@ MatrixInt* NSVectorQuad::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NSVectorQuad::makeEmbeddedConstraints(
+EnumConstraints* NSVectorQuadOct::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
-    EnumConstraints* ans = new EnumConstraints(triangulation->size());
+    // At most one quad/oct per tetrahedron.
+    // At most one oct type overall.
+    EnumConstraints* ans = new EnumConstraints(triangulation->size() + 1);
 
-    unsigned long base = 0;
-    for (unsigned c = 0; c < ans->size(); ++c) {
+    unsigned base = 0;
+    for (unsigned c = 1; c < ans->size(); ++c) {
         (*ans)[c].insert((*ans)[c].end(), base);
         (*ans)[c].insert((*ans)[c].end(), base + 1);
         (*ans)[c].insert((*ans)[c].end(), base + 2);
-        base += 3;
+        (*ans)[c].insert((*ans)[c].end(), base + 3);
+        (*ans)[c].insert((*ans)[c].end(), base + 4);
+        (*ans)[c].insert((*ans)[c].end(), base + 5);
+
+        (*ans)[0].insert((*ans)[0].end(), base + 3);
+        (*ans)[0].insert((*ans)[0].end(), base + 4);
+        (*ans)[0].insert((*ans)[0].end(), base + 5);
+
+        base += 6;
     }
 
     return ans;
@@ -115,24 +129,24 @@ namespace {
     };
 }
 
-NNormalSurfaceVector* NSVectorQuad::makeMirror(
+NNormalSurfaceVector* NSVectorQuadOct::makeMirror(
         const Ray& original, const NTriangulation* triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
-    unsigned long nRows = 7 * triang->size();
-    NSVectorStandard* ans = new NSVectorStandard(nRows);
+    unsigned long nRows = 10 * triang->size();
+    NSVectorANStandard* ans = new NSVectorANStandard(nRows);
 
     // Set every triangular coordinate in the answer to infinity.
     // For coordinates about vertices not enjoying infinitely many discs,
     // infinity will mean "unknown".
     unsigned long row;
     int i;
-    for (row = 0; row < nRows; row+=7)
+    for (row = 0; row < nRows; row += 10)
         for (i = 0; i < 4; i++)
             ans->setElement(row + i, LargeInteger::infinity);
-    for (row = 0; 7 * row < nRows; row++)
-        for (i = 0; i < 3; i++)
-            ans->setElement(7 * row + 4 + i, original[3 * row + i]);
+    for (row = 0; 10 * row < nRows; ++row)
+        for (i = 0; i < 6; i++)
+            ans->setElement(10 * row + 4 + i, original[6 * row + i]);
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.
@@ -162,7 +176,7 @@ NNormalSurfaceVector* NSVectorQuad::makeMirror(
 
         // Pick some triangular disc and set it to zero.
         const NVertexEmbedding& vemb = (*vit)->front();
-        row = 7 * vemb.tetrahedron()->index() + vemb.vertex();
+        row = 10 * vemb.tetrahedron()->index() + vemb.vertex();
         ans->setElement(row, LargeInteger::zero);
 
         min = LargeInteger::zero;
@@ -193,7 +207,7 @@ NNormalSurfaceVector* NSVectorQuad::makeMirror(
             beginit = current.edge->begin();
             endit = current.edge->end();
             for (eembit = beginit; eembit != endit; eembit++)
-                if (! (*ans)[7 * (*eembit).tetrahedron()->index() +
+                if (! (*ans)[10 * (*eembit).tetrahedron()->index() +
                         (*eembit).vertices()[current.end]].isInfinite())
                     break;
 
@@ -211,13 +225,20 @@ NNormalSurfaceVector* NSVectorQuad::makeMirror(
                 tetPerm = (*eembit).vertices();
                 tetIndex = tet->index();
 
-                expect =
-                    (*ans)[7 * adjIndex + adjPerm[current.end]] +
-                    (*ans)[7 * adjIndex + 4 +
-                        quadSeparating[adjPerm[3]][adjPerm[current.end]]] -
-                    (*ans)[7 * tetIndex + 4 +
-                        quadSeparating[tetPerm[2]][tetPerm[current.end]]];
-                ans->setElement(7 * tetIndex + tetPerm[current.end], expect);
+                expect = (*ans)[10 * adjIndex + adjPerm[current.end]]
+                    + (*ans)[10 * adjIndex + 4 + quadSeparating
+                        [adjPerm[3]][adjPerm[current.end]]]
+                    + (*ans)[10 * adjIndex + 7 + quadMeeting
+                        [adjPerm[3]][adjPerm[current.end]][0]]
+                    + (*ans)[10 * adjIndex + 7 + quadMeeting
+                        [adjPerm[3]][adjPerm[current.end]][1]]
+                    - (*ans)[10 * tetIndex + 4 + quadSeparating
+                        [tetPerm[2]][tetPerm[current.end]]]
+                    - (*ans)[10 * tetIndex + 7 + quadMeeting
+                        [tetPerm[2]][tetPerm[current.end]][0]]
+                    - (*ans)[10 * tetIndex + 7 + quadMeeting
+                        [tetPerm[2]][tetPerm[current.end]][1]];
+                ans->setElement(10 * tetIndex + tetPerm[current.end], expect);
                 if (expect < min)
                     min = expect;
 
@@ -247,13 +268,20 @@ NNormalSurfaceVector* NSVectorQuad::makeMirror(
                 tetPerm = (*eembit).vertices();
                 tetIndex = tet->index();
 
-                expect =
-                    (*ans)[7 * adjIndex + adjPerm[current.end]] +
-                    (*ans)[7 * adjIndex + 4 +
-                        quadSeparating[adjPerm[2]][adjPerm[current.end]]] -
-                    (*ans)[7 * tetIndex + 4 +
-                        quadSeparating[tetPerm[3]][tetPerm[current.end]]];
-                row = 7 * tetIndex + tetPerm[current.end];
+                expect = (*ans)[10 * adjIndex + adjPerm[current.end]]
+                    + (*ans)[10 * adjIndex + 4 + quadSeparating
+                        [adjPerm[2]][adjPerm[current.end]]]
+                    + (*ans)[10 * adjIndex + 7 + quadMeeting
+                        [adjPerm[2]][adjPerm[current.end]][0]]
+                    + (*ans)[10 * adjIndex + 7 + quadMeeting
+                        [adjPerm[2]][adjPerm[current.end]][1]]
+                    - (*ans)[10 * tetIndex + 4 + quadSeparating
+                        [tetPerm[3]][tetPerm[current.end]]]
+                    - (*ans)[10 * tetIndex + 7 + quadMeeting
+                        [tetPerm[3]][tetPerm[current.end]][0]]
+                    - (*ans)[10 * tetIndex + 7 + quadMeeting
+                        [tetPerm[3]][tetPerm[current.end]][1]];
+                row = 10 * tetIndex + tetPerm[current.end];
                 if ((*ans)[row].isInfinite()) {
                     ans->setElement(row, expect);
                     if (expect < min)
@@ -285,7 +313,7 @@ NNormalSurfaceVector* NSVectorQuad::makeMirror(
         // to infinity.  Otherwise subtract min from every coordinate to
         // make the values as small as possible.
         for (auto& emb : **vit) {
-            row = 7 * emb.tetrahedron()->index() + emb.vertex();
+            row = 10 * emb.tetrahedron()->index() + emb.vertex();
             if (broken)
                 ans->setElement(row, LargeInteger::infinity);
             else
@@ -294,7 +322,7 @@ NNormalSurfaceVector* NSVectorQuad::makeMirror(
     }
 
     // Note that there should be no need to remove common factors since
-    // the quad coordinates have not changed and in theory they already
+    // the quad/oct coordinates have not changed and in theory they already
     // had gcd=1.
     return ans;
 }

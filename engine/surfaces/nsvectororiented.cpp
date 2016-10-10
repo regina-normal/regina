@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "enumerate/enumconstraints.h"
-#include "surfaces/nsoriented.h"
+#include "surfaces/nsvectororiented.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
 #include "triangulation/ntriangulation.h"

@@ -33,8 +33,8 @@
 #include <deque>
 #include <set>
 #include "enumerate/enumconstraints.h"
-#include "surfaces/nsorientedquad.h"
-#include "surfaces/nsoriented.h"
+#include "surfaces/nsvectororientedquad.h"
+#include "surfaces/nsvectororiented.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
 #include "triangulation/ntriangulation.h"

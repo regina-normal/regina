@@ -31,8 +31,7 @@
  **************************************************************************/
 
 /*! \file surfaces/nsanstandard.h
- *  \brief Implements almost normal surface vectors using standard
- *  triangle-quad-oct coordinates.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NSANSTANDARD_H
@@ -40,124 +39,9 @@
 #define __NSANSTANDARD_H
 #endif
 
-#include "regina-core.h"
-#include "surfaces/nnormalsurface.h"
+#warning This header is deprecated; please use surfaces/nsvectoranstandard.h instead.
 
-namespace regina {
-
-class NSVectorANStandard;
-
-/**
- * \weakgroup surfaces
- * @{
- */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct NormalInfo<NS_AN_STANDARD> {
-    typedef NSVectorANStandard Class;
-    typedef NormalInfo<NS_AN_STANDARD> Standard;
-    typedef NormalInfo<NS_AN_QUAD_OCT> Reduced;
-    inline static const char* name() {
-        return "Standard almost normal (tri-quad-oct)";
-    }
-    enum {
-        almostNormal = 1,
-        spun = 0,
-        oriented = 0
-    };
-};
-#endif
-
-/**
- * An almost normal surface vector using standard triangle-quad-oct
- * coordinates.
- *
- * If there are \a t tetrahedra in the underlying
- * triangulation, there must be precisely 10<i>t</i> coordinates.
- * The first ten coordinates will be for the first tetrahedron, the
- * next ten for the second tetrahedron and so on.  For each
- * tetrahedron, the first four represent the number of
- * triangular discs about vertex 0, 1, 2 and 3, the next
- * three represent the number of quadrilateral discs of type 0,
- * 1 and 2 (see NNormalSurface::quads()) and the final three
- * represent the number of octagonal discs of type 0, 1 and 2 (see
- * NNormalSurface::octs()).
- *
- * \ifacespython Not present.
- */
-class REGINA_API NSVectorANStandard : public NNormalSurfaceVector {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorANStandard, NS_AN_STANDARD)
-
-    public:
-        /**
-         * Creates a new vector all of whose entries are initialised to
-         * zero.
-         *
-         * @param length the number of elements in the new vector.
-         */
-        NSVectorANStandard(size_t length);
-        /**
-         * Creates a new vector that is a clone of the given vector.
-         *
-         * @param cloneMe the vector to clone.
-         */
-        NSVectorANStandard(const Vector<LargeInteger>& cloneMe);
-
-        virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang) const;
-        virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const NTriangulation* triang) const;
-        virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const;
-        virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const NTriangulation* triang) const;
-        virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const NTriangulation* triang) const;
-
-        static NNormalSurfaceVector* makeZeroVector(
-            const NTriangulation* triangulation);
-        static MatrixInt* makeMatchingEquations(
-            const NTriangulation* triangulation);
-        static EnumConstraints* makeEmbeddedConstraints(
-            const NTriangulation* triangulation);
-};
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceVectorStandard has now been
- * renamed to NSVectorStandard.
- */
-REGINA_DEPRECATED typedef NSVectorANStandard NNormalSurfaceVectorANStandard;
-
-/*@}*/
-
-// Inline functions for NSVectorANStandard
-
-inline NSVectorANStandard::NSVectorANStandard(
-        size_t length) : NNormalSurfaceVector(length) {
-}
-inline NSVectorANStandard::NSVectorANStandard(
-        const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVector(cloneMe) {
-}
-
-inline LargeInteger NSVectorANStandard::triangles(
-        size_t tetIndex, int vertex, const NTriangulation*) const {
-    return coords_[10 * tetIndex + vertex];
-}
-inline LargeInteger NSVectorANStandard::quads(
-        size_t tetIndex, int quadType, const NTriangulation*) const {
-    return coords_[10 * tetIndex + 4 + quadType];
-}
-inline LargeInteger NSVectorANStandard::octs(
-        size_t tetIndex, int octType, const NTriangulation*) const {
-    return coords_[10 * tetIndex + 7 + octType];
-}
-
-} // namespace regina
+#include "surfaces/nsvectoranstandard.h"
 
 #endif
 
