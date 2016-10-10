@@ -530,7 +530,7 @@
 		052FA036180600FB00FAE4DF /* nprism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E10180600FB00FAE4DF /* nprism.h */; };
 		052FA037180600FB00FAE4DF /* nsvectoranstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */; };
 		052FA038180600FB00FAE4DF /* nsvectoranstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E12180600FB00FAE4DF /* nsvectoranstandard.h */; };
-		052FA039180600FB00FAE4DF /* nsmirrored.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E13180600FB00FAE4DF /* nsmirrored.h */; };
+		052FA039180600FB00FAE4DF /* nsvectormirrored.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E13180600FB00FAE4DF /* nsvectormirrored.h */; };
 		052FA03A180600FB00FAE4DF /* nsvectororiented.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E14180600FB00FAE4DF /* nsvectororiented.cpp */; };
 		052FA03B180600FB00FAE4DF /* nsvectororiented.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E15180600FB00FAE4DF /* nsvectororiented.h */; };
 		052FA03C180600FB00FAE4DF /* nsvectororientedquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E16180600FB00FAE4DF /* nsvectororientedquad.cpp */; };
@@ -852,6 +852,7 @@
 		053CAB411DAB408C00A92F98 /* nsquad.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB3B1DAB408C00A92F98 /* nsquad.h */; };
 		053CAB421DAB408C00A92F98 /* nsquadoct.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB3C1DAB408C00A92F98 /* nsquadoct.h */; };
 		053CAB431DAB408C00A92F98 /* nsstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB3D1DAB408C00A92F98 /* nsstandard.h */; };
+		053CAB451DAB699A00A92F98 /* nsmirrored.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB441DAB699A00A92F98 /* nsmirrored.h */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -2561,7 +2562,7 @@
 		052F9E10180600FB00FAE4DF /* nprism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprism.h; sourceTree = "<group>"; };
 		052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectoranstandard.cpp; sourceTree = "<group>"; };
 		052F9E12180600FB00FAE4DF /* nsvectoranstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectoranstandard.h; sourceTree = "<group>"; };
-		052F9E13180600FB00FAE4DF /* nsmirrored.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsmirrored.h; sourceTree = "<group>"; };
+		052F9E13180600FB00FAE4DF /* nsvectormirrored.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectormirrored.h; sourceTree = "<group>"; };
 		052F9E14180600FB00FAE4DF /* nsvectororiented.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectororiented.cpp; sourceTree = "<group>"; };
 		052F9E15180600FB00FAE4DF /* nsvectororiented.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectororiented.h; sourceTree = "<group>"; };
 		052F9E16180600FB00FAE4DF /* nsvectororientedquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectororientedquad.cpp; sourceTree = "<group>"; };
@@ -2727,6 +2728,7 @@
 		053CAB3B1DAB408C00A92F98 /* nsquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsquad.h; sourceTree = "<group>"; };
 		053CAB3C1DAB408C00A92F98 /* nsquadoct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsquadoct.h; sourceTree = "<group>"; };
 		053CAB3D1DAB408C00A92F98 /* nsstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsstandard.h; sourceTree = "<group>"; };
+		053CAB441DAB699A00A92F98 /* nsmirrored.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsmirrored.h; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -4811,7 +4813,7 @@
 				052F9E0F180600FB00FAE4DF /* nprism.cpp */,
 				052F9E10180600FB00FAE4DF /* nprism.h */,
 				053CAB381DAB408C00A92F98 /* nsanstandard.h */,
-				052F9E13180600FB00FAE4DF /* nsmirrored.h */,
+				053CAB441DAB699A00A92F98 /* nsmirrored.h */,
 				053CAB391DAB408C00A92F98 /* nsoriented.h */,
 				053CAB3A1DAB408C00A92F98 /* nsorientedquad.h */,
 				053CAB3B1DAB408C00A92F98 /* nsquad.h */,
@@ -4820,6 +4822,7 @@
 				053CAB301DA8D6B100A92F98 /* nsurfacefilter.h */,
 				052F9E11180600FB00FAE4DF /* nsvectoranstandard.cpp */,
 				052F9E12180600FB00FAE4DF /* nsvectoranstandard.h */,
+				052F9E13180600FB00FAE4DF /* nsvectormirrored.h */,
 				052F9E14180600FB00FAE4DF /* nsvectororiented.cpp */,
 				052F9E15180600FB00FAE4DF /* nsvectororiented.h */,
 				052F9E16180600FB00FAE4DF /* nsvectororientedquad.cpp */,
@@ -6082,7 +6085,7 @@
 				052FA01F180600FB00FAE4DF /* ntxicore.h in Headers */,
 				05431F201C40F260009BC072 /* canonical-impl.h in Headers */,
 				052F9FA8180600FB00FAE4DF /* unix_file_io.h in Headers */,
-				052FA039180600FB00FAE4DF /* nsmirrored.h in Headers */,
+				052FA039180600FB00FAE4DF /* nsvectormirrored.h in Headers */,
 				05431F261C40F260009BC072 /* isomorphism.h in Headers */,
 				052F9F8E180600FB00FAE4DF /* kernel_typedefs.h in Headers */,
 				0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */,
@@ -6359,6 +6362,7 @@
 				05431F121C40F257009BC072 /* face.h in Headers */,
 				05431F281C40F260009BC072 /* simplex.h in Headers */,
 				0591E7A71C4F74C400793A9C /* dim4facetpairing.h in Headers */,
+				053CAB451DAB699A00A92F98 /* nsmirrored.h in Headers */,
 				05431F351C40F363009BC072 /* nfacepairing.h in Headers */,
 				052FA089180600FB00FAE4DF /* intutils.h in Headers */,
 				052FA08A180600FB00FAE4DF /* memutils.h in Headers */,

@@ -271,7 +271,7 @@ struct NormalInfo;
  * @param id the corresponding NNormalCoords constant.
  * @param superclass the vector class from which \a class_ is derived.
  * This is typically NormalSurfaceVector, though in some cases it may be
- * different (e.g., NormalSurfaceVectorMirrored).
+ * different (e.g., NSVectorMirrored).
  */
 #define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id, superclass) \
     public: \

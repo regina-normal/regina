@@ -40,7 +40,7 @@
 #define __NSVECTORORIENTEDQUAD_H
 #endif
 #include "regina-core.h"
-#include "surfaces/nsmirrored.h"
+#include "surfaces/nsvectormirrored.h"
 
 namespace regina {
 
@@ -86,9 +86,9 @@ struct NormalInfo<NS_ORIENTED_QUAD> {
  * \ifacespython Not present.
  */
 class REGINA_API NSVectorOrientedQuad :
-        public NormalSurfaceVectorMirrored {
+        public NSVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOrientedQuad, NS_ORIENTED_QUAD,
-        NormalSurfaceVectorMirrored)
+        NSVectorMirrored)
 
     public:
         /**
@@ -141,11 +141,11 @@ REGINA_DEPRECATED typedef NSVectorOrientedQuad NNormalSurfaceVectorOrientedQuad;
 // Inline functions for NSVectorOrientedQuad
 
 inline NSVectorOrientedQuad::NSVectorOrientedQuad(
-        size_t length) : NormalSurfaceVectorMirrored(length) {
+        size_t length) : NSVectorMirrored(length) {
 }
 inline NSVectorOrientedQuad::NSVectorOrientedQuad(
         const Vector<LargeInteger>& cloneMe) :
-        NormalSurfaceVectorMirrored(cloneMe) {
+        NSVectorMirrored(cloneMe) {
 }
 
 inline NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(

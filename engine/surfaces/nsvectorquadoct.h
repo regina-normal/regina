@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "surfaces/nsmirrored.h"
+#include "surfaces/nsvectormirrored.h"
 
 namespace regina {
 
@@ -83,9 +83,9 @@ struct NormalInfo<NS_AN_QUAD_OCT> {
  * \ifacespython Not present.
  */
 class REGINA_API NSVectorQuadOct :
-        public NormalSurfaceVectorMirrored {
+        public NSVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuadOct, NS_AN_QUAD_OCT,
-        NormalSurfaceVectorMirrored)
+        NSVectorMirrored)
 
     public:
         /**
@@ -131,11 +131,11 @@ REGINA_DEPRECATED typedef NSVectorQuadOct NNormalSurfaceVectorQuadOct;
 // Inline functions for NSVectorQuadOct
 
 inline NSVectorQuadOct::NSVectorQuadOct(
-        size_t length) : NormalSurfaceVectorMirrored(length) {
+        size_t length) : NSVectorMirrored(length) {
 }
 inline NSVectorQuadOct::NSVectorQuadOct(
         const Vector<LargeInteger>& cloneMe) :
-        NormalSurfaceVectorMirrored(cloneMe) {
+        NSVectorMirrored(cloneMe) {
 }
 
 inline NormalSurfaceVector* NSVectorQuadOct::makeMirror(

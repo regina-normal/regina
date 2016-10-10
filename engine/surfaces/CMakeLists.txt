@@ -59,6 +59,7 @@ if (${REGINA_INSTALL_DEV})
     nsstandard.h
     nsurfacefilter.h
     nsvectoranstandard.h
+    nsvectormirrored.h
     nsvectororiented.h
     nsvectororientedquad.h
     nsvectorquad.h
