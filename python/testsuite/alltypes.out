@@ -1083,7 +1083,7 @@ Equality type : BY_VALUE
 NDiscSpecIterator : class
 Equality type : BY_VALUE
 
-NDiscType : class
+DiscType : class
 Equality type : BY_VALUE
 
 NEdge : typedef ->  Face3_1

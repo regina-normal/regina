@@ -827,10 +827,10 @@ class REGINA_API NormalSurface :
         std::string name_;
             /**< An optional name associated with this surface. */
 
-        mutable Property<NDiscType> octPosition_;
+        mutable Property<DiscType> octPosition_;
             /**< The position of the first non-zero octagonal coordinate,
-                 or NDiscType::NONE if there is no non-zero octagonal
-                 coordinate.  Here NDiscType::type is an octagon type
+                 or DiscType::NONE if there is no non-zero octagonal
+                 coordinate.  Here DiscType::type is an octagon type
                  between 0 and 2 inclusive. */
         mutable Property<LargeInteger> eulerChar_;
             /**< The Euler characteristic of this surface. */
@@ -1090,22 +1090,22 @@ class REGINA_API NormalSurface :
          * has a non-zero octagonal coordinate.  In other words, if this
          * routine returns the disc type \a t, then the octagonal
          * coordinate returned by octs(t.tetIndex, t.type) is non-zero.
-         * Here NDiscType::type represents an octagon type within a
+         * Here DiscType::type represents an octagon type within a
          * tetrahedron, and takes values between 0 and 2 inclusive.
          *
          * If this surface does not contain any octagons, this routine
-         * returns NDiscType::NONE instead.
+         * returns DiscType::NONE instead.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.  Moreover, if the underlying coordinate
          * system does not support almost normal surfaces, then even the
-         * first call is fast (it returns NDiscType::NONE immediately).
+         * first call is fast (it returns DiscType::NONE immediately).
          *
          * @return the position of the first non-zero octagonal coordinate,
-         * or NDiscType::NONE if there is no such coordinate.
+         * or DiscType::NONE if there is no such coordinate.
          */
-        NDiscType octPosition() const;
+        DiscType octPosition() const;
 
         /**
          * Returns the number of coordinates in the specific underlying
@@ -1835,7 +1835,7 @@ inline LargeInteger NormalSurface::arcs(size_t triIndex,
     return vector->arcs(triIndex, triVertex, triangulation_);
 }
 
-inline NDiscType NormalSurface::octPosition() const {
+inline DiscType NormalSurface::octPosition() const {
     if (! octPosition_.known())
         calculateOctPosition();
     return octPosition_.value();
@@ -1917,7 +1917,7 @@ inline LargeInteger NormalSurface::isCentral() const {
 }
 
 inline bool NormalSurface::normal() const {
-    return (octPosition() == NDiscType::NONE);
+    return (octPosition() == DiscType::NONE);
 }
 
 inline const Ray& NormalSurface::rawVector() const {

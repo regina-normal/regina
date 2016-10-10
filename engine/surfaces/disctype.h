@@ -69,8 +69,8 @@ namespace regina {
  * Note that this class tracks disc \a types, not discs themselves.
  * To track individual normal discs, see the NDiscSpec class instead.
  */
-struct REGINA_API NDiscType {
-    static const NDiscType NONE;
+struct REGINA_API DiscType {
+    static const DiscType NONE;
         /**< Represents a "null" disc type.  Here the \a type member is
              negative, to distinguish it from "meaningful" disc types
              in which \a type is always zero or positive. */
@@ -83,12 +83,12 @@ struct REGINA_API NDiscType {
         /**< Identifies the disc type within the specified tetrahedron.
              The precise meaning of this member is left up to the user,
              though it must be non-negative for "meaningful" disc types.
-             See the NDiscType class notes for details. */
+             See the DiscType class notes for details. */
 
     /**
      * Creates a new disc type initialised to NONE.
      */
-    NDiscType();
+    DiscType();
     /**
      * Creates a new disc type initialised with the given values.
      *
@@ -97,13 +97,13 @@ struct REGINA_API NDiscType {
      * @param newType the specific disc type within the given
      * tetrahedron; see the class notes for the meaning of this field.
      */
-    NDiscType(size_t newTetIndex, int newType);
+    DiscType(size_t newTetIndex, int newType);
     /**
      * Creates a copy of the given disc type.
      *
      * @param cloneMe the disc type to clone.
      */
-    NDiscType(const NDiscType& cloneMe);
+    DiscType(const DiscType& cloneMe);
 
     /**
      * Sets this to a copy of the given disc type.
@@ -111,7 +111,7 @@ struct REGINA_API NDiscType {
      * @param cloneMe the disc type to clone.
      * @return a reference to this disc type.
      */
-    NDiscType& operator = (const NDiscType& cloneMe);
+    DiscType& operator = (const DiscType& cloneMe);
     /**
      * Determines if this and the given disc type are identical.
      *
@@ -122,7 +122,7 @@ struct REGINA_API NDiscType {
      * @return \c true if this and the given disc type are identical, or
      * \c false if they are different.
      */
-    bool operator == (const NDiscType& compare) const;
+    bool operator == (const DiscType& compare) const;
     /**
      * Determines if this and the given disc type are different.
      *
@@ -132,7 +132,7 @@ struct REGINA_API NDiscType {
      * @return \c true if this and the given disc type are different, or
      * \c false if they are identical.
      */
-    bool operator != (const NDiscType& compare) const;
+    bool operator != (const DiscType& compare) const;
     /**
      * Provides an ordering of disc types.  Types are ordered first by
      * \a tetrahedron and then by \a type.  NONE is considered less than
@@ -141,7 +141,7 @@ struct REGINA_API NDiscType {
      * @return \c true if this disc type appears before the given disc type
      * in the ordering, or \c false if not.
      */
-    bool operator < (const NDiscType& compare) const;
+    bool operator < (const DiscType& compare) const;
 };
 
 /**
@@ -152,43 +152,51 @@ struct REGINA_API NDiscType {
  * @param type the disc type to write.
  * @return a reference to the given output stream.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const NDiscType& type);
+REGINA_API std::ostream& operator << (std::ostream& out, const DiscType& type);
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NDiscType has now been renamed to DiscType.
+ */
+REGINA_DEPRECATED typedef DiscType NDiscType;
 
 /*@}*/
 
-// Inline functions for NDiscType
+// Inline functions for DiscType
 
-inline NDiscType::NDiscType() : tetIndex(0), type(-1) {
+inline DiscType::DiscType() : tetIndex(0), type(-1) {
 }
 
-inline NDiscType::NDiscType(size_t newTetIndex, int newType) :
+inline DiscType::DiscType(size_t newTetIndex, int newType) :
         tetIndex(newTetIndex), type(newType) {
 }
 
-inline NDiscType::NDiscType(const NDiscType& cloneMe) :
+inline DiscType::DiscType(const DiscType& cloneMe) :
         tetIndex(cloneMe.tetIndex), type(cloneMe.type) {
 }
 
-inline NDiscType& NDiscType::operator = (const NDiscType& cloneMe) {
+inline DiscType& DiscType::operator = (const DiscType& cloneMe) {
     tetIndex = cloneMe.tetIndex;
     type = cloneMe.type;
     return *this;
 }
 
-inline bool NDiscType::operator == (const NDiscType& compare) const {
+inline bool DiscType::operator == (const DiscType& compare) const {
     return (tetIndex == compare.tetIndex && type == compare.type);
 }
 
-inline bool NDiscType::operator != (const NDiscType& compare) const {
+inline bool DiscType::operator != (const DiscType& compare) const {
     return (tetIndex != compare.tetIndex || type != compare.type);
 }
 
-inline bool NDiscType::operator < (const NDiscType& compare) const {
+inline bool DiscType::operator < (const DiscType& compare) const {
     return (tetIndex < compare.tetIndex ||
         (tetIndex == compare.tetIndex && type < compare.type));
 }
 
-inline std::ostream& operator << (std::ostream& out, const NDiscType& type) {
+inline std::ostream& operator << (std::ostream& out, const DiscType& type) {
     return out << '(' << type.tetIndex << ", " << type.type << ')';
 }
 

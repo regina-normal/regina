@@ -35,19 +35,20 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NDiscType;
+using regina::DiscType;
 
-void addNDiscType() {
-    scope s = class_<NDiscType>("NDiscType")
+void addDiscType() {
+    class_<DiscType>("DiscType")
         .def(init<unsigned long, int>())
-        .def(init<const NDiscType&>())
-        .def_readwrite("tetIndex", &NDiscType::tetIndex)
-        .def_readwrite("type", &NDiscType::type)
+        .def(init<const DiscType&>())
+        .def_readwrite("tetIndex", &DiscType::tetIndex)
+        .def_readwrite("type", &DiscType::type)
         .def(self < self)
         .def(self_ns::str(self))
         .def(regina::python::add_eq_operators())
+        .attr("NONE") = &DiscType::NONE;
     ;
 
-    s.attr("NONE") = &NDiscType::NONE;
+    scope().attr("NDiscType") = scope().attr("DiscType");
 }
 

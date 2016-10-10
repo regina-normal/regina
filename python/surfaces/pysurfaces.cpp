@@ -31,7 +31,7 @@
  **************************************************************************/
 
 void addNDisc();
-void addNDiscType();
+void addDiscType();
 void addNormalSurface();
 void addNormalSurfaces();
 void addNormalCoords();
@@ -47,7 +47,7 @@ void addSurfacesClasses() {
 
     addNormalFlags();
     addNDisc();
-    addNDiscType();
+    addDiscType();
     addNormalSurface();
     addNormalSurfaces();
     addPrism();

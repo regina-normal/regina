@@ -512,8 +512,8 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     if (self.packet->allowsAlmostNormal()) {
         if (coord == 0) {
-            regina::NDiscType oct = s->octPosition();
-            if (oct == regina::NDiscType::NONE) {
+            regina::DiscType oct = s->octPosition();
+            if (oct == regina::DiscType::NONE) {
                 cell.textLabel.text = @"";
                 return cell;
             }

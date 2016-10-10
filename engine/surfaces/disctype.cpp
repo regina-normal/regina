@@ -34,7 +34,7 @@
 
 namespace regina {
 
-const NDiscType NDiscType::NONE;
+const DiscType DiscType::NONE;
 
 } // namespace regina
 
