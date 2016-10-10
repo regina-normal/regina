@@ -109,5 +109,11 @@ void addSurfaceFilter() {
     FIX_REGINA_BOOST_CONVERTERS(SurfaceFilter);
     FIX_REGINA_BOOST_CONVERTERS(SurfaceFilterCombination);
     FIX_REGINA_BOOST_CONVERTERS(SurfaceFilterProperties);
+
+    scope().attr("NSurfaceFilter") = scope().attr("SurfaceFilter");
+    scope().attr("NSurfaceFilterCombination") =
+        scope().attr("SurfaceFilterCombination");
+    scope().attr("NSurfaceFilterProperties") =
+        scope().attr("SurfaceFilterProperties");
 }
 
