@@ -57,7 +57,7 @@ namespace regina {
  */
 class REGINA_API XMLNormalSurfaceReader : public XMLElementReader {
     private:
-        NNormalSurface* surface_;
+        NormalSurface* surface_;
             /**< The normal surface currently being read. */
         const NTriangulation* tri;
             /**< The triangulation in which this surface lives. */
@@ -84,7 +84,7 @@ class REGINA_API XMLNormalSurfaceReader : public XMLElementReader {
          * @return the newly allocated normal surface, or 0 if an error
          * occurred.
          */
-        NNormalSurface* surface();
+        NormalSurface* surface();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -138,7 +138,7 @@ inline XMLNormalSurfaceReader::XMLNormalSurfaceReader(
         surface_(0), tri(newTri), coords(newCoords), vecLen(-1) {
 }
 
-inline NNormalSurface* XMLNormalSurfaceReader::surface() {
+inline NormalSurface* XMLNormalSurfaceReader::surface() {
     return surface_;
 }
 

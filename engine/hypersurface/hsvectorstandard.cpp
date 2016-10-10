@@ -37,7 +37,7 @@
 #include "hypersurface/nhsstandard.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
-#include "surfaces/nnormalsurface.h" // for quadDefn[][].
+#include "surfaces/normalsurface.h" // for quadDefn[][].
 
 namespace regina {
 

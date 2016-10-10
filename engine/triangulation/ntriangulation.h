@@ -67,7 +67,7 @@ namespace regina {
 class AngleStructure;
 class NBoundaryComponent;
 class NGroupPresentation;
-class NNormalSurface;
+class NormalSurface;
 class ProgressTrackerOpen;
 class XMLPacketReader;
 
@@ -901,7 +901,7 @@ class REGINA_API Triangulation<3> :
         bool knowsZeroEfficient() const;
         /**
          * Determines whether this triangulation has a normal splitting
-         * surface.  See NNormalSurface::isSplitting() for details
+         * surface.  See NormalSurface::isSplitting() for details
          * regarding normal splitting surfaces.
          *
          * \pre This triangulation is connected.  If the triangulation
@@ -943,7 +943,7 @@ class REGINA_API Triangulation<3> :
          * @return a newly allocated non-vertex-linking normal sphere or
          * disc, or 0 if none exists.
          */
-        NNormalSurface* hasNonTrivialSphereOrDisc();
+        NormalSurface* hasNonTrivialSphereOrDisc();
         /**
          * Searches for an octagonal almost normal 2-sphere within this
          * triangulation.  If such a surface exists, this routine is
@@ -963,7 +963,7 @@ class REGINA_API Triangulation<3> :
          * @return a newly allocated non-vertex-linking normal sphere or
          * disc, or 0 if none exists.
          */
-        NNormalSurface* hasOctagonalAlmostNormalSphere();
+        NormalSurface* hasOctagonalAlmostNormalSphere();
         /**
          * Searches for a strict angle structure on this triangulation.
          * Recall that a \e strict angle structure is one in which every

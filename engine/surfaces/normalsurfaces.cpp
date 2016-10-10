@@ -231,7 +231,7 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
     out << "\"/>\n";
 
     // Write the individual surfaces.
-    std::vector<NNormalSurface*>::const_iterator it;
+    std::vector<NormalSurface*>::const_iterator it;
     for (it = surfaces.begin(); it != surfaces.end(); it++)
         (*it)->writeXMLData(out);
 }
@@ -240,7 +240,7 @@ Packet* NormalSurfaces::internalClonePacket(Packet* /* parent */) const {
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, which_, algorithm_);
     transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),
-        FuncNewClonePtr<NNormalSurface>());
+        FuncNewClonePtr<NormalSurface>());
     return ans;
 }
 

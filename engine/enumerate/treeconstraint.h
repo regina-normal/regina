@@ -41,12 +41,12 @@
 
 #include "maths/integer.h"
 #include "surfaces/normalcoords.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 
 namespace regina {
 
 class AngleStructure;
-class NNormalSurface;
+class NormalSurface;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -317,7 +317,7 @@ class LPConstraintBase {
          * @return \c true if the given surface satisfies these linear
          * constraints, or \c false if it does not.
          */
-        static bool verify(const NNormalSurface* s);
+        static bool verify(const NormalSurface* s);
 
         /**
          * Ensures that the given angle structure satisfies the extra
@@ -325,7 +325,7 @@ class LPConstraintBase {
          *
          * Ideally this test is not based on explicitly recomputing the
          * linear function(s), but instead runs independent tests;
-         * see the related routine verify(const NNormalSurface*) for examples.
+         * see the related routine verify(const NormalSurface*) for examples.
          *
          * If these linear constraints work with normal or almost normal
          * surfaces (not angle structure coordinates), then this routine should
@@ -414,7 +414,7 @@ class LPConstraintNone : public LPConstraintSubspace {
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNone, IntType>&, unsigned);
-        static bool verify(const NNormalSurface*);
+        static bool verify(const NormalSurface*);
         static bool verify(const AngleStructure*);
         static bool supported(NormalCoords coords);
 };
@@ -480,7 +480,7 @@ class LPConstraintEuler : public LPConstraintBase {
         static void constrain(
             LPData<regina::LPConstraintEuler, IntType>& lp,
             unsigned numCols);
-        static bool verify(const NNormalSurface* s);
+        static bool verify(const NormalSurface* s);
         static bool verify(const AngleStructure*);
         static bool supported(NormalCoords coords);
 };
@@ -553,7 +553,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
         static void constrain(
             LPData<regina::LPConstraintNonSpun, IntType>& lp,
             unsigned numCols);
-        static bool verify(const NNormalSurface* s);
+        static bool verify(const NormalSurface* s);
         static bool verify(const AngleStructure*);
         static bool supported(NormalCoords coords);
 };
@@ -873,7 +873,7 @@ inline void LPConstraintNone::constrain(
         LPData<regina::LPConstraintNone, IntType>&, unsigned) {
 }
 
-inline bool LPConstraintNone::verify(const NNormalSurface*) {
+inline bool LPConstraintNone::verify(const NormalSurface*) {
     return true;
 }
 
@@ -927,7 +927,7 @@ inline void LPConstraintEuler::constrain(
     lp.constrainPositive(numCols - 1);
 }
 
-inline bool LPConstraintEuler::verify(const NNormalSurface* s) {
+inline bool LPConstraintEuler::verify(const NormalSurface* s) {
     return (s->eulerChar() > 0);
 }
 
@@ -978,7 +978,7 @@ inline void LPConstraintNonSpun::constrain(
     lp.constrainZero(numCols - 1);
 }
 
-inline bool LPConstraintNonSpun::verify(const NNormalSurface* s) {
+inline bool LPConstraintNonSpun::verify(const NormalSurface* s) {
     return s->isCompact();
 }
 

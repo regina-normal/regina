@@ -87,7 +87,7 @@
 namespace regina {
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
+NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildSurface() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
@@ -102,7 +102,7 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
     lpSlot_[nTypes_]->extractSolution(*v, type_);
 
     if (coords_ == NS_QUAD || coords_ == NS_STANDARD)
-        return new NNormalSurface(origTableaux_.tri(), v);
+        return new NormalSurface(origTableaux_.tri(), v);
 
     // We have an almost normal surface: restore the octagon
     // coordinates.
@@ -138,7 +138,7 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         }
     }
     delete v;
-    return new NNormalSurface(origTableaux_.tri(), an);
+    return new NormalSurface(origTableaux_.tri(), an);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -156,7 +156,7 @@ AngleStructure* TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const NNormalSurface* s, const MatrixInt* matchingEqns) const {
+        const NormalSurface* s, const MatrixInt* matchingEqns) const {
     if (coords_ == NS_ANGLE)
         return false;
 
@@ -1198,7 +1198,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 NormalSurfaceVector* v =
                     new NSVectorStandard(7 * nTets_);
                 lpSlot_[level_ + 1]->extractSolution(*v, type_);
-                NNormalSurface* f = new NNormalSurface(
+                NormalSurface* f = new NormalSurface(
                     origTableaux_.tri(), v);
                 std::cout << f->str() << std::endl;
                 delete f;

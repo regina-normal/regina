@@ -80,7 +80,7 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
     }
 
-    surface_ = new NNormalSurface(tri, vec);
+    surface_ = new NormalSurface(tri, vec);
     if (! name.empty())
         surface_->setName(name);
 }
@@ -159,7 +159,7 @@ void XMLNormalSurfacesReader::endContentSubElement(
         XMLElementReader* subReader) {
     if (list)
         if (subTagName == "surface")
-            if (NNormalSurface* s =
+            if (NormalSurface* s =
                     dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
                     surface())
                 list->surfaces.push_back(s);

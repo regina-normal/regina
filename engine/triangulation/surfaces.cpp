@@ -68,7 +68,7 @@ namespace regina {
  * vertex link.
  */
 
-NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
+NormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return 0;
@@ -82,7 +82,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
         // For now, just use the safe arbitrary-precision Integer type.
         TreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
         if (tree.find()) {
-            NNormalSurface* s = tree.buildSurface();
+            NormalSurface* s = tree.buildSurface();
             if (! ((! s->hasRealBoundary()) &&
                     (s->eulerChar() == 1) && s->isTwoSided()))
                 return s;
@@ -99,8 +99,8 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     // appear as a vertex surface).  Otherwise fall back to standard coords.
     NormalSurfaces* surfaces = NormalSurfaces::enumerate(this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
-    const NNormalSurface* s;
-    NNormalSurface* ans = 0;
+    const NormalSurface* s;
+    NormalSurface* ans = 0;
     for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
         s = surfaces->surface(i);
 
@@ -132,7 +132,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     return ans;
 }
 
-NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
+NormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return 0;
@@ -152,7 +152,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
             // which then implies that our surface here is almost normal
             // with exactly 1 octagon and Euler = 2.  This is exactly
             // what we're looking for.
-            NNormalSurface* s = tree.buildSurface();
+            NormalSurface* s = tree.buildSurface();
             return s;
         } else
             return 0;
@@ -167,8 +167,8 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
 
     // Our vertex surfaces are guaranteed to be in smallest possible
     // integer coordinates, with at most one non-zero octagonal coordinate.
-    const NNormalSurface* s;
-    NNormalSurface* ans = 0;
+    const NormalSurface* s;
+    NormalSurface* ans = 0;
     unsigned long tet;
     unsigned oct;
     bool found, broken;
@@ -220,7 +220,7 @@ bool NTriangulation::isZeroEfficient() {
             // Operate on a clone of this triangulation, to avoid
             // changing the real packet tree.
             NTriangulation clone(*this);
-            NNormalSurface* s = clone.hasNonTrivialSphereOrDisc();
+            NormalSurface* s = clone.hasNonTrivialSphereOrDisc();
             if (s) {
                 zeroEfficient_ = false;
                 delete s;
@@ -252,7 +252,7 @@ bool NTriangulation::hasSplittingSurface() {
 
     // Run through all vertex surfaces.
     unsigned long nSurfaces = surfaces->size();
-    const NNormalSurface* s;
+    const NormalSurface* s;
     LargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
         s = surfaces->surface(i);

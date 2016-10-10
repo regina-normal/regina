@@ -32,7 +32,7 @@
 
 #import "SurfacesSummary.h"
 #import "TextHelper.h"
-#import "surfaces/nnormalsurface.h"
+#import "surfaces/normalsurface.h"
 #import "surfaces/normalsurfaces.h"
 #import <iterator>
 #import <map>
@@ -63,7 +63,7 @@ struct CountSet {
         n1sOr = n2sOr = n1sNor = n2sNor = tot = mask = 0;
     }
     
-    void append(const regina::NNormalSurface* s) {
+    void append(const regina::NormalSurface* s) {
         if (s->isOrientable()) {
             if (s->isTwoSided()) {
                 ++n2sOr;
@@ -176,7 +176,7 @@ struct CountSet {
     nSpun = 0;
     
     unsigned long n = self.packet->size();
-    const regina::NNormalSurface* s;
+    const regina::NormalSurface* s;
     regina::LargeInteger euler;
     for (unsigned long i = 0; i < n; ++i) {
         s = self.packet->surface(i);

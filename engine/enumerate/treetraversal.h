@@ -371,7 +371,7 @@ class TreeTraversal : public BanConstraint {
          * @return a normal surface that has been found at the current stage
          * of the search.
          */
-        NNormalSurface* buildSurface() const;
+        NormalSurface* buildSurface() const;
 
         /**
          * Reconstructs the full taut angle structure that is represented by
@@ -440,7 +440,7 @@ class TreeTraversal : public BanConstraint {
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).
          */
-        bool verify(const NNormalSurface* s,
+        bool verify(const NormalSurface* s,
                 const MatrixInt* matchingEqns = 0) const;
 
         /**
@@ -1571,7 +1571,7 @@ template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
         writeSurface(const TreeEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
-    NNormalSurface* f = tree.buildSurface();
+    NormalSurface* f = tree.buildSurface();
     std::cout << f->str() << std::endl;
     delete f;
     return true;

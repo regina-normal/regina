@@ -33,7 +33,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "angle/anglestructure.h"
 #include "progress/progresstracker.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 #include "../safeheldtype.h"

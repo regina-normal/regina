@@ -62,7 +62,7 @@ using regina::NComponent;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
-using regina::NNormalSurface;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
 using regina::NSignature;
@@ -2054,7 +2054,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 expected = true;
                 NormalSurfaces* s = NormalSurfaces::enumerate(
                     tri, regina::NS_STANDARD);
-                const NNormalSurface* f;
+                const NormalSurface* f;
                 for (size_t i = 0; i < s->size(); ++i) {
                     f = s->surface(i);
                     if (f->eulerChar() == 2 &&

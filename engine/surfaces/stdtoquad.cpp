@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/nsvectorstandard.h"
 #include "surfaces/nsvectorquad.h"
@@ -86,7 +86,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     VectorPtr* use = new VectorPtr[surfaces.size()];
     unsigned long nUse = 0;
 
-    std::vector<NNormalSurface*>::const_iterator it;
+    std::vector<NormalSurface*>::const_iterator it;
     for (it = surfaces.begin(); it != surfaces.end(); ++it)
         if (! (*it)->isVertexLinking())
             use[nUse++] = &(*it)->rawVector();
@@ -142,7 +142,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
                 for (quad = 0; quad < Variant::reducedPerTet; ++quad)
                     v->setElement(pos++,
                         (*use[i])[Variant::stdPos(tet, 4 + quad)]);
-            ans->surfaces.push_back(new NNormalSurface(owner, v));
+            ans->surfaces.push_back(new NormalSurface(owner, v));
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if

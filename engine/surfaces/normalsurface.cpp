@@ -33,7 +33,7 @@
 #include <algorithm>
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
@@ -92,8 +92,8 @@ const Perm<4> __octDiscArcs[24] = {
     Perm<4>(3,1,0,2), Perm<4>(3,0,2,1), Perm<4>(2,3,1,0), Perm<4>(2,1,0,3)
 };
 
-NNormalSurface* NNormalSurface::clone() const {
-    NNormalSurface* ans = new NNormalSurface(triangulation_,
+NormalSurface* NormalSurface::clone() const {
+    NormalSurface* ans = new NormalSurface(triangulation_,
         dynamic_cast<NormalSurfaceVector*>(vector->clone()));
 
     ans->eulerChar_ = eulerChar_;
@@ -106,8 +106,8 @@ NNormalSurface* NNormalSurface::clone() const {
     return ans;
 }
 
-NNormalSurface* NNormalSurface::doubleSurface() const {
-    NNormalSurface* ans = new NNormalSurface(triangulation_,
+NormalSurface* NormalSurface::doubleSurface() const {
+    NormalSurface* ans = new NormalSurface(triangulation_,
         dynamic_cast<NormalSurfaceVector*>(vector->clone()));
 
     *(ans->vector) += *(ans->vector);
@@ -129,13 +129,13 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
     return ans;
 }
 
-NNormalSurface::NNormalSurface(const NTriangulation* triang,
+NormalSurface::NormalSurface(const NTriangulation* triang,
         NormalSurfaceVector* newVector) :
         vector(newVector),
         triangulation_(triang) {
 }
 
-void NNormalSurface::writeTextShort(std::ostream& out) const {
+void NormalSurface::writeTextShort(std::ostream& out) const {
     size_t nTets = triangulation_->size();
     size_t tet;
     unsigned j;
@@ -239,7 +239,7 @@ LargeInteger NormalSurfaceVector::isCentral(const NTriangulation* triang)
     return tot;
 }
 
-bool NNormalSurface::isEmpty() const {
+bool NormalSurface::isEmpty() const {
     size_t nTet = triangulation_->size();
     bool checkAlmostNormal = vector->allowsAlmostNormal();
 
@@ -264,7 +264,7 @@ bool NNormalSurface::isEmpty() const {
     return true;
 }
 
-bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
+bool NormalSurface::sameSurface(const NormalSurface& other) const {
     size_t nTet = triangulation_->size();
     bool checkAlmostNormal =
         (vector->allowsAlmostNormal() || other.vector->allowsAlmostNormal());
@@ -290,7 +290,7 @@ bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
     return true;
 }
 
-bool NNormalSurface::embedded() const {
+bool NormalSurface::embedded() const {
     size_t nTets = triangulation_->size();
 
     int type;
@@ -310,7 +310,7 @@ bool NNormalSurface::embedded() const {
     return true;
 }
 
-bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
+bool NormalSurface::locallyCompatible(const NormalSurface& other) const {
     size_t nTets = triangulation_->size();
 
     int type;
@@ -330,7 +330,7 @@ bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
     return true;
 }
 
-void NNormalSurface::calculateOctPosition() const {
+void NormalSurface::calculateOctPosition() const {
     if (! vector->allowsAlmostNormal()) {
         octPosition_ = NDiscType::NONE;
         return;
@@ -350,7 +350,7 @@ void NNormalSurface::calculateOctPosition() const {
     return;
 }
 
-void NNormalSurface::calculateEulerChar() const {
+void NormalSurface::calculateEulerChar() const {
     size_t index, tot;
     int type;
     LargeInteger ans = LargeInteger::zero;
@@ -381,7 +381,7 @@ void NNormalSurface::calculateEulerChar() const {
     eulerChar_ = ans;
 }
 
-void NNormalSurface::calculateRealBoundary() const {
+void NormalSurface::calculateRealBoundary() const {
     if (triangulation_->isClosed()) {
         realBoundary = false;
         return;
@@ -426,7 +426,7 @@ void NNormalSurface::calculateRealBoundary() const {
     realBoundary = false;
 }
 
-MatrixInt* NNormalSurface::boundaryIntersections() const {
+MatrixInt* NormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const SnapPeaTriangulation* snapPea =
         dynamic_cast<const SnapPeaTriangulation*>(triangulation());
@@ -475,7 +475,7 @@ MatrixInt* NNormalSurface::boundaryIntersections() const {
     return slopes;
 }
 
-void NNormalSurface::writeXMLData(std::ostream& out) const {
+void NormalSurface::writeXMLData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 

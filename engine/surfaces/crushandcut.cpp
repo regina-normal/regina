@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <thread>
 #include "enumerate/treetraversal.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/nprism.h"
 #include "triangulation/ntriangulation.h"
 
@@ -571,7 +571,7 @@ namespace {
              * tetrahedra in the vertex neighbourhoods) will be automatically
              * inserted into the given triangulation.
              */
-            TetBlockSet(const NNormalSurface* s, unsigned long tetIndex,
+            TetBlockSet(const NormalSurface* s, unsigned long tetIndex,
                 NTriangulation* insertInto);
 
             /**
@@ -1006,7 +1006,7 @@ namespace {
         outerVertices_ = outerVertices_ * Perm<4>(1, 2, 0, 3);
     }
 
-    TetBlockSet::TetBlockSet(const NNormalSurface* s, unsigned long tetIndex,
+    TetBlockSet::TetBlockSet(const NormalSurface* s, unsigned long tetIndex,
             NTriangulation* insertInto) {
         unsigned long i, j;
         for (i = 0; i < 4; ++i)
@@ -1152,7 +1152,7 @@ namespace {
 // Implementation of cutAlong()
 // ------------------------------------------------------------------------
 
-NTriangulation* NNormalSurface::cutAlong() const {
+NTriangulation* NormalSurface::cutAlong() const {
     NTriangulation* ans = new NTriangulation();
     Packet::ChangeEventSpan span(ans);
 
@@ -1213,7 +1213,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
 // Implementation of crush()
 // ------------------------------------------------------------------------
 
-NTriangulation* NNormalSurface::crush() const {
+NTriangulation* NormalSurface::crush() const {
     NTriangulation* ans = new NTriangulation(*triangulation_);
     unsigned long nTet = ans->size();
     if (nTet == 0)
@@ -1291,7 +1291,7 @@ NTriangulation* NNormalSurface::crush() const {
     return ans;
 }
 
-bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
+bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     // Is it even a disc?
     if (! hasRealBoundary())
         return false;
@@ -1428,7 +1428,7 @@ namespace {
                 long ec = t_[side]->boundaryComponent(0)->eulerChar();
 
                 // Look for a normal disc or sphere to crush.
-                NNormalSurface* ans;
+                NormalSurface* ans;
                 NTriangulation* crush;
                 unsigned nComp;
                 bool found;
@@ -1523,7 +1523,7 @@ namespace {
     };
 } // anonymous namespace
 
-bool NNormalSurface::isIncompressible() const {
+bool NormalSurface::isIncompressible() const {
     // We don't bother making the surface two-sided.  This is because
     // cutting along the two-sided surface will produce (i) exactly what
     // you obtain from cutting along the one-sided surface, plus

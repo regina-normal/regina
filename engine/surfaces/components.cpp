@@ -88,8 +88,8 @@ namespace {
      * be inserted.
      * @return the number of connected components.
      */
-    unsigned splitIntoComponents(const NNormalSurface& s,
-            std::vector<NNormalSurface*>& dest) {
+    unsigned splitIntoComponents(const NormalSurface& s,
+            std::vector<NormalSurface*>& dest) {
         // Shamelessly copied from my orientation/two-sidedness code from
         // years earlier.  Some day I will need to make a generic structure
         // for a depth-first search over normal discs.  Not today.
@@ -214,7 +214,7 @@ namespace {
         }
 
         for (i = 0; i < compID; ++i)
-            dest.push_back(new NNormalSurface(tri, ans[i]));
+            dest.push_back(new NormalSurface(tri, ans[i]));
         delete[] ans;
 
         // All done!
@@ -222,7 +222,7 @@ namespace {
     }
 } // anonymous namespace
 
-bool NNormalSurface::disjoint(const NNormalSurface& other) const {
+bool NormalSurface::disjoint(const NormalSurface& other) const {
     // Some sanity tests before we begin.
     // These should all pass if the user has adhered to the preconditions.
     if (! (isCompact() && other.isCompact()))
@@ -240,9 +240,9 @@ bool NNormalSurface::disjoint(const NNormalSurface& other) const {
     NormalSurfaceVector* v =
         static_cast<NormalSurfaceVector*>(vector->clone());
     (*v) += *(other.vector);
-    NNormalSurface* sum = new NNormalSurface(triangulation_, v);
+    NormalSurface* sum = new NormalSurface(triangulation_, v);
 
-    typedef std::vector<NNormalSurface*> CompVector;
+    typedef std::vector<NormalSurface*> CompVector;
     CompVector bits;
     splitIntoComponents(*sum, bits);
 

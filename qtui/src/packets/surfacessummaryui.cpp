@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
@@ -167,7 +167,7 @@ void SurfacesSummaryUI::refresh() {
     std::set<regina::LargeInteger> allECsClosed, allECsBounded;
     std::set<std::pair<int, int> > allTypesClosed, allTypesBounded;
 
-    const regina::NNormalSurface* s;
+    const regina::NormalSurface* s;
     regina::LargeInteger euler;
     std::pair<int, int> type;
     unsigned long i;

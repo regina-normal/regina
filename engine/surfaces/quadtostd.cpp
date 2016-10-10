@@ -34,7 +34,7 @@
 #include "enumerate/doubledescription.h"
 #include "maths/matrix.h"
 #include "maths/ray.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/nsvectorstandard.h"
 #include "surfaces/nsvectorquad.h"
@@ -67,10 +67,10 @@ NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
 
 template void NormalSurfaces::buildStandardFromReduced<
         NormalSurfaces::NormalSpec>(NTriangulation*,
-        const std::vector<NNormalSurface*>&, ProgressTracker*);
+        const std::vector<NormalSurface*>&, ProgressTracker*);
 template void NormalSurfaces::buildStandardFromReduced<
         NormalSurfaces::AlmostNormalSpec>(NTriangulation*,
-        const std::vector<NNormalSurface*>&, ProgressTracker*);
+        const std::vector<NormalSurface*>&, ProgressTracker*);
 
 /**
  * Put helper classes and constants into an anonymous namespace.
@@ -287,13 +287,13 @@ namespace {
              * @return a newly created normal surface based on this vector.
              */
             template <class VectorClass>
-            NNormalSurface* recover(NTriangulation* tri) const {
+            NormalSurface* recover(NTriangulation* tri) const {
                 VectorClass* v = new VectorClass(size());
 
                 for (size_t i = 0; i < size(); ++i)
                     v->setElement(i, elements[i]);
 
-                return new NNormalSurface(tri, v);
+                return new NormalSurface(tri, v);
             }
 
             /**
@@ -342,7 +342,7 @@ NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
 
 template <class Variant>
 void NormalSurfaces::buildStandardFromReduced(NTriangulation* owner,
-        const std::vector<NNormalSurface*>& reducedList,
+        const std::vector<NormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     size_t nFacets = Variant::stdLen(owner->size());
 
@@ -379,7 +379,7 @@ void NormalSurfaces::buildStandardFromReduced(NTriangulation* owner,
 
 template <class Variant, class BitmaskType>
 void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
-        const std::vector<NNormalSurface*>& reducedList,
+        const std::vector<NormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.
     unsigned long n = owner->size();
@@ -424,7 +424,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
     RaySpecList list[2];
 
     NormalSurfaceVector* v;
-    std::vector<NNormalSurface*>::const_iterator qit;
+    std::vector<NormalSurface*>::const_iterator qit;
     for (qit = reducedList.begin(); qit != reducedList.end(); ++qit) {
         v = Variant::ReducedVector::makeMirror((*qit)->rawVector(), owner);
         list[0].push_back(new RaySpec<BitmaskType>(v->coords()));

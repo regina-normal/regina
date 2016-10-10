@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "maths/matrix.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
@@ -42,7 +42,7 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NNormalSurface;
+using regina::NormalSurface;
 using regina::NTriangulation;
 using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
@@ -68,7 +68,7 @@ namespace {
      * A python-only constructor that lets users build a normal surface
      * from a hand-crafted list of integers.
      */
-    NNormalSurface* fromCoordinates(NTriangulation* t,
+    NormalSurface* fromCoordinates(NTriangulation* t,
             regina::NormalCoords coords, boost::python::list values) {
         regina::NormalSurfaceVector* v = regina::makeZeroVector(t, coords);
 
@@ -104,13 +104,13 @@ namespace {
             x_large();
         }
 
-        return new NNormalSurface(t, v);
+        return new NormalSurface(t, v);
     }
 
-    void writeRawVector_stdio(const NNormalSurface& s) {
+    void writeRawVector_stdio(const NormalSurface& s) {
         s.writeRawVector(std::cout);
     }
-    boost::python::tuple isThinEdgeLink_tuple(const NNormalSurface& s) {
+    boost::python::tuple isThinEdgeLink_tuple(const NormalSurface& s) {
         std::pair<const regina::NEdge*, const regina::NEdge*> ans =
             s.isThinEdgeLink();
         return boost::python::make_tuple(boost::python::ptr(ans.first),
@@ -118,63 +118,63 @@ namespace {
     }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isCompressingDisc,
-        NNormalSurface::isCompressingDisc, 0, 1);
+        NormalSurface::isCompressingDisc, 0, 1);
 }
 
-void addNNormalSurface() {
-    class_<NNormalSurface, std::auto_ptr<NNormalSurface>, boost::noncopyable>
-            ("NNormalSurface", no_init)
+void addNormalSurface() {
+    class_<NormalSurface, std::auto_ptr<NormalSurface>, boost::noncopyable>
+            ("NormalSurface", no_init)
         .def("__init__", make_constructor(fromCoordinates))
-        .def("clone", &NNormalSurface::clone,
+        .def("clone", &NormalSurface::clone,
             return_value_policy<manage_new_object>())
-        .def("doubleSurface", &NNormalSurface::doubleSurface,
+        .def("doubleSurface", &NormalSurface::doubleSurface,
             return_value_policy<manage_new_object>())
-        .def("triangles", &NNormalSurface::triangles)
-        .def("orientedTriangles", &NNormalSurface::orientedTriangles)
-        .def("quads", &NNormalSurface::quads)
-        .def("orientedQuads", &NNormalSurface::orientedQuads)
-        .def("octs", &NNormalSurface::octs)
-        .def("edgeWeight", &NNormalSurface::edgeWeight)
-        .def("arcs", &NNormalSurface::arcs)
-        .def("octPosition", &NNormalSurface::octPosition)
-        .def("countCoords", &NNormalSurface::countCoords)
-        .def("triangulation", &NNormalSurface::triangulation,
+        .def("triangles", &NormalSurface::triangles)
+        .def("orientedTriangles", &NormalSurface::orientedTriangles)
+        .def("quads", &NormalSurface::quads)
+        .def("orientedQuads", &NormalSurface::orientedQuads)
+        .def("octs", &NormalSurface::octs)
+        .def("edgeWeight", &NormalSurface::edgeWeight)
+        .def("arcs", &NormalSurface::arcs)
+        .def("octPosition", &NormalSurface::octPosition)
+        .def("countCoords", &NormalSurface::countCoords)
+        .def("triangulation", &NormalSurface::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("name", &NNormalSurface::name,
+        .def("name", &NormalSurface::name,
             return_value_policy<return_by_value>())
-        .def("setName", &NNormalSurface::setName)
+        .def("setName", &NormalSurface::setName)
         .def("writeRawVector", writeRawVector_stdio)
-        .def("isEmpty", &NNormalSurface::isEmpty)
-        .def("isCompact", &NNormalSurface::isCompact)
-        .def("eulerChar", &NNormalSurface::eulerChar)
-        .def("isOrientable", &NNormalSurface::isOrientable)
-        .def("isTwoSided", &NNormalSurface::isTwoSided)
-        .def("isConnected", &NNormalSurface::isConnected)
-        .def("hasRealBoundary", &NNormalSurface::hasRealBoundary)
-        .def("isVertexLinking", &NNormalSurface::isVertexLinking)
-        .def("isVertexLink", &NNormalSurface::isVertexLink,
+        .def("isEmpty", &NormalSurface::isEmpty)
+        .def("isCompact", &NormalSurface::isCompact)
+        .def("eulerChar", &NormalSurface::eulerChar)
+        .def("isOrientable", &NormalSurface::isOrientable)
+        .def("isTwoSided", &NormalSurface::isTwoSided)
+        .def("isConnected", &NormalSurface::isConnected)
+        .def("hasRealBoundary", &NormalSurface::hasRealBoundary)
+        .def("isVertexLinking", &NormalSurface::isVertexLinking)
+        .def("isVertexLink", &NormalSurface::isVertexLink,
             return_value_policy<reference_existing_object>())
         .def("isThinEdgeLink", isThinEdgeLink_tuple)
-        .def("isSplitting", &NNormalSurface::isSplitting)
-        .def("isCentral", &NNormalSurface::isCentral)
-        .def("isCompressingDisc", &NNormalSurface::isCompressingDisc,
+        .def("isSplitting", &NormalSurface::isSplitting)
+        .def("isCentral", &NormalSurface::isCentral)
+        .def("isCompressingDisc", &NormalSurface::isCompressingDisc,
             OL_isCompressingDisc())
-        .def("isIncompressible", &NNormalSurface::isIncompressible)
-        .def("cutAlong", &NNormalSurface::cutAlong,
+        .def("isIncompressible", &NormalSurface::isIncompressible)
+        .def("cutAlong", &NormalSurface::cutAlong,
             return_value_policy<to_held_type<> >())
-        .def("crush", &NNormalSurface::crush,
+        .def("crush", &NormalSurface::crush,
             return_value_policy<to_held_type<> >())
-        .def("sameSurface", &NNormalSurface::sameSurface)
-        .def("normal", &NNormalSurface::normal)
-        .def("embedded", &NNormalSurface::embedded)
-        .def("locallyCompatible", &NNormalSurface::locallyCompatible)
-        .def("disjoint", &NNormalSurface::disjoint)
-        .def("boundaryIntersections", &NNormalSurface::boundaryIntersections,
+        .def("sameSurface", &NormalSurface::sameSurface)
+        .def("normal", &NormalSurface::normal)
+        .def("embedded", &NormalSurface::embedded)
+        .def("locallyCompatible", &NormalSurface::locallyCompatible)
+        .def("disjoint", &NormalSurface::disjoint)
+        .def("boundaryIntersections", &NormalSurface::boundaryIntersections,
             return_value_policy<manage_new_object>())
         .def("systemAllowsAlmostNormal",
-            &NNormalSurface::systemAllowsAlmostNormal)
-        .def("systemAllowsSpun", &NNormalSurface::systemAllowsSpun)
-        .def("systemAllowsOriented", &NNormalSurface::systemAllowsOriented)
+            &NormalSurface::systemAllowsAlmostNormal)
+        .def("systemAllowsSpun", &NormalSurface::systemAllowsSpun)
+        .def("systemAllowsOriented", &NormalSurface::systemAllowsOriented)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
@@ -188,5 +188,7 @@ void addNNormalSurface() {
     scope().attr("triDiscArcs") = &triDiscArcs_arr;
     scope().attr("quadDiscArcs") = &quadDiscArcs_arr;
     scope().attr("octDiscArcs") = &octDiscArcs_arr;
+
+    scope().attr("NNormalSurface") = scope().attr("NormalSurface");
 }
 

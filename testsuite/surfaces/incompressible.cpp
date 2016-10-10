@@ -34,14 +34,14 @@
 #include <memory>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NExampleTriangulation;
-using regina::NNormalSurface;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
 using regina::NTetrahedron;
@@ -62,7 +62,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void verifyNotIncompressible(const NNormalSurface* s,
+        void verifyNotIncompressible(const NormalSurface* s,
                 const std::string& triName) {
             if (s->isIncompressible()) {
                 CPPUNIT_FAIL(("A compressible surface in " + triName +

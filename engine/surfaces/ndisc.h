@@ -42,7 +42,7 @@
 
 #include <cassert>
 #include "regina-core.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -222,7 +222,7 @@ class REGINA_API NDiscSetTet {
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          */
-        NDiscSetTet(const NNormalSurface& surface, size_t tetIndex);
+        NDiscSetTet(const NormalSurface& surface, size_t tetIndex);
         /**
          * Creates a new set of normal discs where the number of discs of
          * each type is explicitly given.
@@ -361,7 +361,7 @@ class NDiscSetTetData : public NDiscSetTet {
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          */
-        NDiscSetTetData(const NNormalSurface& surface,
+        NDiscSetTetData(const NormalSurface& surface,
                 size_t tetIndex) : NDiscSetTet(surface, tetIndex) {
             for (int i=0; i<10; i++)
                 if (internalNDiscs[i])
@@ -384,7 +384,7 @@ class NDiscSetTetData : public NDiscSetTet {
          * @param initValue the value with which to initialise the data
          * corresponding to each disc.
          */
-        NDiscSetTetData(const NNormalSurface& surface,
+        NDiscSetTetData(const NormalSurface& surface,
                 size_t tetIndex, const T& initValue) :
                 NDiscSetTet(surface, tetIndex) {
             unsigned long disc;
@@ -499,7 +499,7 @@ class REGINA_API NDiscSetSurface {
          * @param surface the normal surface whose discs we shall use.
          * @param b this parameter is ignored.
          */
-        NDiscSetSurface(const NNormalSurface& surface, bool b);
+        NDiscSetSurface(const NormalSurface& surface, bool b);
 
     public:
         /**
@@ -508,7 +508,7 @@ class REGINA_API NDiscSetSurface {
          *
          * @param surface the normal surface whose discs we shall use.
          */
-        NDiscSetSurface(const NNormalSurface& surface);
+        NDiscSetSurface(const NormalSurface& surface);
         /**
          * Destroys this set of discs and deallocates all associated memory.
          */
@@ -604,7 +604,7 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          *
          * @param surface the normal surface whose discs we shall use.
          */
-        NDiscSetSurfaceData(const NNormalSurface& surface) :
+        NDiscSetSurfaceData(const NormalSurface& surface) :
                 NDiscSetSurface(surface, true) {
             size_t tot = triangulation->size();
             if (tot)
@@ -621,7 +621,7 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          * @param initValue the value with which to initialise the data
          * corresponding to each disc.
          */
-        NDiscSetSurfaceData(const NNormalSurface& surface, const T& initValue) :
+        NDiscSetSurfaceData(const NormalSurface& surface, const T& initValue) :
                 NDiscSetSurface(surface, true) {
             size_t tot = triangulation->size();
             if (tot)

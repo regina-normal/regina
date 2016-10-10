@@ -416,7 +416,7 @@ namespace Coordinates {
     }
 
     regina::LargeInteger getCoordinate(NormalCoords coordSystem,
-            const regina::NNormalSurface& surface, size_t whichCoord) {
+            const regina::NormalSurface& surface, size_t whichCoord) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return surface.triangles(whichCoord / 7, whichCoord % 7);

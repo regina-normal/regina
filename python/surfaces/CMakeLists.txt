@@ -4,9 +4,9 @@
 SET ( FILES
   ndisc
   ndisctype
-  nnormalsurface
   normalcoords
   normalflags
+  normalsurface
   normalsurfaces
   nprism
   surfacefilter

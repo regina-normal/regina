@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "triangulation/ntriangulation.h"
 #include <set>
 

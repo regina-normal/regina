@@ -133,7 +133,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
     unsigned surfaceIndex = realIndex[index.row()];
 
     if (role == Qt::DisplayRole) {
-        const regina::NNormalSurface* s = surfaces_->surface(surfaceIndex);
+        const regina::NormalSurface* s = surfaces_->surface(surfaceIndex);
 
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
@@ -248,7 +248,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NNormalSurface* s = surfaces_->surface(surfaceIndex);
+        const regina::NormalSurface* s = surfaces_->surface(surfaceIndex);
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s->isCompact())
@@ -359,11 +359,11 @@ Qt::ItemFlags SurfaceModel::flags(const QModelIndex& index) const {
 bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         int role) {
     if (index.column() == 1 && role == Qt::EditRole) {
-        // At present, NNormalSurface::setName() does not fire a change
+        // At present, NormalSurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
         regina::Packet::ChangeEventSpan span(surfaces_);
-        const_cast<regina::NNormalSurface*>(
+        const_cast<regina::NormalSurface*>(
             surfaces_->surface(realIndex[index.row()]))->
             setName(value.toString().toUtf8().constData());
         return true;
@@ -646,7 +646,7 @@ void SurfacesCoordinateUI::cutAlong() {
 
     size_t whichSurface = model->surfaceIndex(
         table->selectionModel()->selectedIndexes().front());
-    const regina::NNormalSurface* toCutAlong =
+    const regina::NormalSurface* toCutAlong =
         model->surfaces()->surface(whichSurface);
     if (! toCutAlong->isCompact()) {
         ReginaSupport::info(ui,
@@ -676,7 +676,7 @@ void SurfacesCoordinateUI::crush() {
 
     size_t whichSurface = model->surfaceIndex(
         table->selectionModel()->selectedIndexes().front());
-    const regina::NNormalSurface* toCrush =
+    const regina::NormalSurface* toCrush =
         model->surfaces()->surface(whichSurface);
     if (! toCrush->isCompact()) {
         ReginaSupport::info(ui,

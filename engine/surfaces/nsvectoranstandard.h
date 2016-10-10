@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 
 namespace regina {
 
@@ -80,9 +80,9 @@ struct NormalInfo<NS_AN_STANDARD> {
  * tetrahedron, the first four represent the number of
  * triangular discs about vertex 0, 1, 2 and 3, the next
  * three represent the number of quadrilateral discs of type 0,
- * 1 and 2 (see NNormalSurface::quads()) and the final three
+ * 1 and 2 (see NormalSurface::quads()) and the final three
  * represent the number of octagonal discs of type 0, 1 and 2 (see
- * NNormalSurface::octs()).
+ * NormalSurface::octs()).
  *
  * \ifacespython Not present.
  */

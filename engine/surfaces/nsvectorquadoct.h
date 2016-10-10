@@ -76,9 +76,9 @@ struct NormalInfo<NS_AN_QUAD_OCT> {
  * The first six coordinates will be for the first tetrahedron, the
  * next six for the second tetrahedron and so on.  For each
  * tetrahedron, the first three coordinates represent the number of
- * quadrilateral discs of type 0, 1 and 2 (see NNormalSurface::quads()),
+ * quadrilateral discs of type 0, 1 and 2 (see NormalSurface::quads()),
  * and the final three represent the number of octagonal discs of type
- * 0, 1 and 2 (see NNormalSurface::octs()).
+ * 0, 1 and 2 (see NormalSurface::octs()).
  *
  * \ifacespython Not present.
  */

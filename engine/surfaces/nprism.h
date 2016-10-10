@@ -50,7 +50,7 @@ namespace regina {
  * @{
  */
 
-class NNormalSurface;
+class NormalSurface;
 
 /**
  * Specifies a single triangular prism in a tetrahedron.

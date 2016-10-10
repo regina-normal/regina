@@ -985,7 +985,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * Equivalently, the boundary curves pass <i>L.q</i> times around the
          * meridian and <i>-M.q</i> times around the longitude.
          * To compute these slopes directly from a normal surface, see
-         * NNormalSurface::boundaryIntersections().
+         * NormalSurface::boundaryIntersections().
          *
          * The orientations of the
          * boundary curves of a spun-normal surface are chosen so

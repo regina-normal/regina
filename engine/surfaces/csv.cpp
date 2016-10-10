@@ -82,7 +82,7 @@ namespace {
      * Writes a piece of the CSV data for the given normal surface
      * corresponding to the given set of optional fields.
      */
-    void writePropData(std::ostream& out, const NNormalSurface* s, int fields) {
+    void writePropData(std::ostream& out, const NormalSurface* s, int fields) {
         if (fields & surfaceExportName) {
             if (! s->name().empty())
                 writeCSVQuotedString(out, s->name().c_str());
@@ -194,7 +194,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
 
     // Write the data for individual surfaces.
     unsigned long tot = size();
-    const NNormalSurface* s;
+    const NormalSurface* s;
     for (i = 0; i < tot; ++i) {
         s = surface(i);
 
@@ -252,7 +252,7 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
 
     // Write the data for individual surfaces.
     unsigned long tot = size();
-    const NNormalSurface* s;
+    const NormalSurface* s;
     for (i = 0; i < tot; ++i) {
         s = surface(i);
 

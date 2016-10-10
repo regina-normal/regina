@@ -1187,8 +1187,7 @@ NNormalHypersurface : typedef ->  NormalHypersurface
 
 NNormalHypersurfaceList : typedef ->  NormalHypersurfaces
 
-NNormalSurface : class
-Equality type : BY_REFERENCE
+NNormalSurface : typedef ->  NormalSurface
 
 NNormalSurfaceList : typedef ->  NormalSurfaces
 
@@ -1361,6 +1360,9 @@ Equality type : BY_REFERENCE
 
 NormalList : class
 Equality type : BY_VALUE
+
+NormalSurface : class
+Equality type : BY_REFERENCE
 
 NormalSurfaces : class
 Equality type : BY_REFERENCE

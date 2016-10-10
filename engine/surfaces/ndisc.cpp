@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/ndisc.h"
 
 namespace regina {
@@ -79,7 +79,7 @@ bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
     return false;
 }
 
-NDiscSetTet::NDiscSetTet(const NNormalSurface& surface, size_t tetIndex) {
+NDiscSetTet::NDiscSetTet(const NormalSurface& surface, size_t tetIndex) {
     int i;
     for (i=0; i<4; i++)
         internalNDiscs[i] = surface.triangles(tetIndex, i).longValue();
@@ -148,7 +148,7 @@ void NDiscSetTet::discFromArc(int arcFace, int arcVertex,
             (arcNumber - internalNDiscs[arcVertex]) - 1;
 }
 
-NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
+NDiscSetSurface::NDiscSetSurface(const NormalSurface& surface, bool) :
         triangulation(surface.triangulation()) {
     size_t tot = triangulation->size();
     if (tot == 0)
@@ -157,7 +157,7 @@ NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
         discSets = new NDiscSetTet*[tot];
 }
 
-NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface) :
+NDiscSetSurface::NDiscSetSurface(const NormalSurface& surface) :
         triangulation(surface.triangulation()) {
     size_t tot = triangulation->size();
     if (tot == 0)

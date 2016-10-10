@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/surfacefilter.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"

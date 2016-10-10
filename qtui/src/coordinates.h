@@ -46,7 +46,7 @@
 #include <QObject>
 
 namespace regina {
-    class NNormalSurface;
+    class NormalSurface;
     class NormalHypersurface;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
@@ -138,7 +138,7 @@ namespace Coordinates {
      * coordinate system.
      */
     regina::LargeInteger getCoordinate(regina::NormalCoords coordSystem,
-        const regina::NNormalSurface& surface, size_t whichCoord);
+        const regina::NormalSurface& surface, size_t whichCoord);
 
     /**
      * Return a particular coordinate of a normal hypersurface in the given

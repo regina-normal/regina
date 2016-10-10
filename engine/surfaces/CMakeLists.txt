@@ -10,7 +10,7 @@ SET ( FILES
   links
   ndisc
   ndisctype
-  nnormalsurface
+  normalsurface
   normalsurfaces
   nprism
   nsvectoranstandard
@@ -48,6 +48,7 @@ if (${REGINA_INSTALL_DEV})
     normalcoords.h
     normalflags.h
     normalspec-impl.h
+    normalsurface.h
     normalsurfaces.h
     nprism.h
     nsanstandard.h

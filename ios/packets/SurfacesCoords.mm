@@ -231,7 +231,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalSurface* s = self.packet->surface(selectedRow - 1);
+    const regina::NormalSurface* s = self.packet->surface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
                                                         message:@"I can only cut along compact surfaces, not spun-normal surfaces."
@@ -278,7 +278,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalSurface* s = self.packet->surface(selectedRow - 1);
+    const regina::NormalSurface* s = self.packet->surface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
                                                         message:@"I can only crush compact surfaces, not spun-normal surfaces."
@@ -409,7 +409,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
 
-    const regina::NNormalSurface* s = self.packet->surface(rowPath.row);
+    const regina::NormalSurface* s = self.packet->surface(rowPath.row);
 
     int prop = PROP_NONE;
     int coord = columnPath.column;

@@ -48,7 +48,7 @@ using regina::NBoundaryComponent;
 using regina::Container;
 using regina::NEdge;
 using regina::NExampleTriangulation;
-using regina::NNormalSurface;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::NormalSurfaceVector;
 using regina::Packet;
@@ -281,7 +281,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 list->size() == expectedSize);
         }
 
-        void testSurface(const NNormalSurface* surface, const char* triName,
+        void testSurface(const NormalSurface* surface, const char* triName,
                 const char* surfaceName, int euler, bool connected,
                 bool orient, bool twoSided, bool compact, bool realBdry,
                 bool vertexLink, unsigned edgeLink,
@@ -420,7 +420,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             unsigned long tot = 0;
             unsigned long size = list->size();
 
-            const NNormalSurface* s;
+            const NormalSurface* s;
             for (unsigned long i = 0; i < size; i++) {
                 s = list->surface(i);
 
@@ -1805,7 +1805,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             unsigned long n = list->size();
 
             unsigned long i, j;
-            const NNormalSurface *s, *t;
+            const NormalSurface *s, *t;
             std::pair<const NEdge*, const NEdge*> edges;
             unsigned long edge;
 
@@ -2021,7 +2021,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         // be equal to (i) the surface s, (ii) two copies of the surface s,
         // or (iii) a double cover of the surface s.
         // Increment the relevant counters accordingly.
-        static void checkBoundaryType(const NNormalSurface* s,
+        static void checkBoundaryType(const NormalSurface* s,
                 const NTriangulation* tri, unsigned& foundS,
                 unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
             if (tri->countBoundaryComponents() == 1) {
@@ -2054,12 +2054,12 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 tri, NS_STANDARD);
             unsigned long n = list->size();
 
-            const NNormalSurface *s;
+            const NormalSurface *s;
             std::unique_ptr<NTriangulation> t;
             std::unique_ptr<Container> comp;
             unsigned long nComp;
 
-            std::unique_ptr<NNormalSurface> sDouble;
+            std::unique_ptr<NormalSurface> sDouble;
             std::unique_ptr<NTriangulation> tDouble;
             std::unique_ptr<Container> compDouble;
             unsigned long nCompDouble;

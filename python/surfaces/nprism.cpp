@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "surfaces/nprism.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "../helpers.h"
 
 using namespace boost::python;

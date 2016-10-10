@@ -36,7 +36,7 @@
 #include "enumerate/treetraversal.h"
 #include "packet/container.h"
 #include "subcomplex/nsnappedball.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/nisomorphism.h"
@@ -76,7 +76,7 @@ long NTriangulation::connectedSumDecomposition(Packet* primeParent,
 
     NTriangulation* processing;
     NTriangulation* crushed;
-    NNormalSurface* sphere;
+    NormalSurface* sphere;
     while ((processing = static_cast<NTriangulation*>(
             toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
@@ -286,7 +286,7 @@ bool NTriangulation::isThreeSphere() const {
 
     NTriangulation* processing;
     NTriangulation* crushed;
-    NNormalSurface* sphere;
+    NormalSurface* sphere;
     while ((processing = static_cast<NTriangulation*>(toProcess.lastChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess.  Each of these children has trivial
@@ -461,7 +461,7 @@ bool NTriangulation::isSolidTorus() const {
     // This observation simplifies the crushing cases later on.
 
     // Pull out the big guns: normal surface time.
-    NNormalSurface* s;
+    NormalSurface* s;
     NTriangulation* crushed;
     Packet* p;
     NTriangulation* comp;
@@ -646,7 +646,7 @@ bool NTriangulation::isIrreducible() const {
 
     NTriangulation* processing;
     NTriangulation* crushed;
-    NNormalSurface* sphere;
+    NormalSurface* sphere;
     while ((processing = static_cast<NTriangulation*>(
             toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
@@ -792,7 +792,7 @@ bool NTriangulation::hasCompressingDisc() const {
     // Nope.  Decide whether we can use the fast linear programming
     // machinery or whether we need to do a full vertex surface enumeration.
     if (use->isOrientable() && use->countBoundaryComponents() == 1) {
-        NNormalSurface* ans;
+        NormalSurface* ans;
         NTriangulation* crush;
         NTriangulation* comp;
         unsigned nComp;

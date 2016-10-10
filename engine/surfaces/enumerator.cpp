@@ -598,7 +598,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
                     tmpInt.tryReduce();
                     v->setElement(i, tmpInt);
                 }
-                list_->surfaces.push_back(new NNormalSurface(triang_, v));
+                list_->surfaces.push_back(new NormalSurface(triang_, v));
             }
         }
 

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "surfaces/surfacefilter.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/filterregistry.h"
 #include "utilities/xmlutils.h"
@@ -56,7 +56,7 @@ void SurfaceFilter::writeXMLPacketData(std::ostream& out) const {
     out << "  </filter>\n";
 }
 
-bool SurfaceFilterCombination::accept(const NNormalSurface& surface) const {
+bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
     if (usesAnd_) {
         // Combine all child filters using AND.
         for (Packet* child = firstChild(); child; child = child->nextSibling())
@@ -84,7 +84,7 @@ LargeInteger SurfaceFilterProperties::eulerChar(size_t index) const {
     return *it;
 }
 
-bool SurfaceFilterProperties::accept(const NNormalSurface& surface) const {
+bool SurfaceFilterProperties::accept(const NormalSurface& surface) const {
     if (! realBoundary_.contains(surface.hasRealBoundary()))
         return false;
     if (! compactness_.contains(surface.isCompact()))

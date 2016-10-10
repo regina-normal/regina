@@ -216,7 +216,7 @@ using regina::NTriangle;
     }
 }
 
-+ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord
++ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NormalSurface&)surface whichCoord:(unsigned long)whichCoord
 {
     if (coordSystem == regina::NS_STANDARD) {
         if (whichCoord % 7 < 4)

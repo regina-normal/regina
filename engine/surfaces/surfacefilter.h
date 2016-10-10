@@ -48,7 +48,7 @@
 
 namespace regina {
 
-class NNormalSurface;
+class NormalSurface;
 class NormalSurfaces;
 class SurfaceFilter;
 class SurfaceFilterCombination;
@@ -208,7 +208,7 @@ class REGINA_API SurfaceFilter : public Packet {
          * @return \c true if and only if the given surface is accepted
          * by this filter.
          */
-        virtual bool accept(const NNormalSurface& surface) const;
+        virtual bool accept(const NormalSurface& surface) const;
 
 #ifdef __DOXYGEN
         /**
@@ -321,7 +321,7 @@ class REGINA_API SurfaceFilterCombination : public SurfaceFilter {
          */
         void setUsesAnd(bool value);
 
-        virtual bool accept(const NNormalSurface& surface) const;
+        virtual bool accept(const NormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
         static XMLFilterReader* xmlFilterReader(Packet* parent);
 
@@ -488,7 +488,7 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
          */
         void setRealBoundary(const BoolSet& value);
 
-        virtual bool accept(const NNormalSurface& surface) const;
+        virtual bool accept(const NormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
         static XMLFilterReader* xmlFilterReader(Packet* parent);
 
@@ -535,7 +535,7 @@ inline SurfaceFilter::SurfaceFilter(const SurfaceFilter&) : Packet() {
 inline SurfaceFilter::~SurfaceFilter() {
 }
 
-inline bool SurfaceFilter::accept(const NNormalSurface&) const {
+inline bool SurfaceFilter::accept(const NormalSurface&) const {
     return true;
 }
 

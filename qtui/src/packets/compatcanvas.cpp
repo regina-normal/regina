@@ -33,7 +33,7 @@
 // Regina core includes:
 #include "hypersurface/normalhypersurface.h"
 #include "hypersurface/normalhypersurfaces.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 
 #define NICE_SIZE 200
@@ -53,7 +53,7 @@
 
 using regina::NormalHypersurface;
 using regina::NormalHypersurfaces;
-using regina::NNormalSurface;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
 
 CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
@@ -260,7 +260,7 @@ void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
     QBrush fill(Qt::darkCyan);
 
     unsigned i, j;
-    const NNormalSurface *s, *t;
+    const NormalSurface *s, *t;
     for (i = 0; i < nSurfaces; ++i) {
         s = surfaces.surface(i);
 
@@ -346,7 +346,7 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
     // We know the surface list is non-empty.
 
     unsigned i, j;
-    const NNormalSurface *s, *t;
+    const NormalSurface *s, *t;
 
     bool* usable = new bool[nSurfaces];
     for (i = 0; i < nSurfaces; ++i) {

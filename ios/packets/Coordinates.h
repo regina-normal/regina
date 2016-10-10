@@ -41,7 +41,7 @@ namespace regina {
     typedef Triangulation<4> Dim4Triangulation;
 
     class NormalHypersurface;
-    class NNormalSurface;
+    class NormalSurface;
 }
 
 @interface Coordinates : NSObject
@@ -87,7 +87,7 @@ namespace regina {
  * Return a particular coordinate of a normal surface in the given
  * coordinate system.
  */
-+ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord;
++ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NormalSurface&)surface whichCoord:(unsigned long)whichCoord;
 
 @end
 

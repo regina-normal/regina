@@ -49,7 +49,7 @@
 #include <QWhatsThis>
 
 using regina::Packet;
-using regina::NNormalSurface;
+using regina::NormalSurface;
 
 SurfacesUI::SurfacesUI(regina::NormalSurfaces* packet,
         PacketPane* newEnclosingPane) :

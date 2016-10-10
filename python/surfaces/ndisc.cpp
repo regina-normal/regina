@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "surfaces/ndisc.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "../helpers.h"
 
 using namespace boost::python;
@@ -66,7 +66,7 @@ void addNDisc() {
 
     class_<NDiscSetTet, std::auto_ptr<NDiscSetTet>,
             boost::noncopyable>("NDiscSetTet",
-            init<const regina::NNormalSurface&, unsigned long>())
+            init<const regina::NormalSurface&, unsigned long>())
         .def("nDiscs", &NDiscSetTet::nDiscs)
         .def("arcFromDisc", &NDiscSetTet::arcFromDisc)
         .def("discFromArc", &NDiscSetTet::discFromArc)
@@ -75,7 +75,7 @@ void addNDisc() {
 
     class_<NDiscSetSurface, std::auto_ptr<NDiscSetSurface>,
             boost::noncopyable>("NDiscSetSurface",
-            init<const regina::NNormalSurface&>())
+            init<const regina::NormalSurface&>())
         .def("nTets", &NDiscSetSurface::nTets)
         .def("nDiscs", &NDiscSetSurface::nDiscs)
         .def("tetDiscs", &NDiscSetSurface::tetDiscs,
