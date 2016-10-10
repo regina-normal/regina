@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-void addNDisc();
+void addDisc();
 void addDiscType();
 void addNormalSurface();
 void addNormalSurfaces();
@@ -46,7 +46,7 @@ void addSurfacesClasses() {
     addSurfaceFilterType();
 
     addNormalFlags();
-    addNDisc();
+    addDisc();
     addDiscType();
     addNormalSurface();
     addNormalSurfaces();

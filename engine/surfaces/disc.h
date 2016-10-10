@@ -65,7 +65,7 @@ namespace regina {
  * of the tetrahedron.
  *
  * Note that, unlike DiscType in which the meaning of DiscType::type is
- * flexible, the meaning of NDiscSpec::type is fixed as described above.
+ * flexible, the meaning of DiscSpec::type is fixed as described above.
  *
  * \warning This class converts the indices of normal discs of a
  * given type from LargeInteger to <tt>unsigned long</tt>.  See the
@@ -76,40 +76,40 @@ namespace regina {
  * \pre This class should only be used with \a embedded
  * normal surfaces.
  */
-struct REGINA_API NDiscSpec {
+struct REGINA_API DiscSpec {
     size_t tetIndex;
         /**< The index in the triangulation of the tetrahedron
              containing the disc. */
     int type;
         /**< The disc type; this is between 0 and 9 inclusive, as described
-             in the \a NDiscSpec class notes. */
+             in the \a DiscSpec class notes. */
     unsigned long number;
         /**< Specifies which disc of the particular type in the
              particular tetrahedron is being referred to; discs
-             are numbered as described in the \a NDiscSpec class notes. */
+             are numbered as described in the \a DiscSpec class notes. */
 
     /**
      * Creates a new uninitialised disc specifier.
      */
-    NDiscSpec();
+    DiscSpec();
     /**
      * Creates a new disc specifier containing the given values.
      *
      * @param newTetIndex the index in the triangulation of the tetrahedron
      * containing the disc.
      * @param newType the disc type; this is between 0 and 9 inclusive,
-     * as described in the \a NDiscSpec class notes.
+     * as described in the \a DiscSpec class notes.
      * @param newNumber specifies which disc of the particular type in the
      * particular tetrahedron is being referred to; discs are numbered
-     * as described in the \a NDiscSpec class notes.
+     * as described in the \a DiscSpec class notes.
      */
-    NDiscSpec(size_t newTetIndex, int newType, unsigned long newNumber);
+    DiscSpec(size_t newTetIndex, int newType, unsigned long newNumber);
     /**
      * Creates a new disc specifier that is a clone of the given specifier.
      *
      * @param cloneMe the disc specifier to clone.
      */
-    NDiscSpec(const NDiscSpec& cloneMe);
+    DiscSpec(const DiscSpec& cloneMe);
 
     /**
      * Copies the values from the given disc specifier into this specifier.
@@ -117,7 +117,7 @@ struct REGINA_API NDiscSpec {
      * @param cloneMe the disc specifier whose values should be copied.
      * @return a reference to this disc specifier.
      */
-    NDiscSpec& operator = (const NDiscSpec& cloneMe);
+    DiscSpec& operator = (const DiscSpec& cloneMe);
     /**
      * Determines if this and the given disc specifier contain identical
      * information.
@@ -126,7 +126,7 @@ struct REGINA_API NDiscSpec {
      * @return \c true if and only if this and the given disc specifier
      * contain identical information.
      */
-    bool operator == (const NDiscSpec& other) const;
+    bool operator == (const DiscSpec& other) const;
     /**
      * Determines if this and the given disc specifier contain different
      * information.
@@ -135,9 +135,9 @@ struct REGINA_API NDiscSpec {
      * @return \c true if and only if this and the given disc specifier
      * contain different information.
      */
-    bool operator != (const NDiscSpec& other) const;
+    bool operator != (const DiscSpec& other) const;
 
-    friend std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
+    friend std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
 };
 
 /**
@@ -149,14 +149,14 @@ struct REGINA_API NDiscSpec {
  * @param spec the disc specifier to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const NDiscSpec& spec);
+REGINA_API std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
 
 /**
  * Determines whether or not normal discs of the given type are
  * numbered away from the given vertex.
  *
  * @param discType the normal disc type under consideration; this
- * should be between 0 and 9 inclusive, as described by the NDiscSpec
+ * should be between 0 and 9 inclusive, as described by the DiscSpec
  * class notes.
  * @param vertex the vertex under consideration; this should be
  * between 0 and 3 inclusive.
@@ -175,7 +175,7 @@ REGINA_API bool numberDiscsAwayFromVertex(int discType, int vertex);
  * \pre The given normal arc lies on a normal disc of the given type.
  *
  * @param discType the normal disc type under consideration; this should
- * be between 0 and 9 inclusive, as described by the NDiscSpec class
+ * be between 0 and 9 inclusive, as described by the DiscSpec class
  * notes.
  * @param vertex the vertex about which the normal arc runs.
  * @param edgeStart the start vertex of the edge to which the normal arc
@@ -202,9 +202,9 @@ REGINA_API bool discOrientationFollowsEdge(int discType, int vertex,
  *
  * \todo \problong Have some error flag so we can barf politely if the number
  * of normal discs of a given type does not fit into an <tt>unsigned
- * long</tt>.  See how this affects NDiscSetTetData also.
+ * long</tt>.  See how this affects DiscSetTetData also.
  */
-class REGINA_API NDiscSetTet {
+class REGINA_API DiscSetTet {
     protected:
         unsigned long internalNDiscs[10];
             /**< The number of discs of each type. */
@@ -222,7 +222,7 @@ class REGINA_API NDiscSetTet {
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          */
-        NDiscSetTet(const NormalSurface& surface, size_t tetIndex);
+        DiscSetTet(const NormalSurface& surface, size_t tetIndex);
         /**
          * Creates a new set of normal discs where the number of discs of
          * each type is explicitly given.
@@ -238,7 +238,7 @@ class REGINA_API NDiscSetTet {
          * @param oct1 the number of octahedral discs of type 1.
          * @param oct2 the number of octahedral discs of type 2.
          */
-        NDiscSetTet(unsigned long tri0, unsigned long tri1,
+        DiscSetTet(unsigned long tri0, unsigned long tri1,
             unsigned long tri2, unsigned long tri3,
             unsigned long quad0, unsigned long quad1, unsigned long quad2,
             unsigned long oct0 = 0, unsigned long oct1 = 0,
@@ -246,7 +246,7 @@ class REGINA_API NDiscSetTet {
         /**
          * Destroys this disc set.
          */
-        virtual ~NDiscSetTet();
+        virtual ~DiscSetTet();
 
         /**
          * Determines the number of discs of the given type inside this
@@ -254,7 +254,7 @@ class REGINA_API NDiscSetTet {
          *
          * @param type the disc type to examine; this should be between
          * 0 and 9 inclusive.  Disc types are outlined in
-         * the NDiscSpec class notes.
+         * the DiscSpec class notes.
          * @return the number of discs of the given type inside this
          * tetrahedron.
          */
@@ -274,7 +274,7 @@ class REGINA_API NDiscSetTet {
          * \a arcVertex should not be the same.
          * @param discType the disc type of the given normal disc;
          * this should be between 0 and 9 inclusive, as described in the
-         * NDiscSpec class notes.
+         * DiscSpec class notes.
          * @param discNumber indicates which normal disc of the given disc
          * type is referred to (between 0 and <tt>nDiscs(discType)-1</tt>
          * inclusive).
@@ -292,7 +292,7 @@ class REGINA_API NDiscSetTet {
          *
          * \pre The given normal arc
          * actually exists in the normal surface with which this
-         * \a NDiscSetTet object was created.
+         * \a DiscSetTet object was created.
          *
          * @param arcFace the face of this tetrahedron containing the
          * normal arc (between 0 and 3 inclusive).
@@ -306,7 +306,7 @@ class REGINA_API NDiscSetTet {
          * tetrahedron vertex outwards.
          * @param discType returns the disc type of the normal disc that
          * meets the given normal arc; this will be between 0 and 9
-         * inclusive, as described in the NDiscSpec class notes.
+         * inclusive, as described in the DiscSpec class notes.
          * Any value may be initially passed.
          * @param discNumber returns a number that indicates which
          * normal disc of the returned disc type (<tt>discType</tt>)
@@ -338,7 +338,7 @@ class REGINA_API NDiscSetTet {
  * \ifacespython Not present.
  */
 template <class T>
-class NDiscSetTetData : public NDiscSetTet {
+class DiscSetTetData : public DiscSetTet {
     public:
         typedef T* DataPtr;
             /**< A type that is a pointer to the data stored with each
@@ -361,8 +361,8 @@ class NDiscSetTetData : public NDiscSetTet {
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          */
-        NDiscSetTetData(const NormalSurface& surface,
-                size_t tetIndex) : NDiscSetTet(surface, tetIndex) {
+        DiscSetTetData(const NormalSurface& surface,
+                size_t tetIndex) : DiscSetTet(surface, tetIndex) {
             for (int i=0; i<10; i++)
                 if (internalNDiscs[i])
                     internalData[i] = new T[internalNDiscs[i]];
@@ -384,9 +384,9 @@ class NDiscSetTetData : public NDiscSetTet {
          * @param initValue the value with which to initialise the data
          * corresponding to each disc.
          */
-        NDiscSetTetData(const NormalSurface& surface,
+        DiscSetTetData(const NormalSurface& surface,
                 size_t tetIndex, const T& initValue) :
-                NDiscSetTet(surface, tetIndex) {
+                DiscSetTet(surface, tetIndex) {
             unsigned long disc;
             for (int i=0; i<10; i++)
                 if (internalNDiscs[i]) {
@@ -412,12 +412,12 @@ class NDiscSetTetData : public NDiscSetTet {
          * @param oct1 the number of octahedral discs of type 1.
          * @param oct2 the number of octahedral discs of type 2.
          */
-        NDiscSetTetData(unsigned long tri0, unsigned long tri1,
+        DiscSetTetData(unsigned long tri0, unsigned long tri1,
                 unsigned long tri2, unsigned long tri3,
                 unsigned long quad0, unsigned long quad1, unsigned long quad2,
                 unsigned long oct0 = 0, unsigned long oct1 = 0,
                 unsigned long oct2 = 0) :
-                NDiscSetTet(tri0, tri1, tri2, tri3, quad0, quad1, quad2,
+                DiscSetTet(tri0, tri1, tri2, tri3, quad0, quad1, quad2,
                     oct0, oct1, oct2) {
             for (int i=0; i<10; i++)
                 if (internalNDiscs[i])
@@ -431,7 +431,7 @@ class NDiscSetTetData : public NDiscSetTet {
          * elements are pointers to dynamically allocated objects, these
          * will not be destroyed.
          */
-        virtual ~NDiscSetTetData() {
+        virtual ~DiscSetTetData() {
             for (int i=0; i<10; i++)
                 if (internalData[i])
                     delete[] internalData[i];
@@ -443,7 +443,7 @@ class NDiscSetTetData : public NDiscSetTet {
          *
          * @param discType the disc type of the given normal disc;
          * this should be between 0 and 9 inclusive, as described in the
-         * NDiscSpec class notes.
+         * DiscSpec class notes.
          * @param discNumber indicates which normal disc of the given disc
          * type is referred to; this should be between 0 and
          * <tt>nDiscs(discType)-1</tt> inclusive.
@@ -459,7 +459,7 @@ class NDiscSetTetData : public NDiscSetTet {
 
 /**
  * Represents the set of all normal discs forming a normal surface.
- * These are stored as an array of NDiscSetTet objects, one for each
+ * These are stored as an array of DiscSetTet objects, one for each
  * tetrahedron.
  *
  * \warning This class converts the number of normal discs of a
@@ -471,9 +471,9 @@ class NDiscSetTetData : public NDiscSetTet {
  * \pre This class should only be used with \a embedded
  * normal surfaces.
  */
-class REGINA_API NDiscSetSurface {
+class REGINA_API DiscSetSurface {
     protected:
-        NDiscSetTet** discSets;
+        DiscSetTet** discSets;
             /**< The disc sets corresponding to each tetrahedron. */
         const NTriangulation* triangulation;
             /**< The triangulation in which the normal surface lives. */
@@ -482,24 +482,24 @@ class REGINA_API NDiscSetSurface {
         /**
          * Creates a new disc set corresponding to the discs of the
          * given normal surface.  The array of tetrahedron disc set
-         * pointers will be created but the NDiscSetTet objects themselves
+         * pointers will be created but the DiscSetTet objects themselves
          * will <b>not</b> be created.
          *
          * This constructor should be called from constructors of subclasses
-         * who wish to use objects of a subclass of NDiscSetTet, which
+         * who wish to use objects of a subclass of DiscSetTet, which
          * this constructor allows them to create for themselves.
          *
          * \warning After calling this constructor, each
-         * NDiscSetTet object
+         * DiscSetTet object
          * in the \a discSets array <b>must</b> be created, since the
-         * \a NDiscSetSurface destructor will attempt to destroy them!
+         * \a DiscSetSurface destructor will attempt to destroy them!
          * The \a discSets array will have size
          * <tt>surface.triangulation()->size()</tt>.
          *
          * @param surface the normal surface whose discs we shall use.
          * @param b this parameter is ignored.
          */
-        NDiscSetSurface(const NormalSurface& surface, bool b);
+        DiscSetSurface(const NormalSurface& surface, bool b);
 
     public:
         /**
@@ -508,11 +508,11 @@ class REGINA_API NDiscSetSurface {
          *
          * @param surface the normal surface whose discs we shall use.
          */
-        NDiscSetSurface(const NormalSurface& surface);
+        DiscSetSurface(const NormalSurface& surface);
         /**
          * Destroys this set of discs and deallocates all associated memory.
          */
-        virtual ~NDiscSetSurface();
+        virtual ~DiscSetSurface();
 
         /**
          * Returns the number of tetrahedra in the underlying
@@ -529,7 +529,7 @@ class REGINA_API NDiscSetSurface {
          * tetrahedron to examine.
          * @param type the disc type to examine; this should be between
          * 0 and 9 inclusive.  Disc types are outlined in
-         * the NDiscSpec class notes.
+         * the DiscSpec class notes.
          * @return the number of discs of the given type inside the
          * given tetrahedron.
          */
@@ -542,7 +542,7 @@ class REGINA_API NDiscSetSurface {
          * tetrahedron.
          * @return the set of discs inside the given tetrahedron.
          */
-        NDiscSetTet& tetDiscs(size_t tetIndex) const;
+        DiscSetTet& tetDiscs(size_t tetIndex) const;
 
         /**
          * Determines which normal disc is adjacent to the given normal disc
@@ -569,16 +569,16 @@ class REGINA_API NDiscSetSurface {
          * specifier will be newly created, and it is up to the caller
          * of this routine to dispose of it.
          */
-        NDiscSpec* adjacentDisc(const NDiscSpec& disc, Perm<4> arc,
+        DiscSpec* adjacentDisc(const DiscSpec& disc, Perm<4> arc,
                 Perm<4>& adjArc) const;
 };
 
 /**
  * Stores data of type \c T for every normal disc within a particular
  * normal surface.
- * This data is stored using an array of NDiscSetTetData<T> objects,
+ * This data is stored using an array of DiscSetTetData<T> objects,
  * one for each tetrahedron (thus the inherited member function
- * tetDiscs() will return an object of class NDiscSetTetData<T>).
+ * tetDiscs() will return an object of class DiscSetTetData<T>).
  *
  * \warning This class converts the number of normal discs of a
  * given type from LargeInteger to <tt>unsigned long</tt>.  See the
@@ -595,7 +595,7 @@ class REGINA_API NDiscSetSurface {
  * \ifacespython Not present.
  */
 template <class T>
-class NDiscSetSurfaceData : public NDiscSetSurface {
+class DiscSetSurfaceData : public DiscSetSurface {
     public:
         /**
          * Creates a new disc set corresponding to the discs of the
@@ -604,12 +604,12 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          *
          * @param surface the normal surface whose discs we shall use.
          */
-        NDiscSetSurfaceData(const NormalSurface& surface) :
-                NDiscSetSurface(surface, true) {
+        DiscSetSurfaceData(const NormalSurface& surface) :
+                DiscSetSurface(surface, true) {
             size_t tot = triangulation->size();
             if (tot)
                 for (size_t index = 0; index < tot; index++)
-                    discSets[index] = new NDiscSetTetData<T>(surface, index);
+                    discSets[index] = new DiscSetTetData<T>(surface, index);
         }
         /**
          * Creates a new disc set corresponding to the discs of the
@@ -621,12 +621,12 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          * @param initValue the value with which to initialise the data
          * corresponding to each disc.
          */
-        NDiscSetSurfaceData(const NormalSurface& surface, const T& initValue) :
-                NDiscSetSurface(surface, true) {
+        DiscSetSurfaceData(const NormalSurface& surface, const T& initValue) :
+                DiscSetSurface(surface, true) {
             size_t tot = triangulation->size();
             if (tot)
                 for (size_t index = 0; index < tot; index++)
-                    discSets[index] = new NDiscSetTetData<T>(surface, index,
+                    discSets[index] = new DiscSetTetData<T>(surface, index,
                         initValue);
         }
 
@@ -639,8 +639,8 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          * @return a reference to the data corresponding to the given
          * normal disc.
          */
-        T& data(const NDiscSpec& disc) {
-            return dynamic_cast<NDiscSetTetData<T>*>(discSets[disc.tetIndex])->
+        T& data(const DiscSpec& disc) {
+            return dynamic_cast<DiscSetTetData<T>*>(discSets[disc.tetIndex])->
                 data(disc.type, disc.number);
         }
 };
@@ -656,11 +656,11 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
  * \pre The number of normal discs of a particular type
  * in a particular tetrahedron can be represented by a long integer.
  */
-class REGINA_API NDiscSpecIterator {
+class REGINA_API DiscSpecIterator {
     protected:
-        const NDiscSetSurface* internalDiscSet;
+        const DiscSetSurface* internalDiscSet;
             /**< The disc set through which we are iterating. */
-        NDiscSpec current;
+        DiscSpec current;
             /**< The disc currently pointed to. */
 
     public:
@@ -668,20 +668,20 @@ class REGINA_API NDiscSpecIterator {
          * Creates a new uninitialised iterator.
          * This iterator cannot be used or queried until init() is called.
          */
-        NDiscSpecIterator();
+        DiscSpecIterator();
         /**
          * Creates a new iterator pointing to the first disc in the
          * given disc set.
          *
          * @param discSet the disc set used to initialise this iterator.
          */
-        NDiscSpecIterator(const NDiscSetSurface& discSet);
+        DiscSpecIterator(const DiscSetSurface& discSet);
         /**
          * Points this iterator to the first disc in the given disc set.
          *
          * @param discSet the disc set used to reinitialise this iterator.
          */
-        void init(const NDiscSetSurface& discSet);
+        void init(const DiscSetSurface& discSet);
 
         /**
          * Points this iterator to the next disc, or makes it
@@ -723,7 +723,7 @@ class REGINA_API NDiscSpecIterator {
          *
          * @return a reference to the disc pointed to by this iterator.
          */
-        const NDiscSpec& operator *() const;
+        const DiscSpec& operator *() const;
         /**
          * Determines if this iterator is past-the-end.
          *
@@ -734,28 +734,28 @@ class REGINA_API NDiscSpecIterator {
          * Determines if this and the given iterator are equal.
          *
          * Two iterators are considered equal if (i) they were constructed
-         * from the same NDiscSetSurface object (not two different
-         * NDiscSetSurface objects with identical contents), and (ii) they
+         * from the same DiscSetSurface object (not two different
+         * DiscSetSurface objects with identical contents), and (ii) they
          * point to the same disc of the same tetrahedron.
          *
          * @param other the iterator to compare with this.
          * @return \c true if and only if this and the given iterator
          * are equal.
          */
-        bool operator == (const NDiscSpecIterator& other) const;
+        bool operator == (const DiscSpecIterator& other) const;
         /**
          * Determines if this and the given iterator are different.
          *
          * Two iterators are considered equal if (i) they were constructed
-         * from the same NDiscSetSurface object (not two different
-         * NDiscSetSurface objects with identical contents), and (ii) they
+         * from the same DiscSetSurface object (not two different
+         * DiscSetSurface objects with identical contents), and (ii) they
          * point to the same disc of the same tetrahedron.
          *
          * @param other the iterator to compare with this.
          * @return \c true if and only if this and the given iterator
          * are equal.
          */
-        bool operator != (const NDiscSpecIterator& other) const;
+        bool operator != (const DiscSpecIterator& other) const;
 
     private:
         /**
@@ -770,68 +770,109 @@ class REGINA_API NDiscSpecIterator {
         void makeValid();
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NDiscSpec has now been renamed to DiscSpec.
+ */
+REGINA_DEPRECATED typedef DiscSpec NDiscSpec;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NDiscSetTet has now been renamed to DiscSetTet.
+ */
+REGINA_DEPRECATED typedef DiscSetTet NDiscSetTet;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NDiscSetTetData has now been renamed to DiscSetTetData.
+ */
+REGINA_DEPRECATED typedef DiscSetTetData NDiscSetTetData;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NDiscSetSurface has now been renamed to DiscSetSurface.
+ */
+REGINA_DEPRECATED typedef DiscSetSurface NDiscSetSurface;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NDiscSetSurfaceData has now been renamed to
+ * DiscSetSurfaceData.
+ */
+REGINA_DEPRECATED typedef DiscSetSurfaceData NDiscSetSurfaceData;
+
 /*@}*/
 
-// Inline functions for NDiscSpec
+// Inline functions for DiscSpec
 
-inline NDiscSpec::NDiscSpec() {
+inline DiscSpec::DiscSpec() {
 }
-inline NDiscSpec::NDiscSpec(size_t newTetIndex, int newType,
+inline DiscSpec::DiscSpec(size_t newTetIndex, int newType,
         unsigned long newNumber) : tetIndex(newTetIndex), type(newType),
         number(newNumber) {
 }
-inline NDiscSpec::NDiscSpec(const NDiscSpec& cloneMe) :
+inline DiscSpec::DiscSpec(const DiscSpec& cloneMe) :
         tetIndex(cloneMe.tetIndex), type(cloneMe.type),
         number(cloneMe.number) {
 }
 
-inline NDiscSpec& NDiscSpec::operator = (const NDiscSpec& cloneMe) {
+inline DiscSpec& DiscSpec::operator = (const DiscSpec& cloneMe) {
     tetIndex = cloneMe.tetIndex;
     type = cloneMe.type;
     number = cloneMe.number;
     return *this;
 }
-inline bool NDiscSpec::operator == (const NDiscSpec& other) const {
+inline bool DiscSpec::operator == (const DiscSpec& other) const {
     return (tetIndex == other.tetIndex && type == other.type &&
         number == other.number);
 }
-inline bool NDiscSpec::operator != (const NDiscSpec& other) const {
+inline bool DiscSpec::operator != (const DiscSpec& other) const {
     return (tetIndex != other.tetIndex || type != other.type ||
         number != other.number);
 }
 
-// Inline functions for NDiscSetTet
+// Inline functions for DiscSetTet
 
-inline NDiscSetTet::~NDiscSetTet() {
+inline DiscSetTet::~DiscSetTet() {
 }
 
-inline unsigned long NDiscSetTet::nDiscs(int type) const {
+inline unsigned long DiscSetTet::nDiscs(int type) const {
     return internalNDiscs[type];
 }
 
-// Inline functions for NDiscSetSurface
+// Inline functions for DiscSetSurface
 
-inline size_t NDiscSetSurface::nTets() const {
+inline size_t DiscSetSurface::nTets() const {
     return triangulation->size();
 }
 
-inline unsigned long NDiscSetSurface::nDiscs(size_t tetIndex, int type) const {
+inline unsigned long DiscSetSurface::nDiscs(size_t tetIndex, int type) const {
     return discSets[tetIndex]->nDiscs(type);
 }
 
-inline NDiscSetTet& NDiscSetSurface::tetDiscs(size_t tetIndex) const {
+inline DiscSetTet& DiscSetSurface::tetDiscs(size_t tetIndex) const {
     return *(discSets[tetIndex]);
 }
 
-// Inline functions for NDiscSpecIterator
+// Inline functions for DiscSpecIterator
 
-inline NDiscSpecIterator::NDiscSpecIterator() {
+inline DiscSpecIterator::DiscSpecIterator() {
 }
-inline NDiscSpecIterator::NDiscSpecIterator(const NDiscSetSurface& discSet) :
+inline DiscSpecIterator::DiscSpecIterator(const DiscSetSurface& discSet) :
         internalDiscSet(&discSet), current(0, 0, 0) {
     makeValid();
 }
-inline void NDiscSpecIterator::init(const NDiscSetSurface& discSet) {
+inline void DiscSpecIterator::init(const DiscSetSurface& discSet) {
     internalDiscSet = &discSet;
     current.tetIndex = 0;
     current.type = 0;
@@ -839,28 +880,28 @@ inline void NDiscSpecIterator::init(const NDiscSetSurface& discSet) {
     makeValid();
 }
 
-inline void NDiscSpecIterator::operator++() {
+inline void DiscSpecIterator::operator++() {
     current.number++;
     makeValid();
 }
-inline void NDiscSpecIterator::operator++(int) {
+inline void DiscSpecIterator::operator++(int) {
     current.number++;
     makeValid();
 }
-inline const NDiscSpec& NDiscSpecIterator::operator *() const {
+inline const DiscSpec& DiscSpecIterator::operator *() const {
     return current;
 }
-inline bool NDiscSpecIterator::done() const {
+inline bool DiscSpecIterator::done() const {
     return (current.tetIndex == internalDiscSet->nTets());
 }
 
-inline bool NDiscSpecIterator::operator == (
-        const NDiscSpecIterator& other) const {
+inline bool DiscSpecIterator::operator == (
+        const DiscSpecIterator& other) const {
     return internalDiscSet == other.internalDiscSet && current == other.current;
 }
 
-inline bool NDiscSpecIterator::operator != (
-        const NDiscSpecIterator& other) const {
+inline bool DiscSpecIterator::operator != (
+        const DiscSpecIterator& other) const {
     return internalDiscSet != other.internalDiscSet || current != other.current;
 }
 

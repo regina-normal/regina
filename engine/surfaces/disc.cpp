@@ -35,7 +35,7 @@
 
 namespace regina {
 
-std::ostream& operator << (std::ostream& out, const NDiscSpec& spec) {
+std::ostream& operator << (std::ostream& out, const DiscSpec& spec) {
     out << '(' << spec.tetIndex << ", " << spec.type << ", "
         << spec.number << ')';
     return out;
@@ -79,7 +79,7 @@ bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
     return false;
 }
 
-NDiscSetTet::NDiscSetTet(const NormalSurface& surface, size_t tetIndex) {
+DiscSetTet::DiscSetTet(const NormalSurface& surface, size_t tetIndex) {
     int i;
     for (i=0; i<4; i++)
         internalNDiscs[i] = surface.triangles(tetIndex, i).longValue();
@@ -89,7 +89,7 @@ NDiscSetTet::NDiscSetTet(const NormalSurface& surface, size_t tetIndex) {
         internalNDiscs[i] = surface.octs(tetIndex, i - 7).longValue();
 }
 
-NDiscSetTet::NDiscSetTet(unsigned long tri0, unsigned long tri1,
+DiscSetTet::DiscSetTet(unsigned long tri0, unsigned long tri1,
         unsigned long tri2, unsigned long tri3,
         unsigned long quad0, unsigned long quad1, unsigned long quad2,
         unsigned long oct0, unsigned long oct1, unsigned long oct2) {
@@ -105,7 +105,7 @@ NDiscSetTet::NDiscSetTet(unsigned long tri0, unsigned long tri1,
     internalNDiscs[9] = oct2;
 }
 
-unsigned long NDiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
+unsigned long DiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
         int discType, unsigned long discNumber) const {
     // Is it a triangle?
     if (discType < 4)
@@ -121,7 +121,7 @@ unsigned long NDiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
             - discNumber - 1;
 }
 
-void NDiscSetTet::discFromArc(int arcFace, int arcVertex,
+void DiscSetTet::discFromArc(int arcFace, int arcVertex,
         unsigned long arcNumber,
         int& discType, unsigned long& discNumber) const {
     // Is it a triangle?
@@ -148,28 +148,28 @@ void NDiscSetTet::discFromArc(int arcFace, int arcVertex,
             (arcNumber - internalNDiscs[arcVertex]) - 1;
 }
 
-NDiscSetSurface::NDiscSetSurface(const NormalSurface& surface, bool) :
+DiscSetSurface::DiscSetSurface(const NormalSurface& surface, bool) :
         triangulation(surface.triangulation()) {
     size_t tot = triangulation->size();
     if (tot == 0)
         discSets = 0;
     else
-        discSets = new NDiscSetTet*[tot];
+        discSets = new DiscSetTet*[tot];
 }
 
-NDiscSetSurface::NDiscSetSurface(const NormalSurface& surface) :
+DiscSetSurface::DiscSetSurface(const NormalSurface& surface) :
         triangulation(surface.triangulation()) {
     size_t tot = triangulation->size();
     if (tot == 0)
         discSets = 0;
     else {
-        discSets = new NDiscSetTet*[tot];
+        discSets = new DiscSetTet*[tot];
         for (size_t index = 0; index < tot; index++)
-            discSets[index] = new NDiscSetTet(surface, index);
+            discSets[index] = new DiscSetTet(surface, index);
     }
 }
 
-NDiscSetSurface::~NDiscSetSurface() {
+DiscSetSurface::~DiscSetSurface() {
     if (discSets) {
         size_t tot = nTets();
         for (size_t index = 0; index < tot; index++)
@@ -178,14 +178,14 @@ NDiscSetSurface::~NDiscSetSurface() {
     }
 }
 
-NDiscSpec* NDiscSetSurface::adjacentDisc(const NDiscSpec& disc,
+DiscSpec* DiscSetSurface::adjacentDisc(const DiscSpec& disc,
         Perm<4> arc, Perm<4>& adjArc) const {
     const NTetrahedron* tet = triangulation->tetrahedron(disc.tetIndex);
     int arcFace = arc[3];
     if (tet->adjacentTetrahedron(arcFace) == 0)
         return 0;
 
-    NDiscSpec* ans = new NDiscSpec;
+    DiscSpec* ans = new DiscSpec;
     ans->tetIndex = tet->adjacentTetrahedron(arcFace)->index();
     adjArc = tet->adjacentGluing(arcFace) * arc;
 
@@ -197,7 +197,7 @@ NDiscSpec* NDiscSetSurface::adjacentDisc(const NDiscSpec& disc,
     return ans;
 }
 
-void NDiscSpecIterator::makeValid() {
+void DiscSpecIterator::makeValid() {
     while (current.number ==
             internalDiscSet->nDiscs(current.tetIndex, current.type)) {
         current.number = 0;

@@ -77,20 +77,20 @@ void NormalSurface::calculateOrientable() const {
     twoSided.clear();
     connected.clear();
 
-    NDiscSetSurfaceData<OrientData> orients(*this);
+    DiscSetSurfaceData<OrientData> orients(*this);
         // Stores the orientation of each disc.
-    std::queue<NDiscSpec> discQueue;
+    std::queue<DiscSpec> discQueue;
         // A queue of discs whose orientations must be propagated.
-    NDiscSpecIterator it(orients);
+    DiscSpecIterator it(orients);
         // Runs through the discs whose orientations might not have yet
         // been determined.
-    NDiscSpec use;
+    DiscSpec use;
         // The disc that currently holds our interest.
 
     int nGluingArcs;     // The number of arcs on the current disc to
                          //     which an adjacent disc might may be glued.
 
-    NDiscSpec* adjDisc;  // The disc to which the current disc is glued.
+    DiscSpec* adjDisc;  // The disc to which the current disc is glued.
     Perm<4> arc[8];       // Holds each gluing arc for the current disc.
     Perm<4> adjArc;       // Represents the corresponding gluing arc on the
                          //     adjacent disc.

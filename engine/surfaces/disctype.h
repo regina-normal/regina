@@ -67,7 +67,7 @@ namespace regina {
  * does not clash with any meaningful values.
  *
  * Note that this class tracks disc \a types, not discs themselves.
- * To track individual normal discs, see the NDiscSpec class instead.
+ * To track individual normal discs, see the DiscSpec class instead.
  */
 struct REGINA_API DiscType {
     static const DiscType NONE;

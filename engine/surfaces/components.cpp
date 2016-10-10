@@ -102,20 +102,20 @@ namespace {
         // TODO: First check that there aren't too many discs!
 
         // All right.  Off we go.
-        NDiscSetSurfaceData<ComponentData> components(s);
+        DiscSetSurfaceData<ComponentData> components(s);
             // Stores the component ID for each disc.
-        std::queue<NDiscSpec> discQueue;
+        std::queue<DiscSpec> discQueue;
             // A queue of discs whose component IDs must be propagated.
-        NDiscSpecIterator it(components);
+        DiscSpecIterator it(components);
             // Runs through the discs whose component IDs might not have yet
             // been determined.
-        NDiscSpec use;
+        DiscSpec use;
             // The disc that currently holds our interest.
 
         int nGluingArcs;     // The number of arcs on the current disc to
                              //     which an adjacent disc might may be glued.
 
-        NDiscSpec* adjDisc;  // The disc to which the current disc is glued.
+        DiscSpec* adjDisc;  // The disc to which the current disc is glued.
         Perm<4> arc[8];       // Holds each gluing arc for the current disc.
         Perm<4> adjArc;       // Represents the corresponding gluing arc on the
                              //     adjacent disc.

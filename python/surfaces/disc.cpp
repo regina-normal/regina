@@ -36,27 +36,27 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NDiscSpec;
-using regina::NDiscSetTet;
-using regina::NDiscSetSurface;
-using regina::NDiscSpecIterator;
+using regina::DiscSpec;
+using regina::DiscSetTet;
+using regina::DiscSetSurface;
+using regina::DiscSpecIterator;
 
 namespace {
-    void inc_operator(NDiscSpecIterator& s) {
+    void inc_operator(DiscSpecIterator& s) {
         s++;
     }
-    const NDiscSpec& deref_operator(NDiscSpecIterator& s) {
+    const DiscSpec& deref_operator(DiscSpecIterator& s) {
         return *s;
     }
 }
 
-void addNDisc() {
-    class_<NDiscSpec>("NDiscSpec")
+void addDisc() {
+    class_<DiscSpec>("DiscSpec")
         .def(init<unsigned long, int, unsigned long>())
-        .def(init<const NDiscSpec&>())
-        .def_readwrite("tetIndex", &NDiscSpec::tetIndex)
-        .def_readwrite("type", &NDiscSpec::type)
-        .def_readwrite("number", &NDiscSpec::number)
+        .def(init<const DiscSpec&>())
+        .def_readwrite("tetIndex", &DiscSpec::tetIndex)
+        .def_readwrite("type", &DiscSpec::type)
+        .def_readwrite("number", &DiscSpec::number)
         .def(self_ns::str(self))
         .def(regina::python::add_eq_operators())
     ;
@@ -64,34 +64,39 @@ void addNDisc() {
     def("numberDiscsAwayFromVertex", regina::numberDiscsAwayFromVertex);
     def("discOrientationFollowsEdge", regina::discOrientationFollowsEdge);
 
-    class_<NDiscSetTet, std::auto_ptr<NDiscSetTet>,
-            boost::noncopyable>("NDiscSetTet",
+    class_<DiscSetTet, std::auto_ptr<DiscSetTet>,
+            boost::noncopyable>("DiscSetTet",
             init<const regina::NormalSurface&, unsigned long>())
-        .def("nDiscs", &NDiscSetTet::nDiscs)
-        .def("arcFromDisc", &NDiscSetTet::arcFromDisc)
-        .def("discFromArc", &NDiscSetTet::discFromArc)
+        .def("nDiscs", &DiscSetTet::nDiscs)
+        .def("arcFromDisc", &DiscSetTet::arcFromDisc)
+        .def("discFromArc", &DiscSetTet::discFromArc)
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NDiscSetSurface, std::auto_ptr<NDiscSetSurface>,
-            boost::noncopyable>("NDiscSetSurface",
+    class_<DiscSetSurface, std::auto_ptr<DiscSetSurface>,
+            boost::noncopyable>("DiscSetSurface",
             init<const regina::NormalSurface&>())
-        .def("nTets", &NDiscSetSurface::nTets)
-        .def("nDiscs", &NDiscSetSurface::nDiscs)
-        .def("tetDiscs", &NDiscSetSurface::tetDiscs,
+        .def("nTets", &DiscSetSurface::nTets)
+        .def("nDiscs", &DiscSetSurface::nDiscs)
+        .def("tetDiscs", &DiscSetSurface::tetDiscs,
             return_internal_reference<>())
-        .def("adjacentDisc", &NDiscSetSurface::adjacentDisc,
+        .def("adjacentDisc", &DiscSetSurface::adjacentDisc,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NDiscSpecIterator, boost::noncopyable>("NDiscSpecIterator")
-        .def(init<const NDiscSetSurface&>())
-        .def("init", &NDiscSpecIterator::init)
+    class_<DiscSpecIterator, boost::noncopyable>("DiscSpecIterator")
+        .def(init<const DiscSetSurface&>())
+        .def("init", &DiscSpecIterator::init)
         .def("inc", inc_operator)
         .def("deref", deref_operator, return_value_policy<return_by_value>())
-        .def("done", &NDiscSpecIterator::done)
+        .def("done", &DiscSpecIterator::done)
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NDiscSpec") = scope().attr("DiscSpec");
+    scope().attr("NDiscSetTet") = scope().attr("DiscSetTet");
+    scope().attr("NDiscSetSurface") = scope().attr("DiscSetSurface");
+    scope().attr("NDiscSpecIterator") = scope().attr("DiscSpecIterator");
 }
 

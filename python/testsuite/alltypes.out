@@ -1071,16 +1071,16 @@ NCusp : typedef ->  Cusp
 
 NCyclotomic : typedef ->  Cyclotomic
 
-NDiscSetSurface : class
+DiscSetSurface : class
 Equality type : BY_REFERENCE
 
-NDiscSetTet : class
+DiscSetTet : class
 Equality type : BY_REFERENCE
 
-NDiscSpec : class
+DiscSpec : class
 Equality type : BY_VALUE
 
-NDiscSpecIterator : class
+DiscSpecIterator : class
 Equality type : BY_VALUE
 
 DiscType : class

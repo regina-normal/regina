@@ -229,10 +229,10 @@ NTriangulation* NormalHypersurface::triangulate() const {
     if (outer->isEmpty())
         return inner;
 
-    // Set up one NDiscSetTetData for each tetrahedron, storing the
+    // Set up one DiscSetTetData for each tetrahedron, storing the
     // relevant DiscData maps.  We don't actually need this for the
     // boundary tetrahedra, but for now we'll just do everything.
-    typedef NDiscSetTetData<DiscData> TetData;
+    typedef DiscSetTetData<DiscData> TetData;
     size_t nTets = outer->countTetrahedra();
     TetData** tetData = new TetData*[nTets];
 
@@ -293,7 +293,7 @@ NTriangulation* NormalHypersurface::triangulate() const {
 
     DiscData* discData;
     TriangleData* triData;
-    NDiscSpec outerTetDisc;
+    DiscSpec outerTetDisc;
 
     NTetrahedron* innerTet[3];
     int facet;
