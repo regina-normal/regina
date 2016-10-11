@@ -1066,7 +1066,8 @@ class REGINA_API NPacket :
          *
          * \pre This packet does not depend upon its parent.
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out is not present; instead the
+         * XML data is written to standard output.
          *
          * @param out the output stream to which the XML data file should
          * be written.
