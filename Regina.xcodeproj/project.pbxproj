@@ -193,7 +193,6 @@
 		052942DA1C5CDFBE0011C1E6 /* nsnappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* nsnappeaalgebra.h */; };
 		052AB7101C6304A800C44D54 /* facetspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 052AB70F1C6304A800C44D54 /* facetspec.h */; };
 		052AB7131C6304C900C44D54 /* facetspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052AB7111C6304C500C44D54 /* facetspec.cpp */; };
-		052DB5C21D9F201800EDEA68 /* censuslookup in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 052DB5C11D9F200600EDEA68 /* censuslookup */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
 		052F9E85180600FB00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -806,6 +805,7 @@
 		052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D5C180600FA00FAE4DF /* unix_file_io.c */; };
 		052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D8F180600FB00FAE4DF /* update_shapes.c */; };
 		052FA23D180612DD00FAE4DF /* volume.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D90180600FB00FAE4DF /* volume.c */; };
+		053CAB4F1DACA75900A92F98 /* regutils in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 053CAB4E1DACA74A00A92F98 /* regutils */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -1654,13 +1654,6 @@
 			remoteGlobalIDString = 05617ADC1D9DBFBE00B1E33B;
 			remoteInfo = "Utils - TriCensus";
 		};
-		05617B681D9DC6FB00B1E33B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 05617B0B1D9DC52200B1E33B;
-			remoteInfo = "Utils - RegConcat";
-		};
 		05617B6A1D9DC70600B1E33B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
@@ -1674,13 +1667,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 05617B211D9DC53400B1E33B;
 			remoteInfo = "Utils - RegFileDump";
-		};
-		05617B6E1D9DC70C00B1E33B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 05617B2C1D9DC54500B1E33B;
-			remoteInfo = "Utils - RegFileType";
 		};
 		05617B701D9DC70E00B1E33B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1712,8 +1698,8 @@
 			dstPath = python;
 			dstSubfolderSpec = 7;
 			files = (
+				053CAB4F1DACA75900A92F98 /* regutils in Copy Python Scripts */,
 				050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Scripts */,
-				052DB5C21D9F201800EDEA68 /* censuslookup in Copy Python Scripts */,
 			);
 			name = "Copy Python Scripts";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2123,7 +2109,6 @@
 		052942D61C5CDCBF0011C1E6 /* safeheldtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeheldtype.h; sourceTree = "<group>"; };
 		052AB70F1C6304A800C44D54 /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
-		052DB5C11D9F200600EDEA68 /* censuslookup */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = censuslookup; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
 		052F9C01180600FA00FAE4DF /* nabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nabeliangroup.h; sourceTree = "<group>"; };
@@ -2629,6 +2614,7 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		053CAB4E1DACA74A00A92F98 /* regutils */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = regutils; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* ncyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncyclotomic.cpp; sourceTree = "<group>"; };
@@ -4087,7 +4073,7 @@
 		052DB5C01D9F1FF100EDEA68 /* alt */ = {
 			isa = PBXGroup;
 			children = (
-				052DB5C11D9F200600EDEA68 /* censuslookup */,
+				053CAB4E1DACA74A00A92F98 /* regutils */,
 			);
 			path = alt;
 			sourceTree = "<group>";
@@ -6397,10 +6383,8 @@
 			dependencies = (
 				055ABEB419B49F1100044C1B /* PBXTargetDependency */,
 				050F5E6F1B9BD3A000C1F681 /* PBXTargetDependency */,
-				05617B691D9DC6FB00B1E33B /* PBXTargetDependency */,
 				05617B6B1D9DC70600B1E33B /* PBXTargetDependency */,
 				05617B6D1D9DC70900B1E33B /* PBXTargetDependency */,
-				05617B6F1D9DC70C00B1E33B /* PBXTargetDependency */,
 				05617B711D9DC70E00B1E33B /* PBXTargetDependency */,
 				05617AF71D9DC0E000B1E33B /* PBXTargetDependency */,
 				05617B731D9DC71100B1E33B /* PBXTargetDependency */,
@@ -6596,7 +6580,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../../../Resources/python/__init__.py ${macosdir}/python/regina/__init__.py\nln -f -s ../Resources/python/censuslookup ${macosdir}/censuslookup\nln -f -s ../Resources/regina-python ${macosdir}/regina-python\n\nchmod a+x ${macosdir}/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python ${macosdir}/regina-python\nln -f -s ../../../Resources/python/__init__.py ${macosdir}/python/regina/__init__.py\n\nfor i in censuslookup regconcat regfiletype; do\n    ln -f -s ../Resources/python/regutils ${macosdir}/$i\ndone\n\nchmod a+x ${macosdir}/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6638,7 +6622,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regconcat regconvert regfiledump regfiletype sigcensus trisetcmp tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regconvert regfiledump sigcensus trisetcmp tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7854,11 +7838,6 @@
 			target = 05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */;
 			targetProxy = 05617AF61D9DC0E000B1E33B /* PBXContainerItemProxy */;
 		};
-		05617B691D9DC6FB00B1E33B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 05617B0B1D9DC52200B1E33B /* Utils - RegConcat */;
-			targetProxy = 05617B681D9DC6FB00B1E33B /* PBXContainerItemProxy */;
-		};
 		05617B6B1D9DC70600B1E33B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05617B161D9DC52B00B1E33B /* Utils - RegConvert */;
@@ -7868,11 +7847,6 @@
 			isa = PBXTargetDependency;
 			target = 05617B211D9DC53400B1E33B /* Utils - RegFileDump */;
 			targetProxy = 05617B6C1D9DC70900B1E33B /* PBXContainerItemProxy */;
-		};
-		05617B6F1D9DC70C00B1E33B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 05617B2C1D9DC54500B1E33B /* Utils - RegFileType */;
-			targetProxy = 05617B6E1D9DC70C00B1E33B /* PBXContainerItemProxy */;
 		};
 		05617B711D9DC70E00B1E33B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
