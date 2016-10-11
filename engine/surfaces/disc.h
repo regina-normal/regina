@@ -792,7 +792,8 @@ REGINA_DEPRECATED typedef DiscSetTet NDiscSetTet;
  *
  * \deprecated The class NDiscSetTetData has now been renamed to DiscSetTetData.
  */
-REGINA_DEPRECATED typedef DiscSetTetData NDiscSetTetData;
+template <class T>
+using REGINA_DEPRECATED NDiscSetTetData = DiscSetTetData<T>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -809,7 +810,8 @@ REGINA_DEPRECATED typedef DiscSetSurface NDiscSetSurface;
  * \deprecated The class NDiscSetSurfaceData has now been renamed to
  * DiscSetSurfaceData.
  */
-REGINA_DEPRECATED typedef DiscSetSurfaceData NDiscSetSurfaceData;
+template <class T>
+using REGINA_DEPRECATED NDiscSetSurfaceData = DiscSetSurfaceData<T>;
 
 /*@}*/
 

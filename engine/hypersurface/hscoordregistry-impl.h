@@ -52,7 +52,7 @@
 #endif
 
 #include "hypersurface/hscoordregistry.h"
-#include "hypersurface/nhsstandard.h"
+#include "hypersurface/hsvectorstandard.h"
 
 namespace regina {
 
