@@ -9,6 +9,9 @@ Regina - A Normal Surface Theory Calculator
 
 Mac App Store version 5.0
 
+    ENGINE:
+        Class NPacket:
+            - writeXMLFile() is now available in python (using std::cout only).
     USER INTERFACE:
         - Disabled syntax highlighting for script packets, since this
           uses GPL code which is incompatible with the App Store license.
