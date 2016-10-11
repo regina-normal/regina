@@ -34,6 +34,7 @@
 
 import os
 import sys
+import string
 
 appName = os.path.basename(sys.argv[0])
 appDir = os.path.dirname(sys.argv[0])
@@ -200,8 +201,118 @@ elif appName == 'regconvert':
         sys.exit(1)
 
 elif appName == 'regfiledump':
-    # TODO
-    pass
+    def usage(error):
+        if error:
+            sys.stderr.write(error + '\n\n')
+
+        sys.stderr.write('Usage:\n')
+        sys.stderr.write('    ' + sys.argv[0] + ' [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]\n\n')
+        sys.stderr.write('    -f : Display full packet details (default)\n')
+        sys.stderr.write('    -l : Only display packet labels and types\n')
+        sys.stderr.write("    -l : Don't display packets at all (implies -c)\n")
+        sys.stderr.write('    -c : Finish with a count of all packets in the file\n\n')
+        sys.stderr.write('    <packet-label> ... : Only display the listed packets (otherwise all\n')
+        sys.stderr.write('                         packets are displayed)\n')
+        sys.exit(1)
+
+    separator = "************************************************************";
+
+    def dumpNoPacket(label, opt):
+        if opt == 'l':
+            print 'ERROR:', label, '-- No such packet.'
+        elif opt == 'f':
+            print separator
+            print '*'
+            print '* ERROR:', label
+            print '*        No such packet.'
+            print '*'
+            print separator
+            print
+
+    def dumpPacketHeader(p):
+        print separator
+        print '*'
+        print '* Label:', p.humanLabel()
+        print '* Type: ', p.typeName()
+        if p.parent:
+            print '* Parent: ', p.parent().humanLabel()
+        else:
+            print '* Parent: (none)'
+        if p.hasTags():
+            print '* Tags:', string.join(', ', p.tags())
+        print '*'
+        print separator
+
+    def dumpPacket(p, opt):
+        if opt == 'l':
+            print p.fullName()
+        elif opt == 'f':
+            dumpPacketHeader(p)
+            print
+            print p.detail()
+            print
+
+    filename = None
+    packets = []
+    opt = None
+    count = False
+
+    # Parse command line.
+    for arg in sys.argv[1:]:
+        if arg == '-c':
+            count = True
+        elif arg == '-f' or elif arg == '-l' or arg == '-n':
+            if opt:
+                usage('More than one detail level has been specified.')
+            opt = arg[1]
+        elif arg[:1] == '-':
+            usage('Invalid option: ' + arg)
+        elif not arg:
+            usage('Empty arguments are not allowed.')
+        elif filename:
+            packets.append(arg)
+        else:
+            filename = arg
+
+    if not filename:
+        usage('No file has been specified.')
+
+    # Add default options.
+    if not opt:
+        opt = 'f'
+    if opt == 'n':
+        count = True
+
+    if opt == 'n' and packets:
+        usage('You cannot specify individual packets if packets are not to be displayed.')
+
+    # In the python implementation we will just write international characters
+    # in utf8, and hope that the terminal is sufficiently modern to cope.
+
+    # Do the actual work.
+    tree = regina.open(filename)
+    if not tree:
+        sys.stderr.write('File ' + filename + ' could not be read.\n')
+        sys.exit(1)
+
+    if opt != 'n';
+        if not packets:
+            p = tree
+            while p:
+                dumpPacket(p, opt)
+                p = p.nextTreePacket()
+        else:
+            for i in packets:
+                p = tree.findPacketLabel(i)
+                if p:
+                    dumpPacket(p, opt)
+                else:
+                    dumpNoPacket(i, opt)
+
+    if count:
+        if opt != 'n':
+            print
+        print tree.totalTreeSize(), 'total packets in file.'
 
 elif appName == 'regfiletype':
     def usage(error):
