@@ -51,7 +51,7 @@ try:
 except:
     globalUsage('Could not import the regina module.')
 
-regina.NGlobalDirs.setDirs('', '', appDir + '/../Resources')
+regina.GlobalDirs.setDirs('', '', appDir + '/../Resources')
 
 if appName == 'censuslookup':
     def usage(error):
@@ -119,7 +119,7 @@ elif appName == 'regconcat':
         usage('No data files have been supplied.')
 
     # Read the input files one by one.
-    ans = regina.NContainer()
+    ans = regina.Container()
     ans.setLabel('Combined Data')
 
     error = False
@@ -164,7 +164,7 @@ elif appName == 'regfiletype':
         if len(sys.argv) > 2:
             print '[', f, ']'
 
-        info = regina.NFileInfo.identify(f)
+        info = regina.FileInfo.identify(f)
         if info:
             print info.detail(),
         else:
