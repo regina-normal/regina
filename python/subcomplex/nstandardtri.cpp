@@ -34,7 +34,6 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/nmanifold.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/ncomponent.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 

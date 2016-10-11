@@ -34,8 +34,6 @@
 #include <memory>
 #include <cppunit/extensions/HelperMacros.h>
 #include "manifold/nsimplesurfacebundle.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nexampletriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"

@@ -30,11 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4edge.h"
-#include "dim4/dim4triangle.h"
 #include "dim4/dim4triangulation.h"
 #include "enumerate/enumconstraints.h"
-#include "hypersurface/nhsstandard.h"
+#include "hypersurface/hsvectorstandard.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
 #include "surfaces/normalsurface.h" // for quadDefn[][].

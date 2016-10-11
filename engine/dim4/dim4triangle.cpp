@@ -30,8 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4edge.h"
-#include "dim4/dim4triangle.h"
+#include "dim4/dim4triangulation.h"
 
 namespace regina {
 

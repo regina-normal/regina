@@ -36,7 +36,6 @@
 #include "algebra/nabeliangroup.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 

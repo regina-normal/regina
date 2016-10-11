@@ -31,18 +31,22 @@
  **************************************************************************/
 
 /*! \file dim4/dim4pentachoron.h
- *  \brief Deals with 4-dimensional simplices in a 4-manifold triangulation.
+ *  \brief Internal header for 4-dimensional simplices in a 4-manifold
+ *  triangulation.
+ *
+ *  This file is automatically included from dim4triangulation.h; there is
+ *  no need for end users to include this header explicitly.
  */
+
+// We include dim4triangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within dim4triangulation.h.
+#include "dim4/dim4triangulation.h"
 
 #ifndef __DIM4PENTACHORON_H
 #ifndef __DOXYGEN
 #define __DIM4PENTACHORON_H
 #endif
-
-#include "regina-core.h"
-#include "generic/simplex.h"
-#include "utilities/markedvector.h"
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -107,11 +111,6 @@ class REGINA_API Simplex<4> : public detail::SimplexBase<4> {
 typedef Simplex<4> Dim4Pentachoron;
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "dim4/dim4triangulation.h"
-namespace regina {
 
 // Inline functions for Dim4Pentachoron
 

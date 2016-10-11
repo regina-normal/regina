@@ -32,7 +32,6 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredsolidtorus.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 

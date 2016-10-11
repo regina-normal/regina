@@ -30,18 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file dim4/dim4component.h
+ *  \brief Internal header for connected components of a 4-manifold
+ *  triangulation.
+ *
+ *  This file is automatically included from dim4triangulation.h; there is
+ *  no need for end users to include this header explicitly.
+ */
+
+// We include dim4triangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within dim4triangulation.h.
+#include "dim4/dim4triangulation.h"
+
 #ifndef __DIM4COMPONENT_H
 #ifndef __DOXYGEN
 #define __DIM4COMPONENT_H
 #endif
-
-/*! \file dim4/dim4component.h
- *  \brief Deals with connected components of a 4-manifold triangulation.
- */
-
-#include "regina-core.h"
-#include "generic/component.h"
-#include "generic/alias/face.h"
 
 namespace regina {
 

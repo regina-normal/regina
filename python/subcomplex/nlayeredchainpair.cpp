@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredchainpair.h"
-#include "triangulation/ncomponent.h"
+#include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 
 using namespace boost::python;

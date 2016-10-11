@@ -32,9 +32,7 @@
 
 #include "algebra/nabeliangroup.h"
 #include "manifold/nhandlebody.h"
-#include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 

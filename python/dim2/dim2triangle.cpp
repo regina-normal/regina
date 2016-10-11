@@ -30,11 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim2/dim2component.h"
-#include "dim2/dim2edge.h"
-#include "dim2/dim2triangle.h"
 #include "dim2/dim2triangulation.h"
-#include "dim2/dim2vertex.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"

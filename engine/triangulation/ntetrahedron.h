@@ -31,18 +31,21 @@
  **************************************************************************/
 
 /*! \file triangulation/ntetrahedron.h
- *  \brief Deals with tetrahedra in a triangulation.
+ *  \brief Internal header for tetrahedra in a 3-manifold triangulation.
+ *
+ *  This file is automatically included from ntriangulation.h; there is
+ *  no need for end users to include this header explicitly.
  */
+
+// We include ntriangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within ntriangulation.h.
+#include "triangulation/ntriangulation.h"
 
 #ifndef __NTETRAHEDRON_H
 #ifndef __DOXYGEN
 #define __NTETRAHEDRON_H
 #endif
-
-#include "regina-core.h"
-#include "generic/simplex.h"
-#include "utilities/markedvector.h"
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -120,11 +123,6 @@ class REGINA_API Simplex<3> : public detail::SimplexBase<3> {
 typedef Simplex<3> NTetrahedron;
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "triangulation/ntriangulation.h"
-namespace regina {
 
 // Inline functions for Simplex<3>
 

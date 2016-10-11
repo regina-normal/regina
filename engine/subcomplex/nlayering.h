@@ -43,6 +43,8 @@
 #include "maths/matrix2.h"
 #include "maths/perm.h"
 
+#include <boost/noncopyable.hpp>
+
 namespace regina {
 
 template <int> class Simplex;

@@ -61,9 +61,9 @@ namespace regina {
  *
  * For Regina's \ref stddim "standard dimensions", this template is specialised
  * and offers more functionality.  In order to use these specialised classes,
- * you will need to include the corresponding headers (e.g.,
- * dim2/dim2component.h for \a dim = 2, or triangulation/ncomponent.h for
- * \a dim = 3).  For convenience, there are typedefs available for these
+ * you will need to include the corresponding triangulation headers (e.g.,
+ * dim2/dim2triangulation.h for \a dim = 2, or triangulation/ntriangulation.h
+ * for \a dim = 3).  For convenience, there are typedefs available for these
  * specialised classes (such as Dim2Component and NComponent respectively).
  *
  * \ifacespython Python does not support templates.  Instead

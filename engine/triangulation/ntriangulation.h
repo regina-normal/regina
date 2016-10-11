@@ -60,7 +60,8 @@
 // destructors where necessary.
 #include "triangulation/nisomorphism.h"
 
-// NOTE: More #includes follow after the class declarations.
+// NOTE: More #includes for faces, components and boundary components
+// follow after the class declarations.
 
 namespace regina {
 

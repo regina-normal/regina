@@ -34,7 +34,7 @@
 #include "manifold/nhandlebody.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
-#include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

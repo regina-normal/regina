@@ -23,6 +23,11 @@ Version 5.1  [ (under development) ]
             + NNormalSurfaceList becomes NormalSurfaces.
             + NNormalSurfaceVector{Standard,...} becomes NSVector{Standard,...}.
             + NSurfaceSubset is removed entirely (see below).
+            + All vertex/edge/face/etc. headers and all component and boundary
+              component headers are replaced by the corresponding triangulation
+              header for the same dimension.  So, for instance,
+              triangulation/nvertex.h becomes triangulation/ntriangulation.h,
+              and dim2/dim2component.h becomes dim2/dim2triangulation.h.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into

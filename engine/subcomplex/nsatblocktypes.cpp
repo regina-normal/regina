@@ -33,9 +33,7 @@
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatblocktypes.h"
 #include "subcomplex/nlayeredsolidtorus.h"
-#include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include <algorithm>
 #include <cstdlib> // For exit().

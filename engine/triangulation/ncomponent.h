@@ -30,18 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file triangulation/ncomponent.h
+ *  \brief Internal header for connected components of a 3-manifold
+ *  triangulation.
+ *
+ *  This file is automatically included from ntriangulation.h; there is
+ *  no need for end users to include this header explicitly.
+ */
+
+// We include ntriangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within ntriangulation.h.
+#include "triangulation/ntriangulation.h"
+
 #ifndef __NCOMPONENT_H
 #ifndef __DOXYGEN
 #define __NCOMPONENT_H
 #endif
-
-/*! \file triangulation/ncomponent.h
- *  \brief Deals with connected components of a 3-manifold triangulation.
- */
-
-#include "regina-core.h"
-#include "generic/component.h"
-#include "generic/alias/face.h"
 
 namespace regina {
 

@@ -31,17 +31,21 @@
  **************************************************************************/
 
 /*! \file dim2/dim2edge.h
- *  \brief Deals with edges in the 1-skeleton of a 2-manifold triangulation.
+ *  \brief Internal header for edges in a 2-manifold triangulation.
+ *
+ *  This file is automatically included from dim2triangulation.h; there is
+ *  no need for end users to include this header explicitly.
  */
+
+// We include dim2triangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within dim2triangulation.h.
+#include "dim2/dim2triangulation.h"
 
 #ifndef __DIM2EDGE_H
 #ifndef __DOXYGEN
 #define __DIM2EDGE_H
 #endif
-
-#include "regina-core.h"
-#include "generic/face.h"
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -170,11 +174,6 @@ class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
 typedef Face<2, 1> Dim2Edge;
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "dim2/dim2triangle.h"
-namespace regina {
 
 // Inline functions for Dim2Edge
 

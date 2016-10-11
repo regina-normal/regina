@@ -32,7 +32,6 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/npillowtwosphere.h"
-#include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 

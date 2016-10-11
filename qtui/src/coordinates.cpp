@@ -33,7 +33,6 @@
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 
 #include "reginaprefset.h"

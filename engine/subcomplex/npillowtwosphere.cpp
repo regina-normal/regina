@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "subcomplex/npillowtwosphere.h"
-#include "triangulation/ntriangle.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

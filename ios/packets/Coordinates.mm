@@ -35,7 +35,6 @@
 #import "generic/facenumbering.h"
 #import "hypersurface/normalhypersurfaces.h"
 #import "surfaces/normalsurfaces.h"
-#import "triangulation/ntriangle.h"
 #import "triangulation/ntriangulation.h"
 
 using regina::HyperCoords;

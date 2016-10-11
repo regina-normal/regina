@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim2/dim2vertex.h"
+#include "dim2/dim2triangulation.h"
 
 namespace regina {
 

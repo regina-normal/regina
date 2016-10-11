@@ -31,17 +31,21 @@
  **************************************************************************/
 
 /*! \file triangulation/nvertex.h
- *  \brief Deals with vertices in a triangulation.
+ *  \brief Internal header for vertices in a 3-manifold triangulation.
+ *
+ *  This file is automatically included from ntriangulation.h; there is
+ *  no need for end users to include this header explicitly.
  */
+
+// We include ntriangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within ntriangulation.h.
+#include "triangulation/ntriangulation.h"
 
 #ifndef __NVERTEX_H
 #ifndef __DOXYGEN
 #define __NVERTEX_H
 #endif
-
-#include "regina-core.h"
-#include "generic/face.h"
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -353,11 +357,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
 typedef Face<3, 0> NVertex;
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "triangulation/ntetrahedron.h"
-namespace regina {
 
 // Inline functions for NVertex
 

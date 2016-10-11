@@ -51,7 +51,8 @@
 // destructors where necessary.
 #include "dim2/dim2isomorphism.h"
 
-// NOTE: More #includes follow after the class declarations.
+// NOTE: More #includes for faces, components and boundary components
+// follow after the class declarations.
 
 namespace regina {
 

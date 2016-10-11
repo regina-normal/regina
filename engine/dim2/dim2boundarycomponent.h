@@ -30,22 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file dim2/dim2boundarycomponent.h
+ *  \brief Internal header for boundary components of a 2-manifold
+ *  triangulation.
+ *
+ *  This file is automatically included from dim2triangulation.h; there is
+ *  no need for end users to include this header explicitly.
+ */
+
+// We include dim2triangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within dim2triangulation.h.
+#include "dim2/dim2triangulation.h"
+
 #ifndef __DIM2BOUNDARYCOMPONENT_H
 #ifndef __DOXYGEN
 #define __DIM2BOUNDARYCOMPONENT_H
 #endif
-
-/*! \file dim2/dim2boundarycomponent.h
- *  \brief Deals with boundary components of a 2-manifold triangulation.
- */
-
-#include <vector>
-#include "regina-core.h"
-#include "output.h"
-#include "generic/alias/face.h"
-#include "utilities/markedvector.h"
-#include <boost/noncopyable.hpp>
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -161,11 +162,6 @@ class REGINA_API Dim2BoundaryComponent :
 };
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "dim2/dim2vertex.h"
-namespace regina {
 
 // Inline functions for Dim2BoundaryComponent
 

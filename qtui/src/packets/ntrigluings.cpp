@@ -37,7 +37,7 @@
 #include "progress/progresstracker.h"
 #include "snappea/snappeatriangulation.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangle.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "edittableview.h"

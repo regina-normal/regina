@@ -32,11 +32,7 @@
 
 #include <boost/python.hpp>
 #include "dim2/dim2triangulation.h"
-#include "triangulation/nboundarycomponent.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
-#include "triangulation/nvertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"

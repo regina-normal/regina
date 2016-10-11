@@ -30,22 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file triangulation/nboundarycomponent.h
+ *  \brief Internal header for components of the boundary of a
+ *  3-manifold triangulation.
+ *
+ *  This file is automatically included from ntriangulation.h; there is
+ *  no need for end users to include this header explicitly.
+ */
+
+// We include ntriangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within ntriangulation.h.
+#include "triangulation/ntriangulation.h"
+
 #ifndef __NBOUNDARYCOMPONENT_H
 #ifndef __DOXYGEN
 #define __NBOUNDARYCOMPONENT_H
 #endif
-
-/*! \file triangulation/nboundarycomponent.h
- *  \brief Deals with components of the boundary of a triangulation.
- */
-
-#include <vector>
-#include "regina-core.h"
-#include "output.h"
-#include "generic/alias/face.h"
-#include "utilities/markedvector.h"
-#include <boost/noncopyable.hpp>
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -227,11 +228,6 @@ class REGINA_API NBoundaryComponent :
 };
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "triangulation/nvertex.h"
-namespace regina {
 
 // Inline functions for NBoundaryComponent
 

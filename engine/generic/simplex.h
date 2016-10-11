@@ -71,10 +71,11 @@ namespace regina {
  *
  * For Regina's \ref stddim "standard dimensions", this template is specialised
  * and offers significant extra functionality.  In order to use these
- * specialised classes, you will need to include the corresponding headers
- * (e.g., dim2/dim2triangle.h for \a dim = 2, or triangulation/ntetrahedron.h
- * for \a dim = 3).  For convenience, there are typedefs available for these
- * specialised classes (such as Dim2Triangle and NTetrahedron respectively).
+ * specialised classes, you will need to include the corresponding
+ * triangulation headers (e.g., dim2/dim2triangulation.h for \a dim = 2, or
+ * triangulation/ntriangulation.h for \a dim = 3).  For convenience, there
+ * are typedefs available for these specialised classes (such as
+ * Dim2Triangle and NTetrahedron respectively).
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix

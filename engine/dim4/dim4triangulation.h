@@ -54,7 +54,8 @@
 // destructors where necessary.
 #include "dim4/dim4isomorphism.h"
 
-// NOTE: More #includes follow after the class declarations.
+// NOTE: More #includes for faces, components and boundary components
+// follow after the class declarations.
 
 namespace regina {
 

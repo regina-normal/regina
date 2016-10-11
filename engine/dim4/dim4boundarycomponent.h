@@ -30,22 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file dim4/dim4boundarycomponent.h
+ *  \brief Internal header for components of the boundary of a 4-manifold
+ *  triangulation.
+ *
+ *  This file is automatically included from dim4triangulation.h; there is
+ *  no need for end users to include this header explicitly.
+ */
+
+// We include dim4triangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within dim4triangulation.h.
+#include "dim4/dim4triangulation.h"
+
 #ifndef __DIM4BOUNDARYCOMPONENT_H
 #ifndef __DOXYGEN
 #define __DIM4BOUNDARYCOMPONENT_H
 #endif
-
-/*! \file dim4/dim4boundarycomponent.h
- *  \brief Deals with components of the boundary of a 4-manifold triangulation.
- */
-
-#include <vector>
-#include "regina-core.h"
-#include "output.h"
-#include "generic/alias/face.h"
-#include "utilities/markedvector.h"
-#include <boost/noncopyable.hpp>
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -283,11 +284,6 @@ class REGINA_API Dim4BoundaryComponent :
 };
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "dim4/dim4vertex.h"
-namespace regina {
 
 // Inline functions for Dim4BoundaryComponent
 

@@ -32,12 +32,7 @@
 
 #import "Dim4EltMovesController.h"
 #import "TextHelper.h"
-#import "dim4/dim4edge.h"
-#import "dim4/dim4pentachoron.h"
-#import "dim4/dim4tetrahedron.h"
-#import "dim4/dim4triangle.h"
 #import "dim4/dim4triangulation.h"
-#import "dim4/dim4vertex.h"
 
 @interface Dim4EltMovesController () {
     NSMutableArray* options42;

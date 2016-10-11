@@ -33,8 +33,7 @@
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "utilities/ptrutils.h"
 #include <set>
 #include <sstream>

@@ -34,11 +34,9 @@
 #include <utility>
 #include "algebra/nabeliangroup.h"
 #include "manifold/nsfs.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntetrahedron.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

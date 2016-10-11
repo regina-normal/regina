@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/nedge.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

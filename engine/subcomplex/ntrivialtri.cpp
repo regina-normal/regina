@@ -36,10 +36,7 @@
 #include "manifold/nlensspace.h"
 #include "manifold/nsimplesurfacebundle.h"
 #include "subcomplex/ntrivialtri.h"
-#include "triangulation/nboundarycomponent.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntriangle.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

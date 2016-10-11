@@ -32,9 +32,7 @@
 
 #include "maths/matrix2.h"
 #include "subcomplex/nsatannulus.h"
-#include "triangulation/nedge.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {

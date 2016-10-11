@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "triangulation/ntriangulation.h"
-#include "triangulation/nedge.h"
 #include "triangulation/nisomorphism.h"
 
 #include <iostream>

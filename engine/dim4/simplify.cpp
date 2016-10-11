@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "dim4/dim4triangulation.h"
-#include "triangulation/nedge.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

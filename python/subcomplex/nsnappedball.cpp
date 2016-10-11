@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/nsnappedball.h"
-#include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 
 using namespace boost::python;

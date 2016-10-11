@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/nboundarycomponent.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

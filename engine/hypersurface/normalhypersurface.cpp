@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "dim4/dim4edge.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/normalhypersurface.h"
 #include "triangulation/ntriangulation.h"

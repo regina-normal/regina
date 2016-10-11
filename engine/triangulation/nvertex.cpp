@@ -32,7 +32,7 @@
 
 #include "dim2/dim2triangulation.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/nvertex.h"
+#include "triangulation/ntriangulation.h"
 #include <sstream>
 
 namespace regina {

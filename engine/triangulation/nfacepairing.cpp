@@ -35,7 +35,6 @@
 #include <vector>
 #include "triangulation/nfacepair.h"
 #include "triangulation/nfacepairing.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 #include "utilities/stringutils.h"

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "dim4/dim4boundarycomponent.h"
+#include "dim4/dim4triangulation.h"
 
 // UI includes:
 #include "dim4boundarycomponentchooser.h"

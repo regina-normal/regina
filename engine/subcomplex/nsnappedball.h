@@ -41,12 +41,9 @@
 
 #include "regina-core.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/nedge.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
-
-template <int> class Simplex;
-typedef Simplex<3> NTetrahedron;
 
 /**
  * \weakgroup subcomplex

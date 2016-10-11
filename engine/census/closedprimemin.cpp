@@ -33,7 +33,6 @@
 #include <boost/next_prior.hpp>
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
-#include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"

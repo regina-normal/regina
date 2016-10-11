@@ -32,11 +32,7 @@
 
 #import "EltMovesController.h"
 #import "TextHelper.h"
-#import "triangulation/nedge.h"
-#import "triangulation/ntetrahedron.h"
-#import "triangulation/ntriangle.h"
 #import "triangulation/ntriangulation.h"
-#import "triangulation/nvertex.h"
 
 @interface EdgeArg : NSObject
 @property (assign, nonatomic) unsigned long edge;

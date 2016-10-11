@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/ntetrahedron.h"
 #include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nsnappedball.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

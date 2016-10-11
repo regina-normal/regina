@@ -31,17 +31,21 @@
  **************************************************************************/
 
 /*! \file triangulation/ntriangle.h
- *  \brief Deals with triangles in a triangulation.
+ *  \brief Internal header for triangles in a 3-manifold triangulation.
+ *
+ *  This file is automatically included from ntriangulation.h; there is
+ *  no need for end users to include this header explicitly.
  */
+
+// We include ntriangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within ntriangulation.h.
+#include "triangulation/ntriangulation.h"
 
 #ifndef __NFACE_H
 #ifndef __DOXYGEN
 #define __NFACE_H
 #endif
-
-#include "regina-core.h"
-#include "generic/face.h"
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -260,11 +264,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
 typedef Face<3, 2> NTriangle;
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "triangulation/ntetrahedron.h"
-namespace regina {
 
 // Inline functions for NTriangle
 

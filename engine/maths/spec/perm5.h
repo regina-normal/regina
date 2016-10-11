@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file maths/perm5.h
- *  \brief Deals with permutations of {0,1,2,3,4}.
+ *  \brief Internal header for permutations of {0,1,2,3,4}.
  *
  *  This file is automatically included from perm.h; there is no need for
  *  end users to include this specialisation header explicitly.

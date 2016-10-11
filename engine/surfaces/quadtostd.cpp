@@ -41,7 +41,6 @@
 #include "surfaces/nsvectoranstandard.h"
 #include "surfaces/nsvectorquadoct.h"
 #include "triangulation/ntriangulation.h"
-#include "triangulation/nvertex.h"
 #include "utilities/bitmask.h"
 #include <iterator>
 #include <vector>

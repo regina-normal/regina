@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayering.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

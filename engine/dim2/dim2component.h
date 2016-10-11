@@ -30,18 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file dim2/dim2component.h
+ *  \brief Internal header for connected components of a 2-manifold
+ *  triangulation.
+ *
+ *  This file is automatically included from dim2triangulation.h; there is
+ *  no need for end users to include this header explicitly.
+ */
+
+// We include dim2triangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within dim2triangulation.h.
+#include "dim2/dim2triangulation.h"
+
 #ifndef __DIM2COMPONENT_H
 #ifndef __DOXYGEN
 #define __DIM2COMPONENT_H
 #endif
-
-/*! \file dim2/dim2component.h
- *  \brief Deals with connected components of a 2-manifold triangulation.
- */
-
-#include "regina-core.h"
-#include "generic/component.h"
-#include "generic/alias/face.h"
 
 namespace regina {
 

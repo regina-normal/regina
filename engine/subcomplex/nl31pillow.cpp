@@ -32,10 +32,8 @@
 
 #include "algebra/nabeliangroup.h"
 #include "manifold/nlensspace.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
-#include "triangulation/nvertex.h"
 #include "subcomplex/nl31pillow.h"
+#include "triangulation/ntriangulation.h"
 
 namespace regina {
 

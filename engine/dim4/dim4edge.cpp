@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "dim2/dim2triangulation.h"
-#include "dim4/dim4edge.h"
+#include "dim4/dim4triangulation.h"
 #include <sstream>
 
 namespace regina {

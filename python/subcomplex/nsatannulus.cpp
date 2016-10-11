@@ -33,7 +33,6 @@
 #include <boost/python.hpp>
 #include "maths/matrix2.h"
 #include "subcomplex/nsatannulus.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 

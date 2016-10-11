@@ -32,7 +32,7 @@
 
 #include "algebra/nabeliangroup.h"
 #include "manifold/nhandlebody.h"
-#include "triangulation/ntetrahedron.h"
+#include "triangulation/ntriangulation.h"
 #include "subcomplex/nsnappedball.h"
 
 namespace regina {

@@ -31,11 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "dim4/dim4boundarycomponent.h"
-#include "dim4/dim4edge.h"
-#include "dim4/dim4tetrahedron.h"
-#include "dim4/dim4triangle.h"
-#include "dim4/dim4vertex.h"
+#include "dim4/dim4triangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"

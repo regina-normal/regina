@@ -31,17 +31,21 @@
  **************************************************************************/
 
 /*! \file dim4/dim4edge.h
- *  \brief Deals with edges in a 4-manifold triangulation.
+ *  \brief Internal header for edges in a 4-manifold triangulation.
+ *
+ *  This file is automatically included from dim4triangulation.h; there is
+ *  no need for end users to include this header explicitly.
  */
+
+// We include dim4triangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within dim4triangulation.h.
+#include "dim4/dim4triangulation.h"
 
 #ifndef __DIM4EDGE_H
 #ifndef __DOXYGEN
 #define __DIM4EDGE_H
 #endif
-
-#include "regina-core.h"
-#include "generic/face.h"
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -256,11 +260,6 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
 typedef Face<4, 1> Dim4Edge;
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "dim4/dim4pentachoron.h"
-namespace regina {
 
 // Inline functions for Dim4Edge
 

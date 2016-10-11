@@ -31,18 +31,21 @@
  **************************************************************************/
 
 /*! \file dim2/dim2triangle.h
- *  \brief Deals with triangular faces in a 2-manifold triangulation.
+ *  \brief Internal header for triangular faces in a 2-manifold triangulation.
+ *
+ *  This file is automatically included from dim2triangulation.h; there is
+ *  no need for end users to include this header explicitly.
  */
+
+// We include dim2triangulation.h before the header guard, to ensure that the
+// various face/component headers are processed in exactly the right order.
+// This header will be re-included from within dim2triangulation.h.
+#include "dim2/dim2triangulation.h"
 
 #ifndef __DIM2TRIANGLE_H
 #ifndef __DOXYGEN
 #define __DIM2TRIANGLE_H
 #endif
-
-#include "regina-core.h"
-#include "generic/simplex.h"
-#include "utilities/markedvector.h"
-// NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
@@ -112,11 +115,6 @@ class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
 typedef Simplex<2> Dim2Triangle;
 
 /*@}*/
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "dim2/dim2triangulation.h"
-namespace regina {
 
 // Inline functions for Simplex<2>
 

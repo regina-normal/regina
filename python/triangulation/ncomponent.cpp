@@ -31,12 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "triangulation/nboundarycomponent.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntetrahedron.h"
-#include "triangulation/ntriangle.h"
-#include "triangulation/nvertex.h"
+#include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 

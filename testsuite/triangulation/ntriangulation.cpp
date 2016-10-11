@@ -49,7 +49,6 @@
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
-#include "triangulation/nvertex.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/generictriangulation.h"

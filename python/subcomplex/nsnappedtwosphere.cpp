@@ -33,7 +33,6 @@
 #include <boost/python.hpp>
 #include "subcomplex/nsnappedball.h"
 #include "subcomplex/nsnappedtwosphere.h"
-#include "triangulation/ntetrahedron.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 

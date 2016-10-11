@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "triangulation/nboundarycomponent.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "boundarycomponentchooser.h"
