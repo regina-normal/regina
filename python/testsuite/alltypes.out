@@ -118,6 +118,21 @@ Dim4Vertex : typedef ->  Face4_0
 
 Dim4VertexEmbedding : typedef ->  FaceEmbedding4_0
 
+DiscSetSurface : class
+Equality type : BY_REFERENCE
+
+DiscSetTet : class
+Equality type : BY_REFERENCE
+
+DiscSpec : class
+Equality type : BY_VALUE
+
+DiscSpecIterator : class
+Equality type : BY_VALUE
+
+DiscType : class
+Equality type : BY_VALUE
+
 ExampleSnapPea : class
 Equality type : NEVER_INSTANTIATED
 
@@ -1071,20 +1086,15 @@ NCusp : typedef ->  Cusp
 
 NCyclotomic : typedef ->  Cyclotomic
 
-DiscSetSurface : class
-Equality type : BY_REFERENCE
+NDiscSetSurface : typedef ->  DiscSetSurface
 
-DiscSetTet : class
-Equality type : BY_REFERENCE
+NDiscSetTet : typedef ->  DiscSetTet
 
-DiscSpec : class
-Equality type : BY_VALUE
+NDiscSpec : typedef ->  DiscSpec
 
-DiscSpecIterator : class
-Equality type : BY_VALUE
+NDiscSpecIterator : typedef ->  DiscSpecIterator
 
-DiscType : class
-Equality type : BY_VALUE
+NDiscType : typedef ->  DiscType
 
 NEdge : typedef ->  Face3_1
 
@@ -1238,8 +1248,7 @@ NPolynomial : typedef ->  Polynomial
 
 NPrimes : typedef ->  Primes
 
-PrismSpec : class
-Equality type : BY_VALUE
+NPrismSpec : typedef ->  PrismSpec
 
 NProgressTracker : typedef ->  ProgressTracker
 
@@ -1310,6 +1319,12 @@ Equality type : BY_REFERENCE
 
 NStandardTriangulation : class
 Equality type : BY_REFERENCE
+
+NSurfaceFilter : typedef ->  SurfaceFilter
+
+NSurfaceFilterCombination : typedef ->  SurfaceFilterCombination
+
+NSurfaceFilterProperties : typedef ->  SurfaceFilterProperties
 
 NTetFace : typedef ->  FacetSpec3
 
@@ -1423,6 +1438,9 @@ Equality type : BY_VALUE
 
 Primes : class
 Equality type : NEVER_INSTANTIATED
+
+PrismSpec : class
+Equality type : BY_VALUE
 
 ProgressTracker : class
 Equality type : BY_REFERENCE
