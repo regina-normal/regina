@@ -1,0 +1,181 @@
+#!/usr/bin/python
+#
+# Regina - A Normal Surface Theory Calculator
+# Alternate implementations of command-line utilities for the MacOS app bundle
+#
+# Copyright (c) 2002-2016, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# This implementation is designed for the Xcode bundle only - it hard-codes
+# paths to the census databases that are specific to the bundle layout.
+# In all other settings, you should use the standard implementations
+# of these utilities from the utils/ directory of Regina's source tree.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+import os
+import sys
+
+appName = os.path.basename(sys.argv[0])
+appDir = os.path.dirname(sys.argv[0])
+
+def globalUsage(error):
+    if error:
+        sys.stderr.write('ERROR: ' + error + '\n\n')
+    sys.stderr.write('Please call this script through the symlinks provided in the MacOS directory.\n');
+    sys.exit(1)
+
+try:
+    # TODO sys.path = [ appDir + '/python' ] + sys.path
+    sys.path = [ appDir + '/../../m/python' ] + sys.path
+    import regina
+except:
+    globalUsage('Could not import the regina module.')
+
+regina.NGlobalDirs.setDirs('', '', appDir + '/../Resources')
+
+if appName == 'censuslookup':
+    def usage(error):
+        if error:
+            sys.stderr.write(error + '\n\n')
+
+        sys.stderr.write('Usage:\n')
+        sys.stderr.write('    ' + sys.argv[0] + ' <isosig> ...\n')
+        sys.exit(1)
+
+    if len(sys.argv) < 2:
+        usage('Please specify one or more isomorphism signatures.')
+
+    for sig in sys.argv[1:]:
+        hits = regina.NCensus.lookup(sig)
+
+        n = hits.count()
+        if n == 1:
+            print sig + ': 1 hit'
+        else:
+            print sig + ':', n, 'hits'
+
+        hit = hits.first()
+        while hit:
+            print '    ' + hit.name() + ' -- ' + hit.db().desc()
+            hit = hit.next()
+
+        print
+
+elif appName == 'regconcat':
+    def usage(error):
+        if error:
+            sys.stderr.write(error + '\n\n')
+
+        sys.stderr.write('Usage:\n')
+        sys.stderr.write('    ' + sys.argv[0] + \
+            ' [ -o <output-file> ] <data-file> ...\n\n')
+        sys.stderr.write('    -o <output-file> : Write to the given data file (otherwise standard\n')
+        sys.stderr.write('                       output is used)\n')
+        sys.exit(1)
+
+    # Parse the command line.
+    files = []
+    outputFile = None
+
+    i = 1
+    while i < len(sys.argv):
+        if sys.argv[i] == '-o':
+            if i == len(sys.argv) - 1:
+                usage('Option -o is missing an output filename.')
+            elif outputFile:
+                usage('More than one output filename has been supplied.')
+            i = i + 1
+            outputFile = sys.argv[i]
+        elif sys.argv[i][:1] == '-':
+            usage('Invalid option: ' + sys.argv[i])
+        elif sys.argv[i]:
+            files.append(sys.argv[i])
+        else:
+            usage('Empty arguments are not allowed.')
+
+        i = i + 1
+
+    if not files:
+        usage('No data files have been supplied.')
+
+    # Read the input files one by one.
+    ans = regina.NContainer()
+    ans.setLabel('Combined Data')
+
+    error = False
+    for f in files:
+        data = regina.open(f)
+        if not data:
+            sys.stderr.write('File ' + f + ' could not be read.\n')
+            error = True
+        else:
+            ans.insertChildLast(data)
+
+    # Tidy up the final data file and write it.
+    if not outputFile:
+        ans.writeXMLFile()
+    elif not ans.save(outputFile):
+        sys.stderr.write('File ' + outputFile + ' could not be written.\n')
+
+    if error:
+        sys.exit(1)
+
+elif appName == 'regconvert':
+    # TODO
+    pass
+
+elif appName == 'regfiledump':
+    # TODO
+    pass
+
+elif appName == 'regfiletype':
+    def usage(error):
+        if error:
+            sys.stderr.write(error + '\n\n')
+
+        sys.stderr.write('Usage:\n')
+        sys.stderr.write('    ' + sys.argv[0] + ' <file> ...\n')
+        sys.exit(1)
+
+    if len(sys.argv) < 2:
+        usage('Please specify one or more files.')
+
+    for f in sys.argv[1:]:
+        if len(sys.argv) > 2:
+            print '[', f, ']'
+
+        info = regina.NFileInfo.identify(f)
+        if info:
+            print info.detail(),
+        else:
+            print 'Unknown file format or file could not be opened.'
+
+        if len(sys.argv) > 2:
+            print
+
+elif appName == 'trisetcmp':
+    # TODO
+    pass
+
+else:
+    globalUsage('"' + appName + '" is not one of Regina\'s command-line utilities.')

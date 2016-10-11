@@ -73,6 +73,10 @@ namespace {
         }
     }
 
+    void writeXMLFile_stdout(const NPacket& p) {
+        p.writeXMLFile(std::cout);
+    }
+
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_reparent, reparent_check, 2, 3);
 
     boost::python::list tags_list(const Packet* p) {
@@ -142,6 +146,7 @@ void addPacket() {
         .def("clone", &Packet::clone,
             OL_clone()[return_value_policy<to_held_type<> >()])
         .def("save", save_filename, OL_save())
+        .def("writeXMLFile", writeXMLFile_stdout)
         .def("internalID", &Packet::internalID)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())

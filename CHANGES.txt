@@ -82,6 +82,8 @@ Version 5.1  [ (under development) ]
             - Now behaves correctly when the vector is changed, even after
               the mirror has been created.
             - Removed the copy constructor.
+        Class Packet:
+            - writeXMLFile() is now available in python (using std::cout only).
         Class Primes:
             - Now works with type Integer, not LargeInteger.
         Class SurfaceSubset:
