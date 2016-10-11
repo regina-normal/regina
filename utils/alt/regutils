@@ -141,8 +141,64 @@ elif appName == 'regconcat':
         sys.exit(1)
 
 elif appName == 'regconvert':
-    # TODO
-    pass
+    def usage(error):
+        if error:
+            sys.stderr.write(error + '\n\n')
+
+        sys.stderr.write('Usage:\n')
+        sys.stderr.write('    ' + sys.argv[0] + ' [ -x | -u ] <old-file> [ <new-file> ]\n\n')
+        sys.stderr.write('    -x : Convert to compressed XML (default)\n')
+        sys.stderr.write('    -u : Convert to uncompressed XML\n\n')
+        sys.stderr.write('    <new-file> may be the same as <old-file>.\n')
+        sys.stderr.write('    <new-file> defaults to standard output (implies -u).\n')
+        sys.exit(1)
+
+    oldFile = None
+    newFile = None
+    typeOpt = None
+
+    for arg in sys.argv[1:]:
+        if arg == '-u' or arg == '-x':
+            if typeOpt:
+                usage('More than one file type has been specified.')
+            typeOpt = arg[1]
+        elif arg[:1] == '-':
+            usage('Invalid option: ' + arg)
+        elif arg == '':
+            usage('Empty arguments are not allowed.')
+        elif not oldFile:
+            oldFile = arg
+        elif not newFile:
+            newFile = arg
+        else:
+            usage('More than two files have been specified.')
+
+    if not oldFile:
+        usage('No files have been specified.')
+
+    # Add default options.
+    if not typeOpt:
+        if newFile:
+            typeOpt = 'x'
+        else:
+            typeOpt = 'u'
+
+    # Check we're allowed to use stdout if we've asked for it.
+    if (not newFile) and (typeOpt != 'u'):
+        usage('Only uncompressed XML can be written to standard output.')
+
+    # Read the old file.
+    tree = regina.open(oldFile)
+    if not tree:
+        sys.stderr.write('File ' + oldFile + ' could not be read.\n')
+        sys.exit(1)
+
+    # Write the new file.
+    if not newFile:
+        tree.writeXMLFile()
+    elif not tree.save(newFile, (typeOpt == 'x')):
+        sys.stderr.write('File ' + newFile + ' could not be written.\n')
+        sys.exit(1)
 
 elif appName == 'regfiledump':
     # TODO
