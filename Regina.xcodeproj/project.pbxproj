@@ -1705,26 +1705,12 @@
 			remoteGlobalIDString = 05617ADC1D9DBFBE00B1E33B;
 			remoteInfo = "Utils - TriCensus";
 		};
-		05617B6C1D9DC70900B1E33B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 05617B211D9DC53400B1E33B;
-			remoteInfo = "Utils - RegFileDump";
-		};
 		05617B701D9DC70E00B1E33B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 05617B371D9DC55000B1E33B;
 			remoteInfo = "Utils - SigCensus";
-		};
-		05617B721D9DC71100B1E33B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 05617B421D9DC55B00B1E33B;
-			remoteInfo = "Utils - TriSetCmp";
 		};
 		05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -6621,10 +6607,8 @@
 			dependencies = (
 				055ABEB419B49F1100044C1B /* PBXTargetDependency */,
 				050F5E6F1B9BD3A000C1F681 /* PBXTargetDependency */,
-				05617B6D1D9DC70900B1E33B /* PBXTargetDependency */,
 				05617B711D9DC70E00B1E33B /* PBXTargetDependency */,
 				05617AF71D9DC0E000B1E33B /* PBXTargetDependency */,
-				05617B731D9DC71100B1E33B /* PBXTargetDependency */,
 			);
 			name = Qt;
 			productName = Qt;
@@ -6817,7 +6801,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python ${macosdir}/regina-python\nln -f -s ../../../Resources/python/__init__.py ${macosdir}/python/regina/__init__.py\n\nfor i in censuslookup regconcat regconvert regfiletype; do\n    ln -f -s ../Resources/python/regutils ${macosdir}/$i\ndone\n\nchmod a+x ${macosdir}/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python ${macosdir}/regina-python\nln -f -s ../../../Resources/python/__init__.py ${macosdir}/python/regina/__init__.py\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils ${macosdir}/$i\ndone\n\nchmod a+x ${macosdir}/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6859,7 +6843,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regfiledump sigcensus trisetcmp tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in sigcensus tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8064,20 +8048,10 @@
 			target = 05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */;
 			targetProxy = 05617AF61D9DC0E000B1E33B /* PBXContainerItemProxy */;
 		};
-		05617B6D1D9DC70900B1E33B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 05617B211D9DC53400B1E33B /* Utils - RegFileDump */;
-			targetProxy = 05617B6C1D9DC70900B1E33B /* PBXContainerItemProxy */;
-		};
 		05617B711D9DC70E00B1E33B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05617B371D9DC55000B1E33B /* Utils - SigCensus */;
 			targetProxy = 05617B701D9DC70E00B1E33B /* PBXContainerItemProxy */;
-		};
-		05617B731D9DC71100B1E33B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */;
-			targetProxy = 05617B721D9DC71100B1E33B /* PBXContainerItemProxy */;
 		};
 		05B14EBB19B427AC002138C0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

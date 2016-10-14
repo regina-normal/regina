@@ -34,6 +34,7 @@
 
 import os
 import sys
+import string
 
 appName = os.path.basename(sys.argv[0])
 appDir = os.path.dirname(sys.argv[0])
@@ -45,8 +46,7 @@ def globalUsage(error):
     sys.exit(1)
 
 try:
-    # TODO sys.path = [ appDir + '/python' ] + sys.path
-    sys.path = [ appDir + '/../../m/python' ] + sys.path
+    sys.path = [ appDir + '/python' ] + sys.path
     import regina
 except:
     globalUsage('Could not import the regina module.')
@@ -201,8 +201,118 @@ elif appName == 'regconvert':
         sys.exit(1)
 
 elif appName == 'regfiledump':
-    # TODO
-    pass
+    def usage(error):
+        if error:
+            sys.stderr.write(error + '\n\n')
+
+        sys.stderr.write('Usage:\n')
+        sys.stderr.write('    ' + sys.argv[0] + ' [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]\n\n')
+        sys.stderr.write('    -f : Display full packet details (default)\n')
+        sys.stderr.write('    -l : Only display packet labels and types\n')
+        sys.stderr.write("    -l : Don't display packets at all (implies -c)\n")
+        sys.stderr.write('    -c : Finish with a count of all packets in the file\n\n')
+        sys.stderr.write('    <packet-label> ... : Only display the listed packets (otherwise all\n')
+        sys.stderr.write('                         packets are displayed)\n')
+        sys.exit(1)
+
+    separator = "************************************************************";
+
+    def dumpNoPacket(label, opt):
+        if opt == 'l':
+            print 'ERROR:', label, '-- No such packet.'
+        elif opt == 'f':
+            print separator
+            print '*'
+            print '* ERROR:', label
+            print '*        No such packet.'
+            print '*'
+            print separator
+            print
+
+    def dumpPacketHeader(p):
+        print separator
+        print '*'
+        print '* Label:', p.humanLabel()
+        print '* Type: ', p.typeName()
+        if p.parent:
+            print '* Parent: ', p.parent().humanLabel()
+        else:
+            print '* Parent: (none)'
+        if p.hasTags():
+            print '* Tags:', string.join(', ', p.tags())
+        print '*'
+        print separator
+
+    def dumpPacket(p, opt):
+        if opt == 'l':
+            print p.fullName()
+        elif opt == 'f':
+            dumpPacketHeader(p)
+            print
+            print p.detail()
+            print
+
+    filename = None
+    packets = []
+    opt = None
+    count = False
+
+    # Parse command line.
+    for arg in sys.argv[1:]:
+        if arg == '-c':
+            count = True
+        elif arg == '-f' or elif arg == '-l' or arg == '-n':
+            if opt:
+                usage('More than one detail level has been specified.')
+            opt = arg[1]
+        elif arg[:1] == '-':
+            usage('Invalid option: ' + arg)
+        elif not arg:
+            usage('Empty arguments are not allowed.')
+        elif filename:
+            packets.append(arg)
+        else:
+            filename = arg
+
+    if not filename:
+        usage('No file has been specified.')
+
+    # Add default options.
+    if not opt:
+        opt = 'f'
+    if opt == 'n':
+        count = True
+
+    if opt == 'n' and packets:
+        usage('You cannot specify individual packets if packets are not to be displayed.')
+
+    # In the python implementation we will just write international characters
+    # in utf8, and hope that the terminal is sufficiently modern to cope.
+
+    # Do the actual work.
+    tree = regina.open(filename)
+    if not tree:
+        sys.stderr.write('File ' + filename + ' could not be read.\n')
+        sys.exit(1)
+
+    if opt != 'n';
+        if not packets:
+            p = tree
+            while p:
+                dumpPacket(p, opt)
+                p = p.nextTreePacket()
+        else:
+            for i in packets:
+                p = tree.findPacketLabel(i)
+                if p:
+                    dumpPacket(p, opt)
+                else:
+                    dumpNoPacket(i, opt)
+
+    if count:
+        if opt != 'n':
+            print
+        print tree.totalTreeSize(), 'total packets in file.'
 
 elif appName == 'regfiletype':
     def usage(error):
@@ -230,8 +340,160 @@ elif appName == 'regfiletype':
             print
 
 elif appName == 'trisetcmp':
-    # TODO
-    pass
+    def usage(error):
+        if error:
+            sys.stderr.write(error + '\n\n')
+
+        sys.stderr.write('Usage:\n')
+        sys.stderr.write('    ' + sys.argv[0] + ' [ -m | -n ] [ -s ] <file1.rga> <file2.rga>\n\n')
+        sys.stderr.write('    -m : List matches, i.e., triangulations contained in both files (default)\n'
+        sys.stderr.write('    -n : List non-matches, i.e., triangulations in one file but not the other\n'
+        sys.stderr.write('    -s : Allow triangulations from file1.rga to be subcomplexes of\n'
+        sys.stderr.write('         triangulations from file2.rga\n')
+        sys.exit(1)
+
+    subcomplexTesting = False
+
+    def isTri(t):
+        return t.type() == regina.PACKET_TRIANGULATION or \
+            t.type() == regina.PACKET_DIM4TRIANGULATION
+
+    def compare(t1, t2):
+        if subcomplexTesting:
+            return t1.isContainedIn(t2)
+        else:
+            return t1.isIsomorphicTo(t2)
+
+    def runMatches(tree1, tree2):
+        if subcomplexTesting:
+            print 'Matching (isomorphic subcomplex) triangulations:'
+            op = '<='
+        else:
+            print 'Matching (isomorphic) triangulations:'
+            op = '=='
+        print
+
+        nMatches = 0
+
+        p1 = tree1
+        while p1:
+            if isTri(p1):
+                p2 = tree2
+                while p2:
+                    if p2.type() == p1.type():
+                        if compare(p1, p2):
+                            print '    ' + p1.humanLabel() + '  ' + op + \
+                                '  ' + p2.humanLabel()
+                            nMatches = nMatches + 1
+                    p2 = p2.nextTreePacket()
+            p1 = p1.nextTreePacket()
+
+        if nMatches == 0:
+            print 'No matches found.'
+        elif nMatches == 1:
+            print
+            print '1 match.'
+        else:
+            print
+            print nMatches, 'matches.'
+
+    def runNonMatches(file1, tree1, file2, tree2):
+        print 'Triangulations in ' + file1 + ' but not ' + file2 + ':'
+        print
+
+        nMissing = 0
+
+        p1 = tree1
+        while p1:
+            if isTri(p1):
+                matched = False
+                p2 = tree2
+                while p2 and not matched:
+                    if p2.type() == p1.type():
+                        if compare(p1, p2):
+                            matched = True
+                    p2 = p2.nextTreePacket()
+                if not matched:
+                    print '    ' + p1.humanLabel()
+                    nMissing = nMissing + 1
+            p1 = p1.nextTreePacket()
+
+        if nMissing == 0:
+            print 'All triangulations matched.'
+        elif nMissing == 1:
+            print
+            print '1 non-match.'
+        else:
+            print
+            print nMissing, 'non-matches.'
+
+    # Parse command line.
+    listMatches = False
+    listNonMatches = False
+    noMoreOpts = False
+
+    for arg in sys.argv[1:]:
+        if not noMoreOpts:
+            if arg == '-m':
+                listMatches = True
+                continue
+            elif arg == '-n':
+                listNonMatches = True
+                continue
+            elif arg == '-s':
+                subcomplexTesting = True
+                continue
+            elif arg == '--':
+                noMoreOpts = True
+                continue
+            elif arg[:1] == '-':
+                usage('Invalid option: ' + arg
+        if arg:
+            noMoreOpts = True
+            if not file1:
+                file1 = arg
+            elif not file2:
+                file2 = arg
+            else:
+                usage('You may not pass more than two data files.')
+        else:
+            usage('Empty arguments are not allowed.')
+
+    if listMatches and listNonMatches:
+        usage('Options -n and -m may not be used together.')
+    if not (listMatches or listNonMatches):
+        # List matches by default.
+        listMatches = True
+
+    if not (file1 and file2):
+        usage('Two data files must be specified.')
+
+    # Open the two data files.
+    tree1 = regina.open(file1)
+    if not tree1:
+        sys.stderr.write('File ' + file1 + ' could not be read.\n')
+        sys.stderr.write('Please check that it exists and that it is a Regina data file.\n')
+        sys.exit(1)
+
+    tree2 = regina.open(file2)
+    if not tree2:
+        sys.stderr.write('File ' + file2 + ' could not be read.\n')
+        sys.stderr.write('Please check that it exists and that it is a Regina data file.\n')
+        sys.exit(1)
+
+    # In the python implementation we will just write international characters
+    # in utf8, and hope that the terminal is sufficiently modern to cope.
+
+    # Run our tests.
+    if listMatches:
+        runMatches(tree1, tree2)
+    else:
+        runNonMatches(file1, tree1, file2, tree2)
+        if not subcomplexTesting:
+            print
+            print '--------------------'
+            print
+            runNonMatches(file2, tree2, file1, tree1)
 
 else:
     globalUsage('"' + appName + '" is not one of Regina\'s command-line utilities.')
