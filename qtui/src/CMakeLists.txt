@@ -13,6 +13,7 @@ ADD_SUBDIRECTORY(icons)
 ADD_SUBDIRECTORY(choosers)
 ADD_SUBDIRECTORY(foreign)
 ADD_SUBDIRECTORY(packettypes)
+ADD_SUBDIRECTORY(syntax)
 
 IF(BOOST_PYTHON_FOUND)
   ADD_SUBDIRECTORY(python)
@@ -48,20 +49,6 @@ IF(LIBGVC_FOUND)
     SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
   ENDIF (${GRAPHVIZ_TYPE} STREQUAL Framework)
 ENDIF(LIBGVC_FOUND)
-
-IF(SRCHILITE_FOUND)
-  ADD_SUBDIRECTORY(srchiliteqt)
-  ADD_SUBDIRECTORY(syntax)
-  SET(LINK_LIBS ${LINK_LIBS} ${SRCHILITE_LIBRARY})
-  INCLUDE_DIRECTORIES(${SRCHILITE_INCLUDE_DIR})
-  IF(WIN32)
-    # It seems that under Windows we need to explicitly link our code against
-    # boost-regex, which is used internally by libsource-highlight.
-    SET(LINK_LIBS ${LINK_LIBS} ${Boost_REGEX_LIBRARY})
-  ENDIF(WIN32)
-ELSE(SRCHILITE_FOUND)
-  ADD_DEFINITIONS(-DNO_SRCHILITE=1)
-ENDIF(SRCHILITE_FOUND)
 
 SET(SOURCES ${SOURCES}
   bigwidget.cpp

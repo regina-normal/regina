@@ -564,13 +564,6 @@ ELSE(DISABLE_GUI)
     "http://graphviz.org/"
     REGINA_MANDATORY)
 
-  FIND_PACKAGE(SourceHighlight)
-  MACRO_LOG_FEATURE(SRCHILITE_FOUND
-    "Source-highlight"
-    "Syntax highlighting"
-    "http://www.gnu.org/software/src-highlite/"
-    REGINA_MANDATORY)
-
   if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
     set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
     find_package(SharedMimeInfo)
