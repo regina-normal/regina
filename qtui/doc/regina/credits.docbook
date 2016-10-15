@@ -172,15 +172,14 @@
     </para>
    </sect3>
  
-   <sect3 id="license-srchilite">
+   <sect3 id="license-highlight">
     <title>Syntax Highlighting</title>
     <para>
-     &regina; includes code from
-     <application>Source-highlight-qt</application> and language definitions
-     from <application>&gnu; Source-highlight</application>,
-     which it uses to highlight &python; scripts.
-     Both projects are by Lorenzo Bettini and others, and are distributed
-     under the terms of the &gnu; General Public License, version&nbsp;3.
+     &regina;'s graphical user interface includes the
+     <classname>PythonSyntaxHighlighter</classname> class by Frankie Simon
+     and others, which it uses for highlighting &python; scripts.
+     This class is distributed under the X11 license; see the class header for
+     the license details.
     </para>
    </sect3>
  
