@@ -849,6 +849,8 @@
 		052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D5C180600FA00FAE4DF /* unix_file_io.c */; };
 		052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D8F180600FB00FAE4DF /* update_shapes.c */; };
 		052FA23D180612DD00FAE4DF /* volume.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D90180600FB00FAE4DF /* volume.c */; };
+		05375CD41DB21A86002348F0 /* pythonsyntaxhighlighter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05375CD01DB21A73002348F0 /* pythonsyntaxhighlighter.cpp */; };
+		05375CD51DB21FDF002348F0 /* pythonsyntaxhighlighter.h in Sources */ = {isa = PBXBuildFile; fileRef = 05375CD11DB21A73002348F0 /* pythonsyntaxhighlighter.h */; };
 		053CAB4F1DACA75900A92F98 /* regutils in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 053CAB4E1DACA74A00A92F98 /* regutils */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -1274,7 +1276,6 @@
 		0583656518DB8876008B08D9 /* real_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656118DB8876008B08D9 /* real_type.h */; };
 		0583656C18DB88E8008B08D9 /* dim2triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583656818DB88D9008B08D9 /* dim2triangulation.cpp */; };
 		0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656018DB8876008B08D9 /* kernel_namespace.h */; };
-		058637F3181DBC5900E95307 /* syntax in Resources */ = {isa = PBXBuildFile; fileRef = 058637F2181DBC5800E95307 /* syntax */; };
 		058641F019D77D820019E056 /* TextHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058641EF19D77D820019E056 /* TextHelper.mm */; };
 		0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426A19D92D550019E056 /* SurfacesMatching.mm */; };
 		0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426D19D982D00019E056 /* SpreadHelper.mm */; };
@@ -2690,6 +2691,8 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		05375CD01DB21A73002348F0 /* pythonsyntaxhighlighter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonsyntaxhighlighter.cpp; sourceTree = "<group>"; };
+		05375CD11DB21A73002348F0 /* pythonsyntaxhighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonsyntaxhighlighter.h; sourceTree = "<group>"; };
 		053CAB4E1DACA74A00A92F98 /* regutils */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = regutils; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
@@ -3038,13 +3041,6 @@
 		0564A5F51811D920002CC2AE /* shortrunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shortrunner.cpp; sourceTree = "<group>"; };
 		0564A5F61811D920002CC2AE /* shortrunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shortrunner.h; sourceTree = "<group>"; };
 		0564A60D1811D920002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		0564A60E1811D920002CC2AE /* default.style */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = default.style; sourceTree = "<group>"; };
-		0564A60F1811D920002CC2AE /* function.lang */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = function.lang; sourceTree = "<group>"; };
-		0564A6101811D920002CC2AE /* number.lang */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = number.lang; sourceTree = "<group>"; };
-		0564A6111811D920002CC2AE /* python.lang */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = python.lang; sourceTree = "<group>"; };
-		0564A6121811D921002CC2AE /* script_comment.lang */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = script_comment.lang; sourceTree = "<group>"; };
-		0564A6131811D921002CC2AE /* SOURCE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOURCE; sourceTree = "<group>"; };
-		0564A6141811D921002CC2AE /* symbols.lang */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = symbols.lang; sourceTree = "<group>"; };
 		0564A6151811D921002CC2AE /* tips */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tips; sourceTree = "<group>"; };
 		0564A6161811D921002CC2AE /* treenav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treenav.cpp; sourceTree = "<group>"; };
 		0564A6171811D921002CC2AE /* x-regina.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = "x-regina.ico"; sourceTree = "<group>"; };
@@ -3146,7 +3142,6 @@
 		0583656718DB88D9008B08D9 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0583656818DB88D9008B08D9 /* dim2triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triangulation.cpp; sourceTree = "<group>"; };
 		0583656918DB88D9008B08D9 /* testdim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim2.h; sourceTree = "<group>"; };
-		058637F2181DBC5800E95307 /* syntax */ = {isa = PBXFileReference; lastKnownFileType = folder; name = syntax; path = src/syntax; sourceTree = "<group>"; };
 		058641EE19D77D820019E056 /* TextHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextHelper.h; sourceTree = "<group>"; };
 		058641EF19D77D820019E056 /* TextHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextHelper.mm; sourceTree = "<group>"; };
 		0586426919D92D550019E056 /* SurfacesMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesMatching.h; sourceTree = "<group>"; };
@@ -5342,7 +5337,6 @@
 				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
 				051806D5181202E0008EBB01 /* examples */,
 				051806D3181202BD008EBB01 /* icons */,
-				058637F2181DBC5800E95307 /* syntax */,
 			);
 			path = qtui;
 			sourceTree = "<group>";
@@ -5615,13 +5609,8 @@
 			isa = PBXGroup;
 			children = (
 				0564A60D1811D920002CC2AE /* CMakeLists.txt */,
-				0564A60E1811D920002CC2AE /* default.style */,
-				0564A60F1811D920002CC2AE /* function.lang */,
-				0564A6101811D920002CC2AE /* number.lang */,
-				0564A6111811D920002CC2AE /* python.lang */,
-				0564A6121811D921002CC2AE /* script_comment.lang */,
-				0564A6131811D921002CC2AE /* SOURCE */,
-				0564A6141811D921002CC2AE /* symbols.lang */,
+				05375CD01DB21A73002348F0 /* pythonsyntaxhighlighter.cpp */,
+				05375CD11DB21A73002348F0 /* pythonsyntaxhighlighter.h */,
 			);
 			path = syntax;
 			sourceTree = "<group>";
@@ -6713,7 +6702,6 @@
 				055ABEC719B49FC300044C1B /* hyp-knot-link-census.zsig in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
 				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
-				058637F3181DBC5900E95307 /* syntax in Resources */,
 				051806D6181202E0008EBB01 /* examples in Resources */,
 				05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */,
 				05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */,
@@ -7535,6 +7523,7 @@
 				050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */,
 				055ABEBB19B49F6800044C1B /* hyp-knot-link-census.zsig in Sources */,
 				050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */,
+				05375CD51DB21FDF002348F0 /* pythonsyntaxhighlighter.h in Sources */,
 				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
 				054739E11D9B176200C7B56F /* clickablelabel.h in Sources */,
@@ -7568,6 +7557,7 @@
 				0543AEAA1811E12A002758F8 /* ncompatcanvas.h in Sources */,
 				051691BC1C5AD60100DC69EC /* nhypercompatui.h in Sources */,
 				051691BD1C5AD60600DC69EC /* nhypercoordinateui.h in Sources */,
+				05375CD41DB21A86002348F0 /* pythonsyntaxhighlighter.cpp in Sources */,
 				051691BE1C5AD60A00DC69EC /* nhypermatchingui.h in Sources */,
 				051691BF1C5AD60D00DC69EC /* nhypersummaryui.h in Sources */,
 				051691C01C5AD61200DC69EC /* nhypersurfaceui.h in Sources */,
