@@ -46,10 +46,7 @@
 #include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-
-#if ! (NO_SRCHILITE)
-#include "../srchiliteqt/Qt4SyntaxHighlighter.h"
-#endif
+#include "syntax/pythonsyntaxhighlighter.h"
 
 #include <cstring>
 #include <QAction>
@@ -295,11 +292,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
 
-#if ! (NO_SRCHILITE)
-    srchiliteqt::Qt4SyntaxHighlighter* highlighter =
-        new srchiliteqt::Qt4SyntaxHighlighter(editWidget->document());
-    highlighter->init("python.lang", "default.style");
-#endif
+    new PythonSyntaxHighlighter(editWidget->document());
 
     editWidget->setFocus();
     editWidget->setWhatsThis(tr("Type the Python script into this "

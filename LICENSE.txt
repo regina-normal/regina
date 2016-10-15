@@ -94,10 +94,10 @@ GNU General Public License.
 
 SYNTAX HIGHLIGHTING:
 
-Regina includes code from Source-highlight-qt and language definitions
-from GNU Source-highlight, which it uses to highlight Python scripts.
-Both projects are by Lorenzo Bettini and others, and are distributed
-under the terms of the GNU General Public License, version 3.
+Regina's graphical user interface includes the PythonSyntaxHighlighter class
+by Frankie Simon and others, which it uses for highlighting Python scripts.
+This class is distributed under the X11 license; see the class header for
+the license details.
 
 
 ICONS:
