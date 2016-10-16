@@ -1086,12 +1086,7 @@
 		05617B631D9DC5DF00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B641D9DC5DF00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B651D9DC5DF00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B751D9DC72F00B1E33B /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
-		05617B761D9DC72F00B1E33B /* regconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B171D9DC52B00B1E33B /* regconvert */; };
-		05617B771D9DC72F00B1E33B /* regfiledump in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B221D9DC53400B1E33B /* regfiledump */; };
-		05617B781D9DC72F00B1E33B /* regfiletype in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B2D1D9DC54500B1E33B /* regfiletype */; };
 		05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B381D9DC55000B1E33B /* sigcensus */; };
-		05617B7A1D9DC72F00B1E33B /* trisetcmp in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B431D9DC55B00B1E33B /* trisetcmp */; };
 		05617B7B1D9DC79E00B1E33B /* trisetcmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */; };
 		05617B7C1D9DC7A200B1E33B /* sigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE91D9DC02900B1E33B /* sigcensus.cpp */; };
 		05617B7D1D9DC7A600B1E33B /* regfiletype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE81D9DC02900B1E33B /* regfiletype.cpp */; };
@@ -1745,12 +1740,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				05617B751D9DC72F00B1E33B /* regconcat in Copy Engine and Utilities */,
-				05617B761D9DC72F00B1E33B /* regconvert in Copy Engine and Utilities */,
-				05617B771D9DC72F00B1E33B /* regfiledump in Copy Engine and Utilities */,
-				05617B781D9DC72F00B1E33B /* regfiletype in Copy Engine and Utilities */,
 				05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */,
-				05617B7A1D9DC72F00B1E33B /* trisetcmp in Copy Engine and Utilities */,
 				05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */,
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
