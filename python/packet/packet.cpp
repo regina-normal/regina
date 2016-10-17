@@ -73,7 +73,7 @@ namespace {
         }
     }
 
-    void writeXMLFile_stdout(const NPacket& p) {
+    void writeXMLFile_stdout(const Packet& p) {
         p.writeXMLFile(std::cout);
     }
 
