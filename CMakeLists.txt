@@ -348,7 +348,7 @@ IF (QDBM)
   PKG_CHECK_MODULES(TOKYOCABINET qdbm)
   MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
     "QDBM"
-    "Essential: lighweight database library for accessing census data"
+    "Essential: lightweight database library for census data"
     "http://fallabs.com/qdbm/"
     TRUE)
   SET (QDBM_AS_TOKYOCABINET TRUE)
@@ -357,7 +357,7 @@ ELSE (QDBM)
   PKG_CHECK_MODULES(TOKYOCABINET tokyocabinet)
   MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
     "Tokyo Cabinet"
-    "Essential: lighweight database library for accessing census data"
+    "Essential: lightweight database library for census data"
     "http://fallabs.com/tokyocabinet/"
     TRUE)
   SET (DB_EXT "tdb")
