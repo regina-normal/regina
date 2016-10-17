@@ -34,7 +34,10 @@
 #include <cstdlib>
 #include <iostream>
 
-void usage(const char* progName) {
+void usage(const char* progName, const std::string& error = std::string()) {
+    if (! error.empty())
+        std::cerr << error << "\n\n";
+
     std::cerr << "Usage:\n";
     std::cerr << "    " << progName << " <file> ...\n";
     exit(1);
@@ -42,7 +45,7 @@ void usage(const char* progName) {
 
 int main(int argc, char* argv[]) {
     if (argc < 2)
-        usage(argv[0]);
+        usage(argv[0], "Please specify one or more files.");
 
     regina::NFileInfo* info;
     for (int i = 1; i < argc; i++) {
