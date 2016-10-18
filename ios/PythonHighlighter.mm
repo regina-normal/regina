@@ -64,20 +64,33 @@ static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x
 
 
 
-@implementation PythonHighlighter
+@implementation PythonHighlighter {
+    UIFont* regular;
+    UIFont* bold;
+    UIFont* italic;
+}
 
 - (id)init
 {
     self = [super init];
+    if (self) {
+        // TODO: Pass the UITextView as an argument, and extract the font size from that.
+        regular = [UIFont fontWithName:@"Menlo" size:14];
+        bold = [UIFont fontWithName:@"Menlo-Bold" size:14];
+        italic = [UIFont fontWithName:@"Menlo-Italic" size:14];
+    }
     return self;
 }
 
 - (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta
 {
-    NSString* text = textStorage.string;
+    NSLog(@"willProcessEditing: range %d(%d), delta %d", editedRange.location, editedRange.length, delta);
 
-    // NSLog(@"Will process editing: range %d:%d, length %d", editedRange.location, editedRange.length, delta);
-    // NSLog(@"Text is: %@", text);
+    // By default, everything should be in a fixed-width font.
+    [textStorage addAttribute:NSFontAttributeName value:regular range:editedRange];
+
+    // Highlight what needs to be highlighted.
+    NSString* text = textStorage.string;
 
     [text enumerateSubstringsInRange:NSMakeRange(0, text.length)
                              options:NSStringEnumerationByWords
