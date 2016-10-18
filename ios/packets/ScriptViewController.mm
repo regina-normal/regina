@@ -31,10 +31,9 @@
  **************************************************************************/
 
 #import "PacketManagerIOS.h"
+#import "PythonHighlighter.h"
 #import "ScriptViewController.h"
 #import "packet/nscript.h"
-
-static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x5E / 256.0) blue:(0x08 / 256.0) alpha:1.0];
 
 #pragma mark - Script variable cell
 
@@ -51,6 +50,7 @@ static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x
 
 @interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate, NSTextStorageDelegate> {
     CGFloat variableHeaderHeight;
+    PythonHighlighter* highlighter;
 }
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
@@ -67,7 +67,9 @@ static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x
 
     self.variables.delegate = self;
     self.variables.dataSource = self;
-    self.script.textStorage.delegate = self;
+
+    highlighter = [[PythonHighlighter alloc] init];
+    self.script.textStorage.delegate = highlighter;
 
     [self reloadPacket];
 }
@@ -129,21 +131,6 @@ static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x
         variableHeaderHeight = size.height;
     }
     return variableHeaderHeight;
-}
-
-- (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta
-{
-    NSString* text = textStorage.string;
-
-    // NSLog(@"Will process editing: range %d:%d, length %d", editedRange.location, editedRange.length, delta);
-    // NSLog(@"Text is: %@", text);
-
-    [text enumerateSubstringsInRange:NSMakeRange(0, text.length)
-                             options:NSStringEnumerationByWords
-                          usingBlock:^(NSString* substring, NSRange substringRange, NSRange, BOOL*) {
-                              if ([substring isEqual:@"homology"])
-                                  [textStorage addAttribute:NSForegroundColorAttributeName value:darkerGoldenrod range:substringRange];
-                          }];
 }
 
 @end

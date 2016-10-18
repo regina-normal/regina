@@ -1528,6 +1528,7 @@
 		05FEA07B19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */; };
 		05FEA07C19C1890900A31924 /* nexamplesnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */; };
 		05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07E19C2B96000A31924 /* PacketPicker.mm */; };
+		05FF4D3E1DB6BE310056D1EA /* PythonHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -3359,6 +3360,8 @@
 		05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexamplesnappeatriangulation.h; sourceTree = "<group>"; };
 		05FEA07D19C2B96000A31924 /* PacketPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketPicker.h; sourceTree = "<group>"; };
 		05FEA07E19C2B96000A31924 /* PacketPicker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketPicker.mm; sourceTree = "<group>"; };
+		05FF4D3A1DB6BC1E0056D1EA /* PythonHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonHighlighter.h; sourceTree = "<group>"; };
+		05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonHighlighter.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4911,6 +4914,8 @@
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
 				050313C51812DDF0007F0CBE /* PacketViewer.h */,
+				05FF4D3A1DB6BC1E0056D1EA /* PythonHighlighter.h */,
+				05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */,
 				05583A6019B8041F00076187 /* ReginaDocument.h */,
 				05583A6119B8041F00076187 /* ReginaDocument.mm */,
 				05D1C16D19C6542700CF92F2 /* ReginaHelper.h */,
@@ -7016,6 +7021,7 @@
 				05A73C9D19B2EF5A0099C617 /* fundamental_group.c in Sources */,
 				052FA234180612DD00FAE4DF /* solve_equations.c in Sources */,
 				0591E7BF1C4F74E100793A9C /* dim4triangle.cpp in Sources */,
+				05FF4D3E1DB6BE310056D1EA /* PythonHighlighter.mm in Sources */,
 				052FA1621806129B00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
 				05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */,
 				052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */,
