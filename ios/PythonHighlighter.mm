@@ -47,27 +47,139 @@ static NSArray* operators = @[
 static NSArray* braces = @[
     @"{", @"}", @"\\(", @"\\)", @"\\[", @"]"];
 
-static NSDictionary* basicStyles = @{
-                                     @"keyword" : @[],
-                                     @"operator" : @[],
-                                     @"brace" : @[],
-                                     @"defclass" : @[],
-                                     @"string" : @[],
-                                     @"string2" : @[],
-                                     @"comment" : @[],
-                                     @"self" : @[],
-                                     @"numbers" : @[]
-    };
+static UIColor* darkMagenta = [UIColor colorWithRed:(0x8b / 256.0) green:(0x00 / 256.0) blue:(0x8b / 256.0) alpha:1.0];
+static UIColor* darkGreen = [UIColor colorWithRed:(0x00 / 256.0) green:(0x64 / 256.0) blue:(0x00 / 256.0) alpha:1.0];
 
+@interface HighlightingRule : NSObject
 
-static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x5E / 256.0) blue:(0x08 / 256.0) alpha:1.0];
+@property (strong, nonatomic) NSRegularExpression* pattern;
+@property (assign, nonatomic) NSInteger match;
+@property (weak, nonatomic) UIColor* colour;
+@property (weak, nonatomic) UIFont* font;
 
+- (id)initWithPattern:(NSString*)p match:(NSInteger)m colour:(UIColor*)c font:(UIFont*)f;
++ (id)ruleWithPattern:(NSString*)p match:(NSInteger)m colour:(UIColor*)c font:(UIFont*)f;
 
+@end
+
+@implementation HighlightingRule
+
+- (id)initWithPattern:(NSString *)p match:(NSInteger)m colour:(UIColor *)c font:(UIFont *)f
+{
+    self = [super init];
+    if (self) {
+        _pattern = [NSRegularExpression regularExpressionWithPattern:p options:0 error:nil];
+        _match = m;
+        _colour = c;
+        _font = f;
+    }
+    return self;
+}
+
++ (id)ruleWithPattern:(NSString *)p match:(NSInteger)m colour:(UIColor *)c font:(UIFont *)f
+{
+    return [[HighlightingRule alloc] initWithPattern:p match:m colour:c font:f];
+}
+
+@end
 
 @implementation PythonHighlighter {
     UIFont* regular;
     UIFont* bold;
     UIFont* italic;
+    NSMutableArray* rules;
+}
+
+- (void)initRules
+{
+    rules = [[NSMutableArray alloc] init];
+
+    // Keywords:
+    // (Can be overridden by strings and/or comments)
+    for (NSString* s in keywords) {
+        [rules addObject:[HighlightingRule ruleWithPattern:[NSString stringWithFormat:@"\\b%@\\b", s]
+                                                     match:0
+                                                    colour:[UIColor blueColor]
+                                                      font:nil]];
+    }
+
+    // Operators:
+    // (Can be overridden by strings and/or comments)
+    for (NSString* s in operators) {
+        [rules addObject:[HighlightingRule ruleWithPattern:s
+                                                     match:0
+                                                    colour:[UIColor redColor]
+                                                      font:nil]];
+    }
+
+    // Braces:
+    // (Can be overridden by strings and/or comments)
+    for (NSString* s in braces) {
+        [rules addObject:[HighlightingRule ruleWithPattern:s
+                                                     match:0
+                                                    colour:[UIColor darkGrayColor]
+                                                      font:nil]];
+    }
+
+    // Self:
+    // (Can be overridden by strings and/or comments)
+    [rules addObject:[HighlightingRule ruleWithPattern:@"\\bself\\b"
+                                                 match:0
+                                                colour:[UIColor blackColor]
+                                                  font:italic]];
+
+    // "def" or "class" followed by an identifier:
+    // (Can be overridden by strings and/or comments)
+    [rules addObject:[HighlightingRule ruleWithPattern:@"\\bdef\\b\\s*(\\w+)"
+                                                 match:1
+                                                colour:[UIColor blackColor]
+                                                  font:bold]];
+    [rules addObject:[HighlightingRule ruleWithPattern:@"\\bclass\\b\\s*(\\w+)"
+                                                 match:1
+                                                colour:[UIColor blackColor]
+                                                  font:bold]];
+
+    // Numeric literals:
+    // (Can be overridden by strings and/or comments)
+    [rules addObject:[HighlightingRule ruleWithPattern:@"\\b[+-]?[0-9]+[lL]?\\b"
+                                                 match:0
+                                                colour:[UIColor brownColor]
+                                                  font:nil]];
+    [rules addObject:[HighlightingRule ruleWithPattern:@"\\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\\b"
+                                                 match:0
+                                                colour:[UIColor brownColor]
+                                                  font:nil]];
+    [rules addObject:[HighlightingRule ruleWithPattern:@"\\b[+-]?[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b"
+                                                 match:0
+                                                colour:[UIColor brownColor]
+                                                  font:nil]];
+
+    // Strings, possibly including escape sequences:
+    // TODO: I'm not convinced by these regexes (both for iOS and Qt)...
+    // TODO: Make sure this is not inside a comment.
+    [rules addObject:[HighlightingRule ruleWithPattern:@"\"[^\"\\\\]*(\\\\.[^\"\\\\]*)*\""
+                                                 match:0
+                                                colour:[UIColor magentaColor]
+                                                  font:regular]];
+    [rules addObject:[HighlightingRule ruleWithPattern:@"'[^'\\\\]*(\\\\.[^'\\\\]*)*'"
+                                                 match:0
+                                                colour:[UIColor magentaColor]
+                                                  font:regular]];
+    [rules addObject:[HighlightingRule ruleWithPattern:@"\"\"\"[^\"\\\\]*(\\\\.[^\"\\\\]*)*\"\"\""
+                                                 match:0
+                                                colour:darkMagenta
+                                                  font:regular]];
+    [rules addObject:[HighlightingRule ruleWithPattern:@"'''[^'\\\\]*(\\\\.[^'\\\\]*)*'''"
+                                                 match:0
+                                                colour:darkMagenta
+                                                  font:regular]];
+
+    // Single-line comments:
+    // TODO: Make sure this is not inside a string.
+    [rules addObject:[HighlightingRule ruleWithPattern:@"#[^\\n]*"
+                                                 match:0
+                                                colour:darkGreen
+                                                  font:italic]];
 }
 
 - (id)init
@@ -75,9 +187,11 @@ static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x
     self = [super init];
     if (self) {
         // TODO: Pass the UITextView as an argument, and extract the font size from that.
-        regular = [UIFont fontWithName:@"Menlo" size:14];
-        bold = [UIFont fontWithName:@"Menlo-Bold" size:14];
-        italic = [UIFont fontWithName:@"Menlo-Italic" size:14];
+        regular = [UIFont fontWithName:@"Menlo" size:12];
+        bold = [UIFont fontWithName:@"Menlo-Bold" size:12];
+        italic = [UIFont fontWithName:@"Menlo-Italic" size:12];
+
+        [self initRules];
     }
     return self;
 }
@@ -86,18 +200,26 @@ static UIColor* darkerGoldenrod = [UIColor colorWithRed:(0x80 / 256.0) green:(0x
 {
     NSLog(@"willProcessEditing: range %d(%d), delta %d", editedRange.location, editedRange.length, delta);
 
+    // Currently, we highlight the *entire* text all at once.
+    // This is fine for now, where syntax highlighting is only used for read-only script packets.
+    // Once we start allowing users to edit scripts, this may need to change...
+
     // By default, everything should be in a fixed-width font.
     [textStorage addAttribute:NSFontAttributeName value:regular range:editedRange];
 
     // Highlight what needs to be highlighted.
     NSString* text = textStorage.string;
-
-    [text enumerateSubstringsInRange:NSMakeRange(0, text.length)
-                             options:NSStringEnumerationByWords
-                          usingBlock:^(NSString* substring, NSRange substringRange, NSRange, BOOL*) {
-                              if ([substring isEqual:@"homology"])
-                                  [textStorage addAttribute:NSForegroundColorAttributeName value:darkerGoldenrod range:substringRange];
-                          }];
+    NSArray<NSTextCheckingResult*>* matches;
+    for (HighlightingRule* rule in rules) {
+        matches = [rule.pattern matchesInString:text options:0 range:NSMakeRange(0, text.length)];
+        for (NSTextCheckingResult* match in matches) {
+            NSRange r = [match rangeAtIndex:rule.match];
+            if (rule.colour)
+                [textStorage addAttribute:NSForegroundColorAttributeName value:rule.colour range:r];
+            if (rule.font)
+                [textStorage addAttribute:NSFontAttributeName value:rule.font range:r];
+        }
+    }
 }
 
 @end
