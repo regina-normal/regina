@@ -34,6 +34,7 @@
 
 namespace regina {
     class Packet;
+    class Script;
 }
 
 /**
@@ -96,16 +97,18 @@ namespace regina {
  * Set the given variable in Python's main namespace to represent the given
  * Regina packet.
  */
-- (bool)setVar:(NSString*)name value:(regina::Packet*)value;
+- (bool)setVar:(const char*)name value:(regina::Packet*)value;
 
 /**
- * Test whether the given Python script compiles.
+ * Run the given Python code in Python's main namespace.
  */
-- (bool)compileScript:(NSString*)code;
+- (bool)runCode:(const char*)code;
 
 /**
- * Run the given Python script in Python's main namespace.
+ * Run the given script packet in Python's main namespace.
+ * This involves setting all of the script variables, and then running
+ * the script code itself.
  */
-- (bool)runScript:(NSString*)code;
+- (bool)runScript:(regina::Script*)script;
 
 @end

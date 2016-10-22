@@ -84,14 +84,9 @@
 
     // TODO: The following is a proof-of-concept to see if we can run something in python.
     PythonInterpreter* p = [[PythonInterpreter alloc] initWithOut:nil err:nil];
-    [p runScript:@"print 2+3\n"];
-    NSLog(@"Importing regina:");
     [p importRegina];
-    NSLog(@"Hello regina!");
-    [p runScript:@"print regina.welcome()\n"];
-    NSLog(@"Running full script:");
-    [p runScript:self.script.text];
-    NSLog(@"Done running script.");
+    [p runCode:"print regina.welcome()\n"];
+    [p runScript:self.packet];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

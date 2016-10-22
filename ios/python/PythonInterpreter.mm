@@ -32,7 +32,7 @@
 
 #import "PythonInterpreter.h"
 #import "file/globaldirs.h"
-#import "packet/packet.h"
+#import "packet/script.h"
 
 // We need to include <ostream> before boost.python - otherwise we get a
 // compile error when boost.python includes <ostream> itself.. *shrug*
@@ -247,7 +247,7 @@ class PythonOutputStreamObjC {
     return ok;
 }
 
-- (bool)setVar:(NSString *)name value:(regina::Packet *)value
+- (bool)setVar:(const char*)name value:(regina::Packet *)value
 {
     PyEval_RestoreThread(_state);
 
@@ -257,7 +257,7 @@ class PythonOutputStreamObjC {
         PyObject* pyValue = conv(value);
 
         if (pyValue) {
-            PyObject* nameStr = PyString_FromString([name UTF8String]); // New ref.
+            PyObject* nameStr = PyString_FromString(name); // New ref.
             PyDict_SetItem(_mainNamespace, nameStr, conv(value));
             Py_DECREF(nameStr);
             ok = true;
@@ -271,11 +271,11 @@ class PythonOutputStreamObjC {
     return ok;
 }
 
-- (bool)compileScript:(NSString *)code
+- (bool)runCode:(const char*)code
 {
     PyEval_RestoreThread(_state);
 
-    PyObject* ans = Py_CompileString([code UTF8String], "<script>", Py_file_input);
+    PyObject* ans = PyRun_String(code, Py_file_input, _mainNamespace, _mainNamespace);
     if (ans) {
         Py_DECREF(ans);
         _state = PyEval_SaveThread();
@@ -288,21 +288,17 @@ class PythonOutputStreamObjC {
     }
 }
 
-- (bool)runScript:(NSString *)code
+- (bool)runScript:(regina::Script*)script
 {
-    PyEval_RestoreThread(_state);
+    bool result = true;
+    for (size_t i = 0; i < script->countVariables(); ++i)
+        if (! [self setVar:script->variableName(i).c_str() value:script->variableValue(i)])
+            result = false;
 
-    PyObject* ans = PyRun_String([code UTF8String], Py_file_input, _mainNamespace, _mainNamespace);
-    if (ans) {
-        Py_DECREF(ans);
-        _state = PyEval_SaveThread();
-        return true;
-    } else {
-        PyErr_Print();
-        PyErr_Clear();
-        _state = PyEval_SaveThread();
-        return false;
-    }
+    if (! [self runCode:(script->text() + "\n\n").c_str()])
+        result = false;
+
+    return result;
 }
 
 @end
