@@ -35,6 +35,8 @@
 #import "ScriptViewController.h"
 #import "packet/script.h"
 
+#import "../python/PythonInterpreter.h"
+
 #pragma mark - Script variable cell
 
 @interface ScriptVariableCell ()
@@ -79,6 +81,10 @@
     self.script.text = [NSString stringWithUTF8String:self.packet->text().c_str()];
     [self.script scrollRangeToVisible:NSMakeRange(0, 0)];
     [self.variables reloadData];
+
+    // TODO: The following is a proof-of-concept to see if we can run something in python.
+    PythonInterpreter* p = [[PythonInterpreter alloc] initWithOut:nil err:nil];
+    [p runScript:@"print 2+3\n"];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
