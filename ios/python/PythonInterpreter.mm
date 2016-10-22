@@ -31,17 +31,19 @@
  **************************************************************************/
 
 #import "PythonInterpreter.h"
-#import <file/globaldirs.h>
-#import <string>
-#import <ostream> // This needs to come before boost/python.hpp. *shrug*
+#import "file/globaldirs.h"
+#import "packet/packet.h"
+
+// We need to include <ostream> before boost.python - otherwise we get a
+// compile error when boost.python includes <ostream> itself.. *shrug*
+#import <ostream>
 
 // Python includes:
 #import <Python.h>
-#import <compile.h>
-#import <eval.h>
-#import <sysmodule.h>
-
 #import <boost/python.hpp>
+
+// Declare the entry point for Regina's python module:
+PyMODINIT_FUNC initregina();
 
 /**
  * WARNING: We never call Py_Finalize().
@@ -185,13 +187,35 @@ class PythonOutputStreamObjC {
             PyErr_Clear();
         }
 
+        // Load Regina's python module.
+        // This must be done again for each new interpreter.
+        // Boost will complain loudly on stderr about re-registering
+        // to-Python converters, but we can just ignore this.
+        initregina();
+
         // Release the global interpreter lock.
         PyEval_SaveThread();
     }
     return self;
 }
 
-// TODO: Destructor that cleans up Python and deletes _outCpp / _errCpp.
+- (void)dealloc
+{
+    NSLog(@"Python interpreter being deallocated");
+
+    // Acquire the global interpreter lock.
+    PyEval_RestoreThread(_state);
+
+    // Destroy the interpreter.
+    Py_EndInterpreter(_state);
+
+    // Release the global interpreter lock.
+    PyEval_ReleaseLock();
+
+    // Delete C++ resources that are not managed by ARC.
+    delete _outCpp;
+    delete _errCpp;
+}
 
 - (bool)executeLine:(NSString *)command
 {
@@ -201,20 +225,67 @@ class PythonOutputStreamObjC {
 
 - (bool)importRegina
 {
-    // TODO
-    return false;
+    PyEval_RestoreThread(_state);
+
+    bool ok = false;
+    try {
+        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+        if (regModule) {
+            PyDict_SetItemString(_mainNamespace, "regina", regModule);
+            Py_DECREF(regModule);
+            ok = true;
+        } else {
+            PyErr_Print();
+            PyErr_Clear();
+        }
+    } catch (const boost::python::error_already_set&) {
+        PyErr_Print();
+        PyErr_Clear();
+    }
+
+    _state = PyEval_SaveThread();
+    return ok;
 }
 
 - (bool)setVar:(NSString *)name value:(regina::Packet *)value
 {
-    // TODO
-    return false;
+    PyEval_RestoreThread(_state);
+
+    bool ok = false;
+    try {
+        boost::python::reference_existing_object::apply<regina::Packet*>::type conv;
+        PyObject* pyValue = conv(value);
+
+        if (pyValue) {
+            PyObject* nameStr = PyString_FromString([name UTF8String]); // New ref.
+            PyDict_SetItem(_mainNamespace, nameStr, conv(value));
+            Py_DECREF(nameStr);
+            ok = true;
+        }
+    } catch (const boost::python::error_already_set&) {
+        PyErr_Print();
+        PyErr_Clear();
+    }
+
+    _state = PyEval_SaveThread();
+    return ok;
 }
 
 - (bool)compileScript:(NSString *)code
 {
-    // TODO
-    return false;
+    PyEval_RestoreThread(_state);
+
+    PyObject* ans = Py_CompileString([code UTF8String], "<script>", Py_file_input);
+    if (ans) {
+        Py_DECREF(ans);
+        _state = PyEval_SaveThread();
+        return true;
+    } else {
+        PyErr_Print();
+        PyErr_Clear();
+        _state = PyEval_SaveThread();
+        return false;
+    }
 }
 
 - (bool)runScript:(NSString *)code
@@ -232,12 +303,6 @@ class PythonOutputStreamObjC {
         _state = PyEval_SaveThread();
         return false;
     }
-}
-
-- (bool)runScript:(NSString *)code filename:(NSString *)filename
-{
-    // TODO
-    return false;
 }
 
 @end

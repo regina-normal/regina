@@ -60,32 +60,52 @@ namespace regina {
 @end
 
 /**
- * A single python subinterpreter.  Multiple subinterpreters are independent
+ * A single Python subinterpreter.  Multiple subinterpreters are independent
  * and may exist simultaneously.
  *
  * Each new subinterpreter corresponds to a new call to Py_NewInterpreter().
- * The global routine Py_Initialize() and Py_Finalize() are called when the
- * first interpreter is created and the last interpreter is destroyed
- * respectively.
+ * The global routine Py_Initialize() is called when the first interpreter is
+ * created.  The global routine Py_Finalize() is never called (which is
+ * bad behaviour), since Regina has no idea which interpreter will be the last.
  */
 @interface PythonInterpreter : NSObject
 
 /**
- * Initialises a new subinterpreter, using the given output and error
- * streams.  The two stream may be the same.  Moreover, one or both streams
- * may be \c nil, in which case the corresponding output will be logged via
- * NSLog().
+ * Initialises a new subinterpreter.
+ *
+ * \param out The output stream to use as sys.stdout.  This may be \c nil,
+ * in which case a PythonLogStream will be used.
+ * \param err The output stream to use as sys.stderr.  This may be \c nil,
+ * in which case a PythonLogStream will be used.  This is also allowed to be
+ * the same as \a out.
  */
 - (id)initWithOut:(id<PythonOutputStream>)out err:(id<PythonOutputStream>)err;
 
 /**
- * Interactions with the Python subinterpreter:
+ * Execute a single line of code.  This is intended for use in an interactive
+ * Python session.
  */
 - (bool)executeLine:(NSString*)command;
+
+/**
+ * Import Regina's Python module.
+ */
 - (bool)importRegina;
+
+/**
+ * Set the given variable in Python's main namespace to represent the given
+ * Regina packet.
+ */
 - (bool)setVar:(NSString*)name value:(regina::Packet*)value;
+
+/**
+ * Test whether the given Python script compiles.
+ */
 - (bool)compileScript:(NSString*)code;
+
+/**
+ * Run the given Python script in Python's main namespace.
+ */
 - (bool)runScript:(NSString*)code;
-- (bool)runScript:(NSString*)code filename:(NSString*)filename;
 
 @end
