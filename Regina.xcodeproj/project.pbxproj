@@ -8717,6 +8717,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_LINK_MODULE_INTO_EXECUTABLE=1",
 					"DEBUG=1",
 					"$(inherited)",
 				);
@@ -8762,6 +8763,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_LINK_MODULE_INTO_EXECUTABLE=1";
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/preconfig/ios-xcode5\"",
 					"$(inherited)",
