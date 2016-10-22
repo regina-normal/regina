@@ -151,6 +151,7 @@ class PythonOutputStreamObjC {
         if (pythonInitialised)
             PyEval_AcquireLock();
         else {
+            // Make sure Python can find its own modules.
             std::string pyZipDir = regina::GlobalDirs::home() + "/python";
 
             std::string newPath("PYTHONPATH=");
@@ -159,6 +160,11 @@ class PythonOutputStreamObjC {
 
             putenv(strdup(newPath.c_str()));
 
+            // Make sure Python can find Regina's module also.
+            if (PyImport_AppendInittab("regina", &initregina) == -1)
+                NSLog(@"ERROR: PyImport_AppendInittab(\"regina\", ...) failed.");
+
+            // Go ahead and initialise Python.
             PyEval_InitThreads();
             Py_Initialize();
             pythonInitialised = true;
@@ -186,12 +192,6 @@ class PythonOutputStreamObjC {
             PyErr_Print();
             PyErr_Clear();
         }
-
-        // Load Regina's python module.
-        // This must be done again for each new interpreter.
-        // Boost will complain loudly on stderr about re-registering
-        // to-Python converters, but we can just ignore this.
-        initregina();
 
         // Release the global interpreter lock.
         PyEval_SaveThread();
