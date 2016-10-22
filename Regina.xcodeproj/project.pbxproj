@@ -827,6 +827,8 @@
 		052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D5C180600FA00FAE4DF /* unix_file_io.c */; };
 		052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D8F180600FB00FAE4DF /* update_shapes.c */; };
 		052FA23D180612DD00FAE4DF /* volume.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D90180600FB00FAE4DF /* volume.c */; };
+		05375CD41DB21A86002348F0 /* pythonsyntaxhighlighter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05375CD01DB21A73002348F0 /* pythonsyntaxhighlighter.cpp */; };
+		05375CD51DB21FDF002348F0 /* pythonsyntaxhighlighter.h in Sources */ = {isa = PBXBuildFile; fileRef = 05375CD11DB21A73002348F0 /* pythonsyntaxhighlighter.h */; };
 		053CAB131DA4A27500A92F98 /* nrational.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB121DA4A27500A92F98 /* nrational.h */; };
 		053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */; };
 		053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */; };
@@ -856,8 +858,6 @@
 		053CAB4B1DAC479300A92F98 /* ndisc.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB481DAC479300A92F98 /* ndisc.h */; };
 		053CAB4C1DAC479300A92F98 /* ndisctype.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB491DAC479300A92F98 /* ndisctype.h */; };
 		053CAB4D1DAC479300A92F98 /* nprism.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB4A1DAC479300A92F98 /* nprism.h */; };
-		05375CD41DB21A86002348F0 /* pythonsyntaxhighlighter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05375CD01DB21A73002348F0 /* pythonsyntaxhighlighter.cpp */; };
-		05375CD51DB21FDF002348F0 /* pythonsyntaxhighlighter.h in Sources */ = {isa = PBXBuildFile; fileRef = 05375CD11DB21A73002348F0 /* pythonsyntaxhighlighter.h */; };
 		053CAB4F1DACA75900A92F98 /* regutils in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 053CAB4E1DACA74A00A92F98 /* regutils */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -2664,6 +2664,8 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		05375CD01DB21A73002348F0 /* pythonsyntaxhighlighter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonsyntaxhighlighter.cpp; sourceTree = "<group>"; };
+		05375CD11DB21A73002348F0 /* pythonsyntaxhighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonsyntaxhighlighter.h; sourceTree = "<group>"; };
 		053CAB121DA4A27500A92F98 /* nrational.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nrational.h; sourceTree = "<group>"; };
 		053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		053CAB181DA4A9CC00A92F98 /* nprimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprimes.h; sourceTree = "<group>"; };
@@ -2693,8 +2695,6 @@
 		053CAB481DAC479300A92F98 /* ndisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisc.h; sourceTree = "<group>"; };
 		053CAB491DAC479300A92F98 /* ndisctype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisctype.h; sourceTree = "<group>"; };
 		053CAB4A1DAC479300A92F98 /* nprism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprism.h; sourceTree = "<group>"; };
-		05375CD01DB21A73002348F0 /* pythonsyntaxhighlighter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonsyntaxhighlighter.cpp; sourceTree = "<group>"; };
-		05375CD11DB21A73002348F0 /* pythonsyntaxhighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonsyntaxhighlighter.h; sourceTree = "<group>"; };
 		053CAB4E1DACA74A00A92F98 /* regutils */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = regutils; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
