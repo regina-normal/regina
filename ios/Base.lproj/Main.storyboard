@@ -7726,7 +7726,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z9S-w7-wkO">
-                                <state key="normal" title="Run"/>
+                                <state key="normal" title="Run…"/>
                                 <connections>
                                     <action selector="run:" destination="hwU-kY-f7E" eventType="touchUpInside" id="qVE-WQ-Ai9"/>
                                 </connections>
