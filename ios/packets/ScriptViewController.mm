@@ -81,8 +81,11 @@
     self.script.text = [NSString stringWithUTF8String:self.packet->text().c_str()];
     [self.script scrollRangeToVisible:NSMakeRange(0, 0)];
     [self.variables reloadData];
+}
 
+- (IBAction)run:(id)sender {
     // TODO: The following is a proof-of-concept to see if we can run something in python.
+    // Currently it just logs the python output via NSLog().
     PythonInterpreter* p = [[PythonInterpreter alloc] initWithOut:nil err:nil];
     [p importRegina];
     [p runCode:"print regina.welcome()\n"];
