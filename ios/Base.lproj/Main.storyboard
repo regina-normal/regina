@@ -7732,7 +7732,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NXn-Sh-RyC">
-                                <state key="normal" image="Action-Orient"/>
+                                <state key="normal" image="Action-Run"/>
                                 <connections>
                                     <action selector="run:" destination="hwU-kY-f7E" eventType="touchUpInside" id="5YH-S8-Mvf"/>
                                 </connections>
@@ -11428,6 +11428,7 @@
         <image name="Action-Fill" width="32" height="32"/>
         <image name="Action-Orient" width="32" height="32"/>
         <image name="Action-Randomise" width="32" height="32"/>
+        <image name="Action-Run" width="32" height="32"/>
         <image name="Action-Simplify" width="32" height="32"/>
         <image name="Action-VtxLinks" width="32" height="32"/>
         <image name="Container" width="32" height="32"/>
