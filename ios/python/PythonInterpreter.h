@@ -47,6 +47,8 @@ namespace regina {
  * Process a chunk of data that was sent to this output stream.
  * This routine might for instance display the data to the user
  * or write it to a log file.
+ *
+ * You should assume that \a data is encoded in UTF-8.
  */
 - (void)processOutput:(const char*)data;
 @end

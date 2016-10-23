@@ -70,7 +70,9 @@ static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 
 - (void)processOutput:(const char*)data
 {
-    NSLog(@"%s", data);
+    // We can't use %s with NSLog, since this does not default to UTF-8.
+    // Instead we jump through some hoops to explicitly specify that data is UTF-8.
+    NSLog(@"%@", [NSString stringWithUTF8String:data]);
 }
 
 @end
