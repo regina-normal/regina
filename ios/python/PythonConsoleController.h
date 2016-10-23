@@ -38,84 +38,25 @@ namespace regina {
 }
 
 /**
- * A protocol for objects that can act as Python output streams
- * sys.stdout and/or sys.stderr.
+ * Represents different visual styles for the text that is logged in the
+ * scrollable history area for a Python console.
  */
-@protocol PythonOutputStream <NSObject>
-@required
-/**
- * Process a chunk of data that was sent to this output stream.
- * This routine might for instance display the data to the user
- * or write it to a log file.
- *
- * You should assume that \a data is encoded in UTF-8.
- */
-- (void)processOutput:(const char*)data;
-@end
+enum HistoryStyle {
+    HistoryInput,
+    HistoryOutput,
+    HistoryInfo,
+    HistoryError
+};
+
+@interface PythonConsoleController : UIViewController
+@property (assign, nonatomic) regina::Packet* root;
+@property (assign, nonatomic) regina::Packet* item;
+@property (assign, nonatomic) regina::Script* script;
 
 /**
- * A Python output stream that sends data to NSLog().
+ * Logs the given text at the end of the scrollable history area.
+ * This may be called from any thread.
  */
-@interface PythonLogStream : NSObject<PythonOutputStream>
-
-- (void)processOutput:(const char*)data;
-
-@end
-
-/**
- * A single Python subinterpreter.  Multiple subinterpreters are independent
- * and may exist simultaneously.
- *
- * Each new subinterpreter corresponds to a new call to Py_NewInterpreter().
- * The global routine Py_Initialize() is called when the first interpreter is
- * created.  The global routine Py_Finalize() is never called (which is
- * bad behaviour), since Regina has no idea which interpreter will be the last.
- */
-@interface PythonInterpreter : NSObject
-
-/**
- * Initialises a new subinterpreter.
- *
- * \param out The output stream to use as sys.stdout.  This may be \c nil,
- * in which case a PythonLogStream will be used.
- * \param err The output stream to use as sys.stderr.  This may be \c nil,
- * in which case a PythonLogStream will be used.  This is also allowed to be
- * the same as \a out.
- */
-- (id)initWithOut:(id<PythonOutputStream>)out err:(id<PythonOutputStream>)err;
-
-/**
- * Execute a single line of code.  This is intended for use in an interactive
- * Python session.
- */
-- (bool)executeLine:(const char*)command;
-
-/**
- * Import Regina's Python module.
- */
-- (bool)importRegina;
-
-/**
- * Set the given variable in Python's main namespace to represent the given
- * Regina packet.
- */
-- (bool)setVar:(const char*)name value:(regina::Packet*)value;
-
-/**
- * Run the given Python code in Python's main namespace.
- */
-- (bool)runCode:(const char*)code;
-
-/**
- * Run the given script packet in Python's main namespace.
- * This involves setting all of the script variables, and then running
- * the script code itself.
- */
-- (bool)runScript:(regina::Script*)script;
-
-/**
- * Flush the standard output and error streams.
- */
-- (void)flush;
+- (void)appendHistory:(NSString*)text style:(HistoryStyle)style;
 
 @end

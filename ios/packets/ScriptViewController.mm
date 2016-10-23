@@ -35,7 +35,7 @@
 #import "ScriptViewController.h"
 #import "packet/script.h"
 
-#import "../python/PythonInterpreter.h"
+#import "../python/PythonConsoleController.h"
 
 #pragma mark - Script variable cell
 
@@ -84,12 +84,10 @@
 }
 
 - (IBAction)run:(id)sender {
-    // TODO: The following is a proof-of-concept to see if we can run something in python.
-    // Currently it just logs the python output via NSLog().
-    PythonInterpreter* p = [[PythonInterpreter alloc] initWithOut:nil err:nil];
-    [p importRegina];
-    [p runCode:"print regina.welcome()\n"];
-    [p runScript:self.packet];
+    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"pythonConsole"];
+    static_cast<PythonConsoleController*>(sheet).script = self.packet;
+    [self presentViewController:sheet animated:YES completion:nil];
+
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

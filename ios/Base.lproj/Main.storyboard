@@ -7786,6 +7786,73 @@
             </objects>
             <point key="canvasLocation" x="-1722" y="1193"/>
         </scene>
+        <!--Python Console Controller-->
+        <scene sceneID="OMS-29-KXf">
+            <objects>
+                <viewController storyboardIdentifier="pythonConsole" id="yxp-Bb-yGq" customClass="PythonConsoleController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2kR-7m-KdU"/>
+                        <viewControllerLayoutGuide type="bottom" id="bCv-gW-fjr"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="FKb-yJ-d3w">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4ES-4j-GDB">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <attributedString key="attributedText"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sCk-0J-Zqb">
+                                <items>
+                                    <barButtonItem title="&gt;&gt;&gt;" id="bTc-zE-wlo">
+                                        <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="KZX-GG-gfM">
+                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" id="JiY-OG-Gu3" customClass="LongTextField">
+                                            <rect key="frame" x="62" y="7" width="97" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" enablesReturnKeyAutomatically="YES"/>
+                                            <connections>
+                                                <action selector="execute:" destination="yxp-Bb-yGq" eventType="editingDidEnd" id="cqL-XT-Bcd"/>
+                                            </connections>
+                                        </textField>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Dtk-g7-iUe"/>
+                                    <barButtonItem title="Close" id="SBV-28-7cR">
+                                        <connections>
+                                            <action selector="close:" destination="yxp-Bb-yGq" id="wNi-7t-3dd"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4ES-4j-GDB" firstAttribute="top" secondItem="2kR-7m-KdU" secondAttribute="bottom" constant="8" id="1kU-fn-oxY"/>
+                            <constraint firstItem="sCk-0J-Zqb" firstAttribute="leading" secondItem="FKb-yJ-d3w" secondAttribute="leading" id="Gxt-Zm-FAT"/>
+                            <constraint firstItem="bCv-gW-fjr" firstAttribute="top" secondItem="sCk-0J-Zqb" secondAttribute="bottom" id="OxB-33-EbU"/>
+                            <constraint firstItem="sCk-0J-Zqb" firstAttribute="top" secondItem="4ES-4j-GDB" secondAttribute="bottom" constant="20" id="bo0-hB-D0L"/>
+                            <constraint firstAttribute="trailing" secondItem="sCk-0J-Zqb" secondAttribute="trailing" id="ln9-Sr-Bhe"/>
+                            <constraint firstItem="4ES-4j-GDB" firstAttribute="leading" secondItem="FKb-yJ-d3w" secondAttribute="leading" constant="20" id="nFg-su-KK6"/>
+                            <constraint firstAttribute="trailing" secondItem="4ES-4j-GDB" secondAttribute="trailing" constant="20" id="sGJ-U2-lD3"/>
+                        </constraints>
+                    </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <modalPageSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="closeButton" destination="SBV-28-7cR" id="aIP-0x-bij"/>
+                        <outlet property="history" destination="4ES-4j-GDB" id="07d-X9-6q0"/>
+                        <outlet property="input" destination="JiY-OG-Gu3" id="k1V-jl-Knf"/>
+                        <outlet property="prompt" destination="bTc-zE-wlo" id="86J-hc-Ylb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="h5x-5U-Hyl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-743" y="1193"/>
+        </scene>
         <!--Master-->
         <scene sceneID="qUY-0Y-I08">
             <objects>

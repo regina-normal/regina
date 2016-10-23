@@ -465,5 +465,11 @@ class PythonOutputStreamObjC {
     return result;
 }
 
+- (void)flush
+{
+    _outCpp->flush();
+    _errCpp->flush();
+}
+
 @end
 
