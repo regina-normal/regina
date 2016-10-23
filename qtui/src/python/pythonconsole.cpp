@@ -399,6 +399,10 @@ void PythonConsole::executeScript(const QString& script,
     addOutput(scriptName.isEmpty() ? tr("Running %1...").arg(scriptName) :
             tr("Running script..."));
     interpreter->runScript(script.toUtf8());
+
+    // Finish the output.
+    output->flush();
+    error->flush();
 }
 
 void PythonConsole::saveLog() {
