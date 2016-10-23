@@ -49,6 +49,7 @@ set (IMGS
   puncture
   randomise
   regina
+  run
   signature-2d
   signature-3d
   signature-4d
