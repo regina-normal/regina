@@ -351,22 +351,10 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actionBar->addAction(actSep);
     scriptActionList.append(actSep);
 
-    QAction* actCompile = new QAction(this);
-    //scriptActions->addAction("script_compile");;
-    actCompile->setText(tr("&Compile"));
-    actCompile->setIcon(ReginaSupport::themeIcon("run-build-file"));
-    actCompile->setToolTip(tr("Compile the Python script"));
-    actCompile->setWhatsThis(tr("Test whether this Python script "
-        "actually compiles.  Any errors will be shown in a separate "
-        "Python console."));
-    connect(actCompile, SIGNAL(triggered()), this, SLOT(compile()));
-    actionBar->addAction(actCompile);
-    scriptActionList.append(actCompile);
-
     QAction* actRun = new QAction(this);
     //scriptActions->addAction("script_run");;
     actRun->setText(tr("&Run"));
-    actRun->setIcon(ReginaSupport::themeIcon("system-run"));
+    actRun->setIcon(ReginaSupport::regIcon("run"));
     actRun->setToolTip(tr("Execute the Python script"));
     actRun->setWhatsThis(tr("Execute this Python script.  The "
         "script will be run in a separate Python console."));
@@ -529,22 +517,6 @@ void ScriptUI::updateRemoveState() {
         actRemove->setEnabled(script->countVariables() > 0);
     else
         actRemove->setEnabled(false);
-}
-
-void ScriptUI::compile() {
-    endEdit();
-
-    if (enclosingPane->getMainWindow()->getPythonManager().compileScript(ui,
-            editWidget->toPlainText() + "\n\n") == 0) {
-        #ifdef BOOST_PYTHON_FOUND
-        ReginaSupport::success(ui,
-            tr("The script compiles successfully."));
-        #endif
-    } else
-        ReginaSupport::failure(ui,
-            tr("The script does not compile."),
-            tr("See the Python console for details.  You may interact with "
-            "this console to further investigate the problem."));
 }
 
 void ScriptUI::execute() {

@@ -188,9 +188,8 @@ class ScriptUI : public QObject, public PacketUI {
         void updateRemoveState();
 
         /**
-         * Handle python compilation and execution.
+         * Handle python execution.
          */
-        void compile();
         void execute();
 
         /**
