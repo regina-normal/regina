@@ -88,7 +88,7 @@ namespace regina {
  * Execute a single line of code.  This is intended for use in an interactive
  * Python session.
  */
-- (bool)executeLine:(NSString*)command;
+- (bool)executeLine:(const char*)command;
 
 /**
  * Import Regina's Python module.
