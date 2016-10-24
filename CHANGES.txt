@@ -86,6 +86,9 @@ Version 5.1  [ (under development) ]
             - writeXMLFile() is now available in python (using std::cout only).
         Class Primes:
             - Now works with type Integer, not LargeInteger.
+        Class SafePtr:
+            - New default constructor, bool conversion and routine reset().
+            - Disabled the default copy assignment operator.
         Class SurfaceSubset:
             - Removed entirely.  This class has been unused for several years,
               and was just a trivial wrapper for iterating through a surface
