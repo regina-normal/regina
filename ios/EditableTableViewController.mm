@@ -33,9 +33,6 @@
 #import "EditableTableViewController.h"
 #import "ReginaHelper.h"
 
-#define SHEET_DELETE 501
-#define SHEET_ACTION 502
-
 @interface EditableTableViewController () {
     UITextField* renameField;
     NSInteger renameIndex;
@@ -229,23 +226,6 @@
         // Popovers to the right appear strangely cropped on iOS 8.  Disallow them.
         alert.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown;
         [self presentViewController:alert animated:YES completion:nil];
-    }
-}
-
-#pragma mark - Action sheet
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.tag == SHEET_DELETE) {
-        if (buttonIndex == actionSheet.destructiveButtonIndex)
-            [self deleteAction];
-        self.actionPath = nil;
-    } else if (actionSheet.tag == SHEET_ACTION) {
-        if (buttonIndex == renameIndex)
-            [self renameBegin];
-        else {
-            [self otherActionSelected:buttonIndex];
-            self.actionPath = nil;
-        }
     }
 }
 

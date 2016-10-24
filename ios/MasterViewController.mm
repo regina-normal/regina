@@ -36,11 +36,6 @@
 #import "ReginaDocument.h"
 #import "ReginaHelper.h"
 
-// Action sheet tags;
-enum {
-    sheetNew = 1,
-};
-
 static UIColor* darkGoldenrod = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 static UIColor* snapPeaGreen = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1.0];
 
@@ -604,19 +599,6 @@ enum DocSource {
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return (! self.actionPath) && (indexPath.section == 1);
-}
-
-#pragma mark - Action Sheet
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.tag == sheetNew) {
-        switch (buttonIndex) {
-            case 0: [self newDocumentFrom:DOCSOURCE_NATIVE]; break;
-            case 1: [self newDocumentFrom:DOCSOURCE_DROPBOX]; break;
-            default: break;
-        }
-    } else
-        [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
 }
 
 @end
