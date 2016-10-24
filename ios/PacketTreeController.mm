@@ -467,6 +467,10 @@
         [self.tableView deleteRowsAtIndexPaths:@[self.actionPath, subtreePath]
                               withRowAnimation:UITableViewRowAnimationFade];
     } else {
+        if (_subtreeRow > self.actionPath.row) {
+            // The subtree row will shuffle up by one.
+            --_subtreeRow;
+        }
         [self.tableView deleteRowsAtIndexPaths:@[self.actionPath]
                               withRowAnimation:UITableViewRowAnimationFade];
     }
