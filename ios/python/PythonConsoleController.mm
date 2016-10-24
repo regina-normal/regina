@@ -44,6 +44,8 @@
 static UIColor* infoColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
 
+#define KEY_PYTHON_ACCEPTED @"PythonAccepted"
+
 /**
  * Represents different visual styles for the text that is logged in the
  * scrollable history area for a Python console.
@@ -108,6 +110,20 @@ enum HistoryStyle {
 
 + (void)openConsoleFromViewController:(UIViewController *)c root:(regina::Packet *)root item:(regina::Packet *)item script:(regina::Script *)script
 {
+    BOOL accepted = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_PYTHON_ACCEPTED];
+    if (! accepted) {
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Use Python?"
+                                                                       message:@"Regina's Python interface is for advanced users. It gives you low-level programmable control over Regina's mathematical engine. Do you wish to continue?"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Continue" style:UIAlertActionStyleDefault handler:^(UIAlertAction*) {
+            [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:KEY_PYTHON_ACCEPTED];
+            [PythonConsoleController openConsoleFromViewController:c root:root item:item script:script];
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [c presentViewController:alert animated:YES completion:nil];
+        return;
+    }
+
     PythonConsoleController* sheet = static_cast<PythonConsoleController*>([c.storyboard instantiateViewControllerWithIdentifier:@"pythonConsole"]);
     sheet.root = root;
     sheet.item = item;
