@@ -87,7 +87,6 @@
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"pythonConsole"];
     static_cast<PythonConsoleController*>(sheet).script = self.packet;
     [self presentViewController:sheet animated:YES completion:nil];
-
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
