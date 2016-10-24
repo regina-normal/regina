@@ -276,6 +276,13 @@ void PythonConsole::addOutput(const QString& output) {
     QApplication::instance()->processEvents();
 }
 
+void PythonConsole::addInfo(const QString& info) {
+    session->moveCursor(QTextCursor::End);
+    session->insertHtml("<font color=\"dark goldenrod\">" + encode(info) +
+        "</font><br>");
+    QApplication::instance()->processEvents();
+}
+
 void PythonConsole::addError(const QString& output) {
     session->moveCursor(QTextCursor::End);
     session->insertHtml("<font color=\"dark red\">" + encode(output) +
@@ -336,7 +343,7 @@ bool PythonConsole::importRegina() {
 void PythonConsole::setRootPacket(regina::Packet* packet) {
     if (interpreter->setVar("root", packet)) {
         if (packet)
-            addOutput(tr("The (invisible) root of the packet tree is in the "
+            addInfo(tr("The (invisible) root of the packet tree is in the "
                 "variable [root]."));
     } else {
         ReginaSupport::warn(this,
@@ -351,7 +358,7 @@ void PythonConsole::setSelectedPacket(regina::Packet* packet) {
     // Set the variable.
     if (interpreter->setVar("item", packet)) {
         if (packet)
-            addOutput(tr("The selected packet (%1) is in the "
+            addInfo(tr("The selected packet (%1) is in the "
                 "variable [item].").arg(packet->humanLabel().c_str()));
         // Set "selected" for backward compatibility with Regina <= 4.92.
         // Ignore any errors.
@@ -396,7 +403,7 @@ bool PythonConsole::compileScript(const QString& script) {
 
 void PythonConsole::executeScript(const QString& script,
         const QString& scriptName) {
-    addOutput(scriptName.isEmpty() ? tr("Running %1...").arg(scriptName) :
+    addInfo(scriptName.isEmpty() ? tr("Running %1...").arg(scriptName) :
             tr("Running script..."));
     interpreter->runScript(script.toUtf8());
 
