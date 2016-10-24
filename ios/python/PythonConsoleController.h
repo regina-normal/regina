@@ -39,9 +39,6 @@ namespace regina {
 
 @interface PythonConsoleController : UIViewController
 
-/**
- * Opens a new Python console.
- */
 + (void)openConsoleFromViewController:(UIViewController*)c root:(regina::Packet*)root item:(regina::Packet*)item script:(regina::Script*)script;
 
 @end
