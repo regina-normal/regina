@@ -39,6 +39,7 @@
 #import "PacketViewer.h"
 #import "ReginaHelper.h"
 #import "TempFile.h"
+#import "python/PythonConsoleController.h"
 #import "packet/packet.h"
 #import "packet/pdf.h"
 #import "packet/packettype.h"
@@ -53,6 +54,7 @@
 @property (strong, nonatomic) UIDocumentInteractionController *interaction;
 @property (strong, nonatomic) TempFile *interactionFile;
 @property (strong, nonatomic) UIBarButtonItem *shareButton;
+@property (strong, nonatomic) UIBarButtonItem *pythonButton;
 @end
 
 @implementation DetailViewController
@@ -93,7 +95,16 @@
                          target:self
                          action:@selector(shareDocument)] :
                         nil);
-    self.navigationItem.rightBarButtonItem = self.shareButton;
+    self.pythonButton = [[UIBarButtonItem alloc]
+                         initWithImage:[UIImage imageNamed:@"Nav-Python"]
+                         style:UIBarButtonItemStylePlain
+                         target:self
+                         action:@selector(pythonConsole)];
+
+    if (self.shareButton)
+        self.navigationItem.rightBarButtonItems = @[ self.pythonButton, self.shareButton ];
+    else
+        self.navigationItem.rightBarButtonItem = self.pythonButton;
 
     // Close any packet viewers that might be open,
     // push any outstanding changes to the calculation engine,
@@ -283,6 +294,15 @@
     } else {
         [_interact presentOptionsMenuFromBarButtonItem:self.shareButton animated:YES];
     }
+}
+
+- (void)pythonConsole
+{
+    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"pythonConsole"];
+    static_cast<PythonConsoleController*>(sheet).item = _packet;
+    if (_doc)
+        static_cast<PythonConsoleController*>(sheet).root = _doc.tree;
+    [self presentViewController:sheet animated:YES completion:nil];
 }
 
 #pragma mark - Packet listener
