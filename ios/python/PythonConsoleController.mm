@@ -35,8 +35,11 @@
 #import "TextHelper.h"
 #import "packet/script.h"
 
-// TODO: Make keyboard permanently visible?
+// TODO: Don't hide-and-display the keyboard during short processing.
 // TODO: Make sure the UI DTRT when packets are deleted, etc.
+
+// TODO: Enable editing of script packets
+// TODO: Allow python consoles to be opened elsewhere.
 
 // Information is displayed in dark goldenrod:
 static UIColor* infoColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
@@ -205,6 +208,7 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
             }
 
             self.working = false;
+            [self.input becomeFirstResponder];
         });
     });
 }
@@ -253,16 +257,23 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
 
 - (void)keyboardWillShow:(NSNotification*)notification
 {
-    // TODO: Animate correctly.
     CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     NSTimeInterval duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     NSInteger animationCurve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+
+    // Do we need to scroll the text view?
+    CGFloat newHistoryHeight = self.history.frame.size.height + kbOffset - kbSize.height;
+    bool endWasVisible = (self.history.contentSize.height - self.history.contentOffset.y <= self.history.frame.size.height);
+    bool endWillBeVisible = (self.history.contentSize.height - self.history.contentOffset.y <= newHistoryHeight);
 
     [UIView animateWithDuration:duration
                           delay:0
                         options:UIViewAnimationOptions(animationCurve << 16)
                      animations:^{
                          self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset - kbSize.height);
+                         if (endWasVisible && ! endWillBeVisible)
+                             self.history.contentOffset = CGPointMake(self.history.contentOffset.x, self.history.contentSize.height - newHistoryHeight);
+                         [self.view layoutIfNeeded]; // Ensures that the frame change is actually animated.
                          kbOffset = kbSize.height;
                      }
                      completion:^(BOOL finished){}];
@@ -270,9 +281,18 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
 
 - (void)keyboardWillHide:(NSNotification*)notification
 {
-    // TODO: Animate
-    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset);
-    kbOffset = 0;
+    NSTimeInterval duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    NSInteger animationCurve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:UIViewAnimationOptions(animationCurve << 16)
+                     animations:^{
+                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset);
+                         [self.view layoutIfNeeded]; // Ensures that the frame change is actually animated.
+                         kbOffset = 0;
+                     }
+                     completion:^(BOOL finished){}];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
