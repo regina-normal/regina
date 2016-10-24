@@ -4403,6 +4403,8 @@
 			children = (
 				0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */,
 				0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */,
+				05FF4D3A1DB6BC1E0056D1EA /* PythonHighlighter.h */,
+				05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */,
 				05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */,
 				05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */,
 				05249EA31DBB8FC9001FE29E /* python27.zip */,
@@ -5334,8 +5336,6 @@
 				05F96C111809F59600C99F96 /* PacketTreeController.h */,
 				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
 				050313C51812DDF0007F0CBE /* PacketViewer.h */,
-				05FF4D3A1DB6BC1E0056D1EA /* PythonHighlighter.h */,
-				05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */,
 				05583A6019B8041F00076187 /* ReginaDocument.h */,
 				05583A6119B8041F00076187 /* ReginaDocument.mm */,
 				05D1C16D19C6542700CF92F2 /* ReginaHelper.h */,
