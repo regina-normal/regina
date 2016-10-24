@@ -70,6 +70,11 @@
      * this cell is not currently visible.
      */
     NSInteger _subtreeRow;
+
+    /**
+     * Are we manually deleting and/or reordering child packets?
+     */
+    bool _changingChildren;
 }
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
@@ -155,6 +160,11 @@
             [_packets addPointer:p];
     }
 
+    // This messes things up a little in iOS8: for example, when a child packet
+    // is deleted through python, then the refreshed table view fails to display
+    // the detail (i.e., # subpackets) for some cells.
+    // This appears to work correctly in iOS9, and since iOS8 is getting quite
+    // old now (Apple is up to iOS10 at the time of writing), we will just leave this be.
     [self.tableView reloadData];
 }
 
@@ -369,8 +379,12 @@
         return;
 
     if (packet == self.node) {
-        // No need to update the table, since this action can only have happened as a result
+        // Only update the table if this action was not a result
         // of user interaction with the table.
+        if (! _changingChildren) {
+            _subtreeRow = 0;
+            [self refreshPackets];
+        }
         [[ReginaHelper document] setDirty];
     } else {
         // One of our children needs a new subtitle (which counts *its* children).
@@ -381,8 +395,12 @@
 }
 
 - (void)childrenWereReordered:(regina::Packet *)packet {
-    // No need to update the table, since this action can only have happened as a result
+    // Only update the table if this action was not a result
     // of user interaction with the table.
+    if (! _changingChildren) {
+        _subtreeRow = 0;
+        [self refreshPackets];
+    }
     [[ReginaHelper document] setDirty];
 }
 
@@ -458,6 +476,8 @@
     int packetIndex = [self packetIndexForPath:self.actionPath];
     regina::Packet* packet = static_cast<regina::Packet*>([_packets pointerAtIndex:packetIndex]);
 
+    _changingChildren = true;
+
     [_packets removePointerAtIndex:packetIndex];
 
     if (_subtreeRow == self.actionPath.row + 1) {
@@ -476,6 +496,8 @@
     }
 
     delete packet;
+
+    _changingChildren = false;
 }
 
 #pragma mark - Table view
