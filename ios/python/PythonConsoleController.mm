@@ -35,10 +35,7 @@
 #import "TextHelper.h"
 #import "packet/script.h"
 
-// TODO: Scroll up when the keyboard is enabled so we can see what we are typing.
-// TODO: Make the input box auto-resize correctly.
 // TODO: Make keyboard permanently visible?
-// TODO: Make <return> process the input immediately.
 // TODO: Make sure the UI DTRT when packets are deleted, etc.
 
 // Information is displayed in dark goldenrod:
@@ -78,7 +75,7 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
 }
 @end
 
-@interface PythonConsoleController () {
+@interface PythonConsoleController () <UITextFieldDelegate> {
     PythonInterpreter* python;
     PythonConsoleStdout* outputStream;
     PythonConsoleStderr* errorStream;
@@ -86,12 +83,14 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
     UIFont* inputFont;
     bool primaryPrompt;
     NSString* lastIndent;
+    CGFloat kbOffset;
 }
 
 @property (weak, nonatomic) IBOutlet UITextView *history;
 @property (weak, nonatomic) IBOutlet UITextField *input;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *prompt;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *closeButton;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (assign, nonatomic) bool working;
 
 @end
@@ -110,6 +109,13 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
     outputStream = [[PythonConsoleStdout alloc] init];
     errorStream = [[PythonConsoleStderr alloc] init];
     outputStream.console = errorStream.console = self;
+
+    [self fixToolbar];
+    self.input.delegate = self;
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
     python = [[PythonInterpreter alloc] initWithOut:outputStream err:errorStream];
     [python importRegina];
@@ -131,6 +137,23 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
     });
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  __nonnull context) {
+        [self fixToolbar];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  __nonnull context) {
+    }];
+}
+
 - (void)setWorking:(bool)working
 {
     // Must be called from the main thread.
@@ -147,6 +170,8 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
         self.input.enabled = true;
         _working = false;
     }
+
+    [self fixToolbar];
 }
 
 - (IBAction)execute:(id)sender
@@ -218,6 +243,42 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
 {
     // Can be called from any thread.
     [self appendHistory:[NSString stringWithUTF8String:data] style:HistoryOutput];
+}
+
+- (void)fixToolbar
+{
+    // Why is 135 the magic number?  I'm not entirely sure... but it lays things out correctly. *sigh*
+    self.input.frame = CGRectMake(0, 0, self.toolbar.frame.size.width - self.closeButton.width - self.prompt.width - 135, self.input.frame.size.height);
+}
+
+- (void)keyboardWillShow:(NSNotification*)notification
+{
+    // TODO: Animate correctly.
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    NSTimeInterval duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    NSInteger animationCurve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:UIViewAnimationOptions(animationCurve << 16)
+                     animations:^{
+                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset - kbSize.height);
+                         kbOffset = kbSize.height;
+                     }
+                     completion:^(BOOL finished){}];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    // TODO: Animate
+    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset);
+    kbOffset = 0;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self execute:self];
+    return YES;
 }
 
 @end

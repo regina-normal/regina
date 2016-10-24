@@ -7809,18 +7809,14 @@
                                         <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="KZX-GG-gfM">
-                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" id="JiY-OG-Gu3" customClass="LongTextField">
+                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" id="JiY-OG-Gu3" customClass="LongTextField">
                                             <rect key="frame" x="62" y="7" width="97" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" enablesReturnKeyAutomatically="YES"/>
-                                            <connections>
-                                                <action selector="execute:" destination="yxp-Bb-yGq" eventType="editingDidEnd" id="cqL-XT-Bcd"/>
-                                            </connections>
+                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="go"/>
                                         </textField>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Dtk-g7-iUe"/>
                                     <barButtonItem title="Close" id="SBV-28-7cR">
                                         <connections>
                                             <action selector="close:" destination="yxp-Bb-yGq" id="wNi-7t-3dd"/>
@@ -7847,6 +7843,7 @@
                         <outlet property="history" destination="4ES-4j-GDB" id="07d-X9-6q0"/>
                         <outlet property="input" destination="JiY-OG-Gu3" id="k1V-jl-Knf"/>
                         <outlet property="prompt" destination="bTc-zE-wlo" id="86J-hc-Ylb"/>
+                        <outlet property="toolbar" destination="sCk-0J-Zqb" id="XBY-Fj-r4C"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h5x-5U-Hyl" userLabel="First Responder" sceneMemberID="firstResponder"/>
