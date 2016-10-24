@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "file/globaldirs.h"
+#include "packet/packet.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include <QFile>

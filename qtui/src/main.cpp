@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "file/globaldirs.h"
+#include "packet/packet.h"
 
 #include "iconcache.h"
 #include "reginamain.h"

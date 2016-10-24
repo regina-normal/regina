@@ -115,7 +115,7 @@ void ReginaMain::newTriangulation() {
 
 void ReginaMain::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
         const QString& dialogTitle) {
-    NewPacketDialog dlg(this, creator, packetTree,
+    NewPacketDialog dlg(this, creator, packetTree.get(),
         treeView->selectedPacket(), parentFilter, dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::Packet* newPacket = dlg.createdPacket();

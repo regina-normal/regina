@@ -37,6 +37,7 @@
 #ifndef __REGINAMAIN_H_
 #define __REGINAMAIN_H_
 
+#include "utilities/safeptr.h"
 #include "pythonmanager.h"
 #include "reginaprefset.h"
 #include "reginaabout.h"
@@ -83,8 +84,12 @@ class ReginaMain : public QMainWindow {
         /**
          * Current data file
          */
-        regina::Packet* packetTree;
-            /**< The current working packet tree. */
+        regina::SafePtr<regina::Packet> packetTree;
+            /**< The current working packet tree.
+                 We keep this as a SafePtr so that python consoles are
+                 not holding the only safe pointers to the root packet
+                 (and therefore python consoles do not have the side-effect
+                 of deleting the root packet when they close). */
         QString localFile;
             /**< Current filename, or null if we don't have one (or if we are
                  trying to hide it from the user, e.g., for census data). */
@@ -410,7 +415,7 @@ inline PythonManager& ReginaMain::getPythonManager() {
 }
 
 inline regina::Packet* ReginaMain::getPacketTree() {
-    return packetTree;
+    return packetTree.get();
 }
 
 #endif

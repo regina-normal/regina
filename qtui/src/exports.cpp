@@ -89,7 +89,7 @@ void ReginaMain::exportSource() {
 
 void ReginaMain::exportFile(const PacketExporter& exporter,
         const QString& fileFilter, const QString& dialogTitle) {
-    ExportDialog dlg(this, packetTree, treeView->selectedPacket(),
+    ExportDialog dlg(this, packetTree.get(), treeView->selectedPacket(),
         exporter.canExport(), exporter.useExportEncoding(), dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::Packet* data = dlg.selectedPacket();

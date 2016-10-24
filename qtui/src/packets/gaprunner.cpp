@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "algebra/ngrouppresentation.h"
+#include "packet/packet.h"
 
 #include "messagelayer.h"
 #include "reginamain.h"

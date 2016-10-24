@@ -37,7 +37,6 @@
 #include "file/globaldirs.h"
 #include "packet/packet.h"
 
-
 #include "pythonoutputstream.h"
 
 #include <boost/python.hpp>
@@ -50,6 +49,9 @@
 #include <compile.h>
 #include <eval.h>
 #include <sysmodule.h>
+
+// For regina's to_held_type:
+#include "../python/safeheldtype.h"
 
 // Cater for the fact that Py_CompileString has changed behaviour
 // between Python 2.2 and Python 2.3.
@@ -353,14 +355,14 @@ bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
 
     bool ok = false;
     try {
-        boost::python::reference_existing_object::
-            apply<regina::Packet*>::type conv;
+        regina::python::to_held_type<>::apply<regina::Packet*>::type conv;
         PyObject* pyValue = conv(value);
 
         if (pyValue) {
             PyObject* nameStr = PyString_FromString(name); // New ref.
-            PyDict_SetItem(mainNamespace, nameStr, conv(value));
+            PyDict_SetItem(mainNamespace, nameStr, pyValue);
             Py_DECREF(nameStr);
+            Py_DECREF(pyValue);
             ok = true;
         }
     } catch (const boost::python::error_already_set&) {
