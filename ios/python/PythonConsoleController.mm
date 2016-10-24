@@ -35,10 +35,7 @@
 #import "TextHelper.h"
 #import "packet/script.h"
 
-// TODO: Make sure the UI DTRT when packets are deleted, etc.
 // TODO: Enable editing of script packets
-// TODO: makeOrphan() in python does not delete!
-// TODO: Safety net: ask first-time python users.
 
 // Information is displayed in dark goldenrod:
 static UIColor* infoColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
