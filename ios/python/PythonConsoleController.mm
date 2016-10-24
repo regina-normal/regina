@@ -137,6 +137,23 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
             [python flush];
         }
 
+        if (self.root) {
+            if ([python setVar:"root" value:self.root]) {
+                if (self.root)
+                    [self appendHistory:@"The (invisible) root of the packet tree is in the variable [root].\n" style:HistoryInfo];
+            } else
+                [self appendHistory:@"ERROR: I could not set the [root] variable.\nPlease report this error to the authors.\n" style:HistoryError];
+        }
+
+        if (self.item) {
+            if ([python setVar:"item" value:self.item]) {
+                if (self.item)
+                    [self appendHistory:[NSString stringWithFormat:@"The selected packet (%@) is in the variable [item].\n",
+                                         [NSString stringWithUTF8String:self.item->label().c_str()]] style:HistoryInfo];
+            } else
+                [self appendHistory:@"ERROR: I could not set the [item] variable.\nPlease report this error to the authors.\n" style:HistoryError];
+        }
+
         [self appendHistory:@"Ready.\n" style:HistoryInfo];
 
         dispatch_async(dispatch_get_main_queue(), ^{
