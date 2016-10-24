@@ -147,13 +147,13 @@
 }
 
 - (void)refreshPackets {
-    if (! _node)
-        return;
-
     _packets = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
-    regina::Packet* p;
-    for (p = _node->firstChild(); p; p = p->nextSibling())
-        [_packets addPointer:p];
+
+    if (_node) {
+        regina::Packet* p;
+        for (p = _node->firstChild(); p; p = p->nextSibling())
+            [_packets addPointer:p];
+    }
 
     [self.tableView reloadData];
 }
@@ -384,6 +384,17 @@
     // No need to update the table, since this action can only have happened as a result
     // of user interaction with the table.
     [[ReginaHelper document] setDirty];
+}
+
+- (void)packetToBeDestroyed:(regina::Packet *)packet {
+    if (packet == _node) {
+        _node = 0;
+        _listener = nil;
+        _packets = nil;
+        self.title = @"⟨deleted⟩";
+        [self.tableView reloadData];
+        self.addButton.enabled = NO;
+    }
 }
 
 #pragma mark - Editable table view

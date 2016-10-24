@@ -76,7 +76,7 @@ enum DocType {
  * time after openWithCompletionHandler returns, and may still be non-null
  * for a little time after closeWithCompletionHandler returns.
  */
-@property (assign, nonatomic, readonly) regina::Packet* tree;
+- (regina::Packet*)tree;
 
 - (id)initWithExample:(Example*)e;
 + (id)documentWithExample:(Example*)e;

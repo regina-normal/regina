@@ -42,6 +42,9 @@
 #import <Python.h>
 #import <boost/python.hpp>
 
+// For regina's to_held_type:
+#import "../python/safeheldtype.h"
+
 // Declare the entry point for Regina's python module:
 PyMODINIT_FUNC initregina();
 
@@ -417,13 +420,14 @@ class PythonOutputStreamObjC {
 
     bool ok = false;
     try {
-        boost::python::reference_existing_object::apply<regina::Packet*>::type conv;
+        regina::python::to_held_type<>::apply<regina::Packet*>::type conv;
         PyObject* pyValue = conv(value);
 
         if (pyValue) {
             PyObject* nameStr = PyString_FromString(name); // New ref.
-            PyDict_SetItem(_mainNamespace, nameStr, conv(value));
+            PyDict_SetItem(_mainNamespace, nameStr, pyValue);
             Py_DECREF(nameStr);
+            Py_DECREF(pyValue);
             ok = true;
         }
     } catch (const boost::python::error_already_set&) {

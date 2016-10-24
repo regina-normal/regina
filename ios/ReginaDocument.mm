@@ -36,6 +36,7 @@
 #import "packet/container.h"
 #import "packet/text.h"
 #import "snappea/snappeatriangulation.h"
+#import "utilities/safeptr.h"
 #import <boost/iostreams/device/array.hpp>
 #import <boost/iostreams/stream.hpp>
 #import <sstream>
@@ -49,6 +50,10 @@ enum DocError {
 
 @interface ReginaDocument () {
     NSString* description;
+
+    // Keeping the packet tree as a SafePtr ensures that python consoles do not
+    // inadvertently delete the entire packet tree when cleaning up after themselves.
+    regina::SafePtr<regina::Packet> _tree;
 }
 @end
 
@@ -67,7 +72,7 @@ enum DocError {
     self = [super initWithFileURL:[NSURL fileURLWithPath:path]];
     if (self) {
         description = e.desc;
-        _tree = 0;
+        _tree.reset();
         _type = DOC_READONLY;
     }
     return self;
@@ -100,7 +105,7 @@ enum DocError {
     self = [super initWithFileURL:u];
     if (self) {
         description = nil;
-        _tree = 0;
+        _tree.reset();
         _type = (moveOk ? DOC_NATIVE : DOC_READONLY);
     }
     return self;
@@ -122,7 +127,7 @@ enum DocError {
     self = [super initWithFileURL:u];
     if (self) {
         description = nil;
-        _tree = 0;
+        _tree.reset();
         _type = DOC_NATIVE;
     }
     return self;
@@ -143,7 +148,7 @@ enum DocError {
     
     self = [super initWithFileURL:url];
     if (self) {
-        _tree = new regina::Container();
+        _tree.reset(new regina::Container());
         regina::Text* text = new regina::Text(
 "Welcome to Regina!\n\n"
 "A single Regina document can contain many objects, also called \"packets\".  "
@@ -154,7 +159,7 @@ enum DocError {
 "If you like, you can delete this packet now.");
 
         text->setLabel("Read me");
-        _tree->insertChildLast(text);
+        _tree.get()->insertChildLast(text);
         _type = DOC_NATIVE;
         
         [self saveToURL:url forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
@@ -175,14 +180,11 @@ enum DocError {
     return [[ReginaDocument alloc] initNewWithCompletionHandler:completionHandler];
 }
 
-- (void)dealloc {
-    if (_tree) {
-        delete _tree;
-        NSLog(@"Deleted packet tree.");
-    }
-}
-
 #pragma mark Properties
+
+- (regina::Packet*)tree {
+    return _tree.get();
+}
 
 - (NSString *)localizedName {
     if (description)
@@ -223,14 +225,14 @@ enum DocError {
                                         userInfo:[NSDictionary dictionaryWithObject:@"Could not read SnapPea data file" forKey:NSLocalizedDescriptionKey]];
             return NO;
         }
-        _tree = new regina::Container();
-        _tree->setLabel("SnapPea import");
-        _tree->insertChildLast(tri);
+        _tree.reset(new regina::Container());
+        _tree.get()->setLabel("SnapPea import");
+        _tree.get()->insertChildLast(tri);
         
         _type = DOC_FOREIGN;
     } else {
         boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>(data.bytes), data.length);
-        _tree = regina::open(s);
+        _tree.reset(regina::open(s));
         if (! _tree) {
             *outError = [NSError errorWithDomain:@"ReginaDocument"
                                             code:DOC_ERR_OPEN_FAILED
@@ -253,7 +255,7 @@ enum DocError {
     
     NSLog(@"Preparing to save: %@", self.fileURL);
     std::ostringstream s;
-    if (_tree->save(s)) {
+    if (_tree.get()->save(s)) {
         const std::string& str = s.str();
         NSLog(@"Saved to memory, now writing to file.");
         return [NSData dataWithBytes:str.c_str() length:str.length()];

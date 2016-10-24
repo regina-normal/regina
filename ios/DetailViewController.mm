@@ -319,6 +319,7 @@
 
 - (void)packetToBeDestroyed:(regina::Packet *)packet
 {
+    // TODO: Check that this works via python.
     if (packet == self.packet)
         self.packet = nil;
 }
