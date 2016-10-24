@@ -50,9 +50,10 @@
 
 #pragma mark - Script view controller
 
-@interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate, NSTextStorageDelegate> {
+@interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, NSTextStorageDelegate> {
     CGFloat variableHeaderHeight;
     PythonHighlighter* highlighter;
+    BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
@@ -71,16 +72,76 @@
     self.variables.dataSource = self;
 
     highlighter = [[PythonHighlighter alloc] init];
+    self.script.delegate = self;
     self.script.textStorage.delegate = highlighter;
 
     [self reloadPacket];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)reloadPacket
 {
+    if (myEdit)
+        return;
+
     self.script.text = [NSString stringWithUTF8String:self.packet->text().c_str()];
     [self.script scrollRangeToVisible:NSMakeRange(0, 0)];
     [self.variables reloadData];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    myEdit = YES;
+    self.packet->setText([textView.text UTF8String]);
+    myEdit = NO;
+}
+
+- (void)ensureCursorVisible
+{
+    // Sigh.  If we call [self.detail scrollRangeToVisible:self.detail.selectedRange],
+    // the cursor does not move up above the keyboard (happens in both iOS 7 and iOS 8).
+    // Scroll manually instead.
+    CGRect caret = [self.script caretRectForPosition:self.script.selectedTextRange.end];
+    CGFloat overflow = caret.origin.y + caret.size.height - (self.script.contentOffset.y + self.script.bounds.size.height - self.script.contentInset.bottom /* keyboard height */);
+    if (overflow > 0) {
+        // Add a few points more than the required offset.
+        [UIView animateWithDuration:.1 animations:^{
+            self.script.contentOffset = CGPointMake(self.script.contentOffset.x,
+                                                    self.script.contentOffset.y + overflow + 7);
+        }];
+    }
+}
+
+- (void)keyboardDidShow:(NSNotification*)notification
+{
+    // Find the gap between the text view and the bottom of the screen.
+    CGFloat gap = self.script.superview.frame.size.height - self.script.frame.origin.y - self.script.frame.size.height;
+
+    // On iOS 8 (but not all orientations for iOS 7), what we need is kbSize.height.
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+
+    self.script.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height - gap, 0);
+    self.script.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height - gap, 0);
+
+    [self ensureCursorVisible];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    self.script.contentInset = UIEdgeInsetsZero;
+    self.script.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
 - (IBAction)run:(id)sender {

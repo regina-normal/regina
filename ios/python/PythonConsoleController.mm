@@ -35,8 +35,6 @@
 #import "TextHelper.h"
 #import "packet/script.h"
 
-// TODO: Enable editing of script packets
-
 // Information is displayed in dark goldenrod:
 static UIColor* infoColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
