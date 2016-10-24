@@ -35,9 +35,7 @@
 #import "TextHelper.h"
 #import "packet/script.h"
 
-// TODO: Don't hide-and-display the keyboard during short processing.
 // TODO: Make sure the UI DTRT when packets are deleted, etc.
-
 // TODO: Enable editing of script packets
 // TODO: Allow python consoles to be opened elsewhere.
 
@@ -84,6 +82,7 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
     PythonConsoleStderr* errorStream;
     UIFont* outputFont;
     UIFont* inputFont;
+    UIFont* entryFont;
     bool primaryPrompt;
     NSString* lastIndent;
     CGFloat kbOffset;
@@ -106,13 +105,19 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
     lastIndent = @"";
     self.working = true;
 
+    // Make the prompt use a fixed-width font, so that when the prompt
+    // changes we do not have to worry about redoing the toolbar layout.
+    [self.prompt setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Menlo" size:14]} forState:UIControlStateNormal];
+
     outputFont = [UIFont fontWithName:@"Menlo" size:12];
     inputFont = [UIFont fontWithName:@"Menlo-Bold" size:12];
+    entryFont = [UIFont fontWithName:@"Menlo" size:12];
 
     outputStream = [[PythonConsoleStdout alloc] init];
     errorStream = [[PythonConsoleStderr alloc] init];
     outputStream.console = errorStream.console = self;
 
+    self.input.font = entryFont;
     [self fixToolbar];
     self.input.delegate = self;
 
@@ -161,17 +166,19 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
 {
     // Must be called from the main thread.
     if (working) {
+        self.input.attributedText = [TextHelper dimString:@"Processing..."];
         _working = true;
-        self.input.enabled = false;
+
         self.closeButton.enabled = false;
-        self.prompt.title = @"     ";
-        self.input.text = @"Processing...";
+        self.prompt.title = @"   ";
     } else {
         self.prompt.title = (primaryPrompt ? @">>>" : @"...");
-        self.input.text = lastIndent;
         self.closeButton.enabled = true;
         self.input.enabled = true;
+
         _working = false;
+        self.input.text = lastIndent;
+        self.input.textColor = [UIColor blackColor]; // Override the grey from "Processing".
     }
 
     [self fixToolbar];
@@ -299,6 +306,16 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
 {
     [self execute:self];
     return YES;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    return (! self.working);
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    return (! self.working);
 }
 
 @end
