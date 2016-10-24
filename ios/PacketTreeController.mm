@@ -72,6 +72,8 @@
     NSInteger _subtreeRow;
 }
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
+
 @end
 
 @implementation PacketTreeController
