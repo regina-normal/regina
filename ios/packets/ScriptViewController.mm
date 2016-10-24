@@ -84,9 +84,7 @@
 }
 
 - (IBAction)run:(id)sender {
-    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"pythonConsole"];
-    static_cast<PythonConsoleController*>(sheet).script = self.packet;
-    [self presentViewController:sheet animated:YES completion:nil];
+    [PythonConsoleController openConsoleFromViewController:self root:nil item:nil script:self.packet];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

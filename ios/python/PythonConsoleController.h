@@ -30,33 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 namespace regina {
     class Packet;
     class Script;
 }
 
-/**
- * Represents different visual styles for the text that is logged in the
- * scrollable history area for a Python console.
- */
-enum HistoryStyle {
-    HistoryInput,
-    HistoryOutput,
-    HistoryInfo,
-    HistoryError
-};
-
 @interface PythonConsoleController : UIViewController
-@property (assign, nonatomic) regina::Packet* root;
-@property (assign, nonatomic) regina::Packet* item;
-@property (assign, nonatomic) regina::Script* script;
 
 /**
- * Logs the given text at the end of the scrollable history area.
- * This may be called from any thread.
+ * Opens a new Python console.
  */
-- (void)appendHistory:(NSString*)text style:(HistoryStyle)style;
++ (void)openConsoleFromViewController:(UIViewController*)c root:(regina::Packet*)root item:(regina::Packet*)item script:(regina::Script*)script;
 
 @end

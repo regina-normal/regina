@@ -37,43 +37,30 @@
 
 // TODO: Make sure the UI DTRT when packets are deleted, etc.
 // TODO: Enable editing of script packets
-// TODO: Allow python consoles to be opened elsewhere.
+// TODO: makeOrphan() in python does not delete!
+// TODO: Safety net: ask first-time python users.
 
 // Information is displayed in dark goldenrod:
 static UIColor* infoColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
 
-@interface LongTextField : UITextField
-- (CGSize)sizeThatFits:(CGSize)size;
-@end
-
-@implementation LongTextField
-- (CGSize)sizeThatFits:(CGSize)size
-{
-    return size;
-}
-@end
+/**
+ * Represents different visual styles for the text that is logged in the
+ * scrollable history area for a Python console.
+ */
+enum HistoryStyle {
+    HistoryInput,
+    HistoryOutput,
+    HistoryInfo,
+    HistoryError
+};
 
 @interface PythonConsoleStdout : NSObject<PythonOutputStream>
 @property (weak, nonatomic) PythonConsoleController* console;
 @end
 
-@implementation PythonConsoleStdout
-- (void)processOutput:(const char *)data
-{
-    [self.console appendHistory:[NSString stringWithUTF8String:data] style:HistoryOutput];
-}
-@end
-
 @interface PythonConsoleStderr : NSObject<PythonOutputStream>
 @property (weak, nonatomic) PythonConsoleController* console;
-@end
-
-@implementation PythonConsoleStderr
-- (void)processOutput:(const char *)data
-{
-    [self.console appendHistory:[NSString stringWithUTF8String:data] style:HistoryError];
-}
 @end
 
 @interface PythonConsoleController () <UITextFieldDelegate> {
@@ -95,9 +82,38 @@ static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (assign, nonatomic) bool working;
 
+@property (assign, nonatomic) regina::Packet* root;
+@property (assign, nonatomic) regina::Packet* item;
+@property (assign, nonatomic) regina::Script* script;
+
+- (void)appendHistory:(NSString*)text style:(HistoryStyle)style;
+
+@end
+
+@implementation PythonConsoleStdout
+- (void)processOutput:(const char *)data
+{
+    [self.console appendHistory:[NSString stringWithUTF8String:data] style:HistoryOutput];
+}
+@end
+
+@implementation PythonConsoleStderr
+- (void)processOutput:(const char *)data
+{
+    [self.console appendHistory:[NSString stringWithUTF8String:data] style:HistoryError];
+}
 @end
 
 @implementation PythonConsoleController
+
++ (void)openConsoleFromViewController:(UIViewController *)c root:(regina::Packet *)root item:(regina::Packet *)item script:(regina::Script *)script
+{
+    PythonConsoleController* sheet = static_cast<PythonConsoleController*>([c.storyboard instantiateViewControllerWithIdentifier:@"pythonConsole"]);
+    sheet.root = root;
+    sheet.item = item;
+    sheet.script = script;
+    [c presentViewController:sheet animated:YES completion:nil];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {

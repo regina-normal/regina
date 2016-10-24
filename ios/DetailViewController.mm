@@ -298,11 +298,7 @@
 
 - (void)pythonConsole
 {
-    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"pythonConsole"];
-    static_cast<PythonConsoleController*>(sheet).item = _packet;
-    if (_doc)
-        static_cast<PythonConsoleController*>(sheet).root = _doc.tree;
-    [self presentViewController:sheet animated:YES completion:nil];
+    [PythonConsoleController openConsoleFromViewController:self root:(_doc ? _doc.tree : nil) item:_packet script:nil];
 }
 
 #pragma mark - Packet listener
