@@ -173,8 +173,8 @@ void addTreeDecomposition() {
         .def(init<const regina::NTriangulation&>())
         .def(init<const regina::NTriangulation&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::Dim2Triangulation&>())
-        .def(init<const regina::Dim2Triangulation&,
+        .def(init<const regina::Triangulation<2>&>())
+        .def(init<const regina::Triangulation<2>&,
             regina::TreeDecompositionAlg>())
         .def(init<const regina::Dim4Triangulation&>())
         .def(init<const regina::Dim4Triangulation&,

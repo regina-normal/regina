@@ -51,14 +51,10 @@ namespace regina {
 
 class NBoundaryComponent;
 
-template <int> class Component;
 template <int> class Isomorphism;
-template <int> class Simplex;
-template <int> class Triangulation;
 typedef Component<3> NComponent;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
-typedef Triangulation<2> Dim2Triangulation;
 typedef Triangulation<3> NTriangulation;
 
 /**
@@ -125,7 +121,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
             /**< A broad categorisation of the topology of the vertex link. */
         long linkEulerChar_;
             /**< Specifies the Euler characteristic of the vertex link. */
-        Dim2Triangulation* linkTri_;
+        Triangulation<2>* linkTri_;
             /**< A triangulation of the vertex link.  This will only be
                  constructed on demand; until then it will be null. */
 
@@ -209,7 +205,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          *
          * @return the read-only triangulated link of the vertex.
          */
-        const Dim2Triangulation* buildLink() const;
+        const Triangulation<2>* buildLink() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -265,7 +261,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          *
          * @return a newly constructed triangulation of the link of this vertex.
          */
-        Dim2Triangulation* buildLinkDetail(bool labels = true,
+        Triangulation<2>* buildLinkDetail(bool labels = true,
             NIsomorphism** inclusion = 0) const;
 
         /**
@@ -373,7 +369,7 @@ inline NVertex::LinkType Face<3, 0>::link() const {
     return link_;
 }
 
-inline const Dim2Triangulation* Face<3, 0>::buildLink() const {
+inline const Triangulation<2>* Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // This is a construct-on-demand member: cast away constness to
         // set it here.

@@ -76,7 +76,7 @@ static NSArray* _allRows;
                                          icon:@"Container"],
                     [NewPacketRow rowWithType:regina::PACKET_DIM2TRIANGULATION
                                         label:@"2-D triangulation"
-                                         icon:@"Dim2Triangulation"],
+                                         icon:@"Triangulation2"],
                     [NewPacketRow rowWithType:regina::PACKET_TRIANGULATION
                                         label:@"3-D triangulation"
                                          icon:@"Triangulation"],

@@ -75,7 +75,7 @@
 
 - (regina::Packet*)create
 {
-    regina::Packet* ans = new regina::Dim2Triangulation();
+    regina::Packet* ans = new regina::Triangulation<2>();
     ans->setLabel("2-D triangulation");
     return ans;
 }
@@ -84,7 +84,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
+typedef regina::Triangulation<2>* (*Dim2TriangulationCreator)();
 
 /**
  * Represents a single option in the examples picker.
@@ -95,7 +95,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
 @property (assign, nonatomic) Dim2TriangulationCreator creator;
 
 + (id)exampleWithName:(NSString*)name creator:(Dim2TriangulationCreator)creator;
-- (regina::Dim2Triangulation*)create;
+- (regina::Triangulation<2>*)create;
 
 @end
 
@@ -111,9 +111,9 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     return e;
 }
 
-- (regina::Dim2Triangulation *)create
+- (regina::Triangulation<2> *)create
 {
-    regina::Dim2Triangulation* ans = (*self.creator)();
+    regina::Triangulation<2>* ans = (*self.creator)();
     ans->setLabel(self.name.UTF8String);
     return ans;
 }
@@ -324,7 +324,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
         return 0;
     }
     
-    regina::Dim2Triangulation* t = regina::Dim2Triangulation::fromIsoSig(sig);
+    regina::Triangulation<2>* t = regina::Triangulation<2>::fromIsoSig(sig);
     if (! t) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Invalid Isomorphism Signature"

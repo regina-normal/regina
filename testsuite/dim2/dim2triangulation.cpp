@@ -38,7 +38,7 @@
 #include "testsuite/generic/generictriangulation.h"
 #include "testsuite/dim2/testdim2.h"
 
-using regina::Dim2Triangulation;
+using regina::Triangulation;
 using regina::Dim2ExampleTriangulation;
 
 class Dim2TriangulationTest : public TriangulationTest<2> {
@@ -56,43 +56,43 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
 
     private:
         // Trivial:
-        Dim2Triangulation empty;
+        Triangulation<2> empty;
             /**< An empty triangulation. */
 
         // Closed orientable:
-        Dim2Triangulation s2;
+        Triangulation<2> s2;
             /**< A 2-sphere with two triangles. */
-        Dim2Triangulation s2Tet;
+        Triangulation<2> s2Tet;
             /**< A 2-sphere with four triangles. */
-        Dim2Triangulation s2Oct;
+        Triangulation<2> s2Oct;
             /**< A 2-sphere with eight triangles. */
-        Dim2Triangulation torus;
+        Triangulation<2> torus;
             /**< A torus with two triangles. */
-        Dim2Triangulation torus2;
+        Triangulation<2> torus2;
             /**< A genus two torus. */
 
         // Closed non-orientable:
-        Dim2Triangulation rp2;
+        Triangulation<2> rp2;
             /**< A projective plane with two triangles. */
-        Dim2Triangulation kb;
+        Triangulation<2> kb;
             /**< A Klein bottle with two triangles. */
 
         // Bounded:
-        Dim2Triangulation disc;
+        Triangulation<2> disc;
             /**< A disc with one triangle. */
-        Dim2Triangulation annulus;
+        Triangulation<2> annulus;
             /**< An annulus with two triangles. */
-        Dim2Triangulation mobius;
+        Triangulation<2> mobius;
             /**< A Mobius band with one triangle. */
 
         // Disconnected triangulations:
-        Dim2Triangulation disjoint2;
+        Triangulation<2> disjoint2;
             /**< A disjoint union of two triangulations. */
-        Dim2Triangulation disjoint3;
+        Triangulation<2> disjoint3;
             /**< A disjoint union of three triangulations. */
 
     public:
-        void copyAndDelete(Dim2Triangulation& dest, Dim2Triangulation* source) {
+        void copyAndDelete(Triangulation<2>& dest, Triangulation<2>* source) {
             dest.insertTriangulation(*source);
             dest.setLabel(source->label());
             delete source;
@@ -175,10 +175,10 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
             testManualAll(verifyOrient);
         }
 
-        static void verifyEltMove13(Dim2Triangulation* tri) {
+        static void verifyEltMove13(Triangulation<2>* tri) {
             unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
-                Dim2Triangulation large(*tri);
+                Triangulation<2> large(*tri);
                 large.oneThreeMove(large.triangle(i));
 
                 if (large.size() != n + 2) {

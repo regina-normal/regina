@@ -54,7 +54,6 @@
 #include "testsuite/generic/generictriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
-using regina::Dim2Triangulation;
 using regina::NAbelianGroup;
 using regina::NBoundaryComponent;
 using regina::NComponent;
@@ -68,6 +67,7 @@ using regina::NSignature;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangle;
+using regina::Triangulation;
 using regina::NTriangulation;
 using regina::NVertex;
 
@@ -1451,8 +1451,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                 NVertex* v = tri->vertex(i);
                 NIsomorphism* iso;
 
-                const Dim2Triangulation* link = v->buildLink();
-                Dim2Triangulation* link2 = v->buildLinkDetail(true, &iso);
+                const Triangulation<2>* link = v->buildLink();
+                Triangulation<2>* link2 = v->buildLinkDetail(true, &iso);
 
                 if (link->size() != v->degree()) {
                     std::ostringstream msg;

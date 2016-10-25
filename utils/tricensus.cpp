@@ -93,7 +93,7 @@ int runCensus();
 struct Dim2Params {
     typedef regina::Dim2EdgePairing Pairing;
     typedef regina::Dim2GluingPermSearcher GluingPermSearcher;
-    typedef regina::Dim2Triangulation Triangulation;
+    typedef regina::Triangulation<2> Triangulation;
 
     inline static void findAllPerms(const Pairing* p,
             const Pairing::IsoList* autos, bool orientableOnly,

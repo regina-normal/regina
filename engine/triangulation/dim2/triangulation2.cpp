@@ -40,7 +40,7 @@
 namespace regina {
 
 Triangulation<2>::Triangulation(const std::string& description) {
-    Dim2Triangulation* attempt;
+    Triangulation<2>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
         cloneFrom(*attempt);
@@ -159,7 +159,7 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
     out << "  </triangles>\n";
 }
 
-void Triangulation<2>::cloneFrom(const Dim2Triangulation& X) {
+void Triangulation<2>::cloneFrom(const Triangulation<2>& X) {
     ChangeEventSpan span(this);
 
     removeAllTriangles();

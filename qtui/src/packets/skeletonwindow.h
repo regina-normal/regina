@@ -49,7 +49,6 @@ class QTreeView;
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<2> Dim2Triangulation;
     typedef Triangulation<3> NTriangulation;
     typedef Triangulation<4> Dim4Triangulation;
 };
@@ -338,13 +337,13 @@ class Dim2VertexModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim2Triangulation* tri;
+        regina::Triangulation<2>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim2VertexModel(regina::Dim2Triangulation* tri_);
+        Dim2VertexModel(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -372,13 +371,13 @@ class Dim2EdgeModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim2Triangulation* tri;
+        regina::Triangulation<2>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim2EdgeModel(regina::Dim2Triangulation* tri_);
+        Dim2EdgeModel(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -406,13 +405,13 @@ class Dim2ComponentModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim2Triangulation* tri;
+        regina::Triangulation<2>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim2ComponentModel(regina::Dim2Triangulation* tri_);
+        Dim2ComponentModel(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -440,13 +439,13 @@ class Dim2BoundaryComponentModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim2Triangulation* tri;
+        regina::Triangulation<2>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim2BoundaryComponentModel(regina::Dim2Triangulation* tri_);
+        Dim2BoundaryComponentModel(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -727,17 +726,17 @@ inline ComponentModel::ComponentModel(regina::NTriangulation* tri_) :
 inline BoundaryComponentModel::BoundaryComponentModel(
         regina::NTriangulation* tri_) : tri(tri_) {}
 
-inline Dim2VertexModel::Dim2VertexModel(regina::Dim2Triangulation* tri_) :
+inline Dim2VertexModel::Dim2VertexModel(regina::Triangulation<2>* tri_) :
         tri(tri_) {}
 
-inline Dim2EdgeModel::Dim2EdgeModel(regina::Dim2Triangulation* tri_) :
+inline Dim2EdgeModel::Dim2EdgeModel(regina::Triangulation<2>* tri_) :
         tri(tri_) {}
 
-inline Dim2ComponentModel::Dim2ComponentModel(regina::Dim2Triangulation* tri_) :
+inline Dim2ComponentModel::Dim2ComponentModel(regina::Triangulation<2>* tri_) :
         tri(tri_) {}
 
 inline Dim2BoundaryComponentModel::Dim2BoundaryComponentModel(
-        regina::Dim2Triangulation* tri_) : tri(tri_) {}
+        regina::Triangulation<2>* tri_) : tri(tri_) {}
 
 inline Dim4VertexModel::Dim4VertexModel(regina::Dim4Triangulation* tri_) :
         tri(tri_) {}

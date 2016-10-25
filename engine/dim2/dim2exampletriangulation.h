@@ -45,7 +45,6 @@
 namespace regina {
 
 template <int> class Triangulation;
-typedef Triangulation<2> Dim2Triangulation;
 
 /**
  * \weakgroup triangulation
@@ -80,7 +79,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* orientable(
+        static Triangulation<2>* orientable(
             unsigned genus, unsigned punctures);
 
         /**
@@ -94,7 +93,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* nonOrientable(
+        static Triangulation<2>* nonOrientable(
             unsigned genus, unsigned punctures);
 
         /**
@@ -103,7 +102,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* sphere();
+        static Triangulation<2>* sphere();
 
         /**
          * Returns the four-triangle 2-sphere formed from the boundary
@@ -112,7 +111,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* sphereTetrahedron();
+        static Triangulation<2>* sphereTetrahedron();
 
         /**
          * Returns the eight-triangle 2-sphere formed from the boundary
@@ -121,7 +120,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* sphereOctahedron();
+        static Triangulation<2>* sphereOctahedron();
 
         /**
          * Returns a one-triangle disc.
@@ -129,7 +128,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* disc();
+        static Triangulation<2>* disc();
 
         /**
          * Returns a two-triangle annulus.
@@ -137,7 +136,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* annulus();
+        static Triangulation<2>* annulus();
 
         /**
          * Returns a one-triangle Mobius band.
@@ -145,7 +144,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* mobius();
+        static Triangulation<2>* mobius();
 
         /**
          * Returns a two-triangle torus.
@@ -153,7 +152,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* torus();
+        static Triangulation<2>* torus();
 
         /**
          * Returns a two-triangle projective plane.
@@ -161,7 +160,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* rp2();
+        static Triangulation<2>* rp2();
 
         /**
          * Returns a two-triangle Klein bottle.
@@ -169,7 +168,7 @@ class REGINA_API Dim2ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim2Triangulation* kb();
+        static Triangulation<2>* kb();
 };
 
 /*@}*/

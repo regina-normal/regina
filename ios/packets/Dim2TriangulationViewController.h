@@ -34,12 +34,11 @@
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<2> Dim2Triangulation;
 }
 
 @interface Dim2TriangulationViewController : PacketTabBarController <PacketEditor>
 
-@property (assign, nonatomic) regina::Dim2Triangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<2>* packet;
 
 - (void)updateHeader:(UILabel*)header;
 

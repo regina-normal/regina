@@ -76,7 +76,7 @@ void ctrlFarmPartialSearch(const typename CensusType::GluingPermSearcher*,
 struct Dim2Params {
     typedef regina::Dim2EdgePairing Pairing;
     typedef regina::Dim2GluingPermSearcher GluingPermSearcher;
-    typedef regina::Dim2Triangulation Triangulation;
+    typedef regina::Triangulation<2> Triangulation;
 
     inline static GluingPermSearcher* bestSearcher(Pairing* p,
             bool orientableOnly, bool /* finiteOnly */, int /* whichPurge */) {

@@ -62,10 +62,10 @@ void NVertex::writeTextLong(std::ostream& out) const {
         out << "  " << emb << std::endl;
 }
 
-Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
+Triangulation<2>* NVertex::buildLinkDetail(bool labels,
         NIsomorphism** inclusion) const {
     // Build the triangulation.
-    Dim2Triangulation* ans = new Dim2Triangulation();
+    Triangulation<2>* ans = new Triangulation<2>();
     Packet::ChangeEventSpan span(ans);
 
     if (inclusion)

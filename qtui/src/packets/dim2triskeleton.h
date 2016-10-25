@@ -42,9 +42,7 @@
 
 namespace regina {
     class Packet;
-
     template <int> class Triangulation;
-    typedef Triangulation<2> Dim2Triangulation;
 };
 
 /**
@@ -55,7 +53,7 @@ class Dim2TriSkeletonUI : public PacketTabbedViewerTab {
         /**
          * Constructor.
          */
-        Dim2TriSkeletonUI(regina::Dim2Triangulation* packet,
+        Dim2TriSkeletonUI(regina::Triangulation<2>* packet,
                 PacketTabbedUI* useParentUI);
 };
 
@@ -69,7 +67,7 @@ class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Dim2Triangulation* tri;
+        regina::Triangulation<2>* tri;
 
         /**
          * Internal components
@@ -91,7 +89,7 @@ class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        Dim2TriSkelCompUI(regina::Dim2Triangulation* packet,
+        Dim2TriSkelCompUI(regina::Triangulation<2>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**

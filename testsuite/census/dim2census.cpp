@@ -40,7 +40,7 @@
 using regina::BoolSet;
 using regina::Dim2EdgePairing;
 using regina::Dim2GluingPermSearcher;
-using regina::Dim2Triangulation;
+using regina::Triangulation;
 
 class Dim2CensusTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Dim2CensusTest);
@@ -108,7 +108,7 @@ class Dim2CensusTest : public CppUnit::TestFixture {
                 void* spec) {
             if (perms) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Dim2Triangulation* tri = perms->triangulate();
+                Triangulation<2>* tri = perms->triangulate();
                 if ((! (s->minimal_ && ! tri->isMinimal())) &&
                         (! (s->orbl_ == BoolSet::sTrue &&
                             ! tri->isOrientable())) &&

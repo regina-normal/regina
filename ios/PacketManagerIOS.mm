@@ -53,7 +53,7 @@
         case regina::PACKET_CONTAINER:
             return [UIImage imageNamed:@"Container"];
         case regina::PACKET_DIM2TRIANGULATION:
-            return [UIImage imageNamed:@"Dim2Triangulation"];
+            return [UIImage imageNamed:@"Triangulation2"];
         case regina::PACKET_TRIANGULATION:
             return [UIImage imageNamed:@"Triangulation"];
         case regina::PACKET_DIM4TRIANGULATION:

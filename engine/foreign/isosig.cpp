@@ -68,7 +68,7 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
 
     std::string isoSig;
     std::string label;
-    Dim2Triangulation* tri2;
+    Triangulation<2>* tri2;
     NTriangulation* tri3;
     Dim4Triangulation* tri4;
 
@@ -99,7 +99,7 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
         if (! isoSig.empty()) {
             // Process this isomorphism signature.
             if (dimension == 2) {
-                if ((tri2 = Dim2Triangulation::fromIsoSig(isoSig))) {
+                if ((tri2 = Triangulation<2>::fromIsoSig(isoSig))) {
                     tri2->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri2);
                 } else

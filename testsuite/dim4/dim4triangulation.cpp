@@ -48,7 +48,6 @@
 #include "testsuite/generic/generictriangulation.h"
 #include "testsuite/dim4/testdim4.h"
 
-using regina::Dim2Triangulation;
 using regina::Dim4BoundaryComponent;
 using regina::Dim4Edge;
 using regina::Dim4ExampleTriangulation;
@@ -65,6 +64,7 @@ using regina::Perm;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
+using regina::Triangulation;
 using regina::NVertex;
 
 class Dim4TriangulationTest : public TriangulationTest<4> {
@@ -1682,8 +1682,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 Dim4Edge* e = tri->edge(i);
                 Dim4Isomorphism* iso;
 
-                const Dim2Triangulation* link = e->buildLink();
-                Dim2Triangulation* link2 = e->buildLinkDetail(true, &iso);
+                const Triangulation<2>* link = e->buildLink();
+                Triangulation<2>* link2 = e->buildLinkDetail(true, &iso);
 
                 if (link->countTriangles() != e->degree()) {
                     std::ostringstream msg;

@@ -123,10 +123,10 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     // Algebra:
     addNGroupPresentation(runner);
 
-    // Dim2Triangulation:
+    // 2-manifold triangulations:
     addDim2Triangulation(runner);
 
-    // Triangulation:
+    // 3-manifold triangulations:
     addNTriangulation(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);

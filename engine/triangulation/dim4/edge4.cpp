@@ -41,10 +41,10 @@ Face<4, 1>::~Face() {
     delete link_;
 }
 
-Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
+Triangulation<2>* Face<4, 1>::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
     // Build the triangulation.
-    Dim2Triangulation* ans = new Dim2Triangulation();
+    Triangulation<2>* ans = new Triangulation<2>();
     Packet::ChangeEventSpan span(ans);
 
     if (inclusion)

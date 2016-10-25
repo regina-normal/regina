@@ -48,7 +48,7 @@
 #include <QStackedWidget>
 
 using regina::Dim2ExampleTriangulation;
-using regina::Dim2Triangulation;
+using regina::Triangulation;
 
 namespace {
     /**
@@ -240,7 +240,7 @@ regina::Packet* Dim2TriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        Dim2Triangulation* ans = new Dim2Triangulation();
+        Triangulation<2>* ans = new Triangulation<2>();
         ans->setLabel("2-D triangulation");
         return ans;
     } else if (typeId == TRI_OR) {
@@ -276,7 +276,7 @@ regina::Packet* Dim2TriangulationCreator::createPacket(regina::Packet*,
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        Dim2Triangulation* ans = Dim2Triangulation::fromIsoSig(sig);
+        Triangulation<2>* ans = Triangulation<2>::fromIsoSig(sig);
         if (ans) {
             ans->setLabel(sig);
             return ans;

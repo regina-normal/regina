@@ -138,7 +138,7 @@
         return;
     }
     
-    regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(*self.packet->vertex(seln.row - 1)->buildLink());
+    regina::Triangulation<2>* ans = new regina::Triangulation<2>(*self.packet->vertex(seln.row - 1)->buildLink());
     ans->setLabel([NSString stringWithFormat:@"Link of vertex %zd", seln.row - 1].UTF8String);
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];

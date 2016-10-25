@@ -52,19 +52,19 @@ namespace {
         return ans;
     }
 
-    regina::Dim2Triangulation* vertex_buildLink(const NVertex* v) {
-        return new regina::Dim2Triangulation(*(v->buildLink()));
+    regina::Triangulation<2>* vertex_buildLink(const NVertex* v) {
+        return new regina::Triangulation<2>(*(v->buildLink()));
     }
 
     boost::python::tuple vertex_buildLinkDetail_bool(const NVertex* v,
             bool labels = true) {
         regina::NIsomorphism* iso;
-        regina::Dim2Triangulation* link = new regina::Dim2Triangulation(
+        regina::Triangulation<2>* link = new regina::Triangulation<2>(
             *(v->buildLinkDetail(labels, &iso)));
         return boost::python::make_tuple(
             boost::python::object(boost::python::handle<>(
                 regina::python::to_held_type<>::
-                apply<regina::Dim2Triangulation*>::type()(link))),
+                apply<regina::Triangulation<2>*>::type()(link))),
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
                 apply<regina::NIsomorphism*>::type()(iso))));

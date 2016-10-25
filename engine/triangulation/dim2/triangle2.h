@@ -49,9 +49,6 @@
 
 namespace regina {
 
-template <int> class Triangulation;
-typedef Triangulation<2> Dim2Triangulation;
-
 /**
  * \weakgroup dim2
  * @{
@@ -68,7 +65,7 @@ typedef Triangulation<2> Dim2Triangulation;
  * triangle and its sub-faces integrate into the overall skeletal structure
  * of the triangulation.
  *
- * An implementation note: the Dim2Triangulation class is responsible for
+ * An implementation note: the Triangulation<2> class is responsible for
  * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
@@ -94,7 +91,7 @@ class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
          *
          * @param tri the triangulation to which the new triangle belongs.
          */
-        Simplex(Dim2Triangulation* tri);
+        Simplex(Triangulation<2>* tri);
         /**
          * Creates a new triangle with the given description and
          * no edges joined to anything.
@@ -102,7 +99,7 @@ class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
          * @param desc the description to give the new triangle.
          * @param tri the triangulation to which the new triangle belongs.
          */
-        Simplex(const std::string& desc, Dim2Triangulation* tri);
+        Simplex(const std::string& desc, Triangulation<2>* tri);
 
     friend class Triangulation<2>;
     friend class detail::TriangulationBase<2>;
@@ -126,12 +123,12 @@ inline int Simplex<2>::adjacentEdge(int edge) const {
     return adjacentFacet(edge);
 }
 
-inline Simplex<2>::Simplex(Dim2Triangulation* tri) :
+inline Simplex<2>::Simplex(Triangulation<2>* tri) :
         detail::SimplexBase<2>(tri) {
 }
 
 inline Simplex<2>::Simplex(const std::string& desc,
-        Dim2Triangulation* tri) : detail::SimplexBase<2>(desc, tri) {
+        Triangulation<2>* tri) : detail::SimplexBase<2>(desc, tri) {
 }
 
 } // namespace regina

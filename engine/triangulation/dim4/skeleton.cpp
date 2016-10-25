@@ -435,7 +435,7 @@ void Dim4Triangulation::calculateEdgeLinks() {
         if (e->hasBadIdentification() && ! e->hasBadLink()) {
             // Calling buildLink() causes the edge link to be cached by
             // Dim4Edge.
-            const Dim2Triangulation* link = e->buildLink();
+            const Triangulation<2>* link = e->buildLink();
             if ((link->isClosed() && link->eulerChar() != 2) ||
                     ((! link->isClosed()) && link->eulerChar() != 1))
                 e->markBadLink();

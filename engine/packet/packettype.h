@@ -121,8 +121,7 @@ enum PacketType {
      */
     REGINA_DEPRECATED_ENUM PACKET_NORMALHYPERSURFACELIST = 13,
     /**
-     * Represents a 2-dimensional triangulation, of class Triangulation<2>
-     * (or equivalently, Dim2Triangulation).
+     * Represents a 2-dimensional triangulation, of class Triangulation<2>.
      *
      * This is identical to the constant PACKET_TRIANGULATION2.
      */
@@ -133,8 +132,7 @@ enum PacketType {
      */
     PACKET_SNAPPEATRIANGULATION = 16,
     /**
-     * Represents a 2-dimensional triangulation, of class Triangulation<2>
-     * (or equivalently, Dim2Triangulation).
+     * Represents a 2-dimensional triangulation, of class Triangulation<2>.
      *
      * This is identical to the constant PACKET_DIM2TRIANGULATION.
      */

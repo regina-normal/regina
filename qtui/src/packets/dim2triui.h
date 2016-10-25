@@ -47,7 +47,6 @@ class QLabel;
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<2> Dim2Triangulation;
 };
 
 /**
@@ -69,7 +68,7 @@ class Dim2TriangulationUI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        Dim2TriangulationUI(regina::Dim2Triangulation* packet,
+        Dim2TriangulationUI(regina::Triangulation<2>* packet,
             PacketPane* newEnclosingPane);
         ~Dim2TriangulationUI();
 
@@ -89,7 +88,7 @@ class Dim2TriHeaderUI : public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Dim2Triangulation* tri;
+        regina::Triangulation<2>* tri;
 
         /**
          * Internal components
@@ -102,7 +101,7 @@ class Dim2TriHeaderUI : public PacketViewerTab {
         /**
          * Constructor.
          */
-        Dim2TriHeaderUI(regina::Dim2Triangulation* packet,
+        Dim2TriHeaderUI(regina::Triangulation<2>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -120,7 +119,7 @@ class Dim2TriHeaderUI : public PacketViewerTab {
         /**
          * Allow other UIs to access the summary information.
          */
-        static QString summaryInfo(regina::Dim2Triangulation* tri);
+        static QString summaryInfo(regina::Triangulation<2>* tri);
 };
 
 inline PacketEditIface* Dim2TriangulationUI::getEditIface() {

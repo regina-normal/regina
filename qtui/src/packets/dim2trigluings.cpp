@@ -54,7 +54,7 @@
 #include <set>
 
 using regina::Packet;
-using regina::Dim2Triangulation;
+using regina::Triangulation;
 
 namespace {
     /**
@@ -73,7 +73,7 @@ namespace {
     QRegExp reEdge("^[0-2][0-2]$");
 }
 
-Dim2GluingsModel::Dim2GluingsModel(regina::Dim2Triangulation* tri,
+Dim2GluingsModel::Dim2GluingsModel(regina::Triangulation<2>* tri,
         bool readWrite) : tri_(tri), isReadWrite_(readWrite) {
 }
 
@@ -295,7 +295,7 @@ regina::Perm<3> Dim2GluingsModel::edgeStringToPerm(int srcEdge,
         regina::Dim2Edge::ordering(srcEdge).inverse();
 }
 
-Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
+Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Triangulation<2>* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of edge gluings.

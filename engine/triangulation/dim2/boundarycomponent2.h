@@ -50,11 +50,7 @@
 
 namespace regina {
 
-template <int> class Component;
-template <int> class Triangulation;
-template <int, int> class Face;
 typedef Component<2> Dim2Component;
-typedef Triangulation<2> Dim2Triangulation;
 typedef Face<2, 0> Dim2Vertex;
 typedef Face<2, 1> Dim2Edge;
 

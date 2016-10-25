@@ -40,7 +40,6 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Dim2ExampleTriangulation;
-using regina::Dim2Triangulation;
 
 void addDim2ExampleTriangulation() {
     class_<Dim2ExampleTriangulation>("Dim2ExampleTriangulation", no_init)

@@ -154,7 +154,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<Container*>(packet), enclosingPane);
         case PACKET_DIM2TRIANGULATION:
             return new Dim2TriangulationUI(
-                dynamic_cast<Dim2Triangulation*>(packet), enclosingPane);
+                dynamic_cast<Triangulation<2>*>(packet), enclosingPane);
         case PACKET_DIM4TRIANGULATION:
             return new Dim4TriangulationUI(
                 dynamic_cast<Dim4Triangulation*>(packet), enclosingPane);

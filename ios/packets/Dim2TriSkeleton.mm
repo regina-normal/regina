@@ -45,7 +45,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
 
 @property (strong, nonatomic) Dim2TriangulationViewController* viewer;
-@property (assign, nonatomic) regina::Dim2Triangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<2>* packet;
 @end
 
 @implementation Dim2TriSkeleton

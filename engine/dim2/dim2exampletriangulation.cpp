@@ -36,9 +36,9 @@
 
 namespace regina {
 
-Dim2Triangulation* Dim2ExampleTriangulation::orientable(
+Triangulation<2>* Dim2ExampleTriangulation::orientable(
         unsigned genus, unsigned punctures) {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+    Triangulation<2>* ans = new Triangulation<2>();
 
     if (genus == 0) {
         if (punctures == 0)
@@ -88,14 +88,14 @@ Dim2Triangulation* Dim2ExampleTriangulation::orientable(
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::nonOrientable(
+Triangulation<2>* Dim2ExampleTriangulation::nonOrientable(
         unsigned genus, unsigned punctures) {
     if (genus == 0)
         return orientable(0, punctures); // Just in case. *shrug*
     if (genus == 1 && punctures == 0)
         return rp2(); // Avoid 2-gons.
 
-    Dim2Triangulation* ans = new Dim2Triangulation();
+    Triangulation<2>* ans = new Triangulation<2>();
 
     unsigned n = 2 * genus + 3 * punctures - 2;
     unsigned i;
@@ -124,8 +124,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::nonOrientable(
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::sphere() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::sphere() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere");
 
     Dim2Triangle* r = ans->newTriangle();
@@ -137,8 +137,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphere() {
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::sphereTetrahedron() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::sphereTetrahedron() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere (tetrahedron boundary)");
 
     Dim2Triangle* r = ans->newTriangle();
@@ -155,8 +155,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphereTetrahedron() {
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::sphereOctahedron() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::sphereOctahedron() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere (octahedron boundary)");
 
     Dim2Triangle* r = ans->newTriangle();
@@ -183,8 +183,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphereOctahedron() {
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::disc() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::disc() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Disc");
 
     ans->newTriangle();
@@ -192,8 +192,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::disc() {
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::annulus() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::annulus() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Annulus");
 
     Dim2Triangle* r = ans->newTriangle();
@@ -204,8 +204,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::annulus() {
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::mobius() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::mobius() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("M\u00F6bius band");
 
     Dim2Triangle* r = ans->newTriangle();
@@ -214,8 +214,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::mobius() {
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::torus() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::torus() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Torus");
 
     Dim2Triangle* r = ans->newTriangle();
@@ -227,8 +227,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::torus() {
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::rp2() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::rp2() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Projective plane");
 
     Dim2Triangle* r = ans->newTriangle();
@@ -240,8 +240,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::rp2() {
     return ans;
 }
 
-Dim2Triangulation* Dim2ExampleTriangulation::kb() {
-    Dim2Triangulation* ans = new Dim2Triangulation();
+Triangulation<2>* Dim2ExampleTriangulation::kb() {
+    Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Klein bottle");
 
     Dim2Triangle* r = ans->newTriangle();

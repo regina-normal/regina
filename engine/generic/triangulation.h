@@ -215,15 +215,11 @@ namespace regina {
  * and offers \e much more functionality.  In order to use these specialised
  * classes, you will need to include the corresponding headers (e.g.,
  * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
- * for \a dim = 3).  For convenience, there are typedefs available for
- * these specialised classes (such as Dim2Triangulation and NTriangulation
- * respectively).
+ * for \a dim = 3).
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Triangulation2 and Triangulation3 for dimensions 2 and 3).
- * The typedefs mentioned above for standard dimensions
- * (e.g., Dim2Triangulation and NTriangulation) are also available.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.

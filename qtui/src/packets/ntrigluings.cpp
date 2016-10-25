@@ -993,7 +993,7 @@ void NTriGluingsUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
+            regina::Triangulation<2>* ans = new regina::Triangulation<2>(
                 *chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(
                 chosen->index()).toUtf8().constData());
