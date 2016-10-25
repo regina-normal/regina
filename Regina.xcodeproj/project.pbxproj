@@ -4069,6 +4069,7 @@
 				050F5D071B9BAB9C00C1F681 /* angle */,
 				050F5DC01B9BAB9C00C1F681 /* census */,
 				050F5D0C1B9BAB9C00C1F681 /* dim2 */,
+				050F5DAA1B9BAB9C00C1F681 /* dim3 */,
 				0591E7F71C4F760500793A9C /* dim4 */,
 				050F5D181B9BAB9C00C1F681 /* file */,
 				050F5DC81B9BAB9C00C1F681 /* foreign */,
@@ -4090,7 +4091,6 @@
 				050F5D751B9BAB9C00C1F681 /* surfaces */,
 				050F5D841B9BAB9C00C1F681 /* testsuite */,
 				050F5DA61B9BAB9C00C1F681 /* treewidth */,
-				050F5DAA1B9BAB9C00C1F681 /* triangulation */,
 				050F5DB91B9BAB9C00C1F681 /* utilities */,
 				050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */,
 			);
@@ -4349,7 +4349,7 @@
 			path = treewidth;
 			sourceTree = "<group>";
 		};
-		050F5DAA1B9BAB9C00C1F681 /* triangulation */ = {
+		050F5DAA1B9BAB9C00C1F681 /* dim3 */ = {
 			isa = PBXGroup;
 			children = (
 				050F5DAB1B9BAB9C00C1F681 /* CMakeLists.txt */,
@@ -4367,7 +4367,7 @@
 				050F5DB71B9BAB9C00C1F681 /* nvertex.cpp */,
 				050F5DB81B9BAB9C00C1F681 /* pytriangulation.cpp */,
 			);
-			path = triangulation;
+			path = dim3;
 			sourceTree = "<group>";
 		};
 		050F5DB91B9BAB9C00C1F681 /* utilities */ = {
@@ -5211,6 +5211,7 @@
 				052FA0CF1806088B00FAE4DF /* census */,
 				052FA0D61806088B00FAE4DF /* CMakeLists.txt */,
 				0583656618DB88D9008B08D9 /* dim2 */,
+				052FA0F61806088B00FAE4DF /* dim3 */,
 				0591E8511C4F777E00793A9C /* dim4 */,
 				052FA0D71806088B00FAE4DF /* exhaustive.cpp */,
 				052FA0D81806088B00FAE4DF /* exhaustive.h */,
@@ -5223,7 +5224,6 @@
 				052FA0EF1806088B00FAE4DF /* surfaces */,
 				05D1174919EE043F003BEC55 /* testsuite.cpp */,
 				05D1174A19EE043F003BEC55 /* testsuite.h */,
-				052FA0F61806088B00FAE4DF /* triangulation */,
 				052FA0FE1806088B00FAE4DF /* utilities */,
 			);
 			path = testsuite;
@@ -5305,7 +5305,7 @@
 			path = surfaces;
 			sourceTree = "<group>";
 		};
-		052FA0F61806088B00FAE4DF /* triangulation */ = {
+		052FA0F61806088B00FAE4DF /* dim3 */ = {
 			isa = PBXGroup;
 			children = (
 				052FA0F71806088B00FAE4DF /* CMakeLists.txt */,
@@ -5316,7 +5316,7 @@
 				052FA0FC1806088B00FAE4DF /* triangulation3.cpp */,
 				052FA0FD1806088B00FAE4DF /* testtriangulation.h */,
 			);
-			path = triangulation;
+			path = dim3;
 			sourceTree = "<group>";
 		};
 		052FA0FE1806088B00FAE4DF /* utilities */ = {
