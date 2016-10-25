@@ -46,10 +46,6 @@
 namespace regina {
 
 class AngleStructure;
-class NormalSurface;
-
-template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 template <typename IntType> class LPMatrix;
 template <class LPConstraint> class LPCol;
@@ -273,7 +269,7 @@ class LPConstraintBase {
          * replaced with the zero functions instead).
          */
         static bool addRows(LPCol<LPConstraintBase>* col,
-            const int* columnPerm, const NTriangulation* tri);
+            const int* columnPerm, const Triangulation<3>* tri);
 
         /**
          * Explicitly constraints each of these linear functions to an
@@ -410,7 +406,7 @@ class LPConstraintNone : public LPConstraintSubspace {
         };
 
         static bool addRows(LPCol<regina::LPConstraintNone>*,
-            const int*, const NTriangulation*);
+            const int*, const Triangulation<3>*);
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNone, IntType>&, unsigned);
@@ -475,7 +471,7 @@ class LPConstraintEuler : public LPConstraintBase {
 
         static bool addRows(
             LPCol<regina::LPConstraintEuler>* col,
-            const int* columnPerm, const NTriangulation* tri);
+            const int* columnPerm, const Triangulation<3>* tri);
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintEuler, IntType>& lp,
@@ -548,7 +544,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
 
         static bool addRows(
             LPCol<regina::LPConstraintNonSpun>* col,
-            const int* columnPerm, const NTriangulation* tri);
+            const int* columnPerm, const Triangulation<3>* tri);
         template <typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNonSpun, IntType>& lp,
@@ -615,7 +611,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  */
 class BanConstraintBase {
     protected:
-        const NTriangulation* tri_;
+        const Triangulation<3>* tri_;
             /**< The triangulation with which we are working. */
         int coords_;
             /**< The normal or almost normal coordinate system in which
@@ -651,7 +647,7 @@ class BanConstraintBase {
          * which we are working.  This must be one of NS_QUAD,
          * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
          */
-        BanConstraintBase(const NTriangulation* tri, int coords);
+        BanConstraintBase(const Triangulation<3>* tri, int coords);
 
         /**
          * Destroys this object and all associated data.
@@ -731,7 +727,7 @@ class BanNone : public BanConstraintBase {
          * which we are working.  This must be one of NS_QUAD,
          * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
          */
-        BanNone(const NTriangulation* tri, int coords);
+        BanNone(const Triangulation<3>* tri, int coords);
 
         void init(const int*);
         static bool supported(NormalCoords coords);
@@ -776,7 +772,7 @@ class BanBoundary : public BanConstraintBase {
          * which we are working.  This must be one of NS_QUAD,
          * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        BanBoundary(const NTriangulation* tri, int coords);
+        BanBoundary(const Triangulation<3>* tri, int coords);
 
         void init(const int* columnPerm);
         static bool supported(NormalCoords coords);
@@ -828,7 +824,7 @@ class BanTorusBoundary : public BanConstraintBase {
          * which we are working.  This must be one of NS_QUAD,
          * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        BanTorusBoundary(const NTriangulation* tri, int coords);
+        BanTorusBoundary(const Triangulation<3>* tri, int coords);
 
         void init(const int* columnPerm);
         static bool supported(NormalCoords coords);
@@ -864,7 +860,7 @@ inline IntType LPConstraintNone::Coefficients::innerProductOct(
 
 inline bool LPConstraintNone::addRows(
         LPCol<regina::LPConstraintNone>*,
-        const int*, const NTriangulation*) {
+        const int*, const Triangulation<3>*) {
     return true;
 }
 
@@ -1003,7 +999,7 @@ inline void BanConstraintBase::enforceBans(LPData<LPConstraint, IntType>& lp)
             lp.constrainZero(i);
 }
 
-inline BanNone::BanNone(const NTriangulation* tri, int coords) :
+inline BanNone::BanNone(const Triangulation<3>* tri, int coords) :
         BanConstraintBase(tri, coords) {
 }
 
@@ -1014,7 +1010,7 @@ inline bool BanNone::supported(NormalCoords) {
     return true;
 }
 
-inline BanBoundary::BanBoundary(const NTriangulation* tri, int coords) :
+inline BanBoundary::BanBoundary(const Triangulation<3>* tri, int coords) :
         BanConstraintBase(tri, coords) {
 }
 
@@ -1023,7 +1019,7 @@ inline bool BanBoundary::supported(NormalCoords coords) {
 }
 
 inline BanTorusBoundary::BanTorusBoundary(
-        const NTriangulation* tri, int coords) :
+        const Triangulation<3>* tri, int coords) :
         BanConstraintBase(tri, coords) {
 }
 

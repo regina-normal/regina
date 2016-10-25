@@ -73,7 +73,6 @@ using regina::Dim4GluingPermSearcher;
 using regina::BoolSet;
 using regina::NFacePairing;
 using regina::NGluingPermSearcher;
-using regina::NTriangulation;
 using regina::Triangulation;
 
 namespace {
@@ -90,7 +89,7 @@ namespace {
     void foundGluingPerms3(const NGluingPermSearcher* perms, void* holder) {
         if (perms) {
             TestFunctionHolder3* h = static_cast<TestFunctionHolder3*>(holder);
-            NTriangulation* tri = perms->triangulate();
+            Triangulation<3>* tri = perms->triangulate();
             if (tri->isValid() &&
                     (! (h->finite_ == BoolSet::sTrue && tri->isIdeal())) &&
                     (! (h->finite_ == BoolSet::sFalse && ! tri->isIdeal()))) {

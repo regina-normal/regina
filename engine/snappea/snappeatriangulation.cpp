@@ -98,7 +98,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
     listen(this);
 }
 
-SnapPeaTriangulation::SnapPeaTriangulation(const NTriangulation& tri, bool) :
+SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
         data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     const SnapPeaTriangulation* clone =
         dynamic_cast<const SnapPeaTriangulation*>(&tri);
@@ -113,7 +113,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const NTriangulation& tri, bool) :
     }
 
     // We are building a SnapPea triangulation from one of Regina's
-    // own NTriangulation data structures.
+    // own Triangulation<3> data structures.
     //
     // Make sure SnapPea is likely to be comfortable with it.
     if (tri.isEmpty() ||
@@ -147,7 +147,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const NTriangulation& tri, bool) :
     tData.tetrahedron_data = new regina::snappea::TetrahedronData[
         tData.num_tetrahedra];
     int tet, face, i, j, k, l;
-    NTriangulation::TetrahedronIterator it = tri.tetrahedra().begin();
+    Triangulation<3>::TetrahedronIterator it = tri.tetrahedra().begin();
     for (tet = 0; tet < tData.num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
             tData.tetrahedron_data[tet].neighbor_index[face] = static_cast<int>(
@@ -342,7 +342,7 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
     return true;
 }
 
-NTriangulation* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
+Triangulation<3>* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
         const {
     if (! data_)
         return 0;
@@ -357,7 +357,7 @@ NTriangulation* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
 
         if (! t)
             return 0;
-        NTriangulation* ans = new NTriangulation();
+        Triangulation<3>* ans = new Triangulation<3>();
         fillRegina(t, *ans);
         return ans;
     } else {
@@ -375,7 +375,7 @@ NTriangulation* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
     }
 }
 
-NTriangulation* SnapPeaTriangulation::filledTriangulation() const {
+Triangulation<3>* SnapPeaTriangulation::filledTriangulation() const {
     if (! data_)
         return 0;
 
@@ -391,7 +391,7 @@ NTriangulation* SnapPeaTriangulation::filledTriangulation() const {
 
         if (! t)
             return 0;
-        NTriangulation* ans = new NTriangulation();
+        Triangulation<3>* ans = new Triangulation<3>();
         fillRegina(t, *ans);
         return ans;
     } else {
@@ -429,7 +429,7 @@ SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {
     return ans;
 }
 
-NTriangulation* SnapPeaTriangulation::canonize() const {
+Triangulation<3>* SnapPeaTriangulation::canonize() const {
     if (! data_)
         return 0;
 
@@ -441,7 +441,7 @@ NTriangulation* SnapPeaTriangulation::canonize() const {
         return 0;
     }
 
-    NTriangulation* ans = new NTriangulation();
+    Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel(get_triangulation_name(data_));
     fillRegina(tmp, *ans);
     regina::snappea::free_triangulation(tmp);
@@ -648,7 +648,7 @@ void SnapPeaTriangulation::writeTextLong(std::ostream& out) const {
         return;
     }
 
-    NTriangulation::writeTextLong(out);
+    Triangulation<3>::writeTextLong(out);
 
     unsigned i;
     if (shape_) {
@@ -723,7 +723,7 @@ void SnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
 
 void SnapPeaTriangulation::packetWasChanged(Packet* packet) {
     // If the triangulation is changed "illegitimately", via the
-    // inherited NTriangulation interface, then convert this to a null
+    // inherited Triangulation<3> interface, then convert this to a null
     // triangulation.
     if (packet == this && data_ && ! syncing_)
         reset(0);
@@ -731,7 +731,7 @@ void SnapPeaTriangulation::packetWasChanged(Packet* packet) {
 
 void SnapPeaTriangulation::sync() {
     // TODO: Check first whether anything has changed, and only resync
-    // the NTriangulation data if it has.
+    // the Triangulation<3> data if it has.
     syncing_ = true;
     {
         ChangeEventSpan span(this);
@@ -850,7 +850,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
 }
 
 void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
-        NTriangulation& dest) {
+        Triangulation<3>& dest) {
     ChangeEventSpan span(&dest);
 
     regina::snappea::TriangulationData* tData;

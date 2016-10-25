@@ -490,7 +490,7 @@ void HyperCoordinateUI::triangulate() {
     }
 
     // Go ahead and triangulate it.
-    regina::NTriangulation* ans = use->triangulate();
+    regina::Triangulation<3>* ans = use->triangulate();
     ans->setLabel(surfaces->triangulation()->adornedLabel(
         "Hypersurface #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);

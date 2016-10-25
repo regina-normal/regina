@@ -120,7 +120,7 @@ void Triangulation<4>::calculateBoundary() {
         boundaryComponents_.push_back(label);
         loopTet->component()->boundaryComponents_.push_back(label);
 
-        label->boundary_ = new NTriangulation();
+        label->boundary_ = new Triangulation<3>();
 
         // Run a breadth-first search from this boundary tetrahedron to
         // completely enumerate all tetrahedra in this boundary component.
@@ -249,21 +249,21 @@ void Triangulation<4>::calculateBoundary() {
         // Now run through the vertices, edges and triangles of the
         // 3-manifold triangulation and insert the corresponding 4-D
         // objects into the boundary component lists in the *same* order.
-        for (NTriangulation::TriangleIterator it =
+        for (Triangulation<3>::TriangleIterator it =
                 label->boundary_->triangles().begin();
                 it != label->boundary_->triangles().end(); ++it) {
             const NTriangleEmbedding& emb = (*it)->front();
             tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
             label->triangles_.push_back(tet->triangle(emb.triangle()));
         }
-        for (NTriangulation::EdgeIterator it =
+        for (Triangulation<3>::EdgeIterator it =
                 label->boundary_->edges().begin();
                 it != label->boundary_->edges().end(); ++it) {
             const NEdgeEmbedding& emb = (*it)->front();
             tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
             label->edges_.push_back(tet->edge(emb.edge()));
         }
-        for (NTriangulation::VertexIterator it =
+        for (Triangulation<3>::VertexIterator it =
                 label->boundary_->vertices().begin();
                 it != label->boundary_->vertices().end(); ++it) {
             const NVertexEmbedding& emb = (*it)->front();
@@ -288,7 +288,7 @@ void Triangulation<4>::calculateVertexLinks() {
     NTetrahedron** tet = new NTetrahedron*[5 * n];
 
     for (Dim4Vertex* vertex : vertices()) {
-        vertex->link_ = new NTriangulation();
+        vertex->link_ = new Triangulation<3>();
         for (auto& emb : *vertex)
             tet[5 * emb.pentachoron()->index() + emb.vertex()]
                 = vertex->link_->newTetrahedron();
@@ -388,7 +388,7 @@ void Triangulation<4>::calculateVertexLinks() {
         // spherical double cover at the vertex link).  We detect these
         // cases separately under calculateEdgeLinks() below.
         if (! vertex->isValid()) {
-            NTriangulation::VertexIterator linkit;
+            Triangulation<3>::VertexIterator linkit;
             int type;
             for (linkit = vertex->link_->vertices().begin();
                     linkit != vertex->link_->vertices().end(); ++linkit) {

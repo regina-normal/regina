@@ -207,8 +207,8 @@ bool NSatAnnulus::isTwoSidedTorus() const {
     return true;
 }
 
-void NSatAnnulus::transform(const NTriangulation* originalTri,
-        const NIsomorphism* iso, NTriangulation* newTri) {
+void NSatAnnulus::transform(const Triangulation<3>* originalTri,
+        const NIsomorphism* iso, Triangulation<3>* newTri) {
     unsigned which;
     unsigned long tetID;
     for (which = 0; which < 2; which++) {
@@ -218,7 +218,7 @@ void NSatAnnulus::transform(const NTriangulation* originalTri,
     }
 }
 
-void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
+void NSatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
     // Save ourselves headaches later.  Though this should never happen;
     // see the preconditions.
     if (alpha == 0)

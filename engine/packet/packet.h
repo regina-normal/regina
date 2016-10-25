@@ -267,7 +267,7 @@ class REGINA_API Packet :
 
         /**
          * Returns an English name for this type of packet.
-         * An example is \c NTriangulation.
+         * An example is \c Triangulation3.
          * This is the same for all packets of this class.
          *
          * @return the packet type name.

@@ -63,7 +63,6 @@ template <int> class Triangulation;
 // We *must* declare the specialisation here; otherwise this header has
 // the side-effect of instantiating Trianglation<3> using the generic template.
 template <> class Triangulation<3>;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup surfaces
@@ -259,7 +258,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal surface list is created).
          */
-        static NormalSurfaces* enumerate(NTriangulation* owner,
+        static NormalSurfaces* enumerate(Triangulation<3>* owner,
             NormalCoords coords,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
@@ -341,7 +340,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * 
          * @return the triangulation in which these surfaces live.
          */
-        NTriangulation* triangulation() const;
+        Triangulation<3>* triangulation() const;
         /**
          * Returns the number of surfaces stored in this list.
          *
@@ -644,7 +643,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * Currently the heuristic tests include (i) throwing away
          * all vertex links and thin edge links, and then
          * (ii) cutting along the remaining surfaces and running
-         * NTriangulation::hasSimpleCompressingDisc() on the resulting
+         * Triangulation<3>::hasSimpleCompressingDisc() on the resulting
          * bounded triangulations.  For more details on these tests
          * see "The Weber-Seifert dodecahedral space is non-Haken",
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
@@ -932,7 +931,7 @@ class REGINA_API NormalSurfaces : public Packet {
                 std::output_iterator_tag, NormalSurfaceVector*> {
             NormalSurfaces* list;
                 /**< The list into which surfaces will be inserted. */
-            NTriangulation* owner;
+            Triangulation<3>* owner;
                 /**< The triangulation in which the surfaces to be
                  *   inserted are contained. */
 
@@ -946,7 +945,7 @@ class REGINA_API NormalSurfaces : public Packet {
              * to be inserted are contained.
              */
             SurfaceInserter(NormalSurfaces& newList,
-                NTriangulation* newOwner);
+                Triangulation<3>* newOwner);
             /**
              * Creates a new output iterator that is a clone of the
              * given iterator.
@@ -1089,7 +1088,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * and cancellation requests, or 0 if this is not required.
          */
         template <class Variant>
-        void buildStandardFromReduced(NTriangulation* owner,
+        void buildStandardFromReduced(Triangulation<3>* owner,
             const std::vector<NormalSurface*>& reducedList,
             ProgressTracker* tracker = 0);
 
@@ -1110,7 +1109,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * the number of tetrahedra in the given triangulation.
          */
         template <class Variant, class BitmaskType>
-        void buildStandardFromReducedUsing(NTriangulation* owner,
+        void buildStandardFromReducedUsing(Triangulation<3>* owner,
             const std::vector<NormalSurface*>& reducedList,
             ProgressTracker* tracker);
 
@@ -1155,7 +1154,7 @@ class REGINA_API NormalSurfaces : public Packet {
             private:
                 NormalSurfaces* list_;
                     /**< The surface list to be filled. */
-                NTriangulation* triang_;
+                Triangulation<3>* triang_;
                     /**< The triangulation in which these surfaces lie. */
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
@@ -1173,7 +1172,7 @@ class REGINA_API NormalSurfaces : public Packet {
                  * capabilities are not required.
                  */
                 Enumerator(NormalSurfaces* list,
-                    NTriangulation* triang, ProgressTracker* tracker);
+                    Triangulation<3>* triang, ProgressTracker* tracker);
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -1381,7 +1380,7 @@ class REGINA_API NormalSurfaces : public Packet {
  * @return a new zero vector of the correct class and length.
  */
 REGINA_API NormalSurfaceVector* makeZeroVector(
-    const NTriangulation* triangulation, NormalCoords coords);
+    const Triangulation<3>* triangulation, NormalCoords coords);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
@@ -1398,7 +1397,7 @@ REGINA_API NormalSurfaceVector* makeZeroVector(
  * @return a newly allocated set of matching equations.
  */
 REGINA_API MatrixInt* makeMatchingEquations(
-    const NTriangulation* triangulation, NormalCoords coords);
+    const Triangulation<3>* triangulation, NormalCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
@@ -1412,7 +1411,7 @@ REGINA_API MatrixInt* makeMatchingEquations(
  * @return a newly allocated set of constraints.
  */
 REGINA_API EnumConstraints* makeEmbeddedConstraints(
-    const NTriangulation* triangulation, NormalCoords coords);
+    const Triangulation<3>* triangulation, NormalCoords coords);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1525,7 +1524,7 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors()
 }
 
 inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
-        NormalSurfaces& newList, NTriangulation* newOwner) :
+        NormalSurfaces& newList, Triangulation<3>* newOwner) :
         list(&newList), owner(newOwner) {
 }
 
@@ -1578,7 +1577,7 @@ inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
 }
 
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
-        NTriangulation* triang, ProgressTracker* tracker) :
+        Triangulation<3>* triang, ProgressTracker* tracker) :
         list_(list), triang_(triang), tracker_(tracker) {
 }
 

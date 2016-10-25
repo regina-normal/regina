@@ -112,7 +112,7 @@ class REGINA_API AngleStructures : public Packet {
          *
          * @return the corresponding triangulation.
          */
-        NTriangulation* triangulation() const;
+        Triangulation<3>* triangulation() const;
 
         /**
          * Returns whether this list was produced by enumerating taut angle
@@ -206,7 +206,7 @@ class REGINA_API AngleStructures : public Packet {
          * passed and a new thread could not be started, this routine
          * returns 0 (and no angle structure list is created).
          */
-        static AngleStructures* enumerate(NTriangulation* owner,
+        static AngleStructures* enumerate(Triangulation<3>* owner,
             bool tautOnly = false, ProgressTracker* tracker = 0);
 
         /**
@@ -231,7 +231,7 @@ class REGINA_API AngleStructures : public Packet {
          * will be enumerated.
          * @return the newly created angle structure list.
          */
-        static AngleStructures* enumerateTautDD(NTriangulation* owner);
+        static AngleStructures* enumerateTautDD(Triangulation<3>* owner);
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -278,7 +278,7 @@ class REGINA_API AngleStructures : public Packet {
                 std::output_iterator_tag, AngleStructureVector*> {
             AngleStructures* list;
                 /**< The list into which angle structures will be inserted. */
-            NTriangulation* owner;
+            Triangulation<3>* owner;
                 /**< The triangulation on which the angle structures to
                  *   be inserted lie. */
 
@@ -300,7 +300,7 @@ class REGINA_API AngleStructures : public Packet {
              * to be inserted lie.
              */
             StructureInserter(AngleStructures& newList,
-                NTriangulation* newOwner);
+                Triangulation<3>* newOwner);
             /**
              * Creates a new output iterator that is a clone of the
              * given iterator.
@@ -378,7 +378,7 @@ class REGINA_API AngleStructures : public Packet {
          * reporting and cancellation polling, or 0 if these
          * capabilities are not required.
          */
-        void enumerateInternal(NTriangulation* triang,
+        void enumerateInternal(Triangulation<3>* triang,
             ProgressTracker* tracker = 0);
 
     friend class regina::XMLAngleStructuresReader;
@@ -404,7 +404,7 @@ class REGINA_API AngleStructures : public Packet {
  * equations will be based.
  * @return a newly allocated set of equations.
  */
-REGINA_API MatrixInt* makeAngleEquations(const NTriangulation* tri);
+REGINA_API MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -462,7 +462,7 @@ inline AngleStructures::StructureInserter::StructureInserter() : list(0),
 }
 
 inline AngleStructures::StructureInserter::StructureInserter(
-        AngleStructures& newList, NTriangulation* newOwner) :
+        AngleStructures& newList, Triangulation<3>* newOwner) :
         list(&newList), owner(newOwner) {
 }
 
@@ -508,7 +508,7 @@ inline AngleStructures::StructureInserter&
     return *this;
 }
 
-inline MatrixInt* makeAngleEquations(const NTriangulation* tri) {
+inline MatrixInt* makeAngleEquations(const Triangulation<3>* tri) {
     return AngleStructureVector::makeAngleEquations(tri);
 }
 

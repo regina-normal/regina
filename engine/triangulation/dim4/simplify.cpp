@@ -109,7 +109,7 @@ namespace {
     // are already in the same component (i.e., a cycle has been created).
     //
     // This routine is a direct clone of the corresponding routine for
-    // NTriangulation::collapseEdge().  It would be nice to reuse this
+    // Triangulation<3>::collapseEdge().  It would be nice to reuse this
     // routine instead of duplicate it, but that is for another day.
     bool unionFindInsert(long* parent, long* depth, long vtx1, long vtx2) {
         // Find the root of the tree containing vtx1 and vtx2.

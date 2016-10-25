@@ -60,7 +60,7 @@ NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
 template <class Variant>
 NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     // And off we go!
-    NTriangulation* owner = triangulation();
+    Triangulation<3>* owner = triangulation();
 
     // Basic sanity checks:
     if (coords_ != Variant::standardCoords())

@@ -56,7 +56,6 @@ template <int> class Simplex;
 template <int> class Triangulation;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup subcomplex
@@ -385,8 +384,8 @@ class REGINA_API NSatBlock :
          * @param newTri the triangulation to be used by the updated
          * block structure.
          */
-        virtual void transform(const NTriangulation* originalTri,
-                const NIsomorphism* iso, NTriangulation* newTri);
+        virtual void transform(const Triangulation<3>* originalTri,
+                const NIsomorphism* iso, Triangulation<3>* newTri);
 
         /**
          * Finds the next (or previous) boundary annulus around from this,

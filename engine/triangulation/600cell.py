@@ -61,7 +61,7 @@ def simpToReg(simp):
 
             gluings[j][f] = regina.Perm4(tmp[0], tmp[1], tmp[2], tmp[3])
 
-    ans = regina.NTriangulation()
+    ans = regina.Triangulation3()
     for j in range(n):
         ans.newTetrahedron()
     for j in range(n):

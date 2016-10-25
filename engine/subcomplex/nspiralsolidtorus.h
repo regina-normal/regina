@@ -48,7 +48,6 @@ namespace regina {
 template <int> class Simplex;
 template <int> class Triangulation;
 typedef Simplex<3> NTetrahedron;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup subcomplex
@@ -200,7 +199,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * @return \c true if and only if the representation of this
          * spiralled solid torus was actually changed.
          */
-        bool makeCanonical(const NTriangulation* tri);
+        bool makeCanonical(const Triangulation<3>* tri);
 
         /**
          * Determines whether this spiralled solid torus is in canonical
@@ -211,7 +210,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * @return \c true if and only if this spiralled solid torus is
          * in canonical form.
          */
-        bool isCanonical(const NTriangulation* tri) const;
+        bool isCanonical(const Triangulation<3>* tri) const;
 
         /**
          * Determines if the given tetrahedron forms part of a

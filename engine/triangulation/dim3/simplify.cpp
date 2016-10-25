@@ -89,7 +89,7 @@ namespace {
     }
 }
 
-bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
+bool Triangulation<3>::threeTwoMove(NEdge* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
@@ -209,7 +209,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
+bool Triangulation<3>::twoThreeMove(NTriangle* f, bool check, bool perform) {
     if (check) {
         if (f->degree() != 2)
             return false;
@@ -330,7 +330,7 @@ bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
     return true;
 }
 
-bool NTriangulation::oneFourMove(NTetrahedron* tet, bool /* check */,
+bool Triangulation<3>::oneFourMove(NTetrahedron* tet, bool /* check */,
         bool perform) {
     if ( !perform )
         return true; // You can always do this move.
@@ -388,7 +388,7 @@ bool NTriangulation::oneFourMove(NTetrahedron* tet, bool /* check */,
     return true;
 }
 
-bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
+bool Triangulation<3>::fourFourMove(NEdge* e, int newAxis, bool check,
         bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
@@ -430,7 +430,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     return true;
 }
 
-bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
+bool Triangulation<3>::twoZeroMove(NEdge* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
@@ -526,7 +526,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
+bool Triangulation<3>::twoZeroMove(NVertex* v, bool check, bool perform) {
     if (check) {
         if (v->link() != NVertex::SPHERE)
             return false;
@@ -607,7 +607,7 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     return true;
 }
 
-bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
+bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
         bool check, bool perform) {
     // edgeEnd is the end opposite where the action is.
     if (check) {
@@ -733,7 +733,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     return true;
 }
 
-bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
+bool Triangulation<3>::openBook(NTriangle* f, bool check, bool perform) {
     const NTriangleEmbedding& emb = f->front();
     NTetrahedron* tet = emb.tetrahedron();
     Perm<4> vertices = emb.vertices();
@@ -780,7 +780,7 @@ bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
     return true;
 }
 
-bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
+bool Triangulation<3>::closeBook(NEdge* e, bool check, bool perform) {
     if (check) {
         if (! e->isBoundary())
             return false;
@@ -827,7 +827,7 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-bool NTriangulation::shellBoundary(NTetrahedron* t,
+bool Triangulation<3>::shellBoundary(NTetrahedron* t,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.
     if (check) {
@@ -884,7 +884,7 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
     return true;
 }
 
-bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
+bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
     // Find the tetrahedra to remove.
     std::deque<NEdgeEmbedding>::const_iterator it;
     NTetrahedron* tet = 0;
@@ -1141,7 +1141,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-void NTriangulation::reorderTetrahedraBFS(bool reverse) {
+void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     unsigned long n = size();
     if (n == 0)
         return;

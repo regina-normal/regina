@@ -87,7 +87,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
 }
 
 NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
-        NTriangulation* tri) {
+        Triangulation<3>* tri) {
     if (tri->countComponents() != 1)
         return 0;
 

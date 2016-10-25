@@ -131,7 +131,7 @@
         return;
     }
     
-    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
+    regina::Triangulation<3>* ans = new regina::Triangulation<3>(*self.packet);
     ans->setLabel(self.packet->label());
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];

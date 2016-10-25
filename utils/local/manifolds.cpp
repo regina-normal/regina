@@ -158,7 +158,7 @@ bool process(Container* c) {
     std::string name, structure;
     for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
-        if (child->type() != PACKET_TRIANGULATION)
+        if (child->type() != PACKET_TRIANGULATION3)
             continue;
 
         foundTri = true;

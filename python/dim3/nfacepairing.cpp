@@ -39,7 +39,7 @@
 using namespace boost::python;
 using regina::NFacePairing;
 using regina::NTetFace;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     const NTetFace& (NFacePairing::*dest_face)(const NTetFace&) const =
@@ -95,7 +95,7 @@ namespace {
 void addNFacePairing() {
     class_<NFacePairing, std::auto_ptr<NFacePairing>, boost::noncopyable>
             ("NFacePairing", init<const NFacePairing&>())
-        .def(init<const NTriangulation&>())
+        .def(init<const Triangulation<3>&>())
         .def("size", &NFacePairing::size)
         .def("dest", dest_face,
             return_value_policy<reference_existing_object>())

@@ -39,7 +39,6 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::NExampleTriangulation;
-using regina::NTriangulation;
 
 void addNExampleTriangulation() {
     class_<NExampleTriangulation>("NExampleTriangulation", no_init)

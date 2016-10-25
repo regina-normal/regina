@@ -45,7 +45,6 @@
 namespace regina {
 
 template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -81,7 +80,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* threeSphere();
+        static Triangulation<3>* threeSphere();
 
         /**
          * Returns the two-tetrahedron triangulation of the 3-sphere
@@ -90,7 +89,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* bingsHouse();
+        static Triangulation<3>* bingsHouse();
 
         /**
          * Returns a two-tetrahedron triangulation of the product space
@@ -99,7 +98,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* s2xs1();
+        static Triangulation<3>* s2xs1();
 
         /**
          * Returns a three-tetrahedron triangulation of the non-orientable
@@ -108,7 +107,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* rp2xs1();
+        static Triangulation<3>* rp2xs1();
 
         /**
          * Returns a triangulation of the connected sum
@@ -117,7 +116,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* rp3rp3();
+        static Triangulation<3>* rp3rp3();
 
         /**
          * Returns a triangulation of the lens space <tt>L(p,q)</tt>.
@@ -134,7 +133,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* lens(size_t p, size_t q);
+        static Triangulation<3>* lens(size_t p, size_t q);
 
         /**
          * Returns the five-tetrahedron triangulation of the
@@ -143,7 +142,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* poincareHomologySphere();
+        static Triangulation<3>* poincareHomologySphere();
 
         /**
          * Returns a nine-tetrahedron minimal triangulation of the Weeks
@@ -155,7 +154,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* weeks();
+        static Triangulation<3>* weeks();
 
         /**
          * Returns a one-vertex triangulation of the Weber-Seifert
@@ -171,7 +170,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* weberSeifert();
+        static Triangulation<3>* weberSeifert();
 
         /**
          * Returns the nine-tetrahedron closed orientable hyperbolic
@@ -180,7 +179,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* smallClosedOrblHyperbolic();
+        static Triangulation<3>* smallClosedOrblHyperbolic();
 
         /**
          * Returns the eleven-tetrahedron closed non-orientable hyperbolic
@@ -189,7 +188,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* smallClosedNonOrblHyperbolic();
+        static Triangulation<3>* smallClosedNonOrblHyperbolic();
 
         /**
          * Returns the boundary 3-sphere of the regular 600-cell.
@@ -203,7 +202,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* sphere600();
+        static Triangulation<3>* sphere600();
 
         /*@}*/
         /**
@@ -230,7 +229,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* lst(size_t a, size_t b);
+        static Triangulation<3>* lst(size_t a, size_t b);
 
         /**
          * Returns a triangulation of the solid Klein bottle.
@@ -238,7 +237,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* solidKleinBottle();
+        static Triangulation<3>* solidKleinBottle();
 
         /*@}*/
         /**
@@ -253,7 +252,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* figureEight();
+        static Triangulation<3>* figureEight();
 
         /**
          * Returns a two-tetrahedron ideal triangulation of the trefoil
@@ -262,7 +261,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* trefoil();
+        static Triangulation<3>* trefoil();
 
         /**
          * Returns a four-tetrahedron ideal triangulation of the
@@ -271,7 +270,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* whiteheadLink();
+        static Triangulation<3>* whiteheadLink();
 
         /**
          * Returns the one-tetrahedron ideal triangulation of the
@@ -280,7 +279,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* gieseking();
+        static Triangulation<3>* gieseking();
 
         /**
          * Returns a triangulation of a solid genus two torus with a
@@ -290,7 +289,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* cuspedGenusTwoTorus();
+        static Triangulation<3>* cuspedGenusTwoTorus();
 
         /*@}*/
 };

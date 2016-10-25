@@ -102,8 +102,6 @@
 + (NSString *)viewerFor:(regina::Packet *)p {
     switch (p->type()) {
         case regina::PACKET_ANGLESTRUCTURES: return @"viewAngles";
-        case regina::PACKET_DIM2TRIANGULATION: return @"viewDim2Triangulation";
-        case regina::PACKET_DIM4TRIANGULATION: return @"viewDim4Triangulation";
         case regina::PACKET_NORMALSURFACES: return @"viewSurfaces";
         case regina::PACKET_NORMALHYPERSURFACES: return @"viewHypersurfaces";
         case regina::PACKET_SCRIPT: return @"viewScript";
@@ -115,7 +113,9 @@
                 default: return @"viewDefault";
             }
         case regina::PACKET_TEXT: return @"viewText";
-        case regina::PACKET_TRIANGULATION: return @"viewTriangulation";
+        case regina::PACKET_TRIANGULATION2: return @"viewDim2Triangulation";
+        case regina::PACKET_TRIANGULATION3: return @"viewTriangulation";
+        case regina::PACKET_TRIANGULATION4: return @"viewDim4Triangulation";
         case regina::PACKET_TRIANGULATION5:
         case regina::PACKET_TRIANGULATION6:
         case regina::PACKET_TRIANGULATION7:
@@ -160,13 +160,13 @@
             [spec created:t];
             break;
         }
-        case regina::PACKET_TRIANGULATION:
+        case regina::PACKET_TRIANGULATION3:
             [PacketManagerIOS newPacket:spec formSheet:@"newTriangulation"];
             break;
-        case regina::PACKET_DIM2TRIANGULATION:
+        case regina::PACKET_TRIANGULATION2:
             [PacketManagerIOS newPacket:spec formSheet:@"newDim2Triangulation"];
             break;
-        case regina::PACKET_DIM4TRIANGULATION:
+        case regina::PACKET_TRIANGULATION4:
             [PacketManagerIOS newPacket:spec formSheet:@"newDim4Triangulation"];
             break;
         case regina::PACKET_NORMALSURFACES:

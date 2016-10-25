@@ -35,11 +35,11 @@
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nhomologicaldata.h"
 #include "triangulation/dim3.h"
-#include "testsuite/triangulation/testtriangulation.h"
+#include "testsuite/dim3/testtriangulation.h"
 
 using regina::NExampleTriangulation;
 using regina::NHomologicalData;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 /**
  * Thanks to Ryan Budney for supplying the questions and answers for
@@ -64,77 +64,77 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         // constructed on the fly by NExampleTriangulation.
 
         // Closed orientable:
-        NTriangulation* s3;
+        Triangulation<3>* s3;
             /**< A one-tetrahedron 3-sphere. */
-        NTriangulation* s2xs1;
+        Triangulation<3>* s2xs1;
             /**< The two-tetrahedron S^2 x S^1. */
-        NTriangulation lens3_1;
+        Triangulation<3> lens3_1;
             /**< The layered lens space L(3,1). */
-        NTriangulation lens4_1;
+        Triangulation<3> lens4_1;
             /**< The layered lens space L(4,1). */
-        NTriangulation lens7_1;
+        Triangulation<3> lens7_1;
             /**< The layered lens space L(7,1). */
-        NTriangulation d88xz15;
+        Triangulation<3> d88xz15;
             /**< The orbit manifold S^3 / D_88 x Z_15, also known
                  as SFS [S2: (2,1) (2,1) (11,19)]. */
-        NTriangulation* poincare;
+        Triangulation<3>* poincare;
             /**< The poincare homology sphere. */
-        NTriangulation* weberSeifert;
+        Triangulation<3>* weberSeifert;
             /**< The Weber-Seifert dodecahedral space. */
-        NTriangulation torusBundleA;
+        Triangulation<3> torusBundleA;
             /**< The torus bundle T x I / [ 0,1 | -1,0 ], built using an
                  augmented triangular solid torus. */
-        NTriangulation torusBundleB;
+        Triangulation<3> torusBundleB;
             /**< The torus bundle T x I / [ -1,1 | -1,0 ], built using an
                  augmented triangular solid torus. */
-        NTriangulation twistedKBxS1;
+        Triangulation<3> twistedKBxS1;
             /**< The orientable twisted product KB/n2 x~ S^1. */
-        NTriangulation closedHypA;
+        Triangulation<3> closedHypA;
             /**< The manifold with volume 1.01494161 from the
                  Hodgson-Weeks closed orientable census. */
-        NTriangulation closedHypB;
+        Triangulation<3> closedHypB;
             /**< The manifold with volume 2.45402944 from the
                  Hodgson-Weeks closed orientable census. */
-        NTriangulation closedHypC;
+        Triangulation<3> closedHypC;
             /**< The manifold with volume 1.26370924 from Regina's
                  closed orientable census. */
 
         // Closed non-orientable:
-        NTriangulation norA;
+        Triangulation<3> norA;
             /**< The non-orientable manifold SFS [M_/n2: (2,1)]. */
-        NTriangulation norB;
+        Triangulation<3> norB;
             /**< The non-orientable manifold SFS [RP2: (2,1) (2,1)]. */
-        NTriangulation norTorusBundle;
+        Triangulation<3> norTorusBundle;
             /**< The non-orientable torus bundle T x I / [ 2,1 | 1,0 ]. */
 
         // Ideal:
-        NTriangulation* gieseking;
+        Triangulation<3>* gieseking;
             /**< The Gieseking manifold. */
-        NTriangulation* figureEight;
+        Triangulation<3>* figureEight;
             /**< The figure eight knot complement. */
-        NTriangulation m003;
+        Triangulation<3> m003;
             /**< The manifold m003 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
-        NTriangulation m041;
+        Triangulation<3> m041;
             /**< The manifold m041 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
-        NTriangulation m045;
+        Triangulation<3> m045;
             /**< The manifold m045 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
-        NTriangulation s028;
+        Triangulation<3> s028;
             /**< The manifold s028 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
-        NTriangulation s887;
+        Triangulation<3> s887;
             /**< The manifold s887 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
-        NTriangulation s955;
+        Triangulation<3> s955;
             /**< The manifold s955 from the cusped hyperbolic census of
                  Callahan, Hildebrand and Weeks, as shipped with SnapPea. */
-        NTriangulation genusTwoBdry;
+        Triangulation<3> genusTwoBdry;
             /**< An ideal triangulation with a single genus two cusp. */
 
         // Bounded:
-        NTriangulation lst3_4_7;
+        Triangulation<3> lst3_4_7;
             /**< The layered solid torus LST(3,4,7). */
 
     public:
@@ -158,7 +158,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
             // The others we recreate using dehydration strings.
             // The dehydration strings were obtained by running
-            // NTriangulation::dehydrate() over triangulations from
+            // Triangulation<3>::dehydrate() over triangulations from
             // the relevant census data files.
             twistedKBxS1.insertRehydration("gepaacdfefefknakanx");
             closedHypA.insertRehydration("jgpadaaeffghfiihirmxitdagbj");
@@ -186,7 +186,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             delete figureEight;
         }
 
-        void verifyHomologyConsistency(const NTriangulation& tri,
+        void verifyHomologyConsistency(const Triangulation<3>& tri,
                 const char* name) {
             NHomologicalData dat(tri);
 
@@ -252,7 +252,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 "Manifold with genus two cusp");
         }
 
-        void verifyBdryManifoldMapH1(const NTriangulation& tri,
+        void verifyBdryManifoldMapH1(const Triangulation<3>& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
             std::string val = dat.bdryHomologyMap(1).str();
@@ -281,7 +281,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 "epic, with kernel Z");
         }
 
-        void verifyStandardCells(NTriangulation& tri, const char* name,
+        void verifyStandardCells(Triangulation<3>& tri, const char* name,
                 unsigned long c0, unsigned long c1, unsigned long c2,
                 unsigned long c3) {
             NHomologicalData dat(tri);
@@ -313,7 +313,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyStandardCells(lst3_4_7, "LST(3,4,7)", 1, 5, 7, 3);
         }
 
-        void verifyDualCells(NTriangulation& tri, const char* name,
+        void verifyDualCells(Triangulation<3>& tri, const char* name,
                 unsigned long c0, unsigned long c1, unsigned long c2,
                 unsigned long c3) {
             NHomologicalData dat(tri);
@@ -345,7 +345,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyDualCells(lst3_4_7, "LST(3,4,7)", 3, 5, 2, 0);
         }
 
-        void verifyTorsionRankVector(NTriangulation& tri,
+        void verifyTorsionRankVector(Triangulation<3>& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
             std::string val = dat.torsionRankVectorString();
@@ -372,7 +372,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyTorsionRankVector(lst3_4_7, "LST(3,4,7)", "no torsion");
         }
 
-        void verifyTorsionSigmaVector(NTriangulation& tri,
+        void verifyTorsionSigmaVector(Triangulation<3>& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
             std::string val = dat.torsionSigmaVectorString();
@@ -400,7 +400,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             verifyTorsionSigmaVector(lst3_4_7, "LST(3,4,7)", "no 2-torsion");
         }
 
-        void verifyTorsionLegendreSymbolVector(NTriangulation& tri,
+        void verifyTorsionLegendreSymbolVector(Triangulation<3>& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
             std::string val = dat.torsionLegendreSymbolVectorString();
@@ -431,7 +431,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 "no odd p-torsion");
         }
 
-        void verifyEmbeddability(const NTriangulation& tri,
+        void verifyEmbeddability(const Triangulation<3>& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
             std::string val = dat.embeddabilityComment();

@@ -39,10 +39,10 @@ using regina::NCensus;
 using regina::NCensusDB;
 using regina::NCensusHit;
 using regina::NCensusHits;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
-    NCensusHits* (*lookup_tri)(const NTriangulation&) = &NCensus::lookup;
+    NCensusHits* (*lookup_tri)(const Triangulation<3>&) = &NCensus::lookup;
     NCensusHits* (*lookup_sig)(const std::string&) = &NCensus::lookup;
 }
 

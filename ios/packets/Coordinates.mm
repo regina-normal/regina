@@ -97,7 +97,7 @@ using regina::NTriangle;
             coordSystem == regina::NS_AN_QUAD_OCT);
 }
 
-+ (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri
++ (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::Triangulation<3>*)tri
 {
     if (coordSystem == regina::NS_STANDARD)
         return tri->size() * 7;
@@ -121,7 +121,7 @@ using regina::NTriangle;
         return 0;
 }
 
-+ (NSString*)columnName:(regina::NormalCoords)coordSystem whichCoord:(unsigned long)whichCoord tri:(regina::NTriangulation*)tri
++ (NSString*)columnName:(regina::NormalCoords)coordSystem whichCoord:(unsigned long)whichCoord tri:(regina::Triangulation<3>*)tri
 {
     if (coordSystem == regina::NS_STANDARD) {
         if (whichCoord % 7 < 4)
@@ -183,7 +183,7 @@ using regina::NTriangle;
     return @"Unknown";
 }
 
-+ (NSString*)longestColumnName:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri
++ (NSString*)longestColumnName:(regina::NormalCoords)coordSystem tri:(regina::Triangulation<3>*)tri
 {
     switch (coordSystem) {
         case regina::NS_STANDARD:

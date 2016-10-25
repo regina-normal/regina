@@ -1,4 +1,4 @@
-# triangulation
+# dim3
 
 # Files to compile
 SET ( FILES
@@ -11,7 +11,7 @@ SET ( FILES
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
-  SET ( SOURCES ${SOURCES} triangulation/${SOURCE_FILE})
+  SET ( SOURCES ${SOURCES} dim3/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 

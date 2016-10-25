@@ -45,7 +45,6 @@ class QLabel;
 namespace regina {
     class Packet;
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -58,7 +57,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
         /**
          * Internal components
@@ -97,7 +96,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriSurfacesUI(regina::NTriangulation* packet,
+        NTriSurfacesUI(regina::Triangulation<3>* packet,
             PacketTabbedUI* useParentUI);
 
         /**

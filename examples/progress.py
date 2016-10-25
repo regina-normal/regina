@@ -16,7 +16,7 @@ import time
 # then copied the isomorphism signature so that we can reconstruct the
 # triangulation here.
 sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
-tri = NTriangulation(sig)
+tri = Triangulation3(sig)
 print tri.size(), 'tetrahedra'
 
 # Create a progress tracker to use during the normal surface enumeration.

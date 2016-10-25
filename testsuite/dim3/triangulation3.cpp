@@ -52,7 +52,7 @@
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/generictriangulation.h"
-#include "testsuite/triangulation/testtriangulation.h"
+#include "testsuite/dim3/testtriangulation.h"
 
 using regina::NAbelianGroup;
 using regina::NBoundaryComponent;
@@ -68,7 +68,6 @@ using regina::NStandardTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangle;
 using regina::Triangulation;
-using regina::NTriangulation;
 using regina::NVertex;
 
 class Triangulation3Test : public TriangulationTest<3> {
@@ -120,120 +119,120 @@ class Triangulation3Test : public TriangulationTest<3> {
             /**< For comparing floating-point Turaev-Viro values. */
 
         // Trivial:
-        NTriangulation empty;
+        Triangulation<3> empty;
             /**< An empty triangulation. */
-        NTriangulation singleTet;
+        Triangulation<3> singleTet;
             /**< A single tetrahedron with no face gluings. */
 
         // Closed orientable:
-        NTriangulation s3;
+        Triangulation<3> s3;
             /**< A one-vertex 3-sphere. */
-        NTriangulation s2xs1;
+        Triangulation<3> s2xs1;
             /**< The product space S^2 x S^1. */
-        NTriangulation rp3_1;
+        Triangulation<3> rp3_1;
             /**< A one-vertex triangulation of RP^3. */
-        NTriangulation rp3_2;
+        Triangulation<3> rp3_2;
             /**< A two-vertex triangulation of RP^3. */
-        NTriangulation lens3_1;
+        Triangulation<3> lens3_1;
             /**< A two-vertex lens space L(3,1). */
-        NTriangulation lens8_3;
+        Triangulation<3> lens8_3;
             /**< The layered lens space L(8,3). */
-        NTriangulation lens7_1_loop;
+        Triangulation<3> lens7_1_loop;
             /**< An untwisted layered loop representing L(7,1). */
-        NTriangulation rp3rp3;
+        Triangulation<3> rp3rp3;
             /**< The connected sum RP^3 # RP^3. */
-        NTriangulation q32xz3;
+        Triangulation<3> q32xz3;
             /**< The orbit manifold S^3 / Q_32 x Z_3. */
-        NTriangulation q28;
+        Triangulation<3> q28;
             /**< A twisted layered loop representing S^3 / Q_28. */
-        NTriangulation weberSeifert;
+        Triangulation<3> weberSeifert;
             /**< The Weber-Seifert dodecahedral space.  With 23 tetrahedra,
                  this is too large for running normal surface algorithms
                  here in the test suite. */
 
         // Closed orientable, very large:
-        NTriangulation lens100_1;
+        Triangulation<3> lens100_1;
             /**< The lens space L(100,1). */
 
         // Bounded orientable:
-        NTriangulation lst3_4_7;
+        Triangulation<3> lst3_4_7;
             /**< The layered solid torus LST(3,4,7). */
 
         // Ideal orientable:
-        NTriangulation figure8;
+        Triangulation<3> figure8;
             /**< The figure eight knot complement. */
 
         // Closed non-orientable:
-        NTriangulation rp2xs1;
+        Triangulation<3> rp2xs1;
             /**< The product RP^2 x S^1. */
 
         // Bounded non-orientable:
-        NTriangulation solidKB;
+        Triangulation<3> solidKB;
             /**< A solid Klein bottle. */
 
         // Ideal non-orientable:
-        NTriangulation gieseking;
+        Triangulation<3> gieseking;
             /**< The Gieseking manifold. */
 
         // Invalid edges:
-        NTriangulation invalidEdges;
+        Triangulation<3> invalidEdges;
             /**< Contains two invalid edges, but all vertices have
                  2-sphere links. */
 
         // Non-standard vertex links:
-        NTriangulation twoProjPlaneCusps;
+        Triangulation<3> twoProjPlaneCusps;
             /**< A subdivision of invalidEdges, resulting in all edges
                  valid but two projective plane cusps.  Note that this
                  triangulation has a 3-sphere orientable double cover. */
-        NTriangulation cuspedGenusTwoTorus;
+        Triangulation<3> cuspedGenusTwoTorus;
             /**< A solid genus two torus with a cusped boundary. */
-        NTriangulation pinchedSolidTorus;
+        Triangulation<3> pinchedSolidTorus;
             /**< A solid torus with one longitude pinched to a point. */
-        NTriangulation pinchedSolidKB;
+        Triangulation<3> pinchedSolidKB;
             /**< A solid Klein bottle with one longitude pinched to a point. */
 
         // Non-minimal:
-        NTriangulation s3_large;
+        Triangulation<3> s3_large;
             /**< A non-minimal 3-sphere triangulation. */
-        NTriangulation rp3_large;
+        Triangulation<3> rp3_large;
             /**< The manifold RP^3. */
-        NTriangulation lens8_3_large;
+        Triangulation<3> lens8_3_large;
             /**< The lens space L(8,3). */
-        NTriangulation q20_large;
+        Triangulation<3> q20_large;
             /**< The manifold S^3 / Q_20. */
-        NTriangulation ball_large;
+        Triangulation<3> ball_large;
             /**< A four tetrahedron ball that used to cause crashes in
                  the simplification routines once upon a time. */
-        NTriangulation ball_large_pillows;
+        Triangulation<3> ball_large_pillows;
             /**< A four tetrahedron ball formed by joining together two
                  triangular pillows. */
-        NTriangulation ball_large_snapped;
+        Triangulation<3> ball_large_snapped;
             /**< A ball formed by joining together three snapped balls. */
-        NTriangulation singleTet_bary;
+        Triangulation<3> singleTet_bary;
             /**< The barycentric subdivision of a single tetrahedron. */
-        NTriangulation fig8_bary;
+        Triangulation<3> fig8_bary;
             /**< The barycentric subdivision of the figure eight knot
                  complement. */
 
         // Disconnected triangulations:
-        NTriangulation disjoint2;
+        Triangulation<3> disjoint2;
             /**< A disjoint union of two triangulations. */
-        NTriangulation disjoint3;
+        Triangulation<3> disjoint3;
             /**< A disjoint union of three triangulations. */
 
     public:
-        void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
             dest.insertTriangulation(*source);
             dest.setLabel(source->label());
             delete source;
         }
 
-        void generateFromSig(NTriangulation& tri, const std::string& sigStr) {
+        void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
             NSignature* sig = NSignature::parse(sigStr);
             if (sig == 0)
                 return;
 
-            NTriangulation* triNew = sig->triangulate();
+            Triangulation<3>* triNew = sig->triangulate();
             delete sig;
             if (triNew == 0)
                 return;
@@ -243,12 +242,12 @@ class Triangulation3Test : public TriangulationTest<3> {
             delete triNew;
         }
 
-        NTriangulation* generateFromSig(const std::string& sigStr) {
+        Triangulation<3>* generateFromSig(const std::string& sigStr) {
             NSignature* sig = NSignature::parse(sigStr);
             if (sig == 0)
                 return 0;
 
-            NTriangulation* triNew = sig->triangulate();
+            Triangulation<3>* triNew = sig->triangulate();
             if (! triNew)
                 return 0;
 
@@ -787,7 +786,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // TODO: Check that nobody has too many boundary components.
         }
 
-        static void verifyBoundaryTriangles(NTriangulation* tri) {
+        static void verifyBoundaryTriangles(Triangulation<3>* tri) {
             unsigned long found = 0;
 
             unsigned long i, j;
@@ -828,7 +827,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualAll(verifyBoundaryTriangles);
         }
 
-        void verifyVertexCount(NTriangulation& tri, unsigned nVertices,
+        void verifyVertexCount(Triangulation<3>& tri, unsigned nVertices,
                 const char* triName) {
             if (tri.countVertices() != nVertices) {
                 std::ostringstream msg;
@@ -838,7 +837,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyVertexDisc(NTriangulation& tri, unsigned vertex,
+        void verifyVertexDisc(Triangulation<3>& tri, unsigned vertex,
                 const char* triName) {
             if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
@@ -895,7 +894,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyVertexSphere(NTriangulation& tri, unsigned vertex,
+        void verifyVertexSphere(Triangulation<3>& tri, unsigned vertex,
                 const char* triName) {
             if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
@@ -952,7 +951,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyVertexTorus(NTriangulation& tri, unsigned vertex,
+        void verifyVertexTorus(Triangulation<3>& tri, unsigned vertex,
                 const char* triName) {
             if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
@@ -1009,7 +1008,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyVertexKB(NTriangulation& tri, unsigned vertex,
+        void verifyVertexKB(Triangulation<3>& tri, unsigned vertex,
                 const char* triName) {
             if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
@@ -1066,7 +1065,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyVertexTorusG2(NTriangulation& tri, unsigned vertex,
+        void verifyVertexTorusG2(Triangulation<3>& tri, unsigned vertex,
                 const char* triName) {
             if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
@@ -1123,7 +1122,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyVertexProjPlane(NTriangulation& tri, unsigned vertex,
+        void verifyVertexProjPlane(Triangulation<3>& tri, unsigned vertex,
                 const char* triName) {
             if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
@@ -1180,7 +1179,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyVertexAnnulus(NTriangulation& tri, unsigned vertex,
+        void verifyVertexAnnulus(Triangulation<3>& tri, unsigned vertex,
                 const char* triName) {
             if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
@@ -1237,7 +1236,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyVertexMobius(NTriangulation& tri, unsigned vertex,
+        void verifyVertexMobius(Triangulation<3>& tri, unsigned vertex,
                 const char* triName) {
             if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
@@ -1446,7 +1445,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Pinched solid Klein bottle");
         }
 
-        static void verifyVertexLinks(NTriangulation* tri) {
+        static void verifyVertexLinks(Triangulation<3>* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
                 NVertex* v = tri->vertex(i);
                 NIsomorphism* iso;
@@ -1600,7 +1599,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllIdeal(verifyVertexLinks);
         }
 
-        void verifyEuler(const NTriangulation& tri,
+        void verifyEuler(const Triangulation<3>& tri,
                 long expectedManifold, long expectedTri, const char* triName) {
             long eulerManifold = tri.eulerCharManifold();
             long eulerTri = tri.eulerCharTri();
@@ -1652,22 +1651,22 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyEuler(pinchedSolidKB, 0, 1, "Pinched solid Klein bottle");
 
             {
-                NTriangulation t(twoProjPlaneCusps);
+                Triangulation<3> t(twoProjPlaneCusps);
                 t.idealToFinite();
                 verifyEuler(t, 1, 1, "Triangulation with RP^2 boundaries");
             }
             {
-                NTriangulation t(cuspedGenusTwoTorus);
+                Triangulation<3> t(cuspedGenusTwoTorus);
                 t.idealToFinite();
                 verifyEuler(t, -1, -1, "Solid genus two torus");
             }
             {
-                NTriangulation t(pinchedSolidTorus);
+                Triangulation<3> t(pinchedSolidTorus);
                 t.idealToFinite();
                 verifyEuler(t, 0, 0, "Unpinched solid torus");
             }
             {
-                NTriangulation t(pinchedSolidKB);
+                Triangulation<3> t(pinchedSolidKB);
                 t.idealToFinite();
                 verifyEuler(t, 0, 0, "Unpinched solid Klein bottle");
             }
@@ -1886,7 +1885,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Boundary H1(cusped solid genus two torus)", 4);
         }
 
-        static void verifyFundGroupVsH1(NTriangulation* tri) {
+        static void verifyFundGroupVsH1(Triangulation<3>* tri) {
             NGroupPresentation* pi1 =
                 new NGroupPresentation(tri->fundamentalGroup());
 
@@ -2026,7 +2025,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Fund(pinched solid Klein bottle)", "Z");
         }
 
-        static void testZeroEfficiency(NTriangulation* tri) {
+        static void testZeroEfficiency(Triangulation<3>* tri) {
             bool ans = tri->isZeroEfficient();
 
             if (tri->isClosed() && tri->isConnected()) {
@@ -2185,7 +2184,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 q32xz3.isIrreducible());
         }
 
-        NTriangulation* verifyThreeSphere(NTriangulation* tri,
+        Triangulation<3>* verifyThreeSphere(Triangulation<3>* tri,
                 const char* name = 0) {
             if (name)
                 tri->setLabel(name);
@@ -2196,7 +2195,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Try again with a barycentric subdivision.
-            NTriangulation big(*tri);
+            Triangulation<3> big(*tri);
             big.barycentricSubdivision();
             if (! big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-sphere "
@@ -2219,7 +2218,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             return tri;
         }
 
-        NTriangulation* verifyNotThreeSphere(NTriangulation* tri,
+        Triangulation<3>* verifyNotThreeSphere(Triangulation<3>* tri,
                 const char* name = 0) {
             if (name)
                 tri->setLabel(name);
@@ -2230,7 +2229,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Try again with a barycentric subdivision.
-            NTriangulation big(*tri);
+            Triangulation<3> big(*tri);
             big.barycentricSubdivision();
             if (big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-sphere "
@@ -2263,18 +2262,18 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyIsoSigThreeSphere(const std::string& sigStr) {
-            NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
+            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
             t->setLabel(sigStr);
             delete verifyThreeSphere(t);
         }
 
         void verifyIsoSigNotThreeSphere(const std::string& sigStr) {
-            NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
+            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
             t->setLabel(sigStr);
             delete verifyNotThreeSphere(t);
         }
 
-        static void testThreeSphere6(NTriangulation* tri) {
+        static void testThreeSphere6(Triangulation<3>* tri) {
             // PRECONDITION: tri has <= 6 tetrahedra.
             //
             // We know from the closed orientable census data that the
@@ -2327,7 +2326,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void threeSphereRecognition() {
-            NTriangulation* tri;
+            Triangulation<3>* tri;
 
             // 3-spheres obtained from splitting surface signatures:
             verifySigThreeSphere("(a)(a)");
@@ -2344,7 +2343,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifySigThreeSphere("(abcd)(aefg)(b)(c)(d)(e)(f)(g)");
 
             // 3-spheres obtained as Lens spaces:
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(1,0);
             tri->setLabel("L(1,0)");
             delete verifyThreeSphere(tri);
@@ -2421,7 +2420,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Poincare homology sphere (example)");
 
             // Poincare homology sphere as a plugged triangular solid torus:
-            tri = new NTriangulation;
+            tri = new Triangulation<3>;
             NTetrahedron* tet[5];
             int i;
             for (i = 0; i < 5; i++)
@@ -2441,44 +2440,44 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Poincare homology sphere as an augmented triangular solid
             // torus:
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertAugTriSolidTorus(2, -1, 3, 1, 5, -4);
             delete verifyNotThreeSphere(tri,
                 "Poincare homology sphere (aug I)");
 
             // Poincare homology sphere as another augmented triangular solid
             // torus:
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
             delete verifyNotThreeSphere(tri,
                 "Poincare homology sphere (aug II)");
 
             // Let's make sure silly things like balls aren't picked up.
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->newTetrahedron();
             delete verifyNotThreeSphere(tri, "Standalone tetrahedron");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
             delete verifyNotThreeSphere(tri, "Snapped tetrahedron");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 2);
             delete verifyNotThreeSphere(tri, "LST(1,2,3)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(3, 4);
             delete verifyNotThreeSphere(tri, "LST(3,4,7)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             delete verifyNotThreeSphere(tri, "Empty triangulation");
 
             // Some disconnected examples.
             verifyNotThreeSphere(&disjoint2, "Disjoint, 2 components");
             verifyNotThreeSphere(&disjoint3, "Disjoint, 3 components");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(1,0);
             tri->insertLayeredLensSpace(1,0);
             tri->setLabel("S^3 U S^3");
@@ -2532,7 +2531,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             //verifyIsoSigThreeSphere("kLLvQPPkbeghfifjhjjxxaaxxjxrvc");
         }
 
-        NTriangulation* verifyThreeBall(NTriangulation* tri,
+        Triangulation<3>* verifyThreeBall(Triangulation<3>* tri,
                 const std::string& triName) {
             if (! tri->isBall()) {
                 CPPUNIT_FAIL(("The 3-ball " + triName +
@@ -2540,7 +2539,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Try again with a barycentric subdivision.
-            NTriangulation big(*tri);
+            Triangulation<3> big(*tri);
             big.barycentricSubdivision();
             if (! big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-ball "
@@ -2550,7 +2549,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             return tri;
         }
 
-        NTriangulation* verifyNotThreeBall(NTriangulation* tri,
+        Triangulation<3>* verifyNotThreeBall(Triangulation<3>* tri,
                 const std::string& triName) {
             if (tri->isBall()) {
                 CPPUNIT_FAIL(("The non-3-ball" + triName +
@@ -2558,7 +2557,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Try again with a barycentric subdivision.
-            NTriangulation big(*tri);
+            Triangulation<3> big(*tri);
             big.barycentricSubdivision();
             if (big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-ball "
@@ -2569,20 +2568,20 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void threeBallRecognition() {
-            NTriangulation* tri;
+            Triangulation<3>* tri;
             NTetrahedron* tet[4];
 
             // Balls:
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->newTetrahedron();
             delete verifyThreeBall(tri, "Standalone tetrahedron");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
             delete verifyThreeBall(tri, "Snapped tetrahedron");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
             tet[0]->join(0, tet[1], Perm<4>());
@@ -2592,7 +2591,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // This ball used to crash the simplification routines once
             // upon a time.  Throw it into the test suite for good measure.
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
             tet[2] = tri->newTetrahedron();
@@ -2606,15 +2605,15 @@ class Triangulation3Test : public TriangulationTest<3> {
             delete verifyThreeBall(tri, "4-tetrahedron ball");
 
             // Non-balls:
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 2);
             delete verifyNotThreeBall(tri, "LST(1,2,3)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(3, 4);
             delete verifyNotThreeBall(tri, "LST(3,4,7)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             delete verifyNotThreeBall(tri, "Empty triangulation");
 
             // Make a punctured Poincare homology sphere.
@@ -2626,11 +2625,11 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Punctured Poincare homology sphere");
 
             // Throw in a couple of closed manifolds for good measure.
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(1,0);
             delete verifyNotThreeBall(tri, "L(1,0)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(2,1);
             delete verifyNotThreeBall(tri, "L(2,1)");
 
@@ -2641,13 +2640,13 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyNotThreeBall(&disjoint2, "Disjoint, 2 components");
             verifyNotThreeBall(&disjoint3, "Disjoint, 3 components");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->newTetrahedron();
             tri->newTetrahedron();
             delete verifyNotThreeBall(tri, "B^3 U B^3");
         }
 
-        static void testSolidTorus4(NTriangulation* tri) {
+        static void testSolidTorus4(Triangulation<3>* tri) {
             // PRECONDITION: tri is not ideal, and has <= 4 tetrahedra.
             //
             // We know from the bounded orientable census data that the only
@@ -2683,23 +2682,23 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        NTriangulation* verifySolidTorus(NTriangulation* tri,
+        Triangulation<3>* verifySolidTorus(Triangulation<3>* tri,
                 const char* triName = 0) {
             if (triName)
                 tri->setLabel(triName);
 
-            NTriangulation bounded(*tri);
+            Triangulation<3> bounded(*tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
 
-            NTriangulation ideal(*tri);
+            Triangulation<3> ideal(*tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
 
-            NTriangulation boundedBig(bounded);
+            Triangulation<3> boundedBig(bounded);
             boundedBig.barycentricSubdivision();
 
-            NTriangulation idealBig(ideal);
+            Triangulation<3> idealBig(ideal);
             idealBig.barycentricSubdivision();
 
             if (! bounded.isSolidTorus()) {
@@ -2722,23 +2721,23 @@ class Triangulation3Test : public TriangulationTest<3> {
             return tri;
         }
 
-        NTriangulation* verifyNotSolidTorus(NTriangulation* tri,
+        Triangulation<3>* verifyNotSolidTorus(Triangulation<3>* tri,
                 const char* triName = 0) {
             if (triName)
                 tri->setLabel(triName);
 
-            NTriangulation bounded(*tri);
+            Triangulation<3> bounded(*tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
 
-            NTriangulation ideal(*tri);
+            Triangulation<3> ideal(*tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
 
-            NTriangulation boundedBig(bounded);
+            Triangulation<3> boundedBig(bounded);
             boundedBig.barycentricSubdivision();
 
-            NTriangulation idealBig(ideal);
+            Triangulation<3> idealBig(ideal);
             idealBig.barycentricSubdivision();
 
             if (bounded.isSolidTorus()) {
@@ -2762,49 +2761,49 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyIsoSigSolidTorus(const std::string& sigStr) {
-            NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
+            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
             t->setLabel(sigStr);
             delete verifySolidTorus(t);
         }
 
         void verifyIsoSigNotSolidTorus(const std::string& sigStr) {
-            NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
+            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
             t->setLabel(sigStr);
             delete verifyNotSolidTorus(t);
         }
 
         void solidTorusRecognition() {
-            NTriangulation* tri;
+            Triangulation<3>* tri;
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             delete verifyNotSolidTorus(tri, "Empty triangulation");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->newTetrahedron();
             delete verifyNotSolidTorus(tri, "Single tetrahedron");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             NTetrahedron* tet = tri->newTetrahedron();
             tet->join(0, tet, Perm<4>(3, 1, 2, 0));
             delete verifyNotSolidTorus(tri, "Snapped tetrahedron");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 2);
             delete verifySolidTorus(tri, "LST(1,2,3)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 20);
             delete verifySolidTorus(tri, "LST(1,20,21)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 1);
             delete verifySolidTorus(tri, "LST(1,1,2)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(0, 1);
             delete verifySolidTorus(tri, "LST(0,1,1)");
 
-            tri = NTriangulation::fromIsoSig("cMcabbgds");
+            tri = Triangulation<3>::fromIsoSig("cMcabbgds");
             delete verifySolidTorus(tri, "Ideal solid torus");
 
             tri = NExampleTriangulation::figureEight();
@@ -2834,11 +2833,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyIsoSigSolidTorus("iLAvPQacbbgehfgdicdffnf");
 
             // Throw in a couple of closed manifolds for good measure.
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(1,0);
             delete verifyNotSolidTorus(tri, "L(1,0)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(2,1);
             delete verifyNotSolidTorus(tri, "L(2,1)");
 
@@ -2849,7 +2848,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyNotSolidTorus(&disjoint2, "2-component manifold");
             verifyNotSolidTorus(&disjoint3, "3-component manifold");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 2);
             tri->insertLayeredSolidTorus(1, 2);
             delete verifyNotSolidTorus(tri, "LST U LST");
@@ -2858,7 +2857,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(&testSolidTorus4);
         }
 
-        void verifyTV3(NTriangulation& t, const std::string& triName) {
+        void verifyTV3(Triangulation<3>& t, const std::string& triName) {
             // Verify the Turaev-Viro invariants for r=3.
             // The expected values are described in the paper of Turaev
             // and Viro.
@@ -3016,12 +3015,12 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyTVS2xS1(7); verifyTVS2xS1(8);
         }
 
-        static void verifyDoubleCover(NTriangulation* tri) {
+        static void verifyDoubleCover(Triangulation<3>* tri) {
             // PRE: tri is either empty or connected.
             if (! tri->isConnected())
                 return;
 
-            NTriangulation cover(*tri);
+            Triangulation<3> cover(*tri);
             cover.makeDoubleCover();
 
             if (tri->isEmpty()) {
@@ -3044,7 +3043,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                NTriangulation* child = static_cast<NTriangulation*>(
+                Triangulation<3>* child = static_cast<Triangulation<3>*>(
                     parent.firstChild());
                 while (child) {
                     if (! tri->isIsomorphicTo(*child).get()) {
@@ -3056,7 +3055,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    child = static_cast<NTriangulation*>(child->nextSibling());
+                    child = static_cast<Triangulation<3>*>(child->nextSibling());
                 }
             } else {
                 // We should come away with a proper connected double cover.
@@ -3132,8 +3131,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualAll(verifyDoubleCover);
         }
 
-        static void verifyBary(NTriangulation* tri) {
-            NTriangulation b(*tri);
+        static void verifyBary(Triangulation<3>* tri) {
+            Triangulation<3> b(*tri);
             b.barycentricSubdivision();
 
             // Note that subdivisions can turn invalid into valid, but
@@ -3244,8 +3243,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualAll(verifyBary);
         }
 
-        static void verifyIdealToFinite(NTriangulation* tri) {
-            NTriangulation finite(*tri);
+        static void verifyIdealToFinite(Triangulation<3>* tri) {
+            Triangulation<3> finite(*tri);
             finite.idealToFinite();
 
             // Are there any ideal vertices remaining?
@@ -3257,7 +3256,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Are there any invalid vertices remaining?
-            for (NTriangulation::VertexIterator vit =
+            for (Triangulation<3>::VertexIterator vit =
                     finite.vertices().begin(); vit !=
                     finite.vertices().end(); ++vit)
                 if ((*vit)->isBoundary() && ! (*vit)->isStandard()) {
@@ -3270,7 +3269,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
-            NTriangulation::EdgeIterator eit;
+            Triangulation<3>::EdgeIterator eit;
             for (eit = tri->edges().begin();
                     eit != tri->edges().end(); ++eit)
                 if (! (*eit)->isValid())
@@ -3301,7 +3300,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // boundary components are topologically unchanged.
             if (tri->isValid()) {
                 typedef std::pair<long, bool> BCSpec;
-                NTriangulation::BoundaryComponentIterator bcit;
+                Triangulation<3>::BoundaryComponentIterator bcit;
 
                 std::vector<BCSpec> bcOld;
                 for (bcit = tri->boundaryComponents().begin();
@@ -3331,8 +3330,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualAll(verifyIdealToFinite);
         }
 
-        static void verifyFiniteToIdeal(NTriangulation* tri) {
-            NTriangulation ideal(*tri);
+        static void verifyFiniteToIdeal(Triangulation<3>* tri) {
+            Triangulation<3> ideal(*tri);
             ideal.finiteToIdeal();
 
             // Are there any boundary triangles remaining?
@@ -3345,7 +3344,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
-            NTriangulation::EdgeIterator eit;
+            Triangulation<3>::EdgeIterator eit;
             for (eit = tri->edges().begin();
                     eit != tri->edges().end(); ++eit)
                 if (! (*eit)->isValid())
@@ -3367,7 +3366,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // for sphere which must vanish.
             if (tri->isValid()) {
                 typedef std::pair<long, bool> BCSpec;
-                NTriangulation::BoundaryComponentIterator bcit;
+                Triangulation<3>::BoundaryComponentIterator bcit;
 
                 std::vector<BCSpec> bcOld;
                 for (bcit = tri->boundaryComponents().begin();
@@ -3405,24 +3404,24 @@ class Triangulation3Test : public TriangulationTest<3> {
             // 3-sphere.  Edges 0 and 2 make a Hopf link, and edge 1 is
             // just an interval.
             {
-                NTriangulation snap;
+                Triangulation<3> snap;
                 NTetrahedron* tet = snap.newTetrahedron();
                 tet->join(0, tet, Perm<4>(0, 1));
                 tet->join(2, tet, Perm<4>(2, 3));
 
-                NTriangulation tmp0(snap);
+                Triangulation<3> tmp0(snap);
                 tmp0.drillEdge(tmp0.edge(0));
                 if (! tmp0.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 0 "
                         "does not give a solid torus.");
 
-                NTriangulation tmp1(snap);
+                Triangulation<3> tmp1(snap);
                 tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isBall())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 1 "
                         "does not give a 3-ball.");
 
-                NTriangulation tmp2(snap);
+                Triangulation<3> tmp2(snap);
                 tmp2.drillEdge(tmp2.edge(2));
                 if (! tmp2.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 2 "
@@ -3433,12 +3432,12 @@ class Triangulation3Test : public TriangulationTest<3> {
             // 3-sphere.
             // Edge 0 forms a trefoil, and edge 1 is unknotted.
             {
-                NTriangulation layer;
+                Triangulation<3> layer;
                 NTetrahedron* tet = layer.newTetrahedron();
                 tet->join(0, tet, Perm<4>(1, 2, 3, 0));
                 tet->join(2, tet, Perm<4>(2, 3));
 
-                NTriangulation tmp0(layer);
+                Triangulation<3> tmp0(layer);
                 tmp0.drillEdge(tmp0.edge(0));
                 if (! (tmp0.isValid() && (! tmp0.isIdeal()) &&
                         (tmp0.countBoundaryComponents() == 1) &&
@@ -3449,7 +3448,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 0 "
                         "does not give a non-trivial knot complement.");
 
-                NTriangulation tmp1(layer);
+                Triangulation<3> tmp1(layer);
                 tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isSolidTorus())
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 1 "
@@ -3460,22 +3459,22 @@ class Triangulation3Test : public TriangulationTest<3> {
             // boundary edge, and so drilling it should leave us with
             // a solid torus again.
             {
-                NTriangulation lst;
+                Triangulation<3> lst;
                 lst.insertLayeredSolidTorus(1, 2);
 
-                NTriangulation tmp0(lst);
+                Triangulation<3> tmp0(lst);
                 tmp0.drillEdge(tmp0.edge(0));
                 if (! tmp0.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 0 "
                         "does not give a solid torus.");
 
-                NTriangulation tmp1(lst);
+                Triangulation<3> tmp1(lst);
                 tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 1 "
                         "does not give a solid torus.");
 
-                NTriangulation tmp2(lst);
+                Triangulation<3> tmp2(lst);
                 tmp2.drillEdge(tmp2.edge(2));
                 if (! tmp2.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 2 "
@@ -3485,14 +3484,14 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Now try a 2-tetrahedron ball, where we drill the internal edge
             // between the two tetrahedra.  The result should be a solid torus.
             {
-                NTriangulation ball;
+                Triangulation<3> ball;
                 NTetrahedron* a = ball.newTetrahedron();
                 NTetrahedron* b = ball.newTetrahedron();
                 a->join(0, b, Perm<4>());
                 a->join(1, b, Perm<4>());
 
                 // The internal edge joins vertices 2-3.
-                NTriangulation tmp(ball);
+                Triangulation<3> tmp(ball);
                 tmp.drillEdge(tmp.tetrahedron(0)->edge(5));
                 if (! tmp.isSolidTorus())
                     CPPUNIT_FAIL("2-tetrahedron ball: drilling the "
@@ -3500,13 +3499,13 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        static void verifyPuncture(NTriangulation* tri) {
+        static void verifyPuncture(Triangulation<3>* tri) {
             unsigned long n = tri->size();
             if (n == 0)
                 return;
 
             for (unsigned long i = 0; i <= n; ++i) {
-                NTriangulation punc(*tri);
+                Triangulation<3> punc(*tri);
                 NTetrahedron* origTet;
                 if (i == n) {
                     origTet = tri->tetrahedron(0);
@@ -3673,11 +3672,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllIdeal(verifyPuncture, true);
         }
 
-        static void verifyConnectedSumWithSelf(NTriangulation* tri) {
+        static void verifyConnectedSumWithSelf(Triangulation<3>* tri) {
             if (tri->countComponents() != 1)
                 return;
 
-            NTriangulation t(*tri);
+            Triangulation<3> t(*tri);
             t.connectedSumWith(t);
 
             // TODO: Check that homology doubles.
@@ -3717,9 +3716,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (nOld == 1) {
                     // There should be two summands, each homeomorphic
                     // to the original.
-                    NTriangulation* c1 = static_cast<NTriangulation*>(
+                    Triangulation<3>* c1 = static_cast<Triangulation<3>*>(
                         t.firstChild());
-                    NTriangulation* c2 = static_cast<NTriangulation*>(
+                    Triangulation<3>* c2 = static_cast<Triangulation<3>*>(
                         c1->nextSibling());
                     if (c1->homology() != tri->homology() ||
                             c2->homology() != tri->homology()) {
@@ -3736,7 +3735,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualSmall(verifyConnectedSumWithSelf);
         }
 
-        void verifyDehydration(const NTriangulation& tri) {
+        void verifyDehydration(const Triangulation<3>& tri) {
             std::string dehydrate = tri.dehydrate();
             if (dehydrate.empty()) {
                 std::ostringstream msg;
@@ -3744,7 +3743,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NTriangulation rehydrate;
+            Triangulation<3> rehydrate;
             if (! rehydrate.insertRehydration(dehydrate)) {
                 std::ostringstream msg;
                 msg << tri.label()
@@ -3761,7 +3760,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyNoDehydration(const NTriangulation& tri) {
+        void verifyNoDehydration(const Triangulation<3>& tri) {
             std::string dehydrate = tri.dehydrate();
             if (! dehydrate.empty()) {
                 std::ostringstream msg;
@@ -3810,9 +3809,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyNoDehydration(disjoint3);
         }
 
-        void verifySimplification(const NTriangulation& tri,
+        void verifySimplification(const Triangulation<3>& tri,
                 unsigned simpleSize, const char* simpleName) {
-            NTriangulation t(tri);
+            Triangulation<3> t(tri);
             t.intelligentSimplify();
 
             if (t.size() != simpleSize) {
@@ -3841,7 +3840,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Make sure it does not simplify any further.
-            NTriangulation t2(t);
+            Triangulation<3> t2(t);
             if (t2.intelligentSimplify()) {
                 std::ostringstream msg;
                 msg << "The simple triangulation " << std->name()
@@ -3858,9 +3857,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             delete std;
         }
 
-        void verifyNoSimplification(const NTriangulation& tri,
+        void verifyNoSimplification(const Triangulation<3>& tri,
                 const char* name) {
-            NTriangulation t(tri);
+            Triangulation<3> t(tri);
             if (t.intelligentSimplify()) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
@@ -3881,12 +3880,12 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifySimplification(singleTet_bary, 1, "B3 (3-vtx)");
 
             // Some triangulations that should not simplify.
-            NTriangulation* tri;
+            Triangulation<3>* tri;
             NTetrahedron* tet[4];
 
             // A triangulation with two degree two projective plane cusps
             // (that should not be simplified away):
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertRehydration("cabbbbxww");
             if (tri->size() != 2)
                 CPPUNIT_FAIL("Custom two-cusped triangulation failed "
@@ -3896,7 +3895,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // A triangulation with an invalid edge that simplifies
             // (where the invalid edge must not be simplified away):
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
             tet[2] = tri->newTetrahedron();
@@ -3920,7 +3919,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // A solid torus that once upon a time was incorrectly simplified
             // away to a ball.
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
             tet[2] = tri->newTetrahedron();
@@ -3940,7 +3939,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void verifyRetriangulation(const char* isoSig,
                 unsigned heightNeeded, unsigned nThreads) {
-            NTriangulation t(isoSig);
+            Triangulation<3> t(isoSig);
             if (t.isEmpty())
                 CPPUNIT_FAIL("Triangulation not constructed from isosig.");
 
@@ -3982,21 +3981,21 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyRetriangulation("hLALPkbcbefgfghxwnxark", 3, 2);
         }
 
-        static void testReordering(NTriangulation* t) {
-            NTriangulation a(*t);
+        static void testReordering(Triangulation<3>* t) {
+            Triangulation<3> a(*t);
             a.reorderTetrahedraBFS();
 
-            NTriangulation b(*t);
+            Triangulation<3> b(*t);
             b.reorderTetrahedraBFS(true);
 
             NIsomorphism* iso = NIsomorphism::random(t->size());
-            NTriangulation* c = iso->apply(t);
+            Triangulation<3>* c = iso->apply(t);
             delete iso;
 
-            NTriangulation d(*c);
+            Triangulation<3> d(*c);
             d.reorderTetrahedraBFS();
 
-            NTriangulation e(*c);
+            Triangulation<3> e(*c);
             e.reorderTetrahedraBFS(true);
 
             if (! t->isIsomorphicTo(a).get()) {
@@ -4047,7 +4046,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         void propertyUpdates() {
             // Begin with an empty triangulation and calculate various
             // properties.
-            NTriangulation t;
+            Triangulation<3> t;
 
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not valid.",
                 t.isValid());
@@ -4095,10 +4094,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "is orientable.", ! t.isOrientable());
         }
 
-        static void verifyEltMove14(NTriangulation* tri) {
+        static void verifyEltMove14(Triangulation<3>* tri) {
             unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
-                NTriangulation large(*tri);
+                Triangulation<3> large(*tri);
                 large.oneFourMove(large.tetrahedron(i));
 
                 if (large.size() != n + 3) {

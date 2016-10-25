@@ -79,9 +79,9 @@ using regina::NEdge;
 using regina::Packet;
 using regina::Perm;
 using regina::NSatRegion;
-using regina::NTriangulation;
+using regina::Triangulation;
 
-NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
+NTriCompositionUI::NTriCompositionUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet), comparingTri(0), components(0), lastComponent(0) {
     // Set up the UI.
@@ -115,7 +115,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     isoSelectArea->addWidget(label);
     isoTest = new PacketChooser(tri->root(),
-        new SubclassFilter<NTriangulation>(),
+        new SubclassFilter<Triangulation<3>>(),
         PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
@@ -260,7 +260,7 @@ void NTriCompositionUI::updateIsoPanel() {
     if (isoTest->selectedPacket() != comparingTri) {
         if (comparingTri)
             comparingTri->unlisten(this);
-        comparingTri = dynamic_cast<NTriangulation*>(isoTest->selectedPacket());
+        comparingTri = dynamic_cast<Triangulation<3>*>(isoTest->selectedPacket());
         if (comparingTri)
             comparingTri->listen(this);
     }

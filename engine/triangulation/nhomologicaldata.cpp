@@ -121,13 +121,13 @@ void NHomologicalData::computeccIndexing() {
     unsigned long i=0;
     unsigned long j=0;
 
-    for (NTriangulation::VertexIterator vit = tri->vertices().begin();
+    for (Triangulation<3>::VertexIterator vit = tri->vertices().begin();
             vit != tri->vertices().end(); vit++) {
         if (!((*vit)->isIdeal())) sNIV.push_back(i);
         i++;
     } // sNIV
 
-    for (NTriangulation::EdgeIterator eit = tri->edges().begin();
+    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
             eit != tri->edges().end(); eit++) {
         for (i=0;i<2;i++) {
             if ((*eit)->vertex(i)->isIdeal()) sIEOE.push_back(2*j+i);
@@ -136,7 +136,7 @@ void NHomologicalData::computeccIndexing() {
     }
     j=0; // sIEOE
 
-    for (NTriangulation::TriangleIterator fit = tri->triangles().begin();
+    for (Triangulation<3>::TriangleIterator fit = tri->triangles().begin();
             fit != tri->triangles().end(); fit++) {
         for (i=0;i<3;i++) {
             if ((*fit)->vertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);
@@ -145,7 +145,7 @@ void NHomologicalData::computeccIndexing() {
     }
     j=0; // sIEEOF
 
-    for (NTriangulation::TetrahedronIterator tit = tri->tetrahedra().begin();
+    for (Triangulation<3>::TetrahedronIterator tit = tri->tetrahedra().begin();
             tit != tri->tetrahedra().end(); tit++) {
         for (i=0;i<4;i++)  {
             if ((*tit)->vertex(i)->isIdeal()) {
@@ -156,38 +156,38 @@ void NHomologicalData::computeccIndexing() {
     }
     j=0;// sIEFOT
 
-    for (NTriangulation::VertexIterator vit = tri->vertices().begin();
+    for (Triangulation<3>::VertexIterator vit = tri->vertices().begin();
             vit != tri->vertices().end(); vit++) // dNINBV
     {if ((!((*vit)->isIdeal())) &&
             (!((*vit)->isBoundary()))) dNINBV.push_back(j);
         j++;
     } j=0;
-    for (NTriangulation::EdgeIterator eit = tri->edges().begin();
+    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
             eit != tri->edges().end(); eit++) {
         if (!((*eit)->isBoundary()))
             dNBE.push_back(j);
         j++;
     }
     j=0; // dNBE
-    for (NTriangulation::TriangleIterator fit = tri->triangles().begin();
+    for (Triangulation<3>::TriangleIterator fit = tri->triangles().begin();
             fit != tri->triangles().end(); fit++) {
         if (!((*fit)->isBoundary()))        dNBF.push_back(j);
         j++;
     }
     i=0; // dNBF
 
-    for (NTriangulation::VertexIterator vit = tri->vertices().begin();
+    for (Triangulation<3>::VertexIterator vit = tri->vertices().begin();
             vit != tri->vertices().end(); vit++) // sBNIV
     {if ( (!((*vit)->isIdeal())) &&
             ((*vit)->isBoundary())) sBNIV.push_back(i);
         i++;
     } i=0;
-    for (NTriangulation::EdgeIterator eit = tri->edges().begin();
+    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
             eit != tri->edges().end(); eit++) // sBNIE
     {if ((*eit)->isBoundary()) sBNIE.push_back(i);
         i++;
     } i=0;
-    for (NTriangulation::TriangleIterator fit = tri->triangles().begin();
+    for (Triangulation<3>::TriangleIterator fit = tri->triangles().begin();
             fit != tri->triangles().end(); fit++) // sBNIF
     {if ((*fit)->isBoundary()) sBNIF.push_back(i);
         i++;
@@ -1829,7 +1829,7 @@ void NHomologicalData::computeEmbeddabilityString() {
      { // triangulation is NOT orientable, therefore can not embed
        // in any rational homology 3-sphere.  So we look at the
        // orientation cover...
-       NTriangulation orTri(*tri);
+       Triangulation<3> orTri(*tri);
        orTri.makeDoubleCover();
        NHomologicalData covHomol(orTri);
         // break up into two cases, boundary and no boundary...

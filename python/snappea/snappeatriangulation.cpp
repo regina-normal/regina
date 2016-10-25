@@ -42,14 +42,14 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::Cusp;
 using regina::SnapPeaTriangulation;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     double (SnapPeaTriangulation::*volume_void)() const =
         &SnapPeaTriangulation::volume;
-    NTriangulation* (SnapPeaTriangulation::*filledTriangulation_void)() const =
+    Triangulation<3>* (SnapPeaTriangulation::*filledTriangulation_void)() const =
         &SnapPeaTriangulation::filledTriangulation;
-    NTriangulation* (SnapPeaTriangulation::*filledTriangulation_unsigned)
+    Triangulation<3>* (SnapPeaTriangulation::*filledTriangulation_unsigned)
         (unsigned) const = &SnapPeaTriangulation::filledTriangulation;
 
     boost::python::tuple volume_precision(const SnapPeaTriangulation& t) {
@@ -82,12 +82,12 @@ void addSnapPeaTriangulation() {
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<SnapPeaTriangulation, bases<regina::NTriangulation>,
+    class_<SnapPeaTriangulation, bases<regina::Triangulation<3>>,
             SafeHeldType<SnapPeaTriangulation>, boost::noncopyable>
             ("SnapPeaTriangulation", init<>())
         .def(init<const std::string&>())
         .def(init<const SnapPeaTriangulation&>())
-        .def(init<const NTriangulation&, optional<bool> >())
+        .def(init<const Triangulation<3>&, optional<bool> >())
         .def("isNull", &SnapPeaTriangulation::isNull)
         .def("name", &SnapPeaTriangulation::name)
         .def("solutionType", &SnapPeaTriangulation::solutionType)
@@ -164,7 +164,7 @@ void addSnapPeaTriangulation() {
     ;
 
     implicitly_convertible<SafeHeldType<SnapPeaTriangulation>,
-        SafeHeldType<regina::NTriangulation> >();
+        SafeHeldType<regina::Triangulation<3>> >();
 
     FIX_REGINA_BOOST_CONVERTERS(SnapPeaTriangulation);
 

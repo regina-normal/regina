@@ -168,7 +168,7 @@ void XMLNormalSurfacesReader::endContentSubElement(
 XMLPacketReader* NormalSurfaces::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new XMLNormalSurfacesReader(
-        dynamic_cast<NTriangulation*>(parent), resolver);
+        dynamic_cast<Triangulation<3>*>(parent), resolver);
 }
 
 } // namespace regina

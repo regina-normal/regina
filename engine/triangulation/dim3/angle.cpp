@@ -37,7 +37,7 @@
 
 namespace regina {
 
-bool NTriangulation::knowsStrictAngleStructure() const {
+bool Triangulation<3>::knowsStrictAngleStructure() const {
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
@@ -57,7 +57,7 @@ bool NTriangulation::knowsStrictAngleStructure() const {
     return strictAngleStructure_.known();
 }
 
-const AngleStructure* NTriangulation::findStrictAngleStructure() const {
+const AngleStructure* Triangulation<3>::findStrictAngleStructure() const {
     // The following test also catches any easy cases.
     if (knowsStrictAngleStructure())
         return strictAngleStructure_.value();

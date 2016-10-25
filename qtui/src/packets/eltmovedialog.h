@@ -54,7 +54,6 @@ template <int> class SimplexChooser;
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -99,13 +98,13 @@ class EltMoveDialog : public QDialog, public regina::PacketListener {
         /**
          * Packet tree structure:
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor and destructor.
          */
-        EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri);
+        EltMoveDialog(QWidget* parent, regina::Triangulation<3>* useTri);
         ~EltMoveDialog();
 
         /**

@@ -48,8 +48,8 @@
 
 namespace regina {
 
-NTriangulation* NTriangulation::rehydrate(const std::string& dehydration) {
-    NTriangulation* ans = new NTriangulation;
+Triangulation<3>* Triangulation<3>::rehydrate(const std::string& dehydration) {
+    Triangulation<3>* ans = new Triangulation<3>;
     if (ans->insertRehydration(dehydration))
         return ans;
 
@@ -57,7 +57,7 @@ NTriangulation* NTriangulation::rehydrate(const std::string& dehydration) {
     return 0;
 }
 
-bool NTriangulation::insertRehydration(const std::string& dehydration) {
+bool Triangulation<3>::insertRehydration(const std::string& dehydration) {
     // Ensure the string is non-empty.
     if (dehydration.empty())
         return false;
@@ -205,7 +205,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     return (! broken);
 }
 
-std::string NTriangulation::dehydrate() const {
+std::string Triangulation<3>::dehydrate() const {
     // Can we even dehydrate at all?
     if (simplices_.size() > 25 || hasBoundaryTriangles() || ! isConnected())
         return "";

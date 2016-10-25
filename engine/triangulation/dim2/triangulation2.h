@@ -80,7 +80,7 @@ typedef Face<2, 1> Dim2Edge;
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
-struct PacketInfo<PACKET_DIM2TRIANGULATION> {
+struct PacketInfo<PACKET_TRIANGULATION2> {
     typedef Triangulation<2> Class;
     inline static const char* name() {
         return "2-Manifold Triangulation";
@@ -111,7 +111,7 @@ template <>
 class REGINA_API Triangulation<2> :
         public Packet,
         public detail::TriangulationBase<2> {
-    REGINA_PACKET(Triangulation<2>, PACKET_DIM2TRIANGULATION)
+    REGINA_PACKET(Triangulation<2>, PACKET_TRIANGULATION2)
 
     public:
         typedef std::vector<Dim2Triangle*>::const_iterator TriangleIterator;

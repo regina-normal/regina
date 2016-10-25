@@ -90,7 +90,7 @@ void NSatBlockStarterSet::initialise() {
     insert(starter);
 }
 
-void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
+void NSatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
     // Clean up usedTets if required.
     if (! usedTets.empty())
         usedTets.clear();

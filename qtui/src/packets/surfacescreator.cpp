@@ -122,8 +122,8 @@ QString SurfacesCreator::parentWhatsThis() {
 
 regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
-    // Note that parent may be either NTriangulation or SnapPeaTriangulation.
-    if (! dynamic_cast<regina::NTriangulation*>(parent)) {
+    // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
+    if (! dynamic_cast<regina::Triangulation<3>*>(parent)) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
             ui->tr("Normal surfaces must live within a 3-manifold "
@@ -185,7 +185,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalSurfaces* ans = NormalSurfaces::enumerate(
-            dynamic_cast<regina::NTriangulation*>(parent),
+            dynamic_cast<regina::Triangulation<3>*>(parent),
             coordSystem,
             regina::NS_VERTEX | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
@@ -207,7 +207,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalSurfaces* ans = NormalSurfaces::enumerate(
-            dynamic_cast<regina::NTriangulation*>(parent),
+            dynamic_cast<regina::Triangulation<3>*>(parent),
             coordSystem,
             regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),

@@ -757,7 +757,7 @@ void Dim4TriGluingsUI::boundaryComponents() {
                 "construct a 3-manifold triangulation from the corresponding "
                 "vertex link.</qt>"));
         if (chosen) {
-            regina::NTriangulation* ans = new regina::NTriangulation(
+            regina::Triangulation<3>* ans = new regina::Triangulation<3>(
                 *chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(
                 chosen->index()).toUtf8().constData());
@@ -787,7 +787,7 @@ void Dim4TriGluingsUI::vertexLinks() {
                 "the pentachoron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            regina::NTriangulation* ans = new regina::NTriangulation(
+            regina::Triangulation<3>* ans = new regina::Triangulation<3>(
                 *chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(
                 chosen->index()).toUtf8().constData());

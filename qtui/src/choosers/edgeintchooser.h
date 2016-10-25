@@ -47,7 +47,6 @@
 namespace regina {
     template <int> class Triangulation;
     template <int, int> class Face;
-    typedef Triangulation<3> NTriangulation;
     typedef Face<3, 1> NEdge;
 };
 
@@ -78,7 +77,7 @@ typedef bool (*EdgeIntFilterFunc)(regina::NEdge*, int);
  */
 class EdgeIntChooser : public QComboBox, public regina::PacketListener {
     private:
-        regina::NTriangulation* tri_;
+        regina::Triangulation<3>* tri_;
             /**< The triangulation whose edges we are
                  choosing from. */
         EdgeIntFilterFunc filter_;
@@ -107,7 +106,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every edge/integer
          * combination will be offered.
          */
-        EdgeIntChooser(regina::NTriangulation* tri,
+        EdgeIntChooser(regina::Triangulation<3>* tri,
                 int argMin, int argMax, const QString& argDesc,
                 EdgeIntFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
@@ -178,7 +177,7 @@ class EdgeIntDialog : public QDialog {
          * Constructor and destructor.
          */
         EdgeIntDialog(QWidget* parent,
-            regina::NTriangulation* tri,
+            regina::Triangulation<3>* tri,
             int argMin, int argMax, const QString& argDesc,
             EdgeIntFilterFunc filter,
             const QString& title,
@@ -186,7 +185,7 @@ class EdgeIntDialog : public QDialog {
             const QString& whatsThis);
 
         static std::pair<regina::NEdge*, int> choose(QWidget* parent,
-            regina::NTriangulation* tri,
+            regina::Triangulation<3>* tri,
             int argMin, int argMax, const QString& argDesc,
             EdgeIntFilterFunc filter,
             const QString& title,

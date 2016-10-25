@@ -81,7 +81,7 @@ Perm<4> perm_from_edges(const int edge_orientations_on_tet[6]) {
 
 // writes the result into edge_orientations_tet
 
-void edge_orientations_on_tet(const NTriangulation &trig,
+void edge_orientations_on_tet(const Triangulation<3> &trig,
                               const std::vector<int> &edge_orientations,
                               const NTetrahedron *tet,
                               int edge_orientations_tet[6]) {
@@ -129,7 +129,7 @@ inline bool check_consistency_on_face(const int edge_orientations_tet[6],
 
 // checks that the edge_orientations give an ordering of the triangulation
 
-bool check_consistency_on_tet(const NTriangulation &trig,
+bool check_consistency_on_tet(const Triangulation<3> &trig,
                               const std::vector<int> &edge_orientations,
                               const NTetrahedron *tet,
                               bool force_oriented)
@@ -173,7 +173,7 @@ bool check_consistency_on_tet(const NTriangulation &trig,
 
 // checks that the edge orientations give a valid ordering of the triangulation
 
-bool check_consistency_around_edge(const NTriangulation &trig,
+bool check_consistency_around_edge(const Triangulation<3> &trig,
                                    const std::vector<int> &edge_orientations,
                                    int edge_index,
                                    bool force_oriented)
@@ -190,7 +190,7 @@ bool check_consistency_around_edge(const NTriangulation &trig,
 
 // construct isomorphism from edge orientations
 
-NIsomorphism* iso_from_edges(const NTriangulation &trig,
+NIsomorphism* iso_from_edges(const Triangulation<3> &trig,
                              const std::vector<int> & edge_orientations,
                              bool force_oriented) {
 
@@ -230,7 +230,7 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
 // If the function succeeds the isomorphism turning the triangulation into an
 // ordered triangulation is returned.
 
-NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
+NIsomorphism* ordering_iso(const Triangulation<3> &trig, bool force_oriented)
 {
     std::vector<int> edge_orientations(trig.countEdges(),0);
 
@@ -266,7 +266,7 @@ NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
 
 } // End anonymous namespace
 
-bool NTriangulation::isOrdered() const {
+bool Triangulation<3>::isOrdered() const {
     TetrahedronIterator it;
 
     for(it = simplices_.begin(); it != simplices_.end(); ++it)
@@ -287,7 +287,7 @@ bool NTriangulation::isOrdered() const {
     return true;
 }
 
-bool NTriangulation::order(bool force_oriented) {
+bool Triangulation<3>::order(bool force_oriented) {
     ensureSkeleton();
 
     if(force_oriented && !isOrientable())
@@ -306,9 +306,9 @@ bool NTriangulation::order(bool force_oriented) {
     // consistency check
 
     if(! isOrdered())
-        reorder_fatal_error("NTriangulation::order returned unordered triangulation in reorder.cpp");
+        reorder_fatal_error("Triangulation<3>::order returned unordered triangulation in reorder.cpp");
     if(force_oriented && ! isOriented())
-        reorder_fatal_error("NTriangulation::order returned unoriented triangulation in reorder.cpp");
+        reorder_fatal_error("Triangulation<3>::order returned unoriented triangulation in reorder.cpp");
 
     return true;
 }

@@ -154,7 +154,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          * blocked self-identified Seifert fibred space, or \c null if
          * the given triangulation is not of this form.
          */
-        static NBlockedSFSLoop* isBlockedSFSLoop(NTriangulation* tri);
+        static NBlockedSFSLoop* isBlockedSFSLoop(Triangulation<3>* tri);
 
     private:
         /**

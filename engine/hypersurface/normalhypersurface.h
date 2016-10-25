@@ -63,8 +63,8 @@ class EnumConstraints;
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
 
+template <int> class Triangulation;
 template <int, int> class Face;
-typedef Triangulation<3> NTriangulation;
 typedef Face<4, 0> Dim4Vertex;
 typedef Face<4, 1> Dim4Edge;
 
@@ -811,7 +811,7 @@ class REGINA_API NormalHypersurface :
          * links that are not spheres, then it is possible that this
          * normal hypersurface is not a compact 3-manifold.  In such a
          * case, this routine will compute homology in the same way as
-         * NTriangulation::homology() - that is, by effectively truncating
+         * Triangulation<3>::homology() - that is, by effectively truncating
          * ideal points of the hypersurface (which may arise where the
          * hypersurface meets an invalid edge).
          *
@@ -834,7 +834,7 @@ class REGINA_API NormalHypersurface :
          * hypersurface.
          *
          * The triangulation will be simplified via
-         * NTriangulation::intelligentSimplify(), which means that the
+         * Triangulation<3>::intelligentSimplify(), which means that the
          * tetrahedra of the final triangulation are not likely to
          * correspond to any particular tetrahedron/prism pieces of
          * this normal hypersurface.
@@ -849,7 +849,7 @@ class REGINA_API NormalHypersurface :
          *
          * @return a triangulation of this normal hypersurface.
          */
-        NTriangulation* triangulate() const;
+        Triangulation<3>* triangulate() const;
 
         /**
          * Determines whether this and the given hypersurface in fact

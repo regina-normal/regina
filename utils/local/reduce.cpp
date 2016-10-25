@@ -246,7 +246,7 @@ void processTree() {
     while (p) {
         next = p->nextTreePacket();
 
-        if (p->type() == PACKET_TRIANGULATION) {
+        if (p->type() == PACKET_TRIANGULATION3) {
             // A triangulation to process.
             orig = static_cast<NTriangulation*>(p);
             printf("Processing %s ...\n", orig->label().c_str());

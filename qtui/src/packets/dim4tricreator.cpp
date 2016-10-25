@@ -130,7 +130,7 @@ Dim4TriangulationCreator::Dim4TriangulationCreator(ReginaMain* mainWindow) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     iBundleFrom = new PacketChooser(mainWindow->getPacketTree(),
-        new SubclassFilter<regina::NTriangulation>(),
+        new SubclassFilter<regina::Triangulation<3>>(),
         PacketChooser::ROOT_AS_PACKET);
     iBundleFrom->setWhatsThis(expln);
     iBundleFrom->selectPacket(mainWindow->selectedPacket());
@@ -150,7 +150,7 @@ Dim4TriangulationCreator::Dim4TriangulationCreator(ReginaMain* mainWindow) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     s1BundleFrom = new PacketChooser(mainWindow->getPacketTree(),
-        new SubclassFilter<regina::NTriangulation>(),
+        new SubclassFilter<regina::Triangulation<3>>(),
         PacketChooser::ROOT_AS_PACKET);
     s1BundleFrom->setWhatsThis(expln);
     s1BundleFrom->selectPacket(mainWindow->selectedPacket());
@@ -226,7 +226,7 @@ regina::Packet* Dim4TriangulationCreator::createPacket(regina::Packet*,
         ans->setLabel("4-D triangulation");
         return ans;
     } else if (typeId == TRI_IBUNDLE) {
-        regina::NTriangulation* from = dynamic_cast<regina::NTriangulation*>(
+        regina::Triangulation<3>* from = dynamic_cast<regina::Triangulation<3>*>(
             iBundleFrom->selectedPacket());
         if (! from) {
             ReginaSupport::info(parentWidget, QObject::tr(
@@ -242,7 +242,7 @@ regina::Packet* Dim4TriangulationCreator::createPacket(regina::Packet*,
             ans->setLabel(from->label() + " × I");
         return ans;
     } else if (typeId == TRI_S1BUNDLE) {
-        regina::NTriangulation* from = dynamic_cast<regina::NTriangulation*>(
+        regina::Triangulation<3>* from = dynamic_cast<regina::Triangulation<3>*>(
             s1BundleFrom->selectedPacket());
         if (! from) {
             ReginaSupport::info(parentWidget, QObject::trUtf8(

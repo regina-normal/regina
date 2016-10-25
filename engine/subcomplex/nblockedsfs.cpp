@@ -332,7 +332,7 @@ void NBlockedSFS::writeTextLong(std::ostream& out) const {
     region_->writeDetail(out, "Blocked SFS");
 }
 
-NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
+NBlockedSFS* NBlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
     // Basic property checks.
     if (tri->countComponents() > 1)
         return 0;

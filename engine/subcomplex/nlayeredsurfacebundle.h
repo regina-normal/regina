@@ -211,7 +211,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * layered surface bundle, or \c null if the given triangulation
          * is not a layered surface bundle.
          */
-        static NLayeredTorusBundle* isLayeredTorusBundle(NTriangulation* tri);
+        static NLayeredTorusBundle* isLayeredTorusBundle(Triangulation<3>* tri);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;
@@ -257,7 +257,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * layered surface bundle, or \c null if the given triangulation is
          * not a layered surface bundle with the given <tt>T x I</tt> core.
          */
-        static NLayeredTorusBundle* hunt(NTriangulation* tri,
+        static NLayeredTorusBundle* hunt(Triangulation<3>* tri,
             const NTxICore& core);
 };
 

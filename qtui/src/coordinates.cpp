@@ -116,7 +116,7 @@ namespace Coordinates {
                 coordSystem == regina::NS_AN_QUAD_OCT);
     }
 
-    size_t numColumns(NormalCoords coordSystem, regina::NTriangulation* tri) {
+    size_t numColumns(NormalCoords coordSystem, regina::Triangulation<3>* tri) {
         if (coordSystem == regina::NS_STANDARD)
             return tri->size() * 7;
         else if (coordSystem == regina::NS_AN_STANDARD)
@@ -151,7 +151,7 @@ namespace Coordinates {
     }
 
     QString columnName(NormalCoords coordSystem, size_t whichCoord,
-            regina::NTriangulation* tri) {
+            regina::Triangulation<3>* tri) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return QString("%1: %2").arg(whichCoord / 7).
@@ -269,7 +269,7 @@ namespace Coordinates {
     }
 
     QString columnDesc(NormalCoords coordSystem, size_t whichCoord,
-            const QObject *context, regina::NTriangulation* tri) {
+            const QObject *context, regina::Triangulation<3>* tri) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return context->tr("Tetrahedron %1, triangle about vertex %2").

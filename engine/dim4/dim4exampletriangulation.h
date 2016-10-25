@@ -47,7 +47,6 @@ namespace regina {
 template <int> class Isomorphism;
 template <int> class Triangulation;
 typedef Isomorphism<3> NIsomorphism;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup dim4
@@ -187,7 +186,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Triangulation<4>* doubleCone(const NTriangulation& base);
+        static Triangulation<4>* doubleCone(const Triangulation<3>& base);
 
         /**
          * Returns a single cone over the given 3-manifold triangulation.
@@ -206,7 +205,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Triangulation<4>* singleCone(const NTriangulation& base);
+        static Triangulation<4>* singleCone(const Triangulation<3>& base);
 
         /**
          * Returns a triangulation of the product <tt>M x I</tt>,
@@ -233,7 +232,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Triangulation<4>* iBundle(const NTriangulation& base);
+        static Triangulation<4>* iBundle(const Triangulation<3>& base);
 
         /**
          * Returns a triangulation of the product <tt>M x S1</tt>,
@@ -254,7 +253,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Triangulation<4>* s1Bundle(const NTriangulation& base);
+        static Triangulation<4>* s1Bundle(const Triangulation<3>& base);
 
         /**
          * Returns a bundle formed from a given 3-manifold and a given
@@ -288,7 +287,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * destroyed by the caller of this routine.
          */
         static Triangulation<4>* bundleWithMonodromy(
-            const NTriangulation& base,
+            const Triangulation<3>& base,
             const NIsomorphism& monodromy);
 
         /*@}*/

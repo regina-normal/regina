@@ -38,7 +38,7 @@
 
 namespace regina {
 
-void NTriangulation::calculateSkeleton() {
+void Triangulation<3>::calculateSkeleton() {
     TriangulationBase<3>::calculateSkeleton();
 
     ideal_ = false;
@@ -69,7 +69,7 @@ void NTriangulation::calculateSkeleton() {
         t->component()->triangles_.push_back(t);
 }
 
-void NTriangulation::checkPermutations() {
+void Triangulation<3>::checkPermutations() {
     TetrahedronIterator it;
 
     for (it = simplices_.begin(); it != simplices_.end(); it++)
@@ -102,7 +102,7 @@ void NTriangulation::checkPermutations() {
         }
 }
 
-void NTriangulation::calculateBoundary() {
+void Triangulation<3>::calculateBoundary() {
     // Sets boundaryComponents, NTriangle.boundaryComponent,
     //     NEdge.boundaryComponent, NVertex.boundaryComponent,
     //     NComponent.boundaryComponents
@@ -120,7 +120,7 @@ void NTriangulation::calculateBoundary() {
     }
 }
 
-void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
+void Triangulation<3>::labelBoundaryTriangle(NTriangle* firstTriangle,
         NBoundaryComponent* label) {
     std::queue<NTriangle*> triangleQueue;
 
@@ -214,7 +214,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
     }
 }
 
-void NTriangulation::calculateVertexLinks() {
+void Triangulation<3>::calculateVertexLinks() {
     // Begin by calculating Euler characteristics.
     // Here we use the formula:  chi = (2 v_int + v_bdry - f) / 2, which
     // is easily proven with a little arithmetic.
@@ -294,7 +294,7 @@ void NTriangulation::calculateVertexLinks() {
     }
 }
 
-void NTriangulation::calculateBoundaryProperties() const {
+void Triangulation<3>::calculateBoundaryProperties() const {
     // Make sure the skeleton has been calculated!
     ensureSkeleton();
 

@@ -60,7 +60,6 @@ template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup enumerate
@@ -490,7 +489,7 @@ struct LPCol : public LPConstraint::Coefficients {
 template <class LPConstraint>
 class LPInitialTableaux {
     private:
-        const NTriangulation* tri_;
+        const Triangulation<3>* tri_;
             /**< The underlying triangulation. */
         NormalCoords coords_;
             /**< The coordinate system used for the matrix of matching
@@ -553,7 +552,7 @@ class LPInitialTableaux {
          * (such as searching for a non-trivial normal disc or sphere, or
          * a strict angle structure).
          */
-        LPInitialTableaux(const NTriangulation* tri,
+        LPInitialTableaux(const Triangulation<3>* tri,
             NormalCoords coords, bool enumeration);
 
         /**
@@ -567,7 +566,7 @@ class LPInitialTableaux {
          *
          * @return the underlying triangulation.
          */
-        inline const NTriangulation* tri() const;
+        inline const Triangulation<3>* tri() const;
 
         /**
          * Returns the coordinate system that is used for the matrix of
@@ -1621,7 +1620,7 @@ inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
 }
 
 template <class LPConstraint>
-inline const NTriangulation* LPInitialTableaux<LPConstraint>::tri() const {
+inline const Triangulation<3>* LPInitialTableaux<LPConstraint>::tri() const {
     return tri_;
 }
 

@@ -49,7 +49,6 @@ class NSigCensus;
 class NSigPartialIsomorphism;
 
 template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \addtogroup split Splitting Surfaces
@@ -167,7 +166,7 @@ class REGINA_API NSignature :
          *
          * @return the corresponding triangulation.
          */
-        NTriangulation* triangulate() const;
+        Triangulation<3>* triangulate() const;
 
         /**
          * Lexicographically compares the results of transformations upon

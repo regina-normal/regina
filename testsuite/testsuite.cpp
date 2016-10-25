@@ -42,13 +42,13 @@
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/dim2/testdim2.h"
+#include "testsuite/dim3/testtriangulation.h"
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/generic/testgeneric.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
 #include "testsuite/surfaces/testsurfaces.h"
-#include "testsuite/triangulation/testtriangulation.h"
 #include "testsuite/utilities/testutilities.h"
 
 namespace {
@@ -124,17 +124,17 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addNGroupPresentation(runner);
 
     // 2-manifold triangulations:
-    addDim2Triangulation(runner);
+    addTriangulation2(runner);
 
     // 3-manifold triangulations:
-    addNTriangulation(runner);
+    addTriangulation3(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);
     addNIsomorphism(runner);
     addNHomologicalData(runner);
 
     // 4-manifold triangulations:
-    addDim4Triangulation(runner);
+    addTriangulation4(runner);
 
     // Generic triangulations:
     addFaceNumbering(runner);

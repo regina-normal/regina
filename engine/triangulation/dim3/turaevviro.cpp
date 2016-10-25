@@ -423,7 +423,7 @@ namespace {
 
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroBacktrack(
-            const NTriangulation& tri,
+            const Triangulation<3>& tri,
             const InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
@@ -619,7 +619,7 @@ namespace {
 
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroNaive(
-            const NTriangulation& tri,
+            const Triangulation<3>& tri,
             const InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
@@ -741,7 +741,7 @@ namespace {
 
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroTreewidth(
-            const NTriangulation& tri,
+            const Triangulation<3>& tri,
             InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
@@ -1103,14 +1103,14 @@ namespace {
 
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroPolytope(
-            const NTriangulation& tri,
+            const Triangulation<3>& tri,
             InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
         std::vector<std::vector<mpz_class> > input;
         unsigned long nTri = tri.countTriangles();
 
-        NTriangulation::EdgeIterator eit;
+        Triangulation<3>::EdgeIterator eit;
         const NTetrahedron* tet;
         Perm<4> p;
         unsigned long i;
@@ -1173,7 +1173,7 @@ namespace {
     }
 }
 
-double NTriangulation::turaevViroApprox(unsigned long r,
+double Triangulation<3>::turaevViroApprox(unsigned long r,
         unsigned long whichRoot, TuraevViroAlg alg) const {
     // Do some basic parameter checks.
     if (r < 3)
@@ -1216,7 +1216,7 @@ double NTriangulation::turaevViroApprox(unsigned long r,
     return ans.real();
 }
 
-Cyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
+Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
         TuraevViroAlg alg) const {
     // Do some basic parameter checks.
     if (r < 3)

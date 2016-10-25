@@ -65,13 +65,13 @@ void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
 namespace {
     struct ZeroVector : public Returns<NormalSurfaceVector*> {
         template <typename Coords>
-        inline NormalSurfaceVector* operator() (const NTriangulation* tri) {
+        inline NormalSurfaceVector* operator() (const Triangulation<3>* tri) {
             return Coords::Class::makeZeroVector(tri);
         }
     };
 }
 
-NormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
+NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
         NormalCoords coords) {
     return forCoords(coords, ZeroVector(), 0, triangulation);
 }
@@ -79,13 +79,13 @@ NormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
 namespace {
     struct MatchingEquations : public Returns<MatrixInt*> {
         template <typename Coords>
-        inline MatrixInt* operator() (const NTriangulation* tri) {
+        inline MatrixInt* operator() (const Triangulation<3>* tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
-MatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
+MatrixInt* makeMatchingEquations(const Triangulation<3>* triangulation,
         NormalCoords coords) {
     return forCoords(coords, MatchingEquations(), 0, triangulation);
 }
@@ -93,19 +93,19 @@ MatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
 namespace {
     struct EmbeddedConstraints : public Returns<EnumConstraints*> {
         template <typename Coords>
-        inline EnumConstraints* operator() (const NTriangulation* tri) {
+        inline EnumConstraints* operator() (const Triangulation<3>* tri) {
             return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
 }
 
 EnumConstraints* makeEmbeddedConstraints(
-        const NTriangulation* triangulation, NormalCoords coords) {
+        const Triangulation<3>* triangulation, NormalCoords coords) {
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-NTriangulation* NormalSurfaces::triangulation() const {
-    return dynamic_cast<NTriangulation*>(parent());
+Triangulation<3>* NormalSurfaces::triangulation() const {
+    return dynamic_cast<Triangulation<3>*>(parent());
 }
 
 namespace {

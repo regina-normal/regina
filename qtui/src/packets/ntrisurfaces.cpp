@@ -58,9 +58,8 @@
 #define MAX_CENSUS_TRIANGULATION_SIZE 50
 
 using regina::Packet;
-using regina::NTriangulation;
 
-NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
+NTriSurfacesUI::NTriSurfacesUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();

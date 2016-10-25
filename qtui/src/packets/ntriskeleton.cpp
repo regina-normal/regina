@@ -47,9 +47,9 @@
 #include <QPushButton>
 
 using regina::Packet;
-using regina::NTriangulation;
+using regina::Triangulation;
 
-NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
+NTriSkeletonUI::NTriSkeletonUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriSkeleton) {
@@ -58,7 +58,7 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
         tr("&Graphs"));
 }
 
-NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
+NTriSkelCompUI::NTriSkelCompUI(regina::Triangulation<3>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();

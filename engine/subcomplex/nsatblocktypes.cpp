@@ -281,8 +281,8 @@ void NSatLST::writeAbbr(std::ostream& out, bool tex) const {
         << lst_->meridinalCuts(2) << (tex ? '}' : ')');
 }
 
-void NSatLST::transform(const NTriangulation* originalTri,
-        const NIsomorphism* iso, NTriangulation* newTri) {
+void NSatLST::transform(const Triangulation<3>* originalTri,
+        const NIsomorphism* iso, Triangulation<3>* newTri) {
     // Start with the parent implementation.
     NSatBlock::transform(originalTri, iso, newTri);
 
@@ -465,7 +465,7 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
     return ans;
 }
 
-NSatTriPrism* NSatTriPrism::insertBlock(NTriangulation& tri, bool major) {
+NSatTriPrism* NSatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
     NTetrahedron* a = tri.newTetrahedron();
     NTetrahedron* b = tri.newTetrahedron();
     NTetrahedron* c = tri.newTetrahedron();
@@ -600,7 +600,7 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
     return ans;
 }
 
-NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
+NSatCube* NSatCube::insertBlock(Triangulation<3>& tri) {
     NTetrahedron* bdry0 = tri.newTetrahedron();
     NTetrahedron* bdry1 = tri.newTetrahedron();
     NTetrahedron* bdry2 = tri.newTetrahedron();
@@ -826,7 +826,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     return 0;
 }
 
-NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
+NSatReflectorStrip* NSatReflectorStrip::insertBlock(Triangulation<3>& tri,
         unsigned length, bool twisted) {
     NSatReflectorStrip* ans = new NSatReflectorStrip(length, twisted);
 

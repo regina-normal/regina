@@ -101,7 +101,7 @@ namespace {
     }
 }
 
-EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
+EltMoveDialog::EltMoveDialog(QWidget* parent, regina::Triangulation<3>* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     setWindowTitle(tr("Elementary Move"));

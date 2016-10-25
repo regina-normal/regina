@@ -49,7 +49,6 @@ namespace regina {
     class NormalSurface;
     class NormalHypersurface;
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 }
 
 namespace Coordinates {
@@ -79,7 +78,7 @@ namespace Coordinates {
      * system.
      */
     size_t numColumns(regina::NormalCoords coordSystem,
-        regina::NTriangulation* tri);
+        regina::Triangulation<3>* tri);
 
     /**
      * Return the number of coordinate columns in the given coordinate
@@ -97,7 +96,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnName(regina::NormalCoords coordSystem,
-        size_t whichCoord, regina::NTriangulation* tri = 0);
+        size_t whichCoord, regina::Triangulation<3>* tri = 0);
 
     /**
      * Return a column header for the given coordinate of the given
@@ -119,7 +118,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnDesc(regina::NormalCoords coordSystem, size_t whichCoord,
-        const QObject *context, regina::NTriangulation* tri = 0);
+        const QObject *context, regina::Triangulation<3>* tri = 0);
 
     /**
      * Return a column description for the given coordinate of the given

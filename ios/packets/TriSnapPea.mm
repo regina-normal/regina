@@ -48,7 +48,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *convertIcon;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
-@property (assign, nonatomic) regina::NTriangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
 @implementation TriSnapPea

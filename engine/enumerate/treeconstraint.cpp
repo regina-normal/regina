@@ -38,7 +38,7 @@ namespace regina {
 
 bool LPConstraintEuler::addRows(
         LPCol<regina::LPConstraintEuler>* col,
-        const int* columnPerm, const NTriangulation* tri) {
+        const int* columnPerm, const Triangulation<3>* tri) {
     int* obj = new int[7 * tri->size()];
     unsigned tet, i;
     Perm<4> p;
@@ -74,7 +74,7 @@ bool LPConstraintEuler::addRows(
 
 bool LPConstraintNonSpun::addRows(
         LPCol<regina::LPConstraintNonSpun>* col,
-        const int* columnPerm, const NTriangulation* tri) {
+        const int* columnPerm, const Triangulation<3>* tri) {
     // Regardless of whether the constraints are broken,
     // we need to ensure that the matrix has full rank.
     // Therefore add the coefficients for the two new variables now.
@@ -117,7 +117,7 @@ bool LPConstraintNonSpun::addRows(
     return true;
 }
 
-BanConstraintBase::BanConstraintBase(const NTriangulation* tri, int coords) :
+BanConstraintBase::BanConstraintBase(const Triangulation<3>* tri, int coords) :
         tri_(tri), coords_(coords) {
     unsigned nCols = (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
             3 * tri->size() :

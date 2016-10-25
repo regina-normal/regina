@@ -43,7 +43,7 @@
 using regina::NEdge;
 
 EdgeIntChooser::EdgeIntChooser(
-        regina::NTriangulation* tri,
+        regina::Triangulation<3>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
@@ -111,7 +111,7 @@ QString EdgeIntChooser::description(regina::NEdge* option, int arg) {
 }
 
 void EdgeIntChooser::fill() {
-    regina::NTriangulation::EdgeIterator it;
+    regina::Triangulation<3>::EdgeIterator it;
     int i;
     for (it = tri_->edges().begin(); it != tri_->edges().end(); ++it)
         for (i = argMin_; i <= argMax_; ++i)
@@ -122,7 +122,7 @@ void EdgeIntChooser::fill() {
 }
 
 EdgeIntDialog::EdgeIntDialog(QWidget* parent,
-        regina::NTriangulation* tri,
+        regina::Triangulation<3>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
         const QString& title,
@@ -148,7 +148,7 @@ EdgeIntDialog::EdgeIntDialog(QWidget* parent,
 }
 
 std::pair<regina::NEdge*, int> EdgeIntDialog::choose(QWidget* parent,
-        regina::NTriangulation* tri,
+        regina::Triangulation<3>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
         const QString& title,

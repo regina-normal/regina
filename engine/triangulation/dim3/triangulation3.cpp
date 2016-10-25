@@ -44,7 +44,7 @@
 namespace regina {
 
 Triangulation<3>::Triangulation(const std::string& description) {
-    NTriangulation* attempt;
+    Triangulation<3>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
         cloneFrom(*attempt);
@@ -245,9 +245,9 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
         out << "  " << xmlValueTag("haken", haken_.value()) << '\n';
 }
 
-NTriangulation* Triangulation<3>::enterTextTriangulation(std::istream& in,
+Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
         std::ostream& out) {
-    NTriangulation* triang = new NTriangulation();
+    Triangulation<3>* triang = new Triangulation<3>();
     NTetrahedron* tet;
     long nTet;
 
@@ -378,7 +378,7 @@ void Triangulation<3>::deleteSkeleton() {
     TriangulationBase<3>::deleteSkeleton();
 }
 
-void Triangulation<3>::cloneFrom(const NTriangulation& X) {
+void Triangulation<3>::cloneFrom(const Triangulation<3>& X) {
     ChangeEventSpan span(this);
 
     removeAllTetrahedra();

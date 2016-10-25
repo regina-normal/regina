@@ -100,7 +100,7 @@ void NPluggedTorusBundle::writeTextLong(std::ostream& out) const {
 }
 
 NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
-        NTriangulation* tri) {
+        Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
@@ -141,7 +141,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
     return 0;
 }
 
-NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
+NPluggedTorusBundle* NPluggedTorusBundle::hunt(Triangulation<3>* triang,
         const NTxICore& bundle) {
     std::list<NIsomorphism*> isos;
     if (! bundle.core().findAllSubcomplexesIn(*triang, back_inserter(isos)))

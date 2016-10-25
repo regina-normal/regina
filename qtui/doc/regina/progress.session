@@ -20,7 +20,7 @@ Copyright (c) 1999-2016, The Regina development team
 ... # then copied the isomorphism signature so that we can reconstruct the
 ... # triangulation here.
 ... sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
-&gt;&gt;&gt; tri = NTriangulation(sig)
+&gt;&gt;&gt; tri = Triangulation3(sig)
 &gt;&gt;&gt; print tri.size(), 'tetrahedra'
 18 tetrahedra
 &gt;&gt;&gt; 

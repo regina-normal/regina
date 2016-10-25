@@ -40,12 +40,12 @@
 
 namespace regina {
 
-NTriangulation* Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
+Triangulation<3>* Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
     std::istringstream in(snapPeaData);
     return Triangulation<3>::readSnapPea(in);
 }
 
-NTriangulation* Triangulation<3>::readSnapPea(std::istream& in) {
+Triangulation<3>* Triangulation<3>::readSnapPea(std::istream& in) {
     // Check that this is a SnapPea triangulation.
     char name[1001];
     unsigned len;
@@ -87,7 +87,7 @@ NTriangulation* Triangulation<3>::readSnapPea(std::istream& in) {
     }
 
     // Create the new tetrahedra.
-    NTriangulation* triang = new NTriangulation();
+    Triangulation<3>* triang = new Triangulation<3>();
     triang->setLabel(name);
 
     unsigned numTet;

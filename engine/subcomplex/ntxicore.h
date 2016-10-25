@@ -83,7 +83,7 @@ class REGINA_API NTxICore :
         public Output<NTxICore>,
         public boost::noncopyable {
     protected:
-        NTriangulation core_;
+        Triangulation<3> core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
                  described. */
         unsigned bdryTet_[2][2];
@@ -120,7 +120,7 @@ class REGINA_API NTxICore :
          *
          * @return the full triangulation.
          */
-        const NTriangulation& core() const;
+        const Triangulation<3>& core() const;
         /**
          * Determines which tetrahedron provides the requested boundary
          * triangle.
@@ -463,7 +463,7 @@ inline NTxICore::NTxICore() {
 inline NTxICore::~NTxICore() {
 }
 
-inline const NTriangulation& NTxICore::core() const {
+inline const Triangulation<3>& NTxICore::core() const {
     return core_;
 }
 

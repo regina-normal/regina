@@ -40,8 +40,8 @@ const int NSimpleSurfaceBundle::S2xS1 = 1;
 const int NSimpleSurfaceBundle::S2xS1_TWISTED = 2;
 const int NSimpleSurfaceBundle::RP2xS1 = 3;
 
-NTriangulation* NSimpleSurfaceBundle::construct() const {
-    NTriangulation* ans = new NTriangulation();
+Triangulation<3>* NSimpleSurfaceBundle::construct() const {
+    Triangulation<3>* ans = new Triangulation<3>();
 
     if (type_ == S2xS1) {
         ans->insertLayeredLensSpace(0, 1);

@@ -150,7 +150,7 @@ void NBlockedSFSTriple::writeTextLong(std::ostream& out) const {
 }
 
 NBlockedSFSTriple* NBlockedSFSTriple::isBlockedSFSTriple(
-        NTriangulation* tri) {
+        Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;

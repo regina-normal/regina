@@ -186,7 +186,7 @@ namespace {
 
         // Create the set of normal surfaces!
         // Note that all vectors are automagically initialised to zero.
-        const NTriangulation* tri = s.triangulation();
+        const Triangulation<3>* tri = s.triangulation();
         NormalSurfaceVector** ans = new NormalSurfaceVector*[compID];
 
         NormalSurfaceVector* vec;

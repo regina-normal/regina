@@ -465,7 +465,7 @@ void SnapPeaShapesUI::toRegina() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to convert."));
     else {
-        regina::NTriangulation* ans = new regina::NTriangulation(*tri);
+        regina::Triangulation<3>* ans = new regina::Triangulation<3>(*tri);
         ans->setLabel(tri->label());
         tri->insertChildLast(ans);
         enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -485,7 +485,7 @@ void SnapPeaShapesUI::fill() {
             tr("You can enter filling coefficients on the "
                 "<i>Shapes & Cusps</i> tab."));
     } else {
-        regina::NTriangulation* ans;
+        regina::Triangulation<3>* ans;
         if (tri->countFilledCusps() == 1)
             ans = tri->filledTriangulation();
         else {
@@ -528,7 +528,7 @@ void SnapPeaShapesUI::canonise() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to canonise."));
     else {
-        regina::NTriangulation* ans = tri->canonise();
+        regina::Triangulation<3>* ans = tri->canonise();
         if (! ans) {
             ReginaSupport::sorry(ui,
                 tr("The SnapPea kernel was not able to build the "

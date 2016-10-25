@@ -54,7 +54,7 @@ Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
 NormalSurfaces* NormalSurfaces::enumerate(
-        NTriangulation* owner, NormalCoords coords,
+        Triangulation<3>* owner, NormalCoords coords,
         NormalList which, NormalAlg algHints,
         ProgressTracker* tracker) {
     NormalSurfaces* list = new NormalSurfaces(

@@ -501,7 +501,7 @@ int mainController() {
 
     // Do it.
     for (Packet* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == PACKET_TRIANGULATION) {
+        if (p->type() == PACKET_TRIANGULATION3) {
             nTris++;
             ctrlFarmTri(static_cast<NTriangulation*>(p));
         }
@@ -688,7 +688,7 @@ void slaveSameSize(NTriangulation* t) {
     // Hunt for it in the packet tree.
     NTriangulation* found = 0;
     for (Packet* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == PACKET_TRIANGULATION)
+        if (p->type() == PACKET_TRIANGULATION3)
             if (static_cast<NTriangulation*>(p)->isIsomorphicTo(*t).get()) {
                 found = static_cast<NTriangulation*>(p);
                 break;

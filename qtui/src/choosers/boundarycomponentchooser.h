@@ -47,7 +47,6 @@
 namespace regina {
     class NBoundaryComponent;
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -75,7 +74,7 @@ typedef bool (*BoundaryComponentFilterFunc)(regina::NBoundaryComponent*);
 class BoundaryComponentChooser :
         public QComboBox, public regina::PacketListener {
     private:
-        regina::NTriangulation* tri_;
+        regina::Triangulation<3>* tri_;
             /**< The triangulation whose boundary components we are
                  choosing from. */
         BoundaryComponentFilterFunc filter_;
@@ -100,7 +99,7 @@ class BoundaryComponentChooser :
          * The given filter may be 0, in which case every boundary component
          * will be offered.
          */
-        BoundaryComponentChooser(regina::NTriangulation* tri,
+        BoundaryComponentChooser(regina::Triangulation<3>* tri,
                 BoundaryComponentFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -169,14 +168,14 @@ class BoundaryComponentDialog : public QDialog {
          * Constructor and destructor.
          */
         BoundaryComponentDialog(QWidget* parent,
-            regina::NTriangulation* tri,
+            regina::Triangulation<3>* tri,
             BoundaryComponentFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::NBoundaryComponent* choose(QWidget* parent,
-            regina::NTriangulation* tri,
+            regina::Triangulation<3>* tri,
             BoundaryComponentFilterFunc filter,
             const QString& title,
             const QString& message,

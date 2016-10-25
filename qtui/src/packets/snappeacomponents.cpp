@@ -39,7 +39,7 @@
 
 #include <climits>
 
-NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, QWidget* parent,
+NoSnapPea::NoSnapPea(regina::Triangulation<3>* useTri, QWidget* parent,
         bool delayedRefresh) :
         QLabel(parent), tri(useTri) {
     setWordWrap(true);

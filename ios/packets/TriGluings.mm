@@ -72,7 +72,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
-@property (assign, nonatomic) regina::NTriangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 
 @property (strong, nonatomic) NSLock* simplifyLock; // locks the simplifyTracker _pointer_, not the tracker itself.
 @end

@@ -38,7 +38,7 @@
 
 namespace regina {
 
-bool NTriangulation::intelligentSimplify() {
+bool Triangulation<3>::intelligentSimplify() {
     bool changed;
 
     { // Begin scope for change event block.
@@ -48,7 +48,7 @@ bool NTriangulation::intelligentSimplify() {
         changed = simplifyToLocalMinimum(true);
 
         // Clone to work with when we might want to roll back changes.
-        NTriangulation* use;
+        Triangulation<3>* use;
 
         // Variables used for selecting random 4-4 moves.
         std::vector<std::pair<NEdge*, int> > fourFourAvailable;
@@ -68,7 +68,7 @@ bool NTriangulation::intelligentSimplify() {
             // might not lead to a simplification.
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
-            use = (changed ? this : new NTriangulation(*this));
+            use = (changed ? this : new Triangulation<3>(*this));
 
             // Make random 4-4 moves.
             fourFourAttempts = fourFourCap = 0;
@@ -127,7 +127,7 @@ bool NTriangulation::intelligentSimplify() {
             if (hasBoundaryTriangles()) {
                 // Clone again, always -- we don't want to create gratuitous
                 // boundary triangles if they won't be of any help.
-                use = new NTriangulation(*this);
+                use = new Triangulation<3>(*this);
 
                 // Perform every book opening move we can find.
                 TriangleIterator fit;
@@ -204,7 +204,7 @@ bool NTriangulation::intelligentSimplify() {
     return changed;
 }
 
-bool NTriangulation::simplifyToLocalMinimum(bool perform) {
+bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
     BoundaryComponentIterator bit;
     unsigned long nTriangles;
     unsigned long iTriangle;

@@ -110,7 +110,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tvValues;
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
-@property (assign, nonatomic) regina::NTriangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
 @implementation TriAlgebra
@@ -212,7 +212,7 @@
     [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
 
     // Simplify before doing any algebraic computations.
-    regina::NTriangulation t(*self.packet);
+    regina::Triangulation<3> t(*self.packet);
     t.intelligentSimplify();
 
     self.h1.text = @(t.homology().utf8().c_str());
@@ -245,7 +245,7 @@
     }
 
     computed = [[NSMutableArray alloc] init];
-    const regina::NTriangulation::TuraevViroSet& s = self.packet->allCalculatedTuraevViro();
+    const regina::Triangulation<3>::TuraevViroSet& s = self.packet->allCalculatedTuraevViro();
     for (const auto& tv : s)
         [computed addObject:[TVItem itemWithValue:@(tv.second.utf8("\u03B6" /* small zeta */).c_str())
                                                 r:tv.first.first

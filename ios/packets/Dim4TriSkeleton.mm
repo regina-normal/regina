@@ -153,7 +153,7 @@
         return;
     }
     
-    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet->vertex(seln.row - 1)->buildLink());
+    regina::Triangulation<3>* ans = new regina::Triangulation<3>(*self.packet->vertex(seln.row - 1)->buildLink());
     ans->setLabel([NSString stringWithFormat:@"Link of vertex %zd", seln.row - 1].UTF8String);
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
@@ -174,7 +174,7 @@
         return;
     }
     
-    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet->boundaryComponent(seln.row - 1)->build());
+    regina::Triangulation<3>* ans = new regina::Triangulation<3>(*self.packet->boundaryComponent(seln.row - 1)->build());
     ans->setLabel([NSString stringWithFormat:@"Boundary component %zd", seln.row - 1].UTF8String);
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];

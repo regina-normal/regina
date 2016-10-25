@@ -52,7 +52,6 @@ class NSnappedBall;
 template <int> class Simplex;
 template <int> class Triangulation;
 typedef Simplex<3> NTetrahedron;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup subcomplex

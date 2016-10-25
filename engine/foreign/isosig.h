@@ -56,7 +56,7 @@ class Container;
  * Signatures for both 3-manifold triangulations and 4-manifold triangulations
  * are accepted (though they cannot be mixed together within the same file).
  * These isomorphism signatures will be converted into triangulations using
- * NTriangulation::fromIsoSig() and Triangulation<4>::fromIsoSig()
+ * Triangulation<3>::fromIsoSig() and Triangulation<4>::fromIsoSig()
  * respectively.
  *
  * A newly allocated container will be returned; the imported

@@ -40,7 +40,7 @@
 
 using regina::NManifold;
 using regina::NStandardTriangulation;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 class NStandardTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NStandardTriangulationTest);
@@ -58,7 +58,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
 
         void testRecognition(const char* dehydration,
                 const char* triName, const char* mfdName) {
-            NTriangulation t;
+            Triangulation<3> t;
             if (! t.insertRehydration(dehydration)) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -103,7 +103,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
 
         void testRecognitionSig(const char* isoSig,
                 const char* triName, const char* mfdName) {
-            NTriangulation* t = NTriangulation::fromIsoSig(isoSig);
+            Triangulation<3>* t = Triangulation<3>::fromIsoSig(isoSig);
             if (! t) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName

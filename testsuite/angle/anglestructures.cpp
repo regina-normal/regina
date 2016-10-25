@@ -44,7 +44,7 @@ using regina::AngleStructures;
 using regina::AngleStructureVector;
 using regina::NExampleTriangulation;
 using regina::NTetrahedron;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 class AngleStructuresTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(AngleStructuresTest);
@@ -61,19 +61,19 @@ class AngleStructuresTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        NTriangulation triEmpty;
+        Triangulation<3> triEmpty;
             /**< An empty triangulation. */
-        NTriangulation triOneTet;
+        Triangulation<3> triOneTet;
             /**< A single tetrahedron (with no face gluings). */
-        NTriangulation triGieseking;
+        Triangulation<3> triGieseking;
             /**< The Gieseking manifold. */
-        NTriangulation triFigure8;
+        Triangulation<3> triFigure8;
             /**< The figure eight knot complement. */
-        NTriangulation triLoopC2;
+        Triangulation<3> triLoopC2;
             /**< An untwisted layered loop of length 2. */
 
     public:
-        void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
             dest.insertTriangulation(*source);
             delete source;
         }
@@ -211,7 +211,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void verifyTaut(const char* isoSig, unsigned long nTaut) {
-            NTriangulation* tri = NTriangulation::fromIsoSig(isoSig);
+            Triangulation<3>* tri = Triangulation<3>::fromIsoSig(isoSig);
             if (! tri) {
                 std::ostringstream msg;
                 msg << "Could not reconstruct from isoSig: " << isoSig << ".";
@@ -321,7 +321,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             verifyTaut("JLLLAAwzLLAwQwvvwMAQAAQMcbedgfhfilnnnpoqrstvCxEBDzFAFEGEFHHIIxxnxhxjxxxaxgvcxxafenatpkatbwqrrqfqr", 0);
         }
 
-        void verifyTautVsAll(NTriangulation* t, const char* name) {
+        void verifyTautVsAll(Triangulation<3>* t, const char* name) {
             AngleStructures* all = AngleStructures::enumerate(t, false);
             AngleStructures* taut = AngleStructures::enumerate(t, true);
 
@@ -368,7 +368,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void verifyTautVsAll(const char* dehydration) {
-            NTriangulation* t = NTriangulation::rehydrate(dehydration);
+            Triangulation<3>* t = Triangulation<3>::rehydrate(dehydration);
             if (t->isEmpty()) {
                 std::ostringstream msg;
                 msg << "Failed to rehydrate " << dehydration << ".";
@@ -476,7 +476,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             return ok;
         }
 
-        static void verifyTreeVsDD(NTriangulation* tri) {
+        static void verifyTreeVsDD(Triangulation<3>* tri) {
             AngleStructures* all = AngleStructures::enumerate(
                 tri, false);
             AngleStructures* tautTree = AngleStructures::enumerate(

@@ -59,7 +59,7 @@ class REGINA_API XMLNormalSurfaceReader : public XMLElementReader {
     private:
         NormalSurface* surface_;
             /**< The normal surface currently being read. */
-        const NTriangulation* tri;
+        const Triangulation<3>* tri;
             /**< The triangulation in which this surface lives. */
         NormalCoords coords;
             /**< The coordinate system used by this surface. */
@@ -75,7 +75,7 @@ class REGINA_API XMLNormalSurfaceReader : public XMLElementReader {
          * @param newTri the triangulation in which this normal surface lives.
          * @param newCoords the coordinate system used by this normal surface.
          */
-        XMLNormalSurfaceReader(const NTriangulation* newTri,
+        XMLNormalSurfaceReader(const Triangulation<3>* newTri,
             NormalCoords newCoords);
 
         /**
@@ -107,7 +107,7 @@ class REGINA_API XMLNormalSurfacesReader : public XMLPacketReader {
     private:
         NormalSurfaces* list;
             /**< The normal surface list currently being read. */
-        const NTriangulation* tri;
+        const Triangulation<3>* tri;
             /**< The triangulation in which these normal surfaces live. */
 
     public:
@@ -118,7 +118,7 @@ class REGINA_API XMLNormalSurfacesReader : public XMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLNormalSurfacesReader(const NTriangulation* newTri,
+        XMLNormalSurfacesReader(const Triangulation<3>* newTri,
             XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
@@ -134,7 +134,7 @@ class REGINA_API XMLNormalSurfacesReader : public XMLPacketReader {
 // Inline functions for XMLNormalSurfaceReader
 
 inline XMLNormalSurfaceReader::XMLNormalSurfaceReader(
-        const NTriangulation* newTri, NormalCoords newCoords) :
+        const Triangulation<3>* newTri, NormalCoords newCoords) :
         surface_(0), tri(newTri), coords(newCoords), vecLen(-1) {
 }
 
@@ -145,7 +145,7 @@ inline NormalSurface* XMLNormalSurfaceReader::surface() {
 // Inline functions for XMLNormalSurfacesReader
 
 inline XMLNormalSurfacesReader::XMLNormalSurfacesReader(
-        const NTriangulation* newTri, XMLTreeResolver& resolver) :
+        const Triangulation<3>* newTri, XMLTreeResolver& resolver) :
         XMLPacketReader(resolver), list(0), tri(newTri) {
 }
 

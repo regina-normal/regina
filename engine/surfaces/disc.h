@@ -475,7 +475,7 @@ class REGINA_API DiscSetSurface {
     protected:
         DiscSetTet** discSets;
             /**< The disc sets corresponding to each tetrahedron. */
-        const NTriangulation* triangulation;
+        const Triangulation<3>* triangulation;
             /**< The triangulation in which the normal surface lives. */
 
     protected:

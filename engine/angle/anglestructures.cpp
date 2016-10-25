@@ -44,7 +44,7 @@ namespace regina {
 
 typedef std::vector<AngleStructure*>::const_iterator StructureIteratorConst;
 
-void AngleStructures::enumerateInternal(NTriangulation* triang,
+void AngleStructures::enumerateInternal(Triangulation<3>* triang,
         ProgressTracker* tracker) {
     // Form the matching equations.
     MatrixInt* eqns = AngleStructureVector::makeAngleEquations(triang);
@@ -94,7 +94,7 @@ void AngleStructures::enumerateInternal(NTriangulation* triang,
     delete eqns;
 }
 
-AngleStructures* AngleStructures::enumerate(NTriangulation* owner,
+AngleStructures* AngleStructures::enumerate(Triangulation<3>* owner,
         bool tautOnly, ProgressTracker* tracker) {
     AngleStructures* ans = new AngleStructures(tautOnly);
 
@@ -107,7 +107,7 @@ AngleStructures* AngleStructures::enumerate(NTriangulation* owner,
 }
 
 AngleStructures* AngleStructures::enumerateTautDD(
-        NTriangulation* owner) {
+        Triangulation<3>* owner) {
     AngleStructures* ans = new AngleStructures(true /* taut only */);
 
     // Form the matching equations.
@@ -135,8 +135,8 @@ AngleStructures* AngleStructures::enumerateTautDD(
     return ans;
 }
 
-NTriangulation* AngleStructures::triangulation() const {
-    return dynamic_cast<NTriangulation*>(parent());
+Triangulation<3>* AngleStructures::triangulation() const {
+    return dynamic_cast<Triangulation<3>*>(parent());
 }
 
 void AngleStructures::writeTextShort(std::ostream& o) const {

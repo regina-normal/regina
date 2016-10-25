@@ -35,7 +35,7 @@
 
 namespace regina {
 
-const NAbelianGroup& NTriangulation::homology() const {
+const NAbelianGroup& Triangulation<3>::homology() const {
     if (H1_.known())
         return *H1_.value();
 
@@ -104,7 +104,7 @@ const NAbelianGroup& NTriangulation::homology() const {
     return *(H1_ = ans);
 }
 
-const NAbelianGroup& NTriangulation::homologyRel() const {
+const NAbelianGroup& Triangulation<3>::homologyRel() const {
     if (H1Rel_.known())
         return *H1Rel_.value();
 
@@ -190,7 +190,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
     return *(H1Rel_ = ans);
 }
 
-const NAbelianGroup& NTriangulation::homologyBdry() const {
+const NAbelianGroup& Triangulation<3>::homologyBdry() const {
     if (H1Bdry_.known())
         return *H1Bdry_.value();
 
@@ -219,7 +219,7 @@ const NAbelianGroup& NTriangulation::homologyBdry() const {
     return *(H1Bdry_ = ans);
 }
 
-const NAbelianGroup& NTriangulation::homologyH2() const {
+const NAbelianGroup& Triangulation<3>::homologyH2() const {
     if (H2_.known())
         return *H2_.value();
 

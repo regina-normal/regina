@@ -270,7 +270,7 @@ void NormalHypersurface::calculateFromTriangulation() const {
     connected_.clear();
     H1_.clear();
 
-    NTriangulation* me = triangulate();
+    Triangulation<3>* me = triangulate();
     orientable_ = me->isOrientable();
     connected_ = me->isConnected();
     H1_ = new NAbelianGroup(me->homology());
@@ -278,7 +278,7 @@ void NormalHypersurface::calculateFromTriangulation() const {
     delete me;
 
     NormalHypersurface* twice = doubleHypersurface();
-    NTriangulation* cover = twice->triangulate();
+    Triangulation<3>* cover = twice->triangulate();
     twoSided_ = (cover->countComponents() == 2 * nComp);
     delete cover;
     delete twice;

@@ -55,14 +55,14 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *graphPropertiesGap;
 @property (weak, nonatomic) IBOutlet UIWebView *graph;
 
-@property (assign, nonatomic) regina::NTriangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
 @implementation TriGraph
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+    self.packet = static_cast<regina::Triangulation<3>*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
     self.graphType.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TRI_GRAPH_TYPE];
 

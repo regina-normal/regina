@@ -48,7 +48,6 @@ namespace regina {
 class NAbelianGroup;
 
 template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \addtogroup manifold Standard 3-Manifolds
@@ -119,7 +118,7 @@ class REGINA_API NManifold :
          * @return a triangulation of this 3-manifold, or 0 if the
          * appropriate construction routine has not yet been implemented.
          */
-        virtual NTriangulation* construct() const;
+        virtual Triangulation<3>* construct() const;
         /**
          * Returns the first homology group of this 3-manifold, if such
          * a routine has been implemented.  If the calculation of
@@ -278,7 +277,7 @@ class REGINA_API NManifold :
 inline NManifold::~NManifold() {
 }
 
-inline NTriangulation* NManifold::construct() const {
+inline Triangulation<3>* NManifold::construct() const {
     return 0;
 }
 

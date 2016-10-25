@@ -42,7 +42,7 @@
 #include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
-#include "testsuite/triangulation/testtriangulation.h"
+#include "testsuite/dim3/testtriangulation.h"
 
 using regina::NAbelianGroup;
 using regina::Container;
@@ -51,7 +51,7 @@ using regina::Perm;
 using regina::NSignature;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 class ConnectedSumDecompTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ConnectedSumDecompTest);
@@ -65,12 +65,12 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        NTriangulation* generateFromSig(const std::string& sigStr) {
+        Triangulation<3>* generateFromSig(const std::string& sigStr) {
             NSignature* sig = NSignature::parse(sigStr);
             if (sig == 0)
                 return 0;
 
-            NTriangulation* triNew = sig->triangulate();
+            Triangulation<3>* triNew = sig->triangulate();
             delete sig;
             return triNew;
         }
@@ -81,7 +81,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        NTriangulation* verifyThreeSphere(NTriangulation* tri,
+        Triangulation<3>* verifyThreeSphere(Triangulation<3>* tri,
                 const std::string& triName) {
             Container summands;
             unsigned long ans = tri->connectedSumDecomposition(&summands);
@@ -97,7 +97,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             delete verifyThreeSphere(generateFromSig(sigStr), sigStr);
         }
 
-        NTriangulation* verifyPrime(NTriangulation* tri,
+        Triangulation<3>* verifyPrime(Triangulation<3>* tri,
                 const std::string& triName, const std::string& manifold) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
@@ -111,7 +111,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 " is reported to be composite.", ans == 1 &&
                 summands.firstChild() == summands.lastChild());
 
-            NTriangulation* summand = static_cast<NTriangulation*>(
+            Triangulation<3>* summand = static_cast<Triangulation<3>*>(
                 summands.firstChild());
 
             std::unique_ptr<NStandardTriangulation> stdTri(
@@ -149,7 +149,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
         /**
          * NOTE: The two manifold names must be given in lexicographical order.
          */
-        NTriangulation* verifyPair(NTriangulation* tri,
+        Triangulation<3>* verifyPair(Triangulation<3>* tri,
                 const std::string& triName, const std::string& manifold1,
                 const std::string& manifold2) {
             // Recall that ASSERTS throw exceptions, so after testing
@@ -167,9 +167,9 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 " is reported to have more than two summands.", ans == 2 &&
                 summands.firstChild()->nextSibling() == summands.lastChild());
 
-            NTriangulation* summand1 = static_cast<NTriangulation*>(
+            Triangulation<3>* summand1 = static_cast<Triangulation<3>*>(
                 summands.firstChild());
-            NTriangulation* summand2 = static_cast<NTriangulation*>(
+            Triangulation<3>* summand2 = static_cast<Triangulation<3>*>(
                 summands.lastChild());
 
             std::unique_ptr<NStandardTriangulation> stdTri1(
@@ -200,7 +200,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
                 // Swap the summands also so we can correctly analyse
                 // them later.
-                NTriangulation* tmpTri = summand2;
+                Triangulation<3>* tmpTri = summand2;
                 summand2 = summand1;
                 summand1 = tmpTri;
             }
@@ -242,22 +242,22 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 manifold2);
         }
 
-        NTriangulation* verifyRP3x3(NTriangulation* tri,
+        Triangulation<3>* verifyRP3x3(Triangulation<3>* tri,
                 const std::string& triName) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
             Container summands;
             unsigned long ans = tri->connectedSumDecomposition(&summands);
 
-            NTriangulation* summand1 = static_cast<NTriangulation*>(
+            Triangulation<3>* summand1 = static_cast<Triangulation<3>*>(
                 summands.firstChild());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be a 3-sphere.", ans > 0 && summand1 != 0);
-            NTriangulation* summand2 = static_cast<NTriangulation*>(
+            Triangulation<3>* summand2 = static_cast<Triangulation<3>*>(
                 summand1->nextSibling());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be prime.", ans > 1 && summand2 != 0);
-            NTriangulation* summand3 = static_cast<NTriangulation*>(
+            Triangulation<3>* summand3 = static_cast<Triangulation<3>*>(
                 summand2->nextSibling());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have only two prime summands.",
@@ -334,9 +334,9 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             verifySigThreeSphere("(abcd)(aefg)(b)(c)(d)(e)(f)(g)");
 
             // 3-spheres obtained as Lens spaces:
-            NTriangulation* tri;
+            Triangulation<3>* tri;
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(1,0);
             delete verifyThreeSphere(tri, "L(1,0)");
         }
@@ -368,7 +368,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
         }
 
         void primes() {
-            NTriangulation* tri;
+            Triangulation<3>* tri;
 
             // Triangulations obtained from splitting surface signatures:
             verifySigPrime("(aa)", "L(4,1)");
@@ -399,7 +399,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             // We'll build this a few different ways.
 
             // Poincare homology sphere as a plugged triangular solid torus:
-            tri = new NTriangulation;
+            tri = new Triangulation<3>;
             NTetrahedron* tet[5];
             int i;
             for (i = 0; i < 5; i++)
@@ -419,14 +419,14 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             // Poincare homology sphere as an augmented triangular solid
             // torus:
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertAugTriSolidTorus(2, -1, 3, 1, 5, -4);
             delete verifyPrime(tri, "the Poincare homology sphere (aug I)",
                 "S3/P120");
 
             // Poincare homology sphere as another augmented triangular solid
             // torus:
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertAugTriSolidTorus(2, -1, 3, -2, 5, 1);
             delete verifyPrime(tri, "the Poincare homology sphere (aug II)",
                 "S3/P120");
@@ -449,7 +449,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             verifySigRP3x3("(aabcde)(cfg)(dgf)(b)(e)");
         }
 
-        static void testDecomp(NTriangulation* tri) {
+        static void testDecomp(Triangulation<3>* tri) {
             // Checked the connectedSumDecomposition() preconditions.
             if (! (tri->isValid() && tri->isClosed() && tri->isConnected()))
                 return;
@@ -478,11 +478,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             }
 
             NAbelianGroup h1;
-            NTriangulation* term;
+            Triangulation<3>* term;
             bool foundNor = false;
             for (regina::Packet* p = parent.firstChild(); p;
                     p = p->nextSibling()) {
-                term = static_cast<NTriangulation*>(p);
+                term = static_cast<Triangulation<3>*>(p);
                 if (! term->isOrientable())
                     foundNor = true;
                 if (! term->isZeroEfficient()) {

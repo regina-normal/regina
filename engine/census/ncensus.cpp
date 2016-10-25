@@ -101,7 +101,7 @@ bool NCensusDB::lookup(const std::string& isoSig, NCensusHits* hits) const {
     return true;
 }
 
-NCensusHits* NCensus::lookup(const NTriangulation& tri) {
+NCensusHits* NCensus::lookup(const Triangulation<3>& tri) {
     return lookup(tri.isoSig());
 }
 

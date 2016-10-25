@@ -730,7 +730,7 @@ bool NSFSpace::operator < (const NSFSpace& compare) const {
     return false;
 }
 
-NTriangulation* NSFSpace::construct() const {
+Triangulation<3>* NSFSpace::construct() const {
     // Things that we don't deal with just yet.
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
         return 0;
@@ -738,7 +738,7 @@ NTriangulation* NSFSpace::construct() const {
     // We already know how to construct lens spaces.
     NLensSpace* lens = isLensSpace();
     if (lens) {
-        NTriangulation* t = lens->construct();
+        Triangulation<3>* t = lens->construct();
         delete lens;
         return t;
     }
@@ -749,7 +749,7 @@ NTriangulation* NSFSpace::construct() const {
 
     // Since we've already dealt with lens spaces, we must have at least
     // three exceptional fibres.  Build a blocked structure.
-    NTriangulation* ans = new NTriangulation();
+    Triangulation<3>* ans = new Triangulation<3>();
     NTetrahedron *a, *b, *c;
 
     // Begin with the first triangular solid torus.

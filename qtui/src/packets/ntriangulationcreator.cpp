@@ -53,7 +53,7 @@
 #include <QStackedWidget>
 
 using regina::NExampleTriangulation;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     /**
@@ -325,7 +325,7 @@ regina::Packet* NTriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        NTriangulation* ans = new NTriangulation();
+        Triangulation<3>* ans = new Triangulation<3>();
         ans->setLabel("3-D triangulation");
         return ans;
     } else if (typeId == TRI_LAYERED_LENS_SPACE) {
@@ -473,7 +473,7 @@ regina::Packet* NTriangulationCreator::createPacket(regina::Packet*,
             whichPair++;
         }
 
-        NTriangulation* ans = sfs.construct();
+        Triangulation<3>* ans = sfs.construct();
         ans->setLabel(sfs.structure());
         return ans;
     } else if (typeId == TRI_ISOSIG) {
@@ -492,7 +492,7 @@ regina::Packet* NTriangulationCreator::createPacket(regina::Packet*,
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        NTriangulation* ans = NTriangulation::fromIsoSig(sig);
+        Triangulation<3>* ans = Triangulation<3>::fromIsoSig(sig);
         if (ans) {
             ans->setLabel(sig);
             return ans;
@@ -519,7 +519,7 @@ regina::Packet* NTriangulationCreator::createPacket(regina::Packet*,
             return 0;
         }
 
-        NTriangulation* ans = new NTriangulation();
+        Triangulation<3>* ans = new Triangulation<3>();
         std::string dehydString = reDehydration.cap(1).toUtf8().constData();
         if (! ans->insertRehydration(dehydString)) {
             delete ans;
@@ -563,7 +563,7 @@ regina::Packet* NTriangulationCreator::createPacket(regina::Packet*,
                 "Burton, PhD thesis, available from the Regina website.</qt>"));
             return 0;
         }
-        NTriangulation* ans = sig->triangulate();
+        Triangulation<3>* ans = sig->triangulate();
         delete sig;
         ans->setLabel(sigString);
         return ans;

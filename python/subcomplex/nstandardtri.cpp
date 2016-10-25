@@ -49,7 +49,7 @@ namespace {
     }
     NStandardTriangulation* (*isStandardTri_comp)(regina::NComponent*) =
         &NStandardTriangulation::isStandardTriangulation;
-    NStandardTriangulation* (*isStandardTri_tri)(regina::NTriangulation*) =
+    NStandardTriangulation* (*isStandardTri_tri)(regina::Triangulation<3>*) =
         &NStandardTriangulation::isStandardTriangulation;
 }
 

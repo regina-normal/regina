@@ -38,7 +38,7 @@
 
 namespace regina {
 
-void NTriangulation::barycentricSubdivision() {
+void Triangulation<3>::barycentricSubdivision() {
     // Rewritten for Regina 4.94 to use a more sensible labelling scheme.
 
     // IMPORTANT: If this code is ever rewritten (and in particular, if
@@ -50,7 +50,7 @@ void NTriangulation::barycentricSubdivision() {
     if (nOldTet == 0)
         return;
 
-    NTriangulation staging;
+    Triangulation<3> staging;
     ChangeEventSpan span1(&staging);
 
     NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
@@ -111,7 +111,7 @@ void NTriangulation::barycentricSubdivision() {
     delete[] newTet;
 }
 
-void NTriangulation::drillEdge(NEdge* e) {
+void Triangulation<3>::drillEdge(NEdge* e) {
     // Recall from the barycentric subdivision code above that
     // a tetrahedron in the subdivision is uniquely defined by the
     // permutation (face, edge, vtx, corner) of (0, 1, 2, 3).
@@ -172,7 +172,7 @@ void NTriangulation::drillEdge(NEdge* e) {
     intelligentSimplify();
 }
 
-bool NTriangulation::idealToFinite() {
+bool Triangulation<3>::idealToFinite() {
     // The call to isValid() ensures the skeleton has been calculated.
     if (isValid() && ! isIdeal())
         return false;
@@ -182,7 +182,7 @@ bool NTriangulation::idealToFinite() {
     if (! numOldTet)
         return false;
 
-    NTriangulation staging;
+    Triangulation<3> staging;
     ChangeEventSpan span1(&staging);
 
     NTetrahedron **newTet = new NTetrahedron*[32*numOldTet];
@@ -286,13 +286,13 @@ bool NTriangulation::idealToFinite() {
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
     for_each(tetList.begin(), tetList.end(),
-        std::bind1st(std::mem_fun(&NTriangulation::removeTetrahedron), this));
+        std::bind1st(std::mem_fun(&Triangulation<3>::removeTetrahedron), this));
 
     delete[] newTet;
     return true;
 }
 
-void NTriangulation::puncture(NTetrahedron* tet) {
+void Triangulation<3>::puncture(NTetrahedron* tet) {
     if (! tet) {
         // Preconditions disallow empty triangulations, but anyway:
         if (simplices_.empty())
@@ -338,7 +338,7 @@ void NTriangulation::puncture(NTetrahedron* tet) {
     tet->join(0, prism[0][0], Perm<4>(3,0,1,2));
 }
 
-void NTriangulation::connectedSumWith(const NTriangulation& other) {
+void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // Precondition check.
     if (simplices_.empty() || ! isConnected())
         return;

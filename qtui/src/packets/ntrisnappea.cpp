@@ -50,9 +50,9 @@
 
 using regina::Packet;
 using regina::SnapPeaTriangulation;
-using regina::NTriangulation;
+using regina::Triangulation;
 
-NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
+NTriSnapPeaUI::NTriSnapPeaUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0) {
     ui = new QStackedWidget();

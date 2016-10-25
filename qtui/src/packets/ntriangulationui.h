@@ -52,7 +52,6 @@ class QToolBar;
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -77,7 +76,7 @@ class NTriangulationUI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        NTriangulationUI(regina::NTriangulation* packet,
+        NTriangulationUI(regina::Triangulation<3>* packet,
             PacketPane* newEnclosingPane);
         ~NTriangulationUI();
 
@@ -100,7 +99,7 @@ class NTriHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
         /**
          * Internal components
@@ -114,7 +113,7 @@ class NTriHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        NTriHeaderUI(regina::NTriangulation* packet,
+        NTriHeaderUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -139,7 +138,7 @@ class NTriHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Allow other UIs to access the summary information.
          */
-        static QString summaryInfo(regina::NTriangulation* tri);
+        static QString summaryInfo(regina::Triangulation<3>* tri);
 
     public slots:
         /**

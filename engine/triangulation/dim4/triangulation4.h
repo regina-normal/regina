@@ -87,7 +87,7 @@ typedef Face<4, 0> Dim4Vertex;
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
-struct PacketInfo<PACKET_DIM4TRIANGULATION> {
+struct PacketInfo<PACKET_TRIANGULATION4> {
     typedef Triangulation <4>Class;
     inline static const char* name() {
         return "4-Manifold Triangulation";
@@ -122,7 +122,7 @@ template <>
 class REGINA_API Triangulation<4> :
         public Packet,
         public detail::TriangulationBase<4> {
-    REGINA_PACKET(Triangulation<4>, PACKET_DIM4TRIANGULATION)
+    REGINA_PACKET(Triangulation<4>, PACKET_TRIANGULATION4)
 
     public:
         typedef std::vector<Dim4Pentachoron*>::const_iterator

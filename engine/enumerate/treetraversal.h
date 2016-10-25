@@ -50,7 +50,6 @@ namespace regina {
 class ProgressTracker;
 
 template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup enumerate
@@ -512,7 +511,7 @@ class TreeTraversal : public BanConstraint {
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere).
          */
-        TreeTraversal(const NTriangulation* tri, NormalCoords coords,
+        TreeTraversal(const Triangulation<3>* tri, NormalCoords coords,
                 int branchesPerQuad, int branchesPerTri, bool enumeration);
 
         /**
@@ -758,7 +757,7 @@ class TreeEnumeration :
          * vertex surfaces.  This must be one of NS_QUAD, NS_STANDARD,
          * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        TreeEnumeration(const NTriangulation* tri, NormalCoords coords);
+        TreeEnumeration(const Triangulation<3>* tri, NormalCoords coords);
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -1026,7 +1025,7 @@ class TautEnumeration :
          * @param tri the triangulation in which we wish to enumerate
          * taut angle structures.
          */
-        TautEnumeration(const NTriangulation* tri);
+        TautEnumeration(const Triangulation<3>* tri);
 
         /**
          * Returns the total number of taut angle structures
@@ -1355,7 +1354,7 @@ class TreeSingleSoln :
          * which to work.  This must be one of NS_QUAD, NS_STANDARD,
          * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        TreeSingleSoln(const NTriangulation* tri, NormalCoords coords);
+        TreeSingleSoln(const Triangulation<3>* tri, NormalCoords coords);
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -1534,7 +1533,7 @@ inline int TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
-        const NTriangulation* tri, NormalCoords coords) :
+        const Triangulation<3>* tri, NormalCoords coords) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              7 : 4) /* branches per quad */,
@@ -1579,7 +1578,7 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
-        const NTriangulation* tri) :
+        const Triangulation<3>* tri) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, NS_ANGLE,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
@@ -1612,7 +1611,7 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline TreeSingleSoln<LPConstraint, BanConstraint, IntType>::TreeSingleSoln(
-        const NTriangulation* tri, NormalCoords coords) :
+        const Triangulation<3>* tri, NormalCoords coords) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              6 : 3) /* branches per quad */,

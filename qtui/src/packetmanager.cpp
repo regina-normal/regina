@@ -69,12 +69,6 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
             id = (packet->parent() ? IconCache::packet_container :
                 IconCache::regina);
             break;
-        case PACKET_DIM2TRIANGULATION :
-            id = IconCache::packet_dim2triangulation;
-            break;
-        case PACKET_DIM4TRIANGULATION :
-            id = IconCache::packet_dim4triangulation;
-            break;
         case PACKET_PDF :
             id = IconCache::packet_pdf;
             break;
@@ -106,8 +100,14 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
         case PACKET_TEXT :
             id = IconCache::packet_text;
             break;
-        case PACKET_TRIANGULATION :
-            id = IconCache::packet_triangulation;
+        case PACKET_TRIANGULATION2 :
+            id = IconCache::packet_triangulation2;
+            break;
+        case PACKET_TRIANGULATION3 :
+            id = IconCache::packet_triangulation3;
+            break;
+        case PACKET_TRIANGULATION4 :
+            id = IconCache::packet_triangulation4;
             break;
         // For generic dimensions, we don't cache the icons.
         case PACKET_TRIANGULATION5 :
@@ -152,12 +152,6 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_CONTAINER:
             return new ContainerUI(
                 dynamic_cast<Container*>(packet), enclosingPane);
-        case PACKET_DIM2TRIANGULATION:
-            return new Dim2TriangulationUI(
-                dynamic_cast<Triangulation<2>*>(packet), enclosingPane);
-        case PACKET_DIM4TRIANGULATION:
-            return new Dim4TriangulationUI(
-                dynamic_cast<Triangulation<4>*>(packet), enclosingPane);
         case PACKET_NORMALSURFACES:
             return new SurfacesUI(
                 dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
@@ -186,9 +180,15 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_TEXT:
             return new TextUI(
                 dynamic_cast<Text*>(packet), enclosingPane);
-        case PACKET_TRIANGULATION:
+        case PACKET_TRIANGULATION2:
+            return new Dim2TriangulationUI(
+                dynamic_cast<Triangulation<2>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION3:
             return new NTriangulationUI(
-                dynamic_cast<NTriangulation*>(packet), enclosingPane);
+                dynamic_cast<Triangulation<3>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION4:
+            return new Dim4TriangulationUI(
+                dynamic_cast<Triangulation<4>*>(packet), enclosingPane);
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(
                 dynamic_cast<Triangulation<5>*>(packet), enclosingPane);

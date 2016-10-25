@@ -70,7 +70,7 @@ def surfaceStats(tri):
 	dumpSurfaces('Fundamental surfaces (quad-oct almost normal)',
 		regina.NormalSurfaces.enumerate(tri, regina.NS_AN_QUAD_OCT, regina.NS_FUNDAMENTAL))
 
-t = regina.NTriangulation()
+t = regina.Triangulation3()
 t.setLabel("Empty triangulation")
 surfaceStats(t)
 

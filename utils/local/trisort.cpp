@@ -118,7 +118,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
 bool hasTriangulation(Container* c) {
     for (Packet* child = c->firstChild(); child; child = child->nextSibling())
-        if (child->type() == PACKET_TRIANGULATION)
+        if (child->type() == PACKET_TRIANGULATION3)
             return true;
 
     return false;
@@ -134,7 +134,7 @@ void process(Container* c) {
     for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         spec.packet = child;
-        spec.isTri = (child->type() == PACKET_TRIANGULATION);
+        spec.isTri = (child->type() == PACKET_TRIANGULATION3);
 
         if (spec.isTri) {
             std = NStandardTriangulation::isStandardTriangulation(

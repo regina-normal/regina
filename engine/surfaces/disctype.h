@@ -78,7 +78,7 @@ struct REGINA_API DiscType {
     size_t tetIndex;
         /**< The index within the triangulation of the tetrahedron
              containing this disc type.  This must be between 0 and
-             NTriangulation::size()-1 inclusive. */
+             Triangulation<3>::size()-1 inclusive. */
     int type;
         /**< Identifies the disc type within the specified tetrahedron.
              The precise meaning of this member is left up to the user,

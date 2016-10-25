@@ -190,7 +190,7 @@ typedef regina::Triangulation<4>* (*Dim4TriangulationCreator)();
 - (void)viewDidLoad
 {
     NewDim4TriangulationController* c = static_cast<NewDim4TriangulationController*>(self.parentViewController.parentViewController);
-    [self.from fill:c.spec.parent->root() type1:regina::PACKET_TRIANGULATION type2:regina::PACKET_SNAPPEATRIANGULATION allowNone:NO noneText:@"No 3-manifold triangulations in this document"];
+    [self.from fill:c.spec.parent->root() type1:regina::PACKET_TRIANGULATION3 type2:regina::PACKET_SNAPPEATRIANGULATION allowNone:NO noneText:@"No 3-manifold triangulations in this document"];
     [self.bundleType setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_BUNDLE_TYPE]];
 }
 
@@ -210,7 +210,7 @@ typedef regina::Triangulation<4>* (*Dim4TriangulationCreator)();
         return 0;
     }
 
-    regina::NTriangulation* tri = static_cast<regina::NTriangulation*>([self.from selectedPacket]);
+    regina::Triangulation<3>* tri = static_cast<regina::Triangulation<3>*>([self.from selectedPacket]);
     if (! tri) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Triangulation Selected"
                                                         message:nil

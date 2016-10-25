@@ -54,9 +54,9 @@
 #include <QVBoxLayout>
 
 using regina::Packet;
-using regina::NTriangulation;
+using regina::Triangulation;
 
-NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
+NTriangulationUI::NTriangulationUI(regina::Triangulation<3>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri) {
     NTriHeaderUI* header = new NTriHeaderUI(packet, this);
@@ -91,7 +91,7 @@ QString NTriangulationUI::getPacketMenuText() const {
     return QObject::tr("3-D T&riangulation");
 }
 
-NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
+NTriHeaderUI::NTriHeaderUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -139,7 +139,7 @@ void NTriHeaderUI::refresh() {
     refreshLock();
 }
 
-QString NTriHeaderUI::summaryInfo(regina::NTriangulation* tri) {
+QString NTriHeaderUI::summaryInfo(regina::Triangulation<3>* tri) {
     if (tri->isEmpty())
         return QObject::tr("Empty");
 

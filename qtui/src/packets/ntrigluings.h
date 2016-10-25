@@ -50,7 +50,6 @@ namespace regina {
     class Packet;
     template <int> class Simplex;
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 class GluingsModel : public QAbstractItemModel {
@@ -58,7 +57,7 @@ class GluingsModel : public QAbstractItemModel {
         /**
          * Details of the triangulation
          */
-        regina::NTriangulation* tri_;
+        regina::Triangulation<3>* tri_;
 
         /**
          * Internal status
@@ -69,7 +68,7 @@ class GluingsModel : public QAbstractItemModel {
         /**
          * Constructor.
          */
-        GluingsModel(regina::NTriangulation* tri, bool readWrite);
+        GluingsModel(regina::Triangulation<3>* tri, bool readWrite);
 
         /**
          * Read-write state.
@@ -141,7 +140,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
         /**
          * Internal components
@@ -165,7 +164,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        NTriGluingsUI(regina::NTriangulation* packet,
+        NTriGluingsUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI, bool readWrite);
         ~NTriGluingsUI();
 

@@ -48,12 +48,6 @@ void IconCache::load(IconID id) {
         case packet_container:
             cache_[id] = ReginaSupport::regIcon("packet_container");
             return;
-        case packet_dim2triangulation:
-            cache_[id] = ReginaSupport::regIcon("packet_dim2triangulation");
-            return;
-        case packet_dim4triangulation:
-            cache_[id] = ReginaSupport::regIcon("packet_dim4triangulation");
-            return;
         case packet_filter:
             cache_[id] = ReginaSupport::regIcon("packet_filter");
             return;
@@ -75,8 +69,14 @@ void IconCache::load(IconID id) {
         case packet_text:
             cache_[id] = ReginaSupport::regIcon("packet_text");
             return;
-        case packet_triangulation:
-            cache_[id] = ReginaSupport::regIcon("packet_triangulation");
+        case packet_triangulation2:
+            cache_[id] = ReginaSupport::regIcon("packet_triangulation2");
+            return;
+        case packet_triangulation3:
+            cache_[id] = ReginaSupport::regIcon("packet_triangulation3");
+            return;
+        case packet_triangulation4:
+            cache_[id] = ReginaSupport::regIcon("packet_triangulation4");
             return;
         case filter_comb:
             cache_[id] = ReginaSupport::regIcon("filter_comb");

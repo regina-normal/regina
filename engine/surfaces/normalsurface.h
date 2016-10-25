@@ -208,7 +208,6 @@ typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 template <int, int> class Face;
-typedef Triangulation<3> NTriangulation;
 typedef Face<3, 0> NVertex;
 typedef Face<3, 1> NEdge;
 
@@ -344,9 +343,9 @@ struct NormalInfo;
  *   implemented if your coordinate system supports transverse orientation.
  *   Otherwise you can use the default implementations (which returns zero).
  *   <li>Static public functions <tt>void
- *   makeZeroVector(const NTriangulation*)</tt>,
- *   <tt>MatrixInt* makeMatchingEquations(const NTriangulation*)</tt> and
- *   makeEmbeddedConstraints(const NTriangulation*) must be
+ *   makeZeroVector(const Triangulation<3>*)</tt>,
+ *   <tt>MatrixInt* makeMatchingEquations(const Triangulation<3>*)</tt> and
+ *   makeEmbeddedConstraints(const Triangulation<3>*) must be
  *   declared and implemented.</li>
  * </ul>
  *
@@ -512,7 +511,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return \c true if and only if there is an octagonal disc type
          * present and its coordinate is greater than one.
          */
-        virtual bool hasMultipleOctDiscs(const NTriangulation* triang) const;
+        virtual bool hasMultipleOctDiscs(const Triangulation<3>* triang) const;
         /**
          * Determines if the normal surface represented is compact (has
          * finitely many discs).
@@ -527,7 +526,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return \c true if and only if the normal surface represented
          * is compact.
          */
-        virtual bool isCompact(const NTriangulation* triang) const;
+        virtual bool isCompact(const Triangulation<3>* triang) const;
         /**
          * Determines if the normal surface represented is vertex
          * linking.  A <i>vertex linking</i> surface contains only
@@ -543,7 +542,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return \c true if and only if the normal surface represented
          * is vertex linking.
          */
-        virtual bool isVertexLinking(const NTriangulation* triang) const;
+        virtual bool isVertexLinking(const Triangulation<3>* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the link of a single vertex.
@@ -557,7 +556,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
+        virtual const NVertex* isVertexLink(const Triangulation<3>* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the thin link of a single edge.
@@ -581,7 +580,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * as described above.
          */
         virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink(
-            const NTriangulation* triang) const;
+            const Triangulation<3>* triang) const;
         /**
          * Determines if the normal surface represented is a splitting
          * surface in the given triangulation.  A \a splitting surface
@@ -598,7 +597,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return \c true if and only if the normal surface represented
          * is a splitting surface.
          */
-        virtual bool isSplitting(const NTriangulation* triang) const;
+        virtual bool isSplitting(const Triangulation<3>* triang) const;
         /**
          * Determines if the normal surface represented is a central
          * surface in the given triangulation.  A \a central surface
@@ -616,7 +615,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return the number of tetrahedra that the surface meets if it
          * is a central surface, or 0 if it is not a central surface.
          */
-        virtual LargeInteger isCentral(const NTriangulation* triang) const;
+        virtual LargeInteger isCentral(const Triangulation<3>* triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -626,7 +625,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
@@ -634,7 +633,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return the number of triangular discs of the given type.
          */
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang) const = 0;
+            int vertex, const Triangulation<3>* triang) const = 0;
 
         /**
          * Returns the number of oriented triangular discs of the given type in
@@ -648,7 +647,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
@@ -657,7 +656,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return the number of triangular discs of the given type.
          */
         virtual LargeInteger orientedTriangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang, bool orientation) const;
+            int vertex, const Triangulation<3>* triang, bool orientation) const;
 
         /**
          * Returns the number of quadrilateral discs of the given type
@@ -667,14 +666,14 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param quadType the type of this quadrilateral in the given
          * tetrahedron; this should be 0, 1 or 2.
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of quadrilateral discs of the given type.
          */
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const NTriangulation* triang) const = 0;
+            int quadType, const Triangulation<3>* triang) const = 0;
 
         /**
          * Returns the number of oriented quadrilateral discs of the given type
@@ -688,7 +687,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param quadType the type of this quadrilateral in the given
          * tetrahedron; this should be 0, 1 or 2.
          * @param triang the triangulation in which this normal surface lives.
@@ -696,7 +695,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return the number of quadrilateral discs of the given type.
          */
         virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const NTriangulation* triang, bool orientation) const;
+            int quadType, const Triangulation<3>* triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
@@ -705,14 +704,14 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested octagons reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param octType the type of this octagon in the given tetrahedron;
          * this should be 0, 1 or 2.
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of octagonal discs of the given type.
          */
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const = 0;
+            int octType, const Triangulation<3>* triang) const = 0;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -720,13 +719,13 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
-         * NTriangulation::countEdges()-1 inclusive.
+         * Triangulation<3>::countEdges()-1 inclusive.
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of times this normal surface crosses the
          * given edge.
          */
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const NTriangulation* triang) const = 0;
+            const Triangulation<3>* triang) const = 0;
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
@@ -734,7 +733,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          *
          * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
-         * NTriangulation::countTriangles()-1 inclusive.
+         * Triangulation<3>::countTriangles()-1 inclusive.
          * @param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
@@ -743,7 +742,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * given triangle with the given arc type.
          */
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const NTriangulation* triang) const = 0;
+            int triVertex, const Triangulation<3>* triang) const = 0;
 
         /**
          * Returns a new normal surface vector of the appropriate length
@@ -759,7 +758,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          */
         #ifdef __DOXYGEN
             static NormalSurfaceVector* makeZeroVector(
-                const NTriangulation* triangulation);
+                const Triangulation<3>* triangulation);
         #endif
         /**
          * Creates a new set of normal surface matching equations for
@@ -775,7 +774,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          */
         #ifdef __DOXYGEN
             static MatrixInt* makeMatchingEquations(
-                const NTriangulation* triangulation);
+                const Triangulation<3>* triangulation);
         #endif
         /**
          * Creates a new set of validity constraints representing
@@ -790,7 +789,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          */
         #ifdef __DOXYGEN
             static EnumConstraints* makeEmbeddedConstraints(
-                const NTriangulation* triangulation);
+                const Triangulation<3>* triangulation);
         #endif
 };
 
@@ -821,7 +820,7 @@ class REGINA_API NormalSurface :
         NormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
              *   space is appropriate. */
-        const NTriangulation* triangulation_;
+        const Triangulation<3>* triangulation_;
             /**< The triangulation in which this normal surface resides. */
 
         std::string name_;
@@ -866,7 +865,7 @@ class REGINA_API NormalSurface :
          * @param newVector a vector containing the coordinates of the
          * normal surface in whichever space is appropriate.
          */
-        NormalSurface(const NTriangulation* triang,
+        NormalSurface(const Triangulation<3>* triang,
             NormalSurfaceVector* newVector);
 
         /**
@@ -890,7 +889,7 @@ class REGINA_API NormalSurface :
          * converted internally to LargeInteger objects.
          */
         #ifdef __DOXYGEN
-        NormalSurface(const NTriangulation* triang, NormalCoords coordSystem,
+        NormalSurface(const Triangulation<3>* triang, NormalCoords coordSystem,
             List allCoords);
         #endif
 
@@ -933,7 +932,7 @@ class REGINA_API NormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
@@ -963,7 +962,7 @@ class REGINA_API NormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
@@ -994,7 +993,7 @@ class REGINA_API NormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param quadType the type of this quadrilateral in the given
          * tetrahedron; this should be 0, 1 or 2, as described above.
          * @return the number of quadrilateral discs of the given type.
@@ -1023,7 +1022,7 @@ class REGINA_API NormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param quadType the type of this quadrilateral in the given
          * tetrahedron; this should be 0, 1 or 2, as described above.
          * @param orientation the orientation of the quadrilateral disc 
@@ -1053,7 +1052,7 @@ class REGINA_API NormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested octagons reside;
          * this should be between 0 and
-         * NTriangulation::size()-1 inclusive.
+         * Triangulation<3>::size()-1 inclusive.
          * @param octType the type of this octagon in the given tetrahedron;
          * this should be 0, 1 or 2, as described above.
          * @return the number of octagonal discs of the given type.
@@ -1065,7 +1064,7 @@ class REGINA_API NormalSurface :
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
-         * NTriangulation::countEdges()-1 inclusive.
+         * Triangulation<3>::countEdges()-1 inclusive.
          * @return the number of times this normal surface crosses the
          * given edge.
          */
@@ -1076,7 +1075,7 @@ class REGINA_API NormalSurface :
          *
          * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
-         * NTriangulation::countTriangles()-1 inclusive.
+         * Triangulation<3>::countTriangles()-1 inclusive.
          * @param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
@@ -1119,7 +1118,7 @@ class REGINA_API NormalSurface :
          *
          * @return the underlying triangulation.
          */
-        const NTriangulation* triangulation() const;
+        const Triangulation<3>* triangulation() const;
 
         /**
          * Returns the name associated with this normal surface.
@@ -1439,7 +1438,7 @@ class REGINA_API NormalSurface :
          * @return a pointer to the newly allocated resulting
          * triangulation.
          */
-        NTriangulation* cutAlong() const;
+        Triangulation<3>* cutAlong() const;
 
         /**
          * Crushes this surface to a point in the associated
@@ -1478,7 +1477,7 @@ class REGINA_API NormalSurface :
          * @return a pointer to the newly allocated resulting
          * triangulation.
          */
-        NTriangulation* crush() const;
+        Triangulation<3>* crush() const;
 
         /**
          * Determines whether this and the given surface in fact
@@ -1608,7 +1607,7 @@ class REGINA_API NormalSurface :
          * since it needs to know the specific meridian and longitude on each
          * cusp.  This information is \e only available through the SnapPea
          * kernel, since Regina does not use or store peripheral curves for
-         * its own NTriangulation class.  Therefore, if the underlying
+         * its own Triangulation<3> class.  Therefore, if the underlying
          * triangulation (as returned by triangulation()) is not of the
          * subclass SnapPeaTriangulation, this routine will simply return 0.
          *
@@ -1844,7 +1843,7 @@ inline DiscType NormalSurface::octPosition() const {
 inline size_t NormalSurface::countCoords() const {
     return vector->size();
 }
-inline const NTriangulation* NormalSurface::triangulation() const {
+inline const Triangulation<3>* NormalSurface::triangulation() const {
     return triangulation_;
 }
 

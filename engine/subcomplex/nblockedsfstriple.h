@@ -213,7 +213,7 @@ class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
          * blocked triple, or \c null if the given triangulation is not of
          * this form.
          */
-        static NBlockedSFSTriple* isBlockedSFSTriple(NTriangulation* tri);
+        static NBlockedSFSTriple* isBlockedSFSTriple(Triangulation<3>* tri);
 
     private:
         /**

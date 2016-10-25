@@ -75,7 +75,7 @@
 
 - (regina::Packet*)create
 {
-    regina::Packet* ans = new regina::NTriangulation();
+    regina::Packet* ans = new regina::Triangulation<3>();
     ans->setLabel("3-D triangulation");
     return ans;
 }
@@ -84,7 +84,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::NTriangulation* (*TriangulationCreator)();
+typedef regina::Triangulation<3>* (*TriangulationCreator)();
 
 /**
  * Represents a single option in the examples picker.
@@ -95,7 +95,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
 @property (assign, nonatomic) TriangulationCreator creator;
 
 + (id)exampleWithName:(NSString*)name creator:(TriangulationCreator)creator;
-- (regina::NTriangulation*)create;
+- (regina::Triangulation<3>*)create;
 
 @end
 
@@ -111,9 +111,9 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
     return e;
 }
 
-- (regina::NTriangulation *)create
+- (regina::Triangulation<3> *)create
 {
-    regina::NTriangulation* ans = (*self.creator)();
+    regina::Triangulation<3>* ans = (*self.creator)();
     ans->setLabel(self.name.UTF8String);
     return ans;
 }
@@ -210,7 +210,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
         return 0;
     }
     
-    regina::NTriangulation* t = regina::NTriangulation::fromIsoSig(sig);
+    regina::Triangulation<3>* t = regina::Triangulation<3>::fromIsoSig(sig);
     if (! t) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Invalid Isomorphism Signature"

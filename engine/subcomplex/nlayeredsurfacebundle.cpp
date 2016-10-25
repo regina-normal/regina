@@ -64,7 +64,7 @@ NLayeredTorusBundle::~NLayeredTorusBundle() {
 }
 
 NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
-        NTriangulation* tri) {
+        Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
@@ -118,7 +118,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
     return 0;
 }
 
-NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
+NLayeredTorusBundle* NLayeredTorusBundle::hunt(Triangulation<3>* tri,
         const NTxICore& core) {
     std::list<NIsomorphism*> isos;
     if (! core.core().findAllSubcomplexesIn(*tri, back_inserter(isos)))

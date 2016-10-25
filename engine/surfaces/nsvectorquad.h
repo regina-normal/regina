@@ -102,21 +102,21 @@ class REGINA_API NSVectorQuad :
         NSVectorQuad(const Vector<LargeInteger>& cloneMe);
 
         static NormalSurfaceVector* makeMirror(const Ray& original,
-            const NTriangulation* triang);
-        virtual NormalSurfaceVector* makeMirror(const NTriangulation* triang)
+            const Triangulation<3>* triang);
+        virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
             const;
 
-        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
+        virtual const NVertex* isVertexLink(const Triangulation<3>* triang) const;
 
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const;
+            int octType, const Triangulation<3>* triang) const;
 
         static NormalSurfaceVector* makeZeroVector(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
         static MatrixInt* makeMatchingEquations(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
 };
 
 /**
@@ -141,18 +141,18 @@ inline NSVectorQuad::NSVectorQuad(
 }
 
 inline NormalSurfaceVector* NSVectorQuad::makeMirror(
-        const NTriangulation* triang) const {
+        const Triangulation<3>* triang) const {
     return makeMirror(coords(), triang);
 }
 
 inline const NVertex* NSVectorQuad::isVertexLink(
-        const NTriangulation*) const {
+        const Triangulation<3>*) const {
     // Quad space does not contain vertex links at all.
     return 0;
 }
 
 inline LargeInteger NSVectorQuad::octs(
-        size_t, int, const NTriangulation*) const {
+        size_t, int, const Triangulation<3>*) const {
     return Ray::zero;
 }
 

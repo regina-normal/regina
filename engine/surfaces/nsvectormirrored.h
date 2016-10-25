@@ -66,10 +66,10 @@ namespace regina {
  * Subclasses must however implement two variants of makeMirror():
  *
  * - a static function
- *   NormalSurfaceVector* makeMirror(const Ray&, const NTriangulation*),
+ *   NormalSurfaceVector* makeMirror(const Ray&, const Triangulation<3>*),
  *   which builds the mirror vector from the native vector;
  * - a virtual function
- *   NormalSurfaceVector* makeMirror(const NTriangulation*) const,
+ *   NormalSurfaceVector* makeMirror(const Triangulation<3>*) const,
  *   which simply calls the static function described above.
  *
  * \ifacespython Not present.
@@ -113,7 +113,7 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
          * @return a newly created vector that describes the same normal
          * surface in a "standard" coordinate system, as described above.
          */
-        virtual NormalSurfaceVector* makeMirror(const NTriangulation* triang)
+        virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
             const = 0;
 
 #ifdef __DOXYGEN
@@ -141,7 +141,7 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
          * surface in a "standard" coordinate system, as described above.
          */
         static NormalSurfaceVector* makeMirror(const Ray& original,
-            const NTriangulation* triang);
+            const Triangulation<3>* triang);
 #endif
 
         virtual void setElement(size_t index, const LargeInteger& value)
@@ -150,21 +150,21 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
         virtual void scaleDown() override;
 
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang) const override;
+            int vertex, const Triangulation<3>* triang) const override;
         virtual LargeInteger orientedTriangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang, bool orientation) const
+            int vertex, const Triangulation<3>* triang, bool orientation) const
             override;
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const NTriangulation* triang) const override;
+            int quadType, const Triangulation<3>* triang) const override;
         virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const NTriangulation* triang, bool orientation) const
+            int quadType, const Triangulation<3>* triang, bool orientation) const
             override;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const override;
+            int octType, const Triangulation<3>* triang) const override;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const NTriangulation* triang) const override;
+            const Triangulation<3>* triang) const override;
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const NTriangulation* triang) const override;
+            int triVertex, const Triangulation<3>* triang) const override;
 };
 
 /**
@@ -209,14 +209,14 @@ inline void NSVectorMirrored::scaleDown() {
 }
 
 inline LargeInteger NSVectorMirrored::triangles(
-        size_t tetIndex, int vertex, const NTriangulation* triang) const {
+        size_t tetIndex, int vertex, const Triangulation<3>* triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->triangles(tetIndex, vertex, triang);
 }
 inline LargeInteger NSVectorMirrored::orientedTriangles(
-        size_t tetIndex, int vertex, const NTriangulation* triang,
+        size_t tetIndex, int vertex, const Triangulation<3>* triang,
         bool orientation) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
@@ -225,14 +225,14 @@ inline LargeInteger NSVectorMirrored::orientedTriangles(
         orientation);
 }
 inline LargeInteger NSVectorMirrored::quads(
-        size_t tetIndex, int quadType, const NTriangulation* triang) const {
+        size_t tetIndex, int quadType, const Triangulation<3>* triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->quads(tetIndex, quadType, triang);
 }
 inline LargeInteger NSVectorMirrored::orientedQuads(
-        size_t tetIndex, int quadType, const NTriangulation* triang,
+        size_t tetIndex, int quadType, const Triangulation<3>* triang,
         bool orientation) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
@@ -241,14 +241,14 @@ inline LargeInteger NSVectorMirrored::orientedQuads(
         orientation);
 }
 inline LargeInteger NSVectorMirrored::octs(
-        size_t tetIndex, int octType, const NTriangulation* triang) const {
+        size_t tetIndex, int octType, const Triangulation<3>* triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
             makeMirror(triang);
     return mirror->octs(tetIndex, octType, triang);
 }
 inline LargeInteger NSVectorMirrored::edgeWeight(
-        size_t edgeIndex, const NTriangulation* triang) const {
+        size_t edgeIndex, const Triangulation<3>* triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
             makeMirror(triang);
@@ -256,7 +256,7 @@ inline LargeInteger NSVectorMirrored::edgeWeight(
 }
 inline LargeInteger NSVectorMirrored::arcs(
         size_t triIndex, int triVertex,
-        const NTriangulation* triang) const {
+        const Triangulation<3>* triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
             makeMirror(triang);

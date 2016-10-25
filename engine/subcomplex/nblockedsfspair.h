@@ -149,7 +149,7 @@ class REGINA_API NBlockedSFSPair : public NStandardTriangulation {
          * blocked pair, or \c null if the given triangulation is not of
          * this form.
          */
-        static NBlockedSFSPair* isBlockedSFSPair(NTriangulation* tri);
+        static NBlockedSFSPair* isBlockedSFSPair(Triangulation<3>* tri);
 
     private:
         /**

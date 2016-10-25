@@ -57,8 +57,8 @@ const char NSnapPeaCensusManifold::SEC_6_NOR = 'x';
 const char NSnapPeaCensusManifold::SEC_7_OR = 'v';
 const char NSnapPeaCensusManifold::SEC_7_NOR = 'y';
 
-NTriangulation* NSnapPeaCensusManifold::construct() const {
-    NTriangulation* ans = 0;
+Triangulation<3>* NSnapPeaCensusManifold::construct() const {
+    Triangulation<3>* ans = 0;
 
     // Hard-code a few special cases so that the numbering of tetrahedra
     // and vertices is compatible with earlier versions of Regina.
@@ -67,7 +67,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             ans = NExampleTriangulation::gieseking();
             ans->setLabel("");
         } else if (index_ == 1) {
-            ans = new NTriangulation();
+            ans = new Triangulation<3>();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
@@ -75,7 +75,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             r->join(2, s, Perm<4>(3, 2, 1, 0));
             r->join(3, s, Perm<4>(1, 0, 3, 2));
         } else if (index_ == 2) {
-            ans = new NTriangulation();
+            ans = new Triangulation<3>();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
@@ -83,7 +83,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             r->join(2, s, Perm<4>(2, 1, 3, 0));
             r->join(3, s, Perm<4>(3, 1, 0, 2));
         } else if (index_ == 3) {
-            ans = new NTriangulation();
+            ans = new Triangulation<3>();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
@@ -137,7 +137,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
     }
     fclose(dat);
 
-    ans = NTriangulation::rehydrate(tri);
+    ans = Triangulation<3>::rehydrate(tri);
     return ans;
 }
 

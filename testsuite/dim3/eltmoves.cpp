@@ -36,13 +36,13 @@
 #include "manifold/nsimplesurfacebundle.h"
 #include "triangulation/dim3.h"
 #include "triangulation/nexampletriangulation.h"
-#include "testsuite/triangulation/testtriangulation.h"
+#include "testsuite/dim3/testtriangulation.h"
 
 using regina::NEdge;
 using regina::Perm;
 using regina::NSimpleSurfaceBundle;
 using regina::NTetrahedron;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 class ElementaryMovesTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ElementaryMovesTest);
@@ -55,13 +55,13 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
     private:
         // Tetrahedra 0 and 1 joined along faces 0 and 1 using the
         // identity permutation.
-        NTriangulation base;
+        Triangulation<3> base;
 
         // As for base, but with two diagonally opposite faces joined
         // also to form a solid Klein bottle.
         // This acts as a two-sided Mobius strip that can be flattened,
         // with faces 0/012 <--> 1/301.
-        NTriangulation baseKB;
+        Triangulation<3> baseKB;
 
     public:
         void setUp() {
@@ -78,8 +78,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void verify20Edge(NTriangulation* tri, long whichEdge,
-                NTriangulation* result, const std::string& caseName) {
+        void verify20Edge(Triangulation<3>* tri, long whichEdge,
+                Triangulation<3>* result, const std::string& caseName) {
             bool done = tri->twoZeroMove(tri->edge(whichEdge));
             CPPUNIT_ASSERT_MESSAGE(
                 "A 2-0 edge move was incorrectly disallowed for the " +
@@ -89,7 +89,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 caseName + " case", tri->isIsomorphicTo(*result).get());
         }
 
-        void verify20EdgeInvalid(NTriangulation* tri,
+        void verify20EdgeInvalid(Triangulation<3>* tri,
                 const std::string& caseName) {
             bool found = false;
             NEdge* edge;
@@ -138,9 +138,9 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     { { 2,1,0,3 }, { 0,0,0,0 }, { 0,3,1,2 }, { 0,0,0,0 } }
                 };
 
-                NTriangulation orig;
+                Triangulation<3> orig;
                 orig.insertConstruction(5, adjOrig, gluOrig);
-                NTriangulation result;
+                Triangulation<3> result;
                 result.insertConstruction(3, adjResult, gluResult);
 
                 verify20Edge(&orig, 0, &result, "one-boundary-face");
@@ -148,7 +148,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
             {
                 // One face boundary, two more joined in a loop.
-                NTriangulation t;
+                Triangulation<3> t;
                 t.insertTriangulation(base);
                 NTetrahedron* tet = t.tetrahedron(0);
                 tet->join(2, tet, Perm<4>(2, 3));
@@ -161,7 +161,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     (! e->isBoundary()) && e->degree() == 1 &&
                         t.isOrientable());
 
-                NTriangulation ball;
+                Triangulation<3> ball;
                 ball.newTetrahedron();
 
                 verify20Edge(&t, 3, &ball, "boundary-loop-tet");
@@ -170,13 +170,13 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             {
                 // Two boundary faces, the others attached to the top of
                 // an LST.
-                NTriangulation orig;
+                Triangulation<3> orig;
                 orig.insertLayeredSolidTorus(4, 7);
                 NTetrahedron* top = orig.newTetrahedron();
                 orig.tetrahedron(0)->join(2, top, Perm<4>(2, 3, 0, 1));
                 orig.tetrahedron(0)->join(3, top, Perm<4>(2, 3, 0, 1));
 
-                NTriangulation lst;
+                Triangulation<3> lst;
                 lst.insertLayeredSolidTorus(3, 4);
 
                 verify20Edge(&orig, 0, &lst, "boundary-layer");
@@ -201,9 +201,9 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     { { 0,1,2,3 }, { 0,1,2,3 }, { 0,2,1,3 }, { 3,1,2,0 } }
                 };
 
-                NTriangulation orig;
+                Triangulation<3> orig;
                 orig.insertConstruction(5, adj, glu);
-                NTriangulation lst;
+                Triangulation<3> lst;
                 lst.insertLayeredSolidTorus(3, 4);
 
                 verify20Edge(&orig, 5, &lst, "internal-flat");
@@ -228,11 +228,11 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     { { 0,1,2,3 }, { 0,1,2,3 }, { 1,2,3,0 }, { 3,0,1,2 } }
                 };
 
-                NTriangulation orig;
+                Triangulation<3> orig;
                 orig.insertConstruction(5, adj, glu);
-                NTriangulation lens;
+                Triangulation<3> lens;
                 lens.insertLayeredLensSpace(10, 3);
-                NTriangulation copy(orig);
+                Triangulation<3> copy(orig);
 
                 verify20Edge(&orig, 5, &lens, "internal-loop-twist");
                 verify20Edge(&copy, 0, &lens, "internal-flat-lens");
@@ -264,7 +264,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     { { 0,1,2,3 }, { 0,1,2,3 }, { 3,0,2,1 }, { 3,0,1,2 } }
                 };
 
-                NTriangulation orig;
+                Triangulation<3> orig;
                 orig.insertConstruction(8, adjOrig, gluOrig);
 
                 const int adjResult[6][4] = {
@@ -285,7 +285,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     { { 2,1,3,0 }, { 1,3,0,2 }, { 3,0,2,1 }, { 0,2,1,3 } }
                 };
 
-                NTriangulation result;
+                Triangulation<3> result;
                 result.insertConstruction(6, adjResult, gluResult);
 
                 verify20Edge(&orig, 8, &result, "internal-cross");
@@ -293,7 +293,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
             {
                 // Two copies of baseKB glued along a single face.
-                NTriangulation t;
+                Triangulation<3> t;
                 t.insertTriangulation(baseKB);
                 t.insertTriangulation(baseKB);
                 t.tetrahedron(0)->join(3, t.tetrahedron(2), Perm<4>());
@@ -305,7 +305,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         void twoZeroEdgeInvalid() {
             {
                 // All four faces joined together in a simple loop.
-                NTriangulation* s2xs1 =
+                Triangulation<3>* s2xs1 =
                     NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1)
                     .construct();
                 verify20EdgeInvalid(s2xs1, "round-loop");
@@ -314,7 +314,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
             {
                 // All four faces joined together in a crossed loop.
-                NTriangulation* s2xs1Twisted =
+                Triangulation<3>* s2xs1Twisted =
                     NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1_TWISTED)
                     .construct();
                 verify20EdgeInvalid(s2xs1Twisted, "crossed-loop");
@@ -324,7 +324,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             {
                 // All four faces internal, but the two equatorial edges
                 // both boundary.
-                NTriangulation t;
+                Triangulation<3> t;
                 t.insertTriangulation(base);
                 NTetrahedron* p = t.newTetrahedron();
                 NTetrahedron* q = t.newTetrahedron();
@@ -341,7 +341,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             {
                 // All four faces internal, and the two equatorial edges
                 // internal but identified (sphere).
-                NTriangulation t;
+                Triangulation<3> t;
                 t.insertTriangulation(base);
                 NTetrahedron* p = t.newTetrahedron();
                 NTetrahedron* q = t.newTetrahedron();
@@ -367,7 +367,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             {
                 // All four faces internal, and the two equatorial edges
                 // internal but identified (RP2).
-                NTriangulation t;
+                Triangulation<3> t;
                 t.insertTriangulation(base);
                 NTetrahedron* p = t.newTetrahedron();
                 NTetrahedron* q = t.newTetrahedron();
@@ -392,7 +392,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
             {
                 // Two faces boundary, the other joined in a loop.
-                NTriangulation t;
+                Triangulation<3> t;
                 t.insertTriangulation(base);
                 NTetrahedron* tet = t.tetrahedron(0);
                 tet->join(2, tet, Perm<4>(2, 3));
@@ -408,7 +408,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
             {
                 // Two faces boundary, the other joined in a cross.
-                NTriangulation t;
+                Triangulation<3> t;
                 t.insertTriangulation(baseKB);
 
                 NEdge* e = t.tetrahedron(0)->
@@ -440,7 +440,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     { { 0,1,2,3 }, { 0,1,2,3 }, { 0,0,0,0 }, { 3,1,2,0 } }
                 };
 
-                NTriangulation orig;
+                Triangulation<3> orig;
                 orig.insertConstruction(5, adj, glu);
                 verify20EdgeInvalid(&orig, "boundary-opposite-wedge");
             }
@@ -448,7 +448,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             {
                 // Two diagonally opposite faces boundary, the other two
                 // glued to an LST boundary.  Doesn't really matter how.
-                NTriangulation orig;
+                Triangulation<3> orig;
                 orig.insertLayeredSolidTorus(3,4);
                 orig.insertTriangulation(base);
 

@@ -43,7 +43,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::NormalSurface;
-using regina::NTriangulation;
+using regina::Triangulation;
 using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
 using regina::python::GlobalArray3D;
@@ -68,7 +68,7 @@ namespace {
      * A python-only constructor that lets users build a normal surface
      * from a hand-crafted list of integers.
      */
-    NormalSurface* fromCoordinates(NTriangulation* t,
+    NormalSurface* fromCoordinates(Triangulation<3>* t,
             regina::NormalCoords coords, boost::python::list values) {
         regina::NormalSurfaceVector* v = regina::makeZeroVector(t, coords);
 

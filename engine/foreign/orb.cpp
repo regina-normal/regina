@@ -68,16 +68,16 @@ namespace {
 /**
  * Modified from Orb's cassonToTriangulation() routine.
  *
- * The routine was changed to be compatible with Regina's NTriangulation
+ * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure.
  */
-NTriangulation *cassonToNTriangulation( CassonFormat *cf )
+Triangulation<3> *cassonToNTriangulation( CassonFormat *cf )
  {
  int i;
- NTriangulation *triang = new NTriangulation();
+ Triangulation<3> *triang = new Triangulation<3>();
  // since CassonFormat does not allow naming of triangulations,
  //  triang is given a name in the readOrb() function.
- //  I try to mimic NTriangulation::readSnapPea and
+ //  I try to mimic Triangulation<3>::readSnapPea and
  //  Orb::cassonToTriangulation as much as possible.
 
  // If the triangulation is empty, leave now before we start allocating
@@ -319,11 +319,11 @@ void freeCassonFormat( CassonFormat *cf )
 /**
  * Modified from Orb's readTriangulation() routine.
  *
- * The routine was changed to be compatible with Regina's NTriangulation
+ * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure, and to use standard C++ string and I/O streams
  * instead of Qt strings and I/O streams.
  */
-NTriangulation *readTriangulation( std::istream &ts) {
+Triangulation<3> *readTriangulation( std::istream &ts) {
     std::string line, file_id;
 
     getline(ts, line);
@@ -342,7 +342,7 @@ NTriangulation *readTriangulation( std::istream &ts) {
         return 0;
     }
 
-    NTriangulation* manifold = cassonToNTriangulation( cf );
+    Triangulation<3>* manifold = cassonToNTriangulation( cf );
     freeCassonFormat( cf );
 
     manifold->setLabel(file_id);
@@ -351,7 +351,7 @@ NTriangulation *readTriangulation( std::istream &ts) {
 
 } // End anonymous namespace
 
-NTriangulation *readOrb(const char *filename) {
+Triangulation<3> *readOrb(const char *filename) {
     std::ifstream file(filename);
 
     if (! file) {

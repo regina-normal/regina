@@ -54,7 +54,7 @@ class Container;
  * Reads a list of dehydrated triangulations from the given text file.
  * The file should contain one dehydration string per line.  These
  * strings will be rehydrated as described in
- * NTriangulation::insertRehydration().
+ * Triangulation<3>::insertRehydration().
  *
  * A newly allocated container will be returned; the imported
  * triangulations will be inserted as children of this container.

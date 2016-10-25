@@ -213,7 +213,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * triangulation is not of the form described by this class.
          */
         static NPluggedTorusBundle* isPluggedTorusBundle
-            (NTriangulation* tri);
+            (Triangulation<3>* tri);
 
     private:
         /**
@@ -263,7 +263,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * is not of the form described by this class using an isomorphic
          * copy of the given thin I-bundle.
          */
-        static NPluggedTorusBundle* hunt(NTriangulation* tri,
+        static NPluggedTorusBundle* hunt(Triangulation<3>* tri,
             const NTxICore& bundle);
 };
 

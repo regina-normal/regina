@@ -122,7 +122,7 @@ class REGINA_API NBlockedSFS : public NStandardTriangulation {
          * blocked Seifert fibred space, or \c null if the given
          * triangulation is not a blocked Seifert fibred space.
          */
-        static NBlockedSFS* isBlockedSFS(NTriangulation* tri);
+        static NBlockedSFS* isBlockedSFS(Triangulation<3>* tri);
 
     private:
         /**

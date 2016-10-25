@@ -356,7 +356,7 @@ void ReginaMain::setupActions() {
     QAction* actDim2Triangulation = new QAction(this);
     actDim2Triangulation->setText(tr("New 2-D &Triangulation"));
     actDim2Triangulation->setIcon(IconCache::icon(
-        IconCache::packet_dim2triangulation));
+        IconCache::packet_triangulation2));
     actDim2Triangulation->setShortcut(tr("Alt+2"));
     actDim2Triangulation->setToolTip(tr("New 2-manifold triangulation"));
     actDim2Triangulation->setWhatsThis(
@@ -368,7 +368,8 @@ void ReginaMain::setupActions() {
 
     QAction* actTriangulation = new QAction(this);
     actTriangulation->setText(tr("New 3-D &Triangulation"));
-    actTriangulation->setIcon(IconCache::icon(IconCache::packet_triangulation));
+    actTriangulation->setIcon(IconCache::icon(
+        IconCache::packet_triangulation3));
     actTriangulation->setShortcut(tr("Alt+t"));
     actTriangulation->setToolTip(tr("New 3-manifold triangulation"));
     actTriangulation->setWhatsThis(
@@ -381,7 +382,7 @@ void ReginaMain::setupActions() {
     QAction* actDim4Triangulation = new QAction(this);
     actDim4Triangulation->setText(tr("New &4-D Triangulation"));
     actDim4Triangulation->setIcon(IconCache::icon(
-        IconCache::packet_dim4triangulation));
+        IconCache::packet_triangulation4));
     actDim4Triangulation->setShortcut(tr("Alt+4"));
     actDim4Triangulation->setToolTip(tr("New 4-manifold triangulation"));
     actDim4Triangulation->setWhatsThis(

@@ -50,11 +50,7 @@
 
 namespace regina {
 
-template <int> class Component;
-template <int> class Triangulation;
-template <int, int> class Face;
 typedef Component<4> Dim4Component;
-typedef Triangulation<3> NTriangulation;
 typedef Face<4, 3> Dim4Tetrahedron;
 typedef Face<4, 2> Dim4Triangle;
 typedef Face<4, 1> Dim4Edge;
@@ -109,7 +105,7 @@ class REGINA_API Dim4BoundaryComponent :
         std::vector<Dim4Vertex*> vertices_;
             /**< List of vertices in the boundary component. */
 
-        NTriangulation* boundary_;
+        Triangulation<3>* boundary_;
             /**< A full triangulation of the boundary component formed
                  by joining together individual boundary tetrahedra.
                  If this boundary component does not contain any tetrahedra
@@ -205,7 +201,7 @@ class REGINA_API Dim4BoundaryComponent :
          *
          * @return the triangulation of this boundary component.
          */
-        const NTriangulation* build() const;
+        const Triangulation<3>* build() const;
 
         /**
          * Determines if this boundary component is ideal.
@@ -349,7 +345,7 @@ inline Dim4Component* Dim4BoundaryComponent::component() const {
     return vertices_.front()->component();
 }
 
-inline const NTriangulation* Dim4BoundaryComponent::build() const {
+inline const Triangulation<3>* Dim4BoundaryComponent::build() const {
     return (boundary_ ? boundary_ : vertices_.front()->buildLink());
 }
 

@@ -37,14 +37,14 @@
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
-#include "testsuite/triangulation/testtriangulation.h"
+#include "testsuite/dim3/testtriangulation.h"
 
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NIsomorphism;
 using regina::Perm;
 using regina::NTetrahedron;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 class NIsomorphismTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NIsomorphismTest);
@@ -60,28 +60,28 @@ class NIsomorphismTest : public CppUnit::TestFixture {
         typedef void (NIsomorphismTest::*IsoTest)(const NIsomorphism&,
             unsigned long);
 
-        NTriangulation rp2xs1;
+        Triangulation<3> rp2xs1;
             /**< A three-tetrahedron closed non-orientable triangulation. */
 
-        NTriangulation lens8_1;
+        Triangulation<3> lens8_1;
             /**< A highly symmetric layered lens space. */
-        NTriangulation lens13_3;
+        Triangulation<3> lens13_3;
             /**< A less symmetric layered lens space. */
-        NTriangulation twisted5;
+        Triangulation<3> twisted5;
             /**< A twisted layered loop. */
-        NTriangulation untwisted5;
+        Triangulation<3> untwisted5;
             /**< An untwisted layered loop. */
-        NTriangulation fig8;
+        Triangulation<3> fig8;
             /**< The figure eight knot complement. */
-        NTriangulation aug;
+        Triangulation<3> aug;
             /**< A triangulation with no non-trivial symmetries whatsoever. */
 
-        NTriangulation ball;
+        Triangulation<3> ball;
             /**< A standalone tetrahedron. */
 
     public:
         void setUp() {
-            NTriangulation* t = NExampleTriangulation::rp2xs1();
+            Triangulation<3>* t = NExampleTriangulation::rp2xs1();
             rp2xs1.insertTriangulation(*t);
             delete t;
 
@@ -195,7 +195,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             if (which % 11 != 0)
                 return;
 
-            NTriangulation* image = iso.apply(&rp2xs1);
+            Triangulation<3>* image = iso.apply(&rp2xs1);
 
             std::ostringstream msg;
             msg << "Isomorphism #" << which << " created a copy of RP2xS1 ";
@@ -226,7 +226,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             if (which % 11 != 0)
                 return;
 
-            NTriangulation* image = iso.apply(&rp2xs1);
+            Triangulation<3>* image = iso.apply(&rp2xs1);
             if (! rp2xs1.isIsomorphicTo(*image).get()) {
                 std::ostringstream msg;
                 msg << "Isomorphism #" << which << " created a triangulation "
@@ -240,9 +240,9 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             enumerate(3, &NIsomorphismTest::isomorphicTest);
         }
 
-        void testAutomorphismsAndSubcomplexes(const NTriangulation& t,
+        void testAutomorphismsAndSubcomplexes(const Triangulation<3>& t,
                 const char* name, unsigned long symmetries) {
-            NTriangulation t2(t);
+            Triangulation<3> t2(t);
 
             if (! t2.isIsomorphicTo(t).get()) {
                 std::ostringstream msg;

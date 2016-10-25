@@ -42,16 +42,16 @@
 namespace regina {
 
 NormalSurfaceVector* NSVectorQuad::makeZeroVector(
-        const NTriangulation* triangulation) {
+        const Triangulation<3>* triangulation) {
     return new NSVectorQuad(3 * triangulation->size());
 }
 
 MatrixInt* NSVectorQuad::makeMatchingEquations(
-        const NTriangulation* triangulation) {
+        const Triangulation<3>* triangulation) {
     unsigned long nCoords = 3 * triangulation->size();
     // One equation per non-boundary edge.
     long nEquations = long(triangulation->countEdges());
-    for (NTriangulation::BoundaryComponentIterator bit = triangulation->
+    for (Triangulation<3>::BoundaryComponentIterator bit = triangulation->
             boundaryComponents().begin();
             bit != triangulation->boundaryComponents().end(); bit++)
         nEquations -= (*bit)->countEdges();
@@ -63,7 +63,7 @@ MatrixInt* NSVectorQuad::makeMatchingEquations(
     // equation.
     Perm<4> perm;
     unsigned long tetIndex;
-    for (NTriangulation::EdgeIterator eit = triangulation->edges().begin();
+    for (Triangulation<3>::EdgeIterator eit = triangulation->edges().begin();
             eit != triangulation->edges().end(); eit++) {
         if (! (*eit)->isBoundary()) {
             for (auto& emb : **eit) {
@@ -81,7 +81,7 @@ MatrixInt* NSVectorQuad::makeMatchingEquations(
 }
 
 EnumConstraints* NSVectorQuad::makeEmbeddedConstraints(
-        const NTriangulation* triangulation) {
+        const Triangulation<3>* triangulation) {
     EnumConstraints* ans = new EnumConstraints(triangulation->size());
 
     unsigned long base = 0;
@@ -116,7 +116,7 @@ namespace {
 }
 
 NormalSurfaceVector* NSVectorQuad::makeMirror(
-        const Ray& original, const NTriangulation* triang) {
+        const Ray& original, const Triangulation<3>* triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
     unsigned long nRows = 7 * triang->size();
@@ -154,7 +154,7 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
     Perm<4> tetPerm, adjPerm;
     unsigned long tetIndex, adjIndex;
     LargeInteger expect;
-    for (NTriangulation::VertexIterator vit = triang->vertices().begin();
+    for (Triangulation<3>::VertexIterator vit = triang->vertices().begin();
             vit != triang->vertices().end(); vit++) {
         usedEdges[0].clear(); usedEdges[1].clear();
         examine.clear();

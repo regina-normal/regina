@@ -33,7 +33,7 @@
 
 print NAbelianGroup.equalityType
 print Integer.equalityType
-print NTriangulation.equalityType
+print Triangulation3.equalityType
 
 # Test == and != for objects that are equal by value but have different
 # underlying C++ pointers.
@@ -53,9 +53,9 @@ print a == b, a != b
 
 # Cases that should be reported as different (by C++ reference):
 
-print 'NTriangulation:'
-a = NTriangulation()
-b = NTriangulation()
+print 'Triangulation3:'
+a = Triangulation3()
+b = Triangulation3()
 print a == b, a != b
 
 print 'NGroupPresentation:'
@@ -67,13 +67,13 @@ print a == b, a != b
 # but different python wrappers.
 # In all cases these objects should be reported as equal.
 
-print 'NTriangulation:'
-a = NTriangulation()
+print 'Triangulation3:'
+a = Triangulation3()
 b = a.root()
 print a == b, a != b
 
 print 'NTetrahedron:'
-t = NTriangulation()
+t = Triangulation3()
 a = t.newTetrahedron()
 b = t.tetrahedron(0)
 print a == b, a != b

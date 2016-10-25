@@ -59,7 +59,7 @@ class REGINA_API XMLAngleStructureReader : public XMLElementReader {
     private:
         AngleStructure* angles;
             /**< The angle structure currently being read. */
-        NTriangulation* tri;
+        Triangulation<3>* tri;
             /**< The triangulation on which this angle structure is placed. */
         long vecLen;
             /**< The length of corresponding angle structure vector. */
@@ -70,7 +70,7 @@ class REGINA_API XMLAngleStructureReader : public XMLElementReader {
          *
          * @param newTri the triangulation on which this angle structure lies.
          */
-        XMLAngleStructureReader(NTriangulation* newTri);
+        XMLAngleStructureReader(Triangulation<3>* newTri);
 
         /**
          * Returns the angle structure that has been read.
@@ -101,7 +101,7 @@ class REGINA_API XMLAngleStructuresReader : public XMLPacketReader {
     private:
         AngleStructures* list;
             /**< The angle structure list currently being read. */
-        NTriangulation* tri;
+        Triangulation<3>* tri;
             /**< The triangulation on which these angle structures
                  are placed. */
 
@@ -114,7 +114,7 @@ class REGINA_API XMLAngleStructuresReader : public XMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLAngleStructuresReader(NTriangulation* newTri,
+        XMLAngleStructuresReader(Triangulation<3>* newTri,
             XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
@@ -130,7 +130,7 @@ class REGINA_API XMLAngleStructuresReader : public XMLPacketReader {
 // Inline functions for XMLAngleStructureReader
 
 inline XMLAngleStructureReader::XMLAngleStructureReader(
-        NTriangulation* newTri) : angles(0), tri(newTri), vecLen(-1) {
+        Triangulation<3>* newTri) : angles(0), tri(newTri), vecLen(-1) {
 }
 
 inline AngleStructure* XMLAngleStructureReader::structure() {
@@ -140,7 +140,7 @@ inline AngleStructure* XMLAngleStructureReader::structure() {
 // Inline functions for XMLAngleStructuresReader
 
 inline XMLAngleStructuresReader::XMLAngleStructuresReader(
-        NTriangulation* newTri, XMLTreeResolver& resolver) :
+        Triangulation<3>* newTri, XMLTreeResolver& resolver) :
         XMLPacketReader(resolver),
         list(new AngleStructures(false)), tri(newTri) {
 }

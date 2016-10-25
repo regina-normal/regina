@@ -64,7 +64,7 @@
 
 using regina::Cyclotomic;
 using regina::Packet;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     /**
@@ -113,7 +113,7 @@ namespace {
     };
 }
 
-NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
+NTriAlgebraUI::NTriAlgebraUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
@@ -123,7 +123,7 @@ NTriAlgebraUI::NTriAlgebraUI(regina::NTriangulation* packet,
     addTab(new NTriCellularInfoUI(packet, this), tr("&Cellular Info"));
 }
 
-NTriHomologyFundUI::NTriHomologyFundUI(regina::NTriangulation* packet,
+NTriHomologyFundUI::NTriHomologyFundUI(regina::Triangulation<3>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -302,7 +302,7 @@ void NTriHomologyFundUI::updatePreferences() {
     refresh();
 }
 
-NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
+NTriTuraevViroUI::NTriTuraevViroUI(regina::Triangulation<3>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -407,8 +407,8 @@ void NTriTuraevViroUI::refresh() {
 
     // Since TuraevViroSet is a sorted data type,
     // these items will automatically be inserted in the right order.
-    const NTriangulation::TuraevViroSet& invs(tri->allCalculatedTuraevViro());
-    for (NTriangulation::TuraevViroSet::const_iterator it = invs.begin();
+    const Triangulation<3>::TuraevViroSet& invs(tri->allCalculatedTuraevViro());
+    for (Triangulation<3>::TuraevViroSet::const_iterator it = invs.begin();
             it != invs.end(); it++)
         if (unicode)
             invariants->addTopLevelItem(new TuraevViroItem(
@@ -625,7 +625,7 @@ void NTriCellularInfoUI::refresh() {
     }
 }
 
-NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
+NTriCellularInfoUI::NTriCellularInfoUI(regina::Triangulation<3>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     QScrollArea* scroller = new QScrollArea();

@@ -56,9 +56,6 @@ class XMLSnapPeaReader;
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
 
-template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
-
 /**
  * \addtogroup snappea SnapPea Triangulations
  * Interfaces for accessing the SnapPea kernel
@@ -146,7 +143,7 @@ class REGINA_API Cusp :
     public:
         /**
          * Returns the corresponding vertex of the Regina triangulation
-         * (i.e., of the NTriangulation structure that is inherited by
+         * (i.e., of the Triangulation<3> structure that is inherited by
          * SnapPeaTriangulation).
          *
          * Note that cusp and vertex indexing might not be in sync; that is,
@@ -232,12 +229,12 @@ class REGINA_API Cusp :
  *   SnapPy using strings that contain the contents of a SnapPea data file
  *   (see for instance SnapPeaTriangulation::snapPea()).
  *
- * Regarding the inherited NTriangulation interface:
+ * Regarding the inherited Triangulation<3> interface:
  *
  * - You can happily query this object using both SnapPea functions (such as
  *   SnapPeaTriangulation::volume(), and others specific to this class)
  *   and Regina's native triangulation functions (such as
- *   NTriangulation::homology(), and others inherited from NTriangulation).
+ *   Triangulation<3>::homology(), and others inherited from Triangulation<3>).
  *   This is because an object of this class stores \e two representations of
  *   the triangulation (SnapPea's and Regina's), which are always kept in sync.
  *
@@ -246,8 +243,8 @@ class REGINA_API Cusp :
  *   This is essentially because the synchronisation is one-way only (from
  *   SnapPea to Regina, but not in the other direction).
  *
- * - Any attempt to edit this triangulation via the inherited NTriangulation
- *   interface (for instance, by calling NTriangulation::twoThreeMove()) will
+ * - Any attempt to edit this triangulation via the inherited Triangulation<3>
+ *   interface (for instance, by calling Triangulation<3>::twoThreeMove()) will
  *   automatically cause this to become a <b>null triangulation</b>,
  *   with no tetrahedra and no SnapPea data at all.
  *
@@ -263,7 +260,7 @@ class REGINA_API Cusp :
  * - attempting to read a broken SnapPea data file;
  *
  * - attempting to change a SnapPea triangulation using the inherited
- *   NTriangulation interface (as discussed above);
+ *   Triangulation<3> interface (as discussed above);
  *
  * - attempting to import a SnapPea triangulation that uses unsupported
  *   (e.g., non-integer or non-coprime) filling coefficients, as discussed
@@ -272,10 +269,10 @@ class REGINA_API Cusp :
  * Regarding fillings:  SnapPea can store and manipulate Dehn fillings on
  * cusps, and the SnapPeaTriangulation class respects these where it can (but
  * with restrictions on the possible filling coefficients; see below).
- * However, Regina's own NTriangulation class knows nothing about fillings
+ * However, Regina's own Triangulation<3> class knows nothing about fillings
  * at all.  Therefore:
  *
- * - Routines inherited through the NTriangulation interface will ignore
+ * - Routines inherited through the Triangulation<3> interface will ignore
  *   fillings completely (so, for instance, homology() will return the
  *   first homology of the unfilled manifold, even if SnapPea has
  *   designated fillings on the cusps).
@@ -315,7 +312,7 @@ class REGINA_API Cusp :
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
  */
-class REGINA_API SnapPeaTriangulation : public NTriangulation,
+class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
         public PacketListener {
     REGINA_PACKET(SnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION)
 
@@ -385,9 +382,9 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
                  internal packet listener to distinguish between "legitimate"
-                 changes to the inherited NTriangulation via sync(), versus
+                 changes to the inherited Triangulation<3> via sync(), versus
                  "illegitimate" changes from elsewhere through the inherited
-                 NTriangulation interface. */
+                 Triangulation<3> interface. */
 
         static bool kernelMessages_;
             /**< Should the SnapPea kernel write diagnostic messages to
@@ -483,7 +480,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          *   through the SnapPea kernel.  If \a tri is a null SnapPea
          *   triangulation then this copy will be a null triangulation also.
          *
-         * - If \a tri is of the parent class NTriangulation, then
+         * - If \a tri is of the parent class Triangulation<3>, then
          *   Regina will attempt to convert this triangulation to
          *   SnapPea format.  If the conversion is successful, this
          *   constructor will immediately ask SnapPea to try to find a
@@ -530,7 +527,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * (This argument was once required if you wanted to pass a
          * closed triangluation to SnapPea.)
          */
-        SnapPeaTriangulation(const NTriangulation& tri, bool ignored = false);
+        SnapPeaTriangulation(const Triangulation<3>& tri, bool ignored = false);
 
         /**
          * Destroys this triangulation.  All internal SnapPea data will
@@ -772,7 +769,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * Returns the total number of cusps (both filled and complete).
          *
          * This returns the same value as the inherited function
-         * NTriangulation::countBoundaryComponents().
+         * Triangulation<3>::countBoundaryComponents().
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.num_cusps()</tt>.
@@ -909,7 +906,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * structure on the new triangulation.
          *
          * If this triangulation has only one cusp, then the result will
-         * be a new instance of NTriangulation (not SnapPeaTriangulation),
+         * be a new instance of Triangulation<3> (not SnapPeaTriangulation),
          * and will represent a closed manifold.
          *
          * Either way, the result will be a newly allocated triangulation, and
@@ -928,7 +925,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * @return the new filled triangulation or 0 if the filling was
          * not possible (as described above).
          */
-        NTriangulation* filledTriangulation(unsigned whichCusp) const;
+        Triangulation<3>* filledTriangulation(unsigned whichCusp) const;
 
         /**
          * Retriangulates to permanently fill all non-complete cusps.
@@ -947,7 +944,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * compute a hyperbolic structure on the new triangulation.
          *
          * If all cusps of this triangulation have filling coefficients
-         * assigned, then the result will be a new instance of NTriangulation
+         * assigned, then the result will be a new instance of Triangulation<3>
          * (not SnapPeaTriangulation), and will represent a closed manifold.
          *
          * Whatever happens, the result will be a newly allocated triangulation,
@@ -959,7 +956,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * @return the new filled triangulation, or 0 if this is a null
          * triangulation.
          */
-        NTriangulation* filledTriangulation() const;
+        Triangulation<3>* filledTriangulation() const;
 
         /**
          * Returns a matrix for computing boundary slopes of
@@ -999,12 +996,12 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * \pre All vertex links in this triangulation must be tori.
          *
          * \warning If this triangulation was constructed from a Regina
-         * triangulation (of class NTriangulation), then Regina will have
+         * triangulation (of class Triangulation<3>), then Regina will have
          * no information about what meridian and longitude the user wishes
          * to use (since Regina does not keep track of peripheral curves
          * on cusps).  Therefore Regina will give boundary slopes relative
          * to the (shortest, second-shortest) basis, as described in the
-         * constructor SnapPeaTriangulation(const NTriangulation&, bool).
+         * constructor SnapPeaTriangulation(const Triangulation<3>&, bool).
          * This might not be what the user expects.
          *
          * @author William Pettersson and Stephan Tillmann
@@ -1028,7 +1025,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * truncated.
          *
          * This is different from the inherited homology() routine from
-         * the parent NTriangulation class:
+         * the parent Triangulation<3> class:
          *
          * - This routine homologyFilled() respects Dehn fillings, and uses
          *   a combination of both SnapPea's and Regina's code to compute
@@ -1037,8 +1034,8 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          *   in which case this routine will return a null pointer.
          *
          * - The inherited homology() routine uses only Regina's code, and
-         *   works purely within Regina's parent NTriangulation class.
-         *   Since NTriangulation knows nothing about SnapPea or fillings,
+         *   works purely within Regina's parent Triangulation<3> class.
+         *   Since Triangulation<3> knows nothing about SnapPea or fillings,
          *   this means that any fillings on the cusps (which are
          *   specific to SnapPea triangulations) will be ignored.
          *   The homology() routine will always return a solution.
@@ -1078,14 +1075,14 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * fillings) will be treated as though they had been truncated.
          *
          * This is different from the inherited fundamentalGroup() routine
-         * from the parent NTriangulation class:
+         * from the parent Triangulation<3> class:
          *
          * - This routine fundamentalGroupFilled() respects Dehn fillings, and
          *   directly uses SnapPea's code to compute fundamental groups.
          *
-         * - The inherited fundamentalGroup() routine uses only Regina's
-         *   code, and works purely within Regina's parent NTriangulation class.
-         *   Since NTriangulation knows nothing about SnapPea or fillings,
+         * - The inherited fundamentalGroup() routine uses only Regina's code,
+         *   and works purely within Regina's parent Triangulation<3> class.
+         *   Since Triangulation<3> knows nothing about SnapPea or fillings,
          *   this means that any fillings on the cusps (which are specific
          *   to SnapPea triangulations) will be ignored.
          *
@@ -1185,7 +1182,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          *
          * Any fillings on the cusps of this SnapPea triangulation will be
          * ignored.  In the resulting canonical triangulation (which is
-         * one of Regina's native NTriangulation objects, not a SnapPea
+         * one of Regina's native Triangulation<3> objects, not a SnapPea
          * triangulation), these fillings will be completely forgotten.
          *
          * The canonical cell decomposition is the one described in
@@ -1237,14 +1234,14 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * @return the canonical triangulation of the canonical cell
          * decomposition, or 0 if this could not be constructed.
          */
-        NTriangulation* canonize() const;
+        Triangulation<3>* canonize() const;
 
         /**
          * A synonym for canonize(), which constructs the canonical
          * retriangulation of the canonical cell decomposition.
          * See canonize() for further details.
          */
-        NTriangulation* canonise() const;
+        Triangulation<3>* canonise() const;
 
         /**
          * Asks SnapPea to randomly retriangulate this manifold, using
@@ -1353,7 +1350,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
 
     private:
         /**
-         * Synchronises the inherited NTriangulation data so that the
+         * Synchronises the inherited Triangulation<3> data so that the
          * tetrahedra and their gluings match the raw SnapPea data.
          * Also refreshes other internal properties and caches,
          * such as cusps and tetrahedron shapes.
@@ -1399,7 +1396,7 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
          * @param dest the destination Regina triangulation.
          */
         static void fillRegina(regina::snappea::Triangulation* src,
-            NTriangulation& dest);
+            Triangulation<3>& dest);
 
         /**
          * Resets the internal SnapPea data to the given SnapPea triangulation.
@@ -1499,7 +1496,7 @@ inline SnapPeaTriangulation* SnapPeaTriangulation::protoCanonise() const {
     return protoCanonize();
 }
 
-inline NTriangulation* SnapPeaTriangulation::canonise() const {
+inline Triangulation<3>* SnapPeaTriangulation::canonise() const {
     return canonize();
 }
 

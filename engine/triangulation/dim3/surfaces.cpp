@@ -68,7 +68,7 @@ namespace regina {
  * vertex link.
  */
 
-NormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
+NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return 0;
@@ -132,7 +132,7 @@ NormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     return ans;
 }
 
-NormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
+NormalSurface* Triangulation<3>::hasOctagonalAlmostNormalSphere() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return 0;
@@ -212,14 +212,14 @@ NormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     return ans;
 }
 
-bool NTriangulation::isZeroEfficient() {
+bool Triangulation<3>::isZeroEfficient() {
     if (! zeroEfficient_.known()) {
         if (hasTwoSphereBoundaryComponents())
             zeroEfficient_ = false;
         else {
             // Operate on a clone of this triangulation, to avoid
             // changing the real packet tree.
-            NTriangulation clone(*this);
+            Triangulation<3> clone(*this);
             NormalSurface* s = clone.hasNonTrivialSphereOrDisc();
             if (s) {
                 zeroEfficient_ = false;
@@ -236,7 +236,7 @@ bool NTriangulation::isZeroEfficient() {
     return zeroEfficient_.value();
 }
 
-bool NTriangulation::hasSplittingSurface() {
+bool Triangulation<3>::hasSplittingSurface() {
     // Splitting surfaces must unfortunately be calculated using
     // tri-quad coordinates.
     if (splittingSurface_.known())
@@ -246,7 +246,7 @@ bool NTriangulation::hasSplittingSurface() {
     //
     // Work on a clone of this triangulation so we don't trigger any
     // changes to the packet tree.
-    NTriangulation working(*this);
+    Triangulation<3> working(*this);
     NormalSurfaces* surfaces = NormalSurfaces::enumerate(&working,
         NS_STANDARD);
 

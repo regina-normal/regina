@@ -61,8 +61,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
     return ans;
 }
 
-void NLayeredSolidTorus::transform(const NTriangulation* originalTri,
-        const NIsomorphism* iso, NTriangulation* newTri) {
+void NLayeredSolidTorus::transform(const Triangulation<3>* originalTri,
+        const NIsomorphism* iso, Triangulation<3>* newTri) {
     unsigned i, j;
     size_t baseTetID = base_->index();
     size_t topTetID = topLevel_->index();
@@ -668,11 +668,11 @@ NAbelianGroup* NLayeredSolidTorus::homology() const {
     return ans;
 }
 
-NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
+Triangulation<3>* NLayeredSolidTorus::flatten(const Triangulation<3>* original,
         int mobiusBandBdry) const {
     // Create a new triangulation and identify the top-level and
     // base tetrahedra.
-    NTriangulation* ans = new NTriangulation(*original);
+    Triangulation<3>* ans = new Triangulation<3>(*original);
 
     NTetrahedron* newTop = ans->tetrahedron(topLevel_->index());
     NTetrahedron* newBase = ans->tetrahedron(base_->index());

@@ -49,7 +49,6 @@ template <int> class Simplex;
 template <int> class Triangulation;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup subcomplex
@@ -276,7 +275,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * @return a newly created triangulation in which this layered
          * solid torus has been flattened to a Mobius band.
          */
-        NTriangulation* flatten(const NTriangulation* original,
+        Triangulation<3>* flatten(const Triangulation<3>* original,
                 int mobiusBandBdry) const;
 
         /**
@@ -300,8 +299,8 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * @param newTri the triangulation to be referenced by the updated
          * layered solid torus.
          */
-        void transform(const NTriangulation* originalTri,
-                const NIsomorphism* iso, NTriangulation* newTri);
+        void transform(const Triangulation<3>* originalTri,
+                const NIsomorphism* iso, Triangulation<3>* newTri);
 
         /**
          * Determines if the given tetrahedron forms the base of a

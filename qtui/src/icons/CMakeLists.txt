@@ -24,8 +24,6 @@ set (IMGS
   orient
   packet_angles
   packet_container
-  packet_dim2triangulation
-  packet_dim4triangulation
   packet_filter
   packet_hypersurfaces
   packet_pdf
@@ -33,7 +31,9 @@ set (IMGS
   packet_snappea
   packet_surfaces
   packet_text
-  packet_triangulation
+  packet_triangulation2
+  packet_triangulation3
+  packet_triangulation4
   packet_triangulation5
   packet_triangulation6
   packet_triangulation7

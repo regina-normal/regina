@@ -47,9 +47,7 @@ class QPushButton;
 
 namespace regina {
     class Packet;
-
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -60,7 +58,7 @@ class NTriAlgebraUI : public PacketTabbedViewerTab {
         /**
          * Constructor.
          */
-        NTriAlgebraUI(regina::NTriangulation* packet,
+        NTriAlgebraUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
 };
 
@@ -74,7 +72,7 @@ class NTriHomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
         /**
          * Internal components
@@ -97,7 +95,7 @@ class NTriHomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriHomologyFundUI(regina::NTriangulation* packet,
+        NTriHomologyFundUI(regina::Triangulation<3>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -134,7 +132,7 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
         /**
          * Internal components
@@ -149,7 +147,7 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriTuraevViroUI(regina::NTriangulation* packet,
+        NTriTuraevViroUI(regina::Triangulation<3>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -185,7 +183,7 @@ class NTriCellularInfoUI: public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
         /**
          * Internal components
@@ -208,7 +206,7 @@ class NTriCellularInfoUI: public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriCellularInfoUI(regina::NTriangulation* packet,
+        NTriCellularInfoUI(regina::Triangulation<3>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**

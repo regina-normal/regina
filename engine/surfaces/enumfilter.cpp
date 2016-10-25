@@ -115,7 +115,7 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
-    NTriangulation* t;
+    Triangulation<3>* t;
 #ifdef DEBUG
     int which = 0;
 #endif

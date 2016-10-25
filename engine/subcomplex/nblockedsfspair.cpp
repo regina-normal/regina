@@ -118,7 +118,7 @@ void NBlockedSFSPair::writeTextLong(std::ostream& out) const {
     region_[1]->writeDetail(out, "Second region");
 }
 
-NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(NTriangulation* tri) {
+NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;

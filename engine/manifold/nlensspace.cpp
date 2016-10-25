@@ -60,8 +60,8 @@ void NLensSpace::reduce() {
         q_ = inv;
 }
 
-NTriangulation* NLensSpace::construct() const {
-    NTriangulation* ans = new NTriangulation();
+Triangulation<3>* NLensSpace::construct() const {
+    Triangulation<3>* ans = new Triangulation<3>();
     ans->insertLayeredLensSpace(p_, q_);
     return ans;
 }

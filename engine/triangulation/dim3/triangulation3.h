@@ -95,8 +95,8 @@ typedef Face<3, 2> NTriangle;
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
-struct PacketInfo<PACKET_TRIANGULATION> {
-    typedef NTriangulation Class;
+struct PacketInfo<PACKET_TRIANGULATION3> {
+    typedef Triangulation<3> Class;
     inline static const char* name() {
         return "3-Manifold Triangulation";
     }
@@ -173,7 +173,7 @@ template <>
 class REGINA_API Triangulation<3> :
         public Packet,
         public detail::TriangulationBase<3> {
-    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION)
+    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3)
 
     public:
         typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
@@ -547,7 +547,7 @@ class REGINA_API Triangulation<3> :
          * \pre This triangulation has at most one component.
          *
          * \warning As with every routine implemented by Regina's
-         * NTriangulation class, if you are calling this from the subclass
+         * Triangulation<3> class, if you are calling this from the subclass
          * SnapPeaTriangulation then <b>any fillings on the cusps will be
          * ignored</b>.  If you wish to compute the fundamental group with
          * fillings, call SnapPeaTriangulation::fundamentalGroupFilled()
@@ -606,7 +606,7 @@ class REGINA_API Triangulation<3> :
          * (see isValid()).
          *
          * \warning As with every routine implemented by Regina's
-         * NTriangulation class, if you are calling this from the subclass
+         * Triangulation<3> class, if you are calling this from the subclass
          * SnapPeaTriangulation then <b>any fillings on the cusps will
          * be ignored</b>.  If you wish to compute homology with fillings,
          * call SnapPeaTriangulation::homologyFilled() instead.
@@ -639,7 +639,7 @@ class REGINA_API Triangulation<3> :
          * (see isValid()).
          *
          * \warning As with every routine implemented by Regina's
-         * NTriangulation class, if you are calling this from the subclass
+         * Triangulation<3> class, if you are calling this from the subclass
          * SnapPeaTriangulation then <b>any fillings on the cusps will
          * be ignored</b>.  If you wish to compute homology with fillings,
          * call SnapPeaTriangulation::homologyFilled() instead.
@@ -1222,7 +1222,7 @@ class REGINA_API Triangulation<3> :
          * be a function or some other callable object).
          *
          * - \a action must take at least one argument.  The first argument
-         *   will be of type (const NTriangulation&), and will reference
+         *   will be of type (const Triangulation<3>&), and will reference
          *   the triangulation that has been found.  If there are any
          *   additional arguments supplied in the list \a args, then
          *   these will be passed as subsequent arguments to \a action.
@@ -2652,7 +2652,7 @@ class REGINA_API Triangulation<3> :
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own NTriangulation
+         * - If you are calling this from one of Regina's own Triangulation<3>
          *   objects, then only the tetrahedron gluings and the manifold name
          *   will be stored (the name will be derived from the packet label).
          *   All other SnapPea-specific information (such as peripheral curves)
@@ -2685,7 +2685,7 @@ class REGINA_API Triangulation<3> :
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own NTriangulation
+         * - If you are calling this from one of Regina's own Triangulation<3>
          *   objects, then only the tetrahedron gluings and the manifold name
          *   will be stored (the name will be derived from the packet label).
          *   All other SnapPea-specific information (such as peripheral curves)
@@ -2721,7 +2721,7 @@ class REGINA_API Triangulation<3> :
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own NTriangulation
+         * - If you are calling this from one of Regina's own Triangulation<3>
          *   objects, then only the tetrahedron gluings and the manifold name
          *   will be stored (the name will be derived from the packet label).
          *   All other SnapPea-specific information (such as peripheral curves)
@@ -2855,7 +2855,7 @@ class REGINA_API Triangulation<3> :
          * written.
          * @return the triangulation entered in by the user.
          */
-        static NTriangulation* enterTextTriangulation(std::istream& in,
+        static Triangulation<3>* enterTextTriangulation(std::istream& in,
                 std::ostream& out);
         /**
          * Rehydrates the given alphabetical string into a new triangulation.
@@ -2884,13 +2884,13 @@ class REGINA_API Triangulation<3> :
          * @see dehydrate
          * @see insertRehydration
          */
-        static NTriangulation* rehydrate(const std::string& dehydration);
+        static Triangulation<3>* rehydrate(const std::string& dehydration);
 
         /**
          * Extracts the tetrahedron gluings from a string that contains the
          * full contents of a SnapPea data file.  All other SnapPea-specific
          * information (such as peripheral curves) will be ignored, since
-         * Regina's NTriangulation class does not track such information itself.
+         * Regina's Triangulation<3> class does not track such information itself.
          *
          * If you wish to preserve all SnapPea-specific information from the
          * data file, you should work with the SnapPeaTriangulation class
@@ -2909,7 +2909,7 @@ class REGINA_API Triangulation<3> :
          *
          * \warning This routine is "lossy", in that drops SnapPea-specific
          * information (as described above).  Unless you specifically need an
-         * NTriangulation (not an SnapPeaTriangulation) or you need to avoid
+         * Triangulation<3> (not an SnapPeaTriangulation) or you need to avoid
          * calling routines from the SnapPea kernel, it is highly recommended
          * that you create a SnapPeaTriangulation from the given file
          * contents instead.  See the string-based SnapPeaTriangulation
@@ -2920,7 +2920,7 @@ class REGINA_API Triangulation<3> :
          * @return a new triangulation extracted from the given data,
          * or 0 on error.
          */
-        static NTriangulation* fromSnapPea(const std::string& snapPeaData);
+        static Triangulation<3>* fromSnapPea(const std::string& snapPeaData);
 
         /*@}*/
 
@@ -2938,7 +2938,7 @@ class REGINA_API Triangulation<3> :
          * @param from the triangulation from which this triangulation
          * will be cloned.
          */
-        void cloneFrom(const NTriangulation& from);
+        void cloneFrom(const Triangulation<3>& from);
 
     private:
         /**
@@ -3007,7 +3007,7 @@ class REGINA_API Triangulation<3> :
          */
         bool retriangulateInternal(int height, unsigned nThreads,
             ProgressTrackerOpen* tracker,
-            const std::function<bool(const NTriangulation&)>& action) const;
+            const std::function<bool(const Triangulation<3>&)>& action) const;
 
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
                 std::set<NVertex*>&) const;
@@ -3018,8 +3018,8 @@ class REGINA_API Triangulation<3> :
 
         /**
          * Reads the contents of a SnapPea data file from the given input
-         * stream, and converts the result to a new NTriangulation.  Since
-         * this returns a NTriangulation, it will lose some SnapPea-specific
+         * stream, and converts the result to a new Triangulation<3>.  Since
+         * this returns a Triangulation<3>, it will lose some SnapPea-specific
          * information in the process (such as peripheral curves).
          *
          * If the input stream could not be read or if the data was not in the
@@ -3033,7 +3033,7 @@ class REGINA_API Triangulation<3> :
          *
          * \ifacespython Not present.
          */
-        static NTriangulation* readSnapPea(std::istream& in);
+        static Triangulation<3>* readSnapPea(std::istream& in);
 
     friend class regina::Simplex<3>;
     friend class regina::detail::SimplexBase<3>;
@@ -3062,12 +3062,12 @@ typedef Triangulation<3> NTriangulation;
 #include "triangulation/dim3/boundarycomponent3.h"
 namespace regina {
 
-// Inline functions for NTriangulation
+// Inline functions for Triangulation<3>
 
 inline Triangulation<3>::Triangulation() {
 }
 
-inline Triangulation<3>::Triangulation(const NTriangulation& cloneMe) {
+inline Triangulation<3>::Triangulation(const Triangulation<3>& cloneMe) {
     cloneFrom(cloneMe);
 }
 
@@ -3076,7 +3076,7 @@ inline Triangulation<3>::~Triangulation() {
 }
 
 inline Packet* Triangulation<3>::internalClonePacket(Packet*) const {
-    return new NTriangulation(*this);
+    return new Triangulation<3>(*this);
 }
 
 inline bool Triangulation<3>::dependsOnParent() const {
@@ -3176,7 +3176,7 @@ inline bool Triangulation<3>::hasStrictAngleStructure() const {
     return (strictAngleStructure_.value() != 0);
 }
 
-inline const NAbelianGroup& NTriangulation::homologyH1() const {
+inline const NAbelianGroup& Triangulation<3>::homologyH1() const {
     return homology();
 }
 

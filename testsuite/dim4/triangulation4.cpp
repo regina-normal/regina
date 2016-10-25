@@ -62,7 +62,6 @@ using regina::NIsomorphism;
 using regina::Perm;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
-using regina::NTriangulation;
 using regina::Triangulation;
 using regina::NVertex;
 
@@ -198,7 +197,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // Some of our triangulations are built from 3-manifold
             // triangulations.
-            NTriangulation* base;
+            Triangulation<3>* base;
 
             base = NExampleTriangulation::threeSphere();
             copyAndDelete(s4_doubleConeS3,
@@ -647,7 +646,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 bool makeBdryFinite = false) {
             std::string ans;
 
-            NTriangulation t(*(tri.boundaryComponent(whichBdry)->build()));
+            Triangulation<3> t(*(tri.boundaryComponent(whichBdry)->build()));
             t.intelligentSimplify();
 
             if (makeBdryFinite) {
@@ -687,7 +686,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // Do a barycentric subdivision to turn any invalid edges
             // into proper RP^2 ideal boundaries.
-            NTriangulation t(*(tri.boundaryComponent(whichBdry)->build()));
+            Triangulation<3> t(*(tri.boundaryComponent(whichBdry)->build()));
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
@@ -856,7 +855,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyLinkCount(tri, nVert);
 
             for (unsigned i = 0; i < nVert; ++i) {
-                NTriangulation t(*(tri.vertex(i)->buildLink()));
+                Triangulation<3> t(*(tri.vertex(i)->buildLink()));
                 t.intelligentSimplify();
 
                 std::string link;
@@ -889,7 +888,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyLinkCount(tri, nVert);
 
             for (unsigned i = 0; i < nVert; ++i) {
-                NTriangulation t(*(tri.vertex(i)->buildLink()));
+                Triangulation<3> t(*(tri.vertex(i)->buildLink()));
                 t.intelligentSimplify();
 
                 std::string link;
@@ -922,7 +921,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 unsigned whichVertex, const char* manifold) {
             std::string link;
 
-            NTriangulation t(*(tri.vertex(whichVertex)->buildLink()));
+            Triangulation<3> t(*(tri.vertex(whichVertex)->buildLink()));
             t.intelligentSimplify();
 
             NStandardTriangulation* std =
@@ -957,7 +956,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // Do a barycentric subdivision to turn any invalid edges
             // into proper RP^2 ideal boundaries.
-            NTriangulation t(*(tri.vertex(whichVertex)->buildLink()));
+            Triangulation<3> t(*(tri.vertex(whichVertex)->buildLink()));
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
@@ -1488,8 +1487,8 @@ class Triangulation4Test : public TriangulationTest<4> {
                 Dim4Vertex* v = tri->vertex(i);
                 Dim4Isomorphism* iso;
 
-                const NTriangulation* link = v->buildLink();
-                NTriangulation* link2 = v->buildLinkDetail(true, &iso);
+                const Triangulation<3>* link = v->buildLink();
+                Triangulation<3>* link2 = v->buildLinkDetail(true, &iso);
 
                 if (link->size() != v->degree()) {
                     std::ostringstream msg;
@@ -1747,7 +1746,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 Dim4Pentachoron* p;
                 Dim4Vertex* v;
                 Perm<5> perm;
-                const NTriangulation* vLink;
+                const Triangulation<3>* vLink;
                 for (j = 0; j < 2; ++j) {
                     p = e->front().pentachoron();
                     perm = e->front().vertices();
@@ -2015,7 +2014,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             runCensusAllNoBdry(verifyIdealToFinite); // Sometimes change
         }
 
-        static void verifyIBundle(NTriangulation* tri) {
+        static void verifyIBundle(Triangulation<3>* tri) {
             // For now, only work with compact triangulations.
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
@@ -2104,7 +2103,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             runCensusAllBounded(verifyIBundle);
         }
 
-        static void verifyS1Bundle(NTriangulation* tri) {
+        static void verifyS1Bundle(Triangulation<3>* tri) {
             // For now, only work with compact triangulations.
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
@@ -2191,7 +2190,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             runCensusAllBounded(verifyS1Bundle);
         }
 
-        static void verifyBundleWithMonodromy(NTriangulation* tri) {
+        static void verifyBundleWithMonodromy(Triangulation<3>* tri) {
             // For now, only work with compact triangulations.
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
@@ -2271,7 +2270,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             // definitely break things, since the gluings are not involutions.
             // This is the two-vertex, two-tetrahedron L(3,1);
             // the degree two vertex is 0(0) == 1(1).
-            NTriangulation tri;
+            Triangulation<3> tri;
             NTetrahedron* t0 = tri.newTetrahedron();
             NTetrahedron* t1 = tri.newTetrahedron();
             t0->join(0, t1, regina::Perm<4>(1,3,0,2));

@@ -34,12 +34,11 @@
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 }
 
 @interface TriangulationViewController : PacketTabBarController <PacketEditor>
 
-@property (assign, nonatomic) regina::NTriangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 
 - (void)updateHeader:(UILabel*)header lockIcon:(UIButton*)lockIcon;
 

@@ -56,9 +56,9 @@
             else
                 _parent = 0;
         } else if (type == regina::PACKET_NORMALHYPERSURFACES) {
-            if (viewing && viewing->type() == regina::PACKET_DIM4TRIANGULATION)
+            if (viewing && viewing->type() == regina::PACKET_TRIANGULATION4)
                 _parent = viewing;
-            else if (tree.node->type() == regina::PACKET_DIM4TRIANGULATION)
+            else if (tree.node->type() == regina::PACKET_TRIANGULATION4)
                 _parent = tree.node;
             else
                 _parent = 0;
@@ -132,7 +132,7 @@
 
 + (BOOL)isTriangulation:(regina::Packet*)p
 {
-    return (p->type() == regina::PACKET_TRIANGULATION || p->type() == regina::PACKET_SNAPPEATRIANGULATION);
+    return (p->type() == regina::PACKET_TRIANGULATION3 || p->type() == regina::PACKET_SNAPPEATRIANGULATION);
 }
 
 @end

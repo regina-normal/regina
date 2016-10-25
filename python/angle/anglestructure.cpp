@@ -39,7 +39,6 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::AngleStructure;
-using regina::NTriangulation;
 
 void addAngleStructure() {
     class_<AngleStructure, std::auto_ptr<AngleStructure>, boost::noncopyable>

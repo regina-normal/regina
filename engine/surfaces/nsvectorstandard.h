@@ -103,22 +103,22 @@ class REGINA_API NSVectorStandard : public NormalSurfaceVector {
         NSVectorStandard(const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang) const;
+            int vertex, const Triangulation<3>* triang) const;
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const NTriangulation* triang) const;
+            int quadType, const Triangulation<3>* triang) const;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const;
+            int octType, const Triangulation<3>* triang) const;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const NTriangulation* triang) const;
+            const Triangulation<3>* triang) const;
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const NTriangulation* triang) const;
+            int triVertex, const Triangulation<3>* triang) const;
 
         static NormalSurfaceVector* makeZeroVector(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
         static MatrixInt* makeMatchingEquations(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
 };
 
 /**
@@ -143,15 +143,15 @@ inline NSVectorStandard::NSVectorStandard(
 }
 
 inline LargeInteger NSVectorStandard::triangles(
-        size_t tetIndex, int vertex, const NTriangulation*) const {
+        size_t tetIndex, int vertex, const Triangulation<3>*) const {
     return coords_[7 * tetIndex + vertex];
 }
 inline LargeInteger NSVectorStandard::quads(
-        size_t tetIndex, int quadType, const NTriangulation*) const {
+        size_t tetIndex, int quadType, const Triangulation<3>*) const {
     return coords_[7 * tetIndex + 4 + quadType];
 }
 inline LargeInteger NSVectorStandard::octs(
-        size_t, int, const NTriangulation*) const {
+        size_t, int, const Triangulation<3>*) const {
     return Ray::zero;
 }
 

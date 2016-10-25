@@ -58,7 +58,6 @@ namespace regina {
     template <int> class Isomorphism;
     template <int> class Perm;
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -79,8 +78,8 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
-        regina::NTriangulation* comparingTri;
+        regina::Triangulation<3>* tri;
+        regina::Triangulation<3>* comparingTri;
         std::unique_ptr<regina::Isomorphism<3>> isomorphism;
         IsomorphismType isoType;
 
@@ -100,7 +99,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        NTriCompositionUI(regina::NTriangulation* packet,
+        NTriCompositionUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
         ~NTriCompositionUI();
 

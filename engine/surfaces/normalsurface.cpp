@@ -129,7 +129,7 @@ NormalSurface* NormalSurface::doubleSurface() const {
     return ans;
 }
 
-NormalSurface::NormalSurface(const NTriangulation* triang,
+NormalSurface::NormalSurface(const Triangulation<3>* triang,
         NormalSurfaceVector* newVector) :
         vector(newVector),
         triangulation_(triang) {
@@ -156,7 +156,7 @@ void NormalSurface::writeTextShort(std::ostream& out) const {
     }
 }
 
-bool NormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
+bool NormalSurfaceVector::hasMultipleOctDiscs(const Triangulation<3>* triang)
         const {
     size_t nTets = triang->size();
     int oct;
@@ -175,7 +175,7 @@ bool NormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
     return false;
 }
 
-bool NormalSurfaceVector::isCompact(const NTriangulation* triang) const {
+bool NormalSurfaceVector::isCompact(const Triangulation<3>* triang) const {
     size_t nTets = triang->size();
     size_t tet;
     int type;
@@ -195,7 +195,7 @@ bool NormalSurfaceVector::isCompact(const NTriangulation* triang) const {
     return true;
 }
 
-bool NormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
+bool NormalSurfaceVector::isSplitting(const Triangulation<3>* triang) const {
     size_t nTets = triang->size();
     size_t tet;
     int type;
@@ -218,7 +218,7 @@ bool NormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
     return true;
 }
 
-LargeInteger NormalSurfaceVector::isCentral(const NTriangulation* triang)
+LargeInteger NormalSurfaceVector::isCentral(const Triangulation<3>* triang)
         const {
     size_t nTets = triang->size();
     size_t tet;
@@ -438,7 +438,7 @@ MatrixInt* NormalSurface::boundaryIntersections() const {
         return 0;
     if (vector->allowsAlmostNormal())
         return 0;
-    for (NTriangulation::VertexIterator it = snapPea->vertices().begin();
+    for (Triangulation<3>::VertexIterator it = snapPea->vertices().begin();
             it != snapPea->vertices().end(); ++it) {
         if (! (*it)->isIdeal())
             return 0;
@@ -513,12 +513,12 @@ void NormalSurface::writeXMLData(std::ostream& out) const {
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
 LargeInteger NormalSurfaceVector::orientedTriangles(
-        size_t, int, const NTriangulation*, bool) const {
+        size_t, int, const Triangulation<3>*, bool) const {
     return LargeInteger::zero;
 };
 
 LargeInteger NormalSurfaceVector::orientedQuads(
-        size_t, int, const NTriangulation*, bool) const {
+        size_t, int, const Triangulation<3>*, bool) const {
     return LargeInteger::zero;
 };
 

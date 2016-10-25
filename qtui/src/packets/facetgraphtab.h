@@ -52,9 +52,7 @@ class QSvgWidget;
 
 namespace regina {
     class Packet;
-
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -94,10 +92,10 @@ class Dim2EdgeGraphData : public FacetGraphData {
 
 class Dim3FaceGraphData : public FacetGraphData {
     private:
-        regina::NTriangulation* tri_;
+        regina::Triangulation<3>* tri_;
 
     public:
-        Dim3FaceGraphData(regina::NTriangulation* tri) : tri_(tri) {}
+        Dim3FaceGraphData(regina::Triangulation<3>* tri) : tri_(tri) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);

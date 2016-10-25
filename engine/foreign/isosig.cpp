@@ -69,7 +69,7 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
     std::string isoSig;
     std::string label;
     Triangulation<2>* tri2;
-    NTriangulation* tri3;
+    Triangulation<3>* tri3;
     Triangulation<4>* tri4;
 
     while(! in.eof()) {
@@ -105,7 +105,7 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
                 } else
                     errStrings = errStrings + '\n' + isoSig;
             } else if (dimension == 3) {
-                if ((tri3 = NTriangulation::fromIsoSig(isoSig))) {
+                if ((tri3 = Triangulation<3>::fromIsoSig(isoSig))) {
                     tri3->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri3);
                 } else

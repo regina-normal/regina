@@ -36,7 +36,7 @@
 
 namespace regina {
 
-NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
+NTetrahedron* Triangulation<3>::layerOn(NEdge* edge) {
     // Locate the two boundary triangles.
     // Note that our preconditions ensure they exist and are distinct;
     // we won't test this again here.
@@ -65,7 +65,7 @@ NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
     return newTet;
 }
 
-NTetrahedron* NTriangulation::insertLayeredSolidTorus(
+NTetrahedron* Triangulation<3>::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
     ChangeEventSpan span(this);
 
@@ -113,7 +113,7 @@ NTetrahedron* NTriangulation::insertLayeredSolidTorus(
     return newTet;
 }
 
-void NTriangulation::insertLayeredLensSpace(unsigned long p, unsigned long q) {
+void Triangulation<3>::insertLayeredLensSpace(unsigned long p, unsigned long q) {
     ChangeEventSpan span(this);
 
     NTetrahedron* chain;
@@ -144,7 +144,7 @@ void NTriangulation::insertLayeredLensSpace(unsigned long p, unsigned long q) {
     }
 }
 
-void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
+void Triangulation<3>::insertLayeredLoop(unsigned long length, bool twisted) {
     if (length == 0)
         return;
 
@@ -176,7 +176,7 @@ void NTriangulation::insertLayeredLoop(unsigned long length, bool twisted) {
     }
 }
 
-void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
+void Triangulation<3>::insertAugTriSolidTorus(long a1, long b1,
         long a2, long b2, long a3, long b3) {
     ChangeEventSpan span(this);
 
@@ -274,7 +274,7 @@ void NTriangulation::insertAugTriSolidTorus(long a1, long b1,
     }
 }
 
-void NTriangulation::insertSFSOverSphere(long a1, long b1, long a2, long b2,
+void Triangulation<3>::insertSFSOverSphere(long a1, long b1, long a2, long b2,
         long a3, long b3) {
     // Construct the SFS that we seek.
     NSFSpace sfs;
@@ -294,7 +294,7 @@ void NTriangulation::insertSFSOverSphere(long a1, long b1, long a2, long b2,
     sfs.reduce();
 
     // Use the SFS construction routine, which can handle this type of SFS.
-    NTriangulation* ans = sfs.construct();
+    Triangulation<3>* ans = sfs.construct();
     insertTriangulation(*ans);
     delete ans;
 }

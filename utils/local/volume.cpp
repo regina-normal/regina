@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
 
     // Process the packets.
     for (Packet* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == PACKET_TRIANGULATION)
+        if (p->type() == PACKET_TRIANGULATION3)
             process(static_cast<NTriangulation*>(p));
         else if (outputContainers && p->type() == PACKET_CONTAINER)
             std::cout << "----- " << p->label() << " -----"

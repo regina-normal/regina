@@ -162,7 +162,7 @@ XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
     return new XMLElementReader();
 }
 
-XMLPacketReader* NTriangulation::xmlReader(Packet*,
+XMLPacketReader* Triangulation<3>::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
     return new NXMLTriangulationReader(resolver);
 }

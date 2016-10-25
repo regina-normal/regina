@@ -5,11 +5,11 @@ Integer:
 True False
 NAbelianGroup:
 True False
-NTriangulation:
+Triangulation3:
 False True
 NGroupPresentation:
 False True
-NTriangulation:
+Triangulation3:
 True False
 NTetrahedron:
 True False

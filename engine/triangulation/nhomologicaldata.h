@@ -53,9 +53,6 @@
 
 namespace regina {
 
-template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
-
 /**
  * \weakgroup algebra
  * @{
@@ -204,7 +201,7 @@ private:
      * triangulation as reference.
      * This is the triangulation that it is initialized by.
      */
-    std::unique_ptr<NTriangulation> tri;
+    std::unique_ptr<Triangulation<3>> tri;
 
     /**
      * Pointer to the 0-th homology group in standard cellular coordinates,
@@ -460,7 +457,7 @@ public:
      *
      * @param input the triangulation to use.
      */
-    NHomologicalData(const NTriangulation& input);
+    NHomologicalData(const Triangulation<3>& input);
     /**
      * Copy constructor.
      *
@@ -554,7 +551,7 @@ public:
      *
      * In the case that the triangulation is a proper
      * triangulation of a manifold (or delta-complex decomposition) it
-     * simply returns the same information as in the NTriangulation
+     * simply returns the same information as in the Triangulation<3>
      * vertex, edge, face and tetrahedron lists.
      *
      * In the case that this is an ideal triangulation, this algorithm
@@ -598,11 +595,11 @@ public:
      * vertex treated as a surface boundary component.
      *
      * This routine returns the same value as
-     * NTriangulation::eulerCharManifold(), though it computes it
+     * Triangulation<3>::eulerCharManifold(), though it computes it
      * in a different way.
      *
      * On the other hand, this routine differs from
-     * NTriangulation::eulerCharTri(), which handles ideal triangulations
+     * Triangulation<3>::eulerCharTri(), which handles ideal triangulations
      * in a non-standard way (treating each ideal vertex as just a single
      * vertex).
      *
@@ -765,9 +762,9 @@ public:
 // Inline functions for NHomologicalData
 
 // constructor
-inline NHomologicalData::NHomologicalData(const NTriangulation& input):
+inline NHomologicalData::NHomologicalData(const Triangulation<3>& input):
 
-        tri(new NTriangulation(input)),
+        tri(new Triangulation<3>(input)),
 
         ccIndexingComputed(false),
         chainComplexesComputed(false),

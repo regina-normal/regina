@@ -56,14 +56,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *drillEdgeButton;
 @property (weak, nonatomic) IBOutlet UIButton *drillEdgeIcon;
 
-@property (assign, nonatomic) regina::NTriangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
 @implementation TriSkeleton
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+    self.packet = static_cast<regina::Triangulation<3>*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
     self.details.delegate = self;
     self.details.dataSource = self;
@@ -115,7 +115,7 @@
     
     // Drill edge:
     enable = NO;
-    if (self.viewWhich.selectedSegmentIndex == 1 && self.packet->type() == regina::PACKET_TRIANGULATION) {
+    if (self.viewWhich.selectedSegmentIndex == 1 && self.packet->type() == regina::PACKET_TRIANGULATION3) {
         NSIndexPath* seln = self.details.indexPathForSelectedRow;
         if (seln && seln.row > 0 && seln.row <= self.packet->countEdges())
             enable = YES;
@@ -159,7 +159,7 @@
         return;
     }
     
-    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
+    regina::Triangulation<3>* ans = new regina::Triangulation<3>(*self.packet);
     [ReginaHelper runWithHUD:@"Drilling…"
                         code:^{
                             ans->drillEdge(ans->edge(seln.row - 1));

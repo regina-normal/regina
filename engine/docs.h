@@ -221,7 +221,7 @@ namespace regina {
  *
  *  - Everything within the C++ namespace \a regina becomes part of the
  *    Python module \a regina.  For example, the C++ class
- *    regina::NTriangulation becomes the Python class regina.NTriangulation.
+ *    regina::Triangulation<3> becomes the Python class regina.Triangulation3.
  *
  *  - Regina's most important C++ classes and functions are wrapped
  *    in Python.  However, not all classes and functions are wrapped.
@@ -232,7 +232,7 @@ namespace regina {
  *  - Most of Regina's classes and functions have the same interface
  *    in both C++ and Python, but occasionally there are differences.
  *    Again, you will see a bold <b>Python:</b> note indicating this.
- *    See for instance the method NTriangulation::tetrahedra(),
+ *    See for instance the method Triangulation<3>::tetrahedra(),
  *    or the global function writeResUsage().
  *
  *  <h3>Testing equality</h3>
@@ -266,7 +266,7 @@ namespace regina {
  *    tests whether \a x and \a y refer to the same underlying C++ object.
  *    This is similar to how the test <tt>x is y</tt> would behave in a
  *    native Python application.  Examples of such classes are
- *    NTriangulation and NTetrahedron.
+ *    Triangulation<3> and NTetrahedron.
  *
  *    These classes do not provide C++ comparison operators == or !=.
  *
@@ -281,7 +281,7 @@ namespace regina {
  *  respectively:
  *
  *  \code{.unparsed}
- *  >>> print NTriangulation.equalityType
+ *  >>> print Triangulation3.equalityType
  *  BY_REFERENCE
  *  \endcode
  */

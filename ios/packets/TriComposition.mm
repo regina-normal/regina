@@ -76,7 +76,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *standard;
 @property (weak, nonatomic) IBOutlet UITextView *components;
 
-@property (assign, nonatomic) regina::NTriangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
 @implementation TriComposition
@@ -89,7 +89,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+    self.packet = static_cast<regina::Triangulation<3>*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
     [self reloadPacket];
 }

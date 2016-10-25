@@ -43,7 +43,7 @@
 
 namespace regina {
 
-long NTriangulation::connectedSumDecomposition(Packet* primeParent,
+long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
         bool setLabels) {
     // Precondition checks.
     if (! (isValid() && isClosed() && isConnected()))
@@ -55,7 +55,7 @@ long NTriangulation::connectedSumDecomposition(Packet* primeParent,
     bool initOrientable = isOrientable();
 
     // Make a working copy, simplify and record the initial homology.
-    NTriangulation* working = new NTriangulation(*this);
+    Triangulation<3>* working = new Triangulation<3>(*this);
     working->intelligentSimplify();
 
     unsigned long initZ, initZ2, initZ3;
@@ -70,13 +70,13 @@ long NTriangulation::connectedSumDecomposition(Packet* primeParent,
     Container toProcess;
     toProcess.insertChildLast(working);
 
-    std::list<NTriangulation*> primeComponents;
+    std::list<Triangulation<3>*> primeComponents;
     unsigned long whichComp = 0;
 
-    NTriangulation* processing;
-    NTriangulation* crushed;
+    Triangulation<3>* processing;
+    Triangulation<3>* crushed;
     NormalSurface* sphere;
-    while ((processing = static_cast<NTriangulation*>(
+    while ((processing = static_cast<Triangulation<3>*>(
             toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the elements of primeComponents
@@ -98,7 +98,7 @@ long NTriangulation::connectedSumDecomposition(Packet* primeParent,
 
                 delete crushed;
 
-                std::list<NTriangulation*>::iterator it;
+                std::list<Triangulation<3>*>::iterator it;
                 for (it = primeComponents.begin();
                         it != primeComponents.end(); ++it)
                     delete *it;
@@ -169,7 +169,7 @@ long NTriangulation::connectedSumDecomposition(Packet* primeParent,
     // Run a final homology check and put back our missing S2xS1, S2x~S1,
     // RP3 and L(3,1) terms.
     unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
-    for (std::list<NTriangulation*>::iterator it = primeComponents.begin();
+    for (std::list<Triangulation<3>*>::iterator it = primeComponents.begin();
             it != primeComponents.end(); it++) {
         const NAbelianGroup& homology = (*it)->homology();
         finalZ += homology.rank();
@@ -178,7 +178,7 @@ long NTriangulation::connectedSumDecomposition(Packet* primeParent,
     }
 
     while (finalZ++ < initZ) {
-        working = new NTriangulation();
+        working = new Triangulation<3>();
         if (initOrientable) {
             // Build S2 x S1.
             working->insertLayeredLensSpace(0, 1);
@@ -196,18 +196,18 @@ long NTriangulation::connectedSumDecomposition(Packet* primeParent,
         zeroEfficient_ = false; // Implied by the S2xS1 or S2x~S1 summand.
     }
     while (finalZ2++ < initZ2) {
-        working = new NTriangulation();
+        working = new Triangulation<3>();
         working->insertLayeredLensSpace(2, 1);
         primeComponents.push_back(working);
     }
     while (finalZ3++ < initZ3) {
-        working = new NTriangulation();
+        working = new Triangulation<3>();
         working->insertLayeredLensSpace(3, 1);
         primeComponents.push_back(working);
     }
 
     // All done!
-    for (std::list<NTriangulation*>::iterator it = primeComponents.begin();
+    for (std::list<Triangulation<3>*>::iterator it = primeComponents.begin();
             it != primeComponents.end(); it++) {
         primeParent->insertChildLast(*it);
 
@@ -243,7 +243,7 @@ long NTriangulation::connectedSumDecomposition(Packet* primeParent,
     return whichComp;
 }
 
-bool NTriangulation::isThreeSphere() const {
+bool Triangulation<3>::isThreeSphere() const {
     if (threeSphere_.known())
         return threeSphere_.value();
 
@@ -256,7 +256,7 @@ bool NTriangulation::isThreeSphere() const {
 
     // Check homology and fundamental group.
     // Better simplify first, which means we need a clone.
-    NTriangulation* working = new NTriangulation(*this);
+    Triangulation<3>* working = new Triangulation<3>(*this);
     working->intelligentSimplify();
 
     // The Poincare conjecture!
@@ -283,10 +283,10 @@ bool NTriangulation::isThreeSphere() const {
     Container toProcess;
     toProcess.insertChildLast(working);
 
-    NTriangulation* processing;
-    NTriangulation* crushed;
+    Triangulation<3>* processing;
+    Triangulation<3>* crushed;
     NormalSurface* sphere;
-    while ((processing = static_cast<NTriangulation*>(toProcess.lastChild()))) {
+    while ((processing = static_cast<Triangulation<3>*>(toProcess.lastChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess.  Each of these children has trivial
         // homology (and therefore we have no S2xS1 / RP3 / L(3,1)
@@ -365,7 +365,7 @@ bool NTriangulation::isThreeSphere() const {
     return true;
 }
 
-bool NTriangulation::knowsThreeSphere() const {
+bool Triangulation<3>::knowsThreeSphere() const {
     if (threeSphere_.known())
         return true;
 
@@ -379,7 +379,7 @@ bool NTriangulation::knowsThreeSphere() const {
     return false;
 }
 
-bool NTriangulation::isBall() const {
+bool Triangulation<3>::isBall() const {
     if (threeBall_.known())
         return threeBall_.value();
 
@@ -397,7 +397,7 @@ bool NTriangulation::isBall() const {
     // Cone the boundary to a point (i.e., fill it with a ball), then
     // call isThreeSphere() on the resulting closed triangulation.
 
-    NTriangulation working(*this);
+    Triangulation<3> working(*this);
     working.intelligentSimplify();
     working.finiteToIdeal();
 
@@ -408,7 +408,7 @@ bool NTriangulation::isBall() const {
     return threeBall_.value();
 }
 
-bool NTriangulation::knowsBall() const {
+bool Triangulation<3>::knowsBall() const {
     if (threeBall_.known())
         return true;
 
@@ -424,7 +424,7 @@ bool NTriangulation::knowsBall() const {
     return false;
 }
 
-bool NTriangulation::isSolidTorus() const {
+bool Triangulation<3>::isSolidTorus() const {
     if (solidTorus_.known())
         return solidTorus_.value();
 
@@ -437,7 +437,7 @@ bool NTriangulation::isSolidTorus() const {
 
     // If it's ideal, make it a triangulation with real boundary.
     // If it's not ideal, clone it anyway so we can modify it.
-    NTriangulation* working = new NTriangulation(*this);
+    Triangulation<3>* working = new Triangulation<3>(*this);
     working->intelligentSimplify();
     if (working->isIdeal()) {
         working->idealToFinite();
@@ -461,9 +461,9 @@ bool NTriangulation::isSolidTorus() const {
 
     // Pull out the big guns: normal surface time.
     NormalSurface* s;
-    NTriangulation* crushed;
+    Triangulation<3>* crushed;
     Packet* p;
-    NTriangulation* comp;
+    Triangulation<3>* comp;
     while (true) {
         // INVARIANT: working is homeomorphic to our original manifold.
         if (working->countVertices() > 1) {
@@ -501,7 +501,7 @@ bool NTriangulation::isSolidTorus() const {
         crushed->splitIntoComponents(0, false);
         for (p = crushed->firstChild(); p; p = p->nextSibling()) {
             // Examine each connected component after crushing.
-            comp = static_cast<NTriangulation*>(p);
+            comp = static_cast<Triangulation<3>*>(p);
             if (comp->isClosed()) {
                 // A closed piece.
                 // Must be a 3-sphere, or else we didn't have a solid torus.
@@ -559,7 +559,7 @@ bool NTriangulation::isSolidTorus() const {
     }
 }
 
-bool NTriangulation::knowsSolidTorus() const {
+bool Triangulation<3>::knowsSolidTorus() const {
     if (solidTorus_.known())
         return true;
 
@@ -584,7 +584,7 @@ bool NTriangulation::knowsSolidTorus() const {
     return false;
 }
 
-Packet* NTriangulation::makeZeroEfficient() {
+Packet* Triangulation<3>::makeZeroEfficient() {
     // Extract a connected sum decomposition.
     Container* connSum = new Container();
     connSum->setLabel(adornedLabel("Decomposition"));
@@ -595,7 +595,7 @@ Packet* NTriangulation::makeZeroEfficient() {
         return connSum;
     } else if (ans == 1) {
         // Prime.
-        NTriangulation* newTri = dynamic_cast<NTriangulation*>(
+        Triangulation<3>* newTri = dynamic_cast<Triangulation<3>*>(
             connSum->lastChild());
         if (! isIsomorphicTo(*newTri).get()) {
             removeAllTetrahedra();
@@ -614,7 +614,7 @@ Packet* NTriangulation::makeZeroEfficient() {
     }
 }
 
-bool NTriangulation::isIrreducible() const {
+bool Triangulation<3>::isIrreducible() const {
     if (irreducible_.known())
         return irreducible_.value();
 
@@ -628,7 +628,7 @@ bool NTriangulation::isIrreducible() const {
     unsigned long summands = 0;
 
     // Make a working copy, simplify and record the initial homology.
-    NTriangulation* working = new NTriangulation(*this);
+    Triangulation<3>* working = new Triangulation<3>(*this);
     working->intelligentSimplify();
 
     unsigned long Z, Z2, Z3;
@@ -643,10 +643,10 @@ bool NTriangulation::isIrreducible() const {
     Container toProcess;
     toProcess.insertChildLast(working);
 
-    NTriangulation* processing;
-    NTriangulation* crushed;
+    Triangulation<3>* processing;
+    Triangulation<3>* crushed;
     NormalSurface* sphere;
-    while ((processing = static_cast<NTriangulation*>(
+    while ((processing = static_cast<Triangulation<3>*>(
             toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the prime components that we threw away,
@@ -754,11 +754,11 @@ bool NTriangulation::isIrreducible() const {
     return (irreducible_ = true);
 }
 
-bool NTriangulation::knowsIrreducible() const {
+bool Triangulation<3>::knowsIrreducible() const {
     return irreducible_.known();
 }
 
-bool NTriangulation::hasCompressingDisc() const {
+bool Triangulation<3>::hasCompressingDisc() const {
     if (compressingDisc_.known())
         return compressingDisc_.value();
 
@@ -779,7 +779,7 @@ bool NTriangulation::hasCompressingDisc() const {
 
     // Off we go.
     // Work with a simplified triangulation.
-    NTriangulation* use = new NTriangulation(*this);
+    Triangulation<3>* use = new Triangulation<3>(*this);
     use->intelligentSimplify();
 
     // Try for a fast answer first.
@@ -792,8 +792,8 @@ bool NTriangulation::hasCompressingDisc() const {
     // machinery or whether we need to do a full vertex surface enumeration.
     if (use->isOrientable() && use->countBoundaryComponents() == 1) {
         NormalSurface* ans;
-        NTriangulation* crush;
-        NTriangulation* comp;
+        Triangulation<3>* crush;
+        Triangulation<3>* comp;
         unsigned nComp;
 
         while (true) {
@@ -837,7 +837,7 @@ bool NTriangulation::hasCompressingDisc() const {
             delete use;
 
             nComp = crush->splitIntoComponents();
-            comp = static_cast<NTriangulation*>(crush->firstChild());
+            comp = static_cast<Triangulation<3>*>(crush->firstChild());
             while (comp) {
                 if (comp->countBoundaryComponents() == 1 &&
                         comp->boundaryComponent(0)->eulerChar()
@@ -847,7 +847,7 @@ bool NTriangulation::hasCompressingDisc() const {
                     break;
                 }
 
-                comp = static_cast<NTriangulation*>(comp->nextSibling());
+                comp = static_cast<Triangulation<3>*>(comp->nextSibling());
             }
 
             delete crush;
@@ -885,7 +885,7 @@ bool NTriangulation::hasCompressingDisc() const {
     }
 }
 
-bool NTriangulation::knowsCompressingDisc() const {
+bool Triangulation<3>::knowsCompressingDisc() const {
     if (compressingDisc_.known())
         return true;
 
@@ -901,7 +901,7 @@ bool NTriangulation::knowsCompressingDisc() const {
     return true;
 }
 
-bool NTriangulation::hasSimpleCompressingDisc() const {
+bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // Some sanity checks; also enforce preconditions.
     if (! hasBoundaryTriangles())
         return false;
@@ -910,7 +910,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
 
     // Off we go.
     // Work with a simplified triangulation.
-    NTriangulation use(*this);
+    Triangulation<3> use(*this);
     use.intelligentSimplify();
 
     // Check to see whether any component is a one-tetrahedron solid torus.
@@ -966,7 +966,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         // Cut along the triangle to be sure.
         const NTriangleEmbedding& emb = (*fit)->front();
 
-        NTriangulation cut(use);
+        Triangulation<3> cut(use);
         cut.tetrahedron(emb.tetrahedron()->markedIndex())->unjoin(
             emb.triangle());
 
@@ -1018,7 +1018,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
             continue;
         }
 
-        NTriangulation cut(use);
+        Triangulation<3> cut(use);
         cut.tetrahedron((*tit)->markedIndex())->unjoin(upper);
         NTetrahedron* tet = cut.newTetrahedron();
         tet->join(NEdge::edgeVertex[equator][0], tet, Perm<4>(
@@ -1066,7 +1066,7 @@ namespace {
     };
 }
 
-bool NTriangulation::isHaken() const {
+bool Triangulation<3>::isHaken() const {
     if (haken_.known())
         return haken_.value();
 
@@ -1082,7 +1082,7 @@ bool NTriangulation::isHaken() const {
 
     // Okay: we are closed, connected, orientable and irreducible.
     // Move to a copy of this triangulation, which we can mess with.
-    NTriangulation t(*this);
+    Triangulation<3> t(*this);
     t.intelligentSimplify();
 
     // First check for an easy answer via homology:
@@ -1119,7 +1119,7 @@ bool NTriangulation::isHaken() const {
     return (haken_ = false);
 }
 
-bool NTriangulation::knowsHaken() const {
+bool Triangulation<3>::knowsHaken() const {
     return haken_.known();
 }
 

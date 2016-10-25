@@ -36,12 +36,12 @@
 
 using namespace boost::python;
 using regina::NHomologicalData;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 void addNHomologicalData() {
     class_<NHomologicalData, std::auto_ptr<NHomologicalData>,
             boost::noncopyable>
-            ("NHomologicalData", init<const NTriangulation&>())
+            ("NHomologicalData", init<const Triangulation<3>&>())
         .def(init<const NHomologicalData&>())
         .def("homology", &NHomologicalData::homology,
             return_internal_reference<>())

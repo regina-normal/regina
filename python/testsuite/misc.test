@@ -36,7 +36,7 @@
 print regina.testEngine(3)
 
 # Some slightly less trivial tests.
-t = regina.NTriangulation()
+t = regina.Triangulation3()
 t.insertLayeredLensSpace(5,1)
 print t.homology()
 

@@ -45,7 +45,7 @@ using regina::NCensusHit;
 using regina::NCensusHits;
 using regina::NFacePairing;
 using regina::NGluingPermSearcher;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 class NCensusTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NCensusTest);
@@ -239,7 +239,7 @@ class NCensusTest : public CppUnit::TestFixture {
         static void foundPerms(const NGluingPermSearcher* perms, void* spec) {
             if (perms) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
-                NTriangulation* tri = perms->triangulate();
+                Triangulation<3>* tri = perms->triangulate();
                 if (tri->isValid() &&
                         (! (s->minimal_ &&
                             tri->simplifyToLocalMinimum(false))) &&

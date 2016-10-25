@@ -53,7 +53,6 @@ template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \addtogroup angle Angle Structures
@@ -121,7 +120,7 @@ class REGINA_API AngleStructureVector : public Ray {
          * equations will be based.
          * @return a newly allocated set of equations.
          */
-        static MatrixInt* makeAngleEquations(const NTriangulation* tri);
+        static MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
 };
 
 /**
@@ -136,7 +135,7 @@ class REGINA_API AngleStructure :
         AngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
-        const NTriangulation* triangulation_;
+        const Triangulation<3>* triangulation_;
             /**< The triangulation on which this angle structure is placed. */
 
         mutable unsigned long flags;
@@ -167,7 +166,7 @@ class REGINA_API AngleStructure :
          * @param newVector a vector containing the individual angles in the
          * angle structure.
          */
-        AngleStructure(const NTriangulation* triang,
+        AngleStructure(const Triangulation<3>* triang,
             AngleStructureVector* newVector);
         /**
          * Destroys this angle structure.
@@ -193,7 +192,7 @@ class REGINA_API AngleStructure :
          *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested angle lives; this should
-         * be between 0 and NTriangulation::size()-1
+         * be between 0 and Triangulation<3>::size()-1
          * inclusive.
          * @param edgePair the number representing the pair of edges holding
          * the requested angle, as described above; this should be 0, 1 or 2.
@@ -206,7 +205,7 @@ class REGINA_API AngleStructure :
          *
          * @return the underlying triangulation.
          */
-        const NTriangulation* triangulation() const;
+        const Triangulation<3>* triangulation() const;
 
         /**
          * Determines whether this is a strict angle structure.
@@ -341,7 +340,7 @@ inline AngleStructureVector::AngleStructureVector(
 
 // Inline functions for AngleStructure
 
-inline AngleStructure::AngleStructure(const NTriangulation* triang,
+inline AngleStructure::AngleStructure(const Triangulation<3>* triang,
         AngleStructureVector* newVector) : vector(newVector),
         triangulation_(triang), flags(0) {
 }
@@ -350,7 +349,7 @@ inline AngleStructure::~AngleStructure() {
     delete vector;
 }
 
-inline const NTriangulation* AngleStructure::triangulation() const {
+inline const Triangulation<3>* AngleStructure::triangulation() const {
     return triangulation_;
 }
 

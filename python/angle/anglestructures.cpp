@@ -45,14 +45,14 @@ using regina::AngleStructures;
 
 namespace {
     // Write manual overload wrappers since this is a static member function.
-    AngleStructures* enumerate_1(regina::NTriangulation* owner) {
+    AngleStructures* enumerate_1(regina::Triangulation<3>* owner) {
         return AngleStructures::enumerate(owner);
     }
-    AngleStructures* enumerate_2(regina::NTriangulation* owner,
+    AngleStructures* enumerate_2(regina::Triangulation<3>* owner,
             bool tautOnly) {
         return AngleStructures::enumerate(owner, tautOnly);
     }
-    AngleStructures* enumerate_3(regina::NTriangulation* owner,
+    AngleStructures* enumerate_3(regina::Triangulation<3>* owner,
             bool tautOnly, regina::ProgressTracker* tracker) {
         return AngleStructures::enumerate(owner, tautOnly, tracker);
     }

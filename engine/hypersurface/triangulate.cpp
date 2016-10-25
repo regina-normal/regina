@@ -120,7 +120,7 @@ namespace {
      * into the position that really belongs to vertex y.
      */
     void adjustQuadMaps(TriangleMap& map0, TriangleMap& map1,
-            Perm<4> err, NTriangulation* tri) {
+            Perm<4> err, Triangulation<3>* tri) {
         if (err.isIdentity()) {
             // The mappings are already correct.
             return;
@@ -219,9 +219,9 @@ namespace {
 // Implementation of triangulate()
 // ------------------------------------------------------------------------
 
-NTriangulation* NormalHypersurface::triangulate() const {
+Triangulation<3>* NormalHypersurface::triangulate() const {
     const Triangulation<4>* outer = triangulation();
-    NTriangulation* inner = new NTriangulation();
+    Triangulation<3>* inner = new Triangulation<3>();
 
     // Get rid of an empty *outer* triangulation now.
     if (outer->isEmpty())

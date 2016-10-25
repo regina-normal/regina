@@ -50,7 +50,6 @@ namespace regina {
 class NCensusHits;
 
 template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \addtogroup census Census of Triangulations
@@ -64,7 +63,7 @@ typedef Triangulation<3> NTriangulation;
  *
  * A census database stores a list of key-value pairs.  The keys are
  * isomorphism signatures of triangulations (as returned by
- * NTriangulation::isoSig(), for instance), and the values are
+ * Triangulation<3>::isoSig(), for instance), and the values are
  * human-readable names (typically the names of the triangulations
  * and/or the names of the underlying manifolds).  An isomorphism
  * signature may appear multiple times (with different names)
@@ -331,17 +330,17 @@ class REGINA_API NCensus {
          * @param tri the triangulation that you wish to search for.
          * @return a newly created list of all database matches.
          */
-        static NCensusHits* lookup(const NTriangulation& tri);
+        static NCensusHits* lookup(const Triangulation<3>& tri);
         /**
          * Searches for the given triangulation through all of Regina's
          * in-built census databases.
          *
          * For this routine you specify the triangulation by giving its
-         * isomorphism signature, as returned by NTriangulation::isoSig().
-         * This is faster than the variant lookup(const NTriangulation&),
+         * isomorphism signature, as returned by Triangulation<3>::isoSig().
+         * This is faster than the variant lookup(const Triangulation<3>&),
          * since Regina's census databases store isomorphism signatures
          * internally.  If you do not already know the isomorphism signature,
-         * it is fine to just call lookup(const NTriangulation&) instead.
+         * it is fine to just call lookup(const Triangulation<3>&) instead.
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).

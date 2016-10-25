@@ -82,14 +82,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *manifold;
 @property (weak, nonatomic) IBOutlet UILabel *census;
 
-@property (assign, nonatomic) regina::NTriangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
 @implementation TriRecognition
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = static_cast<regina::NTriangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+    self.packet = static_cast<regina::Triangulation<3>*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
     self.properties.dataSource = self;
 
@@ -112,7 +112,7 @@
 
     // Combinatorial recognition.
     {
-        regina::NTriangulation simp(*self.packet);
+        regina::Triangulation<3> simp(*self.packet);
         simp.intelligentSimplify();
         regina::NStandardTriangulation* std = regina::NStandardTriangulation::isStandardTriangulation(&simp);
         if (std) {
@@ -186,7 +186,7 @@
 
     // Display the results of a census lookup.
     if (self.packet->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::NTriangulation*>(self.packet)->isoSig());
+        regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::Triangulation<3>*>(self.packet)->isoSig());
         if (hits->count() == 0) {
             self.census.numberOfLines = 1;
             self.census.attributedText = [TextHelper dimString:@"Not found"];
@@ -385,7 +385,7 @@
                                                                    otherButtonTitles:nil];
                              [alert show];
                          } else if (nSummands == 1) {
-                             regina::NTriangulation* small = static_cast<regina::NTriangulation*>(base->firstChild());
+                             regina::Triangulation<3>* small = static_cast<regina::Triangulation<3>*>(base->firstChild());
 
                              // Special-case S2xS1, S2x~S1 and RP3, which do not have
                              // 0-efficient triangulations.
@@ -474,7 +474,7 @@
         return;
     }
     
-    regina::NTriangulation* ans = s->canonise();
+    regina::Triangulation<3>* ans = s->canonise();
     if (! ans) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Could Not Retriangulate"
                                                         message:@"The SnapPea kernel was not able to build the canonical retriangulation of the canonical cell decomposition."

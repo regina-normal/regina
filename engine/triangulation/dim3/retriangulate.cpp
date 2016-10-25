@@ -63,7 +63,7 @@ namespace {
             typedef std::set<std::string> SigSet;
 
             const size_t maxTet_;
-            std::function<bool(const NTriangulation&)> action_;
+            std::function<bool(const Triangulation<3>&)> action_;
             bool done_;
 
             SigSet sigs_;
@@ -71,11 +71,11 @@ namespace {
 
         public:
             TriBFS(size_t maxTet,
-                const std::function<bool(const NTriangulation&)>& action) :
+                const std::function<bool(const Triangulation<3>&)>& action) :
                 maxTet_(maxTet), action_(action), done_(false) {
             }
 
-            bool seed(const NTriangulation& tri);
+            bool seed(const Triangulation<3>& tri);
             void processQueue(ProgressTrackerOpen* tracker);
             void processQueueParallel(unsigned nThreads,
                 ProgressTrackerOpen* tracker);
@@ -83,12 +83,12 @@ namespace {
             bool done() const;
 
         private:
-            bool candidate(const NTriangulation& alt);
+            bool candidate(const Triangulation<3>& alt);
             void propagateFrom(const SigSet::iterator& it);
     };
 
     template <bool threading>
-    inline bool TriBFS<threading>::seed(const NTriangulation& tri) {
+    inline bool TriBFS<threading>::seed(const Triangulation<3>& tri) {
         if (action_(tri))
             return (done_ = true);
 
@@ -102,11 +102,11 @@ namespace {
         // requres that insertion into a std::set does not invalidate
         // iterators.
 
-        NTriangulation* t = NTriangulation::fromIsoSig(*it);
+        Triangulation<3>* t = Triangulation<3>::fromIsoSig(*it);
         size_t i;
         for (i = 0; i < t->countEdges(); ++i)
             if (t->threeTwoMove(t->edge(i), true, false)) {
-                NTriangulation alt(*t);
+                Triangulation<3> alt(*t);
                 alt.threeTwoMove(alt.edge(i), false, true);
                 if (candidate(alt)) {
                     delete t;
@@ -117,7 +117,7 @@ namespace {
         if (t->size() < maxTet_)
             for (i = 0; i < t->countTriangles(); ++i)
                 if (t->twoThreeMove(t->triangle(i), true, false)) {
-                    NTriangulation alt(*t);
+                    Triangulation<3> alt(*t);
                     alt.twoThreeMove(alt.triangle(i), false, true);
                     if (candidate(alt)) {
                         delete t;
@@ -218,7 +218,7 @@ namespace {
     }
 
     template <>
-    bool TriBFS<true>::candidate(const NTriangulation& alt) {
+    bool TriBFS<true>::candidate(const Triangulation<3>& alt) {
         const std::string sig = alt.isoSig();
 
         std::lock_guard<std::mutex> lock(mutex_);
@@ -244,7 +244,7 @@ namespace {
     }
 
     template <>
-    bool TriBFS<false>::candidate(const NTriangulation& alt) {
+    bool TriBFS<false>::candidate(const Triangulation<3>& alt) {
         const std::string sig = alt.isoSig();
 
         auto result = sigs_.insert(sig);
@@ -258,9 +258,9 @@ namespace {
         return false;
     }
 
-    bool enumerate(const NTriangulation& tri, int height, unsigned nThreads,
+    bool enumerate(const Triangulation<3>& tri, int height, unsigned nThreads,
             ProgressTrackerOpen* tracker,
-            const std::function<bool(const NTriangulation&)>& action) {
+            const std::function<bool(const Triangulation<3>&)>& action) {
         if (tracker)
             tracker->newStage("Exploring triangulations");
 
@@ -295,8 +295,8 @@ namespace {
         }
     }
 
-    bool simplifyFound(const NTriangulation& alt,
-            NTriangulation& original, size_t minTet) {
+    bool simplifyFound(const Triangulation<3>& alt,
+            Triangulation<3>& original, size_t minTet) {
         if (alt.size() < minTet) {
             // TODO: Make t.cloneFrom(alt) public.
             Packet::ChangeEventSpan span(&original);
@@ -309,15 +309,15 @@ namespace {
     }
 }
 
-bool NTriangulation::simplifyExhaustive(int height, unsigned nThreads,
+bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker) {
     return retriangulate(height, nThreads, tracker, &simplifyFound,
         std::ref(*this), size());
 }
 
-bool NTriangulation::retriangulateInternal(int height, unsigned nThreads,
+bool Triangulation<3>::retriangulateInternal(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
-        const std::function<bool(const NTriangulation&)>& action) const {
+        const std::function<bool(const Triangulation<3>&)>& action) const {
     if (tracker) {
         try {
             std::thread(&enumerate, *this, height, nThreads, tracker, action)

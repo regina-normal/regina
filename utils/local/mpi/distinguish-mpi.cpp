@@ -524,7 +524,7 @@ void ctrlProcess(Container* c) {
 
     for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
-        if (child->type() != PACKET_TRIANGULATION)
+        if (child->type() != PACKET_TRIANGULATION3)
             continue;
         tri = static_cast<NTriangulation*>(child);
 

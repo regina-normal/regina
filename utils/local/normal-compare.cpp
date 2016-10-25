@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
     }
 
     Packet* p = tree;
-    while (p && p->type() != PACKET_TRIANGULATION)
+    while (p && p->type() != PACKET_TRIANGULATION3)
         p = p->nextTreePacket();
     long currTri = 0;
 
@@ -203,7 +203,7 @@ int main(int argc, char* argv[]) {
     // Find the requested triangulation.
     while (p && currTri < useTri) {
         p = p->nextTreePacket();
-        while (p && p->type() != PACKET_TRIANGULATION)
+        while (p && p->type() != PACKET_TRIANGULATION3)
             p = p->nextTreePacket();
 
         ++currTri;

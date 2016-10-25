@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
         }
 
         for (Packet* p = tree; p; p = p->nextTreePacket())
-            if (p->type() == PACKET_TRIANGULATION) {
+            if (p->type() == PACKET_TRIANGULATION3) {
                 found = true;
                 dehydration = static_cast<NTriangulation*>(p)->dehydrate();
 

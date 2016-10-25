@@ -105,26 +105,26 @@ class REGINA_API NSVectorOriented : public NormalSurfaceVector {
         NSVectorOriented(const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang) const;
+            int vertex, const Triangulation<3>* triang) const;
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const NTriangulation* triang) const;
+            int quadType, const Triangulation<3>* triang) const;
         virtual LargeInteger orientedTriangles(size_t tetIndex,
-            int vertex, const NTriangulation* triang, bool orientation) const;
+            int vertex, const Triangulation<3>* triang, bool orientation) const;
         virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const NTriangulation* triang, bool orientation) const;
+            int quadType, const Triangulation<3>* triang, bool orientation) const;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const;
+            int octType, const Triangulation<3>* triang) const;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const NTriangulation* triang) const;
+            const Triangulation<3>* triang) const;
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const NTriangulation* triang) const;
+            int triVertex, const Triangulation<3>* triang) const;
 
         static NormalSurfaceVector* makeZeroVector(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
         static MatrixInt* makeMatchingEquations(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
-            const NTriangulation* triangulation);
+            const Triangulation<3>* triangulation);
 };
 
 /**
@@ -149,30 +149,30 @@ inline NSVectorOriented::NSVectorOriented(
 }
 
 inline LargeInteger NSVectorOriented::triangles(
-        size_t tetIndex, int vertex, const NTriangulation* tri) const {
+        size_t tetIndex, int vertex, const Triangulation<3>* tri) const {
     return orientedTriangles(tetIndex,vertex,tri, true)
            + orientedTriangles(tetIndex,vertex,tri, false);
 }
 inline LargeInteger NSVectorOriented::quads(
-        size_t tetIndex, int quadType, const NTriangulation* tri) const {
+        size_t tetIndex, int quadType, const Triangulation<3>* tri) const {
     return orientedQuads(tetIndex,quadType,tri, true)
            + orientedQuads(tetIndex,quadType,tri, false);
 }
 
 inline LargeInteger NSVectorOriented::orientedTriangles(
-        size_t tetIndex, int vertex, const NTriangulation*,
+        size_t tetIndex, int vertex, const Triangulation<3>*,
         bool orientation) const {
     return coords_[14 * tetIndex + 2 * vertex +
         (orientation ? 0 : 1)];
 }
 inline LargeInteger NSVectorOriented::orientedQuads(
-        size_t tetIndex, int quadType, const NTriangulation*, 
+        size_t tetIndex, int quadType, const Triangulation<3>*, 
         bool orientation) const {
     return coords_[14 * tetIndex + 8 + 2 * quadType +
         (orientation ? 0 : 1)];
 }
 inline LargeInteger NSVectorOriented::octs(
-        size_t, int, const NTriangulation*) const {
+        size_t, int, const Triangulation<3>*) const {
     return Ray::zero;
 }
 

@@ -175,8 +175,8 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_TEXT : return
             func.template operator()<PacketInfo<PACKET_TEXT>>(
             std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION>>(
+        case PACKET_TRIANGULATION3 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION3>>(
             std::forward<Args>(args)...);
         case PACKET_NORMALSURFACES : return
             func.template operator()<PacketInfo<PACKET_NORMALSURFACES>>(
@@ -193,11 +193,11 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_PDF : return
             func.template operator()<PacketInfo<PACKET_PDF>>(
             std::forward<Args>(args)...);
-        case PACKET_DIM2TRIANGULATION : return
-            func.template operator()<PacketInfo<PACKET_DIM2TRIANGULATION>>(
+        case PACKET_TRIANGULATION2 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION2>>(
             std::forward<Args>(args)...);
-        case PACKET_DIM4TRIANGULATION : return
-            func.template operator()<PacketInfo<PACKET_DIM4TRIANGULATION>>(
+        case PACKET_TRIANGULATION4 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION4>>(
             std::forward<Args>(args)...);
         case PACKET_NORMALHYPERSURFACES : return
             func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACES>>(
@@ -252,8 +252,8 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
         case PACKET_TEXT :
             func.template operator()<PacketInfo<PACKET_TEXT>>(
             std::forward<Args>(args)...); break;
-        case PACKET_TRIANGULATION :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION>>(
+        case PACKET_TRIANGULATION3 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION3>>(
             std::forward<Args>(args)...); break;
         case PACKET_NORMALSURFACES :
             func.template operator()<PacketInfo<PACKET_NORMALSURFACES>>(
@@ -270,11 +270,11 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
         case PACKET_PDF :
             func.template operator()<PacketInfo<PACKET_PDF>>(
             std::forward<Args>(args)...); break;
-        case PACKET_DIM2TRIANGULATION :
-            func.template operator()<PacketInfo<PACKET_DIM2TRIANGULATION>>(
+        case PACKET_TRIANGULATION2 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION2>>(
             std::forward<Args>(args)...); break;
-        case PACKET_DIM4TRIANGULATION :
-            func.template operator()<PacketInfo<PACKET_DIM4TRIANGULATION>>(
+        case PACKET_TRIANGULATION4 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION4>>(
             std::forward<Args>(args)...); break;
         case PACKET_NORMALHYPERSURFACES :
             func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACES>>(

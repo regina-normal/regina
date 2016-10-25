@@ -52,7 +52,7 @@
 
 void ReginaMain::newAngleStructures() {
     newPacket(new AngleStructureCreator(),
-        new SubclassFilter<regina::NTriangulation>(),
+        new SubclassFilter<regina::Triangulation<3>>(),
         tr("New Angle Structure Solutions"));
 }
 
@@ -78,7 +78,7 @@ void ReginaMain::newFilter() {
 
 void ReginaMain::newNormalSurfaces() {
     newPacket(new SurfacesCreator(),
-        new SubclassFilter<regina::NTriangulation>(),
+        new SubclassFilter<regina::Triangulation<3>>(),
         tr("New Normal Surface List"));
 }
 

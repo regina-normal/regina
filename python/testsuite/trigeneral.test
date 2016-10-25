@@ -116,22 +116,22 @@ def vitalStats(tri):
 	# and skeletal details.  We'd like to keep the output files small,
 	# so dump checksums of the details instead of the details themselves.
 	print "Double cover:"
-	t = regina.NTriangulation(tri)
+	t = regina.Triangulation3(tri)
 	t.makeDoubleCover()
 	print "Checksum =", checksum(t.detail())
 
 	print "Ideal to finite:"
-	t = regina.NTriangulation(tri)
+	t = regina.Triangulation3(tri)
 	print "Result =", t.idealToFinite()
 	print "Checksum =", checksum(t.detail())
 
 	print "Finite to ideal:"
-	t = regina.NTriangulation(tri)
+	t = regina.Triangulation3(tri)
 	print "Result =", t.finiteToIdeal()
 	print "Checksum =", checksum(t.detail())
 
 	print "Barycentric subdivision:"
-	t = regina.NTriangulation(tri)
+	t = regina.Triangulation3(tri)
 	t.barycentricSubdivision()
 	print "Checksum =", checksum(t.detail())
 
@@ -144,7 +144,7 @@ def vitalStats(tri):
 
 	print
 
-t = regina.NTriangulation()
+t = regina.Triangulation3()
 t.setLabel("Empty triangulation")
 vitalStats(t)
 

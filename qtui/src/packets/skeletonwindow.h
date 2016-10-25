@@ -49,7 +49,6 @@ class QTreeView;
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
@@ -166,13 +165,13 @@ class VertexModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        VertexModel(regina::NTriangulation* tri_);
+        VertexModel(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -200,13 +199,13 @@ class EdgeModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        EdgeModel(regina::NTriangulation* tri_);
+        EdgeModel(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -234,13 +233,13 @@ class TriangleModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        TriangleModel(regina::NTriangulation* tri_);
+        TriangleModel(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -268,13 +267,13 @@ class ComponentModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        ComponentModel(regina::NTriangulation* tri_);
+        ComponentModel(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -302,13 +301,13 @@ class BoundaryComponentModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
          * Constructor.
          */
-        BoundaryComponentModel(regina::NTriangulation* tri_);
+        BoundaryComponentModel(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -710,20 +709,20 @@ inline void SkeletonWindow::updateCaption() {
     setWindowTitle(model->caption());
 }
 
-inline VertexModel::VertexModel(regina::NTriangulation* tri_) :
+inline VertexModel::VertexModel(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
-inline EdgeModel::EdgeModel(regina::NTriangulation* tri_) :
+inline EdgeModel::EdgeModel(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
-inline TriangleModel::TriangleModel(regina::NTriangulation* tri_) :
+inline TriangleModel::TriangleModel(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
-inline ComponentModel::ComponentModel(regina::NTriangulation* tri_) :
+inline ComponentModel::ComponentModel(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
 inline BoundaryComponentModel::BoundaryComponentModel(
-        regina::NTriangulation* tri_) : tri(tri_) {}
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
 inline Dim2VertexModel::Dim2VertexModel(regina::Triangulation<2>* tri_) :
         tri(tri_) {}

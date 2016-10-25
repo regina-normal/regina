@@ -61,10 +61,10 @@ void Face<4, 0>::writeTextLong(std::ostream& out) const {
         out << "  " << emb << std::endl;
 }
 
-NTriangulation* Face<4, 0>::buildLinkDetail(bool labels,
+Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
     // Build the triangulation.
-    NTriangulation* ans = new NTriangulation();
+    Triangulation<3>* ans = new Triangulation<3>();
     Packet::ChangeEventSpan span(ans);
 
     if (inclusion)

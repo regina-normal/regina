@@ -104,7 +104,7 @@ void NBlockedSFSLoop::writeTextLong(std::ostream& out) const {
     region_->writeDetail(out, "Internal region");
 }
 
-NBlockedSFSLoop* NBlockedSFSLoop::isBlockedSFSLoop(NTriangulation* tri) {
+NBlockedSFSLoop* NBlockedSFSLoop::isBlockedSFSLoop(Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;

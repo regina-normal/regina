@@ -48,9 +48,6 @@ namespace regina {
 
 class NFacePair;
 
-template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
-
 /**
  * \weakgroup triangulation
  * @{
@@ -87,7 +84,7 @@ class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
          * @param tri the triangulation whose face pairing should be
          * constructed.
          */
-        FacetPairing(const NTriangulation& tri);
+        FacetPairing(const Triangulation<3>& tri);
 
         /**
          * Follows a chain as far as possible from the given point.
@@ -524,7 +521,7 @@ inline FacetPairing<3>::FacetPairing(const FacetPairing& cloneMe) :
         detail::FacetPairingBase<3>(cloneMe) {
 }
 
-inline FacetPairing<3>::FacetPairing(const NTriangulation& tri) :
+inline FacetPairing<3>::FacetPairing(const Triangulation<3>& tri) :
         detail::FacetPairingBase<3>(tri) {
 }
 

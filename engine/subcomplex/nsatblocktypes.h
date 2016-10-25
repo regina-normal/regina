@@ -209,8 +209,8 @@ class REGINA_API NSatLST : public NSatBlock {
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
-        virtual void transform(const NTriangulation* originalTri,
-            const NIsomorphism* iso, NTriangulation* newTri);
+        virtual void transform(const Triangulation<3>* originalTri,
+            const NIsomorphism* iso, Triangulation<3>* newTri);
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
@@ -315,7 +315,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
          * or \c false if a block of minor type should be inserted.
          * @return structural details of the newly inserted block.
          */
-        static NSatTriPrism* insertBlock(NTriangulation& tri, bool major);
+        static NSatTriPrism* insertBlock(Triangulation<3>& tri, bool major);
 
     protected:
         /**
@@ -399,7 +399,7 @@ class REGINA_API NSatCube : public NSatBlock {
          * be inserted.
          * @return structural details of the newly inserted block.
          */
-        static NSatCube* insertBlock(NTriangulation& tri);
+        static NSatCube* insertBlock(Triangulation<3>& tri);
 
     protected:
         /**
@@ -480,7 +480,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
          * \c false if the new strip should not be twisted.
          * @return structural details of the newly inserted block.
          */
-        static NSatReflectorStrip* insertBlock(NTriangulation& tri,
+        static NSatReflectorStrip* insertBlock(Triangulation<3>& tri,
             unsigned length, bool twisted);
 
     protected:

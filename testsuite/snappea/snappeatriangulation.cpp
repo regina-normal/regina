@@ -46,7 +46,7 @@ using regina::NExampleTriangulation;
 using regina::Perm;
 using regina::SnapPeaTriangulation;
 using regina::NTetrahedron;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 class SnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(SnapPeaTriangulationTest);
@@ -69,10 +69,10 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
          */
 
         // Orientable 3-manifolds:
-        NTriangulation m2_1, m2_2, m3_9, m4_52, m4_1_2, m4_4_2;
+        Triangulation<3> m2_1, m2_2, m3_9, m4_52, m4_1_2, m4_4_2;
 
         // Non-orientable 3-manifolds:
-        NTriangulation n1_1, n2_1, n2_1_2, n4_14, n4_9_2, n4_1_2_1;
+        Triangulation<3> n1_1, n2_1, n2_1_2, n4_14, n4_9_2, n4_1_2_1;
 
         /**
          * Triangulations from "Symmetries, isometries and length
@@ -84,12 +84,12 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
          * rejected by SnapPeaTriangulation, since most SnapPea
          * functions require an ideal triangulation.
          */
-        NTriangulation closedHypOr, closedHypNor;
+        Triangulation<3> closedHypOr, closedHypNor;
 
         /**
          * The Weber-Seifert dodecahedral space:
          */
-        NTriangulation weberSeifert;
+        Triangulation<3> weberSeifert;
 
         /**
          * Triangulations of 3-manifolds whose reported volume should be zero.
@@ -97,33 +97,33 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
          * These were found through an exhaustive census of small ideal
          * triangulations (they do not appear in SnapPea's hyperbolic census).
          */
-        NTriangulation flatOr, flatNor, degenerateOr, degenerateNor;
+        Triangulation<3> flatOr, flatNor, degenerateOr, degenerateNor;
 
         /**
          * Triangulations that SnapPea should refuse to deal with.
          */
-        NTriangulation empty;
+        Triangulation<3> empty;
             /**< An empty triangulation. */
-        NTriangulation lst123;
+        Triangulation<3> lst123;
             /**< A (1,2,3) layered solid torus. */
-        NTriangulation m2_1_m2_1;
+        Triangulation<3> m2_1_m2_1;
             /**< Two disconnected copies of m2_1. */
-        NTriangulation genusTwoTorusCusp;
+        Triangulation<3> genusTwoTorusCusp;
             /**< A orientable triangulation with a genus two torus cusp. */
-        NTriangulation projPlaneCusps;
+        Triangulation<3> projPlaneCusps;
             /**< A non-orientable triangulation with two projective plane
                  cusps. */
-        NTriangulation genusFourNonOrCusp;
+        Triangulation<3> genusFourNonOrCusp;
             /**< A triangulation with a genus four non-orientable cusp
              * (i.e., a non-orientable analogue of the two-holed torus). */
-        NTriangulation cuspedTorus;
+        Triangulation<3> cuspedTorus;
             /**< A solid torus with a cusped boundary and a finite vertex. */
-        NTriangulation edgeInvalid;
+        Triangulation<3> edgeInvalid;
             /**< A triangulation with two invalid edges but whose
                  vertices all have 2-sphere links. */
 
     public:
-        void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
             dest.insertTriangulation(*source);
             delete source;
         }
@@ -172,7 +172,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             copyAndDelete(closedHypOr,
                 NExampleTriangulation::smallClosedOrblHyperbolic());
             closedHypOr.setLabel("or_0.94270736");
-            copyAndDelete(closedHypNor, NTriangulation::fromIsoSig(
+            copyAndDelete(closedHypNor, Triangulation<3>::fromIsoSig(
                 "lLLLALAQccegffiijkikkkknawmhvwcls"));
             closedHypNor.setLabel("nor_2.02988321");
 
@@ -244,7 +244,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void testIncompatible(NTriangulation& tri, const char* message) {
+        void testIncompatible(Triangulation<3>& tri, const char* message) {
             SnapPeaTriangulation s(tri);
             CPPUNIT_ASSERT_MESSAGE(message, s.isNull());
         }
@@ -327,7 +327,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "should not be representable in SnapPea format.");
         }
 
-        void testVolume(NTriangulation& tri, double vol, unsigned places) {
+        void testVolume(Triangulation<3>& tri, double vol, unsigned places) {
             // Verify the volume to the given number of decimal places.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
@@ -423,7 +423,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL(msg.str());
         }
 
-        void testFlat(NTriangulation& tri, const char* triName,
+        void testFlat(Triangulation<3>& tri, const char* triName,
                 unsigned places) {
             // Verify that the triangulation has a flat solution and the
             // volume is zero to the given number of decimal places.
@@ -467,7 +467,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             testFlat(flatNor, "The non-orientable flat triangulation", 9);
         }
 
-        void testDegenerate(NTriangulation& tri, const char* triName) {
+        void testDegenerate(Triangulation<3>& tri, const char* triName) {
             // Verify that the triangulation has a degenerate solution
             // and the volume is zero.  The volume is tested to whatever
             // precision is reported (up to a maximum of maxPlaces),
@@ -508,7 +508,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void spunBoundaries() {
-            NTriangulation* f8 =
+            Triangulation<3>* f8 =
                 NExampleTriangulation::figureEight();
             SnapPeaTriangulation* t = new SnapPeaTriangulation(*f8);
 
@@ -564,21 +564,21 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             delete f8;
         }
 
-        static void testStability(NTriangulation* tri) {
+        static void testStability(Triangulation<3>* tri) {
             // Just make sure SnapPea can work with the triangulation
             // without crashing.
             SnapPeaTriangulation s(*tri);
             s.volume();
             s.randomize();
             s.volume();
-            NTriangulation t(s);
+            Triangulation<3> t(s);
         }
 
         void stability() {
             runCensusAllNoBdry(&testStability);
         }
 
-        void testFilledHomology(const NTriangulation& tri, int m, int l,
+        void testFilledHomology(const Triangulation<3>& tri, int m, int l,
                 const std::string& expectedH1) {
             SnapPeaTriangulation s(tri);
             if (s.isNull()) {

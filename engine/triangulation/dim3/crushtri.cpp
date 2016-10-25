@@ -34,7 +34,7 @@
 
 namespace regina {
 
-void NTriangulation::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
+void Triangulation<3>::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
         std::set<NVertex*>& vertexSet) const {
     ensureSkeleton();
 
@@ -46,7 +46,7 @@ void NTriangulation::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
             edgeSet, vertexSet);
 }
 
-void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
+void Triangulation<3>::stretchBoundaryForestFromVertex(NVertex* from,
         std::set<NEdge*>& edgeSet,
         std::set<NVertex*>& vertexSet) const {
     vertexSet.insert(from);
@@ -74,7 +74,7 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
     }
 }
 
-void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
+void Triangulation<3>::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
         bool canJoinBoundaries) const {
     ensureSkeleton();
 
@@ -93,7 +93,7 @@ void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
         }
 }
 
-bool NTriangulation::stretchForestFromVertex(NVertex* from,
+bool Triangulation<3>::stretchForestFromVertex(NVertex* from,
         std::set<NEdge*>& edgeSet,
         std::set<NVertex*>& vertexSet,
         std::set<NVertex*>& thisStretch) const {

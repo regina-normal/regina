@@ -79,7 +79,7 @@ void NSpiralSolidTorus::cycle(size_t k) {
     vertexRoles_ = newRoles;
 }
 
-bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
+bool NSpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     size_t i, index;
 
     size_t baseTet = 0;
@@ -124,7 +124,7 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
     return true;
 }
 
-bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
+bool NSpiralSolidTorus::isCanonical(const Triangulation<3>* tri) const {
     if (vertexRoles_[0][0] > vertexRoles_[0][3])
         return false;
 

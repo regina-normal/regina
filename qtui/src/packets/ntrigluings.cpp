@@ -67,7 +67,7 @@
 #include <set>
 
 using regina::Packet;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     /**
@@ -86,7 +86,7 @@ namespace {
     QRegExp reFace("^[0-3][0-3][0-3]$");
 }
 
-GluingsModel::GluingsModel(regina::NTriangulation* tri, bool readWrite) :
+GluingsModel::GluingsModel(regina::Triangulation<3>* tri, bool readWrite) :
         tri_(tri), isReadWrite_(readWrite) {
 }
 
@@ -311,7 +311,7 @@ regina::Perm<4> GluingsModel::faceStringToPerm(int srcFace, const QString& str) 
         destVertex[3]) * regina::NTriangle::ordering(srcFace).inverse();
 }
 
-NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
+NTriGluingsUI::NTriGluingsUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
@@ -915,7 +915,7 @@ void NTriGluingsUI::drillEdge() {
                 "can be quite slow for larger triangulations.\n\n"
                 "Please be patient."), ui));
 
-            regina::NTriangulation* ans = new regina::NTriangulation(*tri);
+            regina::Triangulation<3>* ans = new regina::Triangulation<3>(*tri);
             ans->drillEdge(ans->edge(chosen->index()));
             ans->setLabel(tri->adornedLabel("Drilled"));
             tri->insertChildLast(ans);
@@ -934,10 +934,10 @@ void NTriGluingsUI::connectedSumWith() {
         return;
     }
 
-    regina::NTriangulation* other = static_cast<regina::NTriangulation*>(
+    regina::Triangulation<3>* other = static_cast<regina::Triangulation<3>*>(
         PacketDialog::choose(ui,
             tri->root(),
-            new SubclassFilter<regina::NTriangulation>(),
+            new SubclassFilter<regina::Triangulation<3>>(),
             tr("Connected Sum"),
             tr("Sum this with which other triangulation?"),
             tr("Regina will form a connected sum of this triangulation "
@@ -1090,7 +1090,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
             if (nSummands == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
                 // 0-efficient triangulations.
-                NTriangulation* small = static_cast<NTriangulation*>
+                Triangulation<3>* small = static_cast<Triangulation<3>*>
                     (base->firstChild());
                 if (small->size() <= 2 && small->homology().isZ()) {
                     // The only closed prime manifolds with
@@ -1163,9 +1163,9 @@ void NTriGluingsUI::makeZeroEfficient() {
 
     // If it's possible that the triangulation but not the number of
     // tetrahedra is changed, remember the original.
-    std::unique_ptr<NTriangulation> orig;
+    std::unique_ptr<Triangulation<3>> orig;
     if (initTets <= 2)
-        orig.reset(new NTriangulation(*tri));
+        orig.reset(new Triangulation<3>(*tri));
 
     // Make it 0-efficient and see what happens.
     Packet* decomp = tri->makeZeroEfficient();

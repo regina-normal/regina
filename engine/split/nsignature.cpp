@@ -171,9 +171,9 @@ NSignature* NSignature::parse(const std::string& str) {
     return sig;
 }
 
-NTriangulation* NSignature::triangulate() const {
+Triangulation<3>* NSignature::triangulate() const {
     unsigned sigLen = 2 * order_;
-    NTriangulation* tri = new NTriangulation();
+    Triangulation<3>* tri = new Triangulation<3>();
 
     // Create a new set of tetrahedra.
     // Tetrahedron vertices will be:
