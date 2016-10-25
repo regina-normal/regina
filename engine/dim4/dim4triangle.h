@@ -31,138 +31,17 @@
  **************************************************************************/
 
 /*! \file dim4/dim4triangle.h
- *  \brief Internal header for triangles in a 4-manifold triangulation.
- *
- *  This file is automatically included from dim4triangulation.h; there is
- *  no need for end users to include this header explicitly.
+ *  \brief Deprecated header.
  */
-
-// We include dim4triangulation.h before the header guard, to ensure that the
-// various face/component headers are processed in exactly the right order.
-// This header will be re-included from within dim4triangulation.h.
-#include "dim4/dim4triangulation.h"
 
 #ifndef __DIM4TRIANGLE_H
 #ifndef __DOXYGEN
 #define __DIM4TRIANGLE_H
 #endif
 
-namespace regina {
+#warning This header is deprecated; please use triangulation/dim4.h instead.
 
-class Dim4BoundaryComponent;
-
-typedef Component<4> Dim4Component;
-typedef Simplex<4> Dim4Pentachoron;
-typedef Triangulation<4> Dim4Triangulation;
-typedef Face<4, 0> Dim4Vertex;
-typedef Face<4, 1> Dim4Edge;
-
-/**
- * \weakgroup dim4
- * @{
- */
-
-/**
- * A convenience typedef for FaceEmbedding<4, 2>.
- */
-typedef FaceEmbedding<4, 2> Dim4TriangleEmbedding;
-
-/**
- * Represents a triangle in the skeleton of a 4-manifold triangulation.
- *
- * This is a specialisation of the generic Face class template; see the
- * documentation for Face for a general overview of how this class works.
- *
- * These specialisations for Regina's \ref stddim "standard dimensions"
- * offer significant extra functionality.
- */
-template <>
-class REGINA_API Face<4, 2> : public detail::FaceBase<4, 2>,
-        public Output<Face<4, 2>> {
-    private:
-        Dim4BoundaryComponent* boundaryComponent_;
-            /**< The boundary component that this triangle is a part of,
-                 or 0 if this triangle is internal. */
-
-    public:
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this triangle belongs.
-         *
-         * @return the boundary component containing this triangle, or 0 if this
-         * triangle does not lie entirely within the boundary of the
-         * triangulation.
-         */
-        Dim4BoundaryComponent* boundaryComponent() const;
-
-        /**
-         * Determines if this triangle lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this triangle lies on the boundary.
-         */
-        bool isBoundary() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
-    private:
-        /**
-         * Creates a new triangle and marks it as belonging to the
-         * given triangulation component.
-         *
-         * @param component the triangulation component to which this
-         * triangle belongs.
-         */
-        Face(Dim4Component* component);
-
-    friend class Triangulation<4>;
-    friend class detail::TriangulationBase<4>;
-};
-
-/**
- * A convenience typedef for Face<4, 2>.
- */
-typedef Face<4, 2> Dim4Triangle;
-
-/*@}*/
-
-// Inline functions for Dim4Triangle
-
-inline Face<4, 2>::Face(Dim4Component* component) :
-        detail::FaceBase<4, 2>(component), boundaryComponent_(0) {
-}
-
-inline Dim4BoundaryComponent* Face<4, 2>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<4, 2>::isBoundary() const {
-    return (boundaryComponent_ != 0);
-}
-
-inline void Face<4, 2>::writeTextShort(std::ostream& out) const {
-    out << (boundaryComponent_ ? "Boundary " : "Internal ")
-        << "triangle of degree " << degree();
-}
-
-} // namespace regina
+#include "triangulation/dim4.h"
 
 #endif
 

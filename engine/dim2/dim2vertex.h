@@ -31,138 +31,17 @@
  **************************************************************************/
 
 /*! \file dim2/dim2vertex.h
- *  \brief Internal header for vertices in a 2-manifold triangulation.
- *
- *  This file is automatically included from dim2triangulation.h; there is
- *  no need for end users to include this header explicitly.
+ *  \brief Deprecated header.
  */
-
-// We include dim2triangulation.h before the header guard, to ensure that the
-// various face/component headers are processed in exactly the right order.
-// This header will be re-included from within dim2triangulation.h.
-#include "dim2/dim2triangulation.h"
 
 #ifndef __DIM2VERTEX_H
 #ifndef __DOXYGEN
 #define __DIM2VERTEX_H
 #endif
 
-namespace regina {
+#warning This header is deprecated; please use triangulation/dim2.h instead.
 
-class Dim2BoundaryComponent;
-
-template <int> class Component;
-template <int> class Simplex;
-template <int> class Triangulation;
-typedef Component<2> Dim2Component;
-typedef Simplex<2> Dim2Triangle;
-typedef Triangulation<2> Dim2Triangulation;
-
-/**
- * \weakgroup dim2
- * @{
- */
-
-/**
- * A convenience typedef for FaceEmbedding<2, 0>.
- */
-typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
-
-/**
- * Represents a vertex in the skeleton of a 2-manifold triangulation.
- *
- * This is a specialisation of the generic Face class template; see the
- * documentation for Face for a general overview of how this class works.
- *
- * These specialisations for Regina's \ref stddim "standard dimensions"
- * offer significant extra functionality.
- */
-template <>
-class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
-        public Output<Face<2, 0>> {
-    private:
-        Dim2BoundaryComponent* boundaryComponent_;
-            /**< The boundary component that this vertex is a part of,
-                 or 0 if this vertex is internal. */
-
-    public:
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this vertex belongs.
-         *
-         * @return the boundary component containing this vertex,
-         * or 0 if this vertex is not on the boundary of the triangulation.
-         */
-        Dim2BoundaryComponent* boundaryComponent() const;
-
-        /**
-         * Determines if this vertex lies on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this vertex lies on the boundary.
-         */
-        bool isBoundary() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
-    private:
-        /**
-         * Creates a new vertex and marks it as belonging to the
-         * given triangulation component.
-         *
-         * @param component the triangulation component to which this
-         * vertex belongs.
-         */
-        Face(Dim2Component* component);
-
-    friend class Triangulation<2>;
-    friend class detail::TriangulationBase<2>;
-};
-
-/**
- * A convenience typedef for Face<2, 0>.
- */
-typedef Face<2, 0> Dim2Vertex;
-
-/*@}*/
-
-// Inline functions for Dim2Vertex
-
-inline Face<2, 0>::Face(Dim2Component* component) :
-        detail::FaceBase<2, 0>(component), boundaryComponent_(0) {
-}
-
-inline Dim2BoundaryComponent* Face<2, 0>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<2, 0>::isBoundary() const {
-    return (boundaryComponent_ != 0);
-}
-
-inline void Face<2, 0>::writeTextShort(std::ostream& out) const {
-    out << (boundaryComponent_ ? "Boundary " : "Internal ")
-        << "vertex of degree " << degree();
-}
-
-} // namespace regina
+#include "triangulation/dim2.h"
 
 #endif
 

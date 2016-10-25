@@ -2,20 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  dim4boundarycomponent
-  dim4edge
   dim4exampletriangulation
-  dim4triangle
-  dim4tetrahedron
-  dim4triangulation
-  dim4vertex
-  homology
-  homotopy
   nxmldim4trireader
-  simplify
-  simplifyglobal
-  skeleton
-  subdivide
   )
 
 # Prepend folder name

@@ -31,102 +31,17 @@
  **************************************************************************/
 
 /*! \file dim4/dim4pentachoron.h
- *  \brief Internal header for 4-dimensional simplices in a 4-manifold
- *  triangulation.
- *
- *  This file is automatically included from dim4triangulation.h; there is
- *  no need for end users to include this header explicitly.
+ *  \brief Deprecated header.
  */
-
-// We include dim4triangulation.h before the header guard, to ensure that the
-// various face/component headers are processed in exactly the right order.
-// This header will be re-included from within dim4triangulation.h.
-#include "dim4/dim4triangulation.h"
 
 #ifndef __DIM4PENTACHORON_H
 #ifndef __DOXYGEN
 #define __DIM4PENTACHORON_H
 #endif
 
-namespace regina {
+#warning This header is deprecated; please use triangulation/dim4.h instead.
 
-template <int> class Triangulation;
-typedef Triangulation<4> Dim4Triangulation;
-
-/**
- * \weakgroup dim4
- * @{
- */
-
-/**
- * Represents a pentachoron (a 4-dimensional simplex) within a
- * 4-manifold triangulation.
- *
- * This is a specialisation of the generic Simplex class template; see the
- * generic Simplex documentation for an overview of how this class works.
- *
- * This 4-dimensional specialisation contains some extra functionality.
- * In particular, each pentachoron stores additional details on how this
- * pentachoron and its sub-faces integrate into the overall skeletal
- * structure of the triangulation.
- *
- * An implementation note: the Dim4Triangulation class is responsible for
- * creating, maintaining and destroying this extra skeletal information.
- */
-template <>
-class REGINA_API Simplex<4> : public detail::SimplexBase<4> {
-    public:
-        /**
-         * A dimension-specific alias for adjacentSimplex().
-         *
-         * See adjacentSimplex() for further information.
-         */
-        Simplex* adjacentPentachoron(int facet) const;
-
-    private:
-        /**
-         * Creates a new pentachoron with empty description and no
-         * facets joined to anything.
-         *
-         * @param tri the triangulation to which the new pentachoron belongs.
-         */
-        Simplex(Dim4Triangulation* tri);
-        /**
-         * Creates a new pentachoron with the given description and
-         * no facets joined to anything.
-         *
-         * @param desc the description to give the new pentachoron.
-         * @param tri the triangulation to which the new pentachoron belongs.
-         */
-        Simplex(const std::string& desc, Dim4Triangulation* tri);
-
-    friend class Triangulation<4>;
-    friend class detail::TriangulationBase<4>;
-        /**< Allow access to private members. */
-};
-
-/**
- * A convenience typedef for Simplex<4>.
- */
-typedef Simplex<4> Dim4Pentachoron;
-
-/*@}*/
-
-// Inline functions for Dim4Pentachoron
-
-inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {
-    return adjacentSimplex(facet);
-}
-
-inline Simplex<4>::Simplex(Dim4Triangulation* tri) :
-        detail::SimplexBase<4>(tri) {
-}
-
-inline Simplex<4>::Simplex(const std::string& desc, Dim4Triangulation* tri) :
-        detail::SimplexBase<4>(desc, tri) {
-}
-
-} // namespace regina
+#include "triangulation/dim4.h"
 
 #endif
 

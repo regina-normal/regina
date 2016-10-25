@@ -2,14 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  dim2boundarycomponent
-  dim2edge
   dim2exampletriangulation
-  dim2triangulation
-  dim2vertex
   nxmldim2trireader
-  skeleton
-  simplify
   )
 
 # Prepend folder name

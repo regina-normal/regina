@@ -42,7 +42,7 @@
 #define __DIM2_H
 #endif
 
-#include "dim2/dim2triangulation.h"
+#include "triangulation/dim2/triangulation2.h"
 
 #endif
 

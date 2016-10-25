@@ -42,7 +42,7 @@
 #define __DIM3_H
 #endif
 
-#include "ntriangulation.h"
+#include "triangulation/dim3/triangulation3.h"
 
 #endif
 

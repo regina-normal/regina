@@ -42,7 +42,7 @@
 #define __DIM4_H
 #endif
 
-#include "dim4/dim4triangulation.h"
+#include "triangulation/dim4/triangulation4.h"
 
 #endif
 

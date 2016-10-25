@@ -2,38 +2,21 @@
 
 # Files to compile
 SET ( FILES
-  angle
-  crushtri
-  decompose
-  homology
-  homotopy
-  hydrate
-  insertlayered
-  nboundarycomponent
-  nedge
   nexampletriangulation
   nfacepair
   nfacepairing
   nhomologicaldata
-  ntriangle
-  ntriangulation
-  nvertex
   nxmltrireader
-  reorder
-  retriangulate
-  simplify
-  simplifyglobal
-  skeleton
-  snappea
-  subdivide
-  surfaces
-  turaevviro
   )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
   SET ( SOURCES ${SOURCES} triangulation/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
+
+ADD_SUBDIRECTORY(dim2)
+ADD_SUBDIRECTORY(dim3)
+ADD_SUBDIRECTORY(dim4)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
