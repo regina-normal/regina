@@ -39,7 +39,7 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4Triangle;
+using regina::Triangle;
 using regina::Dim4TriangleEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
@@ -49,11 +49,11 @@ using regina::python::GlobalArray3D;
 
 namespace {
     GlobalArray3D<int> Dim4Triangle_triangleNumber(
-        Dim4Triangle::triangleNumber, 5);
+        Triangle<4>::triangleNumber, 5);
     GlobalArray2D<int> Dim4Triangle_triangleVertex(
-        Dim4Triangle::triangleVertex, 10);
+        Triangle<4>::triangleVertex, 10);
 
-    boost::python::list Dim4Triangle_embeddings_list(const Dim4Triangle* t) {
+    boost::python::list Dim4Triangle_embeddings_list(const Triangle<4>* t) {
         boost::python::list ans;
         for (auto& emb : *t)
             ans.append(emb);
@@ -79,38 +79,38 @@ void addDim4Triangle() {
     {
         scope s = class_<Face<4, 2>, std::auto_ptr<Face<4, 2>>,
                 boost::noncopyable>("Face4_2", no_init)
-            .def("index", &Dim4Triangle::index)
+            .def("index", &Triangle<4>::index)
             .def("embeddings", Dim4Triangle_embeddings_list)
-            .def("embedding", &Dim4Triangle::embedding,
+            .def("embedding", &Triangle<4>::embedding,
                 return_internal_reference<>())
-            .def("front", &Dim4Triangle::front,
+            .def("front", &Triangle<4>::front,
                 return_internal_reference<>())
-            .def("back", &Dim4Triangle::back,
+            .def("back", &Triangle<4>::back,
                 return_internal_reference<>())
-            .def("triangulation", &Dim4Triangle::triangulation,
+            .def("triangulation", &Triangle<4>::triangulation,
                 return_value_policy<to_held_type<>>())
-            .def("component", &Dim4Triangle::component,
+            .def("component", &Triangle<4>::component,
                 return_value_policy<reference_existing_object>())
-            .def("boundaryComponent", &Dim4Triangle::boundaryComponent,
+            .def("boundaryComponent", &Triangle<4>::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("face", &regina::python::face<Dim4Triangle, 2, int>)
-            .def("vertex", &Dim4Triangle::vertex,
+            .def("face", &regina::python::face<Triangle<4>, 2, int>)
+            .def("vertex", &Triangle<4>::vertex,
                 return_value_policy<reference_existing_object>())
-            .def("edge", &Dim4Triangle::edge,
+            .def("edge", &Triangle<4>::edge,
                 return_value_policy<reference_existing_object>())
             .def("faceMapping",
-                &regina::python::faceMapping<Dim4Triangle, 2, 5>)
-            .def("vertexMapping", &Dim4Triangle::vertexMapping)
-            .def("edgeMapping", &Dim4Triangle::edgeMapping)
-            .def("degree", &Dim4Triangle::degree)
-            .def("isBoundary", &Dim4Triangle::isBoundary)
-            .def("isLinkOrientable", &Dim4Triangle::isLinkOrientable)
-            .def("isValid", &Dim4Triangle::isValid)
-            .def("hasBadIdentification", &Dim4Triangle::hasBadIdentification)
-            .def("hasBadLink", &Dim4Triangle::hasBadLink)
-            .def("ordering", &Dim4Triangle::ordering)
-            .def("faceNumber", &Dim4Triangle::faceNumber)
-            .def("containsVertex", &Dim4Triangle::containsVertex)
+                &regina::python::faceMapping<Triangle<4>, 2, 5>)
+            .def("vertexMapping", &Triangle<4>::vertexMapping)
+            .def("edgeMapping", &Triangle<4>::edgeMapping)
+            .def("degree", &Triangle<4>::degree)
+            .def("isBoundary", &Triangle<4>::isBoundary)
+            .def("isLinkOrientable", &Triangle<4>::isLinkOrientable)
+            .def("isValid", &Triangle<4>::isValid)
+            .def("hasBadIdentification", &Triangle<4>::hasBadIdentification)
+            .def("hasBadLink", &Triangle<4>::hasBadLink)
+            .def("ordering", &Triangle<4>::ordering)
+            .def("faceNumber", &Triangle<4>::faceNumber)
+            .def("containsVertex", &Triangle<4>::containsVertex)
             .def(regina::python::add_output())
             .def(regina::python::add_eq_operators())
             .staticmethod("ordering")

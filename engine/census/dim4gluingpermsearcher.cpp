@@ -879,8 +879,8 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
             w3 = p[v3];
 
             // Look at the edge opposite v1, v2 and v3.
-            e = Dim4Triangle::triangleNumber[v1][v2][v3];
-            f = Dim4Triangle::triangleNumber[w1][w2][w3];
+            e = Triangle<4>::triangleNumber[v1][v2][v3];
+            f = Triangle<4>::triangleNumber[w1][w2][w3];
             eIdx = e + 10 * facet.simp;
             fIdx = f + 10 * adj.simp;
             orderIdx = e + 10 * orderElt_;
@@ -896,14 +896,14 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
             // three vertices of the opposite pentachoron triangle in
             // ascending numerical order.
             tmpInvariant = 0;
-            if (p[Dim4Triangle::triangleVertex[e][0]] ==
-                    Dim4Triangle::triangleVertex[f][0])
+            if (p[Triangle<4>::triangleVertex[e][0]] ==
+                    Triangle<4>::triangleVertex[f][0])
                 ++tmpInvariant;
-            if (p[Dim4Triangle::triangleVertex[e][1]] ==
-                    Dim4Triangle::triangleVertex[f][1])
+            if (p[Triangle<4>::triangleVertex[e][1]] ==
+                    Triangle<4>::triangleVertex[f][1])
                 ++tmpInvariant;
-            if (p[Dim4Triangle::triangleVertex[e][2]] ==
-                    Dim4Triangle::triangleVertex[f][2])
+            if (p[Triangle<4>::triangleVertex[e][2]] ==
+                    Triangle<4>::triangleVertex[f][2])
                 ++tmpInvariant;
             hasTwistTriangle = (tmpInvariant == 1 ? 0 : 1);
 
@@ -1181,8 +1181,8 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
             w3 = p[v3];
 
             // Look at the edge opposite v1, v2 and v3.
-            e = Dim4Triangle::triangleNumber[v1][v2][v3];
-            f = Dim4Triangle::triangleNumber[w1][w2][w3];
+            e = Triangle<4>::triangleNumber[v1][v2][v3];
+            f = Triangle<4>::triangleNumber[w1][w2][w3];
             eIdx = e + 10 * facet.simp;
             fIdx = f + 10 * adj.simp;
             orderIdx = e + 10 * orderElt_;
@@ -1291,23 +1291,23 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
 
         // Vertices of a triangle are labelled in order from smallest to
         // largest.
-        if (p[Dim4Triangle::triangleVertex[e][0]] ==
-                Dim4Triangle::triangleVertex[f][0]) {
-            if (p[Dim4Triangle::triangleVertex[e][1]] ==
-                    Dim4Triangle::triangleVertex[f][1])
+        if (p[Triangle<4>::triangleVertex[e][0]] ==
+                Triangle<4>::triangleVertex[f][0]) {
+            if (p[Triangle<4>::triangleVertex[e][1]] ==
+                    Triangle<4>::triangleVertex[f][1])
                 directTwist.setPermCode(Perm<3>::code012);
             else
                 directTwist.setPermCode(Perm<3>::code021);
-        } else if (p[Dim4Triangle::triangleVertex[e][0]] ==
-                Dim4Triangle::triangleVertex[f][1]) {
-            if (p[Dim4Triangle::triangleVertex[e][1]] ==
-                    Dim4Triangle::triangleVertex[f][0])
+        } else if (p[Triangle<4>::triangleVertex[e][0]] ==
+                Triangle<4>::triangleVertex[f][1]) {
+            if (p[Triangle<4>::triangleVertex[e][1]] ==
+                    Triangle<4>::triangleVertex[f][0])
                 directTwist.setPermCode(Perm<3>::code102);
             else
                 directTwist.setPermCode(Perm<3>::code120);
         } else {
-            if (p[Dim4Triangle::triangleVertex[e][1]] ==
-                    Dim4Triangle::triangleVertex[f][0])
+            if (p[Triangle<4>::triangleVertex[e][1]] ==
+                    Triangle<4>::triangleVertex[f][0])
                 directTwist.setPermCode(Perm<3>::code201);
             else
                 directTwist.setPermCode(Perm<3>::code210);

@@ -105,7 +105,7 @@ void Triangulation<4>::calculateBoundary() {
     int facet, adjFacet;
     Dim4Vertex* vertex;
     Dim4Edge* edge;
-    Dim4Triangle* tri;
+    Triangle<4>* tri;
     Dim4TriangleEmbedding triEmb;
     Dim4Tetrahedron *tet, *adjTet;
     int tetTri, adjTetTri;

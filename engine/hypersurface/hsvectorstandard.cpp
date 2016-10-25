@@ -55,9 +55,9 @@ LargeInteger HSVectorStandard::edgeWeight(
     unsigned e = Dim4Edge::edgeNumber[start][end];
     for (unsigned i = 0; i < 3; ++i) {
         ans += coords_[15 * pentIndex + 5 +
-            Dim4Edge::edgeNumber[start][Dim4Triangle::triangleVertex[e][i]]];
+            Dim4Edge::edgeNumber[start][Triangle<4>::triangleVertex[e][i]]];
         ans += coords_[15 * pentIndex + 5 +
-            Dim4Edge::edgeNumber[end][Dim4Triangle::triangleVertex[e][i]]];
+            Dim4Edge::edgeNumber[end][Triangle<4>::triangleVertex[e][i]]];
     }
     return ans;
 }
@@ -141,7 +141,7 @@ EnumConstraints* HSVectorStandard::makeEmbeddedConstraints(
             for (i = 0; i < 3; ++i) {
                 edge2 = Dim4Edge::edgeNumber[
                     Dim4Edge::edgeVertex[edge1][0]][
-                    Dim4Triangle::triangleVertex[edge1][i]];
+                    Triangle<4>::triangleVertex[edge1][i]];
                 if (edge1 < edge2) {
                     (*ans)[c].insert((*ans)[c].end(), base + edge1);
                     (*ans)[c].insert((*ans)[c].end(), base + edge2);
@@ -149,7 +149,7 @@ EnumConstraints* HSVectorStandard::makeEmbeddedConstraints(
                 }
                 edge2 = Dim4Edge::edgeNumber[
                     Dim4Edge::edgeVertex[edge1][1]][
-                    Dim4Triangle::triangleVertex[edge1][i]];
+                    Triangle<4>::triangleVertex[edge1][i]];
                 if (edge1 < edge2) {
                     (*ans)[c].insert((*ans)[c].end(), base + edge1);
                     (*ans)[c].insert((*ans)[c].end(), base + edge2);

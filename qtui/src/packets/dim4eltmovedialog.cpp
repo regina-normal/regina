@@ -61,7 +61,7 @@ namespace {
         return e->triangulation()->fourTwoMove(e, true, false);
     }
 
-    bool has33(regina::Dim4Triangle* f) {
+    bool has33(regina::Triangle<4>* f) {
         return f->triangulation()->threeThreeMove(f, true, false);
     }
 
@@ -69,7 +69,7 @@ namespace {
         return f->triangulation()->twoFourMove(f, true, false);
     }
 
-    bool has20t(regina::Dim4Triangle* t) {
+    bool has20t(regina::Triangle<4>* t) {
         return t->triangulation()->twoZeroMove(t, true, false);
     }
 
@@ -300,7 +300,7 @@ void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
         if (e)
             tri->fourTwoMove(e);
     } else if (use33->isChecked()) {
-        regina::Dim4Triangle* t = box33->selected();
+        regina::Triangle<4>* t = box33->selected();
         if (t)
             tri->threeThreeMove(t);
     } else if (use24->isChecked()) {
@@ -312,7 +312,7 @@ void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
         if (p)
             tri->oneFiveMove(p);
     } else if (use20t->isChecked()) {
-        regina::Dim4Triangle* t = box20t->selected();
+        regina::Triangle<4>* t = box20t->selected();
         if (t)
             tri->twoZeroMove(t);
     } else if (use20e->isChecked()) {

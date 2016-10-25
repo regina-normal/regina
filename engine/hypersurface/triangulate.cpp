@@ -344,9 +344,9 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
         for (type = 0; type < 10; ++type) {
             e0 = Dim4Edge::edgeVertex[type][0];
             e1 = Dim4Edge::edgeVertex[type][1];
-            f0 = Dim4Triangle::triangleVertex[type][0];
-            f1 = Dim4Triangle::triangleVertex[type][1];
-            f2 = Dim4Triangle::triangleVertex[type][2];
+            f0 = Triangle<4>::triangleVertex[type][0];
+            f1 = Triangle<4>::triangleVertex[type][1];
+            f2 = Triangle<4>::triangleVertex[type][2];
 
             for (pieceNumber = 0; pieceNumber < prisms(pent, type).longValue();
                     ++pieceNumber) {

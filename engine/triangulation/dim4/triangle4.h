@@ -142,7 +142,7 @@ typedef Face<4, 2> Dim4Triangle;
 
 /*@}*/
 
-// Inline functions for Dim4Triangle
+// Inline functions for Face<4, 2>
 
 inline Face<4, 2>::Face(Dim4Component* component) :
         detail::FaceBase<4, 2>(component), boundaryComponent_(0) {

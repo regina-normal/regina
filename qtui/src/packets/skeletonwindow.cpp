@@ -62,7 +62,7 @@ using regina::Dim4Component;
 using regina::Dim4Edge;
 using regina::Dim4Tetrahedron;
 using regina::Dim4TetrahedronEmbedding;
-using regina::Dim4Triangle;
+using regina::Triangle;
 using regina::Dim4Vertex;
 
 #define SKELETON_MAX_ROWS_DEFAULT 10
@@ -1214,7 +1214,7 @@ int Dim4TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const 
 
 QVariant Dim4TriangleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Triangle* item = tri->triangle(index.row());
+        Triangle<4>* item = tri->triangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();

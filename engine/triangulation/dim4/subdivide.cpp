@@ -256,7 +256,7 @@ bool Triangulation<4>::idealToFinite() {
                 if (!tIv) continue;
                 // the only way we can get here is the triangle has ideal
                 // vertices. So we have to subdivide canonically.
-                const Dim4Triangle* aTri( aTet->triangle(k) );
+                const Triangle<4>* aTri( aTet->triangle(k) );
                 for (unsigned long l=0; l<3; l++)
                     if (shouldTruncate(aTri->vertex(l)) )
                         newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
@@ -340,7 +340,7 @@ bool Triangulation<4>::idealToFinite() {
                     newPens[ p0 ]->join( 4, newPens[ p1 ], Perm<5>() );
                     if (!tIV) continue;
 
-                    const Dim4Triangle* aTri(aTet->triangle(j) );
+                    const Triangle<4>* aTri(aTet->triangle(j) );
                     // now the type (6) _CCdt.
                     p0.penType = _CCdt;
                     p1.penType = _CCdt;
@@ -398,7 +398,7 @@ bool Triangulation<4>::idealToFinite() {
             for (unsigned long k=0; k<4; k++) {
                 subDivNot p0( _OP, i, j, k ); // will have to
                 subDivNot p1( _OP, i, j, k ); // modify later
-                const Dim4Triangle* aTri( aTet->triangle(k) );
+                const Triangle<4>* aTri( aTet->triangle(k) );
                 bool tidV(false);
                 for (unsigned long l=0; l<3; l++)
                     if (shouldTruncate(aTri->vertex(l))) {
@@ -676,7 +676,7 @@ bool Triangulation<4>::idealToFinite() {
 
         for (unsigned long j=0; j<10; j++) {
             Perm<5> triInc( aPen->triangleMapping( j ) );
-            const Dim4Triangle* aTri( aPen->triangle( j ) );
+            const Triangle<4>* aTri( aPen->triangle( j ) );
             // triInc[0 1 2] are the triangle vertices, [3 4] the vertices of the
             //  opposite edge. So we are gluing all the facets of tet's 3 and 4 which
             //  are incident to the triangle 012.

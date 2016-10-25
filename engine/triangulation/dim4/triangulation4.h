@@ -65,17 +65,12 @@ namespace regina {
 class Dim4BoundaryComponent;
 class XMLPacketReader;
 
-template <int> class Component;
 template <int> class Isomorphism;
-template <int> class SimplexBase;
-template <int> class Simplex;
 template <int> class XMLTriangulationReader;
-template <int, int> class Face;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
 typedef Simplex<4> Dim4Pentachoron;
 typedef Face<4, 3> Dim4Tetrahedron;
-typedef Face<4, 2> Dim4Triangle;
 typedef Face<4, 1> Dim4Edge;
 typedef Face<4, 0> Dim4Vertex;
 
@@ -108,7 +103,7 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  *
  * In particular, this class also tracks vertices, edges, triangles and
  * tetrahedra of the triangulation (as represented by the classes Dim4Vertex,
- * Dim4Edge, Dim4Triangle and Dim4Tetrahedron), as well as boundary components
+ * Dim4Edge, Triangle<4> and Dim4Tetrahedron), as well as boundary components
  * (as represented by the class Dim4BoundaryComponent).  Such objects are
  * temporary: whenever the triangulation changes, these objects will be
  * deleted and rebuilt, and so any pointers to them will become invalid.
@@ -605,7 +600,7 @@ class REGINA_API Triangulation<4> :
          *
          * See the page on \ref pachner for definitions and terminology
          * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>pentachora().back()->triangle(Dim4Triangle::triangleNumber[0][1][2])</tt>.
+         * <tt>pentachora().back()->triangle(Triangle<4>::triangleNumber[0][1][2])</tt>.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
@@ -621,7 +616,7 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool threeThreeMove(Dim4Triangle* t, bool check = true,
+        bool threeThreeMove(Triangle<4>* t, bool check = true,
             bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-4 move
@@ -726,7 +721,7 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoZeroMove(Dim4Triangle* t, bool check = true,
+        bool twoZeroMove(Triangle<4>* t, bool check = true,
             bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-0 move about

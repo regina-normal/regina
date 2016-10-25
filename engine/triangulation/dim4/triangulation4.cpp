@@ -131,7 +131,7 @@ void Triangulation<4>::writeTextLong(std::ostream& out) const {
                 for (k = j + 1; k < 5; ++k)
                     out << ' ' << std::setw(3)
                         << pent->triangle(
-                            Dim4Triangle::triangleNumber[i][j][k])->index();
+                            Triangle<4>::triangleNumber[i][j][k])->index();
         out << '\n';
     }
     out << '\n';

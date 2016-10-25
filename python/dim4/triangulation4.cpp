@@ -51,7 +51,7 @@ namespace {
         const std::string&) = &Triangulation<4>::newPentachoron;
     regina::Dim4Pentachoron* (Triangulation<4>::*pentachoron_non_const)(
         size_t) = &Triangulation<4>::pentachoron;
-    bool (Triangulation<4>::*twoZeroMove_triangle)(regina::Dim4Triangle*,
+    bool (Triangulation<4>::*twoZeroMove_triangle)(regina::Triangle<4>*,
         bool, bool) = &Triangulation<4>::twoZeroMove;
     bool (Triangulation<4>::*twoZeroMove_edge)(regina::Dim4Edge*,
         bool, bool) = &Triangulation<4>::twoZeroMove;

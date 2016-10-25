@@ -266,7 +266,7 @@ bool Triangulation<4>::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<4>::threeThreeMove(Dim4Triangle* f, bool check,
+bool Triangulation<4>::threeThreeMove(Triangle<4>* f, bool check,
         bool perform) {
     if (check) {
         // f must be valid and non-boundary.
@@ -523,7 +523,7 @@ bool Triangulation<4>::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
     return true;
 }
 
-bool Triangulation<4>::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
+bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
     if (check) {
         if (t->isBoundary() || ! t->isValid())
             return false;
@@ -547,17 +547,17 @@ bool Triangulation<4>::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
             return false;
 
         Dim4Edge* edge[2];
-        Dim4Triangle* tri[2][3];
+        Triangle<4>* tri[2][3];
         Dim4Tetrahedron* tet[2][3];
 
         for (i = 0; i < 2; ++i) {
             edge[i] = pent[i]->edge(
                 Dim4Edge::edgeNumber[perm[i][3]][perm[i][4]]);
-            tri[i][0] = pent[i]->triangle(Dim4Triangle::triangleNumber
+            tri[i][0] = pent[i]->triangle(Triangle<4>::triangleNumber
                 [perm[i][0]][perm[i][3]][perm[i][4]]);
-            tri[i][1] = pent[i]->triangle(Dim4Triangle::triangleNumber
+            tri[i][1] = pent[i]->triangle(Triangle<4>::triangleNumber
                 [perm[i][1]][perm[i][3]][perm[i][4]]);
-            tri[i][2] = pent[i]->triangle(Dim4Triangle::triangleNumber
+            tri[i][2] = pent[i]->triangle(Triangle<4>::triangleNumber
                 [perm[i][2]][perm[i][3]][perm[i][4]]);
             tet[i][0] = pent[i]->tetrahedron(perm[i][0]);
             tet[i][1] = pent[i]->tetrahedron(perm[i][1]);
@@ -720,9 +720,9 @@ bool Triangulation<4>::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
             return false;
 
         // No bad loops of triangles.
-        Dim4Triangle* tri[2];
+        Triangle<4>* tri[2];
         for (i = 0; i < 2; ++i)
-            tri[i] = pent[i]->triangle(Dim4Triangle::triangleNumber
+            tri[i] = pent[i]->triangle(Triangle<4>::triangleNumber
                 [perm[i][2]][perm[i][3]][perm[i][4]]);
 
         if (tri[0] == tri[1])
@@ -915,12 +915,12 @@ bool Triangulation<4>::shellBoundary(Dim4Pentachoron* p,
                 return false;
 
             // No two of the remaining three triangles identified.
-            Dim4Triangle* internal[3];
+            Triangle<4>* internal[3];
             int j = 0;
             for (i = 0; i < 5; ++i)
                 if (i != bdry[0] && i != bdry[1])
                     internal[j++] = p->triangle(
-                        Dim4Triangle::triangleNumber[bdry[0]][bdry[1]][i]);
+                        Triangle<4>::triangleNumber[bdry[0]][bdry[1]][i]);
 
             if (internal[0] == internal[1] ||
                     internal[1] == internal[2] ||
@@ -928,7 +928,7 @@ bool Triangulation<4>::shellBoundary(Dim4Pentachoron* p,
                 return false;
         } else if (nBdry == 3) {
             // Opposite triangle not in boundary.
-            i = Dim4Triangle::triangleNumber[bdry[0]][bdry[1]][bdry[2]];
+            i = Triangle<4>::triangleNumber[bdry[0]][bdry[1]][bdry[2]];
             if (p->triangle(i)->isBoundary())
                 return false;
 
@@ -1052,7 +1052,7 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                 std::fill(depth, depth + nEdges + 1, 0);
 
                 // Run through all boundary triangles containing e.
-                for (Dim4Triangle* triangle : triangles()) {
+                for (Triangle<4>* triangle : triangles()) {
                     if (! triangle->isBoundary())
                         continue;
 
@@ -1094,7 +1094,7 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             std::fill(depth, depth + nEdges + 1, 0);
 
             // Run through all internal triangles containing e.
-            for (Dim4Triangle* triangle : triangles()) {
+            for (Triangle<4>* triangle : triangles()) {
                 if (triangle->isBoundary())
                     continue;
 
@@ -1160,7 +1160,7 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             // The depth of each subtree in the union-find tree.
             long* depth = new long[nTriangles + 1];
 
-            Dim4Triangle *upper, *lower;
+            Triangle<4> *upper, *lower;
             long id1, id2;
             int i;
 

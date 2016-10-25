@@ -143,7 +143,7 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * sits within \c pent and is parallel to
          * <tt>pent->triangle(e)</tt>.
          * Then vertices 0,1,2 of the triangle in the link will be
-         * parallel to vertices 0,1,2 of the corresponding Dim4Triangle.
+         * parallel to vertices 0,1,2 of the corresponding Triangle<4>.
          * The permutation <tt>pent->triangleMapping(e)</tt> will map
          * vertices 0,1,2 of the triangle in the link to the
          * corresponding vertices of \c pent (those opposite \c e),

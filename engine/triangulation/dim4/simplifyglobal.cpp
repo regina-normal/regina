@@ -51,13 +51,13 @@ bool Triangulation<4>::intelligentSimplify() {
         Triangulation<4>* use;
 
         // Variables for selecting random 3-3 moves.
-        std::vector<Dim4Triangle*> threeThreeAvailable;
-        Dim4Triangle* threeThreeChoice;
+        std::vector<Triangle<4>*> threeThreeAvailable;
+        Triangle<4>* threeThreeChoice;
 
         unsigned long threeThreeAttempts;
         unsigned long threeThreeCap;
 
-        Dim4Triangle* triangle;
+        Triangle<4>* triangle;
         TriangleIterator fit;
 
         while (true) {
@@ -207,7 +207,7 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
             // Experience suggests that 2-0 moves are more important to
             // "unblock" other moves, and we should leave the simpler
             // 4-2 moves until last.
-            for (Dim4Triangle* t : triangles()) {
+            for (Triangle<4>* t : triangles()) {
                 if (twoZeroMove(t, true, perform)) {
                     changedNow = changed = true;
                     break;

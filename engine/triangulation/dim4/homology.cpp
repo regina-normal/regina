@@ -79,7 +79,7 @@ const NAbelianGroup& Triangulation<4>::homologyH1() const {
     int facet;
     Dim4Tetrahedron* tet;
     i = 0;
-    for (Dim4Triangle* f : triangles()) {
+    for (Triangle<4>* f : triangles()) {
         if (f->isBoundary())
             continue;
 
@@ -133,7 +133,7 @@ const NAbelianGroup& Triangulation<4>::homologyH2() const {
     unsigned long row, col;
     Dim4Pentachoron* pent;
     Dim4Edge* e;
-    Dim4Triangle* t;
+    Triangle<4>* t;
     Dim4Tetrahedron* tet;
     Perm<5> perm, tmpPerm;
     int pentEdge, pentTriangle;
@@ -233,7 +233,7 @@ const NAbelianGroup& Triangulation<4>::homologyH2() const {
                 continue;
 
             row = triangleInternalIndex[t->index()];
-            pentTriangle = Dim4Triangle::triangleNumber
+            pentTriangle = Triangle<4>::triangleNumber
                 [perm[(j+1) % 4]][perm[(j+2) % 4]][perm[(j+3) % 4]];
             bdry21.entry(row, col) +=
                 (pent->triangleMapping(pentTriangle)[4] == perm[4] ? 1 : -1);

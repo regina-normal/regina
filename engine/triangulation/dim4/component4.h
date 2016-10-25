@@ -52,12 +52,8 @@ namespace regina {
 
 class Dim4BoundaryComponent;
 
-template <int> class Simplex;
-template <int> class Triangulation;
-template <int, int> class Face;
 typedef Simplex<4> Dim4Pentachoron;
 typedef Face<4, 3> Dim4Tetrahedron;
-typedef Face<4, 2> Dim4Triangle;
 typedef Face<4, 1> Dim4Edge;
 typedef Face<4, 0> Dim4Vertex;
 
@@ -104,7 +100,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
     private:
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the component. */
-        std::vector<Dim4Triangle*> triangles_;
+        std::vector<Triangle<4>*> triangles_;
             /**< List of triangles in the component. */
         std::vector<Dim4Edge*> edges_;
             /**< List of edges in the component. */
@@ -266,7 +262,7 @@ inline const std::vector<Dim4Tetrahedron*>& Component<4>::faces<3>() const {
 }
 
 template <>
-inline const std::vector<Dim4Triangle*>& Component<4>::faces<2>() const {
+inline const std::vector<Triangle<4>*>& Component<4>::faces<2>() const {
     return triangles_;
 }
 
@@ -286,7 +282,7 @@ inline Dim4Tetrahedron* Dim4Component::face<3>(size_t index) const {
 }
 
 template <>
-inline Dim4Triangle* Dim4Component::face<2>(size_t index) const {
+inline Triangle<4>* Dim4Component::face<2>(size_t index) const {
     return triangles_[index];
 }
 

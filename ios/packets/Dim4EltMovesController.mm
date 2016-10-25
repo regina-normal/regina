@@ -266,7 +266,7 @@
     return self.packet->edge([options[use] longValue]);
 }
 
-- (regina::Dim4Triangle*)triangleFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Triangle<4>*)triangleFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -346,7 +346,7 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
-- (NSAttributedString*)triangleDesc:(regina::Dim4Triangle*)triangle
+- (NSAttributedString*)triangleDesc:(regina::Triangle<4>*)triangle
 {
     if (! triangle)
         return [TextHelper badString:@"Invalid triangle"];
@@ -415,7 +415,7 @@
 
 - (IBAction)do33:(id)sender
 {
-    regina::Dim4Triangle* use = [self triangleFor:self.stepper33 options:options33];
+    regina::Triangle<4>* use = [self triangleFor:self.stepper33 options:options33];
     if (! use)
         return;
 
@@ -445,7 +445,7 @@
 
 - (IBAction)do20Triangle:(id)sender
 {
-    regina::Dim4Triangle* use = [self triangleFor:self.stepper20Triangle options:options20Triangle];
+    regina::Triangle<4>* use = [self triangleFor:self.stepper20Triangle options:options20Triangle];
     if (! use)
         return;
 

@@ -52,7 +52,6 @@ namespace regina {
 
 typedef Component<4> Dim4Component;
 typedef Face<4, 3> Dim4Tetrahedron;
-typedef Face<4, 2> Dim4Triangle;
 typedef Face<4, 1> Dim4Edge;
 typedef Face<4, 0> Dim4Vertex;
 
@@ -98,7 +97,7 @@ class REGINA_API Dim4BoundaryComponent :
     private:
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the boundary component. */
-        std::vector<Dim4Triangle*> triangles_;
+        std::vector<Triangle<4>*> triangles_;
             /**< List of triangles in the boundary component. */
         std::vector<Dim4Edge*> edges_;
             /**< List of edges in the boundary component. */
@@ -324,7 +323,7 @@ inline Dim4Tetrahedron* Dim4BoundaryComponent::face<3>(size_t index) const {
 }
 
 template <>
-inline Dim4Triangle* Dim4BoundaryComponent::face<2>(size_t index) const {
+inline Triangle<4>* Dim4BoundaryComponent::face<2>(size_t index) const {
     return triangles_[index];
 }
 

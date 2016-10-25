@@ -72,7 +72,7 @@ const NGroupPresentation& Triangulation<4>::fundamentalGroup() const {
     int facet;
     Dim4Tetrahedron* tet;
     NGroupExpression* rel;
-    for (Dim4Triangle* f : triangles()) {
+    for (Triangle<4>* f : triangles()) {
         if (f->isBoundary())
             continue;
 
