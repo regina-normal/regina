@@ -8,7 +8,7 @@ SET ( FILES
   dim2exampletriangulation
   dim2triangle
   dim2isomorphism
-  dim2triangulation
+  triangulation2
   dim2vertex
   pydim2
   )

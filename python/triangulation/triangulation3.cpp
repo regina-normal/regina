@@ -189,7 +189,7 @@ namespace {
     }
 }
 
-void addNTriangulation() {
+void addTriangulation3() {
     enum_<regina::TuraevViroAlg>("TuraevViroAlg")
         .value("TV_DEFAULT", regina::TV_DEFAULT)
         .value("TV_BACKTRACK", regina::TV_BACKTRACK)

@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  dim4triangulation
+  triangulation4
   )
 
 # Prepend folder name

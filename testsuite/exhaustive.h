@@ -47,18 +47,18 @@ namespace regina {
     template <int> class Triangulation;
 }
 
-typedef void (*Dim2TriangulationTestFunction)(regina::Triangulation<2>*);
-typedef void (*NTriangulationTestFunction)(regina::Triangulation<3>*);
-typedef void (*Dim4TriangulationTestFunction)(regina::Triangulation<4>*);
+typedef void (*Triangulation2TestFunction)(regina::Triangulation<2>*);
+typedef void (*Triangulation3TestFunction)(regina::Triangulation<3>*);
+typedef void (*Triangulation4TestFunction)(regina::Triangulation<4>*);
 
-void runCensusMinClosed(NTriangulationTestFunction f, bool small_ = false);
-void runCensusAllClosed(NTriangulationTestFunction f, bool small_ = false);
-void runCensusAllBounded(NTriangulationTestFunction f, bool small_ = false);
-void runCensusAllIdeal(NTriangulationTestFunction f, bool small_ = false);
-void runCensusAllNoBdry(NTriangulationTestFunction f, bool small_ = false);
+void runCensusMinClosed(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllClosed(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllBounded(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllIdeal(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllNoBdry(Triangulation3TestFunction f, bool small_ = false);
 
-void runCensusAllClosed(Dim4TriangulationTestFunction f);
-void runCensusAllBounded(Dim4TriangulationTestFunction f);
-void runCensusAllNoBdry(Dim4TriangulationTestFunction f);
+void runCensusAllClosed(Triangulation4TestFunction f);
+void runCensusAllBounded(Triangulation4TestFunction f);
+void runCensusAllNoBdry(Triangulation4TestFunction f);
 
 #endif

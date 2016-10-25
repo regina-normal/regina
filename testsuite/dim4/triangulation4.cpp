@@ -66,8 +66,8 @@ using regina::NTriangulation;
 using regina::Triangulation;
 using regina::NVertex;
 
-class Dim4TriangulationTest : public TriangulationTest<4> {
-    CPPUNIT_TEST_SUITE(Dim4TriangulationTest);
+class Triangulation4Test : public TriangulationTest<4> {
+    CPPUNIT_TEST_SUITE(Triangulation4Test);
 
     // Generic tests:
     CPPUNIT_TEST(makeCanonical);
@@ -293,7 +293,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         /**
          * Run a given test over all hand-coded test cases.
          */
-        void testManualAll(Dim4TriangulationTestFunction f) {
+        void testManualAll(Triangulation4TestFunction f) {
             f(&empty);
             f(&s4_id);
             f(&s4_doubleConeS3);
@@ -320,7 +320,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
          * Run a given test over all hand-coded test cases that are not
          * too large.
          */
-        void testManualTiny(Dim4TriangulationTestFunction f) {
+        void testManualTiny(Triangulation4TestFunction f) {
             f(&empty);
             f(&s4_id);
             f(&s4_doubleConeS3);
@@ -2283,7 +2283,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         }
 };
 
-void addDim4Triangulation(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Dim4TriangulationTest::suite());
+void addTriangulation4(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Triangulation4Test::suite());
 }
 

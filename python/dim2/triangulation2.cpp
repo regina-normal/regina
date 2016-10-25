@@ -132,7 +132,7 @@ namespace {
     }
 }
 
-void addDim2Triangulation() {
+void addTriangulation2() {
     class_<Triangulation<2>, bases<regina::Packet>,
             SafeHeldType<Triangulation<2>>,
             boost::noncopyable>("Triangulation2")

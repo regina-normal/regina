@@ -157,7 +157,7 @@ namespace {
     }
 }
 
-void addDim4Triangulation() {
+void addTriangulation4() {
     class_<Triangulation<4>, bases<regina::Packet>,
             SafeHeldType<Triangulation<4>>,
             boost::noncopyable>("Triangulation4")

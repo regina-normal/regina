@@ -6,7 +6,7 @@ SET ( FILES
   eltmoves
   nhomologicaldata
   nisomorphism
-  ntriangulation
+  triangulation3
   )
 
 # Prepend folder name

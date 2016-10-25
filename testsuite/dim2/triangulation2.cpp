@@ -41,8 +41,8 @@
 using regina::Triangulation;
 using regina::Dim2ExampleTriangulation;
 
-class Dim2TriangulationTest : public TriangulationTest<2> {
-    CPPUNIT_TEST_SUITE(Dim2TriangulationTest);
+class Triangulation2Test : public TriangulationTest<2> {
+    CPPUNIT_TEST_SUITE(Triangulation2Test);
 
     // Generic tests:
     CPPUNIT_TEST(makeCanonical);
@@ -147,7 +147,7 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
         /**
          * Run a given test over all hand-coded cases.
          */
-        void testManualAll(Dim2TriangulationTestFunction f) {
+        void testManualAll(Triangulation2TestFunction f) {
             f(&empty);
             f(&s2);
             f(&s2Tet);
@@ -224,7 +224,7 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
         }
 };
 
-void addDim2Triangulation(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Dim2TriangulationTest::suite());
+void addTriangulation2(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Triangulation2Test::suite());
 }
 

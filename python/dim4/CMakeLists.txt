@@ -10,7 +10,7 @@ SET ( FILES
   dim4isomorphism
   dim4pentachoron
   dim4tetrahedron
-  dim4triangulation
+  triangulation4
   dim4vertex
   pydim4
   )

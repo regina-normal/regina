@@ -71,8 +71,8 @@ using regina::Triangulation;
 using regina::NTriangulation;
 using regina::NVertex;
 
-class NTriangulationTest : public TriangulationTest<3> {
-    CPPUNIT_TEST_SUITE(NTriangulationTest);
+class Triangulation3Test : public TriangulationTest<3> {
+    CPPUNIT_TEST_SUITE(Triangulation3Test);
 
     // Generic tests:
     CPPUNIT_TEST(makeCanonical);
@@ -448,7 +448,7 @@ class NTriangulationTest : public TriangulationTest<3> {
          * Run a given test over all hand-coded test cases that are not
          * obscenely large.
          */
-        void testManualSmall(NTriangulationTestFunction f) {
+        void testManualSmall(Triangulation3TestFunction f) {
             f(&empty);
             f(&singleTet);
             f(&s3);
@@ -488,7 +488,7 @@ class NTriangulationTest : public TriangulationTest<3> {
         /**
          * Run a given test over all hand-coded test cases.
          */
-        void testManualAll(NTriangulationTestFunction f) {
+        void testManualAll(Triangulation3TestFunction f) {
             testManualSmall(f);
             f(&lens100_1);
         }
@@ -4196,7 +4196,7 @@ class NTriangulationTest : public TriangulationTest<3> {
         }
 };
 
-void addNTriangulation(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NTriangulationTest::suite());
+void addTriangulation3(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Triangulation3Test::suite());
 }
 

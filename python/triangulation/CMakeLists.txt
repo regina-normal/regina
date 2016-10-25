@@ -12,7 +12,7 @@ SET ( FILES
   nisomorphism
   ntetrahedron
   ntriangle
-  ntriangulation
+  triangulation3
   nvertex
   pytriangulation
   )

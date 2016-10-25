@@ -38,7 +38,7 @@ void addDim4Isomorphism();
 void addDim4Pentachoron();
 void addDim4Tetrahedron();
 void addDim4Triangle();
-void addDim4Triangulation();
+void addTriangulation4();
 void addDim4Vertex();
 
 void addDim4Classes() {
@@ -50,7 +50,7 @@ void addDim4Classes() {
     addDim4Pentachoron();
     addDim4Tetrahedron();
     addDim4Triangle();
-    addDim4Triangulation();
+    addTriangulation4();
     addDim4Vertex();
 }
 

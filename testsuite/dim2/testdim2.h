@@ -42,5 +42,5 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addDim2Triangulation(CppUnit::TextUi::TestRunner& runner);
+void addTriangulation2(CppUnit::TextUi::TestRunner& runner);
 

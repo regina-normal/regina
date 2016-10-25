@@ -40,7 +40,7 @@ void addNHomologicalData();
 void addNIsomorphism();
 void addNTetrahedron();
 void addNTriangle();
-void addNTriangulation();
+void addTriangulation3();
 void addNVertex();
 
 void addTriangulationClasses() {
@@ -54,7 +54,7 @@ void addTriangulationClasses() {
     addNIsomorphism();
     addNTetrahedron();
     addNTriangle();
-    addNTriangulation();
+    addTriangulation3();
     addNVertex();
 }
 
