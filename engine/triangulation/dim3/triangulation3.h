@@ -3042,7 +3042,11 @@ class REGINA_API Triangulation<3> :
 };
 
 /**
- * A convenience typedef for Triangulation<3>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NTriangulation, you should use
+ * the templated class name Triangulation<3>.
  */
 typedef Triangulation<3> NTriangulation;
 

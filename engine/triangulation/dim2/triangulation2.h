@@ -425,7 +425,7 @@ class REGINA_API Triangulation<2> :
  * be removed in a future release of Regina.
  *
  * \deprecated Instead of the old typedef Dim2Triangulation, you should use
- * the correct class name Triangulation<2>.
+ * the templated class name Triangulation<2>.
  */
 typedef Triangulation<2> Dim2Triangulation;
 

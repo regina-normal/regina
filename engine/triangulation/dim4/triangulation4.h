@@ -996,7 +996,11 @@ class REGINA_API Triangulation<4> :
 };
 
 /**
- * A convenience typedef for Triangulation<4>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4Triangulation, you should use
+ * the templated class name Triangulation<4>.
  */
 typedef Triangulation<4> Dim4Triangulation;
 

@@ -23,12 +23,17 @@ Version 5.1  [ (under development) ]
             + NNormalSurfaceList becomes NormalSurfaces.
             + NNormalSurfaceVector{Standard,...} becomes NSVector{Standard,...}.
             + NSurfaceSubset is removed entirely (see below).
-            + For "standard" dimensions 2, 3 and 4, all vertex/edge/face/etc.
-              headers and all component and boundary component headers are
-              replaced by triangulation/dim{2,3,4}.h.  So, for instance,
-              triangulation/nvertex.h becomes triangulation/dim3.h, and
-              dim2/dim2component.h becomes triangulation/dim2.h.  Higher
-              dimensions still use the generic header generic/triangulation.h.
+            + For "standard" dimensions 2, 3 and 4:
+              - All vertex/edge/face/etc. headers and all component and
+                boundary component headers are replaced by
+                triangulation/dim{2,3,4}.h.  So, for instance,
+                triangulation/nvertex.h becomes triangulation/dim3.h, and
+                dim2/dim2component.h becomes triangulation/dim2.h.
+              - Triangulation typedefs Dim2Triangulation, NTriangulation and
+                Dim4Triangulation are now deprecated, in favour of the
+                templated class names Triangulation<2,3,4>.
+              - Higher dimensions still use the generic header
+                generic/triangulation.h.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into
@@ -99,6 +104,9 @@ Version 5.1  [ (under development) ]
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
               and PACKET_ANGLESTRUCTURELIST to PACKET_ANGLESTRUCTURES.
               The old names are kept but deprecated.
+            - Deprecated the old names PACKET_DIM2TRIANGULATION,
+              PACKET_TRIANGULATION and PACKET_DIM4TRIANGULATION.
+              Instead use the newer names PACKET_TRIANGULATION{2,3,4}.
         Routine preImageOfLattice(), torsionAutInverse():
             - Now works with type Integer instead of LargeInteger.
         Routine isZero, isNonZero, isPositive, isNegative, isNonPositive,
