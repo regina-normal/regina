@@ -33,7 +33,7 @@
 #include <set>
 #include <vector>
 
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/memutils.h"
 
 namespace regina {

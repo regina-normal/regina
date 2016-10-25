@@ -1790,6 +1790,9 @@
 		05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */; };
 		05E49D251DA38C7D00B55E31 /* ncyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D241DA38C7D00B55E31 /* ncyclotomic.h */; };
 		05EA195719F30A0100D37501 /* EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMovesController.mm */; };
+		05F09FBF1DBEF01800117BFC /* dim2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBC1DBEF01800117BFC /* dim2.h */; };
+		05F09FC01DBEF01800117BFC /* dim3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBD1DBEF01800117BFC /* dim3.h */; };
+		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
 		05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1219C1305A005B53B5 /* NewAnglesController.mm */; };
@@ -3691,6 +3694,9 @@
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMovesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMovesController.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMovesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMovesController.mm; sourceTree = "<group>"; };
+		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
+		05F09FBD1DBEF01800117BFC /* dim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim3.h; sourceTree = "<group>"; };
+		05F09FBE1DBEF01800117BFC /* dim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4.h; sourceTree = "<group>"; };
 		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
 		05F23E0E19C08834005B53B5 /* snappea-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-320.png"; sourceTree = "<group>"; };
 		05F23E1119C1305A005B53B5 /* NewAnglesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewAnglesController.h; sourceTree = "<group>"; };
@@ -5082,6 +5088,9 @@
 				05A73C7E19B2EE680099C617 /* angle.cpp */,
 				052F9E32180600FB00FAE4DF /* crushtri.cpp */,
 				052F9E33180600FB00FAE4DF /* decompose.cpp */,
+				05F09FBC1DBEF01800117BFC /* dim2.h */,
+				05F09FBD1DBEF01800117BFC /* dim3.h */,
+				05F09FBE1DBEF01800117BFC /* dim4.h */,
 				052F9E35180600FB00FAE4DF /* homology.cpp */,
 				052F9E36180600FB00FAE4DF /* homotopy.cpp */,
 				052F9E37180600FB00FAE4DF /* hydrate.cpp */,
@@ -6374,6 +6383,7 @@
 				053CAB211DA63C8900A92F98 /* nmatrix2.h in Headers */,
 				052FA052180600FB00FAE4DF /* sfproperties.h in Headers */,
 				052F9F8C180600FB00FAE4DF /* kernel.h in Headers */,
+				05F09FC01DBEF01800117BFC /* dim3.h in Headers */,
 				053CAB371DAAEF0F00A92F98 /* nhsstandard.h in Headers */,
 				0591E7AF1C4F74C400793A9C /* dim4triangulation.h in Headers */,
 				052FA009180600FB00FAE4DF /* nsatblock.h in Headers */,
@@ -6407,6 +6417,7 @@
 				052F9F01180600FB00FAE4DF /* nfileinfo.h in Headers */,
 				0583656518DB8876008B08D9 /* real_type.h in Headers */,
 				052F9F31180600FB00FAE4DF /* nsimplesurfacebundle.h in Headers */,
+				05F09FBF1DBEF01800117BFC /* dim2.h in Headers */,
 				05431F2F1C40F2DB009BC072 /* nperm2.h in Headers */,
 				052F9F3C180600FB00FAE4DF /* integer.h in Headers */,
 				052FA02E180600FB00FAE4DF /* normalsurface.h in Headers */,
@@ -6591,6 +6602,7 @@
 				053CAB4C1DAC479300A92F98 /* ndisctype.h in Headers */,
 				053CAB451DAB699A00A92F98 /* nsmirrored.h in Headers */,
 				05431F351C40F363009BC072 /* nfacepairing.h in Headers */,
+				05F09FC11DBEF01800117BFC /* dim4.h in Headers */,
 				052FA089180600FB00FAE4DF /* intutils.h in Headers */,
 				052FA08A180600FB00FAE4DF /* memutils.h in Headers */,
 				052F9FE3180600FB00FAE4DF /* nsigisomorphism.h in Headers */,

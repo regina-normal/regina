@@ -34,7 +34,7 @@
 #include "manifold/nlensspace.h"
 #include "maths/numbertheory.h"
 #include "subcomplex/nlayeredlensspace.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

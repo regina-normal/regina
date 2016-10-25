@@ -33,7 +33,7 @@
 #include <boost/python.hpp>
 #include "maths/matrix2.h"
 #include "subcomplex/nsatannulus.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using namespace boost::python;

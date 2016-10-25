@@ -51,7 +51,7 @@
 
 #include <subcomplex/nblockedsfs.h>
 #include <subcomplex/nstandardtri.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <cstdlib>
 #include <iostream>

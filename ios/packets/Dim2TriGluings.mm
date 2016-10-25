@@ -33,8 +33,8 @@
 #import "ReginaHelper.h"
 #import "Dim2TriGluings.h"
 #import "Dim2TriangulationViewController.h"
-#import "dim2/dim2triangulation.h"
 #import "packet/container.h"
+#import "triangulation/dim2.h"
 
 #pragma mark - Table cell
 

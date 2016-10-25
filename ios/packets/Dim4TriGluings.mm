@@ -34,8 +34,8 @@
 #import "Dim4EltMovesController.h"
 #import "Dim4TriangulationViewController.h"
 #import "Dim4TriGluings.h"
-#import "dim4/dim4triangulation.h"
 #import "packet/container.h"
+#import "triangulation/dim4.h"
 
 #pragma mark - Table cell
 

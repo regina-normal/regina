@@ -35,8 +35,8 @@
 #import "TriangulationViewController.h"
 #import "TriSkeleton.h"
 #import "TextHelper.h"
-#import "dim2/dim2triangulation.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim2.h"
+#import "triangulation/dim3.h"
 
 #define KEY_LAST_TRI_SKELETON_TYPE @"ViewTriSkeletonWhich"
 

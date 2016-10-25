@@ -32,7 +32,7 @@
 
 #include "angle/anglestructures.h"
 #include "progress/progresstracker.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 

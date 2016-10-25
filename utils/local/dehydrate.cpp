@@ -47,7 +47,7 @@
  * Mathematics of Computation 68/225, 1999.
  */
 
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include <cstdlib>
 #include <iostream>

@@ -35,7 +35,7 @@
 #import "TriangulationViewController.h"
 #import "TriSnapPea.h"
 #import "snappea/snappeatriangulation.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 @interface TriSnapPea ()
 @property (weak, nonatomic) IBOutlet UILabel *header;

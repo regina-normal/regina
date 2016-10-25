@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "surfaces/normalsurface.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include <set>
 
 #define NO_EDGES std::make_pair(static_cast<NEdge*>(0), static_cast<NEdge*>(0))

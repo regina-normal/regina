@@ -33,8 +33,8 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/dim2gluingpermsearcher.h"
-#include "dim2/dim2triangulation.h"
 #include "packet/container.h"
+#include "triangulation/dim2.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::BoolSet;

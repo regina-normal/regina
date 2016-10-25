@@ -31,10 +31,10 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "dim4/dim4triangulation.h"
 #include "hypersurface/normalhypersurface.h"
 #include "hypersurface/normalhypersurfaces.h" // for makeZeroVector()
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 

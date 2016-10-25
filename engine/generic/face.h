@@ -61,8 +61,8 @@ namespace regina {
  * If \a dim is one of Regina's \ref stddim "standard dimensions", then
  * this template is specialised to offer additional dimension-specific aliases.
  * In order to use these specialised classes, you will need to include the
- * corresponding triangulation headers (e.g., dim2/dim2triangulation.h for
- * \a dim = 2, or triangulation/ntriangulation.h for \a dim = 3).
+ * corresponding triangulation headers (e.g., triangulation/dim2.h for
+ * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
  * For convenience, there are typedefs for these specialised classes
  * (e.g., Dim2EdgeEmbedding, NVertexEmbedding, and so on).
  *
@@ -130,8 +130,8 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * If \a dim is one of Regina's \ref stddim "standard dimensions", then
  * this template is specialised to offer additional functionality.
  * In order to use these specialised classes, you will need to include the
- * corresponding triangulation headers (e.g., dim2/dim2triangulation.h for
- * \a dim = 2, or triangulation/ntriangulation.h for \a dim = 3).
+ * corresponding triangulation headers (e.g., triangulation/dim2.h for
+ * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
  * For convenience, there are typedefs for these specialised classes
  * (e.g., Dim2Edge, NVertex, and so on).
  *

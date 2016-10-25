@@ -32,7 +32,7 @@
 
 #include <cctype>
 
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 /**
  * Determine the integer value represented by the given letter

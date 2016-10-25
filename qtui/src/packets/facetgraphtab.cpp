@@ -33,12 +33,12 @@
 // Regina core includes:
 #include "regina-config.h" // for LIBGVC_FOUND
 #include "dim2/dim2edgepairing.h"
-#include "dim2/dim2triangulation.h"
 #include "dim4/dim4facetpairing.h"
-#include "dim4/dim4triangulation.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/nfacepairing.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 // UI includes:
 #include "facetgraphtab.h"

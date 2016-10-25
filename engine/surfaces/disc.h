@@ -43,7 +43,7 @@
 #include <cassert>
 #include "regina-core.h"
 #include "surfaces/normalsurface.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

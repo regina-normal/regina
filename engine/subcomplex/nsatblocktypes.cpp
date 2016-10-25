@@ -34,7 +34,7 @@
 #include "subcomplex/nsatblocktypes.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "triangulation/nfacepair.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include <algorithm>
 #include <cstdlib> // For exit().
 #include <iterator>

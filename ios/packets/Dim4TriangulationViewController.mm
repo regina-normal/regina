@@ -32,7 +32,7 @@
 
 #import "Dim4TriangulationViewController.h"
 #import "TextHelper.h"
-#import "dim4/dim4triangulation.h"
+#import "triangulation/dim4.h"
 
 @implementation Dim4TriangulationViewController
 

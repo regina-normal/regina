@@ -39,7 +39,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "dim2/dim2triangulation.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "packet/container.h"
@@ -48,7 +47,8 @@
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/generictriangulation.h"

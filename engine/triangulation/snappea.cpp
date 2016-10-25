@@ -35,7 +35,7 @@
 #include <fstream>
 #include <iomanip>
 
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
 namespace regina {

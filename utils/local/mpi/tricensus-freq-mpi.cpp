@@ -69,7 +69,7 @@
 #include <popt.h>
 #include "census/ngluingpermsearcher.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "mpi.h"
 
 // MPI constants.

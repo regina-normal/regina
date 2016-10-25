@@ -32,7 +32,7 @@
 
 #import "Dim4EltMovesController.h"
 #import "TextHelper.h"
-#import "dim4/dim4triangulation.h"
+#import "triangulation/dim4.h"
 
 @interface Dim4EltMovesController () {
     NSMutableArray* options42;

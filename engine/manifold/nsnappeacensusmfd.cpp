@@ -34,7 +34,7 @@
 #include "manifold/nsnappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include <cstdio>
 #include <cstring>

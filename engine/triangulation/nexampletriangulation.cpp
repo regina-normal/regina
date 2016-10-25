@@ -32,7 +32,7 @@
 
 #include "split/nsignature.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace {
     static const int poincareAdj[5][4] = {

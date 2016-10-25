@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim2/dim2triangulation.h"
-#include "dim4/dim4triangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 #include "skeletonwindow.h"
 #include "../packetui.h"

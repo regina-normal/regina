@@ -35,7 +35,7 @@
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 

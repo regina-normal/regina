@@ -32,7 +32,7 @@
 
 #include "angle/anglestructure.h"
 #include "maths/matrix.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {

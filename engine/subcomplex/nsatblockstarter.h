@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "subcomplex/nsatblock.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/listoncall.h"
 
 namespace regina {

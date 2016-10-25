@@ -39,7 +39,7 @@
 #import "MDSpreadViewClasses.h"
 #import "snappea/snappeatriangulation.h"
 #import "surfaces/normalsurfaces.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 #define KEY_SURFACES_COORDS_COMPACT @"SurfacesCoordsCompact"
 

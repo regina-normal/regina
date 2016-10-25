@@ -37,7 +37,7 @@
 #include "split/nsignature.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/surfaces/testsurfaces.h"

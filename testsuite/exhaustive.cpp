@@ -35,8 +35,8 @@
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "packet/container.h"
-#include "triangulation/ntriangulation.h"
-#include "dim4/dim4triangulation.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 // When we run tests over an entire census, do we use a larger census
 // (which takes a long time to run), or a smaller census?

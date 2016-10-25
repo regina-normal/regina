@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "dim2/dim2exampletriangulation.h"
-#include "dim2/dim2triangulation.h"
+#include "triangulation/dim2.h"
 
 // UI includes:
 #include "dim2tricreator.h"

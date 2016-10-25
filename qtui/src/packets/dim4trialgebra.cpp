@@ -33,8 +33,8 @@
 // Regina core includes:
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
-#include "dim4/dim4triangulation.h"
 #include "maths/numbertheory.h"
+#include "triangulation/dim4.h"
 
 // UI includes:
 #include "columnlayout.h"

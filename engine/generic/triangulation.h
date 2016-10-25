@@ -214,7 +214,7 @@ namespace regina {
  * For Regina's \ref stddim "standard dimensions", this template is specialised
  * and offers \e much more functionality.  In order to use these specialised
  * classes, you will need to include the corresponding headers (e.g.,
- * dim2/dim2triangulation.h for \a dim = 2, or triangulation/ntriangulation.h
+ * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
  * for \a dim = 3).  For convenience, there are typedefs available for
  * these specialised classes (such as Dim2Triangulation and NTriangulation
  * respectively).

@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4triangulation.h"
 #include "enumerate/enumconstraints.h"
 #include "hypersurface/hsvectorstandard.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
 #include "surfaces/normalsurface.h" // for quadDefn[][].
+#include "triangulation/dim4.h"
 
 namespace regina {
 

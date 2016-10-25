@@ -35,7 +35,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/nhandlebody.h"
 #include "subcomplex/nspiralsolidtorus.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

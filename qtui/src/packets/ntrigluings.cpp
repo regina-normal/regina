@@ -31,13 +31,13 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "dim2/dim2triangulation.h"
 #include "packet/container.h"
 #include "packet/text.h"
 #include "progress/progresstracker.h"
 #include "snappea/snappeatriangulation.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "edittableview.h"

@@ -35,7 +35,7 @@
 #include "maths/numbertheory.h"
 #include "split/nsignature.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "ntriangulationcreator.h"

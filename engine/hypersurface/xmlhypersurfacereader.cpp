@@ -31,9 +31,9 @@
  **************************************************************************/
 
 #include <vector>
-#include "dim4/dim4triangulation.h"
 #include "hypersurface/xmlhypersurfacereader.h"
 #include "hypersurface/hscoordregistry.h"
+#include "triangulation/dim4.h"
 #include "utilities/stringutils.h"
 
 namespace regina {

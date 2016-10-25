@@ -58,7 +58,7 @@
  * and reduced triangulations) will be saved to the given output data file.
  */
 
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <cstdio>
 #include <popt.h>

@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include <thread>
-#include "dim4/dim4triangulation.h"
 #include "enumerate/doubledescription.h"
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
@@ -39,6 +38,7 @@
 #include "hypersurface/hscoordregistry.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
+#include "triangulation/dim4.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {

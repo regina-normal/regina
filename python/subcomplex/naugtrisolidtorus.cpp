@@ -33,7 +33,7 @@
 #include <boost/python.hpp>
 #include "manifold/nsfs.h"
 #include "subcomplex/naugtrisolidtorus.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using namespace boost::python;

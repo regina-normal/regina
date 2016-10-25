@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 

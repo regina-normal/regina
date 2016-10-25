@@ -39,7 +39,7 @@
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "subcomplex/nsatannulus.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

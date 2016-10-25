@@ -40,6 +40,9 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    dim2.h
+    dim3.h
+    dim4.h
     nboundarycomponent.h
     ncomponent.h
     nedge.h

@@ -34,7 +34,7 @@
 #include "angle/anglestructures.h"
 #include "surfaces/normalsurface.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/angle/testangle.h"

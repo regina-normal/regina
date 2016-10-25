@@ -37,7 +37,7 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NExampleTriangulation;

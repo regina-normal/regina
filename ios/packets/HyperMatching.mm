@@ -35,9 +35,9 @@
 #import "HyperMatching.h"
 #import "HyperViewController.h"
 #import "MDSpreadViewClasses.h"
-#import "dim4/dim4triangulation.h"
 #import "hypersurface/normalhypersurfaces.h"
 #import "maths/matrix.h"
+#import "triangulation/dim4.h"
 
 #define KEY_HYPER_MATCHING_COMPACT @"HypersurfacesMatchingCompact"
 

@@ -35,7 +35,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "manifold/nmanifold.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
 
 using regina::NManifold;

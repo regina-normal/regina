@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4triangulation.h"
+#include "triangulation/dim4.h"
 
 #include "dim4eltmovedialog.h"
 #include "reginasupport.h"

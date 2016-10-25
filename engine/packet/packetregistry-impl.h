@@ -51,17 +51,17 @@
 
 #include "packet/container.h"
 #include "packet/text.h"
-#include "triangulation/ntriangulation.h"
 #include "surfaces/normalsurfaces.h"
 #include "packet/script.h"
 #include "surfaces/surfacefilter.h"
 #include "angle/anglestructures.h"
 #include "packet/pdf.h"
-#include "dim2/dim2triangulation.h"
-#include "dim4/dim4triangulation.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "snappea/snappeatriangulation.h"
 #include "generic/triangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 namespace regina {
 

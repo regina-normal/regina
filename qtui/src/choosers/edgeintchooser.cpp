@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "edgeintchooser.h"

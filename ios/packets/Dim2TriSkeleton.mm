@@ -33,7 +33,7 @@
 #import "Dim2TriSkeleton.h"
 #import "Dim2TriangulationViewController.h"
 #import "TextHelper.h"
-#import "dim2/dim2triangulation.h"
+#import "triangulation/dim2.h"
 
 #define KEY_LAST_DIM2_SKELETON_TYPE @"ViewDim2SkeletonWhich"
 

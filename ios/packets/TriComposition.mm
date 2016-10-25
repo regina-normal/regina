@@ -57,7 +57,7 @@
 #import "subcomplex/nspiralsolidtorus.h"
 #import "subcomplex/nstandardtri.h"
 #import "subcomplex/ntxicore.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 #define INDENT1 "\t• "
 #define INDENT2 "\t\t- "

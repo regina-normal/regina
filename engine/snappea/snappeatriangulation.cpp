@@ -41,7 +41,7 @@
 #include "snappea/kernel/triangulation.h"
 #include "snappea/kernel/unix_file_io.h"
 #include "snappea/snappy/SnapPy.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 

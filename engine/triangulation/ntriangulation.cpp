@@ -37,7 +37,7 @@
 #include <sstream>
 #include <stack>
 
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 

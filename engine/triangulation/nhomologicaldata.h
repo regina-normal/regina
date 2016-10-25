@@ -43,7 +43,7 @@
 #include "output.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/rational.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/ptrutils.h"
 #include <algorithm>
 #include <memory>

@@ -30,10 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4triangulation.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
+#include "triangulation/dim4.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 

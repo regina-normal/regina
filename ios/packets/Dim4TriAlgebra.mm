@@ -34,7 +34,7 @@
 #import "TextHelper.h"
 #import "Dim4TriangulationViewController.h"
 #import "Dim4TriAlgebra.h"
-#import "dim4/dim4triangulation.h"
+#import "triangulation/dim4.h"
 #import "utilities/stringutils.h"
 
 @interface Dim4TriAlgebra () <UITableViewDataSource, UIAlertViewDelegate>

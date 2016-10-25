@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <queue>
 #include <utility>
-#include "dim2/dim2triangulation.h"
+#include "triangulation/dim2.h"
 
 namespace regina {
 

@@ -57,7 +57,7 @@
 #include "enumerate/treelp.h"
 #include "maths/matrixops.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/bitmask.h"
 #include <cstring>
 

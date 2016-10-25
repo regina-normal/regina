@@ -33,7 +33,7 @@
 #include "maths/matrix.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h" // for makeZeroVector()
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"

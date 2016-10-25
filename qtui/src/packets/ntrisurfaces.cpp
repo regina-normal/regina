@@ -35,7 +35,7 @@
 #include "manifold/nmanifold.h"
 #include "snappea/snappeatriangulation.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "ntrisurfaces.h"

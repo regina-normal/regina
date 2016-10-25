@@ -53,7 +53,7 @@
 #include "surfaces/nsvectorquadoct.h"
 #include "surfaces/nsvectorstandard.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 /**
  * Optimisation flags:

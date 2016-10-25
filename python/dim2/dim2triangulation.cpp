@@ -32,7 +32,7 @@
 
 #include "algebra/ngrouppresentation.h"
 #include "dim2/dim2isomorphism.h"
-#include "dim2/dim2triangulation.h"
+#include "triangulation/dim2.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 

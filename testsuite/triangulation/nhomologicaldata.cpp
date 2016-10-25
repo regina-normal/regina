@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nhomologicaldata.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NExampleTriangulation;

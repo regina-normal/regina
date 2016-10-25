@@ -40,7 +40,7 @@
 #import "packet/container.h"
 #import "snappea/snappeatriangulation.h"
 #import "subcomplex/nstandardtri.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 #define PROP_SPHERE 1
 #define PROP_BALL 2

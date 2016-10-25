@@ -42,11 +42,11 @@
 #include "census/dim2gluingpermsearcher.h"
 #include "census/dim4gluingpermsearcher.h"
 #include "census/ngluingpermsearcher.h"
-#include "dim2/dim2triangulation.h"
-#include "dim4/dim4triangulation.h"
 #include "packet/container.h"
 #include "packet/text.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 // Write messages tailored to the working dimension.
 #define WORD_face (dim4 ? "facet" : dim2 ? "edge" : "face")

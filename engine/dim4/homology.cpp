@@ -31,9 +31,9 @@
  **************************************************************************/
 
 #include "algebra/nabeliangroup.h"
-#include "dim4/dim4triangulation.h"
 #include "maths/matrixops.h"
 #include "maths/matrix.h"
+#include "triangulation/dim4.h"
 
 namespace regina {
 

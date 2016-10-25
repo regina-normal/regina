@@ -34,7 +34,7 @@
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "triangulation/nexampletriangulation.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 @interface NewTriangulationController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *types;

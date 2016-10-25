@@ -32,7 +32,7 @@
 
 #include <queue>
 #include "maths/rational.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include <iostream>
 

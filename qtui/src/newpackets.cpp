@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4triangulation.h"
 #include "packet/container.h"
 #include "packet/script.h"
 #include "packet/text.h"
 #include "snappea/snappeatriangulation.h"
+#include "triangulation/dim4.h"
 
 #include "newpacketdialog.h"
 #include "packetcreator.h"

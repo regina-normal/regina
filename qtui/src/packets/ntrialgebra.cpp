@@ -35,7 +35,7 @@
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "triangulation/nhomologicaldata.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "columnlayout.h"

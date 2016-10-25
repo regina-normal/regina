@@ -33,7 +33,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "subcomplex/nl31pillow.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

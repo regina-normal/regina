@@ -32,7 +32,7 @@
 
 #include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nsnappedball.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

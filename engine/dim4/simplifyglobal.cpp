@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <cstdlib>
-#include "dim4/dim4triangulation.h"
+#include "triangulation/dim4.h"
 
 // Affects the number of random 3-3 moves attempted during simplification.
 #define COEFF_3_3 10

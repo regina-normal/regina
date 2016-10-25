@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "dim2/dim2triangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"

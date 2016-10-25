@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <cctype>
 #include "split/nsignature.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/memutils.h"
 
 namespace regina {

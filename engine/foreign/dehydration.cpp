@@ -36,7 +36,7 @@
 #include "foreign/dehydration.h"
 #include "packet/container.h"
 #include "packet/text.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

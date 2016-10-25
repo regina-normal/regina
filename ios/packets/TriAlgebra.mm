@@ -36,7 +36,7 @@
 #import "TriangulationViewController.h"
 #import "TriAlgebra.h"
 #import "maths/numbertheory.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 #import "utilities/stringutils.h"
 
 // TODO: Turaev-Viro: reduce size of the label in the "Left Detail" table cells?

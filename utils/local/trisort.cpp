@@ -49,7 +49,7 @@
 #include <packet/container.h>
 #include <subcomplex/nblockedsfs.h>
 #include <subcomplex/nstandardtri.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <algorithm>
 #include <cstdlib>

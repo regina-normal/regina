@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "maths/matrix2.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {

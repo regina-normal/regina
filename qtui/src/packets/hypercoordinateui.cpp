@@ -31,9 +31,9 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "dim4/dim4triangulation.h"
 #include "hypersurface/normalhypersurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 // UI includes:
 #include "coordinatechooser.h"

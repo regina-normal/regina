@@ -37,9 +37,9 @@
 #import "HyperViewController.h"
 #import "TextHelper.h"
 #import "MDSpreadViewClasses.h"
-#import "dim4/dim4triangulation.h"
 #import "hypersurface/normalhypersurfaces.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
+#import "triangulation/dim4.h"
 
 #define KEY_HYPER_COORDS_COMPACT @"HypersurfacesCoordsCompact"
 

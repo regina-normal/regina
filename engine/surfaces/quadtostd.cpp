@@ -40,7 +40,7 @@
 #include "surfaces/nsvectorquad.h"
 #include "surfaces/nsvectoranstandard.h"
 #include "surfaces/nsvectorquadoct.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/bitmask.h"
 #include <iterator>
 #include <vector>

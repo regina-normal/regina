@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "split/nsignature.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 

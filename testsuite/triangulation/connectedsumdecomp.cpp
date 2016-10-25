@@ -39,7 +39,7 @@
 #include "packet/container.h"
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/triangulation/testtriangulation.h"

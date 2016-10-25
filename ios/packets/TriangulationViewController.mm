@@ -32,7 +32,7 @@
 
 #import "TriangulationViewController.h"
 #import "TextHelper.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 @implementation TriangulationViewController
 

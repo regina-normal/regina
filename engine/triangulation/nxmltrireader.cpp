@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/nxmlalgebrareader.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "triangulation/nxmltrireader.h"
 
 namespace regina {

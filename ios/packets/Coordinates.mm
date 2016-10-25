@@ -31,11 +31,11 @@
  **************************************************************************/
 
 #import "Coordinates.h"
-#import "dim4/dim4triangulation.h"
 #import "generic/facenumbering.h"
 #import "hypersurface/normalhypersurfaces.h"
 #import "surfaces/normalsurfaces.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
+#import "triangulation/dim4.h"
 
 using regina::HyperCoords;
 using regina::NormalHypersurfaces;

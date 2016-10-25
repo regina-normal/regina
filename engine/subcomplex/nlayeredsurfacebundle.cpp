@@ -35,7 +35,7 @@
 #include "subcomplex/nlayering.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

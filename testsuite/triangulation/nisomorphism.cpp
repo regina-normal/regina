@@ -36,7 +36,7 @@
 #include "algebra/nabeliangroup.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NAbelianGroup;

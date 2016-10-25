@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <sstream>
 #include "census/dim4gluingpermsearcher.h"
-#include "dim4/dim4triangulation.h"
+#include "triangulation/dim4.h"
 #include "utilities/memutils.h"
 
 // If this symbol is uncommented, then the algorithm will become fairly

@@ -36,7 +36,7 @@
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 #include <thread>
 

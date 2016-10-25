@@ -31,8 +31,8 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "dim2/dim2triangulation.h"
 #include "packet/container.h"
+#include "triangulation/dim2.h"
 
 // UI includes:
 #include "dim2trigluings.h"

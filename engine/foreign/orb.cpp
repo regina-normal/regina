@@ -57,7 +57,7 @@
 
 #include "foreign/casson.h"
 #include "foreign/orb.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
 namespace regina {

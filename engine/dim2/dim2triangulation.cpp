@@ -34,7 +34,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include "dim2/dim2triangulation.h"
+#include "triangulation/dim2.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {

@@ -31,9 +31,9 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "dim2/dim2triangulation.h"
 #include "maths/numbertheory.h"
 #include "snappea/snappeatriangulation.h"
+#include "triangulation/dim2.h"
 
 // UI includes:
 #include "edittreeview.h"

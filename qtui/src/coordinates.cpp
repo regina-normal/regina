@@ -30,10 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4triangulation.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 #include "reginaprefset.h"
 

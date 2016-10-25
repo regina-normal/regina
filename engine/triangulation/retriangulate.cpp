@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "progress/progresstracker.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include <condition_variable>
 #include <mutex>
 #include <queue>

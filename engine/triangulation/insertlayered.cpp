@@ -32,7 +32,7 @@
 
 #include "manifold/nlensspace.h"
 #include "manifold/nsfs.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

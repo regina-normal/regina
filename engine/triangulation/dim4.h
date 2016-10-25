@@ -30,74 +30,19 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nsimplesurfacebundle.h"
-#include "triangulation/dim3.h"
+/*! \file triangulation/dim4.h
+ *  \brief Includes all headers for working with 4-dimensional triangulations.
+ *  This includes headers for the main class Triangulation<4>, as well as the
+ *  face classes Face<4,\a subdim> and the component classes Component<4> and
+ *  Dim4BoundaryComponent.
+ */
 
-namespace regina {
+#ifndef __DIM4_H
+#ifndef __DOXYGEN
+#define __DIM4_H
+#endif
 
-const int NSimpleSurfaceBundle::S2xS1 = 1;
-const int NSimpleSurfaceBundle::S2xS1_TWISTED = 2;
-const int NSimpleSurfaceBundle::RP2xS1 = 3;
+#include "dim4/dim4triangulation.h"
 
-NTriangulation* NSimpleSurfaceBundle::construct() const {
-    NTriangulation* ans = new NTriangulation();
-
-    if (type_ == S2xS1) {
-        ans->insertLayeredLensSpace(0, 1);
-    } else if (type_ == S2xS1_TWISTED) {
-        // Taken from section 3.5.1 of Ben Burton's PhD thesis.
-        NTetrahedron* r = ans->newTetrahedron();
-        NTetrahedron* s = ans->newTetrahedron();
-
-        r->join(1, s, Perm<4>());
-        r->join(3, s, Perm<4>());
-        r->join(2, s, Perm<4>(3, 2, 0, 1));
-        s->join(2, r, Perm<4>(3, 2, 0, 1));
-    } else if (type_ == RP2xS1) {
-        // Taken from section 3.5.1 of Ben Burton's PhD thesis.
-        NTetrahedron* r = ans->newTetrahedron();
-        NTetrahedron* s = ans->newTetrahedron();
-        NTetrahedron* t = ans->newTetrahedron();
-
-        s->join(0, r, Perm<4>(0, 1, 2, 3));
-        s->join(3, r, Perm<4>(3, 0, 1, 2));
-        s->join(1, t, Perm<4>(3, 0, 1, 2));
-        s->join(2, t, Perm<4>(0, 1, 2, 3));
-        r->join(1, t, Perm<4>(2, 3, 0, 1));
-        r->join(3, t, Perm<4>(2, 3, 0, 1));
-    }
-
-    return ans;
-}
-
-NAbelianGroup* NSimpleSurfaceBundle::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
-    ans->addRank();
-    if (type_ == RP2xS1)
-        ans->addTorsionElement(2);
-    return ans;
-}
-
-std::ostream& NSimpleSurfaceBundle::writeName(std::ostream& out) const {
-    if (type_ == S2xS1)
-        out << "S2 x S1";
-    else if (type_ == S2xS1_TWISTED)
-        out << "S2 x~ S1";
-    else if (type_ == RP2xS1)
-        out << "RP2 x S1";
-    return out;
-}
-
-std::ostream& NSimpleSurfaceBundle::writeTeXName(std::ostream& out) const {
-    if (type_ == S2xS1)
-        out << "S^2 \\times S^1";
-    else if (type_ == S2xS1_TWISTED)
-        out << "S^2 \\twisted S^1";
-    else if (type_ == RP2xS1)
-        out << "\\mathbb{R}P^2 \\times S^1";
-    return out;
-}
-
-} // namespace regina
+#endif
 

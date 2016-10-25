@@ -37,7 +37,7 @@
 #import "TriGluings.h"
 #import "packet/container.h"
 #import "progress/progresstracker.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 #pragma mark - Table cell
 

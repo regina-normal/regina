@@ -37,8 +37,8 @@
 #ifndef __HYPERCOODINATEUI_H
 #define __HYPERCOODINATEUI_H
 
-#include "dim4/dim4triangulation.h" // To avoid generic Triangulation<4>.
 #include "hypersurface/normalhypersurfaces.h"
+#include "triangulation/dim4.h" // To avoid generic Triangulation<4>.
 
 #include "../packettabui.h"
 #include "coordinates.h"

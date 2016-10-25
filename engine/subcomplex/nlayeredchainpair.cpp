@@ -34,7 +34,7 @@
 #include "manifold/nsfs.h"
 #include "maths/matrix.h"
 #include "subcomplex/nlayeredchainpair.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

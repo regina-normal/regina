@@ -36,7 +36,7 @@
 #include "census/ngluingpermsearcher.h"
 #include "file/globaldirs.h"
 #include "packet/container.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::BoolSet;

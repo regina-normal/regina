@@ -33,7 +33,7 @@
 // Regina core includes:
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "coordinatechooser.h"

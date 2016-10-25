@@ -32,7 +32,7 @@
 
 #include <algorithm>
 #include "manifold/nsfs.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 
 namespace regina {

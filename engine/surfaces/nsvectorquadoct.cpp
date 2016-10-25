@@ -37,7 +37,7 @@
 #include "surfaces/nsvectoranstandard.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

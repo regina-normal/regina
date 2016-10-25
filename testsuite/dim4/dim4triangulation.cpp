@@ -34,15 +34,15 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "dim2/dim2triangulation.h"
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4isomorphism.h"
-#include "dim4/dim4triangulation.h"
 #include "manifold/nmanifold.h"
 #include "packet/container.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/generictriangulation.h"

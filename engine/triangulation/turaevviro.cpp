@@ -40,7 +40,7 @@
 #include "maths/cyclotomic.h"
 #include "maths/numbertheory.h"
 #include "treewidth/treedecomposition.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/sequence.h"
 #include <gmpxx.h>
 #include <map>

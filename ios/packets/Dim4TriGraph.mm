@@ -35,8 +35,8 @@
 #import "Dim4TriangulationViewController.h"
 #import "Dim4TriGraph.h"
 #import "dim4/dim4facetpairing.h"
-#import "dim4/dim4triangulation.h"
 #import "treewidth/treedecomposition.h"
+#import "triangulation/dim4.h"
 #import "gvc.h"
 
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;

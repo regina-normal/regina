@@ -39,7 +39,7 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

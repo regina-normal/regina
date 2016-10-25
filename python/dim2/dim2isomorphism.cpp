@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "dim2/dim2isomorphism.h"
-#include "dim2/dim2triangulation.h"
+#include "triangulation/dim2.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 

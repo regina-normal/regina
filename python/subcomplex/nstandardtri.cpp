@@ -34,7 +34,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/nmanifold.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using namespace boost::python;

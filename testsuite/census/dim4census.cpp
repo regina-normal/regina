@@ -33,8 +33,8 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/dim4gluingpermsearcher.h"
-#include "dim4/dim4triangulation.h"
 #include "packet/container.h"
+#include "triangulation/dim4.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::Dim4FacetPairing;

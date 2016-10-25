@@ -37,7 +37,7 @@
 #import "TriGraph.h"
 #import "treewidth/treedecomposition.h"
 #import "triangulation/nfacepairing.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 #import "gvc.h"
 
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
