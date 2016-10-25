@@ -102,12 +102,12 @@ GENERATE_MAN         = NO
 # Preprocessor related options:
 
 ENABLE_PREPROCESSING = YES
-MACRO_EXPANSION      = NO
+MACRO_EXPANSION      = YES
+EXPAND_ONLY_PREDEF   = YES
+PREDEFINED           = __DOXYGEN REGINA_API= REGINA_DEPRECATED=
 
 SEARCH_INCLUDES      = YES
 INCLUDE_PATH         = @PROJECT_SOURCE_DIR@/engine
-
-PREDEFINED           = __DOXYGEN
 
 # External reference options:
 
