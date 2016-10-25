@@ -32,7 +32,7 @@
 
 #include <enumerate/treetraversal.h>
 #include <surfaces/normalsurfaces.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 using namespace regina;
 
