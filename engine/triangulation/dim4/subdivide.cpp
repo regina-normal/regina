@@ -37,12 +37,12 @@
 
 namespace regina {
 
-void Dim4Triangulation::barycentricSubdivision() {
+void Triangulation<4>::barycentricSubdivision() {
     unsigned long nOldPent = size();
     if (nOldPent == 0)
         return;
 
-    Dim4Triangulation staging;
+    Triangulation<4> staging;
     ChangeEventSpan span1(&staging);
 
     Dim4Pentachoron** newPent = new Dim4Pentachoron*[nOldPent * 120];
@@ -198,7 +198,7 @@ namespace {
     }
 } // anonymous namespace
 
-bool Dim4Triangulation::idealToFinite() {
+bool Triangulation<4>::idealToFinite() {
     bool idVrts(false);
     for (unsigned long i=0; i<countVertices(); i++)
         if (shouldTruncate(vertex(i))) {
@@ -207,7 +207,7 @@ bool Dim4Triangulation::idealToFinite() {
         }
     if (!idVrts) return false;
 // * * * Create new triangulation * * *
-    Dim4Triangulation* newTri( new Dim4Triangulation );
+    Triangulation<4>* newTri( new Triangulation<4> );
 #ifdef DEBUG
     std::cerr << "Performing idealToFinite()\n";
 #endif
@@ -591,7 +591,7 @@ bool Dim4Triangulation::idealToFinite() {
                             incPerm0 = Perm<5>(triInc2[1],triInc2[2],triInc2[0], 
                                 triInc2[3], triInc2[4] );
                         } else {
-                            std::cout<<"Dim4Triangulation::idealToFinite()"<<
+                            std::cout<<"Triangulation<4>::idealToFinite()"<<
                                         " Error 1."<<std::endl;
                             exit(1);
                         }
@@ -623,7 +623,7 @@ bool Dim4Triangulation::idealToFinite() {
                             incPerm1 = Perm<5>(triInc3[1],triInc3[2],triInc3[0], 
                                               triInc3[3], triInc3[4] );
                         } else {
-                            std::cout<<"Dim4Triangulation::idealToFinite()"<<
+                            std::cout<<"Triangulation<4>::idealToFinite()"<<
                                         " Error 2."<<std::endl;
                             exit(1);
                         }

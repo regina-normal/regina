@@ -45,10 +45,10 @@
 #include <QLabel>
 #include <QLayout>
 
-using regina::Dim4Triangulation;
 using regina::Packet;
+using regina::Triangulation;
 
-Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Dim4Triangulation* packet,
+Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Triangulation<4>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
@@ -56,7 +56,7 @@ Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Dim4Triangulation* packet,
         tr("&Homology && Fund. Group"));
 }
 
-Dim4TriHomologyFundUI::Dim4TriHomologyFundUI(regina::Dim4Triangulation* packet,
+Dim4TriHomologyFundUI::Dim4TriHomologyFundUI(regina::Triangulation<4>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();

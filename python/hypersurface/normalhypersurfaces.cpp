@@ -47,21 +47,21 @@ using regina::NormalHypersurfaces;
 
 namespace {
     // Write manual overload wrappers since these are static member functions.
-    NormalHypersurfaces* unified_2(regina::Dim4Triangulation* owner,
+    NormalHypersurfaces* unified_2(regina::Triangulation<4>* owner,
             regina::HyperCoords coords) {
         return NormalHypersurfaces::enumerate(owner, coords);
     }
-    NormalHypersurfaces* unified_3(regina::Dim4Triangulation* owner,
+    NormalHypersurfaces* unified_3(regina::Triangulation<4>* owner,
             regina::HyperCoords coords, regina::HyperList which) {
         return NormalHypersurfaces::enumerate(owner, coords, which);
     }
-    NormalHypersurfaces* unified_4(regina::Dim4Triangulation* owner,
+    NormalHypersurfaces* unified_4(regina::Triangulation<4>* owner,
             regina::HyperCoords coords, regina::HyperList which,
             regina::HyperAlg algHints) {
         return NormalHypersurfaces::enumerate(owner, coords, which,
             algHints);
     }
-    NormalHypersurfaces* unified_5(regina::Dim4Triangulation* owner,
+    NormalHypersurfaces* unified_5(regina::Triangulation<4>* owner,
             regina::HyperCoords coords, regina::HyperList which,
             regina::HyperAlg algHints, regina::ProgressTracker* tracker) {
         return NormalHypersurfaces::enumerate(owner, coords, which,

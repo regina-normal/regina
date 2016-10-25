@@ -53,7 +53,7 @@
 #include <QToolBar>
 
 using regina::Packet;
-using regina::Dim4Triangulation;
+using regina::Triangulation;
 
 namespace {
     /**
@@ -72,7 +72,7 @@ namespace {
     QRegExp reFacet("^[0-4][0-4][0-4][0-4]$");
 }
 
-Dim4GluingsModel::Dim4GluingsModel(Dim4Triangulation* tri, bool readWrite) :
+Dim4GluingsModel::Dim4GluingsModel(Triangulation<4>* tri, bool readWrite) :
         tri_(tri), isReadWrite_(readWrite) {
 }
 
@@ -302,7 +302,7 @@ regina::Perm<5> Dim4GluingsModel::facetStringToPerm(int srcFacet,
         regina::Dim4Tetrahedron::ordering(srcFacet).inverse();
 }
 
-Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
+Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Triangulation<4>* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of facet gluings.

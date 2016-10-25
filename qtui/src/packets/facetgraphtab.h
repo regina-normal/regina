@@ -55,7 +55,6 @@ namespace regina {
 
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**
@@ -112,10 +111,10 @@ class Dim3FaceGraphData : public FacetGraphData {
 
 class Dim4FacetGraphData : public FacetGraphData {
     private:
-        regina::Dim4Triangulation* tri_;
+        regina::Triangulation<4>* tri_;
 
     public:
-        Dim4FacetGraphData(regina::Dim4Triangulation* tri) : tri_(tri) {}
+        Dim4FacetGraphData(regina::Triangulation<4>* tri) : tri_(tri) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);

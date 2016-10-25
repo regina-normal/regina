@@ -225,7 +225,7 @@ void addDim2Triangulation() {
         .def("dumpConstruction", &Triangulation<2>::dumpConstruction)
         .staticmethod("fromIsoSig")
         .staticmethod("isoSigComponentSize")
-        .attr("typeID") = regina::PACKET_DIM2TRIANGULATION;
+        .attr("typeID") = regina::PACKET_TRIANGULATION2;
     ;
 
     implicitly_convertible<SafeHeldType<Triangulation<2>>,

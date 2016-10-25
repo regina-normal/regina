@@ -40,7 +40,7 @@
 namespace regina {
 
 LargeInteger HSVectorStandard::edgeWeight(
-        size_t edgeIndex, const Dim4Triangulation* triang) const {
+        size_t edgeIndex, const Triangulation<4>* triang) const {
     // Find a pentachoron next to the edge in question.
     const Dim4EdgeEmbedding& emb = triang->edge(edgeIndex)->front();
     long pentIndex = emb.pentachoron()->index();
@@ -63,12 +63,12 @@ LargeInteger HSVectorStandard::edgeWeight(
 }
 
 NormalHypersurfaceVector* HSVectorStandard::makeZeroVector(
-        const Dim4Triangulation* triangulation) {
+        const Triangulation<4>* triangulation) {
     return new HSVectorStandard(15 * triangulation->size());
 }
 
 MatrixInt* HSVectorStandard::makeMatchingEquations(
-        const Dim4Triangulation* triangulation) {
+        const Triangulation<4>* triangulation) {
     size_t nCoords = 15 * triangulation->size();
     // Seven equations per non-boundary facet.
     // T_boundary + 2 T_internal = 5 P
@@ -82,7 +82,7 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
     int i;
     size_t pent0, pent1;
     Perm<5> perm0, perm1;
-    for (Dim4Triangulation::TetrahedronIterator tit =
+    for (Triangulation<4>::TetrahedronIterator tit =
             triangulation->tetrahedra().begin();
             tit != triangulation->tetrahedra().end(); tit++) {
         if (! (*tit)->isBoundary()) {
@@ -128,7 +128,7 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
 }
 
 EnumConstraints* HSVectorStandard::makeEmbeddedConstraints(
-        const Dim4Triangulation* triangulation) {
+        const Triangulation<4>* triangulation) {
     EnumConstraints* ans = new EnumConstraints(30 * triangulation->size());
 
     size_t base = 5;

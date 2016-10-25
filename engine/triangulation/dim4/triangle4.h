@@ -53,7 +53,6 @@ class Dim4BoundaryComponent;
 
 typedef Component<4> Dim4Component;
 typedef Simplex<4> Dim4Pentachoron;
-typedef Triangulation<4> Dim4Triangulation;
 typedef Face<4, 0> Dim4Vertex;
 typedef Face<4, 1> Dim4Edge;
 

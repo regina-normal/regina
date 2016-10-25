@@ -64,7 +64,6 @@ template <int> class Triangulation;
 // We *must* declare the specialisation here; otherwise this header has
 // the side-effect of instantiating Trianglation<4> using the generic template.
 template <> class Triangulation<4>;
-typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup hypersurface
@@ -183,7 +182,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal hypersurface list is created).
          */
-        static NormalHypersurfaces* enumerate(Dim4Triangulation* owner,
+        static NormalHypersurfaces* enumerate(Triangulation<4>* owner,
             HyperCoords coords,
             HyperList which = HS_LIST_DEFAULT,
             HyperAlg algHints = HS_ALG_DEFAULT,
@@ -240,7 +239,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
          *
          * @return the triangulation in which these hypersurfaces live.
          */
-        Dim4Triangulation* triangulation() const;
+        Triangulation<4>* triangulation() const;
 
         /**
          * Returns the number of hypersurfaces stored in this list.
@@ -439,7 +438,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                 std::output_iterator_tag, NormalHypersurfaceVector*> {
             NormalHypersurfaces* list_;
                 /**< The list into which hypersurfaces will be inserted. */
-            Dim4Triangulation* owner_;
+            Triangulation<4>* owner_;
                 /**< The triangulation in which the hypersurfaces to be
                  *   inserted are contained. */
 
@@ -453,7 +452,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
              * to be inserted are contained.
              */
             HypersurfaceInserter(NormalHypersurfaces& list,
-                Dim4Triangulation* owner);
+                Triangulation<4>* owner);
             /**
              * Creates a new output iterator that is a clone of the
              * given iterator.
@@ -527,7 +526,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
             private:
                 NormalHypersurfaces* list_;
                     /**< The hypersurface list to be filled. */
-                Dim4Triangulation* triang_;
+                Triangulation<4>* triang_;
                     /**< The triangulation in which these hypersurfaces lie. */
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
@@ -546,7 +545,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * these capabilities are not required.
                  */
                 Enumerator(NormalHypersurfaces* list,
-                    Dim4Triangulation* triang, ProgressTracker* tracker);
+                    Triangulation<4>* triang, ProgressTracker* tracker);
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -684,7 +683,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
  * @return a new zero vector of the correct class and length.
  */
 REGINA_API NormalHypersurfaceVector* makeZeroVector(
-    const Dim4Triangulation* triangulation, HyperCoords coords);
+    const Triangulation<4>* triangulation, HyperCoords coords);
 /**
  * Creates a new set of normal hypersurface matching equations for the
  * given triangulation using the given coordinate system.
@@ -703,7 +702,7 @@ REGINA_API NormalHypersurfaceVector* makeZeroVector(
  * @return a newly allocated set of matching equations.
  */
 REGINA_API MatrixInt* makeMatchingEquations(
-    const Dim4Triangulation* triangulation, HyperCoords coords);
+    const Triangulation<4>* triangulation, HyperCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
@@ -719,7 +718,7 @@ REGINA_API MatrixInt* makeMatchingEquations(
  * @return a newly allocated set of constraints.
  */
 REGINA_API EnumConstraints* makeEmbeddedConstraints(
-    const Dim4Triangulation* triangulation, HyperCoords coords);
+    const Triangulation<4>* triangulation, HyperCoords coords);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -838,7 +837,7 @@ inline NormalHypersurfaces::VectorIterator
 }
 
 inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
-        NormalHypersurfaces& list, Dim4Triangulation* owner) :
+        NormalHypersurfaces& list, Triangulation<4>* owner) :
         list_(&list), owner_(owner) {
 }
 
@@ -891,7 +890,7 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
 }
 
 inline NormalHypersurfaces::Enumerator::Enumerator(
-        NormalHypersurfaces* list, Dim4Triangulation* triang,
+        NormalHypersurfaces* list, Triangulation<4>* triang,
         ProgressTracker* tracker) :
         list_(list), triang_(triang), tracker_(tracker) {
 }

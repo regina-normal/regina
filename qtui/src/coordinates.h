@@ -50,7 +50,6 @@ namespace regina {
     class NormalHypersurface;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 }
 
 namespace Coordinates {
@@ -87,7 +86,7 @@ namespace Coordinates {
      * system.
      */
     size_t numColumns(regina::HyperCoords coordSystem,
-        regina::Dim4Triangulation* tri);
+        regina::Triangulation<4>* tri);
 
     /**
      * Return a column header for the given coordinate of the given
@@ -109,7 +108,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnName(regina::HyperCoords coordSystem,
-        size_t whichCoord, regina::Dim4Triangulation* tri = 0);
+        size_t whichCoord, regina::Triangulation<4>* tri = 0);
 
     /**
      * Return a column description for the given coordinate of the given
@@ -131,7 +130,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnDesc(regina::HyperCoords coordSystem, size_t whichCoord,
-        const QObject *context, regina::Dim4Triangulation* tri = 0);
+        const QObject *context, regina::Triangulation<4>* tri = 0);
 
     /**
      * Return a particular coordinate of a normal surface in the given

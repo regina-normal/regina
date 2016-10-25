@@ -90,7 +90,7 @@ namespace {
     }
 }
 
-Dim4EltMoveDialog::Dim4EltMoveDialog(QWidget* parent, regina::Dim4Triangulation* useTri) :
+Dim4EltMoveDialog::Dim4EltMoveDialog(QWidget* parent, regina::Triangulation<4>* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     setWindowTitle(tr("Elementary Move"));

@@ -54,7 +54,6 @@ using regina::Dim4ExampleTriangulation;
 using regina::Dim4Isomorphism;
 using regina::Dim4Pentachoron;
 using regina::Dim4Tetrahedron;
-using regina::Dim4Triangulation;
 using regina::Dim4Vertex;
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
@@ -101,82 +100,82 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
     private:
         // Trivial:
-        Dim4Triangulation empty;
+        Triangulation<4> empty;
             /**< The empty triangulation. */
 
         // Closed orientable:
-        Dim4Triangulation s4_id;
+        Triangulation<4> s4_id;
             /**< The 4-sphere, with two pentachora whose boundaries are
                  identified according to the identity map. */
-        Dim4Triangulation s4_doubleConeS3;
+        Triangulation<4> s4_doubleConeS3;
             /**< A double cone over the 3-sphere. */
-        Dim4Triangulation s3xs1;
+        Triangulation<4> s3xs1;
             /**< The product S^3 x S^1. */
 
         // Closed non-orientable:
-        Dim4Triangulation rp4;
+        Triangulation<4> rp4;
             /**< Real projective 4-space, built from four pentachora. */
-        Dim4Triangulation s3xs1Twisted;
+        Triangulation<4> s3xs1Twisted;
             /**< The twisted product S^3 x~ S^1. */
 
         // Bounded orientable:
-        Dim4Triangulation ball_singlePent;
+        Triangulation<4> ball_singlePent;
             /**< A single pentachoron with no facet gluings. */
-        Dim4Triangulation ball_foldedPent;
+        Triangulation<4> ball_foldedPent;
             /**< A single pentachoron with two facets folded together. */
-        Dim4Triangulation ball_singleConeS3;
+        Triangulation<4> ball_singleConeS3;
             /**< A single cone over the 3-sphere. */
-        Dim4Triangulation ball_layerAndFold;
+        Triangulation<4> ball_layerAndFold;
             /**< Layer one pentachoron onto another over a single edge.
                  Then fold together the two remaining facets of one of the
                  pentachora. */
 
         // Ideal orientable:
-        Dim4Triangulation idealPoincareProduct;
+        Triangulation<4> idealPoincareProduct;
             /**< An ideal triangulation of the product P x I, where
                  P is the Poincare homology sphere. */
-        Dim4Triangulation idealCappellShaneson;
+        Triangulation<4> idealCappellShaneson;
             /**< The simplest triangulated non-trivial 2-knot exterior */
 
         // Both ideal and real boundary:
-        Dim4Triangulation mixedPoincareProduct;
+        Triangulation<4> mixedPoincareProduct;
             /**< A triangulation of the product P x I with one real and one
                  ideal boundary, where P is the Poincare homology sphere. */
 
         // Invalid triangulations:
-        Dim4Triangulation idealFigEightProduct;
+        Triangulation<4> idealFigEightProduct;
             /**< A double cone over the figure eight knot complement.  All
                  three vertices should have links that are invalid because
                  they are closed and cusped.  The edges joining each cone
                  point to the centre vertex should be invalid because they
                  have torus links. */
-        Dim4Triangulation mixedFigEightProduct;
+        Triangulation<4> mixedFigEightProduct;
             /**< A single cone over the figure eight knot complement.
                  Both vertices should be invalid; one has a closed and cusped
                  link, and the other has an invalid 3-manifold as its link.
                  The edge joining both vertices is invalid also, with a
                  torus link. */
-        Dim4Triangulation pillow_twoCycle;
+        Triangulation<4> pillow_twoCycle;
             /**< A "tetrahedral pillow" whose two facets are identified
                  according to a permutation in S_4, which in this case is
                  a pair swap. */
-        Dim4Triangulation pillow_threeCycle;
+        Triangulation<4> pillow_threeCycle;
             /**< A "tetrahedral pillow" whose two facets are identified
                  according to a permutation in S_4, which in this case is
                  a 3-cycle. */
-        Dim4Triangulation pillow_fourCycle;
+        Triangulation<4> pillow_fourCycle;
             /**< A "tetrahedral pillow" whose two facets are identified
                  according to a permutation in S_4, which in this case is
                  a 4-cycle. */
 
         // Disconnected triangulations:
-        Dim4Triangulation disjoint2;
+        Triangulation<4> disjoint2;
             /**< A disjoint union of two triangulations. */
-        Dim4Triangulation disjoint3;
+        Triangulation<4> disjoint3;
             /**< A disjoint union of three triangulations. */
 
     public:
-        void copyAndDelete(Dim4Triangulation& dest, Dim4Triangulation* source,
+        void copyAndDelete(Triangulation<4>& dest, Triangulation<4>* source,
                 const char* name) {
             dest.insertTriangulation(*source);
             dest.setLabel(name);
@@ -356,7 +355,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             testManualAll(verifyOrient);
         }
 
-        void verifyValid(const Dim4Triangulation& tri) {
+        void verifyValid(const Triangulation<4>& tri) {
             if (! tri.isValid()) {
                 CPPUNIT_FAIL("Triangulation " + tri.label() +
                     " is reported as invalid.");
@@ -387,7 +386,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 }
         }
 
-        void verifyInvalid(const Dim4Triangulation& tri,
+        void verifyInvalid(const Triangulation<4>& tri,
                 int invalidVertices, int invalidEdges,
                 int invalidEdgeLinks, int invalidEdgeIDs,
                 int invalidTriangles) {
@@ -480,13 +479,13 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyInvalid(pillow_fourCycle, 0, 1, 1, 1, 0);
         }
 
-        void verifyConnected(const Dim4Triangulation& tri) {
+        void verifyConnected(const Triangulation<4>& tri) {
             if (! tri.isConnected())
                 CPPUNIT_FAIL("Triangulation " + tri.label() +
                     " is reported as disconnected.");
         }
 
-        void verifyDisconnected(const Dim4Triangulation& tri) {
+        void verifyDisconnected(const Triangulation<4>& tri) {
             if (tri.isConnected())
                 CPPUNIT_FAIL("Triangulation " + tri.label() +
                     " is reported as connected.");
@@ -515,7 +514,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyDisconnected(disjoint3);
         }
 
-        void verifyOrientable(const Dim4Triangulation& tri,
+        void verifyOrientable(const Triangulation<4>& tri,
                 bool isOrientable = true) {
             if (isOrientable) {
                 if (! tri.isOrientable())
@@ -549,7 +548,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyOrientable(pillow_fourCycle, false);
         }
 
-        void verifyBoundary(const Dim4Triangulation& tri,
+        void verifyBoundary(const Triangulation<4>& tri,
                 bool realBdry = false, int idealVertices = 0,
                 bool invalidVertices = false, bool valid = true) {
             bool closed = ! (realBdry || idealVertices || invalidVertices);
@@ -632,7 +631,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyBoundary(pillow_fourCycle, false, 0, false, false);
         }
 
-        void verifyBoundaryCount(const Dim4Triangulation& tri, unsigned nBdry) {
+        void verifyBoundaryCount(const Triangulation<4>& tri, unsigned nBdry) {
             unsigned long ans = tri.countBoundaryComponents();
             if (ans != nBdry) {
                 std::ostringstream msg;
@@ -643,7 +642,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
         }
 
-        void verifyBoundaryTri(const Dim4Triangulation& tri,
+        void verifyBoundaryTri(const Triangulation<4>& tri,
                 unsigned whichBdry, const char* bdryManifold,
                 bool makeBdryFinite = false) {
             std::string ans;
@@ -681,7 +680,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
         }
 
-        void verifyBoundaryH1(const Dim4Triangulation& tri,
+        void verifyBoundaryH1(const Triangulation<4>& tri,
                 unsigned whichBdry, const char* h1) {
             // For boundaries where we have little hope of recognising the
             // underlying triangulation or manifold.
@@ -757,7 +756,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyBoundaryCount(pillow_fourCycle, 0);
         }
 
-        static void verifyBoundaryTetrahedra(Dim4Triangulation* tri) {
+        static void verifyBoundaryTetrahedra(Triangulation<4>* tri) {
             unsigned long found = 0;
 
             unsigned long i, j;
@@ -798,7 +797,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             testManualAll(verifyBoundaryTetrahedra);
         }
 
-        void verifyBoundaryInclusions(const Dim4Triangulation& tri) {
+        void verifyBoundaryInclusions(const Triangulation<4>& tri) {
             Dim4BoundaryComponent* bc;
             const NTetrahedron *tet3, *adj3;
             Dim4Tetrahedron *tet4, *adj4;
@@ -843,7 +842,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyBoundaryInclusions(ball_layerAndFold);
         }
 
-        void verifyLinkCount(const Dim4Triangulation& tri, unsigned nVert) {
+        void verifyLinkCount(const Triangulation<4>& tri, unsigned nVert) {
             if (tri.countVertices() != nVert) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.label()
@@ -853,7 +852,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
         }
 
-        void verifyLinksSpheres(const Dim4Triangulation& tri, unsigned nVert) {
+        void verifyLinksSpheres(const Triangulation<4>& tri, unsigned nVert) {
             verifyLinkCount(tri, nVert);
 
             for (unsigned i = 0; i < nVert; ++i) {
@@ -886,7 +885,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
         }
 
-        void verifyLinksBalls(const Dim4Triangulation& tri, unsigned nVert) {
+        void verifyLinksBalls(const Triangulation<4>& tri, unsigned nVert) {
             verifyLinkCount(tri, nVert);
 
             for (unsigned i = 0; i < nVert; ++i) {
@@ -919,7 +918,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
         }
 
-        void verifyLink(const Dim4Triangulation& tri,
+        void verifyLink(const Triangulation<4>& tri,
                 unsigned whichVertex, const char* manifold) {
             std::string link;
 
@@ -951,7 +950,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
         }
 
-        void verifyLinkH1(const Dim4Triangulation& tri,
+        void verifyLinkH1(const Triangulation<4>& tri,
                 unsigned whichVertex, const char* h1) {
             // For links where we have little hope of recognising the
             // underlying triangulation or manifold.
@@ -1025,7 +1024,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyLinksSpheres(pillow_fourCycle, 2);
         }
 
-        void verifyEulerChar(const Dim4Triangulation& tri,
+        void verifyEulerChar(const Triangulation<4>& tri,
                 long expectedManifold, long expectedTri) {
             long eulerManifold = tri.eulerCharManifold();
             long eulerTri = tri.eulerCharTri();
@@ -1047,7 +1046,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
         }
 
-        void verifyEulerCharTri(const Dim4Triangulation& tri,
+        void verifyEulerCharTri(const Triangulation<4>& tri,
                 long expectedTri) {
             long eulerTri = tri.eulerCharTri();
 
@@ -1080,7 +1079,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyEulerCharTri(pillow_fourCycle, 0);
         }
 
-        void verifyHomologyH1(const Dim4Triangulation& tri, const char* H1) {
+        void verifyHomologyH1(const Triangulation<4>& tri, const char* H1) {
             std::string ans = tri.homology().str();
             if (ans != H1) {
                 std::ostringstream msg;
@@ -1109,7 +1108,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyHomologyH1(mixedFigEightProduct, "Z");
         }
 
-        void verifyFundGroup(const Dim4Triangulation& tri, const char* group) {
+        void verifyFundGroup(const Triangulation<4>& tri, const char* group) {
             std::string ans = tri.fundamentalGroup().recogniseGroup();
             if (ans != group) {
                 std::string showAns = ans;
@@ -1147,12 +1146,12 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
         }
 
-        static void verifyDoubleCover(Dim4Triangulation* tri) {
+        static void verifyDoubleCover(Triangulation<4>* tri) {
             // PRE: tri is either empty or connected.
             if (! tri->isConnected())
                 return;
 
-            Dim4Triangulation cover(*tri);
+            Triangulation<4> cover(*tri);
             cover.makeDoubleCover();
 
             if (tri->isEmpty()) {
@@ -1174,7 +1173,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                Dim4Triangulation* child = static_cast<Dim4Triangulation*>(
+                Triangulation<4>* child = static_cast<Triangulation<4>*>(
                     parent.firstChild());
                 while (child) {
                     if (! tri->isIsomorphicTo(*child).get()) {
@@ -1186,7 +1185,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    child = static_cast<Dim4Triangulation*>(child->nextSibling());
+                    child = static_cast<Triangulation<4>*>(child->nextSibling());
                 }
             } else {
                 // We should come away with a proper connected double cover.
@@ -1271,8 +1270,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             testManualAll(verifyDoubleCover);
         }
 
-        static void verifyBary(Dim4Triangulation* tri) {
-            Dim4Triangulation b(*tri);
+        static void verifyBary(Triangulation<4>* tri) {
+            Triangulation<4> b(*tri);
             b.barycentricSubdivision();
 
             // Note that subdivisions can turn invalid into valid, but
@@ -1385,10 +1384,10 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             testManualTiny(verifyBary);
         }
 
-        static void verifyEltMove15(Dim4Triangulation* tri) {
+        static void verifyEltMove15(Triangulation<4>* tri) {
             unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
-                Dim4Triangulation large(*tri);
+                Triangulation<4> large(*tri);
                 large.oneFiveMove(large.pentachoron(i));
 
                 if (large.size() != n + 4) {
@@ -1484,7 +1483,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             runCensusAllNoBdry(verifyEltMove15);
         }
 
-        static void verifyVertexLinks(Dim4Triangulation* tri) {
+        static void verifyVertexLinks(Triangulation<4>* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
                 Dim4Vertex* v = tri->vertex(i);
                 Dim4Isomorphism* iso;
@@ -1677,7 +1676,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             runCensusAllNoBdry(verifyVertexLinks);
         }
 
-        static void verifyEdgeLinks(Dim4Triangulation* tri) {
+        static void verifyEdgeLinks(Triangulation<4>* tri) {
             for (unsigned long i = 0; i < tri->countEdges(); ++i) {
                 Dim4Edge* e = tri->edge(i);
                 Dim4Isomorphism* iso;
@@ -1876,7 +1875,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             runCensusAllNoBdry(verifyEdgeLinks);
         }
 
-        static void verifyIdealToFinite(Dim4Triangulation* tri) {
+        static void verifyIdealToFinite(Triangulation<4>* tri) {
             bool shouldTruncate = false;
             if (tri->isValid() && ! tri->isIdeal()) {
                 // Should not truncate any vertices.
@@ -1891,7 +1890,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (! shouldTruncate) {
                 // The idealToFinite routine should leave tri unchanged.
-                Dim4Triangulation other(*tri);
+                Triangulation<4> other(*tri);
                 other.idealToFinite();
                 if (! other.isIdenticalTo(*tri)) {
                     std::ostringstream msg;
@@ -1910,7 +1909,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // We use just a couple of different isomorphisms here, since this
             // is a slow test and we are running it over a great many examples.
             for (unsigned i = 0; i < 2; ++i) {
-                Dim4Triangulation other(*tri);
+                Triangulation<4> other(*tri);
                 if (i > 0) {
                     Dim4Isomorphism* iso = Dim4Isomorphism::random(
                         other.size());
@@ -2021,7 +2020,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
 
-            Dim4Triangulation* b = Dim4ExampleTriangulation::iBundle(*tri);
+            Triangulation<4>* b = Dim4ExampleTriangulation::iBundle(*tri);
 
             if (! b->isValid()) {
                 std::ostringstream msg;
@@ -2110,7 +2109,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
 
-            Dim4Triangulation* b = Dim4ExampleTriangulation::s1Bundle(*tri);
+            Triangulation<4>* b = Dim4ExampleTriangulation::s1Bundle(*tri);
 
             if (! b->isValid()) {
                 std::ostringstream msg;
@@ -2201,7 +2200,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             tri->findAllIsomorphisms(*tri, back_inserter(autos));
 
             for (NIsomorphism* aut : autos) {
-                Dim4Triangulation* b =
+                Triangulation<4>* b =
                     Dim4ExampleTriangulation::bundleWithMonodromy(*tri, *aut);
 
                 if (! b->isValid()) {

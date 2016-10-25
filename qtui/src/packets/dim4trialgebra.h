@@ -46,7 +46,6 @@ namespace regina {
     class Packet;
 
     template <int> class Triangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**
@@ -57,7 +56,7 @@ class Dim4TriAlgebraUI : public PacketTabbedViewerTab {
         /**
          * Constructor.
          */
-        Dim4TriAlgebraUI(regina::Dim4Triangulation* packet,
+        Dim4TriAlgebraUI(regina::Triangulation<4>* packet,
                 PacketTabbedUI* useParentUI);
 };
 
@@ -71,7 +70,7 @@ class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
         /**
          * Internal components
@@ -88,7 +87,7 @@ class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        Dim4TriHomologyFundUI(regina::Dim4Triangulation* packet,
+        Dim4TriHomologyFundUI(regina::Triangulation<4>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**

@@ -170,14 +170,14 @@ void addTreeDecomposition() {
 
     class_<TreeDecomposition, std::auto_ptr<TreeDecomposition>,
             boost::noncopyable>("TreeDecomposition", no_init)
-        .def(init<const regina::NTriangulation&>())
-        .def(init<const regina::NTriangulation&,
-            regina::TreeDecompositionAlg>())
         .def(init<const regina::Triangulation<2>&>())
         .def(init<const regina::Triangulation<2>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::Dim4Triangulation&>())
-        .def(init<const regina::Dim4Triangulation&,
+        .def(init<const regina::Triangulation<3>&>())
+        .def(init<const regina::Triangulation<3>&,
+            regina::TreeDecompositionAlg>())
+        .def(init<const regina::Triangulation<4>&>())
+        .def(init<const regina::Triangulation<4>&,
             regina::TreeDecompositionAlg>())
         .def(init<const regina::NFacePairing&>())
         .def(init<const regina::NFacePairing&,

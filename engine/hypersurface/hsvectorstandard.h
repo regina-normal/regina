@@ -98,18 +98,18 @@ class REGINA_API HSVectorStandard :
             const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger tetrahedra(size_t pentIndex,
-            int vertex, const Dim4Triangulation* triang) const;
+            int vertex, const Triangulation<4>* triang) const;
         virtual LargeInteger prisms(size_t pentIndex,
-            int prismType, const Dim4Triangulation* triang) const;
+            int prismType, const Triangulation<4>* triang) const;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Dim4Triangulation* triang) const;
+            const Triangulation<4>* triang) const;
 
         static NormalHypersurfaceVector* makeZeroVector(
-            const Dim4Triangulation* triangulation);
+            const Triangulation<4>* triangulation);
         static MatrixInt* makeMatchingEquations(
-            const Dim4Triangulation* triangulation);
+            const Triangulation<4>* triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
-            const Dim4Triangulation* triangulation);
+            const Triangulation<4>* triangulation);
 };
 
 /**
@@ -134,11 +134,11 @@ inline HSVectorStandard::HSVectorStandard(
 }
 
 inline LargeInteger HSVectorStandard::tetrahedra(
-        size_t pentIndex, int vertex, const Dim4Triangulation*) const {
+        size_t pentIndex, int vertex, const Triangulation<4>*) const {
     return coords_[15 * pentIndex + vertex];
 }
 inline LargeInteger HSVectorStandard::prisms(
-        size_t pentIndex, int prismType, const Dim4Triangulation*) const {
+        size_t pentIndex, int prismType, const Triangulation<4>*) const {
     return coords_[15 * pentIndex + 5 + prismType];
 }
 

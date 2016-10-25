@@ -48,7 +48,6 @@ template <int> class Isomorphism;
 template <int> class Triangulation;
 typedef Isomorphism<3> NIsomorphism;
 typedef Triangulation<3> NTriangulation;
-typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup dim4
@@ -89,7 +88,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* fourSphere();
+        static Triangulation<4>* fourSphere();
 
         /**
          * Returns the standard six-pentachoron triangulation of the 4-sphere
@@ -98,7 +97,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* simplicialFourSphere();
+        static Triangulation<4>* simplicialFourSphere();
 
         /**
          * Returns a four-pentachoron triangulation of real projective
@@ -108,7 +107,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * destroyed by the caller of this routine.
          * @author Ryan Budney
          */
-        static Dim4Triangulation* rp4();
+        static Triangulation<4>* rp4();
 
         /**
          * Returns a two-pentachoron triangulation of the product space
@@ -117,7 +116,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* s3xs1();
+        static Triangulation<4>* s3xs1();
 
         /**
          * Returns a two-pentachoron triangulation of the twisted product
@@ -126,7 +125,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* s3xs1Twisted();
+        static Triangulation<4>* s3xs1Twisted();
 
         /*@}*/
         /**
@@ -148,7 +147,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* cappellShaneson();
+        static Triangulation<4>* cappellShaneson();
 
         /*@}*/
         /**
@@ -188,7 +187,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* doubleCone(const NTriangulation& base);
+        static Triangulation<4>* doubleCone(const NTriangulation& base);
 
         /**
          * Returns a single cone over the given 3-manifold triangulation.
@@ -207,7 +206,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* singleCone(const NTriangulation& base);
+        static Triangulation<4>* singleCone(const NTriangulation& base);
 
         /**
          * Returns a triangulation of the product <tt>M x I</tt>,
@@ -224,7 +223,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * The product itself will contain 82 pentachora for each
          * original tetrahedron of \a M, and will contain many internal
          * vertices.  It is highly recommended that you call
-         * Dim4Triangulation::intelligentSimplify() afterwards if you do
+         * Triangulation<4>::intelligentSimplify() afterwards if you do
          * not need to preserve the combinatorial structure.
          *
          * \warning If the given 3-manifold triangulation has ideal boundary,
@@ -234,7 +233,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* iBundle(const NTriangulation& base);
+        static Triangulation<4>* iBundle(const NTriangulation& base);
 
         /**
          * Returns a triangulation of the product <tt>M x S1</tt>,
@@ -245,7 +244,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * The product will contain 82 pentachora for each
          * original tetrahedron of \a M, and will contain many internal
          * vertices.  It is highly recommended that you call
-         * Dim4Triangulation::intelligentSimplify() afterwards if you do
+         * Triangulation<4>::intelligentSimplify() afterwards if you do
          * not need to preserve the combinatorial structure.
          *
          * \warning If the given 3-manifold triangulation has ideal boundary,
@@ -255,7 +254,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* s1Bundle(const NTriangulation& base);
+        static Triangulation<4>* s1Bundle(const NTriangulation& base);
 
         /**
          * Returns a bundle formed from a given 3-manifold and a given
@@ -273,7 +272,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * The resulting manifold will contain 82 pentachora for each
          * original tetrahedron of \a M, and will contain many internal
          * vertices.  It is highly recommended that you call
-         * Dim4Triangulation::intelligentSimplify() afterwards if you do
+         * Triangulation<4>::intelligentSimplify() afterwards if you do
          * not need to preserve the combinatorial structure.
          *
          * \pre The given monodromy must be an isomorphism from \a M to
@@ -288,7 +287,7 @@ class REGINA_API Dim4ExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static Dim4Triangulation* bundleWithMonodromy(
+        static Triangulation<4>* bundleWithMonodromy(
             const NTriangulation& base,
             const NIsomorphism& monodromy);
 

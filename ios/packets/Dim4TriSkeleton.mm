@@ -55,14 +55,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *triangulateBdryButton;
 @property (weak, nonatomic) IBOutlet UIButton *triangulateBdryIcon;
 
-@property (assign, nonatomic) regina::Dim4Triangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end
 
 @implementation Dim4TriSkeleton
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = static_cast<regina::Dim4Triangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+    self.packet = static_cast<regina::Triangulation<4>*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
     self.details.delegate = self;
     self.details.dataSource = self;

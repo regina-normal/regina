@@ -1017,7 +1017,7 @@ typedef Triangulation<4> Dim4Triangulation;
 #include "triangulation/dim4/boundarycomponent4.h"
 namespace regina {
 
-// Inline functions for Dim4Triangulation
+// Inline functions for Triangulation<4>
 
 inline Triangulation<4>::Triangulation() : knownSimpleLinks_(false) {
 }
@@ -1109,7 +1109,7 @@ inline const NAbelianGroup& Triangulation<4>::homology() const {
 }
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {
-    return new Dim4Triangulation(*this);
+    return new Triangulation<4>(*this);
 }
 
 } // namespace regina

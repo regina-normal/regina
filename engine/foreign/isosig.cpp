@@ -70,7 +70,7 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
     std::string label;
     Triangulation<2>* tri2;
     NTriangulation* tri3;
-    Dim4Triangulation* tri4;
+    Triangulation<4>* tri4;
 
     while(! in.eof()) {
         // Read in the next line.
@@ -111,7 +111,7 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
                 } else
                     errStrings = errStrings + '\n' + isoSig;
             } else if (dimension == 4) {
-                if ((tri4 = Dim4Triangulation::fromIsoSig(isoSig))) {
+                if ((tri4 = Triangulation<4>::fromIsoSig(isoSig))) {
                     tri4->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri4);
                 } else

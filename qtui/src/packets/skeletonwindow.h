@@ -50,7 +50,6 @@ class QTreeView;
 namespace regina {
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**
@@ -473,13 +472,13 @@ class Dim4VertexModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim4VertexModel(regina::Dim4Triangulation* tri_);
+        Dim4VertexModel(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -507,13 +506,13 @@ class Dim4EdgeModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim4EdgeModel(regina::Dim4Triangulation* tri_);
+        Dim4EdgeModel(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -541,13 +540,13 @@ class Dim4TriangleModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim4TriangleModel(regina::Dim4Triangulation* tri_);
+        Dim4TriangleModel(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -575,13 +574,13 @@ class Dim4TetrahedronModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim4TetrahedronModel(regina::Dim4Triangulation* tri_);
+        Dim4TetrahedronModel(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -609,13 +608,13 @@ class Dim4ComponentModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim4ComponentModel(regina::Dim4Triangulation* tri_);
+        Dim4ComponentModel(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -643,13 +642,13 @@ class Dim4BoundaryComponentModel : public SkeletalModel {
         /**
          * The triangulation being displayed
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor.
          */
-        Dim4BoundaryComponentModel(regina::Dim4Triangulation* tri_);
+        Dim4BoundaryComponentModel(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -738,22 +737,22 @@ inline Dim2ComponentModel::Dim2ComponentModel(regina::Triangulation<2>* tri_) :
 inline Dim2BoundaryComponentModel::Dim2BoundaryComponentModel(
         regina::Triangulation<2>* tri_) : tri(tri_) {}
 
-inline Dim4VertexModel::Dim4VertexModel(regina::Dim4Triangulation* tri_) :
+inline Dim4VertexModel::Dim4VertexModel(regina::Triangulation<4>* tri_) :
         tri(tri_) {}
 
-inline Dim4EdgeModel::Dim4EdgeModel(regina::Dim4Triangulation* tri_) :
+inline Dim4EdgeModel::Dim4EdgeModel(regina::Triangulation<4>* tri_) :
         tri(tri_) {}
 
-inline Dim4TriangleModel::Dim4TriangleModel(regina::Dim4Triangulation* tri_) :
+inline Dim4TriangleModel::Dim4TriangleModel(regina::Triangulation<4>* tri_) :
         tri(tri_) {}
 
 inline Dim4TetrahedronModel::Dim4TetrahedronModel(
-        regina::Dim4Triangulation* tri_) : tri(tri_) {}
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
-inline Dim4ComponentModel::Dim4ComponentModel(regina::Dim4Triangulation* tri_) :
+inline Dim4ComponentModel::Dim4ComponentModel(regina::Triangulation<4>* tri_) :
         tri(tri_) {}
 
 inline Dim4BoundaryComponentModel::Dim4BoundaryComponentModel(
-        regina::Dim4Triangulation* tri_) : tri(tri_) {}
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 #endif

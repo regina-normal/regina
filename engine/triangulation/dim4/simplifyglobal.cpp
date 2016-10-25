@@ -38,7 +38,7 @@
 
 namespace regina {
 
-bool Dim4Triangulation::intelligentSimplify() {
+bool Triangulation<4>::intelligentSimplify() {
     bool changed;
 
     { // Begin scope for change event span.
@@ -48,7 +48,7 @@ bool Dim4Triangulation::intelligentSimplify() {
         changed = simplifyToLocalMinimum(true);
 
         // Clone to work with when we might want to roll back changes.
-        Dim4Triangulation* use;
+        Triangulation<4>* use;
 
         // Variables for selecting random 3-3 moves.
         std::vector<Dim4Triangle*> threeThreeAvailable;
@@ -67,7 +67,7 @@ bool Dim4Triangulation::intelligentSimplify() {
             // might not lead to a simplification.
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
-            use = (changed ? this : new Dim4Triangulation(*this));
+            use = (changed ? this : new Triangulation<4>(*this));
 
             // Make random 3-3 moves.
             threeThreeAttempts = threeThreeCap = 0;
@@ -123,7 +123,7 @@ bool Dim4Triangulation::intelligentSimplify() {
             if (hasBoundaryTetrahedra()) {
                 // Clone again, always -- we don't want to create gratuitous
                 // boundary facets if they won't be of any help.
-                use = new Dim4Triangulation(*this);
+                use = new Triangulation<4>(*this);
 
                 // Perform every book opening move we can find.
                 TetrahedronIterator tit;
@@ -169,7 +169,7 @@ bool Dim4Triangulation::intelligentSimplify() {
     return changed;
 }
 
-bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
+bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
     BoundaryComponentIterator bit;
     Dim4BoundaryComponent* bc;
     unsigned long nTetrahedra;

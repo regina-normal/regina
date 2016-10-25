@@ -43,7 +43,7 @@
 using regina::Dim4BoundaryComponent;
 
 Dim4BoundaryComponentChooser::Dim4BoundaryComponentChooser(
-        regina::Dim4Triangulation* tri,
+        regina::Triangulation<4>* tri,
         FilterFunc filter, QWidget* parent,
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
@@ -126,7 +126,7 @@ void Dim4BoundaryComponentChooser::fill() {
 }
 
 Dim4BoundaryComponentDialog::Dim4BoundaryComponentDialog(QWidget* parent,
-        regina::Dim4Triangulation* tri,
+        regina::Triangulation<4>* tri,
         Dim4BoundaryComponentChooser::FilterFunc filter,
         const QString& title,
         const QString& message,
@@ -152,7 +152,7 @@ Dim4BoundaryComponentDialog::Dim4BoundaryComponentDialog(QWidget* parent,
 
 regina::Dim4BoundaryComponent* Dim4BoundaryComponentDialog::choose(
         QWidget* parent,
-        regina::Dim4Triangulation* tri,
+        regina::Triangulation<4>* tri,
         Dim4BoundaryComponentChooser::FilterFunc filter,
         const QString& title,
         const QString& message,

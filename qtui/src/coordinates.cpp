@@ -139,7 +139,7 @@ namespace Coordinates {
             return 0;
     }
 
-    size_t numColumns(HyperCoords coordSystem, regina::Dim4Triangulation* tri) {
+    size_t numColumns(HyperCoords coordSystem, regina::Triangulation<4>* tri) {
         if (coordSystem == regina::HS_STANDARD)
             return tri->size() * 15;
         else if (coordSystem == regina::HS_PRISM)
@@ -239,7 +239,7 @@ namespace Coordinates {
     }
 
     QString columnName(HyperCoords coordSystem, size_t whichCoord,
-            regina::Dim4Triangulation* tri) {
+            regina::Triangulation<4>* tri) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)
                 return QString("%1: %2").arg(whichCoord / 15).
@@ -377,7 +377,7 @@ namespace Coordinates {
     }
 
     QString columnDesc(HyperCoords coordSystem, size_t whichCoord,
-            const QObject *context, regina::Dim4Triangulation* tri) {
+            const QObject *context, regina::Triangulation<4>* tri) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)
                 return context->tr(

@@ -52,12 +52,12 @@
             return [UIImage imageNamed:@"Angles"];
         case regina::PACKET_CONTAINER:
             return [UIImage imageNamed:@"Container"];
-        case regina::PACKET_DIM2TRIANGULATION:
+        case regina::PACKET_TRIANGULATION2:
             return [UIImage imageNamed:@"Triangulation2"];
-        case regina::PACKET_TRIANGULATION:
-            return [UIImage imageNamed:@"Triangulation"];
-        case regina::PACKET_DIM4TRIANGULATION:
-            return [UIImage imageNamed:@"Dim4Triangulation"];
+        case regina::PACKET_TRIANGULATION3:
+            return [UIImage imageNamed:@"Triangulation3"];
+        case regina::PACKET_TRIANGULATION4:
+            return [UIImage imageNamed:@"Triangulation4"];
         case regina::PACKET_NORMALSURFACES:
             return [UIImage imageNamed:@"Surfaces"];
         case regina::PACKET_NORMALHYPERSURFACES:

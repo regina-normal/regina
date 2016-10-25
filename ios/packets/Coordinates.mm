@@ -285,7 +285,7 @@ using regina::NTriangle;
     }
 }
 
-+ (size_t)numColumns:(regina::HyperCoords)coordSystem tri:(regina::Dim4Triangulation*)tri
++ (size_t)numColumns:(regina::HyperCoords)coordSystem tri:(regina::Triangulation<4>*)tri
 {
     if (coordSystem == regina::HS_STANDARD)
         return tri->size() * 15;
@@ -297,7 +297,7 @@ using regina::NTriangle;
         return 0;
 }
 
-+ (NSString*)columnName:(regina::HyperCoords)coordSystem whichCoord:(size_t)whichCoord tri:(regina::Dim4Triangulation*)tri
++ (NSString*)columnName:(regina::HyperCoords)coordSystem whichCoord:(size_t)whichCoord tri:(regina::Triangulation<4>*)tri
 {
     if (coordSystem == regina::HS_STANDARD) {
         if (whichCoord % 15 < 5)
@@ -320,7 +320,7 @@ using regina::NTriangle;
     return @"Unknown";
 }
 
-+ (NSString*)longestColumnName:(regina::HyperCoords)coordSystem tri:(regina::Dim4Triangulation*)tri
++ (NSString*)longestColumnName:(regina::HyperCoords)coordSystem tri:(regina::Triangulation<4>*)tri
 {
     switch (coordSystem) {
         case regina::HS_STANDARD:

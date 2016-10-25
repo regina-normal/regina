@@ -47,7 +47,6 @@
 namespace regina {
     class Dim4BoundaryComponent;
     template <int> class Triangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**
@@ -76,7 +75,7 @@ class Dim4BoundaryComponentChooser :
         typedef bool (*FilterFunc)(regina::Dim4BoundaryComponent*);
 
     private:
-        regina::Dim4Triangulation* tri_;
+        regina::Triangulation<4>* tri_;
             /**< The triangulation whose boundary components we are
                  choosing from. */
         FilterFunc filter_;
@@ -101,7 +100,7 @@ class Dim4BoundaryComponentChooser :
          * The given filter may be 0, in which case every boundary component
          * will be offered.
          */
-        Dim4BoundaryComponentChooser(regina::Dim4Triangulation* tri,
+        Dim4BoundaryComponentChooser(regina::Triangulation<4>* tri,
                 FilterFunc filter, QWidget* parent, bool autoUpdate = true);
 
         /**
@@ -169,14 +168,14 @@ class Dim4BoundaryComponentDialog : public QDialog {
          * Constructor and destructor.
          */
         Dim4BoundaryComponentDialog(QWidget* parent,
-            regina::Dim4Triangulation* tri,
+            regina::Triangulation<4>* tri,
             Dim4BoundaryComponentChooser::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::Dim4BoundaryComponent* choose(QWidget* parent,
-            regina::Dim4Triangulation* tri,
+            regina::Triangulation<4>* tri,
             Dim4BoundaryComponentChooser::FilterFunc filter,
             const QString& title,
             const QString& message,

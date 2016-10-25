@@ -55,7 +55,6 @@ template <int> class Isomorphism;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
 typedef Simplex<4> Dim4Pentachoron;
-typedef Triangulation<4> Dim4Triangulation;
 
 /**
  * \weakgroup dim4

@@ -48,27 +48,27 @@ namespace {
     struct ZeroVector : public Returns<NormalHypersurfaceVector*> {
         template <typename Coords>
         inline NormalHypersurfaceVector* operator() (
-                const Dim4Triangulation* tri) {
+                const Triangulation<4>* tri) {
             return Coords::Class::makeZeroVector(tri);
         }
     };
 }
 
 NormalHypersurfaceVector* makeZeroVector(
-        const Dim4Triangulation* triangulation, HyperCoords coords) {
+        const Triangulation<4>* triangulation, HyperCoords coords) {
     return forCoords(coords, ZeroVector(), 0, triangulation);
 }
 
 namespace {
     struct MatchingEquations : public Returns<MatrixInt*> {
         template <typename Coords>
-        inline MatrixInt* operator() (const Dim4Triangulation* tri) {
+        inline MatrixInt* operator() (const Triangulation<4>* tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
-MatrixInt* makeMatchingEquations(const Dim4Triangulation* triangulation,
+MatrixInt* makeMatchingEquations(const Triangulation<4>* triangulation,
         HyperCoords coords) {
     return forCoords(coords, MatchingEquations(), 0, triangulation);
 }
@@ -76,19 +76,19 @@ MatrixInt* makeMatchingEquations(const Dim4Triangulation* triangulation,
 namespace {
     struct EmbeddedConstraints : public Returns<EnumConstraints*> {
         template <typename Coords>
-        inline EnumConstraints* operator() (const Dim4Triangulation* tri) {
+        inline EnumConstraints* operator() (const Triangulation<4>* tri) {
             return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
 }
 
 EnumConstraints* makeEmbeddedConstraints(
-        const Dim4Triangulation* triangulation, HyperCoords coords) {
+        const Triangulation<4>* triangulation, HyperCoords coords) {
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-Dim4Triangulation* NormalHypersurfaces::triangulation() const {
-    return dynamic_cast<Dim4Triangulation*>(parent());
+Triangulation<4>* NormalHypersurfaces::triangulation() const {
+    return dynamic_cast<Triangulation<4>*>(parent());
 }
 
 namespace {

@@ -39,7 +39,7 @@
 
 namespace regina {
 
-void Dim4Triangulation::calculateSkeleton() {
+void Triangulation<4>::calculateSkeleton() {
     TriangulationBase<4>::calculateSkeleton();
 
     // Triangulations are valid and non-ideal until proven otherwise.
@@ -85,7 +85,7 @@ void Dim4Triangulation::calculateSkeleton() {
         t->component()->tetrahedra_.push_back(t);
 }
 
-void Dim4Triangulation::calculateBoundary() {
+void Triangulation<4>::calculateBoundary() {
     // Are there any boundary tetrahedra at all?
     long nBdry = 2 * countTetrahedra() - 5 * simplices_.size();
     if (nBdry == 0)
@@ -275,7 +275,7 @@ void Dim4Triangulation::calculateBoundary() {
     delete[] bdryTetAll;
 }
 
-void Dim4Triangulation::calculateVertexLinks() {
+void Triangulation<4>::calculateVertexLinks() {
     long n = simplices_.size();
     if (n == 0)
         return;
@@ -430,7 +430,7 @@ void Dim4Triangulation::calculateVertexLinks() {
         knownSimpleLinks_ = true;
 }
 
-void Dim4Triangulation::calculateEdgeLinks() {
+void Triangulation<4>::calculateEdgeLinks() {
     for (Dim4Edge* e : edges())
         if (e->hasBadIdentification() && ! e->hasBadLink()) {
             // Calling buildLink() causes the edge link to be cached by

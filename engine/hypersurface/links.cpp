@@ -35,7 +35,7 @@
 
 namespace regina {
 
-bool NormalHypersurfaceVector::isVertexLinking(const Dim4Triangulation* triang)
+bool NormalHypersurfaceVector::isVertexLinking(const Triangulation<4>* triang)
         const {
     size_t nPents = triang->size();
     size_t pent;
@@ -49,7 +49,7 @@ bool NormalHypersurfaceVector::isVertexLinking(const Dim4Triangulation* triang)
 }
 
 const Dim4Vertex* NormalHypersurfaceVector::isVertexLink(
-        const Dim4Triangulation* triang) const {
+        const Triangulation<4>* triang) const {
     size_t nPents = triang->size();
     size_t pent;
     int type;
@@ -107,7 +107,7 @@ const Dim4Vertex* NormalHypersurfaceVector::isVertexLink(
 }
 
 const Dim4Edge* NormalHypersurfaceVector::isThinEdgeLink(
-        const Dim4Triangulation* triang) const {
+        const Triangulation<4>* triang) const {
     size_t nPents = triang->size();
     size_t pent;
     int type;

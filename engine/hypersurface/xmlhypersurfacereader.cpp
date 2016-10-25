@@ -149,7 +149,7 @@ void XMLNormalHypersurfacesReader::endContentSubElement(
 XMLPacketReader* NormalHypersurfaces::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new XMLNormalHypersurfacesReader(
-        dynamic_cast<Dim4Triangulation*>(parent), resolver);
+        dynamic_cast<Triangulation<4>*>(parent), resolver);
 }
 
 } // namespace regina

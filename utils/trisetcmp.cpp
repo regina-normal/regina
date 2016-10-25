@@ -35,9 +35,9 @@
 #include "triangulation/dim4.h"
 #include "utilities/i18nutils.h"
 
-using regina::Dim4Triangulation;
 using regina::Packet;
 using regina::NTriangulation;
+using regina::Triangulation;
 
 bool subcomplexTesting = false;
 
@@ -48,7 +48,7 @@ bool compare(NTriangulation* t1, NTriangulation* t2) {
         return t1->isIsomorphicTo(*t2).get();
 }
 
-bool compare(Dim4Triangulation* t1, Dim4Triangulation* t2) {
+bool compare(Triangulation<4>* t1, Triangulation<4>* t2) {
     if (subcomplexTesting)
         return t1->isContainedIn(*t2).get();
     else
@@ -94,8 +94,8 @@ void runMatches(Packet* tree1, Packet* tree2, std::ostream& out) {
         } else if (p1->type() == regina::PACKET_DIM4TRIANGULATION) {
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
                 if (p2->type() == regina::PACKET_DIM4TRIANGULATION)
-                    if (compare(static_cast<Dim4Triangulation*>(p1),
-                            static_cast<Dim4Triangulation*>(p2))) {
+                    if (compare(static_cast<Triangulation<4>*>(p1),
+                            static_cast<Triangulation<4>*>(p2))) {
                         out << "    " << p1->label()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
                             << p2->label() << std::endl;
@@ -136,8 +136,8 @@ void runNonMatches(const std::string& file1, Packet* tree1,
             matched = false;
             for (p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
                 if (p2->type() == regina::PACKET_DIM4TRIANGULATION)
-                    if (compare(static_cast<Dim4Triangulation*>(p1),
-                            static_cast<Dim4Triangulation*>(p2)))
+                    if (compare(static_cast<Triangulation<4>*>(p1),
+                            static_cast<Triangulation<4>*>(p2)))
                         matched = true;
             if (! matched) {
                 out << "    " << p1->label() << std::endl;

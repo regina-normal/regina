@@ -44,7 +44,7 @@
 namespace regina {
 
 NormalHypersurfaces* NormalHypersurfaces::enumerate(
-        Dim4Triangulation* owner, HyperCoords coords,
+        Triangulation<4>* owner, HyperCoords coords,
         HyperList which, HyperAlg algHints,
         ProgressTracker* tracker) {
     NormalHypersurfaces* list = new NormalHypersurfaces(

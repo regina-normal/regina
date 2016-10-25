@@ -70,11 +70,11 @@
 
 using regina::Dim4FacetPairing;
 using regina::Dim4GluingPermSearcher;
-using regina::Dim4Triangulation;
 using regina::BoolSet;
 using regina::NFacePairing;
 using regina::NGluingPermSearcher;
 using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     struct TestFunctionHolder3 {
@@ -127,7 +127,7 @@ namespace {
     void foundGluingPerms4(const Dim4GluingPermSearcher* perms, void* holder) {
         if (perms) {
             TestFunctionHolder4* h = static_cast<TestFunctionHolder4*>(holder);
-            Dim4Triangulation* tri = perms->triangulate();
+            Triangulation<4>* tri = perms->triangulate();
             if (tri->isValid() &&
                     (! (h->finite_ == BoolSet::sTrue && tri->isIdeal())) &&
                     (! (h->finite_ == BoolSet::sFalse && ! tri->isIdeal()))) {

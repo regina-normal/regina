@@ -54,7 +54,6 @@ template <int> class SimplexChooser;
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**
@@ -95,13 +94,13 @@ class Dim4EltMoveDialog : public QDialog, public regina::PacketListener {
         /**
          * Packet tree structure:
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
     public:
         /**
          * Constructor and destructor.
          */
-        Dim4EltMoveDialog(QWidget* parent, regina::Dim4Triangulation* useTri);
+        Dim4EltMoveDialog(QWidget* parent, regina::Triangulation<4>* useTri);
         ~Dim4EltMoveDialog();
 
         /**

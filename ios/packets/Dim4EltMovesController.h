@@ -34,9 +34,8 @@
 
 namespace regina {
     template <int> class Triangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 }
 
 @interface Dim4EltMovesController : UIViewController
-@property (assign, nonatomic) regina::Dim4Triangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end

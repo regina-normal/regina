@@ -34,7 +34,7 @@
 
 namespace regina {
 
-const NGroupPresentation& Dim4Triangulation::fundamentalGroup() const {
+const NGroupPresentation& Triangulation<4>::fundamentalGroup() const {
     if (fundGroup_.known())
         return *fundGroup_.value();
 

@@ -127,7 +127,7 @@ QString HyperCreator::parentWhatsThis() {
 
 regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
-    if (! dynamic_cast<regina::Dim4Triangulation*>(parent)) {
+    if (! dynamic_cast<regina::Triangulation<4>*>(parent)) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 4-manifold triangulation."),
             ui->tr("Normal hypersurfaces must live within a 4-manifold "
@@ -174,7 +174,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalHypersurfaces* ans = NormalHypersurfaces::enumerate(
-            dynamic_cast<regina::Dim4Triangulation*>(parent),
+            dynamic_cast<regina::Triangulation<4>*>(parent),
             coordSystem,
             regina::HS_VERTEX | (embedded->isChecked() ?
                 regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
@@ -196,7 +196,7 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalHypersurfaces* ans = NormalHypersurfaces::enumerate(
-            dynamic_cast<regina::Dim4Triangulation*>(parent),
+            dynamic_cast<regina::Triangulation<4>*>(parent),
             coordSystem,
             regina::HS_FUNDAMENTAL | (embedded->isChecked() ?
                 regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),

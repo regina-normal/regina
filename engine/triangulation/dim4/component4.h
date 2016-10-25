@@ -56,7 +56,6 @@ template <int> class Simplex;
 template <int> class Triangulation;
 template <int, int> class Face;
 typedef Simplex<4> Dim4Pentachoron;
-typedef Triangulation<4> Dim4Triangulation;
 typedef Face<4, 3> Dim4Tetrahedron;
 typedef Face<4, 2> Dim4Triangle;
 typedef Face<4, 1> Dim4Edge;

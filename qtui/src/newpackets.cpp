@@ -84,7 +84,7 @@ void ReginaMain::newNormalSurfaces() {
 
 void ReginaMain::newNormalHypersurfaces() {
     newPacket(new HyperCreator(),
-        new SubclassFilter<regina::Dim4Triangulation>(),
+        new SubclassFilter<regina::Triangulation<4>>(),
         tr("New Normal Hypersurface List"));
 }
 

@@ -52,7 +52,7 @@
 #include <QStackedWidget>
 
 using regina::Dim4ExampleTriangulation;
-using regina::Dim4Triangulation;
+using regina::Triangulation;
 
 namespace {
     /**
@@ -222,7 +222,7 @@ regina::Packet* Dim4TriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        Dim4Triangulation* ans = new Dim4Triangulation();
+        Triangulation<4>* ans = new Triangulation<4>();
         ans->setLabel("4-D triangulation");
         return ans;
     } else if (typeId == TRI_IBUNDLE) {
@@ -234,7 +234,7 @@ regina::Packet* Dim4TriangulationCreator::createPacket(regina::Packet*,
                 "I-bundle from."));
             return 0;
         }
-        Dim4Triangulation* ans = Dim4ExampleTriangulation::iBundle(*from);
+        Triangulation<4>* ans = Dim4ExampleTriangulation::iBundle(*from);
         ans->intelligentSimplify();
         if (from->label().empty())
             ans->setLabel("I-bundle");
@@ -250,7 +250,7 @@ regina::Packet* Dim4TriangulationCreator::createPacket(regina::Packet*,
                 "S¹-bundle from."));
             return 0;
         }
-        Dim4Triangulation* ans = Dim4ExampleTriangulation::s1Bundle(*from);
+        Triangulation<4>* ans = Dim4ExampleTriangulation::s1Bundle(*from);
         ans->intelligentSimplify();
         if (from->label().empty())
             ans->setLabel("S¹-bundle");
@@ -275,7 +275,7 @@ regina::Packet* Dim4TriangulationCreator::createPacket(regina::Packet*,
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        Dim4Triangulation* ans = Dim4Triangulation::fromIsoSig(sig);
+        Triangulation<4>* ans = Triangulation<4>::fromIsoSig(sig);
         if (ans) {
             ans->setLabel(sig);
             return ans;

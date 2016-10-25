@@ -39,7 +39,7 @@
 
 using regina::Dim4FacetPairing;
 using regina::Dim4GluingPermSearcher;
-using regina::Dim4Triangulation;
+using regina::Triangulation;
 using regina::BoolSet;
 
 class Dim4CensusTest : public CppUnit::TestFixture {
@@ -106,7 +106,7 @@ class Dim4CensusTest : public CppUnit::TestFixture {
                 void* spec) {
             if (perms) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Dim4Triangulation* tri = perms->triangulate();
+                Triangulation<4>* tri = perms->triangulate();
                 if (tri->isValid() &&
                         (! (s->orbl_ == BoolSet::sTrue &&
                             ! tri->isOrientable())) &&

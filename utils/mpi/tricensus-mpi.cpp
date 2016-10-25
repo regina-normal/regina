@@ -131,7 +131,7 @@ struct Dim3Params {
 struct Dim4Params {
     typedef regina::Dim4FacetPairing Pairing;
     typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
-    typedef regina::Dim4Triangulation Triangulation;
+    typedef regina::Triangulation<4> Triangulation;
 
     inline static GluingPermSearcher* bestSearcher(Pairing* p,
             bool orientableOnly, bool finiteOnly, int /* whichPurge */) {

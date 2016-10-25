@@ -102,7 +102,7 @@ namespace {
     }
 
     // A helper routine that uses union-find to test whether a graph
-    // contains cycles.  This is used by Dim4Triangulation::collapseEdge().
+    // contains cycles.  This is used by Triangulation<4>::collapseEdge().
     //
     // This routine returns true if the given edge connects two distinct
     // components of the graph, or false if both endpoints of the edge
@@ -137,7 +137,7 @@ namespace {
     }
 }
 
-bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
+bool Triangulation<4>::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     if (check) {
         // e must be valid and non-boundary.
         if (e->isBoundary() || ! e->isValid())
@@ -266,7 +266,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     return true;
 }
 
-bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
+bool Triangulation<4>::threeThreeMove(Dim4Triangle* f, bool check,
         bool perform) {
     if (check) {
         // f must be valid and non-boundary.
@@ -364,7 +364,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
     return true;
 }
 
-bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
+bool Triangulation<4>::twoFourMove(Dim4Tetrahedron* f, bool check,
         bool perform) {
     if (check) {
         if (f->degree() != 2)
@@ -462,7 +462,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
     return true;
 }
 
-bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
+bool Triangulation<4>::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
         bool perform) {
     if ( !perform )
         return true; // You can always do this move.
@@ -523,7 +523,7 @@ bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
     return true;
 }
 
-bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
+bool Triangulation<4>::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
     if (check) {
         if (t->isBoundary() || ! t->isValid())
             return false;
@@ -696,7 +696,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
     return true;
 }
 
-bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
+bool Triangulation<4>::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
     if (check) {
         // The follow test also implicitly ensures that the edge link is
         // a 2-sphere.  See Dim4Edge::isValid() for details.
@@ -797,7 +797,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
     return true;
 }
 
-bool Dim4Triangulation::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
+bool Triangulation<4>::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
     const Dim4TetrahedronEmbedding& emb = t->front();
     Dim4Pentachoron* pent = emb.pentachoron();
 
@@ -868,7 +868,7 @@ bool Dim4Triangulation::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
     return true;
 }
 
-bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
+bool Triangulation<4>::shellBoundary(Dim4Pentachoron* p,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.
     if (check) {
@@ -951,7 +951,7 @@ bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
     return true;
 }
 
-bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
+bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
     // Find the pentachora to remove.
     Perm<5> p;
 

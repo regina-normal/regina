@@ -60,7 +60,7 @@ class REGINA_API XMLNormalHypersurfaceReader : public XMLElementReader {
     private:
         NormalHypersurface* surface_;
             /**< The normal hypersurface currently being read. */
-        const Dim4Triangulation* tri_;
+        const Triangulation<4>* tri_;
             /**< The triangulation in which this hypersurface lives. */
         HyperCoords coords_;
             /**< The coordinate system used by this hypersurface. */
@@ -76,7 +76,7 @@ class REGINA_API XMLNormalHypersurfaceReader : public XMLElementReader {
          * @param tri the triangulation in which this normal hypersurface lives.
          * @param coords the coordinate system used by this normal hypersurface.
          */
-        XMLNormalHypersurfaceReader(const Dim4Triangulation* tri,
+        XMLNormalHypersurfaceReader(const Triangulation<4>* tri,
             HyperCoords coords);
 
         /**
@@ -108,7 +108,7 @@ class REGINA_API XMLNormalHypersurfacesReader : public XMLPacketReader {
     private:
         NormalHypersurfaces* list_;
             /**< The normal hypersurface list currently being read. */
-        const Dim4Triangulation* tri_;
+        const Triangulation<4>* tri_;
             /**< The triangulation in which these normal hypersurfaces live. */
 
     public:
@@ -120,7 +120,7 @@ class REGINA_API XMLNormalHypersurfacesReader : public XMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLNormalHypersurfacesReader(const Dim4Triangulation* tri,
+        XMLNormalHypersurfacesReader(const Triangulation<4>* tri,
             XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
@@ -136,7 +136,7 @@ class REGINA_API XMLNormalHypersurfacesReader : public XMLPacketReader {
 // Inline functions for XMLNormalHypersurfaceReader
 
 inline XMLNormalHypersurfaceReader::XMLNormalHypersurfaceReader(
-        const Dim4Triangulation* tri, HyperCoords coords) :
+        const Triangulation<4>* tri, HyperCoords coords) :
         surface_(0), tri_(tri), coords_(coords), vecLen_(-1) {
 }
 
@@ -147,7 +147,7 @@ inline NormalHypersurface* XMLNormalHypersurfaceReader::hypersurface() {
 // Inline functions for XMLNormalHypersurfacesReader
 
 inline XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
-        const Dim4Triangulation* tri, XMLTreeResolver& resolver) :
+        const Triangulation<4>* tri, XMLTreeResolver& resolver) :
         XMLPacketReader(resolver), list_(0), tri_(tri) {
 }
 

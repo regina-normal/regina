@@ -51,9 +51,9 @@
 #include <QVBoxLayout>
 
 using regina::Packet;
-using regina::Dim4Triangulation;
+using regina::Triangulation;
 
-Dim4TriangulationUI::Dim4TriangulationUI(regina::Dim4Triangulation* packet,
+Dim4TriangulationUI::Dim4TriangulationUI(regina::Triangulation<4>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim4Tri) {
     Dim4TriHeaderUI* header = new Dim4TriHeaderUI(packet, this);
@@ -84,7 +84,7 @@ QString Dim4TriangulationUI::getPacketMenuText() const {
     return QObject::tr("&4-D Triangulation");
 }
 
-Dim4TriHeaderUI::Dim4TriHeaderUI(regina::Dim4Triangulation* packet,
+Dim4TriHeaderUI::Dim4TriHeaderUI(regina::Triangulation<4>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -132,7 +132,7 @@ void Dim4TriHeaderUI::refresh() {
     refreshLock();
 }
 
-QString Dim4TriHeaderUI::summaryInfo(regina::Dim4Triangulation* tri) {
+QString Dim4TriHeaderUI::summaryInfo(regina::Triangulation<4>* tri) {
     if (tri->isEmpty())
         return QObject::tr("Empty");
 

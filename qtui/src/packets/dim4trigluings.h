@@ -52,7 +52,6 @@ namespace regina {
     template <int> class Simplex;
     template <int> class Triangulation;
     typedef Simplex<4> Dim4Pentachoron;
-    typedef Triangulation<4> Dim4Triangulation;
 };
 
 class Dim4GluingsModel : public QAbstractItemModel {
@@ -60,7 +59,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
         /**
          * Details of the triangulation
          */
-        regina::Dim4Triangulation* tri_;
+        regina::Triangulation<4>* tri_;
 
         /**
          * Internal status
@@ -71,7 +70,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
         /**
          * Constructor.
          */
-        Dim4GluingsModel(regina::Dim4Triangulation* tri, bool readWrite);
+        Dim4GluingsModel(regina::Triangulation<4>* tri, bool readWrite);
 
         /**
          * Read-write state.
@@ -145,7 +144,7 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
-        regina::Dim4Triangulation* tri;
+        regina::Triangulation<4>* tri;
 
         /**
          * Internal components
@@ -169,7 +168,7 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
+        Dim4TriGluingsUI(regina::Triangulation<4>* packet,
                 PacketTabbedUI* useParentUI, bool readWrite);
         ~Dim4TriGluingsUI();
 

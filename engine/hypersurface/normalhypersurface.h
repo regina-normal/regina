@@ -63,10 +63,8 @@ class EnumConstraints;
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
 
-template <int> class Triangulation;
 template <int, int> class Face;
 typedef Triangulation<3> NTriangulation;
-typedef Triangulation<4> Dim4Triangulation;
 typedef Face<4, 0> Dim4Vertex;
 typedef Face<4, 1> Dim4Edge;
 
@@ -178,9 +176,9 @@ struct HyperInfo;
  *   system adorns pieces with extra information (such as orientation) then
  *   your implementation must compute the appropriate sum.</li>
  *   <li>Static public functions <tt>void
- *   makeZeroVector(const Dim4Triangulation*)</tt>,
- *   <tt>MatrixInt* makeMatchingEquations(const Dim4Triangulation*)</tt> and
- *   makeEmbeddedConstraints(const Dim4Triangulation*) must be
+ *   makeZeroVector(const Triangulation<4>*)</tt>,
+ *   <tt>MatrixInt* makeMatchingEquations(const Triangulation<4>*)</tt> and
+ *   makeEmbeddedConstraints(const Triangulation<4>*) must be
  *   declared and implemented.</li>
  * </ul>
  *
@@ -301,7 +299,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * @return \c true if and only if the normal hypersurface represented
          * is compact.
          */
-        virtual bool isCompact(const Dim4Triangulation* triang) const;
+        virtual bool isCompact(const Triangulation<4>* triang) const;
         /**
          * Determines if the normal hypersurface represented is vertex
          * linking.  A <i>vertex linking</i> hypersurface contains only
@@ -318,7 +316,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * @return \c true if and only if the normal hypersurface represented
          * is vertex linking.
          */
-        virtual bool isVertexLinking(const Dim4Triangulation* triang) const;
+        virtual bool isVertexLinking(const Triangulation<4>* triang) const;
         /**
          * Determines if a rational multiple of the normal hypersurface
          * represented is the link of a single vertex.
@@ -333,7 +331,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * @return the vertex linked by this hypersurface, or 0 if this
          * hypersurface is not the link of a single vertex.
          */
-        virtual const Dim4Vertex* isVertexLink(const Dim4Triangulation* triang)
+        virtual const Dim4Vertex* isVertexLink(const Triangulation<4>* triang)
             const;
         /**
          * Determines if a rational multiple of the normal hypersurface
@@ -349,7 +347,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * @return the edge linked by this hypersurface, or 0 if this
          * hypersurface is not a thin edge link.
          */
-        virtual const Dim4Edge* isThinEdgeLink(const Dim4Triangulation* triang)
+        virtual const Dim4Edge* isThinEdgeLink(const Triangulation<4>* triang)
             const;
 
         /**
@@ -359,7 +357,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested tetrahedron pieces reside;
-         * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
+         * this should be between 0 and Triangulation<4>::size()-1 inclusive.
          * @param vertex the vertex of the given pentachoron around
          * which the requested tetrahedron pieces lie; this should be between
          * 0 and 4 inclusive.
@@ -368,7 +366,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * @return the number of tetrahedron pieces of the given type.
          */
         virtual LargeInteger tetrahedra(size_t pentIndex,
-            int vertex, const Dim4Triangulation* triang) const = 0;
+            int vertex, const Triangulation<4>* triang) const = 0;
         /**
          * Returns the number of prism pieces of the given type
          * in this normal hypersurface.
@@ -376,7 +374,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prism pieces reside;
-         * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
+         * this should be between 0 and Triangulation<4>::size()-1 inclusive.
          * @param prismType specifies the edge of the given pentachoron that
          * this prism separates from the opposite triangle;
          * this should be between 0 and 9 inclusive.
@@ -385,7 +383,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * @return the number of prism pieces of the given type.
          */
         virtual LargeInteger prisms(size_t pentIndex,
-            int prismType, const Dim4Triangulation* triang) const = 0;
+            int prismType, const Triangulation<4>* triang) const = 0;
         /**
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
@@ -393,14 +391,14 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
-         * Dim4Triangulation::countEdges()-1 inclusive.
+         * Triangulation<4>::countEdges()-1 inclusive.
          * @param triang the triangulation in which this normal hypersurface
          * lives.
          * @return the number of times this normal hypersurface crosses the
          * given edge.
          */
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Dim4Triangulation* triang) const = 0;
+            const Triangulation<4>* triang) const = 0;
 
         /**
          * Returns a new normal hypersurface vector of the appropriate length
@@ -416,7 +414,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          */
         #ifdef __DOXYGEN
             static NormalHypersurfaceVector* makeZeroVector(
-                const Dim4Triangulation* triangulation);
+                const Triangulation<4>* triangulation);
         #endif
         /**
          * Creates a new set of normal hypersurface matching equations for
@@ -432,7 +430,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          */
         #ifdef __DOXYGEN
             static MatrixInt* makeMatchingEquations(
-                const Dim4Triangulation* triangulation);
+                const Triangulation<4>* triangulation);
         #endif
         /**
          * Creates a new set of validity constraints representing
@@ -447,7 +445,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          */
         #ifdef __DOXYGEN
             static EnumConstraints* makeEmbeddedConstraints(
-                const Dim4Triangulation* triangulation);
+                const Triangulation<4>* triangulation);
         #endif
 };
 
@@ -472,7 +470,7 @@ class REGINA_API NormalHypersurface :
         NormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in
              *   whichever space is appropriate. */
-        const Dim4Triangulation* triangulation_;
+        const Triangulation<4>* triangulation_;
             /**< The triangulation in which this normal hypersurface resides. */
 
         std::string name_;
@@ -513,7 +511,7 @@ class REGINA_API NormalHypersurface :
          * @param vector a vector containing the coordinates of the
          * normal hypersurface in whichever space is appropriate.
          */
-        NormalHypersurface(const Dim4Triangulation* triangulation,
+        NormalHypersurface(const Triangulation<4>* triangulation,
             NormalHypersurfaceVector* vector);
         /**
          * A Python-only routine that creates a new normal hypersurface
@@ -538,7 +536,7 @@ class REGINA_API NormalHypersurface :
          * converted internally to LargeInteger objects.
          */
         #ifdef __DOXYGEN
-        NormalHypersurface(const Dim4Triangulation* triang,
+        NormalHypersurface(const Triangulation<4>* triang,
             HyperCoords coordSystem, List allCoords);
         #endif
         /**
@@ -579,7 +577,7 @@ class REGINA_API NormalHypersurface :
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested pieces reside;
-         * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
+         * this should be between 0 and Triangulation<4>::size()-1 inclusive.
          * @param vertex the vertex of the given pentachoron around
          * which the requested pieces lie; this should be between 0
          * and 4 inclusive.
@@ -601,7 +599,7 @@ class REGINA_API NormalHypersurface :
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prisms reside;
-         * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
+         * this should be between 0 and Triangulation<4>::size()-1 inclusive.
          * @param prismType specifies the edge of the given pentachoron that
          * this prism separates from the opposite triangle;
          * this should be between 0 and 9 inclusive.
@@ -614,7 +612,7 @@ class REGINA_API NormalHypersurface :
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
-         * Dim4Triangulation::countEdges()-1 inclusive.
+         * Triangulation<4>::countEdges()-1 inclusive.
          * @return the number of times this normal hypersurface crosses the
          * given edge.
          */
@@ -632,7 +630,7 @@ class REGINA_API NormalHypersurface :
          *
          * @return the underlying triangulation.
          */
-        const Dim4Triangulation* triangulation() const;
+        const Triangulation<4>* triangulation() const;
 
         /**
          * Returns the name associated with this normal hypersurface.
@@ -1029,7 +1027,7 @@ inline LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
 inline size_t NormalHypersurface::countCoords() const {
     return vector_->size();
 }
-inline const Dim4Triangulation* NormalHypersurface::triangulation() const {
+inline const Triangulation<4>* NormalHypersurface::triangulation() const {
     return triangulation_;
 }
 

@@ -41,67 +41,66 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4Triangulation;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
 namespace {
-    regina::Dim4Pentachoron* (Dim4Triangulation::*newPentachoron_void)() =
-        &Dim4Triangulation::newPentachoron;
-    regina::Dim4Pentachoron* (Dim4Triangulation::*newPentachoron_string)(
-        const std::string&) = &Dim4Triangulation::newPentachoron;
-    regina::Dim4Pentachoron* (Dim4Triangulation::*pentachoron_non_const)(
-        size_t) = &Dim4Triangulation::pentachoron;
-    bool (Dim4Triangulation::*twoZeroMove_triangle)(regina::Dim4Triangle*,
-        bool, bool) = &Dim4Triangulation::twoZeroMove;
-    bool (Dim4Triangulation::*twoZeroMove_edge)(regina::Dim4Edge*,
-        bool, bool) = &Dim4Triangulation::twoZeroMove;
-    size_t(Dim4Triangulation::*splitIntoComponents)(regina::Packet*, bool) =
-        &Dim4Triangulation::splitIntoComponents;
+    regina::Dim4Pentachoron* (Triangulation<4>::*newPentachoron_void)() =
+        &Triangulation<4>::newPentachoron;
+    regina::Dim4Pentachoron* (Triangulation<4>::*newPentachoron_string)(
+        const std::string&) = &Triangulation<4>::newPentachoron;
+    regina::Dim4Pentachoron* (Triangulation<4>::*pentachoron_non_const)(
+        size_t) = &Triangulation<4>::pentachoron;
+    bool (Triangulation<4>::*twoZeroMove_triangle)(regina::Dim4Triangle*,
+        bool, bool) = &Triangulation<4>::twoZeroMove;
+    bool (Triangulation<4>::*twoZeroMove_edge)(regina::Dim4Edge*,
+        bool, bool) = &Triangulation<4>::twoZeroMove;
+    size_t(Triangulation<4>::*splitIntoComponents)(regina::Packet*, bool) =
+        &Triangulation<4>::splitIntoComponents;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
-        Dim4Triangulation::simplifyToLocalMinimum, 0, 1);
+        Triangulation<4>::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fourTwoMove,
-        Dim4Triangulation::fourTwoMove, 1, 3);
+        Triangulation<4>::fourTwoMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_threeThreeMove,
-        Dim4Triangulation::threeThreeMove, 1, 3);
+        Triangulation<4>::threeThreeMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoFourMove,
-        Dim4Triangulation::twoFourMove, 1, 3);
+        Triangulation<4>::twoFourMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFiveMove,
-        Dim4Triangulation::oneFiveMove, 1, 3);
+        Triangulation<4>::oneFiveMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoZeroMove,
-        Dim4Triangulation::twoZeroMove, 1, 3);
+        Triangulation<4>::twoZeroMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_openBook,
-        Dim4Triangulation::openBook, 1, 3);
+        Triangulation<4>::openBook, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_shellBoundary,
-        Dim4Triangulation::shellBoundary, 1, 3);
+        Triangulation<4>::shellBoundary, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
-        Dim4Triangulation::collapseEdge, 1, 3);
+        Triangulation<4>::collapseEdge, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        Dim4Triangulation::splitIntoComponents, 0, 2);
+        Triangulation<4>::splitIntoComponents, 0, 2);
 
-    boost::python::list Dim4_pentachora_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_pentachora_list(Triangulation<4>& t) {
         boost::python::list ans;
         for (auto s : t.pentachora())
             ans.append(boost::python::ptr(s));
         return ans;
     }
 
-    boost::python::list Dim4_components_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_components_list(Triangulation<4>& t) {
         boost::python::list ans;
         for (auto c : t.components())
             ans.append(boost::python::ptr(c));
         return ans;
     }
 
-    boost::python::list Dim4_boundaryComponents_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_boundaryComponents_list(Triangulation<4>& t) {
         boost::python::list ans;
         for (auto b : t.boundaryComponents())
             ans.append(boost::python::ptr(b));
         return ans;
     }
 
-    boost::python::list fVector_list(const Dim4Triangulation& t) {
+    boost::python::list fVector_list(const Triangulation<4>& t) {
         boost::python::list ans;
         for (auto i : t.fVector())
             ans.append(i);
@@ -109,7 +108,7 @@ namespace {
     }
 
     boost::python::list findAllIsomorphisms_list(
-        const Dim4Triangulation& t, const Dim4Triangulation& other) {
+        const Triangulation<4>& t, const Triangulation<4>& other) {
         boost::python::list ans;
 
         std::list<regina::Dim4Isomorphism*> isos;
@@ -124,7 +123,7 @@ namespace {
     }
 
     boost::python::list findAllSubcomplexesIn_list(
-        const Dim4Triangulation& t, const Dim4Triangulation& other) {
+        const Triangulation<4>& t, const Triangulation<4>& other) {
         boost::python::list ans;
 
         std::list<regina::Dim4Isomorphism*> isos;
@@ -138,16 +137,16 @@ namespace {
         return ans;
     }
 
-    void simplifiedFundamentalGroup_clone(Dim4Triangulation& tri,
+    void simplifiedFundamentalGroup_clone(Triangulation<4>& tri,
             const regina::NGroupPresentation& group) {
         tri.simplifiedFundamentalGroup(new regina::NGroupPresentation(group));
     }
 
-    std::string isoSig_void(const Dim4Triangulation& t) {
+    std::string isoSig_void(const Triangulation<4>& t) {
         return t.isoSig();
     }
 
-    boost::python::tuple isoSig_relabelling(const Dim4Triangulation& t) {
+    boost::python::tuple isoSig_relabelling(const Triangulation<4>& t) {
         regina::Dim4Isomorphism* iso;
         std::string sig = t.isoSig(&iso);
         return boost::python::make_tuple(
@@ -159,14 +158,13 @@ namespace {
 }
 
 void addDim4Triangulation() {
-    {
-    scope s = class_<Triangulation<4>, bases<regina::Packet>,
+    class_<Triangulation<4>, bases<regina::Packet>,
             SafeHeldType<Triangulation<4>>,
             boost::noncopyable>("Triangulation4")
-        .def(init<const Dim4Triangulation&>())
+        .def(init<const Triangulation<4>&>())
         .def(init<const std::string&>())
-        .def("size", &Dim4Triangulation::size)
-        .def("countPentachora", &Dim4Triangulation::countPentachora)
+        .def("size", &Triangulation<4>::size)
+        .def("countPentachora", &Triangulation<4>::countPentachora)
         .def("pentachora", Dim4_pentachora_list)
         .def("simplices", Dim4_pentachora_list)
         .def("pentachoron", pentachoron_non_const,
@@ -181,120 +179,118 @@ void addDim4Triangulation() {
             return_internal_reference<>())
         .def("newSimplex", newPentachoron_string,
             return_internal_reference<>())
-        .def("removePentachoron", &Dim4Triangulation::removePentachoron)
-        .def("removeSimplex", &Dim4Triangulation::removeSimplex)
-        .def("removePentachoronAt", &Dim4Triangulation::removePentachoronAt)
-        .def("removeSimplexAt", &Dim4Triangulation::removeSimplexAt)
-        .def("removeAllPentachora", &Dim4Triangulation::removeAllPentachora)
-        .def("removeAllSimplices", &Dim4Triangulation::removeAllSimplices)
-        .def("swapContents", &Dim4Triangulation::swapContents)
-        .def("moveContentsTo", &Dim4Triangulation::moveContentsTo)
-        .def("countComponents", &Dim4Triangulation::countComponents)
+        .def("removePentachoron", &Triangulation<4>::removePentachoron)
+        .def("removeSimplex", &Triangulation<4>::removeSimplex)
+        .def("removePentachoronAt", &Triangulation<4>::removePentachoronAt)
+        .def("removeSimplexAt", &Triangulation<4>::removeSimplexAt)
+        .def("removeAllPentachora", &Triangulation<4>::removeAllPentachora)
+        .def("removeAllSimplices", &Triangulation<4>::removeAllSimplices)
+        .def("swapContents", &Triangulation<4>::swapContents)
+        .def("moveContentsTo", &Triangulation<4>::moveContentsTo)
+        .def("countComponents", &Triangulation<4>::countComponents)
         .def("countBoundaryComponents",
-            &Dim4Triangulation::countBoundaryComponents)
-        .def("countFaces", &regina::python::countFaces<Dim4Triangulation, 4>)
-        .def("countVertices", &Dim4Triangulation::countVertices)
-        .def("countEdges", &Dim4Triangulation::countEdges)
-        .def("countTriangles", &Dim4Triangulation::countTriangles)
-        .def("countTetrahedra", &Dim4Triangulation::countTetrahedra)
+            &Triangulation<4>::countBoundaryComponents)
+        .def("countFaces", &regina::python::countFaces<Triangulation<4>, 4>)
+        .def("countVertices", &Triangulation<4>::countVertices)
+        .def("countEdges", &Triangulation<4>::countEdges)
+        .def("countTriangles", &Triangulation<4>::countTriangles)
+        .def("countTetrahedra", &Triangulation<4>::countTetrahedra)
         .def("fVector", fVector_list)
         .def("components", Dim4_components_list)
         .def("boundaryComponents", Dim4_boundaryComponents_list)
-        .def("faces", &regina::python::faces<Dim4Triangulation, 4>)
-        .def("vertices", regina::python::faces_list<Dim4Triangulation, 4, 0>)
-        .def("edges", regina::python::faces_list<Dim4Triangulation, 4, 1>)
-        .def("triangles", regina::python::faces_list<Dim4Triangulation, 4, 2>)
-        .def("tetrahedra", regina::python::faces_list<Dim4Triangulation, 4, 3>)
-        .def("component", &Dim4Triangulation::component,
+        .def("faces", &regina::python::faces<Triangulation<4>, 4>)
+        .def("vertices", regina::python::faces_list<Triangulation<4>, 4, 0>)
+        .def("edges", regina::python::faces_list<Triangulation<4>, 4, 1>)
+        .def("triangles", regina::python::faces_list<Triangulation<4>, 4, 2>)
+        .def("tetrahedra", regina::python::faces_list<Triangulation<4>, 4, 3>)
+        .def("component", &Triangulation<4>::component,
             return_internal_reference<>())
-        .def("boundaryComponent", &Dim4Triangulation::boundaryComponent,
+        .def("boundaryComponent", &Triangulation<4>::boundaryComponent,
             return_internal_reference<>())
-        .def("face", &regina::python::face<Dim4Triangulation, 4, size_t>)
-        .def("vertex", &Dim4Triangulation::vertex,
+        .def("face", &regina::python::face<Triangulation<4>, 4, size_t>)
+        .def("vertex", &Triangulation<4>::vertex,
             return_internal_reference<>())
-        .def("edge", &Dim4Triangulation::edge,
+        .def("edge", &Triangulation<4>::edge,
             return_internal_reference<>())
-        .def("triangle", &Dim4Triangulation::triangle,
+        .def("triangle", &Triangulation<4>::triangle,
             return_internal_reference<>())
-        .def("tetrahedron", &Dim4Triangulation::tetrahedron,
+        .def("tetrahedron", &Triangulation<4>::tetrahedron,
             return_internal_reference<>())
-        .def("isIdenticalTo", &Dim4Triangulation::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<4>::isIdenticalTo)
         .def("isIsomorphicTo",
-            +[](const Dim4Triangulation& t, const Dim4Triangulation& s) {
+            +[](const Triangulation<4>& t, const Triangulation<4>& s) {
                 return t.isIsomorphicTo(s).release(); },
             return_value_policy<manage_new_object>())
-        .def("makeCanonical", &Dim4Triangulation::makeCanonical)
+        .def("makeCanonical", &Triangulation<4>::makeCanonical)
         .def("isContainedIn",
-            +[](const Dim4Triangulation& t, const Dim4Triangulation& s) {
+            +[](const Triangulation<4>& t, const Triangulation<4>& s) {
                 return t.isContainedIn(s).release(); },
             return_value_policy<manage_new_object>())
         .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
-        .def("isEmpty", &Dim4Triangulation::isEmpty)
-        .def("eulerCharTri", &Dim4Triangulation::eulerCharTri)
-        .def("eulerCharManifold", &Dim4Triangulation::eulerCharManifold)
-        .def("isValid", &Dim4Triangulation::isValid)
-        .def("isIdeal", &Dim4Triangulation::isIdeal)
-        .def("hasBoundaryFacets", &Dim4Triangulation::hasBoundaryFacets)
-        .def("hasBoundaryTetrahedra", &Dim4Triangulation::hasBoundaryTetrahedra)
-        .def("countBoundaryFacets", &Dim4Triangulation::countBoundaryFacets)
+        .def("isEmpty", &Triangulation<4>::isEmpty)
+        .def("eulerCharTri", &Triangulation<4>::eulerCharTri)
+        .def("eulerCharManifold", &Triangulation<4>::eulerCharManifold)
+        .def("isValid", &Triangulation<4>::isValid)
+        .def("isIdeal", &Triangulation<4>::isIdeal)
+        .def("hasBoundaryFacets", &Triangulation<4>::hasBoundaryFacets)
+        .def("hasBoundaryTetrahedra", &Triangulation<4>::hasBoundaryTetrahedra)
+        .def("countBoundaryFacets", &Triangulation<4>::countBoundaryFacets)
         .def("countBoundaryTetrahedra",
-            &Dim4Triangulation::countBoundaryTetrahedra)
-        .def("isClosed", &Dim4Triangulation::isClosed)
-        .def("isOrientable", &Dim4Triangulation::isOrientable)
-        .def("isOriented", &Dim4Triangulation::isOriented)
-        .def("isConnected", &Dim4Triangulation::isConnected)
-        .def("fundamentalGroup", &Dim4Triangulation::fundamentalGroup,
+            &Triangulation<4>::countBoundaryTetrahedra)
+        .def("isClosed", &Triangulation<4>::isClosed)
+        .def("isOrientable", &Triangulation<4>::isOrientable)
+        .def("isOriented", &Triangulation<4>::isOriented)
+        .def("isConnected", &Triangulation<4>::isConnected)
+        .def("fundamentalGroup", &Triangulation<4>::fundamentalGroup,
             return_internal_reference<>())
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_clone)
-        .def("homology", &Dim4Triangulation::homology,
+        .def("homology", &Triangulation<4>::homology,
             return_internal_reference<>())
-        .def("homologyH1", &Dim4Triangulation::homologyH1,
+        .def("homologyH1", &Triangulation<4>::homologyH1,
             return_internal_reference<>())
-        .def("homologyH2", &Dim4Triangulation::homologyH2,
+        .def("homologyH2", &Triangulation<4>::homologyH2,
             return_internal_reference<>())
-        .def("orient", &Dim4Triangulation::orient)
+        .def("orient", &Triangulation<4>::orient)
         .def("splitIntoComponents", splitIntoComponents,
             OL_splitIntoComponents())
-        .def("intelligentSimplify", &Dim4Triangulation::intelligentSimplify)
+        .def("intelligentSimplify", &Triangulation<4>::intelligentSimplify)
         .def("simplifyToLocalMinimum",
-            &Dim4Triangulation::simplifyToLocalMinimum,
+            &Triangulation<4>::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
-        .def("fourTwoMove", &Dim4Triangulation::fourTwoMove, OL_fourTwoMove())
-        .def("threeThreeMove", &Dim4Triangulation::threeThreeMove,
+        .def("fourTwoMove", &Triangulation<4>::fourTwoMove, OL_fourTwoMove())
+        .def("threeThreeMove", &Triangulation<4>::threeThreeMove,
             OL_threeThreeMove())
-        .def("twoFourMove", &Dim4Triangulation::twoFourMove, OL_twoFourMove())
-        .def("oneFiveMove", &Dim4Triangulation::oneFiveMove, OL_oneFiveMove())
+        .def("twoFourMove", &Triangulation<4>::twoFourMove, OL_twoFourMove())
+        .def("oneFiveMove", &Triangulation<4>::oneFiveMove, OL_oneFiveMove())
         .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
         .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
-        .def("openBook", &Dim4Triangulation::openBook, OL_openBook())
-        .def("shellBoundary", &Dim4Triangulation::shellBoundary,
+        .def("openBook", &Triangulation<4>::openBook, OL_openBook())
+        .def("shellBoundary", &Triangulation<4>::shellBoundary,
             OL_shellBoundary())
-        .def("collapseEdge", &Dim4Triangulation::collapseEdge,
+        .def("collapseEdge", &Triangulation<4>::collapseEdge,
             OL_collapseEdge())
-        .def("finiteToIdeal", &Dim4Triangulation::finiteToIdeal)
-        .def("makeDoubleCover", &Dim4Triangulation::makeDoubleCover)
+        .def("finiteToIdeal", &Triangulation<4>::finiteToIdeal)
+        .def("makeDoubleCover", &Triangulation<4>::makeDoubleCover)
         .def("barycentricSubdivision",
-            &Dim4Triangulation::barycentricSubdivision)
-        .def("idealToFinite", &Dim4Triangulation::idealToFinite)
-        .def("insertTriangulation", &Dim4Triangulation::insertTriangulation)
+            &Triangulation<4>::barycentricSubdivision)
+        .def("idealToFinite", &Triangulation<4>::idealToFinite)
+        .def("insertTriangulation", &Triangulation<4>::insertTriangulation)
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)
-        .def("fromIsoSig", &Dim4Triangulation::fromIsoSig,
+        .def("fromIsoSig", &Triangulation<4>::fromIsoSig,
             return_value_policy<to_held_type<>>())
-        .def("isoSigComponentSize", &Dim4Triangulation::isoSigComponentSize)
-        .def("dumpConstruction", &Dim4Triangulation::dumpConstruction)
+        .def("isoSigComponentSize", &Triangulation<4>::isoSigComponentSize)
+        .def("dumpConstruction", &Triangulation<4>::dumpConstruction)
         .staticmethod("fromIsoSig")
         .staticmethod("isoSigComponentSize")
+        .attr("typeID") = regina::PACKET_TRIANGULATION4;
     ;
 
-    s.attr("typeID") = regina::PACKET_DIM4TRIANGULATION;
-
-    implicitly_convertible<SafeHeldType<Dim4Triangulation>,
+    implicitly_convertible<SafeHeldType<Triangulation<4>>,
         SafeHeldType<regina::Packet> >();
-    }
 
-    FIX_REGINA_BOOST_CONVERTERS(Dim4Triangulation);
+    FIX_REGINA_BOOST_CONVERTERS(Triangulation<4>);
 
     scope().attr("Dim4Triangulation") = scope().attr("Triangulation4");
 }

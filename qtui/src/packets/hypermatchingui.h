@@ -49,7 +49,6 @@ namespace regina {
     class NormalHypersurfaces;
     class Packet;
     template <int> class Triangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 };
 
 class HyperMatchingModel : public QAbstractItemModel {

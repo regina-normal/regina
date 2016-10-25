@@ -77,7 +77,7 @@
 
 - (regina::Packet*)create
 {
-    regina::Packet* ans = new regina::Dim4Triangulation();
+    regina::Packet* ans = new regina::Triangulation<4>();
     ans->setLabel("4-D triangulation");
     return ans;
 }
@@ -86,7 +86,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::Dim4Triangulation* (*Dim4TriangulationCreator)();
+typedef regina::Triangulation<4>* (*Dim4TriangulationCreator)();
 
 /**
  * Represents a single option in the examples picker.
@@ -97,7 +97,7 @@ typedef regina::Dim4Triangulation* (*Dim4TriangulationCreator)();
 @property (assign, nonatomic) Dim4TriangulationCreator creator;
 
 + (id)exampleWithName:(NSString*)name creator:(Dim4TriangulationCreator)creator;
-- (regina::Dim4Triangulation*)create;
+- (regina::Triangulation<4>*)create;
 
 @end
 
@@ -113,9 +113,9 @@ typedef regina::Dim4Triangulation* (*Dim4TriangulationCreator)();
     return e;
 }
 
-- (regina::Dim4Triangulation *)create
+- (regina::Triangulation<4> *)create
 {
-    regina::Dim4Triangulation* ans = (*self.creator)();
+    regina::Triangulation<4>* ans = (*self.creator)();
     ans->setLabel(self.name.UTF8String);
     return ans;
 }
@@ -221,7 +221,7 @@ typedef regina::Dim4Triangulation* (*Dim4TriangulationCreator)();
         return 0;
     }
 
-    regina::Dim4Triangulation* ans;
+    regina::Triangulation<4>* ans;
     if (self.bundleType.selectedSegmentIndex == 0) {
         ans = regina::Dim4ExampleTriangulation::iBundle(*tri);
 
@@ -271,7 +271,7 @@ typedef regina::Dim4Triangulation* (*Dim4TriangulationCreator)();
         return 0;
     }
     
-    regina::Dim4Triangulation* t = regina::Dim4Triangulation::fromIsoSig(sig);
+    regina::Triangulation<4>* t = regina::Triangulation<4>::fromIsoSig(sig);
     if (! t) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Invalid Isomorphism Signature"

@@ -49,7 +49,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *fundRelsDetails;
 
 @property (strong, nonatomic) Dim4TriangulationViewController* viewer;
-@property (assign, nonatomic) regina::Dim4Triangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end
 
 @implementation Dim4TriAlgebra
@@ -145,7 +145,7 @@
     [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
 
     // Simplify before doing any algebraic computations.
-    regina::Dim4Triangulation t(*self.packet);
+    regina::Triangulation<4> t(*self.packet);
     t.intelligentSimplify();
 
     if (self.packet->isValid()) {

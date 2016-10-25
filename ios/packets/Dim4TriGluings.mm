@@ -51,7 +51,7 @@
 @implementation Dim4TriGluingCell
 @end
 
-#pragma mark - Dim4Triangulation gluings
+#pragma mark - Triangulation<4> gluings
 
 @interface Dim4TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIActionSheetDelegate> {
     CGFloat headerHeight;
@@ -70,7 +70,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
 @property (strong, nonatomic) Dim4TriangulationViewController* viewer;
-@property (assign, nonatomic) regina::Dim4Triangulation* packet;
+@property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end
 
 @implementation Dim4TriGluings

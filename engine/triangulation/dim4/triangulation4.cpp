@@ -40,9 +40,9 @@
 
 namespace regina {
 
-Dim4Triangulation::Triangulation(const std::string& description) :
+Triangulation<4>::Triangulation(const std::string& description) :
         knownSimpleLinks_(false) {
-    Dim4Triangulation* attempt;
+    Triangulation<4>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
         cloneFrom(*attempt);
@@ -52,7 +52,7 @@ Dim4Triangulation::Triangulation(const std::string& description) :
     delete attempt;
 }
 
-void Dim4Triangulation::writeTextLong(std::ostream& out) const {
+void Triangulation<4>::writeTextLong(std::ostream& out) const {
     ensureSkeleton();
 
     out << "Size of the skeleton:\n";
@@ -149,7 +149,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
-long Dim4Triangulation::eulerCharManifold() const {
+long Triangulation<4>::eulerCharManifold() const {
     // Begin with V - E + F - T + P.
     // This call to eulerCharTri() also ensures that the skeleton has
     // been calculated.
@@ -170,7 +170,7 @@ long Dim4Triangulation::eulerCharManifold() const {
     return ans;
 }
 
-void Dim4Triangulation::writeXMLPacketData(std::ostream& out) const {
+void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
     using regina::xml::xmlValueTag;
 
@@ -212,7 +212,7 @@ void Dim4Triangulation::writeXMLPacketData(std::ostream& out) const {
     }
 }
 
-void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
+void Triangulation<4>::cloneFrom(const Triangulation<4>& X) {
     ChangeEventSpan span(this);
 
     removeAllPentachora();
@@ -256,7 +256,7 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
         H2_ = new NAbelianGroup(*(X.H2_.value()));
 }
 
-void Dim4Triangulation::deleteSkeleton() {
+void Triangulation<4>::deleteSkeleton() {
     for (auto b : boundaryComponents_)
         delete b;
     boundaryComponents_.clear();
@@ -264,7 +264,7 @@ void Dim4Triangulation::deleteSkeleton() {
     TriangulationBase<4>::deleteSkeleton();
 }
 
-void Dim4Triangulation::clearAllProperties() {
+void Triangulation<4>::clearAllProperties() {
     if (calculatedSkeleton())
         deleteSkeleton();
 

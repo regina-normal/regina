@@ -50,9 +50,6 @@
 
 namespace regina {
 
-template <int> class Triangulation;
-typedef Triangulation<4> Dim4Triangulation;
-
 /**
  * \weakgroup dim4
  * @{
@@ -70,7 +67,7 @@ typedef Triangulation<4> Dim4Triangulation;
  * pentachoron and its sub-faces integrate into the overall skeletal
  * structure of the triangulation.
  *
- * An implementation note: the Dim4Triangulation class is responsible for
+ * An implementation note: the Triangulation<4> class is responsible for
  * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
@@ -90,7 +87,7 @@ class REGINA_API Simplex<4> : public detail::SimplexBase<4> {
          *
          * @param tri the triangulation to which the new pentachoron belongs.
          */
-        Simplex(Dim4Triangulation* tri);
+        Simplex(Triangulation<4>* tri);
         /**
          * Creates a new pentachoron with the given description and
          * no facets joined to anything.
@@ -98,7 +95,7 @@ class REGINA_API Simplex<4> : public detail::SimplexBase<4> {
          * @param desc the description to give the new pentachoron.
          * @param tri the triangulation to which the new pentachoron belongs.
          */
-        Simplex(const std::string& desc, Dim4Triangulation* tri);
+        Simplex(const std::string& desc, Triangulation<4>* tri);
 
     friend class Triangulation<4>;
     friend class detail::TriangulationBase<4>;
@@ -118,11 +115,11 @@ inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {
     return adjacentSimplex(facet);
 }
 
-inline Simplex<4>::Simplex(Dim4Triangulation* tri) :
+inline Simplex<4>::Simplex(Triangulation<4>* tri) :
         detail::SimplexBase<4>(tri) {
 }
 
-inline Simplex<4>::Simplex(const std::string& desc, Dim4Triangulation* tri) :
+inline Simplex<4>::Simplex(const std::string& desc, Triangulation<4>* tri) :
         detail::SimplexBase<4>(desc, tri) {
 }
 

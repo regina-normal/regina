@@ -190,9 +190,6 @@ namespace {
 }
 
 void addNTriangulation() {
-    {
-    scope global;
-
     enum_<regina::TuraevViroAlg>("TuraevViroAlg")
         .value("TV_DEFAULT", regina::TV_DEFAULT)
         .value("TV_BACKTRACK", regina::TV_BACKTRACK)
@@ -200,12 +197,12 @@ void addNTriangulation() {
         .value("TV_NAIVE", regina::TV_NAIVE)
         ;
 
-    global.attr("TV_DEFAULT") = regina::TV_DEFAULT;
-    global.attr("TV_BACKTRACK") = regina::TV_BACKTRACK;
-    global.attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
-    global.attr("TV_NAIVE") = regina::TV_NAIVE;
+    scope().attr("TV_DEFAULT") = regina::TV_DEFAULT;
+    scope().attr("TV_BACKTRACK") = regina::TV_BACKTRACK;
+    scope().attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
+    scope().attr("TV_NAIVE") = regina::TV_NAIVE;
 
-    scope s = class_<Triangulation<3>, bases<regina::Packet>,
+    class_<Triangulation<3>, bases<regina::Packet>,
             SafeHeldType<Triangulation<3>>,
             boost::noncopyable>("Triangulation3")
         .def(init<const NTriangulation&>())
@@ -409,13 +406,11 @@ void addNTriangulation() {
         .staticmethod("isoSigComponentSize")
         .staticmethod("fromSnapPea")
         .staticmethod("enterTextTriangulation")
+        .attr("typeID") = regina::PACKET_TRIANGULATION3;
     ;
-
-    s.attr("typeID") = regina::PACKET_TRIANGULATION;
 
     implicitly_convertible<SafeHeldType<NTriangulation>,
         SafeHeldType<regina::Packet> >();
-    }
 
     FIX_REGINA_BOOST_CONVERTERS(NTriangulation);
 

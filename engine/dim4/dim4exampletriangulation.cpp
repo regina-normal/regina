@@ -36,10 +36,10 @@
 
 namespace regina {
 
-Dim4Triangulation* Dim4ExampleTriangulation::fourSphere() {
+Triangulation<4>* Dim4ExampleTriangulation::fourSphere() {
     // Take two pentachora and join their entire boundaries according to
     // the identity map.
-    Dim4Triangulation* ans = new Dim4Triangulation();
+    Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("4-sphere");
 
     Dim4Pentachoron* p = ans->newPentachoron();
@@ -53,8 +53,8 @@ Dim4Triangulation* Dim4ExampleTriangulation::fourSphere() {
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::simplicialFourSphere() {
-    Dim4Triangulation* ans = new Dim4Triangulation();
+Triangulation<4>* Dim4ExampleTriangulation::simplicialFourSphere() {
+    Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Standard simplicial 4-sphere");
 
     Dim4Pentachoron* penList[6];
@@ -80,8 +80,8 @@ Dim4Triangulation* Dim4ExampleTriangulation::simplicialFourSphere() {
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
-    Dim4Triangulation* ans = new Dim4Triangulation();
+Triangulation<4>* Dim4ExampleTriangulation::rp4() {
+    Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Real projective 4-space");
 
     // Thanks Ryan, you rock. :)
@@ -103,11 +103,11 @@ Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::s3xs1() {
+Triangulation<4>* Dim4ExampleTriangulation::s3xs1() {
     // Make two pentachora, and join three of the five facets according
     // to the identity map.  Only facets 0123 and 1234 of each
     // pentachoron remain.
-    Dim4Triangulation* ans = new Dim4Triangulation();
+    Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("S3 x S1");
 
     Dim4Pentachoron* p = ans->newPentachoron();
@@ -125,11 +125,11 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1() {
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
+Triangulation<4>* Dim4ExampleTriangulation::s3xs1Twisted() {
     // Make two pentachora, and join three of the five facets according
     // to the identity map.  Only facets 0123 and 1234 of each
     // pentachoron remain.
-    Dim4Triangulation* ans = new Dim4Triangulation();
+    Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("S3 x~ S1");
 
     Dim4Pentachoron* p = ans->newPentachoron();
@@ -147,9 +147,9 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::cappellShaneson() {
+Triangulation<4>* Dim4ExampleTriangulation::cappellShaneson() {
     // Use the gluings described in arXiv:1109.3899.
-    Dim4Triangulation* ans = new Dim4Triangulation();
+    Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Cappell-Shaneson knot complement");
 
     Dim4Pentachoron* p = ans->newPentachoron();
@@ -163,9 +163,9 @@ Dim4Triangulation* Dim4ExampleTriangulation::cappellShaneson() {
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
+Triangulation<4>* Dim4ExampleTriangulation::doubleCone(
         const NTriangulation& base) {
-    Dim4Triangulation* ans = new Dim4Triangulation();
+    Triangulation<4>* ans = new Triangulation<4>();
     Packet::ChangeEventSpan span(ans);
     ans->setLabel("Double cone over " + base.label());
 
@@ -211,9 +211,9 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
+Triangulation<4>* Dim4ExampleTriangulation::singleCone(
         const NTriangulation& base) {
-    Dim4Triangulation* ans = new Dim4Triangulation();
+    Triangulation<4>* ans = new Triangulation<4>();
     Packet::ChangeEventSpan span(ans);
     ans->setLabel("Single cone over " + base.label());
 
@@ -289,14 +289,14 @@ namespace {
          * Create the pentachoron that provides either the upper or lower
          * tetrahedron boundary of this prism.
          */
-        inline void buildBdry(Dim4Triangulation* tri, int which) {
+        inline void buildBdry(Triangulation<4>* tri, int which) {
             bdry[which] = tri->newPentachoron();
         }
 
         /**
          * Create all remaining pentachora (80 of 82) within this prism.
          */
-        inline void buildWalls(Dim4Triangulation* tri) {
+        inline void buildWalls(Triangulation<4>* tri) {
             unsigned i, j, k, l;
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 4; ++j)
@@ -398,9 +398,9 @@ namespace {
     };
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
+Triangulation<4>* Dim4ExampleTriangulation::iBundle(
         const NTriangulation& base) {
-    Dim4Triangulation* ans = new Dim4Triangulation();
+    Triangulation<4>* ans = new Triangulation<4>();
     Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x I");
 
@@ -452,9 +452,9 @@ Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
+Triangulation<4>* Dim4ExampleTriangulation::s1Bundle(
         const NTriangulation& base) {
-    Dim4Triangulation* ans = iBundle(base);
+    Triangulation<4>* ans = iBundle(base);
     Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x S1");
 
@@ -467,9 +467,9 @@ Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
     return ans;
 }
 
-Dim4Triangulation* Dim4ExampleTriangulation::bundleWithMonodromy(
+Triangulation<4>* Dim4ExampleTriangulation::bundleWithMonodromy(
         const NTriangulation& base, const NIsomorphism& monodromy) {
-    Dim4Triangulation* ans = iBundle(base);
+    Triangulation<4>* ans = iBundle(base);
     Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x I / ~");
 

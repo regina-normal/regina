@@ -41,7 +41,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::NormalHypersurface;
-using regina::Dim4Triangulation;
+using regina::Triangulation;
 
 namespace {
     void writeRawVector_stdio(const NormalHypersurface& s) {
@@ -52,7 +52,7 @@ namespace {
      * A python-only constructor that lets users build a normal hypersurface
      * from a hand-crafted list of integers.
      */
-    NormalHypersurface* fromCoordinates(Dim4Triangulation* t,
+    NormalHypersurface* fromCoordinates(Triangulation<4>* t,
             regina::HyperCoords coords, boost::python::list values) {
         regina::NormalHypersurfaceVector* v =
             regina::makeZeroVector(t, coords);
