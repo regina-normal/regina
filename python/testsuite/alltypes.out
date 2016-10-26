@@ -161,6 +161,34 @@ Edge8 : typedef ->  Face8_1
 
 Edge9 : typedef ->  Face9_1
 
+EdgeEmbedding10 : typedef ->  FaceEmbedding10_1
+
+EdgeEmbedding11 : typedef ->  FaceEmbedding11_1
+
+EdgeEmbedding12 : typedef ->  FaceEmbedding12_1
+
+EdgeEmbedding13 : typedef ->  FaceEmbedding13_1
+
+EdgeEmbedding14 : typedef ->  FaceEmbedding14_1
+
+EdgeEmbedding15 : typedef ->  FaceEmbedding15_1
+
+EdgeEmbedding2 : typedef ->  FaceEmbedding2_1
+
+EdgeEmbedding3 : typedef ->  FaceEmbedding3_1
+
+EdgeEmbedding4 : typedef ->  FaceEmbedding4_1
+
+EdgeEmbedding5 : typedef ->  FaceEmbedding5_1
+
+EdgeEmbedding6 : typedef ->  FaceEmbedding6_1
+
+EdgeEmbedding7 : typedef ->  FaceEmbedding7_1
+
+EdgeEmbedding8 : typedef ->  FaceEmbedding8_1
+
+EdgeEmbedding9 : typedef ->  FaceEmbedding9_1
+
 ExampleSnapPea : class
 Equality type : NEVER_INSTANTIATED
 
@@ -1468,6 +1496,28 @@ Pentachoron8 : typedef ->  Face8_4
 
 Pentachoron9 : typedef ->  Face9_4
 
+PentachoronEmbedding10 : typedef ->  FaceEmbedding10_4
+
+PentachoronEmbedding11 : typedef ->  FaceEmbedding11_4
+
+PentachoronEmbedding12 : typedef ->  FaceEmbedding12_4
+
+PentachoronEmbedding13 : typedef ->  FaceEmbedding13_4
+
+PentachoronEmbedding14 : typedef ->  FaceEmbedding14_4
+
+PentachoronEmbedding15 : typedef ->  FaceEmbedding15_4
+
+PentachoronEmbedding5 : typedef ->  FaceEmbedding5_4
+
+PentachoronEmbedding6 : typedef ->  FaceEmbedding6_4
+
+PentachoronEmbedding7 : typedef ->  FaceEmbedding7_4
+
+PentachoronEmbedding8 : typedef ->  FaceEmbedding8_4
+
+PentachoronEmbedding9 : typedef ->  FaceEmbedding9_4
+
 Perm10 : class
 Equality type : BY_VALUE
 
@@ -1614,6 +1664,30 @@ Tetrahedron8 : typedef ->  Face8_3
 
 Tetrahedron9 : typedef ->  Face9_3
 
+TetrahedronEmbedding10 : typedef ->  FaceEmbedding10_3
+
+TetrahedronEmbedding11 : typedef ->  FaceEmbedding11_3
+
+TetrahedronEmbedding12 : typedef ->  FaceEmbedding12_3
+
+TetrahedronEmbedding13 : typedef ->  FaceEmbedding13_3
+
+TetrahedronEmbedding14 : typedef ->  FaceEmbedding14_3
+
+TetrahedronEmbedding15 : typedef ->  FaceEmbedding15_3
+
+TetrahedronEmbedding4 : typedef ->  FaceEmbedding4_3
+
+TetrahedronEmbedding5 : typedef ->  FaceEmbedding5_3
+
+TetrahedronEmbedding6 : typedef ->  FaceEmbedding6_3
+
+TetrahedronEmbedding7 : typedef ->  FaceEmbedding7_3
+
+TetrahedronEmbedding8 : typedef ->  FaceEmbedding8_3
+
+TetrahedronEmbedding9 : typedef ->  FaceEmbedding9_3
+
 Text : class
 Equality type : BY_REFERENCE
 
@@ -1650,6 +1724,32 @@ Triangle7 : typedef ->  Face7_2
 Triangle8 : typedef ->  Face8_2
 
 Triangle9 : typedef ->  Face9_2
+
+TriangleEmbedding10 : typedef ->  FaceEmbedding10_2
+
+TriangleEmbedding11 : typedef ->  FaceEmbedding11_2
+
+TriangleEmbedding12 : typedef ->  FaceEmbedding12_2
+
+TriangleEmbedding13 : typedef ->  FaceEmbedding13_2
+
+TriangleEmbedding14 : typedef ->  FaceEmbedding14_2
+
+TriangleEmbedding15 : typedef ->  FaceEmbedding15_2
+
+TriangleEmbedding3 : typedef ->  FaceEmbedding3_2
+
+TriangleEmbedding4 : typedef ->  FaceEmbedding4_2
+
+TriangleEmbedding5 : typedef ->  FaceEmbedding5_2
+
+TriangleEmbedding6 : typedef ->  FaceEmbedding6_2
+
+TriangleEmbedding7 : typedef ->  FaceEmbedding7_2
+
+TriangleEmbedding8 : typedef ->  FaceEmbedding8_2
+
+TriangleEmbedding9 : typedef ->  FaceEmbedding9_2
 
 Triangulation10 : class
 Equality type : BY_REFERENCE
@@ -1720,4 +1820,32 @@ Vertex7 : typedef ->  Face7_0
 Vertex8 : typedef ->  Face8_0
 
 Vertex9 : typedef ->  Face9_0
+
+VertexEmbedding10 : typedef ->  FaceEmbedding10_0
+
+VertexEmbedding11 : typedef ->  FaceEmbedding11_0
+
+VertexEmbedding12 : typedef ->  FaceEmbedding12_0
+
+VertexEmbedding13 : typedef ->  FaceEmbedding13_0
+
+VertexEmbedding14 : typedef ->  FaceEmbedding14_0
+
+VertexEmbedding15 : typedef ->  FaceEmbedding15_0
+
+VertexEmbedding2 : typedef ->  FaceEmbedding2_0
+
+VertexEmbedding3 : typedef ->  FaceEmbedding3_0
+
+VertexEmbedding4 : typedef ->  FaceEmbedding4_0
+
+VertexEmbedding5 : typedef ->  FaceEmbedding5_0
+
+VertexEmbedding6 : typedef ->  FaceEmbedding6_0
+
+VertexEmbedding7 : typedef ->  FaceEmbedding7_0
+
+VertexEmbedding8 : typedef ->  FaceEmbedding8_0
+
+VertexEmbedding9 : typedef ->  FaceEmbedding9_0
 
