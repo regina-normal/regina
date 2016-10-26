@@ -1285,7 +1285,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 //   natural orientation agrees with the manifolds one or not.
                 //
                 // dual orientation of triangle points into some tetrahedron
-                //  given by triangle[?]->embedding(0) is a NTriangleEmbedding
+                //  given by triangle[?]->embedding(0) is a TriangleEmbedding<3>
                 //     triangle[]->embedding(0).tetrahedron() tet pointer
                 //     triangle[]->embedding(0).vertices() is a Perm
                 //

@@ -124,7 +124,7 @@ void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
         NBoundaryComponent* label) {
     std::queue<Triangle<3>*> triangleQueue;
 
-    const NTriangleEmbedding& emb = firstTriangle->front();
+    const TriangleEmbedding<3>& emb = firstTriangle->front();
     firstTriangle->boundaryComponent_ = label;
     label->triangles_.push_back(firstTriangle);
     emb.tetrahedron()->tmpOrientation_[emb.triangle()] = 1;

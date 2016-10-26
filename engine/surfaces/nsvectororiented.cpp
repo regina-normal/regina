@@ -59,7 +59,7 @@ LargeInteger NSVectorOriented::edgeWeight(
 LargeInteger NSVectorOriented::arcs(size_t triIndex,
         int triVertex, const Triangulation<3>* triang) const {
     // Find a tetrahedron next to the triangle in question.
-    const NTriangleEmbedding& emb = triang->triangles()[triIndex]->front();
+    const TriangleEmbedding<3>& emb = triang->triangles()[triIndex]->front();
     long tetIndex = emb.tetrahedron()->index();
     int vertex = emb.vertices()[triVertex];
     int backOfFace = emb.vertices()[3];

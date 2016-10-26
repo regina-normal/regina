@@ -106,7 +106,7 @@ void Triangulation<4>::calculateBoundary() {
     Dim4Vertex* vertex;
     Dim4Edge* edge;
     Triangle<4>* tri;
-    Dim4TriangleEmbedding triEmb;
+    TriangleEmbedding<4> triEmb;
     Dim4Tetrahedron *tet, *adjTet;
     int tetTri, adjTetTri;
     NTetrahedron *bdryTet, *adjBdryTet;
@@ -252,7 +252,7 @@ void Triangulation<4>::calculateBoundary() {
         for (Triangulation<3>::TriangleIterator it =
                 label->boundary_->triangles().begin();
                 it != label->boundary_->triangles().end(); ++it) {
-            const NTriangleEmbedding& emb = (*it)->front();
+            const TriangleEmbedding<3>& emb = (*it)->front();
             tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
             label->triangles_.push_back(tet->triangle(emb.triangle()));
         }

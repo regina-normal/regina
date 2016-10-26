@@ -49,7 +49,6 @@
 using regina::NBoundaryComponent;
 using regina::NComponent;
 using regina::NEdge;
-using regina::NTriangleEmbedding;
 using regina::NVertex;
 using regina::Dim2BoundaryComponent;
 using regina::Dim2Component;
@@ -62,6 +61,7 @@ using regina::Dim4Edge;
 using regina::Dim4Tetrahedron;
 using regina::Dim4TetrahedronEmbedding;
 using regina::Triangle;
+using regina::TriangleEmbedding;
 using regina::Dim4Vertex;
 
 #define SKELETON_MAX_ROWS_DEFAULT 10
@@ -604,7 +604,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                 } else {
                     QString ans;
                     for (unsigned long i = 0; i < item->countTriangles(); ++i) {
-                        const NTriangleEmbedding& emb =
+                        const TriangleEmbedding<3>& emb =
                             item->triangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
                             arg(emb.tetrahedron()->index()).

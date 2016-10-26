@@ -734,7 +734,7 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
 }
 
 bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
-    const NTriangleEmbedding& emb = f->front();
+    const TriangleEmbedding<3>& emb = f->front();
     NTetrahedron* tet = emb.tetrahedron();
     Perm<4> vertices = emb.vertices();
 

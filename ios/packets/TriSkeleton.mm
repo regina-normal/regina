@@ -425,7 +425,7 @@
                     // Parity says #vertices >= 2, so always use plural form.
                 } else {
                     for (unsigned long i = 0; i < b->countTriangles(); ++i) {
-                        const regina::NTriangleEmbedding& emb = b->triangle(i)->front();
+                        const regina::TriangleEmbedding<3>& emb = b->triangle(i)->front();
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%s)",
                                                   emb.tetrahedron()->index(),

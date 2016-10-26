@@ -441,14 +441,14 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::NTriangleEmbedding& e0 = triangle->embedding(0);
+    const regina::TriangleEmbedding<3>& e0 = triangle->embedding(0);
     [text appendFormat:@"Triangle %ld — %ld (%s)",
      triangle->index(),
      e0.tetrahedron()->index(),
      e0.vertices().trunc3().c_str()];
 
     if (triangle->degree() > 1) {
-        const regina::NTriangleEmbedding& e1 = triangle->embedding(1);
+        const regina::TriangleEmbedding<3>& e1 = triangle->embedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.tetrahedron()->index(),
          e1.vertices().trunc3().c_str()];

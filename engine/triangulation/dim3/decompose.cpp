@@ -964,7 +964,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 
         // This could be a compressing disc.
         // Cut along the triangle to be sure.
-        const NTriangleEmbedding& emb = (*fit)->front();
+        const TriangleEmbedding<3>& emb = (*fit)->front();
 
         Triangulation<3> cut(use);
         cut.tetrahedron(emb.tetrahedron()->markedIndex())->unjoin(

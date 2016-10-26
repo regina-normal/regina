@@ -40,7 +40,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Triangle;
-using regina::Dim4TriangleEmbedding;
+using regina::TriangleEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::GlobalArray;
@@ -64,14 +64,14 @@ namespace {
 void addDim4Triangle() {
     class_<FaceEmbedding<4, 2>>("FaceEmbedding4_2",
             init<regina::Dim4Pentachoron*, int>())
-        .def(init<const Dim4TriangleEmbedding&>())
-        .def("simplex", &Dim4TriangleEmbedding::simplex,
+        .def(init<const TriangleEmbedding<4>&>())
+        .def("simplex", &TriangleEmbedding<4>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("pentachoron", &Dim4TriangleEmbedding::pentachoron,
+        .def("pentachoron", &TriangleEmbedding<4>::pentachoron,
             return_value_policy<reference_existing_object>())
-        .def("face", &Dim4TriangleEmbedding::face)
-        .def("triangle", &Dim4TriangleEmbedding::triangle)
-        .def("vertices", &Dim4TriangleEmbedding::vertices)
+        .def("face", &TriangleEmbedding<4>::face)
+        .def("triangle", &TriangleEmbedding<4>::triangle)
+        .def("vertices", &TriangleEmbedding<4>::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

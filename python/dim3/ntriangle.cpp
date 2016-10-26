@@ -42,7 +42,7 @@ using namespace regina::python;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::Triangle;
-using regina::NTriangleEmbedding;
+using regina::TriangleEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
@@ -57,14 +57,14 @@ namespace {
 void addNTriangle() {
     class_<FaceEmbedding<3, 2>>("FaceEmbedding3_2",
             init<regina::NTetrahedron*, int>())
-        .def(init<const NTriangleEmbedding&>())
-        .def("simplex", &NTriangleEmbedding::simplex,
+        .def(init<const TriangleEmbedding<3>&>())
+        .def("simplex", &TriangleEmbedding<3>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("tetrahedron", &NTriangleEmbedding::tetrahedron,
+        .def("tetrahedron", &TriangleEmbedding<3>::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("face", &NTriangleEmbedding::face)
-        .def("triangle", &NTriangleEmbedding::triangle)
-        .def("vertices", &NTriangleEmbedding::vertices)
+        .def("face", &TriangleEmbedding<3>::face)
+        .def("triangle", &TriangleEmbedding<3>::triangle)
+        .def("vertices", &TriangleEmbedding<3>::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
