@@ -233,7 +233,7 @@ void NormalHypersurface::calculateRealBoundary() const {
 
     size_t index;
     size_t tot = triangulation_->size();
-    const Dim4Pentachoron* pent;
+    const Pentachoron<4>* pent;
     int type, facet;
 
     for (index = 0; index < tot; index++) {

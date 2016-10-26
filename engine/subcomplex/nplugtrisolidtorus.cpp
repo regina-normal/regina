@@ -145,7 +145,7 @@ NManifold* NPlugTriSolidTorus::manifold() const {
 NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
         NComponent* comp) {
     // Each triangular solid torus is tested three times since we
-    // can't call NTetrahedron::index() from within a component only.
+    // can't call Tetrahedron<3>::index() from within a component only.
     // TODO: Update - yes we can now.  This constraint was from an
     // ancient version of regina.  Fix this code accordingly.
 
@@ -168,15 +168,15 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
     unsigned long tetIndex;
     int coreIndex;
     NTriSolidTorus* core;
-    NTetrahedron* coreTet[3];
+    Tetrahedron<3>* coreTet[3];
     NEdge* axis[3];
     Perm<4> coreRoles[3];
-    NTetrahedron* base[2];
+    Tetrahedron<3>* base[2];
     Perm<4> baseRoles[2];
     int i, j;
     bool error;
 
-    NTetrahedron* plugTet[3][2];
+    Tetrahedron<3>* plugTet[3][2];
     Perm<4> plugRoles[3][2];
     Perm<4> realPlugRoles[2];
 

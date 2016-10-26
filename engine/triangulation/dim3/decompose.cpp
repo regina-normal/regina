@@ -184,8 +184,8 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
             working->insertLayeredLensSpace(0, 1);
         } else {
             // Build S2 x~ S1.
-            NTetrahedron* t0 = working->newTetrahedron();
-            NTetrahedron* t1 = working->newTetrahedron();
+            Tetrahedron<3>* t0 = working->newTetrahedron();
+            Tetrahedron<3>* t1 = working->newTetrahedron();
             t0->join(0, t1, Perm<4>(0, 1, 3, 2));
             t0->join(1, t1, Perm<4>(0, 1, 3, 2));
             t0->join(2, t1, Perm<4>(1, 3, 2, 0));
@@ -1012,7 +1012,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
         int upper = ball->boundaryFace(0);
         delete ball;
 
-        NTetrahedron* adj = (*tit)->adjacentTetrahedron(upper);
+        Tetrahedron<3>* adj = (*tit)->adjacentTetrahedron(upper);
         if (! adj) {
             // The disc is trivial.
             continue;
@@ -1020,7 +1020,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 
         Triangulation<3> cut(use);
         cut.tetrahedron((*tit)->markedIndex())->unjoin(upper);
-        NTetrahedron* tet = cut.newTetrahedron();
+        Tetrahedron<3>* tet = cut.newTetrahedron();
         tet->join(NEdge::edgeVertex[equator][0], tet, Perm<4>(
             NEdge::edgeVertex[equator][0], NEdge::edgeVertex[equator][1]));
         tet->join(upper, cut.tetrahedron(adj->markedIndex()),

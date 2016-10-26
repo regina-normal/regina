@@ -89,7 +89,7 @@ Triangulation<2>* NVertex::buildLinkDetail(bool labels,
         }
     }
 
-    NTetrahedron *tet, *adj;
+    Tetrahedron<3> *tet, *adj;
     int exitTri, v;
     int edgeInLink;
     int adjIndex;

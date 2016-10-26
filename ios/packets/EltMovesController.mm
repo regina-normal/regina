@@ -346,7 +346,7 @@
     return self.packet->triangle([options[use] longValue]);
 }
 
-- (regina::NTetrahedron*)tetrahedronFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Tetrahedron<3>*)tetrahedronFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -457,7 +457,7 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
-- (NSAttributedString*)tetrahedronDesc:(regina::NTetrahedron*)tetrahedron
+- (NSAttributedString*)tetrahedronDesc:(regina::Tetrahedron<3>*)tetrahedron
 {
     if (! tetrahedron)
         return [TextHelper badString:@"Invalid tetrahedron"];
@@ -488,7 +488,7 @@
 
 - (IBAction)do14:(id)sender
 {
-    regina::NTetrahedron* use = [self tetrahedronFor:self.stepper14 options:options14];
+    regina::Tetrahedron<3>* use = [self tetrahedronFor:self.stepper14 options:options14];
     if (! use)
         return;
 
@@ -558,7 +558,7 @@
 
 - (IBAction)doShell:(id)sender
 {
-    regina::NTetrahedron* use = [self tetrahedronFor:self.stepperShell options:optionsShell];
+    regina::Tetrahedron<3>* use = [self tetrahedronFor:self.stepperShell options:optionsShell];
     if (! use)
         return;
 

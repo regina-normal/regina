@@ -44,7 +44,7 @@ NSnappedTwoSphere* NSnappedTwoSphere::clone() const {
 }
 
 NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
-        NTetrahedron* tet1, NTetrahedron* tet2) {
+        Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
     NSnappedBall* ball[2];
     if (! (ball[0] = NSnappedBall::formsSnappedBall(tet1)))
         return 0;

@@ -47,7 +47,7 @@ void Triangulation<3>::calculateSkeleton() {
 #if 0
     checkPermutations();
         // Sets valid to false if gluings are mismatched (which should
-        // never happen if the NTetrahedron gluing routines have been
+        // never happen if the Tetrahedron<3> gluing routines have been
         // used correctly)
 #endif
 
@@ -74,7 +74,7 @@ void Triangulation<3>::checkPermutations() {
 
     for (it = simplices_.begin(); it != simplices_.end(); it++)
         for (int face = 0; face < 4; face++) {
-            NTetrahedron * adjacent = (*it) -> adjacentTetrahedron(face);
+            Tetrahedron<3> * adjacent = (*it) -> adjacentTetrahedron(face);
 
             if (adjacent) {
                 Perm<4> perm = (*it) -> adjacentGluing(face);
@@ -130,7 +130,7 @@ void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
     emb.tetrahedron()->tmpOrientation_[emb.triangle()] = 1;
     triangleQueue.push(firstTriangle);
 
-    NTetrahedron* tet;
+    Tetrahedron<3>* tet;
     Perm<4> tetVertices;
     int tetFace;
     int i,j;
@@ -141,7 +141,7 @@ void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
     Triangle<3>* nextTriangle;
     int nextFaceNumber;
     Perm<4> nextFacePerm;
-    NTetrahedron* nextTet;
+    Tetrahedron<3>* nextTet;
     int followFromFace;
     Perm<4> switchPerm;
     int yourOrientation;
@@ -225,7 +225,7 @@ void Triangulation<3>::calculateVertexLinks() {
     // Begin by calculating (2 v_int + v_bdry) for each vertex link.
     NVertex* end0;
     NVertex* end1;
-    NTetrahedron* tet;
+    Tetrahedron<3>* tet;
     for (NEdge* e : edges()) {
         // Try to compute e->vertex(0) and e->vertex(1), but
         // without calling e->vertex() which will recursively try to

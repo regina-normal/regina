@@ -120,10 +120,10 @@ namespace {
      */
     class Block {
         protected:
-            const NTetrahedron* outerTet_;
+            const Tetrahedron<3>* outerTet_;
                 /**< The "outer tetrahedron".  This is the tetrahedron
                      of the original triangulation that contains this block. */
-            NTetrahedron** innerTet_;
+            Tetrahedron<3>** innerTet_;
                 /**< The "inner tetrahedra".  These are the tetrahedra
                      used to triangulate this block, and also to
                      perform any necessary boundary layerings. */
@@ -139,7 +139,7 @@ namespace {
                      (or 0 if this block does not actually meet face i
                      of the outer tetrahedron). */
 
-            NTetrahedron* link_[4];
+            Tetrahedron<3>* link_[4];
                 /**< Indicates which inner tetrahedra in this block (if any)
                      face the vertices of the outer tetrahedron.
                      Specifically, if this block contains a triangle on its
@@ -169,7 +169,7 @@ namespace {
             /**
              * Returns the outer tetrahedron.
              */
-            const NTetrahedron* outerTet();
+            const Tetrahedron<3>* outerTet();
 
             /**
              * Glues this block to the given adjacent block.  This
@@ -197,7 +197,7 @@ namespace {
              *
              * \pre This block already contains at least one inner tetrahedron.
              */
-            NTetrahedron* layeringTetrahedron();
+            Tetrahedron<3>* layeringTetrahedron();
 
             /**
              * Attaches the triangle described by link_[vertex] to the
@@ -208,7 +208,7 @@ namespace {
              * tetrahedron (where "shrunk-down" means dilation about the
              * given outer tetrahedron vertex).
              */
-            void attachVertexNbd(NTetrahedron* nbd, int vertex);
+            void attachVertexNbd(Tetrahedron<3>* nbd, int vertex);
 
         protected:
             /**
@@ -221,7 +221,7 @@ namespace {
              * layerings will be automatically inserted into the given
              * triangulation.
              */
-            Block(const NTetrahedron* outerTet, unsigned initialNumTet,
+            Block(const Tetrahedron<3>* outerTet, unsigned initialNumTet,
                 unsigned maxLayerings, Triangulation<3>* insertInto);
     };
 
@@ -252,7 +252,7 @@ namespace {
              * All new inner tetrahedra will be automatically
              * inserted into the given triangulation.
              */
-            TriPrism(const NTetrahedron *outerTet, int type,
+            TriPrism(const Tetrahedron<3> *outerTet, int type,
                 Triangulation<3>* insertInto);
     };
 
@@ -280,7 +280,7 @@ namespace {
              * All new inner tetrahedra will be automatically
              * inserted into the given triangulation.
              */
-            QuadPrism(const NTetrahedron *outerTet, int type,
+            QuadPrism(const Tetrahedron<3> *outerTet, int type,
                 Triangulation<3>* insertInto);
     };
 
@@ -308,7 +308,7 @@ namespace {
              * All new inner tetrahedra will be automatically
              * inserted into the given triangulation.
              */
-            TruncHalfTet(const NTetrahedron *outerTet, int type,
+            TruncHalfTet(const Tetrahedron<3> *outerTet, int type,
                 Triangulation<3>* insertInto);
     };
 
@@ -330,7 +330,7 @@ namespace {
              * All new inner tetrahedra will be automatically
              * inserted into the given triangulation.
              */
-            TruncTet(const NTetrahedron *outerTet, Triangulation<3>* insertInto);
+            TruncTet(const Tetrahedron<3> *outerTet, Triangulation<3>* insertInto);
     };
 
     /**
@@ -394,7 +394,7 @@ namespace {
      */
     class BdryQuad : public Bdry {
         private:
-            NTetrahedron* innerTet_[2];
+            Tetrahedron<3>* innerTet_[2];
                 /**< The two inner tetrahedra of the block that supply the
                      two inner boundary faces for this quadrilateral. */
             Perm<4> innerVertices_[2];
@@ -441,7 +441,7 @@ namespace {
      */
     class BdryHex : public Bdry {
         private:
-            NTetrahedron* innerTet_[4];
+            Tetrahedron<3>* innerTet_[4];
                 /**< The four inner tetrahedra of the block that supply the
                      four inner boundary faces for this quadrilateral. */
             Perm<4> innerVertices_[4];
@@ -547,7 +547,7 @@ namespace {
                      This block exists if and only if the normal surface
                      contains no quadrilateral discs. */
 
-            NTetrahedron* vertexNbd_[4];
+            Tetrahedron<3>* vertexNbd_[4];
                 /**< The four small tetrahedra that contribute to the
                      vertex neighbourhoods surrounding the four vertices
                      of the outer tetrahedron.  The vertices of each small
@@ -627,7 +627,7 @@ namespace {
              *
              * See the data member \a vertexNbd_ for further details.
              */
-            NTetrahedron* vertexNbd(int vertex);
+            Tetrahedron<3>* vertexNbd(int vertex);
     };
 
     inline Block::~Block() {
@@ -636,7 +636,7 @@ namespace {
         delete[] innerTet_;
     }
 
-    inline const NTetrahedron* Block::outerTet() {
+    inline const Tetrahedron<3>* Block::outerTet() {
         return outerTet_;
     }
 
@@ -644,28 +644,28 @@ namespace {
         bdry_[face]->join(other->bdry_[outerTet_->adjacentFace(face)]);
     }
 
-    inline NTetrahedron* Block::layeringTetrahedron() {
+    inline Tetrahedron<3>* Block::layeringTetrahedron() {
         return (innerTet_[nInnerTet_++] =
             innerTet_[0]->triangulation()->newTetrahedron());
     }
 
-    inline void Block::attachVertexNbd(NTetrahedron* nbd, int vertex) {
+    inline void Block::attachVertexNbd(Tetrahedron<3>* nbd, int vertex) {
         link_[vertex]->join(linkVertices_[vertex].preImageOf(vertex),
             nbd, linkVertices_[vertex]);
     }
 
-    inline Block::Block(const NTetrahedron *outerTet, unsigned initialNumTet,
+    inline Block::Block(const Tetrahedron<3> *outerTet, unsigned initialNumTet,
             unsigned maxLayerings, Triangulation<3>* insertInto) :
             outerTet_(outerTet),
-            innerTet_(new NTetrahedron*[initialNumTet + maxLayerings]),
+            innerTet_(new Tetrahedron<3>*[initialNumTet + maxLayerings]),
             nInnerTet_(initialNumTet) {
         unsigned i;
         for (i = 0; i < nInnerTet_; ++i)
             innerTet_[i] = insertInto->newTetrahedron();
-        std::fill(link_, link_ + 4, static_cast<NTetrahedron*>(0));
+        std::fill(link_, link_ + 4, static_cast<Tetrahedron<3>*>(0));
     }
 
-    TriPrism::TriPrism(const NTetrahedron *outerTet, int type,
+    TriPrism::TriPrism(const Tetrahedron<3> *outerTet, int type,
             Triangulation<3>* insertInto) :
             Block(outerTet, 3, 3, insertInto) {
         innerTet_[1]->join(1, innerTet_[0], Perm<4>());
@@ -702,7 +702,7 @@ namespace {
         linkVertices_[vertices[0]] = vertices * Perm<4>(0, 1, 3, 2);
     }
 
-    QuadPrism::QuadPrism(const NTetrahedron *outerTet, int type,
+    QuadPrism::QuadPrism(const Tetrahedron<3> *outerTet, int type,
             Triangulation<3>* insertInto) :
             Block(outerTet, 5, 4, insertInto) {
         innerTet_[4]->join(2, innerTet_[0], Perm<4>());
@@ -747,7 +747,7 @@ namespace {
         bdry_[vertices[3]] = q;
     }
 
-    TruncHalfTet::TruncHalfTet(const NTetrahedron *outerTet, int type,
+    TruncHalfTet::TruncHalfTet(const Tetrahedron<3> *outerTet, int type,
             Triangulation<3>* insertInto):
             Block(outerTet, 8, 10, insertInto) {
         innerTet_[1]->join(2, innerTet_[0], Perm<4>());
@@ -811,7 +811,7 @@ namespace {
         linkVertices_[vertices[3]] = vertices * Perm<4>(3, 1, 2, 0);
     }
 
-    TruncTet::TruncTet(const NTetrahedron *outerTet, Triangulation<3>* insertInto) :
+    TruncTet::TruncTet(const Tetrahedron<3> *outerTet, Triangulation<3>* insertInto) :
             Block(outerTet, 11, 16, insertInto) {
         innerTet_[0]->join(2, innerTet_[4], Perm<4>());
         innerTet_[1]->join(3, innerTet_[7], Perm<4>());
@@ -923,7 +923,7 @@ namespace {
     }
 
     void BdryQuad::reflect() {
-        NTetrahedron* layering = block_->layeringTetrahedron();
+        Tetrahedron<3>* layering = block_->layeringTetrahedron();
 
         layering->join(0, innerTet_[1],
             innerVertices_[1] * Perm<4>(3, 2, 1, 0));
@@ -962,10 +962,10 @@ namespace {
     }
 
     void BdryHex::reflect() {
-        NTetrahedron* layering0 = block_->layeringTetrahedron();
-        NTetrahedron* layering1 = block_->layeringTetrahedron();
-        NTetrahedron* layering2 = block_->layeringTetrahedron();
-        NTetrahedron* layering3 = block_->layeringTetrahedron();
+        Tetrahedron<3>* layering0 = block_->layeringTetrahedron();
+        Tetrahedron<3>* layering1 = block_->layeringTetrahedron();
+        Tetrahedron<3>* layering2 = block_->layeringTetrahedron();
+        Tetrahedron<3>* layering3 = block_->layeringTetrahedron();
 
         layering0->join(1, innerTet_[3], innerVertices_[3] * Perm<4>(1, 3));
         layering0->join(2, innerTet_[2], innerVertices_[2] * Perm<4>(2, 3));
@@ -992,7 +992,7 @@ namespace {
     }
 
     void BdryHex::rotate() {
-        NTetrahedron* t = innerTet_[0];
+        Tetrahedron<3>* t = innerTet_[0];
         innerTet_[0] = innerTet_[1];
         innerTet_[1] = innerTet_[2];
         innerTet_[2] = t;
@@ -1027,7 +1027,7 @@ namespace {
             quadType_ = -1;
         }
 
-        const NTetrahedron* tet = s->triangulation()->tetrahedron(tetIndex);
+        const Tetrahedron<3>* tet = s->triangulation()->tetrahedron(tetIndex);
 
         // Build the blocks.
         // Note in all of this that we insert an extra "fake" triangle at each
@@ -1143,7 +1143,7 @@ namespace {
         return truncHalfTet_[0];
     }
 
-    inline NTetrahedron* TetBlockSet::vertexNbd(int vertex) {
+    inline Tetrahedron<3>* TetBlockSet::vertexNbd(int vertex) {
         return vertexNbd_[vertex];
     }
 }
@@ -1234,8 +1234,8 @@ Triangulation<3>* NormalSurface::crush() const {
     }
 
     // Run through and fix the tetrahedron gluings.
-    NTetrahedron* tet;
-    NTetrahedron* adj;
+    Tetrahedron<3>* tet;
+    Tetrahedron<3>* adj;
     int adjQuads;
     Perm<4> adjPerm;
     Perm<4> swap;

@@ -44,7 +44,7 @@ NSnappedBall* NSnappedBall::clone() const {
     return ans;
 }
 
-NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
+NSnappedBall* NSnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
     int inFace1, inFace2;
     Perm<4> perm;
     for (inFace1 = 0; inFace1 < 3; inFace1++)

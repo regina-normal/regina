@@ -60,7 +60,7 @@ namespace regina {
  */
 class REGINA_API NSnappedBall : public NStandardTriangulation {
     private:
-        NTetrahedron* tet;
+        Tetrahedron<3>* tet;
             /**< The tetrahedron that forms the snapped ball. */
         int equator;
             /**< The edge that forms the equator on the ball boundary. */
@@ -78,7 +78,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          *
          * @return the tetrahedron.
          */
-        NTetrahedron* tetrahedron() const;
+        Tetrahedron<3>* tetrahedron() const;
 
         /**
          * Returns one of the two tetrahedron faces that forms the boundary
@@ -134,7 +134,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * snapped 3-ball, or \c null if the given tetrahedron is
          * not a snapped 3-ball.
          */
-        static NSnappedBall* formsSnappedBall(NTetrahedron* tet);
+        static NSnappedBall* formsSnappedBall(Tetrahedron<3>* tet);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;
@@ -155,7 +155,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
 
 inline NSnappedBall::NSnappedBall() {
 }
-inline NTetrahedron* NSnappedBall::tetrahedron() const {
+inline Tetrahedron<3>* NSnappedBall::tetrahedron() const {
     return tet;
 }
 inline int NSnappedBall::boundaryFace(int index) const {

@@ -389,7 +389,7 @@ void NormalSurface::calculateRealBoundary() const {
 
     size_t index;
     size_t tot = triangulation_->size();
-    const NTetrahedron* tet;
+    const Tetrahedron<3>* tet;
     int type, face;
 
     for (index = 0; index < tot; index++) {

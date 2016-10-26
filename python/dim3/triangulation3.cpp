@@ -48,11 +48,11 @@ using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
 namespace {
-    regina::NTetrahedron* (Triangulation<3>::*newTetrahedron_void)() =
+    regina::Tetrahedron<3>* (Triangulation<3>::*newTetrahedron_void)() =
         &Triangulation<3>::newTetrahedron;
-    regina::NTetrahedron* (Triangulation<3>::*newTetrahedron_string)(
+    regina::Tetrahedron<3>* (Triangulation<3>::*newTetrahedron_string)(
         const std::string&) = &Triangulation<3>::newTetrahedron;
-    regina::NTetrahedron* (Triangulation<3>::*tetrahedron_non_const)(
+    regina::Tetrahedron<3>* (Triangulation<3>::*tetrahedron_non_const)(
         size_t) = &Triangulation<3>::tetrahedron;
     bool (Triangulation<3>::*twoZeroMove_vertex)(regina::NVertex*, bool, bool) =
         &Triangulation<3>::twoZeroMove;

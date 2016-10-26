@@ -157,8 +157,8 @@ Triangulation<3>* NExampleTriangulation::bingsHouse() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Bing's house with two rooms");
 
-    NTetrahedron* r = ans->newTetrahedron();
-    NTetrahedron* s = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans->newTetrahedron();
+    Tetrahedron<3>* s = ans->newTetrahedron();
     r->join(0, r, Perm<4>(0, 1));
     s->join(0, s, Perm<4>(0, 1));
     r->join(2, s, Perm<4>(3, 1, 2, 0));
@@ -183,8 +183,8 @@ Triangulation<3>* NExampleTriangulation::rp2xs1() {
     Triangulation<3>* ans = solidKleinBottle();
     ans->setLabel("RP2 x S1");
 
-    NTetrahedron* r = ans->tetrahedron(0);
-    NTetrahedron* t = ans->tetrahedron(2);
+    Tetrahedron<3>* r = ans->tetrahedron(0);
+    Tetrahedron<3>* t = ans->tetrahedron(2);
     r->join(1, t, Perm<4>(2, 3, 0, 1));
     r->join(3, t, Perm<4>(2, 3, 0, 1));
 
@@ -296,9 +296,9 @@ Triangulation<3>* NExampleTriangulation::solidKleinBottle() {
 
     // A three-tetrahedron solid Klein bottle is described in section
     // 3.5.1 of Benjamin Burton's PhD thesis.
-    NTetrahedron* r = ans->newTetrahedron();
-    NTetrahedron* s = ans->newTetrahedron();
-    NTetrahedron* t = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans->newTetrahedron();
+    Tetrahedron<3>* s = ans->newTetrahedron();
+    Tetrahedron<3>* t = ans->newTetrahedron();
     s->join(0, r, Perm<4>(0, 1, 2, 3));
     s->join(3, r, Perm<4>(3, 0, 1, 2));
     s->join(1, t, Perm<4>(3, 0, 1, 2));
@@ -313,8 +313,8 @@ Triangulation<3>* NExampleTriangulation::figureEight() {
 
     // The two-tetrahedron figure eight knot complement is described at
     // the beginning of chapter 8 of Richard Rannard's PhD thesis.
-    NTetrahedron* r = ans->newTetrahedron();
-    NTetrahedron* s = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans->newTetrahedron();
+    Tetrahedron<3>* s = ans->newTetrahedron();
     r->join(0, s, Perm<4>(1, 3, 0, 2));
     r->join(1, s, Perm<4>(2, 0, 3, 1));
     r->join(2, s, Perm<4>(0, 3, 2, 1));
@@ -327,8 +327,8 @@ Triangulation<3>* NExampleTriangulation::trefoil() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Trefoil knot complement");
 
-    NTetrahedron* r = ans->newTetrahedron();
-    NTetrahedron* s = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans->newTetrahedron();
+    Tetrahedron<3>* s = ans->newTetrahedron();
     r->join(0, s, Perm<4>(2, 3));
     r->join(1, s, Perm<4>(2, 3));
     r->join(2, s, Perm<4>(1, 3));
@@ -350,7 +350,7 @@ Triangulation<3>* NExampleTriangulation::gieseking() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Gieseking manifold");
 
-    NTetrahedron* r = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans->newTetrahedron();
     r->join(0, r, Perm<4>(1, 2, 0, 3));
     r->join(2, r, Perm<4>(0, 2, 3, 1));
 
@@ -363,10 +363,10 @@ Triangulation<3>* NExampleTriangulation::cuspedGenusTwoTorus() {
 
     // We create this by first constructing an ordinary solid genus two
     // torus and then converting the real boundary to an ideal vertex.
-    NTetrahedron* r = ans->newTetrahedron();
-    NTetrahedron* s = ans->newTetrahedron();
-    NTetrahedron* t = ans->newTetrahedron();
-    NTetrahedron* u = ans->newTetrahedron();
+    Tetrahedron<3>* r = ans->newTetrahedron();
+    Tetrahedron<3>* s = ans->newTetrahedron();
+    Tetrahedron<3>* t = ans->newTetrahedron();
+    Tetrahedron<3>* u = ans->newTetrahedron();
     r->join(0, s, Perm<4>());
     r->join(1, t, Perm<4>(1, 2, 3, 0));
     r->join(2, u, Perm<4>(1, 0, 3, 2));

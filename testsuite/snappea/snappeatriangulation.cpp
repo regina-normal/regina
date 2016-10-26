@@ -45,7 +45,7 @@
 using regina::NExampleTriangulation;
 using regina::Perm;
 using regina::SnapPeaTriangulation;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangulation;
 
 class SnapPeaTriangulationTest : public CppUnit::TestFixture {
@@ -133,8 +133,8 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             // suite's running progress messages.
             SnapPeaTriangulation::disableKernelMessages();
 
-            NTetrahedron* t;
-            NTetrahedron* s;
+            Tetrahedron<3>* t;
+            Tetrahedron<3>* s;
 
             m2_1.insertRehydration("cabbbbaei");
             m2_1.setLabel("M 2_1");

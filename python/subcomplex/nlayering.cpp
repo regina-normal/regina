@@ -38,11 +38,11 @@
 using namespace boost::python;
 using regina::NLayering;
 using regina::Perm;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 
 void addNLayering() {
     class_<NLayering, boost::noncopyable, std::auto_ptr<NLayering> >
-            ("NLayering", init<NTetrahedron*, Perm<4>, NTetrahedron*, Perm<4>>())
+            ("NLayering", init<Tetrahedron<3>*, Perm<4>, Tetrahedron<3>*, Perm<4>>())
         .def("size", &NLayering::size)
         .def("oldBoundaryTet", &NLayering::oldBoundaryTet,
             return_value_policy<reference_existing_object>())

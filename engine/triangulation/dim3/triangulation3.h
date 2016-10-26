@@ -78,7 +78,6 @@ class XMLPacketReader;
 template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
 typedef Isomorphism<3> NIsomorphism;
-typedef Simplex<3> NTetrahedron;
 typedef Face<3, 0> NVertex;
 typedef Face<3, 1> NEdge;
 
@@ -171,7 +170,7 @@ class REGINA_API Triangulation<3> :
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3)
 
     public:
-        typedef std::vector<NTetrahedron*>::const_iterator TetrahedronIterator;
+        typedef std::vector<Tetrahedron<3>*>::const_iterator TetrahedronIterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through tetrahedra. */
         typedef FaceList<3, 2>::Iterator TriangleIterator;
@@ -330,19 +329,19 @@ class REGINA_API Triangulation<3> :
          *
          * See newSimplex() for further information.
          */
-        NTetrahedron* newTetrahedron();
+        Tetrahedron<3>* newTetrahedron();
         /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
          */
-        NTetrahedron* newTetrahedron(const std::string& desc);
+        Tetrahedron<3>* newTetrahedron(const std::string& desc);
         /**
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
          */
-        void removeTetrahedron(NTetrahedron* tet);
+        void removeTetrahedron(Tetrahedron<3>* tet);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
@@ -1388,7 +1387,7 @@ class REGINA_API Triangulation<3> :
          * (defaults to \c true).
          * @return \c true always.
          */
-        bool oneFourMove(NTetrahedron* t, bool check = true,
+        bool oneFourMove(Tetrahedron<3>* t, bool check = true,
             bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 4-4 move
@@ -1715,7 +1714,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool shellBoundary(NTetrahedron* t,
+        bool shellBoundary(Tetrahedron<3>* t,
                 bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a collapse of
@@ -2373,7 +2372,7 @@ class REGINA_API Triangulation<3> :
          * taken.  This may be \c null (the default), in which case the
          * first tetrahedron will be used.
          */
-        void puncture(NTetrahedron* tet = 0);
+        void puncture(Tetrahedron<3>* tet = 0);
 
         /*@}*/
         /**
@@ -2392,7 +2391,7 @@ class REGINA_API Triangulation<3> :
          * @param edge the boundary edge upon which to layer.
          * @return the new tetrahedron provided by the layering.
          */
-        NTetrahedron* layerOn(NEdge* edge);
+        Tetrahedron<3>* layerOn(NEdge* edge);
 
         /**
          * Inserts a new layered solid torus into the triangulation.
@@ -2422,7 +2421,7 @@ class REGINA_API Triangulation<3> :
          *
          * @see NLayeredSolidTorus
          */
-        NTetrahedron* insertLayeredSolidTorus(unsigned long cuts0,
+        Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);
         /**
          * Inserts a new layered lens space L(p,q) into the triangulation.
@@ -2956,7 +2955,7 @@ class REGINA_API Triangulation<3> :
          * If any of these tests fail, this routine writes a message to
          * standard error and marks this triangulations as invalid.
          * Any such failure indicates a likely programming error, since
-         * adjacent face gluings should always match if the NTetrahedron
+         * adjacent face gluings should always match if the Tetrahedron<3>
          * gluing routines have been used correctly.
          *
          * @author Matthias Goerner
@@ -3078,11 +3077,11 @@ inline bool Triangulation<3>::dependsOnParent() const {
     return false;
 }
 
-inline NTetrahedron* Triangulation<3>::newTetrahedron() {
+inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {
     return newSimplex();
 }
 
-inline NTetrahedron* Triangulation<3>::newTetrahedron(const std::string& desc) {
+inline Tetrahedron<3>* Triangulation<3>::newTetrahedron(const std::string& desc) {
     return newSimplex(desc);
 }
 
@@ -3090,7 +3089,7 @@ inline void Triangulation<3>::removeTetrahedronAt(size_t index) {
     removeSimplexAt(index);
 }
 
-inline void Triangulation<3>::removeTetrahedron(NTetrahedron* tet) {
+inline void Triangulation<3>::removeTetrahedron(Tetrahedron<3>* tet) {
     removeSimplex(tet);
 }
 

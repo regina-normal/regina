@@ -52,7 +52,6 @@ namespace regina {
 class Dim4BoundaryComponent;
 
 typedef Component<4> Dim4Component;
-typedef Simplex<4> Dim4Pentachoron;
 typedef Face<4, 1> Dim4Edge;
 typedef Face<4, 0> Dim4Vertex;
 
@@ -180,7 +179,7 @@ REGINA_DEPRECATED typedef Face<4, 3> Dim4Tetrahedron;
 
 /*@}*/
 
-// Inline functions for Dim4Tetrahedron
+// Inline functions for Tetrahedron<4>
 
 inline Face<4, 3>::Face(Dim4Component* component) :
         FaceBase<4, 3>(component), boundaryComponent_(0) {

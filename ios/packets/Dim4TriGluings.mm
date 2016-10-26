@@ -117,14 +117,14 @@
     [self.pentachora reloadData];
 }
 
-+ (NSString*)destStringFromFacet:(int)srcFacet dest:(regina::Dim4Pentachoron*)destSimp gluing:(const regina::Perm<5>&)gluing
++ (NSString*)destStringFromFacet:(int)srcFacet dest:(regina::Pentachoron<4>*)destSimp gluing:(const regina::Perm<5>&)gluing
 {
     if (! destSimp)
         return @" "; // Use a space to ensure the label has enough height to pick up touches.
     else
         return [NSString stringWithFormat:@"%ld (%s)",
                 destSimp->markedIndex(),
-                (gluing * regina::Dim4Tetrahedron::ordering(srcFacet)).trunc4().c_str()];
+                (gluing * regina::Tetrahedron<4>::ordering(srcFacet)).trunc4().c_str()];
 }
 
 - (IBAction)newSimplex:(id)sender {
@@ -169,7 +169,7 @@
     editField.returnKeyType = UIReturnKeyDone;
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
     if (editFacet >= 0) {
-        regina::Dim4Pentachoron* s = self.packet->simplex(editSimplex);
+        regina::Pentachoron<4>* s = self.packet->simplex(editSimplex);
         editField.text = [[Dim4TriGluings destStringFromFacet:editFacet
                                                          dest:s->adjacentSimplex(editFacet)
                                                        gluing:s->adjacentGluing(editFacet)]
@@ -479,7 +479,7 @@
         return;
     }
     
-    regina::Dim4Pentachoron* s = self.packet->simplex(editSimplex);
+    regina::Pentachoron<4>* s = self.packet->simplex(editSimplex);
     
     NSMutableArray* toReload = [[NSMutableArray alloc] init];
     if (editFacet >= 0) {
@@ -535,7 +535,7 @@
                 goto cleanUpGluing;
             }
             regina::Perm<5> destGluing = regina::Perm<5>(adj0, adj1, adj2, adj3, (10 - adj0 - adj1 - adj2 - adj3)) *
-                regina::Dim4Tetrahedron::ordering(editFacet).inverse();
+                regina::Tetrahedron<4>::ordering(editFacet).inverse();
             
             // Are we gluing the facet to itself?
             if (destSimplex == editSimplex && destGluing[editFacet] == editFacet) {
@@ -566,7 +566,7 @@
                     
                     // Does this new partner already have its own partner?
                     // If so, better unglue it.
-                    regina::Dim4Pentachoron* adj = self.packet->simplex(destSimplex);
+                    regina::Pentachoron<4>* adj = self.packet->simplex(destSimplex);
                     if (adj->adjacentSimplex(destFacet)) {
                         NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destFacet)->markedIndex()+1 inSection:0];
                         if ([toReload indexOfObject:path] == NSNotFound)
@@ -624,7 +624,7 @@ cleanUpGluing:
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
     
     Dim4TriGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Pentachoron" forIndexPath:indexPath];
-    regina::Dim4Pentachoron* s = self.packet->simplex(indexPath.row - 1);
+    regina::Pentachoron<4>* s = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%zd. %s", indexPath.row - 1, s->description().c_str()];
     cell.facet0.text = [Dim4TriGluings destStringFromFacet:0 dest:s->adjacentSimplex(0) gluing:s->adjacentGluing(0)];
     cell.facet1.text = [Dim4TriGluings destStringFromFacet:1 dest:s->adjacentSimplex(1) gluing:s->adjacentGluing(1)];

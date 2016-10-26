@@ -63,8 +63,8 @@ void Triangulation<4>::writeTextLong(std::ostream& out) const {
     out << "  Vertices: " << countVertices() << '\n';
     out << '\n';
 
-    Dim4Pentachoron* pent;
-    Dim4Pentachoron* adjPent;
+    Pentachoron<4>* pent;
+    Pentachoron<4>* adjPent;
     unsigned pentPos;
     int i, j, k;
     Perm<5> adjPerm;
@@ -176,7 +176,7 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
 
     // Write the pentachoron gluings.
     PentachoronIterator it;
-    Dim4Pentachoron* adjPent;
+    Pentachoron<4>* adjPent;
     int facet;
 
     out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
@@ -223,8 +223,8 @@ void Triangulation<4>::cloneFrom(const Triangulation<4>& X) {
 
     // Make the gluings.
     long pentPos, adjPos;
-    Dim4Pentachoron* pent;
-    Dim4Pentachoron* adjPent;
+    Pentachoron<4>* pent;
+    Pentachoron<4>* adjPent;
     Perm<5> adjPerm;
     int facet;
     pentPos = 0;

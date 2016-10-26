@@ -65,7 +65,7 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
 
     // Off we go!
     unsigned i;
-    NTetrahedron** t = new NTetrahedron*[size_];
+    Tetrahedron<3>** t = new Tetrahedron<3>*[size_];
     for (i = 0; i < size_; i++)
         t[i] = core_.newTetrahedron();
 
@@ -130,7 +130,7 @@ NTxIParallelCore::NTxIParallelCore() {
     // Just hard-code it.  It's only one triangulation, and it's highly
     // symmetric.
     unsigned i;
-    NTetrahedron** t = new NTetrahedron*[6];
+    Tetrahedron<3>** t = new Tetrahedron<3>*[6];
     for (i = 0; i < 6; i++)
         t[i] = core_.newTetrahedron();
 

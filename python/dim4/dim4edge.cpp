@@ -83,7 +83,7 @@ namespace {
 
 void addDim4Edge() {
     class_<FaceEmbedding<4, 1>>("FaceEmbedding4_1",
-            init<regina::Dim4Pentachoron*, int>())
+            init<regina::Pentachoron<4>*, int>())
         .def(init<const EdgeEmbedding<4>&>())
         .def("simplex", &EdgeEmbedding<4>::simplex,
             return_value_policy<reference_existing_object>())

@@ -51,7 +51,7 @@ void Triangulation<3>::stretchBoundaryForestFromVertex(NVertex* from,
         std::set<NVertex*>& vertexSet) const {
     vertexSet.insert(from);
 
-    NTetrahedron* tet;
+    Tetrahedron<3>* tet;
     NVertex* otherVertex;
     NEdge* edge;
     int vertex, yourVertex;
@@ -104,7 +104,7 @@ bool Triangulation<3>::stretchForestFromVertex(NVertex* from,
     vertexSet.insert(from);
     thisStretch.insert(from);
 
-    NTetrahedron* tet;
+    Tetrahedron<3>* tet;
     NVertex* otherVertex;
     int vertex, yourVertex;
     bool madeLink = false;

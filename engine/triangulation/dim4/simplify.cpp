@@ -149,7 +149,7 @@ bool Triangulation<4>::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
 
     // e must meet four distinct pentachora, which must be glued around
     // the edge in a way that gives a 3-simplex link.  Find these pentachora.
-    Dim4Pentachoron* oldPent[4];
+    Pentachoron<4>* oldPent[4];
     Perm<5> oldVertices[4]; // 01 -> edge, 234 -> link
 
     // We will permute oldVertices so that:
@@ -203,13 +203,13 @@ bool Triangulation<4>::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     ChangeEventSpan span(this);
 
     // Create two new pentachora.
-    Dim4Pentachoron* newPent[2];
+    Pentachoron<4>* newPent[2];
     for (i = 0; i < 2; ++i)
         newPent[i] = newPentachoron();
 
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
-    Dim4Pentachoron* adjPent[2][4];
+    Pentachoron<4>* adjPent[2][4];
     Perm<5> adjGluing[2][4];
     int k,l;
     for (i = 0; i < 2; ++i) { // new pentachora ; old facets
@@ -278,7 +278,7 @@ bool Triangulation<4>::threeThreeMove(Triangle<4>* f, bool check,
     }
 
     // f must meet three distinct pentachora.  Find these pentachora.
-    Dim4Pentachoron* oldPent[3];
+    Pentachoron<4>* oldPent[3];
     Perm<5> oldVertices[3]; // 012 -> triangle, 34 -> link
     int i,j;
     for (i = 0; i < 3; ++i) {
@@ -299,13 +299,13 @@ bool Triangulation<4>::threeThreeMove(Triangle<4>* f, bool check,
     ChangeEventSpan span(this);
 
     // Create three new pentachora.
-    Dim4Pentachoron* newPent[3];
+    Pentachoron<4>* newPent[3];
     for (i = 0; i < 3; ++i)
         newPent[i] = newPentachoron();
 
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
-    Dim4Pentachoron* adjPent[3][3];
+    Pentachoron<4>* adjPent[3][3];
     Perm<5> adjGluing[3][3];
     int k,l;
     for (i = 0; i < 3; ++i) { // new pentachora ; old facets
@@ -364,7 +364,7 @@ bool Triangulation<4>::threeThreeMove(Triangle<4>* f, bool check,
     return true;
 }
 
-bool Triangulation<4>::twoFourMove(Dim4Tetrahedron* f, bool check,
+bool Triangulation<4>::twoFourMove(Tetrahedron<4>* f, bool check,
         bool perform) {
     if (check) {
         if (f->degree() != 2)
@@ -373,7 +373,7 @@ bool Triangulation<4>::twoFourMove(Dim4Tetrahedron* f, bool check,
     }
 
     // f must meet two distinct pentachora.  Find these pentachora.
-    Dim4Pentachoron* oldPent[2];
+    Pentachoron<4>* oldPent[2];
     Perm<5> oldVertices[2]; // 0123 -> facet.
     int i;
     for (i = 0; i < 2; ++i) {
@@ -394,13 +394,13 @@ bool Triangulation<4>::twoFourMove(Dim4Tetrahedron* f, bool check,
     ChangeEventSpan span(this);
 
     // Create four new pentachora.
-    Dim4Pentachoron* newPent[4];
+    Pentachoron<4>* newPent[4];
     for (i = 0; i < 4; ++i)
         newPent[i] = newPentachoron();
 
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
-    Dim4Pentachoron* adjPent[4][2];
+    Pentachoron<4>* adjPent[4][2];
     Perm<5> adjGluing[4][2];
     int j,k,l;
     for (i = 0; i < 4; ++i) { // new pentachora ; old facets
@@ -462,7 +462,7 @@ bool Triangulation<4>::twoFourMove(Dim4Tetrahedron* f, bool check,
     return true;
 }
 
-bool Triangulation<4>::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
+bool Triangulation<4>::oneFiveMove(Pentachoron<4>* pen, bool /* check */,
         bool perform) {
     if ( !perform )
         return true; // You can always do this move.
@@ -472,7 +472,7 @@ bool Triangulation<4>::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
     ChangeEventSpan span(this);
 
     // Before we unglue, record how the adjacent pentachora are glued to pen.
-    Dim4Pentachoron* adjPen[5];
+    Pentachoron<4>* adjPen[5];
     Perm<5> adjGlue[5];
     unsigned i, j;
     for (i=0; i<5; i++) {
@@ -489,7 +489,7 @@ bool Triangulation<4>::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
     // Vertex i of newPen[i] will become the new internal vertex, and
     // the other four vertices of newPen[i] will keep the same vertex numbers
     // that they had in the old pentachoron.
-    Dim4Pentachoron* newPen[5];
+    Pentachoron<4>* newPen[5];
     for (i = 0; i < 5; ++i)
         newPen[i] = newPentachoron();
 
@@ -531,7 +531,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
             return false;
     }
 
-    Dim4Pentachoron* pent[2];
+    Pentachoron<4>* pent[2];
     Perm<5> perm[2];
 
     int i;
@@ -548,7 +548,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
 
         Dim4Edge* edge[2];
         Triangle<4>* tri[2][3];
-        Dim4Tetrahedron* tet[2][3];
+        Tetrahedron<4>* tet[2][3];
 
         for (i = 0; i < 2; ++i) {
             edge[i] = pent[i]->edge(
@@ -665,7 +665,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][3]);
     Perm<5> gluing;
-    Dim4Pentachoron *top, *bottom;
+    Pentachoron<4> *top, *bottom;
     int topFacet;
     for (i = 0; i < 3; ++i) {
         top = pent[0]->adjacentPentachoron(perm[0][i]);
@@ -706,7 +706,7 @@ bool Triangulation<4>::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
             return false;
     }
 
-    Dim4Pentachoron* pent[2];
+    Pentachoron<4>* pent[2];
     Perm<5> perm[2];
 
     int i;
@@ -731,7 +731,7 @@ bool Triangulation<4>::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
             return false;
 
         // No bad loops of tetrahedra.
-        Dim4Tetrahedron* tet[2][2];
+        Tetrahedron<4>* tet[2][2];
         for (i = 0; i < 2; ++i) {
             tet[i][0] = pent[i]->tetrahedron(perm[i][0]);
             tet[i][1] = pent[i]->tetrahedron(perm[i][1]);
@@ -766,7 +766,7 @@ bool Triangulation<4>::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][2]);
     Perm<5> gluing;
-    Dim4Pentachoron *top, *bottom;
+    Pentachoron<4> *top, *bottom;
     int topFacet;
     for (i = 0; i < 2; ++i) {
         top = pent[0]->adjacentPentachoron(perm[0][i]);
@@ -797,9 +797,9 @@ bool Triangulation<4>::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<4>::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
+bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
     const TetrahedronEmbedding<4>& emb = t->front();
-    Dim4Pentachoron* pent = emb.pentachoron();
+    Pentachoron<4>* pent = emb.pentachoron();
 
     // Check that the triangle has exactly two boundary edges.
     // Note that this will imply that the triangle joins two tetrahedra.
@@ -868,7 +868,7 @@ bool Triangulation<4>::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<4>::shellBoundary(Dim4Pentachoron* p,
+bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.
     if (check) {
@@ -1171,7 +1171,7 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                 std::fill(depth, depth + nTriangles + 1, 0);
 
                 // Run through all boundary tetrahedra containing e.
-                for (Dim4Tetrahedron* tet : tetrahedra()) {
+                for (Tetrahedron<4>* tet : tetrahedra()) {
                     if (! tet->isBoundary())
                         continue;
 
@@ -1204,7 +1204,7 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             std::fill(depth, depth + nTriangles + 1, 0);
 
             // Run through all internal tetrahedra containing e.
-            for (Dim4Tetrahedron* tet : tetrahedra()) {
+            for (Tetrahedron<4>* tet : tetrahedra()) {
                 if (tet->isBoundary())
                     continue;
 
@@ -1267,7 +1267,7 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             long* depth = new long[nTets + 1];
             std::fill(depth, depth + nTets + 1, 0);
 
-            Dim4Tetrahedron *upper, *lower;
+            Tetrahedron<4> *upper, *lower;
             long id1, id2;
 
             for (auto& emb : *e) {
@@ -1299,12 +1299,12 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
 
     ChangeEventSpan span(this);
     Perm<5> topPerm, botPerm;
-    Dim4Pentachoron *top, *bot;
+    Pentachoron<4> *top, *bot;
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
     unsigned nEmbs = e->degree();
-    Dim4Pentachoron** embPent = new Dim4Pentachoron*[nEmbs];
+    Pentachoron<4>** embPent = new Pentachoron<4>*[nEmbs];
     Perm<5>* embVert = new Perm<5>[nEmbs];
 
     unsigned i = 0;

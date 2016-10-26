@@ -64,17 +64,17 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     // a component).
 
     // Start with tetrahedron 0.  This must belong to *some* chain.
-    NTetrahedron* base = comp->tetrahedron(0);
+    Tetrahedron<3>* base = comp->tetrahedron(0);
 
     NLayeredChain* first;
     NLayeredChain* second;
 
     // Note that we only need check permutations in S3 since we can
     // arbitrarily assign the role of one vertex in the tetrahedron.
-    NTetrahedron* firstBottom;
-    NTetrahedron* firstTop;
-    NTetrahedron* secondBottom;
-    NTetrahedron* secondTop;
+    Tetrahedron<3>* firstBottom;
+    Tetrahedron<3>* firstTop;
+    Tetrahedron<3>* secondBottom;
+    Tetrahedron<3>* secondTop;
     Perm<4> firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
 
     for (int p = 0; p < 6; p++) {

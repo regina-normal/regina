@@ -65,7 +65,7 @@ namespace {
         return f->triangulation()->threeThreeMove(f, true, false);
     }
 
-    bool has24(regina::Dim4Tetrahedron* f) {
+    bool has24(regina::Tetrahedron<4>* f) {
         return f->triangulation()->twoFourMove(f, true, false);
     }
 
@@ -77,11 +77,11 @@ namespace {
         return e->triangulation()->twoZeroMove(e, true, false);
     }
 
-    bool hasOpenBook(regina::Dim4Tetrahedron* t) {
+    bool hasOpenBook(regina::Tetrahedron<4>* t) {
         return t->triangulation()->openBook(t, true, false);
     }
 
-    bool hasShellBoundary(regina::Dim4Pentachoron* p) {
+    bool hasShellBoundary(regina::Pentachoron<4>* p) {
         return p->triangulation()->shellBoundary(p, true, false);
     }
 
@@ -304,11 +304,11 @@ void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
         if (t)
             tri->threeThreeMove(t);
     } else if (use24->isChecked()) {
-        regina::Dim4Tetrahedron* t = box24->selected();
+        regina::Tetrahedron<4>* t = box24->selected();
         if (t)
             tri->twoFourMove(t);
     } else if (use15->isChecked()) {
-        regina::Dim4Pentachoron* p = box15->selected();
+        regina::Pentachoron<4>* p = box15->selected();
         if (p)
             tri->oneFiveMove(p);
     } else if (use20t->isChecked()) {
@@ -320,11 +320,11 @@ void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
         if (e)
             tri->twoZeroMove(e);
     } else if (useOpenBook->isChecked()) {
-        regina::Dim4Tetrahedron* f = boxOpenBook->selected();
+        regina::Tetrahedron<4>* f = boxOpenBook->selected();
         if (f)
             tri->openBook(f);
     } else if (useShellBdry->isChecked()) {
-        regina::Dim4Pentachoron* p = boxShellBdry->selected();
+        regina::Pentachoron<4>* p = boxShellBdry->selected();
         if (p)
             tri->shellBoundary(p);
     } else if (useCollapseEdge->isChecked()) {

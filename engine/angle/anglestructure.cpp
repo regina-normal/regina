@@ -188,7 +188,7 @@ void AngleStructure::calculateType() const {
             long nEdges = triangulation_->countEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
-            const NTetrahedron* tet;
+            const Tetrahedron<3>* tet;
             int orient;
             long e;
             for (unsigned i = 0; i < triangulation_->size();

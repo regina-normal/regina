@@ -42,8 +42,8 @@ Triangulation<4>* Dim4ExampleTriangulation::fourSphere() {
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("4-sphere");
 
-    Dim4Pentachoron* p = ans->newPentachoron();
-    Dim4Pentachoron* q = ans->newPentachoron();
+    Pentachoron<4>* p = ans->newPentachoron();
+    Pentachoron<4>* q = ans->newPentachoron();
     p->join(0, q, Perm<5>());
     p->join(1, q, Perm<5>());
     p->join(2, q, Perm<5>());
@@ -57,7 +57,7 @@ Triangulation<4>* Dim4ExampleTriangulation::simplicialFourSphere() {
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Standard simplicial 4-sphere");
 
-    Dim4Pentachoron* penList[6];
+    Pentachoron<4>* penList[6];
         // one pentachoron for every vertex of the 5-simplex
     unsigned i, j, k;
     for (i=0; i<6; i++)
@@ -85,10 +85,10 @@ Triangulation<4>* Dim4ExampleTriangulation::rp4() {
     ans->setLabel("Real projective 4-space");
 
     // Thanks Ryan, you rock. :)
-    Dim4Pentachoron* p = ans->newPentachoron();
-    Dim4Pentachoron* q = ans->newPentachoron();
-    Dim4Pentachoron* r = ans->newPentachoron();
-    Dim4Pentachoron* s = ans->newPentachoron();
+    Pentachoron<4>* p = ans->newPentachoron();
+    Pentachoron<4>* q = ans->newPentachoron();
+    Pentachoron<4>* r = ans->newPentachoron();
+    Pentachoron<4>* s = ans->newPentachoron();
     p->join(0, s, Perm<5>(1,0,3,2,4));
     p->join(1, s, Perm<5>(1,0,3,2,4));
     p->join(2, q, Perm<5>());
@@ -110,8 +110,8 @@ Triangulation<4>* Dim4ExampleTriangulation::s3xs1() {
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("S3 x S1");
 
-    Dim4Pentachoron* p = ans->newPentachoron();
-    Dim4Pentachoron* q = ans->newPentachoron();
+    Pentachoron<4>* p = ans->newPentachoron();
+    Pentachoron<4>* q = ans->newPentachoron();
     p->join(1, q, Perm<5>());
     p->join(2, q, Perm<5>());
     p->join(3, q, Perm<5>());
@@ -132,8 +132,8 @@ Triangulation<4>* Dim4ExampleTriangulation::s3xs1Twisted() {
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("S3 x~ S1");
 
-    Dim4Pentachoron* p = ans->newPentachoron();
-    Dim4Pentachoron* q = ans->newPentachoron();
+    Pentachoron<4>* p = ans->newPentachoron();
+    Pentachoron<4>* q = ans->newPentachoron();
     p->join(1, q, Perm<5>());
     p->join(2, q, Perm<5>());
     p->join(3, q, Perm<5>());
@@ -152,8 +152,8 @@ Triangulation<4>* Dim4ExampleTriangulation::cappellShaneson() {
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Cappell-Shaneson knot complement");
 
-    Dim4Pentachoron* p = ans->newPentachoron();
-    Dim4Pentachoron* q = ans->newPentachoron();
+    Pentachoron<4>* p = ans->newPentachoron();
+    Pentachoron<4>* q = ans->newPentachoron();
     q->join(0, p, Perm<5>(2,0,1,3,4));
     q->join(2, p, Perm<5>(0,1,4,2,3));
     q->join(3, p, Perm<5>(0,2,3,1,4));
@@ -174,12 +174,12 @@ Triangulation<4>* Dim4ExampleTriangulation::doubleCone(
         return ans;
 
     // We have at least one tetrahedron.  Off we go.
-    Dim4Pentachoron** pent = new Dim4Pentachoron*[2 * n];
+    Pentachoron<4>** pent = new Pentachoron<4>*[2 * n];
 
     unsigned long i;
     int face;
     unsigned long adjIndex;
-    const NTetrahedron *tet, *adjTet;
+    const Tetrahedron<3> *tet, *adjTet;
     Perm<4> map;
 
     for (i = 0; i < 2 * n; ++i)
@@ -222,12 +222,12 @@ Triangulation<4>* Dim4ExampleTriangulation::singleCone(
         return ans;
 
     // We have at least one tetrahedron.  Off we go.
-    Dim4Pentachoron** pent = new Dim4Pentachoron*[n];
+    Pentachoron<4>** pent = new Pentachoron<4>*[n];
 
     unsigned long i;
     int face;
     unsigned long adjIndex;
-    const NTetrahedron *tet, *adjTet;
+    const Tetrahedron<3> *tet, *adjTet;
     Perm<4> map;
     for (i = 0; i < n; ++i) {
         pent[i] = ans->newPentachoron();
@@ -264,20 +264,20 @@ namespace {
      * of every pentachoron).
      */
     struct Prism {
-        Dim4Pentachoron* bdry[2];
+        Pentachoron<4>* bdry[2];
             /**< The pentachora providing the lower and upper boundaries
                  of the prism. */
-        Dim4Pentachoron* wallBase3[2][4];
+        Pentachoron<4>* wallBase3[2][4];
             /**< wallBase3[i][j] provides a triangle base of the 3-dimensional
                  prism "wall" that runs between facet j of bdry[0] and
                  facet j of bdry[1]. */
-        Dim4Pentachoron* wallBase2[2][4][4];
+        Pentachoron<4>* wallBase2[2][4][4];
             /**< wallBase2[i][j][k] provides a triangle side of the
                  3-dimensional prism "wall" between facet j of bdry[0] and
                  facet j of bdry[1].  Specifically, this triangle forms
                  a base of the rectangular 2-face of the prism that does not
                  meet vertex k.  Requires j,k distinct. */
-        Dim4Pentachoron* wallSide[2][4][4][4];
+        Pentachoron<4>* wallSide[2][4][4][4];
             /**< wallSide[i][j][k][l] provides a triangle side of the
                  3-dimensional prism "wall" between facet j of bdry[0] and
                  facet j of bdry[1].  Specifically, this triangle is contained
@@ -428,7 +428,7 @@ Triangulation<4>* Dim4ExampleTriangulation::iBundle(
     // Glue adjacent prisms together.
     unsigned long adjIndex;
     unsigned face;
-    const NTetrahedron *tet, *adj;
+    const Tetrahedron<3> *tet, *adj;
     for (i = 0; i < n; ++i) {
         tet = base.tetrahedron(i);
         for (face = 0; face < 4; ++face) {

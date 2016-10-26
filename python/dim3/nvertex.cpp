@@ -77,7 +77,7 @@ namespace {
 
 void addNVertex() {
     class_<FaceEmbedding<3, 0>>("FaceEmbedding3_0",
-            init<regina::NTetrahedron*, int>())
+            init<regina::Tetrahedron<3>*, int>())
         .def(init<const VertexEmbedding<3>&>())
         .def("simplex", &VertexEmbedding<3>::simplex,
             return_value_policy<reference_existing_object>())

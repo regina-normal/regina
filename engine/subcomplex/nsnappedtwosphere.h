@@ -49,8 +49,6 @@ namespace regina {
 
 class NSnappedBall;
 
-typedef Simplex<3> NTetrahedron;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -112,8 +110,8 @@ class REGINA_API NSnappedTwoSphere :
          * snapped 2-sphere, or \c null if the given tetrahedra do not
          * form a snapped 2-sphere.
          */
-        static NSnappedTwoSphere* formsSnappedTwoSphere(NTetrahedron* tet1,
-            NTetrahedron* tet2);
+        static NSnappedTwoSphere* formsSnappedTwoSphere(Tetrahedron<3>* tet1,
+            Tetrahedron<3>* tet2);
         /**
          * Determines if the two given snapped 3-balls together form a snapped
          * 2-sphere.

@@ -306,7 +306,7 @@ namespace {
          * The six arguments colour0, ..., colour5 refer to the colours
          * on tetrahedron edges 0, ..., 5 respectively.
          */
-        void tetContrib(const NTetrahedron* tet,
+        void tetContrib(const Tetrahedron<3>* tet,
                 unsigned long colour0, unsigned long colour1,
                 unsigned long colour2, unsigned long colour3,
                 unsigned long colour4, unsigned long colour5,
@@ -509,7 +509,7 @@ namespace {
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
         bool admissible;
-        const NTetrahedron* tet;
+        const Tetrahedron<3>* tet;
         const Triangle<3>* triangle;
         while (curr >= 0) {
             // Have we found an admissible colouring?
@@ -653,7 +653,7 @@ namespace {
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         bool admissible;
         long index1, index2;
-        const NTetrahedron* tet;
+        const Tetrahedron<3>* tet;
         while (curr >= 0) {
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {
@@ -752,7 +752,7 @@ namespace {
         const TreeBag *bag, *child, *sibling;
         int i, j;
         int index;
-        const NTetrahedron* tet;
+        const Tetrahedron<3>* tet;
         const NEdge* edge;
 
         // In the seenDegree[] array, an edge that has been seen in all
@@ -1111,7 +1111,7 @@ namespace {
         unsigned long nTri = tri.countTriangles();
 
         Triangulation<3>::EdgeIterator eit;
-        const NTetrahedron* tet;
+        const Tetrahedron<3>* tet;
         Perm<4> p;
         unsigned long i;
         for (eit = tri.edges().begin(); eit != tri.edges().end(); ++eit) {

@@ -856,7 +856,7 @@ void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
     regina::snappea::TriangulationData* tData;
     regina::snappea::triangulation_to_data(src, &tData);
 
-    NTetrahedron** tet = new NTetrahedron*[tData->num_tetrahedra];
+    Tetrahedron<3>** tet = new Tetrahedron<3>*[tData->num_tetrahedra];
 
     int i, j;
     for (i = 0; i < tData->num_tetrahedra; ++i)

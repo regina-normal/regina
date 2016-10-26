@@ -51,7 +51,6 @@
 namespace regina {
 
 typedef Component<4> Dim4Component;
-typedef Face<4, 3> Dim4Tetrahedron;
 typedef Face<4, 1> Dim4Edge;
 typedef Face<4, 0> Dim4Vertex;
 
@@ -95,7 +94,7 @@ class REGINA_API Dim4BoundaryComponent :
         public boost::noncopyable,
         public MarkedElement {
     private:
-        std::vector<Dim4Tetrahedron*> tetrahedra_;
+        std::vector<Tetrahedron<4>*> tetrahedra_;
             /**< List of tetrahedra in the boundary component. */
         std::vector<Triangle<4>*> triangles_;
             /**< List of triangles in the boundary component. */
@@ -187,7 +186,7 @@ class REGINA_API Dim4BoundaryComponent :
          * a copy of tetrahedron <tt>tetrahedron(i)</tt> of this 4-manifold
          * boundary component, and its vertices 0,1,2,3 are numbered in the
          * same way.  To relate tetrahedron vertex numbers to pentachoron
-         * vertex numbers, see Dim4Pentachoron::tetrahedronMapping().
+         * vertex numbers, see Pentachoron<4>::tetrahedronMapping().
          *
          * If this boundary component consists only of a single vertex
          * (which happens with ideal vertices and also some invalid vertices),
@@ -318,7 +317,7 @@ inline size_t Dim4BoundaryComponent::countFaces<0>() const {
 }
 
 template <>
-inline Dim4Tetrahedron* Dim4BoundaryComponent::face<3>(size_t index) const {
+inline Tetrahedron<4>* Dim4BoundaryComponent::face<3>(size_t index) const {
     return tetrahedra_[index];
 }
 

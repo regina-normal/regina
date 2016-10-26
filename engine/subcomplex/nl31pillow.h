@@ -44,8 +44,6 @@
 
 namespace regina {
 
-typedef Simplex<3> NTetrahedron;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -66,7 +64,7 @@ typedef Simplex<3> NTetrahedron;
  */
 class REGINA_API NL31Pillow : public NStandardTriangulation {
     private:
-        NTetrahedron* tet[2];
+        Tetrahedron<3>* tet[2];
             /**< The two tetrahedra in the triangular pillow. */
         unsigned interior[2];
             /**< The vertex of each tetrahedron that corresponds to the
@@ -91,7 +89,7 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          * must be either 0 or 1.
          * @return the requested tetrahedron.
          */
-        NTetrahedron* tetrahedron(int whichTet) const;
+        Tetrahedron<3>* tetrahedron(int whichTet) const;
         /**
          * Returns the vertex number of the given tetrahedron
          * corresponding to the degree three vertex in the interior of
@@ -143,7 +141,7 @@ inline NL31Pillow::NL31Pillow() {
 inline NL31Pillow::~NL31Pillow() {
 }
 
-inline NTetrahedron* NL31Pillow::tetrahedron(int whichTet) const {
+inline Tetrahedron<3>* NL31Pillow::tetrahedron(int whichTet) const {
     return tet[whichTet];
 }
 inline unsigned NL31Pillow::interiorVertex(int whichTet) const {

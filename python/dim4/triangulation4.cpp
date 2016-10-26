@@ -45,11 +45,11 @@ using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
 namespace {
-    regina::Dim4Pentachoron* (Triangulation<4>::*newPentachoron_void)() =
+    regina::Pentachoron<4>* (Triangulation<4>::*newPentachoron_void)() =
         &Triangulation<4>::newPentachoron;
-    regina::Dim4Pentachoron* (Triangulation<4>::*newPentachoron_string)(
+    regina::Pentachoron<4>* (Triangulation<4>::*newPentachoron_string)(
         const std::string&) = &Triangulation<4>::newPentachoron;
-    regina::Dim4Pentachoron* (Triangulation<4>::*pentachoron_non_const)(
+    regina::Pentachoron<4>* (Triangulation<4>::*pentachoron_non_const)(
         size_t) = &Triangulation<4>::pentachoron;
     bool (Triangulation<4>::*twoZeroMove_triangle)(regina::Triangle<4>*,
         bool, bool) = &Triangulation<4>::twoZeroMove;

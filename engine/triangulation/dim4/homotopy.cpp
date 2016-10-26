@@ -63,14 +63,14 @@ const NGroupPresentation& Triangulation<4>::fundamentalGroup() const {
     // Find out which tetrahedron corresponds to which generator.
     long* genIndex = new long[countTetrahedra()];
     long i = 0;
-    for (Dim4Tetrahedron* tet : tetrahedra())
+    for (Tetrahedron<4>* tet : tetrahedra())
         if (! (tet->isBoundary() || tet->inMaximalForest()))
             genIndex[tet->index()] = i++;
 
     // Run through each triangle and insert the corresponding relations.
-    Dim4Pentachoron* pent;
+    Pentachoron<4>* pent;
     int facet;
-    Dim4Tetrahedron* tet;
+    Tetrahedron<4>* tet;
     NGroupExpression* rel;
     for (Triangle<4>* f : triangles()) {
         if (f->isBoundary())

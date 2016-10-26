@@ -45,8 +45,6 @@
 
 namespace regina {
 
-typedef Simplex<3> NTetrahedron;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -90,9 +88,9 @@ typedef Simplex<3> NTetrahedron;
  */
 class REGINA_API NLayeredChain : public NStandardTriangulation {
     private:
-        NTetrahedron* bottom_;
+        Tetrahedron<3>* bottom_;
             /**< The bottom tetrahedron of this layered chain. */
-        NTetrahedron* top_;
+        Tetrahedron<3>* top_;
             /**< The top tetrahedron of this layered chain. */
         unsigned long index_;
             /**< The number of tetrahedra in this layered chain. */
@@ -115,7 +113,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * in the same format as the permutation returned by
          * bottomVertexRoles() and topVertexRoles().
          */
-        NLayeredChain(NTetrahedron* tet, Perm<4> vertexRoles);
+        NLayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles);
 
         /**
          * Creates a new layered chain that is a clone of the given
@@ -135,13 +133,13 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          *
          * @return the bottom tetrahedron.
          */
-        NTetrahedron* bottom() const;
+        Tetrahedron<3>* bottom() const;
         /**
          * Returns the top tetrahedron of this layered chain.
          *
          * @return the top tetrahedron.
          */
-        NTetrahedron* top() const;
+        Tetrahedron<3>* top() const;
         /**
          * Returns the number of tetrahedra in this layered chain.
          *
@@ -258,7 +256,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
 
 // Inline functions for NLayeredChain
 
-inline NLayeredChain::NLayeredChain(NTetrahedron* tet, Perm<4> vertexRoles) :
+inline NLayeredChain::NLayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles) :
         bottom_(tet), top_(tet), index_(1), bottomVertexRoles_(vertexRoles),
         topVertexRoles_(vertexRoles) {
 }
@@ -270,10 +268,10 @@ inline NLayeredChain::NLayeredChain(const NLayeredChain& cloneMe) :
 inline NLayeredChain::~NLayeredChain() {
 }
 
-inline NTetrahedron* NLayeredChain::bottom() const {
+inline Tetrahedron<3>* NLayeredChain::bottom() const {
     return bottom_;
 }
-inline NTetrahedron* NLayeredChain::top() const {
+inline Tetrahedron<3>* NLayeredChain::top() const {
     return top_;
 }
 inline unsigned long NLayeredChain::index() const {

@@ -50,7 +50,7 @@ using regina::NManifold;
 using regina::Perm;
 using regina::NSignature;
 using regina::NStandardTriangulation;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangulation;
 
 class ConnectedSumDecompTest : public CppUnit::TestFixture {
@@ -400,7 +400,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             // Poincare homology sphere as a plugged triangular solid torus:
             tri = new Triangulation<3>;
-            NTetrahedron* tet[5];
+            Tetrahedron<3>* tet[5];
             int i;
             for (i = 0; i < 5; i++)
                 tet[i] = tri->newTetrahedron();

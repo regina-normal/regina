@@ -45,8 +45,8 @@ void Triangulation<4>::barycentricSubdivision() {
     Triangulation<4> staging;
     ChangeEventSpan span1(&staging);
 
-    Dim4Pentachoron** newPent = new Dim4Pentachoron*[nOldPent * 120];
-    Dim4Pentachoron* oldPent;
+    Pentachoron<4>** newPent = new Pentachoron<4>*[nOldPent * 120];
+    Pentachoron<4>* oldPent;
 
     // A pentachoron in the subdivision is uniquely defined by the
     // permutation (tet, triangle, edge, vtx, corner) of (0, 1, 2, 3, 4).
@@ -213,22 +213,22 @@ bool Triangulation<4>::idealToFinite() {
 #endif
 
 // * * * Create the pentachora for the new triangulation * * *
-    std::map< subDivNot, Dim4Pentachoron* > newPens; // this will index them.
+    std::map< subDivNot, Pentachoron<4>* > newPens; // this will index them.
     for (unsigned long i=0; i<size(); i++) {
-        const Dim4Pentachoron* aPen( pentachoron(i) ); // ambient pent
+        const Pentachoron<4>* aPen( pentachoron(i) ); // ambient pent
         bool pIv(false);   // check if has ideal vertices
         for (unsigned long j=0; j<5; j++)
             if (shouldTruncate(aPen->vertex(j)))
                 pIv = true;
         if (!pIv) {
-            newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
+            newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
                             ( subDivNot( _OP, i ), newTri->newPentachoron() ) );
             continue;
         }
         for (unsigned long j=0; j<5; j++) { // tet / pen vtx loop
             // _CiT check
             if (shouldTruncate(aPen->vertex(j)))
-                newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
+                newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
                         ( subDivNot( _CiT, i, j ), newTri->newPentachoron() ) );
             // _CT check
             bool TIv(false); // tet across from j has ideal vertex?
@@ -236,18 +236,18 @@ bool Triangulation<4>::idealToFinite() {
                 if (shouldTruncate(aPen->vertex( (j+k) % 5)))
                     TIv = true;
             if (!TIv) {
-                newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
+                newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
                          ( subDivNot( _CT, i, j ), newTri->newPentachoron() ) );
                 continue;
             }
             // we're in situation 4, 5, or 6.
-            const Dim4Tetrahedron* aTet( aPen->tetrahedron(j) );
+            const Tetrahedron<4>* aTet( aPen->tetrahedron(j) );
             for (unsigned long k=0; k<4; k++) {
                 if (shouldTruncate(aTet->vertex(k)))
-                    newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
+                    newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
                      ( subDivNot( _CCit, i, j, k ), 
                        newTri->newPentachoron() ) ); // CCit
-                newPens.insert( std::pair< subDivNot, Dim4Pentachoron* > // CCt
+                newPens.insert( std::pair< subDivNot, Pentachoron<4>* > // CCt
                      ( subDivNot( _CCt, i, j, k ), 
                        newTri->newPentachoron() ) );
                 bool tIv(false); // check if remaining triangle has 
@@ -259,7 +259,7 @@ bool Triangulation<4>::idealToFinite() {
                 const Triangle<4>* aTri( aTet->triangle(k) );
                 for (unsigned long l=0; l<3; l++)
                     if (shouldTruncate(aTri->vertex(l)) )
-                        newPens.insert( std::pair< subDivNot, Dim4Pentachoron* >
+                        newPens.insert( std::pair< subDivNot, Pentachoron<4>* >
                          ( subDivNot( _CCdt, i, j, k, l ), 
                            newTri->newPentachoron() ) );
             } // end k loop
@@ -271,7 +271,7 @@ bool Triangulation<4>::idealToFinite() {
     for (unsigned long i=0; i<countTetrahedra(); i++)
         if (!tetrahedron(i)->isBoundary()) {
             // check if has ideal vertices
-            const Dim4Tetrahedron* aTet( tetrahedron(i) );
+            const Tetrahedron<4>* aTet( tetrahedron(i) );
             const TetrahedronEmbedding<4> tEmb0( aTet->embedding(0) );
             const TetrahedronEmbedding<4> tEmb1( aTet->embedding(1) );
 
@@ -385,7 +385,7 @@ bool Triangulation<4>::idealToFinite() {
 
 // * * * gluings corresponding to subdivision of individual pentachora * * *
     for (unsigned long i=0; i<size(); i++) {
-        const Dim4Pentachoron* aPen( pentachoron(i) );
+        const Pentachoron<4>* aPen( pentachoron(i) );
         bool pIv(false);
         for (unsigned long j=0; j<5; j++)
             if (shouldTruncate(aPen->vertex(j))) pIv = true;
@@ -394,7 +394,7 @@ bool Triangulation<4>::idealToFinite() {
         //    all  objects of type (6) CCdt and (4) CCt if on a common pen, 
         //    tet and triangle.
         for (unsigned long j=0; j<5; j++) {
-            const Dim4Tetrahedron* aTet( aPen->tetrahedron( j ) );
+            const Tetrahedron<4>* aTet( aPen->tetrahedron( j ) );
             for (unsigned long k=0; k<4; k++) {
                 subDivNot p0( _OP, i, j, k ); // will have to
                 subDivNot p1( _OP, i, j, k ); // modify later
@@ -494,7 +494,7 @@ bool Triangulation<4>::idealToFinite() {
         //  every edge of the tet, and for every ideal edge of a triangle in 
         //  the tet, if it exists.
         for (unsigned long j=0; j<5; j++) {
-            const Dim4Tetrahedron* aTet( aPen->tetrahedron(j) );
+            const Tetrahedron<4>* aTet( aPen->tetrahedron(j) );
             bool tIv(false);
             for (unsigned long k=0; k<4; k++)
                 if (shouldTruncate(aTet->vertex(k))) {

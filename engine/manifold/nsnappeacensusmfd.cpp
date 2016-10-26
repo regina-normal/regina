@@ -68,24 +68,24 @@ Triangulation<3>* NSnapPeaCensusManifold::construct() const {
             ans->setLabel("");
         } else if (index_ == 1) {
             ans = new Triangulation<3>();
-            NTetrahedron* r = ans->newTetrahedron();
-            NTetrahedron* s = ans->newTetrahedron();
+            Tetrahedron<3>* r = ans->newTetrahedron();
+            Tetrahedron<3>* s = ans->newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(2, 3, 1, 0));
             r->join(2, s, Perm<4>(3, 2, 1, 0));
             r->join(3, s, Perm<4>(1, 0, 3, 2));
         } else if (index_ == 2) {
             ans = new Triangulation<3>();
-            NTetrahedron* r = ans->newTetrahedron();
-            NTetrahedron* s = ans->newTetrahedron();
+            Tetrahedron<3>* r = ans->newTetrahedron();
+            Tetrahedron<3>* s = ans->newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(3, 1, 2, 0));
             r->join(2, s, Perm<4>(2, 1, 3, 0));
             r->join(3, s, Perm<4>(3, 1, 0, 2));
         } else if (index_ == 3) {
             ans = new Triangulation<3>();
-            NTetrahedron* r = ans->newTetrahedron();
-            NTetrahedron* s = ans->newTetrahedron();
+            Tetrahedron<3>* r = ans->newTetrahedron();
+            Tetrahedron<3>* s = ans->newTetrahedron();
             r->join(0, s, Perm<4>(0, 1, 3, 2));
             r->join(1, s, Perm<4>(2, 1, 0, 3));
             r->join(2, s, Perm<4>(0, 3, 2, 1));

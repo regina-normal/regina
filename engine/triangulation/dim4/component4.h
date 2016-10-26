@@ -52,8 +52,6 @@ namespace regina {
 
 class Dim4BoundaryComponent;
 
-typedef Simplex<4> Dim4Pentachoron;
-typedef Face<4, 3> Dim4Tetrahedron;
 typedef Face<4, 1> Dim4Edge;
 typedef Face<4, 0> Dim4Vertex;
 
@@ -98,7 +96,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
         public alias::FaceOfTriangulation<Component<4>, 4>,
         public alias::FacesOfTriangulation<Component<4>, 4> {
     private:
-        std::vector<Dim4Tetrahedron*> tetrahedra_;
+        std::vector<Tetrahedron<4>*> tetrahedra_;
             /**< List of tetrahedra in the component. */
         std::vector<Triangle<4>*> triangles_;
             /**< List of triangles in the component. */
@@ -257,7 +255,7 @@ inline size_t Dim4Component::countBoundaryComponents() const {
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
 
 template <>
-inline const std::vector<Dim4Tetrahedron*>& Component<4>::faces<3>() const {
+inline const std::vector<Tetrahedron<4>*>& Component<4>::faces<3>() const {
     return tetrahedra_;
 }
 
@@ -277,7 +275,7 @@ inline const std::vector<Dim4Vertex*>& Component<4>::faces<0>() const {
 }
 
 template <>
-inline Dim4Tetrahedron* Dim4Component::face<3>(size_t index) const {
+inline Tetrahedron<4>* Dim4Component::face<3>(size_t index) const {
     return tetrahedra_[index];
 }
 

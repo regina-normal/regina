@@ -39,7 +39,7 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4Tetrahedron;
+using regina::Tetrahedron;
 using regina::TetrahedronEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
@@ -47,7 +47,7 @@ using regina::python::GlobalArray;
 
 namespace {
     boost::python::list Dim4Tetrahedron_embeddings_list(
-            const Dim4Tetrahedron* t) {
+            const Tetrahedron<4>* t) {
         boost::python::list ans;
         for (auto& emb : *t)
             ans.append(emb);
@@ -57,7 +57,7 @@ namespace {
 
 void addDim4Tetrahedron() {
     class_<FaceEmbedding<4, 3>>("FaceEmbedding4_3",
-            init<regina::Dim4Pentachoron*, int>())
+            init<regina::Pentachoron<4>*, int>())
         .def(init<const TetrahedronEmbedding<4>&>())
         .def("simplex", &TetrahedronEmbedding<4>::simplex,
             return_value_policy<reference_existing_object>())
@@ -72,39 +72,39 @@ void addDim4Tetrahedron() {
 
     class_<Face<4, 3>, std::auto_ptr<Face<4, 3>>,
             boost::noncopyable>("Face4_3", no_init)
-        .def("index", &Dim4Tetrahedron::index)
-        .def("degree", &Dim4Tetrahedron::degree)
+        .def("index", &Tetrahedron<4>::index)
+        .def("degree", &Tetrahedron<4>::degree)
         .def("embeddings", Dim4Tetrahedron_embeddings_list)
-        .def("embedding", &Dim4Tetrahedron::embedding,
+        .def("embedding", &Tetrahedron<4>::embedding,
             return_internal_reference<>())
-        .def("front", &Dim4Tetrahedron::front,
+        .def("front", &Tetrahedron<4>::front,
             return_internal_reference<>())
-        .def("back", &Dim4Tetrahedron::back,
+        .def("back", &Tetrahedron<4>::back,
             return_internal_reference<>())
-        .def("triangulation", &Dim4Tetrahedron::triangulation,
+        .def("triangulation", &Tetrahedron<4>::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("component", &Dim4Tetrahedron::component,
+        .def("component", &Tetrahedron<4>::component,
             return_value_policy<reference_existing_object>())
-        .def("boundaryComponent", &Dim4Tetrahedron::boundaryComponent,
+        .def("boundaryComponent", &Tetrahedron<4>::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Dim4Tetrahedron, 3, int>)
-        .def("vertex", &Dim4Tetrahedron::vertex,
+        .def("face", &regina::python::face<Tetrahedron<4>, 3, int>)
+        .def("vertex", &Tetrahedron<4>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("edge", &Dim4Tetrahedron::edge,
+        .def("edge", &Tetrahedron<4>::edge,
             return_value_policy<reference_existing_object>())
-        .def("triangle", &Dim4Tetrahedron::triangle,
+        .def("triangle", &Tetrahedron<4>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("faceMapping", &regina::python::faceMapping<Dim4Tetrahedron, 3, 5>)
-        .def("vertexMapping", &Dim4Tetrahedron::vertexMapping)
-        .def("edgeMapping", &Dim4Tetrahedron::edgeMapping)
-        .def("triangleMapping", &Dim4Tetrahedron::triangleMapping)
-        .def("isValid", &Dim4Tetrahedron::isValid)
-        .def("isLinkOrientable", &Dim4Tetrahedron::isLinkOrientable)
-        .def("isBoundary", &Dim4Tetrahedron::isBoundary)
-        .def("inMaximalForest", &Dim4Tetrahedron::inMaximalForest)
-        .def("ordering", &Dim4Tetrahedron::ordering)
-        .def("faceNumber", &Dim4Tetrahedron::faceNumber)
-        .def("containsVertex", &Dim4Tetrahedron::containsVertex)
+        .def("faceMapping", &regina::python::faceMapping<Tetrahedron<4>, 3, 5>)
+        .def("vertexMapping", &Tetrahedron<4>::vertexMapping)
+        .def("edgeMapping", &Tetrahedron<4>::edgeMapping)
+        .def("triangleMapping", &Tetrahedron<4>::triangleMapping)
+        .def("isValid", &Tetrahedron<4>::isValid)
+        .def("isLinkOrientable", &Tetrahedron<4>::isLinkOrientable)
+        .def("isBoundary", &Tetrahedron<4>::isBoundary)
+        .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest)
+        .def("ordering", &Tetrahedron<4>::ordering)
+        .def("faceNumber", &Tetrahedron<4>::faceNumber)
+        .def("containsVertex", &Tetrahedron<4>::containsVertex)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("ordering")

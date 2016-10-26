@@ -43,7 +43,7 @@ using regina::AngleStructure;
 using regina::AngleStructures;
 using regina::AngleStructureVector;
 using regina::NExampleTriangulation;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangulation;
 
 class AngleStructuresTest : public CppUnit::TestFixture {

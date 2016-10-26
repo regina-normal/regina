@@ -52,8 +52,7 @@ using regina::Dim4BoundaryComponent;
 using regina::Dim4Edge;
 using regina::Dim4ExampleTriangulation;
 using regina::Dim4Isomorphism;
-using regina::Dim4Pentachoron;
-using regina::Dim4Tetrahedron;
+using regina::Pentachoron;
 using regina::Dim4Vertex;
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
@@ -61,7 +60,7 @@ using regina::NGroupPresentation;
 using regina::NIsomorphism;
 using regina::Perm;
 using regina::NStandardTriangulation;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangulation;
 using regina::NVertex;
 
@@ -230,7 +229,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             delete base;
 
             // Build the rest manually.
-            Dim4Pentachoron* p[2];
+            Pentachoron<4>* p[2];
 
             ball_singlePent.newPentachoron();
             ball_singlePent.setLabel("D^4 (single pentachoron)");
@@ -798,8 +797,8 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void verifyBoundaryInclusions(const Triangulation<4>& tri) {
             Dim4BoundaryComponent* bc;
-            const NTetrahedron *tet3, *adj3;
-            Dim4Tetrahedron *tet4, *adj4;
+            const Tetrahedron<3> *tet3, *adj3;
+            Tetrahedron<4> *tet4, *adj4;
 
             int n = tri.countBoundaryComponents();
             int count;
@@ -1600,9 +1599,9 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // Make sure the edge link matches what happens on
                 // the vertex links.
                 unsigned j, k;
-                Dim4Pentachoron* p;
+                Pentachoron<4>* p;
                 Perm<5> perm;
-                const regina::NTetrahedron *t, *adj;
+                const regina::Tetrahedron<3> *t, *adj;
                 unsigned vNum;
                 for (j = 0; j < v->degree(); ++j) {
                     p = tri->pentachoron(iso->pentImage(j));
@@ -1743,7 +1742,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // Make sure the edge link matches what happens on
                 // the vertex links.
                 unsigned j, k;
-                Dim4Pentachoron* p;
+                Pentachoron<4>* p;
                 Dim4Vertex* v;
                 Perm<5> perm;
                 const Triangulation<3>* vLink;
@@ -2271,8 +2270,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             // This is the two-vertex, two-tetrahedron L(3,1);
             // the degree two vertex is 0(0) == 1(1).
             Triangulation<3> tri;
-            NTetrahedron* t0 = tri.newTetrahedron();
-            NTetrahedron* t1 = tri.newTetrahedron();
+            Tetrahedron<3>* t0 = tri.newTetrahedron();
+            Tetrahedron<3>* t1 = tri.newTetrahedron();
             t0->join(0, t1, regina::Perm<4>(1,3,0,2));
             t0->join(1, t1, regina::Perm<4>(1,2,3,0));
             t0->join(2, t1, regina::Perm<4>(1,2,3,0));

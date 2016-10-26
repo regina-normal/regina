@@ -83,7 +83,7 @@ Perm<4> perm_from_edges(const int edge_orientations_on_tet[6]) {
 
 void edge_orientations_on_tet(const Triangulation<3> &trig,
                               const std::vector<int> &edge_orientations,
-                              const NTetrahedron *tet,
+                              const Tetrahedron<3> *tet,
                               int edge_orientations_tet[6]) {
     for(int i = 0; i < 6; i++)
     {
@@ -131,7 +131,7 @@ inline bool check_consistency_on_face(const int edge_orientations_tet[6],
 
 bool check_consistency_on_tet(const Triangulation<3> &trig,
                               const std::vector<int> &edge_orientations,
-                              const NTetrahedron *tet,
+                              const Tetrahedron<3> *tet,
                               bool force_oriented)
 {
     int edge_orientations_tet[6];

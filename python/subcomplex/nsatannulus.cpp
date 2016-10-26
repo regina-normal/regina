@@ -39,14 +39,14 @@
 using namespace boost::python;
 using regina::Perm;
 using regina::NSatAnnulus;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 
 namespace {
-    NTetrahedron* tet_read(NSatAnnulus& a, int which) {
+    Tetrahedron<3>* tet_read(NSatAnnulus& a, int which) {
         return a.tet[which];
     }
 
-    void tet_write(NSatAnnulus& a, int which, NTetrahedron* value) {
+    void tet_write(NSatAnnulus& a, int which, Tetrahedron<3>* value) {
         a.tet[which] = value;
     }
 
@@ -71,7 +71,7 @@ namespace {
 void addNSatAnnulus() {
     class_<NSatAnnulus>("NSatAnnulus")
         .def(init<const NSatAnnulus&>())
-        .def(init<NTetrahedron*, Perm<4>, NTetrahedron*, Perm<4>>())
+        .def(init<Tetrahedron<3>*, Perm<4>, Tetrahedron<3>*, Perm<4>>())
         .def("tet", tet_read, return_internal_reference<>())
         .def("roles", roles_read)
         .def("setTet", tet_write)

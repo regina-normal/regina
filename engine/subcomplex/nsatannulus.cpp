@@ -303,7 +303,7 @@ void NSatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const 
         }
     }
 
-    NTetrahedron* lst = tri->insertLayeredSolidTorus(cuts0, cuts1);
+    Tetrahedron<3>* lst = tri->insertLayeredSolidTorus(cuts0, cuts1);
 
     // The boundary of the new LST sits differently for the special
     // cases (0,1,1) and (1,1,2); see the insertLayeredSolidTorus()

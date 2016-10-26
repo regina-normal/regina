@@ -750,7 +750,7 @@ Triangulation<3>* NSFSpace::construct() const {
     // Since we've already dealt with lens spaces, we must have at least
     // three exceptional fibres.  Build a blocked structure.
     Triangulation<3>* ans = new Triangulation<3>();
-    NTetrahedron *a, *b, *c;
+    Tetrahedron<3> *a, *b, *c;
 
     // Begin with the first triangular solid torus.
     a = ans->newTetrahedron();
@@ -771,8 +771,8 @@ Triangulation<3>* NSFSpace::construct() const {
     // Run through the rest of the fibres, one at a time.  Each extra
     // fibre (aside from the third) will require another triangular
     // solid torus.
-    NTetrahedron* prevA = a;
-    NTetrahedron* prevC = c;
+    Tetrahedron<3>* prevA = a;
+    Tetrahedron<3>* prevC = c;
 
     NSFSFibre nextFibre = *fit++;
     while (fit != fibres_.end()) {

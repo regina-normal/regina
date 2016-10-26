@@ -49,7 +49,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
 }
 
 void NSpiralSolidTorus::reverse() {
-    NTetrahedron** newTet = new NTetrahedron*[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
     Perm<4>* newRoles = new Perm<4>[nTet];
 
     Perm<4> switchPerm(3, 2, 1, 0);
@@ -65,7 +65,7 @@ void NSpiralSolidTorus::reverse() {
 }
 
 void NSpiralSolidTorus::cycle(size_t k) {
-    NTetrahedron** newTet = new NTetrahedron*[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
     Perm<4>* newRoles = new Perm<4>[nTet];
 
     for (size_t i = 0; i < nTet; i++) {
@@ -97,7 +97,7 @@ bool NSpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     if (baseTet == 0 && (! reverseAlso))
         return false;
 
-    NTetrahedron** newTet = new NTetrahedron*[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
     Perm<4>* newRoles = new Perm<4>[nTet];
 
     if (reverseAlso) {
@@ -136,22 +136,22 @@ bool NSpiralSolidTorus::isCanonical(const Triangulation<3>* tri) const {
     return true;
 }
 
-NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
+NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
         Perm<4> useVertexRoles) {
     Perm<4> invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
 
-    NTetrahedron* base = tet;
+    Tetrahedron<3>* base = tet;
     Perm<4> baseRoles(useVertexRoles);
 
-    std::vector<NTetrahedron*> tets;
+    std::vector<Tetrahedron<3>*> tets;
     std::vector<Perm<4>> roles;
-    std::set<NTetrahedron*> usedTets;
+    std::set<Tetrahedron<3>*> usedTets;
 
     tets.push_back(tet);
     roles.push_back(useVertexRoles);
     usedTets.insert(tet);
 
-    NTetrahedron* adjTet;
+    Tetrahedron<3>* adjTet;
     Perm<4> adjRoles;
 
     while (1) {

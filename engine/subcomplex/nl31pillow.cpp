@@ -66,7 +66,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
         return 0;
 
     // Verify that all four faces of one tetrahedron join to the other.
-    NTetrahedron* tet[2];
+    Tetrahedron<3>* tet[2];
     tet[0] = comp->tetrahedron(0);
     tet[1] = comp->tetrahedron(1);
 

@@ -276,7 +276,7 @@
     return self.packet->triangle([options[use] longValue]);
 }
 
-- (regina::Dim4Tetrahedron*)tetrahedronFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Tetrahedron<4>*)tetrahedronFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -286,7 +286,7 @@
     return self.packet->tetrahedron([options[use] longValue]);
 }
 
-- (regina::Dim4Pentachoron*)pentachoronFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Pentachoron<4>*)pentachoronFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -371,7 +371,7 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
-- (NSAttributedString*)tetrahedronDesc:(regina::Dim4Tetrahedron*)tetrahedron
+- (NSAttributedString*)tetrahedronDesc:(regina::Tetrahedron<4>*)tetrahedron
 {
     if (! tetrahedron)
         return [TextHelper badString:@"Invalid tetrahedron"];
@@ -394,7 +394,7 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
-- (NSAttributedString*)pentachoronDesc:(regina::Dim4Pentachoron*)pentachoron
+- (NSAttributedString*)pentachoronDesc:(regina::Pentachoron<4>*)pentachoron
 {
     if (! pentachoron)
         return [TextHelper badString:@"Invalid pentachoron"];
@@ -425,7 +425,7 @@
 
 - (IBAction)do24:(id)sender
 {
-    regina::Dim4Tetrahedron* use = [self tetrahedronFor:self.stepper24 options:options24];
+    regina::Tetrahedron<4>* use = [self tetrahedronFor:self.stepper24 options:options24];
     if (! use)
         return;
 
@@ -435,7 +435,7 @@
 
 - (IBAction)do15:(id)sender
 {
-    regina::Dim4Pentachoron* use = [self pentachoronFor:self.stepper15 options:options15];
+    regina::Pentachoron<4>* use = [self pentachoronFor:self.stepper15 options:options15];
     if (! use)
         return;
 
@@ -465,7 +465,7 @@
 
 - (IBAction)doOpenBook:(id)sender
 {
-    regina::Dim4Tetrahedron* use = [self tetrahedronFor:self.stepperOpenBook options:optionsOpenBook];
+    regina::Tetrahedron<4>* use = [self tetrahedronFor:self.stepperOpenBook options:optionsOpenBook];
     if (! use)
         return;
 
@@ -475,7 +475,7 @@
 
 - (IBAction)doShell:(id)sender
 {
-    regina::Dim4Pentachoron* use = [self pentachoronFor:self.stepperShell options:optionsShell];
+    regina::Pentachoron<4>* use = [self pentachoronFor:self.stepperShell options:optionsShell];
     if (! use)
         return;
 

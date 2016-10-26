@@ -63,7 +63,7 @@ namespace {
 
 void addDim4Triangle() {
     class_<FaceEmbedding<4, 2>>("FaceEmbedding4_2",
-            init<regina::Dim4Pentachoron*, int>())
+            init<regina::Pentachoron<4>*, int>())
         .def(init<const TriangleEmbedding<4>&>())
         .def("simplex", &TriangleEmbedding<4>::simplex,
             return_value_policy<reference_existing_object>())

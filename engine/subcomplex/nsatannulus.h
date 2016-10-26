@@ -52,7 +52,6 @@ template <int> class Triangulation;
 template <int, int> class Face;
 template <int dim> using Simplex = Face<dim, dim>;
 typedef Isomorphism<3> NIsomorphism;
-typedef Simplex<3> NTetrahedron;
 
 /**
  * \weakgroup subcomplex
@@ -129,7 +128,7 @@ typedef Simplex<3> NTetrahedron;
  * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
  */
 struct REGINA_API NSatAnnulus {
-    NTetrahedron* tet[2];
+    Tetrahedron<3>* tet[2];
         /**< Describes which tetrahedra provide the first and second
              triangles.  See the class notes for details. */
     Perm<4> roles[2];
@@ -157,7 +156,7 @@ struct REGINA_API NSatAnnulus {
      * @param t1 the tetrahedron to assign to \a tet[1].
      * @param r1 the permutation to assign to \a roles[1].
      */
-    NSatAnnulus(NTetrahedron* t0, Perm<4> r0, NTetrahedron* t1, Perm<4> r1);
+    NSatAnnulus(Tetrahedron<3>* t0, Perm<4> r0, Tetrahedron<3>* t1, Perm<4> r1);
     /**
      * Makes this equal to a clone of the given structure.
      *
@@ -465,8 +464,8 @@ inline NSatAnnulus::NSatAnnulus(const NSatAnnulus& cloneMe) {
     roles[0] = cloneMe.roles[0]; roles[1] = cloneMe.roles[1];
 }
 
-inline NSatAnnulus::NSatAnnulus(NTetrahedron* t0, Perm<4> r0,
-        NTetrahedron* t1, Perm<4> r1) {
+inline NSatAnnulus::NSatAnnulus(Tetrahedron<3>* t0, Perm<4> r0,
+        Tetrahedron<3>* t1, Perm<4> r1) {
     tet[0] = t0; tet[1] = t1;
     roles[0] = r0; roles[1] = r1;
 }
@@ -504,7 +503,7 @@ inline NSatAnnulus NSatAnnulus::verticalReflection() const {
 }
 
 inline void NSatAnnulus::reflectHorizontal() {
-    NTetrahedron* t = tet[0];
+    Tetrahedron<3>* t = tet[0];
     tet[0] = tet[1];
     tet[1] = t;
 
@@ -519,7 +518,7 @@ inline NSatAnnulus NSatAnnulus::horizontalReflection() const {
 }
 
 inline void NSatAnnulus::rotateHalfTurn() {
-    NTetrahedron* t = tet[0];
+    Tetrahedron<3>* t = tet[0];
     tet[0] = tet[1];
     tet[1] = t;
 

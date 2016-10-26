@@ -96,22 +96,22 @@ void Triangulation<4>::calculateBoundary() {
     // boundary).  There are probably better ways, but we'll just store
     // the (3-manifold tetrahedra) in an array of size
     // (number of 4-manifold tetrahedra).
-    NTetrahedron** bdryTetAll = new NTetrahedron*[countTetrahedra()];
+    Tetrahedron<3>** bdryTetAll = new Tetrahedron<3>*[countTetrahedra()];
     std::fill(bdryTetAll, bdryTetAll + countTetrahedra(), nullptr);
 
     Dim4BoundaryComponent* label;
-    std::queue<Dim4Tetrahedron*> queue;
-    Dim4Pentachoron *pent, *adjPent;
+    std::queue<Tetrahedron<4>*> queue;
+    Pentachoron<4> *pent, *adjPent;
     int facet, adjFacet;
     Dim4Vertex* vertex;
     Dim4Edge* edge;
     Triangle<4>* tri;
     TriangleEmbedding<4> triEmb;
-    Dim4Tetrahedron *tet, *adjTet;
+    Tetrahedron<4> *tet, *adjTet;
     int tetTri, adjTetTri;
-    NTetrahedron *bdryTet, *adjBdryTet;
+    Tetrahedron<3> *bdryTet, *adjBdryTet;
     int i, j;
-    for (Dim4Tetrahedron* loopTet : tetrahedra()) {
+    for (Tetrahedron<4>* loopTet : tetrahedra()) {
         // We only care about boundary tetrahedra that we haven't yet seen..
         if (loopTet->degree() == 2 || loopTet->boundaryComponent_)
             continue;
@@ -285,7 +285,7 @@ void Triangulation<4>::calculateVertexLinks() {
     // Construct the vertex linking tetrahedra, and insert them into each
     // vertex link in the correct order as described by the
     // Dim4Vertex::buildLink() docs.
-    NTetrahedron** tet = new NTetrahedron*[5 * n];
+    Tetrahedron<3>** tet = new Tetrahedron<3>*[5 * n];
 
     for (Dim4Vertex* vertex : vertices()) {
         vertex->link_ = new Triangulation<3>();
@@ -295,7 +295,7 @@ void Triangulation<4>::calculateVertexLinks() {
     }
 
     // Now glue the tetrahedra together correctly.
-    Dim4Pentachoron *pent, *adjPent;
+    Pentachoron<4> *pent, *adjPent;
     long pentIdx, adjPentIdx;
     int vertexIdx, adjVertexIdx;
     int exitFacet, adjFacet;

@@ -53,8 +53,8 @@ void Triangulation<3>::barycentricSubdivision() {
     Triangulation<3> staging;
     ChangeEventSpan span1(&staging);
 
-    NTetrahedron** newTet = new NTetrahedron*[nOldTet * 24];
-    NTetrahedron* oldTet;
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nOldTet * 24];
+    Tetrahedron<3>* oldTet;
 
     // A tetrahedron in the subdivision is uniquely defined by the
     // permutation (face, edge, vtx, corner) of (0, 1, 2, 3).
@@ -185,7 +185,7 @@ bool Triangulation<3>::idealToFinite() {
     Triangulation<3> staging;
     ChangeEventSpan span1(&staging);
 
-    NTetrahedron **newTet = new NTetrahedron*[32*numOldTet];
+    Tetrahedron<3> **newTet = new Tetrahedron<3>*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)
         newTet[i] = staging.newTetrahedron();
 
@@ -238,7 +238,7 @@ bool Triangulation<3>::idealToFinite() {
     }
 
     // Now deal with the gluings between the pieces inside adjacent tetrahedra.
-    NTetrahedron *ot;
+    Tetrahedron<3> *ot;
     long oppTet;
     Perm<4> p;
     for (i=0; i<numOldTet; i++) {
@@ -277,7 +277,7 @@ bool Triangulation<3>::idealToFinite() {
 
     // Remove the tetrahedra that meet any of the ideal or invalid vertices.
     // First we make a list of the tetrahedra.
-    std::vector<NTetrahedron*> tetList;
+    std::vector<Tetrahedron<3>*> tetList;
     for (NVertex* v : vertices())
         if (v->isIdeal() || ! v->isValid())
             for (auto& emb : *v)
@@ -292,7 +292,7 @@ bool Triangulation<3>::idealToFinite() {
     return true;
 }
 
-void Triangulation<3>::puncture(NTetrahedron* tet) {
+void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
     if (! tet) {
         // Preconditions disallow empty triangulations, but anyway:
         if (simplices_.empty())
@@ -306,7 +306,7 @@ void Triangulation<3>::puncture(NTetrahedron* tet) {
     // We will attach a pair of triangular prisms to face 123 of tet.
     // We will join the rectangular walls of the prisms together, and
     // one triangular end from each will join to form the new S^2 boundary.
-    NTetrahedron* prism[2][3];
+    Tetrahedron<3>* prism[2][3];
 
     // Create the new tetrahedra in an order that ensures that the new
     // S^2 boundary will appear in the final two tetrahedra.
@@ -328,7 +328,7 @@ void Triangulation<3>::puncture(NTetrahedron* tet) {
     prism[0][2]->join(1, prism[1][2], Perm<4>(0,1,3,2));
     prism[0][2]->join(2, prism[1][2], Perm<4>(0,1,3,2));
 
-    NTetrahedron* adj = tet->adjacentTetrahedron(0);
+    Tetrahedron<3>* adj = tet->adjacentTetrahedron(0);
     if (adj) {
         Perm<4> gluing = tet->adjacentGluing(0);
         tet->unjoin(0);
@@ -345,7 +345,7 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
 
     ChangeEventSpan span(this);
 
-    NTetrahedron* toPuncture[2];
+    Tetrahedron<3>* toPuncture[2];
 
     // Insert the other triangulation *before* puncturing, so that
     // things work in the case where we sum a triangulation with itself.
@@ -354,7 +354,7 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     toPuncture[0] = simplices_[0];
     toPuncture[1] = simplices_[n];
 
-    NTetrahedron* bdry[2][2];
+    Tetrahedron<3>* bdry[2][2];
 
     puncture(toPuncture[0]);
     bdry[0][0] = simplices_[simplices_.size() - 2];

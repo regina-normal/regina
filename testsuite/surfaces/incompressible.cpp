@@ -44,7 +44,7 @@ using regina::NExampleTriangulation;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangulation;
 
 class IncompressibleTest : public CppUnit::TestFixture {
@@ -150,7 +150,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
 
         void hasCompressingDisc() {
             Triangulation<3>* tri;
-            NTetrahedron* tet[4];
+            Tetrahedron<3>* tet[4];
             
             tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 2);

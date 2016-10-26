@@ -86,7 +86,7 @@
     [self.tetrahedra reloadData];
 }
 
-+ (NSString*)destStringFromFace:(int)srcFace dest:(regina::NTetrahedron*)destTet gluing:(const regina::Perm<4>&)gluing
++ (NSString*)destStringFromFace:(int)srcFace dest:(regina::Tetrahedron<3>*)destTet gluing:(const regina::Perm<4>&)gluing
 {
     if (! destTet)
         return @" ";
@@ -150,7 +150,7 @@
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
     
     SnapPeaGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
-    regina::NTetrahedron* t = self.packet->simplex(indexPath.row - 1);
+    regina::Tetrahedron<3>* t = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
     cell.face0.text = [SnapPeaGluings destStringFromFace:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.face1.text = [SnapPeaGluings destStringFromFace:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];

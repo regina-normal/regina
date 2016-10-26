@@ -69,8 +69,6 @@ template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
-typedef Simplex<4> Dim4Pentachoron;
-typedef Face<4, 3> Dim4Tetrahedron;
 typedef Face<4, 1> Dim4Edge;
 typedef Face<4, 0> Dim4Vertex;
 
@@ -103,7 +101,7 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  *
  * In particular, this class also tracks vertices, edges, triangles and
  * tetrahedra of the triangulation (as represented by the classes Dim4Vertex,
- * Dim4Edge, Triangle<4> and Dim4Tetrahedron), as well as boundary components
+ * Dim4Edge, Triangle<4> and Tetrahedron<4>), as well as boundary components
  * (as represented by the class Dim4BoundaryComponent).  Such objects are
  * temporary: whenever the triangulation changes, these objects will be
  * deleted and rebuilt, and so any pointers to them will become invalid.
@@ -120,7 +118,7 @@ class REGINA_API Triangulation<4> :
     REGINA_PACKET(Triangulation<4>, PACKET_TRIANGULATION4)
 
     public:
-        typedef std::vector<Dim4Pentachoron*>::const_iterator
+        typedef std::vector<Pentachoron<4>*>::const_iterator
                 PentachoronIterator;
             /**< A dimension-specific alias for SimplexIterator, used to
                  iterate through pentachora. */
@@ -230,19 +228,19 @@ class REGINA_API Triangulation<4> :
          *
          * See newSimplex() for further information.
          */
-        Dim4Pentachoron* newPentachoron();
+        Pentachoron<4>* newPentachoron();
         /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
          */
-        Dim4Pentachoron* newPentachoron(const std::string& desc);
+        Pentachoron<4>* newPentachoron(const std::string& desc);
         /**
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
          */
-        void removePentachoron(Dim4Pentachoron* tet);
+        void removePentachoron(Pentachoron<4>* tet);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
@@ -651,7 +649,7 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoFourMove(Dim4Tetrahedron* f, bool check = true,
+        bool twoFourMove(Tetrahedron<4>* f, bool check = true,
             bool perform = true);
 
         /**
@@ -686,7 +684,7 @@ class REGINA_API Triangulation<4> :
          * (defaults to \c true).
          * @return \c true always.
          */
-        bool oneFiveMove(Dim4Pentachoron* p, bool check = true,
+        bool oneFiveMove(Pentachoron<4>* p, bool check = true,
             bool perform = true);
 
         /**
@@ -825,7 +823,7 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool openBook(Dim4Tetrahedron* t,
+        bool openBook(Tetrahedron<4>* t,
             bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a boundary shelling
@@ -876,7 +874,7 @@ class REGINA_API Triangulation<4> :
          * changing the topology of the manifold.  If \a check is \c false,
          * this function simply returns \c true.
          */
-        bool shellBoundary(Dim4Pentachoron* p,
+        bool shellBoundary(Pentachoron<4>* p,
             bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a collapse of
@@ -1035,16 +1033,16 @@ inline bool Triangulation<4>::dependsOnParent() const {
     return false;
 }
 
-inline Dim4Pentachoron* Triangulation<4>::newPentachoron() {
+inline Pentachoron<4>* Triangulation<4>::newPentachoron() {
     return newSimplex();
 }
 
-inline Dim4Pentachoron* Triangulation<4>::newPentachoron(
+inline Pentachoron<4>* Triangulation<4>::newPentachoron(
         const std::string& desc) {
     return newSimplex(desc);
 }
 
-inline void Triangulation<4>::removePentachoron(Dim4Pentachoron* pent) {
+inline void Triangulation<4>::removePentachoron(Pentachoron<4>* pent) {
     removeSimplex(pent);
 }
 

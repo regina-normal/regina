@@ -72,7 +72,7 @@ a = Triangulation3()
 b = a.root()
 print a == b, a != b
 
-print 'NTetrahedron:'
+print 'Tetrahedron3:'
 t = Triangulation3()
 a = t.newTetrahedron()
 b = t.tetrahedron(0)

@@ -11,7 +11,7 @@ NGroupPresentation:
 False True
 Triangulation3:
 True False
-NTetrahedron:
+Tetrahedron3:
 True False
 NAbelianGroup:
 True False

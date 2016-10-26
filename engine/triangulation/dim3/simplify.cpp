@@ -98,9 +98,9 @@ bool Triangulation<3>::threeTwoMove(NEdge* e, bool check, bool perform) {
     }
 
     // Find the unwanted tetrahedra.
-    NTetrahedron* oldTet[3];
+    Tetrahedron<3>* oldTet[3];
     Perm<4> oldVertexPerm[3];
-    std::set<NTetrahedron*> oldTets;
+    std::set<Tetrahedron<3>*> oldTets;
     int oldPos = 0;
     for (auto& emb : *e) {
         oldTet[oldPos] = emb.tetrahedron();
@@ -123,7 +123,7 @@ bool Triangulation<3>::threeTwoMove(NEdge* e, bool check, bool perform) {
     int oldPos2, newPos, newPos2;
 
     // Create the new tetrahedra.
-    NTetrahedron* newTet[2];
+    Tetrahedron<3>* newTet[2];
     for (newPos = 0; newPos < 2; newPos++)
         newTet[newPos] = newTetrahedron();
 
@@ -138,7 +138,7 @@ bool Triangulation<3>::threeTwoMove(NEdge* e, bool check, bool perform) {
     // Find the tetrahedra to which the old tetrahedron faces are glued,
     // store the gluings from (0,1,2) of the new tetrahedron faces to the
     // vertices of these adjacent tetrahedra, and unjoin the tetrahedra.
-    NTetrahedron* adjTet[2][3];
+    Tetrahedron<3>* adjTet[2][3];
     int adjFace;
     int oldFace;
 
@@ -217,7 +217,7 @@ bool Triangulation<3>::twoThreeMove(Triangle<3>* f, bool check, bool perform) {
     }
 
     // Find the unwanted tetrahedra.
-    NTetrahedron* oldTet[2];
+    Tetrahedron<3>* oldTet[2];
     Perm<4> oldVertexPerm[2];
     int oldPos;
     for (oldPos = 0; oldPos < 2; oldPos++) {
@@ -241,7 +241,7 @@ bool Triangulation<3>::twoThreeMove(Triangle<3>* f, bool check, bool perform) {
     int oldPos2, newPos, newPos2;
 
     // Allocate the new tetrahedra.
-    NTetrahedron* newTet[3];
+    Tetrahedron<3>* newTet[3];
     for (newPos = 0; newPos < 3; newPos++)
         newTet[newPos] = newTetrahedron();
 
@@ -256,7 +256,7 @@ bool Triangulation<3>::twoThreeMove(Triangle<3>* f, bool check, bool perform) {
     // Find the tetrahedra to which the old tetrahedron faces are glued,
     // store the gluings from (0,1,2) of the new tetrahedron faces to the
     // vertices of these adjacent tetrahedra, and unjoin the tetrahedra.
-    NTetrahedron* adjTet[3][2];
+    Tetrahedron<3>* adjTet[3][2];
     int adjFace;
     int oldFace;
 
@@ -330,7 +330,7 @@ bool Triangulation<3>::twoThreeMove(Triangle<3>* f, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<3>::oneFourMove(NTetrahedron* tet, bool /* check */,
+bool Triangulation<3>::oneFourMove(Tetrahedron<3>* tet, bool /* check */,
         bool perform) {
     if ( !perform )
         return true; // You can always do this move.
@@ -338,7 +338,7 @@ bool Triangulation<3>::oneFourMove(NTetrahedron* tet, bool /* check */,
     ChangeEventSpan span(this);
 
     // Before we unglue, record how the adjacent tetrahedra are glued to tet.
-    NTetrahedron* adjTet[4];
+    Tetrahedron<3>* adjTet[4];
     Perm<4> adjGlue[4];
     unsigned i, j;
     for (i=0; i<4; i++) {
@@ -355,7 +355,7 @@ bool Triangulation<3>::oneFourMove(NTetrahedron* tet, bool /* check */,
     // Vertex i of newTet[i] will become the new internal vertex, and
     // the other three vertices of newTet[i] will keep the same vertex numbers
     // that they had in the old tetrahedron.
-    NTetrahedron* newTet[4];
+    Tetrahedron<3>* newTet[4];
     for (i = 0; i < 4; ++i)
         newTet[i] = newTetrahedron();
 
@@ -398,8 +398,8 @@ bool Triangulation<3>::fourFourMove(NEdge* e, int newAxis, bool check,
     }
 
     // Find the unwanted tetrahedra.
-    NTetrahedron* oldTet[4];
-    std::set<NTetrahedron*> oldTets;
+    Tetrahedron<3>* oldTet[4];
+    std::set<Tetrahedron<3>*> oldTets;
     int oldPos = 0;
     for (auto& emb : *e) {
         oldTet[oldPos] = emb.tetrahedron();
@@ -438,7 +438,7 @@ bool Triangulation<3>::twoZeroMove(NEdge* e, bool check, bool perform) {
             return false;
     }
 
-    NTetrahedron* tet[2];
+    Tetrahedron<3>* tet[2];
     Perm<4> perm[2];
 
     int i = 0;
@@ -493,8 +493,8 @@ bool Triangulation<3>::twoZeroMove(NEdge* e, bool check, bool perform) {
     // other.
     Perm<4> crossover = tet[0]->adjacentGluing(perm[0][2]);
     Perm<4> gluing;
-    NTetrahedron* top;
-    NTetrahedron* bottom;
+    Tetrahedron<3>* top;
+    Tetrahedron<3>* bottom;
     int topFace;
     for (i=0; i<2; i++) {
         top = tet[0]->adjacentTetrahedron(perm[0][i]);
@@ -534,7 +534,7 @@ bool Triangulation<3>::twoZeroMove(NVertex* v, bool check, bool perform) {
             return false;
     }
 
-    NTetrahedron* tet[2];
+    Tetrahedron<3>* tet[2];
     int vertex[2];
 
     int i = 0;
@@ -577,8 +577,8 @@ bool Triangulation<3>::twoZeroMove(NVertex* v, bool check, bool perform) {
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
-    NTetrahedron* top = tet[0]->adjacentTetrahedron(vertex[0]);
-    NTetrahedron* bottom = tet[1]->adjacentTetrahedron(vertex[1]);
+    Tetrahedron<3>* top = tet[0]->adjacentTetrahedron(vertex[0]);
+    Tetrahedron<3>* bottom = tet[1]->adjacentTetrahedron(vertex[1]);
 
     if (! top) {
         tet[1]->unjoin(vertex[1]);
@@ -618,10 +618,10 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
     }
 
     const EdgeEmbedding<3>& emb = e->front();
-    NTetrahedron* oldTet = emb.tetrahedron();
+    Tetrahedron<3>* oldTet = emb.tetrahedron();
     Perm<4> oldVertices = emb.vertices();
 
-    NTetrahedron* top = oldTet->adjacentTetrahedron(oldVertices[edgeEnd]);
+    Tetrahedron<3>* top = oldTet->adjacentTetrahedron(oldVertices[edgeEnd]);
     int otherEdgeEnd = 1 - edgeEnd;
 
     if (check)
@@ -665,7 +665,7 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
     ChangeEventSpan span(this);
 
     // First glue together the two faces that will be flattened.
-    NTetrahedron* adjTet[2];
+    Tetrahedron<3>* adjTet[2];
     adjTet[0] = top->adjacentTetrahedron(topGlued[0]);
     adjTet[1] = top->adjacentTetrahedron(topGlued[1]);
 
@@ -687,7 +687,7 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
     }
 
     // Now make the new tetrahedron and glue it to itself.
-    NTetrahedron* newTet = newTetrahedron();
+    Tetrahedron<3>* newTet = newTetrahedron();
     newTet->join(2, newTet, Perm<4>(2,3));
 
     // Glue the new tetrahedron into the remaining structure.
@@ -704,8 +704,8 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
     } else {
         int bottomFace = oldVertices[otherEdgeEnd];
         int topFace = bottomToTop[bottomFace];
-        NTetrahedron* adjTop = top->adjacentTetrahedron(topFace);
-        NTetrahedron* adjBottom = oldTet->adjacentTetrahedron(bottomFace);
+        Tetrahedron<3>* adjTop = top->adjacentTetrahedron(topFace);
+        Tetrahedron<3>* adjBottom = oldTet->adjacentTetrahedron(bottomFace);
 
         Perm<4> bottomFacePerm = Perm<4>(oldVertices[edgeEnd],
             oldVertices[otherEdgeEnd], oldVertices[2], oldVertices[3]);
@@ -735,7 +735,7 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
 
 bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     const TriangleEmbedding<3>& emb = f->front();
-    NTetrahedron* tet = emb.tetrahedron();
+    Tetrahedron<3>* tet = emb.tetrahedron();
     Perm<4> vertices = emb.vertices();
 
     // Check that the triangle has exactly two boundary edges.
@@ -790,8 +790,8 @@ bool Triangulation<3>::closeBook(NEdge* e, bool check, bool perform) {
     const EdgeEmbedding<3>& front = e->front();
     const EdgeEmbedding<3>& back = e->back();
 
-    NTetrahedron* t0 = front.tetrahedron();
-    NTetrahedron* t1 = back.tetrahedron();
+    Tetrahedron<3>* t0 = front.tetrahedron();
+    Tetrahedron<3>* t1 = back.tetrahedron();
     Perm<4> p0 = front.vertices();
     Perm<4> p1 = back.vertices();
 
@@ -827,7 +827,7 @@ bool Triangulation<3>::closeBook(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<3>::shellBoundary(NTetrahedron* t,
+bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
         bool check, bool perform) {
     // To perform the move we don't even need a skeleton.
     if (check) {
@@ -887,7 +887,7 @@ bool Triangulation<3>::shellBoundary(NTetrahedron* t,
 bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
     // Find the tetrahedra to remove.
     std::deque<EdgeEmbedding<3>>::const_iterator it;
-    NTetrahedron* tet = 0;
+    Tetrahedron<3>* tet = 0;
     Perm<4> p;
 
     if (check) {
@@ -1107,12 +1107,12 @@ bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
     // Perform the move.
     ChangeEventSpan span(this);
     Perm<4> topPerm, botPerm;
-    NTetrahedron *top, *bot;
+    Tetrahedron<3> *top, *bot;
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
     size_t degree = e->degree();
-    NTetrahedron** embTet = new NTetrahedron*[degree];
+    Tetrahedron<3>** embTet = new Tetrahedron<3>*[degree];
     Perm<4>* embVertices = new Perm<4>[degree];
 
     unsigned i;
@@ -1149,7 +1149,7 @@ void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     ChangeEventSpan span(this);
 
     // Run a breadth-first search over all tetrahedra.
-    NTetrahedron** ordered = new NTetrahedron*[n];
+    Tetrahedron<3>** ordered = new Tetrahedron<3>*[n];
     bool* used = new bool[n];
 
     std::fill(used, used + n, false);
@@ -1158,7 +1158,7 @@ void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     unsigned long nextTet = 0;   /* Used to search for connected components. */
 
     unsigned i;
-    NTetrahedron *tet, *adj;
+    Tetrahedron<3> *tet, *adj;
     while (processed < n) {
         if (filled == processed) {
             // Look for the next connected component.

@@ -110,7 +110,7 @@ void NLayeredSolidTorus::transform(const Triangulation<3>* originalTri,
 }
 
 NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
-        NTetrahedron* tet) {
+        Tetrahedron<3>* tet) {
     int baseFace1;
     int baseFace2 = -1;
     Perm<4> basePerm;
@@ -295,9 +295,9 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
 }
 
 NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
-        NTetrahedron* tet, unsigned topFace1, unsigned topFace2) {
-    NTetrahedron* top = tet;
-    NTetrahedron* next;
+        Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
+    Tetrahedron<3>* top = tet;
+    Tetrahedron<3>* next;
     Perm<4> cross1, cross2;
     Perm<4> canon1, canon2;
     NFacePair pair = NFacePair(topFace1, topFace2).complement();
@@ -596,7 +596,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     TriangleEmbedding<3> f1 = comp->boundaryComponent(0)->triangle(1)->
         embedding(0);
 
-    NTetrahedron* top = f0.tetrahedron();
+    Tetrahedron<3>* top = f0.tetrahedron();
     if (f1.tetrahedron() != top)
         return 0;
 
@@ -614,8 +614,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     // also require us to code up the entire structure again.
 
     NFacePair underFaces = NFacePair(f0.triangle(), f1.triangle()).complement();
-    NTetrahedron* currTet = top;
-    NTetrahedron* nextTet;
+    Tetrahedron<3>* currTet = top;
+    Tetrahedron<3>* nextTet;
     while (1) {
         // INV: Thus far we have seen a chain of tetrahedra, with each
         // tetrahedron glued to the next along two faces.
@@ -674,14 +674,14 @@ Triangulation<3>* NLayeredSolidTorus::flatten(const Triangulation<3>* original,
     // base tetrahedra.
     Triangulation<3>* ans = new Triangulation<3>(*original);
 
-    NTetrahedron* newTop = ans->tetrahedron(topLevel_->index());
-    NTetrahedron* newBase = ans->tetrahedron(base_->index());
+    Tetrahedron<3>* newTop = ans->tetrahedron(topLevel_->index());
+    Tetrahedron<3>* newBase = ans->tetrahedron(base_->index());
 
     Packet::ChangeEventSpan span(ans);
 
     // Reglue the top faces before deleting the layered solid torus.
-    NTetrahedron* adj0 = newTop->adjacentTetrahedron(topFace_[0]);
-    NTetrahedron* adj1 = newTop->adjacentTetrahedron(topFace_[1]);
+    Tetrahedron<3>* adj0 = newTop->adjacentTetrahedron(topFace_[0]);
+    Tetrahedron<3>* adj1 = newTop->adjacentTetrahedron(topFace_[1]);
 
     if (adj0 && adj1 && (adj0 != newTop)) {
         // A permutation for each adjacent tetrahedron.
@@ -718,8 +718,8 @@ Triangulation<3>* NLayeredSolidTorus::flatten(const Triangulation<3>* original,
     }
 
     // Delete the layered solid torus tetrahedra.
-    NTetrahedron* curr;
-    NTetrahedron* next;
+    Tetrahedron<3>* curr;
+    Tetrahedron<3>* next;
     NFacePair currBdryFaces;
     Perm<4> adjPerm;
 

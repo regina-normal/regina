@@ -72,7 +72,7 @@ Triangulation<2>* Face<4, 1>::buildLinkDetail(bool labels,
         }
     }
 
-    Dim4Pentachoron *pent, *adj;
+    Pentachoron<4> *pent, *adj;
     Perm<5> adjGluing;
     int exitTet, e;
     int edgeInLink;

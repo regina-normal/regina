@@ -179,7 +179,7 @@ Triangulation<3>* NSignature::triangulate() const {
     // Tetrahedron vertices will be:
     //   bottom left -> top right: 0 -> 1
     //   bottom right -> top left: 2 -> 3
-    NTetrahedron** tet = new NTetrahedron*[order_];
+    Tetrahedron<3>** tet = new Tetrahedron<3>*[order_];
     unsigned pos;
     for (pos = 0; pos < order_; pos++)
         tet[pos] = tri->newTetrahedron();

@@ -64,7 +64,7 @@ const NGroupPresentation& Triangulation<3>::fundamentalGroup() const {
             genIndex[f->index()] = i++;
 
     // Run through each edge and put the relations in the matrix.
-    NTetrahedron* currTet;
+    Tetrahedron<3>* currTet;
     Triangle<3>* triangle;
     int currTetFace;
     long triGenIndex;

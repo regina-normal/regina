@@ -319,7 +319,7 @@
                 cell.index.text = @"No tetrahedra";
                 cell.data0.text = cell.data1.text = @"";
             } else {
-                regina::Dim4Tetrahedron* t = self.packet->tetrahedron(indexPath.row - 1);
+                regina::Tetrahedron<4>* t = self.packet->tetrahedron(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
 
@@ -340,7 +340,7 @@
                 cell.index.text = @"No tetrahedra";
                 cell.data0.text = cell.data1.text = cell.data2.text = cell.data3.text = @"";
             } else {
-                regina::Dim4Pentachoron *t = self.packet->pentachoron(indexPath.row - 1);
+                regina::Pentachoron<4> *t = self.packet->pentachoron(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Pentachoron" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
 

@@ -39,44 +39,44 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 
 void addNTetrahedron() {
     class_<regina::Simplex<3>, std::auto_ptr<regina::Simplex<3>>,
             boost::noncopyable>("Simplex3", no_init)
-        .def("description", &NTetrahedron::description,
+        .def("description", &Tetrahedron<3>::description,
             return_value_policy<return_by_value>())
-        .def("setDescription", &NTetrahedron::setDescription)
-        .def("index", &NTetrahedron::index)
-        .def("adjacentTetrahedron", &NTetrahedron::adjacentTetrahedron,
+        .def("setDescription", &Tetrahedron<3>::setDescription)
+        .def("index", &Tetrahedron<3>::index)
+        .def("adjacentTetrahedron", &Tetrahedron<3>::adjacentTetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("adjacentSimplex", &NTetrahedron::adjacentSimplex,
+        .def("adjacentSimplex", &Tetrahedron<3>::adjacentSimplex,
             return_value_policy<reference_existing_object>())
-        .def("adjacentGluing", &NTetrahedron::adjacentGluing)
-        .def("adjacentFace", &NTetrahedron::adjacentFace)
-        .def("adjacentFacet", &NTetrahedron::adjacentFacet)
-        .def("hasBoundary", &NTetrahedron::hasBoundary)
-        .def("join", &NTetrahedron::join)
-        .def("unjoin", &NTetrahedron::unjoin,
+        .def("adjacentGluing", &Tetrahedron<3>::adjacentGluing)
+        .def("adjacentFace", &Tetrahedron<3>::adjacentFace)
+        .def("adjacentFacet", &Tetrahedron<3>::adjacentFacet)
+        .def("hasBoundary", &Tetrahedron<3>::hasBoundary)
+        .def("join", &Tetrahedron<3>::join)
+        .def("unjoin", &Tetrahedron<3>::unjoin,
             return_value_policy<reference_existing_object>())
-        .def("isolate", &NTetrahedron::isolate)
-        .def("triangulation", &NTetrahedron::triangulation,
+        .def("isolate", &Tetrahedron<3>::isolate)
+        .def("triangulation", &Tetrahedron<3>::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("component", &NTetrahedron::component,
+        .def("component", &Tetrahedron<3>::component,
             return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<NTetrahedron, 3, int>)
-        .def("vertex", &NTetrahedron::vertex,
+        .def("face", &regina::python::face<Tetrahedron<3>, 3, int>)
+        .def("vertex", &Tetrahedron<3>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("edge", &NTetrahedron::edge,
+        .def("edge", &Tetrahedron<3>::edge,
             return_value_policy<reference_existing_object>())
-        .def("triangle", &NTetrahedron::triangle,
+        .def("triangle", &Tetrahedron<3>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("faceMapping", &regina::python::faceMapping<NTetrahedron, 3>)
-        .def("vertexMapping", &NTetrahedron::vertexMapping)
-        .def("edgeMapping", &NTetrahedron::edgeMapping)
-        .def("triangleMapping", &NTetrahedron::triangleMapping)
-        .def("orientation", &NTetrahedron::orientation)
-        .def("facetInMaximalForest", &NTetrahedron::facetInMaximalForest)
+        .def("faceMapping", &regina::python::faceMapping<Tetrahedron<3>, 3>)
+        .def("vertexMapping", &Tetrahedron<3>::vertexMapping)
+        .def("edgeMapping", &Tetrahedron<3>::edgeMapping)
+        .def("triangleMapping", &Tetrahedron<3>::triangleMapping)
+        .def("orientation", &Tetrahedron<3>::orientation)
+        .def("facetInMaximalForest", &Tetrahedron<3>::facetInMaximalForest)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

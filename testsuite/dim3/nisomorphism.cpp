@@ -43,7 +43,7 @@ using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NIsomorphism;
 using regina::Perm;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangulation;
 
 class NIsomorphismTest : public CppUnit::TestFixture {
@@ -317,7 +317,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             }
 
             // Add a lone tetrahedron.
-            NTetrahedron* tet = t2.newTetrahedron();
+            Tetrahedron<3>* tet = t2.newTetrahedron();
             if (! t2.isContainedIn(t).get()) {
                 std::ostringstream msg;
                 msg << "Isolating a tetrahedron of " << name <<

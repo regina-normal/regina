@@ -556,7 +556,7 @@
     unsigned long nTets = self.packet->size();
     
     regina::NSpiralSolidTorus* spiral;
-    regina::NTetrahedron* tet;
+    regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
     for (i = 0; i < nTets; i++) {
@@ -691,8 +691,8 @@
     unsigned long nTets = self.packet->size();
     
     unsigned long i, j;
-    regina::NTetrahedron* t1;
-    regina::NTetrahedron* t2;
+    regina::Tetrahedron<3>* t1;
+    regina::Tetrahedron<3>* t2;
     regina::NSnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = self.packet->tetrahedron(i);

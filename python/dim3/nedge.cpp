@@ -60,7 +60,7 @@ namespace {
 void addNEdge() {
     // Classes:
     class_<FaceEmbedding<3, 1>>("FaceEmbedding3_1",
-            init<regina::NTetrahedron*, int>())
+            init<regina::Tetrahedron<3>*, int>())
         .def(init<const EdgeEmbedding<3>&>())
         .def("simplex", &EdgeEmbedding<3>::simplex,
             return_value_policy<reference_existing_object>())

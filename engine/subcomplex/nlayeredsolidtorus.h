@@ -46,7 +46,6 @@ namespace regina {
 
 template <int> class Isomorphism;
 typedef Isomorphism<3> NIsomorphism;
-typedef Simplex<3> NTetrahedron;
 
 /**
  * \weakgroup subcomplex
@@ -71,7 +70,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
         size_t nTetrahedra;
             /**< The number of tetrahedra in this torus. */
 
-        NTetrahedron* base_;
+        Tetrahedron<3>* base_;
             /**< The tetrahedron that is glued to itself at the base of
                  this torus. */
         int baseEdge_[6];
@@ -86,7 +85,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
             /**< The two faces of the base tetrahedron that are glued to
                  each other. */
 
-        NTetrahedron* topLevel_;
+        Tetrahedron<3>* topLevel_;
             /**< The tetrahedron on the boundary of this torus. */
         int topEdge_[3][2];
             /**< Returns the edges of the top tetrahedron that the meridinal
@@ -125,7 +124,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          *
          * @return the base tetrahedron.
          */
-        NTetrahedron* base() const;
+        Tetrahedron<3>* base() const;
         /**
          * Returns the requested edge of the base tetrahedron belonging
          * to the given group.  The layering identifies the six edges
@@ -183,7 +182,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          *
          * @return the top level tetrahedron.
          */
-        NTetrahedron* topLevel() const;
+        Tetrahedron<3>* topLevel() const;
         /**
          * Returns the number of times the meridinal disc of the torus
          * cuts the top level tetrahedron edges in the given group.
@@ -316,7 +315,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * not the base of a layered solid torus.
          */
         static NLayeredSolidTorus* formsLayeredSolidTorusBase(
-            NTetrahedron* tet);
+            Tetrahedron<3>* tet);
 
         /**
          * Determines if the given tetrahedron forms the top level
@@ -346,7 +345,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * its two faces do not form the top level of a layered solid torus.
          */
         static NLayeredSolidTorus* formsLayeredSolidTorusTop(
-            NTetrahedron* tet, unsigned topFace1, unsigned topFace2);
+            Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
 
         /**
          * Determines if the given triangulation component forms a
@@ -412,7 +411,7 @@ inline size_t NLayeredSolidTorus::size() const {
     return nTetrahedra;
 }
 
-inline NTetrahedron* NLayeredSolidTorus::base() const {
+inline Tetrahedron<3>* NLayeredSolidTorus::base() const {
     return base_;
 }
 inline int NLayeredSolidTorus::baseEdge(int group, int index) const {
@@ -426,7 +425,7 @@ inline int NLayeredSolidTorus::baseFace(int index) const {
     return baseFace_[index];
 }
 
-inline NTetrahedron* NLayeredSolidTorus::topLevel() const {
+inline Tetrahedron<3>* NLayeredSolidTorus::topLevel() const {
     return topLevel_;
 }
 inline unsigned long NLayeredSolidTorus::meridinalCuts(int group) const {

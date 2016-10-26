@@ -96,7 +96,7 @@ namespace {
         return f->triangulation()->openBook(f, true, false);
     }
 
-    bool hasShellBoundary(regina::NTetrahedron* t) {
+    bool hasShellBoundary(regina::Tetrahedron<3>* t) {
         return t->triangulation()->shellBoundary(t, true, false);
     }
 }
@@ -356,7 +356,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (f)
             tri->twoThreeMove(f);
     } else if (use14->isChecked()) {
-        regina::NTetrahedron* t = box14->selected();
+        regina::Tetrahedron<3>* t = box14->selected();
         if (t)
             tri->oneFourMove(t);
     } else if (use44->isChecked()) {
@@ -384,7 +384,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (e)
             tri->closeBook(e);
     } else if (useShellBdry->isChecked()) {
-        regina::NTetrahedron* t = boxShellBdry->selected();
+        regina::Tetrahedron<3>* t = boxShellBdry->selected();
         if (t)
             tri->shellBoundary(t);
     } else if (useCollapseEdge->isChecked()) {

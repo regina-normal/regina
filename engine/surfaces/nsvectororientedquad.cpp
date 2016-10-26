@@ -172,7 +172,7 @@ NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
         EdgeEnd current;
         std::deque<EdgeEmbedding<3>>::const_iterator eembit, backupit,
             endit, beginit;
-        NTetrahedron* tet;
+        Tetrahedron<3>* tet;
         Perm<4> tetPerm, adjPerm;
         size_t tetIndex, adjIndex;
         LargeInteger expect;

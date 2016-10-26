@@ -58,7 +58,7 @@ using regina::Dim2Vertex;
 using regina::Dim4BoundaryComponent;
 using regina::Dim4Component;
 using regina::Dim4Edge;
-using regina::Dim4Tetrahedron;
+using regina::Tetrahedron;
 using regina::TetrahedronEmbedding;
 using regina::Triangle;
 using regina::TriangleEmbedding;
@@ -1304,7 +1304,7 @@ int Dim4TetrahedronModel::columnCount(const QModelIndex& /* unused parent*/)
 
 QVariant Dim4TetrahedronModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Tetrahedron* item = tri->tetrahedron(index.row());
+        Tetrahedron<4>* item = tri->tetrahedron(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();

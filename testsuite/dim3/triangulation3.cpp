@@ -65,7 +65,7 @@ using regina::NormalSurfaces;
 using regina::Perm;
 using regina::NSignature;
 using regina::NStandardTriangulation;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangle;
 using regina::Triangulation;
 using regina::NVertex;
@@ -344,10 +344,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             fig8_bary.setLabel("Subdivided figure 8 knot complement");
 
             // The rest alas must be done manually.
-            NTetrahedron* r;
-            NTetrahedron* s;
-            NTetrahedron* t;
-            NTetrahedron* u;
+            Tetrahedron<3>* r;
+            Tetrahedron<3>* s;
+            Tetrahedron<3>* t;
+            Tetrahedron<3>* u;
 
             // A two-tetrahedron two-vertex L(3,1) is straightforward to
             // construct using a vertex of degree two.
@@ -1524,7 +1524,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 }
 
                 unsigned j, k;
-                NTetrahedron* tet;
+                Tetrahedron<3>* tet;
                 Perm<4> perm;
                 const regina::Triangle<2> *t, *adj;
                 unsigned vNum;
@@ -2421,7 +2421,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Poincare homology sphere as a plugged triangular solid torus:
             tri = new Triangulation<3>;
-            NTetrahedron* tet[5];
+            Tetrahedron<3>* tet[5];
             int i;
             for (i = 0; i < 5; i++)
                 tet[i] = tri->newTetrahedron();
@@ -2569,7 +2569,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void threeBallRecognition() {
             Triangulation<3>* tri;
-            NTetrahedron* tet[4];
+            Tetrahedron<3>* tet[4];
 
             // Balls:
             tri = new Triangulation<3>();
@@ -2783,7 +2783,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             delete verifyNotSolidTorus(tri, "Single tetrahedron");
 
             tri = new Triangulation<3>();
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(0, tet, Perm<4>(3, 1, 2, 0));
             delete verifyNotSolidTorus(tri, "Snapped tetrahedron");
 
@@ -3405,7 +3405,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // just an interval.
             {
                 Triangulation<3> snap;
-                NTetrahedron* tet = snap.newTetrahedron();
+                Tetrahedron<3>* tet = snap.newTetrahedron();
                 tet->join(0, tet, Perm<4>(0, 1));
                 tet->join(2, tet, Perm<4>(2, 3));
 
@@ -3433,7 +3433,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Edge 0 forms a trefoil, and edge 1 is unknotted.
             {
                 Triangulation<3> layer;
-                NTetrahedron* tet = layer.newTetrahedron();
+                Tetrahedron<3>* tet = layer.newTetrahedron();
                 tet->join(0, tet, Perm<4>(1, 2, 3, 0));
                 tet->join(2, tet, Perm<4>(2, 3));
 
@@ -3485,8 +3485,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             // between the two tetrahedra.  The result should be a solid torus.
             {
                 Triangulation<3> ball;
-                NTetrahedron* a = ball.newTetrahedron();
-                NTetrahedron* b = ball.newTetrahedron();
+                Tetrahedron<3>* a = ball.newTetrahedron();
+                Tetrahedron<3>* b = ball.newTetrahedron();
                 a->join(0, b, Perm<4>());
                 a->join(1, b, Perm<4>());
 
@@ -3506,7 +3506,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             for (unsigned long i = 0; i <= n; ++i) {
                 Triangulation<3> punc(*tri);
-                NTetrahedron* origTet;
+                Tetrahedron<3>* origTet;
                 if (i == n) {
                     origTet = tri->tetrahedron(0);
                     punc.puncture();
@@ -3881,7 +3881,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Some triangulations that should not simplify.
             Triangulation<3>* tri;
-            NTetrahedron* tet[4];
+            Tetrahedron<3>* tet[4];
 
             // A triangulation with two degree two projective plane cusps
             // (that should not be simplified away):

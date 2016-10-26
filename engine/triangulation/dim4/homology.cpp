@@ -69,15 +69,15 @@ const NAbelianGroup& Triangulation<4>::homologyH1() const {
     // Find out which tetrahedron corresponds to which generator.
     long* genIndex = new long[countTetrahedra()];
     long i = 0;
-    for (Dim4Tetrahedron* tet : tetrahedra())
+    for (Tetrahedron<4>* tet : tetrahedra())
         if (! (tet->isBoundary() || tet->inMaximalForest()))
             genIndex[tet->index()] = i++;
 
     // Run through each triangle and put the corresponding relations into
     // the matrix.
-    Dim4Pentachoron* pent;
+    Pentachoron<4>* pent;
     int facet;
-    Dim4Tetrahedron* tet;
+    Tetrahedron<4>* tet;
     i = 0;
     for (Triangle<4>* f : triangles()) {
         if (f->isBoundary())
@@ -131,10 +131,10 @@ const NAbelianGroup& Triangulation<4>::homologyH2() const {
 
     unsigned long i, j;
     unsigned long row, col;
-    Dim4Pentachoron* pent;
+    Pentachoron<4>* pent;
     Dim4Edge* e;
     Triangle<4>* t;
-    Dim4Tetrahedron* tet;
+    Tetrahedron<4>* tet;
     Perm<5> perm, tmpPerm;
     int pentEdge, pentTriangle;
 

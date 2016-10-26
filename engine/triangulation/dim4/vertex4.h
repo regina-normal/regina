@@ -54,7 +54,6 @@ class Dim4BoundaryComponent;
 template <int> class Isomorphism;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
-typedef Simplex<4> Dim4Pentachoron;
 
 /**
  * \weakgroup dim4
@@ -143,7 +142,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * sits within \c pent and is parallel to
          * <tt>pent->tetrahedron(v)</tt>.
          * Then vertices 0,1,2,3 of the tetrahedron in the link will be
-         * parallel to vertices 0,1,2,3 of the corresponding Dim4Tetrahedron.
+         * parallel to vertices 0,1,2,3 of the corresponding Tetrahedron<4>.
          * The permutation <tt>pent->tetrahedronMapping(v)</tt> will map
          * vertices 0,1,2,3 of the tetrahedron in the link to the
          * corresponding vertices of \c pent (those opposite \c v),

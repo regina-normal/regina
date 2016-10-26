@@ -71,7 +71,7 @@ Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
         *inclusion = new Dim4Isomorphism(degree());
 
     std::vector<VertexEmbedding<4>>::const_iterator it, adjIt;
-    NTetrahedron* tTet;
+    Tetrahedron<3>* tTet;
     int i;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {
         tTet = ans->newTetrahedron();
@@ -88,7 +88,7 @@ Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
         }
     }
 
-    Dim4Pentachoron *pent, *adj;
+    Pentachoron<4> *pent, *adj;
     int exitTet, v;
     int faceInLink;
     int adjIndex;

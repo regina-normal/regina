@@ -79,7 +79,7 @@ const NVertex* NormalSurfaceVector::isVertexLink(const Triangulation<3>* triang)
     NVertex* ans = 0;
     LargeInteger ansMult;
 
-    const NTetrahedron* t;
+    const Tetrahedron<3>* t;
     NVertex* v;
     LargeInteger coord;
 
@@ -150,7 +150,7 @@ std::pair<const NEdge*, const NEdge*> NormalSurfaceVector::isThinEdgeLink(
     const NEdge* ans[2];
     LargeInteger ansMultDouble;
 
-    const NTetrahedron* t;
+    const Tetrahedron<3>* t;
     NEdge* e[6]; // { 2*link, 4*intersect }
     LargeInteger coord;
     int i;

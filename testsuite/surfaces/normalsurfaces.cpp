@@ -55,7 +55,7 @@ using regina::Packet;
 using regina::Perm;
 using regina::Ray;
 using regina::NSignature;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangulation;
 
 using regina::NS_STANDARD;
@@ -183,9 +183,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void setUp() {
-            NTetrahedron* r;
-            NTetrahedron* s;
-            NTetrahedron* t;
+            Tetrahedron<3>* r;
+            Tetrahedron<3>* s;
+            Tetrahedron<3>* t;
 
             // Some triangulations have no face identifications at all.
             empty.setLabel("Empty");

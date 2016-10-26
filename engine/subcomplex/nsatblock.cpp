@@ -99,7 +99,7 @@ std::string NSatBlock::abbr(bool tex) const {
     return s.str();
 }
 
-bool NSatBlock::isBad(NTetrahedron* t, const TetList& list) {
+bool NSatBlock::isBad(Tetrahedron<3>* t, const TetList& list) {
     if (list.find(t) != list.end())
         return true;
     return false;

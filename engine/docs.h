@@ -266,7 +266,7 @@ namespace regina {
  *    tests whether \a x and \a y refer to the same underlying C++ object.
  *    This is similar to how the test <tt>x is y</tt> would behave in a
  *    native Python application.  Examples of such classes are
- *    Triangulation<3> and NTetrahedron.
+ *    Triangulation<3> and Tetrahedron<3>.
  *
  *    These classes do not provide C++ comparison operators == or !=.
  *

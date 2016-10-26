@@ -79,10 +79,10 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     // a component).
 
     // Pick our base tetrahedron.
-    NTetrahedron* base = comp->tetrahedron(0);
+    Tetrahedron<3>* base = comp->tetrahedron(0);
 
-    NTetrahedron* tet = base;
-    NTetrahedron* next;
+    Tetrahedron<3>* tet = base;
+    Tetrahedron<3>* next;
     int baseTop0, baseTop1, baseBottom0, baseBottom1;
     int top0, top1, bottom0, bottom1;
     int adjTop0 = 0, adjTop1 = 0, adjBottom0 = 0, adjBottom1 = 0;

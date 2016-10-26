@@ -180,7 +180,7 @@ DiscSetSurface::~DiscSetSurface() {
 
 DiscSpec* DiscSetSurface::adjacentDisc(const DiscSpec& disc,
         Perm<4> arc, Perm<4>& adjArc) const {
-    const NTetrahedron* tet = triangulation->tetrahedron(disc.tetIndex);
+    const Tetrahedron<3>* tet = triangulation->tetrahedron(disc.tetIndex);
     int arcFace = arc[3];
     if (tet->adjacentTetrahedron(arcFace) == 0)
         return 0;

@@ -41,7 +41,7 @@
 using regina::NEdge;
 using regina::Perm;
 using regina::NSimpleSurfaceBundle;
-using regina::NTetrahedron;
+using regina::Tetrahedron;
 using regina::Triangulation;
 
 class ElementaryMovesTest : public CppUnit::TestFixture {
@@ -65,8 +65,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            NTetrahedron* r = base.newTetrahedron();
-            NTetrahedron* s = base.newTetrahedron();
+            Tetrahedron<3>* r = base.newTetrahedron();
+            Tetrahedron<3>* s = base.newTetrahedron();
             r->join(0, s, Perm<4>());
             r->join(1, s, Perm<4>());
 
@@ -150,9 +150,9 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // One face boundary, two more joined in a loop.
                 Triangulation<3> t;
                 t.insertTriangulation(base);
-                NTetrahedron* tet = t.tetrahedron(0);
+                Tetrahedron<3>* tet = t.tetrahedron(0);
                 tet->join(2, tet, Perm<4>(2, 3));
-                NTetrahedron* tet2 = t.newTetrahedron();
+                Tetrahedron<3>* tet2 = t.newTetrahedron();
                 t.tetrahedron(1)->join(2, tet2, Perm<4>());
 
                 NEdge* e = tet->edge(NEdge::edgeNumber[0][1]);
@@ -172,7 +172,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // an LST.
                 Triangulation<3> orig;
                 orig.insertLayeredSolidTorus(4, 7);
-                NTetrahedron* top = orig.newTetrahedron();
+                Tetrahedron<3>* top = orig.newTetrahedron();
                 orig.tetrahedron(0)->join(2, top, Perm<4>(2, 3, 0, 1));
                 orig.tetrahedron(0)->join(3, top, Perm<4>(2, 3, 0, 1));
 
@@ -326,10 +326,10 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // both boundary.
                 Triangulation<3> t;
                 t.insertTriangulation(base);
-                NTetrahedron* p = t.newTetrahedron();
-                NTetrahedron* q = t.newTetrahedron();
-                NTetrahedron* r = t.newTetrahedron();
-                NTetrahedron* s = t.newTetrahedron();
+                Tetrahedron<3>* p = t.newTetrahedron();
+                Tetrahedron<3>* q = t.newTetrahedron();
+                Tetrahedron<3>* r = t.newTetrahedron();
+                Tetrahedron<3>* s = t.newTetrahedron();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());
@@ -343,10 +343,10 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // internal but identified (sphere).
                 Triangulation<3> t;
                 t.insertTriangulation(base);
-                NTetrahedron* p = t.newTetrahedron();
-                NTetrahedron* q = t.newTetrahedron();
-                NTetrahedron* r = t.newTetrahedron();
-                NTetrahedron* s = t.newTetrahedron();
+                Tetrahedron<3>* p = t.newTetrahedron();
+                Tetrahedron<3>* q = t.newTetrahedron();
+                Tetrahedron<3>* r = t.newTetrahedron();
+                Tetrahedron<3>* s = t.newTetrahedron();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());
@@ -369,10 +369,10 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // internal but identified (RP2).
                 Triangulation<3> t;
                 t.insertTriangulation(base);
-                NTetrahedron* p = t.newTetrahedron();
-                NTetrahedron* q = t.newTetrahedron();
-                NTetrahedron* r = t.newTetrahedron();
-                NTetrahedron* s = t.newTetrahedron();
+                Tetrahedron<3>* p = t.newTetrahedron();
+                Tetrahedron<3>* q = t.newTetrahedron();
+                Tetrahedron<3>* r = t.newTetrahedron();
+                Tetrahedron<3>* s = t.newTetrahedron();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());
@@ -394,7 +394,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 // Two faces boundary, the other joined in a loop.
                 Triangulation<3> t;
                 t.insertTriangulation(base);
-                NTetrahedron* tet = t.tetrahedron(0);
+                Tetrahedron<3>* tet = t.tetrahedron(0);
                 tet->join(2, tet, Perm<4>(2, 3));
 
                 NEdge* e = tet->edge(NEdge::edgeNumber[0][1]);
@@ -452,7 +452,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 orig.insertLayeredSolidTorus(3,4);
                 orig.insertTriangulation(base);
 
-                NTetrahedron* top = orig.tetrahedron(0);
+                Tetrahedron<3>* top = orig.tetrahedron(0);
                 orig.tetrahedron(3)->join(3, top, Perm<4>(1,2,0,3));
                 orig.tetrahedron(4)->join(2, top, Perm<4>(0,3,2,1));
 

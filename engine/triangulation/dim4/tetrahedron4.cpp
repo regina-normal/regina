@@ -35,7 +35,7 @@
 
 namespace regina {
 
-void Dim4Tetrahedron::writeTextLong(std::ostream& out) const {
+void Tetrahedron<4>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 

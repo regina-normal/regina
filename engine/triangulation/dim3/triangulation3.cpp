@@ -95,8 +95,8 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
     out << "  Vertices: " << countVertices() << '\n';
     out << '\n';
 
-    NTetrahedron* tet;
-    NTetrahedron* adjTet;
+    Tetrahedron<3>* tet;
+    Tetrahedron<3>* adjTet;
     unsigned tetPos;
     int face, vertex, start, end;
     Perm<4> adjPerm;
@@ -171,7 +171,7 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
 
     // Write the tetrahedron gluings.
     TetrahedronIterator it;
-    NTetrahedron* adjTet;
+    Tetrahedron<3>* adjTet;
     int face;
 
     out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
@@ -248,7 +248,7 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
 Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
         std::ostream& out) {
     Triangulation<3>* triang = new Triangulation<3>();
-    NTetrahedron* tet;
+    Tetrahedron<3>* tet;
     long nTet;
 
     // Create new tetrahedra.
@@ -267,7 +267,7 @@ Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
     // Read in the joins.
     long tetPos, altPos;
     int face, altFace;
-    NTetrahedron* altTet;
+    Tetrahedron<3>* altTet;
     int vertices[6];
 
     out << "Tetrahedra are numbered from 0 to " << nTet-1 << ".\n";
@@ -389,8 +389,8 @@ void Triangulation<3>::cloneFrom(const Triangulation<3>& X) {
 
     // Make the gluings.
     long tetPos, adjPos;
-    NTetrahedron* tet;
-    NTetrahedron* adjTet;
+    Tetrahedron<3>* tet;
+    Tetrahedron<3>* adjTet;
     Perm<4> adjPerm;
     int face;
     tetPos = 0;
@@ -543,7 +543,7 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
 
     // Write face gluings.
     Triangle<3>* f;
-    NTetrahedron* tet;
+    Tetrahedron<3>* tet;
     Perm<4> vert;
     for (unsigned i = 0; i < countTriangles(); ++i) {
         f = triangle(i);

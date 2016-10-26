@@ -85,7 +85,7 @@ Triangulation<3> *cassonToNTriangulation( CassonFormat *cf )
  if (cf->num_tet == 0)
      return triang;
 
- NTetrahedron **tet = new NTetrahedron*[cf->num_tet]; // tet corresponds to tet_array in Orb
+ Tetrahedron<3> **tet = new Tetrahedron<3>*[cf->num_tet]; // tet corresponds to tet_array in Orb
  for (i=0; i<cf->num_tet; i++)
         tet[i]=triang->newTetrahedron();
  // now tet is a pointer to an array of NTetrahedrons,

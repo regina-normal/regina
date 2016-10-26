@@ -52,7 +52,6 @@ namespace regina {
     template <int> class Triangulation;
     template <int, int> class Face;
     template <int dim> using Simplex = Face<dim, dim>;
-    typedef Simplex<4> Dim4Pentachoron;
 };
 
 class Dim4GluingsModel : public QAbstractItemModel {
@@ -117,7 +116,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
          * non-boundary facets.
          */
         static QString destString(int srcFacet,
-            regina::Dim4Pentachoron* destPent,
+            regina::Pentachoron<4>* destPent,
             const regina::Perm<5>& gluing);
 
         /**

@@ -924,8 +924,8 @@ void NTriCompositionUI::findSnappedSpheres() {
     QTreeWidgetItem* details = 0;
 
     unsigned long i, j;
-    regina::NTetrahedron* t1;
-    regina::NTetrahedron* t2;
+    regina::Tetrahedron<3>* t1;
+    regina::Tetrahedron<3>* t2;
     regina::NSnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = tri->tetrahedron(i);
@@ -958,7 +958,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
     QTreeWidgetItem* details = 0;
 
     regina::NSpiralSolidTorus* spiral;
-    regina::NTetrahedron* tet;
+    regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
     for (i = 0; i < nTets; i++) {

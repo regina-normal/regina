@@ -92,7 +92,7 @@ Triangulation<3>* Triangulation<3>::readSnapPea(std::istream& in) {
 
     unsigned numTet;
     in >> numTet;
-    NTetrahedron **tet = new NTetrahedron*[numTet];
+    Tetrahedron<3> **tet = new Tetrahedron<3>*[numTet];
     for (i=0; i<numTet; i++)
         tet[i] = triang->newTetrahedron();
 

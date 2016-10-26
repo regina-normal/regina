@@ -71,7 +71,7 @@ const NAbelianGroup& Triangulation<3>::homology() const {
     }
 
     // Run through each edge and put the relations in the matrix.
-    NTetrahedron* currTet;
+    Tetrahedron<3>* currTet;
     Triangle<3>* triangle;
     int currTetFace;
     long triGenIndex;
@@ -154,7 +154,7 @@ const NAbelianGroup& Triangulation<3>::homologyRel() const {
     }
 
     // Run through each triangle and put the relations in the matrix.
-    NTetrahedron* currTet;
+    Tetrahedron<3>* currTet;
     Perm<4> currTetVertices;
     long edgeGenIndex;
     i = 0;

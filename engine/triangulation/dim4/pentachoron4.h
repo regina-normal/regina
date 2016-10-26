@@ -119,7 +119,7 @@ REGINA_DEPRECATED typedef Simplex<4> Dim4Pentachoron;
 
 /*@}*/
 
-// Inline functions for Dim4Pentachoron
+// Inline functions for Pentachoron<4>
 
 inline Simplex<4>* Face<4, 4>::adjacentPentachoron(int facet) const {
     return adjacentSimplex(facet);

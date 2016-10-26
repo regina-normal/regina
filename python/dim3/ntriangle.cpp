@@ -56,7 +56,7 @@ namespace {
 
 void addNTriangle() {
     class_<FaceEmbedding<3, 2>>("FaceEmbedding3_2",
-            init<regina::NTetrahedron*, int>())
+            init<regina::Tetrahedron<3>*, int>())
         .def(init<const TriangleEmbedding<3>&>())
         .def("simplex", &TriangleEmbedding<3>::simplex,
             return_value_policy<reference_existing_object>())

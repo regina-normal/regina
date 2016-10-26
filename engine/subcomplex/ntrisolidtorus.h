@@ -45,8 +45,6 @@
 
 namespace regina {
 
-typedef Simplex<3> NTetrahedron;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -88,7 +86,7 @@ typedef Simplex<3> NTetrahedron;
  */
 class REGINA_API NTriSolidTorus : public NStandardTriangulation {
     private:
-        NTetrahedron* tet[3];
+        Tetrahedron<3>* tet[3];
             /**< The tetrahedra that make up this solid torus. */
         Perm<4> vertexRoles_[3];
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
@@ -117,7 +115,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * to return; this must be 0, 1 or 2.
          * @return the requested tetrahedron.
          */
-        NTetrahedron* tetrahedron(int index) const;
+        Tetrahedron<3>* tetrahedron(int index) const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -262,7 +260,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * \c null if the given tetrahedron is not part of a triangular
          * solid torus with the given vertex roles.
          */
-        static NTriSolidTorus* formsTriSolidTorus(NTetrahedron* tet,
+        static NTriSolidTorus* formsTriSolidTorus(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
 
         NManifold* manifold() const;
@@ -287,7 +285,7 @@ inline NTriSolidTorus::NTriSolidTorus() {
 inline NTriSolidTorus::~NTriSolidTorus() {
 }
 
-inline NTetrahedron* NTriSolidTorus::tetrahedron(int index) const {
+inline Tetrahedron<3>* NTriSolidTorus::tetrahedron(int index) const {
     return tet[index];
 }
 inline Perm<4> NTriSolidTorus::vertexRoles(int index) const {

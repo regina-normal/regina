@@ -79,7 +79,7 @@ namespace {
      * tetrahedron of that normal piece.
      */
     struct TriangleMap {
-        NTetrahedron* dest;
+        Tetrahedron<3>* dest;
         Perm<4> vertexMap;
     };
 
@@ -126,8 +126,8 @@ namespace {
             return;
         }
 
-        NTetrahedron* oldd0 = map0.dest;
-        NTetrahedron* oldd1 = map1.dest;
+        Tetrahedron<3>* oldd0 = map0.dest;
+        Tetrahedron<3>* oldd1 = map1.dest;
         Perm<4> oldv0 = map0.vertexMap;
         Perm<4> oldv1 = map1.vertexMap;
 
@@ -143,7 +143,7 @@ namespace {
         if (err == Perm<4>(1,0)) {
             // Reflect A,B.
             // This requires a layering.
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -156,7 +156,7 @@ namespace {
         if (err == Perm<4>(2,3)) {
             // Reflect C,D.
             // This again requires a layering.
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -187,7 +187,7 @@ namespace {
         if (err == Perm<4>(2,3,1,0)) {
             // Rotate the quadrilateral.
             // This requires a layering.
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -200,7 +200,7 @@ namespace {
         if (err == Perm<4>(3,2,0,1)) {
             // Rotate the quadrilateral in the other direction.
             // This also requires a layering.
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -234,8 +234,8 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
     size_t nTets = outer->countTetrahedra();
     TetData** tetData = new TetData*[nTets];
 
-    const Dim4Pentachoron* outerPent;
-    Dim4Tetrahedron* outerTet;
+    const Pentachoron<4>* outerPent;
+    Tetrahedron<4>* outerTet;
     Perm<5> outerTetEmb;
 
     size_t tet;
@@ -293,7 +293,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
     TriangleData* triData;
     DiscSpec outerTetDisc;
 
-    NTetrahedron* innerTet[3];
+    Tetrahedron<3>* innerTet[3];
     int facet;
 
     for (pent = 0; pent < nPents; ++pent) {

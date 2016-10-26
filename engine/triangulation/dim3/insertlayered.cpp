@@ -36,12 +36,12 @@
 
 namespace regina {
 
-NTetrahedron* Triangulation<3>::layerOn(NEdge* edge) {
+Tetrahedron<3>* Triangulation<3>::layerOn(NEdge* edge) {
     // Locate the two boundary triangles.
     // Note that our preconditions ensure they exist and are distinct;
     // we won't test this again here.
-    NTetrahedron* tet1 = edge->front().tetrahedron();
-    NTetrahedron* tet2 = edge->back().tetrahedron();
+    Tetrahedron<3>* tet1 = edge->front().tetrahedron();
+    Tetrahedron<3>* tet2 = edge->back().tetrahedron();
 
     Perm<4> roles1 = edge->front().vertices();
     Perm<4> roles2 = edge->back().vertices();
@@ -57,7 +57,7 @@ NTetrahedron* Triangulation<3>::layerOn(NEdge* edge) {
 
     ChangeEventSpan span(this);
 
-    NTetrahedron* newTet = newTetrahedron();
+    Tetrahedron<3>* newTet = newTetrahedron();
 
     newTet->join(3, tet1, roles1);
     newTet->join(2, tet2, roles2);
@@ -65,13 +65,13 @@ NTetrahedron* Triangulation<3>::layerOn(NEdge* edge) {
     return newTet;
 }
 
-NTetrahedron* Triangulation<3>::insertLayeredSolidTorus(
+Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
     ChangeEventSpan span(this);
 
     unsigned long cuts2 = cuts0 + cuts1;
 
-    NTetrahedron* newTet = newTetrahedron();
+    Tetrahedron<3>* newTet = newTetrahedron();
 
     // Take care of the case that can be done with a single
     // tetrahedron.
@@ -85,14 +85,14 @@ NTetrahedron* Triangulation<3>::insertLayeredSolidTorus(
     // Take care of the special small cases.
     if (cuts2 == 2) {
         // Make a 1-2-1 arrangement.
-        NTetrahedron* base = insertLayeredSolidTorus(1, 2);
+        Tetrahedron<3>* base = insertLayeredSolidTorus(1, 2);
         base->join(2, newTet, Perm<4>(2,3,0,1));
         base->join(3, newTet, Perm<4>(2,3,0,1));
         return newTet;
     }
     if (cuts2 == 1) {
         // Make a 1-1-0 arrangement.
-        NTetrahedron* base = insertLayeredSolidTorus(1, 1);
+        Tetrahedron<3>* base = insertLayeredSolidTorus(1, 1);
         base->join(2, newTet, Perm<4>(0,2,1,3));
         base->join(3, newTet, Perm<4>(3,1,2,0));
         return newTet;
@@ -101,11 +101,11 @@ NTetrahedron* Triangulation<3>::insertLayeredSolidTorus(
     // At this point we know cuts2 > 3.  Recursively build the layered
     // triangulation.
     if (cuts1 - cuts0 > cuts0) {
-        NTetrahedron* base = insertLayeredSolidTorus(cuts0, cuts1 - cuts0);
+        Tetrahedron<3>* base = insertLayeredSolidTorus(cuts0, cuts1 - cuts0);
         base->join(2, newTet, Perm<4>(0,2,1,3));
         base->join(3, newTet, Perm<4>(3,1,2,0));
     } else {
-        NTetrahedron* base = insertLayeredSolidTorus(cuts1 - cuts0, cuts0);
+        Tetrahedron<3>* base = insertLayeredSolidTorus(cuts1 - cuts0, cuts0);
         base->join(2, newTet, Perm<4>(3,1,0,2));
         base->join(3, newTet, Perm<4>(0,2,3,1));
     }
@@ -116,7 +116,7 @@ NTetrahedron* Triangulation<3>::insertLayeredSolidTorus(
 void Triangulation<3>::insertLayeredLensSpace(unsigned long p, unsigned long q) {
     ChangeEventSpan span(this);
 
-    NTetrahedron* chain;
+    Tetrahedron<3>* chain;
     if (p == 0) {
         chain = insertLayeredSolidTorus(1, 1);
         chain->join(3, chain, Perm<4>(3, 0, 1, 2));
@@ -152,9 +152,9 @@ void Triangulation<3>::insertLayeredLoop(unsigned long length, bool twisted) {
 
     // Insert a layered chain of the given length.
     // We should probably split this out into a separate routine.
-    NTetrahedron* base;
-    NTetrahedron* curr;
-    NTetrahedron* next;
+    Tetrahedron<3>* base;
+    Tetrahedron<3>* curr;
+    Tetrahedron<3>* next;
 
     base = newTetrahedron();
     curr = base;
@@ -183,7 +183,7 @@ void Triangulation<3>::insertAugTriSolidTorus(long a1, long b1,
     int i;
 
     // Construct the core triangular solid torus.
-    NTetrahedron* core[3];
+    Tetrahedron<3>* core[3];
     for (i = 0; i < 3; i++)
         core[i] = newTetrahedron();
     for (i = 0; i < 3; i++)
@@ -192,7 +192,7 @@ void Triangulation<3>::insertAugTriSolidTorus(long a1, long b1,
     // Attach the external layered solid tori.
     long axis, major, minor;
     unsigned long absAxis, absMajor, absMinor;
-    NTetrahedron* lstTop;
+    Tetrahedron<3>* lstTop;
     for (i = 0; i < 3; i++) {
         if (i == 0) axis = a1; else if (i == 1) axis = a2; else axis = a3;
         if (i == 0) major = b1; else if (i == 1) major = b2; else major = b3;

@@ -65,7 +65,7 @@ const Dim4Vertex* NormalHypersurfaceVector::isVertexLink(
     Dim4Vertex* ans = 0;
     LargeInteger ansMult;
 
-    const Dim4Pentachoron* p;
+    const Pentachoron<4>* p;
     LargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
@@ -116,7 +116,7 @@ const Dim4Edge* NormalHypersurfaceVector::isThinEdgeLink(
     Dim4Edge* ans = 0;
     LargeInteger ansMult;
 
-    const Dim4Pentachoron* p;
+    const Pentachoron<4>* p;
     LargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {

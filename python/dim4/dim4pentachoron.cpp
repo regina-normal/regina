@@ -38,46 +38,46 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4Pentachoron;
+using regina::Pentachoron;
 
 void addDim4Pentachoron() {
     class_<regina::Simplex<4>, std::auto_ptr<regina::Simplex<4>>,
             boost::noncopyable>("Simplex4", no_init)
-        .def("description", &Dim4Pentachoron::description,
+        .def("description", &Pentachoron<4>::description,
             return_value_policy<return_by_value>())
-        .def("setDescription", &Dim4Pentachoron::setDescription)
-        .def("index", &Dim4Pentachoron::index)
-        .def("adjacentPentachoron", &Dim4Pentachoron::adjacentPentachoron,
+        .def("setDescription", &Pentachoron<4>::setDescription)
+        .def("index", &Pentachoron<4>::index)
+        .def("adjacentPentachoron", &Pentachoron<4>::adjacentPentachoron,
             return_value_policy<reference_existing_object>())
-        .def("adjacentSimplex", &Dim4Pentachoron::adjacentSimplex,
+        .def("adjacentSimplex", &Pentachoron<4>::adjacentSimplex,
             return_value_policy<reference_existing_object>())
-        .def("adjacentGluing", &Dim4Pentachoron::adjacentGluing)
-        .def("adjacentFacet", &Dim4Pentachoron::adjacentFacet)
-        .def("hasBoundary", &Dim4Pentachoron::hasBoundary)
-        .def("join", &Dim4Pentachoron::join)
-        .def("unjoin", &Dim4Pentachoron::unjoin,
+        .def("adjacentGluing", &Pentachoron<4>::adjacentGluing)
+        .def("adjacentFacet", &Pentachoron<4>::adjacentFacet)
+        .def("hasBoundary", &Pentachoron<4>::hasBoundary)
+        .def("join", &Pentachoron<4>::join)
+        .def("unjoin", &Pentachoron<4>::unjoin,
             return_value_policy<reference_existing_object>())
-        .def("isolate", &Dim4Pentachoron::isolate)
-        .def("triangulation", &Dim4Pentachoron::triangulation,
+        .def("isolate", &Pentachoron<4>::isolate)
+        .def("triangulation", &Pentachoron<4>::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("component", &Dim4Pentachoron::component,
+        .def("component", &Pentachoron<4>::component,
             return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Dim4Pentachoron, 4, int>)
-        .def("vertex", &Dim4Pentachoron::vertex,
+        .def("face", &regina::python::face<Pentachoron<4>, 4, int>)
+        .def("vertex", &Pentachoron<4>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("edge", &Dim4Pentachoron::edge,
+        .def("edge", &Pentachoron<4>::edge,
             return_value_policy<reference_existing_object>())
-        .def("triangle", &Dim4Pentachoron::triangle,
+        .def("triangle", &Pentachoron<4>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("tetrahedron", &Dim4Pentachoron::tetrahedron,
+        .def("tetrahedron", &Pentachoron<4>::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("faceMapping", &regina::python::faceMapping<Dim4Pentachoron, 4>)
-        .def("vertexMapping", &Dim4Pentachoron::vertexMapping)
-        .def("edgeMapping", &Dim4Pentachoron::edgeMapping)
-        .def("triangleMapping", &Dim4Pentachoron::triangleMapping)
-        .def("tetrahedronMapping", &Dim4Pentachoron::tetrahedronMapping)
-        .def("orientation", &Dim4Pentachoron::orientation)
-        .def("facetInMaximalForest", &Dim4Pentachoron::facetInMaximalForest)
+        .def("faceMapping", &regina::python::faceMapping<Pentachoron<4>, 4>)
+        .def("vertexMapping", &Pentachoron<4>::vertexMapping)
+        .def("edgeMapping", &Pentachoron<4>::edgeMapping)
+        .def("triangleMapping", &Pentachoron<4>::triangleMapping)
+        .def("tetrahedronMapping", &Pentachoron<4>::tetrahedronMapping)
+        .def("orientation", &Pentachoron<4>::orientation)
+        .def("facetInMaximalForest", &Pentachoron<4>::facetInMaximalForest)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

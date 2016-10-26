@@ -77,7 +77,7 @@ namespace {
 
 void addDim4Vertex() {
     class_<FaceEmbedding<4, 0>>("FaceEmbedding4_0",
-            init<regina::Dim4Pentachoron*, int>())
+            init<regina::Pentachoron<4>*, int>())
         .def(init<const VertexEmbedding<4>&>())
         .def("simplex", &VertexEmbedding<4>::simplex,
             return_value_policy<reference_existing_object>())

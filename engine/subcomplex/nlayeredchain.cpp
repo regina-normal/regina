@@ -38,7 +38,7 @@
 namespace regina {
 
 bool NLayeredChain::extendAbove() {
-    NTetrahedron* adj = top_->adjacentTetrahedron(topVertexRoles_[0]);
+    Tetrahedron<3>* adj = top_->adjacentTetrahedron(topVertexRoles_[0]);
     if (adj == bottom_ || adj == top_ || adj == 0)
         return false;
     if (adj != top_->adjacentTetrahedron(topVertexRoles_[3]))
@@ -59,7 +59,7 @@ bool NLayeredChain::extendAbove() {
 }
 
 bool NLayeredChain::extendBelow() {
-    NTetrahedron* adj = bottom_->adjacentTetrahedron(bottomVertexRoles_[1]);
+    Tetrahedron<3>* adj = bottom_->adjacentTetrahedron(bottomVertexRoles_[1]);
     if (adj == bottom_ || adj == top_ || adj == 0)
         return false;
     if (adj != bottom_->adjacentTetrahedron(bottomVertexRoles_[2]))
@@ -89,7 +89,7 @@ bool NLayeredChain::extendMaximal() {
 }
 
 void NLayeredChain::reverse() {
-    NTetrahedron* tmp = top_;
+    Tetrahedron<3>* tmp = top_;
     top_ = bottom_;
     bottom_ = tmp;
 

@@ -52,7 +52,6 @@ namespace regina {
 
 class NBoundaryComponent;
 
-typedef Simplex<3> NTetrahedron;
 typedef Face<3, 0> NVertex;
 typedef Face<3, 1> NEdge;
 

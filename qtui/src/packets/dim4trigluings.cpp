@@ -95,7 +95,7 @@ int Dim4GluingsModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant Dim4GluingsModel::data(const QModelIndex& index, int role) const {
-    regina::Dim4Pentachoron* p = tri_->simplex(index.row());
+    regina::Pentachoron<4>* p = tri_->simplex(index.row());
     if (role == Qt::DisplayRole) {
         // Pentachoron name?
         if (index.column() == 0)
@@ -153,7 +153,7 @@ Qt::ItemFlags Dim4GluingsModel::flags(const QModelIndex& index) const {
 
 bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         int role) {
-    regina::Dim4Pentachoron* p = tri_->simplex(index.row());
+    regina::Pentachoron<4>* p = tri_->simplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
         if (newName == p->description().c_str())
@@ -229,7 +229,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
     // Does this new partner already have its own partner?
     // If so, better unglue it.
-    regina::Dim4Pentachoron* adj = tri_->simplex(newAdjPent);
+    regina::Pentachoron<4>* adj = tri_->simplex(newAdjPent);
     if (adj->adjacentSimplex(newAdjFacet))
         adj->unjoin(newAdjFacet);
 
@@ -275,13 +275,13 @@ void Dim4GluingsModel::showError(const QString& message) {
 }
 
 QString Dim4GluingsModel::destString(int srcFacet,
-        regina::Dim4Pentachoron* destPent,
+        regina::Pentachoron<4>* destPent,
         const regina::Perm<5>& gluing) {
     if (! destPent)
         return "";
     else
         return QString::number(destPent->markedIndex()) + " (" +
-            (gluing * regina::Dim4Tetrahedron::ordering(srcFacet)).
+            (gluing * regina::Tetrahedron<4>::ordering(srcFacet)).
             trunc4().c_str() + ')';
 }
 
@@ -299,7 +299,7 @@ regina::Perm<5> Dim4GluingsModel::facetStringToPerm(int srcFacet,
 
     return regina::Perm<5>(destVertex[0], destVertex[1], destVertex[2],
         destVertex[3], destVertex[4]) *
-        regina::Dim4Tetrahedron::ordering(srcFacet).inverse();
+        regina::Tetrahedron<4>::ordering(srcFacet).inverse();
 }
 
 Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Triangulation<4>* packet,
