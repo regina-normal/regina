@@ -50,7 +50,7 @@ namespace regina {
 /**
  * A triangulation page for viewing normal surface properties.
  */
-class NTriSurfacesUI : public QObject, public PacketViewerTab {
+class Tri3SurfacesUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -96,7 +96,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriSurfacesUI(regina::Triangulation<3>* packet,
+        Tri3SurfacesUI(regina::Triangulation<3>* packet,
             PacketTabbedUI* useParentUI);
 
         /**
@@ -125,7 +125,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         void updatePreferences();
 };
 
-inline void NTriSurfacesUI::updatePreferences() {
+inline void Tri3SurfacesUI::updatePreferences() {
     refresh();
 }
 

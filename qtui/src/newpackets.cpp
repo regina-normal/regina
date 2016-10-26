@@ -109,7 +109,7 @@ void ReginaMain::newText() {
 }
 
 void ReginaMain::newTriangulation() {
-    newPacket(new NTriangulationCreator(), 0,
+    newPacket(new Tri3Creator(), 0,
         tr("New 3-Manifold Triangulation"));
 }
 

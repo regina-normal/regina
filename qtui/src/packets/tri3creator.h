@@ -47,7 +47,7 @@ class QLineEdit;
 /**
  * An interface for creating 3-manifold triangulations.
  */
-class NTriangulationCreator : public PacketCreator {
+class Tri3Creator : public PacketCreator {
     private:
         /**
          * Internal components
@@ -71,7 +71,7 @@ class NTriangulationCreator : public PacketCreator {
         /**
          * Constructor.
          */
-        NTriangulationCreator();
+        Tri3Creator();
 
         /**
          * PacketCreator overrides.

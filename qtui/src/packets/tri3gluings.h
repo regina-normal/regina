@@ -134,7 +134,7 @@ class GluingsModel : public QAbstractItemModel {
 /**
  * A 3-manifold triangulation page for editing face gluings.
  */
-class NTriGluingsUI : public QObject, public PacketEditorTab {
+class Tri3GluingsUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
@@ -165,9 +165,9 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        NTriGluingsUI(regina::Triangulation<3>* packet,
+        Tri3GluingsUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI, bool readWrite);
-        ~NTriGluingsUI();
+        ~Tri3GluingsUI();
 
         /**
          * Fill the given toolbar with triangulation actions.

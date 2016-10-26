@@ -113,17 +113,17 @@ namespace {
     };
 }
 
-NTriAlgebraUI::NTriAlgebraUI(regina::Triangulation<3>* packet,
+Tri3AlgebraUI::Tri3AlgebraUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
-    addTab(new NTriHomologyFundUI(packet, this),
+    addTab(new Tri3HomologyFundUI(packet, this),
         tr("&Homology && Fund. Group"));
-    addTab(new NTriTuraevViroUI(packet, this), tr("&Turaev-Viro"));
-    addTab(new NTriCellularInfoUI(packet, this), tr("&Cellular Info"));
+    addTab(new Tri3TuraevViroUI(packet, this), tr("&Turaev-Viro"));
+    addTab(new Tri3CellularInfoUI(packet, this), tr("&Cellular Info"));
 }
 
-NTriHomologyFundUI::NTriHomologyFundUI(regina::Triangulation<3>* packet,
+Tri3HomologyFundUI::Tri3HomologyFundUI(regina::Triangulation<3>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -212,15 +212,15 @@ NTriHomologyFundUI::NTriHomologyFundUI(regina::Triangulation<3>* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::Packet* NTriHomologyFundUI::getPacket() {
+regina::Packet* Tri3HomologyFundUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriHomologyFundUI::getInterface() {
+QWidget* Tri3HomologyFundUI::getInterface() {
     return ui;
 }
 
-void NTriHomologyFundUI::refresh() {
+void Tri3HomologyFundUI::refresh() {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
     if (unicode)
@@ -274,13 +274,13 @@ void NTriHomologyFundUI::refresh() {
     }
 }
 
-void NTriHomologyFundUI::fundGroupSimplified() {
+void Tri3HomologyFundUI::fundGroupSimplified() {
     regina::NGroupPresentation* simp = fgGroup->takeSimplifiedGroup();
     if (simp)
         tri->simplifiedFundamentalGroup(simp);
 }
 
-void NTriHomologyFundUI::refreshLabels() {
+void Tri3HomologyFundUI::refreshLabels() {
     if (ReginaPrefSet::global().displayUnicode) {
         labelH1->setText(QObject::trUtf8("H\u2081(M):"));
         labelH1Rel->setText(QObject::trUtf8("H\u2081(M, \u2202M):"));
@@ -296,13 +296,13 @@ void NTriHomologyFundUI::refreshLabels() {
     }
 }
 
-void NTriHomologyFundUI::updatePreferences() {
+void Tri3HomologyFundUI::updatePreferences() {
     // If we've changed the unicode setting, then we may need some redrawing.
     refreshLabels();
     refresh();
 }
 
-NTriTuraevViroUI::NTriTuraevViroUI(regina::Triangulation<3>* packet,
+Tri3TuraevViroUI::Tri3TuraevViroUI(regina::Triangulation<3>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -388,15 +388,15 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::Triangulation<3>* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::Packet* NTriTuraevViroUI::getPacket() {
+regina::Packet* Tri3TuraevViroUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriTuraevViroUI::getInterface() {
+QWidget* Tri3TuraevViroUI::getInterface() {
     return ui;
 }
 
-void NTriTuraevViroUI::refresh() {
+void Tri3TuraevViroUI::refresh() {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
     paramsLabel->setEnabled(true);
@@ -420,7 +420,7 @@ void NTriTuraevViroUI::refresh() {
                 (*it).second.str("z").c_str()));
 }
 
-void NTriTuraevViroUI::calculateInvariant() {
+void Tri3TuraevViroUI::calculateInvariant() {
     // Make sure the triangulation is not being edited.
     if (! params->isEnabled())
         return;
@@ -489,7 +489,7 @@ void NTriTuraevViroUI::calculateInvariant() {
         calculateInvariant(r, false);
 }
 
-void NTriTuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
+void Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
     const auto& s = tri->allCalculatedTuraevViro();
@@ -518,7 +518,7 @@ void NTriTuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
     invariants->addTopLevelItem(item);
 }
 
-void NTriTuraevViroUI::updatePreferences() {
+void Tri3TuraevViroUI::updatePreferences() {
     // If we've changed the unicode setting, then we may need some redrawing.
     refresh();
 }
@@ -528,7 +528,7 @@ void NTriTuraevViroUI::updatePreferences() {
 /** These routines puts up the interface for the detailed cellular information
         and it is a submenu of the Algebra menu. **/
 
-void NTriCellularInfoUI::refresh() {
+void Tri3CellularInfoUI::refresh() {
     if (tri->isValid()) {
         bool unicode = ReginaPrefSet::global().displayUnicode;
 
@@ -625,7 +625,7 @@ void NTriCellularInfoUI::refresh() {
     }
 }
 
-NTriCellularInfoUI::NTriCellularInfoUI(regina::Triangulation<3>* packet,
+Tri3CellularInfoUI::Tri3CellularInfoUI(regina::Triangulation<3>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     QScrollArea* scroller = new QScrollArea();
@@ -791,15 +791,15 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::Triangulation<3>* packet,
 }
 
 
-regina::Packet* NTriCellularInfoUI::getPacket() {
+regina::Packet* Tri3CellularInfoUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriCellularInfoUI::getInterface() {
+QWidget* Tri3CellularInfoUI::getInterface() {
     return ui;
 }
 
-void NTriCellularInfoUI::refreshLabels() {
+void Tri3CellularInfoUI::refreshLabels() {
     if (ReginaPrefSet::global().displayUnicode)
         labelBdryMap->setText(QObject::trUtf8(
             "<qt>H\u2081(\u2202M &rarr; M): </qt>"));
@@ -807,7 +807,7 @@ void NTriCellularInfoUI::refreshLabels() {
         labelBdryMap->setText(QObject::tr("<qt>H1(bdry M &rarr; M): </qt>"));
 }
 
-void NTriCellularInfoUI::updatePreferences() {
+void Tri3CellularInfoUI::updatePreferences() {
     // If we've changed the unicode setting, then we may need some redrawing.
     refreshLabels();
     refresh();

@@ -13,7 +13,7 @@ SET ( FILES
   dim4trigluings
   dim4triskeleton
   dim4triui
-  eltmovedialog
+  eltmovedialog3
   facetgraphtab
   filtercomb
   filtercreator

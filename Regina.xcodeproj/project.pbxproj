@@ -1143,7 +1143,7 @@
 		0543AEA31811E12A002758F8 /* dim2trigluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58B1811D920002CC2AE /* dim2trigluings.h */; };
 		0543AEA41811E12A002758F8 /* dim2triskeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58D1811D920002CC2AE /* dim2triskeleton.h */; };
 		0543AEA51811E12A002758F8 /* dim2triui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58F1811D920002CC2AE /* dim2triui.h */; };
-		0543AEA61811E12A002758F8 /* eltmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5911811D920002CC2AE /* eltmovedialog.h */; };
+		0543AEA61811E12A002758F8 /* eltmovedialog3.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5911811D920002CC2AE /* eltmovedialog3.h */; };
 		0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5931811D920002CC2AE /* facetgraphtab.h */; };
 		0543AEA81811E12A002758F8 /* gaprunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5951811D920002CC2AE /* gaprunner.h */; };
 		0543AEA91811E12A002758F8 /* anglesui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5991811D920002CC2AE /* anglesui.h */; };
@@ -1313,7 +1313,7 @@
 		0564A94E1811D921002CC2AE /* dim2trigluings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58A1811D920002CC2AE /* dim2trigluings.cpp */; };
 		0564A94F1811D921002CC2AE /* dim2triskeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58C1811D920002CC2AE /* dim2triskeleton.cpp */; };
 		0564A9501811D921002CC2AE /* dim2triui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58E1811D920002CC2AE /* dim2triui.cpp */; };
-		0564A9511811D921002CC2AE /* eltmovedialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5901811D920002CC2AE /* eltmovedialog.cpp */; };
+		0564A9511811D921002CC2AE /* eltmovedialog3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5901811D920002CC2AE /* eltmovedialog3.cpp */; };
 		0564A9521811D921002CC2AE /* facetgraphtab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5921811D920002CC2AE /* facetgraphtab.cpp */; };
 		0564A9531811D921002CC2AE /* gaprunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5941811D920002CC2AE /* gaprunner.cpp */; };
 		0564A9541811D921002CC2AE /* anglescreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5961811D920002CC2AE /* anglescreator.cpp */; };
@@ -3189,8 +3189,8 @@
 		0564A58D1811D920002CC2AE /* dim2triskeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2triskeleton.h; sourceTree = "<group>"; };
 		0564A58E1811D920002CC2AE /* dim2triui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triui.cpp; sourceTree = "<group>"; };
 		0564A58F1811D920002CC2AE /* dim2triui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2triui.h; sourceTree = "<group>"; };
-		0564A5901811D920002CC2AE /* eltmovedialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog.cpp; sourceTree = "<group>"; };
-		0564A5911811D920002CC2AE /* eltmovedialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog.h; sourceTree = "<group>"; };
+		0564A5901811D920002CC2AE /* eltmovedialog3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog3.cpp; sourceTree = "<group>"; };
+		0564A5911811D920002CC2AE /* eltmovedialog3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog3.h; sourceTree = "<group>"; };
 		0564A5921811D920002CC2AE /* facetgraphtab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetgraphtab.cpp; sourceTree = "<group>"; };
 		0564A5931811D920002CC2AE /* facetgraphtab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetgraphtab.h; sourceTree = "<group>"; };
 		0564A5941811D920002CC2AE /* gaprunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gaprunner.cpp; sourceTree = "<group>"; };
@@ -5838,8 +5838,8 @@
 				0591E8331C4F767300793A9C /* dim4triui.cpp */,
 				0591E8341C4F767300793A9C /* dim4triui.h */,
 				05A73CBB19B2F1AB0099C617 /* docwidget.h */,
-				0564A5901811D920002CC2AE /* eltmovedialog.cpp */,
-				0564A5911811D920002CC2AE /* eltmovedialog.h */,
+				0564A5901811D920002CC2AE /* eltmovedialog3.cpp */,
+				0564A5911811D920002CC2AE /* eltmovedialog3.h */,
 				0564A5921811D920002CC2AE /* facetgraphtab.cpp */,
 				0564A5931811D920002CC2AE /* facetgraphtab.h */,
 				0564A5AA1811D920002CC2AE /* filtercomb.cpp */,
@@ -8202,7 +8202,7 @@
 				0543AEA31811E12A002758F8 /* dim2trigluings.h in Sources */,
 				0543AEA41811E12A002758F8 /* dim2triskeleton.h in Sources */,
 				0543AEA51811E12A002758F8 /* dim2triui.h in Sources */,
-				0543AEA61811E12A002758F8 /* eltmovedialog.h in Sources */,
+				0543AEA61811E12A002758F8 /* eltmovedialog3.h in Sources */,
 				0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */,
 				0543AEA81811E12A002758F8 /* gaprunner.h in Sources */,
 				0554CA7B1C5983B00053461B /* generictriui.h in Sources */,
@@ -8321,7 +8321,7 @@
 				0564A9691811D921002CC2AE /* tri3skeleton.cpp in Sources */,
 				0564A97F1811D921002CC2AE /* reginamain.cpp in Sources */,
 				05A73CCE19B2F1AB0099C617 /* snappeagluings.cpp in Sources */,
-				0564A9511811D921002CC2AE /* eltmovedialog.cpp in Sources */,
+				0564A9511811D921002CC2AE /* eltmovedialog3.cpp in Sources */,
 				0564A9461811D921002CC2AE /* packetchooser.cpp in Sources */,
 				0564A94D1811D921002CC2AE /* dim2tricreator.cpp in Sources */,
 				0564A9641811D921002CC2AE /* tri3algebra.cpp in Sources */,

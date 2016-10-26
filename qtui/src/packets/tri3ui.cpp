@@ -56,15 +56,15 @@
 using regina::Packet;
 using regina::Triangulation;
 
-NTriangulationUI::NTriangulationUI(regina::Triangulation<3>* packet,
+Tri3UI::Tri3UI(regina::Triangulation<3>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri) {
-    NTriHeaderUI* header = new NTriHeaderUI(packet, this);
-    gluings = new NTriGluingsUI(packet, this, newEnclosingPane->isReadWrite());
-    skeleton = new NTriSkeletonUI(packet, this);
-    algebra = new NTriAlgebraUI(packet, this);
-    surfaces = new NTriSurfacesUI(packet, this);
-    snapPea = new NTriSnapPeaUI(packet, this);
+    Tri3HeaderUI* header = new Tri3HeaderUI(packet, this);
+    gluings = new Tri3GluingsUI(packet, this, newEnclosingPane->isReadWrite());
+    skeleton = new Tri3SkeletonUI(packet, this);
+    algebra = new Tri3AlgebraUI(packet, this);
+    surfaces = new Tri3SurfacesUI(packet, this);
+    snapPea = new Tri3SnapPeaUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -72,26 +72,26 @@ NTriangulationUI::NTriangulationUI(regina::Triangulation<3>* packet,
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
-    addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
+    addTab(new Tri3CompositionUI(packet, this), QObject::tr("&Composition"));
     addTab(surfaces, QObject::tr("&Recognition"));
     addTab(snapPea, QObject::tr("Snap&Pea"));
 
     editIface = new PacketEditTabbedUI(this);
 }
 
-NTriangulationUI::~NTriangulationUI() {
+Tri3UI::~Tri3UI() {
     delete editIface;
 }
 
-const QLinkedList<QAction*>& NTriangulationUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& Tri3UI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 
-QString NTriangulationUI::getPacketMenuText() const {
+QString Tri3UI::getPacketMenuText() const {
     return QObject::tr("3-D T&riangulation");
 }
 
-NTriHeaderUI::NTriHeaderUI(regina::Triangulation<3>* packet,
+Tri3HeaderUI::Tri3HeaderUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -126,20 +126,20 @@ NTriHeaderUI::NTriHeaderUI(regina::Triangulation<3>* packet,
     tri->listen(this);
 }
 
-regina::Packet* NTriHeaderUI::getPacket() {
+regina::Packet* Tri3HeaderUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriHeaderUI::getInterface() {
+QWidget* Tri3HeaderUI::getInterface() {
     return ui;
 }
 
-void NTriHeaderUI::refresh() {
+void Tri3HeaderUI::refresh() {
     header->setText(summaryInfo(tri));
     refreshLock();
 }
 
-QString NTriHeaderUI::summaryInfo(regina::Triangulation<3>* tri) {
+QString Tri3HeaderUI::summaryInfo(regina::Triangulation<3>* tri) {
     if (tri->isEmpty())
         return QObject::tr("Empty");
 
@@ -173,7 +173,7 @@ QString NTriHeaderUI::summaryInfo(regina::Triangulation<3>* tri) {
     return msg;
 }
 
-void NTriHeaderUI::lockedExplanation() {
+void Tri3HeaderUI::lockedExplanation() {
     if (tri->isPacketEditable())
         return;
 
@@ -187,27 +187,27 @@ void NTriHeaderUI::lockedExplanation() {
             "edit the clone instead.</qt>"));
 }
 
-void NTriHeaderUI::childWasAdded(regina::Packet* packet,
+void Tri3HeaderUI::childWasAdded(regina::Packet* packet,
         regina::Packet* child) {
     // Be careful - we may not be in the GUI thread.
     QApplication::postEvent(this, new QEvent(
         (QEvent::Type)EVT_HEADER_CHILD_ADDED));
 }
 
-void NTriHeaderUI::childWasRemoved(regina::Packet* packet,
+void Tri3HeaderUI::childWasRemoved(regina::Packet* packet,
         regina::Packet* child, bool inParentDestructor) {
     if (! inParentDestructor)
         refreshLock();
 }
 
-void NTriHeaderUI::refreshLock() {
+void Tri3HeaderUI::refreshLock() {
     if (tri->isPacketEditable())
         locked->hide();
     else
         locked->show();
 }
 
-void NTriHeaderUI::customEvent(QEvent* event) {
+void Tri3HeaderUI::customEvent(QEvent* event) {
     if (event->type() == EVT_HEADER_CHILD_ADDED)
         refreshLock();
 }

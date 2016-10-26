@@ -52,7 +52,7 @@ using regina::Packet;
 using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
-NTriSnapPeaUI::NTriSnapPeaUI(regina::Triangulation<3>* packet,
+Tri3SnapPeaUI::Tri3SnapPeaUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0) {
     ui = new QStackedWidget();
@@ -146,20 +146,20 @@ NTriSnapPeaUI::NTriSnapPeaUI(regina::Triangulation<3>* packet,
         this, SLOT(updatePreferences()));
 }
 
-NTriSnapPeaUI::~NTriSnapPeaUI() {
+Tri3SnapPeaUI::~Tri3SnapPeaUI() {
     if (snappeaTri)
         delete snappeaTri;
 }
 
-regina::Packet* NTriSnapPeaUI::getPacket() {
+regina::Packet* Tri3SnapPeaUI::getPacket() {
     return reginaTri;
 }
 
-QWidget* NTriSnapPeaUI::getInterface() {
+QWidget* Tri3SnapPeaUI::getInterface() {
     return ui;
 }
 
-void NTriSnapPeaUI::refresh() {
+void Tri3SnapPeaUI::refresh() {
     if (snappeaTri)
         delete snappeaTri;
 
@@ -198,7 +198,7 @@ void NTriSnapPeaUI::refresh() {
     }
 }
 
-void NTriSnapPeaUI::toSnapPea() {
+void Tri3SnapPeaUI::toSnapPea() {
     if (! snappeaTri) {
         // This should never happen, but...
         ui->setCurrentWidget(dataNull);
@@ -227,7 +227,7 @@ void NTriSnapPeaUI::toSnapPea() {
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
-QString NTriSnapPeaUI::solutionTypeString(int solnType) {
+QString Tri3SnapPeaUI::solutionTypeString(int solnType) {
     switch (solnType) {
         case SnapPeaTriangulation::not_attempted:
             return tr("Not attempted");
@@ -250,7 +250,7 @@ QString NTriSnapPeaUI::solutionTypeString(int solnType) {
     }
 }
 
-QString NTriSnapPeaUI::solutionTypeExplanation(int solnType) {
+QString Tri3SnapPeaUI::solutionTypeExplanation(int solnType) {
     switch (solnType) {
         case SnapPeaTriangulation::not_attempted:
             return tr("This particular solution type means that "

@@ -59,7 +59,7 @@
 
 using regina::Packet;
 
-NTriSurfacesUI::NTriSurfacesUI(regina::Triangulation<3>* packet,
+Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
@@ -309,15 +309,15 @@ NTriSurfacesUI::NTriSurfacesUI(regina::Triangulation<3>* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::Packet* NTriSurfacesUI::getPacket() {
+regina::Packet* Tri3SurfacesUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriSurfacesUI::getInterface() {
+QWidget* Tri3SurfacesUI::getInterface() {
     return ui;
 }
 
-void NTriSurfacesUI::refresh() {
+void Tri3SurfacesUI::refresh() {
     int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
 
     regina::Property<bool> isHyp;
@@ -676,7 +676,7 @@ void NTriSurfacesUI::refresh() {
     }
 }
 
-void NTriSurfacesUI::calculateZeroEff() {
+void Tri3SurfacesUI::calculateZeroEff() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "Deciding whether a triangulation is 0-efficient\n"
         "can be quite slow for larger triangulations.\n\n"
@@ -687,7 +687,7 @@ void NTriSurfacesUI::calculateZeroEff() {
     refresh();
 }
 
-void NTriSurfacesUI::calculateSplitting() {
+void Tri3SurfacesUI::calculateSplitting() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "Deciding whether a splitting surface exists can\n"
         "be quite slow for larger triangulations.\n\n"
@@ -698,7 +698,7 @@ void NTriSurfacesUI::calculateSplitting() {
     refresh();
 }
 
-void NTriSurfacesUI::calculateThreeSphere() {
+void Tri3SurfacesUI::calculateThreeSphere() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "3-sphere recognition can be quite slow\n"
         "for larger triangulations.\n\n"
@@ -709,7 +709,7 @@ void NTriSurfacesUI::calculateThreeSphere() {
     refresh();
 }
 
-void NTriSurfacesUI::calculateThreeBall() {
+void Tri3SurfacesUI::calculateThreeBall() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "3-ball recognition can be quite slow\n"
         "for larger triangulations.\n\n"
@@ -720,7 +720,7 @@ void NTriSurfacesUI::calculateThreeBall() {
     refresh();
 }
 
-void NTriSurfacesUI::calculateSolidTorus() {
+void Tri3SurfacesUI::calculateSolidTorus() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "Solid torus recognition can be quite slow\n"
         "for larger triangulations.\n\n"
@@ -731,7 +731,7 @@ void NTriSurfacesUI::calculateSolidTorus() {
     refresh();
 }
 
-void NTriSurfacesUI::calculateIrreducible() {
+void Tri3SurfacesUI::calculateIrreducible() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "Testing irreducibility can be quite slow\n"
         "for larger triangulations.\n\n"
@@ -742,7 +742,7 @@ void NTriSurfacesUI::calculateIrreducible() {
     refresh();
 }
 
-void NTriSurfacesUI::calculateHaken() {
+void Tri3SurfacesUI::calculateHaken() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "Hakenness testing can be quite slow\n"
         "for larger triangulations.\n\n"
@@ -753,7 +753,7 @@ void NTriSurfacesUI::calculateHaken() {
     refresh();
 }
 
-void NTriSurfacesUI::calculateStrict() {
+void Tri3SurfacesUI::calculateStrict() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
         "Testing for a strict angle structure may be slow\n"
         "for extremely large triangulations.\n\n"

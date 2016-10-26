@@ -311,7 +311,7 @@ regina::Perm<4> GluingsModel::faceStringToPerm(int srcFace, const QString& str) 
         destVertex[3]) * regina::Triangle<3>::ordering(srcFace).inverse();
 }
 
-NTriGluingsUI::NTriGluingsUI(regina::Triangulation<3>* packet,
+Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
@@ -651,17 +651,17 @@ NTriGluingsUI::NTriGluingsUI(regina::Triangulation<3>* packet,
     refresh();
 }
 
-NTriGluingsUI::~NTriGluingsUI() {
+Tri3GluingsUI::~Tri3GluingsUI() {
     // Make sure the actions, including separators, are all deleted.
 
     delete model;
 }
 
-const QLinkedList<QAction*>& NTriGluingsUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& Tri3GluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
-void NTriGluingsUI::fillToolBar(QToolBar* bar) {
+void Tri3GluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actAddTet);
     bar->addAction(actRemoveTet);
     bar->addSeparator();
@@ -669,24 +669,24 @@ void NTriGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actOrient);
 }
 
-regina::Packet* NTriGluingsUI::getPacket() {
+regina::Packet* Tri3GluingsUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriGluingsUI::getInterface() {
+QWidget* Tri3GluingsUI::getInterface() {
     return ui;
 }
 
-void NTriGluingsUI::refresh() {
+void Tri3GluingsUI::refresh() {
     model->rebuild();
     updateActionStates();
 }
 
-void NTriGluingsUI::endEdit() {
+void Tri3GluingsUI::endEdit() {
     faceTable->endEdit();
 }
 
-void NTriGluingsUI::setReadWrite(bool readWrite) {
+void Tri3GluingsUI::setReadWrite(bool readWrite) {
     model->setReadWrite(readWrite);
 
     if (readWrite) {
@@ -705,13 +705,13 @@ void NTriGluingsUI::setReadWrite(bool readWrite) {
     updateActionStates();
 }
 
-void NTriGluingsUI::addTet() {
+void Tri3GluingsUI::addTet() {
     endEdit();
 
     tri->newTetrahedron();
 }
 
-void NTriGluingsUI::removeSelectedTets() {
+void Tri3GluingsUI::removeSelectedTets() {
     endEdit();
 
     // Gather together all the tetrahedra to be deleted.
@@ -762,7 +762,7 @@ void NTriGluingsUI::removeSelectedTets() {
     }
 }
 
-void NTriGluingsUI::simplify() {
+void Tri3GluingsUI::simplify() {
     endEdit();
 
     if (! tri->intelligentSimplify()) {
@@ -782,7 +782,7 @@ void NTriGluingsUI::simplify() {
     }
 }
 
-void NTriGluingsUI::simplifyExhaustive(int height) {
+void Tri3GluingsUI::simplifyExhaustive(int height) {
     size_t initSize = tri->size();
 
     regina::ProgressTrackerOpen tracker;
@@ -812,7 +812,7 @@ void NTriGluingsUI::simplifyExhaustive(int height) {
     }
 }
 
-void NTriGluingsUI::orient() {
+void Tri3GluingsUI::orient() {
     endEdit();
 
     if (tri->isOriented()) {
@@ -836,13 +836,13 @@ void NTriGluingsUI::orient() {
     tri->orient();
 }
 
-void NTriGluingsUI::barycentricSubdivide() {
+void Tri3GluingsUI::barycentricSubdivide() {
     endEdit();
 
     tri->barycentricSubdivision();
 }
 
-void NTriGluingsUI::idealToFinite() {
+void Tri3GluingsUI::idealToFinite() {
     endEdit();
 
     if (tri->isValid() && ! tri->isIdeal())
@@ -856,7 +856,7 @@ void NTriGluingsUI::idealToFinite() {
     }
 }
 
-void NTriGluingsUI::finiteToIdeal() {
+void Tri3GluingsUI::finiteToIdeal() {
     endEdit();
 
     if (! tri->hasBoundaryTriangles())
@@ -871,19 +871,19 @@ void NTriGluingsUI::finiteToIdeal() {
     }
 }
 
-void NTriGluingsUI::elementaryMove() {
+void Tri3GluingsUI::elementaryMove() {
     endEdit();
 
-    (new EltMoveDialog(ui, tri))->show();
+    (new EltMoveDialog3(ui, tri))->show();
 }
 
-void NTriGluingsUI::doubleCover() {
+void Tri3GluingsUI::doubleCover() {
     endEdit();
 
     tri->makeDoubleCover();
 }
 
-void NTriGluingsUI::puncture() {
+void Tri3GluingsUI::puncture() {
     endEdit();
 
     if (tri->isEmpty())
@@ -896,7 +896,7 @@ void NTriGluingsUI::puncture() {
     }
 }
 
-void NTriGluingsUI::drillEdge() {
+void Tri3GluingsUI::drillEdge() {
     endEdit();
 
     if (tri->countEdges() == 0)
@@ -924,7 +924,7 @@ void NTriGluingsUI::drillEdge() {
     }
 }
 
-void NTriGluingsUI::connectedSumWith() {
+void Tri3GluingsUI::connectedSumWith() {
     endEdit();
 
     if (tri->isEmpty() || ! tri->isConnected()) {
@@ -948,7 +948,7 @@ void NTriGluingsUI::connectedSumWith() {
         tri->connectedSumWith(*other);
 }
 
-void NTriGluingsUI::boundaryComponents() {
+void Tri3GluingsUI::boundaryComponents() {
     endEdit();
 
     if (tri->boundaryComponents().empty())
@@ -973,7 +973,7 @@ void NTriGluingsUI::boundaryComponents() {
     }
 }
 
-void NTriGluingsUI::vertexLinks() {
+void Tri3GluingsUI::vertexLinks() {
     endEdit();
 
     if (tri->countVertices() == 0)
@@ -1003,7 +1003,7 @@ void NTriGluingsUI::vertexLinks() {
     }
 }
 
-void NTriGluingsUI::splitIntoComponents() {
+void Tri3GluingsUI::splitIntoComponents() {
     endEdit();
 
     if (tri->countComponents() == 0)
@@ -1037,7 +1037,7 @@ void NTriGluingsUI::splitIntoComponents() {
     }
 }
 
-void NTriGluingsUI::connectedSumDecomposition() {
+void Tri3GluingsUI::connectedSumDecomposition() {
     endEdit();
 
     if (tri->isEmpty())
@@ -1138,7 +1138,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
     }
 }
 
-void NTriGluingsUI::makeZeroEfficient() {
+void Tri3GluingsUI::makeZeroEfficient() {
     endEdit();
 
     unsigned long initTets = tri->size();
@@ -1247,7 +1247,7 @@ void NTriGluingsUI::makeZeroEfficient() {
     }
 }
 
-void NTriGluingsUI::toSnapPea() {
+void Tri3GluingsUI::toSnapPea() {
     endEdit();
 
     if (tri->isEmpty() || tri->hasBoundaryTriangles() ||
@@ -1286,7 +1286,7 @@ void NTriGluingsUI::toSnapPea() {
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
-void NTriGluingsUI::updateRemoveState() {
+void Tri3GluingsUI::updateRemoveState() {
     if (model->isReadWrite())
         actRemoveTet->setEnabled(
             ! faceTable->selectionModel()->selectedIndexes().empty());
@@ -1294,7 +1294,7 @@ void NTriGluingsUI::updateRemoveState() {
         actRemoveTet->setEnabled(false);
 }
 
-void NTriGluingsUI::updateActionStates() {
+void Tri3GluingsUI::updateActionStates() {
     if (! model->isReadWrite())
         actOrient->setEnabled(false);
     else if (! tri->isOrientable())

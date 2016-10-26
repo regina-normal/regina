@@ -49,16 +49,16 @@
 using regina::Packet;
 using regina::Triangulation;
 
-NTriSkeletonUI::NTriSkeletonUI(regina::Triangulation<3>* packet,
+Tri3SkeletonUI::Tri3SkeletonUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriSkeleton) {
-    addTab(new NTriSkelCompUI(packet, this), tr("&Skeletal Components"));
+    addTab(new Tri3SkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim3FaceGraphData(packet), this),
         tr("&Graphs"));
 }
 
-NTriSkelCompUI::NTriSkelCompUI(regina::Triangulation<3>* packet,
+Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -209,15 +209,15 @@ NTriSkelCompUI::NTriSkelCompUI(regina::Triangulation<3>* packet,
     layout->addStretch(1);
 }
 
-regina::Packet* NTriSkelCompUI::getPacket() {
+regina::Packet* Tri3SkelCompUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriSkelCompUI::getInterface() {
+QWidget* Tri3SkelCompUI::getInterface() {
     return ui;
 }
 
-void NTriSkelCompUI::refresh() {
+void Tri3SkelCompUI::refresh() {
     nVertices->setText(QString::number(tri->countVertices()));
     nEdges->setText(QString::number(tri->countEdges()));
     nTriangles->setText(QString::number(tri->countTriangles()));
@@ -233,7 +233,7 @@ void NTriSkelCompUI::refresh() {
         (it.next())->refresh();
 }
 
-void NTriSkelCompUI::viewVertices() {
+void Tri3SkelCompUI::viewVertices() {
     // Because we pass this as parent to the new window, we are
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
@@ -243,25 +243,25 @@ void NTriSkelCompUI::viewVertices() {
     viewers.append(win);
 }
 
-void NTriSkelCompUI::viewEdges() {
+void Tri3SkelCompUI::viewEdges() {
     SkeletonWindow* win = new SkeletonWindow(this, new Edge3Model(tri));
     win->show();
     viewers.append(win);
 }
 
-void NTriSkelCompUI::viewTriangles() {
+void Tri3SkelCompUI::viewTriangles() {
     SkeletonWindow* win = new SkeletonWindow(this, new Triangle3Model(tri));
     win->show();
     viewers.append(win);
 }
 
-void NTriSkelCompUI::viewComponents() {
+void Tri3SkelCompUI::viewComponents() {
     SkeletonWindow* win = new SkeletonWindow(this, new ComponentModel(tri));
     win->show();
     viewers.append(win);
 }
 
-void NTriSkelCompUI::viewBoundaryComponents() {
+void Tri3SkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
         new BoundaryComponentModel(tri));
     win->show();

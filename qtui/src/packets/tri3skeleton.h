@@ -48,19 +48,19 @@ namespace regina {
 /**
  * A triangulation page for viewing skeletal properties.
  */
-class NTriSkeletonUI : public PacketTabbedViewerTab {
+class Tri3SkeletonUI : public PacketTabbedViewerTab {
     public:
         /**
          * Constructor.
          */
-        NTriSkeletonUI(regina::Triangulation<3>* packet,
+        Tri3SkeletonUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
 };
 
 /**
  * A triangulation page for accessing individual skeletal components.
  */
-class NTriSkelCompUI : public QObject, public PacketViewerTab {
+class Tri3SkelCompUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -91,7 +91,7 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        NTriSkelCompUI(regina::Triangulation<3>* packet,
+        Tri3SkelCompUI(regina::Triangulation<3>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**

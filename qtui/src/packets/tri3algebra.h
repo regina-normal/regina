@@ -53,19 +53,19 @@ namespace regina {
 /**
  * A triangulation page for viewing algebraic properties.
  */
-class NTriAlgebraUI : public PacketTabbedViewerTab {
+class Tri3AlgebraUI : public PacketTabbedViewerTab {
     public:
         /**
          * Constructor.
          */
-        NTriAlgebraUI(regina::Triangulation<3>* packet,
+        Tri3AlgebraUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
 };
 
 /**
  * A triangulation page for viewing homology and the fundamental group.
  */
-class NTriHomologyFundUI : public QObject, public PacketViewerTab {
+class Tri3HomologyFundUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -95,7 +95,7 @@ class NTriHomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriHomologyFundUI(regina::Triangulation<3>* packet,
+        Tri3HomologyFundUI(regina::Triangulation<3>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -125,7 +125,7 @@ class NTriHomologyFundUI : public QObject, public PacketViewerTab {
 /**
  * A triangulation page for viewing Turaev-Viro invariants.
  */
-class NTriTuraevViroUI : public QObject, public PacketViewerTab {
+class Tri3TuraevViroUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -147,7 +147,7 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriTuraevViroUI(regina::Triangulation<3>* packet,
+        Tri3TuraevViroUI(regina::Triangulation<3>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
@@ -176,7 +176,7 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
  *
  * \author Ryan Budney
  */
-class NTriCellularInfoUI: public QObject, public PacketViewerTab {
+class Tri3CellularInfoUI: public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -206,7 +206,7 @@ class NTriCellularInfoUI: public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        NTriCellularInfoUI(regina::Triangulation<3>* packet,
+        Tri3CellularInfoUI(regina::Triangulation<3>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**

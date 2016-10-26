@@ -81,7 +81,7 @@ using regina::Perm;
 using regina::NSatRegion;
 using regina::Triangulation;
 
-NTriCompositionUI::NTriCompositionUI(regina::Triangulation<3>* packet,
+Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet), comparingTri(0), components(0), lastComponent(0) {
     // Set up the UI.
@@ -171,19 +171,19 @@ NTriCompositionUI::NTriCompositionUI(regina::Triangulation<3>* packet,
     editIface = new PacketEditTreeWidgetSingleLine(details);
 }
 
-NTriCompositionUI::~NTriCompositionUI() {
+Tri3CompositionUI::~Tri3CompositionUI() {
     delete editIface;
 }
 
-regina::Packet* NTriCompositionUI::getPacket() {
+regina::Packet* Tri3CompositionUI::getPacket() {
     return tri;
 }
 
-QWidget* NTriCompositionUI::getInterface() {
+QWidget* Tri3CompositionUI::getInterface() {
     return ui;
 }
 
-void NTriCompositionUI::refresh() {
+void Tri3CompositionUI::refresh() {
     updateIsoPanel();
 
     details->clear();
@@ -245,7 +245,7 @@ void NTriCompositionUI::refresh() {
     details->setRootIsDecorated(foundInnerChildren);
 }
 
-void NTriCompositionUI::packetToBeDestroyed(regina::Packet*) {
+void Tri3CompositionUI::packetToBeDestroyed(regina::Packet*) {
     // Our current isomorphism test triangulation is about to be
     // destroyed.
     isoTest->setCurrentIndex(0); // (i.e., None)
@@ -253,7 +253,7 @@ void NTriCompositionUI::packetToBeDestroyed(regina::Packet*) {
     updateIsoPanel();
 }
 
-void NTriCompositionUI::updateIsoPanel() {
+void Tri3CompositionUI::updateIsoPanel() {
     // Update the packet chooser in case things have changed.
     isoTest->refreshContents();
 
@@ -289,7 +289,7 @@ void NTriCompositionUI::updateIsoPanel() {
     isoView->setEnabled(isomorphism.get());
 }
 
-void NTriCompositionUI::viewIsomorphism() {
+void Tri3CompositionUI::viewIsomorphism() {
     if (isoType == NoRelationship || ! comparingTri)
         return;
 
@@ -352,7 +352,7 @@ void NTriCompositionUI::viewIsomorphism() {
         title, msg + "<p>" + details.join("<br>") + "<qt>");
 }
 
-QTreeWidgetItem* NTriCompositionUI::addTopLevelSection(const QString& text) {
+QTreeWidgetItem* Tri3CompositionUI::addTopLevelSection(const QString& text) {
     QTreeWidgetItem* newItem = new QTreeWidgetItem(details);
     newItem->setText(0,text);
     return newItem;
@@ -362,7 +362,7 @@ QTreeWidgetItem* NTriCompositionUI::addTopLevelSection(const QString& text) {
     //    return new QTreeWidgetItem(details, text);
 }
 
-QTreeWidgetItem* NTriCompositionUI::addComponentSection(const QString& text) {
+QTreeWidgetItem* Tri3CompositionUI::addComponentSection(const QString& text) {
     if (! components)
         components = addTopLevelSection(tr("Components"));
 
@@ -377,7 +377,7 @@ QTreeWidgetItem* NTriCompositionUI::addComponentSection(const QString& text) {
     return lastComponent;
 }
 
-void NTriCompositionUI::findAugTriSolidTori() {
+void Tri3CompositionUI::findAugTriSolidTori() {
     unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
@@ -426,7 +426,7 @@ void NTriCompositionUI::findAugTriSolidTori() {
     }
 }
 
-void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
+void Tri3CompositionUI::describeSatRegion(const NSatRegion& region,
         QTreeWidgetItem* parent) {
     QTreeWidgetItem* details;
     QTreeWidgetItem* annuli;
@@ -521,7 +521,7 @@ void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
     }
 }
 
-void NTriCompositionUI::findBlockedTriangulations() {
+void Tri3CompositionUI::findBlockedTriangulations() {
     QTreeWidgetItem* id;
     QTreeWidgetItem* details;
 
@@ -635,7 +635,7 @@ void NTriCompositionUI::findBlockedTriangulations() {
     }
 }
 
-void NTriCompositionUI::findL31Pillows() {
+void Tri3CompositionUI::findL31Pillows() {
     unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
@@ -662,7 +662,7 @@ void NTriCompositionUI::findL31Pillows() {
     }
 }
 
-void NTriCompositionUI::findLayeredChainPairs() {
+void Tri3CompositionUI::findLayeredChainPairs() {
     unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
@@ -690,7 +690,7 @@ void NTriCompositionUI::findLayeredChainPairs() {
     }
 }
 
-void NTriCompositionUI::findLayeredLensSpaces() {
+void Tri3CompositionUI::findLayeredLensSpaces() {
     unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
@@ -722,7 +722,7 @@ void NTriCompositionUI::findLayeredLensSpaces() {
     }
 }
 
-void NTriCompositionUI::findLayeredLoops() {
+void Tri3CompositionUI::findLayeredLoops() {
     unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
@@ -761,7 +761,7 @@ void NTriCompositionUI::findLayeredLoops() {
     }
 }
 
-void NTriCompositionUI::findLayeredSolidTori() {
+void Tri3CompositionUI::findLayeredSolidTori() {
     unsigned long nTets = tri->size();
 
     QTreeWidgetItem* id = 0;
@@ -804,7 +804,7 @@ void NTriCompositionUI::findLayeredSolidTori() {
     }
 }
 
-void NTriCompositionUI::findPillowSpheres() {
+void Tri3CompositionUI::findPillowSpheres() {
     unsigned long nTriangles = tri->countTriangles();
 
     QTreeWidgetItem* id = 0;
@@ -839,7 +839,7 @@ void NTriCompositionUI::findPillowSpheres() {
     }
 }
 
-void NTriCompositionUI::findPlugTriSolidTori() {
+void Tri3CompositionUI::findPlugTriSolidTori() {
     unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
@@ -892,7 +892,7 @@ void NTriCompositionUI::findPlugTriSolidTori() {
     }
 }
 
-void NTriCompositionUI::findSnappedBalls() {
+void Tri3CompositionUI::findSnappedBalls() {
     unsigned long nTets = tri->size();
 
     QTreeWidgetItem* id = 0;
@@ -917,7 +917,7 @@ void NTriCompositionUI::findSnappedBalls() {
     }
 }
 
-void NTriCompositionUI::findSnappedSpheres() {
+void Tri3CompositionUI::findSnappedSpheres() {
     unsigned long nTets = tri->size();
 
     QTreeWidgetItem* id = 0;
@@ -951,7 +951,7 @@ void NTriCompositionUI::findSnappedSpheres() {
     }
 }
 
-void NTriCompositionUI::findSpiralSolidTori() {
+void Tri3CompositionUI::findSpiralSolidTori() {
     unsigned long nTets = tri->size();
 
     QTreeWidgetItem* id = 0;
@@ -1054,7 +1054,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
     }
 }
 
-QString NTriCompositionUI::edgeString(unsigned long tetIndex,
+QString Tri3CompositionUI::edgeString(unsigned long tetIndex,
         int edge1, int edge2) {
     if (edge1 < 0)
         return tr("None");
@@ -1068,13 +1068,13 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
             arg(Edge<3>::edgeVertex[edge2][0]).arg(Edge<3>::edgeVertex[edge2][1]);
 }
 
-QString NTriCompositionUI::edgeString(unsigned long tetIndex,
+QString Tri3CompositionUI::edgeString(unsigned long tetIndex,
         const regina::Perm<4>& roles, int startPreimage, int endPreimage) {
     return QString("%1 (%2%3)").arg(tetIndex).arg(roles[startPreimage]).
         arg(roles[endPreimage]);
 }
 
-QString NTriCompositionUI::matrixString(const regina::Matrix2& matrix) {
+QString Tri3CompositionUI::matrixString(const regina::Matrix2& matrix) {
     return QString("[ %1 %2 | %3 %4 ]").
         arg(matrix[0][0]).arg(matrix[0][1]).arg(matrix[1][0]).arg(matrix[1][1]);
 }

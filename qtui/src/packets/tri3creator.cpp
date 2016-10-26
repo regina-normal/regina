@@ -113,7 +113,7 @@ namespace {
     QRegExp reSignature("^([\\(\\)\\.,;:\\|\\-A-Za-z]+)$");
 }
 
-NTriangulationCreator::NTriangulationCreator() {
+Tri3Creator::Tri3Creator() {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -317,11 +317,11 @@ NTriangulationCreator::NTriangulationCreator() {
         SLOT(setCurrentIndex(int)));
 }
 
-QWidget* NTriangulationCreator::getInterface() {
+QWidget* Tri3Creator::getInterface() {
     return ui;
 }
 
-regina::Packet* NTriangulationCreator::createPacket(regina::Packet*,
+regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {

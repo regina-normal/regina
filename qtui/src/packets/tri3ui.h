@@ -41,11 +41,11 @@
 #include "../packettabui.h"
 
 class ClickableLabel;
-class NTriAlgebraUI;
-class NTriGluingsUI;
-class NTriSkeletonUI;
-class NTriSurfacesUI;
-class NTriSnapPeaUI;
+class Tri3AlgebraUI;
+class Tri3GluingsUI;
+class Tri3SkeletonUI;
+class Tri3SurfacesUI;
+class Tri3SnapPeaUI;
 class PacketEditIface;
 class QLabel;
 class QToolBar;
@@ -57,18 +57,18 @@ namespace regina {
 /**
  * A packet interface for viewing 3-manifold triangulations.
  */
-class NTriangulationUI : public PacketTabbedUI {
+class Tri3UI : public PacketTabbedUI {
     Q_OBJECT
 
     private:
         /**
          * Internal components
          */
-        NTriGluingsUI* gluings;
-        NTriSkeletonUI* skeleton;
-        NTriAlgebraUI* algebra;
-        NTriSurfacesUI* surfaces;
-        NTriSnapPeaUI* snapPea;
+        Tri3GluingsUI* gluings;
+        Tri3SkeletonUI* skeleton;
+        Tri3AlgebraUI* algebra;
+        Tri3SurfacesUI* surfaces;
+        Tri3SnapPeaUI* snapPea;
 
         PacketEditIface* editIface;
 
@@ -76,9 +76,9 @@ class NTriangulationUI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        NTriangulationUI(regina::Triangulation<3>* packet,
+        Tri3UI(regina::Triangulation<3>* packet,
             PacketPane* newEnclosingPane);
-        ~NTriangulationUI();
+        ~Tri3UI();
 
         /**
          * PacketUI overrides.
@@ -91,7 +91,7 @@ class NTriangulationUI : public PacketTabbedUI {
 /**
  * A header for the 3-manifold triangulation viewer.
  */
-class NTriHeaderUI : public QObject, public PacketViewerTab,
+class Tri3HeaderUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
     Q_OBJECT
 
@@ -113,7 +113,7 @@ class NTriHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        NTriHeaderUI(regina::Triangulation<3>* packet,
+        Tri3HeaderUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -158,11 +158,11 @@ class NTriHeaderUI : public QObject, public PacketViewerTab,
         void customEvent(QEvent* event);
 };
 
-inline PacketEditIface* NTriangulationUI::getEditIface() {
+inline PacketEditIface* Tri3UI::getEditIface() {
     return editIface;
 }
 
-inline QToolBar* NTriHeaderUI::getToolBar() {
+inline QToolBar* Tri3HeaderUI::getToolBar() {
     return bar;
 }
 

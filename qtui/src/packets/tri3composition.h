@@ -63,7 +63,7 @@ namespace regina {
 /**
  * A triangulation page for viewing the combinatorial composition.
  */
-class NTriCompositionUI : public QObject, public PacketViewerTab,
+class Tri3CompositionUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
     Q_OBJECT
 
@@ -99,9 +99,9 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        NTriCompositionUI(regina::Triangulation<3>* packet,
+        Tri3CompositionUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
-        ~NTriCompositionUI();
+        ~Tri3CompositionUI();
 
         /**
          * PacketViewerTab overrides.
@@ -162,7 +162,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         static QString matrixString(const regina::Matrix2& matrix);
 };
 
-inline PacketEditIface* NTriCompositionUI::getEditIface() {
+inline PacketEditIface* Tri3CompositionUI::getEditIface() {
     return editIface;
 }
 

@@ -52,7 +52,7 @@ namespace regina {
 /**
  * A triangulation page for viewing normal surface properties.
  */
-class NTriSnapPeaUI : public QObject, public PacketViewerTab {
+class Tri3SnapPeaUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -78,9 +78,9 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        NTriSnapPeaUI(regina::Triangulation<3>* packet,
+        Tri3SnapPeaUI(regina::Triangulation<3>* packet,
             PacketTabbedUI* useParentUI);
-        ~NTriSnapPeaUI();
+        ~Tri3SnapPeaUI();
 
         /**
          * PacketViewerTab overrides.
@@ -111,7 +111,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         static QString solutionTypeExplanation(int solnType);
 };
 
-inline void NTriSnapPeaUI::updatePreferences() {
+inline void Tri3SnapPeaUI::updatePreferences() {
     refresh();
 }
 

@@ -65,7 +65,7 @@ SnapPeaUI::SnapPeaUI(regina::SnapPeaTriangulation* packet,
     shapes = new SnapPeaShapesUI(packet, this,
         newEnclosingPane->isReadWrite());
     gluings = new SnapPeaGluingsUI(packet, this);
-    skeleton = new NTriSkeletonUI(packet, this);
+    skeleton = new Tri3SkeletonUI(packet, this);
     algebra = new SnapPeaAlgebraUI(packet, this);
 
     shapes->fillToolBar(header->getToolBar());
@@ -75,8 +75,8 @@ SnapPeaUI::SnapPeaUI(regina::SnapPeaTriangulation* packet,
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
-    addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
-    addTab(new NTriSurfacesUI(packet, this), QObject::tr("&Recognition"));
+    addTab(new Tri3CompositionUI(packet, this), QObject::tr("&Composition"));
+    addTab(new Tri3SurfacesUI(packet, this), QObject::tr("&Recognition"));
     addTab(new SnapPeaFileUI(packet, this), QObject::tr("&File"));
 
     editIface = new PacketEditTabbedUI(this);

@@ -101,7 +101,7 @@ namespace {
     }
 }
 
-EltMoveDialog::EltMoveDialog(QWidget* parent, regina::Triangulation<3>* useTri) :
+EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     setWindowTitle(tr("Elementary Move"));
@@ -336,12 +336,12 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::Triangulation<3>* useTri) 
     tri->listen(this);
 }
 
-EltMoveDialog::~EltMoveDialog() {
+EltMoveDialog3::~EltMoveDialog3() {
     tri->unlisten(this);
     delete moveTypes;
 }
 
-void EltMoveDialog::clicked(QAbstractButton* btn) {
+void EltMoveDialog3::clicked(QAbstractButton* btn) {
     if (buttons->buttonRole(btn) == QDialogButtonBox::RejectRole)
         reject();
     if (buttons->buttonRole(btn) != QDialogButtonBox::ApplyRole)
@@ -395,17 +395,17 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         ReginaSupport::info(this, tr("Please select a move."));
 }
 
-void EltMoveDialog::updateApply() {
+void EltMoveDialog3::updateApply() {
     QAbstractButton* b = moveTypes->checkedButton();
     buttons->button(QDialogButtonBox::Apply)->setEnabled(b && b->isEnabled());
 }
 
-void EltMoveDialog::packetWasRenamed(regina::Packet*) {
+void EltMoveDialog3::packetWasRenamed(regina::Packet*) {
     name->setText(tri->humanLabel().c_str());
 }
 
 template <typename ChooserClass>
-void EltMoveDialog::updateStates(ChooserClass* chooser, QRadioButton* button) {
+void EltMoveDialog3::updateStates(ChooserClass* chooser, QRadioButton* button) {
     if (chooser->refresh()) {
         button->setEnabled(true);
         chooser->setEnabled(true);
@@ -415,7 +415,7 @@ void EltMoveDialog::updateStates(ChooserClass* chooser, QRadioButton* button) {
     }
 }
 
-void EltMoveDialog::packetWasChanged(regina::Packet*) {
+void EltMoveDialog3::packetWasChanged(regina::Packet*) {
     if (tri->size() == 1)
         overview->setText(tr("1 tetrahedron"));
     else
@@ -437,7 +437,7 @@ void EltMoveDialog::packetWasChanged(regina::Packet*) {
     updateApply();
 }
 
-void EltMoveDialog::packetToBeDestroyed(regina::Packet*) {
+void EltMoveDialog3::packetToBeDestroyed(regina::Packet*) {
     reject();
 }
 
