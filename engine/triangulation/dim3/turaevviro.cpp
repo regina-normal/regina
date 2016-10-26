@@ -317,7 +317,7 @@ namespace {
             ans *= tmp;
 
             int i;
-            const NTriangle* triangle;
+            const Triangle<3>* triangle;
             const NEdge* edge;
             for (i = 0; i < 4; ++i) {
                 triangle = tet->triangle(i);
@@ -510,7 +510,7 @@ namespace {
         TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
         bool admissible;
         const NTetrahedron* tet;
-        const NTriangle* triangle;
+        const Triangle<3>* triangle;
         while (curr >= 0) {
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {

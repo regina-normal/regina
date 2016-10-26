@@ -66,7 +66,7 @@ using regina::Perm;
 using regina::NSignature;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
-using regina::NTriangle;
+using regina::Triangle;
 using regina::Triangulation;
 using regina::NVertex;
 
@@ -1526,7 +1526,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 unsigned j, k;
                 NTetrahedron* tet;
                 Perm<4> perm;
-                const regina::Dim2Triangle *t, *adj;
+                const regina::Triangle<2> *t, *adj;
                 unsigned vNum;
                 for (j = 0; j < v->degree(); ++j) {
                     tet = tri->tetrahedron(iso->tetImage(j));

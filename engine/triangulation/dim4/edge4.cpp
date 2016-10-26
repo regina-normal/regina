@@ -51,7 +51,7 @@ Triangulation<2>* Face<4, 1>::buildLinkDetail(bool labels,
         *inclusion = new Dim4Isomorphism(degree());
 
     std::vector<Dim4EdgeEmbedding>::const_iterator it, adjIt;
-    Dim2Triangle* tTri;
+    Triangle<2>* tTri;
     Perm<5> perm;
     int i;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {

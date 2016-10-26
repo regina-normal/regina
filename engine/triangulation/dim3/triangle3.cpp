@@ -34,7 +34,7 @@
 
 namespace regina {
 
-NTriangle::Type NTriangle::type() {
+Triangle<3>::Type Triangle<3>::type() {
     if (type_)
         return type_;
 
@@ -94,7 +94,7 @@ NTriangle::Type NTriangle::type() {
     return UNKNOWN_TYPE;
 }
 
-void NTriangle::writeTextLong(std::ostream& out) const {
+void Triangle<3>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 

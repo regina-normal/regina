@@ -112,7 +112,7 @@
     [self.triangles reloadData];
 }
 
-+ (NSString*)destStringFromEdge:(int)srcEdge dest:(regina::Dim2Triangle*)destTri gluing:(const regina::Perm<3>&)gluing
++ (NSString*)destStringFromEdge:(int)srcEdge dest:(regina::Triangle<2>*)destTri gluing:(const regina::Perm<3>&)gluing
 {
     if (! destTri)
         return @" "; // Use a space to ensure the label has enough height to pick up touches.
@@ -161,7 +161,7 @@
     editField.returnKeyType = UIReturnKeyDone;
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
     if (editEdge >= 0) {
-        regina::Dim2Triangle* t = self.packet->simplex(editSimplex);
+        regina::Triangle<2>* t = self.packet->simplex(editSimplex);
         editField.text = [[Dim2TriGluings destStringFromEdge:editEdge
                                                         dest:t->adjacentSimplex(editEdge)
                                                       gluing:t->adjacentGluing(editEdge)]
@@ -367,7 +367,7 @@
         return;
     }
     
-    regina::Dim2Triangle* t = self.packet->simplex(editSimplex);
+    regina::Triangle<2>* t = self.packet->simplex(editSimplex);
     
     NSMutableArray* toReload = [[NSMutableArray alloc] init];
     if (editEdge >= 0) {
@@ -452,7 +452,7 @@
                     
                     // Does this new partner already have its own partner?
                     // If so, better unglue it.
-                    regina::Dim2Triangle* adj = self.packet->simplex(destSimplex);
+                    regina::Triangle<2>* adj = self.packet->simplex(destSimplex);
                     if (adj->adjacentSimplex(destEdge)) {
                         NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destEdge)->markedIndex()+1 inSection:0];
                         if ([toReload indexOfObject:path] == NSNotFound)
@@ -510,7 +510,7 @@ cleanUpGluing:
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
-    regina::Dim2Triangle* t = self.packet->simplex(indexPath.row - 1);
+    regina::Triangle<2>* t = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->description().c_str()];
     cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];

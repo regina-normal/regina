@@ -66,7 +66,7 @@ void Triangulation<2>::calculateBoundary() {
         return;
 
     Dim2BoundaryComponent* label;
-    Dim2Triangle *tri, *adjTri;
+    Triangle<2> *tri, *adjTri;
     int edgeId, adjEdgeId;
     int vertexId, adjVertexId;
     Dim2Edge *adjEdge;

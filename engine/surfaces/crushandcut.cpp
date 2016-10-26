@@ -1166,7 +1166,7 @@ Triangulation<3>* NormalSurface::cutAlong() const {
         sets[i] = new TetBlockSet(this, i, ans);
 
     Triangulation<3>::TriangleIterator fit;
-    NTriangle* f;
+    Triangle<3>* f;
     unsigned long tet0, tet1;
     int face0, face1;
     int fromVertex0, fromVertex1;

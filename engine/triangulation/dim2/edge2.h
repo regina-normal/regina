@@ -52,7 +52,6 @@ namespace regina {
 class Dim2BoundaryComponent;
 
 typedef Component<2> Dim2Component;
-typedef Simplex<2> Dim2Triangle;
 typedef Face<2, 0> Dim2Vertex;
 
 /**

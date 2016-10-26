@@ -81,7 +81,6 @@ typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 typedef Face<3, 0> NVertex;
 typedef Face<3, 1> NEdge;
-typedef Face<3, 2> NTriangle;
 
 /**
  * \addtogroup triangulation 3-Manifold Triangulations
@@ -147,7 +146,7 @@ enum TuraevViroAlg {
  * the combinatorial structure of the triangulation.
  *
  * In particular, this class also tracks vertices, edges and triangles of the
- * triangulation (as represented by the classes NVertex, NEdge and NTriangle),
+ * triangulation (as represented by the classes NVertex, NEdge and Triangle<3>),
  * as well as boundary components (as represented by the class
  * NBoundaryComponent).  Such objects are temporary: whenever the
  * triangulation changes, these objects will be deleted and rebuilt, and so
@@ -1360,7 +1359,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoThreeMove(NTriangle* t, bool check = true, bool perform = true);
+        bool twoThreeMove(Triangle<3>* t, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 1-4 move
          * upon the given tetrahedron.
@@ -1624,7 +1623,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool openBook(NTriangle* t, bool check = true, bool perform = true);
+        bool openBook(Triangle<3>* t, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book closing move
          * about the given boundary edge.
@@ -2976,7 +2975,7 @@ class REGINA_API Triangulation<3> :
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*);
+        void labelBoundaryTriangle(Triangle<3>*, NBoundaryComponent*);
 
         /**
          * Internal to calculateSkeleton().  See the comments within

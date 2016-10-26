@@ -128,8 +128,8 @@ Triangulation<2>* Dim2ExampleTriangulation::sphere() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere");
 
-    Dim2Triangle* r = ans->newTriangle();
-    Dim2Triangle* s = ans->newTriangle();
+    Triangle<2>* r = ans->newTriangle();
+    Triangle<2>* s = ans->newTriangle();
     r->join(0, s, Perm<3>());
     r->join(1, s, Perm<3>());
     r->join(2, s, Perm<3>());
@@ -141,10 +141,10 @@ Triangulation<2>* Dim2ExampleTriangulation::sphereTetrahedron() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere (tetrahedron boundary)");
 
-    Dim2Triangle* r = ans->newTriangle();
-    Dim2Triangle* s = ans->newTriangle();
-    Dim2Triangle* t = ans->newTriangle();
-    Dim2Triangle* u = ans->newTriangle();
+    Triangle<2>* r = ans->newTriangle();
+    Triangle<2>* s = ans->newTriangle();
+    Triangle<2>* t = ans->newTriangle();
+    Triangle<2>* u = ans->newTriangle();
     r->join(1, s, Perm<3>(1, 2));
     s->join(1, t, Perm<3>(1, 2));
     t->join(1, r, Perm<3>(1, 2));
@@ -159,14 +159,14 @@ Triangulation<2>* Dim2ExampleTriangulation::sphereOctahedron() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere (octahedron boundary)");
 
-    Dim2Triangle* r = ans->newTriangle();
-    Dim2Triangle* s = ans->newTriangle();
-    Dim2Triangle* t = ans->newTriangle();
-    Dim2Triangle* u = ans->newTriangle();
-    Dim2Triangle* v = ans->newTriangle();
-    Dim2Triangle* w = ans->newTriangle();
-    Dim2Triangle* x = ans->newTriangle();
-    Dim2Triangle* y = ans->newTriangle();
+    Triangle<2>* r = ans->newTriangle();
+    Triangle<2>* s = ans->newTriangle();
+    Triangle<2>* t = ans->newTriangle();
+    Triangle<2>* u = ans->newTriangle();
+    Triangle<2>* v = ans->newTriangle();
+    Triangle<2>* w = ans->newTriangle();
+    Triangle<2>* x = ans->newTriangle();
+    Triangle<2>* y = ans->newTriangle();
     r->join(1, s, Perm<3>(1, 2));
     s->join(1, t, Perm<3>(1, 2));
     t->join(1, u, Perm<3>(1, 2));
@@ -196,8 +196,8 @@ Triangulation<2>* Dim2ExampleTriangulation::annulus() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Annulus");
 
-    Dim2Triangle* r = ans->newTriangle();
-    Dim2Triangle* s = ans->newTriangle();
+    Triangle<2>* r = ans->newTriangle();
+    Triangle<2>* s = ans->newTriangle();
     r->join(0, s, Perm<3>(1, 2));
     r->join(2, s, Perm<3>(0, 1));
 
@@ -208,7 +208,7 @@ Triangulation<2>* Dim2ExampleTriangulation::mobius() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("M\u00F6bius band");
 
-    Dim2Triangle* r = ans->newTriangle();
+    Triangle<2>* r = ans->newTriangle();
     r->join(0, r, Perm<3>(2, 0, 1));
 
     return ans;
@@ -218,8 +218,8 @@ Triangulation<2>* Dim2ExampleTriangulation::torus() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Torus");
 
-    Dim2Triangle* r = ans->newTriangle();
-    Dim2Triangle* s = ans->newTriangle();
+    Triangle<2>* r = ans->newTriangle();
+    Triangle<2>* s = ans->newTriangle();
     r->join(0, s, Perm<3>(1, 2));
     r->join(1, s, Perm<3>(2, 0));
     r->join(2, s, Perm<3>(0, 1));
@@ -231,8 +231,8 @@ Triangulation<2>* Dim2ExampleTriangulation::rp2() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Projective plane");
 
-    Dim2Triangle* r = ans->newTriangle();
-    Dim2Triangle* s = ans->newTriangle();
+    Triangle<2>* r = ans->newTriangle();
+    Triangle<2>* s = ans->newTriangle();
     r->join(0, s, Perm<3>(1, 2));
     r->join(1, s, Perm<3>());
     r->join(2, s, Perm<3>());
@@ -244,8 +244,8 @@ Triangulation<2>* Dim2ExampleTriangulation::kb() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Klein bottle");
 
-    Dim2Triangle* r = ans->newTriangle();
-    Dim2Triangle* s = ans->newTriangle();
+    Triangle<2>* r = ans->newTriangle();
+    Triangle<2>* s = ans->newTriangle();
     r->join(0, s, Perm<3>(1, 2));
     r->join(1, s, Perm<3>(2, 0));
     r->join(2, s, Perm<3>());

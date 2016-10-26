@@ -64,7 +64,6 @@ class XMLPacketReader;
 
 template <int> class Isomorphism;
 typedef Isomorphism<2> Dim2Isomorphism;
-typedef Simplex<2> Dim2Triangle;
 typedef Face<2, 0> Dim2Vertex;
 typedef Face<2, 1> Dim2Edge;
 
@@ -110,7 +109,7 @@ class REGINA_API Triangulation<2> :
     REGINA_PACKET(Triangulation<2>, PACKET_TRIANGULATION2)
 
     public:
-        typedef std::vector<Dim2Triangle*>::const_iterator TriangleIterator;
+        typedef std::vector<Triangle<2>*>::const_iterator TriangleIterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through triangles. */
         typedef FaceList<2, 1>::Iterator EdgeIterator;
@@ -193,19 +192,19 @@ class REGINA_API Triangulation<2> :
          *
          * See newSimplex() for further information.
          */
-        Dim2Triangle* newTriangle();
+        Triangle<2>* newTriangle();
         /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
          */
-        Dim2Triangle* newTriangle(const std::string& desc);
+        Triangle<2>* newTriangle(const std::string& desc);
         /**
          * A dimension-specific alias for removeSimplex().
          *
          * See removeSimplex() for further information.
          */
-        void removeTriangle(Dim2Triangle* tri);
+        void removeTriangle(Triangle<2>* tri);
         /**
          * A dimension-specific alias for removeSimplexAt().
          *
@@ -370,7 +369,7 @@ class REGINA_API Triangulation<2> :
          * (defaults to \c true).
          * @return \c true always.
          */
-        bool oneThreeMove(Dim2Triangle* t, bool check = true,
+        bool oneThreeMove(Triangle<2>* t, bool check = true,
             bool perform = true);
 
         /*@}*/
@@ -458,15 +457,15 @@ inline bool Triangulation<2>::dependsOnParent() const {
     return false;
 }
 
-inline Dim2Triangle* Triangulation<2>::newTriangle() {
+inline Triangle<2>* Triangulation<2>::newTriangle() {
     return newSimplex();
 }
 
-inline Dim2Triangle* Triangulation<2>::newTriangle(const std::string& desc) {
+inline Triangle<2>* Triangulation<2>::newTriangle(const std::string& desc) {
     return newSimplex(desc);
 }
 
-inline void Triangulation<2>::removeTriangle(Dim2Triangle* tri) {
+inline void Triangulation<2>::removeTriangle(Triangle<2>* tri) {
     removeSimplex(tri);
 }
 

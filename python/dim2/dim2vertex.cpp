@@ -54,7 +54,7 @@ namespace {
 
 void addDim2Vertex() {
     class_<FaceEmbedding<2, 0>>("FaceEmbedding2_0",
-            init<regina::Dim2Triangle*, int>())
+            init<regina::Triangle<2>*, int>())
         .def(init<const Dim2VertexEmbedding&>())
         .def("simplex", &Dim2VertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())

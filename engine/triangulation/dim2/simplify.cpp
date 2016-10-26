@@ -34,7 +34,7 @@
 
 namespace regina {
 
-bool Triangulation<2>::oneThreeMove(Dim2Triangle* tri, bool /* check */,
+bool Triangulation<2>::oneThreeMove(Triangle<2>* tri, bool /* check */,
         bool perform) {
     if ( !perform )
         return true; // You can always do this move.
@@ -42,7 +42,7 @@ bool Triangulation<2>::oneThreeMove(Dim2Triangle* tri, bool /* check */,
     ChangeEventSpan span(this);
 
     // Before we unglue, record how the adjacent triangles are glued to tri.
-    Dim2Triangle* adjTri[3];
+    Triangle<2>* adjTri[3];
     Perm<3> adjGlue[3];
     unsigned i, j;
     for (i=0; i<3; i++) {
@@ -59,7 +59,7 @@ bool Triangulation<2>::oneThreeMove(Dim2Triangle* tri, bool /* check */,
     // Vertex i of newTri[i] will become the new internal vertex, and
     // the other two vertices of newTri[i] will keep the same vertex numbers
     // that they had in the old triangle.
-    Dim2Triangle* newTri[3];
+    Triangle<2>* newTri[3];
     for (i = 0; i < 3; ++i)
         newTri[i] = newTriangle();
 

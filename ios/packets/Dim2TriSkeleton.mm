@@ -180,7 +180,7 @@
                 cell.index.text = @"No triangles";
                 cell.data0.text = cell.data1.text = @"";
             } else {
-                regina::Dim2Triangle *t = self.packet->triangle(indexPath.row - 1);
+                regina::Triangle<2> *t = self.packet->triangle(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
 

@@ -292,7 +292,7 @@ QString GluingsModel::destString(int srcFace, regina::NTetrahedron* destTet,
         return "";
     else
         return QString::number(destTet->markedIndex()) + " (" +
-            (gluing * regina::NTriangle::ordering(srcFace)).trunc3().c_str() +
+            (gluing * regina::Triangle<3>::ordering(srcFace)).trunc3().c_str() +
             ')';
 }
 
@@ -308,7 +308,7 @@ regina::Perm<4> GluingsModel::faceStringToPerm(int srcFace, const QString& str) 
     }
 
     return regina::Perm<4>(destVertex[0], destVertex[1], destVertex[2],
-        destVertex[3]) * regina::NTriangle::ordering(srcFace).inverse();
+        destVertex[3]) * regina::Triangle<3>::ordering(srcFace).inverse();
 }
 
 NTriGluingsUI::NTriGluingsUI(regina::Triangulation<3>* packet,

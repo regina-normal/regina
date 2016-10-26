@@ -44,7 +44,7 @@ NPillowTwoSphere* NPillowTwoSphere::clone() const {
 }
 
 NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
-        NTriangle* tri1, NTriangle* tri2) {
+        Triangle<3>* tri1, Triangle<3>* tri2) {
     if (tri1 == tri2 || tri1->isBoundary() || tri2->isBoundary())
         return 0;
     NEdge* edge[2][3];

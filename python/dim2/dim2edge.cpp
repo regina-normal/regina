@@ -57,7 +57,7 @@ namespace {
 
 void addDim2Edge() {
     class_<FaceEmbedding<2, 1>>("FaceEmbedding2_1",
-            init<regina::Dim2Triangle*, int>())
+            init<regina::Triangle<2>*, int>())
         .def(init<const Dim2EdgeEmbedding&>())
         .def("simplex", &Dim2EdgeEmbedding::simplex,
             return_value_policy<reference_existing_object>())

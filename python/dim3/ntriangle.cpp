@@ -41,12 +41,12 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::Face;
 using regina::FaceEmbedding;
-using regina::NTriangle;
+using regina::Triangle;
 using regina::NTriangleEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    boost::python::list NTriangle_embeddings_list(const NTriangle* t) {
+    boost::python::list NTriangle_embeddings_list(const Triangle<3>* t) {
         boost::python::list ans;
         for (auto& emb: *t)
             ans.append(emb);
@@ -72,40 +72,40 @@ void addNTriangle() {
     {
         scope s = class_<Face<3, 2>, std::auto_ptr<Face<3, 2>>,
                 boost::noncopyable>("Face3_2", no_init)
-            .def("index", &NTriangle::index)
+            .def("index", &Triangle<3>::index)
             .def("embeddings", NTriangle_embeddings_list)
-            .def("embedding", &NTriangle::embedding,
+            .def("embedding", &Triangle<3>::embedding,
                 return_internal_reference<>())
-            .def("isBoundary", &NTriangle::isBoundary)
-            .def("inMaximalForest", &NTriangle::inMaximalForest)
-            .def("type", &NTriangle::type)
-            .def("subtype", &NTriangle::subtype)
-            .def("isMobiusBand", &NTriangle::isMobiusBand)
-            .def("isCone", &NTriangle::isCone)
-            .def("isValid", &NTriangle::isValid)
-            .def("isLinkOrientable", &NTriangle::isLinkOrientable)
-            .def("degree", &NTriangle::degree)
-            .def("front", &NTriangle::front,
+            .def("isBoundary", &Triangle<3>::isBoundary)
+            .def("inMaximalForest", &Triangle<3>::inMaximalForest)
+            .def("type", &Triangle<3>::type)
+            .def("subtype", &Triangle<3>::subtype)
+            .def("isMobiusBand", &Triangle<3>::isMobiusBand)
+            .def("isCone", &Triangle<3>::isCone)
+            .def("isValid", &Triangle<3>::isValid)
+            .def("isLinkOrientable", &Triangle<3>::isLinkOrientable)
+            .def("degree", &Triangle<3>::degree)
+            .def("front", &Triangle<3>::front,
                 return_internal_reference<>())
-            .def("back", &NTriangle::back,
+            .def("back", &Triangle<3>::back,
                 return_internal_reference<>())
-            .def("triangulation", &NTriangle::triangulation,
+            .def("triangulation", &Triangle<3>::triangulation,
                 return_value_policy<to_held_type<> >())
-            .def("component", &NTriangle::component,
+            .def("component", &Triangle<3>::component,
                 return_value_policy<reference_existing_object>())
-            .def("boundaryComponent", &NTriangle::boundaryComponent,
+            .def("boundaryComponent", &Triangle<3>::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("face", &regina::python::face<NTriangle, 2, int>)
-            .def("vertex", &NTriangle::vertex,
+            .def("face", &regina::python::face<Triangle<3>, 2, int>)
+            .def("vertex", &Triangle<3>::vertex,
                 return_value_policy<reference_existing_object>())
-            .def("edge", &NTriangle::edge,
+            .def("edge", &Triangle<3>::edge,
                 return_value_policy<reference_existing_object>())
-            .def("faceMapping", &regina::python::faceMapping<NTriangle, 2, 4>)
-            .def("vertexMapping", &NTriangle::vertexMapping)
-            .def("edgeMapping", &NTriangle::edgeMapping)
-            .def("ordering", &NTriangle::ordering)
-            .def("faceNumber", &NTriangle::faceNumber)
-            .def("containsVertex", &NTriangle::containsVertex)
+            .def("faceMapping", &regina::python::faceMapping<Triangle<3>, 2, 4>)
+            .def("vertexMapping", &Triangle<3>::vertexMapping)
+            .def("edgeMapping", &Triangle<3>::edgeMapping)
+            .def("ordering", &Triangle<3>::ordering)
+            .def("faceNumber", &Triangle<3>::faceNumber)
+            .def("containsVertex", &Triangle<3>::containsVertex)
             .def(regina::python::add_output())
             .def(regina::python::add_eq_operators())
             .staticmethod("ordering")
@@ -113,26 +113,26 @@ void addNTriangle() {
             .staticmethod("containsVertex")
         ;
 
-        enum_<regina::NTriangle::Type>("Type")
-            .value("UNKNOWN_TYPE", regina::NTriangle::UNKNOWN_TYPE)
-            .value("TRIANGLE", regina::NTriangle::TRIANGLE)
-            .value("SCARF", regina::NTriangle::SCARF)
-            .value("PARACHUTE", regina::NTriangle::PARACHUTE)
-            .value("CONE", regina::NTriangle::CONE)
-            .value("MOBIUS", regina::NTriangle::MOBIUS)
-            .value("HORN", regina::NTriangle::HORN)
-            .value("DUNCEHAT", regina::NTriangle::DUNCEHAT)
-            .value("L31", regina::NTriangle::L31)
+        enum_<regina::Triangle<3>::Type>("Type")
+            .value("UNKNOWN_TYPE", regina::Triangle<3>::UNKNOWN_TYPE)
+            .value("TRIANGLE", regina::Triangle<3>::TRIANGLE)
+            .value("SCARF", regina::Triangle<3>::SCARF)
+            .value("PARACHUTE", regina::Triangle<3>::PARACHUTE)
+            .value("CONE", regina::Triangle<3>::CONE)
+            .value("MOBIUS", regina::Triangle<3>::MOBIUS)
+            .value("HORN", regina::Triangle<3>::HORN)
+            .value("DUNCEHAT", regina::Triangle<3>::DUNCEHAT)
+            .value("L31", regina::Triangle<3>::L31)
             ;
 
-        s.attr("TRIANGLE") = NTriangle::TRIANGLE;
-        s.attr("SCARF") = NTriangle::SCARF;
-        s.attr("PARACHUTE") = NTriangle::PARACHUTE;
-        s.attr("CONE") = NTriangle::CONE;
-        s.attr("MOBIUS") = NTriangle::MOBIUS;
-        s.attr("HORN") = NTriangle::HORN;
-        s.attr("DUNCEHAT") = NTriangle::DUNCEHAT;
-        s.attr("L31") = NTriangle::L31;
+        s.attr("TRIANGLE") = Triangle<3>::TRIANGLE;
+        s.attr("SCARF") = Triangle<3>::SCARF;
+        s.attr("PARACHUTE") = Triangle<3>::PARACHUTE;
+        s.attr("CONE") = Triangle<3>::CONE;
+        s.attr("MOBIUS") = Triangle<3>::MOBIUS;
+        s.attr("HORN") = Triangle<3>::HORN;
+        s.attr("DUNCEHAT") = Triangle<3>::DUNCEHAT;
+        s.attr("L31") = Triangle<3>::L31;
     }
 
     scope().attr("NTriangleEmbedding") = scope().attr("FaceEmbedding3_2");

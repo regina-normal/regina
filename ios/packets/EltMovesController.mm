@@ -336,7 +336,7 @@
     return options[use];
 }
 
-- (regina::NTriangle*)triangleFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Triangle<3>*)triangleFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -434,7 +434,7 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
-- (NSAttributedString*)triangleDesc:(regina::NTriangle*)triangle
+- (NSAttributedString*)triangleDesc:(regina::Triangle<3>*)triangle
 {
     if (! triangle)
         return [TextHelper badString:@"Invalid triangle"];
@@ -478,7 +478,7 @@
 
 - (IBAction)do23:(id)sender
 {
-    regina::NTriangle* use = [self triangleFor:self.stepper23 options:options23];
+    regina::Triangle<3>* use = [self triangleFor:self.stepper23 options:options23];
     if (! use)
         return;
 
@@ -538,7 +538,7 @@
 
 - (IBAction)doOpenBook:(id)sender
 {
-    regina::NTriangle* use = [self triangleFor:self.stepperOpenBook options:optionsOpenBook];
+    regina::Triangle<3>* use = [self triangleFor:self.stepperOpenBook options:optionsOpenBook];
     if (! use)
         return;
 

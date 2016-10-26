@@ -41,7 +41,7 @@ using regina::HyperCoords;
 using regina::NormalHypersurfaces;
 using regina::NormalSurfaces;
 using regina::NormalCoords;
-using regina::NTriangle;
+using regina::Triangle;
 
 @implementation Coordinates
 
@@ -164,7 +164,7 @@ using regina::NTriangle;
         } else {
             // "false" orientation.
             if (stdCoord % 7 < 4)
-                return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), NTriangle::ordering(stdCoord % 7).trunc3().c_str()];
+                return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), Triangle<3>::ordering(stdCoord % 7).trunc3().c_str()];
             else
                 return [NSString stringWithFormat:@"%ld: %d%d", (stdCoord / 7), regina::quadDefn[(stdCoord % 7) - 4][2], regina::quadDefn[(stdCoord % 7) - 4][3]];
         }

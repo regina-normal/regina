@@ -1793,7 +1793,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     }
                 }
 
-                const regina::Dim2Triangle *t, *adj;
+                const regina::Triangle<2> *t, *adj;
                 unsigned eNum;
                 for (j = 0; j < e->degree(); ++j) {
                     p = tri->pentachoron(iso->pentImage(j));

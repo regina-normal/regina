@@ -54,7 +54,6 @@ typedef Component<3> NComponent;
 typedef Simplex<3> NTetrahedron;
 typedef Face<3, 0> NVertex;
 typedef Face<3, 1> NEdge;
-typedef Face<3, 2> NTriangle;
 
 /**
  * \weakgroup triangulation
@@ -89,7 +88,7 @@ class REGINA_API NBoundaryComponent :
         public alias::FaceOfTriangulation<NBoundaryComponent, 3>,
         public MarkedElement {
     private:
-        std::vector<NTriangle*> triangles_;
+        std::vector<Triangle<3>*> triangles_;
             /**< List of triangles in the component. */
         std::vector<NEdge*> edges_;
             /**< List of edges in the component. */
@@ -255,7 +254,7 @@ inline size_t NBoundaryComponent::countFaces<0>() const {
 }
 
 template <>
-inline NTriangle* NBoundaryComponent::face<2>(size_t index) const {
+inline Triangle<3>* NBoundaryComponent::face<2>(size_t index) const {
     return triangles_[index];
 }
 

@@ -76,8 +76,8 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
     out << "  Vertices: " << countVertices() << '\n';
     out << '\n';
 
-    Dim2Triangle* tri;
-    Dim2Triangle* adjTri;
+    Triangle<2>* tri;
+    Triangle<2>* adjTri;
     unsigned triPos;
     int i, j;
     Perm<3> adjPerm;
@@ -138,7 +138,7 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
 
     // Write the triangle gluings.
     TriangleIterator it;
-    Dim2Triangle* adjTri;
+    Triangle<2>* adjTri;
     int edge;
 
     out << "  <triangles ntriangles=\"" << simplices_.size() << "\">\n";
@@ -170,8 +170,8 @@ void Triangulation<2>::cloneFrom(const Triangulation<2>& X) {
 
     // Make the gluings.
     long triPos, adjPos;
-    Dim2Triangle* tri;
-    Dim2Triangle* adjTri;
+    Triangle<2>* tri;
+    Triangle<2>* adjTri;
     Perm<3> adjPerm;
     int edge;
     triPos = 0;

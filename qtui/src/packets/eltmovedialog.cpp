@@ -88,11 +88,11 @@ namespace {
         return e->triangulation()->twoOneMove(e, end, true, false);
     }
 
-    bool has23(regina::NTriangle* f) {
+    bool has23(regina::Triangle<3>* f) {
         return f->triangulation()->twoThreeMove(f, true, false);
     }
 
-    bool hasOpenBook(regina::NTriangle* f) {
+    bool hasOpenBook(regina::Triangle<3>* f) {
         return f->triangulation()->openBook(f, true, false);
     }
 
@@ -352,7 +352,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (e)
             tri->threeTwoMove(e);
     } else if (use23->isChecked()) {
-        regina::NTriangle* f = box23->selected();
+        regina::Triangle<3>* f = box23->selected();
         if (f)
             tri->twoThreeMove(f);
     } else if (use14->isChecked()) {
@@ -376,7 +376,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (s.first)
             tri->twoOneMove(s.first, s.second);
     } else if (useOpenBook->isChecked()) {
-        regina::NTriangle* f = boxOpenBook->selected();
+        regina::Triangle<3>* f = boxOpenBook->selected();
         if (f)
             tri->openBook(f);
     } else if (useCloseBook->isChecked()) {

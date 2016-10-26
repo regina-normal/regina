@@ -55,7 +55,6 @@ class NBoundaryComponent;
 typedef Simplex<3> NTetrahedron;
 typedef Face<3, 0> NVertex;
 typedef Face<3, 1> NEdge;
-typedef Face<3, 2> NTriangle;
 
 /**
  * \weakgroup triangulation
@@ -98,7 +97,7 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
         public alias::FaceOfTriangulation<Component<3>, 3>,
         public alias::FacesOfTriangulation<Component<3>, 3> {
     private:
-        std::vector<NTriangle*> triangles_;
+        std::vector<Triangle<3>*> triangles_;
             /**< List of triangles in the component. */
         std::vector<NEdge*> edges_;
             /**< List of edges in the component. */
@@ -249,7 +248,7 @@ inline size_t Component<3>::countBoundaryComponents() const {
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
 template <>
-inline const std::vector<NTriangle*>& Component<3>::faces<2>() const {
+inline const std::vector<Triangle<3>*>& Component<3>::faces<2>() const {
     return triangles_;
 }
 
@@ -264,7 +263,7 @@ inline const std::vector<NVertex*>& Component<3>::faces<0>() const {
 }
 
 template <>
-inline NTriangle* Component<3>::face<2>(size_t index) const {
+inline Triangle<3>* Component<3>::face<2>(size_t index) const {
     return triangles_[index];
 }
 

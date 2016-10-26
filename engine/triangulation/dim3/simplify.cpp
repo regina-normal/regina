@@ -209,7 +209,7 @@ bool Triangulation<3>::threeTwoMove(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<3>::twoThreeMove(NTriangle* f, bool check, bool perform) {
+bool Triangulation<3>::twoThreeMove(Triangle<3>* f, bool check, bool perform) {
     if (check) {
         if (f->degree() != 2)
             return false;
@@ -418,7 +418,7 @@ bool Triangulation<3>::fourFourMove(NEdge* e, int newAxis, bool check,
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
     ChangeEventSpan span(this);
-    NTriangle* tri23 = (newAxis == 0 ?
+    Triangle<3>* tri23 = (newAxis == 0 ?
         oldTet[0]->triangle(e->embedding(0).vertices()[2]) :
         oldTet[1]->triangle(e->embedding(1).vertices()[2]));
     int edge32 = e->embedding(3).edge();
@@ -454,7 +454,7 @@ bool Triangulation<3>::twoZeroMove(NEdge* e, bool check, bool perform) {
 
     if (check) {
         NEdge* edge[2];
-        NTriangle* triangle[2][2];
+        Triangle<3>* triangle[2][2];
             // triangle[i][j] will be on tetrahedron i opposite vertex j of the
             // internal edge.
         for (i=0; i<2; i++) {
@@ -548,7 +548,7 @@ bool Triangulation<3>::twoZeroMove(NVertex* v, bool check, bool perform) {
         if (tet[0] == tet[1])
             return false;
 
-        NTriangle* triangle[2];
+        Triangle<3>* triangle[2];
         for (i = 0; i < 2; i++)
             triangle[i] = tet[i]->triangle(vertex[i]);
         if (triangle[0] == triangle[1])
@@ -628,8 +628,8 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
         if (! top)
             return false;
 
-    NTriangle* centreTri = oldTet->triangle(oldVertices[edgeEnd]);
-    NTriangle* bottomTri = oldTet->triangle(oldVertices[otherEdgeEnd]);
+    Triangle<3>* centreTri = oldTet->triangle(oldVertices[edgeEnd]);
+    Triangle<3>* bottomTri = oldTet->triangle(oldVertices[otherEdgeEnd]);
     Perm<4> bottomToTop =
         oldTet->adjacentGluing(oldVertices[edgeEnd]);
     int topGlued[2];
@@ -733,7 +733,7 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
     return true;
 }
 
-bool Triangulation<3>::openBook(NTriangle* f, bool check, bool perform) {
+bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     const NTriangleEmbedding& emb = f->front();
     NTetrahedron* tet = emb.tetrahedron();
     Perm<4> vertices = emb.vertices();
@@ -1070,7 +1070,7 @@ bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
             long* depth = new long[nTriangles + 1];
             std::fill(depth, depth + nTriangles + 1, 0);
 
-            NTriangle *upper, *lower;
+            Triangle<3> *upper, *lower;
             long id1, id2;
 
             for (it = e->begin(); it != e->end(); ++it) {

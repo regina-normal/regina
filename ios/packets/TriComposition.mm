@@ -663,8 +663,8 @@
     unsigned long nTriangles = self.packet->countTriangles();
     
     unsigned long i, j;
-    regina::NTriangle* f1;
-    regina::NTriangle* f2;
+    regina::Triangle<3>* f1;
+    regina::Triangle<3>* f2;
     regina::NPillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
         f1 = self.packet->triangle(i);

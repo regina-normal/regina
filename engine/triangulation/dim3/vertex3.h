@@ -188,7 +188,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * suppose that <tt>buildLink()->triangle(i)</tt> sits within
          * \c tet and is parallel to <tt>tet->triangle(v)</tt>.
          * Then vertices 0,1,2 of the triangle in the link will be
-         * parallel to vertices 0,1,2 of the corresponding NTriangle.
+         * parallel to vertices 0,1,2 of the corresponding Triangle<3>.
          * The permutation <tt>tet->triangleMapping(v)</tt> will map
          * vertices 0,1,2 of the triangle in the link to the
          * corresponding vertices of \c tet (those opposite \c v),

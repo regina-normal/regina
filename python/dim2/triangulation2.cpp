@@ -45,11 +45,11 @@ using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
 namespace {
-    regina::Dim2Triangle* (Triangulation<2>::*newTriangle_void)() =
+    regina::Triangle<2>* (Triangulation<2>::*newTriangle_void)() =
         &Triangulation<2>::newTriangle;
-    regina::Dim2Triangle* (Triangulation<2>::*newTriangle_string)(
+    regina::Triangle<2>* (Triangulation<2>::*newTriangle_string)(
         const std::string&) = &Triangulation<2>::newTriangle;
-    regina::Dim2Triangle* (Triangulation<2>::*triangle_non_const)(
+    regina::Triangle<2>* (Triangulation<2>::*triangle_non_const)(
         size_t) = &Triangulation<2>::triangle;
     size_t (Triangulation<2>::*splitIntoComponents)(
         regina::Packet*, bool) = &Triangulation<2>::splitIntoComponents;

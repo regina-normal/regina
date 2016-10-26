@@ -52,7 +52,7 @@ void Triangulation<3>::calculateSkeleton() {
 #endif
 
     calculateBoundary();
-        // Sets boundaryComponents, NTriangle.boundaryComponent,
+        // Sets boundaryComponents, Triangle<3>.boundaryComponent,
         //     NEdge.boundaryComponent, NVertex.boundaryComponent,
         //     NComponent.boundaryComponents
     calculateVertexLinks();
@@ -103,12 +103,12 @@ void Triangulation<3>::checkPermutations() {
 }
 
 void Triangulation<3>::calculateBoundary() {
-    // Sets boundaryComponents, NTriangle.boundaryComponent,
+    // Sets boundaryComponents, Triangle<3>.boundaryComponent,
     //     NEdge.boundaryComponent, NVertex.boundaryComponent,
     //     NComponent.boundaryComponents
     NBoundaryComponent* label;
 
-    for (NTriangle* triangle : triangles()) {
+    for (Triangle<3>* triangle : triangles()) {
         if (triangle->degree() < 2)
             if (triangle->boundaryComponent_ == 0) {
                 label = new NBoundaryComponent();
@@ -120,9 +120,9 @@ void Triangulation<3>::calculateBoundary() {
     }
 }
 
-void Triangulation<3>::labelBoundaryTriangle(NTriangle* firstTriangle,
+void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
         NBoundaryComponent* label) {
-    std::queue<NTriangle*> triangleQueue;
+    std::queue<Triangle<3>*> triangleQueue;
 
     const NTriangleEmbedding& emb = firstTriangle->front();
     firstTriangle->boundaryComponent_ = label;
@@ -137,8 +137,8 @@ void Triangulation<3>::labelBoundaryTriangle(NTriangle* firstTriangle,
     NVertex* vertex;
     NEdge* edge;
 
-    NTriangle* triangle;
-    NTriangle* nextTriangle;
+    Triangle<3>* triangle;
+    Triangle<3>* nextTriangle;
     int nextFaceNumber;
     Perm<4> nextFacePerm;
     NTetrahedron* nextTet;

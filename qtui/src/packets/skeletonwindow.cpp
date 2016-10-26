@@ -49,7 +49,6 @@
 using regina::NBoundaryComponent;
 using regina::NComponent;
 using regina::NEdge;
-using regina::NTriangle;
 using regina::NTriangleEmbedding;
 using regina::NVertex;
 using regina::Dim2BoundaryComponent;
@@ -385,7 +384,7 @@ int TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant TriangleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NTriangle* item = tri->triangle(index.row());
+        Triangle<3>* item = tri->triangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -395,21 +394,21 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                     prefix = tr("(Bdry) ");
 
                 int type = item->type();
-                if (type == NTriangle::TRIANGLE)
+                if (type == Triangle<3>::TRIANGLE)
                     return prefix + tr("Triangle");
-                if (type == NTriangle::SCARF)
+                if (type == Triangle<3>::SCARF)
                     return prefix + tr("Scarf");
-                if (type == NTriangle::PARACHUTE)
+                if (type == Triangle<3>::PARACHUTE)
                     return prefix + tr("Parachute");
-                if (type == NTriangle::MOBIUS)
+                if (type == Triangle<3>::MOBIUS)
                     return prefix + trUtf8("Möbius band");
-                if (type == NTriangle::CONE)
+                if (type == Triangle<3>::CONE)
                     return prefix + tr("Cone");
-                if (type == NTriangle::HORN)
+                if (type == Triangle<3>::HORN)
                     return prefix + tr("Horn");
-                if (type == NTriangle::DUNCEHAT)
+                if (type == Triangle<3>::DUNCEHAT)
                     return prefix + tr("Dunce hat");
-                if (type == NTriangle::L31)
+                if (type == Triangle<3>::L31)
                     return prefix + tr("L(3,1)");
                 return prefix + tr("UNKNOWN");
             }

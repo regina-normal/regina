@@ -96,7 +96,7 @@ int Dim2GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
 }
 
 QVariant Dim2GluingsModel::data(const QModelIndex& index, int role) const {
-    regina::Dim2Triangle* t = tri_->simplex(index.row());
+    regina::Triangle<2>* t = tri_->simplex(index.row());
     if (role == Qt::DisplayRole) {
         // Triangle name?
         if (index.column() == 0)
@@ -152,7 +152,7 @@ Qt::ItemFlags Dim2GluingsModel::flags(const QModelIndex& /* unused index*/) cons
 
 bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         int /* unused role*/) {
-    regina::Dim2Triangle* t = tri_->simplex(index.row());
+    regina::Triangle<2>* t = tri_->simplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
         if (newName == t->description().c_str())
@@ -227,7 +227,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
     // Does this new partner already have its own partner?
     // If so, better unglue it.
-    regina::Dim2Triangle* adj = tri_->simplex(newAdjTri);
+    regina::Triangle<2>* adj = tri_->simplex(newAdjTri);
     if (adj->adjacentSimplex(newAdjEdge))
         adj->unjoin(newAdjEdge);
 
@@ -270,7 +270,7 @@ void Dim2GluingsModel::showError(const QString& message) {
         tr("This is not a valid gluing."), message);
 }
 
-QString Dim2GluingsModel::destString(int srcEdge, regina::Dim2Triangle* destTri,
+QString Dim2GluingsModel::destString(int srcEdge, regina::Triangle<2>* destTri,
         const regina::Perm<3>& gluing) {
     if (! destTri)
         return "";

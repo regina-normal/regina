@@ -103,7 +103,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
             // Now we know it's either m003 or m004.  We distinguish
             // between them by triangle types, since all of m003's triangles
             // are Mobius bands and all of m004's triangles are horns.
-            if (comp->triangle(0)->type() == NTriangle::MOBIUS)
+            if (comp->triangle(0)->type() == Triangle<3>::MOBIUS)
                 return new NSnapPeaCensusTri(SEC_5, 3);
             else
                 return new NSnapPeaCensusTri(SEC_5, 4);
@@ -120,7 +120,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                     return 0;
                 // Census says it's m001 if no triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
-                    if (comp->triangle(i)->type() == NTriangle::DUNCEHAT)
+                    if (comp->triangle(i)->type() == Triangle<3>::DUNCEHAT)
                         return 0;
                 return new NSnapPeaCensusTri(SEC_5, 1);
             } else if (comp->countVertices() == 2) {
@@ -132,7 +132,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                     return 0;
                 // Census says it's m002 if some triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
-                    if (comp->triangle(i)->type() == NTriangle::DUNCEHAT)
+                    if (comp->triangle(i)->type() == Triangle<3>::DUNCEHAT)
                         return new NSnapPeaCensusTri(SEC_5, 2);
                 return 0;
             }

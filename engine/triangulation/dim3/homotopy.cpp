@@ -57,7 +57,7 @@ const NGroupPresentation& Triangulation<3>::fundamentalGroup() const {
     // Find out which triangle corresponds to which generator.
     long *genIndex = new long[countTriangles()];
     long i = 0;
-    for (NTriangle* f : triangles())
+    for (Triangle<3>* f : triangles())
         if (f->isBoundary() || f->inMaximalForest())
             genIndex[f->index()] = -1;
         else
@@ -65,7 +65,7 @@ const NGroupPresentation& Triangulation<3>::fundamentalGroup() const {
 
     // Run through each edge and put the relations in the matrix.
     NTetrahedron* currTet;
-    NTriangle* triangle;
+    Triangle<3>* triangle;
     int currTetFace;
     long triGenIndex;
     NGroupExpression* rel;

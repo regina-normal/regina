@@ -295,38 +295,38 @@
                 cell.index.text = @"No triangles";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::NTriangle* t = self.packet->triangle(indexPath.row - 1);
+                regina::Triangle<3>* t = self.packet->triangle(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
 
                 cell.data0.text = (t->isBoundary() ? @"Bdry" : @"Internal");
 
                 switch (t->type()) {
-                    case regina::NTriangle::TRIANGLE:
+                    case regina::Triangle<3>::TRIANGLE:
                         cell.data1.text = @"Triangle";
                         break;
-                    case regina::NTriangle::SCARF:
+                    case regina::Triangle<3>::SCARF:
                         cell.data1.text = @"Scarf";
                         break;
-                    case regina::NTriangle::PARACHUTE:
+                    case regina::Triangle<3>::PARACHUTE:
                         cell.data1.text = @"Parachute";
                         break;
-                    case regina::NTriangle::MOBIUS:
+                    case regina::Triangle<3>::MOBIUS:
                         cell.data1.text = @"Möbius band";
                         break;
-                    case regina::NTriangle::CONE:
+                    case regina::Triangle<3>::CONE:
                         cell.data1.text = @"Cone";
                         break;
-                    case regina::NTriangle::HORN:
+                    case regina::Triangle<3>::HORN:
                         cell.data1.text = @"Horn";
                         break;
-                    case regina::NTriangle::DUNCEHAT:
+                    case regina::Triangle<3>::DUNCEHAT:
                         cell.data1.text = @"Dunce hat";
                         break;
-                    case regina::NTriangle::L31:
+                    case regina::Triangle<3>::L31:
                         cell.data1.text = @"L(3,1)";
                         break;
-                    case regina::NTriangle::UNKNOWN_TYPE:
+                    case regina::Triangle<3>::UNKNOWN_TYPE:
                         cell.data1.attributedText = [TextHelper badString:@"Unknown"];
                         break;
                 }

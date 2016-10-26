@@ -542,7 +542,7 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
     out << "triangulation" << std::endl;
 
     // Write face gluings.
-    NTriangle* f;
+    Triangle<3>* f;
     NTetrahedron* tet;
     Perm<4> vert;
     for (unsigned i = 0; i < countTriangles(); ++i) {

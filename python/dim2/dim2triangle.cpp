@@ -39,41 +39,41 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim2Triangle;
+using regina::Triangle;
 
 void addDim2Triangle() {
     class_<regina::Simplex<2>, std::auto_ptr<regina::Simplex<2>>,
             boost::noncopyable>("Simplex2", no_init)
-        .def("description", &Dim2Triangle::description,
+        .def("description", &Triangle<2>::description,
             return_value_policy<return_by_value>())
-        .def("setDescription", &Dim2Triangle::setDescription)
-        .def("index", &Dim2Triangle::index)
-        .def("adjacentTriangle", &Dim2Triangle::adjacentTriangle,
+        .def("setDescription", &Triangle<2>::setDescription)
+        .def("index", &Triangle<2>::index)
+        .def("adjacentTriangle", &Triangle<2>::adjacentTriangle,
             return_value_policy<reference_existing_object>())
-        .def("adjacentSimplex", &Dim2Triangle::adjacentSimplex,
+        .def("adjacentSimplex", &Triangle<2>::adjacentSimplex,
             return_value_policy<reference_existing_object>())
-        .def("adjacentGluing", &Dim2Triangle::adjacentGluing)
-        .def("adjacentEdge", &Dim2Triangle::adjacentEdge)
-        .def("adjacentFacet", &Dim2Triangle::adjacentFacet)
-        .def("hasBoundary", &Dim2Triangle::hasBoundary)
-        .def("join", &Dim2Triangle::join)
-        .def("unjoin", &Dim2Triangle::unjoin,
+        .def("adjacentGluing", &Triangle<2>::adjacentGluing)
+        .def("adjacentEdge", &Triangle<2>::adjacentEdge)
+        .def("adjacentFacet", &Triangle<2>::adjacentFacet)
+        .def("hasBoundary", &Triangle<2>::hasBoundary)
+        .def("join", &Triangle<2>::join)
+        .def("unjoin", &Triangle<2>::unjoin,
             return_value_policy<reference_existing_object>())
-        .def("isolate", &Dim2Triangle::isolate)
-        .def("triangulation", &Dim2Triangle::triangulation,
+        .def("isolate", &Triangle<2>::isolate)
+        .def("triangulation", &Triangle<2>::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("component", &Dim2Triangle::component,
+        .def("component", &Triangle<2>::component,
             return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Dim2Triangle, 2, int>)
-        .def("vertex", &Dim2Triangle::vertex,
+        .def("face", &regina::python::face<Triangle<2>, 2, int>)
+        .def("vertex", &Triangle<2>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("edge", &Dim2Triangle::edge,
+        .def("edge", &Triangle<2>::edge,
             return_value_policy<reference_existing_object>())
-        .def("faceMapping", &regina::python::faceMapping<Dim2Triangle, 2>)
-        .def("vertexMapping", &Dim2Triangle::vertexMapping)
-        .def("edgeMapping", &Dim2Triangle::edgeMapping)
-        .def("orientation", &Dim2Triangle::orientation)
-        .def("facetInMaximalForest", &Dim2Triangle::facetInMaximalForest)
+        .def("faceMapping", &regina::python::faceMapping<Triangle<2>, 2>)
+        .def("vertexMapping", &Triangle<2>::vertexMapping)
+        .def("edgeMapping", &Triangle<2>::edgeMapping)
+        .def("orientation", &Triangle<2>::orientation)
+        .def("facetInMaximalForest", &Triangle<2>::facetInMaximalForest)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

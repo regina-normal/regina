@@ -811,8 +811,8 @@ void NTriCompositionUI::findPillowSpheres() {
     QTreeWidgetItem* details = 0;
 
     unsigned long i, j;
-    regina::NTriangle* f1;
-    regina::NTriangle* f2;
+    regina::Triangle<3>* f1;
+    regina::Triangle<3>* f2;
     regina::NPillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
         f1 = tri->triangle(i);
