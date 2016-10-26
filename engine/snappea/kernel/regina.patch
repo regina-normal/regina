@@ -190,3 +190,15 @@ index a85629c..bf53f81 100644
  
  
  /*
+diff --git a/engine/snappea/kernel/winged_edge.h b/engine/snappea/kernel/winged_edge.h
+index a4fb91b..54c5012 100644
+--- a/engine/snappea/kernel/winged_edge.h
++++ b/engine/snappea/kernel/winged_edge.h
+@@ -49,6 +49,7 @@ enum
+  *  (Indeed even the existence of the Tetrahedron structure is private to
+  *  the kernel, so we are "cheating" a bit even by including the typedef.)
+  */
++struct Tetrahedron; // To distinguish snappea's Tetrahedron from regina's.
+ typedef struct Tetrahedron      TetrahedronSneak;
+ 
+ 

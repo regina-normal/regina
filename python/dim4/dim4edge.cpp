@@ -144,5 +144,6 @@ void addDim4Edge() {
 
     scope().attr("Dim4EdgeEmbedding") = scope().attr("FaceEmbedding4_1");
     scope().attr("Dim4Edge") = scope().attr("Face4_1");
+    scope().attr("Edge4") = scope().attr("Face4_1");
 }
 

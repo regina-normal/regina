@@ -165,9 +165,13 @@ class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
 };
 
 /**
- * A convenience typedef for Face<2, 1>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2Edge, you should use
+ * either the new alias Edge<2>, or the full class name Face<2, 1>.
  */
-typedef Face<2, 1> Dim2Edge;
+REGINA_DEPRECATED typedef Face<2, 1> Dim2Edge;
 
 /*@}*/
 

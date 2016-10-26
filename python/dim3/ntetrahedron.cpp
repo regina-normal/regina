@@ -82,5 +82,7 @@ void addNTetrahedron() {
     ;
 
     scope().attr("NTetrahedron") = scope().attr("Simplex3");
+    scope().attr("Tetrahedron3") = scope().attr("Simplex3");
+    scope().attr("Face3_3") = scope().attr("Simplex3");
 }
 

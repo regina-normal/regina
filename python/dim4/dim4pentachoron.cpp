@@ -83,5 +83,7 @@ void addDim4Pentachoron() {
     ;
 
     scope().attr("Dim4Pentachoron") = scope().attr("Simplex4");
+    scope().attr("Pentachoron4") = scope().attr("Simplex4");
+    scope().attr("Face4_4") = scope().attr("Simplex4");
 }
 

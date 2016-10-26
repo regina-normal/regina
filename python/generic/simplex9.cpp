@@ -34,5 +34,6 @@
 
 void addSimplex9() {
     addSimplex<9>("Simplex9");
+    scope().attr("Face9_9") = scope().attr("Simplex9");
 }
 

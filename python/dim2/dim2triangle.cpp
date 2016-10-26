@@ -79,5 +79,7 @@ void addDim2Triangle() {
     ;
 
     scope().attr("Dim2Triangle") = scope().attr("Simplex2");
+    scope().attr("Triangle2") = scope().attr("Simplex2");
+    scope().attr("Face2_2") = scope().attr("Simplex2");
 }
 

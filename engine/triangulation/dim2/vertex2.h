@@ -133,9 +133,13 @@ class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
 };
 
 /**
- * A convenience typedef for Face<2, 0>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2Vertex, you should use
+ * either the new alias Vertex<2>, or the full class name Face<2, 0>.
  */
-typedef Face<2, 0> Dim2Vertex;
+REGINA_DEPRECATED typedef Face<2, 0> Dim2Vertex;
 
 /*@}*/
 

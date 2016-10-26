@@ -55,28 +55,34 @@ namespace regina {
  */
 
 /**
- * Represents a triangle within a 2-manifold triangulation.
+ * Represents a tetrahedron within a 2-manifold triangulation.
  *
- * This is a specialisation of the generic Simplex class template; see the
- * Simplex documentation for an overview of how this class works.
+ * This class is typically referred to by the aliases Simplex<2> or
+ * Triangle<2> (or, for Python users, \c Simplex2 and \c Triangle2).
  *
- * This 2-dimensional specialisation contains some extra functionality.
- * In particular, each triangle stores additional details on how this
- * triangle and its sub-faces integrate into the overall skeletal structure
- * of the triangulation.
+ * The class template Face<dim, dim> specialises the generic Face class
+ * template in order to work with top-dimensional simplices in a triangulation.
+ * This class Face<2, 2> specialises it further to add extra functionality for
+ * dimension 2.
  *
- * An implementation note: the Triangulation<2> class is responsible for
+ * See the documentation for the partial specialisation Face<dim, dim> for an
+ * overview of how a top-dimensional simplex class works.
+ *
+ * This 2-dimensional specialisation extends the generic top-dimensional
+ * simplex class by storing additional details on how this triangle
+ * and its sub-faces integrate into the overall skeletal structure of the
+ * triangulation.  Note that the Triangulation<2> class is responsible for
  * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
-class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
+class REGINA_API Face<2, 2> : public detail::SimplexBase<2> {
     public:
         /**
          * A dimension-specific alias for adjacentSimplex().
          *
          * See adjacentSimplex() for further information.
          */
-        Simplex* adjacentTriangle(int edge) const;
+        Simplex<2>* adjacentTriangle(int edge) const;
         /**
          * A dimension-specific alias for adjacentFacet().
          *
@@ -91,7 +97,7 @@ class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
          *
          * @param tri the triangulation to which the new triangle belongs.
          */
-        Simplex(Triangulation<2>* tri);
+        Face(Triangulation<2>* tri);
         /**
          * Creates a new triangle with the given description and
          * no edges joined to anything.
@@ -99,7 +105,7 @@ class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
          * @param desc the description to give the new triangle.
          * @param tri the triangulation to which the new triangle belongs.
          */
-        Simplex(const std::string& desc, Triangulation<2>* tri);
+        Face(const std::string& desc, Triangulation<2>* tri);
 
     friend class Triangulation<2>;
     friend class detail::TriangulationBase<2>;
@@ -107,27 +113,31 @@ class REGINA_API Simplex<2> : public detail::SimplexBase<2> {
 };
 
 /**
- * A convenience typedef for Simplex<2>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2Triangle, you should use
+ * the new alias Simplex<2> (or, if you prefer, the full class name Face<2, 2>).
  */
-typedef Simplex<2> Dim2Triangle;
+REGINA_DEPRECATED typedef Simplex<2> Dim2Triangle;
 
 /*@}*/
 
 // Inline functions for Simplex<2>
 
-inline Simplex<2>* Simplex<2>::adjacentTriangle(int edge) const {
+inline Simplex<2>* Face<2, 2>::adjacentTriangle(int edge) const {
     return adjacentSimplex(edge);
 }
 
-inline int Simplex<2>::adjacentEdge(int edge) const {
+inline int Face<2, 2>::adjacentEdge(int edge) const {
     return adjacentFacet(edge);
 }
 
-inline Simplex<2>::Simplex(Triangulation<2>* tri) :
+inline Face<2, 2>::Face(Triangulation<2>* tri) :
         detail::SimplexBase<2>(tri) {
 }
 
-inline Simplex<2>::Simplex(const std::string& desc,
+inline Face<2, 2>::Face(const std::string& desc,
         Triangulation<2>* tri) : detail::SimplexBase<2>(desc, tri) {
 }
 

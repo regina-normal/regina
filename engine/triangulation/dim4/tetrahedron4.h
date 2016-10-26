@@ -165,9 +165,13 @@ class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
 };
 
 /**
- * A convenience typedef for Face<4, 3>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4Tetrahedron, you should use
+ * either the new alias Tetrahedron<4>, or the full class name Face<4, 3>.
  */
-typedef Face<4, 3> Dim4Tetrahedron;
+REGINA_DEPRECATED typedef Face<4, 3> Dim4Tetrahedron;
 
 /*@}*/
 

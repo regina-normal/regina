@@ -124,5 +124,6 @@ void addDim4Triangle() {
 
     scope().attr("Dim4TriangleEmbedding") = scope().attr("FaceEmbedding4_2");
     scope().attr("Dim4Triangle") = scope().attr("Face4_2");
+    scope().attr("Triangle4") = scope().attr("Face4_2");
 }
 

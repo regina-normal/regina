@@ -48,8 +48,9 @@ class QToolBar;
 namespace regina {
     class Packet;
     template <int> class Perm;
-    template <int> class Simplex;
     template <int> class Triangulation;
+    template <int, int> class Face;
+    template <int dim> using Simplex = Face<dim, dim>;
 };
 
 class Dim2GluingsModel : public QAbstractItemModel {

@@ -59,26 +59,32 @@ namespace regina {
  * Represents a pentachoron (a 4-dimensional simplex) within a
  * 4-manifold triangulation.
  *
- * This is a specialisation of the generic Simplex class template; see the
- * generic Simplex documentation for an overview of how this class works.
+ * This class is typically referred to by the aliases Simplex<4> or
+ * Pentachoron<4> (or, for Python users, \c Simplex4 and \c Pentachoron4).
  *
- * This 4-dimensional specialisation contains some extra functionality.
- * In particular, each pentachoron stores additional details on how this
- * pentachoron and its sub-faces integrate into the overall skeletal
- * structure of the triangulation.
+ * The class template Face<dim, dim> specialises the generic Face class
+ * template in order to work with top-dimensional simplices in a triangulation.
+ * This class Face<4, 4> specialises it further to add extra functionality for
+ * dimension 4.
  *
- * An implementation note: the Triangulation<4> class is responsible for
+ * See the documentation for the partial specialisation Face<dim, dim> for an
+ * overview of how a top-dimensional simplex class works.
+ *
+ * This 4-dimensional specialisation extends the generic top-dimensional
+ * simplex class by storing additional details on how this pentachoron
+ * and its sub-faces integrate into the overall skeletal structure of the
+ * triangulation.  Note that the Triangulation<4> class is responsible for
  * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
-class REGINA_API Simplex<4> : public detail::SimplexBase<4> {
+class REGINA_API Face<4, 4> : public detail::SimplexBase<4> {
     public:
         /**
          * A dimension-specific alias for adjacentSimplex().
          *
          * See adjacentSimplex() for further information.
          */
-        Simplex* adjacentPentachoron(int facet) const;
+        Simplex<4>* adjacentPentachoron(int facet) const;
 
     private:
         /**
@@ -87,7 +93,7 @@ class REGINA_API Simplex<4> : public detail::SimplexBase<4> {
          *
          * @param tri the triangulation to which the new pentachoron belongs.
          */
-        Simplex(Triangulation<4>* tri);
+        Face(Triangulation<4>* tri);
         /**
          * Creates a new pentachoron with the given description and
          * no facets joined to anything.
@@ -95,7 +101,7 @@ class REGINA_API Simplex<4> : public detail::SimplexBase<4> {
          * @param desc the description to give the new pentachoron.
          * @param tri the triangulation to which the new pentachoron belongs.
          */
-        Simplex(const std::string& desc, Triangulation<4>* tri);
+        Face(const std::string& desc, Triangulation<4>* tri);
 
     friend class Triangulation<4>;
     friend class detail::TriangulationBase<4>;
@@ -103,23 +109,27 @@ class REGINA_API Simplex<4> : public detail::SimplexBase<4> {
 };
 
 /**
- * A convenience typedef for Simplex<4>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4Pentachoron, you should use
+ * the new alias Simplex<4> (or, if you prefer, the full class name Face<4, 4>).
  */
-typedef Simplex<4> Dim4Pentachoron;
+REGINA_DEPRECATED typedef Simplex<4> Dim4Pentachoron;
 
 /*@}*/
 
 // Inline functions for Dim4Pentachoron
 
-inline Dim4Pentachoron* Dim4Pentachoron::adjacentPentachoron(int facet) const {
+inline Simplex<4>* Face<4, 4>::adjacentPentachoron(int facet) const {
     return adjacentSimplex(facet);
 }
 
-inline Simplex<4>::Simplex(Triangulation<4>* tri) :
+inline Face<4, 4>::Face(Triangulation<4>* tri) :
         detail::SimplexBase<4>(tri) {
 }
 
-inline Simplex<4>::Simplex(const std::string& desc, Triangulation<4>* tri) :
+inline Face<4, 4>::Face(const std::string& desc, Triangulation<4>* tri) :
         detail::SimplexBase<4>(desc, tri) {
 }
 

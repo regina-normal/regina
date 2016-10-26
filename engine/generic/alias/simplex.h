@@ -44,7 +44,8 @@
 
 namespace regina {
 
-template <int> class Simplex;
+template <int, int> class Face;
+template <int dim> using Simplex = Face<dim, dim>;
 
 /**
  * Contains helper classes that provide dimension-specific aliases for

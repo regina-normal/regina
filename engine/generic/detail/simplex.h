@@ -51,9 +51,9 @@
 namespace regina {
 
 template <int> class Component;
-template <int> class Simplex;
 template <int> class Triangulation;
 template <int, int> class Face;
+template <int dim> using Simplex = Face<dim, dim>;
 
 namespace detail {
 

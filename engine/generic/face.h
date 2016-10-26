@@ -109,7 +109,25 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
 
 /**
  * Represents a <i>subdim</i>-face in the skeleton of a <i>dim</i>-dimensional
- * triangulation.
+ * triangulation.  There are two substantially different cases:
+ *
+ * - The case \a subdim &lt; \a dim represents a lower-dimensional face
+ *   in a triangulation.  This is implemented by the generic class
+ *   template (as documented here), and is specialised for Regina's
+ *   \ref stddim "standard dimensions" (as discussed below).
+ *
+ * - The case \a subdim = \a dim represents a top-dimensional simplex in
+ *   a triangulation.  This class has a very different interface, and is
+ *   implemented by the partial specialisation Face<dim, dim> (and again
+ *   specialised further for \ref stddim "standard dimensions").   This
+ *   case is typically referred to using the type alias Simplex<dim>, to
+ *   make the distinction clear.  See the documentation for the specialisation
+ *   Face<dim, dim> for details on the interface that it provides.
+ *
+ * For small-dimensional faces, this class is typically described using
+ * dimension-specific type aliases: Vertex<dim>, Edge<dim>, Triangle<dim>,
+ * Tetrahedron<dim> and Pentachoron<dim> refer to the cases
+ * \a subdim = 0, 1, 2, 3 and 4 respectively.
  *
  * A given <i>subdim</i>-face \a F of the triangulation may appear many
  * times within the various top-dimensional simplices of the underlying
@@ -132,19 +150,15 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * In order to use these specialised classes, you will need to include the
  * corresponding triangulation headers (e.g., triangulation/dim2.h for
  * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
- * For convenience, there are typedefs for these specialised classes
- * (e.g., Dim2Edge, NVertex, and so on).
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending dimensions \a dim and \a subdim as
- * suffices (e.g., Face2_1 and Face3_0 for the two examples above).  The 
- * typedefs mentioned above for standard dimensions
- * (e.g., Dim2Edge and NVertex) are also available.
+ * suffices (e.g., Face2_1 and Face3_0 for the two examples above).
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class represents.
- * This must be between 0 and <i>dim</i>-1 inclusive.
+ * This must be between 0 and <i>dim</i> inclusive.
  */
 template <int dim, int subdim>
 class Face :
@@ -153,6 +167,9 @@ class Face :
     static_assert(! standardDim(dim),
         "The generic implementation of Face<dim, subdim> "
         "should not be used for Regina's standard dimensions.");
+    static_assert(subdim < dim,
+        "The generic implementation of Face<dim, subdim> "
+        "should only be used for the case subdim < dim.");
 
     public:
         /**
@@ -187,13 +204,100 @@ class Face :
     friend class detail::TriangulationBase<dim>;
 };
 
+/**
+ * Refers to a vertex of a <i>dim</i>-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a vertex of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 0>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Vertex8).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ */
+template <int dim>
+using Vertex = Face<dim, 0>;
+
+/**
+ * Refers to an edge of a <i>dim</i>-dimensional triangulation.
+ *
+ * This is the preferred way to refer to an edge of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 1>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Edge5).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ */
+template <int dim>
+using Edge = Face<dim, 1>;
+
+/**
+ * Refers to a triangular face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 2, where it refers to
+ * a top-dimensional simplex of a 2-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 2-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 2>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Triangle4).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ */
+template <int dim>
+using Triangle = Face<dim, 2>;
+
+/**
+ * Refers to a tetrahedral face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 3, where it refers to
+ * a top-dimensional simplex of a 3-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 3-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 3>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c Tetrahedron7).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 3 and 15 inclusive.
+ */
+template <int dim>
+using Tetrahedron = Face<dim, 3>;
+
+/**
+ * Refers to a pentachoron face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 4, where it refers to
+ * a top-dimensional simplex of a 4-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 4-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 4>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g.,
+ * \c Pentachoron9).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 4 and 15 inclusive.
+ */
+template <int dim>
+using Pentachoron = Face<dim, 4>;
+
 // Note that some of our face-related classes are specialised elsewhere.
 // Do not explicitly drag in the specialised headers for now.
+template <int dim> class Face<dim, dim>;
+template <> class Face<2, 2>;
 template <> class Face<2, 1>;
 template <> class Face<2, 0>;
+template <> class Face<3, 3>;
 template <> class Face<3, 2>;
 template <> class Face<3, 1>;
 template <> class Face<3, 0>;
+template <> class Face<4, 4>;
 template <> class Face<4, 3>;
 template <> class Face<4, 2>;
 template <> class Face<4, 1>;

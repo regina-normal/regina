@@ -134,9 +134,13 @@ class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
 };
 
 /**
- * A convenience typedef for Face<3, 1>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NEdge, you should use
+ * either the new alias Edge<3>, or the full class name Face<3, 1>.
  */
-typedef Face<3, 1> NEdge;
+REGINA_DEPRECATED typedef Face<3, 1> NEdge;
 
 /*@}*/
 

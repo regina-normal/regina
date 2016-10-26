@@ -57,19 +57,25 @@ namespace regina {
 /**
  * Represents a tetrahedron within a 3-manifold triangulation.
  *
- * This is a specialisation of the generic Simplex class template; see the
- * generic Simplex documentation for an overview of how this class works.
+ * This class is typically referred to by the aliases Simplex<3> or
+ * Tetrahedron<3> (or, for Python users, \c Simplex3 and \c Tetrahedron3).
  *
- * This 3-dimensional specialisation contains some extra functionality.
- * In particular, each tetrahedron stores additional details on how this
- * tetrahedron and its sub-faces integrate into the overall skeletal
- * structure of the triangulation.
+ * The class template Face<dim, dim> specialises the generic Face class
+ * template in order to work with top-dimensional simplices in a triangulation.
+ * This class Face<3, 3> specialises it further to add extra functionality for
+ * dimension 3.
  *
- * An implementation note: the Triangulation<3> class is responsible for
+ * See the documentation for the partial specialisation Face<dim, dim> for an
+ * overview of how a top-dimensional simplex class works.
+ *
+ * This 3-dimensional specialisation extends the generic top-dimensional
+ * simplex class by storing additional details on how this tetrahedron
+ * and its sub-faces integrate into the overall skeletal structure of the
+ * triangulation.  Note that the Triangulation<3> class is responsible for
  * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
-class REGINA_API Simplex<3> : public detail::SimplexBase<3> {
+class REGINA_API Face<3, 3> : public detail::SimplexBase<3> {
     private:
         int tmpOrientation_[4];
             /**< Temporary array used to represent orientations of triangles
@@ -84,7 +90,7 @@ class REGINA_API Simplex<3> : public detail::SimplexBase<3> {
          *
          * See adjacentSimplex() for further information.
          */
-        Simplex* adjacentTetrahedron(int face) const;
+        Simplex<3>* adjacentTetrahedron(int face) const;
         /**
          * A dimension-specific alias for adjacentFacet().
          *
@@ -99,7 +105,7 @@ class REGINA_API Simplex<3> : public detail::SimplexBase<3> {
          *
          * @param tri the triangulation to which the new tetrahedron belongs.
          */
-        Simplex(Triangulation<3>* tri);
+        Face(Triangulation<3>* tri);
         /**
          * Creates a new tetrahedron with the given description and
          * no edges joined to anything.
@@ -107,7 +113,7 @@ class REGINA_API Simplex<3> : public detail::SimplexBase<3> {
          * @param desc the description to give the new tetrahedron.
          * @param tri the triangulation to which the new tetrahedron belongs.
          */
-        Simplex(const std::string& desc, Triangulation<3>* tri);
+        Face(const std::string& desc, Triangulation<3>* tri);
 
     friend class Triangulation<3>;
     friend class detail::TriangulationBase<3>;
@@ -115,26 +121,30 @@ class REGINA_API Simplex<3> : public detail::SimplexBase<3> {
 };
 
 /**
- * A convenience typedef for Simplex<3>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NTetrahedron, you should use
+ * the new alias Simplex<3> (or, if you prefer, the full class name Face<3, 3>).
  */
-typedef Simplex<3> NTetrahedron;
+REGINA_DEPRECATED typedef Simplex<3> NTetrahedron;
 
 /*@}*/
 
 // Inline functions for Simplex<3>
 
-inline Simplex<3>* Simplex<3>::adjacentTetrahedron(int face) const {
+inline Simplex<3>* Face<3, 3>::adjacentTetrahedron(int face) const {
     return adjacentSimplex(face);
 }
 
-inline int Simplex<3>::adjacentFace(int face) const {
+inline int Face<3, 3>::adjacentFace(int face) const {
     return adjacentFacet(face);
 }
 
-inline Simplex<3>::Simplex(Triangulation<3>* tri) : detail::SimplexBase<3>(tri) {
+inline Face<3, 3>::Face(Triangulation<3>* tri) : detail::SimplexBase<3>(tri) {
 }
 
-inline Simplex<3>::Simplex(const std::string& desc, Triangulation<3>* tri) :
+inline Face<3, 3>::Face(const std::string& desc, Triangulation<3>* tri) :
         detail::SimplexBase<3>(desc, tri) {
 }
 

@@ -62,11 +62,7 @@ namespace regina {
 class Dim2BoundaryComponent;
 class XMLPacketReader;
 
-template <int> class Component;
 template <int> class Isomorphism;
-template <int> class SimplexBase;
-template <int> class Simplex;
-template <int, int> class Face;
 typedef Isomorphism<2> Dim2Isomorphism;
 typedef Simplex<2> Dim2Triangle;
 typedef Face<2, 0> Dim2Vertex;
@@ -415,7 +411,7 @@ class REGINA_API Triangulation<2> :
          */
         void calculateBoundary();
 
-    friend class regina::Simplex<2>;
+    friend class regina::Face<2, 2>;
     friend class regina::detail::SimplexBase<2>;
     friend class regina::detail::TriangulationBase<2>;
 };
@@ -427,7 +423,7 @@ class REGINA_API Triangulation<2> :
  * \deprecated Instead of the old typedef Dim2Triangulation, you should use
  * the templated class name Triangulation<2>.
  */
-typedef Triangulation<2> Dim2Triangulation;
+REGINA_DEPRECATED typedef Triangulation<2> Dim2Triangulation;
 
 /*@}*/
 

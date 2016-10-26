@@ -137,5 +137,6 @@ void addNTriangle() {
 
     scope().attr("NTriangleEmbedding") = scope().attr("FaceEmbedding3_2");
     scope().attr("NTriangle") = scope().attr("Face3_2");
+    scope().attr("Triangle3") = scope().attr("Face3_2");
 }
 

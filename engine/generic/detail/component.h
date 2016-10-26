@@ -48,7 +48,6 @@
 
 namespace regina {
 
-template <int> class Simplex;
 template <int> class Triangulation;
 
 namespace detail {

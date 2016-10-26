@@ -49,9 +49,10 @@
 
 namespace regina {
 
-template <int dim> class Isomorphism;
-template <int dim> class Simplex;
-template <int dim> class Triangulation;
+template <int> class Isomorphism;
+template <int> class Triangulation;
+template <int, int> class Face;
+template <int dim> using Simplex = Face<dim, dim>;
 
 namespace detail {
 

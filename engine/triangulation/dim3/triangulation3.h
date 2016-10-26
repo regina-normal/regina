@@ -75,12 +75,8 @@ class NormalSurface;
 class ProgressTrackerOpen;
 class XMLPacketReader;
 
-template <int> class Component;
 template <int> class Isomorphism;
-template <int> class SimplexBase;
-template <int> class Simplex;
 template <int> class XMLTriangulationReader;
-template <int, int> class Face;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 typedef Face<3, 0> NVertex;
@@ -3035,7 +3031,7 @@ class REGINA_API Triangulation<3> :
          */
         static Triangulation<3>* readSnapPea(std::istream& in);
 
-    friend class regina::Simplex<3>;
+    friend class regina::Face<3, 3>;
     friend class regina::detail::SimplexBase<3>;
     friend class regina::detail::TriangulationBase<3>;
     friend class regina::XMLTriangulationReader<3>;
@@ -3048,7 +3044,7 @@ class REGINA_API Triangulation<3> :
  * \deprecated Instead of the old typedef NTriangulation, you should use
  * the templated class name Triangulation<3>.
  */
-typedef Triangulation<3> NTriangulation;
+REGINA_DEPRECATED typedef Triangulation<3> NTriangulation;
 
 /*@}*/
 

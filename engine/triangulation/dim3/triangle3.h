@@ -255,9 +255,13 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
 };
 
 /**
- * A convenience typedef for Face<3, 2>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NTriangle, you should use
+ * either the new alias Triangle<3>, or the full class name Face<3, 2>.
  */
-typedef Face<3, 2> NTriangle;
+REGINA_DEPRECATED typedef Face<3, 2> NTriangle;
 
 /*@}*/
 

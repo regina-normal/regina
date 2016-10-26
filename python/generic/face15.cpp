@@ -48,5 +48,11 @@ void addFace15() {
     addFace<15, 12>("Face15_12", "FaceEmbedding15_12");
     addFace<15, 13>("Face15_13", "FaceEmbedding15_13");
     addFace<15, 14>("Face15_14", "FaceEmbedding15_14");
+
+    scope().attr("Vertex15") = scope().attr("Face15_0");
+    scope().attr("Edge15") = scope().attr("Face15_1");
+    scope().attr("Triangle15") = scope().attr("Face15_2");
+    scope().attr("Tetrahedron15") = scope().attr("Face15_3");
+    scope().attr("Pentachoron15") = scope().attr("Face15_4");
 }
 

@@ -48,8 +48,9 @@ namespace regina {
 class Matrix2;
 
 template <int> class Isomorphism;
-template <int> class Simplex;
 template <int> class Triangulation;
+template <int, int> class Face;
+template <int dim> using Simplex = Face<dim, dim>;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
 

@@ -984,7 +984,7 @@ class REGINA_API Triangulation<4> :
          */
         void calculateEdgeLinks();
 
-    friend class regina::Simplex<4>;
+    friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
     friend class regina::XMLTriangulationReader<4>;
@@ -997,7 +997,7 @@ class REGINA_API Triangulation<4> :
  * \deprecated Instead of the old typedef Dim4Triangulation, you should use
  * the templated class name Triangulation<4>.
  */
-typedef Triangulation<4> Dim4Triangulation;
+REGINA_DEPRECATED typedef Triangulation<4> Dim4Triangulation;
 
 /*@}*/
 

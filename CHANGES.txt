@@ -25,15 +25,23 @@ Version 5.1  [ (under development) ]
             + NSurfaceSubset is removed entirely (see below).
             + For "standard" dimensions 2, 3 and 4:
               - All vertex/edge/face/etc. headers and all component and
-                boundary component headers are replaced by
-                triangulation/dim{2,3,4}.h.  So, for instance,
+                boundary component headers are included automatically by
+                the new headers triangulation/dim{2,3,4}.h.  So, for instance,
                 triangulation/nvertex.h becomes triangulation/dim3.h, and
                 dim2/dim2component.h becomes triangulation/dim2.h.
+                Note that higher dimensions still use the generic header
+                generic/triangulation.h.
               - Triangulation typedefs Dim2Triangulation, NTriangulation and
                 Dim4Triangulation are now deprecated, in favour of the
                 templated class names Triangulation<2,3,4>.
-              - Higher dimensions still use the generic header
-                generic/triangulation.h.
+              - Face typedefs (e.g., Dim2Vertex, NTriangle, Dim4Edge) and
+                simplex typedefs (Dim2Triangle, NTetrahedron, Dim4Pentachoron)
+                are now deprecated, in favour of the new templated aliases
+                Vertex<dim>, Edge<dim>, etc.  So, for instance, face classes
+                Dim2Vertex and NTriangle become Vertex<2> and Triangle<3>,
+                and simplex classes NTetrahedron and Dim4Pentachoron become
+                Tetrahedron<3> and Pentachoron<4>.  For top-dimensional simplex
+                classes, the type aliases Simplex<dim> are also available.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into
@@ -45,6 +53,11 @@ Version 5.1  [ (under development) ]
     ENGINE:
         Class AbelianGroup, MarkedAbelianGroup, HomMarkedAbelianGroup:
             - Now works with type Integer, not LargeInteger.
+        Class Face<dim, subdim>:
+            - The template parameters are expanded to include the case
+              Face<dim, dim>, which now implements the old class Simplex<dim>.
+              Simplex<dim> remains as a templated type alias, and is still
+              the preferred way to refer to this class.
         Class HomologicalData:
             - Now works with type Integer instead of LargeInteger for all
               member functions except for torsionSigmaVector().
@@ -95,6 +108,10 @@ Version 5.1  [ (under development) ]
         Class SafePtr:
             - New default constructor, bool conversion and routine reset().
             - Disabled the default copy assignment operator.
+        Class Simplex<dim>:
+            - This is now implemented as the specialisation Face<dim, dim>.
+              The preferred way to refer to this class is still Simplex<dim>,
+              which is now a templated type alias.
         Class SurfaceSubset:
             - Removed entirely.  This class has been unused for several years,
               and was just a trivial wrapper for iterating through a surface

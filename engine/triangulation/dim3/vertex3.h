@@ -347,9 +347,13 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
 };
 
 /**
- * A convenience typedef for Face<3, 0>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NVertex, you should use
+ * either the new alias Vertex<3>, or the full class name Face<3, 0>.
  */
-typedef Face<3, 0> NVertex;
+REGINA_DEPRECATED typedef Face<3, 0> NVertex;
 
 /*@}*/
 

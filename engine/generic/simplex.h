@@ -54,6 +54,11 @@ namespace regina {
  * For example, for 3-manifolds this class represents a tetrahedron, and for
  * 2-manifolds this class represents a triangle.
  *
+ * Although this is a specialisation of the Face class template, this
+ * class is typically referred to using the alias Simplex<dim>.
+ * For Regina's \ref stddim "standard dimensions", you can also use the
+ * aliases Triangle<2>, Tetrahedron<3> and Pentachoron<4>.
+ *
  * Top-dimensional simplices cannot exist in isolation (without a
  * triangulation object), and they cannot be created or destroyed directly.
  * Instead, you create and destroy them via the underlying triangulation,
@@ -73,21 +78,17 @@ namespace regina {
  * and offers significant extra functionality.  In order to use these
  * specialised classes, you will need to include the corresponding
  * triangulation headers (e.g., triangulation/dim2.h for \a dim = 2, or
- * triangulation/dim3.h for \a dim = 3).  For convenience, there
- * are typedefs available for these specialised classes (such as
- * Dim2Triangle and NTetrahedron respectively).
+ * triangulation/dim3.h for \a dim = 3).
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Simplex2 and Simplex3 for dimensions 2 and 3).
- * The typedefs mentioned above for standard dimensions
- * (e.g., Dim2Triangle and NTetrahedron) are also available.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
  */
 template <int dim>
-class Simplex : public detail::SimplexBase<dim> {
+class Face<dim, dim> : public detail::SimplexBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Simplex<dim> "
         "should not be used for Regina's standard dimensions.");
@@ -99,7 +100,7 @@ class Simplex : public detail::SimplexBase<dim> {
          *
          * @param tri the triangulation to which the new simplex belongs.
          */
-        Simplex(Triangulation<dim>* tri);
+        Face(Triangulation<dim>* tri);
         /**
          * Creates a new simplex with the given description and no facets
          * joined to anything.
@@ -107,29 +108,42 @@ class Simplex : public detail::SimplexBase<dim> {
          * @param desc the description to give the new simplex.
          * @param tri the triangulation to which the new simplex belongs.
          */
-        Simplex(const std::string& desc, Triangulation<dim>* tri);
+        Face(const std::string& desc, Triangulation<dim>* tri);
 
     friend class Triangulation<dim>;
     friend class detail::TriangulationBase<dim>;
 };
 
+/**
+ * Refers to a top-dimensional simplex in a <i>dim</i>-dimensional
+ * triangulation.
+ *
+ * This is the preferred way to refer to a top-dimensional simplex (as
+ * opposed to the more clumsy notation Face<dim, dim>).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ */
+template <int dim>
+using Simplex = Face<dim, dim>;
+
 // Note that some of our simplex classes are specialised elsewhere.
 // Do not explicitly drag in the specialised headers for now.
-template <> class Simplex<2>;
-template <> class Simplex<3>;
-template <> class Simplex<4>;
+template <> class Face<2, 2>;
+template <> class Face<3, 3>;
+template <> class Face<4, 4>;
 
 /*@}*/
 
 // Inline functions for Simplex
 
 template <int dim>
-inline Simplex<dim>::Simplex(Triangulation<dim>* tri) :
+inline Face<dim, dim>::Face(Triangulation<dim>* tri) :
         detail::SimplexBase<dim>(tri) {
 }
 
 template <int dim>
-inline Simplex<dim>::Simplex(const std::string& desc,
+inline Face<dim, dim>::Face(const std::string& desc,
         Triangulation<dim>* tri) :
         detail::SimplexBase<dim>(desc, tri) {
 }

@@ -34,5 +34,6 @@
 
 void addSimplex10() {
     addSimplex<10>("Simplex10");
+    scope().attr("Face10_10") = scope().attr("Simplex10");
 }
 

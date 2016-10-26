@@ -39,5 +39,11 @@ void addFace6() {
     addFace<6, 3>("Face6_3", "FaceEmbedding6_3");
     addFace<6, 4>("Face6_4", "FaceEmbedding6_4");
     addFace<6, 5>("Face6_5", "FaceEmbedding6_5");
+
+    scope().attr("Vertex6") = scope().attr("Face6_0");
+    scope().attr("Edge6") = scope().attr("Face6_1");
+    scope().attr("Triangle6") = scope().attr("Face6_2");
+    scope().attr("Tetrahedron6") = scope().attr("Face6_3");
+    scope().attr("Pentachoron6") = scope().attr("Face6_4");
 }
 

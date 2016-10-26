@@ -99,5 +99,6 @@ void addDim2Vertex() {
 
     scope().attr("Dim2VertexEmbedding") = scope().attr("FaceEmbedding2_0");
     scope().attr("Dim2Vertex") = scope().attr("Face2_0");
+    scope().attr("Vertex2") = scope().attr("Face2_0");
 }
 

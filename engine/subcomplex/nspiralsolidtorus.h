@@ -45,8 +45,6 @@
 
 namespace regina {
 
-template <int> class Simplex;
-template <int> class Triangulation;
 typedef Simplex<3> NTetrahedron;
 
 /**

@@ -49,7 +49,8 @@
 #include <vector>
 
 namespace regina {
-    template <int> class Simplex;
+    template <int, int> class Face;
+    template <int dim> using Simplex = Face<dim, dim>;
     template <int> class Triangulation;
 };
 

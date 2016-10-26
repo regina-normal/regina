@@ -108,5 +108,6 @@ void addDim2Edge() {
 
     scope().attr("Dim2EdgeEmbedding") = scope().attr("FaceEmbedding2_1");
     scope().attr("Dim2Edge") = scope().attr("Face2_1");
+    scope().attr("Edge2") = scope().attr("Face2_1");
 }
 
