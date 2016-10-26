@@ -30,140 +30,140 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ntriangulationui.h
- *  \brief Provides an interface for viewing 3-manifold triangulations.
+/*! \file tri3composition.h
+ *  \brief Provides a combinatorial composition viewer for triangulations.
  */
 
-#ifndef __NTRIANGULATIONUI_H
-#define __NTRIANGULATIONUI_H
+#ifndef __TRI3COMPOSITION_H
+#define __TRI3COMPOSITION_H
 
 #include "packet/packetlistener.h"
+
 #include "../packettabui.h"
 
-class ClickableLabel;
-class NTriAlgebraUI;
-class NTriGluingsUI;
-class NTriSkeletonUI;
-class NTriSurfacesUI;
-class NTriSnapPeaUI;
+#include <memory>
+
+class PacketChooser;
 class PacketEditIface;
-class QLabel;
-class QToolBar;
+class QMenu;
+class QPushButton;
+class QTreeWidget;
+class QTreeWidgetItem;
 
 namespace regina {
+    class Matrix2;
+    class Packet;
+    class NSatRegion;
+    class NStandardTriangulation;
+    template <int> class Isomorphism;
+    template <int> class Perm;
     template <int> class Triangulation;
 };
 
 /**
- * A packet interface for viewing 3-manifold triangulations.
+ * A triangulation page for viewing the combinatorial composition.
  */
-class NTriangulationUI : public PacketTabbedUI {
-    Q_OBJECT
-
-    private:
-        /**
-         * Internal components
-         */
-        NTriGluingsUI* gluings;
-        NTriSkeletonUI* skeleton;
-        NTriAlgebraUI* algebra;
-        NTriSurfacesUI* surfaces;
-        NTriSnapPeaUI* snapPea;
-
-        PacketEditIface* editIface;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        NTriangulationUI(regina::Triangulation<3>* packet,
-            PacketPane* newEnclosingPane);
-        ~NTriangulationUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-};
-
-/**
- * A header for the 3-manifold triangulation viewer.
- */
-class NTriHeaderUI : public QObject, public PacketViewerTab,
+class NTriCompositionUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
     Q_OBJECT
 
     private:
         /**
+         * Describes the type of isomorphism relationship that has been
+         * discovered, if any.
+         */
+        enum IsomorphismType
+            { NoRelationship, IsIsomorphic, IsSubcomplex, IsSupercomplex };
+
+        /**
          * Packet details
          */
         regina::Triangulation<3>* tri;
+        regina::Triangulation<3>* comparingTri;
+        std::unique_ptr<regina::Isomorphism<3>> isomorphism;
+        IsomorphismType isoType;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
-        ClickableLabel* locked;
-        QToolBar* bar;
+        PacketChooser* isoTest;
+        QLabel* isoResult;
+        QPushButton* isoView;
+        QTreeWidget* details;
+        QTreeWidgetItem* components;
+        QTreeWidgetItem* lastComponent;
+        PacketEditIface* editIface;
 
     public:
         /**
          * Constructor.
          */
-        NTriHeaderUI(regina::Triangulation<3>* packet,
+        NTriCompositionUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
-
-        /**
-         * Component queries.
-         */
-        QToolBar* getToolBar();
+        ~NTriCompositionUI();
 
         /**
          * PacketViewerTab overrides.
          */
         regina::Packet* getPacket();
         QWidget* getInterface();
+        PacketEditIface* getEditIface();
         void refresh();
 
         /**
          * PacketListener overrides.
          */
-        void childWasAdded(regina::Packet* packet, regina::Packet* child);
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor);
-
-        /**
-         * Allow other UIs to access the summary information.
-         */
-        static QString summaryInfo(regina::Triangulation<3>* tri);
+        void packetToBeDestroyed(regina::Packet* packet);
 
     public slots:
         /**
-         * Explain to the user what the padlock means.
+         * Update the isomorphism test panel.
          */
-        void lockedExplanation();
-
-    protected:
-        /**
-         * Update the state of the padlock.
-         */
-        void refreshLock();
+        void updateIsoPanel();
 
         /**
-         * Allow GUI updates from a non-GUI thread.
+         * View the isomorphism details.
          */
-        void customEvent(QEvent* event);
+        void viewIsomorphism();
+
+    private:
+        /**
+         * Add new items to the list view.
+         */
+        QTreeWidgetItem* addTopLevelSection(const QString& text);
+        QTreeWidgetItem* addComponentSection(const QString& text);
+
+        /**
+         * Fill the list view with information.
+         */
+        void findAugTriSolidTori();
+        void findBlockedTriangulations();
+        void findL31Pillows();
+        void findLayeredChainPairs();
+        void findLayeredLensSpaces();
+        void findLayeredLoops();
+        void findLayeredSolidTori();
+        void findPillowSpheres();
+        void findPlugTriSolidTori();
+        void findSnappedBalls();
+        void findSnappedSpheres();
+        void findSpiralSolidTori();
+        void describeSatRegion(const regina::NSatRegion& region,
+            QTreeWidgetItem* parent);
+
+        /**
+         * Return string representations of various items.
+         */
+        static QString edgeString(unsigned long tetIndex, int edge1,
+            int edge2);
+        static QString edgeString(unsigned long tetIndex,
+            const regina::Perm<4>& roles, int startPreimage, int endPreimage);
+        static QString matrixString(const regina::Matrix2& matrix);
 };
 
-inline PacketEditIface* NTriangulationUI::getEditIface() {
+inline PacketEditIface* NTriCompositionUI::getEditIface() {
     return editIface;
-}
-
-inline QToolBar* NTriHeaderUI::getToolBar() {
-    return bar;
 }
 
 #endif

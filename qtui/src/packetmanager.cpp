@@ -52,7 +52,7 @@
 #include "packets/snappeaui.h"
 #include "packets/surfacesui.h"
 #include "packets/textui.h"
-#include "packets/ntriangulationui.h"
+#include "packets/tri3ui.h"
 
 #include <QPlainTextEdit>
 

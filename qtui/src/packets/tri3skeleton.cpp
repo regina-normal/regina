@@ -36,7 +36,7 @@
 
 // UI includes:
 #include "facetgraphtab.h"
-#include "ntriskeleton.h"
+#include "tri3skeleton.h"
 #include "skeletonwindow.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"

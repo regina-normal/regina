@@ -1157,13 +1157,13 @@
 		0543AEB11811E12A002758F8 /* surfacesmatchingui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B11811D920002CC2AE /* surfacesmatchingui.h */; };
 		0543AEB21811E12A002758F8 /* surfacessummaryui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B31811D920002CC2AE /* surfacessummaryui.h */; };
 		0543AEB31811E12A002758F8 /* textui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B51811D920002CC2AE /* textui.h */; };
-		0543AEB41811E12A002758F8 /* ntrialgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B71811D920002CC2AE /* ntrialgebra.h */; };
-		0543AEB51811E12A002758F8 /* ntriangulationui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BB1811D920002CC2AE /* ntriangulationui.h */; };
-		0543AEB61811E12A002758F8 /* ntricomposition.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BD1811D920002CC2AE /* ntricomposition.h */; };
-		0543AEB71811E12A002758F8 /* ntrigluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BF1811D920002CC2AE /* ntrigluings.h */; };
-		0543AEB81811E12A002758F8 /* ntriskeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C11811D920002CC2AE /* ntriskeleton.h */; };
-		0543AEB91811E12A002758F8 /* ntrisnappea.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C31811D920002CC2AE /* ntrisnappea.h */; };
-		0543AEBA1811E12A002758F8 /* ntrisurfaces.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C51811D920002CC2AE /* ntrisurfaces.h */; };
+		0543AEB41811E12A002758F8 /* tri3algebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B71811D920002CC2AE /* tri3algebra.h */; };
+		0543AEB51811E12A002758F8 /* tri3ui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BB1811D920002CC2AE /* tri3ui.h */; };
+		0543AEB61811E12A002758F8 /* tri3composition.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BD1811D920002CC2AE /* tri3composition.h */; };
+		0543AEB71811E12A002758F8 /* tri3gluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BF1811D920002CC2AE /* tri3gluings.h */; };
+		0543AEB81811E12A002758F8 /* tri3skeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C11811D920002CC2AE /* tri3skeleton.h */; };
+		0543AEB91811E12A002758F8 /* tri3snappea.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C31811D920002CC2AE /* tri3snappea.h */; };
+		0543AEBA1811E12A002758F8 /* tri3surfaces.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C51811D920002CC2AE /* tri3surfaces.h */; };
 		0543AEBB1811E12A002758F8 /* skeletonwindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C71811D920002CC2AE /* skeletonwindow.h */; };
 		0543AEBC1811E12A002758F8 /* snappeacomponents.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C91811D920002CC2AE /* snappeacomponents.h */; };
 		0543AEBD1811E12A002758F8 /* packetwindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CD1811D920002CC2AE /* packetwindow.h */; };
@@ -1332,14 +1332,14 @@
 		0564A9611811D921002CC2AE /* surfacesmatchingui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B01811D920002CC2AE /* surfacesmatchingui.cpp */; };
 		0564A9621811D921002CC2AE /* surfacessummaryui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B21811D920002CC2AE /* surfacessummaryui.cpp */; };
 		0564A9631811D921002CC2AE /* textui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B41811D920002CC2AE /* textui.cpp */; };
-		0564A9641811D921002CC2AE /* ntrialgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B61811D920002CC2AE /* ntrialgebra.cpp */; };
-		0564A9651811D921002CC2AE /* ntriangulationcreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B81811D920002CC2AE /* ntriangulationcreator.cpp */; };
-		0564A9661811D921002CC2AE /* ntriangulationui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BA1811D920002CC2AE /* ntriangulationui.cpp */; };
-		0564A9671811D921002CC2AE /* ntricomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BC1811D920002CC2AE /* ntricomposition.cpp */; };
-		0564A9681811D921002CC2AE /* ntrigluings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BE1811D920002CC2AE /* ntrigluings.cpp */; };
-		0564A9691811D921002CC2AE /* ntriskeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C01811D920002CC2AE /* ntriskeleton.cpp */; };
-		0564A96A1811D921002CC2AE /* ntrisnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C21811D920002CC2AE /* ntrisnappea.cpp */; };
-		0564A96B1811D921002CC2AE /* ntrisurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C41811D920002CC2AE /* ntrisurfaces.cpp */; };
+		0564A9641811D921002CC2AE /* tri3algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B61811D920002CC2AE /* tri3algebra.cpp */; };
+		0564A9651811D921002CC2AE /* tri3creator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B81811D920002CC2AE /* tri3creator.cpp */; };
+		0564A9661811D921002CC2AE /* tri3ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BA1811D920002CC2AE /* tri3ui.cpp */; };
+		0564A9671811D921002CC2AE /* tri3composition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BC1811D920002CC2AE /* tri3composition.cpp */; };
+		0564A9681811D921002CC2AE /* tri3gluings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BE1811D920002CC2AE /* tri3gluings.cpp */; };
+		0564A9691811D921002CC2AE /* tri3skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C01811D920002CC2AE /* tri3skeleton.cpp */; };
+		0564A96A1811D921002CC2AE /* tri3snappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C21811D920002CC2AE /* tri3snappea.cpp */; };
+		0564A96B1811D921002CC2AE /* tri3surfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C41811D920002CC2AE /* tri3surfaces.cpp */; };
 		0564A96C1811D921002CC2AE /* skeletonwindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C61811D920002CC2AE /* skeletonwindow.cpp */; };
 		0564A96D1811D921002CC2AE /* snappeacomponents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5C81811D920002CC2AE /* snappeacomponents.cpp */; };
 		0564A96E1811D921002CC2AE /* packetui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CA1811D920002CC2AE /* packetui.cpp */; };
@@ -3227,22 +3227,22 @@
 		0564A5B31811D920002CC2AE /* surfacessummaryui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacessummaryui.h; sourceTree = "<group>"; };
 		0564A5B41811D920002CC2AE /* textui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = textui.cpp; sourceTree = "<group>"; };
 		0564A5B51811D920002CC2AE /* textui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textui.h; sourceTree = "<group>"; };
-		0564A5B61811D920002CC2AE /* ntrialgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntrialgebra.cpp; sourceTree = "<group>"; };
-		0564A5B71811D920002CC2AE /* ntrialgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntrialgebra.h; sourceTree = "<group>"; };
-		0564A5B81811D920002CC2AE /* ntriangulationcreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntriangulationcreator.cpp; sourceTree = "<group>"; };
-		0564A5B91811D920002CC2AE /* ntriangulationcreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntriangulationcreator.h; sourceTree = "<group>"; };
-		0564A5BA1811D920002CC2AE /* ntriangulationui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntriangulationui.cpp; sourceTree = "<group>"; };
-		0564A5BB1811D920002CC2AE /* ntriangulationui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntriangulationui.h; sourceTree = "<group>"; };
-		0564A5BC1811D920002CC2AE /* ntricomposition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntricomposition.cpp; sourceTree = "<group>"; };
-		0564A5BD1811D920002CC2AE /* ntricomposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntricomposition.h; sourceTree = "<group>"; };
-		0564A5BE1811D920002CC2AE /* ntrigluings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntrigluings.cpp; sourceTree = "<group>"; };
-		0564A5BF1811D920002CC2AE /* ntrigluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntrigluings.h; sourceTree = "<group>"; };
-		0564A5C01811D920002CC2AE /* ntriskeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntriskeleton.cpp; sourceTree = "<group>"; };
-		0564A5C11811D920002CC2AE /* ntriskeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntriskeleton.h; sourceTree = "<group>"; };
-		0564A5C21811D920002CC2AE /* ntrisnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntrisnappea.cpp; sourceTree = "<group>"; };
-		0564A5C31811D920002CC2AE /* ntrisnappea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntrisnappea.h; sourceTree = "<group>"; };
-		0564A5C41811D920002CC2AE /* ntrisurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntrisurfaces.cpp; sourceTree = "<group>"; };
-		0564A5C51811D920002CC2AE /* ntrisurfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntrisurfaces.h; sourceTree = "<group>"; };
+		0564A5B61811D920002CC2AE /* tri3algebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri3algebra.cpp; sourceTree = "<group>"; };
+		0564A5B71811D920002CC2AE /* tri3algebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri3algebra.h; sourceTree = "<group>"; };
+		0564A5B81811D920002CC2AE /* tri3creator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri3creator.cpp; sourceTree = "<group>"; };
+		0564A5B91811D920002CC2AE /* tri3creator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri3creator.h; sourceTree = "<group>"; };
+		0564A5BA1811D920002CC2AE /* tri3ui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri3ui.cpp; sourceTree = "<group>"; };
+		0564A5BB1811D920002CC2AE /* tri3ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri3ui.h; sourceTree = "<group>"; };
+		0564A5BC1811D920002CC2AE /* tri3composition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri3composition.cpp; sourceTree = "<group>"; };
+		0564A5BD1811D920002CC2AE /* tri3composition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri3composition.h; sourceTree = "<group>"; };
+		0564A5BE1811D920002CC2AE /* tri3gluings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri3gluings.cpp; sourceTree = "<group>"; };
+		0564A5BF1811D920002CC2AE /* tri3gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri3gluings.h; sourceTree = "<group>"; };
+		0564A5C01811D920002CC2AE /* tri3skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri3skeleton.cpp; sourceTree = "<group>"; };
+		0564A5C11811D920002CC2AE /* tri3skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri3skeleton.h; sourceTree = "<group>"; };
+		0564A5C21811D920002CC2AE /* tri3snappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri3snappea.cpp; sourceTree = "<group>"; };
+		0564A5C31811D920002CC2AE /* tri3snappea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri3snappea.h; sourceTree = "<group>"; };
+		0564A5C41811D920002CC2AE /* tri3surfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri3surfaces.cpp; sourceTree = "<group>"; };
+		0564A5C51811D920002CC2AE /* tri3surfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri3surfaces.h; sourceTree = "<group>"; };
 		0564A5C61811D920002CC2AE /* skeletonwindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skeletonwindow.cpp; sourceTree = "<group>"; };
 		0564A5C71811D920002CC2AE /* skeletonwindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skeletonwindow.h; sourceTree = "<group>"; };
 		0564A5C81811D920002CC2AE /* snappeacomponents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappeacomponents.cpp; sourceTree = "<group>"; };
@@ -5866,22 +5866,6 @@
 				051691AA1C5AD59000DC69EC /* hypersummaryui.h */,
 				051691AB1C5AD59000DC69EC /* hyperui.cpp */,
 				051691AC1C5AD59000DC69EC /* hyperui.h */,
-				0564A5B61811D920002CC2AE /* ntrialgebra.cpp */,
-				0564A5B71811D920002CC2AE /* ntrialgebra.h */,
-				0564A5B81811D920002CC2AE /* ntriangulationcreator.cpp */,
-				0564A5B91811D920002CC2AE /* ntriangulationcreator.h */,
-				0564A5BA1811D920002CC2AE /* ntriangulationui.cpp */,
-				0564A5BB1811D920002CC2AE /* ntriangulationui.h */,
-				0564A5BC1811D920002CC2AE /* ntricomposition.cpp */,
-				0564A5BD1811D920002CC2AE /* ntricomposition.h */,
-				0564A5BE1811D920002CC2AE /* ntrigluings.cpp */,
-				0564A5BF1811D920002CC2AE /* ntrigluings.h */,
-				0564A5C01811D920002CC2AE /* ntriskeleton.cpp */,
-				0564A5C11811D920002CC2AE /* ntriskeleton.h */,
-				0564A5C21811D920002CC2AE /* ntrisnappea.cpp */,
-				0564A5C31811D920002CC2AE /* ntrisnappea.h */,
-				0564A5C41811D920002CC2AE /* ntrisurfaces.cpp */,
-				0564A5C51811D920002CC2AE /* ntrisurfaces.h */,
 				0564A5A21811D920002CC2AE /* pdfui.cpp */,
 				0564A5A31811D920002CC2AE /* pdfui.h */,
 				0564A5A41811D920002CC2AE /* scriptui.cpp */,
@@ -5916,6 +5900,22 @@
 				0564A5A11811D920002CC2AE /* surfacesui.h */,
 				0564A5B41811D920002CC2AE /* textui.cpp */,
 				0564A5B51811D920002CC2AE /* textui.h */,
+				0564A5B61811D920002CC2AE /* tri3algebra.cpp */,
+				0564A5B71811D920002CC2AE /* tri3algebra.h */,
+				0564A5B81811D920002CC2AE /* tri3creator.cpp */,
+				0564A5B91811D920002CC2AE /* tri3creator.h */,
+				0564A5BC1811D920002CC2AE /* tri3composition.cpp */,
+				0564A5BD1811D920002CC2AE /* tri3composition.h */,
+				0564A5BE1811D920002CC2AE /* tri3gluings.cpp */,
+				0564A5BF1811D920002CC2AE /* tri3gluings.h */,
+				0564A5C01811D920002CC2AE /* tri3skeleton.cpp */,
+				0564A5C11811D920002CC2AE /* tri3skeleton.h */,
+				0564A5C21811D920002CC2AE /* tri3snappea.cpp */,
+				0564A5C31811D920002CC2AE /* tri3snappea.h */,
+				0564A5C41811D920002CC2AE /* tri3surfaces.cpp */,
+				0564A5C51811D920002CC2AE /* tri3surfaces.h */,
+				0564A5BA1811D920002CC2AE /* tri3ui.cpp */,
+				0564A5BB1811D920002CC2AE /* tri3ui.h */,
 			);
 			path = packets;
 			sourceTree = "<group>";
@@ -8231,13 +8231,13 @@
 				05375CD41DB21A86002348F0 /* pythonsyntaxhighlighter.cpp in Sources */,
 				05B1EF181C54299C008E7B49 /* dim4boundarycomponentchooser.cpp in Sources */,
 				0543AEB31811E12A002758F8 /* textui.h in Sources */,
-				0543AEB41811E12A002758F8 /* ntrialgebra.h in Sources */,
-				0543AEB51811E12A002758F8 /* ntriangulationui.h in Sources */,
-				0543AEB61811E12A002758F8 /* ntricomposition.h in Sources */,
-				0543AEB71811E12A002758F8 /* ntrigluings.h in Sources */,
-				0543AEB81811E12A002758F8 /* ntriskeleton.h in Sources */,
-				0543AEB91811E12A002758F8 /* ntrisnappea.h in Sources */,
-				0543AEBA1811E12A002758F8 /* ntrisurfaces.h in Sources */,
+				0543AEB41811E12A002758F8 /* tri3algebra.h in Sources */,
+				0543AEB51811E12A002758F8 /* tri3ui.h in Sources */,
+				0543AEB61811E12A002758F8 /* tri3composition.h in Sources */,
+				0543AEB71811E12A002758F8 /* tri3gluings.h in Sources */,
+				0543AEB81811E12A002758F8 /* tri3skeleton.h in Sources */,
+				0543AEB91811E12A002758F8 /* tri3snappea.h in Sources */,
+				0543AEBA1811E12A002758F8 /* tri3surfaces.h in Sources */,
 				0543AEBB1811E12A002758F8 /* skeletonwindow.h in Sources */,
 				0543AEBC1811E12A002758F8 /* snappeacomponents.h in Sources */,
 				0543AE911811DE79002758F8 /* packetui.h in Sources */,
@@ -8261,7 +8261,7 @@
 				0564A9401811D921002CC2AE /* introdialog.cpp in Sources */,
 				0564A9611811D921002CC2AE /* surfacesmatchingui.cpp in Sources */,
 				0564A8101811D921002CC2AE /* recogniserhandler.cpp in Sources */,
-				0564A9681811D921002CC2AE /* ntrigluings.cpp in Sources */,
+				0564A9681811D921002CC2AE /* tri3gluings.cpp in Sources */,
 				051691B91C5AD5AC00DC69EC /* hypermatchingui.cpp in Sources */,
 				0507C5A71C54495D00D1C86C /* dim4eltmovedialog.cpp in Sources */,
 				0564A9501811D921002CC2AE /* dim2triui.cpp in Sources */,
@@ -8270,7 +8270,7 @@
 				0564A8081811D921002CC2AE /* csvsurfacehandler.cpp in Sources */,
 				0564A9811811D921002CC2AE /* reginapref.cpp in Sources */,
 				0564A80A1811D921002CC2AE /* exportdialog.cpp in Sources */,
-				0564A9671811D921002CC2AE /* ntricomposition.cpp in Sources */,
+				0564A9671811D921002CC2AE /* tri3composition.cpp in Sources */,
 				0564A9591811D921002CC2AE /* surfacesui.cpp in Sources */,
 				0564A9571811D921002CC2AE /* containerui.cpp in Sources */,
 				0564A95D1811D921002CC2AE /* surfacescoordinateui.cpp in Sources */,
@@ -8282,7 +8282,7 @@
 				0564A9551811D921002CC2AE /* anglesui.cpp in Sources */,
 				0591E8401C4F769100793A9C /* dim4tricreator.cpp in Sources */,
 				0564A96D1811D921002CC2AE /* snappeacomponents.cpp in Sources */,
-				0564A9661811D921002CC2AE /* ntriangulationui.cpp in Sources */,
+				0564A9661811D921002CC2AE /* tri3ui.cpp in Sources */,
 				0564A80B1811D921002CC2AE /* importdialog.cpp in Sources */,
 				0564A80E1811D921002CC2AE /* pdfhandler.cpp in Sources */,
 				0564A9781811D921002CC2AE /* recentfilesaction.cpp in Sources */,
@@ -8304,8 +8304,8 @@
 				0564A9801811D921002CC2AE /* reginamanager.cpp in Sources */,
 				0564A95E1811D921002CC2AE /* filtercomb.cpp in Sources */,
 				0564A95B1811D921002CC2AE /* scriptui.cpp in Sources */,
-				0564A96A1811D921002CC2AE /* ntrisnappea.cpp in Sources */,
-				0564A9651811D921002CC2AE /* ntriangulationcreator.cpp in Sources */,
+				0564A96A1811D921002CC2AE /* tri3snappea.cpp in Sources */,
+				0564A9651811D921002CC2AE /* tri3creator.cpp in Sources */,
 				05A73CCA19B2F1AB0099C617 /* groupwidget.cpp in Sources */,
 				0564A9841811D921002CC2AE /* sharedtempfile.cpp in Sources */,
 				0564A8021811D921002CC2AE /* codecchooser.cpp in Sources */,
@@ -8318,13 +8318,13 @@
 				0564A9431811D921002CC2AE /* messagelayer.cpp in Sources */,
 				0564A97E1811D921002CC2AE /* reginaabout.cpp in Sources */,
 				0564A9621811D921002CC2AE /* surfacessummaryui.cpp in Sources */,
-				0564A9691811D921002CC2AE /* ntriskeleton.cpp in Sources */,
+				0564A9691811D921002CC2AE /* tri3skeleton.cpp in Sources */,
 				0564A97F1811D921002CC2AE /* reginamain.cpp in Sources */,
 				05A73CCE19B2F1AB0099C617 /* snappeagluings.cpp in Sources */,
 				0564A9511811D921002CC2AE /* eltmovedialog.cpp in Sources */,
 				0564A9461811D921002CC2AE /* packetchooser.cpp in Sources */,
 				0564A94D1811D921002CC2AE /* dim2tricreator.cpp in Sources */,
-				0564A9641811D921002CC2AE /* ntrialgebra.cpp in Sources */,
+				0564A9641811D921002CC2AE /* tri3algebra.cpp in Sources */,
 				0564A9491811D921002CC2AE /* packetmanager.cpp in Sources */,
 				050F5E801B9BD6F400C1F681 /* pythonoutputstream.cpp in Sources */,
 				0564A9481811D921002CC2AE /* packeteditiface.cpp in Sources */,
@@ -8350,7 +8350,7 @@
 				0564A96E1811D921002CC2AE /* packetui.cpp in Sources */,
 				0564A95A1811D921002CC2AE /* pdfui.cpp in Sources */,
 				0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */,
-				0564A96B1811D921002CC2AE /* ntrisurfaces.cpp in Sources */,
+				0564A96B1811D921002CC2AE /* tri3surfaces.cpp in Sources */,
 				0564A80D1811D921002CC2AE /* orbhandler.cpp in Sources */,
 				0564A96F1811D921002CC2AE /* packetwindow.cpp in Sources */,
 			);

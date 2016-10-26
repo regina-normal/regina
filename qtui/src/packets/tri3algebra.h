@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ntrialgebra.h
+/*! \file tri3algebra.h
  *  \brief Provides an algebra viewer for triangulations.
  */
 
-#ifndef __NTRIALGEBRA_H
-#define __NTRIALGEBRA_H
+#ifndef __TRI3ALGEBRA_H
+#define __TRI3ALGEBRA_H
 
 #include "../packettabui.h"
 

@@ -38,7 +38,7 @@
 #include "triangulation/dim3.h"
 
 // UI includes:
-#include "ntrisurfaces.h"
+#include "tri3surfaces.h"
 #include "patiencedialog.h"
 #include "reginamain.h"
 #include "reginasupport.h"

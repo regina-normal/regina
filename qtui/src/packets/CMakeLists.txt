@@ -27,14 +27,6 @@ SET ( FILES
   hypermatchingui
   hypersummaryui
   hyperui
-  ntrialgebra
-  ntriangulationcreator
-  ntriangulationui
-  ntricomposition
-  ntrigluings
-  ntriskeleton
-  ntrisnappea
-  ntrisurfaces
   pdfui
   scriptui
   skeletonwindow
@@ -52,6 +44,14 @@ SET ( FILES
   surfacessummaryui
   surfacesui
   textui
+  tri3algebra
+  tri3creator
+  tri3composition
+  tri3gluings
+  tri3skeleton
+  tri3snappea
+  tri3surfaces
+  tri3ui
   )
 
 FOREACH( FILE ${FILES} )

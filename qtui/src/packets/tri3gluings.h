@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ntrigluings.h
+/*! \file tri3gluings.h
  *  \brief Provides a face gluing editor for 3-manifold triangulations.
  */
 
-#ifndef __NTRIGLUINGS_H
-#define __NTRIGLUINGS_H
+#ifndef __TRI3GLUINGS_H
+#define __TRI3GLUINGS_H
 
 #include "../packettabui.h"
 #include "reginaprefset.h"

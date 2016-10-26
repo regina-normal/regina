@@ -30,74 +30,57 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ntrisurfaces.h
- *  \brief Provides a normal surface properties viewer for triangulations.
+/*! \file tri3snappea.h
+ *  \brief Provides access to SnapPea calculations for triangulations.
  */
 
-#ifndef __NTRISURFACES_H
-#define __NTRISURFACES_H
+#ifndef __TRI3SNAPPEA_H
+#define __TRI3SNAPPEA_H
 
 #include "../packettabui.h"
 
-class QAbstractButton;
+class NoSnapPea;
 class QLabel;
+class QStackedWidget;
 
 namespace regina {
     class Packet;
+    class SnapPeaTriangulation;
     template <int> class Triangulation;
 };
 
 /**
  * A triangulation page for viewing normal surface properties.
  */
-class NTriSurfacesUI : public QObject, public PacketViewerTab {
+class NTriSnapPeaUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::Triangulation<3>* tri;
+        regina::Triangulation<3>* reginaTri;
+        regina::SnapPeaTriangulation* snappeaTri;
 
         /**
          * Internal components
          */
-        QWidget* ui;
-        QLabel* zeroEff;
-        QLabel* titleZeroEff;
-        QLabel* splitting;
-        QLabel* titleSplitting;
-        QLabel* threeSphere;
-        QLabel* titleThreeSphere;
-        QLabel* threeBall;
-        QLabel* titleThreeBall;
-        QLabel* solidTorus;
-        QLabel* titleSolidTorus;
-        QLabel* irreducible;
-        QLabel* titleIrreducible;
-        QLabel* haken;
-        QLabel* titleHaken;
-        QLabel* strict;
-        QLabel* titleStrict;
-        QLabel* hyperbolic;
-        QLabel* titleHyperbolic;
-        QAbstractButton* btnZeroEff;
-        QAbstractButton* btnSplitting;
-        QAbstractButton* btnThreeSphere;
-        QAbstractButton* btnThreeBall;
-        QAbstractButton* btnSolidTorus;
-        QAbstractButton* btnIrreducible;
-        QAbstractButton* btnHaken;
-        QAbstractButton* btnStrict;
-        QLabel* manifold;
-        QLabel* census;
+        QStackedWidget* ui;
+        QWidget* dataValid;
+        QWidget* dataNull;
+        QLabel* solutionType;
+        QLabel* solutionTypeLabel;
+        QString solutionTypeExplnBase;
+        QLabel* volume;
+        NoSnapPea* unavailable;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        NTriSurfacesUI(regina::Triangulation<3>* packet,
+        NTriSnapPeaUI(regina::Triangulation<3>* packet,
             PacketTabbedUI* useParentUI);
+        ~NTriSnapPeaUI();
 
         /**
          * PacketViewerTab overrides.
@@ -108,24 +91,27 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
 
     public slots:
         /**
-         * Calculate properties.
-         */
-        void calculateZeroEff();
-        void calculateSplitting();
-        void calculateThreeSphere();
-        void calculateThreeBall();
-        void calculateSolidTorus();
-        void calculateIrreducible();
-        void calculateHaken();
-        void calculateStrict();
-
-        /**
-         * Notify that preferences have changed.
+         * Update properties.
          */
         void updatePreferences();
+
+        /**
+         * Convert this to a full SnapPea triangulation.
+         */
+        void toSnapPea();
+
+    private:
+        /**
+         * These routines convert a SnapPeaTriangulation::SolutionType
+         * into various types of human-readable string.  They are declared
+         * to take an int so that the calculation engine headers need not
+         * be included.
+         */
+        static QString solutionTypeString(int solnType);
+        static QString solutionTypeExplanation(int solnType);
 };
 
-inline void NTriSurfacesUI::updatePreferences() {
+inline void NTriSnapPeaUI::updatePreferences() {
     refresh();
 }
 

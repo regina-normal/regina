@@ -38,7 +38,7 @@
 #include "triangulation/dim3.h"
 
 // UI includes:
-#include "ntriangulationcreator.h"
+#include "tri3creator.h"
 #include "reginasupport.h"
 
 #include <QCheckBox>

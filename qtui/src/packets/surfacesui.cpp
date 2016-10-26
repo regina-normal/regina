@@ -41,7 +41,7 @@
 #include "surfacescoordinateui.h"
 #include "surfacesmatchingui.h"
 #include "surfacessummaryui.h"
-#include "ntriangulationui.h"
+#include "tri3ui.h"
 #include "reginamain.h"
 
 #include <QLabel>

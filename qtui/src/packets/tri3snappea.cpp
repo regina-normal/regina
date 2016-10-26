@@ -35,7 +35,7 @@
 
 // UI includes:
 #include "iconcache.h"
-#include "ntrisnappea.h"
+#include "tri3snappea.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"

@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ntriangulationcreator.h
+/*! \file tri3creator.h
  *  \brief Allows the creation of 3-manifold triangulations.
  */
 
-#ifndef __NTRIANGULATIONCREATOR_H
-#define __NTRIANGULATIONCREATOR_H
+#ifndef __TRI3CREATOR_H
+#define __TRI3CREATOR_H
 
 #include "../packetcreator.h"
 

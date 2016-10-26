@@ -41,7 +41,7 @@
 #include "columnlayout.h"
 #include "gaprunner.h"
 #include "groupwidget.h"
-#include "ntrialgebra.h"
+#include "tri3algebra.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 

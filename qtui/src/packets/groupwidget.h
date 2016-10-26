@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ntrialgebra.h
+/*! \file tri3algebra.h
  *  \brief Provides an algebra viewer for triangulations.
  */
 

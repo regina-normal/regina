@@ -42,7 +42,7 @@
 // UI includes:
 #include "edittableview.h"
 #include "eltmovedialog.h"
-#include "ntrigluings.h"
+#include "tri3gluings.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "patiencedialog.h"

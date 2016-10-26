@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ntriskeleton.h
+/*! \file tri3skeleton.h
  *  \brief Provides a skeletal properties viewer for 3-manifold triangulations.
  */
 
-#ifndef __NTRISKELETON_H
-#define __NTRISKELETON_H
+#ifndef __TRI3SKELETON_H
+#define __TRI3SKELETON_H
 
 #include "packettabui.h"
 #include "skeletonwindow.h"

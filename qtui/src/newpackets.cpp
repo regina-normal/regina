@@ -46,7 +46,7 @@
 #include "packets/anglescreator.h"
 #include "packets/filtercreator.h"
 #include "packets/hypercreator.h"
-#include "packets/ntriangulationcreator.h"
+#include "packets/tri3creator.h"
 #include "packets/snappeacreator.h"
 #include "packets/surfacescreator.h"
 

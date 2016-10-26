@@ -58,7 +58,7 @@
 #include "triangulation/dim3.h"
 
 // UI includes:
-#include "ntricomposition.h"
+#include "tri3composition.h"
 #include "../packetchooser.h"
 #include "../packeteditiface.h"
 #include "../packetfilter.h"
