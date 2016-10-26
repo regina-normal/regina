@@ -4,12 +4,12 @@
 SET ( FILES
   dim2boundarycomponent
   dim2component
-  dim2edge
+  edge2
   dim2exampletriangulation
-  dim2triangle
+  triangle2
   dim2isomorphism
   triangulation2
-  dim2vertex
+  vertex2
   pydim2
   )
 

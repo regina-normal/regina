@@ -4,16 +4,16 @@
 SET ( FILES
   nboundarycomponent
   ncomponent
-  nedge
+  edge3
   nexampletriangulation
   nfacepair
   nfacepairing
   nhomologicaldata
   nisomorphism
-  ntetrahedron
-  ntriangle
+  tetrahedron3
+  triangle3
   triangulation3
-  nvertex
+  vertex3
   pytriangulation
   )
 

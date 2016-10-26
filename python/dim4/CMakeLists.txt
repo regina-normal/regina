@@ -4,14 +4,14 @@
 SET ( FILES
   dim4boundarycomponent
   dim4component
-  dim4edge
+  edge4
   dim4exampletriangulation
-  dim4triangle
+  triangle4
   dim4isomorphism
-  dim4pentachoron
-  dim4tetrahedron
+  pentachoron4
+  tetrahedron4
   triangulation4
-  dim4vertex
+  vertex4
   pydim4
   )
 
