@@ -35,7 +35,7 @@
 #include "triangulation/dim2.h"
 
 // UI includes:
-#include "dim2trigluings.h"
+#include "tri2gluings.h"
 #include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -73,29 +73,29 @@ namespace {
     QRegExp reEdge("^[0-2][0-2]$");
 }
 
-Dim2GluingsModel::Dim2GluingsModel(regina::Triangulation<2>* tri,
+GluingsModel2::GluingsModel2(regina::Triangulation<2>* tri,
         bool readWrite) : tri_(tri), isReadWrite_(readWrite) {
 }
 
-void Dim2GluingsModel::rebuild() {
+void GluingsModel2::rebuild() {
     beginResetModel();
     endResetModel();
 }
 
-QModelIndex Dim2GluingsModel::index(int row, int column,
+QModelIndex GluingsModel2::index(int row, int column,
         const QModelIndex& /* unused parent*/) const {
     return createIndex(row, column, quint32(4 * row + column));
 }
 
-int Dim2GluingsModel::rowCount(const QModelIndex& /* unused parent*/) const {
+int GluingsModel2::rowCount(const QModelIndex& /* unused parent*/) const {
     return tri_->size();
 }
 
-int Dim2GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int GluingsModel2::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim2GluingsModel::data(const QModelIndex& index, int role) const {
+QVariant GluingsModel2::data(const QModelIndex& index, int role) const {
     regina::Triangle<2>* t = tri_->simplex(index.row());
     if (role == Qt::DisplayRole) {
         // Triangle name?
@@ -127,7 +127,7 @@ QVariant Dim2GluingsModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim2GluingsModel::headerData(int section, Qt::Orientation orientation,
+QVariant GluingsModel2::headerData(int section, Qt::Orientation orientation,
         int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -143,14 +143,14 @@ QVariant Dim2GluingsModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-Qt::ItemFlags Dim2GluingsModel::flags(const QModelIndex& /* unused index*/) const {
+Qt::ItemFlags GluingsModel2::flags(const QModelIndex& /* unused index*/) const {
     if (isReadWrite_)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
-bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
+bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
         int /* unused role*/) {
     regina::Triangle<2>* t = tri_->simplex(index.row());
     if (index.column() == 0) {
@@ -236,7 +236,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
     return true;
 }
 
-QString Dim2GluingsModel::isEdgeStringValid(unsigned long srcTri, int srcEdge,
+QString GluingsModel2::isEdgeStringValid(unsigned long srcTri, int srcEdge,
         unsigned long destTri, const QString& destEdge,
         regina::Perm<3>* gluing) {
     if (destTri >= tri_->size())
@@ -263,14 +263,14 @@ QString Dim2GluingsModel::isEdgeStringValid(unsigned long srcTri, int srcEdge,
     return QString::null;
 }
 
-void Dim2GluingsModel::showError(const QString& message) {
+void GluingsModel2::showError(const QString& message) {
     // We should actually pass the view to the message box, not 0, but we
     // don't have access to any widget from here...
     ReginaSupport::info(0 /* should be the view? */,
         tr("This is not a valid gluing."), message);
 }
 
-QString Dim2GluingsModel::destString(int srcEdge, regina::Triangle<2>* destTri,
+QString GluingsModel2::destString(int srcEdge, regina::Triangle<2>* destTri,
         const regina::Perm<3>& gluing) {
     if (! destTri)
         return "";
@@ -279,7 +279,7 @@ QString Dim2GluingsModel::destString(int srcEdge, regina::Triangle<2>* destTri,
             regina::Edge<2>::ordering(srcEdge)).trunc2().c_str() + ')';
 }
 
-regina::Perm<3> Dim2GluingsModel::edgeStringToPerm(int srcEdge,
+regina::Perm<3> GluingsModel2::edgeStringToPerm(int srcEdge,
         const QString& str) {
     int destVertex[3];
 
@@ -295,11 +295,11 @@ regina::Perm<3> Dim2GluingsModel::edgeStringToPerm(int srcEdge,
         regina::Edge<2>::ordering(srcEdge).inverse();
 }
 
-Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Triangulation<2>* packet,
+Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of edge gluings.
-    model = new Dim2GluingsModel(packet, readWrite);
+    model = new GluingsModel2(packet, readWrite);
     edgeTable = new EditTableView();
     edgeTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     edgeTable->setModel(model);
@@ -418,41 +418,41 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Triangulation<2>* packet,
     refresh();
 }
 
-Dim2TriGluingsUI::~Dim2TriGluingsUI() {
+Tri2GluingsUI::~Tri2GluingsUI() {
     // Make sure the actions, including separators, are all deleted.
 
     delete model;
 }
 
-const QLinkedList<QAction*>& Dim2TriGluingsUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& Tri2GluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
-void Dim2TriGluingsUI::fillToolBar(QToolBar* bar) {
+void Tri2GluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actAddTri);
     bar->addAction(actRemoveTri);
     bar->addSeparator();
     bar->addAction(actOrient);
 }
 
-regina::Packet* Dim2TriGluingsUI::getPacket() {
+regina::Packet* Tri2GluingsUI::getPacket() {
     return tri;
 }
 
-QWidget* Dim2TriGluingsUI::getInterface() {
+QWidget* Tri2GluingsUI::getInterface() {
     return ui;
 }
 
-void Dim2TriGluingsUI::refresh() {
+void Tri2GluingsUI::refresh() {
     model->rebuild();
     updateActionStates();
 }
 
-void Dim2TriGluingsUI::endEdit() {
+void Tri2GluingsUI::endEdit() {
     edgeTable->endEdit();
 }
 
-void Dim2TriGluingsUI::setReadWrite(bool readWrite) {
+void Tri2GluingsUI::setReadWrite(bool readWrite) {
     model->setReadWrite(readWrite);
 
     if (readWrite) {
@@ -471,13 +471,13 @@ void Dim2TriGluingsUI::setReadWrite(bool readWrite) {
     updateActionStates();
 }
 
-void Dim2TriGluingsUI::addTri() {
+void Tri2GluingsUI::addTri() {
     endEdit();
 
     tri->newTriangle();
 }
 
-void Dim2TriGluingsUI::removeSelectedTris() {
+void Tri2GluingsUI::removeSelectedTris() {
     endEdit();
 
     // Gather together all the triangles to be deleted.
@@ -528,7 +528,7 @@ void Dim2TriGluingsUI::removeSelectedTris() {
     }
 }
 
-void Dim2TriGluingsUI::orient() {
+void Tri2GluingsUI::orient() {
     endEdit();
 
     if (tri->isOriented()) {
@@ -552,13 +552,13 @@ void Dim2TriGluingsUI::orient() {
     tri->orient();
 }
 
-void Dim2TriGluingsUI::doubleCover() {
+void Tri2GluingsUI::doubleCover() {
     endEdit();
 
     tri->makeDoubleCover();
 }
 
-void Dim2TriGluingsUI::splitIntoComponents() {
+void Tri2GluingsUI::splitIntoComponents() {
     endEdit();
 
     if (tri->countComponents() == 0)
@@ -592,7 +592,7 @@ void Dim2TriGluingsUI::splitIntoComponents() {
     }
 }
 
-void Dim2TriGluingsUI::updateRemoveState() {
+void Tri2GluingsUI::updateRemoveState() {
     if (model->isReadWrite())
         actRemoveTri->setEnabled(
             ! edgeTable->selectionModel()->selectedIndexes().empty());
@@ -600,7 +600,7 @@ void Dim2TriGluingsUI::updateRemoveState() {
         actRemoveTri->setEnabled(false);
 }
 
-void Dim2TriGluingsUI::updateActionStates() {
+void Tri2GluingsUI::updateActionStates() {
     if (! model->isReadWrite())
         actOrient->setEnabled(false);
     else if (! tri->isOrientable())

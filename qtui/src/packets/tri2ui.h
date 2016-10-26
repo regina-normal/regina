@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                     *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,39 +30,60 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim2triskeleton.h
- *  \brief Provides a skeletal properties viewer for 2-manifold triangulations.
+/*! \file tri2ui.h
+ *  \brief Provides an interface for viewing 2-manifold triangulations.
  */
 
-#ifndef __DIM2TRISKELETON_H
-#define __DIM2TRISKELETON_H
+#ifndef __TRI2UI_H
+#define __TRI2UI_H
 
-#include "packettabui.h"
-#include "skeletonwindow.h"
+#include "../packettabui.h"
+
+class QToolBar;
+class Tri2GluingsUI;
+class Tri2SkeletonUI;
+class PacketEditIface;
+class QLabel;
 
 namespace regina {
-    class Packet;
     template <int> class Triangulation;
 };
 
 /**
- * A triangulation page for viewing skeletal properties.
+ * A packet interface for viewing 2-manifold triangulations.
  */
-class Dim2TriSkeletonUI : public PacketTabbedViewerTab {
+class Tri2UI : public PacketTabbedUI {
+    Q_OBJECT
+
+    private:
+        /**
+         * Internal components
+         */
+        Tri2GluingsUI* gluings;
+        Tri2SkeletonUI* skeleton;
+
+        PacketEditIface* editIface;
+
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        Dim2TriSkeletonUI(regina::Triangulation<2>* packet,
-                PacketTabbedUI* useParentUI);
+        Tri2UI(regina::Triangulation<2>* packet,
+            PacketPane* newEnclosingPane);
+        ~Tri2UI();
+
+        /**
+         * PacketUI overrides.
+         */
+        PacketEditIface* getEditIface();
+        const QLinkedList<QAction*>& getPacketTypeActions();
+        QString getPacketMenuText() const;
 };
 
 /**
- * A triangulation page for accessing individual skeletal components.
+ * A header for the 2-manifold triangulation viewer.
  */
-class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
+class Tri2HeaderUI : public PacketViewerTab {
     private:
         /**
          * Packet details
@@ -73,24 +94,20 @@ class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* nVertices;
-        QLabel* nEdges;
-        QLabel* nTriangles;
-        QLabel* nComps;
-        QLabel* nBdryComps;
-        QLabel* eulerTri;
-
-        /**
-         * Skeleton viewers
-         */
-        QLinkedList<SkeletonWindow*> viewers;
+        QLabel* header;
+        QToolBar* bar;
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        Dim2TriSkelCompUI(regina::Triangulation<2>* packet,
-                PacketTabbedViewerTab* useParentUI);
+        Tri2HeaderUI(regina::Triangulation<2>* packet,
+                PacketTabbedUI* useParentUI);
+
+        /**
+         * Component queries.
+         */
+        QToolBar* getToolBar();
 
         /**
          * PacketViewerTab overrides.
@@ -99,14 +116,18 @@ class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
 
-    public slots:
         /**
-         * Open skeleton windows.
+         * Allow other UIs to access the summary information.
          */
-        void viewVertices();
-        void viewEdges();
-        void viewComponents();
-        void viewBoundaryComponents();
+        static QString summaryInfo(regina::Triangulation<2>* tri);
 };
+
+inline PacketEditIface* Tri2UI::getEditIface() {
+    return editIface;
+}
+
+inline QToolBar* Tri2HeaderUI::getToolBar() {
+    return bar;
+}
 
 #endif

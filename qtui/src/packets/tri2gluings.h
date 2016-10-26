@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim2trigluings.h
+/*! \file tri2gluings.h
  *  \brief Provides an edge gluing editor for 2-manifold triangulations.
  */
 
-#ifndef __DIM2TRIGLUINGS_H
-#define __DIM2TRIGLUINGS_H
+#ifndef __TRI2GLUINGS_H
+#define __TRI2GLUINGS_H
 
 #include "../packettabui.h"
 #include "reginaprefset.h"
@@ -53,7 +53,7 @@ namespace regina {
     template <int dim> using Simplex = Face<dim, dim>;
 };
 
-class Dim2GluingsModel : public QAbstractItemModel {
+class GluingsModel2 : public QAbstractItemModel {
     protected:
         /**
          * Details of the triangulation
@@ -69,7 +69,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
         /**
          * Constructor and destructor.
          */
-        Dim2GluingsModel(regina::Triangulation<2>* tri, bool readWrite);
+        GluingsModel2(regina::Triangulation<2>* tri, bool readWrite);
 
         /**
          * Read-write state.
@@ -134,7 +134,7 @@ class Dim2GluingsModel : public QAbstractItemModel {
 /**
  * A 2-manifold triangulation page for editing edge gluings.
  */
-class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
+class Tri2GluingsUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
@@ -148,7 +148,7 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
          */
         QWidget* ui;
         EditTableView* edgeTable;
-        Dim2GluingsModel* model;
+        GluingsModel2* model;
 
         /**
          * Gluing actions
@@ -163,9 +163,9 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        Dim2TriGluingsUI(regina::Triangulation<2>* packet,
+        Tri2GluingsUI(regina::Triangulation<2>* packet,
                 PacketTabbedUI* useParentUI, bool readWrite);
-        ~Dim2TriGluingsUI();
+        ~Tri2GluingsUI();
 
         /**
          * Fill the given toolbar with triangulation actions.
@@ -207,11 +207,11 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
         void updateActionStates();
 };
 
-inline bool Dim2GluingsModel::isReadWrite() const {
+inline bool GluingsModel2::isReadWrite() const {
     return isReadWrite_;
 }
 
-inline void Dim2GluingsModel::setReadWrite(bool readWrite) {
+inline void GluingsModel2::setReadWrite(bool readWrite) {
     if (isReadWrite_ != readWrite) {
         // Edit flags will all change.
         // A full model reset is probably too severe, but.. *shrug*
@@ -221,7 +221,7 @@ inline void Dim2GluingsModel::setReadWrite(bool readWrite) {
     }
 }
 
-inline QModelIndex Dim2GluingsModel::parent(const QModelIndex&) const {
+inline QModelIndex GluingsModel2::parent(const QModelIndex&) const {
     // All items are top-level.
     return QModelIndex();
 }

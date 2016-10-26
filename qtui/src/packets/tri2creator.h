@@ -30,104 +30,55 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim2triui.h
- *  \brief Provides an interface for viewing 2-manifold triangulations.
+/*! \file tri2creator.h
+ *  \brief Allows the creation of 2-manifold triangulations.
  */
 
-#ifndef __DIM2TRIUI_H
-#define __DIM2TRIUI_H
+#ifndef __TRI2CREATOR_H
+#define __TRI2CREATOR_H
 
-#include "../packettabui.h"
+#include "../packetcreator.h"
 
-class QToolBar;
-class Dim2TriGluingsUI;
-class Dim2TriSkeletonUI;
-class PacketEditIface;
-class QLabel;
+#include <QStackedWidget>
 
-namespace regina {
-    template <int> class Triangulation;
-};
+class QCheckBox;
+class QComboBox;
+class QLineEdit;
 
 /**
- * A packet interface for viewing 2-manifold triangulations.
+ * An interface for creating 2-manifold triangulations.
  */
-class Dim2TriangulationUI : public PacketTabbedUI {
-    Q_OBJECT
-
+class Tri2Creator : public PacketCreator {
     private:
-        /**
-         * Internal components
-         */
-        Dim2TriGluingsUI* gluings;
-        Dim2TriSkeletonUI* skeleton;
-
-        PacketEditIface* editIface;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        Dim2TriangulationUI(regina::Triangulation<2>* packet,
-            PacketPane* newEnclosingPane);
-        ~Dim2TriangulationUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-};
-
-/**
- * A header for the 2-manifold triangulation viewer.
- */
-class Dim2TriHeaderUI : public PacketViewerTab {
-    private:
-        /**
-         * Packet details
-         */
-        regina::Triangulation<2>* tri;
-
         /**
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
-        QToolBar* bar;
+        QComboBox* type;
+        QStackedWidget* details;
+
+        /**
+         * Details for specific triangulation types
+         */
+        QLineEdit* orGenus;
+        QLineEdit* orPunctures;
+        QLineEdit* norGenus;
+        QLineEdit* norPunctures;
+        QLineEdit* isoSig;
+        QComboBox* exampleWhich;
 
     public:
         /**
          * Constructor.
          */
-        Dim2TriHeaderUI(regina::Triangulation<2>* packet,
-                PacketTabbedUI* useParentUI);
+        Tri2Creator();
 
         /**
-         * Component queries.
+         * PacketCreator overrides.
          */
-        QToolBar* getToolBar();
-
-        /**
-         * PacketViewerTab overrides.
-         */
-        regina::Packet* getPacket();
         QWidget* getInterface();
-        void refresh();
-
-        /**
-         * Allow other UIs to access the summary information.
-         */
-        static QString summaryInfo(regina::Triangulation<2>* tri);
+        regina::Packet* createPacket(regina::Packet* parentPacket,
+            QWidget* parentWidget);
 };
-
-inline PacketEditIface* Dim2TriangulationUI::getEditIface() {
-    return editIface;
-}
-
-inline QToolBar* Dim2TriHeaderUI::getToolBar() {
-    return bar;
-}
 
 #endif

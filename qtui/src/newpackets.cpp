@@ -41,7 +41,7 @@
 #include "packetfilter.h"
 #include "packettreeview.h"
 #include "reginamain.h"
-#include "packets/dim2tricreator.h"
+#include "packets/tri2creator.h"
 #include "packets/tri4creator.h"
 #include "packets/anglescreator.h"
 #include "packets/filtercreator.h"
@@ -99,7 +99,7 @@ void ReginaMain::newText() {
 }
 
 void ReginaMain::newTriangulation2() {
-    newPacket(new Dim2TriangulationCreator(), 0,
+    newPacket(new Tri2Creator(), 0,
         tr("New 2-Manifold Triangulation"));
 }
 

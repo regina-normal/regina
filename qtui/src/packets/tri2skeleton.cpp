@@ -35,7 +35,7 @@
 #include "triangulation/dim2.h"
 
 // UI includes:
-#include "dim2triskeleton.h"
+#include "tri2skeleton.h"
 #include "facetgraphtab.h"
 #include "skeletonwindow.h"
 #include "reginaprefset.h"
@@ -49,16 +49,16 @@
 using regina::Triangulation;
 using regina::Packet;
 
-Dim2TriSkeletonUI::Dim2TriSkeletonUI(regina::Triangulation<2>* packet,
+Tri2SkeletonUI::Tri2SkeletonUI(regina::Triangulation<2>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim2TriSkeleton) {
-    addTab(new Dim2TriSkelCompUI(packet, this), tr("&Skeletal Components"));
+    addTab(new Tri2SkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim2EdgeGraphData(packet), this),
         tr("&Graphs"));
 }
 
-Dim2TriSkelCompUI::Dim2TriSkelCompUI(regina::Triangulation<2>* packet,
+Tri2SkelCompUI::Tri2SkelCompUI(regina::Triangulation<2>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -174,15 +174,15 @@ Dim2TriSkelCompUI::Dim2TriSkelCompUI(regina::Triangulation<2>* packet,
     layout->addStretch(1);
 }
 
-regina::Packet* Dim2TriSkelCompUI::getPacket() {
+regina::Packet* Tri2SkelCompUI::getPacket() {
     return tri;
 }
 
-QWidget* Dim2TriSkelCompUI::getInterface() {
+QWidget* Tri2SkelCompUI::getInterface() {
     return ui;
 }
 
-void Dim2TriSkelCompUI::refresh() {
+void Tri2SkelCompUI::refresh() {
     nVertices->setText(QString::number(tri->countVertices()));
     nEdges->setText(QString::number(tri->countEdges()));
     nTriangles->setText(QString::number(tri->size()));
@@ -196,7 +196,7 @@ void Dim2TriSkelCompUI::refresh() {
         (it.next())->refresh();
 }
 
-void Dim2TriSkelCompUI::viewVertices() {
+void Tri2SkelCompUI::viewVertices() {
     // Because we pass this as parent to the new window, we are
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
@@ -206,19 +206,19 @@ void Dim2TriSkelCompUI::viewVertices() {
     viewers.append(win);
 }
 
-void Dim2TriSkelCompUI::viewEdges() {
+void Tri2SkelCompUI::viewEdges() {
     SkeletonWindow* win = new SkeletonWindow(this, new Edge2Model(tri));
     win->show();
     viewers.append(win);
 }
 
-void Dim2TriSkelCompUI::viewComponents() {
+void Tri2SkelCompUI::viewComponents() {
     SkeletonWindow* win = new SkeletonWindow(this, new Dim2ComponentModel(tri));
     win->show();
     viewers.append(win);
 }
 
-void Dim2TriSkelCompUI::viewBoundaryComponents() {
+void Tri2SkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
         new Dim2BoundaryComponentModel(tri));
     win->show();

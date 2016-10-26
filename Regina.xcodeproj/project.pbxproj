@@ -1140,9 +1140,9 @@
 		0543AEA01811E12A002758F8 /* packeteditiface.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A57E1811D920002CC2AE /* packeteditiface.h */; };
 		0543AEA11811E12A002758F8 /* packettabui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5831811D920002CC2AE /* packettabui.h */; };
 		0543AEA21811E12A002758F8 /* packettreeview.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5851811D920002CC2AE /* packettreeview.h */; };
-		0543AEA31811E12A002758F8 /* dim2trigluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58B1811D920002CC2AE /* dim2trigluings.h */; };
-		0543AEA41811E12A002758F8 /* dim2triskeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58D1811D920002CC2AE /* dim2triskeleton.h */; };
-		0543AEA51811E12A002758F8 /* dim2triui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58F1811D920002CC2AE /* dim2triui.h */; };
+		0543AEA31811E12A002758F8 /* tri2gluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58B1811D920002CC2AE /* tri2gluings.h */; };
+		0543AEA41811E12A002758F8 /* tri2skeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58D1811D920002CC2AE /* tri2skeleton.h */; };
+		0543AEA51811E12A002758F8 /* tri2ui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58F1811D920002CC2AE /* tri2ui.h */; };
 		0543AEA61811E12A002758F8 /* eltmovedialog3.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5911811D920002CC2AE /* eltmovedialog3.h */; };
 		0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5931811D920002CC2AE /* facetgraphtab.h */; };
 		0543AEA81811E12A002758F8 /* gaprunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5951811D920002CC2AE /* gaprunner.h */; };
@@ -1309,10 +1309,10 @@
 		0564A9491811D921002CC2AE /* packetmanager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5801811D920002CC2AE /* packetmanager.cpp */; };
 		0564A94A1811D921002CC2AE /* packettabui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5821811D920002CC2AE /* packettabui.cpp */; };
 		0564A94B1811D921002CC2AE /* packettreeview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5841811D920002CC2AE /* packettreeview.cpp */; };
-		0564A94D1811D921002CC2AE /* dim2tricreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5881811D920002CC2AE /* dim2tricreator.cpp */; };
-		0564A94E1811D921002CC2AE /* dim2trigluings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58A1811D920002CC2AE /* dim2trigluings.cpp */; };
-		0564A94F1811D921002CC2AE /* dim2triskeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58C1811D920002CC2AE /* dim2triskeleton.cpp */; };
-		0564A9501811D921002CC2AE /* dim2triui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58E1811D920002CC2AE /* dim2triui.cpp */; };
+		0564A94D1811D921002CC2AE /* tri2creator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5881811D920002CC2AE /* tri2creator.cpp */; };
+		0564A94E1811D921002CC2AE /* tri2gluings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58A1811D920002CC2AE /* tri2gluings.cpp */; };
+		0564A94F1811D921002CC2AE /* tri2skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58C1811D920002CC2AE /* tri2skeleton.cpp */; };
+		0564A9501811D921002CC2AE /* tri2ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A58E1811D920002CC2AE /* tri2ui.cpp */; };
 		0564A9511811D921002CC2AE /* eltmovedialog3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5901811D920002CC2AE /* eltmovedialog3.cpp */; };
 		0564A9521811D921002CC2AE /* facetgraphtab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5921811D920002CC2AE /* facetgraphtab.cpp */; };
 		0564A9531811D921002CC2AE /* gaprunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5941811D920002CC2AE /* gaprunner.cpp */; };
@@ -3181,14 +3181,14 @@
 		0564A5841811D920002CC2AE /* packettreeview.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packettreeview.cpp; sourceTree = "<group>"; };
 		0564A5851811D920002CC2AE /* packettreeview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettreeview.h; sourceTree = "<group>"; };
 		0564A5871811D920002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		0564A5881811D920002CC2AE /* dim2tricreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2tricreator.cpp; sourceTree = "<group>"; };
-		0564A5891811D920002CC2AE /* dim2tricreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2tricreator.h; sourceTree = "<group>"; };
-		0564A58A1811D920002CC2AE /* dim2trigluings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2trigluings.cpp; sourceTree = "<group>"; };
-		0564A58B1811D920002CC2AE /* dim2trigluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2trigluings.h; sourceTree = "<group>"; };
-		0564A58C1811D920002CC2AE /* dim2triskeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triskeleton.cpp; sourceTree = "<group>"; };
-		0564A58D1811D920002CC2AE /* dim2triskeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2triskeleton.h; sourceTree = "<group>"; };
-		0564A58E1811D920002CC2AE /* dim2triui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triui.cpp; sourceTree = "<group>"; };
-		0564A58F1811D920002CC2AE /* dim2triui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2triui.h; sourceTree = "<group>"; };
+		0564A5881811D920002CC2AE /* tri2creator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri2creator.cpp; sourceTree = "<group>"; };
+		0564A5891811D920002CC2AE /* tri2creator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri2creator.h; sourceTree = "<group>"; };
+		0564A58A1811D920002CC2AE /* tri2gluings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri2gluings.cpp; sourceTree = "<group>"; };
+		0564A58B1811D920002CC2AE /* tri2gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri2gluings.h; sourceTree = "<group>"; };
+		0564A58C1811D920002CC2AE /* tri2skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri2skeleton.cpp; sourceTree = "<group>"; };
+		0564A58D1811D920002CC2AE /* tri2skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri2skeleton.h; sourceTree = "<group>"; };
+		0564A58E1811D920002CC2AE /* tri2ui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri2ui.cpp; sourceTree = "<group>"; };
+		0564A58F1811D920002CC2AE /* tri2ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri2ui.h; sourceTree = "<group>"; };
 		0564A5901811D920002CC2AE /* eltmovedialog3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog3.cpp; sourceTree = "<group>"; };
 		0564A5911811D920002CC2AE /* eltmovedialog3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog3.h; sourceTree = "<group>"; };
 		0564A5921811D920002CC2AE /* facetgraphtab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetgraphtab.cpp; sourceTree = "<group>"; };
@@ -5817,14 +5817,6 @@
 				0564A59B1811D920002CC2AE /* compatcanvas.h */,
 				0564A59C1811D920002CC2AE /* containerui.cpp */,
 				0564A59D1811D920002CC2AE /* containerui.h */,
-				0564A5881811D920002CC2AE /* dim2tricreator.cpp */,
-				0564A5891811D920002CC2AE /* dim2tricreator.h */,
-				0564A58A1811D920002CC2AE /* dim2trigluings.cpp */,
-				0564A58B1811D920002CC2AE /* dim2trigluings.h */,
-				0564A58C1811D920002CC2AE /* dim2triskeleton.cpp */,
-				0564A58D1811D920002CC2AE /* dim2triskeleton.h */,
-				0564A58E1811D920002CC2AE /* dim2triui.cpp */,
-				0564A58F1811D920002CC2AE /* dim2triui.h */,
 				05A73CBB19B2F1AB0099C617 /* docwidget.h */,
 				0564A5901811D920002CC2AE /* eltmovedialog3.cpp */,
 				0564A5911811D920002CC2AE /* eltmovedialog3.h */,
@@ -5890,6 +5882,14 @@
 				0564A5A11811D920002CC2AE /* surfacesui.h */,
 				0564A5B41811D920002CC2AE /* textui.cpp */,
 				0564A5B51811D920002CC2AE /* textui.h */,
+				0564A5881811D920002CC2AE /* tri2creator.cpp */,
+				0564A5891811D920002CC2AE /* tri2creator.h */,
+				0564A58A1811D920002CC2AE /* tri2gluings.cpp */,
+				0564A58B1811D920002CC2AE /* tri2gluings.h */,
+				0564A58C1811D920002CC2AE /* tri2skeleton.cpp */,
+				0564A58D1811D920002CC2AE /* tri2skeleton.h */,
+				0564A58E1811D920002CC2AE /* tri2ui.cpp */,
+				0564A58F1811D920002CC2AE /* tri2ui.h */,
 				0564A5B61811D920002CC2AE /* tri3algebra.cpp */,
 				0564A5B71811D920002CC2AE /* tri3algebra.h */,
 				0564A5B81811D920002CC2AE /* tri3creator.cpp */,
@@ -8199,9 +8199,9 @@
 				0543AEA21811E12A002758F8 /* packettreeview.h in Sources */,
 				051691BB1C5AD5AC00DC69EC /* hyperui.cpp in Sources */,
 				050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */,
-				0543AEA31811E12A002758F8 /* dim2trigluings.h in Sources */,
-				0543AEA41811E12A002758F8 /* dim2triskeleton.h in Sources */,
-				0543AEA51811E12A002758F8 /* dim2triui.h in Sources */,
+				0543AEA31811E12A002758F8 /* tri2gluings.h in Sources */,
+				0543AEA41811E12A002758F8 /* tri2skeleton.h in Sources */,
+				0543AEA51811E12A002758F8 /* tri2ui.h in Sources */,
 				0543AEA61811E12A002758F8 /* eltmovedialog3.h in Sources */,
 				0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */,
 				0543AEA81811E12A002758F8 /* gaprunner.h in Sources */,
@@ -8264,7 +8264,7 @@
 				0564A9681811D921002CC2AE /* tri3gluings.cpp in Sources */,
 				051691B91C5AD5AC00DC69EC /* hypermatchingui.cpp in Sources */,
 				0507C5A71C54495D00D1C86C /* eltmovedialog4.cpp in Sources */,
-				0564A9501811D921002CC2AE /* dim2triui.cpp in Sources */,
+				0564A9501811D921002CC2AE /* tri2ui.cpp in Sources */,
 				0564A96C1811D921002CC2AE /* skeletonwindow.cpp in Sources */,
 				0564A8111811D921002CC2AE /* reginahandler.cpp in Sources */,
 				0564A8081811D921002CC2AE /* csvsurfacehandler.cpp in Sources */,
@@ -8290,7 +8290,7 @@
 				0564A9821811D921002CC2AE /* reginaprefset.cpp in Sources */,
 				0564A8091811D921002CC2AE /* dehydrationhandler.cpp in Sources */,
 				0591E8431C4F769100793A9C /* tri4ui.cpp in Sources */,
-				0564A94F1811D921002CC2AE /* dim2triskeleton.cpp in Sources */,
+				0564A94F1811D921002CC2AE /* tri2skeleton.cpp in Sources */,
 				0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */,
 				0564A95C1811D921002CC2AE /* surfacescompatui.cpp in Sources */,
 				0564A94A1811D921002CC2AE /* packettabui.cpp in Sources */,
@@ -8323,7 +8323,7 @@
 				05A73CCE19B2F1AB0099C617 /* snappeagluings.cpp in Sources */,
 				0564A9511811D921002CC2AE /* eltmovedialog3.cpp in Sources */,
 				0564A9461811D921002CC2AE /* packetchooser.cpp in Sources */,
-				0564A94D1811D921002CC2AE /* dim2tricreator.cpp in Sources */,
+				0564A94D1811D921002CC2AE /* tri2creator.cpp in Sources */,
 				0564A9641811D921002CC2AE /* tri3algebra.cpp in Sources */,
 				0564A9491811D921002CC2AE /* packetmanager.cpp in Sources */,
 				050F5E801B9BD6F400C1F681 /* pythonoutputstream.cpp in Sources */,
@@ -8333,7 +8333,7 @@
 				0564A8131811D921002CC2AE /* sourcehandler.cpp in Sources */,
 				0564A99B1811D921002CC2AE /* treenav.cpp in Sources */,
 				0564A9701811D921002CC2AE /* patiencedialog.cpp in Sources */,
-				0564A94E1811D921002CC2AE /* dim2trigluings.cpp in Sources */,
+				0564A94E1811D921002CC2AE /* tri2gluings.cpp in Sources */,
 				0564A9771811D921002CC2AE /* pythonmanager.cpp in Sources */,
 				05A73CCC19B2F1AB0099C617 /* snappeacreator.cpp in Sources */,
 				0564A80F1811D921002CC2AE /* pythonhandler.cpp in Sources */,

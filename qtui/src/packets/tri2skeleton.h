@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,55 +30,83 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim2tricreator.h
- *  \brief Allows the creation of 2-manifold triangulations.
+/*! \file tri2skeleton.h
+ *  \brief Provides a skeletal properties viewer for 2-manifold triangulations.
  */
 
-#ifndef __DIM2TRICREATOR_H
-#define __DIM2TRICREATOR_H
+#ifndef __TRI2SKELETON_H
+#define __TRI2SKELETON_H
 
-#include "../packetcreator.h"
+#include "packettabui.h"
+#include "skeletonwindow.h"
 
-#include <QStackedWidget>
-
-class QCheckBox;
-class QComboBox;
-class QLineEdit;
+namespace regina {
+    class Packet;
+    template <int> class Triangulation;
+};
 
 /**
- * An interface for creating 2-manifold triangulations.
+ * A triangulation page for viewing skeletal properties.
  */
-class Dim2TriangulationCreator : public PacketCreator {
-    private:
-        /**
-         * Internal components
-         */
-        QWidget* ui;
-        QComboBox* type;
-        QStackedWidget* details;
-
-        /**
-         * Details for specific triangulation types
-         */
-        QLineEdit* orGenus;
-        QLineEdit* orPunctures;
-        QLineEdit* norGenus;
-        QLineEdit* norPunctures;
-        QLineEdit* isoSig;
-        QComboBox* exampleWhich;
-
+class Tri2SkeletonUI : public PacketTabbedViewerTab {
     public:
         /**
          * Constructor.
          */
-        Dim2TriangulationCreator();
+        Tri2SkeletonUI(regina::Triangulation<2>* packet,
+                PacketTabbedUI* useParentUI);
+};
+
+/**
+ * A triangulation page for accessing individual skeletal components.
+ */
+class Tri2SkelCompUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
+    private:
+        /**
+         * Packet details
+         */
+        regina::Triangulation<2>* tri;
 
         /**
-         * PacketCreator overrides.
+         * Internal components
          */
+        QWidget* ui;
+        QLabel* nVertices;
+        QLabel* nEdges;
+        QLabel* nTriangles;
+        QLabel* nComps;
+        QLabel* nBdryComps;
+        QLabel* eulerTri;
+
+        /**
+         * Skeleton viewers
+         */
+        QLinkedList<SkeletonWindow*> viewers;
+
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        Tri2SkelCompUI(regina::Triangulation<2>* packet,
+                PacketTabbedViewerTab* useParentUI);
+
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::Packet* getPacket();
         QWidget* getInterface();
-        regina::Packet* createPacket(regina::Packet* parentPacket,
-            QWidget* parentWidget);
+        void refresh();
+
+    public slots:
+        /**
+         * Open skeleton windows.
+         */
+        void viewVertices();
+        void viewEdges();
+        void viewComponents();
+        void viewBoundaryComponents();
 };
 
 #endif

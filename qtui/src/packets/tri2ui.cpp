@@ -34,9 +34,9 @@
 #include "triangulation/dim2.h"
 
 // UI includes:
-#include "dim2triui.h"
-#include "dim2trigluings.h"
-#include "dim2triskeleton.h"
+#include "tri2ui.h"
+#include "tri2gluings.h"
+#include "tri2skeleton.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
 
@@ -47,13 +47,13 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Dim2TriangulationUI::Dim2TriangulationUI(regina::Triangulation<2>* packet,
+Tri2UI::Tri2UI(regina::Triangulation<2>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim2Tri) {
-    Dim2TriHeaderUI* header = new Dim2TriHeaderUI(packet, this);
-    gluings = new Dim2TriGluingsUI(packet, this,
+    Tri2HeaderUI* header = new Tri2HeaderUI(packet, this);
+    gluings = new Tri2GluingsUI(packet, this,
         newEnclosingPane->isReadWrite());
-    skeleton = new Dim2TriSkeletonUI(packet, this);
+    skeleton = new Tri2SkeletonUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -64,19 +64,19 @@ Dim2TriangulationUI::Dim2TriangulationUI(regina::Triangulation<2>* packet,
     editIface = new PacketEditTabbedUI(this);
 }
 
-Dim2TriangulationUI::~Dim2TriangulationUI() {
+Tri2UI::~Tri2UI() {
     delete editIface;
 }
 
-const QLinkedList<QAction*>& Dim2TriangulationUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& Tri2UI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 
-QString Dim2TriangulationUI::getPacketMenuText() const {
+QString Tri2UI::getPacketMenuText() const {
     return QObject::tr("2-D T&riangulation");
 }
 
-Dim2TriHeaderUI::Dim2TriHeaderUI(regina::Triangulation<2>* packet,
+Tri2HeaderUI::Tri2HeaderUI(regina::Triangulation<2>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -96,19 +96,19 @@ Dim2TriHeaderUI::Dim2TriHeaderUI(regina::Triangulation<2>* packet,
     uiLayout->addWidget(header);
 }
 
-regina::Packet* Dim2TriHeaderUI::getPacket() {
+regina::Packet* Tri2HeaderUI::getPacket() {
     return tri;
 }
 
-QWidget* Dim2TriHeaderUI::getInterface() {
+QWidget* Tri2HeaderUI::getInterface() {
     return ui;
 }
 
-void Dim2TriHeaderUI::refresh() {
+void Tri2HeaderUI::refresh() {
     header->setText(summaryInfo(tri));
 }
 
-QString Dim2TriHeaderUI::summaryInfo(regina::Triangulation<2>* tri) {
+QString Tri2HeaderUI::summaryInfo(regina::Triangulation<2>* tri) {
     if (tri->isEmpty())
         return QObject::tr("Empty");
 

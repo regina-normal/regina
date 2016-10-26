@@ -35,7 +35,7 @@
 #include "triangulation/dim2.h"
 
 // UI includes:
-#include "dim2tricreator.h"
+#include "tri2creator.h"
 #include "reginasupport.h"
 
 #include <QComboBox>
@@ -85,7 +85,7 @@ namespace {
     QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
 }
 
-Dim2TriangulationCreator::Dim2TriangulationCreator() {
+Tri2Creator::Tri2Creator() {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -232,11 +232,11 @@ Dim2TriangulationCreator::Dim2TriangulationCreator() {
         SLOT(setCurrentIndex(int)));
 }
 
-QWidget* Dim2TriangulationCreator::getInterface() {
+QWidget* Tri2Creator::getInterface() {
     return ui;
 }
 
-regina::Packet* Dim2TriangulationCreator::createPacket(regina::Packet*,
+regina::Packet* Tri2Creator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {

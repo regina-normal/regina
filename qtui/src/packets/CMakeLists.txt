@@ -3,10 +3,6 @@ SET ( FILES
   anglesui
   compatcanvas
   containerui
-  dim2tricreator
-  dim2trigluings
-  dim2triskeleton
-  dim2triui
   eltmovedialog3
   eltmovedialog4
   facetgraphtab
@@ -39,6 +35,10 @@ SET ( FILES
   surfacessummaryui
   surfacesui
   textui
+  tri2creator
+  tri2gluings
+  tri2skeleton
+  tri2ui
   tri3algebra
   tri3creator
   tri3composition
