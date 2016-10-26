@@ -192,7 +192,7 @@ int main(int argc, char* argv[]) {
         p = p->nextTreePacket();
     long currTri = 0;
 
-    NTriangulation* t;
+    Triangulation<3>* t;
     NormalSurfaces* q;
     NormalSurfaces* s;
 
@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
     }
 
     printf("Using triangulation %ld\n", useTri);
-    t = static_cast<NTriangulation*>(p);
+    t = static_cast<Triangulation<3>*>(p);
     if ((! t->isValid()) || t->isIdeal()) {
         // We only care about valid triangulations with no ideal vertices.
         printf("0 0 0 0 0");

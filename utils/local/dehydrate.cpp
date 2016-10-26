@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         for (Packet* p = tree; p; p = p->nextTreePacket())
             if (p->type() == PACKET_TRIANGULATION3) {
                 found = true;
-                dehydration = static_cast<NTriangulation*>(p)->dehydrate();
+                dehydration = static_cast<Triangulation<3>*>(p)->dehydrate();
 
                 std::cout << p->label() << " : ";
                 if (dehydration.empty())

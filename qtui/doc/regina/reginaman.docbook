@@ -179,8 +179,8 @@
        (that is, do not run
        <literal>from regina import&nbsp;*</literal>).
        This means that (for example) the main 3-manifold triangulation class
-       must be accessed as <literal>regina.NTriangulation</literal>, not
-       just <literal>NTriangulation</literal>.
+       must be accessed as <literal>regina.Triangulation3</literal>, not
+       just <literal>Triangulation3</literal>.
       </para>
      </listitem>
     </varlistentry>

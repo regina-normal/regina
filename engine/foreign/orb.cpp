@@ -71,7 +71,7 @@ namespace {
  * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure.
  */
-Triangulation<3> *cassonToNTriangulation( CassonFormat *cf )
+Triangulation<3> *cassonToTriangulation( CassonFormat *cf )
  {
  int i;
  Triangulation<3> *triang = new Triangulation<3>();
@@ -342,7 +342,7 @@ Triangulation<3> *readTriangulation( std::istream &ts) {
         return 0;
     }
 
-    Triangulation<3>* manifold = cassonToNTriangulation( cf );
+    Triangulation<3>* manifold = cassonToTriangulation( cf );
     freeCassonFormat( cf );
 
     manifold->setLabel(file_id);

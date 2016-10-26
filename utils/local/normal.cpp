@@ -161,11 +161,11 @@ bool process(const std::string& filename) {
         return false;
     }
 
-    NTriangulation* t;
+    Triangulation<3>* t;
     NormalSurfaces* s;
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION3) {
-            t = static_cast<NTriangulation*>(p);
+            t = static_cast<Triangulation<3>*>(p);
             s = NormalSurfaces::enumerate(t,
                 (quad ? NS_QUAD : NS_STANDARD));
             out << t->size() << ' ' << s->size() << " \""

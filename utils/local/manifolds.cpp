@@ -164,7 +164,7 @@ bool process(Container* c) {
         foundTri = true;
 
         std = NStandardTriangulation::isStandardTriangulation(
-            static_cast<NTriangulation*>(child));
+            static_cast<Triangulation<3>*>(child));
         if (! std)
             continue;
 

@@ -382,7 +382,7 @@ private:
     void computeBHomology();
     /** Computes all the homology groups of the manifold using dual cells. This
      ** routine is the faster than computeHomology() but it's likely a bit
-     ** slower than NTriangulation's homology routines. */
+     ** slower than Triangulation<3>'s homology routines. */
     void computeDHomology();
     /** The induced map on homology corresponding to inclusion of the
         boundary. */

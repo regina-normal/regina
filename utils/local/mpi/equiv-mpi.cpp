@@ -125,7 +125,7 @@ Packet* tree = 0;
 
 // A set of triangulations that have been found to be homeomorphic to
 // each other.  A set of this type forms the solution to a single slave task.
-typedef std::set<NTriangulation*> TriSet;
+typedef std::set<Triangulation<3>*> TriSet;
 TriSet equivs;
 
 
@@ -145,7 +145,7 @@ bool hasError = false;
 Packet* newTree = 0;
 
 // A mapping from triangulations to equivalence classes.
-typedef std::map<NTriangulation*, int> ClassMap;
+typedef std::map<Triangulation<3>*, int> ClassMap;
 ClassMap eClass;
 int nextClass = 0;
 
@@ -162,7 +162,7 @@ unsigned long nHasNew = 0;
  */
 
 // The original triangulation currently being processed.
-NTriangulation* orig;
+Triangulation<3>* orig;
 
 // Facts we have discovered about the original triangulation.
 bool nonMin, hasNew;
@@ -363,7 +363,7 @@ int ctrlWaitForSlave() {
         equivs.clear();
 
         Packet* p;
-        NTriangulation* tri;
+        Triangulation<3>* tri;
         while (1) {
             MPI_Recv(triLabel, MAX_TRI_LABEL_LEN + 1, MPI_CHAR, slave,
                 TAG_RESULT_DATA, MPI_COMM_WORLD, &status);
@@ -376,7 +376,7 @@ int ctrlWaitForSlave() {
                     << "] not found." << std::endl;
                 hasError = true;
             } else {
-                tri = dynamic_cast<NTriangulation*>(p);
+                tri = dynamic_cast<Triangulation<3>*>(p);
                 if (! tri) {
                     ctrlLogStamp() << "ERROR: Returned equivalent [" << triLabel
                         << "] is not a triangulation!" << std::endl;
@@ -460,7 +460,7 @@ int ctrlWaitForSlave() {
  * slave down.  Note that if the given triangulation is 0 but no slaves
  * are actively working on tasks then this routine will wait forever.
  */
-void ctrlFarmTri(NTriangulation* tri) {
+void ctrlFarmTri(Triangulation<3>* tri) {
     int slave;
     if (tri == 0 || nRunningSlaves == nSlaves) {
         // We need to wait for somebody to stop first.
@@ -490,7 +490,7 @@ void ctrlFarmTri(NTriangulation* tri) {
  * Main routine for the controller.
  */
 int mainController() {
-    NTriangulation* t;
+    Triangulation<3>* t;
 
     // Start logging.
     logger.open(logFile);
@@ -503,7 +503,7 @@ int mainController() {
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION3) {
             nTris++;
-            ctrlFarmTri(static_cast<NTriangulation*>(p));
+            ctrlFarmTri(static_cast<Triangulation<3>*>(p));
         }
 
     // Kill off any slaves that never started working, since there are no
@@ -559,7 +559,7 @@ int mainController() {
                         printf("    %s\n",
                             cit2->first->label().c_str());
                         if (outFile) {
-                            t = new NTriangulation(*(cit2->first));
+                            t = new Triangulation<3>(*(cit2->first));
                             t->setLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }
@@ -684,13 +684,13 @@ void slaveSendEquivs() {
  *
  * We have a homeomorphic triangulation of the same size as the original.
  */
-void slaveSameSize(NTriangulation* t) {
+void slaveSameSize(Triangulation<3>* t) {
     // Hunt for it in the packet tree.
-    NTriangulation* found = 0;
+    Triangulation<3>* found = 0;
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION3)
-            if (static_cast<NTriangulation*>(p)->isIsomorphicTo(*t).get()) {
-                found = static_cast<NTriangulation*>(p);
+            if (static_cast<Triangulation<3>*>(p)->isIsomorphicTo(*t).get()) {
+                found = static_cast<Triangulation<3>*>(p);
                 break;
             }
 
@@ -716,7 +716,7 @@ void slaveSameSize(NTriangulation* t) {
  *
  * Do the final greedy simplify and process.
  */
-void slaveProcessAlt(NTriangulation* t) {
+void slaveProcessAlt(Triangulation<3>* t) {
     t->intelligentSimplify();
 
     if (t->size() < orig->size())
@@ -730,19 +730,19 @@ void slaveProcessAlt(NTriangulation* t) {
  *
  * Perform reduction moves.  The given triangulation may be changed.
  */
-void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
+void slaveTryMovesDown(Triangulation<3>* t, int maxLevels) {
     if (maxLevels == 0) {
         slaveProcessAlt(t);
         return;
     }
 
-    NTriangulation* alt;
+    Triangulation<3>* alt;
     unsigned i, j;
     bool found = false;
 
     for (i = 0; i < t->countEdges(); i++)
         if (t->twoZeroMove(t->edge(i), true, false)) {
-            alt = new NTriangulation(*t);
+            alt = new Triangulation<3>(*t);
             alt->twoZeroMove(alt->edge(i));
             slaveTryMovesDown(alt, maxLevels - 1);
             found = true;
@@ -755,7 +755,7 @@ void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
     for (i = 0; i < t->countEdges(); i++)
         for (j = 0; j < 2; j++)
             if (t->twoOneMove(t->edge(i), j, true, false)) {
-                alt = new NTriangulation(*t);
+                alt = new Triangulation<3>(*t);
                 alt->twoOneMove(alt->edge(i), j);
                 slaveTryMovesDown(alt, maxLevels - 1);
                 found = true;
@@ -769,7 +769,7 @@ void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
     if (! found)
         for (i = 0; i < t->countEdges(); i++)
             if (t->threeTwoMove(t->edge(i), true, false)) {
-                alt = new NTriangulation(*t);
+                alt = new Triangulation<3>(*t);
                 alt->threeTwoMove(alt->edge(i));
                 slaveTryMovesDown(alt, maxLevels - 1);
                 found = true;
@@ -784,7 +784,7 @@ void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
         for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->edge(i), j, true, false)) {
-                    alt = new NTriangulation(*t);
+                    alt = new Triangulation<3>(*t);
                     alt->fourFourMove(alt->edge(i), j);
                     slaveTryMovesDown(alt, maxLevels - 1);
                     found = true;
@@ -805,17 +805,17 @@ void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
  * Perform 4-4 moves.  The given triangulation may be changed.
  * Moves that revert to prev, prev2 or prev3 will not be considered.
  */
-void slaveTryMovesAcross(NTriangulation* t, int maxLevels,
-        NTriangulation* prev = 0, NTriangulation* prev2 = 0,
-        NTriangulation* prev3 = 0) {
+void slaveTryMovesAcross(Triangulation<3>* t, int maxLevels,
+        Triangulation<3>* prev = 0, Triangulation<3>* prev2 = 0,
+        Triangulation<3>* prev3 = 0) {
     unsigned i, j;
-    NTriangulation* alt;
+    Triangulation<3>* alt;
 
     if (maxLevels > 0)
         for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->edge(i), j, true, false)) {
-                    alt = new NTriangulation(*t);
+                    alt = new Triangulation<3>(*t);
                     alt->fourFourMove(alt->edge(i), j);
                     if (prev && alt->isIsomorphicTo(*prev).get()) {
                         // Ignore, reversion.
@@ -840,17 +840,17 @@ void slaveTryMovesAcross(NTriangulation* t, int maxLevels,
  *
  * Perform 2-3 moves.  The given triangulation will not be changed.
  */
-void slaveTryMovesUp(NTriangulation* t, int levelsRemaining) {
-    NTriangulation* alt;
+void slaveTryMovesUp(Triangulation<3>* t, int levelsRemaining) {
+    Triangulation<3>* alt;
 
     if (levelsRemaining == 0) {
         // We're not allowed to change the original, so clone it.
-        alt = new NTriangulation(*t);
+        alt = new Triangulation<3>(*t);
         slaveTryMovesAcross(alt, argAcross);
         delete alt;
     } else {
         for (unsigned i = 0; i < t->countTriangles(); i++) {
-            alt = new NTriangulation(*t);
+            alt = new Triangulation<3>(*t);
             if (alt->twoThreeMove(alt->triangle(i))) {
                 if (levelsRemaining > 1)
                     slaveTryMovesUp(alt, levelsRemaining - 1);
@@ -870,7 +870,7 @@ void slaveTryMovesUp(NTriangulation* t, int levelsRemaining) {
  *
  * Process a single triangulation.
  */
-void slaveProcessTri(NTriangulation* tri) {
+void slaveProcessTri(Triangulation<3>* tri) {
     nonMin = hasNew = false;
     orig = tri;
     equivs.clear();
@@ -892,7 +892,7 @@ void slaveProcessTri(NTriangulation* tri) {
 int mainSlave() {
     char triLabel[MAX_TRI_LABEL_LEN + 1];
     Packet* p;
-    NTriangulation* tri;
+    Triangulation<3>* tri;
 
     // Keep fetching and processing tasks until there are no more.
     MPI_Status status;
@@ -908,7 +908,7 @@ int mainSlave() {
         if (! p)
             slaveBail(std::string("Packet ") + triLabel + " not found.");
         else {
-            tri = dynamic_cast<NTriangulation*>(p);
+            tri = dynamic_cast<Triangulation<3>*>(p);
             if (! tri)
                 slaveBail(std::string("Packet ") + triLabel +
                     " is not a triangulation.");

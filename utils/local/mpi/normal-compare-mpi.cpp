@@ -378,7 +378,7 @@ int mainSlave() {
         p = p->nextTreePacket();
     long currTri = 0;
 
-    NTriangulation* t;
+    Triangulation<3>* t;
     NormalSurfaces* q;
     NormalSurfaces* s;
 
@@ -416,7 +416,7 @@ int mainSlave() {
             continue;
         }
 
-        t = static_cast<NTriangulation*>(p);
+        t = static_cast<Triangulation<3>*>(p);
         if ((! t->isValid()) || t->isIdeal()) {
             // We only care about valid triangulations with no ideal vertices.
             slaveSendResult(0, 0, 0, 0, 0);

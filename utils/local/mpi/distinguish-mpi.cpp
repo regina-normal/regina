@@ -149,7 +149,7 @@ struct InvData;
 std::vector<InvData*> manifolds;
 
 // The current working data for each slave.
-NTriangulation* slaveWorkingTri[MAX_SLAVES + 1];
+Triangulation<3>* slaveWorkingTri[MAX_SLAVES + 1];
 InvData* slaveWorkingData[MAX_SLAVES + 1];
 int slaveWorkingTV[MAX_SLAVES + 1];
 
@@ -393,7 +393,7 @@ inline bool cmpInvData(const InvData* x, const InvData* y) {
  * Called when different triangulations of the same manifold are
  * discovered to have different invariants.
  */
-void ctrlInconsistent(InvData* data, NTriangulation* tri, const char* inv) {
+void ctrlInconsistent(InvData* data, Triangulation<3>* tri, const char* inv) {
     printf("INCONSISTENCY: %s\n", data->manifold->label().c_str());
     printf("    Invariant: %s\n", inv);
     printf("    Triangulation: %s\n", tri->label().c_str());
@@ -410,7 +410,7 @@ void ctrlInconsistent(InvData* data, NTriangulation* tri, const char* inv) {
  * Called when different triangulations of the same manifold are
  * discovered to have different Turaev-Viro invariants.
  */
-void ctrlInconsistentTV(InvData* data, NTriangulation* tri, int whichTV) {
+void ctrlInconsistentTV(InvData* data, Triangulation<3>* tri, int whichTV) {
     printf("INCONSISTENCY: %s\n", data->manifold->label().c_str());
     printf("    Invariant: Turaev-Viro(%ld, %ld)\n",
         tvParams[whichTV][0], tvParams[whichTV][1]);
@@ -480,7 +480,7 @@ int ctrlWaitForSlave() {
  * If all slaves are working then this routine will wait until some
  * slave finishes its current task.
  */
-void ctrlFarmTask(NTriangulation* tri, InvData* data, int whichTV) {
+void ctrlFarmTask(Triangulation<3>* tri, InvData* data, int whichTV) {
     int slave;
     if (nRunningSlaves == nSlaves) {
         // We need to wait for somebody to stop first.
@@ -519,14 +519,14 @@ void ctrlFarmTask(NTriangulation* tri, InvData* data, int whichTV) {
  */
 void ctrlProcess(Container* c) {
     InvData* mfdData = 0;
-    NTriangulation* tri;
+    Triangulation<3>* tri;
     int i;
 
     for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         if (child->type() != PACKET_TRIANGULATION3)
             continue;
-        tri = static_cast<NTriangulation*>(child);
+        tri = static_cast<Triangulation<3>*>(child);
 
         ctrlLogStamp() << "Processing triangulation: "
             << tri->label() << std::endl;
@@ -680,7 +680,7 @@ void slaveSendResult(double ans) {
 int mainSlave() {
     char triLabel[MAX_TRI_LABEL_LEN + 1];
     long taskParams[2];
-    NTriangulation* workingTri = 0;
+    Triangulation<3>* workingTri = 0;
 
     // Keep fetching and processing tasks until there are no more.
     MPI_Status status;
@@ -696,7 +696,7 @@ int mainSlave() {
             MPI_Recv(triLabel, MAX_TRI_LABEL_LEN + 1, MPI_CHAR, 0,
                 TAG_CHANGE_TRI, MPI_COMM_WORLD, &status);
 
-            workingTri = dynamic_cast<NTriangulation*>(
+            workingTri = dynamic_cast<Triangulation<3>*>(
                 tree->findPacketLabel(triLabel));
         } else if (taskParams[0] < 3 || taskParams[0] > tvMaxR) {
             // Value of r is out of range.

@@ -85,8 +85,8 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
-void insertTri(const NTriangulation& source) {
-    NTriangulation* t = new NTriangulation(source);
+void insertTri(const Triangulation<3>& source) {
+    Triangulation<3>* t = new Triangulation<3>(source);
     t->setLabel(source.label());
 
     std::string H1 = t->homology().str();
@@ -119,13 +119,13 @@ void process(const char* filename) {
     unsigned nTris = 0;
     unsigned nGood = 0;
 
-    NTriangulation* t;
+    Triangulation<3>* t;
 
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION3) {
             nTris++;
 
-            t = static_cast<NTriangulation*>(p);
+            t = static_cast<Triangulation<3>*>(p);
 
             if (t->intelligentSimplify())
                 continue;

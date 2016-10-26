@@ -55,7 +55,7 @@ def ensureDestroyed(watcher):
 
 print 'Insertion case'
 c = Container(); cw = watcher(c)
-t = NTriangulation(); t.newTetrahedron(); tw = watcher(t)
+t = Triangulation3(); t.newTetrahedron(); tw = watcher(t)
 c.insertChildLast(t)
 ensureAlive(cw); ensureAlive(tw)
 t = None
@@ -65,7 +65,7 @@ ensureDestroyed(cw); ensureDestroyed(tw)
 
 print 'Root destruction case'
 a = Container(); aw = watcher(a)
-b = NTriangulation(); bw = watcher(b)
+b = Triangulation3(); bw = watcher(b)
 a.insertChildLast(b)
 ensureAlive(aw); ensureAlive(bw)
 a = None
@@ -77,7 +77,7 @@ ensureDestroyed(aw); ensureDestroyed(bw)
 
 print 'Orphan case'
 p = Container(); pw = watcher(p)
-q = NTriangulation(); qw = watcher(q)
+q = Triangulation3(); qw = watcher(q)
 p.insertChildLast(q)
 ensureAlive(pw); ensureAlive(qw)
 

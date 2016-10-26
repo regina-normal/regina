@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
             usage(argv[0]);
 
         // Process the next triangulation on the command line:
-        NTriangulation* t = NTriangulation::fromIsoSig(argv[i]);
+        Triangulation3* t = Triangulation3::fromIsoSig(argv[i]);
         if (t) {
             found = true;
 

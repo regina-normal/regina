@@ -138,7 +138,7 @@ void process(Container* c) {
 
         if (spec.isTri) {
             std = NStandardTriangulation::isStandardTriangulation(
-                static_cast<NTriangulation*>(child));
+                static_cast<Triangulation<3>*>(child));
             spec.hasName = (std != 0);
 
             if (spec.hasName) {

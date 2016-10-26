@@ -83,7 +83,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
-void process(NTriangulation* t) {
+void process(Triangulation<3>* t) {
     std::cout << t->label() << "  -->  ";
     totTris++;
 
@@ -161,7 +161,7 @@ int main(int argc, char* argv[]) {
     // Process the packets.
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION3)
-            process(static_cast<NTriangulation*>(p));
+            process(static_cast<Triangulation<3>*>(p));
         else if (outputContainers && p->type() == PACKET_CONTAINER)
             std::cout << "----- " << p->label() << " -----"
                 << std::endl;

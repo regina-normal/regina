@@ -357,8 +357,8 @@ elif appName == 'trisetcmp':
     subcomplexTesting = False
 
     def isTri(t):
-        return t.type() == regina.PACKET_TRIANGULATION or \
-            t.type() == regina.PACKET_DIM4TRIANGULATION
+        return t.type() == regina.PACKET_TRIANGULATION3 or \
+            t.type() == regina.PACKET_TRIANGULATION4
 
     def compare(t1, t2):
         if subcomplexTesting:

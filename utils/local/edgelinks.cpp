@@ -154,12 +154,12 @@ bool process(const std::string& filename) {
         return false;
     }
 
-    NTriangulation* t;
+    Triangulation<3>* t;
     NormalSurfaces* s;
     long n, i, links;
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION3) {
-            t = static_cast<NTriangulation*>(p);
+            t = static_cast<Triangulation<3>*>(p);
             s = NormalSurfaces::enumerate(t, NS_QUAD);
 
             links = 0;

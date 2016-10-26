@@ -536,7 +536,7 @@ int mainController() {
  */
 void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
     if (perms) {
-        regina::NTriangulation* tri = perms->triangulate();
+        regina::Triangulation<3>* tri = perms->triangulate();
 
         bool ok = true;
         if (! tri->isValid())

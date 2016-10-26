@@ -74,7 +74,7 @@ int main() {
         if (feof(stdin))
             break;
 
-        regina::NTriangulation* tri = regina::NTriangulation::fromIsoSig(input);
+        regina::Triangulation<3>* tri = regina::Triangulation<3>::fromIsoSig(input);
         regina::NormalSurfaces* s;
 
         s = regina::NormalSurfaces::enumerate(tri, regina::NS_STANDARD);

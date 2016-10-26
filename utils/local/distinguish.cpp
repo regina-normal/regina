@@ -93,7 +93,7 @@ struct InvData {
     unsigned long h2z2;
     double* turaevViro;
 
-    InvData(NTriangulation* tri) : manifold(0) {
+    InvData(Triangulation<3>* tri) : manifold(0) {
         h1 = tri->homology().str();
         h2z2 = tri->homologyH2Z2();
 
@@ -165,7 +165,7 @@ void process(Container* c) {
         if (child->type() != PACKET_TRIANGULATION3)
             continue;
 
-        triData = new InvData(static_cast<NTriangulation*>(child));
+        triData = new InvData(static_cast<Triangulation<3>*>(child));
 
         if (! mfdData) {
             mfdData = triData;
