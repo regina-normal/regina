@@ -85,7 +85,7 @@ void NHyperbolicMinSearcher::runSearch(long maxDepth) {
     int minOrder = orderElt;
     int maxOrder = orderElt + maxDepth;
 
-    NTetFace face, adj;
+    FacetSpec<3> face, adj;
     int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
@@ -312,8 +312,8 @@ int NHyperbolicMinSearcher::mergeEdgeClasses() {
      * proven to be non-minimal.  For details see:
      * "The cusped hyperbolic census is complete", B.B.
      */
-    NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing_)[face];
+    FacetSpec<3> face = order[orderElt];
+    FacetSpec<3> adj = (*pairing_)[face];
 
     int retVal = 0;
 
@@ -394,7 +394,7 @@ int NHyperbolicMinSearcher::mergeEdgeClasses() {
 }
 
 void NHyperbolicMinSearcher::splitEdgeClasses() {
-    NTetFace face = order[orderElt];
+    FacetSpec<3> face = order[orderElt];
 
     int v1, v2;
     int e;

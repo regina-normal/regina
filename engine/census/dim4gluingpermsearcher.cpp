@@ -229,10 +229,10 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
 
     // Just fill the order_[] array in a default left-to-right fashion.
     // Subclasses can rearrange things if they choose.
-    order_ = new Dim4PentFacet[(nPent * 5) / 2];
+    order_ = new FacetSpec<4>[(nPent * 5) / 2];
     orderElt_ = orderSize_ = 0;
 
-    Dim4PentFacet facet, adj;
+    FacetSpec<4> facet, adj;
     for (facet.setFirst(); ! facet.isPastEnd(nPent, true); facet++)
         if (! pairing->isUnmatched(facet))
             if (facet < pairing->dest(facet))
@@ -338,7 +338,7 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
     int minOrder = orderElt_;
     int maxOrder = orderElt_ + maxDepth;
 
-    Dim4PentFacet facet, adj;
+    FacetSpec<4> facet, adj;
 
     while (orderElt_ >= minOrder) {
         facet = order_[orderElt_];
@@ -683,7 +683,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
     for (p = 0; p < nPent; ++p)
         in >> orientation_[p];
 
-    order_ = new Dim4PentFacet[(nPent * 5) / 2];
+    order_ = new FacetSpec<4>[(nPent * 5) / 2];
     in >> orderElt_ >> orderSize_;
     for (p = 0; p < orderSize_; ++p) {
         in >> order_[p].simp >> order_[p].facet;
@@ -748,7 +748,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
 }
 
 bool Dim4GluingPermSearcher::isCanonical() const {
-    Dim4PentFacet facet, facetDest, facetImage;
+    FacetSpec<4> facet, facetDest, facetImage;
     int ordering;
 
     for (Dim4FacetPairing::IsoList::const_iterator it = autos_->begin();
@@ -784,9 +784,9 @@ bool Dim4GluingPermSearcher::isCanonical() const {
     return true;
 }
 
-bool Dim4GluingPermSearcher::badTriangleLink(const Dim4PentFacet& facet) const {
+bool Dim4GluingPermSearcher::badTriangleLink(const FacetSpec<4>& facet) const {
     // Run around all four triangles bounding the facet.
-    Dim4PentFacet adj;
+    FacetSpec<4> adj;
     unsigned pent;
     Perm<5> current;
     Perm<5> start(facet.facet, 4);
@@ -843,8 +843,8 @@ bool Dim4GluingPermSearcher::badTriangleLink(const Dim4PentFacet& facet) const {
 
 bool Dim4GluingPermSearcher::mergeEdgeClasses() {
     // Merge all six edge pairs for the current facet.
-    Dim4PentFacet facet = order_[orderElt_];
-    Dim4PentFacet adj = (*pairing_)[facet];
+    FacetSpec<4> facet = order_[orderElt_];
+    FacetSpec<4> adj = (*pairing_)[facet];
 
     bool retVal = false;
 
@@ -1153,8 +1153,8 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
 }
 
 void Dim4GluingPermSearcher::splitEdgeClasses() {
-    Dim4PentFacet facet = order_[orderElt_];
-    Dim4PentFacet adj = (*pairing_)[facet];
+    FacetSpec<4> facet = order_[orderElt_];
+    FacetSpec<4> adj = (*pairing_)[facet];
 
     int v1, v2, v3, w1, w2, w3;
     int e, f;
@@ -1262,8 +1262,8 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
 }
 
 bool Dim4GluingPermSearcher::mergeTriangleClasses() {
-    Dim4PentFacet facet = order_[orderElt_];
-    Dim4PentFacet adj = (*pairing_)[facet];
+    FacetSpec<4> facet = order_[orderElt_];
+    FacetSpec<4> adj = (*pairing_)[facet];
 
     bool retVal = false;
 
@@ -1354,7 +1354,7 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
 }
 
 void Dim4GluingPermSearcher::splitTriangleClasses() {
-    Dim4PentFacet facet = order_[orderElt_];
+    FacetSpec<4> facet = order_[orderElt_];
 
     int v1, v2;
     int f;

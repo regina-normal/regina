@@ -65,10 +65,10 @@ NGluingPermSearcher::NGluingPermSearcher(
 
     // Just fill the order[] array in a default left-to-right fashion.
     // Subclasses can rearrange things if they choose.
-    order = new NTetFace[nTets * 2];
+    order = new FacetSpec<3>[nTets * 2];
     orderElt = orderSize = 0;
 
-    NTetFace face, adj;
+    FacetSpec<3> face, adj;
     for (face.setFirst(); ! face.isPastEnd(nTets, true); face++)
         if (! pairing->isUnmatched(face))
             if (face < pairing->dest(face))
@@ -162,7 +162,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
     int minOrder = orderElt;
     int maxOrder = orderElt + maxDepth;
 
-    NTetFace face, adj;
+    FacetSpec<3> face, adj;
 
     while (orderElt >= minOrder) {
         face = order[orderElt];
@@ -376,7 +376,7 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
     for (t = 0; t < nTets; t++)
         in >> orientation[t];
 
-    order = new NTetFace[2 * nTets];
+    order = new FacetSpec<3>[2 * nTets];
     in >> orderElt >> orderSize;
     for (t = 0; t < orderSize; t++) {
         in >> order[t].simp >> order[t].facet;
@@ -392,7 +392,7 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
 }
 
 bool NGluingPermSearcher::isCanonical() const {
-    NTetFace face, faceDest, faceImage;
+    FacetSpec<3> face, faceDest, faceImage;
     int ordering;
 
     for (NFacePairing::IsoList::const_iterator it = autos_->begin();
@@ -428,9 +428,9 @@ bool NGluingPermSearcher::isCanonical() const {
     return true;
 }
 
-bool NGluingPermSearcher::badEdgeLink(const NTetFace& face) const {
+bool NGluingPermSearcher::badEdgeLink(const FacetSpec<3>& face) const {
     // Run around all three edges bounding the face.
-    NTetFace adj;
+    FacetSpec<3> adj;
     unsigned tet;
     Perm<4> current;
     Perm<4> start(face.facet, 3);
@@ -492,10 +492,10 @@ bool NGluingPermSearcher::badEdgeLink(const NTetFace& face) const {
     return false;
 }
 
-bool NGluingPermSearcher::lowDegreeEdge(const NTetFace& face,
+bool NGluingPermSearcher::lowDegreeEdge(const FacetSpec<3>& face,
         bool testDegree12, bool testDegree3) const {
     // Run around all three edges bounding the face.
-    NTetFace adj;
+    FacetSpec<3> adj;
     unsigned tet;
     Perm<4> current;
     Perm<4> start(face.facet, 3);

@@ -65,7 +65,7 @@ bool FacetPairing<3>::hasTripleEdge() const {
 }
 
 void FacetPairing<3>::followChain(size_t& tet, NFacePair& faces) const {
-    NTetFace dest1, dest2;
+    FacetSpec<3> dest1, dest2;
     while (true) {
         // Does the first face lead to a real tetrahedron?
         if (isUnmatched(tet, faces.lower()))
@@ -128,7 +128,7 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
     // second chain.
     NFacePair chainFaces;
     size_t chainTet;
-    NTetFace destFace;
+    FacetSpec<3> destFace;
     unsigned ignoreFace;
     int i;
     for (i = 0; i < 2; i++) {
@@ -189,8 +189,8 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and create the double handle.
-    NTetFace dest1 = dest(bdryTet, bdryFaces.lower());
-    NTetFace dest2 = dest(bdryTet, bdryFaces.upper());
+    FacetSpec<3> dest1 = dest(bdryTet, bdryFaces.lower());
+    FacetSpec<3> dest2 = dest(bdryTet, bdryFaces.upper());
 
     // These two faces must be joined to two distinct tetrahedra.
     if (dest1.simp == dest2.simp)
@@ -243,8 +243,8 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
     followChain(bdryTet, bdryFaces);
 
     // Here we expect to find the wedge.
-    NTetFace dest1 = dest(bdryTet, bdryFaces.lower());
-    NTetFace dest2 = dest(bdryTet, bdryFaces.upper());
+    FacetSpec<3> dest1 = dest(bdryTet, bdryFaces.lower());
+    FacetSpec<3> dest2 = dest(bdryTet, bdryFaces.upper());
 
     if (dest1.isBoundary(size_) || dest2.isBoundary(size_) ||
             dest1.simp == dest2.simp)
@@ -254,12 +254,12 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
     // Hunt for the edge joining them, and also see where they follow
     // through to beyond these two new vertices.
     // Drawing a diagram whilst reading this code will certainly help. :)
-    NTetFace throughFace[2][3];
+    FacetSpec<3> throughFace[2][3];
     int nThroughFaces[2];
     nThroughFaces[0] = nThroughFaces[1] = 0;
 
     int i, j;
-    NTetFace nextDest;
+    FacetSpec<3> nextDest;
     bool foundCrossEdge = false;
     for (i = 0; i < 4; i++) {
         if (i != dest1.facet) {
@@ -345,7 +345,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
     // Try each possible direction away from the working faces into the bigon.
     NFacePair bigonFaces;
     int bigonTet, farTet, extraTet;
-    NTetFace destFace;
+    FacetSpec<3> destFace;
     unsigned ignoreFace;
     int i;
     for (i = 0; i < 2; i++) {
@@ -446,8 +446,8 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
     if (dest(bdryTet, bdryFaces.lower()).simp == static_cast<int>(bdryTet))
         return false;
 
-    NTetFace axis1 = dest(bdryTet, bdryFaces.lower());
-    NTetFace axis2 = dest(bdryTet, bdryFaces.upper());
+    FacetSpec<3> axis1 = dest(bdryTet, bdryFaces.lower());
+    FacetSpec<3> axis2 = dest(bdryTet, bdryFaces.upper());
     if (axis1.isBoundary(size_) || axis2.isBoundary(size_))
         return false;
 
@@ -458,7 +458,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
 
     // Count the number of other chains coming from axis1 and axis2.
     int exit1, exit2;
-    NTetFace arrive1, arrive2;
+    FacetSpec<3> arrive1, arrive2;
     int nChains = 1;
     size_t newChainTet;
     NFacePair newChainFaces;
@@ -617,7 +617,7 @@ bool FacetPairing<3>::hasDoubleStar() const {
 
 bool FacetPairing<3>::hasDoubleSquare() const {
     size_t t1;
-    NTetFace t2;
+    FacetSpec<3> t2;
     int join, fa, fb;
     int adj1 = 0, adj2 = 0;
     bool found;

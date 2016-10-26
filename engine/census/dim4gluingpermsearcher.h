@@ -444,7 +444,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
                  forwards or backwards from 0 according to how many
                  times the orientation has been set or verified. */
 
-        Dim4PentFacet* order_;
+        FacetSpec<4>* order_;
             /**< Describes the order in which gluing permutations are
                  assigned to pentachoron facets.  Specifically, this order is
                  order_[0], order_[1], ..., order_[orderSize_-1].
@@ -795,7 +795,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * lead to a triangle identified with itself using a non-trivial
          * rotation or reflection, or \c false if no such triangle is found.
          */
-        bool badTriangleLink(const Dim4PentFacet& facet) const;
+        bool badTriangleLink(const FacetSpec<4>& facet) const;
 
         /**
          * Returns the character used to identify this class when

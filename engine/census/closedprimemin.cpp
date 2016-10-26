@@ -105,7 +105,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
 
     // Hunt for structures within the face pairing graph.
 
-    NTetFace face, adj;
+    FacetSpec<3> face, adj;
     unsigned orderDone = 0;
     std::fill(orderAssigned, orderAssigned + 4 * nTets, false);
 
@@ -138,7 +138,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
 
     unsigned i;
     int tet;
-    NTetFace dest1, dest2;
+    FacetSpec<3> dest1, dest2;
     NFacePair faces;
     for (i = 0; i < nChains; i++) {
         tet = order[i].simp;
@@ -158,8 +158,8 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
             orderType[orderDone + 1] = EDGE_CHAIN_INTERNAL_SECOND;
 
             if (tet < dest1.simp) {
-                order[orderDone] = NTetFace(tet, faces.lower());
-                order[orderDone + 1] = NTetFace(tet, faces.upper());
+                order[orderDone] = FacetSpec<3>(tet, faces.lower());
+                order[orderDone + 1] = FacetSpec<3>(tet, faces.upper());
             }
 
             orderAssigned[tet * 4 + faces.lower()] = true;
@@ -170,8 +170,8 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
             faces = NFacePair(dest1.facet, dest2.facet);
 
             if (dest1.simp < tet) {
-                order[orderDone] = NTetFace(dest1.simp, faces.lower());
-                order[orderDone + 1] = NTetFace(dest1.simp, faces.upper());
+                order[orderDone] = FacetSpec<3>(dest1.simp, faces.lower());
+                order[orderDone + 1] = FacetSpec<3>(dest1.simp, faces.upper());
             }
 
             faces = faces.complement();
@@ -376,7 +376,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     int minOrder = orderElt;
     int maxOrder = orderElt + maxDepth;
 
-    NTetFace face, adj;
+    FacetSpec<3> face, adj;
     bool generic;
     int mergeResult;
     while (orderElt >= minOrder) {
@@ -738,8 +738,8 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
 }
 
 int NClosedPrimeMinSearcher::mergeEdgeClasses() {
-    NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing_)[face];
+    FacetSpec<3> face = order[orderElt];
+    FacetSpec<3> adj = (*pairing_)[face];
 
     int retVal = 0;
 
@@ -879,7 +879,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
 }
 
 void NClosedPrimeMinSearcher::splitEdgeClasses() {
-    NTetFace face = order[orderElt];
+    FacetSpec<3> face = order[orderElt];
 
     int v1, v2;
     int e;

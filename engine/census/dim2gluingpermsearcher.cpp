@@ -64,10 +64,10 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(
 
     // Just fill the order[] array in a default left-to-right fashion.
     // Subclasses can rearrange things if they choose.
-    order = new Dim2TriangleEdge[(nTris * 3) / 2];
+    order = new FacetSpec<2>[(nTris * 3) / 2];
     orderElt = orderSize = 0;
 
-    Dim2TriangleEdge edge, adj;
+    FacetSpec<2> edge, adj;
     for (edge.setFirst(); ! edge.isPastEnd(nTris, true); edge++)
         if (! pairing->isUnmatched(edge))
             if (edge < pairing->dest(edge))
@@ -142,7 +142,7 @@ void Dim2GluingPermSearcher::runSearch(long maxDepth) {
     int minOrder = orderElt;
     int maxOrder = orderElt + maxDepth;
 
-    Dim2TriangleEdge edge, adj;
+    FacetSpec<2> edge, adj;
 
     while (orderElt >= minOrder) {
         edge = order[orderElt];
@@ -325,7 +325,7 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
     for (t = 0; t < nTris; t++)
         in >> orientation[t];
 
-    order = new Dim2TriangleEdge[(nTris * 3) / 2];
+    order = new FacetSpec<2>[(nTris * 3) / 2];
     in >> orderElt >> orderSize;
     for (t = 0; t < orderSize; t++) {
         in >> order[t].simp >> order[t].facet;
@@ -341,7 +341,7 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
 }
 
 bool Dim2GluingPermSearcher::isCanonical() const {
-    Dim2TriangleEdge edge, edgeDest, edgeImage;
+    FacetSpec<2> edge, edgeDest, edgeImage;
     int ordering;
 
     for (Dim2EdgePairing::IsoList::const_iterator it = autos_->begin();

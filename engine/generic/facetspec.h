@@ -71,9 +71,7 @@ namespace regina {
  *
  * \ifacespython Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g., FacetSpec2
- * and FacetSpec3 for dimensions 2 and 3).  The typedefs
- * Dim2TriangleEdge, NTetFace and Dim4PentFacet can also be used in
- * Regina's \ref stddim "standard dimensions".
+ * and FacetSpec3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
@@ -269,25 +267,31 @@ struct FacetSpec {
 };
 
 /**
- * A lightweight class used to refer to a particular edge of a
- * particular triangle in a 2-manifold triangulation.  This is a
- * convenience typedef for the template instance FacetSpec<2>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2TriangleEdge, you should
+ * use the real class name FacetSpec<2>.
  */
-typedef FacetSpec<2> Dim2TriangleEdge;
+REGINA_DEPRECATED typedef FacetSpec<2> Dim2TriangleEdge;
 
 /**
- * A lightweight class used to refer to a particular face of a
- * particular tetrahedron in a 3-manifold triangulation.  This is a
- * convenience typedef for the template instance FacetSpec<3>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NTetFace, you should
+ * use the real class name FacetSpec<3>.
  */
-typedef FacetSpec<3> NTetFace;
+REGINA_DEPRECATED typedef FacetSpec<3> NTetFace;
 
 /**
- * A lightweight class used to refer to a particular facet of a
- * particular pentachoron in a 4-manifold triangulation.  This is a
- * convenience typedef for the template instance FacetSpec<4>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4PentFacet, you should
+ * use the real class name FacetSpec<4>.
  */
-typedef FacetSpec<4> Dim4PentFacet;
+REGINA_DEPRECATED typedef FacetSpec<4> Dim4PentFacet;
 
 /*@}*/
 

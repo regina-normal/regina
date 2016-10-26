@@ -296,7 +296,7 @@ void NEulerSearcher::runSearch(long maxDepth) {
     int minOrder = orderElt;
     int maxOrder = orderElt + maxDepth;
 
-    NTetFace face, adj;
+    FacetSpec<3> face, adj;
     int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
@@ -594,8 +594,8 @@ NEulerSearcher::NEulerSearcher(std::istream& in,
 
 int NEulerSearcher::mergeVertexClasses() {
     // Merge all three vertex pairs for the current face.
-    NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing_)[face];
+    FacetSpec<3> face = order[orderElt];
+    FacetSpec<3> adj = (*pairing_)[face];
 
     int retVal = 0;
 
@@ -914,8 +914,8 @@ int NEulerSearcher::mergeVertexClasses() {
 
 void NEulerSearcher::splitVertexClasses() {
     // Split all three vertex pairs for the current face.
-    NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing_)[face];
+    FacetSpec<3> face = order[orderElt];
+    FacetSpec<3> adj = (*pairing_)[face];
 
     int v, w;
     int vIdx, wIdx;
@@ -1012,8 +1012,8 @@ void NEulerSearcher::splitVertexClasses() {
 }
 
 bool NEulerSearcher::mergeEdgeClasses() {
-    NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing_)[face];
+    FacetSpec<3> face = order[orderElt];
+    FacetSpec<3> adj = (*pairing_)[face];
 
     bool retVal = false;
 
@@ -1083,7 +1083,7 @@ bool NEulerSearcher::mergeEdgeClasses() {
 }
 
 void NEulerSearcher::splitEdgeClasses() {
-    NTetFace face = order[orderElt];
+    FacetSpec<3> face = order[orderElt];
 
     int v1, v2;
     int e;

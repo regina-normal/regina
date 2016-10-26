@@ -45,6 +45,8 @@ Version 5.1  [ (under development) ]
               - Likewise, face embedding typedefs (e.g., Dim2VertexEmbedding,
                 NTriangleEmbedding) are now deprecated in favour of the new
                 templated aliases VertexEmbedding<dim>, EdgeEmbedding<dim>, etc.
+              - Typedefs Dim2TriangleEdge, NTetFace and Dim4PentFacet are
+                deprecated, in favour of the real class name FacetSpec<2,3,4>.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into

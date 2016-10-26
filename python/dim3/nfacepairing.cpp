@@ -38,15 +38,15 @@
 
 using namespace boost::python;
 using regina::NFacePairing;
-using regina::NTetFace;
+using regina::FacetSpec;
 using regina::Triangulation;
 
 namespace {
-    const NTetFace& (NFacePairing::*dest_face)(const NTetFace&) const =
+    const FacetSpec<3>& (NFacePairing::*dest_face)(const FacetSpec<3>&) const =
         &NFacePairing::dest;
-    const NTetFace& (NFacePairing::*dest_unsigned)(size_t, unsigned) const =
+    const FacetSpec<3>& (NFacePairing::*dest_unsigned)(size_t, unsigned) const =
         &NFacePairing::dest;
-    bool (NFacePairing::*isUnmatched_face)(const NTetFace&) const =
+    bool (NFacePairing::*isUnmatched_face)(const FacetSpec<3>&) const =
         &NFacePairing::isUnmatched;
     bool (NFacePairing::*isUnmatched_unsigned)(size_t, unsigned) const =
         &NFacePairing::isUnmatched;
@@ -102,8 +102,8 @@ void addNFacePairing() {
         .def("dest", dest_unsigned,
             return_value_policy<reference_existing_object>())
         .def("__getitem__",
-            static_cast<const NTetFace& (NFacePairing::*)(
-                const NTetFace&) const>(&NFacePairing::operator[]),
+            static_cast<const FacetSpec<3>& (NFacePairing::*)(
+                const FacetSpec<3>&) const>(&NFacePairing::operator[]),
             return_value_policy<reference_existing_object>())
         .def("isUnmatched", isUnmatched_face)
         .def("isUnmatched", isUnmatched_unsigned)

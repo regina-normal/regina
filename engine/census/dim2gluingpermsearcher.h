@@ -132,7 +132,7 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
                  times the orientation has been set or verified. */
 
     protected:
-        Dim2TriangleEdge* order;
+        FacetSpec<2>* order;
             /**< Describes the order in which gluing permutations are
                  assigned to edges.  Specifically, this order is
                  order[0], order[1], ..., order[orderSize-1].

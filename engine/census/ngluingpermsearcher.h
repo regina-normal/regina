@@ -214,7 +214,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
                  times the orientation has been set or verified. */
 
     protected:
-        NTetFace* order;
+        FacetSpec<3>* order;
             /**< Describes the order in which gluing permutations are
                  assigned to faces.  Specifically, this order is
                  order[0], order[1], ..., order[orderSize-1].
@@ -547,7 +547,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * lead to an edge identified with itself in reverse, or \c false
          * if no such edge is found.
          */
-        bool badEdgeLink(const NTetFace& face) const;
+        bool badEdgeLink(const FacetSpec<3>& face) const;
 
         /**
          * Determines whether the permutations already constructed model
@@ -574,7 +574,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * \a testDegree12 and \a testDegree3, or \c false if no such
          * edge is found.
          */
-        bool lowDegreeEdge(const NTetFace& face, bool testDegree12,
+        bool lowDegreeEdge(const FacetSpec<3>& face, bool testDegree12,
             bool testDegree3) const;
 
         /**
