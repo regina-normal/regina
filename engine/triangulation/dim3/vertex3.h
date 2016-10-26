@@ -62,11 +62,6 @@ typedef Simplex<3> NTetrahedron;
  */
 
 /**
- * A convenience typedef for FaceEmbedding<3, 0>.
- */
-typedef FaceEmbedding<3, 0> NVertexEmbedding;
-
-/**
  * Represents a vertex in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -345,6 +340,16 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
     friend class Triangulation<3>;
     friend class detail::TriangulationBase<3>;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NVertexEmbedding, you should
+ * use either the new alias VertexEmbedding<3>, or the full class name
+ * FaceEmbedding<3, 0>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<3, 0> NVertexEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will

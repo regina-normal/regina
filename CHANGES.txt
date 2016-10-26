@@ -42,6 +42,9 @@ Version 5.1  [ (under development) ]
                 and simplex classes NTetrahedron and Dim4Pentachoron become
                 Tetrahedron<3> and Pentachoron<4>.  For top-dimensional simplex
                 classes, the type aliases Simplex<dim> are also available.
+              - Likewise, face embedding typedefs (e.g., Dim2VertexEmbedding,
+                NTriangleEmbedding) are now deprecated in favour of the new
+                templated aliases VertexEmbedding<dim>, EdgeEmbedding<dim>, etc.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into

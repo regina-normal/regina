@@ -52,6 +52,12 @@ namespace regina {
  * Details how a <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation
  * appears within each top-dimensional simplex.
  *
+ * For small-dimensional faces, this class is typically described using
+ * dimension-specific type aliases: VertexEmbedding<dim>, EdgeEmbedding<dim>,
+ * TriangleEmbedding<dim>, TetrahedronEmbedding<dim> and
+ * PentachoronEmbedding<dim> refer to the cases
+ * \a subdim = 0, 1, 2, 3 and 4 respectively.
+ *
  * For a <i>dim</i>-dimensional triangulation \a T, each <i>subdim</i>-face
  * \a F typically belongs to many top-dimensional simplices of \a T,
  * and therefore has many associated FaceEmbedding objects.  These individual
@@ -63,14 +69,10 @@ namespace regina {
  * In order to use these specialised classes, you will need to include the
  * corresponding triangulation headers (e.g., triangulation/dim2.h for
  * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
- * For convenience, there are typedefs for these specialised classes
- * (e.g., Dim2EdgeEmbedding, NVertexEmbedding, and so on).
  *
- * \ifacespython Python does not support templates.  Instead
- * this class can be used by appending dimensions \a dim and \a subdim as
- * suffices (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples
- * above).  The typedefs mentioned above for standard dimensions
- * (e.g., Dim2EdgeEmbedding and NVertexEmbedding) are also available.
+ * \ifacespython Python does not support templates.  Instead this class
+ * can be used by appending dimensions \a dim and \a subdim as suffices
+ * (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
@@ -203,6 +205,91 @@ class Face :
     friend class Triangulation<dim>;
     friend class detail::TriangulationBase<dim>;
 };
+
+/**
+ * Details how a vertex of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 0>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c VertexEmbedding3).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ */
+template <int dim>
+using VertexEmbedding = FaceEmbedding<dim, 0>;
+
+/**
+ * Details how a edge of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 1>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c EdgeEmbedding5).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ */
+template <int dim>
+using EdgeEmbedding = FaceEmbedding<dim, 1>;
+
+/**
+ * Details how a triangular face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 2>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c TriangleEmbedding12).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 3 and 15 inclusive.
+ */
+template <int dim>
+using TriangleEmbedding = FaceEmbedding<dim, 2>;
+
+/**
+ * Details how a tetrahedral face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 3>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c TetrahedronEmbedding7).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 4 and 15 inclusive.
+ */
+template <int dim>
+using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
+
+/**
+ * Details how a pentachoron face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 4>).
+ *
+ * \ifacespython Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c PentachoronEmbedding14).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 5 and 15 inclusive.
+ */
+template <int dim>
+using PentachoronEmbedding = FaceEmbedding<dim, 4>;
 
 /**
  * Refers to a vertex of a <i>dim</i>-dimensional triangulation.

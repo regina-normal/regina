@@ -63,11 +63,6 @@ typedef Face<4, 0> Dim4Vertex;
  */
 
 /**
- * A convenience typedef for FaceEmbedding<4, 1>.
- */
-typedef FaceEmbedding<4, 1> Dim4EdgeEmbedding;
-
-/**
  * Represents an edge in the skeleton of a 4-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -252,6 +247,16 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
     friend class Triangulation<4>;
     friend class detail::TriangulationBase<4>;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4EdgeEmbedding, you should
+ * use either the new alias EdgeEmbedding<4>, or the full class name
+ * FaceEmbedding<4, 1>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<4, 1> Dim4EdgeEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will

@@ -59,11 +59,6 @@ typedef Component<2> Dim2Component;
  */
 
 /**
- * A convenience typedef for FaceEmbedding<2, 0>.
- */
-typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
-
-/**
  * Represents a vertex in the skeleton of a 2-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -130,6 +125,16 @@ class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
     friend class Triangulation<2>;
     friend class detail::TriangulationBase<2>;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2VertexEmbedding, you should
+ * use either the new alias VertexEmbedding<2>, or the full class name
+ * FaceEmbedding<2, 0>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will

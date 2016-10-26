@@ -62,11 +62,6 @@ typedef Face<3, 1> NEdge;
  */
 
 /**
- * A convenience typedef for FaceEmbedding<3, 2>.
- */
-typedef FaceEmbedding<3, 2> NTriangleEmbedding;
-
-/**
  * Represents a triangle in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -253,6 +248,16 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
     friend class Triangulation<3>;
     friend class detail::TriangulationBase<3>;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NTriangleEmbedding, you should
+ * use either the new alias TriangleEmbedding<3>, or the full class name
+ * FaceEmbedding<3, 2>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<3, 2> NTriangleEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
