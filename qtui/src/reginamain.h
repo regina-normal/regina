@@ -279,8 +279,6 @@ class ReginaMain : public QMainWindow {
          */
         void newAngleStructures();
         void newContainer();
-        void newDim2Triangulation();
-        void newDim4Triangulation();
         void newFilter();
         void newNormalSurfaces();
         void newNormalHypersurfaces();
@@ -288,7 +286,9 @@ class ReginaMain : public QMainWindow {
         void newSnapPeaTriangulation();
         void newScript();
         void newText();
-        void newTriangulation();
+        void newTriangulation2();
+        void newTriangulation3();
+        void newTriangulation4();
 
         /**
          * Packet import routines.

@@ -61,16 +61,6 @@ void ReginaMain::newContainer() {
         tr("New Container"));
 }
 
-void ReginaMain::newDim2Triangulation() {
-    newPacket(new Dim2TriangulationCreator(), 0,
-        tr("New 2-Manifold Triangulation"));
-}
-
-void ReginaMain::newDim4Triangulation() {
-    newPacket(new Dim4TriangulationCreator(this), 0,
-        tr("New 4-Manifold Triangulation"));
-}
-
 void ReginaMain::newFilter() {
     newPacket(new FilterCreator(), 0,
         tr("New Normal Surface Filter"));
@@ -108,9 +98,19 @@ void ReginaMain::newText() {
         tr("New Text Packet"));
 }
 
-void ReginaMain::newTriangulation() {
+void ReginaMain::newTriangulation2() {
+    newPacket(new Dim2TriangulationCreator(), 0,
+        tr("New 2-Manifold Triangulation"));
+}
+
+void ReginaMain::newTriangulation3() {
     newPacket(new Tri3Creator(), 0,
         tr("New 3-Manifold Triangulation"));
+}
+
+void ReginaMain::newTriangulation4() {
+    newPacket(new Dim4TriangulationCreator(this), 0,
+        tr("New 4-Manifold Triangulation"));
 }
 
 void ReginaMain::newPacket(PacketCreator* creator, PacketFilter* parentFilter,

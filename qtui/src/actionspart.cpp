@@ -362,7 +362,7 @@ void ReginaMain::setupActions() {
     actDim2Triangulation->setWhatsThis(
         tr("Create a new 2-manifold triangulation."));
     connect(actDim2Triangulation, SIGNAL(triggered()), this,
-        SLOT(newDim2Triangulation()) );
+        SLOT(newTriangulation2()) );
     treeGeneralEditActions.append(actDim2Triangulation);
     treeMenu->addAction(actDim2Triangulation);
 
@@ -375,7 +375,7 @@ void ReginaMain::setupActions() {
     actTriangulation->setWhatsThis(
         tr("Create a new 3-manifold triangulation."));
     connect(actTriangulation, SIGNAL(triggered()), this,
-        SLOT(newTriangulation()) );
+        SLOT(newTriangulation3()) );
     treeGeneralEditActions.append(actTriangulation);
     treeMenu->addAction(actTriangulation);
 
@@ -388,7 +388,7 @@ void ReginaMain::setupActions() {
     actDim4Triangulation->setWhatsThis(
         tr("Create a new 4-manifold triangulation."));
     connect(actDim4Triangulation, SIGNAL(triggered()), this,
-        SLOT(newDim4Triangulation()) );
+        SLOT(newTriangulation4()) );
     treeGeneralEditActions.append(actDim4Triangulation);
     treeMenu->addAction(actDim4Triangulation);
 
