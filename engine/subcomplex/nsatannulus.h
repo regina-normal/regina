@@ -50,7 +50,7 @@ class Matrix2;
 template <int> class Isomorphism;
 template <int> class Triangulation;
 template <int, int> class Face;
-template <int dim> using Simplex = Face<dim, dim>;
+template <int dim> using Tetrahedron = Face<dim, 3>;
 typedef Isomorphism<3> NIsomorphism;
 
 /**

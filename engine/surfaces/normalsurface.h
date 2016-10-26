@@ -208,6 +208,8 @@ typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 template <int, int> class Face;
+template <int dim> using Vertex = Face<dim, 0>;
+template <int dim> using Edge = Face<dim, 1>;
 
 /**
  * A template that stores information about a particular

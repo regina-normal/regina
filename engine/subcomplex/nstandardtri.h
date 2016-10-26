@@ -51,7 +51,7 @@ class NManifold;
 template <int> class Component;
 template <int> class Triangulation;
 template <int, int> class Face;
-template <int dim> using Simplex = Face<dim, dim>; // Used by many subclasses.
+template <int dim> using Tetrahedron = Face<dim, 3>; // Used by many subclasses.
 typedef Component<3> NComponent;
 
 /**

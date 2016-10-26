@@ -48,7 +48,7 @@
 namespace regina {
 
 template <int, int> class Face;
-template <int dim> using Simplex = Face<dim, dim>;
+template <int dim> using Tetrahedron = Face<dim, 3>;
 
 /**
  * \weakgroup subcomplex
