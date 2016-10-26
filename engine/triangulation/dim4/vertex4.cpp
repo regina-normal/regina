@@ -70,7 +70,7 @@ Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
     if (inclusion)
         *inclusion = new Dim4Isomorphism(degree());
 
-    std::vector<Dim4VertexEmbedding>::const_iterator it, adjIt;
+    std::vector<VertexEmbedding<4>>::const_iterator it, adjIt;
     NTetrahedron* tTet;
     int i;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {

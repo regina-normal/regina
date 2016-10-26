@@ -210,7 +210,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
     unsigned long iTriangle;
     // unsigned long nEdges;
     // unsigned long iEdge;
-    // std::deque<NEdgeEmbedding>::const_iterator embit, embbeginit, embendit;
+    // std::deque<EdgeEmbedding<3>>::const_iterator embit, embbeginit, embendit;
 
     bool changed = false;   // Has anything changed ever (for return value)?
     bool changedNow = true; // Did we just change something (for loop control)?

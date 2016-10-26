@@ -303,14 +303,14 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::Dim4VertexEmbedding& e0 = vertex->embedding(0);
+    const regina::VertexEmbedding<4>& e0 = vertex->embedding(0);
     [text appendFormat:@"Vertex %ld — %ld (%d)",
      vertex->index(),
      e0.pentachoron()->index(),
      e0.vertex()];
 
     if (vertex->degree() > 1) {
-        const regina::Dim4VertexEmbedding& e1 = vertex->embedding(1);
+        const regina::VertexEmbedding<4>& e1 = vertex->embedding(1);
         [text appendFormat:@", %ld (%d)",
          e1.pentachoron()->index(),
          e1.vertex()];
@@ -328,14 +328,14 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::Dim4EdgeEmbedding& e0 = edge->embedding(0);
+    const regina::EdgeEmbedding<4>& e0 = edge->embedding(0);
     [text appendFormat:@"Edge %ld — %ld (%s)",
      edge->index(),
      e0.pentachoron()->index(),
      e0.vertices().trunc2().c_str()];
 
     if (edge->degree() > 1) {
-        const regina::Dim4EdgeEmbedding& e1 = edge->embedding(1);
+        const regina::EdgeEmbedding<4>& e1 = edge->embedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.pentachoron()->index(),
          e1.vertices().trunc2().c_str()];
@@ -378,14 +378,14 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::Dim4TetrahedronEmbedding& e0 = tetrahedron->embedding(0);
+    const regina::TetrahedronEmbedding<4>& e0 = tetrahedron->embedding(0);
     [text appendFormat:@"Tet %ld — %ld (%s)",
      tetrahedron->index(),
      e0.pentachoron()->index(),
      e0.vertices().trunc4().c_str()];
 
     if (tetrahedron->degree() > 1) {
-        const regina::Dim4TetrahedronEmbedding& e1 = tetrahedron->embedding(1);
+        const regina::TetrahedronEmbedding<4>& e1 = tetrahedron->embedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.pentachoron()->index(),
          e1.vertices().trunc4().c_str()];

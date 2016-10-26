@@ -259,14 +259,14 @@ void Triangulation<4>::calculateBoundary() {
         for (Triangulation<3>::EdgeIterator it =
                 label->boundary_->edges().begin();
                 it != label->boundary_->edges().end(); ++it) {
-            const NEdgeEmbedding& emb = (*it)->front();
+            const EdgeEmbedding<3>& emb = (*it)->front();
             tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
             label->edges_.push_back(tet->edge(emb.edge()));
         }
         for (Triangulation<3>::VertexIterator it =
                 label->boundary_->vertices().begin();
                 it != label->boundary_->vertices().end(); ++it) {
-            const NVertexEmbedding& emb = (*it)->front();
+            const VertexEmbedding<3>& emb = (*it)->front();
             tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
             label->vertices_.push_back(tet->vertex(emb.vertex()));
         }
@@ -399,11 +399,11 @@ void Triangulation<4>::calculateVertexLinks() {
 
                     // Find a tetrahedron in the 3-manifold vertex link
                     // containing the bad 3-manifold vertex.
-                    const NVertexEmbedding& linkemb((*linkit)->front());
+                    const VertexEmbedding<3>& linkemb((*linkit)->front());
 
                     // Find the corresponding pentachoron in the 4-manifold
                     // triangulation.
-                    const Dim4VertexEmbedding& vemb(vertex->embedding(
+                    const VertexEmbedding<4>& vemb(vertex->embedding(
                         linkemb.tetrahedron()->index()));
 
                     // We have the pentachoron (vemb.pentachoron())

@@ -84,7 +84,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     ans->tet[1] = tet[1];
 
     for (int i = 0; i < 2; i++) {
-        const NVertexEmbedding& emb = comp->vertex(internalVertex)->
+        const VertexEmbedding<3>& emb = comp->vertex(internalVertex)->
             embedding(i);
         if (emb.tetrahedron() == tet[0])
             ans->interior[0] = emb.vertex();

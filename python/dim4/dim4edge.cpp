@@ -41,7 +41,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Dim4Edge;
-using regina::Dim4EdgeEmbedding;
+using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::GlobalArray;
@@ -84,14 +84,14 @@ namespace {
 void addDim4Edge() {
     class_<FaceEmbedding<4, 1>>("FaceEmbedding4_1",
             init<regina::Dim4Pentachoron*, int>())
-        .def(init<const Dim4EdgeEmbedding&>())
-        .def("simplex", &Dim4EdgeEmbedding::simplex,
+        .def(init<const EdgeEmbedding<4>&>())
+        .def("simplex", &EdgeEmbedding<4>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("pentachoron", &Dim4EdgeEmbedding::pentachoron,
+        .def("pentachoron", &EdgeEmbedding<4>::pentachoron,
             return_value_policy<reference_existing_object>())
-        .def("face", &Dim4EdgeEmbedding::face)
-        .def("edge", &Dim4EdgeEmbedding::edge)
-        .def("vertices", &Dim4EdgeEmbedding::vertices)
+        .def("face", &EdgeEmbedding<4>::face)
+        .def("edge", &EdgeEmbedding<4>::edge)
+        .def("vertices", &EdgeEmbedding<4>::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

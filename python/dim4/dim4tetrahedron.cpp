@@ -40,7 +40,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Dim4Tetrahedron;
-using regina::Dim4TetrahedronEmbedding;
+using regina::TetrahedronEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::GlobalArray;
@@ -58,14 +58,14 @@ namespace {
 void addDim4Tetrahedron() {
     class_<FaceEmbedding<4, 3>>("FaceEmbedding4_3",
             init<regina::Dim4Pentachoron*, int>())
-        .def(init<const Dim4TetrahedronEmbedding&>())
-        .def("simplex", &Dim4TetrahedronEmbedding::simplex,
+        .def(init<const TetrahedronEmbedding<4>&>())
+        .def("simplex", &TetrahedronEmbedding<4>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("pentachoron", &Dim4TetrahedronEmbedding::pentachoron,
+        .def("pentachoron", &TetrahedronEmbedding<4>::pentachoron,
             return_value_policy<reference_existing_object>())
-        .def("face", &Dim4TetrahedronEmbedding::face)
-        .def("tetrahedron", &Dim4TetrahedronEmbedding::tetrahedron)
-        .def("vertices", &Dim4TetrahedronEmbedding::vertices)
+        .def("face", &TetrahedronEmbedding<4>::face)
+        .def("tetrahedron", &TetrahedronEmbedding<4>::tetrahedron)
+        .def("vertices", &TetrahedronEmbedding<4>::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

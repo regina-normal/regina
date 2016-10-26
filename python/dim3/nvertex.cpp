@@ -42,7 +42,7 @@ using namespace regina::python;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::NVertex;
-using regina::NVertexEmbedding;
+using regina::VertexEmbedding;
 
 namespace {
     boost::python::list vertex_embeddings_list(const NVertex* v) {
@@ -78,14 +78,14 @@ namespace {
 void addNVertex() {
     class_<FaceEmbedding<3, 0>>("FaceEmbedding3_0",
             init<regina::NTetrahedron*, int>())
-        .def(init<const NVertexEmbedding&>())
-        .def("simplex", &NVertexEmbedding::simplex,
+        .def(init<const VertexEmbedding<3>&>())
+        .def("simplex", &VertexEmbedding<3>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("tetrahedron", &NVertexEmbedding::tetrahedron,
+        .def("tetrahedron", &VertexEmbedding<3>::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("face", &NVertexEmbedding::face)
-        .def("vertex", &NVertexEmbedding::vertex)
-        .def("vertices", &NVertexEmbedding::vertices)
+        .def("face", &VertexEmbedding<3>::face)
+        .def("vertex", &VertexEmbedding<3>::vertex)
+        .def("vertices", &VertexEmbedding<3>::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

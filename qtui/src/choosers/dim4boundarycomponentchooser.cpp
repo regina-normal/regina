@@ -104,7 +104,7 @@ QString Dim4BoundaryComponentChooser::description(
                 .arg(v->front().simplex()->index())
                 .arg(v->front().vertex());
     } else {
-        const regina::Dim4TetrahedronEmbedding& f0 =
+        const regina::TetrahedronEmbedding<4>& f0 =
             option->tetrahedron(0)->front();
         QString desc;
         if (option->countTetrahedra() == 1)

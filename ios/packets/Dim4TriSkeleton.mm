@@ -442,13 +442,13 @@
                     }
                 } else {
                     if (b->countTetrahedra() == 1) {
-                        const regina::Dim4TetrahedronEmbedding& emb = b->tetrahedron(0)->front();
+                        const regina::TetrahedronEmbedding<4>& emb = b->tetrahedron(0)->front();
                         cell.data2.text = [NSString stringWithFormat:@"Facet %ld (%s)",
                                            emb.pentachoron()->index(),
                                            emb.vertices().trunc4().c_str()];
                     } else {
                         for (size_t i = 0; i < b->countTetrahedra(); ++i) {
-                            const regina::Dim4TetrahedronEmbedding& emb = b->tetrahedron(i)->front();
+                            const regina::TetrahedronEmbedding<4>& emb = b->tetrahedron(i)->front();
                             [TextHelper appendToList:pieces
                                                 item:[NSString stringWithFormat:@"%ld (%s)",
                                                       emb.pentachoron()->index(),

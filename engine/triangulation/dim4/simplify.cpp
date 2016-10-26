@@ -798,7 +798,7 @@ bool Triangulation<4>::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
 }
 
 bool Triangulation<4>::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
-    const Dim4TetrahedronEmbedding& emb = t->front();
+    const TetrahedronEmbedding<4>& emb = t->front();
     Dim4Pentachoron* pent = emb.pentachoron();
 
     // Check that the triangle has exactly two boundary edges.

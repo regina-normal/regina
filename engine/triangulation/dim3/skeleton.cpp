@@ -230,7 +230,7 @@ void Triangulation<3>::calculateVertexLinks() {
         // Try to compute e->vertex(0) and e->vertex(1), but
         // without calling e->vertex() which will recursively try to
         // recompute the skeleton.
-        const NEdgeEmbedding& emb = e->front();
+        const EdgeEmbedding<3>& emb = e->front();
         tet = emb.tetrahedron();
         end0 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
             [emb.edge()][0]];

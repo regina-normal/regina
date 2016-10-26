@@ -40,7 +40,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::NEdge;
-using regina::NEdgeEmbedding;
+using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::GlobalArray2D;
@@ -61,14 +61,14 @@ void addNEdge() {
     // Classes:
     class_<FaceEmbedding<3, 1>>("FaceEmbedding3_1",
             init<regina::NTetrahedron*, int>())
-        .def(init<const NEdgeEmbedding&>())
-        .def("simplex", &NEdgeEmbedding::simplex,
+        .def(init<const EdgeEmbedding<3>&>())
+        .def("simplex", &EdgeEmbedding<3>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("tetrahedron", &NEdgeEmbedding::tetrahedron,
+        .def("tetrahedron", &EdgeEmbedding<3>::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("face", &NEdgeEmbedding::face)
-        .def("edge", &NEdgeEmbedding::edge)
-        .def("vertices", &NEdgeEmbedding::vertices)
+        .def("face", &EdgeEmbedding<3>::face)
+        .def("edge", &EdgeEmbedding<3>::edge)
+        .def("vertices", &EdgeEmbedding<3>::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

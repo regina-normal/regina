@@ -41,7 +41,7 @@ namespace regina {
 LargeInteger NSVectorANStandard::edgeWeight(
         size_t edgeIndex, const Triangulation<3>* triang) const {
     // Find a tetrahedron next to the edge in question.
-    const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
+    const EdgeEmbedding<3>& emb = triang->edge(edgeIndex)->front();
     long tetIndex = emb.tetrahedron()->index();
     int start = emb.vertices()[0];
     int end = emb.vertices()[1];

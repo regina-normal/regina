@@ -617,7 +617,7 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
             return false;
     }
 
-    const NEdgeEmbedding& emb = e->front();
+    const EdgeEmbedding<3>& emb = e->front();
     NTetrahedron* oldTet = emb.tetrahedron();
     Perm<4> oldVertices = emb.vertices();
 
@@ -787,8 +787,8 @@ bool Triangulation<3>::closeBook(NEdge* e, bool check, bool perform) {
     }
 
     // Find the two triangles on either side of edge e.
-    const NEdgeEmbedding& front = e->front();
-    const NEdgeEmbedding& back = e->back();
+    const EdgeEmbedding<3>& front = e->front();
+    const EdgeEmbedding<3>& back = e->back();
 
     NTetrahedron* t0 = front.tetrahedron();
     NTetrahedron* t1 = back.tetrahedron();
@@ -886,7 +886,7 @@ bool Triangulation<3>::shellBoundary(NTetrahedron* t,
 
 bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
     // Find the tetrahedra to remove.
-    std::deque<NEdgeEmbedding>::const_iterator it;
+    std::deque<EdgeEmbedding<3>>::const_iterator it;
     NTetrahedron* tet = 0;
     Perm<4> p;
 

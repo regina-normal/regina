@@ -231,7 +231,7 @@
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned long i = 0; i < b->countEdges(); ++i) {
-                    const regina::Dim2EdgeEmbedding& emb = b->edge(i)->front();
+                    const regina::EdgeEmbedding<2>& emb = b->edge(i)->front();
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
                                               emb.triangle()->index(),

@@ -40,7 +40,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Dim4Vertex;
-using regina::Dim4VertexEmbedding;
+using regina::VertexEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
@@ -78,14 +78,14 @@ namespace {
 void addDim4Vertex() {
     class_<FaceEmbedding<4, 0>>("FaceEmbedding4_0",
             init<regina::Dim4Pentachoron*, int>())
-        .def(init<const Dim4VertexEmbedding&>())
-        .def("simplex", &Dim4VertexEmbedding::simplex,
+        .def(init<const VertexEmbedding<4>&>())
+        .def("simplex", &VertexEmbedding<4>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("pentachoron", &Dim4VertexEmbedding::pentachoron,
+        .def("pentachoron", &VertexEmbedding<4>::pentachoron,
             return_value_policy<reference_existing_object>())
-        .def("face", &Dim4VertexEmbedding::face)
-        .def("vertex", &Dim4VertexEmbedding::vertex)
-        .def("vertices", &Dim4VertexEmbedding::vertices)
+        .def("face", &VertexEmbedding<4>::face)
+        .def("vertex", &VertexEmbedding<4>::vertex)
+        .def("vertices", &VertexEmbedding<4>::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

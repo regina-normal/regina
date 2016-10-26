@@ -170,7 +170,7 @@ NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
         int end;
         NEdge* edge;
         EdgeEnd current;
-        std::deque<NEdgeEmbedding>::const_iterator eembit, backupit,
+        std::deque<EdgeEmbedding<3>>::const_iterator eembit, backupit,
             endit, beginit;
         NTetrahedron* tet;
         Perm<4> tetPerm, adjPerm;
@@ -183,7 +183,7 @@ NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
             broken = false;
 
             // Pick some triangular disc and set it to zero.
-            const NVertexEmbedding& vemb = (*vit)->front();
+            const VertexEmbedding<3>& vemb = (*vit)->front();
             row = 14 * vemb.tetrahedron()->index() + 2 * vemb.vertex() + orient;
             ans->setElement(row, LargeInteger::zero);
 

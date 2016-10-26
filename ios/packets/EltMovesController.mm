@@ -363,14 +363,14 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::NVertexEmbedding& e0 = vertex->embedding(0);
+    const regina::VertexEmbedding<3>& e0 = vertex->embedding(0);
     [text appendFormat:@"Vertex %ld — %ld (%d)",
      vertex->index(),
      e0.tetrahedron()->index(),
      e0.vertex()];
 
     if (vertex->degree() > 1) {
-        const regina::NVertexEmbedding& e1 = vertex->embedding(1);
+        const regina::VertexEmbedding<3>& e1 = vertex->embedding(1);
         [text appendFormat:@", %ld (%d)",
          e1.tetrahedron()->index(),
          e1.vertex()];
@@ -388,14 +388,14 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::NEdgeEmbedding& e0 = edge->embedding(0);
+    const regina::EdgeEmbedding<3>& e0 = edge->embedding(0);
     [text appendFormat:@"Edge %ld — %ld (%s)",
      edge->index(),
      e0.tetrahedron()->index(),
      e0.vertices().trunc2().c_str()];
 
     if (edge->degree() > 1) {
-        const regina::NEdgeEmbedding& e1 = edge->embedding(1);
+        const regina::EdgeEmbedding<3>& e1 = edge->embedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.tetrahedron()->index(),
          e1.vertices().trunc2().c_str()];
@@ -414,7 +414,7 @@
     NSMutableString* text = [[NSMutableString alloc] init];
 
     regina::NEdge* edge = self.packet->edge(edgeArg.edge);
-    const regina::NEdgeEmbedding& e0 = edge->embedding(0);
+    const regina::EdgeEmbedding<3>& e0 = edge->embedding(0);
     [text appendFormat:@"Edge %ld [%@ %d] — %ld (%s)",
      edge->index(),
      type,
@@ -423,7 +423,7 @@
      e0.vertices().trunc2().c_str()];
 
     if (edge->degree() > 1) {
-        const regina::NEdgeEmbedding& e1 = edge->embedding(1);
+        const regina::EdgeEmbedding<3>& e1 = edge->embedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.tetrahedron()->index(),
          e1.vertices().trunc2().c_str()];

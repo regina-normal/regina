@@ -39,7 +39,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Dim2Vertex;
-using regina::Dim2VertexEmbedding;
+using regina::VertexEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
@@ -55,14 +55,14 @@ namespace {
 void addDim2Vertex() {
     class_<FaceEmbedding<2, 0>>("FaceEmbedding2_0",
             init<regina::Triangle<2>*, int>())
-        .def(init<const Dim2VertexEmbedding&>())
-        .def("simplex", &Dim2VertexEmbedding::simplex,
+        .def(init<const VertexEmbedding<2>&>())
+        .def("simplex", &VertexEmbedding<2>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("triangle", &Dim2VertexEmbedding::triangle,
+        .def("triangle", &VertexEmbedding<2>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("face", &Dim2VertexEmbedding::face)
-        .def("vertex", &Dim2VertexEmbedding::vertex)
-        .def("vertices", &Dim2VertexEmbedding::vertices)
+        .def("face", &VertexEmbedding<2>::face)
+        .def("vertex", &VertexEmbedding<2>::vertex)
+        .def("vertices", &VertexEmbedding<2>::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

@@ -71,7 +71,7 @@ void Triangulation<2>::calculateBoundary() {
     int vertexId, adjVertexId;
     Dim2Edge *adjEdge;
     Dim2Vertex* vertex;
-    Dim2VertexEmbedding vertexEmb;
+    VertexEmbedding<2> vertexEmb;
 
     for (Dim2Edge* edge : edges()) {
         // We only care about boundary edges that we haven't yet seen..

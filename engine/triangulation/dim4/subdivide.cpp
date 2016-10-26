@@ -272,8 +272,8 @@ bool Triangulation<4>::idealToFinite() {
         if (!tetrahedron(i)->isBoundary()) {
             // check if has ideal vertices
             const Dim4Tetrahedron* aTet( tetrahedron(i) );
-            const Dim4TetrahedronEmbedding tEmb0( aTet->embedding(0) );
-            const Dim4TetrahedronEmbedding tEmb1( aTet->embedding(1) );
+            const TetrahedronEmbedding<4> tEmb0( aTet->embedding(0) );
+            const TetrahedronEmbedding<4> tEmb1( aTet->embedding(1) );
 
             bool TIv(false);
             for (unsigned long j=0; j<4; j++)

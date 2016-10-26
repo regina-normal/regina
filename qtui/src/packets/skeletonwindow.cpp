@@ -53,13 +53,13 @@ using regina::NVertex;
 using regina::Dim2BoundaryComponent;
 using regina::Dim2Component;
 using regina::Dim2Edge;
-using regina::Dim2EdgeEmbedding;
+using regina::EdgeEmbedding;
 using regina::Dim2Vertex;
 using regina::Dim4BoundaryComponent;
 using regina::Dim4Component;
 using regina::Dim4Edge;
 using regina::Dim4Tetrahedron;
-using regina::Dim4TetrahedronEmbedding;
+using regina::TetrahedronEmbedding;
 using regina::Triangle;
 using regina::TriangleEmbedding;
 using regina::Dim4Vertex;
@@ -953,7 +953,7 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
             case 2:
                 QString ans;
                 for (unsigned long i = 0; i < item->countEdges(); ++i) {
-                    const Dim2EdgeEmbedding& emb = item->edge(i)->front();
+                    const EdgeEmbedding<2>& emb = item->edge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.triangle()->index()).
                         arg(emb.vertices().trunc2().c_str()));
@@ -1511,7 +1511,7 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
                     QString ans;
                     for (unsigned long i = 0;
                             i < item->countTetrahedra(); i++) {
-                        const Dim4TetrahedronEmbedding& emb =
+                        const TetrahedronEmbedding<4>& emb =
                             item->tetrahedron(i)->front();
                         appendToList(ans, QString("%1 (%2)").
                             arg(emb.pentachoron()->index()).

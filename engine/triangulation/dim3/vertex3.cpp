@@ -71,7 +71,7 @@ Triangulation<2>* NVertex::buildLinkDetail(bool labels,
     if (inclusion)
         *inclusion = new NIsomorphism(degree());
 
-    std::vector<NVertexEmbedding>::const_iterator it, adjIt;
+    std::vector<VertexEmbedding<3>>::const_iterator it, adjIt;
     Triangle<2>* tTri;
     int i;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {

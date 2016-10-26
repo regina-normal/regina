@@ -42,7 +42,7 @@ namespace regina {
 LargeInteger HSVectorStandard::edgeWeight(
         size_t edgeIndex, const Triangulation<4>* triang) const {
     // Find a pentachoron next to the edge in question.
-    const Dim4EdgeEmbedding& emb = triang->edge(edgeIndex)->front();
+    const EdgeEmbedding<4>& emb = triang->edge(edgeIndex)->front();
     long pentIndex = emb.pentachoron()->index();
     int start = emb.vertices()[0];
     int end = emb.vertices()[1];

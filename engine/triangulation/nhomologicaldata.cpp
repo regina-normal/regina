@@ -392,7 +392,7 @@ void NHomologicalData::computeChainComplexes() {
     long int ind2;
     int k;
 
-    NEdgeEmbedding tempe;
+    EdgeEmbedding<3> tempe;
 
     // start B3: for each dual tetrahedron==nonboundary vertex,
     //           find the corresp edges==non-boundary boundary triangles
@@ -421,7 +421,7 @@ void NHomologicalData::computeChainComplexes() {
         // bundle at the vertex so that we can compare with the
         // normal orientations of the edges incident. This normal
         // orientation will have the form of a sign +-1 for each
-        // NVertexEmbedding in vtet's embedding list. Our orientation convention
+        // VertexEmbedding<3> in vtet's embedding list. Our orientation convention
         // will be chosen so that vtet->front() is positively oriented,
         // ie: tetor[0]==1 always.
 
@@ -478,7 +478,7 @@ void NHomologicalData::computeChainComplexes() {
                 if ( ind2<2 ) {
                     // edge k of tetrahedron j, moreover we know that
                     // the vertex of the edge corresponds to ind2
-                    tempe=NEdgeEmbedding(
+                    tempe=EdgeEmbedding<3>(
                         vtet->embedding(j).tetrahedron(), k );
                     // the corresp orientation coming from our local
                     // orientation
