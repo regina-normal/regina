@@ -160,7 +160,7 @@ class SkeletonTreeView : public QTreeView {
         virtual QSize sizeHint() const;
 };
 
-class VertexModel : public SkeletalModel {
+class Vertex3Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -171,7 +171,7 @@ class VertexModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        VertexModel(regina::Triangulation<3>* tri_);
+        Vertex3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -194,7 +194,7 @@ class VertexModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class EdgeModel : public SkeletalModel {
+class Edge3Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -205,7 +205,7 @@ class EdgeModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        EdgeModel(regina::Triangulation<3>* tri_);
+        Edge3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -228,7 +228,7 @@ class EdgeModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class TriangleModel : public SkeletalModel {
+class Triangle3Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -239,7 +239,7 @@ class TriangleModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        TriangleModel(regina::Triangulation<3>* tri_);
+        Triangle3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -330,7 +330,7 @@ class BoundaryComponentModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class Dim2VertexModel : public SkeletalModel {
+class Vertex2Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -341,7 +341,7 @@ class Dim2VertexModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        Dim2VertexModel(regina::Triangulation<2>* tri_);
+        Vertex2Model(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -364,7 +364,7 @@ class Dim2VertexModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class Dim2EdgeModel : public SkeletalModel {
+class Edge2Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -375,7 +375,7 @@ class Dim2EdgeModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        Dim2EdgeModel(regina::Triangulation<2>* tri_);
+        Edge2Model(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -466,7 +466,7 @@ class Dim2BoundaryComponentModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class Dim4VertexModel : public SkeletalModel {
+class Vertex4Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -477,7 +477,7 @@ class Dim4VertexModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        Dim4VertexModel(regina::Triangulation<4>* tri_);
+        Vertex4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -500,7 +500,7 @@ class Dim4VertexModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class Dim4EdgeModel : public SkeletalModel {
+class Edge4Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -511,7 +511,7 @@ class Dim4EdgeModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        Dim4EdgeModel(regina::Triangulation<4>* tri_);
+        Edge4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -534,7 +534,7 @@ class Dim4EdgeModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class Dim4TriangleModel : public SkeletalModel {
+class Triangle4Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -545,7 +545,7 @@ class Dim4TriangleModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        Dim4TriangleModel(regina::Triangulation<4>* tri_);
+        Triangle4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -568,7 +568,7 @@ class Dim4TriangleModel : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class Dim4TetrahedronModel : public SkeletalModel {
+class Tetrahedron4Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -579,7 +579,7 @@ class Dim4TetrahedronModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        Dim4TetrahedronModel(regina::Triangulation<4>* tri_);
+        Tetrahedron4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -709,13 +709,13 @@ inline void SkeletonWindow::updateCaption() {
     setWindowTitle(model->caption());
 }
 
-inline VertexModel::VertexModel(regina::Triangulation<3>* tri_) :
+inline Vertex3Model::Vertex3Model(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
-inline EdgeModel::EdgeModel(regina::Triangulation<3>* tri_) :
+inline Edge3Model::Edge3Model(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
-inline TriangleModel::TriangleModel(regina::Triangulation<3>* tri_) :
+inline Triangle3Model::Triangle3Model(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
 inline ComponentModel::ComponentModel(regina::Triangulation<3>* tri_) :
@@ -724,10 +724,10 @@ inline ComponentModel::ComponentModel(regina::Triangulation<3>* tri_) :
 inline BoundaryComponentModel::BoundaryComponentModel(
         regina::Triangulation<3>* tri_) : tri(tri_) {}
 
-inline Dim2VertexModel::Dim2VertexModel(regina::Triangulation<2>* tri_) :
+inline Vertex2Model::Vertex2Model(regina::Triangulation<2>* tri_) :
         tri(tri_) {}
 
-inline Dim2EdgeModel::Dim2EdgeModel(regina::Triangulation<2>* tri_) :
+inline Edge2Model::Edge2Model(regina::Triangulation<2>* tri_) :
         tri(tri_) {}
 
 inline Dim2ComponentModel::Dim2ComponentModel(regina::Triangulation<2>* tri_) :
@@ -736,16 +736,16 @@ inline Dim2ComponentModel::Dim2ComponentModel(regina::Triangulation<2>* tri_) :
 inline Dim2BoundaryComponentModel::Dim2BoundaryComponentModel(
         regina::Triangulation<2>* tri_) : tri(tri_) {}
 
-inline Dim4VertexModel::Dim4VertexModel(regina::Triangulation<4>* tri_) :
+inline Vertex4Model::Vertex4Model(regina::Triangulation<4>* tri_) :
         tri(tri_) {}
 
-inline Dim4EdgeModel::Dim4EdgeModel(regina::Triangulation<4>* tri_) :
+inline Edge4Model::Edge4Model(regina::Triangulation<4>* tri_) :
         tri(tri_) {}
 
-inline Dim4TriangleModel::Dim4TriangleModel(regina::Triangulation<4>* tri_) :
+inline Triangle4Model::Triangle4Model(regina::Triangulation<4>* tri_) :
         tri(tri_) {}
 
-inline Dim4TetrahedronModel::Dim4TetrahedronModel(
+inline Tetrahedron4Model::Tetrahedron4Model(
         regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 inline Dim4ComponentModel::Dim4ComponentModel(regina::Triangulation<4>* tri_) :

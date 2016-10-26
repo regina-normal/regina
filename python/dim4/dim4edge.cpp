@@ -48,10 +48,10 @@ using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
 
 namespace {
-    GlobalArray2D<int> Dim4Edge_edgeNumber(Edge<4>::edgeNumber, 5);
-    GlobalArray2D<int> Dim4Edge_edgeVertex(Edge<4>::edgeVertex, 10);
+    GlobalArray2D<int> Edge4_edgeNumber(Edge<4>::edgeNumber, 5);
+    GlobalArray2D<int> Edge4_edgeVertex(Edge<4>::edgeVertex, 10);
 
-    boost::python::list Dim4Edge_embeddings_list(const Edge<4>* e) {
+    boost::python::list Edge4_embeddings_list(const Edge<4>* e) {
         boost::python::list ans;
         for (auto& emb : *e)
             ans.append(emb);
@@ -81,7 +81,7 @@ namespace {
     }
 }
 
-void addDim4Edge() {
+void addEdge4() {
     class_<FaceEmbedding<4, 1>>("FaceEmbedding4_1",
             init<regina::Pentachoron<4>*, int>())
         .def(init<const EdgeEmbedding<4>&>())
@@ -100,7 +100,7 @@ void addDim4Edge() {
         scope s = class_<Face<4, 1>, std::auto_ptr<Face<4, 1>>,
                 boost::noncopyable>("Face4_1", no_init)
             .def("index", &Edge<4>::index)
-            .def("embeddings", Dim4Edge_embeddings_list)
+            .def("embeddings", Edge4_embeddings_list)
             .def("embedding", &Edge<4>::embedding,
                 return_internal_reference<>())
             .def("front", &Edge<4>::front,
@@ -138,8 +138,8 @@ void addDim4Edge() {
             .staticmethod("containsVertex")
         ;
 
-        s.attr("edgeNumber") = &Dim4Edge_edgeNumber;
-        s.attr("edgeVertex") = &Dim4Edge_edgeVertex;
+        s.attr("edgeNumber") = &Edge4_edgeNumber;
+        s.attr("edgeVertex") = &Edge4_edgeVertex;
     }
 
     scope().attr("Dim4EdgeEmbedding") = scope().attr("FaceEmbedding4_1");

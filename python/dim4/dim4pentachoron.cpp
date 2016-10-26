@@ -40,7 +40,7 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::Pentachoron;
 
-void addDim4Pentachoron() {
+void addPentachoron4() {
     class_<regina::Simplex<4>, std::auto_ptr<regina::Simplex<4>>,
             boost::noncopyable>("Simplex4", no_init)
         .def("description", &Pentachoron<4>::description,

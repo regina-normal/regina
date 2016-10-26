@@ -32,29 +32,29 @@
 
 void addNBoundaryComponent();
 void addNComponent();
-void addNEdge();
+void addEdge3();
 void addNExampleTriangulation();
 void addNFacePair();
 void addNFacePairing();
 void addNHomologicalData();
 void addNIsomorphism();
-void addNTetrahedron();
-void addNTriangle();
+void addTetrahedron3();
+void addTriangle3();
 void addTriangulation3();
-void addNVertex();
+void addVertex3();
 
 void addTriangulationClasses() {
     addNBoundaryComponent();
     addNComponent();
-    addNEdge();
+    addEdge3();
     addNExampleTriangulation();
     addNFacePair();
     addNFacePairing();
     addNHomologicalData();
     addNIsomorphism();
-    addNTetrahedron();
-    addNTriangle();
+    addTetrahedron3();
+    addTriangle3();
     addTriangulation3();
-    addNVertex();
+    addVertex3();
 }
 

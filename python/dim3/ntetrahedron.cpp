@@ -41,7 +41,7 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::Tetrahedron;
 
-void addNTetrahedron() {
+void addTetrahedron3() {
     class_<regina::Simplex<3>, std::auto_ptr<regina::Simplex<3>>,
             boost::noncopyable>("Simplex3", no_init)
         .def("description", &Tetrahedron<3>::description,

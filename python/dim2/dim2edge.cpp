@@ -47,7 +47,7 @@ using regina::FaceEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    boost::python::list Dim2Edge_embeddings_list(const Edge<2>* e) {
+    boost::python::list Edge2_embeddings_list(const Edge<2>* e) {
         boost::python::list ans;
         for (auto& emb: *e)
             ans.append(emb);
@@ -55,7 +55,7 @@ namespace {
     }
 }
 
-void addDim2Edge() {
+void addEdge2() {
     class_<FaceEmbedding<2, 1>>("FaceEmbedding2_1",
             init<regina::Triangle<2>*, int>())
         .def(init<const EdgeEmbedding<2>&>())
@@ -75,7 +75,7 @@ void addDim2Edge() {
         .def("index", &Edge<2>::index)
         .def("isValid", &Edge<2>::isValid)
         .def("isLinkOrientable", &Edge<2>::isLinkOrientable)
-        .def("embeddings", Dim2Edge_embeddings_list)
+        .def("embeddings", Edge2_embeddings_list)
         .def("degree", &Edge<2>::degree)
         .def("embedding", &Edge<2>::embedding,
             return_internal_reference<>())

@@ -48,12 +48,12 @@ using regina::python::GlobalArray2D;
 using regina::python::GlobalArray3D;
 
 namespace {
-    GlobalArray3D<int> Dim4Triangle_triangleNumber(
+    GlobalArray3D<int> Triangle4_triangleNumber(
         Triangle<4>::triangleNumber, 5);
-    GlobalArray2D<int> Dim4Triangle_triangleVertex(
+    GlobalArray2D<int> Triangle4_triangleVertex(
         Triangle<4>::triangleVertex, 10);
 
-    boost::python::list Dim4Triangle_embeddings_list(const Triangle<4>* t) {
+    boost::python::list Triangle4_embeddings_list(const Triangle<4>* t) {
         boost::python::list ans;
         for (auto& emb : *t)
             ans.append(emb);
@@ -61,7 +61,7 @@ namespace {
     }
 }
 
-void addDim4Triangle() {
+void addTriangle4() {
     class_<FaceEmbedding<4, 2>>("FaceEmbedding4_2",
             init<regina::Pentachoron<4>*, int>())
         .def(init<const TriangleEmbedding<4>&>())
@@ -80,7 +80,7 @@ void addDim4Triangle() {
         scope s = class_<Face<4, 2>, std::auto_ptr<Face<4, 2>>,
                 boost::noncopyable>("Face4_2", no_init)
             .def("index", &Triangle<4>::index)
-            .def("embeddings", Dim4Triangle_embeddings_list)
+            .def("embeddings", Triangle4_embeddings_list)
             .def("embedding", &Triangle<4>::embedding,
                 return_internal_reference<>())
             .def("front", &Triangle<4>::front,
@@ -118,8 +118,8 @@ void addDim4Triangle() {
             .staticmethod("containsVertex")
         ;
 
-        s.attr("triangleNumber") = &Dim4Triangle_triangleNumber;
-        s.attr("triangleVertex") = &Dim4Triangle_triangleVertex;
+        s.attr("triangleNumber") = &Triangle4_triangleNumber;
+        s.attr("triangleVertex") = &Triangle4_triangleVertex;
     }
 
     scope().attr("Dim4TriangleEmbedding") = scope().attr("FaceEmbedding4_2");

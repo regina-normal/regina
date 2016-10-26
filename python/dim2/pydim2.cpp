@@ -32,21 +32,21 @@
 
 void addDim2BoundaryComponent();
 void addDim2Component();
-void addDim2Edge();
+void addEdge2();
 void addDim2ExampleTriangulation();
 void addDim2Isomorphism();
-void addDim2Triangle();
+void addTriangle2();
 void addTriangulation2();
-void addDim2Vertex();
+void addVertex2();
 
 void addDim2Classes() {
     addDim2BoundaryComponent();
     addDim2Component();
-    addDim2Edge();
+    addEdge2();
     addDim2ExampleTriangulation();
     addDim2Isomorphism();
-    addDim2Triangle();
+    addTriangle2();
     addTriangulation2();
-    addDim2Vertex();
+    addVertex2();
 }
 

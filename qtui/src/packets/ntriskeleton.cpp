@@ -238,19 +238,19 @@ void NTriSkelCompUI::viewVertices() {
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
     // Similarly for edges, triangles, etc.
-    SkeletonWindow* win = new SkeletonWindow(this, new VertexModel(tri));
+    SkeletonWindow* win = new SkeletonWindow(this, new Vertex3Model(tri));
     win->show();
     viewers.append(win);
 }
 
 void NTriSkelCompUI::viewEdges() {
-    SkeletonWindow* win = new SkeletonWindow(this, new EdgeModel(tri));
+    SkeletonWindow* win = new SkeletonWindow(this, new Edge3Model(tri));
     win->show();
     viewers.append(win);
 }
 
 void NTriSkelCompUI::viewTriangles() {
-    SkeletonWindow* win = new SkeletonWindow(this, new TriangleModel(tri));
+    SkeletonWindow* win = new SkeletonWindow(this, new Triangle3Model(tri));
     win->show();
     viewers.append(win);
 }

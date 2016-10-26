@@ -41,7 +41,7 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::Triangle;
 
-void addDim2Triangle() {
+void addTriangle2() {
     class_<regina::Simplex<2>, std::auto_ptr<regina::Simplex<2>>,
             boost::noncopyable>("Simplex2", no_init)
         .def("description", &Triangle<2>::description,

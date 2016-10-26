@@ -32,25 +32,25 @@
 
 void addDim4BoundaryComponent();
 void addDim4Component();
-void addDim4Edge();
+void addEdge4();
 void addDim4ExampleTriangulation();
 void addDim4Isomorphism();
-void addDim4Pentachoron();
-void addDim4Tetrahedron();
-void addDim4Triangle();
+void addPentachoron4();
+void addTetrahedron4();
+void addTriangle4();
 void addTriangulation4();
-void addDim4Vertex();
+void addVertex4();
 
 void addDim4Classes() {
     addDim4BoundaryComponent();
     addDim4Component();
-    addDim4Edge();
+    addEdge4();
     addDim4ExampleTriangulation();
     addDim4Isomorphism();
-    addDim4Pentachoron();
-    addDim4Tetrahedron();
-    addDim4Triangle();
+    addPentachoron4();
+    addTetrahedron4();
+    addTriangle4();
     addTriangulation4();
-    addDim4Vertex();
+    addVertex4();
 }
 

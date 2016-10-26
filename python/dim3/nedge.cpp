@@ -46,8 +46,8 @@ using regina::FaceEmbedding;
 using regina::python::GlobalArray2D;
 
 namespace {
-    GlobalArray2D<int> NEdge_edgeNumber(Edge<3>::edgeNumber, 4);
-    GlobalArray2D<int> NEdge_edgeVertex(Edge<3>::edgeVertex, 6);
+    GlobalArray2D<int> Edge3_edgeNumber(Edge<3>::edgeNumber, 4);
+    GlobalArray2D<int> Edge3_edgeVertex(Edge<3>::edgeVertex, 6);
 
     boost::python::list edge_embeddings_list(const Edge<3>* e) {
         boost::python::list ans;
@@ -57,7 +57,7 @@ namespace {
     }
 }
 
-void addNEdge() {
+void addEdge3() {
     // Classes:
     class_<FaceEmbedding<3, 1>>("FaceEmbedding3_1",
             init<regina::Tetrahedron<3>*, int>())
@@ -111,8 +111,8 @@ void addNEdge() {
             .staticmethod("containsVertex")
         ;
 
-        s.attr("edgeNumber") = &NEdge_edgeNumber;
-        s.attr("edgeVertex") = &NEdge_edgeVertex;
+        s.attr("edgeNumber") = &Edge3_edgeNumber;
+        s.attr("edgeVertex") = &Edge3_edgeVertex;
     }
 
     scope().attr("NEdgeEmbedding") = scope().attr("FaceEmbedding3_1");

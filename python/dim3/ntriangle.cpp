@@ -46,7 +46,7 @@ using regina::TriangleEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    boost::python::list NTriangle_embeddings_list(const Triangle<3>* t) {
+    boost::python::list Triangle3_embeddings_list(const Triangle<3>* t) {
         boost::python::list ans;
         for (auto& emb: *t)
             ans.append(emb);
@@ -54,7 +54,7 @@ namespace {
     }
 }
 
-void addNTriangle() {
+void addTriangle3() {
     class_<FaceEmbedding<3, 2>>("FaceEmbedding3_2",
             init<regina::Tetrahedron<3>*, int>())
         .def(init<const TriangleEmbedding<3>&>())
@@ -73,7 +73,7 @@ void addNTriangle() {
         scope s = class_<Face<3, 2>, std::auto_ptr<Face<3, 2>>,
                 boost::noncopyable>("Face3_2", no_init)
             .def("index", &Triangle<3>::index)
-            .def("embeddings", NTriangle_embeddings_list)
+            .def("embeddings", Triangle3_embeddings_list)
             .def("embedding", &Triangle<3>::embedding,
                 return_internal_reference<>())
             .def("isBoundary", &Triangle<3>::isBoundary)

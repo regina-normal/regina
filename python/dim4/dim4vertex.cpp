@@ -45,7 +45,7 @@ using regina::Face;
 using regina::FaceEmbedding;
 
 namespace {
-    boost::python::list Dim4Vertex_embeddings_list(const Vertex<4>* v) {
+    boost::python::list Vertex4_embeddings_list(const Vertex<4>* v) {
         boost::python::list ans;
         for (auto& emb : *v)
             ans.append(emb);
@@ -75,7 +75,7 @@ namespace {
     }
 }
 
-void addDim4Vertex() {
+void addVertex4() {
     class_<FaceEmbedding<4, 0>>("FaceEmbedding4_0",
             init<regina::Pentachoron<4>*, int>())
         .def(init<const VertexEmbedding<4>&>())
@@ -93,7 +93,7 @@ void addDim4Vertex() {
     class_<Face<4, 0>, std::auto_ptr<Face<4, 0>>, boost::noncopyable>
             ("Face4_0", no_init)
         .def("index", &Vertex<4>::index)
-        .def("embeddings", Dim4Vertex_embeddings_list)
+        .def("embeddings", Vertex4_embeddings_list)
         .def("embedding", &Vertex<4>::embedding,
             return_internal_reference<>())
         .def("front", &Vertex<4>::front,

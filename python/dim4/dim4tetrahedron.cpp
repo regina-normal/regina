@@ -46,7 +46,7 @@ using regina::FaceEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    boost::python::list Dim4Tetrahedron_embeddings_list(
+    boost::python::list Tetrahedron4_embeddings_list(
             const Tetrahedron<4>* t) {
         boost::python::list ans;
         for (auto& emb : *t)
@@ -55,7 +55,7 @@ namespace {
     }
 }
 
-void addDim4Tetrahedron() {
+void addTetrahedron4() {
     class_<FaceEmbedding<4, 3>>("FaceEmbedding4_3",
             init<regina::Pentachoron<4>*, int>())
         .def(init<const TetrahedronEmbedding<4>&>())
@@ -74,7 +74,7 @@ void addDim4Tetrahedron() {
             boost::noncopyable>("Face4_3", no_init)
         .def("index", &Tetrahedron<4>::index)
         .def("degree", &Tetrahedron<4>::degree)
-        .def("embeddings", Dim4Tetrahedron_embeddings_list)
+        .def("embeddings", Tetrahedron4_embeddings_list)
         .def("embedding", &Tetrahedron<4>::embedding,
             return_internal_reference<>())
         .def("front", &Tetrahedron<4>::front,
