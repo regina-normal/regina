@@ -111,7 +111,7 @@ namespace {
         s.writeRawVector(std::cout);
     }
     boost::python::tuple isThinEdgeLink_tuple(const NormalSurface& s) {
-        std::pair<const regina::NEdge*, const regina::NEdge*> ans =
+        std::pair<const regina::Edge<3>*, const regina::Edge<3>*> ans =
             s.isThinEdgeLink();
         return boost::python::make_tuple(boost::python::ptr(ans.first),
             boost::python::ptr(ans.second));

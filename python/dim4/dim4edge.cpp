@@ -40,7 +40,7 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4Edge;
+using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
@@ -48,21 +48,21 @@ using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
 
 namespace {
-    GlobalArray2D<int> Dim4Edge_edgeNumber(Dim4Edge::edgeNumber, 5);
-    GlobalArray2D<int> Dim4Edge_edgeVertex(Dim4Edge::edgeVertex, 10);
+    GlobalArray2D<int> Dim4Edge_edgeNumber(Edge<4>::edgeNumber, 5);
+    GlobalArray2D<int> Dim4Edge_edgeVertex(Edge<4>::edgeVertex, 10);
 
-    boost::python::list Dim4Edge_embeddings_list(const Dim4Edge* e) {
+    boost::python::list Dim4Edge_embeddings_list(const Edge<4>* e) {
         boost::python::list ans;
         for (auto& emb : *e)
             ans.append(emb);
         return ans;
     }
 
-    regina::Triangulation<2>* edge_buildLink(const Dim4Edge* e) {
+    regina::Triangulation<2>* edge_buildLink(const Edge<4>* e) {
         return new regina::Triangulation<2>(*(e->buildLink()));
     }
 
-    boost::python::tuple edge_buildLinkDetail_bool(const Dim4Edge* e,
+    boost::python::tuple edge_buildLinkDetail_bool(const Edge<4>* e,
             bool labels = true) {
         regina::Dim4Isomorphism* iso;
         regina::Triangulation<2>* link = new regina::Triangulation<2>(
@@ -76,7 +76,7 @@ namespace {
                 apply<regina::Dim4Isomorphism*>::type()(iso))));
     }
 
-    boost::python::tuple edge_buildLinkDetail_void(const Dim4Edge* e) {
+    boost::python::tuple edge_buildLinkDetail_void(const Edge<4>* e) {
         return edge_buildLinkDetail_bool(e);
     }
 }
@@ -99,38 +99,38 @@ void addDim4Edge() {
     {
         scope s = class_<Face<4, 1>, std::auto_ptr<Face<4, 1>>,
                 boost::noncopyable>("Face4_1", no_init)
-            .def("index", &Dim4Edge::index)
+            .def("index", &Edge<4>::index)
             .def("embeddings", Dim4Edge_embeddings_list)
-            .def("embedding", &Dim4Edge::embedding,
+            .def("embedding", &Edge<4>::embedding,
                 return_internal_reference<>())
-            .def("front", &Dim4Edge::front,
+            .def("front", &Edge<4>::front,
                 return_internal_reference<>())
-            .def("back", &Dim4Edge::back,
+            .def("back", &Edge<4>::back,
                 return_internal_reference<>())
-            .def("triangulation", &Dim4Edge::triangulation,
+            .def("triangulation", &Edge<4>::triangulation,
                 return_value_policy<to_held_type<>>())
-            .def("component", &Dim4Edge::component,
+            .def("component", &Edge<4>::component,
                 return_value_policy<reference_existing_object>())
-            .def("boundaryComponent", &Dim4Edge::boundaryComponent,
+            .def("boundaryComponent", &Edge<4>::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("face", &regina::python::face<Dim4Edge, 1, int>)
-            .def("vertex", &Dim4Edge::vertex,
+            .def("face", &regina::python::face<Edge<4>, 1, int>)
+            .def("vertex", &Edge<4>::vertex,
                 return_value_policy<reference_existing_object>())
-            .def("faceMapping", &regina::python::faceMapping<Dim4Edge, 1, 5>)
-            .def("vertexMapping", &Dim4Edge::vertexMapping)
-            .def("degree", &Dim4Edge::degree)
-            .def("isBoundary", &Dim4Edge::isBoundary)
-            .def("isLinkOrientable", &Dim4Edge::isLinkOrientable)
-            .def("isValid", &Dim4Edge::isValid)
-            .def("hasBadIdentification", &Dim4Edge::hasBadIdentification)
-            .def("hasBadLink", &Dim4Edge::hasBadLink)
+            .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1, 5>)
+            .def("vertexMapping", &Edge<4>::vertexMapping)
+            .def("degree", &Edge<4>::degree)
+            .def("isBoundary", &Edge<4>::isBoundary)
+            .def("isLinkOrientable", &Edge<4>::isLinkOrientable)
+            .def("isValid", &Edge<4>::isValid)
+            .def("hasBadIdentification", &Edge<4>::hasBadIdentification)
+            .def("hasBadLink", &Edge<4>::hasBadLink)
             .def("buildLink", &edge_buildLink,
                 return_value_policy<to_held_type<>>())
             .def("buildLinkDetail", edge_buildLinkDetail_void)
             .def("buildLinkDetail", edge_buildLinkDetail_bool)
-            .def("ordering", &Dim4Edge::ordering)
-            .def("faceNumber", &Dim4Edge::faceNumber)
-            .def("containsVertex", &Dim4Edge::containsVertex)
+            .def("ordering", &Edge<4>::ordering)
+            .def("faceNumber", &Edge<4>::faceNumber)
+            .def("containsVertex", &Edge<4>::containsVertex)
             .def(regina::python::add_output())
             .def(regina::python::add_eq_operators())
             .staticmethod("ordering")

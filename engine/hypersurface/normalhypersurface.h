@@ -65,8 +65,6 @@ typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 template <int, int> class Face;
-typedef Face<4, 0> Dim4Vertex;
-typedef Face<4, 1> Dim4Edge;
 
 /**
  * A template that stores information about a particular
@@ -331,7 +329,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * @return the vertex linked by this hypersurface, or 0 if this
          * hypersurface is not the link of a single vertex.
          */
-        virtual const Dim4Vertex* isVertexLink(const Triangulation<4>* triang)
+        virtual const Vertex<4>* isVertexLink(const Triangulation<4>* triang)
             const;
         /**
          * Determines if a rational multiple of the normal hypersurface
@@ -347,7 +345,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * @return the edge linked by this hypersurface, or 0 if this
          * hypersurface is not a thin edge link.
          */
-        virtual const Dim4Edge* isThinEdgeLink(const Triangulation<4>* triang)
+        virtual const Edge<4>* isThinEdgeLink(const Triangulation<4>* triang)
             const;
 
         /**
@@ -787,7 +785,7 @@ class REGINA_API NormalHypersurface :
          * @return the vertex linked by this hypersurface, or 0 if this
          * hypersurface is not the link of a single vertex.
          */
-        const Dim4Vertex* isVertexLink() const;
+        const Vertex<4>* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this hypersurface
          * is the thin link of a single edge.
@@ -801,7 +799,7 @@ class REGINA_API NormalHypersurface :
          * @return the edge linked by this hypersurface, or 0 if this
          * hypersurface is not a thin edge link.
          */
-        const Dim4Edge* isThinEdgeLink() const;
+        const Edge<4>* isThinEdgeLink() const;
 
         /**
          * Returns the first homology group of this hypersurface.
@@ -1082,11 +1080,11 @@ inline bool NormalHypersurface::isVertexLinking() const {
     return vector_->isVertexLinking(triangulation_);
 }
 
-inline const Dim4Vertex* NormalHypersurface::isVertexLink() const {
+inline const Vertex<4>* NormalHypersurface::isVertexLink() const {
     return vector_->isVertexLink(triangulation_);
 }
 
-inline const Dim4Edge* NormalHypersurface::isThinEdgeLink() const {
+inline const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     return vector_->isThinEdgeLink(triangulation_);
 }
 

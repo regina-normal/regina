@@ -45,7 +45,6 @@
 namespace regina {
 
 template <int, int> class Face;
-typedef Face<3, 1> NEdge;
 
 /**
  * \weakgroup subcomplex
@@ -84,7 +83,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
     private:
         unsigned long length_;
             /**< The length of this layered loop. */
-        NEdge* hinge_[2];
+        Edge<3>* hinge_[2];
             /**< The hinge edge(s) of this layered loop.  If the loop is
                  twisted, the second element in this array will be \c null. */
 
@@ -125,7 +124,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * or 1.
          * @return the requested hinge edge.
          */
-        NEdge* hinge(int which) const;
+        Edge<3>* hinge(int which) const;
 
         /**
          * Determines if the given triangulation component is a layered
@@ -166,7 +165,7 @@ inline unsigned long NLayeredLoop::length() const {
 inline bool NLayeredLoop::isTwisted() const {
     return (hinge_[1] == 0);
 }
-inline NEdge* NLayeredLoop::hinge(int which) const {
+inline Edge<3>* NLayeredLoop::hinge(int which) const {
     return hinge_[which];
 }
 inline std::ostream& NLayeredLoop::writeName(std::ostream& out) const {

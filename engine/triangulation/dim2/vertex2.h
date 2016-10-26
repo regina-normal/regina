@@ -147,7 +147,7 @@ REGINA_DEPRECATED typedef Face<2, 0> Dim2Vertex;
 
 /*@}*/
 
-// Inline functions for Dim2Vertex
+// Inline functions for Vertex<2>
 
 inline Face<2, 0>::Face(Dim2Component* component) :
         detail::FaceBase<2, 0>(component), boundaryComponent_(0) {

@@ -38,13 +38,13 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim2Vertex;
+using regina::Vertex;
 using regina::VertexEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
 namespace {
-    boost::python::list Dim2Vertex_embeddings_list(const Dim2Vertex* v) {
+    boost::python::list Dim2Vertex_embeddings_list(const Vertex<2>* v) {
         boost::python::list ans;
         for (auto& emb: *v)
             ans.append(emb);
@@ -69,27 +69,27 @@ void addDim2Vertex() {
 
     class_<Face<2, 0>, std::auto_ptr<Face<2, 0>>, boost::noncopyable>
             ("Face2_0", no_init)
-        .def("index", &Dim2Vertex::index)
-        .def("isValid", &Dim2Vertex::isValid)
-        .def("isLinkOrientable", &Dim2Vertex::isLinkOrientable)
+        .def("index", &Vertex<2>::index)
+        .def("isValid", &Vertex<2>::isValid)
+        .def("isLinkOrientable", &Vertex<2>::isLinkOrientable)
         .def("embeddings", Dim2Vertex_embeddings_list)
-        .def("embedding", &Dim2Vertex::embedding,
+        .def("embedding", &Vertex<2>::embedding,
             return_internal_reference<>())
-        .def("front", &Dim2Vertex::front,
+        .def("front", &Vertex<2>::front,
             return_internal_reference<>())
-        .def("back", &Dim2Vertex::back,
+        .def("back", &Vertex<2>::back,
             return_internal_reference<>())
-        .def("triangulation", &Dim2Vertex::triangulation,
+        .def("triangulation", &Vertex<2>::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("component", &Dim2Vertex::component,
+        .def("component", &Vertex<2>::component,
             return_value_policy<reference_existing_object>())
-        .def("boundaryComponent", &Dim2Vertex::boundaryComponent,
+        .def("boundaryComponent", &Vertex<2>::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("degree", &Dim2Vertex::degree)
-        .def("isBoundary", &Dim2Vertex::isBoundary)
-        .def("ordering", &Dim2Vertex::ordering)
-        .def("faceNumber", &Dim2Vertex::faceNumber)
-        .def("containsVertex", &Dim2Vertex::containsVertex)
+        .def("degree", &Vertex<2>::degree)
+        .def("isBoundary", &Vertex<2>::isBoundary)
+        .def("ordering", &Vertex<2>::ordering)
+        .def("faceNumber", &Vertex<2>::faceNumber)
+        .def("containsVertex", &Vertex<2>::containsVertex)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("ordering")

@@ -51,8 +51,6 @@
 namespace regina {
 
 typedef Component<3> NComponent;
-typedef Face<3, 0> NVertex;
-typedef Face<3, 1> NEdge;
 
 /**
  * \weakgroup triangulation
@@ -74,7 +72,7 @@ typedef Face<3, 1> NEdge;
  * same boundary component; if not then the offending vertex will be
  * included in all of these boundary components.  Nevertheless, only one
  * of these can be considered the "official" boundary component of the
- * vertex as returned by NVertex::boundaryComponent().  This is all a
+ * vertex as returned by Vertex<3>::boundaryComponent().  This is all a
  * bit of a mess, but then again the entire triangulation is invalid and
  * so you almost certainly have bigger problems to deal with.
  *
@@ -89,9 +87,9 @@ class REGINA_API NBoundaryComponent :
     private:
         std::vector<Triangle<3>*> triangles_;
             /**< List of triangles in the component. */
-        std::vector<NEdge*> edges_;
+        std::vector<Edge<3>*> edges_;
             /**< List of edges in the component. */
-        std::vector<NVertex*> vertices_;
+        std::vector<Vertex<3>*> vertices_;
             /**< List of vertices in the component. */
 
         bool orientable_;
@@ -209,12 +207,12 @@ class REGINA_API NBoundaryComponent :
          * Creates a new boundary component consisting only of the given
          * ideal vertex.
          *
-         * \pre The given vertex is ideal as returned by NVertex::isIdeal().
+         * \pre The given vertex is ideal as returned by Vertex<3>::isIdeal().
          *
          * @param idealVertex the vertex to place in the new boundary
          * component.
          */
-        NBoundaryComponent(NVertex* idealVertex);
+        NBoundaryComponent(Vertex<3>* idealVertex);
 
     friend class Triangulation<3>;
         /**< Allow access to private members. */
@@ -227,7 +225,7 @@ class REGINA_API NBoundaryComponent :
 inline NBoundaryComponent::NBoundaryComponent() {
 }
 
-inline NBoundaryComponent::NBoundaryComponent(NVertex* idealVertex) {
+inline NBoundaryComponent::NBoundaryComponent(Vertex<3>* idealVertex) {
     vertices_.push_back(idealVertex);
 }
 
@@ -258,12 +256,12 @@ inline Triangle<3>* NBoundaryComponent::face<2>(size_t index) const {
 }
 
 template <>
-inline NEdge* NBoundaryComponent::face<1>(size_t index) const {
+inline Edge<3>* NBoundaryComponent::face<1>(size_t index) const {
     return edges_[index];
 }
 
 template <>
-inline NVertex* NBoundaryComponent::face<0>(size_t index) const {
+inline Vertex<3>* NBoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 #endif // ! __DOXYGEN

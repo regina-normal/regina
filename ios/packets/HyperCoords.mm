@@ -372,8 +372,8 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
             return cell;
         case PROP_LINK:
         {
-            const regina::Dim4Vertex* v;
-            const regina::Dim4Edge* e;
+            const regina::Vertex<4>* v;
+            const regina::Edge<4>* e;
 
             if ((v = s->isVertexLink()))
                 cell.textLabel.text = [NSString stringWithFormat:@"Vertex %ld",

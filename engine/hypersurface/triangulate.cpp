@@ -249,36 +249,36 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
         tetData[tet] = new TetData(
             tetrahedra(pent, outerTetEmb[0]).longValue() +
                 prisms(pent,
-                    Dim4Edge::edgeNumber[outerTetEmb[0]][outerTetEmb[4]]).
+                    Edge<4>::edgeNumber[outerTetEmb[0]][outerTetEmb[4]]).
                     longValue(),
             tetrahedra(pent, outerTetEmb[1]).longValue() +
                 prisms(pent,
-                    Dim4Edge::edgeNumber[outerTetEmb[1]][outerTetEmb[4]]).
+                    Edge<4>::edgeNumber[outerTetEmb[1]][outerTetEmb[4]]).
                     longValue(),
             tetrahedra(pent, outerTetEmb[2]).longValue() +
                 prisms(pent,
-                    Dim4Edge::edgeNumber[outerTetEmb[2]][outerTetEmb[4]]).
+                    Edge<4>::edgeNumber[outerTetEmb[2]][outerTetEmb[4]]).
                     longValue(),
             tetrahedra(pent, outerTetEmb[3]).longValue() +
                 prisms(pent,
-                    Dim4Edge::edgeNumber[outerTetEmb[3]][outerTetEmb[4]]).
+                    Edge<4>::edgeNumber[outerTetEmb[3]][outerTetEmb[4]]).
                     longValue(),
-            prisms(pent, Dim4Edge::edgeNumber
+            prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[0][0]]]
                     [outerTetEmb[quadDefn[0][1]]]).longValue() +
-                prisms(pent, Dim4Edge::edgeNumber
+                prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[0][2]]]
                     [outerTetEmb[quadDefn[0][3]]]).longValue(),
-            prisms(pent, Dim4Edge::edgeNumber
+            prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[1][0]]]
                     [outerTetEmb[quadDefn[1][1]]]).longValue() +
-                prisms(pent, Dim4Edge::edgeNumber
+                prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[1][2]]]
                     [outerTetEmb[quadDefn[1][3]]]).longValue(),
-            prisms(pent, Dim4Edge::edgeNumber
+            prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[2][0]]]
                     [outerTetEmb[quadDefn[2][1]]]).longValue() +
-                prisms(pent, Dim4Edge::edgeNumber
+                prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[2][2]]]
                     [outerTetEmb[quadDefn[2][3]]]).longValue());
     }
@@ -342,8 +342,8 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
     for (pent = 0; pent < nPents; ++pent) {
         outerPent = outer->pentachoron(pent);
         for (type = 0; type < 10; ++type) {
-            e0 = Dim4Edge::edgeVertex[type][0];
-            e1 = Dim4Edge::edgeVertex[type][1];
+            e0 = Edge<4>::edgeVertex[type][0];
+            e1 = Edge<4>::edgeVertex[type][1];
             f0 = Triangle<4>::triangleVertex[type][0];
             f1 = Triangle<4>::triangleVertex[type][1];
             f2 = Triangle<4>::triangleVertex[type][2];
@@ -421,7 +421,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                     outerTetDisc.number = pieceNumber;
                 else
                     outerTetDisc.number = prisms(pent, type).longValue()
-                        + prisms(pent, Dim4Edge::edgeNumber[f1][f2])
+                        + prisms(pent, Edge<4>::edgeNumber[f1][f2])
                             .longValue()
                         - pieceNumber - 1;
 
@@ -473,7 +473,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                     outerTetDisc.number = pieceNumber;
                 else
                     outerTetDisc.number = prisms(pent, type).longValue()
-                        + prisms(pent, Dim4Edge::edgeNumber[f0][f2]).longValue()
+                        + prisms(pent, Edge<4>::edgeNumber[f0][f2]).longValue()
                         - pieceNumber - 1;
 
                 discData = &tetData[outerTetDisc.tetIndex]->data(
@@ -524,7 +524,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
                     outerTetDisc.number = pieceNumber;
                 else
                     outerTetDisc.number = prisms(pent, type).longValue()
-                        + prisms(pent, Dim4Edge::edgeNumber[f0][f1])
+                        + prisms(pent, Edge<4>::edgeNumber[f0][f1])
                             .longValue()
                         - pieceNumber - 1;
 

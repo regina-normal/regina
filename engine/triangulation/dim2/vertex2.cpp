@@ -34,7 +34,7 @@
 
 namespace regina {
 
-void Dim2Vertex::writeTextLong(std::ostream& out) const {
+void Vertex<2>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 

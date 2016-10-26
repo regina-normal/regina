@@ -89,7 +89,7 @@ namespace {
     }
 }
 
-bool Triangulation<3>::threeTwoMove(NEdge* e, bool check, bool perform) {
+bool Triangulation<3>::threeTwoMove(Edge<3>* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
@@ -388,7 +388,7 @@ bool Triangulation<3>::oneFourMove(Tetrahedron<3>* tet, bool /* check */,
     return true;
 }
 
-bool Triangulation<3>::fourFourMove(NEdge* e, int newAxis, bool check,
+bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
         bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
@@ -430,7 +430,7 @@ bool Triangulation<3>::fourFourMove(NEdge* e, int newAxis, bool check,
     return true;
 }
 
-bool Triangulation<3>::twoZeroMove(NEdge* e, bool check, bool perform) {
+bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
@@ -453,12 +453,12 @@ bool Triangulation<3>::twoZeroMove(NEdge* e, bool check, bool perform) {
             return false;
 
     if (check) {
-        NEdge* edge[2];
+        Edge<3>* edge[2];
         Triangle<3>* triangle[2][2];
             // triangle[i][j] will be on tetrahedron i opposite vertex j of the
             // internal edge.
         for (i=0; i<2; i++) {
-            edge[i] = tet[i]->edge(NEdge::edgeNumber[perm[i][2]][perm[i][3]]);
+            edge[i] = tet[i]->edge(Edge<3>::edgeNumber[perm[i][2]][perm[i][3]]);
             triangle[i][0] = tet[i]->triangle(perm[i][0]);
             triangle[i][1] = tet[i]->triangle(perm[i][1]);
         }
@@ -526,9 +526,9 @@ bool Triangulation<3>::twoZeroMove(NEdge* e, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<3>::twoZeroMove(NVertex* v, bool check, bool perform) {
+bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     if (check) {
-        if (v->link() != NVertex::SPHERE)
+        if (v->link() != Vertex<3>::SPHERE)
             return false;
         if (v->degree() != 2)
             return false;
@@ -607,7 +607,7 @@ bool Triangulation<3>::twoZeroMove(NVertex* v, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
+bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
         bool check, bool perform) {
     // edgeEnd is the end opposite where the action is.
     if (check) {
@@ -633,12 +633,12 @@ bool Triangulation<3>::twoOneMove(NEdge* e, int edgeEnd,
     Perm<4> bottomToTop =
         oldTet->adjacentGluing(oldVertices[edgeEnd]);
     int topGlued[2];
-    NEdge* flatEdge[2];
+    Edge<3>* flatEdge[2];
     int i;
     for (i=0; i<2; i++) {
         topGlued[i] = bottomToTop[oldVertices[i + 2]];
         flatEdge[i] = top->edge(
-            NEdge::edgeNumber[topGlued[i]][bottomToTop[oldVertices[edgeEnd]]]);
+            Edge<3>::edgeNumber[topGlued[i]][bottomToTop[oldVertices[edgeEnd]]]);
     }
 
     if (check) {
@@ -743,17 +743,17 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     if (check) {
         int fVertex = -1;
         int nBdry = 0;
-        if (tet->edge(NEdge::edgeNumber[vertices[0]][vertices[1]])->
+        if (tet->edge(Edge<3>::edgeNumber[vertices[0]][vertices[1]])->
                 isBoundary())
             nBdry++;
         else
             fVertex = 2;
-        if (tet->edge(NEdge::edgeNumber[vertices[1]][vertices[2]])->
+        if (tet->edge(Edge<3>::edgeNumber[vertices[1]][vertices[2]])->
                 isBoundary())
             nBdry++;
         else
             fVertex = 0;
-        if (tet->edge(NEdge::edgeNumber[vertices[2]][vertices[0]])->
+        if (tet->edge(Edge<3>::edgeNumber[vertices[2]][vertices[0]])->
                 isBoundary())
             nBdry++;
         else
@@ -761,7 +761,7 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
 
         if (nBdry != 2)
             return false;
-        if (tet->vertex(vertices[fVertex])->link() != NVertex::DISC)
+        if (tet->vertex(vertices[fVertex])->link() != Vertex<3>::DISC)
             return false;
         if (! f->edge(fVertex)->isValid())
             return false;
@@ -780,7 +780,7 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<3>::closeBook(NEdge* e, bool check, bool perform) {
+bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     if (check) {
         if (! e->isBoundary())
             return false;
@@ -800,14 +800,14 @@ bool Triangulation<3>::closeBook(NEdge* e, bool check, bool perform) {
             return false;
         if (t0->vertex(p0[2]) == t1->vertex(p1[3]))
             return false;
-        if (t0->vertex(p0[2])->link() != NVertex::DISC ||
-               t1->vertex(p1[3])->link() != NVertex::DISC)
+        if (t0->vertex(p0[2])->link() != Vertex<3>::DISC ||
+               t1->vertex(p1[3])->link() != Vertex<3>::DISC)
             return false;
 
-        NEdge* e1 = t0->edge(NEdge::edgeNumber[p0[0]][p0[2]]);
-        NEdge* e2 = t0->edge(NEdge::edgeNumber[p0[1]][p0[2]]);
-        NEdge* f1 = t1->edge(NEdge::edgeNumber[p1[0]][p1[3]]);
-        NEdge* f2 = t1->edge(NEdge::edgeNumber[p1[1]][p1[3]]);
+        Edge<3>* e1 = t0->edge(Edge<3>::edgeNumber[p0[0]][p0[2]]);
+        Edge<3>* e2 = t0->edge(Edge<3>::edgeNumber[p0[1]][p0[2]]);
+        Edge<3>* f1 = t1->edge(Edge<3>::edgeNumber[p1[0]][p1[3]]);
+        Edge<3>* f2 = t1->edge(Edge<3>::edgeNumber[p1[1]][p1[3]]);
 
         if (e1 == e2 && f1 == f2)
             return false;
@@ -845,11 +845,11 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
             if (t->vertex(bdry[0])->isBoundary())
                 return false;
 
-            NEdge* internal[3];
+            Edge<3>* internal[3];
             j = 0;
             for (i = 0; i < 4; ++i)
                 if (i != bdry[0])
-                    internal[j++] = t->edge(NEdge::edgeNumber[bdry[0]][i]);
+                    internal[j++] = t->edge(Edge<3>::edgeNumber[bdry[0]][i]);
 
             if (! (internal[0]->isValid() &&
                     internal[1]->isValid() &&
@@ -861,12 +861,12 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
                     internal[2] == internal[0])
                 return false;
         } else if (nBdry == 2) {
-            i = NEdge::edgeNumber[bdry[0]][bdry[1]];
+            i = Edge<3>::edgeNumber[bdry[0]][bdry[1]];
             if (t->edge(i)->isBoundary())
                 return false;
             if (! t->edge(i)->isValid())
                 return false;
-            if (t->adjacentTetrahedron(NEdge::edgeVertex[5 - i][0]) == t)
+            if (t->adjacentTetrahedron(Edge<3>::edgeVertex[5 - i][0]) == t)
                 return false;
         }
     }
@@ -884,7 +884,7 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
     return true;
 }
 
-bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
+bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     // Find the tetrahedra to remove.
     std::deque<EdgeEmbedding<3>>::const_iterator it;
     Tetrahedron<3>* tet = 0;
@@ -919,9 +919,9 @@ bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
         if (e->vertex(0)->isBoundary() && e->vertex(1)->isBoundary()) {
             if (! e->isBoundary())
                 return false;
-            if (e->vertex(0)->link() != NVertex::DISC)
+            if (e->vertex(0)->link() != Vertex<3>::DISC)
                 return false;
-            if (e->vertex(1)->link() != NVertex::DISC)
+            if (e->vertex(1)->link() != Vertex<3>::DISC)
                 return false;
         }
 
@@ -932,10 +932,10 @@ bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
         // don't want a _chain_ of bigons together to crush a sphere or
         // projective plane.
         //
-        // The way we do this is as follows.  Consider each NEdge* to be
+        // The way we do this is as follows.  Consider each Edge<3>* to be
         // a vertex of some graph G, and consider each bigon to be an edge
         // in this graph G.  The vertices at either end of the edge in G
-        // are the (NEdge*)s that bound the bigon.
+        // are the (Edge<3>*)s that bound the bigon.
         //
         // We can happily flatten each bigon if and only if the graph G
         // contains no cycles.  We shall test this using union-find,
@@ -993,7 +993,7 @@ bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
             long* depth = new long[nEdges + 1];
             std::fill(depth, depth + nEdges + 1, 0);
 
-            NEdge *upper, *lower;
+            Edge<3> *upper, *lower;
             long id1, id2;
 
             // Run through all triangles containing e.
@@ -1003,8 +1003,8 @@ bool Triangulation<3>::collapseEdge(NEdge* e, bool check, bool perform) {
                 tet = it->tetrahedron();
                 p = it->vertices();
 
-                upper = tet->edge(NEdge::edgeNumber[p[0]][p[2]]);
-                lower = tet->edge(NEdge::edgeNumber[p[1]][p[2]]);
+                upper = tet->edge(Edge<3>::edgeNumber[p[0]][p[2]]);
+                lower = tet->edge(Edge<3>::edgeNumber[p[1]][p[2]]);
 
                 if (upper == e || lower == e) {
                     // [0a]: Check 0 fails (see explanation earlier).

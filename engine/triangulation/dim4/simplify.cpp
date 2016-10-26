@@ -137,7 +137,7 @@ namespace {
     }
 }
 
-bool Triangulation<4>::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
+bool Triangulation<4>::fourTwoMove(Edge<4>* e, bool check, bool perform) {
     if (check) {
         // e must be valid and non-boundary.
         if (e->isBoundary() || ! e->isValid())
@@ -546,13 +546,13 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
         if (pent[0] == pent[1])
             return false;
 
-        Dim4Edge* edge[2];
+        Edge<4>* edge[2];
         Triangle<4>* tri[2][3];
         Tetrahedron<4>* tet[2][3];
 
         for (i = 0; i < 2; ++i) {
             edge[i] = pent[i]->edge(
-                Dim4Edge::edgeNumber[perm[i][3]][perm[i][4]]);
+                Edge<4>::edgeNumber[perm[i][3]][perm[i][4]]);
             tri[i][0] = pent[i]->triangle(Triangle<4>::triangleNumber
                 [perm[i][0]][perm[i][3]][perm[i][4]]);
             tri[i][1] = pent[i]->triangle(Triangle<4>::triangleNumber
@@ -696,10 +696,10 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
     return true;
 }
 
-bool Triangulation<4>::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
+bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
     if (check) {
         // The follow test also implicitly ensures that the edge link is
-        // a 2-sphere.  See Dim4Edge::isValid() for details.
+        // a 2-sphere.  See Edge<4>::isValid() for details.
         if (e->isBoundary() || ! e->isValid())
             return false;
         if (e->degree() != 2)
@@ -827,13 +827,13 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
 
         if (nBdry == 2) {
             // Remaining edge is non-boundary.
-            int edge = NEdge::edgeNumber[bdryTriangle[0]][bdryTriangle[1]];
+            int edge = Edge<3>::edgeNumber[bdryTriangle[0]][bdryTriangle[1]];
             if (t->edge(edge)->isBoundary())
                 return false;
 
             // Remaining two triangles are not identified.
-            if (t->triangle(NEdge::edgeVertex[5 - edge][0]) ==
-                    t->triangle(NEdge::edgeVertex[5 - edge][1]))
+            if (t->triangle(Edge<3>::edgeVertex[5 - edge][0]) ==
+                    t->triangle(Edge<3>::edgeVertex[5 - edge][1]))
                 return false;
         } else if (nBdry == 1) {
             // Remaining vertex is non-boundary.
@@ -841,13 +841,13 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
                 return false;
 
             // No two of the remaining three edges are identified.
-            Dim4Edge* internal[3];
+            Edge<4>* internal[3];
             internal[0] = t->edge(
-                NEdge::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 1) % 4]);
+                Edge<3>::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 1) % 4]);
             internal[1] = t->edge(
-                NEdge::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 2) % 4]);
+                Edge<3>::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 2) % 4]);
             internal[2] = t->edge(
-                NEdge::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 3) % 4]);
+                Edge<3>::edgeNumber[bdryTriangle[0]][(bdryTriangle[0] + 3) % 4]);
 
             if (internal[0] == internal[1] || internal[1] == internal[2] ||
                     internal[2] == internal[0])
@@ -898,11 +898,11 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
                 return false;
 
             // No two of the remaining four edges identified.
-            Dim4Edge* internal[4];
+            Edge<4>* internal[4];
             int j = 0;
             for (i = 0; i < 5; ++i)
                 if (i != bdry[0])
-                    internal[j++] = p->edge(Dim4Edge::edgeNumber[bdry[0]][i]);
+                    internal[j++] = p->edge(Edge<4>::edgeNumber[bdry[0]][i]);
 
             for (i = 0; i < 4; ++i)
                 for (j = i + 1; j < 4; ++j)
@@ -910,7 +910,7 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
                         return false;
         } else if (nBdry == 2) {
             // Opposite edge not in boundary.
-            i = Dim4Edge::edgeNumber[bdry[0]][bdry[1]];
+            i = Edge<4>::edgeNumber[bdry[0]][bdry[1]];
             if (p->edge(i)->isBoundary())
                 return false;
 
@@ -933,7 +933,7 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
                 return false;
 
             // Remaining two facets not identified.
-            if (p->adjacentPentachoron(Dim4Edge::edgeVertex[i][0]) == p)
+            if (p->adjacentPentachoron(Edge<4>::edgeVertex[i][0]) == p)
                 return false;
         }
     }
@@ -951,7 +951,7 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
     return true;
 }
 
-bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
+bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     // Find the pentachora to remove.
     Perm<5> p;
 
@@ -1005,10 +1005,10 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         // don't want a _chain_ of bigons together to crush a sphere or
         // projective plane.
         //
-        // The way we do this is as follows.  Consider each Dim4Edge* to be
+        // The way we do this is as follows.  Consider each Edge<4>* to be
         // a vertex of some graph G, and consider each bigon to be an edge
         // in this graph G.  The vertices at either end of the edge in G
-        // are the (Dim4Edge*)s that bound the bigon.
+        // are the (Edge<4>*)s that bound the bigon.
         //
         // We can happily flatten each bigon if and only if the graph G
         // contains no cycles.  We shall test this using union-find,
@@ -1041,7 +1041,7 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
             // The depth of each subtree in the union-find tree.
             long* depth = new long[nEdges + 1];
 
-            Dim4Edge *upper, *lower;
+            Edge<4> *upper, *lower;
             long id1, id2;
             int i;
 
@@ -1184,8 +1184,8 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                     // This tetrahedron contains edge e (specifically, as
                     // edge i of this tetrahedron).
 
-                    upper = tet->triangle(NEdge::edgeVertex[i][0]);
-                    lower = tet->triangle(NEdge::edgeVertex[i][1]);
+                    upper = tet->triangle(Edge<3>::edgeVertex[i][0]);
+                    lower = tet->triangle(Edge<3>::edgeVertex[i][1]);
 
                     if (! unionFindInsert(parent, depth,
                             upper->markedIndex(), lower->markedIndex())) {
@@ -1217,8 +1217,8 @@ bool Triangulation<4>::collapseEdge(Dim4Edge* e, bool check, bool perform) {
                 // This tetrahedron contains edge e (specifically, as edge i
                 // of this tetrahedron).
 
-                upper = tet->triangle(NEdge::edgeVertex[i][0]);
-                lower = tet->triangle(NEdge::edgeVertex[i][1]);
+                upper = tet->triangle(Edge<3>::edgeVertex[i][0]);
+                lower = tet->triangle(Edge<3>::edgeVertex[i][1]);
 
                 id1 = ((upper->isBoundary() || ! upper->isValid()) ?
                     nTriangles : upper->markedIndex());

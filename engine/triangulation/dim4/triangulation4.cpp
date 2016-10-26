@@ -115,7 +115,7 @@ void Triangulation<4>::writeTextLong(std::ostream& out) const {
         for (i = 0; i < 5; ++i)
             for (j = i + 1; j < 5; ++j)
                 out << ' ' << std::setw(3)
-                    << pent->edge(Dim4Edge::edgeNumber[i][j])->index();
+                    << pent->edge(Edge<4>::edgeNumber[i][j])->index();
         out << '\n';
     }
     out << '\n';

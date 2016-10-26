@@ -56,9 +56,9 @@ Perm<4> perm_from_edges(const int edge_orientations_on_tet[6]) {
     int p[4] = {0, 0, 0, 0};
     for(int i = 0; i < 6; i++)
         if(edge_orientations_on_tet[i] == +1)
-            p[NEdge::edgeVertex[i][1]]++;
+            p[Edge<3>::edgeVertex[i][1]]++;
         else
-            p[NEdge::edgeVertex[i][0]]++;
+            p[Edge<3>::edgeVertex[i][0]]++;
 
     // Consistency check
     for(int i = 0; i < 4; i++) {
@@ -111,14 +111,14 @@ inline bool check_consistency_on_face(const int edge_orientations_tet[6],
 
     // There are only two ways to get a cyclic orientation of edges on a face
 
-    if(   (edge_orientations_tet[NEdge::edgeNumber[v0][v1]] == +1)
-       && (edge_orientations_tet[NEdge::edgeNumber[v1][v2]] == +1)
-       && (edge_orientations_tet[NEdge::edgeNumber[v0][v2]] == -1))
+    if(   (edge_orientations_tet[Edge<3>::edgeNumber[v0][v1]] == +1)
+       && (edge_orientations_tet[Edge<3>::edgeNumber[v1][v2]] == +1)
+       && (edge_orientations_tet[Edge<3>::edgeNumber[v0][v2]] == -1))
         return false;
 
-    if(   (edge_orientations_tet[NEdge::edgeNumber[v0][v1]] == -1)
-       && (edge_orientations_tet[NEdge::edgeNumber[v1][v2]] == -1)
-       && (edge_orientations_tet[NEdge::edgeNumber[v0][v2]] == +1))
+    if(   (edge_orientations_tet[Edge<3>::edgeNumber[v0][v1]] == -1)
+       && (edge_orientations_tet[Edge<3>::edgeNumber[v1][v2]] == -1)
+       && (edge_orientations_tet[Edge<3>::edgeNumber[v0][v2]] == +1))
         return false;
 
     return true;

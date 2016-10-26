@@ -54,9 +54,9 @@ namespace {
         const std::string&) = &Triangulation<3>::newTetrahedron;
     regina::Tetrahedron<3>* (Triangulation<3>::*tetrahedron_non_const)(
         size_t) = &Triangulation<3>::tetrahedron;
-    bool (Triangulation<3>::*twoZeroMove_vertex)(regina::NVertex*, bool, bool) =
+    bool (Triangulation<3>::*twoZeroMove_vertex)(regina::Vertex<3>*, bool, bool) =
         &Triangulation<3>::twoZeroMove;
-    bool (Triangulation<3>::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
+    bool (Triangulation<3>::*twoZeroMove_edge)(regina::Edge<3>*, bool, bool) =
         &Triangulation<3>::twoZeroMove;
     std::string (Triangulation<3>::*snapPea_void)() const =
         &Triangulation<3>::snapPea;

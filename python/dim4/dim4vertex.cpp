@@ -39,24 +39,24 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4Vertex;
+using regina::Vertex;
 using regina::VertexEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
 namespace {
-    boost::python::list Dim4Vertex_embeddings_list(const Dim4Vertex* v) {
+    boost::python::list Dim4Vertex_embeddings_list(const Vertex<4>* v) {
         boost::python::list ans;
         for (auto& emb : *v)
             ans.append(emb);
         return ans;
     }
 
-    regina::Triangulation<3>* vertex_buildLink(const Dim4Vertex* v) {
+    regina::Triangulation<3>* vertex_buildLink(const Vertex<4>* v) {
         return new regina::Triangulation<3>(*(v->buildLink()));
     }
 
-    boost::python::tuple vertex_buildLinkDetail_bool(const Dim4Vertex* v,
+    boost::python::tuple vertex_buildLinkDetail_bool(const Vertex<4>* v,
             bool labels = true) {
         regina::Dim4Isomorphism* iso;
         regina::Triangulation<3>* link = new regina::Triangulation<3>(
@@ -70,7 +70,7 @@ namespace {
                 apply<regina::Dim4Isomorphism*>::type()(iso))));
     }
 
-    boost::python::tuple vertex_buildLinkDetail_void(const Dim4Vertex* v) {
+    boost::python::tuple vertex_buildLinkDetail_void(const Vertex<4>* v) {
         return vertex_buildLinkDetail_bool(v);
     }
 }
@@ -92,34 +92,34 @@ void addDim4Vertex() {
 
     class_<Face<4, 0>, std::auto_ptr<Face<4, 0>>, boost::noncopyable>
             ("Face4_0", no_init)
-        .def("index", &Dim4Vertex::index)
+        .def("index", &Vertex<4>::index)
         .def("embeddings", Dim4Vertex_embeddings_list)
-        .def("embedding", &Dim4Vertex::embedding,
+        .def("embedding", &Vertex<4>::embedding,
             return_internal_reference<>())
-        .def("front", &Dim4Vertex::front,
+        .def("front", &Vertex<4>::front,
             return_internal_reference<>())
-        .def("back", &Dim4Vertex::back,
+        .def("back", &Vertex<4>::back,
             return_internal_reference<>())
-        .def("triangulation", &Dim4Vertex::triangulation,
+        .def("triangulation", &Vertex<4>::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("component", &Dim4Vertex::component,
+        .def("component", &Vertex<4>::component,
             return_value_policy<reference_existing_object>())
-        .def("boundaryComponent", &Dim4Vertex::boundaryComponent,
+        .def("boundaryComponent", &Vertex<4>::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("degree", &Dim4Vertex::degree)
+        .def("degree", &Vertex<4>::degree)
         .def("buildLink", &vertex_buildLink,
             return_value_policy<to_held_type<>>())
         .def("buildLinkDetail", vertex_buildLinkDetail_void)
         .def("buildLinkDetail", vertex_buildLinkDetail_bool)
-        .def("isLinkOrientable", &Dim4Vertex::isLinkOrientable)
-        .def("isValid", &Dim4Vertex::isValid)
-        .def("hasBadIdentification", &Dim4Vertex::hasBadIdentification)
-        .def("hasBadLink", &Dim4Vertex::hasBadLink)
-        .def("isIdeal", &Dim4Vertex::isIdeal)
-        .def("isBoundary", &Dim4Vertex::isBoundary)
-        .def("ordering", &Dim4Vertex::ordering)
-        .def("faceNumber", &Dim4Vertex::faceNumber)
-        .def("containsVertex", &Dim4Vertex::containsVertex)
+        .def("isLinkOrientable", &Vertex<4>::isLinkOrientable)
+        .def("isValid", &Vertex<4>::isValid)
+        .def("hasBadIdentification", &Vertex<4>::hasBadIdentification)
+        .def("hasBadLink", &Vertex<4>::hasBadLink)
+        .def("isIdeal", &Vertex<4>::isIdeal)
+        .def("isBoundary", &Vertex<4>::isBoundary)
+        .def("ordering", &Vertex<4>::ordering)
+        .def("faceNumber", &Vertex<4>::faceNumber)
+        .def("containsVertex", &Vertex<4>::containsVertex)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("ordering")

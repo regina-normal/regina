@@ -108,8 +108,8 @@ int binomSmall(int n, int k);
  *
  * \ifacespython This class is not available in Python.  However, all of
  * its routines can be accessed through Face<dim, subdim> (which in Python
- * becomes Face<i>dim</i>_<i>subdim</i>, or one of the typedefs in
- * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
+ * becomes Face<i>dim</i>_<i>subdim</i>, or one of the type aliases such as
+ * Vertex3, Edge2 and so on).
  *
  * \tparam dim the dimension of the simplex whose faces we are numbering.
  * This must be between 1 and 15 inclusive.

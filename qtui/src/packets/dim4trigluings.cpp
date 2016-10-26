@@ -774,7 +774,7 @@ void Dim4TriGluingsUI::vertexLinks() {
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {
-        regina::Dim4Vertex* chosen =
+        regina::Vertex<4>* chosen =
             FaceDialog<4, 0>::choose(ui, tri, 0 /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),

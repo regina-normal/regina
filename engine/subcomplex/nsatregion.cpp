@@ -339,21 +339,21 @@ void NSatRegion::calculateBaseEuler() {
     // outside the region.  Count the boundary vertices separately (this
     // is easy, since it's the same as the number of boundary edges).
 
-    std::set<NEdge*> baseVerticesAll;
-    std::set<NEdge*> baseVerticesBdry;
+    std::set<Edge<3>*> baseVerticesAll;
+    std::set<Edge<3>*> baseVerticesBdry;
     NSatAnnulus annData;
 
     for (it = blocks_.begin(); it != blocks_.end(); it++)
         for (ann = 0; ann < it->block->nAnnuli(); ann++) {
             annData = it->block->annulus(ann);
             baseVerticesAll.insert(annData.tet[0]->edge(
-                NEdge::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
+                Edge<3>::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
 
             if (! it->block->hasAdjacentBlock(ann)) {
                 baseVerticesBdry.insert(annData.tet[0]->edge(
-                    NEdge::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
+                    Edge<3>::edgeNumber[annData.roles[0][0]][annData.roles[0][1]]));
                 baseVerticesBdry.insert(annData.tet[1]->edge(
-                    NEdge::edgeNumber[annData.roles[1][0]][annData.roles[1][1]]));
+                    Edge<3>::edgeNumber[annData.roles[1][0]][annData.roles[1][1]]));
             }
         }
 

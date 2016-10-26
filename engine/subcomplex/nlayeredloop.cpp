@@ -108,8 +108,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                     base->adjacentTetrahedron(baseBottom1))
                 continue;
 
-            hinge0 = NEdge::edgeNumber[baseTop0][baseBottom0];
-            hinge1 = NEdge::edgeNumber[baseTop1][baseBottom1];
+            hinge0 = Edge<3>::edgeNumber[baseTop0][baseBottom0];
+            hinge1 = Edge<3>::edgeNumber[baseTop1][baseBottom1];
             if (twisted) {
                 if (base->edge(hinge0) != base->edge(hinge1))
                     continue;

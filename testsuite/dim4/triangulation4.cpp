@@ -49,20 +49,19 @@
 #include "testsuite/dim4/testdim4.h"
 
 using regina::Dim4BoundaryComponent;
-using regina::Dim4Edge;
+using regina::Edge;
 using regina::Dim4ExampleTriangulation;
 using regina::Dim4Isomorphism;
-using regina::Pentachoron;
-using regina::Dim4Vertex;
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
+using regina::Pentachoron;
 using regina::Perm;
 using regina::NStandardTriangulation;
 using regina::Tetrahedron;
 using regina::Triangulation;
-using regina::NVertex;
+using regina::Vertex;
 
 class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST_SUITE(Triangulation4Test);
@@ -1457,7 +1456,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
                 bool res =
                     large.collapseEdge(large.pentachoron(n + 3)->edge(
-                    regina::Dim4Edge::edgeNumber[0][4]), true, true);
+                    regina::Edge<4>::edgeNumber[0][4]), true, true);
 
                 if (! res) {
                     std::ostringstream msg;
@@ -1483,7 +1482,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         static void verifyVertexLinks(Triangulation<4>* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
-                Dim4Vertex* v = tri->vertex(i);
+                Vertex<4>* v = tri->vertex(i);
                 Dim4Isomorphism* iso;
 
                 const Triangulation<3>* link = v->buildLink();
@@ -1676,7 +1675,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         static void verifyEdgeLinks(Triangulation<4>* tri) {
             for (unsigned long i = 0; i < tri->countEdges(); ++i) {
-                Dim4Edge* e = tri->edge(i);
+                Edge<4>* e = tri->edge(i);
                 Dim4Isomorphism* iso;
 
                 const Triangulation<2>* link = e->buildLink();
@@ -1743,7 +1742,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // the vertex links.
                 unsigned j, k;
                 Pentachoron<4>* p;
-                Dim4Vertex* v;
+                Vertex<4>* v;
                 Perm<5> perm;
                 const Triangulation<3>* vLink;
                 for (j = 0; j < 2; ++j) {
@@ -1766,7 +1765,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    NVertex* match = vLink->tetrahedron(k)->vertex(
+                    Vertex<3>* match = vLink->tetrahedron(k)->vertex(
                         p->tetrahedronMapping(perm[j]).preImageOf(
                         perm[1-j]));
 
@@ -1797,7 +1796,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 for (j = 0; j < e->degree(); ++j) {
                     p = tri->pentachoron(iso->pentImage(j));
                     perm = iso->facetPerm(j);
-                    eNum = Dim4Edge::edgeNumber[perm[3]][perm[4]];
+                    eNum = Edge<4>::edgeNumber[perm[3]][perm[4]];
                     if (p->edge(eNum) != e ||
                             p->edgeMapping(eNum)[0] != perm[3] ||
                             p->edgeMapping(eNum)[1] != perm[4]) {

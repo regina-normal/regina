@@ -188,7 +188,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * corresponding vertices of \c tet (those opposite \c v),
          * and will map 3 to \c v itself.
          *
-         * This NVertex object will retain ownership of the triangulation
+         * This Vertex<3> object will retain ownership of the triangulation
          * that is returned.  If you wish to edit the triangulation, you
          * should make a new clone and edit the clone instead.
          *
@@ -361,7 +361,7 @@ REGINA_DEPRECATED typedef Face<3, 0> NVertex;
 
 /*@}*/
 
-// Inline functions for NVertex
+// Inline functions for Vertex<3>
 
 inline Face<3, 0>::Face(NComponent* component) :
         detail::FaceBase<3, 0>(component),
@@ -372,7 +372,7 @@ inline NBoundaryComponent* Face<3, 0>::boundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline NVertex::LinkType Face<3, 0>::link() const {
+inline Vertex<3>::LinkType Face<3, 0>::link() const {
     return link_;
 }
 
@@ -380,7 +380,7 @@ inline const Triangulation<2>* Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // This is a construct-on-demand member: cast away constness to
         // set it here.
-        const_cast<NVertex*>(this)->linkTri_ = buildLinkDetail(false, 0);
+        const_cast<Vertex<3>*>(this)->linkTri_ = buildLinkDetail(false, 0);
     }
     return linkTri_;
 }

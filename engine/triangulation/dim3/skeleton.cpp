@@ -53,12 +53,12 @@ void Triangulation<3>::calculateSkeleton() {
 
     calculateBoundary();
         // Sets boundaryComponents, Triangle<3>.boundaryComponent,
-        //     NEdge.boundaryComponent, NVertex.boundaryComponent,
+        //     Edge<3>.boundaryComponent, Vertex<3>.boundaryComponent,
         //     NComponent.boundaryComponents
     calculateVertexLinks();
-        // Sets valid, ideal, NVertex.link,
-        //     NVertex.linkEulerChar, NComponent.ideal,
-        //     boundaryComponents, NVertex.boundaryComponent
+        // Sets valid, ideal, Vertex<3>.link,
+        //     Vertex<3>.linkEulerChar, NComponent.ideal,
+        //     boundaryComponents, Vertex<3>.boundaryComponent
 
     // Flesh out the details of each component.
     for (auto v : vertices())
@@ -104,7 +104,7 @@ void Triangulation<3>::checkPermutations() {
 
 void Triangulation<3>::calculateBoundary() {
     // Sets boundaryComponents, Triangle<3>.boundaryComponent,
-    //     NEdge.boundaryComponent, NVertex.boundaryComponent,
+    //     Edge<3>.boundaryComponent, Vertex<3>.boundaryComponent,
     //     NComponent.boundaryComponents
     NBoundaryComponent* label;
 
@@ -134,8 +134,8 @@ void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
     Perm<4> tetVertices;
     int tetFace;
     int i,j;
-    NVertex* vertex;
-    NEdge* edge;
+    Vertex<3>* vertex;
+    Edge<3>* edge;
 
     Triangle<3>* triangle;
     Triangle<3>* nextTriangle;
@@ -171,7 +171,7 @@ void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
         for (i=0; i<3; i++)
             for (j=i+1; j<3; j++) {
                 edge = tet->regina::detail::SimplexFaces<3, 1>::face_[
-                    NEdge::edgeNumber[tetVertices[i]][tetVertices[j]]];
+                    Edge<3>::edgeNumber[tetVertices[i]][tetVertices[j]]];
                 if (! (edge->boundaryComponent_)) {
                     edge->boundaryComponent_ = label;
                     label->edges_.push_back(edge);
@@ -219,14 +219,14 @@ void Triangulation<3>::calculateVertexLinks() {
     // Here we use the formula:  chi = (2 v_int + v_bdry - f) / 2, which
     // is easily proven with a little arithmetic.
 
-    // Note that NVertex::linkEulerChar is initialised to 0 in
-    // the NVertex constructor.
+    // Note that Vertex<3>::linkEulerChar is initialised to 0 in
+    // the Vertex<3> constructor.
 
     // Begin by calculating (2 v_int + v_bdry) for each vertex link.
-    NVertex* end0;
-    NVertex* end1;
+    Vertex<3>* end0;
+    Vertex<3>* end1;
     Tetrahedron<3>* tet;
-    for (NEdge* e : edges()) {
+    for (Edge<3>* e : edges()) {
         // Try to compute e->vertex(0) and e->vertex(1), but
         // without calling e->vertex() which will recursively try to
         // recompute the skeleton.
@@ -253,7 +253,7 @@ void Triangulation<3>::calculateVertexLinks() {
     // Run through each vertex and finalise Euler characteristic, link
     // and more.
 
-    for (NVertex* vertex : vertices()) {
+    for (Vertex<3>* vertex : vertices()) {
         // Fix the Euler characteristic (subtract f, divide by two).
         vertex->linkEulerChar_ = (vertex->linkEulerChar_
             - static_cast<long>(vertex->degree())) / 2;
@@ -262,22 +262,22 @@ void Triangulation<3>::calculateVertexLinks() {
             // We haven't added ideal vertices to the boundary list yet,
             // so this must be real boundary.
             if (vertex->linkEulerChar_ == 1)
-                vertex->link_ = NVertex::DISC;
+                vertex->link_ = Vertex<3>::DISC;
             else {
-                vertex->link_ = NVertex::INVALID;
+                vertex->link_ = Vertex<3>::INVALID;
                 vertex->markBadLink();
                 valid_ = vertex->component_->valid_ = false;
                 standard_ = false;
             }
         } else {
             if (vertex->linkEulerChar_ == 2)
-                vertex->link_ = NVertex::SPHERE;
+                vertex->link_ = Vertex<3>::SPHERE;
             else {
                 if (vertex->linkEulerChar_ == 0)
                     vertex->link_ = (vertex->isLinkOrientable() ?
-                        NVertex::TORUS : NVertex::KLEIN_BOTTLE);
+                        Vertex<3>::TORUS : Vertex<3>::KLEIN_BOTTLE);
                 else {
-                    vertex->link_ = NVertex::NON_STANDARD_CUSP;
+                    vertex->link_ = Vertex<3>::NON_STANDARD_CUSP;
                     standard_ = false;
                 }
 

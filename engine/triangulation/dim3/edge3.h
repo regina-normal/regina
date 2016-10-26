@@ -52,7 +52,6 @@ namespace regina {
 class NBoundaryComponent;
 
 typedef Component<3> NComponent;
-typedef Face<3, 0> NVertex;
 
 /**
  * \weakgroup triangulation
@@ -148,7 +147,7 @@ REGINA_DEPRECATED typedef Face<3, 1> NEdge;
 
 /*@}*/
 
-// Inline functions for NEdge
+// Inline functions for Edge<3>
 
 inline Face<3, 1>::Face(NComponent* component) :
         detail::FaceBase<3, 1>(component),

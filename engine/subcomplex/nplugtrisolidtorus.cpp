@@ -169,7 +169,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
     int coreIndex;
     NTriSolidTorus* core;
     Tetrahedron<3>* coreTet[3];
-    NEdge* axis[3];
+    Edge<3>* axis[3];
     Perm<4> coreRoles[3];
     Tetrahedron<3>* base[2];
     Perm<4> baseRoles[2];
@@ -201,7 +201,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 coreTet[i] = core->tetrahedron(i);
                 coreRoles[i] = core->vertexRoles(i);
                 axis[i] = coreTet[i]->edge(
-                    NEdge::edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
+                    Edge<3>::edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
             }
 
             if (axis[0] == axis[1] || axis[1] == axis[2] ||

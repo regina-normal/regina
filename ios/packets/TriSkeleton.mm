@@ -222,31 +222,31 @@
                 cell.index.text = @"No vertices";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::NVertex* v = self.packet->vertex(indexPath.row - 1);
+                regina::Vertex<3>* v = self.packet->vertex(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Vertex" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
                 cell.data1.text = [NSString stringWithFormat:@"%ld", v->degree()];
 
                 switch (v->link()) {
-                    case regina::NVertex::SPHERE:
+                    case regina::Vertex<3>::SPHERE:
                         cell.data0.text = @"Internal";
                         break;
-                    case regina::NVertex::DISC:
+                    case regina::Vertex<3>::DISC:
                         cell.data0.text = @"Bdry";
                         break;
-                    case regina::NVertex::TORUS:
+                    case regina::Vertex<3>::TORUS:
                         cell.data0.text = @"Ideal: Torus";
                         break;
-                    case regina::NVertex::KLEIN_BOTTLE:
+                    case regina::Vertex<3>::KLEIN_BOTTLE:
                         cell.data0.text = @"Ideal: Klein bottle";
                         break;
-                    case regina::NVertex::NON_STANDARD_CUSP:
+                    case regina::Vertex<3>::NON_STANDARD_CUSP:
                         if (v->isLinkOrientable())
                             cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld orbl", (1 - (v->linkEulerChar() / 2))];
                         else
                             cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld non-orbl", (2 - v->linkEulerChar())];
                         break;
-                    case regina::NVertex::INVALID:
+                    case regina::Vertex<3>::INVALID:
                         cell.data0.attributedText = [TextHelper badString:@"Invalid"];
                         break;
                     default:
@@ -268,7 +268,7 @@
                 cell.index.text = @"No edges";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::NEdge* e = self.packet->edge(indexPath.row - 1);
+                regina::Edge<3>* e = self.packet->edge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
                 cell.data1.text = [NSString stringWithFormat:@"%ld", e->degree()];
@@ -415,7 +415,7 @@
 
                 NSMutableString* pieces = [NSMutableString string];
                 if (b->isIdeal()) {
-                    regina::NVertex* v = b->vertex(0);
+                    regina::Vertex<3>* v = b->vertex(0);
                     for (auto& emb : *v)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%d)",

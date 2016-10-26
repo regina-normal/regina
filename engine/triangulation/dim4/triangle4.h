@@ -52,8 +52,6 @@ namespace regina {
 class Dim4BoundaryComponent;
 
 typedef Component<4> Dim4Component;
-typedef Face<4, 0> Dim4Vertex;
-typedef Face<4, 1> Dim4Edge;
 
 /**
  * \weakgroup dim4

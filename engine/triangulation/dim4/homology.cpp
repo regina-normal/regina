@@ -132,7 +132,7 @@ const NAbelianGroup& Triangulation<4>::homologyH2() const {
     unsigned long i, j;
     unsigned long row, col;
     Pentachoron<4>* pent;
-    Dim4Edge* e;
+    Edge<4>* e;
     Triangle<4>* t;
     Tetrahedron<4>* tet;
     Perm<5> perm, tmpPerm;
@@ -190,7 +190,7 @@ const NAbelianGroup& Triangulation<4>::homologyH2() const {
                 continue;
 
             row = edgeInternalIndex[e->index()];
-            pentEdge = Dim4Edge::edgeNumber[perm[(j+1) % 3]][perm[(j+2) % 3]];
+            pentEdge = Edge<4>::edgeNumber[perm[(j+1) % 3]][perm[(j+2) % 3]];
 
             tmpPerm = Perm<5>(2, j) * perm.inverse() *
                 pent->edgeMapping(pentEdge);

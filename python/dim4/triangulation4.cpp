@@ -53,7 +53,7 @@ namespace {
         size_t) = &Triangulation<4>::pentachoron;
     bool (Triangulation<4>::*twoZeroMove_triangle)(regina::Triangle<4>*,
         bool, bool) = &Triangulation<4>::twoZeroMove;
-    bool (Triangulation<4>::*twoZeroMove_edge)(regina::Dim4Edge*,
+    bool (Triangulation<4>::*twoZeroMove_edge)(regina::Edge<4>*,
         bool, bool) = &Triangulation<4>::twoZeroMove;
     size_t(Triangulation<4>::*splitIntoComponents)(regina::Packet*, bool) =
         &Triangulation<4>::splitIntoComponents;

@@ -147,7 +147,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
                 out << ' ' << std::setw(3)
-                    << tet->edge(NEdge::edgeNumber[start][end])->index();
+                    << tet->edge(Edge<3>::edgeNumber[start][end])->index();
         out << '\n';
     }
     out << '\n';
@@ -359,10 +359,10 @@ long Triangulation<3>::eulerCharManifold() const {
     // vertices (i.e., non-standard boundary vertices) and also invalid edges,
     // and truncate those unwanted bits also.
     if (! valid_) {
-        for (NVertex* v : vertices())
-            if (v->link() == NVertex::INVALID)
+        for (Vertex<3>* v : vertices())
+            if (v->link() == Vertex<3>::INVALID)
                 ans += v->linkEulerChar() - 1;
-        for (NEdge* e : edges())
+        for (Edge<3>* e : edges())
             if (! e->isValid())
                 ++ans;
     }

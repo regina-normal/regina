@@ -39,17 +39,17 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NEdge;
+using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::GlobalArray2D;
 
 namespace {
-    GlobalArray2D<int> NEdge_edgeNumber(NEdge::edgeNumber, 4);
-    GlobalArray2D<int> NEdge_edgeVertex(NEdge::edgeVertex, 6);
+    GlobalArray2D<int> NEdge_edgeNumber(Edge<3>::edgeNumber, 4);
+    GlobalArray2D<int> NEdge_edgeVertex(Edge<3>::edgeVertex, 6);
 
-    boost::python::list edge_embeddings_list(const NEdge* e) {
+    boost::python::list edge_embeddings_list(const Edge<3>* e) {
         boost::python::list ans;
         for (auto& emb: *e)
             ans.append(emb);
@@ -76,34 +76,34 @@ void addNEdge() {
     {
         scope s = class_<Face<3, 1>, std::auto_ptr<Face<3, 1>>,
                 boost::noncopyable>("Face3_1", no_init)
-            .def("index", &NEdge::index)
+            .def("index", &Edge<3>::index)
             .def("embeddings", edge_embeddings_list)
-            .def("embedding", &NEdge::embedding,
+            .def("embedding", &Edge<3>::embedding,
                 return_internal_reference<>())
-            .def("front", &NEdge::front,
+            .def("front", &Edge<3>::front,
                 return_internal_reference<>())
-            .def("back", &NEdge::back,
+            .def("back", &Edge<3>::back,
                 return_internal_reference<>())
-            .def("triangulation", &NEdge::triangulation,
+            .def("triangulation", &Edge<3>::triangulation,
                 return_value_policy<to_held_type<> >())
-            .def("component", &NEdge::component,
+            .def("component", &Edge<3>::component,
                 return_value_policy<reference_existing_object>())
-            .def("boundaryComponent", &NEdge::boundaryComponent,
+            .def("boundaryComponent", &Edge<3>::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("face", &regina::python::face<NEdge, 1, int>)
-            .def("vertex", &NEdge::vertex,
+            .def("face", &regina::python::face<Edge<3>, 1, int>)
+            .def("vertex", &Edge<3>::vertex,
                 return_value_policy<reference_existing_object>())
-            .def("faceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
-            .def("vertexMapping", &NEdge::vertexMapping)
-            .def("degree", &NEdge::degree)
-            .def("isBoundary", &NEdge::isBoundary)
-            .def("isValid", &NEdge::isValid)
-            .def("hasBadIdentification", &NEdge::hasBadIdentification)
-            .def("hasBadLink", &NEdge::hasBadLink)
-            .def("isLinkOrientable", &NEdge::isLinkOrientable)
-            .def("ordering", &NEdge::ordering)
-            .def("faceNumber", &NEdge::faceNumber)
-            .def("containsVertex", &NEdge::containsVertex)
+            .def("faceMapping", &regina::python::faceMapping<Edge<3>, 1, 4>)
+            .def("vertexMapping", &Edge<3>::vertexMapping)
+            .def("degree", &Edge<3>::degree)
+            .def("isBoundary", &Edge<3>::isBoundary)
+            .def("isValid", &Edge<3>::isValid)
+            .def("hasBadIdentification", &Edge<3>::hasBadIdentification)
+            .def("hasBadLink", &Edge<3>::hasBadLink)
+            .def("isLinkOrientable", &Edge<3>::isLinkOrientable)
+            .def("ordering", &Edge<3>::ordering)
+            .def("faceNumber", &Edge<3>::faceNumber)
+            .def("containsVertex", &Edge<3>::containsVertex)
             .def(regina::python::add_output())
             .def(regina::python::add_eq_operators())
             .staticmethod("ordering")

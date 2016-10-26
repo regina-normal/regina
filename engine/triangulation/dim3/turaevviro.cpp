@@ -318,7 +318,7 @@ namespace {
 
             int i;
             const Triangle<3>* triangle;
-            const NEdge* edge;
+            const Edge<3>* edge;
             for (i = 0; i < 4; ++i) {
                 triangle = tet->triangle(i);
                 if (triangle->front().tetrahedron() == tet &&
@@ -703,10 +703,10 @@ namespace {
             admissible = true;
             for (auto& emb : *tri.edge(sortedEdges[curr])) {
                 index1 = emb.tetrahedron()->edge(
-                    NEdge::edgeNumber[emb.vertices()[0]]
+                    Edge<3>::edgeNumber[emb.vertices()[0]]
                     [emb.vertices()[2]])->index();
                 index2 = emb.tetrahedron()->edge(
-                    NEdge::edgeNumber[emb.vertices()[1]]
+                    Edge<3>::edgeNumber[emb.vertices()[1]]
                     [emb.vertices()[2]])->index();
                 if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
                     // We've decided upon colours for all three edges of
@@ -753,7 +753,7 @@ namespace {
         int i, j;
         int index;
         const Tetrahedron<3>* tet;
-        const NEdge* edge;
+        const Edge<3>* edge;
 
         // In the seenDegree[] array, an edge that has been seen in all
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as

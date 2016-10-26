@@ -34,8 +34,8 @@
 
 namespace regina {
 
-void Triangulation<3>::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
-        std::set<NVertex*>& vertexSet) const {
+void Triangulation<3>::maximalForestInBoundary(std::set<Edge<3>*>& edgeSet,
+        std::set<Vertex<3>*>& vertexSet) const {
     ensureSkeleton();
 
     vertexSet.clear();
@@ -46,14 +46,14 @@ void Triangulation<3>::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
             edgeSet, vertexSet);
 }
 
-void Triangulation<3>::stretchBoundaryForestFromVertex(NVertex* from,
-        std::set<NEdge*>& edgeSet,
-        std::set<NVertex*>& vertexSet) const {
+void Triangulation<3>::stretchBoundaryForestFromVertex(Vertex<3>* from,
+        std::set<Edge<3>*>& edgeSet,
+        std::set<Vertex<3>*>& vertexSet) const {
     vertexSet.insert(from);
 
     Tetrahedron<3>* tet;
-    NVertex* otherVertex;
-    NEdge* edge;
+    Vertex<3>* otherVertex;
+    Edge<3>* edge;
     int vertex, yourVertex;
     for (auto& emb : *from) {
         tet = emb.tetrahedron();
@@ -61,7 +61,7 @@ void Triangulation<3>::stretchBoundaryForestFromVertex(NVertex* from,
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
             if (vertex == yourVertex)
                 continue;
-            edge = tet->edge(NEdge::edgeNumber[vertex][yourVertex]);
+            edge = tet->edge(Edge<3>::edgeNumber[vertex][yourVertex]);
             if (! (edge->isBoundary()))
                 continue;
             otherVertex = tet->vertex(yourVertex);
@@ -74,29 +74,29 @@ void Triangulation<3>::stretchBoundaryForestFromVertex(NVertex* from,
     }
 }
 
-void Triangulation<3>::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
+void Triangulation<3>::maximalForestInSkeleton(std::set<Edge<3>*>& edgeSet,
         bool canJoinBoundaries) const {
     ensureSkeleton();
 
-    std::set<NVertex*> vertexSet;
-    std::set<NVertex*> thisBranch;
+    std::set<Vertex<3>*> vertexSet;
+    std::set<Vertex<3>*> thisBranch;
 
     if (canJoinBoundaries)
         edgeSet.clear();
     else
         maximalForestInBoundary(edgeSet, vertexSet);
 
-    for (NVertex* v : vertices())
+    for (Vertex<3>* v : vertices())
         if (! (vertexSet.count(v))) {
             stretchForestFromVertex(v, edgeSet, vertexSet, thisBranch);
             thisBranch.clear();
         }
 }
 
-bool Triangulation<3>::stretchForestFromVertex(NVertex* from,
-        std::set<NEdge*>& edgeSet,
-        std::set<NVertex*>& vertexSet,
-        std::set<NVertex*>& thisStretch) const {
+bool Triangulation<3>::stretchForestFromVertex(Vertex<3>* from,
+        std::set<Edge<3>*>& edgeSet,
+        std::set<Vertex<3>*>& vertexSet,
+        std::set<Vertex<3>*>& thisStretch) const {
     // Moves out from the vertex until we hit a vertex that has already
     //     been visited; then stops.
     // Returns true if we make such a link.
@@ -105,7 +105,7 @@ bool Triangulation<3>::stretchForestFromVertex(NVertex* from,
     thisStretch.insert(from);
 
     Tetrahedron<3>* tet;
-    NVertex* otherVertex;
+    Vertex<3>* otherVertex;
     int vertex, yourVertex;
     bool madeLink = false;
     for (auto& emb : *from) {
@@ -118,7 +118,7 @@ bool Triangulation<3>::stretchForestFromVertex(NVertex* from,
             if (thisStretch.count(otherVertex))
                 continue;
             madeLink = vertexSet.count(otherVertex);
-            edgeSet.insert(tet->edge(NEdge::edgeNumber[vertex][yourVertex]));
+            edgeSet.insert(tet->edge(Edge<3>::edgeNumber[vertex][yourVertex]));
             if (! madeLink)
                 madeLink =
                     stretchForestFromVertex(otherVertex, edgeSet, vertexSet,

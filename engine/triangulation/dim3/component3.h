@@ -52,9 +52,6 @@ namespace regina {
 
 class NBoundaryComponent;
 
-typedef Face<3, 0> NVertex;
-typedef Face<3, 1> NEdge;
-
 /**
  * \weakgroup triangulation
  * @{
@@ -98,9 +95,9 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
     private:
         std::vector<Triangle<3>*> triangles_;
             /**< List of triangles in the component. */
-        std::vector<NEdge*> edges_;
+        std::vector<Edge<3>*> edges_;
             /**< List of edges in the component. */
-        std::vector<NVertex*> vertices_;
+        std::vector<Vertex<3>*> vertices_;
             /**< List of vertices in the component. */
         std::vector<NBoundaryComponent*> boundaryComponents_;
             /**< List of boundary components in the component. */
@@ -182,7 +179,7 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
         /**
          * Determines if this component is ideal.
          * This is the case if and only if it contains an ideal vertex
-         * as described by NVertex::isIdeal().
+         * as described by Vertex<3>::isIdeal().
          *
          * @return \c true if and only if this component is ideal.
          */
@@ -252,12 +249,12 @@ inline const std::vector<Triangle<3>*>& Component<3>::faces<2>() const {
 }
 
 template <>
-inline const std::vector<NEdge*>& Component<3>::faces<1>() const {
+inline const std::vector<Edge<3>*>& Component<3>::faces<1>() const {
     return edges_;
 }
 
 template <>
-inline const std::vector<NVertex*>& Component<3>::faces<0>() const {
+inline const std::vector<Vertex<3>*>& Component<3>::faces<0>() const {
     return vertices_;
 }
 
@@ -267,12 +264,12 @@ inline Triangle<3>* Component<3>::face<2>(size_t index) const {
 }
 
 template <>
-inline NEdge* Component<3>::face<1>(size_t index) const {
+inline Edge<3>* Component<3>::face<1>(size_t index) const {
     return edges_[index];
 }
 
 template <>
-inline NVertex* Component<3>::face<0>(size_t index) const {
+inline Vertex<3>* Component<3>::face<0>(size_t index) const {
     return vertices_[index];
 }
 #endif // ! __DOXYGEN

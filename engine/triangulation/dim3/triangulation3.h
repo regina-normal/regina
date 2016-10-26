@@ -78,8 +78,6 @@ class XMLPacketReader;
 template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
 typedef Isomorphism<3> NIsomorphism;
-typedef Face<3, 0> NVertex;
-typedef Face<3, 1> NEdge;
 
 /**
  * \addtogroup triangulation 3-Manifold Triangulations
@@ -145,7 +143,7 @@ enum TuraevViroAlg {
  * the combinatorial structure of the triangulation.
  *
  * In particular, this class also tracks vertices, edges and triangles of the
- * triangulation (as represented by the classes NVertex, NEdge and Triangle<3>),
+ * triangulation (as represented by the classes Vertex<3>, Edge<3> and Triangle<3>),
  * as well as boundary components (as represented by the class
  * NBoundaryComponent).  Such objects are temporary: whenever the
  * triangulation changes, these objects will be deleted and rebuilt, and so
@@ -477,7 +475,7 @@ class REGINA_API Triangulation<3> :
         /**
          * Determines if this triangulation is standard.
          * This is the case if and only if every vertex is standard.
-         * See NVertex::isStandard() for further details.
+         * See Vertex<3>::isStandard() for further details.
          *
          * @return \c true if and only if this triangulation is
          * standard.
@@ -1050,8 +1048,8 @@ class REGINA_API Triangulation<3> :
          * @param vertexSet the set to be emptied and into which the
          * vertices of the maximal forest will be placed.
          */
-        void maximalForestInBoundary(std::set<NEdge*>& edgeSet,
-                std::set<NVertex*>& vertexSet) const;
+        void maximalForestInBoundary(std::set<Edge<3>*>& edgeSet,
+                std::set<Vertex<3>*>& vertexSet) const;
         /**
          * Produces a maximal forest in the triangulation's 1-skeleton.
          * The given set will be emptied and will have the edges of the
@@ -1076,7 +1074,7 @@ class REGINA_API Triangulation<3> :
          * boundary components are allowed to be joined by the maximal
          * forest.
          */
-        void maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
+        void maximalForestInSkeleton(std::set<Edge<3>*>& edgeSet,
                 bool canJoinBoundaries = true) const;
 
         /**
@@ -1327,7 +1325,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool threeTwoMove(NEdge* e, bool check = true, bool perform = true);
+        bool threeTwoMove(Edge<3>* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-3 move
          * about the given triangle.
@@ -1418,7 +1416,7 @@ class REGINA_API Triangulation<3> :
          * @param newAxis Specifies which axis of the octahedron the new
          * tetrahedra should meet along; this should be 0 or 1.
          * Consider the four original tetrahedra in the order described
-         * by NEdge::embedding(0,...,3); call these tetrahedra 0, 1, 2 and
+         * by Edge<3>::embedding(0,...,3); call these tetrahedra 0, 1, 2 and
          * 3.  If \a newAxis is 0, the new axis will separate tetrahedra
          * 0 and 1 from 2 and 3.  If \a newAxis is 1, the new axis will
          * separate tetrahedra 1 and 2 from 3 and 0.
@@ -1431,7 +1429,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool fourFourMove(NEdge* e, int newAxis, bool check = true,
+        bool fourFourMove(Edge<3>* e, int newAxis, bool check = true,
                 bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-0 move
@@ -1479,7 +1477,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoZeroMove(NEdge* e, bool check = true, bool perform = true);
+        bool twoZeroMove(Edge<3>* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-0 move
          * about the given vertex of degree 2.
@@ -1521,7 +1519,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoZeroMove(NVertex* v, bool check = true, bool perform = true);
+        bool twoZeroMove(Vertex<3>* v, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 2-1 move
          * about the given edge.
@@ -1577,7 +1575,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoOneMove(NEdge* e, int edgeEnd,
+        bool twoOneMove(Edge<3>* e, int edgeEnd,
                 bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book opening move
@@ -1671,7 +1669,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool closeBook(NEdge* e, bool check = true, bool perform = true);
+        bool closeBook(Edge<3>* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a boundary shelling
          * move on the given tetrahedron.
@@ -1748,7 +1746,7 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool collapseEdge(NEdge* e, bool check = true, bool perform = true);
+        bool collapseEdge(Edge<3>* e, bool check = true, bool perform = true);
 
         /**
          * Reorders the tetrahedra of this triangulation using a
@@ -2336,7 +2334,7 @@ class REGINA_API Triangulation<3> :
          *
          * @param e the edge to drill out.
          */
-        void drillEdge(NEdge* e);
+        void drillEdge(Edge<3>* e);
 
         /**
          * Punctures this manifold by removing a 3-ball from the interior of
@@ -2391,7 +2389,7 @@ class REGINA_API Triangulation<3> :
          * @param edge the boundary edge upon which to layer.
          * @return the new tetrahedron provided by the layering.
          */
-        Tetrahedron<3>* layerOn(NEdge* edge);
+        Tetrahedron<3>* layerOn(Edge<3>* edge);
 
         /**
          * Inserts a new layered solid torus into the triangulation.
@@ -3003,11 +3001,11 @@ class REGINA_API Triangulation<3> :
             ProgressTrackerOpen* tracker,
             const std::function<bool(const Triangulation<3>&)>& action) const;
 
-        void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
-                std::set<NVertex*>&) const;
+        void stretchBoundaryForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
+                std::set<Vertex<3>*>&) const;
             /**< Internal to maximalForestInBoundary(). */
-        bool stretchForestFromVertex(NVertex*, std::set<NEdge*>&,
-                std::set<NVertex*>&, std::set<NVertex*>&) const;
+        bool stretchForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
+                std::set<Vertex<3>*>&, std::set<Vertex<3>*>&) const;
             /**< Internal to maximalForestInSkeleton(). */
 
         /**

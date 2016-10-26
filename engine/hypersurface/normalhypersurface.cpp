@@ -188,8 +188,8 @@ bool NormalHypersurface::embedded() const {
         if (found == 2)
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 2; ++j)
-                    if (Dim4Edge::edgeVertex[prism[0]][i] ==
-                            Dim4Edge::edgeVertex[prism[1]][j])
+                    if (Edge<4>::edgeVertex[prism[0]][i] ==
+                            Edge<4>::edgeVertex[prism[1]][j])
                         return false;
     }
 
@@ -217,8 +217,8 @@ bool NormalHypersurface::locallyCompatible(const NormalHypersurface& other)
         if (found == 2)
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 2; ++j)
-                    if (Dim4Edge::edgeVertex[prism[0]][i] ==
-                            Dim4Edge::edgeVertex[prism[1]][j])
+                    if (Edge<4>::edgeVertex[prism[0]][i] ==
+                            Edge<4>::edgeVertex[prism[1]][j])
                         return false;
     }
 

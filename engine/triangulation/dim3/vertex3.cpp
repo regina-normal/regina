@@ -37,11 +37,11 @@
 
 namespace regina {
 
-NVertex::~Face() {
+Vertex<3>::~Face() {
     delete linkTri_;
 }
 
-void NVertex::writeTextShort(std::ostream& out) const {
+void Vertex<3>::writeTextShort(std::ostream& out) const {
     switch(link_) {
         case SPHERE: out << "Internal "; break;
         case DISC: out << "Boundary "; break;
@@ -53,7 +53,7 @@ void NVertex::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << degree();
 }
 
-void NVertex::writeTextLong(std::ostream& out) const {
+void Vertex<3>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
@@ -62,7 +62,7 @@ void NVertex::writeTextLong(std::ostream& out) const {
         out << "  " << emb << std::endl;
 }
 
-Triangulation<2>* NVertex::buildLinkDetail(bool labels,
+Triangulation<2>* Vertex<3>::buildLinkDetail(bool labels,
         NIsomorphism** inclusion) const {
     // Build the triangulation.
     Triangulation<2>* ans = new Triangulation<2>();

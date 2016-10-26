@@ -36,7 +36,7 @@
 
 namespace regina {
 
-Tetrahedron<3>* Triangulation<3>::layerOn(NEdge* edge) {
+Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     // Locate the two boundary triangles.
     // Note that our preconditions ensure they exist and are distinct;
     // we won't test this again here.

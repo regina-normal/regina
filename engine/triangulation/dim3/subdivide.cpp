@@ -111,7 +111,7 @@ void Triangulation<3>::barycentricSubdivision() {
     delete[] newTet;
 }
 
-void Triangulation<3>::drillEdge(NEdge* e) {
+void Triangulation<3>::drillEdge(Edge<3>* e) {
     // Recall from the barycentric subdivision code above that
     // a tetrahedron in the subdivision is uniquely defined by the
     // permutation (face, edge, vtx, corner) of (0, 1, 2, 3).
@@ -131,12 +131,12 @@ void Triangulation<3>::drillEdge(NEdge* e) {
     int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision
                      // that contain the two corresponding half-edges.
     oldToNew[0] = Perm<4>(
-        NEdge::edgeVertex[5 - edgeNum][0], NEdge::edgeVertex[5 - edgeNum][1],
-        NEdge::edgeVertex[edgeNum][0], NEdge::edgeVertex[edgeNum][1]).
+        Edge<3>::edgeVertex[5 - edgeNum][0], Edge<3>::edgeVertex[5 - edgeNum][1],
+        Edge<3>::edgeVertex[edgeNum][0], Edge<3>::edgeVertex[edgeNum][1]).
         S4Index();
     oldToNew[1] = Perm<4>(
-        NEdge::edgeVertex[5 - edgeNum][0], NEdge::edgeVertex[5 - edgeNum][1],
-        NEdge::edgeVertex[edgeNum][1], NEdge::edgeVertex[edgeNum][0]).
+        Edge<3>::edgeVertex[5 - edgeNum][0], Edge<3>::edgeVertex[5 - edgeNum][1],
+        Edge<3>::edgeVertex[edgeNum][1], Edge<3>::edgeVertex[edgeNum][0]).
         S4Index();
 
     ChangeEventSpan span(this);
@@ -147,7 +147,7 @@ void Triangulation<3>::drillEdge(NEdge* e) {
 
     int i, j, k;
     unsigned long finalTet;
-    NVertex* finalVertex;
+    Vertex<3>* finalVertex;
     for (i = 0; i < 2; ++i)
         for (j = 0; j < 2; ++j) {
             finalTet = 24 * (24 * tetNum + oldToNew[i]) + oldToNew[j];
@@ -278,7 +278,7 @@ bool Triangulation<3>::idealToFinite() {
     // Remove the tetrahedra that meet any of the ideal or invalid vertices.
     // First we make a list of the tetrahedra.
     std::vector<Tetrahedron<3>*> tetList;
-    for (NVertex* v : vertices())
+    for (Vertex<3>* v : vertices())
         if (v->isIdeal() || ! v->isValid())
             for (auto& emb : *v)
                 tetList.push_back(emb.tetrahedron());

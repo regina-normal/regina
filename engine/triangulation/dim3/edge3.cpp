@@ -34,7 +34,7 @@
 
 namespace regina {
 
-void NEdge::writeTextLong(std::ostream& out) const {
+void Edge<3>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 

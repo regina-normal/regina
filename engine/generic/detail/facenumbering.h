@@ -92,8 +92,8 @@ REGINA_API extern const int* const binomSmall_[17];
  * \ifacespython This base class is not present, and neither is
  * FaceNumbering<dim, subdim>.  Python users can access these routines
  * through the class Face<dim, subdim> (which in Python
- * becomes Face<i>dim</i>_<i>subdim</i>, or one of the typedefs in
- * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
+ * becomes Face<i>dim</i>_<i>subdim</i>, or one of the type aliases
+ * such as Vertex3, Edge2 and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
  * This must be between 1 and 15 inclusive.
@@ -192,8 +192,8 @@ class FaceNumberingAPI {
  * \ifacespython This base class is not present, and neither is
  * FaceNumbering<dim, subdim>.  Python users can access these routines
  * through the class Face<dim, subdim> (which in Python
- * becomes Face<i>dim</i>_<i>subdim</i>, or one of the typedefs in
- * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
+ * becomes Face<i>dim</i>_<i>subdim</i>, or one of the type aliases
+ * such as Vertex3, Edge2 and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
  * This must be between 1 and 15 inclusive.

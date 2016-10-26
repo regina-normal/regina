@@ -52,9 +52,6 @@ namespace regina {
 
 class Dim2BoundaryComponent;
 
-typedef Face<2, 0> Dim2Vertex;
-typedef Face<2, 1> Dim2Edge;
-
 /**
  * \weakgroup dim2
  * @{
@@ -95,9 +92,9 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
         public alias::FaceOfTriangulation<Component<2>, 2>,
         public alias::FacesOfTriangulation<Component<2>, 2> {
     private:
-        std::vector<Dim2Edge*> edges_;
+        std::vector<Edge<2>*> edges_;
             /**< List of edges in the component. */
-        std::vector<Dim2Vertex*> vertices_;
+        std::vector<Vertex<2>*> vertices_;
             /**< List of vertices in the component. */
         std::vector<Dim2BoundaryComponent*> boundaryComponents_;
             /**< List of boundary components in the component. */
@@ -218,12 +215,12 @@ inline size_t Component<2>::countFaces<0>() const {
 }
 
 template <>
-inline const std::vector<Dim2Edge*>& Component<2>::faces<1>() const {
+inline const std::vector<Edge<2>*>& Component<2>::faces<1>() const {
     return edges_;
 }
 
 template <>
-inline const std::vector<Dim2Vertex*>& Component<2>::faces<0>() const {
+inline const std::vector<Vertex<2>*>& Component<2>::faces<0>() const {
     return vertices_;
 }
 #endif // ! __DOXYGEN
@@ -235,12 +232,12 @@ inline size_t Component<2>::countBoundaryComponents() const {
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
 template <>
-inline Dim2Edge* Component<2>::face<1>(size_t index) const {
+inline Edge<2>* Component<2>::face<1>(size_t index) const {
     return edges_[index];
 }
 
 template <>
-inline Dim2Vertex* Component<2>::face<0>(size_t index) const {
+inline Vertex<2>* Component<2>::face<0>(size_t index) const {
     return vertices_[index];
 }
 #endif // ! __DOXYGEN

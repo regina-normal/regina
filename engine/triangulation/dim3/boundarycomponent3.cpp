@@ -39,7 +39,7 @@ void NBoundaryComponent::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     if (isIdeal()) {
-        NVertex* v = vertices_.front();
+        Vertex<3>* v = vertices_.front();
         out << "Vertex: " << v->index() << std::endl;
         out << "Appears as:" << std::endl;
         for (auto& emb : *v)

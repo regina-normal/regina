@@ -59,15 +59,15 @@ void Triangulation<4>::calculateSkeleton() {
 
     calculateVertexLinks();
         // Sets:
-        // - Dim4Vertex::link_
-        // - valid_ and Dim4Vertex::valid_ in the case of bad vertex links
-        // - valid_ and Dim4Edge::invalid_ in the case of bad edge links
-        // - ideal_, Dim4Vertex::ideal_ and Dim4Component::ideal_
+        // - Vertex<4>::link_
+        // - valid_ and Vertex<4>::valid_ in the case of bad vertex links
+        // - valid_ and Edge<4>::invalid_ in the case of bad edge links
+        // - ideal_, Vertex<4>::ideal_ and Dim4Component::ideal_
 
     if (! valid_)
         calculateEdgeLinks();
         // Sets:
-        // - Dim4Edge::link_, but only for edges with bad self-identifications
+        // - Edge<4>::link_, but only for edges with bad self-identifications
 
     // Recall that for 4-manifolds we restrict "ideal" to only include
     // valid triangulations.
@@ -103,8 +103,8 @@ void Triangulation<4>::calculateBoundary() {
     std::queue<Tetrahedron<4>*> queue;
     Pentachoron<4> *pent, *adjPent;
     int facet, adjFacet;
-    Dim4Vertex* vertex;
-    Dim4Edge* edge;
+    Vertex<4>* vertex;
+    Edge<4>* edge;
     Triangle<4>* tri;
     TriangleEmbedding<4> triEmb;
     Tetrahedron<4> *tet, *adjTet;
@@ -158,7 +158,7 @@ void Triangulation<4>::calculateBoundary() {
                         continue;
 
                     edge = pent->regina::detail::SimplexFaces<4, 1>::face_[
-                        Dim4Edge::edgeNumber[i][j]];
+                        Edge<4>::edgeNumber[i][j]];
                     if (edge->boundaryComponent_ != label)
                         edge->boundaryComponent_ = label;
                 }
@@ -173,7 +173,7 @@ void Triangulation<4>::calculateBoundary() {
                 // Examine the triangle opposite vertices (i, facet).  This is
                 // the triangle opposite the edge joining vertices (i, facet).
                 tri = pent->regina::detail::SimplexFaces<4, 2>::face_[
-                    Dim4Edge::edgeNumber[i][facet]];
+                    Edge<4>::edgeNumber[i][facet]];
                 if (! tri->boundaryComponent_)
                     tri->boundaryComponent_ = label;
 
@@ -284,10 +284,10 @@ void Triangulation<4>::calculateVertexLinks() {
 
     // Construct the vertex linking tetrahedra, and insert them into each
     // vertex link in the correct order as described by the
-    // Dim4Vertex::buildLink() docs.
+    // Vertex<4>::buildLink() docs.
     Tetrahedron<3>** tet = new Tetrahedron<3>*[5 * n];
 
-    for (Dim4Vertex* vertex : vertices()) {
+    for (Vertex<4>* vertex : vertices()) {
         vertex->link_ = new Triangulation<3>();
         for (auto& emb : *vertex)
             tet[5 * emb.pentachoron()->index() + emb.vertex()]
@@ -341,7 +341,7 @@ void Triangulation<4>::calculateVertexLinks() {
 
     // Look at each vertex link and see what it says about this 4-manifold
     // triangulation.
-    for (Dim4Vertex* vertex : vertices()) {
+    for (Vertex<4>* vertex : vertices()) {
         if (vertex->link_->hasBoundaryTriangles()) {
             // It's a 3-ball or nothing.
             if ((! knownSimpleLinks_) && ! vertex->link_->isBall()) {
@@ -393,7 +393,7 @@ void Triangulation<4>::calculateVertexLinks() {
             for (linkit = vertex->link_->vertices().begin();
                     linkit != vertex->link_->vertices().end(); ++linkit) {
                 type = (*linkit)->link();
-                if (type != NVertex::SPHERE && type != NVertex::DISC) {
+                if (type != Vertex<3>::SPHERE && type != Vertex<3>::DISC) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.
 
@@ -415,7 +415,7 @@ void Triangulation<4>::calculateVertexLinks() {
 
                     // Got it!
                     vemb.pentachoron()->regina::detail::SimplexFaces<4, 1>::face_[
-                        Dim4Edge::edgeNumber[vemb.vertex()][otherEnd]
+                        Edge<4>::edgeNumber[vemb.vertex()][otherEnd]
                         ]->markBadLink();
                 }
             }
@@ -431,10 +431,10 @@ void Triangulation<4>::calculateVertexLinks() {
 }
 
 void Triangulation<4>::calculateEdgeLinks() {
-    for (Dim4Edge* e : edges())
+    for (Edge<4>* e : edges())
         if (e->hasBadIdentification() && ! e->hasBadLink()) {
             // Calling buildLink() causes the edge link to be cached by
-            // Dim4Edge.
+            // Edge<4>.
             const Triangulation<2>* link = e->buildLink();
             if ((link->isClosed() && link->eulerChar() != 2) ||
                     ((! link->isClosed()) && link->eulerChar() != 1))

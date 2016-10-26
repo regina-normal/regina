@@ -48,21 +48,17 @@
 
 using regina::NBoundaryComponent;
 using regina::NComponent;
-using regina::NEdge;
-using regina::NVertex;
 using regina::Dim2BoundaryComponent;
 using regina::Dim2Component;
-using regina::Dim2Edge;
+using regina::Edge;
 using regina::EdgeEmbedding;
-using regina::Dim2Vertex;
 using regina::Dim4BoundaryComponent;
 using regina::Dim4Component;
-using regina::Dim4Edge;
 using regina::Tetrahedron;
 using regina::TetrahedronEmbedding;
 using regina::Triangle;
 using regina::TriangleEmbedding;
-using regina::Dim4Vertex;
+using regina::Vertex;
 
 #define SKELETON_MAX_ROWS_DEFAULT 10
 namespace {
@@ -188,21 +184,21 @@ int VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant VertexModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NVertex* item = tri->vertex(index.row());
+        Vertex<3>* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
             case 1: {
                 switch (item->link()) {
-                    case NVertex::SPHERE:
+                    case Vertex<3>::SPHERE:
                         return QString();
-                    case NVertex::DISC:
+                    case Vertex<3>::DISC:
                         return tr("Bdry");
-                    case NVertex::TORUS:
+                    case Vertex<3>::TORUS:
                         return tr("Ideal: Torus");
-                    case NVertex::KLEIN_BOTTLE:
+                    case Vertex<3>::KLEIN_BOTTLE:
                         return tr("Ideal: Klein bottle");
-                    case NVertex::NON_STANDARD_CUSP: {
+                    case Vertex<3>::NON_STANDARD_CUSP: {
                         if (item->isLinkOrientable())
                             return tr("Ideal: Genus %1 orbl").arg(
                                 1 - (item->linkEulerChar() / 2));
@@ -210,7 +206,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                             return tr("Ideal: Genus %1 non-orbl").arg(
                                 2 - item->linkEulerChar());
                     }
-                    case NVertex::INVALID:
+                    case Vertex<3>::INVALID:
                         return tr("Invalid");
                     default:
                         return tr("Unknown");
@@ -295,7 +291,7 @@ int EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant EdgeModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NEdge* item = tri->edge(index.row());
+        Edge<3>* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -594,7 +590,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                     tr("%1 triangles").arg(item->countTriangles()));
             case 3:
                 if (item->isIdeal()) {
-                    NVertex* v = item->vertex(0);
+                    Vertex<3>* v = item->vertex(0);
                     QString ans;
                     for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
@@ -686,7 +682,7 @@ int Dim2VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Vertex* item = tri->vertex(index.row());
+        Vertex<2>* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -774,7 +770,7 @@ int Dim2EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Edge* item = tri->edge(index.row());
+        Edge<2>* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1025,7 +1021,7 @@ int Dim4VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim4VertexModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Vertex* item = tri->vertex(index.row());
+        Vertex<4>* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1118,7 +1114,7 @@ int Dim4EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim4EdgeModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Edge* item = tri->edge(index.row());
+        Edge<4>* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1500,7 +1496,7 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
                     tr("%1 tetrahedra").arg(item->countTetrahedra()));
             case 3:
                 if (item->isIdeal() || item->isInvalidVertex()) {
-                    Dim4Vertex* v = item->vertex(0);
+                    Vertex<4>* v = item->vertex(0);
                     QString ans;
                     for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").

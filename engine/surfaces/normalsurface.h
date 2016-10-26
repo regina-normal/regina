@@ -100,8 +100,8 @@ REGINA_API extern const int quadMeeting[4][4][2];
  * - <tt>quadDefn[i][2] < quadDefn[i][3]</tt>;
  * - <tt>quadDefn[i][0] < quadDefn[i][2]</tt>.
  *
- * This array contains similar information to the function NEdge::ordering().
- * Instead of quadDefn[\a i][\a j], you can call NEdge::ordering(\a i)[\a j];
+ * This array contains similar information to the function Edge<3>::ordering().
+ * Instead of quadDefn[\a i][\a j], you can call Edge<3>::ordering(\a i)[\a j];
  * this will give the same results for \a j = 0 and 1, but it might
  * switch the results for \a j = 2 and 3.
  */
@@ -208,8 +208,6 @@ typedef MatrixIntDomain<Integer> MatrixInt;
 
 template <int> class Triangulation;
 template <int, int> class Face;
-typedef Face<3, 0> NVertex;
-typedef Face<3, 1> NEdge;
 
 /**
  * A template that stores information about a particular
@@ -556,7 +554,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        virtual const NVertex* isVertexLink(const Triangulation<3>* triang) const;
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the thin link of a single edge.
@@ -579,7 +577,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * @return a pair containing the edge(s) linked by this surface,
          * as described above.
          */
-        virtual std::pair<const NEdge*, const NEdge*> isThinEdgeLink(
+        virtual std::pair<const Edge<3>*, const Edge<3>*> isThinEdgeLink(
             const Triangulation<3>* triang) const;
         /**
          * Determines if the normal surface represented is a splitting
@@ -1290,7 +1288,7 @@ class REGINA_API NormalSurface :
          * @return the vertex linked by this surface, or 0 if this
          * surface is not the link of a single vertex.
          */
-        const NVertex* isVertexLink() const;
+        const Vertex<3>* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this surface
          * is the thin link of a single edge.
@@ -1315,7 +1313,7 @@ class REGINA_API NormalSurface :
          * @return a pair containing the edge(s) linked by this surface,
          * as described above.
          */
-        std::pair<const NEdge*, const NEdge*> isThinEdgeLink() const;
+        std::pair<const Edge<3>*, const Edge<3>*> isThinEdgeLink() const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing
@@ -1898,11 +1896,11 @@ inline bool NormalSurface::isVertexLinking() const {
     return vector->isVertexLinking(triangulation_);
 }
 
-inline const NVertex* NormalSurface::isVertexLink() const {
+inline const Vertex<3>* NormalSurface::isVertexLink() const {
     return vector->isVertexLink(triangulation_);
 }
 
-inline std::pair<const NEdge*, const NEdge*> NormalSurface::isThinEdgeLink()
+inline std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink()
         const {
     return vector->isThinEdgeLink(triangulation_);
 }

@@ -887,8 +887,8 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
 
             // We declare the natural orientation of an edge to be
             // smaller vertex to larger vertex.
-            hasTwistEdge = (p[Dim4Edge::edgeVertex[e][0]] >
-                p[Dim4Edge::edgeVertex[e][1]] ?  1 : 0);
+            hasTwistEdge = (p[Edge<4>::edgeVertex[e][0]] >
+                p[Edge<4>::edgeVertex[e][1]] ?  1 : 0);
 
             // Are the natural 012 representations of the two triangles
             // joined with reverse orientations?
@@ -1284,8 +1284,8 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
         w2 = p[v2];
 
         // Look at the triangle opposite edge v1-v2.
-        e = Dim4Edge::edgeNumber[v1][v2];
-        f = Dim4Edge::edgeNumber[w1][w2];
+        e = Edge<4>::edgeNumber[v1][v2];
+        f = Edge<4>::edgeNumber[w1][w2];
 
         orderIdx = v2 + 5 * orderElt_;
 
@@ -1368,7 +1368,7 @@ void Dim4GluingPermSearcher::splitTriangleClasses() {
             continue;
 
         // Look at the triangle opposite edge v1-v2.
-        f = Dim4Edge::edgeNumber[v1][v2];
+        f = Edge<4>::edgeNumber[v1][v2];
 
         fIdx = f + 10 * facet.simp;
         orderIdx = v2 + 5 * orderElt_;

@@ -38,7 +38,7 @@
 #include "triangulation/nexampletriangulation.h"
 #include "testsuite/dim3/testtriangulation.h"
 
-using regina::NEdge;
+using regina::Edge;
 using regina::Perm;
 using regina::NSimpleSurfaceBundle;
 using regina::Tetrahedron;
@@ -92,7 +92,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         void verify20EdgeInvalid(Triangulation<3>* tri,
                 const std::string& caseName) {
             bool found = false;
-            NEdge* edge;
+            Edge<3>* edge;
             for (unsigned long e = 0; e < tri->countEdges(); e++) {
                 edge = tri->edge(e);
                 if (edge->degree() == 2 && ! edge->isBoundary())
@@ -155,7 +155,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 Tetrahedron<3>* tet2 = t.newTetrahedron();
                 t.tetrahedron(1)->join(2, tet2, Perm<4>());
 
-                NEdge* e = tet->edge(NEdge::edgeNumber[0][1]);
+                Edge<3>* e = tet->edge(Edge<3>::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-tet is malformed.",
                     (! e->isBoundary()) && e->degree() == 1 &&
@@ -354,8 +354,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 p->join(3, r, Perm<4>());
                 q->join(2, s, Perm<4>());
 
-                NEdge* e = t.tetrahedron(0)->edge(
-                    NEdge::edgeNumber[0][1]);
+                Edge<3>* e = t.tetrahedron(0)->edge(
+                    Edge<3>::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case identified-edges-S2 is malformed.",
                     (! e->isBoundary()) && e->degree() == 6 &&
@@ -380,8 +380,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 p->join(3, r, Perm<4>(0, 1));
                 q->join(2, s, Perm<4>(0, 1));
 
-                NEdge* e = t.tetrahedron(0)->edge(
-                    NEdge::edgeNumber[0][1]);
+                Edge<3>* e = t.tetrahedron(0)->edge(
+                    Edge<3>::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case identified-edges-RP2 is malformed.",
                     (! e->isBoundary()) && e->degree() == 6 &&
@@ -397,7 +397,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 Tetrahedron<3>* tet = t.tetrahedron(0);
                 tet->join(2, tet, Perm<4>(2, 3));
 
-                NEdge* e = tet->edge(NEdge::edgeNumber[0][1]);
+                Edge<3>* e = tet->edge(Edge<3>::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-boundary is malformed.",
                     (! e->isBoundary()) && e->degree() == 1 &&
@@ -411,8 +411,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 Triangulation<3> t;
                 t.insertTriangulation(baseKB);
 
-                NEdge* e = t.tetrahedron(0)->
-                    edge(NEdge::edgeNumber[0][1]);
+                Edge<3>* e = t.tetrahedron(0)->
+                    edge(Edge<3>::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-cross-boundary is malformed.",
                     e->isBoundary() && e->degree() == 3 &&

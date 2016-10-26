@@ -46,7 +46,7 @@ using regina::NAbelianGroup;
 using regina::BoolSet;
 using regina::NBoundaryComponent;
 using regina::Container;
-using regina::NEdge;
+using regina::Edge;
 using regina::NExampleTriangulation;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
@@ -373,7 +373,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 else
                     msg << "be the (thin) link of two edges.";
 
-                std::pair<const regina::NEdge*, const regina::NEdge*> links
+                std::pair<const regina::Edge<3>*, const regina::Edge<3>*> links
                     = surface->isThinEdgeLink();
                 unsigned ans;
                 if (links.first == 0)
@@ -432,7 +432,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         s->isVertexLinking() == vertexLink &&
                         s->isCentral() == central &&
                         s->isSplitting() == splitting) {
-                    std::pair<const regina::NEdge*, const regina::NEdge*> links
+                    std::pair<const regina::Edge<3>*, const regina::Edge<3>*> links
                         = s->isThinEdgeLink();
                     unsigned linkCount;
                     if (links.first == 0)
@@ -1806,7 +1806,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             unsigned long i, j;
             const NormalSurface *s, *t;
-            std::pair<const NEdge*, const NEdge*> edges;
+            std::pair<const Edge<3>*, const Edge<3>*> edges;
             unsigned long edge;
 
             for (i = 0; i < n; ++i) {

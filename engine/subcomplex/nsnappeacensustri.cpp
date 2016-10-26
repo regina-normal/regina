@@ -73,7 +73,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     int link;
     for (i = 0; i < nVertices; i++) {
         link = comp->vertex(i)->link();
-        if (link != NVertex::TORUS && link != NVertex::KLEIN_BOTTLE)
+        if (link != Vertex<3>::TORUS && link != Vertex<3>::KLEIN_BOTTLE)
             return 0;
     }
     for (i = 0; i < nEdges; i++)
@@ -147,9 +147,9 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             if (comp->countEdges() != 4)
                 return 0;
-            if (comp->vertex(0)->link() != NVertex::TORUS)
+            if (comp->vertex(0)->link() != Vertex<3>::TORUS)
                 return 0;
-            if (comp->vertex(1)->link() != NVertex::TORUS)
+            if (comp->vertex(1)->link() != Vertex<3>::TORUS)
                 return 0;
             if (comp->vertex(0)->degree() != 8)
                 return 0;

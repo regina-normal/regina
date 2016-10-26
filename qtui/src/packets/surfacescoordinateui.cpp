@@ -180,8 +180,8 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return QString(QChar(0x2014 /* emdash */));
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 4)) {
-            const regina::NVertex* v;
-            std::pair<const regina::NEdge*, const regina::NEdge*> e;
+            const regina::Vertex<3>* v;
+            std::pair<const regina::Edge<3>*, const regina::Edge<3>*> e;
 
             if ((v = s->isVertexLink()))
                 return tr("Vertex %1").arg(v->index());

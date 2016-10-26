@@ -193,7 +193,7 @@ namespace {
 #endif
     }; // end def subDivNot
 
-    inline bool shouldTruncate(Dim4Vertex* v) {
+    inline bool shouldTruncate(Vertex<4>* v) {
         return (v->isIdeal() || ! v->isValid());
     }
 } // anonymous namespace

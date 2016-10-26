@@ -160,13 +160,13 @@ inline Tetrahedron<3>* NSnappedBall::tetrahedron() const {
 }
 inline int NSnappedBall::boundaryFace(int index) const {
     return index == 0 ?
-        NEdge::edgeVertex[5 - equator][0] :
-        NEdge::edgeVertex[5 - equator][1];
+        Edge<3>::edgeVertex[5 - equator][0] :
+        Edge<3>::edgeVertex[5 - equator][1];
 }
 inline int NSnappedBall::internalFace(int index) const {
     return index == 0 ?
-        NEdge::edgeVertex[equator][0] :
-        NEdge::edgeVertex[equator][1];
+        Edge<3>::edgeVertex[equator][0] :
+        Edge<3>::edgeVertex[equator][1];
 }
 inline int NSnappedBall::equatorEdge() const {
     return equator;

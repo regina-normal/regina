@@ -131,7 +131,7 @@ class REGINA_API Cusp :
         public ShortOutput<Cusp>,
         public boost::noncopyable {
     private:
-        NVertex* vertex_;
+        Vertex<3>* vertex_;
             /**< The corresponding vertex of the Regina triangulation. */
         int m_;
             /**< The first (meridian) filling coefficient, or 0 if this
@@ -154,7 +154,7 @@ class REGINA_API Cusp :
          * and vertex numbering fall out of sync, and to translate
          * between them if/when this happens.
          */
-        NVertex* vertex() const;
+        Vertex<3>* vertex() const;
 
         /**
          * Returns whether this cusp is complete.
@@ -1440,7 +1440,7 @@ inline SnapPeaFatalError::SnapPeaFatalError(
 inline Cusp::Cusp() {
 }
 
-inline NVertex* Cusp::vertex() const {
+inline Vertex<3>* Cusp::vertex() const {
     return vertex_;
 }
 

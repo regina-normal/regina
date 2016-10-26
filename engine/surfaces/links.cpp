@@ -34,7 +34,7 @@
 #include "triangulation/dim3.h"
 #include <set>
 
-#define NO_EDGES std::make_pair(static_cast<NEdge*>(0), static_cast<NEdge*>(0))
+#define NO_EDGES std::make_pair(static_cast<Edge<3>*>(0), static_cast<Edge<3>*>(0))
 
 namespace regina {
 
@@ -55,7 +55,7 @@ bool NormalSurfaceVector::isVertexLinking(const Triangulation<3>* triang) const 
     return true;
 }
 
-const NVertex* NormalSurfaceVector::isVertexLink(const Triangulation<3>* triang)
+const Vertex<3>* NormalSurfaceVector::isVertexLink(const Triangulation<3>* triang)
         const {
     unsigned long nTets = triang->size();
     unsigned long tet;
@@ -74,13 +74,13 @@ const NVertex* NormalSurfaceVector::isVertexLink(const Triangulation<3>* triang)
                     return 0;
 
     // Now examine the triangle to see if we link only a single vertex.
-    std::set<NVertex*> notAns;
+    std::set<Vertex<3>*> notAns;
         /**< We will ignore notAns once ans != 0. */
-    NVertex* ans = 0;
+    Vertex<3>* ans = 0;
     LargeInteger ansMult;
 
     const Tetrahedron<3>* t;
-    NVertex* v;
+    Vertex<3>* v;
     LargeInteger coord;
 
     for (tet = 0; tet < nTets; tet++) {
@@ -129,7 +129,7 @@ const NVertex* NormalSurfaceVector::isVertexLink(const Triangulation<3>* triang)
     return ans;
 }
 
-std::pair<const NEdge*, const NEdge*> NormalSurfaceVector::isThinEdgeLink(
+std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
         const Triangulation<3>* triang) const {
     unsigned long nTets = triang->size();
     unsigned long tet;
@@ -144,14 +144,14 @@ std::pair<const NEdge*, const NEdge*> NormalSurfaceVector::isThinEdgeLink(
 
     // Run through the quadrilateral discs and work out if there are any
     // valid candidates.
-    std::set<NEdge*> notAns;
+    std::set<Edge<3>*> notAns;
         /**< We will ignore notAns once ans != 0. */
     bool foundQuads = false;
-    const NEdge* ans[2];
+    const Edge<3>* ans[2];
     LargeInteger ansMultDouble;
 
     const Tetrahedron<3>* t;
-    NEdge* e[6]; // { 2*link, 4*intersect }
+    Edge<3>* e[6]; // { 2*link, 4*intersect }
     LargeInteger coord;
     int i;
 
@@ -159,17 +159,17 @@ std::pair<const NEdge*, const NEdge*> NormalSurfaceVector::isThinEdgeLink(
         t = triang->tetrahedron(tet);
         for (type = 0; type < 3; type++) {
             coord = quads(tet, type, triang);
-            e[0] = t->edge(NEdge::edgeNumber[quadDefn[type][0]]
+            e[0] = t->edge(Edge<3>::edgeNumber[quadDefn[type][0]]
                 [quadDefn[type][1]]);
-            e[1] = t->edge(NEdge::edgeNumber[quadDefn[type][2]]
+            e[1] = t->edge(Edge<3>::edgeNumber[quadDefn[type][2]]
                 [quadDefn[type][3]]);
-            e[2] = t->edge(NEdge::edgeNumber[quadDefn[type][0]]
+            e[2] = t->edge(Edge<3>::edgeNumber[quadDefn[type][0]]
                 [quadDefn[type][2]]);
-            e[3] = t->edge(NEdge::edgeNumber[quadDefn[type][0]]
+            e[3] = t->edge(Edge<3>::edgeNumber[quadDefn[type][0]]
                 [quadDefn[type][3]]);
-            e[4] = t->edge(NEdge::edgeNumber[quadDefn[type][1]]
+            e[4] = t->edge(Edge<3>::edgeNumber[quadDefn[type][1]]
                 [quadDefn[type][2]]);
-            e[5] = t->edge(NEdge::edgeNumber[quadDefn[type][1]]
+            e[5] = t->edge(Edge<3>::edgeNumber[quadDefn[type][1]]
                 [quadDefn[type][3]]);
 
             if (coord == 0) {
@@ -261,7 +261,7 @@ std::pair<const NEdge*, const NEdge*> NormalSurfaceVector::isThinEdgeLink(
         return NO_EDGES;
 
     // Finally check the triangular discs.
-    NVertex* v;
+    Vertex<3>* v;
     bool expectZero[2];
     int j;
     for (tet = 0; tet < nTets; tet++) {
@@ -284,7 +284,7 @@ std::pair<const NEdge*, const NEdge*> NormalSurfaceVector::isThinEdgeLink(
                 // edge, the coordinate should also be 0.
                 if (! expectZero[i])
                     for (j = 0; j < 3; j++)
-                        if (t->edge(NEdge::edgeNumber[type][(type+j+1) % 4])
+                        if (t->edge(Edge<3>::edgeNumber[type][(type+j+1) % 4])
                                 == ans[i]) {
                             expectZero[i] = true;
                             break;

@@ -950,7 +950,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 
     // Look for a single internal triangle surrounded by three boundary edges.
     // It doesn't matter whether the edges and/or vertices are distinct.
-    NEdge *e0, *e1, *e2;
+    Edge<3> *e0, *e1, *e2;
     unsigned long newSphereCount;
     for (fit = use.triangles().begin(); fit != use.triangles().end(); ++fit) {
         if ((*fit)->isBoundary())
@@ -1021,8 +1021,8 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
         Triangulation<3> cut(use);
         cut.tetrahedron((*tit)->markedIndex())->unjoin(upper);
         Tetrahedron<3>* tet = cut.newTetrahedron();
-        tet->join(NEdge::edgeVertex[equator][0], tet, Perm<4>(
-            NEdge::edgeVertex[equator][0], NEdge::edgeVertex[equator][1]));
+        tet->join(Edge<3>::edgeVertex[equator][0], tet, Perm<4>(
+            Edge<3>::edgeVertex[equator][0], Edge<3>::edgeVertex[equator][1]));
         tet->join(upper, cut.tetrahedron(adj->markedIndex()),
             (*tit)->adjacentGluing(upper));
 

@@ -51,13 +51,13 @@ bool Triangulation<3>::intelligentSimplify() {
         Triangulation<3>* use;
 
         // Variables used for selecting random 4-4 moves.
-        std::vector<std::pair<NEdge*, int> > fourFourAvailable;
-        std::pair<NEdge*, int> fourFourChoice;
+        std::vector<std::pair<Edge<3>*, int> > fourFourAvailable;
+        std::pair<Edge<3>*, int> fourFourChoice;
 
         unsigned long fourFourAttempts;
         unsigned long fourFourCap;
 
-        NEdge* edge;
+        Edge<3>* edge;
         EdgeIterator eit;
         int axis;
 
@@ -225,7 +225,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
             // Crush edges if we can.
             if (countVertices() > components().size() &&
                     countVertices() > boundaryComponents_.size()) {
-                for (NEdge* edge : edges())
+                for (Edge<3>* edge : edges())
                     if (collapseEdge(edge, true, perform)) {
                         changedNow = changed = true;
                         break;
@@ -239,7 +239,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
             }
 
             // Look for internal simplifications.
-            for (NEdge* edge : edges()) {
+            for (Edge<3>* edge : edges()) {
                 if (threeTwoMove(edge, true, perform)) {
                     changedNow = changed = true;
                     break;
@@ -263,7 +263,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                 else
                     return true;
             }
-            for (NVertex* vertex : vertices())
+            for (Vertex<3>* vertex : vertices())
                 if (twoZeroMove(vertex, true, perform)) {
                     changedNow = changed = true;
                     break;

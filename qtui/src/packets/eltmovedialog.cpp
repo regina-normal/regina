@@ -60,31 +60,31 @@ namespace {
     const int ID_SHELLBDRY = 9;
     const int ID_COLLAPSEEDGE = 10;
 
-    bool has20v(regina::NVertex* v) {
+    bool has20v(regina::Vertex<3>* v) {
         return v->triangulation()->twoZeroMove(v, true, false);
     }
 
-    bool has32(regina::NEdge* e) {
+    bool has32(regina::Edge<3>* e) {
         return e->triangulation()->threeTwoMove(e, true, false);
     }
 
-    bool has20e(regina::NEdge* e) {
+    bool has20e(regina::Edge<3>* e) {
         return e->triangulation()->twoZeroMove(e, true, false);
     }
 
-    bool hasCloseBook(regina::NEdge* e) {
+    bool hasCloseBook(regina::Edge<3>* e) {
         return e->triangulation()->closeBook(e, true, false);
     }
 
-    bool hasCollapseEdge(regina::NEdge* e) {
+    bool hasCollapseEdge(regina::Edge<3>* e) {
         return e->triangulation()->collapseEdge(e, true, false);
     }
 
-    bool has44(regina::NEdge* e, int axis) {
+    bool has44(regina::Edge<3>* e, int axis) {
         return e->triangulation()->fourFourMove(e, axis, true, false);
     }
 
-    bool has21(regina::NEdge* e, int end) {
+    bool has21(regina::Edge<3>* e, int end) {
         return e->triangulation()->twoOneMove(e, end, true, false);
     }
 
@@ -348,7 +348,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         return;
 
     if (use32->isChecked()) {
-        regina::NEdge* e = box32->selected();
+        regina::Edge<3>* e = box32->selected();
         if (e)
             tri->threeTwoMove(e);
     } else if (use23->isChecked()) {
@@ -360,19 +360,19 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (t)
             tri->oneFourMove(t);
     } else if (use44->isChecked()) {
-        std::pair<regina::NEdge*, int> s = box44->selected();
+        std::pair<regina::Edge<3>*, int> s = box44->selected();
         if (s.first)
             tri->fourFourMove(s.first, s.second);
     } else if (use20e->isChecked()) {
-        regina::NEdge* e = box20e->selected();
+        regina::Edge<3>* e = box20e->selected();
         if (e)
             tri->twoZeroMove(e);
     } else if (use20v->isChecked()) {
-        regina::NVertex* v = box20v->selected();
+        regina::Vertex<3>* v = box20v->selected();
         if (v)
             tri->twoZeroMove(v);
     } else if (use21->isChecked()) {
-        std::pair<regina::NEdge*, int> s = box21->selected();
+        std::pair<regina::Edge<3>*, int> s = box21->selected();
         if (s.first)
             tri->twoOneMove(s.first, s.second);
     } else if (useOpenBook->isChecked()) {
@@ -380,7 +380,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (f)
             tri->openBook(f);
     } else if (useCloseBook->isChecked()) {
-        regina::NEdge* e = boxCloseBook->selected();
+        regina::Edge<3>* e = boxCloseBook->selected();
         if (e)
             tri->closeBook(e);
     } else if (useShellBdry->isChecked()) {
@@ -388,7 +388,7 @@ void EltMoveDialog::clicked(QAbstractButton* btn) {
         if (t)
             tri->shellBoundary(t);
     } else if (useCollapseEdge->isChecked()) {
-        regina::NEdge* e = boxCollapseEdge->selected();
+        regina::Edge<3>* e = boxCollapseEdge->selected();
         if (e)
             tri->collapseEdge(e);
     } else

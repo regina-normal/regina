@@ -138,7 +138,7 @@
                 cell.index.text = @"No vertices";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim2Vertex* v = self.packet->vertex(indexPath.row - 1);
+                regina::Vertex<2>* v = self.packet->vertex(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Vertex" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = (v->isBoundary() ? @"Bdry" : @"Internal");
@@ -159,7 +159,7 @@
                 cell.index.text = @"No edges";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim2Edge* e = self.packet->edge(indexPath.row - 1);
+                regina::Edge<2>* e = self.packet->edge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = (e->isBoundary() ? @"Bdry" : @"Internal");

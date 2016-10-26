@@ -69,8 +69,6 @@ template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
-typedef Face<4, 1> Dim4Edge;
-typedef Face<4, 0> Dim4Vertex;
 
 /**
  * \addtogroup dim4 4-Manifold Triangulations
@@ -100,8 +98,8 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  * the combinatorial structure of the triangulation.
  *
  * In particular, this class also tracks vertices, edges, triangles and
- * tetrahedra of the triangulation (as represented by the classes Dim4Vertex,
- * Dim4Edge, Triangle<4> and Tetrahedron<4>), as well as boundary components
+ * tetrahedra of the triangulation (as represented by the classes Vertex<4>,
+ * Edge<4>, Triangle<4> and Tetrahedron<4>), as well as boundary components
  * (as represented by the class Dim4BoundaryComponent).  Such objects are
  * temporary: whenever the triangulation changes, these objects will be
  * deleted and rebuilt, and so any pointers to them will become invalid.
@@ -265,7 +263,7 @@ class REGINA_API Triangulation<4> :
          *
          * Note that each ideal vertex forms its own boundary component, and
          * some invalid vertices do also.  See the Dim4BoundaryComponent
-         * class notes and Dim4Vertex::isBoundary() for details.
+         * class notes and Vertex<4>::isBoundary() for details.
          *
          * @return the number of boundary components.
          */
@@ -276,7 +274,7 @@ class REGINA_API Triangulation<4> :
          *
          * Note that each ideal vertex forms its own boundary component, and
          * some invalid vertices do also.  See the Dim4BoundaryComponent
-         * class notes and Dim4Vertex::isBoundary() for details.
+         * class notes and Vertex<4>::isBoundary() for details.
          *
          * Bear in mind that each time the triangulation changes, the
          * boundary components will be deleted and replaced with new
@@ -376,7 +374,7 @@ class REGINA_API Triangulation<4> :
          *
          * Note that ideal triangulations are not closed.  Triangulations
          * with invalid vertices are also considered not closed; see
-         * Dim4Vertex::isBoundary() for details.
+         * Vertex<4>::isBoundary() for details.
          *
          * @return \c true if and only if this triangulation is closed.
          */
@@ -579,7 +577,7 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool fourTwoMove(Dim4Edge* e, bool check = true, bool perform = true);
+        bool fourTwoMove(Edge<4>* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 3-3 move
          * about the given triangle.
@@ -633,7 +631,7 @@ class REGINA_API Triangulation<4> :
          *
          * See the page on \ref pachner for definitions and terminology
          * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>pentachora().back()->edge(Dim4Edge::edgeNumber[0][1])</tt>.
+         * <tt>pentachora().back()->edge(Edge<4>::edgeNumber[0][1])</tt>.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
@@ -771,7 +769,7 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoZeroMove(Dim4Edge* e, bool check = true, bool perform = true);
+        bool twoZeroMove(Edge<4>* e, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
@@ -908,7 +906,7 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool collapseEdge(Dim4Edge* e, bool check = true, bool perform = true);
+        bool collapseEdge(Edge<4>* e, bool check = true, bool perform = true);
 
         /*@}*/
         /**

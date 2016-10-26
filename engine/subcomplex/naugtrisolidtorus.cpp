@@ -579,11 +579,11 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             // layered[whichLayered[j]].
                             edgeGroupRoles[j] = Perm<4>(
                                 layered[whichLayered[j]]->topEdgeGroup(
-                                    NEdge::edgeNumber[q[0]][q[3]]),
+                                    Edge<3>::edgeNumber[q[0]][q[3]]),
                                 layered[whichLayered[j]]->topEdgeGroup(
-                                    NEdge::edgeNumber[q[0]][q[1]]),
+                                    Edge<3>::edgeNumber[q[0]][q[1]]),
                                 layered[whichLayered[j]]->topEdgeGroup(
-                                    NEdge::edgeNumber[q[1]][q[3]]),
+                                    Edge<3>::edgeNumber[q[1]][q[3]]),
                                 3);
                             usedLayered++;
                             break;

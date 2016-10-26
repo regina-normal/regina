@@ -137,8 +137,8 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
                 return QString(QChar(0x2014 /* emdash */));
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
-            const regina::Dim4Vertex* v;
-            const regina::Dim4Edge* e;
+            const regina::Vertex<4>* v;
+            const regina::Edge<4>* e;
 
             if ((v = s->isVertexLink()))
                 return tr("Vertex %1").arg(v->index());

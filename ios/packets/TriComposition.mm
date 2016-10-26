@@ -726,16 +726,16 @@
     else if (second < 0)
         return [NSString stringWithFormat:@"%ld (%d%d)",
                 tetIndex,
-                regina::NEdge::edgeVertex[first][0],
-                regina::NEdge::edgeVertex[first][1]];
+                regina::Edge<3>::edgeVertex[first][0],
+                regina::Edge<3>::edgeVertex[first][1]];
     else
         return [NSString stringWithFormat:@"%ld (%d%d) = %ld (%d%d)",
                 tetIndex,
-                regina::NEdge::edgeVertex[first][0],
-                regina::NEdge::edgeVertex[first][1],
+                regina::Edge<3>::edgeVertex[first][0],
+                regina::Edge<3>::edgeVertex[first][1],
                 tetIndex,
-                regina::NEdge::edgeVertex[second][0],
-                regina::NEdge::edgeVertex[second][1]];
+                regina::Edge<3>::edgeVertex[second][0],
+                regina::Edge<3>::edgeVertex[second][1]];
 }
 
 + (NSString*)matrixString:(const regina::Matrix2&)matrix

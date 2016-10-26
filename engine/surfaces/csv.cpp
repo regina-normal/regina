@@ -126,11 +126,11 @@ namespace {
         if (fields & surfaceExportLink) {
             // Mirror the information that gets shown in the Link column
             // in the GUI.
-            const NVertex* v = s->isVertexLink();
+            const Vertex<3>* v = s->isVertexLink();
             if (v)
                 out << "\"Vertex " << v->index() << "\"";
             else {
-                std::pair<const regina::NEdge*, const regina::NEdge*> e =
+                std::pair<const regina::Edge<3>*, const regina::Edge<3>*> e =
                     s->isThinEdgeLink();
                 if (e.second)
                     out << "\"Thin edges " << e.first->index()

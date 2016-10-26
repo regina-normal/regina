@@ -148,7 +148,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * corresponding vertices of \c pent (those opposite \c v),
          * and will map 4 to \c v itself.
          *
-         * This Dim4Vertex object will retain ownership of the triangulation
+         * This Vertex<4> object will retain ownership of the triangulation
          * that is returned.  If you wish to edit the triangulation, you
          * should make a new clone and edit the clone instead.
          *
@@ -302,7 +302,7 @@ REGINA_DEPRECATED typedef Face<4, 0> Dim4Vertex;
 
 /*@}*/
 
-// Inline functions for Dim4Vertex
+// Inline functions for Vertex<4>
 
 inline Face<4, 0>::Face(Dim4Component* component) :
         detail::FaceBase<4, 0>(component),

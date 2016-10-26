@@ -51,8 +51,6 @@
 namespace regina {
 
 typedef Component<2> Dim2Component;
-typedef Face<2, 0> Dim2Vertex;
-typedef Face<2, 1> Dim2Edge;
 
 /**
  * \weakgroup dim2
@@ -72,9 +70,9 @@ class REGINA_API Dim2BoundaryComponent :
         public boost::noncopyable,
         public MarkedElement {
     private:
-        std::vector<Dim2Edge*> edges_;
+        std::vector<Edge<2>*> edges_;
             /**< List of edges in the component. */
-        std::vector<Dim2Vertex*> vertices_;
+        std::vector<Vertex<2>*> vertices_;
             /**< List of vertices in the component. */
 
     public:
@@ -181,12 +179,12 @@ inline size_t Dim2BoundaryComponent::countFaces<0>() const {
 }
 
 template <>
-inline Dim2Edge* Dim2BoundaryComponent::face<1>(size_t index) const {
+inline Edge<2>* Dim2BoundaryComponent::face<1>(size_t index) const {
     return edges_[index];
 }
 
 template <>
-inline Dim2Vertex* Dim2BoundaryComponent::face<0>(size_t index) const {
+inline Vertex<2>* Dim2BoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 #endif // ! __DOXYGEN

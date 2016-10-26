@@ -335,14 +335,14 @@ int NHyperbolicMinSearcher::mergeEdgeClasses() {
         w2 = p[v2];
 
         // Look at the edge opposite v1-v2.
-        e = 5 - NEdge::edgeNumber[v1][v2];
-        f = 5 - NEdge::edgeNumber[w1][w2];
+        e = 5 - Edge<3>::edgeNumber[v1][v2];
+        f = 5 - Edge<3>::edgeNumber[w1][w2];
 
         orderIdx = v2 + 4 * orderElt;
 
         // We declare the natural orientation of an edge to be smaller
         // vertex to larger vertex.
-        hasTwist = (p[NEdge::edgeVertex[e][0]] > p[NEdge::edgeVertex[e][1]] ?
+        hasTwist = (p[Edge<3>::edgeVertex[e][0]] > p[Edge<3>::edgeVertex[e][1]] ?
             1 : 0);
 
         parentTwists = 0;
@@ -408,7 +408,7 @@ void NHyperbolicMinSearcher::splitEdgeClasses() {
             continue;
 
         // Look at the edge opposite v1-v2.
-        e = 5 - NEdge::edgeNumber[v1][v2];
+        e = 5 - Edge<3>::edgeNumber[v1][v2];
 
         eIdx = e + 6 * face.simp;
         orderIdx = v2 + 4 * orderElt;

@@ -41,8 +41,8 @@ Triangle<3>::Type Triangle<3>::type() {
     subtype_ = -1;
 
     // Determine the triangle type.
-    NVertex* v[3];
-    NEdge* e[3];
+    Vertex<3>* v[3];
+    Edge<3>* e[3];
     int i;
     for (i = 0; i < 3; i++) {
         v[i] = vertex(i);

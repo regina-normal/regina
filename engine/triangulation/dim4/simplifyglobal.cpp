@@ -188,7 +188,7 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
             // Crush edges if we can.
             if (countVertices() > countComponents() &&
                     countVertices() > boundaryComponents_.size()) {
-                for (Dim4Edge* e : edges()) {
+                for (Edge<4>* e : edges()) {
                     if (collapseEdge(e, true, perform)) {
                         changedNow = changed = true;
                         break;
@@ -220,7 +220,7 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
-            for (Dim4Edge* e : edges()) {
+            for (Edge<4>* e : edges()) {
                 if (twoZeroMove(e, true, perform)) {
                     changedNow = changed = true;
                     break;
@@ -233,7 +233,7 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
-            for (Dim4Edge* e : edges()) {
+            for (Edge<4>* e : edges()) {
                 if (fourTwoMove(e, true, perform)) {
                     changedNow = changed = true;
                     break;

@@ -41,22 +41,22 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::Face;
 using regina::FaceEmbedding;
-using regina::NVertex;
+using regina::Vertex;
 using regina::VertexEmbedding;
 
 namespace {
-    boost::python::list vertex_embeddings_list(const NVertex* v) {
+    boost::python::list vertex_embeddings_list(const Vertex<3>* v) {
         boost::python::list ans;
         for (auto& emb: *v)
             ans.append(emb);
         return ans;
     }
 
-    regina::Triangulation<2>* vertex_buildLink(const NVertex* v) {
+    regina::Triangulation<2>* vertex_buildLink(const Vertex<3>* v) {
         return new regina::Triangulation<2>(*(v->buildLink()));
     }
 
-    boost::python::tuple vertex_buildLinkDetail_bool(const NVertex* v,
+    boost::python::tuple vertex_buildLinkDetail_bool(const Vertex<3>* v,
             bool labels = true) {
         regina::NIsomorphism* iso;
         regina::Triangulation<2>* link = new regina::Triangulation<2>(
@@ -70,7 +70,7 @@ namespace {
                 apply<regina::NIsomorphism*>::type()(iso))));
     }
 
-    boost::python::tuple vertex_buildLinkDetail_void(const NVertex* v) {
+    boost::python::tuple vertex_buildLinkDetail_void(const Vertex<3>* v) {
         return vertex_buildLinkDetail_bool(v);
     }
 }
@@ -93,38 +93,38 @@ void addNVertex() {
     {
         scope s = class_<Face<3, 0>, std::auto_ptr<Face<3, 0>>,
                 boost::noncopyable>("Face3_0", no_init)
-            .def("index", &NVertex::index)
+            .def("index", &Vertex<3>::index)
             .def("embeddings", vertex_embeddings_list)
-            .def("embedding", &NVertex::embedding,
+            .def("embedding", &Vertex<3>::embedding,
                 return_internal_reference<>())
-            .def("front", &NVertex::front,
+            .def("front", &Vertex<3>::front,
                 return_internal_reference<>())
-            .def("back", &NVertex::back,
+            .def("back", &Vertex<3>::back,
                 return_internal_reference<>())
-            .def("triangulation", &NVertex::triangulation,
+            .def("triangulation", &Vertex<3>::triangulation,
                 return_value_policy<to_held_type<> >())
-            .def("component", &NVertex::component,
+            .def("component", &Vertex<3>::component,
                 return_value_policy<reference_existing_object>())
-            .def("boundaryComponent", &NVertex::boundaryComponent,
+            .def("boundaryComponent", &Vertex<3>::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("degree", &NVertex::degree)
-            .def("link", &NVertex::link)
+            .def("degree", &Vertex<3>::degree)
+            .def("link", &Vertex<3>::link)
             .def("buildLink", &vertex_buildLink,
                 return_value_policy<to_held_type<>>())
             .def("buildLinkDetail", vertex_buildLinkDetail_void)
             .def("buildLinkDetail", vertex_buildLinkDetail_bool)
-            .def("isLinkClosed", &NVertex::isLinkClosed)
-            .def("isIdeal", &NVertex::isIdeal)
-            .def("isBoundary", &NVertex::isBoundary)
-            .def("isStandard", &NVertex::isStandard)
-            .def("isValid", &NVertex::isValid)
-            .def("hasBadIdentification", &NVertex::hasBadIdentification)
-            .def("hasBadLink", &NVertex::hasBadLink)
-            .def("isLinkOrientable", &NVertex::isLinkOrientable)
-            .def("linkEulerChar", &NVertex::linkEulerChar)
-            .def("ordering", &NVertex::ordering)
-            .def("faceNumber", &NVertex::faceNumber)
-            .def("containsVertex", &NVertex::containsVertex)
+            .def("isLinkClosed", &Vertex<3>::isLinkClosed)
+            .def("isIdeal", &Vertex<3>::isIdeal)
+            .def("isBoundary", &Vertex<3>::isBoundary)
+            .def("isStandard", &Vertex<3>::isStandard)
+            .def("isValid", &Vertex<3>::isValid)
+            .def("hasBadIdentification", &Vertex<3>::hasBadIdentification)
+            .def("hasBadLink", &Vertex<3>::hasBadLink)
+            .def("isLinkOrientable", &Vertex<3>::isLinkOrientable)
+            .def("linkEulerChar", &Vertex<3>::linkEulerChar)
+            .def("ordering", &Vertex<3>::ordering)
+            .def("faceNumber", &Vertex<3>::faceNumber)
+            .def("containsVertex", &Vertex<3>::containsVertex)
             .def(regina::python::add_output())
             .def(regina::python::add_eq_operators())
             .staticmethod("ordering")
@@ -132,21 +132,21 @@ void addNVertex() {
             .staticmethod("containsVertex")
         ;
 
-        enum_<regina::NVertex::LinkType>("LinkType")
-            .value("SPHERE", regina::NVertex::SPHERE)
-            .value("DISC", regina::NVertex::DISC)
-            .value("TORUS", regina::NVertex::TORUS)
-            .value("KLEIN_BOTTLE", regina::NVertex::KLEIN_BOTTLE)
-            .value("NON_STANDARD_CUSP", regina::NVertex::NON_STANDARD_CUSP)
-            .value("INVALID", regina::NVertex::INVALID)
+        enum_<regina::Vertex<3>::LinkType>("LinkType")
+            .value("SPHERE", regina::Vertex<3>::SPHERE)
+            .value("DISC", regina::Vertex<3>::DISC)
+            .value("TORUS", regina::Vertex<3>::TORUS)
+            .value("KLEIN_BOTTLE", regina::Vertex<3>::KLEIN_BOTTLE)
+            .value("NON_STANDARD_CUSP", regina::Vertex<3>::NON_STANDARD_CUSP)
+            .value("INVALID", regina::Vertex<3>::INVALID)
             ;
 
-        s.attr("SPHERE") = NVertex::SPHERE;
-        s.attr("DISC") = NVertex::DISC;
-        s.attr("TORUS") = NVertex::TORUS;
-        s.attr("KLEIN_BOTTLE") = NVertex::KLEIN_BOTTLE;
-        s.attr("NON_STANDARD_CUSP") = NVertex::NON_STANDARD_CUSP;
-        s.attr("INVALID") = NVertex::INVALID;
+        s.attr("SPHERE") = Vertex<3>::SPHERE;
+        s.attr("DISC") = Vertex<3>::DISC;
+        s.attr("TORUS") = Vertex<3>::TORUS;
+        s.attr("KLEIN_BOTTLE") = Vertex<3>::KLEIN_BOTTLE;
+        s.attr("NON_STANDARD_CUSP") = Vertex<3>::NON_STANDARD_CUSP;
+        s.attr("INVALID") = Vertex<3>::INVALID;
     }
 
     scope().attr("NVertexEmbedding") = scope().attr("FaceEmbedding3_0");

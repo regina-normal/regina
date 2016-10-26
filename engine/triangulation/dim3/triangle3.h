@@ -52,8 +52,6 @@ namespace regina {
 class NBoundaryComponent;
 
 typedef Component<3> NComponent;
-typedef Face<3, 0> NVertex;
-typedef Face<3, 1> NEdge;
 
 /**
  * \weakgroup triangulation

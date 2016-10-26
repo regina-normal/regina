@@ -76,7 +76,7 @@ const NAbelianGroup& Triangulation<3>::homology() const {
     int currTetFace;
     long triGenIndex;
     i = 0;
-    for (NEdge* e : edges()) {
+    for (Edge<3>* e : edges()) {
         if (! e->isBoundary()) {
             // Put in the relation corresponding to this edge.
             for (auto& emb : *e) {
@@ -115,7 +115,7 @@ const NAbelianGroup& Triangulation<3>::homologyRel() const {
 
     // Find a maximal forest in the 1-skeleton.
     // Note that this will ensure the skeleton has been calculated.
-    std::set<NEdge*> forest;
+    std::set<Edge<3>*> forest;
     maximalForestInSkeleton(forest, false);
 
     // Build a presentation matrix.
@@ -142,7 +142,7 @@ const NAbelianGroup& Triangulation<3>::homologyRel() const {
     // Find out which edge corresponds to which generator.
     long* genIndex = new long[countEdges()];
     long i = 0;
-    for (NEdge* e : edges()) {
+    for (Edge<3>* e : edges()) {
         if (e->isBoundary())
             genIndex[e->index()] = -1;
         else if (forest.count(e))
@@ -169,7 +169,7 @@ const NAbelianGroup& Triangulation<3>::homologyRel() const {
                 currEdgeEnd = currTetVertices[(triEdge + 1) % 3];
                 // Examine the edge from vertex edgeStart to edgeEnd
                 // in tetrahedron currTet.
-                currEdge = NEdge::edgeNumber[currEdgeStart][currEdgeEnd];
+                currEdge = Edge<3>::edgeNumber[currEdgeStart][currEdgeEnd];
                 edgeGenIndex = genIndex[currTet->edge(currEdge)->index()];
                 if (edgeGenIndex >= 0) {
                     if (currTet->edgeMapping(currEdge)[0] == currEdgeStart)

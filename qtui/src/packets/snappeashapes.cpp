@@ -434,7 +434,7 @@ void SnapPeaShapesUI::vertexLinks() {
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {
-        regina::NVertex* chosen =
+        regina::Vertex<3>* chosen =
             FaceDialog<3, 0>::choose(ui, tri, 0 /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),

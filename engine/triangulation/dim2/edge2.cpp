@@ -34,7 +34,7 @@
 
 namespace regina {
 
-void Dim2Edge::writeTextLong(std::ostream& out) const {
+void Edge<2>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 

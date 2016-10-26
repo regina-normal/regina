@@ -760,10 +760,10 @@ namespace {
         innerTet_[4]->join(2, innerTet_[7], Perm<4>());
 
         Perm<4> vertices(
-            NEdge::edgeVertex[type][0],
-            NEdge::edgeVertex[type][1],
-            NEdge::edgeVertex[5 - type][0],
-            NEdge::edgeVertex[5 - type][1]);
+            Edge<3>::edgeVertex[type][0],
+            Edge<3>::edgeVertex[type][1],
+            Edge<3>::edgeVertex[5 - type][0],
+            Edge<3>::edgeVertex[5 - type][1]);
 
         BdryQuad* q;
         BdryHex* h;
@@ -1069,7 +1069,7 @@ namespace {
             else if (quadCount_ == 0)
                 truncTet_->attachVertexNbd(vertexNbd_[i], i);
             else if (i == 0 ||
-                    static_cast<int>(i) == NEdge::edgeVertex[quadType_][1])
+                    static_cast<int>(i) == Edge<3>::edgeVertex[quadType_][1])
                 truncHalfTet_[0]->attachVertexNbd(vertexNbd_[i], i);
             else
                 truncHalfTet_[1]->attachVertexNbd(vertexNbd_[i], i);
@@ -1120,14 +1120,14 @@ namespace {
         // Next comes the truncated half-tetrahedron.
         if (whichBlock == triCount_[fromVertex]) {
             if (fromVertex == 0 ||
-                    fromVertex == NEdge::edgeVertex[quadType_][1])
+                    fromVertex == Edge<3>::edgeVertex[quadType_][1])
                 return truncHalfTet_[0];
             else
                 return truncHalfTet_[1];
         }
 
         // Finally we have the quad prisms.
-        if (fromVertex == 0 || fromVertex == NEdge::edgeVertex[quadType_][1])
+        if (fromVertex == 0 || fromVertex == Edge<3>::edgeVertex[quadType_][1])
             return quadPrism_[whichBlock - triCount_[fromVertex] - 1];
         else
             return quadPrism_[
@@ -1138,7 +1138,7 @@ namespace {
         if (quadCount_ == 0)
             return truncTet_;
 
-        if (face == 0 || face == NEdge::edgeVertex[quadType_][1])
+        if (face == 0 || face == Edge<3>::edgeVertex[quadType_][1])
             return truncHalfTet_[1];
         return truncHalfTet_[0];
     }

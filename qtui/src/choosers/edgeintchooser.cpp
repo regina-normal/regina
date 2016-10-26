@@ -40,7 +40,7 @@
 #include <QDialogButtonBox>
 #include <QLabel>
 
-using regina::NEdge;
+using regina::Edge;
 
 EdgeIntChooser::EdgeIntChooser(
         regina::Triangulation<3>* tri,
@@ -56,16 +56,16 @@ EdgeIntChooser::EdgeIntChooser(
     fill();
 }
 
-std::pair<NEdge*, int> EdgeIntChooser::selected() {
+std::pair<Edge<3>*, int> EdgeIntChooser::selected() {
     if (count() == 0)
-        return std::make_pair((NEdge*)(0), (int)(0));
+        return std::make_pair((Edge<3>*)(0), (int)(0));
     int curr = currentIndex();
-    return (curr < 0 ? std::make_pair((NEdge*)(0), (int)(0)) : options_[curr]);
+    return (curr < 0 ? std::make_pair((Edge<3>*)(0), (int)(0)) : options_[curr]);
 }
 
-void EdgeIntChooser::select(regina::NEdge* option, int arg) {
+void EdgeIntChooser::select(regina::Edge<3>* option, int arg) {
     int index = 0;
-    std::vector<std::pair<regina::NEdge*, int> >::const_iterator it =
+    std::vector<std::pair<regina::Edge<3>*, int> >::const_iterator it =
         options_.begin();
     while (it != options_.end()) {
         if (it->first == option && it->second == arg) {
@@ -82,7 +82,7 @@ void EdgeIntChooser::select(regina::NEdge* option, int arg) {
     return;
 }
 
-QString EdgeIntChooser::description(regina::NEdge* option, int arg) {
+QString EdgeIntChooser::description(regina::Edge<3>* option, int arg) {
     if (option->degree() == 1) {
         const regina::EdgeEmbedding<3>& e0 = option->embedding(0);
         return trUtf8("Edge %1 [%2 %3] — %4 (%5)")
@@ -147,7 +147,7 @@ EdgeIntDialog::EdgeIntDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-std::pair<regina::NEdge*, int> EdgeIntDialog::choose(QWidget* parent,
+std::pair<regina::Edge<3>*, int> EdgeIntDialog::choose(QWidget* parent,
         regina::Triangulation<3>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
@@ -159,6 +159,6 @@ std::pair<regina::NEdge*, int> EdgeIntDialog::choose(QWidget* parent,
     if (dlg.exec())
         return dlg.chooser->selected();
     else
-        return std::make_pair((NEdge*)(0), (int)(0));
+        return std::make_pair((Edge<3>*)(0), (int)(0));
 }
 

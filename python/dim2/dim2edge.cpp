@@ -40,14 +40,14 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim2Edge;
+using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    boost::python::list Dim2Edge_embeddings_list(const Dim2Edge* e) {
+    boost::python::list Dim2Edge_embeddings_list(const Edge<2>* e) {
         boost::python::list ans;
         for (auto& emb: *e)
             ans.append(emb);
@@ -72,33 +72,33 @@ void addDim2Edge() {
 
     class_<Face<2, 1>, std::auto_ptr<Face<2, 1>>, boost::noncopyable>
             ("Face2_1", no_init)
-        .def("index", &Dim2Edge::index)
-        .def("isValid", &Dim2Edge::isValid)
-        .def("isLinkOrientable", &Dim2Edge::isLinkOrientable)
+        .def("index", &Edge<2>::index)
+        .def("isValid", &Edge<2>::isValid)
+        .def("isLinkOrientable", &Edge<2>::isLinkOrientable)
         .def("embeddings", Dim2Edge_embeddings_list)
-        .def("degree", &Dim2Edge::degree)
-        .def("embedding", &Dim2Edge::embedding,
+        .def("degree", &Edge<2>::degree)
+        .def("embedding", &Edge<2>::embedding,
             return_internal_reference<>())
-        .def("front", &Dim2Edge::front,
+        .def("front", &Edge<2>::front,
             return_internal_reference<>())
-        .def("back", &Dim2Edge::back,
+        .def("back", &Edge<2>::back,
             return_internal_reference<>())
-        .def("triangulation", &Dim2Edge::triangulation,
+        .def("triangulation", &Edge<2>::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("component", &Dim2Edge::component,
+        .def("component", &Edge<2>::component,
             return_value_policy<reference_existing_object>())
-        .def("boundaryComponent", &Dim2Edge::boundaryComponent,
+        .def("boundaryComponent", &Edge<2>::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Dim2Edge, 1, int>)
-        .def("vertex", &Dim2Edge::vertex,
+        .def("face", &regina::python::face<Edge<2>, 1, int>)
+        .def("vertex", &Edge<2>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("faceMapping", &regina::python::faceMapping<Dim2Edge, 1, 3>)
-        .def("vertexMapping", &Dim2Edge::vertexMapping)
-        .def("isBoundary", &Dim2Edge::isBoundary)
-        .def("inMaximalForest", &Dim2Edge::inMaximalForest)
-        .def("ordering", &Dim2Edge::ordering)
-        .def("faceNumber", &Dim2Edge::faceNumber)
-        .def("containsVertex", &Dim2Edge::containsVertex)
+        .def("faceMapping", &regina::python::faceMapping<Edge<2>, 1, 3>)
+        .def("vertexMapping", &Edge<2>::vertexMapping)
+        .def("isBoundary", &Edge<2>::isBoundary)
+        .def("inMaximalForest", &Edge<2>::inMaximalForest)
+        .def("ordering", &Edge<2>::ordering)
+        .def("faceNumber", &Edge<2>::faceNumber)
+        .def("containsVertex", &Edge<2>::containsVertex)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("ordering")

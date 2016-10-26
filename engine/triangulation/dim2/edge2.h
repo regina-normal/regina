@@ -52,7 +52,6 @@ namespace regina {
 class Dim2BoundaryComponent;
 
 typedef Component<2> Dim2Component;
-typedef Face<2, 0> Dim2Vertex;
 
 /**
  * \weakgroup dim2
@@ -179,7 +178,7 @@ REGINA_DEPRECATED typedef Face<2, 1> Dim2Edge;
 
 /*@}*/
 
-// Inline functions for Dim2Edge
+// Inline functions for Edge<2>
 
 inline Face<2, 1>::Face(Dim2Component* component) :
         detail::FaceBase<2, 1>(component), boundaryComponent_(0) {

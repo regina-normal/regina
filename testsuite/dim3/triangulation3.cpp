@@ -68,7 +68,7 @@ using regina::NStandardTriangulation;
 using regina::Tetrahedron;
 using regina::Triangle;
 using regina::Triangulation;
-using regina::NVertex;
+using regina::Vertex;
 
 class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST_SUITE(Triangulation3Test);
@@ -847,9 +847,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.vertex(vertex);
+            Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::DISC) {
+            if (v->link() != Vertex<3>::DISC) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as DISC.";
@@ -904,9 +904,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.vertex(vertex);
+            Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::SPHERE) {
+            if (v->link() != Vertex<3>::SPHERE) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as SPHERE.";
@@ -961,9 +961,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.vertex(vertex);
+            Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::TORUS) {
+            if (v->link() != Vertex<3>::TORUS) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as TORUS.";
@@ -1018,9 +1018,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.vertex(vertex);
+            Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::KLEIN_BOTTLE) {
+            if (v->link() != Vertex<3>::KLEIN_BOTTLE) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as KLEIN_BOTTLE.";
@@ -1075,9 +1075,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.vertex(vertex);
+            Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::NON_STANDARD_CUSP) {
+            if (v->link() != Vertex<3>::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as NON_STANDARD_CUSP.";
@@ -1132,9 +1132,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.vertex(vertex);
+            Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::NON_STANDARD_CUSP) {
+            if (v->link() != Vertex<3>::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as NON_STANDARD_CUSP.";
@@ -1189,9 +1189,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.vertex(vertex);
+            Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::INVALID) {
+            if (v->link() != Vertex<3>::INVALID) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as INVALID.";
@@ -1246,9 +1246,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.vertex(vertex);
+            Vertex<3>* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::INVALID) {
+            if (v->link() != Vertex<3>::INVALID) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as INVALID.";
@@ -1447,7 +1447,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         static void verifyVertexLinks(Triangulation<3>* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
-                NVertex* v = tri->vertex(i);
+                Vertex<3>* v = tri->vertex(i);
                 NIsomorphism* iso;
 
                 const Triangulation<2>* link = v->buildLink();
@@ -4169,7 +4169,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
                 bool res =
                     large.collapseEdge(large.tetrahedron(n + 2)->edge(
-                    regina::NEdge::edgeNumber[0][3]), true, true);
+                    regina::Edge<3>::edgeNumber[0][3]), true, true);
 
                 if (! res) {
                     std::ostringstream msg;

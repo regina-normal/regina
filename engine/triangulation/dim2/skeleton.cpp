@@ -69,11 +69,11 @@ void Triangulation<2>::calculateBoundary() {
     Triangle<2> *tri, *adjTri;
     int edgeId, adjEdgeId;
     int vertexId, adjVertexId;
-    Dim2Edge *adjEdge;
-    Dim2Vertex* vertex;
+    Edge<2> *adjEdge;
+    Vertex<2>* vertex;
     VertexEmbedding<2> vertexEmb;
 
-    for (Dim2Edge* edge : edges()) {
+    for (Edge<2>* edge : edges()) {
         // We only care about boundary edges that we haven't yet seen..
         if (edge->degree() == 2 || edge->boundaryComponent_)
             continue;

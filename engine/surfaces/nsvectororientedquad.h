@@ -110,7 +110,7 @@ class REGINA_API NSVectorOrientedQuad :
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
             const;
 
-        virtual const NVertex* isVertexLink(const Triangulation<3>* triang) const;
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang) const;
 
         virtual LargeInteger quads(size_t tetIndex,
             int quadType, const Triangulation<3>* triang) const;
@@ -166,7 +166,7 @@ inline LargeInteger NSVectorOrientedQuad::orientedQuads(
         (orientation ? 0 : 1)];
 }
 
-inline const NVertex* NSVectorOrientedQuad::isVertexLink(
+inline const Vertex<3>* NSVectorOrientedQuad::isVertexLink(
         const Triangulation<3>*) const {
     // Quad space does not contain vertex links at all.
     return 0;

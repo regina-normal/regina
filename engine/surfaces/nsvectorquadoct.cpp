@@ -114,13 +114,13 @@ namespace {
      * A structure representing a particular end of an edge.
      */
     struct EdgeEnd {
-        NEdge* edge;
+        Edge<3>* edge;
             /**< The edge under consideration. */
         int end;
             /**< The end of the edge under consideration; this is 0 or 1. */
 
         EdgeEnd() {}
-        EdgeEnd(NEdge* newEdge, int newEnd) : edge(newEdge), end(newEnd) {}
+        EdgeEnd(Edge<3>* newEdge, int newEnd) : edge(newEdge), end(newEnd) {}
         EdgeEnd(const EdgeEnd& cloneMe) : edge(cloneMe.edge),
                 end(cloneMe.end) {}
         void operator = (const EdgeEnd& cloneMe) {
@@ -150,7 +150,7 @@ NormalSurfaceVector* NSVectorQuadOct::makeMirror(
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.
-    std::set<NEdge*> usedEdges[2];
+    std::set<Edge<3>*> usedEdges[2];
         // usedEdges[i] contains the edges for which we have already
         // examined end i.
     LargeInteger min;
@@ -160,7 +160,7 @@ NormalSurfaceVector* NSVectorQuadOct::makeMirror(
     bool broken;
         // Are the matching equations broken about this edge end?
     int end;
-    NEdge* edge;
+    Edge<3>* edge;
     EdgeEnd current;
     std::deque<EdgeEmbedding<3>>::const_iterator eembit, backupit,
         endit, beginit;
@@ -186,9 +186,9 @@ NormalSurfaceVector* NSVectorQuadOct::makeMirror(
             if (i == vemb.vertex())
                 continue;
             edge = vemb.tetrahedron()->edge(
-                NEdge::edgeNumber[vemb.vertex()][i]);
+                Edge<3>::edgeNumber[vemb.vertex()][i]);
             end = vemb.tetrahedron()->edgeMapping(
-                NEdge::edgeNumber[vemb.vertex()][i])[0] == i ? 1 : 0;
+                Edge<3>::edgeNumber[vemb.vertex()][i])[0] == i ? 1 : 0;
             if (usedEdges[end].insert(edge).second)
                 examine.push_back(EdgeEnd(edge, end));
         }
@@ -244,9 +244,9 @@ NormalSurfaceVector* NSVectorQuadOct::makeMirror(
 
                 // Remember to examine the new edge end if appropriate.
                 edge = tet->edge(
-                    NEdge::edgeNumber[tetPerm[2]][tetPerm[current.end]]);
+                    Edge<3>::edgeNumber[tetPerm[2]][tetPerm[current.end]]);
                 end = tet->edgeMapping(
-                    NEdge::edgeNumber[tetPerm[2]][tetPerm[current.end]])[0]
+                    Edge<3>::edgeNumber[tetPerm[2]][tetPerm[current.end]])[0]
                     == tetPerm[2] ? 1 : 0;
                 if (usedEdges[end].insert(edge).second)
                     examine.push_back(EdgeEnd(edge, end));
@@ -289,9 +289,9 @@ NormalSurfaceVector* NSVectorQuadOct::makeMirror(
 
                     // Remember to examine the new edge end if appropriate.
                     edge = tet->edge(
-                        NEdge::edgeNumber[tetPerm[3]][tetPerm[current.end]]);
+                        Edge<3>::edgeNumber[tetPerm[3]][tetPerm[current.end]]);
                     end = tet->edgeMapping(
-                        NEdge::edgeNumber[tetPerm[3]][tetPerm[current.end]])[0]
+                        Edge<3>::edgeNumber[tetPerm[3]][tetPerm[current.end]])[0]
                         == tetPerm[3] ? 1 : 0;
                     if (usedEdges[end].insert(edge).second)
                         examine.push_back(EdgeEnd(edge, end));

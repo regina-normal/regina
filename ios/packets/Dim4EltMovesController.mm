@@ -246,7 +246,7 @@
     }
 }
 
-- (regina::Dim4Vertex*)vertexFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Vertex<4>*)vertexFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -256,7 +256,7 @@
     return self.packet->vertex([options[use] longValue]);
 }
 
-- (regina::Dim4Edge*)edgeFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Edge<4>*)edgeFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -296,7 +296,7 @@
     return self.packet->pentachoron([options[use] longValue]);
 }
 
-- (NSAttributedString*)vertexDesc:(regina::Dim4Vertex*)vertex
+- (NSAttributedString*)vertexDesc:(regina::Vertex<4>*)vertex
 {
     if (! vertex)
         return [TextHelper badString:@"Invalid vertex"];
@@ -321,7 +321,7 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
-- (NSAttributedString*)edgeDesc:(regina::Dim4Edge*)edge
+- (NSAttributedString*)edgeDesc:(regina::Edge<4>*)edge
 {
     if (! edge)
         return [TextHelper badString:@"Invalid edge"];
@@ -405,7 +405,7 @@
 
 - (IBAction)do42:(id)sender
 {
-    regina::Dim4Edge* use = [self edgeFor:self.stepper42 options:options42];
+    regina::Edge<4>* use = [self edgeFor:self.stepper42 options:options42];
     if (! use)
         return;
 
@@ -455,7 +455,7 @@
 
 - (IBAction)do20Edge:(id)sender
 {
-    regina::Dim4Edge* use = [self edgeFor:self.stepper20Edge options:options20Edge];
+    regina::Edge<4>* use = [self edgeFor:self.stepper20Edge options:options20Edge];
     if (! use)
         return;
 
@@ -485,7 +485,7 @@
 
 - (IBAction)doCollapseEdge:(id)sender
 {
-    regina::Dim4Edge* use = [self edgeFor:self.stepperCollapseEdge options:optionsCollapseEdge];
+    regina::Edge<4>* use = [self edgeFor:self.stepperCollapseEdge options:optionsCollapseEdge];
     if (! use)
         return;
 

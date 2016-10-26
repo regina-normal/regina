@@ -75,7 +75,7 @@
 #include <QTextDocument>
 #include <QTreeWidgetItem>
 
-using regina::NEdge;
+using regina::Edge;
 using regina::Packet;
 using regina::Perm;
 using regina::NSatRegion;
@@ -1060,12 +1060,12 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
         return tr("None");
     else if (edge2 < 0)
         return QString("%1 (%2%3)").arg(tetIndex).
-            arg(NEdge::edgeVertex[edge1][0]).arg(NEdge::edgeVertex[edge1][1]);
+            arg(Edge<3>::edgeVertex[edge1][0]).arg(Edge<3>::edgeVertex[edge1][1]);
     else
         return QString("%1 (%2%3) = %4 (%5%6)").arg(tetIndex).
-            arg(NEdge::edgeVertex[edge1][0]).arg(NEdge::edgeVertex[edge1][1]).
+            arg(Edge<3>::edgeVertex[edge1][0]).arg(Edge<3>::edgeVertex[edge1][1]).
             arg(tetIndex).
-            arg(NEdge::edgeVertex[edge2][0]).arg(NEdge::edgeVertex[edge2][1]);
+            arg(Edge<3>::edgeVertex[edge2][0]).arg(Edge<3>::edgeVertex[edge2][1]);
 }
 
 QString NTriCompositionUI::edgeString(unsigned long tetIndex,

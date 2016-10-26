@@ -477,8 +477,8 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             return cell;
         case PROP_LINK:
         {
-            const regina::NVertex* v;
-            std::pair<const regina::NEdge*, const regina::NEdge*> e;
+            const regina::Vertex<3>* v;
+            std::pair<const regina::Edge<3>*, const regina::Edge<3>*> e;
 
             if ((v = s->isVertexLink()))
                 cell.textLabel.text = [NSString stringWithFormat:@"Vertex %ld",

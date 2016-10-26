@@ -57,7 +57,7 @@ namespace {
     const int ID_SHELLBDRY = 7;
     const int ID_COLLAPSEEDGE = 8;
 
-    bool has42(regina::Dim4Edge* e) {
+    bool has42(regina::Edge<4>* e) {
         return e->triangulation()->fourTwoMove(e, true, false);
     }
 
@@ -73,7 +73,7 @@ namespace {
         return t->triangulation()->twoZeroMove(t, true, false);
     }
 
-    bool has20e(regina::Dim4Edge* e) {
+    bool has20e(regina::Edge<4>* e) {
         return e->triangulation()->twoZeroMove(e, true, false);
     }
 
@@ -85,7 +85,7 @@ namespace {
         return p->triangulation()->shellBoundary(p, true, false);
     }
 
-    bool hasCollapseEdge(regina::Dim4Edge* e) {
+    bool hasCollapseEdge(regina::Edge<4>* e) {
         return e->triangulation()->collapseEdge(e, true, false);
     }
 }
@@ -296,7 +296,7 @@ void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
         return;
 
     if (use42->isChecked()) {
-        regina::Dim4Edge* e = box42->selected();
+        regina::Edge<4>* e = box42->selected();
         if (e)
             tri->fourTwoMove(e);
     } else if (use33->isChecked()) {
@@ -316,7 +316,7 @@ void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
         if (t)
             tri->twoZeroMove(t);
     } else if (use20e->isChecked()) {
-        regina::Dim4Edge* e = box20e->selected();
+        regina::Edge<4>* e = box20e->selected();
         if (e)
             tri->twoZeroMove(e);
     } else if (useOpenBook->isChecked()) {
@@ -328,7 +328,7 @@ void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
         if (p)
             tri->shellBoundary(p);
     } else if (useCollapseEdge->isChecked()) {
-        regina::Dim4Edge* e = boxCollapseEdge->selected();
+        regina::Edge<4>* e = boxCollapseEdge->selected();
         if (e)
             tri->collapseEdge(e);
     } else

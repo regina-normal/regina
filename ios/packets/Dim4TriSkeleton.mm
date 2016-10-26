@@ -236,7 +236,7 @@
                 cell.index.text = @"No vertices";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim4Vertex* v = self.packet->vertex(indexPath.row - 1);
+                regina::Vertex<4>* v = self.packet->vertex(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Vertex" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
                 cell.data1.text = [NSString stringWithFormat:@"%ld", v->degree()];
@@ -265,7 +265,7 @@
                 cell.index.text = @"No edges";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim4Edge* e = self.packet->edge(indexPath.row - 1);
+                regina::Edge<4>* e = self.packet->edge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
                 cell.data1.text = [NSString stringWithFormat:@"%ld", e->degree()];
@@ -427,7 +427,7 @@
 
                 NSMutableString* pieces = [NSMutableString string];
                 if (b->isIdeal() || b->isInvalidVertex()) {
-                    regina::Dim4Vertex* v = b->vertex(0);
+                    regina::Vertex<4>* v = b->vertex(0);
                     if (v->degree() == 1)
                         cell.data2.text = [NSString stringWithFormat:@"Vertex %ld (%d)",
                                            v->front().pentachoron()->index(),

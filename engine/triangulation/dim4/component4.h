@@ -52,9 +52,6 @@ namespace regina {
 
 class Dim4BoundaryComponent;
 
-typedef Face<4, 1> Dim4Edge;
-typedef Face<4, 0> Dim4Vertex;
-
 /**
  * \weakgroup dim4
  * @{
@@ -100,9 +97,9 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
             /**< List of tetrahedra in the component. */
         std::vector<Triangle<4>*> triangles_;
             /**< List of triangles in the component. */
-        std::vector<Dim4Edge*> edges_;
+        std::vector<Edge<4>*> edges_;
             /**< List of edges in the component. */
-        std::vector<Dim4Vertex*> vertices_;
+        std::vector<Vertex<4>*> vertices_;
             /**< List of vertices in the component. */
         std::vector<Dim4BoundaryComponent*> boundaryComponents_;
             /**< List of boundary components in the component. */
@@ -184,7 +181,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
         /**
          * Determines if this component is ideal.
          * This is the case if and only if it contains an ideal vertex
-         * as described by Dim4Vertex::isIdeal().
+         * as described by Vertex<4>::isIdeal().
          *
          * @return \c true if and only if this component is ideal.
          */
@@ -196,7 +193,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
          *
          * Note that ideal components are not closed.  Likewise,
          * components with invalid vertices are not closed.
-         * See Dim4Vertex::isBoundary() for details.
+         * See Vertex<4>::isBoundary() for details.
          *
          * @return \c true if and only if this component is closed.
          */
@@ -265,12 +262,12 @@ inline const std::vector<Triangle<4>*>& Component<4>::faces<2>() const {
 }
 
 template <>
-inline const std::vector<Dim4Edge*>& Component<4>::faces<1>() const {
+inline const std::vector<Edge<4>*>& Component<4>::faces<1>() const {
     return edges_;
 }
 
 template <>
-inline const std::vector<Dim4Vertex*>& Component<4>::faces<0>() const {
+inline const std::vector<Vertex<4>*>& Component<4>::faces<0>() const {
     return vertices_;
 }
 
@@ -285,12 +282,12 @@ inline Triangle<4>* Dim4Component::face<2>(size_t index) const {
 }
 
 template <>
-inline Dim4Edge* Dim4Component::face<1>(size_t index) const {
+inline Edge<4>* Dim4Component::face<1>(size_t index) const {
     return edges_[index];
 }
 
 template <>
-inline Dim4Vertex* Dim4Component::face<0>(size_t index) const {
+inline Vertex<4>* Dim4Component::face<0>(size_t index) const {
     return vertices_[index];
 }
 

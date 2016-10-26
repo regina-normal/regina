@@ -903,7 +903,7 @@ void NTriGluingsUI::drillEdge() {
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any edges."));
     else {
-        regina::NEdge* chosen =
+        regina::Edge<3>* chosen =
             FaceDialog<3, 1>::choose(ui, tri, 0 /* filter */,
             tr("Drill Edge"),
             tr("Drill out a regular neighbourhood of which edge?"),
@@ -980,7 +980,7 @@ void NTriGluingsUI::vertexLinks() {
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {
-        regina::NVertex* chosen =
+        regina::Vertex<3>* chosen =
             FaceDialog<3, 0>::choose(ui, tri, 0 /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),

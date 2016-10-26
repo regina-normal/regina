@@ -51,8 +51,6 @@
 namespace regina {
 
 typedef Component<4> Dim4Component;
-typedef Face<4, 1> Dim4Edge;
-typedef Face<4, 0> Dim4Vertex;
 
 /**
  * \weakgroup dim4
@@ -67,7 +65,7 @@ typedef Face<4, 0> Dim4Vertex;
  * Likewise, an invalid vertex is placed in its own boundary
  * component if it does not already belong to some larger boundary
  * component (for instance, if its link is an ideal 3-manifold triangulation).
- * See Dim4Vertex::isBoundary() for details.
+ * See Vertex<4>::isBoundary() for details.
  *
  * We can encounter some interesting cases with invalid triangulations.
  * Consider some vertex in a 4-manifold triangulation.  If the link of
@@ -78,7 +76,7 @@ typedef Face<4, 0> Dim4Vertex;
  * listed as part of the same boundary component; if not then the
  * offending vertex will be included in all of these boundary components.
  * Nevertheless, only one of these can be considered the "official" boundary
- * component of the vertex as returned by Dim4Vertex::boundaryComponent().
+ * component of the vertex as returned by Vertex<4>::boundaryComponent().
  * This is all a bit of a mess (and even more so when you consider that
  * the same thing can happen with invalid edges), but then again the
  * entire 4-manifold triangulation is invalid and so you almost certainly
@@ -98,9 +96,9 @@ class REGINA_API Dim4BoundaryComponent :
             /**< List of tetrahedra in the boundary component. */
         std::vector<Triangle<4>*> triangles_;
             /**< List of triangles in the boundary component. */
-        std::vector<Dim4Edge*> edges_;
+        std::vector<Edge<4>*> edges_;
             /**< List of edges in the boundary component. */
-        std::vector<Dim4Vertex*> vertices_;
+        std::vector<Vertex<4>*> vertices_;
             /**< List of vertices in the boundary component. */
 
         Triangulation<3>* boundary_;
@@ -191,7 +189,7 @@ class REGINA_API Dim4BoundaryComponent :
          * If this boundary component consists only of a single vertex
          * (which happens with ideal vertices and also some invalid vertices),
          * then this routine returns the triangulation of the corresponding
-         * vertex link.  See Dim4Vertex::link() for details.
+         * vertex link.  See Vertex<4>::link() for details.
          *
          * This routine is fast (it uses a pre-computed triangulation).
          * Moreover, it is guaranteed that the full skeleton of this
@@ -271,7 +269,7 @@ class REGINA_API Dim4BoundaryComponent :
          *
          * @param vertex the vertex to place in the new boundary component.
          */
-        Dim4BoundaryComponent(Dim4Vertex* vertex);
+        Dim4BoundaryComponent(Vertex<4>* vertex);
 
     friend class Triangulation<4>;
         /**< Allow access to private members. */
@@ -285,7 +283,7 @@ inline Dim4BoundaryComponent::Dim4BoundaryComponent() :
         boundary_(0) {
 }
 
-inline Dim4BoundaryComponent::Dim4BoundaryComponent(Dim4Vertex* vertex) :
+inline Dim4BoundaryComponent::Dim4BoundaryComponent(Vertex<4>* vertex) :
         boundary_(0) {
     vertices_.push_back(vertex);
 }
@@ -327,12 +325,12 @@ inline Triangle<4>* Dim4BoundaryComponent::face<2>(size_t index) const {
 }
 
 template <>
-inline Dim4Edge* Dim4BoundaryComponent::face<1>(size_t index) const {
+inline Edge<4>* Dim4BoundaryComponent::face<1>(size_t index) const {
     return edges_[index];
 }
 
 template <>
-inline Dim4Vertex* Dim4BoundaryComponent::face<0>(size_t index) const {
+inline Vertex<4>* Dim4BoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 

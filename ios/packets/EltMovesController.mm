@@ -306,7 +306,7 @@
     }
 }
 
-- (regina::NVertex*)vertexFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Vertex<3>*)vertexFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -316,7 +316,7 @@
     return self.packet->vertex([options[use] longValue]);
 }
 
-- (regina::NEdge*)edgeFor:(UIStepper*)stepper options:(NSArray*)options
+- (regina::Edge<3>*)edgeFor:(UIStepper*)stepper options:(NSArray*)options
 {
     NSInteger use = stepper.value;
     if (use < 0 || use >= options.count) {
@@ -356,7 +356,7 @@
     return self.packet->tetrahedron([options[use] longValue]);
 }
 
-- (NSAttributedString*)vertexDesc:(regina::NVertex*)vertex
+- (NSAttributedString*)vertexDesc:(regina::Vertex<3>*)vertex
 {
     if (! vertex)
         return [TextHelper badString:@"Invalid vertex"];
@@ -381,7 +381,7 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
-- (NSAttributedString*)edgeDesc:(regina::NEdge*)edge
+- (NSAttributedString*)edgeDesc:(regina::Edge<3>*)edge
 {
     if (! edge)
         return [TextHelper badString:@"Invalid edge"];
@@ -413,7 +413,7 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    regina::NEdge* edge = self.packet->edge(edgeArg.edge);
+    regina::Edge<3>* edge = self.packet->edge(edgeArg.edge);
     const regina::EdgeEmbedding<3>& e0 = edge->embedding(0);
     [text appendFormat:@"Edge %ld [%@ %d] — %ld (%s)",
      edge->index(),
@@ -468,7 +468,7 @@
 
 - (IBAction)do32:(id)sender
 {
-    regina::NEdge* use = [self edgeFor:self.stepper32 options:options32];
+    regina::Edge<3>* use = [self edgeFor:self.stepper32 options:options32];
     if (! use)
         return;
 
@@ -508,7 +508,7 @@
 
 - (IBAction)do20Edge:(id)sender
 {
-    regina::NEdge* use = [self edgeFor:self.stepper20Edge options:options20Edge];
+    regina::Edge<3>* use = [self edgeFor:self.stepper20Edge options:options20Edge];
     if (! use)
         return;
 
@@ -518,7 +518,7 @@
 
 - (IBAction)do20Vtx:(id)sender
 {
-    regina::NVertex* use = [self vertexFor:self.stepper20Vtx options:options20Vtx];
+    regina::Vertex<3>* use = [self vertexFor:self.stepper20Vtx options:options20Vtx];
     if (! use)
         return;
 
@@ -548,7 +548,7 @@
 
 - (IBAction)doCloseBook:(id)sender
 {
-    regina::NEdge* use = [self edgeFor:self.stepperCloseBook options:optionsCloseBook];
+    regina::Edge<3>* use = [self edgeFor:self.stepperCloseBook options:optionsCloseBook];
     if (! use)
         return;
 
@@ -568,7 +568,7 @@
 
 - (IBAction)doCollapseEdge:(id)sender
 {
-    regina::NEdge* use = [self edgeFor:self.stepperCollapseEdge options:optionsCollapseEdge];
+    regina::Edge<3>* use = [self edgeFor:self.stepperCollapseEdge options:optionsCollapseEdge];
     if (! use)
         return;
 

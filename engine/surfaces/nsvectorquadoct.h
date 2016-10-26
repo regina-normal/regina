@@ -107,7 +107,7 @@ class REGINA_API NSVectorQuadOct :
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
             const;
 
-        virtual const NVertex* isVertexLink(const Triangulation<3>* triang) const;
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang) const;
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);
@@ -143,7 +143,7 @@ inline NormalSurfaceVector* NSVectorQuadOct::makeMirror(
     return makeMirror(coords(), triang);
 }
 
-inline const NVertex* NSVectorQuadOct::isVertexLink(
+inline const Vertex<3>* NSVectorQuadOct::isVertexLink(
         const Triangulation<3>*) const {
     // Quad-oct space does not contain vertex links at all.
     return 0;

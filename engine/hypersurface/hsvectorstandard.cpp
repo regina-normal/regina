@@ -52,12 +52,12 @@ LargeInteger HSVectorStandard::edgeWeight(
     LargeInteger ans(coords_[15 * pentIndex + start]);
     ans += coords_[15 * pentIndex + end];
     // Prisms:
-    unsigned e = Dim4Edge::edgeNumber[start][end];
+    unsigned e = Edge<4>::edgeNumber[start][end];
     for (unsigned i = 0; i < 3; ++i) {
         ans += coords_[15 * pentIndex + 5 +
-            Dim4Edge::edgeNumber[start][Triangle<4>::triangleVertex[e][i]]];
+            Edge<4>::edgeNumber[start][Triangle<4>::triangleVertex[e][i]]];
         ans += coords_[15 * pentIndex + 5 +
-            Dim4Edge::edgeNumber[end][Triangle<4>::triangleVertex[e][i]]];
+            Edge<4>::edgeNumber[end][Triangle<4>::triangleVertex[e][i]]];
     }
     return ans;
 }
@@ -99,9 +99,9 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
 
                 // Prisms that meet this triangle:
                 ans->entry(row, 15 * pent0 + 5 +
-                    Dim4Edge::edgeNumber[perm0[i]][perm0[4]]) += 1;
+                    Edge<4>::edgeNumber[perm0[i]][perm0[4]]) += 1;
                 ans->entry(row, 15 * pent1 + 5 +
-                    Dim4Edge::edgeNumber[perm1[i]][perm1[4]]) -= 1;
+                    Edge<4>::edgeNumber[perm1[i]][perm1[4]]) -= 1;
                 row++;
             }
 
@@ -109,16 +109,16 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
             for (i=0; i<3; i++) {
                 // Prisms that meet this quad:
                 ans->entry(row, 15 * pent0 + 5 +
-                    Dim4Edge::edgeNumber[perm0[quadDefn[i][0]]]
+                    Edge<4>::edgeNumber[perm0[quadDefn[i][0]]]
                                         [perm0[quadDefn[i][1]]]) += 1;
                 ans->entry(row, 15 * pent0 + 5 +
-                    Dim4Edge::edgeNumber[perm0[quadDefn[i][2]]]
+                    Edge<4>::edgeNumber[perm0[quadDefn[i][2]]]
                                         [perm0[quadDefn[i][3]]]) += 1;
                 ans->entry(row, 15 * pent1 + 5 +
-                    Dim4Edge::edgeNumber[perm1[quadDefn[i][0]]]
+                    Edge<4>::edgeNumber[perm1[quadDefn[i][0]]]
                                         [perm1[quadDefn[i][1]]]) -= 1;
                 ans->entry(row, 15 * pent1 + 5 +
-                    Dim4Edge::edgeNumber[perm1[quadDefn[i][2]]]
+                    Edge<4>::edgeNumber[perm1[quadDefn[i][2]]]
                                         [perm1[quadDefn[i][3]]]) -= 1;
                 row++;
             }
@@ -139,16 +139,16 @@ EnumConstraints* HSVectorStandard::makeEmbeddedConstraints(
     for (pent = 0; pent < triangulation->size(); ++pent) {
         for (edge1 = 0; edge1 < 10; ++edge1)
             for (i = 0; i < 3; ++i) {
-                edge2 = Dim4Edge::edgeNumber[
-                    Dim4Edge::edgeVertex[edge1][0]][
+                edge2 = Edge<4>::edgeNumber[
+                    Edge<4>::edgeVertex[edge1][0]][
                     Triangle<4>::triangleVertex[edge1][i]];
                 if (edge1 < edge2) {
                     (*ans)[c].insert((*ans)[c].end(), base + edge1);
                     (*ans)[c].insert((*ans)[c].end(), base + edge2);
                     ++c;
                 }
-                edge2 = Dim4Edge::edgeNumber[
-                    Dim4Edge::edgeVertex[edge1][1]][
+                edge2 = Edge<4>::edgeNumber[
+                    Edge<4>::edgeVertex[edge1][1]][
                     Triangle<4>::triangleVertex[edge1][i]];
                 if (edge1 < edge2) {
                     (*ans)[c].insert((*ans)[c].end(), base + edge1);

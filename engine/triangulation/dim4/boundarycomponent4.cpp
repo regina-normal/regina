@@ -41,7 +41,7 @@ Dim4BoundaryComponent::~Dim4BoundaryComponent() {
 }
 
 bool Dim4BoundaryComponent::isIdeal() const {
-    // Either of Dim4Vertex::isValid() or Dim4Vertex::isIdeal() will do here.
+    // Either of Vertex<4>::isValid() or Vertex<4>::isIdeal() will do here.
     return (tetrahedra_.empty() && vertices_.front()->isValid());
 }
 
@@ -54,7 +54,7 @@ void Dim4BoundaryComponent::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     if (isIdeal() || isInvalidVertex()) {
-        Dim4Vertex* v = vertices_.front();
+        Vertex<4>* v = vertices_.front();
         out << "Vertex: " << v->index() << std::endl;
         out << "Appears as:" << std::endl;
         for (auto& emb : *v)

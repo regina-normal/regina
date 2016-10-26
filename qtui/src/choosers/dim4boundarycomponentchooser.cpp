@@ -82,7 +82,7 @@ void Dim4BoundaryComponentChooser::select(regina::Dim4BoundaryComponent* option)
 QString Dim4BoundaryComponentChooser::description(
         regina::Dim4BoundaryComponent* option) {
     if (option->isIdeal()) {
-        regina::Dim4Vertex* v = option->vertex(0);
+        regina::Vertex<4>* v = option->vertex(0);
         QString desc;
         if (v->degree() == 1)
             desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4)");
@@ -93,7 +93,7 @@ QString Dim4BoundaryComponentChooser::description(
                 .arg(v->front().simplex()->index())
                 .arg(v->front().vertex());
     } else if (option->isInvalidVertex()) {
-        regina::Dim4Vertex* v = option->vertex(0);
+        regina::Vertex<4>* v = option->vertex(0);
         QString desc;
         if (v->degree() == 1)
             desc = trUtf8("Invalid bdry comp %1 — Vertex %2 — %3 (%4)");

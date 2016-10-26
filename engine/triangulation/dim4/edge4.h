@@ -54,7 +54,6 @@ class Dim4BoundaryComponent;
 template <int> class Isomorphism;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
-typedef Face<4, 0> Dim4Vertex;
 
 /**
  * \weakgroup dim4
@@ -143,7 +142,7 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * corresponding vertices of \c pent (those opposite \c e),
          * and will map 3 and 4 to the vertices of \c e itself.
          *
-         * This Dim4Edge object will retain ownership of the triangulation
+         * This Edge<4> object will retain ownership of the triangulation
          * that is returned.  If you wish to edit the triangulation, you
          * should make a new clone and edit the clone instead.
          *
@@ -186,7 +185,7 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * indicate exactly where the <i>i</i>th triangle sits within
          * \a pent: (i) it will send 3,4 to the vertices of \a pent that lie
          * on the edge that the triangle links, with 3 and 4 mapping to
-         * vertices 0 and 1 respectively of the corresponding Dim4Edge;
+         * vertices 0 and 1 respectively of the corresponding Edge<4>;
          * and (ii) it will send 0,1,2 to the vertices of \a pent that
          * are parallel to vertices 0,1,2 of this triangle.
          *
@@ -268,7 +267,7 @@ REGINA_DEPRECATED typedef Face<4, 1> Dim4Edge;
 
 /*@}*/
 
-// Inline functions for Dim4Edge
+// Inline functions for Edge<4>
 
 inline Face<4, 1>::Face(Dim4Component* component) :
         detail::FaceBase<4, 1>(component),
@@ -287,7 +286,7 @@ inline const Triangulation<2>* Face<4, 1>::buildLink() const {
     if (! link_) {
         // This is a construct-on-demand member; cast away constness to
         // set it here.
-        const_cast<Dim4Edge*>(this)->link_ = buildLinkDetail(false, 0);
+        const_cast<Edge<4>*>(this)->link_ = buildLinkDetail(false, 0);
     }
     return link_;
 }

@@ -64,8 +64,6 @@ class XMLPacketReader;
 
 template <int> class Isomorphism;
 typedef Isomorphism<2> Dim2Isomorphism;
-typedef Face<2, 0> Dim2Vertex;
-typedef Face<2, 1> Dim2Edge;
 
 /**
  * \addtogroup dim2 2-Manifold Triangulations
@@ -95,7 +93,7 @@ struct PacketInfo<PACKET_TRIANGULATION2> {
  * the combinatorial structure of the triangulation.
  *
  * In particular, this class also tracks the vertices and edges of the
- * triangulation (as represented by the classes Dim2Vertex and Dim2Edge),
+ * triangulation (as represented by the classes Vertex<2> and Edge<2>),
  * as well as boundary components (as represented by the class
  * Dim2BoundaryComponent).  Such objects are temporary: whenever the
  * triangulation changes, these objects will be deleted and rebuilt, and so
