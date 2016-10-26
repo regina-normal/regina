@@ -116,6 +116,7 @@ void addNEdge() {
     }
 
     scope().attr("NEdgeEmbedding") = scope().attr("FaceEmbedding3_1");
+    scope().attr("EdgeEmbedding3") = scope().attr("FaceEmbedding3_1");
     scope().attr("NEdge") = scope().attr("Face3_1");
     scope().attr("Edge3") = scope().attr("Face3_1");
 }

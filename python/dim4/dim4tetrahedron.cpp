@@ -113,6 +113,7 @@ void addDim4Tetrahedron() {
     ;
 
     scope().attr("Dim4TetrahedronEmbedding") = scope().attr("FaceEmbedding4_3");
+    scope().attr("TetrahedronEmbedding4") = scope().attr("FaceEmbedding4_3");
     scope().attr("Dim4Tetrahedron") = scope().attr("Face4_3");
     scope().attr("Tetrahedron4") = scope().attr("Face4_3");
 }

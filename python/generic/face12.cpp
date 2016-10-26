@@ -46,6 +46,12 @@ void addFace12() {
     addFace<12, 10>("Face12_10", "FaceEmbedding12_10");
     addFace<12, 11>("Face12_11", "FaceEmbedding12_11");
 
+    scope().attr("VertexEmbedding12") = scope().attr("FaceEmbedding12_0");
+    scope().attr("EdgeEmbedding12") = scope().attr("FaceEmbedding12_1");
+    scope().attr("TriangleEmbedding12") = scope().attr("FaceEmbedding12_2");
+    scope().attr("TetrahedronEmbedding12") = scope().attr("FaceEmbedding12_3");
+    scope().attr("PentachoronEmbedding12") = scope().attr("FaceEmbedding12_4");
+
     scope().attr("Vertex12") = scope().attr("Face12_0");
     scope().attr("Edge12") = scope().attr("Face12_1");
     scope().attr("Triangle12") = scope().attr("Face12_2");

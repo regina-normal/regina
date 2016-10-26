@@ -128,6 +128,7 @@ void addDim4Vertex() {
     ;
 
     scope().attr("Dim4VertexEmbedding") = scope().attr("FaceEmbedding4_0");
+    scope().attr("VertexEmbedding4") = scope().attr("FaceEmbedding4_0");
     scope().attr("Dim4Vertex") = scope().attr("Face4_0");
     scope().attr("Vertex4") = scope().attr("Face4_0");
 }

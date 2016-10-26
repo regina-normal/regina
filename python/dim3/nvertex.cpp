@@ -150,6 +150,7 @@ void addNVertex() {
     }
 
     scope().attr("NVertexEmbedding") = scope().attr("FaceEmbedding3_0");
+    scope().attr("VertexEmbedding3") = scope().attr("FaceEmbedding3_0");
     scope().attr("NVertex") = scope().attr("Face3_0");
     scope().attr("Vertex3") = scope().attr("Face3_0");
 }
