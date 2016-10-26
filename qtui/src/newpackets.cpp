@@ -42,7 +42,7 @@
 #include "packettreeview.h"
 #include "reginamain.h"
 #include "packets/dim2tricreator.h"
-#include "packets/dim4tricreator.h"
+#include "packets/tri4creator.h"
 #include "packets/anglescreator.h"
 #include "packets/filtercreator.h"
 #include "packets/hypercreator.h"
@@ -109,7 +109,7 @@ void ReginaMain::newTriangulation3() {
 }
 
 void ReginaMain::newTriangulation4() {
-    newPacket(new Dim4TriangulationCreator(this), 0,
+    newPacket(new Tri4Creator(this), 0,
         tr("New 4-Manifold Triangulation"));
 }
 

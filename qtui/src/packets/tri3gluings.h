@@ -53,7 +53,7 @@ namespace regina {
     template <int dim> using Simplex = Face<dim, dim>;
 };
 
-class GluingsModel : public QAbstractItemModel {
+class GluingsModel3 : public QAbstractItemModel {
     protected:
         /**
          * Details of the triangulation
@@ -69,7 +69,7 @@ class GluingsModel : public QAbstractItemModel {
         /**
          * Constructor.
          */
-        GluingsModel(regina::Triangulation<3>* tri, bool readWrite);
+        GluingsModel3(regina::Triangulation<3>* tri, bool readWrite);
 
         /**
          * Read-write state.
@@ -148,7 +148,7 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
          */
         QWidget* ui;
         EditTableView* faceTable;
-        GluingsModel* model;
+        GluingsModel3* model;
 
         /**
          * Gluing actions
@@ -223,11 +223,11 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         void updateActionStates();
 };
 
-inline bool GluingsModel::isReadWrite() const {
+inline bool GluingsModel3::isReadWrite() const {
     return isReadWrite_;
 }
 
-inline void GluingsModel::setReadWrite(bool readWrite) {
+inline void GluingsModel3::setReadWrite(bool readWrite) {
     if (isReadWrite_ != readWrite) {
         // Edit flags will all change.
         // A full model reset is probably too severe, but.. *shrug*
@@ -237,7 +237,7 @@ inline void GluingsModel::setReadWrite(bool readWrite) {
     }
 }
 
-inline QModelIndex GluingsModel::parent(const QModelIndex&) const {
+inline QModelIndex GluingsModel3::parent(const QModelIndex&) const {
     // All items are top-level.
     return QModelIndex();
 }

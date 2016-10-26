@@ -41,7 +41,7 @@
 #include "reginasupport.h"
 #include "packets/anglesui.h"
 #include "packets/dim2triui.h"
-#include "packets/dim4triui.h"
+#include "packets/tri4ui.h"
 #include "packets/filtercomb.h"
 #include "packets/filterprop.h"
 #include "packets/generictriui.h"
@@ -187,7 +187,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
             return new Tri3UI(
                 dynamic_cast<Triangulation<3>*>(packet), enclosingPane);
         case PACKET_TRIANGULATION4:
-            return new Dim4TriangulationUI(
+            return new Tri4UI(
                 dynamic_cast<Triangulation<4>*>(packet), enclosingPane);
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(

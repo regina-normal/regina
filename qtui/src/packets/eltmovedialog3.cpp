@@ -32,7 +32,7 @@
 
 #include "triangulation/dim3.h"
 
-#include "eltmovedialog.h"
+#include "eltmovedialog3.h"
 #include "reginasupport.h"
 #include "choosers/edgeintchooser.h"
 #include "choosers/facechooser.h"

@@ -37,10 +37,10 @@
 #include "clickablelabel.h"
 #include "eventids.h"
 #include "iconcache.h"
-#include "dim4trialgebra.h"
-#include "dim4trigluings.h"
-#include "dim4triskeleton.h"
-#include "dim4triui.h"
+#include "tri4algebra.h"
+#include "tri4gluings.h"
+#include "tri4skeleton.h"
+#include "tri4ui.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -53,14 +53,14 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Dim4TriangulationUI::Dim4TriangulationUI(regina::Triangulation<4>* packet,
+Tri4UI::Tri4UI(regina::Triangulation<4>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim4Tri) {
-    Dim4TriHeaderUI* header = new Dim4TriHeaderUI(packet, this);
-    gluings = new Dim4TriGluingsUI(packet, this,
+    Tri4HeaderUI* header = new Tri4HeaderUI(packet, this);
+    gluings = new Tri4GluingsUI(packet, this,
         newEnclosingPane->isReadWrite());
-    skeleton = new Dim4TriSkeletonUI(packet, this);
-    algebra = new Dim4TriAlgebraUI(packet, this);
+    skeleton = new Tri4SkeletonUI(packet, this);
+    algebra = new Tri4AlgebraUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
 
@@ -72,19 +72,19 @@ Dim4TriangulationUI::Dim4TriangulationUI(regina::Triangulation<4>* packet,
     editIface = new PacketEditTabbedUI(this);
 }
 
-Dim4TriangulationUI::~Dim4TriangulationUI() {
+Tri4UI::~Tri4UI() {
     delete editIface;
 }
 
-const QLinkedList<QAction*>& Dim4TriangulationUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& Tri4UI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 
-QString Dim4TriangulationUI::getPacketMenuText() const {
+QString Tri4UI::getPacketMenuText() const {
     return QObject::tr("&4-D Triangulation");
 }
 
-Dim4TriHeaderUI::Dim4TriHeaderUI(regina::Triangulation<4>* packet,
+Tri4HeaderUI::Tri4HeaderUI(regina::Triangulation<4>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -119,20 +119,20 @@ Dim4TriHeaderUI::Dim4TriHeaderUI(regina::Triangulation<4>* packet,
     tri->listen(this);
 }
 
-regina::Packet* Dim4TriHeaderUI::getPacket() {
+regina::Packet* Tri4HeaderUI::getPacket() {
     return tri;
 }
 
-QWidget* Dim4TriHeaderUI::getInterface() {
+QWidget* Tri4HeaderUI::getInterface() {
     return ui;
 }
 
-void Dim4TriHeaderUI::refresh() {
+void Tri4HeaderUI::refresh() {
     header->setText(summaryInfo(tri));
     refreshLock();
 }
 
-QString Dim4TriHeaderUI::summaryInfo(regina::Triangulation<4>* tri) {
+QString Tri4HeaderUI::summaryInfo(regina::Triangulation<4>* tri) {
     if (tri->isEmpty())
         return QObject::tr("Empty");
 
@@ -166,7 +166,7 @@ QString Dim4TriHeaderUI::summaryInfo(regina::Triangulation<4>* tri) {
     return msg;
 }
 
-void Dim4TriHeaderUI::lockedExplanation() {
+void Tri4HeaderUI::lockedExplanation() {
     if (tri->isPacketEditable())
         return;
 
@@ -180,27 +180,27 @@ void Dim4TriHeaderUI::lockedExplanation() {
             "edit the clone instead.</qt>"));
 }
 
-void Dim4TriHeaderUI::childWasAdded(regina::Packet* packet,
+void Tri4HeaderUI::childWasAdded(regina::Packet* packet,
         regina::Packet* child) {
     // Be careful - we may not be in the GUI thread.
     QApplication::postEvent(this, new QEvent(
         (QEvent::Type)EVT_HEADER_CHILD_ADDED));
 }
 
-void Dim4TriHeaderUI::childWasRemoved(regina::Packet* packet,
+void Tri4HeaderUI::childWasRemoved(regina::Packet* packet,
         regina::Packet* child, bool inParentDestructor) {
     if (! inParentDestructor)
         refreshLock();
 }
 
-void Dim4TriHeaderUI::refreshLock() {
+void Tri4HeaderUI::refreshLock() {
     if (tri->isPacketEditable())
         locked->hide();
     else
         locked->show();
 }
 
-void Dim4TriHeaderUI::customEvent(QEvent* event) {
+void Tri4HeaderUI::customEvent(QEvent* event) {
     if (event->type() == EVT_HEADER_CHILD_ADDED)
         refreshLock();
 }

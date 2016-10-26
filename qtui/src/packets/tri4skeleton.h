@@ -30,65 +30,37 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim4triui.h
- *  \brief Provides an interface for viewing 4-manifold triangulations.
+/*! \file tri4skeleton.h
+ *  \brief Provides a skeletal properties viewer for 4-manifold triangulations.
  */
 
-#ifndef __DIM4TRIUI_H
-#define __DIM4TRIUI_H
+#ifndef __TRI4SKELETON_H
+#define __TRI4SKELETON_H
 
-#include "packet/packetlistener.h"
-#include "../packettabui.h"
-
-class ClickableLabel;
-class Dim4TriAlgebraUI;
-class Dim4TriGluingsUI;
-class Dim4TriSkeletonUI;
-class PacketEditIface;
-class QLabel;
-class QToolBar;
+#include "packettabui.h"
+#include "skeletonwindow.h"
 
 namespace regina {
+    class Packet;
     template <int> class Triangulation;
 };
 
 /**
- * A packet interface for viewing 4-manifold triangulations.
+ * A triangulation page for viewing skeletal properties.
  */
-class Dim4TriangulationUI : public PacketTabbedUI {
-    Q_OBJECT
-
-    private:
-        /**
-         * Internal components
-         */
-        Dim4TriGluingsUI* gluings;
-        Dim4TriSkeletonUI* skeleton;
-        Dim4TriAlgebraUI* algebra;
-
-        PacketEditIface* editIface;
-
+class Tri4SkeletonUI : public PacketTabbedViewerTab {
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        Dim4TriangulationUI(regina::Triangulation<4>* packet,
-            PacketPane* newEnclosingPane);
-        ~Dim4TriangulationUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        Tri4SkeletonUI(regina::Triangulation<4>* packet,
+                PacketTabbedUI* useParentUI);
 };
 
 /**
- * A header for the 4-manifold triangulation viewer.
+ * A triangulation page for accessing individual skeletal components.
  */
-class Dim4TriHeaderUI : public QObject, public PacketViewerTab,
-        public regina::PacketListener {
+class Tri4SkelCompUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
@@ -101,21 +73,28 @@ class Dim4TriHeaderUI : public QObject, public PacketViewerTab,
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
-        ClickableLabel* locked;
-        QToolBar* bar;
+        QLabel* nVertices;
+        QLabel* nEdges;
+        QLabel* nTriangles;
+        QLabel* nTetrahedra;
+        QLabel* nPentachora;
+        QLabel* nComps;
+        QLabel* nBdryComps;
+        QLabel* eulerTri;
+        QLabel* eulerManifold;
+        QLabel* eulerManifoldLabel;
+
+        /**
+         * Skeleton viewers
+         */
+        QLinkedList<SkeletonWindow*> viewers;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        Dim4TriHeaderUI(regina::Triangulation<4>* packet,
-                PacketTabbedUI* useParentUI);
-
-        /**
-         * Component queries.
-         */
-        QToolBar* getToolBar();
+        Tri4SkelCompUI(regina::Triangulation<4>* packet,
+                PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -124,42 +103,16 @@ class Dim4TriHeaderUI : public QObject, public PacketViewerTab,
         QWidget* getInterface();
         void refresh();
 
-        /**
-         * PacketListener overrides.
-         */
-        void childWasAdded(regina::Packet* packet, regina::Packet* child);
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor);
-
-        /**
-         * Allow other UIs to access the summary information.
-         */
-        static QString summaryInfo(regina::Triangulation<4>* tri);
-
     public slots:
         /**
-         * Explain to the user what the padlock means.
+         * Open skeleton windows.
          */
-        void lockedExplanation();
-
-    protected:
-        /**
-         * Update the state of the padlock.
-         */
-        void refreshLock();
-
-        /**
-         * Allow GUI updates from a non-GUI thread.
-         */
-        void customEvent(QEvent* event);
+        void viewVertices();
+        void viewEdges();
+        void viewTriangles();
+        void viewTetrahedra();
+        void viewComponents();
+        void viewBoundaryComponents();
 };
-
-inline PacketEditIface* Dim4TriangulationUI::getEditIface() {
-    return editIface;
-}
-
-inline QToolBar* Dim4TriHeaderUI::getToolBar() {
-    return bar;
-}
 
 #endif

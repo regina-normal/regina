@@ -62,7 +62,7 @@ class SnapPeaGluingsUI : public QObject, public PacketViewerTab {
          */
         QWidget* ui;
         QTableView* faceTable;
-        GluingsModel* model;
+        GluingsModel3* model;
 
     public:
         /**

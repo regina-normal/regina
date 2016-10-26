@@ -7,13 +7,8 @@ SET ( FILES
   dim2trigluings
   dim2triskeleton
   dim2triui
-  dim4eltmovedialog
-  dim4trialgebra
-  dim4tricreator
-  dim4trigluings
-  dim4triskeleton
-  dim4triui
   eltmovedialog3
+  eltmovedialog4
   facetgraphtab
   filtercomb
   filtercreator
@@ -52,6 +47,11 @@ SET ( FILES
   tri3snappea
   tri3surfaces
   tri3ui
+  tri4algebra
+  tri4creator
+  tri4gluings
+  tri4skeleton
+  tri4ui
   )
 
 FOREACH( FILE ${FILES} )

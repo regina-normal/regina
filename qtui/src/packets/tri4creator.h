@@ -30,89 +30,55 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim4triskeleton.h
- *  \brief Provides a skeletal properties viewer for 4-manifold triangulations.
+/*! \file tri4creator.h
+ *  \brief Allows the creation of 4-manifold triangulations.
  */
 
-#ifndef __DIM4TRISKELETON_H
-#define __DIM4TRISKELETON_H
+#ifndef __TRI4CREATOR_H
+#define __TRI4CREATOR_H
 
-#include "packettabui.h"
-#include "skeletonwindow.h"
+#include "../packetcreator.h"
 
-namespace regina {
-    class Packet;
-    template <int> class Triangulation;
-};
+#include <QStackedWidget>
+
+class PacketChooser;
+class ReginaMain;
+class QCheckBox;
+class QComboBox;
+class QLineEdit;
 
 /**
- * A triangulation page for viewing skeletal properties.
+ * An interface for creating 4-manifold triangulations.
  */
-class Dim4TriSkeletonUI : public PacketTabbedViewerTab {
-    public:
-        /**
-         * Constructor.
-         */
-        Dim4TriSkeletonUI(regina::Triangulation<4>* packet,
-                PacketTabbedUI* useParentUI);
-};
-
-/**
- * A triangulation page for accessing individual skeletal components.
- */
-class Dim4TriSkelCompUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
+class Tri4Creator : public PacketCreator {
     private:
-        /**
-         * Packet details
-         */
-        regina::Triangulation<4>* tri;
-
         /**
          * Internal components
          */
         QWidget* ui;
-        QLabel* nVertices;
-        QLabel* nEdges;
-        QLabel* nTriangles;
-        QLabel* nTetrahedra;
-        QLabel* nPentachora;
-        QLabel* nComps;
-        QLabel* nBdryComps;
-        QLabel* eulerTri;
-        QLabel* eulerManifold;
-        QLabel* eulerManifoldLabel;
+        QComboBox* type;
+        QStackedWidget* details;
 
         /**
-         * Skeleton viewers
+         * Details for specific triangulation types
          */
-        QLinkedList<SkeletonWindow*> viewers;
+        PacketChooser* iBundleFrom;
+        PacketChooser* s1BundleFrom;
+        QLineEdit* isoSig;
+        QComboBox* exampleWhich;
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        Dim4TriSkelCompUI(regina::Triangulation<4>* packet,
-                PacketTabbedViewerTab* useParentUI);
+        Tri4Creator(ReginaMain* mainWindow);
 
         /**
-         * PacketViewerTab overrides.
+         * PacketCreator overrides.
          */
-        regina::Packet* getPacket();
         QWidget* getInterface();
-        void refresh();
-
-    public slots:
-        /**
-         * Open skeleton windows.
-         */
-        void viewVertices();
-        void viewEdges();
-        void viewTriangles();
-        void viewTetrahedra();
-        void viewComponents();
-        void viewBoundaryComponents();
+        regina::Packet* createPacket(regina::Packet* parentPacket,
+            QWidget* parentWidget);
 };
 
 #endif

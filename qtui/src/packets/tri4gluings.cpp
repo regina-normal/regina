@@ -36,8 +36,8 @@
 #include "triangulation/dim4.h"
 
 // UI includes:
-#include "dim4eltmovedialog.h"
-#include "dim4trigluings.h"
+#include "eltmovedialog4.h"
+#include "tri4gluings.h"
 #include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -72,29 +72,29 @@ namespace {
     QRegExp reFacet("^[0-4][0-4][0-4][0-4]$");
 }
 
-Dim4GluingsModel::Dim4GluingsModel(Triangulation<4>* tri, bool readWrite) :
+GluingsModel4::GluingsModel4(Triangulation<4>* tri, bool readWrite) :
         tri_(tri), isReadWrite_(readWrite) {
 }
 
-void Dim4GluingsModel::rebuild() {
+void GluingsModel4::rebuild() {
     beginResetModel();
     endResetModel();
 }
 
-QModelIndex Dim4GluingsModel::index(int row, int column,
+QModelIndex GluingsModel4::index(int row, int column,
         const QModelIndex& parent) const {
     return createIndex(row, column, quint32(6 * row + column));
 }
 
-int Dim4GluingsModel::rowCount(const QModelIndex& parent) const {
+int GluingsModel4::rowCount(const QModelIndex& parent) const {
     return tri_->size();
 }
 
-int Dim4GluingsModel::columnCount(const QModelIndex& parent) const {
+int GluingsModel4::columnCount(const QModelIndex& parent) const {
     return 6;
 }
 
-QVariant Dim4GluingsModel::data(const QModelIndex& index, int role) const {
+QVariant GluingsModel4::data(const QModelIndex& index, int role) const {
     regina::Pentachoron<4>* p = tri_->simplex(index.row());
     if (role == Qt::DisplayRole) {
         // Pentachoron name?
@@ -126,7 +126,7 @@ QVariant Dim4GluingsModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim4GluingsModel::headerData(int section, Qt::Orientation orientation,
+QVariant GluingsModel4::headerData(int section, Qt::Orientation orientation,
         int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -144,14 +144,14 @@ QVariant Dim4GluingsModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-Qt::ItemFlags Dim4GluingsModel::flags(const QModelIndex& index) const {
+Qt::ItemFlags GluingsModel4::flags(const QModelIndex& index) const {
     if (isReadWrite_)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
-bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
+bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
         int role) {
     regina::Pentachoron<4>* p = tri_->simplex(index.row());
     if (index.column() == 0) {
@@ -238,7 +238,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
     return true;
 }
 
-QString Dim4GluingsModel::isFacetStringValid(unsigned long srcPent,
+QString GluingsModel4::isFacetStringValid(unsigned long srcPent,
         int srcFacet, unsigned long destPent, const QString& destFacet,
         regina::Perm<5>* gluing) {
     if (destPent >= tri_->size())
@@ -267,14 +267,14 @@ QString Dim4GluingsModel::isFacetStringValid(unsigned long srcPent,
     return QString::null;
 }
 
-void Dim4GluingsModel::showError(const QString& message) {
+void GluingsModel4::showError(const QString& message) {
     // We should actually pass the view to KMessageBox, not 0, but we
     // don't have access to any widget from here...
     ReginaSupport::info(0 /* should be the view? */,
         tr("This is not a valid gluing."), message);
 }
 
-QString Dim4GluingsModel::destString(int srcFacet,
+QString GluingsModel4::destString(int srcFacet,
         regina::Pentachoron<4>* destPent,
         const regina::Perm<5>& gluing) {
     if (! destPent)
@@ -285,7 +285,7 @@ QString Dim4GluingsModel::destString(int srcFacet,
             trunc4().c_str() + ')';
 }
 
-regina::Perm<5> Dim4GluingsModel::facetStringToPerm(int srcFacet,
+regina::Perm<5> GluingsModel4::facetStringToPerm(int srcFacet,
         const QString& str) {
     int destVertex[5];
 
@@ -302,11 +302,11 @@ regina::Perm<5> Dim4GluingsModel::facetStringToPerm(int srcFacet,
         regina::Tetrahedron<4>::ordering(srcFacet).inverse();
 }
 
-Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Triangulation<4>* packet,
+Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of facet gluings.
-    model = new Dim4GluingsModel(packet, readWrite);
+    model = new GluingsModel4(packet, readWrite);
     facetTable = new EditTableView();
     facetTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     facetTable->setModel(model);
@@ -546,17 +546,17 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Triangulation<4>* packet,
     refresh();
 }
 
-Dim4TriGluingsUI::~Dim4TriGluingsUI() {
+Tri4GluingsUI::~Tri4GluingsUI() {
     // Make sure the actions, including separators, are all deleted.
 
     delete model;
 }
 
-const QLinkedList<QAction*>& Dim4TriGluingsUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& Tri4GluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
-void Dim4TriGluingsUI::fillToolBar(QToolBar* bar) {
+void Tri4GluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actAddPent);
     bar->addAction(actRemovePent);
     bar->addSeparator();
@@ -564,24 +564,24 @@ void Dim4TriGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actOrient);
 }
 
-regina::Packet* Dim4TriGluingsUI::getPacket() {
+regina::Packet* Tri4GluingsUI::getPacket() {
     return tri;
 }
 
-QWidget* Dim4TriGluingsUI::getInterface() {
+QWidget* Tri4GluingsUI::getInterface() {
     return ui;
 }
 
-void Dim4TriGluingsUI::refresh() {
+void Tri4GluingsUI::refresh() {
     model->rebuild();
     updateActionStates();
 }
 
-void Dim4TriGluingsUI::endEdit() {
+void Tri4GluingsUI::endEdit() {
     facetTable->endEdit();
 }
 
-void Dim4TriGluingsUI::setReadWrite(bool readWrite) {
+void Tri4GluingsUI::setReadWrite(bool readWrite) {
     model->setReadWrite(readWrite);
 
     if (readWrite) {
@@ -600,13 +600,13 @@ void Dim4TriGluingsUI::setReadWrite(bool readWrite) {
     updateActionStates();
 }
 
-void Dim4TriGluingsUI::addPent() {
+void Tri4GluingsUI::addPent() {
     endEdit();
 
     tri->newPentachoron();
 }
 
-void Dim4TriGluingsUI::removeSelectedPents() {
+void Tri4GluingsUI::removeSelectedPents() {
     endEdit();
 
     // Gather together all the pentachora to be deleted.
@@ -657,7 +657,7 @@ void Dim4TriGluingsUI::removeSelectedPents() {
     }
 }
 
-void Dim4TriGluingsUI::simplify() {
+void Tri4GluingsUI::simplify() {
     endEdit();
 
     if (! tri->intelligentSimplify())
@@ -667,7 +667,7 @@ void Dim4TriGluingsUI::simplify() {
             "simply means that I could not find a way of reducing it."));
 }
 
-void Dim4TriGluingsUI::orient() {
+void Tri4GluingsUI::orient() {
     endEdit();
 
     if (tri->isOriented()) {
@@ -691,13 +691,13 @@ void Dim4TriGluingsUI::orient() {
     tri->orient();
 }
 
-void Dim4TriGluingsUI::barycentricSubdivide() {
+void Tri4GluingsUI::barycentricSubdivide() {
     endEdit();
 
     tri->barycentricSubdivision();
 }
 
-void Dim4TriGluingsUI::idealToFinite() {
+void Tri4GluingsUI::idealToFinite() {
     endEdit();
 
     if (tri->isValid() && ! tri->isIdeal())
@@ -711,7 +711,7 @@ void Dim4TriGluingsUI::idealToFinite() {
     }
 }
 
-void Dim4TriGluingsUI::finiteToIdeal() {
+void Tri4GluingsUI::finiteToIdeal() {
     endEdit();
 
     if (! tri->hasBoundaryFacets())
@@ -726,19 +726,19 @@ void Dim4TriGluingsUI::finiteToIdeal() {
     }
 }
 
-void Dim4TriGluingsUI::elementaryMove() {
+void Tri4GluingsUI::elementaryMove() {
     endEdit();
 
-    (new Dim4EltMoveDialog(ui, tri))->show();
+    (new EltMoveDialog4(ui, tri))->show();
 }
 
-void Dim4TriGluingsUI::doubleCover() {
+void Tri4GluingsUI::doubleCover() {
     endEdit();
 
     tri->makeDoubleCover();
 }
 
-void Dim4TriGluingsUI::boundaryComponents() {
+void Tri4GluingsUI::boundaryComponents() {
     endEdit();
 
     if (tri->countBoundaryComponents() == 0)
@@ -767,7 +767,7 @@ void Dim4TriGluingsUI::boundaryComponents() {
     }
 }
 
-void Dim4TriGluingsUI::vertexLinks() {
+void Tri4GluingsUI::vertexLinks() {
     endEdit();
 
     if (tri->countVertices() == 0)
@@ -797,7 +797,7 @@ void Dim4TriGluingsUI::vertexLinks() {
     }
 }
 
-void Dim4TriGluingsUI::splitIntoComponents() {
+void Tri4GluingsUI::splitIntoComponents() {
     endEdit();
 
     if (tri->countComponents() == 0)
@@ -831,7 +831,7 @@ void Dim4TriGluingsUI::splitIntoComponents() {
     }
 }
 
-void Dim4TriGluingsUI::updateRemoveState() {
+void Tri4GluingsUI::updateRemoveState() {
     // Are we read-write?
     if (model->isReadWrite())
         actRemovePent->setEnabled(
@@ -840,7 +840,7 @@ void Dim4TriGluingsUI::updateRemoveState() {
         actRemovePent->setEnabled(false);
 }
 
-void Dim4TriGluingsUI::updateActionStates() {
+void Tri4GluingsUI::updateActionStates() {
     if (! model->isReadWrite())
         actOrient->setEnabled(false);
     else if (! tri->isOrientable())

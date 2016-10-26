@@ -41,7 +41,7 @@
 
 // UI includes:
 #include "edittableview.h"
-#include "eltmovedialog.h"
+#include "eltmovedialog3.h"
 #include "tri3gluings.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
@@ -86,29 +86,29 @@ namespace {
     QRegExp reFace("^[0-3][0-3][0-3]$");
 }
 
-GluingsModel::GluingsModel(regina::Triangulation<3>* tri, bool readWrite) :
+GluingsModel3::GluingsModel3(regina::Triangulation<3>* tri, bool readWrite) :
         tri_(tri), isReadWrite_(readWrite) {
 }
 
-void GluingsModel::rebuild() {
+void GluingsModel3::rebuild() {
     beginResetModel();
     endResetModel();
 }
 
-QModelIndex GluingsModel::index(int row, int column,
+QModelIndex GluingsModel3::index(int row, int column,
         const QModelIndex& /* unused parent*/) const {
     return createIndex(row, column, quint32(5 * row + column));
 }
 
-int GluingsModel::rowCount(const QModelIndex& /* unused parent*/) const {
+int GluingsModel3::rowCount(const QModelIndex& /* unused parent*/) const {
     return tri_->size();
 }
 
-int GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int GluingsModel3::columnCount(const QModelIndex& /* unused parent*/) const {
     return 5;
 }
 
-QVariant GluingsModel::data(const QModelIndex& index, int role) const {
+QVariant GluingsModel3::data(const QModelIndex& index, int role) const {
     regina::Tetrahedron<3>* t = tri_->simplex(index.row());
     if (role == Qt::DisplayRole) {
         // Tetrahedron name?
@@ -140,7 +140,7 @@ QVariant GluingsModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant GluingsModel::headerData(int section, Qt::Orientation orientation,
+QVariant GluingsModel3::headerData(int section, Qt::Orientation orientation,
         int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -157,14 +157,14 @@ QVariant GluingsModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-Qt::ItemFlags GluingsModel::flags(const QModelIndex& /* unused index*/) const {
+Qt::ItemFlags GluingsModel3::flags(const QModelIndex& /* unused index*/) const {
     if (isReadWrite_)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
-bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
+bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
         int /* unused role*/) {
     regina::Tetrahedron<3>* t = tri_->simplex(index.row());
     if (index.column() == 0) {
@@ -251,7 +251,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
     return true;
 }
 
-QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
+QString GluingsModel3::isFaceStringValid(unsigned long srcTet, int srcFace,
         unsigned long destTet, const QString& destFace,
         regina::Perm<4>* gluing) {
     if (destTet >= tri_->size())
@@ -279,14 +279,14 @@ QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
     return QString::null;
 }
 
-void GluingsModel::showError(const QString& message) {
+void GluingsModel3::showError(const QString& message) {
     // We should actually pass the view to the message box, not 0, but we
     // don't have access to any widget from here...
     ReginaSupport::info(0 /* should be the view? */,
         tr("This is not a valid gluing."), message);
 }
 
-QString GluingsModel::destString(int srcFace, regina::Tetrahedron<3>* destTet,
+QString GluingsModel3::destString(int srcFace, regina::Tetrahedron<3>* destTet,
         const regina::Perm<4>& gluing) {
     if (! destTet)
         return "";
@@ -296,7 +296,7 @@ QString GluingsModel::destString(int srcFace, regina::Tetrahedron<3>* destTet,
             ')';
 }
 
-regina::Perm<4> GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
+regina::Perm<4> GluingsModel3::faceStringToPerm(int srcFace, const QString& str) {
     int destVertex[4];
 
     destVertex[3] = 6; // This will be adjusted in a moment.
@@ -315,7 +315,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
-    model = new GluingsModel(packet, readWrite);
+    model = new GluingsModel3(packet, readWrite);
     faceTable = new EditTableView();
     faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     faceTable->setModel(model);

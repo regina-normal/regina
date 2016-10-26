@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,40 +30,65 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim4trialgebra.h
- *  \brief Provides an algebra viewer for 4-manifold triangulations.
+/*! \file tri4ui.h
+ *  \brief Provides an interface for viewing 4-manifold triangulations.
  */
 
-#ifndef __DIM4TRIALGEBRA_H
-#define __DIM4TRIALGEBRA_H
+#ifndef __TRI4UI_H
+#define __TRI4UI_H
 
+#include "packet/packetlistener.h"
 #include "../packettabui.h"
 
-class GroupWidget;
+class ClickableLabel;
+class Tri4AlgebraUI;
+class Tri4GluingsUI;
+class Tri4SkeletonUI;
+class PacketEditIface;
 class QLabel;
+class QToolBar;
 
 namespace regina {
-    class Packet;
-
     template <int> class Triangulation;
 };
 
 /**
- * A triangulation page for viewing algebraic properties.
+ * A packet interface for viewing 4-manifold triangulations.
  */
-class Dim4TriAlgebraUI : public PacketTabbedViewerTab {
+class Tri4UI : public PacketTabbedUI {
+    Q_OBJECT
+
+    private:
+        /**
+         * Internal components
+         */
+        Tri4GluingsUI* gluings;
+        Tri4SkeletonUI* skeleton;
+        Tri4AlgebraUI* algebra;
+
+        PacketEditIface* editIface;
+
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        Dim4TriAlgebraUI(regina::Triangulation<4>* packet,
-                PacketTabbedUI* useParentUI);
+        Tri4UI(regina::Triangulation<4>* packet,
+            PacketPane* newEnclosingPane);
+        ~Tri4UI();
+
+        /**
+         * PacketUI overrides.
+         */
+        PacketEditIface* getEditIface();
+        const QLinkedList<QAction*>& getPacketTypeActions();
+        QString getPacketMenuText() const;
 };
 
 /**
- * A triangulation page for viewing homology and the fundamental group.
+ * A header for the 4-manifold triangulation viewer.
  */
-class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
+class Tri4HeaderUI : public QObject, public PacketViewerTab,
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -76,19 +101,21 @@ class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* labelH1;
-        QLabel* labelH2;
-        QLabel* H1;
-        QLabel* H2;
-        QLabel* fgMsg;
-        GroupWidget* fgGroup;
+        QLabel* header;
+        ClickableLabel* locked;
+        QToolBar* bar;
 
     public:
         /**
          * Constructor.
          */
-        Dim4TriHomologyFundUI(regina::Triangulation<4>* packet,
-                PacketTabbedViewerTab* useParentUI);
+        Tri4HeaderUI(regina::Triangulation<4>* packet,
+                PacketTabbedUI* useParentUI);
+
+        /**
+         * Component queries.
+         */
+        QToolBar* getToolBar();
 
         /**
          * PacketViewerTab overrides.
@@ -97,21 +124,42 @@ class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
 
+        /**
+         * PacketListener overrides.
+         */
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
+            bool inParentDestructor);
+
+        /**
+         * Allow other UIs to access the summary information.
+         */
+        static QString summaryInfo(regina::Triangulation<4>* tri);
+
     public slots:
         /**
-         * Notify us that the presentation has been simplified.
+         * Explain to the user what the padlock means.
          */
-        void fundGroupSimplified();
-        /**
-         * Note that preferences have changed.
-         */
-        void updatePreferences();
+        void lockedExplanation();
 
-    private:
+    protected:
         /**
-         * Update the static labels according to current unicode preferences.
+         * Update the state of the padlock.
          */
-        void refreshLabels();
+        void refreshLock();
+
+        /**
+         * Allow GUI updates from a non-GUI thread.
+         */
+        void customEvent(QEvent* event);
 };
+
+inline PacketEditIface* Tri4UI::getEditIface() {
+    return editIface;
+}
+
+inline QToolBar* Tri4HeaderUI::getToolBar() {
+    return bar;
+}
 
 #endif

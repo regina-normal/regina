@@ -39,7 +39,7 @@
 // UI includes:
 #include "columnlayout.h"
 #include "groupwidget.h"
-#include "dim4trialgebra.h"
+#include "tri4algebra.h"
 #include "reginaprefset.h"
 
 #include <QLabel>
@@ -48,15 +48,15 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Triangulation<4>* packet,
+Tri4AlgebraUI::Tri4AlgebraUI(regina::Triangulation<4>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
-    addTab(new Dim4TriHomologyFundUI(packet, this),
+    addTab(new Tri4HomologyFundUI(packet, this),
         tr("&Homology && Fund. Group"));
 }
 
-Dim4TriHomologyFundUI::Dim4TriHomologyFundUI(regina::Triangulation<4>* packet,
+Tri4HomologyFundUI::Tri4HomologyFundUI(regina::Triangulation<4>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -118,15 +118,15 @@ Dim4TriHomologyFundUI::Dim4TriHomologyFundUI(regina::Triangulation<4>* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::Packet* Dim4TriHomologyFundUI::getPacket() {
+regina::Packet* Tri4HomologyFundUI::getPacket() {
     return tri;
 }
 
-QWidget* Dim4TriHomologyFundUI::getInterface() {
+QWidget* Tri4HomologyFundUI::getInterface() {
     return ui;
 }
 
-void Dim4TriHomologyFundUI::refresh() {
+void Tri4HomologyFundUI::refresh() {
     if (tri->isValid()) {
         if (ReginaPrefSet::global().displayUnicode) {
             H1->setText(tri->homologyH1().utf8().c_str());
@@ -158,13 +158,13 @@ void Dim4TriHomologyFundUI::refresh() {
     }
 }
 
-void Dim4TriHomologyFundUI::fundGroupSimplified() {
+void Tri4HomologyFundUI::fundGroupSimplified() {
     regina::NGroupPresentation* simp = fgGroup->takeSimplifiedGroup();
     if (simp)
         tri->simplifiedFundamentalGroup(simp);
 }
 
-void Dim4TriHomologyFundUI::refreshLabels() {
+void Tri4HomologyFundUI::refreshLabels() {
     if (ReginaPrefSet::global().displayUnicode) {
         labelH1->setText(QObject::trUtf8("H\u2081(M):"));
         labelH2->setText(QObject::trUtf8("H\u2082(M):"));
@@ -174,7 +174,7 @@ void Dim4TriHomologyFundUI::refreshLabels() {
     }
 }
 
-void Dim4TriHomologyFundUI::updatePreferences() {
+void Tri4HomologyFundUI::updatePreferences() {
     // If we've changed the unicode setting, then we may need some redrawing.
     refreshLabels();
     refresh();

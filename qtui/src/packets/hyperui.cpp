@@ -36,7 +36,7 @@
 
 // UI includes:
 #include "coordinates.h"
-#include "dim4triui.h"
+#include "tri4ui.h"
 #include "hyperui.h"
 #include "hypercompatui.h"
 #include "hypercoordinateui.h"

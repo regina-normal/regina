@@ -16,8 +16,8 @@
 		0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0506EC1C19F65B43003E455B /* iPhone.storyboard */; };
 		05074A7C1DA47E060007773C /* nvector.h in Headers */ = {isa = PBXBuildFile; fileRef = 05074A7B1DA47E060007773C /* nvector.h */; };
 		05074A7E1DA480D60007773C /* nray.h in Headers */ = {isa = PBXBuildFile; fileRef = 05074A7D1DA480D60007773C /* nray.h */; };
-		0507C5A71C54495D00D1C86C /* dim4eltmovedialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A31C54494E00D1C86C /* dim4eltmovedialog.cpp */; };
-		0507C5A81C54497200D1C86C /* dim4eltmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* dim4eltmovedialog.h */; };
+		0507C5A71C54495D00D1C86C /* eltmovedialog4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */; };
+		0507C5A81C54497200D1C86C /* eltmovedialog4.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* eltmovedialog4.h */; };
 		050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */; };
 		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
@@ -1528,15 +1528,15 @@
 		0591E8281C4F764F00793A9C /* normalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8201C4F764800793A9C /* normalhypersurface.cpp */; };
 		0591E8291C4F764F00793A9C /* normalhypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8211C4F764800793A9C /* normalhypersurfaces.cpp */; };
 		0591E82A1C4F764F00793A9C /* pyhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8221C4F764800793A9C /* pyhypersurface.cpp */; };
-		0591E83F1C4F769100793A9C /* dim4trialgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82B1C4F767300793A9C /* dim4trialgebra.cpp */; };
-		0591E8401C4F769100793A9C /* dim4tricreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82D1C4F767300793A9C /* dim4tricreator.cpp */; };
-		0591E8411C4F769100793A9C /* dim4trigluings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82F1C4F767300793A9C /* dim4trigluings.cpp */; };
-		0591E8421C4F769100793A9C /* dim4triskeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8311C4F767300793A9C /* dim4triskeleton.cpp */; };
-		0591E8431C4F769100793A9C /* dim4triui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8331C4F767300793A9C /* dim4triui.cpp */; };
-		0591E8441C4F772B00793A9C /* dim4trialgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82C1C4F767300793A9C /* dim4trialgebra.h */; };
-		0591E8461C4F773500793A9C /* dim4trigluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8301C4F767300793A9C /* dim4trigluings.h */; };
-		0591E8471C4F773800793A9C /* dim4triskeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8321C4F767300793A9C /* dim4triskeleton.h */; };
-		0591E8481C4F773C00793A9C /* dim4triui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8341C4F767300793A9C /* dim4triui.h */; };
+		0591E83F1C4F769100793A9C /* tri4algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82B1C4F767300793A9C /* tri4algebra.cpp */; };
+		0591E8401C4F769100793A9C /* tri4creator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82D1C4F767300793A9C /* tri4creator.cpp */; };
+		0591E8411C4F769100793A9C /* tri4gluings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82F1C4F767300793A9C /* tri4gluings.cpp */; };
+		0591E8421C4F769100793A9C /* tri4skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8311C4F767300793A9C /* tri4skeleton.cpp */; };
+		0591E8431C4F769100793A9C /* tri4ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8331C4F767300793A9C /* tri4ui.cpp */; };
+		0591E8441C4F772B00793A9C /* tri4algebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E82C1C4F767300793A9C /* tri4algebra.h */; };
+		0591E8461C4F773500793A9C /* tri4gluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8301C4F767300793A9C /* tri4gluings.h */; };
+		0591E8471C4F773800793A9C /* tri4skeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8321C4F767300793A9C /* tri4skeleton.h */; };
+		0591E8481C4F773C00793A9C /* tri4ui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8341C4F767300793A9C /* tri4ui.h */; };
 		0591E84D1C4F777000793A9C /* dim4census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8491C4F776A00793A9C /* dim4census.cpp */; };
 		0591E84E1C4F777000793A9C /* dim4facetpairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* dim4facetpairing.cpp */; };
 		0591E84F1C4F777100793A9C /* dim4census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8491C4F776A00793A9C /* dim4census.cpp */; };
@@ -2159,8 +2159,8 @@
 		0506EC1C19F65B43003E455B /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		05074A7B1DA47E060007773C /* nvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nvector.h; sourceTree = "<group>"; };
 		05074A7D1DA480D60007773C /* nray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nray.h; sourceTree = "<group>"; };
-		0507C5A31C54494E00D1C86C /* dim4eltmovedialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4eltmovedialog.cpp; sourceTree = "<group>"; };
-		0507C5A41C54494E00D1C86C /* dim4eltmovedialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4eltmovedialog.h; sourceTree = "<group>"; };
+		0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog4.cpp; sourceTree = "<group>"; };
+		0507C5A41C54494E00D1C86C /* eltmovedialog4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog4.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -3476,16 +3476,16 @@
 		0591E8201C4F764800793A9C /* normalhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurface.cpp; sourceTree = "<group>"; };
 		0591E8211C4F764800793A9C /* normalhypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurfaces.cpp; sourceTree = "<group>"; };
 		0591E8221C4F764800793A9C /* pyhypersurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyhypersurface.cpp; sourceTree = "<group>"; };
-		0591E82B1C4F767300793A9C /* dim4trialgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4trialgebra.cpp; sourceTree = "<group>"; };
-		0591E82C1C4F767300793A9C /* dim4trialgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4trialgebra.h; sourceTree = "<group>"; };
-		0591E82D1C4F767300793A9C /* dim4tricreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4tricreator.cpp; sourceTree = "<group>"; };
-		0591E82E1C4F767300793A9C /* dim4tricreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4tricreator.h; sourceTree = "<group>"; };
-		0591E82F1C4F767300793A9C /* dim4trigluings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4trigluings.cpp; sourceTree = "<group>"; };
-		0591E8301C4F767300793A9C /* dim4trigluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4trigluings.h; sourceTree = "<group>"; };
-		0591E8311C4F767300793A9C /* dim4triskeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4triskeleton.cpp; sourceTree = "<group>"; };
-		0591E8321C4F767300793A9C /* dim4triskeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4triskeleton.h; sourceTree = "<group>"; };
-		0591E8331C4F767300793A9C /* dim4triui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4triui.cpp; sourceTree = "<group>"; };
-		0591E8341C4F767300793A9C /* dim4triui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4triui.h; sourceTree = "<group>"; };
+		0591E82B1C4F767300793A9C /* tri4algebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4algebra.cpp; sourceTree = "<group>"; };
+		0591E82C1C4F767300793A9C /* tri4algebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4algebra.h; sourceTree = "<group>"; };
+		0591E82D1C4F767300793A9C /* tri4creator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4creator.cpp; sourceTree = "<group>"; };
+		0591E82E1C4F767300793A9C /* tri4creator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4creator.h; sourceTree = "<group>"; };
+		0591E82F1C4F767300793A9C /* tri4gluings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4gluings.cpp; sourceTree = "<group>"; };
+		0591E8301C4F767300793A9C /* tri4gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4gluings.h; sourceTree = "<group>"; };
+		0591E8311C4F767300793A9C /* tri4skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4skeleton.cpp; sourceTree = "<group>"; };
+		0591E8321C4F767300793A9C /* tri4skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4skeleton.h; sourceTree = "<group>"; };
+		0591E8331C4F767300793A9C /* tri4ui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4ui.cpp; sourceTree = "<group>"; };
+		0591E8341C4F767300793A9C /* tri4ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4ui.h; sourceTree = "<group>"; };
 		0591E8491C4F776A00793A9C /* dim4census.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4census.cpp; sourceTree = "<group>"; };
 		0591E84A1C4F776A00793A9C /* dim4facetpairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4facetpairing.cpp; sourceTree = "<group>"; };
 		0591E8521C4F779B00793A9C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -5825,21 +5825,11 @@
 				0564A58D1811D920002CC2AE /* dim2triskeleton.h */,
 				0564A58E1811D920002CC2AE /* dim2triui.cpp */,
 				0564A58F1811D920002CC2AE /* dim2triui.h */,
-				0507C5A31C54494E00D1C86C /* dim4eltmovedialog.cpp */,
-				0507C5A41C54494E00D1C86C /* dim4eltmovedialog.h */,
-				0591E82B1C4F767300793A9C /* dim4trialgebra.cpp */,
-				0591E82C1C4F767300793A9C /* dim4trialgebra.h */,
-				0591E82D1C4F767300793A9C /* dim4tricreator.cpp */,
-				0591E82E1C4F767300793A9C /* dim4tricreator.h */,
-				0591E82F1C4F767300793A9C /* dim4trigluings.cpp */,
-				0591E8301C4F767300793A9C /* dim4trigluings.h */,
-				0591E8311C4F767300793A9C /* dim4triskeleton.cpp */,
-				0591E8321C4F767300793A9C /* dim4triskeleton.h */,
-				0591E8331C4F767300793A9C /* dim4triui.cpp */,
-				0591E8341C4F767300793A9C /* dim4triui.h */,
 				05A73CBB19B2F1AB0099C617 /* docwidget.h */,
 				0564A5901811D920002CC2AE /* eltmovedialog3.cpp */,
 				0564A5911811D920002CC2AE /* eltmovedialog3.h */,
+				0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */,
+				0507C5A41C54494E00D1C86C /* eltmovedialog4.h */,
 				0564A5921811D920002CC2AE /* facetgraphtab.cpp */,
 				0564A5931811D920002CC2AE /* facetgraphtab.h */,
 				0564A5AA1811D920002CC2AE /* filtercomb.cpp */,
@@ -5916,6 +5906,16 @@
 				0564A5C51811D920002CC2AE /* tri3surfaces.h */,
 				0564A5BA1811D920002CC2AE /* tri3ui.cpp */,
 				0564A5BB1811D920002CC2AE /* tri3ui.h */,
+				0591E82B1C4F767300793A9C /* tri4algebra.cpp */,
+				0591E82C1C4F767300793A9C /* tri4algebra.h */,
+				0591E82D1C4F767300793A9C /* tri4creator.cpp */,
+				0591E82E1C4F767300793A9C /* tri4creator.h */,
+				0591E82F1C4F767300793A9C /* tri4gluings.cpp */,
+				0591E8301C4F767300793A9C /* tri4gluings.h */,
+				0591E8311C4F767300793A9C /* tri4skeleton.cpp */,
+				0591E8321C4F767300793A9C /* tri4skeleton.h */,
+				0591E8331C4F767300793A9C /* tri4ui.cpp */,
+				0591E8341C4F767300793A9C /* tri4ui.h */,
 			);
 			path = packets;
 			sourceTree = "<group>";
@@ -8182,12 +8182,12 @@
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
 				054739E11D9B176200C7B56F /* clickablelabel.h in Sources */,
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
-				0591E83F1C4F769100793A9C /* dim4trialgebra.cpp in Sources */,
-				0591E8441C4F772B00793A9C /* dim4trialgebra.h in Sources */,
-				0591E8461C4F773500793A9C /* dim4trigluings.h in Sources */,
-				0591E8471C4F773800793A9C /* dim4triskeleton.h in Sources */,
-				0591E8481C4F773C00793A9C /* dim4triui.h in Sources */,
-				0507C5A81C54497200D1C86C /* dim4eltmovedialog.h in Sources */,
+				0591E83F1C4F769100793A9C /* tri4algebra.cpp in Sources */,
+				0591E8441C4F772B00793A9C /* tri4algebra.h in Sources */,
+				0591E8461C4F773500793A9C /* tri4gluings.h in Sources */,
+				0591E8471C4F773800793A9C /* tri4skeleton.h in Sources */,
+				0591E8481C4F773C00793A9C /* tri4ui.h in Sources */,
+				0507C5A81C54497200D1C86C /* eltmovedialog4.h in Sources */,
 				0543AE9B1811E12A002758F8 /* exportdialog.h in Sources */,
 				05A73CCF19B2F1AB0099C617 /* snappeashapes.cpp in Sources */,
 				0543AE9C1811E12A002758F8 /* importdialog.h in Sources */,
@@ -8249,7 +8249,7 @@
 				0554CA7A1C5983870053461B /* generictriui.cpp in Sources */,
 				0543AEBF1811E12A002758F8 /* progressdialogs.h in Sources */,
 				0543AEC01811E12A002758F8 /* recentfilesaction.h in Sources */,
-				0591E8411C4F769100793A9C /* dim4trigluings.cpp in Sources */,
+				0591E8411C4F769100793A9C /* tri4gluings.cpp in Sources */,
 				0543AEC11811E12A002758F8 /* reginaabout.h in Sources */,
 				0543AEC21811E12A002758F8 /* reginamain.h in Sources */,
 				0543AEC31811E12A002758F8 /* reginamanager.h in Sources */,
@@ -8263,7 +8263,7 @@
 				0564A8101811D921002CC2AE /* recogniserhandler.cpp in Sources */,
 				0564A9681811D921002CC2AE /* tri3gluings.cpp in Sources */,
 				051691B91C5AD5AC00DC69EC /* hypermatchingui.cpp in Sources */,
-				0507C5A71C54495D00D1C86C /* dim4eltmovedialog.cpp in Sources */,
+				0507C5A71C54495D00D1C86C /* eltmovedialog4.cpp in Sources */,
 				0564A9501811D921002CC2AE /* dim2triui.cpp in Sources */,
 				0564A96C1811D921002CC2AE /* skeletonwindow.cpp in Sources */,
 				0564A8111811D921002CC2AE /* reginahandler.cpp in Sources */,
@@ -8280,7 +8280,7 @@
 				0564A9831811D921002CC2AE /* reginasupport.cpp in Sources */,
 				0564A8041811D921002CC2AE /* coordinates.cpp in Sources */,
 				0564A9551811D921002CC2AE /* anglesui.cpp in Sources */,
-				0591E8401C4F769100793A9C /* dim4tricreator.cpp in Sources */,
+				0591E8401C4F769100793A9C /* tri4creator.cpp in Sources */,
 				0564A96D1811D921002CC2AE /* snappeacomponents.cpp in Sources */,
 				0564A9661811D921002CC2AE /* tri3ui.cpp in Sources */,
 				0564A80B1811D921002CC2AE /* importdialog.cpp in Sources */,
@@ -8289,7 +8289,7 @@
 				0564A9601811D921002CC2AE /* filterprop.cpp in Sources */,
 				0564A9821811D921002CC2AE /* reginaprefset.cpp in Sources */,
 				0564A8091811D921002CC2AE /* dehydrationhandler.cpp in Sources */,
-				0591E8431C4F769100793A9C /* dim4triui.cpp in Sources */,
+				0591E8431C4F769100793A9C /* tri4ui.cpp in Sources */,
 				0564A94F1811D921002CC2AE /* dim2triskeleton.cpp in Sources */,
 				0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */,
 				0564A95C1811D921002CC2AE /* surfacescompatui.cpp in Sources */,
@@ -8299,7 +8299,7 @@
 				0564A9851811D921002CC2AE /* shortrunner.cpp in Sources */,
 				0564A93F1811D921002CC2AE /* imports.cpp in Sources */,
 				0564A9441811D921002CC2AE /* newpacketdialog.cpp in Sources */,
-				0591E8421C4F769100793A9C /* dim4triskeleton.cpp in Sources */,
+				0591E8421C4F769100793A9C /* tri4skeleton.cpp in Sources */,
 				0564A9711811D921002CC2AE /* progressdialogs.cpp in Sources */,
 				0564A9801811D921002CC2AE /* reginamanager.cpp in Sources */,
 				0564A95E1811D921002CC2AE /* filtercomb.cpp in Sources */,

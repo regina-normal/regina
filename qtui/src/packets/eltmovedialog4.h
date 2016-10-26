@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file eltmovedialog.h
+/*! \file eltmovedialog4.h
  *  \brief Provides a dialog through which the user can perform
  *  elementary moves on a 4-manifold triangulation.
  */
 
-#ifndef __DIM4ELTMOVEDIALOG_H
-#define __DIM4ELTMOVEDIALOG_H
+#ifndef __ELTMOVEDIALOG4_H
+#define __ELTMOVEDIALOG4_H
 
 #include "packet/packetlistener.h"
 
@@ -60,7 +60,7 @@ namespace regina {
  * A dialog used to select and perform an elementary move on a
  * 4-manifold triangulation.
  */
-class Dim4EltMoveDialog : public QDialog, public regina::PacketListener {
+class EltMoveDialog4 : public QDialog, public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -100,8 +100,8 @@ class Dim4EltMoveDialog : public QDialog, public regina::PacketListener {
         /**
          * Constructor and destructor.
          */
-        Dim4EltMoveDialog(QWidget* parent, regina::Triangulation<4>* useTri);
-        ~Dim4EltMoveDialog();
+        EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri);
+        ~EltMoveDialog4();
 
         /**
          * Update the overview information if the triangulation changes.

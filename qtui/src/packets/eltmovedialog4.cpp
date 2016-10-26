@@ -32,7 +32,7 @@
 
 #include "triangulation/dim4.h"
 
-#include "dim4eltmovedialog.h"
+#include "eltmovedialog4.h"
 #include "reginasupport.h"
 #include "choosers/facechooser.h"
 #include "choosers/simplexchooser.h"
@@ -90,7 +90,7 @@ namespace {
     }
 }
 
-Dim4EltMoveDialog::Dim4EltMoveDialog(QWidget* parent, regina::Triangulation<4>* useTri) :
+EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     setWindowTitle(tr("Elementary Move"));
@@ -284,12 +284,12 @@ Dim4EltMoveDialog::Dim4EltMoveDialog(QWidget* parent, regina::Triangulation<4>* 
     tri->listen(this);
 }
 
-Dim4EltMoveDialog::~Dim4EltMoveDialog() {
+EltMoveDialog4::~EltMoveDialog4() {
     tri->unlisten(this);
     delete moveTypes;
 }
 
-void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
+void EltMoveDialog4::clicked(QAbstractButton* btn) {
     if (buttons->buttonRole(btn) == QDialogButtonBox::RejectRole)
         reject();
     if (buttons->buttonRole(btn) != QDialogButtonBox::ApplyRole)
@@ -335,17 +335,17 @@ void Dim4EltMoveDialog::clicked(QAbstractButton* btn) {
         ReginaSupport::info(this, tr("Please select a move."));
 }
 
-void Dim4EltMoveDialog::updateApply() {
+void EltMoveDialog4::updateApply() {
     QAbstractButton* b = moveTypes->checkedButton();
     buttons->button(QDialogButtonBox::Apply)->setEnabled(b && b->isEnabled());
 }
 
-void Dim4EltMoveDialog::packetWasRenamed(regina::Packet*) {
+void EltMoveDialog4::packetWasRenamed(regina::Packet*) {
     name->setText(tri->humanLabel().c_str());
 }
 
 template <typename ChooserClass>
-void Dim4EltMoveDialog::updateStates(ChooserClass* chooser, QRadioButton* button) {
+void EltMoveDialog4::updateStates(ChooserClass* chooser, QRadioButton* button) {
     if (chooser->refresh()) {
         button->setEnabled(true);
         chooser->setEnabled(true);
@@ -355,7 +355,7 @@ void Dim4EltMoveDialog::updateStates(ChooserClass* chooser, QRadioButton* button
     }
 }
 
-void Dim4EltMoveDialog::packetWasChanged(regina::Packet*) {
+void EltMoveDialog4::packetWasChanged(regina::Packet*) {
     if (tri->size() == 1)
         overview->setText(tr("1 pentachoron"));
     else
@@ -375,7 +375,7 @@ void Dim4EltMoveDialog::packetWasChanged(regina::Packet*) {
     updateApply();
 }
 
-void Dim4EltMoveDialog::packetToBeDestroyed(regina::Packet*) {
+void EltMoveDialog4::packetToBeDestroyed(regina::Packet*) {
     reject();
 }
 

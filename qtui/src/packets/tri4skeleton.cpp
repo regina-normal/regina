@@ -35,7 +35,7 @@
 #include "triangulation/dim4.h"
 
 // UI includes:
-#include "dim4triskeleton.h"
+#include "tri4skeleton.h"
 #include "facetgraphtab.h"
 #include "skeletonwindow.h"
 #include "reginaprefset.h"
@@ -49,16 +49,16 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Dim4TriSkeletonUI::Dim4TriSkeletonUI(regina::Triangulation<4>* packet,
+Tri4SkeletonUI::Tri4SkeletonUI(regina::Triangulation<4>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim4TriSkeleton) {
-    addTab(new Dim4TriSkelCompUI(packet, this), tr("&Skeletal Components"));
+    addTab(new Tri4SkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim4FacetGraphData(packet), this),
         tr("&Graphs"));
 }
 
-Dim4TriSkelCompUI::Dim4TriSkelCompUI(regina::Triangulation<4>* packet,
+Tri4SkelCompUI::Tri4SkelCompUI(regina::Triangulation<4>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -221,15 +221,15 @@ Dim4TriSkelCompUI::Dim4TriSkelCompUI(regina::Triangulation<4>* packet,
     layout->addStretch(1);
 }
 
-regina::Packet* Dim4TriSkelCompUI::getPacket() {
+regina::Packet* Tri4SkelCompUI::getPacket() {
     return tri;
 }
 
-QWidget* Dim4TriSkelCompUI::getInterface() {
+QWidget* Tri4SkelCompUI::getInterface() {
     return ui;
 }
 
-void Dim4TriSkelCompUI::refresh() {
+void Tri4SkelCompUI::refresh() {
     nVertices->setText(QString::number(tri->countVertices()));
     nEdges->setText(QString::number(tri->countEdges()));
     nTriangles->setText(QString::number(tri->countTriangles()));
@@ -253,7 +253,7 @@ void Dim4TriSkelCompUI::refresh() {
         (it.next())->refresh();
 }
 
-void Dim4TriSkelCompUI::viewVertices() {
+void Tri4SkelCompUI::viewVertices() {
     // Because we pass this as parent to the new window, we are
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
@@ -263,32 +263,32 @@ void Dim4TriSkelCompUI::viewVertices() {
     viewers.append(win);
 }
 
-void Dim4TriSkelCompUI::viewEdges() {
+void Tri4SkelCompUI::viewEdges() {
     SkeletonWindow* win = new SkeletonWindow(this, new Edge4Model(tri));
     win->show();
     viewers.append(win);
 }
 
-void Dim4TriSkelCompUI::viewTriangles() {
+void Tri4SkelCompUI::viewTriangles() {
     SkeletonWindow* win = new SkeletonWindow(this, new Triangle4Model(tri));
     win->show();
     viewers.append(win);
 }
 
-void Dim4TriSkelCompUI::viewTetrahedra() {
+void Tri4SkelCompUI::viewTetrahedra() {
     SkeletonWindow* win = new SkeletonWindow(this,
         new Tetrahedron4Model(tri));
     win->show();
     viewers.append(win);
 }
 
-void Dim4TriSkelCompUI::viewComponents() {
+void Tri4SkelCompUI::viewComponents() {
     SkeletonWindow* win = new SkeletonWindow(this, new Dim4ComponentModel(tri));
     win->show();
     viewers.append(win);
 }
 
-void Dim4TriSkelCompUI::viewBoundaryComponents() {
+void Tri4SkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
         new Dim4BoundaryComponentModel(tri));
     win->show();

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                     *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,55 +30,88 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim4triangulationcreator.h
- *  \brief Allows the creation of 4-manifold triangulations.
+/*! \file tri4algebra.h
+ *  \brief Provides an algebra viewer for 4-manifold triangulations.
  */
 
-#ifndef __DIM4TRICREATOR_H
-#define __DIM4TRICREATOR_H
+#ifndef __TRI4ALGEBRA_H
+#define __TRI4ALGEBRA_H
 
-#include "../packetcreator.h"
+#include "../packettabui.h"
 
-#include <QStackedWidget>
+class GroupWidget;
+class QLabel;
 
-class PacketChooser;
-class ReginaMain;
-class QCheckBox;
-class QComboBox;
-class QLineEdit;
+namespace regina {
+    class Packet;
+
+    template <int> class Triangulation;
+};
 
 /**
- * An interface for creating 4-manifold triangulations.
+ * A triangulation page for viewing algebraic properties.
  */
-class Dim4TriangulationCreator : public PacketCreator {
+class Tri4AlgebraUI : public PacketTabbedViewerTab {
+    public:
+        /**
+         * Constructor.
+         */
+        Tri4AlgebraUI(regina::Triangulation<4>* packet,
+                PacketTabbedUI* useParentUI);
+};
+
+/**
+ * A triangulation page for viewing homology and the fundamental group.
+ */
+class Tri4HomologyFundUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
+        /**
+         * Packet details
+         */
+        regina::Triangulation<4>* tri;
+
         /**
          * Internal components
          */
         QWidget* ui;
-        QComboBox* type;
-        QStackedWidget* details;
-
-        /**
-         * Details for specific triangulation types
-         */
-        PacketChooser* iBundleFrom;
-        PacketChooser* s1BundleFrom;
-        QLineEdit* isoSig;
-        QComboBox* exampleWhich;
+        QLabel* labelH1;
+        QLabel* labelH2;
+        QLabel* H1;
+        QLabel* H2;
+        QLabel* fgMsg;
+        GroupWidget* fgGroup;
 
     public:
         /**
          * Constructor.
          */
-        Dim4TriangulationCreator(ReginaMain* mainWindow);
+        Tri4HomologyFundUI(regina::Triangulation<4>* packet,
+                PacketTabbedViewerTab* useParentUI);
 
         /**
-         * PacketCreator overrides.
+         * PacketViewerTab overrides.
          */
+        regina::Packet* getPacket();
         QWidget* getInterface();
-        regina::Packet* createPacket(regina::Packet* parentPacket,
-            QWidget* parentWidget);
+        void refresh();
+
+    public slots:
+        /**
+         * Notify us that the presentation has been simplified.
+         */
+        void fundGroupSimplified();
+        /**
+         * Note that preferences have changed.
+         */
+        void updatePreferences();
+
+    private:
+        /**
+         * Update the static labels according to current unicode preferences.
+         */
+        void refreshLabels();
 };
 
 #endif

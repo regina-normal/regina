@@ -36,7 +36,7 @@
 #include "triangulation/dim4.h"
 
 // UI includes:
-#include "dim4tricreator.h"
+#include "tri4creator.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
@@ -86,7 +86,7 @@ namespace {
     QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
 }
 
-Dim4TriangulationCreator::Dim4TriangulationCreator(ReginaMain* mainWindow) {
+Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -214,11 +214,11 @@ Dim4TriangulationCreator::Dim4TriangulationCreator(ReginaMain* mainWindow) {
         SLOT(setCurrentIndex(int)));
 }
 
-QWidget* Dim4TriangulationCreator::getInterface() {
+QWidget* Tri4Creator::getInterface() {
     return ui;
 }
 
-regina::Packet* Dim4TriangulationCreator::createPacket(regina::Packet*,
+regina::Packet* Tri4Creator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
