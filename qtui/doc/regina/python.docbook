@@ -343,7 +343,7 @@
   <para>
    Regarding fillings and peripheral curves:
    &regina; does not store fillings or peripheral curves for its own native
-   <link linkend="packet-triangulation">triangulation packets</link>,
+   <link linkend="packet-triangulation3">triangulation packets</link>,
    as represented by the <classname>Triangulation3</classname> class.
    However, it does store fillings and peripheral curves for its hybrid
    <link linkend="packet-snappea">&snappea; triangulation packets</link>,

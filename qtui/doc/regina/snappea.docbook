@@ -3,7 +3,7 @@
 
  <para>
   For 3-manifolds, &regina;'s native triangulation structure is the
-  <link linkend="packet-triangulation">triangulation packet</link>,
+  <link linkend="packet-triangulation3">triangulation packet</link>,
   as described in the
   <link linkend="triangulations">previous chapter</link>.
   This structure is best suited for fine-grained analysis and
@@ -89,7 +89,7 @@
    <title>Converting from a &regina; Triangulation</title>
    <para>
     It is easy to convert one of &regina;'s native
-    <link linkend="packet-triangulation">3-manifold triangulation packets</link>
+    <link linkend="packet-triangulation3">3-manifold triangulation packets</link>
     into a &snappea; triangulation.  To do this, open the &regina;
     triangulation and then either:
     <itemizedlist>
@@ -603,7 +603,7 @@
      otherwise it retriangulates the Epstein-Penner decomposition in a
      canonical way by introducing new internal vertices.
      Because of this latter possibility, the result will be one of &regina;'s
-     more flexible <link linkend="packet-triangulation">triangulation
+     more flexible <link linkend="packet-triangulation3">triangulation
      packets</link>, and not a &snappea; triangulation.
     </para>
     <warning><para>
@@ -660,7 +660,7 @@
      If you want access to &regina;'s full functionality and
      fine-grained access to the triangulation, you can convert your
      &snappea; triangulation packet into one of &regina;'s
-     native <link linkend="packet-triangulation">3-manifold
+     native <link linkend="packet-triangulation3">3-manifold
      triangulation packets</link>.
      To do this, select
      <menuchoice>
