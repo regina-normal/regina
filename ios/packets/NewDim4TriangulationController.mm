@@ -49,7 +49,7 @@
 - (void)viewDidLoad
 {
     self.pages = static_cast<NewPacketPageViewController*>(self.childViewControllers.lastObject);
-    [self.pages fillWithPages:@[@"newDim4TriEmpty", @"newDim4TriExample", @"newDim4TriBundle", @"newDim4TriIsosig"]
+    [self.pages fillWithPages:@[@"newTri4Empty", @"newTri4Example", @"newTri4Bundle", @"newTri4Isosig"]
                  pageSelector:self.types
                    defaultKey:@"NewDim4TriangulationPage"];
 }

@@ -113,9 +113,9 @@
                 default: return @"viewDefault";
             }
         case regina::PACKET_TEXT: return @"viewText";
-        case regina::PACKET_TRIANGULATION2: return @"viewDim2Triangulation";
-        case regina::PACKET_TRIANGULATION3: return @"viewTriangulation";
-        case regina::PACKET_TRIANGULATION4: return @"viewDim4Triangulation";
+        case regina::PACKET_TRIANGULATION2: return @"viewTri2";
+        case regina::PACKET_TRIANGULATION3: return @"viewTri3";
+        case regina::PACKET_TRIANGULATION4: return @"viewTri4";
         case regina::PACKET_TRIANGULATION5:
         case regina::PACKET_TRIANGULATION6:
         case regina::PACKET_TRIANGULATION7:
@@ -160,14 +160,14 @@
             [spec created:t];
             break;
         }
-        case regina::PACKET_TRIANGULATION3:
-            [PacketManagerIOS newPacket:spec formSheet:@"newTriangulation"];
-            break;
         case regina::PACKET_TRIANGULATION2:
-            [PacketManagerIOS newPacket:spec formSheet:@"newDim2Triangulation"];
+            [PacketManagerIOS newPacket:spec formSheet:@"newTri2"];
+            break;
+        case regina::PACKET_TRIANGULATION3:
+            [PacketManagerIOS newPacket:spec formSheet:@"newTri3"];
             break;
         case regina::PACKET_TRIANGULATION4:
-            [PacketManagerIOS newPacket:spec formSheet:@"newDim4Triangulation"];
+            [PacketManagerIOS newPacket:spec formSheet:@"newTri4"];
             break;
         case regina::PACKET_NORMALSURFACES:
             [PacketManagerIOS newPacket:spec formSheet:@"newSurfaces"];
