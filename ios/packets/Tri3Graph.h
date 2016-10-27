@@ -30,12 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "PacketViewer.h"
 
-namespace regina {
-    template <int> class Triangulation;
-}
+@interface Tri3Graph : UIViewController <PacketViewer>
 
-@interface EltMovesController : UIViewController
-@property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end

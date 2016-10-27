@@ -30,67 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#import "Dim4TriangulationViewController.h"
-#import "TextHelper.h"
-#import "triangulation/dim4.h"
+#import <UIKit/UIKit.h>
+#import "PacketViewer.h"
+#import "Skeleton.h"
 
-@implementation Tri4ViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self setSelectedImages:@[@"Tab-Gluings-Bold",
-                              @"Tab-Skeleton-Bold",
-                              @"Tab-Graph-Bold",
-                              [NSNull null]]];
-    [self registerDefaultKey:@"ViewDim4TriangulationTab"];
-}
-
-- (void)updateHeader:(UILabel *)header lockIcon:(UIButton*)lockIcon
-{
-    if (self.packet->isEmpty())
-        header.text = @"Empty";
-    else if (! self.packet->isValid())
-        header.attributedText = [TextHelper badString:@"Invalid triangulation"];
-    else {
-        NSMutableString* msg;
-
-        if (self.packet->isClosed())
-            msg = [NSMutableString stringWithString:@"Closed, "];
-        else {
-            if (self.packet->isIdeal() && self.packet->hasBoundaryFacets())
-                msg = [NSMutableString stringWithString:@"Ideal & real boundary, "];
-            else if (self.packet->isIdeal())
-                msg = [NSMutableString stringWithString:@"Ideal boundary, "];
-            else if (self.packet->hasBoundaryFacets())
-                msg = [NSMutableString stringWithString:@"Real boundary, "];
-        }
-
-        if (self.packet->isOrientable()) {
-            if (self.packet->isOriented())
-                [msg appendString:@"orientable and oriented, "];
-            else
-                [msg appendString:@"orientable but not oriented, "];
-        } else
-            [msg appendString:@"non-orientable, "];
-
-        if (self.packet->isConnected())
-            [msg appendString:@"connected"];
-        else
-            [msg appendString:@"disconnected"];
-        
-        header.text = msg;
-    }
-
-    lockIcon.hidden = self.packet->isPacketEditable();
-}
-
-- (void)editabilityChanged
-{
-    // A bit heavyweight.
-    // For most tabs all we actually need to do is update the lock icon.
-    // Sometimes there is more to do though (e.g., the gluings tab shows/hides the new-simplex row).
-    [static_cast<id<PacketViewer> >(self.selectedViewController) reloadPacket];
-}
+@interface Tri4Skeleton : SkeletonViewer <PacketViewer>
 
 @end

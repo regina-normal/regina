@@ -32,8 +32,17 @@
 
 #import <UIKit/UIKit.h>
 #import "PacketViewer.h"
-#import "Skeleton.h"
 
-@interface TriSkeleton : SkeletonViewer <PacketViewer>
+namespace regina {
+    class NGroupPresentation;
+}
+
+@interface Tri4Algebra : UIViewController <PacketViewer>
+
++ (void)reloadGroup:(const regina::NGroupPresentation&)group
+               name:(UILabel*)name
+               gens:(UILabel*)gens
+               rels:(UILabel*)rels
+            details:(UITextView*)details;
 
 @end

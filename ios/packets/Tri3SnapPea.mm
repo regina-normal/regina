@@ -32,12 +32,12 @@
 
 #import "ReginaHelper.h"
 #import "TextHelper.h"
-#import "TriangulationViewController.h"
-#import "TriSnapPea.h"
+#import "Tri3ViewController.h"
+#import "Tri3SnapPea.h"
 #import "snappea/snappeatriangulation.h"
 #import "triangulation/dim3.h"
 
-@interface TriSnapPea ()
+@interface Tri3SnapPea ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
@@ -51,7 +51,7 @@
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
-@implementation TriSnapPea
+@implementation Tri3SnapPea
 
 - (void)viewDidLoad
 {

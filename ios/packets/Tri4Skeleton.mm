@@ -31,15 +31,15 @@
  **************************************************************************/
 
 #import "ReginaHelper.h"
-#import "Dim4TriangulationViewController.h"
-#import "Dim4TriSkeleton.h"
+#import "Tri4ViewController.h"
+#import "Tri4Skeleton.h"
 #import "TextHelper.h"
 #import "triangulation/dim3.h"
 #import "triangulation/dim4.h"
 
-#define KEY_LAST_DIM4TRI_SKELETON_TYPE @"ViewDim4TriSkeletonWhich"
+#define KEY_LAST_DIM4TRI_SKELETON_TYPE @"ViewTri4SkeletonWhich"
 
-@interface Dim4TriSkeleton () <UITableViewDataSource, UITableViewDelegate> {
+@interface Tri4Skeleton () <UITableViewDataSource, UITableViewDelegate> {
     CGFloat headerHeight, fatHeaderHeight;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
@@ -58,7 +58,7 @@
 @property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end
 
-@implementation Dim4TriSkeleton
+@implementation Tri4Skeleton
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

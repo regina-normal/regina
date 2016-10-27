@@ -33,8 +33,8 @@
 #import "ReginaHelper.h"
 #import "SnapPeaViewController.h"
 #import "TextHelper.h"
-#import "TriangulationViewController.h"
-#import "TriRecognition.h"
+#import "Tri3ViewController.h"
+#import "Tri3Recognition.h"
 #import "census/ncensus.h"
 #import "manifold/nmanifold.h"
 #import "packet/container.h"
@@ -67,7 +67,7 @@
 @implementation PropertyCell
 @end
 
-@interface TriRecognition () <UITableViewDataSource> {
+@interface Tri3Recognition () <UITableViewDataSource> {
     NSMutableArray* propertyList;
     NSString* manifoldName;
     regina::Property<bool> isHyp;
@@ -85,7 +85,7 @@
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
-@implementation TriRecognition
+@implementation Tri3Recognition
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -508,7 +508,7 @@
 
     PropertyCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Property" forIndexPath:indexPath];
     cell.property = prop;
-    cell.name.text = [TriRecognition propertyName:prop];
+    cell.name.text = [Tri3Recognition propertyName:prop];
 
     NSAttributedString* value = [self value:prop];
 

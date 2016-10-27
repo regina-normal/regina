@@ -32,12 +32,12 @@
 
 #import "ReginaHelper.h"
 #import "TextHelper.h"
-#import "Dim4TriangulationViewController.h"
-#import "Dim4TriAlgebra.h"
+#import "Tri4ViewController.h"
+#import "Tri4Algebra.h"
 #import "triangulation/dim4.h"
 #import "utilities/stringutils.h"
 
-@interface Dim4TriAlgebra () <UITableViewDataSource, UIAlertViewDelegate>
+@interface Tri4Algebra () <UITableViewDataSource, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
 
@@ -52,7 +52,7 @@
 @property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end
 
-@implementation Dim4TriAlgebra
+@implementation Tri4Algebra
 
 - (void)viewDidLoad
 {
@@ -162,7 +162,7 @@
         self.fundName.text = @"Disconnected";
         self.fundGens.text = self.fundRels.text = self.fundRelsDetails.text = @"";
     } else {
-        [Dim4TriAlgebra reloadGroup:self.packet->fundamentalGroup()
+        [Tri4Algebra reloadGroup:self.packet->fundamentalGroup()
                                name:self.fundName
                                gens:self.fundGens
                                rels:self.fundRels

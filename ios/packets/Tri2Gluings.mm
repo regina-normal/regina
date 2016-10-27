@@ -38,14 +38,14 @@
 
 #pragma mark - Table cell
 
-@interface Dim2GluingCell : UITableViewCell
+@interface Tri2GluingCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *index;
 @property (weak, nonatomic) IBOutlet UILabel *edge2;
 @property (weak, nonatomic) IBOutlet UILabel *edge1;
 @property (weak, nonatomic) IBOutlet UILabel *edge0;
 @end
 
-@implementation Dim2GluingCell
+@implementation Tri2GluingCell
 @end
 
 #pragma mark - Triangulation<2> gluings viewer
@@ -147,7 +147,7 @@
     [editField resignFirstResponder];
 }
 
-- (void)editGluingForSimplex:(int)simplex cell:(Dim2GluingCell*)cell label:(UILabel*)label
+- (void)editGluingForSimplex:(int)simplex cell:(Tri2GluingCell*)cell label:(UILabel*)label
 {
     editLabel = label;
     editSimplex = simplex;
@@ -198,7 +198,7 @@
     if (indexPath.row == 0 || indexPath.row > self.packet->size())
         return;
     
-    Dim2GluingCell* cell = static_cast<Dim2GluingCell*>([self.triangles cellForRowAtIndexPath:indexPath]);
+    Tri2GluingCell* cell = static_cast<Tri2GluingCell*>([self.triangles cellForRowAtIndexPath:indexPath]);
     CGPoint inner = [self.triangles convertPoint:location toView:cell];
     if (CGRectContainsPoint(cell.index.frame, inner))
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.index];
@@ -509,7 +509,7 @@ cleanUpGluing:
     else if (indexPath.row == self.packet->size() + 1)
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
-    Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
+    Tri2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
     regina::Triangle<2>* t = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->description().c_str()];
     cell.edge0.text = [Tri2Gluings destStringFromEdge:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];

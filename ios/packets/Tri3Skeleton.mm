@@ -32,15 +32,15 @@
 
 #import "ReginaHelper.h"
 #import "SnapPeaViewController.h"
-#import "TriangulationViewController.h"
-#import "TriSkeleton.h"
+#import "Tri3ViewController.h"
+#import "Tri3Skeleton.h"
 #import "TextHelper.h"
 #import "triangulation/dim2.h"
 #import "triangulation/dim3.h"
 
-#define KEY_LAST_TRI_SKELETON_TYPE @"ViewTriSkeletonWhich"
+#define KEY_LAST_TRI_SKELETON_TYPE @"ViewTri3SkeletonWhich"
 
-@interface TriSkeleton () <UITableViewDataSource, UITableViewDelegate> {
+@interface Tri3Skeleton () <UITableViewDataSource, UITableViewDelegate> {
     CGFloat headerHeight, fatHeaderHeight;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
@@ -59,7 +59,7 @@
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
-@implementation TriSkeleton
+@implementation Tri3Skeleton
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

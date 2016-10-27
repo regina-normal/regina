@@ -35,7 +35,7 @@
 #import "TextHelper.h"
 #import "triangulation/dim2.h"
 
-#define KEY_LAST_DIM2_SKELETON_TYPE @"ViewDim2SkeletonWhich"
+#define KEY_LAST_DIM2_SKELETON_TYPE @"ViewTri2SkeletonWhich"
 
 @interface Tri2Skeleton () <UITableViewDataSource, UITableViewDelegate> {
     CGFloat headerHeight, fatHeaderHeight;

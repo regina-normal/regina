@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#import "TriangulationViewController.h"
+#import "Tri4ViewController.h"
 #import "TextHelper.h"
-#import "triangulation/dim3.h"
+#import "triangulation/dim4.h"
 
-@implementation Tri3ViewController
+@implementation Tri4ViewController
 
 - (void)viewDidLoad
 {
@@ -42,11 +42,8 @@
     [self setSelectedImages:@[@"Tab-Gluings-Bold",
                               @"Tab-Skeleton-Bold",
                               @"Tab-Graph-Bold",
-                              [NSNull null],
-                              @"Tab-Composition-Bold",
-                              @"Tab-Recognition-Bold",
-                              @"Tab-SnapPea-Bold"]];
-    [self registerDefaultKey:@"ViewTriangulationTab"];
+                              [NSNull null]]];
+    [self registerDefaultKey:@"ViewTri4Tab"];
 }
 
 - (void)updateHeader:(UILabel *)header lockIcon:(UIButton*)lockIcon
@@ -61,11 +58,11 @@
         if (self.packet->isClosed())
             msg = [NSMutableString stringWithString:@"Closed, "];
         else {
-            if (self.packet->isIdeal() && self.packet->hasBoundaryTriangles())
+            if (self.packet->isIdeal() && self.packet->hasBoundaryFacets())
                 msg = [NSMutableString stringWithString:@"Ideal & real boundary, "];
             else if (self.packet->isIdeal())
                 msg = [NSMutableString stringWithString:@"Ideal boundary, "];
-            else if (self.packet->hasBoundaryTriangles())
+            else if (self.packet->hasBoundaryFacets())
                 msg = [NSMutableString stringWithString:@"Real boundary, "];
         }
 

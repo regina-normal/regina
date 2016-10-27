@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "EltMovesController.h"
+#import "EltMoves3.h"
 #import "TextHelper.h"
 #import "triangulation/dim3.h"
 
@@ -52,7 +52,7 @@
 }
 @end
 
-@interface EltMovesController () {
+@interface EltMoves3 () {
     NSMutableArray* options32;
     NSMutableArray* options23;
     NSMutableArray* options14;
@@ -108,7 +108,7 @@
 
 @end
 
-@implementation EltMovesController
+@implementation EltMoves3
 
 - (void)viewWillAppear:(BOOL)animated
 {

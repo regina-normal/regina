@@ -272,8 +272,8 @@ void ReginaPrefSet::readInternal() {
     tabDim3TriAlgebra = settings.value("Dim3TriAlgebra", 0).toUInt();
     tabDim3TriSkeleton = settings.value("Dim3TriSkeleton", 0).toUInt();
     tabDim4Tri = settings.value("Dim4Tri", 0).toUInt();
-    tabDim4TriAlgebra = settings.value("Dim4TriAlgebra", 0).toUInt();
-    tabDim4TriSkeleton = settings.value("Dim4TriSkeleton", 0).toUInt();
+    tabDim4TriAlgebra = settings.value("Tri4Algebra", 0).toUInt();
+    tabDim4TriSkeleton = settings.value("Tri4Skeleton", 0).toUInt();
     tabHypersurfaceList = settings.value("HypersurfaceList", 0).toUInt();
     tabSnapPeaTri = settings.value("SnapPeaTri", 0).toUInt();
     tabSnapPeaTriAlgebra = settings.value("SnapPeaTriAlgebra", 0).toUInt();
@@ -380,8 +380,8 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("Dim3TriAlgebra", tabDim3TriAlgebra);
     settings.setValue("Dim3TriSkeleton", tabDim3TriSkeleton);
     settings.setValue("Dim4Tri", tabDim4Tri);
-    settings.setValue("Dim4TriAlgebra", tabDim4TriAlgebra);
-    settings.setValue("Dim4TriSkeleton", tabDim4TriSkeleton);
+    settings.setValue("Tri4Algebra", tabDim4TriAlgebra);
+    settings.setValue("Tri4Skeleton", tabDim4TriSkeleton);
     settings.setValue("HypersurfaceList", tabHypersurfaceList);
     settings.setValue("SnapPeaTri", tabSnapPeaTri);
     settings.setValue("SnapPeaTriAlgebra", tabSnapPeaTriAlgebra);

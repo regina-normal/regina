@@ -32,8 +32,8 @@
 
 #import "SnapPeaViewController.h"
 #import "TextHelper.h"
-#import "TriangulationViewController.h"
-#import "TriComposition.h"
+#import "Tri3ViewController.h"
+#import "Tri3Composition.h"
 #import "manifold/nmanifold.h"
 #import "subcomplex/naugtrisolidtorus.h"
 #import "subcomplex/nblockedsfs.h"
@@ -64,7 +64,7 @@
 #define INDENT3 "\t\t\t- "
 #define INDENT4 "\t\t\t\t- "
 
-@interface TriComposition () <UITextFieldDelegate> {
+@interface Tri3Composition () <UITextFieldDelegate> {
     UILabel* copyFrom;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
@@ -79,7 +79,7 @@
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
-@implementation TriComposition
+@implementation Tri3Composition
 
 - (void)viewDidLoad
 {
@@ -435,7 +435,7 @@
         [self describeSatRegion:loop->region() details:details];
         
         [details appendFormat:@INDENT1 "Matching relation: %@\n",
-         [TriComposition matrixString:loop->matchingReln()]];
+         [Tri3Composition matrixString:loop->matchingReln()]];
         
         [details appendString:@"\n"];
         delete loop;
@@ -452,7 +452,7 @@
         [self describeSatRegion:pair->region(0) details:details];
         
         [details appendFormat:@INDENT1 "Matching relation (first → second): %@\n",
-         [TriComposition matrixString:pair->matchingReln()]];
+         [Tri3Composition matrixString:pair->matchingReln()]];
         
         [details appendString:@"\n"];
         delete pair;
@@ -472,10 +472,10 @@
         [self describeSatRegion:triple->centre() details:details];
         
         [details appendFormat:@INDENT1 "Matching relation (centre → second end): %@\n",
-         [TriComposition matrixString:triple->matchingReln(1)]];
+         [Tri3Composition matrixString:triple->matchingReln(1)]];
         
         [details appendFormat:@INDENT1 "Matching relation (centre → first end): %@\n",
-         [TriComposition matrixString:triple->matchingReln(0)]];
+         [Tri3Composition matrixString:triple->matchingReln(0)]];
         
         [details appendString:@"\n"];
         delete triple;
@@ -486,10 +486,10 @@
         [details appendString:@"Layered Torus Bundle\n"];
         
         [details appendFormat:@INDENT1 "Layering relation (lower a/b → upper a/b): %@\n",
-         [TriComposition matrixString:bundle->layeringReln()]];
+         [Tri3Composition matrixString:bundle->layeringReln()]];
         
         [details appendFormat:@INDENT1 "Core relation (upper a/b → lower a/b): %@\n",
-         [TriComposition matrixString:bundle->core().parallelReln()]];
+         [Tri3Composition matrixString:bundle->core().parallelReln()]];
         
         [details appendFormat:@INDENT1 "Core T × I triangulation: %s\n",
          bundle->core().name().c_str()];
@@ -506,7 +506,7 @@
         [self describeSatRegion:pBundle->region() details:details];
         
         [details appendFormat:@INDENT1 "Matching relation (joining region boundaries): %@\n",
-         [TriComposition matrixString:pBundle->matchingReln()]];
+         [Tri3Composition matrixString:pBundle->matchingReln()]];
         
         [details appendFormat:@INDENT1 "Thin I-bundle (T × I): %s\n",
          pBundle->bundle().name().c_str()];
@@ -531,17 +531,17 @@
             [details appendFormat:@INDENT1 "Top level: tet %ld\n", topIndex];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
              torus->meridinalCuts(0),
-             [TriComposition edgeStringForTorus:topIndex
+             [Tri3Composition edgeStringForTorus:topIndex
                                           first:torus->topEdge(0, 0)
                                          second:torus->topEdge(0, 1)]];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
              torus->meridinalCuts(1),
-             [TriComposition edgeStringForTorus:topIndex
+             [Tri3Composition edgeStringForTorus:topIndex
                                           first:torus->topEdge(1, 0)
                                          second:torus->topEdge(1, 1)]];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
              torus->meridinalCuts(2),
-             [TriComposition edgeStringForTorus:topIndex
+             [Tri3Composition edgeStringForTorus:topIndex
                                           first:torus->topEdge(2, 0)
                                          second:torus->topEdge(2, 1)]];
             
@@ -593,15 +593,15 @@
             [details appendString:@INDENT1 "Major edges:\n"];
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@ = %@ = %@",
-                 [TriComposition edgeStringForTet:tetIndex[(j + spiralTets - 1) % spiralTets]
+                 [Tri3Composition edgeStringForTet:tetIndex[(j + spiralTets - 1) % spiralTets]
                                             roles:spiral->vertexRoles((j + spiralTets - 1) % spiralTets)
                                             start:2
                                               end:3],
-                 [TriComposition edgeStringForTet:tetIndex[j]
+                 [Tri3Composition edgeStringForTet:tetIndex[j]
                                             roles:spiral->vertexRoles(j)
                                             start:1
                                               end:2],
-                 [TriComposition edgeStringForTet:tetIndex[(j + 1) % spiralTets]
+                 [Tri3Composition edgeStringForTet:tetIndex[(j + 1) % spiralTets]
                                             roles:spiral->vertexRoles((j + 1) % spiralTets)
                                             start:0
                                               end:1]];
@@ -611,11 +611,11 @@
             [details appendString:@INDENT1 "Minor edges:\n"];
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@ = %@",
-                 [TriComposition edgeStringForTet:tetIndex[j]
+                 [Tri3Composition edgeStringForTet:tetIndex[j]
                                             roles:spiral->vertexRoles(j)
                                             start:1
                                               end:3],
-                 [TriComposition edgeStringForTet:tetIndex[(j + 1) % spiralTets]
+                 [Tri3Composition edgeStringForTet:tetIndex[(j + 1) % spiralTets]
                                             roles:spiral->vertexRoles((j + 1) % spiralTets)
                                             start:0
                                               end:2]];
@@ -625,7 +625,7 @@
             [details appendString:@INDENT1 "Axis edges:\n"];
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@",
-                 [TriComposition edgeStringForTet:tetIndex[j]
+                 [Tri3Composition edgeStringForTet:tetIndex[j]
                                             roles:spiral->vertexRoles(j)
                                             start:0
                                               end:3]];

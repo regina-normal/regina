@@ -33,6 +33,6 @@
 #import <UIKit/UIKit.h>
 #import "PacketViewer.h"
 
-@interface Dim4TriGraph : UIViewController <PacketViewer>
+@interface Tri3Composition : UIViewController <PacketViewer>
 
 @end

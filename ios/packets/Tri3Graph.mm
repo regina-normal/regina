@@ -30,20 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
-#define KEY_LAST_DIM4TRI_GRAPH_TYPE @"ViewDim4TriGraphType"
+#define KEY_LAST_TRI_GRAPH_TYPE @"ViewTri3GraphType"
 
-#import "Dim4TriangulationViewController.h"
-#import "Dim4TriGraph.h"
-#import "dim4/dim4facetpairing.h"
+#import "SnapPeaViewController.h"
+#import "Tri3ViewController.h"
+#import "Tri3Graph.h"
 #import "treewidth/treedecomposition.h"
-#import "triangulation/dim4.h"
+#import "triangulation/nfacepairing.h"
+#import "triangulation/dim3.h"
 #import "gvc.h"
 
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
 extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
 extern gvplugin_library_t gvplugin_core_LTX_library;
 
-@interface Dim4TriGraph ()
+@interface Tri3Graph ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
@@ -54,33 +55,36 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *graphPropertiesGap;
 @property (weak, nonatomic) IBOutlet UIWebView *graph;
 
-@property (assign, nonatomic) regina::Triangulation<4>* packet;
+@property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
-@implementation Dim4TriGraph
+@implementation Tri3Graph
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.packet = static_cast<regina::Triangulation<4>*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+    self.packet = static_cast<regina::Triangulation<3>*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
-    self.graphType.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_DIM4TRI_GRAPH_TYPE];
+    self.graphType.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TRI_GRAPH_TYPE];
 
     [self reloadPacket];
 }
 
 - (IBAction)typeChanged:(id)sender {
     [self reloadPacket];
-    [[NSUserDefaults standardUserDefaults] setInteger:self.graphType.selectedSegmentIndex forKey:KEY_LAST_DIM4TRI_GRAPH_TYPE];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.graphType.selectedSegmentIndex forKey:KEY_LAST_TRI_GRAPH_TYPE];
 }
 
 - (void)reloadPacket
 {
-    [static_cast<Tri4ViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
+    if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
+        [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
+    else
+        [static_cast<Tri3ViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
     std::string dot;
     switch (self.graphType.selectedSegmentIndex) {
         case 0: {
-            regina::Dim4FacetPairing p(*self.packet);
+            regina::NFacePairing p(*self.packet);
             dot = p.dot("v", false /* subgraph */, true /* labels */);
             self.graphProperties.text = nil;
             self.graphPropertiesGap.constant = 0;

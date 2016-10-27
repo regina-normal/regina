@@ -3342,7 +3342,7 @@
         <!--Skeleton-->
         <scene sceneID="W3M-ym-zdG">
             <objects>
-                <viewController id="0iB-LS-sG4" customClass="TriSkeleton" sceneMemberID="viewController">
+                <viewController id="0iB-LS-sG4" customClass="Tri3Skeleton" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="5nE-rs-zrn"/>
                         <viewControllerLayoutGuide type="bottom" id="dIq-sg-gOj"/>
@@ -4734,7 +4734,7 @@
         <!--Composition-->
         <scene sceneID="usf-Jg-nfe">
             <objects>
-                <viewController id="iMB-kx-LGT" customClass="TriComposition" sceneMemberID="viewController">
+                <viewController id="iMB-kx-LGT" customClass="Tri3Composition" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="NiA-04-1YF"/>
                         <viewControllerLayoutGuide type="bottom" id="qzZ-me-jBn"/>
@@ -4844,7 +4844,7 @@
         <!--Recognition-->
         <scene sceneID="HXS-Wk-J3w">
             <objects>
-                <viewController id="J1x-TO-1Zt" customClass="TriRecognition" sceneMemberID="viewController">
+                <viewController id="J1x-TO-1Zt" customClass="Tri3Recognition" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="db8-fn-QMD"/>
                         <viewControllerLayoutGuide type="bottom" id="x1i-f3-EXY"/>
@@ -5211,7 +5211,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Triangle" id="Tf7-Za-p1W" customClass="Dim2GluingCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Triangle" id="Tf7-Za-p1W" customClass="Tri2GluingCell">
                                         <rect key="frame" x="0.0" y="66" width="728" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Tf7-Za-p1W" id="B9g-Jg-s8F">
@@ -5451,7 +5451,7 @@
         <!--Graph-->
         <scene sceneID="toc-zO-UYR">
             <objects>
-                <viewController id="n6H-e3-Xo9" customClass="TriGraph" sceneMemberID="viewController">
+                <viewController id="n6H-e3-Xo9" customClass="Tri3Graph" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Yve-4f-TBN"/>
                         <viewControllerLayoutGuide type="bottom" id="lCy-qR-26P"/>
@@ -5528,7 +5528,7 @@
         <!--Skeleton-->
         <scene sceneID="F5F-Xc-I9M">
             <objects>
-                <viewController id="e7R-Ek-ug0" customClass="TriSkeleton" sceneMemberID="viewController">
+                <viewController id="e7R-Ek-ug0" customClass="Tri3Skeleton" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="TKf-sl-2gP"/>
                         <viewControllerLayoutGuide type="bottom" id="A9u-iX-1Zk"/>
@@ -6412,7 +6412,7 @@
         <!--Gluings-->
         <scene sceneID="mma-vF-E1A">
             <objects>
-                <viewController id="qRa-sB-Dvt" customClass="TriGluings" sceneMemberID="viewController">
+                <viewController id="qRa-sB-Dvt" customClass="Tri3Gluings" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="g4W-5x-0Ii"/>
                         <viewControllerLayoutGuide type="bottom" id="QK1-k1-OOL"/>
@@ -6489,7 +6489,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Tetrahedron" id="UCu-Dd-y18" customClass="TriGluingCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Tetrahedron" id="UCu-Dd-y18" customClass="Tri3GluingCell">
                                         <rect key="frame" x="0.0" y="66" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UCu-Dd-y18" id="UqO-tF-8DI">
@@ -6765,7 +6765,7 @@
         <!--Algebra-->
         <scene sceneID="msX-hE-bKZ">
             <objects>
-                <viewController id="E8x-R2-m55" customClass="TriAlgebra" sceneMemberID="viewController">
+                <viewController id="E8x-R2-m55" customClass="Tri3Algebra" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="CHu-yF-XJP"/>
                         <viewControllerLayoutGuide type="bottom" id="xXo-39-sIV"/>
@@ -7064,7 +7064,7 @@
         <!--Composition-->
         <scene sceneID="l5N-6n-8oq">
             <objects>
-                <viewController id="i6X-BY-fes" customClass="TriComposition" sceneMemberID="viewController">
+                <viewController id="i6X-BY-fes" customClass="Tri3Composition" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Qt3-s2-HNV"/>
                         <viewControllerLayoutGuide type="bottom" id="sdE-bn-1uA"/>
@@ -7167,7 +7167,7 @@
         <!--Recognition-->
         <scene sceneID="FqF-mj-7jK">
             <objects>
-                <viewController id="Y29-Wh-2Yc" customClass="TriRecognition" sceneMemberID="viewController">
+                <viewController id="Y29-Wh-2Yc" customClass="Tri3Recognition" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YyC-1H-Ljs"/>
                         <viewControllerLayoutGuide type="bottom" id="vT4-AR-b3O"/>
@@ -7409,7 +7409,7 @@
         <!--SnapPea-->
         <scene sceneID="pYe-mh-dNp">
             <objects>
-                <viewController id="BiH-OW-Gco" customClass="TriSnapPea" sceneMemberID="viewController">
+                <viewController id="BiH-OW-Gco" customClass="Tri3SnapPea" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="k06-63-itu"/>
                         <viewControllerLayoutGuide type="bottom" id="cx5-YO-st0"/>
@@ -7890,7 +7890,7 @@
         <!--Elt Moves Controller-->
         <scene sceneID="USV-hh-jZP">
             <objects>
-                <viewController storyboardIdentifier="eltMoves" modalPresentationStyle="formSheet" id="LKh-F4-34P" customClass="EltMovesController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="eltMoves3" modalPresentationStyle="formSheet" id="LKh-F4-34P" customClass="EltMoves3" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jNI-c7-Avz"/>
                         <viewControllerLayoutGuide type="bottom" id="ui5-eo-amL"/>
@@ -8323,7 +8323,7 @@
         <!--Graph-->
         <scene sceneID="y1J-h3-RP8">
             <objects>
-                <viewController id="Kls-ha-6ou" customClass="TriGraph" sceneMemberID="viewController">
+                <viewController id="Kls-ha-6ou" customClass="Tri3Graph" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="z1q-oa-h2O"/>
                         <viewControllerLayoutGuide type="bottom" id="ffZ-Rm-uio"/>
@@ -9373,7 +9373,7 @@
         <!--Graph-->
         <scene sceneID="eJv-Q0-l8I">
             <objects>
-                <viewController id="YKa-Ao-uYC" customClass="Dim4TriGraph" sceneMemberID="viewController">
+                <viewController id="YKa-Ao-uYC" customClass="Tri4Graph" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="otS-NC-Wwn"/>
                         <viewControllerLayoutGuide type="bottom" id="fND-qw-wgf"/>
@@ -9451,7 +9451,7 @@
         <!--Skeleton-->
         <scene sceneID="UwM-AP-jm9">
             <objects>
-                <viewController id="iLS-ZM-wJb" customClass="Dim4TriSkeleton" sceneMemberID="viewController">
+                <viewController id="iLS-ZM-wJb" customClass="Tri4Skeleton" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Jhw-c9-cgZ"/>
                         <viewControllerLayoutGuide type="bottom" id="ZiC-o2-MNe"/>
@@ -10444,7 +10444,7 @@
         <!--Gluings-->
         <scene sceneID="092-pM-GuM">
             <objects>
-                <viewController id="j9V-zB-RPW" customClass="Dim4TriGluings" sceneMemberID="viewController">
+                <viewController id="j9V-zB-RPW" customClass="Tri4Gluings" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wR0-LY-MZl"/>
                         <viewControllerLayoutGuide type="bottom" id="A7M-da-pFM"/>
@@ -10529,7 +10529,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Pentachoron" id="oTG-00-gZt" customClass="Dim4TriGluingCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Pentachoron" id="oTG-00-gZt" customClass="Tri4GluingCell">
                                         <rect key="frame" x="0.0" y="66" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oTG-00-gZt" id="1li-uf-jkC">
@@ -10775,7 +10775,7 @@
         <!--Algebra-->
         <scene sceneID="dBu-dI-1Ak">
             <objects>
-                <viewController id="obr-OV-pvt" customClass="Dim4TriAlgebra" sceneMemberID="viewController">
+                <viewController id="obr-OV-pvt" customClass="Tri4Algebra" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="xxw-Hn-dO2"/>
                         <viewControllerLayoutGuide type="bottom" id="WCO-Wv-LxN"/>
@@ -10963,7 +10963,7 @@
         <!--Dim4 Elt Moves Controller-->
         <scene sceneID="xIG-G1-oc8">
             <objects>
-                <viewController storyboardIdentifier="Dim4EltMoves" modalPresentationStyle="formSheet" id="qvR-uh-EGh" customClass="Dim4EltMovesController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="eltMoves4" modalPresentationStyle="formSheet" id="qvR-uh-EGh" customClass="EltMoves4" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Kkt-K0-Sg8"/>
                         <viewControllerLayoutGuide type="bottom" id="tsK-Gu-DNI"/>

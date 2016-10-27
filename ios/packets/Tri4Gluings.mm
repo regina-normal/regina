@@ -30,70 +30,66 @@
  *                                                                        *
  **************************************************************************/
 
-#import "EltMovesController.h"
-#import "MBProgressHUD.h"
 #import "ReginaHelper.h"
-#import "TriangulationViewController.h"
-#import "TriGluings.h"
+#import "EltMoves4.h"
+#import "Tri4ViewController.h"
+#import "Tri4Gluings.h"
 #import "packet/container.h"
-#import "progress/progresstracker.h"
-#import "triangulation/dim3.h"
+#import "triangulation/dim4.h"
 
 #pragma mark - Table cell
 
-@interface TriGluingCell : UITableViewCell
+@interface Tri4GluingCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *index;
-@property (weak, nonatomic) IBOutlet UILabel *face3;
-@property (weak, nonatomic) IBOutlet UILabel *face2;
-@property (weak, nonatomic) IBOutlet UILabel *face1;
-@property (weak, nonatomic) IBOutlet UILabel *face0;
+@property (weak, nonatomic) IBOutlet UILabel *facet4;
+@property (weak, nonatomic) IBOutlet UILabel *facet3;
+@property (weak, nonatomic) IBOutlet UILabel *facet2;
+@property (weak, nonatomic) IBOutlet UILabel *facet1;
+@property (weak, nonatomic) IBOutlet UILabel *facet0;
 @end
 
-@implementation TriGluingCell
+@implementation Tri4GluingCell
 @end
 
-#pragma mark - Triangulation gluings
+#pragma mark - Triangulation<4> gluings
 
-@interface TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIActionSheetDelegate> {
+@interface Tri4Gluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIActionSheetDelegate> {
     CGFloat headerHeight;
     UILabel* editLabel;
     UITextField* editField;
     int editSimplex;
     int editFacet; // -1 for editing the description
     BOOL myEdit;
-    regina::ProgressTrackerOpen* simplifyTracker; // for cancellation
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
 
-@property (weak, nonatomic) IBOutlet UITableView *tetrahedra;
+@property (weak, nonatomic) IBOutlet UITableView *pentachora;
 @property (weak, nonatomic) IBOutlet UIButton *orientButton;
 @property (weak, nonatomic) IBOutlet UIButton *orientIcon;
 @property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
-@property (strong, nonatomic) Tri3ViewController* viewer;
-@property (assign, nonatomic) regina::Triangulation<3>* packet;
-
-@property (strong, nonatomic) NSLock* simplifyLock; // locks the simplifyTracker _pointer_, not the tracker itself.
+@property (strong, nonatomic) Tri4ViewController* viewer;
+@property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end
 
-@implementation TriGluings
+@implementation Tri4Gluings
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.viewer = static_cast<Tri3ViewController*>(self.parentViewController);
+    self.viewer = static_cast<Tri4ViewController*>(self.parentViewController);
     
     UITapGestureRecognizer *r = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touched:)];
-    [self.tetrahedra addGestureRecognizer:r];
+    [self.pentachora addGestureRecognizer:r];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.packet = self.viewer.packet;
 
-    self.tetrahedra.delegate = self;
-    self.tetrahedra.dataSource = self;
+    self.pentachora.delegate = self;
+    self.pentachora.dataSource = self;
     
     [self reloadPacket];
 
@@ -118,17 +114,17 @@
     
     [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
     self.orientButton.enabled = self.orientIcon.enabled = (self.packet->isOrientable() && ! self.packet->isOriented());
-    [self.tetrahedra reloadData];
+    [self.pentachora reloadData];
 }
 
-+ (NSString*)destStringFromFacet:(int)srcFacet dest:(regina::Tetrahedron<3>*)destTet gluing:(const regina::Perm<4>&)gluing
++ (NSString*)destStringFromFacet:(int)srcFacet dest:(regina::Pentachoron<4>*)destSimp gluing:(const regina::Perm<5>&)gluing
 {
-    if (! destTet)
+    if (! destSimp)
         return @" "; // Use a space to ensure the label has enough height to pick up touches.
     else
         return [NSString stringWithFormat:@"%ld (%s)",
-                destTet->markedIndex(),
-                (gluing * regina::Triangle<3>::ordering(srcFacet)).trunc3().c_str()];
+                destSimp->markedIndex(),
+                (gluing * regina::Tetrahedron<4>::ordering(srcFacet)).trunc4().c_str()];
 }
 
 - (IBAction)newSimplex:(id)sender {
@@ -144,9 +140,9 @@
                                            inSection:0];
     NSIndexPath* add = [NSIndexPath indexPathForRow:self.packet->size()+1
                                           inSection:0];
-    [self.tetrahedra insertRowsAtIndexPaths:@[last]
+    [self.pentachora insertRowsAtIndexPaths:@[last]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tetrahedra scrollToRowAtIndexPath:add
+    [self.pentachora scrollToRowAtIndexPath:add
                           atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     
     [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
@@ -159,7 +155,7 @@
     [editField resignFirstResponder];
 }
 
-- (void)editGluingForSimplex:(int)simplex cell:(TriGluingCell*)cell label:(UILabel*)label
+- (void)editGluingForSimplex:(int)simplex cell:(Tri4GluingCell*)cell label:(UILabel*)label
 {
     editLabel = label;
     editSimplex = simplex;
@@ -173,10 +169,10 @@
     editField.returnKeyType = UIReturnKeyDone;
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
     if (editFacet >= 0) {
-        regina::Tetrahedron<3>* t = self.packet->simplex(editSimplex);
-        editField.text = [[TriGluings destStringFromFacet:editFacet
-                                                     dest:t->adjacentSimplex(editFacet)
-                                                   gluing:t->adjacentGluing(editFacet)]
+        regina::Pentachoron<4>* s = self.packet->simplex(editSimplex);
+        editField.text = [[Tri4Gluings destStringFromFacet:editFacet
+                                                         dest:s->adjacentSimplex(editFacet)
+                                                       gluing:s->adjacentGluing(editFacet)]
                           stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         editField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
@@ -208,23 +204,25 @@
     if (tap.state != UIGestureRecognizerStateRecognized)
         return;
     
-    CGPoint location = [tap locationInView:self.tetrahedra];
-    NSIndexPath *indexPath = [self.tetrahedra indexPathForRowAtPoint:location];
+    CGPoint location = [tap locationInView:self.pentachora];
+    NSIndexPath *indexPath = [self.pentachora indexPathForRowAtPoint:location];
     if (indexPath.row == 0 || indexPath.row > self.packet->size())
         return;
     
-    TriGluingCell* cell = static_cast<TriGluingCell*>([self.tetrahedra cellForRowAtIndexPath:indexPath]);
-    CGPoint inner = [self.tetrahedra convertPoint:location toView:cell];
+    Tri4GluingCell* cell = static_cast<Tri4GluingCell*>([self.pentachora cellForRowAtIndexPath:indexPath]);
+    CGPoint inner = [self.pentachora convertPoint:location toView:cell];
     if (CGRectContainsPoint(cell.index.frame, inner))
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.index];
-    else if (CGRectContainsPoint(cell.face0.frame, inner))
-        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.face0];
-    else if (CGRectContainsPoint(cell.face1.frame, inner))
-        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.face1];
-    else if (CGRectContainsPoint(cell.face2.frame, inner))
-        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.face2];
-    else if (CGRectContainsPoint(cell.face3.frame, inner))
-        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.face3];
+    else if (CGRectContainsPoint(cell.facet0.frame, inner))
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.facet0];
+    else if (CGRectContainsPoint(cell.facet1.frame, inner))
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.facet1];
+    else if (CGRectContainsPoint(cell.facet2.frame, inner))
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.facet2];
+    else if (CGRectContainsPoint(cell.facet3.frame, inner))
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.facet3];
+    else if (CGRectContainsPoint(cell.facet4.frame, inner))
+        [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.facet4];
 }
 
 #pragma mark - Triangulation operations
@@ -233,7 +231,7 @@
 {
     if (! self.packet->isPacketEditable()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Cannot Change Gluings"
-                                                        message:@"This triangulation has associated normal surfaces and/or angle structures, and so you cannot change its tetrahedron gluings."
+                                                        message:@"This triangulation has associated normal hypersurfaces, and so you cannot change its pentachoron gluings."
                                                        delegate:nil
                                               cancelButtonTitle:@"Close"
                                               otherButtonTitles:nil];
@@ -244,88 +242,6 @@
     return YES;
 }
 
-- (IBAction)simplifyCancel:(id)sender
-{
-    // Cancel the exhaustive simplification, if one is running.
-
-    // Note: the lock is created before the HUD (and the HUD calls this routine),
-    // so by the time this routine is called, we are guaranteed that
-    // self.simplifyLock is non-nil.
-
-    [self.simplifyLock lock];
-    if (self->simplifyTracker)
-        self->simplifyTracker->cancel();
-    [self.simplifyLock unlock];
-}
-
-- (void)simplifyExhaustiveWithHeight:(int)height
-{
-    if (! self.simplifyLock)
-        self.simplifyLock = [[NSLock alloc] init];
-
-    // Run the exhaustive simplification within a HUD.
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
-
-    UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
-    hud.label.text = @"Searching Pachner graph…";
-
-    [hud.button setTitle:@"Cancel" forState:UIControlStateNormal];
-    [hud.button addTarget:self action:@selector(simplifyCancel:) forControlEvents:UIControlEventTouchUpInside];
-
-    size_t initSize = self.packet->size();
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        regina::ProgressTrackerOpen* tracker = new regina::ProgressTrackerOpen();
-        bool cancelled = false;
-
-        [self.simplifyLock lock];
-        self->simplifyTracker = tracker;
-        [self.simplifyLock unlock];
-
-        self.packet->simplifyExhaustive(height, 1 /* threads */, tracker);
-
-        unsigned long steps;
-        while (! tracker->isFinished()) {
-            if (tracker->stepsChanged()) {
-                steps = tracker->steps();
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    hud.detailsLabel.text = [NSString stringWithFormat:@"Tried %ld triangulations", steps];
-                });
-            }
-            usleep(100000);
-        }
-        [self.simplifyLock lock];
-        self->simplifyTracker = nullptr;
-        [self.simplifyLock unlock];
-
-        cancelled = tracker->isCancelled();
-        delete tracker;
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [hud hideAnimated:NO];
-            [UIApplication sharedApplication].idleTimerDisabled = NO;
-
-            if ((! cancelled) && self.packet->size() == initSize) {
-                // We still couldn't simplify.
-                UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
-                                                                               message:[NSString stringWithFormat:@"I still could not simplify the triangulation, even after exhaustively searching the Pachner graph up to %ld tetrahedra.\n\nI can look further, but be warned: the time and memory required could grow very rapidly.", initSize + height]
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Keep trying"
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction* action) {
-                                                            [self simplifyExhaustiveWithHeight:(height + 1)];
-                                                        }]];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Close"
-                                                          style:UIAlertActionStyleCancel
-                                                        handler:^(UIAlertAction * action) {}]];
-                [self presentViewController:alert animated:YES completion:nil];
-            }
-        });
-    });
-
-}
-
 - (IBAction)simplify:(id)sender
 {
     [self endEditing];
@@ -333,20 +249,12 @@
         return;
 
     if (! self.packet->intelligentSimplify()) {
-        // Greedy simplification failed.
-        // Offer a more exhaustive alternative.
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
-                                                                       message:nil
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Try harder"
-                                                  style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction* action) {
-                                                            [self simplifyExhaustiveWithHeight:2];
-                                                        }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Close"
-                                                  style:UIAlertActionStyleCancel
-                                                handler:^(UIAlertAction * action) {}]];
-        [self presentViewController:alert animated:YES completion:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Simplify"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
     }
 }
 
@@ -448,14 +356,24 @@
     if (! [self checkEditable])
         return;
 
-    if (self.packet->isValid() && ! self.packet->isIdeal()) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Ideal Vertices"
-                                                        message:@"This operation truncates ideal (or invalid) vertices to produce real boundary components."
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Close"
-                                              otherButtonTitles:nil];
-        [alert show];
-        return;
+    // Make sure there are in fact vertices to truncate.
+    if (! self.packet->isIdeal()) {
+        bool hasInvalidVertices = false;
+        if (! self.packet->isValid())
+            for (auto v : self.packet->vertices())
+                if (! v->isValid()) {
+                    hasInvalidVertices = true;
+                    break;
+                }
+        if (! hasInvalidVertices) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Ideal Vertices"
+                                                            message:@"This operation truncates ideal (or invalid) vertices to produce real boundary components."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            return;
+        }
     }
     
     regina::Packet::ChangeEventSpan span(self.packet);
@@ -469,9 +387,9 @@
     if (! [self checkEditable])
         return;
 
-    if (! self.packet->hasBoundaryTriangles()) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Boundary Triangles"
-                                                        message:@"This operation converts real boundary components, formed from boundary triangles, into ideal vertices."
+    if (! self.packet->hasBoundaryFacets()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Boundary Tetrahedra"
+                                                        message:@"This operation converts real boundary components, formed from boundary tetrahedra, into ideal vertices."
                                                        delegate:nil
                                               cancelButtonTitle:@"Close"
                                               otherButtonTitles:nil];
@@ -493,35 +411,14 @@
     self.packet->makeDoubleCover();
 }
 
-- (IBAction)puncture:(id)sender
-{
-    [self endEditing];
-    if (! [self checkEditable])
-        return;
-
-    if (self.packet->isEmpty()) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Empty Triangulation"
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Close"
-                                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-
-    regina::Packet::ChangeEventSpan span(self.packet);
-    self.packet->puncture();
-    self.packet->intelligentSimplify();
-}
-
 - (IBAction)elementaryMoves:(id)sender
 {
     [self endEditing];
     if (! [self checkEditable])
         return;
 
-    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"eltMoves"];
-    static_cast<EltMovesController*>(sheet).packet = self.packet;
+    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"eltMoves4"];
+    static_cast<EltMoves4*>(sheet).packet = self.packet;
     [self presentViewController:sheet animated:YES completion:nil];
 }
 
@@ -535,7 +432,6 @@
                                                                 @"Truncate ideal vertices",
                                                                 @"Make ideal",
                                                                 @"Double cover",
-                                                                @"Puncture",
                                                                 @"Elementary moves",
                                                                 nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
@@ -547,24 +443,24 @@
 {
     CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
 
-    CGRect tableInDetail = [self.parentViewController.view convertRect:self.tetrahedra.frame fromView:self.view];
+    CGRect tableInDetail = [self.parentViewController.view convertRect:self.pentachora.frame fromView:self.view];
     CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
 
     if (kbSize.height <= unused)
         return;
 
-    self.tetrahedra.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
-    self.tetrahedra.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
+    self.pentachora.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
+    self.pentachora.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
 
-    [self.tetrahedra scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:editSimplex+1 inSection:0]
+    [self.pentachora scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:editSimplex+1 inSection:0]
                            atScrollPosition:UITableViewScrollPositionNone
                                    animated:YES];
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification
 {
-    self.tetrahedra.contentInset = UIEdgeInsetsZero;
-    self.tetrahedra.scrollIndicatorInsets = UIEdgeInsetsZero;
+    self.pentachora.contentInset = UIEdgeInsetsZero;
+    self.pentachora.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
 #pragma mark - Text field
@@ -583,27 +479,27 @@
         return;
     }
     
-    regina::Tetrahedron<3>* t = self.packet->simplex(editSimplex);
+    regina::Pentachoron<4>* s = self.packet->simplex(editSimplex);
     
     NSMutableArray* toReload = [[NSMutableArray alloc] init];
     if (editFacet >= 0) {
         NSString* dest = [editField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if (dest.length == 0) {
             // We are making this a boundary facet.
-            if (t->adjacentSimplex(editFacet)) {
+            if (s->adjacentSimplex(editFacet)) {
                 myEdit = YES;
-                [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editFacet)->markedIndex()+1 inSection:0]];
-                t->unjoin(editFacet);
+                [toReload addObject:[NSIndexPath indexPathForRow:s->adjacentSimplex(editFacet)->markedIndex()+1 inSection:0]];
+                s->unjoin(editFacet);
                 editLabel.text = @" ";
                 [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
                 myEdit = NO;
             }
         } else {
-            NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:@"\\A(\\d+)[ ,\\(]+([0-3][0-3][0-3])[ \\)]*\\Z" options:0 error:nil];
+            NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:@"\\A(\\d+)[ ,\\(]+([0-4][0-4][0-4][0-4])[ \\)]*\\Z" options:0 error:nil];
             NSTextCheckingResult* result = [regex firstMatchInString:dest options:0 range:NSMakeRange(0, dest.length)];
             if (! result) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Gluing"
-                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"6 (130)\", or just \"6 130\"."
+                                                                message:@"Please enter the gluing in the form pentachoron (facet).  For example, you could enter \"7 (2140)\", or just \"7 2140\"."
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];
@@ -613,8 +509,8 @@
             
             int destSimplex = [[dest substringWithRange:[result rangeAtIndex:1]] intValue];
             if (destSimplex < 0 || destSimplex >= self.packet->size()) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Tetrahedron"
-                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"6 (130)\", or just \"6 130\"."
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Pentachoron"
+                                                                message:@"Please enter the gluing in the form pentachoron (facet).  For example, you could enter \"7 (2140)\", or just \"7 2140\"."
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];
@@ -623,26 +519,27 @@
             }
             
             // We know at this point that we pass the regex, which means the adjacent facet
-            // is in the form [0-3][0-3][0-3].
+            // is in the form [0-4][0-4][0-4][0-4].
             int adjGluingAsInt = [dest substringWithRange:[result rangeAtIndex:2]].intValue;
-            int adj0 = (adjGluingAsInt / 100);
-            int adj1 = (adjGluingAsInt % 100) / 10;
-            int adj2 = (adjGluingAsInt % 10);
-            if (adj0 == adj1 || adj0 == adj2 || adj1 == adj2) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Face"
-                                                                message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"6 (130)\", or just \"6 130\"."
+            int adj0 = (adjGluingAsInt / 1000);
+            int adj1 = (adjGluingAsInt % 1000) / 100;
+            int adj2 = (adjGluingAsInt % 100) / 10;
+            int adj3 = (adjGluingAsInt % 10);
+            if (adj0 == adj1 || adj0 == adj2 || adj1 == adj2 || adj0 == adj3 || adj1 == adj3 || adj2 == adj3) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Facet"
+                                                                message:@"Please enter the gluing in the form pentachoron (facet).  For example, you could enter \"7 (2140)\", or just \"7 2140\"."
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
                                                       otherButtonTitles:nil];
                 [alert show];
                 goto cleanUpGluing;
             }
-            regina::Perm<4> destGluing = regina::Perm<4>(adj0, adj1, adj2, (6 - adj0 - adj1 - adj2)) *
-                regina::Triangle<3>::ordering(editFacet).inverse();
+            regina::Perm<5> destGluing = regina::Perm<5>(adj0, adj1, adj2, adj3, (10 - adj0 - adj1 - adj2 - adj3)) *
+                regina::Tetrahedron<4>::ordering(editFacet).inverse();
             
             // Are we gluing the facet to itself?
             if (destSimplex == editSimplex && destGluing[editFacet] == editFacet) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Glue a Face to Itself"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Glue a Facet to Itself"
                                                                 message:nil
                                                                delegate:nil
                                                       cancelButtonTitle:@"Close"
@@ -651,7 +548,7 @@
                 goto cleanUpGluing;
             }
             
-            if (t->adjacentSimplex(editFacet) != self.packet->simplex(destSimplex) || destGluing != t->adjacentGluing(editFacet)) {
+            if (s->adjacentSimplex(editFacet) != self.packet->simplex(destSimplex) || destGluing != s->adjacentGluing(editFacet)) {
                 // We are making a change, and it's a valid one.
                 // Do it.
                 myEdit = YES;
@@ -659,9 +556,9 @@
                     regina::Packet::ChangeEventSpan span(self.packet);
                     
                     // First unglue from the old partner if it exists.
-                    if (t->adjacentSimplex(editFacet)) {
-                        [toReload addObject:[NSIndexPath indexPathForRow:t->adjacentSimplex(editFacet)->markedIndex()+1 inSection:0]];
-                        t->unjoin(editFacet);
+                    if (s->adjacentSimplex(editFacet)) {
+                        [toReload addObject:[NSIndexPath indexPathForRow:s->adjacentSimplex(editFacet)->markedIndex()+1 inSection:0]];
+                        s->unjoin(editFacet);
                     }
                     
                     // We are gluing the facet to a new partner.
@@ -669,7 +566,7 @@
                     
                     // Does this new partner already have its own partner?
                     // If so, better unglue it.
-                    regina::Tetrahedron<3>* adj = self.packet->simplex(destSimplex);
+                    regina::Pentachoron<4>* adj = self.packet->simplex(destSimplex);
                     if (adj->adjacentSimplex(destFacet)) {
                         NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destFacet)->markedIndex()+1 inSection:0];
                         if ([toReload indexOfObject:path] == NSNotFound)
@@ -678,12 +575,12 @@
                     }
                     
                     // Glue the two facets together.
-                    t->join(editFacet, adj, destGluing);
+                    s->join(editFacet, adj, destGluing);
                     NSIndexPath* path = [NSIndexPath indexPathForRow:destSimplex+1 inSection:0];
                     if ([toReload indexOfObject:path] == NSNotFound)
                         [toReload addObject:path];
                     
-                    editLabel.text = [NSString stringWithFormat:@"%d (%d%d%d)", destSimplex, adj0, adj1, adj2];
+                    editLabel.text = [NSString stringWithFormat:@"%d (%d%d%d%d)", destSimplex, adj0, adj1, adj2, adj3];
                 }
                 [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
                 myEdit = NO;
@@ -692,7 +589,7 @@
     } else {
         myEdit = YES;
         NSString* desc = [editField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        t->setDescription(desc.UTF8String);
+        s->setDescription(desc.UTF8String);
         editLabel.text = [NSString stringWithFormat:@"%d. %@", editSimplex, desc];
         myEdit = NO;
     }
@@ -703,7 +600,7 @@ cleanUpGluing:
     editLabel = nil;
     
     if (toReload.count)
-        [self.tetrahedra reloadRowsAtIndexPaths:toReload withRowAnimation:UITableViewRowAnimationFade];
+        [self.pentachora reloadRowsAtIndexPaths:toReload withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -726,13 +623,14 @@ cleanUpGluing:
     else if (indexPath.row == self.packet->size() + 1)
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
     
-    TriGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
-    regina::Tetrahedron<3>* t = self.packet->simplex(indexPath.row - 1);
-    cell.index.text = [NSString stringWithFormat:@"%zd. %s", indexPath.row - 1, t->description().c_str()];
-    cell.face0.text = [TriGluings destStringFromFacet:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
-    cell.face1.text = [TriGluings destStringFromFacet:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
-    cell.face2.text = [TriGluings destStringFromFacet:2 dest:t->adjacentSimplex(2) gluing:t->adjacentGluing(2)];
-    cell.face3.text = [TriGluings destStringFromFacet:3 dest:t->adjacentSimplex(3) gluing:t->adjacentGluing(3)];
+    Tri4GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Pentachoron" forIndexPath:indexPath];
+    regina::Pentachoron<4>* s = self.packet->simplex(indexPath.row - 1);
+    cell.index.text = [NSString stringWithFormat:@"%zd. %s", indexPath.row - 1, s->description().c_str()];
+    cell.facet0.text = [Tri4Gluings destStringFromFacet:0 dest:s->adjacentSimplex(0) gluing:s->adjacentGluing(0)];
+    cell.facet1.text = [Tri4Gluings destStringFromFacet:1 dest:s->adjacentSimplex(1) gluing:s->adjacentGluing(1)];
+    cell.facet2.text = [Tri4Gluings destStringFromFacet:2 dest:s->adjacentSimplex(2) gluing:s->adjacentGluing(2)];
+    cell.facet3.text = [Tri4Gluings destStringFromFacet:3 dest:s->adjacentSimplex(3) gluing:s->adjacentGluing(3)];
+    cell.facet4.text = [Tri4Gluings destStringFromFacet:4 dest:s->adjacentSimplex(4) gluing:s->adjacentGluing(4)];
     return cell;
 }
 
@@ -749,8 +647,8 @@ cleanUpGluing:
     if (indexPath.row == 0 || indexPath.row > self.packet->size())
         return;
     
-    // Many rows could change - not only do we blank out gluings for adjacent tetrahedra,
-    // but we also need to reindex every tetrahedron after the one that was removed.
+    // Many rows could change - not only do we blank out gluings for adjacent pentachora,
+    // but we also need to reindex every pentachoron after the one that was removed.
     // Just reload everything.
     // This is easy: we don't set myEdit=YES, and instead rely on the automatic packet reload.
     self.packet->removeSimplexAt(indexPath.row - 1);
@@ -759,12 +657,12 @@ cleanUpGluing:
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row > 0)
-        return self.tetrahedra.rowHeight;
+        return self.pentachora.rowHeight;
     
     // The header row is smaller.  Calculate it based on the cell contents, which include
     // auto-layout constraints that pin the labels to the upper and lower boundaries.
     if (headerHeight == 0) {
-        UITableViewCell* cell = [self.tetrahedra dequeueReusableCellWithIdentifier:@"Header"];
+        UITableViewCell* cell = [self.pentachora dequeueReusableCellWithIdentifier:@"Header"];
         [cell layoutIfNeeded];
         CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
         headerHeight = size.height;
@@ -791,8 +689,6 @@ cleanUpGluing:
         case 4:
             [self doubleCover:nil]; break;
         case 5:
-            [self puncture:nil]; break;
-        case 6:
             [self elementaryMoves:nil]; break;
     }
 }

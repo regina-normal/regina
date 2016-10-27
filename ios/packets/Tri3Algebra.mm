@@ -33,8 +33,8 @@
 #import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "TextPopover.h"
-#import "TriangulationViewController.h"
-#import "TriAlgebra.h"
+#import "Tri3ViewController.h"
+#import "Tri3Algebra.h"
 #import "maths/numbertheory.h"
 #import "triangulation/dim3.h"
 #import "utilities/stringutils.h"
@@ -90,7 +90,7 @@
 
 @end
 
-@interface TriAlgebra () <UITableViewDataSource> {
+@interface Tri3Algebra () <UITableViewDataSource> {
     int r;
     NSMutableArray* computed;
 }
@@ -113,7 +113,7 @@
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
-@implementation TriAlgebra
+@implementation Tri3Algebra
 
 - (void)viewDidLoad
 {
@@ -237,7 +237,7 @@
         self.fundName.text = @"Disconnected";
         self.fundGens.text = self.fundRels.text = self.fundRelsDetails.text = @"";
     } else {
-        [TriAlgebra reloadGroup:self.packet->fundamentalGroup()
+        [Tri3Algebra reloadGroup:self.packet->fundamentalGroup()
                            name:self.fundName
                            gens:self.fundGens
                            rels:self.fundRels

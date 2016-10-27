@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#import "Dim4EltMovesController.h"
+#import "EltMoves4.h"
 #import "TextHelper.h"
 #import "triangulation/dim4.h"
 
-@interface Dim4EltMovesController () {
+@interface EltMoves4 () {
     NSMutableArray* options42;
     NSMutableArray* options33;
     NSMutableArray* options24;
@@ -82,7 +82,7 @@
 
 @end
 
-@implementation Dim4EltMovesController
+@implementation EltMoves4
 
 - (void)viewWillAppear:(BOOL)animated
 {

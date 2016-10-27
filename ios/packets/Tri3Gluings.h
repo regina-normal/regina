@@ -33,6 +33,6 @@
 #import <UIKit/UIKit.h>
 #import "PacketViewer.h"
 
-@interface TriComposition : UIViewController <PacketViewer>
+@interface Tri3Gluings : UIViewController <PacketEditor>
 
 @end

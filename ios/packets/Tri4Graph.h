@@ -33,6 +33,6 @@
 #import <UIKit/UIKit.h>
 #import "PacketViewer.h"
 
-@interface Dim4TriGluings : UIViewController <PacketEditor>
+@interface Tri4Graph : UIViewController <PacketViewer>
 
 @end

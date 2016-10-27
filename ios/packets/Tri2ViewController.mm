@@ -40,7 +40,7 @@
     [super viewDidLoad];
     [self setSelectedImages:@[@"Tab-Gluings-Bold",
                               @"Tab-Skeleton-Bold"]];
-    [self registerDefaultKey:@"ViewDim2Tab"];
+    [self registerDefaultKey:@"ViewTri2Tab"];
 }
 
 - (void)updateHeader:(UILabel *)header
