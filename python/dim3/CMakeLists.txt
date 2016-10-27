@@ -2,14 +2,14 @@
 
 # Files to compile
 SET ( FILES
-  nboundarycomponent
-  ncomponent
+  boundarycomponent3
+  component3
   edge3
   nexampletriangulation
   nfacepair
   nfacepairing
   nhomologicaldata
-  nisomorphism
+  isomorphism3
   tetrahedron3
   triangle3
   triangulation3

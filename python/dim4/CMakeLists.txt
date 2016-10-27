@@ -2,12 +2,12 @@
 
 # Files to compile
 SET ( FILES
-  dim4boundarycomponent
-  dim4component
+  boundarycomponent4
+  component4
   edge4
   dim4exampletriangulation
   triangle4
-  dim4isomorphism
+  isomorphism4
   pentachoron4
   tetrahedron4
   triangulation4
