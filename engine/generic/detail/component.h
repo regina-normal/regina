@@ -72,7 +72,7 @@ template <int> class TriangulationBase;
  * \ifacespython This base class is not present, but the "end user"
  * class Component<dim> is.
  *
- * \tparam the dimension of the underlying triangulation.
+ * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
  */
 template <int dim>
