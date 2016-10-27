@@ -267,7 +267,7 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Tabs");
     tabDim2Tri = settings.value("Dim2Tri", 0).toUInt();
-    tabDim2TriSkeleton = settings.value("Dim2TriSkeleton", 0).toUInt();
+    tabDim2TriSkeleton = settings.value("Tri2Skeleton", 0).toUInt();
     tabDim3Tri = settings.value("Dim3Tri", 0).toUInt();
     tabDim3TriAlgebra = settings.value("Dim3TriAlgebra", 0).toUInt();
     tabDim3TriSkeleton = settings.value("Dim3TriSkeleton", 0).toUInt();
@@ -375,7 +375,7 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Tabs");
     settings.setValue("Dim2Tri", tabDim2Tri);
-    settings.setValue("Dim2TriSkeleton", tabDim2TriSkeleton);
+    settings.setValue("Tri2Skeleton", tabDim2TriSkeleton);
     settings.setValue("Dim3Tri", tabDim3Tri);
     settings.setValue("Dim3TriAlgebra", tabDim3TriAlgebra);
     settings.setValue("Dim3TriSkeleton", tabDim3TriSkeleton);

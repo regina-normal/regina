@@ -32,5 +32,5 @@
 
 #import "PacketViewer.h"
 
-@interface Dim2TriGluings : UIViewController <PacketEditor>
+@interface Tri2Gluings : UIViewController <PacketEditor>
 @end

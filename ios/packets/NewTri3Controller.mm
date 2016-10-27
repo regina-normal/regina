@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "NewTriangulationController.h"
+#import "NewTri3Controller.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "triangulation/nexampletriangulation.h"

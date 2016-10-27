@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "NewDim4TriangulationController.h"
+#import "NewTri4Controller.h"
 #import "PacketPicker.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"

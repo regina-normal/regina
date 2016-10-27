@@ -1828,7 +1828,7 @@
         <!--Skeleton-->
         <scene sceneID="LtH-VR-MAi">
             <objects>
-                <viewController id="zhm-vX-8Da" customClass="Dim2TriSkeleton" sceneMemberID="viewController">
+                <viewController id="zhm-vX-8Da" customClass="Tri2Skeleton" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mtN-gG-vZa"/>
                         <viewControllerLayoutGuide type="bottom" id="ZYU-dQ-f31"/>
@@ -5143,7 +5143,7 @@
         <!--Gluings-->
         <scene sceneID="yAq-GE-LNs">
             <objects>
-                <viewController id="lAL-g5-7to" customClass="Dim2TriGluings" sceneMemberID="viewController">
+                <viewController id="lAL-g5-7to" customClass="Tri2Gluings" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="EjZ-RU-0Tr"/>
                         <viewControllerLayoutGuide type="bottom" id="5mv-Wt-Kv3"/>

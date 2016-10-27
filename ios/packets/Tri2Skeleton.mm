@@ -30,14 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#import "Dim2TriSkeleton.h"
-#import "Dim2TriangulationViewController.h"
+#import "Tri2Skeleton.h"
+#import "Tri2ViewController.h"
 #import "TextHelper.h"
 #import "triangulation/dim2.h"
 
 #define KEY_LAST_DIM2_SKELETON_TYPE @"ViewDim2SkeletonWhich"
 
-@interface Dim2TriSkeleton () <UITableViewDataSource, UITableViewDelegate> {
+@interface Tri2Skeleton () <UITableViewDataSource, UITableViewDelegate> {
     CGFloat headerHeight, fatHeaderHeight;
 }
 @property (weak, nonatomic) IBOutlet UILabel *summary;
@@ -48,7 +48,7 @@
 @property (assign, nonatomic) regina::Triangulation<2>* packet;
 @end
 
-@implementation Dim2TriSkeleton
+@implementation Tri2Skeleton
 
 - (void)viewDidLoad
 {

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "Dim2TriangulationViewController.h"
+#import "Tri2ViewController.h"
 #import "triangulation/dim2.h"
 
 @implementation Tri2ViewController

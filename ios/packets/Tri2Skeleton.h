@@ -33,5 +33,5 @@
 #import "PacketViewer.h"
 #import "Skeleton.h"
 
-@interface Dim2TriSkeleton : SkeletonViewer <PacketViewer>
+@interface Tri2Skeleton : SkeletonViewer <PacketViewer>
 @end

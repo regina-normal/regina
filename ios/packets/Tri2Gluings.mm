@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #import "ReginaHelper.h"
-#import "Dim2TriGluings.h"
-#import "Dim2TriangulationViewController.h"
+#import "Tri2Gluings.h"
+#import "Tri2ViewController.h"
 #import "packet/container.h"
 #import "triangulation/dim2.h"
 
@@ -50,7 +50,7 @@
 
 #pragma mark - Triangulation<2> gluings viewer
 
-@interface Dim2TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIActionSheetDelegate> {
+@interface Tri2Gluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIActionSheetDelegate> {
     CGFloat headerHeight;
     UILabel* editLabel;
     UITextField* editField;
@@ -68,7 +68,7 @@
 @property (assign, nonatomic) regina::Triangulation<2>* packet;
 @end
 
-@implementation Dim2TriGluings
+@implementation Tri2Gluings
 
 - (void)viewDidLoad
 {
@@ -162,7 +162,7 @@
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
     if (editEdge >= 0) {
         regina::Triangle<2>* t = self.packet->simplex(editSimplex);
-        editField.text = [[Dim2TriGluings destStringFromEdge:editEdge
+        editField.text = [[Tri2Gluings destStringFromEdge:editEdge
                                                         dest:t->adjacentSimplex(editEdge)
                                                       gluing:t->adjacentGluing(editEdge)]
                           stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -512,9 +512,9 @@ cleanUpGluing:
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
     regina::Triangle<2>* t = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->description().c_str()];
-    cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
-    cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
-    cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentSimplex(2) gluing:t->adjacentGluing(2)];
+    cell.edge0.text = [Tri2Gluings destStringFromEdge:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
+    cell.edge1.text = [Tri2Gluings destStringFromEdge:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
+    cell.edge2.text = [Tri2Gluings destStringFromEdge:2 dest:t->adjacentSimplex(2) gluing:t->adjacentGluing(2)];
     return cell;
 }
 
