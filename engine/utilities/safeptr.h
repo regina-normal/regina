@@ -146,15 +146,15 @@ public:
      */
     void reset(T* object = 0);
 
+    /**
+     * Disable the default assignment operator.
+     */
+    SafePtr<T>& operator = (const SafePtr<T>&) = delete;
+
 private:
     boost::intrusive_ptr<detail::SafeRemnant<typename T::SafePointeeType>>
         remnant_;
     /**< The remnant that points to the pointee. */
-
-    /**
-     * Disable the default assignment operator.
-     */
-    SafePtr<T>& operator = (const SafePtr<T>&);
 };
 
 } // namespace regina

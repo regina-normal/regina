@@ -73,6 +73,14 @@ template <class T>
 class SafePointeeBase {
 public:
     /**
+     * Prevent derived classes from accidentally calling the copy constructor.
+     * A derived class' copy constructor by default calls the protected default
+     * constructor, which it should because it sets the remnant_ to zero on
+     * the copied object.
+     */
+    SafePointeeBase(const SafePointeeBase &) = delete;
+
+    /**
      * Destructor.
      *
      * Once this destructor is called, any SafePtr that points to this object
@@ -80,6 +88,12 @@ public:
      * be dereferenced any longer.
      */
     ~SafePointeeBase();
+
+    /**
+     * Prevent derived classes from accidentally calling the assignment
+     * operator.
+     */
+    SafePointeeBase & operator=(const SafePointeeBase &) = delete;
 
     /**
      * The type of object being pointed to.
@@ -93,20 +107,6 @@ protected:
     SafePointeeBase();
 
 private:
-    /**
-     * Prevent derived classes from accidentally calling the copy constructor.
-     * A derived class' copy constructor by default calls the above default
-     * constructor, which it should because it sets the remnant_ to zero on
-     * the copied object.
-     */
-    SafePointeeBase(const SafePointeeBase &);
-
-    /**
-     * Prevent derived classes from accidentally calling the assignment
-     * operator.
-     */
-    SafePointeeBase & operator=(const SafePointeeBase &);
-
     friend class detail::SafeRemnant<T>;
     detail::SafeRemnant<T> *remnant_;
         /**< Points to the corresponding persistent object. */

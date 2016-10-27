@@ -80,11 +80,10 @@ class REGINA_API Locale {
          */
         static const char* codeset();
 
-    private:
         /**
          * Disable the default constructor, since all routines are static.
          */
-        Locale();
+        Locale() = delete;
 };
 
 /**
