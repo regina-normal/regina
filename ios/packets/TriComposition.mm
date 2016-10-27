@@ -121,7 +121,7 @@
     if ([self.parentViewController isKindOfClass:[SnapPeaViewController class]])
         [static_cast<SnapPeaViewController*>(self.parentViewController) updateHeader:self.header volume:self.volume solnType:self.solnType];
     else
-        [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
+        [static_cast<Tri3ViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
     self.isosig.text = @(self.packet->isoSig().c_str());
     

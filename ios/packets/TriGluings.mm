@@ -71,7 +71,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *orientIcon;
 @property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
-@property (strong, nonatomic) TriangulationViewController* viewer;
+@property (strong, nonatomic) Tri3ViewController* viewer;
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 
 @property (strong, nonatomic) NSLock* simplifyLock; // locks the simplifyTracker _pointer_, not the tracker itself.
@@ -82,7 +82,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
+    self.viewer = static_cast<Tri3ViewController*>(self.parentViewController);
     
     UITapGestureRecognizer *r = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touched:)];
     [self.tetrahedra addGestureRecognizer:r];

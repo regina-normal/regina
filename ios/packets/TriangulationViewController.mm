@@ -34,7 +34,7 @@
 #import "TextHelper.h"
 #import "triangulation/dim3.h"
 
-@implementation TriangulationViewController
+@implementation Tri3ViewController
 
 - (void)viewDidLoad
 {

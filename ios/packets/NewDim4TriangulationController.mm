@@ -38,20 +38,20 @@
 #import "triangulation/dim3.h"
 #import "triangulation/dim4.h"
 
-@interface NewDim4TriangulationController ()
+@interface NewTri4Controller ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *types;
 @property (weak, nonatomic) IBOutlet UIView *container;
 @property (weak, nonatomic) NewPacketPageViewController *pages;
 @end
 
-@implementation NewDim4TriangulationController
+@implementation NewTri4Controller
 
 - (void)viewDidLoad
 {
     self.pages = static_cast<NewPacketPageViewController*>(self.childViewControllers.lastObject);
     [self.pages fillWithPages:@[@"newTri4Empty", @"newTri4Example", @"newTri4Bundle", @"newTri4Isosig"]
                  pageSelector:self.types
-                   defaultKey:@"NewDim4TriangulationPage"];
+                   defaultKey:@"NewTri4Page"];
 }
 
 - (IBAction)create:(id)sender
@@ -73,7 +73,7 @@
 
 #pragma mark - Empty page
 
-@implementation NewDim4TriangulationEmptyPage
+@implementation NewTri4EmptyPage
 
 - (regina::Packet*)create
 {
@@ -124,15 +124,15 @@ typedef regina::Triangulation<4>* (*Dim4TriangulationCreator)();
 
 #pragma mark - Example page
 
-@interface NewDim4TriangulationExamplePage () <UIPickerViewDataSource, UIPickerViewDelegate> {
+@interface NewTri4ExamplePage () <UIPickerViewDataSource, UIPickerViewDelegate> {
     NSArray* options;
 }
 @property (weak, nonatomic) IBOutlet UIPickerView *example;
 @end
 
-#define KEY_LAST_EXAMPLE @"NewDim4TriangulationExample"
+#define KEY_LAST_EXAMPLE @"NewTri4Example"
 
-@implementation NewDim4TriangulationExamplePage
+@implementation NewTri4ExamplePage
 
 - (void)viewDidLoad
 {
@@ -178,18 +178,18 @@ typedef regina::Triangulation<4>* (*Dim4TriangulationCreator)();
 
 #pragma mark - Bundle page
 
-#define KEY_LAST_BUNDLE_TYPE @"NewDim4TriangulationBundleType"
+#define KEY_LAST_BUNDLE_TYPE @"NewTri4BundleType"
 
-@interface NewDim4TriangulationBundlePage ()
+@interface NewTri4BundlePage ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *bundleType;
 @property (weak, nonatomic) IBOutlet PacketPicker *from;
 @end
 
-@implementation NewDim4TriangulationBundlePage
+@implementation NewTri4BundlePage
 
 - (void)viewDidLoad
 {
-    NewDim4TriangulationController* c = static_cast<NewDim4TriangulationController*>(self.parentViewController.parentViewController);
+    NewTri4Controller* c = static_cast<NewTri4Controller*>(self.parentViewController.parentViewController);
     [self.from fill:c.spec.parent->root() type1:regina::PACKET_TRIANGULATION3 type2:regina::PACKET_SNAPPEATRIANGULATION allowNone:NO noneText:@"No 3-manifold triangulations in this document"];
     [self.bundleType setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_BUNDLE_TYPE]];
 }
@@ -246,14 +246,14 @@ typedef regina::Triangulation<4>* (*Dim4TriangulationCreator)();
 
 #pragma mark - Isosig page
 
-@interface NewDim4TriangulationIsosigPage ()
+@interface NewTri4IsosigPage ()
 @property (weak, nonatomic) IBOutlet UITextField *isosig;
 @end
 
-@implementation NewDim4TriangulationIsosigPage
+@implementation NewTri4IsosigPage
 
 - (IBAction)editingEnded:(id)sender {
-    NewDim4TriangulationController* c = static_cast<NewDim4TriangulationController*>(self.parentViewController.parentViewController);
+    NewTri4Controller* c = static_cast<NewTri4Controller*>(self.parentViewController.parentViewController);
     [c create:sender];
 }
 

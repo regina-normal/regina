@@ -127,7 +127,7 @@
         case regina::PACKET_TRIANGULATION13:
         case regina::PACKET_TRIANGULATION14:
         case regina::PACKET_TRIANGULATION15:
-            return @"viewGenericTriangulation";
+            return @"viewGenericTri";
         default: return @"viewDefault";
     }
 }

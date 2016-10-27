@@ -75,7 +75,7 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
 
 - (void)reloadPacket
 {
-    [static_cast<Dim4TriangulationViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
+    [static_cast<Tri4ViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
     std::string dot;
     switch (self.graphType.selectedSegmentIndex) {

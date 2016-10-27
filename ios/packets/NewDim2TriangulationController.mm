@@ -36,20 +36,20 @@
 #import "dim2/dim2exampletriangulation.h"
 #import "triangulation/dim2.h"
 
-@interface NewDim2TriangulationController ()
+@interface NewTri2Controller ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *types;
 @property (weak, nonatomic) IBOutlet UIView *container;
 @property (weak, nonatomic) NewPacketPageViewController *pages;
 @end
 
-@implementation NewDim2TriangulationController
+@implementation NewTri2Controller
 
 - (void)viewDidLoad
 {
     self.pages = static_cast<NewPacketPageViewController*>(self.childViewControllers.lastObject);
     [self.pages fillWithPages:@[@"newTri2Empty", @"newTri2Example", @"newTri2Surface", @"newTri2Isosig"]
                  pageSelector:self.types
-                   defaultKey:@"NewDim2TriangulationPage"];
+                   defaultKey:@"NewTri2Page"];
 }
 
 - (IBAction)create:(id)sender
@@ -71,7 +71,7 @@
 
 #pragma mark - Empty page
 
-@implementation NewDim2TriangulationEmptyPage
+@implementation NewTri2EmptyPage
 
 - (regina::Packet*)create
 {
@@ -122,15 +122,15 @@ typedef regina::Triangulation<2>* (*Dim2TriangulationCreator)();
 
 #pragma mark - Example page
 
-@interface NewDim2TriangulationExamplePage () <UIPickerViewDataSource, UIPickerViewDelegate> {
+@interface NewTri2ExamplePage () <UIPickerViewDataSource, UIPickerViewDelegate> {
     NSArray* options;
 }
 @property (weak, nonatomic) IBOutlet UIPickerView *example;
 @end
 
-#define KEY_LAST_EXAMPLE @"NewDim2TriangulationExample"
+#define KEY_LAST_EXAMPLE @"NewTri2Example"
 
-@implementation NewDim2TriangulationExamplePage
+@implementation NewTri2ExamplePage
 
 - (void)viewDidLoad
 {
@@ -179,14 +179,14 @@ typedef regina::Triangulation<2>* (*Dim2TriangulationCreator)();
 
 #pragma mark - Surface page
 
-@interface NewDim2TriangulationSurfacePage ()
+@interface NewTri2SurfacePage ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *orbl;
 @property (weak, nonatomic) IBOutlet UILabel *genusExpln;
 @property (weak, nonatomic) IBOutlet UITextField *genus;
 @property (weak, nonatomic) IBOutlet UITextField *punctures;
 @end
 
-@implementation NewDim2TriangulationSurfacePage
+@implementation NewTri2SurfacePage
 
 - (void)viewDidLoad
 {
@@ -299,14 +299,14 @@ typedef regina::Triangulation<2>* (*Dim2TriangulationCreator)();
 
 #pragma mark - Isosig page
 
-@interface NewDim2TriangulationIsosigPage ()
+@interface NewTri2IsosigPage ()
 @property (weak, nonatomic) IBOutlet UITextField *isosig;
 @end
 
-@implementation NewDim2TriangulationIsosigPage
+@implementation NewTri2IsosigPage
 
 - (IBAction)editingEnded:(id)sender {
-    NewDim2TriangulationController* c = static_cast<NewDim2TriangulationController*>(self.parentViewController.parentViewController);
+    NewTri2Controller* c = static_cast<NewTri2Controller*>(self.parentViewController.parentViewController);
     [c create:sender];
 }
 

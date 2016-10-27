@@ -36,20 +36,20 @@
 #import "triangulation/nexampletriangulation.h"
 #import "triangulation/dim3.h"
 
-@interface NewTriangulationController ()
+@interface NewTri3Controller ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *types;
 @property (weak, nonatomic) IBOutlet UIView *container;
 @property (weak, nonatomic) NewPacketPageViewController *pages;
 @end
 
-@implementation NewTriangulationController
+@implementation NewTri3Controller
 
 - (void)viewDidLoad
 {
     self.pages = static_cast<NewPacketPageViewController*>(self.childViewControllers.lastObject);
     [self.pages fillWithPages:@[@"newTri3Empty", @"newTri3Example", @"newTri3Isosig"]
                  pageSelector:self.types
-                   defaultKey:@"NewTriangulationPage"];
+                   defaultKey:@"NewTri3Page"];
 }
 
 - (IBAction)create:(id)sender
@@ -71,7 +71,7 @@
 
 #pragma mark - Empty page
 
-@implementation NewTriangulationEmptyPage
+@implementation NewTri3EmptyPage
 
 - (regina::Packet*)create
 {
@@ -122,15 +122,15 @@ typedef regina::Triangulation<3>* (*TriangulationCreator)();
 
 #pragma mark - Example page
 
-@interface NewTriangulationExamplePage () <UIPickerViewDataSource, UIPickerViewDelegate> {
+@interface NewTri3ExamplePage () <UIPickerViewDataSource, UIPickerViewDelegate> {
     NSArray* options;
 }
 @property (weak, nonatomic) IBOutlet UIPickerView *example;
 @end
 
-#define KEY_LAST_EXAMPLE @"NewTriangulationExample"
+#define KEY_LAST_EXAMPLE @"NewTri3Example"
 
-@implementation NewTriangulationExamplePage
+@implementation NewTri3ExamplePage
 
 - (void)viewDidLoad
 {
@@ -185,14 +185,14 @@ typedef regina::Triangulation<3>* (*TriangulationCreator)();
 
 #pragma mark - Isosig page
 
-@interface NewTriangulationIsosigPage ()
+@interface NewTri3IsosigPage ()
 @property (weak, nonatomic) IBOutlet UITextField *isosig;
 @end
 
-@implementation NewTriangulationIsosigPage
+@implementation NewTri3IsosigPage
 
 - (IBAction)editingEnded:(id)sender {
-    NewTriangulationController* c = static_cast<NewTriangulationController*>(self.parentViewController.parentViewController);
+    NewTri3Controller* c = static_cast<NewTri3Controller*>(self.parentViewController.parentViewController);
     [c create:sender];
 }
 

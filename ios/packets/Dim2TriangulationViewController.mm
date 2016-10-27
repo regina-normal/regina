@@ -33,7 +33,7 @@
 #import "Dim2TriangulationViewController.h"
 #import "triangulation/dim2.h"
 
-@implementation Dim2TriangulationViewController
+@implementation Tri2ViewController
 
 - (void)viewDidLoad
 {

@@ -109,7 +109,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *tvArgs;
 @property (weak, nonatomic) IBOutlet UITableView *tvValues;
 
-@property (strong, nonatomic) TriangulationViewController* viewer;
+@property (strong, nonatomic) Tri3ViewController* viewer;
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
 
@@ -118,7 +118,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
+    self.viewer = static_cast<Tri3ViewController*>(self.parentViewController);
 
 
     UILongPressGestureRecognizer *g = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(tvDetail:)];

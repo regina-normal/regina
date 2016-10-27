@@ -36,7 +36,7 @@ namespace regina {
     template <int> class Triangulation;
 }
 
-@interface TriangulationViewController : PacketTabBarController <PacketEditor>
+@interface Tri3ViewController : PacketTabBarController <PacketEditor>
 
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 

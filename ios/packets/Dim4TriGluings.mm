@@ -69,7 +69,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *orientIcon;
 @property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
-@property (strong, nonatomic) Dim4TriangulationViewController* viewer;
+@property (strong, nonatomic) Tri4ViewController* viewer;
 @property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end
 
@@ -78,7 +78,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.viewer = static_cast<Dim4TriangulationViewController*>(self.parentViewController);
+    self.viewer = static_cast<Tri4ViewController*>(self.parentViewController);
     
     UITapGestureRecognizer *r = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touched:)];
     [self.pentachora addGestureRecognizer:r];

@@ -38,29 +38,29 @@
  * This holds a NewPacketPageViewController; the corresponding pages
  * are described by separate view controller classes below.
  */
-@interface NewTriangulationController : NewPacketController
+@interface NewTri3Controller : NewPacketController
 @end
 
 /**
  * The controller for creating a new empty triangulation.
  *
- * This represents an individual page within the larger NewTriangulationController.
+ * This represents an individual page within the larger NewTri3Controller.
  */
-@interface NewTriangulationEmptyPage : UIViewController <PacketCreator>
+@interface NewTri3EmptyPage : UIViewController <PacketCreator>
 @end
 
 /**
  * The controller for creating a ready-made example triangulation.
  *
- * This represents an individual page within the larger NewTriangulationController.
+ * This represents an individual page within the larger NewTri3Controller.
  */
-@interface NewTriangulationExamplePage : UIViewController <PacketCreator>
+@interface NewTri3ExamplePage : UIViewController <PacketCreator>
 @end
 
 /**
  * The controller for creating a new triangulation from an isomorphism signature.
  *
- * This represents an individual page within the larger NewTriangulationController.
+ * This represents an individual page within the larger NewTri3Controller.
  */
-@interface NewTriangulationIsosigPage : UIViewController <PacketCreator>
+@interface NewTri3IsosigPage : UIViewController <PacketCreator>
 @end

@@ -38,37 +38,37 @@
  * This holds a NewPacketPageViewController; the corresponding pages
  * are described by separate view controller classes below.
  */
-@interface NewDim2TriangulationController : NewPacketController
+@interface NewTri2Controller : NewPacketController
 @end
 
 /**
  * The controller for creating a new empty triangulation.
  *
- * This represents an individual page within the larger NewDim2TriangulationController.
+ * This represents an individual page within the larger NewTri2Controller.
  */
-@interface NewDim2TriangulationEmptyPage : UIViewController <PacketCreator>
+@interface NewTri2EmptyPage : UIViewController <PacketCreator>
 @end
 
 /**
  * The controller for creating a ready-made example triangulation.
  *
- * This represents an individual page within the larger NewDim2TriangulationController.
+ * This represents an individual page within the larger NewTri2Controller.
  */
-@interface NewDim2TriangulationExamplePage : UIViewController <PacketCreator>
+@interface NewTri2ExamplePage : UIViewController <PacketCreator>
 @end
 
 /**
  * The controller for triangulating an arbitrary surface.
  *
- * This represents an individual page within the larger NewDim2TriangulationController.
+ * This represents an individual page within the larger NewTri2Controller.
  */
-@interface NewDim2TriangulationSurfacePage : UIViewController <PacketCreator>
+@interface NewTri2SurfacePage : UIViewController <PacketCreator>
 @end
 
 /**
  * The controller for creating a new triangulation from an isomorphism signature.
  *
- * This represents an individual page within the larger NewDim2TriangulationController.
+ * This represents an individual page within the larger NewTri2Controller.
  */
-@interface NewDim2TriangulationIsosigPage : UIViewController <PacketCreator>
+@interface NewTri2IsosigPage : UIViewController <PacketCreator>
 @end

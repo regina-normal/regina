@@ -44,7 +44,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *fVector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *viewWhich;
 
-@property (strong, nonatomic) Dim2TriangulationViewController* viewer;
+@property (strong, nonatomic) Tri2ViewController* viewer;
 @property (assign, nonatomic) regina::Triangulation<2>* packet;
 @end
 
@@ -53,7 +53,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.viewer = static_cast<Dim2TriangulationViewController*>(self.parentViewController);
+    self.viewer = static_cast<Tri2ViewController*>(self.parentViewController);
 }
 
 - (void)viewWillAppear:(BOOL)animated {

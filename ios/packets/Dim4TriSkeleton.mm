@@ -72,7 +72,7 @@
 
 - (void)reloadPacket
 {
-    [static_cast<Dim4TriangulationViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
+    [static_cast<Tri4ViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
     self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld, %ld, %ld)",
                          self.packet->countFaces<0>(),

@@ -48,7 +48,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *fundRels;
 @property (weak, nonatomic) IBOutlet UITextView *fundRelsDetails;
 
-@property (strong, nonatomic) Dim4TriangulationViewController* viewer;
+@property (strong, nonatomic) Tri4ViewController* viewer;
 @property (assign, nonatomic) regina::Triangulation<4>* packet;
 @end
 
@@ -57,7 +57,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.viewer = static_cast<Dim4TriangulationViewController*>(self.parentViewController);
+    self.viewer = static_cast<Tri4ViewController*>(self.parentViewController);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
