@@ -254,11 +254,6 @@ class REGINA_API IConvStream : public std::ostream {
             const char* srcCode, const char* destCode);
 };
 
-// Inline functions for Locale
-
-inline Locale::Locale() {
-}
-
 // Inline functions for IConvStreamBuffer
 
 inline IConvStreamBuffer::IConvStreamBuffer() :
