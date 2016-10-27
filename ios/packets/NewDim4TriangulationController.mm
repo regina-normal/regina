@@ -86,7 +86,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::Triangulation<4>* (*Dim4TriangulationCreator)();
+typedef regina::Triangulation<4>* (*Tri4Creator)();
 
 /**
  * Represents a single option in the examples picker.
@@ -94,16 +94,16 @@ typedef regina::Triangulation<4>* (*Dim4TriangulationCreator)();
 @interface Dim4ExampleTriangulation : NSObject
 
 @property (strong, nonatomic) NSString* name;
-@property (assign, nonatomic) Dim4TriangulationCreator creator;
+@property (assign, nonatomic) Tri4Creator creator;
 
-+ (id)exampleWithName:(NSString*)name creator:(Dim4TriangulationCreator)creator;
++ (id)exampleWithName:(NSString*)name creator:(Tri4Creator)creator;
 - (regina::Triangulation<4>*)create;
 
 @end
 
 @implementation Dim4ExampleTriangulation
 
-+ (id)exampleWithName:(NSString *)name creator:(Dim4TriangulationCreator)creator
++ (id)exampleWithName:(NSString *)name creator:(Tri4Creator)creator
 {
     Dim4ExampleTriangulation* e = [[Dim4ExampleTriangulation alloc] init];
     if (e) {

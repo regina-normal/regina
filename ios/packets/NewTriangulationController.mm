@@ -84,7 +84,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::Triangulation<3>* (*TriangulationCreator)();
+typedef regina::Triangulation<3>* (*Tri3Creator)();
 
 /**
  * Represents a single option in the examples picker.
@@ -92,16 +92,16 @@ typedef regina::Triangulation<3>* (*TriangulationCreator)();
 @interface ExampleTriangulation : NSObject
 
 @property (strong, nonatomic) NSString* name;
-@property (assign, nonatomic) TriangulationCreator creator;
+@property (assign, nonatomic) Tri3Creator creator;
 
-+ (id)exampleWithName:(NSString*)name creator:(TriangulationCreator)creator;
++ (id)exampleWithName:(NSString*)name creator:(Tri3Creator)creator;
 - (regina::Triangulation<3>*)create;
 
 @end
 
 @implementation ExampleTriangulation
 
-+ (id)exampleWithName:(NSString *)name creator:(TriangulationCreator)creator
++ (id)exampleWithName:(NSString *)name creator:(Tri3Creator)creator
 {
     ExampleTriangulation* e = [[ExampleTriangulation alloc] init];
     if (e) {
