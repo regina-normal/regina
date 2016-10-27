@@ -176,7 +176,7 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * triangulations recognised by this routine.
          */
         static NSnapPeaCensusTri* isSmallSnapPeaCensusTri(
-            const NComponent* comp);
+            const Component<3>* comp);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;

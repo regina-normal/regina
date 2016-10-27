@@ -46,7 +46,7 @@ NL31Pillow* NL31Pillow::clone() const {
     return ans;
 }
 
-NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
+NL31Pillow* NL31Pillow::isL31Pillow(const Component<3>* comp) {
     // Basic property check.
     if (comp->size() != 2 ||
             comp->countVertices() != 2 ||

@@ -362,7 +362,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * layered solid torus, or \c null if the given component is not
          * a layered solid torus.
          */
-        static NLayeredSolidTorus* isLayeredSolidTorus(NComponent* comp);
+        static NLayeredSolidTorus* isLayeredSolidTorus(Component<3>* comp);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;

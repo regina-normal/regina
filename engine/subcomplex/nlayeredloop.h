@@ -136,7 +136,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * layered loop, or \c null if the given component is
          * not a layered loop.
          */
-        static NLayeredLoop* isLayeredLoop(const NComponent* comp);
+        static NLayeredLoop* isLayeredLoop(const Component<3>* comp);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;

@@ -123,7 +123,7 @@ class REGINA_API NTrivialTri : public NStandardTriangulation {
          * triangulation, or \c null if the given component is not one
          * of the triangulations recognised by this class.
          */
-        static NTrivialTri* isTrivialTriangulation(const NComponent* comp);
+        static NTrivialTri* isTrivialTriangulation(const Component<3>* comp);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;

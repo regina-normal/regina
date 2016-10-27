@@ -37,10 +37,9 @@
 
 using namespace boost::python;
 using regina::Component;
-using regina::Dim4Component;
 
 namespace {
-    boost::python::list pentachora_list(Dim4Component& t) {
+    boost::python::list pentachora_list(Component<4>& t) {
         boost::python::list ans;
         for (std::vector<regina::Simplex<4>*>::const_iterator it =
                 t.simplices().begin(); it != t.simplices().end(); ++it)
@@ -49,48 +48,48 @@ namespace {
     }
 }
 
-void addDim4Component() {
+void addComponent4() {
     class_<Component<4>, std::auto_ptr<Component<4>>, boost::noncopyable>
             ("Component4", no_init)
-        .def("index", &Dim4Component::index)
-        .def("size", &Dim4Component::size)
-        .def("countPentachora", &Dim4Component::countPentachora)
-        .def("countFaces", &regina::python::countFaces<Dim4Component, 4>)
-        .def("countTetrahedra", &Dim4Component::countTetrahedra)
-        .def("countTriangles", &Dim4Component::countTriangles)
-        .def("countEdges", &Dim4Component::countEdges)
-        .def("countVertices", &Dim4Component::countVertices)
-        .def("countBoundaryComponents", &Dim4Component::countBoundaryComponents)
+        .def("index", &Component<4>::index)
+        .def("size", &Component<4>::size)
+        .def("countPentachora", &Component<4>::countPentachora)
+        .def("countFaces", &regina::python::countFaces<Component<4>, 4>)
+        .def("countTetrahedra", &Component<4>::countTetrahedra)
+        .def("countTriangles", &Component<4>::countTriangles)
+        .def("countEdges", &Component<4>::countEdges)
+        .def("countVertices", &Component<4>::countVertices)
+        .def("countBoundaryComponents", &Component<4>::countBoundaryComponents)
         .def("simplices", pentachora_list)
         .def("pentachora", pentachora_list)
-        .def("faces", &regina::python::faces<Dim4Component, 4>)
-        .def("vertices", regina::python::faces_list<Dim4Component, 4, 0>)
-        .def("edges", regina::python::faces_list<Dim4Component, 4, 1>)
-        .def("triangles", regina::python::faces_list<Dim4Component, 4, 2>)
-        .def("tetrahedra", regina::python::faces_list<Dim4Component, 4, 3>)
-        .def("simplex", &Dim4Component::simplex,
+        .def("faces", &regina::python::faces<Component<4>, 4>)
+        .def("vertices", regina::python::faces_list<Component<4>, 4, 0>)
+        .def("edges", regina::python::faces_list<Component<4>, 4, 1>)
+        .def("triangles", regina::python::faces_list<Component<4>, 4, 2>)
+        .def("tetrahedra", regina::python::faces_list<Component<4>, 4, 3>)
+        .def("simplex", &Component<4>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("pentachoron", &Dim4Component::pentachoron,
+        .def("pentachoron", &Component<4>::pentachoron,
             return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Dim4Component, 4, size_t>)
-        .def("tetrahedron", &Dim4Component::tetrahedron,
+        .def("face", &regina::python::face<Component<4>, 4, size_t>)
+        .def("tetrahedron", &Component<4>::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("triangle", &Dim4Component::triangle,
+        .def("triangle", &Component<4>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("edge", &Dim4Component::edge,
+        .def("edge", &Component<4>::edge,
             return_value_policy<reference_existing_object>())
-        .def("vertex", &Dim4Component::vertex,
+        .def("vertex", &Component<4>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("boundaryComponent", &Dim4Component::boundaryComponent,
+        .def("boundaryComponent", &Component<4>::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("isIdeal", &Dim4Component::isIdeal)
-        .def("isValid", &Dim4Component::isValid)
-        .def("isOrientable", &Dim4Component::isOrientable)
-        .def("isClosed", &Dim4Component::isClosed)
-        .def("hasBoundaryFacets", &Dim4Component::hasBoundaryFacets)
-        .def("hasBoundaryTetrahedra", &Dim4Component::hasBoundaryTetrahedra)
-        .def("countBoundaryFacets", &Dim4Component::countBoundaryFacets)
-        .def("countBoundaryTetrahedra", &Dim4Component::countBoundaryTetrahedra)
+        .def("isIdeal", &Component<4>::isIdeal)
+        .def("isValid", &Component<4>::isValid)
+        .def("isOrientable", &Component<4>::isOrientable)
+        .def("isClosed", &Component<4>::isClosed)
+        .def("hasBoundaryFacets", &Component<4>::hasBoundaryFacets)
+        .def("hasBoundaryTetrahedra", &Component<4>::hasBoundaryTetrahedra)
+        .def("countBoundaryFacets", &Component<4>::countBoundaryFacets)
+        .def("countBoundaryTetrahedra", &Component<4>::countBoundaryTetrahedra)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

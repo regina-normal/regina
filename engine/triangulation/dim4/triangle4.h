@@ -51,8 +51,6 @@ namespace regina {
 
 class Dim4BoundaryComponent;
 
-typedef Component<4> Dim4Component;
-
 /**
  * \weakgroup dim4
  * @{
@@ -121,7 +119,7 @@ class REGINA_API Face<4, 2> : public detail::FaceBase<4, 2>,
          * @param component the triangulation component to which this
          * triangle belongs.
          */
-        Face(Dim4Component* component);
+        Face(Component<4>* component);
 
     friend class Triangulation<4>;
     friend class detail::TriangulationBase<4>;
@@ -150,7 +148,7 @@ REGINA_DEPRECATED typedef Face<4, 2> Dim4Triangle;
 
 // Inline functions for Face<4, 2>
 
-inline Face<4, 2>::Face(Dim4Component* component) :
+inline Face<4, 2>::Face(Component<4>* component) :
         detail::FaceBase<4, 2>(component), boundaryComponent_(0) {
 }
 

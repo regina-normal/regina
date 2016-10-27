@@ -283,7 +283,7 @@ void Tri4SkelCompUI::viewTetrahedra() {
 }
 
 void Tri4SkelCompUI::viewComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Dim4ComponentModel(tri));
+    SkeletonWindow* win = new SkeletonWindow(this, new Component4Model(tri));
     win->show();
     viewers.append(win);
 }

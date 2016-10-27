@@ -47,7 +47,7 @@ const int NTrivialTri::SPHERE_4_VERTEX = 5000;
 const int NTrivialTri::BALL_3_VERTEX = 5100;
 const int NTrivialTri::BALL_4_VERTEX = 5101;
 
-NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
+NTrivialTri* NTrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     // Since the triangulations are so small we can use census results
     // to recognise the triangulations by properties alone.
 

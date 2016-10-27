@@ -117,7 +117,7 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          * triangular pillow L(3,1), or \c null if the given component is
          * not a triangular pillow L(3,1).
          */
-        static NL31Pillow* isL31Pillow(const NComponent* comp);
+        static NL31Pillow* isL31Pillow(const Component<3>* comp);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;

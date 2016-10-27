@@ -208,9 +208,13 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
 };
 
 /**
- * A convenience typedef for Component<3>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NComponent, you should use
+ * the real class name Component<3>.
  */
-typedef Component<3> NComponent;
+REGINA_DEPRECATED typedef Component<3> NComponent;
 
 /*@}*/
 

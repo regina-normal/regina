@@ -47,13 +47,11 @@
 #include <QStyle>
 
 using regina::NBoundaryComponent;
-using regina::NComponent;
 using regina::Dim2BoundaryComponent;
-using regina::Dim2Component;
+using regina::Component;
 using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Dim4BoundaryComponent;
-using regina::Dim4Component;
 using regina::Tetrahedron;
 using regina::TetrahedronEmbedding;
 using regina::Triangle;
@@ -460,11 +458,11 @@ QString Triangle3Model::toolTipForCol(int column) {
     }
 }
 
-QString ComponentModel::caption() const {
+QString Component3Model::caption() const {
     return tr("Components (%1)").arg(tri->label().c_str());
 }
 
-QString ComponentModel::overview() const {
+QString Component3Model::overview() const {
     return tr("<qt>Displays details of each "
         "connected component of this triangulation.<p>"
         "The different components are numbered from 0 upwards.  "
@@ -474,19 +472,19 @@ QString ComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int ComponentModel::rowCount(const QModelIndex& parent) const {
+int Component3Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countComponents());
 }
 
-int ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Component3Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant ComponentModel::data(const QModelIndex& index, int role) const {
+QVariant Component3Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NComponent* item = tri->component(index.row());
+        Component<3>* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -510,7 +508,7 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant ComponentModel::headerData(int section,
+QVariant Component3Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -529,7 +527,7 @@ QVariant ComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString ComponentModel::toolTipForCol(int column) {
+QString Component3Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual component.  "
             "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");
@@ -830,11 +828,11 @@ QString Edge2Model::toolTipForCol(int column) {
     }
 }
 
-QString Dim2ComponentModel::caption() const {
+QString Component2Model::caption() const {
     return tr("Components (%1)").arg(tri->label().c_str());
 }
 
-QString Dim2ComponentModel::overview() const {
+QString Component2Model::overview() const {
     return tr("<qt>Displays details of each "
         "connected component of this triangulation.<p>"
         "The different components are numbered from 0 upwards.  "
@@ -844,19 +842,19 @@ QString Dim2ComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim2ComponentModel::rowCount(const QModelIndex& parent) const {
+int Component2Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countComponents());
 }
 
-int Dim2ComponentModel::columnCount(const QModelIndex& /* unused */) const {
+int Component2Model::columnCount(const QModelIndex& /* unused */) const {
     return 4;
 }
 
-QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
+QVariant Component2Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Component* item = tri->component(index.row());
+        Component<2>* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -878,7 +876,7 @@ QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim2ComponentModel::headerData(int section,
+QVariant Component2Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -897,7 +895,7 @@ QVariant Dim2ComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim2ComponentModel::toolTipForCol(int column) {
+QString Component2Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual component.  "
             "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");
@@ -1363,11 +1361,11 @@ QString Tetrahedron4Model::toolTipForCol(int column) {
     }
 }
 
-QString Dim4ComponentModel::caption() const {
+QString Component4Model::caption() const {
     return tr("Components (%1)").arg(tri->label().c_str());
 }
 
-QString Dim4ComponentModel::overview() const {
+QString Component4Model::overview() const {
     return tr("<qt>Displays details of each "
         "connected component of this triangulation.<p>"
         "The different components are numbered from 0 upwards.  "
@@ -1377,19 +1375,19 @@ QString Dim4ComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim4ComponentModel::rowCount(const QModelIndex& parent) const {
+int Component4Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countComponents());
 }
 
-int Dim4ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Component4Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
+QVariant Component4Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Component* item = tri->component(index.row());
+        Component<4>* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1413,7 +1411,7 @@ QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim4ComponentModel::headerData(int section,
+QVariant Component4Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -1432,7 +1430,7 @@ QVariant Dim4ComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim4ComponentModel::toolTipForCol(int column) {
+QString Component4Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual component.  "
             "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");

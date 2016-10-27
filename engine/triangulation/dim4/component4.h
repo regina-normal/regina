@@ -214,38 +214,42 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
 };
 
 /**
- * A convenience typedef for Component<4>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4Component, you should use
+ * the real class name Component<4>.
  */
-typedef Component<4> Dim4Component;
+REGINA_DEPRECATED typedef Component<4> Dim4Component;
 
 /*@}*/
 
 // Inline functions for Component<4>
 
-inline Dim4Component::Component() : detail::ComponentBase<4>(), ideal_(false) {
+inline Component<4>::Component() : detail::ComponentBase<4>(), ideal_(false) {
 }
 
 template <>
-inline size_t Dim4Component::countFaces<3>() const {
+inline size_t Component<4>::countFaces<3>() const {
     return tetrahedra_.size();
 }
 
 template <>
-inline size_t Dim4Component::countFaces<2>() const {
+inline size_t Component<4>::countFaces<2>() const {
     return triangles_.size();
 }
 
 template <>
-inline size_t Dim4Component::countFaces<1>() const {
+inline size_t Component<4>::countFaces<1>() const {
     return edges_.size();
 }
 
 template <>
-inline size_t Dim4Component::countFaces<0>() const {
+inline size_t Component<4>::countFaces<0>() const {
     return vertices_.size();
 }
 
-inline size_t Dim4Component::countBoundaryComponents() const {
+inline size_t Component<4>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
@@ -272,37 +276,37 @@ inline const std::vector<Vertex<4>*>& Component<4>::faces<0>() const {
 }
 
 template <>
-inline Tetrahedron<4>* Dim4Component::face<3>(size_t index) const {
+inline Tetrahedron<4>* Component<4>::face<3>(size_t index) const {
     return tetrahedra_[index];
 }
 
 template <>
-inline Triangle<4>* Dim4Component::face<2>(size_t index) const {
+inline Triangle<4>* Component<4>::face<2>(size_t index) const {
     return triangles_[index];
 }
 
 template <>
-inline Edge<4>* Dim4Component::face<1>(size_t index) const {
+inline Edge<4>* Component<4>::face<1>(size_t index) const {
     return edges_[index];
 }
 
 template <>
-inline Vertex<4>* Dim4Component::face<0>(size_t index) const {
+inline Vertex<4>* Component<4>::face<0>(size_t index) const {
     return vertices_[index];
 }
 
 #endif // __DOXYGEN
 
-inline Dim4BoundaryComponent* Dim4Component::boundaryComponent(
+inline Dim4BoundaryComponent* Component<4>::boundaryComponent(
         size_t index) const {
     return boundaryComponents_[index];
 }
 
-inline bool Dim4Component::isIdeal() const {
+inline bool Component<4>::isIdeal() const {
     return ideal_;
 }
 
-inline bool Dim4Component::isClosed() const {
+inline bool Component<4>::isClosed() const {
     return (boundaryComponents_.empty());
 }
 

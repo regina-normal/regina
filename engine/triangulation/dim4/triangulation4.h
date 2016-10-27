@@ -67,7 +67,6 @@ class XMLPacketReader;
 
 template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
-typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
 
 /**

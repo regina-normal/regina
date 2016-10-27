@@ -143,7 +143,7 @@ NManifold* NPlugTriSolidTorus::manifold() const {
 }
 
 NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
-        NComponent* comp) {
+        Component<3>* comp) {
     // Each triangular solid torus is tested three times since we
     // can't call Tetrahedron<3>::index() from within a component only.
     // TODO: Update - yes we can now.  This constraint was from an

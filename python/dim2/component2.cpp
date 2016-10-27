@@ -37,10 +37,9 @@
 
 using namespace boost::python;
 using regina::Component;
-using regina::Dim2Component;
 
 namespace {
-    boost::python::list triangles_list(Dim2Component& t) {
+    boost::python::list triangles_list(Component<2>& t) {
         boost::python::list ans;
         for (auto s : t.triangles())
             ans.append(boost::python::ptr(s));
@@ -48,39 +47,39 @@ namespace {
     }
 }
 
-void addDim2Component() {
+void addComponent2() {
     class_<Component<2>, std::auto_ptr<Component<2>>, boost::noncopyable>
             ("Component2", no_init)
-        .def("index", &Dim2Component::index)
-        .def("size", &Dim2Component::size)
-        .def("countTriangles", &Dim2Component::countTriangles)
-        .def("countFaces", &regina::python::countFaces<Dim2Component, 2>)
-        .def("countEdges", &Dim2Component::countEdges)
-        .def("countVertices", &Dim2Component::countVertices)
-        .def("countBoundaryComponents", &Dim2Component::countBoundaryComponents)
+        .def("index", &Component<2>::index)
+        .def("size", &Component<2>::size)
+        .def("countTriangles", &Component<2>::countTriangles)
+        .def("countFaces", &regina::python::countFaces<Component<2>, 2>)
+        .def("countEdges", &Component<2>::countEdges)
+        .def("countVertices", &Component<2>::countVertices)
+        .def("countBoundaryComponents", &Component<2>::countBoundaryComponents)
         .def("simplices", triangles_list)
         .def("triangles", triangles_list)
-        .def("faces", &regina::python::faces<Dim2Component, 2>)
-        .def("edges", regina::python::faces_list<Dim2Component, 2, 1>)
-        .def("vertices", regina::python::faces_list<Dim2Component, 2, 0>)
-        .def("triangle", &Dim2Component::triangle,
+        .def("faces", &regina::python::faces<Component<2>, 2>)
+        .def("edges", regina::python::faces_list<Component<2>, 2, 1>)
+        .def("vertices", regina::python::faces_list<Component<2>, 2, 0>)
+        .def("triangle", &Component<2>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("simplex", &Dim2Component::simplex,
+        .def("simplex", &Component<2>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Dim2Component, 2, size_t>)
-        .def("edge", &Dim2Component::edge,
+        .def("face", &regina::python::face<Component<2>, 2, size_t>)
+        .def("edge", &Component<2>::edge,
             return_value_policy<reference_existing_object>())
-        .def("vertex", &Dim2Component::vertex,
+        .def("vertex", &Component<2>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("boundaryComponent", &Dim2Component::boundaryComponent,
+        .def("boundaryComponent", &Component<2>::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("isValid", &Dim2Component::isValid)
-        .def("isOrientable", &Dim2Component::isOrientable)
-        .def("isClosed", &Dim2Component::isClosed)
-        .def("hasBoundaryFacets", &Dim2Component::hasBoundaryFacets)
-        .def("hasBoundaryEdges", &Dim2Component::hasBoundaryEdges)
-        .def("countBoundaryFacets", &Dim2Component::countBoundaryFacets)
-        .def("countBoundaryEdges", &Dim2Component::countBoundaryEdges)
+        .def("isValid", &Component<2>::isValid)
+        .def("isOrientable", &Component<2>::isOrientable)
+        .def("isClosed", &Component<2>::isClosed)
+        .def("hasBoundaryFacets", &Component<2>::hasBoundaryFacets)
+        .def("hasBoundaryEdges", &Component<2>::hasBoundaryEdges)
+        .def("countBoundaryFacets", &Component<2>::countBoundaryFacets)
+        .def("countBoundaryEdges", &Component<2>::countBoundaryEdges)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

@@ -44,7 +44,7 @@ const char NSnapPeaCensusTri::SEC_7_OR = 'v';
 const char NSnapPeaCensusTri::SEC_7_NOR = 'y';
 
 NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
-        const NComponent* comp) {
+        const Component<3>* comp) {
     // Currently this routine can recognise SnapPea triangulations
     // m000 -- m004 as well as m129.
 

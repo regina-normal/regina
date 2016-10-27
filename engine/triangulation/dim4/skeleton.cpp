@@ -53,7 +53,7 @@ void Triangulation<4>::calculateSkeleton() {
     calculateBoundary();
         // Sets:
         // - boundaryComponents_
-        // - Dim4Component::boundaryComponents_
+        // - Component<4>::boundaryComponents_
         // - Dim4 [ Tetrahedron, Triangle, Edge, Vertex ]::boundaryComponent_
         // - all Dim4BoundaryComponent members
 
@@ -62,7 +62,7 @@ void Triangulation<4>::calculateSkeleton() {
         // - Vertex<4>::link_
         // - valid_ and Vertex<4>::valid_ in the case of bad vertex links
         // - valid_ and Edge<4>::invalid_ in the case of bad edge links
-        // - ideal_, Vertex<4>::ideal_ and Dim4Component::ideal_
+        // - ideal_, Vertex<4>::ideal_ and Component<4>::ideal_
 
     if (! valid_)
         calculateEdgeLinks();

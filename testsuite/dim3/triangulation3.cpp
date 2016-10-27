@@ -56,7 +56,7 @@
 
 using regina::NAbelianGroup;
 using regina::NBoundaryComponent;
-using regina::NComponent;
+using regina::Component;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
@@ -803,7 +803,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             unsigned long c;
-            regina::NComponent* comp;
+            regina::Component<3>* comp;
             for (c = 0; c < tri->countComponents(); ++c) {
                 comp = tri->component(c);
                 found = 0;
@@ -3645,7 +3645,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
                     NAbelianGroup expectH2(tri->homologyH2());
                     NAbelianGroup foundH2(punc.homologyH2());
-                    NComponent* c = origTet->component();
+                    Component<3>* c = origTet->component();
                     if (! c->isClosed()) {
                         // X -> X + Z
                         expectH2.addRank();

@@ -50,8 +50,6 @@
 
 namespace regina {
 
-typedef Component<4> Dim4Component;
-
 /**
  * \weakgroup dim4
  * @{
@@ -169,7 +167,7 @@ class REGINA_API Dim4BoundaryComponent :
          *
          * @return the component containing this boundary component.
          */
-        Dim4Component* component() const;
+        Component<4>* component() const;
 
         /**
          * Returns the full 3-manifold triangulation of this boundary
@@ -336,7 +334,7 @@ inline Vertex<4>* Dim4BoundaryComponent::face<0>(size_t index) const {
 
 #endif // __DOXYGEN
 
-inline Dim4Component* Dim4BoundaryComponent::component() const {
+inline Component<4>* Dim4BoundaryComponent::component() const {
     // There may be no tetrahedra, but there is always a vertex.
     return vertices_.front()->component();
 }

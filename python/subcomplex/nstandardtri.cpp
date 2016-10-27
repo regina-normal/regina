@@ -47,7 +47,7 @@ namespace {
     void writeTeXName_stdio(const NStandardTriangulation& t) {
         t.writeTeXName(std::cout);
     }
-    NStandardTriangulation* (*isStandardTri_comp)(regina::NComponent*) =
+    NStandardTriangulation* (*isStandardTri_comp)(regina::Component<3>*) =
         &NStandardTriangulation::isStandardTriangulation;
     NStandardTriangulation* (*isStandardTri_tri)(regina::Triangulation<3>*) =
         &NStandardTriangulation::isStandardTriangulation;

@@ -256,7 +256,7 @@ void Tri3SkelCompUI::viewTriangles() {
 }
 
 void Tri3SkelCompUI::viewComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this, new ComponentModel(tri));
+    SkeletonWindow* win = new SkeletonWindow(this, new Component3Model(tri));
     win->show();
     viewers.append(win);
 }

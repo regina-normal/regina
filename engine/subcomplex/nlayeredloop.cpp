@@ -61,7 +61,7 @@ NManifold* NLayeredLoop::manifold() const {
     }
 }
 
-NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
+NLayeredLoop* NLayeredLoop::isLayeredLoop(const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;

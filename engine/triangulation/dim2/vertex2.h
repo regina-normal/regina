@@ -51,8 +51,6 @@ namespace regina {
 
 class Dim2BoundaryComponent;
 
-typedef Component<2> Dim2Component;
-
 /**
  * \weakgroup dim2
  * @{
@@ -120,7 +118,7 @@ class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
          * @param component the triangulation component to which this
          * vertex belongs.
          */
-        Face(Dim2Component* component);
+        Face(Component<2>* component);
 
     friend class Triangulation<2>;
     friend class detail::TriangulationBase<2>;
@@ -149,7 +147,7 @@ REGINA_DEPRECATED typedef Face<2, 0> Dim2Vertex;
 
 // Inline functions for Vertex<2>
 
-inline Face<2, 0>::Face(Dim2Component* component) :
+inline Face<2, 0>::Face(Component<2>* component) :
         detail::FaceBase<2, 0>(component), boundaryComponent_(0) {
 }
 

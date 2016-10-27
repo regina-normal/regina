@@ -54,10 +54,10 @@ void Triangulation<3>::calculateSkeleton() {
     calculateBoundary();
         // Sets boundaryComponents, Triangle<3>.boundaryComponent,
         //     Edge<3>.boundaryComponent, Vertex<3>.boundaryComponent,
-        //     NComponent.boundaryComponents
+        //     Component<3>.boundaryComponents
     calculateVertexLinks();
         // Sets valid, ideal, Vertex<3>.link,
-        //     Vertex<3>.linkEulerChar, NComponent.ideal,
+        //     Vertex<3>.linkEulerChar, Component<3>.ideal,
         //     boundaryComponents, Vertex<3>.boundaryComponent
 
     // Flesh out the details of each component.
@@ -105,7 +105,7 @@ void Triangulation<3>::checkPermutations() {
 void Triangulation<3>::calculateBoundary() {
     // Sets boundaryComponents, Triangle<3>.boundaryComponent,
     //     Edge<3>.boundaryComponent, Vertex<3>.boundaryComponent,
-    //     NComponent.boundaryComponents
+    //     Component<3>.boundaryComponents
     NBoundaryComponent* label;
 
     for (Triangle<3>* triangle : triangles()) {

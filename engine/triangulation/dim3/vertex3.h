@@ -52,7 +52,6 @@ namespace regina {
 class NBoundaryComponent;
 
 template <int> class Isomorphism;
-typedef Component<3> NComponent;
 typedef Isomorphism<3> NIsomorphism;
 
 /**
@@ -334,7 +333,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * @param myComponent the triangulation component to which this
          * vertex belongs.
          */
-        Face(NComponent* component);
+        Face(Component<3>* component);
 
     friend class Triangulation<3>;
     friend class detail::TriangulationBase<3>;
@@ -363,7 +362,7 @@ REGINA_DEPRECATED typedef Face<3, 0> NVertex;
 
 // Inline functions for Vertex<3>
 
-inline Face<3, 0>::Face(NComponent* component) :
+inline Face<3, 0>::Face(Component<3>* component) :
         detail::FaceBase<3, 0>(component),
         boundaryComponent_(0), linkEulerChar_(0), linkTri_(0) {
 }

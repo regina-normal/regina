@@ -52,7 +52,6 @@ namespace regina {
 class Dim4BoundaryComponent;
 
 template <int> class Isomorphism;
-typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
 
 /**
@@ -275,7 +274,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * @param component the triangulation component to which this
          * vertex belongs.
          */
-        Face(Dim4Component* component);
+        Face(Component<4>* component);
 
     friend class Triangulation<4>;
     friend class detail::TriangulationBase<4>;
@@ -304,7 +303,7 @@ REGINA_DEPRECATED typedef Face<4, 0> Dim4Vertex;
 
 // Inline functions for Vertex<4>
 
-inline Face<4, 0>::Face(Dim4Component* component) :
+inline Face<4, 0>::Face(Component<4>* component) :
         detail::FaceBase<4, 0>(component),
         boundaryComponent_(0), link_(0), ideal_(false) {
 }

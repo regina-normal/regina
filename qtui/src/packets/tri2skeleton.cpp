@@ -213,7 +213,7 @@ void Tri2SkelCompUI::viewEdges() {
 }
 
 void Tri2SkelCompUI::viewComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Dim2ComponentModel(tri));
+    SkeletonWindow* win = new SkeletonWindow(this, new Component2Model(tri));
     win->show();
     viewers.append(win);
 }

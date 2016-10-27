@@ -770,7 +770,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
 
             unsigned long c;
-            regina::Dim4Component* comp;
+            regina::Component<4>* comp;
             for (c = 0; c < tri->countComponents(); ++c) {
                 comp = tri->component(c);
                 found = 0;

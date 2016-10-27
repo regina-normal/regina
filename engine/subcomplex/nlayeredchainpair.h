@@ -45,7 +45,6 @@
 namespace regina {
 
 template <int> class Component;
-typedef Component<3> NComponent;
 
 /**
  * \weakgroup subcomplex
@@ -117,7 +116,7 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
          * layered chain pair, or \c null if the given component is
          * not a layered chain pair.
          */
-        static NLayeredChainPair* isLayeredChainPair(const NComponent* comp);
+        static NLayeredChainPair* isLayeredChainPair(const Component<3>* comp);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;

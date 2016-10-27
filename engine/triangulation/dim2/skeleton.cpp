@@ -48,7 +48,7 @@ void Triangulation<2>::calculateSkeleton() {
     calculateBoundary();
         // Sets:
         // - boundaryComponents_
-        // - Dim2Component::boundaryComponents_
+        // - Component<2>::boundaryComponents_
         // - Dim2 [ Edge, Vertex ]::boundaryComponent_
         // - all Dim2BoundaryComponent members
 

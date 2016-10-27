@@ -62,7 +62,7 @@ std::string NStandardTriangulation::TeXName() const {
 }
 
 NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
-        NComponent* comp) {
+        Component<3>* comp) {
     NStandardTriangulation* ans;
     if ((ans = NTrivialTri::isTrivialTriangulation(comp)))
         return ans;

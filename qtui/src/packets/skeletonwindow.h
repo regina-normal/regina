@@ -262,7 +262,7 @@ class Triangle3Model : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class ComponentModel : public SkeletalModel {
+class Component3Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -273,7 +273,7 @@ class ComponentModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        ComponentModel(regina::Triangulation<3>* tri_);
+        Component3Model(regina::Triangulation<3>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -398,7 +398,7 @@ class Edge2Model : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class Dim2ComponentModel : public SkeletalModel {
+class Component2Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -409,7 +409,7 @@ class Dim2ComponentModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        Dim2ComponentModel(regina::Triangulation<2>* tri_);
+        Component2Model(regina::Triangulation<2>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -602,7 +602,7 @@ class Tetrahedron4Model : public SkeletalModel {
         static QString toolTipForCol(int column);
 };
 
-class Dim4ComponentModel : public SkeletalModel {
+class Component4Model : public SkeletalModel {
     private:
         /**
          * The triangulation being displayed
@@ -613,7 +613,7 @@ class Dim4ComponentModel : public SkeletalModel {
         /**
          * Constructor.
          */
-        Dim4ComponentModel(regina::Triangulation<4>* tri_);
+        Component4Model(regina::Triangulation<4>* tri_);
 
         /**
          * Overrides for describing this subclass of model.
@@ -718,7 +718,7 @@ inline Edge3Model::Edge3Model(regina::Triangulation<3>* tri_) :
 inline Triangle3Model::Triangle3Model(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
-inline ComponentModel::ComponentModel(regina::Triangulation<3>* tri_) :
+inline Component3Model::Component3Model(regina::Triangulation<3>* tri_) :
         tri(tri_) {}
 
 inline BoundaryComponentModel::BoundaryComponentModel(
@@ -730,7 +730,7 @@ inline Vertex2Model::Vertex2Model(regina::Triangulation<2>* tri_) :
 inline Edge2Model::Edge2Model(regina::Triangulation<2>* tri_) :
         tri(tri_) {}
 
-inline Dim2ComponentModel::Dim2ComponentModel(regina::Triangulation<2>* tri_) :
+inline Component2Model::Component2Model(regina::Triangulation<2>* tri_) :
         tri(tri_) {}
 
 inline Dim2BoundaryComponentModel::Dim2BoundaryComponentModel(
@@ -748,7 +748,7 @@ inline Triangle4Model::Triangle4Model(regina::Triangulation<4>* tri_) :
 inline Tetrahedron4Model::Tetrahedron4Model(
         regina::Triangulation<4>* tri_) : tri(tri_) {}
 
-inline Dim4ComponentModel::Dim4ComponentModel(regina::Triangulation<4>* tri_) :
+inline Component4Model::Component4Model(regina::Triangulation<4>* tri_) :
         tri(tri_) {}
 
 inline Dim4BoundaryComponentModel::Dim4BoundaryComponentModel(

@@ -377,7 +377,7 @@
                 cell.index.text = @"No components";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::NComponent* c = self.packet->component(indexPath.row - 1);
+                regina::Component<3>* c = self.packet->component(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
                 cell.data1.text = [TextHelper countString:c->size() singular:"tetrahedron" plural:"tetrahedra"];

@@ -179,7 +179,7 @@ NManifold* NAugTriSolidTorus::manifold() const {
 }
 
 NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
-        const NComponent* comp) {
+        const Component<3>* comp) {
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;

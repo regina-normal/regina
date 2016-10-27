@@ -191,9 +191,13 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
 };
 
 /**
- * A convenience typedef for Component<2>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2Component, you should use
+ * the real class name Component<2>.
  */
-typedef Component<2> Dim2Component;
+REGINA_DEPRECATED typedef Component<2> Dim2Component;
 
 /*@}*/
 

@@ -48,7 +48,7 @@ NLayeredLensSpace* NLayeredLensSpace::clone() const {
 }
 
 NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
-        const NComponent* comp) {
+        const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;

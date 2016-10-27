@@ -50,8 +50,6 @@
 
 namespace regina {
 
-typedef Component<3> NComponent;
-
 /**
  * \weakgroup triangulation
  * @{
@@ -146,7 +144,7 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the component containing this boundary component.
          */
-        NComponent* component() const;
+        Component<3>* component() const;
 
         /**
          * Returns the Euler characteristic of this boundary component.
@@ -266,7 +264,7 @@ inline Vertex<3>* NBoundaryComponent::face<0>(size_t index) const {
 }
 #endif // ! __DOXYGEN
 
-inline NComponent* NBoundaryComponent::component() const {
+inline Component<3>* NBoundaryComponent::component() const {
     // There may be no triangles, but there is always a vertex.
     return vertices_.front()->component();
 }

@@ -47,7 +47,6 @@
 namespace regina {
 
 template <int> class Component;
-typedef Component<3> NComponent;
 
 /**
  * \weakgroup subcomplex
@@ -208,7 +207,7 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * plugged triangular solid torus, or \c null if the given
          * component is not a plugged triangular solid torus.
          */
-        static NPlugTriSolidTorus* isPlugTriSolidTorus(NComponent* comp);
+        static NPlugTriSolidTorus* isPlugTriSolidTorus(Component<3>* comp);
 
         NManifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;

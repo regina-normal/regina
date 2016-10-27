@@ -37,10 +37,9 @@
 
 using namespace boost::python;
 using regina::Component;
-using regina::NComponent;
 
 namespace {
-    boost::python::list simplices_list(NComponent& t) {
+    boost::python::list simplices_list(Component<3>& t) {
         boost::python::list ans;
         for (std::vector<regina::Simplex<3>*>::const_iterator it =
                 t.simplices().begin(); it != t.simplices().end(); ++it)
@@ -49,44 +48,44 @@ namespace {
     }
 }
 
-void addNComponent() {
+void addComponent3() {
     class_<Component<3>, std::auto_ptr<Component<3>>, boost::noncopyable>
             ("Component3", no_init)
-        .def("index", &NComponent::index)
-        .def("size", &NComponent::size)
-        .def("countTetrahedra", &NComponent::countTetrahedra)
-        .def("countFaces", &regina::python::countFaces<NComponent, 3>)
-        .def("countTriangles", &NComponent::countTriangles)
-        .def("countEdges", &NComponent::countEdges)
-        .def("countVertices", &NComponent::countVertices)
-        .def("countBoundaryComponents", &NComponent::countBoundaryComponents)
+        .def("index", &Component<3>::index)
+        .def("size", &Component<3>::size)
+        .def("countTetrahedra", &Component<3>::countTetrahedra)
+        .def("countFaces", &regina::python::countFaces<Component<3>, 3>)
+        .def("countTriangles", &Component<3>::countTriangles)
+        .def("countEdges", &Component<3>::countEdges)
+        .def("countVertices", &Component<3>::countVertices)
+        .def("countBoundaryComponents", &Component<3>::countBoundaryComponents)
         .def("simplices", simplices_list)
         .def("tetrahedra", simplices_list)
-        .def("simplex", &NComponent::simplex,
+        .def("simplex", &Component<3>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("tetrahedron", &NComponent::tetrahedron,
+        .def("tetrahedron", &Component<3>::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("faces", &regina::python::faces<NComponent, 3>)
-        .def("triangles", regina::python::faces_list<NComponent, 3, 2>)
-        .def("edges", regina::python::faces_list<NComponent, 3, 1>)
-        .def("vertices", regina::python::faces_list<NComponent, 3, 0>)
-        .def("face", &regina::python::face<NComponent, 3, size_t>)
-        .def("triangle", &NComponent::triangle,
+        .def("faces", &regina::python::faces<Component<3>, 3>)
+        .def("triangles", regina::python::faces_list<Component<3>, 3, 2>)
+        .def("edges", regina::python::faces_list<Component<3>, 3, 1>)
+        .def("vertices", regina::python::faces_list<Component<3>, 3, 0>)
+        .def("face", &regina::python::face<Component<3>, 3, size_t>)
+        .def("triangle", &Component<3>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("edge", &NComponent::edge,
+        .def("edge", &Component<3>::edge,
             return_value_policy<reference_existing_object>())
-        .def("vertex", &NComponent::vertex,
+        .def("vertex", &Component<3>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("boundaryComponent", &NComponent::boundaryComponent,
+        .def("boundaryComponent", &Component<3>::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("isIdeal", &NComponent::isIdeal)
-        .def("isValid", &NComponent::isValid)
-        .def("isOrientable", &NComponent::isOrientable)
-        .def("isClosed", &NComponent::isClosed)
-        .def("hasBoundaryFacets", &NComponent::hasBoundaryFacets)
-        .def("hasBoundaryTriangles", &NComponent::hasBoundaryTriangles)
-        .def("countBoundaryFacets", &NComponent::countBoundaryFacets)
-        .def("countBoundaryTriangles", &NComponent::countBoundaryTriangles)
+        .def("isIdeal", &Component<3>::isIdeal)
+        .def("isValid", &Component<3>::isValid)
+        .def("isOrientable", &Component<3>::isOrientable)
+        .def("isClosed", &Component<3>::isClosed)
+        .def("hasBoundaryFacets", &Component<3>::hasBoundaryFacets)
+        .def("hasBoundaryTriangles", &Component<3>::hasBoundaryTriangles)
+        .def("countBoundaryFacets", &Component<3>::countBoundaryFacets)
+        .def("countBoundaryTriangles", &Component<3>::countBoundaryTriangles)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

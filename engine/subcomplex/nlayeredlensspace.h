@@ -145,7 +145,7 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * layered lens space, or \c null if the given component is
          * not a layered lens space.
          */
-        static NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
+        static NLayeredLensSpace* isLayeredLensSpace(const Component<3>* comp);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;

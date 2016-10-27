@@ -582,7 +582,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
     return 0;
 }
 
-NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
+NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
     // Start with some basic property checks.
     if (! comp->isOrientable())
         return 0;

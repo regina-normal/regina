@@ -52,7 +52,6 @@ template <int> class Component;
 template <int> class Triangulation;
 template <int, int> class Face;
 template <int dim> using Tetrahedron = Face<dim, 3>; // Used by many subclasses.
-typedef Component<3> NComponent;
 
 /**
  * \addtogroup subcomplex Standard Triangulations and Subcomplexes
@@ -265,7 +264,7 @@ class REGINA_API NStandardTriangulation :
          * given component is recognised, or 0 otherwise.
          */
         static NStandardTriangulation* isStandardTriangulation(
-            NComponent* component);
+            Component<3>* component);
         /**
          * Determines whether the given triangulation represents one of the
          * standard triangulations understood by Regina.  The list of
@@ -278,7 +277,7 @@ class REGINA_API NStandardTriangulation :
          * identifications of these boundary triangles with each other.
          *
          * This routine may recognise more triangulations than the
-         * component-based isStandardTriangulation(NComponent*),
+         * component-based isStandardTriangulation(Component<3>*),
          * since passing an entire triangulation allows access to
          * more information.
          *

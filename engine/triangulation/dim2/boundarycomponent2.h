@@ -50,8 +50,6 @@
 
 namespace regina {
 
-typedef Component<2> Dim2Component;
-
 /**
  * \weakgroup dim2
  * @{
@@ -125,7 +123,7 @@ class REGINA_API Dim2BoundaryComponent :
          *
          * @return the component containing this boundary component.
          */
-        Dim2Component* component() const;
+        Component<2>* component() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -189,7 +187,7 @@ inline Vertex<2>* Dim2BoundaryComponent::face<0>(size_t index) const {
 }
 #endif // ! __DOXYGEN
 
-inline Dim2Component* Dim2BoundaryComponent::component() const {
+inline Component<2>* Dim2BoundaryComponent::component() const {
     return vertices_.front()->component();
 }
 

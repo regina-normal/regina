@@ -51,8 +51,6 @@ namespace regina {
 
 class NBoundaryComponent;
 
-typedef Component<3> NComponent;
-
 /**
  * \weakgroup triangulation
  * @{
@@ -240,7 +238,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * @param myComponent the triangulation component to which this
          * triangle belongs.
          */
-        Face(NComponent* component);
+        Face(Component<3>* component);
 
     friend class Triangulation<3>;
     friend class detail::TriangulationBase<3>;
@@ -269,7 +267,7 @@ REGINA_DEPRECATED typedef Face<3, 2> NTriangle;
 
 // Inline functions for Triangle<3>
 
-inline Face<3, 2>::Face(NComponent* component) :
+inline Face<3, 2>::Face(Component<3>* component) :
         FaceBase<3, 2>(component),
         boundaryComponent_(0), type_(UNKNOWN_TYPE) {
 }

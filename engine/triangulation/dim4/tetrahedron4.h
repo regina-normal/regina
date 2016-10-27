@@ -51,8 +51,6 @@ namespace regina {
 
 class Dim4BoundaryComponent;
 
-typedef Component<4> Dim4Component;
-
 /**
  * \weakgroup dim4
  * @{
@@ -150,7 +148,7 @@ class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
          * @param component the triangulation component to which this
          * tetrahedron belongs.
          */
-        Face(Dim4Component* component);
+        Face(Component<4>* component);
 
     friend class Triangulation<4>;
     friend class detail::TriangulationBase<4>;
@@ -179,7 +177,7 @@ REGINA_DEPRECATED typedef Face<4, 3> Dim4Tetrahedron;
 
 // Inline functions for Tetrahedron<4>
 
-inline Face<4, 3>::Face(Dim4Component* component) :
+inline Face<4, 3>::Face(Component<4>* component) :
         FaceBase<4, 3>(component), boundaryComponent_(0) {
 }
 
