@@ -55,7 +55,7 @@
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::NAbelianGroup;
-using regina::NBoundaryComponent;
+using regina::BoundaryComponent;
 using regina::Component;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
@@ -3588,7 +3588,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 }
 
                 unsigned long nPunc = punc.size();
-                NBoundaryComponent* bc = punc.tetrahedron(nPunc - 1)->
+                BoundaryComponent<3>* bc = punc.tetrahedron(nPunc - 1)->
                     triangle(0)->boundaryComponent();
                 if (bc == 0 || bc != punc.tetrahedron(nPunc - 2)->
                         triangle(0)->boundaryComponent()) {

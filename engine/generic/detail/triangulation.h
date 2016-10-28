@@ -48,6 +48,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/component.h"
+#include "generic/boundarycomponent.h"
 #include "generic/face.h"
 #include "generic/simplex.h"
 #include "generic/alias/face.h"
@@ -55,7 +56,6 @@
 
 namespace regina {
 
-template <int> class Component;
 template <int> class Isomorphism;
 template <int> class Triangulation;
 

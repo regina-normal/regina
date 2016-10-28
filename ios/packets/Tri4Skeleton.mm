@@ -416,7 +416,7 @@
                 cell.index.text = @"No boundary components";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim4BoundaryComponent* b = self.packet->boundaryComponent(indexPath.row - 1);
+                regina::BoundaryComponent<4>* b = self.packet->boundaryComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Bdry" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
                 cell.data0.text = (b->isIdeal() ? @"Ideal" : b->isInvalidVertex() ? @"Invalid" : @"Real");

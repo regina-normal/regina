@@ -59,7 +59,6 @@
 
 namespace regina {
 
-class Dim2BoundaryComponent;
 class XMLPacketReader;
 
 template <int> class Isomorphism;
@@ -95,7 +94,7 @@ struct PacketInfo<PACKET_TRIANGULATION2> {
  * In particular, this class also tracks the vertices and edges of the
  * triangulation (as represented by the classes Vertex<2> and Edge<2>),
  * as well as boundary components (as represented by the class
- * Dim2BoundaryComponent).  Such objects are temporary: whenever the
+ * BoundaryComponent<2>).  Such objects are temporary: whenever the
  * triangulation changes, these objects will be deleted and rebuilt, and so
  * any pointers to them will become invalid.  Likewise, if the triangulation
  * is deleted then these objects will be deleted alongside it.
@@ -114,12 +113,12 @@ class REGINA_API Triangulation<2> :
             /**< Used to iterate through edges. */
         typedef FaceList<2, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<Dim2BoundaryComponent*>::const_iterator
+        typedef std::vector<BoundaryComponent<2>*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
     private:
-        MarkedVector<Dim2BoundaryComponent> boundaryComponents_;
+        MarkedVector<BoundaryComponent<2>> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
 
     public:
@@ -244,7 +243,7 @@ class REGINA_API Triangulation<2> :
          *
          * @return the list of all boundary components.
          */
-        const std::vector<Dim2BoundaryComponent*>& boundaryComponents() const;
+        const std::vector<BoundaryComponent<2>*>& boundaryComponents() const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -256,7 +255,7 @@ class REGINA_API Triangulation<2> :
          * from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
-        Dim2BoundaryComponent* boundaryComponent(size_t index) const;
+        BoundaryComponent<2>* boundaryComponent(size_t index) const;
 
         /*@}*/
         /**
@@ -480,13 +479,13 @@ inline size_t Triangulation<2>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline const std::vector<Dim2BoundaryComponent*>&
+inline const std::vector<BoundaryComponent<2>*>&
         Triangulation<2>::boundaryComponents() const {
     ensureSkeleton();
-    return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
+    return (const std::vector<BoundaryComponent<2>*>&)(boundaryComponents_);
 }
 
-inline Dim2BoundaryComponent* Triangulation<2>::boundaryComponent(
+inline BoundaryComponent<2>* Triangulation<2>::boundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];

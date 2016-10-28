@@ -40,7 +40,7 @@
 #include <QDialogButtonBox>
 #include <QLabel>
 
-using regina::NBoundaryComponent;
+using regina::BoundaryComponent;
 
 BoundaryComponentChooser::BoundaryComponentChooser(
         regina::Triangulation<3>* tri,
@@ -54,16 +54,16 @@ BoundaryComponentChooser::BoundaryComponentChooser(
     fill();
 }
 
-NBoundaryComponent* BoundaryComponentChooser::selected() {
+BoundaryComponent<3>* BoundaryComponentChooser::selected() {
     if (count() == 0)
         return 0;
     int curr = currentIndex();
     return (curr < 0 ? 0 : options_[curr]);
 }
 
-void BoundaryComponentChooser::select(regina::NBoundaryComponent* option) {
+void BoundaryComponentChooser::select(regina::BoundaryComponent<3>* option) {
     int index = 0;
-    std::vector<regina::NBoundaryComponent*>::const_iterator it =
+    std::vector<regina::BoundaryComponent<3>*>::const_iterator it =
         options_.begin();
     while (it != options_.end()) {
         if ((*it) == option) {
@@ -81,7 +81,7 @@ void BoundaryComponentChooser::select(regina::NBoundaryComponent* option) {
 }
 
 QString BoundaryComponentChooser::description(
-        regina::NBoundaryComponent* option) {
+        regina::BoundaryComponent<3>* option) {
     if (option->isIdeal()) {
         regina::Vertex<3>* v = option->vertex(0);
         QString desc;
@@ -145,7 +145,7 @@ BoundaryComponentDialog::BoundaryComponentDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-regina::NBoundaryComponent* BoundaryComponentDialog::choose(QWidget* parent,
+regina::BoundaryComponent<3>* BoundaryComponentDialog::choose(QWidget* parent,
         regina::Triangulation<3>* tri,
         BoundaryComponentFilterFunc filter,
         const QString& title,

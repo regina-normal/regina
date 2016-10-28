@@ -185,7 +185,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
     bool* markVtx = new bool[nVertices];
     std::fill(markVtx, markVtx + nVertices, false);
 
-    NBoundaryComponent* bc;
+    BoundaryComponent<3>* bc;
     for (i = 0; i < tri_->countBoundaryComponents(); ++i) {
         bc = tri_->boundaryComponent(i);
         if ((! bc->isIdeal()) && bc->isOrientable() &&

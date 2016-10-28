@@ -40,7 +40,7 @@
 #include <QDialogButtonBox>
 #include <QLabel>
 
-using regina::Dim4BoundaryComponent;
+using regina::BoundaryComponent;
 
 Dim4BoundaryComponentChooser::Dim4BoundaryComponentChooser(
         regina::Triangulation<4>* tri,
@@ -54,14 +54,14 @@ Dim4BoundaryComponentChooser::Dim4BoundaryComponentChooser(
     fill();
 }
 
-Dim4BoundaryComponent* Dim4BoundaryComponentChooser::selected() {
+BoundaryComponent<4>* Dim4BoundaryComponentChooser::selected() {
     if (count() == 0)
         return 0;
     int curr = currentIndex();
     return (curr < 0 ? 0 : options_[curr]);
 }
 
-void Dim4BoundaryComponentChooser::select(regina::Dim4BoundaryComponent* option) {
+void Dim4BoundaryComponentChooser::select(regina::BoundaryComponent<4>* option) {
     int index = 0;
     auto it = options_.begin();
     while (it != options_.end()) {
@@ -80,7 +80,7 @@ void Dim4BoundaryComponentChooser::select(regina::Dim4BoundaryComponent* option)
 }
 
 QString Dim4BoundaryComponentChooser::description(
-        regina::Dim4BoundaryComponent* option) {
+        regina::BoundaryComponent<4>* option) {
     if (option->isIdeal()) {
         regina::Vertex<4>* v = option->vertex(0);
         QString desc;
@@ -150,7 +150,7 @@ Dim4BoundaryComponentDialog::Dim4BoundaryComponentDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-regina::Dim4BoundaryComponent* Dim4BoundaryComponentDialog::choose(
+regina::BoundaryComponent<4>* Dim4BoundaryComponentDialog::choose(
         QWidget* parent,
         regina::Triangulation<4>* tri,
         Dim4BoundaryComponentChooser::FilterFunc filter,

@@ -46,12 +46,10 @@
 #include <QScrollBar>
 #include <QStyle>
 
-using regina::NBoundaryComponent;
-using regina::Dim2BoundaryComponent;
+using regina::BoundaryComponent;
 using regina::Component;
 using regina::Edge;
 using regina::EdgeEmbedding;
-using regina::Dim4BoundaryComponent;
 using regina::Tetrahedron;
 using regina::TetrahedronEmbedding;
 using regina::Triangle;
@@ -574,7 +572,7 @@ int BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) c
 QVariant BoundaryComponentModel::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        NBoundaryComponent* item = tri->boundaryComponent(index.row());
+        BoundaryComponent<3>* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -937,7 +935,7 @@ int Dim2BoundaryComponentModel::columnCount(const QModelIndex& /* unused */)
 QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2BoundaryComponent* item = tri->boundaryComponent(index.row());
+        BoundaryComponent<2>* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1479,7 +1477,7 @@ int Dim4BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*
 QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4BoundaryComponent* item = tri->boundaryComponent(index.row());
+        BoundaryComponent<4>* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();

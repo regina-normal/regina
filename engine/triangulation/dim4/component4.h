@@ -50,8 +50,6 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
-
 /**
  * \weakgroup dim4
  * @{
@@ -101,7 +99,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
             /**< List of edges in the component. */
         std::vector<Vertex<4>*> vertices_;
             /**< List of vertices in the component. */
-        std::vector<Dim4BoundaryComponent*> boundaryComponents_;
+        std::vector<BoundaryComponent<4>*> boundaryComponents_;
             /**< List of boundary components in the component. */
 
         bool ideal_;
@@ -176,7 +174,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
          * entire triangulation.
          * @return the requested boundary component.
          */
-        Dim4BoundaryComponent* boundaryComponent(size_t index) const;
+        BoundaryComponent<4>* boundaryComponent(size_t index) const;
 
         /**
          * Determines if this component is ideal.
@@ -297,7 +295,7 @@ inline Vertex<4>* Component<4>::face<0>(size_t index) const {
 
 #endif // __DOXYGEN
 
-inline Dim4BoundaryComponent* Component<4>::boundaryComponent(
+inline BoundaryComponent<4>* Component<4>::boundaryComponent(
         size_t index) const {
     return boundaryComponents_[index];
 }

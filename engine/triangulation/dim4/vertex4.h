@@ -49,8 +49,6 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
-
 template <int> class Isomorphism;
 typedef Isomorphism<4> Dim4Isomorphism;
 
@@ -72,7 +70,7 @@ template <>
 class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
         public Output<Face<4, 0>> {
     private:
-        Dim4BoundaryComponent* boundaryComponent_;
+        BoundaryComponent<4>* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
         Triangulation<3>* link_;
@@ -93,7 +91,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * Returns the boundary component of the triangulation to which
          * this vertex belongs.
          *
-         * See the note in the Dim4BoundaryComponent overview regarding what
+         * See the note in the BoundaryComponent overview regarding what
          * happens if the vertex link itself has more than one boundary
          * component.  Note that such a vertex link makes the triangulation
          * invalid.
@@ -110,7 +108,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * or 0 if this vertex is not on the boundary of the triangulation
          * as determined by isBoundary().
          */
-        Dim4BoundaryComponent* boundaryComponent() const;
+        BoundaryComponent<4>* boundaryComponent() const;
 
         /**
          * Returns a full 3-manifold triangulation describing
@@ -308,7 +306,7 @@ inline Face<4, 0>::Face(Component<4>* component) :
         boundaryComponent_(0), link_(0), ideal_(false) {
 }
 
-inline Dim4BoundaryComponent* Face<4, 0>::boundaryComponent() const {
+inline BoundaryComponent<4>* Face<4, 0>::boundaryComponent() const {
     return boundaryComponent_;
 }
 

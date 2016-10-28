@@ -1,6 +1,5 @@
 # Files to compile
 SET ( FILES
-  boundarycomponent4
   edge4
   homology
   homotopy

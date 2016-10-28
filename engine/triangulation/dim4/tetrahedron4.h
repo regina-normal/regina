@@ -49,8 +49,6 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
-
 /**
  * \weakgroup dim4
  * @{
@@ -69,7 +67,7 @@ template <>
 class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
         public Output<Face<4, 3>> {
     private:
-        Dim4BoundaryComponent* boundaryComponent_;
+        BoundaryComponent<4>* boundaryComponent_;
             /**< The boundary component that this tetrahedron is a part of,
                  or 0 if this tetrahedron is internal. */
 
@@ -90,7 +88,7 @@ class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
          * if this tetrahedron does not lie entirely within the boundary of
          * the triangulation.
          */
-        Dim4BoundaryComponent* boundaryComponent() const;
+        BoundaryComponent<4>* boundaryComponent() const;
 
         /**
          * Determines whether this tetrahedron represents a dual edge in the
@@ -181,7 +179,7 @@ inline Face<4, 3>::Face(Component<4>* component) :
         FaceBase<4, 3>(component), boundaryComponent_(0) {
 }
 
-inline Dim4BoundaryComponent* Face<4, 3>::boundaryComponent() const {
+inline BoundaryComponent<4>* Face<4, 3>::boundaryComponent() const {
     return boundaryComponent_;
 }
 

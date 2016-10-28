@@ -39,36 +39,39 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4BoundaryComponent;
+using regina::BoundaryComponent;
 
 void addDim4BoundaryComponent() {
-    class_<Dim4BoundaryComponent, std::auto_ptr<Dim4BoundaryComponent>,
-            boost::noncopyable>("Dim4BoundaryComponent", no_init)
-        .def("index", &Dim4BoundaryComponent::index)
+    class_<BoundaryComponent<4>, std::auto_ptr<BoundaryComponent<4>>,
+            boost::noncopyable>("BoundaryComponent4", no_init)
+        .def("index", &BoundaryComponent<4>::index)
+        .def("size", &BoundaryComponent<4>::size)
         .def("countFaces",
-            &regina::python::countFaces<Dim4BoundaryComponent, 4>)
+            &regina::python::countFaces<BoundaryComponent<4>, 4>)
         .def("countTetrahedra",
-            &Dim4BoundaryComponent::countTetrahedra)
-        .def("countTriangles", &Dim4BoundaryComponent::countTriangles)
-        .def("countEdges", &Dim4BoundaryComponent::countEdges)
-        .def("countVertices", &Dim4BoundaryComponent::countVertices)
-        .def("face", &regina::python::face<Dim4BoundaryComponent, 4, size_t>)
-        .def("tetrahedron", &Dim4BoundaryComponent::tetrahedron,
+            &BoundaryComponent<4>::countTetrahedra)
+        .def("countTriangles", &BoundaryComponent<4>::countTriangles)
+        .def("countEdges", &BoundaryComponent<4>::countEdges)
+        .def("countVertices", &BoundaryComponent<4>::countVertices)
+        .def("face", &regina::python::face<BoundaryComponent<4>, 4, size_t>)
+        .def("tetrahedron", &BoundaryComponent<4>::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("triangle", &Dim4BoundaryComponent::triangle,
+        .def("triangle", &BoundaryComponent<4>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("edge", &Dim4BoundaryComponent::edge,
+        .def("edge", &BoundaryComponent<4>::edge,
             return_value_policy<reference_existing_object>())
-        .def("vertex", &Dim4BoundaryComponent::vertex,
+        .def("vertex", &BoundaryComponent<4>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("component", &Dim4BoundaryComponent::component,
+        .def("component", &BoundaryComponent<4>::component,
             return_value_policy<reference_existing_object>())
-        .def("build", &Dim4BoundaryComponent::build,
+        .def("build", &BoundaryComponent<4>::build,
             return_value_policy<to_held_type<>>())
-        .def("isIdeal", &Dim4BoundaryComponent::isIdeal)
-        .def("isInvalidVertex", &Dim4BoundaryComponent::isInvalidVertex)
+        .def("isIdeal", &BoundaryComponent<4>::isIdeal)
+        .def("isInvalidVertex", &BoundaryComponent<4>::isInvalidVertex)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("Dim4BoundaryComponent") = scope().attr("BoundaryComponent4");
 }
 

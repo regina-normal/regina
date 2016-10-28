@@ -49,8 +49,6 @@
 
 namespace regina {
 
-class NBoundaryComponent;
-
 /**
  * \weakgroup triangulation
  * @{
@@ -69,7 +67,7 @@ template <>
 class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
         public Output<Face<3, 1>> {
     private:
-        NBoundaryComponent* boundaryComponent_;
+        BoundaryComponent<3>* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
 
@@ -81,7 +79,7 @@ class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
          * @return the boundary component containing this edge, or 0 if this
          * edge does not lie entirely within the boundary of the triangulation.
          */
-        NBoundaryComponent* boundaryComponent() const;
+        BoundaryComponent<3>* boundaryComponent() const;
 
         /**
          * Determines if this edge lies entirely on the boundary of the
@@ -152,7 +150,7 @@ inline Face<3, 1>::Face(Component<3>* component) :
         boundaryComponent_(0) {
 }
 
-inline NBoundaryComponent* Face<3, 1>::boundaryComponent() const {
+inline BoundaryComponent<3>* Face<3, 1>::boundaryComponent() const {
     return boundaryComponent_;
 }
 

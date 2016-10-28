@@ -34,7 +34,7 @@
  *  \brief Includes all headers for working with 4-dimensional triangulations.
  *  This includes headers for the main class Triangulation<4>, as well as the
  *  face classes Face<4,\a subdim> and the component classes Component<4> and
- *  Dim4BoundaryComponent.
+ *  BoundaryComponent<4>.
  */
 
 #ifndef __DIM4_H

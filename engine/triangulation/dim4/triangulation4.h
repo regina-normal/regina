@@ -50,6 +50,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "generic/triangulation.h"
 #include "packet/packet.h"
+#include "triangulation/dim3.h" // for deleting boundary triangulations
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 
@@ -62,7 +63,6 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
 class XMLPacketReader;
 
 template <int> class Isomorphism;
@@ -99,7 +99,7 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  * In particular, this class also tracks vertices, edges, triangles and
  * tetrahedra of the triangulation (as represented by the classes Vertex<4>,
  * Edge<4>, Triangle<4> and Tetrahedron<4>), as well as boundary components
- * (as represented by the class Dim4BoundaryComponent).  Such objects are
+ * (as represented by the class BoundaryComponent<4>).  Such objects are
  * temporary: whenever the triangulation changes, these objects will be
  * deleted and rebuilt, and so any pointers to them will become invalid.
  * Likewise, if the triangulation is deleted then these objects will be
@@ -127,7 +127,7 @@ class REGINA_API Triangulation<4> :
             /**< Used to iterate through edges. */
         typedef FaceList<4, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<Dim4BoundaryComponent*>::const_iterator
+        typedef std::vector<BoundaryComponent<4>*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
@@ -141,7 +141,7 @@ class REGINA_API Triangulation<4> :
                  links, or it may mean that the vertex links have not yet
                  been calculated. */
 
-        MarkedVector<Dim4BoundaryComponent> boundaryComponents_;
+        MarkedVector<BoundaryComponent<4>> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
 
@@ -261,7 +261,7 @@ class REGINA_API Triangulation<4> :
          * Returns the number of boundary components in this triangulation.
          *
          * Note that each ideal vertex forms its own boundary component, and
-         * some invalid vertices do also.  See the Dim4BoundaryComponent
+         * some invalid vertices do also.  See the BoundaryComponent
          * class notes and Vertex<4>::isBoundary() for details.
          *
          * @return the number of boundary components.
@@ -272,7 +272,7 @@ class REGINA_API Triangulation<4> :
          * Returns all boundary components of this triangulation.
          *
          * Note that each ideal vertex forms its own boundary component, and
-         * some invalid vertices do also.  See the Dim4BoundaryComponent
+         * some invalid vertices do also.  See the BoundaryComponent
          * class notes and Vertex<4>::isBoundary() for details.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -287,7 +287,7 @@ class REGINA_API Triangulation<4> :
          *
          * @return the list of all boundary components.
          */
-        const std::vector<Dim4BoundaryComponent*>& boundaryComponents() const;
+        const std::vector<BoundaryComponent<4>*>& boundaryComponents() const;
         /**
          * Returns the requested boundary component of this triangulation.
          *
@@ -299,7 +299,7 @@ class REGINA_API Triangulation<4> :
          * from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
-        Dim4BoundaryComponent* boundaryComponent(size_t index) const;
+        BoundaryComponent<4>* boundaryComponent(size_t index) const;
 
         /*@}*/
         /**
@@ -1056,13 +1056,13 @@ inline size_t Triangulation<4>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline const std::vector<Dim4BoundaryComponent*>&
+inline const std::vector<BoundaryComponent<4>*>&
         Triangulation<4>::boundaryComponents() const {
     ensureSkeleton();
-    return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
+    return (const std::vector<BoundaryComponent<4>*>&)(boundaryComponents_);
 }
 
-inline Dim4BoundaryComponent* Triangulation<4>::boundaryComponent(
+inline BoundaryComponent<4>* Triangulation<4>::boundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];

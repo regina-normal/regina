@@ -55,6 +55,7 @@
 #include "maths/cyclotomic.h"
 #include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
+#include "triangulation/dim2.h" // for deleting boundary triangulations
 #include "utilities/boolset.h"
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
@@ -69,7 +70,6 @@
 namespace regina {
 
 class AngleStructure;
-class NBoundaryComponent;
 class NGroupPresentation;
 class NormalSurface;
 class ProgressTrackerOpen;
@@ -145,7 +145,7 @@ enum TuraevViroAlg {
  * In particular, this class also tracks vertices, edges and triangles of the
  * triangulation (as represented by the classes Vertex<3>, Edge<3> and Triangle<3>),
  * as well as boundary components (as represented by the class
- * NBoundaryComponent).  Such objects are temporary: whenever the
+ * BoundaryComponent<3>).  Such objects are temporary: whenever the
  * triangulation changes, these objects will be deleted and rebuilt, and so
  * any pointers to them will become invalid.  Likewise, if the triangulation
  * is deleted then these objects will be deleted alongside it.
@@ -177,7 +177,7 @@ class REGINA_API Triangulation<3> :
             /**< Used to iterate through edges. */
         typedef FaceList<3, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<NBoundaryComponent*>::const_iterator
+        typedef std::vector<BoundaryComponent<3>*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
@@ -187,7 +187,7 @@ class REGINA_API Triangulation<3> :
                  as described by turaevViro(). */
 
     private:
-        MarkedVector<NBoundaryComponent> boundaryComponents_;
+        MarkedVector<BoundaryComponent<3>> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
 
         bool ideal_;
@@ -383,7 +383,7 @@ class REGINA_API Triangulation<3> :
          *
          * @return the list of all boundary components.
          */
-        const std::vector<NBoundaryComponent*>& boundaryComponents() const;
+        const std::vector<BoundaryComponent<3>*>& boundaryComponents() const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -395,7 +395,7 @@ class REGINA_API Triangulation<3> :
          * component, ranging from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
-        NBoundaryComponent* boundaryComponent(size_t index) const;
+        BoundaryComponent<3>* boundaryComponent(size_t index) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -2972,7 +2972,7 @@ class REGINA_API Triangulation<3> :
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
          */
-        void labelBoundaryTriangle(Triangle<3>*, NBoundaryComponent*);
+        void labelBoundaryTriangle(Triangle<3>*, BoundaryComponent<3>*);
 
         /**
          * Internal to calculateSkeleton().  See the comments within
@@ -3110,13 +3110,13 @@ inline long Triangulation<3>::eulerCharTri() const {
         - static_cast<long>(simplices_.size());
 }
 
-inline const std::vector<NBoundaryComponent*>&
+inline const std::vector<BoundaryComponent<3>*>&
         Triangulation<3>::boundaryComponents() const {
     ensureSkeleton();
-    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
+    return (const std::vector<BoundaryComponent<3>*>&)(boundaryComponents_);
 }
 
-inline NBoundaryComponent* Triangulation<3>::boundaryComponent(
+inline BoundaryComponent<3>* Triangulation<3>::boundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];

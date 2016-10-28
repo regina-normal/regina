@@ -106,12 +106,12 @@ void Triangulation<3>::calculateBoundary() {
     // Sets boundaryComponents, Triangle<3>.boundaryComponent,
     //     Edge<3>.boundaryComponent, Vertex<3>.boundaryComponent,
     //     Component<3>.boundaryComponents
-    NBoundaryComponent* label;
+    BoundaryComponent<3>* label;
 
     for (Triangle<3>* triangle : triangles()) {
         if (triangle->degree() < 2)
             if (triangle->boundaryComponent_ == 0) {
-                label = new NBoundaryComponent();
+                label = new BoundaryComponent<3>();
                 label->orientable_ = true;
                 labelBoundaryTriangle(triangle, label);
                 boundaryComponents_.push_back(label);
@@ -121,12 +121,12 @@ void Triangulation<3>::calculateBoundary() {
 }
 
 void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
-        NBoundaryComponent* label) {
+        BoundaryComponent<3>* label) {
     std::queue<Triangle<3>*> triangleQueue;
 
     const TriangleEmbedding<3>& emb = firstTriangle->front();
     firstTriangle->boundaryComponent_ = label;
-    label->triangles_.push_back(firstTriangle);
+    label->push_back(firstTriangle);
     emb.tetrahedron()->tmpOrientation_[emb.triangle()] = 1;
     triangleQueue.push(firstTriangle);
 
@@ -163,7 +163,7 @@ void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
                 // more than one boundary component.  Push it into all
                 // of the relevant boundary components' lists.
                 vertex->boundaryComponent_ = label;
-                label->vertices_.push_back(vertex);
+                label->push_back(vertex);
             }
         }
 
@@ -174,7 +174,7 @@ void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
                     Edge<3>::edgeNumber[tetVertices[i]][tetVertices[j]]];
                 if (! (edge->boundaryComponent_)) {
                     edge->boundaryComponent_ = label;
-                    label->edges_.push_back(edge);
+                    label->push_back(edge);
                 }
 
                 // Label the adjacent boundary triangle with the same label.
@@ -206,7 +206,7 @@ void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
                 } else {
                     // Add this adjacent triangle to the queue.
                     nextTriangle->boundaryComponent_ = label;
-                    label->triangles_.push_back(nextTriangle);
+                    label->push_back(nextTriangle);
                     nextTet->tmpOrientation_[nextFaceNumber] = yourOrientation;
                     triangleQueue.push(nextTriangle);
                 }
@@ -284,7 +284,8 @@ void Triangulation<3>::calculateVertexLinks() {
                 ideal_ = true;
                 vertex->component()->ideal_ = true;
 
-                NBoundaryComponent* bc = new NBoundaryComponent(vertex);
+                BoundaryComponent<3>* bc = new BoundaryComponent<3>();
+                bc->push_back(vertex);
                 bc->orientable_ = vertex->isLinkOrientable();
                 vertex->boundaryComponent_ = bc;
                 boundaryComponents_.push_back(bc);

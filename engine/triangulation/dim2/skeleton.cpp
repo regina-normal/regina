@@ -50,7 +50,7 @@ void Triangulation<2>::calculateSkeleton() {
         // - boundaryComponents_
         // - Component<2>::boundaryComponents_
         // - Dim2 [ Edge, Vertex ]::boundaryComponent_
-        // - all Dim2BoundaryComponent members
+        // - all BoundaryComponent<2> members
 
     // Flesh out the details of each component.
     for (auto v : vertices())
@@ -65,7 +65,7 @@ void Triangulation<2>::calculateBoundary() {
     if (nBdry == 0)
         return;
 
-    Dim2BoundaryComponent* label;
+    BoundaryComponent<2>* label;
     Triangle<2> *tri, *adjTri;
     int edgeId, adjEdgeId;
     int vertexId, adjVertexId;
@@ -78,7 +78,7 @@ void Triangulation<2>::calculateBoundary() {
         if (edge->degree() == 2 || edge->boundaryComponent_)
             continue;
 
-        label = new Dim2BoundaryComponent();
+        label = new BoundaryComponent<2>();
         boundaryComponents_.push_back(label);
         edge->component()->boundaryComponents_.push_back(label);
 
@@ -92,10 +92,10 @@ void Triangulation<2>::calculateBoundary() {
         while (true) {
             if (! edge->boundaryComponent_) {
                 edge->boundaryComponent_ = label;
-                label->edges_.push_back(edge);
+                label->push_back(edge);
 
                 vertex->boundaryComponent_ = label;
-                label->vertices_.push_back(vertex);
+                label->push_back(vertex);
             } else {
                 // We've looped right around.
                 break;

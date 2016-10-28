@@ -1,6 +1,5 @@
 # Files to compile
 SET ( FILES
-  boundarycomponent2
   edge2
   simplify
   skeleton

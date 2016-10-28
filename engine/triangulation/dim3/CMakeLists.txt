@@ -1,7 +1,6 @@
 # Files to compile
 SET ( FILES
   angle
-  boundarycomponent3
   crushtri
   decompose
   edge3

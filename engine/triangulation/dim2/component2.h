@@ -50,8 +50,6 @@
 
 namespace regina {
 
-class Dim2BoundaryComponent;
-
 /**
  * \weakgroup dim2
  * @{
@@ -96,7 +94,7 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
             /**< List of edges in the component. */
         std::vector<Vertex<2>*> vertices_;
             /**< List of vertices in the component. */
-        std::vector<Dim2BoundaryComponent*> boundaryComponents_;
+        std::vector<BoundaryComponent<2>*> boundaryComponents_;
             /**< List of boundary components in the component. */
 
     public:
@@ -168,7 +166,7 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          * entire triangulation.
          * @return the requested boundary component.
          */
-        Dim2BoundaryComponent* boundaryComponent(size_t index) const;
+        BoundaryComponent<2>* boundaryComponent(size_t index) const;
 
         /**
          * Determines if this component is closed.
@@ -246,7 +244,7 @@ inline Vertex<2>* Component<2>::face<0>(size_t index) const {
 }
 #endif // ! __DOXYGEN
 
-inline Dim2BoundaryComponent* Component<2>::boundaryComponent(size_t index)
+inline BoundaryComponent<2>* Component<2>::boundaryComponent(size_t index)
         const {
     return boundaryComponents_[index];
 }

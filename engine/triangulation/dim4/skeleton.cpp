@@ -55,7 +55,7 @@ void Triangulation<4>::calculateSkeleton() {
         // - boundaryComponents_
         // - Component<4>::boundaryComponents_
         // - Dim4 [ Tetrahedron, Triangle, Edge, Vertex ]::boundaryComponent_
-        // - all Dim4BoundaryComponent members
+        // - all BoundaryComponent<4> members
 
     calculateVertexLinks();
         // Sets:
@@ -99,7 +99,7 @@ void Triangulation<4>::calculateBoundary() {
     Tetrahedron<3>** bdryTetAll = new Tetrahedron<3>*[countTetrahedra()];
     std::fill(bdryTetAll, bdryTetAll + countTetrahedra(), nullptr);
 
-    Dim4BoundaryComponent* label;
+    BoundaryComponent<4>* label;
     std::queue<Tetrahedron<4>*> queue;
     Pentachoron<4> *pent, *adjPent;
     int facet, adjFacet;
@@ -116,7 +116,7 @@ void Triangulation<4>::calculateBoundary() {
         if (loopTet->degree() == 2 || loopTet->boundaryComponent_)
             continue;
 
-        label = new Dim4BoundaryComponent();
+        label = new BoundaryComponent<4>();
         boundaryComponents_.push_back(label);
         loopTet->component()->boundaryComponents_.push_back(label);
 
@@ -129,7 +129,7 @@ void Triangulation<4>::calculateBoundary() {
         // tetrahedra are added to the boundary triangulation in the
         // same order as they are added to the list label->tetrahedra_.
         loopTet->boundaryComponent_ = label;
-        label->tetrahedra_.push_back(loopTet);
+        label->push_back(loopTet);
 
         queue.push(loopTet);
 
@@ -238,7 +238,7 @@ void Triangulation<4>::calculateBoundary() {
                 // processing.
                 if (! adjTet->boundaryComponent_) {
                     adjTet->boundaryComponent_ = label;
-                    label->tetrahedra_.push_back(adjTet);
+                    label->push_back(adjTet);
                     queue.push(adjTet);
                 }
             }
@@ -253,22 +253,22 @@ void Triangulation<4>::calculateBoundary() {
                 label->boundary_->triangles().begin();
                 it != label->boundary_->triangles().end(); ++it) {
             const TriangleEmbedding<3>& emb = (*it)->front();
-            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
-            label->triangles_.push_back(tet->triangle(emb.triangle()));
+            tet = label->tetrahedron(emb.tetrahedron()->markedIndex());
+            label->push_back(tet->triangle(emb.triangle()));
         }
         for (Triangulation<3>::EdgeIterator it =
                 label->boundary_->edges().begin();
                 it != label->boundary_->edges().end(); ++it) {
             const EdgeEmbedding<3>& emb = (*it)->front();
-            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
-            label->edges_.push_back(tet->edge(emb.edge()));
+            tet = label->tetrahedron(emb.tetrahedron()->markedIndex());
+            label->push_back(tet->edge(emb.edge()));
         }
         for (Triangulation<3>::VertexIterator it =
                 label->boundary_->vertices().begin();
                 it != label->boundary_->vertices().end(); ++it) {
             const VertexEmbedding<3>& emb = (*it)->front();
-            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
-            label->vertices_.push_back(tet->vertex(emb.vertex()));
+            tet = label->tetrahedron(emb.tetrahedron()->markedIndex());
+            label->push_back(tet->vertex(emb.vertex()));
         }
     }
 
@@ -360,18 +360,18 @@ void Triangulation<4>::calculateVertexLinks() {
                 valid_ = vertex->component_->valid_ =  false;
                 vertex->markBadLink();
                 foundNonSimpleLink = true;
-                boundaryComponents_.push_back(
-                    vertex->boundaryComponent_ =
-                    new Dim4BoundaryComponent(vertex));
+                vertex->boundaryComponent_ = new BoundaryComponent<4>();
+                vertex->boundaryComponent_->push_back(vertex);
+                boundaryComponents_.push_back(vertex->boundaryComponent_);
             } else if ((! knownSimpleLinks_) &&
                     ! vertex->link_->isThreeSphere()) {
                 // The vertex is fine but it's not a 3-sphere.
                 // We have an ideal triangulation.
                 ideal_ = vertex->component()->ideal_ = vertex->ideal_ = true;
                 foundNonSimpleLink = true;
-                boundaryComponents_.push_back(
-                    vertex->boundaryComponent_ =
-                    new Dim4BoundaryComponent(vertex));
+                vertex->boundaryComponent_ = new BoundaryComponent<4>();
+                vertex->boundaryComponent_->push_back(vertex);
+                boundaryComponents_.push_back(vertex->boundaryComponent_);
             }
             // The only case not covered is a 3-sphere link, where we
             // have nothing to do.

@@ -45,7 +45,7 @@
 #include <vector>
 
 namespace regina {
-    class Dim4BoundaryComponent;
+    template <int> class BoundaryComponent;
     template <int> class Triangulation;
 };
 
@@ -72,7 +72,7 @@ class Dim4BoundaryComponentChooser :
          * A filter function, used to determine whether a given
          * boundary component should appear in the list.
          */
-        typedef bool (*FilterFunc)(regina::Dim4BoundaryComponent*);
+        typedef bool (*FilterFunc)(regina::BoundaryComponent<4>*);
 
     private:
         regina::Triangulation<4>* tri_;
@@ -81,7 +81,7 @@ class Dim4BoundaryComponentChooser :
         FilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::Dim4BoundaryComponent*> options_;
+        std::vector<regina::BoundaryComponent<4>*> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -109,7 +109,7 @@ class Dim4BoundaryComponentChooser :
          * If there are no available boundary components to choose from,
          * this routine will return 0.
          */
-        regina::Dim4BoundaryComponent* selected();
+        regina::BoundaryComponent<4>* selected();
 
         /**
          * Changes the selection to the given boundary component.
@@ -120,7 +120,7 @@ class Dim4BoundaryComponentChooser :
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::Dim4BoundaryComponent* option);
+        void select(regina::BoundaryComponent<4>* option);
 
         /**
          * Forces a manual refresh of the contents of this chooser.
@@ -140,7 +140,7 @@ class Dim4BoundaryComponentChooser :
         /**
          * The text to be displayed for a given option.
          */
-        QString description(regina::Dim4BoundaryComponent* option);
+        QString description(regina::BoundaryComponent<4>* option);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -174,7 +174,7 @@ class Dim4BoundaryComponentDialog : public QDialog {
             const QString& message,
             const QString& whatsThis);
 
-        static regina::Dim4BoundaryComponent* choose(QWidget* parent,
+        static regina::BoundaryComponent<4>* choose(QWidget* parent,
             regina::Triangulation<4>* tri,
             Dim4BoundaryComponentChooser::FilterFunc filter,
             const QString& title,

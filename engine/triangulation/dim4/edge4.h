@@ -49,8 +49,6 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
-
 template <int> class Isomorphism;
 typedef Isomorphism<4> Dim4Isomorphism;
 
@@ -72,7 +70,7 @@ template <>
 class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
         public Output<Face<4, 1>> {
     private:
-        Dim4BoundaryComponent* boundaryComponent_;
+        BoundaryComponent<4>* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
         Triangulation<2>* link_;
@@ -89,7 +87,7 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * Returns the boundary component of the triangulation to which
          * this edge belongs.
          *
-         * See the note in the Dim4BoundaryComponent overview regarding
+         * See the note in the BoundaryComponent overview regarding
          * what happens if the edge link itself has more than one
          * boundary component.  Note that such an edge link makes the
          * triangulation invalid.
@@ -97,7 +95,7 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * @return the boundary component containing this edge, or 0 if this
          * edge does not lie entirely within the boundary of the triangulation.
          */
-        Dim4BoundaryComponent* boundaryComponent() const;
+        BoundaryComponent<4>* boundaryComponent() const;
 
         /**
          * Determines if this edge lies entirely on the boundary of the
@@ -273,7 +271,7 @@ inline Face<4, 1>::Face(Component<4>* component) :
         boundaryComponent_(0), link_(0) {
 }
 
-inline Dim4BoundaryComponent* Face<4, 1>::boundaryComponent() const {
+inline BoundaryComponent<4>* Face<4, 1>::boundaryComponent() const {
     return boundaryComponent_;
 }
 

@@ -48,6 +48,10 @@ Version 5.1  [ (under development) ]
               - Component typedefs Dim2Component, NComponent and Dim4Component
                 are deprecated, in favour of the templated class names
                 Component<2,3,4>.
+              - Boundary component classes Dim2BoundaryComponent,
+                NBoundaryComponent and Dim4BoundaryComponent are likewise
+                deprecated, and are now typedefs for the new template class
+                BoundaryComponent<2,3,4>.
               - Typedefs Dim2TriangleEdge, NTetFace and Dim4PentFacet are
                 deprecated, in favour of the templated class names
                 FacetSpec<2,3,4>.
@@ -62,6 +66,12 @@ Version 5.1  [ (under development) ]
     ENGINE:
         Class AbelianGroup, MarkedAbelianGroup, HomMarkedAbelianGroup:
             - Now works with type Integer, not LargeInteger.
+        Class BoundaryComponent<dim>:
+            - A new generic template for boundary components, which generalises
+              the old standalone Dim2BoundaryComponent, NBoundaryComponent and
+              Dim4BoundaryComponent classes.
+            - New routine size() to count top-dimensional faces.
+            - The 3-D class BoundaryComponent<3> now has a build() function.
         Class Face<dim, subdim>:
             - The template parameters are expanded to include the case
               Face<dim, dim>, which now implements the old class Simplex<dim>.

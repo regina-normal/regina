@@ -71,6 +71,9 @@ template <int> class XMLTriangulationReader;
  * <tt>Face<dim, subdim>*</tt>.  Likewise, the variable \a f in the range-based
  * \c for loop above will be a pointer of type <tt>Face<dim, subdim>*</tt>.
  *
+ * The routine Face::index() will always return the index of the
+ * corresponding face in this list.
+ *
  * \warning Face objects are highly temporary: whenever a triangulation
  * changes, all its face objects will be deleted and new ones will be
  * created in their place.

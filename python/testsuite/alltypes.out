@@ -7,6 +7,9 @@ Equality type : BY_REFERENCE
 BoolSet : class
 Equality type : BY_VALUE
 
+BoundaryComponent4 : class
+Equality type : BY_REFERENCE
+
 Component10 : class
 Equality type : BY_REFERENCE
 
@@ -84,8 +87,7 @@ Dim2Vertex : typedef ->  Face2_0
 
 Dim2VertexEmbedding : typedef ->  FaceEmbedding2_0
 
-Dim4BoundaryComponent : class
-Equality type : BY_REFERENCE
+Dim4BoundaryComponent : typedef ->  BoundaryComponent4
 
 Dim4Component : typedef ->  Component4
 

@@ -50,8 +50,6 @@
 
 namespace regina {
 
-class NBoundaryComponent;
-
 /**
  * \weakgroup triangulation
  * @{
@@ -99,7 +97,7 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
             /**< List of edges in the component. */
         std::vector<Vertex<3>*> vertices_;
             /**< List of vertices in the component. */
-        std::vector<NBoundaryComponent*> boundaryComponents_;
+        std::vector<BoundaryComponent<3>*> boundaryComponents_;
             /**< List of boundary components in the component. */
 
         bool ideal_;
@@ -174,7 +172,7 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
          * entire triangulation.
          * @return the requested boundary component.
          */
-        NBoundaryComponent* boundaryComponent(size_t index) const;
+        BoundaryComponent<3>* boundaryComponent(size_t index) const;
 
         /**
          * Determines if this component is ideal.
@@ -278,7 +276,7 @@ inline Vertex<3>* Component<3>::face<0>(size_t index) const {
 }
 #endif // ! __DOXYGEN
 
-inline NBoundaryComponent* Component<3>::boundaryComponent(size_t index) const {
+inline BoundaryComponent<3>* Component<3>::boundaryComponent(size_t index) const {
     return boundaryComponents_[index];
 }
 

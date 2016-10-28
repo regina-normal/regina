@@ -49,8 +49,6 @@
 
 namespace regina {
 
-class NBoundaryComponent;
-
 template <int> class Isomorphism;
 typedef Isomorphism<3> NIsomorphism;
 
@@ -106,7 +104,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
                      triangulation invalid. */
         };
     private:
-        NBoundaryComponent* boundaryComponent_;
+        BoundaryComponent<3>* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
         LinkType link_;
@@ -127,7 +125,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * Returns the boundary component of the triangulation to which
          * this vertex belongs.
          *
-         * See the note in the NBoundaryComponent overview regarding what
+         * See the note in the BoundaryComponent overview regarding what
          * happens if the vertex link is a multiply punctured surface.
          * Note that this makes both the vertex and the triangulation invalid.
          *
@@ -138,7 +136,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * or 0 if this vertex is not on the boundary of the triangulation
          * as determined by isBoundary().
          */
-        NBoundaryComponent* boundaryComponent() const;
+        BoundaryComponent<3>* boundaryComponent() const;
 
         /**
          * Returns a broad categorisation of the link of the vertex.
@@ -367,7 +365,7 @@ inline Face<3, 0>::Face(Component<3>* component) :
         boundaryComponent_(0), linkEulerChar_(0), linkTri_(0) {
 }
 
-inline NBoundaryComponent* Face<3, 0>::boundaryComponent() const {
+inline BoundaryComponent<3>* Face<3, 0>::boundaryComponent() const {
     return boundaryComponent_;
 }
 

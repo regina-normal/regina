@@ -49,8 +49,6 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
-
 /**
  * \weakgroup dim4
  * @{
@@ -69,7 +67,7 @@ template <>
 class REGINA_API Face<4, 2> : public detail::FaceBase<4, 2>,
         public Output<Face<4, 2>> {
     private:
-        Dim4BoundaryComponent* boundaryComponent_;
+        BoundaryComponent<4>* boundaryComponent_;
             /**< The boundary component that this triangle is a part of,
                  or 0 if this triangle is internal. */
 
@@ -82,7 +80,7 @@ class REGINA_API Face<4, 2> : public detail::FaceBase<4, 2>,
          * triangle does not lie entirely within the boundary of the
          * triangulation.
          */
-        Dim4BoundaryComponent* boundaryComponent() const;
+        BoundaryComponent<4>* boundaryComponent() const;
 
         /**
          * Determines if this triangle lies entirely on the boundary of the
@@ -152,7 +150,7 @@ inline Face<4, 2>::Face(Component<4>* component) :
         detail::FaceBase<4, 2>(component), boundaryComponent_(0) {
 }
 
-inline Dim4BoundaryComponent* Face<4, 2>::boundaryComponent() const {
+inline BoundaryComponent<4>* Face<4, 2>::boundaryComponent() const {
     return boundaryComponent_;
 }
 

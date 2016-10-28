@@ -45,7 +45,7 @@
 #include <vector>
 
 namespace regina {
-    class NBoundaryComponent;
+    template <int> class BoundaryComponent;
     template <int> class Triangulation;
 };
 
@@ -53,7 +53,7 @@ namespace regina {
  * A filter function, used to determine whether a given boundary component
  * should appear in the list.
  */
-typedef bool (*BoundaryComponentFilterFunc)(regina::NBoundaryComponent*);
+typedef bool (*BoundaryComponentFilterFunc)(regina::BoundaryComponent<3>*);
 
 /**
  * A widget through which a single boundary component of some triangulation
@@ -80,7 +80,7 @@ class BoundaryComponentChooser :
         BoundaryComponentFilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::NBoundaryComponent*> options_;
+        std::vector<regina::BoundaryComponent<3>*> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -109,7 +109,7 @@ class BoundaryComponentChooser :
          * If there are no available boundary components to choose from,
          * this routine will return 0.
          */
-        regina::NBoundaryComponent* selected();
+        regina::BoundaryComponent<3>* selected();
 
         /**
          * Changes the selection to the given boundary component.
@@ -120,7 +120,7 @@ class BoundaryComponentChooser :
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::NBoundaryComponent* option);
+        void select(regina::BoundaryComponent<3>* option);
 
         /**
          * Forces a manual refresh of the contents of this chooser.
@@ -140,7 +140,7 @@ class BoundaryComponentChooser :
         /**
          * The text to be displayed for a given option.
          */
-        QString description(regina::NBoundaryComponent* option);
+        QString description(regina::BoundaryComponent<3>* option);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -174,7 +174,7 @@ class BoundaryComponentDialog : public QDialog {
             const QString& message,
             const QString& whatsThis);
 
-        static regina::NBoundaryComponent* choose(QWidget* parent,
+        static regina::BoundaryComponent<3>* choose(QWidget* parent,
             regina::Triangulation<3>* tri,
             BoundaryComponentFilterFunc filter,
             const QString& title,

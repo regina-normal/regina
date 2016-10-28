@@ -84,7 +84,7 @@ class Component : public detail::ComponentBase<dim> {
          *
          * Marks the component as orientable, with no boundary facets.
          */
-        Component();
+        Component() = default;
 
     friend class detail::TriangulationBase<dim>;
 };
@@ -96,12 +96,6 @@ template <> class Component<3>;
 template <> class Component<4>;
 
 /*@}*/
-
-// Inline functions for Component
-
-template <int dim>
-inline Component<dim>::Component() : detail::ComponentBase<dim>() {
-}
 
 } // namespace regina
 

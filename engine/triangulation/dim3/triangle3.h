@@ -49,8 +49,6 @@
 
 namespace regina {
 
-class NBoundaryComponent;
-
 /**
  * \weakgroup triangulation
  * @{
@@ -107,7 +105,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
         };
 
     private:
-        NBoundaryComponent* boundaryComponent_;
+        BoundaryComponent<3>* boundaryComponent_;
             /**< The boundary component that this triangle is a part of,
                  or 0 if this triangle is internal. */
         Type type_;
@@ -209,7 +207,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * triangle does not lie entirely within the boundary of the
          * triangulation.
          */
-        NBoundaryComponent* boundaryComponent() const;
+        BoundaryComponent<3>* boundaryComponent() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -272,7 +270,7 @@ inline Face<3, 2>::Face(Component<3>* component) :
         boundaryComponent_(0), type_(UNKNOWN_TYPE) {
 }
 
-inline NBoundaryComponent* Face<3, 2>::boundaryComponent() const {
+inline BoundaryComponent<3>* Face<3, 2>::boundaryComponent() const {
     return boundaryComponent_;
 }
 

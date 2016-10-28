@@ -49,8 +49,6 @@
 
 namespace regina {
 
-class Dim2BoundaryComponent;
-
 /**
  * \weakgroup dim2
  * @{
@@ -69,7 +67,7 @@ template <>
 class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
         public Output<Face<2, 0>> {
     private:
-        Dim2BoundaryComponent* boundaryComponent_;
+        BoundaryComponent<2>* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
 
@@ -81,7 +79,7 @@ class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
          * @return the boundary component containing this vertex,
          * or 0 if this vertex is not on the boundary of the triangulation.
          */
-        Dim2BoundaryComponent* boundaryComponent() const;
+        BoundaryComponent<2>* boundaryComponent() const;
 
         /**
          * Determines if this vertex lies on the boundary of the
@@ -151,7 +149,7 @@ inline Face<2, 0>::Face(Component<2>* component) :
         detail::FaceBase<2, 0>(component), boundaryComponent_(0) {
 }
 
-inline Dim2BoundaryComponent* Face<2, 0>::boundaryComponent() const {
+inline BoundaryComponent<2>* Face<2, 0>::boundaryComponent() const {
     return boundaryComponent_;
 }
 

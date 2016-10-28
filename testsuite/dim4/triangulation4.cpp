@@ -48,7 +48,7 @@
 #include "testsuite/generic/generictriangulation.h"
 #include "testsuite/dim4/testdim4.h"
 
-using regina::Dim4BoundaryComponent;
+using regina::BoundaryComponent;
 using regina::Edge;
 using regina::Dim4ExampleTriangulation;
 using regina::Dim4Isomorphism;
@@ -795,7 +795,7 @@ class Triangulation4Test : public TriangulationTest<4> {
         }
 
         void verifyBoundaryInclusions(const Triangulation<4>& tri) {
-            Dim4BoundaryComponent* bc;
+            BoundaryComponent<4>* bc;
             const Tetrahedron<3> *tet3, *adj3;
             Tetrahedron<4> *tet4, *adj4;
 
@@ -1328,7 +1328,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // Invalid vertices and edges can wreak havoc on the
             // counting and labelling of boundary components (see
-            // Dim4BoundaryComponent for details).
+            // the BoundaryComponent class notes for details).
             if (tri->isValid() && (tri->countBoundaryComponents() !=
                     b.countBoundaryComponents())) {
                 std::ostringstream msg;

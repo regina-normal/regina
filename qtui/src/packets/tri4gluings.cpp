@@ -745,7 +745,7 @@ void Tri4GluingsUI::boundaryComponents() {
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any boundary components."));
     else {
-        regina::Dim4BoundaryComponent* chosen =
+        regina::BoundaryComponent<4>* chosen =
             Dim4BoundaryComponentDialog::choose(ui, tri, 0 /* filter */,
             tr("Boundary Components"),
             tr("Triangulate which boundary component?"),

@@ -171,7 +171,7 @@ bool Triangulation<4>::intelligentSimplify() {
 
 bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
     BoundaryComponentIterator bit;
-    Dim4BoundaryComponent* bc;
+    BoundaryComponent<4>* bc;
     unsigned long nTetrahedra;
     unsigned long iTet;
 

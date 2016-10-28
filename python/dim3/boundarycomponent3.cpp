@@ -33,33 +33,41 @@
 #include <boost/python.hpp>
 #include "triangulation/dim3.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
-using regina::NBoundaryComponent;
+using namespace regina::python;
+using regina::BoundaryComponent;
 
 void addNBoundaryComponent() {
-    class_<NBoundaryComponent, std::auto_ptr<NBoundaryComponent>,
-            boost::noncopyable> ("NBoundaryComponent", no_init)
-        .def("index", &NBoundaryComponent::index)
-        .def("countFaces", &regina::python::countFaces<NBoundaryComponent, 3>)
-        .def("countTriangles", &NBoundaryComponent::countTriangles)
-        .def("countEdges", &NBoundaryComponent::countEdges)
-        .def("countVertices", &NBoundaryComponent::countVertices)
-        .def("face", &regina::python::face<NBoundaryComponent, 3, size_t>)
-        .def("triangle", &NBoundaryComponent::triangle,
+    class_<BoundaryComponent<3>, std::auto_ptr<BoundaryComponent<3>>,
+            boost::noncopyable> ("BoundaryComponent3", no_init)
+        .def("index", &BoundaryComponent<3>::index)
+        .def("size", &BoundaryComponent<3>::size)
+        .def("countFaces", &regina::python::countFaces<BoundaryComponent<3>, 3>)
+        .def("countTriangles", &BoundaryComponent<3>::countTriangles)
+        .def("countEdges", &BoundaryComponent<3>::countEdges)
+        .def("countVertices", &BoundaryComponent<3>::countVertices)
+        .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)
+        .def("triangle", &BoundaryComponent<3>::triangle,
             return_value_policy<reference_existing_object>())
-        .def("edge", &NBoundaryComponent::edge,
+        .def("edge", &BoundaryComponent<3>::edge,
             return_value_policy<reference_existing_object>())
-        .def("vertex", &NBoundaryComponent::vertex,
+        .def("vertex", &BoundaryComponent<3>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("component", &NBoundaryComponent::component,
+        .def("component", &BoundaryComponent<3>::component,
             return_value_policy<reference_existing_object>())
-        .def("eulerChar", &NBoundaryComponent::eulerChar)
-        .def("isIdeal", &NBoundaryComponent::isIdeal)
-        .def("isOrientable", &NBoundaryComponent::isOrientable)
+        .def("build", &BoundaryComponent<3>::build,
+            return_value_policy<to_held_type<>>())
+        .def("eulerChar", &BoundaryComponent<3>::eulerChar)
+        .def("isIdeal", &BoundaryComponent<3>::isIdeal)
+        .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
+        .def("isOrientable", &BoundaryComponent<3>::isOrientable)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NBoundaryComponent") = scope().attr("BoundaryComponent3");
 }
 

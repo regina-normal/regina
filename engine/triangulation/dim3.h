@@ -34,7 +34,7 @@
  *  \brief Includes all headers for working with 3-dimensional triangulations.
  *  This includes headers for the main class Triangulation<3>, as well as the
  *  face classes Face<3,\a subdim> and the component classes Component<3> and
- *  NBoundaryComponent.
+ *  BoundaryComponent<3>.
  */
 
 #ifndef __DIM3_H

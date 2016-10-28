@@ -44,7 +44,7 @@
 
 using regina::NAbelianGroup;
 using regina::BoolSet;
-using regina::NBoundaryComponent;
+using regina::BoundaryComponent;
 using regina::Container;
 using regina::Edge;
 using regina::NExampleTriangulation;
@@ -1974,8 +1974,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 return false;
 
             // Check that both boundary components are homeomorphic.
-            NBoundaryComponent* b0 = tri->boundaryComponent(0);
-            NBoundaryComponent* b1 = tri->boundaryComponent(1);
+            BoundaryComponent<3>* b0 = tri->boundaryComponent(0);
+            BoundaryComponent<3>* b1 = tri->boundaryComponent(1);
 
             if (b0->eulerChar() != b1->eulerChar())
                 return false;
@@ -2025,7 +2025,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 const Triangulation<3>* tri, unsigned& foundS,
                 unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
             if (tri->countBoundaryComponents() == 1) {
-                const NBoundaryComponent* b = tri->boundaryComponent(0);
+                const BoundaryComponent<3>* b = tri->boundaryComponent(0);
 
                 if (s->eulerChar() == b->eulerChar()
                         && s->isOrientable() == b->isOrientable())
@@ -2034,8 +2034,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         (b->isOrientable() || ! s->isOrientable()))
                     ++foundDoubleCover;
             } else if (tri->countBoundaryComponents() == 2) {
-                const NBoundaryComponent* b0 = tri->boundaryComponent(0);
-                const NBoundaryComponent* b1 = tri->boundaryComponent(1);
+                const BoundaryComponent<3>* b0 = tri->boundaryComponent(0);
+                const BoundaryComponent<3>* b1 = tri->boundaryComponent(1);
 
                 if (
                         s->eulerChar() == b0->eulerChar() &&
