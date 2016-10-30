@@ -46,7 +46,7 @@ namespace {
      */
     class NAbelianGroupPropertyReader : public XMLElementReader {
         public:
-            typedef Property<NAbelianGroup, StoreManagedPtr> PropType;
+            typedef Property<AbelianGroup, StoreManagedPtr> PropType;
 
         private:
             PropType& prop_;
@@ -67,7 +67,7 @@ namespace {
             virtual void endSubElement(const std::string& subTagName,
                     XMLElementReader* subReader) {
                 if (subTagName == "abeliangroup") {
-                    NAbelianGroup* ans =
+                    AbelianGroup* ans =
                         dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
                         group();
                     if (ans)

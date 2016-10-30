@@ -365,7 +365,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
         static NLayeredSolidTorus* isLayeredSolidTorus(Component<3>* comp);
 
         NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

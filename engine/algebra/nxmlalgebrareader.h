@@ -60,7 +60,7 @@ namespace regina {
  */
 class REGINA_API NXMLAbelianGroupReader : public XMLElementReader {
     private:
-        NAbelianGroup* group_;
+        AbelianGroup* group_;
             /**< The abelian group currently being read. */
 
     public:
@@ -75,7 +75,7 @@ class REGINA_API NXMLAbelianGroupReader : public XMLElementReader {
          *
          * @return the group that has been read, or 0 if an error occurred.
          */
-        virtual NAbelianGroup* group();
+        virtual AbelianGroup* group();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -126,7 +126,7 @@ class REGINA_API NXMLGroupPresentationReader : public XMLElementReader {
 inline NXMLAbelianGroupReader::NXMLAbelianGroupReader() : group_(0) {
 }
 
-inline NAbelianGroup* NXMLAbelianGroupReader::group() {
+inline AbelianGroup* NXMLAbelianGroupReader::group() {
     return group_;
 }
 

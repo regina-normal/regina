@@ -179,7 +179,7 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
             const Component<3>* comp);
 
         NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 

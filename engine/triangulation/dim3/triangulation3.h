@@ -198,14 +198,14 @@ class REGINA_API Triangulation<3> :
         mutable Property<NGroupPresentation, StoreManagedPtr>
                 fundamentalGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H1Rel_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H1Rel_;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H1Bdry_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H1Bdry_;
             /**< First homology group of the boundary. */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
         mutable Property<bool> twoSphereBoundaryComponents_;
@@ -605,7 +605,7 @@ class REGINA_API Triangulation<3> :
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& homology() const;
+        const AbelianGroup& homology() const;
         /**
          * Returns the first homology group for this triangulation.
          * If this triangulation contains any ideal or invalid vertices,
@@ -638,7 +638,7 @@ class REGINA_API Triangulation<3> :
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& homologyH1() const;
+        const AbelianGroup& homologyH1() const;
         /**
          * Returns the relative first homology group with
          * respect to the boundary for this triangulation.
@@ -655,7 +655,7 @@ class REGINA_API Triangulation<3> :
          * @return the relative first homology group with respect to the
          * boundary.
          */
-        const NAbelianGroup& homologyRel() const;
+        const AbelianGroup& homologyRel() const;
         /**
          * Returns the first homology group of the
          * boundary for this triangulation.
@@ -675,7 +675,7 @@ class REGINA_API Triangulation<3> :
          *
          * @return the first homology group of the boundary.
          */
-        const NAbelianGroup& homologyBdry() const;
+        const AbelianGroup& homologyBdry() const;
         /**
          * Returns the second homology group for this triangulation.
          * If this triangulation contains any ideal vertices,
@@ -695,7 +695,7 @@ class REGINA_API Triangulation<3> :
          *
          * @return the second homology group.
          */
-        const NAbelianGroup& homologyH2() const;
+        const AbelianGroup& homologyH2() const;
         /**
          * Returns the second homology group with coefficients in Z_2
          * for this triangulation.
@@ -3168,7 +3168,7 @@ inline bool Triangulation<3>::hasStrictAngleStructure() const {
     return (strictAngleStructure_.value() != 0);
 }
 
-inline const NAbelianGroup& Triangulation<3>::homologyH1() const {
+inline const AbelianGroup& Triangulation<3>::homologyH1() const {
     return homology();
 }
 

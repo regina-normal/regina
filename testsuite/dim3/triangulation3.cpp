@@ -54,7 +54,7 @@
 #include "testsuite/generic/generictriangulation.h"
 #include "testsuite/dim3/testtriangulation.h"
 
-using regina::NAbelianGroup;
+using regina::AbelianGroup;
 using regina::NBoundaryComponent;
 using regina::Component;
 using regina::NExampleTriangulation;
@@ -1681,7 +1681,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyEuler(fig8_bary, 0, 1, "Large figure eight knot complement");
         }
 
-        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+        void verifyGroup(const AbelianGroup& g, const std::string& grpName,
                 unsigned rank) {
             // Construct the error message.
             std::ostringstream msg;
@@ -1701,7 +1701,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
         }
 
-        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+        void verifyGroup(const AbelianGroup& g, const std::string& grpName,
                 unsigned rank, unsigned long torsionDegree) {
             // Construct the error message.
             std::ostringstream msg;
@@ -1723,7 +1723,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+        void verifyGroup(const AbelianGroup& g, const std::string& grpName,
                 unsigned rank, unsigned long torsionDegree1,
                 unsigned long torsionDegree2) {
             // Construct the error message.
@@ -1747,7 +1747,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+        void verifyGroup(const AbelianGroup& g, const std::string& grpName,
                 unsigned rank, unsigned long torsionDegree1,
                 unsigned long torsionDegree2, unsigned long torsionDegree3) {
             // Construct the error message.
@@ -1906,7 +1906,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
             delete pi1;
 
-            NAbelianGroup abelian;
+            AbelianGroup abelian;
             abelian.addGroup(m);
 
             if (abelian.detail() != tri->homology().detail()) {
@@ -3112,7 +3112,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 // We expect the first homology group to be identical,
                 // or to be missing a copy of Z_2.
                 if (! (tri->homology() == cover.homology())) {
-                    NAbelianGroup hCover(cover.homology());
+                    AbelianGroup hCover(cover.homology());
                     hCover.addTorsionElement(2);
                     if (! (tri->homology() == hCover)) {
                         std::ostringstream msg;
@@ -3643,8 +3643,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    NAbelianGroup expectH2(tri->homologyH2());
-                    NAbelianGroup foundH2(punc.homologyH2());
+                    AbelianGroup expectH2(tri->homologyH2());
+                    AbelianGroup foundH2(punc.homologyH2());
                     Component<3>* c = origTet->component();
                     if (! c->isClosed()) {
                         // X -> X + Z

@@ -119,7 +119,7 @@ class REGINA_API NSimpleSurfaceBundle : public NManifold {
         bool operator != (const NSimpleSurfaceBundle& compare) const;
 
         virtual Triangulation<3>* construct() const;
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

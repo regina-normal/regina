@@ -44,7 +44,7 @@
 #include "testsuite/exhaustive.h"
 #include "testsuite/dim3/testtriangulation.h"
 
-using regina::NAbelianGroup;
+using regina::AbelianGroup;
 using regina::Container;
 using regina::NManifold;
 using regina::Perm;
@@ -213,7 +213,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 stdName2 == manifold2);
 
             // Test that the homologies are consistent.
-            NAbelianGroup combined(summand1->homology());
+            AbelianGroup combined(summand1->homology());
             combined.addGroup(summand2->homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
@@ -303,7 +303,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 stdName1 == "RP3" && stdName2 == "RP3" && stdName3 == "RP3");
 
             // Test that the homologies are consistent.
-            NAbelianGroup combined(summand1->homology());
+            AbelianGroup combined(summand1->homology());
             combined.addGroup(summand2->homology());
             combined.addGroup(summand3->homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
@@ -477,7 +477,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NAbelianGroup h1;
+            AbelianGroup h1;
             Triangulation<3>* term;
             bool foundNor = false;
             for (regina::Packet* p = parent.firstChild(); p;

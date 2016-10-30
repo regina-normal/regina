@@ -103,7 +103,7 @@ void process(Triangulation<3>* t) {
             if ((! structure.empty()) && (structure != manifold))
                 std::cout << "  ==  " << structure;
 
-            NAbelianGroup* h1 = m->homology();
+            AbelianGroup* h1 = m->homology();
             if (h1) {
                 homChecked++;
                 if (! (*h1 == t->homology())) {

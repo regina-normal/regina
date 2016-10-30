@@ -107,8 +107,8 @@ NManifold* NLayeredChain::manifold() const {
     return new NHandlebody(index_ <= 1 ? 0 : 1, true);
 }
 
-NAbelianGroup* NLayeredChain::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NLayeredChain::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     if (index_ > 1)
         ans->addRank();
     return ans;

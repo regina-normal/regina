@@ -200,8 +200,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const Component<3>* comp) {
     return 0;
 }
 
-NAbelianGroup* NLayeredLoop::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NLayeredLoop::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     if (hinge_[1]) {
         // Untwisted.
         if (length_ > 1)

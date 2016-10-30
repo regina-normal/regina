@@ -177,8 +177,8 @@ NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(Tetrahedron<3>* tet,
     return ans;
 }
 
-NAbelianGroup* NTriSolidTorus::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NTriSolidTorus::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;
 }

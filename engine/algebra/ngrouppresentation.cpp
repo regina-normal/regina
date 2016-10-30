@@ -224,7 +224,7 @@ std::string NGroupPresentation::recogniseGroup(bool moreUtf8) const {
         { out << 0; return out.str(); }
 
     // Let's record the abelianisation.
-    std::unique_ptr< NAbelianGroup > ab( abelianisation() );
+    std::unique_ptr< AbelianGroup > ab( abelianisation() );
 
     // abelian test
     if (identifyAbelian()) {
@@ -297,9 +297,9 @@ std::string NGroupPresentation::recogniseGroup(bool moreUtf8) const {
     return std::string(); // returns empty string if not recognised.
 }
 
-std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
+std::unique_ptr<AbelianGroup> NGroupPresentation::abelianisation() const
 {
-    // create presentation matrices to pass to NAbelianGroup(M, N)
+    // create presentation matrices to pass to AbelianGroup(M, N)
     MatrixInt M(1, countGenerators() ); // zero matrix
     MatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
@@ -308,7 +308,7 @@ std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
         for (unsigned long i=0; i<Rj.countTerms(); i++)
             N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
-    return std::unique_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
+    return std::unique_ptr<AbelianGroup>(new AbelianGroup(M,N));
 }
 
 std::unique_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianisation()

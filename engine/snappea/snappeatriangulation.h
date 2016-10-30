@@ -375,7 +375,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
             /**< The fundamental group of the filled triangulation,
                  or 0 if this cannot be computed (e.g., if SnapPea
                  does not return a matrix of relations). */
-        mutable Property<NAbelianGroup, StoreManagedPtr> h1Filled_;
+        mutable Property<AbelianGroup, StoreManagedPtr> h1Filled_;
             /**< The first homology group of the filled triangulation,
                  or 0 if this cannot be computed. */
 
@@ -1067,7 +1067,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * @return the first homology group of the filled manifold, or
          * 0 if this could not be computed.
          */
-        const NAbelianGroup* homologyFilled() const;
+        const AbelianGroup* homologyFilled() const;
 
         /**
          * Returns the fundamental group of the manifold with respect to

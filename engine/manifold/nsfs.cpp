@@ -801,7 +801,7 @@ Triangulation<3>* NSFSpace::construct() const {
     return ans;
 }
 
-NAbelianGroup* NSFSpace::homology() const {
+AbelianGroup* NSFSpace::homology() const {
     if (punctures_ || puncturesTwisted_) {
         // Not just now.
         return 0;
@@ -811,7 +811,7 @@ NAbelianGroup* NSFSpace::homology() const {
     // abelianise.  The presentation without reflectors is given on
     // p91 of Orlik [1972].  Each reflector gives additional generators
     // y and z, for which y acts as a boundary component and z^2 = fibre.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     unsigned long nRef = reflectors_ + reflectorsTwisted_;
     bool twisted = fibreReversing();
 

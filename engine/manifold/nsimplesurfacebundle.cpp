@@ -71,8 +71,8 @@ Triangulation<3>* NSimpleSurfaceBundle::construct() const {
     return ans;
 }
 
-NAbelianGroup* NSimpleSurfaceBundle::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NSimpleSurfaceBundle::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     if (type_ == RP2xS1)
         ans->addTorsionElement(2);

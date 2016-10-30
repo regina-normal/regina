@@ -31,7 +31,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-print NAbelianGroup.equalityType
+print AbelianGroup.equalityType
 print Integer.equalityType
 print Triangulation3.equalityType
 
@@ -46,9 +46,9 @@ a = Integer(3)
 b = Integer(3)
 print a == b, a != b
 
-print 'NAbelianGroup:'
-a = NAbelianGroup()
-b = NAbelianGroup()
+print 'AbelianGroup:'
+a = AbelianGroup()
+b = AbelianGroup()
 print a == b, a != b
 
 # Cases that should be reported as different (by C++ reference):
@@ -78,7 +78,7 @@ a = t.newTetrahedron()
 b = t.tetrahedron(0)
 print a == b, a != b
 
-print 'NAbelianGroup:'
+print 'AbelianGroup:'
 t = NExampleTriangulation.lens(8,3)
 a = t.homology()
 b = t.homology()

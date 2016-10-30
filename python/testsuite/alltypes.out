@@ -1,3 +1,6 @@
+AbelianGroup : class
+Equality type : BY_VALUE
+
 AngleStructure : class
 Equality type : BY_REFERENCE
 
@@ -1121,9 +1124,6 @@ Matrix2Row : class
 Equality type : BY_VALUE
 
 MatrixInt : class
-Equality type : BY_VALUE
-
-NAbelianGroup : class
 Equality type : BY_VALUE
 
 NAngleStructure : typedef ->  AngleStructure

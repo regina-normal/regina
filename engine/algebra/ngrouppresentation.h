@@ -55,7 +55,7 @@
 
 namespace regina {
 
-class NAbelianGroup;
+class AbelianGroup;
 class NHomGroupPresentation;
 class NMarkedAbelianGroup;
 
@@ -935,7 +935,7 @@ class REGINA_API NGroupPresentation :
          * - <tt>0</tt> for the trivial group;
          * - <tt>Z_n</tt> for cyclic groups with \a n > 1;
          * - <tt>Free(n)</tt> for free groups with \a n > 1 generators - see
-         *   NAbelianGroup::str() for how abelian groups are presented;
+         *   AbelianGroup::str() for how abelian groups are presented;
          * - <tt>FreeProduct(G1, G2, ... , Gk)</tt> for free products, where
          *   one replaces \a G1 through \a Gk by text strings representing the
          *   free summands;
@@ -976,7 +976,7 @@ class REGINA_API NGroupPresentation :
          *
          * @return a newly allocated abelianisation of this group.
          */
-        std::unique_ptr<NAbelianGroup> abelianisation() const;
+        std::unique_ptr<AbelianGroup> abelianisation() const;
 
         /**
          * Computes the abelianisation of this group.

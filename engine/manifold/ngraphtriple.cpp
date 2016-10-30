@@ -68,7 +68,7 @@ bool NGraphTriple::operator < (const NGraphTriple& compare) const {
     return simpler(matchingReln_[1], compare.matchingReln_[1]);
 }
 
-NAbelianGroup* NGraphTriple::homology() const {
+AbelianGroup* NGraphTriple::homology() const {
     // Just for safety (this should always be true anyway):
     if (end_[0]->punctures(false) != 1 || end_[0]->punctures(true) != 0)
         return 0;
@@ -195,7 +195,7 @@ NAbelianGroup* NGraphTriple::homology() const {
     reln++;
 
     // Phew.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(m);
     return ans;
 }

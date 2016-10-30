@@ -415,13 +415,13 @@ void Triangulation<3>::cloneFrom(const Triangulation<3>& X) {
     if (X.fundamentalGroup_.known())
         fundamentalGroup_= new NGroupPresentation(*X.fundamentalGroup_.value());
     if (X.H1_.known())
-        H1_ = new NAbelianGroup(*(X.H1_.value()));
+        H1_ = new AbelianGroup(*(X.H1_.value()));
     if (X.H1Rel_.known())
-        H1Rel_ = new NAbelianGroup(*(X.H1Rel_.value()));
+        H1Rel_ = new AbelianGroup(*(X.H1Rel_.value()));
     if (X.H1Bdry_.known())
-        H1Bdry_ = new NAbelianGroup(*(X.H1Bdry_.value()));
+        H1Bdry_ = new AbelianGroup(*(X.H1Bdry_.value()));
     if (X.H2_.known())
-        H2_ = new NAbelianGroup(*(X.H2_.value()));
+        H2_ = new AbelianGroup(*(X.H2_.value()));
 
     twoSphereBoundaryComponents_ = X.twoSphereBoundaryComponents_;
     negativeIdealBoundaryComponents_ = X.negativeIdealBoundaryComponents_;

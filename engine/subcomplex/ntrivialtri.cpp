@@ -148,8 +148,8 @@ NManifold* NTrivialTri::manifold() const {
     return 0;
 }
 
-NAbelianGroup* NTrivialTri::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NTrivialTri::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
 
     if (type_ == N2)
         ans->addRank();

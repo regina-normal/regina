@@ -57,7 +57,7 @@ bool NGraphPair::operator < (const NGraphPair& compare) const {
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-NAbelianGroup* NGraphPair::homology() const {
+AbelianGroup* NGraphPair::homology() const {
     // Just for safety (this should always be true anyway):
     if (sfs_[0]->punctures(false) != 1 || sfs_[0]->punctures(true) != 0)
         return 0;
@@ -165,7 +165,7 @@ NAbelianGroup* NGraphPair::homology() const {
     m.entry(7 + fibres0 + fibres1 + ref0 + ref1, 1 + genus0) =
         matchingReln_[1][1];
 
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(m);
     return ans;
 }

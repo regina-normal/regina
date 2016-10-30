@@ -232,7 +232,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
                 Perm<4> useVertexRoles);
 
         NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

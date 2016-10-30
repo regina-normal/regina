@@ -99,8 +99,8 @@ NManifold* NL31Pillow::manifold() const {
     return new NLensSpace(3, 1);
 }
 
-NAbelianGroup* NL31Pillow::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NL31Pillow::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addTorsionElement(3);
     return ans;
 }

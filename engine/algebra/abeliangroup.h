@@ -71,27 +71,27 @@ typedef MatrixIntDomain<Integer> MatrixInt;
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
-class REGINA_API NAbelianGroup :
-        public ShortOutput<NAbelianGroup, true>,
+class REGINA_API AbelianGroup :
+        public ShortOutput<AbelianGroup, true>,
         public boost::noncopyable {
     protected:
         unsigned rank_;
             /**< The rank of the group (the number of Z components). */
         std::multiset<Integer> invariantFactors;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
-             *   described in the NAbelianGroup notes. */
+             *   described in the AbelianGroup notes. */
 
     public:
         /**
          * Creates a new trivial group.
          */
-        NAbelianGroup();
+        AbelianGroup();
         /**
          * Creates a clone of the given group.
          *
          * @param cloneMe the group to clone.
          */
-        NAbelianGroup(const NAbelianGroup& cloneMe);
+        AbelianGroup(const AbelianGroup& cloneMe);
         /**
          * Creates an abelian group as the homology of a chain complex.
          *
@@ -105,7 +105,7 @@ class REGINA_API NAbelianGroup :
          *
          * @author Ryan Budney
          */
-        NAbelianGroup(const MatrixInt& M, const MatrixInt& N);
+        AbelianGroup(const MatrixInt& M, const MatrixInt& N);
         /**
          * Creates an abelian group as the homology of a chain complex,
          * using mod-\a p coefficients.
@@ -120,11 +120,11 @@ class REGINA_API NAbelianGroup :
          * @param p the modulus, which may be any Integer.
          * Zero is interpreted as a request for integer coefficents,
          * which will give the same result as the
-         * NAbelianGroup(const MatrixInt&, const MatrixInt&) constructor.
+         * AbelianGroup(const MatrixInt&, const MatrixInt&) constructor.
          *
          * @author Ryan Budney
          */
-        NAbelianGroup(const MatrixInt& M, const MatrixInt& N,
+        AbelianGroup(const MatrixInt& M, const MatrixInt& N,
             const Integer &p);
 
         /**
@@ -214,7 +214,7 @@ class REGINA_API NAbelianGroup :
          *
          * @param group the group to add to this one.
          */
-        void addGroup(const NAbelianGroup& group);
+        void addGroup(const AbelianGroup& group);
 
         /**
          * Returns the rank of the group.
@@ -260,7 +260,7 @@ class REGINA_API NAbelianGroup :
         /**
          * Returns the number of invariant factors that describe the
          * torsion elements of this group.
-         * See the NAbelianGroup class notes for further details.
+         * See the AbelianGroup class notes for further details.
          *
          * @return the number of invariant factors.
          */
@@ -268,7 +268,7 @@ class REGINA_API NAbelianGroup :
         /**
          * Returns the given invariant factor describing the torsion
          * elements of this group.
-         * See the NAbelianGroup class notes for further details.
+         * See the AbelianGroup class notes for further details.
          *
          * If the invariant factors are <i>d0</i>|<i>d1</i>|...|<i>dn</i>,
          * this routine will return <i>di</i> where <i>i</i> is the
@@ -312,7 +312,7 @@ class REGINA_API NAbelianGroup :
          * @param other the group with which this should be compared.
          * @return \c true if and only if the two groups are isomorphic.
          */
-        bool operator == (const NAbelianGroup& other) const;
+        bool operator == (const AbelianGroup& other) const;
         /**
          * Determines whether this and the given abelian group are
          * non-isomorphic.
@@ -320,7 +320,7 @@ class REGINA_API NAbelianGroup :
          * @param other the group with which this should be compared.
          * @return \c true if and only if the two groups are non-isomorphic.
          */
-        bool operator != (const NAbelianGroup& other) const;
+        bool operator != (const AbelianGroup& other) const;
 
         /**
          * Writes a chunk of XML containing this abelian group.
@@ -339,7 +339,7 @@ class REGINA_API NAbelianGroup :
          * <tt>3 Z + 4 Z_2 + Z_120</tt>.
          * The torsion elements will be written in terms of the
          * invariant factors of the group, as described in the
-         * NAbelianGroup notes.
+         * AbelianGroup notes.
          *
          * \ifacespython Not present.
          *
@@ -373,55 +373,55 @@ class REGINA_API NAbelianGroup :
 
 /*@}*/
 
-// Inline functions for NAbelianGroup
+// Inline functions for AbelianGroup
 
-inline NAbelianGroup::NAbelianGroup() : rank_(0) {
+inline AbelianGroup::AbelianGroup() : rank_(0) {
 }
 
-inline NAbelianGroup::NAbelianGroup(const NAbelianGroup& g) :
+inline AbelianGroup::AbelianGroup(const AbelianGroup& g) :
         rank_(g.rank_), invariantFactors(g.invariantFactors) {
 }
 
-inline void NAbelianGroup::addRank(int extraRank) {
+inline void AbelianGroup::addRank(int extraRank) {
     rank_ += extraRank;
 }
 
-inline void NAbelianGroup::addTorsionElement(unsigned long degree,
+inline void AbelianGroup::addTorsionElement(unsigned long degree,
         unsigned mult) {
     addTorsionElement(Integer(degree), mult);
 }
 
-inline unsigned NAbelianGroup::rank() const {
+inline unsigned AbelianGroup::rank() const {
     return rank_;
 }
 
-inline unsigned NAbelianGroup::torsionRank(unsigned long degree) const {
+inline unsigned AbelianGroup::torsionRank(unsigned long degree) const {
     return torsionRank(Integer(degree));
 }
 
-inline size_t NAbelianGroup::countInvariantFactors() const {
+inline size_t AbelianGroup::countInvariantFactors() const {
     return invariantFactors.size();
 }
 
-inline bool NAbelianGroup::isTrivial() const {
+inline bool AbelianGroup::isTrivial() const {
     return (rank_ == 0 && invariantFactors.empty());
 }
 
-inline bool NAbelianGroup::isZ() const {
+inline bool AbelianGroup::isZ() const {
     return (rank_ == 1 && invariantFactors.empty());
 }
 
-inline bool NAbelianGroup::isZn(unsigned long n) const {
+inline bool AbelianGroup::isZn(unsigned long n) const {
     return (n == 0 ? isZ() : n == 1 ? isTrivial() :
         (rank_ == 0 && invariantFactors.size() == 1 &&
             *invariantFactors.begin() == n));
 }
 
-inline bool NAbelianGroup::operator == (const NAbelianGroup& other) const {
+inline bool AbelianGroup::operator == (const AbelianGroup& other) const {
     return (rank_ == other.rank_ && invariantFactors == other.invariantFactors);
 }
 
-inline bool NAbelianGroup::operator != (const NAbelianGroup& other) const {
+inline bool AbelianGroup::operator != (const AbelianGroup& other) const {
     return (rank_ != other.rank_ || invariantFactors != other.invariantFactors);
 }
 

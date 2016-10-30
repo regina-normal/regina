@@ -37,12 +37,12 @@
 
 namespace regina {
 
-const NAbelianGroup& Triangulation<4>::homologyH1() const {
+const AbelianGroup& Triangulation<4>::homologyH1() const {
     if (H1_.known())
         return *H1_.value();
 
     if (isEmpty())
-        return *(H1_ = new NAbelianGroup());
+        return *(H1_ = new AbelianGroup());
 
     // Calculate the first homology.
     ensureSkeleton();
@@ -110,17 +110,17 @@ const NAbelianGroup& Triangulation<4>::homologyH1() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(pres);
     return *(H1_ = ans);
 }
 
-const NAbelianGroup& Triangulation<4>::homologyH2() const {
+const AbelianGroup& Triangulation<4>::homologyH2() const {
     if (H2_.known())
         return *H2_.value();
 
     if (isEmpty())
-        return *(H1_ = new NAbelianGroup());
+        return *(H1_ = new AbelianGroup());
 
     ensureSkeleton();
 
@@ -252,7 +252,7 @@ const NAbelianGroup& Triangulation<4>::homologyH2() const {
     // Pair of boundary maps to abelian group
     // --------------------------------------
 
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(bdry32);
 
     smithNormalForm(bdry21);

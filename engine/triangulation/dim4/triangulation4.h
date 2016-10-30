@@ -150,9 +150,9 @@ class REGINA_API Triangulation<4> :
 
         mutable Property<NGroupPresentation, StoreManagedPtr> fundGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
     public:
@@ -447,7 +447,7 @@ class REGINA_API Triangulation<4> :
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& homology() const;
+        const AbelianGroup& homology() const;
 
         /**
          * Returns the first homology group for this triangulation.
@@ -467,7 +467,7 @@ class REGINA_API Triangulation<4> :
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& homologyH1() const;
+        const AbelianGroup& homologyH1() const;
 
         /**
          * Returns the second homology group for this triangulation.
@@ -484,7 +484,7 @@ class REGINA_API Triangulation<4> :
          *
          * @return the second homology group.
          */
-        const NAbelianGroup& homologyH2() const;
+        const AbelianGroup& homologyH2() const;
 
         /*@}*/
         /**
@@ -1094,7 +1094,7 @@ inline void Triangulation<4>::simplifiedFundamentalGroup(
     fundGroup_ = newGroup;
 }
 
-inline const NAbelianGroup& Triangulation<4>::homology() const {
+inline const AbelianGroup& Triangulation<4>::homology() const {
     return homologyH1();
 }
 

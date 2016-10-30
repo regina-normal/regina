@@ -251,9 +251,9 @@ void Triangulation<4>::cloneFrom(const Triangulation<4>& X) {
     if (X.fundGroup_.known())
         fundGroup_ = new NGroupPresentation(*(X.fundGroup_.value()));
     if (X.H1_.known())
-        H1_ = new NAbelianGroup(*(X.H1_.value()));
+        H1_ = new AbelianGroup(*(X.H1_.value()));
     if (X.H2_.known())
-        H2_ = new NAbelianGroup(*(X.H2_.value()));
+        H2_ = new AbelianGroup(*(X.H2_.value()));
 }
 
 void Triangulation<4>::deleteSkeleton() {

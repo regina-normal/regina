@@ -148,7 +148,7 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
         static NLayeredLensSpace* isLayeredLensSpace(const Component<3>* comp);
 
         NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

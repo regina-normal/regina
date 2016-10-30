@@ -37,31 +37,31 @@
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 
 using namespace boost::python;
-using regina::NAbelianGroup;
+using regina::AbelianGroup;
 using regina::Integer;
 using regina::MatrixInt;
 
 namespace {
-    void (NAbelianGroup::*addTorsionElement_large)(
+    void (AbelianGroup::*addTorsionElement_large)(
         const regina::Integer&, unsigned) =
-        &NAbelianGroup::addTorsionElement;
-    void (NAbelianGroup::*addTorsionElement_long)(unsigned long,
-        unsigned) = &NAbelianGroup::addTorsionElement;
-    void (NAbelianGroup::*addGroup_matrix)(const MatrixInt&) =
-        &NAbelianGroup::addGroup;
-    void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
-        &NAbelianGroup::addGroup;
-    unsigned (NAbelianGroup::*torsionRank_large)(
-        const regina::Integer&) const = &NAbelianGroup::torsionRank;
-    unsigned (NAbelianGroup::*torsionRank_long)(unsigned long)
-        const = &NAbelianGroup::torsionRank;
+        &AbelianGroup::addTorsionElement;
+    void (AbelianGroup::*addTorsionElement_long)(unsigned long,
+        unsigned) = &AbelianGroup::addTorsionElement;
+    void (AbelianGroup::*addGroup_matrix)(const MatrixInt&) =
+        &AbelianGroup::addGroup;
+    void (AbelianGroup::*addGroup_group)(const AbelianGroup&) =
+        &AbelianGroup::addGroup;
+    unsigned (AbelianGroup::*torsionRank_large)(
+        const regina::Integer&) const = &AbelianGroup::torsionRank;
+    unsigned (AbelianGroup::*torsionRank_long)(unsigned long)
+        const = &AbelianGroup::torsionRank;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRank,
-        NAbelianGroup::addRank, 0, 1);
+        AbelianGroup::addRank, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addTorsionElement,
-        NAbelianGroup::addTorsionElement, 1, 2);
+        AbelianGroup::addTorsionElement, 1, 2);
 
-    void addTorsionElements_dict(NAbelianGroup& g,
+    void addTorsionElements_dict(AbelianGroup& g,
             boost::python::list elements) {
         std::multiset<regina::Integer> set;
 
@@ -93,13 +93,13 @@ namespace {
     }
 }
 
-void addNAbelianGroup() {
-    class_<NAbelianGroup, std::auto_ptr<NAbelianGroup>, boost::noncopyable>
-            ("NAbelianGroup")
-        .def(init<const NAbelianGroup&>())
+void addAbelianGroup() {
+    class_<AbelianGroup, std::auto_ptr<AbelianGroup>, boost::noncopyable>
+            ("AbelianGroup")
+        .def(init<const AbelianGroup&>())
         .def(init<const MatrixInt&, const MatrixInt&>())
         .def(init<const MatrixInt&, const MatrixInt&, const Integer&>())
-        .def("addRank", &NAbelianGroup::addRank, OL_addRank())
+        .def("addRank", &AbelianGroup::addRank, OL_addRank())
         .def("addTorsionElement", addTorsionElement_large,
             OL_addTorsionElement())
         .def("addTorsionElement", addTorsionElement_long,
@@ -107,16 +107,16 @@ void addNAbelianGroup() {
         .def("addTorsionElements", addTorsionElements_dict)
         .def("addGroup", addGroup_matrix)
         .def("addGroup", addGroup_group)
-        .def("rank", &NAbelianGroup::rank)
+        .def("rank", &AbelianGroup::rank)
         .def("torsionRank", torsionRank_large)
         .def("torsionRank", torsionRank_long)
-        .def("countInvariantFactors", &NAbelianGroup::countInvariantFactors)
-        .def("invariantFactor", &NAbelianGroup::invariantFactor,
+        .def("countInvariantFactors", &AbelianGroup::countInvariantFactors)
+        .def("invariantFactor", &AbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
-        .def("isTrivial", &NAbelianGroup::isTrivial)
-        .def("isZ", &NAbelianGroup::isZ)
-        .def("isZn", &NAbelianGroup::isZn)
-        .def("utf8", &NAbelianGroup::utf8)
+        .def("isTrivial", &AbelianGroup::isTrivial)
+        .def("isZ", &AbelianGroup::isZ)
+        .def("isZn", &AbelianGroup::isZn)
+        .def("utf8", &AbelianGroup::utf8)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

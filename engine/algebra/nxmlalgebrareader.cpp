@@ -99,7 +99,7 @@ void NXMLAbelianGroupReader::startElement(const std::string&,
     long rank;
     if (valueOf(tagProps.lookup("rank"), rank))
         if (rank >= 0) {
-            group_ = new NAbelianGroup();
+            group_ = new AbelianGroup();
             if (rank)
                 group_->addRank(rank);
         }

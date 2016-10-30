@@ -249,7 +249,7 @@ class REGINA_API NGraphTriple : public NManifold {
          */
         bool operator < (const NGraphTriple& compare) const;
 
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

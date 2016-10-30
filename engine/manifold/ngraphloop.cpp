@@ -51,7 +51,7 @@ bool NGraphLoop::operator < (const NGraphLoop& compare) const {
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-NAbelianGroup* NGraphLoop::homology() const {
+AbelianGroup* NGraphLoop::homology() const {
     // Just for safety (this should always be true anyway):
     if (sfs_->punctures(false) != 2 || sfs_->punctures(true) != 0)
         return 0;
@@ -117,7 +117,7 @@ NAbelianGroup* NGraphLoop::homology() const {
     m.entry(4 + fibres + ref, 0) = matchingReln_[1][0];
     m.entry(4 + fibres + ref, 2 + genus) = matchingReln_[1][1];
 
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(m);
     return ans;
 }

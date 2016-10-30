@@ -36,13 +36,13 @@
 
 namespace regina {
 
-const Integer& NAbelianGroup::invariantFactor(size_t index) const {
+const Integer& AbelianGroup::invariantFactor(size_t index) const {
     std::multiset<Integer>::const_iterator it = invariantFactors.begin();
     advance(it, index);
     return *it;
 }
 
-void NAbelianGroup::addTorsionElement(const Integer& degree,
+void AbelianGroup::addTorsionElement(const Integer& degree,
         unsigned mult) {
     // If there are no current torsion elements, just throw in the new
     // ones.
@@ -75,7 +75,7 @@ void NAbelianGroup::addTorsionElement(const Integer& degree,
     replaceTorsion(a);
 }
 
-void NAbelianGroup::addTorsionElements(const std::multiset<Integer>&
+void AbelianGroup::addTorsionElements(const std::multiset<Integer>&
         torsion) {
     // Build a presentation matrix for the torsion.
     size_t len = invariantFactors.size() + torsion.size();
@@ -100,7 +100,7 @@ void NAbelianGroup::addTorsionElements(const std::multiset<Integer>&
     replaceTorsion(a);
 }
 
-void NAbelianGroup::addGroup(const MatrixInt& presentation) {
+void AbelianGroup::addGroup(const MatrixInt& presentation) {
     // Prepare to calculate invariant factors.
     size_t len = invariantFactors.size();
     MatrixInt a(len + presentation.rows(), len + presentation.columns());
@@ -125,7 +125,7 @@ void NAbelianGroup::addGroup(const MatrixInt& presentation) {
     replaceTorsion(a);
 }
 
-void NAbelianGroup::addGroup(const NAbelianGroup& group) {
+void AbelianGroup::addGroup(const AbelianGroup& group) {
     rank_ += group.rank_;
 
     // Work out the torsion elements.
@@ -161,7 +161,7 @@ void NAbelianGroup::addGroup(const NAbelianGroup& group) {
     replaceTorsion(a);
 }
 
-unsigned NAbelianGroup::torsionRank(const Integer& degree) const {
+unsigned AbelianGroup::torsionRank(const Integer& degree) const {
     std::multiset<Integer>::const_reverse_iterator it;
     unsigned ans = 0;
     // Because we have SNF, we can bail as soon as we reach a factor
@@ -174,7 +174,7 @@ unsigned NAbelianGroup::torsionRank(const Integer& degree) const {
     return ans;
 }
 
-void NAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
+void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
     bool writtenSomething = false;
 
     if (rank_ > 0) {
@@ -221,7 +221,7 @@ void NAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
         out << '0';
 }
 
-void NAbelianGroup::replaceTorsion(const MatrixInt& matrix) {
+void AbelianGroup::replaceTorsion(const MatrixInt& matrix) {
     // Delete any preexisting torsion.
     invariantFactors.clear();
 
@@ -248,7 +248,7 @@ void NAbelianGroup::replaceTorsion(const MatrixInt& matrix) {
     }
 }
 
-void NAbelianGroup::writeXMLData(std::ostream& out) const {
+void AbelianGroup::writeXMLData(std::ostream& out) const {
     out << "<abeliangroup rank=\"" << rank_ << "\"> ";
     for (std::multiset<Integer>::const_iterator it =
             invariantFactors.begin(); it != invariantFactors.end(); it++)
@@ -257,7 +257,7 @@ void NAbelianGroup::writeXMLData(std::ostream& out) const {
 }
 
 // ---N--> CC --M-->  ie: M*N = 0.
-NAbelianGroup::NAbelianGroup(const MatrixInt& M, const MatrixInt& N) {
+AbelianGroup::AbelianGroup(const MatrixInt& M, const MatrixInt& N) {
     rank_ = N.rows();
     MatrixInt tempN(N);
     metricalSmithNormalForm(tempN);
@@ -282,7 +282,7 @@ NAbelianGroup::NAbelianGroup(const MatrixInt& M, const MatrixInt& N) {
     }
 }
 
-NAbelianGroup::NAbelianGroup(const MatrixInt& M, const MatrixInt& N,
+AbelianGroup::AbelianGroup(const MatrixInt& M, const MatrixInt& N,
         const Integer &p) {
     Integer cof(p.abs());
     rank_ = N.rows();

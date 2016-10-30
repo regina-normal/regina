@@ -141,7 +141,7 @@ Triangulation<3>* NSnapPeaCensusManifold::construct() const {
     return ans;
 }
 
-NAbelianGroup* NSnapPeaCensusManifold::homology() const {
+AbelianGroup* NSnapPeaCensusManifold::homology() const {
     // Fetch the relevant data from the census dehydration files.
     std::string file = GlobalDirs::data() + "/snappea";
     switch (section_) {
@@ -178,7 +178,7 @@ NAbelianGroup* NSnapPeaCensusManifold::homology() const {
     }
     fclose(dat);
 
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     char* c;
     int val;
 
