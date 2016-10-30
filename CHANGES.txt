@@ -71,6 +71,7 @@ Version 5.1  [ (under development) ]
               the old standalone Dim2BoundaryComponent, NBoundaryComponent and
               Dim4BoundaryComponent classes.
             - New routine size() to count top-dimensional faces.
+            - New routine isReal() for dimensions dim = 3,4.
             - The 3-D class BoundaryComponent<3> now has a build() function.
         Class Face<dim, subdim>:
             - The template parameters are expanded to include the case

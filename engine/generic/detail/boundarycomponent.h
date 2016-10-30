@@ -374,6 +374,25 @@ class BoundaryComponentFaceInterface :
         using BoundaryComponentFaceStorage<dim, allFaces>::size;
 
         /**
+         * Determines if this boundary component is real.
+         * This is the case if and only if it is formed from one or more
+         * (dim-1)-faces.
+         *
+         * See the BoundaryComponent class notes for an overview of real,
+         * ideal, and invalid vertex boundary components.
+         *
+         * This routine is only available where \a dim is at least 3
+         * and is one of Regina's \ref stddim "standard dimensions".
+         * (In other dimensions, real boundary components are the only
+         * types of boundary component that Regina will recognise.)
+         *
+         * @return \c true if and only if this boundary component is real.
+         */
+        bool isReal() const {
+            return ! WeakFaceList<dim, dim-1>::faces_.empty();
+        }
+
+        /**
          * Determines if this boundary component is ideal.
          * This is the case if and only if it consists of a single
          * ideal vertex and no faces of any other dimensions.

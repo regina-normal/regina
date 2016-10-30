@@ -63,6 +63,7 @@ void addNBoundaryComponent() {
             .def("build", &BoundaryComponent<3>::build,
                 return_internal_reference<>())
             .def("eulerChar", &BoundaryComponent<3>::eulerChar)
+            .def("isReal", &BoundaryComponent<3>::isReal)
             .def("isIdeal", &BoundaryComponent<3>::isIdeal)
             .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
             .def("isOrientable", &BoundaryComponent<3>::isOrientable)

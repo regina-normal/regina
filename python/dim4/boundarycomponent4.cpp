@@ -68,6 +68,7 @@ void addDim4BoundaryComponent() {
                 return_value_policy<reference_existing_object>())
             .def("build", &BoundaryComponent<4>::build,
                 return_internal_reference<>())
+            .def("isReal", &BoundaryComponent<4>::isReal)
             .def("isIdeal", &BoundaryComponent<4>::isIdeal)
             .def("isInvalidVertex", &BoundaryComponent<4>::isInvalidVertex)
             .def(regina::python::add_output())

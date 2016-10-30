@@ -673,7 +673,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void verifyBoundaryBuild(const Triangulation<4>& tri) {
             for (auto bc : tri.boundaryComponents())
-                if (bc->size()) {
+                if (bc->isReal()) {
                     // We have a real boundary component.
                     const Triangulation<3>* built = bc->build();
 
