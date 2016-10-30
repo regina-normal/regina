@@ -37,7 +37,7 @@
 #include <sstream>
 #include <vector>
 #include <cppunit/extensions/HelperMacros.h>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"

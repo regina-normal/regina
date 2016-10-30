@@ -40,7 +40,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "maths/numbertheory.h"
 #include "maths/matrixops.h"
 #include "utilities/stringutils.h"

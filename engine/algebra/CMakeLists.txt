@@ -17,6 +17,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    abeliangroup.h
     nabeliangroup.h
     ngrouppresentation.h
     nhomgrouppresentation.h

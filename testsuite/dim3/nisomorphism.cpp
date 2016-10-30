@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/ngraphloop.h"
 #include "manifold/nsfs.h"
 #include "maths/matrix.h"

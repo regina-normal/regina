@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/ntorusbundle.h"
 #include "../helpers.h"
 

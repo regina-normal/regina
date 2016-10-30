@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nsnappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/dim3.h"

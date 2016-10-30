@@ -32,7 +32,7 @@
 
 #include <set>
 #include <vector>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/dim3.h"

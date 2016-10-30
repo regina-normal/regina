@@ -43,7 +43,7 @@
 #include <utility>
 #include "regina-core.h"
 #include "output.h"
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/ray.h"
 #include "utilities/boolset.h"

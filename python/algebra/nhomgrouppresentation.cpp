@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"

@@ -50,7 +50,7 @@
  * All output is written to standard output.
  */
 
-#include <algebra/nabeliangroup.h>
+#include <algebra/abeliangroup.h>
 #include <manifold/nmanifold.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/dim3.h>

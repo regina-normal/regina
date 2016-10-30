@@ -34,7 +34,7 @@
 #include <memory>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nmanifold.h"
 #include "packet/container.h"
 #include "split/nsignature.h"

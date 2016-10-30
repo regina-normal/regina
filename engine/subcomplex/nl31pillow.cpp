@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "subcomplex/nl31pillow.h"
 #include "triangulation/dim3.h"

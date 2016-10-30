@@ -46,7 +46,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "generic/triangulation.h"
 #include "packet/packet.h"

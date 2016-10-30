@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <iterator>
 #include <sstream>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "manifold/nsfs.h"
 #include "maths/matrix.h"

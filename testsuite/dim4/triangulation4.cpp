@@ -32,7 +32,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4isomorphism.h"

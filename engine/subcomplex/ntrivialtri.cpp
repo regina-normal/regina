@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
 #include "manifold/nlensspace.h"
 #include "manifold/nsimplesurfacebundle.h"

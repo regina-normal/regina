@@ -50,7 +50,7 @@
 #include "utilities/memutils.h"
 #include "utilities/ptrutils.h"
 #include "algebra/nmarkedabeliangroup.h"
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {

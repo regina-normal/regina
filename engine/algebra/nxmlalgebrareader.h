@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "utilities/xmlelementreader.h"
 

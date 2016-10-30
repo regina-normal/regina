@@ -67,7 +67,7 @@
  * This option may not be used with any of the other options listed above.
  */
 
-#include <algebra/nabeliangroup.h>
+#include <algebra/abeliangroup.h>
 #include <manifold/nmanifold.h>
 #include <packet/container.h>
 #include <subcomplex/nstandardtri.h>

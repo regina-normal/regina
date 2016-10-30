@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/nlayeredloop.h"

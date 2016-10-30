@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "maths/matrixops.h"
 #include "maths/matrix.h"
 #include "triangulation/dim4.h"

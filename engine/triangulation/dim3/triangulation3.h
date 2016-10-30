@@ -48,7 +48,7 @@
 #include <set>
 
 #include "regina-core.h"
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "angle/anglestructure.h"
 #include "generic/triangulation.h"

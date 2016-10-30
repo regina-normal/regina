@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"
 #include "manifold/nsfsaltset.h"
