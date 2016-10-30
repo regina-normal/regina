@@ -120,5 +120,7 @@ void addAbelianGroup() {
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NAbelianGroup") = scope().attr("AbelianGroup");
 }
 
