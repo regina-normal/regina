@@ -61,7 +61,7 @@ void addNBoundaryComponent() {
             .def("component", &BoundaryComponent<3>::component,
                 return_value_policy<reference_existing_object>())
             .def("build", &BoundaryComponent<3>::build,
-                return_value_policy<to_held_type<>>())
+                return_internal_reference<>())
             .def("eulerChar", &BoundaryComponent<3>::eulerChar)
             .def("isIdeal", &BoundaryComponent<3>::isIdeal)
             .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)

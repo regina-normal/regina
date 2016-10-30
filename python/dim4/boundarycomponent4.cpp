@@ -67,7 +67,7 @@ void addDim4BoundaryComponent() {
             .def("component", &BoundaryComponent<4>::component,
                 return_value_policy<reference_existing_object>())
             .def("build", &BoundaryComponent<4>::build,
-                return_value_policy<to_held_type<>>())
+                return_internal_reference<>())
             .def("isIdeal", &BoundaryComponent<4>::isIdeal)
             .def("isInvalidVertex", &BoundaryComponent<4>::isInvalidVertex)
             .def(regina::python::add_output())
