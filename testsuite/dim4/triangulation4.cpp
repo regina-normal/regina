@@ -628,15 +628,151 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundary(pillow_fourCycle, false, 0, false, false);
         }
 
-        void verifyBoundaryCount(const Triangulation<4>& tri, unsigned nBdry) {
-            unsigned long ans = tri.countBoundaryComponents();
-            if (ans != nBdry) {
+        void verifyBoundaryCount(const Triangulation<4>& tri,
+                size_t nReal, size_t nIdeal = 0, size_t nInvalid = 0) {
+            size_t ans = tri.countBoundaryComponents();
+            if (ans != nReal + nIdeal + nInvalid) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.label() << " gives "
                     << ans << " boundary component(s) instead of the expected "
-                    << nBdry << "." << std::endl;
+                    << nReal + nIdeal + nInvalid << "." << std::endl;
                 CPPUNIT_FAIL(msg.str());
             }
+
+            size_t foundReal = 0, foundIdeal = 0, foundInvalid = 0;
+            for (auto bc : tri.boundaryComponents())
+                if (bc->isIdeal())
+                    ++foundIdeal;
+                else if (bc->isInvalidVertex())
+                    ++foundInvalid;
+                else
+                    ++foundReal;
+
+            if (foundReal != nReal) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label() << " gives " << ans
+                    << " real boundary component(s) instead of the expected "
+                    << nReal << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (foundIdeal != nIdeal) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label() << " gives " << ans
+                    << " ideal boundary component(s) instead of the expected "
+                    << nIdeal << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (foundInvalid != nInvalid) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label() << " gives " << ans
+                    << " invalid boundary component(s) instead of the expected "
+                    << nInvalid << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyBoundaryBuild(const Triangulation<4>& tri) {
+            for (auto bc : tri.boundaryComponents())
+                if (bc->size()) {
+                    // We have a real boundary component.
+                    const Triangulation<3>* built = bc->build();
+
+                    // Check that [built] and [bc] have the same numbers
+                    // of faces of each dimension.
+                    if (bc->countFaces<0>() != built->countFaces<0>()) {
+                        std::ostringstream msg;
+                        msg << "Boundary component " << bc->index()
+                            << " of triangulation " << tri.label()
+                            << " gives the wrong number of 0-faces"
+                            << " when triangulated."
+                            << std::endl;
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (bc->countFaces<1>() != built->countFaces<1>()) {
+                        std::ostringstream msg;
+                        msg << "Boundary component " << bc->index()
+                            << " of triangulation " << tri.label()
+                            << " gives the wrong number of 1-faces"
+                            << " when triangulated."
+                            << std::endl;
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (bc->countFaces<2>() != built->countFaces<2>()) {
+                        std::ostringstream msg;
+                        msg << "Boundary component " << bc->index()
+                            << " of triangulation " << tri.label()
+                            << " gives the wrong number of 2-faces"
+                            << " when triangulated."
+                            << std::endl;
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (bc->size() != built->size()) {
+                        std::ostringstream msg;
+                        msg << "Boundary component " << bc->index()
+                            << " of triangulation " << tri.label()
+                            << " gives the wrong number of 3-faces"
+                            << " when triangulated."
+                            << std::endl;
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    // Check that all faces of [built] seem to appear in the
+                    // same order as they do in [bc].
+                    size_t i, j;
+                    for (i = 0; i < bc->size(); ++i) {
+                        const regina::Simplex<3>* innerSimp = built->simplex(i);
+                        regina::Face<4, 3>* outerSimp = bc->face<3>(i);
+
+                        for (j = 0; j < 4; ++j) {
+                            regina::Face<3, 0>* innerFace =
+                                innerSimp->face<0>(j);
+                            regina::Face<4, 0>* outerFace =
+                                outerSimp->face<0>(j);
+
+                            if (bc->face<0>(innerFace->index()) != outerFace) {
+                                std::ostringstream msg;
+                                msg << "Boundary component " << bc->index()
+                                    << " of triangulation " << tri.label()
+                                    << " gives mismatched 0-face indices"
+                                    << " when triangulated."
+                                    << std::endl;
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                        for (j = 0; j < 6; ++j) {
+                            regina::Face<3, 1>* innerFace =
+                                innerSimp->face<1>(j);
+                            regina::Face<4, 1>* outerFace =
+                                outerSimp->face<1>(j);
+
+                            if (bc->face<1>(innerFace->index()) != outerFace) {
+                                std::ostringstream msg;
+                                msg << "Boundary component " << bc->index()
+                                    << " of triangulation " << tri.label()
+                                    << " gives mismatched 1-face indices"
+                                    << " when triangulated."
+                                    << std::endl;
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                        for (j = 0; j < 4; ++j) {
+                            regina::Face<3, 2>* innerFace =
+                                innerSimp->face<2>(j);
+                            regina::Face<4, 2>* outerFace =
+                                outerSimp->face<2>(j);
+
+                            if (bc->face<2>(innerFace->index()) != outerFace) {
+                                std::ostringstream msg;
+                                msg << "Boundary component " << bc->index()
+                                    << " of triangulation " << tri.label()
+                                    << " gives mismatched 2-face indices"
+                                    << " when triangulated."
+                                    << std::endl;
+                                CPPUNIT_FAIL(msg.str());
+                            }
+                        }
+                    }
+                }
         }
 
         void verifyBoundaryTri(const Triangulation<4>& tri,
@@ -708,22 +844,27 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(rp4, 0);
             verifyBoundaryCount(s3xs1Twisted, 0);
             verifyBoundaryCount(ball_singlePent, 1);
+            verifyBoundaryBuild(ball_singlePent);
             verifyBoundaryTri(ball_singlePent, 0, "S3");
             verifyBoundaryCount(ball_foldedPent, 1);
+            verifyBoundaryBuild(ball_foldedPent);
             verifyBoundaryTri(ball_foldedPent, 0, "S3");
             verifyBoundaryCount(ball_singleConeS3, 1);
+            verifyBoundaryBuild(ball_singleConeS3);
             verifyBoundaryTri(ball_singleConeS3, 0, "S3");
             verifyBoundaryCount(ball_layerAndFold, 1);
+            verifyBoundaryBuild(ball_layerAndFold);
             verifyBoundaryTri(ball_layerAndFold, 0, "S3");
-            verifyBoundaryCount(idealPoincareProduct, 2);
+            verifyBoundaryCount(idealPoincareProduct, 0, 2);
             verifyBoundaryTri(idealPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(idealPoincareProduct, 1, "S3/P120");
-            verifyBoundaryCount(idealCappellShaneson, 1);
+            verifyBoundaryCount(idealCappellShaneson, 0, 1);
             verifyBoundaryTri(idealCappellShaneson, 0, "S2 x S1");
-            verifyBoundaryCount(mixedPoincareProduct, 2);
+            verifyBoundaryCount(mixedPoincareProduct, 1, 1);
+            verifyBoundaryBuild(mixedPoincareProduct);
             verifyBoundaryTri(mixedPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(mixedPoincareProduct, 1, "S3/P120");
-            verifyBoundaryCount(idealFigEightProduct, 3);
+            verifyBoundaryCount(idealFigEightProduct, 0, 0, 3);
             // Boundary 0 of idealFigEightProduct should be the
             // suspension of a torus.  I think.
             verifyBoundaryTri(idealFigEightProduct, 0,
@@ -733,12 +874,13 @@ class Triangulation4Test : public TriangulationTest<4> {
                 "Figure eight knot complement");
             verifyBoundaryTri(idealFigEightProduct, 2,
                 "Figure eight knot complement");
-            verifyBoundaryCount(mixedFigEightProduct, 2);
+            verifyBoundaryCount(mixedFigEightProduct, 1, 0, 1);
+            verifyBoundaryBuild(mixedFigEightProduct);
             verifyBoundaryTri(mixedFigEightProduct, 0,
                 "Figure eight knot complement");
             verifyBoundaryTri(mixedFigEightProduct, 1,
                 "Figure eight knot complement");
-            verifyBoundaryCount(pillow_twoCycle, 2);
+            verifyBoundaryCount(pillow_twoCycle, 0, 0, 2);
             // I *think* the links of the two invalid vertices for
             // pillow_twoCycle are (RP2 x I), but with one RP2 cusp and
             // one invalid edge (as opposed to two RP2 cusps).
@@ -748,7 +890,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryTri(pillow_twoCycle, 1,
                 "<unrecognised triangulation>", true);
             verifyBoundaryH1(pillow_twoCycle, 1, "Z_2");
-            verifyBoundaryCount(pillow_threeCycle, 1);
+            verifyBoundaryCount(pillow_threeCycle, 0, 1);
             verifyBoundaryTri(pillow_threeCycle, 0, "L(3,1)");
             verifyBoundaryCount(pillow_fourCycle, 0);
         }
