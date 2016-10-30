@@ -118,21 +118,34 @@ struct WeakFaceListSuite<dim, 0> : public WeakFaceList<dim, 0> {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
- * \tparam allFaces \c true if this class should store all faces of all
+ * \tparam allFaces_ \c true if this class should store all faces of all
  * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
  * store faces of dimension <i>dim</i>-1.
  */
-template <int dim, bool allFaces>
+template <int dim, bool allFaces_>
 class BoundaryComponentFaceStorage :
         protected WeakFaceListSuite<dim, dim - 1>,
         public alias::FaceOfTriangulation<
             BoundaryComponentFaceStorage<dim, true>, dim> {
-    static_assert(allFaces,
+    static_assert(allFaces_,
         "The generic BoundaryComponentFaceStorage template should "
         "only be used with allFaces = true.");
     static_assert(standardDim(dim),
         "The BoundaryComponentFaceStorage template should only set "
         "allFaces = true for Regina's standard dimensions.");
+
+    public:
+        /**
+         * A compile-time constant indicating whether this boundary
+         * component class stores all lower-dimensional faces (\c true),
+         * or only faces of dimension <i>dim</i>-1 (\c false).
+         *
+         * This is a compile-time constant only, with no linkage - any attempt
+         * to create a reference or pointer to it will give a linker error.
+         *
+         * \ifacespython Not present.
+         */
+        static constexpr bool allFaces = true;
 
     public:
         /**
@@ -228,6 +241,15 @@ class BoundaryComponentFaceStorage :
         void push_back(Face<dim, subdim>* face) {
             WeakFaceList<dim, subdim>::faces_.push_back(face);
         }
+
+        /**
+         * Gives direct access to the internal list of (<i>dim</i>-1)-faces.
+         *
+         * @return the internal list of (<i>dim</i>-1)-faces.
+         */
+        const std::vector<Face<dim, dim-1>*>& simplices() const {
+            return WeakFaceList<dim, dim-1>::faces_;
+        }
 };
 
 /**
@@ -244,6 +266,19 @@ class BoundaryComponentFaceStorage<dim, false> {
     static_assert(! standardDim(dim),
         "The BoundaryComponentFaceStorage template should not set "
         "allFaces = false for Regina's standard dimensions.");
+
+    public:
+        /**
+         * A compile-time constant indicating whether this boundary
+         * component class stores all lower-dimensional faces (\c true),
+         * or only faces of dimension <i>dim</i>-1 (\c false).
+         *
+         * This is a compile-time constant only, with no linkage - any attempt
+         * to create a reference or pointer to it will give a linker error.
+         *
+         * \ifacespython Not present.
+         */
+        static constexpr bool allFaces = false;
 
     protected:
         std::vector<Face<dim, dim-1>*> simplices_;
@@ -283,6 +318,15 @@ class BoundaryComponentFaceStorage<dim, false> {
         void push_back(Face<dim, dim-1>* face) {
             simplices_.push_back(face);
         }
+
+        /**
+         * Gives direct access to the internal list of (<i>dim</i>-1)-faces.
+         *
+         * @return the internal list of (<i>dim</i>-1)-faces.
+         */
+        const std::vector<Face<dim, dim-1>*>& simplices() const {
+            return simplices_;
+        }
 };
 
 /**
@@ -298,20 +342,33 @@ class BoundaryComponentFaceStorage<dim, false> {
  * \tparam allFaces \c true if this class should store all faces of all
  * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
  * store faces of dimension <i>dim</i>-1.
- * \tparam allowVertex \c true if ideal and/or invalid vertex boundary
+ * \tparam allowVertex_ \c true if ideal and/or invalid vertex boundary
  * components are both possible and recognised in dimension \a dim,
  * or \c false if only real boundary components are supported.
  */
-template <int dim, bool allFaces, bool allowVertex>
+template <int dim, bool allFaces, bool allowVertex_>
 class BoundaryComponentFaceInterface :
         public BoundaryComponentFaceStorage<dim, allFaces> {
-    static_assert(allFaces && allowVertex,
+    static_assert(allFaces && allowVertex_,
         "The generic BoundaryComponentFaceInterface template should "
         "only be used with allFaces = true and allowVertex = true.");
     // The face storage superclass already tests for standard dimension.
     static_assert(dim > 2,
         "The generic BoundaryComponentFaceInterface template should not "
         "be used for dimension 2.");
+
+    public:
+        /**
+         * A compile-time constant indicating whether ideal and/or
+         * invalid vertex boundary components are both possible and
+         * recognised by this boundary component class.
+         *
+         * This is a compile-time constant only, with no linkage - any attempt
+         * to create a reference or pointer to it will give a linker error.
+         *
+         * \ifacespython Not present.
+         */
+        static constexpr bool allowVertex = true;
 
     public:
         using BoundaryComponentFaceStorage<dim, allFaces>::size;
@@ -463,6 +520,19 @@ class BoundaryComponentFaceInterface<dim, allFaces, false> :
         "allowVertex = false for standard dimensions greater than 2.");
 
     public:
+        /**
+         * A compile-time constant indicating whether ideal and/or
+         * invalid vertex boundary components are both possible and
+         * recognised by this boundary component class.
+         *
+         * This is a compile-time constant only, with no linkage - any attempt
+         * to create a reference or pointer to it will give a linker error.
+         *
+         * \ifacespython Not present.
+         */
+        static constexpr bool allowVertex = false;
+
+    public:
         using BoundaryComponentFaceStorage<dim, allFaces>::size;
 
         /**
@@ -546,24 +616,39 @@ class BoundaryComponentFaceInterface<dim, allFaces, false> :
  * \tparam allowVertex \c true if ideal and/or invalid vertex boundary
  * components are both possible and recognised in dimension \a dim,
  * or \c false if only real boundary components are supported.
- * \tparam canBuild \c true if we support triangulating boundary components,
+ * \tparam canBuild_ \c true if we support triangulating boundary components,
  * or \c false if this is not possible (i.e., the dimension is 2).
  */
-template <int dim, bool allFaces, bool allowVertex, bool canBuild>
+template <int dim, bool allFaces, bool allowVertex, bool canBuild_>
 class BoundaryComponentStorage :
         public BoundaryComponentFaceInterface<dim, allFaces, allowVertex> {
-    static_assert(canBuild,
+    static_assert(canBuild_,
         "The generic BoundaryComponentStoarge template should only be "
         "used with canBuild = true.");
     static_assert(dim > 2,
         "The generic BoundaryComponentStorage template cannot be used "
         "for dimension 2.");
 
+    public:
+        /**
+         * A compile-time constant indicating whether this boundary
+         * component class supports triangulating boundary components.
+         *
+         * This is a compile-time constant only, with no linkage - any attempt
+         * to create a reference or pointer to it will give a linker error.
+         *
+         * \ifacespython Not present.
+         */
+        static constexpr bool canBuild = true;
+
     protected:
         Triangulation<dim-1>* boundary_;
             /**< A full triangulation of the boundary component.
-                 If this boundary component is an ideal or invalid vertex,
-                 then this will be a null pointer. */
+                 This may be pre-computed when the triangulation skeleton
+                 is constructed, or it may be \c null in which case it
+                 will be built on demand.
+                 For ideal or invalid vertices, this is always \c null since
+                 the triangulation is cached by the vertex class instead.*/
 
     public:
         /**
@@ -596,7 +681,7 @@ class BoundaryComponentStorage :
          * then this routine returns the triangulation of the corresponding
          * vertex link.  See Vertex::link() for details.
          *
-         * This routine is fast (it uses a pre-computed triangulation).
+         * This routine is fast, since it caches the boundary triangulation.
          * Moreover, it is guaranteed that the full skeleton of this
          * (<i>dim</i>-1)-dimensional triangulation will have been generated
          * already.
@@ -604,17 +689,38 @@ class BoundaryComponentStorage :
          * @return the triangulation of this boundary component.
          */
         const Triangulation<dim-1>* build() const {
-            return (boundary_ ? boundary_ :
-                BoundaryComponentFaceInterface<dim, allFaces, allowVertex>::
-                buildVertexLink());
+            if (boundary_)
+                return boundary_; // Already cached or pre-computed.
+            if (simplices().empty())
+                return buildVertexLink(); // Ideal or invalid vertex.
+
+            return (
+                const_cast<BoundaryComponentStorage<dim, allFaces,
+                    allowVertex, canBuild_>*>(this)->
+                boundary_ = buildRealBoundary());
         }
 
     protected:
+        using BoundaryComponentFaceStorage<dim, allFaces>::simplices;
+        using BoundaryComponentFaceInterface<dim, allFaces, allowVertex>::
+            buildVertexLink;
+
         /**
          * Initialises the cached boundary triangulation to \c null.
          */
         BoundaryComponentStorage() : boundary_(0) {
         }
+
+    private:
+        /**
+         * Builds a new triangulation of this boundary component,
+         * assuming this is a real boundary component.
+         *
+         * \pre The number of (dim-1)-faces is strictly positive.
+         *
+         * @return the newly created boundary triangulation.
+         */
+        Triangulation<dim-1>* buildRealBoundary() const;
 };
 
 /**
@@ -632,6 +738,18 @@ class BoundaryComponentStorage<dim, allFaces, allowVertex, false> :
     static_assert(dim == 2,
         "The BoundaryComponentStorage template should not set "
         "canBuild = false for dimensions greater than 2.");
+
+    public:
+        /**
+         * A compile-time constant indicating whether this boundary
+         * component class supports triangulating boundary components.
+         *
+         * This is a compile-time constant only, with no linkage - any attempt
+         * to create a reference or pointer to it will give a linker error.
+         *
+         * \ifacespython Not present.
+         */
+        static constexpr bool canBuild = false;
 };
 
 /**
@@ -681,6 +799,78 @@ class BoundaryComponentBase :
 };
 
 /*@}*/
+
+// Non-inline implementation details
+
+template <int dim, bool allFaces, bool allowVertex, bool canBuild_>
+Triangulation<dim-1>*
+        BoundaryComponentStorage<dim, allFaces, allowVertex, canBuild_>::
+        buildRealBoundary() const {
+    // From the precondition, there is a positive number of (dim-1)-faces.
+    const auto& allSimp = simplices();
+
+    // Build a map from ((dim-1)-face index in underlying triangulation)
+    // to ((dim-1)-face in boundary component).
+    //
+    // The way we build it ensures that (dim-1)-faces are added to the
+    // new boundary triangulation in the same order as they appear in
+    // the boundary component's list of (dim-1)-faces.
+    Triangulation<dim>* mainTri = allSimp.front()->triangulation();
+    Simplex<dim-1>** bdrySimplex = new Simplex<dim-1>*[
+        mainTri->template countFaces<dim-1>()];
+
+    Triangulation<dim-1>* ans = new Triangulation<dim-1>();
+    typename Triangulation<dim-1>::ChangeEventSpan span(ans);
+
+    for (auto s : allSimp)
+        bdrySimplex[s->index()] = ans->newSimplex();
+
+    // Run through the (dim-1)-simplices and make all the face gluings.
+    int facetOfSimp;
+    Simplex<dim-1> *simpBdry, *adjBdry;
+    Face<dim, dim-1>* adjOuter;
+    Face<dim, dim-2>* ridgeOuter;
+    for (Face<dim, dim-1>* simpOuter : allSimp) {
+        simpBdry = bdrySimplex[simpOuter->index()];
+        for (facetOfSimp = 0; facetOfSimp < dim; ++facetOfSimp)
+            if (! simpBdry->adjacentSimplex(facetOfSimp)) {
+                // Find out who is glued to this facet.
+                ridgeOuter = simpOuter->template face<dim-2>(facetOfSimp);
+
+                // Remember that the link of ridgeOuter has simpOuter at
+                // one end of the list, and the adjacent simplex at the other.
+                const auto& embFront = ridgeOuter->front();
+                const auto& embBack = ridgeOuter->back();
+                if (embFront.simplex()->template face<dim-1>(
+                            embFront.vertices()[dim]) == simpOuter &&
+                        embFront.vertices()[dim-1] ==
+                            simpOuter->front().vertices()[facetOfSimp]) {
+                    adjOuter = embBack.simplex()->template face<dim-1>(
+                        embBack.vertices()[dim-1]);
+                    simpBdry->join(facetOfSimp, bdrySimplex[adjOuter->index()],
+                        Perm<dim>::contract(
+                            adjOuter->front().vertices().inverse() *
+                            embBack.vertices() *
+                            Perm<dim+1>(dim-1, dim) *
+                            embFront.vertices().inverse() *
+                            simpOuter->front().vertices()));
+                } else {
+                    adjOuter = embFront.simplex()->template face<dim-1>(
+                        embFront.vertices()[dim]);
+                    simpBdry->join(facetOfSimp, bdrySimplex[adjOuter->index()],
+                        Perm<dim>::contract(
+                            adjOuter->front().vertices().inverse() *
+                            embFront.vertices() *
+                            Perm<dim+1>(dim-1, dim) *
+                            embBack.vertices().inverse() *
+                            simpOuter->front().vertices()));
+                }
+            }
+    }
+
+    delete[] bdrySimplex;
+    return ans;
+}
 
 } } // namespace regina::detail
 

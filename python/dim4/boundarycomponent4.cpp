@@ -42,35 +42,47 @@ using namespace regina::python;
 using regina::BoundaryComponent;
 
 void addDim4BoundaryComponent() {
-    class_<BoundaryComponent<4>, std::auto_ptr<BoundaryComponent<4>>,
-            boost::noncopyable>("BoundaryComponent4", no_init)
-        .def("index", &BoundaryComponent<4>::index)
-        .def("size", &BoundaryComponent<4>::size)
-        .def("countFaces",
-            &regina::python::countFaces<BoundaryComponent<4>, 4>)
-        .def("countTetrahedra",
-            &BoundaryComponent<4>::countTetrahedra)
-        .def("countTriangles", &BoundaryComponent<4>::countTriangles)
-        .def("countEdges", &BoundaryComponent<4>::countEdges)
-        .def("countVertices", &BoundaryComponent<4>::countVertices)
-        .def("face", &regina::python::face<BoundaryComponent<4>, 4, size_t>)
-        .def("tetrahedron", &BoundaryComponent<4>::tetrahedron,
-            return_value_policy<reference_existing_object>())
-        .def("triangle", &BoundaryComponent<4>::triangle,
-            return_value_policy<reference_existing_object>())
-        .def("edge", &BoundaryComponent<4>::edge,
-            return_value_policy<reference_existing_object>())
-        .def("vertex", &BoundaryComponent<4>::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("component", &BoundaryComponent<4>::component,
-            return_value_policy<reference_existing_object>())
-        .def("build", &BoundaryComponent<4>::build,
-            return_value_policy<to_held_type<>>())
-        .def("isIdeal", &BoundaryComponent<4>::isIdeal)
-        .def("isInvalidVertex", &BoundaryComponent<4>::isInvalidVertex)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-    ;
+    {
+        scope s = class_<BoundaryComponent<4>,
+                std::auto_ptr<BoundaryComponent<4>>,
+                boost::noncopyable>("BoundaryComponent4", no_init)
+            .def("index", &BoundaryComponent<4>::index)
+            .def("size", &BoundaryComponent<4>::size)
+            .def("countFaces",
+                &regina::python::countFaces<BoundaryComponent<4>, 4>)
+            .def("countTetrahedra",
+                &BoundaryComponent<4>::countTetrahedra)
+            .def("countTriangles", &BoundaryComponent<4>::countTriangles)
+            .def("countEdges", &BoundaryComponent<4>::countEdges)
+            .def("countVertices", &BoundaryComponent<4>::countVertices)
+            .def("face", &regina::python::face<BoundaryComponent<4>, 4, size_t>)
+            .def("tetrahedron", &BoundaryComponent<4>::tetrahedron,
+                return_value_policy<reference_existing_object>())
+            .def("triangle", &BoundaryComponent<4>::triangle,
+                return_value_policy<reference_existing_object>())
+            .def("edge", &BoundaryComponent<4>::edge,
+                return_value_policy<reference_existing_object>())
+            .def("vertex", &BoundaryComponent<4>::vertex,
+                return_value_policy<reference_existing_object>())
+            .def("component", &BoundaryComponent<4>::component,
+                return_value_policy<reference_existing_object>())
+            .def("build", &BoundaryComponent<4>::build,
+                return_value_policy<to_held_type<>>())
+            .def("isIdeal", &BoundaryComponent<4>::isIdeal)
+            .def("isInvalidVertex", &BoundaryComponent<4>::isInvalidVertex)
+            .def(regina::python::add_output())
+            .def(regina::python::add_eq_operators())
+        ;
+        /*
+         * If these bindings are enabled, we must use bool(...) on the RHS
+         * to ensure that the values are not treated as references (since
+         * these static class members are really just compile-time constants,
+         * and are not defined in a way that gives them linkage).
+        s.attr("allFaces") = bool(BoundaryComponent<4>::allFaces);
+        s.attr("allowVertex") = bool(BoundaryComponent<4>::allowVertex);
+        s.attr("canBuild") = bool(BoundaryComponent<4>::canBuild);
+        */
+    }
 
     scope().attr("Dim4BoundaryComponent") = scope().attr("BoundaryComponent4");
 }

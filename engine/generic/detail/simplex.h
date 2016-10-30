@@ -466,7 +466,7 @@ class SimplexBase :
          *   opposite \a F in this simplex.  These orientations will be
          *   consistent for all simplices containing \a F.
          *
-         * - For faces of codimension one (e.g., edges in a 3-manifold
+         * - For faces of codimension two (e.g., edges in a 3-manifold
          *   triangulation), this orientation condition is even stronger.
          *   Here the link of the face \a F must be a path (for a boundary
          *   face) or a cycle (for an internal face).

@@ -39,24 +39,36 @@ using namespace boost::python;
 using regina::BoundaryComponent;
 
 void addDim2BoundaryComponent() {
-    class_<BoundaryComponent<2>, std::auto_ptr<BoundaryComponent<2>>,
-            boost::noncopyable> ("BoundaryComponent2", no_init)
-        .def("index", &BoundaryComponent<2>::index)
-        .def("size", &BoundaryComponent<2>::size)
-        .def("countFaces",
-            &regina::python::countFaces<BoundaryComponent<2>, 2>)
-        .def("countEdges", &BoundaryComponent<2>::countEdges)
-        .def("countVertices", &BoundaryComponent<2>::countVertices)
-        .def("face", &regina::python::face<BoundaryComponent<2>, 2, size_t>)
-        .def("edge", &BoundaryComponent<2>::edge,
-            return_value_policy<reference_existing_object>())
-        .def("vertex", &BoundaryComponent<2>::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("component", &BoundaryComponent<2>::component,
-            return_value_policy<reference_existing_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-    ;
+    {
+        scope s = class_<BoundaryComponent<2>,
+                std::auto_ptr<BoundaryComponent<2>>,
+                boost::noncopyable> ("BoundaryComponent2", no_init)
+            .def("index", &BoundaryComponent<2>::index)
+            .def("size", &BoundaryComponent<2>::size)
+            .def("countFaces",
+                &regina::python::countFaces<BoundaryComponent<2>, 2>)
+            .def("countEdges", &BoundaryComponent<2>::countEdges)
+            .def("countVertices", &BoundaryComponent<2>::countVertices)
+            .def("face", &regina::python::face<BoundaryComponent<2>, 2, size_t>)
+            .def("edge", &BoundaryComponent<2>::edge,
+                return_value_policy<reference_existing_object>())
+            .def("vertex", &BoundaryComponent<2>::vertex,
+                return_value_policy<reference_existing_object>())
+            .def("component", &BoundaryComponent<2>::component,
+                return_value_policy<reference_existing_object>())
+            .def(regina::python::add_output())
+            .def(regina::python::add_eq_operators())
+        ;
+        /*
+         * If these bindings are enabled, we must use bool(...) on the RHS
+         * to ensure that the values are not treated as references (since
+         * these static class members are really just compile-time constants,
+         * and are not defined in a way that gives them linkage).
+        s.attr("allFaces") = bool(BoundaryComponent<2>::allFaces);
+        s.attr("allowVertex") = bool(BoundaryComponent<2>::allowVertex);
+        s.attr("canBuild") = bool(BoundaryComponent<2>::canBuild);
+        */
+    }
 
     scope().attr("Dim2BoundaryComponent") = scope().attr("BoundaryComponent2");
 }

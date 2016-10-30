@@ -41,32 +41,44 @@ using namespace regina::python;
 using regina::BoundaryComponent;
 
 void addNBoundaryComponent() {
-    class_<BoundaryComponent<3>, std::auto_ptr<BoundaryComponent<3>>,
-            boost::noncopyable> ("BoundaryComponent3", no_init)
-        .def("index", &BoundaryComponent<3>::index)
-        .def("size", &BoundaryComponent<3>::size)
-        .def("countFaces", &regina::python::countFaces<BoundaryComponent<3>, 3>)
-        .def("countTriangles", &BoundaryComponent<3>::countTriangles)
-        .def("countEdges", &BoundaryComponent<3>::countEdges)
-        .def("countVertices", &BoundaryComponent<3>::countVertices)
-        .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)
-        .def("triangle", &BoundaryComponent<3>::triangle,
-            return_value_policy<reference_existing_object>())
-        .def("edge", &BoundaryComponent<3>::edge,
-            return_value_policy<reference_existing_object>())
-        .def("vertex", &BoundaryComponent<3>::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("component", &BoundaryComponent<3>::component,
-            return_value_policy<reference_existing_object>())
-        .def("build", &BoundaryComponent<3>::build,
-            return_value_policy<to_held_type<>>())
-        .def("eulerChar", &BoundaryComponent<3>::eulerChar)
-        .def("isIdeal", &BoundaryComponent<3>::isIdeal)
-        .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
-        .def("isOrientable", &BoundaryComponent<3>::isOrientable)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-    ;
+    {
+        scope s = class_<BoundaryComponent<3>,
+                std::auto_ptr<BoundaryComponent<3>>,
+                boost::noncopyable> ("BoundaryComponent3", no_init)
+            .def("index", &BoundaryComponent<3>::index)
+            .def("size", &BoundaryComponent<3>::size)
+            .def("countFaces", &regina::python::countFaces<BoundaryComponent<3>, 3>)
+            .def("countTriangles", &BoundaryComponent<3>::countTriangles)
+            .def("countEdges", &BoundaryComponent<3>::countEdges)
+            .def("countVertices", &BoundaryComponent<3>::countVertices)
+            .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)
+            .def("triangle", &BoundaryComponent<3>::triangle,
+                return_value_policy<reference_existing_object>())
+            .def("edge", &BoundaryComponent<3>::edge,
+                return_value_policy<reference_existing_object>())
+            .def("vertex", &BoundaryComponent<3>::vertex,
+                return_value_policy<reference_existing_object>())
+            .def("component", &BoundaryComponent<3>::component,
+                return_value_policy<reference_existing_object>())
+            .def("build", &BoundaryComponent<3>::build,
+                return_value_policy<to_held_type<>>())
+            .def("eulerChar", &BoundaryComponent<3>::eulerChar)
+            .def("isIdeal", &BoundaryComponent<3>::isIdeal)
+            .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
+            .def("isOrientable", &BoundaryComponent<3>::isOrientable)
+            .def(regina::python::add_output())
+            .def(regina::python::add_eq_operators())
+        ;
+        /*
+         * If these bindings are enabled, we must use bool(...) on the RHS
+         * to ensure that the values are not treated as references (since
+         * these static class members are really just compile-time constants,
+         * and are not defined in a way that gives them linkage).
+        s.attr("allFaces") = bool(BoundaryComponent<3>::allFaces);
+        s.attr("allowVertex") = bool(BoundaryComponent<3>::allowVertex);
+        s.attr("canBuild") = bool(BoundaryComponent<3>::canBuild);
+        */
+    }
 
     scope().attr("NBoundaryComponent") = scope().attr("BoundaryComponent3");
 }
