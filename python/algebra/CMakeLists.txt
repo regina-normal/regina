@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  nabeliangroup
+  abeliangroup
   ngrouppresentation
   nhomgrouppresentation
   nmarkedabeliangroup
