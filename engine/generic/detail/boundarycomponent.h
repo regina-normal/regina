@@ -398,6 +398,23 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
+         * Returns all (<i>dim</i>-1)-faces in this boundary component.
+         *
+         * The reference that is returned will remain valid only for as
+         * long as this boundary component object exists.  In particular,
+         * the reference will become invalid any time that the triangulation
+         * changes (since all boundary component objects will be destroyed
+         * and others rebuilt in their place).
+         *
+         * \ifacespython This routine returns a python list.
+         *
+         * @return the list of all (<i>dim</i>-1)-faces.
+         */
+        const std::vector<Face<dim, dim-1>*>& facets() const {
+            return WeakFaceList<dim, dim-1>::faces_;
+        }
+
+        /**
          * Returns the requested (<i>dim</i>-1)-face in this boundary component.
          * These are the top-dimensional faces for a real boundary component.
          *
@@ -476,15 +493,6 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
-         * Gives direct access to the internal list of (<i>dim</i>-1)-faces.
-         *
-         * @return the internal list of (<i>dim</i>-1)-faces.
-         */
-        const std::vector<Face<dim, dim-1>*>& facets() const {
-            return WeakFaceList<dim, dim-1>::faces_;
-        }
-
-        /**
          * Reorders all lower-dimensional faces of the given triangulation
          * so that they appear in the same order as the corresponding
          * faces of this boundary component, and relabels these faces so
@@ -553,6 +561,23 @@ class BoundaryComponentFaceStorage<dim, false> {
         }
 
         /**
+         * Returns all (<i>dim</i>-1)-faces in this boundary component.
+         *
+         * The reference that is returned will remain valid only for as
+         * long as this boundary component object exists.  In particular,
+         * the reference will become invalid any time that the triangulation
+         * changes (since all boundary component objects will be destroyed
+         * and others rebuilt in their place).
+         *
+         * \ifacespython This routine returns a python list.
+         *
+         * @return the list of all (<i>dim</i>-1)-faces.
+         */
+        const std::vector<Face<dim, dim-1>*>& facets() const {
+            return facets_;
+        }
+
+        /**
          * Returns the requested (<i>dim</i>-1)-face in this boundary component.
          * These are the top-dimensional faces for a real boundary component.
          *
@@ -590,15 +615,6 @@ class BoundaryComponentFaceStorage<dim, false> {
          */
         void push_back(Face<dim, dim-1>* face) {
             facets_.push_back(face);
-        }
-
-        /**
-         * Gives direct access to the internal list of (<i>dim</i>-1)-faces.
-         *
-         * @return the internal list of (<i>dim</i>-1)-faces.
-         */
-        const std::vector<Face<dim, dim-1>*>& facets() const {
-            return facets_;
         }
 
         /**
@@ -658,6 +674,7 @@ class BoundaryComponentFaceInterface :
 
     public:
         using BoundaryComponentFaceStorage<dim, allFaces>::size;
+        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
 
         /**
          * Determines if this boundary component is real.
@@ -675,7 +692,7 @@ class BoundaryComponentFaceInterface :
          * @return \c true if and only if this boundary component is real.
          */
         bool isReal() const {
-            return ! WeakFaceList<dim, dim-1>::faces_.empty();
+            return ! facets().empty();
         }
 
         /**
@@ -701,7 +718,7 @@ class BoundaryComponentFaceInterface :
          */
         bool isIdeal() const {
             // Either of Vertex::isValid() or Vertex::isIdeal() will do here.
-            return (WeakFaceList<dim, dim-1>::faces_.empty() &&
+            return (facets().empty() &&
                 WeakFaceList<dim, 0>::faces_.front()->isValid());
         }
 
@@ -734,7 +751,7 @@ class BoundaryComponentFaceInterface :
          * single invalid vertex and nothing else.
          */
         bool isInvalidVertex() const {
-            return (WeakFaceList<dim, dim-1>::faces_.empty() &&
+            return (facets().empty() &&
                 ! WeakFaceList<dim, 0>::faces_.front()->isValid());
         }
 
@@ -788,7 +805,7 @@ class BoundaryComponentFaceInterface :
                             << std::endl;
                         break;
                 }
-                for (auto s : WeakFaceList<dim, dim-1>::faces_)
+                for (auto s : facets())
                     out << "  " << s->front().simplex()->index() << " ("
                         << s->front().vertices().trunc(dim) << ')' << std::endl;
             }
@@ -839,6 +856,7 @@ class BoundaryComponentFaceInterface<dim, allFaces, false> :
 
     public:
         using BoundaryComponentFaceStorage<dim, allFaces>::size;
+        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
 
         /**
          * Writes a short text representation of this object to the
@@ -879,7 +897,7 @@ class BoundaryComponentFaceInterface<dim, allFaces, false> :
                         << std::endl;
                     break;
             }
-            for (auto s : WeakFaceList<dim, dim-1>::faces_)
+            for (auto s : facets())
                 out << "  " << s->front().simplex()->index() << " ("
                     << s->front().vertices().trunc(dim) << ')' << std::endl;
         }
@@ -956,6 +974,8 @@ class BoundaryComponentStorage :
                  the triangulation is cached by the vertex class instead.*/
 
     public:
+        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
+
         /**
          * Destroys this object.  The cached boundary component triangulation
          * will be destroyed also.
@@ -1014,7 +1034,6 @@ class BoundaryComponentStorage :
         }
 
     protected:
-        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
         using BoundaryComponentFaceInterface<dim, allFaces, allowVertex>::
             buildVertexLink;
 

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "boundarycomponent-bindings.h"
+#include "triangulation/dim4.h" // for build()
 
 void addBoundaryComponent5() {
     addBoundaryComponent<5>("BoundaryComponent5");

@@ -41,6 +41,15 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::BoundaryComponent;
 
+namespace {
+    boost::python::list facets_list(BoundaryComponent<4>& t) {
+        boost::python::list ans;
+        for (auto s : t.facets())
+            ans.append(boost::python::ptr(s));
+        return ans;
+    }
+}
+
 void addDim4BoundaryComponent() {
     {
         scope s = class_<BoundaryComponent<4>,
@@ -55,6 +64,8 @@ void addDim4BoundaryComponent() {
             .def("countTriangles", &BoundaryComponent<4>::countTriangles)
             .def("countEdges", &BoundaryComponent<4>::countEdges)
             .def("countVertices", &BoundaryComponent<4>::countVertices)
+            .def("facets", facets_list)
+            .def("tetrahedra", facets_list)
             .def("facet", &BoundaryComponent<4>::facet,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<BoundaryComponent<4>, 4, size_t>)
