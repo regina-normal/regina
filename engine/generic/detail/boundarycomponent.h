@@ -75,9 +75,157 @@ namespace detail {
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
-struct WeakFaceList {
-    std::vector<Face<dim, subdim>*> faces_;
-        /**< The list of faces. */
+class WeakFaceList {
+    protected:
+        std::vector<Face<dim, subdim>*> faces_;
+            /**< The list of faces. */
+
+    private:
+        /**
+         * An input iterator that runs through the faces of this list in
+         * order and converts them to the corresponding faces from some
+         * other triangulation \a tri.
+         *
+         * The iterator relies on an array \a map, where for each face
+         * \a f in this list, <tt>map[f->index()]</tt> is the corresponding
+         * face of \a tri.  Note that <tt>f->index()</tt> is the index of
+         * \a f in its underlying <i>dim</i>-dimensional triangulation,
+         * \e not the index of \a f in this list.
+         */
+        template <int tridim>
+        class ReorderIterator {
+            private:
+                typename std::vector<Face<dim, subdim>*>::const_iterator it_;
+                    /**< Points to the current face of this list. */
+                Face<tridim, subdim>** map_;
+                    /**< The map that converts faces of this list to faces of
+                         the other triangulation \a tri, as described in the
+                         class notes. */
+
+            public:
+                /**
+                 * Creates an uninitialised iterator.
+                 */
+                ReorderIterator() : it_(), map_(0) {
+                }
+
+                /**
+                 * Creates an iterator that points to the given face of
+                 * this list, using the given map to convert faces of
+                 * this list to faces of the other triangulation \a tri.
+                 * See the iterator class notes for details.
+                 */
+                ReorderIterator(
+                        typename std::vector<Face<dim, subdim>*>::
+                            const_iterator it,
+                        Face<tridim, subdim>** map) : it_(it), map_(map) {
+                }
+
+                /**
+                 * Copy constructor.
+                 */
+                ReorderIterator(const ReorderIterator&) = default;
+
+                /**
+                 * Tests whether this and the given iterator point to
+                 * the same face.
+                 */
+                bool operator == (const ReorderIterator& rhs) const {
+                    return it_ == rhs.it_;
+                }
+
+                /**
+                 * Tests whether this and the given iterator point to
+                 * different faces.
+                 */
+                bool operator != (const ReorderIterator& rhs) const {
+                    return it_ != rhs.it_;
+                }
+
+                /**
+                 * Preincrement operator that steps to the next face in this
+                 * list.
+                 */
+                ReorderIterator& operator ++() {
+                    ++it_;
+                    return *this;
+                }
+
+                /**
+                 * Postincrement operator that steps to the next face in this
+                 * list.
+                 */
+                ReorderIterator operator ++(int) {
+                    ReorderIterator prev(*this);
+                    ++it_;
+                    return prev;
+                }
+
+                /**
+                 * Returns the face of the other triangulation \a tri that
+                 * corresponds to the current face in this list.  See
+                 * the iterator class notes for details.
+                 */
+                Face<tridim, subdim>* operator * () const {
+                    return map_[(*it_)->index()];
+                }
+        };
+
+    protected:
+        /**
+         * Reorders all <i>subdim</i>-faces of the given triangulation so
+         * that they appear in the same order as the corresponding faces
+         * in this list.
+         *
+         * \pre The <i>subdim</i>-faces of the given triangulation \a tri
+         * are in one-to-one correspondence with the <i>subdim</i>-faces in
+         * this list, though not necessarily in the same order.  Moreover,
+         * for each \a i and \a j, this correspondence maps the <i>i</i>th
+         * <i>subdim</i>-face of <tt>tri->simplex(j)</tt> to the <i>i</i>th
+         * <i>subdim</i>-face of <tt>tridimFaces[j]</tt>.
+         *
+         * \tparam tridim the dimension of the given triangulation.
+         * This must be strictly larger than \a subdim, but it need not
+         * be equal to \a dim.
+         *
+         * @param tri a <i>tridim</i>-dimensional triangulation, as
+         * described above.
+         * @param tridimFaces a list of <i>tridim</i>-faces that together
+         * contain all of the faces in this list, and that are in an
+         * \e ordered one-to-one correspondence with the top-dimensional
+         * simplices of \a tri as described in the precondition above.
+         */
+        template <int tridim>
+        void reorderFaces(Triangulation<tridim>* tri,
+                const std::vector<Face<dim, tridim>*>& tridimFaces) const {
+            static_assert(tridim > subdim,
+                "reorderFaces() should only be used with triangulations "
+                "of dimension tridim > subdim.");
+
+            if (faces_.empty())
+                return; // Should never happen.
+
+            // Build a map from
+            // subdim-face indices in the d-dim triang -> subdim-faces in tri.
+            //
+            // This is a partial function: it is only defined for indices
+            // of *boundary* subdim-faces in the d-dim triang.
+            // We leave the other values of the map uninitialised.
+            Face<tridim, subdim>** map = new Face<tridim, subdim>*[
+                faces_.front()->triangulation()->template countFaces<subdim>()];
+
+            for (Face<tridim, subdim>* f : tri->template faces<subdim>()) {
+                const auto& emb = f->front();
+                map[tridimFaces[emb.simplex()->index()]->
+                        template face<subdim>(emb.face())->index()] = f;
+            }
+
+            tri->template reorderFaces<subdim>(
+                ReorderIterator<tridim>(faces_.begin(), map),
+                ReorderIterator<tridim>(faces_.end(), map));
+
+            delete[] map;
+        }
 };
 
 /**
@@ -95,15 +243,52 @@ struct WeakFaceList {
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
-struct WeakFaceListSuite :
+class WeakFaceListSuite :
         public WeakFaceListSuite<dim, subdim - 1>,
         public WeakFaceList<dim, subdim> {
+    protected:
+        /**
+         * Reorders all faces of all dimensions 0,...,\a subdim of the given
+         * triangulation, so that for each \a k, the <i>k</i>-faces of the
+         * given triangulation appear in the same order as the corresponding
+         * <i>k</i>-faces in this suite.
+         *
+         * \pre For each dimension \a k = 0,...,\a subdim, the <i>k</i>-faces
+         * of the given triangulation \a tri are in one-to-one correspondence
+         * with the <i>k</i>-faces in this suite, though not necessarily in the
+         * same order.  Moreover, for each \a i and \a j, this correspondence
+         * maps the <i>i</i>th <i>k</i>-face of <tt>tri->simplex(j)</tt> to the
+         * <i>i</i>th <i>k</i>-face of <tt>tridimFaces[j]</tt>.
+         *
+         * \tparam tridim the dimension of the given triangulation.
+         * This must be strictly larger than \a subdim, but it need not
+         * be equal to \a dim.
+         *
+         * @param tri a <i>tridim</i>-dimensional triangulation, as
+         * described above.
+         * @param tridimFaces a list of <i>tridim</i>-faces that together
+         * contain all of the faces in this suite, and that are in an
+         * \e ordered one-to-one correspondence with the top-dimensional
+         * simplices of \a tri as described in the precondition above.
+         */
+        template <int tridim>
+        void reorderFaces(Triangulation<tridim>* tri,
+                const std::vector<Face<dim, tridim>*>& tridimFaces) const {
+            WeakFaceListSuite<dim, subdim - 1>::reorderFaces(tri, tridimFaces);
+            WeakFaceList<dim, subdim>::reorderFaces(tri, tridimFaces);
+        }
 };
 
 #ifndef __DOXYGEN
 
 template <int dim>
-struct WeakFaceListSuite<dim, 0> : public WeakFaceList<dim, 0> {
+class WeakFaceListSuite<dim, 0> : public WeakFaceList<dim, 0> {
+    protected:
+        template <int tridim>
+        void reorderFaces(Triangulation<tridim>* tri,
+                const std::vector<Face<dim, tridim>*>& tridimFaces) const {
+            WeakFaceList<dim, 0>::reorderFaces(tri, tridimFaces);
+        }
 };
 
 #endif // __DOXYGEN
@@ -250,6 +435,27 @@ class BoundaryComponentFaceStorage :
         const std::vector<Face<dim, dim-1>*>& simplices() const {
             return WeakFaceList<dim, dim-1>::faces_;
         }
+
+        /**
+         * Reorders all lower-dimensional faces of the given triangulation
+         * so that they appear in the same order as the corresponding
+         * faces of this boundary component.  This affects all faces of
+         * dimensions 0,...,(<i>dim</i>-2).
+         *
+         * \pre This is a real boundary component.
+         * \pre \a tri is a triangulation of this boundary component.
+         * \pre For each \a i, the <i>i</i>th top-dimensional simplex of
+         * \a tri corresponds to the <i>i</i>th (<i>dim</i>-1)-face of
+         * this boundary component, and has its vertices 0,...,(<i>dim</i>-1)
+         * labelled in the same way.
+         *
+         * @param tri a triangulation of this boundary component, as
+         * described above.
+         */
+        void reorderFaces(Triangulation<dim-1>* tri) const {
+            WeakFaceListSuite<dim, dim - 2>::reorderFaces(tri,
+                WeakFaceList<dim, dim - 1>::faces_);
+        }
 };
 
 /**
@@ -326,6 +532,19 @@ class BoundaryComponentFaceStorage<dim, false> {
          */
         const std::vector<Face<dim, dim-1>*>& simplices() const {
             return simplices_;
+        }
+
+    protected:
+        /**
+         * Reorders all lower-dimensional faces of the given triangulation
+         * so that they appear in the same order as the corresponding
+         * faces of this boundary component.  This affects all faces of
+         * dimensions 0,...,(<i>dim</i>-2).
+         *
+         * In this specialised class template, this function does nothing
+         * because faces of dimension 0,...,(<i>dim</i>-2) are not stored.
+         */
+        void reorderFaces(Triangulation<dim-1>*) const {
         }
 };
 
@@ -685,15 +904,22 @@ class BoundaryComponentStorage :
          *
          * If this is a real boundary component (i.e., it is built from
          * one or more (<i>dim</i>-1)-faces), then the triangulation of this
-         * boundary component is as follows.
-         * Let \a i lie between 0 and size()-1 inclusive.  Then simplex \a i
-         * of the returned (<i>dim</i>-1)-dimensional triangulation is
-         * a copy of <tt>face<dim-1>(i)</tt> of this boundary component,
-         * and its vertices 0,...,<i>dim</i>-1 are numbered in the
-         * same way.  To relate these (<i>dim</i>-1)-face vertex numbers to
-         * the vertex numbers of top-dimensional simplices in the overall
-         * <i>dim</i>-dimensional triangulation, see
-         * Simplex<dim>::faceMapping<dim-1>().
+         * boundary component is as follows:
+         *
+         * - Let \a i lie between 0 and size()-1 inclusive.  Then simplex \a i
+         *   of the returned (<i>dim</i>-1)-dimensional triangulation is
+         *   a copy of <tt>face<dim-1>(i)</tt> of this boundary component,
+         *   and its vertices 0,...,<i>dim</i>-1 are numbered in the
+         *   same way.  To relate these (<i>dim</i>-1)-face vertex numbers to
+         *   the vertex numbers of top-dimensional simplices in the overall
+         *   <i>dim</i>-dimensional triangulation, see
+         *   Simplex<dim>::faceMapping<dim-1>().
+         *
+         * - If this boundary component stores lower-dimensional faces (i.e.,
+         *   if the template argument \a allFaces is \c true), then a similar
+         *   correspondence holds for these lower-dimensional faces also:
+         *   for each \a i, <i>k</i>-face \a i of the returned triangulation is
+         *   a copy of <tt>face<k>(i)</tt> of this boundary component.
          *
          * If this boundary component consists only of a single vertex
          * (i.e., this is an ideal or invalid vertex boundary component),
@@ -888,6 +1114,12 @@ Triangulation<dim-1>*
     }
 
     delete[] bdrySimplex;
+
+    // Now the triangulation is built, we need to reorder its
+    // lower-dimensional faces to appear in the same order as they do in
+    // the boundary component face lists.
+    BoundaryComponentFaceStorage<dim, allFaces>::reorderFaces(ans);
+
     return ans;
 }
 

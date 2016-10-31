@@ -1520,7 +1520,22 @@ class TriangulationBase :
          */
         bool compatible(const Triangulation<dim>& other, bool complete) const;
 
+        /**
+         * Reorders the <i>subdim</i>-faces of this triangulation.
+         *
+         * The given range of iterators, when dereferenced, should contain
+         * exactly the <i>subdim</i>-faces of this triangulation, though
+         * possibly in a different order.
+         *
+         * As a result of calling this routine, the <i>subdim</i>-faces
+         * will be reindexed (in particular, Face<dim, subdim>::index()
+         * will now return a different value).
+         */
+        template <int subdim, typename Iterator>
+        void reorderFaces(Iterator begin, Iterator end);
+
     template <int, int, int> friend struct FaceCalculator;
+    template <int, int> friend class WeakFaceList;
 };
 
 /*@}*/
@@ -1771,6 +1786,12 @@ template <int subdim>
 inline const FaceList<dim, subdim>& TriangulationBase<dim>::faces() const {
     ensureSkeleton();
     return *this;
+}
+
+template <int dim>
+template <int subdim, typename Iterator>
+inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
+    FaceList<dim, subdim>::template reorderFaces<Iterator>(begin, end);
 }
 
 template <int dim>

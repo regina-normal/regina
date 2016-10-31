@@ -81,6 +81,8 @@ Version 5.1  [ (under development) ]
         Class HomologicalData:
             - Now works with type Integer instead of LargeInteger for all
               member functions except for torsionSigmaVector().
+        Class MarkedVector:
+            - New routine refill() for bulk replacements.
         Class MatrixInt:
             - Now stores elements of type Integer, not LargeInteger.  If
               you need support for infinity, you can always use the class

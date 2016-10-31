@@ -163,6 +163,32 @@ class FaceList {
          * @return \c true if and only if the degree sequences are equal.
          */
         bool sameDegrees(const FaceList<dim, subdim>& other) const;
+        /**
+         * Reorders this list of faces.
+         *
+         * The given range should contain exactly the faces in this list
+         * but in a (possibly) different order.  This routine will then
+         * replace the items in this list with the given range, which
+         * will therefore just reorder them.
+         *
+         * Note that the indices returned by Face<dim, subdim>::index()
+         * will change as a result.
+         *
+         * \pre The range of faces defined by \a begin and \a end contains
+         * exactly the faces in this list, but possibly in a different order.
+         *
+         * \tparam Iterator an input iterator type, whose dereference
+         * operator returns a pointer of type <tt>Face<dim, subdim>*</tt>.
+         *
+         * @param begin an iterator that points to the beginning of the range
+         * of reordered faces.
+         * @param end an iterator that points past the end of the range of
+         * reordered faces.
+         */
+        template <typename Iterator>
+        void reorderFaces(Iterator begin, Iterator end) {
+            faces_.refill(begin, end);
+        }
 };
 
 } // namespace regina
