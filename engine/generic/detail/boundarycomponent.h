@@ -48,7 +48,14 @@
 
 namespace regina {
 
+template <int> class Component;
+template <int> class Triangulation;
+template <int, int> class Face;
+template <int dim> using Simplex = Face<dim, dim>;
+
 namespace detail {
+
+template <int> class TriangulationBase;
 
 /**
  * \weakgroup detail
@@ -594,7 +601,6 @@ class BoundaryComponentFaceStorage<dim, false> {
             return facets_;
         }
 
-    protected:
         /**
          * Reorders all lower-dimensional faces of the given triangulation
          * so that they appear in the same order as the corresponding

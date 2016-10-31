@@ -70,9 +70,6 @@ template <>
 class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
         public Output<Face<4, 1>> {
     private:
-        BoundaryComponent<4>* boundaryComponent_;
-            /**< The boundary component that this edge is a part of,
-                 or 0 if this edge is internal. */
         Triangulation<2>* link_;
             /**< A triangulation of the edge link.  This will only be
              * constructed on demand; until then it will be null. */
@@ -82,28 +79,6 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * Default destructor.
          */
         ~Face();
-
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this edge belongs.
-         *
-         * See the note in the BoundaryComponent overview regarding
-         * what happens if the edge link itself has more than one
-         * boundary component.  Note that such an edge link makes the
-         * triangulation invalid.
-         *
-         * @return the boundary component containing this edge, or 0 if this
-         * edge does not lie entirely within the boundary of the triangulation.
-         */
-        BoundaryComponent<4>* boundaryComponent() const;
-
-        /**
-         * Determines if this edge lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this edge lies on the boundary.
-         */
-        bool isBoundary() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -267,16 +242,7 @@ REGINA_DEPRECATED typedef Face<4, 1> Dim4Edge;
 // Inline functions for Edge<4>
 
 inline Face<4, 1>::Face(Component<4>* component) :
-        detail::FaceBase<4, 1>(component),
-        boundaryComponent_(0), link_(0) {
-}
-
-inline BoundaryComponent<4>* Face<4, 1>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<4, 1>::isBoundary() const {
-    return (boundaryComponent_ != 0);
+        detail::FaceBase<4, 1>(component), link_(0) {
 }
 
 inline const Triangulation<2>* Face<4, 1>::buildLink() const {
@@ -289,7 +255,7 @@ inline const Triangulation<2>* Face<4, 1>::buildLink() const {
 }
 
 inline void Face<4, 1>::writeTextShort(std::ostream& out) const {
-    out << (boundaryComponent_ ? "Boundary " : "Internal ")
+    out << (isBoundary() ? "Boundary " : "Internal ")
         << "edge of degree " << degree();
 }
 

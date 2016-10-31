@@ -105,9 +105,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
         };
 
     private:
-        BoundaryComponent<3>* boundaryComponent_;
-            /**< The boundary component that this triangle is a part of,
-                 or 0 if this triangle is internal. */
         Type type_;
             /**< Specifies the triangle type, or \a UNKNOWN_TYPE if the
                  type has not yet been determined. */
@@ -117,14 +114,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
                  relevant for some triangle types. */
 
     public:
-        /**
-         * Determines if this triangle lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this triangle lies on the boundary.
-         */
-        bool isBoundary() const;
-
         /**
          * Determines whether this triangle represents a dual edge in the
          * maximal forest that has been chosen for the dual 1-skeleton of the
@@ -200,16 +189,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
         bool isCone();
 
         /**
-         * Returns the boundary component of the triangulation to which
-         * this triangle belongs.
-         *
-         * @return the boundary component containing this triangle, or 0 if this
-         * triangle does not lie entirely within the boundary of the
-         * triangulation.
-         */
-        BoundaryComponent<3>* boundaryComponent() const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -266,16 +245,7 @@ REGINA_DEPRECATED typedef Face<3, 2> NTriangle;
 // Inline functions for Triangle<3>
 
 inline Face<3, 2>::Face(Component<3>* component) :
-        FaceBase<3, 2>(component),
-        boundaryComponent_(0), type_(UNKNOWN_TYPE) {
-}
-
-inline BoundaryComponent<3>* Face<3, 2>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<3, 2>::isBoundary() const {
-    return (boundaryComponent_ != 0);
+        FaceBase<3, 2>(component), type_(UNKNOWN_TYPE) {
 }
 
 inline bool Face<3, 2>::inMaximalForest() const {

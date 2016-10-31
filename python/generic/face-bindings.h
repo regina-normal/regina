@@ -260,6 +260,9 @@ void addFace(const char* name, const char* embName) {
             return_value_policy<regina::python::to_held_type<>>())
         .def("component", &Face<dim, subdim>::component,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &Face<dim, subdim>::boundaryComponent,
+            return_value_policy<reference_existing_object>())
+        .def("isBoundary", &Face<dim, subdim>::isBoundary)
         .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>)
         .def("faceMapping",
             &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>)

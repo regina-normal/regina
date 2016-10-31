@@ -70,9 +70,6 @@ template <>
 class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
         public Output<Face<4, 0>> {
     private:
-        BoundaryComponent<4>* boundaryComponent_;
-            /**< The boundary component that this vertex is a part of,
-                 or 0 if this vertex is internal. */
         Triangulation<3>* link_;
             /**< The link of this vertex, given as a full-blown
                  3-manifold triangulation.  It is guaranteed that 3-sphere
@@ -86,29 +83,6 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * Default destructor.
          */
         ~Face();
-
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this vertex belongs.
-         *
-         * See the note in the BoundaryComponent overview regarding what
-         * happens if the vertex link itself has more than one boundary
-         * component.  Note that such a vertex link makes the triangulation
-         * invalid.
-         *
-         * An ideal vertex will have its own individual boundary
-         * component to which it belongs.
-         *
-         * An invalid vertex will be given its own individual boundary
-         * component if (and only if) it does not already belong to some
-         * larger boundary component (for instance, if its link is an
-         * ideal 3-manifold triangulation).
-         *
-         * @return the boundary component containing this vertex,
-         * or 0 if this vertex is not on the boundary of the triangulation
-         * as determined by isBoundary().
-         */
-        BoundaryComponent<4>* boundaryComponent() const;
 
         /**
          * Returns a full 3-manifold triangulation describing
@@ -225,27 +199,6 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
         bool isIdeal() const;
 
         /**
-         * Determines if this vertex lies on the boundary of the
-         * triangulation.
-         *
-         * Ideal vertices form their own boundary components, and are
-         * therefore considered to be on the boundary.
-         *
-         * Invalid vertices are always considered to be on the boundary.
-         * If an invalid vertex is not already part of some larger boundary
-         * component (for instance, if its link is an ideal 3-manifold
-         * triangulation) then it is given its own boundary component (much
-         * like an ideal vertex).
-         *
-         * As a matter of fact, the only vertices that are \e not
-         * considered as on the boundary are those whose links are 3-spheres.
-         *
-         * @return \c true if and only if this vertex lies on the boundary.
-         * @see isIdeal()
-         */
-        bool isBoundary() const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -302,12 +255,7 @@ REGINA_DEPRECATED typedef Face<4, 0> Dim4Vertex;
 // Inline functions for Vertex<4>
 
 inline Face<4, 0>::Face(Component<4>* component) :
-        detail::FaceBase<4, 0>(component),
-        boundaryComponent_(0), link_(0), ideal_(false) {
-}
-
-inline BoundaryComponent<4>* Face<4, 0>::boundaryComponent() const {
-    return boundaryComponent_;
+        detail::FaceBase<4, 0>(component), link_(0), ideal_(false) {
 }
 
 inline const Triangulation<3>* Face<4, 0>::buildLink() const {
@@ -316,10 +264,6 @@ inline const Triangulation<3>* Face<4, 0>::buildLink() const {
 
 inline bool Face<4, 0>::isIdeal() const {
     return ideal_;
-}
-
-inline bool Face<4, 0>::isBoundary() const {
-    return (boundaryComponent_ != 0);
 }
 
 } // namespace regina

@@ -53,6 +53,7 @@
 
 namespace regina {
 
+template <int> class BoundaryComponent;
 template <int> class Component;
 template <int> class Triangulation;
 template <int, int> class Face;
@@ -848,6 +849,9 @@ class FaceBase :
     private:
         Component<dim>* component_;
             /**< The component that this face belongs to. */
+        BoundaryComponent<dim>* boundaryComponent_;
+            /**< The boundary component that this face is a part of,
+                 or 0 if this face is internal. */
 
     public:
         /**
@@ -870,6 +874,36 @@ class FaceBase :
          * @return the component containing this face.
          */
         Component<dim>* component() const;
+        /**
+         * Returns the boundary component of the triangulation to which
+         * this face belongs.
+         *
+         * See the note in the BoundaryComponent overview regarding
+         * what happens if the link of the face itself has more than one
+         * boundary component.  Note that such a link makes both the
+         * face and the underlying triangulation invalid.
+         *
+         * For dimensions in which ideal and/or invalid vertices are
+         * both possible and recognised: an ideal vertex will have its own
+         * individual boundary component to which it belongs, and so will
+         * an invalid vertex boundary component if the invalid vertex does
+         * not already belong to some real boundary component.
+         *
+         * @return the boundary component containing this face, or 0 if this
+         * face does not lie entirely within the boundary of the triangulation.
+         */
+        BoundaryComponent<dim>* boundaryComponent() const;
+        /**
+         * Determines if this face lies entirely on the boundary of the
+         * triangulation.
+         *
+         * For dimensions in which ideal and/or invalid vertices are
+         * both possible and recognised: both ideal and invalid vertices
+         * are considered to be on the boundary.
+         *
+         * @return \c true if and only if this face lies on the boundary.
+         */
+        bool isBoundary() const;
 
         /**
          * Returns the <i>lowerdim</i>-face of the underlying triangulation
@@ -959,7 +993,8 @@ class FaceBase :
 
     protected:
         /**
-         * Creates a new face.
+         * Creates a new face.  The face will be initialised as belong
+         * to no boundary component.
          *
          * @param component the component of the underlying triangulation
          * to which the new face belongs.
@@ -1286,6 +1321,17 @@ inline Component<dim>* FaceBase<dim, subdim>::component() const {
 }
 
 template <int dim, int subdim>
+inline BoundaryComponent<dim>* FaceBase<dim, subdim>::boundaryComponent()
+        const {
+    return boundaryComponent_;
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::isBoundary() const {
+    return boundaryComponent_;
+}
+
+template <int dim, int subdim>
 template <int lowerdim>
 inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
     // Let S be the dim-simplex corresponding to the first embedding,
@@ -1344,7 +1390,7 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
 
 template <int dim, int subdim>
 inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
-        component_(component) {
+        component_(component), boundaryComponent_(0) {
 }
 
 } } // namespace regina::detail

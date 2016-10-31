@@ -66,29 +66,7 @@ namespace regina {
 template <>
 class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
         public Output<Face<2, 0>> {
-    private:
-        BoundaryComponent<2>* boundaryComponent_;
-            /**< The boundary component that this vertex is a part of,
-                 or 0 if this vertex is internal. */
-
     public:
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this vertex belongs.
-         *
-         * @return the boundary component containing this vertex,
-         * or 0 if this vertex is not on the boundary of the triangulation.
-         */
-        BoundaryComponent<2>* boundaryComponent() const;
-
-        /**
-         * Determines if this vertex lies on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this vertex lies on the boundary.
-         */
-        bool isBoundary() const;
-
         /**
          * Writes a short text representation of this object to the
          * given output stream.
@@ -146,19 +124,11 @@ REGINA_DEPRECATED typedef Face<2, 0> Dim2Vertex;
 // Inline functions for Vertex<2>
 
 inline Face<2, 0>::Face(Component<2>* component) :
-        detail::FaceBase<2, 0>(component), boundaryComponent_(0) {
-}
-
-inline BoundaryComponent<2>* Face<2, 0>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<2, 0>::isBoundary() const {
-    return (boundaryComponent_ != 0);
+        detail::FaceBase<2, 0>(component) {
 }
 
 inline void Face<2, 0>::writeTextShort(std::ostream& out) const {
-    out << (boundaryComponent_ ? "Boundary " : "Internal ")
+    out << (isBoundary() ? "Boundary " : "Internal ")
         << "vertex of degree " << degree();
 }
 

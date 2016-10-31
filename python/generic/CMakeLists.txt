@@ -1,5 +1,16 @@
 # Files to compile
 SET ( FILES
+  boundarycomponent5
+  boundarycomponent6
+  boundarycomponent7
+  boundarycomponent8
+  boundarycomponent9
+  boundarycomponent10
+  boundarycomponent11
+  boundarycomponent12
+  boundarycomponent13
+  boundarycomponent14
+  boundarycomponent15
   component5
   component6
   component7

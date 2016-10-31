@@ -104,9 +104,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
                      triangulation invalid. */
         };
     private:
-        BoundaryComponent<3>* boundaryComponent_;
-            /**< The boundary component that this vertex is a part of,
-                 or 0 if this vertex is internal. */
         LinkType link_;
             /**< A broad categorisation of the topology of the vertex link. */
         long linkEulerChar_;
@@ -120,23 +117,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * Default destructor.
          */
         ~Face();
-
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this vertex belongs.
-         *
-         * See the note in the BoundaryComponent overview regarding what
-         * happens if the vertex link is a multiply punctured surface.
-         * Note that this makes both the vertex and the triangulation invalid.
-         *
-         * An ideal vertex will have its own individual boundary
-         * component to which it belongs.
-         *
-         * @return the boundary component containing this vertex,
-         * or 0 if this vertex is not on the boundary of the triangulation
-         * as determined by isBoundary().
-         */
-        BoundaryComponent<3>* boundaryComponent() const;
 
         /**
          * Returns a broad categorisation of the link of the vertex.
@@ -272,18 +252,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
         bool isIdeal() const;
 
         /**
-         * Determines if this vertex lies on the boundary of the
-         * triangulation.  Ideal vertices are included as
-         * being on the boundary.  In fact, the only vertices not
-         * considered as on the boundary are those whose links are
-         * spheres.
-         *
-         * @return \c true if and only if this vertex lies on the boundary.
-         * @see isIdeal()
-         */
-        bool isBoundary() const;
-
-        /**
          * Determines if this vertex is standard.
          * This requires the vertex link to be a sphere, disc, torus or
          * Klein bottle.
@@ -361,12 +329,7 @@ REGINA_DEPRECATED typedef Face<3, 0> NVertex;
 // Inline functions for Vertex<3>
 
 inline Face<3, 0>::Face(Component<3>* component) :
-        detail::FaceBase<3, 0>(component),
-        boundaryComponent_(0), linkEulerChar_(0), linkTri_(0) {
-}
-
-inline BoundaryComponent<3>* Face<3, 0>::boundaryComponent() const {
-    return boundaryComponent_;
+        detail::FaceBase<3, 0>(component), linkEulerChar_(0), linkTri_(0) {
 }
 
 inline Vertex<3>::LinkType Face<3, 0>::link() const {
@@ -389,10 +352,6 @@ inline bool Face<3, 0>::isLinkClosed() const {
 inline bool Face<3, 0>::isIdeal() const {
     return (link_ == TORUS || link_ == KLEIN_BOTTLE ||
         link_ == NON_STANDARD_CUSP);
-}
-
-inline bool Face<3, 0>::isBoundary() const {
-    return (boundaryComponent_ != 0);
 }
 
 inline bool Face<3, 0>::isStandard() const {

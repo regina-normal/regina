@@ -66,30 +66,7 @@ namespace regina {
 template <>
 class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
         public Output<Face<4, 3>> {
-    private:
-        BoundaryComponent<4>* boundaryComponent_;
-            /**< The boundary component that this tetrahedron is a part of,
-                 or 0 if this tetrahedron is internal. */
-
     public:
-        /**
-         * Determines if this tetrahedron lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this tetrahedron lies on the boundary.
-         */
-        bool isBoundary() const;
-
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this tetrahedron belongs.
-         *
-         * @return the boundary component containing this tetrahedron, or 0
-         * if this tetrahedron does not lie entirely within the boundary of
-         * the triangulation.
-         */
-        BoundaryComponent<4>* boundaryComponent() const;
-
         /**
          * Determines whether this tetrahedron represents a dual edge in the
          * maximal forest that has been chosen for the dual 1-skeleton of the
@@ -176,15 +153,7 @@ REGINA_DEPRECATED typedef Face<4, 3> Dim4Tetrahedron;
 // Inline functions for Tetrahedron<4>
 
 inline Face<4, 3>::Face(Component<4>* component) :
-        FaceBase<4, 3>(component), boundaryComponent_(0) {
-}
-
-inline BoundaryComponent<4>* Face<4, 3>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<4, 3>::isBoundary() const {
-    return (boundaryComponent_ != 0);
+        FaceBase<4, 3>(component) {
 }
 
 inline bool Face<4, 3>::inMaximalForest() const {
@@ -192,7 +161,7 @@ inline bool Face<4, 3>::inMaximalForest() const {
 }
 
 inline void Face<4, 3>::writeTextShort(std::ostream& out) const {
-    out << (boundaryComponent_ ? "Boundary " : "Internal ") << "tetrahedron";
+    out << (isBoundary() ? "Boundary " : "Internal ") << "tetrahedron";
 }
 
 } // namespace regina

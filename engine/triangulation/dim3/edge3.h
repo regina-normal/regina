@@ -66,29 +66,7 @@ namespace regina {
 template <>
 class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
         public Output<Face<3, 1>> {
-    private:
-        BoundaryComponent<3>* boundaryComponent_;
-            /**< The boundary component that this edge is a part of,
-                 or 0 if this edge is internal. */
-
     public:
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this edge belongs.
-         *
-         * @return the boundary component containing this edge, or 0 if this
-         * edge does not lie entirely within the boundary of the triangulation.
-         */
-        BoundaryComponent<3>* boundaryComponent() const;
-
-        /**
-         * Determines if this edge lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this edge lies on the boundary.
-         */
-        bool isBoundary() const;
-
         /**
          * Writes a short text representation of this object to the
          * given output stream.
@@ -146,16 +124,7 @@ REGINA_DEPRECATED typedef Face<3, 1> NEdge;
 // Inline functions for Edge<3>
 
 inline Face<3, 1>::Face(Component<3>* component) :
-        detail::FaceBase<3, 1>(component),
-        boundaryComponent_(0) {
-}
-
-inline BoundaryComponent<3>* Face<3, 1>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<3, 1>::isBoundary() const {
-    return (boundaryComponent_ != 0);
+        detail::FaceBase<3, 1>(component) {
 }
 
 inline void Face<3, 1>::writeTextShort(std::ostream& out) const {

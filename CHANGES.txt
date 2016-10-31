@@ -78,6 +78,8 @@ Version 5.1  [ (under development) ]
               Face<dim, dim>, which now implements the old class Simplex<dim>.
               Simplex<dim> remains as a templated type alias, and is still
               the preferred way to refer to this class.
+            - For higher-dimensional triangulations (dim >= 5), faces now
+              support isBoundary() and boundaryComponent().
         Class HomologicalData:
             - Now works with type Integer instead of LargeInteger for all
               member functions except for torsionSigmaVector().

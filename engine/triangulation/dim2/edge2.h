@@ -66,30 +66,7 @@ namespace regina {
 template <>
 class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
         public Output<Face<2, 1>> {
-    private:
-        BoundaryComponent<2>* boundaryComponent_;
-            /**< The boundary component that this edge is a part of,
-                 or 0 if this edge is internal. */
-
     public:
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this edge belongs.
-         *
-         * @return the boundary component containing this edge, or 0
-         * if this edge does not lie entirely within the boundary of
-         * the triangulation.
-         */
-        BoundaryComponent<2>* boundaryComponent() const;
-
-        /**
-         * Determines if this edge lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this edge lies on the boundary.
-         */
-        bool isBoundary() const;
-
         /**
          * Determines whether this edge represents a dual edge in the
          * maximal forest that has been chosen for the dual 1-skeleton of the
@@ -177,15 +154,7 @@ REGINA_DEPRECATED typedef Face<2, 1> Dim2Edge;
 // Inline functions for Edge<2>
 
 inline Face<2, 1>::Face(Component<2>* component) :
-        detail::FaceBase<2, 1>(component), boundaryComponent_(0) {
-}
-
-inline BoundaryComponent<2>* Face<2, 1>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<2, 1>::isBoundary() const {
-    return (boundaryComponent_ != 0);
+        detail::FaceBase<2, 1>(component) {
 }
 
 inline bool Face<2, 1>::inMaximalForest() const {
@@ -193,7 +162,7 @@ inline bool Face<2, 1>::inMaximalForest() const {
 }
 
 inline void Face<2, 1>::writeTextShort(std::ostream& out) const {
-    out << (boundaryComponent_ ? "Boundary " : "Internal ") << "edge";
+    out << (isBoundary() ? "Boundary " : "Internal ") << "edge";
 }
 
 } // namespace regina

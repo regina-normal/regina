@@ -66,30 +66,7 @@ namespace regina {
 template <>
 class REGINA_API Face<4, 2> : public detail::FaceBase<4, 2>,
         public Output<Face<4, 2>> {
-    private:
-        BoundaryComponent<4>* boundaryComponent_;
-            /**< The boundary component that this triangle is a part of,
-                 or 0 if this triangle is internal. */
-
     public:
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this triangle belongs.
-         *
-         * @return the boundary component containing this triangle, or 0 if this
-         * triangle does not lie entirely within the boundary of the
-         * triangulation.
-         */
-        BoundaryComponent<4>* boundaryComponent() const;
-
-        /**
-         * Determines if this triangle lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this triangle lies on the boundary.
-         */
-        bool isBoundary() const;
-
         /**
          * Writes a short text representation of this object to the
          * given output stream.
@@ -147,19 +124,11 @@ REGINA_DEPRECATED typedef Face<4, 2> Dim4Triangle;
 // Inline functions for Face<4, 2>
 
 inline Face<4, 2>::Face(Component<4>* component) :
-        detail::FaceBase<4, 2>(component), boundaryComponent_(0) {
-}
-
-inline BoundaryComponent<4>* Face<4, 2>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<4, 2>::isBoundary() const {
-    return (boundaryComponent_ != 0);
+        detail::FaceBase<4, 2>(component) {
 }
 
 inline void Face<4, 2>::writeTextShort(std::ostream& out) const {
-    out << (boundaryComponent_ ? "Boundary " : "Internal ")
+    out << (isBoundary() ? "Boundary " : "Internal ")
         << "triangle of degree " << degree();
 }
 
