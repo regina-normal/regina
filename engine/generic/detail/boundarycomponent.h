@@ -370,6 +370,26 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
+         * Returns the requested (<i>dim</i>-1)-face in this boundary component.
+         * These are the top-dimensional faces for a real boundary component.
+         *
+         * Note that the index of a face in the boundary component need
+         * not be the index of the same face in the overall triangulation.
+         * However, if this is a real boundary component (i.e., it is built
+         * from one or more (<i>dim</i>-1)-faces), then the index of each
+         * (<i>dim</i>-1)-face in this boundary component will match the
+         * index of the corresponding top-dimensional simplex in the
+         * (<i>dim</i>-1)-manifold triangulation returned by build().
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * size()-1 inclusive.
+         * @return the requested face.
+         */
+        Face<dim, dim-1>* facet(size_t index) const {
+            return WeakFaceList<dim, dim-1>::faces_[index];
+        }
+
+        /**
          * Returns the requested <i>subdim</i>-face in this boundary component.
          *
          * Note that the index of a face in the boundary component need
@@ -432,7 +452,7 @@ class BoundaryComponentFaceStorage :
          *
          * @return the internal list of (<i>dim</i>-1)-faces.
          */
-        const std::vector<Face<dim, dim-1>*>& simplices() const {
+        const std::vector<Face<dim, dim-1>*>& facets() const {
             return WeakFaceList<dim, dim-1>::faces_;
         }
 
@@ -487,7 +507,7 @@ class BoundaryComponentFaceStorage<dim, false> {
         static constexpr bool allFaces = false;
 
     protected:
-        std::vector<Face<dim, dim-1>*> simplices_;
+        std::vector<Face<dim, dim-1>*> facets_;
             /**< List of all (dim-1)-simplices in the boundary component. */
 
     public:
@@ -500,7 +520,25 @@ class BoundaryComponentFaceStorage<dim, false> {
          * component.
          */
         size_t size() const {
-            return simplices_.size();
+            return facets_.size();
+        }
+
+        /**
+         * Returns the requested (<i>dim</i>-1)-face in this boundary component.
+         * These are the top-dimensional faces for a real boundary component.
+         *
+         * Note that the index of a face in the boundary component need not be
+         * the index of the same face in the overall triangulation.  However,
+         * the index of each (<i>dim</i>-1)-face in this boundary component
+         * will match the index of the corresponding top-dimensional simplex
+         * in the (<i>dim</i>-1)-manifold triangulation returned by build().
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * size()-1 inclusive.
+         * @return the requested face.
+         */
+        Face<dim, dim-1>* facet(size_t index) const {
+            return facets_[index];
         }
 
         /**
@@ -510,7 +548,7 @@ class BoundaryComponentFaceStorage<dim, false> {
          * @return the component containing this boundary component.
          */
         Component<dim>* component() const {
-            return simplices_.front()->component();
+            return facets_.front()->component();
         }
 
     protected:
@@ -522,7 +560,7 @@ class BoundaryComponentFaceStorage<dim, false> {
          * @param face the face to append to the list.
          */
         void push_back(Face<dim, dim-1>* face) {
-            simplices_.push_back(face);
+            facets_.push_back(face);
         }
 
         /**
@@ -530,8 +568,8 @@ class BoundaryComponentFaceStorage<dim, false> {
          *
          * @return the internal list of (<i>dim</i>-1)-faces.
          */
-        const std::vector<Face<dim, dim-1>*>& simplices() const {
-            return simplices_;
+        const std::vector<Face<dim, dim-1>*>& facets() const {
+            return facets_;
         }
 
     protected:
@@ -908,7 +946,7 @@ class BoundaryComponentStorage :
          *
          * - Let \a i lie between 0 and size()-1 inclusive.  Then simplex \a i
          *   of the returned (<i>dim</i>-1)-dimensional triangulation is
-         *   a copy of <tt>face<dim-1>(i)</tt> of this boundary component,
+         *   a copy of <tt>facet(i)</tt> of this boundary component,
          *   and its vertices 0,...,<i>dim</i>-1 are numbered in the
          *   same way.  To relate these (<i>dim</i>-1)-face vertex numbers to
          *   the vertex numbers of top-dimensional simplices in the overall
@@ -936,7 +974,7 @@ class BoundaryComponentStorage :
         const Triangulation<dim-1>* build() const {
             if (boundary_)
                 return boundary_; // Already cached or pre-computed.
-            if (simplices().empty())
+            if (facets().empty())
                 return buildVertexLink(); // Ideal or invalid vertex.
 
             return (
@@ -1052,7 +1090,7 @@ Triangulation<dim-1>*
         BoundaryComponentStorage<dim, allFaces, allowVertex, canBuild_>::
         buildRealBoundary() const {
     // From the precondition, there is a positive number of (dim-1)-faces.
-    const auto& allSimp = simplices();
+    const auto& allFacets = facets();
 
     // Build a map from ((dim-1)-face index in underlying triangulation)
     // to ((dim-1)-face in boundary component).
@@ -1060,14 +1098,14 @@ Triangulation<dim-1>*
     // The way we build it ensures that (dim-1)-faces are added to the
     // new boundary triangulation in the same order as they appear in
     // the boundary component's list of (dim-1)-faces.
-    Triangulation<dim>* mainTri = allSimp.front()->triangulation();
+    Triangulation<dim>* mainTri = allFacets.front()->triangulation();
     Simplex<dim-1>** bdrySimplex = new Simplex<dim-1>*[
         mainTri->template countFaces<dim-1>()];
 
     Triangulation<dim-1>* ans = new Triangulation<dim-1>();
     typename Triangulation<dim-1>::ChangeEventSpan span(ans);
 
-    for (auto s : allSimp)
+    for (auto s : allFacets)
         bdrySimplex[s->index()] = ans->newSimplex();
 
     // Run through the (dim-1)-simplices and make all the face gluings.
@@ -1075,7 +1113,7 @@ Triangulation<dim-1>*
     Simplex<dim-1> *simpBdry, *adjBdry;
     Face<dim, dim-1>* adjOuter;
     Face<dim, dim-2>* ridgeOuter;
-    for (Face<dim, dim-1>* simpOuter : allSimp) {
+    for (Face<dim, dim-1>* simpOuter : allFacets) {
         simpBdry = bdrySimplex[simpOuter->index()];
         for (facetOfSimp = 0; facetOfSimp < dim; ++facetOfSimp)
             if (! simpBdry->adjacentSimplex(facetOfSimp)) {

@@ -51,6 +51,8 @@ void addNBoundaryComponent() {
             .def("countTriangles", &BoundaryComponent<3>::countTriangles)
             .def("countEdges", &BoundaryComponent<3>::countEdges)
             .def("countVertices", &BoundaryComponent<3>::countVertices)
+            .def("facet", &BoundaryComponent<3>::facet,
+                return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)
             .def("triangle", &BoundaryComponent<3>::triangle,
                 return_value_policy<reference_existing_object>())

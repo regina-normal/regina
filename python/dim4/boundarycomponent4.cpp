@@ -55,6 +55,8 @@ void addDim4BoundaryComponent() {
             .def("countTriangles", &BoundaryComponent<4>::countTriangles)
             .def("countEdges", &BoundaryComponent<4>::countEdges)
             .def("countVertices", &BoundaryComponent<4>::countVertices)
+            .def("facet", &BoundaryComponent<4>::facet,
+                return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<BoundaryComponent<4>, 4, size_t>)
             .def("tetrahedron", &BoundaryComponent<4>::tetrahedron,
                 return_value_policy<reference_existing_object>())

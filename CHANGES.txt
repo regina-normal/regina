@@ -70,7 +70,7 @@ Version 5.1  [ (under development) ]
             - A new generic template for boundary components, which generalises
               the old standalone Dim2BoundaryComponent, NBoundaryComponent and
               Dim4BoundaryComponent classes.
-            - New routine size() to count top-dimensional faces.
+            - New routines size() and facet() to query top-dimensional faces.
             - New routine isReal() for dimensions dim = 3,4.
             - The 3-D class BoundaryComponent<3> now has a build() function.
         Class Face<dim, subdim>:

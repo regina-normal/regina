@@ -49,6 +49,8 @@ void addDim2BoundaryComponent() {
                 &regina::python::countFaces<BoundaryComponent<2>, 2>)
             .def("countEdges", &BoundaryComponent<2>::countEdges)
             .def("countVertices", &BoundaryComponent<2>::countVertices)
+            .def("facet", &BoundaryComponent<2>::facet,
+                return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<BoundaryComponent<2>, 2, size_t>)
             .def("edge", &BoundaryComponent<2>::edge,
                 return_value_policy<reference_existing_object>())
