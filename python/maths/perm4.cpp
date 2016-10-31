@@ -104,6 +104,7 @@ void addPerm4() {
             .def("trunc", &Perm<4>::trunc)
             .def("trunc2", &Perm<4>::trunc2)
             .def("trunc3", &Perm<4>::trunc3)
+            .def("clear", &Perm<4>::clear)
             .def("S4Index", S4Index_void)
             .def("orderedS4Index", &Perm<4>::orderedS4Index)
             .def("orderedSnIndex", &Perm<4>::orderedS4Index)

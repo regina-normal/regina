@@ -1530,9 +1530,26 @@ class TriangulationBase :
          * As a result of calling this routine, the <i>subdim</i>-faces
          * will be reindexed (in particular, Face<dim, subdim>::index()
          * will now return a different value).
+         *
+         * \pre The skeleton of this triangulation has been computed.
          */
         template <int subdim, typename Iterator>
         void reorderFaces(Iterator begin, Iterator end);
+
+        /**
+         * Relabels the vertices of the given face.
+         *
+         * For each top-dimensional simplex \a s of the triangulation that
+         * contains \a f, if the old mapping from vertices of \a f to vertices
+         * of \a s (as returned by Simplex<dim>::faceMapping()) is given by the
+         * permutation \a p, then the new mapping will become
+         * <tt>p * adjust</tt>.
+         *
+         * \pre For each \a i = <i>subdim</i>+1,...,\a dim, the given
+         * permutation maps \a i to itself.
+         */
+        template <int subdim>
+        void relabelFace(Face<dim, subdim>* f, const Perm<dim + 1>& adjust);
 
     template <int, int, int> friend struct FaceCalculator;
     template <int, int> friend class WeakFaceList;
@@ -1792,6 +1809,15 @@ template <int dim>
 template <int subdim, typename Iterator>
 inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
     FaceList<dim, subdim>::template reorderFaces<Iterator>(begin, end);
+}
+
+template <int dim>
+template <int subdim>
+inline void TriangulationBase<dim>::relabelFace(Face<dim, subdim>* f,
+        const Perm<dim + 1>& adjust) {
+    for (const auto& emb : *f)
+        emb.simplex()->SimplexFaces<dim, subdim>::mapping_[emb.face()] =
+            emb.vertices() * adjust;
 }
 
 template <int dim>

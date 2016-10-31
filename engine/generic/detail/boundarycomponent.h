@@ -173,9 +173,10 @@ class WeakFaceList {
 
     protected:
         /**
-         * Reorders all <i>subdim</i>-faces of the given triangulation so
-         * that they appear in the same order as the corresponding faces
-         * in this list.
+         * Reorders and relabels all <i>subdim</i>-faces of the given
+         * triangulation so that they appear in the same order as the
+         * corresponding faces in this list, and so that their vertices
+         * are numbered in a corresponding way.
          *
          * \pre The <i>subdim</i>-faces of the given triangulation \a tri
          * are in one-to-one correspondence with the <i>subdim</i>-faces in
@@ -196,11 +197,11 @@ class WeakFaceList {
          * simplices of \a tri as described in the precondition above.
          */
         template <int tridim>
-        void reorderFaces(Triangulation<tridim>* tri,
+        void reorderAndRelabelFaces(Triangulation<tridim>* tri,
                 const std::vector<Face<dim, tridim>*>& tridimFaces) const {
             static_assert(tridim > subdim,
-                "reorderFaces() should only be used with triangulations "
-                "of dimension tridim > subdim.");
+                "reorderAndRelabelFaces() should only be used with "
+                "triangulations of dimension tridim > subdim.");
 
             if (faces_.empty())
                 return; // Should never happen.
@@ -216,8 +217,26 @@ class WeakFaceList {
 
             for (Face<tridim, subdim>* f : tri->template faces<subdim>()) {
                 const auto& emb = f->front();
-                map[tridimFaces[emb.simplex()->index()]->
-                        template face<subdim>(emb.face())->index()] = f;
+                Face<dim, tridim>* outer = tridimFaces[emb.simplex()->index()];
+                map[outer->template face<subdim>(emb.face())->index()] = f;
+
+                // While we have the two corresponding faces in front of us,
+                // relabel the vertices of f now.
+                //
+                // The following two permutations should be equal:
+                //
+                // - in tridim: emb.simplex()->faceMapping<subdim>(emb.face())
+                // - in dim: outer->faceMapping<subdim>(emb.face())
+                //
+                // The mapping we need to adjust is in tridim.
+
+                Perm<tridim+1> adjust =
+                    emb.simplex()->template faceMapping<subdim>(
+                        emb.face()).inverse() *
+                    Perm<tridim+1>::contract(
+                        outer->template faceMapping<subdim>(emb.face()));
+                adjust.clear(subdim + 1);
+                tri->relabelFace(f, adjust);
             }
 
             tri->template reorderFaces<subdim>(
@@ -248,10 +267,11 @@ class WeakFaceListSuite :
         public WeakFaceList<dim, subdim> {
     protected:
         /**
-         * Reorders all faces of all dimensions 0,...,\a subdim of the given
-         * triangulation, so that for each \a k, the <i>k</i>-faces of the
-         * given triangulation appear in the same order as the corresponding
-         * <i>k</i>-faces in this suite.
+         * Reorders and relabels all faces of all dimensions 0,...,\a subdim of
+         * the given triangulation, so that for each \a k, the <i>k</i>-faces of
+         * the given triangulation appear in the same order as the corresponding
+         * <i>k</i>-faces in this suite, and have their vertices numbered
+         * in a corresponding way.
          *
          * \pre For each dimension \a k = 0,...,\a subdim, the <i>k</i>-faces
          * of the given triangulation \a tri are in one-to-one correspondence
@@ -272,10 +292,11 @@ class WeakFaceListSuite :
          * simplices of \a tri as described in the precondition above.
          */
         template <int tridim>
-        void reorderFaces(Triangulation<tridim>* tri,
+        void reorderAndRelabelFaces(Triangulation<tridim>* tri,
                 const std::vector<Face<dim, tridim>*>& tridimFaces) const {
-            WeakFaceListSuite<dim, subdim - 1>::reorderFaces(tri, tridimFaces);
-            WeakFaceList<dim, subdim>::reorderFaces(tri, tridimFaces);
+            WeakFaceListSuite<dim, subdim - 1>::reorderAndRelabelFaces(
+                tri, tridimFaces);
+            WeakFaceList<dim, subdim>::reorderAndRelabelFaces(tri, tridimFaces);
         }
 };
 
@@ -285,9 +306,9 @@ template <int dim>
 class WeakFaceListSuite<dim, 0> : public WeakFaceList<dim, 0> {
     protected:
         template <int tridim>
-        void reorderFaces(Triangulation<tridim>* tri,
+        void reorderAndRelabelFaces(Triangulation<tridim>* tri,
                 const std::vector<Face<dim, tridim>*>& tridimFaces) const {
-            WeakFaceList<dim, 0>::reorderFaces(tri, tridimFaces);
+            WeakFaceList<dim, 0>::reorderAndRelabelFaces(tri, tridimFaces);
         }
 };
 
@@ -459,8 +480,9 @@ class BoundaryComponentFaceStorage :
         /**
          * Reorders all lower-dimensional faces of the given triangulation
          * so that they appear in the same order as the corresponding
-         * faces of this boundary component.  This affects all faces of
-         * dimensions 0,...,(<i>dim</i>-2).
+         * faces of this boundary component, and relabels these faces so
+         * that their vertices are numbered in a corresponding way.
+         * This affects all faces of dimensions 0,...,(<i>dim</i>-2).
          *
          * \pre This is a real boundary component.
          * \pre \a tri is a triangulation of this boundary component.
@@ -472,8 +494,8 @@ class BoundaryComponentFaceStorage :
          * @param tri a triangulation of this boundary component, as
          * described above.
          */
-        void reorderFaces(Triangulation<dim-1>* tri) const {
-            WeakFaceListSuite<dim, dim - 2>::reorderFaces(tri,
+        void reorderAndRelabelFaces(Triangulation<dim-1>* tri) const {
+            WeakFaceListSuite<dim, dim - 2>::reorderAndRelabelFaces(tri,
                 WeakFaceList<dim, dim - 1>::faces_);
         }
 };
@@ -576,13 +598,14 @@ class BoundaryComponentFaceStorage<dim, false> {
         /**
          * Reorders all lower-dimensional faces of the given triangulation
          * so that they appear in the same order as the corresponding
-         * faces of this boundary component.  This affects all faces of
-         * dimensions 0,...,(<i>dim</i>-2).
+         * faces of this boundary component, and relabels these faces so
+         * that their vertices are numbered in a corresponding way.
+         * This affects all faces of dimensions 0,...,(<i>dim</i>-2).
          *
          * In this specialised class template, this function does nothing
          * because faces of dimension 0,...,(<i>dim</i>-2) are not stored.
          */
-        void reorderFaces(Triangulation<dim-1>*) const {
+        void reorderAndRelabelFaces(Triangulation<dim-1>*) const {
         }
 };
 
@@ -957,7 +980,8 @@ class BoundaryComponentStorage :
          *   if the template argument \a allFaces is \c true), then a similar
          *   correspondence holds for these lower-dimensional faces also:
          *   for each \a i, <i>k</i>-face \a i of the returned triangulation is
-         *   a copy of <tt>face<k>(i)</tt> of this boundary component.
+         *   a copy of <tt>face<k>(i)</tt> of this boundary component,
+         *   and its vertices are numbered in the same way.
          *
          * If this boundary component consists only of a single vertex
          * (i.e., this is an ideal or invalid vertex boundary component),
@@ -984,7 +1008,7 @@ class BoundaryComponentStorage :
         }
 
     protected:
-        using BoundaryComponentFaceStorage<dim, allFaces>::simplices;
+        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
         using BoundaryComponentFaceInterface<dim, allFaces, allowVertex>::
             buildVertexLink;
 
@@ -1153,10 +1177,28 @@ Triangulation<dim-1>*
 
     delete[] bdrySimplex;
 
-    // Now the triangulation is built, we need to reorder its
-    // lower-dimensional faces to appear in the same order as they do in
-    // the boundary component face lists.
-    BoundaryComponentFaceStorage<dim, allFaces>::reorderFaces(ans);
+    /**
+     * Now the triangulation is built, we need to reorder its
+     * lower-dimensional faces to appear in the same order and with the
+     * same vertex numbers as they do in the boundary component face lists.
+     *
+     * A problem: this relabelling does happen immediately after ans is
+     * constructed, but not until *after* the skeletal calculations for ans.
+     * Therefore we have problems if the skeletal calculations for ans
+     * create additional structures that depend on this ordering/numbering.
+     *
+     * Currently the only such structures that we have to worry about are
+     * the triangulated edge/vertex links in Triangulation<4>.
+     * This means we only have problems in the case dim=5.
+     * However: for dim=5, boundary components do not store lower-dimensional
+     * faces, and so this ordering/numbering does not take place at all.
+     *
+     * TODO: Put in some kind of robust mechanism so that this issue
+     * does not come back and bite us at a later date if/when the skeletal
+     * computations are extended to do more than they do now.
+     */
+    ans->countComponents(); // ensures that the skeleton is calculated
+    BoundaryComponentFaceStorage<dim, allFaces>::reorderAndRelabelFaces(ans);
 
     return ans;
 }

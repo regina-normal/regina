@@ -738,6 +738,18 @@ class Triangulation4Test : public TriangulationTest<4> {
                                     << std::endl;
                                 CPPUNIT_FAIL(msg.str());
                             }
+
+                            Perm<4> innerPerm = innerSimp->faceMapping<0>(j);
+                            Perm<5> outerPerm = outerSimp->faceMapping<0>(j);
+                            if (innerPerm.trunc(1) != outerPerm.trunc(1)) {
+                                std::ostringstream msg;
+                                msg << "Boundary component " << bc->index()
+                                    << " of triangulation " << tri.label()
+                                    << " gives mismatched 0-face labelling"
+                                    << " when triangulated."
+                                    << std::endl;
+                                CPPUNIT_FAIL(msg.str());
+                            }
                         }
                         for (j = 0; j < 6; ++j) {
                             regina::Face<3, 1>* innerFace =
@@ -754,6 +766,18 @@ class Triangulation4Test : public TriangulationTest<4> {
                                     << std::endl;
                                 CPPUNIT_FAIL(msg.str());
                             }
+
+                            Perm<4> innerPerm = innerSimp->faceMapping<1>(j);
+                            Perm<5> outerPerm = outerSimp->faceMapping<1>(j);
+                            if (innerPerm.trunc(2) != outerPerm.trunc(2)) {
+                                std::ostringstream msg;
+                                msg << "Boundary component " << bc->index()
+                                    << " of triangulation " << tri.label()
+                                    << " gives mismatched 1-face labelling"
+                                    << " when triangulated."
+                                    << std::endl;
+                                CPPUNIT_FAIL(msg.str());
+                            }
                         }
                         for (j = 0; j < 4; ++j) {
                             regina::Face<3, 2>* innerFace =
@@ -766,6 +790,18 @@ class Triangulation4Test : public TriangulationTest<4> {
                                 msg << "Boundary component " << bc->index()
                                     << " of triangulation " << tri.label()
                                     << " gives mismatched 2-face indices"
+                                    << " when triangulated."
+                                    << std::endl;
+                                CPPUNIT_FAIL(msg.str());
+                            }
+
+                            Perm<4> innerPerm = innerSimp->faceMapping<2>(j);
+                            Perm<5> outerPerm = outerSimp->faceMapping<2>(j);
+                            if (innerPerm.trunc(3) != outerPerm.trunc(3)) {
+                                std::ostringstream msg;
+                                msg << "Boundary component " << bc->index()
+                                    << " of triangulation " << tri.label()
+                                    << " gives mismatched 2-face labelling"
                                     << " when triangulated."
                                     << std::endl;
                                 CPPUNIT_FAIL(msg.str());

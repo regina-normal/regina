@@ -125,6 +125,9 @@ Version 5.1  [ (under development) ]
             - Removed the copy constructor.
         Class Packet:
             - writeXMLFile() is now available in python (using std::cout only).
+        Class Perm<n>:
+            - New method clear() to reset a suffix of the permutation
+              to the identity map.
         Class Primes:
             - Now works with type Integer, not LargeInteger.
         Class SafePtr:

@@ -91,6 +91,7 @@ void addPerm2() {
             .def("index", &Perm<2>::index)
             .def("rand", &Perm<2>::rand)
             .def("trunc", &Perm<2>::trunc)
+            .def("clear", &Perm<2>::clear)
             .def("S2Index", &Perm<2>::S2Index)
             .def("orderedS2Index", &Perm<2>::orderedS2Index)
             .def("orderedSnIndex", &Perm<2>::orderedS2Index)
