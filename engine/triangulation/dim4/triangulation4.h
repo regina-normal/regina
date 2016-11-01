@@ -893,7 +893,6 @@ class REGINA_API Triangulation<4> :
          */
         void clearAllProperties();
 
-        void deleteSkeleton();
         void calculateSkeleton();
 
         /**

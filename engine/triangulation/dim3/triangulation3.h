@@ -2907,7 +2907,6 @@ class REGINA_API Triangulation<3> :
          */
         void checkPermutations();
 
-        void deleteSkeleton();
         void calculateSkeleton();
         /**
          * Internal to calculateSkeleton().  See the comments within

@@ -2522,7 +2522,10 @@ template <int dim>
 inline void TriangulationBase<dim>::deleteSkeleton() {
     for (auto c : components_)
         delete c;
+    for (auto b : boundaryComponents_)
+        delete b;
     components_.clear();
+    boundaryComponents_.clear();
 
     FaceListSuite<dim, dim - 1>::deleteFaces();
 

@@ -370,14 +370,6 @@ long Triangulation<3>::eulerCharManifold() const {
     return ans;
 }
 
-void Triangulation<3>::deleteSkeleton() {
-    for (auto b : boundaryComponents_)
-        delete b;
-    boundaryComponents_.clear();
-
-    TriangulationBase<3>::deleteSkeleton();
-}
-
 void Triangulation<3>::cloneFrom(const Triangulation<3>& X) {
     ChangeEventSpan span(this);
 

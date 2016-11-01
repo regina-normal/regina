@@ -256,14 +256,6 @@ void Triangulation<4>::cloneFrom(const Triangulation<4>& X) {
         H2_ = new NAbelianGroup(*(X.H2_.value()));
 }
 
-void Triangulation<4>::deleteSkeleton() {
-    for (auto b : boundaryComponents_)
-        delete b;
-    boundaryComponents_.clear();
-
-    TriangulationBase<4>::deleteSkeleton();
-}
-
 void Triangulation<4>::clearAllProperties() {
     if (calculatedSkeleton())
         deleteSkeleton();

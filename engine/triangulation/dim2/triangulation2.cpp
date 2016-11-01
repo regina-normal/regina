@@ -196,14 +196,6 @@ void Triangulation<2>::cloneFrom(const Triangulation<2>& X) {
     // None yet for 2-manifold triangulations.
 }
 
-void Triangulation<2>::deleteSkeleton() {
-    for (auto b : boundaryComponents_)
-        delete b;
-    boundaryComponents_.clear();
-
-    TriangulationBase<2>::deleteSkeleton();
-}
-
 void Triangulation<2>::clearAllProperties() {
     if (calculatedSkeleton())
         deleteSkeleton();
