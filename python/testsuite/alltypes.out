@@ -7,7 +7,46 @@ Equality type : BY_REFERENCE
 BoolSet : class
 Equality type : BY_VALUE
 
+BoundaryComponent10 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent11 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent12 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent13 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent14 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent15 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent2 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent3 : class
+Equality type : BY_REFERENCE
+
 BoundaryComponent4 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent5 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent6 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent7 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent8 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent9 : class
 Equality type : BY_REFERENCE
 
 Component10 : class
@@ -61,8 +100,7 @@ Equality type : BY_REFERENCE
 Cyclotomic : class
 Equality type : BY_VALUE
 
-Dim2BoundaryComponent : class
-Equality type : BY_REFERENCE
+Dim2BoundaryComponent : typedef ->  BoundaryComponent2
 
 Dim2Component : typedef ->  Component2
 
@@ -1149,8 +1187,7 @@ Equality type : BY_REFERENCE
 
 NBoolSet : typedef ->  BoolSet
 
-NBoundaryComponent : class
-Equality type : BY_REFERENCE
+NBoundaryComponent : typedef ->  BoundaryComponent3
 
 NCensus : class
 Equality type : NEVER_INSTANTIATED
