@@ -55,26 +55,6 @@ namespace regina {
  * @{
  */
 
-namespace detail {
-
-/**
- * Helper class that indicates what data type is used by a connected component
- * of a triangulation to store a list of <i>subdim</i>-faces.
- */
-template <int subdim>
-struct FaceListHolder<Component<3>, subdim> {
-    /**
-     * The data type used by Component<3> to store the list of all
-     * <i>subdim</i>-faces of the connected component.
-     *
-     * The function Component<3>::faces<subdim>() returns a const
-     * reference to this type.
-     */
-    typedef std::vector<Face<3, subdim>*> Holder;
-};
-
-} // namespace regina::detail
-
 /**
  * Represents a connected component of a 3-manifold triangulation.
  *
