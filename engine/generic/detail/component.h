@@ -42,12 +42,15 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/alias/face.h"
 #include "generic/alias/simplex.h"
 #include "utilities/markedvector.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
+template <int> class BoundaryComponent;
+template <int> class Component;
 template <int> class Triangulation;
 
 namespace detail {
@@ -105,6 +108,8 @@ class ComponentBase :
     private:
         std::vector<Simplex<dim>*> simplices_;
             /**< List of triangles in the component. */
+        std::vector<BoundaryComponent<dim>*> boundaryComponents_;
+            /**< List of boundary components in the component. */
 
     protected:
         bool valid_;
@@ -159,6 +164,38 @@ class ComponentBase :
          * @return the <i>index</i>th top-dimensional simplex.
          */
         Simplex<dim>* simplex(size_t index) const;
+
+        /**
+         * Returns the number of boundary components in this component.
+         *
+         * @return the number of boundary components.
+         */
+        size_t countBoundaryComponents() const;
+        /**
+         * Returns all boundary components in this component.
+         *
+         * The reference that is returned will remain valid only for as long
+         * as this component object exists.  In particular, the reference
+         * will become invalid any time that the triangulation changes
+         * (since all component objects will be destroyed and others rebuilt
+         * in their place).
+         *
+         * \ifacespython This routine returns a python list.
+         *
+         * @return the list of all boundary components.
+         */
+        const std::vector<BoundaryComponent<dim>*>& boundaryComponents() const;
+        /**
+         * Returns the boundary component at the given index in this component.
+         *
+         * Note that the index of a boundary component within this component
+         * may not be the same as its index within the overall triangulation.
+         *
+         * @param index specifies which boundary component to return;
+         * this should be between 0 and countBoundaryComponents()-1 inclusive.
+         * @return the requested boundary component.
+         */
+        BoundaryComponent<dim>* boundaryComponent(size_t index) const;
 
         /**
          * Determines if this component is valid.
@@ -235,6 +272,7 @@ class ComponentBase :
          */
         ComponentBase();
 
+    friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
 };
 
@@ -265,6 +303,23 @@ inline const std::vector<Simplex<dim>*>& ComponentBase<dim>::simplices() const {
 template <int dim>
 inline Simplex<dim>* ComponentBase<dim>::simplex(size_t index) const {
     return simplices_[index];
+}
+
+template <int dim>
+inline size_t ComponentBase<dim>::countBoundaryComponents() const {
+    return boundaryComponents_.size();
+}
+
+template <int dim>
+const std::vector<BoundaryComponent<dim>*>& ComponentBase<dim>::
+        boundaryComponents() const {
+    return boundaryComponents_;
+}
+
+template <int dim>
+inline BoundaryComponent<dim>* ComponentBase<dim>::boundaryComponent(
+        size_t index) const {
+    return boundaryComponents_[index];
 }
 
 template <int dim>

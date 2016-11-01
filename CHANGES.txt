@@ -75,6 +75,8 @@ Version 5.1  [ (under development) ]
               edges(), etc. where relevant.
             - New routine isReal() for dimensions dim = 3,4.
             - The 3-D class BoundaryComponent<3> now has a build() function.
+        Class Component<dim>:
+            - New routine boundaryComponents().
         Class Face<dim, subdim>:
             - The template parameters are expanded to include the case
               Face<dim, dim>, which now implements the old class Simplex<dim>.

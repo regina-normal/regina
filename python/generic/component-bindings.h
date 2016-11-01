@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
+#include "generic/boundarycomponent.h"
 #include "generic/component.h"
 #include "generic/simplex.h"
 #include "../helpers.h"
@@ -48,6 +49,13 @@ namespace {
                 ans.append(boost::python::ptr(*it));
             return ans;
         }
+
+        boost::python::list bc_list(Component<dim>& t) {
+            boost::python::list ans;
+            for (auto s : t.boundaryComponents())
+                ans.append(boost::python::ptr(s));
+            return ans;
+        }
     };
 }
 
@@ -57,8 +65,13 @@ void addComponent(const char* name) {
             (name, no_init)
         .def("index", &Component<dim>::index)
         .def("size", &Component<dim>::size)
+        .def("countBoundaryComponents",
+            &Component<dim>::countBoundaryComponents)
         .def("simplices", &PyComponentHelper<dim>::simplices_list)
         .def("simplex", &Component<dim>::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("boundaryComponents", &PyComponentHelper<dim>::bc_list)
+        .def("boundaryComponent", &Component<dim>::boundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("isValid", &Component<dim>::isValid)
         .def("isOrientable", &Component<dim>::isOrientable)
