@@ -1001,7 +1001,7 @@ inline bool Triangulation<4>::isIdeal() const {
 
 inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
-    return boundaryComponents_.empty();
+    return boundaryComponents().empty();
 }
 
 inline void Triangulation<4>::simplifiedFundamentalGroup(

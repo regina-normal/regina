@@ -430,7 +430,7 @@ inline long Triangulation<2>::eulerChar() const {
 
 inline bool Triangulation<2>::isClosed() const {
     ensureSkeleton();
-    return boundaryComponents_.empty();
+    return boundaryComponents().empty();
 }
 
 inline bool Triangulation<2>::isIdeal() const {

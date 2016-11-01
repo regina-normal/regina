@@ -3075,7 +3075,7 @@ inline bool Triangulation<3>::isStandard() const {
 
 inline bool Triangulation<3>::isClosed() const {
     ensureSkeleton();
-    return boundaryComponents_.empty();
+    return boundaryComponents().empty();
 }
 
 inline void Triangulation<3>::simplifiedFundamentalGroup(
