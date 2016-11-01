@@ -69,10 +69,6 @@ namespace regina {
  */
 template <>
 class BoundaryComponent<3>: public detail::BoundaryComponentBase<3> {
-    private:
-        bool orientable_;
-            /**< Is this boundary component orientable? */
-
     public:
         /**
          * Returns the Euler characteristic of this boundary component.
@@ -82,16 +78,6 @@ class BoundaryComponent<3>: public detail::BoundaryComponentBase<3> {
          * @return the Euler characteristic.
          */
         long eulerChar() const;
-
-        /**
-         * Determines if this boundary component is orientable.
-         * If the boundary component is ideal, the orientability
-         * of the link of the corresponding ideal vertex is returned.
-         *
-         * @return \c true if and only if this boundary component is
-         * orientable.
-         */
-        bool isOrientable() const;
 
     private:
         /**
@@ -120,10 +106,6 @@ inline long BoundaryComponent<3>::eulerChar() const {
     return (isIdeal() ?
         vertex(0)->linkEulerChar() :
         long(countVertices()) - long(countEdges()) + long(countTriangles()));
-}
-
-inline bool BoundaryComponent<3>::isOrientable() const {
-    return orientable_;
 }
 
 } // namespace regina

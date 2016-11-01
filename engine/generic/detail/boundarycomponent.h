@@ -1158,6 +1158,10 @@ class BoundaryComponentBase :
             (dim > 2) /* canBuild */>,
         public boost::noncopyable,
         public MarkedElement {
+    protected:
+        bool orientable_;
+            /**< Is this boundary component orientable? */
+
     public:
         /**
          * Returns the index of this boundary component in the underlying
@@ -1169,9 +1173,24 @@ class BoundaryComponentBase :
             return markedIndex();
         }
 
+        /**
+         * Determines if this boundary component is orientable.  If this is
+         * an ideal or invalid vertex boundary component, then the
+         * orientability of the corresponding vertex link is returned.
+         *
+         * This routine is fast; in particular, it is pre-computed and
+         * does not build a full triangulation of the boundary component.
+         *
+         * @return \c true if and only if this boundary component is
+         * orientable.
+         */
+        bool isOrientable() const {
+            return orientable_;
+        }
+
     protected:
         /**
-         * Default constructor.
+         * Default constructor that leaves orientability uninitialised.
          */
         BoundaryComponentBase() = default;
 

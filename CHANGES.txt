@@ -74,9 +74,14 @@ Version 5.1  [ (under development) ]
             - New routines facets() and faces(), plus aliases vertices(),
               edges(), etc. where relevant.
             - New routine isReal() for dimensions dim = 3,4.
-            - The 3-D class BoundaryComponent<3> now has a build() function.
+            - New routine build() for dimensions other than 4 (this was
+              already present for dimension 4).
+            - New routine isOrientable() for dimensions other than 3 (this was
+              already present for dimension 3).
         Class Component<dim>:
-            - New routine boundaryComponents().
+            - New routine boundaryComponents() in all dimensions, and new
+              routines countBoundaryComponents() and boundaryComponent() in
+              higher dimensions (these were already present for dimensions 2-4).
         Class Face<dim, subdim>:
             - The template parameters are expanded to include the case
               Face<dim, dim>, which now implements the old class Simplex<dim>.
@@ -147,6 +152,10 @@ Version 5.1  [ (under development) ]
             - Removed entirely.  This class has been unused for several years,
               and was just a trivial wrapper for iterating through a surface
               list with a filter.
+        Class Triangulation<dim>:
+            - New routines boundaryComponents(), countBoundaryComponents()
+              and boundaryComponent() for higher-dimensional triangulations
+              (these were already present for dimensions 2-4).
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,

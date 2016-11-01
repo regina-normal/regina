@@ -70,14 +70,6 @@ namespace regina {
  */
 template <>
 class REGINA_API Face<3, 3> : public detail::SimplexBase<3> {
-    private:
-        int tmpOrientation_[4];
-            /**< Temporary array used to represent orientations of triangles
-                 when calculating orientability of boundary components.
-                 Each orientation will be +/-1.
-                 The array should only be used within these orientability
-                 routines, and its contents afterwards are unpredictable. */
-
     public:
         /**
          * A dimension-specific alias for adjacentSimplex().
