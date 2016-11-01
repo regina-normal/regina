@@ -56,11 +56,32 @@ template <int dim> using Simplex = Face<dim, dim>;
 namespace detail {
 
 template <int> class TriangulationBase;
+template <int, bool> class BoundaryComponentFaceStorage;
 
 /**
  * \weakgroup detail
  * @{
  */
+
+/**
+ * Helper class that indicates what data type is used by a boundary
+ * component class to store a list of <i>subdim</i>-faces.
+ *
+ * This is only relevant for boundary components in Regina's
+ * \ref stddim "standard dimensions", since boundary components in
+ * higher dimensions do not store their lower-dimensional faces.
+ */
+template <int dim, int subdim>
+struct FaceListHolder<BoundaryComponentFaceStorage<dim, true>, subdim> {
+    /**
+     * The data type used by BoundaryComponent<dim> to store the list of all
+     * <i>subdim</i>-faces of the boundary component.
+     *
+     * The function BoundaryComponent<dim>::faces<subdim>() returns a const
+     * reference to this type.
+     */
+    typedef std::vector<Face<dim, subdim>*> Holder;
+};
 
 /**
  * Internal class that stores all <i>subdim</i>-faces in a component or
@@ -338,6 +359,8 @@ class WeakFaceListSuite<dim, 0> : public WeakFaceList<dim, 0> {
 template <int dim, bool allFaces_>
 class BoundaryComponentFaceStorage :
         protected WeakFaceListSuite<dim, dim - 1>,
+        public alias::FacesOfTriangulation<
+            BoundaryComponentFaceStorage<dim, true>, dim>,
         public alias::FaceOfTriangulation<
             BoundaryComponentFaceStorage<dim, true>, dim> {
     static_assert(allFaces_,
@@ -412,6 +435,32 @@ class BoundaryComponentFaceStorage :
          */
         const std::vector<Face<dim, dim-1>*>& facets() const {
             return WeakFaceList<dim, dim-1>::faces_;
+        }
+
+        /**
+         * Returns all <i>subdim</i>-faces in this boundary component.
+         *
+         * The reference that is returned will remain valid only for as
+         * long as this boundary component object exists.  In particular,
+         * the reference will become invalid any time that the triangulation
+         * changes (since all boundary component objects will be destroyed
+         * and others rebuilt in their place).
+         *
+         * \ifacespython Python users should call this function in the
+         * form <tt>faces(subdim)</tt>.  It will then return a Python list
+         * containing all the <i>subdim</i>-faces of the boundary component.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the faces when this function is called, and will
+         * \e not be kept up-to-date as the triangulation changes.
+         *
+         * \tparam subdim the dimension of the faces to query.  This must
+         * be between 0 and <i>dim</i>-1 inclusive.
+         *
+         * @return access to the list of all <i>subdim</i>-faces.
+         */
+        template <int subdim>
+        const std::vector<Face<dim, subdim>*>& faces() const {
+            return WeakFaceList<dim, subdim>::faces_;
         }
 
         /**

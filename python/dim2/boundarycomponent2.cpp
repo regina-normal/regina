@@ -38,15 +38,6 @@
 using namespace boost::python;
 using regina::BoundaryComponent;
 
-namespace {
-    boost::python::list facets_list(BoundaryComponent<2>& t) {
-        boost::python::list ans;
-        for (auto s : t.facets())
-            ans.append(boost::python::ptr(s));
-        return ans;
-    }
-}
-
 void addDim2BoundaryComponent() {
     {
         scope s = class_<BoundaryComponent<2>,
@@ -58,8 +49,13 @@ void addDim2BoundaryComponent() {
                 &regina::python::countFaces<BoundaryComponent<2>, 2>)
             .def("countEdges", &BoundaryComponent<2>::countEdges)
             .def("countVertices", &BoundaryComponent<2>::countVertices)
-            .def("facets", facets_list)
-            .def("edges", facets_list)
+            .def("facets",
+                regina::python::faces_list<BoundaryComponent<2>, 2, 1>)
+            .def("faces", &regina::python::faces<BoundaryComponent<2>, 2>)
+            .def("edges",
+                regina::python::faces_list<BoundaryComponent<2>, 2, 1>)
+            .def("vertices",
+                regina::python::faces_list<BoundaryComponent<2>, 2, 0>)
             .def("facet", &BoundaryComponent<2>::facet,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<BoundaryComponent<2>, 2, size_t>)
