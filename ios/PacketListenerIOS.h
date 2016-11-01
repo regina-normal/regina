@@ -66,6 +66,10 @@ namespace regina {
  * This class essentially acts as a bridge between the C++ NPacketListener code
  * and the Objective-C protocol mechanisms.
  *
+ * This class will always call the PacketDelegate functions on the main thread.
+ * This means that, if the corresponding packet events were fired from some
+ * other thread, there may be a delay in calling the PacketDelegate functions.
+ *
  * \warning This class does not manage lifespans at all.  You must ensure that,
  * if the listener might outlive the delegate object, then the method
  * permanentlyUnlisten: is called before the delegate is destroyed.

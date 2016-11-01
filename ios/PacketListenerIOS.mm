@@ -45,70 +45,148 @@ public:
     }
     
     inline void packetToBeChanged(regina::NPacket* packet) {
-        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeChanged:)])
-            [(__bridge id)_object packetToBeChanged:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeChanged:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object packetToBeChanged:packet];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object packetToBeChanged:packet];
+                });
+        }
     }
     
     inline void packetWasChanged(regina::NPacket* packet) {
-        if ([(__bridge id)_object respondsToSelector:@selector(packetWasChanged:)])
-            [(__bridge id)_object packetWasChanged:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetWasChanged:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object packetWasChanged:packet];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object packetWasChanged:packet];
+                });
+        }
     }
     
     inline void packetToBeRenamed(regina::NPacket* packet) {
-        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeRenamed:)])
-            [(__bridge id)_object packetToBeRenamed:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeRenamed:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object packetToBeRenamed:packet];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object packetToBeRenamed:packet];
+                });
+        }
     }
     
     inline void packetWasRenamed(regina::NPacket* packet) {
-        if ([(__bridge id)_object respondsToSelector:@selector(packetWasRenamed:)])
-            [(__bridge id)_object packetWasRenamed:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetWasRenamed:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object packetWasRenamed:packet];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object packetWasRenamed:packet];
+                });
+        }
     }
     
     inline void packetToBeDestroyed(regina::NPacket* packet) {
-        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeDestroyed:)])
-            [(__bridge id)_object packetToBeDestroyed:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(packetToBeDestroyed:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object packetToBeDestroyed:packet];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object packetToBeDestroyed:packet];
+                });
+        }
     }
     
     inline void childToBeAdded(regina::NPacket* packet, regina::NPacket* child) {
         if (packet == _listenChildrenOf)
             child->listen(this);
-        if ([(__bridge id)_object respondsToSelector:@selector(childToBeAddedTo:child:)])
-            [(__bridge id)_object childToBeAddedTo:packet child:child];
+        if ([(__bridge id)_object respondsToSelector:@selector(childToBeAddedTo:child:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object childToBeAddedTo:packet child:child];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object childToBeAddedTo:packet child:child];
+                });
+        }
     }
     
     inline void childWasAdded(regina::NPacket* packet, regina::NPacket* child) {
-        if ([(__bridge id)_object respondsToSelector:@selector(childWasAddedTo:child:)])
-            [(__bridge id)_object childWasAddedTo:packet child:child];
+        if ([(__bridge id)_object respondsToSelector:@selector(childWasAddedTo:child:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object childWasAddedTo:packet child:child];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object childWasAddedTo:packet child:child];
+                });
+        }
     }
     
     inline void childToBeRemoved(regina::NPacket* packet, regina::NPacket* child, bool inParentDestructor) {
-        if ([(__bridge id)_object respondsToSelector:@selector(childToBeRemovedFrom:child:inParentDestructor:)])
-            [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+        if ([(__bridge id)_object respondsToSelector:@selector(childToBeRemovedFrom:child:inParentDestructor:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+                });
+        }
     }
     
     inline void childWasRemoved(regina::NPacket* packet, regina::NPacket* child, bool inParentDestructor) {
-        if ([(__bridge id)_object respondsToSelector:@selector(childWasRemovedFrom:child:inParentDestructor:)])
-            [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+        if ([(__bridge id)_object respondsToSelector:@selector(childWasRemovedFrom:child:inParentDestructor:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+                });
+        }
     }
     
     inline void childrenToBeReordered(regina::NPacket* packet) {
-        if ([(__bridge id)_object respondsToSelector:@selector(childrenToBeReordered:)])
-            [(__bridge id)_object childrenToBeReordered:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(childrenToBeReordered:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object childrenToBeReordered:packet];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object childrenToBeReordered:packet];
+                });
+        }
     }
     
     inline void childrenWereReordered(regina::NPacket* packet) {
-        if ([(__bridge id)_object respondsToSelector:@selector(childrenWereReordered:)])
-            [(__bridge id)_object childrenWereReordered:packet];
+        if ([(__bridge id)_object respondsToSelector:@selector(childrenWereReordered:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object childrenWereReordered:packet];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object childrenWereReordered:packet];
+                });
+        }
     }
 
     inline void childToBeRenamed(regina::NPacket* packet, regina::NPacket* child) {
-        if ([(__bridge id)_object respondsToSelector:@selector(childToBeRenamed:child:)])
-            [(__bridge id)_object childToBeRenamed:packet child:child];
+        if ([(__bridge id)_object respondsToSelector:@selector(childToBeRenamed:child:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object childToBeRenamed:packet child:child];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object childToBeRenamed:packet child:child];
+                });
+        }
     }
     
     inline void childWasRenamed(regina::NPacket* packet, regina::NPacket* child) {
-        if ([(__bridge id)_object respondsToSelector:@selector(childWasRenamed:child:)])
-            [(__bridge id)_object childWasRenamed:packet child:child];
+        if ([(__bridge id)_object respondsToSelector:@selector(childWasRenamed:child:)]) {
+            if ([NSThread isMainThread])
+                [(__bridge id)_object childWasRenamed:packet child:child];
+            else
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(__bridge id)_object childWasRenamed:packet child:child];
+                });
+        }
     }
 };
 
