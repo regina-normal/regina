@@ -170,8 +170,6 @@ bool Triangulation<4>::intelligentSimplify() {
 }
 
 bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
-    BoundaryComponentIterator bit;
-    BoundaryComponent<4>* bc;
     unsigned long nTetrahedra;
     unsigned long iTet;
 
@@ -187,7 +185,7 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
 
             // Crush edges if we can.
             if (countVertices() > countComponents() &&
-                    countVertices() > boundaryComponents_.size()) {
+                    countVertices() > countBoundaryComponents()) {
                 for (Edge<4>* e : edges()) {
                     if (collapseEdge(e, true, perform)) {
                         changedNow = changed = true;
@@ -248,15 +246,12 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
 
             // Look for boundary simplifications.
             if (hasBoundaryTetrahedra()) {
-                for (bit = boundaryComponents_.begin();
-                        bit != boundaryComponents_.end(); bit++) {
-                    bc = *bit;
-
+                for (BoundaryComponent<4>* bc : boundaryComponents()) {
                     // Run through facets of this boundary component looking
                     // for shell boundary moves.
-                    nTetrahedra = (*bit)->countTetrahedra();
+                    nTetrahedra = bc->countTetrahedra();
                     for (iTet = 0; iTet < nTetrahedra; ++iTet) {
-                        if (shellBoundary((*bit)->tetrahedron(iTet)->
+                        if (shellBoundary(bc->tetrahedron(iTet)->
                                 front().pentachoron(),
                                 true, perform)) {
                             changedNow = changed = true;

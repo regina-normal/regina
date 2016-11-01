@@ -40,10 +40,8 @@ void Triangulation<3>::maximalForestInBoundary(std::set<Edge<3>*>& edgeSet,
 
     vertexSet.clear();
     edgeSet.clear();
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++)
-        stretchBoundaryForestFromVertex((*bit)->vertex(0),
-            edgeSet, vertexSet);
+    for (auto bc : boundaryComponents())
+        stretchBoundaryForestFromVertex(bc->vertex(0), edgeSet, vertexSet);
 }
 
 void Triangulation<3>::stretchBoundaryForestFromVertex(Vertex<3>* from,

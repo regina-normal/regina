@@ -52,10 +52,9 @@ const NAbelianGroup& Triangulation<4>::homologyH1() const {
     // Each non-boundary triangle is a relation.
     long nBdryTets = 0;
     long nBdryTriangles = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); ++bit) {
-        nBdryTets += (*bit)->countTetrahedra();
-        nBdryTriangles += (*bit)->countTriangles();
+    for (auto bc : boundaryComponents()) {
+        nBdryTets += bc->countTetrahedra();
+        nBdryTriangles += bc->countTriangles();
     }
 
     // Cast away all unsignedness in case we run into problems subtracting.

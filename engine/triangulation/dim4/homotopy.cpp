@@ -48,9 +48,8 @@ const NGroupPresentation& Triangulation<4>::fundamentalGroup() const {
     // Each non-boundary not-in-forest tetrahedron is a generator.
     // Each non-boundary triangle is a relation.
     long nBdryTets = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); ++bit)
-        nBdryTets += (*bit)->countTetrahedra();
+    for (auto bc : boundaryComponents())
+        nBdryTets += bc->countTetrahedra();
 
     // Cast away all unsignedness in case we run into problems subtracting.
     long nGens = static_cast<long>(countTetrahedra()) - nBdryTets

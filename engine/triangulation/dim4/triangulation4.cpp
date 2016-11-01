@@ -157,7 +157,7 @@ long Triangulation<4>::eulerCharManifold() const {
 
     // Truncate any ideal vertices.
     if (ideal_) {
-        for (auto bc : boundaryComponents_)
+        for (auto bc : boundaryComponents())
             if (bc->isIdeal()) {
                 // Because our 4-manifold triangulation is valid, all
                 // vertex links in the 3-manifold boundary must be

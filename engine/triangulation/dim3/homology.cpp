@@ -49,10 +49,8 @@ const NAbelianGroup& Triangulation<3>::homology() const {
     // Each non-boundary not-in-forest triangle is a generator.
     // Each non-boundary edge is a relation.
     unsigned long nBdryEdges = 0;
-    for (auto bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++) {
-        nBdryEdges += (*bit)->countEdges();
-    }
+    for (auto bc : boundaryComponents())
+        nBdryEdges += bc->countEdges();
     long nGens = countTriangles() - countBoundaryFacets()
         + countComponents() - size();
     long nRels = countEdges() - nBdryEdges;
@@ -124,10 +122,9 @@ const NAbelianGroup& Triangulation<3>::homologyRel() const {
     unsigned long nBdryVertices = 0;
     unsigned long nBdryEdges = 0;
     unsigned long nClosedComponents = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++) {
-        nBdryVertices += (*bit)->countVertices();
-        nBdryEdges += (*bit)->countEdges();
+    for (auto bc : boundaryComponents()) {
+        nBdryVertices += bc->countVertices();
+        nBdryEdges += bc->countEdges();
     }
     for (ComponentIterator cit = components().begin();
             cit != components().end(); cit++)
@@ -202,12 +199,11 @@ const NAbelianGroup& Triangulation<3>::homologyBdry() const {
     // Ensure that the skeleton has been calculated.
     ensureSkeleton();
 
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++) {
-        if ((*bit)->isOrientable()) {
-            rank += (2 - (*bit)->eulerChar());
+    for (auto bc : boundaryComponents()) {
+        if (bc->isOrientable()) {
+            rank += (2 - bc->eulerChar());
         } else {
-            rank += (1 - (*bit)->eulerChar());
+            rank += (1 - bc->eulerChar());
             z2rank++;
         }
     }

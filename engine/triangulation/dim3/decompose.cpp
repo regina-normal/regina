@@ -385,8 +385,8 @@ bool Triangulation<3>::isBall() const {
 
     // Basic property checks.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
-            && boundaryComponents_.size() == 1
-            && boundaryComponents_.front()->eulerChar() == 2)) {
+            && countBoundaryComponents() == 1
+            && boundaryComponents().front()->eulerChar() == 2)) {
         threeBall_ = false;
         return false;
     }
@@ -414,8 +414,8 @@ bool Triangulation<3>::knowsBall() const {
 
     // Run some very fast prelimiary tests before we give up and say no.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
-            && boundaryComponents_.size() == 1
-            && boundaryComponents_.front()->eulerChar() == 2)) {
+            && countBoundaryComponents() == 1
+            && boundaryComponents().front()->eulerChar() == 2)) {
         threeBall_ = false;
         return true;
     }
@@ -430,9 +430,9 @@ bool Triangulation<3>::isSolidTorus() const {
 
     // Basic property checks.
     if (! (isValid() && isOrientable() && isConnected() &&
-            boundaryComponents_.size() == 1 &&
-            boundaryComponents_.front()->eulerChar() == 0 &&
-            boundaryComponents_.front()->isOrientable()))
+            countBoundaryComponents() == 1 &&
+            boundaryComponents().front()->eulerChar() == 0 &&
+            boundaryComponents().front()->isOrientable()))
         return (solidTorus_ = false);
 
     // If it's ideal, make it a triangulation with real boundary.
@@ -569,13 +569,13 @@ bool Triangulation<3>::knowsSolidTorus() const {
         return true;
     }
 
-    if (boundaryComponents_.size() != 1) {
+    if (countBoundaryComponents() != 1) {
         solidTorus_ = false;
         return true;
     }
 
-    if (boundaryComponents_.front()->eulerChar() != 0 ||
-            (! boundaryComponents_.front()->isOrientable())) {
+    if (boundaryComponents().front()->eulerChar() != 0 ||
+            (! boundaryComponents().front()->isOrientable())) {
         solidTorus_ = false;
         return true;
     }
@@ -769,10 +769,9 @@ bool Triangulation<3>::hasCompressingDisc() const {
         return (compressingDisc_ = false);
 
     long minBdryEuler = 2;
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it) {
-        if ((*it)->eulerChar() < minBdryEuler)
-            minBdryEuler = (*it)->eulerChar();
+    for (auto bc : boundaryComponents()) {
+        if (bc->eulerChar() < minBdryEuler)
+            minBdryEuler = bc->eulerChar();
     }
     if (minBdryEuler == 2)
         return (compressingDisc_ = false);
@@ -890,11 +889,9 @@ bool Triangulation<3>::knowsCompressingDisc() const {
         return true;
 
     // Quickly check for non-spherical boundary components before we give up.
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it) {
-        if ((*it)->eulerChar() < 2)
+    for (auto bc : boundaryComponents())
+        if (bc->eulerChar() < 2)
             return false;
-    }
 
     // All boundary components are 2-spheres.
     compressingDisc_ = false;
@@ -942,10 +939,8 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // disc by cutting along it and looking for any *new* boundary
     // spheres that might result.
     unsigned long origSphereCount = 0;
-    BoundaryComponentIterator bit;
-    for (bit = use.boundaryComponents().begin(); bit !=
-            use.boundaryComponents().end(); ++bit)
-        if ((*bit)->eulerChar() == 2)
+    for (auto bc : use.boundaryComponents())
+        if (bc->eulerChar() == 2)
             ++origSphereCount;
 
     // Look for a single internal triangle surrounded by three boundary edges.
@@ -977,9 +972,8 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
             return (compressingDisc_ = true);
 
         newSphereCount = 0;
-        for (bit = cut.boundaryComponents().begin(); bit !=
-                cut.boundaryComponents().end(); ++bit)
-            if ((*bit)->eulerChar() == 2)
+        for (auto bc : cut.boundaryComponents())
+            if (bc->eulerChar() == 2)
                 ++newSphereCount;
 
         // Was the boundary of the disc non-trivial?
@@ -1033,9 +1027,8 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
             return (compressingDisc_ = true);
 
         newSphereCount = 0;
-        for (bit = cut.boundaryComponents().begin(); bit !=
-                cut.boundaryComponents().end(); ++bit)
-            if ((*bit)->eulerChar() == 2)
+        for (auto bc : cut.boundaryComponents())
+            if (bc->eulerChar() == 2)
                 ++newSphereCount;
 
         // Was the boundary of the disc non-trivial?

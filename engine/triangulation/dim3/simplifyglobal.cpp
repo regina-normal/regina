@@ -205,7 +205,6 @@ bool Triangulation<3>::intelligentSimplify() {
 }
 
 bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
-    BoundaryComponentIterator bit;
     unsigned long nTriangles;
     unsigned long iTriangle;
     // unsigned long nEdges;
@@ -224,7 +223,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
 
             // Crush edges if we can.
             if (countVertices() > components().size() &&
-                    countVertices() > boundaryComponents_.size()) {
+                    countVertices() > countBoundaryComponents()) {
                 for (Edge<3>* edge : edges())
                     if (collapseEdge(edge, true, perform)) {
                         changedNow = changed = true;
@@ -277,13 +276,12 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
 
             // Look for boundary simplifications.
             if (hasBoundaryTriangles()) {
-                for (bit = boundaryComponents_.begin();
-                        bit != boundaryComponents_.end(); bit++) {
+                for (BoundaryComponent<3>* bc : boundaryComponents()) {
                     // Run through triangles of this boundary component looking
                     // for shell boundary moves.
-                    nTriangles = (*bit)->countTriangles();
+                    nTriangles = bc->countTriangles();
                     for (iTriangle = 0; iTriangle < nTriangles; iTriangle++) {
-                        if (shellBoundary((*bit)->triangle(iTriangle)->
+                        if (shellBoundary(bc->triangle(iTriangle)->
                                 front().tetrahedron(),
                                 true, perform)) {
                             changedNow = changed = true;

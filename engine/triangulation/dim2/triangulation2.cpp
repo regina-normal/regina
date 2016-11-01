@@ -64,7 +64,7 @@ bool Triangulation<2>::isMinimal() const {
         return (countVertices() == 1);
 
     // All other bounded manifolds:
-    return (countVertices() == boundaryComponents_.size());
+    return (countVertices() == countBoundaryComponents());
 }
 
 void Triangulation<2>::writeTextLong(std::ostream& out) const {

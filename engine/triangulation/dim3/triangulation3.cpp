@@ -350,10 +350,9 @@ long Triangulation<3>::eulerCharManifold() const {
     long ans = eulerCharTri();
 
     // Truncate any ideal vertices.
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it)
-        if ((*it)->isIdeal())
-            ans += (*it)->eulerChar() - 1;
+    for (auto bc : boundaryComponents())
+        if (bc->isIdeal())
+            ans += bc->eulerChar() - 1;
 
     // If we have an invalid triangulation, we need to locate invalid
     // vertices (i.e., non-standard boundary vertices) and also invalid edges,
