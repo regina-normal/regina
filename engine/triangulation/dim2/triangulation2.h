@@ -88,16 +88,7 @@ struct PacketInfo<PACKET_TRIANGULATION2> {
  * the triangulation classes work.
  *
  * This 2-dimensional specialisation offers significant extra functionality,
- * including many functions specific to 2-manifolds, plus rich details of
- * the combinatorial structure of the triangulation.
- *
- * In particular, this class also tracks the vertices and edges of the
- * triangulation (as represented by the classes Vertex<2> and Edge<2>),
- * as well as boundary components (as represented by the class
- * BoundaryComponent<2>).  Such objects are temporary: whenever the
- * triangulation changes, these objects will be deleted and rebuilt, and so
- * any pointers to them will become invalid.  Likewise, if the triangulation
- * is deleted then these objects will be deleted alongside it.
+ * including many functions specific to 2-manifolds.
  */
 template <>
 class REGINA_API Triangulation<2> :
@@ -113,13 +104,6 @@ class REGINA_API Triangulation<2> :
             /**< Used to iterate through edges. */
         typedef FaceList<2, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<BoundaryComponent<2>*>::const_iterator
-                BoundaryComponentIterator;
-            /**< Used to iterate through boundary components. */
-
-    private:
-        MarkedVector<BoundaryComponent<2>> boundaryComponents_;
-            /**< The components that form the boundary of the triangulation. */
 
     public:
         /**
@@ -214,48 +198,6 @@ class REGINA_API Triangulation<2> :
          * See removeAllSimplices() for further information.
          */
         void removeAllTriangles();
-
-        /*@}*/
-        /**
-         * \name Skeletal Queries
-         */
-        /*@{*/
-
-        /**
-         * Returns the number of boundary components in this triangulation.
-         *
-         * @return the number of boundary components.
-         */
-        size_t countBoundaryComponents() const;
-
-        /**
-         * Returns all boundary components of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all boundary components.
-         */
-        const std::vector<BoundaryComponent<2>*>& boundaryComponents() const;
-        /**
-         * Returns the requested triangulation boundary component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired boundary component, ranging
-         * from 0 to countBoundaryComponents()-1 inclusive.
-         * @return the requested boundary component.
-         */
-        BoundaryComponent<2>* boundaryComponent(size_t index) const;
 
         /*@}*/
         /**
@@ -472,23 +414,6 @@ inline void Triangulation<2>::removeTriangleAt(size_t index) {
 
 inline void Triangulation<2>::removeAllTriangles() {
     removeAllSimplices();
-}
-
-inline size_t Triangulation<2>::countBoundaryComponents() const {
-    ensureSkeleton();
-    return boundaryComponents_.size();
-}
-
-inline const std::vector<BoundaryComponent<2>*>&
-        Triangulation<2>::boundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<BoundaryComponent<2>*>&)(boundaryComponents_);
-}
-
-inline BoundaryComponent<2>* Triangulation<2>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
 }
 
 inline bool Triangulation<2>::isValid() const {

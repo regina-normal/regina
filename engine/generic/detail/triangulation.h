@@ -307,10 +307,15 @@ class TriangulationBase :
         typedef typename std::vector<Component<dim>*>::const_iterator
                 ComponentIterator;
             /**< Used to iterate through connected components. */
+        typedef std::vector<BoundaryComponent<dim>*>::const_iterator
+                BoundaryComponentIterator;
+            /**< Used to iterate through boundary components. */
 
     protected:
         MarkedVector<Simplex<dim>> simplices_;
             /**< The top-dimensional simplices that form the triangulation. */
+        MarkedVector<BoundaryComponent<dim>> boundaryComponents_;
+            /**< The components that form the boundary of the triangulation. */
         bool valid_;
             /**< Is this triangulation valid?  See isValid() for details
                  on what this means. */
@@ -512,6 +517,19 @@ class TriangulationBase :
         size_t countComponents() const;
 
         /**
+         * Returns the number of boundary components in this triangulation.
+         *
+         * Note that, in Regina's \ref stddim "standard dimensions",
+         * each ideal vertex forms its own boundary component, and
+         * some invalid vertices do also.  See the BoundaryComponent
+         * class notes for full details on what constitutes a boundary
+         * component in standard and non-standard dimensions.
+         *
+         * @return the number of boundary components.
+         */
+        size_t countBoundaryComponents() const;
+
+        /**
          * Returns the number of <i>subdim</i>-faces in this triangulation.
          *
          * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
@@ -563,6 +581,30 @@ class TriangulationBase :
         const std::vector<Component<dim>*>& components() const;
 
         /**
+         * Returns all boundary components of this triangulation.
+         *
+         * Note that, in Regina's \ref stddim "standard dimensions",
+         * each ideal vertex forms its own boundary component, and
+         * some invalid vertices do also.  See the BoundaryComponent
+         * class notes for full details on what constitutes a boundary
+         * component in standard and non-standard dimensions.
+         *
+         * Bear in mind that each time the triangulation changes, all
+         * boundary component objects will be deleted and replaced with new
+         * ones.  Therefore these boundary component objects should be
+         * considered temporary only.
+         *
+         * In contrast, this reference to the \e list of BoundaryComponent
+         * objects will remain valid and up-to-date for as long as the
+         * triangulation exists.
+         *
+         * \ifacespython This routine returns a python list.
+         *
+         * @return the list of all boundary components.
+         */
+        const std::vector<BoundaryComponent<dim>*>& boundaryComponents() const;
+
+        /**
          * Returns an object that allows iteration through and random access
          * to all <i>subdim</i>-faces of this triangulation.
          *
@@ -597,6 +639,19 @@ class TriangulationBase :
          * @return the requested component.
          */
         Component<dim>* component(size_t index) const;
+
+        /**
+         * Returns the requested boundary component of this triangulation.
+         *
+         * Note that each time the triangulation changes, all
+         * boundary components will be deleted and replaced with new
+         * ones.  Therefore this object should be considered temporary only.
+         *
+         * @param index the index of the desired boundary component; this must
+         * be between 0 and countBoundaryComponents()-1 inclusive.
+         * @return the requested boundary component.
+         */
+        BoundaryComponent<dim>* boundaryComponent(size_t index) const;
 
         /**
          * Returns the requested <i>subdim</i>-face of this triangulation.
@@ -1775,6 +1830,12 @@ inline size_t TriangulationBase<dim>::countComponents() const {
 }
 
 template <int dim>
+inline size_t TriangulationBase<dim>::countBoundaryComponents() const {
+    ensureSkeleton();
+    return boundaryComponents_.size();
+}
+
+template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::countFaces() const {
     ensureSkeleton();
@@ -1796,6 +1857,13 @@ inline const std::vector<Component<dim>*>& TriangulationBase<dim>::components()
         const {
     ensureSkeleton();
     return (const std::vector<Component<dim>*>&)(components_);
+}
+
+template <int dim>
+inline const std::vector<BoundaryComponent<dim>*>& TriangulationBase<dim>::
+        boundaryComponents() const {
+    ensureSkeleton();
+    return (const std::vector<BoundaryComponent<dim>*>&)(boundaryComponents_);
 }
 
 template <int dim>
@@ -1824,6 +1892,13 @@ template <int dim>
 inline Component<dim>* TriangulationBase<dim>::component(size_t index) const {
     ensureSkeleton();
     return components_[index];
+}
+
+template <int dim>
+inline BoundaryComponent<dim>* TriangulationBase<dim>::boundaryComponent(
+        size_t index) const {
+    ensureSkeleton();
+    return boundaryComponents_[index];
 }
 
 template <int dim>

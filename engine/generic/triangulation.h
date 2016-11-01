@@ -233,12 +233,19 @@ namespace regina {
  * fromIsoSig() (which uses <em>isomorphism signatures</em>), or
  * insertConstruction() and dumpConstruction() (which exports C++ code).
  *
- * In additional to top-dimensional simplices, this class also tracks
- * connected components of the triangulation, as represented by the
- * class Component<dim>.  Such objects are temporary: whenever the
- * triangulation changes, they will be deleted and rebuilt, and any
- * pointers to them will become invalid.  Likewise, if the triangulation
- * is deleted then all component objects will be deleted alongside it.
+ * In additional to top-dimensional simplices, this class also tracks:
+ *
+ * - connected components of the triangulation, as represented by the
+ *   class Component<dim>;
+ * - boundary components of the triangulation, as represented by the
+ *   class BoundaryComponent<dim>;
+ * - lower-dimensional faces of the triangulation, as represented by the
+ *   classes Face<dim, subdim> for \a subdim = 0,...,(<i>dim</i>-1).
+ *
+ * Such objects are temporary: whenever the triangulation changes, they will
+ * be deleted and rebuilt, and any pointers to them will become invalid.
+ * Likewise, if the triangulation is deleted then all component objects
+ * will be deleted alongside it.
  *
  * For Regina's \ref stddim "standard dimensions", this template is specialised
  * and offers \e much more functionality.  In order to use these specialised

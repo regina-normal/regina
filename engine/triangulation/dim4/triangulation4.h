@@ -93,17 +93,7 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  * the triangulation classes work.
  *
  * This 4-dimensional specialisation offers significant extra functionality,
- * including many functions specific to 4-manifolds, plus rich details of
- * the combinatorial structure of the triangulation.
- *
- * In particular, this class also tracks vertices, edges, triangles and
- * tetrahedra of the triangulation (as represented by the classes Vertex<4>,
- * Edge<4>, Triangle<4> and Tetrahedron<4>), as well as boundary components
- * (as represented by the class BoundaryComponent<4>).  Such objects are
- * temporary: whenever the triangulation changes, these objects will be
- * deleted and rebuilt, and so any pointers to them will become invalid.
- * Likewise, if the triangulation is deleted then these objects will be
- * deleted alongside it.
+ * including many functions specific to 4-manifolds.
  *
  * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
  * 4-dimensional simplex, with five vertices.
@@ -127,9 +117,6 @@ class REGINA_API Triangulation<4> :
             /**< Used to iterate through edges. */
         typedef FaceList<4, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<BoundaryComponent<4>*>::const_iterator
-                BoundaryComponentIterator;
-            /**< Used to iterate through boundary components. */
 
     private:
         bool knownSimpleLinks_;
@@ -140,10 +127,6 @@ class REGINA_API Triangulation<4> :
                  A value of \c false may mean that there are other vertex
                  links, or it may mean that the vertex links have not yet
                  been calculated. */
-
-        MarkedVector<BoundaryComponent<4>> boundaryComponents_;
-            /**< The components that form the boundary of the
-                 triangulation. */
 
         bool ideal_;
             /**< Is the triangulation ideal? */
@@ -250,56 +233,6 @@ class REGINA_API Triangulation<4> :
          * See removeAllSimplices() for further information.
          */
         void removeAllPentachora();
-
-        /*@}*/
-        /**
-         * \name Skeletal Queries
-         */
-        /*@{*/
-
-        /**
-         * Returns the number of boundary components in this triangulation.
-         *
-         * Note that each ideal vertex forms its own boundary component, and
-         * some invalid vertices do also.  See the BoundaryComponent
-         * class notes and Vertex<4>::isBoundary() for details.
-         *
-         * @return the number of boundary components.
-         */
-        size_t countBoundaryComponents() const;
-
-        /**
-         * Returns all boundary components of this triangulation.
-         *
-         * Note that each ideal vertex forms its own boundary component, and
-         * some invalid vertices do also.  See the BoundaryComponent
-         * class notes and Vertex<4>::isBoundary() for details.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all boundary components.
-         */
-        const std::vector<BoundaryComponent<4>*>& boundaryComponents() const;
-        /**
-         * Returns the requested boundary component of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired boundary component, ranging
-         * from 0 to countBoundaryComponents()-1 inclusive.
-         * @return the requested boundary component.
-         */
-        BoundaryComponent<4>* boundaryComponent(size_t index) const;
 
         /*@}*/
         /**
@@ -1049,23 +982,6 @@ inline void Triangulation<4>::removePentachoronAt(size_t index) {
 
 inline void Triangulation<4>::removeAllPentachora() {
     removeAllSimplices();
-}
-
-inline size_t Triangulation<4>::countBoundaryComponents() const {
-    ensureSkeleton();
-    return boundaryComponents_.size();
-}
-
-inline const std::vector<BoundaryComponent<4>*>&
-        Triangulation<4>::boundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<BoundaryComponent<4>*>&)(boundaryComponents_);
-}
-
-inline BoundaryComponent<4>* Triangulation<4>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
 }
 
 inline long Triangulation<4>::eulerCharTri() const {

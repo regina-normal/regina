@@ -139,16 +139,7 @@ enum TuraevViroAlg {
  * the triangulation classes work.
  *
  * This 3-dimensional specialisation offers significant extra functionality,
- * including many functions specific to 3-manifolds, plus rich details of
- * the combinatorial structure of the triangulation.
- *
- * In particular, this class also tracks vertices, edges and triangles of the
- * triangulation (as represented by the classes Vertex<3>, Edge<3> and Triangle<3>),
- * as well as boundary components (as represented by the class
- * BoundaryComponent<3>).  Such objects are temporary: whenever the
- * triangulation changes, these objects will be deleted and rebuilt, and so
- * any pointers to them will become invalid.  Likewise, if the triangulation
- * is deleted then these objects will be deleted alongside it.
+ * including many functions specific to 3-manifolds.
  *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
@@ -177,9 +168,6 @@ class REGINA_API Triangulation<3> :
             /**< Used to iterate through edges. */
         typedef FaceList<3, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<BoundaryComponent<3>*>::const_iterator
-                BoundaryComponentIterator;
-            /**< Used to iterate through boundary components. */
 
         typedef std::map<std::pair<unsigned long, bool>, Cyclotomic>
                 TuraevViroSet;
@@ -187,9 +175,6 @@ class REGINA_API Triangulation<3> :
                  as described by turaevViro(). */
 
     private:
-        MarkedVector<BoundaryComponent<3>> boundaryComponents_;
-            /**< The components that form the boundary of the triangulation. */
-
         bool ideal_;
             /**< Is the triangulation ideal? */
         bool standard_;
@@ -358,44 +343,6 @@ class REGINA_API Triangulation<3> :
          * \name Skeletal Queries
          */
         /*@{*/
-
-        /**
-         * Returns the number of boundary components in this triangulation.
-         * Note that each ideal vertex forms its own boundary component.
-         *
-         * @return the number of boundary components.
-         */
-        size_t countBoundaryComponents() const;
-
-        /**
-         * Returns all boundary components of this triangulation.
-         * Note that each ideal vertex forms its own boundary component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all boundary components.
-         */
-        const std::vector<BoundaryComponent<3>*>& boundaryComponents() const;
-        /**
-         * Returns the requested triangulation boundary component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired boundary
-         * component, ranging from 0 to countBoundaryComponents()-1 inclusive.
-         * @return the requested boundary component.
-         */
-        BoundaryComponent<3>* boundaryComponent(size_t index) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3095,11 +3042,6 @@ inline void Triangulation<3>::removeAllTetrahedra() {
     removeAllSimplices();
 }
 
-inline size_t Triangulation<3>::countBoundaryComponents() const {
-    ensureSkeleton();
-    return boundaryComponents_.size();
-}
-
 inline long Triangulation<3>::eulerCharTri() const {
     ensureSkeleton();
 
@@ -3108,18 +3050,6 @@ inline long Triangulation<3>::eulerCharTri() const {
         - static_cast<long>(countEdges())
         + static_cast<long>(countTriangles())
         - static_cast<long>(simplices_.size());
-}
-
-inline const std::vector<BoundaryComponent<3>*>&
-        Triangulation<3>::boundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<BoundaryComponent<3>*>&)(boundaryComponents_);
-}
-
-inline BoundaryComponent<3>* Triangulation<3>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
 }
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
