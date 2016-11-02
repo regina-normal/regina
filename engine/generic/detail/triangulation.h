@@ -2556,8 +2556,6 @@ size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
 
 } } // namespace regina::detail
 
-#include "generic/detail/isosig-impl.h"
 #include "generic/detail/canonical-impl.h"
-#include "generic/detail/skeleton-impl.h"
 
 #endif

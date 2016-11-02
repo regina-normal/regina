@@ -34,11 +34,18 @@
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
- *  This file is automatically included from triangulation.h; there is
- *  no need for end users to include it explicitly.
+ *  This file is \e not included from triangulation.h, but the routines
+ *  it contains are explicitly instantiated in Regina's calculation engine.
+ *  Therefore end users should never need to include this header.
  */
 
+#ifndef __ISOSIG_IMPL_H_DETAIL
+#ifndef __DOXYGEN
+#define __ISOSIG_IMPL_H_DETAIL
+#endif
+
 #include <algorithm>
+#include "generic/triangulation.h"
 
 namespace regina {
 namespace detail {
@@ -598,3 +605,4 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
 
 } } // namespace regina::detail
 
+#endif

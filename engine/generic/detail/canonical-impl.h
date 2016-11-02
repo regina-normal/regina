@@ -38,6 +38,11 @@
  *  no need for end users to include it explicitly.
  */
 
+#ifndef __CANONICAL_IMPL_H_DETAIL
+#ifndef __DOXYGEN
+#define __CANONICAL_IMPL_H_DETAIL
+#endif
+
 #include <queue>
 
 namespace regina {
@@ -547,3 +552,4 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
 
 } } // namespace regina::detail
 
+#endif

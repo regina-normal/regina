@@ -16,6 +16,20 @@ SET ( FILES
   boundary13
   boundary14
   boundary15
+  triangulation2
+  triangulation3
+  triangulation4
+  triangulation5
+  triangulation6
+  triangulation7
+  triangulation8
+  triangulation9
+  triangulation10
+  triangulation11
+  triangulation12
+  triangulation13
+  triangulation14
+  triangulation15
   )
 
 # Prepend folder name

@@ -2,6 +2,7 @@
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    boundarycomponent-impl.h
     canonical-impl.h
     component.h
     face.h
@@ -11,6 +12,7 @@ if (${REGINA_INSTALL_DEV})
     isomorphism.h
     isosig-impl.h
     simplex.h
+    skeleton-impl.h
     triangulation.h
     xmltrireader.h
     DESTINATION ${INCLUDEDIR}/generic/detail COMPONENT Development)
