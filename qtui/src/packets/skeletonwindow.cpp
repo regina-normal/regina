@@ -540,11 +540,11 @@ QString Component3Model::toolTipForCol(int column) {
     }
 }
 
-QString BoundaryComponentModel::caption() const {
+QString BoundaryComponent3Model::caption() const {
     return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
-QString BoundaryComponentModel::overview() const {
+QString BoundaryComponent3Model::overview() const {
     return tr("<qt>Displays details of each "
         "boundary component of this triangulation.  A boundary "
         "component may be a collection of adjacent boundary triangles, "
@@ -559,17 +559,17 @@ QString BoundaryComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+int BoundaryComponent3Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
-int BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int BoundaryComponent3Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant BoundaryComponentModel::data(const QModelIndex& index,
+QVariant BoundaryComponent3Model::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
         BoundaryComponent<3>* item = tri->boundaryComponent(index.row());
@@ -612,7 +612,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
         return QVariant();
 }
 
-QVariant BoundaryComponentModel::headerData(int section,
+QVariant BoundaryComponent3Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -631,7 +631,7 @@ QVariant BoundaryComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString BoundaryComponentModel::toolTipForCol(int column) {
+QString BoundaryComponent3Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual boundary "
             "component.  "
@@ -907,11 +907,11 @@ QString Component2Model::toolTipForCol(int column) {
     }
 }
 
-QString Dim2BoundaryComponentModel::caption() const {
+QString BoundaryComponent2Model::caption() const {
     return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
-QString Dim2BoundaryComponentModel::overview() const {
+QString BoundaryComponent2Model::overview() const {
     return tr("<qt>Displays details of each "
         "boundary component of this triangulation.<p>"
         "The different boundary components are numbered from 0 upwards.  "
@@ -921,18 +921,18 @@ QString Dim2BoundaryComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim2BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+int BoundaryComponent2Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
-int Dim2BoundaryComponentModel::columnCount(const QModelIndex& /* unused */)
+int BoundaryComponent2Model::columnCount(const QModelIndex& /* unused */)
         const {
     return 3;
 }
 
-QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
+QVariant BoundaryComponent2Model::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
         BoundaryComponent<2>* item = tri->boundaryComponent(index.row());
@@ -959,7 +959,7 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
         return QVariant();
 }
 
-QVariant Dim2BoundaryComponentModel::headerData(int section,
+QVariant BoundaryComponent2Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -977,7 +977,7 @@ QVariant Dim2BoundaryComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim2BoundaryComponentModel::toolTipForCol(int column) {
+QString BoundaryComponent2Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual boundary "
             "component.  "
@@ -1443,11 +1443,11 @@ QString Component4Model::toolTipForCol(int column) {
     }
 }
 
-QString Dim4BoundaryComponentModel::caption() const {
+QString BoundaryComponent4Model::caption() const {
     return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
-QString Dim4BoundaryComponentModel::overview() const {
+QString BoundaryComponent4Model::overview() const {
     return tr("<qt>Displays details of each "
         "boundary component of this triangulation.  A boundary "
         "component may be: (i) a collection of adjacent boundary tetrahedra; "
@@ -1464,17 +1464,17 @@ QString Dim4BoundaryComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim4BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+int BoundaryComponent4Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
-int Dim4BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int BoundaryComponent4Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
+QVariant BoundaryComponent4Model::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
         BoundaryComponent<4>* item = tri->boundaryComponent(index.row());
@@ -1519,7 +1519,7 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
         return QVariant();
 }
 
-QVariant Dim4BoundaryComponentModel::headerData(int section,
+QVariant BoundaryComponent4Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -1538,7 +1538,7 @@ QVariant Dim4BoundaryComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim4BoundaryComponentModel::toolTipForCol(int column) {
+QString BoundaryComponent4Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual boundary "
             "component.  "

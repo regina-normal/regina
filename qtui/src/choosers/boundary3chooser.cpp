@@ -42,7 +42,7 @@
 
 using regina::BoundaryComponent;
 
-BoundaryComponentChooser::BoundaryComponentChooser(
+BoundaryComponent3Chooser::BoundaryComponent3Chooser(
         regina::Triangulation<3>* tri,
         BoundaryComponentFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
@@ -54,14 +54,14 @@ BoundaryComponentChooser::BoundaryComponentChooser(
     fill();
 }
 
-BoundaryComponent<3>* BoundaryComponentChooser::selected() {
+BoundaryComponent<3>* BoundaryComponent3Chooser::selected() {
     if (count() == 0)
         return 0;
     int curr = currentIndex();
     return (curr < 0 ? 0 : options_[curr]);
 }
 
-void BoundaryComponentChooser::select(regina::BoundaryComponent<3>* option) {
+void BoundaryComponent3Chooser::select(regina::BoundaryComponent<3>* option) {
     int index = 0;
     std::vector<regina::BoundaryComponent<3>*>::const_iterator it =
         options_.begin();
@@ -80,7 +80,7 @@ void BoundaryComponentChooser::select(regina::BoundaryComponent<3>* option) {
     return;
 }
 
-QString BoundaryComponentChooser::description(
+QString BoundaryComponent3Chooser::description(
         regina::BoundaryComponent<3>* option) {
     if (option->isIdeal()) {
         regina::Vertex<3>* v = option->vertex(0);
@@ -110,7 +110,7 @@ QString BoundaryComponentChooser::description(
     }
 }
 
-void BoundaryComponentChooser::fill() {
+void BoundaryComponent3Chooser::fill() {
     regina::Triangulation<3>::BoundaryComponentIterator it;
     for (it = tri_->boundaryComponents().begin();
             it != tri_->boundaryComponents().end(); ++it)
@@ -120,7 +120,7 @@ void BoundaryComponentChooser::fill() {
         }
 }
 
-BoundaryComponentDialog::BoundaryComponentDialog(QWidget* parent,
+BoundaryComponent3Dialog::BoundaryComponent3Dialog(QWidget* parent,
         regina::Triangulation<3>* tri,
         BoundaryComponentFilterFunc filter,
         const QString& title,
@@ -134,7 +134,7 @@ BoundaryComponentDialog::BoundaryComponentDialog(QWidget* parent,
     QLabel* label = new QLabel(message);
     layout->addWidget(label);
 
-    chooser = new BoundaryComponentChooser(tri, filter, this);
+    chooser = new BoundaryComponent3Chooser(tri, filter, this);
     layout->addWidget(chooser);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox(
@@ -145,13 +145,13 @@ BoundaryComponentDialog::BoundaryComponentDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-regina::BoundaryComponent<3>* BoundaryComponentDialog::choose(QWidget* parent,
+regina::BoundaryComponent<3>* BoundaryComponent3Dialog::choose(QWidget* parent,
         regina::Triangulation<3>* tri,
         BoundaryComponentFilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {
-    BoundaryComponentDialog dlg(parent, tri, filter, title, message, whatsThis);
+    BoundaryComponent3Dialog dlg(parent, tri, filter, title, message, whatsThis);
     if (dlg.exec())
         return dlg.chooser->selected();
     else

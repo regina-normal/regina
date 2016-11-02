@@ -65,7 +65,7 @@ namespace regina {
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * classes do not use slots or signals, I believe this is okay.
  */
-class Dim4BoundaryComponentChooser :
+class BoundaryComponent4Chooser :
         public QComboBox, public regina::PacketListener {
     public:
         /**
@@ -100,7 +100,7 @@ class Dim4BoundaryComponentChooser :
          * The given filter may be 0, in which case every boundary component
          * will be offered.
          */
-        Dim4BoundaryComponentChooser(regina::Triangulation<4>* tri,
+        BoundaryComponent4Chooser(regina::Triangulation<4>* tri,
                 FilterFunc filter, QWidget* parent, bool autoUpdate = true);
 
         /**
@@ -156,49 +156,49 @@ class Dim4BoundaryComponentChooser :
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * dialog classes do not use slots or signals, I believe this is okay.
  */
-class Dim4BoundaryComponentDialog : public QDialog {
+class BoundaryComponent4Dialog : public QDialog {
     private:
         /**
          * Internal components:
          */
-        Dim4BoundaryComponentChooser* chooser;
+        BoundaryComponent4Chooser* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
-        Dim4BoundaryComponentDialog(QWidget* parent,
+        BoundaryComponent4Dialog(QWidget* parent,
             regina::Triangulation<4>* tri,
-            Dim4BoundaryComponentChooser::FilterFunc filter,
+            BoundaryComponent4Chooser::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::BoundaryComponent<4>* choose(QWidget* parent,
             regina::Triangulation<4>* tri,
-            Dim4BoundaryComponentChooser::FilterFunc filter,
+            BoundaryComponent4Chooser::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
 
-inline bool Dim4BoundaryComponentChooser::refresh() {
+inline bool BoundaryComponent4Chooser::refresh() {
     clear();
     options_.clear();
     fill();
     return (count() > 0);
 }
 
-inline void Dim4BoundaryComponentChooser::packetToBeChanged(regina::Packet*) {
+inline void BoundaryComponent4Chooser::packetToBeChanged(regina::Packet*) {
     clear();
     options_.clear();
 }
 
-inline void Dim4BoundaryComponentChooser::packetWasChanged(regina::Packet*) {
+inline void BoundaryComponent4Chooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void Dim4BoundaryComponentChooser::packetToBeDestroyed(regina::Packet*) {
+inline void BoundaryComponent4Chooser::packetToBeDestroyed(regina::Packet*) {
     clear();
     options_.clear();
 }

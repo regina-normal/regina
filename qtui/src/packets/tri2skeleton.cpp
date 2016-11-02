@@ -220,7 +220,7 @@ void Tri2SkelCompUI::viewComponents() {
 
 void Tri2SkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
-        new Dim2BoundaryComponentModel(tri));
+        new BoundaryComponent2Model(tri));
     win->show();
     viewers.append(win);
 }

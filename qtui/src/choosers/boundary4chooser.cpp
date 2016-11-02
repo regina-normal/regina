@@ -42,7 +42,7 @@
 
 using regina::BoundaryComponent;
 
-Dim4BoundaryComponentChooser::Dim4BoundaryComponentChooser(
+BoundaryComponent4Chooser::BoundaryComponent4Chooser(
         regina::Triangulation<4>* tri,
         FilterFunc filter, QWidget* parent,
         bool autoUpdate) :
@@ -54,14 +54,14 @@ Dim4BoundaryComponentChooser::Dim4BoundaryComponentChooser(
     fill();
 }
 
-BoundaryComponent<4>* Dim4BoundaryComponentChooser::selected() {
+BoundaryComponent<4>* BoundaryComponent4Chooser::selected() {
     if (count() == 0)
         return 0;
     int curr = currentIndex();
     return (curr < 0 ? 0 : options_[curr]);
 }
 
-void Dim4BoundaryComponentChooser::select(regina::BoundaryComponent<4>* option) {
+void BoundaryComponent4Chooser::select(regina::BoundaryComponent<4>* option) {
     int index = 0;
     auto it = options_.begin();
     while (it != options_.end()) {
@@ -79,7 +79,7 @@ void Dim4BoundaryComponentChooser::select(regina::BoundaryComponent<4>* option) 
     return;
 }
 
-QString Dim4BoundaryComponentChooser::description(
+QString BoundaryComponent4Chooser::description(
         regina::BoundaryComponent<4>* option) {
     if (option->isIdeal()) {
         regina::Vertex<4>* v = option->vertex(0);
@@ -117,7 +117,7 @@ QString Dim4BoundaryComponentChooser::description(
     }
 }
 
-void Dim4BoundaryComponentChooser::fill() {
+void BoundaryComponent4Chooser::fill() {
     for (auto b : tri_->boundaryComponents())
         if ((! filter_) || (*filter_)(b)) {
             addItem(description(b));
@@ -125,9 +125,9 @@ void Dim4BoundaryComponentChooser::fill() {
         }
 }
 
-Dim4BoundaryComponentDialog::Dim4BoundaryComponentDialog(QWidget* parent,
+BoundaryComponent4Dialog::BoundaryComponent4Dialog(QWidget* parent,
         regina::Triangulation<4>* tri,
-        Dim4BoundaryComponentChooser::FilterFunc filter,
+        BoundaryComponent4Chooser::FilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -139,7 +139,7 @@ Dim4BoundaryComponentDialog::Dim4BoundaryComponentDialog(QWidget* parent,
     QLabel* label = new QLabel(message);
     layout->addWidget(label);
 
-    chooser = new Dim4BoundaryComponentChooser(tri, filter, this);
+    chooser = new BoundaryComponent4Chooser(tri, filter, this);
     layout->addWidget(chooser);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox(
@@ -150,14 +150,14 @@ Dim4BoundaryComponentDialog::Dim4BoundaryComponentDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-regina::BoundaryComponent<4>* Dim4BoundaryComponentDialog::choose(
+regina::BoundaryComponent<4>* BoundaryComponent4Dialog::choose(
         QWidget* parent,
         regina::Triangulation<4>* tri,
-        Dim4BoundaryComponentChooser::FilterFunc filter,
+        BoundaryComponent4Chooser::FilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {
-    Dim4BoundaryComponentDialog dlg(parent, tri, filter, title, message,
+    BoundaryComponent4Dialog dlg(parent, tri, filter, title, message,
         whatsThis);
     if (dlg.exec())
         return dlg.chooser->selected();

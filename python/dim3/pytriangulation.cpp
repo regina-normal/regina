@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-void addNBoundaryComponent();
+void addBoundaryComponent3();
 void addComponent3();
 void addEdge3();
 void addNExampleTriangulation();
@@ -44,7 +44,7 @@ void addTriangulation3();
 void addVertex3();
 
 void addTriangulationClasses() {
-    addNBoundaryComponent();
+    addBoundaryComponent3();
     addComponent3();
     addEdge3();
     addNExampleTriangulation();

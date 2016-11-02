@@ -38,7 +38,7 @@
 using namespace boost::python;
 using regina::BoundaryComponent;
 
-void addDim2BoundaryComponent() {
+void addBoundaryComponent2() {
     {
         scope s = class_<BoundaryComponent<2>,
                 std::auto_ptr<BoundaryComponent<2>>,

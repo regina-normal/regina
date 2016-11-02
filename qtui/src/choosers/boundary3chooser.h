@@ -71,7 +71,7 @@ typedef bool (*BoundaryComponentFilterFunc)(regina::BoundaryComponent<3>*);
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * classes do not use slots or signals, I believe this is okay.
  */
-class BoundaryComponentChooser :
+class BoundaryComponent3Chooser :
         public QComboBox, public regina::PacketListener {
     private:
         regina::Triangulation<3>* tri_;
@@ -99,7 +99,7 @@ class BoundaryComponentChooser :
          * The given filter may be 0, in which case every boundary component
          * will be offered.
          */
-        BoundaryComponentChooser(regina::Triangulation<3>* tri,
+        BoundaryComponent3Chooser(regina::Triangulation<3>* tri,
                 BoundaryComponentFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -156,18 +156,18 @@ class BoundaryComponentChooser :
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * dialog classes do not use slots or signals, I believe this is okay.
  */
-class BoundaryComponentDialog : public QDialog {
+class BoundaryComponent3Dialog : public QDialog {
     private:
         /**
          * Internal components:
          */
-        BoundaryComponentChooser* chooser;
+        BoundaryComponent3Chooser* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
-        BoundaryComponentDialog(QWidget* parent,
+        BoundaryComponent3Dialog(QWidget* parent,
             regina::Triangulation<3>* tri,
             BoundaryComponentFilterFunc filter,
             const QString& title,
@@ -182,23 +182,23 @@ class BoundaryComponentDialog : public QDialog {
             const QString& whatsThis);
 };
 
-inline bool BoundaryComponentChooser::refresh() {
+inline bool BoundaryComponent3Chooser::refresh() {
     clear();
     options_.clear();
     fill();
     return (count() > 0);
 }
 
-inline void BoundaryComponentChooser::packetToBeChanged(regina::Packet*) {
+inline void BoundaryComponent3Chooser::packetToBeChanged(regina::Packet*) {
     clear();
     options_.clear();
 }
 
-inline void BoundaryComponentChooser::packetWasChanged(regina::Packet*) {
+inline void BoundaryComponent3Chooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void BoundaryComponentChooser::packetToBeDestroyed(regina::Packet*) {
+inline void BoundaryComponent3Chooser::packetToBeDestroyed(regina::Packet*) {
     clear();
     options_.clear();
 }

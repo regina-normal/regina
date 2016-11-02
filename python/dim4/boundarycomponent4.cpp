@@ -41,7 +41,7 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::BoundaryComponent;
 
-void addDim4BoundaryComponent() {
+void addBoundaryComponent4() {
     {
         scope s = class_<BoundaryComponent<4>,
                 std::auto_ptr<BoundaryComponent<4>>,

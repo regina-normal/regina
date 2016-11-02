@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-void addDim2BoundaryComponent();
+void addBoundaryComponent2();
 void addComponent2();
 void addEdge2();
 void addDim2ExampleTriangulation();
@@ -40,7 +40,7 @@ void addTriangulation2();
 void addVertex2();
 
 void addDim2Classes() {
-    addDim2BoundaryComponent();
+    addBoundaryComponent2();
     addComponent2();
     addEdge2();
     addDim2ExampleTriangulation();
