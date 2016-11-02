@@ -55,7 +55,6 @@
 #include "maths/cyclotomic.h"
 #include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
-#include "triangulation/dim2.h" // for deleting boundary components
 #include "utilities/boolset.h"
 #include "utilities/markedvector.h"
 #include "utilities/property.h"

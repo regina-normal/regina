@@ -41,7 +41,7 @@
 #include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
-#include "choosers/dim4boundarycomponentchooser.h"
+#include "choosers/boundary4chooser.h"
 #include "choosers/facechooser.h"
 
 #include <memory>

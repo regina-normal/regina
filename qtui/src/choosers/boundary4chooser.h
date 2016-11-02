@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim4boundarycomponentchooser.h
+/*! \file boundary4chooser.h
  *  \brief Provides a widget for selecting a single boundary component
  *  of a 4-manifold triangulation.
  */
 
-#ifndef __DIM4BOUNDARYCOMPONENTCHOOSER_H
-#define __DIM4BOUNDARYCOMPONENTCHOOSER_H
+#ifndef __BOUNDARY4CHOOSER_H
+#define __BOUNDARY4CHOOSER_H
 
 #include "packet/packetlistener.h"
 

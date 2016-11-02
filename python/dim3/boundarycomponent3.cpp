@@ -32,6 +32,7 @@
 
 #include <boost/python.hpp>
 #include "triangulation/dim3.h"
+#include "triangulation/dim2.h" // for build()
 #include "../helpers.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"

@@ -50,7 +50,7 @@
 #include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "choosers/boundarycomponentchooser.h"
+#include "choosers/boundary3chooser.h"
 #include "choosers/facechooser.h"
 
 #include <memory>

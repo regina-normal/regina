@@ -33,7 +33,6 @@
 #include <list>
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"
-#include "triangulation/dim4.h" // For deleting boundary components
 #include "../safeheldtype.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"

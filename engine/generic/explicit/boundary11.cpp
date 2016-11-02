@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,48 +30,19 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
-#include "generic/isomorphism.h"
+#include "generic/detail/boundarycomponent-impl.h"
 #include "generic/triangulation.h"
-#include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
-using regina::Isomorphism;
+namespace regina { namespace detail {
 
-namespace {
-    template <int dim>
-    struct PyIsoHelper {
-        typedef int (Isomorphism<dim>::*simpImage_const_type)(unsigned) const;
+// Don't cascade instantiations all the way down through the dimensions...
+extern template REGINA_API BoundaryComponentStorage<10, false, false, true>::
+    ~BoundaryComponentStorage();
 
-        typedef regina::Perm<dim+1> (Isomorphism<dim>::*facetPerm_const_type)(
-            unsigned) const;
-    };
-}
+template REGINA_API BoundaryComponentStorage<11, false, false, true>::
+    ~BoundaryComponentStorage();
 
-template <int dim>
-void addIsomorphism(const char* name) {
-    class_<Isomorphism<dim>, std::auto_ptr<Isomorphism<dim>>,
-            boost::noncopyable>(name, init<const Isomorphism<dim>&>())
-        .def("size", &Isomorphism<dim>::size)
-        .def("simpImage", typename PyIsoHelper<dim>::simpImage_const_type(
-            &Isomorphism<dim>::simpImage))
-        .def("facetPerm", typename PyIsoHelper<dim>::facetPerm_const_type(
-            &Isomorphism<dim>::facetPerm))
-        .def("__getitem__", &Isomorphism<dim>::operator[])
-        .def("isIdentity", &Isomorphism<dim>::isIdentity)
-        .def("apply", &Isomorphism<dim>::apply,
-            return_value_policy<to_held_type<>>())
-        .def("applyInPlace", &Isomorphism<dim>::applyInPlace)
-        .def("random", &Isomorphism<dim>::random,
-            return_value_policy<manage_new_object>())
-        .def("identity", &Isomorphism<dim>::identity,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("random")
-        .staticmethod("identity")
-    ;
-}
+template REGINA_API Triangulation<10>*
+    BoundaryComponentStorage<11, false, false, true>::buildRealBoundary() const;
 
+} }

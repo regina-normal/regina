@@ -50,7 +50,6 @@
 #include "algebra/ngrouppresentation.h"
 #include "generic/triangulation.h"
 #include "packet/packet.h"
-#include "triangulation/dim3.h" // for deleting boundary components
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 

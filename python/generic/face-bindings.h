@@ -35,7 +35,6 @@
 #include "generic/face.h"
 #include "generic/simplex.h"
 #include "generic/triangulation.h"
-#include "triangulation/dim4.h" // For deleting boundary components
 #include "../helpers.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"

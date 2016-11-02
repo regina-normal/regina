@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file boundarycomponentchooser.h
+/*! \file boundary3chooser.h
  *  \brief Provides a widget for selecting a single boundary component
  *  of a 3-manifold triangulation.
  */
 
-#ifndef __BOUNDARYCOMPONENTCHOOSER_H
-#define __BOUNDARYCOMPONENTCHOOSER_H
+#ifndef __BOUNDARY3CHOOSER_H
+#define __BOUNDARY3CHOOSER_H
 
 #include "packet/packetlistener.h"
 

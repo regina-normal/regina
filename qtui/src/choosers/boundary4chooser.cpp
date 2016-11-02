@@ -34,7 +34,7 @@
 #include "triangulation/dim4.h"
 
 // UI includes:
-#include "dim4boundarycomponentchooser.h"
+#include "boundary4chooser.h"
 
 #include <QBoxLayout>
 #include <QDialogButtonBox>

@@ -32,7 +32,6 @@
 
 // Regina core includes:
 #include "generic/triangulation.h"
-#include "triangulation/dim4.h" // For deleting boundary components
 
 // UI includes:
 #include "generictriui.h"

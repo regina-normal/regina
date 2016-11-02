@@ -2,6 +2,7 @@
 
 ADD_SUBDIRECTORY("alias")
 ADD_SUBDIRECTORY("detail")
+ADD_SUBDIRECTORY("explicit")
 
 # Files to compile
 SET ( FILES
