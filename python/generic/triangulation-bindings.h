@@ -72,6 +72,14 @@ namespace {
             return ans;
         }
 
+        static boost::python::list boundaryComponents_list(
+                Triangulation<dim>& t) {
+            boost::python::list ans;
+            for (auto bc : t.boundaryComponents())
+                ans.append(boost::python::ptr(bc));
+            return ans;
+        }
+
         static boost::python::list fVector_list(const Triangulation<dim>& t) {
             boost::python::list ans;
             for (auto i : t.fVector())
@@ -149,11 +157,16 @@ void addTriangulation(const char* name) {
         .def("swapContents", &Triangulation<dim>::swapContents)
         .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
         .def("countComponents", &Triangulation<dim>::countComponents)
+        .def("countBoundaryComponents",
+            &Triangulation<dim>::countBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<Triangulation<dim>, dim>)
         .def("fVector", PyTriHelper<dim>::fVector_list)
         .def("components", PyTriHelper<dim>::components_list)
+        .def("boundaryComponents", PyTriHelper<dim>::boundaryComponents_list)
         .def("faces", &regina::python::faces<Triangulation<dim>, dim>)
         .def("component", &Triangulation<dim>::component,
+            return_internal_reference<>())
+        .def("boundaryComponent", &Triangulation<dim>::boundaryComponent,
             return_internal_reference<>())
         .def("face", &regina::python::face<Triangulation<dim>, dim, size_t>)
         .def("countVertices", &Triangulation<dim>::countVertices)

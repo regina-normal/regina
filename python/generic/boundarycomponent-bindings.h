@@ -71,6 +71,7 @@ void addBoundaryComponent(const char* name) {
             return_value_policy<reference_existing_object>())
         .def("build", &BoundaryComponent<dim>::build,
             return_internal_reference<>())
+        .def("isOrientable", &BoundaryComponent<dim>::isOrientable)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

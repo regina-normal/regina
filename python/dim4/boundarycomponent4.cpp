@@ -84,6 +84,7 @@ void addDim4BoundaryComponent() {
             .def("isReal", &BoundaryComponent<4>::isReal)
             .def("isIdeal", &BoundaryComponent<4>::isIdeal)
             .def("isInvalidVertex", &BoundaryComponent<4>::isInvalidVertex)
+            .def("isOrientable", &BoundaryComponent<4>::isOrientable)
             .def(regina::python::add_output())
             .def(regina::python::add_eq_operators())
         ;

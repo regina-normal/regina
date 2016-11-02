@@ -65,6 +65,7 @@ void addDim2BoundaryComponent() {
                 return_value_policy<reference_existing_object>())
             .def("component", &BoundaryComponent<2>::component,
                 return_value_policy<reference_existing_object>())
+            .def("isOrientable", &BoundaryComponent<2>::isOrientable)
             .def(regina::python::add_output())
             .def(regina::python::add_eq_operators())
         ;
