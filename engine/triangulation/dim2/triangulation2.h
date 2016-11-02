@@ -342,12 +342,6 @@ class REGINA_API Triangulation<2> :
 
         void calculateSkeleton();
 
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateBoundary();
-
     friend class regina::Face<2, 2>;
     friend class regina::detail::SimplexBase<2>;
     friend class regina::detail::TriangulationBase<2>;

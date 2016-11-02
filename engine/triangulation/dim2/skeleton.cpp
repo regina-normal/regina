@@ -45,107 +45,11 @@ void Triangulation<2>::calculateSkeleton() {
     if (simplices_.empty())
         return;
 
-    calculateBoundary();
-        // Sets:
-        // - boundaryComponents_
-        // - Component<2>::boundaryComponents_
-        // - Dim2 [ Edge, Vertex ]::boundaryComponent_
-        // - all BoundaryComponent<2> members
-
     // Flesh out the details of each component.
     for (auto v : vertices())
         v->component()->vertices_.push_back(v);
     for (auto e : edges())
         e->component()->edges_.push_back(e);
-}
-
-void Triangulation<2>::calculateBoundary() {
-    // Are there any boundary edges at all?
-    long nBdry = 2 * countEdges() - 3 * simplices_.size();
-    if (nBdry == 0)
-        return;
-
-    BoundaryComponent<2>* label;
-    Triangle<2> *tri, *adjTri;
-    int edgeId, adjEdgeId;
-    int vertexId, adjVertexId;
-    Edge<2> *adjEdge;
-    Vertex<2>* vertex;
-    VertexEmbedding<2> vertexEmb;
-
-    for (Edge<2>* edge : edges()) {
-        // We only care about boundary edges that we haven't yet seen..
-        if (edge->degree() == 2 || edge->boundaryComponent_)
-            continue;
-
-        label = new BoundaryComponent<2>();
-        boundaryComponents_.push_back(label);
-        edge->component()->boundaryComponents_.push_back(label);
-
-        // Loop around from this boundary edge to
-        // completely enumerate all edges in this boundary component.
-
-        tri = edge->front().triangle();
-        edgeId = edge->front().edge();
-        vertexId = edge->front().vertices()[0];
-        vertex = tri->regina::detail::SimplexFaces<2, 0>::face_[vertexId];
-        while (true) {
-            if (! edge->boundaryComponent_) {
-                edge->boundaryComponent_ = label;
-                label->push_back(edge);
-
-                vertex->boundaryComponent_ = label;
-                label->push_back(vertex);
-            } else {
-                // We've looped right around.
-                break;
-            }
-
-            // Find the next edge along the boundary.
-
-            // We can be clever about this.  The current
-            // boundary edge is one end of the vertex link; the
-            // *adjacent* boundary edge must be at the other.
-            vertexEmb = vertex->front();
-            if (vertexEmb.triangle() == tri &&
-                    vertexEmb.vertices()[0] == vertexId &&
-                    vertexEmb.vertices()[2] == edgeId) {
-                // We are currently looking at the embedding at the
-                // front of the list.  Take the one at the back.
-                vertexEmb = vertex->back();
-
-                adjTri = vertexEmb.triangle();
-                adjEdgeId = vertexEmb.vertices()[1];
-                adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
-                adjVertexId = vertexEmb.vertices()[2];
-            } else {
-                // We must be looking at the embedding at the back
-                // of the list.  Take the one at the front (which is
-                // already stored in vertexEmb).
-                adjTri = vertexEmb.triangle();
-                adjEdgeId = vertexEmb.vertices()[2];
-                adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
-                adjVertexId = vertexEmb.vertices()[1];
-
-                // TODO: Sanity checking; remove this eventually.
-                vertexEmb = vertex->back();
-                if (! (vertexEmb.triangle() == tri &&
-                        vertexEmb.vertices()[0] == vertexId &&
-                        vertexEmb.vertices()[1] == edgeId)) {
-                    std::cerr << "ERROR: Something has gone terribly "
-                        "wrong in computeBoundaryComponents()."
-                        << std::endl;
-                    ::exit(1);
-                }
-            }
-
-            edge = adjEdge;
-            tri = adjTri;
-            edgeId = adjEdgeId;
-            vertexId = adjVertexId;
-            vertex = tri->regina::detail::SimplexFaces<2, 0>::face_[vertexId];
-        }
-    }
 }
 
 } // namespace regina

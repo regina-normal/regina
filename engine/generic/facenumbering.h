@@ -121,11 +121,71 @@ class FaceNumbering : public detail::FaceNumberingImpl<
         dim, subdim, ((dim + 1) >= 2 * (subdim + 1))> {
 };
 
+/**
+ * Returns the (<i>dim</i>-2)-face number that is opposite the edge
+ * joining vertices \a i and \a j in a <i>dim</i>-dimensional simplex.
+ *
+ * This function is offered because its implementation is faster than
+ * working through the FaceNumbering class.
+ *
+ * The arguments \a i and \a j do not need to appear in ascending order.
+ *
+ * @param i the first vertex of an edge in a <i>dim</i>-dimensional simplex.
+ * This must be between 0 and \a dim inclusive.
+ * @param j the second vertex of an edge in a <i>dim</i>-dimensional simplex.
+ * This must be between 0 and \a dim inclusive, and must be different from \a i.
+ * @return the number of the (<i>dim</i>-2)-face opposite the given edge.
+ */
+template <int dim>
+inline int faceOppositeEdge(int i, int j);
+
 // Inline functions
 
 inline int binomSmall(int n, int k) {
     return detail::binomSmall_[n][k];
 }
+
+template <int dim>
+int faceOppositeEdge(int i, int j) {
+    static_assert(dim >= 5,
+        "The generic implementation of faceOpposite() can only be used "
+        "for dimensions dim >= 5.");
+
+    // In dimension >= 5, the requested (dim-2)-face has the same number
+    // as the edge (i, j), and edges are numbered in increasing
+    // lexicographical order by their vertices.
+    if (i > j)
+        std::swap(i, j);
+
+    unsigned ans = detail::binomSmall_[dim + 1][2] - 1; // index of last edge
+    if (i <= dim - 2)
+        ans -= detail::binomSmall_[dim - i][2]; // index of last edge (i, _)
+    return ans - (dim - j); // index of edge (i, j)
+}
+
+#ifndef __DOXYGEN
+
+template <>
+inline int faceOppositeEdge<2>(int i, int j) {
+    // We want the vertex number opposite edge (i, j).
+    return (3 - i - j);
+}
+
+template <>
+inline int faceOppositeEdge<3>(int i, int j) {
+    // We want the edge number opposite edge (i, j).
+    // We can get this using the 3-D lookup table.
+    return 5 - FaceNumbering<3, 1>::edgeNumber[i][j];
+}
+
+template <>
+inline int faceOppositeEdge<4>(int i, int j) {
+    // The triangle opposite edge (i, j) has the same number as edge(i, j).
+    // We can get this using the 4-D lookup table.
+    return FaceNumbering<4, 1>::edgeNumber[i][j];
+}
+
+#endif // __DOXYGEN
 
 } // namespace regina
 

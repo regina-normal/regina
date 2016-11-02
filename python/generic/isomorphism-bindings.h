@@ -33,6 +33,7 @@
 #include <boost/python.hpp>
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"
+#include "triangulation/dim4.h" // For deleting boundary components
 #include "../helpers.h"
 #include "../safeheldtype.h"
 

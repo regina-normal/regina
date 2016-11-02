@@ -50,7 +50,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "generic/triangulation.h"
 #include "packet/packet.h"
-#include "triangulation/dim3.h" // for deleting boundary triangulations
+#include "triangulation/dim3.h" // for deleting boundary components
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 
@@ -895,11 +895,6 @@ class REGINA_API Triangulation<4> :
 
         void calculateSkeleton();
 
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateBoundary();
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.

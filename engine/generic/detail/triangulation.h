@@ -268,6 +268,60 @@ struct FaceCalculator<dim, 0, 2> {
 #endif // __DOXYGEN
 
 /**
+ * Internal class used to identify lower-dimensional faces in a boundary
+ * component of a triangulation.
+ *
+ * Specifically, this class identifies and marks all faces of dimensions
+ * 1,...,\a subdim within the given boundary facet of a
+ * <i>dim</i>-dimensional triangulation.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam subdim the maximum dimension of the faces to identify.
+ * This must be between -1 and (\a dim - 3) inclusive.  In the cases where
+ * \a subdim = 0 or -1, the identify() routine for this class does nothing.
+ */
+template <int dim, int subdim>
+struct BoundaryComponentCalculator {
+    static_assert(1 <= subdim && subdim <= dim - 3,
+        "The generic BoundaryComponentCalculator template can only be used "
+        "for faces of dimension 1 <= subdim <= (dim - 3).");
+
+    /**
+     * Identifies and marks all faces of dimension &le; \a subdim within the
+     * given boundary facet of the given <i>dim</i>-dimensional triangulation.
+     *
+     * This routine pushes all such <i>subdim</i>-faces onto the relevant list
+     * for the given boundary component, and also marks the boundary component
+     * within these <i>subdim</i>-faces themselves.
+     *
+     * @param t the underlying triangulation.
+     * @param bc the boundary component of \a t currently under construction.
+     * @param facet a boundary facet that belongs to \a bc.
+     */
+    static void identify(TriangulationBase<dim>& t,
+            BoundaryComponent<dim>* bc, Face<dim, dim-1>* facet) {
+        t.template calculateBoundaryFaces<subdim>(bc, facet);
+        BoundaryComponentCalculator<dim, subdim - 1>::identify(t, bc, facet);
+    }
+};
+
+#ifndef __DOXYGEN
+
+template <int dim>
+struct BoundaryComponentCalculator<dim, 0> {
+    static void identify(TriangulationBase<dim>&, void*, void*) {
+    }
+};
+
+template <int dim>
+struct BoundaryComponentCalculator<dim, -1> {
+    static void identify(TriangulationBase<dim>&, void*, void*) {
+    }
+};
+
+#endif // __DOXYGEN
+
+/**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
  *
  * Such a triangulation is represented by the class Triangulation<dim>,
@@ -307,7 +361,7 @@ class TriangulationBase :
         typedef typename std::vector<Component<dim>*>::const_iterator
                 ComponentIterator;
             /**< Used to iterate through connected components. */
-        typedef std::vector<BoundaryComponent<dim>*>::const_iterator
+        typedef typename std::vector<BoundaryComponent<dim>*>::const_iterator
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
@@ -1480,6 +1534,27 @@ class TriangulationBase :
         void calculateSkeletonSubdim();
 
         /**
+         * Internal to calculateSkeleton().
+         *
+         * This routine calculates all real boundary components.
+         *
+         * See calculateSkeleton() for further details.
+         */
+        void calculateRealBoundary();
+
+        /**
+         * Internal to calculateRealBoundary().
+         *
+         * This routine identifies and marks all <i>subdim</i>-faces within
+         * the given boundary facet.
+         *
+         * See calculateRealBoundary() for further details.
+         */
+        template <int subdim>
+        void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
+            Face<dim, dim-1>* facet);
+
+        /**
          * Internal to isoSig().
          *
          * Constructs a candidate isomorphism signature for a single
@@ -1607,6 +1682,7 @@ class TriangulationBase :
         void relabelFace(Face<dim, subdim>* f, const Perm<dim + 1>& adjust);
 
     template <int, int, int> friend struct FaceCalculator;
+    template <int, int> friend struct BoundaryComponentCalculator;
     template <int, int> friend class WeakFaceList;
 };
 
@@ -2273,6 +2349,12 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // -----------------------------------------------------------------
 
     FaceCalculator<dim, dim - 1, 1>::calculate(*this);
+
+    // -----------------------------------------------------------------
+    // Real boundary components
+    // -----------------------------------------------------------------
+
+    calculateRealBoundary();
 }
 
 template <int dim>
@@ -2516,6 +2598,153 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
     }
 
     delete[] queue;
+}
+
+template <int dim>
+void TriangulationBase<dim>::calculateRealBoundary() {
+    // Are there any boundary facets at all?
+    long nBdry = 2 * countFaces<dim-1>() - (dim+1) * simplices_.size();
+    if (nBdry == 0)
+        return;
+
+    // This array stores an orientation for each triangle.
+    int* orient = new int[countFaces<dim-1>()];
+
+    // Although we are just doing a BFS, we use a deque instead of a queue
+    // since we are already dragging in the deque header, and since queue
+    // is implemented using deque anyway.
+
+    BoundaryComponent<dim>* label;
+    std::deque<Face<dim, dim-1>*> queue;
+    Simplex<dim> *simp;
+    int facetNum, ridgeNum, i;
+    Face<dim, dim-1> *facet, *adjFacet;
+    Face<dim, dim-2>* ridge;
+    FaceEmbedding<dim, dim-2> ridgeEmbFront, ridgeEmbBack;
+    Perm<dim + 1> switchPerm(dim - 1, dim);
+    Perm<dim + 1> facetGluing;
+    int adjOrient;
+    for (Face<dim, dim-1>* loopFacet : faces<dim-1>()) {
+        // We only care about boundary facets that we haven't yet seen.
+        if (loopFacet->degree() == 2 || loopFacet->boundaryComponent_)
+            continue;
+
+        label = new BoundaryComponent<dim>();
+        label->orientable_ = true;
+        boundaryComponents_.push_back(label);
+        loopFacet->component()->boundaryComponents_.push_back(label);
+
+        // Run a breadth-first search from this boundary facet to
+        // completely enumerate all (dim-1)-faces in this boundary component.
+
+        loopFacet->boundaryComponent_ = label;
+        label->push_back(loopFacet);
+        orient[loopFacet->index()] = 1;
+
+        queue.push_back(loopFacet);
+
+        while (! queue.empty()) {
+            facet = queue.front();
+            queue.pop_front();
+            simp = facet->front().simplex();
+            facetNum = facet->front().face();
+
+            // Run through all faces of dimensions 0,...,(dim-2) within facet,
+            // and include them in this boundary component.
+
+            // Treat the vertices separately, since we can optimise the
+            // vertex number calculations in this case.
+            if (dim >= 3)
+                for (i = 0; i <= dim; ++i)
+                    if (i != facetNum) {
+                        Face<dim, 0>* vertex = simp->vertex(i);
+                        if (vertex->boundaryComponent_ != label) {
+                            vertex->boundaryComponent_ = label;
+                            label->push_back(vertex);
+                        }
+                    }
+
+            // Now for faces of dimension 1..(dim-3):
+            BoundaryComponentCalculator<dim, dim - 3>::identify(*this,
+                label, facet);
+
+            // Finally we process the (dim-2)-faces, and also use these to
+            // locate adjacent boundary facets.
+            for (i = 0; i <= dim; ++i) {
+                if (i == facetNum)
+                    continue;
+
+                // Examine the (dim-2)-face opposite vertices (i, facetNum)
+                // of simp.
+                ridgeNum = faceOppositeEdge<dim>(i, facetNum);
+                ridge = simp->template face<dim-2>(ridgeNum);
+                if (! ridge->boundaryComponent_) {
+                    ridge->boundaryComponent_ = label;
+                    label->push_back(ridge);
+                }
+
+                // Okay, we can be clever about this.  The current
+                // boundary facet is one end of the link of ridge; the
+                // *adjacent* boundary facet must be at the other.
+                ridgeEmbFront = ridge->front();
+                ridgeEmbBack = ridge->back();
+                if (ridgeEmbFront.simplex() == simp &&
+                        ridgeEmbFront.vertices()[dim-1] == i &&
+                        ridgeEmbFront.vertices()[dim] == facetNum) {
+                    // We are currently looking at the embedding at the
+                    // front of the list.  Take the one at the back.
+                    adjFacet = ridgeEmbBack.simplex()->template face<dim-1>(
+                        ridgeEmbBack.vertices()[dim-1]);
+                    facetGluing =
+                        adjFacet->front().vertices().inverse() *
+                        ridgeEmbBack.vertices() *
+                        switchPerm *
+                        ridgeEmbFront.vertices().inverse() *
+                        facet->front().vertices();
+                } else {
+                    // We must be looking at the embedding at the back
+                    // of the list.  Take the one at the front.
+                    adjFacet = ridgeEmbFront.simplex()->template face<dim-1>(
+                        ridgeEmbFront.vertices()[dim]);
+                    facetGluing =
+                        adjFacet->front().vertices().inverse() *
+                        ridgeEmbFront.vertices() *
+                        switchPerm *
+                        ridgeEmbBack.vertices().inverse() *
+                        facet->front().vertices();
+                }
+
+                adjOrient = (facetGluing.sign() > 0 ?
+                    -orient[facet->index()] : orient[facet->index()]);
+
+                // Push the adjacent facet onto the queue for processing.
+                if (adjFacet->boundaryComponent_) {
+                    if (adjOrient != orient[adjFacet->index()])
+                        label->orientable_ = false;
+                } else {
+                    adjFacet->boundaryComponent_ = label;
+                    label->push_back(adjFacet);
+                    orient[adjFacet->index()] = adjOrient;
+                    queue.push_back(adjFacet);
+                }
+            }
+        }
+    }
+
+    delete[] orient;
+}
+
+template <int dim>
+template <int subdim>
+void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
+        Face<dim, dim-1>* facet) {
+    for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
+        Face<dim, subdim>* f = facet->template face<subdim>(i);
+        if (f->boundaryComponent_ != bc) {
+            f->boundaryComponent_ = bc;
+            bc->push_back(f);
+        }
+    }
 }
 
 template <int dim>

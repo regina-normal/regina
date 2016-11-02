@@ -34,6 +34,7 @@
 #include "generic/boundarycomponent.h"
 #include "generic/face.h"
 #include "generic/triangulation.h"
+#include "triangulation/dim4.h" // For deleting boundary components
 #include "../helpers.h"
 
 using namespace boost::python;

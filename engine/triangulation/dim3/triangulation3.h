@@ -55,7 +55,7 @@
 #include "maths/cyclotomic.h"
 #include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
-#include "triangulation/dim2.h" // for deleting boundary triangulations
+#include "triangulation/dim2.h" // for deleting boundary components
 #include "utilities/boolset.h"
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
@@ -2908,17 +2908,6 @@ class REGINA_API Triangulation<3> :
         void checkPermutations();
 
         void calculateSkeleton();
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateBoundary();
-
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void labelBoundaryTriangle(Triangle<3>*, BoundaryComponent<3>*);
 
         /**
          * Internal to calculateSkeleton().  See the comments within

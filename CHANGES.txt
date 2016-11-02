@@ -164,6 +164,8 @@ Version 5.1  [ (under development) ]
             - Deprecated the old names PACKET_DIM2TRIANGULATION,
               PACKET_TRIANGULATION and PACKET_DIM4TRIANGULATION.
               Instead use the newer names PACKET_TRIANGULATION{2,3,4}.
+        Routine faceOppositeEdge():
+            - New routine for optimised face number calculations.
         Routine preImageOfLattice(), torsionAutInverse():
             - Now works with type Integer instead of LargeInteger.
         Routine isZero, isNonZero, isPositive, isNegative, isNonPositive,

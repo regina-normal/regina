@@ -667,6 +667,20 @@ class BoundaryComponentFaceStorage<dim, false> {
         }
 
         /**
+         * Does nothing, since this boundary component does not store
+         * lower-dimensional faces.
+         *
+         * \tparam subdim the dimension of the given face.  This must
+         * be between 0 and <i>dim</i>-2 inclusive.
+         */
+        template <int subdim>
+        void push_back(Face<dim, subdim>*) {
+            static_assert(subdim <= dim - 2,
+                "The no-op push_back() should only be called for "
+                "faces of dimension <= dim - 2.");
+        }
+
+        /**
          * Reorders all lower-dimensional faces of the given triangulation
          * so that they appear in the same order as the corresponding
          * faces of this boundary component, and relabels these faces so
