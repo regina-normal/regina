@@ -37,7 +37,7 @@
 #include "triangulation/dim4.h"
 #include "testsuite/census/testcensus.h"
 
-using regina::Dim4FacetPairing;
+using regina::FacetPairing;
 using regina::Dim4GluingPermSearcher;
 using regina::Triangulation;
 using regina::BoolSet;
@@ -121,8 +121,8 @@ class Dim4CensusTest : public CppUnit::TestFixture {
             }
         }
 
-        static void foundPairing(const Dim4FacetPairing* pairing,
-                const Dim4FacetPairing::IsoList* autos, void* spec) {
+        static void foundPairing(const FacetPairing<4>* pairing,
+                const FacetPairing<4>::IsoList* autos, void* spec) {
             if (pairing) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Dim4GluingPermSearcher::findAllPerms(pairing, autos,
@@ -138,7 +138,7 @@ class Dim4CensusTest : public CppUnit::TestFixture {
             for (unsigned nPent = minPent; nPent <= maxPent; nPent++) {
                 CensusSpec spec(finiteness, orientability);
 
-                Dim4FacetPairing::findAllPairings(nPent, boundary, nBdryFacets,
+                FacetPairing<4>::findAllPairings(nPent, boundary, nBdryFacets,
                     foundPairing, &spec);
 
                 std::ostringstream msg;

@@ -435,7 +435,7 @@
 		05249F701DBC1747001FE29E /* edge3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAE1B9BAB9C00C1F681 /* edge3.cpp */; };
 		05249F711DBC1747001FE29E /* nexampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAF1B9BAB9C00C1F681 /* nexampletriangulation.cpp */; };
 		05249F721DBC1747001FE29E /* nfacepair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB01B9BAB9C00C1F681 /* nfacepair.cpp */; };
-		05249F731DBC1747001FE29E /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCA1C40F641009BC072 /* nfacepairing.cpp */; };
+		05249F731DBC1747001FE29E /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCA1C40F641009BC072 /* facetpairing3.cpp */; };
 		05249F741DBC1747001FE29E /* nhomologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */; };
 		05249F751DBC1747001FE29E /* isomorphism3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB21B9BAB9C00C1F681 /* isomorphism3.cpp */; };
 		05249F761DBC1747001FE29E /* tetrahedron3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB41B9BAB9C00C1F681 /* tetrahedron3.cpp */; };
@@ -807,9 +807,9 @@
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
 		052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		052FA1041806088B00FAE4DF /* dim2census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* dim2census.cpp */; };
-		052FA1051806088B00FAE4DF /* dim2edgepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* dim2edgepairing.cpp */; };
+		052FA1051806088B00FAE4DF /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* facetpairing2.cpp */; };
 		052FA1061806088B00FAE4DF /* ncensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D31806088B00FAE4DF /* ncensus.cpp */; };
-		052FA1071806088B00FAE4DF /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* nfacepairing.cpp */; };
+		052FA1071806088B00FAE4DF /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* facetpairing3.cpp */; };
 		052FA1081806088B00FAE4DF /* exhaustive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D71806088B00FAE4DF /* exhaustive.cpp */; };
 		052FA1091806088B00FAE4DF /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DB1806088B00FAE4DF /* matrixops.cpp */; };
 		052FA10A1806088B00FAE4DF /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DC1806088B00FAE4DF /* integer.cpp */; };
@@ -1121,7 +1121,7 @@
 		05431FC01C40F5D4009BC072 /* face.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FAE1C40F5CA009BC072 /* face.cpp */; };
 		05431FC11C40F5D4009BC072 /* facehelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FAF1C40F5CA009BC072 /* facehelper.cpp */; };
 		05431FC41C40F5D4009BC072 /* pygeneric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FB31C40F5CA009BC072 /* pygeneric.cpp */; };
-		05431FCC1C40F653009BC072 /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCA1C40F641009BC072 /* nfacepairing.cpp */; };
+		05431FCC1C40F653009BC072 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCA1C40F641009BC072 /* facetpairing3.cpp */; };
 		05431FCF1C40F663009BC072 /* intutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCD1C40F65D009BC072 /* intutils.cpp */; };
 		0543AE911811DE79002758F8 /* packetui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CB1811D920002CC2AE /* packetui.h */; };
 		0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41E1811D91E002CC2AE /* coordinatechooser.h */; };
@@ -1538,9 +1538,9 @@
 		0591E8471C4F773800793A9C /* tri4skeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8321C4F767300793A9C /* tri4skeleton.h */; };
 		0591E8481C4F773C00793A9C /* tri4ui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8341C4F767300793A9C /* tri4ui.h */; };
 		0591E84D1C4F777000793A9C /* dim4census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8491C4F776A00793A9C /* dim4census.cpp */; };
-		0591E84E1C4F777000793A9C /* dim4facetpairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* dim4facetpairing.cpp */; };
+		0591E84E1C4F777000793A9C /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* facetpairing4.cpp */; };
 		0591E84F1C4F777100793A9C /* dim4census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8491C4F776A00793A9C /* dim4census.cpp */; };
-		0591E8501C4F777100793A9C /* dim4facetpairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* dim4facetpairing.cpp */; };
+		0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* facetpairing4.cpp */; };
 		0591E8571C4F77A400793A9C /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* triangulation4.cpp */; };
 		0591E8581C4F77A400793A9C /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* triangulation4.cpp */; };
 		0591E8591C4F832B00793A9C /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
@@ -1780,9 +1780,9 @@
 		05D1174119EE0197003BEC55 /* permconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E31806088B00FAE4DF /* permconv.cpp */; };
 		05D1174219EE019D003BEC55 /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583656818DB88D9008B08D9 /* triangulation2.cpp */; };
 		05D1174319EE01A1003BEC55 /* dim2census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* dim2census.cpp */; };
-		05D1174419EE01A1003BEC55 /* dim2edgepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* dim2edgepairing.cpp */; };
+		05D1174419EE01A1003BEC55 /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* facetpairing2.cpp */; };
 		05D1174519EE01A1003BEC55 /* ncensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D31806088B00FAE4DF /* ncensus.cpp */; };
-		05D1174619EE01A1003BEC55 /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* nfacepairing.cpp */; };
+		05D1174619EE01A1003BEC55 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* facetpairing3.cpp */; };
 		05D1174819EE01AA003BEC55 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CB819B2F14B0099C617 /* ngrouppresentation.cpp */; };
 		05D1174B19EE043F003BEC55 /* testsuite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D1174919EE043F003BEC55 /* testsuite.cpp */; };
 		05D1174C19EE043F003BEC55 /* testsuite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D1174919EE043F003BEC55 /* testsuite.cpp */; };
@@ -2926,9 +2926,9 @@
 		052FA0CE1806088B00FAE4DF /* testangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testangle.h; sourceTree = "<group>"; };
 		052FA0D01806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0D11806088B00FAE4DF /* dim2census.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2census.cpp; sourceTree = "<group>"; };
-		052FA0D21806088B00FAE4DF /* dim2edgepairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2edgepairing.cpp; sourceTree = "<group>"; };
+		052FA0D21806088B00FAE4DF /* facetpairing2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing2.cpp; sourceTree = "<group>"; };
 		052FA0D31806088B00FAE4DF /* ncensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncensus.cpp; sourceTree = "<group>"; };
-		052FA0D41806088B00FAE4DF /* nfacepairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nfacepairing.cpp; sourceTree = "<group>"; };
+		052FA0D41806088B00FAE4DF /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		052FA0D51806088B00FAE4DF /* testcensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testcensus.h; sourceTree = "<group>"; };
 		052FA0D61806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0D71806088B00FAE4DF /* exhaustive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = exhaustive.cpp; sourceTree = "<group>"; };
@@ -3110,7 +3110,7 @@
 		05431FB01C40F5CA009BC072 /* facehelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facehelper.h; sourceTree = "<group>"; };
 		05431FB31C40F5CA009BC072 /* pygeneric.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pygeneric.cpp; sourceTree = "<group>"; };
 		05431FC81C40F607009BC072 /* equality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = equality.h; sourceTree = "<group>"; };
-		05431FCA1C40F641009BC072 /* nfacepairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nfacepairing.cpp; sourceTree = "<group>"; };
+		05431FCA1C40F641009BC072 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		05431FCD1C40F65D009BC072 /* intutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = intutils.cpp; sourceTree = "<group>"; };
 		05431FD01C40F67C009BC072 /* alltypes.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = alltypes.out; sourceTree = "<group>"; };
 		05431FD11C40F67C009BC072 /* alltypes.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = alltypes.test; sourceTree = "<group>"; };
@@ -3564,7 +3564,7 @@
 		0591E8331C4F767300793A9C /* tri4ui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4ui.cpp; sourceTree = "<group>"; };
 		0591E8341C4F767300793A9C /* tri4ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4ui.h; sourceTree = "<group>"; };
 		0591E8491C4F776A00793A9C /* dim4census.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4census.cpp; sourceTree = "<group>"; };
-		0591E84A1C4F776A00793A9C /* dim4facetpairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4facetpairing.cpp; sourceTree = "<group>"; };
+		0591E84A1C4F776A00793A9C /* facetpairing4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing4.cpp; sourceTree = "<group>"; };
 		0591E8521C4F779B00793A9C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0591E8531C4F779B00793A9C /* triangulation4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation4.cpp; sourceTree = "<group>"; };
 		0591E8541C4F779B00793A9C /* testdim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim4.h; sourceTree = "<group>"; };
@@ -4476,9 +4476,9 @@
 				050F5DAC1B9BAB9C00C1F681 /* boundarycomponent3.cpp */,
 				050F5DAD1B9BAB9C00C1F681 /* component3.cpp */,
 				050F5DAE1B9BAB9C00C1F681 /* edge3.cpp */,
+				05431FCA1C40F641009BC072 /* facetpairing3.cpp */,
 				050F5DAF1B9BAB9C00C1F681 /* nexampletriangulation.cpp */,
 				050F5DB01B9BAB9C00C1F681 /* nfacepair.cpp */,
-				05431FCA1C40F641009BC072 /* nfacepairing.cpp */,
 				050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */,
 				050F5DB21B9BAB9C00C1F681 /* isomorphism3.cpp */,
 				050F5DB41B9BAB9C00C1F681 /* tetrahedron3.cpp */,
@@ -5362,11 +5362,11 @@
 			children = (
 				052FA0D01806088B00FAE4DF /* CMakeLists.txt */,
 				052FA0D11806088B00FAE4DF /* dim2census.cpp */,
-				052FA0D21806088B00FAE4DF /* dim2edgepairing.cpp */,
 				0591E8491C4F776A00793A9C /* dim4census.cpp */,
-				0591E84A1C4F776A00793A9C /* dim4facetpairing.cpp */,
+				052FA0D21806088B00FAE4DF /* facetpairing2.cpp */,
+				052FA0D41806088B00FAE4DF /* facetpairing3.cpp */,
+				0591E84A1C4F776A00793A9C /* facetpairing4.cpp */,
 				052FA0D31806088B00FAE4DF /* ncensus.cpp */,
-				052FA0D41806088B00FAE4DF /* nfacepairing.cpp */,
 				052FA0D51806088B00FAE4DF /* testcensus.h */,
 			);
 			path = census;
@@ -7609,7 +7609,7 @@
 				050C64801DA10A0700C9420F /* anglestructures.cpp in Sources */,
 				050F5E4E1B9BAB9C00C1F681 /* i18nutils.cpp in Sources */,
 				050F5E141B9BAB9C00C1F681 /* pysplit.cpp in Sources */,
-				05431FCC1C40F653009BC072 /* nfacepairing.cpp in Sources */,
+				05431FCC1C40F653009BC072 /* facetpairing3.cpp in Sources */,
 				050F5E431B9BAB9C00C1F681 /* edge3.cpp in Sources */,
 				050F5DF61B9BAB9C00C1F681 /* cyclotomic.cpp in Sources */,
 				057EE4C01C600A3600C4D155 /* simplex8.cpp in Sources */,
@@ -7658,7 +7658,7 @@
 				052FA10C1806088B00FAE4DF /* perm4.cpp in Sources */,
 				052FA11B1806088B00FAE4DF /* isomorphism.cpp in Sources */,
 				052FA1161806088B00FAE4DF /* normalsurfaces.cpp in Sources */,
-				052FA1071806088B00FAE4DF /* nfacepairing.cpp in Sources */,
+				052FA1071806088B00FAE4DF /* facetpairing3.cpp in Sources */,
 				052FA1191806088B00FAE4DF /* eltmoves.cpp in Sources */,
 				052FA10A1806088B00FAE4DF /* integer.cpp in Sources */,
 				0583656C18DB88E8008B08D9 /* triangulation2.cpp in Sources */,
@@ -7670,7 +7670,7 @@
 				052FA11E1806088B00FAE4DF /* bitmask.cpp in Sources */,
 				052FA11D1806088B00FAE4DF /* base64.cpp in Sources */,
 				052FA1141806088B00FAE4DF /* nstandardtriangulation.cpp in Sources */,
-				052FA1051806088B00FAE4DF /* dim2edgepairing.cpp in Sources */,
+				052FA1051806088B00FAE4DF /* facetpairing2.cpp in Sources */,
 				052FA1081806088B00FAE4DF /* exhaustive.cpp in Sources */,
 				052FA10F1806088B00FAE4DF /* rational.cpp in Sources */,
 				052FA1091806088B00FAE4DF /* matrixops.cpp in Sources */,
@@ -7683,7 +7683,7 @@
 				052FA1101806088B00FAE4DF /* numbertheory.cpp in Sources */,
 				052FA10E1806088B00FAE4DF /* primes.cpp in Sources */,
 				05A73CBA19B2F14B0099C617 /* ngrouppresentation.cpp in Sources */,
-				0591E8501C4F777100793A9C /* dim4facetpairing.cpp in Sources */,
+				0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */,
 				05431F971C40F527009BC072 /* perm.cpp in Sources */,
 				052FA1061806088B00FAE4DF /* ncensus.cpp in Sources */,
 				053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */,
@@ -7829,7 +7829,7 @@
 				050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */,
 				052FA1931806129B00FAE4DF /* nmanifold.cpp in Sources */,
 				052FA1E31806129B00FAE4DF /* nsvectorstandard.cpp in Sources */,
-				0591E84E1C4F777000793A9C /* dim4facetpairing.cpp in Sources */,
+				0591E84E1C4F777000793A9C /* facetpairing4.cpp in Sources */,
 				052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				05F0A05D1DBF0B7000117BFC /* simplify.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
@@ -7995,7 +7995,7 @@
 				052FA17A1806129B00FAE4DF /* engine.cpp in Sources */,
 				052FA22F180612DD00FAE4DF /* peripheral_curves.c in Sources */,
 				05249F3A1DBC1718001FE29E /* pdf.cpp in Sources */,
-				05D1174619EE01A1003BEC55 /* nfacepairing.cpp in Sources */,
+				05D1174619EE01A1003BEC55 /* facetpairing3.cpp in Sources */,
 				05249EDB1DBC16E4001FE29E /* face5.cpp in Sources */,
 				05249F2F1DBC1711001FE29E /* perm2.cpp in Sources */,
 				050AFC5F19DCC68B00835ED6 /* SurfacesCompat.mm in Sources */,
@@ -8010,7 +8010,7 @@
 				05C064691C56C2ED006E6483 /* EltMoves4.mm in Sources */,
 				05249EE81DBC16EA001FE29E /* facetpairing4.cpp in Sources */,
 				05249EBE1DBC16CA001FE29E /* component4.cpp in Sources */,
-				05D1174419EE01A1003BEC55 /* dim2edgepairing.cpp in Sources */,
+				05D1174419EE01A1003BEC55 /* facetpairing2.cpp in Sources */,
 				05249F621DBC1737001FE29E /* disc.cpp in Sources */,
 				05D1173419EE0185003BEC55 /* exhaustive.cpp in Sources */,
 				05249EAA1DBC16B3001FE29E /* ngrouppresentation.cpp in Sources */,
@@ -8067,7 +8067,7 @@
 				055FF38519BFB3C30057462A /* NewPacketPageViewController.mm in Sources */,
 				052FA18E1806129B00FAE4DF /* ngraphloop.cpp in Sources */,
 				05249F4F1DBC1730001FE29E /* nlayeredsolidtorus.cpp in Sources */,
-				05249F731DBC1747001FE29E /* nfacepairing.cpp in Sources */,
+				05249F731DBC1747001FE29E /* facetpairing3.cpp in Sources */,
 				0586427119DA258E0019E056 /* SurfacesCoords.mm in Sources */,
 				05249F791DBC1747001FE29E /* vertex3.cpp in Sources */,
 				052FA13A1806103000FAE4DF /* AppDelegate.mm in Sources */,

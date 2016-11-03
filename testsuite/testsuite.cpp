@@ -151,11 +151,11 @@ void populateTests(CppUnit::TextTestRunner& runner) {
 
     // Census:
     addNCensus(runner);
-    addNFacePairing(runner);
+    addFacetPairing3(runner);
     addDim2Census(runner);
-    addDim2EdgePairing(runner);
+    addFacetPairing2(runner);
     addDim4Census(runner);
-    addDim4FacetPairing(runner);
+    addFacetPairing4(runner);
 
     // SnapPea:
     addSnapPeaTriangulation(runner);

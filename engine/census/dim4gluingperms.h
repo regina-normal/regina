@@ -54,7 +54,7 @@ namespace regina {
 /**
  * Represents a specific set of gluing permutations to complement a
  * particular pairwise matching of pentachoron facets.  Given a
- * pairwise matching of facets (as described by class Dim4FacetPairing), each
+ * pairwise matching of facets (as described by class FacetPairing<4>), each
  * facet that is matched with some other facet will have an associated
  * permutation of five elements (as described by class Perm<5>).
  *
@@ -106,13 +106,13 @@ class REGINA_API Dim4GluingPerms : public NGenericGluingPerms<4> {
          * to reach any pentachoron from any other pentachoron via a
          * series of matched facet pairs.
          * \pre The given facet pairing is in canonical form as described
-         * by Dim4FacetPairing::isCanonical().  Note that all facet pairings
-         * constructed by Dim4FacetPairing::findAllPairings() are of this form.
+         * by FacetPairing<4>::isCanonical().  Note that all facet pairings
+         * constructed by FacetPairing<4>::findAllPairings() are of this form.
          *
          * @param pairing the specific pairing of pentachoron facets
          * that this permutation set will complement.
          */
-        Dim4GluingPerms(const Dim4FacetPairing* pairing);
+        Dim4GluingPerms(const FacetPairing<4>* pairing);
 };
 
 /*@}*/
@@ -127,7 +127,7 @@ inline Dim4GluingPerms::Dim4GluingPerms(std::istream& in) :
         NGenericGluingPerms<4>(in) {
 }
 
-inline Dim4GluingPerms::Dim4GluingPerms(const Dim4FacetPairing* pairing) :
+inline Dim4GluingPerms::Dim4GluingPerms(const FacetPairing<4>* pairing) :
         NGenericGluingPerms<4>(pairing) {
 }
 

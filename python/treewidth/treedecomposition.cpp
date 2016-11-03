@@ -179,14 +179,14 @@ void addTreeDecomposition() {
         .def(init<const regina::Triangulation<4>&>())
         .def(init<const regina::Triangulation<4>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::NFacePairing&>())
-        .def(init<const regina::NFacePairing&,
+        .def(init<const regina::FacetPairing<3>&>())
+        .def(init<const regina::FacetPairing<3>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::Dim2EdgePairing&>())
-        .def(init<const regina::Dim2EdgePairing&,
+        .def(init<const regina::FacetPairing<2>&>())
+        .def(init<const regina::FacetPairing<2>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::Dim4FacetPairing&>())
-        .def(init<const regina::Dim4FacetPairing&,
+        .def(init<const regina::FacetPairing<4>&>())
+        .def(init<const regina::FacetPairing<4>&,
             regina::TreeDecompositionAlg>())
         .def("__init__", make_constructor(fromListAlg))
         .def("__init__", make_constructor(fromList))

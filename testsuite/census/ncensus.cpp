@@ -43,7 +43,7 @@ using regina::BoolSet;
 using regina::NCensus;
 using regina::NCensusHit;
 using regina::NCensusHits;
-using regina::NFacePairing;
+using regina::FacetPairing;
 using regina::NGluingPermSearcher;
 using regina::Triangulation;
 
@@ -256,8 +256,8 @@ class NCensusTest : public CppUnit::TestFixture {
             }
         }
 
-        static void foundPairing(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos, void* spec) {
+        static void foundPairing(const FacetPairing<3>* pairing,
+                const FacetPairing<3>::IsoList* autos, void* spec) {
             if (pairing) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 NGluingPermSearcher::findAllPerms(pairing, autos,
@@ -274,7 +274,7 @@ class NCensusTest : public CppUnit::TestFixture {
             for (unsigned nTets = minTets; nTets <= maxTets; nTets++) {
                 CensusSpec spec(finiteness, orientability, whichPurge, minimal);
 
-                NFacePairing::findAllPairings(nTets, boundary, nBdryFaces,
+                FacetPairing<3>::findAllPairings(nTets, boundary, nBdryFaces,
                     foundPairing, &spec);
 
                 std::ostringstream msg;

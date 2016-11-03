@@ -54,7 +54,7 @@ namespace regina {
 /**
  * Represents a specific set of gluing permutations to complement a
  * particular pairwise matching of tetrahedron faces.  Given a
- * pairwise matching of faces (as described by class NFacePairing), each
+ * pairwise matching of faces (as described by class FacetPairing<3>), each
  * face that is matched with some other face will have an associated
  * permutation of four elements (as described by class Perm<4>).
  *
@@ -106,13 +106,13 @@ class REGINA_API NGluingPerms : public NGenericGluingPerms<3> {
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
          * \pre The given face pairing is in canonical form as described
-         * by NFacePairing::isCanonical().  Note that all face pairings
-         * constructed by NFacePairing::findAllPairings() are of this form.
+         * by FacetPairing<3>::isCanonical().  Note that all face pairings
+         * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
          * @param pairing the specific pairing of tetrahedron faces
          * that this permutation set will complement.
          */
-        NGluingPerms(const NFacePairing* pairing);
+        NGluingPerms(const FacetPairing<3>* pairing);
 };
 
 /*@}*/
@@ -127,7 +127,7 @@ inline NGluingPerms::NGluingPerms(std::istream& in) :
         NGenericGluingPerms<3>(in) {
 }
 
-inline NGluingPerms::NGluingPerms(const NFacePairing* pairing) :
+inline NGluingPerms::NGluingPerms(const FacetPairing<3>* pairing) :
         NGenericGluingPerms<3>(pairing) {
 }
 

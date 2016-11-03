@@ -101,7 +101,7 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
                  and writing tagged data in text format. */
 
     protected:
-        const Dim2EdgePairing::IsoList* autos_;
+        const FacetPairing<2>::IsoList* autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying edge pairing. */
@@ -169,8 +169,8 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
          * to reach any triangle from any other triangle via a
          * series of matched edge pairs.
          * \pre The given edge pairing is in canonical form as described
-         * by Dim2EdgePairing::isCanonical().  Note that all edge pairings
-         * constructed by Dim2EdgePairing::findAllPairings() are of this form.
+         * by FacetPairing<2>::isCanonical().  Note that all edge pairings
+         * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
          * @param pairing the specific pairing of triangle edges
          * that the generated permutation sets will complement.
@@ -192,8 +192,8 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
          * the function \a use which will be called upon each permutation
          * set found.
          */
-        Dim2GluingPermSearcher(const Dim2EdgePairing* pairing,
-                const Dim2EdgePairing::IsoList* autos,
+        Dim2GluingPermSearcher(const FacetPairing<2>* pairing,
+                const FacetPairing<2>::IsoList* autos,
                 bool orientableOnly, UseDim2GluingPerms use, void* useArgs = 0);
 
         /**
@@ -320,11 +320,11 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
          * to reach any triangle from any other triangle via a
          * series of matched edge pairs.
          * \pre The given edge pairing is in canonical form as described
-         * by Dim2EdgePairing::isCanonical().  Note that all edge pairings
-         * constructed by Dim2EdgePairing::findAllPairings() are of this form.
+         * by FacetPairing<2>::isCanonical().  Note that all edge pairings
+         * constructed by FacetPairing<2>::findAllPairings() are of this form.
          */
-        static void findAllPerms(const Dim2EdgePairing* pairing,
-                const Dim2EdgePairing::IsoList* autos,
+        static void findAllPerms(const FacetPairing<2>* pairing,
+                const FacetPairing<2>::IsoList* autos,
                 bool orientableOnly, UseDim2GluingPerms use, void* useArgs = 0);
 
         /**
@@ -349,14 +349,14 @@ class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
          * to reach any triangle from any other triangle via a
          * series of matched edge pairs.
          * \pre The given edge pairing is in canonical form as described
-         * by Dim2EdgePairing::isCanonical().  Note that all edge pairings
-         * constructed by Dim2EdgePairing::findAllPairings() are of this form.
+         * by FacetPairing<2>::isCanonical().  Note that all edge pairings
+         * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
          * @return the newly created search manager.
          */
         static Dim2GluingPermSearcher* bestSearcher(
-                const Dim2EdgePairing* pairing,
-                const Dim2EdgePairing::IsoList* autos,
+                const FacetPairing<2>* pairing,
+                const FacetPairing<2>::IsoList* autos,
                 bool orientableOnly, UseDim2GluingPerms use, void* useArgs = 0);
 
         /**

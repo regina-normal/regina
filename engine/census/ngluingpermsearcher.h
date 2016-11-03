@@ -175,7 +175,7 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
         };
 
     protected:
-        const NFacePairing::IsoList* autos_;
+        const FacetPairing<3>::IsoList* autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying face pairing. */
@@ -273,8 +273,8 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
          * \pre The given face pairing is in canonical form as described
-         * by NFacePairing::isCanonical().  Note that all face pairings
-         * constructed by NFacePairing::findAllPairings() are of this form.
+         * by FacetPairing<3>::isCanonical().  Note that all face pairings
+         * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
          * @param pairing the specific pairing of tetrahedron faces
          * that the generated permutation sets will complement.
@@ -310,8 +310,8 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * the function \a use which will be called upon each permutation
          * set found.
          */
-        NGluingPermSearcher(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
+        NGluingPermSearcher(const FacetPairing<3>* pairing,
+                const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -439,11 +439,11 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
          * \pre The given face pairing is in canonical form as described
-         * by NFacePairing::isCanonical().  Note that all face pairings
-         * constructed by NFacePairing::findAllPairings() are of this form.
+         * by FacetPairing<3>::isCanonical().  Note that all face pairings
+         * constructed by FacetPairing<3>::findAllPairings() are of this form.
          */
-        static void findAllPerms(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
+        static void findAllPerms(const FacetPairing<3>* pairing,
+                const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -469,13 +469,13 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
          * \pre The given face pairing is in canonical form as described
-         * by NFacePairing::isCanonical().  Note that all face pairings
-         * constructed by NFacePairing::findAllPairings() are of this form.
+         * by FacetPairing<3>::isCanonical().  Note that all face pairings
+         * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
          * @return the newly created search manager.
          */
-        static NGluingPermSearcher* bestSearcher(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
+        static NGluingPermSearcher* bestSearcher(const FacetPairing<3>* pairing,
+                const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -1075,16 +1075,16 @@ class REGINA_API NEulerSearcher : public NGluingPermSearcher {
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
          * \pre The given face pairing is in canonical form as described
-         * by NFacePairing::isCanonical().  Note that all face pairings
-         * constructed by NFacePairing::findAllPairings() are of this form.
+         * by FacetPairing<3>::isCanonical().  Note that all face pairings
+         * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
          * @param useEuler the Euler characteristic that vertex links must
          * have.  For boundary vertices, this is the Euler characteristic
          * of the closed surface that would be obtained if the puncture in
          * the vertex link were filled.
          */
-        NEulerSearcher(int useEuler, const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
+        NEulerSearcher(int useEuler, const FacetPairing<3>* pairing,
+                const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -1865,11 +1865,11 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
          * \pre The given face pairing is in canonical form as described
-         * by NFacePairing::isCanonical().  Note that all face pairings
-         * constructed by NFacePairing::findAllPairings() are of this form.
+         * by FacetPairing<3>::isCanonical().  Note that all face pairings
+         * constructed by FacetPairing<3>::findAllPairings() are of this form.
          */
-        NCompactSearcher(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
+        NCompactSearcher(const FacetPairing<3>* pairing,
+                const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
                 UseGluingPerms use, void* useArgs = 0);
 
@@ -2380,13 +2380,13 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
          * \pre The given face pairing is in canonical form as described
-         * by NFacePairing::isCanonical().  Note that all face pairings
-         * constructed by NFacePairing::findAllPairings() are of this form.
+         * by FacetPairing<3>::isCanonical().  Note that all face pairings
+         * constructed by FacetPairing<3>::findAllPairings() are of this form.
          * \pre The given face pairing has no boundary faces and has at
          * least three tetrahedra.
          */
-        NClosedPrimeMinSearcher(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
+        NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
+                const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
 
         /**
@@ -2522,12 +2522,12 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * to reach any tetrahedron from any other tetrahedron via a
          * series of matched face pairs.
          * \pre The given face pairing is in canonical form as described
-         * by NFacePairing::isCanonical().  Note that all face pairings
-         * constructed by NFacePairing::findAllPairings() are of this form.
+         * by FacetPairing<3>::isCanonical().  Note that all face pairings
+         * constructed by FacetPairing<3>::findAllPairings() are of this form.
          * \pre The given face pairing has no boundary faces.
          */
-        NHyperbolicMinSearcher(const NFacePairing* pairing,
-                const NFacePairing::IsoList* autos,
+        NHyperbolicMinSearcher(const FacetPairing<3>* pairing,
+                const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
 
         /**

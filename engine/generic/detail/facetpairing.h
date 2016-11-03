@@ -106,10 +106,6 @@ class FacetPairingBase :
          * The third parameter may contain arbitrary data as passed to
          * findAllPairings().
          *
-         * It may be assumed that the pairing is of the appropriate
-         * dimension-specific subclass (such as NFacePairing for
-         * dimension three, or Dim2EdgePairing for dimension two).
-         *
          * Note that the first two parameters passed might be \c null to
          * signal that facet pairing generation has finished.
          */
@@ -499,10 +495,7 @@ class FacetPairingBase :
          *
          * For each facet pairing that is generated, routine \a use (as
          * passed to this function) will be called with that pairing and
-         * its automorphisms as arguments.  Each pairing will be of the
-         * appropriate dimension-specific subclass (for instance,
-         * NFacePairing for dimension three, or Dim2EdgePairing for
-         * dimension two).
+         * its automorphisms as arguments.
          *
          * Once the generation of facet pairings has finished, routine
          * \a use will be called once more, this time with \c null as its

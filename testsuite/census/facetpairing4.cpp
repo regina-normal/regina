@@ -35,20 +35,20 @@
 #include "dim4/dim4facetpairing.h"
 #include "testsuite/census/testcensus.h"
 
-using regina::Dim4FacetPairing;
+using regina::FacetPairing;
 using regina::BoolSet;
 
 /**
  * Simply increment the given count when a face pairing is found.
  */
-void countFacetPairings(const Dim4FacetPairing* pair,
-        const Dim4FacetPairing::IsoList*, void* count) {
+void countFacetPairings(const FacetPairing<4>* pair,
+        const FacetPairing<4>::IsoList*, void* count) {
     if (pair)
         (*(unsigned*)count)++;
 }
 
-class Dim4FacetPairingTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(Dim4FacetPairingTest);
+class FacetPairing4Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(FacetPairing4Test);
 
     CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
@@ -75,7 +75,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
             unsigned size;
             for (size = 0; size <= 5; ++size) {
                 count = 0;
-                Dim4FacetPairing::findAllPairings(size, BoolSet::sFalse,
+                FacetPairing<4>::findAllPairings(size, BoolSet::sFalse,
                     0, countFacetPairings, &count);
 
                 if (count != nPairs[size]) {
@@ -100,7 +100,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
 
             for (size = 0; size <= 6; ++size) {
                 count = 0;
-                Dim4FacetPairing::findAllPairings(size, BoolSet::sTrue,
+                FacetPairing<4>::findAllPairings(size, BoolSet::sTrue,
                     1, countFacetPairings, &count);
 
                 if (count != nBdry1[size]) {
@@ -115,7 +115,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
 
             for (size = 0; size <= 5; ++size) {
                 count = 0;
-                Dim4FacetPairing::findAllPairings(size, BoolSet::sTrue,
+                FacetPairing<4>::findAllPairings(size, BoolSet::sTrue,
                     2, countFacetPairings, &count);
 
                 if (count != nBdry2[size]) {
@@ -130,7 +130,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
 
             for (size = 0; size <= 4; ++size) {
                 count = 0;
-                Dim4FacetPairing::findAllPairings(size, BoolSet::sTrue,
+                FacetPairing<4>::findAllPairings(size, BoolSet::sTrue,
                     -1, countFacetPairings, &count);
 
                 if (count != nBdry[size]) {
@@ -145,7 +145,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
         }
 };
 
-void addDim4FacetPairing(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Dim4FacetPairingTest::suite());
+void addFacetPairing4(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(FacetPairing4Test::suite());
 }
 

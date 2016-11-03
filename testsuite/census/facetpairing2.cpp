@@ -35,20 +35,20 @@
 #include "dim2/dim2edgepairing.h"
 #include "testsuite/census/testcensus.h"
 
-using regina::Dim2EdgePairing;
+using regina::FacetPairing;
 using regina::BoolSet;
 
 /**
  * Simply increment the given count when a face pairing is found.
  */
-void countEdgePairings(const Dim2EdgePairing* pair,
-        const Dim2EdgePairing::IsoList*, void* count) {
+void countEdgePairings(const FacetPairing<2>* pair,
+        const FacetPairing<2>::IsoList*, void* count) {
     if (pair)
         (*(unsigned*)count)++;
 }
 
-class Dim2EdgePairingTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(Dim2EdgePairingTest);
+class FacetPairing2Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(FacetPairing2Test);
 
     CPPUNIT_TEST(rawCounts);
 
@@ -74,7 +74,7 @@ class Dim2EdgePairingTest : public CppUnit::TestFixture {
             unsigned nTri;
             for (nTri = 0; nTri <= 12; nTri++) {
                 count = 0;
-                Dim2EdgePairing::findAllPairings(nTri, BoolSet::sFalse,
+                FacetPairing<2>::findAllPairings(nTri, BoolSet::sFalse,
                     0, countEdgePairings, &count);
 
                 std::ostringstream msg;
@@ -87,7 +87,7 @@ class Dim2EdgePairingTest : public CppUnit::TestFixture {
         }
 };
 
-void addDim2EdgePairing(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Dim2EdgePairingTest::suite());
+void addFacetPairing2(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(FacetPairing2Test::suite());
 }
 

@@ -3,11 +3,11 @@
 # Files to compile
 SET ( FILES
   dim2census
-  dim2edgepairing
   dim4census
-  dim4facetpairing
+  facetpairing2
+  facetpairing3
+  facetpairing4
   ncensus
-  nfacepairing
   )
 
 # Prepend folder name

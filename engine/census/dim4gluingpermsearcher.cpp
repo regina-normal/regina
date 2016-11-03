@@ -204,7 +204,7 @@ bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
 }
 
 Dim4GluingPermSearcher::Dim4GluingPermSearcher(
-        const Dim4FacetPairing* pairing, const Dim4FacetPairing::IsoList* autos,
+        const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
         UseDim4GluingPerms use, void* useArgs) :
         Dim4GluingPerms(pairing), autos_(autos), autosNew_(autos == 0),
@@ -216,9 +216,9 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
     // This will require us to remove the const for a wee moment.
     if (autosNew_) {
         const_cast<Dim4GluingPermSearcher*>(this)->autos_ =
-            new Dim4FacetPairing::IsoList();
+            new FacetPairing<4>::IsoList();
         pairing->findAutomorphisms(
-            const_cast<Dim4FacetPairing::IsoList&>(*autos_));
+            const_cast<FacetPairing<4>::IsoList&>(*autos_));
     }
 
     // Initialise arrays.
@@ -275,8 +275,8 @@ Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
     if (autosNew_) {
         // We made them, so we'd better remove the const again and
         // delete them.
-        Dim4FacetPairing::IsoList* autos =
-            const_cast<Dim4FacetPairing::IsoList*>(autos_);
+        FacetPairing<4>::IsoList* autos =
+            const_cast<FacetPairing<4>::IsoList*>(autos_);
         std::for_each(autos->begin(), autos->end(),
             FuncDelete<Isomorphism<4>>());
         delete autos;
@@ -284,7 +284,7 @@ Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
 }
 
 Dim4GluingPermSearcher* Dim4GluingPermSearcher::bestSearcher(
-        const Dim4FacetPairing* pairing, const Dim4FacetPairing::IsoList* autos,
+        const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
         UseDim4GluingPerms use, void* useArgs) {
     // Do everything by brute force for now.
@@ -292,8 +292,8 @@ Dim4GluingPermSearcher* Dim4GluingPermSearcher::bestSearcher(
         orientableOnly, finiteOnly, use, useArgs);
 }
 
-void Dim4GluingPermSearcher::findAllPerms(const Dim4FacetPairing* pairing,
-        const Dim4FacetPairing::IsoList* autos, bool orientableOnly,
+void Dim4GluingPermSearcher::findAllPerms(const FacetPairing<4>* pairing,
+        const FacetPairing<4>::IsoList* autos, bool orientableOnly,
         bool finiteOnly, UseDim4GluingPerms use, void* useArgs) {
     Dim4GluingPermSearcher* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, use, useArgs);
@@ -641,8 +641,8 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
 
     // Recontruct the facet pairing automorphisms.
     const_cast<Dim4GluingPermSearcher*>(this)->autos_ =
-        new Dim4FacetPairing::IsoList();
-    pairing_->findAutomorphisms(const_cast<Dim4FacetPairing::IsoList&>(
+        new FacetPairing<4>::IsoList();
+    pairing_->findAutomorphisms(const_cast<FacetPairing<4>::IsoList&>(
         *autos_));
     autosNew_ = true;
 
@@ -751,7 +751,7 @@ bool Dim4GluingPermSearcher::isCanonical() const {
     FacetSpec<4> facet, facetDest, facetImage;
     int ordering;
 
-    for (Dim4FacetPairing::IsoList::const_iterator it = autos_->begin();
+    for (FacetPairing<4>::IsoList::const_iterator it = autos_->begin();
             it != autos_->end(); ++it) {
         // Compare the current set of gluing permutations with its
         // preimage under each facet pairing automorphism, to see whether

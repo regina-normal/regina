@@ -411,7 +411,7 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
                  and writing tagged data in text format. */
 
     protected:
-        const Dim4FacetPairing::IsoList* autos_;
+        const FacetPairing<4>::IsoList* autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying facet pairing. */
@@ -536,8 +536,8 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * to reach any pentachoron from any other pentachoron via a
          * series of matched facet pairs.
          * \pre The given facet pairing is in canonical form as described
-         * by Dim4FacetPairing::isCanonical().  Note that all facet pairings
-         * constructed by Dim4FacetPairing::findAllPairings() are of this form.
+         * by FacetPairing<4>::isCanonical().  Note that all facet pairings
+         * constructed by FacetPairing<4>::findAllPairings() are of this form.
          *
          * @param pairing the specific pairing of pentachoron facets
          * that the generated permutation sets will complement.
@@ -564,8 +564,8 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * the function \a use which will be called upon each permutation
          * set found.
          */
-        Dim4GluingPermSearcher(const Dim4FacetPairing* pairing,
-                const Dim4FacetPairing::IsoList* autos,
+        Dim4GluingPermSearcher(const FacetPairing<4>* pairing,
+                const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
                 UseDim4GluingPerms use, void* useArgs = 0);
 
@@ -693,11 +693,11 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * to reach any pentachoron from any other pentachoron via a
          * series of matched facet pairs.
          * \pre The given facet pairing is in canonical form as described
-         * by Dim4FacetPairing::isCanonical().  Note that all facet pairings
-         * constructed by Dim4FacetPairing::findAllPairings() are of this form.
+         * by FacetPairing<4>::isCanonical().  Note that all facet pairings
+         * constructed by FacetPairing<4>::findAllPairings() are of this form.
          */
-        static void findAllPerms(const Dim4FacetPairing* pairing,
-                const Dim4FacetPairing::IsoList* autos,
+        static void findAllPerms(const FacetPairing<4>* pairing,
+                const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
                 UseDim4GluingPerms use, void* useArgs = 0);
 
@@ -723,14 +723,14 @@ class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
          * to reach any pentachoron from any other pentachoron via a
          * series of matched facet pairs.
          * \pre The given facet pairing is in canonical form as described
-         * by Dim4FacetPairing::isCanonical().  Note that all facet pairings
-         * constructed by Dim4FacetPairing::findAllPairings() are of this form.
+         * by FacetPairing<4>::isCanonical().  Note that all facet pairings
+         * constructed by FacetPairing<4>::findAllPairings() are of this form.
          *
          * @return the newly created search manager.
          */
         static Dim4GluingPermSearcher* bestSearcher(
-                const Dim4FacetPairing* pairing,
-                const Dim4FacetPairing::IsoList* autos,
+                const FacetPairing<4>* pairing,
+                const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
                 UseDim4GluingPerms use, void* useArgs = 0);
 

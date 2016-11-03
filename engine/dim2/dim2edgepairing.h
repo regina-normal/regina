@@ -51,7 +51,11 @@ namespace regina {
  */
 
 /**
- * A convenience typedef for FacetPairing<2>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2EdgePairing, you should use
+ * the full class name FacetPairing<2>.
  */
 typedef FacetPairing<2> Dim2EdgePairing;
 

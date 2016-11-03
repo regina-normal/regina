@@ -321,7 +321,7 @@ void FacetGraphTab::showError(const QString& msg) {
 }
 
 std::string Dim2EdgeGraphData::dual(bool withLabels) {
-    regina::Dim2EdgePairing pairing(*tri_);
+    regina::FacetPairing<2> pairing(*tri_);
     return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
 }
 
@@ -359,7 +359,7 @@ regina::Packet* Dim2EdgeGraphData::getPacket() {
 }
 
 std::string Dim3FaceGraphData::dual(bool withLabels) {
-    regina::NFacePairing pairing(*tri_);
+    regina::FacetPairing<3> pairing(*tri_);
     return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
 }
 
@@ -397,7 +397,7 @@ regina::Packet* Dim3FaceGraphData::getPacket() {
 }
 
 std::string Dim4FacetGraphData::dual(bool withLabels) {
-    regina::Dim4FacetPairing pairing(*tri_);
+    regina::FacetPairing<4> pairing(*tri_);
     return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
 }
 

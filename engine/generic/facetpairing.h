@@ -70,14 +70,11 @@ namespace regina {
  * and offers more functionality.  In order to use these specialised classes,
  * you will need to include the corresponding headers (e.g.,
  * dim2/dim2edgepairing.h for \a dim = 2, or triangulation/nfacepairing.h for
- * \a dim = 3).  For convenience, there are typedefs available for these
- * specialised classes (such as Dim2EdgePairing and NFacePairing respectively).
+ * \a dim = 3).
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., FacetPairing2 and FacetPairing3 for dimensions 2 and 3).
- * The typedefs mentioned above for standard dimensions
- * (e.g., Dim2EdgePairing and NFacePairing) are also available.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.

@@ -200,8 +200,8 @@ bool NEulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
     return true;
 }
 
-NEulerSearcher::NEulerSearcher(int useEuler, const NFacePairing* pairing,
-        const NFacePairing::IsoList* autos, bool orientableOnly,
+NEulerSearcher::NEulerSearcher(int useEuler, const FacetPairing<3>* pairing,
+        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
         int whichPurge, UseGluingPerms use, void* useArgs) :
         NGluingPermSearcher(pairing, autos, orientableOnly,
             true /* finiteOnly */, whichPurge, use, useArgs),

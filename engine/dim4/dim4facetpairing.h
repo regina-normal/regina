@@ -51,7 +51,11 @@ namespace regina {
  */
 
 /**
- * A convenience typedef for FacetPairing<4>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4FacetPairing, you should use
+ * the full class name FacetPairing<4>.
  */
 typedef FacetPairing<4> Dim4FacetPairing;
 

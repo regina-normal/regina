@@ -54,7 +54,7 @@ namespace regina {
 /**
  * Represents a specific set of gluing permutations to complement a
  * particular pairwise matching of triangle edges.  Given a
- * pairwise matching of edges (as described by class Dim2EdgePairing), each
+ * pairwise matching of edges (as described by class FacetPairing<2>), each
  * edge that is matched with some other edge will have an associated
  * permutation of three elements (as described by class Perm<3>).
  *
@@ -106,13 +106,13 @@ class REGINA_API Dim2GluingPerms : public NGenericGluingPerms<2> {
          * to reach any triangle from any other triangle via a
          * series of matched edge pairs.
          * \pre The given edge pairing is in canonical form as described
-         * by Dim2EdgePairing::isCanonical().  Note that all edge pairings
-         * constructed by Dim2EdgePairing::findAllPairings() are of this form.
+         * by FacetPairing<2>::isCanonical().  Note that all edge pairings
+         * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
          * @param pairing the specific pairing of triangle edges
          * that this permutation set will complement.
          */
-        Dim2GluingPerms(const Dim2EdgePairing* pairing);
+        Dim2GluingPerms(const FacetPairing<2>* pairing);
 };
 
 /*@}*/
@@ -127,7 +127,7 @@ inline Dim2GluingPerms::Dim2GluingPerms(std::istream& in) :
         NGenericGluingPerms<2>(in) {
 }
 
-inline Dim2GluingPerms::Dim2GluingPerms(const Dim2EdgePairing* pairing) :
+inline Dim2GluingPerms::Dim2GluingPerms(const FacetPairing<2>* pairing) :
         NGenericGluingPerms<2>(pairing) {
 }
 

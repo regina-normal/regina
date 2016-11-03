@@ -5,9 +5,9 @@ SET ( FILES
   boundarycomponent3
   component3
   edge3
+  facetpairing3
   nexampletriangulation
   nfacepair
-  nfacepairing
   nhomologicaldata
   isomorphism3
   tetrahedron3

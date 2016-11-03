@@ -38,7 +38,7 @@
 #include "testsuite/census/testcensus.h"
 
 using regina::BoolSet;
-using regina::Dim2EdgePairing;
+using regina::FacetPairing;
 using regina::Dim2GluingPermSearcher;
 using regina::Triangulation;
 
@@ -119,8 +119,8 @@ class Dim2CensusTest : public CppUnit::TestFixture {
             }
         }
 
-        static void foundPairing(const Dim2EdgePairing* pairing,
-                const Dim2EdgePairing::IsoList* autos, void* spec) {
+        static void foundPairing(const FacetPairing<2>* pairing,
+                const FacetPairing<2>::IsoList* autos, void* spec) {
             if (pairing) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Dim2GluingPermSearcher::findAllPerms(pairing, autos,
@@ -135,7 +135,7 @@ class Dim2CensusTest : public CppUnit::TestFixture {
                 bool minimal) {
             for (unsigned nTris = minTris; nTris <= maxTris; nTris++) {
                 CensusSpec spec(orientability, minimal);
-                Dim2EdgePairing::findAllPairings(nTris, boundary, nBdryFaces,
+                FacetPairing<2>::findAllPairings(nTris, boundary, nBdryFaces,
                     foundPairing, &spec);
 
                 std::ostringstream msg;

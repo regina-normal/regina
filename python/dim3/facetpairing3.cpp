@@ -37,51 +37,51 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NFacePairing;
+using regina::FacetPairing;
 using regina::FacetSpec;
 using regina::Triangulation;
 
 namespace {
-    const FacetSpec<3>& (NFacePairing::*dest_face)(const FacetSpec<3>&) const =
-        &NFacePairing::dest;
-    const FacetSpec<3>& (NFacePairing::*dest_unsigned)(size_t, unsigned) const =
-        &NFacePairing::dest;
-    bool (NFacePairing::*isUnmatched_face)(const FacetSpec<3>&) const =
-        &NFacePairing::isUnmatched;
-    bool (NFacePairing::*isUnmatched_unsigned)(size_t, unsigned) const =
-        &NFacePairing::isUnmatched;
+    const FacetSpec<3>& (FacetPairing<3>::*dest_face)(const FacetSpec<3>&) const =
+        &FacetPairing<3>::dest;
+    const FacetSpec<3>& (FacetPairing<3>::*dest_unsigned)(size_t, unsigned) const =
+        &FacetPairing<3>::dest;
+    bool (FacetPairing<3>::*isUnmatched_face)(const FacetSpec<3>&) const =
+        &FacetPairing<3>::isUnmatched;
+    bool (FacetPairing<3>::*isUnmatched_unsigned)(size_t, unsigned) const =
+        &FacetPairing<3>::isUnmatched;
 
-    bool (NFacePairing::*query_bdec)() const =
-        &NFacePairing::hasBrokenDoubleEndedChain;
-    bool (NFacePairing::*query_oecwdh)() const =
-        &NFacePairing::hasOneEndedChainWithDoubleHandle;
-    bool (NFacePairing::*query_wdec)() const =
-        &NFacePairing::hasWedgedDoubleEndedChain;
-    bool (NFacePairing::*query_oecwsb)() const =
-        &NFacePairing::hasOneEndedChainWithStrayBigon;
-    bool (NFacePairing::*query_toec)() const =
-        &NFacePairing::hasTripleOneEndedChain;
+    bool (FacetPairing<3>::*query_bdec)() const =
+        &FacetPairing<3>::hasBrokenDoubleEndedChain;
+    bool (FacetPairing<3>::*query_oecwdh)() const =
+        &FacetPairing<3>::hasOneEndedChainWithDoubleHandle;
+    bool (FacetPairing<3>::*query_wdec)() const =
+        &FacetPairing<3>::hasWedgedDoubleEndedChain;
+    bool (FacetPairing<3>::*query_oecwsb)() const =
+        &FacetPairing<3>::hasOneEndedChainWithStrayBigon;
+    bool (FacetPairing<3>::*query_toec)() const =
+        &FacetPairing<3>::hasTripleOneEndedChain;
 
-    void writeDot_stdout(const NFacePairing& p, const char* prefix = 0,
+    void writeDot_stdout(const FacetPairing<3>& p, const char* prefix = 0,
             bool subgraph = false, bool labels = false) {
         p.writeDot(std::cout, prefix, subgraph, labels);
     }
 
     void writeDotHeader_stdout(const char* graphName = 0) {
-        NFacePairing::writeDotHeader(std::cout, graphName);
+        FacetPairing<3>::writeDotHeader(std::cout, graphName);
     }
 
     // Write dot() and dotHeader() as standalone functions: it seems
     // difficult using boost overloads in a way that keeps both gcc and
     // LLVM happy. :/
-    std::string dot_standalone(const NFacePairing& p,
+    std::string dot_standalone(const FacetPairing<3>& p,
             const char* prefix = 0, bool subgraph = false,
             bool labels = false) {
         return p.dot(prefix, subgraph, labels);
     }
 
     std::string dotHeader_standalone(const char* graphName = 0) {
-        return NFacePairing::dotHeader(graphName);
+        return FacetPairing<3>::dotHeader(graphName);
     }
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 4);
@@ -92,32 +92,32 @@ namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, dotHeader_standalone, 0, 1);
 }
 
-void addNFacePairing() {
-    class_<NFacePairing, std::auto_ptr<NFacePairing>, boost::noncopyable>
-            ("NFacePairing", init<const NFacePairing&>())
+void addFacetPairing3() {
+    class_<FacetPairing<3>, std::auto_ptr<FacetPairing<3>>, boost::noncopyable>
+            ("FacetPairing3", init<const FacetPairing<3>&>())
         .def(init<const Triangulation<3>&>())
-        .def("size", &NFacePairing::size)
+        .def("size", &FacetPairing<3>::size)
         .def("dest", dest_face,
             return_value_policy<reference_existing_object>())
         .def("dest", dest_unsigned,
             return_value_policy<reference_existing_object>())
         .def("__getitem__",
-            static_cast<const FacetSpec<3>& (NFacePairing::*)(
-                const FacetSpec<3>&) const>(&NFacePairing::operator[]),
+            static_cast<const FacetSpec<3>& (FacetPairing<3>::*)(
+                const FacetSpec<3>&) const>(&FacetPairing<3>::operator[]),
             return_value_policy<reference_existing_object>())
         .def("isUnmatched", isUnmatched_face)
         .def("isUnmatched", isUnmatched_unsigned)
-        .def("isCanonical", &NFacePairing::isCanonical)
-        .def("toTextRep", &NFacePairing::toTextRep)
-        .def("fromTextRep", &NFacePairing::fromTextRep,
+        .def("isCanonical", &FacetPairing<3>::isCanonical)
+        .def("toTextRep", &FacetPairing<3>::toTextRep)
+        .def("fromTextRep", &FacetPairing<3>::fromTextRep,
             return_value_policy<manage_new_object>())
         .def("writeDot", writeDot_stdout, OL_writeDot())
         .def("dot", dot_standalone, OL_dot())
         .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
         .def("dotHeader", dotHeader_standalone, OL_dotHeader())
-        .def("isClosed", &NFacePairing::isClosed)
-        .def("hasTripleEdge", &NFacePairing::hasTripleEdge)
-        .def("followChain", &NFacePairing::followChain)
+        .def("isClosed", &FacetPairing<3>::isClosed)
+        .def("hasTripleEdge", &FacetPairing<3>::hasTripleEdge)
+        .def("followChain", &FacetPairing<3>::followChain)
 
         // For reasons I do not understand, it seems I have to declare
         // these routines separately to avoid a compile error with
@@ -128,14 +128,16 @@ void addNFacePairing() {
         .def("hasOneEndedChainWithStrayBigon", query_oecwsb)
         .def("hasTripleOneEndedChain", query_toec)
 
-        .def("hasSingleStar", &NFacePairing::hasSingleStar)
-        .def("hasDoubleStar", &NFacePairing::hasDoubleStar)
-        .def("hasDoubleSquare", &NFacePairing::hasDoubleSquare)
+        .def("hasSingleStar", &FacetPairing<3>::hasSingleStar)
+        .def("hasDoubleStar", &FacetPairing<3>::hasDoubleStar)
+        .def("hasDoubleSquare", &FacetPairing<3>::hasDoubleSquare)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
         .staticmethod("dotHeader")
     ;
+
+    scope().attr("NFacePairing") = scope().attr("FacetPairing3");
 }
 

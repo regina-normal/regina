@@ -35,13 +35,13 @@
 #include "testsuite/census/testcensus.h"
 #include "triangulation/nfacepairing.h"
 
-using regina::NFacePairing;
+using regina::FacetPairing;
 using regina::BoolSet;
 
 /**
  * Simply increment the given count when a face pairing is found.
  */
-void countFacePairings(const NFacePairing* pair, const NFacePairing::IsoList*,
+void countFacePairings(const FacetPairing<3>* pair, const FacetPairing<3>::IsoList*,
         void* count) {
     if (pair)
         (*(unsigned*)count)++;
@@ -71,7 +71,7 @@ namespace {
     };
 }
 
-void countBadGraphs(const NFacePairing* pair, const NFacePairing::IsoList*,
+void countBadGraphs(const FacetPairing<3>* pair, const FacetPairing<3>::IsoList*,
         void* badGraphsRaw) {
     if (pair) {
         BadGraphs* badGraphs = static_cast<BadGraphs*>(badGraphsRaw);
@@ -97,8 +97,8 @@ void countBadGraphs(const NFacePairing* pair, const NFacePairing::IsoList*,
     }
 }
 
-class NFacePairingTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NFacePairingTest);
+class FacetPairing3Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(FacetPairing3Test);
 
     CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
@@ -129,7 +129,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             unsigned nTets;
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
-                NFacePairing::findAllPairings(nTets, BoolSet::sFalse,
+                FacetPairing<3>::findAllPairings(nTets, BoolSet::sFalse,
                     0, countFacePairings, &count);
 
                 if (count != nPairs[nTets]) {
@@ -152,7 +152,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
 
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
-                NFacePairing::findAllPairings(nTets, BoolSet::sTrue,
+                FacetPairing<3>::findAllPairings(nTets, BoolSet::sTrue,
                     1, countFacePairings, &count);
 
                 if (count != 0) {
@@ -167,7 +167,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
 
             for (nTets = 0; nTets <= 7; nTets++) {
                 count = 0;
-                NFacePairing::findAllPairings(nTets, BoolSet::sTrue,
+                FacetPairing<3>::findAllPairings(nTets, BoolSet::sTrue,
                     2, countFacePairings, &count);
 
                 if (count != nBdry2[nTets]) {
@@ -182,7 +182,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
 
             for (nTets = 0; nTets <= 6; nTets++) {
                 count = 0;
-                NFacePairing::findAllPairings(nTets, BoolSet::sTrue,
+                FacetPairing<3>::findAllPairings(nTets, BoolSet::sTrue,
                     -1, countFacePairings, &count);
 
                 if (count != nBdry[nTets]) {
@@ -221,7 +221,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             unsigned nTets;
             for (nTets = 1; nTets <= 8; nTets++) {
                 BadGraphs bad;
-                NFacePairing::findAllPairings(nTets, BoolSet::sFalse,
+                FacetPairing<3>::findAllPairings(nTets, BoolSet::sFalse,
                     0, countBadGraphs, &bad);
 
                 if (bad.tripleEdge != nTriple[nTets]) {
@@ -291,7 +291,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
         }
 };
 
-void addNFacePairing(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NFacePairingTest::suite());
+void addFacetPairing3(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(FacetPairing3Test::suite());
 }
 

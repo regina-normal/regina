@@ -68,10 +68,9 @@
 #define DIM4_BOUNDED_CENSUS_SIZE 2
 #define DIM4_IDEAL_CENSUS_SIZE 2
 
-using regina::Dim4FacetPairing;
 using regina::Dim4GluingPermSearcher;
 using regina::BoolSet;
-using regina::NFacePairing;
+using regina::FacetPairing;
 using regina::NGluingPermSearcher;
 using regina::Triangulation;
 
@@ -100,8 +99,8 @@ namespace {
         }
     }
 
-    void foundFacetPairing3(const NFacePairing* pairing,
-            const NFacePairing::IsoList* autos, void* holder) {
+    void foundFacetPairing3(const FacetPairing<3>* pairing,
+            const FacetPairing<3>::IsoList* autos, void* holder) {
         if (pairing) {
             TestFunctionHolder3* h = static_cast<TestFunctionHolder3*>(holder);
             NGluingPermSearcher::findAllPerms(pairing, autos,
@@ -137,8 +136,8 @@ namespace {
         }
     }
 
-    void foundFacetPairing4(const Dim4FacetPairing* pairing,
-            const Dim4FacetPairing::IsoList* autos, void* holder) {
+    void foundFacetPairing4(const FacetPairing<4>* pairing,
+            const FacetPairing<4>::IsoList* autos, void* holder) {
         if (pairing) {
             TestFunctionHolder4* h = static_cast<TestFunctionHolder4*>(holder);
             Dim4GluingPermSearcher::findAllPerms(pairing, autos,
@@ -152,7 +151,7 @@ namespace {
 void runCensusMinClosed(Triangulation3TestFunction testFunction, bool small_) {
     TestFunctionHolder3 f(testFunction, BoolSet::sTrue /* finite */,
         true /* minimal */);
-    NFacePairing::findAllPairings(
+    FacetPairing<3>::findAllPairings(
         (small_ ? DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE :
             DIM3_MIN_CLOSED_CENSUS_SIZE),
         BoolSet::sFalse /* bounded */, -1, /* bdry faces */
@@ -161,7 +160,7 @@ void runCensusMinClosed(Triangulation3TestFunction testFunction, bool small_) {
 
 void runCensusAllClosed(Triangulation3TestFunction testFunction, bool small_) {
     TestFunctionHolder3 f(testFunction, BoolSet::sTrue /* finite */);
-    NFacePairing::findAllPairings(
+    FacetPairing<3>::findAllPairings(
         (small_ ? DIM3_SMALL_CLOSED_CENSUS_SIZE : DIM3_CLOSED_CENSUS_SIZE),
         BoolSet::sFalse /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing3, &f);
@@ -169,7 +168,7 @@ void runCensusAllClosed(Triangulation3TestFunction testFunction, bool small_) {
 
 void runCensusAllBounded(Triangulation3TestFunction testFunction, bool small_) {
     TestFunctionHolder3 f(testFunction, BoolSet::sTrue /* finite */);
-    NFacePairing::findAllPairings(
+    FacetPairing<3>::findAllPairings(
         (small_ ? DIM3_SMALL_BOUNDED_CENSUS_SIZE : DIM3_BOUNDED_CENSUS_SIZE),
         BoolSet::sTrue /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing3, &f);
@@ -177,7 +176,7 @@ void runCensusAllBounded(Triangulation3TestFunction testFunction, bool small_) {
 
 void runCensusAllIdeal(Triangulation3TestFunction testFunction, bool small_) {
     TestFunctionHolder3 f(testFunction, BoolSet::sFalse /* finite */);
-    NFacePairing::findAllPairings(
+    FacetPairing<3>::findAllPairings(
         (small_ ? DIM3_SMALL_IDEAL_CENSUS_SIZE : DIM3_IDEAL_CENSUS_SIZE),
         BoolSet::sFalse /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing3, &f);
@@ -185,7 +184,7 @@ void runCensusAllIdeal(Triangulation3TestFunction testFunction, bool small_) {
 
 void runCensusAllNoBdry(Triangulation3TestFunction testFunction, bool small_) {
     TestFunctionHolder3 f(testFunction, BoolSet::sBoth /* finite */);
-    NFacePairing::findAllPairings(
+    FacetPairing<3>::findAllPairings(
         (small_ ? DIM3_SMALL_IDEAL_CENSUS_SIZE : DIM3_IDEAL_CENSUS_SIZE),
         BoolSet::sFalse /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing3, &f);
@@ -193,7 +192,7 @@ void runCensusAllNoBdry(Triangulation3TestFunction testFunction, bool small_) {
 
 void runCensusAllClosed(Triangulation4TestFunction testFunction) {
     TestFunctionHolder4 f(testFunction, BoolSet::sTrue /* finite */);
-    Dim4FacetPairing::findAllPairings(
+    FacetPairing<4>::findAllPairings(
         DIM4_CLOSED_CENSUS_SIZE,
         BoolSet::sFalse /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing4, &f);
@@ -201,7 +200,7 @@ void runCensusAllClosed(Triangulation4TestFunction testFunction) {
 
 void runCensusAllBounded(Triangulation4TestFunction testFunction) {
     TestFunctionHolder4 f(testFunction, BoolSet::sTrue /* finite */);
-    Dim4FacetPairing::findAllPairings(
+    FacetPairing<4>::findAllPairings(
         DIM4_BOUNDED_CENSUS_SIZE,
         BoolSet::sTrue /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing4, &f);
@@ -209,7 +208,7 @@ void runCensusAllBounded(Triangulation4TestFunction testFunction) {
 
 void runCensusAllNoBdry(Triangulation4TestFunction testFunction) {
     TestFunctionHolder4 f(testFunction, BoolSet::sBoth /* finite */);
-    Dim4FacetPairing::findAllPairings(
+    FacetPairing<4>::findAllPairings(
         DIM4_IDEAL_CENSUS_SIZE,
         BoolSet::sFalse /* bounded */, -1 /* bdry faces */,
         &foundFacetPairing4, &f);

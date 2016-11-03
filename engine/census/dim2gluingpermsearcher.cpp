@@ -41,7 +41,7 @@ namespace regina {
 const char Dim2GluingPermSearcher::dataTag_ = 'g';
 
 Dim2GluingPermSearcher::Dim2GluingPermSearcher(
-        const Dim2EdgePairing* pairing, const Dim2EdgePairing::IsoList* autos,
+        const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
         bool orientableOnly, UseDim2GluingPerms use, void* useArgs) :
         Dim2GluingPerms(pairing), autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), use_(use), useArgs_(useArgs),
@@ -51,9 +51,9 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(
     // This will require us to remove the const for a wee moment.
     if (autosNew) {
         const_cast<Dim2GluingPermSearcher*>(this)->autos_ =
-            new Dim2EdgePairing::IsoList();
+            new FacetPairing<2>::IsoList();
         pairing->findAutomorphisms(
-            const_cast<Dim2EdgePairing::IsoList&>(*autos_));
+            const_cast<FacetPairing<2>::IsoList&>(*autos_));
     }
 
     // Initialise arrays.
@@ -80,8 +80,8 @@ Dim2GluingPermSearcher::~Dim2GluingPermSearcher() {
     if (autosNew) {
         // We made them, so we'd better remove the const again and
         // delete them.
-        Dim2EdgePairing::IsoList* autos =
-            const_cast<Dim2EdgePairing::IsoList*>(autos_);
+        FacetPairing<2>::IsoList* autos =
+            const_cast<FacetPairing<2>::IsoList*>(autos_);
         std::for_each(autos->begin(), autos->end(),
             FuncDelete<Isomorphism<2>>());
         delete autos;
@@ -89,15 +89,15 @@ Dim2GluingPermSearcher::~Dim2GluingPermSearcher() {
 }
 
 Dim2GluingPermSearcher* Dim2GluingPermSearcher::bestSearcher(
-        const Dim2EdgePairing* pairing, const Dim2EdgePairing::IsoList* autos,
+        const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
         bool orientableOnly, UseDim2GluingPerms use, void* useArgs) {
     // We only have one algorithm for now.
     return new Dim2GluingPermSearcher(pairing, autos, orientableOnly,
         use, useArgs);
 }
 
-void Dim2GluingPermSearcher::findAllPerms(const Dim2EdgePairing* pairing,
-        const Dim2EdgePairing::IsoList* autos, bool orientableOnly,
+void Dim2GluingPermSearcher::findAllPerms(const FacetPairing<2>* pairing,
+        const FacetPairing<2>::IsoList* autos, bool orientableOnly,
         UseDim2GluingPerms use, void* useArgs) {
     Dim2GluingPermSearcher* searcher = bestSearcher(pairing, autos,
         orientableOnly, use, useArgs);
@@ -293,8 +293,8 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
 
     // Recontruct the face pairing automorphisms.
     const_cast<Dim2GluingPermSearcher*>(this)->autos_ =
-        new Dim2EdgePairing::IsoList();
-    pairing_->findAutomorphisms(const_cast<Dim2EdgePairing::IsoList&>(*autos_));
+        new FacetPairing<2>::IsoList();
+    pairing_->findAutomorphisms(const_cast<FacetPairing<2>::IsoList&>(*autos_));
     autosNew = true;
 
     // Keep reading.
@@ -344,7 +344,7 @@ bool Dim2GluingPermSearcher::isCanonical() const {
     FacetSpec<2> edge, edgeDest, edgeImage;
     int ordering;
 
-    for (Dim2EdgePairing::IsoList::const_iterator it = autos_->begin();
+    for (FacetPairing<2>::IsoList::const_iterator it = autos_->begin();
             it != autos_->end(); it++) {
         // Compare the current set of gluing permutations with its
         // preimage under each edge pairing automorphism, to see whether

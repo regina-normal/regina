@@ -74,7 +74,7 @@ void ctrlFarmPartialSearch(const typename CensusType::GluingPermSearcher*,
 
 // Differences between censuses of 2, 3 and 4-manifolds:
 struct Dim2Params {
-    typedef regina::Dim2EdgePairing Pairing;
+    typedef regina::FacetPairing<2> Pairing;
     typedef regina::Dim2GluingPermSearcher GluingPermSearcher;
     typedef regina::Triangulation<2> Triangulation;
 
@@ -101,7 +101,7 @@ struct Dim2Params {
 };
 
 struct Dim3Params {
-    typedef regina::NFacePairing Pairing;
+    typedef regina::FacetPairing<3> Pairing;
     typedef regina::NGluingPermSearcher GluingPermSearcher;
     typedef regina::Triangulation<3> Triangulation;
 
@@ -129,7 +129,7 @@ struct Dim3Params {
 };
 
 struct Dim4Params {
-    typedef regina::Dim4FacetPairing Pairing;
+    typedef regina::FacetPairing<4> Pairing;
     typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
     typedef regina::Triangulation<4> Triangulation;
 

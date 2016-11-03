@@ -43,8 +43,8 @@ const char NHyperbolicMinSearcher::ECLASS_LOWDEG = 2;
 
 const char NHyperbolicMinSearcher::dataTag_ = 'h';
 
-NHyperbolicMinSearcher::NHyperbolicMinSearcher(const NFacePairing* pairing,
-        const NFacePairing::IsoList* autos, bool orientableOnly,
+NHyperbolicMinSearcher::NHyperbolicMinSearcher(const FacetPairing<3>* pairing,
+        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
         UseGluingPerms use, void* useArgs) :
         NEulerSearcher(0, pairing, autos, orientableOnly,
             PURGE_NON_MINIMAL_HYP, use, useArgs) {
