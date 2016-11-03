@@ -23,14 +23,15 @@ Version 5.1  [ (under development) ]
             + NNormalSurfaceList becomes NormalSurfaces.
             + NNormalSurfaceVector{Standard,...} becomes NSVector{Standard,...}.
             + NSurfaceSubset is removed entirely (see below).
-            + For "standard" dimensions 2, 3 and 4:
+            + For triangulation-related classes and headers:
               - All vertex/edge/face/etc, component, boundary component and
-                isomorphism headers are included automatically by the
-                new headers triangulation/dim{2,3,4}.h.  So, for instance,
-                triangulation/nvertex.h becomes triangulation/dim3.h, and
-                dim2/dim2component.h becomes triangulation/dim2.h.
-                Note that higher dimensions still use the generic header
-                generic/triangulation.h.
+                isomorphism headers are included automatically by the new
+                headers triangulation/{dim2.h, dim3.h, dim4.h, generic.h}.
+                These are now the preferred headers for accessing
+                triangulations, faces, etc. in dimensions {2, 3, 4, >= 5}.  For
+                instance, triangulation/nvertex.h becomes triangulation/dim3.h,
+                dim2/dim2component.h becomes triangulation/dim2.h, and
+                generic/face.h becomes triangulation/generic.h.
               - All facet pairing headers are included automatically by the
                 new headers triangulation/facetpairing3.h (for dimension 3)
                 and triangulation/facetpairing.h (for all other dimensions).

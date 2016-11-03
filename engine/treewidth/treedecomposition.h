@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "generic/facetpairing.h"
+#include "triangulation/facetpairing.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {

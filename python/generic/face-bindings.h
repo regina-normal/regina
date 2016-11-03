@@ -31,10 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "generic/component.h"
-#include "generic/face.h"
-#include "generic/simplex.h"
-#include "generic/triangulation.h"
+#include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"

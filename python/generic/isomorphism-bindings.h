@@ -31,8 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "generic/isomorphism.h"
-#include "generic/triangulation.h"
+#include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 

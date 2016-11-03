@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,53 +30,25 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
-#include "triangulation/generic.h"
-#include "../helpers.h"
+/*! \file triangulation/generic.h
+ *  \brief Includes all headers for working with higher-dimensional
+ *  triangulations.  This includes headers for the main class
+ *  Triangulation<\a dim>, as well as the face classes Face<\a dim,\a subdim>,
+ *  the component classes Component<\a dim> and BoundaryComponent<\a dim>, and
+ *  the isomorphism class Isomorphism<\a dim>, for all dimensions \a dim &ge; 5.
+ */
 
-using namespace boost::python;
-using regina::Component;
+#ifndef __GENERIC_H
+#ifndef __DOXYGEN
+#define __GENERIC_H
+#endif
 
-namespace {
-    template <int dim>
-    struct PyComponentHelper {
-        boost::python::list simplices_list(Component<dim>& t) {
-            boost::python::list ans;
-            for (auto it = t.simplices().begin();
-                    it != t.simplices().end(); ++it)
-                ans.append(boost::python::ptr(*it));
-            return ans;
-        }
+#include "generic/boundarycomponent.h"
+#include "generic/component.h"
+#include "generic/face.h"
+#include "generic/isomorphism.h"
+#include "generic/simplex.h"
+#include "generic/triangulation.h"
 
-        boost::python::list bc_list(Component<dim>& t) {
-            boost::python::list ans;
-            for (auto s : t.boundaryComponents())
-                ans.append(boost::python::ptr(s));
-            return ans;
-        }
-    };
-}
-
-template <int dim>
-void addComponent(const char* name) {
-    class_<Component<dim>, std::auto_ptr<Component<dim>>, boost::noncopyable>
-            (name, no_init)
-        .def("index", &Component<dim>::index)
-        .def("size", &Component<dim>::size)
-        .def("countBoundaryComponents",
-            &Component<dim>::countBoundaryComponents)
-        .def("simplices", &PyComponentHelper<dim>::simplices_list)
-        .def("simplex", &Component<dim>::simplex,
-            return_value_policy<reference_existing_object>())
-        .def("boundaryComponents", &PyComponentHelper<dim>::bc_list)
-        .def("boundaryComponent", &Component<dim>::boundaryComponent,
-            return_value_policy<reference_existing_object>())
-        .def("isValid", &Component<dim>::isValid)
-        .def("isOrientable", &Component<dim>::isOrientable)
-        .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets)
-        .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-    ;
-}
+#endif
 

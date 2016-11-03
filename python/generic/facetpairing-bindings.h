@@ -31,11 +31,10 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "generic/facetpairing.h"
-#include "generic/isomorphism.h"
-#include "generic/triangulation.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim4.h"
+#include "triangulation/facetpairing.h"
+#include "triangulation/generic.h"
 #include "../helpers.h"
 
 using namespace boost::python;

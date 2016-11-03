@@ -31,9 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "generic/boundarycomponent.h"
-#include "generic/face.h"
-#include "generic/triangulation.h"
+#include "triangulation/generic.h"
 #include "../helpers.h"
 
 using namespace boost::python;

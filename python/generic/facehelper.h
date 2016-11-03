@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "generic/face.h"
+#include "triangulation/generic.h"
 #include "../helpers.h"
 
 namespace regina {
