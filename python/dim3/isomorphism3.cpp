@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
@@ -39,31 +38,30 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Isomorphism;
-using regina::NIsomorphism;
 
 namespace {
-    int (NIsomorphism::*simpImage_const)(unsigned) const =
-        &NIsomorphism::simpImage;
-    regina::Perm<4> (NIsomorphism::*facetPerm_const)(unsigned) const =
-        &NIsomorphism::facetPerm;
+    int (Isomorphism<3>::*simpImage_const)(unsigned) const =
+        &Isomorphism<3>::simpImage;
+    regina::Perm<4> (Isomorphism<3>::*facetPerm_const)(unsigned) const =
+        &Isomorphism<3>::facetPerm;
 }
 
-void addNIsomorphism() {
+void addIsomorphism3() {
     class_<Isomorphism<3>, std::auto_ptr<Isomorphism<3>>, boost::noncopyable>
-            ("Isomorphism3", init<const NIsomorphism&>())
-        .def("size", &NIsomorphism::size)
+            ("Isomorphism3", init<const Isomorphism<3>&>())
+        .def("size", &Isomorphism<3>::size)
         .def("simpImage", simpImage_const)
         .def("tetImage", simpImage_const)
         .def("facetPerm", facetPerm_const)
         .def("facePerm", facetPerm_const)
-        .def("__getitem__", &NIsomorphism::operator[])
-        .def("isIdentity", &NIsomorphism::isIdentity)
-        .def("apply", &NIsomorphism::apply,
+        .def("__getitem__", &Isomorphism<3>::operator[])
+        .def("isIdentity", &Isomorphism<3>::isIdentity)
+        .def("apply", &Isomorphism<3>::apply,
             return_value_policy<to_held_type<> >())
-        .def("applyInPlace", &NIsomorphism::applyInPlace)
-        .def("random", &NIsomorphism::random,
+        .def("applyInPlace", &Isomorphism<3>::applyInPlace)
+        .def("random", &Isomorphism<3>::random,
             return_value_policy<manage_new_object>())
-        .def("identity", &NIsomorphism::identity,
+        .def("identity", &Isomorphism<3>::identity,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())

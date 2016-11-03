@@ -130,7 +130,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addTriangulation3(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);
-    addNIsomorphism(runner);
+    addIsomorphism3(runner);
     addNHomologicalData(runner);
 
     // 4-manifold triangulations:

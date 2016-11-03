@@ -51,7 +51,6 @@ template <int> class Isomorphism;
 template <int> class Triangulation;
 template <int, int> class Face;
 template <int dim> using Tetrahedron = Face<dim, 3>;
-typedef Isomorphism<3> NIsomorphism;
 
 /**
  * \weakgroup subcomplex
@@ -404,7 +403,7 @@ struct REGINA_API NSatAnnulus {
      * representation.
      */
     void transform(const Triangulation<3>* originalTri,
-            const NIsomorphism* iso, Triangulation<3>* newTri);
+            const Isomorphism<3>* iso, Triangulation<3>* newTri);
     /**
      * Returns the image of this annulus representation under the given
      * isomorphism between triangulations.  This annulus representation
@@ -417,7 +416,7 @@ struct REGINA_API NSatAnnulus {
      * representation.
      */
     NSatAnnulus image(const Triangulation<3>* originalTri,
-            const NIsomorphism* iso, Triangulation<3>* newTri) const;
+            const Isomorphism<3>* iso, Triangulation<3>* newTri) const;
 
     /**
      * Attaches a layered solid torus to the this saturated annulus.
@@ -532,7 +531,7 @@ inline NSatAnnulus NSatAnnulus::halfTurnRotation() const {
 }
 
 inline NSatAnnulus NSatAnnulus::image(const Triangulation<3>* originalTri,
-        const NIsomorphism* iso, Triangulation<3>* newTri) const {
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) const {
     NSatAnnulus a(*this);
     a.transform(originalTri, iso, newTri);
     return a;

@@ -54,7 +54,6 @@
 #include "subcomplex/nspiralsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
 #include "subcomplex/ntxicore.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 
 // UI includes:

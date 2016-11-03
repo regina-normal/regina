@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/facetspec.h"
+#include "generic/alias/isomorphism.h"
 #include "maths/perm.h"
 #include <algorithm>
 #include <boost/noncopyable.hpp>
@@ -80,6 +81,7 @@ namespace detail {
 template <int dim>
 class IsomorphismBase :
         public Output<IsomorphismBase<dim>>,
+        public alias::IsomorphismImage<IsomorphismBase<dim>, dim>,
         public boost::noncopyable {
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
     protected:

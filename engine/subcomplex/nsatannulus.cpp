@@ -32,7 +32,6 @@
 
 #include "maths/matrix2.h"
 #include "subcomplex/nsatannulus.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
@@ -208,7 +207,7 @@ bool NSatAnnulus::isTwoSidedTorus() const {
 }
 
 void NSatAnnulus::transform(const Triangulation<3>* originalTri,
-        const NIsomorphism* iso, Triangulation<3>* newTri) {
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     unsigned which;
     unsigned long tetID;
     for (which = 0; which < 2; which++) {

@@ -50,6 +50,7 @@
 #include "generic/component.h"
 #include "generic/boundarycomponent.h"
 #include "generic/face.h"
+#include "generic/isomorphism.h"
 #include "generic/simplex.h"
 #include "generic/alias/face.h"
 #include "generic/alias/simplex.h"

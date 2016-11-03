@@ -36,7 +36,6 @@
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
 #include "subcomplex/ntxicore.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
@@ -143,7 +142,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
 
 NPluggedTorusBundle* NPluggedTorusBundle::hunt(Triangulation<3>* triang,
         const NTxICore& bundle) {
-    std::list<NIsomorphism*> isos;
+    std::list<Isomorphism<3>*> isos;
     if (! bundle.core().findAllSubcomplexesIn(*triang, back_inserter(isos)))
         return 0;
 
@@ -156,7 +155,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(Triangulation<3>* triang,
     bool bdryRefVert, bdryRefHoriz;
 
     // Run through each isomorphism and look for the corresponding layering.
-    for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
+    for (std::list<Isomorphism<3>*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
         // Apply layerings to the upper and lower boundaries.
         NLayering layerUpper(

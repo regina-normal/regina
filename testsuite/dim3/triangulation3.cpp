@@ -46,7 +46,6 @@
 #include "subcomplex/nstandardtri.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 
@@ -59,7 +58,7 @@ using regina::BoundaryComponent;
 using regina::Component;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
-using regina::NIsomorphism;
+using regina::Isomorphism;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
@@ -1448,7 +1447,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyVertexLinks(Triangulation<3>* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
                 Vertex<3>* v = tri->vertex(i);
-                NIsomorphism* iso;
+                Isomorphism<3>* iso;
 
                 const Triangulation<2>* link = v->buildLink();
                 Triangulation<2>* link2 = v->buildLinkDetail(true, &iso);
@@ -3988,7 +3987,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> b(*t);
             b.reorderTetrahedraBFS(true);
 
-            NIsomorphism* iso = NIsomorphism::random(t->size());
+            Isomorphism<3>* iso = Isomorphism<3>::random(t->size());
             Triangulation<3>* c = iso->apply(t);
             delete iso;
 

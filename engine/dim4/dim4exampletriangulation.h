@@ -46,7 +46,6 @@ namespace regina {
 
 template <int> class Isomorphism;
 template <int> class Triangulation;
-typedef Isomorphism<3> NIsomorphism;
 
 /**
  * \weakgroup dim4
@@ -288,7 +287,7 @@ class REGINA_API Dim4ExampleTriangulation {
          */
         static Triangulation<4>* bundleWithMonodromy(
             const Triangulation<3>& base,
-            const NIsomorphism& monodromy);
+            const Isomorphism<3>& monodromy);
 
         /*@}*/
         /**

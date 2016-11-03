@@ -87,29 +87,15 @@ namespace regina {
  * Note that for all types of isomorphism, triangulation \a U is allowed
  * to contain more simplices than triangulation \a T.
  *
- * For Regina's \ref stddim "standard dimensions", this template is specialised
- * and offers some extra functionality.  In order to use these specialised
- * classes, you will need to include the corresponding headers
- * (e.g., dim2/dim2isomorphism.h for \a dim = 2, or
- * triangulation/nisomorphism.h for \a dim = 3).  For convenience, there
- * are typedefs available for these specialised classes (such as
- * Dim2Isomorphism and NIsomorphism respectively).
- *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Isomorphism2 and Isomorphism3 for dimensions 2 and 3).
- * The typedefs mentioned above for standard dimensions
- * (e.g., Dim2Isomorphism and NIsomorphism) are also available.
  *
  * \tparam dim The dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
  */
 template <int dim>
 class Isomorphism : public detail::IsomorphismBase<dim> {
-    static_assert(! standardDim(dim),
-        "The generic implementation of Isomorphism<dim> "
-        "should not be used for Regina's standard dimensions.");
-
     public:
         /**
          * Creates a new isomorphism with no initialisation.
@@ -130,12 +116,6 @@ class Isomorphism : public detail::IsomorphismBase<dim> {
          */
         Isomorphism(const Isomorphism& copy);
 };
-
-// Note that some of our isomorphism classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class Isomorphism<2>;
-template <> class Isomorphism<3>;
-template <> class Isomorphism<4>;
 
 /*@}*/
 

@@ -50,7 +50,6 @@
 namespace regina {
 
 template <int> class Isomorphism;
-typedef Isomorphism<4> Dim4Isomorphism;
 
 /**
  * \weakgroup dim4
@@ -153,8 +152,8 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * that this tetrahedron links.
          *
          * If \a inclusion is non-null (i.e., it points to some
-         * Dim4Isomorphism pointer \a p), then it will be modified to
-         * point to a new Dim4Isomorphism that describes in detail how the
+         * Isomorphism<4> pointer \a p), then it will be modified to
+         * point to a new Isomorphism<4> that describes in detail how the
          * individual tetrahedra of the link sit within pentachora of
          * the original triangulation.  Specifically, after this routine
          * is called, <tt>p->pentImage(i)</tt> will indicate which pentachoron
@@ -169,11 +168,11 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * if one was requested, will be newly allocated.  The caller of
          * this routine is responsible for destroying these objects.
          *
-         * Strictly speaking, this is an abuse of the Dim4Isomorphism class
+         * Strictly speaking, this is an abuse of the Isomorphism<4> class
          * (the domain is a triangulation of the wrong dimension, and
          * the map is not 1-to-1 into the range pentachora).  We use
          * it anyway, but you should not attempt to call any high-level
-         * routines (such as Dim4Isomorphism::apply).
+         * routines (such as Isomorphism<4>::apply).
          *
          * \ifacespython The second (isomorphism) argument is not present.
          * Instead this routine returns a pair (triangulation, isomorphism).
@@ -187,7 +186,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * @return a newly constructed triangulation of the link of this vertex.
          */
         Triangulation<3>* buildLinkDetail(bool labels = true,
-            Dim4Isomorphism** inclusion = 0) const;
+            Isomorphism<4>** inclusion = 0) const;
 
         /**
          * Determines if this vertex is an ideal vertex.

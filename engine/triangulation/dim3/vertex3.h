@@ -50,7 +50,6 @@
 namespace regina {
 
 template <int> class Isomorphism;
-typedef Isomorphism<3> NIsomorphism;
 
 /**
  * \weakgroup triangulation
@@ -198,8 +197,8 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * that this triangle links.
          *
          * If \a inclusion is non-null (i.e., it points to some
-         * NIsomorphism pointer \a p), then it will be modified to
-         * point to a new NIsomorphism that describes in detail how the
+         * Isomorphism<3> pointer \a p), then it will be modified to
+         * point to a new Isomorphism<3> that describes in detail how the
          * individual triangles of the link sit within tetrahedra of
          * the original triangulation.  Specifically, after this routine
          * is called, <tt>p->tetImage(i)</tt> will indicate which tetrahedron
@@ -214,11 +213,11 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * if one was requested, will be newly allocated.  The caller of
          * this routine is responsible for destroying these objects.
          *
-         * Strictly speaking, this is an abuse of the NIsomorphism class
+         * Strictly speaking, this is an abuse of the Isomorphism<3> class
          * (the domain is a triangulation of the wrong dimension, and
          * the map is not 1-to-1 into the range tetrahedra).  We use
          * it anyway, but you should not attempt to call any high-level
-         * routines (such as NIsomorphism::apply).
+         * routines (such as Isomorphism<3>::apply).
          *
          * \ifacespython The second (isomorphism) argument is not present.
          * Instead this routine returns a pair (triangulation, isomorphism).
@@ -232,7 +231,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * @return a newly constructed triangulation of the link of this vertex.
          */
         Triangulation<2>* buildLinkDetail(bool labels = true,
-            NIsomorphism** inclusion = 0) const;
+            Isomorphism<3>** inclusion = 0) const;
 
         /**
          * Determines if the link of this vertex is closed.

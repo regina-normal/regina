@@ -37,7 +37,7 @@ void addNExampleTriangulation();
 void addNFacePair();
 void addNFacePairing();
 void addNHomologicalData();
-void addNIsomorphism();
+void addIsomorphism3();
 void addTetrahedron3();
 void addTriangle3();
 void addTriangulation3();
@@ -51,7 +51,7 @@ void addTriangulationClasses() {
     addNFacePair();
     addNFacePairing();
     addNHomologicalData();
-    addNIsomorphism();
+    addIsomorphism3();
     addTetrahedron3();
     addTriangle3();
     addTriangulation3();

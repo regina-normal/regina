@@ -83,7 +83,7 @@ NGluingPermSearcher::~NGluingPermSearcher() {
         // delete them.
         NFacePairing::IsoList* autos =
             const_cast<NFacePairing::IsoList*>(autos_);
-        std::for_each(autos->begin(), autos->end(), FuncDelete<NIsomorphism>());
+        std::for_each(autos->begin(), autos->end(), FuncDelete<Isomorphism<3>>());
         delete autos;
     }
 }

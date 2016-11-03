@@ -62,7 +62,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
 }
 
 void NLayeredSolidTorus::transform(const Triangulation<3>* originalTri,
-        const NIsomorphism* iso, Triangulation<3>* newTri) {
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     unsigned i, j;
     size_t baseTetID = base_->index();
     size_t topTetID = topLevel_->index();

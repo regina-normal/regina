@@ -210,7 +210,7 @@ class REGINA_API NSatLST : public NSatBlock {
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
         virtual void transform(const Triangulation<3>* originalTri,
-            const NIsomorphism* iso, Triangulation<3>* newTri);
+            const Isomorphism<3>* iso, Triangulation<3>* newTri);
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 

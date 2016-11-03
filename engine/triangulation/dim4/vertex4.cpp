@@ -62,13 +62,13 @@ void Face<4, 0>::writeTextLong(std::ostream& out) const {
 }
 
 Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
-        Dim4Isomorphism** inclusion) const {
+        Isomorphism<4>** inclusion) const {
     // Build the triangulation.
     Triangulation<3>* ans = new Triangulation<3>();
     Packet::ChangeEventSpan span(ans);
 
     if (inclusion)
-        *inclusion = new Dim4Isomorphism(degree());
+        *inclusion = new Isomorphism<4>(degree());
 
     std::vector<VertexEmbedding<4>>::const_iterator it, adjIt;
     Tetrahedron<3>* tTet;

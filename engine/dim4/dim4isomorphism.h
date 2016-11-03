@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file dim4/dim4isomorphism.h
- *  \brief Deals with combinatorial isomorphisms of 4-manifold triangulations.
+ *  \brief Deprecated header.
  */
 
 #ifndef __DIM4ISOMORPHISM_H
@@ -39,89 +39,9 @@
 #define __DIM4ISOMORPHISM_H
 #endif
 
-#include "regina-core.h"
-#include "generic/isomorphism.h"
+#warning This header is deprecated; please use triangulation/dim4.h instead.
 
-namespace regina {
-
-/**
- * \weakgroup dim4
- * @{
- */
-
-/**
- * Represents a combinatorial isomorphism from one 4-manifold triangulation
- * into another.
- *
- * This is a specialisation of the generic Isomorphism class template;
- * see the Isomorphism documentation for an overview of how this class works.
- *
- * This 4-dimensional specialisation contains additional dimension-specific
- * aliases for some commonly-used routines.
- */
-template <>
-class REGINA_API Isomorphism<4> : public detail::IsomorphismBase<4> {
-    public:
-        /**
-         * Creates a new isomorphism with no initialisation.
-         * The images of the simplices and their vertices must be
-         * explicitly set using simpImage() and facetPerm)().
-         *
-         * \ifacespython Not present.
-         *
-         * @param nPentachora the number of pentachora in the source
-         * triangulation associated with this isomorphism.
-         * This is allowed to be zero.
-         */
-        Isomorphism(unsigned nPentachora);
-        /**
-         * Creates a new copy of the given isomorphism.
-         *
-         * @param copy the isomorphism to copy.
-         */
-        Isomorphism(const Isomorphism& copy);
-
-        /**
-         * A dimension-specific alias for simpImage().
-         *
-         * See simpImage() for further information.
-         */
-        int& pentImage(unsigned sourcePent);
-
-        /**
-         * A dimension-specific alias for simpImage().
-         *
-         * See simpImage() for further information.
-         */
-        int pentImage(unsigned sourcePent) const;
-};
-
-/**
- * A convenience typedef for Isomorphism<4>.
- */
-typedef Isomorphism<4> Dim4Isomorphism;
-
-/*@}*/
-
-// Inline functions for Isomorphism<4>
-
-inline Isomorphism<4>::Isomorphism(unsigned sourcePentachora) :
-        detail::IsomorphismBase<4>(sourcePentachora) {
-}
-
-inline Isomorphism<4>::Isomorphism(const Dim4Isomorphism& cloneMe) :
-        detail::IsomorphismBase<4>(cloneMe) {
-}
-
-inline int& Isomorphism<4>::pentImage(unsigned sourcePent) {
-    return simpImage_[sourcePent];
-}
-
-inline int Isomorphism<4>::pentImage(unsigned sourcePent) const {
-    return simpImage_[sourcePent];
-}
-
-} // namespace regina
+#include "triangulation/dim4.h"
 
 #endif
 

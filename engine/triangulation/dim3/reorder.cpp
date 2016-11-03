@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "triangulation/dim3.h"
-#include "triangulation/nisomorphism.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -190,11 +189,11 @@ bool check_consistency_around_edge(const Triangulation<3> &trig,
 
 // construct isomorphism from edge orientations
 
-NIsomorphism* iso_from_edges(const Triangulation<3> &trig,
+Isomorphism<3>* iso_from_edges(const Triangulation<3> &trig,
                              const std::vector<int> & edge_orientations,
                              bool force_oriented) {
 
-    NIsomorphism* iso = new NIsomorphism(trig.size());
+    Isomorphism<3>* iso = new Isomorphism<3>(trig.size());
 
     // iterate through all tetrahedra
 
@@ -230,7 +229,7 @@ NIsomorphism* iso_from_edges(const Triangulation<3> &trig,
 // If the function succeeds the isomorphism turning the triangulation into an
 // ordered triangulation is returned.
 
-NIsomorphism* ordering_iso(const Triangulation<3> &trig, bool force_oriented)
+Isomorphism<3>* ordering_iso(const Triangulation<3> &trig, bool force_oriented)
 {
     std::vector<int> edge_orientations(trig.countEdges(),0);
 
@@ -295,7 +294,7 @@ bool Triangulation<3>::order(bool force_oriented) {
 
     // find the isomorphism to order (and orient) the triangulation
 
-    NIsomorphism* iso = ordering_iso(*this, force_oriented);
+    Isomorphism<3>* iso = ordering_iso(*this, force_oriented);
     if(!iso) return false;
 
     // apply the isomorphism

@@ -53,10 +53,6 @@
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 
-// The following headers are necessary so that std::unique_ptr can invoke
-// destructors where necessary.
-#include "dim4/dim4isomorphism.h"
-
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.
 
@@ -66,7 +62,6 @@ class XMLPacketReader;
 
 template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
-typedef Isomorphism<4> Dim4Isomorphism;
 
 /**
  * \addtogroup dim4 4-Manifold Triangulations

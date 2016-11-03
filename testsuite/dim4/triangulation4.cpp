@@ -35,7 +35,6 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "dim4/dim4exampletriangulation.h"
-#include "dim4/dim4isomorphism.h"
 #include "manifold/nmanifold.h"
 #include "packet/container.h"
 #include "subcomplex/nstandardtri.h"
@@ -51,11 +50,10 @@
 using regina::BoundaryComponent;
 using regina::Edge;
 using regina::Dim4ExampleTriangulation;
-using regina::Dim4Isomorphism;
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
-using regina::NIsomorphism;
+using regina::Isomorphism;
 using regina::Pentachoron;
 using regina::Perm;
 using regina::NStandardTriangulation;
@@ -1661,7 +1659,7 @@ class Triangulation4Test : public TriangulationTest<4> {
         static void verifyVertexLinks(Triangulation<4>* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
                 Vertex<4>* v = tri->vertex(i);
-                Dim4Isomorphism* iso;
+                Isomorphism<4>* iso;
 
                 const Triangulation<3>* link = v->buildLink();
                 Triangulation<3>* link2 = v->buildLinkDetail(true, &iso);
@@ -1854,7 +1852,7 @@ class Triangulation4Test : public TriangulationTest<4> {
         static void verifyEdgeLinks(Triangulation<4>* tri) {
             for (unsigned long i = 0; i < tri->countEdges(); ++i) {
                 Edge<4>* e = tri->edge(i);
-                Dim4Isomorphism* iso;
+                Isomorphism<4>* iso;
 
                 const Triangulation<2>* link = e->buildLink();
                 Triangulation<2>* link2 = e->buildLinkDetail(true, &iso);
@@ -2086,7 +2084,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             for (unsigned i = 0; i < 2; ++i) {
                 Triangulation<4> other(*tri);
                 if (i > 0) {
-                    Dim4Isomorphism* iso = Dim4Isomorphism::random(
+                    Isomorphism<4>* iso = Isomorphism<4>::random(
                         other.size());
                     iso->applyInPlace(&other);
                     delete iso;
@@ -2371,10 +2369,10 @@ class Triangulation4Test : public TriangulationTest<4> {
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
 
-            std::list<NIsomorphism*> autos;
+            std::list<Isomorphism<3>*> autos;
             tri->findAllIsomorphisms(*tri, back_inserter(autos));
 
-            for (NIsomorphism* aut : autos) {
+            for (Isomorphism<3>* aut : autos) {
                 Triangulation<4>* b =
                     Dim4ExampleTriangulation::bundleWithMonodromy(*tri, *aut);
 

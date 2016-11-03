@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "algebra/ngrouppresentation.h"
-#include "dim4/dim4isomorphism.h"
 #include "triangulation/dim4.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
@@ -111,12 +110,12 @@ namespace {
         const Triangulation<4>& t, const Triangulation<4>& other) {
         boost::python::list ans;
 
-        std::list<regina::Dim4Isomorphism*> isos;
+        std::list<regina::Isomorphism<4>*> isos;
         t.findAllIsomorphisms(other, back_inserter(isos));
 
-        for (std::list<regina::Dim4Isomorphism*>::iterator it =
+        for (std::list<regina::Isomorphism<4>*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
-            std::auto_ptr<regina::Dim4Isomorphism> iso(*it);
+            std::auto_ptr<regina::Isomorphism<4>> iso(*it);
             ans.append(iso);
         }
         return ans;
@@ -126,12 +125,12 @@ namespace {
         const Triangulation<4>& t, const Triangulation<4>& other) {
         boost::python::list ans;
 
-        std::list<regina::Dim4Isomorphism*> isos;
+        std::list<regina::Isomorphism<4>*> isos;
         t.findAllSubcomplexesIn(other, back_inserter(isos));
 
-        for (std::list<regina::Dim4Isomorphism*>::iterator it =
+        for (std::list<regina::Isomorphism<4>*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
-            std::auto_ptr<regina::Dim4Isomorphism> iso(*it);
+            std::auto_ptr<regina::Isomorphism<4>> iso(*it);
             ans.append(iso);
         }
         return ans;
@@ -147,13 +146,13 @@ namespace {
     }
 
     boost::python::tuple isoSig_relabelling(const Triangulation<4>& t) {
-        regina::Dim4Isomorphism* iso;
+        regina::Isomorphism<4>* iso;
         std::string sig = t.isoSig(&iso);
         return boost::python::make_tuple(
             sig,
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
-                apply<regina::Dim4Isomorphism*>::type()(iso))));
+                apply<regina::Isomorphism<4>*>::type()(iso))));
     }
 }
 

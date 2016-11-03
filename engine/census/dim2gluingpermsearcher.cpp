@@ -83,7 +83,7 @@ Dim2GluingPermSearcher::~Dim2GluingPermSearcher() {
         Dim2EdgePairing::IsoList* autos =
             const_cast<Dim2EdgePairing::IsoList*>(autos_);
         std::for_each(autos->begin(), autos->end(),
-            FuncDelete<Dim2Isomorphism>());
+            FuncDelete<Isomorphism<2>>());
         delete autos;
     }
 }

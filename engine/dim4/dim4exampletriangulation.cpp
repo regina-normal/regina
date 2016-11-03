@@ -468,7 +468,7 @@ Triangulation<4>* Dim4ExampleTriangulation::s1Bundle(
 }
 
 Triangulation<4>* Dim4ExampleTriangulation::bundleWithMonodromy(
-        const Triangulation<3>& base, const NIsomorphism& monodromy) {
+        const Triangulation<3>& base, const Isomorphism<3>& monodromy) {
     Triangulation<4>* ans = iBundle(base);
     Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x I / ~");

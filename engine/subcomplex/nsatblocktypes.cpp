@@ -282,7 +282,7 @@ void NSatLST::writeAbbr(std::ostream& out, bool tex) const {
 }
 
 void NSatLST::transform(const Triangulation<3>* originalTri,
-        const NIsomorphism* iso, Triangulation<3>* newTri) {
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     // Start with the parent implementation.
     NSatBlock::transform(originalTri, iso, newTri);
 

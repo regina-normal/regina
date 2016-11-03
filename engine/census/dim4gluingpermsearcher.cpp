@@ -278,7 +278,7 @@ Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
         Dim4FacetPairing::IsoList* autos =
             const_cast<Dim4FacetPairing::IsoList*>(autos_);
         std::for_each(autos->begin(), autos->end(),
-            FuncDelete<Dim4Isomorphism>());
+            FuncDelete<Isomorphism<4>>());
         delete autos;
     }
 }

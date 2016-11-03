@@ -35,19 +35,18 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "triangulation/nexampletriangulation.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
-using regina::NIsomorphism;
+using regina::Isomorphism;
 using regina::Perm;
 using regina::Tetrahedron;
 using regina::Triangulation;
 
-class NIsomorphismTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NIsomorphismTest);
+class Isomorphism3Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(Isomorphism3Test);
 
     CPPUNIT_TEST(enumeration);
     CPPUNIT_TEST(application);
@@ -57,7 +56,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        typedef void (NIsomorphismTest::*IsoTest)(const NIsomorphism&,
+        typedef void (Isomorphism3Test::*IsoTest)(const Isomorphism<3>&,
             unsigned long);
 
         Triangulation<3> rp2xs1;
@@ -120,7 +119,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
             unsigned* facePermIndex = new unsigned[n];
 
-            NIsomorphism iso(n);
+            Isomorphism<3> iso(n);
             unsigned long which = 0;
             do {
                 // We have a permutation of tetrahedra.
@@ -158,7 +157,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             return which;
         }
 
-        void enumerationTest(const NIsomorphism& iso, unsigned long which) {
+        void enumerationTest(const Isomorphism<3>& iso, unsigned long which) {
             if (which == 0) {
                 if (! iso.isIdentity()) {
                     std::ostringstream msg;
@@ -178,7 +177,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
         void enumeration() {
             unsigned long tot = enumerate(3,
-                &NIsomorphismTest::enumerationTest);
+                &Isomorphism3Test::enumerationTest);
 
             unsigned long expected = nIsomorphisms(3);
             if (tot != expected) {
@@ -190,7 +189,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             }
         }
 
-        void applicationTest(const NIsomorphism& iso, unsigned long which) {
+        void applicationTest(const Isomorphism<3>& iso, unsigned long which) {
             // Sigh.  This is slow; cut down the processing time.
             if (which % 11 != 0)
                 return;
@@ -218,10 +217,10 @@ class NIsomorphismTest : public CppUnit::TestFixture {
         }
 
         void application() {
-            enumerate(3, &NIsomorphismTest::applicationTest);
+            enumerate(3, &Isomorphism3Test::applicationTest);
         }
 
-        void isomorphicTest(const NIsomorphism& iso, unsigned long which) {
+        void isomorphicTest(const Isomorphism<3>& iso, unsigned long which) {
             // Sigh.  This is slow; cut down the processing time.
             if (which % 11 != 0)
                 return;
@@ -237,7 +236,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
         }
 
         void isomorphic() {
-            enumerate(3, &NIsomorphismTest::isomorphicTest);
+            enumerate(3, &Isomorphism3Test::isomorphicTest);
         }
 
         void testAutomorphismsAndSubcomplexes(const Triangulation<3>& t,
@@ -257,8 +256,8 @@ class NIsomorphismTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            std::list<NIsomorphism*> isos;
-            std::list<NIsomorphism*>::iterator it;
+            std::list<Isomorphism<3>*> isos;
+            std::list<Isomorphism<3>*>::iterator it;
             unsigned long count;
 
             count = t2.findAllSubcomplexesIn(t, back_inserter(isos));
@@ -358,7 +357,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
         }
 };
 
-void addNIsomorphism(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NIsomorphismTest::suite());
+void addIsomorphism3(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Isomorphism3Test::suite());
 }
 

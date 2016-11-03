@@ -59,10 +59,6 @@
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 
-// The following headers are necessary so that std::unique_ptr can invoke
-// destructors where necessary.
-#include "triangulation/nisomorphism.h"
-
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.
 
@@ -76,7 +72,6 @@ class XMLPacketReader;
 
 template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
-typedef Isomorphism<3> NIsomorphism;
 
 /**
  * \addtogroup triangulation 3-Manifold Triangulations

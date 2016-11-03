@@ -50,10 +50,6 @@
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 
-// The following headers are necessary so that std::unique_ptr can invoke
-// destructors where necessary.
-#include "dim2/dim2isomorphism.h"
-
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.
 
@@ -62,7 +58,6 @@ namespace regina {
 class XMLPacketReader;
 
 template <int> class Isomorphism;
-typedef Isomorphism<2> Dim2Isomorphism;
 
 /**
  * \addtogroup dim2 2-Manifold Triangulations

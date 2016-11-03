@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim2/dim2isomorphism.h"
 #include "triangulation/dim2.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
@@ -39,32 +38,31 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim2Isomorphism;
 using regina::Isomorphism;
 
 namespace {
-    int (Dim2Isomorphism::*simpImage_const)(unsigned) const =
-        &Dim2Isomorphism::simpImage;
-    regina::Perm<3> (Dim2Isomorphism::*facetPerm_const)(unsigned) const =
-        &Dim2Isomorphism::facetPerm;
+    int (Isomorphism<2>::*simpImage_const)(unsigned) const =
+        &Isomorphism<2>::simpImage;
+    regina::Perm<3> (Isomorphism<2>::*facetPerm_const)(unsigned) const =
+        &Isomorphism<2>::facetPerm;
 }
 
-void addDim2Isomorphism() {
+void addIsomorphism2() {
     class_<Isomorphism<2>, std::auto_ptr<Isomorphism<2>>, boost::noncopyable>
-            ("Isomorphism2", init<const Dim2Isomorphism&>())
-        .def("size", &Dim2Isomorphism::size)
+            ("Isomorphism2", init<const Isomorphism<2>&>())
+        .def("size", &Isomorphism<2>::size)
         .def("simpImage", simpImage_const)
         .def("triImage", simpImage_const)
         .def("facetPerm", facetPerm_const)
         .def("edgePerm", facetPerm_const)
-        .def("__getitem__", &Dim2Isomorphism::operator[])
-        .def("isIdentity", &Dim2Isomorphism::isIdentity)
-        .def("apply", &Dim2Isomorphism::apply,
+        .def("__getitem__", &Isomorphism<2>::operator[])
+        .def("isIdentity", &Isomorphism<2>::isIdentity)
+        .def("apply", &Isomorphism<2>::apply,
             return_value_policy<to_held_type<> >())
-        .def("applyInPlace", &Dim2Isomorphism::applyInPlace)
-        .def("random", &Dim2Isomorphism::random,
+        .def("applyInPlace", &Isomorphism<2>::applyInPlace)
+        .def("random", &Isomorphism<2>::random,
             return_value_policy<manage_new_object>())
-        .def("identity", &Dim2Isomorphism::identity,
+        .def("identity", &Isomorphism<2>::identity,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())

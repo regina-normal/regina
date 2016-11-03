@@ -40,7 +40,6 @@
  */
 
 #include "regina-core.h"
-#include "dim4/dim4isomorphism.h"
 #include "generic/facetpairing.h"
 #include "triangulation/dim4.h"
 
