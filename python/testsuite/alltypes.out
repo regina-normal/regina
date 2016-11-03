@@ -995,6 +995,9 @@ Equality type : BY_REFERENCE
 FacetPairing2 : class
 Equality type : BY_REFERENCE
 
+FacetPairing3 : class
+Equality type : BY_REFERENCE
+
 FacetPairing4 : class
 Equality type : BY_REFERENCE
 
@@ -1231,8 +1234,7 @@ Equality type : NEVER_INSTANTIATED
 NFacePair : class
 Equality type : BY_VALUE
 
-NFacePairing : class
-Equality type : BY_REFERENCE
+NFacePairing : typedef ->  FacetPairing3
 
 NFileInfo : typedef ->  FileInfo
 
