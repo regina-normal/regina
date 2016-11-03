@@ -1465,6 +1465,7 @@
 		058C305C1DCAC0E8006162D2 /* xmltri4reader.h in Headers */ = {isa = PBXBuildFile; fileRef = 058C305A1DCAC0E8006162D2 /* xmltri4reader.h */; };
 		058C305D1DCAC0EB006162D2 /* xmltri4reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058C30591DCAC0E8006162D2 /* xmltri4reader.cpp */; };
 		058C305F1DCAF6F8006162D2 /* forward.h in Headers */ = {isa = PBXBuildFile; fileRef = 058C305E1DCAF6F8006162D2 /* forward.h */; };
+		058E398B1DCBC0D500D463A4 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */; };
 		058FADA719D388920001B5B5 /* Tri2ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADA419D388920001B5B5 /* Tri2ViewController.mm */; };
 		058FADA819D388920001B5B5 /* SurfacesViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADA619D388920001B5B5 /* SurfacesViewController.mm */; };
 		058FADAB19D38BFC0001B5B5 /* SnapPeaViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */; };
@@ -2497,6 +2498,7 @@
 		051691AC1C5AD59000DC69EC /* hyperui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperui.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
+		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		05249E951DBAE7E8001FE29E /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = ../../Library/Frameworks/ios/Python.framework; sourceTree = "<group>"; };
@@ -5460,6 +5462,7 @@
 			isa = PBXGroup;
 			children = (
 				052FA13B1806103000FAE4DF /* Main.storyboard */,
+				052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */,
 				0506EC1C19F65B43003E455B /* iPhone.storyboard */,
 				052FA1381806103000FAE4DF /* AppDelegate.h */,
 				052FA1391806103000FAE4DF /* AppDelegate.mm */,
@@ -7316,6 +7319,7 @@
 				054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */,
 				0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */,
 				054BC4CE19B4A73D005E01A0 /* hyp-knot-link-census.zsig in Resources */,
+				058E398B1DCBC0D500D463A4 /* Launch.storyboard in Resources */,
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
 				05B62166180B9D7300CCB90B /* title.png in Resources */,
 				054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */,
@@ -9093,7 +9097,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -9140,7 +9143,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
