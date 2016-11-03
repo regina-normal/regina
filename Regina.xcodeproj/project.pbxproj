@@ -1075,9 +1075,7 @@
 		05431F2E1C40F2DB009BC072 /* perm2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F2B1C40F2DB009BC072 /* perm2.cpp */; };
 		05431F2F1C40F2DB009BC072 /* nperm2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F2C1C40F2DB009BC072 /* nperm2.h */; };
 		05431F301C40F2E4009BC072 /* perm2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F2B1C40F2DB009BC072 /* perm2.cpp */; };
-		05431F341C40F363009BC072 /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F311C40F363009BC072 /* nfacepairing.cpp */; };
 		05431F351C40F363009BC072 /* nfacepairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F321C40F363009BC072 /* nfacepairing.h */; };
-		05431F371C40F365009BC072 /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431F311C40F363009BC072 /* nfacepairing.cpp */; };
 		05431F641C40F3C9009BC072 /* bottom.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F3B1C40F3C9009BC072 /* bottom.h */; };
 		05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F3E1C40F3C9009BC072 /* cone_dual_mode.h */; };
 		05431F681C40F3C9009BC072 /* cone_property.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F401C40F3C9009BC072 /* cone_property.h */; };
@@ -1352,6 +1350,10 @@
 		0564A9851811D921002CC2AE /* shortrunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F51811D920002CC2AE /* shortrunner.cpp */; };
 		0564A99B1811D921002CC2AE /* treenav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A6161811D921002CC2AE /* treenav.cpp */; };
 		0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05669D941DCB0E9A00C870C6 /* facetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D911DCB0E9A00C870C6 /* facetpairing.h */; };
+		05669D951DCB0E9A00C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
+		05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D931DCB0E9A00C870C6 /* facetpairing3.h */; };
+		05669D971DCB0EA200C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
 		056AA9941C41C10100FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
 		056AA9951C41C11C00FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
@@ -3052,7 +3054,6 @@
 		05431F2A1C40F2DB009BC072 /* perm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm.h; sourceTree = "<group>"; };
 		05431F2B1C40F2DB009BC072 /* perm2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm2.cpp; sourceTree = "<group>"; };
 		05431F2C1C40F2DB009BC072 /* nperm2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nperm2.h; sourceTree = "<group>"; };
-		05431F311C40F363009BC072 /* nfacepairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nfacepairing.cpp; sourceTree = "<group>"; };
 		05431F321C40F363009BC072 /* nfacepairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepairing.h; sourceTree = "<group>"; };
 		05431F3A1C40F3C9009BC072 /* bottom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bottom.cpp; sourceTree = "<group>"; };
 		05431F3B1C40F3C9009BC072 /* bottom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bottom.h; sourceTree = "<group>"; };
@@ -3361,6 +3362,9 @@
 		0564A6161811D921002CC2AE /* treenav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treenav.cpp; sourceTree = "<group>"; };
 		0564A6171811D921002CC2AE /* x-regina.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = "x-regina.ico"; sourceTree = "<group>"; };
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
+		05669D911DCB0E9A00C870C6 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
+		05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
+		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		056AA9931C41C10100FA81D3 /* boost-python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python.framework"; path = "../../Library/Frameworks/osx/boost-python.framework"; sourceTree = "<group>"; };
 		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
@@ -5252,6 +5256,9 @@
 				05F09FBC1DBEF01800117BFC /* dim2.h */,
 				05F09FBD1DBEF01800117BFC /* dim3.h */,
 				05F09FBE1DBEF01800117BFC /* dim4.h */,
+				05669D911DCB0E9A00C870C6 /* facetpairing.h */,
+				05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */,
+				05669D931DCB0E9A00C870C6 /* facetpairing3.h */,
 				058C305E1DCAF6F8006162D2 /* forward.h */,
 				052F9E3A180600FB00FAE4DF /* nboundarycomponent.h */,
 				052F9E3B180600FB00FAE4DF /* ncomponent.h */,
@@ -5260,7 +5267,6 @@
 				052F9E3F180600FB00FAE4DF /* nexampletriangulation.h */,
 				052F9E41180600FB00FAE4DF /* nfacepair.cpp */,
 				052F9E42180600FB00FAE4DF /* nfacepair.h */,
-				05431F311C40F363009BC072 /* nfacepairing.cpp */,
 				05431F321C40F363009BC072 /* nfacepairing.h */,
 				052F9E46180600FB00FAE4DF /* nhomologicaldata.cpp */,
 				052F9E47180600FB00FAE4DF /* nhomologicaldata.h */,
@@ -6700,6 +6706,7 @@
 				052F9F3C180600FB00FAE4DF /* integer.h in Headers */,
 				052FA02E180600FB00FAE4DF /* normalsurface.h in Headers */,
 				058C305C1DCAC0E8006162D2 /* xmltri4reader.h in Headers */,
+				05669D941DCB0E9A00C870C6 /* facetpairing.h in Headers */,
 				052F9FEB180600FB00FAE4DF /* nblockedsfsloop.h in Headers */,
 				052F9FA0180600FB00FAE4DF /* tersest_triangulation.h in Headers */,
 				0591E7F41C4F75C300793A9C /* dim4gluingpermsearcher.h in Headers */,
@@ -6936,6 +6943,7 @@
 				05431F031C40F1F6009BC072 /* triangulation.h in Headers */,
 				052F9F03180600FB00FAE4DF /* nglobaldirs.h in Headers */,
 				052F9F50180600FB00FAE4DF /* vector.h in Headers */,
+				05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */,
 				052F9F7E180600FB00FAE4DF /* dual_one_skeleton_curve.h in Headers */,
 				052FA083180600FB00FAE4DF /* base64.h in Headers */,
 			);
@@ -8116,6 +8124,7 @@
 				05249F391DBC1718001FE29E /* packettype.cpp in Sources */,
 				055FF38219BECF590057462A /* NewTri3Controller.mm in Sources */,
 				052FA1731806129B00FAE4DF /* dim2exampletriangulation.cpp in Sources */,
+				05669D971DCB0EA200C870C6 /* facetpairing3.cpp in Sources */,
 				052FA1A71806129B00FAE4DF /* packetlistener.cpp in Sources */,
 				052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */,
 				05249F1C1DBC170A001FE29E /* ngraphloop.cpp in Sources */,
@@ -8271,7 +8280,6 @@
 				05249EEA1DBC16EA001FE29E /* facetpairing6.cpp in Sources */,
 				052FA1E11806129B00FAE4DF /* nsvectorquad.cpp in Sources */,
 				052FA223180612DD00FAE4DF /* find_cusp.c in Sources */,
-				05431F371C40F365009BC072 /* nfacepairing.cpp in Sources */,
 				05249EA61DBC16A1001FE29E /* safeheldtype.cpp in Sources */,
 				05249F771DBC1747001FE29E /* triangle3.cpp in Sources */,
 				05937B2319CF819C00160F9A /* PacketTabBarController.mm in Sources */,
@@ -8605,7 +8613,6 @@
 				052F9F23180600FB00FAE4DF /* ngraphtriple.cpp in Sources */,
 				05431EFE1C40F1F6009BC072 /* facenumbering.cpp in Sources */,
 				052F9FD8180600FB00FAE4DF /* update_shapes.c in Sources */,
-				05431F341C40F363009BC072 /* nfacepairing.cpp in Sources */,
 				05C1BED71DCA89DA007C946B /* triangulation5.cpp in Sources */,
 				052FA01C180600FB00FAE4DF /* ntrivialtri.cpp in Sources */,
 				052F9F2C180600FB00FAE4DF /* nsfs.cpp in Sources */,
@@ -8682,6 +8689,7 @@
 				05431F8A1C40F40D009BC072 /* HilbertSeries.cpp in Sources */,
 				05F0A0501DBF0B5E00117BFC /* vertex3.cpp in Sources */,
 				05C1BEAB1DCA7CA9007C946B /* boundary3.cpp in Sources */,
+				05669D951DCB0E9A00C870C6 /* facetpairing3.cpp in Sources */,
 				05F0A0041DBF078800117BFC /* subdivide.cpp in Sources */,
 				05F0A0071DBF078800117BFC /* triangle4.cpp in Sources */,
 				052FA062180600FB00FAE4DF /* nexampletriangulation.cpp in Sources */,

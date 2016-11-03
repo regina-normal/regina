@@ -42,7 +42,7 @@
 
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
-#include "triangulation/nfacepairing.h"
+#include "triangulation/facetpairing3.h"
 #include "utilities/boolset.h"
 
 namespace regina {

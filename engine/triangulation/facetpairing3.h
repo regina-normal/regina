@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __NFACEPAIRING_H
+#ifndef __FACETPAIRING3_H
 #ifndef __DOXYGEN
-#define __NFACEPAIRING_H
+#define __FACETPAIRING3_H
 #endif
 
-/*! \file triangulation/nfacepairing.h
+/*! \file triangulation/facetpairing3.h
  *  \brief Deals with dual graphs of 3-manifold triangulations.
  */
 
@@ -513,7 +513,7 @@ class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
  * \deprecated Instead of the old typedef NFacePairing, you should use
  * the full class name FacetPairing<3>.
  */
-typedef FacetPairing<3> NFacePairing;
+REGINA_DEPRECATED typedef FacetPairing<3> NFacePairing;
 
 /*@}*/
 

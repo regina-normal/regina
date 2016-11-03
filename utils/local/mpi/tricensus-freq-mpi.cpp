@@ -489,13 +489,13 @@ int mainController() {
     std::string pairingRep;
     if (depth > 0) {
         // Generate the face pairings and prepare subsearches.
-        regina::NFacePairing* pairing;
+        regina::FacetPairing<3>* pairing;
         regina::NGluingPermSearcher* searcher;
         while (! (pairingRep = ctrlNextPairing(input)).empty()) {
             taskID[0]++;
             taskID[1] = 0;
 
-            pairing = regina::NFacePairing::fromTextRep(pairingRep);
+            pairing = regina::FacetPairing<3>::fromTextRep(pairingRep);
             if (! pairing) {
                 ctrlLogStamp() << "ERROR: Pairing " << taskID[0]
                     << " is invalid: " << pairingRep << std::endl;
@@ -747,8 +747,8 @@ void slaveProcessPairing() {
         TAG_REQUEST_PAIRING, MPI_COMM_WORLD, &status);
 
     // Parse the face pairing.
-    regina::NFacePairing* pairing =
-        regina::NFacePairing::fromTextRep(pairingRep);
+    regina::FacetPairing<3>* pairing =
+        regina::FacetPairing<3>::fromTextRep(pairingRep);
     if (! pairing) {
         slaveBail(std::string("Invalid face pairing: ") + pairingRep);
         return;

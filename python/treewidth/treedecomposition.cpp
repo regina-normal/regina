@@ -31,10 +31,9 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "dim2/dim2edgepairing.h"
-#include "dim4/dim4facetpairing.h"
 #include "treewidth/treedecomposition.h"
-#include "triangulation/nfacepairing.h"
+#include "triangulation/facetpairing.h"
+#include "triangulation/facetpairing3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"

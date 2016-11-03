@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "testsuite/census/testcensus.h"
 #include "triangulation/dim3.h"
-#include "triangulation/nfacepairing.h"
+#include "triangulation/facetpairing3.h"
 
 using regina::FacetPairing;
 using regina::BoolSet;

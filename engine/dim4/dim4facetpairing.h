@@ -30,36 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __DIM4FACETPAIRING_H
+/*! \file dim4/dim4facetpairing.h
+ *  \brief Deprecated header.
+ */
+
+#ifndef __DIM2FACETPAIRING_H
 #ifndef __DOXYGEN
-#define __DIM4FACETPAIRING_H
+#define __DIM2FACETPAIRING_H
 #endif
 
-/*! \file dim4/dim4facetpairing.h
- *  \brief Deals with dual graphs of 4-manifold triangulations.
- */
+#warning This header is deprecated; please use triangulation/facetpairing.h instead.
 
-#include "regina-core.h"
-#include "generic/facetpairing.h"
-#include "triangulation/dim4.h"
-
-namespace regina {
-
-/**
- * \weakgroup dim4
- * @{
- */
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4FacetPairing, you should use
- * the full class name FacetPairing<4>.
- */
-typedef FacetPairing<4> Dim4FacetPairing;
-
-} // namespace regina
+#include "triangulation/facetpairing.h"
 
 #endif
 

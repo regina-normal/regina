@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __FACETPAIRING_H
+#ifndef __FACETPAIRING_H_GENERIC
 #ifndef __DOXYGEN
-#define __FACETPAIRING_H
+#define __FACETPAIRING_H_GENERIC
 #endif
 
 /*! \file generic/facetpairing.h
@@ -66,11 +66,9 @@ namespace regina {
  * triangulation, the individual gluing permutations will still need to
  * be specified; they are not a part of this structure.
  *
- * For Regina's \ref stddim "standard dimensions", this template is specialised
- * and offers more functionality.  In order to use these specialised classes,
- * you will need to include the corresponding headers (e.g.,
- * dim2/dim2edgepairing.h for \a dim = 2, or triangulation/nfacepairing.h for
- * \a dim = 3).
+ * For dimension 3, this template is specialised and offers more functionality.
+ * In order to use this specialised class, you will need to include the
+ * corresponding header triangulation/facetpairing3.h.
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix

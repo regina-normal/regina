@@ -31,33 +31,16 @@ Version 5.1  [ (under development) ]
                 dim2/dim2component.h becomes triangulation/dim2.h.
                 Note that higher dimensions still use the generic header
                 generic/triangulation.h.
-              - Triangulation typedefs Dim2Triangulation, NTriangulation and
-                Dim4Triangulation are now deprecated, in favour of the
-                templated class names Triangulation<2,3,4>.
-              - Face typedefs (e.g., Dim2Vertex, NTriangle, Dim4Edge) and
-                simplex typedefs (Dim2Triangle, NTetrahedron, Dim4Pentachoron)
-                are now deprecated, in favour of the new templated aliases
-                Vertex<dim>, Edge<dim>, etc.  So, for instance, face classes
-                Dim2Vertex and NTriangle become Vertex<2> and Triangle<3>,
-                and simplex classes NTetrahedron and Dim4Pentachoron become
-                Tetrahedron<3> and Pentachoron<4>.  For top-dimensional simplex
-                classes, the type aliases Simplex<dim> are also available.
-              - Likewise, face embedding typedefs (e.g., Dim2VertexEmbedding,
-                NTriangleEmbedding) are now deprecated in favour of the new
-                templated aliases VertexEmbedding<dim>, EdgeEmbedding<dim>, etc.
-              - Component typedefs Dim2Component, NComponent and Dim4Component
-                are deprecated, in favour of the templated class names
-                Component<2,3,4>.
-              - Boundary component classes Dim2BoundaryComponent,
-                NBoundaryComponent and Dim4BoundaryComponent are likewise
-                deprecated, and are now typedefs for the new template class
-                BoundaryComponent<2,3,4>.
-              - Typedefs Dim2TriangleEdge, NTetFace and Dim4PentFacet are
-                deprecated, in favour of the templated class names
-                FacetSpec<2,3,4>.
-              - Isomorphism typedefs Dim2Isomorphism, NIsomorphism and
-                Dim4Isomorphism are deprecated, in favour of the templated
-                class names Isomorphism<2,3,4>.
+              - All facet pairing headers are included automatically by the
+                new headers triangulation/facetpairing3.h (for dimension 3)
+                and triangulation/facetpairing.h (for all other dimensions).
+              - All typedefs Dim2Foo, NFoo and Dim4Foo are now deprecated, in
+                favour of the templated class names Foo<2,3,4>.  For instance,
+                Dim2Triangulation becomes Triangulation<2>, NVertex becomes
+                Vertex<3>, and Dim4Isomorphism becomes Isomorphism<4>.
+              - As a special case: Dim2TriangleEdge, NTetFace and Dim4PentFacet
+                become FacetSpec<2,3,4>, and Dim2EdgePairing, NFacePairing and
+                Dim4FacetPairing become FacetPairing<2,3,4>.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into

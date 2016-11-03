@@ -34,7 +34,7 @@
 
 #import "Tri4ViewController.h"
 #import "Tri4Graph.h"
-#import "dim4/dim4facetpairing.h"
+#import "triangulation/facetpairing.h"
 #import "treewidth/treedecomposition.h"
 #import "triangulation/dim4.h"
 #import "gvc.h"

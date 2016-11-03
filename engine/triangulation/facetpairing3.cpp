@@ -34,7 +34,7 @@
 #include <sstream>
 #include <vector>
 #include "triangulation/nfacepair.h"
-#include "triangulation/nfacepairing.h"
+#include "triangulation/facetpairing3.h"
 #include "triangulation/dim3.h"
 #include "utilities/memutils.h"
 #include "utilities/stringutils.h"

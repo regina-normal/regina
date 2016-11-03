@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "census/ngenericgluingperms.h"
-#include "triangulation/nfacepairing.h"
+#include "triangulation/facetpairing3.h"
 
 namespace regina {
 

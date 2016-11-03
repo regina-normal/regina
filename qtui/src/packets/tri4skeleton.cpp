@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "dim4/dim4facetpairing.h"
+#include "triangulation/facetpairing.h"
 #include "triangulation/dim4.h"
 
 // UI includes:

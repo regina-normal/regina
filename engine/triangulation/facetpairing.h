@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Test Suite                                                            *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,65 +30,40 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
-#include <cppunit/extensions/HelperMacros.h>
-#include "triangulation/dim2.h"
-#include "triangulation/facetpairing.h"
-#include "testsuite/census/testcensus.h"
+/*! \file triangulation/facetpairing.h
+ *  \brief Includes headers for working with facet pairings in all dimensions
+ *  except for dimension 3.  Specifically, this includes headers for the
+ *  class FacetPairing<dim> for all \a dim &ne; 3.
+ */
 
-using regina::FacetPairing;
-using regina::BoolSet;
+#ifndef __FACETPAIRING_H
+#ifndef __DOXYGEN
+#define __FACETPAIRING_H
+#endif
+
+#include "generic/facetpairing.h"
+
+namespace regina {
 
 /**
- * Simply increment the given count when a face pairing is found.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2EdgePairing, you should use
+ * the full class name FacetPairing<2>.
  */
-void countEdgePairings(const FacetPairing<2>* pair,
-        const FacetPairing<2>::IsoList*, void* count) {
-    if (pair)
-        (*(unsigned*)count)++;
-}
+REGINA_DEPRECATED typedef FacetPairing<2> Dim2EdgePairing;
 
-class FacetPairing2Test : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(FacetPairing2Test);
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4FacetPairing, you should use
+ * the full class name FacetPairing<4>.
+ */
+REGINA_DEPRECATED typedef FacetPairing<4> Dim4FacetPairing;
 
-    CPPUNIT_TEST(rawCounts);
+} // namespace regina
 
-    CPPUNIT_TEST_SUITE_END();
-
-    private:
-        unsigned count;
-            /**< Used to hold arbitrary totals. */
-
-    public:
-        void setUp() {
-        }
-
-        void tearDown() {
-        }
-
-        void rawCounts() {
-            // Figures taken from the online encyclopedia of integer
-            // sequences, #A005967.
-            unsigned nPairs[] = { 0, 0, 2, 0, 5, 0, 17, 0, 71, 0, 388,
-                0, 2592 };
-
-            unsigned nTri;
-            for (nTri = 0; nTri <= 12; nTri++) {
-                count = 0;
-                FacetPairing<2>::findAllPairings(nTri, BoolSet::sFalse,
-                    0, countEdgePairings, &count);
-
-                std::ostringstream msg;
-                msg << "Edge pairing count for " << nTri
-                    << " triangles should be " << nPairs[nTri]
-                    << ", not " << count << '.';
-
-                CPPUNIT_ASSERT_MESSAGE(msg.str(), count == nPairs[nTri]);
-            }
-        }
-};
-
-void addFacetPairing2(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(FacetPairing2Test::suite());
-}
+#endif
 
