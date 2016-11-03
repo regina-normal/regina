@@ -3639,7 +3639,6 @@
 		05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlcallback.cpp; sourceTree = "<group>"; };
 		05A73C7819B2EDFC0099C617 /* xmlcallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlcallback.h; sourceTree = "<group>"; };
 		05A73C7919B2EDFC0099C617 /* xmlelementreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlelementreader.h; sourceTree = "<group>"; };
-		05A73C8119B2EEA20099C617 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
 		05A73C8319B2EEC50099C617 /* csv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csv.cpp; sourceTree = "<group>"; };
 		05A73C8619B2EF130099C617 /* fundgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fundgroup.cpp; path = engine/snappea/fundgroup.cpp; sourceTree = SOURCE_ROOT; };
 		05A73C8719B2EF130099C617 /* homology.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = homology.cpp; path = engine/snappea/homology.cpp; sourceTree = SOURCE_ROOT; };
@@ -3891,6 +3890,7 @@
 		05FEA07E19C2B96000A31924 /* PacketPicker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketPicker.mm; sourceTree = "<group>"; };
 		05FF4D3A1DB6BC1E0056D1EA /* PythonHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonHighlighter.h; sourceTree = "<group>"; };
 		05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonHighlighter.mm; sourceTree = "<group>"; };
+		05FF74E31DCB12F700FC2CB4 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5251,7 +5251,6 @@
 				05F09FC21DBF018400117BFC /* dim2 */,
 				05F09FC31DBF018B00117BFC /* dim3 */,
 				05F09FC41DBF019100117BFC /* dim4 */,
-				05A73C8119B2EEA20099C617 /* 600cell.py */,
 				052F9E30180600FB00FAE4DF /* CMakeLists.txt */,
 				05F09FBC1DBEF01800117BFC /* dim2.h */,
 				05F09FBD1DBEF01800117BFC /* dim3.h */,
@@ -6482,6 +6481,7 @@
 		05F09FC31DBF018B00117BFC /* dim3 */ = {
 			isa = PBXGroup;
 			children = (
+				05FF74E31DCB12F700FC2CB4 /* 600cell.py */,
 				05F0A0191DBF0B5E00117BFC /* angle.cpp */,
 				05F0A01B1DBF0B5E00117BFC /* boundarycomponent3.h */,
 				05F0A01C1DBF0B5E00117BFC /* CMakeLists.txt */,
