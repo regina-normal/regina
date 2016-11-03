@@ -100,7 +100,7 @@ class REGINA_API XMLNormalHypersurfaceReader : public XMLElementReader {
  * An XML packet reader that reads a single normal hypersurface list.
  *
  * \pre The parent XML element reader is in fact an
- * NXMLTriangulationReader.
+ * XMLTriangulationReader<3>.
  *
  * \ifacespython Not present.
  */

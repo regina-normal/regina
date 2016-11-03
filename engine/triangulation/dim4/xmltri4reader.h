@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim4/nxmldim4trireader.h
+/*! \file triangulation/dim4/xmltri4reader.h
  *  \brief Deals with parsing XML data for 4-dimensional triangulation packets.
  */
 
-#ifndef __NXMLDIM4TRIREADER_H
+#ifndef __XMLTRI4READER_H
 #ifndef __DOXYGEN
-#define __NXMLDIM4TRIREADER_H
+#define __XMLTRI4READER_H
 #endif
 
 #include "regina-core.h"
@@ -94,11 +94,6 @@ class REGINA_API XMLTriangulationReader<4> :
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
 };
-
-/**
- * A convenience typedef for XMLTriangulationReader<4>.
- */
-typedef XMLTriangulationReader<4> NXMLDim4TriangulationReader;
 
 /*@}*/
 

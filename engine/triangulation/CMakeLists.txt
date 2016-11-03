@@ -6,7 +6,6 @@ SET ( FILES
   nfacepair
   nfacepairing
   nhomologicaldata
-  nxmltrireader
   )
 
 # Prepend folder name
@@ -38,7 +37,6 @@ if (${REGINA_INSTALL_DEV})
     ntriangle.h
     ntriangulation.h
     nvertex.h
-    nxmltrireader.h
     pachner.h
     DESTINATION ${INCLUDEDIR}/triangulation COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

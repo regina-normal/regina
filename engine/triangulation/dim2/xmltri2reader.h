@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file triangulation/nxmltrireader.h
- *  \brief Deals with parsing XML data for 3-dimensional triangulation packets.
+/*! \file triangulation/dim2/xmltri2reader.h
+ *  \brief Deals with parsing XML data for 2-dimensional triangulation packets.
  */
 
-#ifndef __NXMLTRIREADER_H
+#ifndef __XMLTRI2READER_H
 #ifndef __DOXYGEN
-#define __NXMLTRIREADER_H
+#define __XMLTRI2READER_H
 #endif
 
 #include "regina-core.h"
@@ -45,23 +45,23 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
+ * \weakgroup dim2
  * @{
  */
 
 /**
- * An XML packet reader that reads a single 3-dimensional triangulation.
+ * An XML packet reader that reads a single 2-dimensional triangulation.
  *
  * This is a specialisation of the generic XMLTriangulationReader class
  * template; see the XMLTriangulationReader documentation for an
  * overview of how this class works.
  *
- * This 3-dimensional specialisation contains extra functionality for
- * reading optional properties specific to 3-dimensional triangulations.
+ * This 2-dimensional specialisation contains no extra functionality,
+ * though this may change in future releases of Regina.
  */
 template <>
-class REGINA_API XMLTriangulationReader<3> :
-        public detail::XMLTriangulationReaderBase<3> {
+class REGINA_API XMLTriangulationReader<2> :
+        public detail::XMLTriangulationReaderBase<2> {
     public:
         /**
          * Creates a new triangulation reader.
@@ -95,18 +95,18 @@ class REGINA_API XMLTriangulationReader<3> :
             const regina::xml::XMLPropertyDict& subTagProps);
 };
 
-/**
- * A convenience typedef for XMLTriangulationReader<3>.
- */
-typedef XMLTriangulationReader<3> NXMLTriangulationReader;
-
 /*@}*/
 
-// Inline functions for XMLTriangulationReader<3>
+// Inline functions for XMLTriangulationReader<2>
 
-inline XMLTriangulationReader<3>::XMLTriangulationReader(
+inline XMLTriangulationReader<2>::XMLTriangulationReader(
         XMLTreeResolver& resolver) :
-        detail::XMLTriangulationReaderBase<3>(resolver) {
+        detail::XMLTriangulationReaderBase<2>(resolver) {
+}
+
+inline XMLElementReader* XMLTriangulationReader<2>::startPropertySubElement(
+        const std::string&, const regina::xml::XMLPropertyDict&) {
+    return new XMLElementReader();
 }
 
 } // namespace regina

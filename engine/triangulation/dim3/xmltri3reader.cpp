@@ -32,7 +32,7 @@
 
 #include "algebra/nxmlalgebrareader.h"
 #include "triangulation/dim3.h"
-#include "triangulation/nxmltrireader.h"
+#include "triangulation/dim3/xmltri3reader.h"
 
 namespace regina {
 
@@ -164,7 +164,7 @@ XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
 
 XMLPacketReader* Triangulation<3>::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
-    return new NXMLTriangulationReader(resolver);
+    return new XMLTriangulationReader<3>(resolver);
 }
 
 } // namespace regina

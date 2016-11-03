@@ -3,7 +3,6 @@
 # Files to compile
 SET ( FILES
   dim2exampletriangulation
-  nxmldim2trireader
   )
 
 # Prepend folder name
@@ -23,6 +22,5 @@ if (${REGINA_INSTALL_DEV})
     dim2triangle.h
     dim2triangulation.h
     dim2vertex.h
-    nxmldim2trireader.h
     DESTINATION ${INCLUDEDIR}/dim2 COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

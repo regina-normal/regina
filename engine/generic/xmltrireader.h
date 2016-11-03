@@ -55,7 +55,7 @@ namespace regina {
  * In some dimensions this template is specialised so that it can read in
  * additional properties of the triangulation.  In order to use these
  * specialised classes, you will need to include the corresponding headers
- * (e.g., triangulation/nxmltrireader.h for \a dim = 3).
+ * (e.g., triangulation/dim3/xmltri3reader.h for \a dim = 3).
  *
  * \ifacespython Not present.
  *
