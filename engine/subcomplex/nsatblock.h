@@ -51,8 +51,6 @@ namespace regina {
 struct NSatAnnulus;
 class NSFSpace;
 
-template <int> class Isomorphism;
-
 /**
  * \weakgroup subcomplex
  * @{

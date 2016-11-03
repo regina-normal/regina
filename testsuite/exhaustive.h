@@ -33,6 +33,8 @@
 #ifndef __EXHAUSTIVE_H
 #define __EXHAUSTIVE_H
 
+#include "triangulation/forward.h"
+
 /**
  * The functions in this header allow you to run a test over all
  * triangulations from a census.  Each triangulation will have its
@@ -42,10 +44,6 @@
  * The \a small parameter indicates that a smaller census should be
  * used; this is appropriate when the corresponding test is extremely slow.
  */
-
-namespace regina {
-    template <int> class Triangulation;
-}
 
 typedef void (*Triangulation2TestFunction)(regina::Triangulation<2>*);
 typedef void (*Triangulation3TestFunction)(regina::Triangulation<3>*);

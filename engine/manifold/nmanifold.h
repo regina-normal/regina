@@ -41,13 +41,12 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "triangulation/forward.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
 class NAbelianGroup;
-
-template <int> class Triangulation;
 
 /**
  * \addtogroup manifold Standard 3-Manifolds

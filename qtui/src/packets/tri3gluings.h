@@ -37,6 +37,7 @@
 #ifndef __TRI3GLUINGS_H
 #define __TRI3GLUINGS_H
 
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 #include "reginaprefset.h"
 #include "maths/perm.h"
@@ -48,9 +49,6 @@ class QToolBar;
 
 namespace regina {
     class Packet;
-    template <int> class Triangulation;
-    template <int, int> class Face;
-    template <int dim> using Simplex = Face<dim, dim>;
 };
 
 class GluingsModel3 : public QAbstractItemModel {

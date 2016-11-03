@@ -39,6 +39,7 @@
 
 #include "choosers/facename.h"
 #include "packet/packetlistener.h"
+#include "triangulation/forward.h"
 
 #include <QBoxLayout>
 #include <QDialog>
@@ -46,12 +47,6 @@
 #include <QComboBox>
 #include <QLabel>
 #include <vector>
-
-namespace regina {
-    template <int> class Triangulation;
-    template <int, int> class Face;
-    template <int, int> class FaceEmbedding;
-};
 
 /**
  * A widget through which a single subdim-face of some triangulation

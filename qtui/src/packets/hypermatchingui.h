@@ -38,6 +38,7 @@
 #define __HYPERMATCHINGUI_H
 
 #include "maths/matrix.h"
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 
 #include <memory>
@@ -48,7 +49,6 @@ class QTreeView;
 namespace regina {
     class NormalHypersurfaces;
     class Packet;
-    template <int> class Triangulation;
 };
 
 class HyperMatchingModel : public QAbstractItemModel {

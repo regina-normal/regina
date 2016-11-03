@@ -49,8 +49,6 @@
 
 namespace regina {
 
-template <int> class Isomorphism;
-
 /**
  * \weakgroup dim4
  * @{

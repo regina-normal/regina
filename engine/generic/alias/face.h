@@ -40,11 +40,11 @@
 #endif
 
 #include "regina-core.h"
+#include "triangulation/forward.h"
 
 namespace regina {
 
 template <int> class Perm;
-template <int, int> class Face;
 
 namespace detail {
     template <class, int> struct FaceListHolder;

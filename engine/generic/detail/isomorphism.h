@@ -44,17 +44,12 @@
 #include "output.h"
 #include "generic/facetspec.h"
 #include "generic/alias/isomorphism.h"
+#include "triangulation/forward.h"
 #include "maths/perm.h"
 #include <algorithm>
 #include <boost/noncopyable.hpp>
 
 namespace regina {
-
-template <int> class Isomorphism;
-template <int> class Triangulation;
-template <int, int> class Face;
-template <int dim> using Simplex = Face<dim, dim>;
-
 namespace detail {
 
 /**

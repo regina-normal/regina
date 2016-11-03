@@ -39,15 +39,11 @@
 #define __BOUNDARY4CHOOSER_H
 
 #include "packet/packetlistener.h"
+#include "triangulation/forward.h"
 
 #include <QDialog>
 #include <QComboBox>
 #include <vector>
-
-namespace regina {
-    template <int> class BoundaryComponent;
-    template <int> class Triangulation;
-};
 
 /**
  * A widget through which a single boundary component of some triangulation

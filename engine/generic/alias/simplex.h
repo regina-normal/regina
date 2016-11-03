@@ -40,12 +40,10 @@
 #endif
 
 #include "regina-core.h"
+#include "triangulation/forward.h"
 #include <vector>
 
 namespace regina {
-
-template <int, int> class Face;
-template <int dim> using Simplex = Face<dim, dim>;
 
 /**
  * Contains helper classes that provide dimension-specific aliases for

@@ -60,11 +60,6 @@ class XMLPacketReader;
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
 
-template <int> class Triangulation;
-// We *must* declare the specialisation here; otherwise this header has
-// the side-effect of instantiating Trianglation<4> using the generic template.
-template <> class Triangulation<4>;
-
 /**
  * \weakgroup hypersurface
  * @{

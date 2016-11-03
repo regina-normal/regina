@@ -41,14 +41,13 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "triangulation/forward.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
 class NSigCensus;
 class NSigPartialIsomorphism;
-
-template <int> class Triangulation;
 
 /**
  * \addtogroup split Splitting Surfaces

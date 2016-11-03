@@ -49,8 +49,6 @@ namespace regina {
 class NSatRegion;
 class NTxICore;
 
-template <int> class Isomorphism;
-
 /**
  * \weakgroup subcomplex
  * @{

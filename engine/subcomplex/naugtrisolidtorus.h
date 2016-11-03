@@ -43,10 +43,9 @@
 #include "regina-core.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredsolidtorus.h"
+#include "triangulation/forward.h"
 
 namespace regina {
-
-template <int> class Component;
 
 /**
  * \weakgroup subcomplex

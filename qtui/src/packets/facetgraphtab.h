@@ -38,9 +38,9 @@
 #ifndef __FACETGRAPHTAB_H
 #define __FACETGRAPHTAB_H
 
+#include "triangulation/forward.h"
 #include "packettabui.h"
 #include "skeletonwindow.h"
-
 
 class MessageLayer;
 
@@ -52,7 +52,6 @@ class QSvgWidget;
 
 namespace regina {
     class Packet;
-    template <int> class Triangulation;
 };
 
 /**

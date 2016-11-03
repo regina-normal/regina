@@ -206,6 +206,8 @@ class Face :
     friend class detail::TriangulationBase<dim>;
 };
 
+#ifdef __DOXYGEN
+// This type alias is already defined in trianguation/forward.h.
 /**
  * Details how a vertex of a <i>dim</i>-dimensional triangulation
  * appears within each top-dimensional simplex.
@@ -373,22 +375,7 @@ using Tetrahedron = Face<dim, 3>;
  */
 template <int dim>
 using Pentachoron = Face<dim, 4>;
-
-// Note that some of our face-related classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <int dim> class Face<dim, dim>;
-template <> class Face<2, 2>;
-template <> class Face<2, 1>;
-template <> class Face<2, 0>;
-template <> class Face<3, 3>;
-template <> class Face<3, 2>;
-template <> class Face<3, 1>;
-template <> class Face<3, 0>;
-template <> class Face<4, 4>;
-template <> class Face<4, 3>;
-template <> class Face<4, 2>;
-template <> class Face<4, 1>;
-template <> class Face<4, 0>;
+#endif // __DOXYGEN
 
 /*@}*/
 

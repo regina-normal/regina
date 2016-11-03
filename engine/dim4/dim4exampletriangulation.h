@@ -41,11 +41,9 @@
 #endif
 
 #include "regina-core.h"
+#include "triangulation/forward.h"
 
 namespace regina {
-
-template <int> class Isomorphism;
-template <int> class Triangulation;
 
 /**
  * \weakgroup dim4

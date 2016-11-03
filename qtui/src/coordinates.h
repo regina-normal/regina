@@ -41,6 +41,7 @@
 #include "hypersurface/hypercoords.h"
 #include "maths/integer.h"
 #include "surfaces/normalcoords.h"
+#include "triangulation/forward.h"
 
 #include <QString>
 #include <QObject>
@@ -48,7 +49,6 @@
 namespace regina {
     class NormalSurface;
     class NormalHypersurface;
-    template <int> class Triangulation;
 }
 
 namespace Coordinates {

@@ -53,10 +53,6 @@
 #include "utilities/stringutils.h"
 
 namespace regina {
-
-template <int, int> class Face;
-template <int dim> using Simplex = Face<dim, dim>;
-
 namespace detail {
 
 template <int dim>

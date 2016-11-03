@@ -42,15 +42,11 @@
 
 #include "regina-core.h"
 #include "maths/perm.h"
+#include "triangulation/forward.h"
 
 namespace regina {
 
 class Matrix2;
-
-template <int> class Isomorphism;
-template <int> class Triangulation;
-template <int, int> class Face;
-template <int dim> using Tetrahedron = Face<dim, 3>;
 
 /**
  * \weakgroup subcomplex

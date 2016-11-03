@@ -49,8 +49,6 @@ namespace regina {
 
 class NCensusHits;
 
-template <int> class Triangulation;
-
 /**
  * \addtogroup census Census of Triangulations
  * Census lookup and enumeration for triangulations of various dimensions.

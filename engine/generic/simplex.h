@@ -114,6 +114,8 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
     friend class detail::TriangulationBase<dim>;
 };
 
+#ifdef __DOXYGEN
+// This type alias is already defined in trianguation/forward.h.
 /**
  * Refers to a top-dimensional simplex in a <i>dim</i>-dimensional
  * triangulation.
@@ -126,12 +128,7 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
  */
 template <int dim>
 using Simplex = Face<dim, dim>;
-
-// Note that some of our simplex classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class Face<2, 2>;
-template <> class Face<3, 3>;
-template <> class Face<4, 4>;
+#endif
 
 /*@}*/
 

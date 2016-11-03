@@ -40,6 +40,7 @@
 
 #include "choosers/facename.h"
 #include "packet/packetlistener.h"
+#include "triangulation/forward.h"
 
 #include <QBoxLayout>
 #include <QDialog>
@@ -47,12 +48,6 @@
 #include <QComboBox>
 #include <QLabel>
 #include <vector>
-
-namespace regina {
-    template <int, int> class Face;
-    template <int dim> using Simplex = Face<dim, dim>;
-    template <int> class Triangulation;
-};
 
 /**
  * A widget through which a single top-dimensional simplex of some triangulation

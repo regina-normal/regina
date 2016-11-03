@@ -70,7 +70,6 @@ class NormalSurface;
 class ProgressTrackerOpen;
 class XMLPacketReader;
 
-template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
 
 /**

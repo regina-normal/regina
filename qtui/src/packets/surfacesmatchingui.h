@@ -38,6 +38,7 @@
 #define __SURFACESMATCHINGUI_H
 
 #include "maths/matrix.h"
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 
 #include <memory>
@@ -48,7 +49,6 @@ class QTreeView;
 namespace regina {
     class NormalSurfaces;
     class Packet;
-    template <int> class Triangulation;
 };
 
 class MatchingModel : public QAbstractItemModel {

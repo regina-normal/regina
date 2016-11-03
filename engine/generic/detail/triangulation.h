@@ -57,9 +57,6 @@
 
 namespace regina {
 
-template <int> class Isomorphism;
-template <int> class Triangulation;
-
 /**
  * Contains implementation details and common functionality for Regina's
  * dimension-agnostic classes.

@@ -44,15 +44,11 @@
 #include "output.h"
 #include "generic/alias/face.h"
 #include "generic/alias/simplex.h"
+#include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
-
-template <int> class BoundaryComponent;
-template <int> class Component;
-template <int> class Triangulation;
-
 namespace detail {
 
 template <int> class TriangulationBase;

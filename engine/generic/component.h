@@ -89,12 +89,6 @@ class Component : public detail::ComponentBase<dim> {
     friend class detail::TriangulationBase<dim>;
 };
 
-// Note that some of our component classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class Component<2>;
-template <> class Component<3>;
-template <> class Component<4>;
-
 /*@}*/
 
 } // namespace regina

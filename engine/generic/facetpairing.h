@@ -122,10 +122,6 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
     friend class detail::FacetPairingBase<dim>;
 };
 
-// Note that some of our facet pairing classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class FacetPairing<3>;
-
 /*@}*/
 
 // Inline functions for FacetPairing

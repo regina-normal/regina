@@ -57,8 +57,6 @@ namespace regina {
 
 class XMLPacketReader;
 
-template <int> class Isomorphism;
-
 /**
  * \addtogroup dim2 2-Manifold Triangulations
  * Triangulations of 2-manifolds.

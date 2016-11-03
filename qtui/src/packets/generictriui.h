@@ -37,16 +37,13 @@
 #ifndef __GENERICTRIUI_H
 #define __GENERICTRIUI_H
 
+#include "triangulation/forward.h"
 #include "reginamain.h"
 #include "../packetui.h"
 #include <QObject>
 
 class QLabel;
 class QPushButton;
-
-namespace regina {
-    template <int> class Triangulation;
-};
 
 /**
  * A non-templated, QObject-enabled helper class for GenericTriangulationUI.

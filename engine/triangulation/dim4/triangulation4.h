@@ -60,7 +60,6 @@ namespace regina {
 
 class XMLPacketReader;
 
-template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
 
 /**

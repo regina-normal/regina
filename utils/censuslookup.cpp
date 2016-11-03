@@ -37,6 +37,7 @@
 #endif
 #include "census/ncensus.h"
 #include "file/globaldirs.h"
+#include "triangulation/dim3.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())

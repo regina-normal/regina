@@ -46,14 +46,10 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/facetspec.h"
+#include "triangulation/forward.h"
 #include "utilities/boolset.h"
 
 namespace regina {
-
-template <int> class FacetPairing;
-template <int> class Isomorphism;
-template <int> class Triangulation;
-
 namespace detail {
 
 /**

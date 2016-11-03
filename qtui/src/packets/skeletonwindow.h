@@ -39,6 +39,7 @@
 #define __SKELETONWINDOW_H
 
 #include "packet/packetlistener.h"
+#include "triangulation/forward.h"
 
 #include <QDialog>
 #include <QAbstractItemModel>
@@ -46,10 +47,6 @@
 
 class PacketUI;
 class QTreeView;
-
-namespace regina {
-    template <int> class Triangulation;
-};
 
 /**
  * A base class for models for viewing skeletal data of a particular type

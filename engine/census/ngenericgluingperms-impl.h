@@ -43,12 +43,10 @@
 #include <algorithm>
 #include <iostream>
 #include "census/ngenericgluingperms.h"
+#include "triangulation/forward.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
-
-template <int, int> class Face;
-template <int dim> using Simplex = Face<dim, dim>;
 
 template <int dim>
 NGenericGluingPerms<dim>::NGenericGluingPerms(

@@ -42,12 +42,10 @@
 
 #include "regina-core.h"
 #include "generic/facetspec.h"
+#include "triangulation/forward.h"
 #include "maths/perm.h"
 
 namespace regina {
-
-template <int> class FacetPairing;
-template <int> class Triangulation;
 
 /**
  * \weakgroup census

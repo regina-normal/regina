@@ -30,50 +30,79 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file foreign/orb.h
- *  \brief Allows reading Orb / Casson triangulation files.
+/*! \file triangulation/forward.h
+ *  \brief Provides forward declarations of Regina's triangulation-related
+ *  classes.
+ *
+ *  It is better to include this file rather than manually declare classes
+ *  that you plan to use, for several reasons:
+ *
+ *  - this header declares all template specialisations, so the compiler
+ *    knows not to use generic implementations when these are not approrpiate;
+ *
+ *  - this header declares templated type alias (e.g., Simplex<dim>,
+ *    Vertex<dim>, etc.) in one central location, which is needed for
+ *    compilers that will not accept multiple declarations of the same
+ *    type alias (as seen for example in some versions of gcc).
  */
 
-#ifndef __ORB_H
+#ifndef __FORWARD_H
 #ifndef __DOXYGEN
-#define __ORB_H
+#define __FORWARD_H
 #endif
-
-#include <string>
-#include "regina-core.h"
-#include "triangulation/forward.h"
 
 namespace regina {
 
 /**
- * \weakgroup foreign
+ * \weakgroup triangulation
  * @{
  */
 
-/**
- * Reads a triangulation from the given Orb / Casson file.  A newly
- * allocated triangulation will be returned; it is the user's
- * responsibility to deallocate this when it is finished with.
- *
- * The packet label of the new triangulation will be the manifold name
- * read from the second line of the Orb / Casson file.  The first line
- * of the Orb / Casson file must simply be ``<tt>% orb</tt>''.
- *
- * If the file could not be read or if the data was not in the correct
- * format, 0 will be returned.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * It assumes however that the \e contents of the file are in UTF-8.
- *
- * @param filename the name of the Orb / Casson file from which to read.
- * @return a new triangulation containing the data read from the Orb / Casson
- * file, or 0 on error.
- *
- * @author Ryan Budney, also with code from Damien Heard
- */
-REGINA_API Triangulation<3>* readOrb(const char *filename);
+template <int> class BoundaryComponent;
+
+template <int> class Component;
+template <> class Component<2>;
+template <> class Component<3>;
+template <> class Component<4>;
+
+template <int, int> class Face;
+template <int dim> class Face<dim, dim>;
+template <> class Face<2, 2>;
+template <> class Face<2, 1>;
+template <> class Face<2, 0>;
+template <> class Face<3, 3>;
+template <> class Face<3, 2>;
+template <> class Face<3, 1>;
+template <> class Face<3, 0>;
+template <> class Face<4, 4>;
+template <> class Face<4, 3>;
+template <> class Face<4, 2>;
+template <> class Face<4, 1>;
+template <> class Face<4, 0>;
+template <int dim> using Vertex = Face<dim, 0>;
+template <int dim> using Edge = Face<dim, 1>;
+template <int dim> using Triangle = Face<dim, 2>;
+template <int dim> using Tetrahedron = Face<dim, 3>;
+template <int dim> using Pentachoron = Face<dim, 4>;
+template <int dim> using Simplex = Face<dim, dim>;
+
+template <int, int> class FaceEmbedding;
+template <int dim> using VertexEmbedding = FaceEmbedding<dim, 0>;
+template <int dim> using EdgeEmbedding = FaceEmbedding<dim, 1>;
+template <int dim> using TriangleEmbedding = FaceEmbedding<dim, 2>;
+template <int dim> using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
+template <int dim> using PentachoronEmbedding = FaceEmbedding<dim, 4>;
+template <int dim> using SimplexEmbedding = FaceEmbedding<dim, dim>;
+
+template <int> class FacetPairing;
+template <> class FacetPairing<3>;
+
+template <int> class Isomorphism;
+
+template <int> class Triangulation;
+template <> class Triangulation<2>;
+template <> class Triangulation<3>;
+template <> class Triangulation<4>;
 
 /*@}*/
 

@@ -46,20 +46,13 @@
 #include "generic/alias/face.h"
 #include "generic/alias/facenumber.h"
 #include "generic/alias/simplex.h"
+#include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include <deque>
 #include <vector>
 #include <boost/noncopyable.hpp>
 
 namespace regina {
-
-template <int> class BoundaryComponent;
-template <int> class Component;
-template <int> class Triangulation;
-template <int, int> class Face;
-template <int, int> class FaceEmbedding;
-template <int dim> using Simplex = Face<dim, dim>;
-
 namespace detail {
 
 template <int dim> class TriangulationBase;

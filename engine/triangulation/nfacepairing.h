@@ -41,7 +41,6 @@
 
 #include "regina-core.h"
 #include "generic/facetpairing.h"
-#include "triangulation/dim3.h"
 
 namespace regina {
 

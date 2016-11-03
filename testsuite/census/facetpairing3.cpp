@@ -33,6 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "testsuite/census/testcensus.h"
+#include "triangulation/dim3.h"
 #include "triangulation/nfacepairing.h"
 
 using regina::FacetPairing;

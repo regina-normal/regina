@@ -39,15 +39,11 @@
 #define __BOUNDARY3CHOOSER_H
 
 #include "packet/packetlistener.h"
+#include "triangulation/forward.h"
 
 #include <QDialog>
 #include <QComboBox>
 #include <vector>
-
-namespace regina {
-    template <int> class BoundaryComponent;
-    template <int> class Triangulation;
-};
 
 /**
  * A filter function, used to determine whether a given boundary component

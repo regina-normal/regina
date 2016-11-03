@@ -35,9 +35,6 @@
 #include "../helpers.h"
 
 namespace regina {
-
-template <int, int> class Face;
-
 namespace python {
 
 /**

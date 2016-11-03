@@ -180,6 +180,9 @@ Version 5.1  [ (under development) ]
               (and now removed) array vertexSplitDefn[][].
         Macro REGINA_NORMAL_SURFACE_FLAVOUR, REGINA_NORMAL_HYPERSURFACE_FLAVOUR:
             - Now takes a third argument, representing the parent vector class.
+        Header triangulation/forward.h:
+            - New header that is now the preferred method of forward-declaring
+              Regina's triangulation-related classes and type aliases.
     PYTHON:
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The

@@ -42,13 +42,13 @@
 // There are more #includes below - we need to define FaceList
 // before including generic/detail/triangulation.h.
 #include "packet/packet.h"
+#include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include "utilities/xmlutils.h"
 #include <type_traits>
 
 namespace regina {
 
-template <int, int> class Face;
 template <int> class XMLTriangulationReader;
 
 /**
@@ -347,12 +347,6 @@ class Triangulation :
     friend class detail::SimplexBase<dim>;
     friend class detail::TriangulationBase<dim>;
 };
-
-// Note that some of our triangulation classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class Triangulation<2>;
-template <> class Triangulation<3>;
-template <> class Triangulation<4>;
 
 /**
  * A function object used for sorting faces of triangulations by
