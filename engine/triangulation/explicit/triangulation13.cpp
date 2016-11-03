@@ -30,68 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __COMPONENT_H
-#ifndef __DOXYGEN
-#define __COMPONENT_H
-#endif
+#include "triangulation/detail/isosig-impl.h"
+#include "triangulation/detail/skeleton-impl.h"
+#include "generic/isomorphism.h"
 
-/*! \file generic/component.h
- *  \brief Deals with connected components of triangulations.
- */
+namespace regina { namespace detail {
 
-#include "triangulation/detail/component.h"
+template REGINA_API std::string TriangulationBase<13>::isoSigFrom(
+    size_t, const Perm<14>&, Isomorphism<13>*) const;
+template REGINA_API std::string TriangulationBase<13>::isoSig(
+    Isomorphism<13>**) const;
+template REGINA_API Triangulation<13>* TriangulationBase<13>::fromIsoSig(
+    const std::string&);
+template REGINA_API size_t TriangulationBase<13>::isoSigComponentSize(
+    const std::string&);
 
-namespace regina {
+template REGINA_API void TriangulationBase<13>::calculateSkeleton();
+template REGINA_API void TriangulationBase<13>::deleteSkeleton();
 
-/**
- * \weakgroup generic
- * @{
- */
-
-/**
- * A connected component of a <i>dim</i>-manifold triangulation.
- *
- * Components are highly temporary: whenever a triangulation changes, all
- * of its component objects will be deleted and new ones will be created
- * in their place.
- *
- * Component objects are all created, managed and destroyed by the
- * class Triangulation<dim>.  See the Triangulation notes for further
- * information on working with <i>dim</i>-dimensional triangulations.
- *
- * For Regina's \ref stddim "standard dimensions", this template is specialised
- * and offers more functionality.  In order to use these specialised classes,
- * you will need to include the corresponding triangulation headers (e.g.,
- * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
- * for \a dim = 3).
- *
- * \ifacespython Python does not support templates.  Instead
- * this class can be used by appending the dimension as a suffix
- * (e.g., Component2 and Component3 for dimensions 2 and 3).
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- */
-template <int dim>
-class Component : public detail::ComponentBase<dim> {
-    static_assert(! standardDim(dim),
-        "The generic implementation of Component<dim> "
-        "should not be used for Regina's standard dimensions.");
-
-    private:
-        /**
-         * Default constructor.
-         *
-         * Marks the component as orientable, with no boundary facets.
-         */
-        Component() = default;
-
-    friend class detail::TriangulationBase<dim>;
-};
-
-/*@}*/
-
-} // namespace regina
-
-#endif
-
+} }

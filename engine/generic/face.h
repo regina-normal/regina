@@ -39,7 +39,7 @@
 #define __FACE_H
 #endif
 
-#include "generic/detail/face.h"
+#include "triangulation/detail/face.h"
 
 namespace regina {
 

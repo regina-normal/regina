@@ -39,7 +39,7 @@
 #define __XMLTRIREADER_H
 #endif
 
-#include "generic/detail/xmltrireader.h"
+#include "triangulation/detail/xmltrireader.h"
 
 namespace regina {
 

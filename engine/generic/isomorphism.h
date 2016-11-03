@@ -39,7 +39,7 @@
 #define __ISOMORPHISM_H
 #endif
 
-#include "generic/detail/isomorphism.h"
+#include "triangulation/detail/isomorphism.h"
 
 namespace regina {
 

@@ -4809,12 +4809,9 @@
 		052F9CB7180600FA00FAE4DF /* generic */ = {
 			isa = PBXGroup;
 			children = (
-				05431F051C40F209009BC072 /* alias */,
 				052F9CB8180600FA00FAE4DF /* CMakeLists.txt */,
-				05C1BE9A1DCA7C93007C946B /* explicit */,
 				059BC6651DC7F76E00AB4206 /* boundarycomponent.h */,
 				05431EF31C40F1F6009BC072 /* component.h */,
-				05431F061C40F213009BC072 /* detail */,
 				05431EF41C40F1F6009BC072 /* face.h */,
 				05431EF51C40F1F6009BC072 /* facenumbering.cpp */,
 				05431EF61C40F1F6009BC072 /* facenumbering.h */,
@@ -5252,9 +5249,12 @@
 		052F9E2F180600FB00FAE4DF /* triangulation */ = {
 			isa = PBXGroup;
 			children = (
+				05431F051C40F209009BC072 /* alias */,
+				05431F061C40F213009BC072 /* detail */,
 				05F09FC21DBF018400117BFC /* dim2 */,
 				05F09FC31DBF018B00117BFC /* dim3 */,
 				05F09FC41DBF019100117BFC /* dim4 */,
+				05C1BE9A1DCA7C93007C946B /* explicit */,
 				052F9E30180600FB00FAE4DF /* CMakeLists.txt */,
 				05F09FBC1DBEF01800117BFC /* dim2.h */,
 				05F09FBD1DBEF01800117BFC /* dim3.h */,
@@ -5579,6 +5579,7 @@
 				05C1BEF01DCAB4DC007C946B /* isomorphism.h */,
 				05431F111C40F257009BC072 /* simplex.h */,
 			);
+			name = alias;
 			path = alias;
 			sourceTree = "<group>";
 		};
@@ -5601,6 +5602,7 @@
 				05431F1F1C40F260009BC072 /* triangulation.h */,
 				0591E85A1C50527100793A9C /* xmltrireader.h */,
 			);
+			name = detail;
 			path = detail;
 			sourceTree = "<group>";
 		};
@@ -6409,6 +6411,7 @@
 				05C1BED21DCA89DA007C946B /* triangulation14.cpp */,
 				05C1BED31DCA89DA007C946B /* triangulation15.cpp */,
 			);
+			name = explicit;
 			path = explicit;
 			sourceTree = "<group>";
 		};

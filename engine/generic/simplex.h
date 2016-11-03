@@ -39,7 +39,7 @@
 #define __SIMPLEX_H
 #endif
 
-#include "generic/detail/simplex.h"
+#include "triangulation/detail/simplex.h"
 
 namespace regina {
 

@@ -39,7 +39,7 @@
  *  \brief Deals with boundary components of triangulations.
  */
 
-#include "generic/detail/boundarycomponent.h"
+#include "triangulation/detail/boundarycomponent.h"
 
 namespace regina {
 

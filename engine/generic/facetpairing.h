@@ -39,7 +39,7 @@
  *  \brief Deals with dual graphs of <i>n</i>-dimensional triangulations.
  */
 
-#include "generic/detail/facetpairing.h"
+#include "triangulation/detail/facetpairing.h"
 
 namespace regina {
 

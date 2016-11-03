@@ -40,7 +40,7 @@
 #define __FACENUMBERING_H
 #endif
 
-#include "generic/detail/facenumbering.h"
+#include "triangulation/detail/facenumbering.h"
 
 namespace regina {
 

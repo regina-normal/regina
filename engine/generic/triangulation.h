@@ -40,7 +40,7 @@
 #endif
 
 // There are more #includes below - we need to define FaceList
-// before including generic/detail/triangulation.h.
+// before including triangulation/detail/triangulation.h.
 #include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
@@ -193,7 +193,7 @@ class FaceList {
 
 } // namespace regina
 
-#include "generic/detail/triangulation.h"
+#include "triangulation/detail/triangulation.h"
 
 namespace regina {
 
