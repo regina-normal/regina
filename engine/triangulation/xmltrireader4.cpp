@@ -32,7 +32,7 @@
 
 #include "algebra/nxmlalgebrareader.h"
 #include "triangulation/dim4.h"
-#include "triangulation/xmltri4reader.h"
+#include "triangulation/xmltrireader4.h"
 #include "utilities/property.h"
 
 namespace regina {

@@ -9,9 +9,9 @@ SET ( FILES
   facetpairing3
   facepair
   homologicaldata
-  xmltri2reader
-  xmltri3reader
-  xmltri4reader
+  xmltrireader2
+  xmltrireader3
+  xmltrireader4
   )
 
 # Prepend folder name
@@ -60,8 +60,8 @@ if (${REGINA_INSTALL_DEV})
     nvertex.h
     pachner.h
     xmltrireader.h
-    xmltri2reader.h
-    xmltri3reader.h
-    xmltri4reader.h
+    xmltrireader2.h
+    xmltrireader3.h
+    xmltrireader4.h
     DESTINATION ${INCLUDEDIR}/triangulation COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

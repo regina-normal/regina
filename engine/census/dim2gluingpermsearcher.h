@@ -51,8 +51,6 @@ namespace regina {
  * @{
  */
 
-class Dim2GluingPermSearcher;
-
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.

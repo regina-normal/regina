@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file triangulation/xmltri3reader.h
- *  \brief Deals with parsing XML data for 3-dimensional triangulation packets.
+/*! \file triangulation/xmltrireader4.h
+ *  \brief Deals with parsing XML data for 4-dimensional triangulation packets.
  */
 
-#ifndef __XMLTRI3READER_H
+#ifndef __XMLTRIREADER4_H
 #ifndef __DOXYGEN
-#define __XMLTRI3READER_H
+#define __XMLTRIREADER4_H
 #endif
 
 #include "regina-core.h"
@@ -50,18 +50,18 @@ namespace regina {
  */
 
 /**
- * An XML packet reader that reads a single 3-dimensional triangulation.
+ * An XML packet reader that reads a single 4-dimensional triangulation.
  *
  * This is a specialisation of the generic XMLTriangulationReader class
  * template; see the XMLTriangulationReader documentation for an
  * overview of how this class works.
  *
- * This 3-dimensional specialisation contains extra functionality for
- * reading optional properties specific to 3-dimensional triangulations.
+ * This 4-dimensional specialisation contains extra functionality for
+ * reading optional properties specific to 4-dimensional triangulations.
  */
 template <>
-class REGINA_API XMLTriangulationReader<3> :
-        public detail::XMLTriangulationReaderBase<3> {
+class REGINA_API XMLTriangulationReader<4> :
+        public detail::XMLTriangulationReaderBase<4> {
     public:
         /**
          * Creates a new triangulation reader.
@@ -97,11 +97,11 @@ class REGINA_API XMLTriangulationReader<3> :
 
 /*@}*/
 
-// Inline functions for XMLTriangulationReader<3>
+// Inline functions for XMLTriangulationReader<4>
 
-inline XMLTriangulationReader<3>::XMLTriangulationReader(
+inline XMLTriangulationReader<4>::XMLTriangulationReader(
         XMLTreeResolver& resolver) :
-        detail::XMLTriangulationReaderBase<3>(resolver) {
+        detail::XMLTriangulationReaderBase<4>(resolver) {
 }
 
 } // namespace regina
