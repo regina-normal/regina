@@ -43,7 +43,7 @@ const char Dim2GluingPermSearcher::dataTag_ = 'g';
 Dim2GluingPermSearcher::Dim2GluingPermSearcher(
         const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
         bool orientableOnly, UseDim2GluingPerms use, void* useArgs) :
-        Dim2GluingPerms(pairing), autos_(autos), autosNew(autos == 0),
+        GluingPerms<2>(pairing), autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), use_(use), useArgs_(useArgs),
         started(false),
         orientation(new int[pairing->size()]) {
@@ -258,7 +258,7 @@ Dim2GluingPermSearcher* Dim2GluingPermSearcher::readTaggedData(std::istream& in,
 }
 
 void Dim2GluingPermSearcher::dumpData(std::ostream& out) const {
-    Dim2GluingPerms::dumpData(out);
+    GluingPerms<2>::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
     out << (started ? 's' : '.');
@@ -285,7 +285,7 @@ void Dim2GluingPermSearcher::dumpData(std::ostream& out) const {
 
 Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
         UseDim2GluingPerms use, void* useArgs) :
-        Dim2GluingPerms(in), autos_(0), autosNew(false),
+        GluingPerms<2>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),
         order(0), orderSize(0), orderElt(0) {
     if (inputError_)

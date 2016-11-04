@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "census/dim2gluingperms.h"
+#include "census/gluingperms.h"
 
 namespace regina {
 
@@ -62,7 +62,7 @@ class Dim2GluingPermSearcher;
  * support partial searches as well as full searches).  This set of
  * gluing permutations must not be deallocated by this routine, since it
  * may be used again later by the caller.  The second parameter may contain
- * arbitrary data as passed to either Dim2GluingPerms::findAllPerms() or
+ * arbitrary data as passed to either GluingPerms<2>::findAllPerms() or
  * the Dim2GluingPermSearcher class constructor.
  *
  * Note that the first parameter passed might be \c null to signal that
@@ -88,13 +88,13 @@ typedef void (*UseDim2GluingPerms)(const Dim2GluingPermSearcher*, void*);
  * constructing an object of the corresponding class (and again
  * calling runSearch() on that object directly).
  *
- * Note that this class derives from Dim2GluingPerms.  The search will
- * involve building and repeatedly modifying the inherited Dim2GluingPerms
+ * Note that this class derives from GluingPerms<2>.  The search will
+ * involve building and repeatedly modifying the inherited GluingPerms<2>
  * data in-place.
  *
  * \ifacespython Not present.
  */
-class REGINA_API Dim2GluingPermSearcher : public Dim2GluingPerms {
+class REGINA_API Dim2GluingPermSearcher : public GluingPerms<2> {
     public:
         static const char dataTag_;
             /**< A character used to identify this class when reading

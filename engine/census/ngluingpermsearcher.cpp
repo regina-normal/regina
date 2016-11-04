@@ -44,7 +44,7 @@ NGluingPermSearcher::NGluingPermSearcher(
         const FacetPairing<3>* pairing, const FacetPairing<3>::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         UseGluingPerms use, void* useArgs) :
-        NGluingPerms(pairing), autos_(autos), autosNew(autos == 0),
+        GluingPerms<2>(pairing), autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         whichPurge_(whichPurge), use_(use), useArgs_(useArgs),
         started(false),
@@ -297,7 +297,7 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
 }
 
 void NGluingPermSearcher::dumpData(std::ostream& out) const {
-    NGluingPerms::dumpData(out);
+    GluingPerms<2>::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
     out << (finiteOnly_ ? 'f' : '.');
@@ -325,7 +325,7 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
 
 NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
         UseGluingPerms use, void* useArgs) :
-        NGluingPerms(in), autos_(0), autosNew(false),
+        GluingPerms<2>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),
         order(0), orderSize(0), orderElt(0) {
     if (inputError_)

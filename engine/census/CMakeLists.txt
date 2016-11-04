@@ -7,9 +7,9 @@ SET ( FILES
   dim2gluingpermsearcher
   dim4gluingpermsearcher
   euler
+  gluingperms
   hyperbolic
   ncensus
-  ngenericgluingperms
   ngluingpermsearcher
   )
 
@@ -25,6 +25,8 @@ if (${REGINA_INSTALL_DEV})
     dim2gluingpermsearcher.h
     dim4gluingperms.h
     dim4gluingpermsearcher.h
+    gluingperms.h
+    gluingperms-impl.h
     ncensus.h
     ngenericgluingperms.h
     ngenericgluingperms-impl.h

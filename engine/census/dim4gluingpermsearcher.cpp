@@ -207,7 +207,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
         const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
         UseDim4GluingPerms use, void* useArgs) :
-        Dim4GluingPerms(pairing), autos_(autos), autosNew_(autos == 0),
+        GluingPerms<4>(pairing), autos_(autos), autosNew_(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         use_(use), useArgs_(useArgs),
         started_(false),
@@ -577,7 +577,7 @@ Dim4GluingPermSearcher* Dim4GluingPermSearcher::readTaggedData(std::istream& in,
 }
 
 void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
-    Dim4GluingPerms::dumpData(out);
+    GluingPerms<4>::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
     out << (finiteOnly_ ? 'f' : '.');
@@ -631,7 +631,7 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
 
 Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
         UseDim4GluingPerms use, void* useArgs) :
-        Dim4GluingPerms(in), autos_(0), autosNew_(false),
+        GluingPerms<4>(in), autos_(0), autosNew_(false),
         use_(use), useArgs_(useArgs), orientation_(0),
         order_(0), orderSize_(0), orderElt_(0),
         nEdgeClasses_(0), edgeState_(0), edgeStateChanged_(0),

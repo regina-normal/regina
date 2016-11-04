@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "census/dim4gluingperms.h"
+#include "census/gluingperms.h"
 
 namespace regina {
 
@@ -62,7 +62,7 @@ class Dim4GluingPermSearcher;
  * support partial searches as well as full searches).  This set of
  * gluing permutations must not be deallocated by this routine, since it
  * may be used again later by the caller.  The second parameter may contain
- * arbitrary data as passed to either Dim4GluingPerms::findAllPerms() or
+ * arbitrary data as passed to either GluingPerms<4>::findAllPerms() or
  * the Dim4GluingPermSearcher class constructor.
  *
  * Note that the first parameter passed might be \c null to signal that
@@ -96,13 +96,13 @@ typedef void (*UseDim4GluingPerms)(const Dim4GluingPermSearcher*, void*);
  * union-find", Benjamin A. Burton, Discrete Comput. Geom. 38 (2007), no. 3,
  * 527--571.
  *
- * Note that this class derives from Dim4GluingPerms.  The search will
- * involve building and repeatedly modifying the inherited Dim4GluingPerms
+ * Note that this class derives from GluingPerms<4>.  The search will
+ * involve building and repeatedly modifying the inherited GluingPerms<4>
  * data in-place.
  *
  * \ifacespython Not present.
  */
-class REGINA_API Dim4GluingPermSearcher : public Dim4GluingPerms {
+class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
     protected:
         static const int edgeLinkNextFacet[10][5];
             /**< Maintains an ordering of the three pentachoron facets
