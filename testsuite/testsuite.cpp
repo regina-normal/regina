@@ -150,11 +150,11 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addAngleStructures(runner);
 
     // Census:
-    addNCensus(runner);
+    addCensus3(runner);
     addFacetPairing3(runner);
-    addDim2Census(runner);
+    addCensus2(runner);
     addFacetPairing2(runner);
-    addDim4Census(runner);
+    addCensus4(runner);
     addFacetPairing4(runner);
 
     // SnapPea:

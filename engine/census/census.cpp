@@ -52,15 +52,15 @@
 
 namespace regina {
 
-NCensusDB* NCensus::closedOr_ = 0;
-NCensusDB* NCensus::closedNor_ = 0;
-NCensusDB* NCensus::closedHyp_ = 0;
-NCensusDB* NCensus::cuspedHypOr_ = 0;
-NCensusDB* NCensus::cuspedHypNor_ = 0;
-NCensusDB* NCensus::hypKnotLink_ = 0;
-bool NCensus::dbInit_ = false;
+CensusDB* Census::closedOr_ = 0;
+CensusDB* Census::closedNor_ = 0;
+CensusDB* Census::closedHyp_ = 0;
+CensusDB* Census::cuspedHypOr_ = 0;
+CensusDB* Census::cuspedHypNor_ = 0;
+CensusDB* Census::hypKnotLink_ = 0;
+bool Census::dbInit_ = false;
 
-bool NCensusDB::lookup(const std::string& isoSig, NCensusHits* hits) const {
+bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
 #ifdef QDBM_AS_TOKYOCABINET
     VILLA* db;
     if (! (db = vlopen(filename_.c_str(), VL_OREADER, VL_CMPLEX))) {
@@ -73,7 +73,7 @@ bool NCensusDB::lookup(const std::string& isoSig, NCensusHits* hits) const {
     if (records) {
         int n = cblistnum(records);
         for (int i = 0; i < n; ++i)
-            hits->append(new NCensusHit(cblistval(records, i, 0), this));
+            hits->append(new CensusHit(cblistval(records, i, 0), this));
         cblistclose(records);
     }
 
@@ -90,7 +90,7 @@ bool NCensusDB::lookup(const std::string& isoSig, NCensusHits* hits) const {
     if (records) {
         int n = tclistnum(records);
         for (int i = 0; i < n; ++i)
-            hits->append(new NCensusHit(tclistval2(records, i), this));
+            hits->append(new CensusHit(tclistval2(records, i), this));
         tclistdel(records);
     }
 
@@ -101,11 +101,11 @@ bool NCensusDB::lookup(const std::string& isoSig, NCensusHits* hits) const {
     return true;
 }
 
-NCensusHits* NCensus::lookup(const Triangulation<3>& tri) {
+CensusHits* Census::lookup(const Triangulation<3>& tri) {
     return lookup(tri.isoSig());
 }
 
-NCensusHits* NCensus::lookup(const std::string& isoSig) {
+CensusHits* Census::lookup(const std::string& isoSig) {
     if (! dbInit_) {
         closedOr_ = standardDB("closed-or-census-11." REGINA_DB_EXT,
             "Closed census (orientable)");
@@ -122,7 +122,7 @@ NCensusHits* NCensus::lookup(const std::string& isoSig) {
         dbInit_ = true;
     }
 
-    NCensusHits* hits = new NCensusHits;
+    CensusHits* hits = new CensusHits;
 
     closedOr_->lookup(isoSig, hits);
     closedNor_->lookup(isoSig, hits);
@@ -134,8 +134,8 @@ NCensusHits* NCensus::lookup(const std::string& isoSig) {
     return hits;
 }
 
-NCensusDB* NCensus::standardDB(const char* filename, const char* desc) {
-    return new NCensusDB(GlobalDirs::census() + "/" + filename, desc);
+CensusDB* Census::standardDB(const char* filename, const char* desc) {
+    return new CensusDB(GlobalDirs::census() + "/" + filename, desc);
 }
 
 } // namespace regina

@@ -49,6 +49,18 @@ Equality type : BY_REFERENCE
 BoundaryComponent9 : class
 Equality type : BY_REFERENCE
 
+Census : class
+Equality type : NEVER_INSTANTIATED
+
+CensusDB : class
+Equality type : BY_REFERENCE
+
+CensusHit : class
+Equality type : BY_REFERENCE
+
+CensusHits : class
+Equality type : BY_REFERENCE
+
 Component10 : class
 Equality type : BY_REFERENCE
 
@@ -1235,17 +1247,13 @@ NBoolSet : typedef ->  BoolSet
 
 NBoundaryComponent : typedef ->  BoundaryComponent3
 
-NCensus : class
-Equality type : NEVER_INSTANTIATED
+NCensus : typedef ->  Census
 
-NCensusDB : class
-Equality type : BY_REFERENCE
+NCensusDB : typedef ->  CensusDB
 
-NCensusHit : class
-Equality type : BY_REFERENCE
+NCensusHit : typedef ->  CensusHit
 
-NCensusHits : class
-Equality type : BY_REFERENCE
+NCensusHits : typedef ->  CensusHits
 
 NComponent : typedef ->  Component3
 

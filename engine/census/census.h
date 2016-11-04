@@ -47,7 +47,7 @@
 
 namespace regina {
 
-class NCensusHits;
+class CensusHits;
 
 /**
  * \addtogroup census Census of Triangulations
@@ -70,9 +70,9 @@ class NCensusHits;
  * The format used to store census databases is an internal implementation
  * detail that may change in future releases of Regina.  End users
  * should only search census databases using high-level routines such as
- * NCensus::lookup() and NCensusDB::lookup().
+ * Census::lookup() and CensusDB::lookup().
  */
-class REGINA_API NCensusDB {
+class REGINA_API CensusDB {
     private:
         std::string filename_;
             /**< The filename where the database is stored. */
@@ -93,7 +93,7 @@ class REGINA_API NCensusDB {
          * See the desc() routine for further information on how this
          * description might be used.
          */
-        NCensusDB(const std::string& filename, const std::string& desc);
+        CensusDB(const std::string& filename, const std::string& desc);
 
         /**
          * Returns the filename where this database is stored.
@@ -127,7 +127,7 @@ class REGINA_API NCensusDB {
          * Note in particular that if there were no matches but no errors,
          * then the return value will be \c true.
          */
-        bool lookup(const std::string& isoSig, NCensusHits* hits) const;
+        bool lookup(const std::string& isoSig, CensusHits* hits) const;
 };
 
 /**
@@ -136,17 +136,17 @@ class REGINA_API NCensusDB {
  *
  * Note that a given triangulation might have several hits across Regina's
  * databases.  Therefore hits are typically returned using the separate
- * NCensusHits class, which essentially represents a list of individual
- * NCensusHit objects.
+ * CensusHits class, which essentially represents a list of individual
+ * CensusHit objects.
  */
-class REGINA_API NCensusHit : public boost::noncopyable {
+class REGINA_API CensusHit : public boost::noncopyable {
     private:
         const std::string name_;
             /**< The human-readable name associated with the triangulation
                  in the database. */
-        const NCensusDB* db_;
+        const CensusDB* db_;
             /**< The database in which the triangulation was found. */
-        NCensusHit* next_;
+        CensusHit* next_;
             /**< A pointer to the next hit in the list that was found for the
                  same triangulation, or 0 if this is the last hit. */
 
@@ -165,36 +165,36 @@ class REGINA_API NCensusHit : public boost::noncopyable {
          *
          * @return the database for this hit.
          */
-        const NCensusDB* db() const;
+        const CensusDB* db() const;
         /**
          * Returns the next hit for the same triangulation, or 0 if
          * there are no more hits.
          *
-         * Recall that hits are typically returned using the NCensusHits
-         * class, which stores a list of individual NCensusHit objects.
+         * Recall that hits are typically returned using the CensusHits
+         * class, which stores a list of individual CensusHit objects.
          * To iterate through this list, you should begin by calling
-         * NCensusHits::first() to retrieve the first hit, and then for each
-         * hit call NCensusHit::next() (this function) to retrieve the next hit.
+         * CensusHits::first() to retrieve the first hit, and then for each
+         * hit call CensusHit::next() (this function) to retrieve the next hit.
          *
          * @return the next hit after this in the list, or 0 if this is the
          * last hit.
          */
-        const NCensusHit* next() const;
+        const CensusHit* next() const;
 
     private:
         /**
          * Constructs a hit with the given details.  The pointer \a next_
          * will be set to null.
          */
-        NCensusHit(const char* name, const NCensusDB* db);
+        CensusHit(const char* name, const CensusDB* db);
         /**
          * Constructs a hit with the given details.  The pointer \a next_
          * will be set to null.
          */
-        NCensusHit(const std::string& name, const NCensusDB* db);
+        CensusHit(const std::string& name, const CensusDB* db);
 
-    friend class NCensusDB;
-    friend class NCensusHits;
+    friend class CensusDB;
+    friend class CensusHits;
 };
 
 /**
@@ -203,18 +203,18 @@ class REGINA_API NCensusHit : public boost::noncopyable {
  *
  * A given triangulation might have several hits across Regina's databases
  * (or even in the same database).  The complete set of hits for a given
- * triangulation is represented by a single NCensusHits object (which is
- * essentially a linked list of individual NCensusHit objects).  To iterate
- * through this list, you begin by calling NCensusHits::first(), which will
+ * triangulation is represented by a single CensusHits object (which is
+ * essentially a linked list of individual CensusHit objects).  To iterate
+ * through this list, you begin by calling CensusHits::first(), which will
  * return the first hit (or 0 if there are no hits at all).  Then, for each
- * individual hit, you can call NCensusHit::next() to retrieve the next hit
+ * individual hit, you can call CensusHit::next() to retrieve the next hit
  * in the list (this will return 0 if no more hits were found).
  */
-class REGINA_API NCensusHits : public boost::noncopyable {
+class REGINA_API CensusHits : public boost::noncopyable {
     private:
-        NCensusHit* first_;
+        CensusHit* first_;
             /**< The first hit in the list, or 0 if there are no hits. */
-        NCensusHit* last_;
+        CensusHit* last_;
             /**< The last hit in the list, or 0 if there are no hits. */
         size_t count_;
             /**< The total number of hits in the list. */
@@ -223,21 +223,21 @@ class REGINA_API NCensusHits : public boost::noncopyable {
         /**
          * Constructs an empty set of hits.
          */
-        NCensusHits();
+        CensusHits();
         /**
-         * Destroys this object and all of the individual NCensusHit objects
+         * Destroys this object and all of the individual CensusHit objects
          * that it contains.
          */
-        ~NCensusHits();
+        ~CensusHits();
         /**
          * Returns the first hit in this list.
          *
-         * To continue iterating, you can call NCensusHit::next() upon each
+         * To continue iterating, you can call CensusHit::next() upon each
          * individual hit to retrieve the next hit in the list.
          *
          * @return the first hit, or 0 if there are no hits at all.
          */
-        NCensusHit* first() const;
+        CensusHit* first() const;
         /**
          * Returns the total number of hits in this list.
          *
@@ -262,36 +262,36 @@ class REGINA_API NCensusHits : public boost::noncopyable {
          *
          * @param hit the hit to append to this list.
          */
-        void append(NCensusHit* hit);
+        void append(CensusHit* hit);
 };
 
 /**
  * A utility class used to search for triangulations across one or more
  * 3-manifold census databases.
  */
-class REGINA_API NCensus {
+class REGINA_API Census {
     private:
-        static NCensusDB* closedOr_;
+        static CensusDB* closedOr_;
             /**< The census of closed orientable prime 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
-        static NCensusDB* closedNor_;
+        static CensusDB* closedNor_;
             /**< The census of closed non-orientable P^2-irreducible 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
-        static NCensusDB* closedHyp_;
+        static CensusDB* closedHyp_;
             /**< The census of closed hyperbolic 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
-        static NCensusDB* cuspedHypOr_;
+        static CensusDB* cuspedHypOr_;
             /**< The census of cusped hyperbolic orientable 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
-        static NCensusDB* cuspedHypNor_;
+        static CensusDB* cuspedHypNor_;
             /**< The census of cusped hyperbolic non-orientable 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
-        static NCensusDB* hypKnotLink_;
+        static CensusDB* hypKnotLink_;
             /**< The census of cusped hyperbolic knot and link complements
                  that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
@@ -311,13 +311,13 @@ class REGINA_API NCensus {
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
-         * The list of hits will be returned as a NCensusHits object,
+         * The list of hits will be returned as a CensusHits object,
          * which you can use to iterate through the individual matches.
-         * Even if there are no matches at all, a NCensusHits object will
-         * still be returned; you can call NCensusHits::empty() to test
+         * Even if there are no matches at all, a CensusHits object will
+         * still be returned; you can call CensusHits::empty() to test
          * whether any matches were found.
          *
-         * The NCensusHits object that is returned will be newly
+         * The CensusHits object that is returned will be newly
          * allocated, and it is the caller's responsibility to destroy it.
          *
          * This routine is fast: it first computes the isomorphism
@@ -328,7 +328,7 @@ class REGINA_API NCensus {
          * @param tri the triangulation that you wish to search for.
          * @return a newly created list of all database matches.
          */
-        static NCensusHits* lookup(const Triangulation<3>& tri);
+        static CensusHits* lookup(const Triangulation<3>& tri);
         /**
          * Searches for the given triangulation through all of Regina's
          * in-built census databases.
@@ -342,13 +342,13 @@ class REGINA_API NCensus {
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
-         * The list of hits will be returned as a NCensusHits object,
+         * The list of hits will be returned as a CensusHits object,
          * which you can use to iterate through the individual matches.
-         * Even if there are no matches at all, a NCensusHits object will
-         * still be returned; you can call NCensusHits::empty() to test
+         * Even if there are no matches at all, a CensusHits object will
+         * still be returned; you can call CensusHits::empty() to test
          * whether any matches were found.
          *
-         * The NCensusHits object that is returned will be newly
+         * The CensusHits object that is returned will be newly
          * allocated, and it is the caller's responsibility to destroy it.
          *
          * This routine is fast: it first computes the isomorphism
@@ -360,11 +360,11 @@ class REGINA_API NCensus {
          * that you wish to search for.
          * @return a newly created list of all database matches.
          */
-        static NCensusHits* lookup(const std::string& isoSig);
+        static CensusHits* lookup(const std::string& isoSig);
 
     private:
         /**
-         * Constructs a NCensusDB object for one of Regina's in-built
+         * Constructs a CensusDB object for one of Regina's in-built
          * census databases, stored in the standard census database
          * location on the filesystem.
          *
@@ -374,54 +374,86 @@ class REGINA_API NCensus {
          * @param desc a human-readable description for the database.
          * @return the new database specifier.
          */
-        static NCensusDB* standardDB(const char* filename, const char* desc);
+        static CensusDB* standardDB(const char* filename, const char* desc);
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NCensusDB has now been renamed to CensusDB.
+ */
+REGINA_DEPRECATED typedef CensusDB NCensusDB;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NCensusHit has now been renamed to CensusHit.
+ */
+REGINA_DEPRECATED typedef CensusHit NCensusHit;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NCensusHits has now been renamed to CensusHits.
+ */
+REGINA_DEPRECATED typedef CensusHits NCensusHits;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NCensus has now been renamed to Census.
+ */
+REGINA_DEPRECATED typedef Census NCensus;
 
 /*@}*/
 
-// Inline functions for NCensusDB:
+// Inline functions for CensusDB:
 
-inline NCensusDB::NCensusDB(const std::string& filename,
+inline CensusDB::CensusDB(const std::string& filename,
         const std::string& desc) : filename_(filename), desc_(desc) {
 }
 
-inline const std::string& NCensusDB::filename() const {
+inline const std::string& CensusDB::filename() const {
     return filename_;
 }
 
-inline const std::string& NCensusDB::desc() const {
+inline const std::string& CensusDB::desc() const {
     return desc_;
 }
 
-// Inline functions for NCensusHit:
+// Inline functions for CensusHit:
 
-inline NCensusHit::NCensusHit(const char* name, const NCensusDB* db) :
+inline CensusHit::CensusHit(const char* name, const CensusDB* db) :
         name_(name), db_(db), next_(0) {
 }
 
-inline NCensusHit::NCensusHit(const std::string& name, const NCensusDB* db) :
+inline CensusHit::CensusHit(const std::string& name, const CensusDB* db) :
         name_(name), db_(db), next_(0) {
 }
 
-inline const std::string& NCensusHit::name() const {
+inline const std::string& CensusHit::name() const {
     return name_;
 }
 
-inline const NCensusDB* NCensusHit::db() const {
+inline const CensusDB* CensusHit::db() const {
     return db_;
 }
 
-inline const NCensusHit* NCensusHit::next() const {
+inline const CensusHit* CensusHit::next() const {
     return next_;
 }
 
-// Inline functions for NCensusHits:
+// Inline functions for CensusHits:
 
-inline NCensusHits::NCensusHits() : first_(0), last_(0), count_(0) {
+inline CensusHits::CensusHits() : first_(0), last_(0), count_(0) {
 }
 
-inline NCensusHits::~NCensusHits() {
-    NCensusHit* tmp;
+inline CensusHits::~CensusHits() {
+    CensusHit* tmp;
     while (first_) {
         tmp = first_;
         first_ = first_->next_;
@@ -429,19 +461,19 @@ inline NCensusHits::~NCensusHits() {
     }
 }
 
-inline NCensusHit* NCensusHits::first() const {
+inline CensusHit* CensusHits::first() const {
     return first_;
 }
 
-inline size_t NCensusHits::count() const {
+inline size_t CensusHits::count() const {
     return count_;
 }
 
-inline bool NCensusHits::empty() const {
+inline bool CensusHits::empty() const {
     return ! first_;
 }
 
-inline void NCensusHits::append(NCensusHit* hit) {
+inline void CensusHits::append(CensusHit* hit) {
     if (! first_)
         last_ = first_ = hit;
     else

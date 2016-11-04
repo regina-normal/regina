@@ -651,7 +651,7 @@ void Tri3SurfacesUI::refresh() {
     }
 
     if (tri->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        regina::NCensusHits* hits = regina::NCensus::lookup(tri->isoSig());
+        regina::CensusHits* hits = regina::Census::lookup(tri->isoSig());
         if (hits->empty()) {
             census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
         } else if (hits->count() == 1) {
@@ -660,7 +660,7 @@ void Tri3SurfacesUI::refresh() {
         } else {
             QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
                 .arg(hits->count());
-            const regina::NCensusHit* hit = hits->first();
+            const regina::CensusHit* hit = hits->first();
             for ( ; hit; hit = hit->next()) {
                 ans += "<br>";
                 ans += QString(hit->name().c_str()).toHtmlEscaped();

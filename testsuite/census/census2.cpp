@@ -32,23 +32,23 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "census/dim4gluingpermsearcher.h"
+#include "census/dim2gluingpermsearcher.h"
 #include "packet/container.h"
-#include "triangulation/dim4.h"
+#include "triangulation/dim2.h"
 #include "testsuite/census/testcensus.h"
 
+using regina::BoolSet;
 using regina::FacetPairing;
 using regina::GluingPerms;
-using regina::Dim4GluingPermSearcher;
+using regina::Dim2GluingPermSearcher;
 using regina::Triangulation;
-using regina::BoolSet;
 
-class Dim4CensusTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(Dim4CensusTest);
+class Census2Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(Census2Test);
 
-    CPPUNIT_TEST(rawCounts);
-    CPPUNIT_TEST(rawCountsCompact);
+    CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
+    CPPUNIT_TEST(rawCountsClosedMinimal);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -59,100 +59,97 @@ class Dim4CensusTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void rawCounts() {
-            unsigned nAll[] = { 1, 0, 23, 0, 8656, 0 };
-            rawCountsCompare(1, 3, nAll, "closed/ideal",
-                BoolSet::sBoth, BoolSet::sBoth, BoolSet::sFalse, 0);
+        void rawCountsClosed() {
+            // All counts taken from an enumeration using Regina 4.94.
+            unsigned nAll[] = { 1, 0, 7, 0, 51, 0, 738, 0, 20540, 0, 911677 };
+            rawCountsCompare(1, 8, nAll, "closed",
+                BoolSet::sBoth, BoolSet::sFalse, 0, false);
 
-            unsigned nOrientable[] = { 1, 0, 15, 0, 4150, 0 };
-            rawCountsCompare(1, 3, nOrientable, "closed/ideal",
-                BoolSet::sBoth, BoolSet::sTrue, BoolSet::sFalse, 0);
-        }
-
-        void rawCountsCompact() {
-            unsigned nAll[] = { 1, 0, 10, 0 };
-            rawCountsCompare(1, 3, nAll, "closed compact",
-                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sFalse, 0);
-
-            unsigned nOrientable[] = { 1, 0, 8, 0 };
-            rawCountsCompare(1, 3, nOrientable, "closed compact orbl",
-                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sFalse, 0);
+            unsigned nOrientable[] = { 1, 0, 3, 0, 11, 0, 73, 0, 838, 0, 15840};
+            rawCountsCompare(1, 10, nOrientable, "closed orbl",
+                BoolSet::sTrue, BoolSet::sFalse, 0, false);
         }
 
         void rawCountsBounded() {
-            unsigned nAll[] = { 1, 7, 51, 939, 25265 };
-            rawCountsCompare(1, 2, nAll, "bounded",
-                BoolSet::sBoth, BoolSet::sBoth, BoolSet::sTrue, -1);
+            // All counts taken from an enumeration using Regina 4.94.
+            unsigned nAll[] = { 1, 3, 6, 26, 105, 622, 3589, 28031, 202169 };
+            rawCountsCompare(1, 7, nAll, "bounded",
+                BoolSet::sBoth, BoolSet::sTrue, -1, false);
 
-            unsigned nCompact[] = { 1, 5, 38, 782 };
-            rawCountsCompare(1, 2, nCompact, "bounded compact",
-                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sTrue, -1);
+            unsigned nOrientable[] =
+                { 1, 2, 4, 11, 41, 155, 750, 3967, 23260, 148885, 992299 };
+            rawCountsCompare(1, 8, nOrientable, "bounded orbl",
+                BoolSet::sTrue, BoolSet::sTrue, -1, false);
+        }
 
-            unsigned nOrientable[] = { 1, 4, 27, 457 };
-            rawCountsCompare(1, 2, nOrientable, "bounded compact orbl",
-                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sTrue, -1);
+        void rawCountsClosedMinimal() {
+            // All counts taken from an enumeration using Regina 4.94.
+            unsigned nOrientable[] = { 1, 0, 3 /* sphere + torus */, 0, 0, 0,
+                8, 0, 0, 0, 927 };
+            rawCountsCompare(1, 10, nOrientable, "closed orbl minimal",
+                BoolSet::sTrue, BoolSet::sFalse, 0, true);
+
+            unsigned nNonOrientable[] = { 1, 0, 4 /* PP + KB */, 0, 11, 0,
+                144, 0, 3627, 0, 149288 };
+            rawCountsCompare(1, 8, nNonOrientable, "closed non-orbl minimal",
+                BoolSet::sFalse, BoolSet::sFalse, 0, true);
         }
 
         struct CensusSpec {
-            BoolSet finite_;
             BoolSet orbl_;
+            bool minimal_;
 
             unsigned long count_;
 
-            CensusSpec(BoolSet finite, BoolSet orbl) :
-                finite_(finite), orbl_(orbl), count_(0) {}
+            CensusSpec(BoolSet orbl, bool minimal) :
+                orbl_(orbl), minimal_(minimal), count_(0) {}
         };
 
-        static void foundPerms(const GluingPerms<4>* perms, void* spec) {
+        static void foundPerms(const GluingPerms<2>* perms, void* spec) {
             if (perms) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Triangulation<4>* tri = perms->triangulate();
-                if (tri->isValid() &&
+                Triangulation<2>* tri = perms->triangulate();
+                if ((! (s->minimal_ && ! tri->isMinimal())) &&
                         (! (s->orbl_ == BoolSet::sTrue &&
                             ! tri->isOrientable())) &&
                         (! (s->orbl_ == BoolSet::sFalse &&
-                            tri->isOrientable())) &&
-                        (! (s->finite_ == BoolSet::sTrue &&
-                            tri->isIdeal())) &&
-                        (! (s->finite_ == BoolSet::sFalse &&
-                            ! tri->isIdeal())))
+                            tri->isOrientable())))
                     ++s->count_;
                 delete tri;
             }
         }
 
-        static void foundPairing(const FacetPairing<4>* pairing,
-                const FacetPairing<4>::IsoList* autos, void* spec) {
+        static void foundPairing(const FacetPairing<2>* pairing,
+                const FacetPairing<2>::IsoList* autos, void* spec) {
             if (pairing) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Dim4GluingPermSearcher::findAllPerms(pairing, autos,
-                    ! s->orbl_.hasFalse(), ! s->finite_.hasFalse(),
-                    foundPerms, spec);
+                Dim2GluingPermSearcher::findAllPerms(pairing, autos,
+                    ! s->orbl_.hasFalse(), foundPerms, spec);
             }
         }
 
-        static void rawCountsCompare(unsigned minPent, unsigned maxPent,
-                const unsigned* realAns, const char* censusType,
-                BoolSet finiteness, BoolSet orientability,
-                BoolSet boundary, int nBdryFacets) {
-            for (unsigned nPent = minPent; nPent <= maxPent; nPent++) {
-                CensusSpec spec(finiteness, orientability);
 
-                FacetPairing<4>::findAllPairings(nPent, boundary, nBdryFacets,
+        static void rawCountsCompare(unsigned minTris, unsigned maxTris,
+                const unsigned* realAns, const char* censusType,
+                BoolSet orientability, BoolSet boundary, int nBdryFaces,
+                bool minimal) {
+            for (unsigned nTris = minTris; nTris <= maxTris; nTris++) {
+                CensusSpec spec(orientability, minimal);
+                FacetPairing<2>::findAllPairings(nTris, boundary, nBdryFaces,
                     foundPairing, &spec);
 
                 std::ostringstream msg;
-                msg << "Census count for " << nPent << " pentachora ("
-                    << censusType << ") should be " << realAns[nPent]
+                msg << "Census count for " << nTris << " tetrahedra ("
+                    << censusType << ") should be " << realAns[nTris]
                     << ", not " << spec.count_ << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    spec.count_ == realAns[nPent]);
+                    spec.count_ == realAns[nTris]);
             }
         }
 };
 
-void addDim4Census(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(Dim4CensusTest::suite());
+void addCensus2(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Census2Test::suite());
 }
 

@@ -186,13 +186,13 @@
 
     // Display the results of a census lookup.
     if (self.packet->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::Triangulation<3>*>(self.packet)->isoSig());
+        regina::CensusHits* hits = regina::Census::lookup(static_cast<regina::Triangulation<3>*>(self.packet)->isoSig());
         if (hits->count() == 0) {
             self.census.numberOfLines = 1;
             self.census.attributedText = [TextHelper dimString:@"Not found"];
         } else {
             NSMutableString* msg = [[NSMutableString alloc] init];
-            const regina::NCensusHit* hit;
+            const regina::CensusHit* hit;
             int nHits = 0;
             for (hit = hits->first(); hit; hit = hit->next()) {
                 if (hit != hits->first())

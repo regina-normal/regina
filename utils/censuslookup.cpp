@@ -72,9 +72,9 @@ int main(int argc, char* argv[]) {
 #endif
 
 
-    const regina::NCensusHit* hit;
+    const regina::CensusHit* hit;
     for (int i = 1; i < argc; ++i) {
-        regina::NCensusHits* hits = regina::NCensus::lookup(argv[i]);
+        regina::CensusHits* hits = regina::Census::lookup(argv[i]);
 
         size_t n = hits->count();
         std::cout << argv[i] << ": " << n

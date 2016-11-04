@@ -40,16 +40,16 @@
 #include "testsuite/census/testcensus.h"
 
 using regina::BoolSet;
-using regina::NCensus;
-using regina::NCensusHit;
-using regina::NCensusHits;
+using regina::Census;
+using regina::CensusHit;
+using regina::CensusHits;
 using regina::FacetPairing;
 using regina::GluingPerms;
 using regina::NGluingPermSearcher;
 using regina::Triangulation;
 
-class NCensusTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NCensusTest);
+class Census3Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(Census3Test);
 
     CPPUNIT_TEST(lookup);
     CPPUNIT_TEST(rawCounts);
@@ -69,7 +69,7 @@ class NCensusTest : public CppUnit::TestFixture {
         }
 
         void verifyLookupNone(const char* isoSig) {
-            NCensusHits* hits = NCensus::lookup(isoSig);
+            CensusHits* hits = Census::lookup(isoSig);
             if (! (hits->empty() && hits->count() == 0 && ! hits->first())) {
                 std::ostringstream msg;
                 msg << "Census lookup for " << isoSig
@@ -80,7 +80,7 @@ class NCensusTest : public CppUnit::TestFixture {
         }
 
         void verifyLookup(const char* isoSig, const char* name) {
-            NCensusHits* hits = NCensus::lookup(isoSig);
+            CensusHits* hits = Census::lookup(isoSig);
             if (hits->empty() || hits->count() != 1 || (! hits->first()) ||
                     hits->first()->next()) {
                 std::ostringstream msg;
@@ -99,7 +99,7 @@ class NCensusTest : public CppUnit::TestFixture {
 
         void verifyLookup(const char* isoSig, const char* name1,
                 const char* name2) {
-            NCensusHits* hits = NCensus::lookup(isoSig);
+            CensusHits* hits = Census::lookup(isoSig);
             if (hits->empty() || hits->count() != 2 || (! hits->first()) ||
                     (! hits->first()->next()) ||
                     hits->first()->next()->next()) {
@@ -289,7 +289,7 @@ class NCensusTest : public CppUnit::TestFixture {
         }
 };
 
-void addNCensus(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NCensusTest::suite());
+void addCensus3(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Census3Test::suite());
 }
 

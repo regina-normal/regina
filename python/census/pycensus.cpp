@@ -31,10 +31,10 @@
  **************************************************************************/
 
 void addNGluingPermSearcher();
-void addNCensus();
+void addCensus();
 
 void addCensusClasses() {
     addNGluingPermSearcher();
-    addNCensus();
+    addCensus();
 }
 

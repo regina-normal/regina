@@ -2,12 +2,12 @@
 
 # Files to compile
 SET ( FILES
-  dim2census
-  dim4census
+  census2
+  census3
+  census4
   facetpairing2
   facetpairing3
   facetpairing4
-  ncensus
   )
 
 # Prepend folder name

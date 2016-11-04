@@ -36,53 +36,58 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NCensus;
-using regina::NCensusDB;
-using regina::NCensusHit;
-using regina::NCensusHits;
+using regina::Census;
+using regina::CensusDB;
+using regina::CensusHit;
+using regina::CensusHits;
 using regina::Triangulation;
 
 namespace {
-    NCensusHits* (*lookup_tri)(const Triangulation<3>&) = &NCensus::lookup;
-    NCensusHits* (*lookup_sig)(const std::string&) = &NCensus::lookup;
+    CensusHits* (*lookup_tri)(const Triangulation<3>&) = &Census::lookup;
+    CensusHits* (*lookup_sig)(const std::string&) = &Census::lookup;
 }
 
-void addNCensus() {
-    class_<NCensusDB>("NCensusDB",
+void addCensus() {
+    class_<CensusDB>("CensusDB",
             init<const std::string&, const std::string&>())
-        .def("filename", &NCensusDB::filename,
+        .def("filename", &CensusDB::filename,
             return_value_policy<copy_const_reference>())
-        .def("desc", &NCensusDB::desc,
+        .def("desc", &CensusDB::desc,
             return_value_policy<copy_const_reference>())
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NCensusHit, std::auto_ptr<NCensusHit>,
-            boost::noncopyable>("NCensusHit", no_init)
-        .def("name", &NCensusHit::name,
+    class_<CensusHit, std::auto_ptr<CensusHit>,
+            boost::noncopyable>("CensusHit", no_init)
+        .def("name", &CensusHit::name,
             return_value_policy<copy_const_reference>())
-        .def("db", &NCensusHit::db,
+        .def("db", &CensusHit::db,
             return_internal_reference<>())
-        .def("next", &NCensusHit::next,
+        .def("next", &CensusHit::next,
             return_internal_reference<>())
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NCensusHits, std::auto_ptr<NCensusHits>,
-            boost::noncopyable>("NCensusHits", init<>())
-        .def("first", &NCensusHits::first,
+    class_<CensusHits, std::auto_ptr<CensusHits>,
+            boost::noncopyable>("CensusHits", init<>())
+        .def("first", &CensusHits::first,
             return_internal_reference<>())
-        .def("count", &NCensusHits::count)
-        .def("empty", &NCensusHits::empty)
+        .def("count", &CensusHits::count)
+        .def("empty", &CensusHits::empty)
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NCensus, std::auto_ptr<NCensus>,
-            boost::noncopyable>("NCensus", no_init)
+    class_<Census, std::auto_ptr<Census>,
+            boost::noncopyable>("Census", no_init)
         .def("lookup", lookup_tri, return_value_policy<manage_new_object>())
         .def("lookup", lookup_sig, return_value_policy<manage_new_object>())
         .def(regina::python::no_eq_operators())
         .staticmethod("lookup")
     ;
+
+    scope().attr("NCensusDB") = scope().attr("CensusDB");
+    scope().attr("NCensusHit") = scope().attr("CensusHit");
+    scope().attr("NCensusHits") = scope().attr("CensusHits");
+    scope().attr("NCensus") = scope().attr("Census");
 }
 
