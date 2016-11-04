@@ -20,7 +20,6 @@ SET ( FILES
   triangulation3
   turaevviro
   vertex3
-  xmltri3reader
   )
 
 # Prepend folder name
@@ -40,6 +39,5 @@ if (${REGINA_INSTALL_DEV})
     triangle3.h
     triangulation3.h
     vertex3.h
-    xmltri3reader.h
     DESTINATION ${INCLUDEDIR}/triangulation/dim3 COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -9,6 +9,9 @@ SET ( FILES
   facetpairing3
   nfacepair
   nhomologicaldata
+  xmltri2reader
+  xmltri3reader
+  xmltri4reader
   )
 
 # Prepend folder name
@@ -54,5 +57,8 @@ if (${REGINA_INSTALL_DEV})
     nvertex.h
     pachner.h
     xmltrireader.h
+    xmltri2reader.h
+    xmltri3reader.h
+    xmltri4reader.h
     DESTINATION ${INCLUDEDIR}/triangulation COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file triangulation/dim3/xmltri3reader.h
+/*! \file triangulation/xmltri3reader.h
  *  \brief Deals with parsing XML data for 3-dimensional triangulation packets.
  */
 

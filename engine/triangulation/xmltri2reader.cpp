@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "triangulation/dim2.h"
-#include "triangulation/dim2/xmltri2reader.h"
+#include "triangulation/xmltri2reader.h"
 
 namespace regina {
 

@@ -11,7 +11,6 @@ SET ( FILES
   triangle4
   triangulation4
   vertex4
-  xmltri4reader
   )
 
 # Prepend folder name
@@ -32,6 +31,5 @@ if (${REGINA_INSTALL_DEV})
     triangle4.h
     triangulation4.h
     vertex4.h
-    xmltri4reader.h
     DESTINATION ${INCLUDEDIR}/triangulation/dim4 COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

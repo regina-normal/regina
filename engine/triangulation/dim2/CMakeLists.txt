@@ -5,7 +5,6 @@ SET ( FILES
   skeleton
   triangulation2
   vertex2
-  xmltri2reader
   )
 
 # Prepend folder name
@@ -24,6 +23,5 @@ if (${REGINA_INSTALL_DEV})
     triangle2.h
     triangulation2.h
     vertex2.h
-    xmltri2reader.h
     DESTINATION ${INCLUDEDIR}/triangulation/dim2 COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
