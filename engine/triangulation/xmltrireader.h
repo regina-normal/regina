@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file generic/xmltrireader.h
+/*! \file triangulation/xmltrireader.h
  *  \brief Deals with parsing XML data for triangulation packets.
  */
 

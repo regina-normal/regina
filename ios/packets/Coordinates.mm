@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #import "Coordinates.h"
-#import "generic/facenumbering.h"
 #import "hypersurface/normalhypersurfaces.h"
 #import "surfaces/normalsurfaces.h"
 #import "triangulation/dim3.h"

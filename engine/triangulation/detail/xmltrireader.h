@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "packet/xmlpacketreader.h"
-#include "generic/triangulation.h"
+#include "triangulation/generic/triangulation.h"
 #include "utilities/stringutils.h"
 #include <vector>
 

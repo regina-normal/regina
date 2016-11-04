@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "generic/xmltrireader.h"
+#include "triangulation/generic/xmltrireader.h"
 
 namespace regina {
 

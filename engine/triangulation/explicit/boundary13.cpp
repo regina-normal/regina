@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "triangulation/detail/boundarycomponent-impl.h"
-#include "generic/triangulation.h"
+#include "triangulation/generic.h"
 
 namespace regina { namespace detail {
 

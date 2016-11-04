@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "generic/xmltrireader.h"
 #include "packet/packet.h"
 #include "packet/xmlpacketreader.h"
 #include "packet/xmltreeresolver.h"
 #include "packet/packetregistry.h"
+#include "triangulation/xmltrireader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {

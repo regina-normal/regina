@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file generic/face.h
+/*! \file triangulation/generic/face.h
  *  \brief Deals with lower-dimensional faces of triangulations.
  */
 

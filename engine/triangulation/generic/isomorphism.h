@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file generic/isomorphism.h
+/*! \file triangulation/generic/isomorphism.h
  *  \brief Deals with combinatorial isomorphisms between triangulations.
  */
 

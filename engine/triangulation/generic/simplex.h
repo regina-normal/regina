@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file generic/simplex.h
+/*! \file triangulation/generic/simplex.h
  *  \brief Deals with top-dimensional simplices in a triangulation.
  */
 

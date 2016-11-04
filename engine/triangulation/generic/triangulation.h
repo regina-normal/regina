@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file generic/triangulation.h
+/*! \file triangulation/generic/triangulation.h
  *  \brief Deals with triangulations of arbitrary dimension.
  */
 

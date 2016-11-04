@@ -41,7 +41,7 @@
 #define __FACETPAIRING_H
 #endif
 
-#include "generic/facetpairing.h"
+#include "triangulation/generic/facetpairing.h"
 
 namespace regina {
 

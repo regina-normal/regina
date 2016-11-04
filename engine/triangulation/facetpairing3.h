@@ -40,7 +40,7 @@
  */
 
 #include "regina-core.h"
-#include "generic/facetpairing.h"
+#include "triangulation/generic/facetpairing.h"
 
 namespace regina {
 

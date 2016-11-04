@@ -48,8 +48,7 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "generic/triangulation.h"
-#include "packet/packet.h"
+#include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 

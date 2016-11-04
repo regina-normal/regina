@@ -45,8 +45,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "generic/triangulation.h"
-#include "packet/packet.h"
+#include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 

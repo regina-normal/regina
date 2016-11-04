@@ -35,7 +35,7 @@
 #define __COMPONENT_H
 #endif
 
-/*! \file generic/component.h
+/*! \file triangulation/generic/component.h
  *  \brief Deals with connected components of triangulations.
  */
 

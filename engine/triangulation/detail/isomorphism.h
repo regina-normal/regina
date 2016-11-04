@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "generic/facetspec.h"
+#include "triangulation/facetspec.h"
 #include "triangulation/alias/isomorphism.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"

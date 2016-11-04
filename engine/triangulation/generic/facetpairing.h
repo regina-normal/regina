@@ -35,7 +35,7 @@
 #define __FACETPAIRING_H_GENERIC
 #endif
 
-/*! \file generic/facetpairing.h
+/*! \file triangulation/generic/facetpairing.h
  *  \brief Deals with dual graphs of <i>n</i>-dimensional triangulations.
  */
 

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file generic/facenumbering.h
+/*! \file triangulation/facenumbering.h
  *  \brief Describes the way in which <i>subdim</i>-faces are numbered
  *  within a <i>dim</i>-dimensional simplex.
  */

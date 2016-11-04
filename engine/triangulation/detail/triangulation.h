@@ -47,11 +47,11 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
-#include "generic/component.h"
-#include "generic/boundarycomponent.h"
-#include "generic/face.h"
-#include "generic/isomorphism.h"
-#include "generic/simplex.h"
+#include "triangulation/generic/component.h"
+#include "triangulation/generic/boundarycomponent.h"
+#include "triangulation/generic/face.h"
+#include "triangulation/generic/isomorphism.h"
+#include "triangulation/generic/simplex.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/simplex.h"
 

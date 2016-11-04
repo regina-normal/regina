@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "generic/facenumbering.h"
+#include "triangulation/facenumbering.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"

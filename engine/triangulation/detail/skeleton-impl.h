@@ -44,7 +44,7 @@
 #define __SKELETON_IMPL_H_DETAIL
 #endif
 
-#include "generic/triangulation.h"
+#include "triangulation/generic/triangulation.h"
 
 namespace regina {
 namespace detail {

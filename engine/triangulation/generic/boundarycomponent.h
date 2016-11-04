@@ -35,7 +35,7 @@
 #define __BOUNDARYCOMPONENT_H
 #endif
 
-/*! \file generic/boundarycomponent.h
+/*! \file triangulation/generic/boundarycomponent.h
  *  \brief Deals with boundary components of triangulations.
  */
 

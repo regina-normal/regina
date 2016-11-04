@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "generic/facetspec.h"
+#include "triangulation/facetspec.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
 

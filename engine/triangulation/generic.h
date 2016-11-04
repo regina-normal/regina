@@ -43,12 +43,12 @@
 #define __GENERIC_H
 #endif
 
-#include "generic/boundarycomponent.h"
-#include "generic/component.h"
-#include "generic/face.h"
-#include "generic/isomorphism.h"
-#include "generic/simplex.h"
-#include "generic/triangulation.h"
+#include "triangulation/generic/boundarycomponent.h"
+#include "triangulation/generic/component.h"
+#include "triangulation/generic/face.h"
+#include "triangulation/generic/isomorphism.h"
+#include "triangulation/generic/simplex.h"
+#include "triangulation/generic/triangulation.h"
 
 #endif
 

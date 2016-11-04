@@ -50,7 +50,7 @@
 #define __BOUNDARYCOMPONENT_IMPL_H_DETAIL
 #endif
 
-#include "generic/boundarycomponent.h"
+#include "triangulation/generic/boundarycomponent.h"
 
 namespace regina {
 namespace detail {

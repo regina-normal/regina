@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file generic/facetspec.h
+/*! \file triangulation/facetspec.h
  *  \brief Allows lightweight representation of individual facets of
  *  simplices.
  */

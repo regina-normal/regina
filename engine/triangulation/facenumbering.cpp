@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "generic/facenumbering.h"
+#include "triangulation/facenumbering.h"
 
 namespace {
     const int choose0[1]   = { 1 };

@@ -32,7 +32,7 @@
 
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
-#include "generic/isomorphism.h"
+#include "triangulation/generic.h"
 
 namespace regina { namespace detail {
 
