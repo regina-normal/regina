@@ -45,7 +45,8 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
+ * \addtogroup triangulation Triangulations
+ * Triangulations of manifolds in all supported dimensions.
  * @{
  */
 

@@ -59,7 +59,7 @@ class XMLPacketReader;
 
 /**
  * \addtogroup dim2 2-Manifold Triangulations
- * Triangulations of 2-manifolds.
+ * Details for implementing triangulations of 2-manifolds.
  * @{
  */
 

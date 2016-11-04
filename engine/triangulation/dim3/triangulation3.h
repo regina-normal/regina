@@ -73,8 +73,8 @@ class XMLPacketReader;
 template <int> class XMLTriangulationReader;
 
 /**
- * \addtogroup triangulation 3-Manifold Triangulations
- * Triangulations of 3-manifolds.
+ * \addtogroup dim3 3-Manifold Triangulations
+ * Details for implementing triangulations of 3-manifolds.
  * @{
  */
 

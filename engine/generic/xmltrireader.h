@@ -44,7 +44,7 @@
 namespace regina {
 
 /**
- * \weakgroup generic
+ * \weakgroup triangulation
  * @{
  */
 

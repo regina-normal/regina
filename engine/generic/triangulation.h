@@ -52,8 +52,8 @@ namespace regina {
 template <int> class XMLTriangulationReader;
 
 /**
- * \addtogroup generic Generic code
- * Template code to work with triangulations of arbitrary dimension.
+ * \addtogroup generic Generic triangulations
+ * Details for implementing triangulations in arbitrary dimensions.
  * @{
  */
 

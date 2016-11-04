@@ -54,7 +54,7 @@
 namespace regina {
 
 /**
- * \weakgroup algebra
+ * \weakgroup triangulation
  * @{
  */
 

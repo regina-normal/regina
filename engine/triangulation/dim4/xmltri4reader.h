@@ -45,7 +45,7 @@
 namespace regina {
 
 /**
- * \weakgroup dim4
+ * \weakgroup triangulation
  * @{
  */
 

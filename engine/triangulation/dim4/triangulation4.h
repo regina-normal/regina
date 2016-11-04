@@ -64,7 +64,7 @@ template <int> class XMLTriangulationReader;
 
 /**
  * \addtogroup dim4 4-Manifold Triangulations
- * Triangulations of 4-manifolds.
+ * Details for implementing triangulations of 4-manifolds.
  * @{
  */
 
