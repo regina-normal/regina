@@ -35,15 +35,18 @@ Version 5.1  [ (under development) ]
               - All facet pairing headers are included automatically by the
                 new headers triangulation/facetpairing3.h (for dimension 3)
                 and triangulation/facetpairing.h (for all other dimensions).
-              - All typedefs Dim2Foo, NFoo and Dim4Foo are now deprecated, in
-                favour of the templated class names Foo<2,3,4>.  For instance,
-                Dim2Triangulation becomes Triangulation<2>, NVertex becomes
-                Vertex<3>, and Dim4Isomorphism becomes Isomorphism<4>.
-              - As a special case: Dim2TriangleEdge, NTetFace and Dim4PentFacet
-                become FacetSpec<2,3,4>; Dim2EdgePairing, NFacePairing and
-                Dim4FacetPairing become FacetPairing<2,3,4>; and
-                Dim2ExampleTriangulation, NExampleTriangulation and
-                Dim4ExampleTriangulation become Example<2,3,4>.
+              - All typedefs of the form Dim2Foo, NFoo and Dim4Foo are now
+                deprecated, in favour of the templated class names Foo<2,3,4>.
+                For instance, Dim2Triangulation becomes Triangulation<2>,
+                NVertex becomes Vertex<3>, and Dim4Isomorphism becomes
+                Isomorphism<4>.
+              - As a special cases:
+                * Dim2TriangleEdge, NTetFace and Dim4PentFacet become
+                  FacetSpec<2,3,4>;
+                * Dim2EdgePairing, NFacePairing and Dim4FacetPairing become
+                  FacetPairing<2,3,4>;
+                * Dim2ExampleTriangulation, NExampleTriangulation and
+                  Dim4ExampleTriangulation become Example<2,3,4>.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into
