@@ -33,7 +33,7 @@
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/dim3.h"
-#include "triangulation/nfacepair.h"
+#include "triangulation/facepair.h"
 #include "utilities/memutils.h"
 
 namespace regina {

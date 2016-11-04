@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/nfacepair.h"
+#include "triangulation/facepair.h"
 
 namespace regina {
 
-NFacePair::NFacePair(int newFirst, int newSecond) {
+FacePair::FacePair(int newFirst, int newSecond) {
     if (newFirst < newSecond) {
         first_ = newFirst;
         second_ = newSecond;
@@ -44,20 +44,20 @@ NFacePair::NFacePair(int newFirst, int newSecond) {
     }
 }
 
-NFacePair NFacePair::complement() const {
+FacePair FacePair::complement() const {
     if (first_ > 1)
-        return NFacePair(0, 1);
+        return FacePair(0, 1);
     else if (first_ == 1)
-        return (second_ == 2 ? NFacePair(0, 3) : NFacePair(0, 2));
+        return (second_ == 2 ? FacePair(0, 3) : FacePair(0, 2));
     else if (second_ == 1)
-        return NFacePair(2, 3);
+        return FacePair(2, 3);
     else if (second_ == 2)
-        return NFacePair(1, 3);
+        return FacePair(1, 3);
     else
-        return NFacePair(1, 2);
+        return FacePair(1, 2);
 }
 
-void NFacePair::operator ++ (int) {
+void FacePair::operator ++ (int) {
     if (second_ < 3)
         second_++;
     else if (first_ < 3) {
@@ -67,7 +67,7 @@ void NFacePair::operator ++ (int) {
     }
 }
 
-void NFacePair::operator -- (int) {
+void FacePair::operator -- (int) {
     if (second_ > first_ + 1)
         second_--;
     else if (first_ > 0) {

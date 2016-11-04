@@ -34,7 +34,7 @@
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/dim3.h"
-#include "triangulation/nfacepair.h"
+#include "triangulation/facepair.h"
 #include "utilities/memutils.h"
 
 namespace regina {
@@ -139,10 +139,10 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     unsigned i;
     int tet;
     FacetSpec<3> dest1, dest2;
-    NFacePair faces;
+    FacePair faces;
     for (i = 0; i < nChains; i++) {
         tet = order[i].simp;
-        faces = NFacePair(order[i].facet,
+        faces = FacePair(order[i].facet,
             (*pairing)[order[i]].facet).complement();
         dest1 = pairing->dest(tet, faces.lower());
         dest2 = pairing->dest(tet, faces.upper());
@@ -167,7 +167,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
             orderAssigned[dest1.simp * 4 + dest1.facet] = true;
             orderAssigned[dest2.simp * 4 + dest2.facet] = true;
 
-            faces = NFacePair(dest1.facet, dest2.facet);
+            faces = FacePair(dest1.facet, dest2.facet);
 
             if (dest1.simp < tet) {
                 order[orderDone] = FacetSpec<3>(dest1.simp, faces.lower());
@@ -220,11 +220,11 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
 
     chainPermIndices = (nChainEdges == 0 ? 0 : new int[nChainEdges * 2]);
 
-    NFacePair facesAdj, comp, compAdj;
+    FacePair facesAdj, comp, compAdj;
     Perm<4> trial1, trial2;
     for (i = 0; i < nChainEdges; i++) {
         if (orderType[i] == EDGE_CHAIN_END) {
-            faces = NFacePair(order[i].facet, pairing->dest(order[i]).facet);
+            faces = FacePair(order[i].facet, pairing->dest(order[i]).facet);
             comp = faces.complement();
 
             // order[i].facet == faces.lower(),
@@ -240,9 +240,9 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
                        comp.upper(), comp.lower(),
                        comp.lower(), faces.lower()));
         } else if (orderType[i] == EDGE_CHAIN_INTERNAL_FIRST) {
-            faces = NFacePair(order[i].facet, order[i + 1].facet);
+            faces = FacePair(order[i].facet, order[i + 1].facet);
             comp = faces.complement();
-            facesAdj = NFacePair(pairing->dest(order[i]).facet,
+            facesAdj = FacePair(pairing->dest(order[i]).facet,
                 pairing->dest(order[i + 1]).facet);
             compAdj = facesAdj.complement();
 

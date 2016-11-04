@@ -7,8 +7,8 @@ SET ( FILES
   edge3
   example3
   facetpairing3
-  nfacepair
-  nhomologicaldata
+  facepair
+  homologicaldata
   isomorphism3
   tetrahedron3
   triangle3

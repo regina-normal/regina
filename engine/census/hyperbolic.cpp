@@ -32,7 +32,7 @@
 
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
-#include "triangulation/nfacepair.h"
+#include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
 #include "utilities/memutils.h"
 

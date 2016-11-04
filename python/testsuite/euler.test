@@ -36,10 +36,10 @@ def printEuler(t, name):
 		'---', name
 
 	# Consistency check, while we're here.
-	eHom = regina.NHomologicalData(t).eulerChar()
+	eHom = regina.HomologicalData(t).eulerChar()
 	if eHom != t.eulerCharManifold():
 		print 'ERROR: Triangulation3::eulerCharManifold() and'
-		print '       NHomologicalData.eulerChar() disagree!'
+		print '       HomologicalData.eulerChar() disagree!'
 
 print 'Euler characteristics for triangulation vs compact manifold:'
 

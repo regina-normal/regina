@@ -7,8 +7,8 @@ SET ( FILES
   example4
   facenumbering
   facetpairing3
-  nfacepair
-  nhomologicaldata
+  facepair
+  homologicaldata
   xmltri2reader
   xmltri3reader
   xmltri4reader
@@ -40,9 +40,12 @@ if (${REGINA_INSTALL_DEV})
     example4.h
     forward.h
     facenumbering.h
+    facepair.h
     facetpairing.h
     facetpairing3.h
     facetspec.h
+    generic.h
+    homologicaldata.h
     nboundarycomponent.h
     ncomponent.h
     nedge.h

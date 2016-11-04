@@ -31,31 +31,31 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "triangulation/nfacepair.h"
+#include "triangulation/facepair.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NFacePair;
+using regina::FacePair;
 
 namespace {
-    void facepair_inc_operator(NFacePair& p) {
+    void facepair_inc_operator(FacePair& p) {
         p++;
     }
 
-    void facepair_dec_operator(NFacePair& p) {
+    void facepair_dec_operator(FacePair& p) {
         p--;
     }
 }
 
-void addNFacePair() {
-    class_<NFacePair>("NFacePair")
+void addFacePair() {
+    class_<FacePair>("FacePair")
         .def(init<int, int>())
-        .def(init<const NFacePair&>())
-        .def("lower", &NFacePair::lower)
-        .def("upper", &NFacePair::upper)
-        .def("isBeforeStart", &NFacePair::isBeforeStart)
-        .def("isPastEnd", &NFacePair::isPastEnd)
-        .def("complement", &NFacePair::complement)
+        .def(init<const FacePair&>())
+        .def("lower", &FacePair::lower)
+        .def("upper", &FacePair::upper)
+        .def("isBeforeStart", &FacePair::isBeforeStart)
+        .def("isPastEnd", &FacePair::isPastEnd)
+        .def("complement", &FacePair::complement)
         .def(self < self)
         .def(self > self)
         .def(self <= self)
@@ -64,5 +64,7 @@ void addNFacePair() {
         .def("dec", facepair_dec_operator)
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NFacePair") = scope().attr("FacePair");
 }
 

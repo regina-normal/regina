@@ -4,7 +4,7 @@
 SET ( FILES
   connectedsumdecomp
   eltmoves
-  nhomologicaldata
+  homologicaldata
   isomorphism
   triangulation3
   )

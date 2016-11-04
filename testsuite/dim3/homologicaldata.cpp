@@ -33,20 +33,20 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/example3.h"
-#include "triangulation/nhomologicaldata.h"
+#include "triangulation/homologicaldata.h"
 #include "triangulation/dim3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::Example;
-using regina::NHomologicalData;
+using regina::HomologicalData;
 using regina::Triangulation;
 
 /**
  * Thanks to Ryan Budney for supplying the questions and answers for
  * these tests!
  */
-class NHomologicalDataTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NHomologicalDataTest);
+class HomologicalDataTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(HomologicalDataTest);
 
     CPPUNIT_TEST(homologyConsistency);
     CPPUNIT_TEST(bdryManifoldMapH1);
@@ -188,7 +188,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyHomologyConsistency(const Triangulation<3>& tri,
                 const char* name) {
-            NHomologicalData dat(tri);
+            HomologicalData dat(tri);
 
             std::string fromStandard, fromDual;
             for (int i = 0; i <= 3; ++i) {
@@ -254,7 +254,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyBdryManifoldMapH1(const Triangulation<3>& tri,
                 const char* name, const char* ans) {
-            NHomologicalData dat(tri);
+            HomologicalData dat(tri);
             std::string val = dat.bdryHomologyMap(1).str();
             if (val != ans) {
                 std::ostringstream msg;
@@ -284,7 +284,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyStandardCells(Triangulation<3>& tri, const char* name,
                 unsigned long c0, unsigned long c1, unsigned long c2,
                 unsigned long c3) {
-            NHomologicalData dat(tri);
+            HomologicalData dat(tri);
             unsigned long ans[4] = { c0, c1, c2, c3 };
 
             unsigned long val;
@@ -316,7 +316,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyDualCells(Triangulation<3>& tri, const char* name,
                 unsigned long c0, unsigned long c1, unsigned long c2,
                 unsigned long c3) {
-            NHomologicalData dat(tri);
+            HomologicalData dat(tri);
             unsigned long ans[4] = { c0, c1, c2, c3 };
 
             unsigned long val;
@@ -347,7 +347,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyTorsionRankVector(Triangulation<3>& tri,
                 const char* name, const char* ans) {
-            NHomologicalData dat(tri);
+            HomologicalData dat(tri);
             std::string val = dat.torsionRankVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -374,7 +374,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyTorsionSigmaVector(Triangulation<3>& tri,
                 const char* name, const char* ans) {
-            NHomologicalData dat(tri);
+            HomologicalData dat(tri);
             std::string val = dat.torsionSigmaVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -402,7 +402,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyTorsionLegendreSymbolVector(Triangulation<3>& tri,
                 const char* name, const char* ans) {
-            NHomologicalData dat(tri);
+            HomologicalData dat(tri);
             std::string val = dat.torsionLegendreSymbolVectorString();
             if (val != ans) {
                 std::ostringstream msg;
@@ -433,7 +433,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
         void verifyEmbeddability(const Triangulation<3>& tri,
                 const char* name, const char* ans) {
-            NHomologicalData dat(tri);
+            HomologicalData dat(tri);
             std::string val = dat.embeddabilityComment();
             if (val != ans) {
                 std::ostringstream msg;
@@ -496,7 +496,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         }
 };
 
-void addNHomologicalData(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NHomologicalDataTest::suite());
+void addHomologicalData(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(HomologicalDataTest::suite());
 }
 

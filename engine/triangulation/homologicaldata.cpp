@@ -32,7 +32,7 @@
 
 #include "maths/matrixops.h"
 #include "maths/primes.h"
-#include "triangulation/nhomologicaldata.h"
+#include "triangulation/homologicaldata.h"
 #include <list>
 #include <iostream>
 #include <sstream>
@@ -41,7 +41,7 @@
 namespace regina {
 
 
-void NHomologicalData::writeTextShort(std::ostream& out) const {
+void HomologicalData::writeTextShort(std::ostream& out) const {
     if (mHomology0.get()) {
         out<<"H_0(M) = ";
         mHomology0->writeTextShort(out);
@@ -111,7 +111,7 @@ void NHomologicalData::writeTextShort(std::ostream& out) const {
 
 }
 
-void NHomologicalData::computeccIndexing() {
+void HomologicalData::computeccIndexing() {
     // Only do this if we haven't already done it.
     if (ccIndexingComputed)
         return;
@@ -213,7 +213,7 @@ void NHomologicalData::computeccIndexing() {
     numBdryCells[2] = sBNIF.size() + sIEFOT.size();
 }
 
-void NHomologicalData::computeChainComplexes() {
+void HomologicalData::computeChainComplexes() {
     // Only do this if we haven't already done it.
     if (chainComplexesComputed)
         return;
@@ -903,7 +903,7 @@ void NHomologicalData::computeChainComplexes() {
                 tri->countTriangles() + i - sBNIF.size() ) ,i)+=1;
 }
 
-const NMarkedAbelianGroup& NHomologicalData::homology(unsigned q) {
+const NMarkedAbelianGroup& HomologicalData::homology(unsigned q) {
     if (q==0) {
         if (!mHomology0.get()) {
             computeChainComplexes();
@@ -934,7 +934,7 @@ const NMarkedAbelianGroup& NHomologicalData::homology(unsigned q) {
     // the A's should probably be redone as an array of pointers...
 }
 
-const NMarkedAbelianGroup& NHomologicalData::bdryHomology(unsigned q) {
+const NMarkedAbelianGroup& HomologicalData::bdryHomology(unsigned q) {
     if (q==0) {
         if (!bHomology0.get()) {
             computeChainComplexes();
@@ -958,7 +958,7 @@ const NMarkedAbelianGroup& NHomologicalData::bdryHomology(unsigned q) {
     }
 }
 
-const NMarkedAbelianGroup& NHomologicalData::dualHomology(unsigned q) {
+const NMarkedAbelianGroup& HomologicalData::dualHomology(unsigned q) {
     if (q==0) {
         if (!dmHomology0.get()) {
             computeChainComplexes();
@@ -988,7 +988,7 @@ const NMarkedAbelianGroup& NHomologicalData::dualHomology(unsigned q) {
     }
 }
 
-void NHomologicalData::computeHomology() {
+void HomologicalData::computeHomology() {
     computeChainComplexes();
     if (!mHomology0.get())
         mHomology0.reset(new NMarkedAbelianGroup(*A0,*A1));
@@ -1000,7 +1000,7 @@ void NHomologicalData::computeHomology() {
         mHomology3.reset(new NMarkedAbelianGroup(*A3,*A4));
 }
 
-void NHomologicalData::computeBHomology() {
+void HomologicalData::computeBHomology() {
     computeChainComplexes();
     if (!bHomology0.get())
         bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
@@ -1010,7 +1010,7 @@ void NHomologicalData::computeBHomology() {
         bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
 }
 
-void NHomologicalData::computeDHomology() {
+void HomologicalData::computeDHomology() {
     computeChainComplexes();
     if (!dmHomology0.get())
         dmHomology0.reset(new NMarkedAbelianGroup(*B0_,*B1));
@@ -1022,7 +1022,7 @@ void NHomologicalData::computeDHomology() {
         dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
 }
 
-const NHomMarkedAbelianGroup& NHomologicalData::h1CellAp() {
+const NHomMarkedAbelianGroup& HomologicalData::h1CellAp() {
     if (!dmTomMap1.get()) {
         computeHomology();
         computeDHomology();
@@ -1032,7 +1032,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::h1CellAp() {
     return (*dmTomMap1);
 }
 
-const NHomMarkedAbelianGroup& NHomologicalData::bdryHomologyMap(unsigned q) {
+const NHomMarkedAbelianGroup& HomologicalData::bdryHomologyMap(unsigned q) {
     if (q==0) {
         if (!bmMap0.get()) {
             computeHomology();
@@ -1062,7 +1062,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::bdryHomologyMap(unsigned q) {
     }
 }
 
-void NHomologicalData::computeBIncl() {
+void HomologicalData::computeBIncl() {
     computeHomology();
     computeBHomology();
     if (!bmMap0.get())
@@ -1077,7 +1077,7 @@ void NHomologicalData::computeBIncl() {
 }
 
 
-void NHomologicalData::computeTorsionLinkingForm() {
+void HomologicalData::computeTorsionLinkingForm() {
     // Only do this if we haven't done it already.
     if (torsionFormComputed)
         return;
@@ -1694,7 +1694,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     torsionFormComputed = true;
 } // end computeTorsionLinkingForm()
 
-void NHomologicalData::computeEmbeddabilityString() {
+void HomologicalData::computeEmbeddabilityString() {
     // Only do this if we haven't done it already.
     if (! embeddabilityString.empty())
         return;
@@ -1831,7 +1831,7 @@ void NHomologicalData::computeEmbeddabilityString() {
        // orientation cover...
        Triangulation<3> orTri(*tri);
        orTri.makeDoubleCover();
-       NHomologicalData covHomol(orTri);
+       HomologicalData covHomol(orTri);
         // break up into two cases, boundary and no boundary...
         if (covHomol.bdryHomology(0).isTrivial())
          { // no boundary
@@ -1853,7 +1853,7 @@ void NHomologicalData::computeEmbeddabilityString() {
 } // end computeEmbeddabilityString()
 
 
-bool NHomologicalData::formIsHyperbolic() {
+bool HomologicalData::formIsHyperbolic() {
     if (torsionFormComputed)
         return torsionLinkingFormIsHyperbolic;
 

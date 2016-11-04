@@ -31,49 +31,51 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "triangulation/nhomologicaldata.h"
+#include "triangulation/homologicaldata.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NHomologicalData;
+using regina::HomologicalData;
 using regina::Triangulation;
 
-void addNHomologicalData() {
-    class_<NHomologicalData, std::auto_ptr<NHomologicalData>,
+void addHomologicalData() {
+    class_<HomologicalData, std::auto_ptr<HomologicalData>,
             boost::noncopyable>
-            ("NHomologicalData", init<const Triangulation<3>&>())
-        .def(init<const NHomologicalData&>())
-        .def("homology", &NHomologicalData::homology,
+            ("HomologicalData", init<const Triangulation<3>&>())
+        .def(init<const HomologicalData&>())
+        .def("homology", &HomologicalData::homology,
             return_internal_reference<>())
-        .def("bdryHomology", &NHomologicalData::bdryHomology,
+        .def("bdryHomology", &HomologicalData::bdryHomology,
             return_internal_reference<>())
-        .def("bdryHomologyMap", &NHomologicalData::bdryHomologyMap,
+        .def("bdryHomologyMap", &HomologicalData::bdryHomologyMap,
             return_internal_reference<>())
-        .def("dualHomology", &NHomologicalData::dualHomology,
+        .def("dualHomology", &HomologicalData::dualHomology,
             return_internal_reference<>())
-        .def("h1CellAp", &NHomologicalData::h1CellAp,
+        .def("h1CellAp", &HomologicalData::h1CellAp,
             return_internal_reference<>())
-        .def("countStandardCells", &NHomologicalData::countStandardCells)
-        .def("countDualCells", &NHomologicalData::countDualCells)
-        .def("countBdryCells", &NHomologicalData::countBdryCells)
-        .def("eulerChar", &NHomologicalData::eulerChar)
+        .def("countStandardCells", &HomologicalData::countStandardCells)
+        .def("countDualCells", &HomologicalData::countDualCells)
+        .def("countBdryCells", &HomologicalData::countBdryCells)
+        .def("eulerChar", &HomologicalData::eulerChar)
         .def("torsionRankVectorString",
-            &NHomologicalData::torsionRankVectorString,
+            &HomologicalData::torsionRankVectorString,
             return_value_policy<copy_const_reference>())
         .def("torsionSigmaVectorString",
-            &NHomologicalData::torsionSigmaVectorString,
+            &HomologicalData::torsionSigmaVectorString,
             return_value_policy<copy_const_reference>())
         .def("torsionLegendreSymbolVectorString",
-            &NHomologicalData::torsionLegendreSymbolVectorString,
+            &HomologicalData::torsionLegendreSymbolVectorString,
             return_value_policy<copy_const_reference>())
-        .def("formIsHyperbolic", &NHomologicalData::formIsHyperbolic)
-        .def("formIsSplit", &NHomologicalData::formIsSplit)
-        .def("formSatKK", &NHomologicalData::formSatKK)
+        .def("formIsHyperbolic", &HomologicalData::formIsHyperbolic)
+        .def("formIsSplit", &HomologicalData::formIsSplit)
+        .def("formSatKK", &HomologicalData::formSatKK)
         .def("embeddabilityComment",
-            &NHomologicalData::embeddabilityComment,
+            &HomologicalData::embeddabilityComment,
             return_value_policy<copy_const_reference>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NHomologicalData") = scope().attr("HomologicalData");
 }
 

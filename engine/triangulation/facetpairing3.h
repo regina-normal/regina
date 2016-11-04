@@ -44,7 +44,7 @@
 
 namespace regina {
 
-class NFacePair;
+class FacePair;
 
 /**
  * \weakgroup triangulation
@@ -127,7 +127,7 @@ class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
          * tetrahedron at which we begin.  This parameter will also be
          * modified directly by this routine as a way of returning results.
          */
-        void followChain(size_t& tet, NFacePair& faces) const;
+        void followChain(size_t& tet, FacePair& faces) const;
 
         /**
          * Determines whether this face pairing contains a triple edge.

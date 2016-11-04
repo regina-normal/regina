@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "triangulation/nfacepair.h"
+#include "triangulation/facepair.h"
 #include "triangulation/facetpairing3.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"

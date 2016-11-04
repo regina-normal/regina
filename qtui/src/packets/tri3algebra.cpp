@@ -34,7 +34,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/numbertheory.h"
-#include "triangulation/nhomologicaldata.h"
+#include "triangulation/homologicaldata.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -532,7 +532,7 @@ void Tri3CellularInfoUI::refresh() {
     if (tri->isValid()) {
         bool unicode = ReginaPrefSet::global().displayUnicode;
 
-        regina::NHomologicalData minfo(*tri);
+        regina::HomologicalData minfo(*tri);
 
         Cells->setText(QObject::tr("%1, %2, %3, %4").
             arg(minfo.countStandardCells(0)).

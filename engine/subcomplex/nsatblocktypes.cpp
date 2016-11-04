@@ -33,7 +33,7 @@
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatblocktypes.h"
 #include "subcomplex/nlayeredsolidtorus.h"
-#include "triangulation/nfacepair.h"
+#include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
 #include <algorithm>
 #include <cstdlib> // For exit().
@@ -302,8 +302,8 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
 
     // Here we find the endpoints of the edge from which the two layered
     // triangles fold out.
-    NFacePair centralEdge =
-        NFacePair(annulus.roles[0][3], annulus.roles[1][3]).complement();
+    FacePair centralEdge =
+        FacePair(annulus.roles[0][3], annulus.roles[1][3]).complement();
 
     if (annulus.roles[1] !=
             Perm<4>(annulus.roles[0][3], annulus.roles[1][3]) *
@@ -334,14 +334,14 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     // The first run verifies that each tetrahedron is usable.
     // The second run inserts the tetrahedra into avoidTets.
     Tetrahedron<3>* current = annulus.tet[0];
-    NFacePair currPair = centralEdge;
-    NFacePair nextPair;
+    FacePair currPair = centralEdge;
+    FacePair nextPair;
     while (current != lst->base()) {
         // INV: The current tetrahedron is usable.
         // INV: The next two faces to push through are in currPair.
 
         // Push through to the next tetrahedron.
-        nextPair = NFacePair(
+        nextPair = FacePair(
             current->adjacentFace(currPair.upper()),
             current->adjacentFace(currPair.lower())
             ).complement();
@@ -362,7 +362,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
         // INV: The next two faces to push through are in currPair.
 
         // Push through to the next tetrahedron.
-        nextPair = NFacePair(
+        nextPair = FacePair(
             current->adjacentFace(currPair.upper()),
             current->adjacentFace(currPair.lower())
             ).complement();
