@@ -34,14 +34,7 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __DIM2BOUNDARYCOMPONENT_H
-#ifndef __DOXYGEN
-#define __DIM2BOUNDARYCOMPONENT_H
-#endif
-
 #warning This header is deprecated; please use triangulation/dim2.h instead.
 
 #include "triangulation/dim2.h"
-
-#endif
 

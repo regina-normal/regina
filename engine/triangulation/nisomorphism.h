@@ -34,14 +34,7 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __NISOMORPHISM_H
-#ifndef __DOXYGEN
-#define __NISOMORPHISM_H
-#endif
-
 #warning This header is deprecated; please use triangulation/dim3.h instead.
 
 #include "triangulation/dim3.h"
-
-#endif
 

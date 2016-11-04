@@ -34,14 +34,7 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __NEXAMPLETRIANGULATION_H
-#ifndef __DOXYGEN
-#define __NEXAMPLETRIANGULATION_H
-#endif
-
 #warning This header is deprecated; please use triangulation/example3.h instead.
 
 #include "triangulation/example3.h"
-
-#endif
 

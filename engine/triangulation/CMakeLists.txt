@@ -5,6 +5,7 @@ SET ( FILES
   example2
   example3
   example4
+  facenumbering
   facetpairing3
   nfacepair
   nhomologicaldata
@@ -35,8 +36,10 @@ if (${REGINA_INSTALL_DEV})
     example3.h
     example4.h
     forward.h
+    facenumbering.h
     facetpairing.h
     facetpairing3.h
+    facetspec.h
     nboundarycomponent.h
     ncomponent.h
     nedge.h
@@ -50,5 +53,6 @@ if (${REGINA_INSTALL_DEV})
     ntriangulation.h
     nvertex.h
     pachner.h
+    xmltrireader.h
     DESTINATION ${INCLUDEDIR}/triangulation COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -1049,13 +1049,11 @@
 		05431EEF1C40F093009BC072 /* dim2edgepairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EEE1C40F093009BC072 /* dim2edgepairing.h */; };
 		05431EFC1C40F1F6009BC072 /* component.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EF31C40F1F6009BC072 /* component.h */; };
 		05431EFD1C40F1F6009BC072 /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EF41C40F1F6009BC072 /* face.h */; };
-		05431EFE1C40F1F6009BC072 /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EF51C40F1F6009BC072 /* facenumbering.cpp */; };
 		05431EFF1C40F1F6009BC072 /* facenumbering.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EF61C40F1F6009BC072 /* facenumbering.h */; };
 		05431F001C40F1F6009BC072 /* facetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EF71C40F1F6009BC072 /* facetpairing.h */; };
 		05431F011C40F1F6009BC072 /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EF81C40F1F6009BC072 /* isomorphism.h */; };
 		05431F021C40F1F6009BC072 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EF91C40F1F6009BC072 /* simplex.h */; };
 		05431F031C40F1F6009BC072 /* triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EFA1C40F1F6009BC072 /* triangulation.h */; };
-		05431F041C40F1F9009BC072 /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EF51C40F1F6009BC072 /* facenumbering.cpp */; };
 		05431F121C40F257009BC072 /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F0F1C40F257009BC072 /* face.h */; };
 		05431F131C40F257009BC072 /* facenumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F101C40F257009BC072 /* facenumber.h */; };
 		05431F141C40F257009BC072 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F111C40F257009BC072 /* simplex.h */; };
@@ -1226,6 +1224,11 @@
 		055114CA1DCC460900EC753C /* example4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114C31DCC45FD00EC753C /* example4.cpp */; };
 		055114CD1DCC476A00EC753C /* nexampletriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114CB1DCC476A00EC753C /* nexampletriangulation.h */; };
 		055114CE1DCC476A00EC753C /* pachner.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114CC1DCC476A00EC753C /* pachner.h */; };
+		055114D31DCC71A700EC753C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114CF1DCC71A700EC753C /* facenumbering.cpp */; };
+		055114D41DCC71A700EC753C /* facenumbering.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D01DCC71A700EC753C /* facenumbering.h */; };
+		055114D51DCC71A700EC753C /* facetspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D11DCC71A700EC753C /* facetspec.h */; };
+		055114D61DCC71A700EC753C /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D21DCC71A700EC753C /* xmltrireader.h */; };
+		055114D71DCC71AE00EC753C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114CF1DCC71A700EC753C /* facenumbering.cpp */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -3062,7 +3065,6 @@
 		05431EEE1C40F093009BC072 /* dim2edgepairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2edgepairing.h; sourceTree = "<group>"; };
 		05431EF31C40F1F6009BC072 /* component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
 		05431EF41C40F1F6009BC072 /* face.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
-		05431EF51C40F1F6009BC072 /* facenumbering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facenumbering.cpp; sourceTree = "<group>"; };
 		05431EF61C40F1F6009BC072 /* facenumbering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
 		05431EF71C40F1F6009BC072 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05431EF81C40F1F6009BC072 /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
@@ -3193,6 +3195,10 @@
 		055114C41DCC45FD00EC753C /* example4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example4.h; sourceTree = "<group>"; };
 		055114CB1DCC476A00EC753C /* nexampletriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexampletriangulation.h; sourceTree = "<group>"; };
 		055114CC1DCC476A00EC753C /* pachner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pachner.h; sourceTree = "<group>"; };
+		055114CF1DCC71A700EC753C /* facenumbering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facenumbering.cpp; sourceTree = "<group>"; };
+		055114D01DCC71A700EC753C /* facenumbering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
+		055114D11DCC71A700EC753C /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
+		055114D21DCC71A700EC753C /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
@@ -4863,7 +4869,6 @@
 				059BC6651DC7F76E00AB4206 /* boundarycomponent.h */,
 				05431EF31C40F1F6009BC072 /* component.h */,
 				05431EF41C40F1F6009BC072 /* face.h */,
-				05431EF51C40F1F6009BC072 /* facenumbering.cpp */,
 				05431EF61C40F1F6009BC072 /* facenumbering.h */,
 				05431EF71C40F1F6009BC072 /* facetpairing.h */,
 				052AB70F1C6304A800C44D54 /* facetspec.h */,
@@ -5317,9 +5322,12 @@
 				052F9E3F180600FB00FAE4DF /* example3.h */,
 				055114C31DCC45FD00EC753C /* example4.cpp */,
 				055114C41DCC45FD00EC753C /* example4.h */,
+				055114CF1DCC71A700EC753C /* facenumbering.cpp */,
+				055114D01DCC71A700EC753C /* facenumbering.h */,
 				05669D911DCB0E9A00C870C6 /* facetpairing.h */,
 				05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */,
 				05669D931DCB0E9A00C870C6 /* facetpairing3.h */,
+				055114D11DCC71A700EC753C /* facetspec.h */,
 				058C305E1DCAF6F8006162D2 /* forward.h */,
 				058E398C1DCBC67C00D463A4 /* generic.h */,
 				052F9E3A180600FB00FAE4DF /* nboundarycomponent.h */,
@@ -5337,6 +5345,7 @@
 				052F9E52180600FB00FAE4DF /* ntriangulation.h */,
 				052F9E54180600FB00FAE4DF /* nvertex.h */,
 				055114CC1DCC476A00EC753C /* pachner.h */,
+				055114D21DCC71A700EC753C /* xmltrireader.h */,
 			);
 			path = triangulation;
 			sourceTree = "<group>";
@@ -6742,6 +6751,7 @@
 				052F9FE5180600FB00FAE4DF /* nsignature.h in Headers */,
 				055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */,
 				052F9FA5180600FB00FAE4DF /* triangulation_io.h in Headers */,
+				055114D61DCC71A700EC753C /* xmltrireader.h in Headers */,
 				052FA017180600FB00FAE4DF /* nspiralsolidtorus.h in Headers */,
 				058C30521DCAC0CA006162D2 /* xmltri2reader.h in Headers */,
 				052F9F99180600FB00FAE4DF /* SnapPea.h in Headers */,
@@ -6890,6 +6900,7 @@
 				052FA05F180600FB00FAE4DF /* ncomponent.h in Headers */,
 				050C64C31DA32E7D00C9420F /* nhilbertprimal-impl.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
+				055114D51DCC71A700EC753C /* facetspec.h in Headers */,
 				05431F781C40F3C9009BC072 /* map_operations.h in Headers */,
 				052F9FF7180600FB00FAE4DF /* nlayeredlensspace.h in Headers */,
 				052F9FFB180600FB00FAE4DF /* nlayeredsolidtorus.h in Headers */,
@@ -6932,6 +6943,7 @@
 				05F0A0001DBF078800117BFC /* pentachoron4.h in Headers */,
 				057EE4351C6009A700C4D155 /* perm-impl.h in Headers */,
 				05431F771C40F3C9009BC072 /* list_operations.h in Headers */,
+				055114D41DCC71A700EC753C /* facenumbering.h in Headers */,
 				0591E85F1C50D28700793A9C /* hyperflags.h in Headers */,
 				052F9EAD180600FB00FAE4DF /* dim2component.h in Headers */,
 				050C64BF1DA32E7D00C9420F /* nhilbertcd-impl.h in Headers */,
@@ -8223,7 +8235,6 @@
 				052FA1DB1806129B00FAE4DF /* normalsurface.cpp in Sources */,
 				05F0A00F1DBF079600117BFC /* homology.cpp in Sources */,
 				05C1BEE61DCA89E3007C946B /* triangulation6.cpp in Sources */,
-				05431F041C40F1F9009BC072 /* facenumbering.cpp in Sources */,
 				052FA21B180612DD00FAE4DF /* current_curve_basis.c in Sources */,
 				052FA1DE1806129B00FAE4DF /* nsvectoranstandard.cpp in Sources */,
 				05C064411C55922A006E6483 /* HyperViewController.mm in Sources */,
@@ -8374,6 +8385,7 @@
 				052FA216180612DD00FAE4DF /* chern_simons.c in Sources */,
 				05FEA07B19C1890900A31924 /* examplesnappea.cpp in Sources */,
 				052FA238180612DD00FAE4DF /* tidy_peripheral_curves.c in Sources */,
+				055114D71DCC71AE00EC753C /* facenumbering.cpp in Sources */,
 				052FA235180612DD00FAE4DF /* subdivide.c in Sources */,
 				050C647D1DA1057000C9420F /* xmlanglestructreader.cpp in Sources */,
 				05F0A00E1DBF079600117BFC /* edge4.cpp in Sources */,
@@ -8718,6 +8730,7 @@
 				05F0A0011DBF078800117BFC /* simplify.cpp in Sources */,
 				05F0A03B1DBF0B5E00117BFC /* decompose.cpp in Sources */,
 				055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */,
+				055114D31DCC71A700EC753C /* facenumbering.cpp in Sources */,
 				055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */,
 				055ABEA719B49C1900044C1B /* closed-or-census-11.zsig in Sources */,
 				055ABEA819B49C1900044C1B /* cusped-hyp-nor-census-9.zsig in Sources */,
@@ -8729,7 +8742,6 @@
 				052FA044180600FB00FAE4DF /* surfacefilter.cpp in Sources */,
 				052F9EBE180600FB00FAE4DF /* engine.cpp in Sources */,
 				052F9F23180600FB00FAE4DF /* ngraphtriple.cpp in Sources */,
-				05431EFE1C40F1F6009BC072 /* facenumbering.cpp in Sources */,
 				052F9FD8180600FB00FAE4DF /* update_shapes.c in Sources */,
 				05C1BED71DCA89DA007C946B /* triangulation5.cpp in Sources */,
 				052FA01C180600FB00FAE4DF /* ntrivialtri.cpp in Sources */,

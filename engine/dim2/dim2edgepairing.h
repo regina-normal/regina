@@ -34,14 +34,7 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __DIM2EDGEPAIRING_H
-#ifndef __DOXYGEN
-#define __DIM2EDGEPAIRING_H
-#endif
-
 #warning This header is deprecated; please use triangulation/facetpairing.h instead.
 
 #include "triangulation/facetpairing.h"
-
-#endif
 

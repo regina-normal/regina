@@ -34,14 +34,7 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __NFACEPAIRING_H
-#ifndef __DOXYGEN
-#define __NFACEPAIRING_H
-#endif
-
 #warning This header is deprecated; please use triangulation/facetpairing3.h instead.
 
 #include "triangulation/facetpairing3.h"
-
-#endif
 

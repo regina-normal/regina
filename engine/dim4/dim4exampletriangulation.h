@@ -34,14 +34,7 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __DIM4EXAMPLETRIANGULATION_H
-#ifndef __DOXYGEN
-#define __DIM4EXAMPLETRIANGULATION_H
-#endif
-
 #warning This header is deprecated; please use triangulation/example4.h instead.
 
 #include "triangulation/example4.h"
-
-#endif
 

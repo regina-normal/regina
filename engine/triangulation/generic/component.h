@@ -30,11 +30,68 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file dim4/dim4facetpairing.h
- *  \brief Deprecated header.
+#ifndef __COMPONENT_H
+#ifndef __DOXYGEN
+#define __COMPONENT_H
+#endif
+
+/*! \file generic/component.h
+ *  \brief Deals with connected components of triangulations.
  */
 
-#warning This header is deprecated; please use triangulation/facetpairing.h instead.
+#include "triangulation/detail/component.h"
 
-#include "triangulation/facetpairing.h"
+namespace regina {
+
+/**
+ * \weakgroup generic
+ * @{
+ */
+
+/**
+ * A connected component of a <i>dim</i>-manifold triangulation.
+ *
+ * Components are highly temporary: whenever a triangulation changes, all
+ * of its component objects will be deleted and new ones will be created
+ * in their place.
+ *
+ * Component objects are all created, managed and destroyed by the
+ * class Triangulation<dim>.  See the Triangulation notes for further
+ * information on working with <i>dim</i>-dimensional triangulations.
+ *
+ * For Regina's \ref stddim "standard dimensions", this template is specialised
+ * and offers more functionality.  In order to use these specialised classes,
+ * you will need to include the corresponding triangulation headers (e.g.,
+ * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
+ * for \a dim = 3).
+ *
+ * \ifacespython Python does not support templates.  Instead
+ * this class can be used by appending the dimension as a suffix
+ * (e.g., Component2 and Component3 for dimensions 2 and 3).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ */
+template <int dim>
+class Component : public detail::ComponentBase<dim> {
+    static_assert(! standardDim(dim),
+        "The generic implementation of Component<dim> "
+        "should not be used for Regina's standard dimensions.");
+
+    private:
+        /**
+         * Default constructor.
+         *
+         * Marks the component as orientable, with no boundary facets.
+         */
+        Component() = default;
+
+    friend class detail::TriangulationBase<dim>;
+};
+
+/*@}*/
+
+} // namespace regina
+
+#endif
 
