@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "dim2/dim2exampletriangulation.h"
+#include "triangulation/example2.h"
 #include "triangulation/dim2.h"
 
 #include "testsuite/exhaustive.h"
@@ -39,7 +39,7 @@
 #include "testsuite/dim2/testdim2.h"
 
 using regina::Triangulation;
-using regina::Dim2ExampleTriangulation;
+using regina::Example;
 
 class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST_SUITE(Triangulation2Test);
@@ -101,34 +101,34 @@ class Triangulation2Test : public TriangulationTest<2> {
         void setUp() {
             empty.setLabel("Empty triangulation");
 
-            copyAndDelete(s2, Dim2ExampleTriangulation::sphere());
+            copyAndDelete(s2, Example<2>::sphere());
             s2.setLabel("S^2");
 
-            copyAndDelete(s2Tet, Dim2ExampleTriangulation::sphereTetrahedron());
+            copyAndDelete(s2Tet, Example<2>::sphereTetrahedron());
             s2Tet.setLabel("Tetrahedron boundary");
 
-            copyAndDelete(s2Oct, Dim2ExampleTriangulation::sphereOctahedron());
+            copyAndDelete(s2Oct, Example<2>::sphereOctahedron());
             s2Oct.setLabel("Octahedron boundary");
 
-            copyAndDelete(torus, Dim2ExampleTriangulation::torus());
+            copyAndDelete(torus, Example<2>::torus());
             torus.setLabel("Torus");
 
-            copyAndDelete(torus2, Dim2ExampleTriangulation::orientable(2, 0));
+            copyAndDelete(torus2, Example<2>::orientable(2, 0));
             torus2.setLabel("Genus 2 torus");
 
-            copyAndDelete(rp2, Dim2ExampleTriangulation::rp2());
+            copyAndDelete(rp2, Example<2>::rp2());
             rp2.setLabel("RP^2");
 
-            copyAndDelete(kb, Dim2ExampleTriangulation::kb());
+            copyAndDelete(kb, Example<2>::kb());
             kb.setLabel("KB");
 
-            copyAndDelete(disc, Dim2ExampleTriangulation::disc());
+            copyAndDelete(disc, Example<2>::disc());
             disc.setLabel("Disc");
 
-            copyAndDelete(annulus, Dim2ExampleTriangulation::annulus());
+            copyAndDelete(annulus, Example<2>::annulus());
             annulus.setLabel("Annulus");
 
-            copyAndDelete(mobius, Dim2ExampleTriangulation::mobius());
+            copyAndDelete(mobius, Example<2>::mobius());
             mobius.setLabel("Mobius band");
 
             disjoint2.insertTriangulation(torus);

@@ -2,8 +2,10 @@
 
 # Files to compile
 SET ( FILES
+  example2
+  example3
+  example4
   facetpairing3
-  nexampletriangulation
   nfacepair
   nhomologicaldata
   )
@@ -29,6 +31,9 @@ if (${REGINA_INSTALL_DEV})
     dim2.h
     dim3.h
     dim4.h
+    example2.h
+    example3.h
+    example4.h
     forward.h
     facetpairing.h
     facetpairing3.h

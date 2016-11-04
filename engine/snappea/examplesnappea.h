@@ -53,7 +53,7 @@ class SnapPeaTriangulation;
 /**
  * This class offers routines for constructing various example SnapPea
  * triangulations.  This is analagous to the (much richer)
- * NExampleTriangulation class.
+ * Example<3> class.
  *
  * Each of the routines in this class constructs a new triangulation from
  * scratch.  It is up to the caller of each routine to destroy the

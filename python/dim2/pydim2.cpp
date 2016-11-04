@@ -33,7 +33,7 @@
 void addBoundaryComponent2();
 void addComponent2();
 void addEdge2();
-void addDim2ExampleTriangulation();
+void addExample2();
 void addIsomorphism2();
 void addTriangle2();
 void addTriangulation2();
@@ -43,7 +43,7 @@ void addDim2Classes() {
     addBoundaryComponent2();
     addComponent2();
     addEdge2();
-    addDim2ExampleTriangulation();
+    addExample2();
     addIsomorphism2();
     addTriangle2();
     addTriangulation2();

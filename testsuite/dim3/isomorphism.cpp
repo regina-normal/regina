@@ -34,12 +34,12 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::NAbelianGroup;
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::Isomorphism;
 using regina::Perm;
 using regina::Tetrahedron;
@@ -80,7 +80,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            Triangulation<3>* t = NExampleTriangulation::rp2xs1();
+            Triangulation<3>* t = Example<3>::rp2xs1();
             rp2xs1.insertTriangulation(*t);
             delete t;
 

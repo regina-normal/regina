@@ -32,12 +32,12 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/nhomologicaldata.h"
 #include "triangulation/dim3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::NHomologicalData;
 using regina::Triangulation;
 
@@ -61,7 +61,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
     private:
         // Some triangulations are pointers; this is because they are
-        // constructed on the fly by NExampleTriangulation.
+        // constructed on the fly by Example<3>.
 
         // Closed orientable:
         Triangulation<3>* s3;
@@ -140,12 +140,12 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             // First deal with ready-made example triangulations.
-            s3 = NExampleTriangulation::threeSphere();
-            s2xs1 = NExampleTriangulation::s2xs1();
-            poincare = NExampleTriangulation::poincareHomologySphere();
-            weberSeifert = NExampleTriangulation::weberSeifert();
-            gieseking = NExampleTriangulation::gieseking();
-            figureEight = NExampleTriangulation::figureEight();
+            s3 = Example<3>::threeSphere();
+            s2xs1 = Example<3>::s2xs1();
+            poincare = Example<3>::poincareHomologySphere();
+            weberSeifert = Example<3>::weberSeifert();
+            gieseking = Example<3>::gieseking();
+            figureEight = Example<3>::figureEight();
 
             // Next deal with triangulations that are easy to build.
             lens3_1.insertLayeredLensSpace(3, 1);

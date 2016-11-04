@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "split/nsignature.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
 namespace {
@@ -144,7 +144,7 @@ namespace {
 
 namespace regina {
 
-Triangulation<3>* NExampleTriangulation::threeSphere() {
+Triangulation<3>* Example<3>::threeSphere() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("3-sphere");
 
@@ -153,7 +153,7 @@ Triangulation<3>* NExampleTriangulation::threeSphere() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::bingsHouse() {
+Triangulation<3>* Example<3>::bingsHouse() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Bing's house with two rooms");
 
@@ -167,7 +167,7 @@ Triangulation<3>* NExampleTriangulation::bingsHouse() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::s2xs1() {
+Triangulation<3>* Example<3>::s2xs1() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("S2 x S1");
 
@@ -176,7 +176,7 @@ Triangulation<3>* NExampleTriangulation::s2xs1() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::rp2xs1() {
+Triangulation<3>* Example<3>::rp2xs1() {
     // Section 3.5.1 of Benjamin Burton's PhD thesis describes how to
     // construct RP^2 x S^1 by identifying the boundary triangles of a
     // solid Klein bottle.
@@ -191,7 +191,7 @@ Triangulation<3>* NExampleTriangulation::rp2xs1() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::rp3rp3() {
+Triangulation<3>* Example<3>::rp3rp3() {
     // This can be generated as the enclosing triangulation of a splitting
     // surface, as described in chapter 4 of Benjamin Burton's PhD thesis.
     NSignature* sig = NSignature::parse("aabccd.b.d");
@@ -202,7 +202,7 @@ Triangulation<3>* NExampleTriangulation::rp3rp3() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::lens(size_t p, size_t q) {
+Triangulation<3>* Example<3>::lens(size_t p, size_t q) {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->insertLayeredLensSpace(p, q);
 
@@ -213,7 +213,7 @@ Triangulation<3>* NExampleTriangulation::lens(size_t p, size_t q) {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::poincareHomologySphere() {
+Triangulation<3>* Example<3>::poincareHomologySphere() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Poincar\u00E9 homology sphere");
 
@@ -222,7 +222,7 @@ Triangulation<3>* NExampleTriangulation::poincareHomologySphere() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::weeks() {
+Triangulation<3>* Example<3>::weeks() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Weeks manifold");
 
@@ -231,7 +231,7 @@ Triangulation<3>* NExampleTriangulation::weeks() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::weberSeifert() {
+Triangulation<3>* Example<3>::weberSeifert() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Weber-Seifert dodecahedral space");
 
@@ -248,7 +248,7 @@ Triangulation<3>* NExampleTriangulation::weberSeifert() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::smallClosedOrblHyperbolic() {
+Triangulation<3>* Example<3>::smallClosedOrblHyperbolic() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Closed orientable hyperbolic 3-manifold");
 
@@ -257,7 +257,7 @@ Triangulation<3>* NExampleTriangulation::smallClosedOrblHyperbolic() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::smallClosedNonOrblHyperbolic() {
+Triangulation<3>* Example<3>::smallClosedNonOrblHyperbolic() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Closed non-orientable hyperbolic 3-manifold");
 
@@ -266,7 +266,7 @@ Triangulation<3>* NExampleTriangulation::smallClosedNonOrblHyperbolic() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::sphere600() {
+Triangulation<3>* Example<3>::sphere600() {
     // See 600cell.py for the code that converts the Benedetti-Lutz
     // simplicial complex to a Regina triangulation.
     Triangulation<3>* ans = Triangulation<3>::fromIsoSig("-cyjvvvvvzzzvzzvvwvLLvLvPPvLvPzAPvzAMPzwLvzPvLPzwwMzvPzMzLwzMzMvALMLzvzMPwzwMALMvvMALzMPvAwvzwzMzAwvwwwwMAzMzQLMvzMPAwzzzMLPzvMzMMwwwwMzAwPMzvwzMzAwPMvAzMzAQLLvQzwwzPMvAzQMwwPzwLwPzLMAPPvQAvAMvzQLPwPAwPAMAMvPPzLMQvPzwMAwPAMwALMQwPzwPQwPAMwALMvwzQQAQzALMvMzvAMvwPAMwzvQMQvMzMzQMzzLPQzzMPzPAMMQMLzAwQAPPQPzvLPQzLzPQzLLQMzvMMPQzzPQPvLPzPPQPvzAwAPPQAzPQQLAQQAQPwvLPQPAPwvvzwvvLQMAQLLQQQQLLQQQQQLQQQQQAMMQMQAQialaoamapaqatavawazaPaBaRaCaFaTaHaVa3aIa6aLaXaNaZa7aOa+aebgbSanbWaqbrb0aubybAb2anb5aFbrb9aHbMbObabcbTbfbVbybYbObibkb4bmb6b9bpbGbtbIbecgcwbUbzbWbmcgcCb5bEb7btcycAcXbKbNbEcycZb8bQbSbLc+bPcScPcVc1b-b3bZcac4c7c4c+ccdlcccDcfcfdAcncscicKckclducScpdpcvc1crctdwc7cxdBdzcFcgdCcMcmdVcLdHcNcJcOdOc3c+cTdWdRcWcqdUc0cudKd2cYcRdcd-dbe6c-cyd9cddCdSdedbdYdaedepdLdidndkdteodwdxdTdzeKdvdsdweBd-dIeSdDdAdBeaeKeFdIdQdHdSeJdveVeNdPdTeWd4ebeVdXdWe5ede3d0d7d2dcf4dEeff6d8d0edfkf+dcegfjfiefemehetfNejewfle9eneufBfpemfqexfAfseueUezeJfIeyeAeXeKfKeDeFeFfefTfHeJehfSfMeMfOevf2fQeVfReyf1fVe4eJf5eKfZeifRf1eGfag3e6ebglf8e0fzfNf+eigafdgbfjgCfffkfTfjfSfagbgofxgWfpf4fDfrfhgsfygmgEfwfBf2fAf1figjgxgygNgIfLfOgUfVgPfQgQfWg3fNgOg4gYfUgZf5gZg5fVgWg4g5g7f8fcgPg+fch-fkgXgPgfgkhdhggfhlglhXgkhlhogpgtg0grgthsgzg6g0gvgwhAguhwgnh6gnhCgDgHg8gFgGgEhLgah8gJgMgHhKgFhshahshSgQhehTgghYgRhQhRh2gxh7gvh3gThTh+gbhIh-gGhYhYh9h+h9h+hihyhjhzhmh-h-hphqhJhrhKhbibilimilimininiBhChLhDhMhpipiviwiviwixixiziziOhZhPh0hShdiaiaiVhWh5hXh6hiicicirioioi2h3h7h4h8htiqiqiBiyiyiDiAiAirifigijihikisisiuiBiCiCiEiDiEiGiHiJiIiKiLiLiMiNiNiOiOiQiRiTiSiUiWiViVihjYiXiXiijYi0i1i3i2i4i6i5i5ijj8i7i7ikjnj8ioj+ibj-icjajejdjdjljgjfjfjmjpjgjqjrjsjijkjtjmjujvjojtjqjujwjsjvjwjxjxjxjgovcfbcfboivlbgmvpifdgtoulcepdbifdlcepdbavpaoupdfvlgtalacoigmivnospdvkgwlaojgripdsfgtarncgmwleauckoisidaplsfbgtgrncbgmwouckfoisvplgwqgrxceckoisvfdloshojxhncqbdpvnhvkqhsfxqxccckoisvfflgncqbcpgsfxoxckfoistlojxbdovkqqcncbgmwupgrexdvnhhsfbgtprugdwqeoeshhojwbdovkrqcgresdvnjhgdwneoeskhbcmoigklwxpvnhngijqruoeshsffqgmxigtirmrgmwqiwccxgtqlhppvnhnuoeshsxitgmwqiwqlhpvnjpoeskuagtirmrqahpvkrlgdwntagijqrlaaojwigresmagklwxiaagtcrorqhpggjfrlagkgwciatqhpgvwgntagrosgmauhqluaojgwoiaphxipalagvwgnovggrosgvoggvoojgwovgogovogvcojgwocgfffgcbbojgwocgffgcbojgwovgologvibgrosgvogpgovmdfigvwgnovgugvotecldpbficlpvpoudgtldla");
@@ -276,7 +276,7 @@ Triangulation<3>* NExampleTriangulation::sphere600() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::lst(size_t a, size_t b) {
+Triangulation<3>* Example<3>::lst(size_t a, size_t b) {
     if (a > b)
         std::swap(a, b);
 
@@ -290,7 +290,7 @@ Triangulation<3>* NExampleTriangulation::lst(size_t a, size_t b) {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::solidKleinBottle() {
+Triangulation<3>* Example<3>::solidKleinBottle() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Solid Klein bottle");
 
@@ -307,7 +307,7 @@ Triangulation<3>* NExampleTriangulation::solidKleinBottle() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::figureEight() {
+Triangulation<3>* Example<3>::figureEight() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Figure eight knot complement");
 
@@ -323,7 +323,7 @@ Triangulation<3>* NExampleTriangulation::figureEight() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::trefoil() {
+Triangulation<3>* Example<3>::trefoil() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Trefoil knot complement");
 
@@ -337,7 +337,7 @@ Triangulation<3>* NExampleTriangulation::trefoil() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::whiteheadLink() {
+Triangulation<3>* Example<3>::whiteheadLink() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Whitehead link complement");
 
@@ -346,7 +346,7 @@ Triangulation<3>* NExampleTriangulation::whiteheadLink() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::gieseking() {
+Triangulation<3>* Example<3>::gieseking() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Gieseking manifold");
 
@@ -357,7 +357,7 @@ Triangulation<3>* NExampleTriangulation::gieseking() {
     return ans;
 }
 
-Triangulation<3>* NExampleTriangulation::cuspedGenusTwoTorus() {
+Triangulation<3>* Example<3>::cuspedGenusTwoTorus() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("Cusped genus two solid torus");
 

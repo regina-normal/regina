@@ -272,7 +272,7 @@ namespace regina {
  *
  *  - Some classes are never instantiated, and so can never be compared
  *    at all.  These classes typically contain only static methods.
- *    Examples of such classes are NExampleTriangulation and
+ *    Examples of such classes are Example<dim> and
  *    \ref regina::i18n::Locale "Locale".
  *
  *  If you wish to find out how a particular class \a C behaves, you can

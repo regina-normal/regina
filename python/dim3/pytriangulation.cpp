@@ -33,7 +33,7 @@
 void addBoundaryComponent3();
 void addComponent3();
 void addEdge3();
-void addNExampleTriangulation();
+void addExample3();
 void addNFacePair();
 void addFacetPairing3();
 void addNHomologicalData();
@@ -47,7 +47,7 @@ void addTriangulationClasses() {
     addBoundaryComponent3();
     addComponent3();
     addEdge3();
-    addNExampleTriangulation();
+    addExample3();
     addNFacePair();
     addFacetPairing3();
     addNHomologicalData();

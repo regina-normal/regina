@@ -83,7 +83,7 @@
 		050F5DDB1B9BAB9C00C1F681 /* boundarycomponent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0E1B9BAB9C00C1F681 /* boundarycomponent2.cpp */; };
 		050F5DDC1B9BAB9C00C1F681 /* component2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0F1B9BAB9C00C1F681 /* component2.cpp */; };
 		050F5DDD1B9BAB9C00C1F681 /* edge2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D101B9BAB9C00C1F681 /* edge2.cpp */; };
-		050F5DDE1B9BAB9C00C1F681 /* dim2exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D111B9BAB9C00C1F681 /* dim2exampletriangulation.cpp */; };
+		050F5DDE1B9BAB9C00C1F681 /* example2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D111B9BAB9C00C1F681 /* example2.cpp */; };
 		050F5DDF1B9BAB9C00C1F681 /* isomorphism2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D121B9BAB9C00C1F681 /* isomorphism2.cpp */; };
 		050F5DE01B9BAB9C00C1F681 /* triangle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D131B9BAB9C00C1F681 /* triangle2.cpp */; };
 		050F5DE21B9BAB9C00C1F681 /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D151B9BAB9C00C1F681 /* triangulation2.cpp */; };
@@ -173,7 +173,7 @@
 		050F5E411B9BAB9C00C1F681 /* boundarycomponent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAC1B9BAB9C00C1F681 /* boundarycomponent3.cpp */; };
 		050F5E421B9BAB9C00C1F681 /* component3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAD1B9BAB9C00C1F681 /* component3.cpp */; };
 		050F5E431B9BAB9C00C1F681 /* edge3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAE1B9BAB9C00C1F681 /* edge3.cpp */; };
-		050F5E441B9BAB9C00C1F681 /* nexampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAF1B9BAB9C00C1F681 /* nexampletriangulation.cpp */; };
+		050F5E441B9BAB9C00C1F681 /* example3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAF1B9BAB9C00C1F681 /* example3.cpp */; };
 		050F5E451B9BAB9C00C1F681 /* nfacepair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB01B9BAB9C00C1F681 /* nfacepair.cpp */; };
 		050F5E461B9BAB9C00C1F681 /* nhomologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */; };
 		050F5E471B9BAB9C00C1F681 /* isomorphism3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB21B9BAB9C00C1F681 /* isomorphism3.cpp */; };
@@ -247,7 +247,7 @@
 		05249EB41DBC16C4001FE29E /* boundarycomponent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0E1B9BAB9C00C1F681 /* boundarycomponent2.cpp */; };
 		05249EB51DBC16C4001FE29E /* component2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0F1B9BAB9C00C1F681 /* component2.cpp */; };
 		05249EB61DBC16C4001FE29E /* edge2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D101B9BAB9C00C1F681 /* edge2.cpp */; };
-		05249EB71DBC16C4001FE29E /* dim2exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D111B9BAB9C00C1F681 /* dim2exampletriangulation.cpp */; };
+		05249EB71DBC16C4001FE29E /* example2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D111B9BAB9C00C1F681 /* example2.cpp */; };
 		05249EB81DBC16C4001FE29E /* isomorphism2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D121B9BAB9C00C1F681 /* isomorphism2.cpp */; };
 		05249EB91DBC16C4001FE29E /* triangle2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D131B9BAB9C00C1F681 /* triangle2.cpp */; };
 		05249EBA1DBC16C4001FE29E /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D151B9BAB9C00C1F681 /* triangulation2.cpp */; };
@@ -256,7 +256,7 @@
 		05249EBD1DBC16CA001FE29E /* boundarycomponent4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FA1C4F763600793A9C /* boundarycomponent4.cpp */; };
 		05249EBE1DBC16CA001FE29E /* component4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FB1C4F763600793A9C /* component4.cpp */; };
 		05249EBF1DBC16CA001FE29E /* edge4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FC1C4F763600793A9C /* edge4.cpp */; };
-		05249EC01DBC16CA001FE29E /* dim4exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FD1C4F763600793A9C /* dim4exampletriangulation.cpp */; };
+		05249EC01DBC16CA001FE29E /* example4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FD1C4F763600793A9C /* example4.cpp */; };
 		05249EC11DBC16CA001FE29E /* isomorphism4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FE1C4F763600793A9C /* isomorphism4.cpp */; };
 		05249EC21DBC16CA001FE29E /* pentachoron4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FF1C4F763600793A9C /* pentachoron4.cpp */; };
 		05249EC31DBC16CA001FE29E /* tetrahedron4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8011C4F763600793A9C /* tetrahedron4.cpp */; };
@@ -433,7 +433,7 @@
 		05249F6E1DBC1747001FE29E /* boundarycomponent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAC1B9BAB9C00C1F681 /* boundarycomponent3.cpp */; };
 		05249F6F1DBC1747001FE29E /* component3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAD1B9BAB9C00C1F681 /* component3.cpp */; };
 		05249F701DBC1747001FE29E /* edge3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAE1B9BAB9C00C1F681 /* edge3.cpp */; };
-		05249F711DBC1747001FE29E /* nexampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAF1B9BAB9C00C1F681 /* nexampletriangulation.cpp */; };
+		05249F711DBC1747001FE29E /* example3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAF1B9BAB9C00C1F681 /* example3.cpp */; };
 		05249F721DBC1747001FE29E /* nfacepair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB01B9BAB9C00C1F681 /* nfacepair.cpp */; };
 		05249F731DBC1747001FE29E /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCA1C40F641009BC072 /* facetpairing3.cpp */; };
 		05249F741DBC1747001FE29E /* nhomologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */; };
@@ -483,7 +483,6 @@
 		052F9EAC180600FB00FAE4DF /* dim2boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C3B180600FA00FAE4DF /* dim2boundarycomponent.h */; };
 		052F9EAD180600FB00FAE4DF /* dim2component.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C3C180600FA00FAE4DF /* dim2component.h */; };
 		052F9EAF180600FB00FAE4DF /* dim2edge.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C3E180600FA00FAE4DF /* dim2edge.h */; };
-		052F9EB0180600FB00FAE4DF /* dim2exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C3F180600FA00FAE4DF /* dim2exampletriangulation.cpp */; };
 		052F9EB1180600FB00FAE4DF /* dim2exampletriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C40180600FA00FAE4DF /* dim2exampletriangulation.h */; };
 		052F9EB3180600FB00FAE4DF /* dim2isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C42180600FA00FAE4DF /* dim2isomorphism.h */; };
 		052F9EB5180600FB00FAE4DF /* dim2triangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C44180600FA00FAE4DF /* dim2triangle.h */; };
@@ -769,8 +768,8 @@
 		052FA05E180600FB00FAE4DF /* nboundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E3A180600FB00FAE4DF /* nboundarycomponent.h */; };
 		052FA05F180600FB00FAE4DF /* ncomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E3B180600FB00FAE4DF /* ncomponent.h */; };
 		052FA061180600FB00FAE4DF /* nedge.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E3D180600FB00FAE4DF /* nedge.h */; };
-		052FA062180600FB00FAE4DF /* nexampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E3E180600FB00FAE4DF /* nexampletriangulation.cpp */; };
-		052FA063180600FB00FAE4DF /* nexampletriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E3F180600FB00FAE4DF /* nexampletriangulation.h */; };
+		052FA062180600FB00FAE4DF /* example3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E3E180600FB00FAE4DF /* example3.cpp */; };
+		052FA063180600FB00FAE4DF /* example3.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E3F180600FB00FAE4DF /* example3.h */; };
 		052FA065180600FB00FAE4DF /* nfacepair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E41180600FB00FAE4DF /* nfacepair.cpp */; };
 		052FA066180600FB00FAE4DF /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E42180600FB00FAE4DF /* nfacepair.h */; };
 		052FA06A180600FB00FAE4DF /* nhomologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E46180600FB00FAE4DF /* nhomologicaldata.cpp */; };
@@ -851,7 +850,6 @@
 		052FA16C1806129B00FAE4DF /* dim2gluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1C180600FA00FAE4DF /* dim2gluingpermsearcher.cpp */; };
 		052FA16D1806129B00FAE4DF /* ncensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1E180600FA00FAE4DF /* ncensus.cpp */; };
 		052FA1701806129B00FAE4DF /* ngluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C2A180600FA00FAE4DF /* ngluingpermsearcher.cpp */; };
-		052FA1731806129B00FAE4DF /* dim2exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C3F180600FA00FAE4DF /* dim2exampletriangulation.cpp */; };
 		052FA17A1806129B00FAE4DF /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C51180600FA00FAE4DF /* engine.cpp */; };
 		052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */; };
 		052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* treelp.cpp */; };
@@ -947,7 +945,7 @@
 		052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E27180600FB00FAE4DF /* orientable.cpp */; };
 		052FA1EA1806129B00FAE4DF /* quadtostd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E28180600FB00FAE4DF /* quadtostd.cpp */; };
 		052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */; };
-		052FA1F81806129B00FAE4DF /* nexampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E3E180600FB00FAE4DF /* nexampletriangulation.cpp */; };
+		052FA1F81806129B00FAE4DF /* example3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E3E180600FB00FAE4DF /* example3.cpp */; };
 		052FA1F91806129B00FAE4DF /* nfacepair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E41180600FB00FAE4DF /* nfacepair.cpp */; };
 		052FA1FA1806129B00FAE4DF /* nhomologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E46180600FB00FAE4DF /* nhomologicaldata.cpp */; };
 		052FA2081806129B00FAE4DF /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E5F180600FB00FAE4DF /* base64.cpp */; };
@@ -1220,6 +1218,14 @@
 		0550010B1C4D9EF900501C24 /* face7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001011C4D9EEB00501C24 /* face7.cpp */; };
 		0550010C1C4D9EF900501C24 /* face8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001021C4D9EEB00501C24 /* face8.cpp */; };
 		0550010D1C4D9EF900501C24 /* face9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001031C4D9EEB00501C24 /* face9.cpp */; };
+		055114C51DCC45FD00EC753C /* example2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114C11DCC45FD00EC753C /* example2.cpp */; };
+		055114C61DCC45FD00EC753C /* example2.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114C21DCC45FD00EC753C /* example2.h */; };
+		055114C71DCC45FD00EC753C /* example4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114C31DCC45FD00EC753C /* example4.cpp */; };
+		055114C81DCC45FD00EC753C /* example4.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114C41DCC45FD00EC753C /* example4.h */; };
+		055114C91DCC460600EC753C /* example2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114C11DCC45FD00EC753C /* example2.cpp */; };
+		055114CA1DCC460900EC753C /* example4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114C31DCC45FD00EC753C /* example4.cpp */; };
+		055114CD1DCC476A00EC753C /* nexampletriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114CB1DCC476A00EC753C /* nexampletriangulation.h */; };
+		055114CE1DCC476A00EC753C /* pachner.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114CC1DCC476A00EC753C /* pachner.h */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -1511,7 +1517,6 @@
 		0591E7A11C4F74C400793A9C /* dim4boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7861C4F74C400793A9C /* dim4boundarycomponent.h */; };
 		0591E7A21C4F74C400793A9C /* dim4component.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7871C4F74C400793A9C /* dim4component.h */; };
 		0591E7A41C4F74C400793A9C /* dim4edge.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7891C4F74C400793A9C /* dim4edge.h */; };
-		0591E7A51C4F74C400793A9C /* dim4exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E78A1C4F74C400793A9C /* dim4exampletriangulation.cpp */; };
 		0591E7A61C4F74C400793A9C /* dim4exampletriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E78B1C4F74C400793A9C /* dim4exampletriangulation.h */; };
 		0591E7A71C4F74C400793A9C /* dim4facetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E78C1C4F74C400793A9C /* dim4facetpairing.h */; };
 		0591E7A81C4F74C400793A9C /* dim4isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E78D1C4F74C400793A9C /* dim4isomorphism.h */; };
@@ -1520,7 +1525,6 @@
 		0591E7AD1C4F74C400793A9C /* dim4triangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7921C4F74C400793A9C /* dim4triangle.h */; };
 		0591E7AF1C4F74C400793A9C /* dim4triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7941C4F74C400793A9C /* dim4triangulation.h */; };
 		0591E7B11C4F74C400793A9C /* dim4vertex.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7961C4F74C400793A9C /* dim4vertex.h */; };
-		0591E7BD1C4F74E100793A9C /* dim4exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E78A1C4F74C400793A9C /* dim4exampletriangulation.cpp */; };
 		0591E7D91C4F750200793A9C /* hscoordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CB1C4F750200793A9C /* hscoordregistry-impl.h */; };
 		0591E7DA1C4F750200793A9C /* hscoordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CC1C4F750200793A9C /* hscoordregistry.h */; };
 		0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7CD1C4F750200793A9C /* hypercoords.h */; };
@@ -1547,7 +1551,7 @@
 		0591E8121C4F763B00793A9C /* boundarycomponent4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FA1C4F763600793A9C /* boundarycomponent4.cpp */; };
 		0591E8131C4F763B00793A9C /* component4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FB1C4F763600793A9C /* component4.cpp */; };
 		0591E8141C4F763B00793A9C /* edge4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FC1C4F763600793A9C /* edge4.cpp */; };
-		0591E8151C4F763B00793A9C /* dim4exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FD1C4F763600793A9C /* dim4exampletriangulation.cpp */; };
+		0591E8151C4F763B00793A9C /* example4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FD1C4F763600793A9C /* example4.cpp */; };
 		0591E8161C4F763B00793A9C /* isomorphism4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FE1C4F763600793A9C /* isomorphism4.cpp */; };
 		0591E8171C4F763B00793A9C /* pentachoron4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FF1C4F763600793A9C /* pentachoron4.cpp */; };
 		0591E8191C4F763B00793A9C /* tetrahedron4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8011C4F763600793A9C /* tetrahedron4.cpp */; };
@@ -2338,7 +2342,7 @@
 		050F5D0E1B9BAB9C00C1F681 /* boundarycomponent2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent2.cpp; sourceTree = "<group>"; };
 		050F5D0F1B9BAB9C00C1F681 /* component2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component2.cpp; sourceTree = "<group>"; };
 		050F5D101B9BAB9C00C1F681 /* edge2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge2.cpp; sourceTree = "<group>"; };
-		050F5D111B9BAB9C00C1F681 /* dim2exampletriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2exampletriangulation.cpp; sourceTree = "<group>"; };
+		050F5D111B9BAB9C00C1F681 /* example2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example2.cpp; sourceTree = "<group>"; };
 		050F5D121B9BAB9C00C1F681 /* isomorphism2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism2.cpp; sourceTree = "<group>"; };
 		050F5D131B9BAB9C00C1F681 /* triangle2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangle2.cpp; sourceTree = "<group>"; };
 		050F5D151B9BAB9C00C1F681 /* triangulation2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation2.cpp; sourceTree = "<group>"; };
@@ -2473,7 +2477,7 @@
 		050F5DAC1B9BAB9C00C1F681 /* boundarycomponent3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent3.cpp; sourceTree = "<group>"; };
 		050F5DAD1B9BAB9C00C1F681 /* component3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component3.cpp; sourceTree = "<group>"; };
 		050F5DAE1B9BAB9C00C1F681 /* edge3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge3.cpp; sourceTree = "<group>"; };
-		050F5DAF1B9BAB9C00C1F681 /* nexampletriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nexampletriangulation.cpp; sourceTree = "<group>"; };
+		050F5DAF1B9BAB9C00C1F681 /* example3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example3.cpp; sourceTree = "<group>"; };
 		050F5DB01B9BAB9C00C1F681 /* nfacepair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nfacepair.cpp; sourceTree = "<group>"; };
 		050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhomologicaldata.cpp; sourceTree = "<group>"; };
 		050F5DB21B9BAB9C00C1F681 /* isomorphism3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism3.cpp; sourceTree = "<group>"; };
@@ -2576,7 +2580,6 @@
 		052F9C3B180600FA00FAE4DF /* dim2boundarycomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2boundarycomponent.h; sourceTree = "<group>"; };
 		052F9C3C180600FA00FAE4DF /* dim2component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2component.h; sourceTree = "<group>"; };
 		052F9C3E180600FA00FAE4DF /* dim2edge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2edge.h; sourceTree = "<group>"; };
-		052F9C3F180600FA00FAE4DF /* dim2exampletriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2exampletriangulation.cpp; sourceTree = "<group>"; };
 		052F9C40180600FA00FAE4DF /* dim2exampletriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2exampletriangulation.h; sourceTree = "<group>"; };
 		052F9C42180600FA00FAE4DF /* dim2isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2isomorphism.h; sourceTree = "<group>"; };
 		052F9C44180600FA00FAE4DF /* dim2triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2triangle.h; sourceTree = "<group>"; };
@@ -2915,8 +2918,8 @@
 		052F9E3A180600FB00FAE4DF /* nboundarycomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nboundarycomponent.h; sourceTree = "<group>"; };
 		052F9E3B180600FB00FAE4DF /* ncomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncomponent.h; sourceTree = "<group>"; };
 		052F9E3D180600FB00FAE4DF /* nedge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nedge.h; sourceTree = "<group>"; };
-		052F9E3E180600FB00FAE4DF /* nexampletriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nexampletriangulation.cpp; sourceTree = "<group>"; };
-		052F9E3F180600FB00FAE4DF /* nexampletriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexampletriangulation.h; sourceTree = "<group>"; };
+		052F9E3E180600FB00FAE4DF /* example3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example3.cpp; sourceTree = "<group>"; };
+		052F9E3F180600FB00FAE4DF /* example3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example3.h; sourceTree = "<group>"; };
 		052F9E41180600FB00FAE4DF /* nfacepair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nfacepair.cpp; sourceTree = "<group>"; };
 		052F9E42180600FB00FAE4DF /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
 		052F9E46180600FB00FAE4DF /* nhomologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhomologicaldata.cpp; sourceTree = "<group>"; };
@@ -3184,6 +3187,12 @@
 		055001011C4D9EEB00501C24 /* face7.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face7.cpp; sourceTree = "<group>"; };
 		055001021C4D9EEB00501C24 /* face8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face8.cpp; sourceTree = "<group>"; };
 		055001031C4D9EEB00501C24 /* face9.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face9.cpp; sourceTree = "<group>"; };
+		055114C11DCC45FD00EC753C /* example2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example2.cpp; sourceTree = "<group>"; };
+		055114C21DCC45FD00EC753C /* example2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example2.h; sourceTree = "<group>"; };
+		055114C31DCC45FD00EC753C /* example4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example4.cpp; sourceTree = "<group>"; };
+		055114C41DCC45FD00EC753C /* example4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example4.h; sourceTree = "<group>"; };
+		055114CB1DCC476A00EC753C /* nexampletriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexampletriangulation.h; sourceTree = "<group>"; };
+		055114CC1DCC476A00EC753C /* pachner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pachner.h; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
@@ -3563,7 +3572,6 @@
 		0591E7861C4F74C400793A9C /* dim4boundarycomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4boundarycomponent.h; sourceTree = "<group>"; };
 		0591E7871C4F74C400793A9C /* dim4component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4component.h; sourceTree = "<group>"; };
 		0591E7891C4F74C400793A9C /* dim4edge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4edge.h; sourceTree = "<group>"; };
-		0591E78A1C4F74C400793A9C /* dim4exampletriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4exampletriangulation.cpp; sourceTree = "<group>"; };
 		0591E78B1C4F74C400793A9C /* dim4exampletriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4exampletriangulation.h; sourceTree = "<group>"; };
 		0591E78C1C4F74C400793A9C /* dim4facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4facetpairing.h; sourceTree = "<group>"; };
 		0591E78D1C4F74C400793A9C /* dim4isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4isomorphism.h; sourceTree = "<group>"; };
@@ -3593,7 +3601,7 @@
 		0591E7FA1C4F763600793A9C /* boundarycomponent4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent4.cpp; sourceTree = "<group>"; };
 		0591E7FB1C4F763600793A9C /* component4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component4.cpp; sourceTree = "<group>"; };
 		0591E7FC1C4F763600793A9C /* edge4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge4.cpp; sourceTree = "<group>"; };
-		0591E7FD1C4F763600793A9C /* dim4exampletriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4exampletriangulation.cpp; sourceTree = "<group>"; };
+		0591E7FD1C4F763600793A9C /* example4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example4.cpp; sourceTree = "<group>"; };
 		0591E7FE1C4F763600793A9C /* isomorphism4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism4.cpp; sourceTree = "<group>"; };
 		0591E7FF1C4F763600793A9C /* pentachoron4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pentachoron4.cpp; sourceTree = "<group>"; };
 		0591E8011C4F763600793A9C /* tetrahedron4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetrahedron4.cpp; sourceTree = "<group>"; };
@@ -4301,7 +4309,7 @@
 				050F5D0E1B9BAB9C00C1F681 /* boundarycomponent2.cpp */,
 				050F5D0F1B9BAB9C00C1F681 /* component2.cpp */,
 				050F5D101B9BAB9C00C1F681 /* edge2.cpp */,
-				050F5D111B9BAB9C00C1F681 /* dim2exampletriangulation.cpp */,
+				050F5D111B9BAB9C00C1F681 /* example2.cpp */,
 				050F5D121B9BAB9C00C1F681 /* isomorphism2.cpp */,
 				050F5D131B9BAB9C00C1F681 /* triangle2.cpp */,
 				050F5D151B9BAB9C00C1F681 /* triangulation2.cpp */,
@@ -4529,8 +4537,8 @@
 				050F5DAC1B9BAB9C00C1F681 /* boundarycomponent3.cpp */,
 				050F5DAD1B9BAB9C00C1F681 /* component3.cpp */,
 				050F5DAE1B9BAB9C00C1F681 /* edge3.cpp */,
+				050F5DAF1B9BAB9C00C1F681 /* example3.cpp */,
 				05431FCA1C40F641009BC072 /* facetpairing3.cpp */,
-				050F5DAF1B9BAB9C00C1F681 /* nexampletriangulation.cpp */,
 				050F5DB01B9BAB9C00C1F681 /* nfacepair.cpp */,
 				050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */,
 				050F5DB21B9BAB9C00C1F681 /* isomorphism3.cpp */,
@@ -4753,7 +4761,6 @@
 				052F9C3C180600FA00FAE4DF /* dim2component.h */,
 				052F9C3E180600FA00FAE4DF /* dim2edge.h */,
 				05431EEE1C40F093009BC072 /* dim2edgepairing.h */,
-				052F9C3F180600FA00FAE4DF /* dim2exampletriangulation.cpp */,
 				052F9C40180600FA00FAE4DF /* dim2exampletriangulation.h */,
 				052F9C42180600FA00FAE4DF /* dim2isomorphism.h */,
 				052F9C44180600FA00FAE4DF /* dim2triangle.h */,
@@ -5304,6 +5311,12 @@
 				05F09FBD1DBEF01800117BFC /* dim3.h */,
 				05F09FBE1DBEF01800117BFC /* dim4.h */,
 				054C6A811DCC2127005373F0 /* example.h */,
+				055114C11DCC45FD00EC753C /* example2.cpp */,
+				055114C21DCC45FD00EC753C /* example2.h */,
+				052F9E3E180600FB00FAE4DF /* example3.cpp */,
+				052F9E3F180600FB00FAE4DF /* example3.h */,
+				055114C31DCC45FD00EC753C /* example4.cpp */,
+				055114C41DCC45FD00EC753C /* example4.h */,
 				05669D911DCB0E9A00C870C6 /* facetpairing.h */,
 				05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */,
 				05669D931DCB0E9A00C870C6 /* facetpairing3.h */,
@@ -5312,8 +5325,7 @@
 				052F9E3A180600FB00FAE4DF /* nboundarycomponent.h */,
 				052F9E3B180600FB00FAE4DF /* ncomponent.h */,
 				052F9E3D180600FB00FAE4DF /* nedge.h */,
-				052F9E3E180600FB00FAE4DF /* nexampletriangulation.cpp */,
-				052F9E3F180600FB00FAE4DF /* nexampletriangulation.h */,
+				055114CB1DCC476A00EC753C /* nexampletriangulation.h */,
 				052F9E41180600FB00FAE4DF /* nfacepair.cpp */,
 				052F9E42180600FB00FAE4DF /* nfacepair.h */,
 				05431F321C40F363009BC072 /* nfacepairing.h */,
@@ -5324,6 +5336,7 @@
 				052F9E50180600FB00FAE4DF /* ntriangle.h */,
 				052F9E52180600FB00FAE4DF /* ntriangulation.h */,
 				052F9E54180600FB00FAE4DF /* nvertex.h */,
+				055114CC1DCC476A00EC753C /* pachner.h */,
 			);
 			path = triangulation;
 			sourceTree = "<group>";
@@ -6226,7 +6239,6 @@
 				0591E7861C4F74C400793A9C /* dim4boundarycomponent.h */,
 				0591E7871C4F74C400793A9C /* dim4component.h */,
 				0591E7891C4F74C400793A9C /* dim4edge.h */,
-				0591E78A1C4F74C400793A9C /* dim4exampletriangulation.cpp */,
 				0591E78B1C4F74C400793A9C /* dim4exampletriangulation.h */,
 				0591E78C1C4F74C400793A9C /* dim4facetpairing.h */,
 				0591E78D1C4F74C400793A9C /* dim4isomorphism.h */,
@@ -6272,7 +6284,7 @@
 				0591E7FA1C4F763600793A9C /* boundarycomponent4.cpp */,
 				0591E7FB1C4F763600793A9C /* component4.cpp */,
 				0591E7FC1C4F763600793A9C /* edge4.cpp */,
-				0591E7FD1C4F763600793A9C /* dim4exampletriangulation.cpp */,
+				0591E7FD1C4F763600793A9C /* example4.cpp */,
 				0591E7FE1C4F763600793A9C /* isomorphism4.cpp */,
 				0591E7FF1C4F763600793A9C /* pentachoron4.cpp */,
 				0591E8011C4F763600793A9C /* tetrahedron4.cpp */,
@@ -6665,6 +6677,7 @@
 				052FA078180600FB00FAE4DF /* nvertex.h in Headers */,
 				053CAB421DAB408C00A92F98 /* nsquadoct.h in Headers */,
 				05C1BE981DCA7C77007C946B /* boundarycomponent-impl.h in Headers */,
+				055114C61DCC45FD00EC753C /* example2.h in Headers */,
 				05F0A0081DBF078800117BFC /* triangle4.h in Headers */,
 				052F9EAC180600FB00FAE4DF /* dim2boundarycomponent.h in Headers */,
 				052FA01F180600FB00FAE4DF /* ntxicore.h in Headers */,
@@ -6733,7 +6746,7 @@
 				058C30521DCAC0CA006162D2 /* xmltri2reader.h in Headers */,
 				052F9F99180600FB00FAE4DF /* SnapPea.h in Headers */,
 				052FA011180600FB00FAE4DF /* nsnappeacensustri.h in Headers */,
-				052FA063180600FB00FAE4DF /* nexampletriangulation.h in Headers */,
+				052FA063180600FB00FAE4DF /* example3.h in Headers */,
 				053CAB211DA63C8900A92F98 /* nmatrix2.h in Headers */,
 				052FA052180600FB00FAE4DF /* sfproperties.h in Headers */,
 				05F0A04E1DBF0B5E00117BFC /* triangulation3.h in Headers */,
@@ -6826,6 +6839,7 @@
 				05431F841C40F3C9009BC072 /* sublattice_representation.h in Headers */,
 				0591E7A41C4F74C400793A9C /* dim4edge.h in Headers */,
 				052FA066180600FB00FAE4DF /* nfacepair.h in Headers */,
+				055114CE1DCC476A00EC753C /* pachner.h in Headers */,
 				052F9F40180600FB00FAE4DF /* matrix2.h in Headers */,
 				058C305F1DCAF6F8006162D2 /* forward.h in Headers */,
 				052FA088180600FB00FAE4DF /* i18nutils.h in Headers */,
@@ -6970,6 +6984,7 @@
 				05F0A0061DBF078800117BFC /* tetrahedron4.h in Headers */,
 				052F9F55180600FB00FAE4DF /* packet.h in Headers */,
 				052F9EBF180600FB00FAE4DF /* engine.h in Headers */,
+				055114C81DCC45FD00EC753C /* example4.h in Headers */,
 				052F9F22180600FB00FAE4DF /* ngraphpair.h in Headers */,
 				05A73C7C19B2EDFC0099C617 /* xmlcallback.h in Headers */,
 				05431EFF1C40F1F6009BC072 /* facenumbering.h in Headers */,
@@ -6981,6 +6996,7 @@
 				05431F351C40F363009BC072 /* nfacepairing.h in Headers */,
 				05F09FC11DBEF01800117BFC /* dim4.h in Headers */,
 				052FA089180600FB00FAE4DF /* intutils.h in Headers */,
+				055114CD1DCC476A00EC753C /* nexampletriangulation.h in Headers */,
 				052FA08A180600FB00FAE4DF /* memutils.h in Headers */,
 				052F9FE3180600FB00FAE4DF /* nsigisomorphism.h in Headers */,
 				0588F1191808D43B006BDC79 /* packettype.h in Headers */,
@@ -7515,7 +7531,7 @@
 				057EE45D1C6009F300C4D155 /* component12.cpp in Sources */,
 				057EE4E41C600A3600C4D155 /* facetpairing9.cpp in Sources */,
 				050F5DDD1B9BAB9C00C1F681 /* edge2.cpp in Sources */,
-				0591E8151C4F763B00793A9C /* dim4exampletriangulation.cpp in Sources */,
+				0591E8151C4F763B00793A9C /* example4.cpp in Sources */,
 				050F5E391B9BAB9C00C1F681 /* surfacefilter.cpp in Sources */,
 				0591E8171C4F763B00793A9C /* pentachoron4.cpp in Sources */,
 				050F5E521B9BAB9C00C1F681 /* stringutils.cpp in Sources */,
@@ -7595,7 +7611,7 @@
 				057EE4BE1C600A3600C4D155 /* simplex6.cpp in Sources */,
 				05431FC01C40F5D4009BC072 /* face.cpp in Sources */,
 				050F5DD71B9BAB9C00C1F681 /* pyalgebra.cpp in Sources */,
-				050F5DDE1B9BAB9C00C1F681 /* dim2exampletriangulation.cpp in Sources */,
+				050F5DDE1B9BAB9C00C1F681 /* example2.cpp in Sources */,
 				057EE4C11C600A3600C4D155 /* simplex9.cpp in Sources */,
 				057EE4D61C600A3600C4D155 /* isomorphism8.cpp in Sources */,
 				059BC68B1DC7F7A200AB4206 /* boundarycomponent15.cpp in Sources */,
@@ -7675,7 +7691,7 @@
 				054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */,
 				057EE4D11C600A3600C4D155 /* triangulation14.cpp in Sources */,
 				050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */,
-				050F5E441B9BAB9C00C1F681 /* nexampletriangulation.cpp in Sources */,
+				050F5E441B9BAB9C00C1F681 /* example3.cpp in Sources */,
 				050F5E1D1B9BAB9C00C1F681 /* nlayeredlensspace.cpp in Sources */,
 				050F5DFA1B9BAB9C00C1F681 /* matrixint.cpp in Sources */,
 				059BC68A1DC7F7A200AB4206 /* boundarycomponent14.cpp in Sources */,
@@ -7825,13 +7841,14 @@
 				05249F381DBC1718001FE29E /* packet.cpp in Sources */,
 				05431EED1C40F071009BC072 /* ngenericgluingperms.cpp in Sources */,
 				05249F311DBC1711001FE29E /* perm4.cpp in Sources */,
-				05249EC01DBC16CA001FE29E /* dim4exampletriangulation.cpp in Sources */,
+				05249EC01DBC16CA001FE29E /* example4.cpp in Sources */,
 				05249F251DBC170A001FE29E /* ntorusbundle.cpp in Sources */,
 				05D1173719EE018E003BEC55 /* nstandardtriangulation.cpp in Sources */,
 				058641F019D77D820019E056 /* TextHelper.mm in Sources */,
 				05249F721DBC1747001FE29E /* nfacepair.cpp in Sources */,
 				054C6A741DCC1FF4005373F0 /* example8.cpp in Sources */,
 				052FA229180612DD00FAE4DF /* identify_solution_type.c in Sources */,
+				055114C91DCC460600EC753C /* example2.cpp in Sources */,
 				052FA1B41806129B00FAE4DF /* nsignature.cpp in Sources */,
 				05249F341DBC1711001FE29E /* primes.cpp in Sources */,
 				05249EFA1DBC16F1001FE29E /* isomorphism10.cpp in Sources */,
@@ -7909,7 +7926,7 @@
 				05249EC41DBC16CA001FE29E /* triangle4.cpp in Sources */,
 				052FA1671806129B00FAE4DF /* closedprimemin.cpp in Sources */,
 				05249F2C1DBC1711001FE29E /* matrixops.cpp in Sources */,
-				052FA1F81806129B00FAE4DF /* nexampletriangulation.cpp in Sources */,
+				052FA1F81806129B00FAE4DF /* example3.cpp in Sources */,
 				05249F5B1DBC1730001FE29E /* nsnappedtwosphere.cpp in Sources */,
 				054C6A731DCC1FF4005373F0 /* example7.cpp in Sources */,
 				05249F7F1DBC174E001FE29E /* pyutilities.cpp in Sources */,
@@ -7983,7 +8000,7 @@
 				052FA1B31806129B00FAE4DF /* nsigisomorphism.cpp in Sources */,
 				052FA1961806129B00FAE4DF /* nsimplesurfacebundle.cpp in Sources */,
 				053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */,
-				05249EB71DBC16C4001FE29E /* dim2exampletriangulation.cpp in Sources */,
+				05249EB71DBC16C4001FE29E /* example2.cpp in Sources */,
 				052FA19E1806129B00FAE4DF /* perm3.cpp in Sources */,
 				05249ED71DBC16DF001FE29E /* component13.cpp in Sources */,
 				059BC6961DC7F7A300AB4206 /* boundarycomponent15.cpp in Sources */,
@@ -8016,7 +8033,6 @@
 				05249EB81DBC16C4001FE29E /* isomorphism2.cpp in Sources */,
 				05249EB11DBC16BE001FE29E /* ncensus.cpp in Sources */,
 				05249ED61DBC16DF001FE29E /* component12.cpp in Sources */,
-				0591E7BD1C4F74E100793A9C /* dim4exampletriangulation.cpp in Sources */,
 				05249F3F1DBC171D001FE29E /* pyprogress.cpp in Sources */,
 				05249ECC1DBC16D6001FE29E /* isosig.cpp in Sources */,
 				052FA1A61806129B00FAE4DF /* packet.cpp in Sources */,
@@ -8041,6 +8057,7 @@
 				0591E7F61C4F75CE00793A9C /* dim4gluingpermsearcher.cpp in Sources */,
 				052FA1C21806129B00FAE4DF /* npillowtwosphere.cpp in Sources */,
 				05F09FE11DBF01D100117BFC /* skeleton.cpp in Sources */,
+				055114CA1DCC460900EC753C /* example4.cpp in Sources */,
 				05431F8E1C40F40E009BC072 /* cone_property.cpp in Sources */,
 				05249F011DBC16F6001FE29E /* simplex5.cpp in Sources */,
 				058FADA819D388920001B5B5 /* SurfacesViewController.mm in Sources */,
@@ -8196,7 +8213,7 @@
 				05249F2B1DBC1711001FE29E /* matrixint.cpp in Sources */,
 				052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */,
 				050313C11812DB06007F0CBE /* TextViewController.mm in Sources */,
-				05249F711DBC1747001FE29E /* nexampletriangulation.cpp in Sources */,
+				05249F711DBC1747001FE29E /* example3.cpp in Sources */,
 				05249ED21DBC16DF001FE29E /* component8.cpp in Sources */,
 				05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */,
 				05249EFD1DBC16F1001FE29E /* isomorphism13.cpp in Sources */,
@@ -8221,7 +8238,6 @@
 				05249EE51DBC16E4001FE29E /* face15.cpp in Sources */,
 				05249F391DBC1718001FE29E /* packettype.cpp in Sources */,
 				055FF38219BECF590057462A /* NewTri3Controller.mm in Sources */,
-				052FA1731806129B00FAE4DF /* dim2exampletriangulation.cpp in Sources */,
 				05669D971DCB0EA200C870C6 /* facetpairing3.cpp in Sources */,
 				052FA1A71806129B00FAE4DF /* packetlistener.cpp in Sources */,
 				052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */,
@@ -8784,6 +8800,7 @@
 				052FA08C180600FB00FAE4DF /* boolset.cpp in Sources */,
 				052F9F36180600FB00FAE4DF /* order.cpp in Sources */,
 				05C1BEDD1DCA89DA007C946B /* triangulation11.cpp in Sources */,
+				055114C71DCC45FD00EC753C /* example4.cpp in Sources */,
 				052F9FFE180600FB00FAE4DF /* nlayering.cpp in Sources */,
 				05A73C8C19B2EF130099C617 /* homology.cpp in Sources */,
 				05C1BEDF1DCA89DA007C946B /* triangulation13.cpp in Sources */,
@@ -8794,7 +8811,7 @@
 				05669D951DCB0E9A00C870C6 /* facetpairing3.cpp in Sources */,
 				05F0A0041DBF078800117BFC /* subdivide.cpp in Sources */,
 				05F0A0071DBF078800117BFC /* triangle4.cpp in Sources */,
-				052FA062180600FB00FAE4DF /* nexampletriangulation.cpp in Sources */,
+				052FA062180600FB00FAE4DF /* example3.cpp in Sources */,
 				05C1BEB11DCA7CA9007C946B /* boundary9.cpp in Sources */,
 				058C30511DCAC0CA006162D2 /* xmltri2reader.cpp in Sources */,
 				052F9F5F180600FB00FAE4DF /* xmlpacketreader.cpp in Sources */,
@@ -8895,7 +8912,6 @@
 				052FA082180600FB00FAE4DF /* base64.cpp in Sources */,
 				052F9F72180600FB00FAE4DF /* chern_simons.c in Sources */,
 				05F0A0031DBF078800117BFC /* skeleton.cpp in Sources */,
-				0591E7A51C4F74C400793A9C /* dim4exampletriangulation.cpp in Sources */,
 				052F9F3F180600FB00FAE4DF /* matrix2.cpp in Sources */,
 				05C1BED91DCA89DA007C946B /* triangulation7.cpp in Sources */,
 				052F9FEA180600FB00FAE4DF /* nblockedsfsloop.cpp in Sources */,
@@ -8912,6 +8928,7 @@
 				05C1BEDC1DCA89DA007C946B /* triangulation10.cpp in Sources */,
 				0591E7E41C4F750200793A9C /* xmlhypersurfacereader.cpp in Sources */,
 				052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */,
+				055114C51DCC45FD00EC753C /* example2.cpp in Sources */,
 				05C1BEAD1DCA7CA9007C946B /* boundary5.cpp in Sources */,
 				052F9E89180600FB00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
 				05C1BEAF1DCA7CA9007C946B /* boundary7.cpp in Sources */,
@@ -8963,7 +8980,6 @@
 				052FA042180600FB00FAE4DF /* nsvectorstandard.cpp in Sources */,
 				052FA048180600FB00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				052F9F7D180600FB00FAE4DF /* Dehn_coefficients.c in Sources */,
-				052F9EB0180600FB00FAE4DF /* dim2exampletriangulation.cpp in Sources */,
 				052F9F5B180600FB00FAE4DF /* script.cpp in Sources */,
 				052FA01E180600FB00FAE4DF /* ntxicore.cpp in Sources */,
 				05F09FD81DBF01B600117BFC /* skeleton.cpp in Sources */,

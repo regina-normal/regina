@@ -45,7 +45,7 @@
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 
@@ -56,7 +56,7 @@
 using regina::NAbelianGroup;
 using regina::BoundaryComponent;
 using regina::Component;
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::NGroupPresentation;
 using regina::Isomorphism;
 using regina::NormalSurface;
@@ -313,24 +313,24 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
-            copyAndDelete(weberSeifert, NExampleTriangulation::weberSeifert());
+            copyAndDelete(weberSeifert, Example<3>::weberSeifert());
             weberSeifert.setLabel("Weber-Seifert");
 
             copyAndDelete(figure8,
-                NExampleTriangulation::figureEight());
+                Example<3>::figureEight());
             figure8.setLabel("Figure 8 knot complement");
 
-            copyAndDelete(solidKB, NExampleTriangulation::solidKleinBottle());
+            copyAndDelete(solidKB, Example<3>::solidKleinBottle());
             solidKB.setLabel("Solid Klein bottle");
 
-            copyAndDelete(rp2xs1, NExampleTriangulation::rp2xs1());
+            copyAndDelete(rp2xs1, Example<3>::rp2xs1());
             rp2xs1.setLabel("RP^2 x S^1");
 
-            copyAndDelete(gieseking, NExampleTriangulation::gieseking());
+            copyAndDelete(gieseking, Example<3>::gieseking());
             gieseking.setLabel("Gieseking manifold");
 
             copyAndDelete(cuspedGenusTwoTorus,
-                NExampleTriangulation::cuspedGenusTwoTorus());
+                Example<3>::cuspedGenusTwoTorus());
             cuspedGenusTwoTorus.setLabel("Cusped solid genus 2 torus");
 
             singleTet_bary.newTetrahedron();
@@ -338,7 +338,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             singleTet_bary.setLabel("Subdivided tetrahedron");
 
             copyAndDelete(fig8_bary,
-                NExampleTriangulation::figureEight());
+                Example<3>::figureEight());
             fig8_bary.barycentricSubdivision();
             fig8_bary.setLabel("Subdivided figure 8 knot complement");
 
@@ -2414,7 +2414,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // We'll build this a few different ways.
 
             // First, one out of the can:
-            tri = NExampleTriangulation::poincareHomologySphere();
+            tri = Example<3>::poincareHomologySphere();
             delete verifyNotThreeSphere(tri,
                 "Poincare homology sphere (example)");
 
@@ -2616,7 +2616,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             delete verifyNotThreeBall(tri, "Empty triangulation");
 
             // Make a punctured Poincare homology sphere.
-            tri = NExampleTriangulation::poincareHomologySphere();
+            tri = Example<3>::poincareHomologySphere();
             tri->barycentricSubdivision();
             tri->removeTetrahedronAt(0);
             tri->intelligentSimplify();
@@ -2632,7 +2632,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             tri->insertLayeredLensSpace(2,1);
             delete verifyNotThreeBall(tri, "L(2,1)");
 
-            tri = NExampleTriangulation::poincareHomologySphere();
+            tri = Example<3>::poincareHomologySphere();
             delete verifyNotThreeBall(tri, "Poincare homology sphere");
 
             // Some disconnected examples.
@@ -2805,7 +2805,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             tri = Triangulation<3>::fromIsoSig("cMcabbgds");
             delete verifySolidTorus(tri, "Ideal solid torus");
 
-            tri = NExampleTriangulation::figureEight();
+            tri = Example<3>::figureEight();
             delete verifyNotSolidTorus(tri, "Figure 8 Knot Complement");
 
             // Some knot complements (with real boundary):
@@ -2840,7 +2840,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             tri->insertLayeredLensSpace(2,1);
             delete verifyNotSolidTorus(tri, "L(2,1)");
 
-            tri = NExampleTriangulation::poincareHomologySphere();
+            tri = Example<3>::poincareHomologySphere();
             delete verifyNotSolidTorus(tri, "Poincare homology sphere");
 
             // Some disconnected triangulations:

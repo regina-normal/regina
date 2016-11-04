@@ -34,11 +34,11 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "dim4/dim4exampletriangulation.h"
+#include "triangulation/example4.h"
 #include "manifold/nmanifold.h"
 #include "packet/container.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
@@ -49,9 +49,9 @@
 
 using regina::BoundaryComponent;
 using regina::Edge;
-using regina::Dim4ExampleTriangulation;
+using regina::Example;
 using regina::NAbelianGroup;
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::NGroupPresentation;
 using regina::Isomorphism;
 using regina::Pentachoron;
@@ -182,46 +182,46 @@ class Triangulation4Test : public TriangulationTest<4> {
             empty.setLabel("Empty triangulation");
 
             // We can pull some of our triangulations straight out of the can
-            // via Dim4ExampleTriangulation.
-            copyAndDelete(s4_id, Dim4ExampleTriangulation::fourSphere(),
+            // via Example<4>.
+            copyAndDelete(s4_id, Example<4>::fourSphere(),
                 "S^4 (identity)");
-            copyAndDelete(s3xs1, Dim4ExampleTriangulation::s3xs1(),
+            copyAndDelete(s3xs1, Example<4>::s3xs1(),
                 "S^3 x S^1");
-            copyAndDelete(rp4, Dim4ExampleTriangulation::rp4(), "RP^4");
+            copyAndDelete(rp4, Example<4>::rp4(), "RP^4");
             copyAndDelete(s3xs1Twisted,
-                Dim4ExampleTriangulation::s3xs1Twisted(), "S^3 x~ S^1");
+                Example<4>::s3xs1Twisted(), "S^3 x~ S^1");
 
             // Some of our triangulations are built from 3-manifold
             // triangulations.
             Triangulation<3>* base;
 
-            base = NExampleTriangulation::threeSphere();
+            base = Example<3>::threeSphere();
             copyAndDelete(s4_doubleConeS3,
-                Dim4ExampleTriangulation::doubleCone(*base),
+                Example<4>::doubleCone(*base),
                 "S^4 (double cone)");
             copyAndDelete(ball_singleConeS3,
-                Dim4ExampleTriangulation::singleCone(*base),
+                Example<4>::singleCone(*base),
                 "D^4 (single cone)");
             delete base;
 
-            base = NExampleTriangulation::poincareHomologySphere();
+            base = Example<3>::poincareHomologySphere();
             copyAndDelete(idealPoincareProduct,
-                Dim4ExampleTriangulation::doubleCone(*base),
+                Example<4>::doubleCone(*base),
                 "(S^3 / P_120) x I (double cone)");
             copyAndDelete(idealCappellShaneson,
-                Dim4ExampleTriangulation::cappellShaneson(),
+                Example<4>::cappellShaneson(),
                 "2-pentachoron Cappell-Shaneson 2-knot exterior");
             copyAndDelete(mixedPoincareProduct,
-                Dim4ExampleTriangulation::singleCone(*base),
+                Example<4>::singleCone(*base),
                 "(S^3 / P_120) x I (single cone)");
             delete base;
 
-            base = NExampleTriangulation::figureEight();
+            base = Example<3>::figureEight();
             copyAndDelete(idealFigEightProduct,
-                Dim4ExampleTriangulation::doubleCone(*base),
+                Example<4>::doubleCone(*base),
                 "Fig_8 x I (double cone)");
             copyAndDelete(mixedFigEightProduct,
-                Dim4ExampleTriangulation::singleCone(*base),
+                Example<4>::singleCone(*base),
                 "Fig_8 x I (single cone)");
             delete base;
 
@@ -2193,7 +2193,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
 
-            Triangulation<4>* b = Dim4ExampleTriangulation::iBundle(*tri);
+            Triangulation<4>* b = Example<4>::iBundle(*tri);
 
             if (! b->isValid()) {
                 std::ostringstream msg;
@@ -2282,7 +2282,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             if ((! tri->isValid()) || tri->isIdeal())
                 return;
 
-            Triangulation<4>* b = Dim4ExampleTriangulation::s1Bundle(*tri);
+            Triangulation<4>* b = Example<4>::s1Bundle(*tri);
 
             if (! b->isValid()) {
                 std::ostringstream msg;
@@ -2374,7 +2374,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             for (Isomorphism<3>* aut : autos) {
                 Triangulation<4>* b =
-                    Dim4ExampleTriangulation::bundleWithMonodromy(*tri, *aut);
+                    Example<4>::bundleWithMonodromy(*tri, *aut);
 
                 if (! b->isValid()) {
                     std::ostringstream msg;

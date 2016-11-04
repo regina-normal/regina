@@ -36,7 +36,7 @@
 #include "packet/container.h"
 #include "split/nsignature.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
@@ -47,7 +47,7 @@ using regina::BoolSet;
 using regina::BoundaryComponent;
 using regina::Container;
 using regina::Edge;
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::NormalSurfaceVector;
@@ -195,10 +195,10 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Use pre-coded triangulations where we can.
             copyAndDelete(figure8,
-                NExampleTriangulation::figureEight());
+                Example<3>::figureEight());
             figure8.setLabel("Figure eight knot complement");
 
-            copyAndDelete(gieseking, NExampleTriangulation::gieseking());
+            copyAndDelete(gieseking, Example<3>::gieseking());
             gieseking.setLabel("Gieseking manifold");
 
             // Layered loops can be constructed automatically.

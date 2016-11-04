@@ -34,7 +34,7 @@
 #include "manifold/nsfs.h"
 #include "maths/numbertheory.h"
 #include "split/nsignature.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -52,7 +52,7 @@
 #include <QValidator>
 #include <QStackedWidget>
 
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::Triangulation;
 
 namespace {
@@ -358,7 +358,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
             return 0;
         }
 
-        return NExampleTriangulation::lens(p, q);
+        return Example<3>::lens(p, q);
     } else if (typeId == TRI_LAYERED_SOLID_TORUS) {
         if (! reLSTParams.exactMatch(lstParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -388,11 +388,11 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         }
 
         if (a + b == c)
-            return NExampleTriangulation::lst(a, b);
+            return Example<3>::lst(a, b);
         else if (a + c == b)
-            return NExampleTriangulation::lst(a, c);
+            return Example<3>::lst(a, c);
         else if (b + c == a)
-            return NExampleTriangulation::lst(b, c);
+            return Example<3>::lst(b, c);
         else {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("Two of the layered "
@@ -570,35 +570,35 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_S3_ONETET:
-                return NExampleTriangulation::threeSphere();
+                return Example<3>::threeSphere();
             case EXAMPLE_S3_BING:
-                return NExampleTriangulation::bingsHouse();
+                return Example<3>::bingsHouse();
             case EXAMPLE_S3_600CELL:
-                return NExampleTriangulation::sphere600();
+                return Example<3>::sphere600();
             case EXAMPLE_RP3RP3:
-                return NExampleTriangulation::rp3rp3();
+                return Example<3>::rp3rp3();
             case EXAMPLE_FIGURE8:
-                return NExampleTriangulation::figureEight();
+                return Example<3>::figureEight();
             case EXAMPLE_GIESEKING:
-                return NExampleTriangulation::gieseking();
+                return Example<3>::gieseking();
             case EXAMPLE_LENS8_3:
-                return NExampleTriangulation::lens(8, 3);
+                return Example<3>::lens(8, 3);
             case EXAMPLE_POINCARE:
-                return NExampleTriangulation::poincareHomologySphere();
+                return Example<3>::poincareHomologySphere();
             case EXAMPLE_RP2xS1:
-                return NExampleTriangulation::rp2xs1();
+                return Example<3>::rp2xs1();
             case EXAMPLE_S2xS1:
-                return NExampleTriangulation::s2xs1();
+                return Example<3>::s2xs1();
             case EXAMPLE_SOLIDKLEIN:
-                return NExampleTriangulation::solidKleinBottle();
+                return Example<3>::solidKleinBottle();
             case EXAMPLE_TREFOIL:
-                return NExampleTriangulation::trefoil();
+                return Example<3>::trefoil();
             case EXAMPLE_WEEKS:
-                return NExampleTriangulation::weeks();
+                return Example<3>::weeks();
             case EXAMPLE_WEBERSEIFERT:
-                return NExampleTriangulation::weberSeifert();
+                return Example<3>::weberSeifert();
             case EXAMPLE_WHITEHEAD:
-                return NExampleTriangulation::whiteheadLink();
+                return Example<3>::whiteheadLink();
         }
 
         ReginaSupport::info(parentWidget,

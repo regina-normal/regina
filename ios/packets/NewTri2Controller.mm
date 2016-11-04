@@ -33,7 +33,7 @@
 #import "NewTri2Controller.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "dim2/dim2exampletriangulation.h"
+#import "triangulation/example2.h"
 #import "triangulation/dim2.h"
 
 @interface NewTri2Controller ()
@@ -89,7 +89,7 @@ typedef regina::Triangulation<2>* (*Tri2Creator)();
 /**
  * Represents a single option in the examples picker.
  */
-@interface Dim2ExampleTriangulation : NSObject
+@interface Example2 : NSObject
 
 @property (strong, nonatomic) NSString* name;
 @property (assign, nonatomic) Tri2Creator creator;
@@ -99,11 +99,11 @@ typedef regina::Triangulation<2>* (*Tri2Creator)();
 
 @end
 
-@implementation Dim2ExampleTriangulation
+@implementation Example2
 
 + (id)exampleWithName:(NSString *)name creator:(Tri2Creator)creator
 {
-    Dim2ExampleTriangulation* e = [[Dim2ExampleTriangulation alloc] init];
+    Example2* e = [[Example2 alloc] init];
     if (e) {
         e.name = name;
         e.creator = creator;
@@ -134,15 +134,15 @@ typedef regina::Triangulation<2>* (*Tri2Creator)();
 
 - (void)viewDidLoad
 {
-    options = @[[Dim2ExampleTriangulation exampleWithName:@"Sphere (2 triangles)" creator:&regina::Dim2ExampleTriangulation::sphere],
-                [Dim2ExampleTriangulation exampleWithName:@"Sphere (tetrahedron boundary)" creator:&regina::Dim2ExampleTriangulation::sphereTetrahedron],
-                [Dim2ExampleTriangulation exampleWithName:@"Sphere (octahedron boundary)" creator:&regina::Dim2ExampleTriangulation::sphereOctahedron],
-                [Dim2ExampleTriangulation exampleWithName:@"Disc" creator:&regina::Dim2ExampleTriangulation::disc],
-                [Dim2ExampleTriangulation exampleWithName:@"Annulus" creator:&regina::Dim2ExampleTriangulation::annulus],
-                [Dim2ExampleTriangulation exampleWithName:@"Möbius band" creator:&regina::Dim2ExampleTriangulation::mobius],
-                [Dim2ExampleTriangulation exampleWithName:@"Torus" creator:&regina::Dim2ExampleTriangulation::torus],
-                [Dim2ExampleTriangulation exampleWithName:@"Projective plane" creator:&regina::Dim2ExampleTriangulation::rp2],
-                [Dim2ExampleTriangulation exampleWithName:@"Klein bottle" creator:&regina::Dim2ExampleTriangulation::kb]];
+    options = @[[Example2 exampleWithName:@"Sphere (2 triangles)" creator:&regina::Example<2>::sphere],
+                [Example2 exampleWithName:@"Sphere (tetrahedron boundary)" creator:&regina::Example<2>::sphereTetrahedron],
+                [Example2 exampleWithName:@"Sphere (octahedron boundary)" creator:&regina::Example<2>::sphereOctahedron],
+                [Example2 exampleWithName:@"Disc" creator:&regina::Example<2>::disc],
+                [Example2 exampleWithName:@"Annulus" creator:&regina::Example<2>::annulus],
+                [Example2 exampleWithName:@"Möbius band" creator:&regina::Example<2>::mobius],
+                [Example2 exampleWithName:@"Torus" creator:&regina::Example<2>::torus],
+                [Example2 exampleWithName:@"Projective plane" creator:&regina::Example<2>::rp2],
+                [Example2 exampleWithName:@"Klein bottle" creator:&regina::Example<2>::kb]];
    
     self.example.dataSource = self;
     self.example.delegate = self;
@@ -289,9 +289,9 @@ typedef regina::Triangulation<2>* (*Tri2Creator)();
 
     regina::Packet* ans;
     if (useOrbl)
-        ans = regina::Dim2ExampleTriangulation::orientable(useGenus, usePunctures);
+        ans = regina::Example<2>::orientable(useGenus, usePunctures);
     else
-        ans = regina::Dim2ExampleTriangulation::nonOrientable(useGenus, usePunctures);
+        ans = regina::Example<2>::nonOrientable(useGenus, usePunctures);
     return ans;
 }
 

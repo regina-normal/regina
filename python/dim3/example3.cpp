@@ -30,64 +30,101 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim2/dim2exampletriangulation.h"
+#include <boost/python.hpp>
+#include "triangulation/example3.h"
 #include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
-#include <boost/python.hpp>
-
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim2ExampleTriangulation;
+using regina::Example;
 
-void addDim2ExampleTriangulation() {
-    class_<Dim2ExampleTriangulation>("Example2", no_init)
-        .def("sphere", &Dim2ExampleTriangulation::sphere,
+void addExample3() {
+    class_<Example<3>>("Example3", no_init)
+        .def("sphere", &Example<3>::sphere,
             return_value_policy<to_held_type<> >())
-        .def("simplicialSphere", &Dim2ExampleTriangulation::simplicialSphere,
+        .def("simplicialSphere", &Example<3>::simplicialSphere,
             return_value_policy<to_held_type<> >())
-        .def("sphereBundle", &Dim2ExampleTriangulation::sphereBundle,
+        .def("sphereBundle", &Example<3>::sphereBundle,
             return_value_policy<to_held_type<> >())
-        .def("twistedSphereBundle", &Dim2ExampleTriangulation::twistedSphereBundle,
+        .def("twistedSphereBundle", &Example<3>::twistedSphereBundle,
             return_value_policy<to_held_type<> >())
-        .def("orientable", &Dim2ExampleTriangulation::orientable,
+        .def("doubleCone", &Example<3>::doubleCone,
+            return_value_policy<to_held_type<>>())
+        .def("singleCone", &Example<3>::singleCone,
+            return_value_policy<to_held_type<>>())
+        .def("threeSphere", &Example<3>::threeSphere,
             return_value_policy<to_held_type<> >())
-        .def("nonOrientable", &Dim2ExampleTriangulation::nonOrientable,
+        .def("bingsHouse", &Example<3>::bingsHouse,
             return_value_policy<to_held_type<> >())
-        .def("sphereTetrahedron", &Dim2ExampleTriangulation::sphereTetrahedron,
+        .def("s2xs1", &Example<3>::s2xs1,
             return_value_policy<to_held_type<> >())
-        .def("sphereOctahedron", &Dim2ExampleTriangulation::sphereOctahedron,
+        .def("rp2xs1", &Example<3>::rp2xs1,
             return_value_policy<to_held_type<> >())
-        .def("disc", &Dim2ExampleTriangulation::disc,
+        .def("rp3rp3", &Example<3>::rp3rp3,
             return_value_policy<to_held_type<> >())
-        .def("annulus", &Dim2ExampleTriangulation::annulus,
+        .def("lens", &Example<3>::lens,
             return_value_policy<to_held_type<> >())
-        .def("mobius", &Dim2ExampleTriangulation::mobius,
+        .def("poincareHomologySphere",
+            &Example<3>::poincareHomologySphere,
             return_value_policy<to_held_type<> >())
-        .def("torus", &Dim2ExampleTriangulation::torus,
+        .def("weeks", &Example<3>::weeks,
             return_value_policy<to_held_type<> >())
-        .def("rp2", &Dim2ExampleTriangulation::rp2,
+        .def("weberSeifert", &Example<3>::weberSeifert,
             return_value_policy<to_held_type<> >())
-        .def("kb", &Dim2ExampleTriangulation::kb,
+        .def("smallClosedOrblHyperbolic",
+            &Example<3>::smallClosedOrblHyperbolic,
+            return_value_policy<to_held_type<> >())
+        .def("smallClosedNonOrblHyperbolic",
+            &Example<3>::smallClosedNonOrblHyperbolic,
+            return_value_policy<to_held_type<> >())
+        .def("sphere600", &Example<3>::sphere600,
+            return_value_policy<to_held_type<> >())
+        .def("lst", &Example<3>::lst,
+            return_value_policy<to_held_type<> >())
+        .def("solidKleinBottle", &Example<3>::solidKleinBottle,
+            return_value_policy<to_held_type<> >())
+        .def("figureEight", &Example<3>::figureEight,
+            return_value_policy<to_held_type<> >())
+        .def("trefoil", &Example<3>::trefoil,
+            return_value_policy<to_held_type<> >())
+        .def("whiteheadLink", &Example<3>::whiteheadLink,
+            return_value_policy<to_held_type<> >())
+        .def("gieseking", &Example<3>::gieseking,
+            return_value_policy<to_held_type<> >())
+        .def("cuspedGenusTwoTorus",
+            &Example<3>::cuspedGenusTwoTorus,
             return_value_policy<to_held_type<> >())
         .def(regina::python::no_eq_operators())
         .staticmethod("sphere")
         .staticmethod("simplicialSphere")
         .staticmethod("sphereBundle")
         .staticmethod("twistedSphereBundle")
-        .staticmethod("orientable")
-        .staticmethod("nonOrientable")
-        .staticmethod("sphereTetrahedron")
-        .staticmethod("sphereOctahedron")
-        .staticmethod("disc")
-        .staticmethod("annulus")
-        .staticmethod("mobius")
-        .staticmethod("torus")
-        .staticmethod("rp2")
-        .staticmethod("kb")
+        .staticmethod("doubleCone")
+        .staticmethod("singleCone")
+        .staticmethod("threeSphere")
+        .staticmethod("bingsHouse")
+        .staticmethod("s2xs1")
+        .staticmethod("rp2xs1")
+        .staticmethod("rp3rp3")
+        .staticmethod("lens")
+        .staticmethod("poincareHomologySphere")
+        .staticmethod("weeks")
+        .staticmethod("weberSeifert")
+        .staticmethod("smallClosedOrblHyperbolic")
+        .staticmethod("smallClosedNonOrblHyperbolic")
+        .staticmethod("sphere600")
+        .staticmethod("lst")
+        .staticmethod("solidKleinBottle")
+        .staticmethod("figureEight")
+        .staticmethod("trefoil")
+        .staticmethod("whiteheadLink")
+        .staticmethod("gieseking")
+        .staticmethod("cuspedGenusTwoTorus")
     ;
 
-    scope().attr("Dim2ExampleTriangulation") = scope().attr("Example2");
+    scope().attr("NExampleTriangulation") = scope().attr("Example3");
 }
 

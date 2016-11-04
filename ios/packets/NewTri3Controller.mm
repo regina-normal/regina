@@ -33,7 +33,7 @@
 #import "NewTri3Controller.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "triangulation/nexampletriangulation.h"
+#import "triangulation/example3.h"
 #import "triangulation/dim3.h"
 
 @interface NewTri3Controller ()
@@ -89,7 +89,7 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
 /**
  * Represents a single option in the examples picker.
  */
-@interface ExampleTriangulation : NSObject
+@interface Example3 : NSObject
 
 @property (strong, nonatomic) NSString* name;
 @property (assign, nonatomic) Tri3Creator creator;
@@ -99,11 +99,11 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
 
 @end
 
-@implementation ExampleTriangulation
+@implementation Example3
 
 + (id)exampleWithName:(NSString *)name creator:(Tri3Creator)creator
 {
-    ExampleTriangulation* e = [[ExampleTriangulation alloc] init];
+    Example3* e = [[Example3 alloc] init];
     if (e) {
         e.name = name;
         e.creator = creator;
@@ -134,21 +134,21 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
 
 - (void)viewDidLoad
 {
-    options = @[[ExampleTriangulation exampleWithName:@"3-sphere (1 tetrahedron)" creator:&regina::NExampleTriangulation::threeSphere],
-                [ExampleTriangulation exampleWithName:@"3-sphere (dual to Bing's house)" creator:&regina::NExampleTriangulation::bingsHouse],
-                [ExampleTriangulation exampleWithName:@"3-sphere (600-cell)" creator:&regina::NExampleTriangulation::sphere600],
-                [ExampleTriangulation exampleWithName:@"Connected sum ℝP³ # ℝP³" creator:&regina::NExampleTriangulation::rp3rp3],
-                [ExampleTriangulation exampleWithName:@"Figure eight knot complement" creator:&regina::NExampleTriangulation::figureEight],
-                [ExampleTriangulation exampleWithName:@"Gieseking manifold" creator:&regina::NExampleTriangulation::gieseking],
-                [ExampleTriangulation exampleWithName:@"Lens space L(8,3)" creator:[](){ return regina::NExampleTriangulation::lens(8, 3); }],
-                [ExampleTriangulation exampleWithName:@"Poincaré homology sphere" creator:&regina::NExampleTriangulation::poincareHomologySphere],
-                [ExampleTriangulation exampleWithName:@"Product ℝP² × S¹" creator:&regina::NExampleTriangulation::rp2xs1],
-                [ExampleTriangulation exampleWithName:@"Product S² × S¹" creator:&regina::NExampleTriangulation::s2xs1],
-                [ExampleTriangulation exampleWithName:@"Solid Klein bottle" creator:&regina::NExampleTriangulation::solidKleinBottle],
-                [ExampleTriangulation exampleWithName:@"Trefoil knot complement" creator:&regina::NExampleTriangulation::trefoil],
-                [ExampleTriangulation exampleWithName:@"Weeks manifold" creator:&regina::NExampleTriangulation::weeks],
-                [ExampleTriangulation exampleWithName:@"Weber-Seifert dodecahedral space" creator:&regina::NExampleTriangulation::weberSeifert],
-                [ExampleTriangulation exampleWithName:@"Whitehead link complement" creator:&regina::NExampleTriangulation::whiteheadLink]];
+    options = @[[Example3 exampleWithName:@"3-sphere (1 tetrahedron)" creator:&regina::Example<3>::threeSphere],
+                [Example3 exampleWithName:@"3-sphere (dual to Bing's house)" creator:&regina::Example<3>::bingsHouse],
+                [Example3 exampleWithName:@"3-sphere (600-cell)" creator:&regina::Example<3>::sphere600],
+                [Example3 exampleWithName:@"Connected sum ℝP³ # ℝP³" creator:&regina::Example<3>::rp3rp3],
+                [Example3 exampleWithName:@"Figure eight knot complement" creator:&regina::Example<3>::figureEight],
+                [Example3 exampleWithName:@"Gieseking manifold" creator:&regina::Example<3>::gieseking],
+                [Example3 exampleWithName:@"Lens space L(8,3)" creator:[](){ return regina::Example<3>::lens(8, 3); }],
+                [Example3 exampleWithName:@"Poincaré homology sphere" creator:&regina::Example<3>::poincareHomologySphere],
+                [Example3 exampleWithName:@"Product ℝP² × S¹" creator:&regina::Example<3>::rp2xs1],
+                [Example3 exampleWithName:@"Product S² × S¹" creator:&regina::Example<3>::s2xs1],
+                [Example3 exampleWithName:@"Solid Klein bottle" creator:&regina::Example<3>::solidKleinBottle],
+                [Example3 exampleWithName:@"Trefoil knot complement" creator:&regina::Example<3>::trefoil],
+                [Example3 exampleWithName:@"Weeks manifold" creator:&regina::Example<3>::weeks],
+                [Example3 exampleWithName:@"Weber-Seifert dodecahedral space" creator:&regina::Example<3>::weberSeifert],
+                [Example3 exampleWithName:@"Whitehead link complement" creator:&regina::Example<3>::whiteheadLink]];
     
     self.example.dataSource = self;
     self.example.delegate = self;

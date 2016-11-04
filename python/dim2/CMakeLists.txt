@@ -5,7 +5,7 @@ SET ( FILES
   boundarycomponent2
   component2
   edge2
-  dim2exampletriangulation
+  example2
   triangle2
   isomorphism2
   triangulation2

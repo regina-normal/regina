@@ -3,7 +3,7 @@
 # This code is not built into Regina, and is here for reference only.
 # It was used to extract the isomorphism signature for the 600-cell,
 # which is now hard-coded into the implementation of the C++ routine
-# NExampleTriangulation::sphere600().
+# Example3::sphere600().
 #
 # The simplicial complex described in cell[] was extracted from the
 # Benedetti-Lutz library of triangulations.  See:

@@ -93,7 +93,7 @@ ensureDestroyed(qw)
 # An example of makeOrphan where we never held the reference to the
 # child in the first place.
 print 'Multiple orphan case'
-x = NExampleTriangulation.lens(8,3); xw = watcher(x)
+x = Example3.lens(8,3); xw = watcher(x)
 x.connectedSumDecomposition()
 y = x.lastChild(); yw = watcher(y)
 ensureAlive(xw); ensureAlive(yw)
@@ -109,7 +109,7 @@ ensureDestroyed(xw); ensureDestroyed(yw)
 
 # An example like above, but where we hold many references to the same
 # child packet.
-f = NExampleTriangulation.lens(8,3); fw = watcher(f)
+f = Example3.lens(8,3); fw = watcher(f)
 f.connectedSumDecomposition()
 g = f.lastChild(); gw = watcher(g)
 h = f.lastChild(); hw = watcher(h)

@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim2/dim2exampletriangulation.h"
+#include "triangulation/example2.h"
 #include "triangulation/dim2.h"
 #include <sstream>
 
 namespace regina {
 
-Triangulation<2>* Dim2ExampleTriangulation::orientable(
+Triangulation<2>* Example<2>::orientable(
         unsigned genus, unsigned punctures) {
     Triangulation<2>* ans = new Triangulation<2>();
 
@@ -88,7 +88,7 @@ Triangulation<2>* Dim2ExampleTriangulation::orientable(
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::nonOrientable(
+Triangulation<2>* Example<2>::nonOrientable(
         unsigned genus, unsigned punctures) {
     if (genus == 0)
         return orientable(0, punctures); // Just in case. *shrug*
@@ -124,7 +124,7 @@ Triangulation<2>* Dim2ExampleTriangulation::nonOrientable(
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::sphereTetrahedron() {
+Triangulation<2>* Example<2>::sphereTetrahedron() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere (tetrahedron boundary)");
 
@@ -142,7 +142,7 @@ Triangulation<2>* Dim2ExampleTriangulation::sphereTetrahedron() {
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::sphereOctahedron() {
+Triangulation<2>* Example<2>::sphereOctahedron() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere (octahedron boundary)");
 
@@ -170,7 +170,7 @@ Triangulation<2>* Dim2ExampleTriangulation::sphereOctahedron() {
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::disc() {
+Triangulation<2>* Example<2>::disc() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Disc");
 
@@ -179,7 +179,7 @@ Triangulation<2>* Dim2ExampleTriangulation::disc() {
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::annulus() {
+Triangulation<2>* Example<2>::annulus() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Annulus");
 
@@ -191,7 +191,7 @@ Triangulation<2>* Dim2ExampleTriangulation::annulus() {
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::mobius() {
+Triangulation<2>* Example<2>::mobius() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("M\u00F6bius band");
 
@@ -201,7 +201,7 @@ Triangulation<2>* Dim2ExampleTriangulation::mobius() {
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::torus() {
+Triangulation<2>* Example<2>::torus() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Torus");
 
@@ -214,7 +214,7 @@ Triangulation<2>* Dim2ExampleTriangulation::torus() {
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::rp2() {
+Triangulation<2>* Example<2>::rp2() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Projective plane");
 
@@ -227,7 +227,7 @@ Triangulation<2>* Dim2ExampleTriangulation::rp2() {
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::kb() {
+Triangulation<2>* Example<2>::kb() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Klein bottle");
 

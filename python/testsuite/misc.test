@@ -47,7 +47,7 @@ c = Perm4(2,3)
 print a == c, a == b, b == c
 print a != c, a != b, b != c
 
-t = regina.NExampleTriangulation.poincareHomologySphere()
+t = regina.Example3.poincareHomologySphere()
 a = t.tetrahedron(0)
 b = t.tetrahedron(1)
 c = t.tetrahedron(0)

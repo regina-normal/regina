@@ -33,7 +33,7 @@
 void addBoundaryComponent4();
 void addComponent4();
 void addEdge4();
-void addDim4ExampleTriangulation();
+void addExample4();
 void addIsomorphism4();
 void addPentachoron4();
 void addTetrahedron4();
@@ -45,7 +45,7 @@ void addDim4Classes() {
     addBoundaryComponent4();
     addComponent4();
     addEdge4();
-    addDim4ExampleTriangulation();
+    addExample4();
     addIsomorphism4();
     addPentachoron4();
     addTetrahedron4();

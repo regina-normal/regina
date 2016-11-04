@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4exampletriangulation.h"
+#include "triangulation/example4.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
 namespace regina {
 
-Triangulation<4>* Dim4ExampleTriangulation::fourSphere() {
+Triangulation<4>* Example<4>::fourSphere() {
     // Take two pentachora and join their entire boundaries according to
     // the identity map.
     Triangulation<4>* ans = new Triangulation<4>();
@@ -53,7 +53,7 @@ Triangulation<4>* Dim4ExampleTriangulation::fourSphere() {
     return ans;
 }
 
-Triangulation<4>* Dim4ExampleTriangulation::simplicialFourSphere() {
+Triangulation<4>* Example<4>::simplicialFourSphere() {
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Standard simplicial 4-sphere");
 
@@ -80,7 +80,7 @@ Triangulation<4>* Dim4ExampleTriangulation::simplicialFourSphere() {
     return ans;
 }
 
-Triangulation<4>* Dim4ExampleTriangulation::rp4() {
+Triangulation<4>* Example<4>::rp4() {
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Real projective 4-space");
 
@@ -103,7 +103,7 @@ Triangulation<4>* Dim4ExampleTriangulation::rp4() {
     return ans;
 }
 
-Triangulation<4>* Dim4ExampleTriangulation::s3xs1() {
+Triangulation<4>* Example<4>::s3xs1() {
     // Make two pentachora, and join three of the five facets according
     // to the identity map.  Only facets 0123 and 1234 of each
     // pentachoron remain.
@@ -125,7 +125,7 @@ Triangulation<4>* Dim4ExampleTriangulation::s3xs1() {
     return ans;
 }
 
-Triangulation<4>* Dim4ExampleTriangulation::s3xs1Twisted() {
+Triangulation<4>* Example<4>::s3xs1Twisted() {
     // Make two pentachora, and join three of the five facets according
     // to the identity map.  Only facets 0123 and 1234 of each
     // pentachoron remain.
@@ -147,7 +147,7 @@ Triangulation<4>* Dim4ExampleTriangulation::s3xs1Twisted() {
     return ans;
 }
 
-Triangulation<4>* Dim4ExampleTriangulation::cappellShaneson() {
+Triangulation<4>* Example<4>::cappellShaneson() {
     // Use the gluings described in arXiv:1109.3899.
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Cappell-Shaneson knot complement");
@@ -307,7 +307,7 @@ namespace {
     };
 }
 
-Triangulation<4>* Dim4ExampleTriangulation::iBundle(
+Triangulation<4>* Example<4>::iBundle(
         const Triangulation<3>& base) {
     Triangulation<4>* ans = new Triangulation<4>();
     Packet::ChangeEventSpan span(ans);
@@ -361,7 +361,7 @@ Triangulation<4>* Dim4ExampleTriangulation::iBundle(
     return ans;
 }
 
-Triangulation<4>* Dim4ExampleTriangulation::s1Bundle(
+Triangulation<4>* Example<4>::s1Bundle(
         const Triangulation<3>& base) {
     Triangulation<4>* ans = iBundle(base);
     Packet::ChangeEventSpan span(ans);
@@ -376,7 +376,7 @@ Triangulation<4>* Dim4ExampleTriangulation::s1Bundle(
     return ans;
 }
 
-Triangulation<4>* Dim4ExampleTriangulation::bundleWithMonodromy(
+Triangulation<4>* Example<4>::bundleWithMonodromy(
         const Triangulation<3>& base, const Isomorphism<3>& monodromy) {
     Triangulation<4>* ans = iBundle(base);
     Packet::ChangeEventSpan span(ans);

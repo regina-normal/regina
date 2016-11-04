@@ -36,7 +36,7 @@ print "-----------------------------------------------------------"
 print "Basic:"
 print
 
-print NExampleTriangulation.poincareHomologySphere().isoSig()
+print Example3.poincareHomologySphere().isoSig()
 print Text("Hello World")
 print Text("Hello World").text()
 
@@ -46,8 +46,8 @@ print "Basic container tests:"
 print
 
 t1 = Triangulation3()
-t2 = NExampleTriangulation.poincareHomologySphere()
-t3 = NExampleTriangulation.figureEight()
+t2 = Example3.poincareHomologySphere()
+t3 = Example3.figureEight()
 p = PDF()
 
 t = Text()
