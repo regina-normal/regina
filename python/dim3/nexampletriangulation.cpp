@@ -32,6 +32,7 @@
 
 #include <boost/python.hpp>
 #include "triangulation/nexampletriangulation.h"
+#include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
@@ -41,7 +42,19 @@ using namespace regina::python;
 using regina::NExampleTriangulation;
 
 void addNExampleTriangulation() {
-    class_<NExampleTriangulation>("NExampleTriangulation", no_init)
+    class_<NExampleTriangulation>("Example3", no_init)
+        .def("sphere", &NExampleTriangulation::sphere,
+            return_value_policy<to_held_type<> >())
+        .def("simplicialSphere", &NExampleTriangulation::simplicialSphere,
+            return_value_policy<to_held_type<> >())
+        .def("sphereBundle", &NExampleTriangulation::sphereBundle,
+            return_value_policy<to_held_type<> >())
+        .def("twistedSphereBundle", &NExampleTriangulation::twistedSphereBundle,
+            return_value_policy<to_held_type<> >())
+        .def("doubleCone", &NExampleTriangulation::doubleCone,
+            return_value_policy<to_held_type<>>())
+        .def("singleCone", &NExampleTriangulation::singleCone,
+            return_value_policy<to_held_type<>>())
         .def("threeSphere", &NExampleTriangulation::threeSphere,
             return_value_policy<to_held_type<> >())
         .def("bingsHouse", &NExampleTriangulation::bingsHouse,
@@ -85,6 +98,12 @@ void addNExampleTriangulation() {
             &NExampleTriangulation::cuspedGenusTwoTorus,
             return_value_policy<to_held_type<> >())
         .def(regina::python::no_eq_operators())
+        .staticmethod("sphere")
+        .staticmethod("simplicialSphere")
+        .staticmethod("sphereBundle")
+        .staticmethod("twistedSphereBundle")
+        .staticmethod("doubleCone")
+        .staticmethod("singleCone")
         .staticmethod("threeSphere")
         .staticmethod("bingsHouse")
         .staticmethod("s2xs1")
@@ -105,5 +124,7 @@ void addNExampleTriangulation() {
         .staticmethod("gieseking")
         .staticmethod("cuspedGenusTwoTorus")
     ;
+
+    scope().attr("NExampleTriangulation") = scope().attr("Example3");
 }
 

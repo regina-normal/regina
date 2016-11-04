@@ -22,6 +22,17 @@ SET ( FILES
   component13
   component14
   component15
+  example5
+  example6
+  example7
+  example8
+  example9
+  example10
+  example11
+  example12
+  example13
+  example14
+  example15
   face
   face5
   face6

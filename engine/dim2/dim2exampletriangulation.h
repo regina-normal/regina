@@ -31,17 +31,16 @@
  **************************************************************************/
 
 /*! \file dim2/dim2exampletriangulation.h
- *  \brief Offers several example 2-manifold triangulations as starting
+ *  \brief Offers some example 2-dimensional triangulations as starting
  *  points for testing code or getting used to Regina.
  */
 
-#ifndef __NEXAMPLETRIANGULATION_H
+#ifndef __EXAMPLE2_H
 #ifndef __DOXYGEN
-#define __NEXAMPLETRIANGULATION_H
+#define __EXAMPLE2_H
 #endif
 
-#include "regina-core.h"
-#include "triangulation/forward.h"
+#include "triangulation/generic/example.h"
 
 namespace regina {
 
@@ -51,22 +50,18 @@ namespace regina {
  */
 
 /**
- * This class offers routines for constructing sample 2-manifold triangulations
- * of various types.  These triangulations may be useful for testing new
- * code, or for simply getting a feel for how Regina works.
+ * Offers routines for constructing a variety of sample 2-dimensional
+ * triangulations.
  *
- * The sample triangulations offered here may prove especially useful in
- * Regina's scripting interface, where working with pre-existing files
- * is more complicated than in the GUI.
+ * This is a specialisation of the generic Example class template; see
+ * the Example template documentation for a general overview of how the example
+ * triangulation classes work.
  *
- * All of the methods in this class will assign an appropriate packet label
- * to the triangulation that they return.
- *
- * Note that each of these routines constructs a new triangulation from
- * scratch.  It is up to the caller of each routine to destroy the
- * triangulation that is returned.
+ * This 2-dimensional specialisation offers significant extra functionality,
+ * by providing several more hard-coded constructions.
  */
-class REGINA_API Dim2ExampleTriangulation {
+template <>
+class REGINA_API Example<2> : public detail::ExampleBase<2> {
     public:
         /**
          * Returns a triangulation of the given orientable surface.
@@ -94,14 +89,6 @@ class REGINA_API Dim2ExampleTriangulation {
          */
         static Triangulation<2>* nonOrientable(
             unsigned genus, unsigned punctures);
-
-        /**
-         * Returns a two-triangle 2-sphere.
-         *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
-         */
-        static Triangulation<2>* sphere();
 
         /**
          * Returns the four-triangle 2-sphere formed from the boundary
@@ -169,6 +156,15 @@ class REGINA_API Dim2ExampleTriangulation {
          */
         static Triangulation<2>* kb();
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2ExampleTriangulation, you should
+ * use the full class name Example<2>.
+ */
+REGINA_DEPRECATED typedef Example<2> Dim2ExampleTriangulation;
 
 /*@}*/
 

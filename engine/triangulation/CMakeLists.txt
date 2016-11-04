@@ -19,7 +19,7 @@ ADD_SUBDIRECTORY(dim2)
 ADD_SUBDIRECTORY(dim3)
 ADD_SUBDIRECTORY(dim4)
 ADD_SUBDIRECTORY(explicit)
-
+ADD_SUBDIRECTORY(generic)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)

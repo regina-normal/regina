@@ -110,8 +110,7 @@ Dim2EdgeEmbedding : typedef ->  FaceEmbedding2_1
 
 Dim2EdgePairing : typedef ->  FacetPairing2
 
-Dim2ExampleTriangulation : class
-Equality type : NEVER_INSTANTIATED
+Dim2ExampleTriangulation : typedef ->  Example2
 
 Dim2Isomorphism : typedef ->  Isomorphism2
 
@@ -133,8 +132,7 @@ Dim4Edge : typedef ->  Face4_1
 
 Dim4EdgeEmbedding : typedef ->  FaceEmbedding4_1
 
-Dim4ExampleTriangulation : class
-Equality type : NEVER_INSTANTIATED
+Dim4ExampleTriangulation : typedef ->  Example4
 
 Dim4FacetPairing : typedef ->  FacetPairing4
 
@@ -228,6 +226,45 @@ EdgeEmbedding7 : typedef ->  FaceEmbedding7_1
 EdgeEmbedding8 : typedef ->  FaceEmbedding8_1
 
 EdgeEmbedding9 : typedef ->  FaceEmbedding9_1
+
+Example10 : class
+Equality type : NEVER_INSTANTIATED
+
+Example12 : class
+Equality type : NEVER_INSTANTIATED
+
+Example13 : class
+Equality type : NEVER_INSTANTIATED
+
+Example14 : class
+Equality type : NEVER_INSTANTIATED
+
+Example15 : class
+Equality type : NEVER_INSTANTIATED
+
+Example2 : class
+Equality type : NEVER_INSTANTIATED
+
+Example3 : class
+Equality type : NEVER_INSTANTIATED
+
+Example4 : class
+Equality type : NEVER_INSTANTIATED
+
+Example5 : class
+Equality type : NEVER_INSTANTIATED
+
+Example6 : class
+Equality type : NEVER_INSTANTIATED
+
+Example7 : class
+Equality type : NEVER_INSTANTIATED
+
+Example8 : class
+Equality type : NEVER_INSTANTIATED
+
+Example9 : class
+Equality type : NEVER_INSTANTIATED
 
 ExampleSnapPea : class
 Equality type : NEVER_INSTANTIATED
@@ -1228,8 +1265,7 @@ NEdgeEmbedding : typedef ->  FaceEmbedding3_1
 
 NExampleSnapPeaTriangulation : typedef ->  ExampleSnapPea
 
-NExampleTriangulation : class
-Equality type : NEVER_INSTANTIATED
+NExampleTriangulation : typedef ->  Example3
 
 NFacePair : class
 Equality type : BY_VALUE

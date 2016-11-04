@@ -31,47 +31,37 @@
  **************************************************************************/
 
 /*! \file dim4/dim4exampletriangulation.h
- *  \brief Offers some example 4-manifold triangulations as starting
+ *  \brief Offers some example 4-dimensional triangulations as starting
  *  points for testing code or getting used to Regina.
  */
 
-#ifndef __DIM4EXAMPLETRIANGULATION_H
+#ifndef __EXAMPLE4_H
 #ifndef __DOXYGEN
-#define __DIM4EXAMPLETRIANGULATION_H
+#define __EXAMPLE4_H
 #endif
 
-#include "regina-core.h"
-#include "triangulation/forward.h"
+#include "triangulation/generic/example.h"
 
 namespace regina {
 
 /**
- * \weakgroup dim4
+ * \weakgroup triangulation
  * @{
  */
 
 /**
- * This class offers routines for constructing a variety of sample 4-manifold
- * triangulations.  These triangulations may be useful for testing new
- * code, or for simply getting a feel for how Regina works.
+ * Offers routines for constructing a variety of sample 4-dimensional
+ * triangulations.
  *
- * At the present time only a handful of triangulations are available
- * (in contrast to the 3-dimensional NExampleTriangulation, which offers
- * many interesting examples).  The authors hope to expand this list
- * of 4-dimensional examples in future releases of Regina.
+ * This is a specialisation of the generic Example class template; see
+ * the Example template documentation for a general overview of how the example
+ * triangulation classes work.
  *
- * The sample triangulations offered here may prove especially useful in
- * Regina's scripting interface, where working with pre-existing files
- * is more complicated than in the GUI.
- *
- * All of the methods in this class will assign an appropriate packet label
- * to the triangulation that they return.
- *
- * Note that each of these routines constructs a new triangulation from
- * scratch.  It is up to the caller of each routine to destroy the
- * triangulation that is returned.
+ * This 4-dimensional specialisation offers significant extra functionality,
+ * by providing several more hard-coded and parameterised constructions.
  */
-class REGINA_API Dim4ExampleTriangulation {
+template <>
+class REGINA_API Example<4> : public detail::ExampleBase<4> {
     public:
         /**
          * \name Closed Triangulations
@@ -154,55 +144,6 @@ class REGINA_API Dim4ExampleTriangulation {
          * \name Constructions from 3-Manifold Triangulations
          */
         /*@{*/
-
-        /**
-         * Returns a double cone over the given 3-manifold triangulation.
-         *
-         * If the given 3-manifold is <tt>M</tt>, this returns an ideal
-         * triangulation of the product <tt>M x I</tt> (with two ideal
-         * boundary components).  A copy of the original 3-manifold
-         * triangulation \a base can be found at the centre of this
-         * construction, formed from the tetrahedra that sit between the
-         * two ideal vertices.
-         *
-         * Note that, as a special case, if <tt>M</tt> is either a
-         * 3-sphere or a 3-ball, then this routine returns a 4-sphere or
-         * a 4-ball (since "ideal spheres" and "ideal balls" just become
-         * regular internal and boundary vertices respectively).
-         *
-         * This construction is essentially the suspension of the
-         * triangulation \a base.  We do not call it this however, since
-         * from a topological point of view, to form the ideal triangulation
-         * of <tt>M x I</tt> we "remove" the vertices at the apex of each cone.
-         *
-         * \warning If the given 3-manifold triangulation has any boundary
-         * whatsoever (either real or ideal), then unless this 3-manifold
-         * triangulation is a 3-ball you will obtain an invalid 4-manifold
-         * triangulation as a result.
-         *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
-         */
-        static Triangulation<4>* doubleCone(const Triangulation<3>& base);
-
-        /**
-         * Returns a single cone over the given 3-manifold triangulation.
-         *
-         * If the given 3-manifold is <tt>M</tt>, this returns a triangulation
-         * of the product <tt>M x I</tt> that has one real boundary component
-         * and one ideal boundary component.  The triangulation of the real
-         * boundary component will be identical to the original 3-manifold
-         * triangulation \a base.
-         *
-         * \warning If the given 3-manifold triangulation has any boundary
-         * whatsoever (either real or ideal), then unless this 3-manifold
-         * triangulation is a 3-ball you will obtain an invalid 4-manifold
-         * triangulation as a result.
-         *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
-         */
-        static Triangulation<4>* singleCone(const Triangulation<3>& base);
 
         /**
          * Returns a triangulation of the product <tt>M x I</tt>,
@@ -292,6 +233,15 @@ class REGINA_API Dim4ExampleTriangulation {
          * (end: Constructions from 3-Manifold Triangulations)
          */
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4ExampleTriangulation, you should
+ * use the full class name Example<4>.
+ */
+REGINA_DEPRECATED typedef Example<4> Dim4ExampleTriangulation;
 
 /*@}*/
 

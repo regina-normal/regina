@@ -31,49 +31,29 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "dim4/dim4exampletriangulation.h"
-#include "triangulation/dim3.h"
-#include "triangulation/dim4.h"
+#include "triangulation/example.h"
+#include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4ExampleTriangulation;
+using regina::Example;
 
-void addDim4ExampleTriangulation() {
-    class_<Dim4ExampleTriangulation>("Example4", no_init)
-        .def("sphere", &Dim4ExampleTriangulation::sphere,
+template <int dim>
+void addExample(const char* name) {
+    class_<Example<dim>>(name, no_init)
+        .def("sphere", &Example<dim>::sphere,
             return_value_policy<to_held_type<> >())
-        .def("simplicialSphere", &Dim4ExampleTriangulation::simplicialSphere,
+        .def("simplicialSphere", &Example<dim>::simplicialSphere,
             return_value_policy<to_held_type<> >())
-        .def("sphereBundle", &Dim4ExampleTriangulation::sphereBundle,
+        .def("sphereBundle", &Example<dim>::sphereBundle,
             return_value_policy<to_held_type<> >())
-        .def("twistedSphereBundle", &Dim4ExampleTriangulation::twistedSphereBundle,
+        .def("twistedSphereBundle", &Example<dim>::twistedSphereBundle,
             return_value_policy<to_held_type<> >())
-        .def("doubleCone", &Dim4ExampleTriangulation::doubleCone,
+        .def("doubleCone", &Example<dim>::doubleCone,
             return_value_policy<to_held_type<>>())
-        .def("singleCone", &Dim4ExampleTriangulation::singleCone,
-            return_value_policy<to_held_type<>>())
-        .def("fourSphere", &Dim4ExampleTriangulation::fourSphere,
-            return_value_policy<to_held_type<>>())
-        .def("simplicialFourSphere",
-            &Dim4ExampleTriangulation::simplicialFourSphere,
-            return_value_policy<to_held_type<>>())
-        .def("rp4", &Dim4ExampleTriangulation::rp4,
-            return_value_policy<to_held_type<>>())
-        .def("s3xs1", &Dim4ExampleTriangulation::s3xs1,
-            return_value_policy<to_held_type<>>())
-        .def("s3xs1Twisted", &Dim4ExampleTriangulation::s3xs1Twisted,
-            return_value_policy<to_held_type<>>())
-        .def("cappellShaneson", &Dim4ExampleTriangulation::cappellShaneson,
-            return_value_policy<to_held_type<>>())
-        .def("iBundle", &Dim4ExampleTriangulation::iBundle,
-            return_value_policy<to_held_type<>>())
-        .def("s1Bundle", &Dim4ExampleTriangulation::s1Bundle,
-            return_value_policy<to_held_type<>>())
-        .def("bundleWithMonodromy",
-            &Dim4ExampleTriangulation::bundleWithMonodromy,
+        .def("singleCone", &Example<dim>::singleCone,
             return_value_policy<to_held_type<>>())
         .def(regina::python::no_eq_operators())
         .staticmethod("sphere")
@@ -82,17 +62,6 @@ void addDim4ExampleTriangulation() {
         .staticmethod("twistedSphereBundle")
         .staticmethod("doubleCone")
         .staticmethod("singleCone")
-        .staticmethod("fourSphere")
-        .staticmethod("simplicialFourSphere")
-        .staticmethod("rp4")
-        .staticmethod("s3xs1")
-        .staticmethod("s3xs1Twisted")
-        .staticmethod("cappellShaneson")
-        .staticmethod("iBundle")
-        .staticmethod("s1Bundle")
-        .staticmethod("bundleWithMonodromy")
     ;
-
-    scope().attr("Dim4ExampleTriangulation") = scope().attr("Example4");
 }
 

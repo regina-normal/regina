@@ -40,8 +40,10 @@ Version 5.1  [ (under development) ]
                 Dim2Triangulation becomes Triangulation<2>, NVertex becomes
                 Vertex<3>, and Dim4Isomorphism becomes Isomorphism<4>.
               - As a special case: Dim2TriangleEdge, NTetFace and Dim4PentFacet
-                become FacetSpec<2,3,4>, and Dim2EdgePairing, NFacePairing and
-                Dim4FacetPairing become FacetPairing<2,3,4>.
+                become FacetSpec<2,3,4>; Dim2EdgePairing, NFacePairing and
+                Dim4FacetPairing become FacetPairing<2,3,4>; and
+                Dim2ExampleTriangulation, NExampleTriangulation and
+                Dim4ExampleTriangulation become Example<2,3,4>.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into
@@ -69,6 +71,14 @@ Version 5.1  [ (under development) ]
             - New routine boundaryComponents() in all dimensions, and new
               routines countBoundaryComponents() and boundaryComponent() in
               higher dimensions (these were already present for dimensions 2-4).
+        Class Example<dim>:
+            - A new generic template for generating example triangulations,
+              which generalises the old standalone Dim2ExampleTriangulation,
+              NExampleTriangulation and Dim4ExampleTriangulation classes.
+            - New routines sphere(), simplicialSphere(), sphereBundle(),
+              twistedSphereBundle() for dimensions that did not have them.
+            - New routines singleCone() and doubleCone() for dimensions >= 3
+              that did not have them.
         Class Face<dim, subdim>:
             - The template parameters are expanded to include the case
               Face<dim, dim>, which now implements the old class Simplex<dim>.

@@ -31,17 +31,16 @@
  **************************************************************************/
 
 /*! \file triangulation/nexampletriangulation.h
- *  \brief Offers several example 3-manifold triangulations as starting
+ *  \brief Offers some example 3-dimensional triangulations as starting
  *  points for testing code or getting used to Regina.
  */
 
-#ifndef __NEXAMPLETRIANGULATION_H
+#ifndef __EXAMPLE3_H
 #ifndef __DOXYGEN
-#define __NEXAMPLETRIANGULATION_H
+#define __EXAMPLE3_H
 #endif
 
-#include "regina-core.h"
-#include "triangulation/forward.h"
+#include "triangulation/generic/example.h"
 
 namespace regina {
 
@@ -51,22 +50,18 @@ namespace regina {
  */
 
 /**
- * This class offers routines for constructing sample 3-manifold triangulations
- * of various types.  These triangulations may be useful for testing new
- * code, or for simply getting a feel for how Regina works.
+ * Offers routines for constructing a variety of sample 3-dimensional
+ * triangulations.
  *
- * The sample triangulations offered here may prove especially useful in
- * Regina's scripting interface, where working with pre-existing files
- * is more complicated than in the GUI.
+ * This is a specialisation of the generic Example class template; see
+ * the Example template documentation for a general overview of how the example
+ * triangulation classes work.
  *
- * All of the methods in this class will assign an appropriate packet label
- * to the triangulation that they return.
- *
- * Note that each of these routines constructs a new triangulation from
- * scratch.  It is up to the caller of each routine to destroy the
- * triangulation that is returned.
+ * This 3-dimensional specialisation offers significant extra functionality,
+ * by providing several more hard-coded and parameterised constructions.
  */
-class REGINA_API NExampleTriangulation {
+template <>
+class REGINA_API Example<3> : public detail::ExampleBase<3> {
     public:
         /**
          * \name Closed Triangulations
@@ -292,6 +287,15 @@ class REGINA_API NExampleTriangulation {
 
         /*@}*/
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2ExampleTriangulation, you should
+ * use the full class name Example<2>.
+ */
+REGINA_DEPRECATED typedef Example<3> NExampleTriangulation;
 
 /*@}*/
 

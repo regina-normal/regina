@@ -42,12 +42,18 @@ using namespace regina::python;
 using regina::Dim2ExampleTriangulation;
 
 void addDim2ExampleTriangulation() {
-    class_<Dim2ExampleTriangulation>("Dim2ExampleTriangulation", no_init)
+    class_<Dim2ExampleTriangulation>("Example2", no_init)
+        .def("sphere", &Dim2ExampleTriangulation::sphere,
+            return_value_policy<to_held_type<> >())
+        .def("simplicialSphere", &Dim2ExampleTriangulation::simplicialSphere,
+            return_value_policy<to_held_type<> >())
+        .def("sphereBundle", &Dim2ExampleTriangulation::sphereBundle,
+            return_value_policy<to_held_type<> >())
+        .def("twistedSphereBundle", &Dim2ExampleTriangulation::twistedSphereBundle,
+            return_value_policy<to_held_type<> >())
         .def("orientable", &Dim2ExampleTriangulation::orientable,
             return_value_policy<to_held_type<> >())
         .def("nonOrientable", &Dim2ExampleTriangulation::nonOrientable,
-            return_value_policy<to_held_type<> >())
-        .def("sphere", &Dim2ExampleTriangulation::sphere,
             return_value_policy<to_held_type<> >())
         .def("sphereTetrahedron", &Dim2ExampleTriangulation::sphereTetrahedron,
             return_value_policy<to_held_type<> >())
@@ -66,9 +72,12 @@ void addDim2ExampleTriangulation() {
         .def("kb", &Dim2ExampleTriangulation::kb,
             return_value_policy<to_held_type<> >())
         .def(regina::python::no_eq_operators())
+        .staticmethod("sphere")
+        .staticmethod("simplicialSphere")
+        .staticmethod("sphereBundle")
+        .staticmethod("twistedSphereBundle")
         .staticmethod("orientable")
         .staticmethod("nonOrientable")
-        .staticmethod("sphere")
         .staticmethod("sphereTetrahedron")
         .staticmethod("sphereOctahedron")
         .staticmethod("disc")
@@ -78,5 +87,7 @@ void addDim2ExampleTriangulation() {
         .staticmethod("rp2")
         .staticmethod("kb")
     ;
+
+    scope().attr("Dim2ExampleTriangulation") = scope().attr("Example2");
 }
 

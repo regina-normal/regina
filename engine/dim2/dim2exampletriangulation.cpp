@@ -124,19 +124,6 @@ Triangulation<2>* Dim2ExampleTriangulation::nonOrientable(
     return ans;
 }
 
-Triangulation<2>* Dim2ExampleTriangulation::sphere() {
-    Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("Sphere");
-
-    Triangle<2>* r = ans->newTriangle();
-    Triangle<2>* s = ans->newTriangle();
-    r->join(0, s, Perm<3>());
-    r->join(1, s, Perm<3>());
-    r->join(2, s, Perm<3>());
-
-    return ans;
-}
-
 Triangulation<2>* Dim2ExampleTriangulation::sphereTetrahedron() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere (tetrahedron boundary)");
