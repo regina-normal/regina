@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "census/ncensus.h"
+#include "census/census.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

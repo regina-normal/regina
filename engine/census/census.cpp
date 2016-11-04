@@ -45,7 +45,7 @@
 #include <tcbdb.h>
 #include <tcutil.h>
 #endif
-#include "census/ncensus.h"
+#include "census/census.h"
 #include "file/globaldirs.h"
 #include "triangulation/dim3.h"
 #include "utilities/memutils.h"

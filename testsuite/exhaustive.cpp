@@ -32,7 +32,7 @@
 
 #include "exhaustive.h"
 #include "census/dim4gluingpermsearcher.h"
-#include "census/ncensus.h"
+#include "census/census.h"
 #include "census/ngluingpermsearcher.h"
 #include "packet/container.h"
 #include "triangulation/dim3.h"

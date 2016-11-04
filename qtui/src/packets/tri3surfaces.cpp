@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "census/ncensus.h"
+#include "census/census.h"
 #include "manifold/nmanifold.h"
 #include "snappea/snappeatriangulation.h"
 #include "subcomplex/nstandardtri.h"

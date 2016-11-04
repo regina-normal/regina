@@ -473,8 +473,8 @@
 		052F9E9A180600FB00FAE4DF /* dim2gluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C1B180600FA00FAE4DF /* dim2gluingperms.h */; };
 		052F9E9B180600FB00FAE4DF /* dim2gluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1C180600FA00FAE4DF /* dim2gluingpermsearcher.cpp */; };
 		052F9E9C180600FB00FAE4DF /* dim2gluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C1D180600FA00FAE4DF /* dim2gluingpermsearcher.h */; };
-		052F9E9D180600FB00FAE4DF /* ncensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1E180600FA00FAE4DF /* ncensus.cpp */; };
-		052F9E9E180600FB00FAE4DF /* ncensus.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C1F180600FA00FAE4DF /* ncensus.h */; };
+		052F9E9D180600FB00FAE4DF /* census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1E180600FA00FAE4DF /* census.cpp */; };
+		052F9E9E180600FB00FAE4DF /* census.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C1F180600FA00FAE4DF /* census.h */; };
 		052F9EA4180600FB00FAE4DF /* gluingperms-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C25180600FA00FAE4DF /* gluingperms-impl.h */; };
 		052F9EA5180600FB00FAE4DF /* gluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C26180600FA00FAE4DF /* gluingperms.h */; };
 		052F9EA8180600FB00FAE4DF /* ngluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C29180600FA00FAE4DF /* ngluingperms.h */; };
@@ -848,7 +848,7 @@
 		052FA1671806129B00FAE4DF /* closedprimemin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C13180600FA00FAE4DF /* closedprimemin.cpp */; };
 		052FA1681806129B00FAE4DF /* compact.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C15180600FA00FAE4DF /* compact.cpp */; };
 		052FA16C1806129B00FAE4DF /* dim2gluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1C180600FA00FAE4DF /* dim2gluingpermsearcher.cpp */; };
-		052FA16D1806129B00FAE4DF /* ncensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1E180600FA00FAE4DF /* ncensus.cpp */; };
+		052FA16D1806129B00FAE4DF /* census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1E180600FA00FAE4DF /* census.cpp */; };
 		052FA1701806129B00FAE4DF /* ngluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C2A180600FA00FAE4DF /* ngluingpermsearcher.cpp */; };
 		052FA17A1806129B00FAE4DF /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C51180600FA00FAE4DF /* engine.cpp */; };
 		052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */; };
@@ -1238,6 +1238,9 @@
 		055114E41DCC860200EC753C /* xmltri2reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114D81DCC85F100EC753C /* xmltri2reader.cpp */; };
 		055114E51DCC860200EC753C /* xmltri3reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114DA1DCC85F200EC753C /* xmltri3reader.cpp */; };
 		055114E61DCC860200EC753C /* xmltri4reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114DC1DCC85F200EC753C /* xmltri4reader.cpp */; };
+		055114EA1DCD521D00EC753C /* ncensus.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114E71DCD521D00EC753C /* ncensus.h */; };
+		055114EB1DCD521D00EC753C /* ngenericgluingperms-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114E81DCD521D00EC753C /* ngenericgluingperms-impl.h */; };
+		055114EC1DCD521D00EC753C /* ngenericgluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114E91DCD521D00EC753C /* ngenericgluingperms.h */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -2570,8 +2573,8 @@
 		052F9C1B180600FA00FAE4DF /* dim2gluingperms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2gluingperms.h; sourceTree = "<group>"; };
 		052F9C1C180600FA00FAE4DF /* dim2gluingpermsearcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2gluingpermsearcher.cpp; sourceTree = "<group>"; };
 		052F9C1D180600FA00FAE4DF /* dim2gluingpermsearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2gluingpermsearcher.h; sourceTree = "<group>"; };
-		052F9C1E180600FA00FAE4DF /* ncensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncensus.cpp; sourceTree = "<group>"; };
-		052F9C1F180600FA00FAE4DF /* ncensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncensus.h; sourceTree = "<group>"; };
+		052F9C1E180600FA00FAE4DF /* census.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = census.cpp; sourceTree = "<group>"; };
+		052F9C1F180600FA00FAE4DF /* census.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = census.h; sourceTree = "<group>"; };
 		052F9C25180600FA00FAE4DF /* gluingperms-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gluingperms-impl.h"; sourceTree = "<group>"; };
 		052F9C26180600FA00FAE4DF /* gluingperms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluingperms.h; sourceTree = "<group>"; };
 		052F9C29180600FA00FAE4DF /* ngluingperms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ngluingperms.h; sourceTree = "<group>"; };
@@ -3205,6 +3208,9 @@
 		055114DB1DCC85F200EC753C /* xmltri3reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltri3reader.h; sourceTree = "<group>"; };
 		055114DC1DCC85F200EC753C /* xmltri4reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmltri4reader.cpp; sourceTree = "<group>"; };
 		055114DD1DCC85F200EC753C /* xmltri4reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltri4reader.h; sourceTree = "<group>"; };
+		055114E71DCD521D00EC753C /* ncensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncensus.h; sourceTree = "<group>"; };
+		055114E81DCD521D00EC753C /* ngenericgluingperms-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ngenericgluingperms-impl.h"; sourceTree = "<group>"; };
+		055114E91DCD521D00EC753C /* ngenericgluingperms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ngenericgluingperms.h; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
@@ -4736,6 +4742,8 @@
 		052F9C12180600FA00FAE4DF /* census */ = {
 			isa = PBXGroup;
 			children = (
+				052F9C1E180600FA00FAE4DF /* census.cpp */,
+				052F9C1F180600FA00FAE4DF /* census.h */,
 				052F9C13180600FA00FAE4DF /* closedprimemin.cpp */,
 				052F9C14180600FA00FAE4DF /* CMakeLists.txt */,
 				052F9C15180600FA00FAE4DF /* compact.cpp */,
@@ -4750,8 +4758,9 @@
 				05431EEB1C40F069009BC072 /* gluingperms.cpp */,
 				052F9C26180600FA00FAE4DF /* gluingperms.h */,
 				05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */,
-				052F9C1E180600FA00FAE4DF /* ncensus.cpp */,
-				052F9C1F180600FA00FAE4DF /* ncensus.h */,
+				055114E71DCD521D00EC753C /* ncensus.h */,
+				055114E81DCD521D00EC753C /* ngenericgluingperms-impl.h */,
+				055114E91DCD521D00EC753C /* ngenericgluingperms.h */,
 				052F9C29180600FA00FAE4DF /* ngluingperms.h */,
 				052F9C2A180600FA00FAE4DF /* ngluingpermsearcher.cpp */,
 				052F9C2B180600FA00FAE4DF /* ngluingpermsearcher.h */,
@@ -6691,6 +6700,7 @@
 				052FA01F180600FB00FAE4DF /* ntxicore.h in Headers */,
 				05431F201C40F260009BC072 /* canonical-impl.h in Headers */,
 				052F9FA8180600FB00FAE4DF /* unix_file_io.h in Headers */,
+				055114EC1DCD521D00EC753C /* ngenericgluingperms.h in Headers */,
 				052FA039180600FB00FAE4DF /* nsvectormirrored.h in Headers */,
 				05431F261C40F260009BC072 /* isomorphism.h in Headers */,
 				052F9F8E180600FB00FAE4DF /* kernel_typedefs.h in Headers */,
@@ -6788,7 +6798,7 @@
 				050C64AC1DA264A900C9420F /* nsnappeatriangulation.h in Headers */,
 				050C64921DA12B0700C9420F /* nprogresstracker.h in Headers */,
 				05431F701C40F3C9009BC072 /* HilbertSeries.h in Headers */,
-				052F9E9E180600FB00FAE4DF /* ncensus.h in Headers */,
+				052F9E9E180600FB00FAE4DF /* census.h in Headers */,
 				052FA06D180600FB00FAE4DF /* nisomorphism.h in Headers */,
 				052F9E9A180600FB00FAE4DF /* dim2gluingperms.h in Headers */,
 				052FA005180600FB00FAE4DF /* nplugtrisolidtorus.h in Headers */,
@@ -6991,6 +7001,7 @@
 				052F9F28180600FB00FAE4DF /* nlensspace.h in Headers */,
 				052F9F9F180600FB00FAE4DF /* terse_triangulation.h in Headers */,
 				052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */,
+				055114EB1DCD521D00EC753C /* ngenericgluingperms-impl.h in Headers */,
 				052F9EF4180600FB00FAE4DF /* treeconstraint.h in Headers */,
 				052FA09A180600FB00FAE4DF /* osutils.h in Headers */,
 				05F0A0061DBF078800117BFC /* tetrahedron4.h in Headers */,
@@ -7036,6 +7047,7 @@
 				053CAB3F1DAB408C00A92F98 /* nsoriented.h in Headers */,
 				052F9FF3180600FB00FAE4DF /* nlayeredchain.h in Headers */,
 				052F9E86180600FB00FAE4DF /* ngrouppresentation.h in Headers */,
+				055114EA1DCD521D00EC753C /* ncensus.h in Headers */,
 				052FA076180600FB00FAE4DF /* ntriangulation.h in Headers */,
 				050C64861DA1249600C9420F /* fileinfo.h in Headers */,
 				052F9EF9180600FB00FAE4DF /* treetraversal-impl.h in Headers */,
@@ -8184,7 +8196,7 @@
 				05F0A0161DBF079600117BFC /* triangle4.cpp in Sources */,
 				05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */,
 				05249EE01DBC16E4001FE29E /* face10.cpp in Sources */,
-				052FA16D1806129B00FAE4DF /* ncensus.cpp in Sources */,
+				052FA16D1806129B00FAE4DF /* census.cpp in Sources */,
 				05249F141DBC16FA001FE29E /* triangulation13.cpp in Sources */,
 				05F09FE01DBF01D100117BFC /* simplify.cpp in Sources */,
 				052FA1DC1806129B00FAE4DF /* normalsurfaces.cpp in Sources */,
@@ -8789,7 +8801,7 @@
 				0591E7F31C4F75C300793A9C /* dim4gluingpermsearcher.cpp in Sources */,
 				052F9F7C180600FB00FAE4DF /* cusps.c in Sources */,
 				05C1BEAE1DCA7CA9007C946B /* boundary6.cpp in Sources */,
-				052F9E9D180600FB00FAE4DF /* ncensus.cpp in Sources */,
+				052F9E9D180600FB00FAE4DF /* census.cpp in Sources */,
 				05A73C9C19B2EF5A0099C617 /* fundamental_group.c in Sources */,
 				052F9F4E180600FB00FAE4DF /* numbertheory.cpp in Sources */,
 				05C1BEB61DCA7CA9007C946B /* boundary14.cpp in Sources */,

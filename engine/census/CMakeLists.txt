@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  census
   closedprimemin
   compact
   dim2gluingpermsearcher
@@ -9,7 +10,6 @@ SET ( FILES
   euler
   gluingperms
   hyperbolic
-  ncensus
   ngluingpermsearcher
   )
 
@@ -21,6 +21,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    census.h
     dim2gluingperms.h
     dim2gluingpermsearcher.h
     dim4gluingperms.h

@@ -35,7 +35,7 @@
 #ifdef REGINA_INSTALL_BUNDLE
 #include <libgen.h> // for dirname()
 #endif
-#include "census/ncensus.h"
+#include "census/census.h"
 #include "file/globaldirs.h"
 #include "triangulation/dim3.h"
 

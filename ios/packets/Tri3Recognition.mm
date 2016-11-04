@@ -35,7 +35,7 @@
 #import "TextHelper.h"
 #import "Tri3ViewController.h"
 #import "Tri3Recognition.h"
-#import "census/ncensus.h"
+#import "census/census.h"
 #import "manifold/nmanifold.h"
 #import "packet/container.h"
 #import "snappea/snappeatriangulation.h"
