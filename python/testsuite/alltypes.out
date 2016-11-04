@@ -1011,6 +1011,9 @@ Equality type : BY_VALUE
 FaceEmbedding9_8 : class
 Equality type : BY_VALUE
 
+FacePair : class
+Equality type : BY_VALUE
+
 FacetPairing10 : class
 Equality type : BY_REFERENCE
 
@@ -1136,6 +1139,9 @@ Equality type : BY_REFERENCE
 
 GlobalDirs : class
 Equality type : NEVER_INSTANTIATED
+
+HomologicalData : class
+Equality type : BY_REFERENCE
 
 HyperAlg : class
 Equality type : BY_VALUE
@@ -1267,8 +1273,7 @@ NExampleSnapPeaTriangulation : typedef ->  ExampleSnapPea
 
 NExampleTriangulation : typedef ->  Example3
 
-NFacePair : class
-Equality type : BY_VALUE
+NFacePair : typedef ->  FacePair
 
 NFacePairing : typedef ->  FacetPairing3
 
@@ -1306,8 +1311,7 @@ Equality type : BY_REFERENCE
 NHomMarkedAbelianGroup : class
 Equality type : BY_REFERENCE
 
-NHomologicalData : class
-Equality type : BY_REFERENCE
+NHomologicalData : typedef ->  HomologicalData
 
 NInteger : typedef ->  Integer
 
