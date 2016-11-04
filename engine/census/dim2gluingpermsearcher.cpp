@@ -42,7 +42,7 @@ const char Dim2GluingPermSearcher::dataTag_ = 'g';
 
 Dim2GluingPermSearcher::Dim2GluingPermSearcher(
         const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
-        bool orientableOnly, UseDim2GluingPerms use, void* useArgs) :
+        bool orientableOnly, GluingPerms<2>::Use use, void* useArgs) :
         GluingPerms<2>(pairing), autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), use_(use), useArgs_(useArgs),
         started(false),
@@ -90,7 +90,7 @@ Dim2GluingPermSearcher::~Dim2GluingPermSearcher() {
 
 Dim2GluingPermSearcher* Dim2GluingPermSearcher::bestSearcher(
         const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
-        bool orientableOnly, UseDim2GluingPerms use, void* useArgs) {
+        bool orientableOnly, GluingPerms<2>::Use use, void* useArgs) {
     // We only have one algorithm for now.
     return new Dim2GluingPermSearcher(pairing, autos, orientableOnly,
         use, useArgs);
@@ -98,7 +98,7 @@ Dim2GluingPermSearcher* Dim2GluingPermSearcher::bestSearcher(
 
 void Dim2GluingPermSearcher::findAllPerms(const FacetPairing<2>* pairing,
         const FacetPairing<2>::IsoList* autos, bool orientableOnly,
-        UseDim2GluingPerms use, void* useArgs) {
+        GluingPerms<2>::Use use, void* useArgs) {
     Dim2GluingPermSearcher* searcher = bestSearcher(pairing, autos,
         orientableOnly, use, useArgs);
     searcher->runSearch();
@@ -236,7 +236,7 @@ void Dim2GluingPermSearcher::dumpTaggedData(std::ostream& out) const {
 }
 
 Dim2GluingPermSearcher* Dim2GluingPermSearcher::readTaggedData(std::istream& in,
-        UseDim2GluingPerms use, void* useArgs) {
+        GluingPerms<2>::Use use, void* useArgs) {
     // Read the class marker.
     char c;
     in >> c;
@@ -284,7 +284,7 @@ void Dim2GluingPermSearcher::dumpData(std::ostream& out) const {
 }
 
 Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
-        UseDim2GluingPerms use, void* useArgs) :
+        GluingPerms<2>::Use use, void* useArgs) :
         GluingPerms<2>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),
         order(0), orderSize(0), orderElt(0) {

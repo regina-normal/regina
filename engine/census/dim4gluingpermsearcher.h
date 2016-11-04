@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include "census/gluingperms.h"
+#include "triangulation/facetpairing.h"
 
 namespace regina {
 
@@ -53,22 +54,13 @@ namespace regina {
 class Dim4GluingPermSearcher;
 
 /**
- * A routine used to do arbitrary processing upon a particular set of
- * pentachoron gluing permutations.  Such routines are used to process
- * permutation sets found when running Dim4GluingPermSearcher::findAllPerms().
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
  *
- * The first parameter passed will be a set of gluing permutations
- * (in fact it will be of the subclass Dim4GluingPermSearcher in order to
- * support partial searches as well as full searches).  This set of
- * gluing permutations must not be deallocated by this routine, since it
- * may be used again later by the caller.  The second parameter may contain
- * arbitrary data as passed to either GluingPerms<4>::findAllPerms() or
- * the Dim4GluingPermSearcher class constructor.
- *
- * Note that the first parameter passed might be \c null to signal that
- * gluing permutation generation has finished.
+ * \deprecated Instead of the old typedef UseDim4GluingPerms, you should use
+ * the new type name GluingPerms<4>::Use.
  */
-typedef void (*UseDim4GluingPerms)(const Dim4GluingPermSearcher*, void*);
+REGINA_DEPRECATED typedef GluingPerms<4>::Use UseDim4GluingPerms;
 
 /**
  * A utility class for searching through all possible gluing permutation
@@ -424,7 +416,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
         bool finiteOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to finite (non-ideal) triangulations? */
-        UseDim4GluingPerms use_;
+        GluingPerms<4>::Use use_;
             /**< A routine to call each time a gluing permutation set is
                  found during the search. */
         void* useArgs_;
@@ -567,7 +559,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
         Dim4GluingPermSearcher(const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                UseDim4GluingPerms use, void* useArgs = 0);
+                GluingPerms<4>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -591,7 +583,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
          * @param useArgs as for the main Dim4GluingPermSearcher constructor.
          */
         Dim4GluingPermSearcher(std::istream& in,
-            UseDim4GluingPerms use, void* useArgs = 0);
+            GluingPerms<4>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -699,7 +691,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
         static void findAllPerms(const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                UseDim4GluingPerms use, void* useArgs = 0);
+                GluingPerms<4>::Use use, void* useArgs = 0);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -732,7 +724,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
                 const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                UseDim4GluingPerms use, void* useArgs = 0);
+                GluingPerms<4>::Use use, void* useArgs = 0);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -762,7 +754,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
          * @param in the input stream from which to read.
          */
         static Dim4GluingPermSearcher* readTaggedData(std::istream& in,
-                UseDim4GluingPerms use, void* useArgs = 0);
+                GluingPerms<4>::Use use, void* useArgs = 0);
 
     protected:
         /**

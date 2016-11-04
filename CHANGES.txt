@@ -35,6 +35,8 @@ Version 5.1  [ (under development) ]
               - All facet pairing headers are included automatically by the
                 new headers triangulation/facetpairing3.h (for dimension 3)
                 and triangulation/facetpairing.h (for all other dimensions).
+              - All gluing permutations headers are replaced by the new header
+                census/gluingperms.h.
               - All typedefs of the form Dim2Foo, NFoo and Dim4Foo are now
                 deprecated, in favour of the templated class names Foo<2,3,4>.
                 For instance, Dim2Triangulation becomes Triangulation<2>,
@@ -89,6 +91,10 @@ Version 5.1  [ (under development) ]
               the preferred way to refer to this class.
             - For higher-dimensional triangulations (dim >= 5), faces now
               support isBoundary() and boundaryComponent().
+        Class GluingPermSearcher{2,3,4}:
+            - The "use" routine that is passed to findAllPerms() must now
+              take a GluingPerms<dim> object as its first argument, not the
+              more specific GluingPermSearcher{2,3,4}.
         Class HomologicalData:
             - Now works with type Integer instead of LargeInteger for all
               member functions except for torsionSigmaVector().
@@ -156,6 +162,9 @@ Version 5.1  [ (under development) ]
             - New routines boundaryComponents(), countBoundaryComponents()
               and boundaryComponent() for higher-dimensional triangulations
               (these were already present for dimensions 2-4).
+        Typedef UseDim2GluingPerms, UseGluingPerms, UseDim4GluingPerms:
+            - Renamed to GluingPerms<2,3,4>::Use.  The old names are kept but
+              deprecated.
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,

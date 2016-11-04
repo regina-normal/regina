@@ -206,7 +206,7 @@ bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
 Dim4GluingPermSearcher::Dim4GluingPermSearcher(
         const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
-        UseDim4GluingPerms use, void* useArgs) :
+        GluingPerms<4>::Use use, void* useArgs) :
         GluingPerms<4>(pairing), autos_(autos), autosNew_(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         use_(use), useArgs_(useArgs),
@@ -286,7 +286,7 @@ Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
 Dim4GluingPermSearcher* Dim4GluingPermSearcher::bestSearcher(
         const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
-        UseDim4GluingPerms use, void* useArgs) {
+        GluingPerms<4>::Use use, void* useArgs) {
     // Do everything by brute force for now.
     return new Dim4GluingPermSearcher(pairing, autos,
         orientableOnly, finiteOnly, use, useArgs);
@@ -294,7 +294,7 @@ Dim4GluingPermSearcher* Dim4GluingPermSearcher::bestSearcher(
 
 void Dim4GluingPermSearcher::findAllPerms(const FacetPairing<4>* pairing,
         const FacetPairing<4>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, UseDim4GluingPerms use, void* useArgs) {
+        bool finiteOnly, GluingPerms<4>::Use use, void* useArgs) {
     Dim4GluingPermSearcher* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, use, useArgs);
     searcher->runSearch();
@@ -555,7 +555,7 @@ void Dim4GluingPermSearcher::dumpTaggedData(std::ostream& out) const {
 }
 
 Dim4GluingPermSearcher* Dim4GluingPermSearcher::readTaggedData(std::istream& in,
-        UseDim4GluingPerms use, void* useArgs) {
+        GluingPerms<4>::Use use, void* useArgs) {
     // Read the class marker.
     char c;
     in >> c;
@@ -630,7 +630,7 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
 }
 
 Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
-        UseDim4GluingPerms use, void* useArgs) :
+        GluingPerms<4>::Use use, void* useArgs) :
         GluingPerms<4>(in), autos_(0), autosNew_(false),
         use_(use), useArgs_(useArgs), orientation_(0),
         order_(0), orderSize_(0), orderElt_(0),

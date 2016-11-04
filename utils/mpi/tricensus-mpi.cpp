@@ -63,98 +63,104 @@
 #define HOUR_SEC (60 * MIN_SEC)
 #define DAY_SEC (24 * HOUR_SEC)
 
-// Forward declarations required for the templates below:
-template <class CensusType>
-void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher*,
-    void*);
+// A generic type for accessing gluing permutation search classes:
+template <int dim>
+struct GluingPermSearcher;
 
-template <class CensusType>
-void ctrlFarmPartialSearch(const typename CensusType::GluingPermSearcher*,
-    void*);
+template <>
+struct GluingPermSearcher<2> {
+    typedef regina::Dim2GluingPermSearcher type;
+};
+
+template <>
+struct GluingPermSearcher<3> {
+    typedef regina::NGluingPermSearcher type;
+};
+
+template <>
+struct GluingPermSearcher<4> {
+    typedef regina::Dim4GluingPermSearcher type;
+};
+
+// Forward declarations required for the templates below:
+template <int dim>
+typename GluingPermSearcher<dim>::type* bestSearcher(
+    regina::FacetPairing<dim>*, bool, bool, int);
+
+template <int dim>
+void findAllPerms(regina::FacetPairing<dim>*, bool, bool, int, regina::Packet*);
+
+template <int dim>
+bool mightBeMinimal(regina::Triangulation<dim>*);
+
+template <int dim>
+void slaveFoundGluingPerms(const typename regina::GluingPerms<dim>*, void*);
+
+template <int dim>
+void ctrlFarmPartialSearch(const typename regina::GluingPerms<dim>*, void*);
 
 // Differences between censuses of 2, 3 and 4-manifolds:
-struct Dim2Params {
-    typedef regina::FacetPairing<2> Pairing;
-    typedef regina::Dim2GluingPermSearcher GluingPermSearcher;
-    typedef regina::Triangulation<2> Triangulation;
+template <>
+inline regina::Dim2GluingPermSearcher* bestSearcher<2>(
+        regina::FacetPairing<2>* p,
+        bool orientableOnly, bool /* finiteOnly */, int /* whichPurge */) {
+    return regina::Dim2GluingPermSearcher::bestSearcher(p, 0 /* autos */,
+        orientableOnly, ctrlFarmPartialSearch<2>);
+}
 
-    inline static GluingPermSearcher* bestSearcher(Pairing* p,
-            bool orientableOnly, bool /* finiteOnly */, int /* whichPurge */) {
-        return GluingPermSearcher::bestSearcher(p, 0 /* autos */,
-            orientableOnly, ctrlFarmPartialSearch<Dim2Params>);
-    }
+template <>
+inline void findAllPerms<2>(regina::FacetPairing<2>* p, bool orientableOnly,
+        bool /* finiteOnly */, int /* whichPurge */,
+        regina::Packet* dest) {
+    regina::Dim2GluingPermSearcher::findAllPerms(p, 0,
+        orientableOnly, slaveFoundGluingPerms<2>, dest);
+}
 
-    inline static void findAllPerms(Pairing* p, bool orientableOnly,
-            bool /* finiteOnly */, int /* whichPurge */,
-            regina::Packet* dest) {
-        GluingPermSearcher::findAllPerms(p, 0,
-            orientableOnly, slaveFoundGluingPerms<Dim2Params>, dest);
-    }
+template <>
+inline bool mightBeMinimal<2>(regina::Triangulation<2>* tri) {
+    return tri->isMinimal();
+}
 
-    inline static bool mightBeMinimal(Triangulation* tri) {
-        return tri->isMinimal();
-    }
+template <>
+inline regina::NGluingPermSearcher* bestSearcher<3>(regina::FacetPairing<3>* p,
+        bool orientableOnly, bool finiteOnly, int whichPurge) {
+    return regina::NGluingPermSearcher::bestSearcher(p, 0 /* autos */,
+        orientableOnly, finiteOnly, whichPurge, ctrlFarmPartialSearch<3>);
+}
 
-    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
-        return s->facetPairing();
-    }
-};
+template <>
+inline void findAllPerms<3>(regina::FacetPairing<3>* p, bool orientableOnly,
+        bool finiteOnly, int whichPurge, regina::Packet* dest) {
+    regina::NGluingPermSearcher::findAllPerms(p, 0,
+        orientableOnly, finiteOnly, whichPurge,
+        slaveFoundGluingPerms<3>, dest);
+}
 
-struct Dim3Params {
-    typedef regina::FacetPairing<3> Pairing;
-    typedef regina::NGluingPermSearcher GluingPermSearcher;
-    typedef regina::Triangulation<3> Triangulation;
+template <>
+inline bool mightBeMinimal<3>(regina::Triangulation<3>* tri) {
+    return ! tri->simplifyToLocalMinimum(false);
+}
 
-    inline static GluingPermSearcher* bestSearcher(Pairing* p,
-            bool orientableOnly, bool finiteOnly, int whichPurge) {
-        return GluingPermSearcher::bestSearcher(p, 0 /* autos */,
-            orientableOnly, finiteOnly, whichPurge,
-            ctrlFarmPartialSearch<Dim3Params>);
-    }
+template <>
+inline regina::Dim4GluingPermSearcher* bestSearcher<4>(
+        regina::FacetPairing<4>* p,
+        bool orientableOnly, bool finiteOnly, int /* whichPurge */) {
+    return regina::Dim4GluingPermSearcher::bestSearcher(p, 0 /* autos */,
+        orientableOnly, finiteOnly, ctrlFarmPartialSearch<4>);
+}
 
-    inline static void findAllPerms(Pairing* p, bool orientableOnly,
-            bool finiteOnly, int whichPurge, regina::Packet* dest) {
-        GluingPermSearcher::findAllPerms(p, 0,
-            orientableOnly, finiteOnly, whichPurge,
-            slaveFoundGluingPerms<Dim3Params>, dest);
-    }
+template <>
+inline void findAllPerms<4>(regina::FacetPairing<4>* p, bool orientableOnly,
+        bool finiteOnly, int /* whichPurge */, regina::Packet* dest) {
+    regina::Dim4GluingPermSearcher::findAllPerms(p, 0,
+        orientableOnly, finiteOnly,
+        slaveFoundGluingPerms<4>, dest);
+}
 
-    inline static bool mightBeMinimal(Triangulation* tri) {
-        return ! tri->simplifyToLocalMinimum(false);
-    }
-
-    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
-        return s->facetPairing();
-    }
-};
-
-struct Dim4Params {
-    typedef regina::FacetPairing<4> Pairing;
-    typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
-    typedef regina::Triangulation<4> Triangulation;
-
-    inline static GluingPermSearcher* bestSearcher(Pairing* p,
-            bool orientableOnly, bool finiteOnly, int /* whichPurge */) {
-        return GluingPermSearcher::bestSearcher(p, 0 /* autos */,
-            orientableOnly, finiteOnly,
-            ctrlFarmPartialSearch<Dim4Params>);
-    }
-
-    inline static void findAllPerms(Pairing* p, bool orientableOnly,
-            bool finiteOnly, int /* whichPurge */, regina::Packet* dest) {
-        GluingPermSearcher::findAllPerms(p, 0,
-            orientableOnly, finiteOnly,
-            slaveFoundGluingPerms<Dim4Params>, dest);
-    }
-
-    inline static bool mightBeMinimal(Triangulation*) {
-        return true;
-    }
-
-    inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
-        return s->facetPairing();
-    }
-};
+template <>
+inline bool mightBeMinimal<4>(regina::Triangulation<4>*) {
+    return true;
+}
 
 // Census parameters.
 regina::BoolSet
@@ -536,9 +542,9 @@ void ctrlFarmPairing(const std::string& pairingRep) {
  *
  * Send the given partial search to the next available slave for processing.
  */
-template <class CensusType>
-void ctrlFarmPartialSearch(
-        const typename CensusType::GluingPermSearcher* search, void*) {
+template <int dim>
+void ctrlFarmPartialSearch(const typename regina::GluingPerms<dim>* search,
+        void*) {
     if (! search) {
         // That's it for this face pairing.
         ctrlLogStamp() << "Pairing " << taskID[0] << ": Farmed "
@@ -550,7 +556,8 @@ void ctrlFarmPartialSearch(
     taskID[1]++;
 
     std::ostringstream searchRep;
-    search->dumpTaggedData(searchRep);
+    static_cast<const typename GluingPermSearcher<dim>::type*>(search)->
+        dumpTaggedData(searchRep);
 
     taskID[2] = searchRep.str().length();
 
@@ -585,7 +592,7 @@ void ctrlStopSlave(int slave) {
 /**
  * Main routine for the controller.
  */
-template <class CensusType>
+template <int dim>
 int mainController() {
     // Prepare to read in the face pairings.
     std::ifstream input(pairsFile.c_str());
@@ -614,13 +621,13 @@ int mainController() {
     std::string pairingRep;
     if (depth > 0) {
         // Generate the face pairings and prepare subsearches.
-        typename CensusType::Pairing* pairing;
-        typename CensusType::GluingPermSearcher* searcher;
+        typename regina::FacetPairing<dim>* pairing;
+        typename GluingPermSearcher<dim>::type* searcher;
         while (! (pairingRep = ctrlNextPairing(input)).empty()) {
             taskID[0]++;
             taskID[1] = 0;
 
-            pairing = CensusType::Pairing::fromTextRep(pairingRep);
+            pairing = regina::FacetPairing<dim>::fromTextRep(pairingRep);
             if (! pairing) {
                 ctrlLogStamp() << "ERROR: Pairing " << taskID[0]
                     << " is invalid: " << pairingRep << std::endl;
@@ -634,7 +641,7 @@ int mainController() {
                 continue;
             }
 
-            searcher = CensusType::bestSearcher(pairing,
+            searcher = bestSearcher<dim>(pairing,
                 ! orientability.hasFalse(), ! finiteness.hasFalse(),
                 whichPurge);
             searcher->runSearch(depth);
@@ -676,13 +683,13 @@ int mainController() {
  *
  * Called each time the slave finds a complete triangulation.
  */
-template <class CensusType>
-void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
+template <int dim>
+void slaveFoundGluingPerms(const regina::GluingPerms<dim>* perms,
         void* container) {
     if (perms) {
-        typename CensusType::Triangulation* tri = perms->triangulate();
+        typename regina::Triangulation<dim>* tri = perms->triangulate();
 
-        // For minimalHyp, we don't run CensusType::mightBeMinimal().
+        // For minimalHyp, we don't run mightBeMinimal<dim>().
         // This is because mightBeMinimal() only tests for immediate
         // reductions (i.e., it doesn't use 4-4 moves or well-climbing
         // techniques), and NHyperbolicMinSearcher already ensures that
@@ -699,7 +706,7 @@ void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
         else if ((! orientability.hasTrue()) && tri->isOrientable())
             ok = false;
         else if ((minimal || minimalPrime || minimalPrimeP2) &&
-                ! CensusType::mightBeMinimal(tri))
+                ! mightBeMinimal<dim>(tri))
             ok = false;
 
         if (ok) {
@@ -782,9 +789,8 @@ void slaveDescribeCensusParameters(std::ostream& out) {
  * The census container will not be included, and should be inserted
  * as the last child of the parent.
  */
-template <class CensusType>
-regina::Packet* slaveSkeletonTree(
-        const typename CensusType::GluingPermSearcher* search,
+template <int dim>
+regina::Packet* slaveSkeletonTree(const regina::GluingPerms<dim>* search,
         const char* searchRep) {
     // Create the overall parent packet.
     regina::Container* parent = new regina::Container();
@@ -797,7 +803,7 @@ regina::Packet* slaveSkeletonTree(
 
     descStream << "Processed a " << WORD_face << " pairing subsearch.\n\n"
         << WORD_Face << " pairing:\n"
-        << CensusType::pairingFor(search)->str() << "\n\nSubsearch:\n"
+        << search->facetPairing()->str() << "\n\nSubsearch:\n"
         << searchRep << "\n\n";
 
     slaveDescribeCensusParameters(descStream);
@@ -818,9 +824,9 @@ regina::Packet* slaveSkeletonTree(
  * The census container will not be included, and should be inserted
  * as the last child of the parent.
  */
-template <class CensusType>
+template <int dim>
 regina::Packet* slaveSkeletonTree(
-        const typename CensusType::Pairing* pairing) {
+        const typename regina::FacetPairing<dim>* pairing) {
     // Create the overall parent packet.
     regina::Container* parent = new regina::Container();
     parent->setLabel("Partial MPI census");
@@ -911,7 +917,7 @@ void slaveBail(const std::string& error) {
  *
  * The controller is informed of the final number of triangulations.
  */
-template <class CensusType>
+template <int dim>
 void slaveProcessPartialSearch() {
     char* searchRep = new char[taskID[2] + 1];
 
@@ -928,11 +934,11 @@ void slaveProcessPartialSearch() {
         dest->setLabel("Triangulations");
     }
 
-    typename CensusType::GluingPermSearcher* search;
+    typename GluingPermSearcher<dim>::type* search;
     {
         std::istringstream s(searchRep);
-        search = CensusType::GluingPermSearcher::readTaggedData(s,
-            slaveFoundGluingPerms<CensusType>, dest);
+        search = GluingPermSearcher<dim>::type::readTaggedData(s,
+            slaveFoundGluingPerms<dim>, dest);
     }
 
     if (search == 0 || search->inputError()) {
@@ -946,7 +952,7 @@ void slaveProcessPartialSearch() {
         slaveMakeTaskFilename(sigFile, ".sig");
         sigStreamErr = false;
     } else {
-        parent = slaveSkeletonTree<CensusType>(search, searchRep);
+        parent = slaveSkeletonTree<dim>(search, searchRep);
         parent->insertChildLast(dest);
     }
 
@@ -979,8 +985,8 @@ void slaveProcessPartialSearch() {
     }
 
     delete parent;
-    delete const_cast<typename CensusType::Pairing*>(
-        CensusType::pairingFor(search));
+    delete const_cast<typename regina::FacetPairing<dim>*>(
+        search->facetPairing());
     delete search;
     delete[] searchRep;
 }
@@ -995,7 +1001,7 @@ void slaveProcessPartialSearch() {
  *
  * The controller is informed of the final number of triangulations.
  */
-template <class CensusType>
+template <int dim>
 void slaveProcessPairing() {
     char* pairingRep = new char[taskID[2] + 1];
 
@@ -1005,8 +1011,8 @@ void slaveProcessPairing() {
         TAG_REQUEST_PAIRING, MPI_COMM_WORLD, &status);
 
     // Parse the face pairing.
-    typename CensusType::Pairing* pairing =
-        CensusType::Pairing::fromTextRep(pairingRep);
+    typename regina::FacetPairing<dim>* pairing =
+        regina::FacetPairing<dim>::fromTextRep(pairingRep);
     if (! pairing) {
         if (dim4)
             slaveBail(std::string("Invalid facet pairing: ") + pairingRep);
@@ -1036,7 +1042,7 @@ void slaveProcessPairing() {
         slaveMakeTaskFilename(sigFile, ".sig");
         sigStreamErr = false;
     } else {
-        parent = slaveSkeletonTree<CensusType>(pairing);
+        parent = slaveSkeletonTree<dim>(pairing);
         dest = new regina::Container();
         dest->setLabel("Triangulations");
         parent->insertChildLast(dest);
@@ -1044,7 +1050,7 @@ void slaveProcessPairing() {
 
     nSolns = 0;
     if (! dryRun)
-        CensusType::findAllPerms(pairing, ! orientability.hasFalse(),
+        findAllPerms<dim>(pairing, ! orientability.hasFalse(),
             ! finiteness.hasFalse(), whichPurge, dest);
 
     if (nSolns > 0) {
@@ -1078,7 +1084,7 @@ void slaveProcessPairing() {
 /**
  * Main routine for a slave (ranks 1..size).
  */
-template <class CensusType>
+template <int dim>
 int mainSlave() {
     // Keep fetching and processing tasks until there are no more.
     MPI_Status status;
@@ -1093,9 +1099,9 @@ int mainSlave() {
             break;
 
         if (taskID[1] < 0)
-            slaveProcessPairing<CensusType>();
+            slaveProcessPairing<dim>();
         else
-            slaveProcessPartialSearch<CensusType>();
+            slaveProcessPartialSearch<dim>();
     }
 
     return 0;
@@ -1133,20 +1139,20 @@ int main(int argc, char* argv[]) {
             } else {
                 nSlaves = size - 1;
                 if (dim2)
-                    retVal = mainController<Dim2Params>();
+                    retVal = mainController<2>();
                 else if (dim4)
-                    retVal = mainController<Dim4Params>();
+                    retVal = mainController<4>();
                 else
-                    retVal = mainController<Dim3Params>();
+                    retVal = mainController<3>();
             }
         } else {
             // We're one of many slaves.
             if (dim2)
-                retVal = mainSlave<Dim2Params>();
+                retVal = mainSlave<2>();
             else if (dim4)
-                retVal = mainSlave<Dim4Params>();
+                retVal = mainSlave<4>();
             else
-                retVal = mainSlave<Dim3Params>();
+                retVal = mainSlave<3>();
         }
     }
 

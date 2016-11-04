@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include "census/gluingperms.h"
+#include "triangulation/facetpairing3.h"
 #include "utilities/qitmask.h"
 
 /**
@@ -76,22 +77,13 @@ namespace regina {
 class NGluingPermSearcher;
 
 /**
- * A routine used to do arbitrary processing upon a particular set of
- * tetrahedron gluing permutations.  Such routines are used to process
- * permutation sets found when running NGluingPermSearcher::findAllPerms().
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
  *
- * The first parameter passed will be a set of gluing permutations
- * (in fact it will be of the subclass NGluingPermSearcher in order to
- * support partial searches as well as full searches).  This set of
- * gluing permutations must not be deallocated by this routine, since it
- * may be used again later by the caller.  The second parameter may contain
- * arbitrary data as passed to either GluingPerms<2>::findAllPerms() or
- * the NGluingPermSearcher class constructor.
- *
- * Note that the first parameter passed might be \c null to signal that
- * gluing permutation generation has finished.
+ * \deprecated Instead of the old typedef UseGluingPerms, you should use
+ * the new type name GluingPerms<3>::Use.
  */
-typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
+REGINA_DEPRECATED typedef GluingPerms<3>::Use UseGluingPerms;
 
 /**
  * A utility class for searching through all possible gluing permutation
@@ -111,8 +103,8 @@ typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
  * constructing an object of the corresponding class (and again
  * calling runSearch() on that object directly).
  *
- * Note that this class derives from GluingPerms<2>.  The search will
- * involve building and repeatedly modifying the inherited GluingPerms<2>
+ * Note that this class derives from GluingPerms<3>.  The search will
+ * involve building and repeatedly modifying the inherited GluingPerms<3>
  * data in-place.
  *
  * \ifacespython Only the PurgeFlags enumeration from this class is
@@ -120,7 +112,7 @@ typedef void (*UseGluingPerms)(const NGluingPermSearcher*, void*);
  * available through the regina namespace.  Therefore there is no need
  * to explicitly access the NGluingPermSearcher through Python.
  */
-class REGINA_API NGluingPermSearcher : public GluingPerms<2> {
+class REGINA_API NGluingPermSearcher : public GluingPerms<3> {
     public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
@@ -193,7 +185,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<2> {
                  avoid constructing?  This should be a bitwise OR of constants
                  from the PurgeFlags enumeration.  See the constructor
                  documentation for further details on this search parameter. */
-        UseGluingPerms use_;
+        GluingPerms<3>::Use use_;
             /**< A routine to call each time a gluing permutation set is
                  found during the search. */
         void* useArgs_;
@@ -313,7 +305,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<2> {
         NGluingPermSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                UseGluingPerms use, void* useArgs = 0);
+                GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -337,7 +329,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<2> {
          * @param useArgs as for the main NGluingPermSearcher constructor.
          */
         NGluingPermSearcher(std::istream& in,
-            UseGluingPerms use, void* useArgs = 0);
+            GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -445,7 +437,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<2> {
         static void findAllPerms(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                UseGluingPerms use, void* useArgs = 0);
+                GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -477,7 +469,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<2> {
         static NGluingPermSearcher* bestSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                UseGluingPerms use, void* useArgs = 0);
+                GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -507,7 +499,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<2> {
          * @param in the input stream from which to read.
          */
         static NGluingPermSearcher* readTaggedData(std::istream& in,
-                UseGluingPerms use, void* useArgs = 0);
+                GluingPerms<3>::Use use, void* useArgs = 0);
 
     protected:
         /**
@@ -1086,7 +1078,7 @@ class REGINA_API NEulerSearcher : public NGluingPermSearcher {
         NEulerSearcher(int useEuler, const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
-                UseGluingPerms use, void* useArgs = 0);
+                GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1111,7 +1103,7 @@ class REGINA_API NEulerSearcher : public NGluingPermSearcher {
          * @param in the input stream from which to read.
          */
         NEulerSearcher(std::istream& in,
-            UseGluingPerms use, void* useArgs = 0);
+            GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -1871,7 +1863,7 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
         NCompactSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
-                UseGluingPerms use, void* useArgs = 0);
+                GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1896,7 +1888,7 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
          * @param in the input stream from which to read.
          */
         NCompactSearcher(std::istream& in,
-            UseGluingPerms use, void* useArgs = 0);
+            GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -2387,7 +2379,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          */
         NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+                bool orientableOnly, GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2412,7 +2404,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * @param in the input stream from which to read.
          */
         NClosedPrimeMinSearcher(std::istream& in,
-            UseGluingPerms use, void* useArgs = 0);
+            GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -2528,7 +2520,7 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          */
         NHyperbolicMinSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, UseGluingPerms use, void* useArgs = 0);
+                bool orientableOnly, GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2553,7 +2545,7 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * @param in the input stream from which to read.
          */
         NHyperbolicMinSearcher(std::istream& in,
-            UseGluingPerms use, void* useArgs = 0);
+            GluingPerms<3>::Use use, void* useArgs = 0);
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const;

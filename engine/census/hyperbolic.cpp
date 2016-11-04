@@ -45,7 +45,7 @@ const char NHyperbolicMinSearcher::dataTag_ = 'h';
 
 NHyperbolicMinSearcher::NHyperbolicMinSearcher(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        UseGluingPerms use, void* useArgs) :
+        GluingPerms<3>::Use use, void* useArgs) :
         NEulerSearcher(0, pairing, autos, orientableOnly,
             PURGE_NON_MINIMAL_HYP, use, useArgs) {
 }
@@ -293,7 +293,7 @@ void NHyperbolicMinSearcher::dumpData(std::ostream& out) const {
 }
 
 NHyperbolicMinSearcher::NHyperbolicMinSearcher(std::istream& in,
-        UseGluingPerms use, void* useArgs) :
+        GluingPerms<3>::Use use, void* useArgs) :
         NEulerSearcher(in, use, useArgs) {
     if (inputError_)
         return;

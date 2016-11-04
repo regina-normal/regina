@@ -38,6 +38,7 @@
 #include "testsuite/census/testcensus.h"
 
 using regina::FacetPairing;
+using regina::GluingPerms;
 using regina::Dim4GluingPermSearcher;
 using regina::Triangulation;
 using regina::BoolSet;
@@ -102,8 +103,7 @@ class Dim4CensusTest : public CppUnit::TestFixture {
                 finite_(finite), orbl_(orbl), count_(0) {}
         };
 
-        static void foundPerms(const Dim4GluingPermSearcher* perms,
-                void* spec) {
+        static void foundPerms(const GluingPerms<4>* perms, void* spec) {
             if (perms) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Triangulation<4>* tri = perms->triangulate();

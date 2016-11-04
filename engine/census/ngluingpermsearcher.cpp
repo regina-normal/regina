@@ -43,8 +43,8 @@ const char NGluingPermSearcher::dataTag_ = 'g';
 NGluingPermSearcher::NGluingPermSearcher(
         const FacetPairing<3>* pairing, const FacetPairing<3>::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
-        UseGluingPerms use, void* useArgs) :
-        GluingPerms<2>(pairing), autos_(autos), autosNew(autos == 0),
+        GluingPerms<3>::Use use, void* useArgs) :
+        GluingPerms<3>(pairing), autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         whichPurge_(whichPurge), use_(use), useArgs_(useArgs),
         started(false),
@@ -91,7 +91,7 @@ NGluingPermSearcher::~NGluingPermSearcher() {
 NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
         const FacetPairing<3>* pairing, const FacetPairing<3>::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
-        UseGluingPerms use, void* useArgs) {
+        GluingPerms<3>::Use use, void* useArgs) {
     // Use an optimised algorithm if possible.
     if (finiteOnly) {
         if (pairing->isClosed() && pairing->size() >= 3 &&
@@ -118,7 +118,7 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
 
 void NGluingPermSearcher::findAllPerms(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, UseGluingPerms use, void* useArgs) {
+        bool finiteOnly, int whichPurge, GluingPerms<3>::Use use, void* useArgs) {
     NGluingPermSearcher* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, whichPurge, use, useArgs);
     searcher->runSearch();
@@ -269,7 +269,7 @@ void NGluingPermSearcher::dumpTaggedData(std::ostream& out) const {
 }
 
 NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
-        UseGluingPerms use, void* useArgs) {
+        GluingPerms<3>::Use use, void* useArgs) {
     // Read the class marker.
     char c;
     in >> c;
@@ -297,7 +297,7 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
 }
 
 void NGluingPermSearcher::dumpData(std::ostream& out) const {
-    GluingPerms<2>::dumpData(out);
+    GluingPerms<3>::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
     out << (finiteOnly_ ? 'f' : '.');
@@ -324,8 +324,8 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
 }
 
 NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
-        UseGluingPerms use, void* useArgs) :
-        GluingPerms<2>(in), autos_(0), autosNew(false),
+        GluingPerms<3>::Use use, void* useArgs) :
+        GluingPerms<3>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),
         order(0), orderSize(0), orderElt(0) {
     if (inputError_)

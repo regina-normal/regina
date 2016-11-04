@@ -39,6 +39,7 @@
 
 using regina::BoolSet;
 using regina::FacetPairing;
+using regina::GluingPerms;
 using regina::Dim2GluingPermSearcher;
 using regina::Triangulation;
 
@@ -104,8 +105,7 @@ class Dim2CensusTest : public CppUnit::TestFixture {
                 orbl_(orbl), minimal_(minimal), count_(0) {}
         };
 
-        static void foundPerms(const Dim2GluingPermSearcher* perms,
-                void* spec) {
+        static void foundPerms(const GluingPerms<2>* perms, void* spec) {
             if (perms) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Triangulation<2>* tri = perms->triangulate();
