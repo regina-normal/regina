@@ -73,7 +73,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     // orderings and properties of chains, to accurately reflect the
     // underlying face pairing.
     //
-    // Although the NGluingPermSearcher constructor initialises the order[]
+    // Although the GluingPermSearcher<3> constructor initialises the order[]
     // array in a vanilla fashion (front to back), we reorder things now
     // to match specific structures that are found in the face pairing graph.
 

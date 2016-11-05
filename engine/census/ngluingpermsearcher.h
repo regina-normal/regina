@@ -87,9 +87,9 @@ REGINA_DEPRECATED typedef GluingPerms<3>::Use UseGluingPerms;
 /**
  * A utility class for searching through all possible gluing permutation
  * sets that correspond to a given tetrahedron face pairing.  Subclasses of
- * NGluingPermSearcher correspond to specialised (and heavily optimised)
+ * GluingPermSearcher<3> correspond to specialised (and heavily optimised)
  * search algorithms that may be used in sufficiently constrained scenarios.
- * The main class NGluingPermSearcher offers a default (but slower) search
+ * The main class GluingPermSearcher<3> offers a default (but slower) search
  * algorithm that may be used in more general contexts.
  *
  * The simplest way of performing a search through all possible gluing
@@ -109,7 +109,7 @@ REGINA_DEPRECATED typedef GluingPerms<3>::Use UseGluingPerms;
  * \ifacespython Only the PurgeFlags enumeration from this class is
  * present, and the PurgeFlags constants are also made directly
  * available through the regina namespace.  Therefore there is no need
- * to explicitly access the NGluingPermSearcher through Python.
+ * to explicitly access the class GluingPermSearcher<3> through Python.
  */
 template <>
 class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
@@ -123,7 +123,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          * the enumeration algorithm) ignore certain classes of triangulations.
          * These flags can be combined using bitwise OR.
          *
-         * See the NGluingPermSearcher constructor documentation for further
+         * See the GluingPermSearcher<3> constructor documentation for further
          * details on how these flags are used.
          *
          * \ifacespython For convenience, these constants are also made
@@ -325,8 +325,8 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          * temporary basis only.
          *
          * @param in the input stream from which to read.
-         * @param use as for the main NGluingPermSearcher constructor.
-         * @param useArgs as for the main NGluingPermSearcher constructor.
+         * @param use as for the main GluingPermSearcher<3> constructor.
+         * @param useArgs as for the main GluingPermSearcher<3> constructor.
          */
         GluingPermSearcher(std::istream& in,
             GluingPerms<3>::Use use, void* useArgs = 0);
@@ -362,7 +362,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          * It is possible to run only a partial search, branching to a
          * given depth but no further.  In this case, rather than
          * producing complete gluing permutation sets, the search will
-         * produce a series of partially-complete NGluingPermSearcher
+         * produce a series of partially-complete GluingPermSearcher<3>
          * objects.  These partial searches may then be restarted by
          * calling runSearch() once more (usually after being frozen or
          * passed on to a different processor).  If necessary, the \a use_
@@ -419,10 +419,10 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          *
          * This routine examines the search parameters, chooses the best
          * possible search algorithm, constructs an object of the
-         * corresponding subclass of NGluingPermSearcher and then calls
+         * corresponding subclass of GluingPermSearcher<3> and then calls
          * runSearch().
          *
-         * See the NGluingPermSearcher constructor for documentation on
+         * See the GluingPermSearcher<3> constructor for documentation on
          * the arguments to this routine.  See the runSearch() method
          * for documentation on how the search runs and returns its
          * results.
@@ -442,7 +442,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
         /**
          * Constructs a search manager of the best possible class for the
          * given search parameters.  Different subclasses of
-         * NGluingPermSearcher provide optimised search algorithms for
+         * GluingPermSearcher<3> provide optimised search algorithms for
          * different types of search.
          *
          * Calling this routine and then calling runSearch() on the
@@ -454,7 +454,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          * The resulting object is newly created, and must be destroyed
          * by the caller of this routine.
          *
-         * See the NGluingPermSearcher constructor for documentation on
+         * See the GluingPermSearcher<3> constructor for documentation on
          * the arguments to this routine.
          *
          * \pre The given face pairing is connected, i.e., it is possible
@@ -491,7 +491,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          * destroy it after use.
          *
          * The arguments \a use and \a useArgs are the same as for the
-         * NGluingPermSearcher constructor.
+         * GluingPermSearcher<3> constructor.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -1052,14 +1052,14 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
          * on the vertex links, as described in the class overview.
          *
          * For details on how a search manager is used, see the
-         * NGluingPermSearcher documentation.  Note in particular that
+         * GluingPermSearcher<3> documentation.  Note in particular that
          * this class will be automatically used by
-         * NGluingPermSearcher::findAllPerms() if possible, so there is
+         * GluingPermSearcher<3>::findAllPerms() if possible, so there is
          * often no need for an end user to instantiate this class
          * directly.
          *
          * All constructor arguments except for \a euler are the same as for
-         * the NGluingPermSearcher constructor, though some arguments (such as
+         * the GluingPermSearcher<3> constructor, though some arguments (such as
          * \a finiteOnly) are not needed here since they are already implied
          * by the specialised search context.
          *
@@ -1095,7 +1095,7 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
          * the contents of this object will be otherwise undefined.
          *
          * The arguments \a use and \a useArgs are the same as for the
-         * NGluingPermSearcher constructor.
+         * GluingPermSearcher<3> constructor.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -1843,14 +1843,14 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
          * triangulations are required.
          *
          * For details on how a search manager is used, see the
-         * NGluingPermSearcher documentation.  Note in particular that
+         * GluingPermSearcher<3> documentation.  Note in particular that
          * this class will be automatically used by
-         * NGluingPermSearcher::findAllPerms() if possible, so there is
+         * GluingPermSearcher<3>::findAllPerms() if possible, so there is
          * often no need for an end user to instantiate this class
          * directly.
          *
          * All constructor arguments are the same as for the
-         * NGluingPermSearcher constructor, though some arguments (such as
+         * GluingPermSearcher<3> constructor, though some arguments (such as
          * \a finiteOnly) are not needed here since they are already implied
          * by the specialised search context.
          *
@@ -1880,7 +1880,7 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
          * the contents of this object will be otherwise undefined.
          *
          * The arguments \a use and \a useArgs are the same as for the
-         * NGluingPermSearcher constructor.
+         * GluingPermSearcher<3> constructor.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -2215,14 +2215,14 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
  * order at least three.
  *
  * The search algorithm is significantly different from the default
- * algorithm provided by NGluingPermSearcher.  It is heavily optimised
+ * algorithm provided by GluingPermSearcher<3>.  It is heavily optimised
  * and takes advantage of a number of results regarding the underlying
  * face pairing graph.
  *
  * Note that additional unwanted triangulations (e.g., non-prime or
  * non-minimal triangulations) may still be produced by this search.
  * However, significantly fewer unwanted triangulations will be produced
- * when using this class instead of NGluingPermSearcher.
+ * when using this class instead of GluingPermSearcher<3>.
  *
  * \ifacespython Not present.
  */
@@ -2354,18 +2354,18 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * given face pairing has order at least three.  Note that other
          * unwanted triangulations may still be produced (e.g.,
          * non-prime or non-minimal triangulations), but there will be
-         * far fewer of these than when using the NGluingPermSearcher
+         * far fewer of these than when using the GluingPermSearcher<3>
          * class directly.
          *
          * For details on how a search manager is used, see the
-         * NGluingPermSearcher documentation.  Note in particular that
+         * GluingPermSearcher<3> documentation.  Note in particular that
          * this class will be automatically used by
-         * NGluingPermSearcher::findAllPerms() if possible, so there is
+         * GluingPermSearcher<3>::findAllPerms() if possible, so there is
          * often no need for an end user to instantiate this class
          * directly.
          *
          * All constructor arguments are the same as for the
-         * NGluingPermSearcher constructor, though some arguments (such as
+         * GluingPermSearcher<3> constructor, though some arguments (such as
          * \a finiteOnly and \a whichPurge) are not needed here since they
          * are already implied by the specialised search context.
          *
@@ -2396,7 +2396,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * the contents of this object will be otherwise undefined.
          *
          * The arguments \a use and \a useArgs are the same as for the
-         * NGluingPermSearcher constructor.
+         * GluingPermSearcher<3> constructor.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -2473,7 +2473,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
  * Note that additional unwanted triangulations (e.g., non-hyperbolic or
  * non-minimal triangulations) may still be produced by this search.
  * However, significantly fewer unwanted triangulations will be produced
- * when using this class instead of NGluingPermSearcher.
+ * when using this class instead of GluingPermSearcher<3>.
  *
  * \ifacespython Not present.
  */
@@ -2500,14 +2500,14 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * required.  Here every vertex link will be a torus or Klein bottle.
          * Note that other unwanted triangulations may still be produced
          * (e.g., non-hyperbolic or non-minimal triangulations), but there
-         * will be far fewer of these than when using the NGluingPermSearcher
+         * will be far fewer of these than when using the GluingPermSearcher<3>
          * class directly.
          *
          * For details on how a search manager is used, see the
-         * NGluingPermSearcher documentation.
+         * GluingPermSearcher<3> documentation.
          *
          * All constructor arguments are the same as for the
-         * NGluingPermSearcher constructor, though some arguments (such as
+         * GluingPermSearcher<3> constructor, though some arguments (such as
          * \a finiteOnly and \a whichPurge) are not needed here since they
          * are already implied by the specialised search context.
          *
@@ -2537,7 +2537,7 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * the contents of this object will be otherwise undefined.
          *
          * The arguments \a use and \a useArgs are the same as for the
-         * NGluingPermSearcher constructor.
+         * GluingPermSearcher<3> constructor.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -2608,14 +2608,14 @@ REGINA_DEPRECATED typedef GluingPermSearcher<3> NGluingPermSearcher;
 
 /*@}*/
 
-// Inline functions for NGluingPermSearcher
+// Inline functions for GluingPermSearcher<3>
 
-inline bool NGluingPermSearcher::completePermSet() const {
+inline bool GluingPermSearcher<3>::completePermSet() const {
     return (orderElt == orderSize);
 }
 
-inline char NGluingPermSearcher::dataTag() const {
-    return NGluingPermSearcher::dataTag_;
+inline char GluingPermSearcher<3>::dataTag() const {
+    return GluingPermSearcher<3>::dataTag_;
 }
 
 // Inline functions for NEulerSearcher

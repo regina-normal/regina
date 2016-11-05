@@ -201,7 +201,7 @@ bool NCompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) 
 NCompactSearcher::NCompactSearcher(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
         int whichPurge, GluingPerms<3>::Use use, void* useArgs) :
-        NGluingPermSearcher(pairing, autos, orientableOnly,
+        GluingPermSearcher<3>(pairing, autos, orientableOnly,
             true /* finiteOnly */, whichPurge, use, useArgs) {
     // Initialise the internal arrays to accurately reflect the underlying
     // face pairing.
@@ -492,7 +492,7 @@ void NCompactSearcher::runSearch(long maxDepth) {
 }
 
 void NCompactSearcher::dumpData(std::ostream& out) const {
-    NGluingPermSearcher::dumpData(out);
+    GluingPermSearcher<3>::dumpData(out);
 
     unsigned nTets = size();
     unsigned i;
@@ -524,7 +524,7 @@ void NCompactSearcher::dumpData(std::ostream& out) const {
 
 NCompactSearcher::NCompactSearcher(std::istream& in,
         GluingPerms<3>::Use use, void* useArgs) :
-        NGluingPermSearcher(in, use, useArgs),
+        GluingPermSearcher<3>(in, use, useArgs),
         nVertexClasses(0), vertexState(0), vertexStateChanged(0),
         nEdgeClasses(0), edgeState(0), edgeStateChanged(0) {
     if (inputError_)

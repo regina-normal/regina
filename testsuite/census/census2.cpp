@@ -40,7 +40,7 @@
 using regina::BoolSet;
 using regina::FacetPairing;
 using regina::GluingPerms;
-using regina::Dim2GluingPermSearcher;
+using regina::GluingPermSearcher;
 using regina::Triangulation;
 
 class Census2Test : public CppUnit::TestFixture {
@@ -123,7 +123,7 @@ class Census2Test : public CppUnit::TestFixture {
                 const FacetPairing<2>::IsoList* autos, void* spec) {
             if (pairing) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Dim2GluingPermSearcher::findAllPerms(pairing, autos,
+                GluingPermSearcher<2>::findAllPerms(pairing, autos,
                     ! s->orbl_.hasFalse(), foundPerms, spec);
             }
         }

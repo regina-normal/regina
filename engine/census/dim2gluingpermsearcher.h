@@ -64,9 +64,9 @@ REGINA_DEPRECATED typedef GluingPerms<2>::Use UseDim2GluingPerms;
 /**
  * A utility class for searching through all possible gluing permutation
  * sets that correspond to a given triangle edge pairing.  In the future,
- * there may be subclasses of Dim2GluingPermSearcher that correspond to
+ * there may be subclasses of GluingPermSearcher<2> that correspond to
  * specialised search algorithms for use in certain scenarios.
- * The main class Dim2GluingPermSearcher offers a default search
+ * The main class GluingPermSearcher<2> offers a default search
  * algorithm that may be used in a general context.
  *
  * The simplest way of performing a search through all possible gluing
@@ -206,8 +206,8 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          * temporary basis only.
          *
          * @param in the input stream from which to read.
-         * @param use as for the main Dim2GluingPermSearcher constructor.
-         * @param useArgs as for the main Dim2GluingPermSearcher constructor.
+         * @param use as for the main GluingPermSearcher<2> constructor.
+         * @param useArgs as for the main GluingPermSearcher<2> constructor.
          */
         GluingPermSearcher(std::istream& in,
             GluingPerms<2>::Use use, void* useArgs = 0);
@@ -243,7 +243,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          * It is possible to run only a partial search, branching to a
          * given depth but no further.  In this case, rather than
          * producing complete gluing permutation sets, the search will
-         * produce a series of partially-complete Dim2GluingPermSearcher
+         * produce a series of partially-complete GluingPermSearcher<2>
          * objects.  These partial searches may then be restarted by
          * calling runSearch() once more (usually after being frozen or
          * passed on to a different processor).  If necessary, the \a use_
@@ -300,10 +300,10 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          *
          * This routine examines the search parameters, chooses the best
          * possible search algorithm, constructs an object of the
-         * corresponding subclass of Dim2GluingPermSearcher and then calls
+         * corresponding subclass of GluingPermSearcher<2> and then calls
          * runSearch().
          *
-         * See the Dim2GluingPermSearcher constructor for documentation on
+         * See the GluingPermSearcher<2> constructor for documentation on
          * the arguments to this routine.  See the runSearch() method
          * for documentation on how the search runs and returns its
          * results.
@@ -322,7 +322,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
         /**
          * Constructs a search manager of the best possible class for the
          * given search parameters.  Different subclasses of
-         * Dim2GluingPermSearcher provide optimised search algorithms for
+         * GluingPermSearcher<2> provide optimised search algorithms for
          * different types of search.
          *
          * Calling this routine and then calling runSearch() on the
@@ -334,7 +334,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          * The resulting object is newly created, and must be destroyed
          * by the caller of this routine.
          *
-         * See the Dim2GluingPermSearcher constructor for documentation on
+         * See the GluingPermSearcher<2> constructor for documentation on
          * the arguments to this routine.
          *
          * \pre The given edge pairing is connected, i.e., it is possible
@@ -370,7 +370,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          * destroy it after use.
          *
          * The arguments \a use and \a useArgs are the same as for the
-         * Dim2GluingPermSearcher constructor.
+         * GluingPermSearcher<2> constructor.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -413,14 +413,14 @@ REGINA_DEPRECATED typedef GluingPermSearcher<2> Dim2GluingPermSearcher;
 
 /*@}*/
 
-// Inline functions for Dim2GluingPermSearcher
+// Inline functions for GluingPermSearcher<2>
 
-inline bool Dim2GluingPermSearcher::completePermSet() const {
+inline bool GluingPermSearcher<2>::completePermSet() const {
     return (orderElt == orderSize);
 }
 
-inline char Dim2GluingPermSearcher::dataTag() const {
-    return Dim2GluingPermSearcher::dataTag_;
+inline char GluingPermSearcher<2>::dataTag() const {
+    return GluingPermSearcher<2>::dataTag_;
 }
 
 } // namespace regina

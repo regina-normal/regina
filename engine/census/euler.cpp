@@ -203,7 +203,7 @@ bool NEulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
 NEulerSearcher::NEulerSearcher(int useEuler, const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
         int whichPurge, GluingPerms<3>::Use use, void* useArgs) :
-        NGluingPermSearcher(pairing, autos, orientableOnly,
+        GluingPermSearcher<3>(pairing, autos, orientableOnly,
             true /* finiteOnly */, whichPurge, use, useArgs),
         euler_(useEuler) {
     // Initialise the internal arrays to accurately reflect the underlying
@@ -500,7 +500,7 @@ void NEulerSearcher::runSearch(long maxDepth) {
 }
 
 void NEulerSearcher::dumpData(std::ostream& out) const {
-    NGluingPermSearcher::dumpData(out);
+    GluingPermSearcher<3>::dumpData(out);
 
     out << euler_ << std::endl;
 
@@ -534,7 +534,7 @@ void NEulerSearcher::dumpData(std::ostream& out) const {
 
 NEulerSearcher::NEulerSearcher(std::istream& in,
         GluingPerms<3>::Use use, void* useArgs) :
-        NGluingPermSearcher(in, use, useArgs),
+        GluingPermSearcher<3>(in, use, useArgs),
         nVertexClasses(0), vertexState(0), vertexStateChanged(0),
         nEdgeClasses(0), edgeState(0), edgeStateChanged(0) {
     if (inputError_)

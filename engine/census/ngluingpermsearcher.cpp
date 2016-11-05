@@ -38,9 +38,9 @@
 
 namespace regina {
 
-const char NGluingPermSearcher::dataTag_ = 'g';
+const char GluingPermSearcher<3>::dataTag_ = 'g';
 
-NGluingPermSearcher::GluingPermSearcher(
+GluingPermSearcher<3>::GluingPermSearcher(
         const FacetPairing<3>* pairing, const FacetPairing<3>::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         GluingPerms<3>::Use use, void* useArgs) :
@@ -52,7 +52,7 @@ NGluingPermSearcher::GluingPermSearcher(
     // Generate the list of face pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew) {
-        const_cast<NGluingPermSearcher*>(this)->autos_ =
+        const_cast<GluingPermSearcher<3>*>(this)->autos_ =
             new FacetPairing<3>::IsoList();
         pairing->findAutomorphisms(const_cast<FacetPairing<3>::IsoList&>(*autos_));
     }
@@ -75,7 +75,7 @@ NGluingPermSearcher::GluingPermSearcher(
                 order[orderSize++] = face;
 }
 
-NGluingPermSearcher::~GluingPermSearcher() {
+GluingPermSearcher<3>::~GluingPermSearcher() {
     delete[] orientation;
     delete[] order;
     if (autosNew) {
@@ -88,7 +88,7 @@ NGluingPermSearcher::~GluingPermSearcher() {
     }
 }
 
-NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
+GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
         const FacetPairing<3>* pairing, const FacetPairing<3>::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         GluingPerms<3>::Use use, void* useArgs) {
@@ -112,20 +112,20 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
         return new NHyperbolicMinSearcher(pairing, autos, orientableOnly,
             use, useArgs);
 
-    return new NGluingPermSearcher(pairing, autos, orientableOnly, finiteOnly,
+    return new GluingPermSearcher<3>(pairing, autos, orientableOnly, finiteOnly,
         whichPurge, use, useArgs);
 }
 
-void NGluingPermSearcher::findAllPerms(const FacetPairing<3>* pairing,
+void GluingPermSearcher<3>::findAllPerms(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
         bool finiteOnly, int whichPurge, GluingPerms<3>::Use use, void* useArgs) {
-    NGluingPermSearcher* searcher = bestSearcher(pairing, autos,
+    GluingPermSearcher<3>* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, whichPurge, use, useArgs);
     searcher->runSearch();
     delete searcher;
 }
 
-void NGluingPermSearcher::runSearch(long maxDepth) {
+void GluingPermSearcher<3>::runSearch(long maxDepth) {
     // In this generation algorithm, each orientation is simply +/-1.
 
     unsigned nTetrahedra = size();
@@ -194,7 +194,7 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
         //
         // Don't test for degree 1 or 2 edges here - for situations
         // where these can be purged, we will be using a specialised
-        // subclass of NGluingPermSearcher with its own custom
+        // subclass of GluingPermSearcher<3> with its own custom
         // implementation of runSearch().
         if (lowDegreeEdge(face, false /* degree 1,2 */,
                 whichPurge_ & PURGE_NON_MINIMAL))
@@ -263,12 +263,12 @@ void NGluingPermSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
-void NGluingPermSearcher::dumpTaggedData(std::ostream& out) const {
+void GluingPermSearcher<3>::dumpTaggedData(std::ostream& out) const {
     out << dataTag() << std::endl;
     dumpData(out);
 }
 
-NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
+GluingPermSearcher<3>* GluingPermSearcher<3>::readTaggedData(std::istream& in,
         GluingPerms<3>::Use use, void* useArgs) {
     // Read the class marker.
     char c;
@@ -276,9 +276,9 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
     if (in.eof())
         return 0;
 
-    NGluingPermSearcher* ans;
-    if (c == NGluingPermSearcher::dataTag_)
-        ans = new NGluingPermSearcher(in, use, useArgs);
+    GluingPermSearcher<3>* ans;
+    if (c == GluingPermSearcher<3>::dataTag_)
+        ans = new GluingPermSearcher<3>(in, use, useArgs);
     else if (c == NCompactSearcher::dataTag_)
         ans = new NCompactSearcher(in, use, useArgs);
     else if (c == NClosedPrimeMinSearcher::dataTag_)
@@ -296,7 +296,7 @@ NGluingPermSearcher* NGluingPermSearcher::readTaggedData(std::istream& in,
     return ans;
 }
 
-void NGluingPermSearcher::dumpData(std::ostream& out) const {
+void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
     GluingPerms<3>::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
@@ -323,7 +323,7 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-NGluingPermSearcher::GluingPermSearcher(std::istream& in,
+GluingPermSearcher<3>::GluingPermSearcher(std::istream& in,
         GluingPerms<3>::Use use, void* useArgs) :
         GluingPerms<3>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),
@@ -332,7 +332,7 @@ NGluingPermSearcher::GluingPermSearcher(std::istream& in,
         return;
 
     // Recontruct the face pairing automorphisms.
-    const_cast<NGluingPermSearcher*>(this)->autos_ =
+    const_cast<GluingPermSearcher<3>*>(this)->autos_ =
         new FacetPairing<3>::IsoList();
     pairing_->findAutomorphisms(const_cast<FacetPairing<3>::IsoList&>(*autos_));
     autosNew = true;
@@ -391,7 +391,7 @@ NGluingPermSearcher::GluingPermSearcher(std::istream& in,
         inputError_ = true;
 }
 
-bool NGluingPermSearcher::isCanonical() const {
+bool GluingPermSearcher<3>::isCanonical() const {
     FacetSpec<3> face, faceDest, faceImage;
     int ordering;
 
@@ -428,7 +428,7 @@ bool NGluingPermSearcher::isCanonical() const {
     return true;
 }
 
-bool NGluingPermSearcher::badEdgeLink(const FacetSpec<3>& face) const {
+bool GluingPermSearcher<3>::badEdgeLink(const FacetSpec<3>& face) const {
     // Run around all three edges bounding the face.
     FacetSpec<3> adj;
     unsigned tet;
@@ -492,7 +492,7 @@ bool NGluingPermSearcher::badEdgeLink(const FacetSpec<3>& face) const {
     return false;
 }
 
-bool NGluingPermSearcher::lowDegreeEdge(const FacetSpec<3>& face,
+bool GluingPermSearcher<3>::lowDegreeEdge(const FacetSpec<3>& face,
         bool testDegree12, bool testDegree3) const {
     // Run around all three edges bounding the face.
     FacetSpec<3> adj;

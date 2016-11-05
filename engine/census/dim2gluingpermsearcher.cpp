@@ -38,9 +38,9 @@
 
 namespace regina {
 
-const char Dim2GluingPermSearcher::dataTag_ = 'g';
+const char GluingPermSearcher<2>::dataTag_ = 'g';
 
-Dim2GluingPermSearcher::GluingPermSearcher(
+GluingPermSearcher<2>::GluingPermSearcher(
         const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
         bool orientableOnly, GluingPerms<2>::Use use, void* useArgs) :
         GluingPerms<2>(pairing), autos_(autos), autosNew(autos == 0),
@@ -50,7 +50,7 @@ Dim2GluingPermSearcher::GluingPermSearcher(
     // Generate the list of edge pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew) {
-        const_cast<Dim2GluingPermSearcher*>(this)->autos_ =
+        const_cast<GluingPermSearcher<2>*>(this)->autos_ =
             new FacetPairing<2>::IsoList();
         pairing->findAutomorphisms(
             const_cast<FacetPairing<2>::IsoList&>(*autos_));
@@ -74,7 +74,7 @@ Dim2GluingPermSearcher::GluingPermSearcher(
                 order[orderSize++] = edge;
 }
 
-Dim2GluingPermSearcher::~GluingPermSearcher() {
+GluingPermSearcher<2>::~GluingPermSearcher() {
     delete[] orientation;
     delete[] order;
     if (autosNew) {
@@ -88,24 +88,24 @@ Dim2GluingPermSearcher::~GluingPermSearcher() {
     }
 }
 
-Dim2GluingPermSearcher* Dim2GluingPermSearcher::bestSearcher(
+GluingPermSearcher<2>* GluingPermSearcher<2>::bestSearcher(
         const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
         bool orientableOnly, GluingPerms<2>::Use use, void* useArgs) {
     // We only have one algorithm for now.
-    return new Dim2GluingPermSearcher(pairing, autos, orientableOnly,
+    return new GluingPermSearcher<2>(pairing, autos, orientableOnly,
         use, useArgs);
 }
 
-void Dim2GluingPermSearcher::findAllPerms(const FacetPairing<2>* pairing,
+void GluingPermSearcher<2>::findAllPerms(const FacetPairing<2>* pairing,
         const FacetPairing<2>::IsoList* autos, bool orientableOnly,
         GluingPerms<2>::Use use, void* useArgs) {
-    Dim2GluingPermSearcher* searcher = bestSearcher(pairing, autos,
+    GluingPermSearcher<2>* searcher = bestSearcher(pairing, autos,
         orientableOnly, use, useArgs);
     searcher->runSearch();
     delete searcher;
 }
 
-void Dim2GluingPermSearcher::runSearch(long maxDepth) {
+void GluingPermSearcher<2>::runSearch(long maxDepth) {
     // In this generation algorithm, each orientation is simply +/-1.
 
     unsigned nTriangles = size();
@@ -230,12 +230,12 @@ void Dim2GluingPermSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
-void Dim2GluingPermSearcher::dumpTaggedData(std::ostream& out) const {
+void GluingPermSearcher<2>::dumpTaggedData(std::ostream& out) const {
     out << dataTag() << std::endl;
     dumpData(out);
 }
 
-Dim2GluingPermSearcher* Dim2GluingPermSearcher::readTaggedData(std::istream& in,
+GluingPermSearcher<2>* GluingPermSearcher<2>::readTaggedData(std::istream& in,
         GluingPerms<2>::Use use, void* useArgs) {
     // Read the class marker.
     char c;
@@ -243,9 +243,9 @@ Dim2GluingPermSearcher* Dim2GluingPermSearcher::readTaggedData(std::istream& in,
     if (in.eof())
         return 0;
 
-    Dim2GluingPermSearcher* ans;
-    if (c == Dim2GluingPermSearcher::dataTag_)
-        ans = new Dim2GluingPermSearcher(in, use, useArgs);
+    GluingPermSearcher<2>* ans;
+    if (c == GluingPermSearcher<2>::dataTag_)
+        ans = new GluingPermSearcher<2>(in, use, useArgs);
     else
         return 0;
 
@@ -257,7 +257,7 @@ Dim2GluingPermSearcher* Dim2GluingPermSearcher::readTaggedData(std::istream& in,
     return ans;
 }
 
-void Dim2GluingPermSearcher::dumpData(std::ostream& out) const {
+void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
     GluingPerms<2>::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
@@ -283,7 +283,7 @@ void Dim2GluingPermSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-Dim2GluingPermSearcher::GluingPermSearcher(std::istream& in,
+GluingPermSearcher<2>::GluingPermSearcher(std::istream& in,
         GluingPerms<2>::Use use, void* useArgs) :
         GluingPerms<2>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),
@@ -292,7 +292,7 @@ Dim2GluingPermSearcher::GluingPermSearcher(std::istream& in,
         return;
 
     // Recontruct the face pairing automorphisms.
-    const_cast<Dim2GluingPermSearcher*>(this)->autos_ =
+    const_cast<GluingPermSearcher<2>*>(this)->autos_ =
         new FacetPairing<2>::IsoList();
     pairing_->findAutomorphisms(const_cast<FacetPairing<2>::IsoList&>(*autos_));
     autosNew = true;
@@ -340,7 +340,7 @@ Dim2GluingPermSearcher::GluingPermSearcher(std::istream& in,
         inputError_ = true;
 }
 
-bool Dim2GluingPermSearcher::isCanonical() const {
+bool GluingPermSearcher<2>::isCanonical() const {
     FacetSpec<2> edge, edgeDest, edgeImage;
     int ordering;
 

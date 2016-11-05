@@ -39,7 +39,7 @@
 
 using regina::FacetPairing;
 using regina::GluingPerms;
-using regina::Dim4GluingPermSearcher;
+using regina::GluingPermSearcher;
 using regina::Triangulation;
 using regina::BoolSet;
 
@@ -125,7 +125,7 @@ class Census4Test : public CppUnit::TestFixture {
                 const FacetPairing<4>::IsoList* autos, void* spec) {
             if (pairing) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Dim4GluingPermSearcher::findAllPerms(pairing, autos,
+                GluingPermSearcher<4>::findAllPerms(pairing, autos,
                     ! s->orbl_.hasFalse(), ! s->finite_.hasFalse(),
                     foundPerms, spec);
             }

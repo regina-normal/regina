@@ -598,14 +598,14 @@ int runCensus() {
 
     // Start the census running.
     if (minimalPrimeP2)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
-            regina::NGluingPermSearcher::PURGE_P2_REDUCIBLE;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
+            regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
     else if (minimalHyp)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
     else if (minimal)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL;
 
     if (usePairs) {
         // Only use the face pairings read from standard input.

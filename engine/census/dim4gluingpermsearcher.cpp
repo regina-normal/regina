@@ -44,7 +44,7 @@
 
 namespace regina {
 
-const int Dim4GluingPermSearcher::edgeLinkNextFacet[10][5] = {
+const int GluingPermSearcher<4>::edgeLinkNextFacet[10][5] = {
     { -1, -1,  3,  4,  2 },
     { -1,  3, -1,  4,  1 },
     { -1,  2,  4, -1,  1 },
@@ -57,7 +57,7 @@ const int Dim4GluingPermSearcher::edgeLinkNextFacet[10][5] = {
     {  1,  2,  0, -1, -1 }
 };
 
-const int Dim4GluingPermSearcher::edgeLinkPrevFacet[10][5] = {
+const int GluingPermSearcher<4>::edgeLinkPrevFacet[10][5] = {
     { -1, -1,  4,  2,  3 },
     { -1,  4, -1,  1,  3 },
     { -1,  4,  1, -1,  2 },
@@ -71,12 +71,12 @@ const int Dim4GluingPermSearcher::edgeLinkPrevFacet[10][5] = {
 };
 
 #ifdef DIM4_NO_UNION_FIND
-const char Dim4GluingPermSearcher::dataTag_ = 'b';
+const char GluingPermSearcher<4>::dataTag_ = 'b';
 #else
-const char Dim4GluingPermSearcher::dataTag_ = 'g';
+const char GluingPermSearcher<4>::dataTag_ = 'g';
 #endif
 
-void Dim4GluingPermSearcher::PentEdgeState::dumpData(std::ostream& out) const {
+void GluingPermSearcher<4>::PentEdgeState::dumpData(std::ostream& out) const {
     // Be careful with the twisting fields, which are chars but which should
     // be written as ints.
     out << parent << ' ' << rank << ' ' << bdry << ' '
@@ -91,7 +91,7 @@ void Dim4GluingPermSearcher::PentEdgeState::dumpData(std::ostream& out) const {
         << static_cast<int>(bdryTwistOld[1]);
 }
 
-bool Dim4GluingPermSearcher::PentEdgeState::readData(std::istream& in,
+bool GluingPermSearcher<4>::PentEdgeState::readData(std::istream& in,
         unsigned long nStates) {
     in >> parent >> rank >> bdry;
 
@@ -154,7 +154,7 @@ bool Dim4GluingPermSearcher::PentEdgeState::readData(std::istream& in,
     return true;
 }
 
-void Dim4GluingPermSearcher::PentTriangleState::dumpData(std::ostream& out)
+void GluingPermSearcher<4>::PentTriangleState::dumpData(std::ostream& out)
         const {
     // Be careful with the permutation code, which is an unsigned char
     // but which should be written as an int.
@@ -164,7 +164,7 @@ void Dim4GluingPermSearcher::PentTriangleState::dumpData(std::ostream& out)
         << (hadEqualRank ? 1 : 0);
 }
 
-bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
+bool GluingPermSearcher<4>::PentTriangleState::readData(std::istream& in,
         unsigned long nStates) {
     in >> parent >> rank >> size;
 
@@ -203,7 +203,7 @@ bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
     return true;
 }
 
-Dim4GluingPermSearcher::GluingPermSearcher(
+GluingPermSearcher<4>::GluingPermSearcher(
         const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
         GluingPerms<4>::Use use, void* useArgs) :
@@ -215,7 +215,7 @@ Dim4GluingPermSearcher::GluingPermSearcher(
     // Generate the list of facet pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew_) {
-        const_cast<Dim4GluingPermSearcher*>(this)->autos_ =
+        const_cast<GluingPermSearcher<4>*>(this)->autos_ =
             new FacetPairing<4>::IsoList();
         pairing->findAutomorphisms(
             const_cast<FacetPairing<4>::IsoList&>(*autos_));
@@ -264,7 +264,7 @@ Dim4GluingPermSearcher::GluingPermSearcher(
     std::fill(triStateChanged_, triStateChanged_ + (25 * nPent / 2), -1);
 }
 
-Dim4GluingPermSearcher::~GluingPermSearcher() {
+GluingPermSearcher<4>::~GluingPermSearcher() {
     delete[] triState_;
     delete[] triStateChanged_;
     delete[] edgeState_;
@@ -283,25 +283,25 @@ Dim4GluingPermSearcher::~GluingPermSearcher() {
     }
 }
 
-Dim4GluingPermSearcher* Dim4GluingPermSearcher::bestSearcher(
+GluingPermSearcher<4>* GluingPermSearcher<4>::bestSearcher(
         const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
         GluingPerms<4>::Use use, void* useArgs) {
     // Do everything by brute force for now.
-    return new Dim4GluingPermSearcher(pairing, autos,
+    return new GluingPermSearcher<4>(pairing, autos,
         orientableOnly, finiteOnly, use, useArgs);
 }
 
-void Dim4GluingPermSearcher::findAllPerms(const FacetPairing<4>* pairing,
+void GluingPermSearcher<4>::findAllPerms(const FacetPairing<4>* pairing,
         const FacetPairing<4>::IsoList* autos, bool orientableOnly,
         bool finiteOnly, GluingPerms<4>::Use use, void* useArgs) {
-    Dim4GluingPermSearcher* searcher = bestSearcher(pairing, autos,
+    GluingPermSearcher<4>* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, use, useArgs);
     searcher->runSearch();
     delete searcher;
 }
 
-void Dim4GluingPermSearcher::runSearch(long maxDepth) {
+void GluingPermSearcher<4>::runSearch(long maxDepth) {
     // In this generation algorithm, each orientation is simply +/-1.
 
     unsigned nPentachora = size();
@@ -549,12 +549,12 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
-void Dim4GluingPermSearcher::dumpTaggedData(std::ostream& out) const {
+void GluingPermSearcher<4>::dumpTaggedData(std::ostream& out) const {
     out << dataTag() << std::endl;
     dumpData(out);
 }
 
-Dim4GluingPermSearcher* Dim4GluingPermSearcher::readTaggedData(std::istream& in,
+GluingPermSearcher<4>* GluingPermSearcher<4>::readTaggedData(std::istream& in,
         GluingPerms<4>::Use use, void* useArgs) {
     // Read the class marker.
     char c;
@@ -562,9 +562,9 @@ Dim4GluingPermSearcher* Dim4GluingPermSearcher::readTaggedData(std::istream& in,
     if (in.eof())
         return 0;
 
-    Dim4GluingPermSearcher* ans;
-    if (c == Dim4GluingPermSearcher::dataTag_)
-        ans = new Dim4GluingPermSearcher(in, use, useArgs);
+    GluingPermSearcher<4>* ans;
+    if (c == GluingPermSearcher<4>::dataTag_)
+        ans = new GluingPermSearcher<4>(in, use, useArgs);
     else
         return 0;
 
@@ -576,7 +576,7 @@ Dim4GluingPermSearcher* Dim4GluingPermSearcher::readTaggedData(std::istream& in,
     return ans;
 }
 
-void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
+void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
     GluingPerms<4>::dumpData(out);
 
     out << (orientableOnly_ ? 'o' : '.');
@@ -629,7 +629,7 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-Dim4GluingPermSearcher::GluingPermSearcher(std::istream& in,
+GluingPermSearcher<4>::GluingPermSearcher(std::istream& in,
         GluingPerms<4>::Use use, void* useArgs) :
         GluingPerms<4>(in), autos_(0), autosNew_(false),
         use_(use), useArgs_(useArgs), orientation_(0),
@@ -640,7 +640,7 @@ Dim4GluingPermSearcher::GluingPermSearcher(std::istream& in,
         return;
 
     // Recontruct the facet pairing automorphisms.
-    const_cast<Dim4GluingPermSearcher*>(this)->autos_ =
+    const_cast<GluingPermSearcher<4>*>(this)->autos_ =
         new FacetPairing<4>::IsoList();
     pairing_->findAutomorphisms(const_cast<FacetPairing<4>::IsoList&>(
         *autos_));
@@ -747,7 +747,7 @@ Dim4GluingPermSearcher::GluingPermSearcher(std::istream& in,
         inputError_ = true;
 }
 
-bool Dim4GluingPermSearcher::isCanonical() const {
+bool GluingPermSearcher<4>::isCanonical() const {
     FacetSpec<4> facet, facetDest, facetImage;
     int ordering;
 
@@ -784,7 +784,7 @@ bool Dim4GluingPermSearcher::isCanonical() const {
     return true;
 }
 
-bool Dim4GluingPermSearcher::badTriangleLink(const FacetSpec<4>& facet) const {
+bool GluingPermSearcher<4>::badTriangleLink(const FacetSpec<4>& facet) const {
     // Run around all four triangles bounding the facet.
     FacetSpec<4> adj;
     unsigned pent;
@@ -841,7 +841,7 @@ bool Dim4GluingPermSearcher::badTriangleLink(const FacetSpec<4>& facet) const {
     return false;
 }
 
-bool Dim4GluingPermSearcher::mergeEdgeClasses() {
+bool GluingPermSearcher<4>::mergeEdgeClasses() {
     // Merge all six edge pairs for the current facet.
     FacetSpec<4> facet = order_[orderElt_];
     FacetSpec<4> adj = (*pairing_)[facet];
@@ -1152,7 +1152,7 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
     return retVal;
 }
 
-void Dim4GluingPermSearcher::splitEdgeClasses() {
+void GluingPermSearcher<4>::splitEdgeClasses() {
     FacetSpec<4> facet = order_[orderElt_];
     FacetSpec<4> adj = (*pairing_)[facet];
 
@@ -1261,7 +1261,7 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
     }
 }
 
-bool Dim4GluingPermSearcher::mergeTriangleClasses() {
+bool GluingPermSearcher<4>::mergeTriangleClasses() {
     FacetSpec<4> facet = order_[orderElt_];
     FacetSpec<4> adj = (*pairing_)[facet];
 
@@ -1353,7 +1353,7 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
     return retVal;
 }
 
-void Dim4GluingPermSearcher::splitTriangleClasses() {
+void GluingPermSearcher<4>::splitTriangleClasses() {
     FacetSpec<4> facet = order_[orderElt_];
 
     int v1, v2;
@@ -1393,7 +1393,7 @@ void Dim4GluingPermSearcher::splitTriangleClasses() {
     }
 }
 
-void Dim4GluingPermSearcher::edgeBdryNext(int edgeID, int pent, int edge,
+void GluingPermSearcher<4>::edgeBdryNext(int edgeID, int pent, int edge,
         int bdryFacet, int next[2], char twist[2]) {
     switch (edgeState_[edgeID].bdryEdges) {
         case 3: next[0] = next[1] = edgeID;
@@ -1446,7 +1446,7 @@ void Dim4GluingPermSearcher::edgeBdryNext(int edgeID, int pent, int edge,
     }
 }
 
-void Dim4GluingPermSearcher::edgeBdryConsistencyCheck() {
+void GluingPermSearcher<4>::edgeBdryConsistencyCheck() {
     int adj, id, end;
     for (id = 0; id < static_cast<int>(size()) * 5; ++id)
         if (edgeState_[id].bdryEdges > 0)
@@ -1470,7 +1470,7 @@ void Dim4GluingPermSearcher::edgeBdryConsistencyCheck() {
             }
 }
 
-void Dim4GluingPermSearcher::edgeBdryDump(std::ostream& out) {
+void GluingPermSearcher<4>::edgeBdryDump(std::ostream& out) {
     for (unsigned id = 0; id < size() * 5; ++id) {
         if (id > 0)
             out << ' ';

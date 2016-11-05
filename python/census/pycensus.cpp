@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-void addNGluingPermSearcher();
+void addGluingPermSearcher3();
 void addCensus();
 
 void addCensusClasses() {
-    addNGluingPermSearcher();
+    addGluingPermSearcher3();
     addCensus();
 }
 

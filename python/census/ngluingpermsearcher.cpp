@@ -36,58 +36,60 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NGluingPermSearcher;
+using regina::GluingPermSearcher;
 
-void addNGluingPermSearcher() {
+void addGluingPermSearcher3() {
     {
-        scope s = class_<NGluingPermSearcher,
-                std::auto_ptr<NGluingPermSearcher>,
-                boost::noncopyable>("NGluingPermSearcher", no_init)
+        scope s = class_<GluingPermSearcher<3>,
+                std::auto_ptr<GluingPermSearcher<3>>,
+                boost::noncopyable>("GluingPermSearcher3", no_init)
             .def(regina::python::add_eq_operators())
         ;
 
-        enum_<regina::NGluingPermSearcher::PurgeFlags>("PurgeFlags")
+        enum_<regina::GluingPermSearcher<3>::PurgeFlags>("PurgeFlags")
             .value("PURGE_NONE",
-                regina::NGluingPermSearcher::PURGE_NONE)
+                regina::GluingPermSearcher<3>::PURGE_NONE)
             .value("PURGE_NON_MINIMAL",
-                regina::NGluingPermSearcher::PURGE_NON_MINIMAL)
+                regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL)
             .value("PURGE_NON_PRIME",
-                regina::NGluingPermSearcher::PURGE_NON_PRIME)
+                regina::GluingPermSearcher<3>::PURGE_NON_PRIME)
             .value("PURGE_NON_MINIMAL_PRIME",
-                regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME)
+                regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME)
             .value("PURGE_NON_MINIMAL_HYP",
-                regina::NGluingPermSearcher::PURGE_NON_MINIMAL_HYP)
+                regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP)
             .value("PURGE_P2_REDUCIBLE",
-                regina::NGluingPermSearcher::PURGE_P2_REDUCIBLE)
+                regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE)
             ;
 
         s.attr("PURGE_NONE") =
-            NGluingPermSearcher::PURGE_NONE;
+            GluingPermSearcher<3>::PURGE_NONE;
         s.attr("PURGE_NON_MINIMAL") =
-            NGluingPermSearcher::PURGE_NON_MINIMAL;
+            GluingPermSearcher<3>::PURGE_NON_MINIMAL;
         s.attr("PURGE_NON_PRIME") =
-            NGluingPermSearcher::PURGE_NON_PRIME;
+            GluingPermSearcher<3>::PURGE_NON_PRIME;
         s.attr("PURGE_NON_MINIMAL_PRIME") =
-            NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+            GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
         s.attr("PURGE_NON_MINIMAL_HYP") =
-            NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
+            GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
         s.attr("PURGE_P2_REDUCIBLE") =
-            NGluingPermSearcher::PURGE_P2_REDUCIBLE;
+            GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
     }
 
     scope global;
 
     global.attr("PURGE_NONE") =
-        NGluingPermSearcher::PURGE_NONE;
+        GluingPermSearcher<3>::PURGE_NONE;
     global.attr("PURGE_NON_MINIMAL") =
-        NGluingPermSearcher::PURGE_NON_MINIMAL;
+        GluingPermSearcher<3>::PURGE_NON_MINIMAL;
     global.attr("PURGE_NON_PRIME") =
-        NGluingPermSearcher::PURGE_NON_PRIME;
+        GluingPermSearcher<3>::PURGE_NON_PRIME;
     global.attr("PURGE_NON_MINIMAL_PRIME") =
-        NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+        GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
     global.attr("PURGE_NON_MINIMAL_HYP") =
-        NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
+        GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
     global.attr("PURGE_P2_REDUCIBLE") =
-        NGluingPermSearcher::PURGE_P2_REDUCIBLE;
+        GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
+
+    global.attr("NGluingPermSearcher") = scope().attr("GluingPermSearcher3");
 }
 

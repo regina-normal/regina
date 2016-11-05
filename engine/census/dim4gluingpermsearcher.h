@@ -64,9 +64,9 @@ REGINA_DEPRECATED typedef GluingPerms<4>::Use UseDim4GluingPerms;
 /**
  * A utility class for searching through all possible gluing permutation
  * sets that correspond to a given pentachoron facet pairing.  Subclasses of
- * Dim4GluingPermSearcher correspond to specialised (and heavily optimised)
+ * GluingPermSearcher<4> correspond to specialised (and heavily optimised)
  * search algorithms that may be used in sufficiently constrained scenarios.
- * The main class Dim4GluingPermSearcher offers a default (but slower) search
+ * The main class GluingPermSearcher<4> offers a default (but slower) search
  * algorithm that may be used in more general contexts.
  *
  * The simplest way of performing a search through all possible gluing
@@ -579,8 +579,8 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
          * temporary basis only.
          *
          * @param in the input stream from which to read.
-         * @param use as for the main Dim4GluingPermSearcher constructor.
-         * @param useArgs as for the main Dim4GluingPermSearcher constructor.
+         * @param use as for the main GluingPermSearcher<4> constructor.
+         * @param useArgs as for the main GluingPermSearcher<4> constructor.
          */
         GluingPermSearcher(std::istream& in,
             GluingPerms<4>::Use use, void* useArgs = 0);
@@ -616,7 +616,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
          * It is possible to run only a partial search, branching to a
          * given depth but no further.  In this case, rather than
          * producing complete gluing permutation sets, the search will
-         * produce a series of partially-complete Dim4GluingPermSearcher
+         * produce a series of partially-complete GluingPermSearcher<4>
          * objects.  These partial searches may then be restarted by
          * calling runSearch() once more (usually after being frozen or
          * passed on to a different processor).  If necessary, the \a use_
@@ -673,10 +673,10 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
          *
          * This routine examines the search parameters, chooses the best
          * possible search algorithm, constructs an object of the
-         * corresponding subclass of Dim4GluingPermSearcher and then calls
+         * corresponding subclass of GluingPermSearcher<4> and then calls
          * runSearch().
          *
-         * See the Dim4GluingPermSearcher constructor for documentation on
+         * See the GluingPermSearcher<4> constructor for documentation on
          * the arguments to this routine.  See the runSearch() method
          * for documentation on how the search runs and returns its
          * results.
@@ -696,7 +696,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
         /**
          * Constructs a search manager of the best possible class for the
          * given search parameters.  Different subclasses of
-         * Dim4GluingPermSearcher provide optimised search algorithms for
+         * GluingPermSearcher<4> provide optimised search algorithms for
          * different types of search.
          *
          * Calling this routine and then calling runSearch() on the
@@ -708,7 +708,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
          * The resulting object is newly created, and must be destroyed
          * by the caller of this routine.
          *
-         * See the Dim4GluingPermSearcher constructor for documentation on
+         * See the GluingPermSearcher<4> constructor for documentation on
          * the arguments to this routine.
          *
          * \pre The given facet pairing is connected, i.e., it is possible
@@ -745,7 +745,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
          * destroy it after use.
          *
          * The arguments \a use and \a useArgs are the smae as for the
-         * Dim4GluingPermSearcher constructor.
+         * GluingPermSearcher<4> constructor.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
@@ -1105,34 +1105,34 @@ REGINA_DEPRECATED typedef GluingPermSearcher<4> Dim4GluingPermSearcher;
 
 /*@}*/
 
-// Inline functions for Dim4GluingPermSearcher
+// Inline functions for GluingPermSearcher<4>
 
-inline Dim4GluingPermSearcher::PentEdgeState::PentEdgeState() :
+inline GluingPermSearcher<4>::PentEdgeState::PentEdgeState() :
         parent(-1), rank(0), bdry(3),
         twistUpEdge(0), twistUpTriangle(0), hadEqualRank(false) {
 }
 
-inline Dim4GluingPermSearcher::PentTriangleState::PentTriangleState() :
+inline GluingPermSearcher<4>::PentTriangleState::PentTriangleState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp() /* ID */,
         hadEqualRank(false) {
 }
 
-inline bool Dim4GluingPermSearcher::completePermSet() const {
+inline bool GluingPermSearcher<4>::completePermSet() const {
     return (orderElt_ == orderSize_);
 }
 
-inline char Dim4GluingPermSearcher::dataTag() const {
-    return Dim4GluingPermSearcher::dataTag_;
+inline char GluingPermSearcher<4>::dataTag() const {
+    return GluingPermSearcher<4>::dataTag_;
 }
 
-inline int Dim4GluingPermSearcher::findTriangleClass(int triID) const {
+inline int GluingPermSearcher<4>::findTriangleClass(int triID) const {
     while (triState_[triID].parent >= 0)
         triID = triState_[triID].parent;
 
     return triID;
 }
 
-inline int Dim4GluingPermSearcher::findTriangleClass(int triID, Perm<3>& twist)
+inline int GluingPermSearcher<4>::findTriangleClass(int triID, Perm<3>& twist)
         const {
     for ( ; triState_[triID].parent >= 0; triID = triState_[triID].parent)
         twist = triState_[triID].twistUp * twist;
@@ -1140,7 +1140,7 @@ inline int Dim4GluingPermSearcher::findTriangleClass(int triID, Perm<3>& twist)
     return triID;
 }
 
-inline void Dim4GluingPermSearcher::edgeBdryJoin(int edgeID, char end,
+inline void GluingPermSearcher<4>::edgeBdryJoin(int edgeID, char end,
         int adjEdgeID, char twist) {
     edgeState_[edgeID].bdryNext[static_cast<int>(end)] = adjEdgeID;
     edgeState_[edgeID].bdryTwist[static_cast<int>(end)] = twist;
@@ -1148,7 +1148,7 @@ inline void Dim4GluingPermSearcher::edgeBdryJoin(int edgeID, char end,
     edgeState_[adjEdgeID].bdryTwist[(end ^ 1) ^ twist] = twist;
 }
 
-inline void Dim4GluingPermSearcher::edgeBdryFixAdj(int edgeID) {
+inline void GluingPermSearcher<4>::edgeBdryFixAdj(int edgeID) {
     if (edgeState_[edgeID].bdryNext[0] != edgeID) {
         edgeState_[edgeState_[edgeID].bdryNext[0]].
             bdryNext[1 ^ edgeState_[edgeID].bdryTwist[0]] = edgeID;
@@ -1163,26 +1163,26 @@ inline void Dim4GluingPermSearcher::edgeBdryFixAdj(int edgeID) {
     }
 }
 
-inline void Dim4GluingPermSearcher::edgeBdryBackup(int edgeID) {
+inline void GluingPermSearcher<4>::edgeBdryBackup(int edgeID) {
     edgeState_[edgeID].bdryNextOld[0] = edgeState_[edgeID].bdryNext[0];
     edgeState_[edgeID].bdryNextOld[1] = edgeState_[edgeID].bdryNext[1];
     edgeState_[edgeID].bdryTwistOld[0] = edgeState_[edgeID].bdryTwist[0];
     edgeState_[edgeID].bdryTwistOld[1] = edgeState_[edgeID].bdryTwist[1];
 }
 
-inline void Dim4GluingPermSearcher::edgeBdryRestore(int edgeID) {
+inline void GluingPermSearcher<4>::edgeBdryRestore(int edgeID) {
     edgeState_[edgeID].bdryNext[0] = edgeState_[edgeID].bdryNextOld[0];
     edgeState_[edgeID].bdryNext[1] = edgeState_[edgeID].bdryNextOld[1];
     edgeState_[edgeID].bdryTwist[0] = edgeState_[edgeID].bdryTwistOld[0];
     edgeState_[edgeID].bdryTwist[1] = edgeState_[edgeID].bdryTwistOld[1];
 }
 
-inline bool Dim4GluingPermSearcher::edgeBdryLength1(int edgeID) {
+inline bool GluingPermSearcher<4>::edgeBdryLength1(int edgeID) {
     return (edgeState_[edgeID].bdryNext[0] == edgeID &&
             edgeState_[edgeID].bdryEdges == 1);
 }
 
-inline bool Dim4GluingPermSearcher::edgeBdryLength2(int edgeID1, int edgeID2) {
+inline bool GluingPermSearcher<4>::edgeBdryLength2(int edgeID1, int edgeID2) {
     return (edgeState_[edgeID1].bdryNext[0] == edgeID2 &&
             edgeState_[edgeID1].bdryNext[1] == edgeID2 &&
             edgeState_[edgeID1].bdryEdges == 1 &&

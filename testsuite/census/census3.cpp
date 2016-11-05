@@ -45,7 +45,7 @@ using regina::CensusHit;
 using regina::CensusHits;
 using regina::FacetPairing;
 using regina::GluingPerms;
-using regina::NGluingPermSearcher;
+using regina::GluingPermSearcher;
 using regina::Triangulation;
 
 class Census3Test : public CppUnit::TestFixture {
@@ -185,7 +185,7 @@ class Census3Test : public CppUnit::TestFixture {
             unsigned nOrientable[] = { 1, 4, 11, 7, 17, 50 };
             rawCountsCompare(1, 4, nOrientable, "closed orbl prime minimal",
                 BoolSet::sTrue, BoolSet::sTrue, BoolSet::sFalse, 0,
-                NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME, true);
+                GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME, true);
         }
 
         void rawCountsPrimeMinimalNor() {
@@ -193,8 +193,8 @@ class Census3Test : public CppUnit::TestFixture {
             rawCountsCompare(1, 4, nNonOrientable,
                 "closed non-orbl prime minimal P2-irreducible",
                 BoolSet::sTrue, BoolSet::sFalse, BoolSet::sFalse, 0,
-                NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
-                NGluingPermSearcher::PURGE_P2_REDUCIBLE, true);
+                GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
+                GluingPermSearcher<3>::PURGE_P2_REDUCIBLE, true);
         }
 
         void rawCountsBounded() {
@@ -214,13 +214,13 @@ class Census3Test : public CppUnit::TestFixture {
             unsigned nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
             rawCountsCompare(1, 4, nAll, "candidate minimal cusped hyperbolic",
                 BoolSet::sFalse, BoolSet::sBoth, BoolSet::sFalse, -1,
-                NGluingPermSearcher::PURGE_NON_MINIMAL_HYP, false);
+                GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
             rawCountsCompare(1, 5, nOrientable,
                 "candidate minimal cusped hyperbolic orbl",
                 BoolSet::sFalse, BoolSet::sTrue, BoolSet::sFalse, -1,
-                NGluingPermSearcher::PURGE_NON_MINIMAL_HYP, false);
+                GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP, false);
         }
 
         struct CensusSpec {
@@ -261,7 +261,7 @@ class Census3Test : public CppUnit::TestFixture {
                 const FacetPairing<3>::IsoList* autos, void* spec) {
             if (pairing) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
-                NGluingPermSearcher::findAllPerms(pairing, autos,
+                GluingPermSearcher<3>::findAllPerms(pairing, autos,
                     ! s->orbl_.hasFalse(), ! s->finite_.hasFalse(),
                     s->purge_, foundPerms, spec);
             }

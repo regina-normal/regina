@@ -68,11 +68,10 @@
 #define DIM4_BOUNDED_CENSUS_SIZE 2
 #define DIM4_IDEAL_CENSUS_SIZE 2
 
-using regina::Dim4GluingPermSearcher;
 using regina::BoolSet;
 using regina::FacetPairing;
 using regina::GluingPerms;
-using regina::NGluingPermSearcher;
+using regina::GluingPermSearcher;
 using regina::Triangulation;
 
 namespace {
@@ -104,12 +103,12 @@ namespace {
             const FacetPairing<3>::IsoList* autos, void* holder) {
         if (pairing) {
             TestFunctionHolder3* h = static_cast<TestFunctionHolder3*>(holder);
-            NGluingPermSearcher::findAllPerms(pairing, autos,
+            GluingPermSearcher<3>::findAllPerms(pairing, autos,
                 false /* orientable only */,
                 ! h->finite_.hasFalse() /* finite only */,
                 (h->minimal_ ?
-                    NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
-                    NGluingPermSearcher::PURGE_P2_REDUCIBLE : 0) /* purge */,
+                    GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
+                    GluingPermSearcher<3>::PURGE_P2_REDUCIBLE : 0) /* purge */,
                 &foundGluingPerms3, holder);
         }
     }
@@ -141,7 +140,7 @@ namespace {
             const FacetPairing<4>::IsoList* autos, void* holder) {
         if (pairing) {
             TestFunctionHolder4* h = static_cast<TestFunctionHolder4*>(holder);
-            Dim4GluingPermSearcher::findAllPerms(pairing, autos,
+            GluingPermSearcher<4>::findAllPerms(pairing, autos,
                 false /* orientable only */,
                 ! h->finite_.hasFalse() /* finite only */,
                 &foundGluingPerms4, holder);
