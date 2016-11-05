@@ -25,6 +25,7 @@
      <row><entry namest="c1" nameend="c2">
 <synopsis>
 packet ::= (&xml-triangles;,
+            &xml-fundgroup;?, &xml-H1;?,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -48,6 +49,8 @@ packet ::= (&xml-triangles;,
   <para>
    The triangles forming this triangulation and their corresponding
    edge gluings are specified by the child &xml-triangles; element.
+   Other optional child elements may store precalculated properties of
+   this triangulation.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -76,6 +79,8 @@ packet ::= (&xml-triangles;,
     The following elements occur in <sgmltag>packet</sgmltag> for
     a 2-dimensional triangulation packet:
     <simplelist type="inline">
+     <member>&xml-fundgroup;</member>
+     <member>&xml-H1;</member>
      <member>&xml-packet;</member>
      <member>&xml-tag;</member>
      <member>&xml-triangles;</member>
