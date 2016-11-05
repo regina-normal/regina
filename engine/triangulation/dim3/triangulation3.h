@@ -1021,8 +1021,8 @@ class REGINA_API Triangulation<3> :
          * be a function or some other callable object).
          *
          * - \a action must take at least one argument.  The first argument
-         *   will be of type (const Triangulation<3>&), and will reference
-         *   the triangulation that has been found.  If there are any
+         *   will be of type Triangulation<3>&, and will reference the
+         *   triangulation that has been found.  If there are any
          *   additional arguments supplied in the list \a args, then
          *   these will be passed as subsequent arguments to \a action.
          *
@@ -1036,6 +1036,12 @@ class REGINA_API Triangulation<3> :
          *   that this routine visits will be obtained via Pachner moves
          *   from the original form of this triangulation, before any
          *   subsequent changes (if any) were made.
+         *
+         * - \a action may, if it chooses, make changes to the triangulation
+         *   that is passed in its argument (though it must not delete it).
+         *   This will likewise not affect the search, since the triangulation
+         *   that is passed to \a action will be destroyed immediately after
+         *   \a action is called.
          *
          * - \a action will only be called once for each triangulation
          *   (including this starting triangulation).  In other words, no
@@ -2791,7 +2797,7 @@ class REGINA_API Triangulation<3> :
          */
         bool retriangulateInternal(int height, unsigned nThreads,
             ProgressTrackerOpen* tracker,
-            const std::function<bool(const Triangulation<3>&)>& action) const;
+            const std::function<bool(Triangulation<3>&)>& action) const;
 
         void stretchBoundaryForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
                 std::set<Vertex<3>*>&) const;
