@@ -67,7 +67,7 @@ bool Triangulation<4>::intelligentSimplify() {
             // might not lead to a simplification.
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
-            use = (changed ? this : new Triangulation<4>(*this));
+            use = (changed ? this : new Triangulation<4>(*this, false));
 
             // Make random 3-3 moves.
             threeThreeAttempts = threeThreeCap = 0;
@@ -123,7 +123,7 @@ bool Triangulation<4>::intelligentSimplify() {
             if (hasBoundaryTetrahedra()) {
                 // Clone again, always -- we don't want to create gratuitous
                 // boundary facets if they won't be of any help.
-                use = new Triangulation<4>(*this);
+                use = new Triangulation<4>(*this, false);
 
                 // Perform every book opening move we can find.
                 TetrahedronIterator tit;

@@ -236,9 +236,25 @@ class REGINA_API Triangulation<3> :
          * Creates a new copy of the given triangulation.
          * The packet tree structure and packet label are \e not copied.
          *
+         * This will clone any computed properties (such as homology,
+         * fundamental group, and so on) of the given triangulation also.
+         * If you want a "clean" copy that resets all properties to unknown,
+         * you can use the two-argument copy constructor instead.
+         *
          * @param copy the triangulation to copy.
          */
         Triangulation(const Triangulation<3>& copy);
+        /**
+         * Creates a new copy of the given triangulation, with the option
+         * of whether or not to clone its computed properties also.
+         *
+         * @param copy the triangulation to copy.
+         * @param cloneProps \c true if this should also clone any computed
+         * properties of the given triangulation (such as homology,
+         * fundamental group, and so on), or \c false if the new triangulation
+         * should have all properties marked as unknown.
+         */
+        Triangulation(const Triangulation& copy, bool cloneProps);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -2855,6 +2871,10 @@ namespace regina {
 // Inline functions for Triangulation<3>
 
 inline Triangulation<3>::Triangulation() {
+}
+
+inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
+        TriangulationBase<3>(copy, true) {
 }
 
 inline Triangulation<3>::~Triangulation() {

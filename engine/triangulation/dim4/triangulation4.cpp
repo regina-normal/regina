@@ -205,10 +205,20 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
 }
 
 Triangulation<4>::Triangulation(const Triangulation& X) :
-        TriangulationBase<4>(X), knownSimpleLinks_(false) {
+        TriangulationBase<4>(X),
+        knownSimpleLinks_(X.knownSimpleLinks_) {
     // Clone properties:
-    if (X.knownSimpleLinks_)
-        knownSimpleLinks_ = true;
+    if (X.H2_.known())
+        H2_ = new NAbelianGroup(*(X.H2_.value()));
+}
+
+Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
+        TriangulationBase<4>(X, cloneProps),
+        knownSimpleLinks_(X.knownSimpleLinks_) /* always cloned */ {
+    // For other properties, the user gets to decide:
+    if (! cloneProps)
+        return;
+
     if (X.H2_.known())
         H2_ = new NAbelianGroup(*(X.H2_.value()));
 }

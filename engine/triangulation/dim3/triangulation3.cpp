@@ -391,8 +391,11 @@ long Triangulation<3>::eulerCharManifold() const {
     return ans;
 }
 
-Triangulation<3>::Triangulation(const Triangulation<3>& X) :
-        TriangulationBase<3>(X) {
+Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
+        TriangulationBase<3>(X, cloneProps) {
+    if (! cloneProps)
+        return;
+
     // Clone properties:
     if (X.H1Rel_.known())
         H1Rel_ = new NAbelianGroup(*(X.H1Rel_.value()));

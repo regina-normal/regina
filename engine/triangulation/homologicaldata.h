@@ -773,6 +773,8 @@ REGINA_DEPRECATED typedef HomologicalData NHomologicalData;
 // constructor
 inline HomologicalData::HomologicalData(const Triangulation<3>& input):
 
+        // We clone the properties of input, since the embeddability
+        // string wants to know whether input is the 3-sphere.
         tri(new Triangulation<3>(input)),
 
         ccIndexingComputed(false),

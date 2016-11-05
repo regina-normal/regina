@@ -318,10 +318,27 @@ class Triangulation :
         Triangulation();
         /**
          * Creates a new copy of the given triangulation.
+         * The packet tree structure and packet label are \e not copied.
+         *
+         * This will clone any computed properties (such as homology,
+         * fundamental group, and so on) of the given triangulation also.
+         * If you want a "clean" copy that resets all properties to unknown,
+         * you can use the two-argument copy constructor instead.
          *
          * @param copy the triangulation to copy.
          */
         Triangulation(const Triangulation& copy);
+        /**
+         * Creates a new copy of the given triangulation, with the option
+         * of whether or not to clone its computed properties also.
+         *
+         * @param copy the triangulation to copy.
+         * @param cloneProps \c true if this should also clone any computed
+         * properties of the given triangulation (such as homology,
+         * fundamental group, and so on), or \c false if the new triangulation
+         * should have all properties marked as unknown.
+         */
+        Triangulation(const Triangulation& copy, bool cloneProps);
 
         /*@}*/
         /**
@@ -550,6 +567,11 @@ inline Triangulation<dim>::Triangulation() : detail::TriangulationBase<dim>() {
 template <int dim>
 inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
         detail::TriangulationBase<dim>(copy) {
+}
+
+template <int dim>
+inline Triangulation<dim>::Triangulation(const Triangulation& copy,
+        bool cloneProps) : detail::TriangulationBase<dim>(copy, cloneProps) {
 }
 
 template <int dim>

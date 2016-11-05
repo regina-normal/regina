@@ -175,6 +175,8 @@ Version 5.1  [ (under development) ]
               already present for dimensions 3 and 4).  These routines do not
               require the triangulation to be valid (i.e., the old validity
               restrictions in dimension 4 have been lifted).
+            - New two-argument copy constructor that allows you to clone
+              a triangulation without cloning its computed properties.
             - Routine swapContents() now swaps skeletal data and computed
               properties also, instead of just deleting them.
         Class Triangulation<3>:

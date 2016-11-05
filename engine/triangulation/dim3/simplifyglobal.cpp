@@ -68,7 +68,7 @@ bool Triangulation<3>::intelligentSimplify() {
             // might not lead to a simplification.
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
-            use = (changed ? this : new Triangulation<3>(*this));
+            use = (changed ? this : new Triangulation<3>(*this, false));
 
             // Make random 4-4 moves.
             fourFourAttempts = fourFourCap = 0;
@@ -127,7 +127,7 @@ bool Triangulation<3>::intelligentSimplify() {
             if (hasBoundaryTriangles()) {
                 // Clone again, always -- we don't want to create gratuitous
                 // boundary triangles if they won't be of any help.
-                use = new Triangulation<3>(*this);
+                use = new Triangulation<3>(*this, false);
 
                 // Perform every book opening move we can find.
                 TriangleIterator fit;

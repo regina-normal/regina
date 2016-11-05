@@ -63,7 +63,7 @@ class TriangulationTest : public CppUnit::TestFixture {
         static void verifyOrient(Triangulation<dim>* tri) {
             const int trials = 10;
 
-            Triangulation<dim>* oriented = new Triangulation<dim>(*tri);
+            Triangulation<dim>* oriented = new Triangulation<dim>(*tri, false);
             oriented->orient();
             verifyOrient(tri, oriented);
             delete oriented;

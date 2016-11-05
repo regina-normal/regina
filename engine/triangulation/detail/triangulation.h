@@ -418,9 +418,25 @@ class TriangulationBase :
         /**
          * Creates a new copy of the given triangulation.
          *
+         * This will clone any computed properties (such as homology,
+         * fundamental group, and so on) of the given triangulation also.
+         * If you want a "clean" copy that resets all properties to unknown,
+         * you can use the two-argument copy constructor instead.
+         *
          * @param copy the triangulation to copy.
          */
         TriangulationBase(const TriangulationBase<dim>& copy);
+        /**
+         * Creates a new copy of the given triangulation, with the option
+         * of whether or not to clone its computed properties also.
+         *
+         * @param copy the triangulation to copy.
+         * @param cloneProps \c true if this should also clone any computed
+         * properties of the given triangulation (such as homology,
+         * fundamental group, and so on), or \c false if the new triangulation
+         * should have all properties marked as unknown.
+         */
+        TriangulationBase(const TriangulationBase<dim>& copy, bool cloneProps);
         /**
          * Destroys this triangulation.
          *
@@ -1930,7 +1946,13 @@ inline TriangulationBase<dim>::TriangulationBase() :
 }
 
 template <int dim>
-TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) :
+inline TriangulationBase<dim>::TriangulationBase(
+        const TriangulationBase<dim>& copy) : TriangulationBase(copy, true) {
+}
+
+template <int dim>
+TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
+        bool cloneProps) :
         calculatedSkeleton_(false) {
     // We don't fire a change event here since this is a constructor.
     // There should be nobody listening on events yet.
@@ -1956,10 +1978,12 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) :
     }
 
     // Clone properties:
-    if (copy.fundGroup_.known())
-        fundGroup_ = new NGroupPresentation(*(copy.fundGroup_.value()));
-    if (copy.H1_.known())
-        H1_ = new NAbelianGroup(*(copy.H1_.value()));
+    if (cloneProps) {
+        if (copy.fundGroup_.known())
+            fundGroup_ = new NGroupPresentation(*(copy.fundGroup_.value()));
+        if (copy.H1_.known())
+            H1_ = new NAbelianGroup(*(copy.H1_.value()));
+    }
 }
 
 template <int dim>

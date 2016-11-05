@@ -672,7 +672,7 @@ Triangulation<3>* NLayeredSolidTorus::flatten(const Triangulation<3>* original,
         int mobiusBandBdry) const {
     // Create a new triangulation and identify the top-level and
     // base tetrahedra.
-    Triangulation<3>* ans = new Triangulation<3>(*original);
+    Triangulation<3>* ans = new Triangulation<3>(*original, false);
 
     Tetrahedron<3>* newTop = ans->tetrahedron(topLevel_->index());
     Tetrahedron<3>* newBase = ans->tetrahedron(base_->index());

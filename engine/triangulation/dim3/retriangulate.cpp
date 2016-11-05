@@ -95,7 +95,7 @@ namespace {
         // allowed to change the triangulation that is passed to it.
         // This is inefficient, but at least it only happens once.
         {
-            Triangulation<3> copy(tri);
+            Triangulation<3> copy(tri, false);
             if (action_(copy))
                 return (done_ = true);
             // We cannot use copy from here, since action_() might have
@@ -115,7 +115,7 @@ namespace {
         size_t i;
         for (i = 0; i < t->countEdges(); ++i)
             if (t->threeTwoMove(t->edge(i), true, false)) {
-                Triangulation<3> alt(*t);
+                Triangulation<3> alt(*t, false);
                 alt.threeTwoMove(alt.edge(i), false, true);
                 if (candidate(alt)) {
                     delete t;
@@ -128,7 +128,7 @@ namespace {
         if (t->size() < maxTet_)
             for (i = 0; i < t->countTriangles(); ++i)
                 if (t->twoThreeMove(t->triangle(i), true, false)) {
-                    Triangulation<3> alt(*t);
+                    Triangulation<3> alt(*t, false);
                     alt.twoThreeMove(alt.triangle(i), false, true);
                     if (candidate(alt)) {
                         delete t;
