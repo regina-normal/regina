@@ -32,7 +32,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "census/dim2gluingpermsearcher.h"
+#include "census/gluingpermsearcher2.h"
 #include "packet/container.h"
 #include "triangulation/dim2.h"
 #include "testsuite/census/testcensus.h"

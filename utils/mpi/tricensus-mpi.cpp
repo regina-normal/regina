@@ -39,9 +39,9 @@
 #include <memory>
 #include <sstream>
 #include <popt.h>
-#include "census/dim2gluingpermsearcher.h"
-#include "census/dim4gluingpermsearcher.h"
-#include "census/ngluingpermsearcher.h"
+#include "census/gluingpermsearcher2.h"
+#include "census/gluingpermsearcher4.h"
+#include "census/gluingpermsearcher3.h"
 #include "packet/container.h"
 #include "packet/text.h"
 #include "triangulation/dim2.h"

@@ -31,9 +31,9 @@
  **************************************************************************/
 
 #include "exhaustive.h"
-#include "census/dim4gluingpermsearcher.h"
+#include "census/gluingpermsearcher4.h"
 #include "census/census.h"
-#include "census/ngluingpermsearcher.h"
+#include "census/gluingpermsearcher3.h"
 #include "packet/container.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"

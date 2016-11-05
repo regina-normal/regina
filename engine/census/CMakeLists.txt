@@ -5,12 +5,12 @@ SET ( FILES
   census
   closedprimemin
   compact
-  dim2gluingpermsearcher
-  dim4gluingpermsearcher
   euler
   gluingperms
+  gluingpermsearcher2
+  gluingpermsearcher3
+  gluingpermsearcher4
   hyperbolic
-  ngluingpermsearcher
   )
 
 # Prepend folder name
@@ -29,6 +29,9 @@ if (${REGINA_INSTALL_DEV})
     gluingperms.h
     gluingperms-impl.h
     gluingpermsearcher.h
+    gluingpermsearcher2.h
+    gluingpermsearcher3.h
+    gluingpermsearcher4.h
     ncensus.h
     ngenericgluingperms.h
     ngenericgluingperms-impl.h

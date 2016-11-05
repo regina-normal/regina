@@ -32,7 +32,7 @@
 
 #include <algorithm>
 #include <sstream>
-#include "census/dim4gluingpermsearcher.h"
+#include "census/gluingpermsearcher4.h"
 #include "triangulation/dim4.h"
 #include "utilities/memutils.h"
 

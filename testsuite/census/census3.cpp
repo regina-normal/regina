@@ -33,7 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/census.h"
-#include "census/ngluingpermsearcher.h"
+#include "census/gluingpermsearcher3.h"
 #include "file/globaldirs.h"
 #include "packet/container.h"
 #include "triangulation/dim3.h"

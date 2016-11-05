@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   census
-  ngluingpermsearcher
+  gluingpermsearcher3
   pycensus
   )
 
