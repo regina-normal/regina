@@ -42,7 +42,7 @@ const NAbelianGroup& Triangulation<4>::homologyH2() const {
         return *H2_.value();
 
     if (isEmpty())
-        return *(H1_ = new NAbelianGroup());
+        return *(H2_ = new NAbelianGroup());
 
     ensureSkeleton();
 
