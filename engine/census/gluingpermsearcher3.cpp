@@ -100,16 +100,16 @@ GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
                 (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {
                 // Closed prime minimal P2-irreducible triangulations with >= 3
                 // tetrahedra.
-                return new NClosedPrimeMinSearcher(pairing, autos,
+                return new ClosedPrimeMinSearcher(pairing, autos,
                     orientableOnly, use, useArgs);
             }
-        return new NCompactSearcher(pairing, autos, orientableOnly,
+        return new CompactSearcher(pairing, autos, orientableOnly,
             whichPurge, use, useArgs);
     }
 
     if (pairing->isClosed() && ((whichPurge & PURGE_NON_MINIMAL_HYP) ==
             PURGE_NON_MINIMAL_HYP))
-        return new NHyperbolicMinSearcher(pairing, autos, orientableOnly,
+        return new HyperbolicMinSearcher(pairing, autos, orientableOnly,
             use, useArgs);
 
     return new GluingPermSearcher<3>(pairing, autos, orientableOnly, finiteOnly,
@@ -280,12 +280,12 @@ GluingPermSearcher<3>* GluingPermSearcher<3>::readTaggedData(std::istream& in,
     GluingPermSearcher<3>* ans;
     if (c == GluingPermSearcher<3>::dataTag_)
         ans = new GluingPermSearcher<3>(in, use, useArgs);
-    else if (c == NCompactSearcher::dataTag_)
-        ans = new NCompactSearcher(in, use, useArgs);
-    else if (c == NClosedPrimeMinSearcher::dataTag_)
-        ans = new NClosedPrimeMinSearcher(in, use, useArgs);
-    else if (c == NHyperbolicMinSearcher::dataTag_)
-        ans = new NHyperbolicMinSearcher(in, use, useArgs);
+    else if (c == CompactSearcher::dataTag_)
+        ans = new CompactSearcher(in, use, useArgs);
+    else if (c == ClosedPrimeMinSearcher::dataTag_)
+        ans = new ClosedPrimeMinSearcher(in, use, useArgs);
+    else if (c == HyperbolicMinSearcher::dataTag_)
+        ans = new HyperbolicMinSearcher(in, use, useArgs);
     else
         return 0;
 

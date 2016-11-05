@@ -39,34 +39,34 @@
 
 namespace regina {
 
-const unsigned NClosedPrimeMinSearcher::EDGE_CHAIN_END = 1;
-const unsigned NClosedPrimeMinSearcher::EDGE_CHAIN_INTERNAL_FIRST = 2;
-const unsigned NClosedPrimeMinSearcher::EDGE_CHAIN_INTERNAL_SECOND = 3;
-const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_FIRST = 4;
-const unsigned NClosedPrimeMinSearcher::EDGE_DOUBLE_SECOND = 5;
-const unsigned NClosedPrimeMinSearcher::EDGE_MISC = 6;
+const unsigned ClosedPrimeMinSearcher::EDGE_CHAIN_END = 1;
+const unsigned ClosedPrimeMinSearcher::EDGE_CHAIN_INTERNAL_FIRST = 2;
+const unsigned ClosedPrimeMinSearcher::EDGE_CHAIN_INTERNAL_SECOND = 3;
+const unsigned ClosedPrimeMinSearcher::EDGE_DOUBLE_FIRST = 4;
+const unsigned ClosedPrimeMinSearcher::EDGE_DOUBLE_SECOND = 5;
+const unsigned ClosedPrimeMinSearcher::EDGE_MISC = 6;
 
-const char NClosedPrimeMinSearcher::ECLASS_TWISTED = 1;
-const char NClosedPrimeMinSearcher::ECLASS_LOWDEG = 2;
-const char NClosedPrimeMinSearcher::ECLASS_HIGHDEG = 4;
-const char NClosedPrimeMinSearcher::ECLASS_CONE = 8;
-const char NClosedPrimeMinSearcher::ECLASS_L31 = 16;
+const char ClosedPrimeMinSearcher::ECLASS_TWISTED = 1;
+const char ClosedPrimeMinSearcher::ECLASS_LOWDEG = 2;
+const char ClosedPrimeMinSearcher::ECLASS_HIGHDEG = 4;
+const char ClosedPrimeMinSearcher::ECLASS_CONE = 8;
+const char ClosedPrimeMinSearcher::ECLASS_L31 = 16;
 
-const unsigned NClosedPrimeMinSearcher::coneEdge[12][2] = {
+const unsigned ClosedPrimeMinSearcher::coneEdge[12][2] = {
     { 0, 1 }, { 0, 2 }, { 1, 2 }, { 0, 3 }, { 0, 4 }, { 3, 4 },
     { 1, 3 }, { 1, 5 }, { 3, 5 }, { 2, 4 }, { 2, 5 }, { 4, 5 },
 };
 
-const char NClosedPrimeMinSearcher::coneNoTwist[12] = {
+const char ClosedPrimeMinSearcher::coneNoTwist[12] = {
     1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1
 };
 
-const char NClosedPrimeMinSearcher::dataTag_ = 'c';
+const char ClosedPrimeMinSearcher::dataTag_ = 'c';
 
-NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
+ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
         GluingPermSearcher<3>::Use use, void* useArgs) :
-        NCompactSearcher(pairing, autos, orientableOnly,
+        CompactSearcher(pairing, autos, orientableOnly,
             PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
             use, useArgs) {
     // Initialise internal arrays, specifically those relating to face
@@ -317,7 +317,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
 }
 
 // TODO (net): See what was removed when we brought in vertex link checking.
-void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
+void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
     // Preconditions:
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
@@ -666,8 +666,8 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
-void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
-    NCompactSearcher::dumpData(out);
+void ClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
+    CompactSearcher::dumpData(out);
 
     int i;
     for (i = 0; i < orderSize; i++) {
@@ -694,9 +694,9 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
 #endif
 }
 
-NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
+ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in,
         GluingPermSearcher<3>::Use use, void* useArgs) :
-        NCompactSearcher(in, use, useArgs),
+        CompactSearcher(in, use, useArgs),
         orderType(0), nChainEdges(0), chainPermIndices(0) {
     if (inputError_)
         return;
@@ -737,7 +737,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
         inputError_ = true;
 }
 
-int NClosedPrimeMinSearcher::mergeEdgeClasses() {
+int ClosedPrimeMinSearcher::mergeEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
     FacetSpec<3> adj = (*pairing_)[face];
 
@@ -878,7 +878,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
     return retVal;
 }
 
-void NClosedPrimeMinSearcher::splitEdgeClasses() {
+void ClosedPrimeMinSearcher::splitEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
 
     int v1, v2;

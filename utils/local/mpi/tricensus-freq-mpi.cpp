@@ -67,7 +67,7 @@
 #include <memory>
 #include <sstream>
 #include <popt.h>
-#include "census/ngluingpermsearcher.h"
+#include "census/gluingpermsearcher3.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "mpi.h"
@@ -241,12 +241,12 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
     orientability = regina::BoolSet(! argNor, ! argOr);
 
     if (minimalPrimeP2)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
-            regina::NGluingPermSearcher::PURGE_P2_REDUCIBLE;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
+            regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
     else if (minimal)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL;
     else
         whichPurge = 0;
 
@@ -414,7 +414,7 @@ void ctrlFarmPairing(const std::string& pairingRep) {
  *
  * Send the given partial search to the next available slave for processing.
  */
-void ctrlFarmPartialSearch(const regina::NGluingPermSearcher* search, void*) {
+void ctrlFarmPartialSearch(const regina::GluingPermSearcher<3>* search, void*) {
     if (! search) {
         // That's it for this face pairing.
         ctrlLogStamp() << "Pairing " << taskID[0] << ": Farmed "
@@ -490,7 +490,7 @@ int mainController() {
     if (depth > 0) {
         // Generate the face pairings and prepare subsearches.
         regina::FacetPairing<3>* pairing;
-        regina::NGluingPermSearcher* searcher;
+        regina::GluingPermSearcher<3>* searcher;
         while (! (pairingRep = ctrlNextPairing(input)).empty()) {
             taskID[0]++;
             taskID[1] = 0;
@@ -509,7 +509,7 @@ int mainController() {
                 continue;
             }
 
-            searcher = regina::NGluingPermSearcher::bestSearcher(
+            searcher = regina::GluingPermSearcher<3>::bestSearcher(
                 pairing, 0 /* autos */,
                 ! orientability.hasFalse(), ! finiteness.hasFalse(),
                 whichPurge, ctrlFarmPartialSearch);
@@ -554,7 +554,7 @@ int mainController() {
  *
  * Called each time the slave finds a complete triangulation.
  */
-void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
+void slaveFoundGluingPerms(const regina::GluingPermSearcher<3>* perms, void*) {
     if (perms) {
         regina::Triangulation<3>* tri = perms->triangulate();
 
@@ -667,10 +667,10 @@ void slaveProcessPartialSearch() {
         TAG_REQUEST_SUBSEARCH, MPI_COMM_WORLD, &status);
 
     // Construct the subsearch.
-    regina::NGluingPermSearcher* search;
+    regina::GluingPermSearcher<3>* search;
     {
         std::istringstream s(searchRep);
-        search = regina::NGluingPermSearcher::readTaggedData(s,
+        search = regina::GluingPermSearcher<3>::readTaggedData(s,
             slaveFoundGluingPerms);
     }
 
@@ -764,7 +764,7 @@ void slaveProcessPairing() {
     std::fill(sfreq, sfreq + MAX_FREQ, 0);
     std::fill(qfreq, qfreq + MAX_FREQ, 0);
     if (! dryRun)
-        regina::NGluingPermSearcher::findAllPerms(pairing, 0,
+        regina::GluingPermSearcher<3>::findAllPerms(pairing, 0,
             ! orientability.hasFalse(), ! finiteness.hasFalse(), whichPurge,
             slaveFoundGluingPerms);
 

@@ -47,7 +47,7 @@
 #include "utilities/qitmask.h"
 
 /**
- * Specifies whether the NClosedPrimeMinSearcher census generation code
+ * Specifies whether the ClosedPrimeMinSearcher census generation code
  * should prune on high-degree edges.
  *
  * It is well known that a closed prime minimal P^2-irreducible triangulation
@@ -230,7 +230,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
                  edge of the underlying face pairing graph will be the smaller
                  of the two identified tetrahedron faces (unless otherwise
                  specified for a particular edge type; see
-                 NClosedPrimeMinSearcher for examples). */
+                 ClosedPrimeMinSearcher for examples). */
         int orderSize;
             /**< The total number of edges in the face pairing graph, i.e.,
                  the number of elements of interest in the order[] array. */
@@ -616,12 +616,12 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
  * Algebraic Computation", ACM, 2011, pp. 59-66.
  *
  * No additional unwanted triangulations will be produced by this search
- * (in contrast to other search classes, such as NClosedPrimeMinSearcher).
+ * (in contrast to other search classes, such as ClosedPrimeMinSearcher).
  * That is, \e only 3-manifolds with the required vertex links will be produced.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
+class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
     protected:
         static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
@@ -918,16 +918,16 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
                      around the boundary of face \a i of tetrahedron \a t.
                      Which direction is "positive" is chosen arbitrarily
                      for each face; for details see the implementation
-                     of the NEulerSearcher constructor.
+                     of the EulerSearcher constructor.
 
                      Because of the fixed-size data type, this only
                      stores information for the faces of the first 16
                      tetrahedra.
 
                      Currently this data member is initialised by the
-                     NEulerSearcher constructors (since it belongs to
+                     EulerSearcher constructors (since it belongs to
                      TetEdgeState), but it is only used and updated in
-                     the subclass NClosedPrimeMinSearcher (where it
+                     the subclass ClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
             QitmaskLen64 facesNeg;
                 /**< Indicates how many times this edge runs along the
@@ -937,16 +937,16 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
                      around the boundary of face \a i of tetrahedron \a t.
                      Which direction is "negative" is chosen arbitrarily
                      for each face; for details see the implementation
-                     of the NEulerSearcher constructor.
+                     of the EulerSearcher constructor.
 
                      Because of the fixed-size data type, this only
                      stores information for the faces of the first 16
                      tetrahedra.
 
                      Currently this data member is initialised by the
-                     NEulerSearcher constructors (since it belongs to
+                     EulerSearcher constructors (since it belongs to
                      TetEdgeState), but it is only used and updated in
-                     the subclass NClosedPrimeMinSearcher (where it
+                     the subclass ClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
 
             /**
@@ -1086,7 +1086,7 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
          * of the closed surface that would be obtained if the puncture in
          * the vertex link were filled.
          */
-        NEulerSearcher(int useEuler, const FacetPairing<3>* pairing,
+        EulerSearcher(int useEuler, const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
                 GluingPermSearcher<3>::Use use, void* useArgs = 0);
@@ -1113,14 +1113,14 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
          *
          * @param in the input stream from which to read.
          */
-        NEulerSearcher(std::istream& in,
+        EulerSearcher(std::istream& in,
             GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
          * structures.
          */
-        virtual ~NEulerSearcher();
+        virtual ~EulerSearcher();
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const;
@@ -1451,12 +1451,12 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
  * Algebraic Computation", ACM, 2011, pp. 59-66.
  *
  * No additional unwanted triangulations will be produced by this search
- * (in contrast to other search classes, such as NClosedPrimeMinSearcher).
+ * (in contrast to other search classes, such as ClosedPrimeMinSearcher).
  * That is, \e only compact 3-manifolds will be produced.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
+class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
     protected:
         static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
@@ -1722,16 +1722,16 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
                      around the boundary of face \a i of tetrahedron \a t.
                      Which direction is "positive" is chosen arbitrarily
                      for each face; for details see the implementation
-                     of the NCompactSearcher constructor.
+                     of the CompactSearcher constructor.
 
                      Because of the fixed-size data type, this only
                      stores information for the faces of the first 16
                      tetrahedra.
 
                      Currently this data member is initialised by the
-                     NCompactSearcher constructors (since it belongs to
+                     CompactSearcher constructors (since it belongs to
                      TetEdgeState), but it is only used and updated in
-                     the subclass NClosedPrimeMinSearcher (where it
+                     the subclass ClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
             QitmaskLen64 facesNeg;
                 /**< Indicates how many times this edge runs along the
@@ -1741,16 +1741,16 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
                      around the boundary of face \a i of tetrahedron \a t.
                      Which direction is "negative" is chosen arbitrarily
                      for each face; for details see the implementation
-                     of the NCompactSearcher constructor.
+                     of the CompactSearcher constructor.
 
                      Because of the fixed-size data type, this only
                      stores information for the faces of the first 16
                      tetrahedra.
 
                      Currently this data member is initialised by the
-                     NCompactSearcher constructors (since it belongs to
+                     CompactSearcher constructors (since it belongs to
                      TetEdgeState), but it is only used and updated in
-                     the subclass NClosedPrimeMinSearcher (where it
+                     the subclass ClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
 
             /**
@@ -1871,7 +1871,7 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          */
-        NCompactSearcher(const FacetPairing<3>* pairing,
+        CompactSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
                 GluingPermSearcher<3>::Use use, void* useArgs = 0);
@@ -1898,14 +1898,14 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
          *
          * @param in the input stream from which to read.
          */
-        NCompactSearcher(std::istream& in,
+        CompactSearcher(std::istream& in,
             GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
          * structures.
          */
-        virtual ~NCompactSearcher();
+        virtual ~CompactSearcher();
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const;
@@ -2236,7 +2236,7 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
+class REGINA_API ClosedPrimeMinSearcher : public CompactSearcher {
     private:
         static const unsigned EDGE_CHAIN_END;
             /**< Represents the end of a one-ended chain in a face
@@ -2388,7 +2388,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * \pre The given face pairing has no boundary faces and has at
          * least three tetrahedra.
          */
-        NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
+        ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, GluingPermSearcher<3>::Use use,
                 void* useArgs = 0);
@@ -2415,14 +2415,14 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          *
          * @param in the input stream from which to read.
          */
-        NClosedPrimeMinSearcher(std::istream& in,
+        ClosedPrimeMinSearcher(std::istream& in,
             GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
          * structures.
          */
-        virtual ~NClosedPrimeMinSearcher();
+        virtual ~ClosedPrimeMinSearcher();
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const;
@@ -2437,7 +2437,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * Merge the classes of tetrahedron edges as required by the
          * new gluing made at stage \a orderElt of the search.
          *
-         * This overrides NCompactSearcher::mergeEdgeClasses(), and
+         * This overrides CompactSearcher::mergeEdgeClasses(), and
          * tests for additional structures that, whilst valid, cannot
          * appear in a closed prime minimal P2-irreducible triangulation.
          *
@@ -2465,7 +2465,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * Split the classes of tetrahedron edges to mirror the undoing
          * of the gluing at stage \a orderElt of the search.
          *
-         * This overrides NCompactSearcher::splitEdgeClasses(), so that
+         * This overrides CompactSearcher::splitEdgeClasses(), so that
          * we can undo the additional work performed in the overridden
          * mergeEdgeClasses().
          */
@@ -2488,7 +2488,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
+class REGINA_API HyperbolicMinSearcher : public EulerSearcher {
     private:
         static const char ECLASS_TWISTED;
             /**< Signifies that an edge has been identified with itself
@@ -2530,7 +2530,7 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          * \pre The given face pairing has no boundary faces.
          */
-        NHyperbolicMinSearcher(const FacetPairing<3>* pairing,
+        HyperbolicMinSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, GluingPermSearcher<3>::Use use,
                 void* useArgs = 0);
@@ -2557,7 +2557,7 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          *
          * @param in the input stream from which to read.
          */
-        NHyperbolicMinSearcher(std::istream& in,
+        HyperbolicMinSearcher(std::istream& in,
             GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         // Overridden methods:
@@ -2573,7 +2573,7 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * Merge the classes of tetrahedron edges as required by the
          * new gluing made at stage \a orderElt of the search.
          *
-         * This overrides NEulerSearcher::mergeEdgeClasses(), and
+         * This overrides EulerSearcher::mergeEdgeClasses(), and
          * tests for additional structures that, whilst valid, cannot
          * appear in a minimal ideal triangulation of a finite-volume
          * hyperbolic manifold.
@@ -2602,7 +2602,7 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * Split the classes of tetrahedron edges to mirror the undoing
          * of the gluing at stage \a orderElt of the search.
          *
-         * This overrides NEulerSearcher::splitEdgeClasses(), so that
+         * This overrides EulerSearcher::splitEdgeClasses(), so that
          * we can undo the additional work performed in the overridden
          * mergeEdgeClasses().
          */
@@ -2627,6 +2627,41 @@ REGINA_DEPRECATED typedef GluingPermSearcher<3> NGluingPermSearcher;
  */
 REGINA_DEPRECATED typedef GluingPermSearcher<3>::Use UseGluingPerms;
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NEulerSearcher has now been renamed to EulerSearcher.
+ */
+REGINA_DEPRECATED typedef EulerSearcher NEulerSearcher;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NCompactSearcher has now been renamed to
+ * CompactSearcher.
+ */
+REGINA_DEPRECATED typedef CompactSearcher NCompactSearcher;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NClosedPrimeMinSearcher has now been renamed to
+ * ClosedPrimeMinSearcher.
+ */
+REGINA_DEPRECATED typedef ClosedPrimeMinSearcher NClosedPrimeMinSearcher;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NHyperbolicMinSearcher has now been renamed to
+ * HyperbolicMinSearcher.
+ */
+REGINA_DEPRECATED typedef HyperbolicMinSearcher NHyperbolicMinSearcher;
+
 /*@}*/
 
 // Inline functions for GluingPermSearcher<3>
@@ -2639,44 +2674,44 @@ inline char GluingPermSearcher<3>::dataTag() const {
     return GluingPermSearcher<3>::dataTag_;
 }
 
-// Inline functions for NEulerSearcher
+// Inline functions for EulerSearcher
 
-inline NEulerSearcher::TetVertexState::TetVertexState() :
+inline EulerSearcher::TetVertexState::TetVertexState() :
         parent(-1), rank(0), bdry(3), euler(2), twistUp(0),
         hadEqualRank(false) {
 }
 
-inline NEulerSearcher::TetEdgeState::TetEdgeState() :
+inline EulerSearcher::TetEdgeState::TetEdgeState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp(0),
         hadEqualRank(false) {
 }
 
-inline NEulerSearcher::~NEulerSearcher() {
+inline EulerSearcher::~EulerSearcher() {
     delete[] vertexState;
     delete[] vertexStateChanged;
     delete[] edgeState;
     delete[] edgeStateChanged;
 }
 
-inline char NEulerSearcher::dataTag() const {
-    return NEulerSearcher::dataTag_;
+inline char EulerSearcher::dataTag() const {
+    return EulerSearcher::dataTag_;
 }
 
-inline int NEulerSearcher::findEdgeClass(int edgeID) const {
+inline int EulerSearcher::findEdgeClass(int edgeID) const {
     while (edgeState[edgeID].parent >= 0)
         edgeID = edgeState[edgeID].parent;
 
     return edgeID;
 }
 
-inline int NEulerSearcher::findEdgeClass(int edgeID, char& twisted) const {
+inline int EulerSearcher::findEdgeClass(int edgeID, char& twisted) const {
     for ( ; edgeState[edgeID].parent >= 0; edgeID = edgeState[edgeID].parent)
         twisted ^= edgeState[edgeID].twistUp;
 
     return edgeID;
 }
 
-inline void NEulerSearcher::vtxBdryJoin(int vertexID, char end,
+inline void EulerSearcher::vtxBdryJoin(int vertexID, char end,
         int adjVertexID, char twist) {
     vertexState[vertexID].bdryNext[static_cast<int>(end)] = adjVertexID;
     vertexState[vertexID].bdryTwist[static_cast<int>(end)] = twist;
@@ -2684,7 +2719,7 @@ inline void NEulerSearcher::vtxBdryJoin(int vertexID, char end,
     vertexState[adjVertexID].bdryTwist[(end ^ 1) ^ twist] = twist;
 }
 
-inline void NEulerSearcher::vtxBdryFixAdj(int vertexID) {
+inline void EulerSearcher::vtxBdryFixAdj(int vertexID) {
     if (vertexState[vertexID].bdryNext[0] != vertexID) {
         vertexState[vertexState[vertexID].bdryNext[0]].
             bdryNext[1 ^ vertexState[vertexID].bdryTwist[0]] = vertexID;
@@ -2699,21 +2734,21 @@ inline void NEulerSearcher::vtxBdryFixAdj(int vertexID) {
     }
 }
 
-inline void NEulerSearcher::vtxBdryBackup(int vertexID) {
+inline void EulerSearcher::vtxBdryBackup(int vertexID) {
     vertexState[vertexID].bdryNextOld[0] = vertexState[vertexID].bdryNext[0];
     vertexState[vertexID].bdryNextOld[1] = vertexState[vertexID].bdryNext[1];
     vertexState[vertexID].bdryTwistOld[0] = vertexState[vertexID].bdryTwist[0];
     vertexState[vertexID].bdryTwistOld[1] = vertexState[vertexID].bdryTwist[1];
 }
 
-inline void NEulerSearcher::vtxBdryRestore(int vertexID) {
+inline void EulerSearcher::vtxBdryRestore(int vertexID) {
     vertexState[vertexID].bdryNext[0] = vertexState[vertexID].bdryNextOld[0];
     vertexState[vertexID].bdryNext[1] = vertexState[vertexID].bdryNextOld[1];
     vertexState[vertexID].bdryTwist[0] = vertexState[vertexID].bdryTwistOld[0];
     vertexState[vertexID].bdryTwist[1] = vertexState[vertexID].bdryTwistOld[1];
 }
 
-inline void NEulerSearcher::vtxBdryNext(int vertexID,
+inline void EulerSearcher::vtxBdryNext(int vertexID,
         int tet, int vertex, int bdryFace, int next[2], char twist[2]) {
     switch (vertexState[vertexID].bdryEdges) {
         case 3: next[0] = next[1] = vertexID;
@@ -2766,12 +2801,12 @@ inline void NEulerSearcher::vtxBdryNext(int vertexID,
     }
 }
 
-inline bool NEulerSearcher::vtxBdryLength1(int vertexID) {
+inline bool EulerSearcher::vtxBdryLength1(int vertexID) {
     return (vertexState[vertexID].bdryNext[0] == vertexID &&
             vertexState[vertexID].bdryEdges == 1);
 }
 
-inline bool NEulerSearcher::vtxBdryLength2(
+inline bool EulerSearcher::vtxBdryLength2(
         int vertexID1, int vertexID2) {
     return (vertexState[vertexID1].bdryNext[0] == vertexID2 &&
             vertexState[vertexID1].bdryNext[1] == vertexID2 &&
@@ -2779,43 +2814,43 @@ inline bool NEulerSearcher::vtxBdryLength2(
             vertexState[vertexID2].bdryEdges == 1);
 }
 
-// Inline functions for NCompactSearcher
+// Inline functions for CompactSearcher
 
-inline NCompactSearcher::TetVertexState::TetVertexState() :
+inline CompactSearcher::TetVertexState::TetVertexState() :
         parent(-1), rank(0), bdry(3), twistUp(0), hadEqualRank(false) {
 }
 
-inline NCompactSearcher::TetEdgeState::TetEdgeState() :
+inline CompactSearcher::TetEdgeState::TetEdgeState() :
         parent(-1), rank(0), size(1), bounded(true), twistUp(0),
         hadEqualRank(false) {
 }
 
-inline NCompactSearcher::~NCompactSearcher() {
+inline CompactSearcher::~CompactSearcher() {
     delete[] vertexState;
     delete[] vertexStateChanged;
     delete[] edgeState;
     delete[] edgeStateChanged;
 }
 
-inline char NCompactSearcher::dataTag() const {
-    return NCompactSearcher::dataTag_;
+inline char CompactSearcher::dataTag() const {
+    return CompactSearcher::dataTag_;
 }
 
-inline int NCompactSearcher::findEdgeClass(int edgeID) const {
+inline int CompactSearcher::findEdgeClass(int edgeID) const {
     while (edgeState[edgeID].parent >= 0)
         edgeID = edgeState[edgeID].parent;
 
     return edgeID;
 }
 
-inline int NCompactSearcher::findEdgeClass(int edgeID, char& twisted) const {
+inline int CompactSearcher::findEdgeClass(int edgeID, char& twisted) const {
     for ( ; edgeState[edgeID].parent >= 0; edgeID = edgeState[edgeID].parent)
         twisted ^= edgeState[edgeID].twistUp;
 
     return edgeID;
 }
 
-inline void NCompactSearcher::vtxBdryJoin(int vertexID, char end,
+inline void CompactSearcher::vtxBdryJoin(int vertexID, char end,
         int adjVertexID, char twist) {
     vertexState[vertexID].bdryNext[static_cast<int>(end)] = adjVertexID;
     vertexState[vertexID].bdryTwist[static_cast<int>(end)] = twist;
@@ -2823,7 +2858,7 @@ inline void NCompactSearcher::vtxBdryJoin(int vertexID, char end,
     vertexState[adjVertexID].bdryTwist[(end ^ 1) ^ twist] = twist;
 }
 
-inline void NCompactSearcher::vtxBdryFixAdj(int vertexID) {
+inline void CompactSearcher::vtxBdryFixAdj(int vertexID) {
     if (vertexState[vertexID].bdryNext[0] != vertexID) {
         vertexState[vertexState[vertexID].bdryNext[0]].
             bdryNext[1 ^ vertexState[vertexID].bdryTwist[0]] = vertexID;
@@ -2838,21 +2873,21 @@ inline void NCompactSearcher::vtxBdryFixAdj(int vertexID) {
     }
 }
 
-inline void NCompactSearcher::vtxBdryBackup(int vertexID) {
+inline void CompactSearcher::vtxBdryBackup(int vertexID) {
     vertexState[vertexID].bdryNextOld[0] = vertexState[vertexID].bdryNext[0];
     vertexState[vertexID].bdryNextOld[1] = vertexState[vertexID].bdryNext[1];
     vertexState[vertexID].bdryTwistOld[0] = vertexState[vertexID].bdryTwist[0];
     vertexState[vertexID].bdryTwistOld[1] = vertexState[vertexID].bdryTwist[1];
 }
 
-inline void NCompactSearcher::vtxBdryRestore(int vertexID) {
+inline void CompactSearcher::vtxBdryRestore(int vertexID) {
     vertexState[vertexID].bdryNext[0] = vertexState[vertexID].bdryNextOld[0];
     vertexState[vertexID].bdryNext[1] = vertexState[vertexID].bdryNextOld[1];
     vertexState[vertexID].bdryTwist[0] = vertexState[vertexID].bdryTwistOld[0];
     vertexState[vertexID].bdryTwist[1] = vertexState[vertexID].bdryTwistOld[1];
 }
 
-inline void NCompactSearcher::vtxBdryNext(int vertexID,
+inline void CompactSearcher::vtxBdryNext(int vertexID,
         int tet, int vertex, int bdryFace, int next[2], char twist[2]) {
     switch (vertexState[vertexID].bdryEdges) {
         case 3: next[0] = next[1] = vertexID;
@@ -2905,12 +2940,12 @@ inline void NCompactSearcher::vtxBdryNext(int vertexID,
     }
 }
 
-inline bool NCompactSearcher::vtxBdryLength1(int vertexID) {
+inline bool CompactSearcher::vtxBdryLength1(int vertexID) {
     return (vertexState[vertexID].bdryNext[0] == vertexID &&
             vertexState[vertexID].bdryEdges == 1);
 }
 
-inline bool NCompactSearcher::vtxBdryLength2(
+inline bool CompactSearcher::vtxBdryLength2(
         int vertexID1, int vertexID2) {
     return (vertexState[vertexID1].bdryNext[0] == vertexID2 &&
             vertexState[vertexID1].bdryNext[1] == vertexID2 &&
@@ -2918,22 +2953,22 @@ inline bool NCompactSearcher::vtxBdryLength2(
             vertexState[vertexID2].bdryEdges == 1);
 }
 
-// Inline functions for NClosedPrimeMinSearcher
+// Inline functions for ClosedPrimeMinSearcher
 
-inline NClosedPrimeMinSearcher::~NClosedPrimeMinSearcher() {
+inline ClosedPrimeMinSearcher::~ClosedPrimeMinSearcher() {
     delete[] orderType;
     if (chainPermIndices)
         delete[] chainPermIndices;
 }
 
-inline char NClosedPrimeMinSearcher::dataTag() const {
-    return NClosedPrimeMinSearcher::dataTag_;
+inline char ClosedPrimeMinSearcher::dataTag() const {
+    return ClosedPrimeMinSearcher::dataTag_;
 }
 
-// Inline functions for NHyperbolicMinSearcher
+// Inline functions for HyperbolicMinSearcher
 
-inline char NHyperbolicMinSearcher::dataTag() const {
-    return NHyperbolicMinSearcher::dataTag_;
+inline char HyperbolicMinSearcher::dataTag() const {
+    return HyperbolicMinSearcher::dataTag_;
 }
 
 } // namespace regina

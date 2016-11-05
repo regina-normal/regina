@@ -673,7 +673,7 @@ void slaveFoundGluingPerms(const regina::GluingPermSearcher<dim>* perms,
         // For minimalHyp, we don't run mightBeMinimal<dim>().
         // This is because mightBeMinimal() only tests for immediate
         // reductions (i.e., it doesn't use 4-4 moves or well-climbing
-        // techniques), and NHyperbolicMinSearcher already ensures that
+        // techniques), and HyperbolicMinSearcher already ensures that
         // no such moves are possible (since it ensures no internal vertices
         // and no low-degree edges).
 
