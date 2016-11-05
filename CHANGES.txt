@@ -96,9 +96,6 @@ Version 5.1  [ (under development) ]
             - A new generic class that replaces the old Dim2GluingPermSearcher,
               NGluingPermSearcher and Dim4GluingPermSearcher.  For now this
               class remains undefined for higher dimensions.
-            - The "use" routine that is passed to findAllPerms() must now
-              take a GluingPerms<dim> object as its first argument, not the
-              more specific GluingPermSearcher{2,3,4}.
         Class HomologicalData:
             - Now works with type Integer instead of LargeInteger for all
               member functions except for torsionSigmaVector().
@@ -167,8 +164,8 @@ Version 5.1  [ (under development) ]
               and boundaryComponent() for higher-dimensional triangulations
               (these were already present for dimensions 2-4).
         Typedef UseDim2GluingPerms, UseGluingPerms, UseDim4GluingPerms:
-            - Renamed to GluingPerms<2,3,4>::Use.  The old names are kept but
-              deprecated.
+            - Renamed to GluingPermSearcher<2,3,4>::Use.  The old names are
+              kept but deprecated.
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,

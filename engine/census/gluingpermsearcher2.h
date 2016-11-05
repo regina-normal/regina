@@ -53,15 +53,6 @@ namespace regina {
  */
 
 /**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef UseDim2GluingPerms, you should use
- * the new type name GluingPerms<2>::Use.
- */
-REGINA_DEPRECATED typedef GluingPerms<2>::Use UseDim2GluingPerms;
-
-/**
  * A utility class for searching through all possible gluing permutation
  * sets that correspond to a given triangle edge pairing.  In the future,
  * there may be subclasses of GluingPermSearcher<2> that correspond to
@@ -88,6 +79,25 @@ REGINA_DEPRECATED typedef GluingPerms<2>::Use UseDim2GluingPerms;
 template <>
 class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
     public:
+        /**
+         * A routine that can do arbitrary processing upon a set of gluing
+         * permutations.  Such routines are used to process permutation
+         * sets that are found when running census-building routines such as
+         * findAllPerms().
+         *
+         * The first parameter passed will be a set of gluing permutations
+         * (as this class derives from GluingPerms<2>).  This set of gluing
+         * permutations must not be deallocated by this routine, since it may
+         * be used again later by the caller.  The second parameter may contain
+         * arbitrary data; typically this will be the data passed to the
+         * relevant search routine, such as findAllPerms() or the
+         * GluingPermSearcher class constructor.
+         *
+         * Note that the first parameter passed might be \c null to signal that
+         * gluing permutation generation has finished.
+         */
+        typedef void (*Use)(const GluingPermSearcher<2>*, void*);
+
         static const char dataTag_;
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
@@ -103,7 +113,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
         bool orientableOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to orientable triangulations? */
-        GluingPerms<2>::Use use_;
+        GluingPermSearcher<2>::Use use_;
             /**< A routine to call each time a gluing permutation set is
                  found during the search. */
         void* useArgs_;
@@ -186,7 +196,8 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          */
         GluingPermSearcher(const FacetPairing<2>* pairing,
                 const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPerms<2>::Use use, void* useArgs = 0);
+                bool orientableOnly, GluingPermSearcher<2>::Use use,
+                void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -210,7 +221,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          * @param useArgs as for the main GluingPermSearcher<2> constructor.
          */
         GluingPermSearcher(std::istream& in,
-            GluingPerms<2>::Use use, void* useArgs = 0);
+            GluingPermSearcher<2>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -317,7 +328,8 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          */
         static void findAllPerms(const FacetPairing<2>* pairing,
                 const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPerms<2>::Use use, void* useArgs = 0);
+                bool orientableOnly, GluingPermSearcher<2>::Use use,
+                void* useArgs = 0);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -349,7 +361,8 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
         static GluingPermSearcher<2>* bestSearcher(
                 const FacetPairing<2>* pairing,
                 const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPerms<2>::Use use, void* useArgs = 0);
+                bool orientableOnly, GluingPermSearcher<2>::Use use,
+                void* useArgs = 0);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -379,7 +392,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          * @param in the input stream from which to read.
          */
         static GluingPermSearcher<2>* readTaggedData(std::istream& in,
-                GluingPerms<2>::Use use, void* useArgs = 0);
+                GluingPermSearcher<2>::Use use, void* useArgs = 0);
 
     protected:
         /**
@@ -410,6 +423,15 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
  * use the full class name GluingPermSearcher<2>.
  */
 REGINA_DEPRECATED typedef GluingPermSearcher<2> Dim2GluingPermSearcher;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef UseDim2GluingPerms, you should use
+ * the new type name GluingPermSearcher<2>::Use.
+ */
+REGINA_DEPRECATED typedef GluingPermSearcher<2>::Use UseDim2GluingPerms;
 
 /*@}*/
 

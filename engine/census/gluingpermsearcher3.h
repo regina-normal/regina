@@ -76,15 +76,6 @@ namespace regina {
  */
 
 /**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef UseGluingPerms, you should use
- * the new type name GluingPerms<3>::Use.
- */
-REGINA_DEPRECATED typedef GluingPerms<3>::Use UseGluingPerms;
-
-/**
  * A utility class for searching through all possible gluing permutation
  * sets that correspond to a given tetrahedron face pairing.  Subclasses of
  * GluingPermSearcher<3> correspond to specialised (and heavily optimised)
@@ -114,6 +105,25 @@ REGINA_DEPRECATED typedef GluingPerms<3>::Use UseGluingPerms;
 template <>
 class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
     public:
+        /**
+         * A routine that can do arbitrary processing upon a set of gluing
+         * permutations.  Such routines are used to process permutation
+         * sets that are found when running census-building routines such as
+         * findAllPerms().
+         *
+         * The first parameter passed will be a set of gluing permutations
+         * (as this class derives from GluingPerms<3>).  This set of gluing
+         * permutations must not be deallocated by this routine, since it may
+         * be used again later by the caller.  The second parameter may contain
+         * arbitrary data; typically this will be the data passed to the
+         * relevant search routine, such as findAllPerms() or the
+         * GluingPermSearcher class constructor.
+         *
+         * Note that the first parameter passed might be \c null to signal that
+         * gluing permutation generation has finished.
+         */
+        typedef void (*Use)(const GluingPermSearcher<3>*, void*);
+
         static const char dataTag_;
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
@@ -185,7 +195,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
                  avoid constructing?  This should be a bitwise OR of constants
                  from the PurgeFlags enumeration.  See the constructor
                  documentation for further details on this search parameter. */
-        GluingPerms<3>::Use use_;
+        GluingPermSearcher<3>::Use use_;
             /**< A routine to call each time a gluing permutation set is
                  found during the search. */
         void* useArgs_;
@@ -305,7 +315,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
         GluingPermSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPerms<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -329,7 +339,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          * @param useArgs as for the main GluingPermSearcher<3> constructor.
          */
         GluingPermSearcher(std::istream& in,
-            GluingPerms<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -437,7 +447,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
         static void findAllPerms(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPerms<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -470,7 +480,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
                 const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPerms<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -500,7 +510,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          * @param in the input stream from which to read.
          */
         static GluingPermSearcher<3>* readTaggedData(std::istream& in,
-                GluingPerms<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
     protected:
         /**
@@ -1079,7 +1089,7 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
         NEulerSearcher(int useEuler, const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
-                GluingPerms<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1104,7 +1114,7 @@ class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
          * @param in the input stream from which to read.
          */
         NEulerSearcher(std::istream& in,
-            GluingPerms<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -1864,7 +1874,7 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
         NCompactSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
-                GluingPerms<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1889,7 +1899,7 @@ class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
          * @param in the input stream from which to read.
          */
         NCompactSearcher(std::istream& in,
-            GluingPerms<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -2380,7 +2390,8 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          */
         NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, GluingPerms<3>::Use use, void* useArgs = 0);
+                bool orientableOnly, GluingPermSearcher<3>::Use use,
+                void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2405,7 +2416,7 @@ class REGINA_API NClosedPrimeMinSearcher : public NCompactSearcher {
          * @param in the input stream from which to read.
          */
         NClosedPrimeMinSearcher(std::istream& in,
-            GluingPerms<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -2521,7 +2532,8 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          */
         NHyperbolicMinSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, GluingPerms<3>::Use use, void* useArgs = 0);
+                bool orientableOnly, GluingPermSearcher<3>::Use use,
+                void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2546,7 +2558,7 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          * @param in the input stream from which to read.
          */
         NHyperbolicMinSearcher(std::istream& in,
-            GluingPerms<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const;
@@ -2605,6 +2617,15 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
  * the full class name GluingPermSearcher<3>.
  */
 REGINA_DEPRECATED typedef GluingPermSearcher<3> NGluingPermSearcher;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef UseGluingPerms, you should use
+ * the new type name GluingPermSearcher<3>::Use.
+ */
+REGINA_DEPRECATED typedef GluingPermSearcher<3>::Use UseGluingPerms;
 
 /*@}*/
 

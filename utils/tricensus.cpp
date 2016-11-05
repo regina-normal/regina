@@ -84,7 +84,7 @@ std::ofstream sigStream;
 
 // Forward declarations:
 template <int dim>
-void foundGluingPerms(const typename regina::GluingPerms<dim>*, void*);
+void foundGluingPerms(const regina::GluingPermSearcher<dim>*, void*);
 
 template <int dim>
 void findAllPerms(const regina::FacetPairing<dim>*,
@@ -141,9 +141,10 @@ inline bool mightBeMinimal<4>(regina::Triangulation<4>*) {
  * What to do with each complete triangulation that is generated.
  */
 template <int dim>
-void foundGluingPerms(const regina::GluingPerms<dim>* perms, void* container) {
+void foundGluingPerms(const regina::GluingPermSearcher<dim>* perms,
+        void* container) {
     if (perms) {
-        typename regina::Triangulation<dim>* tri = perms->triangulate();
+        regina::Triangulation<dim>* tri = perms->triangulate();
 
         // For minimalHyp, we don't run mightBeMinimal<dim>().
         // This is because mightBeMinimal() only tests for immediate
@@ -192,7 +193,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>* perms, void* container) {
  * What to do with each face/facet pairing that is generated.
  */
 template <int dim>
-void foundFacePairing(const typename regina::FacetPairing<dim>* pairing,
+void foundFacePairing(const regina::FacetPairing<dim>* pairing,
         const typename regina::FacetPairing<dim>::IsoList* autos,
         void* container) {
     if (pairing) {
@@ -217,7 +218,7 @@ void foundFacePairing(const typename regina::FacetPairing<dim>* pairing,
  * Dump the given face/facet pairing to dumpStream.
  */
 template <int dim>
-void dumpPairing(const typename regina::FacetPairing<dim>* pair,
+void dumpPairing(const regina::FacetPairing<dim>* pair,
         const typename regina::FacetPairing<dim>::IsoList*, void*) {
     if (pair) {
         if (dumpStream.get())
@@ -618,7 +619,7 @@ int runCensus() {
             std::getline(std::cin, pairingRep);
 
             if (pairingRep.length() > 0) {
-                typename regina::FacetPairing<dim>* pairing =
+                regina::FacetPairing<dim>* pairing =
                     regina::FacetPairing<dim>::fromTextRep(pairingRep);
                 if (! pairing) {
                     std::cerr << "Invalid " << WORD_face << " pairing: "

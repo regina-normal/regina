@@ -53,15 +53,6 @@ namespace regina {
  */
 
 /**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef UseDim4GluingPerms, you should use
- * the new type name GluingPerms<4>::Use.
- */
-REGINA_DEPRECATED typedef GluingPerms<4>::Use UseDim4GluingPerms;
-
-/**
  * A utility class for searching through all possible gluing permutation
  * sets that correspond to a given pentachoron facet pairing.  Subclasses of
  * GluingPermSearcher<4> correspond to specialised (and heavily optimised)
@@ -95,6 +86,26 @@ REGINA_DEPRECATED typedef GluingPerms<4>::Use UseDim4GluingPerms;
  */
 template <>
 class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
+    public:
+        /**
+         * A routine that can do arbitrary processing upon a set of gluing
+         * permutations.  Such routines are used to process permutation
+         * sets that are found when running census-building routines such as
+         * findAllPerms().
+         *
+         * The first parameter passed will be a set of gluing permutations
+         * (as this class derives from GluingPerms<4>).  This set of gluing
+         * permutations must not be deallocated by this routine, since it may
+         * be used again later by the caller.  The second parameter may contain
+         * arbitrary data; typically this will be the data passed to the
+         * relevant search routine, such as findAllPerms() or the
+         * GluingPermSearcher class constructor.
+         *
+         * Note that the first parameter passed might be \c null to signal that
+         * gluing permutation generation has finished.
+         */
+        typedef void (*Use)(const GluingPermSearcher<4>*, void*);
+
     protected:
         static const int edgeLinkNextFacet[10][5];
             /**< Maintains an ordering of the three pentachoron facets
@@ -416,7 +427,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
         bool finiteOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to finite (non-ideal) triangulations? */
-        GluingPerms<4>::Use use_;
+        GluingPermSearcher<4>::Use use_;
             /**< A routine to call each time a gluing permutation set is
                  found during the search. */
         void* useArgs_;
@@ -559,7 +570,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
         GluingPermSearcher(const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                GluingPerms<4>::Use use, void* useArgs = 0);
+                GluingPermSearcher<4>::Use use, void* useArgs = 0);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -583,7 +594,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
          * @param useArgs as for the main GluingPermSearcher<4> constructor.
          */
         GluingPermSearcher(std::istream& in,
-            GluingPerms<4>::Use use, void* useArgs = 0);
+            GluingPermSearcher<4>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
@@ -691,7 +702,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
         static void findAllPerms(const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                GluingPerms<4>::Use use, void* useArgs = 0);
+                GluingPermSearcher<4>::Use use, void* useArgs = 0);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -724,7 +735,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
                 const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                GluingPerms<4>::Use use, void* useArgs = 0);
+                GluingPermSearcher<4>::Use use, void* useArgs = 0);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -754,7 +765,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
          * @param in the input stream from which to read.
          */
         static GluingPermSearcher<4>* readTaggedData(std::istream& in,
-                GluingPerms<4>::Use use, void* useArgs = 0);
+                GluingPermSearcher<4>::Use use, void* useArgs = 0);
 
     protected:
         /**
@@ -1102,6 +1113,15 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
  * use the full class name GluingPermSearcher<4>.
  */
 REGINA_DEPRECATED typedef GluingPermSearcher<4> Dim4GluingPermSearcher;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef UseDim4GluingPerms, you should use
+ * the new type name GluingPermSearcher<4>::Use.
+ */
+REGINA_DEPRECATED typedef GluingPermSearcher<4>::Use UseDim4GluingPerms;
 
 /*@}*/
 

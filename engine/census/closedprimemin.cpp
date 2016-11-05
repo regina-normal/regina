@@ -65,7 +65,7 @@ const char NClosedPrimeMinSearcher::dataTag_ = 'c';
 
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        GluingPerms<3>::Use use, void* useArgs) :
+        GluingPermSearcher<3>::Use use, void* useArgs) :
         NCompactSearcher(pairing, autos, orientableOnly,
             PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
             use, useArgs) {
@@ -695,7 +695,7 @@ void NClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
 }
 
 NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
-        GluingPerms<3>::Use use, void* useArgs) :
+        GluingPermSearcher<3>::Use use, void* useArgs) :
         NCompactSearcher(in, use, useArgs),
         orderType(0), nChainEdges(0), chainPermIndices(0) {
     if (inputError_)

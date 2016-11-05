@@ -85,7 +85,7 @@ namespace {
                 f_(f), finite_(finite), minimal_(minimal) {}
     };
 
-    void foundGluingPerms3(const GluingPerms<3>* perms, void* holder) {
+    void foundGluingPerms3(const GluingPermSearcher<3>* perms, void* holder) {
         if (perms) {
             TestFunctionHolder3* h = static_cast<TestFunctionHolder3*>(holder);
             Triangulation<3>* tri = perms->triangulate();
@@ -122,7 +122,7 @@ namespace {
                 f_(f), finite_(finite) {}
     };
 
-    void foundGluingPerms4(const GluingPerms<4>* perms, void* holder) {
+    void foundGluingPerms4(const GluingPermSearcher<4>* perms, void* holder) {
         if (perms) {
             TestFunctionHolder4* h = static_cast<TestFunctionHolder4*>(holder);
             Triangulation<4>* tri = perms->triangulate();

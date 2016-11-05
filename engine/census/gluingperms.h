@@ -81,27 +81,6 @@ namespace regina {
  */
 template <int dim>
 class GluingPerms {
-    public:
-        /**
-         * A routine that can do arbitrary processing upon a set of gluing
-         * permutations.  Such routines are used to process permutation
-         * sets that are found when running census-building routines such as
-         * GluingPermSearcher<3>::findAllPerms().
-         *
-         * The first parameter passed will be a set of gluing permutations
-         * (in fact it will typically be of a search-enabled subclass
-         * such as GluingPermSearcher<3>).  This set of gluing permutations
-         * must not be deallocated by this routine, since it may be used
-         * again later by the caller.  The second parameter may contain
-         * arbitrary data; typically this will be the data passed to the
-         * relevant search routine, such as GluingPermSearcher<3>::findAllPerms()
-         * or the GluingPermSearcher<3> class constructor.
-         *
-         * Note that the first parameter passed might be \c null to signal that
-         * gluing permutation generation has finished.
-         */
-        typedef void (*Use)(const GluingPerms<dim>*, void*);
-
     protected:
         const FacetPairing<dim>* pairing_;
             /**< The facet pairing that this permutation set complements.

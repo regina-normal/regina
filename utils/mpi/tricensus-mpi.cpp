@@ -75,10 +75,10 @@ template <int dim>
 bool mightBeMinimal(regina::Triangulation<dim>*);
 
 template <int dim>
-void slaveFoundGluingPerms(const typename regina::GluingPerms<dim>*, void*);
+void slaveFoundGluingPerms(const regina::GluingPermSearcher<dim>*, void*);
 
 template <int dim>
-void ctrlFarmPartialSearch(const typename regina::GluingPerms<dim>*, void*);
+void ctrlFarmPartialSearch(const regina::GluingPermSearcher<dim>*, void*);
 
 // Differences between censuses of 2, 3 and 4-manifolds:
 template <>
@@ -525,7 +525,7 @@ void ctrlFarmPairing(const std::string& pairingRep) {
  * Send the given partial search to the next available slave for processing.
  */
 template <int dim>
-void ctrlFarmPartialSearch(const typename regina::GluingPerms<dim>* search,
+void ctrlFarmPartialSearch(const regina::GluingPermSearcher<dim>* search,
         void*) {
     if (! search) {
         // That's it for this face pairing.
@@ -538,8 +538,7 @@ void ctrlFarmPartialSearch(const typename regina::GluingPerms<dim>* search,
     taskID[1]++;
 
     std::ostringstream searchRep;
-    static_cast<const regina::GluingPermSearcher<dim>*>(search)->
-        dumpTaggedData(searchRep);
+    search->dumpTaggedData(searchRep);
 
     taskID[2] = searchRep.str().length();
 
@@ -603,7 +602,7 @@ int mainController() {
     std::string pairingRep;
     if (depth > 0) {
         // Generate the face pairings and prepare subsearches.
-        typename regina::FacetPairing<dim>* pairing;
+        regina::FacetPairing<dim>* pairing;
         regina::GluingPermSearcher<dim>* searcher;
         while (! (pairingRep = ctrlNextPairing(input)).empty()) {
             taskID[0]++;
@@ -666,10 +665,10 @@ int mainController() {
  * Called each time the slave finds a complete triangulation.
  */
 template <int dim>
-void slaveFoundGluingPerms(const regina::GluingPerms<dim>* perms,
+void slaveFoundGluingPerms(const regina::GluingPermSearcher<dim>* perms,
         void* container) {
     if (perms) {
-        typename regina::Triangulation<dim>* tri = perms->triangulate();
+        regina::Triangulation<dim>* tri = perms->triangulate();
 
         // For minimalHyp, we don't run mightBeMinimal<dim>().
         // This is because mightBeMinimal() only tests for immediate
@@ -807,8 +806,7 @@ regina::Packet* slaveSkeletonTree(const regina::GluingPerms<dim>* search,
  * as the last child of the parent.
  */
 template <int dim>
-regina::Packet* slaveSkeletonTree(
-        const typename regina::FacetPairing<dim>* pairing) {
+regina::Packet* slaveSkeletonTree(const regina::FacetPairing<dim>* pairing) {
     // Create the overall parent packet.
     regina::Container* parent = new regina::Container();
     parent->setLabel("Partial MPI census");
@@ -967,8 +965,7 @@ void slaveProcessPartialSearch() {
     }
 
     delete parent;
-    delete const_cast<typename regina::FacetPairing<dim>*>(
-        search->facetPairing());
+    delete const_cast<regina::FacetPairing<dim>*>(search->facetPairing());
     delete search;
     delete[] searchRep;
 }
@@ -993,7 +990,7 @@ void slaveProcessPairing() {
         TAG_REQUEST_PAIRING, MPI_COMM_WORLD, &status);
 
     // Parse the face pairing.
-    typename regina::FacetPairing<dim>* pairing =
+    regina::FacetPairing<dim>* pairing =
         regina::FacetPairing<dim>::fromTextRep(pairingRep);
     if (! pairing) {
         if (dim4)

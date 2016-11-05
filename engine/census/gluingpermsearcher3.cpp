@@ -43,7 +43,7 @@ const char GluingPermSearcher<3>::dataTag_ = 'g';
 GluingPermSearcher<3>::GluingPermSearcher(
         const FacetPairing<3>* pairing, const FacetPairing<3>::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
-        GluingPerms<3>::Use use, void* useArgs) :
+        GluingPermSearcher<3>::Use use, void* useArgs) :
         GluingPerms<3>(pairing), autos_(autos), autosNew(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         whichPurge_(whichPurge), use_(use), useArgs_(useArgs),
@@ -91,7 +91,7 @@ GluingPermSearcher<3>::~GluingPermSearcher() {
 GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
         const FacetPairing<3>* pairing, const FacetPairing<3>::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
-        GluingPerms<3>::Use use, void* useArgs) {
+        GluingPermSearcher<3>::Use use, void* useArgs) {
     // Use an optimised algorithm if possible.
     if (finiteOnly) {
         if (pairing->isClosed() && pairing->size() >= 3 &&
@@ -118,7 +118,8 @@ GluingPermSearcher<3>* GluingPermSearcher<3>::bestSearcher(
 
 void GluingPermSearcher<3>::findAllPerms(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, GluingPerms<3>::Use use, void* useArgs) {
+        bool finiteOnly, int whichPurge, GluingPermSearcher<3>::Use use,
+        void* useArgs) {
     GluingPermSearcher<3>* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, whichPurge, use, useArgs);
     searcher->runSearch();
@@ -269,7 +270,7 @@ void GluingPermSearcher<3>::dumpTaggedData(std::ostream& out) const {
 }
 
 GluingPermSearcher<3>* GluingPermSearcher<3>::readTaggedData(std::istream& in,
-        GluingPerms<3>::Use use, void* useArgs) {
+        GluingPermSearcher<3>::Use use, void* useArgs) {
     // Read the class marker.
     char c;
     in >> c;
@@ -324,7 +325,7 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
 }
 
 GluingPermSearcher<3>::GluingPermSearcher(std::istream& in,
-        GluingPerms<3>::Use use, void* useArgs) :
+        GluingPermSearcher<3>::Use use, void* useArgs) :
         GluingPerms<3>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),
         order(0), orderSize(0), orderElt(0) {

@@ -206,7 +206,7 @@ bool GluingPermSearcher<4>::PentTriangleState::readData(std::istream& in,
 GluingPermSearcher<4>::GluingPermSearcher(
         const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
-        GluingPerms<4>::Use use, void* useArgs) :
+        GluingPermSearcher<4>::Use use, void* useArgs) :
         GluingPerms<4>(pairing), autos_(autos), autosNew_(autos == 0),
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         use_(use), useArgs_(useArgs),
@@ -286,7 +286,7 @@ GluingPermSearcher<4>::~GluingPermSearcher() {
 GluingPermSearcher<4>* GluingPermSearcher<4>::bestSearcher(
         const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
-        GluingPerms<4>::Use use, void* useArgs) {
+        GluingPermSearcher<4>::Use use, void* useArgs) {
     // Do everything by brute force for now.
     return new GluingPermSearcher<4>(pairing, autos,
         orientableOnly, finiteOnly, use, useArgs);
@@ -294,7 +294,7 @@ GluingPermSearcher<4>* GluingPermSearcher<4>::bestSearcher(
 
 void GluingPermSearcher<4>::findAllPerms(const FacetPairing<4>* pairing,
         const FacetPairing<4>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, GluingPerms<4>::Use use, void* useArgs) {
+        bool finiteOnly, GluingPermSearcher<4>::Use use, void* useArgs) {
     GluingPermSearcher<4>* searcher = bestSearcher(pairing, autos,
         orientableOnly, finiteOnly, use, useArgs);
     searcher->runSearch();
@@ -555,7 +555,7 @@ void GluingPermSearcher<4>::dumpTaggedData(std::ostream& out) const {
 }
 
 GluingPermSearcher<4>* GluingPermSearcher<4>::readTaggedData(std::istream& in,
-        GluingPerms<4>::Use use, void* useArgs) {
+        GluingPermSearcher<4>::Use use, void* useArgs) {
     // Read the class marker.
     char c;
     in >> c;
@@ -630,7 +630,7 @@ void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
 }
 
 GluingPermSearcher<4>::GluingPermSearcher(std::istream& in,
-        GluingPerms<4>::Use use, void* useArgs) :
+        GluingPermSearcher<4>::Use use, void* useArgs) :
         GluingPerms<4>(in), autos_(0), autosNew_(false),
         use_(use), useArgs_(useArgs), orientation_(0),
         order_(0), orderSize_(0), orderElt_(0),

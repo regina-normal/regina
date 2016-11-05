@@ -237,7 +237,7 @@ class Census3Test : public CppUnit::TestFixture {
                     purge_(purge), minimal_(minimal), count_(0) {}
         };
 
-        static void foundPerms(const GluingPerms<3>* perms, void* spec) {
+        static void foundPerms(const GluingPermSearcher<3>* perms, void* spec) {
             if (perms) {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Triangulation<3>* tri = perms->triangulate();
