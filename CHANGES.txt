@@ -66,6 +66,8 @@ Version 5.1  [ (under development) ]
               the old standalone Dim2BoundaryComponent, NBoundaryComponent and
               Dim4BoundaryComponent classes.
             - New routines size() and facet() to query top-dimensional faces.
+            - New routine countRidges(), to help with higher dimensions
+              where (dim-2)-faces are not actually stored.
             - New routines facets() and faces(), plus aliases vertices(),
               edges(), etc. where relevant.
             - New routine isReal() for dimensions dim = 3,4.
@@ -163,6 +165,10 @@ Version 5.1  [ (under development) ]
             - New routines boundaryComponents(), countBoundaryComponents()
               and boundaryComponent() for higher-dimensional triangulations
               (these were already present for dimensions 2-4).
+            - New routines homology() and homologyH1() for all dimensions
+              (these were already present for dimensions 3 and 4).  These
+              routines do not require the triangulation to be valid (i.e.,
+              the old validity restriction in dimension 4 has been lifted).
         Typedef UseDim2GluingPerms, UseGluingPerms, UseDim4GluingPerms:
             - Renamed to GluingPermSearcher<2,3,4>::Use.  The old names are
               kept but deprecated.

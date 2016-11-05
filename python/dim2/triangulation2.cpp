@@ -211,6 +211,10 @@ void addTriangulation2() {
         .def("orient", &Triangulation<2>::orient)
         .def("splitIntoComponents", splitIntoComponents,
             OL_splitIntoComponents())
+        .def("homology", &Triangulation<2>::homology,
+            return_internal_reference<>())
+        .def("homologyH1", &Triangulation<2>::homologyH1,
+            return_internal_reference<>())
         .def("oneThreeMove", &Triangulation<2>::oneThreeMove,
             OL_oneThreeMove())
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal)

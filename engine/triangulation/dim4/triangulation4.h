@@ -46,11 +46,9 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
-#include "utilities/property.h"
 
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.
@@ -125,8 +123,6 @@ class REGINA_API Triangulation<4> :
 
         mutable Property<NGroupPresentation, StoreManagedPtr> fundGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
-            /**< First homology group of the triangulation. */
         mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
@@ -353,46 +349,6 @@ class REGINA_API Triangulation<4> :
          * the fundamental group of this triangulation.
          */
         void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
-
-        /**
-         * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal vertices, the homology
-         * group will be calculated as if each such vertex had been truncated.
-         *
-         * This routine can also be accessed via the alias homologyH1()
-         * (a name that is more specific, but a little longer to type).
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homology() should be called again; this will be
-         * instantaneous if the group has already been calculated.
-         *
-         * \pre This triangulation is valid.
-         *
-         * @return the first homology group.
-         */
-        const NAbelianGroup& homology() const;
-
-        /**
-         * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal vertices, the homology
-         * group will be calculated as if each such vertex had been truncated.
-         *
-         * This routine can also be accessed via the alias homology()
-         * (a name that is less specific, but a little easier to type).
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homologyH1() should be called again; this will be
-         * instantaneous if the group has already been calculated.
-         *
-         * \pre This triangulation is valid.
-         *
-         * @return the first homology group.
-         */
-        const NAbelianGroup& homologyH1() const;
 
         /**
          * Returns the second homology group for this triangulation.
@@ -994,10 +950,6 @@ inline bool Triangulation<4>::isClosed() const {
 inline void Triangulation<4>::simplifiedFundamentalGroup(
         NGroupPresentation* newGroup) {
     fundGroup_ = newGroup;
-}
-
-inline const NAbelianGroup& Triangulation<4>::homology() const {
-    return homologyH1();
 }
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {

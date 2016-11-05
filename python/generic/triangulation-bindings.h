@@ -202,6 +202,10 @@ void addTriangulation(const char* name) {
             typename PyTriHelper<dim>::splitIntoComponents_type(
                 &Triangulation<dim>::splitIntoComponents),
             typename PyTriHelper<dim>::OL_splitIntoComponents())
+        .def("homology", &Triangulation<dim>::homology,
+            return_internal_reference<>())
+        .def("homologyH1", &Triangulation<dim>::homologyH1,
+            return_internal_reference<>())
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)

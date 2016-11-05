@@ -395,6 +395,20 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
+         * Returns the number of (<i>dim</i>-2)-faces in this boundary
+         * component.
+         *
+         * If this is an ideal or invalid vertex boundary component,
+         * then this routine will return 0.
+         *
+         * @return the number of (<i>dim</i>-2)-faces in this boundary
+         * component.
+         */
+        size_t countRidges() const {
+            return WeakFaceList<dim, dim-2>::faces_.size();
+        }
+
+        /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
          *
          * This routine is only available where \a dim is one of Regina's
@@ -590,6 +604,8 @@ class BoundaryComponentFaceStorage<dim, false> {
     protected:
         std::vector<Face<dim, dim-1>*> facets_;
             /**< List of all (dim-1)-simplices in the boundary component. */
+        size_t nRidges_;
+            /**< The number of (dim-2)-faces in the boundary component. */
 
     public:
         /**
@@ -602,6 +618,20 @@ class BoundaryComponentFaceStorage<dim, false> {
          */
         size_t size() const {
             return facets_.size();
+        }
+
+        /**
+         * Returns the number of (<i>dim</i>-2)-faces in this boundary
+         * component.
+         *
+         * If this is an ideal or invalid vertex boundary component,
+         * then this routine will return 0.
+         *
+         * @return the number of (<i>dim</i>-2)-faces in this boundary
+         * component.
+         */
+        size_t countRidges() const {
+            return nRidges_;
         }
 
         /**
@@ -651,6 +681,12 @@ class BoundaryComponentFaceStorage<dim, false> {
 
     protected:
         /**
+         * Default constructor that initialises the number of ridges to zero.
+         */
+        BoundaryComponentFaceStorage() : nRidges_(0) {
+        }
+
+        /**
          * Pushes the given face onto the end of the list of
          * (<i>dim</i>-1)-faces of this boundary component.
          * This class does not take ownership of the given face.
@@ -662,17 +698,27 @@ class BoundaryComponentFaceStorage<dim, false> {
         }
 
         /**
+         * Increments the number of (<i>dim</i>-2)-faces in this
+         * boundary component.  Since this boundary component class does
+         * not store any lower-dimensional faces, this routine does not
+         * store the given face.
+         */
+        void push_back(Face<dim, dim-2>*) {
+            ++nRidges_;
+        }
+
+        /**
          * Does nothing, since this boundary component does not store
          * lower-dimensional faces.
          *
          * \tparam subdim the dimension of the given face.  This must
-         * be between 0 and <i>dim</i>-2 inclusive.
+         * be between 0 and <i>dim</i>-3 inclusive.
          */
         template <int subdim>
         void push_back(Face<dim, subdim>*) {
-            static_assert(subdim <= dim - 2,
+            static_assert(subdim <= dim - 3,
                 "The no-op push_back() should only be called for "
-                "faces of dimension <= dim - 2.");
+                "faces of dimension <= dim - 3.");
         }
 
         /**

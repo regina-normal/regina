@@ -47,6 +47,8 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "algebra/nabeliangroup.h"
+#include "maths/matrix.h"
 #include "triangulation/generic/component.h"
 #include "triangulation/generic/boundarycomponent.h"
 #include "triangulation/generic/face.h"
@@ -54,6 +56,7 @@
 #include "triangulation/generic/simplex.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/simplex.h"
+#include "utilities/property.h"
 
 namespace regina {
 
@@ -383,6 +386,8 @@ class TriangulationBase :
         bool orientable_;
             /**< Is the triangulation orientable?  This property is only set
                  if/when the skeleton of the triangulation is computed. */
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
+            /**< First homology group of the triangulation. */
 
     public:
         /**
@@ -829,6 +834,64 @@ class TriangulationBase :
          * @author Matthias Goerner
          */
         bool isOriented() const;
+
+        /*@}*/
+        /**
+         * \name Algebraic Properties
+         */
+        /*@{*/
+
+        /**
+         * Returns the first homology group for this triangulation.
+         *
+         * The homology is computed in the dual 2-skeleton.  This means:
+         *
+         * - If the triangulation contains any ideal vertices, the homology
+         *   will be calculated as if each such vertex had been truncated.
+         *
+         * - Likewise, if the triangulation contains any invalid faces
+         *   of dimension 0,1,...,(<i>dim</i>-3), these will effectively
+         *   be truncated also.
+         *
+         * - In contrast, if the triangulation contains any invalid
+         *   (<i>dim</i>-2)-faces (i.e., codimension-2-faces that are
+         *   identified with themselves under a non-trivial map), the
+         *   homology will be computed \e without truncating the
+         *   centroid of the face.  For instance, if a 3-manifold
+         *   triangulation has an edge identified with itself in reverse,
+         *   then the homology will be computed without truncating the
+         *   resulting projective plane cusp.  This means that, if a
+         *   barycentric subdivision is performed on a such a
+         *   triangulation, the result of homology() might change.
+         *
+         * This routine can also be accessed via the alias homologyH1()
+         * (a name that is more specific, but a little longer to type).
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * homology groups will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, homology() should be called again; this will be
+         * instantaneous if the group has already been calculated.
+         *
+         * \warning In dimension 3, if you are calling this from the subclass
+         * SnapPeaTriangulation then <b>any fillings on the cusps will be
+         * ignored</b>.  (This is the same as for every routine implemented by
+         * Regina's Triangulation<3> class.)  If you wish to compute homology
+         * with fillings, call SnapPeaTriangulation::homologyFilled() instead.
+         *
+         * @return the first homology group.
+         */
+        const NAbelianGroup& homology() const;
+
+        /**
+         * Returns the first homology group for this triangulation.
+         *
+         * This is identical to calling homology().  See the homology()
+         * documentation for further details.
+         *
+         * @return the first homology group.
+         */
+        const NAbelianGroup& homologyH1() const;
 
         /*@}*/
         /**
@@ -2550,6 +2613,82 @@ size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
     delete[] newTris;
 
     return whichComp;
+}
+
+template <int dim>
+inline const NAbelianGroup& TriangulationBase<dim>::homologyH1() const {
+    return homology();
+}
+
+template <int dim>
+const NAbelianGroup& TriangulationBase<dim>::homology() const {
+    if (H1_.known())
+        return *H1_.value();
+
+    if (isEmpty())
+        return *(H1_ = new NAbelianGroup());
+
+    // Calculate a maximal forest in the dual 1-skeleton.
+    ensureSkeleton();
+
+    // Build a presentation matrix.
+    // Each non-boundary not-in-forest (dim-1)-face is a generator.
+    // Each non-boundary (dim-2)-face is a relation.
+    long nBdryRidges = 0;
+    for (auto bc : boundaryComponents())
+        nBdryRidges += bc->countRidges();
+
+    // Cast away all unsignedness in case we run into problems subtracting.
+    long nGens = static_cast<long>(countFaces<dim-1>())
+        - static_cast<long>(countBoundaryFacets())
+        + static_cast<long>(countComponents())
+        - static_cast<long>(size());
+    long nRels = static_cast<long>(countFaces<dim-2>()) - nBdryRidges;
+
+    MatrixInt pres(nRels, nGens);
+
+    // Find out which (dim-1)-face corresponds to which generator.
+    long* genIndex = new long[countFaces<dim-1>()];
+    long i = 0;
+    for (Face<dim, dim-1>* f : faces<dim-1>())
+        if (! (f->isBoundary() || f->inMaximalForest()))
+            genIndex[f->index()] = i++;
+
+    // Run through each (dim-2)-face and put the relations into the matrix.
+    Simplex<dim>* simp;
+    int facet;
+    Face<dim, dim-1>* gen;
+    i = 0;
+    for (Face<dim, dim-2>* f : faces<dim-2>()) {
+        if (! f->isBoundary()) {
+            // Put in the relation corresponding to this (dim-2)-face.
+            for (auto& emb : *f) {
+                simp = emb.simplex();
+                facet = emb.vertices()[dim-1];
+                gen = simp->template face<dim-1>(facet);
+                if (! gen->inMaximalForest()) {
+                    // We define the "direction" for this dual edge to point
+                    // from embedding gen->front() to embedding gen->back().
+                    //
+                    // Test whether we are traversing this dual edge forwards
+                    // or backwards as we walk around the (dim-2)-face f.
+                    if ((gen->front().simplex() == simp) &&
+                            (gen->front().face() == facet))
+                        pres.entry(i, genIndex[gen->index()]) += 1;
+                    else
+                        pres.entry(i, genIndex[gen->index()]) -= 1;
+                }
+            }
+            ++i;
+        }
+    }
+
+    delete[] genIndex;
+
+    // Build the group from the presentation matrix and tidy up.
+    NAbelianGroup* ans = new NAbelianGroup();
+    ans->addGroup(pres);
+    return *(H1_ = ans);
 }
 
 } } // namespace regina::detail
