@@ -555,6 +555,24 @@ void TriangulationBase<dim>::clearBaseProperties() {
     H1_.clear();
 }
 
+template <int dim>
+void TriangulationBase<dim>::swapBaseProperties(TriangulationBase<dim>& other) {
+    // Properties stored directly:
+    std::swap(valid_, other.valid_);
+    std::swap(calculatedSkeleton_, other.calculatedSkeleton_);
+    std::swap(orientable_, other.orientable_);
+
+    // Properties stored using std::... containers or MarkedVector:
+    components_.swap(other.components_);
+    boundaryComponents_.swap(other.boundaryComponents_);
+
+    FaceListSuite<dim, dim - 1>::swapFaces(other);
+
+    // Properties stored using the Property<...> class template:
+    fundGroup_.swap(other.fundGroup_);
+    H1_.swap(other.H1_);
+}
+
 } } // namespace regina::detail
 
 #endif

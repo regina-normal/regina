@@ -82,6 +82,39 @@ void Triangulation<3>::clearAllProperties() {
     turaevViroCache_.clear();
 }
 
+void Triangulation<3>::swapAllProperties(Triangulation<3>& other) {
+    swapBaseProperties(other);
+
+    // Properties stored directly:
+    std::swap(ideal_, other.ideal_);
+    std::swap(standard_, other.standard_);
+
+    // Properties stored using the Property<...> template class:
+    H1Rel_.swap(other.H1Rel_);
+    H1Bdry_.swap(other.H1Bdry_);
+    H2_.swap(other.H2_);
+
+    twoSphereBoundaryComponents_.swap(other.twoSphereBoundaryComponents_);
+    negativeIdealBoundaryComponents_.swap(
+        other.negativeIdealBoundaryComponents_);
+
+    zeroEfficient_.swap(other.zeroEfficient_);
+    splittingSurface_.swap(other.splittingSurface_);
+
+    threeSphere_.swap(other.threeSphere_);
+    threeBall_.swap(other.threeBall_);
+    solidTorus_.swap(other.solidTorus_);
+    irreducible_.swap(other.irreducible_);
+    compressingDisc_.swap(other.compressingDisc_);
+    haken_.swap(other.haken_);
+
+    strictAngleStructure_.swap(other.strictAngleStructure_);
+    niceTreeDecomposition_.swap(other.niceTreeDecomposition_);
+
+    // Properties stored using std::... containers:
+    turaevViroCache_.swap(other.turaevViroCache_);
+}
+
 void Triangulation<3>::writeTextLong(std::ostream& out) const {
     ensureSkeleton();
 

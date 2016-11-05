@@ -299,6 +299,7 @@ namespace {
             Triangulation<3>& original, size_t minTet) {
         if (alt.size() < minTet) {
             // TODO: Use swapContents() or something similar.
+            // But... this would require alt to be non-const.
             Packet::ChangeEventSpan span(&original);
             original.removeAllTetrahedra();
             original.insertTriangulation(alt);

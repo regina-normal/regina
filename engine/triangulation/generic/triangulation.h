@@ -150,6 +150,12 @@ class FaceList {
          */
         void destroy();
         /**
+         * Swaps all faces in this list with those in the given list.
+         *
+         * @param other the list of faces to swap with this.
+         */
+        void swap(FaceList<dim, subdim>& other);
+        /**
          * Tests whether this and the given triangulation have the same
          * <i>subdim</i>-face degree sequences.
          *
@@ -338,11 +344,20 @@ class Triangulation :
 
     private:
         /**
-         * Clears any calculated properties and declares them all unknown.
-         * This must be called by any internal function that changes the
-         * triangulation.
+         * Clears any calculated properties, including skeletal data,
+         * and declares them all unknown.  This must be called by any
+         * internal function that changes the triangulation.
+         *
+         * In most cases this routine is followed immediately by firing
+         * a packet change event.
          */
         void clearAllProperties();
+        /**
+         * Swaps all calculated properties, including skeletal data,
+         * with the given triangulation.  This is called by
+         * TriangulationBase::swapContents(), and by nothing else.
+         */
+        void swapAllProperties(Triangulation<dim>& other);
 
     friend class detail::SimplexBase<dim>;
     friend class detail::TriangulationBase<dim>;
@@ -494,6 +509,11 @@ inline void FaceList<dim, subdim>::destroy() {
 }
 
 template <int dim, int subdim>
+inline void FaceList<dim, subdim>::swap(FaceList<dim, subdim>& other) {
+    faces_.swap(other.faces_);
+}
+
+template <int dim, int subdim>
 bool FaceList<dim, subdim>::sameDegrees(const FaceList<dim, subdim>& other)
         const {
     // We may assume that # faces is the same for both triangulations.
@@ -535,6 +555,11 @@ inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
 template <int dim>
 inline void Triangulation<dim>::clearAllProperties() {
     detail::TriangulationBase<dim>::clearBaseProperties();
+}
+
+template <int dim>
+inline void Triangulation<dim>::swapAllProperties(Triangulation<dim>& other) {
+    detail::TriangulationBase<dim>::swapBaseProperties(other);
 }
 
 template <int dim>

@@ -314,14 +314,20 @@ class REGINA_API Triangulation<2> :
 
     private:
         /**
-         * Clears any calculated properties and declares them all
-         * unknown.  All dynamic memory used for storing known
-         * properties is deallocated.
+         * Clears any calculated properties, including skeletal data,
+         * and declares them all unknown.  This must be called by any
+         * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
         void clearAllProperties();
+        /**
+         * Swaps all calculated properties, including skeletal data,
+         * with the given triangulation.  This is called by
+         * TriangulationBase::swapContents(), and by nothing else.
+         */
+        void swapAllProperties(Triangulation<2>& other);
 
         void calculateSkeleton();
 
@@ -421,6 +427,10 @@ inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
 
 inline void Triangulation<2>::clearAllProperties() {
     clearBaseProperties();
+}
+
+inline void Triangulation<2>::swapAllProperties(Triangulation<2>& other) {
+    swapBaseProperties(other);
 }
 
 } // namespace regina

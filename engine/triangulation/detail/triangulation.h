@@ -118,6 +118,14 @@ class FaceListSuite :
          */
         void deleteFaces();
         /**
+         * Swaps all faces of dimension \a subdim and below
+         * with those of the given triangulation.
+         *
+         * @param other the face storage for the triangulation whose
+         * faces are to be swapped with this.
+         */
+        void swapFaces(FaceListSuite<dim, subdim>& other);
+        /**
          * Fills the given vector with the first (\a subdim + 1)
          * elements of the f-vector.
          *
@@ -164,6 +172,7 @@ template <int dim>
 class FaceListSuite<dim, 0> : protected FaceList<dim, 0> {
     protected:
         void deleteFaces();
+        void swapFaces(FaceListSuite<dim, 0>& other);
         void fillFVector(std::vector<size_t>& result) const;
         bool sameFVector(const FaceListSuite<dim, 0>& other) const;
         bool sameDegrees(const FaceListSuite<dim, 0>& other) const;
@@ -537,8 +546,12 @@ class TriangulationBase :
          * All top-dimensional simplices that belong to this triangulation
          * will be moved to \a other, and all top-dimensional simplices
          * that belong to \a other will be moved to this triangulation.
+         * Likewise, all skeletal objects (such as lower-dimensional faces,
+         * components, and boundary components) and all cached properties
+         * (such as homology and fundamental group) will be swapped.
          *
-         * Any pointers or references to Simplex<dim> objects will remain valid.
+         * In particular, any pointers or references to Simplex<dim> and/or
+         * Face<dim, subdim> objects will remain valid.
          *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
@@ -1623,15 +1636,25 @@ class TriangulationBase :
          *
          * Note that TriangulationBase never calls this routine itself.
          * Typically clearBaseProperties() is only ever called by
-         * Triangulation<dim>::clearAllProperties, which in turn is
-         * called by the Triangulation<dim> destructor.
-         *
-         * \warning Any call to clearBaseProperties() must first cast down to
-         * Triangulation<dim>.  You should never directly call this
-         * parent implementation (unless of course you are reimplementing
-         * clearBaseProperties() in a Triangulation<dim> subclass).
+         * Triangulation<dim>::clearAllProperties(), which in turn is called by
+         * "atomic" routines that change the triangluation (before firing
+         * packet change events), as well as the Triangulation<dim> destructor.
          */
         void clearBaseProperties();
+
+        /**
+         * Swaps all properties that are managed by this base class,
+         * including skeletal data, with the given triangulation.
+         *
+         * Note that TriangulationBase never calls this routine itself.
+         * Typically swapBaseProperties() is only ever called by
+         * Triangulation<dim>::swapAllProperties(), which in turn is
+         * called by swapContents().
+         *
+         * @param other the triangulation whose properties should be
+         * swapped with this.
+         */
+        void swapBaseProperties(TriangulationBase<dim>& other);
 
         /**
          * Writes a chunk of XML containing properties of this triangulation.
@@ -1843,9 +1866,21 @@ inline void FaceListSuite<dim, subdim>::deleteFaces() {
     FaceListSuite<dim, subdim - 1>::deleteFaces();
 }
 
+template <int dim, int subdim>
+inline void FaceListSuite<dim, subdim>::swapFaces(
+        FaceListSuite<dim, subdim>& other) {
+    FaceList<dim, subdim>::swap(other);
+    FaceListSuite<dim, subdim - 1>::swapFaces(other);
+}
+
 template <int dim>
 inline void FaceListSuite<dim, 0>::deleteFaces() {
     FaceList<dim, 0>::destroy();
+}
+
+template <int dim>
+inline void FaceListSuite<dim, 0>::swapFaces(FaceListSuite<dim, 0>& other) {
+    FaceList<dim, 0>::swap(other);
 }
 
 template <int dim, int subdim>
@@ -2023,14 +2058,12 @@ void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
 
     simplices_.swap(other.simplices_);
 
-    SimplexIterator it;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it)
-        (*it)->tri_ = static_cast<Triangulation<dim>*>(this);
-    for (it = other.simplices_.begin(); it != other.simplices_.end(); ++it)
-        (*it)->tri_ = &other;
+    for (auto s : simplices_)
+        s->tri_ = static_cast<Triangulation<dim>*>(this);
+    for (auto s : other.simplices_)
+        s->tri_ = &other;
 
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
-    static_cast<Triangulation<dim>&>(other).clearAllProperties();
+    static_cast<Triangulation<dim>*>(this)->swapAllProperties(other);
 }
 
 template <int dim>

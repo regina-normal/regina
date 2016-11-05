@@ -220,4 +220,15 @@ void Triangulation<4>::clearAllProperties() {
     H2_.clear();
 }
 
+void Triangulation<4>::swapAllProperties(Triangulation<4>& other) {
+    swapBaseProperties(other);
+
+    // Properties stored directly:
+    std::swap(knownSimpleLinks_, other.knownSimpleLinks_);
+    std::swap(ideal_, other.ideal_);
+
+    // Properties stored using the Property<...> template class:
+    H2_.swap(other.H2_);
+}
+
 } // namespace regina

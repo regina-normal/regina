@@ -175,6 +175,8 @@ Version 5.1  [ (under development) ]
               already present for dimensions 3 and 4).  These routines do not
               require the triangulation to be valid (i.e., the old validity
               restrictions in dimension 4 have been lifted).
+            - Routine swapContents() now swaps skeletal data and computed
+              properties also, instead of just deleting them.
         Typedef UseDim2GluingPerms, UseGluingPerms, UseDim4GluingPerms:
             - Renamed to GluingPermSearcher<2,3,4>::Use.  The old names are
               kept but deprecated.
