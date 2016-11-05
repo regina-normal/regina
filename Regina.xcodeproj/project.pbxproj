@@ -1437,6 +1437,8 @@
 		057118D219B30BC0009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
 		057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
 		057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
+		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
+		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
 		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4561C6009F300C4D155 /* component5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4371C6009E600C4D155 /* component5.cpp */; };
 		057EE4571C6009F300C4D155 /* component6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4381C6009E600C4D155 /* component6.cpp */; };
@@ -3475,6 +3477,8 @@
 		057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec7n.dat"; sourceTree = "<group>"; };
 		057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec7o.dat"; sourceTree = "<group>"; };
 		057118B819B308F8009FEDC5 /* verify-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "verify-snappea-census-data.py"; sourceTree = "<group>"; };
+		0575A7D91DCE8B700027CE31 /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
+		0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomologicaldata.h; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
@@ -5367,7 +5371,9 @@
 				052F9E3B180600FB00FAE4DF /* ncomponent.h */,
 				052F9E3D180600FB00FAE4DF /* nedge.h */,
 				055114CB1DCC476A00EC753C /* nexampletriangulation.h */,
+				0575A7D91DCE8B700027CE31 /* nfacepair.h */,
 				05431F321C40F363009BC072 /* nfacepairing.h */,
+				0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */,
 				052F9E49180600FB00FAE4DF /* nisomorphism.h */,
 				052F9E4E180600FB00FAE4DF /* ntetrahedron.h */,
 				052F9E50180600FB00FAE4DF /* ntriangle.h */,
@@ -6804,6 +6810,7 @@
 				053CAB371DAAEF0F00A92F98 /* nhsstandard.h in Headers */,
 				0591E7AF1C4F74C400793A9C /* dim4triangulation.h in Headers */,
 				05F0A0381DBF0B5E00117BFC /* boundarycomponent3.h in Headers */,
+				0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */,
 				052FA009180600FB00FAE4DF /* nsatblock.h in Headers */,
 				05F09FD61DBF01B600117BFC /* edge2.h in Headers */,
 				05431F7A1C40F3C9009BC072 /* matrix.h in Headers */,
@@ -7036,6 +7043,7 @@
 				052F9F28180600FB00FAE4DF /* nlensspace.h in Headers */,
 				052F9F9F180600FB00FAE4DF /* terse_triangulation.h in Headers */,
 				052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */,
+				0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */,
 				055114EB1DCD521D00EC753C /* ngenericgluingperms-impl.h in Headers */,
 				052F9EF4180600FB00FAE4DF /* treeconstraint.h in Headers */,
 				052FA09A180600FB00FAE4DF /* osutils.h in Headers */,
