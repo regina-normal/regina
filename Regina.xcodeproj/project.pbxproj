@@ -1241,6 +1241,7 @@
 		055114EA1DCD521D00EC753C /* ncensus.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114E71DCD521D00EC753C /* ncensus.h */; };
 		055114EB1DCD521D00EC753C /* ngenericgluingperms-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114E81DCD521D00EC753C /* ngenericgluingperms-impl.h */; };
 		055114EC1DCD521D00EC753C /* ngenericgluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114E91DCD521D00EC753C /* ngenericgluingperms.h */; };
+		055114EE1DCD5D0500EC753C /* gluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114ED1DCD5D0500EC753C /* gluingpermsearcher.h */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -3211,6 +3212,7 @@
 		055114E71DCD521D00EC753C /* ncensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncensus.h; sourceTree = "<group>"; };
 		055114E81DCD521D00EC753C /* ngenericgluingperms-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ngenericgluingperms-impl.h"; sourceTree = "<group>"; };
 		055114E91DCD521D00EC753C /* ngenericgluingperms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ngenericgluingperms.h; sourceTree = "<group>"; };
+		055114ED1DCD5D0500EC753C /* gluingpermsearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluingpermsearcher.h; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
@@ -4757,6 +4759,7 @@
 				052F9C25180600FA00FAE4DF /* gluingperms-impl.h */,
 				05431EEB1C40F069009BC072 /* gluingperms.cpp */,
 				052F9C26180600FA00FAE4DF /* gluingperms.h */,
+				055114ED1DCD5D0500EC753C /* gluingpermsearcher.h */,
 				05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */,
 				055114E71DCD521D00EC753C /* ncensus.h */,
 				055114E81DCD521D00EC753C /* ngenericgluingperms-impl.h */,
@@ -6864,6 +6867,7 @@
 				0591E7AD1C4F74C400793A9C /* dim4triangle.h in Headers */,
 				052F9F43180600FB00FAE4DF /* nperm3.h in Headers */,
 				0591E7A21C4F74C400793A9C /* dim4component.h in Headers */,
+				055114EE1DCD5D0500EC753C /* gluingpermsearcher.h in Headers */,
 				05431F241C40F260009BC072 /* facetpairing-impl.h in Headers */,
 				0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */,
 				054C6A861DCC2148005373F0 /* example.h in Headers */,

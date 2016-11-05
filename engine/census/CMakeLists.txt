@@ -28,6 +28,7 @@ if (${REGINA_INSTALL_DEV})
     dim4gluingpermsearcher.h
     gluingperms.h
     gluingperms-impl.h
+    gluingpermsearcher.h
     ncensus.h
     ngenericgluingperms.h
     ngenericgluingperms-impl.h

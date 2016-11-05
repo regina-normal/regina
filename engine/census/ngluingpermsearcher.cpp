@@ -40,7 +40,7 @@ namespace regina {
 
 const char NGluingPermSearcher::dataTag_ = 'g';
 
-NGluingPermSearcher::NGluingPermSearcher(
+NGluingPermSearcher::GluingPermSearcher(
         const FacetPairing<3>* pairing, const FacetPairing<3>::IsoList* autos,
         bool orientableOnly, bool finiteOnly, int whichPurge,
         GluingPerms<3>::Use use, void* useArgs) :
@@ -75,7 +75,7 @@ NGluingPermSearcher::NGluingPermSearcher(
                 order[orderSize++] = face;
 }
 
-NGluingPermSearcher::~NGluingPermSearcher() {
+NGluingPermSearcher::~GluingPermSearcher() {
     delete[] orientation;
     delete[] order;
     if (autosNew) {
@@ -323,7 +323,7 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
+NGluingPermSearcher::GluingPermSearcher(std::istream& in,
         GluingPerms<3>::Use use, void* useArgs) :
         GluingPerms<3>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),

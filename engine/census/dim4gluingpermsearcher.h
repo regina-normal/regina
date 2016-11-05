@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include "census/gluingperms.h"
+#include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
 
 namespace regina {
@@ -92,7 +93,8 @@ REGINA_DEPRECATED typedef GluingPerms<4>::Use UseDim4GluingPerms;
  *
  * \ifacespython Not present.
  */
-class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
+template <>
+class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
     protected:
         static const int edgeLinkNextFacet[10][5];
             /**< Maintains an ordering of the three pentachoron facets
@@ -554,7 +556,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
          * the function \a use which will be called upon each permutation
          * set found.
          */
-        Dim4GluingPermSearcher(const FacetPairing<4>* pairing,
+        GluingPermSearcher(const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
                 GluingPerms<4>::Use use, void* useArgs = 0);
@@ -580,14 +582,14 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
          * @param use as for the main Dim4GluingPermSearcher constructor.
          * @param useArgs as for the main Dim4GluingPermSearcher constructor.
          */
-        Dim4GluingPermSearcher(std::istream& in,
+        GluingPermSearcher(std::istream& in,
             GluingPerms<4>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
          * structures.
          */
-        virtual ~Dim4GluingPermSearcher();
+        virtual ~GluingPermSearcher();
 
         /**
          * Generates all possible gluing permutation sets that satisfy
@@ -718,7 +720,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
          *
          * @return the newly created search manager.
          */
-        static Dim4GluingPermSearcher* bestSearcher(
+        static GluingPermSearcher<4>* bestSearcher(
                 const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
@@ -751,7 +753,7 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
          *
          * @param in the input stream from which to read.
          */
-        static Dim4GluingPermSearcher* readTaggedData(std::istream& in,
+        static GluingPermSearcher<4>* readTaggedData(std::istream& in,
                 GluingPerms<4>::Use use, void* useArgs = 0);
 
     protected:
@@ -1091,6 +1093,15 @@ class REGINA_API Dim4GluingPermSearcher : public GluingPerms<4> {
          */
         void edgeBdryDump(std::ostream& out);
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4GluingPermSearcher, you should
+ * use the full class name GluingPermSearcher<4>.
+ */
+REGINA_DEPRECATED typedef GluingPermSearcher<4> Dim4GluingPermSearcher;
 
 /*@}*/
 

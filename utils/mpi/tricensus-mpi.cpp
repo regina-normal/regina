@@ -63,29 +63,10 @@
 #define HOUR_SEC (60 * MIN_SEC)
 #define DAY_SEC (24 * HOUR_SEC)
 
-// A generic type for accessing gluing permutation search classes:
-template <int dim>
-struct GluingPermSearcher;
-
-template <>
-struct GluingPermSearcher<2> {
-    typedef regina::Dim2GluingPermSearcher type;
-};
-
-template <>
-struct GluingPermSearcher<3> {
-    typedef regina::NGluingPermSearcher type;
-};
-
-template <>
-struct GluingPermSearcher<4> {
-    typedef regina::Dim4GluingPermSearcher type;
-};
-
 // Forward declarations required for the templates below:
 template <int dim>
-typename GluingPermSearcher<dim>::type* bestSearcher(
-    regina::FacetPairing<dim>*, bool, bool, int);
+regina::GluingPermSearcher<dim>* bestSearcher(regina::FacetPairing<dim>*,
+    bool, bool, int);
 
 template <int dim>
 void findAllPerms(regina::FacetPairing<dim>*, bool, bool, int, regina::Packet*);
@@ -101,10 +82,10 @@ void ctrlFarmPartialSearch(const typename regina::GluingPerms<dim>*, void*);
 
 // Differences between censuses of 2, 3 and 4-manifolds:
 template <>
-inline regina::Dim2GluingPermSearcher* bestSearcher<2>(
+inline regina::GluingPermSearcher<2>* bestSearcher<2>(
         regina::FacetPairing<2>* p,
         bool orientableOnly, bool /* finiteOnly */, int /* whichPurge */) {
-    return regina::Dim2GluingPermSearcher::bestSearcher(p, 0 /* autos */,
+    return regina::GluingPermSearcher<2>::bestSearcher(p, 0 /* autos */,
         orientableOnly, ctrlFarmPartialSearch<2>);
 }
 
@@ -112,7 +93,7 @@ template <>
 inline void findAllPerms<2>(regina::FacetPairing<2>* p, bool orientableOnly,
         bool /* finiteOnly */, int /* whichPurge */,
         regina::Packet* dest) {
-    regina::Dim2GluingPermSearcher::findAllPerms(p, 0,
+    regina::GluingPermSearcher<2>::findAllPerms(p, 0,
         orientableOnly, slaveFoundGluingPerms<2>, dest);
 }
 
@@ -122,16 +103,17 @@ inline bool mightBeMinimal<2>(regina::Triangulation<2>* tri) {
 }
 
 template <>
-inline regina::NGluingPermSearcher* bestSearcher<3>(regina::FacetPairing<3>* p,
+inline regina::GluingPermSearcher<3>* bestSearcher<3>(
+        regina::FacetPairing<3>* p,
         bool orientableOnly, bool finiteOnly, int whichPurge) {
-    return regina::NGluingPermSearcher::bestSearcher(p, 0 /* autos */,
+    return regina::GluingPermSearcher<3>::bestSearcher(p, 0 /* autos */,
         orientableOnly, finiteOnly, whichPurge, ctrlFarmPartialSearch<3>);
 }
 
 template <>
 inline void findAllPerms<3>(regina::FacetPairing<3>* p, bool orientableOnly,
         bool finiteOnly, int whichPurge, regina::Packet* dest) {
-    regina::NGluingPermSearcher::findAllPerms(p, 0,
+    regina::GluingPermSearcher<3>::findAllPerms(p, 0,
         orientableOnly, finiteOnly, whichPurge,
         slaveFoundGluingPerms<3>, dest);
 }
@@ -142,17 +124,17 @@ inline bool mightBeMinimal<3>(regina::Triangulation<3>* tri) {
 }
 
 template <>
-inline regina::Dim4GluingPermSearcher* bestSearcher<4>(
+inline regina::GluingPermSearcher<4>* bestSearcher<4>(
         regina::FacetPairing<4>* p,
         bool orientableOnly, bool finiteOnly, int /* whichPurge */) {
-    return regina::Dim4GluingPermSearcher::bestSearcher(p, 0 /* autos */,
+    return regina::GluingPermSearcher<4>::bestSearcher(p, 0 /* autos */,
         orientableOnly, finiteOnly, ctrlFarmPartialSearch<4>);
 }
 
 template <>
 inline void findAllPerms<4>(regina::FacetPairing<4>* p, bool orientableOnly,
         bool finiteOnly, int /* whichPurge */, regina::Packet* dest) {
-    regina::Dim4GluingPermSearcher::findAllPerms(p, 0,
+    regina::GluingPermSearcher<4>::findAllPerms(p, 0,
         orientableOnly, finiteOnly,
         slaveFoundGluingPerms<4>, dest);
 }
@@ -367,14 +349,14 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
     orientability = regina::BoolSet(! argNor, ! argOr);
 
     if (minimalPrimeP2)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
-            regina::NGluingPermSearcher::PURGE_P2_REDUCIBLE;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
+            regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
     else if (minimalHyp)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_HYP;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
     else if (minimal)
-        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL;
+        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL;
     else
         whichPurge = 0;
 
@@ -556,7 +538,7 @@ void ctrlFarmPartialSearch(const typename regina::GluingPerms<dim>* search,
     taskID[1]++;
 
     std::ostringstream searchRep;
-    static_cast<const typename GluingPermSearcher<dim>::type*>(search)->
+    static_cast<const regina::GluingPermSearcher<dim>*>(search)->
         dumpTaggedData(searchRep);
 
     taskID[2] = searchRep.str().length();
@@ -622,7 +604,7 @@ int mainController() {
     if (depth > 0) {
         // Generate the face pairings and prepare subsearches.
         typename regina::FacetPairing<dim>* pairing;
-        typename GluingPermSearcher<dim>::type* searcher;
+        regina::GluingPermSearcher<dim>* searcher;
         while (! (pairingRep = ctrlNextPairing(input)).empty()) {
             taskID[0]++;
             taskID[1] = 0;
@@ -934,10 +916,10 @@ void slaveProcessPartialSearch() {
         dest->setLabel("Triangulations");
     }
 
-    typename GluingPermSearcher<dim>::type* search;
+    regina::GluingPermSearcher<dim>* search;
     {
         std::istringstream s(searchRep);
-        search = GluingPermSearcher<dim>::type::readTaggedData(s,
+        search = regina::GluingPermSearcher<dim>::readTaggedData(s,
             slaveFoundGluingPerms<dim>, dest);
     }
 

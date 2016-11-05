@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include "census/gluingperms.h"
+#include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
 
 namespace regina {
@@ -84,7 +85,8 @@ REGINA_DEPRECATED typedef GluingPerms<2>::Use UseDim2GluingPerms;
  *
  * \ifacespython Not present.
  */
-class REGINA_API Dim2GluingPermSearcher : public GluingPerms<2> {
+template <>
+class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
     public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
@@ -182,7 +184,7 @@ class REGINA_API Dim2GluingPermSearcher : public GluingPerms<2> {
          * the function \a use which will be called upon each permutation
          * set found.
          */
-        Dim2GluingPermSearcher(const FacetPairing<2>* pairing,
+        GluingPermSearcher(const FacetPairing<2>* pairing,
                 const FacetPairing<2>::IsoList* autos,
                 bool orientableOnly, GluingPerms<2>::Use use, void* useArgs = 0);
 
@@ -207,14 +209,14 @@ class REGINA_API Dim2GluingPermSearcher : public GluingPerms<2> {
          * @param use as for the main Dim2GluingPermSearcher constructor.
          * @param useArgs as for the main Dim2GluingPermSearcher constructor.
          */
-        Dim2GluingPermSearcher(std::istream& in,
+        GluingPermSearcher(std::istream& in,
             GluingPerms<2>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
          * structures.
          */
-        virtual ~Dim2GluingPermSearcher();
+        virtual ~GluingPermSearcher();
 
         /**
          * Generates all possible gluing permutation sets that satisfy
@@ -344,7 +346,7 @@ class REGINA_API Dim2GluingPermSearcher : public GluingPerms<2> {
          *
          * @return the newly created search manager.
          */
-        static Dim2GluingPermSearcher* bestSearcher(
+        static GluingPermSearcher<2>* bestSearcher(
                 const FacetPairing<2>* pairing,
                 const FacetPairing<2>::IsoList* autos,
                 bool orientableOnly, GluingPerms<2>::Use use, void* useArgs = 0);
@@ -376,7 +378,7 @@ class REGINA_API Dim2GluingPermSearcher : public GluingPerms<2> {
          *
          * @param in the input stream from which to read.
          */
-        static Dim2GluingPermSearcher* readTaggedData(std::istream& in,
+        static GluingPermSearcher<2>* readTaggedData(std::istream& in,
                 GluingPerms<2>::Use use, void* useArgs = 0);
 
     protected:
@@ -399,6 +401,15 @@ class REGINA_API Dim2GluingPermSearcher : public GluingPerms<2> {
          */
         virtual char dataTag() const;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2GluingPermSearcher, you should
+ * use the full class name GluingPermSearcher<2>.
+ */
+REGINA_DEPRECATED typedef GluingPermSearcher<2> Dim2GluingPermSearcher;
 
 /*@}*/
 

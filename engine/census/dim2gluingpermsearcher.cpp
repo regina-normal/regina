@@ -40,7 +40,7 @@ namespace regina {
 
 const char Dim2GluingPermSearcher::dataTag_ = 'g';
 
-Dim2GluingPermSearcher::Dim2GluingPermSearcher(
+Dim2GluingPermSearcher::GluingPermSearcher(
         const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
         bool orientableOnly, GluingPerms<2>::Use use, void* useArgs) :
         GluingPerms<2>(pairing), autos_(autos), autosNew(autos == 0),
@@ -74,7 +74,7 @@ Dim2GluingPermSearcher::Dim2GluingPermSearcher(
                 order[orderSize++] = edge;
 }
 
-Dim2GluingPermSearcher::~Dim2GluingPermSearcher() {
+Dim2GluingPermSearcher::~GluingPermSearcher() {
     delete[] orientation;
     delete[] order;
     if (autosNew) {
@@ -283,7 +283,7 @@ void Dim2GluingPermSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-Dim2GluingPermSearcher::Dim2GluingPermSearcher(std::istream& in,
+Dim2GluingPermSearcher::GluingPermSearcher(std::istream& in,
         GluingPerms<2>::Use use, void* useArgs) :
         GluingPerms<2>(in), autos_(0), autosNew(false),
         use_(use), useArgs_(useArgs), orientation(0),

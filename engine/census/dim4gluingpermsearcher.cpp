@@ -203,7 +203,7 @@ bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
     return true;
 }
 
-Dim4GluingPermSearcher::Dim4GluingPermSearcher(
+Dim4GluingPermSearcher::GluingPermSearcher(
         const FacetPairing<4>* pairing, const FacetPairing<4>::IsoList* autos,
         bool orientableOnly, bool finiteOnly,
         GluingPerms<4>::Use use, void* useArgs) :
@@ -264,7 +264,7 @@ Dim4GluingPermSearcher::Dim4GluingPermSearcher(
     std::fill(triStateChanged_, triStateChanged_ + (25 * nPent / 2), -1);
 }
 
-Dim4GluingPermSearcher::~Dim4GluingPermSearcher() {
+Dim4GluingPermSearcher::~GluingPermSearcher() {
     delete[] triState_;
     delete[] triStateChanged_;
     delete[] edgeState_;
@@ -629,7 +629,7 @@ void Dim4GluingPermSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-Dim4GluingPermSearcher::Dim4GluingPermSearcher(std::istream& in,
+Dim4GluingPermSearcher::GluingPermSearcher(std::istream& in,
         GluingPerms<4>::Use use, void* useArgs) :
         GluingPerms<4>(in), autos_(0), autosNew_(false),
         use_(use), useArgs_(useArgs), orientation_(0),

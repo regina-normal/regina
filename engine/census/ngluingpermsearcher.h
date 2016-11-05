@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include "census/gluingperms.h"
+#include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing3.h"
 #include "utilities/qitmask.h"
 
@@ -110,7 +111,8 @@ REGINA_DEPRECATED typedef GluingPerms<3>::Use UseGluingPerms;
  * available through the regina namespace.  Therefore there is no need
  * to explicitly access the NGluingPermSearcher through Python.
  */
-class REGINA_API NGluingPermSearcher : public GluingPerms<3> {
+template <>
+class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
     public:
         static const char dataTag_;
             /**< A character used to identify this class when reading
@@ -300,7 +302,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<3> {
          * the function \a use which will be called upon each permutation
          * set found.
          */
-        NGluingPermSearcher(const FacetPairing<3>* pairing,
+        GluingPermSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 GluingPerms<3>::Use use, void* useArgs = 0);
@@ -326,14 +328,14 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<3> {
          * @param use as for the main NGluingPermSearcher constructor.
          * @param useArgs as for the main NGluingPermSearcher constructor.
          */
-        NGluingPermSearcher(std::istream& in,
+        GluingPermSearcher(std::istream& in,
             GluingPerms<3>::Use use, void* useArgs = 0);
 
         /**
          * Destroys this search manager and all supporting data
          * structures.
          */
-        virtual ~NGluingPermSearcher();
+        virtual ~GluingPermSearcher();
 
         /**
          * Generates all possible gluing permutation sets that satisfy
@@ -464,7 +466,8 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<3> {
          *
          * @return the newly created search manager.
          */
-        static NGluingPermSearcher* bestSearcher(const FacetPairing<3>* pairing,
+        static GluingPermSearcher<3>* bestSearcher(
+                const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
                 GluingPerms<3>::Use use, void* useArgs = 0);
@@ -496,7 +499,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<3> {
          *
          * @param in the input stream from which to read.
          */
-        static NGluingPermSearcher* readTaggedData(std::istream& in,
+        static GluingPermSearcher<3>* readTaggedData(std::istream& in,
                 GluingPerms<3>::Use use, void* useArgs = 0);
 
     protected:
@@ -608,7 +611,7 @@ class REGINA_API NGluingPermSearcher : public GluingPerms<3> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NEulerSearcher : public NGluingPermSearcher {
+class REGINA_API NEulerSearcher : public GluingPermSearcher<3> {
     protected:
         static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
@@ -1443,7 +1446,7 @@ class REGINA_API NEulerSearcher : public NGluingPermSearcher {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NCompactSearcher : public NGluingPermSearcher {
+class REGINA_API NCompactSearcher : public GluingPermSearcher<3> {
     protected:
         static const char VLINK_CLOSED;
             /**< Signifies that a vertex link has been closed off (i.e.,
@@ -2593,6 +2596,15 @@ class REGINA_API NHyperbolicMinSearcher : public NEulerSearcher {
          */
         void splitEdgeClasses();
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NGluingPermSearcher, you should use
+ * the full class name GluingPermSearcher<3>.
+ */
+REGINA_DEPRECATED typedef GluingPermSearcher<3> NGluingPermSearcher;
 
 /*@}*/
 
