@@ -312,15 +312,6 @@ class REGINA_API Triangulation<2> :
         virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
-        /**
-         * Turns this triangulation into a clone of the given triangulation.
-         * The tree structure and label of this triangulation are not touched.
-         *
-         * @param from the triangulation from which this triangulation
-         * will be cloned.
-         */
-        void cloneFrom(const Triangulation& from);
-
     private:
         /**
          * Clears any calculated properties and declares them all
@@ -364,8 +355,9 @@ namespace regina {
 inline Triangulation<2>::Triangulation() {
 }
 
-inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) {
-    cloneFrom(cloneMe);
+inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) :
+        TriangulationBase<2>(cloneMe) {
+    // No properties yet to clone.
 }
 
 inline Triangulation<2>::~Triangulation() {
@@ -425,6 +417,10 @@ inline bool Triangulation<2>::isIdeal() const {
 
 inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
     return new Triangulation(*this);
+}
+
+inline void Triangulation<2>::clearAllProperties() {
+    clearBaseProperties();
 }
 
 } // namespace regina

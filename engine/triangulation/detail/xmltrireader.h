@@ -41,6 +41,7 @@
 #endif
 
 #include "regina-core.h"
+#include "algebra/nxmlalgebrareader.h"
 #include "packet/xmlpacketreader.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/stringutils.h"
@@ -199,6 +200,87 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
+
+    protected:
+        /**
+         * Internal class that reads an abelian group property.
+         */
+        class AbelianGroupPropertyReader : public XMLElementReader {
+            public:
+                typedef Property<NAbelianGroup, StoreManagedPtr> PropType;
+                    /**< The type of the property currently being read. */
+
+            private:
+                PropType& prop_;
+                    /**< The property currently being read. */
+
+            public:
+                /**
+                 * Creates a new reader that stores its results in the
+                 * given triangulation property.
+                 *
+                 * @param prop a reference to the triangulation property
+                 * in which the data that is read should be stored.
+                 */
+                AbelianGroupPropertyReader(PropType& prop);
+
+                virtual XMLElementReader* startSubElement(
+                    const std::string& subTagName,
+                    const regina::xml::XMLPropertyDict&);
+
+                virtual void endSubElement(const std::string& subTagName,
+                    XMLElementReader* subReader);
+        };
+
+        /**
+         * Internal class that reads a group presentation property.
+         */
+        class GroupPresentationPropertyReader : public XMLElementReader {
+            public:
+                typedef Property<NGroupPresentation, StoreManagedPtr> PropType;
+                    /**< The type of the property currently being read. */
+
+            private:
+                PropType& prop_;
+                    /**< The property currently being read. */
+
+            public:
+                /**
+                 * Creates a new reader that stores its results in the
+                 * given triangulation property.
+                 *
+                 * @param prop a reference to the triangulation property
+                 * in which the data that is read should be stored.
+                 */
+                GroupPresentationPropertyReader(PropType& prop);
+
+                virtual XMLElementReader* startSubElement(
+                    const std::string& subTagName,
+                    const regina::xml::XMLPropertyDict&);
+
+                virtual void endSubElement(const std::string& subTagName,
+                    XMLElementReader* subReader);
+        };
+
+        /**
+         * Returns a reader for the generic triangulation property with the
+         * given subtag name.
+         *
+         * If \a subTagName refers to a property that is managed by the
+         * generic base class TriangulationBase<dim>, then this routine
+         * returns an appropriate element reader.  Otherwise this routine
+         * returns \c null.
+         *
+         * @param subTagName the name of the XML subelement opening tag.
+         * @param subTagProps the properties associated with the subelement
+         * opening tag.
+         * @return a newly created element reader if the corresponding
+         * triangulation property is managed by TriangulationBase<dim>, or
+         * \c null otherwise.
+         */
+        XMLElementReader* propertyReader(
+                const std::string& subTagName,
+                const regina::xml::XMLPropertyDict& subTagProps);
 };
 
 /*@}*/
@@ -365,6 +447,76 @@ XMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
 template <int dim>
 inline void XMLTriangulationReaderBase<dim>::endContentSubElement(
         const std::string&, XMLElementReader*) {
+}
+
+// Inline functions for XMLTriangulationReaderBase::AbelianGroupPropertyReader
+
+template <int dim>
+inline XMLTriangulationReaderBase<dim>::AbelianGroupPropertyReader::
+        AbelianGroupPropertyReader(PropType& prop) : prop_(prop) {
+}
+
+template <int dim>
+inline XMLElementReader* XMLTriangulationReaderBase<dim>::
+        AbelianGroupPropertyReader::startSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict&) {
+    if (subTagName == "abeliangroup")
+        if (! prop_.known())
+            return new NXMLAbelianGroupReader();
+    return new XMLElementReader();
+}
+
+template <int dim>
+inline void XMLTriangulationReaderBase<dim>::AbelianGroupPropertyReader::
+        endSubElement(const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (subTagName == "abeliangroup") {
+        NAbelianGroup* ans = dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
+            group();
+        if (ans)
+            prop_ = ans;
+    }
+}
+
+// Inline functions for
+// XMLTriangulationReaderBase::GroupPresentationPropertyReader
+
+template <int dim>
+inline XMLTriangulationReaderBase<dim>::GroupPresentationPropertyReader::
+        GroupPresentationPropertyReader(PropType& prop) : prop_(prop) {
+}
+
+template <int dim>
+inline XMLElementReader* XMLTriangulationReaderBase<dim>::
+        GroupPresentationPropertyReader::startSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict&) {
+    if (subTagName == "group")
+        if (! prop_.known())
+            return new NXMLGroupPresentationReader();
+    return new XMLElementReader();
+}
+
+template <int dim>
+inline void XMLTriangulationReaderBase<dim>::GroupPresentationPropertyReader::
+        endSubElement(const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (subTagName == "group") {
+        NGroupPresentation* ans = dynamic_cast<
+            NXMLGroupPresentationReader*>(subReader)->group();
+        if (ans)
+            prop_ = ans;
+    }
+}
+
+template <int dim>
+inline XMLElementReader* XMLTriangulationReaderBase<dim>::propertyReader(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& subTagProps) {
+    if (subTagName == "H1")
+        return new AbelianGroupPropertyReader(tri_->H1_);
+    return 0;
 }
 
 } } // namespace regina::detail

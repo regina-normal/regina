@@ -47,13 +47,13 @@ Triangulation<3>::Triangulation(const std::string& description) {
     Triangulation<3>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        cloneFrom(*attempt);
+        swapContents(*attempt);
         setLabel(description);
     } else if ((attempt = rehydrate(description))) {
-        cloneFrom(*attempt);
+        swapContents(*attempt);
         setLabel(description);
     } else if ((attempt = fromSnapPea(description))) {
-        cloneFrom(*attempt);
+        swapContents(*attempt);
         setLabel(attempt->label());
     }
 
@@ -61,11 +61,9 @@ Triangulation<3>::Triangulation(const std::string& description) {
 }
 
 void Triangulation<3>::clearAllProperties() {
-    if (calculatedSkeleton())
-        deleteSkeleton();
+    clearBaseProperties();
 
     fundamentalGroup_.clear();
-    H1_.clear();
     H1Rel_.clear();
     H1Bdry_.clear();
     H2_.clear();
@@ -192,15 +190,12 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
     }
     out << "  </tetrahedra>\n";
 
+    writeXMLBaseProperties(out);
+
     if (fundamentalGroup_.known()) {
         out << "  <fundgroup>\n";
         fundamentalGroup_.value()->writeXMLData(out);
         out << "  </fundgroup>\n";
-    }
-    if (H1_.known()) {
-        out << "  <H1>";
-        H1_.value()->writeXMLData(out);
-        out << "</H1>\n";
     }
     if (H1Rel_.known()) {
         out << "  <H1Rel>";
@@ -369,44 +364,11 @@ long Triangulation<3>::eulerCharManifold() const {
     return ans;
 }
 
-void Triangulation<3>::cloneFrom(const Triangulation<3>& X) {
-    ChangeEventSpan span(this);
-
-    removeAllTetrahedra();
-
-    TetrahedronIterator it;
-    for (it = X.simplices_.begin(); it != X.simplices_.end(); it++)
-        newTetrahedron((*it)->description());
-
-    // Make the gluings.
-    long tetPos, adjPos;
-    Tetrahedron<3>* tet;
-    Tetrahedron<3>* adjTet;
-    Perm<4> adjPerm;
-    int face;
-    tetPos = 0;
-    for (it = X.simplices_.begin(); it != X.simplices_.end(); it++) {
-        tet = *it;
-        for (face=0; face<4; face++) {
-            adjTet = tet->adjacentTetrahedron(face);
-            if (adjTet) {
-                adjPos = adjTet->index();
-                adjPerm = tet->adjacentGluing(face);
-                if (adjPos > tetPos ||
-                        (adjPos == tetPos && adjPerm[face] > face)) {
-                    simplices_[tetPos]->join(face,
-                        simplices_[adjPos], adjPerm);
-                }
-            }
-        }
-        tetPos++;
-    }
-
-    // Properties:
+Triangulation<3>::Triangulation(const Triangulation<3>& X) :
+        TriangulationBase<3>(X) {
+    // Clone properties:
     if (X.fundamentalGroup_.known())
         fundamentalGroup_= new NGroupPresentation(*X.fundamentalGroup_.value());
-    if (X.H1_.known())
-        H1_ = new NAbelianGroup(*(X.H1_.value()));
     if (X.H1Rel_.known())
         H1Rel_ = new NAbelianGroup(*(X.H1Rel_.value()));
     if (X.H1Bdry_.known())

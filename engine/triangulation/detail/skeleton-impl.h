@@ -535,17 +535,23 @@ void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
 }
 
 template <int dim>
-void TriangulationBase<dim>::deleteSkeleton() {
-    for (auto c : components_)
-        delete c;
-    for (auto b : boundaryComponents_)
-        delete b;
-    components_.clear();
-    boundaryComponents_.clear();
+void TriangulationBase<dim>::clearBaseProperties() {
+    // Delete the skeleton.
+    if (calculatedSkeleton_) {
+        for (auto c : components_)
+            delete c;
+        for (auto b : boundaryComponents_)
+            delete b;
+        components_.clear();
+        boundaryComponents_.clear();
 
-    FaceListSuite<dim, dim - 1>::deleteFaces();
+        FaceListSuite<dim, dim - 1>::deleteFaces();
 
-    calculatedSkeleton_ = false;
+        calculatedSkeleton_ = false;
+    }
+
+    // Clear properties.
+    H1_.clear();
 }
 
 } } // namespace regina::detail

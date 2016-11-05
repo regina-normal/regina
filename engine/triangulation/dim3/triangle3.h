@@ -115,35 +115,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
 
     public:
         /**
-         * Determines whether this triangle represents a dual edge in the
-         * maximal forest that has been chosen for the dual 1-skeleton of the
-         * triangulation.
-         *
-         * When the skeletal structure of a triangulation is first computed,
-         * a maximal forest in the dual 1-skeleton of the triangulation is
-         * also constructed.  Each dual edge in this maximal forest
-         * represents a triangle of the (primal) triangulation.
-         *
-         * This maximal forest will remain fixed until the triangulation
-         * changes, at which point it will be recomputed (as will all
-         * other skeletal objects, such as connected components and so on).
-         * There is no guarantee that, when it is recomputed, the
-         * maximal forest will use the same dual edges as before.
-         *
-         * This routine identifies whether this triangle belongs to the
-         * dual forest.  In this sense it performs a similar role to
-         * Simplex::facetInMaximalForest(), but this routine is typically
-         * easier to use.
-         *
-         * If the skeleton has already been computed, then this routine is
-         * very fast (since it just returns a precomputed answer).
-         *
-         * @return \c true if and only if this triangle represents a
-         * dual edge in the maximal forest.
-         */
-        bool inMaximalForest() const;
-
-        /**
          * Returns a description of the triangle type.
          * This will be one of the eight shapes described by the Type
          * enumeration, indicating how the edges and vertices of the
@@ -246,11 +217,6 @@ REGINA_DEPRECATED typedef Face<3, 2> NTriangle;
 
 inline Face<3, 2>::Face(Component<3>* component) :
         FaceBase<3, 2>(component), type_(UNKNOWN_TYPE) {
-}
-
-inline bool Face<3, 2>::inMaximalForest() const {
-    return front().tetrahedron()->facetInMaximalForest(
-        front().triangle());
 }
 
 inline int Face<3, 2>::subtype() {

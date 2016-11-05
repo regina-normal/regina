@@ -1245,6 +1245,13 @@
 		055114F11DCD618100EC753C /* dim2gluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114EF1DCD618100EC753C /* dim2gluingpermsearcher.h */; };
 		055114F21DCD618100EC753C /* dim4gluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F01DCD618100EC753C /* dim4gluingpermsearcher.h */; };
 		055114F41DCD61F700EC753C /* ngluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F31DCD61F700EC753C /* ngluingpermsearcher.h */; };
+		055114FC1DCDF63000EC753C /* boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F51DCDF63000EC753C /* boundarycomponent.h */; };
+		055114FD1DCDF63000EC753C /* component.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F61DCDF63000EC753C /* component.h */; };
+		055114FE1DCDF63000EC753C /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F71DCDF63000EC753C /* face.h */; };
+		055114FF1DCDF63000EC753C /* facetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F81DCDF63000EC753C /* facetpairing.h */; };
+		055115001DCDF63000EC753C /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F91DCDF63000EC753C /* isomorphism.h */; };
+		055115011DCDF63000EC753C /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FA1DCDF63000EC753C /* simplex.h */; };
+		055115021DCDF63000EC753C /* triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FB1DCDF63000EC753C /* triangulation.h */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -3219,6 +3226,13 @@
 		055114EF1DCD618100EC753C /* dim2gluingpermsearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2gluingpermsearcher.h; sourceTree = "<group>"; };
 		055114F01DCD618100EC753C /* dim4gluingpermsearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4gluingpermsearcher.h; sourceTree = "<group>"; };
 		055114F31DCD61F700EC753C /* ngluingpermsearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ngluingpermsearcher.h; sourceTree = "<group>"; };
+		055114F51DCDF63000EC753C /* boundarycomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
+		055114F61DCDF63000EC753C /* component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
+		055114F71DCDF63000EC753C /* face.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
+		055114F81DCDF63000EC753C /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
+		055114F91DCDF63000EC753C /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
+		055114FA1DCDF63000EC753C /* simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
+		055114FB1DCDF63000EC753C /* triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
@@ -5871,8 +5885,15 @@
 		054C6A831DCC212F005373F0 /* generic */ = {
 			isa = PBXGroup;
 			children = (
+				055114F51DCDF63000EC753C /* boundarycomponent.h */,
 				054C6A841DCC2148005373F0 /* CMakeLists.txt */,
+				055114F61DCDF63000EC753C /* component.h */,
 				054C6A851DCC2148005373F0 /* example.h */,
+				055114F71DCDF63000EC753C /* face.h */,
+				055114F81DCDF63000EC753C /* facetpairing.h */,
+				055114F91DCDF63000EC753C /* isomorphism.h */,
+				055114FA1DCDF63000EC753C /* simplex.h */,
+				055114FB1DCDF63000EC753C /* triangulation.h */,
 			);
 			path = generic;
 			sourceTree = "<group>";
@@ -6753,6 +6774,7 @@
 				050C649B1DA1B61000C9420F /* nscript.h in Headers */,
 				050C64C11DA32E7D00C9420F /* nhilbertdual-impl.h in Headers */,
 				050C64771DA1035400C9420F /* nanglestructure.h in Headers */,
+				055115001DCDF63000EC753C /* isomorphism.h in Headers */,
 				055114E11DCC85F200EC753C /* xmltrireader3.h in Headers */,
 				052F9F8D180600FB00FAE4DF /* kernel_prototypes.h in Headers */,
 				052FA08D180600FB00FAE4DF /* boolset.h in Headers */,
@@ -6764,10 +6786,13 @@
 				052FA038180600FB00FAE4DF /* nsvectoranstandard.h in Headers */,
 				052FA013180600FB00FAE4DF /* nsnappedball.h in Headers */,
 				053CAB131DA4A27500A92F98 /* nrational.h in Headers */,
+				055114FE1DCDF63000EC753C /* face.h in Headers */,
 				052F9F41180600FB00FAE4DF /* nmatrixint.h in Headers */,
 				052FA08F180600FB00FAE4DF /* markedvector.h in Headers */,
 				05F0A04A1DBF0B5E00117BFC /* tetrahedron3.h in Headers */,
 				05A73C7D19B2EDFC0099C617 /* xmlelementreader.h in Headers */,
+				055115021DCDF63000EC753C /* triangulation.h in Headers */,
+				055115011DCDF63000EC753C /* simplex.h in Headers */,
 				0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */,
 				052F9EC9180600FB00FAE4DF /* hilbertdual-impl.h in Headers */,
 				052F9FE5180600FB00FAE4DF /* nsignature.h in Headers */,
@@ -6821,6 +6846,7 @@
 				054C6A7F1DCC20DA005373F0 /* strings.h in Headers */,
 				052F9F01180600FB00FAE4DF /* nfileinfo.h in Headers */,
 				0583656518DB8876008B08D9 /* real_type.h in Headers */,
+				055114FF1DCDF63000EC753C /* facetpairing.h in Headers */,
 				052F9F31180600FB00FAE4DF /* nsimplesurfacebundle.h in Headers */,
 				05F09FBF1DBEF01800117BFC /* dim2.h in Headers */,
 				05431F2F1C40F2DB009BC072 /* nperm2.h in Headers */,
@@ -6952,6 +6978,7 @@
 				053CAB251DA6F9FE00A92F98 /* nperm-impl.h in Headers */,
 				0591E7DF1C4F750200793A9C /* hsvectorstandard.h in Headers */,
 				0541AF501B8BE32E002E166B /* output.h in Headers */,
+				055114FC1DCDF63000EC753C /* boundarycomponent.h in Headers */,
 				05431F2D1C40F2DB009BC072 /* perm.h in Headers */,
 				052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
@@ -7022,6 +7049,7 @@
 				052FA09A180600FB00FAE4DF /* osutils.h in Headers */,
 				05F0A0061DBF078800117BFC /* tetrahedron4.h in Headers */,
 				052F9F55180600FB00FAE4DF /* packet.h in Headers */,
+				055114FD1DCDF63000EC753C /* component.h in Headers */,
 				052F9EBF180600FB00FAE4DF /* engine.h in Headers */,
 				055114C81DCC45FD00EC753C /* example4.h in Headers */,
 				052F9F22180600FB00FAE4DF /* ngraphpair.h in Headers */,

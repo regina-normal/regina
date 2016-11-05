@@ -37,90 +37,17 @@
 
 namespace regina {
 
-/**
- * A unique namespace containing various specific-task packet readers.
- */
-namespace {
-    /**
-     * Reads an abelian group property.
-     */
-    class NAbelianGroupPropertyReader : public XMLElementReader {
-        public:
-            typedef Property<NAbelianGroup, StoreManagedPtr> PropType;
-
-        private:
-            PropType& prop_;
-
-        public:
-            NAbelianGroupPropertyReader(PropType& prop) : prop_(prop) {
-            }
-
-            virtual XMLElementReader* startSubElement(
-                    const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "abeliangroup")
-                    if (! prop_.known())
-                        return new NXMLAbelianGroupReader();
-                return new XMLElementReader();
-            }
-
-            virtual void endSubElement(const std::string& subTagName,
-                    XMLElementReader* subReader) {
-                if (subTagName == "abeliangroup") {
-                    NAbelianGroup* ans =
-                        dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
-                        group();
-                    if (ans)
-                        prop_ = ans;
-                }
-            }
-    };
-
-    /**
-     * Reads a group presentation property.
-     */
-    class NGroupPresentationPropertyReader : public XMLElementReader {
-        public:
-            typedef Property<NGroupPresentation, StoreManagedPtr> PropType;
-
-        private:
-            PropType& prop_;
-
-        public:
-            NGroupPresentationPropertyReader(PropType& prop) : prop_(prop) {
-            }
-
-            virtual XMLElementReader* startSubElement(
-                    const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "group")
-                    if (! prop_.known())
-                        return new NXMLGroupPresentationReader();
-                return new XMLElementReader();
-            }
-
-            virtual void endSubElement(const std::string& subTagName,
-                    XMLElementReader* subReader) {
-                if (subTagName == "group") {
-                    NGroupPresentation* ans =
-                        dynamic_cast<NXMLGroupPresentationReader*>(subReader)->
-                        group();
-                    if (ans)
-                        prop_ = ans;
-                }
-            }
-    };
-}
-
 XMLElementReader* XMLTriangulationReader<4>::startPropertySubElement(
         const std::string& subTagName,
-        const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "H1")
-        return new NAbelianGroupPropertyReader(tri_->H1_);
-    else if (subTagName == "H2")
-        return new NAbelianGroupPropertyReader(tri_->H2_);
+        const regina::xml::XMLPropertyDict& props) {
+    XMLElementReader* base = propertyReader(subTagName, props);
+    if (base)
+        return base;
+
+    if (subTagName == "H2")
+        return new AbelianGroupPropertyReader(tri_->H2_);
     else if (subTagName == "fundgroup")
-        return new NGroupPresentationPropertyReader(tri_->fundGroup_);
+        return new GroupPresentationPropertyReader(tri_->fundGroup_);
     return new XMLElementReader();
 }
 

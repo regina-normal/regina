@@ -391,6 +391,43 @@ class FaceStorage {
          */
         const FaceEmbedding<dim, dim - codim>& back() const;
 
+#ifdef __DOXYGEN
+        // This is purely for the benefit of the API documentation.
+        // It is commented out of the real build because the codimension-1 case
+        // (the only case in which this routine exists) is specialised below.
+        /**
+         * Determines whether a codimension-1-face represents a dual edge in
+         * the maximal forest that has been chosen for the dual 1-skeleton of
+         * the triangulation.
+         *
+         * This routine is only available for faces of codimension 1; that is,
+         * (<i>dim</i>-1)-faces of a <i>dim</i>-dimensional triangulation.
+         *
+         * When the skeletal structure of a triangulation is first computed,
+         * a maximal forest in the dual 1-skeleton of the triangulation is
+         * also constructed.  Each dual edge in this maximal forest
+         * represents a (<i>dim</i>-1)-face of the (primal) triangulation.
+         *
+         * This maximal forest will remain fixed until the triangulation
+         * changes, at which point it will be recomputed (as will all
+         * other skeletal objects, such as connected components and so on).
+         * There is no guarantee that, when it is recomputed, the
+         * maximal forest will use the same dual edges as before.
+         *
+         * This routine identifies whether this (<i>dim</i>-1)-face belongs to
+         * the dual forest.  In this sense it performs a similar role to
+         * Simplex::facetInMaximalForest(), but this routine is typically
+         * easier to use.
+         *
+         * If the skeleton has already been computed, then this routine is
+         * very fast (since it just returns a precomputed answer).
+         *
+         * @return \c true if and only if this (<i>dim</i>-1)-face represents
+         * a dual edge in the maximal forest.
+         */
+        bool inMaximalForest() const;
+#endif
+
     protected:
         /**
          * Internal routine to help build the skeleton of a triangulation.
@@ -445,6 +482,8 @@ class FaceStorage<dim, 1> {
 
         const FaceEmbedding<dim, dim-1>& front() const;
         const FaceEmbedding<dim, dim-1>& back() const;
+
+        bool inMaximalForest() const;
 
     protected:
         void push_back(const FaceEmbedding<dim, dim-1>& emb);
@@ -1110,7 +1149,7 @@ inline void FaceStorage<dim, codim>::push_back(
     embeddings_.push_back(emb);
 }
 
-// We hid the specialisation FaceStorage<dim, 1> from doxygen, so hide
+// We hid the specialisations FaceStorage<dim, {1,2}> from doxygen, so hide
 // its implementation as well.
 #ifndef __DOXYGEN
 template <int dim>
@@ -1121,7 +1160,11 @@ template <int dim>
 inline size_t FaceStorage<dim, 1>::degree() const {
     return nEmb_;
 }
-#endif // ! __DOXYGEN
+
+template <int dim>
+inline bool FaceStorage<dim, 1>::inMaximalForest() const {
+    return embeddings_->simplex()->facetInMaximalForest(embeddings_->face());
+}
 
 template <int dim>
 inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::
@@ -1188,9 +1231,6 @@ inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::back() const {
     return embeddings_.back();
 }
 
-// We hid the specialisation FaceStorage<dim, 2> from doxygen, so hide
-// its implementation as well.
-#ifndef __DOXYGEN
 template <int dim>
 inline void FaceStorage<dim, 2>::push_front(
         const FaceEmbedding<dim, dim-2>& emb) {

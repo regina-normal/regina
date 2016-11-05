@@ -85,6 +85,15 @@ class StoreValue {
          */
         void clear() {
         }
+
+        /**
+         * Swaps this with the given value.
+         *
+         * @param other the value to swap with this.
+         */
+        void swap(StoreValue<T>& other) {
+            std::swap(value_, other.value_);
+        }
 };
 
 /**
@@ -126,6 +135,15 @@ class StoreConstPtr {
          */
         void clear() {
             value_ = 0;
+        }
+
+        /**
+         * Swaps this with the given value.
+         *
+         * @param other the value to swap with this.
+         */
+        void swap(StoreConstPtr<T>& other) {
+            std::swap(value_, other.value_);
         }
 };
 
@@ -185,34 +203,15 @@ class StoreManagedPtr {
             if (value_)
                 delete value_;
         }
-};
-
-/**
- * A base class that provides routines shared by all properties,
- * regardless of their individual Property template parameters.
- *
- * \ifacespython Not present.
- */
-class REGINA_API PropertyBase {
-    public:
-        /**
-         * Virtual destructor.
-         */
-        virtual ~PropertyBase() {
-        }
 
         /**
-         * Returns whether or not this property is currently marked as
-         * known.
+         * Swaps this with the given value.
          *
-         * @return whether this property is marked as known.
+         * @param other the value to swap with this.
          */
-        virtual bool known() const = 0;
-
-        /**
-         * Marks this property as unknown.
-         */
-        virtual void clear() = 0;
+        void swap(StoreManagedPtr<T>& other) {
+            std::swap(value_, other.value_);
+        }
 };
 
 /**
@@ -231,10 +230,7 @@ class REGINA_API PropertyBase {
  * \ifacespython Not present.
  */
 template <typename T, template <typename Stored> class Storage = StoreValue>
-class Property :
-        public PropertyBase,
-        protected Storage<T>,
-        public boost::noncopyable {
+class Property : protected Storage<T>, public boost::noncopyable {
     public:
         typedef typename Storage<T>::InitType InitType;
             /**< The type by which new values for the underlying
@@ -255,6 +251,16 @@ class Property :
         }
 
         /**
+         * Returns whether or not this property is currently marked as
+         * known.
+         *
+         * @return whether this property is marked as known.
+         */
+        bool known() const {
+            return known_;
+        }
+
+        /**
          * Returns the current value of this property.  If this property
          * is marked as unknown then the results are undefined.
          *
@@ -264,6 +270,14 @@ class Property :
          */
         QueryType value() const {
             return Storage<T>::value_;
+        }
+
+        /**
+         * Marks this property as unknown.
+         */
+        void clear() {
+            Storage<T>::clear();
+            known_ = false;
         }
 
         /**
@@ -306,31 +320,18 @@ class Property :
             return *this;
         }
 
-        // PropertyBase overrides:
-
-        bool known() const {
-            return known_;
-        }
-
-        void clear() {
-            Storage<T>::clear();
-            known_ = false;
-        }
-};
-
-/*
-template <template <class ListElement> class ListType>
-class PropertyList : public ListType<PropertyBase*> {
-    private:
-        typedef typename ListType<PropertyBase*>::iterator Iterator;
-
-    public:
-        void clearAllProperties() {
-            for (Iterator it = begin(); it != end(); it++)
-                (*it).clear();
+        /**
+         * Swaps this with the given property.  Both the known status
+         * and the values (if known) will swapped in the most efficient
+         * manner that the compiler is aware of.
+         *
+         * @param other the property to swap with this.
+         */
+        void swap(Property<T, Storage>& other) {
+            std::swap(known_, other.known_);
+            Storage<T>::swap(other);
         }
 };
-*/
 
 /*@}*/
 

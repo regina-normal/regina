@@ -46,6 +46,6 @@ template REGINA_API size_t TriangulationBase<12>::isoSigComponentSize(
     const std::string&);
 
 template REGINA_API void TriangulationBase<12>::calculateSkeleton();
-template REGINA_API void TriangulationBase<12>::deleteSkeleton();
+template REGINA_API void TriangulationBase<12>::clearBaseProperties();
 
 } }

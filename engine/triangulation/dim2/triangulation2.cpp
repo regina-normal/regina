@@ -43,7 +43,7 @@ Triangulation<2>::Triangulation(const std::string& description) {
     Triangulation<2>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        cloneFrom(*attempt);
+        swapContents(*attempt);
         setLabel(description);
     }
 
@@ -157,48 +157,8 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
         out << "</triangle>\n";
     }
     out << "  </triangles>\n";
-}
 
-void Triangulation<2>::cloneFrom(const Triangulation<2>& X) {
-    ChangeEventSpan span(this);
-
-    removeAllTriangles();
-
-    TriangleIterator it;
-    for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it)
-        newTriangle((*it)->description());
-
-    // Make the gluings.
-    long triPos, adjPos;
-    Triangle<2>* tri;
-    Triangle<2>* adjTri;
-    Perm<3> adjPerm;
-    int edge;
-    triPos = 0;
-    for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it) {
-        tri = *it;
-        for (edge = 0; edge < 3; ++edge) {
-            adjTri = tri->adjacentTriangle(edge);
-            if (adjTri) {
-                adjPos = adjTri->index();
-                adjPerm = tri->adjacentGluing(edge);
-                if (adjPos > triPos ||
-                        (adjPos == triPos && adjPerm[edge] > edge)) {
-                    simplices_[triPos]->join(edge,
-                        simplices_[adjPos], adjPerm);
-                }
-            }
-        }
-        ++triPos;
-    }
-
-    // Properties:
-    // None yet for 2-manifold triangulations.
-}
-
-void Triangulation<2>::clearAllProperties() {
-    if (calculatedSkeleton())
-        deleteSkeleton();
+    writeXMLBaseProperties(out);
 }
 
 } // namespace regina

@@ -68,36 +68,6 @@ class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
         public Output<Face<2, 1>> {
     public:
         /**
-         * Determines whether this edge represents a dual edge in the
-         * maximal forest that has been chosen for the dual 1-skeleton of the
-         * triangulation.
-         *
-         * When the skeletal structure of a triangulation is first computed,
-         * a maximal forest in the dual 1-skeleton of the triangulation is
-         * also constructed.  Each dual edge in this maximal forest
-         * represents a (transverse) edge in the primal skeleton of the
-         * triangulation.
-         *
-         * This maximal forest will remain fixed until the triangulation
-         * changes, at which point it will be recomputed (as will all
-         * other skeletal objects, such as connected components and so on).
-         * There is no guarantee that, when it is recomputed, the
-         * maximal forest will use the same dual edges as before.
-         *
-         * This routine identifies whether this edge corresponds to a
-         * member of this dual forest.  In this sense it performs a similar
-         * role to Simplex::facetInMaximalForest(), but this routine is
-         * typically easier to use.
-         *
-         * If the skeleton has already been computed, then this routine is
-         * very fast (since it just returns a precomputed answer).
-         *
-         * @return \c true if and only if this edge represents a
-         * dual edge in the maximal forest.
-         */
-        bool inMaximalForest() const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -155,10 +125,6 @@ REGINA_DEPRECATED typedef Face<2, 1> Dim2Edge;
 
 inline Face<2, 1>::Face(Component<2>* component) :
         detail::FaceBase<2, 1>(component) {
-}
-
-inline bool Face<2, 1>::inMaximalForest() const {
-    return front().triangle()->facetInMaximalForest(front().edge());
 }
 
 inline void Face<2, 1>::writeTextShort(std::ostream& out) const {

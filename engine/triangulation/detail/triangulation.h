@@ -90,6 +90,8 @@ namespace regina {
  */
 namespace detail {
 
+template <int dim> class XMLTriangulationReaderBase;
+
 /**
  * \addtogroup detail Implementation details
  * Implementation details that end users should not need to reference directly.
@@ -534,6 +536,9 @@ class TriangulationBase :
          * that belong to \a other will be moved to this triangulation.
          *
          * Any pointers or references to Simplex<dim> objects will remain valid.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this triangulation.
          *
          * @param other the triangulation whose contents should be
          * swapped with this.
@@ -1540,27 +1545,36 @@ class TriangulationBase :
         void calculateSkeleton();
 
         /**
-         * Deallocates all skeletal objects that are managed by this
-         * triangulation, and empties all corresponding internal lists.
-         *
-         * The next time a user queries some skeletal property, the
-         * skeleton will be recalculated.
-         *
-         * Triangulation<dim> subclasses should reimplement this if they
-         * track additional skeletal data, but they \e must call this
-         * parent implementation.
+         * Clears all properties that are managed by this base class.
+         * This includes deleting all skeletal objects and emptying the
+         * corresponding internal lists, as well as clearing other cached
+         * properties and deallocating the corresponding memory where required.
          *
          * Note that TriangulationBase never calls this routine itself.
-         * Typically deleteSkeleton() is only ever called by
+         * Typically clearBaseProperties() is only ever called by
          * Triangulation<dim>::clearAllProperties, which in turn is
          * called by the Triangulation<dim> destructor.
          *
-         * \warning Any call to deleteSkeleton() must first cast down to
+         * \warning Any call to clearBaseProperties() must first cast down to
          * Triangulation<dim>.  You should never directly call this
          * parent implementation (unless of course you are reimplementing
-         * deleteSkeleton() in a Triangulation<dim> subclass).
+         * clearBaseProperties() in a Triangulation<dim> subclass).
          */
-        void deleteSkeleton();
+        void clearBaseProperties();
+
+        /**
+         * Writes a chunk of XML containing properties of this triangulation.
+         * This routine covers those properties that are managed by this base
+         * class TriangulationBase and that have already been computed for this
+         * triangulation.
+         *
+         * This routine is typically called from within
+         * Triangulation<dim>::writeXMLPacketData().  The XML elements
+         * that it writes are child elements of the \c packet element.
+         *
+         * @param out the output stream to which the XML should be written.
+         */
+        void writeXMLBaseProperties(std::ostream& out) const;
 
     private:
         /**
@@ -1745,6 +1759,7 @@ class TriangulationBase :
     template <int, int, int> friend struct FaceCalculator;
     template <int, int> friend struct BoundaryComponentCalculator;
     template <int, int> friend class WeakFaceList;
+    friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
 
 /*@}*/
@@ -1833,6 +1848,10 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) :
                 (*me)->adj_[f] = 0;
         }
     }
+
+    // Clone properties:
+    if (copy.H1_.known())
+        H1_ = new NAbelianGroup(*(copy.H1_.value()));
 }
 
 template <int dim>
@@ -1922,6 +1941,9 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
 
 template <int dim>
 void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
+    if (&other == this)
+        return;
+
     typename Triangulation<dim>::ChangeEventSpan span1(
         static_cast<Triangulation<dim>*>(this));
     typename Triangulation<dim>::ChangeEventSpan span2(&other);
@@ -2689,6 +2711,15 @@ const NAbelianGroup& TriangulationBase<dim>::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addGroup(pres);
     return *(H1_ = ans);
+}
+
+template <int dim>
+void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
+    if (H1_.known()) {
+        out << "  <H1>";
+        H1_.value()->writeXMLData(out);
+        out << "</H1>\n";
+    }
 }
 
 } } // namespace regina::detail

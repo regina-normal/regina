@@ -298,7 +298,7 @@ namespace {
     bool simplifyFound(const Triangulation<3>& alt,
             Triangulation<3>& original, size_t minTet) {
         if (alt.size() < minTet) {
-            // TODO: Make t.cloneFrom(alt) public.
+            // TODO: Use swapContents() or something similar.
             Packet::ChangeEventSpan span(&original);
             original.removeAllTetrahedra();
             original.insertTriangulation(alt);

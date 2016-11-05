@@ -36,85 +36,13 @@
 
 namespace regina {
 
-/**
- * A unique namespace containing various specific-task packet readers.
- */
-namespace {
-    /**
-     * Reads an abelian group property.
-     */
-    class NAbelianGroupPropertyReader : public XMLElementReader {
-        public:
-            typedef Property<NAbelianGroup, StoreManagedPtr> PropType;
-
-        private:
-            PropType& prop;
-
-        public:
-            NAbelianGroupPropertyReader(PropType& newProp) : prop(newProp) {
-            }
-
-            virtual XMLElementReader* startSubElement(
-                    const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "abeliangroup")
-                    if (! prop.known())
-                        return new NXMLAbelianGroupReader();
-                return new XMLElementReader();
-            }
-
-            virtual void endSubElement(const std::string& subTagName,
-                    XMLElementReader* subReader) {
-                if (subTagName == "abeliangroup") {
-                    NAbelianGroup* ans =
-                        dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
-                        group();
-                    if (ans)
-                        prop = ans;
-                }
-            }
-    };
-
-    /**
-     * Reads a group presentation property.
-     */
-    class NGroupPresentationPropertyReader : public XMLElementReader {
-        public:
-            typedef Property<NGroupPresentation, StoreManagedPtr> PropType;
-
-        private:
-            PropType& prop;
-
-        public:
-            NGroupPresentationPropertyReader(PropType& newProp) :
-                    prop(newProp) {
-            }
-
-            virtual XMLElementReader* startSubElement(
-                    const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "group")
-                    if (! prop.known())
-                        return new NXMLGroupPresentationReader();
-                return new XMLElementReader();
-            }
-
-            virtual void endSubElement(const std::string& subTagName,
-                    XMLElementReader* subReader) {
-                if (subTagName == "group") {
-                    NGroupPresentation* ans =
-                        dynamic_cast<NXMLGroupPresentationReader*>(subReader)->
-                        group();
-                    if (ans)
-                        prop = ans;
-                }
-            }
-    };
-}
-
 XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
+    XMLElementReader* base = propertyReader(subTagName, props);
+    if (base)
+        return base;
+
     // We don't read boundary component properties since they're stored
     // across multiple property tags and they're easy to calculate anyway.
     if (subTagName == "zeroeff") {
@@ -149,16 +77,14 @@ XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
         bool b;
         if (valueOf(props.lookup("haken"), b))
             tri_->haken_ = b;
-    } else if (subTagName == "H1")
-        return new NAbelianGroupPropertyReader(tri_->H1_);
-    else if (subTagName == "H1Rel")
-        return new NAbelianGroupPropertyReader(tri_->H1Rel_);
+    } else if (subTagName == "H1Rel")
+        return new AbelianGroupPropertyReader(tri_->H1Rel_);
     else if (subTagName == "H1Bdry")
-        return new NAbelianGroupPropertyReader(tri_->H1Bdry_);
+        return new AbelianGroupPropertyReader(tri_->H1Bdry_);
     else if (subTagName == "H2")
-        return new NAbelianGroupPropertyReader(tri_->H2_);
+        return new AbelianGroupPropertyReader(tri_->H2_);
     else if (subTagName == "fundgroup")
-        return new NGroupPresentationPropertyReader(tri_->fundamentalGroup_);
+        return new GroupPresentationPropertyReader(tri_->fundamentalGroup_);
     return new XMLElementReader();
 }
 

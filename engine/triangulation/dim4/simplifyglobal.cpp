@@ -109,7 +109,7 @@ bool Triangulation<4>::intelligentSimplify() {
                 // At this point, changed == false.
                 if (use->size() < size()) {
                     // The 3-3 moves were successful; accept them.
-                    cloneFrom(*use);
+                    swapContents(*use);
                     changed = true;
                 }
                 delete use;
@@ -145,7 +145,7 @@ bool Triangulation<4>::intelligentSimplify() {
                 if (opened) {
                     if (use->simplifyToLocalMinimum(true)) {
                         // Yay!
-                        cloneFrom(*use);
+                        swapContents(*use);
                         changed = true;
                     } else {
                         // No good.

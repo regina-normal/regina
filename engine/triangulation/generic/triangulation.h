@@ -534,10 +534,7 @@ inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
 
 template <int dim>
 inline void Triangulation<dim>::clearAllProperties() {
-    // We have no override for deleteSkeleton().
-    // Just call the base class implementation.
-    if (detail::TriangulationBase<dim>::calculatedSkeleton())
-        detail::TriangulationBase<dim>::deleteSkeleton();
+    detail::TriangulationBase<dim>::clearBaseProperties();
 }
 
 template <int dim>
@@ -650,6 +647,8 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
         out << "</simplex>\n";
     }
     out << "  </simplices>\n";
+
+    detail::TriangulationBase<dim>::writeXMLBaseProperties(out);
 }
 
 template <int dim>
