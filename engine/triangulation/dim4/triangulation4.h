@@ -46,7 +46,6 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "algebra/ngrouppresentation.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
 
@@ -121,8 +120,6 @@ class REGINA_API Triangulation<4> :
         bool ideal_;
             /**< Is the triangulation ideal? */
 
-        mutable Property<NGroupPresentation, StoreManagedPtr> fundGroup_;
-            /**< Fundamental group of the triangulation. */
         mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
@@ -305,50 +302,6 @@ class REGINA_API Triangulation<4> :
          * \name Algebraic Properties
          */
         /*@{*/
-
-        /**
-         * Returns the fundamental group of this triangulation.
-         * If this triangulation contains any ideal vertices, the
-         * fundamental group will be calculated as if each such vertex
-         * had been truncated.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * fundamental group will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, fundamentalGroup() should be called again; this will
-         * be instantaneous if the group has already been calculated.
-         *
-         * \pre This triangulation is valid.
-         * \pre This triangulation has at most one component.
-         *
-         * @return the fundamental group.
-         */
-        const NGroupPresentation& fundamentalGroup() const;
-        /**
-         * Notifies the triangulation that you have simplified the
-         * presentation of its fundamental group.  The old group
-         * presentation will be destroyed, and this triangulation will take
-         * ownership of the new (hopefully simpler) group that is passed.
-         *
-         * This routine is useful for situations in which some external
-         * body (such as GAP) has simplified the group presentation
-         * better than Regina can.
-         *
-         * Regina does \e not verify that the new group presentation is
-         * equivalent to the old, since this is - well, hard.
-         *
-         * If the fundamental group has not yet been calculated for this
-         * triangulation, this routine will nevertheless take ownership
-         * of the new group, under the assumption that you have worked
-         * out the group through some other clever means without ever
-         * having needed to call fundamentalGroup() at all.
-         *
-         * Note that this routine will not fire a packet change event.
-         *
-         * @param newGroup a new (and hopefully simpler) presentation of
-         * the fundamental group of this triangulation.
-         */
-        void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
 
         /**
          * Returns the second homology group for this triangulation.
@@ -931,11 +884,6 @@ inline bool Triangulation<4>::isIdeal() const {
 inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
-}
-
-inline void Triangulation<4>::simplifiedFundamentalGroup(
-        NGroupPresentation* newGroup) {
-    fundGroup_ = newGroup;
 }
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {

@@ -63,7 +63,6 @@ Triangulation<3>::Triangulation(const std::string& description) {
 void Triangulation<3>::clearAllProperties() {
     clearBaseProperties();
 
-    fundamentalGroup_.clear();
     H1Rel_.clear();
     H1Bdry_.clear();
     H2_.clear();
@@ -192,11 +191,6 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
 
     writeXMLBaseProperties(out);
 
-    if (fundamentalGroup_.known()) {
-        out << "  <fundgroup>\n";
-        fundamentalGroup_.value()->writeXMLData(out);
-        out << "  </fundgroup>\n";
-    }
     if (H1Rel_.known()) {
         out << "  <H1Rel>";
         H1Rel_.value()->writeXMLData(out);
@@ -367,8 +361,6 @@ long Triangulation<3>::eulerCharManifold() const {
 Triangulation<3>::Triangulation(const Triangulation<3>& X) :
         TriangulationBase<3>(X) {
     // Clone properties:
-    if (X.fundamentalGroup_.known())
-        fundamentalGroup_= new NGroupPresentation(*X.fundamentalGroup_.value());
     if (X.H1Rel_.known())
         H1Rel_ = new NAbelianGroup(*(X.H1Rel_.value()));
     if (X.H1Bdry_.known())

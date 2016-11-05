@@ -197,11 +197,6 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
 
     writeXMLBaseProperties(out);
 
-    if (fundGroup_.known()) {
-        out << "  <fundgroup>\n";
-        fundGroup_.value()->writeXMLData(out);
-        out << "  </fundgroup>\n";
-    }
     if (H2_.known()) {
         out << "  <H2>";
         H2_.value()->writeXMLData(out);
@@ -214,8 +209,6 @@ Triangulation<4>::Triangulation(const Triangulation& X) :
     // Clone properties:
     if (X.knownSimpleLinks_)
         knownSimpleLinks_ = true;
-    if (X.fundGroup_.known())
-        fundGroup_ = new NGroupPresentation(*(X.fundGroup_.value()));
     if (X.H2_.known())
         H2_ = new NAbelianGroup(*(X.H2_.value()));
 }
@@ -224,7 +217,6 @@ void Triangulation<4>::clearAllProperties() {
     clearBaseProperties();
 
     knownSimpleLinks_ = false;
-    fundGroup_.clear();
     H2_.clear();
 }
 

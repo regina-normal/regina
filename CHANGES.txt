@@ -170,10 +170,11 @@ Version 5.1  [ (under development) ]
             - New routines boundaryComponents(), countBoundaryComponents()
               and boundaryComponent() for higher-dimensional triangulations
               (these were already present for dimensions 2-4).
-            - New routines homology() and homologyH1() for all dimensions
-              (these were already present for dimensions 3 and 4).  These
-              routines do not require the triangulation to be valid (i.e.,
-              the old validity restriction in dimension 4 has been lifted).
+            - New routines fundamentalGroup(), simplifiedFundamentalGroup(),
+              homology() and homologyH1() for all dimensions (these were
+              already present for dimensions 3 and 4).  These routines do not
+              require the triangulation to be valid (i.e., the old validity
+              restrictions in dimension 4 have been lifted).
         Typedef UseDim2GluingPerms, UseGluingPerms, UseDim4GluingPerms:
             - Renamed to GluingPermSearcher<2,3,4>::Use.  The old names are
               kept but deprecated.

@@ -2,7 +2,6 @@
 SET ( FILES
   edge4
   homology
-  homotopy
   simplify
   simplifyglobal
   skeleton

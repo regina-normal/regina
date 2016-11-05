@@ -48,6 +48,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "algebra/nabeliangroup.h"
+#include "algebra/ngrouppresentation.h"
 #include "maths/matrix.h"
 #include "triangulation/generic/component.h"
 #include "triangulation/generic/boundarycomponent.h"
@@ -388,6 +389,8 @@ class TriangulationBase :
         bool orientable_;
             /**< Is the triangulation orientable?  This property is only set
                  if/when the skeleton of the triangulation is computed. */
+        mutable Property<NGroupPresentation, StoreManagedPtr> fundGroup_;
+            /**< Fundamental group of the triangulation. */
         mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
 
@@ -845,6 +848,74 @@ class TriangulationBase :
          * \name Algebraic Properties
          */
         /*@{*/
+
+        /**
+         * Returns the fundamental group of this triangulation.
+         *
+         * The fundamental group is computed in the dual 2-skeleton.  This
+         * means:
+         *
+         * - If the triangulation contains any ideal vertices, the fundamental
+         *   group will be calculated as if each such vertex had been truncated.
+         *
+         * - Likewise, if the triangulation contains any invalid faces
+         *   of dimension 0,1,...,(<i>dim</i>-3), these will effectively
+         *   be truncated also.
+         *
+         * - In contrast, if the triangulation contains any invalid
+         *   (<i>dim</i>-2)-faces (i.e., codimension-2-faces that are
+         *   identified with themselves under a non-trivial map), the
+         *   fundamental group will be computed \e without truncating the
+         *   centroid of the face.  For instance, if a 3-manifold
+         *   triangulation has an edge identified with itself in reverse,
+         *   then the fundamental group will be computed without truncating
+         *   the resulting projective plane cusp.  This means that, if a
+         *   barycentric subdivision is performed on a such a
+         *   triangulation, the result of fundamentalGroup() might change.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * fundamental group will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, fundamentalGroup() should be called again; this will
+         * be instantaneous if the group has already been calculated.
+         *
+         * \pre This triangulation has at most one component.
+         *
+         * \warning In dimension 3, if you are calling this from the subclass
+         * SnapPeaTriangulation then <b>any fillings on the cusps will be
+         * ignored</b>.  (This is the same as for every routine implemented by
+         * Regina's Triangulation<3> class.)  If you wish to compute the
+         * fundamental group with fillings, call
+         * SnapPeaTriangulation::fundamentalGroupFilled() instead.
+         *
+         * @return the fundamental group.
+         */
+        const NGroupPresentation& fundamentalGroup() const;
+        /**
+         * Notifies the triangulation that you have simplified the
+         * presentation of its fundamental group.  The old group
+         * presentation will be destroyed, and this triangulation will take
+         * ownership of the new (hopefully simpler) group that is passed.
+         *
+         * This routine is useful for situations in which some external
+         * body (such as GAP) has simplified the group presentation
+         * better than Regina can.
+         *
+         * Regina does \e not verify that the new group presentation is
+         * equivalent to the old, since this is - well, hard.
+         *
+         * If the fundamental group has not yet been calculated for this
+         * triangulation, this routine will nevertheless take ownership
+         * of the new group, under the assumption that you have worked
+         * out the group through some other clever means without ever
+         * having needed to call fundamentalGroup() at all.
+         *
+         * Note that this routine will not fire a packet change event.
+         *
+         * @param newGroup a new (and hopefully simpler) presentation of
+         * the fundamental group of this triangulation.
+         */
+        void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
 
         /**
          * Returns the first homology group for this triangulation.
@@ -1850,6 +1921,8 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) :
     }
 
     // Clone properties:
+    if (copy.fundGroup_.known())
+        fundGroup_ = new NGroupPresentation(*(copy.fundGroup_.value()));
     if (copy.H1_.known())
         H1_ = new NAbelianGroup(*(copy.H1_.value()));
 }
@@ -2638,6 +2711,12 @@ size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
 }
 
 template <int dim>
+inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
+        NGroupPresentation* newGroup) {
+    fundGroup_ = newGroup;
+}
+
+template <int dim>
 inline const NAbelianGroup& TriangulationBase<dim>::homologyH1() const {
     return homology();
 }
@@ -2714,7 +2793,81 @@ const NAbelianGroup& TriangulationBase<dim>::homology() const {
 }
 
 template <int dim>
+const NGroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
+    if (fundGroup_.known())
+        return *fundGroup_.value();
+
+    NGroupPresentation* ans = new NGroupPresentation();
+
+    if (isEmpty())
+        return *(fundGroup_ = ans);
+
+    // Calculate a maximal forest in the dual 1-skeleton.
+    ensureSkeleton();
+
+    // Each non-boundary not-in-forest (dim-1)-face is a generator.
+    // Each non-boundary (dim-2)-face is a relation.
+
+    // Cast away all unsignedness in case we run into problems subtracting.
+    long nGens = static_cast<long>(countFaces<dim-1>())
+        - static_cast<long>(countBoundaryFacets())
+        + static_cast<long>(countComponents())
+        - static_cast<long>(size());
+
+    // Insert the generators.
+    ans->addGenerator(nGens);
+
+    // Find out which (dim-1)-face corresponds to which generator.
+    long* genIndex = new long[countFaces<dim-1>()];
+    long i = 0;
+    for (Face<dim, dim-1>* f : faces<dim-1>())
+        if (! (f->isBoundary() || f->inMaximalForest()))
+            genIndex[f->index()] = i++;
+
+    // Run through each (dim-2)-face and insert the corresponding relations.
+    Simplex<dim>* simp;
+    int facet;
+    Face<dim, dim-1>* gen;
+    NGroupExpression* rel;
+    for (Face<dim, dim-2>* f : faces<dim-2>()) {
+        if (! f->isBoundary()) {
+            // Put in the relation corresponding to this triangle.
+            rel = new NGroupExpression();
+            for (auto& emb : *f) {
+                simp = emb.simplex();
+                facet = emb.vertices()[dim-1];
+                gen = simp->template face<dim-1>(facet);
+                if (! gen->inMaximalForest()) {
+                    // We define the "direction" for this dual edge to point
+                    // from embedding gen->front() to embedding gen->back().
+                    //
+                    // Test whether we are traversing this dual edge forwards or
+                    // backwards as we walk around the (dim-2)-face f.
+                    if ((gen->front().simplex() == simp) &&
+                            (gen->front().face() == facet))
+                        rel->addTermLast(genIndex[gen->index()], 1);
+                    else
+                        rel->addTermLast(genIndex[gen->index()], -1);
+                }
+            }
+            ans->addRelation(rel);
+        }
+    }
+
+    // Tidy up.
+    delete[] genIndex;
+    ans->intelligentSimplify();
+
+    return *(fundGroup_ = ans);
+}
+
+template <int dim>
 void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
+    if (fundGroup_.known()) {
+        out << "  <fundgroup>\n";
+        fundGroup_.value()->writeXMLData(out);
+        out << "  </fundgroup>\n";
+    }
     if (H1_.known()) {
         out << "  <H1>";
         H1_.value()->writeXMLData(out);

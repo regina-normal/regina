@@ -514,7 +514,9 @@ template <int dim>
 inline XMLElementReader* XMLTriangulationReaderBase<dim>::propertyReader(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
-    if (subTagName == "H1")
+    if (subTagName == "fundgroup")
+        return new GroupPresentationPropertyReader(tri_->fundGroup_);
+    else if (subTagName == "H1")
         return new AbelianGroupPropertyReader(tri_->H1_);
     return 0;
 }

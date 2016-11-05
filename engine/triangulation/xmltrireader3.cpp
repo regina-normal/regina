@@ -83,8 +83,6 @@ XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
         return new AbelianGroupPropertyReader(tri_->H1Bdry_);
     else if (subTagName == "H2")
         return new AbelianGroupPropertyReader(tri_->H2_);
-    else if (subTagName == "fundgroup")
-        return new GroupPresentationPropertyReader(tri_->fundamentalGroup_);
     return new XMLElementReader();
 }
 

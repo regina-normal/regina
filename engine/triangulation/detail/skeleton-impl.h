@@ -551,6 +551,7 @@ void TriangulationBase<dim>::clearBaseProperties() {
     }
 
     // Clear properties.
+    fundGroup_.clear();
     H1_.clear();
 }
 

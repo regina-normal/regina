@@ -1871,7 +1871,6 @@
 		05F09FFC1DBF078800117BFC /* edge4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FE81DBF078800117BFC /* edge4.cpp */; };
 		05F09FFD1DBF078800117BFC /* edge4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FE91DBF078800117BFC /* edge4.h */; };
 		05F09FFE1DBF078800117BFC /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEA1DBF078800117BFC /* homology.cpp */; };
-		05F09FFF1DBF078800117BFC /* homotopy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEB1DBF078800117BFC /* homotopy.cpp */; };
 		05F0A0001DBF078800117BFC /* pentachoron4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FEC1DBF078800117BFC /* pentachoron4.h */; };
 		05F0A0011DBF078800117BFC /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FED1DBF078800117BFC /* simplify.cpp */; };
 		05F0A0021DBF078800117BFC /* simplifyglobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */; };
@@ -1887,7 +1886,6 @@
 		05F0A00C1DBF078800117BFC /* vertex4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FF81DBF078800117BFC /* vertex4.h */; };
 		05F0A00E1DBF079600117BFC /* edge4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FE81DBF078800117BFC /* edge4.cpp */; };
 		05F0A00F1DBF079600117BFC /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEA1DBF078800117BFC /* homology.cpp */; };
-		05F0A0101DBF079600117BFC /* homotopy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEB1DBF078800117BFC /* homotopy.cpp */; };
 		05F0A0111DBF079600117BFC /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FED1DBF078800117BFC /* simplify.cpp */; };
 		05F0A0121DBF079600117BFC /* simplifyglobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */; };
 		05F0A0131DBF079600117BFC /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEF1DBF078800117BFC /* skeleton.cpp */; };
@@ -1904,7 +1902,6 @@
 		05F0A03C1DBF0B5E00117BFC /* edge3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0201DBF0B5E00117BFC /* edge3.cpp */; };
 		05F0A03D1DBF0B5E00117BFC /* edge3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F0A0211DBF0B5E00117BFC /* edge3.h */; };
 		05F0A03E1DBF0B5E00117BFC /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0221DBF0B5E00117BFC /* homology.cpp */; };
-		05F0A03F1DBF0B5E00117BFC /* homotopy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0231DBF0B5E00117BFC /* homotopy.cpp */; };
 		05F0A0401DBF0B5E00117BFC /* hydrate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0241DBF0B5E00117BFC /* hydrate.cpp */; };
 		05F0A0411DBF0B5E00117BFC /* insertlayered.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0251DBF0B5E00117BFC /* insertlayered.cpp */; };
 		05F0A0421DBF0B5E00117BFC /* reorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0261DBF0B5E00117BFC /* reorder.cpp */; };
@@ -1928,7 +1925,6 @@
 		05F0A0551DBF0B7000117BFC /* decompose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A01F1DBF0B5E00117BFC /* decompose.cpp */; };
 		05F0A0561DBF0B7000117BFC /* edge3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0201DBF0B5E00117BFC /* edge3.cpp */; };
 		05F0A0571DBF0B7000117BFC /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0221DBF0B5E00117BFC /* homology.cpp */; };
-		05F0A0581DBF0B7000117BFC /* homotopy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0231DBF0B5E00117BFC /* homotopy.cpp */; };
 		05F0A0591DBF0B7000117BFC /* hydrate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0241DBF0B5E00117BFC /* hydrate.cpp */; };
 		05F0A05A1DBF0B7000117BFC /* insertlayered.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0251DBF0B5E00117BFC /* insertlayered.cpp */; };
 		05F0A05B1DBF0B7000117BFC /* reorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0261DBF0B5E00117BFC /* reorder.cpp */; };
@@ -3914,7 +3910,6 @@
 		05F09FE81DBF078800117BFC /* edge4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge4.cpp; sourceTree = "<group>"; };
 		05F09FE91DBF078800117BFC /* edge4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge4.h; sourceTree = "<group>"; };
 		05F09FEA1DBF078800117BFC /* homology.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homology.cpp; sourceTree = "<group>"; };
-		05F09FEB1DBF078800117BFC /* homotopy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homotopy.cpp; sourceTree = "<group>"; };
 		05F09FEC1DBF078800117BFC /* pentachoron4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pentachoron4.h; sourceTree = "<group>"; };
 		05F09FED1DBF078800117BFC /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
 		05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplifyglobal.cpp; sourceTree = "<group>"; };
@@ -3937,7 +3932,6 @@
 		05F0A0201DBF0B5E00117BFC /* edge3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge3.cpp; sourceTree = "<group>"; };
 		05F0A0211DBF0B5E00117BFC /* edge3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge3.h; sourceTree = "<group>"; };
 		05F0A0221DBF0B5E00117BFC /* homology.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homology.cpp; sourceTree = "<group>"; };
-		05F0A0231DBF0B5E00117BFC /* homotopy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homotopy.cpp; sourceTree = "<group>"; };
 		05F0A0241DBF0B5E00117BFC /* hydrate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hydrate.cpp; sourceTree = "<group>"; };
 		05F0A0251DBF0B5E00117BFC /* insertlayered.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = insertlayered.cpp; sourceTree = "<group>"; };
 		05F0A0261DBF0B5E00117BFC /* reorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = reorder.cpp; sourceTree = "<group>"; };
@@ -6632,7 +6626,6 @@
 				05F0A0201DBF0B5E00117BFC /* edge3.cpp */,
 				05F0A0211DBF0B5E00117BFC /* edge3.h */,
 				05F0A0221DBF0B5E00117BFC /* homology.cpp */,
-				05F0A0231DBF0B5E00117BFC /* homotopy.cpp */,
 				05F0A0241DBF0B5E00117BFC /* hydrate.cpp */,
 				05F0A0251DBF0B5E00117BFC /* insertlayered.cpp */,
 				05F0A0261DBF0B5E00117BFC /* reorder.cpp */,
@@ -6664,7 +6657,6 @@
 				05F09FE81DBF078800117BFC /* edge4.cpp */,
 				05F09FE91DBF078800117BFC /* edge4.h */,
 				05F09FEA1DBF078800117BFC /* homology.cpp */,
-				05F09FEB1DBF078800117BFC /* homotopy.cpp */,
 				05F09FEC1DBF078800117BFC /* pentachoron4.h */,
 				05F09FED1DBF078800117BFC /* simplify.cpp */,
 				05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */,
@@ -7930,7 +7922,6 @@
 				052FA1B11806129B00FAE4DF /* uimessages.cpp in Sources */,
 				05249EB91DBC16C4001FE29E /* triangle2.cpp in Sources */,
 				05249F3D1DBC1718001FE29E /* text.cpp in Sources */,
-				05F0A0581DBF0B7000117BFC /* homotopy.cpp in Sources */,
 				05937AD319CECF4300160F9A /* MDSpreadViewCellBackground.m in Sources */,
 				05249F4D1DBC1730001FE29E /* nlayeredlensspace.cpp in Sources */,
 				05249EFB1DBC16F1001FE29E /* isomorphism11.cpp in Sources */,
@@ -8380,7 +8371,6 @@
 				05249ECA1DBC16D1001FE29E /* pyfile.cpp in Sources */,
 				05C1BEC51DCA7CB3007C946B /* boundary15.cpp in Sources */,
 				052FA2081806129B00FAE4DF /* base64.cpp in Sources */,
-				05F0A0101DBF079600117BFC /* homotopy.cpp in Sources */,
 				0591E7E81C4F751B00793A9C /* hsvectorstandard.cpp in Sources */,
 				052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */,
 				052FA23A180612DD00FAE4DF /* triangulations.c in Sources */,
@@ -8861,7 +8851,6 @@
 				052F9E85180600FB00FAE4DF /* ngrouppresentation.cpp in Sources */,
 				052F9FE8180600FB00FAE4DF /* nblockedsfs.cpp in Sources */,
 				052FA010180600FB00FAE4DF /* nsnappeacensustri.cpp in Sources */,
-				05F0A03F1DBF0B5E00117BFC /* homotopy.cpp in Sources */,
 				052F9F42180600FB00FAE4DF /* perm3.cpp in Sources */,
 				052F9FA6180600FB00FAE4DF /* triangulations.c in Sources */,
 				05F09FDC1DBF01B600117BFC /* vertex2.cpp in Sources */,
@@ -8945,7 +8934,6 @@
 				052F9F96180600FB00FAE4DF /* precision.c in Sources */,
 				052F9F71180600FB00FAE4DF /* change_peripheral_curves.c in Sources */,
 				052F9FF4180600FB00FAE4DF /* nlayeredchainpair.cpp in Sources */,
-				05F09FFF1DBF078800117BFC /* homotopy.cpp in Sources */,
 				052F9F7B180600FB00FAE4DF /* cusp_shapes.c in Sources */,
 				052F9F78180600FB00FAE4DF /* current_curve_basis.c in Sources */,
 				05A73CA219B2EF5A0099C617 /* matrix_generators.c in Sources */,

@@ -85,6 +85,12 @@ namespace {
             return ans;
         }
 
+        static void simplifiedFundamentalGroup_clone(Triangulation<dim>& tri,
+                const regina::NGroupPresentation& group) {
+            tri.simplifiedFundamentalGroup(
+                new regina::NGroupPresentation(group));
+        }
+
         static boost::python::list findAllIsomorphisms(
             const Triangulation<dim>& t, const Triangulation<dim>& other) {
             boost::python::list ans;
@@ -202,6 +208,10 @@ void addTriangulation(const char* name) {
             typename PyTriHelper<dim>::splitIntoComponents_type(
                 &Triangulation<dim>::splitIntoComponents),
             typename PyTriHelper<dim>::OL_splitIntoComponents())
+        .def("fundamentalGroup", &Triangulation<dim>::fundamentalGroup,
+            return_internal_reference<>())
+        .def("simplifiedFundamentalGroup",
+            PyTriHelper<dim>::simplifiedFundamentalGroup_clone)
         .def("homology", &Triangulation<dim>::homology,
             return_internal_reference<>())
         .def("homologyH1", &Triangulation<dim>::homologyH1,

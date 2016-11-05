@@ -5,7 +5,6 @@ SET ( FILES
   decompose
   edge3
   homology
-  homotopy
   hydrate
   insertlayered
   reorder
