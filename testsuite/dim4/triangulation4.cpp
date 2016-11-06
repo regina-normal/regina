@@ -911,45 +911,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(pillow_fourCycle, 0);
         }
 
-        static void verifyBoundaryTetrahedra(Triangulation<4>* tri) {
-            unsigned long found = 0;
-
-            unsigned long i, j;
-            for (i = 0; i < tri->size(); ++i)
-                for (j = 0; j < 5; ++j)
-                    if (! tri->pentachoron(i)->adjacentPentachoron(j))
-                        ++found;
-
-            if (found != tri->countBoundaryFacets()) {
-                std::ostringstream msg;
-                msg << tri->label()
-                    << " reports the wrong number of boundary tetrahedra.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            unsigned long c;
-            regina::Component<4>* comp;
-            for (c = 0; c < tri->countComponents(); ++c) {
-                comp = tri->component(c);
-                found = 0;
-
-                for (i = 0; i < comp->size(); ++i)
-                    for (j = 0; j < 5; ++j)
-                        if (! comp->pentachoron(i)->adjacentPentachoron(j))
-                            ++found;
-
-                if (found != comp->countBoundaryFacets()) {
-                    std::ostringstream msg;
-                    msg << tri->label()
-                        << " reports the wrong number of "
-                        "boundary tetrahedra in component " << c << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
         void boundaryTetrahedra() {
-            testManualAll(verifyBoundaryTetrahedra);
+            testManualAll(verifyBoundaryFacets);
         }
 
         void verifyBoundaryInclusions(const Triangulation<4>& tri) {

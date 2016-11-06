@@ -45,6 +45,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST_SUITE(Triangulation2Test);
 
     // Generic tests:
+    CPPUNIT_TEST(boundaryEdges);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -137,6 +138,10 @@ class Triangulation2Test : public TriangulationTest<2> {
             f(&mobius);
             f(&disjoint2);
             f(&disjoint3);
+        }
+
+        void boundaryEdges() {
+            testManualAll(verifyBoundaryFacets);
         }
 
         void makeCanonical() {

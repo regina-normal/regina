@@ -776,45 +776,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             // TODO: Check that nobody has too many boundary components.
         }
 
-        static void verifyBoundaryTriangles(Triangulation<3>* tri) {
-            unsigned long found = 0;
-
-            unsigned long i, j;
-            for (i = 0; i < tri->size(); ++i)
-                for (j = 0; j < 4; ++j)
-                    if (! tri->tetrahedron(i)->adjacentTetrahedron(j))
-                        ++found;
-
-            if (found != tri->countBoundaryTriangles()) {
-                std::ostringstream msg;
-                msg << tri->label()
-                    << " reports the wrong number of boundary triangles.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            unsigned long c;
-            regina::Component<3>* comp;
-            for (c = 0; c < tri->countComponents(); ++c) {
-                comp = tri->component(c);
-                found = 0;
-
-                for (i = 0; i < comp->size(); ++i)
-                    for (j = 0; j < 4; ++j)
-                        if (! comp->tetrahedron(i)->adjacentTetrahedron(j))
-                            ++found;
-
-                if (found != comp->countBoundaryTriangles()) {
-                    std::ostringstream msg;
-                    msg << tri->label()
-                        << " reports the wrong number of "
-                        "boundary triangles in component " << c << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
         void boundaryTriangles() {
-            testManualAll(verifyBoundaryTriangles);
+            testManualAll(verifyBoundaryFacets);
         }
 
         void verifyVertexCount(Triangulation<3>& tri, unsigned nVertices,
