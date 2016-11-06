@@ -567,11 +567,13 @@ inline Triangulation<dim>::Triangulation() : detail::TriangulationBase<dim>() {
 template <int dim>
 inline Triangulation<dim>::Triangulation(const Triangulation& copy) :
         detail::TriangulationBase<dim>(copy) {
+    // All properties to clone are held by TriangulationBase.
 }
 
 template <int dim>
 inline Triangulation<dim>::Triangulation(const Triangulation& copy,
         bool cloneProps) : detail::TriangulationBase<dim>(copy, cloneProps) {
+    // All properties to clone are held by TriangulationBase.
 }
 
 template <int dim>

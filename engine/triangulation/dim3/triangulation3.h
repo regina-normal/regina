@@ -2874,7 +2874,7 @@ inline Triangulation<3>::Triangulation() {
 }
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
-        TriangulationBase<3>(copy, true) {
+        Triangulation<3>(copy, true) {
 }
 
 inline Triangulation<3>::~Triangulation() {
