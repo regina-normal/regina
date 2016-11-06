@@ -37,7 +37,49 @@ using regina::Triangulation;
 
 template <int dim>
 class TriangulationTest : public CppUnit::TestFixture {
+    protected:
+        // Trivial:
+        Triangulation<dim> empty;
+            /**< The empty triangulation. */
+
+        // Closed orientable:
+        Triangulation<dim> sphere;
+            /**< The dim-sphere, with two simplices whose boundaries
+                 are identified according to the identity map. */
+        Triangulation<dim> simplicialSphere;
+            /**< The dim-sphere, with two simplices whose boundaries
+                 are identified according to the identity map. */
+        Triangulation<dim> sphereBundle;
+            /**< The product S^(dim-1) x S^1. */
+
+        // Closed non-orientable:
+        Triangulation<dim> twistedSphereBundle;
+            /**< The twisted product S^(dim-1) x~ S^1. */
+
     public:
+        void copyAndDelete(Triangulation<dim>& dest,
+                Triangulation<dim>* source, const char* name = 0) {
+            dest.insertTriangulation(*source);
+            if (name)
+                dest.setLabel(name);
+            else
+                dest.setLabel(source->label());
+            delete source;
+        }
+
+        void setUp() {
+            // The empty triangulation needs no initialisation whatsoever.
+            empty.setLabel("Empty triangulation");
+
+            // Some examples are ready-made via Example<dim>.
+            copyAndDelete(sphere, regina::Example<dim>::sphere());
+            copyAndDelete(simplicialSphere,
+                regina::Example<dim>::simplicialSphere());
+            copyAndDelete(sphereBundle, regina::Example<dim>::sphereBundle());
+            copyAndDelete(twistedSphereBundle,
+                regina::Example<dim>::twistedSphereBundle());
+        }
+
         static void verifyOrient(const Triangulation<dim>* original,
                 const Triangulation<dim>* oriented) {
             if (original->isOrientable() != oriented->isOrientable()) {
@@ -240,6 +282,38 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete relabelling;
                 delete rebuild;
                 delete relabel;
+            }
+        }
+
+        static void verifyHomology(const Triangulation<dim>& tri,
+                const char* H1) {
+            std::string ans = tri.homology().str();
+            if (ans != H1) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label()
+                    << " has homology H1 = " << ans
+                    << " instead of the expected " << H1 << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static void verifyFundGroup(const Triangulation<dim>& tri,
+                const char* group) {
+            std::string ans = tri.fundamentalGroup().recogniseGroup();
+            if (ans != group) {
+                std::string showAns = ans;
+                if (showAns.empty())
+                    showAns = "<unrecognised>";
+
+                std::string showGroup = group;
+                if (showGroup.empty())
+                    showGroup = "<unrecognised>";
+
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label()
+                    << " has fundamental group = " << showAns
+                    << " instead of the expected " << showGroup << ".";
+                CPPUNIT_FAIL(msg.str());
             }
         }
 };

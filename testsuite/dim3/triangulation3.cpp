@@ -118,8 +118,6 @@ class Triangulation3Test : public TriangulationTest<3> {
             /**< For comparing floating-point Turaev-Viro values. */
 
         // Trivial:
-        Triangulation<3> empty;
-            /**< An empty triangulation. */
         Triangulation<3> singleTet;
             /**< A single tetrahedron with no face gluings. */
 
@@ -220,12 +218,6 @@ class Triangulation3Test : public TriangulationTest<3> {
             /**< A disjoint union of three triangulations. */
 
     public:
-        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
-            dest.insertTriangulation(*source);
-            dest.setLabel(source->label());
-            delete source;
-        }
-
         void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
             NSignature* sig = NSignature::parse(sigStr);
             if (sig == 0)
@@ -256,10 +248,9 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void setUp() {
-            // Begin with trivial cases.
-            // The empty triangulation needs no initialisation whatsoever.
-            empty.setLabel("Empty triangulation");
+            TriangulationTest<3>::setUp();
 
+            // Begin with trivial cases.
             singleTet.newTetrahedron();
             singleTet.setLabel("Single tetrahedron");
 
@@ -1948,80 +1939,32 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllIdeal(verifyFundGroupVsH1);
         }
 
-        void verifyFundGroup(const NGroupPresentation& g,
-                const std::string& grpName, const std::string& expected) {
-            std::string actual = g.recogniseGroup();
-            if (actual.empty())
-                actual = "unknown";
-
-            // Construct the error message.
-            std::ostringstream msg;
-            msg << grpName << " is " << actual << ", not " << expected << '.';
-
-            // Check the group.
-            if (expected != actual)
-                CPPUNIT_FAIL(msg.str());
-        }
-
         void fundGroup() {
-            verifyFundGroup(empty.fundamentalGroup(),
-                "Fund(empty triangulation)", "0");
-            verifyFundGroup(singleTet.fundamentalGroup(),
-                "Fund(single tetrahedron)", "0");
-            verifyFundGroup(s3.fundamentalGroup(),
-                "Fund(S^3)", "0");
-            verifyFundGroup(s2xs1.fundamentalGroup(),
-                "Fund(S^2 x S^1)", "Z");
-            verifyFundGroup(rp3_1.fundamentalGroup(),
-                "Fund(RP^3, 1 vtx)", "Z_2");
-            verifyFundGroup(rp3_2.fundamentalGroup(),
-                "Fund(RP^3, 2 vtx)", "Z_2");
-            verifyFundGroup(lens3_1.fundamentalGroup(),
-                "Fund(L(3,1))", "Z_3");
-            verifyFundGroup(lens7_1_loop.fundamentalGroup(),
-                "Fund(Loop L(7,1))", "Z_7");
-            verifyFundGroup(lens8_3.fundamentalGroup(),
-                "Fund(L(8,3))", "Z_8");
-            verifyFundGroup(lens8_3_large.fundamentalGroup(),
-                "Fund(Large L(8,3))", "Z_8");
-            //verifyFundGroup(rp3rp3.fundamentalGroup(),
-            //    "Fund(RP^3 # RP^3)", 0, 2, 2);
-            //verifyFundGroup(q28.fundamentalGroup(),
-            //    "Fund(S^3 / Q_28)", 0, 4);
-            //verifyGroup(weberSeifert.homology(),
-            //    "Fund(SeifertWeber)", 0, 5, 5, 5);
-            //verifyFundGroup(q32xz3.fundamentalGroup(),
-            //    "Fund(S^3 / Q_32 x Z_3)", 0, 2, 6);
-            verifyFundGroup(lens100_1.fundamentalGroup(),
-                "Fund(L(100,1))", "Z_100");
-            verifyFundGroup(ball_large.fundamentalGroup(),
-                "Fund(4-tetrahedron ball)", "0");
-            verifyFundGroup(ball_large_pillows.fundamentalGroup(),
-                "Fund(4-tetrahedron pillow ball)", "0");
-            verifyFundGroup(ball_large_snapped.fundamentalGroup(),
-                "Fund(3-tetrahedron snapped ball)", "0");
-            verifyFundGroup(lst3_4_7.fundamentalGroup(),
-                "Fund(LST(3,4,7))", "Z");
-            verifyFundGroup(figure8.fundamentalGroup(),
-                "Fund(figure eight knot complement)",
+            verifyFundGroup(empty, "0");
+            verifyFundGroup(singleTet, "0");
+            verifyFundGroup(s3, "0");
+            verifyFundGroup(s2xs1, "Z");
+            verifyFundGroup(rp3_1, "Z_2");
+            verifyFundGroup(rp3_2, "Z_2");
+            verifyFundGroup(lens3_1, "Z_3");
+            verifyFundGroup(lens7_1_loop, "Z_7");
+            verifyFundGroup(lens8_3, "Z_8");
+            verifyFundGroup(lens8_3_large, "Z_8");
+            verifyFundGroup(lens100_1, "Z_100");
+            verifyFundGroup(ball_large, "0");
+            verifyFundGroup(ball_large_pillows, "0");
+            verifyFundGroup(ball_large_snapped, "0");
+            verifyFundGroup(lst3_4_7, "Z");
+            verifyFundGroup(figure8,
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
                 // Note: \u21A6 is the unicode mapsto symbol.
-            verifyFundGroup(rp2xs1.fundamentalGroup(),
-                "Fund(RP^2 x S^1)", "Z + Z_2");
-            verifyFundGroup(solidKB.fundamentalGroup(),
-                "Fund(solid Klein bottle)", "Z");
-            //verifyFundGroup(gieseking.fundamentalGroup(),
-            //    "Fund(Gieseking manifold)", 1);
-            verifyFundGroup(invalidEdges.fundamentalGroup(),
-                "Fund(tri with invalid edges)", "0");
-            verifyFundGroup(twoProjPlaneCusps.fundamentalGroup(),
-                "Fund(tri with projective plane cusps)", "Z_2");
-            verifyFundGroup(cuspedGenusTwoTorus.fundamentalGroup(),
-                "Fund(cusped solid genus two torus)", "Free(2)");
-            verifyFundGroup(pinchedSolidTorus.fundamentalGroup(),
-                "Fund(pinched solid torus)", "Z");
-            verifyFundGroup(pinchedSolidKB.fundamentalGroup(),
-                "Fund(pinched solid Klein bottle)", "Z");
+            verifyFundGroup(rp2xs1, "Z + Z_2");
+            verifyFundGroup(solidKB, "Z");
+            verifyFundGroup(invalidEdges, "0");
+            verifyFundGroup(twoProjPlaneCusps, "Z_2");
+            verifyFundGroup(cuspedGenusTwoTorus, "Free(2)");
+            verifyFundGroup(pinchedSolidTorus, "Z");
+            verifyFundGroup(pinchedSolidKB, "Z");
         }
 
         static void testZeroEfficiency(Triangulation<3>* tri) {

@@ -55,27 +55,15 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        // Trivial:
-        Triangulation<2> empty;
-            /**< An empty triangulation. */
-
         // Closed orientable:
-        Triangulation<2> s2;
-            /**< A 2-sphere with two triangles. */
-        Triangulation<2> s2Tet;
-            /**< A 2-sphere with four triangles. */
         Triangulation<2> s2Oct;
             /**< A 2-sphere with eight triangles. */
-        Triangulation<2> torus;
-            /**< A torus with two triangles. */
         Triangulation<2> torus2;
             /**< A genus two torus. */
 
         // Closed non-orientable:
         Triangulation<2> rp2;
             /**< A projective plane with two triangles. */
-        Triangulation<2> kb;
-            /**< A Klein bottle with two triangles. */
 
         // Bounded:
         Triangulation<2> disc;
@@ -99,28 +87,16 @@ class Triangulation2Test : public TriangulationTest<2> {
         }
 
         void setUp() {
-            empty.setLabel("Empty triangulation");
-
-            copyAndDelete(s2, Example<2>::sphere());
-            s2.setLabel("S^2");
-
-            copyAndDelete(s2Tet, Example<2>::sphereTetrahedron());
-            s2Tet.setLabel("Tetrahedron boundary");
+            TriangulationTest<2>::setUp();
 
             copyAndDelete(s2Oct, Example<2>::sphereOctahedron());
             s2Oct.setLabel("Octahedron boundary");
-
-            copyAndDelete(torus, Example<2>::torus());
-            torus.setLabel("Torus");
 
             copyAndDelete(torus2, Example<2>::orientable(2, 0));
             torus2.setLabel("Genus 2 torus");
 
             copyAndDelete(rp2, Example<2>::rp2());
             rp2.setLabel("RP^2");
-
-            copyAndDelete(kb, Example<2>::kb());
-            kb.setLabel("KB");
 
             copyAndDelete(disc, Example<2>::disc());
             disc.setLabel("Disc");
@@ -131,13 +107,13 @@ class Triangulation2Test : public TriangulationTest<2> {
             copyAndDelete(mobius, Example<2>::mobius());
             mobius.setLabel("Mobius band");
 
-            disjoint2.insertTriangulation(torus);
+            disjoint2.insertTriangulation(sphereBundle);
             disjoint2.insertTriangulation(mobius);
             disjoint2.setLabel("Torus U Mobius");
 
-            disjoint3.insertTriangulation(kb);
+            disjoint3.insertTriangulation(twistedSphereBundle);
             disjoint3.insertTriangulation(annulus);
-            disjoint3.insertTriangulation(s2);
+            disjoint3.insertTriangulation(sphere);
             disjoint3.setLabel("KB U Annulus U S^2");
         }
 
@@ -149,13 +125,13 @@ class Triangulation2Test : public TriangulationTest<2> {
          */
         void testManualAll(Triangulation2TestFunction f) {
             f(&empty);
-            f(&s2);
-            f(&s2Tet);
+            f(&sphere);
+            f(&simplicialSphere);
             f(&s2Oct);
-            f(&torus);
+            f(&sphereBundle);
             f(&torus2);
             f(&rp2);
-            f(&kb);
+            f(&twistedSphereBundle);
             f(&disc);
             f(&annulus);
             f(&mobius);
