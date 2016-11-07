@@ -30,10 +30,63 @@
  *                                                                        *
  **************************************************************************/
 
+#include "algebra/nabeliangroup.h"
+#include "algebra/ngrouppresentation.h"
+#include "packet/container.h"
 #include <cppunit/extensions/HelperMacros.h>
 
 using regina::Isomorphism;
 using regina::Triangulation;
+
+/**
+ * Used to verify that the orientable double cover of a non-orientable
+ * triangulation contains the correct number of faces of dimensions
+ * 0,...,subdim.
+ *
+ * \pre This helper class must only be used with valid triangulations.
+ */
+template <int dim, int subdim,
+        bool allowsIdealVertices = (dim == 3 || dim == 4)>
+struct DoubleCoverHelper {
+    static void verifyFaceCounts(const Triangulation<dim>& orig,
+            const Triangulation<dim>& cover) {
+        if (cover.template countFaces<subdim>() !=
+                2 * orig.template countFaces<subdim>()) {
+            std::ostringstream msg;
+            msg << orig.label()
+                << ": Orientable double cover does not "
+                "contain precisely twice as many "
+                << subdim << "-faces.";
+            CPPUNIT_FAIL(msg.str());
+        }
+
+        DoubleCoverHelper<dim, subdim-1>::verifyFaceCounts(orig, cover);
+    }
+};
+
+template <int dim>
+struct DoubleCoverHelper<dim, 0, false> {
+    static void verifyFaceCounts(const Triangulation<dim>& orig,
+            const Triangulation<dim>& cover) {
+        if (cover.countVertices() != 2 * orig.countVertices()) {
+            std::ostringstream msg;
+            msg << orig.label()
+                << ": Orientable double cover does not "
+                "contain precisely twice as many vertices.";
+            CPPUNIT_FAIL(msg.str());
+        }
+    }
+};
+
+template <int dim>
+struct DoubleCoverHelper<dim, 0, true> {
+    static void verifyFaceCounts(const Triangulation<dim>& orig,
+            const Triangulation<dim>& cover) {
+        // Only count vertices for non-ideal triangulations.
+        if (! orig.isIdeal())
+            DoubleCoverHelper<dim, 0, false>::verifyFaceCounts(orig, cover);
+    }
+};
 
 template <int dim>
 class TriangulationTest : public CppUnit::TestFixture {
@@ -351,6 +404,109 @@ class TriangulationTest : public CppUnit::TestFixture {
                         "boundary facets in component " << c << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
+            }
+        }
+
+        static void verifyDoubleCover(Triangulation<dim>* tri) {
+            // PRE: tri is either empty or connected.
+            if (! tri->isConnected())
+                return;
+
+            Triangulation<dim> cover(*tri, false);
+            cover.makeDoubleCover();
+
+            if (tri->isEmpty()) {
+                if (! cover.isEmpty())
+                    CPPUNIT_FAIL("Empty triangulation: "
+                        "Double cover is non-empty.");
+                return;
+            }
+
+            // We have a non-empty connected triangulation.
+            if (tri->isOrientable()) {
+                // We should simply come away with two identical copies of tri.
+                regina::Container parent;
+                if (cover.splitIntoComponents(&parent) != 2) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely two components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                Triangulation<dim>* child = static_cast<Triangulation<dim>*>(
+                    parent.firstChild());
+                while (child) {
+                    if (! tri->isIsomorphicTo(*child).get()) {
+                        std::ostringstream msg;
+                        msg << tri->label()
+                            << ": Orientable double cover "
+                            "contains a component not isomorphic to the "
+                            "original.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    child = static_cast<Triangulation<dim>*>(
+                        child->nextSibling());
+                }
+            } else {
+                // We should come away with a proper connected double cover.
+                if (cover.countComponents() != 1) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely one component.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! cover.isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover is not orientable.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (cover.size() != 2 * tri->size()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely twice as many simplices.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (cover.template countFaces<dim-1>() !=
+                        2 * tri->template countFaces<dim-1>()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely twice as many "
+                        << (dim-1) << "-faces.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isValid())
+                    DoubleCoverHelper<dim, dim-2>::verifyFaceCounts(
+                        *tri, cover);
+
+                /**
+                 * Commenting out this claim about homology groups,
+                 * which is nonsense.
+                // We expect the first homology group to be identical,
+                // or to be missing a copy of Z_2.
+                if (tri->isValid() && (tri->homology() != cover.homology())) {
+                    regina::NAbelianGroup hCover(cover.homology());
+                    hCover.addTorsionElement(2);
+                    if (tri->homology() != hCover) {
+                        std::ostringstream msg;
+                        msg << tri->label()
+                            << ": Orientable double cover has H1 = "
+                            << cover.homology().str()
+                            << ", which does not match the original H1 = "
+                            << tri->homology().str() << '.';
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                */
             }
         }
 };

@@ -49,6 +49,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
+    CPPUNIT_TEST(doubleCover);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(eltMove13);
@@ -198,6 +199,10 @@ class Triangulation2Test : public TriangulationTest<2> {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
+        }
+
+        void doubleCover() {
+            testManualAll(verifyDoubleCover);
         }
 
         void eltMove13() {
