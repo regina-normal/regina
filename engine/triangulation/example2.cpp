@@ -36,6 +36,42 @@
 
 namespace regina {
 
+Triangulation<2>* Example<2>::sphereTetrahedron() {
+    Triangulation<2>* ans = simplicialSphere();
+    ans->setLabel("Sphere (tetrahedron boundary)");
+    return ans;
+}
+
+Triangulation<2>* Example<2>::torus() {
+    Triangulation<2>* ans = sphereBundle();
+    ans->setLabel("Torus");
+    return ans;
+}
+
+Triangulation<2>* Example<2>::kb() {
+    Triangulation<2>* ans = twistedSphereBundle();
+    ans->setLabel("Klein bottle");
+    return ans;
+}
+
+Triangulation<2>* Example<2>::disc() {
+    Triangulation<2>* ans = ball();
+    ans->setLabel("Disc");
+    return ans;
+}
+
+Triangulation<2>* Example<2>::annulus() {
+    Triangulation<2>* ans = ballBundle();
+    ans->setLabel("Annulus");
+    return ans;
+}
+
+Triangulation<2>* Example<2>::mobius() {
+    Triangulation<2>* ans = twistedBallBundle();
+    ans->setLabel("M\u00F6bius band");
+    return ans;
+}
+
 Triangulation<2>* Example<2>::orientable(
         unsigned genus, unsigned punctures) {
     Triangulation<2>* ans = new Triangulation<2>();
@@ -124,24 +160,6 @@ Triangulation<2>* Example<2>::nonOrientable(
     return ans;
 }
 
-Triangulation<2>* Example<2>::sphereTetrahedron() {
-    Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("Sphere (tetrahedron boundary)");
-
-    Triangle<2>* r = ans->newTriangle();
-    Triangle<2>* s = ans->newTriangle();
-    Triangle<2>* t = ans->newTriangle();
-    Triangle<2>* u = ans->newTriangle();
-    r->join(1, s, Perm<3>(1, 2));
-    s->join(1, t, Perm<3>(1, 2));
-    t->join(1, r, Perm<3>(1, 2));
-    r->join(0, u, Perm<3>(0, 1, 2));
-    s->join(0, u, Perm<3>(1, 2, 0));
-    t->join(0, u, Perm<3>(2, 0, 1));
-
-    return ans;
-}
-
 Triangulation<2>* Example<2>::sphereOctahedron() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Sphere (octahedron boundary)");
@@ -170,50 +188,6 @@ Triangulation<2>* Example<2>::sphereOctahedron() {
     return ans;
 }
 
-Triangulation<2>* Example<2>::disc() {
-    Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("Disc");
-
-    ans->newTriangle();
-
-    return ans;
-}
-
-Triangulation<2>* Example<2>::annulus() {
-    Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("Annulus");
-
-    Triangle<2>* r = ans->newTriangle();
-    Triangle<2>* s = ans->newTriangle();
-    r->join(0, s, Perm<3>(1, 2));
-    r->join(2, s, Perm<3>(0, 1));
-
-    return ans;
-}
-
-Triangulation<2>* Example<2>::mobius() {
-    Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("M\u00F6bius band");
-
-    Triangle<2>* r = ans->newTriangle();
-    r->join(0, r, Perm<3>(2, 0, 1));
-
-    return ans;
-}
-
-Triangulation<2>* Example<2>::torus() {
-    Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("Torus");
-
-    Triangle<2>* r = ans->newTriangle();
-    Triangle<2>* s = ans->newTriangle();
-    r->join(0, s, Perm<3>(1, 2));
-    r->join(1, s, Perm<3>(2, 0));
-    r->join(2, s, Perm<3>(0, 1));
-
-    return ans;
-}
-
 Triangulation<2>* Example<2>::rp2() {
     Triangulation<2>* ans = new Triangulation<2>();
     ans->setLabel("Projective plane");
@@ -222,19 +196,6 @@ Triangulation<2>* Example<2>::rp2() {
     Triangle<2>* s = ans->newTriangle();
     r->join(0, s, Perm<3>(1, 2));
     r->join(1, s, Perm<3>());
-    r->join(2, s, Perm<3>());
-
-    return ans;
-}
-
-Triangulation<2>* Example<2>::kb() {
-    Triangulation<2>* ans = new Triangulation<2>();
-    ans->setLabel("Klein bottle");
-
-    Triangle<2>* r = ans->newTriangle();
-    Triangle<2>* s = ans->newTriangle();
-    r->join(0, s, Perm<3>(1, 2));
-    r->join(1, s, Perm<3>(2, 0));
     r->join(2, s, Perm<3>());
 
     return ans;

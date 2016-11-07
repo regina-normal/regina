@@ -70,6 +70,7 @@ class REGINA_API Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a two-pentachoron triangulation of the 4-sphere.
+         * This is identical to calling the generic routine sphere().
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -79,6 +80,7 @@ class REGINA_API Example<4> : public detail::ExampleBase<4> {
         /**
          * Returns the standard six-pentachoron triangulation of the 4-sphere
          * as the boundary of a 5-simplex.
+         * This is identical to calling the generic routine simplicialSphere().
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -97,7 +99,8 @@ class REGINA_API Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a two-pentachoron triangulation of the product space
-         * <tt>S^3 x S^1</tt>.
+         * <tt>S^3 x S^1</tt>.  This is identical to calling the
+         * generic routine sphereBundle().
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -106,7 +109,8 @@ class REGINA_API Example<4> : public detail::ExampleBase<4> {
 
         /**
          * Returns a two-pentachoron triangulation of the twisted product
-         * space <tt>S^3 x~ S^1</tt>.
+         * space <tt>S^3 x~ S^1</tt>.  This is identical to calling the
+         * generic routine twistedSphereBundle().
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -244,6 +248,22 @@ class REGINA_API Example<4> : public detail::ExampleBase<4> {
 REGINA_DEPRECATED typedef Example<4> Dim4ExampleTriangulation;
 
 /*@}*/
+
+inline Triangulation<4>* Example<4>::fourSphere() {
+    return sphere();
+}
+
+inline Triangulation<4>* Example<4>::simplicialFourSphere() {
+    return simplicialSphere();
+}
+
+inline Triangulation<4>* Example<4>::s3xs1() {
+    return sphereBundle();
+}
+
+inline Triangulation<4>* Example<4>::s3xs1Twisted() {
+    return twistedSphereBundle();
+}
 
 } // namespace regina
 

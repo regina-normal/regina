@@ -71,6 +71,8 @@ class REGINA_API Example<3> : public detail::ExampleBase<3> {
 
         /**
          * Returns a one-tetrahedron triangulation of the 3-sphere.
+         * This is \e different from the generic routine sphere(),
+         * which uses two tetrahedra instead.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -89,6 +91,7 @@ class REGINA_API Example<3> : public detail::ExampleBase<3> {
         /**
          * Returns a two-tetrahedron triangulation of the product space
          * <tt>S^2 x S^1</tt>.
+         * This is identical to calling the generic routine sphereBundle().
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -228,6 +231,9 @@ class REGINA_API Example<3> : public detail::ExampleBase<3> {
 
         /**
          * Returns a triangulation of the solid Klein bottle.
+         * This is isomorphic to the triangulation returned by the
+         * generic routine twistedBallBundle(), though it will have a
+         * different packet label.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -297,6 +303,10 @@ class REGINA_API Example<3> : public detail::ExampleBase<3> {
  * use the full class name Example<3>.
  */
 REGINA_DEPRECATED typedef Example<3> NExampleTriangulation;
+
+inline Triangulation<3>* Example<3>::s2xs1() {
+    return sphereBundle();
+}
 
 /*@}*/
 

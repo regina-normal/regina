@@ -161,6 +161,11 @@ class ExampleBase : public ExampleFromLowDim<dim, (dim > 2)> {
 
     public:
         /**
+         * Closed Triangulations
+         */
+        /*@{*/
+
+        /**
          * Explicitly disable the default constructor.
          */
         ExampleBase() = delete;
@@ -199,6 +204,44 @@ class ExampleBase : public ExampleFromLowDim<dim, (dim > 2)> {
          * destroyed by the caller of this routine.
          */
         static Triangulation<dim>* twistedSphereBundle();
+
+        /*@}*/
+        /**
+         * Bounded Triangulations
+         */
+        /*@{*/
+
+        /**
+         * Returns a one-simplex triangulation of the <i>dim</i>-ball.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Triangulation<dim>* ball();
+
+        /**
+         * Returns a triangulation of the product space
+         * <tt>B^(<i>dim</i>-1) x S^1</tt>.
+         * This will use one simplex in odd dimensions, or two simplices
+         * in even dimensions.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Triangulation<dim>* ballBundle();
+
+        /**
+         * Returns a triangulation of the twisted product
+         * space <tt>B^(<i>dim</i>-1) x~ S^1</tt>.
+         * This will use one simplex in even dimensions, or two simplices
+         * in odd dimensions.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Triangulation<dim>* twistedBallBundle();
+
+        /*@}*/
 };
 
 /*@}*/
@@ -408,6 +451,78 @@ Triangulation<dim>* ExampleBase<dim>::twistedSphereBundle() {
     } else {
         p->join(0, p, Perm<dim+1>(map));
         q->join(0, q, Perm<dim+1>(map));
+    }
+
+    // All done.
+    return ans;
+}
+
+template <int dim>
+Triangulation<dim>* ExampleBase<dim>::ball() {
+    Triangulation<dim>* ans = new Triangulation<dim>;
+    Packet::ChangeEventSpan span(ans);
+    ans->setLabel(std::string(Strings<dim>::dim) + "-ball");
+
+    ans->newSimplex();
+    return ans;
+}
+
+template <int dim>
+Triangulation<dim>* ExampleBase<dim>::ballBundle() {
+    // This is the higher-dimensional analogy of a layered solid torus.
+    // In even dimensions the corresponding construction is non-orientable,
+    // and we need to take its orientable double cover.
+    Triangulation<dim>* ans = new Triangulation<dim>();
+    Packet::ChangeEventSpan span(ans);
+    ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x S1");
+
+    // Now join facet 0 to a facet dim to join up the S1 loop.
+    int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }
+    map[0] = dim;
+    for (int i = 0; i < dim; ++i)
+        map[i + 1] = i;
+
+    if (dim % 2) {
+        Simplex<dim>* s = ans->newSimplex();
+        s->join(0, s, Perm<dim+1>(map));
+    } else {
+        Simplex<dim>* s = ans->newSimplex();
+        Simplex<dim>* t = ans->newSimplex();
+        s->join(0, t, Perm<dim+1>(map));
+        t->join(0, s, Perm<dim+1>(map));
+    }
+
+    // All done.
+    return ans;
+}
+
+template <int dim>
+Triangulation<dim>* ExampleBase<dim>::twistedBallBundle() {
+    // This is the higher-dimensional analogy of a layered solid torus.
+    // In even dimensions the corresponding construction is non-orientable.
+    // In odd dimensions the construction is orientable, and so we
+    // double it (giving a two-vertex, two-simplex Bn x S1) but fiddle
+    // with the second map to make it non-orientable.
+    Triangulation<dim>* ans = new Triangulation<dim>();
+    Packet::ChangeEventSpan span(ans);
+    ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x S1");
+
+    // Now join facet 0 to a facet dim to join up the S1 loop.
+    int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }
+    map[0] = dim;
+    for (int i = 0; i < dim; ++i)
+        map[i + 1] = i;
+
+    if (dim % 2) {
+        Simplex<dim>* s = ans->newSimplex();
+        Simplex<dim>* t = ans->newSimplex();
+        s->join(0, t, Perm<dim+1>(map));
+        map[dim - 1] = dim - 1;
+        map[dim] = dim - 2;
+        t->join(0, s, Perm<dim+1>(map));
+    } else {
+        Simplex<dim>* s = ans->newSimplex();
+        s->join(0, s, Perm<dim+1>(map));
     }
 
     // All done.

@@ -51,6 +51,12 @@ void addExample3() {
             return_value_policy<to_held_type<> >())
         .def("twistedSphereBundle", &Example<3>::twistedSphereBundle,
             return_value_policy<to_held_type<> >())
+        .def("ball", &Example<3>::ball,
+            return_value_policy<to_held_type<> >())
+        .def("ballBundle", &Example<3>::ballBundle,
+            return_value_policy<to_held_type<> >())
+        .def("twistedBallBundle", &Example<3>::twistedBallBundle,
+            return_value_policy<to_held_type<> >())
         .def("doubleCone", &Example<3>::doubleCone,
             return_value_policy<to_held_type<>>())
         .def("singleCone", &Example<3>::singleCone,
@@ -102,6 +108,9 @@ void addExample3() {
         .staticmethod("simplicialSphere")
         .staticmethod("sphereBundle")
         .staticmethod("twistedSphereBundle")
+        .staticmethod("ball")
+        .staticmethod("ballBundle")
+        .staticmethod("twistedBallBundle")
         .staticmethod("doubleCone")
         .staticmethod("singleCone")
         .staticmethod("threeSphere")

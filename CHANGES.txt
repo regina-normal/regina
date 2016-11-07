@@ -84,7 +84,8 @@ Version 5.1  [ (under development) ]
               which generalises the old standalone Dim2ExampleTriangulation,
               NExampleTriangulation and Dim4ExampleTriangulation classes.
             - New routines sphere(), simplicialSphere(), sphereBundle(),
-              twistedSphereBundle() for dimensions that did not have them.
+              twistedSphereBundle(), ball(), ballBundle() and
+              twistedBallBundle() for dimensions that did not have them.
             - New routines singleCone() and doubleCone() for dimensions >= 3
               that did not have them.
         Class Face<dim, subdim>:

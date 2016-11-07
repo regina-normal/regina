@@ -36,50 +36,6 @@
 
 namespace regina {
 
-Triangulation<4>* Example<4>::fourSphere() {
-    // Take two pentachora and join their entire boundaries according to
-    // the identity map.
-    Triangulation<4>* ans = new Triangulation<4>();
-    ans->setLabel("4-sphere");
-
-    Pentachoron<4>* p = ans->newPentachoron();
-    Pentachoron<4>* q = ans->newPentachoron();
-    p->join(0, q, Perm<5>());
-    p->join(1, q, Perm<5>());
-    p->join(2, q, Perm<5>());
-    p->join(3, q, Perm<5>());
-    p->join(4, q, Perm<5>());
-
-    return ans;
-}
-
-Triangulation<4>* Example<4>::simplicialFourSphere() {
-    Triangulation<4>* ans = new Triangulation<4>();
-    ans->setLabel("Standard simplicial 4-sphere");
-
-    Pentachoron<4>* penList[6];
-        // one pentachoron for every vertex of the 5-simplex
-    unsigned i, j, k;
-    for (i=0; i<6; i++)
-        penList[i] = ans->newPentachoron();
-    // one gluing for every distinct pair of vertices of 5-simplex
-    // we are gluing facet j-1 of pen i to facet i of pen j. 
-    // using the cycle i -> i+1 -> ... -> j-1 -> i. 
-    for (i=0; i<5; i++)
-        for (j=i+1; j<6; j++) {
-            int map[5];
-            for (k=0; k<5; k++) {
-                if ( (k<i) || (k>=j) )
-                    map[k]=k;
-                else if (k<(j-1))
-                    map[k]=k+1;
-                else map[j-1]=i;
-            }
-            penList[i]->join(j-1 , penList[j], Perm<5>(map) );
-        }
-    return ans;
-}
-
 Triangulation<4>* Example<4>::rp4() {
     Triangulation<4>* ans = new Triangulation<4>();
     ans->setLabel("Real projective 4-space");
@@ -100,50 +56,6 @@ Triangulation<4>* Example<4>::rp4() {
     r->join(2, s, Perm<5>());
     r->join(3, s, Perm<5>());
 
-    return ans;
-}
-
-Triangulation<4>* Example<4>::s3xs1() {
-    // Make two pentachora, and join three of the five facets according
-    // to the identity map.  Only facets 0123 and 1234 of each
-    // pentachoron remain.
-    Triangulation<4>* ans = new Triangulation<4>();
-    ans->setLabel("S3 x S1");
-
-    Pentachoron<4>* p = ans->newPentachoron();
-    Pentachoron<4>* q = ans->newPentachoron();
-    p->join(1, q, Perm<5>());
-    p->join(2, q, Perm<5>());
-    p->join(3, q, Perm<5>());
-
-    // Now join each 0123 to a 1234, which joins up the S1 loop.
-    // Do this in the orientation-preserving way.
-    p->join(0, q, Perm<5>(4,0,1,2,3));
-    q->join(0, p, Perm<5>(4,0,1,2,3));
-
-    // All done.
-    return ans;
-}
-
-Triangulation<4>* Example<4>::s3xs1Twisted() {
-    // Make two pentachora, and join three of the five facets according
-    // to the identity map.  Only facets 0123 and 1234 of each
-    // pentachoron remain.
-    Triangulation<4>* ans = new Triangulation<4>();
-    ans->setLabel("S3 x~ S1");
-
-    Pentachoron<4>* p = ans->newPentachoron();
-    Pentachoron<4>* q = ans->newPentachoron();
-    p->join(1, q, Perm<5>());
-    p->join(2, q, Perm<5>());
-    p->join(3, q, Perm<5>());
-
-    // Now join each 0123 to a 1234, which joins up the S1 loop.
-    // Do this in the orientation-reversing way.
-    p->join(0, p, Perm<5>(4,0,1,2,3));
-    q->join(0, q, Perm<5>(4,0,1,2,3));
-
-    // All done.
     return ans;
 }
 

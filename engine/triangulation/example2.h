@@ -92,7 +92,9 @@ class REGINA_API Example<2> : public detail::ExampleBase<2> {
 
         /**
          * Returns the four-triangle 2-sphere formed from the boundary
-         * of a tetrahedron.
+         * of a tetrahedron.  This is isomorphic to the triangulation
+         * returned by the generic routine simplicialSphere(), though
+         * it will have a different packet label.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -110,6 +112,8 @@ class REGINA_API Example<2> : public detail::ExampleBase<2> {
 
         /**
          * Returns a one-triangle disc.
+         * This is isomorphic to the triangulation returned by the generic
+         * routine ball(), though it will have a different packet label.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -118,6 +122,8 @@ class REGINA_API Example<2> : public detail::ExampleBase<2> {
 
         /**
          * Returns a two-triangle annulus.
+         * This is isomorphic to the triangulation returned by the generic
+         * routine ballBundle(), though it will have a different packet label.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -125,7 +131,9 @@ class REGINA_API Example<2> : public detail::ExampleBase<2> {
         static Triangulation<2>* annulus();
 
         /**
-         * Returns a one-triangle Mobius band.
+         * Returns a one-triangle Mobius band.  This is isomorphic to the
+         * triangulation returned by the generic routine twistedBallBundle(),
+         * though it will have a different packet label.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -134,6 +142,8 @@ class REGINA_API Example<2> : public detail::ExampleBase<2> {
 
         /**
          * Returns a two-triangle torus.
+         * This is isomorphic to the triangulation returned by the generic
+         * routine sphereBundle(), though it will have a different packet label.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
@@ -149,7 +159,9 @@ class REGINA_API Example<2> : public detail::ExampleBase<2> {
         static Triangulation<2>* rp2();
 
         /**
-         * Returns a two-triangle Klein bottle.
+         * Returns a two-triangle Klein bottle.  This is isomorphic to the
+         * triangulation returned by the generic routine twistedSphereBundle(),
+         * though it will have a different packet label.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.

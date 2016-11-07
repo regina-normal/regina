@@ -144,6 +144,12 @@ namespace {
 
 namespace regina {
 
+Triangulation<3>* Example<3>::solidKleinBottle() {
+    Triangulation<3>* ans = twistedBallBundle();
+    ans->setLabel("Solid Klein bottle");
+    return ans;
+}
+
 Triangulation<3>* Example<3>::threeSphere() {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("3-sphere");
@@ -167,24 +173,20 @@ Triangulation<3>* Example<3>::bingsHouse() {
     return ans;
 }
 
-Triangulation<3>* Example<3>::s2xs1() {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("S2 x S1");
-
-    ans->insertLayeredLensSpace(0, 1);
-
-    return ans;
-}
-
 Triangulation<3>* Example<3>::rp2xs1() {
     // Section 3.5.1 of Benjamin Burton's PhD thesis describes how to
     // construct RP^2 x S^1 by identifying the boundary triangles of a
-    // solid Klein bottle.
-    Triangulation<3>* ans = solidKleinBottle();
+    // three-tetrahedron solid Klein bottle.
+    Triangulation<3>* ans = new Triangulation<3>();
     ans->setLabel("RP2 x S1");
 
-    Tetrahedron<3>* r = ans->tetrahedron(0);
-    Tetrahedron<3>* t = ans->tetrahedron(2);
+    Tetrahedron<3>* r = ans->newTetrahedron();
+    Tetrahedron<3>* s = ans->newTetrahedron();
+    Tetrahedron<3>* t = ans->newTetrahedron();
+    s->join(0, r, Perm<4>(0, 1, 2, 3));
+    s->join(3, r, Perm<4>(3, 0, 1, 2));
+    s->join(1, t, Perm<4>(3, 0, 1, 2));
+    s->join(2, t, Perm<4>(0, 1, 2, 3));
     r->join(1, t, Perm<4>(2, 3, 0, 1));
     r->join(3, t, Perm<4>(2, 3, 0, 1));
 
@@ -286,23 +288,6 @@ Triangulation<3>* Example<3>::lst(size_t a, size_t b) {
     std::ostringstream s;
     s << "LST(" << a << ',' << b << ',' << (a + b) << ')';
     ans->setLabel(s.str());
-
-    return ans;
-}
-
-Triangulation<3>* Example<3>::solidKleinBottle() {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->setLabel("Solid Klein bottle");
-
-    // A three-tetrahedron solid Klein bottle is described in section
-    // 3.5.1 of Benjamin Burton's PhD thesis.
-    Tetrahedron<3>* r = ans->newTetrahedron();
-    Tetrahedron<3>* s = ans->newTetrahedron();
-    Tetrahedron<3>* t = ans->newTetrahedron();
-    s->join(0, r, Perm<4>(0, 1, 2, 3));
-    s->join(3, r, Perm<4>(3, 0, 1, 2));
-    s->join(1, t, Perm<4>(3, 0, 1, 2));
-    s->join(2, t, Perm<4>(0, 1, 2, 3));
 
     return ans;
 }

@@ -51,6 +51,12 @@ void addExample2() {
             return_value_policy<to_held_type<> >())
         .def("twistedSphereBundle", &Example<2>::twistedSphereBundle,
             return_value_policy<to_held_type<> >())
+        .def("ball", &Example<2>::ball,
+            return_value_policy<to_held_type<> >())
+        .def("ballBundle", &Example<2>::ballBundle,
+            return_value_policy<to_held_type<> >())
+        .def("twistedBallBundle", &Example<2>::twistedBallBundle,
+            return_value_policy<to_held_type<> >())
         .def("orientable", &Example<2>::orientable,
             return_value_policy<to_held_type<> >())
         .def("nonOrientable", &Example<2>::nonOrientable,
@@ -76,6 +82,9 @@ void addExample2() {
         .staticmethod("simplicialSphere")
         .staticmethod("sphereBundle")
         .staticmethod("twistedSphereBundle")
+        .staticmethod("ball")
+        .staticmethod("ballBundle")
+        .staticmethod("twistedBallBundle")
         .staticmethod("orientable")
         .staticmethod("nonOrientable")
         .staticmethod("sphereTetrahedron")
