@@ -100,8 +100,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             /**< Real projective 4-space, built from four pentachora. */
 
         // Bounded orientable:
-        Triangulation<4> ball_singlePent;
-            /**< A single pentachoron with no facet gluings. */
         Triangulation<4> ball_foldedPent;
             /**< A single pentachoron with two facets folded together. */
         Triangulation<4> ball_singleConeS3;
@@ -200,9 +198,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             // Build the rest manually.
             Pentachoron<4>* p[2];
 
-            ball_singlePent.newPentachoron();
-            ball_singlePent.setLabel("D^4 (single pentachoron)");
-
             p[0] = ball_foldedPent.newPentachoron();
             p[0]->join(2, p[0], Perm<5>(2, 4));
             ball_foldedPent.setLabel("Folded pentachoron");
@@ -268,10 +263,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(&sphereBundle);
             f(&rp4);
             f(&twistedSphereBundle);
-            f(&ball_singlePent);
+            f(&ball);
             f(&ball_foldedPent);
             f(&ball_singleConeS3);
             f(&ball_layerAndFold);
+            f(&ballBundle);
+            f(&twistedBallBundle);
             f(&idealPoincareProduct);
             f(&idealCappellShaneson);
             f(&mixedPoincareProduct);
@@ -296,10 +293,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(&sphereBundle);
             f(&rp4);
             f(&twistedSphereBundle);
-            f(&ball_singlePent);
+            f(&ball);
             f(&ball_foldedPent);
             f(&ball_singleConeS3);
             f(&ball_layerAndFold);
+            f(&ballBundle);
+            f(&twistedBallBundle);
             // f(&idealPoincareProduct);
             f(&idealCappellShaneson);
             // f(&mixedPoincareProduct);
@@ -435,10 +434,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyValid(sphereBundle);
             verifyValid(rp4);
             verifyValid(twistedSphereBundle);
-            verifyValid(ball_singlePent);
+            verifyValid(ball);
             verifyValid(ball_foldedPent);
             verifyValid(ball_singleConeS3);
             verifyValid(ball_layerAndFold);
+            verifyValid(ballBundle);
+            verifyValid(twistedBallBundle);
             verifyValid(idealPoincareProduct);
             verifyValid(idealCappellShaneson);
             verifyValid(mixedPoincareProduct);
@@ -469,10 +470,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyConnected(sphereBundle);
             verifyConnected(rp4);
             verifyConnected(twistedSphereBundle);
-            verifyConnected(ball_singlePent);
+            verifyConnected(ball);
             verifyConnected(ball_foldedPent);
             verifyConnected(ball_singleConeS3);
             verifyConnected(ball_layerAndFold);
+            verifyConnected(ballBundle);
+            verifyConnected(twistedBallBundle);
             verifyConnected(idealPoincareProduct);
             verifyConnected(idealCappellShaneson);
             verifyConnected(mixedPoincareProduct);
@@ -506,10 +509,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyOrientable(sphereBundle);
             verifyOrientable(rp4, false);
             verifyOrientable(twistedSphereBundle, false);
-            verifyOrientable(ball_singlePent);
+            verifyOrientable(ball);
             verifyOrientable(ball_foldedPent);
             verifyOrientable(ball_singleConeS3);
             verifyOrientable(ball_layerAndFold);
+            verifyOrientable(ballBundle);
+            verifyOrientable(twistedBallBundle, false);
             verifyOrientable(idealPoincareProduct);
             verifyOrientable(idealCappellShaneson);
             verifyOrientable(mixedPoincareProduct);
@@ -590,10 +595,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundary(sphereBundle);
             verifyBoundary(rp4);
             verifyBoundary(twistedSphereBundle);
-            verifyBoundary(ball_singlePent, true);
+            verifyBoundary(ball, true);
             verifyBoundary(ball_foldedPent, true);
             verifyBoundary(ball_singleConeS3, true);
             verifyBoundary(ball_layerAndFold, true);
+            verifyBoundary(ballBundle, true);
+            verifyBoundary(twistedBallBundle, true);
             verifyBoundary(idealPoincareProduct, false, 2);
             verifyBoundary(idealCappellShaneson, false, 1, 0, true);
             verifyBoundary(mixedPoincareProduct, true, 1);
@@ -856,9 +863,9 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(sphereBundle, 0);
             verifyBoundaryCount(rp4, 0);
             verifyBoundaryCount(twistedSphereBundle, 0);
-            verifyBoundaryCount(ball_singlePent, 1);
-            verifyBoundaryBuild(ball_singlePent);
-            verifyBoundaryTri(ball_singlePent, 0, "S3");
+            verifyBoundaryCount(ball, 1);
+            verifyBoundaryBuild(ball);
+            verifyBoundaryTri(ball, 0, "S3");
             verifyBoundaryCount(ball_foldedPent, 1);
             verifyBoundaryBuild(ball_foldedPent);
             verifyBoundaryTri(ball_foldedPent, 0, "S3");
@@ -868,6 +875,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(ball_layerAndFold, 1);
             verifyBoundaryBuild(ball_layerAndFold);
             verifyBoundaryTri(ball_layerAndFold, 0, "S3");
+            verifyBoundaryCount(ballBundle, 1);
+            verifyBoundaryBuild(ballBundle);
+            verifyBoundaryTri(ballBundle, 0, "S2 x S1");
+            verifyBoundaryCount(twistedBallBundle, 1);
+            verifyBoundaryBuild(twistedBallBundle);
+            verifyBoundaryTri(twistedBallBundle, 0, "S2 x S1");
             verifyBoundaryCount(idealPoincareProduct, 0, 2);
             verifyBoundaryTri(idealPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(idealPoincareProduct, 1, "S3/P120");
@@ -951,10 +964,12 @@ class Triangulation4Test : public TriangulationTest<4> {
         }
 
         void boundaryInclusions() {
-            verifyBoundaryInclusions(ball_singlePent);
+            verifyBoundaryInclusions(ball);
             verifyBoundaryInclusions(ball_foldedPent);
             verifyBoundaryInclusions(ball_singleConeS3);
             verifyBoundaryInclusions(ball_layerAndFold);
+            verifyBoundaryInclusions(ballBundle);
+            verifyBoundaryInclusions(twistedBallBundle);
         }
 
         void verifyLinkCount(const Triangulation<4>& tri, unsigned nVert) {
@@ -1096,12 +1111,14 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyLinksSpheres(sphereBundle, 1);
             verifyLinksSpheres(rp4, 3);
             verifyLinksSpheres(twistedSphereBundle, 1);
-            verifyLinksBalls(ball_singlePent, 5);
+            verifyLinksBalls(ball, 5);
             verifyLinksBalls(ball_foldedPent, 4);
             verifyLinkCount(ball_singleConeS3, 2);
             verifyLink(ball_singleConeS3, 0, "B3");
             verifyLink(ball_singleConeS3, 1, "S3");
             verifyLinksBalls(ball_layerAndFold, 4);
+            verifyLinksBalls(ballBundle, 2);
+            verifyLinksBalls(twistedBallBundle, 1);
             verifyLinkCount(idealPoincareProduct, 3);
             verifyLink(idealPoincareProduct, 0, "S3");
             verifyLink(idealPoincareProduct, 1, "S3/P120");
@@ -1183,10 +1200,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyEulerChar(sphereBundle, 0, 0);
             verifyEulerChar(rp4, 1, 1);
             verifyEulerChar(twistedSphereBundle, 0, 0);
-            verifyEulerChar(ball_singlePent, 1, 1);
+            verifyEulerChar(ball, 1, 1);
             verifyEulerChar(ball_foldedPent, 1, 1);
             verifyEulerChar(ball_singleConeS3, 1, 1);
             verifyEulerChar(ball_layerAndFold, 1, 1);
+            verifyEulerChar(ballBundle, 0, 0);
+            verifyEulerChar(twistedBallBundle, 0, 0);
             verifyEulerChar(idealPoincareProduct, 0, 2);
             verifyEulerChar(mixedPoincareProduct, 0, 1);
             verifyEulerCharTri(idealFigEightProduct, 1);
@@ -1204,10 +1223,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyHomology(sphereBundle, "Z");
             verifyHomology(rp4, "Z_2");
             verifyHomology(twistedSphereBundle, "Z");
-            verifyHomology(ball_singlePent, "0");
+            verifyHomology(ball, "0");
             verifyHomology(ball_foldedPent, "0");
             verifyHomology(ball_singleConeS3, "0");
             verifyHomology(ball_layerAndFold, "0");
+            verifyHomology(ballBundle, "Z");
+            verifyHomology(twistedBallBundle, "Z");
             verifyHomology(idealPoincareProduct, "0");
             verifyHomology(idealCappellShaneson, "Z");
             verifyHomology(mixedPoincareProduct, "0");
@@ -1223,10 +1244,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyFundGroup(sphereBundle, "Z");
             verifyFundGroup(rp4, "Z_2");
             verifyFundGroup(twistedSphereBundle, "Z");
-            verifyFundGroup(ball_singlePent, "0");
+            verifyFundGroup(ball, "0");
             verifyFundGroup(ball_foldedPent, "0");
             verifyFundGroup(ball_singleConeS3, "0");
             verifyFundGroup(ball_layerAndFold, "0");
+            verifyFundGroup(ballBundle, "Z");
+            verifyFundGroup(twistedBallBundle, "Z");
             verifyFundGroup(idealPoincareProduct, "");
             verifyFundGroup(mixedPoincareProduct, "");
             verifyFundGroup(idealFigEightProduct,

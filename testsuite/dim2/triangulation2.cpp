@@ -67,14 +67,6 @@ class Triangulation2Test : public TriangulationTest<2> {
         Triangulation<2> rp2;
             /**< A projective plane with two triangles. */
 
-        // Bounded:
-        Triangulation<2> disc;
-            /**< A disc with one triangle. */
-        Triangulation<2> annulus;
-            /**< An annulus with two triangles. */
-        Triangulation<2> mobius;
-            /**< A Mobius band with one triangle. */
-
         // Disconnected triangulations:
         Triangulation<2> disjoint2;
             /**< A disjoint union of two triangulations. */
@@ -100,21 +92,12 @@ class Triangulation2Test : public TriangulationTest<2> {
             copyAndDelete(rp2, Example<2>::rp2());
             rp2.setLabel("RP^2");
 
-            copyAndDelete(disc, Example<2>::disc());
-            disc.setLabel("Disc");
-
-            copyAndDelete(annulus, Example<2>::annulus());
-            annulus.setLabel("Annulus");
-
-            copyAndDelete(mobius, Example<2>::mobius());
-            mobius.setLabel("Mobius band");
-
             disjoint2.insertTriangulation(sphereBundle);
-            disjoint2.insertTriangulation(mobius);
+            disjoint2.insertTriangulation(twistedBallBundle);
             disjoint2.setLabel("Torus U Mobius");
 
             disjoint3.insertTriangulation(twistedSphereBundle);
-            disjoint3.insertTriangulation(annulus);
+            disjoint3.insertTriangulation(ballBundle);
             disjoint3.insertTriangulation(sphere);
             disjoint3.setLabel("KB U Annulus U S^2");
         }
@@ -134,9 +117,9 @@ class Triangulation2Test : public TriangulationTest<2> {
             f(&torus2);
             f(&rp2);
             f(&twistedSphereBundle);
-            f(&disc);
-            f(&annulus);
-            f(&mobius);
+            f(&ball);
+            f(&ballBundle);
+            f(&twistedBallBundle);
             f(&disjoint2);
             f(&disjoint3);
         }

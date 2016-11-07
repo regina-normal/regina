@@ -114,10 +114,6 @@ class Triangulation3Test : public TriangulationTest<3> {
         static constexpr const double epsilon = 0.00000001;
             /**< For comparing floating-point Turaev-Viro values. */
 
-        // Trivial:
-        Triangulation<3> singleTet;
-            /**< A single tetrahedron with no face gluings. */
-
         // Closed orientable:
         Triangulation<3> s3;
             /**< A one-vertex 3-sphere. */
@@ -159,10 +155,6 @@ class Triangulation3Test : public TriangulationTest<3> {
         // Closed non-orientable:
         Triangulation<3> rp2xs1;
             /**< The product RP^2 x S^1. */
-
-        // Bounded non-orientable:
-        Triangulation<3> solidKB;
-            /**< A solid Klein bottle. */
 
         // Ideal non-orientable:
         Triangulation<3> gieseking;
@@ -247,10 +239,6 @@ class Triangulation3Test : public TriangulationTest<3> {
         void setUp() {
             TriangulationTest<3>::setUp();
 
-            // Begin with trivial cases.
-            singleTet.newTetrahedron();
-            singleTet.setLabel("Single tetrahedron");
-
             // Some of our triangulations can be constructed automatically.
             s3.insertLayeredLensSpace(1, 0);
             s3.setLabel("S^3");
@@ -307,9 +295,6 @@ class Triangulation3Test : public TriangulationTest<3> {
             copyAndDelete(figure8,
                 Example<3>::figureEight());
             figure8.setLabel("Figure 8 knot complement");
-
-            copyAndDelete(solidKB, Example<3>::solidKleinBottle());
-            solidKB.setLabel("Solid Klein bottle");
 
             copyAndDelete(rp2xs1, Example<3>::rp2xs1());
             rp2xs1.setLabel("RP^2 x S^1");
@@ -436,7 +421,7 @@ class Triangulation3Test : public TriangulationTest<3> {
          */
         void testManualSmall(Triangulation3TestFunction f) {
             f(&empty);
-            f(&singleTet);
+            f(&ball);
             f(&s3);
             f(&s2xs1);
             f(&rp3_1);
@@ -451,7 +436,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             f(&lst3_4_7);
             f(&figure8);
             f(&rp2xs1);
-            f(&solidKB);
+            f(&ballBundle);
+            f(&twistedBallBundle);
             f(&gieseking);
             f(&invalidEdges);
             f(&twoProjPlaneCusps);
@@ -495,7 +481,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not valid.",
                 empty.isValid());
             CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is not valid.",
-                singleTet.isValid());
+                ball.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not valid.",
                 s3.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not valid.",
@@ -538,8 +524,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 figure8.isValid());
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not valid.",
                 rp2xs1.isValid());
+            CPPUNIT_ASSERT_MESSAGE("The solid torus is not valid.",
+                ballBundle.isValid());
             CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle is not valid.",
-                solidKB.isValid());
+                twistedBallBundle.isValid());
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is not valid.",
                 gieseking.isValid());
             CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
@@ -563,7 +551,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not standard.",
                 empty.isStandard());
             CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is not standard.",
-                singleTet.isStandard());
+                ball.isStandard());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not standard.",
                 s3.isStandard());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not standard.",
@@ -606,8 +594,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 figure8.isStandard());
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not standard.",
                 rp2xs1.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The solid torus is not standard.",
+                ballBundle.isStandard());
             CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle is not standard.",
-                solidKB.isStandard());
+                twistedBallBundle.isStandard());
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is not standard.",
                 gieseking.isStandard());
             CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
@@ -630,7 +620,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not orientable.",
                 empty.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is not orientable.",
-                singleTet.isOrientable());
+                ball.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not orientable.",
                 s3.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not orientable.",
@@ -673,8 +663,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 figure8.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is orientable.",
                 ! rp2xs1.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("The solid torus is non-orientable.",
+                ballBundle.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle is orientable.",
-                ! solidKB.isOrientable());
+                ! twistedBallBundle.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is orientable.",
                 ! gieseking.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
@@ -697,7 +689,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation has boundary "
                 "components.", empty.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("A single tetrahedron has no boundary "
-                "components.", singleTet.countBoundaryComponents() > 0);
+                "components.", ball.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("S^3 has boundary components.",
                 s3.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 has boundary components.",
@@ -741,9 +733,12 @@ class Triangulation3Test : public TriangulationTest<3> {
                 figure8.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 has boundary components.",
                 rp2xs1.countBoundaryComponents() == 0);
+            CPPUNIT_ASSERT_MESSAGE("The solid torus "
+                "has no boundary components.",
+                ballBundle.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle "
                 "has no boundary components.",
-                solidKB.countBoundaryComponents() > 0);
+                twistedBallBundle.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold "
                 "has no boundary components.",
                 gieseking.countBoundaryComponents() > 0);
@@ -1244,11 +1239,11 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void vertexLinksSpecific() {
-            verifyVertexCount(singleTet, 4, "Single tetrahedron");
-            verifyVertexDisc(singleTet, 0, "Single tetrahedron");
-            verifyVertexDisc(singleTet, 1, "Single tetrahedron");
-            verifyVertexDisc(singleTet, 2, "Single tetrahedron");
-            verifyVertexDisc(singleTet, 3, "Single tetrahedron");
+            verifyVertexCount(ball, 4, "Single tetrahedron");
+            verifyVertexDisc(ball, 0, "Single tetrahedron");
+            verifyVertexDisc(ball, 1, "Single tetrahedron");
+            verifyVertexDisc(ball, 2, "Single tetrahedron");
+            verifyVertexDisc(ball, 3, "Single tetrahedron");
 
             verifyVertexCount(s3, 1, "S^3");
             verifyVertexSphere(s3, 0, "S^3");
@@ -1334,9 +1329,12 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyVertexCount(rp2xs1, 1, "RP^2 x S^1");
             verifyVertexSphere(rp2xs1, 0, "RP^2 x S^1");
 
-            verifyVertexCount(solidKB, 2, "Solid Klein bottle");
-            verifyVertexDisc(solidKB, 0, "Solid Klein bottle");
-            verifyVertexDisc(solidKB, 1, "Solid Klein bottle");
+            verifyVertexCount(ballBundle, 1, "Solid torus");
+            verifyVertexDisc(ballBundle, 0, "Solid torus");
+
+            verifyVertexCount(twistedBallBundle, 2, "Solid Klein bottle");
+            verifyVertexDisc(twistedBallBundle, 0, "Solid Klein bottle");
+            verifyVertexDisc(twistedBallBundle, 1, "Solid Klein bottle");
 
             verifyVertexCount(gieseking, 1, "Gieseking manifold");
             verifyVertexKB(gieseking, 0, "Gieseking manifold");
@@ -1572,7 +1570,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void eulerChar() {
             verifyEuler(empty, 0, 0, "Empty triangulation");
-            verifyEuler(singleTet, 1, 1, "Single tetrahedron");
+            verifyEuler(ball, 1, 1, "Single tetrahedron");
             verifyEuler(s3, 0, 0, "S^3");
             verifyEuler(s2xs1, 0, 0, "S^2 x S^1");
             verifyEuler(rp3_1, 0, 0, "RP^3 (1 vtx)");
@@ -1588,7 +1586,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyEuler(lst3_4_7, 0, 0, "LST(3,4,7)");
             verifyEuler(figure8, 0, 1, "Figure eight knot complement");
             verifyEuler(rp2xs1, 0, 0, "RP^2 x S^1");
-            verifyEuler(solidKB, 0, 0, "Solid Klein bottle");
+            verifyEuler(ballBundle, 0, 0, "Solid torus");
+            verifyEuler(twistedBallBundle, 0, 0, "Solid Klein bottle");
             verifyEuler(gieseking, 0, 1, "Gieseking manifold");
 
             verifyEuler(invalidEdges, 1, -1,
@@ -1726,7 +1725,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         void homology() {
             verifyGroup(empty.homology(),
                 "H1(empty triangulation)", 0);
-            verifyGroup(singleTet.homology(),
+            verifyGroup(ball.homology(),
                 "H1(single tetrahedron)", 0);
             verifyGroup(s3.homology(),
                 "H1(S^3)", 0);
@@ -1766,7 +1765,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "H1(figure eight knot complement)", 1);
             verifyGroup(rp2xs1.homology(),
                 "H1(RP^2 x S^1)", 1, 2);
-            verifyGroup(solidKB.homology(),
+            verifyGroup(ballBundle.homology(),
+                "H1(solid torus)", 1);
+            verifyGroup(twistedBallBundle.homology(),
                 "H1(solid Klein bottle)", 1);
             verifyGroup(gieseking.homology(),
                 "H1(Gieseking manifold)", 1);
@@ -1785,7 +1786,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         void homologyBdry() {
             verifyGroup(empty.homologyBdry(),
                 "Boundary H1(empty triangulation)", 0);
-            verifyGroup(singleTet.homologyBdry(),
+            verifyGroup(ball.homologyBdry(),
                 "Boundary H1(single tetrahedron)", 0);
             verifyGroup(s3.homologyBdry(),
                 "Boundary H1(S^3)", 0);
@@ -1825,7 +1826,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Boundary H1(figure eight knot complement)", 2);
             verifyGroup(rp2xs1.homologyBdry(),
                 "Boundary H1(RP^2 x S^1)", 0);
-            verifyGroup(solidKB.homologyBdry(),
+            verifyGroup(ballBundle.homologyBdry(),
+                "Boundary H1(solid torus)", 2);
+            verifyGroup(twistedBallBundle.homologyBdry(),
                 "Boundary H1(solid Klein bottle)", 1, 2);
             verifyGroup(gieseking.homologyBdry(),
                 "Boundary H1(Gieseking manifold)", 1, 2);
@@ -1869,7 +1872,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void fundGroupVsH1() {
             verifyFundGroupVsH1(&empty);
-            verifyFundGroupVsH1(&singleTet);
+            verifyFundGroupVsH1(&ball);
             verifyFundGroupVsH1(&s3);
             verifyFundGroupVsH1(&s2xs1);
             verifyFundGroupVsH1(&rp3_1);
@@ -1889,7 +1892,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFundGroupVsH1(&lst3_4_7);
             verifyFundGroupVsH1(&figure8);
             verifyFundGroupVsH1(&rp2xs1);
-            verifyFundGroupVsH1(&solidKB);
+            verifyFundGroupVsH1(&ballBundle);
+            verifyFundGroupVsH1(&twistedBallBundle);
             verifyFundGroupVsH1(&gieseking);
             verifyFundGroupVsH1(&twoProjPlaneCusps);
             verifyFundGroupVsH1(&cuspedGenusTwoTorus);
@@ -1901,7 +1905,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void fundGroup() {
             verifyFundGroup(empty, "0");
-            verifyFundGroup(singleTet, "0");
+            verifyFundGroup(ball, "0");
             verifyFundGroup(s3, "0");
             verifyFundGroup(s2xs1, "Z");
             verifyFundGroup(rp3_1, "Z_2");
@@ -1919,7 +1923,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(rp2xs1, "Z + Z_2");
-            verifyFundGroup(solidKB, "Z");
+            verifyFundGroup(ballBundle, "Z");
+            verifyFundGroup(twistedBallBundle, "Z");
             verifyFundGroup(invalidEdges, "0");
             verifyFundGroup(twoProjPlaneCusps, "Z_2");
             verifyFundGroup(cuspedGenusTwoTorus, "Free(2)");
@@ -1997,7 +2002,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not "
                 "0-efficient.", empty.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is 0-efficient.",
-                ! singleTet.isZeroEfficient());
+                ! ball.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not 0-efficient.",
                 s3.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is 0-efficient.",
@@ -2042,8 +2047,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not 0-efficient.",
                 rp2xs1.isZeroEfficient());
                 // Contains a two-sided projective plane.
+            CPPUNIT_ASSERT_MESSAGE("The solid torus is 0-efficient.",
+                ! ballBundle.isZeroEfficient());
+                // Contains a non-trivial disc.
             CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle is 0-efficient.",
-                ! solidKB.isZeroEfficient());
+                ! twistedBallBundle.isZeroEfficient());
                 // Contains a non-trivial disc.
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is not 0-efficient.",
                 gieseking.isZeroEfficient());
@@ -3563,7 +3571,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void dehydration() {
             verifyDehydration(empty);
-            verifyNoDehydration(singleTet);
+            verifyNoDehydration(ball);
             verifyDehydration(s3);
             verifyDehydration(s3_large);
             verifyDehydration(s2xs1);
@@ -3588,7 +3596,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyNoDehydration(lst3_4_7);
             verifyDehydration(figure8);
             verifyDehydration(rp2xs1);
-            verifyNoDehydration(solidKB);
+            verifyNoDehydration(ballBundle);
+            verifyNoDehydration(twistedBallBundle);
             verifyDehydration(gieseking);
             verifyDehydration(invalidEdges);
             verifyDehydration(twoProjPlaneCusps);

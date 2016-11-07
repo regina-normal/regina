@@ -109,6 +109,14 @@ class TriangulationTest : public CppUnit::TestFixture {
         Triangulation<dim> twistedSphereBundle;
             /**< The twisted product S^(dim-1) x~ S^1. */
 
+        // Real boundary:
+        Triangulation<dim> ball;
+            /**< A single dim-simplex, with no gluings. */
+        Triangulation<dim> ballBundle;
+            /**< The product B^(dim-1) x S^1. */
+        Triangulation<dim> twistedBallBundle;
+            /**< The twisted product B^(dim-1) x~ S^1. */
+
     public:
         void copyAndDelete(Triangulation<dim>& dest,
                 Triangulation<dim>* source, const char* name = 0) {
@@ -131,6 +139,11 @@ class TriangulationTest : public CppUnit::TestFixture {
             copyAndDelete(sphereBundle, regina::Example<dim>::sphereBundle());
             copyAndDelete(twistedSphereBundle,
                 regina::Example<dim>::twistedSphereBundle());
+
+            copyAndDelete(ball, regina::Example<dim>::ball());
+            copyAndDelete(ballBundle, regina::Example<dim>::ballBundle());
+            copyAndDelete(twistedBallBundle,
+                regina::Example<dim>::twistedBallBundle());
         }
 
         static void verifyOrient(const Triangulation<dim>* original,
