@@ -36,7 +36,77 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 using regina::Isomorphism;
+using regina::Perm;
 using regina::Triangulation;
+
+/**
+ * Used to verify that a triangulated boundary component has its faces
+ * labelled and ordered correctly.  Specifically, this class checks all
+ * faces of dimensions 0,...,subdim.
+ */
+template <int dim, int subdim>
+struct BoundaryHelper {
+    static void verifyFaces(const regina::BoundaryComponent<dim>* bc,
+            const Triangulation<dim-1>* built) {
+        BoundaryHelper<dim, subdim-1>::verifyFaces(bc, built);
+
+        if (bc->template countFaces<subdim>() !=
+                built->template countFaces<subdim>()) {
+            std::ostringstream msg;
+            msg << "Boundary component " << bc->index()
+                << " of triangulation " << bc->triangulation()->label()
+                << " gives the wrong number of " << subdim << "-faces"
+                << " when triangulated."
+                << std::endl;
+            CPPUNIT_FAIL(msg.str());
+        }
+
+        size_t i, j;
+        for (i = 0; i < bc->size(); ++i) {
+            const regina::Simplex<dim-1>* innerSimp = built->simplex(i);
+            regina::Face<dim, dim-1>* outerSimp = bc->template face<dim-1>(i);
+
+            for (j = 0; j < regina::binomSmall(dim, subdim+1); ++j) {
+                regina::Face<dim-1, subdim>* innerFace =
+                    innerSimp->template face<subdim>(j);
+                regina::Face<dim, subdim>* outerFace =
+                    outerSimp->template face<subdim>(j);
+
+                if (bc->template face<subdim>(innerFace->index()) !=
+                        outerFace) {
+                    std::ostringstream msg;
+                    msg << "Boundary component " << bc->index()
+                        << " of triangulation " << bc->triangulation()->label()
+                        << " gives mismatched " << subdim << "-face indices"
+                        << " when triangulated."
+                        << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                Perm<dim> innerPerm = innerSimp->template
+                    faceMapping<subdim>(j);
+                Perm<dim+1> outerPerm = outerSimp->template
+                    faceMapping<subdim>(j);
+                if (innerPerm.trunc(subdim+1) != outerPerm.trunc(subdim+1)) {
+                    std::ostringstream msg;
+                    msg << "Boundary component " << bc->index()
+                        << " of triangulation " << bc->triangulation()->label()
+                        << " gives mismatched " << subdim << "-face labelling"
+                        << " when triangulated."
+                        << std::endl;
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+    }
+};
+
+template <int dim>
+struct BoundaryHelper<dim, -1> {
+    static void verifyFaces(const regina::BoundaryComponent<dim>*,
+            const Triangulation<dim-1>*) {
+    }
+};
 
 /**
  * Used to verify that the orientable double cover of a non-orientable
@@ -520,6 +590,91 @@ class TriangulationTest : public CppUnit::TestFixture {
                     }
                 }
                 */
+            }
+        }
+
+        static void verifyBoundaryCount(const Triangulation<dim>& tri,
+                size_t nReal, size_t nIdeal = 0, size_t nInvalid = 0) {
+            size_t ans = tri.countBoundaryComponents();
+            if (ans != nReal + nIdeal + nInvalid) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label() << " gives "
+                    << ans << " boundary component(s) instead of the expected "
+                    << nReal + nIdeal + nInvalid << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            size_t foundReal = 0, foundIdeal = 0, foundInvalid = 0;
+            for (auto bc : tri.boundaryComponents())
+                if (bc->isIdeal())
+                    ++foundIdeal;
+                else if (bc->isInvalidVertex())
+                    ++foundInvalid;
+                else
+                    ++foundReal;
+
+            if (foundReal != nReal) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label() << " gives " << ans
+                    << " real boundary component(s) instead of the expected "
+                    << nReal << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (foundIdeal != nIdeal) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label() << " gives " << ans
+                    << " ideal boundary component(s) instead of the expected "
+                    << nIdeal << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (foundInvalid != nInvalid) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label() << " gives " << ans
+                    << " invalid vertex boundary component(s) instead of "
+                    "the expected " << nInvalid << "." << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static void verifyBoundaryBuild(const Triangulation<dim>& tri) {
+            for (auto bc : tri.boundaryComponents())
+                if (bc->isReal()) {
+                    // We have a real boundary component.
+                    const Triangulation<dim-1>* built = bc->build();
+
+                    if (bc->size() != built->size()) {
+                        std::ostringstream msg;
+                        msg << "Boundary component " << bc->index()
+                            << " of triangulation " << tri.label()
+                            << " gives the wrong number of top-dimensional "
+                            "simplices when triangulated." << std::endl;
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    // Check that [built] and [bc] have the same numbers
+                    // of faces of each dimension, and that these faces
+                    // appear to be ordered and labelled correctly.
+
+                    BoundaryHelper<dim, dim-2>::verifyFaces(bc, built);
+                }
+        }
+
+        static void verifyBoundaryH1(const Triangulation<dim>& tri,
+                size_t whichBdry, const char* h1) {
+            // Do a barycentric subdivision to turn any invalid edges
+            // into proper RP^2 ideal boundaries.
+            Triangulation<dim-1> t(
+                *(tri.boundaryComponent(whichBdry)->build()));
+
+            std::string ans = t.homology().str();
+
+            if (ans != h1) {
+                std::ostringstream msg;
+                msg << "Boundary component " << whichBdry
+                    << " of triangulation " << tri.label()
+                    << " has first homology " << ans
+                    << " instead of the expected " << h1 << ".";
+                CPPUNIT_FAIL(msg.str());
             }
         }
 };
