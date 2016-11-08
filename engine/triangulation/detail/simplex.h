@@ -184,7 +184,7 @@ class SimplexBase :
         public boost::noncopyable {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
     public:
-        typedef typename IntOfMinSize<(dim + 1) / 8>::utype FacetMask;
+        typedef typename IntOfMinSize<(dim / 8) + 1>::utype FacetMask;
             /**< An unsigned integer type with at least <i>dim</i>+1 bits.
                  This can be used as a bitmask for the <i>dim</i>+1 facets
                  (or vertices) of a <i>dim</i>-simplex. */
