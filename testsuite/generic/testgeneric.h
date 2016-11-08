@@ -43,4 +43,5 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addFaceNumbering(CppUnit::TextUi::TestRunner& runner);
+void addGenericTriangulation(CppUnit::TextUi::TestRunner& runner);
 

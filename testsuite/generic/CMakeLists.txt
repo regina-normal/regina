@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   facenumbering
+  generictriangulation
   )
 
 # Prepend folder name

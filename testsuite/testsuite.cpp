@@ -138,6 +138,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
 
     // Generic triangulations:
     addFaceNumbering(runner);
+    addGenericTriangulation(runner);
 
     // Subcomplexes:
     addNStandardTriangulation(runner);

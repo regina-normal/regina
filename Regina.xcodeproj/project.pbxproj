@@ -451,6 +451,8 @@
 		05249F801DBC174E001FE29E /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */; };
 		052774141C55744300140918 /* hypercreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* hypercreator.cpp */; };
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
+		0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
+		0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */; };
 		052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CF1C5CDC8B0011C1E6 /* safeptr.h */; };
 		052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942D01C5CDC8B0011C1E6 /* saferemnant.h */; };
@@ -2557,6 +2559,7 @@
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
 		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
 		052774161C55760B00140918 /* NewHypersurfacesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewHypersurfacesController.mm; sourceTree = "<group>"; };
+		0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriangulation.cpp; sourceTree = "<group>"; };
 		052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safepointeebase.h; sourceTree = "<group>"; };
 		052942CF1C5CDC8B0011C1E6 /* safeptr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeptr.h; sourceTree = "<group>"; };
 		052942D01C5CDC8B0011C1E6 /* saferemnant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = saferemnant.h; sourceTree = "<group>"; };
@@ -6449,6 +6452,7 @@
 			children = (
 				05A73CB419B2F1280099C617 /* CMakeLists.txt */,
 				05431F9B1C40F537009BC072 /* facenumbering.cpp */,
+				0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */,
 				05A73CB519B2F1280099C617 /* generictriangulation.h */,
 				05431F9C1C40F537009BC072 /* testgeneric.h */,
 			);
@@ -7855,6 +7859,7 @@
 				052FA11A1806088B00FAE4DF /* homologicaldata.cpp in Sources */,
 				05431F981C40F527009BC072 /* perm2.cpp in Sources */,
 				052FA11E1806088B00FAE4DF /* bitmask.cpp in Sources */,
+				0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */,
 				052FA11D1806088B00FAE4DF /* base64.cpp in Sources */,
 				052FA1141806088B00FAE4DF /* nstandardtriangulation.cpp in Sources */,
 				052FA1051806088B00FAE4DF /* facetpairing2.cpp in Sources */,
@@ -8412,6 +8417,7 @@
 				05249EE31DBC16E4001FE29E /* face13.cpp in Sources */,
 				05C064551C55C811006E6483 /* HyperSummary.mm in Sources */,
 				05A73C8B19B2EF130099C617 /* fundgroup.cpp in Sources */,
+				0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */,
 				05C1BEE81DCA89E3007C946B /* triangulation8.cpp in Sources */,
 				05249EB51DBC16C4001FE29E /* component2.cpp in Sources */,
 				052FA1A41806129B00FAE4DF /* numbertheory.cpp in Sources */,
