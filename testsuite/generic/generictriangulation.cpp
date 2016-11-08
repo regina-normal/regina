@@ -35,7 +35,7 @@
 #include "triangulation/dim4.h"
 #include "triangulation/example.h"
 
-#include "testsuite/generic/generictriangulation.h"
+#include "testsuite/generic/triangulationtest.h"
 #include "testsuite/generic/testgeneric.h"
 
 template <int dim>

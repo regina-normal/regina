@@ -47,7 +47,7 @@
 #include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
-#include "testsuite/generic/generictriangulation.h"
+#include "testsuite/generic/triangulationtest.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::NAbelianGroup;
