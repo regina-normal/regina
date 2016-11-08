@@ -75,6 +75,7 @@ Version 5.1  [ (under development) ]
               already present for dimension 4).
             - New routine isOrientable() for dimensions other than 3 (this was
               already present for dimension 3).
+            - New routine triangulation() to access the enclosing triangulation.
         Class Component<dim>:
             - New routine boundaryComponents() in all dimensions, and new
               routines countBoundaryComponents() and boundaryComponent() in

@@ -33,8 +33,10 @@
 #include <boost/python.hpp>
 #include "triangulation/generic.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::BoundaryComponent;
 
 namespace {
@@ -66,6 +68,8 @@ void addBoundaryComponent(const char* name) {
             return_value_policy<reference_existing_object>())
         .def("component", &BoundaryComponent<dim>::component,
             return_value_policy<reference_existing_object>())
+        .def("triangulation", &BoundaryComponent<dim>::triangulation,
+            return_value_policy<to_held_type<>>())
         .def("build", &BoundaryComponent<dim>::build,
             return_internal_reference<>())
         .def("isOrientable", &BoundaryComponent<dim>::isOrientable)

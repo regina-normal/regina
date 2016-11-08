@@ -34,8 +34,10 @@
 #include "triangulation/dim2.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::BoundaryComponent;
 
 void addBoundaryComponent2() {
@@ -65,6 +67,8 @@ void addBoundaryComponent2() {
                 return_value_policy<reference_existing_object>())
             .def("component", &BoundaryComponent<2>::component,
                 return_value_policy<reference_existing_object>())
+            .def("triangulation", &BoundaryComponent<2>::triangulation,
+                return_value_policy<to_held_type<>>())
             .def("isOrientable", &BoundaryComponent<2>::isOrientable)
             .def(regina::python::add_output())
             .def(regina::python::add_eq_operators())

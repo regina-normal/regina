@@ -524,6 +524,16 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
+         * Returns the triangulation to which this boundary component belongs.
+         *
+         * @return the triangulation containing this boundary component.
+         */
+        Triangulation<dim>* triangulation() const {
+            // There may be no (dim-1)-simplices, but there is always a vertex.
+            return WeakFaceList<dim, 0>::faces_.front()->triangulation();
+        }
+
+        /**
          * Returns the connected component of the triangulation to which this
          * boundary component belongs.
          *
@@ -667,6 +677,15 @@ class BoundaryComponentFaceStorage<dim, false> {
          */
         Face<dim, dim-1>* facet(size_t index) const {
             return facets_[index];
+        }
+
+        /**
+         * Returns the triangulation to which this boundary component belongs.
+         *
+         * @return the triangulation containing this boundary component.
+         */
+        Triangulation<dim>* triangulation() const {
+            return facets_.front()->triangulation();
         }
 
         /**

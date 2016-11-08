@@ -72,6 +72,8 @@ void addBoundaryComponent3() {
                 return_value_policy<reference_existing_object>())
             .def("component", &BoundaryComponent<3>::component,
                 return_value_policy<reference_existing_object>())
+            .def("triangulation", &BoundaryComponent<3>::triangulation,
+                return_value_policy<to_held_type<>>())
             .def("build", &BoundaryComponent<3>::build,
                 return_internal_reference<>())
             .def("eulerChar", &BoundaryComponent<3>::eulerChar)

@@ -79,6 +79,8 @@ void addBoundaryComponent4() {
                 return_value_policy<reference_existing_object>())
             .def("component", &BoundaryComponent<4>::component,
                 return_value_policy<reference_existing_object>())
+            .def("triangulation", &BoundaryComponent<4>::triangulation,
+                return_value_policy<to_held_type<>>())
             .def("build", &BoundaryComponent<4>::build,
                 return_internal_reference<>())
             .def("isReal", &BoundaryComponent<4>::isReal)
