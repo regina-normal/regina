@@ -76,6 +76,10 @@ struct BoundaryTypeHelper<dim, true> {
     static bool isIdeal(regina::BoundaryComponent<dim>* bc) {
         return bc->isIdeal();
     }
+
+    static bool isInvalidVertex(regina::BoundaryComponent<dim>* bc) {
+        return bc->isInvalidVertex();
+    }
 };
 
 template <int dim>
@@ -87,6 +91,10 @@ struct BoundaryTypeHelper<dim, false> {
     static bool isIdeal(regina::BoundaryComponent<dim>*) {
         return false;
     }
+
+    static bool isInvalidVertex(regina::BoundaryComponent<dim>*) {
+        return false;
+    }
 };
 
 /**
@@ -94,7 +102,7 @@ struct BoundaryTypeHelper<dim, false> {
  * labelled and ordered correctly.  Specifically, this class checks all
  * faces of dimensions 0,...,subdim.
  */
-template <int dim, int subdim>
+template <int dim, int subdim, bool storesFaces = regina::standardDim(dim)>
 struct BoundaryHelper {
     static void verifyFaces(const regina::BoundaryComponent<dim>* bc,
             const Triangulation<dim-1>* built) {
@@ -151,8 +159,15 @@ struct BoundaryHelper {
     }
 };
 
-template <int dim>
-struct BoundaryHelper<dim, -1> {
+template <int dim, bool storesFaces>
+struct BoundaryHelper<dim, -1, storesFaces> {
+    static void verifyFaces(const regina::BoundaryComponent<dim>*,
+            const Triangulation<dim-1>*) {
+    }
+};
+
+template <int dim, int subdim>
+struct BoundaryHelper<dim, subdim, false> {
     static void verifyFaces(const regina::BoundaryComponent<dim>*,
             const Triangulation<dim-1>*) {
     }
@@ -730,7 +745,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             for (auto bc : tri.boundaryComponents())
                 if (BoundaryTypeHelper<dim>::isIdeal(bc))
                     ++foundIdeal;
-                else if (bc->isInvalidVertex())
+                else if (BoundaryTypeHelper<dim>::isInvalidVertex(bc))
                     ++foundInvalid;
                 else
                     ++foundReal;
@@ -774,7 +789,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     }
 
                     // Check that [built] and [bc] have the same numbers
-                    // of faces of each dimension, and that these faces
+                    // of faces of each lower dimension, and that these faces
                     // appear to be ordered and labelled correctly.
 
                     BoundaryHelper<dim, dim-2>::verifyFaces(bc, built);
