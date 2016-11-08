@@ -505,7 +505,7 @@ Triangulation<dim>* ExampleBase<dim>::twistedBallBundle() {
     // with the second map to make it non-orientable.
     Triangulation<dim>* ans = new Triangulation<dim>();
     Packet::ChangeEventSpan span(ans);
-    ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x S1");
+    ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x~ S1");
 
     // Now join facet 0 to a facet dim to join up the S1 loop.
     int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }
