@@ -453,6 +453,7 @@
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
 		0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
+		0528DBD31DD295F3004DD4B6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */; };
 		052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CF1C5CDC8B0011C1E6 /* safeptr.h */; };
 		052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942D01C5CDC8B0011C1E6 /* saferemnant.h */; };
@@ -4000,6 +4001,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */,
+				0528DBD31DD295F3004DD4B6 /* libxml2.dylib in Frameworks */,
 				056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
