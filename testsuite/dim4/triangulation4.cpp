@@ -649,29 +649,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
         }
 
-        void verifyBoundaryH1(const Triangulation<4>& tri,
-                unsigned whichBdry, const char* h1) {
-            // For boundaries where we have little hope of recognising the
-            // underlying triangulation or manifold.
-
-            // Do a barycentric subdivision to turn any invalid edges
-            // into proper RP^2 ideal boundaries.
-            Triangulation<3> t(*(tri.boundaryComponent(whichBdry)->build()));
-            t.barycentricSubdivision();
-            t.intelligentSimplify();
-
-            std::string ans = t.homology().str();
-
-            if (ans != h1) {
-                std::ostringstream msg;
-                msg << "Boundary component " << whichBdry
-                    << " of triangulation " << tri.label()
-                    << " has first homology " << ans
-                    << " instead of the expected " << h1 << ".";
-                CPPUNIT_FAIL(msg.str());
-            }
-        }
-
         void boundaryComponents() {
             verifyBoundaryCount(empty, 0);
             verifyBoundaryCount(sphere, 0);

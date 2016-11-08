@@ -40,6 +40,28 @@ using regina::Perm;
 using regina::Triangulation;
 
 /**
+ * Used to perform barycentric subdivisions in those dimensions that
+ * support them.
+ */
+template <int dim, bool supported = regina::standardDim(dim)>
+struct BarycentricHelper;
+
+template <int dim>
+struct BarycentricHelper<dim, true> {
+    static void subdivideAndSimplify(Triangulation<dim>& t) {
+        t.barycentricSubdivision();
+        t.intelligentSimplify();
+    }
+};
+
+
+template <int dim>
+struct BarycentricHelper<dim, false> {
+    static void subdivideAndSimplify(Triangulation<dim>&) {
+    }
+};
+
+/**
  * Used to verify that a triangulated boundary component has its faces
  * labelled and ordered correctly.  Specifically, this class checks all
  * faces of dimensions 0,...,subdim.
@@ -661,10 +683,21 @@ class TriangulationTest : public CppUnit::TestFixture {
 
         static void verifyBoundaryH1(const Triangulation<dim>& tri,
                 size_t whichBdry, const char* h1) {
-            // Do a barycentric subdivision to turn any invalid edges
-            // into proper RP^2 ideal boundaries.
+            // Calling homology() does not truncate ideal boundaries
+            // at the centroids of invalid (dim-3)-faces that are
+            // self-identified under a non-trivial map.
+            //
+            // This problem only appears in dimension dim >= 4.
+            // Unfortunately, to fix it we need to do a barycentric
+            // subdivision, which is currently only available in
+            // dimension dim <= 5 (i.e., where the boundary triangulation
+            // has dimension <= 4).
+            //
+            // So: for the time being, we perform this subdivision for
+            // the cases dim = 4,5 only.
             Triangulation<dim-1> t(
                 *(tri.boundaryComponent(whichBdry)->build()));
+            BarycentricHelper<dim-1>::subdivideAndSimplify(t);
 
             std::string ans = t.homology().str();
 
