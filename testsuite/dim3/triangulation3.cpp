@@ -117,8 +117,6 @@ class Triangulation3Test : public TriangulationTest<3> {
         // Closed orientable:
         Triangulation<3> s3;
             /**< A one-vertex 3-sphere. */
-        Triangulation<3> s2xs1;
-            /**< The product space S^2 x S^1. */
         Triangulation<3> rp3_1;
             /**< A one-vertex triangulation of RP^3. */
         Triangulation<3> rp3_2;
@@ -242,9 +240,6 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Some of our triangulations can be constructed automatically.
             s3.insertLayeredLensSpace(1, 0);
             s3.setLabel("S^3");
-
-            s2xs1.insertLayeredLensSpace(0, 1);
-            s2xs1.setLabel("S^2 x S^1");
 
             rp3_1.insertLayeredLensSpace(2, 1);
             rp3_1.setLabel("RP^3 (1 vtx)");
@@ -405,7 +400,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             disjoint2.insertTriangulation(cuspedGenusTwoTorus);
             disjoint2.setLabel("Gieseking U (cusped genus 2 torus)");
 
-            disjoint3.insertTriangulation(s2xs1);
+            disjoint3.insertTriangulation(sphereBundle);
             disjoint3.insertTriangulation(ball_large_pillows);
             disjoint3.insertTriangulation(figure8);
             disjoint3.setLabel("(S^2 x S^1) U (B^3) U "
@@ -423,7 +418,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             f(&empty);
             f(&ball);
             f(&s3);
-            f(&s2xs1);
+            f(&sphere);
+            f(&simplicialSphere);
+            f(&sphereBundle);
+            f(&twistedSphereBundle);
             f(&rp3_1);
             f(&rp3_2);
             f(&lens3_1);
@@ -484,8 +482,14 @@ class Triangulation3Test : public TriangulationTest<3> {
                 ball.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not valid.",
                 s3.isValid());
+            CPPUNIT_ASSERT_MESSAGE("Generic S^3 is not valid.",
+                sphere.isValid());
+            CPPUNIT_ASSERT_MESSAGE("Simplicial S^3 is not valid.",
+                simplicialSphere.isValid());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not valid.",
-                s2xs1.isValid());
+                sphereBundle.isValid());
+            CPPUNIT_ASSERT_MESSAGE("S^2 x~ S^1 is not valid.",
+                twistedSphereBundle.isValid());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not valid.",
                 rp3_1.isValid());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not valid.",
@@ -554,8 +558,14 @@ class Triangulation3Test : public TriangulationTest<3> {
                 ball.isStandard());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not standard.",
                 s3.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("Generic S^3 is not standard.",
+                sphere.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("Simplicial S^3 is not standard.",
+                simplicialSphere.isStandard());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not standard.",
-                s2xs1.isStandard());
+                sphereBundle.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("S^2 x~ S^1 is not standard.",
+                twistedSphereBundle.isStandard());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not standard.",
                 rp3_1.isStandard());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not standard.",
@@ -623,8 +633,14 @@ class Triangulation3Test : public TriangulationTest<3> {
                 ball.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not orientable.",
                 s3.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("Generic S^3 is not orientable.",
+                sphere.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("Simplicial S^3 is not orientable.",
+                simplicialSphere.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not orientable.",
-                s2xs1.isOrientable());
+                sphereBundle.isOrientable());
+            CPPUNIT_ASSERT_MESSAGE("S^2 x~ S^1 is orientable.",
+                ! twistedSphereBundle.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not orientable.",
                 rp3_1.isOrientable());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not orientable.",
@@ -688,10 +704,10 @@ class Triangulation3Test : public TriangulationTest<3> {
         void boundaryComponents() {
             verifyBoundaryCount(empty, 0);
             verifyBoundaryCount(sphere, 0);
+            verifyBoundaryCount(simplicialSphere, 0);
             verifyBoundaryCount(sphereBundle, 0);
             verifyBoundaryCount(twistedSphereBundle, 0);
             verifyBoundaryCount(s3, 0);
-            verifyBoundaryCount(s2xs1, 0);
             verifyBoundaryCount(rp3_1, 0);
             verifyBoundaryCount(rp3_2, 0);
             verifyBoundaryCount(lens3_1, 0);
@@ -1213,8 +1229,24 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyVertexCount(s3, 1, "S^3");
             verifyVertexSphere(s3, 0, "S^3");
 
-            verifyVertexCount(s2xs1, 1, "S^2 x S^1");
-            verifyVertexSphere(s2xs1, 0, "S^2 x S^1");
+            verifyVertexCount(sphere, 4, "Generic S^3");
+            verifyVertexSphere(sphere, 0, "Generic S^3");
+            verifyVertexSphere(sphere, 1, "Generic S^3");
+            verifyVertexSphere(sphere, 2, "Generic S^3");
+            verifyVertexSphere(sphere, 3, "Generic S^3");
+
+            verifyVertexCount(simplicialSphere, 5, "Simplicial S^3");
+            verifyVertexSphere(simplicialSphere, 0, "Simplicial S^3");
+            verifyVertexSphere(simplicialSphere, 1, "Simplicial S^3");
+            verifyVertexSphere(simplicialSphere, 2, "Simplicial S^3");
+            verifyVertexSphere(simplicialSphere, 3, "Simplicial S^3");
+            verifyVertexSphere(simplicialSphere, 4, "Simplicial S^3");
+
+            verifyVertexCount(sphereBundle, 1, "S^2 x S^1");
+            verifyVertexSphere(sphereBundle, 0, "S^2 x S^1");
+
+            verifyVertexCount(twistedSphereBundle, 1, "S^2 x~ S^1");
+            verifyVertexSphere(twistedSphereBundle, 0, "S^2 x~ S^1");
 
             verifyVertexCount(rp3_1, 1, "RP^3 (1 vtx)");
             verifyVertexSphere(rp3_1, 0, "RP^3 (1 vtx)");
@@ -1537,7 +1569,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyEuler(empty, 0, 0, "Empty triangulation");
             verifyEuler(ball, 1, 1, "Single tetrahedron");
             verifyEuler(s3, 0, 0, "S^3");
-            verifyEuler(s2xs1, 0, 0, "S^2 x S^1");
+            verifyEuler(sphere, 0, 0, "General S^3");
+            verifyEuler(simplicialSphere, 0, 0, "Simplicial S^3");
+            verifyEuler(sphereBundle, 0, 0, "S^2 x S^1");
+            verifyEuler(twistedSphereBundle, 0, 0, "S^2 x~ S^1");
             verifyEuler(rp3_1, 0, 0, "RP^3 (1 vtx)");
             verifyEuler(rp3_2, 0, 0, "RP^3 (2 vtx)");
             verifyEuler(lens3_1, 0, 0, "L(3,1)");
@@ -1694,8 +1729,14 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "H1(single tetrahedron)", 0);
             verifyGroup(s3.homology(),
                 "H1(S^3)", 0);
-            verifyGroup(s2xs1.homology(),
+            verifyGroup(sphere.homology(),
+                "H1(General S^3)", 0);
+            verifyGroup(simplicialSphere.homology(),
+                "H1(Simplicial S^3)", 0);
+            verifyGroup(sphereBundle.homology(),
                 "H1(S^2 x S^1)", 1);
+            verifyGroup(twistedSphereBundle.homology(),
+                "H1(S^2 x~ S^1)", 1);
             verifyGroup(rp3_1.homology(),
                 "H1(RP^3, 1 vtx)", 0, 2);
             verifyGroup(rp3_2.homology(),
@@ -1755,8 +1796,14 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Boundary H1(single tetrahedron)", 0);
             verifyGroup(s3.homologyBdry(),
                 "Boundary H1(S^3)", 0);
-            verifyGroup(s2xs1.homologyBdry(),
+            verifyGroup(sphere.homologyBdry(),
+                "Boundary H1(General S^3)", 0);
+            verifyGroup(simplicialSphere.homologyBdry(),
+                "Boundary H1(Simplicial S^3)", 0);
+            verifyGroup(sphereBundle.homologyBdry(),
                 "Boundary H1(S^2 x S^1)", 0);
+            verifyGroup(twistedSphereBundle.homologyBdry(),
+                "Boundary H1(S^2 x~ S^1)", 0);
             verifyGroup(rp3_1.homologyBdry(),
                 "Boundary H1(RP^3, 1 vtx)", 0);
             verifyGroup(rp3_2.homologyBdry(),
@@ -1839,7 +1886,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFundGroupVsH1(&empty);
             verifyFundGroupVsH1(&ball);
             verifyFundGroupVsH1(&s3);
-            verifyFundGroupVsH1(&s2xs1);
+            verifyFundGroupVsH1(&sphere);
+            verifyFundGroupVsH1(&simplicialSphere);
+            verifyFundGroupVsH1(&sphereBundle);
+            verifyFundGroupVsH1(&twistedSphereBundle);
             verifyFundGroupVsH1(&rp3_1);
             verifyFundGroupVsH1(&rp3_2);
             verifyFundGroupVsH1(&lens3_1);
@@ -1872,7 +1922,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFundGroup(empty, "0");
             verifyFundGroup(ball, "0");
             verifyFundGroup(s3, "0");
-            verifyFundGroup(s2xs1, "Z");
+            verifyFundGroup(sphere, "0");
+            verifyFundGroup(simplicialSphere, "0");
+            verifyFundGroup(sphereBundle, "Z");
+            verifyFundGroup(twistedSphereBundle, "Z");
             verifyFundGroup(rp3_1, "Z_2");
             verifyFundGroup(rp3_2, "Z_2");
             verifyFundGroup(lens3_1, "Z_3");
@@ -1970,8 +2023,14 @@ class Triangulation3Test : public TriangulationTest<3> {
                 ! ball.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not 0-efficient.",
                 s3.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("General S^3 is 0-efficient.",
+                ! sphere.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("Simplicial S^3 is 0-efficient.",
+                ! simplicialSphere.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is 0-efficient.",
-                ! s2xs1.isZeroEfficient());
+                ! sphereBundle.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("S^2 x~ S^1 is 0-efficient.",
+                ! twistedSphereBundle.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is 0-efficient.",
                 ! rp3_1.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is 0-efficient.",
@@ -2035,8 +2094,14 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "irreducible.", empty.isIrreducible());
             CPPUNIT_ASSERT_MESSAGE("S^3 is not irreducible.",
                 s3.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("General S^3 is not irreducible.",
+                sphere.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("Simplicial S^3 is not irreducible.",
+                simplicialSphere.isIrreducible());
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is irreducible.",
-                ! s2xs1.isIrreducible());
+                ! sphereBundle.isIrreducible());
+            CPPUNIT_ASSERT_MESSAGE("S^2 x~ S^1 is irreducible.",
+                ! twistedSphereBundle.isIrreducible());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not irreducible.",
                 rp3_1.isIrreducible());
             CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not irreducible.",
@@ -2762,19 +2827,38 @@ class Triangulation3Test : public TriangulationTest<3> {
             // value of r.
             // The expected values are described in the paper of Turaev
             // and Viro.
+            double expectedTV, tv;
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
                 if (regina::gcd(q0, r) > 1)
                     continue;
 
-                double tv = s3.turaevViroApprox(r, q0);
-
-                double expectedTV = 2 * sin(M_PI * q0 / static_cast<double>(r));
+                expectedTV = 2 * sin(M_PI * q0 / static_cast<double>(r));
                 expectedTV = (expectedTV * expectedTV) /
                     (2 * static_cast<double>(r));
 
+                tv = s3.turaevViroApprox(r, q0);
                 if (fabs(tv - expectedTV) > epsilon) {
                     std::ostringstream msg;
-                    msg << "Turaev-Viro(S^3, r = " << r << ", root = " << q0
+                    msg << "Turaev-Viro(S^3, r = " << r
+                        << ", root = " << q0
+                        << ") is " << tv << ", not " << expectedTV << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                tv = sphere.turaevViroApprox(r, q0);
+                if (fabs(tv - expectedTV) > epsilon) {
+                    std::ostringstream msg;
+                    msg << "Turaev-Viro(Generic S^3, r = " << r
+                        << ", root = " << q0
+                        << ") is " << tv << ", not " << expectedTV << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                tv = simplicialSphere.turaevViroApprox(r, q0);
+                if (fabs(tv - expectedTV) > epsilon) {
+                    std::ostringstream msg;
+                    msg << "Turaev-Viro(Simplicial S^3, r = " << r
+                        << ", root = " << q0
                         << ") is " << tv << ", not " << expectedTV << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2848,7 +2932,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (regina::gcd(q0, r) > 1)
                     continue;
 
-                double tv = s2xs1.turaevViroApprox(r, q0);
+                double tv = sphereBundle.turaevViroApprox(r, q0);
 
                 double expectedTV = 1.0;
 
@@ -2864,7 +2948,10 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void turaevViro() {
             verifyTV3(s3, "S^3");
-            verifyTV3(s2xs1, "S^2 x S^1");
+            verifyTV3(sphere, "Generic S^3");
+            verifyTV3(simplicialSphere, "Simplicial S^3");
+            verifyTV3(sphereBundle, "S^2 x S^1");
+            verifyTV3(twistedSphereBundle, "S^2 x~ S^1");
             verifyTV3(rp3_1, "RP^3 (1 vtx)");
             verifyTV3(rp3_2, "RP^3 (2 vtx)");
             verifyTV3(lens3_1, "L(3,1)");
@@ -3538,8 +3625,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyDehydration(empty);
             verifyNoDehydration(ball);
             verifyDehydration(s3);
+            verifyDehydration(sphere);
+            verifyDehydration(simplicialSphere);
             verifyDehydration(s3_large);
-            verifyDehydration(s2xs1);
+            verifyDehydration(sphereBundle);
+            verifyDehydration(twistedSphereBundle);
             verifyDehydration(rp3_1);
             verifyDehydration(rp3_2);
             verifyDehydration(rp3_large);
