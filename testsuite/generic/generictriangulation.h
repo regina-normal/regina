@@ -62,6 +62,34 @@ struct BarycentricHelper<dim, false> {
 };
 
 /**
+ * Used to determine the type of a boundary component.
+ */
+template <int dim, bool supportsVertices = (dim == 3 || dim == 4)>
+struct BoundaryTypeHelper;
+
+template <int dim>
+struct BoundaryTypeHelper<dim, true> {
+    static bool isReal(regina::BoundaryComponent<dim>* bc) {
+        return bc->isReal();
+    }
+
+    static bool isIdeal(regina::BoundaryComponent<dim>* bc) {
+        return bc->isIdeal();
+    }
+};
+
+template <int dim>
+struct BoundaryTypeHelper<dim, false> {
+    static bool isReal(regina::BoundaryComponent<dim>*) {
+        return true;
+    }
+
+    static bool isIdeal(regina::BoundaryComponent<dim>*) {
+        return false;
+    }
+};
+
+/**
  * Used to verify that a triangulated boundary component has its faces
  * labelled and ordered correctly.  Specifically, this class checks all
  * faces of dimensions 0,...,subdim.
@@ -631,7 +659,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             size_t foundReal = 0, foundIdeal = 0, foundInvalid = 0;
             for (auto bc : tri.boundaryComponents())
-                if (bc->isIdeal())
+                if (BoundaryTypeHelper<dim>::isIdeal(bc))
                     ++foundIdeal;
                 else if (bc->isInvalidVertex())
                     ++foundInvalid;
@@ -663,7 +691,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
         static void verifyBoundaryBuild(Triangulation<dim>* tri) {
             for (auto bc : tri->boundaryComponents())
-                if (bc->isReal()) {
+                if (BoundaryTypeHelper<dim>::isReal(bc)) {
                     // We have a real boundary component.
                     const Triangulation<dim-1>* built = bc->build();
 
