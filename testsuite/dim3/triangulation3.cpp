@@ -79,8 +79,9 @@ class Triangulation3Test : public TriangulationTest<3> {
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
-    CPPUNIT_TEST(standardness);
+    CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
+    CPPUNIT_TEST(standardness);
     CPPUNIT_TEST(boundaryComponents);
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(vertexLinks);
@@ -489,79 +490,132 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void validity() {
-            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not valid.",
-                empty.isValid());
-            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is not valid.",
-                ball.isValid());
-            CPPUNIT_ASSERT_MESSAGE("S^3 is not valid.",
-                s3.isValid());
-            CPPUNIT_ASSERT_MESSAGE("Generic S^3 is not valid.",
-                sphere.isValid());
-            CPPUNIT_ASSERT_MESSAGE("Simplicial S^3 is not valid.",
-                simplicialSphere.isValid());
-            CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not valid.",
-                sphereBundle.isValid());
-            CPPUNIT_ASSERT_MESSAGE("S^2 x~ S^1 is not valid.",
-                twistedSphereBundle.isValid());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not valid.",
-                rp3_1.isValid());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not valid.",
-                rp3_2.isValid());
-            CPPUNIT_ASSERT_MESSAGE("L(3,1) is not valid.",
-                lens3_1.isValid());
-            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not valid.",
-                lens7_1_loop.isValid());
-            CPPUNIT_ASSERT_MESSAGE("L(8,3) is not valid.",
-                lens8_3.isValid());
-            CPPUNIT_ASSERT_MESSAGE("Large L(8,3) is not valid.",
-                lens8_3_large.isValid());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 is not valid.",
-                rp3rp3.isValid());
-            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not valid.",
-                q28.isValid());
-            CPPUNIT_ASSERT_MESSAGE(
-                "The Weber-Seifert dodecahedral space is not valid.",
-                weberSeifert.isValid());
-            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not valid.",
-                q32xz3.isValid());
-            CPPUNIT_ASSERT_MESSAGE("L(100,1) is not valid.",
-                lens100_1.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball is not valid.",
-                ball_large.isValid());
-            CPPUNIT_ASSERT_MESSAGE(
-                "The 4-tetrahedron pillow ball is not valid.",
-                ball_large_pillows.isValid());
-            CPPUNIT_ASSERT_MESSAGE(
-                "The 3-tetrahedron snapped ball is not valid.",
-                ball_large_snapped.isValid());
-            CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) is not valid.",
-                lst3_4_7.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
-                "is not valid.",
-                figure8.isValid());
-            CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not valid.",
-                rp2xs1.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The solid torus is not valid.",
-                ballBundle.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle is not valid.",
-                twistedBallBundle.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is not valid.",
-                gieseking.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
-                "is reported as valid.",
-                ! invalidEdges.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The triangulation with projective plane "
-                "cusps is not valid.",
-                twoProjPlaneCusps.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
-                "is not valid.",
-                cuspedGenusTwoTorus.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus "
-                "is reported as valid.",
-                ! pinchedSolidTorus.isValid());
-            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
-                "is reported as valid.",
-                ! pinchedSolidKB.isValid());
+            verifyValid(empty);
+            verifyValid(sphere);
+            verifyValid(simplicialSphere);
+            verifyValid(sphereBundle);
+            verifyValid(twistedSphereBundle);
+            verifyValid(ball);
+            verifyValid(ballBundle);
+            verifyValid(twistedBallBundle);
+            verifyValid(s3);
+            verifyValid(rp3_1);
+            verifyValid(rp3_2);
+            verifyValid(lens3_1);
+            verifyValid(lens7_1_loop);
+            verifyValid(lens8_3);
+            verifyValid(lens8_3_large);
+            verifyValid(rp3rp3);
+            verifyValid(q28);
+            verifyValid(weberSeifert);
+            verifyValid(q32xz3);
+            verifyValid(lens100_1);
+            verifyValid(ball_large);
+            verifyValid(ball_large_pillows);
+            verifyValid(ball_large_snapped);
+            verifyValid(lst3_4_7);
+            verifyValid(figure8);
+            verifyValid(rp2xs1);
+            verifyValid(gieseking);
+            verifyValid(invalidEdges, false);
+            verifyValid(twoProjPlaneCusps);
+            verifyValid(cuspedGenusTwoTorus);
+            verifyValid(pinchedSolidTorus, false);
+            verifyValid(pinchedSolidKB, false);
+            verifyValid(s3_large);
+            verifyValid(rp3_large);
+            verifyValid(lens8_3_large);
+            verifyValid(q20_large);
+            verifyValid(singleTet_bary);
+            verifyValid(fig8_bary);
+            verifyValid(disjoint2);
+            verifyValid(disjoint3);
+        }
+
+        void connectedness() {
+            verifyConnected(empty);
+            verifyConnected(sphere);
+            verifyConnected(simplicialSphere);
+            verifyConnected(sphereBundle);
+            verifyConnected(twistedSphereBundle);
+            verifyConnected(ball);
+            verifyConnected(ballBundle);
+            verifyConnected(twistedBallBundle);
+            verifyConnected(s3);
+            verifyConnected(rp3_1);
+            verifyConnected(rp3_2);
+            verifyConnected(lens3_1);
+            verifyConnected(lens7_1_loop);
+            verifyConnected(lens8_3);
+            verifyConnected(lens8_3_large);
+            verifyConnected(rp3rp3);
+            verifyConnected(q28);
+            verifyConnected(weberSeifert);
+            verifyConnected(q32xz3);
+            verifyConnected(lens100_1);
+            verifyConnected(ball_large);
+            verifyConnected(ball_large_pillows);
+            verifyConnected(ball_large_snapped);
+            verifyConnected(lst3_4_7);
+            verifyConnected(figure8);
+            verifyConnected(rp2xs1);
+            verifyConnected(gieseking);
+            verifyConnected(invalidEdges);
+            verifyConnected(twoProjPlaneCusps);
+            verifyConnected(cuspedGenusTwoTorus);
+            verifyConnected(pinchedSolidTorus);
+            verifyConnected(pinchedSolidKB);
+            verifyConnected(s3_large);
+            verifyConnected(rp3_large);
+            verifyConnected(lens8_3_large);
+            verifyConnected(q20_large);
+            verifyConnected(singleTet_bary);
+            verifyConnected(fig8_bary);
+            verifyConnected(disjoint2, false);
+            verifyConnected(disjoint3, false);
+        }
+
+        void orientability() {
+            verifyOrientable(empty);
+            verifyOrientable(sphere);
+            verifyOrientable(simplicialSphere);
+            verifyOrientable(sphereBundle);
+            verifyOrientable(twistedSphereBundle, false);
+            verifyOrientable(ball);
+            verifyOrientable(ballBundle);
+            verifyOrientable(twistedBallBundle, false);
+            verifyOrientable(s3);
+            verifyOrientable(rp3_1);
+            verifyOrientable(rp3_2);
+            verifyOrientable(lens3_1);
+            verifyOrientable(lens7_1_loop);
+            verifyOrientable(lens8_3);
+            verifyOrientable(lens8_3_large);
+            verifyOrientable(rp3rp3);
+            verifyOrientable(q28);
+            verifyOrientable(weberSeifert);
+            verifyOrientable(q32xz3);
+            verifyOrientable(lens100_1);
+            verifyOrientable(ball_large);
+            verifyOrientable(ball_large_pillows);
+            verifyOrientable(ball_large_snapped);
+            verifyOrientable(lst3_4_7);
+            verifyOrientable(figure8);
+            verifyOrientable(rp2xs1, false);
+            verifyOrientable(gieseking, false);
+            verifyOrientable(invalidEdges, false);
+            verifyOrientable(twoProjPlaneCusps, false);
+            verifyOrientable(cuspedGenusTwoTorus);
+            verifyOrientable(pinchedSolidTorus);
+            verifyOrientable(pinchedSolidKB, false);
+            verifyOrientable(s3_large);
+            verifyOrientable(rp3_large);
+            verifyOrientable(lens8_3_large);
+            verifyOrientable(q20_large);
+            verifyOrientable(singleTet_bary);
+            verifyOrientable(fig8_bary);
+            verifyOrientable(disjoint2, false);
+            verifyOrientable(disjoint3);
         }
 
         void standardness() {
@@ -637,81 +691,6 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
                 "is standard.",
                 ! pinchedSolidKB.isStandard());
-        }
-
-        void orientability() {
-            CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not orientable.",
-                empty.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron is not orientable.",
-                ball.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("S^3 is not orientable.",
-                s3.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("Generic S^3 is not orientable.",
-                sphere.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("Simplicial S^3 is not orientable.",
-                simplicialSphere.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 is not orientable.",
-                sphereBundle.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("S^2 x~ S^1 is orientable.",
-                ! twistedSphereBundle.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) is not orientable.",
-                rp3_1.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) is not orientable.",
-                rp3_2.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("L(3,1) is not orientable.",
-                lens3_1.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) is not orientable.",
-                lens7_1_loop.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("L(8,3) is not orientable.",
-                lens8_3.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("Large L(8,3) is not orientable.",
-                lens8_3_large.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 is not orientable.",
-                rp3rp3.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 is not orientable.",
-                q28.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE(
-                "The Weber-Seifert dodecahedral space is not orientable.",
-                weberSeifert.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 is not orientable.",
-                q32xz3.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("L(100,1) is not orientable.",
-                lens100_1.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball is not orientable.",
-                ball_large.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE(
-                "The 4-tetrahedron pillow ball is not orientable.",
-                ball_large_pillows.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE(
-                "The 3-tetrahedron snapped ball is not orientable.",
-                ball_large_snapped.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) is not orientable.",
-                lst3_4_7.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
-                "is not orientable.",
-                figure8.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is orientable.",
-                ! rp2xs1.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The solid torus is non-orientable.",
-                ballBundle.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle is orientable.",
-                ! twistedBallBundle.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold is orientable.",
-                ! gieseking.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
-                "is orientable.",
-                ! invalidEdges.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The triangulation with projective plane "
-                "cusps is orientable.",
-                ! twoProjPlaneCusps.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
-                "is not orientable.",
-                cuspedGenusTwoTorus.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus is not orientable.",
-                pinchedSolidTorus.isOrientable());
-            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
-                "is orientable.",
-                ! pinchedSolidKB.isOrientable());
         }
 
         void boundaryComponents() {

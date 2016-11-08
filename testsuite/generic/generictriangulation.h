@@ -269,6 +269,75 @@ class TriangulationTest : public CppUnit::TestFixture {
                 regina::Example<dim>::twistedBallBundle());
         }
 
+        static void verifyValid(const Triangulation<dim>& tri,
+                bool isValid = true) {
+            if (! isValid) {
+                if (tri.isValid()) {
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
+                        " is reported as valid.");
+                }
+                return;
+            }
+
+            if (! tri.isValid()) {
+                CPPUNIT_FAIL("Triangulation " + tri.label() +
+                    " is reported as invalid.");
+            }
+            /*
+            // TODO: Generalise.
+            unsigned long i;
+            for (i = 0; i < tri.countVertices(); ++i)
+                if (! tri.vertex(i)->isValid()) {
+                    std::ostringstream msg;
+                    msg << "Vertex " << i << " of triangulation "
+                        << tri.label() << " is reported as invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            for (i = 0; i < tri.countEdges(); ++i)
+                if ((! tri.edge(i)->isValid()) ||
+                        tri.edge(i)->hasBadLink() ||
+                        tri.edge(i)->hasBadIdentification()) {
+                    std::ostringstream msg;
+                    msg << "Edge " << i << " of triangulation "
+                        << tri.label() << " is reported as invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            for (i = 0; i < tri.countTriangles(); ++i)
+                if (! tri.triangle(i)->isValid()) {
+                    std::ostringstream msg;
+                    msg << "Triangle " << i << " of triangulation "
+                        << tri.label() << " is reported as invalid.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            */
+        }
+
+        static void verifyOrientable(const Triangulation<dim>& tri,
+                bool isOrientable = true) {
+            if (isOrientable) {
+                if (! tri.isOrientable())
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
+                        " is reported as non-orientable.");
+            } else {
+                if (tri.isOrientable())
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
+                        " is reported as orientable.");
+            }
+        }
+
+        static void verifyConnected(const Triangulation<dim>& tri,
+                bool isConnected = true) {
+            if (isConnected) {
+                if (! tri.isConnected())
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
+                        " is reported as disconnected.");
+            } else {
+                if (tri.isConnected())
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
+                        " is reported as connected.");
+            }
+        }
+
         static void verifyOrient(const Triangulation<dim>* original,
                 const Triangulation<dim>* oriented) {
             if (original->isOrientable() != oriented->isOrientable()) {

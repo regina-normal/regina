@@ -52,6 +52,9 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(boundaryEdges);
 
     // Dimension-specific tests:
+    CPPUNIT_TEST(validity);
+    CPPUNIT_TEST(connectedness);
+    CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(eltMove13);
 
     CPPUNIT_TEST_SUITE_END();
@@ -142,6 +145,54 @@ class Triangulation2Test : public TriangulationTest<2> {
 
         void boundaryEdges() {
             testManualAll(verifyBoundaryFacets);
+        }
+
+        void validity() {
+            verifyValid(empty);
+            verifyValid(sphere);
+            verifyValid(simplicialSphere);
+            verifyValid(sphereBundle);
+            verifyValid(twistedSphereBundle);
+            verifyValid(ball);
+            verifyValid(ballBundle);
+            verifyValid(twistedBallBundle);
+            verifyValid(s2Oct);
+            verifyValid(torus2);
+            verifyValid(rp2);
+            verifyValid(disjoint2);
+            verifyValid(disjoint3);
+        }
+
+        void connectedness() {
+            verifyConnected(empty);
+            verifyConnected(sphere);
+            verifyConnected(simplicialSphere);
+            verifyConnected(sphereBundle);
+            verifyConnected(twistedSphereBundle);
+            verifyConnected(ball);
+            verifyConnected(ballBundle);
+            verifyConnected(twistedBallBundle);
+            verifyConnected(s2Oct);
+            verifyConnected(torus2);
+            verifyConnected(rp2);
+            verifyConnected(disjoint2, false);
+            verifyConnected(disjoint3, false);
+        }
+
+        void orientability() {
+            verifyOrientable(empty);
+            verifyOrientable(sphere);
+            verifyOrientable(simplicialSphere);
+            verifyOrientable(sphereBundle);
+            verifyOrientable(twistedSphereBundle, false);
+            verifyOrientable(ball);
+            verifyOrientable(ballBundle);
+            verifyOrientable(twistedBallBundle, false);
+            verifyOrientable(s2Oct);
+            verifyOrientable(torus2);
+            verifyOrientable(rp2, false);
+            verifyOrientable(disjoint2, false);
+            verifyOrientable(disjoint3, false);
         }
 
         static void verifyEltMove13(Triangulation<2>* tri) {

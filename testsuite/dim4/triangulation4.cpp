@@ -336,37 +336,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             testManualAll(verifyBoundaryBuild);
         }
 
-        void verifyValid(const Triangulation<4>& tri) {
-            if (! tri.isValid()) {
-                CPPUNIT_FAIL("Triangulation " + tri.label() +
-                    " is reported as invalid.");
-            }
-            unsigned long i;
-            for (i = 0; i < tri.countVertices(); ++i)
-                if (! tri.vertex(i)->isValid()) {
-                    std::ostringstream msg;
-                    msg << "Vertex " << i << " of triangulation "
-                        << tri.label() << " is reported as invalid.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            for (i = 0; i < tri.countEdges(); ++i)
-                if ((! tri.edge(i)->isValid()) ||
-                        tri.edge(i)->hasBadLink() ||
-                        tri.edge(i)->hasBadIdentification()) {
-                    std::ostringstream msg;
-                    msg << "Edge " << i << " of triangulation "
-                        << tri.label() << " is reported as invalid.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            for (i = 0; i < tri.countTriangles(); ++i)
-                if (! tri.triangle(i)->isValid()) {
-                    std::ostringstream msg;
-                    msg << "Triangle " << i << " of triangulation "
-                        << tri.label() << " is reported as invalid.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-        }
-
         void verifyInvalid(const Triangulation<4>& tri,
                 int invalidVertices, int invalidEdges,
                 int invalidEdgeLinks, int invalidEdgeIDs,
@@ -463,18 +432,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyInvalid(pillow_fourCycle, 0, 1, 1, 1, 0);
         }
 
-        void verifyConnected(const Triangulation<4>& tri) {
-            if (! tri.isConnected())
-                CPPUNIT_FAIL("Triangulation " + tri.label() +
-                    " is reported as disconnected.");
-        }
-
-        void verifyDisconnected(const Triangulation<4>& tri) {
-            if (tri.isConnected())
-                CPPUNIT_FAIL("Triangulation " + tri.label() +
-                    " is reported as connected.");
-        }
-
         void connectedness() {
             verifyConnected(empty);
             verifyConnected(sphere);
@@ -497,21 +454,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyConnected(pillow_twoCycle);
             verifyConnected(pillow_threeCycle);
             verifyConnected(pillow_fourCycle);
-            verifyDisconnected(disjoint2);
-            verifyDisconnected(disjoint3);
-        }
-
-        void verifyOrientable(const Triangulation<4>& tri,
-                bool isOrientable = true) {
-            if (isOrientable) {
-                if (! tri.isOrientable())
-                    CPPUNIT_FAIL("Triangulation " + tri.label() +
-                        " is reported as non-orientable.");
-            } else {
-                if (tri.isOrientable())
-                    CPPUNIT_FAIL("Triangulation " + tri.label() +
-                        " is reported as orientable.");
-            }
+            verifyConnected(disjoint2, false);
+            verifyConnected(disjoint3, false);
         }
 
         void orientability() {
