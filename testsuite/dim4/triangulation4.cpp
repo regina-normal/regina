@@ -65,20 +65,21 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
+    CPPUNIT_TEST(doubleCover);
+    CPPUNIT_TEST(boundaryFacets);
+    CPPUNIT_TEST(boundaryBuild);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
-    CPPUNIT_TEST(boundary);
+    CPPUNIT_TEST(boundaryFlags);
     CPPUNIT_TEST(boundaryComponents);
-    CPPUNIT_TEST(boundaryTetrahedra);
-    CPPUNIT_TEST(boundaryInclusions);
+    CPPUNIT_TEST(boundaryGluings);
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
-    CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(eltMove15);
     CPPUNIT_TEST(vertexLinks);
@@ -321,6 +322,18 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void orient() {
             testManualAll(verifyOrient);
+        }
+
+        void doubleCover() {
+            testManualAll(verifyDoubleCover);
+        }
+
+        void boundaryFacets() {
+            testManualAll(verifyBoundaryFacets);
+        }
+
+        void boundaryBuild() {
+            testManualAll(verifyBoundaryBuild);
         }
 
         void verifyValid(const Triangulation<4>& tri) {
@@ -587,7 +600,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
         }
 
-        void boundary() {
+        void boundaryFlags() {
             verifyBoundary(empty);
             verifyBoundary(sphere);
             verifyBoundary(simplicialSphere);
@@ -705,15 +718,9 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(pillow_threeCycle, 0, 1);
             verifyBoundaryTri(pillow_threeCycle, 0, "L(3,1)");
             verifyBoundaryCount(pillow_fourCycle, 0);
-
-            testManualAll(verifyBoundaryBuild);
         }
 
-        void boundaryTetrahedra() {
-            testManualAll(verifyBoundaryFacets);
-        }
-
-        void verifyBoundaryInclusions(const Triangulation<4>& tri) {
+        void verifyBoundaryGluings(const Triangulation<4>& tri) {
             BoundaryComponent<4>* bc;
             const Tetrahedron<3> *tet3, *adj3;
             Tetrahedron<4> *tet4, *adj4;
@@ -751,13 +758,13 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
         }
 
-        void boundaryInclusions() {
-            verifyBoundaryInclusions(ball);
-            verifyBoundaryInclusions(ball_foldedPent);
-            verifyBoundaryInclusions(ball_singleConeS3);
-            verifyBoundaryInclusions(ball_layerAndFold);
-            verifyBoundaryInclusions(ballBundle);
-            verifyBoundaryInclusions(twistedBallBundle);
+        void boundaryGluings() {
+            verifyBoundaryGluings(ball);
+            verifyBoundaryGluings(ball_foldedPent);
+            verifyBoundaryGluings(ball_singleConeS3);
+            verifyBoundaryGluings(ball_layerAndFold);
+            verifyBoundaryGluings(ballBundle);
+            verifyBoundaryGluings(twistedBallBundle);
         }
 
         void verifyLinkCount(const Triangulation<4>& tri, unsigned nVert) {
@@ -1044,10 +1051,6 @@ class Triangulation4Test : public TriangulationTest<4> {
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
             verifyFundGroup(mixedFigEightProduct,
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
-        }
-
-        void doubleCover() {
-            testManualAll(verifyDoubleCover);
         }
 
         static void verifyBary(Triangulation<4>* tri) {

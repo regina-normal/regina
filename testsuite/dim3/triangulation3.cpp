@@ -73,13 +73,15 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
+    CPPUNIT_TEST(doubleCover);
+    CPPUNIT_TEST(boundaryTriangles);
+    CPPUNIT_TEST(boundaryBuild);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(standardness);
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(boundaryComponents);
-    CPPUNIT_TEST(boundaryTriangles);
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(eulerChar);
@@ -94,7 +96,6 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(threeBallRecognition);
     CPPUNIT_TEST(solidTorusRecognition);
     CPPUNIT_TEST(turaevViro);
-    CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(finiteToIdeal);
@@ -475,6 +476,18 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualAll(verifyOrient);
         }
 
+        void doubleCover() {
+            testManualAll(verifyDoubleCover);
+        }
+
+        void boundaryTriangles() {
+            testManualAll(verifyBoundaryFacets);
+        }
+
+        void boundaryBuild() {
+            testManualAll(verifyBoundaryBuild);
+        }
+
         void validity() {
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not valid.",
                 empty.isValid());
@@ -745,12 +758,6 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             verifyBoundaryCount(disjoint2, 0, 2);
             verifyBoundaryCount(disjoint3, 1, 1);
-
-            testManualAll(verifyBoundaryBuild);
-        }
-
-        void boundaryTriangles() {
-            testManualAll(verifyBoundaryFacets);
         }
 
         void verifyVertexCount(Triangulation<3>& tri, unsigned nVertices,
@@ -2975,10 +2982,6 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             verifyTVS2xS1(4); verifyTVS2xS1(5); verifyTVS2xS1(6);
             verifyTVS2xS1(7); verifyTVS2xS1(8);
-        }
-
-        void doubleCover() {
-            testManualAll(verifyDoubleCover);
         }
 
         static void verifyBary(Triangulation<3>* tri) {

@@ -45,11 +45,11 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST_SUITE(Triangulation2Test);
 
     // Generic tests:
-    CPPUNIT_TEST(boundaryEdges);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
+    CPPUNIT_TEST(boundaryEdges);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(eltMove13);
@@ -124,10 +124,6 @@ class Triangulation2Test : public TriangulationTest<2> {
             f(&disjoint3);
         }
 
-        void boundaryEdges() {
-            testManualAll(verifyBoundaryFacets);
-        }
-
         void makeCanonical() {
             testManualAll(verifyMakeCanonical);
         }
@@ -138,6 +134,14 @@ class Triangulation2Test : public TriangulationTest<2> {
 
         void orient() {
             testManualAll(verifyOrient);
+        }
+
+        void doubleCover() {
+            testManualAll(verifyDoubleCover);
+        }
+
+        void boundaryEdges() {
+            testManualAll(verifyBoundaryFacets);
         }
 
         static void verifyEltMove13(Triangulation<2>* tri) {
@@ -182,10 +186,6 @@ class Triangulation2Test : public TriangulationTest<2> {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-        }
-
-        void doubleCover() {
-            testManualAll(verifyDoubleCover);
         }
 
         void eltMove13() {

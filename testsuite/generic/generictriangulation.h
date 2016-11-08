@@ -180,6 +180,9 @@ struct DoubleCoverHelper<dim, 0, true> {
     }
 };
 
+/**
+ * Inherited by the test classes for all dimensions.
+ */
 template <int dim>
 class TriangulationTest : public CppUnit::TestFixture {
     protected:
@@ -475,43 +478,6 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyBoundaryFacets(Triangulation<dim>* tri) {
-            unsigned long found = 0;
-
-            unsigned long i, j;
-            for (i = 0; i < tri->size(); ++i)
-                for (j = 0; j <= dim; ++j)
-                    if (! tri->simplex(i)->adjacentSimplex(j))
-                        ++found;
-
-            if (found != tri->countBoundaryFacets()) {
-                std::ostringstream msg;
-                msg << tri->label()
-                    << " reports the wrong number of boundary facets.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            unsigned long c;
-            regina::Component<dim>* comp;
-            for (c = 0; c < tri->countComponents(); ++c) {
-                comp = tri->component(c);
-                found = 0;
-
-                for (i = 0; i < comp->size(); ++i)
-                    for (j = 0; j <= dim; ++j)
-                        if (! comp->simplex(i)->adjacentSimplex(j))
-                            ++found;
-
-                if (found != comp->countBoundaryFacets()) {
-                    std::ostringstream msg;
-                    msg << tri->label()
-                        << " reports the wrong number of "
-                        "boundary facets in component " << c << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
         static void verifyDoubleCover(Triangulation<dim>* tri) {
             // PRE: tri is either empty or connected.
             if (! tri->isConnected())
@@ -612,6 +578,43 @@ class TriangulationTest : public CppUnit::TestFixture {
                     }
                 }
                 */
+            }
+        }
+
+        static void verifyBoundaryFacets(Triangulation<dim>* tri) {
+            unsigned long found = 0;
+
+            unsigned long i, j;
+            for (i = 0; i < tri->size(); ++i)
+                for (j = 0; j <= dim; ++j)
+                    if (! tri->simplex(i)->adjacentSimplex(j))
+                        ++found;
+
+            if (found != tri->countBoundaryFacets()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << " reports the wrong number of boundary facets.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            unsigned long c;
+            regina::Component<dim>* comp;
+            for (c = 0; c < tri->countComponents(); ++c) {
+                comp = tri->component(c);
+                found = 0;
+
+                for (i = 0; i < comp->size(); ++i)
+                    for (j = 0; j <= dim; ++j)
+                        if (! comp->simplex(i)->adjacentSimplex(j))
+                            ++found;
+
+                if (found != comp->countBoundaryFacets()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << " reports the wrong number of "
+                        "boundary facets in component " << c << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
         }
 
