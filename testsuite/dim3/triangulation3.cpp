@@ -686,86 +686,51 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void boundaryComponents() {
-            CPPUNIT_ASSERT_MESSAGE("The empty triangulation has boundary "
-                "components.", empty.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("A single tetrahedron has no boundary "
-                "components.", ball.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("S^3 has boundary components.",
-                s3.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 has boundary components.",
-                s2xs1.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) has boundary components.",
-                rp3_1.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) has boundary components.",
-                rp3_2.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("L(3,1) has boundary components.",
-                lens3_1.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) "
-                "has boundary components.",
-                lens7_1_loop.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("L(8,3) has boundary components.",
-                lens8_3.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("Large L(8,3) has boundary components.",
-                lens8_3_large.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 has boundary components.",
-                rp3rp3.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 has boundary components.",
-                q28.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE(
-                "The Weber-Seifert dodecahedral space has boundary components.",
-                weberSeifert.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 has boundary components.",
-                q32xz3.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("L(100,1) has boundary components.",
-                lens100_1.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball has no boundary "
-                "components.", ball_large.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron pillow ball has no "
-                "boundary components.",
-                ball_large_pillows.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The 3-tetrahedron snapped ball has no "
-                "boundary components.",
-                ball_large_snapped.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) has no boundary components.",
-                lst3_4_7.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
-                "has no boundary components.",
-                figure8.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 has boundary components.",
-                rp2xs1.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("The solid torus "
-                "has no boundary components.",
-                ballBundle.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle "
-                "has no boundary components.",
-                twistedBallBundle.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold "
-                "has no boundary components.",
-                gieseking.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
-                "has boundary components.",
-                invalidEdges.countBoundaryComponents() == 0);
-            CPPUNIT_ASSERT_MESSAGE("The triangulation with projective plane "
-                "cusps has no boundary components.",
-                twoProjPlaneCusps.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
-                "has no boundary components.",
-                cuspedGenusTwoTorus.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus "
-                "has no boundary components.",
-                pinchedSolidTorus.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The pinched solid torus "
-                "has too many boundary components.",
-                pinchedSolidTorus.countBoundaryComponents() < 2);
-            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
-                "has no boundary components.",
-                pinchedSolidKB.countBoundaryComponents() > 0);
-            CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
-                "has too many boundary components.",
-                pinchedSolidKB.countBoundaryComponents() < 2);
+            verifyBoundaryCount(empty, 0);
+            verifyBoundaryCount(sphere, 0);
+            verifyBoundaryCount(sphereBundle, 0);
+            verifyBoundaryCount(twistedSphereBundle, 0);
+            verifyBoundaryCount(s3, 0);
+            verifyBoundaryCount(s2xs1, 0);
+            verifyBoundaryCount(rp3_1, 0);
+            verifyBoundaryCount(rp3_2, 0);
+            verifyBoundaryCount(lens3_1, 0);
+            verifyBoundaryCount(lens8_3, 0);
+            verifyBoundaryCount(lens7_1_loop, 0);
+            verifyBoundaryCount(rp3rp3, 0);
+            verifyBoundaryCount(q32xz3, 0);
+            verifyBoundaryCount(q28, 0);
+            verifyBoundaryCount(weberSeifert, 0);
+            verifyBoundaryCount(lens100_1, 0);
+            verifyBoundaryCount(rp2xs1, 0);
+            verifyBoundaryCount(invalidEdges, 0);
+            verifyBoundaryCount(s3_large, 0);
+            verifyBoundaryCount(rp3_large, 0);
+            verifyBoundaryCount(lens8_3_large, 0);
+            verifyBoundaryCount(q20_large, 0);
 
-            // TODO: Test the individual boundary components.
-            // TODO: Check that nobody has too many boundary components.
+            verifyBoundaryCount(ball, 1);
+            verifyBoundaryCount(ballBundle, 1);
+            verifyBoundaryCount(twistedBallBundle, 1);
+            verifyBoundaryCount(lst3_4_7, 1);
+            verifyBoundaryCount(ball_large, 1);
+            verifyBoundaryCount(ball_large_pillows, 1);
+            verifyBoundaryCount(ball_large_snapped, 1);
+            verifyBoundaryCount(singleTet_bary, 1);
+
+            verifyBoundaryCount(figure8, 0, 1);
+            verifyBoundaryCount(gieseking, 0, 1);
+            verifyBoundaryCount(twoProjPlaneCusps, 0, 2);
+            verifyBoundaryCount(cuspedGenusTwoTorus, 0, 1);
+            verifyBoundaryCount(fig8_bary, 0, 1);
+
+            verifyBoundaryCount(pinchedSolidTorus, 1, 0);
+            verifyBoundaryCount(pinchedSolidKB, 1, 0);
+
+            verifyBoundaryCount(disjoint2, 0, 2);
+            verifyBoundaryCount(disjoint3, 1, 1);
+
+            testManualAll(verifyBoundaryBuild);
         }
 
         void boundaryTriangles() {

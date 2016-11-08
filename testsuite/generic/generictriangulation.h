@@ -658,8 +658,8 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyBoundaryBuild(const Triangulation<dim>& tri) {
-            for (auto bc : tri.boundaryComponents())
+        static void verifyBoundaryBuild(Triangulation<dim>* tri) {
+            for (auto bc : tri->boundaryComponents())
                 if (bc->isReal()) {
                     // We have a real boundary component.
                     const Triangulation<dim-1>* built = bc->build();
@@ -667,7 +667,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     if (bc->size() != built->size()) {
                         std::ostringstream msg;
                         msg << "Boundary component " << bc->index()
-                            << " of triangulation " << tri.label()
+                            << " of triangulation " << tri->label()
                             << " gives the wrong number of top-dimensional "
                             "simplices when triangulated." << std::endl;
                         CPPUNIT_FAIL(msg.str());

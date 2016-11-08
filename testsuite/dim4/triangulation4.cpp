@@ -658,22 +658,16 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(rp4, 0);
             verifyBoundaryCount(twistedSphereBundle, 0);
             verifyBoundaryCount(ball, 1);
-            verifyBoundaryBuild(ball);
             verifyBoundaryTri(ball, 0, "S3");
             verifyBoundaryCount(ball_foldedPent, 1);
-            verifyBoundaryBuild(ball_foldedPent);
             verifyBoundaryTri(ball_foldedPent, 0, "S3");
             verifyBoundaryCount(ball_singleConeS3, 1);
-            verifyBoundaryBuild(ball_singleConeS3);
             verifyBoundaryTri(ball_singleConeS3, 0, "S3");
             verifyBoundaryCount(ball_layerAndFold, 1);
-            verifyBoundaryBuild(ball_layerAndFold);
             verifyBoundaryTri(ball_layerAndFold, 0, "S3");
             verifyBoundaryCount(ballBundle, 1);
-            verifyBoundaryBuild(ballBundle);
             verifyBoundaryTri(ballBundle, 0, "S2 x S1");
             verifyBoundaryCount(twistedBallBundle, 1);
-            verifyBoundaryBuild(twistedBallBundle);
             verifyBoundaryTri(twistedBallBundle, 0, "S2 x~ S1");
             verifyBoundaryCount(idealPoincareProduct, 0, 2);
             verifyBoundaryTri(idealPoincareProduct, 0, "S3/P120");
@@ -681,7 +675,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(idealCappellShaneson, 0, 1);
             verifyBoundaryTri(idealCappellShaneson, 0, "S2 x S1");
             verifyBoundaryCount(mixedPoincareProduct, 1, 1);
-            verifyBoundaryBuild(mixedPoincareProduct);
             verifyBoundaryTri(mixedPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(mixedPoincareProduct, 1, "S3/P120");
             verifyBoundaryCount(idealFigEightProduct, 0, 0, 3);
@@ -695,7 +688,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryTri(idealFigEightProduct, 2,
                 "Figure eight knot complement");
             verifyBoundaryCount(mixedFigEightProduct, 1, 0, 1);
-            verifyBoundaryBuild(mixedFigEightProduct);
             verifyBoundaryTri(mixedFigEightProduct, 0,
                 "Figure eight knot complement");
             verifyBoundaryTri(mixedFigEightProduct, 1,
@@ -713,6 +705,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(pillow_threeCycle, 0, 1);
             verifyBoundaryTri(pillow_threeCycle, 0, "L(3,1)");
             verifyBoundaryCount(pillow_fourCycle, 0);
+
+            testManualAll(verifyBoundaryBuild);
         }
 
         void boundaryTetrahedra() {
