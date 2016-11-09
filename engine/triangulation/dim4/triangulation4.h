@@ -244,24 +244,6 @@ class REGINA_API Triangulation<4> :
         /*@{*/
 
         /**
-         * Returns the Euler characteristic of this triangulation.
-         * This will be evaluated strictly as \a V-E+F-T+P.
-         *
-         * Note that this routine handles cusps in a non-standard way.
-         * Since it computes the Euler characteristic of the
-         * triangulation (and not the underlying manifold), this routine
-         * will treat each cusp as a single vertex, and \e not as
-         * a surface boundary component.
-         *
-         * For a routine that handles cusps properly (i.e., treats them
-         * as 3-manifold boundary components when computing the Euler
-         * characteristic), see eulerCharManifold() instead.
-         *
-         * @return the Euler characteristic of this triangulation.
-         */
-        long eulerCharTri() const;
-
-        /**
          * Returns the Euler characteristic of the corresponding compact
          * manifold.
          *
@@ -887,17 +869,6 @@ inline void Triangulation<4>::removePentachoronAt(size_t index) {
 
 inline void Triangulation<4>::removeAllPentachora() {
     removeAllSimplices();
-}
-
-inline long Triangulation<4>::eulerCharTri() const {
-    ensureSkeleton();
-
-    // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(countVertices())
-        - static_cast<long>(countEdges())
-        + static_cast<long>(countTriangles())
-        - static_cast<long>(countTetrahedra())
-        + static_cast<long>(size());
 }
 
 inline bool Triangulation<4>::isIdeal() const {

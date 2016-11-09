@@ -60,6 +60,7 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::verifyValid;
         using TriangulationTest<dim>::verifyConnected;
         using TriangulationTest<dim>::verifyOrientable;
+        using TriangulationTest<dim>::verifyEulerCharTri;
         using TriangulationTest<dim>::verifyBoundaryCount;
         using TriangulationTest<dim>::verifyBoundaryH1;
         using TriangulationTest<dim>::verifyHomology;
@@ -137,6 +138,17 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
             verifyOrientable(twistedBallBundle, false);
         }
 
+        void eulerChar() {
+            verifyEulerCharTri(empty, 0);
+            verifyEulerCharTri(sphere, (dim % 2 ? 0 : 2));
+            verifyEulerCharTri(simplicialSphere, (dim % 2 ? 0 : 2));
+            verifyEulerCharTri(sphereBundle, 0);
+            verifyEulerCharTri(twistedSphereBundle, 0);
+            verifyEulerCharTri(ball, 1);
+            verifyEulerCharTri(ballBundle, 0);
+            verifyEulerCharTri(twistedBallBundle, 0);
+        }
+
         void boundaryCount() {
             verifyBoundaryCount(empty, 0);
             verifyBoundaryCount(sphere, 0);
@@ -190,6 +202,7 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
+    CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(boundaryCount);
     CPPUNIT_TEST(boundaryHomology);
     CPPUNIT_TEST(homologyH1);
@@ -211,6 +224,7 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
+    CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(boundaryCount);
     CPPUNIT_TEST(boundaryHomology);
     CPPUNIT_TEST(homologyH1);
@@ -236,6 +250,7 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
+    CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(boundaryCount);
     CPPUNIT_TEST(boundaryHomology);
     CPPUNIT_TEST(homologyH1);

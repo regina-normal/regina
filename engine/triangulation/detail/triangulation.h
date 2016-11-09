@@ -335,6 +335,47 @@ struct BoundaryComponentCalculator<dim, -1> {
 #endif // __DOXYGEN
 
 /**
+ * Internal class used to calculate the Euler characteristic of a
+ * triangulation.
+ *
+ * Specifically, this class calculates the alternating sum of the number
+ * of faces of dimensions \a subdim, ..., \a dim within a
+ * <i>dim</i>-dimensional triangulation.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam subdim the minimum dimension of the faces to consider.
+ */
+template <int dim, int subdim>
+struct EulerCalculator {
+    /**
+     * Computes the alternating sum of the number of faces of \a tri of
+     * dimensions \a subdim, ..., \a dim.  Specifically, this computes
+     * <tt>tri.countFaces<subdim>() - tri.countFaces<subdim+1>() + ...
+     * +/- tri.countFaces<dim>()</tt>.
+     *
+     * @param tri the triangulations whose face counts are to be computed.
+     * @return the resulting "partial" Euler characteristic.
+     */
+    static long compute(const TriangulationBase<dim>& tri) {
+        // Remember to cast away the unsignedness of size_t, since this
+        // is an alternating sum.
+        return static_cast<long>(tri.template countFaces<subdim>()) -
+            EulerCalculator<dim, subdim + 1>::compute(tri);
+    }
+};
+
+#ifndef __DOXYGEN
+
+template <int dim>
+struct EulerCalculator<dim, dim> {
+    static long compute(const TriangulationBase<dim>& tri) {
+        return tri.size();
+    }
+};
+
+#endif // __DOXYGEN
+
+/**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
  *
  * Such a triangulation is represented by the class Triangulation<dim>,
@@ -871,6 +912,27 @@ class TriangulationBase :
          * @author Matthias Goerner
          */
         bool isOriented() const;
+
+        /**
+         * Returns the Euler characteristic of this triangulation.
+         * This will be evaluated strictly as the alternating sum
+         * of the number of <i>i</i>-faces (that is,
+         * <tt>countVertices() - countEdges() + countTriangles() - ...</tt>).
+         *
+         * Note that this routine handles ideal triangulations in a
+         * non-standard way.  Since it computes the Euler characteristic of
+         * the triangulation (and not the underlying manifold), this routine
+         * will treat each ideal boundary component as a single vertex, and
+         * \e not as an entire (<i>dim</i>-1)-dimensional boundary component.
+         *
+         * In Regina's \ref stddim "standard dimensions", for a routine that
+         * handles ideal boundary components properly (by treating them as
+         * (<i>dim</i>-1)-dimensional boundary components when computing Euler
+         * characteristic), you can use the routine eulerCharManifold() instead.
+         *
+         * @return the Euler characteristic of this triangulation.
+         */
+        long eulerCharTri() const;
 
         /*@}*/
         /**
@@ -2492,6 +2554,11 @@ bool TriangulationBase<dim>::isOriented() const {
             return false;
 
     return true;
+}
+
+template <int dim>
+inline long TriangulationBase<dim>::eulerCharTri() const {
+    return EulerCalculator<dim, 0>::compute(*this);
 }
 
 template <int dim>

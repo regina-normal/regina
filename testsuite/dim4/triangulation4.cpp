@@ -918,19 +918,6 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
         }
 
-        void verifyEulerCharTri(const Triangulation<4>& tri,
-                long expectedTri) {
-            long eulerTri = tri.eulerCharTri();
-
-            if (eulerTri != expectedTri) {
-                std::ostringstream msg;
-                msg << "Triangulation " << tri.label() << " gives "
-                    "triangulation Euler characteristic = " << eulerTri
-                    << " instead of the expected " << expectedTri << ".";
-                CPPUNIT_FAIL(msg.str());
-            }
-        }
-
         void eulerChar() {
             verifyEulerChar(empty, 0, 0);
             verifyEulerChar(sphere, 2, 2);

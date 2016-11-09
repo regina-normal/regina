@@ -208,6 +208,7 @@ void addTriangulation(const char* name) {
             typename PyTriHelper<dim>::splitIntoComponents_type(
                 &Triangulation<dim>::splitIntoComponents),
             typename PyTriHelper<dim>::OL_splitIntoComponents())
+        .def("eulerCharTri", &Triangulation<dim>::eulerCharTri)
         .def("fundamentalGroup", &Triangulation<dim>::fundamentalGroup,
             return_internal_reference<>())
         .def("simplifiedFundamentalGroup",

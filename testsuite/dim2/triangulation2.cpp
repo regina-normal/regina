@@ -55,6 +55,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
+    CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(eltMove13);
 
     CPPUNIT_TEST_SUITE_END();
@@ -193,6 +194,22 @@ class Triangulation2Test : public TriangulationTest<2> {
             verifyOrientable(rp2, false);
             verifyOrientable(disjoint2, false);
             verifyOrientable(disjoint3, false);
+        }
+
+        void eulerChar() {
+            verifyEulerCharTri(empty, 0);
+            verifyEulerCharTri(sphere, 2);
+            verifyEulerCharTri(simplicialSphere, 2);
+            verifyEulerCharTri(sphereBundle, 0);
+            verifyEulerCharTri(twistedSphereBundle, 0);
+            verifyEulerCharTri(ball, 1);
+            verifyEulerCharTri(ballBundle, 0);
+            verifyEulerCharTri(twistedBallBundle, 0);
+            verifyEulerCharTri(s2Oct, 2);
+            verifyEulerCharTri(torus2, -2);
+            verifyEulerCharTri(rp2, 1);
+            verifyEulerCharTri(disjoint2, 0);
+            verifyEulerCharTri(disjoint3, 2);
         }
 
         static void verifyEltMove13(Triangulation<2>* tri) {

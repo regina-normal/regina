@@ -231,6 +231,8 @@ class REGINA_API Triangulation<2> :
          * Returns the Euler characteristic of this triangulation.
          * This will be evaluated as \a V-E+F.
          *
+         * This returns the same result as eulerCharTri().
+         *
          * @return the Euler characteristic of this triangulation.
          */
         long eulerChar() const;
