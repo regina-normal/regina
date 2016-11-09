@@ -58,6 +58,8 @@ struct BarycentricHelper<dim, true> {
 template <int dim>
 struct BarycentricHelper<dim, false> {
     static void subdivideAndSimplify(Triangulation<dim>&) {
+        // Silently do nothing, since this dimension does not support
+        // barycentric subdivision.
     }
 };
 
@@ -94,6 +96,76 @@ struct BoundaryTypeHelper<dim, false> {
 
     static bool isInvalidVertex(regina::BoundaryComponent<dim>*) {
         return false;
+    }
+};
+
+/**
+ * Used to verify that faces of a given triangulation are valid.
+ * Specifically, this class checks all faces of dimensions 0,...,subdim.
+ */
+template <int dim, int subdim,
+        bool testLinks = (regina::standardDim(dim) && dim > 2)>
+struct ValidityHelper {
+    static void verifyFacesValid(const Triangulation<dim>& tri) {
+        for (size_t i = 0; i < tri.template countFaces<subdim>(); ++i)
+            if ((! tri.template face<subdim>(i)->isValid()) ||
+                    tri.template face<subdim>(i)->hasBadLink() ||
+                    tri.template face<subdim>(i)->hasBadIdentification()) {
+                std::ostringstream msg;
+                msg << subdim << "-face " << i << " of triangulation "
+                    << tri.label() << " is reported as invalid.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+        ValidityHelper<dim, subdim-1, testLinks>::verifyFacesValid(tri);
+    }
+};
+
+template <int dim, int subdim>
+struct ValidityHelper<dim, subdim, false> {
+    static void verifyFacesValid(const Triangulation<dim>& tri) {
+        // In this specialisation, we cannot test Face<...>::hasBadLink().
+        for (size_t i = 0; i < tri.template countFaces<subdim>(); ++i)
+            if ((! tri.template face<subdim>(i)->isValid()) ||
+                    tri.template face<subdim>(i)->hasBadIdentification()) {
+                std::ostringstream msg;
+                msg << subdim << "-face " << i << " of triangulation "
+                    << tri.label() << " is reported as invalid.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+        ValidityHelper<dim, subdim-1, false>::verifyFacesValid(tri);
+    }
+};
+
+template <int dim>
+struct ValidityHelper<dim, 0, true> {
+    static void verifyFacesValid(const Triangulation<dim>& tri) {
+        // For vertices, we cannot test hasBadIdentification().
+        for (size_t i = 0; i < tri.countVertices(); ++i)
+            if ((! tri.vertex(i)->isValid()) ||
+                    tri.vertex(i)->hasBadLink()) {
+                std::ostringstream msg;
+                msg << "Vertex " << i << " of triangulation "
+                    << tri.label() << " is reported as invalid.";
+                CPPUNIT_FAIL(msg.str());
+            }
+    }
+};
+
+template <int dim>
+struct ValidityHelper<dim, 0, false> {
+    static void verifyFacesValid(const Triangulation<dim>& tri) {
+        // In this specialisation we cannot test for either bad links or
+        // bad self-identifications.  (Which means that all vertices are
+        // valid... but we still test isValid() regardless.)
+        for (size_t i = 0; i < tri.countVertices(); ++i)
+            if ((! tri.vertex(i)->isValid())) {
+                std::ostringstream msg;
+                msg << "Vertex " << i << " of triangulation "
+                    << tri.label() << " is reported as invalid.";
+                CPPUNIT_FAIL(msg.str());
+            }
     }
 };
 
@@ -298,33 +370,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Triangulation " + tri.label() +
                     " is reported as invalid.");
             }
-            /*
-            // TODO: Generalise.
-            unsigned long i;
-            for (i = 0; i < tri.countVertices(); ++i)
-                if (! tri.vertex(i)->isValid()) {
-                    std::ostringstream msg;
-                    msg << "Vertex " << i << " of triangulation "
-                        << tri.label() << " is reported as invalid.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            for (i = 0; i < tri.countEdges(); ++i)
-                if ((! tri.edge(i)->isValid()) ||
-                        tri.edge(i)->hasBadLink() ||
-                        tri.edge(i)->hasBadIdentification()) {
-                    std::ostringstream msg;
-                    msg << "Edge " << i << " of triangulation "
-                        << tri.label() << " is reported as invalid.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            for (i = 0; i < tri.countTriangles(); ++i)
-                if (! tri.triangle(i)->isValid()) {
-                    std::ostringstream msg;
-                    msg << "Triangle " << i << " of triangulation "
-                        << tri.label() << " is reported as invalid.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            */
+
+            ValidityHelper<dim, dim-2>::verifyFacesValid(tri);
         }
 
         static void verifyOrientable(const Triangulation<dim>& tri,
