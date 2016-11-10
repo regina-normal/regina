@@ -3,7 +3,6 @@ SET ( FILES
   angle
   crushtri
   decompose
-  edge3
   homology
   hydrate
   insertlayered
@@ -33,7 +32,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     boundarycomponent3.h
     component3.h
-    edge3.h
     tetrahedron3.h
     triangle3.h
     triangulation3.h

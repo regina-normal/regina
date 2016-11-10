@@ -52,15 +52,6 @@ void Face<4, 0>::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << degree();
 }
 
-void Face<4, 0>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (auto& emb : *this)
-        out << "  " << emb << std::endl;
-}
-
 Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
         Isomorphism<4>** inclusion) const {
     // Build the triangulation.

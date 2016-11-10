@@ -6,8 +6,6 @@ SET ( FILES
   simplifyglobal
   skeleton
   subdivide
-  tetrahedron4
-  triangle4
   triangulation4
   vertex4
   )
@@ -26,8 +24,6 @@ if (${REGINA_INSTALL_DEV})
     component4.h
     edge4.h
     pentachoron4.h
-    tetrahedron4.h
-    triangle4.h
     triangulation4.h
     vertex4.h
     DESTINATION ${INCLUDEDIR}/triangulation/dim4 COMPONENT Development)

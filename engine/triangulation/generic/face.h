@@ -147,11 +147,10 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * changes, all its face objects will be deleted and new ones will be
  * created in their place.
  *
- * If \a dim is one of Regina's \ref stddim "standard dimensions", then
- * this template is specialised to offer additional functionality.
- * In order to use these specialised classes, you will need to include the
- * corresponding triangulation headers (e.g., triangulation/dim2.h for
- * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
+ * For some types of faces in dimensions \a dim = 3 and 4, this template is
+ * specialised to offer additional functionality.  In order to use these
+ * specialised classes, you will need to include the corresponding triangulation
+ * headers (triangulation/dim3.h or triangulation/dim4.h respectively).
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending dimensions \a dim and \a subdim as
@@ -163,35 +162,16 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * This must be between 0 and <i>dim</i> inclusive.
  */
 template <int dim, int subdim>
-class Face :
-        public detail::FaceBase<dim, subdim>,
-        public Output<Face<dim, subdim>> {
-    static_assert(! standardDim(dim),
+class Face : public detail::FaceBase<dim, subdim> {
+    static_assert(dim == 2 || dim > 4 ||
+        (dim == 3 && subdim == 1) ||
+        (dim == 4 && subdim >= 2 && subdim <= 3),
         "The generic implementation of Face<dim, subdim> "
-        "should not be used for Regina's standard dimensions.");
+        "should not be used for those face class that are specialised "
+        "in Regina's standard dimensions.");
     static_assert(subdim < dim,
         "The generic implementation of Face<dim, subdim> "
         "should only be used for the case subdim < dim.");
-
-    public:
-        /**
-         * Writes a short text representation of this face to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this face to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
     protected:
         /**
@@ -402,38 +382,6 @@ inline FaceEmbedding<dim, subdim>::FaceEmbedding(
 template <int dim, int subdim>
 inline Face<dim, subdim>::Face(Component<dim>* component) :
         detail::FaceBase<dim, subdim>(component) {
-}
-
-template <int dim, int subdim>
-inline void Face<dim, subdim>::writeTextShort(std::ostream& out) const {
-    // We can't do a partial specialisation on subdim.
-    // Instead take cases, which we hope the compiler can optimise given
-    // that subdim is a compile-time constant.
-    switch (subdim) {
-        case 0:
-            out << "Vertex"; break;
-        case 1:
-            out << "Edge"; break;
-        case 2:
-            out << "Triangle"; break;
-        case 3:
-            out << "Tetrahedron"; break;
-        case 4:
-            out << "Pentachoron"; break;
-        default:
-            out << subdim << "-face"; break;
-    }
-    out << " of degree " << detail::FaceStorage<dim, dim - subdim>::degree();
-}
-
-template <int dim, int subdim>
-inline void Face<dim, subdim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (auto& emb : *this)
-        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

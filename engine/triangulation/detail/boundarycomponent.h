@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "triangulation/alias/face.h"
+#include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include <boost/noncopyable.hpp>
@@ -911,23 +912,8 @@ class BoundaryComponentFaceInterface :
                     out << "  " << emb.simplex()->index()
                         << " (" << emb.vertex() << ')' << std::endl;
             } else {
-                switch (dim) {
-                    case 3:
-                        out << (size() == 1 ? "Triangle:" : "Triangles:")
-                            << std::endl;
-                        break;
-                    case 4:
-                        out << (size() == 1 ? "Tetrahedron:" : "Tetrahedra:")
-                            << std::endl;
-                        break;
-                    // We should never fall through to the default case.
-                    // However, best to implement something regardless...
-                    default:
-                        out << (dim-1)
-                            << (size() == 1 ? "-simplex:" : "-simplices:")
-                            << std::endl;
-                        break;
-                }
+                out << (size() == 1 ? Strings<dim-1>::Face :
+                    Strings<dim-1>::Faces) << ':' << std::endl;
                 for (auto s : facets())
                     out << "  " << s->front().simplex()->index() << " ("
                         << s->front().vertices().trunc(dim) << ')' << std::endl;
@@ -1005,21 +991,8 @@ class BoundaryComponentFaceInterface<dim, allFaces, false> :
             writeTextShort(out);
             out << std::endl;
 
-            switch (dim) {
-                case 2:
-                    out << (size() == 1 ? "Edge:" : "Edges:")
-                        << std::endl;
-                    break;
-                case 5:
-                    out << (size() == 1 ? "Pentachoron:" : "Pentachora:")
-                        << std::endl;
-                    break;
-                default:
-                    out << (dim-1)
-                        << (size() == 1 ? "-simplex:" : "-simplices:")
-                        << std::endl;
-                    break;
-            }
+            out << (size() == 1 ? Strings<dim-1>::Face :
+                Strings<dim-1>::Faces) << ':' << std::endl;
             for (auto s : facets())
                 out << "  " << s->front().simplex()->index() << " ("
                     << s->front().vertices().trunc(dim) << ')' << std::endl;

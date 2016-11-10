@@ -64,8 +64,7 @@ namespace regina {
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
-        public Output<Face<4, 1>> {
+class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1> {
     private:
         Triangulation<2>* link_;
             /**< A triangulation of the edge link.  This will only be
@@ -182,25 +181,6 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
         Triangulation<2>* buildLinkDetail(bool labels = true,
             Isomorphism<4>** inclusion = 0) const;
 
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
     private:
         /**
          * Creates a new edge and marks it as belonging to the
@@ -249,11 +229,6 @@ inline const Triangulation<2>* Face<4, 1>::buildLink() const {
         const_cast<Edge<4>*>(this)->link_ = buildLinkDetail(false, 0);
     }
     return link_;
-}
-
-inline void Face<4, 1>::writeTextShort(std::ostream& out) const {
-    out << (isBoundary() ? "Boundary " : "Internal ")
-        << "edge of degree " << degree();
 }
 
 } // namespace regina

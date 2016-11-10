@@ -64,8 +64,7 @@ namespace regina {
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
-        public Output<Face<3, 0>> {
+class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0> {
     public:
         /**
          * Categorises the possible links of a vertex into a small number
@@ -278,15 +277,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
     private:
         /**

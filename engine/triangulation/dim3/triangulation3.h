@@ -2838,13 +2838,33 @@ class REGINA_API Triangulation<3> :
  */
 REGINA_DEPRECATED typedef Triangulation<3> NTriangulation;
 
+// Additional face typedefs that do not have their own headers:
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NEdgeEmbedding, you should
+ * use either the new alias EdgeEmbedding<3>, or the full class name
+ * FaceEmbedding<3, 1>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<3, 1> NEdgeEmbedding;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NEdge, you should use
+ * either the new alias Edge<3>, or the full class name Face<3, 1>.
+ */
+REGINA_DEPRECATED typedef Face<3, 1> NEdge;
+
 /*@}*/
 
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim3/tetrahedron3.h"
 #include "triangulation/dim3/triangle3.h"
-#include "triangulation/dim3/edge3.h"
 #include "triangulation/dim3/vertex3.h"
 #include "triangulation/dim3/component3.h"
 #include "triangulation/dim3/boundarycomponent3.h"

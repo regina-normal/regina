@@ -46,6 +46,7 @@
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/facenumber.h"
 #include "triangulation/alias/simplex.h"
+#include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include <deque>
@@ -877,6 +878,7 @@ class FaceBase :
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
+        public Output<Face<dim, subdim>>,
         public boost::noncopyable {
     private:
         Component<dim>* component_;
@@ -1022,6 +1024,34 @@ class FaceBase :
          */
         template <int lowerdim>
         Perm<dim + 1> faceMapping(int face) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * The class Face<dim, subdim> may safely override this function,
+         * since the output routines cast down to Face<dim, subdim>
+         * before calling it.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * The class Face<dim, subdim> may safely override this function,
+         * since the output routines cast down to Face<dim, subdim>
+         * before calling it.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
     protected:
         /**
@@ -1424,6 +1454,23 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
 template <int dim, int subdim>
 inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
         component_(component), boundaryComponent_(0) {
+}
+
+template <int dim, int subdim>
+inline void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
+    out << (isBoundary() ? "Boundary " : "Internal ") << Strings<subdim>::face;
+    if (subdim < dim - 1)
+        out << " of degree " << FaceStorage<dim, dim - subdim>::degree();
+}
+
+template <int dim, int subdim>
+void FaceBase<dim, subdim>::writeTextLong(std::ostream& out) const {
+    static_cast<const Face<dim, subdim>*>(this)->writeTextShort(out);
+    out << std::endl;
+
+    out << "Appears as:" << std::endl;
+    for (const auto& emb : *this)
+        out << "  " << emb << std::endl;
 }
 
 } } // namespace regina::detail

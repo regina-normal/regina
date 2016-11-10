@@ -363,13 +363,51 @@ class REGINA_API Triangulation<2> :
  */
 REGINA_DEPRECATED typedef Triangulation<2> Dim2Triangulation;
 
+// Additional face typedefs that do not have their own headers:
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2VertexEmbedding, you should
+ * use either the new alias VertexEmbedding<2>, or the full class name
+ * FaceEmbedding<2, 0>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2EdgeEmbedding, you should
+ * use either the new alias EdgeEmbedding<2>, or the full class name
+ * FaceEmbedding<2, 1>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2Vertex, you should use
+ * either the new alias Vertex<2>, or the full class name Face<2, 0>.
+ */
+REGINA_DEPRECATED typedef Face<2, 0> Dim2Vertex;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2Edge, you should use
+ * either the new alias Edge<2>, or the full class name Face<2, 1>.
+ */
+REGINA_DEPRECATED typedef Face<2, 1> Dim2Edge;
+
 /*@}*/
 
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim2/triangle2.h"
-#include "triangulation/dim2/edge2.h"
-#include "triangulation/dim2/vertex2.h"
 #include "triangulation/dim2/component2.h"
 #include "triangulation/dim2/boundarycomponent2.h"
 namespace regina {

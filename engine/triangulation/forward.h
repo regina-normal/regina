@@ -68,17 +68,12 @@ template <> class Component<4>;
 template <int, int> class Face;
 template <int dim> class Face<dim, dim>;
 template <> class Face<2, 2>;
-template <> class Face<2, 1>;
-template <> class Face<2, 0>;
 template <> class Face<3, 3>;
-template <> class Face<3, 2>;
-template <> class Face<3, 1>;
-template <> class Face<3, 0>;
+template <> class Face<3, 2>; // test shape
+template <> class Face<3, 0>; // build links, output type
 template <> class Face<4, 4>;
-template <> class Face<4, 3>;
-template <> class Face<4, 2>;
-template <> class Face<4, 1>;
-template <> class Face<4, 0>;
+template <> class Face<4, 1>; // build links
+template <> class Face<4, 0>; // build links, output ideal/etc.
 template <int dim> using Vertex = Face<dim, 0>;
 template <int dim> using Edge = Face<dim, 1>;
 template <int dim> using Triangle = Face<dim, 2>;

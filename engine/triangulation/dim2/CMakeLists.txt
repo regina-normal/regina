@@ -1,10 +1,8 @@
 # Files to compile
 SET ( FILES
-  edge2
   simplify
   skeleton
   triangulation2
-  vertex2
   )
 
 # Prepend folder name
@@ -19,9 +17,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     boundarycomponent2.h
     component2.h
-    edge2.h
     triangle2.h
     triangulation2.h
-    vertex2.h
     DESTINATION ${INCLUDEDIR}/triangulation/dim2 COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

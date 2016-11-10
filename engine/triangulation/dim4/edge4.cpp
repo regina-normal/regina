@@ -121,14 +121,5 @@ Triangulation<2>* Face<4, 1>::buildLinkDetail(bool labels,
     return ans;
 }
 
-void Face<4, 1>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (auto& emb : *this)
-        out << "  " << emb << std::endl;
-}
-
 } // namespace regina
 

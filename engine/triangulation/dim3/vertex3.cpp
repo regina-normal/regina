@@ -52,15 +52,6 @@ void Vertex<3>::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << degree();
 }
 
-void Vertex<3>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (auto& emb : *this)
-        out << "  " << emb << std::endl;
-}
-
 Triangulation<2>* Vertex<3>::buildLinkDetail(bool labels,
         Isomorphism<3>** inclusion) const {
     // Build the triangulation.

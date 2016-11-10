@@ -64,8 +64,7 @@ namespace regina {
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
-        public Output<Face<3, 2>> {
+class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2> {
     public:
         /**
          * The \e type of a triangle, which indicates how the vertices and
@@ -159,25 +158,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          */
         bool isCone();
 
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
     private:
         /**
          * Creates a new triangle and marks it as belonging to the
@@ -232,10 +212,6 @@ inline bool Face<3, 2>::isMobiusBand() {
 inline bool Face<3, 2>::isCone() {
     type();
     return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
-}
-
-inline void Face<3, 2>::writeTextShort(std::ostream& out) const {
-    out << (isBoundary() ? "Boundary " : "Internal ") << "triangle";
 }
 
 } // namespace regina
