@@ -180,8 +180,7 @@
 
   <para>
    The <guilabel>&python;</guilabel> options panel controls the behaviour
-   of &python; consoles, and allows you to manage your active
-   <link linkend="python-libraries">&python; libraries</link>.
+   of &python; consoles.
   </para>
   <para>
    <inlinemediaobject>
