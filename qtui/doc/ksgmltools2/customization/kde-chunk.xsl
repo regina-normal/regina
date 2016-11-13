@@ -1,8 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		version="1.0">
 
-<xsl:import href="../docbook/xsl/html/autoidx.xsl"/>
-<xsl:import href="../docbook/xsl/html/chunk.xsl"/>
+<xsl:import href="kde-chunk-common.xsl"/>
 <xsl:include href="kde-navig.xsl"/>
 <xsl:include href="kde-ttlpg.xsl"/>
 <xsl:include href="kde-style.xsl"/>
@@ -68,37 +67,27 @@ set       toc,title
 </xsl:param>
 
 
-
-<xsl:template name="dbhtml-filename">
-<xsl:choose>
-     <xsl:when test=". != /*">
-      <xsl:value-of select="@id"/>
-      <xsl:value-of select="$html.ext"/>
-     </xsl:when>
-     <xsl:otherwise>
-	<xsl:text>index.html</xsl:text>
-      </xsl:otherwise>
-</xsl:choose>
-</xsl:template>
-
-<xsl:template name="dbhtml-dir">
-</xsl:template>
-
-<xsl:template name="user.head.content">
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-   <meta name="GENERATOR" content="KDE XSL Stylesheet V{$KDE_VERSION} using libxslt"/>
-</xsl:template>
-
 <xsl:template match="/book/bookinfo/legalnotice" mode="titlepage.mode">
   <xsl:variable name="filename" select="concat($kde.common,'fdl-notice.html')"/>
   <xsl:variable name="title">
     <xsl:apply-templates select="." mode="title.markup"/>
   </xsl:variable>
-  <p>
-    <a href="{$filename}">
-      <xsl:copy-of select="$title"/>
-    </a>
-  </p>
+  <!-- Hard-coding the GNU FDL is not appropriate, but for backward compatability,
+       if the text in the legalnotice is the FDL notice, then just show the
+       "Legal Notice" text, as KDE4 has done from very early.
+       Otherwise, continue to process the contents of the legalnotice element -->
+  <xsl:choose>
+     <xsl:when test=".//xref[@linkend='gnu-fdl']">
+      <p>
+        <a href="{$filename}">
+          <xsl:copy-of select="$title"/>
+        </a>
+      </p>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:apply-templates select="*"/>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <!-- try with olinks: it nearly works --><!--

@@ -1,8 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		version="1.0">
 
-<xsl:import href="../docbook/xsl/html/autoidx.xsl"/>
-<xsl:import href="../docbook/xsl/html/chunk.xsl"/>
+<xsl:import href="kde-include-common.xsl"/>
 <xsl:include href="regina-web-navig.xsl"/>
 <xsl:include href="kde-ttlpg.xsl"/>
 <xsl:include href="kde-style.xsl"/>
@@ -35,6 +34,7 @@
   </FILENAME>
 </xsl:template-->
 
+<xsl:param name="chunker.output.encoding" select="'UTF-8'"/>
 <xsl:param name="menuchoice.menu.separator" select="'&#x2192;'"/>
 <xsl:param name="use.id.as.filename">1</xsl:param>
 <xsl:param name="generate.section.toc">0</xsl:param>

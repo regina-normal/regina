@@ -97,7 +97,7 @@
 
 <!ENTITY % DocBookDTD	    PUBLIC
   "-//OASIS//DTD DocBook XML V4.2//EN"
-  "../../docbook/xml-dtd-4.2/docbookx.dtd"         > 
+  "../../docbook/xml-dtd-4.2/docbookx.dtd"         >
 %DocBookDTD;
 
 

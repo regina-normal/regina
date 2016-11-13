@@ -1,8 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		version="1.0">
 
-<xsl:import href="../docbook/xsl/html/autoidx.xsl"/>
-<xsl:import href="../docbook/xsl/html/chunk.xsl"/>
+<xsl:import href="kde-include-common.xsl"/>
 <xsl:include href="kde-web-navig.xsl"/>
 <xsl:include href="kde-ttlpg.xsl"/>
 <xsl:include href="kde-style.xsl"/>

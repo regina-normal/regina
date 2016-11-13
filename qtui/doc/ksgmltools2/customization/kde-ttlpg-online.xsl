@@ -18,7 +18,7 @@
   <p class="{name(.)}"><!--Documentation by--> <!-- to internationalise -->
     <xsl:call-template name="person.name"/>
     <xsl:text> </xsl:text>
-	<xsl:apply-templates mode="titlepage.mode" select="./affiliation"/>
+	<xsl:apply-templates mode="titlepage.mode" select="email | affiliation"/>
   </p>
 </xsl:template>
 

@@ -1,8 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		version="1.0">
 
-<xsl:import href="../docbook/xsl/html/autoidx.xsl"/>
-<xsl:import href="../docbook/xsl/html/chunk.xsl"/>
+<xsl:import href="kde-chunk-common.xsl"/>
 <xsl:include href="kde-navig-online.xsl"/>
 <xsl:include href="kde-ttlpg-online.xsl"/>
 <xsl:include href="kde-style.xsl"/>
@@ -45,27 +44,6 @@
 <xsl:param name="html.stylesheet" select="concat($kde.common,'kde-default.css',' ',$kde.common,'kde-docs.css')"/>
 <xsl:param name="admon.graphics.path"><xsl:value-of select="kde.common"/></xsl:param>
 <xsl:param name="callout.graphics.path"><xsl:value-of select="kde.common"/></xsl:param>
-
-
-<xsl:template name="dbhtml-filename">
-<xsl:choose>
-     <xsl:when test=". != /*">
-      <xsl:value-of select="@id"/>
-      <xsl:value-of select="$html.ext"/>
-     </xsl:when>
-     <xsl:otherwise>
-	<xsl:text>index.html</xsl:text>
-      </xsl:otherwise>
-</xsl:choose>
-</xsl:template>
-
-<xsl:template name="dbhtml-dir">
-</xsl:template>
-
-<xsl:template name="user.head.content">
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
-   <meta name="GENERATOR" content="KDE XSL Stylesheet V{$KDE_VERSION} using libxslt"/>
-</xsl:template>
 
 <!-- try with olinks: it nearly works --><!--
   <xsl:template match="olink">

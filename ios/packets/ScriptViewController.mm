@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "PacketManagerIOS.h"
+#import "PythonHighlighter.h"
 #import "ScriptViewController.h"
 #import "packet/nscript.h"
 
@@ -47,8 +48,9 @@
 
 #pragma mark - Script view controller
 
-@interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate> {
+@interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate, NSTextStorageDelegate> {
     CGFloat variableHeaderHeight;
+    PythonHighlighter* highlighter;
 }
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
@@ -65,6 +67,9 @@
 
     self.variables.delegate = self;
     self.variables.dataSource = self;
+
+    highlighter = [[PythonHighlighter alloc] init];
+    self.script.textStorage.delegate = highlighter;
 
     [self reloadPacket];
 }
