@@ -56,6 +56,8 @@
 <!ENTITY Marc.Bartsch.mail '<email>marc.bartsch@web.de</email>'>
 <!ENTITY Waldo.Bastian '<personname><firstname>Waldo</firstname><surname>Bastian</surname></personname>'>
 <!ENTITY Waldo.Bastian.mail '<email>bastian@kde.org</email>'>
+<!ENTITY Thomas.Baumgart '<personname><firstname>Thomas</firstname><surname>Baumgart</surname></personname>'>
+<!ENTITY Thomas.Baumgart.mail '<email>ipwizard@users.sourceforge.net</email>'>
 <!ENTITY Andreas.Beckermann '<personname><firstname>Andreas</firstname><surname>Beckermann</surname></personname>'>
 <!ENTITY Andreas.Beckermann.mail '<email>b_mann@gmx.de</email>'>
 <!ENTITY Orville.Bennett '<personname><firstname>Orville</firstname><surname>Bennett</surname></personname>'>
@@ -66,6 +68,8 @@
 <!ENTITY Stephan.Binner.mail '<email>binner@kde.org</email>'>
 <!ENTITY Eric.Bischoff '<personname><firstname>Éric</firstname><surname>Bischoff</surname></personname>'>
 <!ENTITY Eric.Bischoff.mail '<email>e.bischoff@noos.fr</email>'>
+<!ENTITY Tony.Bloomfield '<personname><firstname>Tony</firstname><surname>Bloomfield</surname></personname>'>
+<!ENTITY Tony.Bloomfield.mail '<email>tonybloom@users.sourceforge.net</email>'>
 <!ENTITY Aron.Bostrom '<personname><firstname>Aron</firstname><surname>Boström</surname></personname>'>
 <!ENTITY Aron.Bostrom.mail '<email>aron.bostrom@gmail.com</email>'>
 <!ENTITY Michael.Brade '<personname><firstname>Michael</firstname><surname>Brade</surname></personname>'>
@@ -83,6 +87,8 @@
 <!ENTITY Robert.Cimrman.mail '<email>cimrman3@students.zcu.cz</email>'>
 <!ENTITY John.Cirillo '<personname><firstname>John</firstname><surname>Cirillo</surname></personname>'>
 <!ENTITY John.Cirillo.mail '<email><!-- FIXME --></email>'>
+<!ENTITY Scarlett.Clark '<personname><firstname>Scarlett</firstname><surname>Clark</surname></personname>'>
+<!ENTITY Scarlett.Clark.mail '<email>scarlett@scarlettgatelyclark.com</email>'>
 <!ENTITY Raphael.Kubo.da.Costa '<personname><firstname>Raphael</firstname><othername>Kubo da</othername><surname>Costa</surname></personname>'>
 <!ENTITY Raphael.Kubo.da.Costa.mail '<email>kubito@gmail.com</email>'>
 <!ENTITY Claudiu.Costin '<personname><firstname>Claudiu</firstname><surname>Costin</surname></personname>'>
@@ -119,6 +125,8 @@
 <!ENTITY Alexander.Dymo '<personname><firstname>Alexander</firstname><surname>Dymo</surname></personname>'>
 <!ENTITY Alexander.Dymo.mail '<email>cloudtemple@mksat.net</email>'>
 
+<!ENTITY Michael.T.Edwardes '<personname><firstname>Michael</firstname><othername>T.</othername><surname>Edwardes</surname></personname>'>
+<!ENTITY Michael.T.Edwardes.mail '<email>mte@users.sourceforge.net</email>'>
 <!ENTITY Matthias.Elter '<personname><firstname>Matthias</firstname><surname>Elter</surname></personname>'>
 <!ENTITY Matthias.Elter.mail '<email>elter@kde.org</email>'>
 <!ENTITY Matthias.Ettrich '<personname><firstname>Matthias</firstname><surname>Ettrich</surname></personname>'>
@@ -172,6 +180,8 @@
 <!ENTITY Duncan.Haldane.mail '<email>duncan_haldane@users.sourceforge.net</email>'>
 <!ENTITY J.Hall '<personname><firstname>J</firstname><surname>Hall</surname></personname>'>
 <!ENTITY J.Hall.mail '<email>jhall@kde.org</email>'>
+<!ENTITY Erlend.Hamberg '<personname><firstname>Erlend</firstname><surname>Hamberg</surname></personname>'>
+<!ENTITY Erlend.Hamberg.mail '<email>ehamberg@gmail.com</email>'>
 <!ENTITY Steffen.Hansen '<personname><firstname>Steffen</firstname><surname>Hansen</surname></personname>'>
 <!ENTITY Steffen.Hansen.mail '<email>steffen@klaralvdalens-datakonsult.se</email>'>
 <!ENTITY Brad.Hards '<personname><firstname>Brad</firstname><surname>Hards</surname></personname>'>
@@ -196,6 +206,8 @@
 <!ENTITY Hauke.Hildebrandt.mail '<email>hauke.hildebrandt@iup.uni-heidelberg.de</email>'>
 <!ENTITY Jens.Hoefkens '<personname><firstname>Jens</firstname><surname>Hoefkens</surname></personname>'>
 <!ENTITY Jens.Hoefkens.mail '<email>jens@hoefkens.com</email>'>
+<!ENTITY TC.Hollingsworth '<personname><firstname>T.C.</firstname><surname>Hollingsworth</surname></personname>'>
+<!ENTITY TC.Hollingsworth.mail '<email>tchollingsworth@gmail.com</email>'>
 <!ENTITY Mark.Holloman '<personname><firstname>Mark</firstname><surname>Holloman</surname></personname>'>
 <!ENTITY Mark.Holloman.mail '<email>mhh@mindspring.com</email>'>
 <!ENTITY Greg.M.Holmes '<personname><firstname>Greg</firstname><othername>M.</othername><surname>Holmes</surname></personname>'>
@@ -215,10 +227,12 @@
 <!ENTITY Antonio.Larrosa.Jimenez.mail '<email>larossa@kde.org</email>'>
 <!ENTITY David.Johnson '<personname><firstname>David</firstname><surname>Johnson</surname></personname>'>
 <!ENTITY David.Johnson.mail '<email>david@usermode.org</email>'>
-<!ENTITY Richard.Johnson '<personname><firstname>Richard</firstname><surname>Johnson</surname></personname>'>
+<!ENTITY Richard.Johnson '<personname><firstname>Richard</firstname><othername>A.</othername><surname>Johnson</surname></personname>'>
 <!ENTITY Richard.Johnson.mail '<email>rjohnson@kde.org</email>'>
 <!ENTITY Matt.Johnston '<personname><firstname>Matt</firstname><surname>Johnston</surname></personname>'>
 <!ENTITY Matt.Johnston.mail '<email>mattj@flashmail.com</email>'>
+<!ENTITY Thomas.Baumgart '<personname><firstname>Thomas</firstname><surname>Baumgart</surname></personname>'>
+<!ENTITY Thomas.Baumgart.mail '<email>ipwizard@users.sourceforge.net</email>'>
 <!ENTITY Martin.R.Jones '<personname><firstname>Martin</firstname><othername>R.</othername><surname>Jones</surname></personname>'>
 <!ENTITY Martin.R.Jones.mail '<email>mjones@kde.org</email>'>
 <!ENTITY Thomas.Kabelmann '<personname><firstname>Thomas</firstname><surname>Kabelmann</surname></personname>'>
@@ -274,6 +288,8 @@
 <!ENTITY Neil.Lucock.mail '<email>neil@nlucock.freeserve.co.uk</email>'>
 <!ENTITY Burkhard.Lueck '<personname><firstname>Burkhard</firstname><surname>Lück</surname></personname>'>
 <!ENTITY Burkhard.Lueck.mail '<email>lueck@hube-lueck.de</email>'>
+<!ENTITY Roger.Lum '<personname><firstname>Roger</firstname><surname>Lum</surname></personname>'>
+<!ENTITY Roger.Lum.mail '<email>rogerlum@gmail.com</email>'>
 <!ENTITY Anders.Lund '<personname><firstname>Anders</firstname><surname>Lund</surname></personname>'>
 <!ENTITY Anders.Lund.mail '<email>anders@alweb.dk</email>'>
 
@@ -302,6 +318,8 @@
 <!ENTITY Daniel.Molkentin.mail '<email>molkentin@kde.org</email>'>
 <!ENTITY Mehrdad.Momeny '<personname><firstname>Mehrdad</firstname><surname>Momeny</surname></personname>'>
 <!ENTITY Mehrdad.Momeny.mail '<email>mehrdad.momeny@gmail.com</email>'>
+<!ENTITY Laurent.Montel '<personname><firstname>Laurent</firstname><surname>Montel</surname></personname>'>
+<!ENTITY Laurent.Montel.mail '<email>montel@kde.org</email>'>
 <!ENTITY Richard.J.Moore '<personname><firstname>Richard</firstname><othername>J.</othername><surname>Moore</surname></personname>'>
 <!ENTITY Richard.J.Moore.mail '<email>rich@kde.org</email>'>
 <!ENTITY Dirk.Mueller.mail '<email>mueller@kde.org</email>'>
@@ -320,10 +338,18 @@
 <!ENTITY Alexander.Neundorf.mail '<email>neundorf@kde.org</email>'>
 <!ENTITY Carsten.Niehaus '<personname><firstname>Carsten</firstname><surname>Niehaus</surname></personname>'>
 <!ENTITY Carsten.Niehaus.mail '<email>cniehaus@kde.org</email>'>
+<!ENTITY Dennis.Nienhueser '<personname><firstname>Dennis</firstname><surname>Nienhüser</surname></personname>'>
+<!ENTITY Dennis.Nienhueser.mail '<email>earthwings@gentoo.org</email>'>
 <!ENTITY Golnaz.Nilieh '<personname><firstname>Golnaz</firstname><surname>Nilieh</surname></personname>'>
 <!ENTITY Golnaz.Nilieh.mail '<email>g382nilieh@gmail.com</email>'>
 <!ENTITY Virgil.J.Nisly '<personname><firstname>Virgil</firstname><othername>J.</othername><surname>Nisly</surname></personname>'>
 <!ENTITY Virgil.J.Nisly.mail '<email>virgil@vigilite.com</email>'>
+
+<!ENTITY Cristian.Onet '<personname><firstname>Cristian</firstname><surname>Oneț</surname></personname>'>
+<!ENTITY Cristian.Onet.mail '<email>onet.cristian@gmail.com</email>'>
+<!ENTITY Jack.H.Ostroff '<personname><firstname>Jack</firstname><othername>H.</othername><surname>Ostroff</surname></personname>'>
+<!ENTITY Jack.H.Ostroff.mail '<email>ostroffjh@users.sourceforge.net</email>'>
+
 <!ENTITY Maren.Pakura '<personname><firstname>Maren</firstname><surname>Pakura</surname></personname>'>
 <!ENTITY Maren.Pakura.mail '<email>maren@kde.org</email>'>
 <!ENTITY Randy.Pearson '<personname><firstname>Randy</firstname><surname>Pearson</surname></personname>'>
@@ -405,6 +431,8 @@
 <!ENTITY Aaron.J.Seigo.mail '<email>aseigo@kde.org</email>'>
 <!ENTITY Jonathan.Singer '<personname><firstname>Jonathan</firstname><surname>Singer</surname></personname>'>
 <!ENTITY Jonathan.Singer.mail '<email>jsinger@leeta.net</email>'>
+<!ENTITY Alvaro.Soliverez '<personname><firstname>Alvaro</firstname><surname>Soliverez</surname></personname>'>
+<!ENTITY Alvaro.Soliverez.mail '<email>asoliverez@users.sourceforge.net</email>'>
 <!ENTITY Martin.Sommer '<personname><firstname>Martin</firstname><surname>Sommer</surname></personname>'>
 <!ENTITY Martin.Sommer.mail '<email>msommer@suse.de</email>'>
 <!ENTITY Klaus.Staerk '<personname><firstname>Klaus</firstname><surname>Stärk</surname></personname>'>
@@ -417,6 +445,8 @@
 <!ENTITY Russ.Steffen.mail '<email>rsteffen@bayarea.net</email>'>
 <!ENTITY Neil.Stevens '<personname><firstname>Neil</firstname><surname>Stevens</surname></personname>'>
 <!ENTITY Neil.Stevens.mail '<email>neil@qualityassistant.com</email>'>
+<!ENTITY Darin.Strait '<personname><firstname>Darin</firstname><surname>Strait</surname></personname> '>
+<!ENTITY Darin.Strait.mail '<email>darin.strait@ashdar-partners.com</email>'>
 <!ENTITY David.Sweet '<personname><firstname>David</firstname><surname>Sweet</surname></personname>'>
 <!ENTITY David.Sweet.mail '<email>dsweet@kde.org</email>'>
 
@@ -451,6 +481,8 @@
 <!ENTITY Jan-Pascal.vanBest.mail '<email>janpascal@vanbest.org</email>'>
 <!ENTITY Stas.Verberkt '<personname><firstname>Stas</firstname><surname>Verberkt</surname></personname>'>
 <!ENTITY Stas.Verberkt.mail '<email>legolas@legolasweb.nl</email>'>
+<!ENTITY Fernando.Vilas '<personname><firstname>Fernando</firstname><surname>Vilas</surname></personname>'>
+<!ENTITY Fernando.Vilas.mail '<email>fvilas@users.sourceforge.net</email>'>
 <!ENTITY Stanislav.Visnovsky '<personname><firstname>Stanislav</firstname><surname>Visnovsky</surname></personname>'>
 <!ENTITY Stanislav.Visnovsky.mail '<email>visnovsky@nenya.ms.mff.cuni.cz</email>'>
 <!ENTITY Sean.Vyain '<personname><firstname>Sean</firstname><surname>Vyain</surname></personname>'>
@@ -458,6 +490,8 @@
 
 <!ENTITY Mathias.Waack '<personname><firstname>Mathias</firstname><surname>Waack</surname></personname>'>
 <!ENTITY Mathias.Waack.mail '<email>mathias@atoll-net.de</email>'>
+<!ENTITY Robert.Wadley '<personname><firstname>Robert</firstname><surname>Wadley</surname></personname>'>
+<!ENTITY Robert.Wadley.mail '<email>robntina@users.sourceforge.net</email>'>
 <!ENTITY Joerg.Walter '<personname><firstname>J&ouml;rg</firstname><surname>Walter</surname></personname>'>
 <!ENTITY Joerg.Walter.mail '<email>trouble@garni.ch</email>'>
 <!ENTITY Lauri.Watts '<personname><firstname>Lauri</firstname><surname>Watts</surname></personname>'>
@@ -478,6 +512,8 @@
 <!ENTITY Matthew.Woehlke.mail '<email>mw_triad@users.sourceforge.net</email>'>
 <!ENTITY Marc.Wolf '<personname><firstname>Marc</firstname><surname>Wolf</surname></personname>'>
 <!ENTITY Marc.Wolf.mail '<email>marc@vries.demon.co.uk</email>'>
+<!ENTITY Colin.Wright '<personname><firstname>Colin</firstname><surname>Wright</surname></personname>'>
+<!ENTITY Colin.Wright.mail '<email>cdwright@gwi.net</email>'>
 <!ENTITY Bernd.Johannes.Wuebben '<personname><firstname>Bernd</firstname><othername>Johannes</othername><surname>Wuebben</surname></personname>'>
 <!ENTITY Bernd.Johannes.Wuebben.mail '<email>wuebben@kde.org</email>'>
 

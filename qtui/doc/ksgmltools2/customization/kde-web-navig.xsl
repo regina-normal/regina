@@ -14,8 +14,8 @@
 		</tr>
 		<tr id="logo">
 		  <td valign="top">
-		    <img src="{$kde.common}kde_logo.png" alt="KDE -
-		      The K Desktop Environment" width="296" height="79" border="0" />
+		    <img src="{$kde.common}part_of_the_kde_family_horizontal_190.png" alt="Part of the KDE family"
+		      width="190" height="68" border="0" />
 		  </td>
 		  <td valign="middle" align="center" id="location">
 		    <h1><!-- Why was this used in fact: could the text not just be copied?-->
