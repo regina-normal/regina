@@ -34,6 +34,7 @@
   </FILENAME>
 </xsl:template-->
 
+<xsl:param name="chunker.output.encoding" select="'UTF-8'"/>
 <xsl:param name="menuchoice.menu.separator" select="'&#x2192;'"/>
 <xsl:param name="use.id.as.filename">1</xsl:param>
 <xsl:param name="generate.section.toc">0</xsl:param>
