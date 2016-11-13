@@ -1314,6 +1314,12 @@ Equality type : BY_REFERENCE
 NGraphTriple : class
 Equality type : BY_REFERENCE
 
+NGroupExpression : typedef ->  GroupExpression
+
+NGroupExpressionTerm : typedef ->  GroupExpressionTerm
+
+NGroupPresentation : typedef ->  GroupPresentation
+
 NHandlebody : class
 Equality type : BY_VALUE
 

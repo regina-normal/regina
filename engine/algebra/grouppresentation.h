@@ -152,6 +152,15 @@ struct REGINA_API GroupExpressionTerm {
 };
 
 /**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The struct NGroupExpressionTerm has now been renamed to
+ * GroupExpressionTerm.
+ */
+REGINA_DEPRECATED typedef GroupExpressionTerm NGroupExpressionTerm;
+
+/**
  * Writes the given term to the given output stream.
  * The term will be written in the format <tt>g3^-7</tt>, where in this
  * example the term represents generator number 3 raised to the -7th power.
@@ -649,6 +658,15 @@ class REGINA_API GroupExpression :
          */
         void writeTextShort(std::ostream& out) const;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The struct NGroupExpression has now been renamed to
+ * GroupExpression.
+ */
+REGINA_DEPRECATED typedef GroupExpression NGroupExpression;
 
 /**
  * Represents a finite presentation of a group.
@@ -1424,6 +1442,15 @@ class REGINA_API GroupPresentation :
             const NWordSubstitutionData &sub_data );
 
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The struct NGroupPresentation has now been renamed to
+ * GroupPresentation.
+ */
+REGINA_DEPRECATED typedef GroupPresentation NGroupPresentation;
 
 /*@}*/
 

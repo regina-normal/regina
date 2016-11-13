@@ -118,6 +118,7 @@ void addGroupPresentation() {
         .def(self_ns::str(self))
         .def(regina::python::add_eq_operators())
     ;
+    scope().attr("NGroupExpressionTerm") = scope().attr("GroupExpressionTerm");
 
     class_<GroupExpression,
             std::auto_ptr<GroupExpression>, boost::noncopyable>
@@ -155,6 +156,7 @@ void addGroupPresentation() {
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+    scope().attr("NGroupExpression") = scope().attr("GroupExpression");
 
     class_<GroupPresentation,
             std::auto_ptr<GroupPresentation>, boost::noncopyable>
@@ -205,5 +207,6 @@ void addGroupPresentation() {
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+    scope().attr("NGroupPresentation") = scope().attr("GroupPresentation");
 }
 
