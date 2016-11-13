@@ -31,15 +31,15 @@
  **************************************************************************/
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "dim2/dim2exampletriangulation.h"
+#include "triangulation/example2.h"
 #include "triangulation/dim2.h"
 
 #include "testsuite/exhaustive.h"
-#include "testsuite/generic/generictriangulation.h"
+#include "testsuite/generic/triangulationtest.h"
 #include "testsuite/dim2/testdim2.h"
 
 using regina::Triangulation;
-using regina::Dim2ExampleTriangulation;
+using regina::Example;
 
 class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST_SUITE(Triangulation2Test);
@@ -48,42 +48,28 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
+    CPPUNIT_TEST(doubleCover);
+    CPPUNIT_TEST(boundaryEdges);
 
     // Dimension-specific tests:
+    CPPUNIT_TEST(validity);
+    CPPUNIT_TEST(connectedness);
+    CPPUNIT_TEST(orientability);
+    CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(eltMove13);
 
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        // Trivial:
-        Triangulation<2> empty;
-            /**< An empty triangulation. */
-
         // Closed orientable:
-        Triangulation<2> s2;
-            /**< A 2-sphere with two triangles. */
-        Triangulation<2> s2Tet;
-            /**< A 2-sphere with four triangles. */
         Triangulation<2> s2Oct;
             /**< A 2-sphere with eight triangles. */
-        Triangulation<2> torus;
-            /**< A torus with two triangles. */
         Triangulation<2> torus2;
             /**< A genus two torus. */
 
         // Closed non-orientable:
         Triangulation<2> rp2;
             /**< A projective plane with two triangles. */
-        Triangulation<2> kb;
-            /**< A Klein bottle with two triangles. */
-
-        // Bounded:
-        Triangulation<2> disc;
-            /**< A disc with one triangle. */
-        Triangulation<2> annulus;
-            /**< An annulus with two triangles. */
-        Triangulation<2> mobius;
-            /**< A Mobius band with one triangle. */
 
         // Disconnected triangulations:
         Triangulation<2> disjoint2;
@@ -99,45 +85,24 @@ class Triangulation2Test : public TriangulationTest<2> {
         }
 
         void setUp() {
-            empty.setLabel("Empty triangulation");
+            TriangulationTest<2>::setUp();
 
-            copyAndDelete(s2, Dim2ExampleTriangulation::sphere());
-            s2.setLabel("S^2");
-
-            copyAndDelete(s2Tet, Dim2ExampleTriangulation::sphereTetrahedron());
-            s2Tet.setLabel("Tetrahedron boundary");
-
-            copyAndDelete(s2Oct, Dim2ExampleTriangulation::sphereOctahedron());
+            copyAndDelete(s2Oct, Example<2>::sphereOctahedron());
             s2Oct.setLabel("Octahedron boundary");
 
-            copyAndDelete(torus, Dim2ExampleTriangulation::torus());
-            torus.setLabel("Torus");
-
-            copyAndDelete(torus2, Dim2ExampleTriangulation::orientable(2, 0));
+            copyAndDelete(torus2, Example<2>::orientable(2, 0));
             torus2.setLabel("Genus 2 torus");
 
-            copyAndDelete(rp2, Dim2ExampleTriangulation::rp2());
+            copyAndDelete(rp2, Example<2>::rp2());
             rp2.setLabel("RP^2");
 
-            copyAndDelete(kb, Dim2ExampleTriangulation::kb());
-            kb.setLabel("KB");
-
-            copyAndDelete(disc, Dim2ExampleTriangulation::disc());
-            disc.setLabel("Disc");
-
-            copyAndDelete(annulus, Dim2ExampleTriangulation::annulus());
-            annulus.setLabel("Annulus");
-
-            copyAndDelete(mobius, Dim2ExampleTriangulation::mobius());
-            mobius.setLabel("Mobius band");
-
-            disjoint2.insertTriangulation(torus);
-            disjoint2.insertTriangulation(mobius);
+            disjoint2.insertTriangulation(sphereBundle);
+            disjoint2.insertTriangulation(twistedBallBundle);
             disjoint2.setLabel("Torus U Mobius");
 
-            disjoint3.insertTriangulation(kb);
-            disjoint3.insertTriangulation(annulus);
-            disjoint3.insertTriangulation(s2);
+            disjoint3.insertTriangulation(twistedSphereBundle);
+            disjoint3.insertTriangulation(ballBundle);
+            disjoint3.insertTriangulation(sphere);
             disjoint3.setLabel("KB U Annulus U S^2");
         }
 
@@ -149,16 +114,16 @@ class Triangulation2Test : public TriangulationTest<2> {
          */
         void testManualAll(Triangulation2TestFunction f) {
             f(&empty);
-            f(&s2);
-            f(&s2Tet);
+            f(&sphere);
+            f(&simplicialSphere);
             f(&s2Oct);
-            f(&torus);
+            f(&sphereBundle);
             f(&torus2);
             f(&rp2);
-            f(&kb);
-            f(&disc);
-            f(&annulus);
-            f(&mobius);
+            f(&twistedSphereBundle);
+            f(&ball);
+            f(&ballBundle);
+            f(&twistedBallBundle);
             f(&disjoint2);
             f(&disjoint3);
         }
@@ -173,6 +138,78 @@ class Triangulation2Test : public TriangulationTest<2> {
 
         void orient() {
             testManualAll(verifyOrient);
+        }
+
+        void doubleCover() {
+            testManualAll(verifyDoubleCover);
+        }
+
+        void boundaryEdges() {
+            testManualAll(verifyBoundaryFacets);
+        }
+
+        void validity() {
+            verifyValid(empty);
+            verifyValid(sphere);
+            verifyValid(simplicialSphere);
+            verifyValid(sphereBundle);
+            verifyValid(twistedSphereBundle);
+            verifyValid(ball);
+            verifyValid(ballBundle);
+            verifyValid(twistedBallBundle);
+            verifyValid(s2Oct);
+            verifyValid(torus2);
+            verifyValid(rp2);
+            verifyValid(disjoint2);
+            verifyValid(disjoint3);
+        }
+
+        void connectedness() {
+            verifyConnected(empty);
+            verifyConnected(sphere);
+            verifyConnected(simplicialSphere);
+            verifyConnected(sphereBundle);
+            verifyConnected(twistedSphereBundle);
+            verifyConnected(ball);
+            verifyConnected(ballBundle);
+            verifyConnected(twistedBallBundle);
+            verifyConnected(s2Oct);
+            verifyConnected(torus2);
+            verifyConnected(rp2);
+            verifyConnected(disjoint2, false);
+            verifyConnected(disjoint3, false);
+        }
+
+        void orientability() {
+            verifyOrientable(empty);
+            verifyOrientable(sphere);
+            verifyOrientable(simplicialSphere);
+            verifyOrientable(sphereBundle);
+            verifyOrientable(twistedSphereBundle, false);
+            verifyOrientable(ball);
+            verifyOrientable(ballBundle);
+            verifyOrientable(twistedBallBundle, false);
+            verifyOrientable(s2Oct);
+            verifyOrientable(torus2);
+            verifyOrientable(rp2, false);
+            verifyOrientable(disjoint2, false);
+            verifyOrientable(disjoint3, false);
+        }
+
+        void eulerChar() {
+            verifyEulerCharTri(empty, 0);
+            verifyEulerCharTri(sphere, 2);
+            verifyEulerCharTri(simplicialSphere, 2);
+            verifyEulerCharTri(sphereBundle, 0);
+            verifyEulerCharTri(twistedSphereBundle, 0);
+            verifyEulerCharTri(ball, 1);
+            verifyEulerCharTri(ballBundle, 0);
+            verifyEulerCharTri(twistedBallBundle, 0);
+            verifyEulerCharTri(s2Oct, 2);
+            verifyEulerCharTri(torus2, -2);
+            verifyEulerCharTri(rp2, 1);
+            verifyEulerCharTri(disjoint2, 0);
+            verifyEulerCharTri(disjoint3, 2);
         }
 
         static void verifyEltMove13(Triangulation<2>* tri) {

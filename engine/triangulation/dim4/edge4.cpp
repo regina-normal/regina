@@ -42,13 +42,13 @@ Face<4, 1>::~Face() {
 }
 
 Triangulation<2>* Face<4, 1>::buildLinkDetail(bool labels,
-        Dim4Isomorphism** inclusion) const {
+        Isomorphism<4>** inclusion) const {
     // Build the triangulation.
     Triangulation<2>* ans = new Triangulation<2>();
     Packet::ChangeEventSpan span(ans);
 
     if (inclusion)
-        *inclusion = new Dim4Isomorphism(degree());
+        *inclusion = new Isomorphism<4>(degree());
 
     std::vector<EdgeEmbedding<4>>::const_iterator it, adjIt;
     Triangle<2>* tTri;
@@ -119,15 +119,6 @@ Triangulation<2>* Face<4, 1>::buildLinkDetail(bool labels,
     }
 
     return ans;
-}
-
-void Face<4, 1>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (auto& emb : *this)
-        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

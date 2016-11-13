@@ -41,10 +41,9 @@
 
 #include <string>
 #include "regina-core.h"
+#include "triangulation/forward.h"
 
 namespace regina {
-
-template <int> class Triangulation;
 
 /**
  * \weakgroup foreign

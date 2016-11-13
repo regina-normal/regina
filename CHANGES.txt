@@ -23,34 +23,33 @@ Version 5.1  [ (under development) ]
             + NNormalSurfaceList becomes NormalSurfaces.
             + NNormalSurfaceVector{Standard,...} becomes NSVector{Standard,...}.
             + NSurfaceSubset is removed entirely (see below).
-            + For "standard" dimensions 2, 3 and 4:
-              - All vertex/edge/face/etc. headers and all component and
-                boundary component headers are included automatically by
-                the new headers triangulation/dim{2,3,4}.h.  So, for instance,
-                triangulation/nvertex.h becomes triangulation/dim3.h, and
-                dim2/dim2component.h becomes triangulation/dim2.h.
-                Note that higher dimensions still use the generic header
-                generic/triangulation.h.
-              - Triangulation typedefs Dim2Triangulation, NTriangulation and
-                Dim4Triangulation are now deprecated, in favour of the
-                templated class names Triangulation<2,3,4>.
-              - Face typedefs (e.g., Dim2Vertex, NTriangle, Dim4Edge) and
-                simplex typedefs (Dim2Triangle, NTetrahedron, Dim4Pentachoron)
-                are now deprecated, in favour of the new templated aliases
-                Vertex<dim>, Edge<dim>, etc.  So, for instance, face classes
-                Dim2Vertex and NTriangle become Vertex<2> and Triangle<3>,
-                and simplex classes NTetrahedron and Dim4Pentachoron become
-                Tetrahedron<3> and Pentachoron<4>.  For top-dimensional simplex
-                classes, the type aliases Simplex<dim> are also available.
-              - Likewise, face embedding typedefs (e.g., Dim2VertexEmbedding,
-                NTriangleEmbedding) are now deprecated in favour of the new
-                templated aliases VertexEmbedding<dim>, EdgeEmbedding<dim>, etc.
-              - Component typedefs Dim2Component, NComponent and Dim4Component
-                are deprecated, in favour of the templated class names
-                Component<2,3,4>.
-              - Typedefs Dim2TriangleEdge, NTetFace and Dim4PentFacet are
-                deprecated, in favour of the templated class names
-                FacetSpec<2,3,4>.
+            + For triangulation-related classes and headers:
+              - All vertex/edge/face/etc, component, boundary component and
+                isomorphism headers are included automatically by the new
+                headers triangulation/{dim2.h, dim3.h, dim4.h, generic.h}.
+                These are now the preferred headers for accessing
+                triangulations, faces, etc. in dimensions {2, 3, 4, >= 5}.  For
+                instance, triangulation/nvertex.h becomes triangulation/dim3.h,
+                dim2/dim2component.h becomes triangulation/dim2.h, and
+                generic/face.h becomes triangulation/generic.h.
+              - All facet pairing headers are included automatically by the
+                new headers triangulation/facetpairing3.h (for dimension 3)
+                and triangulation/facetpairing.h (for all other dimensions).
+              - All gluing permutations headers are replaced by the new header
+                census/gluingperms.h, and all gluing permutation search headers
+                are replaced by census/gluingpermsearcher{2,3,4}.h.
+              - All typedefs of the form Dim2Foo, NFoo and Dim4Foo are now
+                deprecated, in favour of the templated class names Foo<2,3,4>.
+                For instance, Dim2Triangulation becomes Triangulation<2>,
+                NVertex becomes Vertex<3>, and Dim4Isomorphism becomes
+                Isomorphism<4>.
+              - As a special cases:
+                * Dim2TriangleEdge, NTetFace and Dim4PentFacet become
+                  FacetSpec<2,3,4>;
+                * Dim2EdgePairing, NFacePairing and Dim4FacetPairing become
+                  FacetPairing<2,3,4>;
+                * Dim2ExampleTriangulation, NExampleTriangulation and
+                  Dim4ExampleTriangulation become Example<2,3,4>.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
             + surfaces/sf{combination,properties}.h are both merged into
@@ -62,14 +61,52 @@ Version 5.1  [ (under development) ]
     ENGINE:
         Class AbelianGroup, MarkedAbelianGroup, HomMarkedAbelianGroup:
             - Now works with type Integer, not LargeInteger.
+        Class BoundaryComponent<dim>:
+            - A new generic template for boundary components, which generalises
+              the old standalone Dim2BoundaryComponent, NBoundaryComponent and
+              Dim4BoundaryComponent classes.
+            - New routines size() and facet() to query top-dimensional faces.
+            - New routine countRidges(), to help with higher dimensions
+              where (dim-2)-faces are not actually stored.
+            - New routines facets() and faces(), plus aliases vertices(),
+              edges(), etc. where relevant.
+            - New routine isReal() for dimensions dim = 3,4.
+            - New routine build() for dimensions other than 4 (this was
+              already present for dimension 4).
+            - New routine isOrientable() for dimensions other than 3 (this was
+              already present for dimension 3).
+            - New routine triangulation() to access the enclosing triangulation.
+        Class Component<dim>:
+            - New routine boundaryComponents() in all dimensions, and new
+              routines countBoundaryComponents() and boundaryComponent() in
+              higher dimensions (these were already present for dimensions 2-4).
+        Class Example<dim>:
+            - A new generic template for generating example triangulations,
+              which generalises the old standalone Dim2ExampleTriangulation,
+              NExampleTriangulation and Dim4ExampleTriangulation classes.
+            - New routines sphere(), simplicialSphere(), sphereBundle(),
+              twistedSphereBundle(), ball(), ballBundle() and
+              twistedBallBundle() for dimensions that did not have them.
+            - New routines singleCone() and doubleCone() for dimensions >= 3
+              that did not have them.
         Class Face<dim, subdim>:
             - The template parameters are expanded to include the case
               Face<dim, dim>, which now implements the old class Simplex<dim>.
               Simplex<dim> remains as a templated type alias, and is still
               the preferred way to refer to this class.
+            - For higher-dimensional triangulations (dim >= 5), faces now
+              support isBoundary(), boundaryComponent(), and for
+              codimension-1-faces only, inMaximalForest().
+            - Fixed inMaximalForest(), which was broken in dimension >= 8.
+        Class GluingPermSearcher<2,3,4>:
+            - A new generic class that replaces the old Dim2GluingPermSearcher,
+              NGluingPermSearcher and Dim4GluingPermSearcher.  For now this
+              class remains undefined for higher dimensions.
         Class HomologicalData:
             - Now works with type Integer instead of LargeInteger for all
               member functions except for torsionSigmaVector().
+        Class MarkedVector:
+            - New routine refill() for bulk replacements.
         Class MatrixInt:
             - Now stores elements of type Integer, not LargeInteger.  If
               you need support for infinity, you can always use the class
@@ -112,6 +149,13 @@ Version 5.1  [ (under development) ]
             - Removed the copy constructor.
         Class Packet:
             - writeXMLFile() is now available in python (using std::cout only).
+        Class Perm<n>:
+            - New method clear() to reset a suffix of the permutation
+              to the identity map.
+        Class Property:
+            - New routine swap() for fast swapping of data.
+        Class PropertyBase:
+            - Removed, since it provided no enhancements to Property.
         Class Primes:
             - Now works with type Integer, not LargeInteger.
         Class SafePtr:
@@ -121,10 +165,32 @@ Version 5.1  [ (under development) ]
             - This is now implemented as the specialisation Face<dim, dim>.
               The preferred way to refer to this class is still Simplex<dim>,
               which is now a templated type alias.
+            - Fixed facetInMaximalForest(), which was broken in dimension >= 8.
         Class SurfaceSubset:
             - Removed entirely.  This class has been unused for several years,
               and was just a trivial wrapper for iterating through a surface
               list with a filter.
+        Class Triangulation<dim>:
+            - New routines boundaryComponents(), countBoundaryComponents()
+              and boundaryComponent() for higher-dimensional triangulations
+              (these were already present for dimensions 2-4).
+            - New routine eulerCharTri() for all dimensions (this was already
+              present for dimensions 3 and 4).
+            - New routines fundamentalGroup(), simplifiedFundamentalGroup(),
+              homology() and homologyH1() for all dimensions (these were
+              already present for dimensions 3 and 4).  These routines do not
+              require the triangulation to be valid (i.e., the old validity
+              restrictions in dimension 4 have been lifted).
+            - New two-argument copy constructor that allows you to clone
+              a triangulation without cloning its computed properties.
+            - Routine swapContents() now swaps skeletal data and computed
+              properties also, instead of just deleting them.
+        Class Triangulation<3>:
+            - Routine retriangulate() now allows its action argument to
+              change the triangulation that is passed to it.
+        Typedef UseDim2GluingPerms, UseGluingPerms, UseDim4GluingPerms:
+            - Renamed to GluingPermSearcher<2,3,4>::Use.  The old names are
+              kept but deprecated.
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
@@ -133,6 +199,8 @@ Version 5.1  [ (under development) ]
             - Deprecated the old names PACKET_DIM2TRIANGULATION,
               PACKET_TRIANGULATION and PACKET_DIM4TRIANGULATION.
               Instead use the newer names PACKET_TRIANGULATION{2,3,4}.
+        Routine faceOppositeEdge():
+            - New routine for optimised face number calculations.
         Routine preImageOfLattice(), torsionAutInverse():
             - Now works with type Integer instead of LargeInteger.
         Routine isZero, isNonZero, isPositive, isNegative, isNonPositive,
@@ -144,6 +212,9 @@ Version 5.1  [ (under development) ]
               (and now removed) array vertexSplitDefn[][].
         Macro REGINA_NORMAL_SURFACE_FLAVOUR, REGINA_NORMAL_HYPERSURFACE_FLAVOUR:
             - Now takes a third argument, representing the parent vector class.
+        Header triangulation/forward.h:
+            - New header that is now the preferred method of forward-declaring
+              Regina's triangulation-related classes and type aliases.
     PYTHON:
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The

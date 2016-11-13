@@ -31,10 +31,7 @@
  **************************************************************************/
 
 #import <Foundation/Foundation.h>
-
-namespace regina {
-    template <int> class Triangulation;
-}
+#import "triangulation/forward.h"
 
 @interface EltMoves3 : UIViewController
 @property (assign, nonatomic) regina::Triangulation<3>* packet;

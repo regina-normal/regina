@@ -46,6 +46,7 @@
 #include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/ray.h"
+#include "triangulation/forward.h"
 #include "utilities/boolset.h"
 #include "utilities/property.h"
 #include <boost/noncopyable.hpp>
@@ -62,11 +63,6 @@ class EnumConstraints;
 
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
-
-template <int> class Triangulation;
-template <int, int> class Face;
-template <int dim> using Vertex = Face<dim, 0>;
-template <int dim> using Edge = Face<dim, 1>;
 
 /**
  * A template that stores information about a particular

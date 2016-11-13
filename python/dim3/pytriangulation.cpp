@@ -30,28 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-void addNBoundaryComponent();
+void addBoundaryComponent3();
 void addComponent3();
 void addEdge3();
-void addNExampleTriangulation();
-void addNFacePair();
-void addNFacePairing();
-void addNHomologicalData();
-void addNIsomorphism();
+void addExample3();
+void addFacePair();
+void addFacetPairing3();
+void addHomologicalData();
+void addIsomorphism3();
 void addTetrahedron3();
 void addTriangle3();
 void addTriangulation3();
 void addVertex3();
 
 void addTriangulationClasses() {
-    addNBoundaryComponent();
+    addBoundaryComponent3();
     addComponent3();
     addEdge3();
-    addNExampleTriangulation();
-    addNFacePair();
-    addNFacePairing();
-    addNHomologicalData();
-    addNIsomorphism();
+    addExample3();
+    addFacePair();
+    addFacetPairing3();
+    addHomologicalData();
+    addIsomorphism3();
     addTetrahedron3();
     addTriangle3();
     addTriangulation3();

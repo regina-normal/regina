@@ -219,7 +219,7 @@ bool Triangulation<3>::isZeroEfficient() {
         else {
             // Operate on a clone of this triangulation, to avoid
             // changing the real packet tree.
-            Triangulation<3> clone(*this);
+            Triangulation<3> clone(*this, false);
             NormalSurface* s = clone.hasNonTrivialSphereOrDisc();
             if (s) {
                 zeroEfficient_ = false;
@@ -246,7 +246,7 @@ bool Triangulation<3>::hasSplittingSurface() {
     //
     // Work on a clone of this triangulation so we don't trigger any
     // changes to the packet tree.
-    Triangulation<3> working(*this);
+    Triangulation<3> working(*this, false);
     NormalSurfaces* surfaces = NormalSurfaces::enumerate(&working,
         NS_STANDARD);
 

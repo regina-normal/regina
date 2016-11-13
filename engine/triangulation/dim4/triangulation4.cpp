@@ -45,7 +45,7 @@ Triangulation<4>::Triangulation(const std::string& description) :
     Triangulation<4>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        cloneFrom(*attempt);
+        swapContents(*attempt);
         setLabel(description);
     }
 
@@ -157,13 +157,13 @@ long Triangulation<4>::eulerCharManifold() const {
 
     // Truncate any ideal vertices.
     if (ideal_) {
-        for (auto bc : boundaryComponents_)
+        for (auto bc : boundaryComponents())
             if (bc->isIdeal()) {
                 // Because our 4-manifold triangulation is valid, all
                 // vertex links in the 3-manifold boundary must be
                 // spheres or discs.  We can therefore use V - E + F - T
                 // on this boundary component.
-                ans += bc->vertices_.front()->link_->eulerCharTri() - 1;
+                ans += bc->vertex(0)->link_->eulerCharTri() - 1;
             }
     }
 
@@ -195,16 +195,8 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
     }
     out << "  </pentachora>\n";
 
-    if (fundGroup_.known()) {
-        out << "  <fundgroup>\n";
-        fundGroup_.value()->writeXMLData(out);
-        out << "  </fundgroup>\n";
-    }
-    if (H1_.known()) {
-        out << "  <H1>";
-        H1_.value()->writeXMLData(out);
-        out << "</H1>\n";
-    }
+    writeXMLBaseProperties(out);
+
     if (H2_.known()) {
         out << "  <H2>";
         H2_.value()->writeXMLData(out);
@@ -212,66 +204,41 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
     }
 }
 
-void Triangulation<4>::cloneFrom(const Triangulation<4>& X) {
-    ChangeEventSpan span(this);
-
-    removeAllPentachora();
-
-    PentachoronIterator it;
-    for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it)
-        newPentachoron((*it)->description());
-
-    // Make the gluings.
-    long pentPos, adjPos;
-    Pentachoron<4>* pent;
-    Pentachoron<4>* adjPent;
-    Perm<5> adjPerm;
-    int facet;
-    pentPos = 0;
-    for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it) {
-        pent = *it;
-        for (facet = 0; facet < 5; ++facet) {
-            adjPent = pent->adjacentPentachoron(facet);
-            if (adjPent) {
-                adjPos = adjPent->index();
-                adjPerm = pent->adjacentGluing(facet);
-                if (adjPos > pentPos ||
-                        (adjPos == pentPos && adjPerm[facet] > facet)) {
-                    simplices_[pentPos]->join(facet,
-                        simplices_[adjPos], adjPerm);
-                }
-            }
-        }
-        ++pentPos;
-    }
-
-    // Properties:
-    if (X.knownSimpleLinks_)
-        knownSimpleLinks_ = true;
-    if (X.fundGroup_.known())
-        fundGroup_ = new NGroupPresentation(*(X.fundGroup_.value()));
-    if (X.H1_.known())
-        H1_ = new AbelianGroup(*(X.H1_.value()));
+Triangulation<4>::Triangulation(const Triangulation& X) :
+        TriangulationBase<4>(X),
+        knownSimpleLinks_(X.knownSimpleLinks_) {
+    // Clone properties:
     if (X.H2_.known())
         H2_ = new AbelianGroup(*(X.H2_.value()));
 }
 
-void Triangulation<4>::deleteSkeleton() {
-    for (auto b : boundaryComponents_)
-        delete b;
-    boundaryComponents_.clear();
+Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
+        TriangulationBase<4>(X, cloneProps),
+        knownSimpleLinks_(X.knownSimpleLinks_) /* always cloned */ {
+    // For other properties, the user gets to decide:
+    if (! cloneProps)
+        return;
 
-    TriangulationBase<4>::deleteSkeleton();
+    if (X.H2_.known())
+        H2_ = new NAbelianGroup(*(X.H2_.value()));
 }
 
 void Triangulation<4>::clearAllProperties() {
-    if (calculatedSkeleton())
-        deleteSkeleton();
+    clearBaseProperties();
 
     knownSimpleLinks_ = false;
-    fundGroup_.clear();
-    H1_.clear();
     H2_.clear();
+}
+
+void Triangulation<4>::swapAllProperties(Triangulation<4>& other) {
+    swapBaseProperties(other);
+
+    // Properties stored directly:
+    std::swap(knownSimpleLinks_, other.knownSimpleLinks_);
+    std::swap(ideal_, other.ideal_);
+
+    // Properties stored using the Property<...> template class:
+    H2_.swap(other.H2_);
 }
 
 } // namespace regina

@@ -461,7 +461,7 @@ True
 1 0 0 ; 0 1 0
 1 0 0 ; 0 0 1
 
-&gt;&gt;&gt; t2 = NExampleTriangulation.figureEight()
+&gt;&gt;&gt; t2 = Example3.figureEight()
 &gt;&gt;&gt; m2 = snappy.Manifold(t2.snapPea())
 &gt;&gt;&gt; print m2.volume()
 2.02988321282

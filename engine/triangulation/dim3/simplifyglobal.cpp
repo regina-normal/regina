@@ -68,7 +68,7 @@ bool Triangulation<3>::intelligentSimplify() {
             // might not lead to a simplification.
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
-            use = (changed ? this : new Triangulation<3>(*this));
+            use = (changed ? this : new Triangulation<3>(*this, false));
 
             // Make random 4-4 moves.
             fourFourAttempts = fourFourCap = 0;
@@ -113,7 +113,7 @@ bool Triangulation<3>::intelligentSimplify() {
                 // At this point, changed == false.
                 if (use->size() < size()) {
                     // The 4-4 moves were successful; accept them.
-                    cloneFrom(*use);
+                    swapContents(*use);
                     changed = true;
                 }
                 delete use;
@@ -127,7 +127,7 @@ bool Triangulation<3>::intelligentSimplify() {
             if (hasBoundaryTriangles()) {
                 // Clone again, always -- we don't want to create gratuitous
                 // boundary triangles if they won't be of any help.
-                use = new Triangulation<3>(*this);
+                use = new Triangulation<3>(*this, false);
 
                 // Perform every book opening move we can find.
                 TriangleIterator fit;
@@ -149,7 +149,7 @@ bool Triangulation<3>::intelligentSimplify() {
                 if (opened) {
                     if (use->simplifyToLocalMinimum(true)) {
                         // Yay!
-                        cloneFrom(*use);
+                        swapContents(*use);
                         changed = true;
                     } else {
                         // No good.
@@ -205,7 +205,6 @@ bool Triangulation<3>::intelligentSimplify() {
 }
 
 bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
-    BoundaryComponentIterator bit;
     unsigned long nTriangles;
     unsigned long iTriangle;
     // unsigned long nEdges;
@@ -224,7 +223,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
 
             // Crush edges if we can.
             if (countVertices() > components().size() &&
-                    countVertices() > boundaryComponents_.size()) {
+                    countVertices() > countBoundaryComponents()) {
                 for (Edge<3>* edge : edges())
                     if (collapseEdge(edge, true, perform)) {
                         changedNow = changed = true;
@@ -277,13 +276,12 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
 
             // Look for boundary simplifications.
             if (hasBoundaryTriangles()) {
-                for (bit = boundaryComponents_.begin();
-                        bit != boundaryComponents_.end(); bit++) {
+                for (BoundaryComponent<3>* bc : boundaryComponents()) {
                     // Run through triangles of this boundary component looking
                     // for shell boundary moves.
-                    nTriangles = (*bit)->countTriangles();
+                    nTriangles = bc->countTriangles();
                     for (iTriangle = 0; iTriangle < nTriangles; iTriangle++) {
-                        if (shellBoundary((*bit)->triangle(iTriangle)->
+                        if (shellBoundary(bc->triangle(iTriangle)->
                                 front().tetrahedron(),
                                 true, perform)) {
                             changedNow = changed = true;

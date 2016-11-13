@@ -33,8 +33,8 @@
 /*! \file triangulation/dim2.h
  *  \brief Includes all headers for working with 2-dimensional triangulations.
  *  This includes headers for the main class Triangulation<2>, as well as the
- *  face classes Face<2,\a subdim> and the component classes Component<2> and
- *  Dim2BoundaryComponent.
+ *  face classes Face<2,\a subdim>, the component classes Component<2> and
+ *  BoundaryComponent<2>, and the isomorphism class Isomorphism<2>.
  */
 
 #ifndef __DIM2_H
@@ -43,6 +43,19 @@
 #endif
 
 #include "triangulation/dim2/triangulation2.h"
+
+namespace regina {
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4Isomorphism, you should use
+ * the full class name Isomorphism<2>.
+ */
+REGINA_DEPRECATED typedef Isomorphism<2> Dim2Isomorphism;
+
+} // namespace regina
 
 #endif
 

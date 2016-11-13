@@ -43,13 +43,10 @@
 #include "regina-core.h"
 #include "output.h"
 #include "maths/perm.h"
+#include "triangulation/forward.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
-
-template <int> class Triangulation;
-template <int, int> class Face;
-template <int dim> using Triangle = Face<dim, 2>;
 
 /**
  * \weakgroup subcomplex

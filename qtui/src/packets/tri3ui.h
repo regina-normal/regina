@@ -38,6 +38,7 @@
 #define __TRI3UI_H
 
 #include "packet/packetlistener.h"
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 
 class ClickableLabel;
@@ -49,10 +50,6 @@ class Tri3SnapPeaUI;
 class PacketEditIface;
 class QLabel;
 class QToolBar;
-
-namespace regina {
-    template <int> class Triangulation;
-};
 
 /**
  * A packet interface for viewing 3-manifold triangulations.

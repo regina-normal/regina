@@ -46,32 +46,21 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "algebra/abeliangroup.h"
-#include "algebra/ngrouppresentation.h"
-#include "generic/triangulation.h"
-#include "packet/packet.h"
+#include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
-#include "utilities/property.h"
-
-// The following headers are necessary so that std::unique_ptr can invoke
-// destructors where necessary.
-#include "dim4/dim4isomorphism.h"
 
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.
 
 namespace regina {
 
-class Dim4BoundaryComponent;
 class XMLPacketReader;
 
-template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
-typedef Isomorphism<4> Dim4Isomorphism;
 
 /**
  * \addtogroup dim4 4-Manifold Triangulations
- * Triangulations of 4-manifolds.
+ * Details for implementing triangulations of 4-manifolds.
  * @{
  */
 
@@ -93,17 +82,7 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  * the triangulation classes work.
  *
  * This 4-dimensional specialisation offers significant extra functionality,
- * including many functions specific to 4-manifolds, plus rich details of
- * the combinatorial structure of the triangulation.
- *
- * In particular, this class also tracks vertices, edges, triangles and
- * tetrahedra of the triangulation (as represented by the classes Vertex<4>,
- * Edge<4>, Triangle<4> and Tetrahedron<4>), as well as boundary components
- * (as represented by the class Dim4BoundaryComponent).  Such objects are
- * temporary: whenever the triangulation changes, these objects will be
- * deleted and rebuilt, and so any pointers to them will become invalid.
- * Likewise, if the triangulation is deleted then these objects will be
- * deleted alongside it.
+ * including many functions specific to 4-manifolds.
  *
  * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
  * 4-dimensional simplex, with five vertices.
@@ -127,9 +106,6 @@ class REGINA_API Triangulation<4> :
             /**< Used to iterate through edges. */
         typedef FaceList<4, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<Dim4BoundaryComponent*>::const_iterator
-                BoundaryComponentIterator;
-            /**< Used to iterate through boundary components. */
 
     private:
         bool knownSimpleLinks_;
@@ -141,18 +117,10 @@ class REGINA_API Triangulation<4> :
                  links, or it may mean that the vertex links have not yet
                  been calculated. */
 
-        MarkedVector<Dim4BoundaryComponent> boundaryComponents_;
-            /**< The components that form the boundary of the
-                 triangulation. */
-
         bool ideal_;
             /**< Is the triangulation ideal? */
 
-        mutable Property<NGroupPresentation, StoreManagedPtr> fundGroup_;
-            /**< Fundamental group of the triangulation. */
-        mutable Property<AbelianGroup, StoreManagedPtr> H1_;
-            /**< First homology group of the triangulation. */
-        mutable Property<AbelianGroup, StoreManagedPtr> H2_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
     public:
@@ -168,14 +136,32 @@ class REGINA_API Triangulation<4> :
          */
         Triangulation();
         /**
-         * Copy constructor.
-         *
          * Creates a copy of the given triangulation.
          * The packet tree structure and packet label are \e not copied.
+         *
+         * This will clone any computed properties (such as homology,
+         * fundamental group, and so on) of the given triangulation also.
+         * If you want a "clean" copy that resets all properties to unknown,
+         * you can use the two-argument copy constructor instead.
          *
          * @param copy the triangulation to copy.
          */
         Triangulation(const Triangulation& copy);
+        /**
+         * Creates a new copy of the given triangulation, with the option
+         * of whether or not to clone its computed properties also.
+         *
+         * Regardless of the argument \a cloneProps, if it is known that
+         * all vertex links of \a copy are 3-sphere or 3-balls, this
+         * knowledge will be copied over to the new triangulation.
+         *
+         * @param copy the triangulation to copy.
+         * @param cloneProps \c true if this should also clone any computed
+         * properties of the given triangulation (such as homology,
+         * fundamental group, and so on), or \c false if the new triangulation
+         * should have all properties marked as unknown.
+         */
+        Triangulation(const Triangulation& copy, bool cloneProps);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -253,77 +239,9 @@ class REGINA_API Triangulation<4> :
 
         /*@}*/
         /**
-         * \name Skeletal Queries
-         */
-        /*@{*/
-
-        /**
-         * Returns the number of boundary components in this triangulation.
-         *
-         * Note that each ideal vertex forms its own boundary component, and
-         * some invalid vertices do also.  See the Dim4BoundaryComponent
-         * class notes and Vertex<4>::isBoundary() for details.
-         *
-         * @return the number of boundary components.
-         */
-        size_t countBoundaryComponents() const;
-
-        /**
-         * Returns all boundary components of this triangulation.
-         *
-         * Note that each ideal vertex forms its own boundary component, and
-         * some invalid vertices do also.  See the Dim4BoundaryComponent
-         * class notes and Vertex<4>::isBoundary() for details.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all boundary components.
-         */
-        const std::vector<Dim4BoundaryComponent*>& boundaryComponents() const;
-        /**
-         * Returns the requested boundary component of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired boundary component, ranging
-         * from 0 to countBoundaryComponents()-1 inclusive.
-         * @return the requested boundary component.
-         */
-        Dim4BoundaryComponent* boundaryComponent(size_t index) const;
-
-        /*@}*/
-        /**
          * \name Basic Properties
          */
         /*@{*/
-
-        /**
-         * Returns the Euler characteristic of this triangulation.
-         * This will be evaluated strictly as \a V-E+F-T+P.
-         *
-         * Note that this routine handles cusps in a non-standard way.
-         * Since it computes the Euler characteristic of the
-         * triangulation (and not the underlying manifold), this routine
-         * will treat each cusp as a single vertex, and \e not as
-         * a surface boundary component.
-         *
-         * For a routine that handles cusps properly (i.e., treats them
-         * as 3-manifold boundary components when computing the Euler
-         * characteristic), see eulerCharManifold() instead.
-         *
-         * @return the Euler characteristic of this triangulation.
-         */
-        long eulerCharTri() const;
 
         /**
          * Returns the Euler characteristic of the corresponding compact
@@ -384,90 +302,6 @@ class REGINA_API Triangulation<4> :
          * \name Algebraic Properties
          */
         /*@{*/
-
-        /**
-         * Returns the fundamental group of this triangulation.
-         * If this triangulation contains any ideal vertices, the
-         * fundamental group will be calculated as if each such vertex
-         * had been truncated.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * fundamental group will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, fundamentalGroup() should be called again; this will
-         * be instantaneous if the group has already been calculated.
-         *
-         * \pre This triangulation is valid.
-         * \pre This triangulation has at most one component.
-         *
-         * @return the fundamental group.
-         */
-        const NGroupPresentation& fundamentalGroup() const;
-        /**
-         * Notifies the triangulation that you have simplified the
-         * presentation of its fundamental group.  The old group
-         * presentation will be destroyed, and this triangulation will take
-         * ownership of the new (hopefully simpler) group that is passed.
-         *
-         * This routine is useful for situations in which some external
-         * body (such as GAP) has simplified the group presentation
-         * better than Regina can.
-         *
-         * Regina does \e not verify that the new group presentation is
-         * equivalent to the old, since this is - well, hard.
-         *
-         * If the fundamental group has not yet been calculated for this
-         * triangulation, this routine will nevertheless take ownership
-         * of the new group, under the assumption that you have worked
-         * out the group through some other clever means without ever
-         * having needed to call fundamentalGroup() at all.
-         *
-         * Note that this routine will not fire a packet change event.
-         *
-         * @param newGroup a new (and hopefully simpler) presentation of
-         * the fundamental group of this triangulation.
-         */
-        void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
-
-        /**
-         * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal vertices, the homology
-         * group will be calculated as if each such vertex had been truncated.
-         *
-         * This routine can also be accessed via the alias homologyH1()
-         * (a name that is more specific, but a little longer to type).
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homology() should be called again; this will be
-         * instantaneous if the group has already been calculated.
-         *
-         * \pre This triangulation is valid.
-         *
-         * @return the first homology group.
-         */
-        const AbelianGroup& homology() const;
-
-        /**
-         * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal vertices, the homology
-         * group will be calculated as if each such vertex had been truncated.
-         *
-         * This routine can also be accessed via the alias homology()
-         * (a name that is less specific, but a little easier to type).
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homologyH1() should be called again; this will be
-         * instantaneous if the group has already been calculated.
-         *
-         * \pre This triangulation is valid.
-         *
-         * @return the first homology group.
-         */
-        const AbelianGroup& homologyH1() const;
 
         /**
          * Returns the second homology group for this triangulation.
@@ -940,34 +774,25 @@ class REGINA_API Triangulation<4> :
         virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
-        /**
-         * Turns this triangulation into a clone of the given triangulation.
-         * The tree structure and label of this triangulation are not touched.
-         *
-         * @param from the triangulation from which this triangulation
-         * will be cloned.
-         */
-        void cloneFrom(const Triangulation& from);
-
     private:
         /**
-         * Clears any calculated properties and declares them all
-         * unknown.  All dynamic memory used for storing known
-         * properties is deallocated.
+         * Clears any calculated properties, including skeletal data,
+         * and declares them all unknown.  This must be called by any
+         * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
         void clearAllProperties();
+        /**
+         * Swaps all calculated properties, including skeletal data,
+         * with the given triangulation.  This is called by
+         * TriangulationBase::swapContents(), and by nothing else.
+         */
+        void swapAllProperties(Triangulation<4>& other);
 
-        void deleteSkeleton();
         void calculateSkeleton();
 
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateBoundary();
         /**
          * Internal to calculateSkeleton().  See the comments within
          * calculateSkeleton() for precisely what this routine does.
@@ -994,13 +819,51 @@ class REGINA_API Triangulation<4> :
  */
 REGINA_DEPRECATED typedef Triangulation<4> Dim4Triangulation;
 
+// Additional face typedefs that do not have their own headers:
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4TriangleEmbedding, you should
+ * use either the new alias TriangleEmbedding<4>, or the full class name
+ * FaceEmbedding<4, 2>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<4, 2> Dim4TriangleEmbedding;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4TetrahedronEmbedding, you should
+ * use either the new alias TetrahedronEmbedding<4>, or the full class name
+ * FaceEmbedding<4, 3>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<4, 3> Dim4TetrahedronEmbedding;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4Triangle, you should use
+ * either the new alias Triangle<4>, or the full class name Face<4, 2>.
+ */
+REGINA_DEPRECATED typedef Face<4, 2> Dim4Triangle;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4Tetrahedron, you should use
+ * either the new alias Tetrahedron<4>, or the full class name Face<4, 3>.
+ */
+REGINA_DEPRECATED typedef Face<4, 3> Dim4Tetrahedron;
+
 /*@}*/
 
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim4/pentachoron4.h"
-#include "triangulation/dim4/tetrahedron4.h"
-#include "triangulation/dim4/triangle4.h"
 #include "triangulation/dim4/edge4.h"
 #include "triangulation/dim4/vertex4.h"
 #include "triangulation/dim4/component4.h"
@@ -1010,11 +873,6 @@ namespace regina {
 // Inline functions for Triangulation<4>
 
 inline Triangulation<4>::Triangulation() : knownSimpleLinks_(false) {
-}
-
-inline Triangulation<4>::Triangulation(const Triangulation& cloneMe) :
-        knownSimpleLinks_(false) {
-    cloneFrom(cloneMe);
 }
 
 inline Triangulation<4>::~Triangulation() {
@@ -1051,34 +909,6 @@ inline void Triangulation<4>::removeAllPentachora() {
     removeAllSimplices();
 }
 
-inline size_t Triangulation<4>::countBoundaryComponents() const {
-    ensureSkeleton();
-    return boundaryComponents_.size();
-}
-
-inline const std::vector<Dim4BoundaryComponent*>&
-        Triangulation<4>::boundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
-}
-
-inline Dim4BoundaryComponent* Triangulation<4>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
-}
-
-inline long Triangulation<4>::eulerCharTri() const {
-    ensureSkeleton();
-
-    // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(countVertices())
-        - static_cast<long>(countEdges())
-        + static_cast<long>(countTriangles())
-        - static_cast<long>(countTetrahedra())
-        + static_cast<long>(size());
-}
-
 inline bool Triangulation<4>::isIdeal() const {
     ensureSkeleton();
     return ideal_;
@@ -1086,16 +916,7 @@ inline bool Triangulation<4>::isIdeal() const {
 
 inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
-    return boundaryComponents_.empty();
-}
-
-inline void Triangulation<4>::simplifiedFundamentalGroup(
-        NGroupPresentation* newGroup) {
-    fundGroup_ = newGroup;
-}
-
-inline const AbelianGroup& Triangulation<4>::homology() const {
-    return homologyH1();
+    return boundaryComponents().empty();
 }
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {

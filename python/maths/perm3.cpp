@@ -94,6 +94,7 @@ void addPerm3() {
             .def("rand", &Perm<3>::rand)
             .def("trunc", &Perm<3>::trunc)
             .def("trunc2", &Perm<3>::trunc2)
+            .def("clear", &Perm<3>::clear)
             .def("S3Index", &Perm<3>::S3Index)
             .def("orderedS3Index", &Perm<3>::orderedS3Index)
             .def("orderedSnIndex", &Perm<3>::orderedS3Index)

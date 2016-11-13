@@ -37,12 +37,12 @@
 #ifndef __TRI2SKELETON_H
 #define __TRI2SKELETON_H
 
+#include "triangulation/forward.h"
 #include "packettabui.h"
 #include "skeletonwindow.h"
 
 namespace regina {
     class Packet;
-    template <int> class Triangulation;
 };
 
 /**

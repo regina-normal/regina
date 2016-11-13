@@ -36,11 +36,11 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
@@ -100,7 +100,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             Triangulation<3>* tri;
 
             // Try the 3-sphere (no incompressible surfaces).
-            tri = NExampleTriangulation::threeSphere();
+            tri = Example<3>::threeSphere();
             delete verifyAllNotIncompressible(tri, "3-sphere");
 
             // Try RP3 (no incompressible surfaces, since we
@@ -114,7 +114,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             delete verifyAllNotIncompressible(tri, "RP3 (2 vtx)");
 
             // Try some other non-Haken manifolds.
-            tri = NExampleTriangulation::poincareHomologySphere();
+            tri = Example<3>::poincareHomologySphere();
             delete verifyAllNotIncompressible(tri,
                 "Poincare homology sphere");
 
@@ -193,7 +193,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             tet[3]->join(2, tet[3], Perm<4>(1,2));
             delete verifyNoCompressingDisc(tri, "4-tetrahedron ball");
 
-            tri = NExampleTriangulation::figureEight();
+            tri = Example<3>::figureEight();
             tri->idealToFinite();
             tri->intelligentSimplify();
             delete verifyNoCompressingDisc(tri, "Figure 8 Knot Complement");

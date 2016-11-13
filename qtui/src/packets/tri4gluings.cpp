@@ -41,7 +41,7 @@
 #include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
-#include "choosers/dim4boundarycomponentchooser.h"
+#include "choosers/boundary4chooser.h"
 #include "choosers/facechooser.h"
 
 #include <memory>
@@ -745,8 +745,8 @@ void Tri4GluingsUI::boundaryComponents() {
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any boundary components."));
     else {
-        regina::Dim4BoundaryComponent* chosen =
-            Dim4BoundaryComponentDialog::choose(ui, tri, 0 /* filter */,
+        regina::BoundaryComponent<4>* chosen =
+            BoundaryComponent4Dialog::choose(ui, tri, 0 /* filter */,
             tr("Boundary Components"),
             tr("Triangulate which boundary component?"),
             tr("<qt>Regina will triangulate whichever "

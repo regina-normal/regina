@@ -30,33 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __DIM2EDGEPAIRING_H
-#ifndef __DOXYGEN
-#define __DIM2EDGEPAIRING_H
-#endif
-
 /*! \file dim2/dim2edgepairing.h
- *  \brief Deals with dual graphs of 2-manifold triangulations.
+ *  \brief Deprecated header.
  */
 
-#include "regina-core.h"
-#include "dim2/dim2isomorphism.h"
-#include "generic/facetpairing.h"
-#include "triangulation/dim2.h"
+#warning This header is deprecated; please use triangulation/facetpairing.h instead.
 
-namespace regina {
-
-/**
- * \weakgroup dim2
- * @{
- */
-
-/**
- * A convenience typedef for FacetPairing<2>.
- */
-typedef FacetPairing<2> Dim2EdgePairing;
-
-} // namespace regina
-
-#endif
+#include "triangulation/facetpairing.h"
 

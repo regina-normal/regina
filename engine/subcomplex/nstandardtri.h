@@ -41,17 +41,13 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "triangulation/forward.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
 class AbelianGroup;
 class NManifold;
-
-template <int> class Component;
-template <int> class Triangulation;
-template <int, int> class Face;
-template <int dim> using Tetrahedron = Face<dim, 3>; // Used by many subclasses.
 
 /**
  * \addtogroup subcomplex Standard Triangulations and Subcomplexes

@@ -46,6 +46,13 @@ namespace {
             ans.append(boost::python::ptr(*it));
         return ans;
     }
+
+    boost::python::list bc_list(Component<3>& t) {
+        boost::python::list ans;
+        for (auto s : t.boundaryComponents())
+            ans.append(boost::python::ptr(s));
+        return ans;
+    }
 }
 
 void addComponent3() {
@@ -69,6 +76,7 @@ void addComponent3() {
         .def("triangles", regina::python::faces_list<Component<3>, 3, 2>)
         .def("edges", regina::python::faces_list<Component<3>, 3, 1>)
         .def("vertices", regina::python::faces_list<Component<3>, 3, 0>)
+        .def("boundaryComponents", bc_list)
         .def("face", &regina::python::face<Component<3>, 3, size_t>)
         .def("triangle", &Component<3>::triangle,
             return_value_policy<reference_existing_object>())

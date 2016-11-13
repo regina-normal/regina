@@ -48,20 +48,12 @@
 #include <set>
 
 #include "regina-core.h"
-#include "algebra/abeliangroup.h"
-#include "algebra/ngrouppresentation.h"
 #include "angle/anglestructure.h"
-#include "generic/triangulation.h"
 #include "maths/cyclotomic.h"
-#include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
+#include "triangulation/generic/triangulation.h"
 #include "utilities/boolset.h"
 #include "utilities/markedvector.h"
-#include "utilities/property.h"
-
-// The following headers are necessary so that std::unique_ptr can invoke
-// destructors where necessary.
-#include "triangulation/nisomorphism.h"
 
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.
@@ -69,19 +61,16 @@
 namespace regina {
 
 class AngleStructure;
-class NBoundaryComponent;
 class NGroupPresentation;
 class NormalSurface;
 class ProgressTrackerOpen;
 class XMLPacketReader;
 
-template <int> class Isomorphism;
 template <int> class XMLTriangulationReader;
-typedef Isomorphism<3> NIsomorphism;
 
 /**
- * \addtogroup triangulation 3-Manifold Triangulations
- * Triangulations of 3-manifolds.
+ * \addtogroup dim3 3-Manifold Triangulations
+ * Details for implementing triangulations of 3-manifolds.
  * @{
  */
 
@@ -139,16 +128,7 @@ enum TuraevViroAlg {
  * the triangulation classes work.
  *
  * This 3-dimensional specialisation offers significant extra functionality,
- * including many functions specific to 3-manifolds, plus rich details of
- * the combinatorial structure of the triangulation.
- *
- * In particular, this class also tracks vertices, edges and triangles of the
- * triangulation (as represented by the classes Vertex<3>, Edge<3> and Triangle<3>),
- * as well as boundary components (as represented by the class
- * NBoundaryComponent).  Such objects are temporary: whenever the
- * triangulation changes, these objects will be deleted and rebuilt, and so
- * any pointers to them will become invalid.  Likewise, if the triangulation
- * is deleted then these objects will be deleted alongside it.
+ * including many functions specific to 3-manifolds.
  *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
@@ -177,9 +157,6 @@ class REGINA_API Triangulation<3> :
             /**< Used to iterate through edges. */
         typedef FaceList<3, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<NBoundaryComponent*>::const_iterator
-                BoundaryComponentIterator;
-            /**< Used to iterate through boundary components. */
 
         typedef std::map<std::pair<unsigned long, bool>, Cyclotomic>
                 TuraevViroSet;
@@ -187,19 +164,11 @@ class REGINA_API Triangulation<3> :
                  as described by turaevViro(). */
 
     private:
-        MarkedVector<NBoundaryComponent> boundaryComponents_;
-            /**< The components that form the boundary of the triangulation. */
-
         bool ideal_;
             /**< Is the triangulation ideal? */
         bool standard_;
             /**< Is the triangulation standard? */
 
-        mutable Property<NGroupPresentation, StoreManagedPtr>
-                fundamentalGroup_;
-            /**< Fundamental group of the triangulation. */
-        mutable Property<AbelianGroup, StoreManagedPtr> H1_;
-            /**< First homology group of the triangulation. */
         mutable Property<AbelianGroup, StoreManagedPtr> H1Rel_;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
@@ -267,9 +236,25 @@ class REGINA_API Triangulation<3> :
          * Creates a new copy of the given triangulation.
          * The packet tree structure and packet label are \e not copied.
          *
+         * This will clone any computed properties (such as homology,
+         * fundamental group, and so on) of the given triangulation also.
+         * If you want a "clean" copy that resets all properties to unknown,
+         * you can use the two-argument copy constructor instead.
+         *
          * @param copy the triangulation to copy.
          */
         Triangulation(const Triangulation<3>& copy);
+        /**
+         * Creates a new copy of the given triangulation, with the option
+         * of whether or not to clone its computed properties also.
+         *
+         * @param copy the triangulation to copy.
+         * @param cloneProps \c true if this should also clone any computed
+         * properties of the given triangulation (such as homology,
+         * fundamental group, and so on), or \c false if the new triangulation
+         * should have all properties marked as unknown.
+         */
+        Triangulation(const Triangulation& copy, bool cloneProps);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -360,44 +345,6 @@ class REGINA_API Triangulation<3> :
         /*@{*/
 
         /**
-         * Returns the number of boundary components in this triangulation.
-         * Note that each ideal vertex forms its own boundary component.
-         *
-         * @return the number of boundary components.
-         */
-        size_t countBoundaryComponents() const;
-
-        /**
-         * Returns all boundary components of this triangulation.
-         * Note that each ideal vertex forms its own boundary component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all boundary components.
-         */
-        const std::vector<NBoundaryComponent*>& boundaryComponents() const;
-        /**
-         * Returns the requested triangulation boundary component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired boundary
-         * component, ranging from 0 to countBoundaryComponents()-1 inclusive.
-         * @return the requested boundary component.
-         */
-        NBoundaryComponent* boundaryComponent(size_t index) const;
-
-        /**
          * Determines if this triangulation contains any two-sphere
          * boundary components.
          *
@@ -419,24 +366,6 @@ class REGINA_API Triangulation<3> :
          * \name Basic Properties
          */
         /*@{*/
-
-        /**
-         * Returns the Euler characteristic of this triangulation.
-         * This will be evaluated strictly as \a V-E+F-T.
-         *
-         * Note that this routine handles cusps in a non-standard way.
-         * Since it computes the Euler characteristic of the
-         * triangulation (and not the underlying manifold), this routine
-         * will treat each cusp as a single vertex, and \e not as
-         * a surface boundary component.
-         *
-         * For a routine that handles cusps properly (i.e., treats them
-         * as surface boundary components when computing the Euler
-         * characteristic), see eulerCharManifold() instead.
-         *
-         * @return the Euler characteristic of this triangulation.
-         */
-        long eulerCharTri() const;
 
         /**
          * Returns the Euler characteristic of the corresponding compact
@@ -515,130 +444,6 @@ class REGINA_API Triangulation<3> :
          */
         /*@{*/
 
-        /**
-         * Returns the fundamental group of this triangulation.
-         * If this triangulation contains any ideal or invalid vertices,
-         * the fundamental group will be calculated as if each such vertex
-         * had been truncated.
-         *
-         * If this triangulation contains any invalid edges, the
-         * calculations will be performed <b>without</b> any truncation
-         * of the corresponding projective plane cusp.  Thus if a
-         * barycentric subdivision is performed on the triangulation, the
-         * result of fundamentalGroup() will change.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * fundamental group will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, fundamentalGroup() should be called again; this will
-         * be instantaneous if the group has already been calculated.
-         *
-         * Note that this triangulation is not required to be valid
-         * (see isValid()).
-         *
-         * \pre This triangulation has at most one component.
-         *
-         * \warning As with every routine implemented by Regina's
-         * Triangulation<3> class, if you are calling this from the subclass
-         * SnapPeaTriangulation then <b>any fillings on the cusps will be
-         * ignored</b>.  If you wish to compute the fundamental group with
-         * fillings, call SnapPeaTriangulation::fundamentalGroupFilled()
-         * instead.
-         *
-         * @return the fundamental group.
-         */
-        const NGroupPresentation& fundamentalGroup() const;
-        /**
-         * Notifies the triangulation that you have simplified the
-         * presentation of its fundamental group.  The old group
-         * presentation will be destroyed, and this triangulation will take
-         * ownership of the new (hopefully simpler) group that is passed.
-         *
-         * This routine is useful for situations in which some external
-         * body (such as GAP) has simplified the group presentation
-         * better than Regina can.
-         *
-         * Regina does <i>not</i> verify that the new group presentation
-         * is equivalent to the old, since this is - well, hard.
-         *
-         * If the fundamental group has not yet been calculated for this
-         * triangulation, this routine will nevertheless take ownership
-         * of the new group, under the assumption that you have worked
-         * out the group through some other clever means without ever
-         * having needed to call fundamentalGroup() at all.
-         *
-         * Note that this routine will not fire a packet change event.
-         *
-         * @param newGroup a new (and hopefully simpler) presentation
-         * of the fundamental group of this triangulation.
-         */
-        void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
-        /**
-         * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal or invalid vertices,
-         * the homology group will be calculated as if each such vertex
-         * had been truncated.
-         *
-         * If this triangulation contains any edges that are self-identified
-         * in reverse, the homology will be computed \b without truncating
-         * the corresponding projective plane cusp(s).  Therefore, if a
-         * barycentric subdivision is performed on such a triangulation,
-         * the result of homology() will change.
-         *
-         * This routine can also be accessed via the alias homologyH1()
-         * (a name that is more specific, but a little longer to type).
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homology() should be called again; this will be
-         * instantaneous if the group has already been calculated.
-         *
-         * Note that this triangulation is not required to be valid
-         * (see isValid()).
-         *
-         * \warning As with every routine implemented by Regina's
-         * Triangulation<3> class, if you are calling this from the subclass
-         * SnapPeaTriangulation then <b>any fillings on the cusps will
-         * be ignored</b>.  If you wish to compute homology with fillings,
-         * call SnapPeaTriangulation::homologyFilled() instead.
-         *
-         * @return the first homology group.
-         */
-        const AbelianGroup& homology() const;
-        /**
-         * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal or invalid vertices,
-         * the homology group will be calculated as if each such vertex
-         * had been truncated.
-         *
-         * If this triangulation contains any edges that are self-identified
-         * in reverse, the homology will be computed \b without truncating
-         * the corresponding projective plane cusp(s).  Therefore, if a
-         * barycentric subdivision is performed on such a triangulation,
-         * the result of homologyH1() will change.
-         *
-         * This routine can also be accessed via the alias homology()
-         * (a name that is less specific, but a little easier to type).
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homologyH1() should be called again; this will be
-         * instantaneous if the group has already been calculated.
-         *
-         * Note that this triangulation is not required to be valid
-         * (see isValid()).
-         *
-         * \warning As with every routine implemented by Regina's
-         * Triangulation<3> class, if you are calling this from the subclass
-         * SnapPeaTriangulation then <b>any fillings on the cusps will
-         * be ignored</b>.  If you wish to compute homology with fillings,
-         * call SnapPeaTriangulation::homologyFilled() instead.
-         *
-         * @return the first homology group.
-         */
-        const AbelianGroup& homologyH1() const;
         /**
          * Returns the relative first homology group with
          * respect to the boundary for this triangulation.
@@ -1214,8 +1019,8 @@ class REGINA_API Triangulation<3> :
          * be a function or some other callable object).
          *
          * - \a action must take at least one argument.  The first argument
-         *   will be of type (const Triangulation<3>&), and will reference
-         *   the triangulation that has been found.  If there are any
+         *   will be of type Triangulation<3>&, and will reference the
+         *   triangulation that has been found.  If there are any
          *   additional arguments supplied in the list \a args, then
          *   these will be passed as subsequent arguments to \a action.
          *
@@ -1229,6 +1034,12 @@ class REGINA_API Triangulation<3> :
          *   that this routine visits will be obtained via Pachner moves
          *   from the original form of this triangulation, before any
          *   subsequent changes (if any) were made.
+         *
+         * - \a action may, if it chooses, make changes to the triangulation
+         *   that is passed in its argument (though it must not delete it).
+         *   This will likewise not affect the search, since the triangulation
+         *   that is passed to \a action will be destroyed immediately after
+         *   \a action is called.
          *
          * - \a action will only be called once for each triangulation
          *   (including this starting triangulation).  In other words, no
@@ -2923,25 +2734,22 @@ class REGINA_API Triangulation<3> :
         virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
-        /**
-         * Turns this triangulation into a clone of the given triangulation.
-         * The tree structure and label of this triangulation are not touched.
-         *
-         * @param from the triangulation from which this triangulation
-         * will be cloned.
-         */
-        void cloneFrom(const Triangulation<3>& from);
-
     private:
         /**
-         * Clears any calculated properties and declares them all
-         * unknown.  All dynamic memory used for storing known
-         * properties is deallocated.
+         * Clears any calculated properties, including skeletal data,
+         * and declares them all unknown.  This must be called by any
+         * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
         void clearAllProperties();
+        /**
+         * Swaps all calculated properties, including skeletal data,
+         * with the given triangulation.  This is called by
+         * TriangulationBase::swapContents(), and by nothing else.
+         */
+        void swapAllProperties(Triangulation<3>& other);
 
         /**
          * Checks that the permutations on face gluings are valid and
@@ -2960,19 +2768,7 @@ class REGINA_API Triangulation<3> :
          */
         void checkPermutations();
 
-        void deleteSkeleton();
         void calculateSkeleton();
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void calculateBoundary();
-
-        /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
-         */
-        void labelBoundaryTriangle(Triangle<3>*, NBoundaryComponent*);
 
         /**
          * Internal to calculateSkeleton().  See the comments within
@@ -2999,7 +2795,7 @@ class REGINA_API Triangulation<3> :
          */
         bool retriangulateInternal(int height, unsigned nThreads,
             ProgressTrackerOpen* tracker,
-            const std::function<bool(const Triangulation<3>&)>& action) const;
+            const std::function<bool(Triangulation<3>&)>& action) const;
 
         void stretchBoundaryForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
                 std::set<Vertex<3>*>&) const;
@@ -3042,13 +2838,33 @@ class REGINA_API Triangulation<3> :
  */
 REGINA_DEPRECATED typedef Triangulation<3> NTriangulation;
 
+// Additional face typedefs that do not have their own headers:
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NEdgeEmbedding, you should
+ * use either the new alias EdgeEmbedding<3>, or the full class name
+ * FaceEmbedding<3, 1>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<3, 1> NEdgeEmbedding;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NEdge, you should use
+ * either the new alias Edge<3>, or the full class name Face<3, 1>.
+ */
+REGINA_DEPRECATED typedef Face<3, 1> NEdge;
+
 /*@}*/
 
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim3/tetrahedron3.h"
 #include "triangulation/dim3/triangle3.h"
-#include "triangulation/dim3/edge3.h"
 #include "triangulation/dim3/vertex3.h"
 #include "triangulation/dim3/component3.h"
 #include "triangulation/dim3/boundarycomponent3.h"
@@ -3059,8 +2875,8 @@ namespace regina {
 inline Triangulation<3>::Triangulation() {
 }
 
-inline Triangulation<3>::Triangulation(const Triangulation<3>& cloneMe) {
-    cloneFrom(cloneMe);
+inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
+        Triangulation<3>(copy, true) {
 }
 
 inline Triangulation<3>::~Triangulation() {
@@ -3095,33 +2911,6 @@ inline void Triangulation<3>::removeAllTetrahedra() {
     removeAllSimplices();
 }
 
-inline size_t Triangulation<3>::countBoundaryComponents() const {
-    ensureSkeleton();
-    return boundaryComponents_.size();
-}
-
-inline long Triangulation<3>::eulerCharTri() const {
-    ensureSkeleton();
-
-    // Cast away the unsignedness of std::vector::size().
-    return static_cast<long>(countVertices())
-        - static_cast<long>(countEdges())
-        + static_cast<long>(countTriangles())
-        - static_cast<long>(simplices_.size());
-}
-
-inline const std::vector<NBoundaryComponent*>&
-        Triangulation<3>::boundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
-}
-
-inline NBoundaryComponent* Triangulation<3>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
-}
-
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
     if (! twoSphereBoundaryComponents_.known())
         calculateBoundaryProperties();
@@ -3146,12 +2935,7 @@ inline bool Triangulation<3>::isStandard() const {
 
 inline bool Triangulation<3>::isClosed() const {
     ensureSkeleton();
-    return boundaryComponents_.empty();
-}
-
-inline void Triangulation<3>::simplifiedFundamentalGroup(
-        NGroupPresentation* newGroup) {
-    fundamentalGroup_ = newGroup;
+    return boundaryComponents().empty();
 }
 
 inline bool Triangulation<3>::knowsZeroEfficient() const {
@@ -3166,10 +2950,6 @@ inline bool Triangulation<3>::hasStrictAngleStructure() const {
     if (! strictAngleStructure_.known())
         findStrictAngleStructure();
     return (strictAngleStructure_.value() != 0);
-}
-
-inline const AbelianGroup& Triangulation<3>::homologyH1() const {
-    return homology();
 }
 
 inline unsigned long Triangulation<3>::homologyH2Z2() const {

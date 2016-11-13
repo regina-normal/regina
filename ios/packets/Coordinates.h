@@ -34,9 +34,9 @@
 #import "hypersurface/hypercoords.h"
 #import "maths/integer.h"
 #import "surfaces/normalcoords.h"
+#import "triangulation/forward.h"
 
 namespace regina {
-    template <int> class Triangulation;
     class NormalHypersurface;
     class NormalSurface;
 }

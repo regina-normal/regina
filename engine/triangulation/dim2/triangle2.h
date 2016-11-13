@@ -62,17 +62,11 @@ namespace regina {
  *
  * The class template Face<dim, dim> specialises the generic Face class
  * template in order to work with top-dimensional simplices in a triangulation.
- * This class Face<2, 2> specialises it further to add extra functionality for
- * dimension 2.
+ * This class Face<2, 2> specialises it further to add dimension-specific
+ * aliases for dimension 2.
  *
  * See the documentation for the partial specialisation Face<dim, dim> for an
  * overview of how a top-dimensional simplex class works.
- *
- * This 2-dimensional specialisation extends the generic top-dimensional
- * simplex class by storing additional details on how this triangle
- * and its sub-faces integrate into the overall skeletal structure of the
- * triangulation.  Note that the Triangulation<2> class is responsible for
- * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
 class REGINA_API Face<2, 2> : public detail::SimplexBase<2> {

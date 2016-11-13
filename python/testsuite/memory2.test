@@ -84,7 +84,7 @@ f = None
 ensureDestroyed(fw)
 
 print 'Vertex link #1'
-t = NExampleTriangulation.lens(7,1); tw = watcher(t)
+t = Example3.lens(7,1); tw = watcher(t)
 v = t.vertex(0).buildLink(); vw = watcher(v)
 t.insertChildLast(v)
 ensureAlive(tw); ensureAlive(vw)
@@ -92,7 +92,7 @@ t = None
 ensureDestroyed(tw); ensureDestroyed(vw)
 
 print 'Vertex link #2'
-t = NExampleTriangulation.lens(7,1); tw = watcher(t)
+t = Example3.lens(7,1); tw = watcher(t)
 v = t.vertex(0).buildLink(); vw = watcher(v)
 ensureAlive(tw); ensureAlive(vw)
 t = None
@@ -101,7 +101,7 @@ v = None
 ensureDestroyed(tw); ensureDestroyed(vw)
 
 print 'Vertex link detailed #1'
-t = NExampleTriangulation.lens(7,1); tw = watcher(t)
+t = Example3.lens(7,1); tw = watcher(t)
 v = t.vertex(0).buildLinkDetail(); vw = watcher(v[0])
 t.insertChildLast(v[0])
 ensureAlive(tw); ensureAlive(vw)
@@ -109,7 +109,7 @@ t = None
 ensureDestroyed(tw); ensureDestroyed(vw)
 
 print 'Vertex link detailed #2'
-t = NExampleTriangulation.lens(7,1); tw = watcher(t)
+t = Example3.lens(7,1); tw = watcher(t)
 v = t.vertex(0).buildLinkDetail(); vw = watcher(v[0])
 ensureAlive(tw); ensureAlive(vw)
 t = None

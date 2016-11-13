@@ -5,7 +5,7 @@ SET ( FILES
   boundarycomponent4
   component4
   edge4
-  dim4exampletriangulation
+  example4
   triangle4
   isomorphism4
   pentachoron4

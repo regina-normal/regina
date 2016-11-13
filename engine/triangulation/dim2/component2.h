@@ -50,32 +50,10 @@
 
 namespace regina {
 
-class Dim2BoundaryComponent;
-
 /**
  * \weakgroup dim2
  * @{
  */
-
-namespace detail {
-
-/**
- * Helper class that indicates what data type is used by a connected component
- * of a triangulation to store a list of <i>subdim</i>-faces.
- */
-template <int subdim>
-struct FaceListHolder<Component<2>, subdim> {
-    /**
-     * The data type used by Component<2> to store the list of all
-     * <i>subdim</i>-faces of the connected component.
-     *
-     * The function Component<2>::faces<subdim>() returns a const
-     * reference to this type.
-     */
-    typedef std::vector<Face<2, subdim>*> Holder;
-};
-
-} // namespace regina::detail
 
 /**
  * Represents a connected component of a 2-manifold triangulation.
@@ -85,7 +63,7 @@ struct FaceListHolder<Component<2>, subdim> {
  *
  * This 2-dimensional specialisation contains some extra functionality.
  * In particular, each 2-dimensional component also stores details on
- * lower-dimensional faces (i.e., vertices and edges) and boundary components.
+ * lower-dimensional faces (i.e., vertices and edges).
  */
 template <>
 class REGINA_API Component<2> : public detail::ComponentBase<2>,
@@ -96,8 +74,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
             /**< List of edges in the component. */
         std::vector<Vertex<2>*> vertices_;
             /**< List of vertices in the component. */
-        std::vector<Dim2BoundaryComponent*> boundaryComponents_;
-            /**< List of boundary components in the component. */
 
     public:
         /**
@@ -114,13 +90,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          */
         template <int subdim>
         size_t countFaces() const;
-
-        /**
-         * Returns the number of boundary components in this component.
-         *
-         * @return the number of boundary components.
-         */
-        size_t countBoundaryComponents() const;
 
         /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
@@ -158,19 +127,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
         Face<2, subdim>* face(size_t index) const;
 
         /**
-         * Returns the requested boundary component in this component.
-         *
-         * @param index the index of the requested boundary component in
-         * this component.  This should be between 0 and
-         * countBoundaryComponents()-1 inclusive.
-         * Note that the index of a boundary component in the component
-         * need not be the index of the same boundary component in the
-         * entire triangulation.
-         * @return the requested boundary component.
-         */
-        Dim2BoundaryComponent* boundaryComponent(size_t index) const;
-
-        /**
          * Determines if this component is closed.
          * This is the case if and only if it has no boundary.
          *
@@ -181,10 +137,8 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
     private:
         /**
          * Default constructor.
-         *
-         * Marks the component as orientable, with no boundary facets.
          */
-        Component();
+        Component() = default;
 
     friend class Triangulation<2>;
     friend class detail::TriangulationBase<2>;
@@ -202,9 +156,6 @@ REGINA_DEPRECATED typedef Component<2> Dim2Component;
 /*@}*/
 
 // Inline functions for Component<2>
-
-inline Component<2>::Component() : detail::ComponentBase<2>() {
-}
 
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
@@ -229,10 +180,6 @@ inline const std::vector<Vertex<2>*>& Component<2>::faces<0>() const {
 }
 #endif // ! __DOXYGEN
 
-inline size_t Component<2>::countBoundaryComponents() const {
-    return boundaryComponents_.size();
-}
-
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
 template <>
@@ -246,13 +193,8 @@ inline Vertex<2>* Component<2>::face<0>(size_t index) const {
 }
 #endif // ! __DOXYGEN
 
-inline Dim2BoundaryComponent* Component<2>::boundaryComponent(size_t index)
-        const {
-    return boundaryComponents_[index];
-}
-
 inline bool Component<2>::isClosed() const {
-    return (boundaryComponents_.empty());
+    return (boundaryComponents().empty());
 }
 
 } // namespace regina

@@ -31,10 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "generic/component.h"
-#include "generic/face.h"
-#include "generic/simplex.h"
-#include "generic/triangulation.h"
+#include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
@@ -226,6 +223,25 @@ namespace {
             c.def(subface_aliases<dim, subdim, 3>());
         }
     };
+
+    template <int dim, int subdim, int codim>
+    struct face_in_maximal_forest : boost::python::def_visitor<
+            face_in_maximal_forest<dim, subdim, codim>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class&) const {
+        }
+    };
+
+    template <int dim, int subdim>
+    struct face_in_maximal_forest<dim, subdim, 1> :
+            boost::python::def_visitor<face_in_maximal_forest<dim, subdim, 1>> {
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("inMaximalForest", &Face<dim, subdim>::inMaximalForest);
+        }
+    };
 }
 
 template <int dim, int subdim>
@@ -255,11 +271,15 @@ void addFace(const char* name, const char* embName) {
             return_internal_reference<>())
         .def("back", &Face<dim, subdim>::back,
             return_internal_reference<>())
+        .def(face_in_maximal_forest<dim, subdim, dim - subdim>())
         .def("index", &Face<dim, subdim>::index)
         .def("triangulation", &Face<dim, subdim>::triangulation,
             return_value_policy<regina::python::to_held_type<>>())
         .def("component", &Face<dim, subdim>::component,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &Face<dim, subdim>::boundaryComponent,
+            return_value_policy<reference_existing_object>())
+        .def("isBoundary", &Face<dim, subdim>::isBoundary)
         .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>)
         .def("faceMapping",
             &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>)

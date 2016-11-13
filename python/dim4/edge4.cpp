@@ -64,7 +64,7 @@ namespace {
 
     boost::python::tuple edge_buildLinkDetail_bool(const Edge<4>* e,
             bool labels = true) {
-        regina::Dim4Isomorphism* iso;
+        regina::Isomorphism<4>* iso;
         regina::Triangulation<2>* link = new regina::Triangulation<2>(
             *(e->buildLinkDetail(labels, &iso)));
         return boost::python::make_tuple(
@@ -73,7 +73,7 @@ namespace {
                 apply<regina::Triangulation<2>*>::type()(link))),
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
-                apply<regina::Dim4Isomorphism*>::type()(iso))));
+                apply<regina::Isomorphism<4>*>::type()(iso))));
     }
 
     boost::python::tuple edge_buildLinkDetail_void(const Edge<4>* e) {

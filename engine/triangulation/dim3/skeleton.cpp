@@ -51,10 +51,6 @@ void Triangulation<3>::calculateSkeleton() {
         // used correctly)
 #endif
 
-    calculateBoundary();
-        // Sets boundaryComponents, Triangle<3>.boundaryComponent,
-        //     Edge<3>.boundaryComponent, Vertex<3>.boundaryComponent,
-        //     Component<3>.boundaryComponents
     calculateVertexLinks();
         // Sets valid, ideal, Vertex<3>.link,
         //     Vertex<3>.linkEulerChar, Component<3>.ideal,
@@ -100,118 +96,6 @@ void Triangulation<3>::checkPermutations() {
                 }
             }
         }
-}
-
-void Triangulation<3>::calculateBoundary() {
-    // Sets boundaryComponents, Triangle<3>.boundaryComponent,
-    //     Edge<3>.boundaryComponent, Vertex<3>.boundaryComponent,
-    //     Component<3>.boundaryComponents
-    NBoundaryComponent* label;
-
-    for (Triangle<3>* triangle : triangles()) {
-        if (triangle->degree() < 2)
-            if (triangle->boundaryComponent_ == 0) {
-                label = new NBoundaryComponent();
-                label->orientable_ = true;
-                labelBoundaryTriangle(triangle, label);
-                boundaryComponents_.push_back(label);
-                triangle->component()->boundaryComponents_.push_back(label);
-            }
-    }
-}
-
-void Triangulation<3>::labelBoundaryTriangle(Triangle<3>* firstTriangle,
-        NBoundaryComponent* label) {
-    std::queue<Triangle<3>*> triangleQueue;
-
-    const TriangleEmbedding<3>& emb = firstTriangle->front();
-    firstTriangle->boundaryComponent_ = label;
-    label->triangles_.push_back(firstTriangle);
-    emb.tetrahedron()->tmpOrientation_[emb.triangle()] = 1;
-    triangleQueue.push(firstTriangle);
-
-    Tetrahedron<3>* tet;
-    Perm<4> tetVertices;
-    int tetFace;
-    int i,j;
-    Vertex<3>* vertex;
-    Edge<3>* edge;
-
-    Triangle<3>* triangle;
-    Triangle<3>* nextTriangle;
-    int nextFaceNumber;
-    Perm<4> nextFacePerm;
-    Tetrahedron<3>* nextTet;
-    int followFromFace;
-    Perm<4> switchPerm;
-    int yourOrientation;
-
-    while (! triangleQueue.empty()) {
-        triangle = triangleQueue.front();
-        triangleQueue.pop();
-
-        // Run through the edges and vertices on this triangle.
-        tet = triangle->front().tetrahedron();
-        tetFace = triangle->front().triangle();
-        tetVertices = tet->regina::detail::SimplexFaces<3, 2>::mapping_[tetFace];
-
-        // Run through the vertices.
-        for (i=0; i<3; i++) {
-            vertex = tet->regina::detail::SimplexFaces<3, 0>::face_[tetVertices[i]];
-            if (vertex->boundaryComponent_ != label) {
-                // A vertex in an invalid triangulation might end up in
-                // more than one boundary component.  Push it into all
-                // of the relevant boundary components' lists.
-                vertex->boundaryComponent_ = label;
-                label->vertices_.push_back(vertex);
-            }
-        }
-
-        // Run through the edges.
-        for (i=0; i<3; i++)
-            for (j=i+1; j<3; j++) {
-                edge = tet->regina::detail::SimplexFaces<3, 1>::face_[
-                    Edge<3>::edgeNumber[tetVertices[i]][tetVertices[j]]];
-                if (! (edge->boundaryComponent_)) {
-                    edge->boundaryComponent_ = label;
-                    label->edges_.push_back(edge);
-                }
-
-                // Label the adjacent boundary triangle with the same label.
-                followFromFace = 6 - tetVertices[i] - tetVertices[j] - tetFace;
-                switchPerm = Perm<4>(followFromFace, tetFace);
-                nextFaceNumber = followFromFace;
-                nextFacePerm = Perm<4>();
-                nextTet = tet;
-                while (nextTet->adjacentTetrahedron(nextFaceNumber)) {
-                    nextFacePerm = nextTet->adjacentGluing(
-                        nextFaceNumber) * nextFacePerm * switchPerm;
-                    nextTet = nextTet->adjacentTetrahedron(nextFaceNumber);
-                    nextFaceNumber = nextFacePerm[followFromFace];
-                }
-                nextTriangle =
-                    nextTet->regina::detail::SimplexFaces<3, 2>::face_[nextFaceNumber];
-                // Find the expected orientation of the next triangle.
-                yourOrientation =
-                    (nextTet->regina::detail::SimplexFaces<3, 2>::mapping_[nextFaceNumber].
-                        inverse() * nextFacePerm * switchPerm *
-                        tet->regina::detail::SimplexFaces<3, 2>::mapping_[tetFace])
-                    .sign() == 1 ? -tet->tmpOrientation_[tetFace] :
-                    tet->tmpOrientation_[tetFace];
-                if (nextTriangle->boundaryComponent_) {
-                    // Check the orientation.
-                    if (yourOrientation !=
-                            nextTet->tmpOrientation_[nextFaceNumber])
-                        label->orientable_ = false;
-                } else {
-                    // Add this adjacent triangle to the queue.
-                    nextTriangle->boundaryComponent_ = label;
-                    label->triangles_.push_back(nextTriangle);
-                    nextTet->tmpOrientation_[nextFaceNumber] = yourOrientation;
-                    triangleQueue.push(nextTriangle);
-                }
-            }
-    }
 }
 
 void Triangulation<3>::calculateVertexLinks() {
@@ -284,7 +168,8 @@ void Triangulation<3>::calculateVertexLinks() {
                 ideal_ = true;
                 vertex->component()->ideal_ = true;
 
-                NBoundaryComponent* bc = new NBoundaryComponent(vertex);
+                BoundaryComponent<3>* bc = new BoundaryComponent<3>();
+                bc->push_back(vertex);
                 bc->orientable_ = vertex->isLinkOrientable();
                 vertex->boundaryComponent_ = bc;
                 boundaryComponents_.push_back(bc);

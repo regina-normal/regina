@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "triangulation/nfacepairing.h"
+#include "triangulation/facetpairing3.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -263,7 +263,7 @@ void Tri3SkelCompUI::viewComponents() {
 
 void Tri3SkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
-        new BoundaryComponentModel(tri));
+        new BoundaryComponent3Model(tri));
     win->show();
     viewers.append(win);
 }

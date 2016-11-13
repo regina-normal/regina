@@ -50,32 +50,10 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
-
 /**
  * \weakgroup dim4
  * @{
  */
-
-namespace detail {
-
-/**
- * Helper class that indicates what data type is used by a connected component
- * of a triangulation to store a list of <i>subdim</i>-faces.
- */
-template <int subdim>
-struct FaceListHolder<Component<4>, subdim> {
-    /**
-     * The data type used by Component<4> to store the list of all
-     * <i>subdim</i>-faces of the connected component.
-     *
-     * The function Component<4>::faces<subdim>() returns a const
-     * reference to this type.
-     */
-    typedef std::vector<Face<4, subdim>*> Holder;
-};
-
-} // namespace regina::detail
 
 /**
  * Represents a connected component of a 4-manifold triangulation.
@@ -85,8 +63,7 @@ struct FaceListHolder<Component<4>, subdim> {
  *
  * This 4-dimensional specialisation contains some extra functionality.
  * In particular, each 4-dimensional component also stores details on
- * lower-dimensional faces (i.e., vertices, edges, triangles and tetrahedra),
- * as well as boundary components.
+ * lower-dimensional faces (i.e., vertices, edges, triangles and tetrahedra).
  */
 template <>
 class REGINA_API Component<4> : public detail::ComponentBase<4>,
@@ -101,8 +78,6 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
             /**< List of edges in the component. */
         std::vector<Vertex<4>*> vertices_;
             /**< List of vertices in the component. */
-        std::vector<Dim4BoundaryComponent*> boundaryComponents_;
-            /**< List of boundary components in the component. */
 
         bool ideal_;
             /**< Is the component ideal? */
@@ -122,13 +97,6 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
          */
         template <int subdim>
         size_t countFaces() const;
-
-        /**
-         * Returns the number of boundary components in this component.
-         *
-         * @return the number of boundary components.
-         */
-        size_t countBoundaryComponents() const;
 
         /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
@@ -166,19 +134,6 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
         Face<4, subdim>* face(size_t index) const;
 
         /**
-         * Returns the requested boundary component in this component.
-         *
-         * @param index the index of the requested boundary component in
-         * this component.  This should be between 0 and
-         * countBoundaryComponents()-1 inclusive.
-         * Note that the index of a boundary component in the component
-         * need not be the index of the same boundary component in the
-         * entire triangulation.
-         * @return the requested boundary component.
-         */
-        Dim4BoundaryComponent* boundaryComponent(size_t index) const;
-
-        /**
          * Determines if this component is ideal.
          * This is the case if and only if it contains an ideal vertex
          * as described by Vertex<4>::isIdeal().
@@ -203,8 +158,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
         /**
          * Default constructor.
          *
-         * Marks the component as orientable and not ideal, with no
-         * boundary facets.
+         * Marks the component as non-ideal.
          */
         Component();
 
@@ -247,10 +201,6 @@ inline size_t Component<4>::countFaces<1>() const {
 template <>
 inline size_t Component<4>::countFaces<0>() const {
     return vertices_.size();
-}
-
-inline size_t Component<4>::countBoundaryComponents() const {
-    return boundaryComponents_.size();
 }
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
@@ -297,17 +247,12 @@ inline Vertex<4>* Component<4>::face<0>(size_t index) const {
 
 #endif // __DOXYGEN
 
-inline Dim4BoundaryComponent* Component<4>::boundaryComponent(
-        size_t index) const {
-    return boundaryComponents_[index];
-}
-
 inline bool Component<4>::isIdeal() const {
     return ideal_;
 }
 
 inline bool Component<4>::isClosed() const {
-    return (boundaryComponents_.empty());
+    return (boundaryComponents().empty());
 }
 
 } // namespace regina

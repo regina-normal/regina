@@ -33,7 +33,7 @@
 #include "file/globaldirs.h"
 #include "manifold/nsnappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
 #include <cstdio>
@@ -64,7 +64,7 @@ Triangulation<3>* NSnapPeaCensusManifold::construct() const {
     // and vertices is compatible with earlier versions of Regina.
     if (section_ == SEC_5) {
         if (index_ == 0) {
-            ans = NExampleTriangulation::gieseking();
+            ans = Example<3>::gieseking();
             ans->setLabel("");
         } else if (index_ == 1) {
             ans = new Triangulation<3>();
@@ -91,10 +91,10 @@ Triangulation<3>* NSnapPeaCensusManifold::construct() const {
             r->join(2, s, Perm<4>(0, 3, 2, 1));
             r->join(3, s, Perm<4>(1, 0, 2, 3));
         } else if (index_ == 4) {
-            ans = NExampleTriangulation::figureEight();
+            ans = Example<3>::figureEight();
             ans->setLabel("");
         } else if (index_ == 129) {
-            ans = NExampleTriangulation::whiteheadLink();
+            ans = Example<3>::whiteheadLink();
             ans->setLabel("");
         }
     }

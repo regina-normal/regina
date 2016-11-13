@@ -42,6 +42,7 @@
 #include "maths/integer.h"
 #include "maths/matrix.h"
 #include "surfaces/normalcoords.h"
+#include "triangulation/forward.h"
 #include <algorithm>
 
 /**
@@ -58,8 +59,6 @@ class Ray;
 
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
-
-template <int> class Triangulation;
 
 /**
  * \weakgroup enumerate

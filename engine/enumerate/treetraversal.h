@@ -44,12 +44,11 @@
 #include "enumerate/treeconstraint.h"
 #include "enumerate/treelp.h"
 #include "enumerate/typetrie.h"
+#include "triangulation/forward.h"
 
 namespace regina {
 
 class ProgressTracker;
-
-template <int> class Triangulation;
 
 /**
  * \weakgroup enumerate

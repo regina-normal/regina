@@ -37,6 +37,7 @@
 #ifndef __TRI3SNAPPEA_H
 #define __TRI3SNAPPEA_H
 
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 
 class NoSnapPea;
@@ -46,7 +47,6 @@ class QStackedWidget;
 namespace regina {
     class Packet;
     class SnapPeaTriangulation;
-    template <int> class Triangulation;
 };
 
 /**

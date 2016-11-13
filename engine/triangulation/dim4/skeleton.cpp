@@ -50,13 +50,6 @@ void Triangulation<4>::calculateSkeleton() {
     if (simplices_.empty())
         return;
 
-    calculateBoundary();
-        // Sets:
-        // - boundaryComponents_
-        // - Component<4>::boundaryComponents_
-        // - Dim4 [ Tetrahedron, Triangle, Edge, Vertex ]::boundaryComponent_
-        // - all Dim4BoundaryComponent members
-
     calculateVertexLinks();
         // Sets:
         // - Vertex<4>::link_
@@ -83,196 +76,6 @@ void Triangulation<4>::calculateSkeleton() {
         t->component()->triangles_.push_back(t);
     for (auto t : tetrahedra())
         t->component()->tetrahedra_.push_back(t);
-}
-
-void Triangulation<4>::calculateBoundary() {
-    // Are there any boundary tetrahedra at all?
-    long nBdry = 2 * countTetrahedra() - 5 * simplices_.size();
-    if (nBdry == 0)
-        return;
-
-    // When triangulating the boundaries, we will need to be able to map
-    // (tetrahedron index in 4-manifold) to (tetrahedron in 3-manifold
-    // boundary).  There are probably better ways, but we'll just store
-    // the (3-manifold tetrahedra) in an array of size
-    // (number of 4-manifold tetrahedra).
-    Tetrahedron<3>** bdryTetAll = new Tetrahedron<3>*[countTetrahedra()];
-    std::fill(bdryTetAll, bdryTetAll + countTetrahedra(), nullptr);
-
-    Dim4BoundaryComponent* label;
-    std::queue<Tetrahedron<4>*> queue;
-    Pentachoron<4> *pent, *adjPent;
-    int facet, adjFacet;
-    Vertex<4>* vertex;
-    Edge<4>* edge;
-    Triangle<4>* tri;
-    TriangleEmbedding<4> triEmb;
-    Tetrahedron<4> *tet, *adjTet;
-    int tetTri, adjTetTri;
-    Tetrahedron<3> *bdryTet, *adjBdryTet;
-    int i, j;
-    for (Tetrahedron<4>* loopTet : tetrahedra()) {
-        // We only care about boundary tetrahedra that we haven't yet seen..
-        if (loopTet->degree() == 2 || loopTet->boundaryComponent_)
-            continue;
-
-        label = new Dim4BoundaryComponent();
-        boundaryComponents_.push_back(label);
-        loopTet->component()->boundaryComponents_.push_back(label);
-
-        label->boundary_ = new Triangulation<3>();
-
-        // Run a breadth-first search from this boundary tetrahedron to
-        // completely enumerate all tetrahedra in this boundary component.
-        //
-        // Because we use a first-in-first-out queue, we know that
-        // tetrahedra are added to the boundary triangulation in the
-        // same order as they are added to the list label->tetrahedra_.
-        loopTet->boundaryComponent_ = label;
-        label->tetrahedra_.push_back(loopTet);
-
-        queue.push(loopTet);
-
-        while (! queue.empty()) {
-            tet = queue.front();
-            queue.pop();
-            pent = tet->front().pentachoron();
-            facet = tet->front().tetrahedron();
-
-            bdryTetAll[tet->markedIndex()] = bdryTet =
-                label->boundary_->newTetrahedron();
-
-            // Run through the vertices and edges on this tetrahedron.
-            for (i = 0; i < 5; ++i)
-                if (i != facet) {
-                    vertex = pent->regina::detail::SimplexFaces<4, 0>::face_[i];
-                    if (vertex->boundaryComponent_ != label)
-                        vertex->boundaryComponent_ = label;
-                }
-
-            for (i = 0; i < 5; ++i) {
-                if (i == facet)
-                    continue;
-                for (j = i + 1; j < 5; ++j) {
-                    if (j == facet)
-                        continue;
-
-                    edge = pent->regina::detail::SimplexFaces<4, 1>::face_[
-                        Edge<4>::edgeNumber[i][j]];
-                    if (edge->boundaryComponent_ != label)
-                        edge->boundaryComponent_ = label;
-                }
-            }
-
-            // Now run through the triangles of this tetrahedron, and follow
-            // through them to adjacent tetrahedra.
-            for (i = 0; i < 5; ++i) {
-                if (i == facet)
-                    continue;
-
-                // Examine the triangle opposite vertices (i, facet).  This is
-                // the triangle opposite the edge joining vertices (i, facet).
-                tri = pent->regina::detail::SimplexFaces<4, 2>::face_[
-                    Edge<4>::edgeNumber[i][facet]];
-                if (! tri->boundaryComponent_)
-                    tri->boundaryComponent_ = label;
-
-                // Okay, we can be clever about this.  The current
-                // boundary tetrahedron is one end of the triangle link; the
-                // *adjacent* boundary tetrahedron must be at the other.
-                triEmb = tri->front();
-                if (triEmb.pentachoron() == pent &&
-                        triEmb.vertices()[3] == i &&
-                        triEmb.vertices()[4] == facet) {
-                    // We are currently looking at the embedding at the
-                    // front of the list.  Take the one at the back.
-                    triEmb = tri->back();
-
-                    adjPent = triEmb.pentachoron();
-                    adjFacet = triEmb.vertices()[3];
-                    adjTet = adjPent->regina::detail::SimplexFaces<4, 3>::face_[adjFacet];
-                    j = triEmb.vertices()[4];
-                } else {
-                    // We must be looking at the embedding at the back
-                    // of the list.  Take the one at the front (which is
-                    // already stored in triEmb).
-                    adjPent = triEmb.pentachoron();
-                    adjFacet = triEmb.vertices()[4];
-                    adjTet = adjPent->regina::detail::SimplexFaces<4, 3>::face_[adjFacet];
-                    j = triEmb.vertices()[3];
-
-                    // TODO: Sanity checking; remove this eventually.
-                    triEmb = tri->back();
-                    if (! (triEmb.pentachoron() == pent &&
-                            triEmb.vertices()[4] == i &&
-                            triEmb.vertices()[3] == facet)) {
-                        std::cerr << "ERROR: Something has gone terribly "
-                            "wrong in computeBoundaryComponents()."
-                            << std::endl;
-                        ::exit(1);
-                    }
-                }
-
-                // Glue the corresponding boundary tetrahedra if both
-                // are ready to go.
-                adjBdryTet = bdryTetAll[adjTet->markedIndex()];
-                if (adjBdryTet) {
-                    // We might have the same tetrahedron joined to
-                    // itself; make sure we only glue in one direction.
-                    if (! bdryTet->adjacentTetrahedron(
-                            pent->regina::detail::SimplexFaces<4, 3>::mapping_[facet].
-                            preImageOf(i))) {
-                        // Glue away.
-                        tetTri = pent->regina::detail::SimplexFaces<4, 3>::mapping_[facet].
-                            preImageOf(i);
-                        adjTetTri = adjPent->regina::detail::SimplexFaces<4, 3>::mapping_
-                            [adjFacet].preImageOf(j);
-
-                        bdryTet->join(tetTri, adjBdryTet,
-                            Perm<4>::contract(adjTet->triangleMapping(adjTetTri) *
-                            tet->triangleMapping(tetTri).inverse()));
-                    }
-                }
-
-                // Push the adjacent tetrahedron onto the queue for
-                // processing.
-                if (! adjTet->boundaryComponent_) {
-                    adjTet->boundaryComponent_ = label;
-                    label->tetrahedra_.push_back(adjTet);
-                    queue.push(adjTet);
-                }
-            }
-        }
-
-        // This boundary 3-manifold triangulation is complete.
-
-        // Now run through the vertices, edges and triangles of the
-        // 3-manifold triangulation and insert the corresponding 4-D
-        // objects into the boundary component lists in the *same* order.
-        for (Triangulation<3>::TriangleIterator it =
-                label->boundary_->triangles().begin();
-                it != label->boundary_->triangles().end(); ++it) {
-            const TriangleEmbedding<3>& emb = (*it)->front();
-            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
-            label->triangles_.push_back(tet->triangle(emb.triangle()));
-        }
-        for (Triangulation<3>::EdgeIterator it =
-                label->boundary_->edges().begin();
-                it != label->boundary_->edges().end(); ++it) {
-            const EdgeEmbedding<3>& emb = (*it)->front();
-            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
-            label->edges_.push_back(tet->edge(emb.edge()));
-        }
-        for (Triangulation<3>::VertexIterator it =
-                label->boundary_->vertices().begin();
-                it != label->boundary_->vertices().end(); ++it) {
-            const VertexEmbedding<3>& emb = (*it)->front();
-            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
-            label->vertices_.push_back(tet->vertex(emb.vertex()));
-        }
-    }
-
-    delete[] bdryTetAll;
 }
 
 void Triangulation<4>::calculateVertexLinks() {
@@ -360,18 +163,22 @@ void Triangulation<4>::calculateVertexLinks() {
                 valid_ = vertex->component_->valid_ =  false;
                 vertex->markBadLink();
                 foundNonSimpleLink = true;
-                boundaryComponents_.push_back(
-                    vertex->boundaryComponent_ =
-                    new Dim4BoundaryComponent(vertex));
+                vertex->boundaryComponent_ = new BoundaryComponent<4>();
+                vertex->boundaryComponent_->orientable_ =
+                    vertex->isLinkOrientable();
+                vertex->boundaryComponent_->push_back(vertex);
+                boundaryComponents_.push_back(vertex->boundaryComponent_);
             } else if ((! knownSimpleLinks_) &&
                     ! vertex->link_->isThreeSphere()) {
                 // The vertex is fine but it's not a 3-sphere.
                 // We have an ideal triangulation.
                 ideal_ = vertex->component()->ideal_ = vertex->ideal_ = true;
                 foundNonSimpleLink = true;
-                boundaryComponents_.push_back(
-                    vertex->boundaryComponent_ =
-                    new Dim4BoundaryComponent(vertex));
+                vertex->boundaryComponent_ = new BoundaryComponent<4>();
+                vertex->boundaryComponent_->orientable_ =
+                    vertex->isLinkOrientable();
+                vertex->boundaryComponent_->push_back(vertex);
+                boundaryComponents_.push_back(vertex->boundaryComponent_);
             }
             // The only case not covered is a 3-sphere link, where we
             // have nothing to do.

@@ -32,8 +32,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "generic/face.h"
-#include "generic/simplex.h"
+#include "triangulation/generic.h"
 #include "testsuite/generic/testgeneric.h"
 
 // For specialisations of FaceNumbering:

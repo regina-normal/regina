@@ -39,15 +39,11 @@
 #define __EDGEINTCHOOSER_H
 
 #include "packet/packetlistener.h"
+#include "triangulation/forward.h"
 
 #include <QDialog>
 #include <QComboBox>
 #include <vector>
-
-namespace regina {
-    template <int> class Triangulation;
-    template <int, int> class Face;
-};
 
 /**
  * A filter function, used to determine whether a given edge with

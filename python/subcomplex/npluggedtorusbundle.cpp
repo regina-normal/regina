@@ -34,7 +34,6 @@
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
 #include "subcomplex/ntxicore.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

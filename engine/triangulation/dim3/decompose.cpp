@@ -38,7 +38,6 @@
 #include "subcomplex/nsnappedball.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
@@ -55,7 +54,7 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
     bool initOrientable = isOrientable();
 
     // Make a working copy, simplify and record the initial homology.
-    Triangulation<3>* working = new Triangulation<3>(*this);
+    Triangulation<3>* working = new Triangulation<3>(*this, false);
     working->intelligentSimplify();
 
     unsigned long initZ, initZ2, initZ3;
@@ -256,7 +255,7 @@ bool Triangulation<3>::isThreeSphere() const {
 
     // Check homology and fundamental group.
     // Better simplify first, which means we need a clone.
-    Triangulation<3>* working = new Triangulation<3>(*this);
+    Triangulation<3>* working = new Triangulation<3>(*this, false);
     working->intelligentSimplify();
 
     // The Poincare conjecture!
@@ -385,8 +384,8 @@ bool Triangulation<3>::isBall() const {
 
     // Basic property checks.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
-            && boundaryComponents_.size() == 1
-            && boundaryComponents_.front()->eulerChar() == 2)) {
+            && countBoundaryComponents() == 1
+            && boundaryComponents().front()->eulerChar() == 2)) {
         threeBall_ = false;
         return false;
     }
@@ -397,7 +396,7 @@ bool Triangulation<3>::isBall() const {
     // Cone the boundary to a point (i.e., fill it with a ball), then
     // call isThreeSphere() on the resulting closed triangulation.
 
-    Triangulation<3> working(*this);
+    Triangulation<3> working(*this, false);
     working.intelligentSimplify();
     working.finiteToIdeal();
 
@@ -414,8 +413,8 @@ bool Triangulation<3>::knowsBall() const {
 
     // Run some very fast prelimiary tests before we give up and say no.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
-            && boundaryComponents_.size() == 1
-            && boundaryComponents_.front()->eulerChar() == 2)) {
+            && countBoundaryComponents() == 1
+            && boundaryComponents().front()->eulerChar() == 2)) {
         threeBall_ = false;
         return true;
     }
@@ -430,14 +429,14 @@ bool Triangulation<3>::isSolidTorus() const {
 
     // Basic property checks.
     if (! (isValid() && isOrientable() && isConnected() &&
-            boundaryComponents_.size() == 1 &&
-            boundaryComponents_.front()->eulerChar() == 0 &&
-            boundaryComponents_.front()->isOrientable()))
+            countBoundaryComponents() == 1 &&
+            boundaryComponents().front()->eulerChar() == 0 &&
+            boundaryComponents().front()->isOrientable()))
         return (solidTorus_ = false);
 
     // If it's ideal, make it a triangulation with real boundary.
     // If it's not ideal, clone it anyway so we can modify it.
-    Triangulation<3>* working = new Triangulation<3>(*this);
+    Triangulation<3>* working = new Triangulation<3>(*this, false);
     working->intelligentSimplify();
     if (working->isIdeal()) {
         working->idealToFinite();
@@ -569,13 +568,13 @@ bool Triangulation<3>::knowsSolidTorus() const {
         return true;
     }
 
-    if (boundaryComponents_.size() != 1) {
+    if (countBoundaryComponents() != 1) {
         solidTorus_ = false;
         return true;
     }
 
-    if (boundaryComponents_.front()->eulerChar() != 0 ||
-            (! boundaryComponents_.front()->isOrientable())) {
+    if (boundaryComponents().front()->eulerChar() != 0 ||
+            (! boundaryComponents().front()->isOrientable())) {
         solidTorus_ = false;
         return true;
     }
@@ -628,7 +627,7 @@ bool Triangulation<3>::isIrreducible() const {
     unsigned long summands = 0;
 
     // Make a working copy, simplify and record the initial homology.
-    Triangulation<3>* working = new Triangulation<3>(*this);
+    Triangulation<3>* working = new Triangulation<3>(*this, false);
     working->intelligentSimplify();
 
     unsigned long Z, Z2, Z3;
@@ -769,17 +768,16 @@ bool Triangulation<3>::hasCompressingDisc() const {
         return (compressingDisc_ = false);
 
     long minBdryEuler = 2;
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it) {
-        if ((*it)->eulerChar() < minBdryEuler)
-            minBdryEuler = (*it)->eulerChar();
+    for (auto bc : boundaryComponents()) {
+        if (bc->eulerChar() < minBdryEuler)
+            minBdryEuler = bc->eulerChar();
     }
     if (minBdryEuler == 2)
         return (compressingDisc_ = false);
 
     // Off we go.
     // Work with a simplified triangulation.
-    Triangulation<3>* use = new Triangulation<3>(*this);
+    Triangulation<3>* use = new Triangulation<3>(*this, false);
     use->intelligentSimplify();
 
     // Try for a fast answer first.
@@ -890,11 +888,9 @@ bool Triangulation<3>::knowsCompressingDisc() const {
         return true;
 
     // Quickly check for non-spherical boundary components before we give up.
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it) {
-        if ((*it)->eulerChar() < 2)
+    for (auto bc : boundaryComponents())
+        if (bc->eulerChar() < 2)
             return false;
-    }
 
     // All boundary components are 2-spheres.
     compressingDisc_ = false;
@@ -910,7 +906,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 
     // Off we go.
     // Work with a simplified triangulation.
-    Triangulation<3> use(*this);
+    Triangulation<3> use(*this, false);
     use.intelligentSimplify();
 
     // Check to see whether any component is a one-tetrahedron solid torus.
@@ -942,10 +938,8 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // disc by cutting along it and looking for any *new* boundary
     // spheres that might result.
     unsigned long origSphereCount = 0;
-    BoundaryComponentIterator bit;
-    for (bit = use.boundaryComponents().begin(); bit !=
-            use.boundaryComponents().end(); ++bit)
-        if ((*bit)->eulerChar() == 2)
+    for (auto bc : use.boundaryComponents())
+        if (bc->eulerChar() == 2)
             ++origSphereCount;
 
     // Look for a single internal triangle surrounded by three boundary edges.
@@ -966,7 +960,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
         // Cut along the triangle to be sure.
         const TriangleEmbedding<3>& emb = (*fit)->front();
 
-        Triangulation<3> cut(use);
+        Triangulation<3> cut(use, false);
         cut.tetrahedron(emb.tetrahedron()->markedIndex())->unjoin(
             emb.triangle());
 
@@ -977,9 +971,8 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
             return (compressingDisc_ = true);
 
         newSphereCount = 0;
-        for (bit = cut.boundaryComponents().begin(); bit !=
-                cut.boundaryComponents().end(); ++bit)
-            if ((*bit)->eulerChar() == 2)
+        for (auto bc : cut.boundaryComponents())
+            if (bc->eulerChar() == 2)
                 ++newSphereCount;
 
         // Was the boundary of the disc non-trivial?
@@ -1018,7 +1011,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
             continue;
         }
 
-        Triangulation<3> cut(use);
+        Triangulation<3> cut(use, false);
         cut.tetrahedron((*tit)->markedIndex())->unjoin(upper);
         Tetrahedron<3>* tet = cut.newTetrahedron();
         tet->join(Edge<3>::edgeVertex[equator][0], tet, Perm<4>(
@@ -1033,9 +1026,8 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
             return (compressingDisc_ = true);
 
         newSphereCount = 0;
-        for (bit = cut.boundaryComponents().begin(); bit !=
-                cut.boundaryComponents().end(); ++bit)
-            if ((*bit)->eulerChar() == 2)
+        for (auto bc : cut.boundaryComponents())
+            if (bc->eulerChar() == 2)
                 ++newSphereCount;
 
         // Was the boundary of the disc non-trivial?
@@ -1082,7 +1074,7 @@ bool Triangulation<3>::isHaken() const {
 
     // Okay: we are closed, connected, orientable and irreducible.
     // Move to a copy of this triangulation, which we can mess with.
-    Triangulation<3> t(*this);
+    Triangulation<3> t(*this, false);
     t.intelligentSimplify();
 
     // First check for an easy answer via homology:

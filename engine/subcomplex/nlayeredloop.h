@@ -44,9 +44,6 @@
 
 namespace regina {
 
-template <int, int> class Face;
-template <int dim> using Edge = Face<dim, 1>;
-
 /**
  * \weakgroup subcomplex
  * @{

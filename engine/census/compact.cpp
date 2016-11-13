@@ -31,33 +31,33 @@
  **************************************************************************/
 
 #include <sstream>
-#include "census/ngluingpermsearcher.h"
-#include "triangulation/nfacepair.h"
+#include "census/gluingpermsearcher3.h"
 #include "triangulation/dim3.h"
+#include "triangulation/facepair.h"
 #include "utilities/memutils.h"
 
 namespace regina {
 
-const char NCompactSearcher::VLINK_CLOSED = 1;
-const char NCompactSearcher::VLINK_NON_SPHERE = 2;
+const char CompactSearcher::VLINK_CLOSED = 1;
+const char CompactSearcher::VLINK_NON_SPHERE = 2;
 
-const int NCompactSearcher::vertexLinkNextFace[4][4] = {
+const int CompactSearcher::vertexLinkNextFace[4][4] = {
     { -1, 2, 3, 1},
     { 3, -1, 0, 2},
     { 1, 3, -1, 0},
     { 1, 2, 0, -1}
 };
 
-const int NCompactSearcher::vertexLinkPrevFace[4][4] = {
+const int CompactSearcher::vertexLinkPrevFace[4][4] = {
     { -1, 3, 1, 2},
     { 2, -1, 3, 0},
     { 3, 0, -1, 1},
     { 2, 0, 1, -1}
 };
 
-const char NCompactSearcher::dataTag_ = 'f';
+const char CompactSearcher::dataTag_ = 'f';
 
-void NCompactSearcher::TetVertexState::dumpData(std::ostream& out)
+void CompactSearcher::TetVertexState::dumpData(std::ostream& out)
         const {
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
@@ -72,7 +72,7 @@ void NCompactSearcher::TetVertexState::dumpData(std::ostream& out)
         << static_cast<int>(bdryTwistOld[1]);
 }
 
-bool NCompactSearcher::TetVertexState::readData(std::istream& in,
+bool CompactSearcher::TetVertexState::readData(std::istream& in,
         unsigned long nStates) {
     in >> parent >> rank >> bdry;
 
@@ -129,7 +129,7 @@ bool NCompactSearcher::TetVertexState::readData(std::istream& in,
     return true;
 }
 
-void NCompactSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
+void CompactSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
         const {
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
@@ -144,7 +144,7 @@ void NCompactSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
         out << char(facesNeg.get(i) + '0');
 }
 
-bool NCompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
+bool CompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
     in >> parent >> rank >> size;
 
     // bounded is a bool, but we need to read it as an int.
@@ -198,10 +198,10 @@ bool NCompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) 
     return true;
 }
 
-NCompactSearcher::NCompactSearcher(const NFacePairing* pairing,
-        const NFacePairing::IsoList* autos, bool orientableOnly,
-        int whichPurge, UseGluingPerms use, void* useArgs) :
-        NGluingPermSearcher(pairing, autos, orientableOnly,
+CompactSearcher::CompactSearcher(const FacetPairing<3>* pairing,
+        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        int whichPurge, GluingPermSearcher<3>::Use use, void* useArgs) :
+        GluingPermSearcher<3>(pairing, autos, orientableOnly,
             true /* finiteOnly */, whichPurge, use, useArgs) {
     // Initialise the internal arrays to accurately reflect the underlying
     // face pairing.
@@ -258,7 +258,7 @@ NCompactSearcher::NCompactSearcher(const NFacePairing* pairing,
 }
 
 // TODO (net): See what was removed when we brought in vertex link checking.
-void NCompactSearcher::runSearch(long maxDepth) {
+void CompactSearcher::runSearch(long maxDepth) {
     unsigned nTets = size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
@@ -491,8 +491,8 @@ void NCompactSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
-void NCompactSearcher::dumpData(std::ostream& out) const {
-    NGluingPermSearcher::dumpData(out);
+void CompactSearcher::dumpData(std::ostream& out) const {
+    GluingPermSearcher<3>::dumpData(out);
 
     unsigned nTets = size();
     unsigned i;
@@ -522,9 +522,9 @@ void NCompactSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-NCompactSearcher::NCompactSearcher(std::istream& in,
-        UseGluingPerms use, void* useArgs) :
-        NGluingPermSearcher(in, use, useArgs),
+CompactSearcher::CompactSearcher(std::istream& in,
+        GluingPermSearcher<3>::Use use, void* useArgs) :
+        GluingPermSearcher<3>(in, use, useArgs),
         nVertexClasses(0), vertexState(0), vertexStateChanged(0),
         nEdgeClasses(0), edgeState(0), edgeStateChanged(0) {
     if (inputError_)
@@ -578,7 +578,7 @@ NCompactSearcher::NCompactSearcher(std::istream& in,
         inputError_ = true;
 }
 
-int NCompactSearcher::mergeVertexClasses() {
+int CompactSearcher::mergeVertexClasses() {
     // Merge all three vertex pairs for the current face.
     FacetSpec<3> face = order[orderElt];
     FacetSpec<3> adj = (*pairing_)[face];
@@ -831,7 +831,7 @@ int NCompactSearcher::mergeVertexClasses() {
     return retVal;
 }
 
-void NCompactSearcher::splitVertexClasses() {
+void CompactSearcher::splitVertexClasses() {
     // Split all three vertex pairs for the current face.
     FacetSpec<3> face = order[orderElt];
     FacetSpec<3> adj = (*pairing_)[face];
@@ -923,7 +923,7 @@ void NCompactSearcher::splitVertexClasses() {
     }
 }
 
-bool NCompactSearcher::mergeEdgeClasses() {
+bool CompactSearcher::mergeEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
     FacetSpec<3> adj = (*pairing_)[face];
 
@@ -994,7 +994,7 @@ bool NCompactSearcher::mergeEdgeClasses() {
     return retVal;
 }
 
-void NCompactSearcher::splitEdgeClasses() {
+void CompactSearcher::splitEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
 
     int v1, v2;
@@ -1034,7 +1034,7 @@ void NCompactSearcher::splitEdgeClasses() {
     }
 }
 
-void NCompactSearcher::vtxBdryConsistencyCheck() {
+void CompactSearcher::vtxBdryConsistencyCheck() {
     int adj, id, end;
     for (id = 0; id < static_cast<int>(size()) * 4; id++)
         if (vertexState[id].bdryEdges > 0)
@@ -1058,7 +1058,7 @@ void NCompactSearcher::vtxBdryConsistencyCheck() {
             }
 }
 
-void NCompactSearcher::vtxBdryDump(std::ostream& out) {
+void CompactSearcher::vtxBdryDump(std::ostream& out) {
     for (unsigned id = 0; id < size() * 4; id++) {
         if (id > 0)
             out << ' ';

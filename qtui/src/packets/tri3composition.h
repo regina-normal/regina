@@ -38,6 +38,7 @@
 #define __TRI3COMPOSITION_H
 
 #include "packet/packetlistener.h"
+#include "triangulation/forward.h"
 
 #include "../packettabui.h"
 
@@ -55,9 +56,7 @@ namespace regina {
     class Packet;
     class NSatRegion;
     class NStandardTriangulation;
-    template <int> class Isomorphism;
     template <int> class Perm;
-    template <int> class Triangulation;
 };
 
 /**

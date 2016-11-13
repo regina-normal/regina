@@ -42,13 +42,11 @@
 #include "regina-core.h"
 #include "maths/matrix2.h"
 #include "maths/perm.h"
+#include "triangulation/forward.h"
 
 #include <boost/noncopyable.hpp>
 
 namespace regina {
-
-template <int, int> class Face;
-template <int dim> using Tetrahedron = Face<dim, 3>;
 
 /**
  * \weakgroup subcomplex

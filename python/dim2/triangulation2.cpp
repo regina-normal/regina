@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "algebra/ngrouppresentation.h"
-#include "dim2/dim2isomorphism.h"
 #include "triangulation/dim2.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
@@ -91,12 +90,12 @@ namespace {
         const Triangulation<2>& t, const Triangulation<2>& other) {
         boost::python::list ans;
 
-        std::list<regina::Dim2Isomorphism*> isos;
+        std::list<regina::Isomorphism<2>*> isos;
         t.findAllIsomorphisms(other, back_inserter(isos));
 
-        for (std::list<regina::Dim2Isomorphism*>::iterator it =
+        for (std::list<regina::Isomorphism<2>*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
-            std::auto_ptr<regina::Dim2Isomorphism> iso(*it);
+            std::auto_ptr<regina::Isomorphism<2>> iso(*it);
             ans.append(iso);
         }
         return ans;
@@ -106,12 +105,12 @@ namespace {
         const Triangulation<2>& t, const Triangulation<2>& other) {
         boost::python::list ans;
 
-        std::list<regina::Dim2Isomorphism*> isos;
+        std::list<regina::Isomorphism<2>*> isos;
         t.findAllSubcomplexesIn(other, back_inserter(isos));
 
-        for (std::list<regina::Dim2Isomorphism*>::iterator it =
+        for (std::list<regina::Isomorphism<2>*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
-            std::auto_ptr<regina::Dim2Isomorphism> iso(*it);
+            std::auto_ptr<regina::Isomorphism<2>> iso(*it);
             ans.append(iso);
         }
         return ans;
@@ -122,13 +121,13 @@ namespace {
     }
 
     boost::python::tuple isoSig_relabelling(const Triangulation<2>& t) {
-        regina::Dim2Isomorphism* iso;
+        regina::Isomorphism<2>* iso;
         std::string sig = t.isoSig(&iso);
         return boost::python::make_tuple(
             sig,
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
-                apply<regina::Dim2Isomorphism*>::type()(iso))));
+                apply<regina::Isomorphism<2>*>::type()(iso))));
     }
 }
 
@@ -212,6 +211,10 @@ void addTriangulation2() {
         .def("orient", &Triangulation<2>::orient)
         .def("splitIntoComponents", splitIntoComponents,
             OL_splitIntoComponents())
+        .def("homology", &Triangulation<2>::homology,
+            return_internal_reference<>())
+        .def("homologyH1", &Triangulation<2>::homologyH1,
+            return_internal_reference<>())
         .def("oneThreeMove", &Triangulation<2>::oneThreeMove,
             OL_oneThreeMove())
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal)

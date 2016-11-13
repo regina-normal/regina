@@ -49,10 +49,8 @@
 
 namespace regina {
 
-class NBoundaryComponent;
-
 /**
- * \weakgroup triangulation
+ * \weakgroup dim3
  * @{
  */
 
@@ -66,8 +64,7 @@ class NBoundaryComponent;
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
-        public Output<Face<3, 2>> {
+class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2> {
     public:
         /**
          * The \e type of a triangle, which indicates how the vertices and
@@ -107,9 +104,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
         };
 
     private:
-        NBoundaryComponent* boundaryComponent_;
-            /**< The boundary component that this triangle is a part of,
-                 or 0 if this triangle is internal. */
         Type type_;
             /**< Specifies the triangle type, or \a UNKNOWN_TYPE if the
                  type has not yet been determined. */
@@ -119,43 +113,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
                  relevant for some triangle types. */
 
     public:
-        /**
-         * Determines if this triangle lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this triangle lies on the boundary.
-         */
-        bool isBoundary() const;
-
-        /**
-         * Determines whether this triangle represents a dual edge in the
-         * maximal forest that has been chosen for the dual 1-skeleton of the
-         * triangulation.
-         *
-         * When the skeletal structure of a triangulation is first computed,
-         * a maximal forest in the dual 1-skeleton of the triangulation is
-         * also constructed.  Each dual edge in this maximal forest
-         * represents a triangle of the (primal) triangulation.
-         *
-         * This maximal forest will remain fixed until the triangulation
-         * changes, at which point it will be recomputed (as will all
-         * other skeletal objects, such as connected components and so on).
-         * There is no guarantee that, when it is recomputed, the
-         * maximal forest will use the same dual edges as before.
-         *
-         * This routine identifies whether this triangle belongs to the
-         * dual forest.  In this sense it performs a similar role to
-         * Simplex::facetInMaximalForest(), but this routine is typically
-         * easier to use.
-         *
-         * If the skeleton has already been computed, then this routine is
-         * very fast (since it just returns a precomputed answer).
-         *
-         * @return \c true if and only if this triangle represents a
-         * dual edge in the maximal forest.
-         */
-        bool inMaximalForest() const;
-
         /**
          * Returns a description of the triangle type.
          * This will be one of the eight shapes described by the Type
@@ -201,35 +158,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          */
         bool isCone();
 
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this triangle belongs.
-         *
-         * @return the boundary component containing this triangle, or 0 if this
-         * triangle does not lie entirely within the boundary of the
-         * triangulation.
-         */
-        NBoundaryComponent* boundaryComponent() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
     private:
         /**
          * Creates a new triangle and marks it as belonging to the
@@ -268,21 +196,7 @@ REGINA_DEPRECATED typedef Face<3, 2> NTriangle;
 // Inline functions for Triangle<3>
 
 inline Face<3, 2>::Face(Component<3>* component) :
-        FaceBase<3, 2>(component),
-        boundaryComponent_(0), type_(UNKNOWN_TYPE) {
-}
-
-inline NBoundaryComponent* Face<3, 2>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<3, 2>::isBoundary() const {
-    return (boundaryComponent_ != 0);
-}
-
-inline bool Face<3, 2>::inMaximalForest() const {
-    return front().tetrahedron()->facetInMaximalForest(
-        front().triangle());
+        FaceBase<3, 2>(component), type_(UNKNOWN_TYPE) {
 }
 
 inline int Face<3, 2>::subtype() {
@@ -298,10 +212,6 @@ inline bool Face<3, 2>::isMobiusBand() {
 inline bool Face<3, 2>::isCone() {
     type();
     return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
-}
-
-inline void Face<3, 2>::writeTextShort(std::ostream& out) const {
-    out << (isBoundary() ? "Boundary " : "Internal ") << "triangle";
 }
 
 } // namespace regina

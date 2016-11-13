@@ -34,14 +34,7 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __DIM4TRIANGLE_H
-#ifndef __DOXYGEN
-#define __DIM4TRIANGLE_H
-#endif
-
 #warning This header is deprecated; please use triangulation/dim4.h instead.
 
 #include "triangulation/dim4.h"
-
-#endif
 

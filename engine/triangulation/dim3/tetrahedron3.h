@@ -50,7 +50,7 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
+ * \weakgroup dim3
  * @{
  */
 
@@ -62,28 +62,14 @@ namespace regina {
  *
  * The class template Face<dim, dim> specialises the generic Face class
  * template in order to work with top-dimensional simplices in a triangulation.
- * This class Face<3, 3> specialises it further to add extra functionality for
- * dimension 3.
+ * This class Face<3, 3> specialises it further to add dimension-specific
+ * aliases for dimension 3.
  *
  * See the documentation for the partial specialisation Face<dim, dim> for an
  * overview of how a top-dimensional simplex class works.
- *
- * This 3-dimensional specialisation extends the generic top-dimensional
- * simplex class by storing additional details on how this tetrahedron
- * and its sub-faces integrate into the overall skeletal structure of the
- * triangulation.  Note that the Triangulation<3> class is responsible for
- * creating, maintaining and destroying this extra skeletal information.
  */
 template <>
 class REGINA_API Face<3, 3> : public detail::SimplexBase<3> {
-    private:
-        int tmpOrientation_[4];
-            /**< Temporary array used to represent orientations of triangles
-                 when calculating orientability of boundary components.
-                 Each orientation will be +/-1.
-                 The array should only be used within these orientability
-                 routines, and its contents afterwards are unpredictable. */
-
     public:
         /**
          * A dimension-specific alias for adjacentSimplex().

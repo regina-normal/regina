@@ -130,14 +130,15 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addTriangulation3(runner);
     addElementaryMoves(runner);
     addConnectedSumDecomp(runner);
-    addNIsomorphism(runner);
-    addNHomologicalData(runner);
+    addIsomorphism3(runner);
+    addHomologicalData(runner);
 
     // 4-manifold triangulations:
     addTriangulation4(runner);
 
     // Generic triangulations:
     addFaceNumbering(runner);
+    addGenericTriangulation(runner);
 
     // Subcomplexes:
     addNStandardTriangulation(runner);
@@ -150,12 +151,12 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addAngleStructures(runner);
 
     // Census:
-    addNCensus(runner);
-    addNFacePairing(runner);
-    addDim2Census(runner);
-    addDim2EdgePairing(runner);
-    addDim4Census(runner);
-    addDim4FacetPairing(runner);
+    addCensus3(runner);
+    addFacetPairing3(runner);
+    addCensus2(runner);
+    addFacetPairing2(runner);
+    addCensus4(runner);
+    addFacetPairing4(runner);
 
     // SnapPea:
     addSnapPeaTriangulation(runner);

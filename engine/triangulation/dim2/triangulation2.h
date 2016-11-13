@@ -45,29 +45,20 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "generic/triangulation.h"
-#include "packet/packet.h"
+#include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
-
-// The following headers are necessary so that std::unique_ptr can invoke
-// destructors where necessary.
-#include "dim2/dim2isomorphism.h"
 
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.
 
 namespace regina {
 
-class Dim2BoundaryComponent;
 class XMLPacketReader;
-
-template <int> class Isomorphism;
-typedef Isomorphism<2> Dim2Isomorphism;
 
 /**
  * \addtogroup dim2 2-Manifold Triangulations
- * Triangulations of 2-manifolds.
+ * Details for implementing triangulations of 2-manifolds.
  * @{
  */
 
@@ -89,16 +80,7 @@ struct PacketInfo<PACKET_TRIANGULATION2> {
  * the triangulation classes work.
  *
  * This 2-dimensional specialisation offers significant extra functionality,
- * including many functions specific to 2-manifolds, plus rich details of
- * the combinatorial structure of the triangulation.
- *
- * In particular, this class also tracks the vertices and edges of the
- * triangulation (as represented by the classes Vertex<2> and Edge<2>),
- * as well as boundary components (as represented by the class
- * Dim2BoundaryComponent).  Such objects are temporary: whenever the
- * triangulation changes, these objects will be deleted and rebuilt, and so
- * any pointers to them will become invalid.  Likewise, if the triangulation
- * is deleted then these objects will be deleted alongside it.
+ * including many functions specific to 2-manifolds.
  */
 template <>
 class REGINA_API Triangulation<2> :
@@ -114,13 +96,6 @@ class REGINA_API Triangulation<2> :
             /**< Used to iterate through edges. */
         typedef FaceList<2, 0>::Iterator VertexIterator;
             /**< Used to iterate through vertices. */
-        typedef std::vector<Dim2BoundaryComponent*>::const_iterator
-                BoundaryComponentIterator;
-            /**< Used to iterate through boundary components. */
-
-    private:
-        MarkedVector<Dim2BoundaryComponent> boundaryComponents_;
-            /**< The components that form the boundary of the triangulation. */
 
     public:
         /**
@@ -138,9 +113,25 @@ class REGINA_API Triangulation<2> :
          * Creates a new copy of the given triangulation.
          * The packet tree structure and packet label are \e not copied.
          *
+         * This will clone any computed properties (such as homology,
+         * fundamental group, and so on) of the given triangulation also.
+         * If you want a "clean" copy that resets all properties to unknown,
+         * you can use the two-argument copy constructor instead.
+         *
          * @param copy the triangulation to copy.
          */
         Triangulation(const Triangulation& copy);
+        /**
+         * Creates a new copy of the given triangulation, with the option
+         * of whether or not to clone its computed properties also.
+         *
+         * @param copy the triangulation to copy.
+         * @param cloneProps \c true if this should also clone any computed
+         * properties of the given triangulation (such as homology,
+         * fundamental group, and so on), or \c false if the new triangulation
+         * should have all properties marked as unknown.
+         */
+        Triangulation(const Triangulation& copy, bool cloneProps);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -218,48 +209,6 @@ class REGINA_API Triangulation<2> :
 
         /*@}*/
         /**
-         * \name Skeletal Queries
-         */
-        /*@{*/
-
-        /**
-         * Returns the number of boundary components in this triangulation.
-         *
-         * @return the number of boundary components.
-         */
-        size_t countBoundaryComponents() const;
-
-        /**
-         * Returns all boundary components of this triangulation.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus the objects contained in this list should be
-         * considered temporary only.
-         *
-         * This reference to the list however will remain valid and
-         * up-to-date for as long as the triangulation exists.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of all boundary components.
-         */
-        const std::vector<Dim2BoundaryComponent*>& boundaryComponents() const;
-        /**
-         * Returns the requested triangulation boundary component.
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * boundary components will be deleted and replaced with new
-         * ones.  Thus this object should be considered temporary only.
-         *
-         * @param index the index of the desired boundary component, ranging
-         * from 0 to countBoundaryComponents()-1 inclusive.
-         * @return the requested boundary component.
-         */
-        Dim2BoundaryComponent* boundaryComponent(size_t index) const;
-
-        /*@}*/
-        /**
          * \name Basic Properties
          */
         /*@{*/
@@ -281,6 +230,8 @@ class REGINA_API Triangulation<2> :
         /**
          * Returns the Euler characteristic of this triangulation.
          * This will be evaluated as \a V-E+F.
+         *
+         * This returns the same result as eulerCharTri().
          *
          * @return the Euler characteristic of this triangulation.
          */
@@ -379,34 +330,24 @@ class REGINA_API Triangulation<2> :
         virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
-        /**
-         * Turns this triangulation into a clone of the given triangulation.
-         * The tree structure and label of this triangulation are not touched.
-         *
-         * @param from the triangulation from which this triangulation
-         * will be cloned.
-         */
-        void cloneFrom(const Triangulation& from);
-
     private:
         /**
-         * Clears any calculated properties and declares them all
-         * unknown.  All dynamic memory used for storing known
-         * properties is deallocated.
+         * Clears any calculated properties, including skeletal data,
+         * and declares them all unknown.  This must be called by any
+         * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
         void clearAllProperties();
-
-        void deleteSkeleton();
-        void calculateSkeleton();
-
         /**
-         * Internal to calculateSkeleton().  See the comments within
-         * calculateSkeleton() for precisely what this routine does.
+         * Swaps all calculated properties, including skeletal data,
+         * with the given triangulation.  This is called by
+         * TriangulationBase::swapContents(), and by nothing else.
          */
-        void calculateBoundary();
+        void swapAllProperties(Triangulation<2>& other);
+
+        void calculateSkeleton();
 
     friend class regina::Face<2, 2>;
     friend class regina::detail::SimplexBase<2>;
@@ -422,13 +363,51 @@ class REGINA_API Triangulation<2> :
  */
 REGINA_DEPRECATED typedef Triangulation<2> Dim2Triangulation;
 
+// Additional face typedefs that do not have their own headers:
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2VertexEmbedding, you should
+ * use either the new alias VertexEmbedding<2>, or the full class name
+ * FaceEmbedding<2, 0>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2EdgeEmbedding, you should
+ * use either the new alias EdgeEmbedding<2>, or the full class name
+ * FaceEmbedding<2, 1>.
+ */
+REGINA_DEPRECATED typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2Vertex, you should use
+ * either the new alias Vertex<2>, or the full class name Face<2, 0>.
+ */
+REGINA_DEPRECATED typedef Face<2, 0> Dim2Vertex;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim2Edge, you should use
+ * either the new alias Edge<2>, or the full class name Face<2, 1>.
+ */
+REGINA_DEPRECATED typedef Face<2, 1> Dim2Edge;
+
 /*@}*/
 
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim2/triangle2.h"
-#include "triangulation/dim2/edge2.h"
-#include "triangulation/dim2/vertex2.h"
 #include "triangulation/dim2/component2.h"
 #include "triangulation/dim2/boundarycomponent2.h"
 namespace regina {
@@ -438,8 +417,15 @@ namespace regina {
 inline Triangulation<2>::Triangulation() {
 }
 
-inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) {
-    cloneFrom(cloneMe);
+inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) :
+        TriangulationBase<2>(cloneMe) {
+    // No properties yet to clone.
+}
+
+inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
+        bool cloneProps) :
+        TriangulationBase<2>(cloneMe, cloneProps) {
+    // No properties yet to clone.
 }
 
 inline Triangulation<2>::~Triangulation() {
@@ -475,23 +461,6 @@ inline void Triangulation<2>::removeAllTriangles() {
     removeAllSimplices();
 }
 
-inline size_t Triangulation<2>::countBoundaryComponents() const {
-    ensureSkeleton();
-    return boundaryComponents_.size();
-}
-
-inline const std::vector<Dim2BoundaryComponent*>&
-        Triangulation<2>::boundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
-}
-
-inline Dim2BoundaryComponent* Triangulation<2>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
-}
-
 inline bool Triangulation<2>::isValid() const {
     return true;
 }
@@ -507,7 +476,7 @@ inline long Triangulation<2>::eulerChar() const {
 
 inline bool Triangulation<2>::isClosed() const {
     ensureSkeleton();
-    return boundaryComponents_.empty();
+    return boundaryComponents().empty();
 }
 
 inline bool Triangulation<2>::isIdeal() const {
@@ -516,6 +485,14 @@ inline bool Triangulation<2>::isIdeal() const {
 
 inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
     return new Triangulation(*this);
+}
+
+inline void Triangulation<2>::clearAllProperties() {
+    clearBaseProperties();
+}
+
+inline void Triangulation<2>::swapAllProperties(Triangulation<2>& other) {
+    swapBaseProperties(other);
 }
 
 } // namespace regina

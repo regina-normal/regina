@@ -34,14 +34,7 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __NCOMPONENT_H
-#ifndef __DOXYGEN
-#define __NCOMPONENT_H
-#endif
-
 #warning This header is deprecated; please use triangulation/dim3.h instead.
 
 #include "triangulation/dim3.h"
-
-#endif
 

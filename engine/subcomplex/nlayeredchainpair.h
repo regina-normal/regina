@@ -41,10 +41,9 @@
 
 #include "regina-core.h"
 #include "subcomplex/nlayeredchain.h"
+#include "triangulation/forward.h"
 
 namespace regina {
-
-template <int> class Component;
 
 /**
  * \weakgroup subcomplex

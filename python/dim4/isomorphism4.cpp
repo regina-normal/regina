@@ -31,38 +31,36 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "dim4/dim4isomorphism.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4Isomorphism;
 using regina::Isomorphism;
 
 namespace {
-    int (Dim4Isomorphism::*simpImage_const)(unsigned) const =
-        &Dim4Isomorphism::simpImage;
-    regina::Perm<5> (Dim4Isomorphism::*facetPerm_const)(unsigned) const =
-        &Dim4Isomorphism::facetPerm;
+    int (Isomorphism<4>::*simpImage_const)(unsigned) const =
+        &Isomorphism<4>::simpImage;
+    regina::Perm<5> (Isomorphism<4>::*facetPerm_const)(unsigned) const =
+        &Isomorphism<4>::facetPerm;
 }
 
-void addDim4Isomorphism() {
+void addIsomorphism4() {
     class_<Isomorphism<4>, std::auto_ptr<Isomorphism<4>>, boost::noncopyable>
-            ("Isomorphism4", init<const Dim4Isomorphism&>())
-        .def("size", &Dim4Isomorphism::size)
+            ("Isomorphism4", init<const Isomorphism<4>&>())
+        .def("size", &Isomorphism<4>::size)
         .def("simpImage", simpImage_const)
         .def("pentImage", simpImage_const)
         .def("facetPerm", facetPerm_const)
-        .def("__getitem__", &Dim4Isomorphism::operator[])
-        .def("isIdentity", &Dim4Isomorphism::isIdentity)
-        .def("apply", &Dim4Isomorphism::apply,
+        .def("__getitem__", &Isomorphism<4>::operator[])
+        .def("isIdentity", &Isomorphism<4>::isIdentity)
+        .def("apply", &Isomorphism<4>::apply,
             return_value_policy<to_held_type<>>())
-        .def("applyInPlace", &Dim4Isomorphism::applyInPlace)
-        .def("random", &Dim4Isomorphism::random,
+        .def("applyInPlace", &Isomorphism<4>::applyInPlace)
+        .def("random", &Isomorphism<4>::random,
             return_value_policy<manage_new_object>())
-        .def("identity", &Dim4Isomorphism::identity,
+        .def("identity", &Isomorphism<4>::identity,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())

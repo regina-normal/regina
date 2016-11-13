@@ -38,6 +38,7 @@
 #ifndef __ELTMOVEDIALOG4_H
 #define __ELTMOVEDIALOG4_H
 
+#include "triangulation/forward.h"
 #include "packet/packetlistener.h"
 
 #include <QDialog>
@@ -51,10 +52,6 @@ class QRadioButton;
 class EdgeIntChooser;
 template <int, int> class FaceChooser;
 template <int> class SimplexChooser;
-
-namespace regina {
-    template <int> class Triangulation;
-};
 
 /**
  * A dialog used to select and perform an elementary move on a

@@ -31,10 +31,7 @@
  **************************************************************************/
 
 #import "PacketTabBarController.h"
-
-namespace regina {
-    template <int> class Triangulation;
-}
+#import "triangulation/forward.h"
 
 @interface Tri3ViewController : PacketTabBarController <PacketEditor>
 

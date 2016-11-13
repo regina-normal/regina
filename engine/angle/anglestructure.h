@@ -43,6 +43,7 @@
 #include "output.h"
 #include "maths/rational.h"
 #include "maths/ray.h"
+#include "triangulation/forward.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -51,8 +52,6 @@ class XMLAngleStructureReader;
 
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
-
-template <int> class Triangulation;
 
 /**
  * \addtogroup angle Angle Structures

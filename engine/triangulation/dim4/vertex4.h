@@ -49,11 +49,6 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
-
-template <int> class Isomorphism;
-typedef Isomorphism<4> Dim4Isomorphism;
-
 /**
  * \weakgroup dim4
  * @{
@@ -69,12 +64,8 @@ typedef Isomorphism<4> Dim4Isomorphism;
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
-        public Output<Face<4, 0>> {
+class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0> {
     private:
-        Dim4BoundaryComponent* boundaryComponent_;
-            /**< The boundary component that this vertex is a part of,
-                 or 0 if this vertex is internal. */
         Triangulation<3>* link_;
             /**< The link of this vertex, given as a full-blown
                  3-manifold triangulation.  It is guaranteed that 3-sphere
@@ -88,29 +79,6 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * Default destructor.
          */
         ~Face();
-
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this vertex belongs.
-         *
-         * See the note in the Dim4BoundaryComponent overview regarding what
-         * happens if the vertex link itself has more than one boundary
-         * component.  Note that such a vertex link makes the triangulation
-         * invalid.
-         *
-         * An ideal vertex will have its own individual boundary
-         * component to which it belongs.
-         *
-         * An invalid vertex will be given its own individual boundary
-         * component if (and only if) it does not already belong to some
-         * larger boundary component (for instance, if its link is an
-         * ideal 3-manifold triangulation).
-         *
-         * @return the boundary component containing this vertex,
-         * or 0 if this vertex is not on the boundary of the triangulation
-         * as determined by isBoundary().
-         */
-        Dim4BoundaryComponent* boundaryComponent() const;
 
         /**
          * Returns a full 3-manifold triangulation describing
@@ -181,8 +149,8 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * that this tetrahedron links.
          *
          * If \a inclusion is non-null (i.e., it points to some
-         * Dim4Isomorphism pointer \a p), then it will be modified to
-         * point to a new Dim4Isomorphism that describes in detail how the
+         * Isomorphism<4> pointer \a p), then it will be modified to
+         * point to a new Isomorphism<4> that describes in detail how the
          * individual tetrahedra of the link sit within pentachora of
          * the original triangulation.  Specifically, after this routine
          * is called, <tt>p->pentImage(i)</tt> will indicate which pentachoron
@@ -197,11 +165,11 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * if one was requested, will be newly allocated.  The caller of
          * this routine is responsible for destroying these objects.
          *
-         * Strictly speaking, this is an abuse of the Dim4Isomorphism class
+         * Strictly speaking, this is an abuse of the Isomorphism<4> class
          * (the domain is a triangulation of the wrong dimension, and
          * the map is not 1-to-1 into the range pentachora).  We use
          * it anyway, but you should not attempt to call any high-level
-         * routines (such as Dim4Isomorphism::apply).
+         * routines (such as Isomorphism<4>::apply).
          *
          * \ifacespython The second (isomorphism) argument is not present.
          * Instead this routine returns a pair (triangulation, isomorphism).
@@ -215,7 +183,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * @return a newly constructed triangulation of the link of this vertex.
          */
         Triangulation<3>* buildLinkDetail(bool labels = true,
-            Dim4Isomorphism** inclusion = 0) const;
+            Isomorphism<4>** inclusion = 0) const;
 
         /**
          * Determines if this vertex is an ideal vertex.
@@ -227,27 +195,6 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
         bool isIdeal() const;
 
         /**
-         * Determines if this vertex lies on the boundary of the
-         * triangulation.
-         *
-         * Ideal vertices form their own boundary components, and are
-         * therefore considered to be on the boundary.
-         *
-         * Invalid vertices are always considered to be on the boundary.
-         * If an invalid vertex is not already part of some larger boundary
-         * component (for instance, if its link is an ideal 3-manifold
-         * triangulation) then it is given its own boundary component (much
-         * like an ideal vertex).
-         *
-         * As a matter of fact, the only vertices that are \e not
-         * considered as on the boundary are those whose links are 3-spheres.
-         *
-         * @return \c true if and only if this vertex lies on the boundary.
-         * @see isIdeal()
-         */
-        bool isBoundary() const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -256,15 +203,6 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -304,12 +242,7 @@ REGINA_DEPRECATED typedef Face<4, 0> Dim4Vertex;
 // Inline functions for Vertex<4>
 
 inline Face<4, 0>::Face(Component<4>* component) :
-        detail::FaceBase<4, 0>(component),
-        boundaryComponent_(0), link_(0), ideal_(false) {
-}
-
-inline Dim4BoundaryComponent* Face<4, 0>::boundaryComponent() const {
-    return boundaryComponent_;
+        detail::FaceBase<4, 0>(component), link_(0), ideal_(false) {
 }
 
 inline const Triangulation<3>* Face<4, 0>::buildLink() const {
@@ -318,10 +251,6 @@ inline const Triangulation<3>* Face<4, 0>::buildLink() const {
 
 inline bool Face<4, 0>::isIdeal() const {
     return ideal_;
-}
-
-inline bool Face<4, 0>::isBoundary() const {
-    return (boundaryComponent_ != 0);
 }
 
 } // namespace regina

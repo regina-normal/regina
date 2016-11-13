@@ -56,144 +56,15 @@ namespace regina {
  */
 
 /**
- * Represents a component of the boundary of a 2-manifold triangulation.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
  *
- * Boundary components are highly temporary; once a triangulation
- * changes, all its boundary component objects will be deleted and new
- * ones will be created.
+ * \deprecated Instead of the old typedef Dim2BoundaryComponent, you should use
+ * the real class name BoundaryComponent<2>.
  */
-class REGINA_API Dim2BoundaryComponent :
-        public Output<Dim2BoundaryComponent>,
-        public alias::FaceOfTriangulation<Dim2BoundaryComponent, 2>,
-        public boost::noncopyable,
-        public MarkedElement {
-    private:
-        std::vector<Edge<2>*> edges_;
-            /**< List of edges in the component. */
-        std::vector<Vertex<2>*> vertices_;
-            /**< List of vertices in the component. */
-
-    public:
-        /**
-         * Returns the index of this boundary component in the underlying
-         * triangulation.
-         *
-         * @return the index of this boundary component.
-         */
-        size_t index() const;
-
-        /**
-         * Returns the number of <i>subdim</i>-faces in this boundary component.
-         *
-         * \pre The template argument \a subdim is either 0 or 1.
-         *
-         * \ifacespython Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * <tt>countFaces(subdim)</tt>; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
-         *
-         * @return the number of <i>subdim</i>-faces.
-         */
-        template <int subdim>
-        size_t countFaces() const;
-
-        /**
-         * Returns the requested <i>subdim</i>-face in this boundary component.
-         *
-         * Note that the index of a face in the boundary component need
-         * not be the index of the same face in the overall triangulation.
-         *
-         * \pre The template argument \a subdim is either 0 or 1.
-         *
-         * \ifacespython Python does not support templates.  Instead,
-         * Python users should call this function in the form
-         * <tt>face(subdim, index)</tt>; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
-         *
-         * @param index the index of the desired face, ranging from 0 to
-         * countFaces<subdim>()-1 inclusive.
-         * @return the requested face.
-         */
-        template <int subdim>
-        Face<2, subdim>* face(size_t index) const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * boundary component belongs.
-         *
-         * @return the component containing this boundary component.
-         */
-        Component<2>* component() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-    private:
-        /**
-         * Default constructor.
-         */
-        Dim2BoundaryComponent();
-
-    friend class Triangulation<2>;
-        /**< Allow access to private members. */
-};
+REGINA_DEPRECATED typedef BoundaryComponent<2> Dim2BoundaryComponent;
 
 /*@}*/
-
-// Inline functions for Dim2BoundaryComponent
-
-inline Dim2BoundaryComponent::Dim2BoundaryComponent() {
-}
-
-inline size_t Dim2BoundaryComponent::index() const {
-    return markedIndex();
-}
-
-// Hide specialisations from doxygen, since it cannot handle them.
-#ifndef __DOXYGEN
-template <>
-inline size_t Dim2BoundaryComponent::countFaces<1>() const {
-    return edges_.size();
-}
-
-template <>
-inline size_t Dim2BoundaryComponent::countFaces<0>() const {
-    return vertices_.size();
-}
-
-template <>
-inline Edge<2>* Dim2BoundaryComponent::face<1>(size_t index) const {
-    return edges_[index];
-}
-
-template <>
-inline Vertex<2>* Dim2BoundaryComponent::face<0>(size_t index) const {
-    return vertices_[index];
-}
-#endif // ! __DOXYGEN
-
-inline Component<2>* Dim2BoundaryComponent::component() const {
-    return vertices_.front()->component();
-}
-
-inline void Dim2BoundaryComponent::writeTextShort(std::ostream& out) const {
-    out << "Boundary component";
-}
 
 } // namespace regina
 

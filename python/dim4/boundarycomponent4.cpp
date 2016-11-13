@@ -31,44 +31,76 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/dim3.h" // for build()
 #include "../helpers.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::Dim4BoundaryComponent;
+using regina::BoundaryComponent;
 
-void addDim4BoundaryComponent() {
-    class_<Dim4BoundaryComponent, std::auto_ptr<Dim4BoundaryComponent>,
-            boost::noncopyable>("Dim4BoundaryComponent", no_init)
-        .def("index", &Dim4BoundaryComponent::index)
-        .def("countFaces",
-            &regina::python::countFaces<Dim4BoundaryComponent, 4>)
-        .def("countTetrahedra",
-            &Dim4BoundaryComponent::countTetrahedra)
-        .def("countTriangles", &Dim4BoundaryComponent::countTriangles)
-        .def("countEdges", &Dim4BoundaryComponent::countEdges)
-        .def("countVertices", &Dim4BoundaryComponent::countVertices)
-        .def("face", &regina::python::face<Dim4BoundaryComponent, 4, size_t>)
-        .def("tetrahedron", &Dim4BoundaryComponent::tetrahedron,
-            return_value_policy<reference_existing_object>())
-        .def("triangle", &Dim4BoundaryComponent::triangle,
-            return_value_policy<reference_existing_object>())
-        .def("edge", &Dim4BoundaryComponent::edge,
-            return_value_policy<reference_existing_object>())
-        .def("vertex", &Dim4BoundaryComponent::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("component", &Dim4BoundaryComponent::component,
-            return_value_policy<reference_existing_object>())
-        .def("build", &Dim4BoundaryComponent::build,
-            return_value_policy<to_held_type<>>())
-        .def("isIdeal", &Dim4BoundaryComponent::isIdeal)
-        .def("isInvalidVertex", &Dim4BoundaryComponent::isInvalidVertex)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-    ;
+void addBoundaryComponent4() {
+    {
+        scope s = class_<BoundaryComponent<4>,
+                std::auto_ptr<BoundaryComponent<4>>,
+                boost::noncopyable>("BoundaryComponent4", no_init)
+            .def("index", &BoundaryComponent<4>::index)
+            .def("size", &BoundaryComponent<4>::size)
+            .def("countFaces",
+                &regina::python::countFaces<BoundaryComponent<4>, 4>)
+            .def("countTetrahedra",
+                &BoundaryComponent<4>::countTetrahedra)
+            .def("countTriangles", &BoundaryComponent<4>::countTriangles)
+            .def("countEdges", &BoundaryComponent<4>::countEdges)
+            .def("countVertices", &BoundaryComponent<4>::countVertices)
+            .def("facets",
+                regina::python::faces_list<BoundaryComponent<4>, 4, 3>)
+            .def("faces", regina::python::faces<BoundaryComponent<4>, 4>)
+            .def("tetrahedra",
+                regina::python::faces_list<BoundaryComponent<4>, 4, 3>)
+            .def("triangles",
+                regina::python::faces_list<BoundaryComponent<4>, 4, 2>)
+            .def("edges",
+                regina::python::faces_list<BoundaryComponent<4>, 4, 1>)
+            .def("vertices",
+                regina::python::faces_list<BoundaryComponent<4>, 4, 0>)
+            .def("facet", &BoundaryComponent<4>::facet,
+                return_value_policy<reference_existing_object>())
+            .def("face", &regina::python::face<BoundaryComponent<4>, 4, size_t>)
+            .def("tetrahedron", &BoundaryComponent<4>::tetrahedron,
+                return_value_policy<reference_existing_object>())
+            .def("triangle", &BoundaryComponent<4>::triangle,
+                return_value_policy<reference_existing_object>())
+            .def("edge", &BoundaryComponent<4>::edge,
+                return_value_policy<reference_existing_object>())
+            .def("vertex", &BoundaryComponent<4>::vertex,
+                return_value_policy<reference_existing_object>())
+            .def("component", &BoundaryComponent<4>::component,
+                return_value_policy<reference_existing_object>())
+            .def("triangulation", &BoundaryComponent<4>::triangulation,
+                return_value_policy<to_held_type<>>())
+            .def("build", &BoundaryComponent<4>::build,
+                return_internal_reference<>())
+            .def("isReal", &BoundaryComponent<4>::isReal)
+            .def("isIdeal", &BoundaryComponent<4>::isIdeal)
+            .def("isInvalidVertex", &BoundaryComponent<4>::isInvalidVertex)
+            .def("isOrientable", &BoundaryComponent<4>::isOrientable)
+            .def(regina::python::add_output())
+            .def(regina::python::add_eq_operators())
+        ;
+        /*
+         * If these bindings are enabled, we must use bool(...) on the RHS
+         * to ensure that the values are not treated as references (since
+         * these static class members are really just compile-time constants,
+         * and are not defined in a way that gives them linkage).
+        s.attr("allFaces") = bool(BoundaryComponent<4>::allFaces);
+        s.attr("allowVertex") = bool(BoundaryComponent<4>::allowVertex);
+        s.attr("canBuild") = bool(BoundaryComponent<4>::canBuild);
+        */
+    }
+
+    scope().attr("Dim4BoundaryComponent") = scope().attr("BoundaryComponent4");
 }
 

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "dim2/dim2exampletriangulation.h"
+#include "triangulation/example2.h"
 #include "triangulation/dim2.h"
 
 // UI includes:
@@ -47,7 +47,7 @@
 #include <QValidator>
 #include <QStackedWidget>
 
-using regina::Dim2ExampleTriangulation;
+using regina::Example;
 using regina::Triangulation;
 
 namespace {
@@ -246,7 +246,7 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
     } else if (typeId == TRI_OR) {
         unsigned long genus = orGenus->text().toULong();
         unsigned long punctures = orPunctures->text().toULong();
-        return Dim2ExampleTriangulation::orientable(genus, punctures);
+        return Example<2>::orientable(genus, punctures);
     } else if (typeId == TRI_NOR) {
         unsigned long genus = norGenus->text().toULong();
         if (genus == 0) {
@@ -256,7 +256,7 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
             return 0;
         }
         unsigned long punctures = norPunctures->text().toULong();
-        return Dim2ExampleTriangulation::nonOrientable(genus, punctures);
+        return Example<2>::nonOrientable(genus, punctures);
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -295,23 +295,23 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_S2:
-                return Dim2ExampleTriangulation::sphere();
+                return Example<2>::sphere();
             case EXAMPLE_S2_TETRAHEDRON:
-                return Dim2ExampleTriangulation::sphereTetrahedron();
+                return Example<2>::sphereTetrahedron();
             case EXAMPLE_S2_OCTAHEDRON:
-                return Dim2ExampleTriangulation::sphereOctahedron();
+                return Example<2>::sphereOctahedron();
             case EXAMPLE_DISC:
-                return Dim2ExampleTriangulation::disc();
+                return Example<2>::disc();
             case EXAMPLE_ANNULUS:
-                return Dim2ExampleTriangulation::annulus();
+                return Example<2>::annulus();
             case EXAMPLE_MOBIUS:
-                return Dim2ExampleTriangulation::mobius();
+                return Example<2>::mobius();
             case EXAMPLE_TORUS:
-                return Dim2ExampleTriangulation::torus();
+                return Example<2>::torus();
             case EXAMPLE_PP:
-                return Dim2ExampleTriangulation::rp2();
+                return Example<2>::rp2();
             case EXAMPLE_KB:
-                return Dim2ExampleTriangulation::kb();
+                return Example<2>::kb();
         }
 
         ReginaSupport::info(parentWidget,

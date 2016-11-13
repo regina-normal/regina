@@ -63,7 +63,7 @@ namespace {
             typedef std::set<std::string> SigSet;
 
             const size_t maxTet_;
-            std::function<bool(const Triangulation<3>&)> action_;
+            std::function<bool(Triangulation<3>&)> action_;
             bool done_;
 
             SigSet sigs_;
@@ -71,7 +71,7 @@ namespace {
 
         public:
             TriBFS(size_t maxTet,
-                const std::function<bool(const Triangulation<3>&)>& action) :
+                const std::function<bool(Triangulation<3>&)>& action) :
                 maxTet_(maxTet), action_(action), done_(false) {
             }
 
@@ -83,15 +83,24 @@ namespace {
             bool done() const;
 
         private:
-            bool candidate(const Triangulation<3>& alt);
+            // candidate() may assume that alt will be deleted immediately
+            // after returning.
+            bool candidate(Triangulation<3>& alt);
             void propagateFrom(const SigSet::iterator& it);
     };
 
     template <bool threading>
     inline bool TriBFS<threading>::seed(const Triangulation<3>& tri) {
-        if (action_(tri))
-            return (done_ = true);
-
+        // We have to pass a copy of tri to action_, since action_ is
+        // allowed to change the triangulation that is passed to it.
+        // This is inefficient, but at least it only happens once.
+        {
+            Triangulation<3> copy(tri, false);
+            if (action_(copy))
+                return (done_ = true);
+            // We cannot use copy from here, since action_() might have
+            // changed it.
+        }
         process_.push(sigs_.insert(tri.isoSig()).first);
         return false;
     }
@@ -106,23 +115,27 @@ namespace {
         size_t i;
         for (i = 0; i < t->countEdges(); ++i)
             if (t->threeTwoMove(t->edge(i), true, false)) {
-                Triangulation<3> alt(*t);
+                Triangulation<3> alt(*t, false);
                 alt.threeTwoMove(alt.edge(i), false, true);
                 if (candidate(alt)) {
                     delete t;
                     return;
                 }
+                // We cannot use alt from here, since candidate() might
+                // have changed it.
             }
 
         if (t->size() < maxTet_)
             for (i = 0; i < t->countTriangles(); ++i)
                 if (t->twoThreeMove(t->triangle(i), true, false)) {
-                    Triangulation<3> alt(*t);
+                    Triangulation<3> alt(*t, false);
                     alt.twoThreeMove(alt.triangle(i), false, true);
                     if (candidate(alt)) {
                         delete t;
                         return;
                     }
+                    // We cannot use alt from here, since candidate() might
+                    // have changed it.
                 }
 
         delete t;
@@ -218,7 +231,7 @@ namespace {
     }
 
     template <>
-    bool TriBFS<true>::candidate(const Triangulation<3>& alt) {
+    bool TriBFS<true>::candidate(Triangulation<3>& alt) {
         const std::string sig = alt.isoSig();
 
         std::lock_guard<std::mutex> lock(mutex_);
@@ -239,12 +252,14 @@ namespace {
 
             if (action_(alt))
                 return (done_ = true);
+            // We cannot use alt from here, since action_() might have
+            // changed it.
         }
         return false;
     }
 
     template <>
-    bool TriBFS<false>::candidate(const Triangulation<3>& alt) {
+    bool TriBFS<false>::candidate(Triangulation<3>& alt) {
         const std::string sig = alt.isoSig();
 
         auto result = sigs_.insert(sig);
@@ -254,13 +269,15 @@ namespace {
 
             if (action_(alt))
                 return (done_ = true);
+            // We cannot use alt from here, since action_() might have
+            // changed it.
         }
         return false;
     }
 
     bool enumerate(const Triangulation<3>& tri, int height, unsigned nThreads,
             ProgressTrackerOpen* tracker,
-            const std::function<bool(const Triangulation<3>&)>& action) {
+            const std::function<bool(Triangulation<3>&)>& action) {
         if (tracker)
             tracker->newStage("Exploring triangulations");
 
@@ -295,13 +312,14 @@ namespace {
         }
     }
 
-    bool simplifyFound(const Triangulation<3>& alt,
-            Triangulation<3>& original, size_t minTet) {
+    bool simplifyFound(Triangulation<3>& alt, Triangulation<3>& original,
+            size_t minTet) {
         if (alt.size() < minTet) {
-            // TODO: Make t.cloneFrom(alt) public.
+            // Since we are allowed to change alt, we use swapContents(),
+            // which avoids yet another round of remaking the tetrahedron
+            // gluings.
             Packet::ChangeEventSpan span(&original);
-            original.removeAllTetrahedra();
-            original.insertTriangulation(alt);
+            original.swapContents(alt);
             original.intelligentSimplify();
             return true;
         } else
@@ -317,7 +335,7 @@ bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
 
 bool Triangulation<3>::retriangulateInternal(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
-        const std::function<bool(const Triangulation<3>&)>& action) const {
+        const std::function<bool(Triangulation<3>&)>& action) const {
     if (tracker) {
         try {
             std::thread(&enumerate, *this, height, nThreads, tracker, action)

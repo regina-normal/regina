@@ -105,8 +105,6 @@ void Triangulation<3>::barycentricSubdivision() {
 
 
     // Delete the existing tetrahedra and put in the new ones.
-    ChangeEventSpan span2(this);
-    removeAllTetrahedra();
     swapContents(staging);
     delete[] newTet;
 }
@@ -271,9 +269,8 @@ bool Triangulation<3>::idealToFinite() {
 
     ChangeEventSpan span2(this);
 
-    removeAllTetrahedra();
     swapContents(staging);
-    calculateSkeleton();
+    ensureSkeleton();
 
     // Remove the tetrahedra that meet any of the ideal or invalid vertices.
     // First we make a list of the tetrahedra.

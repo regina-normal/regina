@@ -37,6 +37,7 @@
 #ifndef __TRI4ALGEBRA_H
 #define __TRI4ALGEBRA_H
 
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 
 class GroupWidget;
@@ -44,8 +45,6 @@ class QLabel;
 
 namespace regina {
     class Packet;
-
-    template <int> class Triangulation;
 };
 
 /**

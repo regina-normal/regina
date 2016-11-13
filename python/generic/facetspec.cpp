@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "generic/facetspec.h"
+#include "triangulation/facetspec.h"
 #include "../helpers.h"
 
 using namespace boost::python;

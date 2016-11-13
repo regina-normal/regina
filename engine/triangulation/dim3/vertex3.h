@@ -49,13 +49,8 @@
 
 namespace regina {
 
-class NBoundaryComponent;
-
-template <int> class Isomorphism;
-typedef Isomorphism<3> NIsomorphism;
-
 /**
- * \weakgroup triangulation
+ * \weakgroup dim3
  * @{
  */
 
@@ -69,8 +64,7 @@ typedef Isomorphism<3> NIsomorphism;
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
-        public Output<Face<3, 0>> {
+class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0> {
     public:
         /**
          * Categorises the possible links of a vertex into a small number
@@ -106,9 +100,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
                      triangulation invalid. */
         };
     private:
-        NBoundaryComponent* boundaryComponent_;
-            /**< The boundary component that this vertex is a part of,
-                 or 0 if this vertex is internal. */
         LinkType link_;
             /**< A broad categorisation of the topology of the vertex link. */
         long linkEulerChar_;
@@ -122,23 +113,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * Default destructor.
          */
         ~Face();
-
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this vertex belongs.
-         *
-         * See the note in the NBoundaryComponent overview regarding what
-         * happens if the vertex link is a multiply punctured surface.
-         * Note that this makes both the vertex and the triangulation invalid.
-         *
-         * An ideal vertex will have its own individual boundary
-         * component to which it belongs.
-         *
-         * @return the boundary component containing this vertex,
-         * or 0 if this vertex is not on the boundary of the triangulation
-         * as determined by isBoundary().
-         */
-        NBoundaryComponent* boundaryComponent() const;
 
         /**
          * Returns a broad categorisation of the link of the vertex.
@@ -220,8 +194,8 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * that this triangle links.
          *
          * If \a inclusion is non-null (i.e., it points to some
-         * NIsomorphism pointer \a p), then it will be modified to
-         * point to a new NIsomorphism that describes in detail how the
+         * Isomorphism<3> pointer \a p), then it will be modified to
+         * point to a new Isomorphism<3> that describes in detail how the
          * individual triangles of the link sit within tetrahedra of
          * the original triangulation.  Specifically, after this routine
          * is called, <tt>p->tetImage(i)</tt> will indicate which tetrahedron
@@ -236,11 +210,11 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * if one was requested, will be newly allocated.  The caller of
          * this routine is responsible for destroying these objects.
          *
-         * Strictly speaking, this is an abuse of the NIsomorphism class
+         * Strictly speaking, this is an abuse of the Isomorphism<3> class
          * (the domain is a triangulation of the wrong dimension, and
          * the map is not 1-to-1 into the range tetrahedra).  We use
          * it anyway, but you should not attempt to call any high-level
-         * routines (such as NIsomorphism::apply).
+         * routines (such as Isomorphism<3>::apply).
          *
          * \ifacespython The second (isomorphism) argument is not present.
          * Instead this routine returns a pair (triangulation, isomorphism).
@@ -254,7 +228,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * @return a newly constructed triangulation of the link of this vertex.
          */
         Triangulation<2>* buildLinkDetail(bool labels = true,
-            NIsomorphism** inclusion = 0) const;
+            Isomorphism<3>** inclusion = 0) const;
 
         /**
          * Determines if the link of this vertex is closed.
@@ -272,18 +246,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * @return \c true if and only if this is an ideal vertex.
          */
         bool isIdeal() const;
-
-        /**
-         * Determines if this vertex lies on the boundary of the
-         * triangulation.  Ideal vertices are included as
-         * being on the boundary.  In fact, the only vertices not
-         * considered as on the boundary are those whose links are
-         * spheres.
-         *
-         * @return \c true if and only if this vertex lies on the boundary.
-         * @see isIdeal()
-         */
-        bool isBoundary() const;
 
         /**
          * Determines if this vertex is standard.
@@ -315,15 +277,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
@@ -363,12 +316,7 @@ REGINA_DEPRECATED typedef Face<3, 0> NVertex;
 // Inline functions for Vertex<3>
 
 inline Face<3, 0>::Face(Component<3>* component) :
-        detail::FaceBase<3, 0>(component),
-        boundaryComponent_(0), linkEulerChar_(0), linkTri_(0) {
-}
-
-inline NBoundaryComponent* Face<3, 0>::boundaryComponent() const {
-    return boundaryComponent_;
+        detail::FaceBase<3, 0>(component), linkEulerChar_(0), linkTri_(0) {
 }
 
 inline Vertex<3>::LinkType Face<3, 0>::link() const {
@@ -391,10 +339,6 @@ inline bool Face<3, 0>::isLinkClosed() const {
 inline bool Face<3, 0>::isIdeal() const {
     return (link_ == TORUS || link_ == KLEIN_BOTTLE ||
         link_ == NON_STANDARD_CUSP);
-}
-
-inline bool Face<3, 0>::isBoundary() const {
-    return (boundaryComponent_ != 0);
 }
 
 inline bool Face<3, 0>::isStandard() const {

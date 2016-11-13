@@ -33,8 +33,8 @@
 /*! \file triangulation/dim3.h
  *  \brief Includes all headers for working with 3-dimensional triangulations.
  *  This includes headers for the main class Triangulation<3>, as well as the
- *  face classes Face<3,\a subdim> and the component classes Component<3> and
- *  NBoundaryComponent.
+ *  face classes Face<3,\a subdim>, the component classes Component<3> and
+ *  BoundaryComponent<3>, and the isomorphism class Isomorphism<3>.
  */
 
 #ifndef __DIM3_H
@@ -43,6 +43,19 @@
 #endif
 
 #include "triangulation/dim3/triangulation3.h"
+
+namespace regina {
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef NIsomorphism, you should use
+ * the full class name Isomorphism<3>.
+ */
+REGINA_DEPRECATED typedef Isomorphism<3> NIsomorphism;
+
+} // namespace regina
 
 #endif
 

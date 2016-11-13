@@ -34,7 +34,7 @@
 #import "PacketPicker.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "dim4/dim4exampletriangulation.h"
+#import "triangulation/example4.h"
 #import "triangulation/dim3.h"
 #import "triangulation/dim4.h"
 
@@ -91,7 +91,7 @@ typedef regina::Triangulation<4>* (*Tri4Creator)();
 /**
  * Represents a single option in the examples picker.
  */
-@interface Dim4ExampleTriangulation : NSObject
+@interface Example4 : NSObject
 
 @property (strong, nonatomic) NSString* name;
 @property (assign, nonatomic) Tri4Creator creator;
@@ -101,11 +101,11 @@ typedef regina::Triangulation<4>* (*Tri4Creator)();
 
 @end
 
-@implementation Dim4ExampleTriangulation
+@implementation Example4
 
 + (id)exampleWithName:(NSString *)name creator:(Tri4Creator)creator
 {
-    Dim4ExampleTriangulation* e = [[Dim4ExampleTriangulation alloc] init];
+    Example4* e = [[Example4 alloc] init];
     if (e) {
         e.name = name;
         e.creator = creator;
@@ -136,12 +136,12 @@ typedef regina::Triangulation<4>* (*Tri4Creator)();
 
 - (void)viewDidLoad
 {
-    options = @[[Dim4ExampleTriangulation exampleWithName:@"Minimal 4-sphere (2 pentachora)" creator:&regina::Dim4ExampleTriangulation::fourSphere],
-                [Dim4ExampleTriangulation exampleWithName:@"Simplicial 4-sphere (6 pentachora)" creator:&regina::Dim4ExampleTriangulation::simplicialFourSphere],
-                [Dim4ExampleTriangulation exampleWithName:@"ℝP⁴" creator:&regina::Dim4ExampleTriangulation::rp4],
-                [Dim4ExampleTriangulation exampleWithName:@"Product S³ × S¹" creator:&regina::Dim4ExampleTriangulation::s3xs1],
-                [Dim4ExampleTriangulation exampleWithName:@"Twisted product S³ ×~ S¹" creator:&regina::Dim4ExampleTriangulation::s3xs1Twisted],
-                [Dim4ExampleTriangulation exampleWithName:@"Cappell-Shaneson knot complement" creator:&regina::Dim4ExampleTriangulation::cappellShaneson]];
+    options = @[[Example4 exampleWithName:@"Minimal 4-sphere (2 pentachora)" creator:&regina::Example<4>::fourSphere],
+                [Example4 exampleWithName:@"Simplicial 4-sphere (6 pentachora)" creator:&regina::Example<4>::simplicialFourSphere],
+                [Example4 exampleWithName:@"ℝP⁴" creator:&regina::Example<4>::rp4],
+                [Example4 exampleWithName:@"Product S³ × S¹" creator:&regina::Example<4>::s3xs1],
+                [Example4 exampleWithName:@"Twisted product S³ ×~ S¹" creator:&regina::Example<4>::s3xs1Twisted],
+                [Example4 exampleWithName:@"Cappell-Shaneson knot complement" creator:&regina::Example<4>::cappellShaneson]];
 
     self.example.dataSource = self;
     self.example.delegate = self;
@@ -223,14 +223,14 @@ typedef regina::Triangulation<4>* (*Tri4Creator)();
 
     regina::Triangulation<4>* ans;
     if (self.bundleType.selectedSegmentIndex == 0) {
-        ans = regina::Dim4ExampleTriangulation::iBundle(*tri);
+        ans = regina::Example<4>::iBundle(*tri);
 
         if (tri->label().empty())
             ans->setLabel("I-bundle");
         else
             ans->setLabel(tri->label() + " × I");
     } else {
-        ans = regina::Dim4ExampleTriangulation::s1Bundle(*tri);
+        ans = regina::Example<4>::s1Bundle(*tri);
 
         if (tri->label().empty())
             ans->setLabel("S¹-bundle");

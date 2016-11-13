@@ -51,9 +51,6 @@ namespace regina {
 struct NSatAnnulus;
 class NSFSpace;
 
-template <int> class Isomorphism;
-typedef Isomorphism<3> NIsomorphism;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -382,7 +379,7 @@ class REGINA_API NSatBlock :
          * block structure.
          */
         virtual void transform(const Triangulation<3>* originalTri,
-                const NIsomorphism* iso, Triangulation<3>* newTri);
+                const Isomorphism<3>* iso, Triangulation<3>* newTri);
 
         /**
          * Finds the next (or previous) boundary annulus around from this,

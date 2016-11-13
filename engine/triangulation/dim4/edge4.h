@@ -49,11 +49,6 @@
 
 namespace regina {
 
-class Dim4BoundaryComponent;
-
-template <int> class Isomorphism;
-typedef Isomorphism<4> Dim4Isomorphism;
-
 /**
  * \weakgroup dim4
  * @{
@@ -69,12 +64,8 @@ typedef Isomorphism<4> Dim4Isomorphism;
  * offer significant extra functionality.
  */
 template <>
-class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
-        public Output<Face<4, 1>> {
+class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1> {
     private:
-        Dim4BoundaryComponent* boundaryComponent_;
-            /**< The boundary component that this edge is a part of,
-                 or 0 if this edge is internal. */
         Triangulation<2>* link_;
             /**< A triangulation of the edge link.  This will only be
              * constructed on demand; until then it will be null. */
@@ -84,28 +75,6 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * Default destructor.
          */
         ~Face();
-
-        /**
-         * Returns the boundary component of the triangulation to which
-         * this edge belongs.
-         *
-         * See the note in the Dim4BoundaryComponent overview regarding
-         * what happens if the edge link itself has more than one
-         * boundary component.  Note that such an edge link makes the
-         * triangulation invalid.
-         *
-         * @return the boundary component containing this edge, or 0 if this
-         * edge does not lie entirely within the boundary of the triangulation.
-         */
-        Dim4BoundaryComponent* boundaryComponent() const;
-
-        /**
-         * Determines if this edge lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this edge lies on the boundary.
-         */
-        bool isBoundary() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -174,8 +143,8 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * that this triangle links.
          *
          * If \a inclusion is non-null (i.e., it points to some
-         * Dim4Isomorphism pointer \a p), then it will be modified to
-         * point to a new Dim4Isomorphism that describes in detail how the
+         * Isomorphism<4> pointer \a p), then it will be modified to
+         * point to a new Isomorphism<4> that describes in detail how the
          * individual triangles of the link sit within pentachora of
          * the original triangulation.  Specifically, after this routine
          * is called, <tt>p->pentImage(i)</tt> will indicate which pentachoron
@@ -192,11 +161,11 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * if one was requested, will be newly allocated.  The caller of
          * this routine is responsible for destroying these objects.
          *
-         * Strictly speaking, this is an abuse of the Dim4Isomorphism class
+         * Strictly speaking, this is an abuse of the Isomorphism<4> class
          * (the domain is a triangulation of the wrong dimension, and
          * the map is not 1-to-1 into the range pentachora).  We use
          * it anyway, but you should not attempt to call any high-level
-         * routines (such as Dim4Isomorphism::apply).
+         * routines (such as Isomorphism<4>::apply).
          *
          * \ifacespython The second (isomorphism) argument is not present.
          * Instead this routine returns a pair (triangulation, isomorphism).
@@ -210,26 +179,7 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * @return a newly constructed triangulation of the link of this edge.
          */
         Triangulation<2>* buildLinkDetail(bool labels = true,
-            Dim4Isomorphism** inclusion = 0) const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
+            Isomorphism<4>** inclusion = 0) const;
 
     private:
         /**
@@ -269,16 +219,7 @@ REGINA_DEPRECATED typedef Face<4, 1> Dim4Edge;
 // Inline functions for Edge<4>
 
 inline Face<4, 1>::Face(Component<4>* component) :
-        detail::FaceBase<4, 1>(component),
-        boundaryComponent_(0), link_(0) {
-}
-
-inline Dim4BoundaryComponent* Face<4, 1>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline bool Face<4, 1>::isBoundary() const {
-    return (boundaryComponent_ != 0);
+        detail::FaceBase<4, 1>(component), link_(0) {
 }
 
 inline const Triangulation<2>* Face<4, 1>::buildLink() const {
@@ -288,11 +229,6 @@ inline const Triangulation<2>* Face<4, 1>::buildLink() const {
         const_cast<Edge<4>*>(this)->link_ = buildLinkDetail(false, 0);
     }
     return link_;
-}
-
-inline void Face<4, 1>::writeTextShort(std::ostream& out) const {
-    out << (boundaryComponent_ ? "Boundary " : "Internal ")
-        << "edge of degree " << degree();
 }
 
 } // namespace regina

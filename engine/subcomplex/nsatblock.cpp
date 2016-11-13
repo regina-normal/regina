@@ -52,7 +52,7 @@ NSatBlock::NSatBlock(const NSatBlock& cloneMe) : nAnnuli_(cloneMe.nAnnuli_),
 }
 
 void NSatBlock::transform(const Triangulation<3>* originalTri,
-        const NIsomorphism* iso, Triangulation<3>* newTri) {
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     for (unsigned i = 0; i < nAnnuli_; i++)
         annulus_[i].transform(originalTri, iso, newTri);
 }

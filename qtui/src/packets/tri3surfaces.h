@@ -37,6 +37,7 @@
 #ifndef __TRI3SURFACES_H
 #define __TRI3SURFACES_H
 
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 
 class QAbstractButton;
@@ -44,7 +45,6 @@ class QLabel;
 
 namespace regina {
     class Packet;
-    template <int> class Triangulation;
 };
 
 /**

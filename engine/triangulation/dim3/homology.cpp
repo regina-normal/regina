@@ -35,75 +35,6 @@
 
 namespace regina {
 
-const AbelianGroup& Triangulation<3>::homology() const {
-    if (H1_.known())
-        return *H1_.value();
-
-    if (isEmpty())
-        return *(H1_ = new AbelianGroup());
-
-    // Calculate a maximal forest in the dual 1-skeleton.
-    ensureSkeleton();
-
-    // Build a presentation matrix.
-    // Each non-boundary not-in-forest triangle is a generator.
-    // Each non-boundary edge is a relation.
-    unsigned long nBdryEdges = 0;
-    for (auto bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++) {
-        nBdryEdges += (*bit)->countEdges();
-    }
-    long nGens = countTriangles() - countBoundaryFacets()
-        + countComponents() - size();
-    long nRels = countEdges() - nBdryEdges;
-    MatrixInt pres(nRels, nGens);
-
-    // Find out which triangle corresponds to which generator.
-    long* genIndex = new long[countTriangles()];
-    long i = 0;
-    for (Triangle<3>* f : triangles()) {
-        if (f->isBoundary() || f->inMaximalForest())
-            genIndex[f->index()] = -1;
-        else {
-            genIndex[f->index()] = i;
-            i++;
-        }
-    }
-
-    // Run through each edge and put the relations in the matrix.
-    Tetrahedron<3>* currTet;
-    Triangle<3>* triangle;
-    int currTetFace;
-    long triGenIndex;
-    i = 0;
-    for (Edge<3>* e : edges()) {
-        if (! e->isBoundary()) {
-            // Put in the relation corresponding to this edge.
-            for (auto& emb : *e) {
-                currTet = emb.tetrahedron();
-                currTetFace = emb.vertices()[2];
-                triangle = currTet->triangle(currTetFace);
-                triGenIndex = genIndex[triangle->index()];
-                if (triGenIndex >= 0) {
-                    if ((triangle->front().tetrahedron() == currTet) &&
-                            (triangle->front().triangle() == currTetFace))
-                        pres.entry(i, triGenIndex) += 1;
-                    else
-                        pres.entry(i, triGenIndex) -= 1;
-                }
-            }
-            i++;
-        }
-    }
-
-    delete[] genIndex;
-
-    // Build the group from the presentation matrix and tidy up.
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addGroup(pres);
-    return *(H1_ = ans);
-}
-
 const AbelianGroup& Triangulation<3>::homologyRel() const {
     if (H1Rel_.known())
         return *H1Rel_.value();
@@ -124,10 +55,9 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     unsigned long nBdryVertices = 0;
     unsigned long nBdryEdges = 0;
     unsigned long nClosedComponents = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++) {
-        nBdryVertices += (*bit)->countVertices();
-        nBdryEdges += (*bit)->countEdges();
+    for (auto bc : boundaryComponents()) {
+        nBdryVertices += bc->countVertices();
+        nBdryEdges += bc->countEdges();
     }
     for (ComponentIterator cit = components().begin();
             cit != components().end(); cit++)
@@ -202,12 +132,11 @@ const AbelianGroup& Triangulation<3>::homologyBdry() const {
     // Ensure that the skeleton has been calculated.
     ensureSkeleton();
 
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); bit++) {
-        if ((*bit)->isOrientable()) {
-            rank += (2 - (*bit)->eulerChar());
+    for (auto bc : boundaryComponents()) {
+        if (bc->isOrientable()) {
+            rank += (2 - bc->eulerChar());
         } else {
-            rank += (1 - (*bit)->eulerChar());
+            rank += (1 - bc->eulerChar());
             z2rank++;
         }
     }

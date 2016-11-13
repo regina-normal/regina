@@ -32,7 +32,7 @@
 
 #include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
-#include "triangulation/nfacepair.h"
+#include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 
@@ -62,7 +62,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
 }
 
 void NLayeredSolidTorus::transform(const Triangulation<3>* originalTri,
-        const NIsomorphism* iso, Triangulation<3>* newTri) {
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     unsigned i, j;
     size_t baseTetID = base_->index();
     size_t topTetID = topLevel_->index();
@@ -300,7 +300,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
     Tetrahedron<3>* next;
     Perm<4> cross1, cross2;
     Perm<4> canon1, canon2;
-    NFacePair pair = NFacePair(topFace1, topFace2).complement();
+    FacePair pair = FacePair(topFace1, topFace2).complement();
     Perm<4> vRoles(pair.upper(), topFace1, topFace2, pair.lower());
     Perm<4> topRoles(vRoles);
     Perm<4> nextRoles;
@@ -481,7 +481,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
 
         // Set up nextRoles so that faces tet/vRoles[0,3] are joined to
         // faces next/nextRoles[1,2] respectively.
-        pair = NFacePair(cross1[vRoles[0]], cross2[vRoles[3]]).complement();
+        pair = FacePair(cross1[vRoles[0]], cross2[vRoles[3]]).complement();
         nextRoles = Perm<4>(pair.upper(), cross1[vRoles[0]], cross2[vRoles[3]],
             pair.lower());
 
@@ -613,7 +613,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) 
     // the top level tetrahedron (which we already know), but this would
     // also require us to code up the entire structure again.
 
-    NFacePair underFaces = NFacePair(f0.triangle(), f1.triangle()).complement();
+    FacePair underFaces = FacePair(f0.triangle(), f1.triangle()).complement();
     Tetrahedron<3>* currTet = top;
     Tetrahedron<3>* nextTet;
     while (1) {
@@ -636,7 +636,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) 
             break;
 
         // No; we have simply moved on to the next tetrahedron.
-        underFaces = NFacePair(currTet->adjacentFace(underFaces.lower()),
+        underFaces = FacePair(currTet->adjacentFace(underFaces.lower()),
             currTet->adjacentFace(underFaces.upper())).complement();
         currTet = nextTet;
     }
@@ -672,7 +672,7 @@ Triangulation<3>* NLayeredSolidTorus::flatten(const Triangulation<3>* original,
         int mobiusBandBdry) const {
     // Create a new triangulation and identify the top-level and
     // base tetrahedra.
-    Triangulation<3>* ans = new Triangulation<3>(*original);
+    Triangulation<3>* ans = new Triangulation<3>(*original, false);
 
     Tetrahedron<3>* newTop = ans->tetrahedron(topLevel_->index());
     Tetrahedron<3>* newBase = ans->tetrahedron(base_->index());
@@ -700,7 +700,7 @@ Triangulation<3>* NLayeredSolidTorus::flatten(const Triangulation<3>* original,
                 Edge<3>::edgeVertex[topEdge_[2][0]][1] - topFace_[0],
             topFace_[0]);
 
-        NFacePair underFaces = NFacePair(topFace_[0], topFace_[1]).complement();
+        FacePair underFaces = FacePair(topFace_[0], topFace_[1]).complement();
         Perm<4> groups1 = Perm<4>(topFace_[0], topFace_[1]) *
             Perm<4>(underFaces.lower(), underFaces.upper()) * groups0;
 
@@ -720,15 +720,15 @@ Triangulation<3>* NLayeredSolidTorus::flatten(const Triangulation<3>* original,
     // Delete the layered solid torus tetrahedra.
     Tetrahedron<3>* curr;
     Tetrahedron<3>* next;
-    NFacePair currBdryFaces;
+    FacePair currBdryFaces;
     Perm<4> adjPerm;
 
     curr = newBase;
-    currBdryFaces = NFacePair(baseFace_[0], baseFace_[1]).complement();
+    currBdryFaces = FacePair(baseFace_[0], baseFace_[1]).complement();
     while (curr) {
         next = curr->adjacentTetrahedron(currBdryFaces.lower());
 
-        currBdryFaces = NFacePair(curr->adjacentFace(currBdryFaces.lower()),
+        currBdryFaces = FacePair(curr->adjacentFace(currBdryFaces.lower()),
             curr->adjacentFace(currBdryFaces.upper())).complement();
         ans->removeTetrahedron(curr);
         curr = next;

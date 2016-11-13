@@ -34,7 +34,7 @@
 
 #import "Tri4ViewController.h"
 #import "Tri4Graph.h"
-#import "dim4/dim4facetpairing.h"
+#import "triangulation/facetpairing.h"
 #import "treewidth/treedecomposition.h"
 #import "triangulation/dim4.h"
 #import "gvc.h"
@@ -80,7 +80,7 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
     std::string dot;
     switch (self.graphType.selectedSegmentIndex) {
         case 0: {
-            regina::Dim4FacetPairing p(*self.packet);
+            regina::FacetPairing<4> p(*self.packet);
             dot = p.dot("v", false /* subgraph */, true /* labels */);
             self.graphProperties.text = nil;
             self.graphPropertiesGap.constant = 0;

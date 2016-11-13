@@ -35,7 +35,6 @@
 #include "packet/text.h"
 #include "progress/progresstracker.h"
 #include "snappea/snappeatriangulation.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 
@@ -50,7 +49,7 @@
 #include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "choosers/boundarycomponentchooser.h"
+#include "choosers/boundary3chooser.h"
 #include "choosers/facechooser.h"
 
 #include <memory>
@@ -955,8 +954,8 @@ void Tri3GluingsUI::boundaryComponents() {
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any boundary components."));
     else {
-        regina::NBoundaryComponent* chosen =
-            BoundaryComponentDialog::choose(ui, tri, 0 /* filter */,
+        regina::BoundaryComponent<3>* chosen =
+            BoundaryComponent3Dialog::choose(ui, tri, 0 /* filter */,
             tr("Boundary Components"),
             tr("Triangulate which boundary component?"),
             tr("<qt>If you select a real boundary component, this will "

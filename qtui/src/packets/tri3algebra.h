@@ -37,6 +37,7 @@
 #ifndef __TRI3ALGEBRA_H
 #define __TRI3ALGEBRA_H
 
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 
 class GroupWidget;
@@ -47,7 +48,6 @@ class QPushButton;
 
 namespace regina {
     class Packet;
-    template <int> class Triangulation;
 };
 
 /**

@@ -37,6 +37,7 @@
 #ifndef __TRI2UI_H
 #define __TRI2UI_H
 
+#include "triangulation/forward.h"
 #include "../packettabui.h"
 
 class QToolBar;
@@ -44,10 +45,6 @@ class Tri2GluingsUI;
 class Tri2SkeletonUI;
 class PacketEditIface;
 class QLabel;
-
-namespace regina {
-    template <int> class Triangulation;
-};
 
 /**
  * A packet interface for viewing 2-manifold triangulations.

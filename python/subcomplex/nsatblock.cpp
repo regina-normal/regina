@@ -33,7 +33,6 @@
 #include <boost/python.hpp>
 #include "manifold/nsfs.h"
 #include "subcomplex/nsatblock.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

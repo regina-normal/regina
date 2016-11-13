@@ -59,7 +59,7 @@ namespace regina {
  *
  * \note The modern cusped hyperbolic census now extends to nine tetrahedra,
  * and indeed the 9-tetrahedron database is accessible through the
- * NCensus lookup routines.  However, for the time being, the scope of these
+ * Census lookup routines.  However, for the time being, the scope of these
  * NSnapPeaCensusManifold and NSnapPeaCensusTri classes is restricted to the
  * original Callahan-Hildebrand-Weeks 7-tetrahedron census only.
  *

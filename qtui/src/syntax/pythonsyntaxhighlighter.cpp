@@ -24,7 +24,7 @@ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WIT
 USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "PythonSyntaxHighlighter.h"
+#include "pythonsyntaxhighlighter.h"
 
 PythonSyntaxHighlighter::PythonSyntaxHighlighter(QTextDocument *parent)
  : QSyntaxHighlighter(parent)

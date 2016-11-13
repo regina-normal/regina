@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include <sstream>
@@ -53,23 +52,14 @@ void Vertex<3>::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << degree();
 }
 
-void Vertex<3>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (auto& emb : *this)
-        out << "  " << emb << std::endl;
-}
-
 Triangulation<2>* Vertex<3>::buildLinkDetail(bool labels,
-        NIsomorphism** inclusion) const {
+        Isomorphism<3>** inclusion) const {
     // Build the triangulation.
     Triangulation<2>* ans = new Triangulation<2>();
     Packet::ChangeEventSpan span(ans);
 
     if (inclusion)
-        *inclusion = new NIsomorphism(degree());
+        *inclusion = new Isomorphism<3>(degree());
 
     std::vector<VertexEmbedding<3>>::const_iterator it, adjIt;
     Triangle<2>* tTri;

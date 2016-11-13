@@ -37,90 +37,12 @@
 
 namespace regina {
 
-const AbelianGroup& Triangulation<4>::homologyH1() const {
-    if (H1_.known())
-        return *H1_.value();
-
-    if (isEmpty())
-        return *(H1_ = new AbelianGroup());
-
-    // Calculate the first homology.
-    ensureSkeleton();
-
-    // Build a presentation matrix.
-    // Each non-boundary not-in-forest tetrahedron is a generator.
-    // Each non-boundary triangle is a relation.
-    long nBdryTets = 0;
-    long nBdryTriangles = 0;
-    for (BoundaryComponentIterator bit = boundaryComponents_.begin();
-            bit != boundaryComponents_.end(); ++bit) {
-        nBdryTets += (*bit)->countTetrahedra();
-        nBdryTriangles += (*bit)->countTriangles();
-    }
-
-    // Cast away all unsignedness in case we run into problems subtracting.
-    long nGens = static_cast<long>(countTetrahedra()) - nBdryTets
-        - static_cast<long>(size())
-        + static_cast<long>(countComponents());
-    long nRels = static_cast<long>(countTriangles()) - nBdryTriangles;
-
-    MatrixInt pres(nRels, nGens);
-
-    // Find out which tetrahedron corresponds to which generator.
-    long* genIndex = new long[countTetrahedra()];
-    long i = 0;
-    for (Tetrahedron<4>* tet : tetrahedra())
-        if (! (tet->isBoundary() || tet->inMaximalForest()))
-            genIndex[tet->index()] = i++;
-
-    // Run through each triangle and put the corresponding relations into
-    // the matrix.
-    Pentachoron<4>* pent;
-    int facet;
-    Tetrahedron<4>* tet;
-    i = 0;
-    for (Triangle<4>* f : triangles()) {
-        if (f->isBoundary())
-            continue;
-
-        // Put in the relation corresponding to this triangle.
-        for (auto& emb : *f) {
-            pent = emb.pentachoron();
-            facet = emb.vertices()[3];
-
-            tet = pent->tetrahedron(facet);
-            if (tet->inMaximalForest())
-                continue;
-
-            // We define the "direction" for this dual edge to point
-            // from embedding tet->front() to embedding tet->back().
-            //
-            // Test whether we are traversing this dual edge forwards or
-            // backwards as we walk around the triangle (*fit).
-            if ((tet->front().pentachoron() == pent) &&
-                    (tet->front().tetrahedron() == facet))
-                pres.entry(i, genIndex[tet->index()]) += 1;
-            else
-                pres.entry(i, genIndex[tet->index()]) -= 1;
-        }
-
-        ++i;
-    }
-
-    delete[] genIndex;
-
-    // Build the group from the presentation matrix and tidy up.
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addGroup(pres);
-    return *(H1_ = ans);
-}
-
 const AbelianGroup& Triangulation<4>::homologyH2() const {
     if (H2_.known())
         return *H2_.value();
 
     if (isEmpty())
-        return *(H1_ = new AbelianGroup());
+        return *(H2_ = new AbelianGroup());
 
     ensureSkeleton();
 

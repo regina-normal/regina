@@ -578,6 +578,22 @@ class REGINA_API Perm<5> {
         std::string trunc4() const;
 
         /**
+         * Resets the images of all integers from \a from onwards to the
+         * identity map.
+         *
+         * Specifically, for each \a i in the range <i>from</i>,...,4,
+         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * 0,1,...,<i>from</i>-1 will not be altered.
+         *
+         * \pre The images of <i>from</i>,...,4 are exactly
+         * <i>from</i>,...,4, but possibly in a different order.
+         *
+         * @param from the first integer whose image should be reset.
+         * This must be between 0 and 5 inclusive.
+         */
+        void clear(unsigned from);
+
+        /**
          * Returns the index of this permutation in the Perm<5>::S5 array.
          *
          * @return the index \a i for which this permutation is equal to

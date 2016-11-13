@@ -35,7 +35,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "manifold/nsimplesurfacebundle.h"
 #include "triangulation/dim3.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::Edge;

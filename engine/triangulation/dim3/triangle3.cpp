@@ -94,14 +94,5 @@ Triangle<3>::Type Triangle<3>::type() {
     return UNKNOWN_TYPE;
 }
 
-void Triangle<3>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (auto& emb : *this)
-        out << "  " << emb << std::endl;
-}
-
 } // namespace regina
 

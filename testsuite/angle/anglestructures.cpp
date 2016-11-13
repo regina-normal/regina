@@ -33,7 +33,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "angle/anglestructures.h"
 #include "surfaces/normalsurface.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
@@ -42,7 +42,7 @@
 using regina::AngleStructure;
 using regina::AngleStructures;
 using regina::AngleStructureVector;
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::Tetrahedron;
 using regina::Triangulation;
 
@@ -81,8 +81,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         void setUp() {
             // Use pre-coded triangulations where we can.
             copyAndDelete(triFigure8,
-                NExampleTriangulation::figureEight());
-            copyAndDelete(triGieseking, NExampleTriangulation::gieseking());
+                Example<3>::figureEight());
+            copyAndDelete(triGieseking, Example<3>::gieseking());
 
             // Layered loops can be constructed automatically.
             triLoopC2.insertLayeredLoop(2, false);

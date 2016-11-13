@@ -31,26 +31,26 @@
  **************************************************************************/
 
 #include <sstream>
-#include "census/ngluingpermsearcher.h"
-#include "triangulation/nfacepair.h"
+#include "census/gluingpermsearcher3.h"
+#include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
 #include "utilities/memutils.h"
 
 namespace regina {
 
-const char NHyperbolicMinSearcher::ECLASS_TWISTED = 1;
-const char NHyperbolicMinSearcher::ECLASS_LOWDEG = 2;
+const char HyperbolicMinSearcher::ECLASS_TWISTED = 1;
+const char HyperbolicMinSearcher::ECLASS_LOWDEG = 2;
 
-const char NHyperbolicMinSearcher::dataTag_ = 'h';
+const char HyperbolicMinSearcher::dataTag_ = 'h';
 
-NHyperbolicMinSearcher::NHyperbolicMinSearcher(const NFacePairing* pairing,
-        const NFacePairing::IsoList* autos, bool orientableOnly,
-        UseGluingPerms use, void* useArgs) :
-        NEulerSearcher(0, pairing, autos, orientableOnly,
+HyperbolicMinSearcher::HyperbolicMinSearcher(const FacetPairing<3>* pairing,
+        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        GluingPermSearcher<3>::Use use, void* useArgs) :
+        EulerSearcher(0, pairing, autos, orientableOnly,
             PURGE_NON_MINIMAL_HYP, use, useArgs) {
 }
 
-void NHyperbolicMinSearcher::runSearch(long maxDepth) {
+void HyperbolicMinSearcher::runSearch(long maxDepth) {
     unsigned nTets = size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
@@ -288,13 +288,13 @@ void NHyperbolicMinSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
-void NHyperbolicMinSearcher::dumpData(std::ostream& out) const {
-    NEulerSearcher::dumpData(out);
+void HyperbolicMinSearcher::dumpData(std::ostream& out) const {
+    EulerSearcher::dumpData(out);
 }
 
-NHyperbolicMinSearcher::NHyperbolicMinSearcher(std::istream& in,
-        UseGluingPerms use, void* useArgs) :
-        NEulerSearcher(in, use, useArgs) {
+HyperbolicMinSearcher::HyperbolicMinSearcher(std::istream& in,
+        GluingPermSearcher<3>::Use use, void* useArgs) :
+        EulerSearcher(in, use, useArgs) {
     if (inputError_)
         return;
 
@@ -303,7 +303,7 @@ NHyperbolicMinSearcher::NHyperbolicMinSearcher(std::istream& in,
         inputError_ = true;
 }
 
-int NHyperbolicMinSearcher::mergeEdgeClasses() {
+int HyperbolicMinSearcher::mergeEdgeClasses() {
     /**
      * As well as detecting edges that are self-identified in reverse,
      * we strip out low-degree edges here.  Although we are also interested
@@ -393,7 +393,7 @@ int NHyperbolicMinSearcher::mergeEdgeClasses() {
     return retVal;
 }
 
-void NHyperbolicMinSearcher::splitEdgeClasses() {
+void HyperbolicMinSearcher::splitEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
 
     int v1, v2;

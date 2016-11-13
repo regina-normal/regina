@@ -36,13 +36,13 @@
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/nexampletriangulation.h"
+#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/snappea/testsnappea.h"
 
-using regina::NExampleTriangulation;
+using regina::Example;
 using regina::Perm;
 using regina::SnapPeaTriangulation;
 using regina::Tetrahedron;
@@ -163,21 +163,21 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             n4_1_2_1.setLabel("N 4_1^2,1");
 
             // Note: the non-orientable manifold below is the same as
-            // NExampleTriangulation::smallClosedNonOrblHyperbolic()),
-            // but if we build it from NExampleTriangulation then we
+            // Example<3>::smallClosedNonOrblHyperbolic()),
+            // but if we build it from Example<3> then we
             // seem to get a degenerate solution.  Using the isosig
             // gives the same triangulation with a different labelling,
             // which seems to prod SnapPea into finding a better
             // (non_geometric) solution instead.
             copyAndDelete(closedHypOr,
-                NExampleTriangulation::smallClosedOrblHyperbolic());
+                Example<3>::smallClosedOrblHyperbolic());
             closedHypOr.setLabel("or_0.94270736");
             copyAndDelete(closedHypNor, Triangulation<3>::fromIsoSig(
                 "lLLLALAQccegffiijkikkkknawmhvwcls"));
             closedHypNor.setLabel("nor_2.02988321");
 
             copyAndDelete(weberSeifert,
-                NExampleTriangulation::weberSeifert());
+                Example<3>::weberSeifert());
             weberSeifert.setLabel("Weber-Seifert");
 
             t = flatOr.newTetrahedron();
@@ -509,7 +509,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
         void spunBoundaries() {
             Triangulation<3>* f8 =
-                NExampleTriangulation::figureEight();
+                Example<3>::figureEight();
             SnapPeaTriangulation* t = new SnapPeaTriangulation(*f8);
 
             regina::NormalSurfaces* s =

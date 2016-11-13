@@ -36,7 +36,7 @@
 #import "Tri3ViewController.h"
 #import "Tri3Graph.h"
 #import "treewidth/treedecomposition.h"
-#import "triangulation/nfacepairing.h"
+#import "triangulation/facetpairing3.h"
 #import "triangulation/dim3.h"
 #import "gvc.h"
 
@@ -84,7 +84,7 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
     std::string dot;
     switch (self.graphType.selectedSegmentIndex) {
         case 0: {
-            regina::NFacePairing p(*self.packet);
+            regina::FacetPairing<3> p(*self.packet);
             dot = p.dot("v", false /* subgraph */, true /* labels */);
             self.graphProperties.text = nil;
             self.graphPropertiesGap.constant = 0;

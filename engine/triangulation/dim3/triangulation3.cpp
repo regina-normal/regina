@@ -47,13 +47,13 @@ Triangulation<3>::Triangulation(const std::string& description) {
     Triangulation<3>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        cloneFrom(*attempt);
+        swapContents(*attempt);
         setLabel(description);
     } else if ((attempt = rehydrate(description))) {
-        cloneFrom(*attempt);
+        swapContents(*attempt);
         setLabel(description);
     } else if ((attempt = fromSnapPea(description))) {
-        cloneFrom(*attempt);
+        swapContents(*attempt);
         setLabel(attempt->label());
     }
 
@@ -61,11 +61,8 @@ Triangulation<3>::Triangulation(const std::string& description) {
 }
 
 void Triangulation<3>::clearAllProperties() {
-    if (calculatedSkeleton())
-        deleteSkeleton();
+    clearBaseProperties();
 
-    fundamentalGroup_.clear();
-    H1_.clear();
     H1Rel_.clear();
     H1Bdry_.clear();
     H2_.clear();
@@ -83,6 +80,39 @@ void Triangulation<3>::clearAllProperties() {
 
     niceTreeDecomposition_.clear();
     turaevViroCache_.clear();
+}
+
+void Triangulation<3>::swapAllProperties(Triangulation<3>& other) {
+    swapBaseProperties(other);
+
+    // Properties stored directly:
+    std::swap(ideal_, other.ideal_);
+    std::swap(standard_, other.standard_);
+
+    // Properties stored using the Property<...> template class:
+    H1Rel_.swap(other.H1Rel_);
+    H1Bdry_.swap(other.H1Bdry_);
+    H2_.swap(other.H2_);
+
+    twoSphereBoundaryComponents_.swap(other.twoSphereBoundaryComponents_);
+    negativeIdealBoundaryComponents_.swap(
+        other.negativeIdealBoundaryComponents_);
+
+    zeroEfficient_.swap(other.zeroEfficient_);
+    splittingSurface_.swap(other.splittingSurface_);
+
+    threeSphere_.swap(other.threeSphere_);
+    threeBall_.swap(other.threeBall_);
+    solidTorus_.swap(other.solidTorus_);
+    irreducible_.swap(other.irreducible_);
+    compressingDisc_.swap(other.compressingDisc_);
+    haken_.swap(other.haken_);
+
+    strictAngleStructure_.swap(other.strictAngleStructure_);
+    niceTreeDecomposition_.swap(other.niceTreeDecomposition_);
+
+    // Properties stored using std::... containers:
+    turaevViroCache_.swap(other.turaevViroCache_);
 }
 
 void Triangulation<3>::writeTextLong(std::ostream& out) const {
@@ -192,16 +222,8 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
     }
     out << "  </tetrahedra>\n";
 
-    if (fundamentalGroup_.known()) {
-        out << "  <fundgroup>\n";
-        fundamentalGroup_.value()->writeXMLData(out);
-        out << "  </fundgroup>\n";
-    }
-    if (H1_.known()) {
-        out << "  <H1>";
-        H1_.value()->writeXMLData(out);
-        out << "</H1>\n";
-    }
+    writeXMLBaseProperties(out);
+
     if (H1Rel_.known()) {
         out << "  <H1Rel>";
         H1Rel_.value()->writeXMLData(out);
@@ -350,10 +372,9 @@ long Triangulation<3>::eulerCharManifold() const {
     long ans = eulerCharTri();
 
     // Truncate any ideal vertices.
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); ++it)
-        if ((*it)->isIdeal())
-            ans += (*it)->eulerChar() - 1;
+    for (auto bc : boundaryComponents())
+        if (bc->isIdeal())
+            ans += bc->eulerChar() - 1;
 
     // If we have an invalid triangulation, we need to locate invalid
     // vertices (i.e., non-standard boundary vertices) and also invalid edges,
@@ -370,52 +391,12 @@ long Triangulation<3>::eulerCharManifold() const {
     return ans;
 }
 
-void Triangulation<3>::deleteSkeleton() {
-    for (auto b : boundaryComponents_)
-        delete b;
-    boundaryComponents_.clear();
+Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
+        TriangulationBase<3>(X, cloneProps) {
+    if (! cloneProps)
+        return;
 
-    TriangulationBase<3>::deleteSkeleton();
-}
-
-void Triangulation<3>::cloneFrom(const Triangulation<3>& X) {
-    ChangeEventSpan span(this);
-
-    removeAllTetrahedra();
-
-    TetrahedronIterator it;
-    for (it = X.simplices_.begin(); it != X.simplices_.end(); it++)
-        newTetrahedron((*it)->description());
-
-    // Make the gluings.
-    long tetPos, adjPos;
-    Tetrahedron<3>* tet;
-    Tetrahedron<3>* adjTet;
-    Perm<4> adjPerm;
-    int face;
-    tetPos = 0;
-    for (it = X.simplices_.begin(); it != X.simplices_.end(); it++) {
-        tet = *it;
-        for (face=0; face<4; face++) {
-            adjTet = tet->adjacentTetrahedron(face);
-            if (adjTet) {
-                adjPos = adjTet->index();
-                adjPerm = tet->adjacentGluing(face);
-                if (adjPos > tetPos ||
-                        (adjPos == tetPos && adjPerm[face] > face)) {
-                    simplices_[tetPos]->join(face,
-                        simplices_[adjPos], adjPerm);
-                }
-            }
-        }
-        tetPos++;
-    }
-
-    // Properties:
-    if (X.fundamentalGroup_.known())
-        fundamentalGroup_= new NGroupPresentation(*X.fundamentalGroup_.value());
-    if (X.H1_.known())
-        H1_ = new AbelianGroup(*(X.H1_.value()));
+    // Clone properties:
     if (X.H1Rel_.known())
         H1Rel_ = new AbelianGroup(*(X.H1Rel_.value()));
     if (X.H1Bdry_.known())

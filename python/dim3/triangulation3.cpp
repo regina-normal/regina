@@ -34,7 +34,6 @@
 #include "angle/anglestructure.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
-#include "triangulation/nisomorphism.h"
 #include "triangulation/dim3.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
@@ -147,12 +146,12 @@ namespace {
         const Triangulation<3>& t, const Triangulation<3>& other) {
         boost::python::list ans;
 
-        std::list<regina::NIsomorphism*> isos;
+        std::list<regina::Isomorphism<3>*> isos;
         t.findAllIsomorphisms(other, back_inserter(isos));
 
-        for (std::list<regina::NIsomorphism*>::iterator it =
+        for (std::list<regina::Isomorphism<3>*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
-            std::auto_ptr<regina::NIsomorphism> iso(*it);
+            std::auto_ptr<regina::Isomorphism<3>> iso(*it);
             ans.append(iso);
         }
         return ans;
@@ -162,12 +161,12 @@ namespace {
         const Triangulation<3>& t, const Triangulation<3>& other) {
         boost::python::list ans;
 
-        std::list<regina::NIsomorphism*> isos;
+        std::list<regina::Isomorphism<3>*> isos;
         t.findAllSubcomplexesIn(other, back_inserter(isos));
 
-        for (std::list<regina::NIsomorphism*>::iterator it =
+        for (std::list<regina::Isomorphism<3>*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
-            std::auto_ptr<regina::NIsomorphism> iso(*it);
+            std::auto_ptr<regina::Isomorphism<3>> iso(*it);
             ans.append(iso);
         }
         return ans;
@@ -178,13 +177,13 @@ namespace {
     }
 
     boost::python::tuple isoSig_relabelling(const Triangulation<3>& t) {
-        regina::NIsomorphism* iso;
+        regina::Isomorphism<3>* iso;
         std::string sig = t.isoSig(&iso);
         return boost::python::make_tuple(
             sig,
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
-                apply<regina::NIsomorphism*>::type()(iso))));
+                apply<regina::Isomorphism<3>*>::type()(iso))));
     }
 }
 

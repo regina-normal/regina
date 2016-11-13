@@ -37,11 +37,8 @@
 #ifndef __SNAPPEACOMPONENTS_H
 #define __SNAPPEACOMPONENTS_H
 
+#include "triangulation/forward.h"
 #include <qlabel.h>
-
-namespace regina {
-    template <int> class Triangulation;
-};
 
 /**
  * Displays a piece of text explaining that SnapPea calculations are not

@@ -33,8 +33,8 @@
 /*! \file triangulation/dim4.h
  *  \brief Includes all headers for working with 4-dimensional triangulations.
  *  This includes headers for the main class Triangulation<4>, as well as the
- *  face classes Face<4,\a subdim> and the component classes Component<4> and
- *  Dim4BoundaryComponent.
+ *  face classes Face<4,\a subdim>, the component classes Component<4> and
+ *  BoundaryComponent<4>, and the isomorphism class Isomorphism<4>.
  */
 
 #ifndef __DIM4_H
@@ -43,6 +43,19 @@
 #endif
 
 #include "triangulation/dim4/triangulation4.h"
+
+namespace regina {
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated Instead of the old typedef Dim4Isomorphism, you should use
+ * the full class name Isomorphism<4>.
+ */
+REGINA_DEPRECATED typedef Isomorphism<4> Dim4Isomorphism;
+
+} // namespace regina
 
 #endif
 

@@ -101,6 +101,7 @@ void addPerm5() {
             .def("trunc2", &Perm<5>::trunc2)
             .def("trunc3", &Perm<5>::trunc3)
             .def("trunc4", &Perm<5>::trunc4)
+            .def("clear", &Perm<5>::clear)
             .def("S5Index", &Perm<5>::S5Index)
             .def("orderedS5Index", &Perm<5>::orderedS5Index)
             .def("orderedSnIndex", &Perm<5>::orderedS5Index)

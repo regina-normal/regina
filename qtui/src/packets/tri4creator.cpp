@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "dim4/dim4exampletriangulation.h"
+#include "triangulation/example4.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
@@ -51,7 +51,7 @@
 #include <QValidator>
 #include <QStackedWidget>
 
-using regina::Dim4ExampleTriangulation;
+using regina::Example;
 using regina::Triangulation;
 
 namespace {
@@ -234,7 +234,7 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
                 "I-bundle from."));
             return 0;
         }
-        Triangulation<4>* ans = Dim4ExampleTriangulation::iBundle(*from);
+        Triangulation<4>* ans = Example<4>::iBundle(*from);
         ans->intelligentSimplify();
         if (from->label().empty())
             ans->setLabel("I-bundle");
@@ -250,7 +250,7 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
                 "S¹-bundle from."));
             return 0;
         }
-        Triangulation<4>* ans = Dim4ExampleTriangulation::s1Bundle(*from);
+        Triangulation<4>* ans = Example<4>::s1Bundle(*from);
         ans->intelligentSimplify();
         if (from->label().empty())
             ans->setLabel("S¹-bundle");
@@ -294,17 +294,17 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_S4:
-                return Dim4ExampleTriangulation::fourSphere();
+                return Example<4>::fourSphere();
             case EXAMPLE_SIMPLICIAL_S4:
-                return Dim4ExampleTriangulation::simplicialFourSphere();
+                return Example<4>::simplicialFourSphere();
             case EXAMPLE_RP4:
-                return Dim4ExampleTriangulation::rp4();
+                return Example<4>::rp4();
             case EXAMPLE_S3xS1:
-                return Dim4ExampleTriangulation::s3xs1();
+                return Example<4>::s3xs1();
             case EXAMPLE_S3xS1TWISTED:
-                return Dim4ExampleTriangulation::s3xs1Twisted();
+                return Example<4>::s3xs1Twisted();
             case EXAMPLE_CAPPELL_SHANESON:
-                return Dim4ExampleTriangulation::cappellShaneson();
+                return Example<4>::cappellShaneson();
         }
 
         ReginaSupport::info(parentWidget,

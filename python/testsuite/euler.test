@@ -36,10 +36,10 @@ def printEuler(t, name):
 		'---', name
 
 	# Consistency check, while we're here.
-	eHom = regina.NHomologicalData(t).eulerChar()
+	eHom = regina.HomologicalData(t).eulerChar()
 	if eHom != t.eulerCharManifold():
 		print 'ERROR: Triangulation3::eulerCharManifold() and'
-		print '       NHomologicalData.eulerChar() disagree!'
+		print '       HomologicalData.eulerChar() disagree!'
 
 print 'Euler characteristics for triangulation vs compact manifold:'
 
@@ -47,26 +47,26 @@ print 'Euler characteristics for triangulation vs compact manifold:'
 printEuler(regina.Triangulation3(), "Empty triangulation")
 
 # Closed:
-printEuler(regina.NExampleTriangulation.lens(8,3), "L(8,3)")
-printEuler(regina.NExampleTriangulation.rp2xs1(), "RP2 x S1")
+printEuler(regina.Example3.lens(8,3), "L(8,3)")
+printEuler(regina.Example3.rp2xs1(), "RP2 x S1")
 
 # Bounded:
-printEuler(regina.NExampleTriangulation.solidKleinBottle(),
+printEuler(regina.Example3.solidKleinBottle(),
 	"Solid Klein bottle")
-printEuler(regina.NExampleTriangulation.lst(3,4), "LST(3,4,7)")
+printEuler(regina.Example3.lst(3,4), "LST(3,4,7)")
 
 tri = regina.Triangulation3()
 tri.newTetrahedron()
 printEuler(tri, "Solid ball")
 
 # Ideal:
-printEuler(regina.NExampleTriangulation.figureEight(),
+printEuler(regina.Example3.figureEight(),
 	"Figure eight knot complement")
-printEuler(regina.NExampleTriangulation.whiteheadLink(),
+printEuler(regina.Example3.whiteheadLink(),
 	"Whitehead link complement")
-printEuler(regina.NExampleTriangulation.gieseking(),
+printEuler(regina.Example3.gieseking(),
 	"Gieseking manifold")
-printEuler(regina.NExampleTriangulation.cuspedGenusTwoTorus(),
+printEuler(regina.Example3.cuspedGenusTwoTorus(),
 	"Cusped genus two torus")
 
 # Edge joined to itself:

@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-void addDim4BoundaryComponent();
+void addBoundaryComponent4();
 void addComponent4();
 void addEdge4();
-void addDim4ExampleTriangulation();
-void addDim4Isomorphism();
+void addExample4();
+void addIsomorphism4();
 void addPentachoron4();
 void addTetrahedron4();
 void addTriangle4();
@@ -42,11 +42,11 @@ void addTriangulation4();
 void addVertex4();
 
 void addDim4Classes() {
-    addDim4BoundaryComponent();
+    addBoundaryComponent4();
     addComponent4();
     addEdge4();
-    addDim4ExampleTriangulation();
-    addDim4Isomorphism();
+    addExample4();
+    addIsomorphism4();
     addPentachoron4();
     addTetrahedron4();
     addTriangle4();
