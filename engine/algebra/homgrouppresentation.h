@@ -367,6 +367,15 @@ class REGINA_API HomGroupPresentation :
         void writeTextLong(std::ostream& out) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NAbelianGroup has now been renamed to
+ * AbelianGroup.
+ */
+REGINA_DEPRECATED typedef HomGroupPresentation NHomGroupPresentation;
+
 /*@}*/
 
 inline HomGroupPresentation::HomGroupPresentation(

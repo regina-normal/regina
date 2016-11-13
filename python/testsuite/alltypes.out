@@ -1326,6 +1326,8 @@ NGroupPresentation : typedef ->  GroupPresentation
 NHandlebody : class
 Equality type : BY_VALUE
 
+NHomGroupPresentation : typedef ->  HomGroupPresentation
+
 NHomMarkedAbelianGroup : class
 Equality type : BY_REFERENCE
 

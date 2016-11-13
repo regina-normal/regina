@@ -83,5 +83,6 @@ void addHomGroupPresentation() {
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+    scope().attr("NHomGroupPresentation") = scope().attr("HomGroupPresentation");
 }
 
