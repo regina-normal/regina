@@ -5,7 +5,7 @@ SET ( FILES
   abeliangroup
   grouppresentation
   homgrouppresentation
-  nmarkedabeliangroup
+  markedabeliangroup
   nxmlalgebrareader
   )
 
