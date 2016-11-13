@@ -441,7 +441,7 @@ class TriangulationBase :
                  if/when the skeleton of the triangulation is computed. */
         mutable Property<GroupPresentation, StoreManagedPtr> fundGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
 
     public:
@@ -1048,7 +1048,7 @@ class TriangulationBase :
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& homology() const;
+        const AbelianGroup& homology() const;
 
         /**
          * Returns the first homology group for this triangulation.
@@ -1058,7 +1058,7 @@ class TriangulationBase :
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& homologyH1() const;
+        const AbelianGroup& homologyH1() const;
 
         /*@}*/
         /**
@@ -2044,7 +2044,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
         if (copy.fundGroup_.known())
             fundGroup_ = new GroupPresentation(*(copy.fundGroup_.value()));
         if (copy.H1_.known())
-            H1_ = new NAbelianGroup(*(copy.H1_.value()));
+            H1_ = new AbelianGroup(*(copy.H1_.value()));
     }
 }
 
@@ -2841,17 +2841,17 @@ inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
 }
 
 template <int dim>
-inline const NAbelianGroup& TriangulationBase<dim>::homologyH1() const {
+inline const AbelianGroup& TriangulationBase<dim>::homologyH1() const {
     return homology();
 }
 
 template <int dim>
-const NAbelianGroup& TriangulationBase<dim>::homology() const {
+const AbelianGroup& TriangulationBase<dim>::homology() const {
     if (H1_.known())
         return *H1_.value();
 
     if (isEmpty())
-        return *(H1_ = new NAbelianGroup());
+        return *(H1_ = new AbelianGroup());
 
     // Calculate a maximal forest in the dual 1-skeleton.
     ensureSkeleton();
@@ -2911,7 +2911,7 @@ const NAbelianGroup& TriangulationBase<dim>::homology() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(pres);
     return *(H1_ = ans);
 }

@@ -737,7 +737,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 // We expect the first homology group to be identical,
                 // or to be missing a copy of Z_2.
                 if (tri->isValid() && (tri->homology() != cover.homology())) {
-                    regina::NAbelianGroup hCover(cover.homology());
+                    regina::AbelianGroup hCover(cover.homology());
                     hCover.addTorsionElement(2);
                     if (tri->homology() != hCover) {
                         std::ostringstream msg;

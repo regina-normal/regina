@@ -120,7 +120,7 @@ class REGINA_API Triangulation<4> :
         bool ideal_;
             /**< Is the triangulation ideal? */
 
-        mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
     public:

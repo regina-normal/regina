@@ -220,7 +220,7 @@ Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
         return;
 
     if (X.H2_.known())
-        H2_ = new NAbelianGroup(*(X.H2_.value()));
+        H2_ = new AbelianGroup(*(X.H2_.value()));
 }
 
 void Triangulation<4>::clearAllProperties() {

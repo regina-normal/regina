@@ -207,7 +207,7 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          */
         class AbelianGroupPropertyReader : public XMLElementReader {
             public:
-                typedef Property<NAbelianGroup, StoreManagedPtr> PropType;
+                typedef Property<AbelianGroup, StoreManagedPtr> PropType;
                     /**< The type of the property currently being read. */
 
             private:
@@ -472,7 +472,7 @@ inline void XMLTriangulationReaderBase<dim>::AbelianGroupPropertyReader::
         endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "abeliangroup") {
-        NAbelianGroup* ans = dynamic_cast<XMLAbelianGroupReader*>(subReader)->
+        AbelianGroup* ans = dynamic_cast<XMLAbelianGroupReader*>(subReader)->
             group();
         if (ans)
             prop_ = ans;
