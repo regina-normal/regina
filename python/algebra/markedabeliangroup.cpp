@@ -175,6 +175,7 @@ void addMarkedAbelianGroup() {
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+    scope().attr("NMarkedAbelianGroup") = scope().attr("MarkedAbelianGroup");
 
     class_<HomMarkedAbelianGroup, std::auto_ptr<HomMarkedAbelianGroup>,
             boost::noncopyable>( "HomMarkedAbelianGroup",
@@ -210,5 +211,6 @@ void addMarkedAbelianGroup() {
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+    scope().attr("NHomMarkedAbelianGroup") = scope().attr("HomMarkedAbelianGroup");
 }
 

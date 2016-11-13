@@ -1334,6 +1334,8 @@ Equality type : BY_VALUE
 
 NHomGroupPresentation : typedef ->  HomGroupPresentation
 
+NHomMarkedAbelianGroup : typedef ->  HomMarkedAbelianGroup
+
 NHomologicalData : typedef ->  HomologicalData
 
 NInteger : typedef ->  Integer
@@ -1371,6 +1373,8 @@ Equality type : BY_VALUE
 
 NManifold : class
 Equality type : BY_REFERENCE
+
+NMarkedAbelianGroup : typedef ->  MarkedAbelianGroup
 
 NMatrix2 : typedef ->  Matrix2
 
