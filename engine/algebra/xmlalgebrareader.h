@@ -58,7 +58,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLAbelianGroupReader : public XMLElementReader {
+class REGINA_API XMLAbelianGroupReader : public XMLElementReader {
     private:
         AbelianGroup* group_;
             /**< The abelian group currently being read. */
@@ -67,7 +67,7 @@ class REGINA_API NXMLAbelianGroupReader : public XMLElementReader {
         /**
          * Creates a new abelian group reader.
          */
-        NXMLAbelianGroupReader();
+        XMLAbelianGroupReader();
 
         /**
          * Returns the newly allocated abelian group that has been read by
@@ -90,7 +90,7 @@ class REGINA_API NXMLAbelianGroupReader : public XMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLGroupPresentationReader : public XMLElementReader {
+class REGINA_API XMLGroupPresentationReader : public XMLElementReader {
     private:
         GroupPresentation* group_;
             /**< The group presentation currently being read. */
@@ -99,7 +99,7 @@ class REGINA_API NXMLGroupPresentationReader : public XMLElementReader {
         /**
          * Creates a new group presentation reader.
          */
-        NXMLGroupPresentationReader();
+        XMLGroupPresentationReader();
 
         /**
          * Returns the newly allocated group presentation that has been read by
@@ -121,21 +121,21 @@ class REGINA_API NXMLGroupPresentationReader : public XMLElementReader {
 
 /*@}*/
 
-// Inline functions for NXMLAbelianGroupReader
+// Inline functions for XMLAbelianGroupReader
 
-inline NXMLAbelianGroupReader::NXMLAbelianGroupReader() : group_(0) {
+inline XMLAbelianGroupReader::XMLAbelianGroupReader() : group_(0) {
 }
 
-inline AbelianGroup* NXMLAbelianGroupReader::group() {
+inline AbelianGroup* XMLAbelianGroupReader::group() {
     return group_;
 }
 
-// Inline functions for NXMLGroupPresentationReader
+// Inline functions for XMLGroupPresentationReader
 
-inline NXMLGroupPresentationReader::NXMLGroupPresentationReader() : group_(0) {
+inline XMLGroupPresentationReader::XMLGroupPresentationReader() : group_(0) {
 }
 
-inline GroupPresentation* NXMLGroupPresentationReader::group() {
+inline GroupPresentation* XMLGroupPresentationReader::group() {
     return group_;
 }
 

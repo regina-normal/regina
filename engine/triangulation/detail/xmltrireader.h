@@ -463,7 +463,7 @@ inline XMLElementReader* XMLTriangulationReaderBase<dim>::
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == "abeliangroup")
         if (! prop_.known())
-            return new NXMLAbelianGroupReader();
+            return new XMLAbelianGroupReader();
     return new XMLElementReader();
 }
 
@@ -472,7 +472,7 @@ inline void XMLTriangulationReaderBase<dim>::AbelianGroupPropertyReader::
         endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "abeliangroup") {
-        NAbelianGroup* ans = dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
+        NAbelianGroup* ans = dynamic_cast<XMLAbelianGroupReader*>(subReader)->
             group();
         if (ans)
             prop_ = ans;
@@ -494,7 +494,7 @@ inline XMLElementReader* XMLTriangulationReaderBase<dim>::
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == "group")
         if (! prop_.known())
-            return new NXMLGroupPresentationReader();
+            return new XMLGroupPresentationReader();
     return new XMLElementReader();
 }
 
@@ -504,7 +504,7 @@ inline void XMLTriangulationReaderBase<dim>::GroupPresentationPropertyReader::
         XMLElementReader* subReader) {
     if (subTagName == "group") {
         GroupPresentation* ans = dynamic_cast<
-            NXMLGroupPresentationReader*>(subReader)->group();
+            XMLGroupPresentationReader*>(subReader)->group();
         if (ans)
             prop_ = ans;
     }

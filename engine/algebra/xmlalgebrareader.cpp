@@ -94,7 +94,7 @@ namespace {
     };
 }
 
-void NXMLAbelianGroupReader::startElement(const std::string&,
+void XMLAbelianGroupReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
     long rank;
     if (valueOf(tagProps.lookup("rank"), rank))
@@ -105,7 +105,7 @@ void NXMLAbelianGroupReader::startElement(const std::string&,
         }
 }
 
-void NXMLAbelianGroupReader::initialChars(const std::string& chars) {
+void XMLAbelianGroupReader::initialChars(const std::string& chars) {
     if (group_) {
         std::list<std::string> tokens;
         if (basicTokenise(back_inserter(tokens), chars) > 0) {
@@ -123,7 +123,7 @@ void NXMLAbelianGroupReader::initialChars(const std::string& chars) {
     }
 }
 
-void NXMLGroupPresentationReader::startElement(const std::string&,
+void XMLGroupPresentationReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
     long nGen;
     if (valueOf(tagProps.lookup("generators"), nGen))
@@ -134,7 +134,7 @@ void NXMLGroupPresentationReader::startElement(const std::string&,
         }
 }
 
-XMLElementReader* NXMLGroupPresentationReader::startSubElement(
+XMLElementReader* XMLGroupPresentationReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& /* subTagProps */) {
     if (group_)
@@ -143,7 +143,7 @@ XMLElementReader* NXMLGroupPresentationReader::startSubElement(
     return new XMLElementReader();
 }
 
-void NXMLGroupPresentationReader::endSubElement(const std::string& subTagName,
+void XMLGroupPresentationReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (group_)
         if (subTagName == "reln") {
