@@ -45,7 +45,7 @@ using regina::NHomMarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::GroupPresentation;
 using regina::GroupExpression;
-using regina::NHomGroupPresentation;
+using regina::HomGroupPresentation;
 
 // These are a pretty limited set of tests.  But they're a start. -ryan
 

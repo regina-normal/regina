@@ -38,7 +38,7 @@
 
 namespace regina {
 
-NHomGroupPresentation::NHomGroupPresentation(
+HomGroupPresentation::HomGroupPresentation(
             const GroupPresentation& groupForIdentity) :
         domain_(new GroupPresentation(groupForIdentity)),
         range_(new GroupPresentation(groupForIdentity)),
@@ -53,7 +53,7 @@ NHomGroupPresentation::NHomGroupPresentation(
     }
 }
 
-GroupExpression NHomGroupPresentation::evaluate(
+GroupExpression HomGroupPresentation::evaluate(
                         const GroupExpression &arg) const
  { // evaluate at arg
    GroupExpression retval(arg);
@@ -65,7 +65,7 @@ GroupExpression NHomGroupPresentation::evaluate(
    return retval;
  }
 
-GroupExpression NHomGroupPresentation::invEvaluate(
+GroupExpression HomGroupPresentation::invEvaluate(
                     const GroupExpression &arg) const
 {
    GroupExpression retval(arg);
@@ -79,7 +79,7 @@ GroupExpression NHomGroupPresentation::invEvaluate(
 }
 
 std::unique_ptr< NHomMarkedAbelianGroup >
-    NHomGroupPresentation::markedAbelianisation() const
+    HomGroupPresentation::markedAbelianisation() const
 {
  std::unique_ptr<NMarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
  std::unique_ptr<NMarkedAbelianGroup> RAN( range_->markedAbelianisation() );
@@ -94,7 +94,7 @@ std::unique_ptr< NHomMarkedAbelianGroup >
         new NHomMarkedAbelianGroup( *DOM, *RAN, ccMat ) );
 }
 
-void NHomGroupPresentation::writeTextShort(std::ostream& out) const {
+void HomGroupPresentation::writeTextShort(std::ostream& out) const {
     if (inv_)
      out << "Isomorphism from ";
     else
@@ -104,7 +104,7 @@ void NHomGroupPresentation::writeTextShort(std::ostream& out) const {
     range_->writeTextShort(out);
 }
 
-void NHomGroupPresentation::writeTextLong(std::ostream& out) const
+void HomGroupPresentation::writeTextLong(std::ostream& out) const
 {
     if (inv_)
      out << "Isomorphism with ";
@@ -129,16 +129,16 @@ void NHomGroupPresentation::writeTextLong(std::ostream& out) const
     out<<std::endl;
 }
 
-bool NHomGroupPresentation::smallCancellation()
+bool HomGroupPresentation::smallCancellation()
 {
- std::unique_ptr<regina::NHomGroupPresentation> rangeMap =
+ std::unique_ptr<regina::HomGroupPresentation> rangeMap =
     range_->smallCancellationDetail();
- std::unique_ptr<regina::NHomGroupPresentation> domainMap =
+ std::unique_ptr<regina::HomGroupPresentation> domainMap =
     domain_->smallCancellationDetail();
  if (! domainMap.get())
-    domainMap.reset(new NHomGroupPresentation(*domain_));
+    domainMap.reset(new HomGroupPresentation(*domain_));
  if (! rangeMap.get())
-    rangeMap.reset(new NHomGroupPresentation(*range_));
+    rangeMap.reset(new HomGroupPresentation(*range_));
  GroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
                     *newDom(domain_), *newRan(range_);
  domain_ = oldDom; range_ = oldRan;// we need to call this->evaluate but our map
@@ -177,37 +177,37 @@ bool NHomGroupPresentation::smallCancellation()
  return retval;
 }
 
-std::unique_ptr<NHomGroupPresentation> NHomGroupPresentation::composeWith(
-            const NHomGroupPresentation& input) const
+std::unique_ptr<HomGroupPresentation> HomGroupPresentation::composeWith(
+            const HomGroupPresentation& input) const
 {
  std::vector<GroupExpression> evalVec(input.domain_->countGenerators());
  for (unsigned long i=0; i<evalVec.size(); i++)
   evalVec[i] = evaluate( input.evaluate(i) );
  if ( (! inv_) || (! input.inv_) )
-  return std::unique_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
+  return std::unique_ptr<HomGroupPresentation>(new HomGroupPresentation(
     *input.domain_, *range_, evalVec) );
  else
   {
     std::vector<GroupExpression> invVec( range_->countGenerators());
     for (unsigned long i=0; i<invVec.size(); i++)
      invVec[i] = input.invEvaluate( invEvaluate(i) );
-    return std::unique_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
+    return std::unique_ptr<HomGroupPresentation>(new HomGroupPresentation(
         *input.domain_, *range_, evalVec, invVec ) );
   }
 }
 
 
 
-bool NHomGroupPresentation::intelligentNielsen()
+bool HomGroupPresentation::intelligentNielsen()
 { // modelled on intelligentSimplify
- std::unique_ptr<regina::NHomGroupPresentation> rangeMap =
+ std::unique_ptr<regina::HomGroupPresentation> rangeMap =
     range_->intelligentNielsenDetail();
- std::unique_ptr<regina::NHomGroupPresentation> domainMap =
+ std::unique_ptr<regina::HomGroupPresentation> domainMap =
     domain_->intelligentNielsenDetail();
  if (! domainMap.get())
-    domainMap.reset(new NHomGroupPresentation(*domain_));
+    domainMap.reset(new HomGroupPresentation(*domain_));
  if (! rangeMap.get())
-    rangeMap.reset(new NHomGroupPresentation(*range_));
+    rangeMap.reset(new HomGroupPresentation(*range_));
  GroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
                     *newDom(domain_), *newRan(range_);
  domain_ = oldDom; range_ = oldRan;// we need to call this->evaluate but our map
@@ -246,18 +246,18 @@ bool NHomGroupPresentation::intelligentNielsen()
  return retval;
 }
 
-bool NHomGroupPresentation::intelligentSimplify()
+bool HomGroupPresentation::intelligentSimplify()
 {
  // step 1: simplify presentation of domain and range
- std::unique_ptr<regina::NHomGroupPresentation> rangeMap =
+ std::unique_ptr<regina::HomGroupPresentation> rangeMap =
     range_->intelligentSimplifyDetail();
- std::unique_ptr<regina::NHomGroupPresentation> domainMap =
+ std::unique_ptr<regina::HomGroupPresentation> domainMap =
     domain_->intelligentSimplifyDetail();
  // build identity maps if either of the above is null.
  if (! domainMap.get())
-    domainMap.reset(new NHomGroupPresentation(*domain_));
+    domainMap.reset(new HomGroupPresentation(*domain_));
  if (! rangeMap.get())
-    rangeMap.reset(new NHomGroupPresentation(*range_));
+    rangeMap.reset(new HomGroupPresentation(*range_));
 
  GroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
                     *newDom(domain_), *newRan(range_);
@@ -304,7 +304,7 @@ bool NHomGroupPresentation::intelligentSimplify()
  return retval;
 }
 
-bool NHomGroupPresentation::invert()
+bool HomGroupPresentation::invert()
 {
  if (inv_)
   {
@@ -316,7 +316,7 @@ bool NHomGroupPresentation::invert()
  return false;
 }
 
-bool NHomGroupPresentation::verify() const
+bool HomGroupPresentation::verify() const
 {
  for (unsigned long i=0; i<domain_->countRelations(); i++)
   {
@@ -328,7 +328,7 @@ bool NHomGroupPresentation::verify() const
  return true;
 }
 
-bool NHomGroupPresentation::verifyIsomorphism() const
+bool HomGroupPresentation::verifyIsomorphism() const
 {
  if (! inv_) return false;
 

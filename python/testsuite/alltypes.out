@@ -1167,6 +1167,9 @@ Equality type : BY_VALUE
 GroupPresentation : class
 Equality type : BY_REFERENCE
 
+HomGroupPresentation : class
+Equality type : BY_REFERENCE
+
 HomologicalData : class
 Equality type : BY_REFERENCE
 
@@ -1322,9 +1325,6 @@ NGroupPresentation : typedef ->  GroupPresentation
 
 NHandlebody : class
 Equality type : BY_VALUE
-
-NHomGroupPresentation : class
-Equality type : BY_REFERENCE
 
 NHomMarkedAbelianGroup : class
 Equality type : BY_REFERENCE

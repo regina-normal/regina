@@ -56,7 +56,7 @@
 namespace regina {
 
 class AbelianGroup;
-class NHomGroupPresentation;
+class HomGroupPresentation;
 class NMarkedAbelianGroup;
 
 /**
@@ -839,7 +839,7 @@ class REGINA_API GroupPresentation :
          *
          * If this routine does return a homomorphism (because the
          * presentation was changed), then this homomorphsm will in fact be
-         * a declared isomorphism.  See the NHomGroupPresentation class
+         * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
          * @return a newly allocated homomorphism describing the
@@ -847,7 +847,7 @@ class REGINA_API GroupPresentation :
          * presentation, or a null pointer if this presentation was not
          * changed.
          */
-        std::unique_ptr<NHomGroupPresentation> intelligentSimplifyDetail();
+        std::unique_ptr<HomGroupPresentation> intelligentSimplifyDetail();
 
         /**
          * Attempts to simplify the group presentation using only small
@@ -873,7 +873,7 @@ class REGINA_API GroupPresentation :
          *
          * If this routine does return a homomorphism (because the
          * presentation was changed), then this homomorphsm will in fact be
-         * a declared isomorphism.  See the NHomGroupPresentation class
+         * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
          * \todo \optlong This routine could use some small tweaks -
@@ -885,7 +885,7 @@ class REGINA_API GroupPresentation :
          * presentation, or a null pointer if this presentation was not
          * changed.
          */
-        std::unique_ptr<NHomGroupPresentation> smallCancellationDetail();
+        std::unique_ptr<HomGroupPresentation> smallCancellationDetail();
 
         /**
          * Uses small cancellation theory to reduce the input word,
@@ -1103,14 +1103,14 @@ class REGINA_API GroupPresentation :
          *
          * If this routine does return a homomorphism (because some
          * move was performed), then this homomorphsm will in fact be
-         * a declared isomorphism.  See the NHomGroupPresentation class
+         * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
          * @return a newly allocated homomorphism describing the
          * map from the original presentation to the new presentation,
          * or a null pointer if no move was performed.
          */
-        std::unique_ptr<NHomGroupPresentation> intelligentNielsenDetail();
+        std::unique_ptr<HomGroupPresentation> intelligentNielsenDetail();
 
         /**
          * Rewrites the presentation so that generators
@@ -1144,14 +1144,14 @@ class REGINA_API GroupPresentation :
          *
          * If this routine does return a homomorphism (because the
          * presentation was changed), then this homomorphsm will in fact be
-         * a declared isomorphism.  See the NHomGroupPresentation class
+         * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
          * @return a newly allocated homomorphism giving the reduction map
          * from the old presentation to the new, or a null pointer if
          * this presentation was not changed.
          */
-        std::unique_ptr<NHomGroupPresentation> homologicalAlignmentDetail();
+        std::unique_ptr<HomGroupPresentation> homologicalAlignmentDetail();
 
         /**
          * An entirely cosmetic re-writing of the presentation, which is
@@ -1183,7 +1183,7 @@ class REGINA_API GroupPresentation :
          *
          * If this routine does return a homomorphism (because the choice of
          * generators was changed), then this homomorphsm will in fact be
-         * a declared isomorphism.  See the NHomGroupPresentation class
+         * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
          * \todo As a final step, make elementary simplifications to aid in
@@ -1193,7 +1193,7 @@ class REGINA_API GroupPresentation :
          * map from the original presentation to the new presentation,
          * or a null pointer if the choice of generators did not change.
          */
-        std::unique_ptr<NHomGroupPresentation> prettyRewritingDetail();
+        std::unique_ptr<HomGroupPresentation> prettyRewritingDetail();
 
         /**
          * Attempts to prove that this and the given group presentation are
@@ -1317,7 +1317,7 @@ class REGINA_API GroupPresentation :
          * it will be an automorphism of a presentation of the kernel of the
          * map this to the integers.
          */
-        std::unique_ptr< NHomGroupPresentation > identifyExtensionOverZ();
+        std::unique_ptr< HomGroupPresentation > identifyExtensionOverZ();
 
         /**
          * Attempts to determine if this group is clearly a free

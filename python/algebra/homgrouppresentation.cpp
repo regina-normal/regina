@@ -40,46 +40,46 @@
 using namespace boost::python;
 using regina::GroupExpression;
 using regina::GroupPresentation;
-using regina::NHomGroupPresentation;
+using regina::HomGroupPresentation;
 
 namespace {
-    GroupExpression (NHomGroupPresentation::*evaluate_ulong)(
-        unsigned long) const = &NHomGroupPresentation::evaluate;
-    GroupExpression (NHomGroupPresentation::*evaluate_exp)(
-        const GroupExpression&) const = &NHomGroupPresentation::evaluate;
-    GroupExpression (NHomGroupPresentation::*invEvaluate_ulong)(
-        unsigned long) const = &NHomGroupPresentation::invEvaluate;
-    GroupExpression (NHomGroupPresentation::*invEvaluate_exp)(
-        const GroupExpression&) const = &NHomGroupPresentation::invEvaluate;
+    GroupExpression (HomGroupPresentation::*evaluate_ulong)(
+        unsigned long) const = &HomGroupPresentation::evaluate;
+    GroupExpression (HomGroupPresentation::*evaluate_exp)(
+        const GroupExpression&) const = &HomGroupPresentation::evaluate;
+    GroupExpression (HomGroupPresentation::*invEvaluate_ulong)(
+        unsigned long) const = &HomGroupPresentation::invEvaluate;
+    GroupExpression (HomGroupPresentation::*invEvaluate_exp)(
+        const GroupExpression&) const = &HomGroupPresentation::invEvaluate;
 }
 
-void addNHomGroupPresentation() {
-    class_<NHomGroupPresentation, std::auto_ptr<NHomGroupPresentation>,
+void addHomGroupPresentation() {
+    class_<HomGroupPresentation, std::auto_ptr<HomGroupPresentation>,
             boost::noncopyable>
-            ("NHomGroupPresentation", init<const NHomGroupPresentation&>())
+            ("HomGroupPresentation", init<const HomGroupPresentation&>())
         .def(init<const GroupPresentation&>())
-        .def("domain", &NHomGroupPresentation::domain,
+        .def("domain", &HomGroupPresentation::domain,
             return_internal_reference<>())
-        .def("range", &NHomGroupPresentation::range,
+        .def("range", &HomGroupPresentation::range,
             return_internal_reference<>())
-        .def("knowsInverse", &NHomGroupPresentation::knowsInverse)
+        .def("knowsInverse", &HomGroupPresentation::knowsInverse)
         .def("evaluate", evaluate_exp)
         .def("evaluate", evaluate_ulong)
         .def("invEvaluate", invEvaluate_exp)
         .def("invEvaluate", invEvaluate_ulong)
         .def("intelligentSimplify",
-            &NHomGroupPresentation::intelligentSimplify)
+            &HomGroupPresentation::intelligentSimplify)
         .def("intelligentNielsen",
-            &NHomGroupPresentation::intelligentNielsen)
+            &HomGroupPresentation::intelligentNielsen)
         .def("smallCancellation",
-            &NHomGroupPresentation::smallCancellation)
+            &HomGroupPresentation::smallCancellation)
         .def("composeWith",
-            &NHomGroupPresentation::composeWith)
-        .def("invert", &NHomGroupPresentation::invert)
-        .def("verify", &NHomGroupPresentation::verify)
-        .def("verifyIsomorphism", &NHomGroupPresentation::verifyIsomorphism)
+            &HomGroupPresentation::composeWith)
+        .def("invert", &HomGroupPresentation::invert)
+        .def("verify", &HomGroupPresentation::verify)
+        .def("verifyIsomorphism", &HomGroupPresentation::verifyIsomorphism)
         .def("markedAbelianisation",
-            &NHomGroupPresentation::markedAbelianisation)
+            &HomGroupPresentation::markedAbelianisation)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

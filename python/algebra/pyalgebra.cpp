@@ -32,13 +32,13 @@
 
 void addAbelianGroup();
 void addGroupPresentation();
-void addNHomGroupPresentation();
+void addHomGroupPresentation();
 void addNMarkedAbelianGroup();
 
 void addAlgebraClasses() {
     addAbelianGroup();
     addGroupPresentation();
-    addNHomGroupPresentation();
+    addHomGroupPresentation();
     addNMarkedAbelianGroup();
 }
 

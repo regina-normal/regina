@@ -61,7 +61,7 @@ class GroupPresentation;
  * that the user (or some other function in Regina) has proven that this
  * is an isomorphism and has explicitly provided the inverse map.
  * To provide the inverse map, you should call the four-argument constructor
- * NHomGroupPresentation(const GroupPresentation&, const GroupPresentation&,
+ * HomGroupPresentation(const GroupPresentation&, const GroupPresentation&,
  * const std::vector<GroupExpression>&, const std::vector<GroupExpression>&).
  *
  * You can test for a declared isomorphism by calling knowsInverse().  Even
@@ -72,8 +72,8 @@ class GroupPresentation;
  *
  * \todo Add a routine to attempt to verify validity of homomorphism.
  */
-class REGINA_API NHomGroupPresentation :
-        public Output<NHomGroupPresentation>,
+class REGINA_API HomGroupPresentation :
+        public Output<HomGroupPresentation>,
         public boost::noncopyable {
     private:
         GroupPresentation* domain_;
@@ -103,7 +103,7 @@ class REGINA_API NHomGroupPresentation :
          *
          * \ifacespython Not present.
          */
-        NHomGroupPresentation(const GroupPresentation &domain,
+        HomGroupPresentation(const GroupPresentation &domain,
                 const GroupPresentation &range,
                 const std::vector<GroupExpression> &map);
 
@@ -127,7 +127,7 @@ class REGINA_API NHomGroupPresentation :
          * sends the <i>i</i>th generator of the range to the
          * element <tt>inv[i]</tt> of the domain.
          */
-        NHomGroupPresentation(const GroupPresentation &domain,
+        HomGroupPresentation(const GroupPresentation &domain,
                 const GroupPresentation &range,
                 const std::vector<GroupExpression> &map,
                 const std::vector<GroupExpression> &inv);
@@ -136,24 +136,24 @@ class REGINA_API NHomGroupPresentation :
          * Creates a new identity homomorphism for the given group.
          *
          * This will be a declared isomorphism (see the
-         * NHomGroupPresentation class notes for details).
+         * HomGroupPresentation class notes for details).
          *
          * @param groupForIdentity both the range and domain of the
          * new identity homomorphism.
          */
-        NHomGroupPresentation(const GroupPresentation& groupForIdentity);
+        HomGroupPresentation(const GroupPresentation& groupForIdentity);
 
         /**
          * Creates a clone of the given group presentation.
          *
          * @param cloneMe the presentation to clone.
          */
-        NHomGroupPresentation(const NHomGroupPresentation& cloneMe);
+        HomGroupPresentation(const HomGroupPresentation& cloneMe);
 
         /**
          * Destroys the group homomorphism.
          */
-        ~NHomGroupPresentation();
+        ~HomGroupPresentation();
 
         /**
          * The domain of the map.
@@ -173,7 +173,7 @@ class REGINA_API NHomGroupPresentation :
          *
          * A <i>declared isomorphism</i> is a isomorphism for which the
          * user has explicitly provided the inverse map.  See the
-         * NHomGroupPresentation class notes for details.
+         * HomGroupPresentation class notes for details.
          *
          * @return \c true if and only if this is a declared
          * isomorphism, i.e, the inverse map was explicitly provided.
@@ -200,7 +200,7 @@ class REGINA_API NHomGroupPresentation :
          * Evaluate the isomorphisms's inverse at an element of the range.
          *
          * \pre This homomorphism is in fact a declared isomorphism.
-         * See the NHomGroupPresentation class notes for details
+         * See the HomGroupPresentation class notes for details
          * on what this means.
          *
          * @param arg an element of the range.
@@ -211,7 +211,7 @@ class REGINA_API NHomGroupPresentation :
          * Evaluate the isomorphism at a generator of the range.
          *
          * \pre This homomorphism is in fact a declared isomorphism.
-         * See the NHomGroupPresentation class notes for details
+         * See the HomGroupPresentation class notes for details
          * on what this means.
          *
          * @param i the index of a generator in the range.
@@ -266,15 +266,15 @@ class REGINA_API NHomGroupPresentation :
          * @param input the homomorphism to compose with this.
          * @return the composition of both homomorphisms.
          */
-        std::unique_ptr<NHomGroupPresentation> composeWith(
-            const NHomGroupPresentation& input) const;
+        std::unique_ptr<HomGroupPresentation> composeWith(
+            const HomGroupPresentation& input) const;
 
         /**
          * Inverts the homomorphism.
          *
          * This is only possible if the homomorphism is in fact a
          * declared isomorphism (which means that the inverse map is
-         * already stored internally).  See the NHomGroupPresentation
+         * already stored internally).  See the HomGroupPresentation
          * class notes for further details on declared isomorphisms.
          *
          * If this is not a declared isomorphism then this routine
@@ -331,7 +331,7 @@ class REGINA_API NHomGroupPresentation :
          * an isomorphism.
          *
          * \pre This homomorphism is in fact a declared isomorphism.
-         * See the NHomGroupPresentation class notes for details
+         * See the HomGroupPresentation class notes for details
          * on what this means.
          *
          * @return \c true if it is verified that this is an
@@ -369,7 +369,7 @@ class REGINA_API NHomGroupPresentation :
 
 /*@}*/
 
-inline NHomGroupPresentation::NHomGroupPresentation(
+inline HomGroupPresentation::HomGroupPresentation(
             const GroupPresentation &domain,
             const GroupPresentation &range,
             const std::vector<GroupExpression> &map ) :
@@ -381,7 +381,7 @@ inline NHomGroupPresentation::NHomGroupPresentation(
         map_[i] = new GroupExpression(map[i]);
 }
 
-inline NHomGroupPresentation::NHomGroupPresentation(
+inline HomGroupPresentation::HomGroupPresentation(
             const GroupPresentation &domain,
             const GroupPresentation &range,
             const std::vector<GroupExpression> &map,
@@ -397,8 +397,8 @@ inline NHomGroupPresentation::NHomGroupPresentation(
         (*inv_)[i] = new GroupExpression(inv[i]);
 }
 
-inline NHomGroupPresentation::NHomGroupPresentation(
-        const NHomGroupPresentation& cloneMe) :
+inline HomGroupPresentation::HomGroupPresentation(
+        const HomGroupPresentation& cloneMe) :
         domain_(new GroupPresentation(*cloneMe.domain_)),
         range_(new GroupPresentation(*cloneMe.range_)) {
     map_.resize(cloneMe.map_.size());
@@ -413,7 +413,7 @@ inline NHomGroupPresentation::NHomGroupPresentation(
         inv_ = 0;
 }
 
-inline NHomGroupPresentation::~NHomGroupPresentation() {
+inline HomGroupPresentation::~HomGroupPresentation() {
     for (unsigned long i=0; i<map_.size(); i++)
         delete map_[i];
     if (inv_) {
@@ -424,23 +424,23 @@ inline NHomGroupPresentation::~NHomGroupPresentation() {
     delete domain_; delete range_;
 }
 
-inline const GroupPresentation& NHomGroupPresentation::domain() const {
+inline const GroupPresentation& HomGroupPresentation::domain() const {
     return *domain_;
 }
 
-inline const GroupPresentation& NHomGroupPresentation::range() const {
+inline const GroupPresentation& HomGroupPresentation::range() const {
     return *range_;
 }
 
-inline bool NHomGroupPresentation::knowsInverse() const {
+inline bool HomGroupPresentation::knowsInverse() const {
     return inv_;
 }
 
-inline GroupExpression NHomGroupPresentation::evaluate(unsigned long i) const {
+inline GroupExpression HomGroupPresentation::evaluate(unsigned long i) const {
     return *(map_[i]);
 }
 
-inline GroupExpression NHomGroupPresentation::invEvaluate(unsigned long i)
+inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)
         const {
     return *((*inv_)[i]);
 }
