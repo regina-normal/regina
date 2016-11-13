@@ -84,15 +84,6 @@ class REGINA_API XMLAbelianGroupReader : public XMLElementReader {
 };
 
 /**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NXMLAbelianGroupReader has now been renamed to
- * XMLAbelianGroupReader.
- */
-REGINA_DEPRECATED typedef XMLAbelianGroupReader NXMLAbelianGroupReader;
-
-/**
  * An XML element reader that reads a single group presentation.
  * A group presentation is generally contained within a
  * <tt>\<group\></tt> ... <tt>\</group\></tt> pair.
@@ -127,15 +118,6 @@ class REGINA_API XMLGroupPresentationReader : public XMLElementReader {
         virtual void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader);
 };
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NXMLGroupPresentationReader has now been renamed to
- * XMLGroupPresentationReader.
- */
-REGINA_DEPRECATED typedef XMLGroupPresentationReader NXMLGroupPresentationReader;
 
 /*@}*/
 

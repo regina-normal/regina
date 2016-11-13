@@ -26,6 +26,5 @@ if (${REGINA_INSTALL_DEV})
     markedabeliangroup.h
     nmarkedabeliangroup.h
     xmlalgebrareader.h
-    nxmlalgebrareader.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

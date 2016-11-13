@@ -457,7 +457,6 @@
 		052F9E86180600FB00FAE4DF /* ngrouppresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C03180600FA00FAE4DF /* ngrouppresentation.h */; };
 		052F9E88180600FB00FAE4DF /* nhomgrouppresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C05180600FA00FAE4DF /* nhomgrouppresentation.h */; };
 		052F9E8A180600FB00FAE4DF /* nmarkedabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C07180600FA00FAE4DF /* nmarkedabeliangroup.h */; };
-		052F9E8C180600FB00FAE4DF /* nxmlalgebrareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C09180600FA00FAE4DF /* nxmlalgebrareader.h */; };
 		052F9E93180600FB00FAE4DF /* closedprimemin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C13180600FA00FAE4DF /* closedprimemin.cpp */; };
 		052F9E94180600FB00FAE4DF /* compact.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C15180600FA00FAE4DF /* compact.cpp */; };
 		052F9E9A180600FB00FAE4DF /* dim2gluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C1B180600FA00FAE4DF /* dim2gluingperms.h */; };
@@ -2559,7 +2558,6 @@
 		052F9C03180600FA00FAE4DF /* ngrouppresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ngrouppresentation.h; sourceTree = "<group>"; };
 		052F9C05180600FA00FAE4DF /* nhomgrouppresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomgrouppresentation.h; sourceTree = "<group>"; };
 		052F9C07180600FA00FAE4DF /* nmarkedabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmarkedabeliangroup.h; sourceTree = "<group>"; };
-		052F9C09180600FA00FAE4DF /* nxmlalgebrareader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlalgebrareader.h; sourceTree = "<group>"; };
 		052F9C0B180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C13180600FA00FAE4DF /* closedprimemin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = closedprimemin.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		052F9C14180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -4731,7 +4729,6 @@
 				052F9C03180600FA00FAE4DF /* ngrouppresentation.h */,
 				052F9C05180600FA00FAE4DF /* nhomgrouppresentation.h */,
 				052F9C07180600FA00FAE4DF /* nmarkedabeliangroup.h */,
-				052F9C09180600FA00FAE4DF /* nxmlalgebrareader.h */,
 				05FB46E21DD92D4A00BB00E5 /* xmlalgebrareader.cpp */,
 				05FB46E31DD92D4A00BB00E5 /* xmlalgebrareader.h */,
 			);
@@ -6700,7 +6697,6 @@
 				052F9F4D180600FB00FAE4DF /* ray.h in Headers */,
 				052F9F3E180600FB00FAE4DF /* matrix.h in Headers */,
 				052F9F47180600FB00FAE4DF /* nperm5.h in Headers */,
-				052F9E8C180600FB00FAE4DF /* nxmlalgebrareader.h in Headers */,
 				052AB7101C6304A800C44D54 /* facetspec.h in Headers */,
 				0583656218DB8876008B08D9 /* double_SnapPy.h in Headers */,
 				052F9F2F180600FB00FAE4DF /* nsfsaltset.h in Headers */,
