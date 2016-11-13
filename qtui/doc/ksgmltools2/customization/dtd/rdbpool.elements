@@ -47,7 +47,6 @@
 <!ENTITY % confgroup.content.module "IGNORE">
 <!ENTITY % graphic.module "IGNORE">
 <!ENTITY % graphicco.module "IGNORE">
-<!ENTITY % imageobjectco.module "IGNORE">
 <!ENTITY % inlinegraphic.module "IGNORE">
 <!ENTITY % revhistory.content.module "IGNORE">
 <!-- end of kde.remove.unused.elements -->]]>

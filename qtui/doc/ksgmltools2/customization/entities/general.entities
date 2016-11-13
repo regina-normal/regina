@@ -122,6 +122,7 @@
 <!ENTITY blinken	"<application>Blinken</application>">
 <!ENTITY bovo	"<application>Bovo</application>">
 <!ENTITY BSD "<trademark>BSD</trademark>">
+<!ENTITY calligra "Calligra">
 <!ENTITY cantor "<application>Cantor</application>">
 <!ENTITY catalogmanager	"<application>Catalog Manager</application>">
 <!ENTITY CD	"<acronym>CD</acronym>">
@@ -159,6 +160,7 @@
 <!ENTITY IRIX	'<trademark class="registered">IRIX</trademark>'>
 <!ENTITY Java	"<trademark>Java</trademark>">
 <!ENTITY Jini	"<trademark>Jini</trademark>">
+<!ENTITY jovie  "<application>Jovie</application>">
 <!ENTITY juk	"<application>JuK</application>">
 <!ENTITY kaboodle	"<application>Kaboodle</application>">
 <!ENTITY kaddressbook	"<application>KAddressBook</application>">
@@ -271,6 +273,7 @@
 <!ENTITY kmouth "<application>KMouth</application>">
 <!ENTITY kmousetool "<application>KMouseTool</application>">
 <!ENTITY kmplot	"<application>KmPlot</application>">
+<!ENTITY kmymoney	"<application>KMyMoney</application>">
 <!ENTITY knetattach     "<application>KNetAttach</application>">
 <!ENTITY knetwalk       "<application>KNetWalk</application>">
 <!ENTITY knewsticker	"<application>KNewsTicker</application>">
