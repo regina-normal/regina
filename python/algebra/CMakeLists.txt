@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   abeliangroup
-  ngrouppresentation
+  grouppresentation
   nhomgrouppresentation
   nmarkedabeliangroup
   pyalgebra

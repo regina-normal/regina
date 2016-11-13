@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  ngrouppresentation
+  grouppresentation
   )
 
 # Prepend folder name
