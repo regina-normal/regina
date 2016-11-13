@@ -6,7 +6,7 @@ SET ( FILES
   grouppresentation
   homgrouppresentation
   markedabeliangroup
-  nxmlalgebrareader
+  xmlalgebrareader
   )
 
 # Prepend folder name
