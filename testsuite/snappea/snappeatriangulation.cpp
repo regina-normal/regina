@@ -589,7 +589,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             s.fill(m, l);
 
-            const regina::NAbelianGroup* h1 = s.homologyFilled();
+            const regina::AbelianGroup* h1 = s.homologyFilled();
             if (! h1) {
                 std::ostringstream msg;
                 msg << "Could not compute filled homology for "

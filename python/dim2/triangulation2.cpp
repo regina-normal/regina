@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "triangulation/dim2.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"

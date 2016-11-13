@@ -67,7 +67,7 @@
  * This option may not be used with any of the other options listed above.
  */
 
-#include <algebra/nabeliangroup.h>
+#include <algebra/abeliangroup.h>
 #include <manifold/nmanifold.h>
 #include <packet/container.h>
 #include <subcomplex/nstandardtri.h>
@@ -185,7 +185,7 @@ bool process(Container* c) {
         if (rawList) {
             std::cout << name;
 
-            NAbelianGroup* h1 = mfd->homology();
+            AbelianGroup* h1 = mfd->homology();
             if (h1) {
                 std::cout << ", H1 = " << h1->str();
                 delete h1;

@@ -48,8 +48,8 @@ class QLabel;
 class QSize;
 
 namespace regina {
-    class NGroupExpression;
-    class NGroupPresentation;
+    class GroupExpression;
+    class GroupPresentation;
 };
 
 /**
@@ -83,15 +83,15 @@ class GAPRunner : public QDialog {
         /**
          * Group information.
          */
-        const regina::NGroupPresentation& origGroup;
-        std::unique_ptr<regina::NGroupPresentation> newGroup;
+        const regina::GroupPresentation& origGroup;
+        std::unique_ptr<regina::GroupPresentation> newGroup;
 
     public:
         /**
          * Constructor and destructor.
          */
         GAPRunner(QWidget* parent, const QString& useExec,
-            const regina::NGroupPresentation& useOrigGroup);
+            const regina::GroupPresentation& useOrigGroup);
         ~GAPRunner();
 
         /**
@@ -105,7 +105,7 @@ class GAPRunner : public QDialog {
          * If no simplified group has been created, a null pointer will
          * be returned.
          */
-        std::unique_ptr<regina::NGroupPresentation> simplifiedGroup();
+        std::unique_ptr<regina::GroupPresentation> simplifiedGroup();
 
     protected slots:
         /**
@@ -132,8 +132,8 @@ class GAPRunner : public QDialog {
         bool appearsValid(const QString& output);
         void processOutput(const QString& output);
         QString origGroupRelns();
-        QString origGroupReln(const regina::NGroupExpression& reln);
-        regina::NGroupExpression* parseRelation(const QString& reln);
+        QString origGroupReln(const regina::GroupExpression& reln);
+        regina::GroupExpression* parseRelation(const QString& reln);
 
         /**
          * Display an error to the user and cancel the operation.

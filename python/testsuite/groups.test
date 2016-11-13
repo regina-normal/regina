@@ -48,12 +48,12 @@ def makeMatrix(rows, cols, values):
 	return m
 
 def makeGroup(rowsM, colsM, valuesM, rowsN, colsN, valuesN):
-	return regina.NMarkedAbelianGroup(
+	return regina.MarkedAbelianGroup(
 		makeMatrix(rowsM, colsM, valuesM),
 		makeMatrix(rowsN, colsN, valuesN))
 
 def makeHom(domain, range, rows, cols, values):
-	return regina.NHomMarkedAbelianGroup(
+	return regina.HomMarkedAbelianGroup(
 		domain, range, makeMatrix(rows, cols, values))
 
 def groupStats(g):

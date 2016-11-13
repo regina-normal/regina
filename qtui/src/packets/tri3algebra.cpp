@@ -31,8 +31,8 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "algebra/ngrouppresentation.h"
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/grouppresentation.h"
+#include "algebra/markedabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "triangulation/homologicaldata.h"
 #include "triangulation/dim3.h"
@@ -275,7 +275,7 @@ void Tri3HomologyFundUI::refresh() {
 }
 
 void Tri3HomologyFundUI::fundGroupSimplified() {
-    regina::NGroupPresentation* simp = fgGroup->takeSimplifiedGroup();
+    regina::GroupPresentation* simp = fgGroup->takeSimplifiedGroup();
     if (simp)
         tri->simplifiedFundamentalGroup(simp);
 }

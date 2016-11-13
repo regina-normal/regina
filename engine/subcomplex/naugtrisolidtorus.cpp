@@ -32,7 +32,7 @@
 
 #include <algorithm>
 #include <utility>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"

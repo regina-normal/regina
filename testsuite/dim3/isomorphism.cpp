@@ -33,12 +33,12 @@
 #include <algorithm>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
-using regina::NAbelianGroup;
+using regina::AbelianGroup;
 using regina::Example;
 using regina::Isomorphism;
 using regina::Perm;
@@ -208,7 +208,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             if (! image->isClosed())
                 CPPUNIT_FAIL(msg.str() + "that was not closed.");
 
-            const NAbelianGroup& h1 = image->homology();
+            const AbelianGroup& h1 = image->homology();
             if (h1.rank() != 1 || h1.countInvariantFactors() != 1 ||
                     h1.invariantFactor(0) != 2)
                 CPPUNIT_FAIL(msg.str() + "that had homology different from "

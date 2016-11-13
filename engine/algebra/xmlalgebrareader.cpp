@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nxmlalgebrareader.h"
+#include "algebra/xmlalgebrareader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -44,15 +44,15 @@ namespace {
      */
     class NExpressionReader : public XMLElementReader {
         private:
-            NGroupExpression* exp;
+            GroupExpression* exp;
             long nGens;
 
         public:
-            NExpressionReader(long newNGens) : exp(new NGroupExpression()),
+            NExpressionReader(long newNGens) : exp(new GroupExpression()),
                     nGens(newNGens) {
             }
 
-            NGroupExpression* getExpression() {
+            GroupExpression* getExpression() {
                 return exp;
             }
 
@@ -94,18 +94,18 @@ namespace {
     };
 }
 
-void NXMLAbelianGroupReader::startElement(const std::string&,
+void XMLAbelianGroupReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
     long rank;
     if (valueOf(tagProps.lookup("rank"), rank))
         if (rank >= 0) {
-            group_ = new NAbelianGroup();
+            group_ = new AbelianGroup();
             if (rank)
                 group_->addRank(rank);
         }
 }
 
-void NXMLAbelianGroupReader::initialChars(const std::string& chars) {
+void XMLAbelianGroupReader::initialChars(const std::string& chars) {
     if (group_) {
         std::list<std::string> tokens;
         if (basicTokenise(back_inserter(tokens), chars) > 0) {
@@ -123,18 +123,18 @@ void NXMLAbelianGroupReader::initialChars(const std::string& chars) {
     }
 }
 
-void NXMLGroupPresentationReader::startElement(const std::string&,
+void XMLGroupPresentationReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
     long nGen;
     if (valueOf(tagProps.lookup("generators"), nGen))
         if (nGen >= 0) {
-            group_ = new NGroupPresentation();
+            group_ = new GroupPresentation();
             if (nGen)
                 group_->addGenerator(nGen);
         }
 }
 
-XMLElementReader* NXMLGroupPresentationReader::startSubElement(
+XMLElementReader* XMLGroupPresentationReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& /* subTagProps */) {
     if (group_)
@@ -143,11 +143,11 @@ XMLElementReader* NXMLGroupPresentationReader::startSubElement(
     return new XMLElementReader();
 }
 
-void NXMLGroupPresentationReader::endSubElement(const std::string& subTagName,
+void XMLGroupPresentationReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (group_)
         if (subTagName == "reln") {
-            NGroupExpression* exp =
+            GroupExpression* exp =
                 dynamic_cast<NExpressionReader*>(subReader)->getExpression();
             if (exp)
                 group_->addRelation(exp);

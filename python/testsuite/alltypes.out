@@ -1,3 +1,6 @@
+AbelianGroup : class
+Equality type : BY_VALUE
+
 AngleStructure : class
 Equality type : BY_REFERENCE
 
@@ -1155,6 +1158,21 @@ Equality type : NEVER_INSTANTIATED
 GluingPermSearcher3 : class
 Equality type : BY_REFERENCE
 
+GroupExpression : class
+Equality type : BY_VALUE
+
+GroupExpressionTerm : class
+Equality type : BY_VALUE
+
+GroupPresentation : class
+Equality type : BY_REFERENCE
+
+HomGroupPresentation : class
+Equality type : BY_REFERENCE
+
+HomMarkedAbelianGroup : class
+Equality type : BY_REFERENCE
+
 HomologicalData : class
 Equality type : BY_REFERENCE
 
@@ -1215,6 +1233,9 @@ Equality type : BY_VALUE
 Locale : class
 Equality type : NEVER_INSTANTIATED
 
+MarkedAbelianGroup : class
+Equality type : BY_REFERENCE
+
 Matrix2 : class
 Equality type : BY_VALUE
 
@@ -1224,8 +1245,7 @@ Equality type : BY_VALUE
 MatrixInt : class
 Equality type : BY_VALUE
 
-NAbelianGroup : class
-Equality type : BY_VALUE
+NAbelianGroup : typedef ->  AbelianGroup
 
 NAngleStructure : typedef ->  AngleStructure
 
@@ -1303,23 +1323,18 @@ Equality type : BY_REFERENCE
 NGraphTriple : class
 Equality type : BY_REFERENCE
 
-NGroupExpression : class
-Equality type : BY_VALUE
+NGroupExpression : typedef ->  GroupExpression
 
-NGroupExpressionTerm : class
-Equality type : BY_VALUE
+NGroupExpressionTerm : typedef ->  GroupExpressionTerm
 
-NGroupPresentation : class
-Equality type : BY_REFERENCE
+NGroupPresentation : typedef ->  GroupPresentation
 
 NHandlebody : class
 Equality type : BY_VALUE
 
-NHomGroupPresentation : class
-Equality type : BY_REFERENCE
+NHomGroupPresentation : typedef ->  HomGroupPresentation
 
-NHomMarkedAbelianGroup : class
-Equality type : BY_REFERENCE
+NHomMarkedAbelianGroup : typedef ->  HomMarkedAbelianGroup
 
 NHomologicalData : typedef ->  HomologicalData
 
@@ -1359,8 +1374,7 @@ Equality type : BY_VALUE
 NManifold : class
 Equality type : BY_REFERENCE
 
-NMarkedAbelianGroup : class
-Equality type : BY_REFERENCE
+NMarkedAbelianGroup : typedef ->  MarkedAbelianGroup
 
 NMatrix2 : typedef ->  Matrix2
 

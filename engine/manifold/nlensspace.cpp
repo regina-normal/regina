@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "maths/numbertheory.h"
 #include "triangulation/dim3.h"
@@ -66,8 +66,8 @@ Triangulation<3>* NLensSpace::construct() const {
     return ans;
 }
 
-NAbelianGroup* NLensSpace::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NLensSpace::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     if (p_ == 0)
         ans->addRank();
     else if (p_ > 1)

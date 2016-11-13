@@ -182,7 +182,7 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
         bool operator != (const NSnapPeaCensusManifold& compare) const;
 
         Triangulation<3>* construct() const;
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

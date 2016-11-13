@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nsfs.h"
 #include "maths/matrix.h"
 #include "subcomplex/nlayeredchainpair.h"
@@ -197,7 +197,7 @@ NManifold* NLayeredChainPair::manifold() const {
     return ans;
 }
 
-NAbelianGroup* NLayeredChainPair::homology() const {
+AbelianGroup* NLayeredChainPair::homology() const {
     // The first homology group can be obtained from the matrix:
     //
     //   [  1  -1   1 ]
@@ -206,7 +206,7 @@ NAbelianGroup* NLayeredChainPair::homology() const {
     //
     // This is established simply by examining the edges on the boundary
     // of each layered chain.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     MatrixInt mat(3, 3);
     mat.initialise(1);
     mat.entry(0, 1) = mat.entry(2, 2) = -1;

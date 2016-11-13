@@ -318,7 +318,7 @@ class REGINA_API Triangulation<4> :
          *
          * @return the second homology group.
          */
-        const NAbelianGroup& homologyH2() const;
+        const AbelianGroup& homologyH2() const;
 
         /*@}*/
         /**

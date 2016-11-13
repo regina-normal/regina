@@ -35,12 +35,12 @@
 
 namespace regina {
 
-const NAbelianGroup& Triangulation<3>::homologyRel() const {
+const AbelianGroup& Triangulation<3>::homologyRel() const {
     if (H1Rel_.known())
         return *H1Rel_.value();
 
     if (countBoundaryComponents() == 0)
-        return *(H1Rel_ = new NAbelianGroup(homology()));
+        return *(H1Rel_ = new AbelianGroup(homology()));
 
     // Calculate the relative first homology wrt the boundary.
 
@@ -115,12 +115,12 @@ const NAbelianGroup& Triangulation<3>::homologyRel() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(pres);
     return *(H1Rel_ = ans);
 }
 
-const NAbelianGroup& Triangulation<3>::homologyBdry() const {
+const AbelianGroup& Triangulation<3>::homologyBdry() const {
     if (H1Bdry_.known())
         return *H1Bdry_.value();
 
@@ -142,18 +142,18 @@ const NAbelianGroup& Triangulation<3>::homologyBdry() const {
     }
 
     // Build the group and tidy up.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank(rank);
     ans->addTorsionElement(2, z2rank);
     return *(H1Bdry_ = ans);
 }
 
-const NAbelianGroup& Triangulation<3>::homologyH2() const {
+const AbelianGroup& Triangulation<3>::homologyH2() const {
     if (H2_.known())
         return *H2_.value();
 
     if (isEmpty())
-        return *(H2_ = new NAbelianGroup());
+        return *(H2_ = new AbelianGroup());
 
     // Calculations are different for orientable vs non-orientable
     // components.
@@ -179,7 +179,7 @@ const NAbelianGroup& Triangulation<3>::homologyH2() const {
     }
 
     // Build the new group and tidy up.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank(rank);
     if (z2rank)
         ans->addTorsionElement(2, z2rank);

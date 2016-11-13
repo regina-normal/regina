@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file algebra/nxmlalgebrareader.h
- *  \brief Deals with parsing XML data for various algebraic structures.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NXMLALGEBRAREADER_H
@@ -39,107 +39,9 @@
 #define __NXMLALGEBRAREADER_H
 #endif
 
-#include "regina-core.h"
-#include "algebra/nabeliangroup.h"
-#include "algebra/ngrouppresentation.h"
-#include "utilities/xmlelementreader.h"
+#warning This header is deprecated; please use algebra/xmlalgebrareader.h instead.
 
-namespace regina {
-
-/**
- * \weakgroup algebra
- * @{
- */
-
-/**
- * An XML element reader that reads a single abelian group.
- * An abelian group is generally contained within an
- * <tt>\<abeliangroup\></tt> ... <tt>\</abeliangroup\></tt> pair.
- *
- * \ifacespython Not present.
- */
-class REGINA_API NXMLAbelianGroupReader : public XMLElementReader {
-    private:
-        NAbelianGroup* group_;
-            /**< The abelian group currently being read. */
-
-    public:
-        /**
-         * Creates a new abelian group reader.
-         */
-        NXMLAbelianGroupReader();
-
-        /**
-         * Returns the newly allocated abelian group that has been read by
-         * this element reader.
-         *
-         * @return the group that has been read, or 0 if an error occurred.
-         */
-        virtual NAbelianGroup* group();
-
-        virtual void startElement(const std::string& tagName,
-            const regina::xml::XMLPropertyDict& tagProps,
-            XMLElementReader* parentReader);
-        virtual void initialChars(const std::string& chars);
-};
-
-/**
- * An XML element reader that reads a single group presentation.
- * A group presentation is generally contained within a
- * <tt>\<group\></tt> ... <tt>\</group\></tt> pair.
- *
- * \ifacespython Not present.
- */
-class REGINA_API NXMLGroupPresentationReader : public XMLElementReader {
-    private:
-        NGroupPresentation* group_;
-            /**< The group presentation currently being read. */
-
-    public:
-        /**
-         * Creates a new group presentation reader.
-         */
-        NXMLGroupPresentationReader();
-
-        /**
-         * Returns the newly allocated group presentation that has been read by
-         * this element reader.
-         *
-         * @return the group that has been read, or 0 if an error occurred.
-         */
-        virtual NGroupPresentation* group();
-
-        virtual void startElement(const std::string& tagName,
-            const regina::xml::XMLPropertyDict& tagProps,
-            XMLElementReader* parentReader);
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
-        virtual void endSubElement(const std::string& subTagName,
-            XMLElementReader* subReader);
-};
-
-/*@}*/
-
-// Inline functions for NXMLAbelianGroupReader
-
-inline NXMLAbelianGroupReader::NXMLAbelianGroupReader() : group_(0) {
-}
-
-inline NAbelianGroup* NXMLAbelianGroupReader::group() {
-    return group_;
-}
-
-// Inline functions for NXMLGroupPresentationReader
-
-inline NXMLGroupPresentationReader::NXMLGroupPresentationReader() : group_(0) {
-}
-
-inline NGroupPresentation* NXMLGroupPresentationReader::group() {
-    return group_;
-}
-
-} // namespace regina
+#include "algebra/xmlalgebrareader.h"
 
 #endif
 

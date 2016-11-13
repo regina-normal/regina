@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
 
 namespace regina {
 
-NAbelianGroup* NHandlebody::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NHandlebody::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     if (nHandles)
         ans->addRank(nHandles);
     return ans;

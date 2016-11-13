@@ -50,11 +50,11 @@
 #include "testsuite/generic/triangulationtest.h"
 #include "testsuite/dim3/testtriangulation.h"
 
-using regina::NAbelianGroup;
+using regina::AbelianGroup;
 using regina::BoundaryComponent;
 using regina::Component;
 using regina::Example;
-using regina::NGroupPresentation;
+using regina::GroupPresentation;
 using regina::Isomorphism;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
@@ -1616,7 +1616,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyEuler(fig8_bary, 0, 1, "Large figure eight knot complement");
         }
 
-        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+        void verifyGroup(const AbelianGroup& g, const std::string& grpName,
                 unsigned rank) {
             // Construct the error message.
             std::ostringstream msg;
@@ -1636,7 +1636,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
         }
 
-        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+        void verifyGroup(const AbelianGroup& g, const std::string& grpName,
                 unsigned rank, unsigned long torsionDegree) {
             // Construct the error message.
             std::ostringstream msg;
@@ -1658,7 +1658,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+        void verifyGroup(const AbelianGroup& g, const std::string& grpName,
                 unsigned rank, unsigned long torsionDegree1,
                 unsigned long torsionDegree2) {
             // Construct the error message.
@@ -1682,7 +1682,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void verifyGroup(const NAbelianGroup& g, const std::string& grpName,
+        void verifyGroup(const AbelianGroup& g, const std::string& grpName,
                 unsigned rank, unsigned long torsionDegree1,
                 unsigned long torsionDegree2, unsigned long torsionDegree3) {
             // Construct the error message.
@@ -1837,8 +1837,8 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         static void verifyFundGroupVsH1(Triangulation<3>* tri) {
-            NGroupPresentation* pi1 =
-                new NGroupPresentation(tri->fundamentalGroup());
+            GroupPresentation* pi1 =
+                new GroupPresentation(tri->fundamentalGroup());
 
             pi1->intelligentSimplify();
 
@@ -1849,15 +1849,15 @@ class Triangulation3Test : public TriangulationTest<3> {
             regina::MatrixInt m(rel, gen);
             size_t i, j;
             for (i = 0; i < rel; ++i) {
-                const regina::NGroupExpression& r = pi1->relation(i);
+                const regina::GroupExpression& r = pi1->relation(i);
                 for (j = 0; j < r.countTerms(); ++j) {
-                    const regina::NGroupExpressionTerm& t = r.term(j);
+                    const regina::GroupExpressionTerm& t = r.term(j);
                     m.entry(i, t.generator) += t.exponent;
                 }
             }
             delete pi1;
 
-            NAbelianGroup abelian;
+            AbelianGroup abelian;
             abelian.addGroup(m);
 
             if (abelian.detail() != tri->homology().detail()) {
@@ -3475,8 +3475,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    NAbelianGroup expectH2(tri->homologyH2());
-                    NAbelianGroup foundH2(punc.homologyH2());
+                    AbelianGroup expectH2(tri->homologyH2());
+                    AbelianGroup foundH2(punc.homologyH2());
                     Component<3>* c = origTet->component();
                     if (! c->isClosed()) {
                         // X -> X + Z

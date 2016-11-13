@@ -59,7 +59,7 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
 
     unsigned long initZ, initZ2, initZ3;
     {
-        const NAbelianGroup& homology = working->homology();
+        const AbelianGroup& homology = working->homology();
         initZ = homology.rank();
         initZ2 = homology.torsionRank(2);
         initZ3 = homology.torsionRank(3);
@@ -170,7 +170,7 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
     unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
     for (std::list<Triangulation<3>*>::iterator it = primeComponents.begin();
             it != primeComponents.end(); it++) {
-        const NAbelianGroup& homology = (*it)->homology();
+        const AbelianGroup& homology = (*it)->homology();
         finalZ += homology.rank();
         finalZ2 += homology.torsionRank(2);
         finalZ3 += homology.torsionRank(3);
@@ -632,7 +632,7 @@ bool Triangulation<3>::isIrreducible() const {
 
     unsigned long Z, Z2, Z3;
     {
-        const NAbelianGroup& homology = working->homology();
+        const AbelianGroup& homology = working->homology();
         Z = homology.rank();
         Z2 = homology.torsionRank(2);
         Z3 = homology.torsionRank(3);
@@ -720,7 +720,7 @@ bool Triangulation<3>::isIrreducible() const {
 
                     // Note which parts of our initial homology we have
                     // now accounted for.
-                    const NAbelianGroup& h1 = processing->homology();
+                    const AbelianGroup& h1 = processing->homology();
                     Z -= h1.rank();
                     Z2 -= h1.torsionRank(2);
                     Z3 -= h1.torsionRank(3);

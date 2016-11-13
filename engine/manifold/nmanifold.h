@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NAbelianGroup;
+class AbelianGroup;
 
 /**
  * \addtogroup manifold Standard 3-Manifolds
@@ -137,7 +137,7 @@ class REGINA_API NManifold :
          * @return the first homology group of this 3-manifold, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        virtual NAbelianGroup* homology() const;
+        virtual AbelianGroup* homology() const;
         /**
          * Returns the first homology group of this 3-manifold, if such
          * a routine has been implemented.  If the calculation of
@@ -157,7 +157,7 @@ class REGINA_API NManifold :
          * @return the first homology group of this 3-manifold, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        NAbelianGroup* homologyH1() const;
+        AbelianGroup* homologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
@@ -280,11 +280,11 @@ inline Triangulation<3>* NManifold::construct() const {
     return 0;
 }
 
-inline NAbelianGroup* NManifold::homology() const {
+inline AbelianGroup* NManifold::homology() const {
     return 0;
 }
 
-inline NAbelianGroup* NManifold::homologyH1() const {
+inline AbelianGroup* NManifold::homologyH1() const {
     return homology();
 }
 

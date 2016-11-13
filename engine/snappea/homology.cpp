@@ -36,7 +36,7 @@
 
 namespace regina {
 
-const NAbelianGroup* SnapPeaTriangulation::homologyFilled() const {
+const AbelianGroup* SnapPeaTriangulation::homologyFilled() const {
     if (! data_)
         return 0;
     if (h1Filled_.known())
@@ -58,7 +58,7 @@ const NAbelianGroup* SnapPeaTriangulation::homologyFilled() const {
     regina::snappea::free_relations(&sRelns);
 
     // Let Regina run Smith normal form.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(rRelns);
     return (h1Filled_ = ans);
 }

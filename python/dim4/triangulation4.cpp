@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "triangulation/dim4.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
@@ -137,8 +137,8 @@ namespace {
     }
 
     void simplifiedFundamentalGroup_clone(Triangulation<4>& tri,
-            const regina::NGroupPresentation& group) {
-        tri.simplifiedFundamentalGroup(new regina::NGroupPresentation(group));
+            const regina::GroupPresentation& group) {
+        tri.simplifiedFundamentalGroup(new regina::GroupPresentation(group));
     }
 
     std::string isoSig_void(const Triangulation<4>& t) {

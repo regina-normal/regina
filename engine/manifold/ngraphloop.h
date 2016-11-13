@@ -194,7 +194,7 @@ class REGINA_API NGraphLoop : public NManifold {
          */
         bool operator < (const NGraphLoop& compare) const;
 
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

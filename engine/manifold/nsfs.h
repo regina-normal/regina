@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NAbelianGroup;
+class AbelianGroup;
 class NLensSpace;
 
 /**
@@ -762,7 +762,7 @@ class REGINA_API NSFSpace : public NManifold {
         bool operator < (const NSFSpace& compare) const;
 
         Triangulation<3>* construct() const;
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

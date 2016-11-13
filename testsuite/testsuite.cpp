@@ -121,7 +121,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addPermConv(runner);
 
     // Algebra:
-    addNGroupPresentation(runner);
+    addGroupPresentation(runner);
 
     // 2-manifold triangulations:
     addTriangulation2(runner);

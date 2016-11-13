@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
 #include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
@@ -662,8 +662,8 @@ NManifold* NLayeredSolidTorus::manifold() const {
     return new NHandlebody(1, true);
 }
 
-NAbelianGroup* NLayeredSolidTorus::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NLayeredSolidTorus::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;
 }

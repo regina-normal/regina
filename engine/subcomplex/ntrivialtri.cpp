@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
 #include "manifold/nlensspace.h"
 #include "manifold/nsimplesurfacebundle.h"
@@ -148,8 +148,8 @@ NManifold* NTrivialTri::manifold() const {
     return 0;
 }
 
-NAbelianGroup* NTrivialTri::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NTrivialTri::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
 
     if (type_ == N2)
         ans->addRank();

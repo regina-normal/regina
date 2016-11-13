@@ -96,13 +96,13 @@
         self.filledFundRels.hidden = NO;
         self.filledFundDetails.hidden = NO;
 
-        const regina::NAbelianGroup* h1 = self.packet->homologyFilled();
+        const regina::AbelianGroup* h1 = self.packet->homologyFilled();
         if (h1)
             self.filledHomology.text = @(h1->utf8().c_str());
         else
             self.filledHomology.attributedText = [TextHelper dimString:@"Could not compute"];
 
-        const regina::NGroupPresentation* pi1 = self.packet->fundamentalGroupFilled();
+        const regina::GroupPresentation* pi1 = self.packet->fundamentalGroupFilled();
         if (pi1)
             [Tri3Algebra reloadGroup:*pi1
                                name:self.filledFundName

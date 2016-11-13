@@ -209,7 +209,7 @@ Triangulation<4>::Triangulation(const Triangulation& X) :
         knownSimpleLinks_(X.knownSimpleLinks_) {
     // Clone properties:
     if (X.H2_.known())
-        H2_ = new NAbelianGroup(*(X.H2_.value()));
+        H2_ = new AbelianGroup(*(X.H2_.value()));
 }
 
 Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :

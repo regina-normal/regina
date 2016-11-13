@@ -171,7 +171,7 @@ NManifold* NLayeredTorusBundle::manifold() const {
     return new NTorusBundle(core_.parallelReln() * reln_);
 }
 
-NAbelianGroup* NLayeredTorusBundle::homology() const {
+AbelianGroup* NLayeredTorusBundle::homology() const {
     // It's implemented in NTorusBundle, so ride on that for now.
     // We'll implement it directly here in good time.
     return NTorusBundle(core_.parallelReln() * reln_).homology();

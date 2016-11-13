@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "maths/numbertheory.h"
 #include "subcomplex/nlayeredlensspace.h"
@@ -143,8 +143,8 @@ NManifold* NLayeredLensSpace::manifold() const {
     return new NLensSpace(p_, q_);
 }
 
-NAbelianGroup* NLayeredLensSpace::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NLayeredLensSpace::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     if (p_ == 0)
         ans->addRank();
     else if (p_ > 1)

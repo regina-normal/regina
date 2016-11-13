@@ -43,7 +43,7 @@
 #include <utility>
 #include "regina-core.h"
 #include "output.h"
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/ray.h"
 #include "triangulation/forward.h"
@@ -484,7 +484,7 @@ class REGINA_API NormalHypersurface :
         mutable Property<bool> compact_;
             /**< Is this hypersurface compact (i.e., does it only
                  contain finitely many pieces)? */
-        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<AbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the hypersurface. */
 
     public:
@@ -823,7 +823,7 @@ class REGINA_API NormalHypersurface :
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& homology() const;
+        const AbelianGroup& homology() const;
 
         /**
          * Returns a 3-manifold triangulation describing this normal
@@ -1068,7 +1068,7 @@ inline bool NormalHypersurface::hasRealBoundary() const {
     return realBoundary_.value();
 }
 
-inline const NAbelianGroup& NormalHypersurface::homology() const {
+inline const AbelianGroup& NormalHypersurface::homology() const {
     if (! H1_.known())
         calculateFromTriangulation();
     return *H1_.value();

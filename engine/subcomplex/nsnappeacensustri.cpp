@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nsnappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/dim3.h"
@@ -172,7 +172,7 @@ NManifold* NSnapPeaCensusTri::manifold() const {
     return new NSnapPeaCensusManifold(section_, index_);
 }
 
-NAbelianGroup* NSnapPeaCensusTri::homology() const {
+AbelianGroup* NSnapPeaCensusTri::homology() const {
     return NSnapPeaCensusManifold(section_, index_).homology();
 }
 

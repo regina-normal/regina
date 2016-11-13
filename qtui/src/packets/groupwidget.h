@@ -44,7 +44,7 @@ class QListWidget;
 
 namespace regina {
     class Packet;
-    class NGroupPresentation;
+    class GroupPresentation;
 };
 
 /**
@@ -54,8 +54,8 @@ class GroupWidget : public QWidget {
     Q_OBJECT
 
     private:
-        const regina::NGroupPresentation* group_;
-        regina::NGroupPresentation* simplified_;
+        const regina::GroupPresentation* group_;
+        regina::GroupPresentation* simplified_;
 
         QWidget* ui_;
         QLabel* fundName_;
@@ -73,14 +73,14 @@ class GroupWidget : public QWidget {
         /**
          * Refresh the contents of the widget.
          */
-        void refresh(const regina::NGroupPresentation* group);
+        void refresh(const regina::GroupPresentation* group);
 
         /**
          * The following routine drops ownership of simplified_ (it is
          * assumed that the caller will claim ownership instead), and
          * sets simplified_ to null.
          */
-        regina::NGroupPresentation* takeSimplifiedGroup();
+        regina::GroupPresentation* takeSimplifiedGroup();
 
     signals:
         /**
@@ -112,8 +112,8 @@ class GroupWidget : public QWidget {
         QString verifyGAPExec();
 };
 
-inline regina::NGroupPresentation* GroupWidget::takeSimplifiedGroup() {
-    regina::NGroupPresentation* ans = simplified_;
+inline regina::GroupPresentation* GroupWidget::takeSimplifiedGroup() {
+    regina::GroupPresentation* ans = simplified_;
     simplified_ = 0;
     return ans;
 }

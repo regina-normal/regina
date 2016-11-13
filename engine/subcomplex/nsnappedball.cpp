@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
 #include "triangulation/dim3.h"
 #include "subcomplex/nsnappedball.h"
@@ -67,8 +67,8 @@ NManifold* NSnappedBall::manifold() const {
     return new NHandlebody(0, true);
 }
 
-NAbelianGroup* NSnappedBall::homology() const {
-    return new NAbelianGroup();
+AbelianGroup* NSnappedBall::homology() const {
+    return new AbelianGroup();
 }
 
 } // namespace regina

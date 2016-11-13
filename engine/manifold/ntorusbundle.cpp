@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
 #include "manifold/ntorusbundle.h"
 
 namespace regina {
 
-NAbelianGroup* NTorusBundle::homology() const {
+AbelianGroup* NTorusBundle::homology() const {
     MatrixInt relns(2, 2);
 
     relns.entry(0, 0) = monodromy_[0][0] - 1;
@@ -44,7 +44,7 @@ NAbelianGroup* NTorusBundle::homology() const {
     relns.entry(1, 0) = monodromy_[1][0];
     relns.entry(1, 1) = monodromy_[1][1] - 1;
 
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     ans->addGroup(relns);
     ans->addRank();
 

@@ -31,57 +31,58 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "algebra/nabeliangroup.h"
-#include "algebra/ngrouppresentation.h"
-#include "algebra/nhomgrouppresentation.h"
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/abeliangroup.h"
+#include "algebra/grouppresentation.h"
+#include "algebra/homgrouppresentation.h"
+#include "algebra/markedabeliangroup.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NGroupExpression;
-using regina::NGroupPresentation;
-using regina::NHomGroupPresentation;
+using regina::GroupExpression;
+using regina::GroupPresentation;
+using regina::HomGroupPresentation;
 
 namespace {
-    NGroupExpression (NHomGroupPresentation::*evaluate_ulong)(
-        unsigned long) const = &NHomGroupPresentation::evaluate;
-    NGroupExpression (NHomGroupPresentation::*evaluate_exp)(
-        const NGroupExpression&) const = &NHomGroupPresentation::evaluate;
-    NGroupExpression (NHomGroupPresentation::*invEvaluate_ulong)(
-        unsigned long) const = &NHomGroupPresentation::invEvaluate;
-    NGroupExpression (NHomGroupPresentation::*invEvaluate_exp)(
-        const NGroupExpression&) const = &NHomGroupPresentation::invEvaluate;
+    GroupExpression (HomGroupPresentation::*evaluate_ulong)(
+        unsigned long) const = &HomGroupPresentation::evaluate;
+    GroupExpression (HomGroupPresentation::*evaluate_exp)(
+        const GroupExpression&) const = &HomGroupPresentation::evaluate;
+    GroupExpression (HomGroupPresentation::*invEvaluate_ulong)(
+        unsigned long) const = &HomGroupPresentation::invEvaluate;
+    GroupExpression (HomGroupPresentation::*invEvaluate_exp)(
+        const GroupExpression&) const = &HomGroupPresentation::invEvaluate;
 }
 
-void addNHomGroupPresentation() {
-    class_<NHomGroupPresentation, std::auto_ptr<NHomGroupPresentation>,
+void addHomGroupPresentation() {
+    class_<HomGroupPresentation, std::auto_ptr<HomGroupPresentation>,
             boost::noncopyable>
-            ("NHomGroupPresentation", init<const NHomGroupPresentation&>())
-        .def(init<const NGroupPresentation&>())
-        .def("domain", &NHomGroupPresentation::domain,
+            ("HomGroupPresentation", init<const HomGroupPresentation&>())
+        .def(init<const GroupPresentation&>())
+        .def("domain", &HomGroupPresentation::domain,
             return_internal_reference<>())
-        .def("range", &NHomGroupPresentation::range,
+        .def("range", &HomGroupPresentation::range,
             return_internal_reference<>())
-        .def("knowsInverse", &NHomGroupPresentation::knowsInverse)
+        .def("knowsInverse", &HomGroupPresentation::knowsInverse)
         .def("evaluate", evaluate_exp)
         .def("evaluate", evaluate_ulong)
         .def("invEvaluate", invEvaluate_exp)
         .def("invEvaluate", invEvaluate_ulong)
         .def("intelligentSimplify",
-            &NHomGroupPresentation::intelligentSimplify)
+            &HomGroupPresentation::intelligentSimplify)
         .def("intelligentNielsen",
-            &NHomGroupPresentation::intelligentNielsen)
+            &HomGroupPresentation::intelligentNielsen)
         .def("smallCancellation",
-            &NHomGroupPresentation::smallCancellation)
+            &HomGroupPresentation::smallCancellation)
         .def("composeWith",
-            &NHomGroupPresentation::composeWith)
-        .def("invert", &NHomGroupPresentation::invert)
-        .def("verify", &NHomGroupPresentation::verify)
-        .def("verifyIsomorphism", &NHomGroupPresentation::verifyIsomorphism)
+            &HomGroupPresentation::composeWith)
+        .def("invert", &HomGroupPresentation::invert)
+        .def("verify", &HomGroupPresentation::verify)
+        .def("verifyIsomorphism", &HomGroupPresentation::verifyIsomorphism)
         .def("markedAbelianisation",
-            &NHomGroupPresentation::markedAbelianisation)
+            &HomGroupPresentation::markedAbelianisation)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+    scope().attr("NHomGroupPresentation") = scope().attr("HomGroupPresentation");
 }
 

@@ -134,7 +134,7 @@
     [self reloadPacket];
 }
 
-+ (void)reloadGroup:(const regina::NGroupPresentation &)group name:(UILabel *)name gens:(UILabel *)gens rels:(UILabel *)rels details:(UITextView *)details
++ (void)reloadGroup:(const regina::GroupPresentation &)group name:(UILabel *)name gens:(UILabel *)gens rels:(UILabel *)rels details:(UITextView *)details
 {
     std::string groupName = group.recogniseGroup(true);
     if (groupName.length()) {
@@ -172,12 +172,12 @@
         // Generators are a, b, ...
         for (long i = 0; i < nRels; ++i) {
             NSMutableString* rel;
-            const std::list<regina::NGroupExpressionTerm>& terms(group.relation(i).terms());
+            const std::list<regina::GroupExpressionTerm>& terms(group.relation(i).terms());
             if (terms.empty())
                 rel = [[NSMutableString alloc] initWithString:@"1"];
             else {
                 rel = [[NSMutableString alloc] initWithString:@"1 ="];
-                std::list<regina::NGroupExpressionTerm>::const_iterator it;
+                std::list<regina::GroupExpressionTerm>::const_iterator it;
                 for (it = terms.begin(); it != terms.end(); ++it) {
                     [rel appendString:@" "];
                     if (it->exponent == 0)

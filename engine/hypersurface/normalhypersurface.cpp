@@ -273,7 +273,7 @@ void NormalHypersurface::calculateFromTriangulation() const {
     Triangulation<3>* me = triangulate();
     orientable_ = me->isOrientable();
     connected_ = me->isConnected();
-    H1_ = new NAbelianGroup(me->homology());
+    H1_ = new AbelianGroup(me->homology());
     size_t nComp = me->countComponents();
     delete me;
 

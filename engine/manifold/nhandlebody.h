@@ -114,7 +114,7 @@ class REGINA_API NHandlebody : public NManifold {
          */
         bool operator != (const NHandlebody& compare) const;
 
-        NAbelianGroup* homology() const;
+        AbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

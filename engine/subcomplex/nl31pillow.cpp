@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "subcomplex/nl31pillow.h"
 #include "triangulation/dim3.h"
@@ -99,8 +99,8 @@ NManifold* NL31Pillow::manifold() const {
     return new NLensSpace(3, 1);
 }
 
-NAbelianGroup* NL31Pillow::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NL31Pillow::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addTorsionElement(3);
     return ans;
 }

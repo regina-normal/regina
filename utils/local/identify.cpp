@@ -50,7 +50,7 @@
  * All output is written to standard output.
  */
 
-#include <algebra/nabeliangroup.h>
+#include <algebra/abeliangroup.h>
 #include <manifold/nmanifold.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/dim3.h>
@@ -103,7 +103,7 @@ void process(Triangulation<3>* t) {
             if ((! structure.empty()) && (structure != manifold))
                 std::cout << "  ==  " << structure;
 
-            NAbelianGroup* h1 = m->homology();
+            AbelianGroup* h1 = m->homology();
             if (h1) {
                 homChecked++;
                 if (! (*h1 == t->homology())) {

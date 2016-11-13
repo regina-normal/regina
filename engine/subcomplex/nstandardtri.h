@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NAbelianGroup;
+class AbelianGroup;
 class NManifold;
 
 /**
@@ -150,7 +150,7 @@ class REGINA_API NStandardTriangulation :
          * @return the first homology group of this triangulation, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        virtual NAbelianGroup* homology() const;
+        virtual AbelianGroup* homology() const;
         /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
@@ -181,7 +181,7 @@ class REGINA_API NStandardTriangulation :
          * @return the first homology group of this triangulation, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        NAbelianGroup* homologyH1() const;
+        AbelianGroup* homologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable
@@ -296,11 +296,11 @@ inline NManifold* NStandardTriangulation::manifold() const {
     return 0;
 }
 
-inline NAbelianGroup* NStandardTriangulation::homology() const {
+inline AbelianGroup* NStandardTriangulation::homology() const {
     return 0;
 }
 
-inline NAbelianGroup* NStandardTriangulation::homologyH1() const {
+inline AbelianGroup* NStandardTriangulation::homologyH1() const {
     return homology();
 }
 

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
@@ -177,8 +177,8 @@ NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(Tetrahedron<3>* tet,
     return ans;
 }
 
-NAbelianGroup* NTriSolidTorus::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NTriSolidTorus::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;
 }

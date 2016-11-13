@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "algebra/nxmlalgebrareader.h"
+#include "algebra/xmlalgebrareader.h"
 #include "packet/xmlpacketreader.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/stringutils.h"
@@ -237,7 +237,7 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          */
         class GroupPresentationPropertyReader : public XMLElementReader {
             public:
-                typedef Property<NGroupPresentation, StoreManagedPtr> PropType;
+                typedef Property<GroupPresentation, StoreManagedPtr> PropType;
                     /**< The type of the property currently being read. */
 
             private:
@@ -463,7 +463,7 @@ inline XMLElementReader* XMLTriangulationReaderBase<dim>::
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == "abeliangroup")
         if (! prop_.known())
-            return new NXMLAbelianGroupReader();
+            return new XMLAbelianGroupReader();
     return new XMLElementReader();
 }
 
@@ -472,7 +472,7 @@ inline void XMLTriangulationReaderBase<dim>::AbelianGroupPropertyReader::
         endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "abeliangroup") {
-        NAbelianGroup* ans = dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
+        NAbelianGroup* ans = dynamic_cast<XMLAbelianGroupReader*>(subReader)->
             group();
         if (ans)
             prop_ = ans;
@@ -494,7 +494,7 @@ inline XMLElementReader* XMLTriangulationReaderBase<dim>::
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == "group")
         if (! prop_.known())
-            return new NXMLGroupPresentationReader();
+            return new XMLGroupPresentationReader();
     return new XMLElementReader();
 }
 
@@ -503,8 +503,8 @@ inline void XMLTriangulationReaderBase<dim>::GroupPresentationPropertyReader::
         endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "group") {
-        NGroupPresentation* ans = dynamic_cast<
-            NXMLGroupPresentationReader*>(subReader)->group();
+        GroupPresentation* ans = dynamic_cast<
+            XMLGroupPresentationReader*>(subReader)->group();
         if (ans)
             prop_ = ans;
     }

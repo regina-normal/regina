@@ -47,9 +47,9 @@
 using regina::BoundaryComponent;
 using regina::Edge;
 using regina::Example;
-using regina::NAbelianGroup;
+using regina::AbelianGroup;
 using regina::Example;
-using regina::NGroupPresentation;
+using regina::GroupPresentation;
 using regina::Isomorphism;
 using regina::Pentachoron;
 using regina::Perm;
@@ -1877,7 +1877,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             // expensive tests.
             b->intelligentSimplify();
 
-            regina::NAbelianGroup expectH1(tri->homologyH1());
+            regina::AbelianGroup expectH1(tri->homologyH1());
             expectH1.addRank();
 
             if (b->homologyH1() != expectH1) {
@@ -1887,7 +1887,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            regina::NAbelianGroup expectH2(tri->homologyH2());
+            regina::AbelianGroup expectH2(tri->homologyH2());
             expectH2.addGroup(tri->homology());
 
             if (b->homologyH2() != expectH2) {

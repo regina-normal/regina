@@ -32,7 +32,7 @@
 
 #include <set>
 #include <vector>
-#include "algebra/nabeliangroup.h"
+#include "algebra/abeliangroup.h"
 #include "manifold/nhandlebody.h"
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/dim3.h"
@@ -197,8 +197,8 @@ NManifold* NSpiralSolidTorus::manifold() const {
     return new NHandlebody(1, true);
 }
 
-NAbelianGroup* NSpiralSolidTorus::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NSpiralSolidTorus::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;
 }

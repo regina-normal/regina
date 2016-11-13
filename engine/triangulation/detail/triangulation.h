@@ -47,8 +47,8 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
-#include "algebra/nabeliangroup.h"
-#include "algebra/ngrouppresentation.h"
+#include "algebra/abeliangroup.h"
+#include "algebra/grouppresentation.h"
 #include "maths/matrix.h"
 #include "triangulation/generic/component.h"
 #include "triangulation/generic/boundarycomponent.h"
@@ -439,7 +439,7 @@ class TriangulationBase :
         bool orientable_;
             /**< Is the triangulation orientable?  This property is only set
                  if/when the skeleton of the triangulation is computed. */
-        mutable Property<NGroupPresentation, StoreManagedPtr> fundGroup_;
+        mutable Property<GroupPresentation, StoreManagedPtr> fundGroup_;
             /**< Fundamental group of the triangulation. */
         mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
@@ -981,7 +981,7 @@ class TriangulationBase :
          *
          * @return the fundamental group.
          */
-        const NGroupPresentation& fundamentalGroup() const;
+        const GroupPresentation& fundamentalGroup() const;
         /**
          * Notifies the triangulation that you have simplified the
          * presentation of its fundamental group.  The old group
@@ -1006,7 +1006,7 @@ class TriangulationBase :
          * @param newGroup a new (and hopefully simpler) presentation of
          * the fundamental group of this triangulation.
          */
-        void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
+        void simplifiedFundamentalGroup(GroupPresentation* newGroup);
 
         /**
          * Returns the first homology group for this triangulation.
@@ -2042,7 +2042,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
     // Clone properties:
     if (cloneProps) {
         if (copy.fundGroup_.known())
-            fundGroup_ = new NGroupPresentation(*(copy.fundGroup_.value()));
+            fundGroup_ = new GroupPresentation(*(copy.fundGroup_.value()));
         if (copy.H1_.known())
             H1_ = new NAbelianGroup(*(copy.H1_.value()));
     }
@@ -2836,7 +2836,7 @@ size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
 
 template <int dim>
 inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
-        NGroupPresentation* newGroup) {
+        GroupPresentation* newGroup) {
     fundGroup_ = newGroup;
 }
 
@@ -2917,11 +2917,11 @@ const NAbelianGroup& TriangulationBase<dim>::homology() const {
 }
 
 template <int dim>
-const NGroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
+const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
     if (fundGroup_.known())
         return *fundGroup_.value();
 
-    NGroupPresentation* ans = new NGroupPresentation();
+    GroupPresentation* ans = new GroupPresentation();
 
     if (isEmpty())
         return *(fundGroup_ = ans);
@@ -2952,11 +2952,11 @@ const NGroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
     Simplex<dim>* simp;
     int facet;
     Face<dim, dim-1>* gen;
-    NGroupExpression* rel;
+    GroupExpression* rel;
     for (Face<dim, dim-2>* f : faces<dim-2>()) {
         if (! f->isBoundary()) {
             // Put in the relation corresponding to this triangle.
-            rel = new NGroupExpression();
+            rel = new GroupExpression();
             for (auto& emb : *f) {
                 simp = emb.simplex();
                 facet = emb.vertices()[dim-1];

@@ -42,5 +42,5 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addNGroupPresentation(CppUnit::TextUi::TestRunner& runner);
+void addGroupPresentation(CppUnit::TextUi::TestRunner& runner);
 

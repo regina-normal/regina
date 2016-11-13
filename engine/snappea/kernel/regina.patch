@@ -202,3 +202,15 @@ index a4fb91b..54c5012 100644
  typedef struct Tetrahedron      TetrahedronSneak;
  
  
+diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
+index 40b8421..63c7582 100644
+--- a/engine/snappea/kernel/SnapPea.h
++++ b/engine/snappea/kernel/SnapPea.h
+@@ -425,6 +425,7 @@ typedef struct SymmetryGroup                SymmetryGroup;
+ typedef struct SymmetryGroupPresentation    SymmetryGroupPresentation;
+ typedef struct DualOneSkeletonCurve         DualOneSkeletonCurve;
+ typedef struct TerseTriangulation           TerseTriangulation;
++struct GroupPresentation; // To distinguish snappea's GroupPresentation from regina's.
+ typedef struct GroupPresentation            GroupPresentation;
+ typedef struct CuspNeighborhoods            CuspNeighborhoods;
+ typedef struct NormalSurfaceList            NormalSurfaceList;
