@@ -61,7 +61,7 @@
 namespace regina {
 
 class AngleStructure;
-class NGroupPresentation;
+class GroupPresentation;
 class NormalSurface;
 class ProgressTrackerOpen;
 class XMLPacketReader;

@@ -54,7 +54,7 @@ using regina::AbelianGroup;
 using regina::BoundaryComponent;
 using regina::Component;
 using regina::Example;
-using regina::NGroupPresentation;
+using regina::GroupPresentation;
 using regina::Isomorphism;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
@@ -1837,8 +1837,8 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         static void verifyFundGroupVsH1(Triangulation<3>* tri) {
-            NGroupPresentation* pi1 =
-                new NGroupPresentation(tri->fundamentalGroup());
+            GroupPresentation* pi1 =
+                new GroupPresentation(tri->fundamentalGroup());
 
             pi1->intelligentSimplify();
 
@@ -1849,9 +1849,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             regina::MatrixInt m(rel, gen);
             size_t i, j;
             for (i = 0; i < rel; ++i) {
-                const regina::NGroupExpression& r = pi1->relation(i);
+                const regina::GroupExpression& r = pi1->relation(i);
                 for (j = 0; j < r.countTerms(); ++j) {
-                    const regina::NGroupExpressionTerm& t = r.term(j);
+                    const regina::GroupExpressionTerm& t = r.term(j);
                     m.entry(i, t.generator) += t.exponent;
                 }
             }

@@ -38,168 +38,168 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NGroupExpressionTerm;
-using regina::NGroupExpression;
-using regina::NGroupPresentation;
+using regina::GroupExpressionTerm;
+using regina::GroupExpression;
+using regina::GroupPresentation;
 
 namespace {
-    void (NGroupExpression::*addTermFirst_term)(const NGroupExpressionTerm&) =
-        &NGroupExpression::addTermFirst;
-    void (NGroupExpression::*addTermFirst_pair)(unsigned long, long) =
-        &NGroupExpression::addTermFirst;
-    void (NGroupExpression::*addTermLast_term)(const NGroupExpressionTerm&) =
-        &NGroupExpression::addTermLast;
-    void (NGroupExpression::*addTermLast_pair)(unsigned long, long) =
-        &NGroupExpression::addTermLast;
-    NGroupExpressionTerm& (NGroupExpression::*term_non_const)(
-        size_t) = &NGroupExpression::term;
+    void (GroupExpression::*addTermFirst_term)(const GroupExpressionTerm&) =
+        &GroupExpression::addTermFirst;
+    void (GroupExpression::*addTermFirst_pair)(unsigned long, long) =
+        &GroupExpression::addTermFirst;
+    void (GroupExpression::*addTermLast_term)(const GroupExpressionTerm&) =
+        &GroupExpression::addTermLast;
+    void (GroupExpression::*addTermLast_pair)(unsigned long, long) =
+        &GroupExpression::addTermLast;
+    GroupExpressionTerm& (GroupExpression::*term_non_const)(
+        size_t) = &GroupExpression::term;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplify,
-        NGroupExpression::simplify, 0, 1);
+        GroupExpression::simplify, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_substitute,
-        NGroupExpression::substitute, 2, 3);
+        GroupExpression::substitute, 2, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addGenerator,
-        NGroupPresentation::addGenerator, 0, 1);
+        GroupPresentation::addGenerator, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nielsenCombine,
-        NGroupPresentation::nielsenCombine, 3, 4);
+        GroupPresentation::nielsenCombine, 3, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_recogniseGroup,
-        NGroupPresentation::recogniseGroup, 0, 1);
+        GroupPresentation::recogniseGroup, 0, 1);
 
-    std::auto_ptr<NGroupExpression> newExpression_str(
+    std::auto_ptr<GroupExpression> newExpression_str(
             const std::string& str) {
-        return std::auto_ptr<NGroupExpression>(new NGroupExpression(str, 0));
+        return std::auto_ptr<GroupExpression>(new GroupExpression(str, 0));
     }
 
-    object terms_list(const NGroupExpression& e) {
+    object terms_list(const GroupExpression& e) {
         boost::python::list ans;
-        for (std::list<NGroupExpressionTerm>::const_iterator it =
+        for (std::list<GroupExpressionTerm>::const_iterator it =
                 e.terms().begin(); it != e.terms().end(); it++)
             ans.append(*it);
         return ans;
     }
 
-    void expressionWriteText(const NGroupExpression& e,
+    void expressionWriteText(const GroupExpression& e,
             bool sw = false, bool utf8 = false) {
         e.writeText(std::cout, sw, utf8);
     }
 
-    void expressionWriteTeX(const NGroupExpression& e) {
+    void expressionWriteTeX(const GroupExpression& e) {
         e.writeTeX(std::cout);
     }
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_expressionWriteText,
         expressionWriteText, 1, 3);
 
-    void addRelation_clone(NGroupPresentation& p, const NGroupExpression& e) {
-        p.addRelation(new regina::NGroupExpression(e));
+    void addRelation_clone(GroupPresentation& p, const GroupExpression& e) {
+        p.addRelation(new regina::GroupExpression(e));
     }
 
-    void presentationWriteTeX(const NGroupPresentation& p) {
+    void presentationWriteTeX(const GroupPresentation& p) {
         p.writeTeX(std::cout);
     }
 
-    void presentationWriteTextCompact(const NGroupPresentation& p) {
+    void presentationWriteTextCompact(const GroupPresentation& p) {
         p.writeTextCompact(std::cout);
     }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_proliferateRelators,
-        NGroupPresentation::proliferateRelators, 0, 1);
+        GroupPresentation::proliferateRelators, 0, 1);
 }
 
-void addNGroupPresentation() {
-    class_<NGroupExpressionTerm>("NGroupExpressionTerm")
-        .def_readwrite("generator", &NGroupExpressionTerm::generator)
-        .def_readwrite("exponent", &NGroupExpressionTerm::exponent)
+void addGroupPresentation() {
+    class_<GroupExpressionTerm>("GroupExpressionTerm")
+        .def_readwrite("generator", &GroupExpressionTerm::generator)
+        .def_readwrite("exponent", &GroupExpressionTerm::exponent)
         .def(init<unsigned long, long>())
-        .def(init<const NGroupExpressionTerm&>())
+        .def(init<const GroupExpressionTerm&>())
         .def(self < self)
-        .def("inverse", &NGroupExpressionTerm::inverse)
+        .def("inverse", &GroupExpressionTerm::inverse)
         .def(self += self)
         .def(self_ns::str(self))
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NGroupExpression,
-            std::auto_ptr<NGroupExpression>, boost::noncopyable>
-            ("NGroupExpression")
-        .def(init<const NGroupExpression&>())
+    class_<GroupExpression,
+            std::auto_ptr<GroupExpression>, boost::noncopyable>
+            ("GroupExpression")
+        .def(init<const GroupExpression&>())
         .def("__init__", boost::python::make_constructor(newExpression_str))
         .def("terms", terms_list)
-        .def("countTerms", &NGroupExpression::countTerms)
-        .def("wordLength", &NGroupExpression::wordLength)
-        .def("isTrivial", &NGroupExpression::isTrivial)
-        .def("erase", &NGroupExpression::erase)
+        .def("countTerms", &GroupExpression::countTerms)
+        .def("wordLength", &GroupExpression::wordLength)
+        .def("isTrivial", &GroupExpression::isTrivial)
+        .def("erase", &GroupExpression::erase)
         .def("term", term_non_const, return_internal_reference<>())
-        .def("generator", &NGroupExpression::generator)
-        .def("exponent", &NGroupExpression::exponent)
+        .def("generator", &GroupExpression::generator)
+        .def("exponent", &GroupExpression::exponent)
         .def("addTermFirst", addTermFirst_term)
         .def("addTermFirst", addTermFirst_pair)
         .def("addTermLast", addTermLast_term)
         .def("addTermLast", addTermLast_pair)
-        .def("addTermsFirst", &NGroupExpression::addTermsFirst)
-        .def("addTermsLast", &NGroupExpression::addTermsLast)
-        .def("addStringFirst", &NGroupExpression::addStringFirst)
-        .def("addStringLast", &NGroupExpression::addStringLast)
-        .def("cycleLeft", &NGroupExpression::cycleLeft)
-        .def("cycleRight", &NGroupExpression::cycleRight)
-        .def("inverse", &NGroupExpression::inverse,
+        .def("addTermsFirst", &GroupExpression::addTermsFirst)
+        .def("addTermsLast", &GroupExpression::addTermsLast)
+        .def("addStringFirst", &GroupExpression::addStringFirst)
+        .def("addStringLast", &GroupExpression::addStringLast)
+        .def("cycleLeft", &GroupExpression::cycleLeft)
+        .def("cycleRight", &GroupExpression::cycleRight)
+        .def("inverse", &GroupExpression::inverse,
             return_value_policy<manage_new_object>())
-        .def("invert", &NGroupExpression::invert)
-        .def("power", &NGroupExpression::power,
+        .def("invert", &GroupExpression::invert)
+        .def("power", &GroupExpression::power,
             return_value_policy<manage_new_object>())
-        .def("simplify", &NGroupExpression::simplify, OL_simplify())
-        .def("substitute", &NGroupExpression::substitute, OL_substitute())
-        .def("toTeX", &NGroupExpression::toTeX)
+        .def("simplify", &GroupExpression::simplify, OL_simplify())
+        .def("substitute", &GroupExpression::substitute, OL_substitute())
+        .def("toTeX", &GroupExpression::toTeX)
         .def("writeText", expressionWriteText, OL_expressionWriteText())
         .def("writeTeX", expressionWriteTeX)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NGroupPresentation,
-            std::auto_ptr<NGroupPresentation>, boost::noncopyable>
-            ("NGroupPresentation")
-        .def(init<const NGroupPresentation&>())
-        .def("addGenerator", &NGroupPresentation::addGenerator,
+    class_<GroupPresentation,
+            std::auto_ptr<GroupPresentation>, boost::noncopyable>
+            ("GroupPresentation")
+        .def(init<const GroupPresentation&>())
+        .def("addGenerator", &GroupPresentation::addGenerator,
             OL_addGenerator())
         .def("addRelation", addRelation_clone)
-        .def("countGenerators", &NGroupPresentation::countGenerators)
-        .def("countRelations", &NGroupPresentation::countRelations)
-        .def("relation", &NGroupPresentation::relation,
+        .def("countGenerators", &GroupPresentation::countGenerators)
+        .def("countRelations", &GroupPresentation::countRelations)
+        .def("relation", &GroupPresentation::relation,
             return_internal_reference<>())
-        .def("isValid", &NGroupPresentation::isValid)
-        .def("intelligentSimplify", &NGroupPresentation::intelligentSimplify)
+        .def("isValid", &GroupPresentation::isValid)
+        .def("intelligentSimplify", &GroupPresentation::intelligentSimplify)
         .def("intelligentSimplifyDetail",
-            &NGroupPresentation::intelligentSimplifyDetail)
-        .def("smallCancellation", &NGroupPresentation::smallCancellation)
+            &GroupPresentation::intelligentSimplifyDetail)
+        .def("smallCancellation", &GroupPresentation::smallCancellation)
         .def("smallCancellationDetail",
-            &NGroupPresentation::smallCancellationDetail)
-        .def("simplifyWord", &NGroupPresentation::simplifyWord)
-        .def("proliferateRelators", &NGroupPresentation::proliferateRelators,
+            &GroupPresentation::smallCancellationDetail)
+        .def("simplifyWord", &GroupPresentation::simplifyWord)
+        .def("proliferateRelators", &GroupPresentation::proliferateRelators,
             OL_proliferateRelators())
-        .def("identifyAbelian", &NGroupPresentation::identifyAbelian)
-        .def("nielsenTransposition", &NGroupPresentation::nielsenTransposition)
-        .def("nielsenInvert", &NGroupPresentation::nielsenInvert)
-        .def("nielsenCombine", &NGroupPresentation::nielsenCombine,
+        .def("identifyAbelian", &GroupPresentation::identifyAbelian)
+        .def("nielsenTransposition", &GroupPresentation::nielsenTransposition)
+        .def("nielsenInvert", &GroupPresentation::nielsenInvert)
+        .def("nielsenCombine", &GroupPresentation::nielsenCombine,
             OL_nielsenCombine())
-        .def("intelligentNielsen", &NGroupPresentation::intelligentNielsen)
+        .def("intelligentNielsen", &GroupPresentation::intelligentNielsen)
         .def("intelligentNielsenDetail",
-            &NGroupPresentation::intelligentNielsenDetail)
-        .def("homologicalAlignment", &NGroupPresentation::homologicalAlignment)
+            &GroupPresentation::intelligentNielsenDetail)
+        .def("homologicalAlignment", &GroupPresentation::homologicalAlignment)
         .def("homologicalAlignmentDetail",
-            &NGroupPresentation::homologicalAlignmentDetail)
-        .def("prettyRewriting", &NGroupPresentation::prettyRewriting)
+            &GroupPresentation::homologicalAlignmentDetail)
+        .def("prettyRewriting", &GroupPresentation::prettyRewriting)
         .def("prettyRewritingDetail",
-            &NGroupPresentation::prettyRewritingDetail)
+            &GroupPresentation::prettyRewritingDetail)
         .def("identifySimplyIsomorphicTo",
-            &NGroupPresentation::identifySimplyIsomorphicTo)
-        .def("recogniseGroup", &NGroupPresentation::recogniseGroup,
+            &GroupPresentation::identifySimplyIsomorphicTo)
+        .def("recogniseGroup", &GroupPresentation::recogniseGroup,
             OL_recogniseGroup())
-        .def("relatorLength", &NGroupPresentation::relatorLength)
-        .def("abelianisation", &NGroupPresentation::abelianisation)
-        .def("markedAbelianisation", &NGroupPresentation::markedAbelianisation)
-        .def("toTeX", &NGroupPresentation::toTeX)
-        .def("compact", &NGroupPresentation::compact)
+        .def("relatorLength", &GroupPresentation::relatorLength)
+        .def("abelianisation", &GroupPresentation::abelianisation)
+        .def("markedAbelianisation", &GroupPresentation::markedAbelianisation)
+        .def("toTeX", &GroupPresentation::toTeX)
+        .def("compact", &GroupPresentation::compact)
         .def("writeTeX", presentationWriteTeX)
         .def("writeTextCompact", presentationWriteTextCompact)
         .def(regina::python::add_output())

@@ -237,7 +237,7 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          */
         class GroupPresentationPropertyReader : public XMLElementReader {
             public:
-                typedef Property<NGroupPresentation, StoreManagedPtr> PropType;
+                typedef Property<GroupPresentation, StoreManagedPtr> PropType;
                     /**< The type of the property currently being read. */
 
             private:
@@ -503,7 +503,7 @@ inline void XMLTriangulationReaderBase<dim>::GroupPresentationPropertyReader::
         endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "group") {
-        NGroupPresentation* ans = dynamic_cast<
+        GroupPresentation* ans = dynamic_cast<
             NXMLGroupPresentationReader*>(subReader)->group();
         if (ans)
             prop_ = ans;

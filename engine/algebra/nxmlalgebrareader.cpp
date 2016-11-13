@@ -44,15 +44,15 @@ namespace {
      */
     class NExpressionReader : public XMLElementReader {
         private:
-            NGroupExpression* exp;
+            GroupExpression* exp;
             long nGens;
 
         public:
-            NExpressionReader(long newNGens) : exp(new NGroupExpression()),
+            NExpressionReader(long newNGens) : exp(new GroupExpression()),
                     nGens(newNGens) {
             }
 
-            NGroupExpression* getExpression() {
+            GroupExpression* getExpression() {
                 return exp;
             }
 
@@ -128,7 +128,7 @@ void NXMLGroupPresentationReader::startElement(const std::string&,
     long nGen;
     if (valueOf(tagProps.lookup("generators"), nGen))
         if (nGen >= 0) {
-            group_ = new NGroupPresentation();
+            group_ = new GroupPresentation();
             if (nGen)
                 group_->addGenerator(nGen);
         }
@@ -147,7 +147,7 @@ void NXMLGroupPresentationReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (group_)
         if (subTagName == "reln") {
-            NGroupExpression* exp =
+            GroupExpression* exp =
                 dynamic_cast<NExpressionReader*>(subReader)->getExpression();
             if (exp)
                 group_->addRelation(exp);

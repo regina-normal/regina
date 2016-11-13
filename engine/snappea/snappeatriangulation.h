@@ -371,7 +371,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
         unsigned filledCusps_;
             /**< The number of cusps that are currently filled. */
 
-        mutable Property<NGroupPresentation, StoreManagedPtr> fundGroupFilled_;
+        mutable Property<GroupPresentation, StoreManagedPtr> fundGroupFilled_;
             /**< The fundamental group of the filled triangulation,
                  or 0 if this cannot be computed (e.g., if SnapPea
                  does not return a matrix of relations). */
@@ -1111,7 +1111,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * @return the fundamental group of the filled manifold, or
          * 0 if this could not be computed.
          */
-        const NGroupPresentation* fundamentalGroupFilled(
+        const GroupPresentation* fundamentalGroupFilled(
             bool simplifyPresentation = true,
             bool fillingsMayAffectGenerators = true,
             bool minimiseNumberOfGenerators = true,

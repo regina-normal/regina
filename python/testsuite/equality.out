@@ -7,7 +7,7 @@ AbelianGroup:
 True False
 Triangulation3:
 False True
-NGroupPresentation:
+GroupPresentation:
 False True
 Triangulation3:
 True False
@@ -15,5 +15,5 @@ Tetrahedron3:
 True False
 AbelianGroup:
 True False
-NGroupPresentation:
+GroupPresentation:
 True False

@@ -140,7 +140,7 @@ GroupWidget::~GroupWidget() {
     delete simplified_;
 }
 
-void GroupWidget::refresh(const regina::NGroupPresentation* group) {
+void GroupWidget::refresh(const regina::GroupPresentation* group) {
     group_ = group;
 
     bool unicode = ReginaPrefSet::global().displayUnicode;
@@ -184,12 +184,12 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
         // Generators are a, b, ...
         for (long i = 0; i < nRels; ++i) {
             QString rel;
-            const std::list<regina::NGroupExpressionTerm>& terms(
+            const std::list<regina::GroupExpressionTerm>& terms(
                 group_->relation(i).terms());
             if (terms.empty())
                 rel = "1";
             else {
-                std::list<regina::NGroupExpressionTerm>::const_iterator it;
+                std::list<regina::GroupExpressionTerm>::const_iterator it;
                 for (it = terms.begin(); it != terms.end(); ++it) {
                     if (it != terms.begin())
                         rel += ' ';
@@ -224,7 +224,7 @@ void GroupWidget::simplifyInternal() {
 
     // Note: We might have group_ == simplified_, so we cannot delete
     // simplified_ just yet.
-    regina::NGroupPresentation* ans = new regina::NGroupPresentation(*group_);
+    regina::GroupPresentation* ans = new regina::GroupPresentation(*group_);
     ans->intelligentSimplify();
 
     delete simplified_;
@@ -248,7 +248,7 @@ void GroupWidget::proliferateRelators() {
 
     // Note: We might have group_ == simplified_, so we cannot delete
     // simplified_ just yet.
-    regina::NGroupPresentation* ans = new regina::NGroupPresentation(*group_);
+    regina::GroupPresentation* ans = new regina::GroupPresentation(*group_);
     ans->proliferateRelators(1);
 
     delete simplified_;
@@ -271,7 +271,7 @@ void GroupWidget::simplifyGAP() {
     // simplified_ just yet.
     GAPRunner dlg(this, useExec, *group_);
     if (dlg.exec() == GAPRunner::Accepted) {
-        regina::NGroupPresentation* ans = dlg.simplifiedGroup().release();
+        regina::GroupPresentation* ans = dlg.simplifiedGroup().release();
         if (ans) {
             delete simplified_;
             simplified_ = ans;

@@ -1158,6 +1158,15 @@ Equality type : NEVER_INSTANTIATED
 GluingPermSearcher3 : class
 Equality type : BY_REFERENCE
 
+GroupExpression : class
+Equality type : BY_VALUE
+
+GroupExpressionTerm : class
+Equality type : BY_VALUE
+
+GroupPresentation : class
+Equality type : BY_REFERENCE
+
 HomologicalData : class
 Equality type : BY_REFERENCE
 
@@ -1303,15 +1312,6 @@ NGraphPair : class
 Equality type : BY_REFERENCE
 
 NGraphTriple : class
-Equality type : BY_REFERENCE
-
-NGroupExpression : class
-Equality type : BY_VALUE
-
-NGroupExpressionTerm : class
-Equality type : BY_VALUE
-
-NGroupPresentation : class
 Equality type : BY_REFERENCE
 
 NHandlebody : class

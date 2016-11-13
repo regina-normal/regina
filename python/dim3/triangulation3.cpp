@@ -106,8 +106,8 @@ namespace {
         Triangulation<3>::turaevViroApprox, 1, 3);
 
     void simplifiedFundamentalGroup_clone(Triangulation<3>& tri,
-            const regina::NGroupPresentation& group) {
-        tri.simplifiedFundamentalGroup(new regina::NGroupPresentation(group));
+            const regina::GroupPresentation& group) {
+        tri.simplifiedFundamentalGroup(new regina::GroupPresentation(group));
     }
 
     Triangulation<3>* enterTextTriangulation_stdio() {

@@ -49,7 +49,7 @@ using regina::Edge;
 using regina::Example;
 using regina::AbelianGroup;
 using regina::Example;
-using regina::NGroupPresentation;
+using regina::GroupPresentation;
 using regina::Isomorphism;
 using regina::Pentachoron;
 using regina::Perm;

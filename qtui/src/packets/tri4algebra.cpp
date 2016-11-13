@@ -159,7 +159,7 @@ void Tri4HomologyFundUI::refresh() {
 }
 
 void Tri4HomologyFundUI::fundGroupSimplified() {
-    regina::NGroupPresentation* simp = fgGroup->takeSimplifiedGroup();
+    regina::GroupPresentation* simp = fgGroup->takeSimplifiedGroup();
     if (simp)
         tri->simplifiedFundamentalGroup(simp);
 }

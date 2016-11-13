@@ -58,9 +58,9 @@ a = Triangulation3()
 b = Triangulation3()
 print a == b, a != b
 
-print 'NGroupPresentation:'
-a = NGroupPresentation()
-b = NGroupPresentation()
+print 'GroupPresentation:'
+a = GroupPresentation()
+b = GroupPresentation()
 print a == b, a != b
 
 # Test == and != for objects that have the same underlying C++ pointers,
@@ -84,7 +84,7 @@ a = t.homology()
 b = t.homology()
 print a == b, a != b
 
-print 'NGroupPresentation:'
+print 'GroupPresentation:'
 t = Example3.lens(8,3)
 a = t.fundamentalGroup()
 b = t.fundamentalGroup()

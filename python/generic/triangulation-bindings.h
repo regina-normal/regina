@@ -86,9 +86,9 @@ namespace {
         }
 
         static void simplifiedFundamentalGroup_clone(Triangulation<dim>& tri,
-                const regina::NGroupPresentation& group) {
+                const regina::GroupPresentation& group) {
             tri.simplifiedFundamentalGroup(
-                new regina::NGroupPresentation(group));
+                new regina::GroupPresentation(group));
         }
 
         static boost::python::list findAllIsomorphisms(

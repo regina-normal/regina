@@ -102,7 +102,7 @@
         else
             self.filledHomology.attributedText = [TextHelper dimString:@"Could not compute"];
 
-        const regina::NGroupPresentation* pi1 = self.packet->fundamentalGroupFilled();
+        const regina::GroupPresentation* pi1 = self.packet->fundamentalGroupFilled();
         if (pi1)
             [Tri3Algebra reloadGroup:*pi1
                                name:self.filledFundName

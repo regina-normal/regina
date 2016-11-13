@@ -38,26 +38,26 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NGroupExpression;
-using regina::NGroupPresentation;
+using regina::GroupExpression;
+using regina::GroupPresentation;
 using regina::NHomGroupPresentation;
 
 namespace {
-    NGroupExpression (NHomGroupPresentation::*evaluate_ulong)(
+    GroupExpression (NHomGroupPresentation::*evaluate_ulong)(
         unsigned long) const = &NHomGroupPresentation::evaluate;
-    NGroupExpression (NHomGroupPresentation::*evaluate_exp)(
-        const NGroupExpression&) const = &NHomGroupPresentation::evaluate;
-    NGroupExpression (NHomGroupPresentation::*invEvaluate_ulong)(
+    GroupExpression (NHomGroupPresentation::*evaluate_exp)(
+        const GroupExpression&) const = &NHomGroupPresentation::evaluate;
+    GroupExpression (NHomGroupPresentation::*invEvaluate_ulong)(
         unsigned long) const = &NHomGroupPresentation::invEvaluate;
-    NGroupExpression (NHomGroupPresentation::*invEvaluate_exp)(
-        const NGroupExpression&) const = &NHomGroupPresentation::invEvaluate;
+    GroupExpression (NHomGroupPresentation::*invEvaluate_exp)(
+        const GroupExpression&) const = &NHomGroupPresentation::invEvaluate;
 }
 
 void addNHomGroupPresentation() {
     class_<NHomGroupPresentation, std::auto_ptr<NHomGroupPresentation>,
             boost::noncopyable>
             ("NHomGroupPresentation", init<const NHomGroupPresentation&>())
-        .def(init<const NGroupPresentation&>())
+        .def(init<const GroupPresentation&>())
         .def("domain", &NHomGroupPresentation::domain,
             return_internal_reference<>())
         .def("range", &NHomGroupPresentation::range,

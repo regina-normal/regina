@@ -39,24 +39,24 @@
 namespace regina {
 
 NHomGroupPresentation::NHomGroupPresentation(
-            const NGroupPresentation& groupForIdentity) :
-        domain_(new NGroupPresentation(groupForIdentity)),
-        range_(new NGroupPresentation(groupForIdentity)),
+            const GroupPresentation& groupForIdentity) :
+        domain_(new GroupPresentation(groupForIdentity)),
+        range_(new GroupPresentation(groupForIdentity)),
         map_(groupForIdentity.countGenerators()),
-        inv_(new std::vector<NGroupExpression*>(
+        inv_(new std::vector<GroupExpression*>(
             groupForIdentity.countGenerators())) {
     for (unsigned long i=0; i<map_.size(); i++) {
-        map_[i] = new NGroupExpression();
-        (*inv_)[i] = new NGroupExpression();
+        map_[i] = new GroupExpression();
+        (*inv_)[i] = new GroupExpression();
         map_[i]->addTermFirst(i, 1);
         (*inv_)[i]->addTermFirst(i,1);
     }
 }
 
-NGroupExpression NHomGroupPresentation::evaluate(
-                        const NGroupExpression &arg) const
+GroupExpression NHomGroupPresentation::evaluate(
+                        const GroupExpression &arg) const
  { // evaluate at arg
-   NGroupExpression retval(arg);
+   GroupExpression retval(arg);
    unsigned long N( range_->countGenerators() );
    for (unsigned long i=0; i<retval.countTerms(); i++)
        retval.term(i).generator += N;
@@ -65,10 +65,10 @@ NGroupExpression NHomGroupPresentation::evaluate(
    return retval;
  }
 
-NGroupExpression NHomGroupPresentation::invEvaluate(
-                    const NGroupExpression &arg) const
+GroupExpression NHomGroupPresentation::invEvaluate(
+                    const GroupExpression &arg) const
 {
-   NGroupExpression retval(arg);
+   GroupExpression retval(arg);
    unsigned long N( domain_->countGenerators() );
    for (unsigned long i=0; i<retval.countTerms(); i++)
        retval.term(i).generator += N;
@@ -86,7 +86,7 @@ std::unique_ptr< NHomMarkedAbelianGroup >
  MatrixInt ccMat( RAN->rankCC(), DOM->rankCC() );
  for (unsigned long j=0; j<ccMat.columns(); j++)
   {
-   NGroupExpression COLj( evaluate(j) );
+   GroupExpression COLj( evaluate(j) );
    for (unsigned long i=0; i<COLj.countTerms(); i++)
     ccMat.entry( COLj.generator(i), j ) += COLj.exponent(i);
   }
@@ -139,15 +139,15 @@ bool NHomGroupPresentation::smallCancellation()
     domainMap.reset(new NHomGroupPresentation(*domain_));
  if (! rangeMap.get())
     rangeMap.reset(new NHomGroupPresentation(*range_));
- NGroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
+ GroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
                     *newDom(domain_), *newRan(range_);
  domain_ = oldDom; range_ = oldRan;// we need to call this->evaluate but our map
  bool retval = rangeMap.get() || domainMap.get();
- std::vector< NGroupExpression > newMap( newDom->countGenerators() );
+ std::vector< GroupExpression > newMap( newDom->countGenerators() );
  for (unsigned long i=0; i<newMap.size(); i++)
   newMap[i].addTermsLast( rangeMap->evaluate(
     evaluate( domainMap->invEvaluate(i) ) ) );
- std::vector< NGroupExpression > newInvMap;
+ std::vector< GroupExpression > newInvMap;
  if (inv_) {
      newInvMap.resize( newRan->countGenerators() );
      for (unsigned long i=0; i<newInvMap.size(); i++)
@@ -164,13 +164,13 @@ bool NHomGroupPresentation::smallCancellation()
 
  for (unsigned long i=0; i<map_.size(); i++)
        {
-        map_[i] = new NGroupExpression(newMap[i]);
+        map_[i] = new GroupExpression(newMap[i]);
         range_->simplifyWord(*map_[i]);
        }
  if (inv_)
      for (unsigned long i=0; i<inv_->size(); i++)
            {
-            (*inv_)[i] = new NGroupExpression(newInvMap[i]);
+            (*inv_)[i] = new GroupExpression(newInvMap[i]);
             domain_->simplifyWord(*(*inv_)[i]);
            }
 
@@ -180,7 +180,7 @@ bool NHomGroupPresentation::smallCancellation()
 std::unique_ptr<NHomGroupPresentation> NHomGroupPresentation::composeWith(
             const NHomGroupPresentation& input) const
 {
- std::vector<NGroupExpression> evalVec(input.domain_->countGenerators());
+ std::vector<GroupExpression> evalVec(input.domain_->countGenerators());
  for (unsigned long i=0; i<evalVec.size(); i++)
   evalVec[i] = evaluate( input.evaluate(i) );
  if ( (! inv_) || (! input.inv_) )
@@ -188,7 +188,7 @@ std::unique_ptr<NHomGroupPresentation> NHomGroupPresentation::composeWith(
     *input.domain_, *range_, evalVec) );
  else
   {
-    std::vector<NGroupExpression> invVec( range_->countGenerators());
+    std::vector<GroupExpression> invVec( range_->countGenerators());
     for (unsigned long i=0; i<invVec.size(); i++)
      invVec[i] = input.invEvaluate( invEvaluate(i) );
     return std::unique_ptr<NHomGroupPresentation>(new NHomGroupPresentation(
@@ -208,15 +208,15 @@ bool NHomGroupPresentation::intelligentNielsen()
     domainMap.reset(new NHomGroupPresentation(*domain_));
  if (! rangeMap.get())
     rangeMap.reset(new NHomGroupPresentation(*range_));
- NGroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
+ GroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
                     *newDom(domain_), *newRan(range_);
  domain_ = oldDom; range_ = oldRan;// we need to call this->evaluate but our map
  bool retval = rangeMap.get() || domainMap.get();
- std::vector< NGroupExpression > newMap( newDom->countGenerators() );
+ std::vector< GroupExpression > newMap( newDom->countGenerators() );
  for (unsigned long i=0; i<newMap.size(); i++)
   newMap[i].addTermsLast( rangeMap->evaluate(
      evaluate( domainMap->invEvaluate(i) ) ) );
- std::vector< NGroupExpression > newInvMap;
+ std::vector< GroupExpression > newInvMap;
  if (inv_) {
      newInvMap.resize( newRan->countGenerators() );
      for (unsigned long i=0; i<newInvMap.size(); i++)
@@ -233,13 +233,13 @@ bool NHomGroupPresentation::intelligentNielsen()
 
  for (unsigned long i=0; i<map_.size(); i++)
        {
-        map_[i] = new NGroupExpression(newMap[i]);
+        map_[i] = new GroupExpression(newMap[i]);
         range_->simplifyWord(*map_[i]);
        }
  if (inv_)
      for (unsigned long i=0; i<inv_->size(); i++)
            {
-            (*inv_)[i] = new NGroupExpression(newInvMap[i]);
+            (*inv_)[i] = new GroupExpression(newInvMap[i]);
             domain_->simplifyWord(*(*inv_)[i]);
            }
 
@@ -259,7 +259,7 @@ bool NHomGroupPresentation::intelligentSimplify()
  if (! rangeMap.get())
     rangeMap.reset(new NHomGroupPresentation(*range_));
 
- NGroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
+ GroupPresentation *oldDom(domainMap->domain_), *oldRan(rangeMap->domain_),
                     *newDom(domain_), *newRan(range_);
 
  domain_ = oldDom; range_ = oldRan;// we need to call this->evaluate but our map
@@ -268,11 +268,11 @@ bool NHomGroupPresentation::intelligentSimplify()
  //         and replace "map" appropriately.  Simplify the words in the range.
  //         Do the same for the inverse map if we have one.
  bool retval = rangeMap.get() || domainMap.get();
- std::vector< NGroupExpression > newMap( newDom->countGenerators() );
+ std::vector< GroupExpression > newMap( newDom->countGenerators() );
  for (unsigned long i=0; i<newMap.size(); i++)
   newMap[i].addTermsLast( rangeMap->evaluate(
      evaluate( domainMap->invEvaluate(i) ) ) );
- std::vector< NGroupExpression > newInvMap;
+ std::vector< GroupExpression > newInvMap;
  if (inv_) {
      newInvMap.resize( newRan->countGenerators() );
      for (unsigned long i=0; i<newInvMap.size(); i++)
@@ -291,13 +291,13 @@ bool NHomGroupPresentation::intelligentSimplify()
 
  for (unsigned long i=0; i<map_.size(); i++)
        {
-        map_[i] = new NGroupExpression(newMap[i]);
+        map_[i] = new GroupExpression(newMap[i]);
         range_->simplifyWord(*map_[i]);
        }
  if (inv_)
      for (unsigned long i=0; i<inv_->size(); i++)
            {
-            (*inv_)[i] = new NGroupExpression(newInvMap[i]);
+            (*inv_)[i] = new GroupExpression(newInvMap[i]);
             domain_->simplifyWord(*(*inv_)[i]);
            }
 
@@ -308,7 +308,7 @@ bool NHomGroupPresentation::invert()
 {
  if (inv_)
   {
-   NGroupPresentation* temp( domain_ );
+   GroupPresentation* temp( domain_ );
    domain_ = range_; range_ = temp;
    map_.swap( *inv_ );
    return true;
@@ -320,8 +320,8 @@ bool NHomGroupPresentation::verify() const
 {
  for (unsigned long i=0; i<domain_->countRelations(); i++)
   {
-   const NGroupExpression& reli( domain_->relation(i) );
-   NGroupExpression imgRel( evaluate(reli) );
+   const GroupExpression& reli( domain_->relation(i) );
+   GroupExpression imgRel( evaluate(reli) );
    range_->simplifyWord(imgRel);
    if (!imgRel.isTrivial()) return false;
   }
@@ -336,7 +336,7 @@ bool NHomGroupPresentation::verifyIsomorphism() const
  // for every generator in the domain compute f^-1(f(x))x^-1 and reduce
  for (unsigned long i=0; i<domain_->countGenerators(); i++)
   {
-   NGroupExpression tempW( invEvaluate(evaluate(i)) );
+   GroupExpression tempW( invEvaluate(evaluate(i)) );
    tempW.addTermLast( i, -1 );
    domain_->simplifyWord(tempW);
    if (tempW.countTerms()>0) return false;
@@ -344,7 +344,7 @@ bool NHomGroupPresentation::verifyIsomorphism() const
  // for every generator in the range compute f(f^-1(x))x^-1 and reduce
  for (unsigned long i=0; i<range_->countGenerators(); i++)
   {
-   NGroupExpression tempW( evaluate(invEvaluate(i)) );
+   GroupExpression tempW( evaluate(invEvaluate(i)) );
    tempW.addTermLast( i, -1 );
    range_->simplifyWord(tempW);
    if (tempW.countTerms()>0) return false;

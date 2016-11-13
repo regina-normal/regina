@@ -67,7 +67,7 @@ class NMarkedAbelianGroup;
 /**
  * Represents a power of a generator in a group presentation.
  */
-struct REGINA_API NGroupExpressionTerm {
+struct REGINA_API GroupExpressionTerm {
     unsigned long generator;
         /**< The number that identifies the generator in this term. */
     long exponent;
@@ -76,20 +76,20 @@ struct REGINA_API NGroupExpressionTerm {
     /**
      * Creates a new uninitialised term.
      */
-    NGroupExpressionTerm();
+    GroupExpressionTerm();
     /**
      * Creates a new term initialised to the given value.
      *
      * @param newGen the number that identifies the generator in the new term.
      * @param newExp the exponent to which this generator is raised.
      */
-    NGroupExpressionTerm(unsigned long newGen, long newExp);
+    GroupExpressionTerm(unsigned long newGen, long newExp);
     /**
      * Creates a new term initialised to the given value.
      *
      * @param cloneMe a term whose data will be copied to the new term.
      */
-    NGroupExpressionTerm(const NGroupExpressionTerm& cloneMe);
+    GroupExpressionTerm(const GroupExpressionTerm& cloneMe);
 
     /**
      * Makes this term identical to the given term.
@@ -97,7 +97,7 @@ struct REGINA_API NGroupExpressionTerm {
      * @param cloneMe the term whose data will be copied to this term.
      * @return a reference to this term.
      */
-    NGroupExpressionTerm& operator = (const NGroupExpressionTerm& cloneMe);
+    GroupExpressionTerm& operator = (const GroupExpressionTerm& cloneMe);
     /**
      * Determines whether this and the given term contain identical data.
      *
@@ -105,7 +105,7 @@ struct REGINA_API NGroupExpressionTerm {
      * @return \c true if and only if this and the given term have both the
      * same generator and exponent.
      */
-    bool operator == (const NGroupExpressionTerm& other) const;
+    bool operator == (const GroupExpressionTerm& other) const;
     /**
      * Determines whether this and the given term do not contain identical data.
      *
@@ -113,7 +113,7 @@ struct REGINA_API NGroupExpressionTerm {
      * @return \c true if and only if this and the given term do not have
      * both the same generator and exponent.
      */
-    bool operator != (const NGroupExpressionTerm& other) const;
+    bool operator != (const GroupExpressionTerm& other) const;
 
     /**
      * Imposes an ordering on terms.
@@ -123,7 +123,7 @@ struct REGINA_API NGroupExpressionTerm {
      * @return true if and only if this term is lexicographically
      * smaller than \a other.
      */
-    bool operator < (const NGroupExpressionTerm& other) const;
+    bool operator < (const GroupExpressionTerm& other) const;
 
     /**
      * Returns the inverse of this term.  The inverse has the same
@@ -133,7 +133,7 @@ struct REGINA_API NGroupExpressionTerm {
      *
      * @return the inverse of this term.
      */
-    NGroupExpressionTerm inverse() const;
+    GroupExpressionTerm inverse() const;
 
     /**
      * Attempts to merge this term with the given term.
@@ -148,7 +148,7 @@ struct REGINA_API NGroupExpressionTerm {
      * @return \c true if the two terms were merged into this term, or
      * \c false if the two terms have different generators.
      */
-    bool operator += (const NGroupExpressionTerm& other);
+    bool operator += (const GroupExpressionTerm& other);
 };
 
 /**
@@ -164,37 +164,37 @@ struct REGINA_API NGroupExpressionTerm {
  * @return a reference to the given output stream.
  */
 REGINA_API std::ostream& operator << (std::ostream& out,
-    const NGroupExpressionTerm& term);
+    const GroupExpressionTerm& term);
 
 /**
  * Represents an expression involving generators from a group presentation
  * or a free group.  An expression is represented as word, i.e, a sequence
  * of powers of generators all of which are multiplied in order.  Each power
- * of a generator corresponds to an individual NGroupExpressionTerm.
+ * of a generator corresponds to an individual GroupExpressionTerm.
  *
  * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains the
  * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
  * order.
  */
-class REGINA_API NGroupExpression :
-        public ShortOutput<NGroupExpression>,
+class REGINA_API GroupExpression :
+        public ShortOutput<GroupExpression>,
         public boost::noncopyable {
     private:
-        std::list<NGroupExpressionTerm> terms_;
+        std::list<GroupExpressionTerm> terms_;
             /** The terms that make up this expression. */
 
     public:
         /**
          * Creates a new expression with no terms.
          */
-        NGroupExpression();
+        GroupExpression();
         /**
          * Creates a new expression that is a clone of the given
          * expression.
          *
          * @param cloneMe the expression to clone.
          */
-        NGroupExpression(const NGroupExpression& cloneMe);
+        GroupExpression(const GroupExpression& cloneMe);
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
@@ -223,7 +223,7 @@ class REGINA_API NGroupExpression :
          * @param valid used for error reporting as described above, or
          * \c null if no error reporting is required.
          */
-        NGroupExpression(const std::string &input, bool* valid=NULL);
+        GroupExpression(const std::string &input, bool* valid=NULL);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -231,7 +231,7 @@ class REGINA_API NGroupExpression :
          * @param cloneMe the expression to clone.
          * @return a reference to this expression.
          */
-        NGroupExpression& operator = (const NGroupExpression& cloneMe);
+        GroupExpression& operator = (const GroupExpression& cloneMe);
 
         /**
          * Equality operator. Checks to see whether or not these two words
@@ -240,7 +240,7 @@ class REGINA_API NGroupExpression :
          * @param comp the expression to compare against this.
          * @return \c true if this and the given string literal are identical.
          */
-        bool operator == (const NGroupExpression& comp) const;
+        bool operator == (const GroupExpression& comp) const;
 
         /**
          * Inequality operator. Checks to see whether or not these two words
@@ -250,7 +250,7 @@ class REGINA_API NGroupExpression :
          * @return \c true if this and the given string literal are not
          * identical.
          */
-        bool operator != (const NGroupExpression& comp) const;
+        bool operator != (const GroupExpression& comp) const;
 
         /**
          * Returns the list of terms in this expression.
@@ -267,7 +267,7 @@ class REGINA_API NGroupExpression :
          *
          * @return the list of terms.
          */
-        std::list<NGroupExpressionTerm>& terms();
+        std::list<GroupExpressionTerm>& terms();
         /**
          * Returns a constant reference to the list of terms in this
          * expression.
@@ -277,13 +277,13 @@ class REGINA_API NGroupExpression :
          * <tt>g6^1</tt> in that order.
          *
          * \ifacespython This routine returns a python list of copied
-         * NGroupExpressionTerm objects.  In particular, modifying this
+         * GroupExpressionTerm objects.  In particular, modifying this
          * list or the terms within it will not modify the group
          * expression from which they came.
          *
          * @return the list of terms.
          */
-        const std::list<NGroupExpressionTerm>& terms() const;
+        const std::list<GroupExpressionTerm>& terms() const;
         /**
          * Returns the number of terms in this expression.
          *
@@ -335,7 +335,7 @@ class REGINA_API NGroupExpression :
          * between 0 and countTerms()-1 inclusive.
          * @return the requested term.
          */
-        NGroupExpressionTerm& term(size_t index);
+        GroupExpressionTerm& term(size_t index);
         /**
          * Returns a constant reference to the term at the given
          * index in this expression.
@@ -352,7 +352,7 @@ class REGINA_API NGroupExpression :
          * between 0 and countTerms()-1 inclusive.
          * @return the requested term.
          */
-        const NGroupExpressionTerm& term(size_t index) const;
+        const GroupExpressionTerm& term(size_t index) const;
         /**
          * Returns the generator corresonding to the
          * term at the given index in this expression.
@@ -387,7 +387,7 @@ class REGINA_API NGroupExpression :
          *
          * @param term the term to add.
          */
-        void addTermFirst(const NGroupExpressionTerm& term);
+        void addTermFirst(const GroupExpressionTerm& term);
         /**
          * Adds the given term to the beginning of this expression.
          *
@@ -402,7 +402,7 @@ class REGINA_API NGroupExpression :
          *
          * @param term the term to add.
          */
-        void addTermLast(const NGroupExpressionTerm& term);
+        void addTermLast(const GroupExpressionTerm& term);
         /**
          * Adds the given term to the end of this expression.
          *
@@ -419,21 +419,21 @@ class REGINA_API NGroupExpression :
          *
          * @param word the word to multiply with this expression.
          */
-        void addTermsFirst(const NGroupExpression& word);
+        void addTermsFirst(const GroupExpression& word);
         /**
          * Multiplies this expression on the right by the given word.
          * This expression will be modified directly.
          *
          * @param word the word to multiply with this expression.
          */
-        void addTermsLast(const NGroupExpression& word);
+        void addTermsLast(const GroupExpression& word);
 
         /**
          * Multiplies this expression on the left by the word
          * respresented by the given string.
          *
          * See the string-based constructor
-         * NGroupExpression(const std::string&, bool*) for further
+         * GroupExpression(const std::string&, bool*) for further
          * information on how this string should be formatted.
          *
          * If the given string cannot be interpreted as a word in a group,
@@ -453,7 +453,7 @@ class REGINA_API NGroupExpression :
          * respresented by the given string.
          *
          * See the string-based constructor
-         * NGroupExpression(const std::string&, bool*) for further
+         * GroupExpression(const std::string&, bool*) for further
          * information on how this string should be formatted.
          *
          * If the given string cannot be interpreted as a word in a group,
@@ -497,7 +497,7 @@ class REGINA_API NGroupExpression :
          *
          * @return the inverse of this expression.
          */
-        NGroupExpression* inverse() const;
+        GroupExpression* inverse() const;
 
         /**
          * Inverts this expression.  Does not allocate or deallocate anything.
@@ -512,7 +512,7 @@ class REGINA_API NGroupExpression :
          * @param exponent the power to which this expression should be raised.
          * @return this expression raised to the given power.
          */
-        NGroupExpression* power(long exponent) const;
+        GroupExpression* power(long exponent) const;
         /**
          * Simplifies this expression.
          * Adjacent powers of the same generator will be combined, and
@@ -545,7 +545,7 @@ class REGINA_API NGroupExpression :
          * @return \c true if and only if any substitutions were made.
          */
         bool substitute(unsigned long generator,
-            const NGroupExpression& expansion, bool cyclic = false);
+            const GroupExpression& expansion, bool cyclic = false);
 
         /**
          * Determines whether or not one can relabel the generators in
@@ -573,8 +573,8 @@ class REGINA_API NGroupExpression :
          * @return a list of permutations, implemented as maps from
          * generator indices of this word to generator indices of \a other.
          */
-        std::list< std::map< unsigned long, NGroupExpressionTerm > >
-            relabellingsThisToOther( const NGroupExpression &other,
+        std::list< std::map< unsigned long, GroupExpressionTerm > >
+            relabellingsThisToOther( const GroupExpression &other,
             bool cyclic=false ) const;
 
         /**
@@ -661,18 +661,18 @@ class REGINA_API NGroupExpression :
  * \todo Let's make intelligent simplify a tad more intelligent, and the GUI
  * call a bit more safe.  Perhaps parallelize the GUI call, and give users
  * parameters to ensure it won't crash the computer.  Also look at the FPGroup
- * package. We should also have a simple way of creating NGroupPresentation
+ * package. We should also have a simple way of creating GroupPresentation
  * objects directly from text strings.  We would like to have something like
- * NGroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
+ * GroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  */
-class REGINA_API NGroupPresentation :
-        public Output<NGroupPresentation>,
+class REGINA_API GroupPresentation :
+        public Output<GroupPresentation>,
         public boost::noncopyable {
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
-        std::vector<NGroupExpression*> relations;
+        std::vector<GroupExpression*> relations;
             /**< The relations between the generators. */
 
     public:
@@ -680,13 +680,13 @@ class REGINA_API NGroupPresentation :
          * Creates a new presentation with no generators and no
          * relations.
          */
-        NGroupPresentation();
+        GroupPresentation();
         /**
          * Creates a clone of the given group presentation.
          *
          * @param cloneMe the presentation to clone.
          */
-        NGroupPresentation(const NGroupPresentation& cloneMe);
+        GroupPresentation(const GroupPresentation& cloneMe);
         /**
          * Constructor that allows you to directly pass an arbitrary number
          * of relators in string format.
@@ -694,7 +694,7 @@ class REGINA_API NGroupPresentation :
          * The first argument \a nGens is the number of generators one wants
          * the group to have. The second argument \a rels is a vector
          * of strings, where each string gives a single relator.  See
-         * the NGroupExpression::NGroupExpression(const std::string&, bool*)
+         * the GroupExpression::GroupExpression(const std::string&, bool*)
          * constructor notes for information on what format these strings
          * can take.
          *
@@ -704,8 +704,8 @@ class REGINA_API NGroupPresentation :
          *
          * If you are compiling Regina against C++11, you can use the
          * C++11 initializer_list construction to construct an
-         * NGroupPresentation directly using syntax of the form
-         * <tt>NGroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
+         * GroupPresentation directly using syntax of the form
+         * <tt>GroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
          *
          * \ifacespython Not present.
          *
@@ -713,13 +713,13 @@ class REGINA_API NGroupPresentation :
          * @param rels a vector of relations each given in string form,
          * as outlined above.
          */
-        NGroupPresentation(unsigned long nGens,
+        GroupPresentation(unsigned long nGens,
                 const std::vector<std::string> &rels);
         /**
          * Destroys the group presentation.
          * All relations that are stored will be deallocated.
          */
-        ~NGroupPresentation();
+        ~GroupPresentation();
 
         /**
          * Assignment operator.
@@ -728,7 +728,7 @@ class REGINA_API NGroupPresentation :
          * copy of.
          * @return a reference to this group presentation.
          */
-        NGroupPresentation& operator=(const NGroupPresentation& cloneMe);
+        GroupPresentation& operator=(const GroupPresentation& cloneMe);
 
         /**
          * Adds one or more generators to the group presentation.
@@ -759,7 +759,7 @@ class REGINA_API NGroupPresentation :
          * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this
          * parameter should be the expression <tt>g1^2 g2</tt>.
          */
-        void addRelation(NGroupExpression* rel);
+        void addRelation(GroupExpression* rel);
 
         /**
          * Returns the number of generators in this group presentation.
@@ -785,7 +785,7 @@ class REGINA_API NGroupPresentation :
          * for instance, if the relation is <tt>g1^2 g2 = 1</tt> then
          * this will be the expression <tt>g1^2 g2</tt>.
          */
-        const NGroupExpression& relation(size_t index) const;
+        const GroupExpression& relation(size_t index) const;
 
         /**
          * Tests whether all of the relations for the group are indeed words
@@ -883,7 +883,7 @@ class REGINA_API NGroupPresentation :
          * This must be a word in the generators of this group.
          * @return \c true if and only if the input word was modified.
          */
-        bool simplifyWord(NGroupExpression &input) const;
+        bool simplifyWord(GroupExpression &input) const;
 
         /**
          * A routine to help escape local wells when simplifying
@@ -964,7 +964,7 @@ class REGINA_API NGroupPresentation :
 
         /**
          * The sum of the word lengths of the relators.
-         * Word lengths are computing using NGroupExpression::wordLength().
+         * Word lengths are computing using GroupExpression::wordLength().
          * Used as a coarse measure of the complexity of the presentation.
          *
          * @return the sum of word lengths.
@@ -1206,7 +1206,7 @@ class REGINA_API NGroupPresentation :
          * @return \c true if this routine could certify that the two group
          * presentations are simply isomorphic, or \c false if it could not.
          */
-        bool identifySimplyIsomorphicTo(const NGroupPresentation& other) const;
+        bool identifySimplyIsomorphicTo(const GroupPresentation& other) const;
 
         /**
          * Returns a TeX representation of this group presentation.
@@ -1319,7 +1319,7 @@ class REGINA_API NGroupPresentation :
          * the factors of this free product, or an empty list if this
          * routine fails (i.e., the result is inconclusive).
          */
-        std::list< NGroupPresentation* > identifyFreeProduct() const;
+        std::list< GroupPresentation* > identifyFreeProduct() const;
 
         /**
          * A structure internal to the small cancellation simplification
@@ -1403,8 +1403,8 @@ class REGINA_API NGroupPresentation :
          *  recognition.
          */
         static void dehnAlgorithmSubMetric(
-            const NGroupExpression &this_word,
-            const NGroupExpression &that_word,
+            const GroupExpression &this_word,
+            const GroupExpression &that_word,
             std::set< NWordSubstitutionData > &sub_list,
             unsigned long step=1 );
 
@@ -1419,49 +1419,49 @@ class REGINA_API NGroupPresentation :
          *  dehnAlgorithmSubMetric.
          */
         static void applySubstitution(
-            NGroupExpression& this_word,
-            const NGroupExpression &that_word,
+            GroupExpression& this_word,
+            const GroupExpression &that_word,
             const NWordSubstitutionData &sub_data );
 
 };
 
 /*@}*/
 
-// Inline functions for NGroupExpressionTerm
+// Inline functions for GroupExpressionTerm
 
-inline NGroupExpressionTerm::NGroupExpressionTerm() {
+inline GroupExpressionTerm::GroupExpressionTerm() {
 }
-inline NGroupExpressionTerm::NGroupExpressionTerm(unsigned long newGen,
+inline GroupExpressionTerm::GroupExpressionTerm(unsigned long newGen,
         long newExp) : generator(newGen), exponent(newExp) {
 }
-inline NGroupExpressionTerm::NGroupExpressionTerm(
-        const NGroupExpressionTerm& cloneMe) :
+inline GroupExpressionTerm::GroupExpressionTerm(
+        const GroupExpressionTerm& cloneMe) :
         generator(cloneMe.generator), exponent(cloneMe.exponent) {
 }
 
-inline NGroupExpressionTerm& NGroupExpressionTerm::operator = (
-        const NGroupExpressionTerm& cloneMe) {
+inline GroupExpressionTerm& GroupExpressionTerm::operator = (
+        const GroupExpressionTerm& cloneMe) {
     generator = cloneMe.generator;
     exponent = cloneMe.exponent;
     return *this;
 }
 
-inline bool NGroupExpressionTerm::operator == (
-        const NGroupExpressionTerm& other) const {
+inline bool GroupExpressionTerm::operator == (
+        const GroupExpressionTerm& other) const {
     return (generator == other.generator) && (exponent == other.exponent);
 }
 
-inline bool NGroupExpressionTerm::operator != (
-        const NGroupExpressionTerm& other) const {
+inline bool GroupExpressionTerm::operator != (
+        const GroupExpressionTerm& other) const {
     return (generator != other.generator) || (exponent != other.exponent);
 }
 
-inline NGroupExpressionTerm NGroupExpressionTerm::inverse() const {
-    return NGroupExpressionTerm(generator, -exponent);
+inline GroupExpressionTerm GroupExpressionTerm::inverse() const {
+    return GroupExpressionTerm(generator, -exponent);
 }
 
-inline bool NGroupExpressionTerm::operator += (
-        const NGroupExpressionTerm& other) {
+inline bool GroupExpressionTerm::operator += (
+        const GroupExpressionTerm& other) {
     if (generator == other.generator) {
         exponent += other.exponent;
         return true;
@@ -1469,128 +1469,128 @@ inline bool NGroupExpressionTerm::operator += (
         return false;
 }
 
-inline bool NGroupExpressionTerm::operator < (
-        const NGroupExpressionTerm& other) const {
+inline bool GroupExpressionTerm::operator < (
+        const GroupExpressionTerm& other) const {
     return ( (generator < other.generator) ||
              ( (generator == other.generator) &&
                ( exponent < other.exponent ) ) );
 }
 
-// Inline functions for NGroupExpression
+// Inline functions for GroupExpression
 
-inline NGroupExpression::NGroupExpression() {
+inline GroupExpression::GroupExpression() {
 }
 
-inline NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) :
+inline GroupExpression::GroupExpression(const GroupExpression& cloneMe) :
         terms_(cloneMe.terms_) {
 }
 
-inline bool NGroupExpression::operator ==(const NGroupExpression& comp) const {
+inline bool GroupExpression::operator ==(const GroupExpression& comp) const {
     return terms_ == comp.terms_;
 }
 
-inline bool NGroupExpression::operator !=(const NGroupExpression& comp) const {
+inline bool GroupExpression::operator !=(const GroupExpression& comp) const {
     return terms_ != comp.terms_;
 }
 
-inline NGroupExpression& NGroupExpression::operator=(
-        const NGroupExpression& cloneMe) {
+inline GroupExpression& GroupExpression::operator=(
+        const GroupExpression& cloneMe) {
     terms_ = cloneMe.terms_;
     return *this;
 }
 
-inline std::list<NGroupExpressionTerm>& NGroupExpression::terms() {
+inline std::list<GroupExpressionTerm>& GroupExpression::terms() {
     return terms_;
 }
 
-inline const std::list<NGroupExpressionTerm>& NGroupExpression::terms()
+inline const std::list<GroupExpressionTerm>& GroupExpression::terms()
         const {
     return terms_;
 }
 
-inline size_t NGroupExpression::countTerms() const {
+inline size_t GroupExpression::countTerms() const {
     return terms_.size();
 }
 
-inline bool NGroupExpression::isTrivial() const {
+inline bool GroupExpression::isTrivial() const {
     return terms_.empty();
 }
 
-inline size_t NGroupExpression::wordLength() const {
+inline size_t GroupExpression::wordLength() const {
     size_t retval(0);
-    std::list<NGroupExpressionTerm>::const_iterator it;
+    std::list<GroupExpressionTerm>::const_iterator it;
     for (it = terms_.begin(); it!=terms_.end(); it++)
         retval += labs((*it).exponent);
     return retval;
 }
 
-inline unsigned long NGroupExpression::generator(size_t index) const {
+inline unsigned long GroupExpression::generator(size_t index) const {
     return term(index).generator;
 }
 
-inline long NGroupExpression::exponent(size_t index) const {
+inline long GroupExpression::exponent(size_t index) const {
     return term(index).exponent;
 }
 
-inline void NGroupExpression::addTermFirst(const NGroupExpressionTerm& term) {
+inline void GroupExpression::addTermFirst(const GroupExpressionTerm& term) {
     terms_.push_front(term);
 }
 
-inline void NGroupExpression::addTermFirst(unsigned long generator,
+inline void GroupExpression::addTermFirst(unsigned long generator,
         long exponent) {
-    terms_.push_front(NGroupExpressionTerm(generator, exponent));
+    terms_.push_front(GroupExpressionTerm(generator, exponent));
 }
 
-inline void NGroupExpression::addTermLast(const NGroupExpressionTerm& term) {
+inline void GroupExpression::addTermLast(const GroupExpressionTerm& term) {
     terms_.push_back(term);
 }
 
-inline void NGroupExpression::addTermLast(unsigned long generator,
+inline void GroupExpression::addTermLast(unsigned long generator,
         long exponent) {
-    terms_.push_back(NGroupExpressionTerm(generator, exponent));
+    terms_.push_back(GroupExpressionTerm(generator, exponent));
 }
 
-inline void NGroupExpression::erase() {
+inline void GroupExpression::erase() {
     terms_.clear();
 }
 
-// Inline functions for NGroupPresentation
+// Inline functions for GroupPresentation
 
-inline NGroupPresentation::NGroupPresentation() : nGenerators(0) {
+inline GroupPresentation::GroupPresentation() : nGenerators(0) {
 }
 
-inline NGroupPresentation::~NGroupPresentation() {
+inline GroupPresentation::~GroupPresentation() {
     for_each(relations.begin(), relations.end(),
-        FuncDelete<NGroupExpression>());
+        FuncDelete<GroupExpression>());
 }
 
-inline unsigned long NGroupPresentation::addGenerator(unsigned long num) {
+inline unsigned long GroupPresentation::addGenerator(unsigned long num) {
     return (nGenerators += num);
 }
 
-inline void NGroupPresentation::addRelation(NGroupExpression* rel) {
+inline void GroupPresentation::addRelation(GroupExpression* rel) {
     relations.push_back(rel);
 }
 
-inline unsigned long NGroupPresentation::countGenerators() const {
+inline unsigned long GroupPresentation::countGenerators() const {
     return nGenerators;
 }
 
-inline size_t NGroupPresentation::countRelations() const {
+inline size_t GroupPresentation::countRelations() const {
     return relations.size();
 }
 
-inline const NGroupExpression& NGroupPresentation::relation(
+inline const GroupExpression& GroupPresentation::relation(
         size_t index) const {
     return *relations[index];
 }
 
-inline void NGroupPresentation::writeTextShort(std::ostream& out) const {
+inline void GroupPresentation::writeTextShort(std::ostream& out) const {
     out << "Group presentation: " << nGenerators << " generators, "
         << relations.size() << " relations";
 }
 
-inline size_t NGroupPresentation::relatorLength() const {
+inline size_t GroupPresentation::relatorLength() const {
     size_t retval(0);
     for (size_t i=0; i<relations.size(); i++)
         retval += relations[i]->wordLength();

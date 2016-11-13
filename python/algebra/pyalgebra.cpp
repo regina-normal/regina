@@ -31,13 +31,13 @@
  **************************************************************************/
 
 void addAbelianGroup();
-void addNGroupPresentation();
+void addGroupPresentation();
 void addNHomGroupPresentation();
 void addNMarkedAbelianGroup();
 
 void addAlgebraClasses() {
     addAbelianGroup();
-    addNGroupPresentation();
+    addGroupPresentation();
     addNHomGroupPresentation();
     addNMarkedAbelianGroup();
 }
