@@ -1170,6 +1170,9 @@ Equality type : BY_REFERENCE
 HomGroupPresentation : class
 Equality type : BY_REFERENCE
 
+HomMarkedAbelianGroup : class
+Equality type : BY_REFERENCE
+
 HomologicalData : class
 Equality type : BY_REFERENCE
 
@@ -1229,6 +1232,9 @@ Equality type : BY_VALUE
 
 Locale : class
 Equality type : NEVER_INSTANTIATED
+
+MarkedAbelianGroup : class
+Equality type : BY_REFERENCE
 
 Matrix2 : class
 Equality type : BY_VALUE
@@ -1328,9 +1334,6 @@ Equality type : BY_VALUE
 
 NHomGroupPresentation : typedef ->  HomGroupPresentation
 
-NHomMarkedAbelianGroup : class
-Equality type : BY_REFERENCE
-
 NHomologicalData : typedef ->  HomologicalData
 
 NInteger : typedef ->  Integer
@@ -1367,9 +1370,6 @@ NLensSpace : class
 Equality type : BY_VALUE
 
 NManifold : class
-Equality type : BY_REFERENCE
-
-NMarkedAbelianGroup : class
 Equality type : BY_REFERENCE
 
 NMatrix2 : typedef ->  Matrix2

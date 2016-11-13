@@ -49,7 +49,7 @@
 
 namespace regina {
 
-class NHomMarkedAbelianGroup;
+class HomMarkedAbelianGroup;
 
 /**
  * \weakgroup algebra
@@ -89,8 +89,8 @@ class NHomMarkedAbelianGroup;
  * \todo Testsuite additions: isBoundary(), boundaryMap(), writeAsBdry(),
  * cycleGen().
  */
-class REGINA_API NMarkedAbelianGroup :
-        public ShortOutput<NMarkedAbelianGroup, true>,
+class REGINA_API MarkedAbelianGroup :
+        public ShortOutput<MarkedAbelianGroup, true>,
         public boost::noncopyable {
     private:
         /** Internal original M */
@@ -145,10 +145,10 @@ class REGINA_API NMarkedAbelianGroup :
         unsigned long tensorIfLoc;
         unsigned long tensorIfNum;
         std::vector<Integer> tensorInvFacList;
-        // and NHomMarkedAbelianGroup at present needs to see some of the
-        // internals of NMarkedAbelianGroup
+        // and HomMarkedAbelianGroup at present needs to see some of the
+        // internals of MarkedAbelianGroup
         // at present this is only used for inverseHom().
-        friend class NHomMarkedAbelianGroup;
+        friend class HomMarkedAbelianGroup;
 
     public:
 
@@ -168,7 +168,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
          */
-        NMarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N);
+        MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N);
 
         /**
          * Creates a marked abelian group from a chain complex with
@@ -185,7 +185,7 @@ class REGINA_API NMarkedAbelianGroup :
          * \a pcoeff >= 0.  If you know beforehand that \a pcoeff=0, it's
          * more efficient to use the previous constructor.
          */
-        NMarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N,
+        MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N,
             const Integer &pcoeff);
 
         /**
@@ -200,14 +200,14 @@ class REGINA_API NMarkedAbelianGroup :
          * @param p describes the type of ring that we use to talk about
          * the "free" module.
          */
-        NMarkedAbelianGroup(unsigned long rk, const Integer &p);
+        MarkedAbelianGroup(unsigned long rk, const Integer &p);
 
         /**
          * Creates a clone of the given group.
          *
          * @param cloneMe the group to clone.
          */
-        NMarkedAbelianGroup(const NMarkedAbelianGroup& cloneMe);
+        MarkedAbelianGroup(const MarkedAbelianGroup& cloneMe);
 
         /**
          * Determines whether or not the defining maps for this group
@@ -268,7 +268,7 @@ class REGINA_API NMarkedAbelianGroup :
          * Returns the number of invariant factors that describe the
          * torsion elements of this group.  This is the minimal number
          * of torsion generators.
-         * See the NMarkedAbelianGroup class notes for further details.
+         * See the MarkedAbelianGroup class notes for further details.
          *
          * @return the number of invariant factors.
          */
@@ -284,7 +284,7 @@ class REGINA_API NMarkedAbelianGroup :
         /**
          * Returns the given invariant factor describing the torsion
          * elements of this group.
-         * See the NMarkedAbelianGroup class notes for further details.
+         * See the MarkedAbelianGroup class notes for further details.
          *
          * If the invariant factors are <i>d0</i>|<i>d1</i>|...|<i>dn</i>,
          * this routine will return <i>di</i> where <i>i</i> is the
@@ -311,29 +311,29 @@ class REGINA_API NMarkedAbelianGroup :
          * @return \c true if and only if the two groups are isomorphic.
          */
         REGINA_INLINE_REQUIRED
-        bool isIsomorphicTo(const NMarkedAbelianGroup &other) const;
+        bool isIsomorphicTo(const MarkedAbelianGroup &other) const;
 
         /**
-         * Determines whether or not the two NMarkedAbelianGroups are
+         * Determines whether or not the two MarkedAbelianGroups are
          * identical, which means they have exactly the same presentation
          * matrices.  This is useful for determining if two
-         * NHomMarkedAbelianGroups are composable.  See isIsomorphicTo() if
+         * HomMarkedAbelianGroups are composable.  See isIsomorphicTo() if
          * all you care about is the isomorphism relation among groups
          * defined by presentation matrices.
          *
-         * @param other the NMarkedAbelianGroup with which this should be
+         * @param other the MarkedAbelianGroup with which this should be
          * compared.
          * @return \c true if and only if the two groups have identical
          * chain-complex definitions.
          */
-        bool equalTo(const NMarkedAbelianGroup& other) const;
+        bool equalTo(const MarkedAbelianGroup& other) const;
 
         /**
          * The text representation will be of the form
          * <tt>3 Z + 4 Z_2 + Z_120</tt>.
          * The torsion elements will be written in terms of the
          * invariant factors of the group, as described in the
-         * NMarkedAbelianGroup notes.
+         * MarkedAbelianGroup notes.
          *
          * @param out the stream to write to.
          * @param utf8 if \c true, then richer unicode characters will
@@ -669,16 +669,16 @@ class REGINA_API NMarkedAbelianGroup :
         const Integer& coefficients() const;
 
         /**
-         *  Returns a NMarkedAbelianGroup representing the torsion subgroup
+         *  Returns a MarkedAbelianGroup representing the torsion subgroup
          *  of this group. 
          */
-        std::unique_ptr<NMarkedAbelianGroup> torsionSubgroup() const;
+        std::unique_ptr<MarkedAbelianGroup> torsionSubgroup() const;
 
         /**
-         *  Returns a NHomMarkedAbelianGroup representing the inclusion of the
+         *  Returns a HomMarkedAbelianGroup representing the inclusion of the
          *  torsion subgroup into this group. 
          */
-        std::unique_ptr<NHomMarkedAbelianGroup> torsionInclusion() const;
+        std::unique_ptr<HomMarkedAbelianGroup> torsionInclusion() const;
 };
 
 /**
@@ -725,14 +725,14 @@ class REGINA_API NMarkedAbelianGroup :
  *
  * @author Ryan Budney
  */
-class REGINA_API NHomMarkedAbelianGroup :
-        public Output<NHomMarkedAbelianGroup>,
+class REGINA_API HomMarkedAbelianGroup :
+        public Output<HomMarkedAbelianGroup>,
         public boost::noncopyable {
     private:
         /** internal rep of domain of the homomorphism */
-        NMarkedAbelianGroup domain_;
+        MarkedAbelianGroup domain_;
         /** internal rep of range of the homomorphism */
-        NMarkedAbelianGroup range_;
+        MarkedAbelianGroup range_;
         /** matrix describing map from domain to range, in the coordinates
             of the chain complexes used to construct domain and range, see
             above description */
@@ -747,11 +747,11 @@ class REGINA_API NHomMarkedAbelianGroup :
             factors. */
         MatrixInt* reducedMatrix_;
         /** pointer to kernel of map */
-        NMarkedAbelianGroup* kernel_;
+        MarkedAbelianGroup* kernel_;
         /** pointer to coKernel of map */
-        NMarkedAbelianGroup* coKernel_;
+        MarkedAbelianGroup* coKernel_;
         /** pointer to image */
-        NMarkedAbelianGroup* image_;
+        MarkedAbelianGroup* image_;
         /** pointer to a lattice which describes the kernel of the
             homomorphism. */
         MatrixInt* reducedKernelLattice;
@@ -772,7 +772,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          * Constructs a homomorphism from two marked abelian groups and
          * a matrix that indicates where the generators are sent.
          * The roles of the two groups and the matrix are described in
-         * detail in the NHomMarkedAbelianGroup class overview.
+         * detail in the HomMarkedAbelianGroup class overview.
          *
          * The matrix must be given in the chain-complex coordinates.
          * Specifically, if the domain was defined via the chain complex
@@ -795,8 +795,8 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @param mat the matrix that describes the homomorphism from 
          * \a dom to \a ran.
          */
-        NHomMarkedAbelianGroup(const NMarkedAbelianGroup& dom,
-                const NMarkedAbelianGroup& ran,
+        HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
+                const MarkedAbelianGroup& ran,
                 const MatrixInt &mat);
 
         /**
@@ -804,17 +804,17 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @param h the homomorphism to clone.
          */
-        NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& h);
+        HomMarkedAbelianGroup(const HomMarkedAbelianGroup& h);
         /**
          * Destructor.
          */
-        ~NHomMarkedAbelianGroup();
+        ~HomMarkedAbelianGroup();
 
         /**
          * Determines whether this and the given homomorphism together
          * form a chain map.
          *
-         * Given two NHomMarkedAbelianGroups, you have two diagrams:
+         * Given two HomMarkedAbelianGroups, you have two diagrams:
          * <pre>
          * Z^a --N1--> Z^b --M1--> Z^c   Z^g --N3--> Z^h --M3--> Z^i
          *                   ^                             ^
@@ -829,7 +829,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return true if and only if c=g, M1=N3, f=j, M2=N4,
          * and the diagram commutes.
          */
-        bool isChainMap(const NHomMarkedAbelianGroup &other) const;
+        bool isChainMap(const HomMarkedAbelianGroup &other) const;
 
         /**
          * Is this at least a cycle map?  If not, pretty much any further
@@ -882,21 +882,21 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the kernel of the homomorphism, as a marked abelian group.
          */
         REGINA_INLINE_REQUIRED
-        const NMarkedAbelianGroup& kernel() const;
+        const MarkedAbelianGroup& kernel() const;
         /**
          * Returns the cokernel of this homomorphism.
          *
          * @return the cokernel of the homomorphism, as a marked abelian group.
          */
         REGINA_INLINE_REQUIRED
-        const NMarkedAbelianGroup& cokernel() const;
+        const MarkedAbelianGroup& cokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
          * @return the image of the homomorphism, as a marked abelian group.
          */
         REGINA_INLINE_REQUIRED
-        const NMarkedAbelianGroup& image() const;
+        const MarkedAbelianGroup& image() const;
 
         /**
          * Short text representation.  This will state some basic
@@ -925,13 +925,13 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @return the domain that was used to define the homomorphism.
          */
-        const NMarkedAbelianGroup& domain() const;
+        const MarkedAbelianGroup& domain() const;
         /**
          * Returns the range of this homomorphism.
          *
          * @return the range that was used to define the homomorphism.
          */
-        const NMarkedAbelianGroup& range() const;
+        const MarkedAbelianGroup& range() const;
         /**
          * Returns the defining matrix for the homomorphism.
          *
@@ -995,7 +995,7 @@ class REGINA_API NHomMarkedAbelianGroup :
             const std::vector<Integer> &input) const;
 
         /**
-         * Returns the inverse to a NHomMarkedAbelianGroup. If this
+         * Returns the inverse to a HomMarkedAbelianGroup. If this
          * homomorphism is not invertible, this routine returns the zero
          * homomorphism.
          *
@@ -1009,7 +1009,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the inverse homomorphism, or the zero homomorphism if
          * this is not invertible.
          */
-        std::unique_ptr<NHomMarkedAbelianGroup> inverseHom() const;
+        std::unique_ptr<HomMarkedAbelianGroup> inverseHom() const;
 
         /**
          * Returns the composition of two homomorphisms.
@@ -1021,20 +1021,20 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @param X the homomorphism to compose this with.
          * @return a newly created composite homomorphism.
          */
-        std::unique_ptr<NHomMarkedAbelianGroup> operator * (
-            const NHomMarkedAbelianGroup &X) const;
+        std::unique_ptr<HomMarkedAbelianGroup> operator * (
+            const HomMarkedAbelianGroup &X) const;
 
         /**
-         *  Returns a NHomMarkedAbelianGroup representing the induced map
+         *  Returns a HomMarkedAbelianGroup representing the induced map
          *  on the torsion subgroups. 
          */
-        std::unique_ptr<NHomMarkedAbelianGroup> torsionSubgroup() const;
+        std::unique_ptr<HomMarkedAbelianGroup> torsionSubgroup() const;
 
         /**
          * Writes a human-readable version of the reduced matrix to the
          * given output stream.  This is a description of the homomorphism
          * in some specific coordinates at present only meant to be
-         * internal to NHomMarkedAbelianGroup.  At present, these coordinates
+         * internal to HomMarkedAbelianGroup.  At present, these coordinates
          * have the torsion factors of the group appearing first, followed by
          * the free factors.
          *
@@ -1048,27 +1048,27 @@ class REGINA_API NHomMarkedAbelianGroup :
     private:
         /**
          * For those situations where you want to define an 
-         * NHomMarkedAbelianGroup from its reduced matrix, not from a chain
+         * HomMarkedAbelianGroup from its reduced matrix, not from a chain
          * map.  This is in the situation where the SNF coordinates have 
          * particular meaning to the user.  At present I only use this
-         * for NHomMarkedAbelianGroup::inverseHom().  Moreover, this routine 
+         * for HomMarkedAbelianGroup::inverseHom().  Moreover, this routine 
          * assumes tebeRedMat actually can be the reduced matrix of some 
          * chain map -- this is not a restriction in
          * the coeff==0 case, but it is if coeff > 0. 
          *
          * \todo Erase completely once made obsolete by right/left inverse.
          */
-        NHomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
-                const NMarkedAbelianGroup &dom, 
-                const NMarkedAbelianGroup &ran);
+        HomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
+                const MarkedAbelianGroup &dom, 
+                const MarkedAbelianGroup &ran);
 };
 
 /*@}*/
 
-// Inline functions for NMarkedAbelianGroup
+// Inline functions for MarkedAbelianGroup
 
 // copy constructor
-inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
+inline MarkedAbelianGroup::MarkedAbelianGroup(const MarkedAbelianGroup& g) :
         OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
         rankOM(g.rankOM),
         ornR(clonePtr(g.ornR)), ornC(clonePtr(g.ornC)),
@@ -1082,72 +1082,72 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         tensorIfNum(g.tensorIfNum), tensorInvFacList(g.tensorInvFacList) {
 }
 
-inline unsigned long NMarkedAbelianGroup::torsionRank(unsigned long degree)
+inline unsigned long MarkedAbelianGroup::torsionRank(unsigned long degree)
         const {
     return torsionRank(Integer(degree));
 }
 
-inline size_t NMarkedAbelianGroup::countInvariantFactors() const {
+inline size_t MarkedAbelianGroup::countInvariantFactors() const {
     return ifNum;
 }
 
-inline const Integer& NMarkedAbelianGroup::invariantFactor(
+inline const Integer& MarkedAbelianGroup::invariantFactor(
         size_t index) const {
     return InvFacList[index];
 }
 
-inline unsigned long NMarkedAbelianGroup::rank() const {
+inline unsigned long MarkedAbelianGroup::rank() const {
     return snfrank;
 }
 
-inline unsigned long NMarkedAbelianGroup::minNumberOfGenerators() const {
+inline unsigned long MarkedAbelianGroup::minNumberOfGenerators() const {
     return snfrank + ifNum;
 }
 
-inline unsigned long NMarkedAbelianGroup::rankCC() const {
+inline unsigned long MarkedAbelianGroup::rankCC() const {
     return OM.columns();
 }
 
-inline unsigned long NMarkedAbelianGroup::minNumberCycleGens() const {
+inline unsigned long MarkedAbelianGroup::minNumberCycleGens() const {
     return OM.columns() - TORLoc;
 }
 
-inline bool NMarkedAbelianGroup::isTrivial() const {
+inline bool MarkedAbelianGroup::isTrivial() const {
     return ( (snfrank==0) && (InvFacList.size()==0) );
 }
 
-inline bool NMarkedAbelianGroup::equalTo(const NMarkedAbelianGroup& other)
+inline bool MarkedAbelianGroup::equalTo(const MarkedAbelianGroup& other)
         const {
     return ( (OM == other.OM) && (ON == other.ON) && (coeff == other.coeff) );
 }
 
-inline bool NMarkedAbelianGroup::isIsomorphicTo(
-        const NMarkedAbelianGroup &other) const {
+inline bool MarkedAbelianGroup::isIsomorphicTo(
+        const MarkedAbelianGroup &other) const {
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
 }
 
-inline const MatrixInt& NMarkedAbelianGroup::M() const {
+inline const MatrixInt& MarkedAbelianGroup::M() const {
     return OM;
 }
-inline const MatrixInt& NMarkedAbelianGroup::N() const {
+inline const MatrixInt& MarkedAbelianGroup::N() const {
     return ON;
 }
-inline const Integer& NMarkedAbelianGroup::coefficients() const {
+inline const Integer& MarkedAbelianGroup::coefficients() const {
     return coeff;
 }
 
-// Inline functions for NHomMarkedAbelianGroup
+// Inline functions for HomMarkedAbelianGroup
 
-inline NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(
-        const NMarkedAbelianGroup& dom,
-        const NMarkedAbelianGroup& ran,
+inline HomMarkedAbelianGroup::HomMarkedAbelianGroup(
+        const MarkedAbelianGroup& dom,
+        const MarkedAbelianGroup& ran,
         const MatrixInt &mat) :
         domain_(dom), range_(ran), matrix(mat),
         reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0),
         reducedKernelLattice(0) {
 }
 
-inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
+inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
     if (reducedMatrix_)
         delete reducedMatrix_;
     if (kernel_)
@@ -1160,61 +1160,61 @@ inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
         delete reducedKernelLattice;
 }
 
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::domain() const {
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::domain() const {
     return domain_;
 }
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::range() const {
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::range() const {
     return range_;
 }
-inline const MatrixInt& NHomMarkedAbelianGroup::definingMatrix() const {
+inline const MatrixInt& HomMarkedAbelianGroup::definingMatrix() const {
     return matrix;
 }
 
-inline const MatrixInt& NHomMarkedAbelianGroup::reducedMatrix() const {
+inline const MatrixInt& HomMarkedAbelianGroup::reducedMatrix() const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     return *reducedMatrix_;
 }
 
-inline bool NHomMarkedAbelianGroup::isEpic() const {
+inline bool HomMarkedAbelianGroup::isEpic() const {
     return cokernel().isTrivial();
 }
 
-inline bool NHomMarkedAbelianGroup::isMonic() const {
+inline bool HomMarkedAbelianGroup::isMonic() const {
     return kernel().isTrivial();
 }
 
-inline bool NHomMarkedAbelianGroup::isIsomorphism() const {
+inline bool HomMarkedAbelianGroup::isIsomorphism() const {
     return (cokernel().isTrivial() && kernel().isTrivial());
 }
 
-inline bool NHomMarkedAbelianGroup::isZero() const {
+inline bool HomMarkedAbelianGroup::isZero() const {
     return image().isTrivial();
 }
 
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::kernel() const {
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::kernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
+    const_cast<HomMarkedAbelianGroup*>(this)->computeKernel();
     return *kernel_;
 }
 
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::image() const {
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::image() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
+    const_cast<HomMarkedAbelianGroup*>(this)->computeImage();
     return *image_;
 }
 
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::cokernel() const {
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::cokernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeCokernel();
+    const_cast<HomMarkedAbelianGroup*>(this)->computeCokernel();
     return *coKernel_;
 }
 

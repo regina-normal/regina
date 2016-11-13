@@ -903,23 +903,23 @@ void HomologicalData::computeChainComplexes() {
                 tri->countTriangles() + i - sBNIF.size() ) ,i)+=1;
 }
 
-const NMarkedAbelianGroup& HomologicalData::homology(unsigned q) {
+const MarkedAbelianGroup& HomologicalData::homology(unsigned q) {
     if (q==0) {
         if (!mHomology0.get()) {
             computeChainComplexes();
-            mHomology0.reset(new NMarkedAbelianGroup(*A0,*A1));
+            mHomology0.reset(new MarkedAbelianGroup(*A0,*A1));
         }
         return *mHomology0;
     } else if (q==1) {
         if (!mHomology1.get()) {
             computeChainComplexes();
-            mHomology1.reset(new NMarkedAbelianGroup(*A1,*A2));
+            mHomology1.reset(new MarkedAbelianGroup(*A1,*A2));
         }
         return *mHomology1;
     } else if (q==2) {
         if (!mHomology2.get()) {
             computeChainComplexes();
-            mHomology2.reset(new NMarkedAbelianGroup(*A2,*A3));
+            mHomology2.reset(new MarkedAbelianGroup(*A2,*A3));
         }
         return *mHomology2;
     } else {
@@ -927,24 +927,24 @@ const NMarkedAbelianGroup& HomologicalData::homology(unsigned q) {
         // outside the required range.
         if (!mHomology3.get()) {
             computeChainComplexes();
-            mHomology3.reset(new NMarkedAbelianGroup(*A3,*A4));
+            mHomology3.reset(new MarkedAbelianGroup(*A3,*A4));
         }
         return *mHomology3;
     }
     // the A's should probably be redone as an array of pointers...
 }
 
-const NMarkedAbelianGroup& HomologicalData::bdryHomology(unsigned q) {
+const MarkedAbelianGroup& HomologicalData::bdryHomology(unsigned q) {
     if (q==0) {
         if (!bHomology0.get()) {
             computeChainComplexes();
-            bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
+            bHomology0.reset(new MarkedAbelianGroup(*Bd0,*Bd1));
         }
         return *bHomology0;
     } else if (q==1) {
         if (!bHomology1.get()) {
             computeChainComplexes();
-            bHomology1.reset(new NMarkedAbelianGroup(*Bd1,*Bd2));
+            bHomology1.reset(new MarkedAbelianGroup(*Bd1,*Bd2));
         }
         return *bHomology1;
     } else {
@@ -952,29 +952,29 @@ const NMarkedAbelianGroup& HomologicalData::bdryHomology(unsigned q) {
         // outside the required range.
         if (!bHomology2.get()) {
             computeChainComplexes();
-            bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
+            bHomology2.reset(new MarkedAbelianGroup(*Bd2,*Bd3));
         }
         return *bHomology2;
     }
 }
 
-const NMarkedAbelianGroup& HomologicalData::dualHomology(unsigned q) {
+const MarkedAbelianGroup& HomologicalData::dualHomology(unsigned q) {
     if (q==0) {
         if (!dmHomology0.get()) {
             computeChainComplexes();
-            dmHomology0.reset(new NMarkedAbelianGroup(*B0_,*B1));
+            dmHomology0.reset(new MarkedAbelianGroup(*B0_,*B1));
         }
         return *dmHomology0;
     } else if (q==1) {
         if (!dmHomology1.get()) {
             computeChainComplexes();
-            dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
+            dmHomology1.reset(new MarkedAbelianGroup(*B1,*B2));
         }
         return *dmHomology1;
     } else if (q==2) {
         if (!dmHomology2.get()) {
             computeChainComplexes();
-            dmHomology2.reset(new NMarkedAbelianGroup(*B2,*B3));
+            dmHomology2.reset(new MarkedAbelianGroup(*B2,*B3));
         }
         return *dmHomology2;
     } else {
@@ -982,7 +982,7 @@ const NMarkedAbelianGroup& HomologicalData::dualHomology(unsigned q) {
         // outside the required range.
         if (!dmHomology3.get()) {
             computeChainComplexes();
-            dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
+            dmHomology3.reset(new MarkedAbelianGroup(*B3,*B4));
         }
         return *dmHomology3;
     }
@@ -991,53 +991,53 @@ const NMarkedAbelianGroup& HomologicalData::dualHomology(unsigned q) {
 void HomologicalData::computeHomology() {
     computeChainComplexes();
     if (!mHomology0.get())
-        mHomology0.reset(new NMarkedAbelianGroup(*A0,*A1));
+        mHomology0.reset(new MarkedAbelianGroup(*A0,*A1));
     if (!mHomology1.get())
-        mHomology1.reset(new NMarkedAbelianGroup(*A1,*A2));
+        mHomology1.reset(new MarkedAbelianGroup(*A1,*A2));
     if (!mHomology2.get())
-        mHomology2.reset(new NMarkedAbelianGroup(*A2,*A3));
+        mHomology2.reset(new MarkedAbelianGroup(*A2,*A3));
     if (!mHomology3.get())
-        mHomology3.reset(new NMarkedAbelianGroup(*A3,*A4));
+        mHomology3.reset(new MarkedAbelianGroup(*A3,*A4));
 }
 
 void HomologicalData::computeBHomology() {
     computeChainComplexes();
     if (!bHomology0.get())
-        bHomology0.reset(new NMarkedAbelianGroup(*Bd0,*Bd1));
+        bHomology0.reset(new MarkedAbelianGroup(*Bd0,*Bd1));
     if (!bHomology1.get())
-        bHomology1.reset(new NMarkedAbelianGroup(*Bd1,*Bd2));
+        bHomology1.reset(new MarkedAbelianGroup(*Bd1,*Bd2));
     if (!bHomology2.get())
-        bHomology2.reset(new NMarkedAbelianGroup(*Bd2,*Bd3));
+        bHomology2.reset(new MarkedAbelianGroup(*Bd2,*Bd3));
 }
 
 void HomologicalData::computeDHomology() {
     computeChainComplexes();
     if (!dmHomology0.get())
-        dmHomology0.reset(new NMarkedAbelianGroup(*B0_,*B1));
+        dmHomology0.reset(new MarkedAbelianGroup(*B0_,*B1));
     if (!dmHomology1.get())
-        dmHomology1.reset(new NMarkedAbelianGroup(*B1,*B2));
+        dmHomology1.reset(new MarkedAbelianGroup(*B1,*B2));
     if (!dmHomology2.get())
-        dmHomology2.reset(new NMarkedAbelianGroup(*B2,*B3));
+        dmHomology2.reset(new MarkedAbelianGroup(*B2,*B3));
     if (!dmHomology3.get())
-        dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
+        dmHomology3.reset(new MarkedAbelianGroup(*B3,*B4));
 }
 
-const NHomMarkedAbelianGroup& HomologicalData::h1CellAp() {
+const HomMarkedAbelianGroup& HomologicalData::h1CellAp() {
     if (!dmTomMap1.get()) {
         computeHomology();
         computeDHomology();
-        dmTomMap1.reset(new NHomMarkedAbelianGroup(
+        dmTomMap1.reset(new HomMarkedAbelianGroup(
             *dmHomology1, *mHomology1, *H1map ));
     }
     return (*dmTomMap1);
 }
 
-const NHomMarkedAbelianGroup& HomologicalData::bdryHomologyMap(unsigned q) {
+const HomMarkedAbelianGroup& HomologicalData::bdryHomologyMap(unsigned q) {
     if (q==0) {
         if (!bmMap0.get()) {
             computeHomology();
             computeBHomology();
-            bmMap0.reset(new NHomMarkedAbelianGroup(
+            bmMap0.reset(new HomMarkedAbelianGroup(
                 *bHomology0, *mHomology0, *B0Incl ));
         }
         return *bmMap0;
@@ -1045,7 +1045,7 @@ const NHomMarkedAbelianGroup& HomologicalData::bdryHomologyMap(unsigned q) {
         if (!bmMap1.get()) {
             computeHomology();
             computeBHomology();
-            bmMap1.reset(new NHomMarkedAbelianGroup(
+            bmMap1.reset(new HomMarkedAbelianGroup(
                 *bHomology1, *mHomology1, *B1Incl ));
         }
         return *bmMap1;
@@ -1055,7 +1055,7 @@ const NHomMarkedAbelianGroup& HomologicalData::bdryHomologyMap(unsigned q) {
         if (!bmMap2.get()) {
             computeHomology();
             computeBHomology();
-            bmMap2.reset(new NHomMarkedAbelianGroup(
+            bmMap2.reset(new HomMarkedAbelianGroup(
                 *bHomology2, *mHomology2, *B2Incl ));
         }
         return *bmMap2;
@@ -1066,13 +1066,13 @@ void HomologicalData::computeBIncl() {
     computeHomology();
     computeBHomology();
     if (!bmMap0.get())
-        bmMap0.reset(new NHomMarkedAbelianGroup(
+        bmMap0.reset(new HomMarkedAbelianGroup(
             *bHomology0, *mHomology0, *B0Incl));
     if (!bmMap1.get())
-        bmMap1.reset(new NHomMarkedAbelianGroup(
+        bmMap1.reset(new HomMarkedAbelianGroup(
             *bHomology1, *mHomology1, *B1Incl));
     if (!bmMap2.get())
-        bmMap2.reset(new NHomMarkedAbelianGroup(
+        bmMap2.reset(new HomMarkedAbelianGroup(
             *bHomology2, *mHomology2, *B2Incl));
 }
 
@@ -1083,7 +1083,7 @@ void HomologicalData::computeTorsionLinkingForm() {
         return;
 
     // dual h1 --> standard h1 isomorphism:
-    const NHomMarkedAbelianGroup& h1CellApComputed(h1CellAp());
+    const HomMarkedAbelianGroup& h1CellApComputed(h1CellAp());
     // min number of torsion gens:
     unsigned long niv(dmHomology1->countInvariantFactors());
     // for holding prime decompositions.:

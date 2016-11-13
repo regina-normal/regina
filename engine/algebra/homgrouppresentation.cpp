@@ -78,11 +78,11 @@ GroupExpression HomGroupPresentation::invEvaluate(
 
 }
 
-std::unique_ptr< NHomMarkedAbelianGroup >
+std::unique_ptr< HomMarkedAbelianGroup >
     HomGroupPresentation::markedAbelianisation() const
 {
- std::unique_ptr<NMarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
- std::unique_ptr<NMarkedAbelianGroup> RAN( range_->markedAbelianisation() );
+ std::unique_ptr<MarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
+ std::unique_ptr<MarkedAbelianGroup> RAN( range_->markedAbelianisation() );
  MatrixInt ccMat( RAN->rankCC(), DOM->rankCC() );
  for (unsigned long j=0; j<ccMat.columns(); j++)
   {
@@ -90,8 +90,8 @@ std::unique_ptr< NHomMarkedAbelianGroup >
    for (unsigned long i=0; i<COLj.countTerms(); i++)
     ccMat.entry( COLj.generator(i), j ) += COLj.exponent(i);
   }
- return std::unique_ptr<NHomMarkedAbelianGroup>(
-        new NHomMarkedAbelianGroup( *DOM, *RAN, ccMat ) );
+ return std::unique_ptr<HomMarkedAbelianGroup>(
+        new HomMarkedAbelianGroup( *DOM, *RAN, ccMat ) );
 }
 
 void HomGroupPresentation::writeTextShort(std::ostream& out) const {

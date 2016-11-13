@@ -40,8 +40,8 @@
 #include "testsuite/algebra/testalgebra.h"
 
 using regina::Integer;
-using regina::NMarkedAbelianGroup;
-using regina::NHomMarkedAbelianGroup;
+using regina::MarkedAbelianGroup;
+using regina::HomMarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::GroupPresentation;
 using regina::GroupExpression;
@@ -225,7 +225,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                 i!=presList.end(); i++) {
             GroupPresentation tPres( *(*i) );
             tPres.homologicalAlignment();
-            std::unique_ptr<NMarkedAbelianGroup> mab( tPres.markedAbelianisation() );
+            std::unique_ptr<MarkedAbelianGroup> mab( tPres.markedAbelianisation() );
             unsigned long N(mab->countInvariantFactors());
             unsigned long M(mab->minNumberOfGenerators());
             /*

@@ -345,7 +345,7 @@ class REGINA_API HomGroupPresentation :
          *
          * @return the induced map on the abelianizations.
          */
-        std::unique_ptr< NHomMarkedAbelianGroup > markedAbelianisation() const;
+        std::unique_ptr< HomMarkedAbelianGroup > markedAbelianisation() const;
 
         /**
          * Writes a short text representation of this object to the

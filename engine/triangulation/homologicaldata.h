@@ -207,82 +207,82 @@ private:
      * Pointer to the 0-th homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> mHomology0;
+    std::unique_ptr<MarkedAbelianGroup> mHomology0;
     /**
      * Pointer to the 1st homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> mHomology1;
+    std::unique_ptr<MarkedAbelianGroup> mHomology1;
     /**
      * Pointer to the 2nd homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> mHomology2;
+    std::unique_ptr<MarkedAbelianGroup> mHomology2;
     /**
      * Pointer to the 3rd homology group in standard cellular coordinates,
      * or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> mHomology3;
+    std::unique_ptr<MarkedAbelianGroup> mHomology3;
 
     /**
      * Pointer to the 0-th boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> bHomology0;
+    std::unique_ptr<MarkedAbelianGroup> bHomology0;
     /**
      * Pointer to the 1st boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> bHomology1;
+    std::unique_ptr<MarkedAbelianGroup> bHomology1;
     /**
      * Pointer to the 2nd boundary homology group in standard cellular
      * coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> bHomology2;
+    std::unique_ptr<MarkedAbelianGroup> bHomology2;
 
     /**
      * Pointer to the boundary inclusion on 0-th homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NHomMarkedAbelianGroup> bmMap0;
+    std::unique_ptr<HomMarkedAbelianGroup> bmMap0;
     /**
      * Pointer to the boundary inclusion on 1st homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NHomMarkedAbelianGroup> bmMap1;
+    std::unique_ptr<HomMarkedAbelianGroup> bmMap1;
     /**
      * Pointer to the boundary inclusion on 2nd homology, standard
      * cellular coordinates, or 0 if it has not yet been computed.
      */
-    std::unique_ptr<NHomMarkedAbelianGroup> bmMap2;
+    std::unique_ptr<HomMarkedAbelianGroup> bmMap2;
 
     /**
      * Pointer to the 0-th homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> dmHomology0;
+    std::unique_ptr<MarkedAbelianGroup> dmHomology0;
     /**
      * Pointer to the 1st homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> dmHomology1;
+    std::unique_ptr<MarkedAbelianGroup> dmHomology1;
     /**
      * Pointer to the 2nd homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> dmHomology2;
+    std::unique_ptr<MarkedAbelianGroup> dmHomology2;
     /**
      * Pointer to the 3rd homology group in dual cellular coordinates, or
      * 0 if it has not yet been computed.
      */
-    std::unique_ptr<NMarkedAbelianGroup> dmHomology3;
+    std::unique_ptr<MarkedAbelianGroup> dmHomology3;
 
     /**
      * Pointer to the cellular approx of the identity H1(M) --> H1(M)
      * from dual to standard cellular coordinates, or 0 if it has not yet
      * been computed.
      */
-    std::unique_ptr<NHomMarkedAbelianGroup> dmTomMap1;
+    std::unique_ptr<HomMarkedAbelianGroup> dmTomMap1;
 
     // below here and the public declaration go the internal bits of
     // data that are not publicly accessible...
@@ -498,7 +498,7 @@ public:
      * @return the q-th homology group, computed in the standard
      * CW-decomposition.
      */
-    const NMarkedAbelianGroup& homology(unsigned q);
+    const MarkedAbelianGroup& homology(unsigned q);
     /**
      * This routine gives access to the homology of the boundary
      * of the manifold, computed with the regular CW-decomposition.
@@ -507,7 +507,7 @@ public:
      * @return the q-th boundary homology group, in standard cellular
      * homology coordinates
      */
-    const NMarkedAbelianGroup& bdryHomology(unsigned q);
+    const MarkedAbelianGroup& bdryHomology(unsigned q);
 
     /**
      * This routine gives access to the homomorphism from the
@@ -517,7 +517,7 @@ public:
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
-    const NHomMarkedAbelianGroup& bdryHomologyMap(unsigned q);
+    const HomMarkedAbelianGroup& bdryHomologyMap(unsigned q);
 
     /**
      * This routine gives access to the manifold's homology computed
@@ -533,7 +533,7 @@ public:
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
      */
-    const NMarkedAbelianGroup& dualHomology(unsigned q);
+    const MarkedAbelianGroup& dualHomology(unsigned q);
 
     /**
      * Returns the isomorphism from dualHomology(1) to homology(1)
@@ -543,7 +543,7 @@ public:
      * computed via a cellular approximation of the identity map from
      * the first 1-skeleton to the second.
      */
-    const NHomMarkedAbelianGroup& h1CellAp();
+    const HomMarkedAbelianGroup& h1CellAp();
 
     /**
      * Returns the number of cells of the given dimension

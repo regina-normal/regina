@@ -37,20 +37,20 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NHomMarkedAbelianGroup;
-using regina::NMarkedAbelianGroup;
+using regina::HomMarkedAbelianGroup;
+using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::Integer;
 
 namespace {
-    unsigned long (NMarkedAbelianGroup::*torsionRank_large)(
+    unsigned long (MarkedAbelianGroup::*torsionRank_large)(
         const regina::Integer&) const =
-        &NMarkedAbelianGroup::torsionRank;
-    unsigned long (NMarkedAbelianGroup::*torsionRank_long)(unsigned long)
-        const = &NMarkedAbelianGroup::torsionRank;
+        &MarkedAbelianGroup::torsionRank;
+    unsigned long (MarkedAbelianGroup::*torsionRank_long)(unsigned long)
+        const = &MarkedAbelianGroup::torsionRank;
 
     boost::python::list freeRep_list(
-            const NMarkedAbelianGroup& g, unsigned long index) {
+            const MarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
         std::vector<regina::Integer> rep = g.freeRep(index);
@@ -63,7 +63,7 @@ namespace {
     }
 
     boost::python::list torsionRep_list(
-            const NMarkedAbelianGroup& g, unsigned long index) {
+            const MarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
         std::vector<regina::Integer> rep = g.torsionRep(index);
@@ -76,7 +76,7 @@ namespace {
     }
 
     boost::python::list snfRep_list_list(
-            const NMarkedAbelianGroup& g, boost::python::list element) {
+            const MarkedAbelianGroup& g, boost::python::list element) {
         unsigned long needLen = g.M().columns();
 
         if (boost::python::len(element) != needLen) {
@@ -124,88 +124,88 @@ namespace {
         return ans;
     }
 
-    void writeReducedMatrix_stdout(const NHomMarkedAbelianGroup& h) {
+    void writeReducedMatrix_stdout(const HomMarkedAbelianGroup& h) {
         h.writeReducedMatrix(std::cout);
     }
 
-    std::unique_ptr<NHomMarkedAbelianGroup> multiplyHom(
-            const NHomMarkedAbelianGroup& h1,
-            const NHomMarkedAbelianGroup& h2) {
+    std::unique_ptr<HomMarkedAbelianGroup> multiplyHom(
+            const HomMarkedAbelianGroup& h1,
+            const HomMarkedAbelianGroup& h2) {
         return h1 * h2;
     }
 }
 
-void addNMarkedAbelianGroup() {
-    class_<NMarkedAbelianGroup, std::auto_ptr<NMarkedAbelianGroup>,
-            boost::noncopyable> ( "NMarkedAbelianGroup",
+void addMarkedAbelianGroup() {
+    class_<MarkedAbelianGroup, std::auto_ptr<MarkedAbelianGroup>,
+            boost::noncopyable> ( "MarkedAbelianGroup",
             init<const MatrixInt&, const MatrixInt&>())
-        .def(init<const NMarkedAbelianGroup&>())
+        .def(init<const MarkedAbelianGroup&>())
         .def(init<const MatrixInt&, const MatrixInt&, const Integer&>())
         .def(init<unsigned long, const Integer&>())
-        .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
-        .def("rank", &NMarkedAbelianGroup::rank)
+        .def("isChainComplex", &MarkedAbelianGroup::isChainComplex)
+        .def("rank", &MarkedAbelianGroup::rank)
         .def("torsionRank", torsionRank_large)
         .def("torsionRank", torsionRank_long)
         .def("minNumberOfGenerators",
-            &NMarkedAbelianGroup::minNumberOfGenerators)
+            &MarkedAbelianGroup::minNumberOfGenerators)
         .def("countInvariantFactors",
-            &NMarkedAbelianGroup::countInvariantFactors)
-        .def("invariantFactor", &NMarkedAbelianGroup::invariantFactor,
+            &MarkedAbelianGroup::countInvariantFactors)
+        .def("invariantFactor", &MarkedAbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
-        .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
-        .def("isIsomorphicTo", &NMarkedAbelianGroup::isIsomorphicTo)
-        .def("equalTo", &NMarkedAbelianGroup::equalTo)
+        .def("isTrivial", &MarkedAbelianGroup::isTrivial)
+        .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)
+        .def("equalTo", &MarkedAbelianGroup::equalTo)
         // TODO: ccRep, ccRep, cycleProjection, cycleProjection
         // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
         // TODO: cycleGen
         .def("freeRep", freeRep_list)
         .def("torsionRep", torsionRep_list)
         .def("snfRep", snfRep_list_list)
-        .def("rankCC", &NMarkedAbelianGroup::rankCC)
-        .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
-        .def("M", &NMarkedAbelianGroup::M,
+        .def("rankCC", &MarkedAbelianGroup::rankCC)
+        .def("minNumberCycleGens", &MarkedAbelianGroup::minNumberCycleGens)
+        .def("M", &MarkedAbelianGroup::M,
             return_internal_reference<>())
-        .def("N", &NMarkedAbelianGroup::N,
+        .def("N", &MarkedAbelianGroup::N,
             return_internal_reference<>())
-        .def("coefficients", &NMarkedAbelianGroup::coefficients,
+        .def("coefficients", &MarkedAbelianGroup::coefficients,
             return_value_policy<return_by_value>())
-        .def("torsionSubgroup", &NMarkedAbelianGroup::torsionSubgroup)
-        .def("torsionInclusion", &NMarkedAbelianGroup::torsionInclusion)
-        .def("utf8", &NMarkedAbelianGroup::utf8)
+        .def("torsionSubgroup", &MarkedAbelianGroup::torsionSubgroup)
+        .def("torsionInclusion", &MarkedAbelianGroup::torsionInclusion)
+        .def("utf8", &MarkedAbelianGroup::utf8)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NHomMarkedAbelianGroup, std::auto_ptr<NHomMarkedAbelianGroup>,
-            boost::noncopyable>( "NHomMarkedAbelianGroup",
-            init<const NMarkedAbelianGroup&, const NMarkedAbelianGroup&,
+    class_<HomMarkedAbelianGroup, std::auto_ptr<HomMarkedAbelianGroup>,
+            boost::noncopyable>( "HomMarkedAbelianGroup",
+            init<const MarkedAbelianGroup&, const MarkedAbelianGroup&,
                 const MatrixInt&>())
-        .def(init<const NHomMarkedAbelianGroup&>())
-        .def("isChainMap", &NHomMarkedAbelianGroup::isChainMap)
-        .def("isCycleMap", &NHomMarkedAbelianGroup::isCycleMap)
-        .def("isEpic", &NHomMarkedAbelianGroup::isEpic)
-        .def("isMonic", &NHomMarkedAbelianGroup::isMonic)
-        .def("isIsomorphism", &NHomMarkedAbelianGroup::isIsomorphism)
-        .def("isIdentity", &NHomMarkedAbelianGroup::isIdentity)
-        .def("isZero", &NHomMarkedAbelianGroup::isZero)
-        .def("kernel", &NHomMarkedAbelianGroup::kernel,
+        .def(init<const HomMarkedAbelianGroup&>())
+        .def("isChainMap", &HomMarkedAbelianGroup::isChainMap)
+        .def("isCycleMap", &HomMarkedAbelianGroup::isCycleMap)
+        .def("isEpic", &HomMarkedAbelianGroup::isEpic)
+        .def("isMonic", &HomMarkedAbelianGroup::isMonic)
+        .def("isIsomorphism", &HomMarkedAbelianGroup::isIsomorphism)
+        .def("isIdentity", &HomMarkedAbelianGroup::isIdentity)
+        .def("isZero", &HomMarkedAbelianGroup::isZero)
+        .def("kernel", &HomMarkedAbelianGroup::kernel,
             return_internal_reference<>())
-        .def("cokernel", &NHomMarkedAbelianGroup::cokernel,
+        .def("cokernel", &HomMarkedAbelianGroup::cokernel,
             return_internal_reference<>())
-        .def("image", &NHomMarkedAbelianGroup::image,
+        .def("image", &HomMarkedAbelianGroup::image,
             return_internal_reference<>())
-        .def("domain", &NHomMarkedAbelianGroup::domain,
+        .def("domain", &HomMarkedAbelianGroup::domain,
             return_internal_reference<>())
-        .def("range", &NHomMarkedAbelianGroup::range,
+        .def("range", &HomMarkedAbelianGroup::range,
             return_internal_reference<>())
-        .def("definingMatrix", &NHomMarkedAbelianGroup::definingMatrix,
+        .def("definingMatrix", &HomMarkedAbelianGroup::definingMatrix,
             return_internal_reference<>())
-        .def("reducedMatrix", &NHomMarkedAbelianGroup::reducedMatrix,
+        .def("reducedMatrix", &HomMarkedAbelianGroup::reducedMatrix,
             return_internal_reference<>())
-        .def("torsionSubgroup", &NHomMarkedAbelianGroup::torsionSubgroup)
+        .def("torsionSubgroup", &HomMarkedAbelianGroup::torsionSubgroup)
         .def("writeReducedMatrix", writeReducedMatrix_stdout)
         // TODO: evalCC, evalSNF
-        .def("inverseHom", &NHomMarkedAbelianGroup::inverseHom)
+        .def("inverseHom", &HomMarkedAbelianGroup::inverseHom)
         .def("__mul__", multiplyHom)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())

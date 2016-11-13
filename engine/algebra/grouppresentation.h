@@ -57,7 +57,7 @@ namespace regina {
 
 class AbelianGroup;
 class HomGroupPresentation;
-class NMarkedAbelianGroup;
+class MarkedAbelianGroup;
 
 /**
  * \weakgroup algebra
@@ -960,7 +960,7 @@ class REGINA_API GroupPresentation :
          * - <tt>Z~G w/ monodromy H</tt> for extensions over Z,
          *   where \a G is a description of the kernel of the homomorphism
          *   to the integers, and \a H is a text string representing the
-         *   monodromy - see NHomMarkedAbelianGroup.str() for details on
+         *   monodromy - see HomMarkedAbelianGroup.str() for details on
          *   how these are presented.
          *
          * \todo \featurelong Make this recognition more effective.
@@ -1003,7 +1003,7 @@ class REGINA_API GroupPresentation :
          *
          * @return a newly allocated abelianisation of this group.
          */
-        std::unique_ptr<NMarkedAbelianGroup> markedAbelianisation() const;
+        std::unique_ptr<MarkedAbelianGroup> markedAbelianisation() const;
 
         /**
          * Attempts to determine if the group is abelian.

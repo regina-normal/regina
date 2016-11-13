@@ -37,7 +37,7 @@
 
 namespace regina {
 
-NMarkedAbelianGroup::NMarkedAbelianGroup(unsigned long rk, 
+MarkedAbelianGroup::MarkedAbelianGroup(unsigned long rk, 
                                          const Integer &p) : 
     OM(rk, rk), ON(rk,rk), OMR(rk,rk), OMC(rk,rk), OMRi(rk, rk), OMCi(rk, rk), 
     rankOM(0), InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
@@ -59,7 +59,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(unsigned long rk,
     if ( p != 1 ) snfrank = rk - ifNum;
 }
 
-NMarkedAbelianGroup::NMarkedAbelianGroup(const MatrixInt& M,
+MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
         const MatrixInt& N) :
     OM(M), ON(N), OMR(M.columns(),M.columns()),
     OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),
@@ -121,11 +121,11 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const MatrixInt& M,
 // the presentation matrix for TOR(H_{k-1}(M;Z), Z_p).   The 2nd matrix is 
 // already in SNF.  We apply SNF to the first, and store the change-of-basis 
 // matrices in otR, otC, otRi, otCi.  We then concatenate these two diagonal 
-// matrices and apply SNF to them to get a situation NMarkedAbelianGroup will 
+// matrices and apply SNF to them to get a situation MarkedAbelianGroup will 
 // be happy with. This has the added advantage of us being able to later easily 
-// implement the NHomMarkedAbelianGroup maps for UCT later when we're interested
+// implement the HomMarkedAbelianGroup maps for UCT later when we're interested
 //  in that kind of stuff. 
-NMarkedAbelianGroup::NMarkedAbelianGroup(const MatrixInt& M, 
+MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M, 
             const MatrixInt& N, const Integer &pcoeff):
     OM(M), ON(N), OMR(M.columns(),M.columns()),
     OMC(M.rows(),M.rows()), OMRi(M.columns(),M.columns()),
@@ -241,7 +241,7 @@ NMarkedAbelianGroup::NMarkedAbelianGroup(const MatrixInt& M,
     }
 }
 
-bool NMarkedAbelianGroup::isChainComplex() const
+bool MarkedAbelianGroup::isChainComplex() const
 {
     if (OM.columns() != ON.rows()) return false;
     std::unique_ptr<MatrixRing<Integer> > prod = OM*ON;
@@ -251,7 +251,7 @@ bool NMarkedAbelianGroup::isChainComplex() const
     return true;
 }
 
-unsigned long NMarkedAbelianGroup::torsionRank(const Integer& degree)
+unsigned long MarkedAbelianGroup::torsionRank(const Integer& degree)
         const {
     unsigned long ans = 0;
     for (unsigned long i=0;i<InvFacList.size();i++) {
@@ -262,7 +262,7 @@ unsigned long NMarkedAbelianGroup::torsionRank(const Integer& degree)
 }
 
 
-void NMarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
+void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
     bool writtenSomething = false;
 
     if (snfrank > 0) {
@@ -314,7 +314,7 @@ void NMarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
  * this routine returns the index-th free generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<Integer> NMarkedAbelianGroup::freeRep(unsigned long index)
+std::vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index)
         const {
     static const std::vector<Integer> nullvec;
     if (index >= snfrank) return nullvec;
@@ -342,7 +342,7 @@ std::vector<Integer> NMarkedAbelianGroup::freeRep(unsigned long index)
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<Integer> NMarkedAbelianGroup::torsionRep(
+std::vector<Integer> MarkedAbelianGroup::torsionRep(
         unsigned long index) const {
     static const std::vector<Integer> nullvec;
     if (index >= ifNum) return nullvec;
@@ -392,7 +392,7 @@ std::vector<Integer> NMarkedAbelianGroup::torsionRep(
 }
 
 
-std::vector<Integer> NMarkedAbelianGroup::ccRep(const std::vector<Integer>& SNFRep) const
+std::vector<Integer> MarkedAbelianGroup::ccRep(const std::vector<Integer>& SNFRep) const
 {
     static const std::vector<Integer> nullV;
     if (SNFRep.size() != snfrank + ifNum) return nullV;
@@ -439,7 +439,7 @@ std::vector<Integer> NMarkedAbelianGroup::ccRep(const std::vector<Integer>& SNFR
  return retval;
 }
 
-std::vector<Integer> NMarkedAbelianGroup::ccRep(
+std::vector<Integer> MarkedAbelianGroup::ccRep(
      unsigned long SNFRep) const
 {
  static const std::vector<Integer> nullV;
@@ -498,7 +498,7 @@ std::vector<Integer> NMarkedAbelianGroup::ccRep(
  * element is not in the kernel of M. element is assumed to have
  * OM.columns()==ON.rows() entries.
  */
-std::vector<Integer> NMarkedAbelianGroup::snfRep(
+std::vector<Integer> MarkedAbelianGroup::snfRep(
         const std::vector<Integer>& element)  const {
     std::vector<Integer> retval(snfrank+ifNum,
             Integer::zero);
@@ -569,7 +569,7 @@ std::vector<Integer> NMarkedAbelianGroup::snfRep(
 }
 
 
-bool NMarkedAbelianGroup::isCycle(const std::vector<Integer> &input) const
+bool MarkedAbelianGroup::isCycle(const std::vector<Integer> &input) const
 { 
  if (input.size() != OM.columns()) return false;
  for (unsigned long i=0; i<OM.rows(); i++)
@@ -582,7 +582,7 @@ bool NMarkedAbelianGroup::isCycle(const std::vector<Integer> &input) const
  return true;
 }
 
-bool NMarkedAbelianGroup::isBoundary(
+bool MarkedAbelianGroup::isBoundary(
      const std::vector<Integer> &input) const
 { 
     if (input.size() != OM.columns()) return false;
@@ -592,7 +592,7 @@ bool NMarkedAbelianGroup::isBoundary(
     return true;
 }
 
-std::vector<Integer> NMarkedAbelianGroup::boundaryMap(
+std::vector<Integer> MarkedAbelianGroup::boundaryMap(
      const std::vector<Integer> &CCrep) const
 {
     std::vector<Integer> retval(OM.rows(), Integer::zero);
@@ -614,7 +614,7 @@ std::vector<Integer> NMarkedAbelianGroup::boundaryMap(
 // routine checks to see if an object in the CC coords for our group is a 
 // boundary, and if so it returns CC coords of what an object that it is a 
 // boundary of.  Null vector is returned if not boundary.  
-std::vector<Integer> NMarkedAbelianGroup::writeAsBoundary(
+std::vector<Integer> MarkedAbelianGroup::writeAsBoundary(
     const std::vector<Integer> &input) const
 {  
     static const std::vector<Integer> nullvec;
@@ -670,7 +670,7 @@ std::vector<Integer> NMarkedAbelianGroup::writeAsBoundary(
 
 // returns the j+TORLoc -th column of the matrix OMR, rescaled appropriately
 //  if it corresponds to a TOR vector.  
-std::vector<Integer> NMarkedAbelianGroup::cycleGen(unsigned long j) const
+std::vector<Integer> MarkedAbelianGroup::cycleGen(unsigned long j) const
 {
     static const std::vector<Integer> nullv;
     if (j >= minNumberCycleGens()) return nullv;
@@ -683,7 +683,7 @@ std::vector<Integer> NMarkedAbelianGroup::cycleGen(unsigned long j) const
     return retval;
 }
 
-std::vector<Integer> NMarkedAbelianGroup::cycleProjection( 
+std::vector<Integer> MarkedAbelianGroup::cycleProjection( 
      const std::vector<Integer> &ccelt ) const
 {
     // multiply by OMRi, truncate, multiply by OMR
@@ -699,7 +699,7 @@ std::vector<Integer> NMarkedAbelianGroup::cycleProjection(
     return retval;
 }
 
-std::vector<Integer> NMarkedAbelianGroup::cycleProjection(
+std::vector<Integer> MarkedAbelianGroup::cycleProjection(
       unsigned long ccindx ) const
 {
     // truncate column cyclenum of OMRi, multiply by OMR
@@ -716,17 +716,17 @@ std::vector<Integer> NMarkedAbelianGroup::cycleProjection(
 
 
 // the trivially presented torsion subgroup
-std::unique_ptr<NMarkedAbelianGroup> NMarkedAbelianGroup::torsionSubgroup()
+std::unique_ptr<MarkedAbelianGroup> MarkedAbelianGroup::torsionSubgroup()
         const {
     MatrixInt dM(1, countInvariantFactors() );
     MatrixInt dN(countInvariantFactors(), countInvariantFactors() );
     for (unsigned long i=0; i<countInvariantFactors(); i++)
         dN.entry(i,i) = invariantFactor(i);
-    return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(dM, dN));
+    return std::unique_ptr<MarkedAbelianGroup>(new MarkedAbelianGroup(dM, dN));
 }
 
 // and its canonical inclusion map
-std::unique_ptr<NHomMarkedAbelianGroup> NMarkedAbelianGroup::torsionInclusion()
+std::unique_ptr<HomMarkedAbelianGroup> MarkedAbelianGroup::torsionInclusion()
         const {
     MatrixInt iM( rankCC(), countInvariantFactors() );
     for (unsigned long j=0; j<iM.columns(); j++) {
@@ -734,14 +734,14 @@ std::unique_ptr<NHomMarkedAbelianGroup> NMarkedAbelianGroup::torsionInclusion()
         for (unsigned long i=0; i<iM.rows(); i++)
             iM.entry(i,j) = jtor[i];
     }
-    return std::unique_ptr<NHomMarkedAbelianGroup>(new NHomMarkedAbelianGroup(
+    return std::unique_ptr<HomMarkedAbelianGroup>(new HomMarkedAbelianGroup(
         *torsionSubgroup(), (*this), iM));
 }
 
 
-NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
-        const NMarkedAbelianGroup &dom,
-        const NMarkedAbelianGroup &ran) :
+HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
+        const MarkedAbelianGroup &dom,
+        const MarkedAbelianGroup &ran) :
     domain_(dom), range_(ran), matrix(ran.M().columns(), dom.M().columns()),
     reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0), reducedKernelLattice(0)
 {
@@ -852,22 +852,22 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
 }
 
 
-NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g):
+HomMarkedAbelianGroup::HomMarkedAbelianGroup(const HomMarkedAbelianGroup& g):
         domain_(g.domain_), range_(g.range_), matrix(g.matrix) {
     if (g.reducedMatrix_) { reducedMatrix_ = new MatrixInt(*g.reducedMatrix_); }
      else reducedMatrix_ = 0;
-    if (g.kernel_) { kernel_ = new NMarkedAbelianGroup(*g.kernel_); }
+    if (g.kernel_) { kernel_ = new MarkedAbelianGroup(*g.kernel_); }
      else kernel_ = 0;
-    if (g.coKernel_) { coKernel_ = new NMarkedAbelianGroup(*g.coKernel_); }
+    if (g.coKernel_) { coKernel_ = new MarkedAbelianGroup(*g.coKernel_); }
      else coKernel_ = 0;
-    if (g.image_) { image_ = new NMarkedAbelianGroup(*g.image_); }
+    if (g.image_) { image_ = new MarkedAbelianGroup(*g.image_); }
      else image_ = 0;
     if (g.reducedKernelLattice) { reducedKernelLattice = 
        new MatrixInt(*g.reducedKernelLattice); } 
      else reducedKernelLattice = 0;
 }
 
-void NHomMarkedAbelianGroup::computeReducedMatrix()
+void HomMarkedAbelianGroup::computeReducedMatrix()
 {
  if (!reducedMatrix_)
   {
@@ -891,7 +891,7 @@ void NHomMarkedAbelianGroup::computeReducedMatrix()
   }
 }
 
-void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
+void HomMarkedAbelianGroup::computeReducedKernelLattice() {
     if (!reducedKernelLattice) {
         computeReducedMatrix();
         const MatrixInt& redMatrix(*reducedMatrix_);
@@ -908,7 +908,7 @@ void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
     }
 }
 
-void NHomMarkedAbelianGroup::computeKernel() {
+void HomMarkedAbelianGroup::computeKernel() {
     if (!kernel_) {
         computeReducedKernelLattice();
         MatrixInt dcLpreimage( *reducedKernelLattice );
@@ -935,13 +935,13 @@ void NHomMarkedAbelianGroup::computeKernel() {
 
         MatrixInt dummy( 1, dcLpreimage.columns() );
 
-        kernel_ = new NMarkedAbelianGroup(dummy, workMat);
+        kernel_ = new MarkedAbelianGroup(dummy, workMat);
     }
 }
 
 
 
-void NHomMarkedAbelianGroup::computeCokernel() {
+void HomMarkedAbelianGroup::computeCokernel() {
     if (!coKernel_) {
         computeReducedMatrix();
 
@@ -957,12 +957,12 @@ void NHomMarkedAbelianGroup::computeCokernel() {
 
         MatrixInt ccgenerators( 1, reducedMatrix_->rows() );
 
-        coKernel_ = new NMarkedAbelianGroup(ccgenerators, ccrelators);
+        coKernel_ = new MarkedAbelianGroup(ccgenerators, ccrelators);
     }
 }
 
 
-void NHomMarkedAbelianGroup::computeImage() {
+void HomMarkedAbelianGroup::computeImage() {
     if (!image_) {
         computeReducedKernelLattice();
         const MatrixInt& dcLpreimage( *reducedKernelLattice );
@@ -979,23 +979,23 @@ void NHomMarkedAbelianGroup::computeImage() {
                 imgCCn.entry(i,j+domain_.countInvariantFactors()) =
                     dcLpreimage.entry(i,j);
 
-        image_ = new NMarkedAbelianGroup(imgCCm, imgCCn);
+        image_ = new MarkedAbelianGroup(imgCCm, imgCCn);
     }
 }
 
-std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::operator * (const 
-      NHomMarkedAbelianGroup &X) const
+std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::operator * (const 
+      HomMarkedAbelianGroup &X) const
 {
     std::unique_ptr<MatrixRing<Integer> > prod=matrix*X.matrix;
     MatrixInt compMat(matrix.rows(), X.matrix.columns() );
     for (unsigned long i=0;i<prod->rows();i++) 
       for (unsigned long j=0;j<prod->columns();j++)
         compMat.entry(i,j) = prod->entry(i, j);
-    return std::unique_ptr<NHomMarkedAbelianGroup>(new 
-        NHomMarkedAbelianGroup(X.domain_, range_, compMat));
+    return std::unique_ptr<HomMarkedAbelianGroup>(new 
+        HomMarkedAbelianGroup(X.domain_, range_, compMat));
 }
 
-std::vector<Integer> NHomMarkedAbelianGroup::evalCC(
+std::vector<Integer> HomMarkedAbelianGroup::evalCC(
    const std::vector<Integer> &input) const
 {
     std::vector<Integer> retval(matrix.rows(), Integer::zero);
@@ -1005,10 +1005,10 @@ std::vector<Integer> NHomMarkedAbelianGroup::evalCC(
     return retval;
 }
 
-std::vector<Integer> NHomMarkedAbelianGroup::evalSNF(
+std::vector<Integer> HomMarkedAbelianGroup::evalSNF(
     const std::vector<Integer> &input) const
 {
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     static const std::vector<Integer> nullV; 
     if (input.size() != domain_.minNumberOfGenerators() ) return nullV;
     std::vector<Integer> retval( 
@@ -1026,11 +1026,11 @@ std::vector<Integer> NHomMarkedAbelianGroup::evalSNF(
 }
 
 
-void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
+void HomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
 
     out<<"Reduced Matrix is "<<reducedMatrix_->rows()<<" by "
         <<reducedMatrix_->columns()<<" corresponding to domain ";
@@ -1048,7 +1048,7 @@ void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
     }
 }
 
-void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
+void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
     if (isIsomorphism()) out<<"isomorphism"; else 
     if (isZero()) out<<"zero map"; else 
     if (isMonic()) { // monic not epic
@@ -1067,7 +1067,7 @@ void NHomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
     }
 }
 
-void NHomMarkedAbelianGroup::writeTextLong(std::ostream& out) const
+void HomMarkedAbelianGroup::writeTextLong(std::ostream& out) const
 {
     out<<"hom[ "; domain_.writeTextShort(out); out<<" --> ";
     range_.writeTextShort(out); out<<" ] ";
@@ -1075,15 +1075,15 @@ void NHomMarkedAbelianGroup::writeTextLong(std::ostream& out) const
 }
 
 
-bool NHomMarkedAbelianGroup::isIdentity() const
+bool HomMarkedAbelianGroup::isIdentity() const
 {
     if (!(domain_.equalTo(range_))) return false;
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
     if (!reducedMatrix_->isIdentity()) return false;
     return true;
 }
 
-bool NHomMarkedAbelianGroup::isCycleMap() const
+bool HomMarkedAbelianGroup::isCycleMap() const
 {
     for (unsigned long j=0; j<domain_.minNumberCycleGens(); j++)
     {
@@ -1097,12 +1097,12 @@ bool NHomMarkedAbelianGroup::isCycleMap() const
     return true;
 }
 
-//  Returns a NHomMarkedAbelianGroup representing the induced map
+//  Returns a HomMarkedAbelianGroup representing the induced map
 //  on the torsion subgroups. 
-std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup()
+std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::torsionSubgroup()
         const {
-    std::unique_ptr<NMarkedAbelianGroup> dom = domain_.torsionSubgroup();
-    std::unique_ptr<NMarkedAbelianGroup> ran = range_.torsionSubgroup();
+    std::unique_ptr<MarkedAbelianGroup> dom = domain_.torsionSubgroup();
+    std::unique_ptr<MarkedAbelianGroup> ran = range_.torsionSubgroup();
 
     MatrixInt mat(range_.countInvariantFactors(),
         domain_.countInvariantFactors() );
@@ -1114,13 +1114,13 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup(
             mat.entry(i,j) = temp[i];
     }
 
-    return std::unique_ptr<NHomMarkedAbelianGroup>(new NHomMarkedAbelianGroup(
+    return std::unique_ptr<HomMarkedAbelianGroup>(new HomMarkedAbelianGroup(
         *dom, *ran, mat));
 }
 
 
 /**
- * Given two NHomMarkedAbelianGroups, you have two diagrams:
+ * Given two HomMarkedAbelianGroups, you have two diagrams:
  * Z^a --N1--> Z^b --M1--> Z^c   Z^g --N3--> Z^h --M3--> Z^i
  *                   ^                             ^
  *                   |  this                       | other
@@ -1128,8 +1128,8 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup(
  * @return true if and only if M1 == N3, M2 == N4 and diagram commutes
  *         commutes.
  */
-bool NHomMarkedAbelianGroup::isChainMap(
-  const NHomMarkedAbelianGroup &other) const
+bool HomMarkedAbelianGroup::isChainMap(
+  const HomMarkedAbelianGroup &other) const
 {
  if ( (range().M().rows() != other.range().N().rows()) ||
       (range().M().columns() != other.range().N().columns()) ||
@@ -1166,12 +1166,12 @@ bool NHomMarkedAbelianGroup::isChainMap(
 // computes the matrix representing the inverse automorphism.  
 // So to do this we'll need a new matrixops.cpp command -- call it 
 // torsionAutInverse.  
-std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() const
+std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::inverseHom() const
 {
- const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+ const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
  MatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );
- if (!isIsomorphism()) return std::unique_ptr<NHomMarkedAbelianGroup>(
-     new NHomMarkedAbelianGroup( invMat, range_, domain_ ));
+ if (!isIsomorphism()) return std::unique_ptr<HomMarkedAbelianGroup>(
+     new HomMarkedAbelianGroup( invMat, range_, domain_ ));
  // get A, B, D from reducedMatrix
  // A must be square with domain/range_.countInvariantFactors() columns
  // D must be square with domain/range_.rank() columns
@@ -1233,7 +1233,7 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() con
     }
  // compute the coefficients of invMat.  We're in the funny situation where we 
  // know what invMat's reduced matrix, not its chain-complex level defining 
- // matrix.  So we use the alternative NHomMarkedAbelianGroup constructor 
+ // matrix.  So we use the alternative HomMarkedAbelianGroup constructor 
  // designed specifically for this situation.  
  // assemble into invMat  [A'|B']
  //                       [-----]
@@ -1248,8 +1248,8 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() con
  for (unsigned long i=0; i<Bi.rows(); i++) 
    for (unsigned long j=0; j<Bi.columns(); j++)
      invMat.entry(i,j+Ai->columns()) = Bi.entry(i,j);
- return std::unique_ptr<NHomMarkedAbelianGroup>(
-   new NHomMarkedAbelianGroup( invMat, range_, domain_ ));
+ return std::unique_ptr<HomMarkedAbelianGroup>(
+   new HomMarkedAbelianGroup( invMat, range_, domain_ ));
 }
 
 

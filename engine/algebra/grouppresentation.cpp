@@ -311,10 +311,10 @@ std::unique_ptr<AbelianGroup> GroupPresentation::abelianisation() const
     return std::unique_ptr<AbelianGroup>(new AbelianGroup(M,N));
 }
 
-std::unique_ptr<NMarkedAbelianGroup> GroupPresentation::markedAbelianisation()
+std::unique_ptr<MarkedAbelianGroup> GroupPresentation::markedAbelianisation()
 const
 {
-    // create presentation matrices to pass to NMarkedAbelianGroup(M, N)
+    // create presentation matrices to pass to MarkedAbelianGroup(M, N)
     MatrixInt M(1, countGenerators() ); // zero matrix
     MatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
@@ -323,7 +323,7 @@ const
         for (unsigned long i=0; i<Rj.countTerms(); i++)
             N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
-    return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
+    return std::unique_ptr<MarkedAbelianGroup>(new MarkedAbelianGroup(M,N));
 }
 
 void GroupPresentation::dehnAlgorithmSubMetric(
@@ -1121,7 +1121,7 @@ GroupPresentation::homologicalAlignmentDetail()
 {
     std::unique_ptr<HomGroupPresentation> retval; // only allocate if appropriate.
     // step 1: compute abelianization and how generators map to abelianization.
-    std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
+    std::unique_ptr< MarkedAbelianGroup > abelianized( markedAbelianisation() );
     MatrixInt abMat( abelianized->minNumberOfGenerators(),
                       countGenerators() );
 
@@ -1678,7 +1678,7 @@ GroupPresentation::identifyExtensionOverZ()
 {
     // step 1: let's build the abelianization homomorphism.
     homologicalAlignment();
-    std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
+    std::unique_ptr< MarkedAbelianGroup > abelianized( markedAbelianisation() );
     if (abelianized->rank() != 1) return
             std::unique_ptr< HomGroupPresentation >();
     if (abelianized->countInvariantFactors()>0)  // put Z generator at 0-th
