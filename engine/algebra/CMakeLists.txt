@@ -21,6 +21,7 @@ if (${REGINA_INSTALL_DEV})
     nabeliangroup.h
     grouppresentation.h
     ngrouppresentation.h
+    homgrouppresentation.h
     nhomgrouppresentation.h
     nmarkedabeliangroup.h
     nxmlalgebrareader.h

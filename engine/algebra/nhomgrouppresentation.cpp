@@ -33,7 +33,7 @@
 #include <iterator>
 #include <sstream>
 #include "algebra/grouppresentation.h"
-#include "algebra/nhomgrouppresentation.h"
+#include "algebra/homgrouppresentation.h"
 #include "maths/numbertheory.h"
 
 namespace regina {
