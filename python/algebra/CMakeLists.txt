@@ -4,7 +4,7 @@
 SET ( FILES
   abeliangroup
   grouppresentation
-  nhomgrouppresentation
+  homgrouppresentation
   nmarkedabeliangroup
   pyalgebra
   )
