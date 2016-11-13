@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/markedabeliangroup.h"
 #include "maths/matrixops.h"
 #include "utilities/stringutils.h"
 #include <iostream>

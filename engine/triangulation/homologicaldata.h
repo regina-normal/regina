@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/markedabeliangroup.h"
 #include "maths/rational.h"
 #include "triangulation/dim3.h"
 #include "utilities/ptrutils.h"

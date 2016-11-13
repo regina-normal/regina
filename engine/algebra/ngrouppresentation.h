@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file algebra/grouppresentation.h
+/*! \file algebra/ngrouppresentation.h
  *  \brief Deprecated header.
  */
 

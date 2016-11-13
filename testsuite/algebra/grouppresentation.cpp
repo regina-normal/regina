@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "algebra/grouppresentation.h"
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/markedabeliangroup.h"
 #include "utilities/stringutils.h"
 
 #include "testsuite/algebra/testalgebra.h"

@@ -23,6 +23,7 @@ if (${REGINA_INSTALL_DEV})
     ngrouppresentation.h
     homgrouppresentation.h
     nhomgrouppresentation.h
+    markedabeliangroup.h
     nmarkedabeliangroup.h
     nxmlalgebrareader.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)

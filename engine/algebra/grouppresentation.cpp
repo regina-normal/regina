@@ -39,7 +39,7 @@
 
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
 #include "maths/numbertheory.h"
 #include "maths/matrixops.h"

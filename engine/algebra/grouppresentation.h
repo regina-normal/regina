@@ -49,7 +49,7 @@
 #include "output.h"
 #include "utilities/memutils.h"
 #include "utilities/ptrutils.h"
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
 #include <boost/noncopyable.hpp>
 

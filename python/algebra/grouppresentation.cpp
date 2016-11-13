@@ -34,7 +34,7 @@
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/markedabeliangroup.h"
 #include "../helpers.h"
 
 using namespace boost::python;

@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "algebra/grouppresentation.h"
-#include "algebra/nmarkedabeliangroup.h"
+#include "algebra/markedabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "triangulation/dim4.h"
 
