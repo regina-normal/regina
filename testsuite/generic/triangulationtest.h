@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "packet/container.h"
 #include <cppunit/extensions/HelperMacros.h>
 

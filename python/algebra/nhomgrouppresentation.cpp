@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "algebra/abeliangroup.h"
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "../helpers.h"

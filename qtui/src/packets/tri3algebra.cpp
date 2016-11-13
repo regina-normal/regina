@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "triangulation/homologicaldata.h"

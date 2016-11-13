@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "packet/packet.h"
 
 #include "messagelayer.h"

@@ -48,7 +48,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "algebra/abeliangroup.h"
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "maths/matrix.h"
 #include "triangulation/generic/component.h"
 #include "triangulation/generic/boundarycomponent.h"

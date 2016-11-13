@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "angle/anglestructure.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"

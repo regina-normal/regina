@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "utilities/stringutils.h"
 
 // UI includes:

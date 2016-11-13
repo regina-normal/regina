@@ -33,7 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "utilities/stringutils.h"
 

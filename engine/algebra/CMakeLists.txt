@@ -19,6 +19,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     abeliangroup.h
     nabeliangroup.h
+    grouppresentation.h
     ngrouppresentation.h
     nhomgrouppresentation.h
     nmarkedabeliangroup.h

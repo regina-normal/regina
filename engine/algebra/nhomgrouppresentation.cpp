@@ -32,7 +32,7 @@
 
 #include <iterator>
 #include <sstream>
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "maths/numbertheory.h"
 

@@ -37,7 +37,7 @@
 #include <sstream>
 #include <algorithm>
 
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
 #include "algebra/nhomgrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "algebra/abeliangroup.h"
