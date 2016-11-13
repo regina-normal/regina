@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "algebra/nxmlalgebrareader.h"
+#include "algebra/xmlalgebrareader.h"
 #include "packet/xmlpacketreader.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/stringutils.h"

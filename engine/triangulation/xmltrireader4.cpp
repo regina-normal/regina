@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nxmlalgebrareader.h"
+#include "algebra/xmlalgebrareader.h"
 #include "triangulation/dim4.h"
 #include "triangulation/xmltrireader4.h"
 #include "utilities/property.h"
