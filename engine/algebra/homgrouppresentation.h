@@ -371,8 +371,8 @@ class REGINA_API HomGroupPresentation :
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
- * \deprecated The class NAbelianGroup has now been renamed to
- * AbelianGroup.
+ * \deprecated The class NHomGroupPresentation has now been renamed to
+ * HomGroupPresentation.
  */
 REGINA_DEPRECATED typedef HomGroupPresentation NHomGroupPresentation;
 
