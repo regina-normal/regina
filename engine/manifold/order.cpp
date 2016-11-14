@@ -41,8 +41,8 @@ namespace regina {
 
 bool NManifold::operator < (const NManifold& compare) const {
     // Lens spaces go first.
-    const NLensSpace* lens1 = dynamic_cast<const NLensSpace*>(this);
-    const NLensSpace* lens2 = dynamic_cast<const NLensSpace*>(&compare);
+    const LensSpace* lens1 = dynamic_cast<const LensSpace*>(this);
+    const LensSpace* lens2 = dynamic_cast<const LensSpace*>(&compare);
 
     if (lens1 && ! lens2)
         return true;

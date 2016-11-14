@@ -37,7 +37,7 @@
 
 namespace regina {
 
-void NLensSpace::reduce() {
+void LensSpace::reduce() {
     if (p_ == 0) {
         q_ = 1;
         return;
@@ -60,13 +60,13 @@ void NLensSpace::reduce() {
         q_ = inv;
 }
 
-Triangulation<3>* NLensSpace::construct() const {
+Triangulation<3>* LensSpace::construct() const {
     Triangulation<3>* ans = new Triangulation<3>();
     ans->insertLayeredLensSpace(p_, q_);
     return ans;
 }
 
-AbelianGroup* NLensSpace::homology() const {
+AbelianGroup* LensSpace::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     if (p_ == 0)
         ans->addRank();
@@ -75,7 +75,7 @@ AbelianGroup* NLensSpace::homology() const {
     return ans;
 }
 
-std::ostream& NLensSpace::writeName(std::ostream& out) const {
+std::ostream& LensSpace::writeName(std::ostream& out) const {
     if (p_ == 0)
         out << "S2 x S1";
     else if (p_ == 1)
@@ -87,7 +87,7 @@ std::ostream& NLensSpace::writeName(std::ostream& out) const {
     return out;
 }
 
-std::ostream& NLensSpace::writeTeXName(std::ostream& out) const {
+std::ostream& LensSpace::writeTeXName(std::ostream& out) const {
     if (p_ == 0)
         out << "S^2 \\times S^1";
     else if (p_ == 1)

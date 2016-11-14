@@ -140,7 +140,7 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
 }
 
 NManifold* NLayeredLensSpace::manifold() const {
-    return new NLensSpace(p_, q_);
+    return new LensSpace(p_, q_);
 }
 
 AbelianGroup* NLayeredLensSpace::homology() const {

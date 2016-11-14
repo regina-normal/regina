@@ -578,7 +578,7 @@ void NSFSpace::complementAllFibres() {
     }
 }
 
-NLensSpace* NSFSpace::isLensSpace() const {
+LensSpace* NSFSpace::isLensSpace() const {
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_) {
         // Not a chance.
         return 0;
@@ -587,13 +587,13 @@ NLensSpace* NSFSpace::isLensSpace() const {
     if (genus_ == 0 && class_ == o1) {
         // Base orbifold is the sphere.
         if (fibres_.empty())
-            return new NLensSpace(b_ >= 0 ? b_ : -b_, 1);
+            return new LensSpace(b_ >= 0 ? b_ : -b_, 1);
         else if (nFibres_ == 1) {
             long q = fibres_.front().alpha;
             long p = fibres_.front().beta + (b_ * q);
 
             // We have SFS [S2 : (q,p)].
-            return new NLensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
+            return new LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
         } else if (nFibres_ == 2) {
             // Precisely two fibres.
             long q = fibres_.back().alpha;
@@ -612,7 +612,7 @@ NLensSpace* NSFSpace::isLensSpace() const {
             }
 
             // We should now have (x,y) == (1,0).
-            return new NLensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
+            return new LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
         }
 
         // Not a lens space.
@@ -625,7 +625,7 @@ NLensSpace* NSFSpace::isLensSpace() const {
             long n = b_ * a + fibres_.front().beta;
 
             if (n == 1 || n == -1)
-                return new NLensSpace(4 * a, 2 * a - 1);
+                return new LensSpace(4 * a, 2 * a - 1);
         }
 
         // Not a lens space.
@@ -736,7 +736,7 @@ Triangulation<3>* NSFSpace::construct() const {
         return 0;
 
     // We already know how to construct lens spaces.
-    NLensSpace* lens = isLensSpace();
+    LensSpace* lens = isLensSpace();
     if (lens) {
         Triangulation<3>* t = lens->construct();
         delete lens;
@@ -1059,7 +1059,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // punctures or reflector boundaries.
 
     // Take out the lens spaces first.
-    NLensSpace* lens = isLensSpace();
+    LensSpace* lens = isLensSpace();
     if (lens) {
         if (tex)
             lens->writeTeXName(out);

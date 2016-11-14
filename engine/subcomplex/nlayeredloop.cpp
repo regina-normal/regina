@@ -49,7 +49,7 @@ NLayeredLoop* NLayeredLoop::clone() const {
 NManifold* NLayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.
-        return new NLensSpace(length_, 1);
+        return new LensSpace(length_, 1);
     } else {
         // Twisted.
         NSFSpace* ans = new NSFSpace();

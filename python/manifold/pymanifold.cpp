@@ -35,7 +35,7 @@ void addGraphPair();
 void addGraphTriple();
 void addHandlebody();
 void addNManifold();
-void addNLensSpace();
+void addLensSpace();
 void addNSFSpace();
 void addNSimpleSurfaceBundle();
 void addNSnapPeaCensusManifold();
@@ -44,7 +44,7 @@ void addNTorusBundle();
 void addManifoldClasses() {
     addNManifold();
     addHandlebody();
-    addNLensSpace();
+    addLensSpace();
     addNSFSpace();
     addNSimpleSurfaceBundle();
     addNSnapPeaCensusManifold();

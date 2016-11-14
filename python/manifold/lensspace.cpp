@@ -35,19 +35,19 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLensSpace;
+using regina::LensSpace;
 
-void addNLensSpace() {
-    class_<NLensSpace, bases<regina::NManifold>,
-            std::auto_ptr<NLensSpace>, boost::noncopyable>
-            ("NLensSpace", init<unsigned long, unsigned long>())
-        .def(init<const NLensSpace&>())
-        .def("p", &NLensSpace::p)
-        .def("q", &NLensSpace::q)
+void addLensSpace() {
+    class_<LensSpace, bases<regina::NManifold>,
+            std::auto_ptr<LensSpace>, boost::noncopyable>
+            ("LensSpace", init<unsigned long, unsigned long>())
+        .def(init<const LensSpace&>())
+        .def("p", &LensSpace::p)
+        .def("q", &LensSpace::q)
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NLensSpace>,
+    implicitly_convertible<std::auto_ptr<LensSpace>,
         std::auto_ptr<regina::NManifold> >();
 }
 

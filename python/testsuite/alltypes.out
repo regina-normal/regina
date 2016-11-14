@@ -1242,6 +1242,9 @@ Equality type : BY_REFERENCE
 LargeInteger : class
 Equality type : BY_VALUE
 
+LensSpace : class
+Equality type : BY_VALUE
+
 Locale : class
 Equality type : NEVER_INSTANTIATED
 
@@ -1375,9 +1378,6 @@ Equality type : BY_REFERENCE
 
 NLayering : class
 Equality type : BY_REFERENCE
-
-NLensSpace : class
-Equality type : BY_VALUE
 
 NManifold : class
 Equality type : BY_REFERENCE

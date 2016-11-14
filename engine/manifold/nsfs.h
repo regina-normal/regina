@@ -46,7 +46,7 @@
 namespace regina {
 
 class AbelianGroup;
-class NLensSpace;
+class LensSpace;
 
 /**
  * \weakgroup manifold
@@ -702,14 +702,14 @@ class REGINA_API NSFSpace : public NManifold {
         /**
          * Determines if this Seifert fibred space is a Lens space.
          *
-         * If this is a Lens space, the NLensSpace returned will be
+         * If this is a Lens space, the LensSpace returned will be
          * newly created and it will be up to the caller
          * of this routine to destroy it.
          *
          * @return a structure containing the details of this Lens
          * space, or \c null if this is not a Lens space.
          */
-        NLensSpace* isLensSpace() const;
+        LensSpace* isLensSpace() const;
 
         /**
          * Determines whether this and the given structure contain

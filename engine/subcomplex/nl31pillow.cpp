@@ -96,7 +96,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const Component<3>* comp) {
 }
 
 NManifold* NL31Pillow::manifold() const {
-    return new NLensSpace(3, 1);
+    return new LensSpace(3, 1);
 }
 
 AbelianGroup* NL31Pillow::homology() const {

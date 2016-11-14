@@ -62,7 +62,7 @@ namespace regina {
  *
  * All optional NManifold routines are implemented for this class.
  */
-class REGINA_API NLensSpace : public NManifold {
+class REGINA_API LensSpace : public NManifold {
     private:
         unsigned long p_;
             /**< The first parameter of the lens space. */
@@ -82,17 +82,17 @@ class REGINA_API NLensSpace : public NManifold {
          * Note that there are no range restrictions whatsoever on this
          * parameter.
          */
-        NLensSpace(unsigned long newP, unsigned long newQ);
+        LensSpace(unsigned long newP, unsigned long newQ);
         /**
          * Creates a clone of the given lens space.
          *
          * @param cloneMe the lens space to clone.
          */
-        NLensSpace(const NLensSpace& cloneMe);
+        LensSpace(const LensSpace& cloneMe);
         /**
          * Destroys this lens space.
          */
-        virtual ~NLensSpace();
+        virtual ~LensSpace();
         /**
          * Returns the first parameter \a p of this lens space L(p,q).
          * See the class notes for details.
@@ -119,7 +119,7 @@ class REGINA_API NLensSpace : public NManifold {
          * @return \c true if and only if this and the given lens space
          * are homeomorphic.
          */
-        bool operator == (const NLensSpace& compare) const;
+        bool operator == (const LensSpace& compare) const;
         /**
          * Determines whether this and the given lens space are
          * non-homeomorphic 3-manifolds.  Note that the manifolds may be
@@ -129,7 +129,7 @@ class REGINA_API NLensSpace : public NManifold {
          * @return \c true if and only if this and the given lens space
          * are non-homeomorphic.
          */
-        bool operator != (const NLensSpace& compare) const;
+        bool operator != (const LensSpace& compare) const;
 
         Triangulation<3>* construct() const;
         AbelianGroup* homology() const;
@@ -147,31 +147,31 @@ class REGINA_API NLensSpace : public NManifold {
 
 /*@}*/
 
-// Inline functions for NLensSpace
+// Inline functions for LensSpace
 
-inline NLensSpace::NLensSpace(unsigned long newP, unsigned long newQ) :
+inline LensSpace::LensSpace(unsigned long newP, unsigned long newQ) :
         p_(newP), q_(newQ) {
     reduce();
 }
-inline NLensSpace::NLensSpace(const NLensSpace& cloneMe) :
+inline LensSpace::LensSpace(const LensSpace& cloneMe) :
         NManifold(), p_(cloneMe.p_), q_(cloneMe.q_) {
 }
-inline NLensSpace::~NLensSpace() {
+inline LensSpace::~LensSpace() {
 }
-inline unsigned long NLensSpace::p() const {
+inline unsigned long LensSpace::p() const {
     return p_;
 }
-inline unsigned long NLensSpace::q() const {
+inline unsigned long LensSpace::q() const {
     return q_;
 }
-inline bool NLensSpace::operator == (const NLensSpace& compare) const {
+inline bool LensSpace::operator == (const LensSpace& compare) const {
     return (p_ == compare.p_ && q_ == compare.q_);
 }
-inline bool NLensSpace::operator != (const NLensSpace& compare) const {
+inline bool LensSpace::operator != (const LensSpace& compare) const {
     return (p_ != compare.p_ || q_ != compare.q_);
 }
 
-inline bool NLensSpace::isHyperbolic() const {
+inline bool LensSpace::isHyperbolic() const {
     return false;
 }
 
