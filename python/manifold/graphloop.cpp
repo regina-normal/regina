@@ -65,6 +65,8 @@ void addGraphLoop() {
         .def(regina::python::add_eq_operators())
     ;
 
+    scope().attr("NGraphLoop") = scope().attr("GraphLoop");
+
     implicitly_convertible<std::auto_ptr<GraphLoop>,
         std::auto_ptr<regina::NManifold> >();
 }

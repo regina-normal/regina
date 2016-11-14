@@ -1317,6 +1317,8 @@ NGlobalDirs : typedef ->  GlobalDirs
 
 NGluingPermSearcher : typedef ->  GluingPermSearcher3
 
+NGraphLoop : typedef ->  GraphLoop
+
 NGraphPair : class
 Equality type : BY_REFERENCE
 
