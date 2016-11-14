@@ -55,7 +55,7 @@ struct NBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
              saturated region are joined together.  This matrix expresses
              the fibre/base curves on one boundary annulus in terms of the
              fibre/base curves on the other, as described by
-             NGraphLoop::matchingReln(). */
+             GraphLoop::matchingReln(). */
 
     /**
      * Creates a new searcher whose \a region pointer is null.
@@ -84,7 +84,7 @@ NManifold* NBlockedSFSLoop::manifold() const {
 
     sfs->reduce(false);
 
-    return new NGraphLoop(sfs, matchingReln_);
+    return new GraphLoop(sfs, matchingReln_);
 }
 
 std::ostream& NBlockedSFSLoop::writeName(std::ostream& out) const {

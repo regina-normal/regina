@@ -70,7 +70,7 @@ NManifold* NPluggedTorusBundle::manifold() const {
 
     sfs->reduce(false);
 
-    return new NGraphLoop(sfs, matchingReln_);
+    return new GraphLoop(sfs, matchingReln_);
 }
 
 std::ostream& NPluggedTorusBundle::writeName(std::ostream& out) const {

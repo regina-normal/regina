@@ -89,7 +89,7 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class REGINA_API NGraphLoop : public NManifold {
+class REGINA_API GraphLoop : public NManifold {
     private:
         NSFSpace* sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */
@@ -129,7 +129,7 @@ class REGINA_API NGraphLoop : public NManifold {
          * @param mat10 the (1,0) element of the matching matrix.
          * @param mat11 the (1,1) element of the matching matrix.
          */
-        NGraphLoop(NSFSpace* sfs, long mat00, long mat01,
+        GraphLoop(NSFSpace* sfs, long mat00, long mat01,
             long mat10, long mat11);
         /**
          * Creates a new graph manifold as a self-identified Seifert fibred
@@ -150,12 +150,12 @@ class REGINA_API NGraphLoop : public NManifold {
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        NGraphLoop(NSFSpace* sfs, const Matrix2& matchingReln);
+        GraphLoop(NSFSpace* sfs, const Matrix2& matchingReln);
         /**
          * Destroys this structure along with the bounded Seifert
          * fibred space and the matching matrix.
          */
-        ~NGraphLoop();
+        ~GraphLoop();
 
         /**
          * Returns a reference to the bounded Seifert fibred space that
@@ -192,7 +192,7 @@ class REGINA_API NGraphLoop : public NManifold {
          * @return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
-        bool operator < (const NGraphLoop& compare) const;
+        bool operator < (const GraphLoop& compare) const;
 
         AbelianGroup* homology() const;
         bool isHyperbolic() const;
@@ -229,28 +229,28 @@ class REGINA_API NGraphLoop : public NManifold {
 
 /*@}*/
 
-// Inline functions for NGraphLoop
+// Inline functions for GraphLoop
 
-inline NGraphLoop::NGraphLoop(NSFSpace* sfs,
+inline GraphLoop::GraphLoop(NSFSpace* sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
     reduce();
 }
 
-inline NGraphLoop::NGraphLoop(NSFSpace* sfs, const Matrix2& matchingReln) :
+inline GraphLoop::GraphLoop(NSFSpace* sfs, const Matrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
     reduce();
 }
 
-inline const NSFSpace& NGraphLoop::sfs() const {
+inline const NSFSpace& GraphLoop::sfs() const {
     return *sfs_;
 }
 
-inline const Matrix2& NGraphLoop::matchingReln() const {
+inline const Matrix2& GraphLoop::matchingReln() const {
     return matchingReln_;
 }
 
-inline bool NGraphLoop::isHyperbolic() const {
+inline bool GraphLoop::isHyperbolic() const {
     return false;
 }
 

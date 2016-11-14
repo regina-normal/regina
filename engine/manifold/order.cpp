@@ -97,8 +97,8 @@ bool NManifold::operator < (const NManifold& compare) const {
     if (triple1 && triple2)
         return (*triple1 < *triple2);
 
-    const NGraphLoop* loop1 = dynamic_cast<const NGraphLoop*>(this);
-    const NGraphLoop* loop2 = dynamic_cast<const NGraphLoop*>(&compare);
+    const GraphLoop* loop1 = dynamic_cast<const GraphLoop*>(this);
+    const GraphLoop* loop2 = dynamic_cast<const GraphLoop*>(&compare);
     if (loop1 && ! loop2)
         return true;
     if (loop2 && ! loop1)

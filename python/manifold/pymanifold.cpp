@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-void addNGraphLoop();
+void addGraphLoop();
 void addNGraphPair();
 void addNGraphTriple();
 void addNHandlebody();
@@ -49,7 +49,7 @@ void addManifoldClasses() {
     addNSimpleSurfaceBundle();
     addNSnapPeaCensusManifold();
     addNTorusBundle();
-    addNGraphLoop();
+    addGraphLoop();
     addNGraphPair();
     addNGraphTriple();
 }
