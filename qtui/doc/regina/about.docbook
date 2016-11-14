@@ -121,7 +121,7 @@
   <blockquote><para>
    Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
    <emphasis>Regina: Software for low-dimensional topology,</emphasis>
-   <literal>http://regina.sourceforge.net/</literal>,
+   <literal>http://regina-normal.github.io/</literal>,
    1999&ndash;2016.
   </para></blockquote>
   <para>
@@ -131,8 +131,8 @@
 @misc{regina,
     author = {Benjamin A. Burton and Ryan Budney and William Pettersson and others},
     title = {Regina: Software for low-dimensional topology},
-    howpublished = {{\tt http://\allowbreak regina.\allowbreak
-        sourceforge.\allowbreak net/}},
+    howpublished = {{\tt http://\allowbreak regina-normal.\allowbreak
+        github.\allowbreak io/}},
     year = {1999--2016}
 }
 </programlisting>

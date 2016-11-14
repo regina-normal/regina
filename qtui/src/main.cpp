@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     QCoreApplication::setOrganizationName("Regina");
-    QCoreApplication::setOrganizationDomain("regina.sourceforge.net");
+    QCoreApplication::setOrganizationDomain("regina-normal.github.io");
     QCoreApplication::setApplicationName("Regina");
 
 #ifdef REGINA_INSTALL_BUNDLE

@@ -65,7 +65,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for low-dimensional topology",
- *  http://regina.sourceforge.net/ , 1999-2016.
+ *  http://regina-normal.github.io/ , 1999-2016.
  *
  *  <h3>Authors</h3>
  *
