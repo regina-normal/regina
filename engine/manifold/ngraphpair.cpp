@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/ngraphpair.h"
+#include "manifold/graphpair.h"
 #include "manifold/nsfs.h"
 #include "manifold/nsfsaltset.h"
 #include "maths/matrix.h"

@@ -26,6 +26,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     graphloop.h
     ngraphloop.h
+    graphpair.h
     ngraphpair.h
     ngraphtriple.h
     nhandlebody.h

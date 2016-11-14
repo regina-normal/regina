@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ngraphpair.h"
+#include "manifold/graphpair.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfspair.h"
 #include "subcomplex/nlayering.h"

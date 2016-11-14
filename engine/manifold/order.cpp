@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <manifold/graphloop.h>
-#include <manifold/ngraphpair.h>
+#include <manifold/graphpair.h>
 #include <manifold/ngraphtriple.h>
 #include <manifold/nlensspace.h>
 #include <manifold/nsfs.h>
