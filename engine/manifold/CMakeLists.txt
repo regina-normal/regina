@@ -6,7 +6,7 @@ SET ( FILES
   graphpair
   graphtriple
   handlebody
-  nlensspace
+  lensspace
   nmanifold
   nsfs
   nsfsaltset
