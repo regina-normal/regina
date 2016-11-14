@@ -28,6 +28,7 @@ if (${REGINA_INSTALL_DEV})
     ngraphloop.h
     graphpair.h
     ngraphpair.h
+    graphtriple.h
     ngraphtriple.h
     nhandlebody.h
     nlensspace.h

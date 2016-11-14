@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/ngraphtriple.h"
+#include "manifold/graphtriple.h"
 #include "manifold/nsfs.h"
 #include "../helpers.h"
 

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ngraphtriple.h"
+#include "manifold/graphtriple.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfstriple.h"
 #include "subcomplex/nlayering.h"
