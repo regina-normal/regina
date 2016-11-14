@@ -1379,6 +1379,8 @@ Equality type : BY_REFERENCE
 NLayering : class
 Equality type : BY_REFERENCE
 
+NLensSpace : typedef ->  LensSpace
+
 NManifold : class
 Equality type : BY_REFERENCE
 

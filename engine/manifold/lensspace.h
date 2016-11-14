@@ -145,6 +145,15 @@ class REGINA_API LensSpace : public NManifold {
         void reduce();
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NLensSpace has now been renamed to
+ * LensSpace.
+ */
+REGINA_DEPRECATED typedef LensSpace NLensSpace;
+
 /*@}*/
 
 // Inline functions for LensSpace

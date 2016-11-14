@@ -47,6 +47,8 @@ void addLensSpace() {
         .def(regina::python::add_eq_operators())
     ;
 
+    scope().attr("NLensSpace") = scope().attr("LensSpace");
+
     implicitly_convertible<std::auto_ptr<LensSpace>,
         std::auto_ptr<regina::NManifold> >();
 }
