@@ -66,6 +66,8 @@ void addGraphPair() {
         .def(regina::python::add_eq_operators())
     ;
 
+    scope().attr("NGraphPair") = scope().attr("GraphPair");
+
     implicitly_convertible<std::auto_ptr<GraphPair>,
         std::auto_ptr<regina::NManifold> >();
 }
