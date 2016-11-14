@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/ngraphloop.h"
+#include "manifold/graphloop.h"
 #include "manifold/nsfs.h"
 #include "../helpers.h"
 

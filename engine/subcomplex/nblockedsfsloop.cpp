@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ngraphloop.h"
+#include "manifold/graphloop.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfsloop.h"
 #include "subcomplex/nlayering.h"

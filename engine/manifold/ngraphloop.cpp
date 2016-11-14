@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/ngraphloop.h"
+#include "manifold/graphloop.h"
 #include "manifold/nsfs.h"
 #include "maths/matrix.h"
 #include <cstdlib> // For labs().

@@ -24,6 +24,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    graphloop.h
     ngraphloop.h
     ngraphpair.h
     ngraphtriple.h
