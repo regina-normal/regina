@@ -64,6 +64,8 @@ void addGraphTriple() {
         .def(regina::python::add_eq_operators())
     ;
 
+    scope().attr("NGraphTriple") = scope().attr("GraphTriple");
+
     implicitly_convertible<std::auto_ptr<GraphTriple>,
         std::auto_ptr<regina::NManifold> >();
 }

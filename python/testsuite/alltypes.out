@@ -1325,6 +1325,10 @@ NGluingPermSearcher : typedef ->  GluingPermSearcher3
 
 NGraphLoop : typedef ->  GraphLoop
 
+NGraphPair : typedef ->  GraphPair
+
+NGraphTriple : typedef ->  GraphTriple
+
 NGroupExpression : typedef ->  GroupExpression
 
 NGroupExpressionTerm : typedef ->  GroupExpressionTerm
