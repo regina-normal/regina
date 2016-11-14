@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
 #include "packet/container.h"
-#include "split/nsignature.h"
+#include "split/signature.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim3.h"
@@ -54,7 +54,7 @@ using regina::NormalSurfaceVector;
 using regina::Packet;
 using regina::Perm;
 using regina::Ray;
-using regina::NSignature;
+using regina::Signature;
 using regina::Tetrahedron;
 using regina::Triangulation;
 
@@ -169,7 +169,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
-            NSignature* sig = NSignature::parse(sigStr);
+            Signature* sig = Signature::parse(sigStr);
             if (sig == 0)
                 return;
 

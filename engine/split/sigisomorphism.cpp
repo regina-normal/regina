@@ -31,12 +31,12 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "split/nsigisomorphism.h"
+#include "split/sigisomorphism.h"
 
 namespace regina {
 
-NSigPartialIsomorphism::NSigPartialIsomorphism(
-        const NSigPartialIsomorphism& iso) : nLabels(iso.nLabels),
+SigPartialIsomorphism::SigPartialIsomorphism(
+        const SigPartialIsomorphism& iso) : nLabels(iso.nLabels),
         nCycles(iso.nCycles),
         labelImage(iso.nLabels ? new unsigned[iso.nLabels] : 0),
         cyclePreImage(iso.nCycles ? new unsigned[iso.nCycles] : 0),
@@ -50,8 +50,8 @@ NSigPartialIsomorphism::NSigPartialIsomorphism(
     }
 }
 
-NSigPartialIsomorphism::NSigPartialIsomorphism(
-        const NSigPartialIsomorphism& base,
+SigPartialIsomorphism::SigPartialIsomorphism(
+        const SigPartialIsomorphism& base,
         unsigned newLabels, unsigned newCycles) : nLabels(newLabels),
         nCycles(newCycles),
         labelImage(newLabels ? new unsigned[newLabels] : 0),
@@ -66,7 +66,7 @@ NSigPartialIsomorphism::NSigPartialIsomorphism(
     }
 }
 
-void NSigPartialIsomorphism::makeCanonical(const NSignature& sig,
+void SigPartialIsomorphism::makeCanonical(const Signature& sig,
         unsigned fromCycleGroup) {
     unsigned fromCycle, toCycle;
     unsigned c, i;
@@ -99,7 +99,7 @@ void NSigPartialIsomorphism::makeCanonical(const NSignature& sig,
                 cycleStart[c] = start1;
             else {
                 // Two possible starting points; we must choose between them.
-                if (NSignature::cycleCmp(sig, c, start1, dir, labelImage,
+                if (Signature::cycleCmp(sig, c, start1, dir, labelImage,
                         sig, c, start2, dir, labelImage) <= 0)
                     cycleStart[c] = start1;
                 else
@@ -117,18 +117,18 @@ void NSigPartialIsomorphism::makeCanonical(const NSignature& sig,
     }
 }
 
-int NSigPartialIsomorphism::compareWith(const NSignature& sig,
-        const NSigPartialIsomorphism* other, unsigned fromCycleGroup) const {
+int SigPartialIsomorphism::compareWith(const Signature& sig,
+        const SigPartialIsomorphism* other, unsigned fromCycleGroup) const {
     int result;
     for (unsigned c = sig.cycleGroupStart[fromCycleGroup]; c < nCycles; c++) {
         if (other)
-            result = NSignature::cycleCmp(sig, cyclePreImage[c],
+            result = Signature::cycleCmp(sig, cyclePreImage[c],
                 cycleStart[cyclePreImage[c]], dir, labelImage,
                 sig, other->cyclePreImage[c],
                 other->cycleStart[other->cyclePreImage[c]], other->dir,
                 other->labelImage);
         else
-            result = NSignature::cycleCmp(sig, cyclePreImage[c],
+            result = Signature::cycleCmp(sig, cyclePreImage[c],
                 cycleStart[cyclePreImage[c]], dir, labelImage,
                 sig, c, 0, 1, 0);
         if (result < 0)

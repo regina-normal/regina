@@ -33,7 +33,7 @@
 // Regina core includes:
 #include "manifold/nsfs.h"
 #include "maths/numbertheory.h"
-#include "split/nsignature.h"
+#include "split/signature.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
@@ -552,7 +552,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         }
 
         std::string sigString = reSignature.cap(1).toUtf8().constData();
-        regina::NSignature* sig = regina::NSignature::parse(sigString);
+        regina::Signature* sig = regina::Signature::parse(sigString);
         if (! sig) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "

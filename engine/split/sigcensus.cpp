@@ -31,18 +31,18 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "split/nsigcensus.h"
+#include "split/sigcensus.h"
 #include "utilities/memutils.h"
 
 namespace regina {
 
 unsigned long formSigCensus(unsigned order, UseSignature use, void* useArgs) {
-    NSigCensus census(order, use, useArgs);
+    SigCensus census(order, use, useArgs);
     census.run(0);
     return census.totalFound;
 }
 
-void* NSigCensus::run(void*) {
+void* SigCensus::run(void*) {
     // Initialisations.
     sig.nCycles = 0;
     sig.nCycleGroups = 0;
@@ -59,31 +59,31 @@ void* NSigCensus::run(void*) {
     return 0;
 }
 
-void NSigCensus::clearTopAutomorphisms() {
+void SigCensus::clearTopAutomorphisms() {
     if (! automorph[sig.nCycleGroups].empty()) {
         for_each(automorph[sig.nCycleGroups].begin(),
             automorph[sig.nCycleGroups].end(),
-            FuncDelete<NSigPartialIsomorphism>());
+            FuncDelete<SigPartialIsomorphism>());
         automorph[sig.nCycleGroups].clear();
     }
 }
 
-bool NSigCensus::extendAutomorphisms() {
+bool SigCensus::extendAutomorphisms() {
     if (sig.nCycleGroups == 0) {
-        automorph[0].push_back(new NSigPartialIsomorphism(1));
-        automorph[0].push_back(new NSigPartialIsomorphism(-1));
+        automorph[0].push_back(new SigPartialIsomorphism(1));
+        automorph[0].push_back(new SigPartialIsomorphism(-1));
         return true;
     }
 
-    NSigPartialIsomorphism* iso;
+    SigPartialIsomorphism* iso;
     unsigned firstLabel;
     int result;
     unsigned i;
-    std::list<NSigPartialIsomorphism*>::const_iterator it;
+    std::list<SigPartialIsomorphism*>::const_iterator it;
     for (it = automorph[sig.nCycleGroups - 1].begin();
             it != automorph[sig.nCycleGroups - 1].end(); it++) {
         // Try extending this automorphism.
-        iso = new NSigPartialIsomorphism(**it, nextLabel, sig.nCycles);
+        iso = new SigPartialIsomorphism(**it, nextLabel, sig.nCycles);
         firstLabel = (*it)->nLabels;
 
         if (firstLabel == nextLabel) {
@@ -108,7 +108,7 @@ bool NSigCensus::extendAutomorphisms() {
                 }
                 else if (result == 0)
                     automorph[sig.nCycleGroups].push_back(
-                        new NSigPartialIsomorphism(*iso));
+                        new SigPartialIsomorphism(*iso));
             } while (std::next_permutation(iso->labelImage + firstLabel,
                     iso->labelImage + nextLabel));
             delete iso;
@@ -117,7 +117,7 @@ bool NSigCensus::extendAutomorphisms() {
     return true;
 }
 
-void NSigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
+void SigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
         unsigned startPos) {
     // Are we finished?
     if (startPos == 2 * sig.order_) {
@@ -155,7 +155,7 @@ void NSigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                 i = 1;
                 while (sig.label[startPos + i] != sig.label[startPos])
                     i++;
-                if (NSignature::cycleCmp(sig, sig.nCycles - 1, 0, 1, 0,
+                if (Signature::cycleCmp(sig, sig.nCycles - 1, 0, 1, 0,
                         sig, sig.nCycles - 1, i, 1, 0) > 0)
                     avoid = true;
             }

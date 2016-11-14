@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <cstdlib>
-#include "split/nsigcensus.h"
+#include "split/sigcensus.h"
 #include "utilities/stringutils.h"
 
 #define MAXORDER 20
@@ -42,8 +42,8 @@ void usage(const char* progName) {
     exit(1);
 }
 
-void printSignature(const regina::NSignature& sig,
-        const regina::NSigIsoList&, void*) {
+void printSignature(const regina::Signature& sig,
+        const regina::SigIsoList&, void*) {
     sig.writeCycles(std::cout, "", "", ".");
     std::cout << '\n';
 }

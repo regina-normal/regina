@@ -1483,8 +1483,7 @@ Equality type : BY_REFERENCE
 
 NScript : typedef ->  Script
 
-NSignature : class
-Equality type : BY_REFERENCE
+NSignature : typedef ->  Signature
 
 NSimpleSurfaceBundle : class
 Equality type : BY_VALUE
@@ -1687,6 +1686,9 @@ Rational : class
 Equality type : BY_VALUE
 
 Script : class
+Equality type : BY_REFERENCE
+
+Signature : class
 Equality type : BY_REFERENCE
 
 Simplex10 : class

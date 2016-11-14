@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-void addNSignature();
+void addSignature();
 
 void addSplitClasses() {
-    addNSignature();
+    addSignature();
 }
 

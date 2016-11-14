@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "split/nsignature.h"
+#include "split/signature.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
@@ -39,27 +39,29 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NSignature;
+using regina::Signature;
 
 namespace {
-    void writeCycles(const NSignature& sig, const std::string& cycleOpen,
+    void writeCycles(const Signature& sig, const std::string& cycleOpen,
             const std::string& cycleClose, const std::string& cycleJoin) {
         sig.writeCycles(std::cout, cycleOpen, cycleClose, cycleJoin);
     }
 }
 
-void addNSignature() {
-    class_<NSignature, std::auto_ptr<NSignature>,
-        boost::noncopyable>("NSignature", init<const NSignature&>())
-        .def("order", &NSignature::order)
-        .def("parse", &NSignature::parse,
+void addSignature() {
+    class_<Signature, std::auto_ptr<Signature>,
+        boost::noncopyable>("Signature", init<const Signature&>())
+        .def("order", &Signature::order)
+        .def("parse", &Signature::parse,
             return_value_policy<manage_new_object>())
-        .def("triangulate", &NSignature::triangulate,
+        .def("triangulate", &Signature::triangulate,
             return_value_policy<to_held_type<> >())
         .def("writeCycles", &writeCycles)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("parse")
     ;
+
+    scope().attr("NSignature") = scope().attr("Signature");
 }
 
