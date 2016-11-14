@@ -139,7 +139,7 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class REGINA_API NGraphTriple : public NManifold {
+class REGINA_API GraphTriple : public NManifold {
     private:
         NSFSpace* end_[2];
             /**< The two end spaces, i.e., the Seifert fibred spaces
@@ -182,13 +182,13 @@ class REGINA_API NGraphTriple : public NManifold {
          * @param matchingReln1 the 2-by-2 matching matrix that
          * specifies how spaces \a end1 and \a centre are joined.
          */
-        NGraphTriple(NSFSpace* end0, NSFSpace* centre, NSFSpace* end1,
+        GraphTriple(NSFSpace* end0, NSFSpace* centre, NSFSpace* end1,
             const Matrix2& matchingReln0, const Matrix2& matchingReln1);
         /**
          * Destroys this structure along with the component Seifert
          * fibred spaces and matching matrices.
          */
-        ~NGraphTriple();
+        ~GraphTriple();
 
         /**
          * Returns a reference to one of the two end spaces.
@@ -247,7 +247,7 @@ class REGINA_API NGraphTriple : public NManifold {
          * @return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
-        bool operator < (const NGraphTriple& compare) const;
+        bool operator < (const GraphTriple& compare) const;
 
         AbelianGroup* homology() const;
         bool isHyperbolic() const;
@@ -285,9 +285,9 @@ class REGINA_API NGraphTriple : public NManifold {
 
 /*@}*/
 
-// Inline functions for NGraphTriple
+// Inline functions for GraphTriple
 
-inline NGraphTriple::NGraphTriple(NSFSpace* end0, NSFSpace* centre,
+inline GraphTriple::GraphTriple(NSFSpace* end0, NSFSpace* centre,
         NSFSpace* end1, const Matrix2& matchingReln0,
         const Matrix2& matchingReln1) {
     end_[0] = end0;
@@ -300,19 +300,19 @@ inline NGraphTriple::NGraphTriple(NSFSpace* end0, NSFSpace* centre,
     reduce();
 }
 
-inline const NSFSpace& NGraphTriple::end(unsigned which) const {
+inline const NSFSpace& GraphTriple::end(unsigned which) const {
     return *end_[which];
 }
 
-inline const NSFSpace& NGraphTriple::centre() const {
+inline const NSFSpace& GraphTriple::centre() const {
     return *centre_;
 }
 
-inline const Matrix2& NGraphTriple::matchingReln(unsigned which) const {
+inline const Matrix2& GraphTriple::matchingReln(unsigned which) const {
     return matchingReln_[which];
 }
 
-inline bool NGraphTriple::isHyperbolic() const {
+inline bool GraphTriple::isHyperbolic() const {
     return false;
 }
 

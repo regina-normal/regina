@@ -36,35 +36,35 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NGraphTriple;
+using regina::GraphTriple;
 using regina::Matrix2;
 using regina::NSFSpace;
 
 namespace {
-    NGraphTriple* createNGraphTriple(const NSFSpace& s1,
+    GraphTriple* createGraphTriple(const NSFSpace& s1,
             const NSFSpace& s2, const NSFSpace& s3,
             const Matrix2& m1, const Matrix2& m2) {
-        return new NGraphTriple(
+        return new GraphTriple(
             new NSFSpace(s1), new NSFSpace(s2), new NSFSpace(s3), m1, m2);
     }
 }
 
-void addNGraphTriple() {
-    class_<NGraphTriple, bases<regina::NManifold>,
-            std::auto_ptr<NGraphTriple>, boost::noncopyable>
-            ("NGraphTriple", no_init)
-        .def("__init__", make_constructor(createNGraphTriple))
-        .def("end", &NGraphTriple::end,
+void addGraphTriple() {
+    class_<GraphTriple, bases<regina::NManifold>,
+            std::auto_ptr<GraphTriple>, boost::noncopyable>
+            ("GraphTriple", no_init)
+        .def("__init__", make_constructor(createGraphTriple))
+        .def("end", &GraphTriple::end,
             return_internal_reference<>())
-        .def("centre", &NGraphTriple::centre,
+        .def("centre", &GraphTriple::centre,
             return_internal_reference<>())
-        .def("matchingReln", &NGraphTriple::matchingReln,
+        .def("matchingReln", &GraphTriple::matchingReln,
             return_internal_reference<>())
         .def(self < self)
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NGraphTriple>,
+    implicitly_convertible<std::auto_ptr<GraphTriple>,
         std::auto_ptr<regina::NManifold> >();
 }
 

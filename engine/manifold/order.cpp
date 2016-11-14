@@ -88,8 +88,8 @@ bool NManifold::operator < (const NManifold& compare) const {
     if (pair1 && pair2)
         return (*pair1 < *pair2);
 
-    const NGraphTriple* triple1 = dynamic_cast<const NGraphTriple*>(this);
-    const NGraphTriple* triple2 = dynamic_cast<const NGraphTriple*>(&compare);
+    const GraphTriple* triple1 = dynamic_cast<const GraphTriple*>(this);
+    const GraphTriple* triple2 = dynamic_cast<const GraphTriple*>(&compare);
     if (triple1 && ! triple2)
         return true;
     if (triple2 && ! triple1)

@@ -32,7 +32,7 @@
 
 void addGraphLoop();
 void addGraphPair();
-void addNGraphTriple();
+void addGraphTriple();
 void addNHandlebody();
 void addNManifold();
 void addNLensSpace();
@@ -51,6 +51,6 @@ void addManifoldClasses() {
     addNTorusBundle();
     addGraphLoop();
     addGraphPair();
-    addNGraphTriple();
+    addGraphTriple();
 }
 

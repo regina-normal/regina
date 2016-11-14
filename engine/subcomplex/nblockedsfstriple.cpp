@@ -115,7 +115,7 @@ NManifold* NBlockedSFSTriple::manifold() const {
     end1->reduce(false);
     hub->reduce(false);
 
-    return new NGraphTriple(end0, hub, end1,
+    return new GraphTriple(end0, hub, end1,
         matchingReln_[0], matchingReln_[1]);
 }
 
