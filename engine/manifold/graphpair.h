@@ -89,7 +89,7 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class REGINA_API NGraphPair : public NManifold {
+class REGINA_API GraphPair : public NManifold {
     private:
         NSFSpace* sfs_[2];
             /**< The two bounded Seifert fibred spaces that are joined
@@ -130,7 +130,7 @@ class REGINA_API NGraphPair : public NManifold {
          * @param mat10 the (1,0) element of the matching matrix.
          * @param mat11 the (1,1) element of the matching matrix.
          */
-        NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1, long mat00, long mat01,
+        GraphPair(NSFSpace* sfs0, NSFSpace* sfs1, long mat00, long mat01,
             long mat10, long mat11);
         /**
          * Creates a new graph manifold as a pair of joined Seifert fibred
@@ -152,13 +152,13 @@ class REGINA_API NGraphPair : public NManifold {
          * @param sfs1 the second Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
+        GraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
             const Matrix2& matchingReln);
         /**
          * Destroys this structure along with the component Seifert
          * fibred spaces and the matching matrix.
          */
-        ~NGraphPair();
+        ~GraphPair();
 
         /**
          * Returns a reference to one of the two bounded Seifert fibred
@@ -196,7 +196,7 @@ class REGINA_API NGraphPair : public NManifold {
          * @return \c true if and only if this is "smaller" than the
          * given graph manifold representation.
          */
-        bool operator < (const NGraphPair& compare) const;
+        bool operator < (const GraphPair& compare) const;
 
         AbelianGroup* homology() const;
         bool isHyperbolic() const;
@@ -223,9 +223,9 @@ class REGINA_API NGraphPair : public NManifold {
 
 /*@}*/
 
-// Inline functions for NGraphPair
+// Inline functions for GraphPair
 
-inline NGraphPair::NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
+inline GraphPair::GraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
         long mat00, long mat01, long mat10, long mat11) :
         matchingReln_(mat00, mat01, mat10, mat11) {
     sfs_[0] = sfs0;
@@ -234,7 +234,7 @@ inline NGraphPair::NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
     reduce();
 }
 
-inline NGraphPair::NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
+inline GraphPair::GraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
         const Matrix2& matchingReln) : matchingReln_(matchingReln) {
     sfs_[0] = sfs0;
     sfs_[1] = sfs1;
@@ -242,15 +242,15 @@ inline NGraphPair::NGraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
     reduce();
 }
 
-inline const NSFSpace& NGraphPair::sfs(unsigned which) const {
+inline const NSFSpace& GraphPair::sfs(unsigned which) const {
     return *sfs_[which];
 }
 
-inline const Matrix2& NGraphPair::matchingReln() const {
+inline const Matrix2& GraphPair::matchingReln() const {
     return matchingReln_;
 }
 
-inline bool NGraphPair::isHyperbolic() const {
+inline bool GraphPair::isHyperbolic() const {
     return false;
 }
 

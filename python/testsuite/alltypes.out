@@ -1161,6 +1161,9 @@ Equality type : BY_REFERENCE
 GraphLoop : class
 Equality type : BY_REFERENCE
 
+GraphPair : class
+Equality type : BY_REFERENCE
+
 GroupExpression : class
 Equality type : BY_VALUE
 
@@ -1318,9 +1321,6 @@ NGlobalDirs : typedef ->  GlobalDirs
 NGluingPermSearcher : typedef ->  GluingPermSearcher3
 
 NGraphLoop : typedef ->  GraphLoop
-
-NGraphPair : class
-Equality type : BY_REFERENCE
 
 NGraphTriple : class
 Equality type : BY_REFERENCE

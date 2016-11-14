@@ -36,37 +36,37 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NGraphPair;
+using regina::GraphPair;
 using regina::Matrix2;
 using regina::NSFSpace;
 
 namespace {
-    NGraphPair* createNGraphPair_longs(const NSFSpace& s1, const NSFSpace& s2,
+    GraphPair* createGraphPair_longs(const NSFSpace& s1, const NSFSpace& s2,
             long a, long b, long c, long d) {
-        return new NGraphPair(new NSFSpace(s1), new NSFSpace(s2), a, b, c, d);
+        return new GraphPair(new NSFSpace(s1), new NSFSpace(s2), a, b, c, d);
     }
 
-    NGraphPair* createNGraphPair_matrix(const NSFSpace& s1, const NSFSpace& s2,
+    GraphPair* createGraphPair_matrix(const NSFSpace& s1, const NSFSpace& s2,
             const Matrix2& m) {
-        return new NGraphPair(new NSFSpace(s1), new NSFSpace(s2), m);
+        return new GraphPair(new NSFSpace(s1), new NSFSpace(s2), m);
     }
 }
 
-void addNGraphPair() {
-    class_<NGraphPair, bases<regina::NManifold>,
-            std::auto_ptr<NGraphPair>, boost::noncopyable>
-            ("NGraphPair", no_init)
-        .def("__init__", make_constructor(createNGraphPair_longs))
-        .def("__init__", make_constructor(createNGraphPair_matrix))
-        .def("sfs", &NGraphPair::sfs,
+void addGraphPair() {
+    class_<GraphPair, bases<regina::NManifold>,
+            std::auto_ptr<GraphPair>, boost::noncopyable>
+            ("GraphPair", no_init)
+        .def("__init__", make_constructor(createGraphPair_longs))
+        .def("__init__", make_constructor(createGraphPair_matrix))
+        .def("sfs", &GraphPair::sfs,
             return_internal_reference<>())
-        .def("matchingReln", &NGraphPair::matchingReln,
+        .def("matchingReln", &GraphPair::matchingReln,
             return_internal_reference<>())
         .def(self < self)
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NGraphPair>,
+    implicitly_convertible<std::auto_ptr<GraphPair>,
         std::auto_ptr<regina::NManifold> >();
 }
 

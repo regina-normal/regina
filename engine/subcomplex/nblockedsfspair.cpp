@@ -54,7 +54,7 @@ struct NBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
         /**< The matrix describing how the region boundaries are joined
              together.  This matrix expresses the fibre/base curves on the
              second region boundary in terms of the fibre/base curves on
-             the first, as described by NGraphPair::matchingReln(). */
+             the first, as described by GraphPair::matchingReln(). */
 
     /**
      * Creates a new searcher whose \a region pointers are both null.
@@ -90,9 +90,9 @@ NManifold* NBlockedSFSPair::manifold() const {
     sfs1->reduce(false);
 
     if (*sfs1 < *sfs0)
-        return new NGraphPair(sfs1, sfs0, matchingReln_.inverse());
+        return new GraphPair(sfs1, sfs0, matchingReln_.inverse());
     else
-        return new NGraphPair(sfs0, sfs1, matchingReln_);
+        return new GraphPair(sfs0, sfs1, matchingReln_);
 }
 
 std::ostream& NBlockedSFSPair::writeName(std::ostream& out) const {

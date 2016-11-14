@@ -79,8 +79,8 @@ bool NManifold::operator < (const NManifold& compare) const {
     }
 
     // Finally graph manifolds (SFS pairs, triples and loops).
-    const NGraphPair* pair1 = dynamic_cast<const NGraphPair*>(this);
-    const NGraphPair* pair2 = dynamic_cast<const NGraphPair*>(&compare);
+    const GraphPair* pair1 = dynamic_cast<const GraphPair*>(this);
+    const GraphPair* pair2 = dynamic_cast<const GraphPair*>(&compare);
     if (pair1 && ! pair2)
         return true;
     if (pair2 && ! pair1)

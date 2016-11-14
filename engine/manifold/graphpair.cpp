@@ -38,12 +38,12 @@
 
 namespace regina {
 
-NGraphPair::~NGraphPair() {
+GraphPair::~GraphPair() {
     delete sfs_[0];
     delete sfs_[1];
 }
 
-bool NGraphPair::operator < (const NGraphPair& compare) const {
+bool GraphPair::operator < (const GraphPair& compare) const {
     if (*sfs_[0] < *compare.sfs_[0])
         return true;
     if (*compare.sfs_[0] < *sfs_[0])
@@ -57,7 +57,7 @@ bool NGraphPair::operator < (const NGraphPair& compare) const {
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-AbelianGroup* NGraphPair::homology() const {
+AbelianGroup* GraphPair::homology() const {
     // Just for safety (this should always be true anyway):
     if (sfs_[0]->punctures(false) != 1 || sfs_[0]->punctures(true) != 0)
         return 0;
@@ -170,7 +170,7 @@ AbelianGroup* NGraphPair::homology() const {
     return ans;
 }
 
-std::ostream& NGraphPair::writeName(std::ostream& out) const {
+std::ostream& GraphPair::writeName(std::ostream& out) const {
     sfs_[0]->writeName(out);
     out << " U/m ";
     sfs_[1]->writeName(out);
@@ -179,7 +179,7 @@ std::ostream& NGraphPair::writeName(std::ostream& out) const {
         matchingReln_[1][0] << ',' << matchingReln_[1][1] << " ]";
 }
 
-std::ostream& NGraphPair::writeTeXName(std::ostream& out) const {
+std::ostream& GraphPair::writeTeXName(std::ostream& out) const {
     sfs_[0]->writeTeXName(out);
     out << " \\bigcup_{\\homtwo{" <<
         matchingReln_[0][0] << "}{" << matchingReln_[0][1] << "}{" <<
@@ -187,7 +187,7 @@ std::ostream& NGraphPair::writeTeXName(std::ostream& out) const {
     return sfs_[1]->writeTeXName(out);
 }
 
-void NGraphPair::reduce() {
+void GraphPair::reduce() {
     /**
      * Things to observe:
      *
@@ -299,7 +299,7 @@ void NGraphPair::reduce() {
     // the relevant non-orientable cases.
 }
 
-void NGraphPair::reduceSign(Matrix2& reln) {
+void GraphPair::reduceSign(Matrix2& reln) {
     // All we can do is negate the entire matrix (180 degree rotation
     // along the join).
     if (simpler(- reln, reln))
