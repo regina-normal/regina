@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/nhandlebody.h"
+#include "manifold/handlebody.h"
 #include "../helpers.h"
 
 using namespace boost::python;

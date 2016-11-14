@@ -30,6 +30,7 @@ if (${REGINA_INSTALL_DEV})
     ngraphpair.h
     graphtriple.h
     ngraphtriple.h
+    handlebody.h
     nhandlebody.h
     nlensspace.h
     nmanifold.h

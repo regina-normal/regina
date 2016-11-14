@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "manifold/handlebody.h"
 
 namespace regina {
 

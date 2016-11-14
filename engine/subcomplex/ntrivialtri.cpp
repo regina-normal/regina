@@ -32,7 +32,7 @@
 
 #include <algorithm>
 #include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "manifold/handlebody.h"
 #include "manifold/nlensspace.h"
 #include "manifold/nsimplesurfacebundle.h"
 #include "subcomplex/ntrivialtri.h"
