@@ -1338,6 +1338,8 @@ NGroupExpressionTerm : typedef ->  GroupExpressionTerm
 
 NGroupPresentation : typedef ->  GroupPresentation
 
+NHandlebody : typedef ->  Handlebody
+
 NHomGroupPresentation : typedef ->  HomGroupPresentation
 
 NHomMarkedAbelianGroup : typedef ->  HomMarkedAbelianGroup

@@ -47,6 +47,8 @@ void addHandlebody() {
         .def(regina::python::add_eq_operators())
     ;
 
+    scope().attr("NHandlebody") = scope().attr("Handlebody");
+
     implicitly_convertible<std::auto_ptr<Handlebody>,
         std::auto_ptr<regina::NManifold> >();
 }
