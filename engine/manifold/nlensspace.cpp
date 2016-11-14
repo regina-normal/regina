@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nlensspace.h"
+#include "manifold/lensspace.h"
 #include "maths/numbertheory.h"
 #include "triangulation/dim3.h"
 

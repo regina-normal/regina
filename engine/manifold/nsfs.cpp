@@ -34,7 +34,7 @@
 #include <iterator>
 #include <sstream>
 #include "algebra/abeliangroup.h"
-#include "manifold/nlensspace.h"
+#include "manifold/lensspace.h"
 #include "manifold/nsfs.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"

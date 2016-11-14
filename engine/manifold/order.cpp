@@ -33,7 +33,7 @@
 #include <manifold/graphloop.h>
 #include <manifold/graphpair.h>
 #include <manifold/graphtriple.h>
-#include <manifold/nlensspace.h>
+#include <manifold/lensspace.h>
 #include <manifold/nsfs.h>
 #include <manifold/ntorusbundle.h>
 

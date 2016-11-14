@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/nlensspace.h"
+#include "manifold/lensspace.h"
 #include "../helpers.h"
 
 using namespace boost::python;

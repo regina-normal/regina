@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nlensspace.h"
+#include "manifold/lensspace.h"
 #include "manifold/nsfs.h"
 #include "triangulation/dim3.h"
 
