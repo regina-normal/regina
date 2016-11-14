@@ -5,7 +5,7 @@ SET ( FILES
   graphloop
   graphpair
   graphtriple
-  nhandlebody
+  handlebody
   nlensspace
   nmanifold
   nsfs
