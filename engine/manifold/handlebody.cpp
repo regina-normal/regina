@@ -35,14 +35,14 @@
 
 namespace regina {
 
-AbelianGroup* NHandlebody::homology() const {
+AbelianGroup* Handlebody::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     if (nHandles)
         ans->addRank(nHandles);
     return ans;
 }
 
-std::ostream& NHandlebody::writeName(std::ostream& out) const {
+std::ostream& Handlebody::writeName(std::ostream& out) const {
     if (nHandles == 0)
         out << "B3";
     else if (nHandles == 1) {
@@ -59,7 +59,7 @@ std::ostream& NHandlebody::writeName(std::ostream& out) const {
     return out;
 }
 
-std::ostream& NHandlebody::writeTeXName(std::ostream& out) const {
+std::ostream& Handlebody::writeTeXName(std::ostream& out) const {
     if (nHandles == 0)
         out << "B^3";
     else if (nHandles == 1) {

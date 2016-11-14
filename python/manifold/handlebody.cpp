@@ -35,19 +35,19 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NHandlebody;
+using regina::Handlebody;
 
-void addNHandlebody() {
-    class_<NHandlebody, bases<regina::NManifold>,
-            std::auto_ptr<NHandlebody>, boost::noncopyable>
-            ("NHandlebody", init<unsigned long, bool>())
-        .def(init<const NHandlebody&>())
-        .def("handles", &NHandlebody::handles)
-        .def("isOrientable", &NHandlebody::isOrientable)
+void addHandlebody() {
+    class_<Handlebody, bases<regina::NManifold>,
+            std::auto_ptr<Handlebody>, boost::noncopyable>
+            ("Handlebody", init<unsigned long, bool>())
+        .def(init<const Handlebody&>())
+        .def("handles", &Handlebody::handles)
+        .def("isOrientable", &Handlebody::isOrientable)
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NHandlebody>,
+    implicitly_convertible<std::auto_ptr<Handlebody>,
         std::auto_ptr<regina::NManifold> >();
 }
 

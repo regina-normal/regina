@@ -1176,6 +1176,9 @@ Equality type : BY_VALUE
 GroupPresentation : class
 Equality type : BY_REFERENCE
 
+Handlebody : class
+Equality type : BY_VALUE
+
 HomGroupPresentation : class
 Equality type : BY_REFERENCE
 
@@ -1334,9 +1337,6 @@ NGroupExpression : typedef ->  GroupExpression
 NGroupExpressionTerm : typedef ->  GroupExpressionTerm
 
 NGroupPresentation : typedef ->  GroupPresentation
-
-NHandlebody : class
-Equality type : BY_VALUE
 
 NHomGroupPresentation : typedef ->  HomGroupPresentation
 

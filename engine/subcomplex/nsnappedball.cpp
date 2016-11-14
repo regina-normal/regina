@@ -64,7 +64,7 @@ NSnappedBall* NSnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
 }
 
 NManifold* NSnappedBall::manifold() const {
-    return new NHandlebody(0, true);
+    return new Handlebody(0, true);
 }
 
 AbelianGroup* NSnappedBall::homology() const {

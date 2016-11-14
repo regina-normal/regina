@@ -55,7 +55,7 @@ namespace regina {
  * All optional NManifold routines except for NManifold::construct() are
  * implemented for this class.
  */
-class REGINA_API NHandlebody : public NManifold {
+class REGINA_API Handlebody : public NManifold {
     private:
         unsigned long nHandles;
             /**< The number of handles. */
@@ -71,17 +71,17 @@ class REGINA_API NHandlebody : public NManifold {
          * or \c false if the handlebody is to be non-orientable.  This
          * must be \c true if the handlebody has no handles.
          */
-        NHandlebody(unsigned long newHandles, bool newOrientable);
+        Handlebody(unsigned long newHandles, bool newOrientable);
         /**
          * Creates a clone of the given handlebody.
          *
          * @param cloneMe the handlebody to clone.
          */
-        NHandlebody(const NHandlebody& cloneMe);
+        Handlebody(const Handlebody& cloneMe);
         /**
          * Destroys this handlebody.
          */
-        virtual ~NHandlebody();
+        virtual ~Handlebody();
         /**
          * Returns the number of handles of this handlebody.
          *
@@ -103,7 +103,7 @@ class REGINA_API NHandlebody : public NManifold {
          * @return \c true if and only if this and the given handlebody
          * are homeomorphic.
          */
-        bool operator == (const NHandlebody& compare) const;
+        bool operator == (const Handlebody& compare) const;
         /**
          * Determines whether this and the given handlebody represent
          * different 3-manifolds.
@@ -112,7 +112,7 @@ class REGINA_API NHandlebody : public NManifold {
          * @return \c true if and only if this and the given handlebody
          * are not homeomorphic.
          */
-        bool operator != (const NHandlebody& compare) const;
+        bool operator != (const Handlebody& compare) const;
 
         AbelianGroup* homology() const;
         bool isHyperbolic() const;
@@ -122,30 +122,30 @@ class REGINA_API NHandlebody : public NManifold {
 
 /*@}*/
 
-// Inline functions for NHandlebody
+// Inline functions for Handlebody
 
-inline NHandlebody::NHandlebody(unsigned long newHandles, bool newOrientable) :
+inline Handlebody::Handlebody(unsigned long newHandles, bool newOrientable) :
         nHandles(newHandles), orientable(newOrientable) {
 }
-inline NHandlebody::NHandlebody(const NHandlebody& cloneMe) : NManifold(),
+inline Handlebody::Handlebody(const Handlebody& cloneMe) : NManifold(),
         nHandles(cloneMe.nHandles), orientable(cloneMe.orientable) {
 }
-inline NHandlebody::~NHandlebody() {
+inline Handlebody::~Handlebody() {
 }
-inline unsigned long NHandlebody::handles() const {
+inline unsigned long Handlebody::handles() const {
     return nHandles;
 }
-inline bool NHandlebody::isOrientable() const {
+inline bool Handlebody::isOrientable() const {
     return orientable;
 }
-inline bool NHandlebody::operator == (const NHandlebody& compare) const {
+inline bool Handlebody::operator == (const Handlebody& compare) const {
     if (orientable && ! compare.orientable)
         return false;
     if (compare.orientable && ! orientable)
         return false;
     return (nHandles == compare.nHandles);
 }
-inline bool NHandlebody::operator != (const NHandlebody& compare) const {
+inline bool Handlebody::operator != (const Handlebody& compare) const {
     if (orientable && ! compare.orientable)
         return true;
     if (compare.orientable && ! orientable)
@@ -153,7 +153,7 @@ inline bool NHandlebody::operator != (const NHandlebody& compare) const {
     return (nHandles != compare.nHandles);
 }
 
-inline bool NHandlebody::isHyperbolic() const {
+inline bool Handlebody::isHyperbolic() const {
     return false;
 }
 

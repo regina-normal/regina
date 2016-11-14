@@ -194,7 +194,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
 }
 
 NManifold* NSpiralSolidTorus::manifold() const {
-    return new NHandlebody(1, true);
+    return new Handlebody(1, true);
 }
 
 AbelianGroup* NSpiralSolidTorus::homology() const {

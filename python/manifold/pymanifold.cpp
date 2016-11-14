@@ -33,7 +33,7 @@
 void addGraphLoop();
 void addGraphPair();
 void addGraphTriple();
-void addNHandlebody();
+void addHandlebody();
 void addNManifold();
 void addNLensSpace();
 void addNSFSpace();
@@ -43,7 +43,7 @@ void addNTorusBundle();
 
 void addManifoldClasses() {
     addNManifold();
-    addNHandlebody();
+    addHandlebody();
     addNLensSpace();
     addNSFSpace();
     addNSimpleSurfaceBundle();

@@ -140,7 +140,7 @@ NManifold* NTrivialTri::manifold() const {
     if (type_ == SPHERE_4_VERTEX)
         return new NLensSpace(1, 0);
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
-        return new NHandlebody(0, true);
+        return new Handlebody(0, true);
     else if (type_ == N2)
         return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1_TWISTED);
     else if (type_ == N3_1 || type_ == N3_2)

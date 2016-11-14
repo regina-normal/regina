@@ -659,7 +659,7 @@ void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
 }
 
 NManifold* NLayeredSolidTorus::manifold() const {
-    return new NHandlebody(1, true);
+    return new Handlebody(1, true);
 }
 
 AbelianGroup* NLayeredSolidTorus::homology() const {

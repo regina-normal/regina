@@ -104,7 +104,7 @@ void NLayeredChain::invert() {
 }
 
 NManifold* NLayeredChain::manifold() const {
-    return new NHandlebody(index_ <= 1 ? 0 : 1, true);
+    return new Handlebody(index_ <= 1 ? 0 : 1, true);
 }
 
 AbelianGroup* NLayeredChain::homology() const {
