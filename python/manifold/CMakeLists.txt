@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   graphloop
-  ngraphpair
+  graphpair
   ngraphtriple
   nhandlebody
   nlensspace
