@@ -101,7 +101,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
         Triangulation<3>::puncture, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turaevViro,
-        Triangulation<3>::turaevViro, 1, 3);
+        Triangulation<3>::turaevViro, 1, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turaevViroApprox,
         Triangulation<3>::turaevViroApprox, 1, 3);
 

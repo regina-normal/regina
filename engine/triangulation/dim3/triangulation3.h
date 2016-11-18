@@ -63,6 +63,7 @@ namespace regina {
 class AngleStructure;
 class GroupPresentation;
 class NormalSurface;
+class ProgressTracker;
 class ProgressTrackerOpen;
 class XMLPacketReader;
 
@@ -574,6 +575,29 @@ class REGINA_API Triangulation<3> :
          * performs significantly more floating point operations, and so is
          * subject to a much larger potential numerical error.
          *
+         * If the requested Turaev-Viro invariant has already been computed,
+         * then the result will be cached and so this routine will be
+         * very fast (since it just returns the previously computed result).
+         * Otherwise the computation could be quite slow, particularly
+         * for larger triangulations and/or larger values of \a r.
+         * This (potentially) long computation can be managed by passing
+         * a progress tracker:
+         *
+         * - If a progress tracker is passed and the requested invariant has
+         *   not yet been computed, then the calculation will take place in a
+         *   new thread and this routine will return immediately.  Once the
+         *   progress tracker indicates that the calculation has finished,
+         *   you can call turaevViro() again with the same arguments for
+         *   \a r and \a parity to retrieve the value of the invariant.
+         *
+         * - If no progress tracker is passed and the requested invariant has
+         *   not yet been computed, the calculation will run in the current
+         *   thread and this routine will not return until it is complete.
+         *
+         * - If the requested invariant has already been computed, then this
+         *   routine will return immediately with the pre-computed value.  If
+         *   a progress tracker is passed then it will be marked as finished.
+         *
          * \pre This triangulation is valid, closed and non-empty.
          *
          * @param r the integer \a r as described above; this must be at
@@ -582,12 +606,17 @@ class REGINA_API Triangulation<3> :
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
          * @param alg the algorithm with which to compute the invariant.
          * If you are not sure, the default value (TV_DEFAULT) is a safe choice.
-         * @return the requested Turaev-Viro invariant.
+         * @param tracker a progress tracker through will progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return the requested Turaev-Viro invariant.  As an exception,
+         * if \a tracker is non-null and the value of this invariant has
+         * not been computed before, then (since the calculation will
+         * still be running in a new thread) the return value is undefined.
          *
          * @see allCalculatedTuraevViro
          */
         Cyclotomic turaevViro(unsigned long r, bool parity = true,
-            TuraevViroAlg alg = TV_DEFAULT) const;
+            TuraevViroAlg alg = TV_DEFAULT, ProgressTracker* tracker = 0) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
          * 3-manifold using a fast but inexact floating-point approximation.

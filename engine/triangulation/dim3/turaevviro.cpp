@@ -35,10 +35,12 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
+#include <thread>
 #include "regina-config.h"
 #include "libnormaliz/cone.h"
 #include "maths/cyclotomic.h"
 #include "maths/numbertheory.h"
+#include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/dim3.h"
 #include "utilities/sequence.h"
@@ -424,8 +426,12 @@ namespace {
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroBacktrack(
             const Triangulation<3>& tri,
-            const InitialData<exact>& init) {
+            const InitialData<exact>& init,
+            ProgressTracker* tracker) {
         typedef typename InitialData<exact>::TVType TVType;
+
+        if (tracker)
+            tracker->newStage("Computing invariant");
 
         unsigned long nEdges = tri.countEdges();
         unsigned long nTriangles = tri.countTriangles();
@@ -511,7 +517,23 @@ namespace {
         bool admissible;
         const Tetrahedron<3>* tet;
         const Triangle<3>* triangle;
+
+        double percent;
+        double d0 = 1.0 / (init.r - 1);
+        double d1 = d0 / (init.r - 1);
+        double d2 = d1 / (init.r - 1);
+
         while (curr >= 0) {
+            if (tracker && curr < 3) {
+                percent = d0 * colour[sortedEdges[0]];
+                if (curr >= 1)
+                    percent += (d1 * colour[sortedEdges[1]]);
+                if (curr >= 2)
+                    percent += (d2 * colour[sortedEdges[2]]);
+
+                tracker->setPercent(percent);
+            }
+
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
@@ -620,8 +642,12 @@ namespace {
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroNaive(
             const Triangulation<3>& tri,
-            const InitialData<exact>& init) {
+            const InitialData<exact>& init,
+            ProgressTracker* tracker) {
         typedef typename InitialData<exact>::TVType TVType;
+
+        if (tracker)
+            tracker->newStage("Computing invariant");
 
         unsigned long nEdges = tri.countEdges();
 
@@ -742,9 +768,16 @@ namespace {
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroTreewidth(
             const Triangulation<3>& tri,
-            InitialData<exact>& init) {
+            InitialData<exact>& init,
+            ProgressTracker* tracker) {
         typedef typename InitialData<exact>::TVType TVType;
 
+        // Progress:
+        // - weight of bag processing is 0.95
+        // - weight of other miscellaneous tasks is 0.05
+
+        if (tracker)
+            tracker->newStage("Building tree decomposition", 0.03);
         const TreeDecomposition& d = tri.niceTreeDecomposition();
 
         int nEdges = tri.countEdges();
@@ -754,6 +787,9 @@ namespace {
         int index;
         const Tetrahedron<3>* tet;
         const Edge<3>* edge;
+
+        if (tracker)
+            tracker->newStage("Analysing bags", 0.01);
 
         // In the seenDegree[] array, an edge that has been seen in all
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as
@@ -836,6 +872,9 @@ namespace {
         int choiceType[6];
 
         for (bag = d.first(); bag; bag = bag->next()) {
+            if (tracker)
+                tracker->newStage("Processing bags", 0.95 / nBags);
+
             index = bag->index();
 
             if (bag->isLeaf()) {
@@ -1082,6 +1121,9 @@ namespace {
 #endif
         }
 
+        if (tracker)
+            tracker->newStage("Cleaning up", 0.01);
+
         // The final bag contains no tetrahedra, and so there should be
         // only one colouring stored (in which all edge colours are aggregated).
         TVType ans = partial[nBags - 1]->begin()->second;
@@ -1190,13 +1232,13 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
     switch (alg) {
         case TV_DEFAULT:
         case TV_BACKTRACK:
-            ans = turaevViroBacktrack(*this, init);
+            ans = turaevViroBacktrack(*this, init, 0);
             break;
         case TV_TREEWIDTH:
-            ans = turaevViroTreewidth(*this, init);
+            ans = turaevViroTreewidth(*this, init, 0);
             break;
         case TV_NAIVE:
-            ans = turaevViroNaive(*this, init);
+            ans = turaevViroNaive(*this, init, 0);
             break;
     }
     /*
@@ -1217,10 +1259,13 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 }
 
 Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
-        TuraevViroAlg alg) const {
+        TuraevViroAlg alg, ProgressTracker* tracker) const {
     // Do some basic parameter checks.
-    if (r < 3)
+    if (r < 3) {
+        if (tracker)
+            tracker->setFinished();
         return Cyclotomic();
+    }
     if (r % 2 == 0)
         parity = false; // As required by allCalculatedTuraevViroInvariants().
 
@@ -1228,28 +1273,57 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
     std::pair<unsigned long, bool> tvParams(r, parity);
 #ifndef TV_IGNORE_CACHE
     TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
-    if (it != turaevViroCache_.end())
+    if (it != turaevViroCache_.end()) {
+        if (tracker)
+            tracker->setFinished();
         return (*it).second;
+    }
 #endif
 
-    // Set up our initial data.
-    InitialData<true> init(r, (parity ? 1 : 0));
+    if (tracker) {
+        std::thread([=]{
+            // Set up our initial data.
+            InitialData<true> init(r, (parity ? 1 : 0));
 
-    InitialData<true>::TVType ans;
-    switch (alg) {
-        case TV_DEFAULT:
-        case TV_BACKTRACK:
-            ans = turaevViroBacktrack(*this, init);
-            break;
-        case TV_TREEWIDTH:
-            ans = turaevViroTreewidth(*this, init);
-            break;
-        case TV_NAIVE:
-            ans = turaevViroNaive(*this, init);
-            break;
+            InitialData<true>::TVType ans;
+            switch (alg) {
+                case TV_DEFAULT:
+                case TV_BACKTRACK:
+                    ans = turaevViroBacktrack(*this, init, tracker);
+                    break;
+                case TV_TREEWIDTH:
+                    ans = turaevViroTreewidth(*this, init, tracker);
+                    break;
+                case TV_NAIVE:
+                    ans = turaevViroNaive(*this, init, tracker);
+                    break;
+            }
+
+            turaevViroCache_[tvParams] = ans;
+            tracker->setFinished();
+        }).detach();
+
+        return Cyclotomic(1); // Zero element of a trivial field.
+    } else {
+        // Set up our initial data.
+        InitialData<true> init(r, (parity ? 1 : 0));
+
+        InitialData<true>::TVType ans;
+        switch (alg) {
+            case TV_DEFAULT:
+            case TV_BACKTRACK:
+                ans = turaevViroBacktrack(*this, init, tracker);
+                break;
+            case TV_TREEWIDTH:
+                ans = turaevViroTreewidth(*this, init, tracker);
+                break;
+            case TV_NAIVE:
+                ans = turaevViroNaive(*this, init, tracker);
+                break;
+        }
+
+        return (turaevViroCache_[tvParams] = ans);
     }
-
-    return (turaevViroCache_[tvParams] = ans);
 }
 
 } // namespace regina
