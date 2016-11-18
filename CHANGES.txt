@@ -80,6 +80,9 @@ Version 5.1  [ (under development) ]
             - New routine boundaryComponents() in all dimensions, and new
               routines countBoundaryComponents() and boundaryComponent() in
               higher dimensions (these were already present for dimensions 2-4).
+        Class Cyclotomic:
+            - This class is now thread-safe.  (Previously it was not, because
+              it worked with a global cache of cyclotomic polynomials.)
         Class Example<dim>:
             - A new generic template for generating example triangulations,
               which generalises the old standalone Dim2ExampleTriangulation,
