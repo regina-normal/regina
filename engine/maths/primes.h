@@ -41,6 +41,7 @@
 
 #include "regina-core.h"
 #include "maths/integer.h"
+#include <thread>
 #include <vector>
 
 namespace regina {
@@ -78,6 +79,9 @@ namespace regina {
  * about the size of the list; the high-level routines will extend it if
  * necessary.
  *
+ * Although this class makes use of global data in its implementation, all
+ * of its methods are thread-safe.
+ *
  * @author Ryan Budney, B.B.
  */
 class REGINA_API Primes {
@@ -92,6 +96,8 @@ class REGINA_API Primes {
                  far, not including the initial seed primes.  This list
                  begins empty, and is expanded as required throughout the
                  life of the program. */
+        static std::mutex largeMutex;
+            /**< Ensures that access to \a largePrimes is thread-safe. */
 
     public:
         /**
@@ -250,6 +256,9 @@ class REGINA_API Primes {
          * Adds the given number of primes (or suspected primes) to the
          * list already stored.
          *
+         * This routine is \e not thread-safe.  It should only be called
+         * when \a largeMutex is locked.
+         *
          * @param extras the number of additional suspected primes to
          * calculate.
          */
@@ -272,6 +281,7 @@ inline Primes::Primes() {
 }
 
 inline unsigned long Primes::size() {
+    std::lock_guard<std::mutex> lock(largeMutex);
     return numPrimeSeeds + largePrimes.size();
 }
 

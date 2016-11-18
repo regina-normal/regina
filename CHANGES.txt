@@ -155,6 +155,9 @@ Version 5.1  [ (under development) ]
         Class Perm<n>:
             - New method clear() to reset a suffix of the permutation
               to the identity map.
+        Class Primes:
+            - This class is now thread-safe.  (Previously it was not, because
+              it worked with a global cache of pre-computed primes.)
         Class Property:
             - New routine swap() for fast swapping of data.
         Class PropertyBase:
