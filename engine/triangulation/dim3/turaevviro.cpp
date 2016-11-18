@@ -63,12 +63,20 @@ namespace {
     struct TuraevViroDetails<true> {
         typedef Cyclotomic TVType;
         typedef Cyclotomic TVResult;
+
+        static TVResult zero() {
+            return Cyclotomic(1);
+        }
     };
 
     template <>
     struct TuraevViroDetails<false> {
         typedef std::complex<double> TVType;
         typedef double TVResult;
+
+        static TVResult zero() {
+            return 0;
+        }
     };
 
     /**
@@ -431,7 +439,7 @@ namespace {
         typedef typename InitialData<exact>::TVType TVType;
 
         if (tracker)
-            tracker->newStage("Computing invariant");
+            tracker->newStage("Enumerating colourings");
 
         unsigned long nEdges = tri.countEdges();
         unsigned long nTriangles = tri.countTriangles();
@@ -519,21 +527,17 @@ namespace {
         const Triangle<3>* triangle;
 
         double percent;
-        double d0 = 1.0 / (init.r - 1);
-        double d1 = d0 / (init.r - 1);
-        double d2 = d1 / (init.r - 1);
+        double* coeff;
+        if (tracker) {
+            coeff = new double[nEdges];
+            if (nEdges) {
+                coeff[0] = 1.0 / (init.r - 1);
+                for (i = 1; i < nEdges; ++i)
+                    coeff[i] = coeff[i - 1] / (init.r - 1);
+            }
+        }
 
         while (curr >= 0) {
-            if (tracker && curr < 3) {
-                percent = d0 * colour[sortedEdges[0]];
-                if (curr >= 1)
-                    percent += (d1 * colour[sortedEdges[1]]);
-                if (curr >= 2)
-                    percent += (d2 * colour[sortedEdges[2]]);
-
-                tracker->setPercent(percent);
-            }
-
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
@@ -558,6 +562,17 @@ namespace {
                 if (curr >= 0)
                     colour[sortedEdges[curr]]++;
                 continue;
+            }
+
+            // From here we have 0 <= curr < nEdges.
+
+            if (tracker) {
+                percent = 0;
+                for (i = 0; i <= curr; ++i)
+                    percent += coeff[i] * colour[sortedEdges[i]];
+
+                if (! tracker->setPercent(percent))
+                    break;
             }
 
             // Have we run out of values to try at this level?
@@ -631,6 +646,12 @@ namespace {
         delete[] triangleCache;
         delete[] tetCache;
 
+        if (tracker) {
+            delete[] coeff;
+            if (tracker->isCancelled())
+                return TuraevViroDetails<exact>::zero();
+        }
+
         // Compute the vertex contributions separately, since these are
         // constant.
         for (i = 0; i < tri.countVertices(); i++)
@@ -647,7 +668,7 @@ namespace {
         typedef typename InitialData<exact>::TVType TVType;
 
         if (tracker)
-            tracker->newStage("Computing invariant");
+            tracker->newStage("Enumerating colourings");
 
         unsigned long nEdges = tri.countEdges();
 
