@@ -35,22 +35,22 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSimpleSurfaceBundle;
+using regina::SimpleSurfaceBundle;
 
-void addNSimpleSurfaceBundle() {
-    scope s = class_<NSimpleSurfaceBundle, bases<regina::Manifold>,
-            std::auto_ptr<NSimpleSurfaceBundle>, boost::noncopyable>
-            ("NSimpleSurfaceBundle", init<int>())
-        .def(init<const NSimpleSurfaceBundle&>())
-        .def("type", &NSimpleSurfaceBundle::type)
+void addSimpleSurfaceBundle() {
+    scope s = class_<SimpleSurfaceBundle, bases<regina::Manifold>,
+            std::auto_ptr<SimpleSurfaceBundle>, boost::noncopyable>
+            ("SimpleSurfaceBundle", init<int>())
+        .def(init<const SimpleSurfaceBundle&>())
+        .def("type", &SimpleSurfaceBundle::type)
         .def(regina::python::add_eq_operators())
     ;
 
-    s.attr("S2xS1") = NSimpleSurfaceBundle::S2xS1;
-    s.attr("S2xS1_TWISTED") = NSimpleSurfaceBundle::S2xS1_TWISTED;
-    s.attr("RP2xS1") = NSimpleSurfaceBundle::RP2xS1;
+    s.attr("S2xS1") = SimpleSurfaceBundle::S2xS1;
+    s.attr("S2xS1_TWISTED") = SimpleSurfaceBundle::S2xS1_TWISTED;
+    s.attr("RP2xS1") = SimpleSurfaceBundle::RP2xS1;
 
-    implicitly_convertible<std::auto_ptr<NSimpleSurfaceBundle>,
+    implicitly_convertible<std::auto_ptr<SimpleSurfaceBundle>,
         std::auto_ptr<regina::Manifold> >();
 }
 

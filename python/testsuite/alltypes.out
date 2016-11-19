@@ -1496,9 +1496,6 @@ NScript : typedef ->  Script
 NSignature : class
 Equality type : BY_REFERENCE
 
-NSimpleSurfaceBundle : class
-Equality type : BY_VALUE
-
 NSnapPeaCensusManifold : class
 Equality type : BY_VALUE
 
@@ -1704,6 +1701,9 @@ Equality type : BY_VALUE
 
 Script : class
 Equality type : BY_REFERENCE
+
+SimpleSurfaceBundle : class
+Equality type : BY_VALUE
 
 Simplex10 : class
 Equality type : BY_REFERENCE

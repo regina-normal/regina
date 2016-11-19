@@ -37,7 +37,7 @@ void addHandlebody();
 void addManifold();
 void addLensSpace();
 void addSFSpace();
-void addNSimpleSurfaceBundle();
+void addSimpleSurfaceBundle();
 void addNSnapPeaCensusManifold();
 void addNTorusBundle();
 
@@ -46,7 +46,7 @@ void addManifoldClasses() {
     addHandlebody();
     addLensSpace();
     addSFSpace();
-    addNSimpleSurfaceBundle();
+    addSimpleSurfaceBundle();
     addNSnapPeaCensusManifold();
     addNTorusBundle();
     addGraphLoop();

@@ -36,11 +36,11 @@
 
 namespace regina {
 
-const int NSimpleSurfaceBundle::S2xS1 = 1;
-const int NSimpleSurfaceBundle::S2xS1_TWISTED = 2;
-const int NSimpleSurfaceBundle::RP2xS1 = 3;
+const int SimpleSurfaceBundle::S2xS1 = 1;
+const int SimpleSurfaceBundle::S2xS1_TWISTED = 2;
+const int SimpleSurfaceBundle::RP2xS1 = 3;
 
-Triangulation<3>* NSimpleSurfaceBundle::construct() const {
+Triangulation<3>* SimpleSurfaceBundle::construct() const {
     Triangulation<3>* ans = new Triangulation<3>();
 
     if (type_ == S2xS1) {
@@ -71,7 +71,7 @@ Triangulation<3>* NSimpleSurfaceBundle::construct() const {
     return ans;
 }
 
-AbelianGroup* NSimpleSurfaceBundle::homology() const {
+AbelianGroup* SimpleSurfaceBundle::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     if (type_ == RP2xS1)
@@ -79,7 +79,7 @@ AbelianGroup* NSimpleSurfaceBundle::homology() const {
     return ans;
 }
 
-std::ostream& NSimpleSurfaceBundle::writeName(std::ostream& out) const {
+std::ostream& SimpleSurfaceBundle::writeName(std::ostream& out) const {
     if (type_ == S2xS1)
         out << "S2 x S1";
     else if (type_ == S2xS1_TWISTED)
@@ -89,7 +89,7 @@ std::ostream& NSimpleSurfaceBundle::writeName(std::ostream& out) const {
     return out;
 }
 
-std::ostream& NSimpleSurfaceBundle::writeTeXName(std::ostream& out) const {
+std::ostream& SimpleSurfaceBundle::writeTeXName(std::ostream& out) const {
     if (type_ == S2xS1)
         out << "S^2 \\times S^1";
     else if (type_ == S2xS1_TWISTED)

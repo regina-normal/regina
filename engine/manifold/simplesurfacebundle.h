@@ -56,7 +56,7 @@ namespace regina {
  *
  * All optional Manifold routines are implemented for this class.
  */
-class REGINA_API NSimpleSurfaceBundle : public Manifold {
+class REGINA_API SimpleSurfaceBundle : public Manifold {
     public:
         /**
          * Represents the orientable 2-sphere bundle over the circle.
@@ -85,13 +85,13 @@ class REGINA_API NSimpleSurfaceBundle : public Manifold {
          * represent.  This must be one of the 3-manifold constants
          * defined in this class.
          */
-        NSimpleSurfaceBundle(int newType);
+        SimpleSurfaceBundle(int newType);
         /**
          * Creates a clone of the given surface bundle.
          *
          * @param cloneMe the surface bundle to clone.
          */
-        NSimpleSurfaceBundle(const NSimpleSurfaceBundle& cloneMe);
+        SimpleSurfaceBundle(const SimpleSurfaceBundle& cloneMe);
         /**
          * Returns the specific type of surface bundle being represented.
          *
@@ -107,7 +107,7 @@ class REGINA_API NSimpleSurfaceBundle : public Manifold {
          * @return \c true if and only if this and the given surface bundle
          * are homeomorphic.
          */
-        bool operator == (const NSimpleSurfaceBundle& compare) const;
+        bool operator == (const SimpleSurfaceBundle& compare) const;
         /**
          * Determines whether this and the given surface bundle represent
          * different 3-manifolds.
@@ -116,7 +116,7 @@ class REGINA_API NSimpleSurfaceBundle : public Manifold {
          * @return \c true if and only if this and the given surface bundle
          * are non-homeomorphic.
          */
-        bool operator != (const NSimpleSurfaceBundle& compare) const;
+        bool operator != (const SimpleSurfaceBundle& compare) const;
 
         virtual Triangulation<3>* construct() const;
         AbelianGroup* homology() const;
@@ -127,28 +127,28 @@ class REGINA_API NSimpleSurfaceBundle : public Manifold {
 
 /*@}*/
 
-// Inline functions for NSimpleSurfaceBundle
+// Inline functions for SimpleSurfaceBundle
 
-inline NSimpleSurfaceBundle::NSimpleSurfaceBundle(
+inline SimpleSurfaceBundle::SimpleSurfaceBundle(
         int newType) : type_(newType) {
 }
-inline NSimpleSurfaceBundle::NSimpleSurfaceBundle(
-        const NSimpleSurfaceBundle& cloneMe) : Manifold(),
+inline SimpleSurfaceBundle::SimpleSurfaceBundle(
+        const SimpleSurfaceBundle& cloneMe) : Manifold(),
         type_(cloneMe.type_) {
 }
-inline int NSimpleSurfaceBundle::type() const {
+inline int SimpleSurfaceBundle::type() const {
     return type_;
 }
-inline bool NSimpleSurfaceBundle::operator ==
-        (const NSimpleSurfaceBundle& compare) const {
+inline bool SimpleSurfaceBundle::operator ==
+        (const SimpleSurfaceBundle& compare) const {
     return (type_ == compare.type_);
 }
-inline bool NSimpleSurfaceBundle::operator !=
-        (const NSimpleSurfaceBundle& compare) const {
+inline bool SimpleSurfaceBundle::operator !=
+        (const SimpleSurfaceBundle& compare) const {
     return (type_ != compare.type_);
 }
 
-inline bool NSimpleSurfaceBundle::isHyperbolic() const {
+inline bool SimpleSurfaceBundle::isHyperbolic() const {
     return false;
 }
 

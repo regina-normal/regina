@@ -142,9 +142,9 @@ Manifold* NTrivialTri::manifold() const {
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
         return new Handlebody(0, true);
     else if (type_ == N2)
-        return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1_TWISTED);
+        return new SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED);
     else if (type_ == N3_1 || type_ == N3_2)
-        return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::RP2xS1);
+        return new SimpleSurfaceBundle(SimpleSurfaceBundle::RP2xS1);
     return 0;
 }
 
