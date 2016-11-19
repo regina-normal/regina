@@ -10,7 +10,7 @@ SET ( FILES
   manifold
   sfs
   simplesurfacebundle
-  nsnappeacensusmfd
+  snappeacensusmfd
   ntorusbundle
   pymanifold
   )

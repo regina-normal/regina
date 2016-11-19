@@ -11,7 +11,7 @@ SET ( FILES
   sfs
   sfsaltset
   simplesurfacebundle
-  nsnappeacensusmfd
+  snappeacensusmfd
   ntorusbundle
   order
   )
