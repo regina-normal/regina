@@ -139,7 +139,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          */
         const Matrix2& matchingReln() const;
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

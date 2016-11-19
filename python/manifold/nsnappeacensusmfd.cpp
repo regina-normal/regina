@@ -38,7 +38,7 @@ using namespace boost::python;
 using regina::NSnapPeaCensusManifold;
 
 void addNSnapPeaCensusManifold() {
-    scope s = class_<NSnapPeaCensusManifold, bases<regina::NManifold>,
+    scope s = class_<NSnapPeaCensusManifold, bases<regina::Manifold>,
             std::auto_ptr<NSnapPeaCensusManifold>, boost::noncopyable>
             ("NSnapPeaCensusManifold", init<char, unsigned long>())
         .def(init<const NSnapPeaCensusManifold&>())
@@ -54,6 +54,6 @@ void addNSnapPeaCensusManifold() {
     s.attr("SEC_7_NOR") = NSnapPeaCensusManifold::SEC_7_NOR;
 
     implicitly_convertible<std::auto_ptr<NSnapPeaCensusManifold>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

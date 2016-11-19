@@ -193,7 +193,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
     return ans;
 }
 
-NManifold* NSpiralSolidTorus::manifold() const {
+Manifold* NSpiralSolidTorus::manifold() const {
     return new Handlebody(1, true);
 }
 

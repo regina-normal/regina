@@ -50,7 +50,7 @@ namespace {
 }
 
 void addGraphTriple() {
-    class_<GraphTriple, bases<regina::NManifold>,
+    class_<GraphTriple, bases<regina::Manifold>,
             std::auto_ptr<GraphTriple>, boost::noncopyable>
             ("GraphTriple", no_init)
         .def("__init__", make_constructor(createGraphTriple))
@@ -67,6 +67,6 @@ void addGraphTriple() {
     scope().attr("NGraphTriple") = scope().attr("GraphTriple");
 
     implicitly_convertible<std::auto_ptr<GraphTriple>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

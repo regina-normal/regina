@@ -586,7 +586,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             if (! std)
                 ans = "<unrecognised triangulation>";
             else {
-                regina::NManifold* mfd = std->manifold();
+                regina::Manifold* mfd = std->manifold();
                 if (! mfd)
                     ans = "<unrecognised manifold>";
                 else {
@@ -734,7 +734,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
-                    regina::NManifold* mfd = std->manifold();
+                    regina::Manifold* mfd = std->manifold();
                     if (! mfd)
                         link = "<unrecognised manifold>";
                     else {
@@ -767,7 +767,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
-                    regina::NManifold* mfd = std->manifold();
+                    regina::Manifold* mfd = std->manifold();
                     if (! mfd)
                         link = "<unrecognised manifold>";
                     else {
@@ -799,7 +799,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             if (! std)
                 link = "<unrecognised triangulation>";
             else {
-                regina::NManifold* mfd = std->manifold();
+                regina::Manifold* mfd = std->manifold();
                 if (! mfd)
                     link = "<unrecognised manifold>";
                 else {

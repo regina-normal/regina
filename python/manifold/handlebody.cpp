@@ -38,7 +38,7 @@ using namespace boost::python;
 using regina::Handlebody;
 
 void addHandlebody() {
-    class_<Handlebody, bases<regina::NManifold>,
+    class_<Handlebody, bases<regina::Manifold>,
             std::auto_ptr<Handlebody>, boost::noncopyable>
             ("Handlebody", init<unsigned long, bool>())
         .def(init<const Handlebody&>())
@@ -50,6 +50,6 @@ void addHandlebody() {
     scope().attr("NHandlebody") = scope().attr("Handlebody");
 
     implicitly_convertible<std::auto_ptr<Handlebody>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

@@ -139,7 +139,7 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
     return 0;
 }
 
-NManifold* NLayeredLensSpace::manifold() const {
+Manifold* NLayeredLensSpace::manifold() const {
     return new LensSpace(p_, q_);
 }
 

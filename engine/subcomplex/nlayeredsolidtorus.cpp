@@ -658,7 +658,7 @@ void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     }
 }
 
-NManifold* NLayeredSolidTorus::manifold() const {
+Manifold* NLayeredSolidTorus::manifold() const {
     return new Handlebody(1, true);
 }
 

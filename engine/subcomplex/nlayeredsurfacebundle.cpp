@@ -165,7 +165,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(Triangulation<3>* tri,
     return 0;
 }
 
-NManifold* NLayeredTorusBundle::manifold() const {
+Manifold* NLayeredTorusBundle::manifold() const {
     // Note that this one-liner appears again in homology(), where
     // we use the underlying NTorusBundle for homology calculations.
     return new NTorusBundle(core_.parallelReln() * reln_);

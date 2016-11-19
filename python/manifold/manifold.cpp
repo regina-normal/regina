@@ -39,33 +39,33 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NManifold;
+using regina::Manifold;
 
 namespace {
-    void writeName_stdio(const NManifold& m) {
+    void writeName_stdio(const Manifold& m) {
         m.writeName(std::cout);
     }
-    void writeTeXName_stdio(const NManifold& m) {
+    void writeTeXName_stdio(const Manifold& m) {
         m.writeTeXName(std::cout);
     }
-    void writeStructure_stdio(const NManifold& m) {
+    void writeStructure_stdio(const Manifold& m) {
         m.writeStructure(std::cout);
     }
 }
 
-void addNManifold() {
-    class_<NManifold, boost::noncopyable, std::auto_ptr<NManifold> >
-            ("NManifold", no_init)
-        .def("name", &NManifold::name)
-        .def("TeXName", &NManifold::TeXName)
-        .def("structure", &NManifold::structure)
-        .def("construct", &NManifold::construct,
+void addManifold() {
+    class_<Manifold, boost::noncopyable, std::auto_ptr<Manifold> >
+            ("Manifold", no_init)
+        .def("name", &Manifold::name)
+        .def("TeXName", &Manifold::TeXName)
+        .def("structure", &Manifold::structure)
+        .def("construct", &Manifold::construct,
             return_value_policy<to_held_type<> >())
-        .def("homology", &NManifold::homology,
+        .def("homology", &Manifold::homology,
             return_value_policy<manage_new_object>())
-        .def("homologyH1", &NManifold::homologyH1,
+        .def("homologyH1", &Manifold::homologyH1,
             return_value_policy<manage_new_object>())
-        .def("isHyperbolic", &NManifold::isHyperbolic)
+        .def("isHyperbolic", &Manifold::isHyperbolic)
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
         .def("writeStructure", writeStructure_stdio)

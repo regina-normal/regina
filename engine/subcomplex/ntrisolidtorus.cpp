@@ -183,7 +183,7 @@ AbelianGroup* NTriSolidTorus::homology() const {
     return ans;
 }
 
-NManifold* NTriSolidTorus::manifold() const {
+Manifold* NTriSolidTorus::manifold() const {
     return new Handlebody(1, true);
 }
 

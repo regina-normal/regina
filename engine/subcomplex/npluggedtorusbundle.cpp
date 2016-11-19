@@ -58,7 +58,7 @@ NPluggedTorusBundle::~NPluggedTorusBundle() {
     delete region_;
 }
 
-NManifold* NPluggedTorusBundle::manifold() const {
+Manifold* NPluggedTorusBundle::manifold() const {
     NSFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;

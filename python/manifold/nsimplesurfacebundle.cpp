@@ -38,7 +38,7 @@ using namespace boost::python;
 using regina::NSimpleSurfaceBundle;
 
 void addNSimpleSurfaceBundle() {
-    scope s = class_<NSimpleSurfaceBundle, bases<regina::NManifold>,
+    scope s = class_<NSimpleSurfaceBundle, bases<regina::Manifold>,
             std::auto_ptr<NSimpleSurfaceBundle>, boost::noncopyable>
             ("NSimpleSurfaceBundle", init<int>())
         .def(init<const NSimpleSurfaceBundle&>())
@@ -51,6 +51,6 @@ void addNSimpleSurfaceBundle() {
     s.attr("RP2xS1") = NSimpleSurfaceBundle::RP2xS1;
 
     implicitly_convertible<std::auto_ptr<NSimpleSurfaceBundle>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

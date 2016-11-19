@@ -68,13 +68,13 @@ namespace regina {
  *     [b]       [q]
  * </pre>
  *
- * All optional NManifold routines except for construct() are implemented
+ * All optional Manifold routines except for construct() are implemented
  * for this class.
  *
  * \todo \feature Implement the == operator for finding conjugate and
  * inverse matrices.
  */
-class REGINA_API NTorusBundle : public NManifold {
+class REGINA_API NTorusBundle : public Manifold {
     private:
         Matrix2 monodromy_;
             /**< The monodromy describing how the two torus boundaries
@@ -230,7 +230,7 @@ inline NTorusBundle::NTorusBundle(long mon00, long mon01, long mon10,
 }
 
 inline NTorusBundle::NTorusBundle(const NTorusBundle& cloneMe) :
-        NManifold(), monodromy_(cloneMe.monodromy_) {
+        Manifold(), monodromy_(cloneMe.monodromy_) {
 }
 
 inline const Matrix2& NTorusBundle::monodromy() const {

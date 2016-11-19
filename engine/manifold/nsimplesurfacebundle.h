@@ -54,9 +54,9 @@ namespace regina {
  * Only 2-sphere bundles, twisted 2-sphere bundles and projective plane
  * bundles are considered.
  *
- * All optional NManifold routines are implemented for this class.
+ * All optional Manifold routines are implemented for this class.
  */
-class REGINA_API NSimpleSurfaceBundle : public NManifold {
+class REGINA_API NSimpleSurfaceBundle : public Manifold {
     public:
         /**
          * Represents the orientable 2-sphere bundle over the circle.
@@ -133,7 +133,7 @@ inline NSimpleSurfaceBundle::NSimpleSurfaceBundle(
         int newType) : type_(newType) {
 }
 inline NSimpleSurfaceBundle::NSimpleSurfaceBundle(
-        const NSimpleSurfaceBundle& cloneMe) : NManifold(),
+        const NSimpleSurfaceBundle& cloneMe) : Manifold(),
         type_(cloneMe.type_) {
 }
 inline int NSimpleSurfaceBundle::type() const {

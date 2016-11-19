@@ -94,11 +94,11 @@ Packet* tree;
 struct ManifoldSpec {
     Packet* container;
     bool hasTriangulation;
-    NManifold* manifold; // 0 if unknown
+    Manifold* manifold; // 0 if unknown
 
     ManifoldSpec() : container(0), hasTriangulation(false), manifold(0) {
     }
-    ManifoldSpec(Packet* c, bool t, NManifold* m) :
+    ManifoldSpec(Packet* c, bool t, Manifold* m) :
             container(c), hasTriangulation(t), manifold(m) {
     }
 
@@ -154,7 +154,7 @@ bool process(Container* c) {
     bool foundTri = false;
 
     NStandardTriangulation* std;
-    NManifold* mfd;
+    Manifold* mfd;
     std::string name, structure;
     for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {

@@ -38,7 +38,7 @@ using namespace boost::python;
 using regina::LensSpace;
 
 void addLensSpace() {
-    class_<LensSpace, bases<regina::NManifold>,
+    class_<LensSpace, bases<regina::Manifold>,
             std::auto_ptr<LensSpace>, boost::noncopyable>
             ("LensSpace", init<unsigned long, unsigned long>())
         .def(init<const LensSpace&>())
@@ -50,6 +50,6 @@ void addLensSpace() {
     scope().attr("NLensSpace") = scope().attr("LensSpace");
 
     implicitly_convertible<std::auto_ptr<LensSpace>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

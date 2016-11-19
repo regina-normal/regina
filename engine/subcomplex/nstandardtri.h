@@ -47,7 +47,7 @@
 namespace regina {
 
 class AbelianGroup;
-class NManifold;
+class Manifold;
 
 /**
  * \addtogroup subcomplex Standard Triangulations and Subcomplexes
@@ -119,7 +119,7 @@ class REGINA_API NStandardTriangulation :
          *
          * @return the underlying 3-manifold.
          */
-        virtual NManifold* manifold() const;
+        virtual Manifold* manifold() const;
         /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
@@ -292,7 +292,7 @@ class REGINA_API NStandardTriangulation :
 inline NStandardTriangulation::~NStandardTriangulation() {
 }
 
-inline NManifold* NStandardTriangulation::manifold() const {
+inline Manifold* NStandardTriangulation::manifold() const {
     return 0;
 }
 

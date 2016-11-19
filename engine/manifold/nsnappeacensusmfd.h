@@ -77,9 +77,9 @@ namespace regina {
  * Furthermore, the section and index parameters of a NSnapPeaCensusTri
  * are identical to those of its corresponding NSnapPeaCensusManifold.
  *
- * All of the optional NManifold routines are implemented for this class.
+ * All of the optional Manifold routines are implemented for this class.
  */
-class REGINA_API NSnapPeaCensusManifold : public NManifold {
+class REGINA_API NSnapPeaCensusManifold : public Manifold {
     public:
         static const char SEC_5;
             /**< Represents the collection of manifolds formed from five or
@@ -198,7 +198,7 @@ inline NSnapPeaCensusManifold::NSnapPeaCensusManifold(char newSection,
         section_(newSection), index_(newIndex) {
 }
 inline NSnapPeaCensusManifold::NSnapPeaCensusManifold(
-        const NSnapPeaCensusManifold& cloneMe) : NManifold(),
+        const NSnapPeaCensusManifold& cloneMe) : Manifold(),
         section_(cloneMe.section_), index_(cloneMe.index_) {
 }
 inline NSnapPeaCensusManifold::~NSnapPeaCensusManifold() {

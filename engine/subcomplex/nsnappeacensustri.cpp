@@ -168,7 +168,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     return 0;
 }
 
-NManifold* NSnapPeaCensusTri::manifold() const {
+Manifold* NSnapPeaCensusTri::manifold() const {
     return new NSnapPeaCensusManifold(section_, index_);
 }
 

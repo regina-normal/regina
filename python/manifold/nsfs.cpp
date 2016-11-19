@@ -69,7 +69,7 @@ void addNSFSpace() {
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<NSFSpace, bases<regina::NManifold>,
+    scope s = class_<NSFSpace, bases<regina::Manifold>,
             std::auto_ptr<NSFSpace> >("NSFSpace")
         .def(init<NSFSpace::classType, unsigned long,
             optional<unsigned long, unsigned long,
@@ -117,6 +117,6 @@ void addNSFSpace() {
         ;
 
     implicitly_convertible<std::auto_ptr<NSFSpace>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

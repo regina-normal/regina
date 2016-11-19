@@ -95,7 +95,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const Component<3>* comp) {
     return ans;
 }
 
-NManifold* NL31Pillow::manifold() const {
+Manifold* NL31Pillow::manifold() const {
     return new LensSpace(3, 1);
 }
 

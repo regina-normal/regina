@@ -273,7 +273,7 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
     return false;
 }
 
-NManifold* NBlockedSFS::manifold() const {
+Manifold* NBlockedSFS::manifold() const {
     NSFSpace* ans = region_->createSFS(false);
     if (! ans)
         return 0;

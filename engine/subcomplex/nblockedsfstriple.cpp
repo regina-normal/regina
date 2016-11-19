@@ -86,7 +86,7 @@ NBlockedSFSTriple::~NBlockedSFSTriple() {
         delete centre_;
 }
 
-NManifold* NBlockedSFSTriple::manifold() const {
+Manifold* NBlockedSFSTriple::manifold() const {
     // Go ahead and create the Seifert fibred spaces.
     NSFSpace* end0 = end_[0]->createSFS(false);
     if (! end0)

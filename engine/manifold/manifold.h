@@ -61,16 +61,16 @@ class AbelianGroup;
  * Subclasses corresponding to the different types of 3-manifold must
  * (of course) override all pure virtual functions.  They must not override
  * writeTextShort() or writeTextLong(), since these routines are \e not virtual,
- * and are provided by the base class NManifold.
+ * and are provided by the base class Manifold.
  */
-class REGINA_API NManifold :
-        public Output<NManifold>,
+class REGINA_API Manifold :
+        public Output<Manifold>,
         public boost::noncopyable {
     public:
         /**
          * A destructor that does nothing.
          */
-        virtual ~NManifold();
+        virtual ~Manifold();
 
         /**
          * Returns the common name of this 3-manifold as a
@@ -112,7 +112,7 @@ class REGINA_API NManifold :
          *
          * The details of which 3-manifolds have construction routines
          * can be found in the notes for the corresponding subclasses of
-         * NManifold.  The default implemention of this routine returns 0.
+         * Manifold.  The default implemention of this routine returns 0.
          *
          * @return a triangulation of this 3-manifold, or 0 if the
          * appropriate construction routine has not yet been implemented.
@@ -126,7 +126,7 @@ class REGINA_API NManifold :
          *
          * The details of which 3-manifolds have homology calculation routines
          * can be found in the notes for the corresponding subclasses of
-         * NManifold.  The default implemention of this routine returns 0.
+         * Manifold.  The default implemention of this routine returns 0.
          *
          * The homology group will be newly allocated and must be destroyed
          * by the caller of this routine.
@@ -146,7 +146,7 @@ class REGINA_API NManifold :
          *
          * The details of which 3-manifolds have homology calculation routines
          * can be found in the notes for the corresponding subclasses of
-         * NManifold.  The default implemention of this routine returns 0.
+         * Manifold.  The default implemention of this routine returns 0.
          *
          * The homology group will be newly allocated and must be destroyed
          * by the caller of this routine.
@@ -193,7 +193,7 @@ class REGINA_API NManifold :
          * @return \c true if and only if this is "smaller" than the
          * given 3-manifold representation.
          */
-        bool operator < (const NManifold& compare) const;
+        bool operator < (const Manifold& compare) const;
 
         /**
          * Writes the common name of this 3-manifold as a
@@ -271,32 +271,32 @@ class REGINA_API NManifold :
 
 /*@}*/
 
-// Inline functions for NManifold
+// Inline functions for Manifold
 
-inline NManifold::~NManifold() {
+inline Manifold::~Manifold() {
 }
 
-inline Triangulation<3>* NManifold::construct() const {
+inline Triangulation<3>* Manifold::construct() const {
     return 0;
 }
 
-inline AbelianGroup* NManifold::homology() const {
+inline AbelianGroup* Manifold::homology() const {
     return 0;
 }
 
-inline AbelianGroup* NManifold::homologyH1() const {
+inline AbelianGroup* Manifold::homologyH1() const {
     return homology();
 }
 
-inline std::ostream& NManifold::writeStructure(std::ostream& out) const {
+inline std::ostream& Manifold::writeStructure(std::ostream& out) const {
     return out;
 }
 
-inline void NManifold::writeTextShort(std::ostream& out) const {
+inline void Manifold::writeTextShort(std::ostream& out) const {
     writeName(out);
 }
 
-inline void NManifold::writeTextLong(std::ostream& out) const {
+inline void Manifold::writeTextLong(std::ostream& out) const {
     writeName(out);
     std::string details = structure();
     if (! details.empty())

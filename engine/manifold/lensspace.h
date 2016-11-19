@@ -60,9 +60,9 @@ namespace regina {
  * then &lt;\a g,\a g&gt; = [+/- \a r^2 \a q/\a p] in Q/Z where \a r is an
  * integer.
  *
- * All optional NManifold routines are implemented for this class.
+ * All optional Manifold routines are implemented for this class.
  */
-class REGINA_API LensSpace : public NManifold {
+class REGINA_API LensSpace : public Manifold {
     private:
         unsigned long p_;
             /**< The first parameter of the lens space. */
@@ -163,7 +163,7 @@ inline LensSpace::LensSpace(unsigned long newP, unsigned long newQ) :
     reduce();
 }
 inline LensSpace::LensSpace(const LensSpace& cloneMe) :
-        NManifold(), p_(cloneMe.p_), q_(cloneMe.q_) {
+        Manifold(), p_(cloneMe.p_), q_(cloneMe.q_) {
 }
 inline LensSpace::~LensSpace() {
 }

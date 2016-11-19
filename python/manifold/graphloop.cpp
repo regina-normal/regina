@@ -52,7 +52,7 @@ namespace {
 }
 
 void addGraphLoop() {
-    class_<GraphLoop, bases<regina::NManifold>,
+    class_<GraphLoop, bases<regina::Manifold>,
             std::auto_ptr<GraphLoop>, boost::noncopyable>
             ("GraphLoop", no_init)
         .def("__init__", make_constructor(createGraphLoop_longs))
@@ -68,6 +68,6 @@ void addGraphLoop() {
     scope().attr("NGraphLoop") = scope().attr("GraphLoop");
 
     implicitly_convertible<std::auto_ptr<GraphLoop>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

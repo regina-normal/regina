@@ -35,19 +35,19 @@
 
 namespace regina {
 
-std::string NManifold::name() const {
+std::string Manifold::name() const {
     std::ostringstream ans;
     writeName(ans);
     return ans.str();
 }
 
-std::string NManifold::TeXName() const {
+std::string Manifold::TeXName() const {
     std::ostringstream ans;
     writeTeXName(ans);
     return ans.str();
 }
 
-std::string NManifold::structure() const {
+std::string Manifold::structure() const {
     std::ostringstream ans;
     writeStructure(ans);
     return ans.str();

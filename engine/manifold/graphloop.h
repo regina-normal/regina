@@ -82,14 +82,14 @@ class NSFSpace;
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional NManifold routine homology() is implemented, but
+ * The optional Manifold routine homology() is implemented, but
  * the optional routine construct() is not.
  *
  * \todo \opt Speed up homology calculations involving orientable base
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class REGINA_API GraphLoop : public NManifold {
+class REGINA_API GraphLoop : public Manifold {
     private:
         NSFSpace* sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */

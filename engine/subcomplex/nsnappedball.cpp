@@ -63,7 +63,7 @@ NSnappedBall* NSnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
     return 0;
 }
 
-NManifold* NSnappedBall::manifold() const {
+Manifold* NSnappedBall::manifold() const {
     return new Handlebody(0, true);
 }
 

@@ -103,7 +103,7 @@ void NLayeredChain::invert() {
     bottomVertexRoles_ = bottomVertexRoles_ * Perm<4>(3, 2, 1, 0);
 }
 
-NManifold* NLayeredChain::manifold() const {
+Manifold* NLayeredChain::manifold() const {
     return new Handlebody(index_ <= 1 ? 0 : 1, true);
 }
 

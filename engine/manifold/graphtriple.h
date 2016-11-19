@@ -118,7 +118,7 @@ class NSFSpace;
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional NManifold routine homology() is implemented, but
+ * The optional Manifold routine homology() is implemented, but
  * the optional routine construct() is not.
  *
  * \warning The 2-by-2 matrices used in this class are \e not the same
@@ -139,7 +139,7 @@ class NSFSpace;
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class REGINA_API GraphTriple : public NManifold {
+class REGINA_API GraphTriple : public Manifold {
     private:
         NSFSpace* end_[2];
             /**< The two end spaces, i.e., the Seifert fibred spaces

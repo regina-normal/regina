@@ -40,7 +40,7 @@ using regina::Matrix2;
 using regina::NTorusBundle;
 
 void addNTorusBundle() {
-    class_<NTorusBundle, bases<regina::NManifold>,
+    class_<NTorusBundle, bases<regina::Manifold>,
             std::auto_ptr<NTorusBundle> >("NTorusBundle")
         .def(init<const Matrix2&>())
         .def(init<long, long, long, long>())
@@ -51,6 +51,6 @@ void addNTorusBundle() {
     ;
 
     implicitly_convertible<std::auto_ptr<NTorusBundle>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

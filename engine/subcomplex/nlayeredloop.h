@@ -135,7 +135,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          */
         static NLayeredLoop* isLayeredLoop(const Component<3>* comp);
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

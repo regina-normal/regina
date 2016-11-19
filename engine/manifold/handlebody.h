@@ -52,10 +52,10 @@ namespace regina {
 /**
  * Represents an arbitrary handlebody.
  *
- * All optional NManifold routines except for NManifold::construct() are
+ * All optional Manifold routines except for Manifold::construct() are
  * implemented for this class.
  */
-class REGINA_API Handlebody : public NManifold {
+class REGINA_API Handlebody : public Manifold {
     private:
         unsigned long nHandles;
             /**< The number of handles. */
@@ -136,7 +136,7 @@ REGINA_DEPRECATED typedef Handlebody NHandlebody;
 inline Handlebody::Handlebody(unsigned long newHandles, bool newOrientable) :
         nHandles(newHandles), orientable(newOrientable) {
 }
-inline Handlebody::Handlebody(const Handlebody& cloneMe) : NManifold(),
+inline Handlebody::Handlebody(const Handlebody& cloneMe) : Manifold(),
         nHandles(cloneMe.nHandles), orientable(cloneMe.orientable) {
 }
 inline Handlebody::~Handlebody() {

@@ -136,7 +136,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     return 0;
 }
 
-NManifold* NTrivialTri::manifold() const {
+Manifold* NTrivialTri::manifold() const {
     if (type_ == SPHERE_4_VERTEX)
         return new LensSpace(1, 0);
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)

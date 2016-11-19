@@ -231,7 +231,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
         static NSpiralSolidTorus* formsSpiralSolidTorus(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

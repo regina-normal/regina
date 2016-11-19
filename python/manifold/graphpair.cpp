@@ -53,7 +53,7 @@ namespace {
 }
 
 void addGraphPair() {
-    class_<GraphPair, bases<regina::NManifold>,
+    class_<GraphPair, bases<regina::Manifold>,
             std::auto_ptr<GraphPair>, boost::noncopyable>
             ("GraphPair", no_init)
         .def("__init__", make_constructor(createGraphPair_longs))
@@ -69,6 +69,6 @@ void addGraphPair() {
     scope().attr("NGraphPair") = scope().attr("GraphPair");
 
     implicitly_convertible<std::auto_ptr<GraphPair>,
-        std::auto_ptr<regina::NManifold> >();
+        std::auto_ptr<regina::Manifold> >();
 }
 

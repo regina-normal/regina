@@ -1248,6 +1248,9 @@ Equality type : BY_VALUE
 Locale : class
 Equality type : NEVER_INSTANTIATED
 
+Manifold : class
+Equality type : BY_REFERENCE
+
 MarkedAbelianGroup : class
 Equality type : BY_REFERENCE
 
@@ -1380,9 +1383,6 @@ NLayering : class
 Equality type : BY_REFERENCE
 
 NLensSpace : typedef ->  LensSpace
-
-NManifold : class
-Equality type : BY_REFERENCE
 
 NMarkedAbelianGroup : typedef ->  MarkedAbelianGroup
 

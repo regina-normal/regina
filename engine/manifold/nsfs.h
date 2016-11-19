@@ -182,7 +182,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  * <tt>beta + b.alpha</tt>), or if there are no exceptional fibres then
  * it is presented as a single (1,b) fibre.
  *
- * The NManifold routines homology() and construct() are only
+ * The Manifold routines homology() and construct() are only
  * implemented in some cases.  The homology() routine is
  * implemented if and only if the base orbifold has no punctures.
  * The construct() routine is implemented only for lens spaces and
@@ -201,7 +201,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  * \todo \featurelong Implement triangulation construction and homology
  * calculation for more Seifert fibred spaces.
  */
-class REGINA_API NSFSpace : public NManifold {
+class REGINA_API NSFSpace : public Manifold {
     public:
         /**
          * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3, \c n4
@@ -877,7 +877,7 @@ inline NSFSpace::NSFSpace(NSFSpace::classType useClass, unsigned long genus,
         nFibres_(0), b_(0) {
 }
 
-inline NSFSpace::NSFSpace(const NSFSpace& cloneMe) : NManifold(),
+inline NSFSpace::NSFSpace(const NSFSpace& cloneMe) : Manifold(),
         class_(cloneMe.class_), genus_(cloneMe.genus_),
         punctures_(cloneMe.punctures_),
         puncturesTwisted_(cloneMe.puncturesTwisted_),
