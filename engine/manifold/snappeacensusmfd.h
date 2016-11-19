@@ -189,6 +189,15 @@ class REGINA_API SnapPeaCensusManifold : public Manifold {
         std::ostream& writeStructure(std::ostream& out) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSnapPeaCensusManifold has now been renamed to
+ * SnapPeaCensusManifold.
+ */
+REGINA_DEPRECATED typedef SnapPeaCensusManifold NSnapPeaCensusManifold;
+
 /*@}*/
 
 // Inline functions for SnapPeaCensusManifold

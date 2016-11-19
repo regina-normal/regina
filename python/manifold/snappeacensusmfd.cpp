@@ -38,22 +38,26 @@ using namespace boost::python;
 using regina::SnapPeaCensusManifold;
 
 void addSnapPeaCensusManifold() {
-    scope s = class_<SnapPeaCensusManifold, bases<regina::Manifold>,
-            std::auto_ptr<SnapPeaCensusManifold>, boost::noncopyable>
-            ("SnapPeaCensusManifold", init<char, unsigned long>())
-        .def(init<const SnapPeaCensusManifold&>())
-        .def("section", &SnapPeaCensusManifold::section)
-        .def("index", &SnapPeaCensusManifold::index)
-        .def(regina::python::add_eq_operators())
-    ;
+    {
+        scope s = class_<SnapPeaCensusManifold, bases<regina::Manifold>,
+                std::auto_ptr<SnapPeaCensusManifold>, boost::noncopyable>
+                ("SnapPeaCensusManifold", init<char, unsigned long>())
+            .def(init<const SnapPeaCensusManifold&>())
+            .def("section", &SnapPeaCensusManifold::section)
+            .def("index", &SnapPeaCensusManifold::index)
+            .def(regina::python::add_eq_operators())
+        ;
 
-    s.attr("SEC_5") = SnapPeaCensusManifold::SEC_5;
-    s.attr("SEC_6_OR") = SnapPeaCensusManifold::SEC_6_OR;
-    s.attr("SEC_6_NOR") = SnapPeaCensusManifold::SEC_6_NOR;
-    s.attr("SEC_7_OR") = SnapPeaCensusManifold::SEC_7_OR;
-    s.attr("SEC_7_NOR") = SnapPeaCensusManifold::SEC_7_NOR;
+        s.attr("SEC_5") = SnapPeaCensusManifold::SEC_5;
+        s.attr("SEC_6_OR") = SnapPeaCensusManifold::SEC_6_OR;
+        s.attr("SEC_6_NOR") = SnapPeaCensusManifold::SEC_6_NOR;
+        s.attr("SEC_7_OR") = SnapPeaCensusManifold::SEC_7_OR;
+        s.attr("SEC_7_NOR") = SnapPeaCensusManifold::SEC_7_NOR;
 
-    implicitly_convertible<std::auto_ptr<SnapPeaCensusManifold>,
-        std::auto_ptr<regina::Manifold> >();
+        implicitly_convertible<std::auto_ptr<SnapPeaCensusManifold>,
+            std::auto_ptr<regina::Manifold> >();
+    }
+
+    scope().attr("NSnapPeaCensusManifold") = scope().attr("SnapPeaCensusManifold");
 }
 

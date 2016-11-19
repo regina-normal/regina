@@ -1498,6 +1498,8 @@ Equality type : BY_REFERENCE
 
 NSimpleSurfaceBundle : typedef ->  SimpleSurfaceBundle
 
+NSnapPeaCensusManifold : typedef ->  SnapPeaCensusManifold
+
 NSnapPeaCensusTri : class
 Equality type : BY_VALUE
 
