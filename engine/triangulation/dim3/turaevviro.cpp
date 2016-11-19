@@ -531,7 +531,7 @@ namespace {
         if (tracker) {
             coeff = new double[nEdges];
             if (nEdges) {
-                coeff[0] = 1.0 / (init.r - 1);
+                coeff[0] = 100.0 / (init.r - 1);
                 for (i = 1; i < nEdges; ++i)
                     coeff[i] = coeff[i - 1] / (init.r - 1);
             }
@@ -707,7 +707,7 @@ namespace {
         if (tracker) {
             coeff = new double[nEdges];
             if (nEdges) {
-                coeff[0] = 1.0 / (init.r - 1);
+                coeff[0] = 100.0 / (init.r - 1);
                 for (i = 1; i < nEdges; ++i)
                     coeff[i] = coeff[i - 1] / (init.r - 1);
             }
