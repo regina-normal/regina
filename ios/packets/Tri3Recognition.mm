@@ -36,7 +36,7 @@
 #import "Tri3ViewController.h"
 #import "Tri3Recognition.h"
 #import "census/census.h"
-#import "manifold/nmanifold.h"
+#import "manifold/manifold.h"
 #import "packet/container.h"
 #import "snappea/snappeatriangulation.h"
 #import "subcomplex/nstandardtri.h"

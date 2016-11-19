@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <sstream>
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 
 namespace regina {
 

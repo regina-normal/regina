@@ -34,6 +34,7 @@ if (${REGINA_INSTALL_DEV})
     nhandlebody.h
     lensspace.h
     nlensspace.h
+    manifold.h
     nmanifold.h
     notation.h
     nsfs.h

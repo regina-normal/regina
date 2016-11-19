@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "nmanifold.h"
+#include "manifold.h"
 
 namespace regina {
 

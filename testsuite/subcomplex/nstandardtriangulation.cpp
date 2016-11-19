@@ -33,7 +33,7 @@
 #include <cmath>
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/dim3.h"
 #include "testsuite/subcomplex/testsubcomplex.h"

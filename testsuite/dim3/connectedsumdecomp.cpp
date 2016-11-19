@@ -35,7 +35,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/abeliangroup.h"
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "packet/container.h"
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"

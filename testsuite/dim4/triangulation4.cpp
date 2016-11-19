@@ -33,7 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/example4.h"
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim2.h"

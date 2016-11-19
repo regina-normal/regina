@@ -34,7 +34,7 @@
 #import "TextHelper.h"
 #import "Tri3ViewController.h"
 #import "Tri3Composition.h"
-#import "manifold/nmanifold.h"
+#import "manifold/manifold.h"
 #import "subcomplex/naugtrisolidtorus.h"
 #import "subcomplex/nblockedsfs.h"
 #import "subcomplex/nblockedsfsloop.h"

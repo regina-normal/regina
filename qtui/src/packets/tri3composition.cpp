@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nblockedsfsloop.h"

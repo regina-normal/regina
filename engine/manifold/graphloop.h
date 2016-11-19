@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "maths/matrix2.h"
 
 namespace regina {

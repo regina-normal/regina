@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "algebra/abeliangroup.h"
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
