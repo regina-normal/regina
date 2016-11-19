@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/nsnappeacensusmfd.h"
+#include "manifold/snappeacensusmfd.h"
 #include "../helpers.h"
 
 using namespace boost::python;

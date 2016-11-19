@@ -43,6 +43,7 @@ if (${REGINA_INSTALL_DEV})
     nsfsaltset.h
     simplesurfacebundle.h
     nsimplesurfacebundle.h
+    snappeacensusmfd.h
     nsnappeacensusmfd.h
     ntorusbundle.h
     DESTINATION ${INCLUDEDIR}/manifold COMPONENT Development)
