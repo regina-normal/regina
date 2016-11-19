@@ -35,7 +35,7 @@
 #include <manifold/graphtriple.h>
 #include <manifold/lensspace.h>
 #include <manifold/sfs.h>
-#include <manifold/ntorusbundle.h>
+#include <manifold/torusbundle.h>
 
 namespace regina {
 

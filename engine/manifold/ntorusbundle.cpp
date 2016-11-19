@@ -32,7 +32,7 @@
 
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
-#include "manifold/ntorusbundle.h"
+#include "manifold/torusbundle.h"
 
 namespace regina {
 

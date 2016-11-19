@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ntorusbundle.h"
+#include "manifold/torusbundle.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/ntxicore.h"

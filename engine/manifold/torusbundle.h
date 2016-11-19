@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file manifold/ntorusbundle.h
+/*! \file manifold/torusbundle.h
  *  \brief Deals with torus bundles over the circle.
  */
 
-#ifndef __NTORUSBUNDLE_H
+#ifndef __TORUSBUNDLE_H
 #ifndef __DOXYGEN
-#define __NTORUSBUNDLE_H
+#define __TORUSBUNDLE_H
 #endif
 
 #include "regina-core.h"

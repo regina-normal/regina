@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "algebra/abeliangroup.h"
-#include "manifold/ntorusbundle.h"
+#include "manifold/torusbundle.h"
 #include "../helpers.h"
 
 using namespace boost::python;
