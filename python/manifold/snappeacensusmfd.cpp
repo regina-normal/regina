@@ -35,25 +35,25 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSnapPeaCensusManifold;
+using regina::SnapPeaCensusManifold;
 
-void addNSnapPeaCensusManifold() {
-    scope s = class_<NSnapPeaCensusManifold, bases<regina::Manifold>,
-            std::auto_ptr<NSnapPeaCensusManifold>, boost::noncopyable>
-            ("NSnapPeaCensusManifold", init<char, unsigned long>())
-        .def(init<const NSnapPeaCensusManifold&>())
-        .def("section", &NSnapPeaCensusManifold::section)
-        .def("index", &NSnapPeaCensusManifold::index)
+void addSnapPeaCensusManifold() {
+    scope s = class_<SnapPeaCensusManifold, bases<regina::Manifold>,
+            std::auto_ptr<SnapPeaCensusManifold>, boost::noncopyable>
+            ("SnapPeaCensusManifold", init<char, unsigned long>())
+        .def(init<const SnapPeaCensusManifold&>())
+        .def("section", &SnapPeaCensusManifold::section)
+        .def("index", &SnapPeaCensusManifold::index)
         .def(regina::python::add_eq_operators())
     ;
 
-    s.attr("SEC_5") = NSnapPeaCensusManifold::SEC_5;
-    s.attr("SEC_6_OR") = NSnapPeaCensusManifold::SEC_6_OR;
-    s.attr("SEC_6_NOR") = NSnapPeaCensusManifold::SEC_6_NOR;
-    s.attr("SEC_7_OR") = NSnapPeaCensusManifold::SEC_7_OR;
-    s.attr("SEC_7_NOR") = NSnapPeaCensusManifold::SEC_7_NOR;
+    s.attr("SEC_5") = SnapPeaCensusManifold::SEC_5;
+    s.attr("SEC_6_OR") = SnapPeaCensusManifold::SEC_6_OR;
+    s.attr("SEC_6_NOR") = SnapPeaCensusManifold::SEC_6_NOR;
+    s.attr("SEC_7_OR") = SnapPeaCensusManifold::SEC_7_OR;
+    s.attr("SEC_7_NOR") = SnapPeaCensusManifold::SEC_7_NOR;
 
-    implicitly_convertible<std::auto_ptr<NSnapPeaCensusManifold>,
+    implicitly_convertible<std::auto_ptr<SnapPeaCensusManifold>,
         std::auto_ptr<regina::Manifold> >();
 }
 

@@ -169,11 +169,11 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
 }
 
 Manifold* NSnapPeaCensusTri::manifold() const {
-    return new NSnapPeaCensusManifold(section_, index_);
+    return new SnapPeaCensusManifold(section_, index_);
 }
 
 AbelianGroup* NSnapPeaCensusTri::homology() const {
-    return NSnapPeaCensusManifold(section_, index_).homology();
+    return SnapPeaCensusManifold(section_, index_).homology();
 }
 
 std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {

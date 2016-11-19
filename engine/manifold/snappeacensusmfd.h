@@ -60,7 +60,7 @@ namespace regina {
  * \note The modern cusped hyperbolic census now extends to nine tetrahedra,
  * and indeed the 9-tetrahedron database is accessible through the
  * Census lookup routines.  However, for the time being, the scope of these
- * NSnapPeaCensusManifold and NSnapPeaCensusTri classes is restricted to the
+ * SnapPeaCensusManifold and NSnapPeaCensusTri classes is restricted to the
  * original Callahan-Hildebrand-Weeks 7-tetrahedron census only.
  *
  * The census is split into five different sections according to number
@@ -73,13 +73,13 @@ namespace regina {
  *
  * Note that this class is closely tied to NSnapPeaCensusTri.
  * In particular, the section constants defined in NSnapPeaCensusTri and
- * NSnapPeaCensusManifold are identical, and so may be freely mixed.
+ * SnapPeaCensusManifold are identical, and so may be freely mixed.
  * Furthermore, the section and index parameters of a NSnapPeaCensusTri
- * are identical to those of its corresponding NSnapPeaCensusManifold.
+ * are identical to those of its corresponding SnapPeaCensusManifold.
  *
  * All of the optional Manifold routines are implemented for this class.
  */
-class REGINA_API NSnapPeaCensusManifold : public Manifold {
+class REGINA_API SnapPeaCensusManifold : public Manifold {
     public:
         static const char SEC_5;
             /**< Represents the collection of manifolds formed from five or
@@ -125,17 +125,17 @@ class REGINA_API NSnapPeaCensusManifold : public Manifold {
          * must be between 0 and <i>k</i>-1, where <i>k</i> is the total
          * number of manifolds in the given section.
          */
-        NSnapPeaCensusManifold(char newSection, unsigned long newIndex);
+        SnapPeaCensusManifold(char newSection, unsigned long newIndex);
         /**
          * Creates a clone of the given SnapPea census manifold.
          *
          * @param cloneMe the census manifold to clone.
          */
-        NSnapPeaCensusManifold(const NSnapPeaCensusManifold& cloneMe);
+        SnapPeaCensusManifold(const SnapPeaCensusManifold& cloneMe);
         /**
          * Destroys this structure.
          */
-        virtual ~NSnapPeaCensusManifold();
+        virtual ~SnapPeaCensusManifold();
         /**
          * Returns the section of the SnapPea census to which this
          * manifold belongs.  This will be one of the section constants
@@ -165,7 +165,7 @@ class REGINA_API NSnapPeaCensusManifold : public Manifold {
          * @return \c true if and only if this and the given structure
          * represent the same SnapPea census manifold.
          */
-        bool operator == (const NSnapPeaCensusManifold& compare) const;
+        bool operator == (const SnapPeaCensusManifold& compare) const;
         /**
          * Determines whether this and the given structure represent
          * different 3-manifolds from the SnapPea census.
@@ -179,7 +179,7 @@ class REGINA_API NSnapPeaCensusManifold : public Manifold {
          * @return \c true if and only if this and the given structure
          * represent different SnapPea census manifolds.
          */
-        bool operator != (const NSnapPeaCensusManifold& compare) const;
+        bool operator != (const SnapPeaCensusManifold& compare) const;
 
         Triangulation<3>* construct() const;
         AbelianGroup* homology() const;
@@ -191,41 +191,41 @@ class REGINA_API NSnapPeaCensusManifold : public Manifold {
 
 /*@}*/
 
-// Inline functions for NSnapPeaCensusManifold
+// Inline functions for SnapPeaCensusManifold
 
-inline NSnapPeaCensusManifold::NSnapPeaCensusManifold(char newSection,
+inline SnapPeaCensusManifold::SnapPeaCensusManifold(char newSection,
         unsigned long newIndex) :
         section_(newSection), index_(newIndex) {
 }
-inline NSnapPeaCensusManifold::NSnapPeaCensusManifold(
-        const NSnapPeaCensusManifold& cloneMe) : Manifold(),
+inline SnapPeaCensusManifold::SnapPeaCensusManifold(
+        const SnapPeaCensusManifold& cloneMe) : Manifold(),
         section_(cloneMe.section_), index_(cloneMe.index_) {
 }
-inline NSnapPeaCensusManifold::~NSnapPeaCensusManifold() {
+inline SnapPeaCensusManifold::~SnapPeaCensusManifold() {
 }
-inline char NSnapPeaCensusManifold::section() const {
+inline char SnapPeaCensusManifold::section() const {
     return section_;
 }
-inline unsigned long NSnapPeaCensusManifold::index() const {
+inline unsigned long SnapPeaCensusManifold::index() const {
     return index_;
 }
-inline bool NSnapPeaCensusManifold::operator == (
-        const NSnapPeaCensusManifold& compare) const {
+inline bool SnapPeaCensusManifold::operator == (
+        const SnapPeaCensusManifold& compare) const {
     if (section_ == SEC_6_NOR && compare.section_ == SEC_6_NOR &&
             (index_ == 101 || index_ == 103) &&
             (compare.index_ == 101 || compare.index_ == 103))
         return true;
     return (section_ == compare.section_ && index_ == compare.index_);
 }
-inline bool NSnapPeaCensusManifold::operator != (
-        const NSnapPeaCensusManifold& compare) const {
+inline bool SnapPeaCensusManifold::operator != (
+        const SnapPeaCensusManifold& compare) const {
     if (section_ == SEC_6_NOR && compare.section_ == SEC_6_NOR &&
             (index_ == 101 || index_ == 103) &&
             (compare.index_ == 101 || compare.index_ == 103))
         return false;
     return (section_ != compare.section_ || index_ != compare.index_);
 }
-inline bool NSnapPeaCensusManifold::isHyperbolic() const {
+inline bool SnapPeaCensusManifold::isHyperbolic() const {
     return true;
 }
 

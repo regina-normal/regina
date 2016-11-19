@@ -51,13 +51,13 @@ namespace {
     }
 }
 
-const char NSnapPeaCensusManifold::SEC_5 = 'm';
-const char NSnapPeaCensusManifold::SEC_6_OR = 's';
-const char NSnapPeaCensusManifold::SEC_6_NOR = 'x';
-const char NSnapPeaCensusManifold::SEC_7_OR = 'v';
-const char NSnapPeaCensusManifold::SEC_7_NOR = 'y';
+const char SnapPeaCensusManifold::SEC_5 = 'm';
+const char SnapPeaCensusManifold::SEC_6_OR = 's';
+const char SnapPeaCensusManifold::SEC_6_NOR = 'x';
+const char SnapPeaCensusManifold::SEC_7_OR = 'v';
+const char SnapPeaCensusManifold::SEC_7_NOR = 'y';
 
-Triangulation<3>* NSnapPeaCensusManifold::construct() const {
+Triangulation<3>* SnapPeaCensusManifold::construct() const {
     Triangulation<3>* ans = 0;
 
     // Hard-code a few special cases so that the numbering of tetrahedra
@@ -141,7 +141,7 @@ Triangulation<3>* NSnapPeaCensusManifold::construct() const {
     return ans;
 }
 
-AbelianGroup* NSnapPeaCensusManifold::homology() const {
+AbelianGroup* SnapPeaCensusManifold::homology() const {
     // Fetch the relevant data from the census dehydration files.
     std::string file = GlobalDirs::data() + "/snappea";
     switch (section_) {
@@ -204,7 +204,7 @@ AbelianGroup* NSnapPeaCensusManifold::homology() const {
     return ans;
 }
 
-std::ostream& NSnapPeaCensusManifold::writeName(std::ostream& out) const {
+std::ostream& SnapPeaCensusManifold::writeName(std::ostream& out) const {
     // Some manifolds will get special names, and will have their usual
     // SnapPea names written in writeStructure() instead.
     if (section_ == SEC_5) {
@@ -220,11 +220,11 @@ std::ostream& NSnapPeaCensusManifold::writeName(std::ostream& out) const {
     return NSnapPeaCensusTri(section_, index_).writeName(out);
 }
 
-std::ostream& NSnapPeaCensusManifold::writeTeXName(std::ostream& out) const {
+std::ostream& SnapPeaCensusManifold::writeTeXName(std::ostream& out) const {
     return NSnapPeaCensusTri(section_, index_).writeTeXName(out);
 }
 
-std::ostream& NSnapPeaCensusManifold::writeStructure(std::ostream& out) const {
+std::ostream& SnapPeaCensusManifold::writeStructure(std::ostream& out) const {
     // If we didn't give the usual SnapPea name in writeName(), give it here.
     if (section_ == SEC_5) {
         if (index_ == 0 || index_ == 4 || index_ == 129)
