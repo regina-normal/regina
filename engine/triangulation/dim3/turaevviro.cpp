@@ -1349,7 +1349,9 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
                     break;
             }
 
-            turaevViroCache_[tvParams] = ans;
+            if (! tracker->isCancelled())
+                turaevViroCache_[tvParams] = ans;
+
             tracker->setFinished();
         }).detach();
 
