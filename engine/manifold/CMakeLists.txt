@@ -7,7 +7,7 @@ SET ( FILES
   graphtriple
   handlebody
   lensspace
-  nmanifold
+  manifold
   nsfs
   nsfsaltset
   nsimplesurfacebundle
