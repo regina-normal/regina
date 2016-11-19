@@ -10,7 +10,7 @@ SET ( FILES
   manifold
   sfs
   sfsaltset
-  nsimplesurfacebundle
+  simplesurfacebundle
   nsnappeacensusmfd
   ntorusbundle
   order

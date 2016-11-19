@@ -9,7 +9,7 @@ SET ( FILES
   lensspace
   manifold
   sfs
-  nsimplesurfacebundle
+  simplesurfacebundle
   nsnappeacensusmfd
   ntorusbundle
   pymanifold
