@@ -701,6 +701,18 @@ namespace {
         bool admissible;
         long index1, index2;
         const Tetrahedron<3>* tet;
+
+        double percent;
+        double* coeff;
+        if (tracker) {
+            coeff = new double[nEdges];
+            if (nEdges) {
+                coeff[0] = 1.0 / (init.r - 1);
+                for (i = 1; i < nEdges; ++i)
+                    coeff[i] = coeff[i - 1] / (init.r - 1);
+            }
+        }
+
         while (curr >= 0) {
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {
@@ -735,6 +747,17 @@ namespace {
                 if (curr >= 0)
                     colour[sortedEdges[curr]]++;
                 continue;
+            }
+
+            // From here we have 0 <= curr < nEdges.
+
+            if (tracker) {
+                percent = 0;
+                for (i = 0; i <= curr; ++i)
+                    percent += coeff[i] * colour[sortedEdges[i]];
+
+                if (! tracker->setPercent(percent))
+                    break;
             }
 
             // Have we run out of values to try at this level?
@@ -777,6 +800,12 @@ namespace {
         delete[] colour;
         delete[] sortedEdges;
         delete[] edgePos;
+
+        if (tracker) {
+            delete[] coeff;
+            if (tracker->isCancelled())
+                return TuraevViroDetails<exact>::zero();
+        }
 
         // Compute the vertex contributions separately, since these are
         // constant.
