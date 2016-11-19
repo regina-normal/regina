@@ -41,6 +41,7 @@ if (${REGINA_INSTALL_DEV})
     nsfs.h
     sfsaltset.h
     nsfsaltset.h
+    simplesurfacebundle.h
     nsimplesurfacebundle.h
     nsnappeacensusmfd.h
     ntorusbundle.h

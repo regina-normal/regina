@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/nsimplesurfacebundle.h"
+#include "manifold/simplesurfacebundle.h"
 #include "../helpers.h"
 
 using namespace boost::python;

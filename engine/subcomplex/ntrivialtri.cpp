@@ -34,7 +34,7 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/handlebody.h"
 #include "manifold/lensspace.h"
-#include "manifold/nsimplesurfacebundle.h"
+#include "manifold/simplesurfacebundle.h"
 #include "subcomplex/ntrivialtri.h"
 #include "triangulation/dim3.h"
 

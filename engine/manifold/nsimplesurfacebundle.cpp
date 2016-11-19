@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nsimplesurfacebundle.h"
+#include "manifold/simplesurfacebundle.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

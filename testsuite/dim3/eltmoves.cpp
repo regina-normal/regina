@@ -33,7 +33,7 @@
 #include <cmath>
 #include <memory>
 #include <cppunit/extensions/HelperMacros.h>
-#include "manifold/nsimplesurfacebundle.h"
+#include "manifold/simplesurfacebundle.h"
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 #include "testsuite/dim3/testtriangulation.h"
