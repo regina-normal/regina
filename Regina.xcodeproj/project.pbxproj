@@ -123,7 +123,7 @@
 		050F5E0F1B9BAB9C00C1F681 /* pyprogress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */; };
 		050F5E111B9BAB9C00C1F681 /* snappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D501B9BAB9C00C1F681 /* snappeatriangulation.cpp */; };
 		050F5E121B9BAB9C00C1F681 /* pysnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D511B9BAB9C00C1F681 /* pysnappea.cpp */; };
-		050F5E131B9BAB9C00C1F681 /* nsignature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D541B9BAB9C00C1F681 /* nsignature.cpp */; };
+		050F5E131B9BAB9C00C1F681 /* signature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D541B9BAB9C00C1F681 /* signature.cpp */; };
 		050F5E141B9BAB9C00C1F681 /* pysplit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D551B9BAB9C00C1F681 /* pysplit.cpp */; };
 		050F5E151B9BAB9C00C1F681 /* naugtrisolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D581B9BAB9C00C1F681 /* naugtrisolidtorus.cpp */; };
 		050F5E161B9BAB9C00C1F681 /* nblockedsfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D591B9BAB9C00C1F681 /* nblockedsfs.cpp */; };
@@ -379,7 +379,7 @@
 		05249F401DBC1722001FE29E /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64931DA12FBD00C9420F /* examplesnappea.cpp */; };
 		05249F411DBC1722001FE29E /* snappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D501B9BAB9C00C1F681 /* snappeatriangulation.cpp */; };
 		05249F421DBC1722001FE29E /* pysnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D511B9BAB9C00C1F681 /* pysnappea.cpp */; };
-		05249F431DBC1729001FE29E /* nsignature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D541B9BAB9C00C1F681 /* nsignature.cpp */; };
+		05249F431DBC1729001FE29E /* signature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D541B9BAB9C00C1F681 /* signature.cpp */; };
 		05249F441DBC1729001FE29E /* pysplit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D551B9BAB9C00C1F681 /* pysplit.cpp */; };
 		05249F451DBC1730001FE29E /* naugtrisolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D581B9BAB9C00C1F681 /* naugtrisolidtorus.cpp */; };
 		05249F461DBC1730001FE29E /* nblockedsfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D591B9BAB9C00C1F681 /* nblockedsfs.cpp */; };
@@ -647,12 +647,12 @@
 		052F9FDC180600FB00FAE4DF /* snappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D93180600FB00FAE4DF /* snappeatriangulation.h */; };
 		052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D97180600FB00FAE4DF /* SnapPy.h */; };
 		052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D99180600FB00FAE4DF /* uimessages.cpp */; };
-		052F9FE0180600FB00FAE4DF /* nsigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9C180600FB00FAE4DF /* nsigcensus.cpp */; };
-		052F9FE1180600FB00FAE4DF /* nsigcensus.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D9D180600FB00FAE4DF /* nsigcensus.h */; };
-		052F9FE2180600FB00FAE4DF /* nsigisomorphism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9E180600FB00FAE4DF /* nsigisomorphism.cpp */; };
-		052F9FE3180600FB00FAE4DF /* nsigisomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D9F180600FB00FAE4DF /* nsigisomorphism.h */; };
-		052F9FE4180600FB00FAE4DF /* nsignature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DA0180600FB00FAE4DF /* nsignature.cpp */; };
-		052F9FE5180600FB00FAE4DF /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9DA1180600FB00FAE4DF /* nsignature.h */; };
+		052F9FE0180600FB00FAE4DF /* sigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9C180600FB00FAE4DF /* sigcensus.cpp */; };
+		052F9FE1180600FB00FAE4DF /* sigcensus.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D9D180600FB00FAE4DF /* sigcensus.h */; };
+		052F9FE2180600FB00FAE4DF /* sigisomorphism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9E180600FB00FAE4DF /* sigisomorphism.cpp */; };
+		052F9FE3180600FB00FAE4DF /* sigisomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D9F180600FB00FAE4DF /* sigisomorphism.h */; };
+		052F9FE4180600FB00FAE4DF /* signature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DA0180600FB00FAE4DF /* signature.cpp */; };
+		052F9FE5180600FB00FAE4DF /* signature.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9DA1180600FB00FAE4DF /* signature.h */; };
 		052F9FE6180600FB00FAE4DF /* naugtrisolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DB3180600FB00FAE4DF /* naugtrisolidtorus.cpp */; };
 		052F9FE7180600FB00FAE4DF /* naugtrisolidtorus.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9DB4180600FB00FAE4DF /* naugtrisolidtorus.h */; };
 		052F9FE8180600FB00FAE4DF /* nblockedsfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DB5180600FB00FAE4DF /* nblockedsfs.cpp */; };
@@ -875,9 +875,9 @@
 		052FA1AD1806129B00FAE4DF /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */; };
 		052FA1B01806129B00FAE4DF /* snappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D92180600FB00FAE4DF /* snappeatriangulation.cpp */; };
 		052FA1B11806129B00FAE4DF /* uimessages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D99180600FB00FAE4DF /* uimessages.cpp */; };
-		052FA1B21806129B00FAE4DF /* nsigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9C180600FB00FAE4DF /* nsigcensus.cpp */; };
-		052FA1B31806129B00FAE4DF /* nsigisomorphism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9E180600FB00FAE4DF /* nsigisomorphism.cpp */; };
-		052FA1B41806129B00FAE4DF /* nsignature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DA0180600FB00FAE4DF /* nsignature.cpp */; };
+		052FA1B21806129B00FAE4DF /* sigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9C180600FB00FAE4DF /* sigcensus.cpp */; };
+		052FA1B31806129B00FAE4DF /* sigisomorphism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9E180600FB00FAE4DF /* sigisomorphism.cpp */; };
+		052FA1B41806129B00FAE4DF /* signature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DA0180600FB00FAE4DF /* signature.cpp */; };
 		052FA1B51806129B00FAE4DF /* naugtrisolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DB3180600FB00FAE4DF /* naugtrisolidtorus.cpp */; };
 		052FA1B61806129B00FAE4DF /* nblockedsfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DB5180600FB00FAE4DF /* nblockedsfs.cpp */; };
 		052FA1B71806129B00FAE4DF /* nblockedsfsloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DB7180600FB00FAE4DF /* nblockedsfsloop.cpp */; };
@@ -2397,7 +2397,7 @@
 		050F5D501B9BAB9C00C1F681 /* snappeatriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappeatriangulation.cpp; sourceTree = "<group>"; };
 		050F5D511B9BAB9C00C1F681 /* pysnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysnappea.cpp; sourceTree = "<group>"; };
 		050F5D531B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		050F5D541B9BAB9C00C1F681 /* nsignature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsignature.cpp; sourceTree = "<group>"; };
+		050F5D541B9BAB9C00C1F681 /* signature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = signature.cpp; sourceTree = "<group>"; };
 		050F5D551B9BAB9C00C1F681 /* pysplit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysplit.cpp; sourceTree = "<group>"; };
 		050F5D571B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D581B9BAB9C00C1F681 /* naugtrisolidtorus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = naugtrisolidtorus.cpp; sourceTree = "<group>"; };
@@ -2777,12 +2777,12 @@
 		052F9D97180600FB00FAE4DF /* SnapPy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPy.h; sourceTree = "<group>"; };
 		052F9D99180600FB00FAE4DF /* uimessages.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uimessages.cpp; sourceTree = "<group>"; };
 		052F9D9B180600FB00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052F9D9C180600FB00FAE4DF /* nsigcensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsigcensus.cpp; sourceTree = "<group>"; };
-		052F9D9D180600FB00FAE4DF /* nsigcensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsigcensus.h; sourceTree = "<group>"; };
-		052F9D9E180600FB00FAE4DF /* nsigisomorphism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsigisomorphism.cpp; sourceTree = "<group>"; };
-		052F9D9F180600FB00FAE4DF /* nsigisomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsigisomorphism.h; sourceTree = "<group>"; };
-		052F9DA0180600FB00FAE4DF /* nsignature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsignature.cpp; sourceTree = "<group>"; };
-		052F9DA1180600FB00FAE4DF /* nsignature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsignature.h; sourceTree = "<group>"; };
+		052F9D9C180600FB00FAE4DF /* sigcensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sigcensus.cpp; sourceTree = "<group>"; };
+		052F9D9D180600FB00FAE4DF /* sigcensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigcensus.h; sourceTree = "<group>"; };
+		052F9D9E180600FB00FAE4DF /* sigisomorphism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sigisomorphism.cpp; sourceTree = "<group>"; };
+		052F9D9F180600FB00FAE4DF /* sigisomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigisomorphism.h; sourceTree = "<group>"; };
+		052F9DA0180600FB00FAE4DF /* signature.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = signature.cpp; sourceTree = "<group>"; };
+		052F9DA1180600FB00FAE4DF /* signature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signature.h; sourceTree = "<group>"; };
 		052F9DA3180600FB00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9DA4180600FB00FAE4DF /* cube.eps */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.eps; sourceTree = "<group>"; };
 		052F9DA5180600FB00FAE4DF /* cube.fig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.fig; sourceTree = "<group>"; };
@@ -4433,7 +4433,7 @@
 			isa = PBXGroup;
 			children = (
 				050F5D531B9BAB9C00C1F681 /* CMakeLists.txt */,
-				050F5D541B9BAB9C00C1F681 /* nsignature.cpp */,
+				050F5D541B9BAB9C00C1F681 /* signature.cpp */,
 				050F5D551B9BAB9C00C1F681 /* pysplit.cpp */,
 			);
 			path = split;
@@ -5155,12 +5155,12 @@
 			isa = PBXGroup;
 			children = (
 				052F9D9B180600FB00FAE4DF /* CMakeLists.txt */,
-				052F9D9C180600FB00FAE4DF /* nsigcensus.cpp */,
-				052F9D9D180600FB00FAE4DF /* nsigcensus.h */,
-				052F9D9E180600FB00FAE4DF /* nsigisomorphism.cpp */,
-				052F9D9F180600FB00FAE4DF /* nsigisomorphism.h */,
-				052F9DA0180600FB00FAE4DF /* nsignature.cpp */,
-				052F9DA1180600FB00FAE4DF /* nsignature.h */,
+				052F9D9C180600FB00FAE4DF /* sigcensus.cpp */,
+				052F9D9D180600FB00FAE4DF /* sigcensus.h */,
+				052F9D9E180600FB00FAE4DF /* sigisomorphism.cpp */,
+				052F9D9F180600FB00FAE4DF /* sigisomorphism.h */,
+				052F9DA0180600FB00FAE4DF /* signature.cpp */,
+				052F9DA1180600FB00FAE4DF /* signature.h */,
 			);
 			path = split;
 			sourceTree = "<group>";
@@ -6775,7 +6775,7 @@
 				055115011DCDF63000EC753C /* simplex.h in Headers */,
 				0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */,
 				052F9EC9180600FB00FAE4DF /* hilbertdual-impl.h in Headers */,
-				052F9FE5180600FB00FAE4DF /* nsignature.h in Headers */,
+				052F9FE5180600FB00FAE4DF /* signature.h in Headers */,
 				055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */,
 				052F9FA5180600FB00FAE4DF /* triangulation_io.h in Headers */,
 				055114D61DCC71A700EC753C /* xmltrireader.h in Headers */,
@@ -6811,7 +6811,7 @@
 				050C64AA1DA1C95700C9420F /* npacket.h in Headers */,
 				05431F681C40F3C9009BC072 /* cone_property.h in Headers */,
 				05F09FD91DBF01B600117BFC /* triangle2.h in Headers */,
-				052F9FE1180600FB00FAE4DF /* nsigcensus.h in Headers */,
+				052F9FE1180600FB00FAE4DF /* sigcensus.h in Headers */,
 				05431F221C40F260009BC072 /* face.h in Headers */,
 				052F9F0F180600FB00FAE4DF /* isosig.h in Headers */,
 				052F9F5C180600FB00FAE4DF /* script.h in Headers */,
@@ -7047,7 +7047,7 @@
 				052FA089180600FB00FAE4DF /* intutils.h in Headers */,
 				055114CD1DCC476A00EC753C /* nexampletriangulation.h in Headers */,
 				052FA08A180600FB00FAE4DF /* memutils.h in Headers */,
-				052F9FE3180600FB00FAE4DF /* nsigisomorphism.h in Headers */,
+				052F9FE3180600FB00FAE4DF /* sigisomorphism.h in Headers */,
 				0588F1191808D43B006BDC79 /* packettype.h in Headers */,
 				05431F7C1C40F3C9009BC072 /* normaliz_exception.h in Headers */,
 				05431F6B1C40F3C9009BC072 /* convert.h in Headers */,
@@ -7812,7 +7812,7 @@
 				057EE4C41C600A3600C4D155 /* simplex12.cpp in Sources */,
 				050F5E251B9BAB9C00C1F681 /* nsatannulus.cpp in Sources */,
 				050F5E2E1B9BAB9C00C1F681 /* ntrisolidtorus.cpp in Sources */,
-				050F5E131B9BAB9C00C1F681 /* nsignature.cpp in Sources */,
+				050F5E131B9BAB9C00C1F681 /* signature.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7902,7 +7902,7 @@
 				054C6A741DCC1FF4005373F0 /* example8.cpp in Sources */,
 				052FA229180612DD00FAE4DF /* identify_solution_type.c in Sources */,
 				055114C91DCC460600EC753C /* example2.cpp in Sources */,
-				052FA1B41806129B00FAE4DF /* nsignature.cpp in Sources */,
+				052FA1B41806129B00FAE4DF /* signature.cpp in Sources */,
 				05249F341DBC1711001FE29E /* primes.cpp in Sources */,
 				05FB46C91DD92CFA00BB00E5 /* grouppresentation.cpp in Sources */,
 				05249EFA1DBC16F1001FE29E /* isomorphism10.cpp in Sources */,
@@ -8048,7 +8048,7 @@
 				05C1BEBC1DCA7CB3007C946B /* boundary6.cpp in Sources */,
 				05249EB21DBC16BE001FE29E /* gluingpermsearcher3.cpp in Sources */,
 				05249EF81DBC16F1001FE29E /* isomorphism8.cpp in Sources */,
-				052FA1B31806129B00FAE4DF /* nsigisomorphism.cpp in Sources */,
+				052FA1B31806129B00FAE4DF /* sigisomorphism.cpp in Sources */,
 				052FA1961806129B00FAE4DF /* nsimplesurfacebundle.cpp in Sources */,
 				053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */,
 				05249EB71DBC16C4001FE29E /* example2.cpp in Sources */,
@@ -8342,7 +8342,7 @@
 				059BC6921DC7F7A300AB4206 /* boundarycomponent11.cpp in Sources */,
 				054C6A721DCC1FF4005373F0 /* example6.cpp in Sources */,
 				05249EEF1DBC16EA001FE29E /* facetpairing11.cpp in Sources */,
-				052FA1B21806129B00FAE4DF /* nsigcensus.cpp in Sources */,
+				052FA1B21806129B00FAE4DF /* sigcensus.cpp in Sources */,
 				052FA20E1806129B00FAE4DF /* xmlutils.cpp in Sources */,
 				05F0A0541DBF0B7000117BFC /* crushtri.cpp in Sources */,
 				052FA1BD1806129B00FAE4DF /* nlayeredlensspace.cpp in Sources */,
@@ -8453,7 +8453,7 @@
 				05249F0B1DBC16F6001FE29E /* simplex15.cpp in Sources */,
 				050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */,
 				052FA1BB1806129B00FAE4DF /* nlayeredchain.cpp in Sources */,
-				05249F431DBC1729001FE29E /* nsignature.cpp in Sources */,
+				05249F431DBC1729001FE29E /* signature.cpp in Sources */,
 				05D1173619EE018A003BEC55 /* normalsurfaces.cpp in Sources */,
 				052FA1CC1806129B00FAE4DF /* nsnappedtwosphere.cpp in Sources */,
 				058FADBA19D506160001B5B5 /* Tri3Algebra.mm in Sources */,
@@ -8865,7 +8865,7 @@
 				052F9F70180600FB00FAE4DF /* canonize_result.c in Sources */,
 				05C1BED51DCA89DA007C946B /* triangulation3.cpp in Sources */,
 				052FA040180600FB00FAE4DF /* nsvectorquadoct.cpp in Sources */,
-				052F9FE0180600FB00FAE4DF /* nsigcensus.cpp in Sources */,
+				052F9FE0180600FB00FAE4DF /* sigcensus.cpp in Sources */,
 				05C1BEB41DCA7CA9007C946B /* boundary12.cpp in Sources */,
 				05B9EC1B18245F2100DCACF3 /* euler.cpp in Sources */,
 				05C1BEDB1DCA89DA007C946B /* triangulation9.cpp in Sources */,
@@ -8883,7 +8883,7 @@
 				052F9F85180600FB00FAE4DF /* holonomy.c in Sources */,
 				052FA0A1180600FB00FAE4DF /* xmlutils.cpp in Sources */,
 				052FA00A180600FB00FAE4DF /* nsatblockstarter.cpp in Sources */,
-				052F9FE4180600FB00FAE4DF /* nsignature.cpp in Sources */,
+				052F9FE4180600FB00FAE4DF /* signature.cpp in Sources */,
 				052F9F80180600FB00FAE4DF /* filling.c in Sources */,
 				052F9F32180600FB00FAE4DF /* nsnappeacensusmfd.cpp in Sources */,
 				052F9F29180600FB00FAE4DF /* nmanifold.cpp in Sources */,
@@ -9001,7 +9001,7 @@
 				052F9EF3180600FB00FAE4DF /* treeconstraint.cpp in Sources */,
 				052F9E94180600FB00FAE4DF /* compact.cpp in Sources */,
 				052F9F92180600FB00FAE4DF /* orient.c in Sources */,
-				052F9FE2180600FB00FAE4DF /* nsigisomorphism.cpp in Sources */,
+				052F9FE2180600FB00FAE4DF /* sigisomorphism.cpp in Sources */,
 				05F0A03A1DBF0B5E00117BFC /* crushtri.cpp in Sources */,
 				05F0A0431DBF0B5E00117BFC /* retriangulate.cpp in Sources */,
 				05C1BEE11DCA89DA007C946B /* triangulation15.cpp in Sources */,

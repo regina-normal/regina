@@ -1493,8 +1493,7 @@ Equality type : BY_REFERENCE
 
 NScript : typedef ->  Script
 
-NSignature : class
-Equality type : BY_REFERENCE
+NSignature : typedef ->  Signature
 
 NSimpleSurfaceBundle : typedef ->  SimpleSurfaceBundle
 
@@ -1700,6 +1699,9 @@ SFSpace : class
 Equality type : BY_VALUE
 
 Script : class
+Equality type : BY_REFERENCE
+
+Signature : class
 Equality type : BY_REFERENCE
 
 SimpleSurfaceBundle : class

@@ -32,7 +32,7 @@
 
 #include <algorithm>
 #include <cctype>
-#include "split/nsignature.h"
+#include "split/signature.h"
 #include "triangulation/dim3.h"
 #include "utilities/memutils.h"
 
@@ -54,7 +54,7 @@ namespace {
     }
 }
 
-NSignature::NSignature(const NSignature& sig) : order_(sig.order_),
+Signature::Signature(const Signature& sig) : order_(sig.order_),
         label(new unsigned[2 * sig.order_]), labelInv(new bool[2 * sig.order_]),
         nCycles(sig.nCycles), cycleStart(new unsigned[sig.nCycles + 1]),
         nCycleGroups(sig.nCycleGroups),
@@ -66,7 +66,7 @@ NSignature::NSignature(const NSignature& sig) : order_(sig.order_),
         cycleGroupStart);
 }
 
-NSignature* NSignature::parse(const std::string& str) {
+Signature* Signature::parse(const std::string& str) {
     // See if the string looks correctly formed.
     // Note that we're not yet counting the individual frequency of each
     // letter, just the overall number of letters.
@@ -149,7 +149,7 @@ NSignature* NSignature::parse(const std::string& str) {
     }
 
     // We now have a valid signature!
-    NSignature* sig = new NSignature();
+    Signature* sig = new Signature();
     sig->order_ = order;
     sig->label = label;
     sig->labelInv = labelInv;
@@ -171,7 +171,7 @@ NSignature* NSignature::parse(const std::string& str) {
     return sig;
 }
 
-Triangulation<3>* NSignature::triangulate() const {
+Triangulation<3>* Signature::triangulate() const {
     unsigned sigLen = 2 * order_;
     Triangulation<3>* tri = new Triangulation<3>();
 
@@ -216,8 +216,8 @@ Triangulation<3>* NSignature::triangulate() const {
     return tri;
 }
 
-int NSignature::cycleCmp(const NSignature& sig1, unsigned cycle1,
-        unsigned start1, int dir1, unsigned* relabel1, const NSignature& sig2,
+int Signature::cycleCmp(const Signature& sig1, unsigned cycle1,
+        unsigned start1, int dir1, unsigned* relabel1, const Signature& sig2,
         unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2) {
     unsigned len = sig1.cycleStart[cycle1 + 1] - sig1.cycleStart[cycle1];
     unsigned* arr1 = sig1.label + sig1.cycleStart[cycle1];
@@ -256,7 +256,7 @@ int NSignature::cycleCmp(const NSignature& sig1, unsigned cycle1,
     return 0;
 }
 
-void NSignature::writeCycles(std::ostream& out, const std::string& cycleOpen,
+void Signature::writeCycles(std::ostream& out, const std::string& cycleOpen,
         const std::string& cycleClose, const std::string& cycleJoin) const {
     out << cycleOpen;
 

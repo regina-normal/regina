@@ -200,13 +200,13 @@
      </para>
      <para>
       The best solution is to download a ready-made package from the
-      <ulink url="http://regina.sourceforge.net/#download">&regina;
+      <ulink url="http://regina-normal.github.io/#download">&regina;
       website</ulink>.  All of the ready-made packages should have
       &python; support built in.
      </para>
      <para>
       If you need to build &regina; yourself from source, make sure you have the
-      <ulink url="http://regina.sourceforge.net/source.html#sysreq">&python;
+      <ulink url="http://regina-normal.github.io/source.html#sysreq">&python;
       and &boost-python; development files</ulink> installed.
       If not, &regina; will warn you about this when you run
       <command>cmake</command>:
@@ -360,16 +360,16 @@
      <para>
       If you can, it is best to install &regina; from a ready-made
       package.  See the
-      <ulink url="http://regina.sourceforge.net/#download">&regina;
+      <ulink url="http://regina-normal.github.io/#download">&regina;
       website</ulink> for a list of &linux; distributions
       that have packages available.
      </para>
      <para>
       If you do need to build &regina; yourself, the website offers
       help on
-      <ulink url="http://regina.sourceforge.net/source.html">building
+      <ulink url="http://regina-normal.github.io/source.html">building
       &regina; from source</ulink>.  There is also a page on
-      <ulink url="http://regina.sourceforge.net/buildtips.html">building
+      <ulink url="http://regina-normal.github.io/buildtips.html">building
       &regina; on different distributions</ulink>, which suggests specific
       <command>cmake</command> options tailored to your particular
       type of machine.
@@ -394,7 +394,7 @@
      </para>
      <para>
       You can only run the test suite if you are
-      <ulink url="http://regina.sourceforge.net/source.html">building
+      <ulink url="http://regina-normal.github.io/source.html">building
       &regina; from source</ulink> yourself.
       If you download a ready-made package, the person who built the
       package should have already verified that &regina; passes the
@@ -402,7 +402,7 @@
      </para>
      <para>
       You will also need
-      <ulink url="http://regina.sourceforge.net/source.html#sysreq"><application>CppUnit</application> installed</ulink>.
+      <ulink url="http://regina-normal.github.io/source.html#sysreq"><application>CppUnit</application> installed</ulink>.
       Otherwise the test suite will run but only with the simpler &python;
       tests, not the rich and detailed &cpp; calculation engine tests.
      </para>
@@ -459,7 +459,7 @@ Total Test time (real) =  19.48 sec
       Please! - mail the authors and let us know.  You are welcome to
       write to us directly (our <link linkend="acknowledgements">email
       addresses are here</link>).  Or even better,
-      use the <link linkend="services">&sourceforge; bug tracking system</link>
+      use the <link linkend="services">&github; issue tracking system</link>
       so that the problem you report is publicly archived.
      </para>
      <para>

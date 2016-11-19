@@ -17,11 +17,11 @@
      &python; bindings and a low-level &cpp; programming interface.
     </para>">
   <!ENTITY regwebsite
-   "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
+   "<ulink url='http://regina-normal.github.io/'>&regina; website</ulink>">
   <!ENTITY regmanapiurl
-   "<emphasis>http://regina.sourceforge.net/engine-docs/</emphasis>">
+   "<emphasis>http://regina-normal.github.io/engine-docs/</emphasis>">
   <!ENTITY regmanhandbookurl
-   "<emphasis>http://regina.sourceforge.net/docs/</emphasis>">
+   "<emphasis>http://regina-normal.github.io/docs/</emphasis>">
   <!ENTITY regmanburtonthesisurl
    "<emphasis>http://www.maths.uq.edu.au/~bab/papers/</emphasis>">
   <!ENTITY manpageack "Many people have been involved in the development

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "split/nsignature.h"
+#include "split/signature.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
@@ -196,7 +196,7 @@ Triangulation<3>* Example<3>::rp2xs1() {
 Triangulation<3>* Example<3>::rp3rp3() {
     // This can be generated as the enclosing triangulation of a splitting
     // surface, as described in chapter 4 of Benjamin Burton's PhD thesis.
-    NSignature* sig = NSignature::parse("aabccd.b.d");
+    Signature* sig = Signature::parse("aabccd.b.d");
     Triangulation<3>* ans = sig->triangulate();
     ans->setLabel("RP3 # RP3");
     delete sig;

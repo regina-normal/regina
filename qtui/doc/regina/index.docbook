@@ -25,15 +25,15 @@
   <!ENTITY mailtheauthors
    "mail <link linkend='acknowledgements'>the authors</link>">
   <!ENTITY regwebsite
-   "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
+   "<ulink url='http://regina-normal.github.io/'>&regina; website</ulink>">
   <!ENTITY regenginedocs
    "<link linkend='python-docs'>calculation engine documentation</link>">
   <!ENTITY regenginedocsurlbase
-   "<ulink url='http://regina.sourceforge.net/engine-docs/'>regina.sourceforge.net</ulink>">
+   "<ulink url='http://regina-normal.github.io/engine-docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanapiurl
-   "<ulink url='http://regina.sourceforge.net/engine-docs/'>regina.sourceforge.net</ulink>">
+   "<ulink url='http://regina-normal.github.io/engine-docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanhandbookurl
-   "<ulink url='http://regina.sourceforge.net/docs/'>regina.sourceforge.net</ulink>">
+   "<ulink url='http://regina-normal.github.io/docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanburtonthesisurl
    "<ulink url='http://www.maths.uq.edu.au/~bab/papers/'>www.maths.uq.edu.au</ulink>">
   <!ENTITY manpageack "Many people have been involved in the development
@@ -81,6 +81,7 @@
    (Groups, Algorithms and Programming)</application>">
   <!ENTITY gaplongurl "<ulink
    url='http://www.gap-system.org/'>&gaplong;</ulink>">
+  <!ENTITY github "<application>GitHub</application>">
   <!ENTITY gnome "<application><acronym>GNOME</acronym></application>">
   <!ENTITY gnu "<acronym>GNU</acronym>">
   <!ENTITY graphviz "<application>Graphviz</application>">
@@ -132,11 +133,10 @@
    "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappy;</ulink>">
   <!ENTITY snappywebsite
    "<ulink url='http://www.math.uic.edu/t3m/SnapPy/'>&snappy; website</ulink>">
-  <!ENTITY sourceforge "<application>SourceForge</application>">
   <!ENTITY sss "S<superscript>3</superscript>">
   <!ENTITY suse "<application>SUSE</application>">
   <!ENTITY sysreq
-   "<ulink url='http://regina.sourceforge.net/source.html'>system
+   "<ulink url='http://regina-normal.github.io/source.html'>system
    requirements page</ulink>">
   <!ENTITY tex "<application>TeX</application>">
   <!ENTITY theta "<replaceable>t</replaceable>">

@@ -37,7 +37,7 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
 #include "packet/container.h"
-#include "split/nsignature.h"
+#include "split/signature.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/dim3.h"
 
@@ -48,7 +48,7 @@ using regina::AbelianGroup;
 using regina::Container;
 using regina::Manifold;
 using regina::Perm;
-using regina::NSignature;
+using regina::Signature;
 using regina::NStandardTriangulation;
 using regina::Tetrahedron;
 using regina::Triangulation;
@@ -66,7 +66,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
     public:
         Triangulation<3>* generateFromSig(const std::string& sigStr) {
-            NSignature* sig = NSignature::parse(sigStr);
+            Signature* sig = Signature::parse(sigStr);
             if (sig == 0)
                 return 0;
 

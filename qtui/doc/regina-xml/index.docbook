@@ -62,7 +62,7 @@
     This manual details the &xml; file format used by &regina;
     for its data files.  For information on &regina; itself, see
     the users' handbook or visit the
-    <ulink url="http://regina.sourceforge.net/">&regina; website</ulink>.
+    <ulink url="http://regina-normal.github.io/">&regina; website</ulink>.
    </para>
    <para>
     This manual is current as of &regina;&nbsp;&regversion;.

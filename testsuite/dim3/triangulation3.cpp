@@ -39,7 +39,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
-#include "split/nsignature.h"
+#include "split/signature.h"
 #include "subcomplex/nstandardtri.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/example3.h"
@@ -59,7 +59,7 @@ using regina::Isomorphism;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
-using regina::NSignature;
+using regina::Signature;
 using regina::NStandardTriangulation;
 using regina::Tetrahedron;
 using regina::Triangle;
@@ -208,7 +208,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
     public:
         void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
-            NSignature* sig = NSignature::parse(sigStr);
+            Signature* sig = Signature::parse(sigStr);
             if (sig == 0)
                 return;
 
@@ -223,7 +223,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         Triangulation<3>* generateFromSig(const std::string& sigStr) {
-            NSignature* sig = NSignature::parse(sigStr);
+            Signature* sig = Signature::parse(sigStr);
             if (sig == 0)
                 return 0;
 

@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGINA-PYTHON" "1" "24 September 2016" "" "The Regina Handbook"
+.TH "REGINA-PYTHON" "1" "15 November 2016" "" "The Regina Handbook"
 
 .SH NAME
 regina-python \- Regina's command-line Python interface
@@ -37,21 +37,10 @@ imported directly into the current namespace
 (effectively running
 from regina import\~*).
 .PP
-If you have frequently-used code, you can store it in a
-\fIuser library\fR\&.
-At the beginning of each Python session, Regina will automatically
-run all of the code in all of your user libraries.
-The list of user libraries will be read from the text file
-\fI~/.regina-libs\fR, which should contain one
-library filename per line.  Blank lines and lines beginning with a
-hash (#) will be ignored.  You can also configure this list of
-libraries through the graphical user interface: see the
-Python options page.
-.PP
 Instead of starting an interactive Python session, you can pass a
 Python script (with arguments if desired).  In this case Regina
 will run the script (after first importing the
-\fIregina\fR module and loading any user libraries).
+\fIregina\fR module).
 If you pass \fB--interactive\fR, Regina will leave you
 at a Python prompt once the script finishes;
 otherwise it will exit Python and return you to the command line.
@@ -75,12 +64,6 @@ information will be output.
 This is equivalent to setting the environment variable
 \fIREGINA_VERBOSITY\fR=2\&.
 .TP
-\fB-n\fR
-.TP
-\fB--nolibs\fR
-Do not load any user libraries when the session starts.
-User libraries are discussed in the overview above.
-.TP
 \fB-a\fR
 .TP
 \fB--noautoimport\fR
@@ -90,8 +73,8 @@ classes and methods into the current namespace
 (that is, do not run
 from regina import\~*).
 This means that (for example) the main 3-manifold triangulation class
-must be accessed as regina.NTriangulation, not
-just NTriangulation\&.
+must be accessed as regina.Triangulation3, not
+just Triangulation3\&.
 .TP
 \fB-i\fR
 .TP
@@ -210,7 +193,7 @@ which describes in detail all of the objects, classes and methods that
 Regina makes available to Python.
 You can access this documentation via
 Help->Python API Reference in the graphical user interface, or read it online
-at \fBhttp://regina.sourceforge.net/engine-docs/\fR\&.
+at \fBhttp://regina-normal.github.io/engine-docs/\fR\&.
 .SH "AUTHOR"
 .PP
 Many people have been involved in the development
