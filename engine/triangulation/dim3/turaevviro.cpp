@@ -53,6 +53,12 @@
 #define TV_UNCOLOURED -1
 #define TV_AGGREGATED -2
 
+// When tracking progress, try to give much more weight to larger bags.
+// (Of course, this should *really* be exponential, but it's nice to see
+// some visual progress for smaller bags, so we try not to completely
+// dwarf them in the weightings.)
+#define HARD_BAG_WEIGHT(bag) (double(bag->size())*(bag->size())*(bag->size()))
+
 namespace regina {
 
 namespace {
@@ -823,7 +829,8 @@ namespace {
         typedef typename InitialData<exact>::TVType TVType;
 
         // Progress:
-        // - weight of bag processing is 0.95
+        // - weight of forget/join bag processing is 0.9
+        // - weight of leaf/introduce bag processing is 0.05
         // - weight of other miscellaneous tasks is 0.05
 
         if (tracker)
@@ -831,7 +838,9 @@ namespace {
         const TreeDecomposition& d = tri.niceTreeDecomposition();
 
         int nEdges = tri.countEdges();
-        int nBags = d.size();
+        size_t nBags = d.size();
+        size_t nEasyBags = 0;
+        double hardBagWeightSum = 0;
         const TreeBag *bag, *child, *sibling;
         int i, j;
         int index;
@@ -853,16 +862,19 @@ namespace {
             seenDegree[index].init(nEdges);
 
             if (bag->isLeaf()) {
+                ++nEasyBags;
                 std::fill(seenDegree[index].begin(),
                     seenDegree[index].end(), 0);
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
+                ++nEasyBags;
                 child = bag->children();
                 std::copy(seenDegree[child->index()].begin(),
                     seenDegree[child->index()].end(),
                     seenDegree[index].begin());
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
+                hardBagWeightSum += HARD_BAG_WEIGHT(bag);
                 child = bag->children();
                 tet = tri.tetrahedron(child->element(bag->subtype()));
                 std::copy(seenDegree[child->index()].begin(),
@@ -876,6 +888,7 @@ namespace {
                 }
             } else {
                 // Join bag.
+                hardBagWeightSum += HARD_BAG_WEIGHT(bag);
                 child = bag->children();
                 sibling = child->sibling();
                 for (i = 0; i < nEdges; ++i) {
@@ -922,12 +935,13 @@ namespace {
         int choiceType[6];
 
         for (bag = d.first(); bag; bag = bag->next()) {
-            if (tracker)
-                tracker->newStage("Processing bags", 0.95 / nBags);
-
             index = bag->index();
 
             if (bag->isLeaf()) {
+                if (tracker)
+                    tracker->newStage("Processing leaf bag",
+                        0.05 / nEasyBags);
+
                 // A single empty colouring.
                 seq = new LightweightSequence<int>(nEdges);
                 std::fill(seq->begin(), seq->end(), TV_UNCOLOURED);
@@ -937,11 +951,19 @@ namespace {
                 partial[index]->insert(std::make_pair(seq, val));
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
+                if (tracker)
+                    tracker->newStage("Processing introduce bag",
+                        0.05 / nEasyBags);
+
                 child = bag->children();
                 partial[index] = partial[child->index()];
                 partial[child->index()] = 0;
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
+                if (tracker)
+                    tracker->newStage("Processing forget bag",
+                        0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+
                 child = bag->children();
                 tet = tri.tetrahedron(child->element(bag->subtype()));
 
@@ -1064,6 +1086,10 @@ namespace {
                 partial[child->index()] = 0;
             } else {
                 // Join bag.
+                if (tracker)
+                    tracker->newStage("Processing join bag",
+                        0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+
                 partial[index] = new SolnSet;
 
                 child = bag->children();
