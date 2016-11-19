@@ -11,7 +11,7 @@ SET ( FILES
   sfs
   simplesurfacebundle
   snappeacensusmfd
-  ntorusbundle
+  torusbundle
   pymanifold
   )
 

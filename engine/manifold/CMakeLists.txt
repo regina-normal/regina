@@ -12,7 +12,7 @@ SET ( FILES
   sfsaltset
   simplesurfacebundle
   snappeacensusmfd
-  ntorusbundle
+  torusbundle
   order
   )
 
