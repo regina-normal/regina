@@ -269,6 +269,15 @@ class REGINA_API Manifold :
         void writeTextLong(std::ostream& out) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NManifold has now been renamed to
+ * Manifold.
+ */
+REGINA_DEPRECATED typedef Manifold NManifold;
+
 /*@}*/
 
 // Inline functions for Manifold

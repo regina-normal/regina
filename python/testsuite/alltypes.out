@@ -1384,6 +1384,8 @@ Equality type : BY_REFERENCE
 
 NLensSpace : typedef ->  LensSpace
 
+NManifold : typedef ->  Manifold
+
 NMarkedAbelianGroup : typedef ->  MarkedAbelianGroup
 
 NMatrix2 : typedef ->  Matrix2
