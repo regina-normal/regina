@@ -1457,6 +1457,10 @@ NProgressTrackerOpen : typedef ->  ProgressTrackerOpen
 
 NRational : typedef ->  Rational
 
+NSFSFibre : typedef ->  SFSFibre
+
+NSFSpace : typedef ->  SFSpace
+
 NSatAnnulus : class
 Equality type : BY_VALUE
 
