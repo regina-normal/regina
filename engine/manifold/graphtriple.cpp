@@ -33,7 +33,7 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/graphtriple.h"
 #include "manifold/nsfs.h"
-#include "manifold/nsfsaltset.h"
+#include "manifold/sfsaltset.h"
 #include "maths/matrix.h"
 
 namespace regina {
