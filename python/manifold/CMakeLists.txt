@@ -8,7 +8,7 @@ SET ( FILES
   handlebody
   lensspace
   manifold
-  nsfs
+  sfs
   nsimplesurfacebundle
   nsnappeacensusmfd
   ntorusbundle
