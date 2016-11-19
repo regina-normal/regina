@@ -1496,6 +1496,8 @@ NScript : typedef ->  Script
 NSignature : class
 Equality type : BY_REFERENCE
 
+NSimpleSurfaceBundle : typedef ->  SimpleSurfaceBundle
+
 NSnapPeaCensusManifold : class
 Equality type : BY_VALUE
 

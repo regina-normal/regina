@@ -125,6 +125,15 @@ class REGINA_API SimpleSurfaceBundle : public Manifold {
         std::ostream& writeTeXName(std::ostream& out) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSimpleSurfaceBundle has now been renamed to
+ * SimpleSurfaceBundle.
+ */
+REGINA_DEPRECATED typedef SimpleSurfaceBundle NSimpleSurfaceBundle;
+
 /*@}*/
 
 // Inline functions for SimpleSurfaceBundle
