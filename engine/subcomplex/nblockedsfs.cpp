@@ -274,7 +274,7 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
 }
 
 Manifold* NBlockedSFS::manifold() const {
-    NSFSpace* ans = region_->createSFS(false);
+    SFSpace* ans = region_->createSFS(false);
     if (! ans)
         return 0;
 
@@ -283,17 +283,17 @@ Manifold* NBlockedSFS::manifold() const {
     // If we have SFS(RP2/n2) with one exceptional fibre, rewrite it as
     // SFS(S2) with three exceptional fibres.
 
-    if (ans->baseClass() == NSFSpace::n2 &&
+    if (ans->baseClass() == SFSpace::n2 &&
             ans->baseGenus() == 1 &&
             (! ans->baseOrientable()) &&
             ans->punctures() == 0 &&
             ans->reflectors() == 0 &&
             ans->fibreCount() <= 1) {
-        NSFSpace* altAns = new NSFSpace(/* S2 x S1 */);
+        SFSpace* altAns = new SFSpace(/* S2 x S1 */);
         altAns->insertFibre(2, 1);
         altAns->insertFibre(2, -1);
 
-        NSFSFibre rp2Fibre;
+        SFSFibre rp2Fibre;
         if (ans->fibreCount() == 0) {
             rp2Fibre.alpha = 1;
             rp2Fibre.beta = ans->obstruction();

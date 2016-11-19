@@ -38,17 +38,17 @@
 using namespace boost::python;
 using regina::GraphPair;
 using regina::Matrix2;
-using regina::NSFSpace;
+using regina::SFSpace;
 
 namespace {
-    GraphPair* createGraphPair_longs(const NSFSpace& s1, const NSFSpace& s2,
+    GraphPair* createGraphPair_longs(const SFSpace& s1, const SFSpace& s2,
             long a, long b, long c, long d) {
-        return new GraphPair(new NSFSpace(s1), new NSFSpace(s2), a, b, c, d);
+        return new GraphPair(new SFSpace(s1), new SFSpace(s2), a, b, c, d);
     }
 
-    GraphPair* createGraphPair_matrix(const NSFSpace& s1, const NSFSpace& s2,
+    GraphPair* createGraphPair_matrix(const SFSpace& s1, const SFSpace& s2,
             const Matrix2& m) {
-        return new GraphPair(new NSFSpace(s1), new NSFSpace(s2), m);
+        return new GraphPair(new SFSpace(s1), new SFSpace(s2), m);
     }
 }
 

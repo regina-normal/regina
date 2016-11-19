@@ -84,7 +84,7 @@ AbelianGroup* GraphLoop::homology() const {
             m.entry(0, i) = 2;
 
     // A relation for each exceptional fibre:
-    NSFSFibre fibre;
+    SFSFibre fibre;
     for (f = 0; f < fibres; f++) {
         fibre = sfs_->fibre(f);
         m.entry(f + 1, 1 + genus + 2 + f) = fibre.alpha;

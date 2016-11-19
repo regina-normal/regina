@@ -63,17 +63,17 @@ class LensSpace;
  * Note that we allow regular fibres with \a alpha = 1, and we do not
  * impose range limits on \a beta (thus \a beta may be negative, or it
  * may be larger than \a alpha).  This is to allow more flexibility in
- * routines such as NSFSpace::insertFibre().
+ * routines such as SFSpace::insertFibre().
  *
  * \warning In Regina 4.2.1 and earlier, this class was named
- * NExceptionalFibre.  The new NSFSFibre class was introduced with
+ * NExceptionalFibre.  The new SFSFibre class was introduced with
  * Regina 4.3, and has changed its behaviour (in particular, the
  * natural ordering of fibres has changed).  Code that was written
  * to work with the old NExceptionalFibre class should be looked at closely
- * before being adapted to the new NSFSFibre class (i.e., it may require
+ * before being adapted to the new SFSFibre class (i.e., it may require
  * more than just substituting class names).
  */
-struct REGINA_API NSFSFibre {
+struct REGINA_API SFSFibre {
     long alpha;
         /**< The first parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
              Note that this is the index of the exceptional fibre.
@@ -85,7 +85,7 @@ struct REGINA_API NSFSFibre {
     /**
      * Creates a new uninitialised exceptional fibre.
      */
-    NSFSFibre();
+    SFSFibre();
     /**
      * Creates a new exceptional fibre with the given parameters.
      *
@@ -94,21 +94,21 @@ struct REGINA_API NSFSFibre {
      * @param newBeta the second parameter of this exceptional fibre;
      * this must have no common factors with the first parameter \a newAlpha.
      */
-    NSFSFibre(long newAlpha, long newBeta);
+    SFSFibre(long newAlpha, long newBeta);
     /**
      * Creates a new exceptional fibre that is a clone of the given
      * fibre.
      *
      * @param cloneMe the exceptional fibre to clone.
      */
-    NSFSFibre(const NSFSFibre& cloneMe);
+    SFSFibre(const SFSFibre& cloneMe);
 
     /**
      * Makes this exceptional fibre a clone of the given fibre.
      *
      * @param cloneMe the exceptional fibre to clone.
      */
-    void operator = (const NSFSFibre& cloneMe);
+    void operator = (const SFSFibre& cloneMe);
     /**
      * Determines if this and the given exceptional fibre are identical.
      * This requires both fibres to have the same values for \a alpha
@@ -118,7 +118,7 @@ struct REGINA_API NSFSFibre {
      * @return \c true if and only if this and the given fibre are
      * identical.
      */
-    bool operator == (const NSFSFibre& compare) const;
+    bool operator == (const SFSFibre& compare) const;
     /**
      * Determines if this and the given exceptional fibre are different.
      * This requires the fibres to have different values for \a alpha and/or
@@ -128,7 +128,7 @@ struct REGINA_API NSFSFibre {
      * @return \c true if and only if this and the given fibre are
      * different.
      */
-    bool operator != (const NSFSFibre& compare) const;
+    bool operator != (const SFSFibre& compare) const;
     /**
      * Determines if this exceptional fibre is smaller than the given
      * fibre.  Fibres are sorted by \a alpha and then by \a beta.
@@ -136,7 +136,7 @@ struct REGINA_API NSFSFibre {
      * @param compare the fibre with which this will be compared.
      * @return \c true if and only if this is smaller than the given fibre.
      */
-    bool operator < (const NSFSFibre& compare) const;
+    bool operator < (const SFSFibre& compare) const;
 };
 
 /**
@@ -148,7 +148,7 @@ struct REGINA_API NSFSFibre {
  * @param f the fibre to write.
  * @return the output stream \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
+REGINA_API std::ostream& operator << (std::ostream& out, const SFSFibre& f);
 
 /**
  * Represents a general Seifert fibred space, which may be orientable or
@@ -190,18 +190,18 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  * boundaries.
  *
  * \warning In Regina 4.2.1 and earlier, this class was named NSFS.
- * The new NSFSpace class was introduced with Regina 4.3, and has changed
+ * The new SFSpace class was introduced with Regina 4.3, and has changed
  * its behaviour in siginficant ways (becoming more general, as well as
  * keeping the obstruction parameter \a b separate).  Code that was written
  * to work with the old NSFS class should be looked at closely before
- * being adapted to the new NSFSpace class (i.e., it may require more
+ * being adapted to the new SFSpace class (i.e., it may require more
  * than just substituting class names).
  *
  * \todo \featurelong Implement recognition of more common names.
  * \todo \featurelong Implement triangulation construction and homology
  * calculation for more Seifert fibred spaces.
  */
-class REGINA_API NSFSpace : public Manifold {
+class REGINA_API SFSpace : public Manifold {
     public:
         /**
          * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3, \c n4
@@ -288,7 +288,7 @@ class REGINA_API NSFSpace : public Manifold {
                  These are in addition to the regular boundary components
                  described by \a puncturesTwisted_. */
 
-        std::list<NSFSFibre> fibres_;
+        std::list<SFSFibre> fibres_;
             /**< The exceptional fibres.  This list will be sorted, and will
                  only contain fibres for which \a alpha and \a beta are
                  coprime and <tt>0 <= beta < alpha > 1</tt>. */
@@ -304,7 +304,7 @@ class REGINA_API NSFSpace : public Manifold {
          * Creates a new Seifert fibred space with base orbifold the
          * 2-sphere and no exceptional fibres.
          */
-        NSFSpace();
+        SFSpace();
         /**
          * Creates a new Seifert fibred space of the given class with the
          * given base orbifold and no exceptional fibres.
@@ -319,7 +319,7 @@ class REGINA_API NSFSpace : public Manifold {
          *
          * @param useClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
-         * paths in the 3-manifold.  See the NSFSpace class notes and the
+         * paths in the 3-manifold.  See the SFSpace class notes and the
          * classType enumeration notes for details.
          * @param genus the genus of the base orbifold (the
          * number of tori or projective planes that it contains).
@@ -340,7 +340,7 @@ class REGINA_API NSFSpace : public Manifold {
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
-        NSFSpace(classType useClass, unsigned long genus,
+        SFSpace(classType useClass, unsigned long genus,
             unsigned long punctures = 0, unsigned long puncturesTwisted = 0,
             unsigned long reflectors = 0, unsigned long reflectorsTwisted = 0);
         /**
@@ -349,11 +349,11 @@ class REGINA_API NSFSpace : public Manifold {
          *
          * @param cloneMe the Seifert fibred space to clone.
          */
-        NSFSpace(const NSFSpace& cloneMe);
+        SFSpace(const SFSpace& cloneMe);
         /**
          * Destroys this Seifert fibred space.
          */
-        virtual ~NSFSpace();
+        virtual ~SFSpace();
 
         /**
          * Modifies this Seifert fibred space to be a clone of the given
@@ -361,7 +361,7 @@ class REGINA_API NSFSpace : public Manifold {
          *
          * @param cloneMe the Seifert fibred space to clone.
          */
-        void operator = (const NSFSpace& cloneMe);
+        void operator = (const SFSpace& cloneMe);
 
         /**
          * Returns which of the eleven predefined classes this space
@@ -374,7 +374,7 @@ class REGINA_API NSFSpace : public Manifold {
          * addHandle(), addCrosscap(), addPuncture() or addReflector().
          *
          * For more information on the eleven predefined classes, see the
-         * NSFSpace class notes or the classType enumeration notes.
+         * SFSpace class notes or the classType enumeration notes.
          *
          * @return the particular class to which this space belongs.
          */
@@ -503,7 +503,7 @@ class REGINA_API NSFSpace : public Manifold {
         /**
          * Returns the requested exceptional fibre.  Fibres are stored
          * in sorted order by \a alpha (the index) and then by \a beta.
-         * See the NSFSpace class notes for details.
+         * See the SFSpace class notes for details.
          *
          * \warning This routine takes linear time (specifically,
          * linear in the argument \a which).
@@ -512,7 +512,7 @@ class REGINA_API NSFSpace : public Manifold {
          * 0 and getFibreCount()-1 inclusive.
          * @return the requested fibre.
          */
-        NSFSFibre fibre(unsigned long which) const;
+        SFSFibre fibre(unsigned long which) const;
 
         /**
          * Returns the obstruction constant \a b for this Seifert fibred
@@ -628,7 +628,7 @@ class REGINA_API NSFSpace : public Manifold {
          * this fibre (i.e., its index) must be strictly positive, and
          * the two parameters of this fibre must be coprime.
          */
-        void insertFibre(const NSFSFibre& fibre);
+        void insertFibre(const SFSFibre& fibre);
 
         /**
          * Adds the given fibre to this Seifert fibred space.
@@ -724,7 +724,7 @@ class REGINA_API NSFSpace : public Manifold {
          * @return \c true if and only if this and the given Seifert
          * fibred space representations are identical.
          */
-        bool operator == (const NSFSpace& compare) const;
+        bool operator == (const SFSpace& compare) const;
 
         /**
          * Determines whether this and the given structure do not contain
@@ -739,7 +739,7 @@ class REGINA_API NSFSpace : public Manifold {
          * @return \c true if and only if this and the given Seifert
          * fibred space representations are different.
          */
-        bool operator != (const NSFSpace& compare) const;
+        bool operator != (const SFSpace& compare) const;
 
         /**
          * Determines in a fairly ad-hoc fashion whether this representation
@@ -759,7 +759,7 @@ class REGINA_API NSFSpace : public Manifold {
          * @return \c true if and only if this is "smaller" than the given
          * Seifert fibred space representation.
          */
-        bool operator < (const NSFSpace& compare) const;
+        bool operator < (const SFSpace& compare) const;
 
         Triangulation<3>* construct() const;
         AbelianGroup* homology() const;
@@ -785,8 +785,8 @@ class REGINA_API NSFSpace : public Manifold {
          * iterator before this routine was called.  Note that the given
          * iterator will be invalidated.
          */
-        std::list<NSFSFibre>::iterator negateFibreDown(
-            std::list<NSFSFibre>::iterator it);
+        std::list<SFSFibre>::iterator negateFibreDown(
+            std::list<SFSFibre>::iterator it);
         /**
          * Internal to writeCommonBase().
          *
@@ -834,41 +834,41 @@ class REGINA_API NSFSpace : public Manifold {
 
 /*@}*/
 
-// Inline functions for NSFSFibre
+// Inline functions for SFSFibre
 
-inline NSFSFibre::NSFSFibre() {
+inline SFSFibre::SFSFibre() {
 }
-inline NSFSFibre::NSFSFibre(long newAlpha, long newBeta) :
+inline SFSFibre::SFSFibre(long newAlpha, long newBeta) :
         alpha(newAlpha), beta(newBeta) {
 }
-inline NSFSFibre::NSFSFibre(const NSFSFibre& cloneMe) :
+inline SFSFibre::SFSFibre(const SFSFibre& cloneMe) :
         alpha(cloneMe.alpha), beta(cloneMe.beta) {
 }
 
-inline void NSFSFibre::operator = (const NSFSFibre& cloneMe) {
+inline void SFSFibre::operator = (const SFSFibre& cloneMe) {
     alpha = cloneMe.alpha;
     beta = cloneMe.beta;
 }
-inline bool NSFSFibre::operator == (const NSFSFibre& compare) const {
+inline bool SFSFibre::operator == (const SFSFibre& compare) const {
     return (alpha == compare.alpha && beta == compare.beta);
 }
-inline bool NSFSFibre::operator != (const NSFSFibre& compare) const {
+inline bool SFSFibre::operator != (const SFSFibre& compare) const {
     return (alpha != compare.alpha || beta != compare.beta);
 }
-inline bool NSFSFibre::operator < (const NSFSFibre& compare) const {
+inline bool SFSFibre::operator < (const SFSFibre& compare) const {
     return (alpha < compare.alpha ||
         (alpha == compare.alpha && beta < compare.beta));
 }
 
-// Inline functions for NSFSpace
+// Inline functions for SFSpace
 
-inline NSFSpace::NSFSpace() : class_(o1), genus_(0),
+inline SFSpace::SFSpace() : class_(o1), genus_(0),
         punctures_(0), puncturesTwisted_(0),
         reflectors_(0), reflectorsTwisted_(0),
         nFibres_(0), b_(0) {
 }
 
-inline NSFSpace::NSFSpace(NSFSpace::classType useClass, unsigned long genus,
+inline SFSpace::SFSpace(SFSpace::classType useClass, unsigned long genus,
         unsigned long punctures, unsigned long puncturesTwisted,
         unsigned long reflectors, unsigned long reflectorsTwisted) :
         class_(useClass), genus_(genus),
@@ -877,7 +877,7 @@ inline NSFSpace::NSFSpace(NSFSpace::classType useClass, unsigned long genus,
         nFibres_(0), b_(0) {
 }
 
-inline NSFSpace::NSFSpace(const NSFSpace& cloneMe) : Manifold(),
+inline SFSpace::SFSpace(const SFSpace& cloneMe) : Manifold(),
         class_(cloneMe.class_), genus_(cloneMe.genus_),
         punctures_(cloneMe.punctures_),
         puncturesTwisted_(cloneMe.puncturesTwisted_),
@@ -887,79 +887,79 @@ inline NSFSpace::NSFSpace(const NSFSpace& cloneMe) : Manifold(),
         b_(cloneMe.b_) {
 }
 
-inline NSFSpace::~NSFSpace() {
+inline SFSpace::~SFSpace() {
 }
 
-inline bool NSFSpace::operator != (const NSFSpace& compare) const {
+inline bool SFSpace::operator != (const SFSpace& compare) const {
     return ! ((*this) == compare);
 }
 
-inline NSFSpace::classType NSFSpace::baseClass() const {
+inline SFSpace::classType SFSpace::baseClass() const {
     return class_;
 }
 
-inline unsigned long NSFSpace::baseGenus() const {
+inline unsigned long SFSpace::baseGenus() const {
     return genus_;
 }
 
-inline bool NSFSpace::baseOrientable() const {
+inline bool SFSpace::baseOrientable() const {
     return (class_ == o1 || class_ == o2 || class_ == bo1 || class_ == bo2);
 }
 
-inline bool NSFSpace::fibreReversing() const {
+inline bool SFSpace::fibreReversing() const {
     return ! (class_ == o1 || class_ == n1 || class_ == bo1 || class_ == bn1);
 }
 
-inline bool NSFSpace::fibreNegating() const {
+inline bool SFSpace::fibreNegating() const {
     return ! (class_ == o1 || class_ == n2 || class_ == bo1 || class_ == bn2);
 }
 
-inline unsigned long NSFSpace::punctures() const {
+inline unsigned long SFSpace::punctures() const {
     return punctures_ + puncturesTwisted_;
 }
 
-inline unsigned long NSFSpace::punctures(bool twisted) const {
+inline unsigned long SFSpace::punctures(bool twisted) const {
     return (twisted ? puncturesTwisted_ : punctures_);
 }
 
-inline unsigned long NSFSpace::reflectors() const {
+inline unsigned long SFSpace::reflectors() const {
     return reflectors_ + reflectorsTwisted_;
 }
 
-inline unsigned long NSFSpace::reflectors(bool twisted) const {
+inline unsigned long SFSpace::reflectors(bool twisted) const {
     return (twisted ? reflectorsTwisted_ : reflectors_);
 }
 
-inline unsigned long NSFSpace::fibreCount() const {
+inline unsigned long SFSpace::fibreCount() const {
     return nFibres_;
 }
 
-inline long NSFSpace::obstruction() const {
+inline long SFSpace::obstruction() const {
     return b_;
 }
 
-inline void NSFSpace::insertFibre(const NSFSFibre& fibre) {
+inline void SFSpace::insertFibre(const SFSFibre& fibre) {
     insertFibre(fibre.alpha, fibre.beta);
 }
 
-inline void NSFSpace::reflect() {
+inline void SFSpace::reflect() {
     complementAllFibres();
     b_ = -b_ - static_cast<long>(nFibres_);
 }
 
-inline bool NSFSpace::isHyperbolic() const {
+inline bool SFSpace::isHyperbolic() const {
     return false;
 }
 
-inline std::ostream& NSFSpace::writeName(std::ostream& out) const {
+inline std::ostream& SFSpace::writeName(std::ostream& out) const {
     return writeCommonName(out, false);
 }
 
-inline std::ostream& NSFSpace::writeTeXName(std::ostream& out) const {
+inline std::ostream& SFSpace::writeTeXName(std::ostream& out) const {
     return writeCommonName(out, true);
 }
 
-inline std::ostream& NSFSpace::writeStructure(std::ostream& out) const {
+inline std::ostream& SFSpace::writeStructure(std::ostream& out) const {
     return writeCommonStructure(out, false);
 }
 

@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NSFSpace;
+class SFSpace;
 
 /**
  * \weakgroup manifold
@@ -91,7 +91,7 @@ class NSFSpace;
  */
 class REGINA_API GraphLoop : public Manifold {
     private:
-        NSFSpace* sfs_;
+        SFSpace* sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */
         Matrix2 matchingReln_;
             /**< The matrix describing how the two boundary tori are joined;
@@ -120,7 +120,7 @@ class REGINA_API GraphLoop : public Manifold {
          * base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \ifacespython In Python, this constructor clones its NSFSpace
+         * \ifacespython In Python, this constructor clones its SFSpace
          * argument instead of claiming ownership of it.
          *
          * @param sfs the bounded Seifert fibred space.
@@ -129,7 +129,7 @@ class REGINA_API GraphLoop : public Manifold {
          * @param mat10 the (1,0) element of the matching matrix.
          * @param mat11 the (1,1) element of the matching matrix.
          */
-        GraphLoop(NSFSpace* sfs, long mat00, long mat01,
+        GraphLoop(SFSpace* sfs, long mat00, long mat01,
             long mat10, long mat11);
         /**
          * Creates a new graph manifold as a self-identified Seifert fibred
@@ -144,13 +144,13 @@ class REGINA_API GraphLoop : public Manifold {
          * boundaries, corresponding to two punctures in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \ifacespython In Python, this constructor clones its NSFSpace
+         * \ifacespython In Python, this constructor clones its SFSpace
          * argument instead of claiming ownership of it.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        GraphLoop(NSFSpace* sfs, const Matrix2& matchingReln);
+        GraphLoop(SFSpace* sfs, const Matrix2& matchingReln);
         /**
          * Destroys this structure along with the bounded Seifert
          * fibred space and the matching matrix.
@@ -163,7 +163,7 @@ class REGINA_API GraphLoop : public Manifold {
          *
          * @return a reference to the bounded Seifert fibred space.
          */
-        const NSFSpace& sfs() const;
+        const SFSpace& sfs() const;
         /**
          * Returns a reference to the 2-by-2 matrix describing how the
          * two boundary tori of the Seifert fibred space are joined together.
@@ -240,18 +240,18 @@ REGINA_DEPRECATED typedef GraphLoop NGraphLoop;
 
 // Inline functions for GraphLoop
 
-inline GraphLoop::GraphLoop(NSFSpace* sfs,
+inline GraphLoop::GraphLoop(SFSpace* sfs,
         long mat00, long mat01, long mat10, long mat11) :
         sfs_(sfs), matchingReln_(mat00, mat01, mat10, mat11) {
     reduce();
 }
 
-inline GraphLoop::GraphLoop(NSFSpace* sfs, const Matrix2& matchingReln) :
+inline GraphLoop::GraphLoop(SFSpace* sfs, const Matrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
     reduce();
 }
 
-inline const NSFSpace& GraphLoop::sfs() const {
+inline const SFSpace& GraphLoop::sfs() const {
     return *sfs_;
 }
 

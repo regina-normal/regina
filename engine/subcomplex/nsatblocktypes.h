@@ -111,7 +111,7 @@ class REGINA_API NSatMobius : public NSatBlock {
         int position() const;
 
         virtual NSatBlock* clone() const;
-        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
@@ -208,7 +208,7 @@ class REGINA_API NSatLST : public NSatBlock {
         Perm<4> roles() const;
 
         virtual NSatBlock* clone() const;
-        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void transform(const Triangulation<3>* originalTri,
             const Isomorphism<3>* iso, Triangulation<3>* newTri);
         virtual void writeTextShort(std::ostream& out) const;
@@ -282,7 +282,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
         bool isMajor() const;
 
         virtual NSatBlock* clone() const;
-        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
@@ -369,7 +369,7 @@ class REGINA_API NSatCube : public NSatBlock {
         NSatCube(const NSatCube& cloneMe);
 
         virtual NSatBlock* clone() const;
-        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
@@ -445,7 +445,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
         NSatReflectorStrip(const NSatReflectorStrip& cloneMe);
 
         virtual NSatBlock* clone() const;
-        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 
@@ -548,7 +548,7 @@ class REGINA_API NSatLayering : public NSatBlock {
         bool overHorizontal() const;
 
         virtual NSatBlock* clone() const;
-        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
 

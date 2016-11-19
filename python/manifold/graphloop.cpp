@@ -38,16 +38,16 @@
 using namespace boost::python;
 using regina::GraphLoop;
 using regina::Matrix2;
-using regina::NSFSpace;
+using regina::SFSpace;
 
 namespace {
-    GraphLoop* createGraphLoop_longs(const NSFSpace& s,
+    GraphLoop* createGraphLoop_longs(const SFSpace& s,
             long a, long b, long c, long d) {
-        return new GraphLoop(new NSFSpace(s), a, b, c, d);
+        return new GraphLoop(new SFSpace(s), a, b, c, d);
     }
 
-    GraphLoop* createGraphLoop_matrix(const NSFSpace& s, const Matrix2& m) {
-        return new GraphLoop(new NSFSpace(s), m);
+    GraphLoop* createGraphLoop_matrix(const SFSpace& s, const Matrix2& m) {
+        return new GraphLoop(new SFSpace(s), m);
     }
 }
 

@@ -96,7 +96,7 @@ AbelianGroup* GraphTriple::homology() const {
     //           - reflector relations
     //           - fibre constraint
     //     - Plus two boundary joinings.
-    NSFSpace* sfs[3];
+    SFSpace* sfs[3];
     unsigned long genus[3], punc[3], fibres[3], ref[3], gens[3];
     unsigned long start[3];
 
@@ -130,7 +130,7 @@ AbelianGroup* GraphTriple::homology() const {
         ref[0] + ref[1] + ref[2] + 13, gens[0] + gens[1] + gens[2]);
 
     unsigned long i, f;
-    NSFSFibre fibre;
+    SFSFibre fibre;
     unsigned long reln = 0;
 
     // Relations internal to each space:
@@ -267,9 +267,9 @@ void GraphTriple::reduce() {
 
     // Decide which of these possible representations gives the nicest
     // matching relations.
-    NSFSpace* use0 = 0;
-    NSFSpace* use1 = 0;
-    NSFSpace* useCentre = 0;
+    SFSpace* use0 = 0;
+    SFSpace* use1 = 0;
+    SFSpace* useCentre = 0;
     Matrix2 useReln[2];
 
     Matrix2 tryReln[2], tmpReln;

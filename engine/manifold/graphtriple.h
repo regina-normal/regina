@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NSFSpace;
+class SFSpace;
 
 /**
  * \weakgroup manifold
@@ -141,10 +141,10 @@ class NSFSpace;
  */
 class REGINA_API GraphTriple : public Manifold {
     private:
-        NSFSpace* end_[2];
+        SFSpace* end_[2];
             /**< The two end spaces, i.e., the Seifert fibred spaces
                  with just one boundary torus. */
-        NSFSpace* centre_;
+        SFSpace* centre_;
             /**< The central space, i.e., the Seifert fibred space with
                  two boundary tori that meets both end spaces. */
         Matrix2 matchingReln_[2];
@@ -171,7 +171,7 @@ class REGINA_API GraphTriple : public Manifold {
          * corresponding to two untwisted punctures in the base orbifold.
          * \pre Each of the given matrices has determinant +1 or -1.
          *
-         * \ifacespython In Python, this constructor clones its NSFSpace
+         * \ifacespython In Python, this constructor clones its SFSpace
          * arguments instead of claiming ownership of them.
          *
          * @param end0 the first end space, as described in the class notes.
@@ -182,7 +182,7 @@ class REGINA_API GraphTriple : public Manifold {
          * @param matchingReln1 the 2-by-2 matching matrix that
          * specifies how spaces \a end1 and \a centre are joined.
          */
-        GraphTriple(NSFSpace* end0, NSFSpace* centre, NSFSpace* end1,
+        GraphTriple(SFSpace* end0, SFSpace* centre, SFSpace* end1,
             const Matrix2& matchingReln0, const Matrix2& matchingReln1);
         /**
          * Destroys this structure along with the component Seifert
@@ -200,7 +200,7 @@ class REGINA_API GraphTriple : public Manifold {
          * 1 if the second end space is to be returned.
          * @return a reference to the requested Seifert fibred space.
          */
-        const NSFSpace& end(unsigned which) const;
+        const SFSpace& end(unsigned which) const;
         /**
          * Returns a reference to the central space.
          * This is the Seifert fibred space with two boundary components,
@@ -209,7 +209,7 @@ class REGINA_API GraphTriple : public Manifold {
          *
          * @return a reference to the requested Seifert fibred space.
          */
-        const NSFSpace& centre() const;
+        const SFSpace& centre() const;
         /**
          * Returns a reference to the 2-by-2 matrix describing how the
          * two requested bounded Seifert fibred spaces are joined together.
@@ -296,8 +296,8 @@ REGINA_DEPRECATED typedef GraphTriple NGraphTriple;
 
 // Inline functions for GraphTriple
 
-inline GraphTriple::GraphTriple(NSFSpace* end0, NSFSpace* centre,
-        NSFSpace* end1, const Matrix2& matchingReln0,
+inline GraphTriple::GraphTriple(SFSpace* end0, SFSpace* centre,
+        SFSpace* end1, const Matrix2& matchingReln0,
         const Matrix2& matchingReln1) {
     end_[0] = end0;
     centre_ = centre;
@@ -309,11 +309,11 @@ inline GraphTriple::GraphTriple(NSFSpace* end0, NSFSpace* centre,
     reduce();
 }
 
-inline const NSFSpace& GraphTriple::end(unsigned which) const {
+inline const SFSpace& GraphTriple::end(unsigned which) const {
     return *end_[which];
 }
 
-inline const NSFSpace& GraphTriple::centre() const {
+inline const SFSpace& GraphTriple::centre() const {
     return *centre_;
 }
 

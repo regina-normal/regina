@@ -54,8 +54,8 @@ bool Manifold::operator < (const Manifold& compare) const {
     }
 
     // Next go through Seifert fibred spaces.
-    const NSFSpace* sfs1 = dynamic_cast<const NSFSpace*>(this);
-    const NSFSpace* sfs2 = dynamic_cast<const NSFSpace*>(&compare);
+    const SFSpace* sfs1 = dynamic_cast<const SFSpace*>(this);
+    const SFSpace* sfs2 = dynamic_cast<const SFSpace*>(&compare);
 
     if (sfs1 && ! sfs2)
         return true;

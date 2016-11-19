@@ -75,11 +75,11 @@ NBlockedSFSPair::~NBlockedSFSPair() {
 }
 
 Manifold* NBlockedSFSPair::manifold() const {
-    NSFSpace* sfs0 = region_[0]->createSFS(false);
+    SFSpace* sfs0 = region_[0]->createSFS(false);
     if (! sfs0)
         return 0;
 
-    NSFSpace* sfs1 = region_[1]->createSFS(false);
+    SFSpace* sfs1 = region_[1]->createSFS(false);
     if (! sfs1) {
         delete sfs0;
         return 0;

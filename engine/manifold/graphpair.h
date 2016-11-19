@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NSFSpace;
+class SFSpace;
 
 /**
  * \weakgroup manifold
@@ -91,7 +91,7 @@ class NSFSpace;
  */
 class REGINA_API GraphPair : public Manifold {
     private:
-        NSFSpace* sfs_[2];
+        SFSpace* sfs_[2];
             /**< The two bounded Seifert fibred spaces that are joined
                  together. */
         Matrix2 matchingReln_;
@@ -120,7 +120,7 @@ class REGINA_API GraphPair : public Manifold {
          * corresponding to a single untwisted puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \ifacespython In Python, this constructor clones its NSFSpace
+         * \ifacespython In Python, this constructor clones its SFSpace
          * arguments instead of claiming ownership of them.
          *
          * @param sfs0 the first Seifert fibred space.
@@ -130,7 +130,7 @@ class REGINA_API GraphPair : public Manifold {
          * @param mat10 the (1,0) element of the matching matrix.
          * @param mat11 the (1,1) element of the matching matrix.
          */
-        GraphPair(NSFSpace* sfs0, NSFSpace* sfs1, long mat00, long mat01,
+        GraphPair(SFSpace* sfs0, SFSpace* sfs1, long mat00, long mat01,
             long mat10, long mat11);
         /**
          * Creates a new graph manifold as a pair of joined Seifert fibred
@@ -145,14 +145,14 @@ class REGINA_API GraphPair : public Manifold {
          * corresponding to a single untwisted puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
-         * \ifacespython In Python, this constructor clones its NSFSpace
+         * \ifacespython In Python, this constructor clones its SFSpace
          * arguments instead of claiming ownership of them.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.
          */
-        GraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
+        GraphPair(SFSpace* sfs0, SFSpace* sfs1,
             const Matrix2& matchingReln);
         /**
          * Destroys this structure along with the component Seifert
@@ -168,7 +168,7 @@ class REGINA_API GraphPair : public Manifold {
          * returned, or 1 if the second space is to be returned.
          * @return a reference to the requested Seifert fibred space.
          */
-        const NSFSpace& sfs(unsigned which) const;
+        const SFSpace& sfs(unsigned which) const;
         /**
          * Returns a reference to the 2-by-2 matrix describing how the
          * two Seifert fibred spaces are joined together.  See the class
@@ -234,7 +234,7 @@ REGINA_DEPRECATED typedef GraphPair NGraphPair;
 
 // Inline functions for GraphPair
 
-inline GraphPair::GraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
+inline GraphPair::GraphPair(SFSpace* sfs0, SFSpace* sfs1,
         long mat00, long mat01, long mat10, long mat11) :
         matchingReln_(mat00, mat01, mat10, mat11) {
     sfs_[0] = sfs0;
@@ -243,7 +243,7 @@ inline GraphPair::GraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
     reduce();
 }
 
-inline GraphPair::GraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
+inline GraphPair::GraphPair(SFSpace* sfs0, SFSpace* sfs1,
         const Matrix2& matchingReln) : matchingReln_(matchingReln) {
     sfs_[0] = sfs0;
     sfs_[1] = sfs1;
@@ -251,7 +251,7 @@ inline GraphPair::GraphPair(NSFSpace* sfs0, NSFSpace* sfs1,
     reduce();
 }
 
-inline const NSFSpace& GraphPair::sfs(unsigned which) const {
+inline const SFSpace& GraphPair::sfs(unsigned which) const {
     return *sfs_[which];
 }
 

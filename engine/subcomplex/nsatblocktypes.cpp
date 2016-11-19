@@ -172,7 +172,7 @@ NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
     return 0;
 }
 
-void NSatMobius::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (position_ == 0) {
         // Diagonal:
         sfs.insertFibre(1, reflect ? 1 : -1);
@@ -255,7 +255,7 @@ NSatLST::~NSatLST() {
     delete lst_;
 }
 
-void NSatLST::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
     long cutsVert = lst_->meridinalCuts(roles_[0]);
     long cutsHoriz = lst_->meridinalCuts(roles_[1]);
     if (roles_[2] == 2) {
@@ -378,7 +378,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     return ans;
 }
 
-void NSatTriPrism::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatTriPrism::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (major_)
         sfs.insertFibre(1, reflect ? -1 : 1);
     else
@@ -499,7 +499,7 @@ NSatTriPrism* NSatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
     return ans;
 }
 
-void NSatCube::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
     sfs.insertFibre(1, reflect ? -2 : 2);
 }
 
@@ -641,7 +641,7 @@ NSatCube* NSatCube::insertBlock(Triangulation<3>& tri) {
     return ans;
 }
 
-void NSatReflectorStrip::adjustSFS(NSFSpace& sfs, bool) const {
+void NSatReflectorStrip::adjustSFS(SFSpace& sfs, bool) const {
     if (! twistedBoundary_)
         sfs.addReflector(false);
 }
@@ -865,7 +865,7 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(Triangulation<3>& tri,
     return ans;
 }
 
-void NSatLayering::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatLayering::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (overHorizontal_)
         sfs.insertFibre(1, reflect ? -2 : 2);
 

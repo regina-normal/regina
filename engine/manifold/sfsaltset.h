@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NSFSpace;
+class SFSpace;
 
 /**
  * \weakgroup manifold
@@ -107,7 +107,7 @@ class REGINA_API SFSAltSet {
     private:
         unsigned size_;
             /**< The number of alternative spaces in this set. */
-        NSFSpace* data_[4];
+        SFSpace* data_[4];
             /**< The list of alternative representations of this Seifert
                  fibred space. */
         Matrix2 conversion_[4];
@@ -131,7 +131,7 @@ class REGINA_API SFSAltSet {
          * @param sfs the original Seifert fibred space for which we are
          * creating a set of alternative representations.
          */
-        SFSAltSet(const NSFSpace* sfs);
+        SFSAltSet(const SFSpace* sfs);
 
         /**
          * Destroys all of the alternative representations in this set.
@@ -152,7 +152,7 @@ class REGINA_API SFSAltSet {
          *
          * @param exception the one alternative that should not be destroyed.
          */
-        void deleteAll(NSFSpace* exception);
+        void deleteAll(SFSpace* exception);
         /**
          * Destroys all of the alternative representations in this set,
          * except for the two given exceptions.
@@ -173,7 +173,7 @@ class REGINA_API SFSAltSet {
          * @param exception2 the second alternative that should not be
          * destroyed.
          */
-        void deleteAll(NSFSpace* exception1, NSFSpace* exception2);
+        void deleteAll(SFSpace* exception1, SFSpace* exception2);
 
         /**
          * Returns the number of alternative spaces in this set.
@@ -186,7 +186,7 @@ class REGINA_API SFSAltSet {
          * returned; this must be between 0 and size()-1 inclusive.
          * @return the requested alternative space.
          */
-        NSFSpace* operator [] (unsigned which) const;
+        SFSpace* operator [] (unsigned which) const;
         /**
          * Returns the conversion matrix for the requested alternative
          * space.  This matrix describes the fibre and base curves of
@@ -250,7 +250,7 @@ inline unsigned SFSAltSet::size() const {
     return size_;
 }
 
-inline NSFSpace* SFSAltSet::operator [] (unsigned which) const {
+inline SFSpace* SFSAltSet::operator [] (unsigned which) const {
     return data_[which];
 }
 

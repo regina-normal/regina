@@ -37,19 +37,19 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSFSFibre;
-using regina::NSFSpace;
+using regina::SFSFibre;
+using regina::SFSpace;
 
 namespace {
-    unsigned long (NSFSpace::*punctures_void)() const = &NSFSpace::punctures;
-    unsigned long (NSFSpace::*punctures_bool)(bool) const =
-        &NSFSpace::punctures;
-    unsigned long (NSFSpace::*reflectors_void)() const = &NSFSpace::reflectors;
-    unsigned long (NSFSpace::*reflectors_bool)(bool) const =
-        &NSFSpace::reflectors;
-    void (NSFSpace::*insertFibre_fibre)(const NSFSFibre&) =
-        &NSFSpace::insertFibre;
-    void (NSFSpace::*insertFibre_longs)(long, long) = &NSFSpace::insertFibre;
+    unsigned long (SFSpace::*punctures_void)() const = &SFSpace::punctures;
+    unsigned long (SFSpace::*punctures_bool)(bool) const =
+        &SFSpace::punctures;
+    unsigned long (SFSpace::*reflectors_void)() const = &SFSpace::reflectors;
+    unsigned long (SFSpace::*reflectors_bool)(bool) const =
+        &SFSpace::reflectors;
+    void (SFSpace::*insertFibre_fibre)(const SFSFibre&) =
+        &SFSpace::insertFibre;
+    void (SFSpace::*insertFibre_longs)(long, long) = &SFSpace::insertFibre;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addHandle, addHandle, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addCrosscap, addCrosscap, 0, 1);
@@ -58,65 +58,65 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_reduce, reduce, 0, 1);
 }
 
-void addNSFSpace() {
-    class_<NSFSFibre>("NSFSFibre")
+void addSFSpace() {
+    class_<SFSFibre>("SFSFibre")
         .def(init<long, long>())
-        .def(init<const NSFSFibre&>())
-        .def_readwrite("alpha", &NSFSFibre::alpha)
-        .def_readwrite("beta", &NSFSFibre::beta)
+        .def(init<const SFSFibre&>())
+        .def_readwrite("alpha", &SFSFibre::alpha)
+        .def_readwrite("beta", &SFSFibre::beta)
         .def(self < self)
         .def(self_ns::str(self))
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<NSFSpace, bases<regina::Manifold>,
-            std::auto_ptr<NSFSpace> >("NSFSpace")
-        .def(init<NSFSpace::classType, unsigned long,
+    scope s = class_<SFSpace, bases<regina::Manifold>,
+            std::auto_ptr<SFSpace> >("SFSpace")
+        .def(init<SFSpace::classType, unsigned long,
             optional<unsigned long, unsigned long,
             unsigned long, unsigned long> >())
-        .def(init<const NSFSpace&>())
-        .def("baseClass", &NSFSpace::baseClass)
-        .def("baseGenus", &NSFSpace::baseGenus)
-        .def("baseOrientable", &NSFSpace::baseOrientable)
-        .def("fibreReversing", &NSFSpace::fibreReversing)
-        .def("fibreNegating", &NSFSpace::fibreNegating)
+        .def(init<const SFSpace&>())
+        .def("baseClass", &SFSpace::baseClass)
+        .def("baseGenus", &SFSpace::baseGenus)
+        .def("baseOrientable", &SFSpace::baseOrientable)
+        .def("fibreReversing", &SFSpace::fibreReversing)
+        .def("fibreNegating", &SFSpace::fibreNegating)
         .def("punctures", punctures_void)
         .def("punctures", punctures_bool)
         .def("reflectors", reflectors_void)
         .def("reflectors", reflectors_bool)
-        .def("fibreCount", &NSFSpace::fibreCount)
-        .def("fibre", &NSFSpace::fibre)
-        .def("obstruction", &NSFSpace::obstruction)
-        .def("addHandle", &NSFSpace::addHandle, OL_addHandle())
-        .def("addCrosscap", &NSFSpace::addCrosscap, OL_addCrosscap())
-        .def("addPuncture", &NSFSpace::addPuncture, OL_addPuncture())
-        .def("addReflector", &NSFSpace::addReflector, OL_addReflector())
+        .def("fibreCount", &SFSpace::fibreCount)
+        .def("fibre", &SFSpace::fibre)
+        .def("obstruction", &SFSpace::obstruction)
+        .def("addHandle", &SFSpace::addHandle, OL_addHandle())
+        .def("addCrosscap", &SFSpace::addCrosscap, OL_addCrosscap())
+        .def("addPuncture", &SFSpace::addPuncture, OL_addPuncture())
+        .def("addReflector", &SFSpace::addReflector, OL_addReflector())
         .def("insertFibre", insertFibre_fibre)
         .def("insertFibre", insertFibre_longs)
-        .def("reflect", &NSFSpace::reflect)
-        .def("complementAllFibres", &NSFSpace::complementAllFibres)
-        .def("reduce", &NSFSpace::reduce, OL_reduce())
-        .def("isLensSpace", &NSFSpace::isLensSpace,
+        .def("reflect", &SFSpace::reflect)
+        .def("complementAllFibres", &SFSpace::complementAllFibres)
+        .def("reduce", &SFSpace::reduce, OL_reduce())
+        .def("isLensSpace", &SFSpace::isLensSpace,
             return_value_policy<manage_new_object>())
         .def(self < self)
         .def(regina::python::add_eq_operators())
     ;
 
-    enum_<NSFSpace::classType>("classType")
-        .value("o1", NSFSpace::o1)
-        .value("o2", NSFSpace::o2)
-        .value("n1", NSFSpace::n1)
-        .value("n2", NSFSpace::n2)
-        .value("n3", NSFSpace::n3)
-        .value("n4", NSFSpace::n4)
-        .value("bo1", NSFSpace::bo1)
-        .value("bo2", NSFSpace::bo2)
-        .value("bn1", NSFSpace::bn1)
-        .value("bn2", NSFSpace::bn2)
-        .value("bn3", NSFSpace::bn3)
+    enum_<SFSpace::classType>("classType")
+        .value("o1", SFSpace::o1)
+        .value("o2", SFSpace::o2)
+        .value("n1", SFSpace::n1)
+        .value("n2", SFSpace::n2)
+        .value("n3", SFSpace::n3)
+        .value("n4", SFSpace::n4)
+        .value("bo1", SFSpace::bo1)
+        .value("bo2", SFSpace::bo2)
+        .value("bn1", SFSpace::bn1)
+        .value("bn2", SFSpace::bn2)
+        .value("bn3", SFSpace::bn3)
         ;
 
-    implicitly_convertible<std::auto_ptr<NSFSpace>,
+    implicitly_convertible<std::auto_ptr<SFSpace>,
         std::auto_ptr<regina::Manifold> >();
 }
 

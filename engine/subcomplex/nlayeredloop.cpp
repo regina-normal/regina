@@ -52,7 +52,7 @@ Manifold* NLayeredLoop::manifold() const {
         return new LensSpace(length_, 1);
     } else {
         // Twisted.
-        NSFSpace* ans = new NSFSpace();
+        SFSpace* ans = new SFSpace();
         ans->insertFibre(2, -1);
         ans->insertFibre(2, 1);
         ans->insertFibre(length_, 1);

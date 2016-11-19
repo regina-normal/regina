@@ -1457,12 +1457,6 @@ NProgressTrackerOpen : typedef ->  ProgressTrackerOpen
 
 NRational : typedef ->  Rational
 
-NSFSFibre : class
-Equality type : BY_VALUE
-
-NSFSpace : class
-Equality type : BY_VALUE
-
 NSatAnnulus : class
 Equality type : BY_VALUE
 
@@ -1696,6 +1690,12 @@ ProgressTrackerOpen : class
 Equality type : BY_REFERENCE
 
 Rational : class
+Equality type : BY_VALUE
+
+SFSFibre : class
+Equality type : BY_VALUE
+
+SFSpace : class
 Equality type : BY_VALUE
 
 Script : class

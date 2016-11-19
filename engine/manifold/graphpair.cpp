@@ -111,7 +111,7 @@ AbelianGroup* GraphPair::homology() const {
             m.entry(1, all0 + i) = 2;
 
     // A relation for each exceptional fibre and obstruction constant:
-    NSFSFibre fibre;
+    SFSFibre fibre;
 
     for (f = 0; f < fibres0; f++) {
         fibre = sfs_[0]->fibre(f);
@@ -221,8 +221,8 @@ void GraphPair::reduce() {
 
     // Decide which of these possible representations gives the nicest
     // matching relation.
-    NSFSpace* use0 = 0;
-    NSFSpace* use1 = 0;
+    SFSpace* use0 = 0;
+    SFSpace* use1 = 0;
     Matrix2 useReln;
 
     Matrix2 tryReln;

@@ -38,14 +38,14 @@
 using namespace boost::python;
 using regina::GraphTriple;
 using regina::Matrix2;
-using regina::NSFSpace;
+using regina::SFSpace;
 
 namespace {
-    GraphTriple* createGraphTriple(const NSFSpace& s1,
-            const NSFSpace& s2, const NSFSpace& s3,
+    GraphTriple* createGraphTriple(const SFSpace& s1,
+            const SFSpace& s2, const SFSpace& s3,
             const Matrix2& m1, const Matrix2& m2) {
         return new GraphTriple(
-            new NSFSpace(s1), new NSFSpace(s2), new NSFSpace(s3), m1, m2);
+            new SFSpace(s1), new SFSpace(s2), new SFSpace(s3), m1, m2);
     }
 }
 

@@ -59,7 +59,7 @@ NPluggedTorusBundle::~NPluggedTorusBundle() {
 }
 
 Manifold* NPluggedTorusBundle::manifold() const {
-    NSFSpace* sfs = region_->createSFS(false);
+    SFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
     if (sfs->punctures() == 1) {

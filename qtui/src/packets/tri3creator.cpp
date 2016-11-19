@@ -433,7 +433,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         }
 
         // Build the Seifert fibred space.
-        regina::NSFSpace sfs;
+        regina::SFSpace sfs;
         long a, b;
         long d, u, v;
         long pos = 0;
