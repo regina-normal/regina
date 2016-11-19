@@ -34,6 +34,7 @@
 #include "algebra/grouppresentation.h"
 #include "algebra/markedabeliangroup.h"
 #include "maths/numbertheory.h"
+#include "progress/progresstracker.h"
 #include "triangulation/homologicaldata.h"
 #include "triangulation/dim3.h"
 
@@ -44,6 +45,7 @@
 #include "tri3algebra.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
+#include "../progressdialogs.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -483,21 +485,29 @@ void Tri3TuraevViroUI::calculateInvariant() {
 
     // Calculate the invariant!
     if (r % 2) {
-        calculateInvariant(r, true);
-        calculateInvariant(r, false);
+        if (calculateInvariant(r, true)) // Returns false if cancelled.
+            calculateInvariant(r, false);
     } else
         calculateInvariant(r, false);
 }
 
-void Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
+bool Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
     const auto& s = tri->allCalculatedTuraevViro();
     if (s.find(std::make_pair(r, parity)) != s.end()) {
         // Duplicate.
-        return;
+        return true;
     }
 
+    regina::ProgressTracker tracker;
+    ProgressDialogNumeric dlg(&tracker, tr("Computing invariant"), ui);
+    tri->turaevViro(r, parity, regina::TV_DEFAULT, &tracker);
+    if (! dlg.run())
+        return false;
+    dlg.hide();
+
+    // Now calling turaevViro() should be instantaneous.
     TuraevViroItem* item;
     if (unicode)
         item = new TuraevViroItem(r, parity,
@@ -513,9 +523,10 @@ void Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
         if (item->compare(dynamic_cast<TuraevViroItem*>(
                 invariants->invisibleRootItem()->child(i))) < 0) {
             invariants->insertTopLevelItem(i, item);
-            return;
+            return true;
         }
     invariants->addTopLevelItem(item);
+    return true;
 }
 
 void Tri3TuraevViroUI::updatePreferences() {

@@ -168,7 +168,7 @@ class Tri3TuraevViroUI : public QObject, public PacketViewerTab {
         void updatePreferences();
 
     private:
-        void calculateInvariant(unsigned long r, bool parity);
+        bool calculateInvariant(unsigned long r, bool parity);
 };
 
 /**
