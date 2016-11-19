@@ -32,7 +32,7 @@
 
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nlayeredloop.h"
 #include "triangulation/dim3.h"
 

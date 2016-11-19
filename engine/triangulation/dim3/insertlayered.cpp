@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "manifold/lensspace.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

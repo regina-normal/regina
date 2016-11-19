@@ -35,7 +35,7 @@
 #include <sstream>
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "subcomplex/nsatannulus.h"

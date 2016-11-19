@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "manifold/graphpair.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nblockedsfspair.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/nsatblockstarter.h"

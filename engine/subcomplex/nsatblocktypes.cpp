@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nsatblocktypes.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "triangulation/facepair.h"

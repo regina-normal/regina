@@ -33,7 +33,7 @@
 #include <boost/python.hpp>
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "../helpers.h"
 
 using namespace boost::python;

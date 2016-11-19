@@ -32,7 +32,7 @@
 
 #include "algebra/abeliangroup.h"
 #include "manifold/graphloop.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "maths/matrix.h"
 #include <cstdlib> // For labs().
 

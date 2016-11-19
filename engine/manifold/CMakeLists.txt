@@ -37,6 +37,7 @@ if (${REGINA_INSTALL_DEV})
     manifold.h
     nmanifold.h
     notation.h
+    sfs.h
     nsfs.h
     sfsaltset.h
     nsfsaltset.h

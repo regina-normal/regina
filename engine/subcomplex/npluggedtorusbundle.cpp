@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "manifold/graphloop.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"

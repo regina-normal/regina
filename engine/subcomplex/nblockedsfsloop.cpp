@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "manifold/graphloop.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nblockedsfsloop.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/nsatblockstarter.h"

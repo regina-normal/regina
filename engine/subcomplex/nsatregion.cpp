@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
 #include "triangulation/dim3.h"

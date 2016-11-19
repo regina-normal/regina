@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "triangulation/dim3.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 

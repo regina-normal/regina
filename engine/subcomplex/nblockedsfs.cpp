@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nsatblockstarter.h"

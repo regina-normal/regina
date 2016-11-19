@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "manifold/graphtriple.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "../helpers.h"
 
 using namespace boost::python;

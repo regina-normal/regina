@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "manifold/sfsaltset.h"
 
 namespace regina {

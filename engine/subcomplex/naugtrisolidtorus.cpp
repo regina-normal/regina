@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <utility>
 #include "algebra/abeliangroup.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
 #include "triangulation/dim3.h"

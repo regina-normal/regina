@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "maths/numbertheory.h"
 #include "split/nsignature.h"
 #include "triangulation/example3.h"

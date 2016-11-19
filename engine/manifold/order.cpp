@@ -34,7 +34,7 @@
 #include <manifold/graphpair.h>
 #include <manifold/graphtriple.h>
 #include <manifold/lensspace.h>
-#include <manifold/nsfs.h>
+#include <manifold/sfs.h>
 #include <manifold/ntorusbundle.h>
 
 namespace regina {

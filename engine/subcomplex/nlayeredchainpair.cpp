@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "maths/matrix.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "triangulation/dim3.h"

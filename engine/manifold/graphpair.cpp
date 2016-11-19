@@ -32,7 +32,7 @@
 
 #include "algebra/abeliangroup.h"
 #include "manifold/graphpair.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "manifold/sfsaltset.h"
 #include "maths/matrix.h"
 
