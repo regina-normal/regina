@@ -1529,9 +1529,6 @@ NTetrahedron : typedef ->  Simplex3
 
 NText : typedef ->  Text
 
-NTorusBundle : class
-Equality type : BY_REFERENCE
-
 NTreeBag : typedef ->  TreeBag
 
 NTreeDecomposition : typedef ->  TreeDecomposition
@@ -1814,6 +1811,9 @@ TetrahedronEmbedding8 : typedef ->  FaceEmbedding8_3
 TetrahedronEmbedding9 : typedef ->  FaceEmbedding9_3
 
 Text : class
+Equality type : BY_REFERENCE
+
+TorusBundle : class
 Equality type : BY_REFERENCE
 
 TreeBag : class

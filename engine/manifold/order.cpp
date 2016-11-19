@@ -65,8 +65,8 @@ bool Manifold::operator < (const Manifold& compare) const {
         return (*sfs1 < *sfs2);
 
     // Now for torus bundles.
-    const NTorusBundle* bundle1 = dynamic_cast<const NTorusBundle*>(this);
-    const NTorusBundle* bundle2 = dynamic_cast<const NTorusBundle*>(&compare);
+    const TorusBundle* bundle1 = dynamic_cast<const TorusBundle*>(this);
+    const TorusBundle* bundle2 = dynamic_cast<const TorusBundle*>(&compare);
 
     if (bundle1 && ! bundle2)
         return true;

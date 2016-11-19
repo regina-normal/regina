@@ -37,20 +37,20 @@
 
 using namespace boost::python;
 using regina::Matrix2;
-using regina::NTorusBundle;
+using regina::TorusBundle;
 
-void addNTorusBundle() {
-    class_<NTorusBundle, bases<regina::Manifold>,
-            std::auto_ptr<NTorusBundle> >("NTorusBundle")
+void addTorusBundle() {
+    class_<TorusBundle, bases<regina::Manifold>,
+            std::auto_ptr<TorusBundle> >("TorusBundle")
         .def(init<const Matrix2&>())
         .def(init<long, long, long, long>())
-        .def(init<const NTorusBundle&>())
-        .def("monodromy", &NTorusBundle::monodromy,
+        .def(init<const TorusBundle&>())
+        .def("monodromy", &TorusBundle::monodromy,
             return_internal_reference<>())
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NTorusBundle>,
+    implicitly_convertible<std::auto_ptr<TorusBundle>,
         std::auto_ptr<regina::Manifold> >();
 }
 

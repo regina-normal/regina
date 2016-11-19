@@ -39,7 +39,7 @@ void addLensSpace();
 void addSFSpace();
 void addSimpleSurfaceBundle();
 void addSnapPeaCensusManifold();
-void addNTorusBundle();
+void addTorusBundle();
 
 void addManifoldClasses() {
     addManifold();
@@ -48,7 +48,7 @@ void addManifoldClasses() {
     addSFSpace();
     addSimpleSurfaceBundle();
     addSnapPeaCensusManifold();
-    addNTorusBundle();
+    addTorusBundle();
     addGraphLoop();
     addGraphPair();
     addGraphTriple();
