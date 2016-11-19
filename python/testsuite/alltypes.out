@@ -1529,6 +1529,8 @@ NTetrahedron : typedef ->  Simplex3
 
 NText : typedef ->  Text
 
+NTorusBundle : typedef ->  TorusBundle
+
 NTreeBag : typedef ->  TreeBag
 
 NTreeDecomposition : typedef ->  TreeDecomposition

@@ -52,5 +52,7 @@ void addTorusBundle() {
 
     implicitly_convertible<std::auto_ptr<TorusBundle>,
         std::auto_ptr<regina::Manifold> >();
+
+    scope().attr("NTorusBundle") = scope().attr("TorusBundle");
 }
 

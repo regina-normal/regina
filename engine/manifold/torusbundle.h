@@ -211,6 +211,15 @@ class REGINA_API TorusBundle : public Manifold {
         static bool simplerNonNeg(const Matrix2& m1, const Matrix2& m2);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NTorusBundle has now been renamed to
+ * TorusBundle.
+ */
+REGINA_DEPRECATED typedef TorusBundle NTorusBundle;
+
 /*@}*/
 
 // Inline functions for TorusBundle
