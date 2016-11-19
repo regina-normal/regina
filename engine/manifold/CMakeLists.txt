@@ -9,7 +9,7 @@ SET ( FILES
   lensspace
   manifold
   nsfs
-  nsfsaltset
+  sfsaltset
   nsimplesurfacebundle
   nsnappeacensusmfd
   ntorusbundle
