@@ -69,15 +69,20 @@ bool ProgressDialogNumeric::run() {
     setMaximum(SLICES);
     bool stillRunning = true;
     while (! tracker_->isFinished()) {
-        if (stillRunning && wasCanceled()) {
-            stillRunning = false;
-            tracker_->cancel();
+        if (stillRunning) {
+            if (wasCanceled()) {
+                stillRunning = false;
+                tracker_->cancel();
+                // The dialog should be hidden now, so there is no point
+                // updating descriptions / percentages from here on.
+            } else {
+                if (tracker_->percentChanged())
+                    setValue(tracker_->percent() * (SLICES / 100));
+                if (tracker_->descriptionChanged())
+                    setLabelText(tracker_->description().c_str());
+            }
+            QCoreApplication::instance()->processEvents();
         }
-        if (tracker_->percentChanged())
-            setValue(tracker_->percent() * (SLICES / 100));
-        if (tracker_->descriptionChanged())
-            setLabelText(tracker_->description().c_str());
-        QCoreApplication::instance()->processEvents();
         QThread::usleep(250);
     }
 
