@@ -103,7 +103,7 @@ class NSFSpace;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSFSAltSet {
+class REGINA_API SFSAltSet {
     private:
         unsigned size_;
             /**< The number of alternative spaces in this set. */
@@ -131,7 +131,7 @@ class REGINA_API NSFSAltSet {
          * @param sfs the original Seifert fibred space for which we are
          * creating a set of alternative representations.
          */
-        NSFSAltSet(const NSFSpace* sfs);
+        SFSAltSet(const NSFSpace* sfs);
 
         /**
          * Destroys all of the alternative representations in this set.
@@ -192,7 +192,7 @@ class REGINA_API NSFSAltSet {
          * space.  This matrix describes the fibre and base curves of
          * the alternative space on the first boundary torus in terms of
          * the fibre and base curves of the original space (which was
-         * passed to the NSFSAltSet constructor).  See the class notes
+         * passed to the SFSAltSet constructor).  See the class notes
          * above for details.
          *
          * Note that this conversion matrix applies \e only to the first
@@ -235,21 +235,21 @@ class REGINA_API NSFSAltSet {
 
 /*@}*/
 
-// Inline functions for NSFSAltSet
+// Inline functions for SFSAltSet
 
-inline unsigned NSFSAltSet::size() const {
+inline unsigned SFSAltSet::size() const {
     return size_;
 }
 
-inline NSFSpace* NSFSAltSet::operator [] (unsigned which) const {
+inline NSFSpace* SFSAltSet::operator [] (unsigned which) const {
     return data_[which];
 }
 
-inline const Matrix2& NSFSAltSet::conversion(unsigned which) const {
+inline const Matrix2& SFSAltSet::conversion(unsigned which) const {
     return conversion_[which];
 }
 
-inline bool NSFSAltSet::reflected(unsigned which) const {
+inline bool SFSAltSet::reflected(unsigned which) const {
     return reflected_[which];
 }
 

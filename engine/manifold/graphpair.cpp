@@ -213,8 +213,8 @@ void GraphPair::reduce() {
 
     // Simplify each space and build a list of possible reflections and
     // other representations that we wish to experiment with using.
-    NSFSAltSet alt0(sfs_[0]);
-    NSFSAltSet alt1(sfs_[1]);
+    SFSAltSet alt0(sfs_[0]);
+    SFSAltSet alt1(sfs_[1]);
 
     delete sfs_[0];
     delete sfs_[1];

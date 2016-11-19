@@ -257,9 +257,9 @@ void GraphTriple::reduce() {
 
     // Simplify each space and build a list of possible reflections and
     // other representations that we wish to experiment with using.
-    NSFSAltSet alt0(end_[0]);
-    NSFSAltSet alt1(end_[1]);
-    NSFSAltSet altCentre(centre_);
+    SFSAltSet alt0(end_[0]);
+    SFSAltSet alt1(end_[1]);
+    SFSAltSet altCentre(centre_);
 
     delete end_[0];
     delete end_[1];

@@ -35,7 +35,7 @@
 
 namespace regina {
 
-NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
+SFSAltSet::SFSAltSet(const NSFSpace* sfs) {
     /**
      * Note that whenever we add a (1,1) twist, we compensate by setting
      * row 2 -> row 2 + row 1 in our conversion matrix.
@@ -131,18 +131,18 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
     }
 }
 
-void NSFSAltSet::deleteAll() {
+void SFSAltSet::deleteAll() {
     for (unsigned i = 0; i < size_; i++)
         delete data_[i];
 }
 
-void NSFSAltSet::deleteAll(NSFSpace* exception) {
+void SFSAltSet::deleteAll(NSFSpace* exception) {
     for (unsigned i = 0; i < size_; i++)
         if (data_[i] != exception)
             delete data_[i];
 }
 
-void NSFSAltSet::deleteAll(NSFSpace* exception1, NSFSpace* exception2) {
+void SFSAltSet::deleteAll(NSFSpace* exception1, NSFSpace* exception2) {
     for (unsigned i = 0; i < size_; i++)
         if (data_[i] != exception1 && data_[i] != exception2)
             delete data_[i];
