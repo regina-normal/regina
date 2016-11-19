@@ -233,6 +233,15 @@ class REGINA_API SFSAltSet {
         bool reflected(unsigned which) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSFSAltSet has now been renamed to
+ * SFSAltSet.
+ */
+REGINA_DEPRECATED typedef SFSAltSet NSFSAltSet;
+
 /*@}*/
 
 // Inline functions for SFSAltSet
