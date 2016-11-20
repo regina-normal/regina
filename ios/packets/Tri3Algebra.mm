@@ -35,7 +35,9 @@
 #import "TextPopover.h"
 #import "Tri3ViewController.h"
 #import "Tri3Algebra.h"
+#import "MBProgressHUD.h"
 #import "maths/numbertheory.h"
+#import "progress/progresstracker.h"
 #import "triangulation/dim3.h"
 #import "utilities/stringutils.h"
 
@@ -90,6 +92,7 @@
 @interface Tri3Algebra () <UITableViewDataSource> {
     int r;
     NSMutableArray* computed;
+    regina::ProgressTracker* tvTracker; // for cancellation
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
@@ -108,6 +111,8 @@
 
 @property (strong, nonatomic) Tri3ViewController* viewer;
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
+
+@property (strong, nonatomic) NSLock* tvLock; // locks the tvTracker _pointer_, not the tracker itself.
 @end
 
 @implementation Tri3Algebra
@@ -295,49 +300,110 @@
     }
 
     // Calculate the invariant!
-    [self calculateTV];
+    [self calculateTVWithParity:(r % 2)];
 }
 
-// This may be called from either the main queue or a background thread.
-- (void)calculateTV
+- (IBAction)tvCancel:(id)sender
 {
-    NSMutableArray<NSIndexPath*>* paths = [[NSMutableArray alloc] init];
-    NSIndexPath* path;
-    if (r % 2) {
-        if ((path = [self calculateTVWithParity:true]))
-            [paths addObject:path];
-        if ((path = [self calculateTVWithParity:false]))
-            [paths addObject:path];
-    } else {
-        if ((path = [self calculateTVWithParity:false]))
-            [paths addObject:path];
-    }
+    // Cancel the Turaev-Viro computation, if one is running.
 
-    // The table needs to be updated in the main queue.
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tvValues insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationRight];
-    });
+    // Note: the lock is created before the HUD (and the HUD calls this routine),
+    // so by the time this routine is called, we are guaranteed that self.tvLock
+    // is non-nil.
+
+    [self.tvLock lock];
+    if (self->tvTracker)
+        self->tvTracker->cancel();
+    [self.tvLock unlock];
 }
 
 // This must only be called by calculateTV.
-- (NSIndexPath*)calculateTVWithParity:(bool)parity
+// For odd r, the parity=true version of this method calls the parity=false version.
+- (void)calculateTVWithParity:(bool)parity
 {
     const auto& s = self.packet->allCalculatedTuraevViro();
     if (s.find(std::make_pair(r, parity)) != s.end()) {
-        // Duplicate.
-        return nil;
+        // This has already been computed.
+        // Move on to the next invariant (if any).
+        if ((r % 2) && parity)
+            [self calculateTVWithParity:false];
+        return;
     }
 
-    NSString* value = @(self.packet->turaevViro(r, parity).utf8("\u03B6" /* small zeta */).c_str());
-    TVItem* item = [TVItem itemWithValue:value r:r parity:parity];
+    if (! self.tvLock)
+        self.tvLock = [[NSLock alloc] init];
 
-    NSUInteger index = [computed indexOfObject:item
-                                 inSortedRange:NSMakeRange(0, computed.count)
-                                       options:NSBinarySearchingInsertionIndex
-                               usingComparator:^(TVItem* x, TVItem* y) { return [x compare:y]; }];
-    [computed insertObject:item atIndex:index];
+    // Run the computation within a HUD.
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
 
-    return [NSIndexPath indexPathForRow:index inSection:0];
+    UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
+    hud.label.text = @"Computing invariant…";
+    hud.mode = MBProgressHUDModeDeterminateHorizontalBar;
+    hud.progress = 0;
+
+    [hud.button setTitle:@"Cancel" forState:UIControlStateNormal];
+    [hud.button addTarget:self action:@selector(tvCancel:) forControlEvents:UIControlEventTouchUpInside];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        regina::ProgressTracker* tracker = new regina::ProgressTracker();
+        bool cancelled = false;
+
+        [self.tvLock lock];
+        self->tvTracker = tracker;
+        [self.tvLock unlock];
+
+        self.packet->turaevViro(r, parity, regina::TV_DEFAULT, tracker);
+
+        NSString* desc;
+        float progress;
+        while (! tracker->isFinished()) {
+            if (tracker->descriptionChanged()) {
+                desc = [NSString stringWithUTF8String:tracker->description().c_str()];
+                progress = tracker->percent() / 100;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    hud.detailsLabel.text = desc;
+                    hud.progress = progress;
+                });
+            } else if (tracker->percentChanged()) {
+                progress = tracker->percent() / 100;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    hud.progress = progress;
+                });
+            }
+            usleep(250000);
+        }
+        [self.tvLock lock];
+        self->tvTracker = nullptr;
+        [self.tvLock unlock];
+
+        cancelled = tracker->isCancelled();
+        delete tracker;
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud hideAnimated:NO];
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
+
+            if (! cancelled) {
+                // Now the call to turaevViro() should be instantaneous.
+                NSString* value = @(self.packet->turaevViro(r, parity).utf8("\u03B6" /* small zeta */).c_str());
+                TVItem* item = [TVItem itemWithValue:value r:r parity:parity];
+
+                NSUInteger index = [computed indexOfObject:item
+                                             inSortedRange:NSMakeRange(0, computed.count)
+                                                   options:NSBinarySearchingInsertionIndex
+                                           usingComparator:^(TVItem* x, TVItem* y) { return [x compare:y]; }];
+                [computed insertObject:item atIndex:index];
+                
+                [self.tvValues insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
+                                     withRowAnimation:UITableViewRowAnimationRight];
+
+                // Go on and calculate the next invariant (if any).
+                if ((r % 2) && parity)
+                    [self calculateTVWithParity:false];
+            }
+        });
+    });
 }
 
 - (IBAction)tvDetail:(id)sender {
