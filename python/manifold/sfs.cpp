@@ -69,60 +69,57 @@ void addSFSpace() {
         .def(regina::python::add_eq_operators())
     ;
 
-    scope().attr("NSFSFibre") = scope().attr("SFSFibre");
+    class_<SFSpace, bases<regina::Manifold>,
+            std::auto_ptr<SFSpace> >("SFSpace")
+        .def(init<SFSpace::classType, unsigned long,
+            optional<unsigned long, unsigned long,
+            unsigned long, unsigned long> >())
+        .def(init<const SFSpace&>())
+        .def("baseClass", &SFSpace::baseClass)
+        .def("baseGenus", &SFSpace::baseGenus)
+        .def("baseOrientable", &SFSpace::baseOrientable)
+        .def("fibreReversing", &SFSpace::fibreReversing)
+        .def("fibreNegating", &SFSpace::fibreNegating)
+        .def("punctures", punctures_void)
+        .def("punctures", punctures_bool)
+        .def("reflectors", reflectors_void)
+        .def("reflectors", reflectors_bool)
+        .def("fibreCount", &SFSpace::fibreCount)
+        .def("fibre", &SFSpace::fibre)
+        .def("obstruction", &SFSpace::obstruction)
+        .def("addHandle", &SFSpace::addHandle, OL_addHandle())
+        .def("addCrosscap", &SFSpace::addCrosscap, OL_addCrosscap())
+        .def("addPuncture", &SFSpace::addPuncture, OL_addPuncture())
+        .def("addReflector", &SFSpace::addReflector, OL_addReflector())
+        .def("insertFibre", insertFibre_fibre)
+        .def("insertFibre", insertFibre_longs)
+        .def("reflect", &SFSpace::reflect)
+        .def("complementAllFibres", &SFSpace::complementAllFibres)
+        .def("reduce", &SFSpace::reduce, OL_reduce())
+        .def("isLensSpace", &SFSpace::isLensSpace,
+            return_value_policy<manage_new_object>())
+        .def(self < self)
+        .def(regina::python::add_eq_operators())
+    ;
 
-    {
-        scope s = class_<SFSpace, bases<regina::Manifold>,
-                std::auto_ptr<SFSpace> >("SFSpace")
-            .def(init<SFSpace::classType, unsigned long,
-                optional<unsigned long, unsigned long,
-                unsigned long, unsigned long> >())
-            .def(init<const SFSpace&>())
-            .def("baseClass", &SFSpace::baseClass)
-            .def("baseGenus", &SFSpace::baseGenus)
-            .def("baseOrientable", &SFSpace::baseOrientable)
-            .def("fibreReversing", &SFSpace::fibreReversing)
-            .def("fibreNegating", &SFSpace::fibreNegating)
-            .def("punctures", punctures_void)
-            .def("punctures", punctures_bool)
-            .def("reflectors", reflectors_void)
-            .def("reflectors", reflectors_bool)
-            .def("fibreCount", &SFSpace::fibreCount)
-            .def("fibre", &SFSpace::fibre)
-            .def("obstruction", &SFSpace::obstruction)
-            .def("addHandle", &SFSpace::addHandle, OL_addHandle())
-            .def("addCrosscap", &SFSpace::addCrosscap, OL_addCrosscap())
-            .def("addPuncture", &SFSpace::addPuncture, OL_addPuncture())
-            .def("addReflector", &SFSpace::addReflector, OL_addReflector())
-            .def("insertFibre", insertFibre_fibre)
-            .def("insertFibre", insertFibre_longs)
-            .def("reflect", &SFSpace::reflect)
-            .def("complementAllFibres", &SFSpace::complementAllFibres)
-            .def("reduce", &SFSpace::reduce, OL_reduce())
-            .def("isLensSpace", &SFSpace::isLensSpace,
-                return_value_policy<manage_new_object>())
-            .def(self < self)
-            .def(regina::python::add_eq_operators())
+    enum_<SFSpace::classType>("classType")
+        .value("o1", SFSpace::o1)
+        .value("o2", SFSpace::o2)
+        .value("n1", SFSpace::n1)
+        .value("n2", SFSpace::n2)
+        .value("n3", SFSpace::n3)
+        .value("n4", SFSpace::n4)
+        .value("bo1", SFSpace::bo1)
+        .value("bo2", SFSpace::bo2)
+        .value("bn1", SFSpace::bn1)
+        .value("bn2", SFSpace::bn2)
+        .value("bn3", SFSpace::bn3)
         ;
 
-        enum_<SFSpace::classType>("classType")
-            .value("o1", SFSpace::o1)
-            .value("o2", SFSpace::o2)
-            .value("n1", SFSpace::n1)
-            .value("n2", SFSpace::n2)
-            .value("n3", SFSpace::n3)
-            .value("n4", SFSpace::n4)
-            .value("bo1", SFSpace::bo1)
-            .value("bo2", SFSpace::bo2)
-            .value("bn1", SFSpace::bn1)
-            .value("bn2", SFSpace::bn2)
-            .value("bn3", SFSpace::bn3)
-            ;
+    implicitly_convertible<std::auto_ptr<SFSpace>,
+        std::auto_ptr<regina::Manifold> >();
 
-        implicitly_convertible<std::auto_ptr<SFSpace>,
-            std::auto_ptr<regina::Manifold> >();
-    }
-
+    scope().attr("NSFSFibre") = scope().attr("SFSFibre");
     scope().attr("NSFSpace") = scope().attr("SFSpace");
 }
 
