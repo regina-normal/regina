@@ -40,9 +40,6 @@
 #import "utilities/stringutils.h"
 
 // TODO: Turaev-Viro: reduce size of the label in the "Left Detail" table cells?
-// TODO: Turaev-Viro calculation: "wait" not working
-
-#define TV_WARN_LARGE_R 15
 
 @interface TVItem : NSObject
 
@@ -294,34 +291,6 @@
                                               cancelButtonTitle:@"Close"
                                               otherButtonTitles:nil];
         [alert show];
-        return;
-    }
-
-    if (r >= TV_WARN_LARGE_R) {
-        // Hide the keyboard now.  This avoids an uncomfortable sequence
-        // of hide-show-hide.
-        [self.tvArgs resignFirstResponder];
-
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Long Calculation Ahead"
-                                                                       message:@"Turaev-Viro invariants require exponential time to compute, and you have chosen a large value of r.  Are you sure you wish to proceed?"
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-
-        UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                         style:UIAlertActionStyleCancel
-                                                       handler:^(UIAlertAction* action) {}];
-        UIAlertAction* compute = [UIAlertAction actionWithTitle:@"Compute"
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction* action) {
-                                                            // Compute the invariant!
-                                                            [ReginaHelper runWithHUD:@"Calculating…"
-                                                                                code:^{
-                                                                                    [self calculateTV];
-                                                                                }
-                                                                             cleanup:nil];
-                                                        }];
-        [alert addAction:cancel];
-        [alert addAction:compute];
-        [self presentViewController:alert animated:YES completion:nil];
         return;
     }
 

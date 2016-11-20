@@ -70,12 +70,6 @@ using regina::Triangulation;
 
 namespace {
     /**
-     * How large does r have to be before we start warning the user about
-     * Turaev-Viro computation time?
-     */
-    const unsigned long TV_WARN_LARGE_R = 15;
-
-    /**
      * A list view item for storing a single Turaev-Viro invariant.
      *
      * These list view items are sorted numerically and drawn with a
@@ -464,23 +458,6 @@ void Tri3TuraevViroUI::calculateInvariant() {
         ReginaSupport::info(ui,
             tr("<qt>The argument <i>r</i> must be at least 3.</qt>"));
         return;
-    }
-
-    if (r >= TV_WARN_LARGE_R) {
-        QMessageBox msg(QMessageBox::Warning,
-            tr("Warning"),
-            tr("This calculation could take a very long time."),
-            QMessageBox::Yes | QMessageBox::Cancel,
-            ui);
-        msg.setInformativeText(tr("<qt>The time required "
-                "to calculate Turaev-Viro invariants grows exponentially "
-                "with <i>r</i>.  It is recommended only to use "
-                "r&nbsp;&lt;&nbsp;%1.<p>"
-                "Are you sure you wish to "
-                "proceed?</qt>").arg(TV_WARN_LARGE_R)),
-        msg.setDefaultButton(QMessageBox::Yes);
-        if (msg.exec() != QMessageBox::Yes)
-            return;
     }
 
     // Calculate the invariant!
