@@ -1255,11 +1255,12 @@ namespace {
         if (tracker && tracker->isCancelled()) {
             // We don't know which elements of partial[] have been
             // deallocated, so check them all.
-            for (i = 0; i < nBags; ++i) {
-                for (auto& soln : *(partial[i]))
-                    delete soln.first;
-                delete partial[i];
-            }
+            for (i = 0; i < nBags; ++i)
+                if (partial[i]) {
+                    for (auto& soln : *(partial[i]))
+                        delete soln.first;
+                    delete partial[i];
+                }
             delete[] partial;
 
             return TuraevViroDetails<exact>::zero();
