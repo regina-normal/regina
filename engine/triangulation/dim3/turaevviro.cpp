@@ -948,7 +948,9 @@ namespace {
                 if (tracker) {
                     if (tracker->isCancelled())
                         break;
-                    tracker->newStage("Processing leaf bag",
+                    tracker->newStage(
+                        "Processing leaf bag (" + std::to_string(index) +
+                            '/' + std::to_string(nBags) + ')',
                         0.05 / nEasyBags);
                 }
 
@@ -964,7 +966,9 @@ namespace {
                 if (tracker) {
                     if (tracker->isCancelled())
                         break;
-                    tracker->newStage("Processing introduce bag",
+                    tracker->newStage(
+                        "Processing introduce bag (" + std::to_string(index) +
+                            '/' + std::to_string(nBags) + ')',
                         0.05 / nEasyBags);
                 }
 
@@ -976,7 +980,9 @@ namespace {
                 if (tracker) {
                     if (tracker->isCancelled())
                         break;
-                    tracker->newStage("Processing forget bag",
+                    tracker->newStage(
+                        "Processing forget bag (" + std::to_string(index) +
+                            '/' + std::to_string(nBags) + ')',
                         0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
                 }
 
@@ -1112,7 +1118,9 @@ namespace {
                 if (tracker) {
                     if (tracker->isCancelled())
                         break;
-                    tracker->newStage("Processing join bag",
+                    tracker->newStage(
+                        "Processing join bag (" + std::to_string(index) +
+                            '/' + std::to_string(nBags) + ')',
                         0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
                 }
 
