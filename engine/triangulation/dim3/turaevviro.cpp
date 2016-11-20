@@ -835,6 +835,7 @@ namespace {
 
         if (tracker)
             tracker->newStage("Building tree decomposition", 0.03);
+
         const TreeDecomposition& d = tri.niceTreeDecomposition();
 
         int nEdges = tri.countEdges();
@@ -847,8 +848,11 @@ namespace {
         const Tetrahedron<3>* tet;
         const Edge<3>* edge;
 
-        if (tracker)
+        if (tracker) {
+            if (tracker->isCancelled())
+                return TuraevViroDetails<exact>::zero();
             tracker->newStage("Analysing bags", 0.01);
+        }
 
         // In the seenDegree[] array, an edge that has been seen in all
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as
@@ -905,8 +909,10 @@ namespace {
         typedef typename SolnSet::iterator SolnIterator;
 
         SolnSet** partial = new SolnSet*[nBags];
+        std::fill(partial, partial + nBags, nullptr);
+
         LightweightSequence<int>* seq;
-        SolnIterator it, it2;
+        SolnIterator it;
         std::pair<SolnIterator, bool> existingSoln;
         int tetEdge[6];
         int colour[6];
@@ -920,6 +926,7 @@ namespace {
         size_t nLeft, nRight;
         SolnIterator *subit, *subit2;
         std::pair<SolnIterator*, SolnIterator*> subrange, subrange2;
+        double increment, percent;
 
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
@@ -938,9 +945,12 @@ namespace {
             index = bag->index();
 
             if (bag->isLeaf()) {
-                if (tracker)
+                if (tracker) {
+                    if (tracker->isCancelled())
+                        break;
                     tracker->newStage("Processing leaf bag",
                         0.05 / nEasyBags);
+                }
 
                 // A single empty colouring.
                 seq = new LightweightSequence<int>(nEdges);
@@ -951,18 +961,24 @@ namespace {
                 partial[index]->insert(std::make_pair(seq, val));
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
-                if (tracker)
+                if (tracker) {
+                    if (tracker->isCancelled())
+                        break;
                     tracker->newStage("Processing introduce bag",
                         0.05 / nEasyBags);
+                }
 
                 child = bag->children();
                 partial[index] = partial[child->index()];
                 partial[child->index()] = 0;
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
-                if (tracker)
+                if (tracker) {
+                    if (tracker->isCancelled())
+                        break;
                     tracker->newStage("Processing forget bag",
                         0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+                }
 
                 child = bag->children();
                 tet = tri.tetrahedron(child->element(bag->subtype()));
@@ -987,8 +1003,16 @@ namespace {
 
                 partial[index] = new SolnSet;
 
+                increment = 100.0 / partial[child->index()]->size();
+                percent = 0;
+
                 for (it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it) {
+                    if (tracker) {
+                        percent += increment;
+                        if (! tracker->setPercent(percent))
+                            break;
+                    }
                     for (i = 0; i < 6; ++i)
                         colour[i] = (choiceType[i] < 0 ?
                             (*(it->first))[tetEdge[i]] : -1);
@@ -1079,16 +1103,18 @@ namespace {
                     }
                 }
 
-                for (it = partial[child->index()]->begin();
-                        it != partial[child->index()]->end(); ++it)
-                    delete it->first;
+                for (auto& soln : *(partial[child->index()]))
+                    delete soln.first;
                 delete partial[child->index()];
                 partial[child->index()] = 0;
             } else {
                 // Join bag.
-                if (tracker)
+                if (tracker) {
+                    if (tracker->isCancelled())
+                        break;
                     tracker->newStage("Processing join bag",
                         0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+                }
 
                 partial[index] = new SolnSet;
 
@@ -1104,12 +1130,18 @@ namespace {
                 LightweightSequence<int>::SubsequenceCompareFirstPtr<
                     SolnIterator> compare(nOverlap, overlap);
 
+                if (tracker && tracker->isCancelled())
+                    break;
+
                 nLeft = 0;
                 leftIndexed = new SolnIterator[partial[child->index()]->size()];
                 for (it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
                     leftIndexed[nLeft++] = it;
                 std::sort(leftIndexed, leftIndexed + nLeft, compare);
+
+                if (tracker && tracker->isCancelled())
+                    break;
 
                 nRight = 0;
                 rightIndexed = new SolnIterator[
@@ -1124,6 +1156,15 @@ namespace {
 
                 while (subrange.second != leftIndexed + nLeft &&
                         subrange2.second != rightIndexed + nRight) {
+                    if (tracker) {
+                        percent = 100.0 * (
+                            (subrange.second - leftIndexed) +
+                            (subrange2.second - rightIndexed)) /
+                            (nLeft + nRight);
+                        if (! tracker->setPercent(percent))
+                            break;
+                    }
+
                     subrange.first = subrange.second;
                     while (subrange.second != leftIndexed + nLeft &&
                             compare.equal(*subrange.first, *subrange.second))
@@ -1175,15 +1216,13 @@ namespace {
                 delete[] leftIndexed;
                 delete[] rightIndexed;
 
-                for (it2 = partial[child->index()]->begin();
-                        it2 != partial[child->index()]->end(); ++it2)
-                    delete it2->first;
+                for (auto& soln : *(partial[child->index()]))
+                    delete soln.first;
                 delete partial[child->index()];
                 partial[child->index()] = 0;
 
-                for (it2 = partial[sibling->index()]->begin();
-                        it2 != partial[sibling->index()]->end(); ++it2)
-                    delete it2->first;
+                for (auto& soln : *(partial[sibling->index()]))
+                    delete soln.first;
                 delete partial[sibling->index()];
                 partial[sibling->index()] = 0;
             }
@@ -1197,25 +1236,41 @@ namespace {
 #endif
         }
 
-        if (tracker)
-            tracker->newStage("Cleaning up", 0.01);
-
-        // The final bag contains no tetrahedra, and so there should be
-        // only one colouring stored (in which all edge colours are aggregated).
-        TVType ans = partial[nBags - 1]->begin()->second;
-        for (i = 0; i < tri.countVertices(); i++)
-            ans *= init.vertexContrib;
-
-        for (it = partial[nBags - 1]->begin(); it != partial[nBags - 1]->end();
-                ++it)
-            delete it->first;
-        delete partial[nBags - 1];
-        partial[nBags - 1] = 0;
+        // Clean up.
+        // Unfortunately, if we have cancelled mid-calculation, the
+        // cleanup could be significant.
+        // If we made it to the end, then the cleanup is O(1).
 
         delete[] seenDegree;
-        delete[] partial;
         delete[] overlap;
 
+        if (tracker && tracker->isCancelled()) {
+            // We don't know which elements of partial[] have been
+            // deallocated, so check them all.
+            for (i = 0; i < nBags; ++i) {
+                for (auto& soln : *(partial[i]))
+                    delete soln.first;
+                delete partial[i];
+            }
+            delete[] partial;
+
+            return TuraevViroDetails<exact>::zero();
+        }
+
+        // We made it to the end.
+        // All elements of partial[] except the last should have already
+        // been deallocated (during the processing of their parent bags).
+        // The final bag contains no tetrahedra, and so it should have
+        // only one colouring stored (in which all edge colours are aggregated).
+        TVType ans = partial[nBags - 1]->begin()->second;
+
+        for (auto& soln : *(partial[nBags - 1]))
+            delete soln.first;
+        delete partial[nBags - 1];
+        delete[] partial;
+
+        for (i = 0; i < tri.countVertices(); i++)
+            ans *= init.vertexContrib;
         return ans;
     }
 

@@ -194,6 +194,8 @@ Version 5.1  [ (under development) ]
         Class Triangulation<3>:
             - Routine retriangulate() now allows its action argument to
               change the triangulation that is passed to it.
+            - Routine turaevViro() now takes a progress tracker, and
+              allows cancellation.
         Typedef UseDim2GluingPerms, UseGluingPerms, UseDim4GluingPerms:
             - Renamed to GluingPermSearcher<2,3,4>::Use.  The old names are
               kept but deprecated.
