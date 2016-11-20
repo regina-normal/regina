@@ -86,7 +86,7 @@ Triangulation<dim-1>*
 
     // Run through the (dim-1)-simplices and make all the face gluings.
     int facetOfSimp;
-    Simplex<dim-1> *simpBdry, *adjBdry;
+    Simplex<dim-1>* simpBdry;
     Face<dim, dim-1>* adjOuter;
     Face<dim, dim-2>* ridgeOuter;
     for (Face<dim, dim-1>* simpOuter : allFacets) {
