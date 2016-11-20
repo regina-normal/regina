@@ -213,7 +213,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          */
         static NLayeredTorusBundle* isLayeredTorusBundle(Triangulation<3>* tri);
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

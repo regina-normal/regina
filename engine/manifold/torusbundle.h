@@ -30,17 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file manifold/ntorusbundle.h
+/*! \file manifold/torusbundle.h
  *  \brief Deals with torus bundles over the circle.
  */
 
-#ifndef __NTORUSBUNDLE_H
+#ifndef __TORUSBUNDLE_H
 #ifndef __DOXYGEN
-#define __NTORUSBUNDLE_H
+#define __TORUSBUNDLE_H
 #endif
 
 #include "regina-core.h"
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "maths/matrix2.h"
 
 namespace regina {
@@ -68,13 +68,13 @@ namespace regina {
  *     [b]       [q]
  * </pre>
  *
- * All optional NManifold routines except for construct() are implemented
+ * All optional Manifold routines except for construct() are implemented
  * for this class.
  *
  * \todo \feature Implement the == operator for finding conjugate and
  * inverse matrices.
  */
-class REGINA_API NTorusBundle : public NManifold {
+class REGINA_API TorusBundle : public Manifold {
     private:
         Matrix2 monodromy_;
             /**< The monodromy describing how the two torus boundaries
@@ -86,7 +86,7 @@ class REGINA_API NTorusBundle : public NManifold {
          * In other words, this routine creates a torus bundle with the
          * identity monodromy.
          */
-        NTorusBundle();
+        TorusBundle();
         /**
          * Creates a new torus bundle over the circle using the given
          * monodromy.
@@ -96,7 +96,7 @@ class REGINA_API NTorusBundle : public NManifold {
          * @param newMonodromy describes precisely how the upper and lower
          * torus boundaries are identified.  See the class notes for details.
          */
-        NTorusBundle(const Matrix2& newMonodromy);
+        TorusBundle(const Matrix2& newMonodromy);
         /**
          * Creates a new torus bundle over the circle using the given
          * monodromy.  The four elements of the monodromy matrix are
@@ -117,13 +117,13 @@ class REGINA_API NTorusBundle : public NManifold {
          * @param mon10 the (1,0) element of the monodromy matrix.
          * @param mon11 the (1,1) element of the monodromy matrix.
          */
-        NTorusBundle(long mon00, long mon01, long mon10, long mon11);
+        TorusBundle(long mon00, long mon01, long mon10, long mon11);
         /**
          * Creates a clone of the given torus bundle.
          *
          * @param cloneMe the torus bundle to clone.
          */
-        NTorusBundle(const NTorusBundle& cloneMe);
+        TorusBundle(const TorusBundle& cloneMe);
         /**
          * Returns the monodromy describing how the upper and lower
          * torus boundaries are identified.  See the class notes for
@@ -211,33 +211,42 @@ class REGINA_API NTorusBundle : public NManifold {
         static bool simplerNonNeg(const Matrix2& m1, const Matrix2& m2);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NTorusBundle has now been renamed to
+ * TorusBundle.
+ */
+REGINA_DEPRECATED typedef TorusBundle NTorusBundle;
+
 /*@}*/
 
-// Inline functions for NTorusBundle
+// Inline functions for TorusBundle
 
-inline NTorusBundle::NTorusBundle() :
+inline TorusBundle::TorusBundle() :
         monodromy_(1, 0, 0, 1) {
 }
 
-inline NTorusBundle::NTorusBundle(const Matrix2& newMonodromy) :
+inline TorusBundle::TorusBundle(const Matrix2& newMonodromy) :
         monodromy_(newMonodromy) {
     reduce();
 }
 
-inline NTorusBundle::NTorusBundle(long mon00, long mon01, long mon10,
+inline TorusBundle::TorusBundle(long mon00, long mon01, long mon10,
         long mon11) : monodromy_(mon00, mon01, mon10, mon11) {
     reduce();
 }
 
-inline NTorusBundle::NTorusBundle(const NTorusBundle& cloneMe) :
-        NManifold(), monodromy_(cloneMe.monodromy_) {
+inline TorusBundle::TorusBundle(const TorusBundle& cloneMe) :
+        Manifold(), monodromy_(cloneMe.monodromy_) {
 }
 
-inline const Matrix2& NTorusBundle::monodromy() const {
+inline const Matrix2& TorusBundle::monodromy() const {
     return monodromy_;
 }
 
-inline void NTorusBundle::rotate() {
+inline void TorusBundle::rotate() {
     long x = monodromy_[0][0];
     monodromy_[0][0] = monodromy_[1][1];
     monodromy_[1][1] = x;
@@ -247,35 +256,35 @@ inline void NTorusBundle::rotate() {
     monodromy_[1][0] = x;
 }
 
-inline void NTorusBundle::addRCDown() {
+inline void TorusBundle::addRCDown() {
     monodromy_[1][0] += monodromy_[0][0];
     monodromy_[1][1] += monodromy_[0][1];
     monodromy_[0][0] -= monodromy_[0][1];
     monodromy_[1][0] -= monodromy_[1][1];
 }
 
-inline void NTorusBundle::subtractRCDown() {
+inline void TorusBundle::subtractRCDown() {
     monodromy_[1][0] -= monodromy_[0][0];
     monodromy_[1][1] -= monodromy_[0][1];
     monodromy_[0][0] += monodromy_[0][1];
     monodromy_[1][0] += monodromy_[1][1];
 }
 
-inline void NTorusBundle::addRCUp() {
+inline void TorusBundle::addRCUp() {
     monodromy_[0][0] += monodromy_[1][0];
     monodromy_[0][1] += monodromy_[1][1];
     monodromy_[0][1] -= monodromy_[0][0];
     monodromy_[1][1] -= monodromy_[1][0];
 }
 
-inline void NTorusBundle::subtractRCUp() {
+inline void TorusBundle::subtractRCUp() {
     monodromy_[0][0] -= monodromy_[1][0];
     monodromy_[0][1] -= monodromy_[1][1];
     monodromy_[0][1] += monodromy_[0][0];
     monodromy_[1][1] += monodromy_[1][0];
 }
 
-inline bool NTorusBundle::isHyperbolic() const {
+inline bool TorusBundle::isHyperbolic() const {
     return false;
 }
 

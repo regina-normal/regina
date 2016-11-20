@@ -33,7 +33,7 @@
 #include <set>
 #include <vector>
 #include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "manifold/handlebody.h"
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/dim3.h"
 
@@ -193,8 +193,8 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
     return ans;
 }
 
-NManifold* NSpiralSolidTorus::manifold() const {
-    return new NHandlebody(1, true);
+Manifold* NSpiralSolidTorus::manifold() const {
+    return new Handlebody(1, true);
 }
 
 AbelianGroup* NSpiralSolidTorus::homology() const {

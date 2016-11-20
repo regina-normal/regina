@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,74 +30,51 @@
  *                                                                        *
  **************************************************************************/
 
+#include <boost/python.hpp>
 #include "algebra/abeliangroup.h"
-#include "manifold/nlensspace.h"
-#include "maths/numbertheory.h"
+#include "manifold/manifold.h"
 #include "triangulation/dim3.h"
+#include "../helpers.h"
+#include "../safeheldtype.h"
 
-namespace regina {
+using namespace boost::python;
+using namespace regina::python;
+using regina::Manifold;
 
-void NLensSpace::reduce() {
-    if (p_ == 0) {
-        q_ = 1;
-        return;
-    } else if (p_ == 1) {
-        q_ = 0;
-        return;
+namespace {
+    void writeName_stdio(const Manifold& m) {
+        m.writeName(std::cout);
     }
-
-    // p > 1 and gcd(p,q) = 1.
-    
-    // Reduce q to +/-q.
-    q_ = q_ % p_;
-    if (2 * q_ > p_)
-        q_ = p_ - q_;
-
-    unsigned long inv = modularInverse(p_, q_);
-    if (2 * inv > p_)
-        inv = p_ - inv;
-    if (inv < q_)
-        q_ = inv;
+    void writeTeXName_stdio(const Manifold& m) {
+        m.writeTeXName(std::cout);
+    }
+    void writeStructure_stdio(const Manifold& m) {
+        m.writeStructure(std::cout);
+    }
 }
 
-Triangulation<3>* NLensSpace::construct() const {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertLayeredLensSpace(p_, q_);
-    return ans;
-}
+void addManifold() {
+    class_<Manifold, boost::noncopyable, std::auto_ptr<Manifold> >
+            ("Manifold", no_init)
+        .def("name", &Manifold::name)
+        .def("TeXName", &Manifold::TeXName)
+        .def("structure", &Manifold::structure)
+        .def("construct", &Manifold::construct,
+            return_value_policy<to_held_type<> >())
+        .def("homology", &Manifold::homology,
+            return_value_policy<manage_new_object>())
+        .def("homologyH1", &Manifold::homologyH1,
+            return_value_policy<manage_new_object>())
+        .def("isHyperbolic", &Manifold::isHyperbolic)
+        .def("writeName", writeName_stdio)
+        .def("writeTeXName", writeTeXName_stdio)
+        .def("writeStructure", writeStructure_stdio)
+        .def(self < self)
+        .def(regina::python::add_output())
+        .def(regina::python::add_eq_operators())
+    ;
 
-AbelianGroup* NLensSpace::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
-    if (p_ == 0)
-        ans->addRank();
-    else if (p_ > 1)
-        ans->addTorsionElement(p_);
-    return ans;
-}
+    scope().attr("NManifold") = scope().attr("Manifold");
 
-std::ostream& NLensSpace::writeName(std::ostream& out) const {
-    if (p_ == 0)
-        out << "S2 x S1";
-    else if (p_ == 1)
-        out << "S3";
-    else if (p_ == 2 && q_ == 1)
-        out << "RP3";
-    else
-        out << "L(" << p_ << ',' << q_ << ')';
-    return out;
 }
-
-std::ostream& NLensSpace::writeTeXName(std::ostream& out) const {
-    if (p_ == 0)
-        out << "S^2 \\times S^1";
-    else if (p_ == 1)
-        out << "S^3";
-    else if (p_ == 2 && q_ == 1)
-        out << "\\mathbb{R}P^3";
-    else
-        out << "L(" << p_ << ',' << q_ << ')';
-    return out;
-}
-
-} // namespace regina
 

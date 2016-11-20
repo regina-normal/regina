@@ -31,40 +31,33 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/ngraphtriple.h"
-#include "manifold/nsfs.h"
+#include "manifold/snappeacensusmfd.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NGraphTriple;
-using regina::Matrix2;
-using regina::NSFSpace;
+using regina::SnapPeaCensusManifold;
 
-namespace {
-    NGraphTriple* createNGraphTriple(const NSFSpace& s1,
-            const NSFSpace& s2, const NSFSpace& s3,
-            const Matrix2& m1, const Matrix2& m2) {
-        return new NGraphTriple(
-            new NSFSpace(s1), new NSFSpace(s2), new NSFSpace(s3), m1, m2);
+void addSnapPeaCensusManifold() {
+    {
+        scope s = class_<SnapPeaCensusManifold, bases<regina::Manifold>,
+                std::auto_ptr<SnapPeaCensusManifold>, boost::noncopyable>
+                ("SnapPeaCensusManifold", init<char, unsigned long>())
+            .def(init<const SnapPeaCensusManifold&>())
+            .def("section", &SnapPeaCensusManifold::section)
+            .def("index", &SnapPeaCensusManifold::index)
+            .def(regina::python::add_eq_operators())
+        ;
+
+        s.attr("SEC_5") = SnapPeaCensusManifold::SEC_5;
+        s.attr("SEC_6_OR") = SnapPeaCensusManifold::SEC_6_OR;
+        s.attr("SEC_6_NOR") = SnapPeaCensusManifold::SEC_6_NOR;
+        s.attr("SEC_7_OR") = SnapPeaCensusManifold::SEC_7_OR;
+        s.attr("SEC_7_NOR") = SnapPeaCensusManifold::SEC_7_NOR;
+
+        implicitly_convertible<std::auto_ptr<SnapPeaCensusManifold>,
+            std::auto_ptr<regina::Manifold> >();
     }
-}
 
-void addNGraphTriple() {
-    class_<NGraphTriple, bases<regina::NManifold>,
-            std::auto_ptr<NGraphTriple>, boost::noncopyable>
-            ("NGraphTriple", no_init)
-        .def("__init__", make_constructor(createNGraphTriple))
-        .def("end", &NGraphTriple::end,
-            return_internal_reference<>())
-        .def("centre", &NGraphTriple::centre,
-            return_internal_reference<>())
-        .def("matchingReln", &NGraphTriple::matchingReln,
-            return_internal_reference<>())
-        .def(self < self)
-        .def(regina::python::add_eq_operators())
-    ;
-
-    implicitly_convertible<std::auto_ptr<NGraphTriple>,
-        std::auto_ptr<regina::NManifold> >();
+    scope().attr("NSnapPeaCensusManifold") = scope().attr("SnapPeaCensusManifold");
 }
 

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,28 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
-#include "manifold/nmanifold.h"
+#include <boost/python.hpp>
+#include "manifold/handlebody.h"
+#include "../helpers.h"
 
-namespace regina {
+using namespace boost::python;
+using regina::Handlebody;
 
-std::string NManifold::name() const {
-    std::ostringstream ans;
-    writeName(ans);
-    return ans.str();
+void addHandlebody() {
+    class_<Handlebody, bases<regina::Manifold>,
+            std::auto_ptr<Handlebody>, boost::noncopyable>
+            ("Handlebody", init<unsigned long, bool>())
+        .def(init<const Handlebody&>())
+        .def("handles", &Handlebody::handles)
+        .def("isOrientable", &Handlebody::isOrientable)
+        .def(regina::python::add_eq_operators())
+    ;
+
+    scope().attr("NHandlebody") = scope().attr("Handlebody");
+
+    implicitly_convertible<std::auto_ptr<Handlebody>,
+        std::auto_ptr<regina::Manifold> >();
 }
-
-std::string NManifold::TeXName() const {
-    std::ostringstream ans;
-    writeTeXName(ans);
-    return ans.str();
-}
-
-std::string NManifold::structure() const {
-    std::ostringstream ans;
-    writeStructure(ans);
-    return ans.str();
-}
-
-} // namespace regina
 

@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nlensspace.h"
-#include "manifold/nsfs.h"
+#include "manifold/lensspace.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nlayeredloop.h"
 #include "triangulation/dim3.h"
 
@@ -46,13 +46,13 @@ NLayeredLoop* NLayeredLoop::clone() const {
     return ans;
 }
 
-NManifold* NLayeredLoop::manifold() const {
+Manifold* NLayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.
-        return new NLensSpace(length_, 1);
+        return new LensSpace(length_, 1);
     } else {
         // Twisted.
-        NSFSpace* ans = new NSFSpace();
+        SFSpace* ans = new SFSpace();
         ans->insertFibre(2, -1);
         ans->insertFibre(2, 1);
         ans->insertFibre(length_, 1);

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "manifold/handlebody.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
 #include "triangulation/dim3.h"
@@ -183,8 +183,8 @@ AbelianGroup* NTriSolidTorus::homology() const {
     return ans;
 }
 
-NManifold* NTriSolidTorus::manifold() const {
-    return new NHandlebody(1, true);
+Manifold* NTriSolidTorus::manifold() const {
+    return new Handlebody(1, true);
 }
 
 } // namespace regina

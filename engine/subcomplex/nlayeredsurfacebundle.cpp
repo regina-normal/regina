@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ntorusbundle.h"
+#include "manifold/torusbundle.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/ntxicore.h"
@@ -165,16 +165,16 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(Triangulation<3>* tri,
     return 0;
 }
 
-NManifold* NLayeredTorusBundle::manifold() const {
+Manifold* NLayeredTorusBundle::manifold() const {
     // Note that this one-liner appears again in homology(), where
-    // we use the underlying NTorusBundle for homology calculations.
-    return new NTorusBundle(core_.parallelReln() * reln_);
+    // we use the underlying TorusBundle for homology calculations.
+    return new TorusBundle(core_.parallelReln() * reln_);
 }
 
 AbelianGroup* NLayeredTorusBundle::homology() const {
-    // It's implemented in NTorusBundle, so ride on that for now.
+    // It's implemented in TorusBundle, so ride on that for now.
     // We'll implement it directly here in good time.
-    return NTorusBundle(core_.parallelReln() * reln_).homology();
+    return TorusBundle(core_.parallelReln() * reln_).homology();
 }
 
 std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nlensspace.h"
+#include "manifold/lensspace.h"
 #include "maths/numbertheory.h"
 #include "subcomplex/nlayeredlensspace.h"
 #include "triangulation/dim3.h"
@@ -139,8 +139,8 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
     return 0;
 }
 
-NManifold* NLayeredLensSpace::manifold() const {
-    return new NLensSpace(p_, q_);
+Manifold* NLayeredLensSpace::manifold() const {
+    return new LensSpace(p_, q_);
 }
 
 AbelianGroup* NLayeredLensSpace::homology() const {

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "maths/numbertheory.h"
 #include "split/signature.h"
 #include "triangulation/example3.h"
@@ -433,7 +433,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         }
 
         // Build the Seifert fibred space.
-        regina::NSFSpace sfs;
+        regina::SFSpace sfs;
         long a, b;
         long d, u, v;
         long pos = 0;

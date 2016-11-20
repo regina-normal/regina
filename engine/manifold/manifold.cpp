@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,48 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
-#include "algebra/abeliangroup.h"
-#include "manifold/nmanifold.h"
-#include "triangulation/dim3.h"
-#include "../helpers.h"
-#include "../safeheldtype.h"
+#include <sstream>
+#include "manifold/manifold.h"
 
-using namespace boost::python;
-using namespace regina::python;
-using regina::NManifold;
+namespace regina {
 
-namespace {
-    void writeName_stdio(const NManifold& m) {
-        m.writeName(std::cout);
-    }
-    void writeTeXName_stdio(const NManifold& m) {
-        m.writeTeXName(std::cout);
-    }
-    void writeStructure_stdio(const NManifold& m) {
-        m.writeStructure(std::cout);
-    }
+std::string Manifold::name() const {
+    std::ostringstream ans;
+    writeName(ans);
+    return ans.str();
 }
 
-void addNManifold() {
-    class_<NManifold, boost::noncopyable, std::auto_ptr<NManifold> >
-            ("NManifold", no_init)
-        .def("name", &NManifold::name)
-        .def("TeXName", &NManifold::TeXName)
-        .def("structure", &NManifold::structure)
-        .def("construct", &NManifold::construct,
-            return_value_policy<to_held_type<> >())
-        .def("homology", &NManifold::homology,
-            return_value_policy<manage_new_object>())
-        .def("homologyH1", &NManifold::homologyH1,
-            return_value_policy<manage_new_object>())
-        .def("isHyperbolic", &NManifold::isHyperbolic)
-        .def("writeName", writeName_stdio)
-        .def("writeTeXName", writeTeXName_stdio)
-        .def("writeStructure", writeStructure_stdio)
-        .def(self < self)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-    ;
+std::string Manifold::TeXName() const {
+    std::ostringstream ans;
+    writeTeXName(ans);
+    return ans.str();
 }
+
+std::string Manifold::structure() const {
+    std::ostringstream ans;
+    writeStructure(ans);
+    return ans.str();
+}
+
+} // namespace regina
 

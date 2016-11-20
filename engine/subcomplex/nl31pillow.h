@@ -119,7 +119,7 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          */
         static NL31Pillow* isL31Pillow(const Component<3>* comp);
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

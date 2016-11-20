@@ -245,7 +245,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          */
         void invert();
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

@@ -30,19 +30,19 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nsfs.h"
-#include "manifold/nsfsaltset.h"
+#include "manifold/sfs.h"
+#include "manifold/sfsaltset.h"
 
 namespace regina {
 
-NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
+SFSAltSet::SFSAltSet(const SFSpace* sfs) {
     /**
      * Note that whenever we add a (1,1) twist, we compensate by setting
      * row 2 -> row 2 + row 1 in our conversion matrix.
      */
 
     // Start with the original, reduced to give obstruction constant zero.
-    data_[0] = new NSFSpace(*sfs);
+    data_[0] = new SFSpace(*sfs);
     data_[0]->reduce(false);
 
     long b = data_[0]->obstruction();
@@ -66,7 +66,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
      * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
      *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
      */
-    if (data_[0]->baseClass() == NSFSpace::bn2 &&
+    if (data_[0]->baseClass() == SFSpace::bn2 &&
             data_[0]->baseGenus() == 1 &&
             (! data_[0]->baseOrientable()) &&
             data_[0]->punctures(false) == 1 &&
@@ -76,7 +76,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
             data_[0]->obstruction() == 0) {
         delete data_[0];
 
-        data_[0] = new NSFSpace(NSFSpace::bo1, 0 /* genus */,
+        data_[0] = new SFSpace(SFSpace::bo1, 0 /* genus */,
             1 /* punctures */, 0 /* twisted */,
             0 /* reflectors */, 0 /* twisted */);
         data_[0]->insertFibre(2, 1);
@@ -86,7 +86,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
     }
 
     // Using data_[0] as a foundation, try now for a reflection.
-    data_[1] = new NSFSpace(*data_[0]);
+    data_[1] = new SFSpace(*data_[0]);
     data_[1]->reflect();
     data_[1]->reduce(false);
 
@@ -107,7 +107,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
         // Do it by adding a single (1,1).  The subsequent reduce() will
         // negate fibres to bring the obstruction constant back down to
         // zero, giving the desired effect.
-        data_[2] = new NSFSpace(*data_[0]);
+        data_[2] = new SFSpace(*data_[0]);
         data_[2]->insertFibre(1, 1);
         data_[2]->reduce(false);
 
@@ -117,7 +117,7 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
         reflected_[2] = false;
 
         // And do it again with an added reflection.
-        data_[3] = new NSFSpace(*data_[0]);
+        data_[3] = new SFSpace(*data_[0]);
         data_[3]->insertFibre(1, 1);
         data_[3]->reflect();
         data_[3]->reduce(false);
@@ -131,18 +131,18 @@ NSFSAltSet::NSFSAltSet(const NSFSpace* sfs) {
     }
 }
 
-void NSFSAltSet::deleteAll() {
+void SFSAltSet::deleteAll() {
     for (unsigned i = 0; i < size_; i++)
         delete data_[i];
 }
 
-void NSFSAltSet::deleteAll(NSFSpace* exception) {
+void SFSAltSet::deleteAll(SFSpace* exception) {
     for (unsigned i = 0; i < size_; i++)
         if (data_[i] != exception)
             delete data_[i];
 }
 
-void NSFSAltSet::deleteAll(NSFSpace* exception1, NSFSpace* exception2) {
+void SFSAltSet::deleteAll(SFSpace* exception1, SFSpace* exception2) {
     for (unsigned i = 0; i < size_; i++)
         if (data_[i] != exception1 && data_[i] != exception2)
             delete data_[i];

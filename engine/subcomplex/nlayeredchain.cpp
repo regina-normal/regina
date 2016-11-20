@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "manifold/handlebody.h"
 #include "triangulation/dim3.h"
 #include "subcomplex/nlayeredchain.h"
 
@@ -103,8 +103,8 @@ void NLayeredChain::invert() {
     bottomVertexRoles_ = bottomVertexRoles_ * Perm<4>(3, 2, 1, 0);
 }
 
-NManifold* NLayeredChain::manifold() const {
-    return new NHandlebody(index_ <= 1 ? 0 : 1, true);
+Manifold* NLayeredChain::manifold() const {
+    return new Handlebody(index_ <= 1 ? 0 : 1, true);
 }
 
 AbelianGroup* NLayeredChain::homology() const {

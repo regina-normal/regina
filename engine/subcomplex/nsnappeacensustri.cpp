@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nsnappeacensusmfd.h"
+#include "manifold/snappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/dim3.h"
 
@@ -168,12 +168,12 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     return 0;
 }
 
-NManifold* NSnapPeaCensusTri::manifold() const {
-    return new NSnapPeaCensusManifold(section_, index_);
+Manifold* NSnapPeaCensusTri::manifold() const {
+    return new SnapPeaCensusManifold(section_, index_);
 }
 
 AbelianGroup* NSnapPeaCensusTri::homology() const {
-    return NSnapPeaCensusManifold(section_, index_).homology();
+    return SnapPeaCensusManifold(section_, index_).homology();
 }
 
 std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {

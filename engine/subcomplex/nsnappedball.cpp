@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "manifold/handlebody.h"
 #include "triangulation/dim3.h"
 #include "subcomplex/nsnappedball.h"
 
@@ -63,8 +63,8 @@ NSnappedBall* NSnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
     return 0;
 }
 
-NManifold* NSnappedBall::manifold() const {
-    return new NHandlebody(0, true);
+Manifold* NSnappedBall::manifold() const {
+    return new Handlebody(0, true);
 }
 
 AbelianGroup* NSnappedBall::homology() const {

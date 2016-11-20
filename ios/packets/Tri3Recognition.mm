@@ -36,7 +36,7 @@
 #import "Tri3ViewController.h"
 #import "Tri3Recognition.h"
 #import "census/census.h"
-#import "manifold/nmanifold.h"
+#import "manifold/manifold.h"
 #import "packet/container.h"
 #import "snappea/snappeatriangulation.h"
 #import "subcomplex/nstandardtri.h"
@@ -116,7 +116,7 @@
         simp.intelligentSimplify();
         regina::NStandardTriangulation* std = regina::NStandardTriangulation::isStandardTriangulation(&simp);
         if (std) {
-            regina::NManifold* mfd = std->manifold();
+            regina::Manifold* mfd = std->manifold();
             if (mfd) {
                 isHyp = mfd->isHyperbolic();
                 manifoldName = @(mfd->name().c_str());

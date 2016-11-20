@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "manifold/handlebody.h"
 #include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
 #include "subcomplex/nlayeredsolidtorus.h"
@@ -658,8 +658,8 @@ void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     }
 }
 
-NManifold* NLayeredSolidTorus::manifold() const {
-    return new NHandlebody(1, true);
+Manifold* NLayeredSolidTorus::manifold() const {
+    return new Handlebody(1, true);
 }
 
 AbelianGroup* NLayeredSolidTorus::homology() const {

@@ -51,7 +51,7 @@
  */
 
 #include <algebra/abeliangroup.h>
-#include <manifold/nmanifold.h>
+#include <manifold/manifold.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/dim3.h>
 
@@ -93,7 +93,7 @@ void process(Triangulation<3>* t) {
         std::cout << s->name();
         trisOk++;
 
-        NManifold* m = s->manifold();
+        Manifold* m = s->manifold();
         if (m) {
             std::string manifold = m->name();
             std::cout << "  ==  " << manifold;

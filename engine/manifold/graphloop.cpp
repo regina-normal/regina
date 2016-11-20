@@ -31,18 +31,18 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/ngraphloop.h"
-#include "manifold/nsfs.h"
+#include "manifold/graphloop.h"
+#include "manifold/sfs.h"
 #include "maths/matrix.h"
 #include <cstdlib> // For labs().
 
 namespace regina {
 
-NGraphLoop::~NGraphLoop() {
+GraphLoop::~GraphLoop() {
     delete sfs_;
 }
 
-bool NGraphLoop::operator < (const NGraphLoop& compare) const {
+bool GraphLoop::operator < (const GraphLoop& compare) const {
     if (*sfs_ < *compare.sfs_)
         return true;
     if (*compare.sfs_ < *sfs_)
@@ -51,7 +51,7 @@ bool NGraphLoop::operator < (const NGraphLoop& compare) const {
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-AbelianGroup* NGraphLoop::homology() const {
+AbelianGroup* GraphLoop::homology() const {
     // Just for safety (this should always be true anyway):
     if (sfs_->punctures(false) != 2 || sfs_->punctures(true) != 0)
         return 0;
@@ -84,7 +84,7 @@ AbelianGroup* NGraphLoop::homology() const {
             m.entry(0, i) = 2;
 
     // A relation for each exceptional fibre:
-    NSFSFibre fibre;
+    SFSFibre fibre;
     for (f = 0; f < fibres; f++) {
         fibre = sfs_->fibre(f);
         m.entry(f + 1, 1 + genus + 2 + f) = fibre.alpha;
@@ -122,21 +122,21 @@ AbelianGroup* NGraphLoop::homology() const {
     return ans;
 }
 
-std::ostream& NGraphLoop::writeName(std::ostream& out) const {
+std::ostream& GraphLoop::writeName(std::ostream& out) const {
     sfs_->writeName(out);
     return out << " / [ " <<
         matchingReln_[0][0] << ',' << matchingReln_[0][1] << " | " <<
         matchingReln_[1][0] << ',' << matchingReln_[1][1] << " ]";
 }
 
-std::ostream& NGraphLoop::writeTeXName(std::ostream& out) const {
+std::ostream& GraphLoop::writeTeXName(std::ostream& out) const {
     sfs_->writeTeXName(out);
     return out << "_{\\homtwo{" <<
         matchingReln_[0][0] << "}{" << matchingReln_[0][1] << "}{" <<
         matchingReln_[1][0] << "}{" << matchingReln_[1][1] << "}}";
 }
 
-void NGraphLoop::reduce() {
+void GraphLoop::reduce() {
     /**
      * Things to observe:
      *
@@ -178,7 +178,7 @@ void NGraphLoop::reduce() {
     }
 }
 
-void NGraphLoop::reduce(Matrix2& reln) {
+void GraphLoop::reduce(Matrix2& reln) {
     // Reduce both the original and the inverse, and see who comes out
     // on top.
     reduceBasis(reln);
@@ -190,7 +190,7 @@ void NGraphLoop::reduce(Matrix2& reln) {
         reln = inv;
 }
 
-void NGraphLoop::reduceBasis(Matrix2& reln) {
+void GraphLoop::reduceBasis(Matrix2& reln) {
     // Use (1,1) / (1,-1) pairs to make the top-left element of the
     // matrix as close to zero as possible.
     if (reln[0][1] != 0 && reln[0][0] != 0) {

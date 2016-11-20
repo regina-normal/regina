@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "census/census.h"
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "snappea/snappeatriangulation.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/dim3.h"
@@ -329,7 +329,7 @@ void Tri3SurfacesUI::refresh() {
     regina::NStandardTriangulation* std =
         regina::NStandardTriangulation::isStandardTriangulation(tri);
     if (std) {
-        regina::NManifold* mfd = std->manifold();
+        regina::Manifold* mfd = std->manifold();
         if (mfd) {
             isHyp = mfd->isHyperbolic();
             name = mfd->name();

@@ -31,20 +31,20 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/ngraphtriple.h"
-#include "manifold/nsfs.h"
-#include "manifold/nsfsaltset.h"
+#include "manifold/graphtriple.h"
+#include "manifold/sfs.h"
+#include "manifold/sfsaltset.h"
 #include "maths/matrix.h"
 
 namespace regina {
 
-NGraphTriple::~NGraphTriple() {
+GraphTriple::~GraphTriple() {
     delete end_[0];
     delete end_[1];
     delete centre_;
 }
 
-bool NGraphTriple::operator < (const NGraphTriple& compare) const {
+bool GraphTriple::operator < (const GraphTriple& compare) const {
     if (*centre_ < *compare.centre_)
         return true;
     if (*compare.centre_ < *centre_)
@@ -68,7 +68,7 @@ bool NGraphTriple::operator < (const NGraphTriple& compare) const {
     return simpler(matchingReln_[1], compare.matchingReln_[1]);
 }
 
-AbelianGroup* NGraphTriple::homology() const {
+AbelianGroup* GraphTriple::homology() const {
     // Just for safety (this should always be true anyway):
     if (end_[0]->punctures(false) != 1 || end_[0]->punctures(true) != 0)
         return 0;
@@ -96,7 +96,7 @@ AbelianGroup* NGraphTriple::homology() const {
     //           - reflector relations
     //           - fibre constraint
     //     - Plus two boundary joinings.
-    NSFSpace* sfs[3];
+    SFSpace* sfs[3];
     unsigned long genus[3], punc[3], fibres[3], ref[3], gens[3];
     unsigned long start[3];
 
@@ -130,7 +130,7 @@ AbelianGroup* NGraphTriple::homology() const {
         ref[0] + ref[1] + ref[2] + 13, gens[0] + gens[1] + gens[2]);
 
     unsigned long i, f;
-    NSFSFibre fibre;
+    SFSFibre fibre;
     unsigned long reln = 0;
 
     // Relations internal to each space:
@@ -200,7 +200,7 @@ AbelianGroup* NGraphTriple::homology() const {
     return ans;
 }
 
-std::ostream& NGraphTriple::writeName(std::ostream& out) const {
+std::ostream& GraphTriple::writeName(std::ostream& out) const {
     end_[0]->writeName(out);
     out << " U/m ";
     centre_->writeName(out);
@@ -217,7 +217,7 @@ std::ostream& NGraphTriple::writeName(std::ostream& out) const {
     return out;
 }
 
-std::ostream& NGraphTriple::writeTeXName(std::ostream& out) const {
+std::ostream& GraphTriple::writeTeXName(std::ostream& out) const {
     end_[0]->writeTeXName(out);
     Matrix2 m0 = matchingReln_[0].inverse();
     out << " \\bigcup_{\\homtwo{" <<
@@ -231,7 +231,7 @@ std::ostream& NGraphTriple::writeTeXName(std::ostream& out) const {
     return out;
 }
 
-void NGraphTriple::reduce() {
+void GraphTriple::reduce() {
     /**
      * Things to observe:
      *
@@ -257,9 +257,9 @@ void NGraphTriple::reduce() {
 
     // Simplify each space and build a list of possible reflections and
     // other representations that we wish to experiment with using.
-    NSFSAltSet alt0(end_[0]);
-    NSFSAltSet alt1(end_[1]);
-    NSFSAltSet altCentre(centre_);
+    SFSAltSet alt0(end_[0]);
+    SFSAltSet alt1(end_[1]);
+    SFSAltSet altCentre(centre_);
 
     delete end_[0];
     delete end_[1];
@@ -267,9 +267,9 @@ void NGraphTriple::reduce() {
 
     // Decide which of these possible representations gives the nicest
     // matching relations.
-    NSFSpace* use0 = 0;
-    NSFSpace* use1 = 0;
-    NSFSpace* useCentre = 0;
+    SFSpace* use0 = 0;
+    SFSpace* use1 = 0;
+    SFSpace* useCentre = 0;
     Matrix2 useReln[2];
 
     Matrix2 tryReln[2], tmpReln;
@@ -381,7 +381,7 @@ void NGraphTriple::reduce() {
     // TODO: More reductions!
 }
 
-void NGraphTriple::reduceBasis(Matrix2& reln0, Matrix2& reln1) {
+void GraphTriple::reduceBasis(Matrix2& reln0, Matrix2& reln1) {
     /**
      * The operation we allow here is to add a (1,1) / (1,-1) pair of
      * twists to centre_, which means:
@@ -427,7 +427,7 @@ void NGraphTriple::reduceBasis(Matrix2& reln0, Matrix2& reln1) {
     reduceSign(reln1);
 }
 
-void NGraphTriple::reduceSign(Matrix2& reln) {
+void GraphTriple::reduceSign(Matrix2& reln) {
     // Make the first non-zero entry positive.
     int i, j;
     for (i = 0; i < 2; i++)

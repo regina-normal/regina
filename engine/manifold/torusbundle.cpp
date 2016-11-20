@@ -32,11 +32,11 @@
 
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
-#include "manifold/ntorusbundle.h"
+#include "manifold/torusbundle.h"
 
 namespace regina {
 
-AbelianGroup* NTorusBundle::homology() const {
+AbelianGroup* TorusBundle::homology() const {
     MatrixInt relns(2, 2);
 
     relns.entry(0, 0) = monodromy_[0][0] - 1;
@@ -51,7 +51,7 @@ AbelianGroup* NTorusBundle::homology() const {
     return ans;
 }
 
-std::ostream& NTorusBundle::writeName(std::ostream& out) const {
+std::ostream& TorusBundle::writeName(std::ostream& out) const {
     if (monodromy_.isIdentity())
         return out << "T x I";
     else
@@ -60,7 +60,7 @@ std::ostream& NTorusBundle::writeName(std::ostream& out) const {
             << monodromy_[1][1] << " ]";
 }
 
-std::ostream& NTorusBundle::writeTeXName(std::ostream& out) const {
+std::ostream& TorusBundle::writeTeXName(std::ostream& out) const {
     if (monodromy_.isIdentity())
         return out << "T^2 \\times I";
     else
@@ -69,7 +69,7 @@ std::ostream& NTorusBundle::writeTeXName(std::ostream& out) const {
             << monodromy_[1][1] << "}";
 }
 
-void NTorusBundle::reduce() {
+void TorusBundle::reduce() {
     // Make the monodromy prettier.
     // In general we are allowed to:
     //
@@ -95,7 +95,7 @@ void NTorusBundle::reduce() {
     long det = monodromy_.determinant();
     if (det != 1 && det != -1) {
         // Something is very wrong.  Don't touch it.
-        std::cerr << "ERROR: NTorusBundle monodromy does not have "
+        std::cerr << "ERROR: TorusBundle monodromy does not have "
             "determinant +/-1.\n";
         return;
     }
@@ -262,7 +262,7 @@ void NTorusBundle::reduce() {
         if (monodromy_ == start)
             break;
 
-        if (NTorusBundle::simplerNonNeg(monodromy_, best))
+        if (TorusBundle::simplerNonNeg(monodromy_, best))
             best = monodromy_;
     }
 
@@ -271,7 +271,7 @@ void NTorusBundle::reduce() {
     // rotated matrix belongs to the same cycle as the original.
     if (det > 0) {
         rotate();
-        if (NTorusBundle::simplerNonNeg(monodromy_, best))
+        if (TorusBundle::simplerNonNeg(monodromy_, best))
             best = monodromy_;
 
         start = monodromy_;
@@ -299,7 +299,7 @@ void NTorusBundle::reduce() {
             if (monodromy_ == start)
                 break;
 
-            if (NTorusBundle::simplerNonNeg(monodromy_, best))
+            if (TorusBundle::simplerNonNeg(monodromy_, best))
                 best = monodromy_;
         }
     }
@@ -311,7 +311,7 @@ void NTorusBundle::reduce() {
         monodromy_.negate();
 }
 
-bool NTorusBundle::simplerNonNeg(const Matrix2& m1, const Matrix2& m2) {
+bool TorusBundle::simplerNonNeg(const Matrix2& m1, const Matrix2& m2) {
     // Value symmetric matrices above all else.
     if (m1[0][1] == m1[1][0] && m2[0][1] != m2[1][0])
         return true;

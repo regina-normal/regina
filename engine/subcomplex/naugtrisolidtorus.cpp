@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <utility>
 #include "algebra/abeliangroup.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
 #include "triangulation/dim3.h"
@@ -66,8 +66,8 @@ NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
     return ans;
 }
 
-NManifold* NAugTriSolidTorus::manifold() const {
-    NSFSpace* ans = new NSFSpace();
+Manifold* NAugTriSolidTorus::manifold() const {
+    SFSpace* ans = new SFSpace();
     if (chainType_ == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
         ans->insertFibre(2, 1);

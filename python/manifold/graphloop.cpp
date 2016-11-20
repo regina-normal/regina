@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,51 +30,44 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include <boost/python.hpp>
+#include "manifold/graphloop.h"
+#include "manifold/sfs.h"
+#include "../helpers.h"
 
-namespace regina {
+using namespace boost::python;
+using regina::GraphLoop;
+using regina::Matrix2;
+using regina::SFSpace;
 
-AbelianGroup* NHandlebody::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
-    if (nHandles)
-        ans->addRank(nHandles);
-    return ans;
-}
-
-std::ostream& NHandlebody::writeName(std::ostream& out) const {
-    if (nHandles == 0)
-        out << "B3";
-    else if (nHandles == 1) {
-        if (orientable)
-            out << "B2 x S1";
-        else
-            out << "B2 x~ S1";
-    } else {
-        if (orientable)
-            out << "Handle-Or(" << nHandles << ')';
-        else
-            out << "Handle-Nor(" << nHandles << ')';
+namespace {
+    GraphLoop* createGraphLoop_longs(const SFSpace& s,
+            long a, long b, long c, long d) {
+        return new GraphLoop(new SFSpace(s), a, b, c, d);
     }
-    return out;
-}
 
-std::ostream& NHandlebody::writeTeXName(std::ostream& out) const {
-    if (nHandles == 0)
-        out << "B^3";
-    else if (nHandles == 1) {
-        if (orientable)
-            out << "B^2 \\times S^1";
-        else
-            out << "B^2 \\twisted S^1";
-    } else {
-        if (orientable)
-            out << "\\mathit{Handle-Or}(" << nHandles << ')';
-        else
-            out << "\\mathit{Handle-Nor}(" << nHandles << ')';
+    GraphLoop* createGraphLoop_matrix(const SFSpace& s, const Matrix2& m) {
+        return new GraphLoop(new SFSpace(s), m);
     }
-    return out;
 }
 
-} // namespace regina
+void addGraphLoop() {
+    class_<GraphLoop, bases<regina::Manifold>,
+            std::auto_ptr<GraphLoop>, boost::noncopyable>
+            ("GraphLoop", no_init)
+        .def("__init__", make_constructor(createGraphLoop_longs))
+        .def("__init__", make_constructor(createGraphLoop_matrix))
+        .def("sfs", &GraphLoop::sfs,
+            return_internal_reference<>())
+        .def("matchingReln", &GraphLoop::matchingReln,
+            return_internal_reference<>())
+        .def(self < self)
+        .def(regina::python::add_eq_operators())
+    ;
+
+    scope().attr("NGraphLoop") = scope().attr("GraphLoop");
+
+    implicitly_convertible<std::auto_ptr<GraphLoop>,
+        std::auto_ptr<regina::Manifold> >();
+}
 

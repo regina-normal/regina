@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "triangulation/dim3.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 
@@ -118,8 +118,8 @@ void NPlugTriSolidTorus::writeTextLong(std::ostream& out) const {
     writeName(out);
 }
 
-NManifold* NPlugTriSolidTorus::manifold() const {
-    NSFSpace* ans = new NSFSpace();
+Manifold* NPlugTriSolidTorus::manifold() const {
+    SFSpace* ans = new SFSpace();
     ans->insertFibre(2, -1);
     ans->insertFibre(3, 1);
 

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,27 +30,51 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
 #include "algebra/abeliangroup.h"
-#include "manifold/ntorusbundle.h"
-#include "../helpers.h"
+#include "manifold/handlebody.h"
 
-using namespace boost::python;
-using regina::Matrix2;
-using regina::NTorusBundle;
+namespace regina {
 
-void addNTorusBundle() {
-    class_<NTorusBundle, bases<regina::NManifold>,
-            std::auto_ptr<NTorusBundle> >("NTorusBundle")
-        .def(init<const Matrix2&>())
-        .def(init<long, long, long, long>())
-        .def(init<const NTorusBundle&>())
-        .def("monodromy", &NTorusBundle::monodromy,
-            return_internal_reference<>())
-        .def(regina::python::add_eq_operators())
-    ;
-
-    implicitly_convertible<std::auto_ptr<NTorusBundle>,
-        std::auto_ptr<regina::NManifold> >();
+AbelianGroup* Handlebody::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
+    if (nHandles)
+        ans->addRank(nHandles);
+    return ans;
 }
+
+std::ostream& Handlebody::writeName(std::ostream& out) const {
+    if (nHandles == 0)
+        out << "B3";
+    else if (nHandles == 1) {
+        if (orientable)
+            out << "B2 x S1";
+        else
+            out << "B2 x~ S1";
+    } else {
+        if (orientable)
+            out << "Handle-Or(" << nHandles << ')';
+        else
+            out << "Handle-Nor(" << nHandles << ')';
+    }
+    return out;
+}
+
+std::ostream& Handlebody::writeTeXName(std::ostream& out) const {
+    if (nHandles == 0)
+        out << "B^3";
+    else if (nHandles == 1) {
+        if (orientable)
+            out << "B^2 \\times S^1";
+        else
+            out << "B^2 \\twisted S^1";
+    } else {
+        if (orientable)
+            out << "\\mathit{Handle-Or}(" << nHandles << ')';
+        else
+            out << "\\mathit{Handle-Nor}(" << nHandles << ')';
+    }
+    return out;
+}
+
+} // namespace regina
 

@@ -33,12 +33,12 @@
 #include <cmath>
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/dim3.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
 
-using regina::NManifold;
+using regina::Manifold;
 using regina::NStandardTriangulation;
 using regina::Triangulation;
 
@@ -82,7 +82,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NManifold* mfd = std->manifold();
+            Manifold* mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
@@ -127,7 +127,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NManifold* mfd = std->manifold();
+            Manifold* mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "

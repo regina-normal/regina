@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
 #include "triangulation/dim3.h"
@@ -118,29 +118,29 @@ void NSatRegion::boundaryAnnulus(unsigned long which,
     // Given the precondition, we should never reach this point.
 }
 
-NSFSpace* NSatRegion::createSFS(bool reflect) const {
+SFSpace* NSatRegion::createSFS(bool reflect) const {
     // Count boundary components.
     unsigned untwisted, twisted;
     countBoundaries(untwisted, twisted);
 
     // Go ahead and build the Seifert fibred space.
-    NSFSpace::classType baseClass;
+    SFSpace::classType baseClass;
 
     bool bdry = (twisted || untwisted || twistedBlocks_);
     if (baseOrbl_) {
         if (hasTwist_)
-            baseClass = (bdry ? NSFSpace::bo2 : NSFSpace::o2);
+            baseClass = (bdry ? SFSpace::bo2 : SFSpace::o2);
         else
-            baseClass = (bdry ? NSFSpace::bo1 : NSFSpace::o1);
+            baseClass = (bdry ? SFSpace::bo1 : SFSpace::o1);
     } else if (! hasTwist_)
-        baseClass = (bdry ? NSFSpace::bn1 : NSFSpace::n1);
+        baseClass = (bdry ? SFSpace::bn1 : SFSpace::n1);
     else if (twistsMatchOrientation_)
-        baseClass = (bdry ? NSFSpace::bn2 : NSFSpace::n2);
+        baseClass = (bdry ? SFSpace::bn2 : SFSpace::n2);
     else {
         // In the no-boundary case, we might not be able to distinguish
         // between n3 and n4.  Just call it n3 for now, and if we discover
         // it might have been n4 instead then we call it off and return 0.
-        baseClass = (bdry ? NSFSpace::bn3 : NSFSpace::n3);
+        baseClass = (bdry ? SFSpace::bn3 : SFSpace::n3);
     }
 
     // Recall that baseEuler_ assumes that each block contributes a plain
@@ -149,7 +149,7 @@ NSFSpace* NSatRegion::createSFS(bool reflect) const {
     // calculate genus just by looking at baseEuler_, orientability and
     // the number of punctures.
 
-    NSFSpace* sfs = new NSFSpace(baseClass,
+    SFSpace* sfs = new SFSpace(baseClass,
         (baseOrbl_ ? ((2 - baseEuler_) - twisted - untwisted) / 2 :
             ((2 - baseEuler_) - twisted - untwisted)),
         untwisted /* untwisted punctures */, twisted /* twisted punctures */,
@@ -164,8 +164,8 @@ NSFSpace* NSatRegion::createSFS(bool reflect) const {
         sfs->insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
 
     if ((sfs->baseGenus() >= 3) &&
-            (sfs->baseClass() == NSFSpace::n3 ||
-             sfs->baseClass() == NSFSpace::n4)) {
+            (sfs->baseClass() == SFSpace::n3 ||
+             sfs->baseClass() == SFSpace::n4)) {
         // Could still be either n3 or n4.
         // Shrug, give up.
         delete sfs;

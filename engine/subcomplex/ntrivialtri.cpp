@@ -32,9 +32,9 @@
 
 #include <algorithm>
 #include "algebra/abeliangroup.h"
-#include "manifold/nhandlebody.h"
-#include "manifold/nlensspace.h"
-#include "manifold/nsimplesurfacebundle.h"
+#include "manifold/handlebody.h"
+#include "manifold/lensspace.h"
+#include "manifold/simplesurfacebundle.h"
 #include "subcomplex/ntrivialtri.h"
 #include "triangulation/dim3.h"
 
@@ -136,15 +136,15 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     return 0;
 }
 
-NManifold* NTrivialTri::manifold() const {
+Manifold* NTrivialTri::manifold() const {
     if (type_ == SPHERE_4_VERTEX)
-        return new NLensSpace(1, 0);
+        return new LensSpace(1, 0);
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
-        return new NHandlebody(0, true);
+        return new Handlebody(0, true);
     else if (type_ == N2)
-        return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1_TWISTED);
+        return new SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED);
     else if (type_ == N3_1 || type_ == N3_2)
-        return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::RP2xS1);
+        return new SimpleSurfaceBundle(SimpleSurfaceBundle::RP2xS1);
     return 0;
 }
 

@@ -34,8 +34,8 @@
 #include <iterator>
 #include <sstream>
 #include "algebra/abeliangroup.h"
-#include "manifold/nlensspace.h"
-#include "manifold/nsfs.h"
+#include "manifold/lensspace.h"
+#include "manifold/sfs.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "subcomplex/nsatannulus.h"
@@ -47,20 +47,20 @@ namespace {
     /**
      * Some small exceptional fibres that we will use for comparisons.
      */
-    NSFSFibre two(2, 1);
-    NSFSFibre three(3, 1);
-    NSFSFibre threeB(3, 2);
-    NSFSFibre four(4, 1);
+    SFSFibre two(2, 1);
+    SFSFibre three(3, 1);
+    SFSFibre threeB(3, 2);
+    SFSFibre four(4, 1);
 }
 
-typedef std::list<NSFSFibre>::iterator FibreIterator;
-typedef std::list<NSFSFibre>::const_iterator FibreIteratorConst;
+typedef std::list<SFSFibre>::iterator FibreIterator;
+typedef std::list<SFSFibre>::const_iterator FibreIteratorConst;
 
-std::ostream& operator << (std::ostream& out, const NSFSFibre& f) {
+std::ostream& operator << (std::ostream& out, const SFSFibre& f) {
     return (out << '(' << f.alpha << ',' << f.beta << ')');
 }
 
-void NSFSpace::operator = (const NSFSpace& cloneMe) {
+void SFSpace::operator = (const SFSpace& cloneMe) {
     class_ = cloneMe.class_;
     genus_ = cloneMe.genus_;
     punctures_ = cloneMe.punctures_;
@@ -72,13 +72,13 @@ void NSFSpace::operator = (const NSFSpace& cloneMe) {
     b_ = cloneMe.b_;
 }
 
-NSFSFibre NSFSpace::fibre(unsigned long which) const {
+SFSFibre SFSpace::fibre(unsigned long which) const {
     FibreIteratorConst pos = fibres_.begin();
     advance(pos, which);
     return *pos;
 }
 
-void NSFSpace::addHandle(bool fibreReversing) {
+void SFSpace::addHandle(bool fibreReversing) {
     // First fix the class.
     // The transitions between classes have been worked out on paper
     // case by case (in particular, following how the generators of the
@@ -118,7 +118,7 @@ void NSFSpace::addHandle(bool fibreReversing) {
         genus_ += 2;
 }
 
-void NSFSpace::addCrosscap(bool fibreReversing) {
+void SFSpace::addCrosscap(bool fibreReversing) {
     // We're making the base orbifold non-orientable.
     // Convert orientable genus to non-orientable genus if required.
     if (baseOrientable())
@@ -178,7 +178,7 @@ void NSFSpace::addCrosscap(bool fibreReversing) {
     genus_++;
 }
 
-void NSFSpace::addPuncture(bool twisted, unsigned long nPunctures) {
+void SFSpace::addPuncture(bool twisted, unsigned long nPunctures) {
     if (twisted) {
         puncturesTwisted_ += nPunctures;
 
@@ -208,7 +208,7 @@ void NSFSpace::addPuncture(bool twisted, unsigned long nPunctures) {
     }
 }
 
-void NSFSpace::addReflector(bool twisted, unsigned long nReflectors) {
+void SFSpace::addReflector(bool twisted, unsigned long nReflectors) {
     if (twisted) {
         reflectorsTwisted_ += nReflectors;
 
@@ -238,7 +238,7 @@ void NSFSpace::addReflector(bool twisted, unsigned long nReflectors) {
     }
 }
 
-void NSFSpace::insertFibre(long alpha, long beta) {
+void SFSpace::insertFibre(long alpha, long beta) {
     // We are assuming that the parameters of this fibre are coprime and
     // that alpha is strictly positive.
 
@@ -266,13 +266,13 @@ void NSFSpace::insertFibre(long alpha, long beta) {
 
     // Now we have 0 <= beta < alpha and alpha >= 2.
     nFibres_++;
-    NSFSFibre f(alpha, beta);
+    SFSFibre f(alpha, beta);
     fibres_.insert(lower_bound(fibres_.begin(), fibres_.end(), f), f);
 
     // We're done!
 }
 
-void NSFSpace::reduce(bool mayReflect) {
+void SFSpace::reduce(bool mayReflect) {
     FibreIterator it, it2;
 
     // If the SFS is non-orientable, we can get rid of b completely and
@@ -288,7 +288,7 @@ void NSFSpace::reduce(bool mayReflect) {
             // Merge this into the first exceptional fibre instead.
             // Instead of modifying the fibre directly, delete and reinsert
             // so that sorted order is maintained.
-            NSFSFibre f(fibres_.front().alpha,
+            SFSFibre f(fibres_.front().alpha,
                 fibres_.front().alpha - fibres_.front().beta);
             fibres_.pop_front();
 
@@ -508,14 +508,14 @@ void NSFSpace::reduce(bool mayReflect) {
     }
 }
 
-std::list<NSFSFibre>::iterator NSFSpace::negateFibreDown(
-        std::list<NSFSFibre>::iterator it) {
+std::list<SFSFibre>::iterator SFSpace::negateFibreDown(
+        std::list<SFSFibre>::iterator it) {
     // The replacement fibre.
-    NSFSFibre f(it->alpha, it->alpha - it->beta);
+    SFSFibre f(it->alpha, it->alpha - it->beta);
 
     // The return value.  This is also a strict upper bound for the
     // location of the replacement fibre.
-    std::list<NSFSFibre>::iterator next = it;
+    std::list<SFSFibre>::iterator next = it;
     next++;
 
     // Delete the old iterator.
@@ -540,14 +540,14 @@ std::list<NSFSFibre>::iterator NSFSpace::negateFibreDown(
     return next;
 }
 
-void NSFSpace::complementAllFibres() {
+void SFSpace::complementAllFibres() {
     FibreIterator it, it2, next;
     for (it = fibres_.begin(); it != fibres_.end(); it++)
         it->beta = it->alpha - it->beta;
 
     // Ensure that the array remains in sorted order.
     // Each portion of the array with fixed index must be reversed.
-    NSFSFibre tmpFibre;
+    SFSFibre tmpFibre;
     it = fibres_.begin();
     while (it != fibres_.end()) {
         // INV: it points to the next block to be reversed.
@@ -578,7 +578,7 @@ void NSFSpace::complementAllFibres() {
     }
 }
 
-NLensSpace* NSFSpace::isLensSpace() const {
+LensSpace* SFSpace::isLensSpace() const {
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_) {
         // Not a chance.
         return 0;
@@ -587,13 +587,13 @@ NLensSpace* NSFSpace::isLensSpace() const {
     if (genus_ == 0 && class_ == o1) {
         // Base orbifold is the sphere.
         if (fibres_.empty())
-            return new NLensSpace(b_ >= 0 ? b_ : -b_, 1);
+            return new LensSpace(b_ >= 0 ? b_ : -b_, 1);
         else if (nFibres_ == 1) {
             long q = fibres_.front().alpha;
             long p = fibres_.front().beta + (b_ * q);
 
             // We have SFS [S2 : (q,p)].
-            return new NLensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
+            return new LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
         } else if (nFibres_ == 2) {
             // Precisely two fibres.
             long q = fibres_.back().alpha;
@@ -612,7 +612,7 @@ NLensSpace* NSFSpace::isLensSpace() const {
             }
 
             // We should now have (x,y) == (1,0).
-            return new NLensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
+            return new LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
         }
 
         // Not a lens space.
@@ -625,7 +625,7 @@ NLensSpace* NSFSpace::isLensSpace() const {
             long n = b_ * a + fibres_.front().beta;
 
             if (n == 1 || n == -1)
-                return new NLensSpace(4 * a, 2 * a - 1);
+                return new LensSpace(4 * a, 2 * a - 1);
         }
 
         // Not a lens space.
@@ -635,7 +635,7 @@ NLensSpace* NSFSpace::isLensSpace() const {
     return 0;
 }
 
-bool NSFSpace::operator == (const NSFSpace& compare) const {
+bool SFSpace::operator == (const SFSpace& compare) const {
     if (class_ != compare.class_)
         return false;
     if (genus_ != compare.genus_)
@@ -659,7 +659,7 @@ bool NSFSpace::operator == (const NSFSpace& compare) const {
     return true;
 }
 
-bool NSFSpace::operator < (const NSFSpace& compare) const {
+bool SFSpace::operator < (const SFSpace& compare) const {
     // Double the genus if it's orientable, so that we can line up tori
     // with Klein bottles, etc.
     unsigned long adjGenus1 = (baseOrientable() ? genus_ * 2 : genus_);
@@ -730,13 +730,13 @@ bool NSFSpace::operator < (const NSFSpace& compare) const {
     return false;
 }
 
-Triangulation<3>* NSFSpace::construct() const {
+Triangulation<3>* SFSpace::construct() const {
     // Things that we don't deal with just yet.
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
         return 0;
 
     // We already know how to construct lens spaces.
-    NLensSpace* lens = isLensSpace();
+    LensSpace* lens = isLensSpace();
     if (lens) {
         Triangulation<3>* t = lens->construct();
         delete lens;
@@ -760,7 +760,7 @@ Triangulation<3>* NSFSpace::construct() const {
     b->join(2, c, Perm<4>());
     c->join(3, a, Perm<4>(1, 2, 3, 0));
 
-    std::list<NSFSFibre>::const_iterator fit = fibres_.begin();
+    std::list<SFSFibre>::const_iterator fit = fibres_.begin();
     NSatAnnulus(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3)).
         attachLST(ans, fit->alpha, fit->beta);
     fit++;
@@ -774,7 +774,7 @@ Triangulation<3>* NSFSpace::construct() const {
     Tetrahedron<3>* prevA = a;
     Tetrahedron<3>* prevC = c;
 
-    NSFSFibre nextFibre = *fit++;
+    SFSFibre nextFibre = *fit++;
     while (fit != fibres_.end()) {
         a = ans->newTetrahedron();
         b = ans->newTetrahedron();
@@ -801,7 +801,7 @@ Triangulation<3>* NSFSpace::construct() const {
     return ans;
 }
 
-AbelianGroup* NSFSpace::homology() const {
+AbelianGroup* SFSpace::homology() const {
     if (punctures_ || puncturesTwisted_) {
         // Not just now.
         return 0;
@@ -906,7 +906,7 @@ AbelianGroup* NSFSpace::homology() const {
     return ans;
 }
 
-void NSFSpace::writeBaseExtraCount(std::ostream& out, unsigned long count,
+void SFSpace::writeBaseExtraCount(std::ostream& out, unsigned long count,
         const char* object, bool tex) {
     out << " + " << count << (tex ? "\\ \\mbox{" : " ") << object;
     if (count != 1)
@@ -915,7 +915,7 @@ void NSFSpace::writeBaseExtraCount(std::ostream& out, unsigned long count,
         out << '}';
 }
 
-std::ostream& NSFSpace::writeCommonBase(std::ostream& out, bool tex) const {
+std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
     bool named = false;
 
     // IMPORTANT: We do not allow spaces with > 2 reflector boundary
@@ -1010,7 +1010,7 @@ std::ostream& NSFSpace::writeCommonBase(std::ostream& out, bool tex) const {
     return out;
 }
 
-std::ostream& NSFSpace::writeCommonStructure(std::ostream& out, bool tex)
+std::ostream& SFSpace::writeCommonStructure(std::ostream& out, bool tex)
         const {
     if (b_ == 0 && fibres_.empty()) {
         // We have a straightforward product (possibly twisted).
@@ -1033,13 +1033,13 @@ std::ostream& NSFSpace::writeCommonStructure(std::ostream& out, bool tex)
     out << ':';
     if (fibres_.empty()) {
         // We have b non-zero.
-        out << ' ' << NSFSFibre(1, b_);
+        out << ' ' << SFSFibre(1, b_);
     } else {
         out << ' ';
         copy(fibres_.begin(), --fibres_.end(),
-            std::ostream_iterator<NSFSFibre>(out, " "));
+            std::ostream_iterator<SFSFibre>(out, " "));
 
-        NSFSFibre final = fibres_.back();
+        SFSFibre final = fibres_.back();
         final.beta += final.alpha * b_;
         out << final;
     }
@@ -1047,7 +1047,7 @@ std::ostream& NSFSpace::writeCommonStructure(std::ostream& out, bool tex)
     return out << (tex ? "\\right)" : "]");
 }
 
-std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
+std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // Things we don't deal with just yet.
     if (fibreNegating())
         return writeStructure(out);
@@ -1059,7 +1059,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // punctures or reflector boundaries.
 
     // Take out the lens spaces first.
-    NLensSpace* lens = isLensSpace();
+    LensSpace* lens = isLensSpace();
     if (lens) {
         if (tex)
             lens->writeTeXName(out);
@@ -1074,7 +1074,7 @@ std::ostream& NSFSpace::writeCommonName(std::ostream& out, bool tex) const {
     if (nFibres_ > 4)
         return writeStructure(out);
 
-    NSFSFibre fibre[4];
+    SFSFibre fibre[4];
     std::copy(fibres_.begin(), fibres_.end(), fibre);
 
     // Note that with three fibres our reduced form will always have

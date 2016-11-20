@@ -22,7 +22,7 @@ def process(tri):
     section = label[0]
     index = int(label[1:])
 
-    manifold = regina.NSnapPeaCensusManifold(section, index)
+    manifold = regina.SnapPeaCensusManifold(section, index)
     con = manifold.construct()
     hom = manifold.homology()
 

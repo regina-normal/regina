@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "maths/matrix.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "triangulation/dim3.h"
@@ -186,8 +186,8 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     return 0;
 }
 
-NManifold* NLayeredChainPair::manifold() const {
-    NSFSpace* ans = new NSFSpace();
+Manifold* NLayeredChainPair::manifold() const {
+    SFSpace* ans = new SFSpace();
 
     ans->insertFibre(2, -1);
     ans->insertFibre(chain_[0]->index() + 1, 1);

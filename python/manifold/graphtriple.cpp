@@ -31,29 +31,42 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/nsnappeacensusmfd.h"
+#include "manifold/graphtriple.h"
+#include "manifold/sfs.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSnapPeaCensusManifold;
+using regina::GraphTriple;
+using regina::Matrix2;
+using regina::SFSpace;
 
-void addNSnapPeaCensusManifold() {
-    scope s = class_<NSnapPeaCensusManifold, bases<regina::NManifold>,
-            std::auto_ptr<NSnapPeaCensusManifold>, boost::noncopyable>
-            ("NSnapPeaCensusManifold", init<char, unsigned long>())
-        .def(init<const NSnapPeaCensusManifold&>())
-        .def("section", &NSnapPeaCensusManifold::section)
-        .def("index", &NSnapPeaCensusManifold::index)
+namespace {
+    GraphTriple* createGraphTriple(const SFSpace& s1,
+            const SFSpace& s2, const SFSpace& s3,
+            const Matrix2& m1, const Matrix2& m2) {
+        return new GraphTriple(
+            new SFSpace(s1), new SFSpace(s2), new SFSpace(s3), m1, m2);
+    }
+}
+
+void addGraphTriple() {
+    class_<GraphTriple, bases<regina::Manifold>,
+            std::auto_ptr<GraphTriple>, boost::noncopyable>
+            ("GraphTriple", no_init)
+        .def("__init__", make_constructor(createGraphTriple))
+        .def("end", &GraphTriple::end,
+            return_internal_reference<>())
+        .def("centre", &GraphTriple::centre,
+            return_internal_reference<>())
+        .def("matchingReln", &GraphTriple::matchingReln,
+            return_internal_reference<>())
+        .def(self < self)
         .def(regina::python::add_eq_operators())
     ;
 
-    s.attr("SEC_5") = NSnapPeaCensusManifold::SEC_5;
-    s.attr("SEC_6_OR") = NSnapPeaCensusManifold::SEC_6_OR;
-    s.attr("SEC_6_NOR") = NSnapPeaCensusManifold::SEC_6_NOR;
-    s.attr("SEC_7_OR") = NSnapPeaCensusManifold::SEC_7_OR;
-    s.attr("SEC_7_NOR") = NSnapPeaCensusManifold::SEC_7_NOR;
+    scope().attr("NGraphTriple") = scope().attr("GraphTriple");
 
-    implicitly_convertible<std::auto_ptr<NSnapPeaCensusManifold>,
-        std::auto_ptr<regina::NManifold> >();
+    implicitly_convertible<std::auto_ptr<GraphTriple>,
+        std::auto_ptr<regina::Manifold> >();
 }
 

@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ngraphtriple.h"
-#include "manifold/nsfs.h"
+#include "manifold/graphtriple.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nblockedsfstriple.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/nsatblockstarter.h"
@@ -86,19 +86,19 @@ NBlockedSFSTriple::~NBlockedSFSTriple() {
         delete centre_;
 }
 
-NManifold* NBlockedSFSTriple::manifold() const {
+Manifold* NBlockedSFSTriple::manifold() const {
     // Go ahead and create the Seifert fibred spaces.
-    NSFSpace* end0 = end_[0]->createSFS(false);
+    SFSpace* end0 = end_[0]->createSFS(false);
     if (! end0)
         return 0;
 
-    NSFSpace* end1 = end_[1]->createSFS(false);
+    SFSpace* end1 = end_[1]->createSFS(false);
     if (! end1) {
         delete end0;
         return 0;
     }
 
-    NSFSpace* hub = centre_->createSFS(false);
+    SFSpace* hub = centre_->createSFS(false);
     if (! hub) {
         delete end0;
         delete end1;
@@ -115,7 +115,7 @@ NManifold* NBlockedSFSTriple::manifold() const {
     end1->reduce(false);
     hub->reduce(false);
 
-    return new NGraphTriple(end0, hub, end1,
+    return new GraphTriple(end0, hub, end1,
         matchingReln_[0], matchingReln_[1]);
 }
 

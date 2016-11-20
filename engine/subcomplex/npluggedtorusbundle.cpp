@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ngraphloop.h"
-#include "manifold/nsfs.h"
+#include "manifold/graphloop.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
@@ -58,8 +58,8 @@ NPluggedTorusBundle::~NPluggedTorusBundle() {
     delete region_;
 }
 
-NManifold* NPluggedTorusBundle::manifold() const {
-    NSFSpace* sfs = region_->createSFS(false);
+Manifold* NPluggedTorusBundle::manifold() const {
+    SFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
     if (sfs->punctures() == 1) {
@@ -70,7 +70,7 @@ NManifold* NPluggedTorusBundle::manifold() const {
 
     sfs->reduce(false);
 
-    return new NGraphLoop(sfs, matchingReln_);
+    return new GraphLoop(sfs, matchingReln_);
 }
 
 std::ostream& NPluggedTorusBundle::writeName(std::ostream& out) const {

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/abeliangroup.h"
-#include "manifold/nlensspace.h"
+#include "manifold/lensspace.h"
 #include "subcomplex/nl31pillow.h"
 #include "triangulation/dim3.h"
 
@@ -95,8 +95,8 @@ NL31Pillow* NL31Pillow::isL31Pillow(const Component<3>* comp) {
     return ans;
 }
 
-NManifold* NL31Pillow::manifold() const {
-    return new NLensSpace(3, 1);
+Manifold* NL31Pillow::manifold() const {
+    return new LensSpace(3, 1);
 }
 
 AbelianGroup* NL31Pillow::homology() const {

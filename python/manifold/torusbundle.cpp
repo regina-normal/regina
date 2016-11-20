@@ -31,23 +31,28 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/nhandlebody.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/torusbundle.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NHandlebody;
+using regina::Matrix2;
+using regina::TorusBundle;
 
-void addNHandlebody() {
-    class_<NHandlebody, bases<regina::NManifold>,
-            std::auto_ptr<NHandlebody>, boost::noncopyable>
-            ("NHandlebody", init<unsigned long, bool>())
-        .def(init<const NHandlebody&>())
-        .def("handles", &NHandlebody::handles)
-        .def("isOrientable", &NHandlebody::isOrientable)
+void addTorusBundle() {
+    class_<TorusBundle, bases<regina::Manifold>,
+            std::auto_ptr<TorusBundle> >("TorusBundle")
+        .def(init<const Matrix2&>())
+        .def(init<long, long, long, long>())
+        .def(init<const TorusBundle&>())
+        .def("monodromy", &TorusBundle::monodromy,
+            return_internal_reference<>())
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NHandlebody>,
-        std::auto_ptr<regina::NManifold> >();
+    implicitly_convertible<std::auto_ptr<TorusBundle>,
+        std::auto_ptr<regina::Manifold> >();
+
+    scope().attr("NTorusBundle") = scope().attr("TorusBundle");
 }
 

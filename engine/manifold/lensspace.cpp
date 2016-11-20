@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,27 +30,74 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
-#include "manifold/nsimplesurfacebundle.h"
-#include "../helpers.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/lensspace.h"
+#include "maths/numbertheory.h"
+#include "triangulation/dim3.h"
 
-using namespace boost::python;
-using regina::NSimpleSurfaceBundle;
+namespace regina {
 
-void addNSimpleSurfaceBundle() {
-    scope s = class_<NSimpleSurfaceBundle, bases<regina::NManifold>,
-            std::auto_ptr<NSimpleSurfaceBundle>, boost::noncopyable>
-            ("NSimpleSurfaceBundle", init<int>())
-        .def(init<const NSimpleSurfaceBundle&>())
-        .def("type", &NSimpleSurfaceBundle::type)
-        .def(regina::python::add_eq_operators())
-    ;
+void LensSpace::reduce() {
+    if (p_ == 0) {
+        q_ = 1;
+        return;
+    } else if (p_ == 1) {
+        q_ = 0;
+        return;
+    }
 
-    s.attr("S2xS1") = NSimpleSurfaceBundle::S2xS1;
-    s.attr("S2xS1_TWISTED") = NSimpleSurfaceBundle::S2xS1_TWISTED;
-    s.attr("RP2xS1") = NSimpleSurfaceBundle::RP2xS1;
+    // p > 1 and gcd(p,q) = 1.
+    
+    // Reduce q to +/-q.
+    q_ = q_ % p_;
+    if (2 * q_ > p_)
+        q_ = p_ - q_;
 
-    implicitly_convertible<std::auto_ptr<NSimpleSurfaceBundle>,
-        std::auto_ptr<regina::NManifold> >();
+    unsigned long inv = modularInverse(p_, q_);
+    if (2 * inv > p_)
+        inv = p_ - inv;
+    if (inv < q_)
+        q_ = inv;
 }
+
+Triangulation<3>* LensSpace::construct() const {
+    Triangulation<3>* ans = new Triangulation<3>();
+    ans->insertLayeredLensSpace(p_, q_);
+    return ans;
+}
+
+AbelianGroup* LensSpace::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
+    if (p_ == 0)
+        ans->addRank();
+    else if (p_ > 1)
+        ans->addTorsionElement(p_);
+    return ans;
+}
+
+std::ostream& LensSpace::writeName(std::ostream& out) const {
+    if (p_ == 0)
+        out << "S2 x S1";
+    else if (p_ == 1)
+        out << "S3";
+    else if (p_ == 2 && q_ == 1)
+        out << "RP3";
+    else
+        out << "L(" << p_ << ',' << q_ << ')';
+    return out;
+}
+
+std::ostream& LensSpace::writeTeXName(std::ostream& out) const {
+    if (p_ == 0)
+        out << "S^2 \\times S^1";
+    else if (p_ == 1)
+        out << "S^3";
+    else if (p_ == 2 && q_ == 1)
+        out << "\\mathbb{R}P^3";
+    else
+        out << "L(" << p_ << ',' << q_ << ')';
+    return out;
+}
+
+} // namespace regina
 

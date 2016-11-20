@@ -31,41 +31,25 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/ngraphloop.h"
-#include "manifold/nsfs.h"
+#include "manifold/lensspace.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NGraphLoop;
-using regina::Matrix2;
-using regina::NSFSpace;
+using regina::LensSpace;
 
-namespace {
-    NGraphLoop* createNGraphLoop_longs(const NSFSpace& s,
-            long a, long b, long c, long d) {
-        return new NGraphLoop(new NSFSpace(s), a, b, c, d);
-    }
-
-    NGraphLoop* createNGraphLoop_matrix(const NSFSpace& s, const Matrix2& m) {
-        return new NGraphLoop(new NSFSpace(s), m);
-    }
-}
-
-void addNGraphLoop() {
-    class_<NGraphLoop, bases<regina::NManifold>,
-            std::auto_ptr<NGraphLoop>, boost::noncopyable>
-            ("NGraphLoop", no_init)
-        .def("__init__", make_constructor(createNGraphLoop_longs))
-        .def("__init__", make_constructor(createNGraphLoop_matrix))
-        .def("sfs", &NGraphLoop::sfs,
-            return_internal_reference<>())
-        .def("matchingReln", &NGraphLoop::matchingReln,
-            return_internal_reference<>())
-        .def(self < self)
+void addLensSpace() {
+    class_<LensSpace, bases<regina::Manifold>,
+            std::auto_ptr<LensSpace>, boost::noncopyable>
+            ("LensSpace", init<unsigned long, unsigned long>())
+        .def(init<const LensSpace&>())
+        .def("p", &LensSpace::p)
+        .def("q", &LensSpace::q)
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NGraphLoop>,
-        std::auto_ptr<regina::NManifold> >();
+    scope().attr("NLensSpace") = scope().attr("LensSpace");
+
+    implicitly_convertible<std::auto_ptr<LensSpace>,
+        std::auto_ptr<regina::Manifold> >();
 }
 

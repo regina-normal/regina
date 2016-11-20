@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nblockedsfsloop.h"
@@ -195,7 +195,7 @@ void Tri3CompositionUI::refresh() {
         addTopLevelSection(
             tr("Triangulation: ") + standardTri->name().c_str());
 
-        std::unique_ptr<regina::NManifold> manifold(standardTri->manifold());
+        std::unique_ptr<regina::Manifold> manifold(standardTri->manifold());
         if (manifold.get())
             addTopLevelSection(
                 tr("3-manifold: ") + manifold->name().c_str());

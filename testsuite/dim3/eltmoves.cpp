@@ -33,14 +33,14 @@
 #include <cmath>
 #include <memory>
 #include <cppunit/extensions/HelperMacros.h>
-#include "manifold/nsimplesurfacebundle.h"
+#include "manifold/simplesurfacebundle.h"
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::Edge;
 using regina::Perm;
-using regina::NSimpleSurfaceBundle;
+using regina::SimpleSurfaceBundle;
 using regina::Tetrahedron;
 using regina::Triangulation;
 
@@ -306,7 +306,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             {
                 // All four faces joined together in a simple loop.
                 Triangulation<3>* s2xs1 =
-                    NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1)
+                    SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1)
                     .construct();
                 verify20EdgeInvalid(s2xs1, "round-loop");
                 delete s2xs1;
@@ -315,7 +315,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             {
                 // All four faces joined together in a crossed loop.
                 Triangulation<3>* s2xs1Twisted =
-                    NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1_TWISTED)
+                    SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED)
                     .construct();
                 verify20EdgeInvalid(s2xs1Twisted, "crossed-loop");
                 delete s2xs1Twisted;

@@ -1158,6 +1158,15 @@ Equality type : NEVER_INSTANTIATED
 GluingPermSearcher3 : class
 Equality type : BY_REFERENCE
 
+GraphLoop : class
+Equality type : BY_REFERENCE
+
+GraphPair : class
+Equality type : BY_REFERENCE
+
+GraphTriple : class
+Equality type : BY_REFERENCE
+
 GroupExpression : class
 Equality type : BY_VALUE
 
@@ -1166,6 +1175,9 @@ Equality type : BY_VALUE
 
 GroupPresentation : class
 Equality type : BY_REFERENCE
+
+Handlebody : class
+Equality type : BY_VALUE
 
 HomGroupPresentation : class
 Equality type : BY_REFERENCE
@@ -1230,8 +1242,14 @@ Equality type : BY_REFERENCE
 LargeInteger : class
 Equality type : BY_VALUE
 
+LensSpace : class
+Equality type : BY_VALUE
+
 Locale : class
 Equality type : NEVER_INSTANTIATED
+
+Manifold : class
+Equality type : BY_REFERENCE
 
 MarkedAbelianGroup : class
 Equality type : BY_REFERENCE
@@ -1314,14 +1332,11 @@ NGlobalDirs : typedef ->  GlobalDirs
 
 NGluingPermSearcher : typedef ->  GluingPermSearcher3
 
-NGraphLoop : class
-Equality type : BY_REFERENCE
+NGraphLoop : typedef ->  GraphLoop
 
-NGraphPair : class
-Equality type : BY_REFERENCE
+NGraphPair : typedef ->  GraphPair
 
-NGraphTriple : class
-Equality type : BY_REFERENCE
+NGraphTriple : typedef ->  GraphTriple
 
 NGroupExpression : typedef ->  GroupExpression
 
@@ -1329,8 +1344,7 @@ NGroupExpressionTerm : typedef ->  GroupExpressionTerm
 
 NGroupPresentation : typedef ->  GroupPresentation
 
-NHandlebody : class
-Equality type : BY_VALUE
+NHandlebody : typedef ->  Handlebody
 
 NHomGroupPresentation : typedef ->  HomGroupPresentation
 
@@ -1368,11 +1382,9 @@ Equality type : BY_REFERENCE
 NLayering : class
 Equality type : BY_REFERENCE
 
-NLensSpace : class
-Equality type : BY_VALUE
+NLensSpace : typedef ->  LensSpace
 
-NManifold : class
-Equality type : BY_REFERENCE
+NManifold : typedef ->  Manifold
 
 NMarkedAbelianGroup : typedef ->  MarkedAbelianGroup
 
@@ -1445,11 +1457,9 @@ NProgressTrackerOpen : typedef ->  ProgressTrackerOpen
 
 NRational : typedef ->  Rational
 
-NSFSFibre : class
-Equality type : BY_VALUE
+NSFSFibre : typedef ->  SFSFibre
 
-NSFSpace : class
-Equality type : BY_VALUE
+NSFSpace : typedef ->  SFSpace
 
 NSatAnnulus : class
 Equality type : BY_VALUE
@@ -1485,11 +1495,9 @@ NScript : typedef ->  Script
 
 NSignature : typedef ->  Signature
 
-NSimpleSurfaceBundle : class
-Equality type : BY_VALUE
+NSimpleSurfaceBundle : typedef ->  SimpleSurfaceBundle
 
-NSnapPeaCensusManifold : class
-Equality type : BY_VALUE
+NSnapPeaCensusManifold : typedef ->  SnapPeaCensusManifold
 
 NSnapPeaCensusTri : class
 Equality type : BY_VALUE
@@ -1520,8 +1528,7 @@ NTetrahedron : typedef ->  Simplex3
 
 NText : typedef ->  Text
 
-NTorusBundle : class
-Equality type : BY_REFERENCE
+NTorusBundle : typedef ->  TorusBundle
 
 NTreeBag : typedef ->  TreeBag
 
@@ -1685,11 +1692,20 @@ Equality type : BY_REFERENCE
 Rational : class
 Equality type : BY_VALUE
 
+SFSFibre : class
+Equality type : BY_VALUE
+
+SFSpace : class
+Equality type : BY_VALUE
+
 Script : class
 Equality type : BY_REFERENCE
 
 Signature : class
 Equality type : BY_REFERENCE
+
+SimpleSurfaceBundle : class
+Equality type : BY_VALUE
 
 Simplex10 : class
 Equality type : BY_REFERENCE
@@ -1732,6 +1748,9 @@ Equality type : BY_REFERENCE
 
 Simplex9 : class
 Equality type : BY_REFERENCE
+
+SnapPeaCensusManifold : class
+Equality type : BY_VALUE
 
 SnapPeaTriangulation : class
 Equality type : BY_REFERENCE
@@ -1796,6 +1815,9 @@ TetrahedronEmbedding8 : typedef ->  FaceEmbedding8_3
 TetrahedronEmbedding9 : typedef ->  FaceEmbedding9_3
 
 Text : class
+Equality type : BY_REFERENCE
+
+TorusBundle : class
 Equality type : BY_REFERENCE
 
 TreeBag : class

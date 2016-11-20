@@ -49,7 +49,7 @@
 namespace regina {
 
 struct NSatAnnulus;
-class NSFSpace;
+class SFSpace;
 
 /**
  * \weakgroup subcomplex
@@ -345,7 +345,7 @@ class REGINA_API NSatBlock :
          * @param reflect \c true if this block is to be reflected, or
          * \c false if it should be inserted directly.
          */
-        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const = 0;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const = 0;
 
         /**
          * Adjusts the structure of this block according to the given
