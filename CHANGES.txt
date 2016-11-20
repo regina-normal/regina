@@ -158,6 +158,9 @@ Version 5.1  [ (under development) ]
         Class Primes:
             - This class is now thread-safe.  (Previously it was not, because
               it worked with a global cache of pre-computed primes.)
+        Class ProgressTracker, ProgressTrackerOpen:
+            - Routine newStage() now accepts C++-style strings as well as
+              C-style strings.
         Class Property:
             - New routine swap() for fast swapping of data.
         Class PropertyBase:
