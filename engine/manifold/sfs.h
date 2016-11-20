@@ -199,12 +199,11 @@ REGINA_API std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * boundaries.
  *
  * \warning In Regina 4.2.1 and earlier, this class was named NSFS.
- * The new SFSpace class was introduced with Regina 4.3, and has changed
- * its behaviour in siginficant ways (becoming more general, as well as
- * keeping the obstruction parameter \a b separate).  Code that was written
- * to work with the old NSFS class should be looked at closely before
- * being adapted to the new SFSpace class (i.e., it may require more
- * than just substituting class names).
+ * As of Regina 4.3, this class was renamed due to significant changes of
+ * behaviour (it became more general, and also now keeps the obstruction
+ * parameter \a b separate).  Code that was written to work with the old
+ * NSFS class should be looked at closely before being adapted to the new
+ * SFSpace class (i.e., it may require more than just substituting class names).
  *
  * \todo \featurelong Implement recognition of more common names.
  * \todo \featurelong Implement triangulation construction and homology
