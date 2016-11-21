@@ -68,7 +68,7 @@ Definition Repository::definitionForName(const std::string& defName) const
     return Definition();
 }
 
-QVector<Theme> Repository::themes() const
+const std::vector<Theme>& Repository::themes() const
 {
     return d->m_themes;
 }

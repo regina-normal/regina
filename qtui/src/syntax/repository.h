@@ -22,8 +22,8 @@
 
 #include <qglobal.h>
 #include <memory>
-
-template <typename T> class QVector;
+#include <vector>
+#include <boost/noncopyable.hpp>
 
 /**
  * @namespace KSyntaxHighlighting
@@ -56,7 +56,7 @@ class Theme;
  * Typically, only one instance of the Repository is needed. This single
  * instance can be thought of as a singleton you keep alive throughout the
  * lifetime of your application. Then, call definitionForName() with the
- * given language name (e.g. "QML" or "Java").
+ * given language name (e.g. "Python" or "Java").
  *
  * In addition to Definitions, the Repository also provides a list of Themes.
  * A Theme is defined by a set of default text style colors as well as editor
@@ -68,7 +68,7 @@ class Theme;
  *
  * @see Definition, Theme, AbstractHighlighter
  */
-class KSYNTAXHIGHLIGHTING_EXPORT Repository
+class KSYNTAXHIGHLIGHTING_EXPORT Repository : public boost::noncopyable
 {
 public:
     /**
@@ -98,7 +98,7 @@ public:
      * Returns all available color themes.
      * The returned list should never be empty.
      */
-    QVector<Theme> themes() const;
+    const std::vector<Theme>& themes() const;
 
     /**
      * Returns the theme called @p themeName.
@@ -132,7 +132,6 @@ public:
     void reload();
 
 private:
-    Q_DISABLE_COPY(Repository)
     friend class RepositoryPrivate;
     std::unique_ptr<RepositoryPrivate> d;
 };

@@ -18,7 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_REPOSITORY_P_H
 #define KSYNTAXHIGHLIGHTING_REPOSITORY_P_H
 
-#include <QVector>
 #include <map>
 
 namespace KSyntaxHighlighting {
@@ -43,7 +42,7 @@ public:
 
     std::map<std::string, Definition> m_defs;
 
-    QVector<Theme> m_themes;
+    std::vector<Theme> m_themes;
 
     quint16 m_formatId;
 };
