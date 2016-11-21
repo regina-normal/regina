@@ -20,7 +20,6 @@
 #include "definition_p.h"
 #include "repository.h"
 
-#include <QDebug>
 #include <iostream>
 
 using namespace KSyntaxHighlighting;

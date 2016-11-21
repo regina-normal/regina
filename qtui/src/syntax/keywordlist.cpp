@@ -17,7 +17,6 @@
 
 #include "keywordlist_p.h"
 
-#include <QDebug>
 #include <QXmlStreamReader>
 
 using namespace KSyntaxHighlighting;

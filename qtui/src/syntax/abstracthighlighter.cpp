@@ -26,7 +26,6 @@
 #include "state_p.h"
 #include "theme.h"
 
-#include <QDebug>
 #include <iostream>
 
 using namespace KSyntaxHighlighting;

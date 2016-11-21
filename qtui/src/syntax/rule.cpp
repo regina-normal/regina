@@ -19,7 +19,6 @@
 #include "definition_p.h"
 #include "xml_p.h"
 
-#include <QDebug>
 #include <QString>
 #include <QXmlStreamReader>
 #include <iostream>

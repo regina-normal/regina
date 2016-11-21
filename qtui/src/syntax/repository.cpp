@@ -25,7 +25,6 @@
 
 #include "file/globaldirs.h"
 
-#include <QDebug>
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>

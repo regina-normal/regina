@@ -24,7 +24,6 @@
 #include <QJsonValue>
 #include <QMetaEnum>
 
-#include <QDebug>
 #include <iostream>
 
 using namespace KSyntaxHighlighting;
