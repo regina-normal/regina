@@ -260,11 +260,11 @@ void DefinitionData::clear()
     hidden = false;
 }
 
-bool DefinitionData::loadMetaData(const QString& definitionFileName)
+bool DefinitionData::loadMetaData(const std::string& definitionFileName)
 {
-    fileName = definitionFileName;
+    fileName = definitionFileName.c_str();
 
-    QFile file(definitionFileName);
+    QFile file(fileName);
     if (!file.open(QFile::ReadOnly))
         return false;
 

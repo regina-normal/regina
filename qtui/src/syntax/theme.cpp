@@ -20,6 +20,8 @@
 
 using namespace KSyntaxHighlighting;
 
+std::string nullName;
+
 Theme::Theme()
 {
 }
@@ -51,7 +53,7 @@ bool Theme::isValid() const
 
 const std::string& Theme::name() const
 {
-    return m_data ? m_data->name() : std::string();
+    return m_data ? m_data->name() : nullName;
 }
 
 bool Theme::isReadOnly() const

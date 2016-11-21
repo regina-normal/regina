@@ -42,7 +42,7 @@ public:
     static DefinitionData* get(const Definition &def);
 
     bool isLoaded() const;
-    bool loadMetaData(const QString &definitionFileName);
+    bool loadMetaData(const std::string& definitionFileName);
 
     void clear();
 

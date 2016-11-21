@@ -43,7 +43,7 @@ public:
      * Load the Theme data from the file @p filePath.
      * Note, that @p filePath either is a local file, or a qt resource location.
      */
-    bool load(const QString &filePath);
+    bool load(const std::string& filePath);
 
     /**
      * Returns the unique name of this Theme.

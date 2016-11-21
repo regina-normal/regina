@@ -25,11 +25,7 @@
 
 #include "file/globaldirs.h"
 
-#include <QDirIterator>
-#include <QFile>
-#include <QFileInfo>
-#include <QStandardPaths>
-
+#include <cassert>
 #include <limits>
 #include <iostream>
 
@@ -56,7 +52,7 @@ Repository::~Repository()
     // reset repo so we can detect in still alive definition instances
     // that the repo was deleted
     foreach (const auto &def, d->m_defs)
-        DefinitionData::get(def.second)->repo = Q_NULLPTR;
+        DefinitionData::get(def.second)->repo = nullptr;
 }
 
 Definition Repository::definitionForName(const std::string& defName) const
@@ -93,41 +89,19 @@ Theme Repository::defaultTheme(Repository::DefaultTheme t)
 
 void RepositoryPrivate::load(Repository *repo)
 {
-    QString syntaxDir = QFile::decodeName(
-        (regina::GlobalDirs::home() + "/syntax").c_str());
+    std::string syntaxBase = regina::GlobalDirs::home() + "/syntax/";
 
-    {
+    for (const char* file : { "alert.xml", "alert_indent.xml", "modelines.xml", "python.xml" }) {
         Definition def;
         auto defData = DefinitionData::get(def);
         defData->repo = repo;
-        if (defData->loadMetaData(QDir(syntaxDir).filePath("alert.xml")))
-            addDefinition(def);
-    }
-    {
-        Definition def;
-        auto defData = DefinitionData::get(def);
-        defData->repo = repo;
-        if (defData->loadMetaData(QDir(syntaxDir).filePath("alert_indent.xml")))
-            addDefinition(def);
-    }
-    {
-        Definition def;
-        auto defData = DefinitionData::get(def);
-        defData->repo = repo;
-        if (defData->loadMetaData(QDir(syntaxDir).filePath("modelines.xml")))
-            addDefinition(def);
-    }
-    {
-        Definition def;
-        auto defData = DefinitionData::get(def);
-        defData->repo = repo;
-        if (defData->loadMetaData(QDir(syntaxDir).filePath("python.xml")))
+        if (defData->loadMetaData(syntaxBase + file))
             addDefinition(def);
     }
 
     // load themes
     auto themeData = std::unique_ptr<ThemeData>(new ThemeData);
-    if (themeData->load(QDir(syntaxDir).filePath("default.theme")))
+    if (themeData->load(syntaxBase + "default.theme"))
         addTheme(Theme(themeData.release()));
 }
 
@@ -165,7 +139,7 @@ void RepositoryPrivate::addTheme(const Theme &theme)
 
 quint16 RepositoryPrivate::nextFormatId()
 {
-    Q_ASSERT(m_formatId < std::numeric_limits<quint16>::max());
+    assert(m_formatId < std::numeric_limits<quint16>::max());
     return ++m_formatId;
 }
 
