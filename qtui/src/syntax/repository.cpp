@@ -125,26 +125,29 @@ void RepositoryPrivate::load(Repository *repo)
     QString syntaxDir = QFile::decodeName(
         (regina::GlobalDirs::home() + "/syntax").c_str());
 
-    Definition def;
     {
+        Definition def;
         auto defData = DefinitionData::get(def);
         defData->repo = repo;
         if (defData->loadMetaData(QDir(syntaxDir).filePath("alert.xml")))
             addDefinition(def);
     }
     {
+        Definition def;
         auto defData = DefinitionData::get(def);
         defData->repo = repo;
         if (defData->loadMetaData(QDir(syntaxDir).filePath("alert_indent.xml")))
             addDefinition(def);
     }
     {
+        Definition def;
         auto defData = DefinitionData::get(def);
         defData->repo = repo;
         if (defData->loadMetaData(QDir(syntaxDir).filePath("modelines.xml")))
             addDefinition(def);
     }
     {
+        Definition def;
         auto defData = DefinitionData::get(def);
         defData->repo = repo;
         if (defData->loadMetaData(QDir(syntaxDir).filePath("python.xml")))
