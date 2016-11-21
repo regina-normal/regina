@@ -122,13 +122,34 @@ Theme Repository::defaultTheme(Repository::DefaultTheme t)
 
 void RepositoryPrivate::load(Repository *repo)
 {
-    QString dataDir = QFile::decodeName(regina::GlobalDirs::data().c_str());
+    QString syntaxDir = QFile::decodeName(
+        (regina::GlobalDirs::home() + "/syntax").c_str());
 
     Definition def;
-    auto defData = DefinitionData::get(def);
-    defData->repo = repo;
-    if (defData->loadMetaData(QDir(dataDir).filePath("python.xml")))
-        addDefinition(def);
+    {
+        auto defData = DefinitionData::get(def);
+        defData->repo = repo;
+        if (defData->loadMetaData(QDir(syntaxDir).filePath("alert.xml")))
+            addDefinition(def);
+    }
+    {
+        auto defData = DefinitionData::get(def);
+        defData->repo = repo;
+        if (defData->loadMetaData(QDir(syntaxDir).filePath("alert_indent.xml")))
+            addDefinition(def);
+    }
+    {
+        auto defData = DefinitionData::get(def);
+        defData->repo = repo;
+        if (defData->loadMetaData(QDir(syntaxDir).filePath("modelines.xml")))
+            addDefinition(def);
+    }
+    {
+        auto defData = DefinitionData::get(def);
+        defData->repo = repo;
+        if (defData->loadMetaData(QDir(syntaxDir).filePath("python.xml")))
+            addDefinition(def);
+    }
 
     m_sortedDefs.reserve(m_defs.size());
     for (auto it = m_defs.constBegin(); it != m_defs.constEnd(); ++it)
@@ -142,7 +163,7 @@ void RepositoryPrivate::load(Repository *repo)
 
     // load themes
     auto themeData = std::unique_ptr<ThemeData>(new ThemeData);
-    if (themeData->load(QDir(dataDir).filePath("default.theme")))
+    if (themeData->load(QDir(syntaxDir).filePath("default.theme")))
         addTheme(Theme(themeData.release()));
 }
 
