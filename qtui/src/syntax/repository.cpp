@@ -24,22 +24,17 @@
 #include "ksyntaxhighlighting_logging.h"
 #include "wildcardmatcher_p.h"
 
+#include "file/globaldirs.h"
+
 #include <QDebug>
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QStandardPaths>
 
 #include <limits>
 
 using namespace KSyntaxHighlighting;
-
-static void initResource()
-{
-    Q_INIT_RESOURCE(syntax_data);
-}
 
 RepositoryPrivate::RepositoryPrivate() :
     m_foldingRegionId(0),
@@ -55,7 +50,6 @@ RepositoryPrivate* RepositoryPrivate::get(Repository *repo)
 Repository::Repository() :
     d(new RepositoryPrivate)
 {
-    initResource();
     d->load(this);
 }
 
@@ -128,15 +122,13 @@ Theme Repository::defaultTheme(Repository::DefaultTheme t)
 
 void RepositoryPrivate::load(Repository *repo)
 {
-    auto dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("org.kde.syntax-highlighting/syntax"), QStandardPaths::LocateDirectory);
-    foreach (const auto &dir, dirs)
-        loadSyntaxFolder(repo, dir);
-    // backward compatibility with Kate
-    dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("katepart5/syntax"), QStandardPaths::LocateDirectory);
-    foreach (const auto &dir, dirs)
-        loadSyntaxFolder(repo, dir);
+    QString dataDir = QFile::decodeName(regina::GlobalDirs::data().c_str());
 
-    loadSyntaxFolder(repo, QStringLiteral(":/org.kde.syntax-highlighting/syntax"));
+    Definition def;
+    auto defData = DefinitionData::get(def);
+    defData->repo = repo;
+    if (defData->loadMetaData(QDir(dataDir).filePath("python.xml")))
+        addDefinition(def);
 
     m_sortedDefs.reserve(m_defs.size());
     for (auto it = m_defs.constBegin(); it != m_defs.constEnd(); ++it)
@@ -149,47 +141,9 @@ void RepositoryPrivate::load(Repository *repo)
     });
 
     // load themes
-    dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("org.kde.syntax-highlighting/themes"), QStandardPaths::LocateDirectory);
-    foreach (const auto &dir, dirs)
-        loadThemeFolder(dir);
-    loadThemeFolder(QStringLiteral(":/org.kde.syntax-highlighting/themes"));
-}
-
-void RepositoryPrivate::loadSyntaxFolder(Repository *repo, const QString &path)
-{
-    if (loadSyntaxFolderFromIndex(repo, path))
-        return;
-
-    QDirIterator it(path);
-    while (it.hasNext()) {
-        Definition def;
-        auto defData = DefinitionData::get(def);
-        defData->repo = repo;
-        if (defData->loadMetaData(it.next()))
-            addDefinition(def);
-    }
-}
-
-bool RepositoryPrivate::loadSyntaxFolderFromIndex(Repository *repo, const QString &path)
-{
-    QFile indexFile(path + QLatin1String("/index.katesyntax"));
-    if (!indexFile.open(QFile::ReadOnly))
-        return false;
-
-    const auto indexDoc(QJsonDocument::fromBinaryData(indexFile.readAll()));
-    const auto index = indexDoc.object();
-    for (auto it = index.begin(); it != index.end(); ++it) {
-        if (!it.value().isObject())
-            continue;
-        const auto fileName = QString(path + QLatin1Char('/') + it.key());
-        const auto defMap = it.value().toObject();
-        Definition def;
-        auto defData = DefinitionData::get(def);
-        defData->repo = repo;
-        if (defData->loadMetaData(fileName, defMap))
-            addDefinition(def);
-    }
-    return true;
+    auto themeData = std::unique_ptr<ThemeData>(new ThemeData);
+    if (themeData->load(QDir(dataDir).filePath("default.theme")))
+        addTheme(Theme(themeData.release()));
 }
 
 void RepositoryPrivate::addDefinition(const Definition &def)
@@ -203,16 +157,6 @@ void RepositoryPrivate::addDefinition(const Definition &def)
     if (it.value().version() >= def.version())
         return;
     m_defs.insert(def.name(), def);
-}
-
-void RepositoryPrivate::loadThemeFolder(const QString &path)
-{
-    QDirIterator it(path);
-    while (it.hasNext()) {
-        auto themeData = std::unique_ptr<ThemeData>(new ThemeData);
-        if (themeData->load(it.next()))
-            addTheme(Theme(themeData.release()));
-    }
 }
 
 static int themeRevision(const Theme &theme)
