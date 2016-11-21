@@ -3,10 +3,8 @@ SET ( FILES
   context.cpp
   contextswitch.cpp
   definition.cpp
-  definitiondownloader.cpp
   foldingregion.cpp
   format.cpp
-  htmlhighlighter.cpp
   keywordlist.cpp
   ksyntaxhighlighting_logging.cpp
   matchresult.cpp
