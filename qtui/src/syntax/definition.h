@@ -49,9 +49,7 @@ class DefinitionData;
  * @section def_info General Information
  *
  * Each Definition contains a non-translated unique name() and a section().
- * In addition, for putting this information e.g. into menus, the functions
- * translatedName() and translatedSection() are provided. However, if isHidden()
- * returns @e true, the Definition should not be visible in the UI. The location
+ * The location
  * of the Definition can be obtained through filePath(), which either is the
  * location on disk or a path to a compiled-in Qt resource.
  *
@@ -109,17 +107,11 @@ public:
     QString filePath() const;
 
     /** Name of the syntax.
-     *  Used for internal references, prefer translatedName() for display.
      */
     QString name() const;
-    /** Translated name for display. */
-    QString translatedName() const;
     /** The group this syntax definition belongs to.
-     *  For display, consider translatedSection().
      */
     QString section() const;
-    /** Translated group name for display. */
-    QString translatedSection() const;
     /** Mime types associated with this syntax definition. */
     QVector<QString> mimeTypes() const;
     /**

@@ -110,7 +110,7 @@ public:
 
     /**
      * Returns all available Definition%s.
-     * Definition%ss are ordered by translated section and translated names,
+     * Definition%ss are ordered by sections and names,
      * for consistent displaying.
      */
     QVector<Definition> definitions() const;

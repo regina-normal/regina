@@ -156,9 +156,9 @@ void RepositoryPrivate::load(Repository *repo)
     for (auto it = m_defs.constBegin(); it != m_defs.constEnd(); ++it)
         m_sortedDefs.push_back(it.value());
     std::sort(m_sortedDefs.begin(), m_sortedDefs.end(), [](const Definition &left, const Definition &right) {
-        auto comparison = left.translatedSection().compare(right.translatedSection(), Qt::CaseInsensitive);
+        auto comparison = left.section().compare(right.section(), Qt::CaseInsensitive);
         if (comparison == 0)
-            comparison = left.translatedName().compare(right.translatedName(), Qt::CaseInsensitive);
+            comparison = left.name().compare(right.name(), Qt::CaseInsensitive);
         return comparison < 0;
     });
 

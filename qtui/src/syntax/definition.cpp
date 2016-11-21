@@ -28,7 +28,6 @@
 #include "ksyntaxhighlighting_version.h"
 #include "xml_p.h"
 
-#include <QCoreApplication>
 #include <QFile>
 #include <QHash>
 #include <QJsonObject>
@@ -112,19 +111,9 @@ QString Definition::name() const
     return d->name;
 }
 
-QString Definition::translatedName() const
-{
-    return QCoreApplication::instance()->translate("Language", d->name.toUtf8().constData());
-}
-
 QString Definition::section() const
 {
     return d->section;
-}
-
-QString Definition::translatedSection() const
-{
-    return QCoreApplication::instance()->translate("Language Section", d->section.toUtf8().constData());
 }
 
 QVector<QString> Definition::mimeTypes() const

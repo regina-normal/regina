@@ -18,8 +18,6 @@
 #include "theme.h"
 #include "themedata_p.h"
 
-#include <QCoreApplication>
-
 using namespace KSyntaxHighlighting;
 
 Theme::Theme()
@@ -54,12 +52,6 @@ bool Theme::isValid() const
 QString Theme::name() const
 {
     return m_data ? m_data->name() : QString();
-}
-
-QString Theme::translatedName() const
-{
-    return m_data ? QCoreApplication::instance()->translate("Theme", m_data->name().toUtf8().constData())
-                  : QString();
 }
 
 bool Theme::isReadOnly() const

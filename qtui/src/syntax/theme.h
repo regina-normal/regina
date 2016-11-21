@@ -38,7 +38,7 @@ class RepositoryPrivate;
  * The Theme provides a full color theme for painting the highlighted text.
  * One Theme is defined either as a *.theme file on disk, or as a file compiled
  * into the SyntaxHighlighting library by using Qt's resource system. Each
- * Theme has a unique name(), including a translatedName() if put into the UI.
+ * Theme has a unique name().
  * Themes shipped by default are typically read-only, see isReadOnly().
  *
  * A Theme defines two sets of colors:
@@ -255,15 +255,8 @@ public:
 
     /**
      * Returns the unique name of this Theme.
-     * @see translatedName()
      */
     QString name() const;
-
-    /**
-     * Returns the translated name of this Theme. The translated name can be
-     * used in the user interface.
-     */
-    QString translatedName() const;
 
     /**
      * Returns @c true if this Theme is read-only.
