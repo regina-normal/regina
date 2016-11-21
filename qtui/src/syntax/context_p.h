@@ -23,11 +23,13 @@
 #include "definition.h"
 #include "definitionref_p.h"
 
+#include <boost/noncopyable.hpp>
+
 class QXmlStreamReader;
 
 namespace KSyntaxHighlighting {
 
-class Context
+class Context : public boost::noncopyable
 {
 public:
     Context();

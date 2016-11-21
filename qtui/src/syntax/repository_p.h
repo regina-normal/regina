@@ -19,6 +19,7 @@
 #define KSYNTAXHIGHLIGHTING_REPOSITORY_P_H
 
 #include <map>
+#include <boost/noncopyable.hpp>
 
 namespace KSyntaxHighlighting {
 
@@ -26,7 +27,7 @@ class Definition;
 class Repository;
 class Theme;
 
-class RepositoryPrivate
+class RepositoryPrivate : public boost::noncopyable
 {
 public:
     RepositoryPrivate();

@@ -23,10 +23,11 @@
 #include "theme.h"
 
 #include <QSharedData>
+#include <boost/noncopyable.hpp>
 
 namespace KSyntaxHighlighting {
 
-class FormatPrivate : public QSharedData
+class FormatPrivate : public QSharedData, public boost::noncopyable
 {
 public:
     FormatPrivate();

@@ -23,6 +23,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <boost/noncopyable.hpp>
 
 #include <QStringRef>
 
@@ -35,7 +36,7 @@ namespace KSyntaxHighlighting {
 class Definition;
 class Repository;
 
-class DefinitionData
+class DefinitionData : boost::noncopyable
 {
 public:
     DefinitionData();
