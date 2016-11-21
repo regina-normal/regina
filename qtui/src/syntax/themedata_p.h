@@ -48,7 +48,7 @@ public:
     /**
      * Returns the unique name of this Theme.
      */
-    QString name() const;
+    const std::string& name() const;
 
     int revision() const;
 
@@ -123,7 +123,7 @@ public:
 
 private:
     int m_revision;
-    QString m_name;
+    std::string m_name;
     QString m_author;
     QString m_license;
     QString m_filePath;

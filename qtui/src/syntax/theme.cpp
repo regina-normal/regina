@@ -49,9 +49,9 @@ bool Theme::isValid() const
     return m_data.data();
 }
 
-QString Theme::name() const
+const std::string& Theme::name() const
 {
-    return m_data ? m_data->name() : QString();
+    return m_data ? m_data->name() : std::string();
 }
 
 bool Theme::isReadOnly() const

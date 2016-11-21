@@ -73,7 +73,7 @@ QVector<Theme> Repository::themes() const
     return d->m_themes;
 }
 
-Theme Repository::theme(const QString &themeName) const
+Theme Repository::theme(const std::string& themeName) const
 {
     for (auto theme : d->m_themes) {
         if (theme.name() == themeName) {
@@ -87,8 +87,8 @@ Theme Repository::theme(const QString &themeName) const
 Theme Repository::defaultTheme(Repository::DefaultTheme t)
 {
     if (t == DarkTheme)
-        return theme(QLatin1String("Breeze Dark"));
-    return theme(QLatin1String("Default"));
+        return theme("Breeze Dark");
+    return theme("Default");
 }
 
 void RepositoryPrivate::load(Repository *repo)

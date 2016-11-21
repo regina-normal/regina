@@ -256,7 +256,7 @@ public:
     /**
      * Returns the unique name of this Theme.
      */
-    QString name() const;
+    const std::string& name() const;
 
     /**
      * Returns @c true if this Theme is read-only.

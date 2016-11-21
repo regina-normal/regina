@@ -112,7 +112,7 @@ bool ThemeData::load(const QString &filePath)
 
     // read metadata
     const QJsonObject metadata = obj.value(QLatin1String("metadata")).toObject();
-    m_name = metadata.value(QLatin1String("name")).toString();
+    m_name = metadata.value(QLatin1String("name")).toString().toUtf8().constData();
     m_revision = metadata.value(QLatin1String("revision")).toInt();
     m_author = metadata.value(QLatin1String("author")).toString();
     m_license = metadata.value(QLatin1String("license")).toString();
@@ -161,7 +161,7 @@ bool ThemeData::load(const QString &filePath)
     return true;
 }
 
-QString ThemeData::name() const
+const std::string& ThemeData::name() const
 {
     return m_name;
 }

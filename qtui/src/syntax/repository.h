@@ -23,7 +23,6 @@
 #include <qglobal.h>
 #include <memory>
 
-class QString;
 template <typename T> class QVector;
 
 /**
@@ -106,7 +105,7 @@ public:
      * If the requested theme cannot be found, the retunred Theme is invalid,
      * see Theme::isValid().
      */
-    Theme theme(const QString &themeName) const;
+    Theme theme(const std::string& themeName) const;
 
     /**
      * Built-in default theme types.

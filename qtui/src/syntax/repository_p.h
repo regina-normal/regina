@@ -21,8 +21,6 @@
 #include <QVector>
 #include <map>
 
-class QString;
-
 namespace KSyntaxHighlighting {
 
 class Definition;
@@ -37,11 +35,8 @@ public:
     static RepositoryPrivate* get(Repository *repo);
 
     void load(Repository *repo);
-    void loadSyntaxFolder(Repository *repo, const QString &path);
-    bool loadSyntaxFolderFromIndex(Repository *repo, const QString &path);
     void addDefinition(const Definition &def);
 
-    void loadThemeFolder(const QString &path);
     void addTheme(const Theme &theme);
 
     quint16 nextFormatId();
