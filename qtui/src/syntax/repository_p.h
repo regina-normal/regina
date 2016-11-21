@@ -44,7 +44,6 @@ public:
     void loadThemeFolder(const QString &path);
     void addTheme(const Theme &theme);
 
-    quint16 foldingRegionId(const QString &defName, const QString &foldName);
     quint16 nextFormatId();
 
     QHash<QString, Definition> m_defs;
@@ -52,8 +51,6 @@ public:
 
     QVector<Theme> m_themes;
 
-    QHash<QPair<QString, QString>, quint16> m_foldingRegionIds;
-    quint16 m_foldingRegionId;
     quint16 m_formatId;
 };
 }

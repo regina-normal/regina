@@ -54,7 +54,6 @@ public:
     void loadContexts(QXmlStreamReader &reader);
     void loadItemData(QXmlStreamReader &reader);
     void loadGeneral(QXmlStreamReader &reader);
-    void loadFoldingIgnoreList(QXmlStreamReader &reader);
     bool checkKateVersion(const QStringRef &verStr);
 
     KeywordList keywordList(const QString &name) const;
@@ -65,8 +64,6 @@ public:
 
     Format formatByName(const QString &name) const;
 
-    quint16 foldingRegionId(const QString &foldName);
-
     DefinitionRef q;
 
     Repository *repo;
@@ -74,8 +71,6 @@ public:
     QVector<Context*> contexts;
     QHash<QString, Format> formats;
     QString delimiters;
-    bool indentationBasedFolding;
-    QStringList foldingIgnoreList;
 
     QString fileName;
     QString name;

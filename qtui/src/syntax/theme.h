@@ -46,7 +46,7 @@ class RepositoryPrivate;
  *   selected text, and properties such as bold and italic. These colors are
  *   used e.g. by the SyntaxHighlighter.
  * - Editor colors, including a background color for the entire editor widget,
- *   the line number color, code folding colors, etc.
+ *   the line number color, etc.
  *
  * @section theme_text_colors Text Colors and the Class Format
  *
@@ -57,7 +57,7 @@ class RepositoryPrivate;
  *
  * If you want to use the SyntaxHighlighting framework to write your own text
  * editor, you also need to paint the background of the editing widget. In
- * addition, the editor may support showing line numbers, a folding bar, a
+ * addition, the editor may support showing line numbers, a
  * highlight for the current text line, and similar features. All these colors
  * are defined in terms of the "editor colors" and accessible by calling
  * editorColor() with the desired enum EditorColorRole.
@@ -184,9 +184,6 @@ public:
         IndentationLine,
         //! Background color for the icon border.
         IconBorder,
-        //! Background colors for code folding regions in the text area, as well
-        //! as code folding indicators in the code folding border.
-        CodeFolding,
         //! Foreground color for drawing the line numbers. This should have a
         //! good contrast with the IconBorder background color.
         LineNumbers,

@@ -30,7 +30,6 @@ namespace KSyntaxHighlighting {
 
 class AbstractHighlighterPrivate;
 class Definition;
-class FoldingRegion;
 class Format;
 class State;
 class Theme;
@@ -60,12 +59,7 @@ class Theme;
  * to parse and highlight the given text line. For each visual highlighting
  * change, highlightLine() will call applyFormat(). Therefore, reimplement
  * applyFormat() to get notified of the Format that is valid in the range
- * starting at the given offset with the specified length. Similarly, for each
- * text part that starts or ends a code folding region, highlightLine() will
- * call applyFolding(). Therefore, if you are interested in code folding,
- * reimplement applyFolding() to get notified of the starting and ending code
- * folding regions, again specified in the range starting at the given offset
- * with the given length.
+ * starting at the given offset with the specified length.
  *
  * The Format class itself depends on the current Theme. A theme must be
  * initially set once such that the Format%s instances can be queried for
@@ -119,7 +113,7 @@ protected:
     /**
      * Highlight the given line. Call this from your derived class
      * where appropriate. This will result in any number of applyFormat()
-     * and applyFolding() calls as a result.
+     * calls as a result.
      * @param text A string containing the text of the line to highlight.
      * @param state The highlighting state handle returned by the call
      *        to highlightLine() for the previous line. For the very first line,
@@ -129,7 +123,7 @@ protected:
      *        next line. You can store the state for efficient partial
      *        re-highlighting for example during editing.
      *
-     * @see applyFormat(), applyFolding()
+     * @see applyFormat()
      */
     State highlightLine(const QString &text, const State &state);
 
@@ -145,26 +139,9 @@ protected:
      *       @p format is invalid for the entire line passed to highlightLine()
      *       (cf. Format::isValid()).
      *
-     * @see applyFolding(), highlightLine()
+     * @see highlightLine()
      */
     virtual void applyFormat(int offset, int length, const Format &format) = 0;
-
-    /**
-     * Reimplement this to apply folding to your output. The provided
-     * FoldingRegion @p region either stars or ends a code folding region in the
-     * interval [@p offset, @p offset + @p length).
-     *
-     * @param offset The start column of the FoldingRegion
-     * @param length The length of the matching text that starts / ends a
-     *       folding region
-     * @param region The FoldingRegion that applies to the range [offset, offset + length)
-     *
-     * @note The FoldingRegion @p region is @e always either of type
-     *       FoldingRegion::Type::Begin or FoldingRegion::Type::End.
-     *
-     * @see applyFormat(), highlightLine(), FoldingRegion
-     */
-    virtual void applyFolding(int offset, int length, FoldingRegion region);
 
 protected:
     AbstractHighlighterPrivate *d_ptr;

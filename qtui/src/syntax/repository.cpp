@@ -37,7 +37,6 @@
 using namespace KSyntaxHighlighting;
 
 RepositoryPrivate::RepositoryPrivate() :
-    m_foldingRegionId(0),
     m_formatId(0)
 {
 }
@@ -202,15 +201,6 @@ void RepositoryPrivate::addTheme(const Theme &theme)
         *it = theme;
 }
 
-quint16 RepositoryPrivate::foldingRegionId(const QString &defName, const QString &foldName)
-{
-    const auto it = m_foldingRegionIds.constFind(qMakePair(defName, foldName));
-    if (it != m_foldingRegionIds.constEnd())
-        return it.value();
-    m_foldingRegionIds.insert(qMakePair(defName, foldName), ++m_foldingRegionId);
-    return m_foldingRegionId;
-}
-
 quint16 RepositoryPrivate::nextFormatId()
 {
     Q_ASSERT(m_formatId < std::numeric_limits<quint16>::max());
@@ -226,9 +216,6 @@ void Repository::reload()
     d->m_sortedDefs.clear();
 
     d->m_themes.clear();
-
-    d->m_foldingRegionId = 0;
-    d->m_foldingRegionIds.clear();
 
     d->m_formatId = 0;
 

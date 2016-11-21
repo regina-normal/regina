@@ -3,7 +3,6 @@ SET ( FILES
   context.cpp
   contextswitch.cpp
   definition.cpp
-  foldingregion.cpp
   format.cpp
   keywordlist.cpp
   ksyntaxhighlighting_logging.cpp

@@ -44,8 +44,7 @@ class DefinitionData;
  * A Definition is the short term for a syntax highlighting definition. It
  * typically is defined in terms of an XML syntax highlighting file, containing
  * all information about a particular syntax highlighting. This includes the
- * highlighting of keywords, information about code folding regions, and
- * indentation preferences.
+ * highlighting of keywords, and indentation preferences.
  *
  * @section def_info General Information
  *
@@ -147,29 +146,6 @@ public:
     QString author() const;
     /** License of this syntax definition. */
     QString license() const;
-
-    /**
-     * Returns whether indentation-based folding is enabled.
-     * An example for indentation-based folding is Python.
-     * When indentation-based folding is enabled, make sure to also check
-     * foldingIgnoreList() for lines that should be treated as empty.
-     *
-     * @see foldingIgnoreList(), State::indentationBasedFoldingEnabled()
-     */
-    bool indentationBasedFoldingEnabled() const;
-
-    /**
-     * If indentationBasedFoldingEnabled() returns @c true, this function returns
-     * a list of regular expressions that represent empty lines. That is, all
-     * lines matching entirely one of the regular expressions should be treated
-     * as empty lines when calculating the indentation-based folding ranges.
-     *
-     * @note This list is only of relevance, if indentationBasedFoldingEnabled()
-     *       returns @c true.
-     *
-     * @see indentationBasedFoldingEnabled()
-     */
-    QStringList foldingIgnoreList() const;
 
 private:
     friend class DefinitionData;

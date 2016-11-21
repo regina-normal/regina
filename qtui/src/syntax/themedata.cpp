@@ -141,7 +141,6 @@ bool ThemeData::load(const QString &filePath)
     m_editorColors[Theme::SpellChecking] = readColor(editorColors.value(QLatin1String("spell-checking")));
     m_editorColors[Theme::IndentationLine] = readColor(editorColors.value(QLatin1String("indentation-line")));
     m_editorColors[Theme::IconBorder] = readColor(editorColors.value(QLatin1String("icon-border")));
-    m_editorColors[Theme::CodeFolding] = readColor(editorColors.value(QLatin1String("code-folding")));
     m_editorColors[Theme::LineNumbers] = readColor(editorColors.value(QLatin1String("line-numbers")));
     m_editorColors[Theme::CurrentLineNumber] = readColor(editorColors.value(QLatin1String("current-line-number")));
     m_editorColors[Theme::WordWrapMarker] = readColor(editorColors.value(QLatin1String("word-wrap-marker")));
