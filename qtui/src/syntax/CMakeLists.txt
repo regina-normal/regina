@@ -22,4 +22,10 @@ ENDFOREACH(FILE)
 
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
-INSTALL(FILES python.xml default.theme DESTINATION ${PKGDATADIR}/syntax)
+INSTALL(FILES
+  alert.xml
+  alert_indent.xml
+  default.theme
+  modelines.xml
+  python.xml
+  DESTINATION ${PKGDATADIR}/syntax)
