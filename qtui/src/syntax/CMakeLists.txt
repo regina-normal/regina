@@ -8,6 +8,7 @@ SET ( FILES
   format.cpp
   htmlhighlighter.cpp
   keywordlist.cpp
+  ksyntaxhighlighting_logging.cpp
   matchresult.cpp
   repository.cpp
   rule.cpp
