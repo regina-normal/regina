@@ -58,14 +58,6 @@ FormatPrivate* FormatPrivate::get(const Format &format)
     return format.d.data();
 }
 
-TextStyleData FormatPrivate::styleOverride(const Theme &theme) const
-{
-    const auto themeData = ThemeData::get(theme);
-    if (themeData)
-        return themeData->textStyleOverride(definition.definition().name(), name);
-    return TextStyleData();
-}
-
 Format::Format() : d(new FormatPrivate)
 {
 }
@@ -114,80 +106,54 @@ bool Format::isDefaultTextStyle(const Theme &theme) const
 
 bool Format::hasTextColor(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
     return textColor(theme) != theme.textColor(Theme::Normal)
-        && (d->style.textColor || theme.textColor(d->defaultStyle) || overrideStyle.textColor);
+        && (d->style.textColor || theme.textColor(d->defaultStyle));
 }
 
 QColor Format::textColor(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
-    if (overrideStyle.textColor)
-        return overrideStyle.textColor;
     return d->style.textColor ? d->style.textColor : theme.textColor(d->defaultStyle);
 }
 
 QColor Format::selectedTextColor(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
-    if (overrideStyle.selectedTextColor)
-        return overrideStyle.selectedTextColor;
     return d->style.selectedTextColor ? d->style.selectedTextColor : theme.selectedTextColor(d->defaultStyle);
 }
 
 bool Format::hasBackgroundColor(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
     return backgroundColor(theme) != theme.backgroundColor(Theme::Normal)
-         && (d->style.backgroundColor || theme.backgroundColor(d->defaultStyle) || overrideStyle.backgroundColor);
+         && (d->style.backgroundColor || theme.backgroundColor(d->defaultStyle));
 }
 
 QColor Format::backgroundColor(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
-    if (overrideStyle.backgroundColor)
-        return overrideStyle.backgroundColor;
     return d->style.backgroundColor ? d->style.backgroundColor : theme.backgroundColor(d->defaultStyle);
 }
 
 QColor Format::selectedBackgroundColor(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
-    if (overrideStyle.selectedBackgroundColor)
-        return overrideStyle.selectedBackgroundColor;
     return d->style.selectedBackgroundColor ? d->style.selectedBackgroundColor
                             : theme.selectedBackgroundColor(d->defaultStyle);
 }
 
 bool Format::isBold(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
-    if (overrideStyle.hasBold)
-        return overrideStyle.bold;
     return d->style.hasBold ? d->style.bold : theme.isBold(d->defaultStyle);
 }
 
 bool Format::isItalic(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
-    if (overrideStyle.hasItalic)
-        return overrideStyle.italic;
     return d->style.hasItalic ? d->style.italic : theme.isItalic(d->defaultStyle);
 }
 
 bool Format::isUnderline(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
-    if (overrideStyle.hasUnderline)
-        return overrideStyle.underline;
     return d->style.hasUnderline ? d->style.underline : theme.isUnderline(d->defaultStyle);
 }
 
 bool Format::isStrikeThrough(const Theme &theme) const
 {
-    const auto overrideStyle = d->styleOverride(theme);
-    if (overrideStyle.hasStrikeThrough)
-        return overrideStyle.strikeThrough;
     return d->style.hasStrikeThrough ? d->style.strikeThrough : theme.isStrikeThrough(d->defaultStyle);
 }
 

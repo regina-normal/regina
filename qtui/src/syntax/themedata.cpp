@@ -158,16 +158,6 @@ bool ThemeData::load(const QString &filePath)
     m_editorColors[Theme::TemplateFocusedPlaceholder] = readColor(editorColors.value(QLatin1String("template-focused-placeholder")));
     m_editorColors[Theme::TemplateReadOnlyPlaceholder] = readColor(editorColors.value(QLatin1String("template-read-only-placeholder")));
 
-    // read per-definition style overrides
-    const auto customStyles = obj.value(QLatin1String("custom-styles")).toObject();
-    for (auto it = customStyles.begin(); it != customStyles.end(); ++it) {
-        const auto obj = it.value().toObject();
-        QHash<QString, TextStyleData> overrideStyle;
-        for (auto it2 = obj.begin(); it2 != obj.end(); ++it2)
-            overrideStyle.insert(it2.key(), readThemeData(it2.value().toObject()));
-        m_textStyleOverrides.insert(it.key(), overrideStyle);
-    }
-
     return true;
 }
 
@@ -243,9 +233,4 @@ QRgb ThemeData::editorColor(Theme::EditorColorRole role) const
 {
     Q_ASSERT(static_cast<int>(role) >= 0 && static_cast<int>(role) <= static_cast<int>(Theme::TemplateReadOnlyPlaceholder));
     return m_editorColors[role];
-}
-
-TextStyleData ThemeData::textStyleOverride(const QString& definitionName, const QString& attributeName) const
-{
-    return m_textStyleOverrides.value(definitionName).value(attributeName);
 }

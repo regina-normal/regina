@@ -22,7 +22,6 @@
 #include "theme.h"
 #include "textstyledata_p.h"
 
-#include <QHash>
 #include <QSharedData>
 
 namespace KSyntaxHighlighting {
@@ -122,9 +121,6 @@ public:
      */
     QRgb editorColor(Theme::EditorColorRole role) const;
 
-
-    TextStyleData textStyleOverride(const QString &definitionName, const QString &attributeName) const;
-
 private:
     int m_revision;
     QString m_name;
@@ -135,10 +131,6 @@ private:
 
     //! TextStyles
     TextStyleData m_textStyles[Theme::Others + 1];
-
-    //! style overrides for individual itemData entries
-    // definition name -> attribute name -> style
-    QHash<QString, QHash<QString, TextStyleData> > m_textStyleOverrides;
 
     //! Editor area colors
     QRgb m_editorColors[Theme::TemplateReadOnlyPlaceholder + 1];
