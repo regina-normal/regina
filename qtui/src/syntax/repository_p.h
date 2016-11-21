@@ -18,8 +18,8 @@
 #ifndef KSYNTAXHIGHLIGHTING_REPOSITORY_P_H
 #define KSYNTAXHIGHLIGHTING_REPOSITORY_P_H
 
-#include <QHash>
 #include <QVector>
+#include <map>
 
 class QString;
 
@@ -46,8 +46,7 @@ public:
 
     quint16 nextFormatId();
 
-    QHash<QString, Definition> m_defs;
-    QVector<Definition> m_sortedDefs;
+    std::map<QString, Definition> m_defs;
 
     QVector<Theme> m_themes;
 

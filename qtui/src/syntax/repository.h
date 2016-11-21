@@ -56,10 +56,8 @@ class Theme;
  *
  * Typically, only one instance of the Repository is needed. This single
  * instance can be thought of as a singleton you keep alive throughout the
- * lifetime of your application. Then, either call definitionForName() with the
- * given language name (e.g. "QML" or "Java"), or definitionForFileName() to
- * obtain a Definition based on the filename/mimetype of the file. The
- * function definitions() returns a list of all available syntax Definition%s.
+ * lifetime of your application. Then, call definitionForName() with the
+ * given language name (e.g. "QML" or "Java").
  *
  * In addition to Definitions, the Repository also provides a list of Themes.
  * A Theme is defined by a set of default text style colors as well as editor
@@ -96,24 +94,6 @@ public:
      *       Definition file.
      */
     Definition definitionForName(const QString &defName) const;
-
-    /**
-     * Returns the best matching Definition for the file named @p fileName.
-     * The match is performed based on the \e extensions and @e mimetype of
-     * the definition files. If multiple matches are found, the one with the
-     * highest priority is returned.
-     *
-     * If no match is found, Definition::isValid() of the returned instance
-     * returns false.
-     */
-    Definition definitionForFileName(const QString &fileName) const;
-
-    /**
-     * Returns all available Definition%s.
-     * Definition%ss are ordered by sections and names,
-     * for consistent displaying.
-     */
-    QVector<Definition> definitions() const;
 
     /**
      * Returns all available color themes.

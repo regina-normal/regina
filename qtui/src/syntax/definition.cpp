@@ -29,7 +29,6 @@
 #include "xml_p.h"
 
 #include <QFile>
-#include <QHash>
 #include <QJsonObject>
 #include <QStringList>
 #include <QVector>

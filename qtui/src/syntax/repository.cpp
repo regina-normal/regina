@@ -55,44 +55,13 @@ Repository::~Repository()
 {
     // reset repo so we can detect in still alive definition instances
     // that the repo was deleted
-    foreach (const auto &def, d->m_sortedDefs)
-        DefinitionData::get(def)->repo = Q_NULLPTR;
+    foreach (const auto &def, d->m_defs)
+        DefinitionData::get(def.second)->repo = Q_NULLPTR;
 }
 
 Definition Repository::definitionForName(const QString& defName) const
 {
-    return d->m_defs.value(defName);
-}
-
-Definition Repository::definitionForFileName(const QString& fileName) const
-{
-    QFileInfo fi(fileName);
-    const auto name = fi.fileName();
-
-    QVector<Definition> candidates;
-    for (auto it = d->m_defs.constBegin(); it != d->m_defs.constEnd(); ++it) {
-        auto def = it.value();
-        foreach (const auto &pattern, def.extensions()) {
-            if (WildcardMatcher::exactMatch(name, pattern)) {
-                candidates.push_back(def);
-                break;
-            }
-        }
-    }
-
-    if (candidates.isEmpty())
-        return Definition();
-
-    std::partial_sort(candidates.begin(), candidates.begin() + 1, candidates.end(), [](const Definition &lhs, const Definition &rhs) {
-        return lhs.priority() > rhs.priority();
-    });
-
-    return candidates.at(0);
-}
-
-QVector<Definition> Repository::definitions() const
-{
-    return d->m_sortedDefs;
+    return d->m_defs[defName];
 }
 
 QVector<Theme> Repository::themes() const
@@ -152,16 +121,6 @@ void RepositoryPrivate::load(Repository *repo)
             addDefinition(def);
     }
 
-    m_sortedDefs.reserve(m_defs.size());
-    for (auto it = m_defs.constBegin(); it != m_defs.constEnd(); ++it)
-        m_sortedDefs.push_back(it.value());
-    std::sort(m_sortedDefs.begin(), m_sortedDefs.end(), [](const Definition &left, const Definition &right) {
-        auto comparison = left.section().compare(right.section(), Qt::CaseInsensitive);
-        if (comparison == 0)
-            comparison = left.name().compare(right.name(), Qt::CaseInsensitive);
-        return comparison < 0;
-    });
-
     // load themes
     auto themeData = std::unique_ptr<ThemeData>(new ThemeData);
     if (themeData->load(QDir(syntaxDir).filePath("default.theme")))
@@ -170,15 +129,15 @@ void RepositoryPrivate::load(Repository *repo)
 
 void RepositoryPrivate::addDefinition(const Definition &def)
 {
-    const auto it = m_defs.constFind(def.name());
-    if (it == m_defs.constEnd()) {
-        m_defs.insert(def.name(), def);
+    const auto it = m_defs.find(def.name());
+    if (it == m_defs.end()) {
+        m_defs.insert(std::make_pair(def.name(), def));
         return;
     }
 
-    if (it.value().version() >= def.version())
+    if (it->second.version() >= def.version())
         return;
-    m_defs.insert(def.name(), def);
+    m_defs.insert(std::make_pair(def.name(), def));
 }
 
 static int themeRevision(const Theme &theme)
@@ -209,10 +168,9 @@ quint16 RepositoryPrivate::nextFormatId()
 void Repository::reload()
 {
     std::cerr << "Reloading syntax definitions!" << std::endl;
-    foreach (const auto &def, d->m_sortedDefs)
-        DefinitionData::get(def)->clear();
+    foreach (const auto &def, d->m_defs)
+        DefinitionData::get(def.second)->clear();
     d->m_defs.clear();
-    d->m_sortedDefs.clear();
 
     d->m_themes.clear();
 
