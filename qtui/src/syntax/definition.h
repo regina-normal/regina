@@ -108,7 +108,7 @@ public:
 
     /** Name of the syntax.
      */
-    QString name() const;
+    const std::string& name() const;
     /** The group this syntax definition belongs to.
      */
     QString section() const;

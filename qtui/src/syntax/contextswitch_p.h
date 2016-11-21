@@ -40,7 +40,7 @@ public:
     void resolve(const Definition &def);
 
 private:
-    QString m_defName;
+    std::string m_defName;
     QString m_contextName;
     Context *m_context;
     int m_popCount;

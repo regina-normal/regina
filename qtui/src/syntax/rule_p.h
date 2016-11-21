@@ -133,7 +133,7 @@ class IncludeRules : public Rule
 {
 public:
     QString contextName() const;
-    QString definitionName() const;
+    const std::string& definitionName() const;
     bool includeAttribute() const;
 
 protected:
@@ -142,7 +142,7 @@ protected:
 
 private:
     QString m_contextName;
-    QString m_defName;
+    std::string m_defName;
     bool m_includeAttribute;
 };
 

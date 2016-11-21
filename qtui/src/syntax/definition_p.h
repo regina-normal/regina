@@ -73,7 +73,7 @@ public:
     QString delimiters;
 
     QString fileName;
-    QString name;
+    std::string name;
     QString section;
     QString style;
     QString indenter;

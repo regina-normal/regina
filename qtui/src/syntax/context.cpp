@@ -98,7 +98,7 @@ Format Context::formatByName(const QString &name) const
             return format;
     }
 
-    std::cerr << "Unknown format" << name.toUtf8().constData() << "in context" << m_name.toUtf8().constData() << "of definition" << m_def.definition().name().toUtf8().constData() << std::endl;
+    std::cerr << "Unknown format" << name.toUtf8().constData() << "in context" << m_name.toUtf8().constData() << "of definition" << m_def.definition().name() << std::endl;
     return format;
 }
 
@@ -186,12 +186,12 @@ void Context::resolveIncludes()
         }
         Context* context = Q_NULLPTR;
         auto myDefData = DefinitionData::get(m_def.definition());
-        if (inc->definitionName().isEmpty()) { // local include
+        if (inc->definitionName().empty()) { // local include
             context = myDefData->contextByName(inc->contextName());
         } else {
             auto def = myDefData->repo->definitionForName(inc->definitionName());
             if (!def.isValid()) {
-                std::cerr << "Unable to resolve external include rule for definition" << inc->definitionName().toUtf8().constData() << "in" << m_def.definition().name().toUtf8().constData() << std::endl;
+                std::cerr << "Unable to resolve external include rule for definition" << inc->definitionName() << "in" << m_def.definition().name() << std::endl;
                 ++it;
                 continue;
             }
@@ -203,7 +203,7 @@ void Context::resolveIncludes()
                 context = defData->contextByName(inc->contextName());
         }
         if (!context) {
-            std::cerr << "Unable to resolve include rule for definition" << inc->contextName().toUtf8().constData() << "##" << inc->definitionName().toUtf8().constData() << "in" << m_def.definition().name().toUtf8().constData() << std::endl;
+            std::cerr << "Unable to resolve include rule for definition" << inc->contextName().toUtf8().constData() << "##" << inc->definitionName() << "in" << m_def.definition().name() << std::endl;
             ++it;
             continue;
         }

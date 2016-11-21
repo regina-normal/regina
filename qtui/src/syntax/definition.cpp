@@ -97,7 +97,7 @@ bool Definition::operator!=(const Definition& other) const
 
 bool Definition::isValid() const
 {
-    return d->repo && !d->fileName.isEmpty() && !d->name.isEmpty();
+    return d->repo && !d->fileName.isEmpty() && !d->name.empty();
 }
 
 QString Definition::filePath() const
@@ -105,7 +105,7 @@ QString Definition::filePath() const
     return d->fileName;
 }
 
-QString Definition::name() const
+const std::string& Definition::name() const
 {
     return d->name;
 }
@@ -284,7 +284,7 @@ bool DefinitionData::loadMetaData(const QString& definitionFileName)
 
 bool DefinitionData::loadMetaData(const QString &file, const QJsonObject &obj)
 {
-    name     = obj.value(QLatin1String("name")).toString();
+    name     = obj.value(QLatin1String("name")).toString().toUtf8().constData();
     section  = obj.value(QLatin1String("section")).toString();
     version  = obj.value(QLatin1String("version")).toInt();
     priority = obj.value(QLatin1String("priority")).toInt();
@@ -313,7 +313,7 @@ bool DefinitionData::loadLanguage(QXmlStreamReader &reader)
     if (!checkKateVersion(reader.attributes().value(QStringLiteral("kateversion"))))
         return false;
 
-    name = reader.attributes().value(QStringLiteral("name")).toString();
+    name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
     section = reader.attributes().value(QStringLiteral("section")).toString();
     // toFloat instead of toInt for backward compatibility with old Kate files
     version = reader.attributes().value(QStringLiteral("version")).toFloat();

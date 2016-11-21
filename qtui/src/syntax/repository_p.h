@@ -46,7 +46,7 @@ public:
 
     quint16 nextFormatId();
 
-    std::map<QString, Definition> m_defs;
+    std::map<std::string, Definition> m_defs;
 
     QVector<Theme> m_themes;
 

@@ -59,7 +59,7 @@ Repository::~Repository()
         DefinitionData::get(def.second)->repo = Q_NULLPTR;
 }
 
-Definition Repository::definitionForName(const QString& defName) const
+Definition Repository::definitionForName(const std::string& defName) const
 {
     const auto it = d->m_defs.find(defName);
     if (it != d->m_defs.end())

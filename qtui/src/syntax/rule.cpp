@@ -483,7 +483,7 @@ QString IncludeRules::contextName() const
     return m_contextName;
 }
 
-QString IncludeRules::definitionName() const
+const std::string& IncludeRules::definitionName() const
 {
     return m_defName;
 }
@@ -501,16 +501,16 @@ bool IncludeRules::doLoad(QXmlStreamReader& reader)
         return false;
     m_contextName = splitted.at(0).toString();
     if (splitted.size() > 1)
-        m_defName = splitted.at(1).toString();
+        m_defName = splitted.at(1).toString().toUtf8().constData();
     m_includeAttribute = Xml::attrToBool(reader.attributes().value(QLatin1String("includeAttrib")));
 
-    return !m_contextName.isEmpty() || !m_defName.isEmpty();
+    return !m_contextName.isEmpty() || !m_defName.empty();
 }
 
 MatchResult IncludeRules::doMatch(const QString& text, int offset, const QStringList&)
 {
     Q_UNUSED(text);
-    std::cerr << "Unresolved include rule for" << m_contextName.toUtf8().constData() << "##" << m_defName.toUtf8().constData() << std::endl;
+    std::cerr << "Unresolved include rule for" << m_contextName.toUtf8().constData() << "##" << m_defName << std::endl;
     return offset;
 }
 

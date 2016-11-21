@@ -41,13 +41,13 @@ AbstractHighlighterPrivate::~AbstractHighlighterPrivate()
 void AbstractHighlighterPrivate::ensureDefinitionLoaded()
 {
     auto defData = DefinitionData::get(m_definition);
-    if (Q_UNLIKELY(!m_definition.isValid() && defData->repo && !m_definition.name().isEmpty())) {
+    if (Q_UNLIKELY(!m_definition.isValid() && defData->repo && !m_definition.name().empty())) {
         std::cerr << "Definition became invalid, trying re-lookup." << std::endl;
         m_definition = defData->repo->definitionForName(m_definition.name());
         defData = DefinitionData::get(m_definition);
     }
 
-    if (Q_UNLIKELY(!defData->repo && !defData->name.isEmpty()))
+    if (Q_UNLIKELY(!defData->repo && !defData->name.empty()))
         std::cerr << "Repository got deleted while a highlighter is still active!" << std::endl;
 
     if (m_definition.isValid())

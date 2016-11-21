@@ -93,7 +93,7 @@ public:
      *       Therefore, only the string "JavaScript" will return a valid
      *       Definition file.
      */
-    Definition definitionForName(const QString &defName) const;
+    Definition definitionForName(const std::string& defName) const;
 
     /**
      * Returns all available color themes.
