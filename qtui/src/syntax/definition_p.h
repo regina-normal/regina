@@ -26,7 +26,6 @@
 
 QT_BEGIN_NAMESPACE
 class QXmlStreamReader;
-class QJsonObject;
 QT_END_NAMESPACE
 
 namespace KSyntaxHighlighting {
@@ -44,7 +43,6 @@ public:
 
     bool isLoaded() const;
     bool loadMetaData(const QString &definitionFileName);
-    bool loadMetaData(const QString &fileName, const QJsonObject &obj);
 
     void clear();
 

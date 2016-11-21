@@ -29,7 +29,6 @@
 #include "xml_p.h"
 
 #include <QFile>
-#include <QJsonObject>
 #include <QStringList>
 #include <QVector>
 #include <QXmlStreamReader>
@@ -280,29 +279,6 @@ bool DefinitionData::loadMetaData(const QString& definitionFileName)
     }
 
     return false;
-}
-
-bool DefinitionData::loadMetaData(const QString &file, const QJsonObject &obj)
-{
-    name     = obj.value(QLatin1String("name")).toString().toUtf8().constData();
-    section  = obj.value(QLatin1String("section")).toString();
-    version  = obj.value(QLatin1String("version")).toInt();
-    priority = obj.value(QLatin1String("priority")).toInt();
-    style    = obj.value(QLatin1String("style")).toString();
-    author   = obj.value(QLatin1String("author")).toString();
-    license  = obj.value(QLatin1String("license")).toString();
-    indenter = obj.value(QLatin1String("indenter")).toString();
-    hidden   = obj.value(QLatin1String("hidden")).toBool();
-    fileName = file;
-
-    const auto exts = obj.value(QLatin1String("extensions")).toString();
-    foreach (const auto &ext, exts.split(QLatin1Char(';'), QString::SkipEmptyParts))
-        extensions.push_back(ext);
-    const auto mts = obj.value(QLatin1String("mimetype")).toString();
-    foreach (const auto &mt, mts.split(QLatin1Char(';'), QString::SkipEmptyParts))
-        mimetypes.push_back(mt);
-
-    return true;
 }
 
 bool DefinitionData::loadLanguage(QXmlStreamReader &reader)
