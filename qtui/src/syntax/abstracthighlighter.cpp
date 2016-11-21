@@ -148,7 +148,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
     auto currentLookupContext = stateData->topContext();
     auto currentFormat = currentLookupContext->attribute();
     bool lineContinuation = false;
-    QHash<Rule*, int> skipOffsets;
+    std::map<Rule*, int> skipOffsets;
 
     do {
         bool isLookAhead = false;
@@ -156,7 +156,8 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
         QString newFormat;
         auto newLookupContext = currentLookupContext;
         foreach (const auto &rule, stateData->topContext()->rules()) {
-            if (skipOffsets.value(rule.get()) > offset)
+            auto it = skipOffsets.find(rule.get());
+            if (it != skipOffsets.end() && it->second > offset)
                 continue;
 
             // filter out rules that only match for leading whitespace
@@ -172,7 +173,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
             const auto newResult = rule->match(text, offset, stateData->topCaptures());
             newOffset = newResult.offset();
             if (newResult.skipOffset() > newOffset)
-                skipOffsets.insert(rule.get(), newResult.skipOffset());
+                skipOffsets.insert(std::make_pair(rule.get(), newResult.skipOffset()));
             if (newOffset <= offset)
                 continue;
 

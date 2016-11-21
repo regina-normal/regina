@@ -61,7 +61,11 @@ Repository::~Repository()
 
 Definition Repository::definitionForName(const QString& defName) const
 {
-    return d->m_defs[defName];
+    const auto it = d->m_defs.find(defName);
+    if (it != d->m_defs.end())
+        return it->second;
+
+    return Definition();
 }
 
 QVector<Theme> Repository::themes() const

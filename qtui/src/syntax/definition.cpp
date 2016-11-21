@@ -177,7 +177,11 @@ Context* DefinitionData::contextByName(const QString& name) const
 
 KeywordList DefinitionData::keywordList(const QString& name) const
 {
-    return keywordLists.value(name);
+    const auto it = keywordLists.find(name);
+    if (it != keywordLists.end())
+        return it->second;
+
+    return KeywordList();
 }
 
 bool DefinitionData::isDelimiter(QChar c) const
@@ -187,9 +191,9 @@ bool DefinitionData::isDelimiter(QChar c) const
 
 Format DefinitionData::formatByName(const QString& name) const
 {
-    const auto it = formats.constFind(name);
-    if (it != formats.constEnd())
-        return it.value();
+    const auto it = formats.find(name);
+    if (it != formats.end())
+        return it->second;
 
     return Format();
 }
@@ -223,7 +227,7 @@ bool DefinitionData::load()
     }
 
     for (auto it = keywordLists.begin(); it != keywordLists.end(); ++it)
-        (*it).setCaseSensitivity(caseSensitive);
+        it->second.setCaseSensitivity(caseSensitive);
 
     foreach (auto context, contexts) {
         context->resolveContexts();
@@ -341,7 +345,7 @@ void DefinitionData::loadHighlighting(QXmlStreamReader& reader)
                 if (reader.name() == QLatin1String("list")) {
                     KeywordList keywords;
                     keywords.load(reader);
-                    keywordLists.insert(keywords.name(), keywords);
+                    keywordLists.insert(std::make_pair(keywords.name(), keywords));
                 } else if (reader.name() == QLatin1String("contexts")) {
                     loadContexts(reader);
                     reader.readNext();
@@ -399,7 +403,7 @@ void DefinitionData::loadItemData(QXmlStreamReader& reader)
                     formatData->definition = q;
                     formatData->load(reader);
                     formatData->id = RepositoryPrivate::get(repo)->nextFormatId();
-                    formats.insert(f.name(), f);
+                    formats.insert(std::make_pair(f.name(), f));
                     reader.readNext();
                 }
                 reader.readNext();

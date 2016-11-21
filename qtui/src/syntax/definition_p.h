@@ -20,9 +20,9 @@
 
 #include "definitionref_p.h"
 
-#include <QHash>
 #include <QString>
 #include <QVector>
+#include <map>
 
 QT_BEGIN_NAMESPACE
 class QXmlStreamReader;
@@ -67,9 +67,9 @@ public:
     DefinitionRef q;
 
     Repository *repo;
-    QHash<QString, KeywordList> keywordLists;
+    std::map<QString, KeywordList> keywordLists;
     QVector<Context*> contexts;
-    QHash<QString, Format> formats;
+    std::map<QString, Format> formats;
     QString delimiters;
 
     QString fileName;
