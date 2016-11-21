@@ -17,12 +17,12 @@
 
 #include "rule_p.h"
 #include "definition_p.h"
-#include "ksyntaxhighlighting_logging.h"
 #include "xml_p.h"
 
 #include <QDebug>
 #include <QString>
 #include <QXmlStreamReader>
+#include <iostream>
 
 using namespace KSyntaxHighlighting;
 
@@ -263,7 +263,7 @@ Rule::Ptr Rule::create(const QStringRef& name)
     else if (name == QLatin1String("WordDetect"))
         rule = new WordDetect;
     else
-        qCWarning(Log) << "Unknown rule type:" << name;
+        std::cerr << "Unknown rule type:" << name.toUtf8().constData() << std::endl;
 
     return Ptr(rule);
 }
@@ -279,7 +279,7 @@ bool AnyChar::doLoad(QXmlStreamReader& reader)
 {
     m_chars = reader.attributes().value(QStringLiteral("String")).toString();
     if (m_chars.size() == 1)
-        qCDebug(Log) << "AnyChar rule with just one char: use DetectChar instead.";
+        std::cerr << "AnyChar rule with just one char: use DetectChar instead." << std::endl;
     return !m_chars.isEmpty();
 }
 
@@ -511,7 +511,7 @@ bool IncludeRules::doLoad(QXmlStreamReader& reader)
 MatchResult IncludeRules::doMatch(const QString& text, int offset, const QStringList&)
 {
     Q_UNUSED(text);
-    qCWarning(Log) << "Unresolved include rule for" << m_contextName << "##" << m_defName;
+    std::cerr << "Unresolved include rule for" << m_contextName.toUtf8().constData() << "##" << m_defName.toUtf8().constData() << std::endl;
     return offset;
 }
 

@@ -17,7 +17,6 @@
 */
 
 #include "themedata_p.h"
-#include "ksyntaxhighlighting_logging.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -26,6 +25,7 @@
 #include <QMetaEnum>
 
 #include <QDebug>
+#include <iostream>
 
 using namespace KSyntaxHighlighting;
 
@@ -103,7 +103,7 @@ bool ThemeData::load(const QString &filePath)
     QJsonParseError parseError;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData, &parseError);
     if (parseError.error != QJsonParseError::NoError) {
-        qCWarning(Log) << "Failed to parse theme file" << filePath << ":" << parseError.errorString();
+        std::cerr << "Failed to parse theme file" << filePath.toUtf8().constData() << ":" << parseError.errorString().toUtf8().constData() << std::endl;
         return false;
     }
 

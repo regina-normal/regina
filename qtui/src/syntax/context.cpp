@@ -20,12 +20,12 @@
 #include "format.h"
 #include "repository.h"
 #include "rule_p.h"
-#include "ksyntaxhighlighting_logging.h"
 #include "xml_p.h"
 
 #include <QDebug>
 #include <QString>
 #include <QXmlStreamReader>
+#include <iostream>
 
 using namespace KSyntaxHighlighting;
 
@@ -99,7 +99,7 @@ Format Context::formatByName(const QString &name) const
             return format;
     }
 
-    qCWarning(Log) << "Unknown format" << name << "in context" << m_name << "of definition" << m_def.definition().name();
+    std::cerr << "Unknown format" << name.toUtf8().constData() << "in context" << m_name.toUtf8().constData() << "of definition" << m_def.definition().name().toUtf8().constData() << std::endl;
     return format;
 }
 
@@ -172,7 +172,7 @@ void Context::resolveIncludes()
     if (resolveState() == Resolved)
         return;
     if (resolveState() == Resolving) {
-        qCWarning(Log) << "Cyclic dependency!";
+        std::cerr << "Cyclic dependency!" << std::endl;
         return;
     }
 
@@ -192,7 +192,7 @@ void Context::resolveIncludes()
         } else {
             auto def = myDefData->repo->definitionForName(inc->definitionName());
             if (!def.isValid()) {
-                qCWarning(Log) << "Unable to resolve external include rule for definition" << inc->definitionName() << "in" << m_def.definition().name();
+                std::cerr << "Unable to resolve external include rule for definition" << inc->definitionName().toUtf8().constData() << "in" << m_def.definition().name().toUtf8().constData() << std::endl;
                 ++it;
                 continue;
             }
@@ -204,7 +204,7 @@ void Context::resolveIncludes()
                 context = defData->contextByName(inc->contextName());
         }
         if (!context) {
-            qCWarning(Log) << "Unable to resolve include rule for definition" << inc->contextName() << "##" << inc->definitionName() << "in" << m_def.definition().name();
+            std::cerr << "Unable to resolve include rule for definition" << inc->contextName().toUtf8().constData() << "##" << inc->definitionName().toUtf8().constData() << "in" << m_def.definition().name().toUtf8().constData() << std::endl;
             ++it;
             continue;
         }

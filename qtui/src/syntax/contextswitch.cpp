@@ -19,9 +19,9 @@
 #include "definition.h"
 #include "definition_p.h"
 #include "repository.h"
-#include "ksyntaxhighlighting_logging.h"
 
 #include <QDebug>
+#include <iostream>
 
 using namespace KSyntaxHighlighting;
 
@@ -90,6 +90,6 @@ void ContextSwitch::resolve(const Definition &def)
     if (!m_contextName.isEmpty()) {
         m_context = DefinitionData::get(d)->contextByName(m_contextName);
         if (!m_context)
-            qCWarning(Log) << "cannot find context" << m_contextName << "in" << def.name();
+            std::cerr << "cannot find context" << m_contextName.toUtf8().constData() << "in" << def.name().toUtf8().constData() << std::endl;
     }
 }

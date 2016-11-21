@@ -25,7 +25,6 @@
 #include "format_p.h"
 #include "repository_p.h"
 #include "rule_p.h"
-#include "ksyntaxhighlighting_logging.h"
 #include "ksyntaxhighlighting_version.h"
 #include "xml_p.h"
 
@@ -39,6 +38,7 @@
 #include <QXmlStreamReader>
 
 #include <algorithm>
+#include <iostream>
 
 using namespace KSyntaxHighlighting;
 
@@ -469,14 +469,14 @@ bool DefinitionData::checkKateVersion(const QStringRef& verStr)
 {
     const auto idx = verStr.indexOf(QLatin1Char('.'));
     if (idx <= 0) {
-        qCWarning(Log) << "Skipping" << fileName << "due to having no valid kateversion attribute:" << verStr;
+        std::cerr << "Skipping" << fileName.toUtf8().constData() << "due to having no valid kateversion attribute:" << verStr.toUtf8().constData() << std::endl;
         return false;
     }
     const auto major = verStr.left(idx).toInt();
     const auto minor = verStr.mid(idx + 1).toInt();
 
     if (major > SyntaxHighlighting_VERSION_MAJOR || (major == SyntaxHighlighting_VERSION_MAJOR && minor > SyntaxHighlighting_VERSION_MINOR)) {
-        qCWarning(Log) << "Skipping" << fileName << "due to being too new, version:" << verStr;
+        std::cerr << "Skipping" << fileName.toUtf8().constData() << "due to being too new, version:" << verStr.toUtf8().constData() << std::endl;
         return false;
     }
 

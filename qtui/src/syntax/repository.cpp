@@ -21,7 +21,6 @@
 #include "definition_p.h"
 #include "theme.h"
 #include "themedata_p.h"
-#include "ksyntaxhighlighting_logging.h"
 #include "wildcardmatcher_p.h"
 
 #include "file/globaldirs.h"
@@ -33,6 +32,7 @@
 #include <QStandardPaths>
 
 #include <limits>
+#include <iostream>
 
 using namespace KSyntaxHighlighting;
 
@@ -209,7 +209,7 @@ quint16 RepositoryPrivate::nextFormatId()
 
 void Repository::reload()
 {
-    qCDebug(Log) << "Reloading syntax definitions!";
+    std::cerr << "Reloading syntax definitions!" << std::endl;
     foreach (const auto &def, d->m_sortedDefs)
         DefinitionData::get(def)->clear();
     d->m_defs.clear();

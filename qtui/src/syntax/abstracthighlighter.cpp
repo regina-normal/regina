@@ -24,10 +24,10 @@
 #include "rule_p.h"
 #include "state.h"
 #include "state_p.h"
-#include "ksyntaxhighlighting_logging.h"
 #include "theme.h"
 
 #include <QDebug>
+#include <iostream>
 
 using namespace KSyntaxHighlighting;
 
@@ -43,13 +43,13 @@ void AbstractHighlighterPrivate::ensureDefinitionLoaded()
 {
     auto defData = DefinitionData::get(m_definition);
     if (Q_UNLIKELY(!m_definition.isValid() && defData->repo && !m_definition.name().isEmpty())) {
-        qCDebug(Log) << "Definition became invalid, trying re-lookup.";
+        std::cerr << "Definition became invalid, trying re-lookup." << std::endl;
         m_definition = defData->repo->definitionForName(m_definition.name());
         defData = DefinitionData::get(m_definition);
     }
 
     if (Q_UNLIKELY(!defData->repo && !defData->name.isEmpty()))
-        qCCritical(Log) << "Repository got deleted while a highlighter is still active!";
+        std::cerr << "Repository got deleted while a highlighter is still active!" << std::endl;
 
     if (m_definition.isValid())
         defData->load();
@@ -124,7 +124,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
     auto newState = state;
     auto stateData = StateData::get(newState);
     if (stateData->m_defData && defData != stateData->m_defData) {
-        qCDebug(Log) << "Got invalid state, resetting.";
+        std::cerr << "Got invalid state, resetting." << std::endl;
         stateData->clear();
     }
     if (stateData->isEmpty()) {

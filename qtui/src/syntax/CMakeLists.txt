@@ -5,7 +5,6 @@ SET ( FILES
   definition.cpp
   format.cpp
   keywordlist.cpp
-  ksyntaxhighlighting_logging.cpp
   matchresult.cpp
   repository.cpp
   rule.cpp
