@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_DEFINITION_H
 #define KSYNTAXHIGHLIGHTING_DEFINITION_H
 
-#include "ksyntaxhighlighting_export.h"
-
 #include <QTypeInfo>
 
 #include <memory>
@@ -61,7 +59,7 @@ class DefinitionData;
  *
  * @see Repository
  */
-class KSYNTAXHIGHLIGHTING_EXPORT Definition
+class Definition
 {
 public:
     /**

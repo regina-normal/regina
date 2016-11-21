@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_REPOSITORY_H
 #define KSYNTAXHIGHLIGHTING_REPOSITORY_H
 
-#include "ksyntaxhighlighting_export.h"
-
 #include <qglobal.h>
 #include <memory>
 #include <vector>
@@ -68,7 +66,7 @@ class Theme;
  *
  * @see Definition, Theme, AbstractHighlighter
  */
-class KSYNTAXHIGHLIGHTING_EXPORT Repository : public boost::noncopyable
+class Repository : public boost::noncopyable
 {
 public:
     /**

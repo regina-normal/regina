@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_QSYNTAXHIGHLIGHTER_H
 #define KSYNTAXHIGHLIGHTING_QSYNTAXHIGHLIGHTER_H
 
-#include "ksyntaxhighlighting_export.h"
-
 #include "abstracthighlighter.h"
 
 #include <QSyntaxHighlighter>
@@ -31,7 +29,7 @@ class SyntaxHighlighterPrivate;
 /** A QSyntaxHighlighter implementation for use with QTextDocument.
  *  This supports partial re-highlighting during editing.
  */
-class KSYNTAXHIGHLIGHTING_EXPORT SyntaxHighlighter : public QSyntaxHighlighter, public AbstractHighlighter
+class SyntaxHighlighter : public QSyntaxHighlighter, public AbstractHighlighter
 {
     Q_OBJECT
 public:

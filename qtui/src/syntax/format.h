@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_FORMAT_H
 #define KSYNTAXHIGHLIGHTING_FORMAT_H
 
-#include "ksyntaxhighlighting_export.h"
-
 #include <QExplicitlySharedDataPointer>
 #include <QTypeInfo>
 
@@ -39,7 +37,7 @@ class Theme;
  *
  *  @see Theme
  */
-class KSYNTAXHIGHLIGHTING_EXPORT Format
+class Format
 {
 public:
     /** Creates an empty/invalid format. */

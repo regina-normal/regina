@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_THEME_H
 #define KSYNTAXHIGHLIGHTING_THEME_H
 
-#include "ksyntaxhighlighting_export.h"
-
 #include <QColor>
 #include <QExplicitlySharedDataPointer>
 #include <qobjectdefs.h>
@@ -71,7 +69,7 @@ class RepositoryPrivate;
  *
  * @see Format
  */
-class KSYNTAXHIGHLIGHTING_EXPORT Theme
+class Theme
 {
     Q_GADGET
 public:

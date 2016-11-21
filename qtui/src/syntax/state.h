@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_STATE_H
 #define KSYNTAXHIGHLIGHTING_STATE_H
 
-#include "ksyntaxhighlighting_export.h"
-
 #include <QExplicitlySharedDataPointer>
 #include <QTypeInfo>
 
@@ -32,7 +30,7 @@ class StateData;
  *  and allows concrete highlighter implementations to store state per
  *  line for fast re-highlighting of specific lines (e.g. during editing).
  */
-class KSYNTAXHIGHLIGHTING_EXPORT State
+class State
 {
 public:
     /** Creates an initial state, ie. what should be used for the first line

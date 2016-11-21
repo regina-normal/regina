@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H
 #define KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H
 
-#include "ksyntaxhighlighting_export.h"
-
 #include <QObject>
 
 #include <memory>
@@ -70,7 +68,7 @@ class Theme;
  *
  * @see SyntaxHighlighter
  */
-class KSYNTAXHIGHLIGHTING_EXPORT AbstractHighlighter
+class AbstractHighlighter
 {
 public:
     virtual ~AbstractHighlighter();
