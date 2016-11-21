@@ -114,7 +114,7 @@ void Rule::setDefinition(const Definition &def)
     m_def = def;
 }
 
-QString Rule::attribute() const
+const std::string& Rule::attribute() const
 {
     return m_attribute;
 }
@@ -148,7 +148,7 @@ bool Rule::load(QXmlStreamReader &reader)
 {
     Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
 
-    m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString();
+    m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString().toUtf8().constData();
     if (reader.name() != QLatin1String("IncludeRules")) // IncludeRules uses this with a different semantic
         m_context.parse(reader.attributes().value(QStringLiteral("context")));
     m_firstNonSpace = Xml::attrToBool(reader.attributes().value(QStringLiteral("firstNonSpace")));
@@ -478,7 +478,7 @@ MatchResult HlCStringChar::doMatch(const QString& text, int offset, const QStrin
 }
 
 
-QString IncludeRules::contextName() const
+const std::string& IncludeRules::contextName() const
 {
     return m_contextName;
 }
@@ -499,18 +499,18 @@ bool IncludeRules::doLoad(QXmlStreamReader& reader)
     auto splitted = s.split(QLatin1String("##"), QString::KeepEmptyParts);
     if (splitted.isEmpty())
         return false;
-    m_contextName = splitted.at(0).toString();
+    m_contextName = splitted.at(0).toString().toUtf8().constData();
     if (splitted.size() > 1)
         m_defName = splitted.at(1).toString().toUtf8().constData();
     m_includeAttribute = Xml::attrToBool(reader.attributes().value(QLatin1String("includeAttrib")));
 
-    return !m_contextName.isEmpty() || !m_defName.empty();
+    return !m_contextName.empty() || !m_defName.empty();
 }
 
 MatchResult IncludeRules::doMatch(const QString& text, int offset, const QStringList&)
 {
     Q_UNUSED(text);
-    std::cerr << "Unresolved include rule for" << m_contextName.toUtf8().constData() << "##" << m_defName << std::endl;
+    std::cerr << "Unresolved include rule for" << m_contextName << "##" << m_defName << std::endl;
     return offset;
 }
 
@@ -529,7 +529,7 @@ MatchResult Int::doMatch(const QString& text, int offset, const QStringList &cap
 
 bool KeywordListRule::doLoad(QXmlStreamReader& reader)
 {
-    m_listName = reader.attributes().value(QLatin1String("String")).toString();
+    m_listName = reader.attributes().value(QLatin1String("String")).toString().toUtf8().constData();
     if (reader.attributes().hasAttribute(QLatin1String("insensitive"))) {
         m_hasCaseSensitivityOverride = true;
         m_caseSensitivityOverride = Xml::attrToBool(reader.attributes().value(QLatin1String("insensitive"))) ?
@@ -537,7 +537,7 @@ bool KeywordListRule::doLoad(QXmlStreamReader& reader)
     } else {
         m_hasCaseSensitivityOverride = false;
     }
-    return !m_listName.isEmpty();
+    return !m_listName.empty();
 }
 
 MatchResult KeywordListRule::doMatch(const QString& text, int offset, const QStringList&)

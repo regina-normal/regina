@@ -23,7 +23,6 @@
 #include "theme.h"
 
 #include <QSharedData>
-#include <QString>
 
 namespace KSyntaxHighlighting {
 
@@ -36,7 +35,7 @@ public:
     void load(QXmlStreamReader &reader);
 
     DefinitionRef definition;
-    QString name;
+    std::string name;
     TextStyleData style;
     Theme::TextStyle defaultStyle;
     quint16 id;

@@ -153,7 +153,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
     do {
         bool isLookAhead = false;
         int newOffset = 0;
-        QString newFormat;
+        std::string newFormat;
         auto newLookupContext = currentLookupContext;
         foreach (const auto &rule, stateData->topContext()->rules()) {
             auto it = skipOffsets.find(rule.get());
@@ -186,7 +186,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
 
             newLookupContext = stateData->topContext();
             d->switchContext(stateData, rule->context(), newResult.captures());
-            newFormat = rule->attribute().isEmpty() ? stateData->topContext()->attribute() : rule->attribute();
+            newFormat = rule->attribute().empty() ? stateData->topContext()->attribute() : rule->attribute();
             if (newOffset == text.size() && std::dynamic_pointer_cast<LineContinue>(rule))
                 lineContinuation = true;
             break;

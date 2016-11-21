@@ -41,7 +41,7 @@ public:
 
 private:
     std::string m_defName;
-    QString m_contextName;
+    std::string m_contextName;
     Context *m_context;
     int m_popCount;
 };

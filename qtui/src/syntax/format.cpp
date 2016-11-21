@@ -79,10 +79,10 @@ Format& Format::operator=(const Format& other)
 
 bool Format::isValid() const
 {
-    return !d->name.isEmpty();
+    return !d->name.empty();
 }
 
-QString Format::name() const
+const std::string& Format::name() const
 {
     return d->name;
 }
@@ -165,7 +165,7 @@ bool Format::spellCheck() const
 
 void FormatPrivate::load(QXmlStreamReader& reader)
 {
-    name = reader.attributes().value(QStringLiteral("name")).toString();
+    name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
     defaultStyle = stringToDefaultFormat(reader.attributes().value(QStringLiteral("defStyleNum")));
 
     QStringRef ref = reader.attributes().value(QStringLiteral("color"));

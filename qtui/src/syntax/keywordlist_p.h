@@ -19,7 +19,6 @@
 #define KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H
 
 #include <QSet>
-#include <QString>
 #include <QVector>
 
 class QXmlStreamReader;
@@ -34,7 +33,7 @@ public:
 
     bool isEmpty() const;
 
-    QString name() const;
+    const std::string& name() const;
 
     /** Checks if @p str is a keyword in this list. */
     bool contains(const QStringRef &str) const;
@@ -45,7 +44,7 @@ public:
     void setCaseSensitivity(Qt::CaseSensitivity caseSensitive);
 
 private:
-    QString m_name;
+    std::string m_name;
     QSet<QString> m_keywords;
     mutable QSet<QString> m_lowerCaseKeywords;
     Qt::CaseSensitivity m_caseSensitive;

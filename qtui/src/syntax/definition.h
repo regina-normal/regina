@@ -21,10 +21,8 @@
 #include <QTypeInfo>
 
 #include <memory>
-
-class QString;
-class QStringList;
-template <typename T> class QVector;
+#include <string>
+#include <vector>
 
 namespace KSyntaxHighlighting {
 
@@ -50,12 +48,6 @@ class DefinitionData;
  * The location
  * of the Definition can be obtained through filePath(), which either is the
  * location on disk or a path to a compiled-in Qt resource.
- *
- * The supported files of a Definition are defined by the list of extensions(),
- * and additionally by the list of mimeTypes(). Note, that extensions() returns
- * wildcards that need to be matched against the filename of the file that
- * requires highlighting. If multiple Definition%s match the file, then the one
- * with higher priority() wins.
  *
  * @see Repository
  */
@@ -100,23 +92,16 @@ public:
     /** Checks whether this object refers to a valid syntax definition. */
     bool isValid() const;
     /** Returns the full path to the definition XML file containing
-     *  the syntax definition. Note that this can be a path to QRC content.
+     *  the syntax definition.
      */
-    QString filePath() const;
+    const std::string& filePath() const;
 
     /** Name of the syntax.
      */
     const std::string& name() const;
     /** The group this syntax definition belongs to.
      */
-    QString section() const;
-    /** Mime types associated with this syntax definition. */
-    QVector<QString> mimeTypes() const;
-    /**
-     * File extensions associated with this syntax definition.
-     * The returned list contains wildcards.
-     */
-    QVector<QString> extensions() const;
+    const std::string& section() const;
     /** Returns the definition version. */
     int version() const;
     /**
@@ -129,13 +114,13 @@ public:
      */
     bool isHidden() const;
     /** Generalized language style, used for indentation. */
-    QString style() const;
+    const std::string& style() const;
     /** Indentation style to be used for this syntax. */
-    QString indenter() const;
+    const std::string& indenter() const;
     /** Name and email of the author of this syntax definition. */
-    QString author() const;
+    const std::string& author() const;
     /** License of this syntax definition. */
-    QString license() const;
+    const std::string& license() const;
 
 private:
     friend class DefinitionData;

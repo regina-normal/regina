@@ -35,7 +35,7 @@ bool KeywordList::isEmpty() const
     return m_keywords.isEmpty();
 }
 
-QString KeywordList::name() const
+const std::string& KeywordList::name() const
 {
     return m_name;
 }
@@ -63,7 +63,7 @@ void KeywordList::load(QXmlStreamReader& reader)
     Q_ASSERT(reader.name() == QLatin1String("list"));
     Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
 
-    m_name = reader.attributes().value(QStringLiteral("name")).toString();
+    m_name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
 
     while (!reader.atEnd()) {
         switch (reader.tokenType()) {

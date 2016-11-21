@@ -29,8 +29,6 @@
 #include "xml_p.h"
 
 #include <QFile>
-#include <QStringList>
-#include <QVector>
 #include <QXmlStreamReader>
 
 #include <algorithm>
@@ -39,7 +37,7 @@
 using namespace KSyntaxHighlighting;
 
 DefinitionData::DefinitionData() :
-    repo(Q_NULLPTR),
+    repo(nullptr),
     delimiters(QStringLiteral("\t !%&()*+,-./:;<=>?[\\]^{|}~")), // must be sorted!
     caseSensitive(Qt::CaseSensitive),
     version(0.0f),
@@ -96,10 +94,10 @@ bool Definition::operator!=(const Definition& other) const
 
 bool Definition::isValid() const
 {
-    return d->repo && !d->fileName.isEmpty() && !d->name.empty();
+    return d->repo && !d->fileName.empty() && !d->name.empty();
 }
 
-QString Definition::filePath() const
+const std::string& Definition::filePath() const
 {
     return d->fileName;
 }
@@ -109,19 +107,9 @@ const std::string& Definition::name() const
     return d->name;
 }
 
-QString Definition::section() const
+const std::string& Definition::section() const
 {
     return d->section;
-}
-
-QVector<QString> Definition::mimeTypes() const
-{
-    return d->mimetypes;
-}
-
-QVector<QString> Definition::extensions() const
-{
-    return d->extensions;
 }
 
 int Definition::version() const
@@ -139,42 +127,42 @@ bool Definition::isHidden() const
     return d->hidden;
 }
 
-QString Definition::style() const
+const std::string& Definition::style() const
 {
     return d->style;
 }
 
-QString Definition::indenter() const
+const std::string& Definition::indenter() const
 {
     return d->indenter;
 }
 
-QString Definition::author() const
+const std::string& Definition::author() const
 {
     return d->author;
 }
 
-QString Definition::license() const
+const std::string& Definition::license() const
 {
     return d->license;
 }
 
 Context* DefinitionData::initialContext() const
 {
-    Q_ASSERT(!contexts.isEmpty());
-    return contexts.first();
+    Q_ASSERT(!contexts.empty());
+    return contexts.front();
 }
 
-Context* DefinitionData::contextByName(const QString& name) const
+Context* DefinitionData::contextByName(const std::string& name) const
 {
     foreach (auto context, contexts) {
         if (context->name() == name)
             return context;
     }
-    return Q_NULLPTR;
+    return nullptr;
 }
 
-KeywordList DefinitionData::keywordList(const QString& name) const
+KeywordList DefinitionData::keywordList(const std::string& name) const
 {
     const auto it = keywordLists.find(name);
     if (it != keywordLists.end())
@@ -188,7 +176,7 @@ bool DefinitionData::isDelimiter(QChar c) const
     return std::binary_search(delimiters.constBegin(), delimiters.constEnd(), c);
 }
 
-Format DefinitionData::formatByName(const QString& name) const
+Format DefinitionData::formatByName(const std::string& name) const
 {
     const auto it = formats.find(name);
     if (it != formats.end())
@@ -199,7 +187,7 @@ Format DefinitionData::formatByName(const QString& name) const
 
 bool DefinitionData::isLoaded() const
 {
-    return !contexts.isEmpty();
+    return !contexts.empty();
 }
 
 bool DefinitionData::load()
@@ -207,8 +195,8 @@ bool DefinitionData::load()
     if (isLoaded())
         return true;
 
-    Q_ASSERT(!fileName.isEmpty());
-    QFile file(fileName);
+    Q_ASSERT(!fileName.empty());
+    QFile file(QFile::decodeName(fileName.c_str()));
     if (!file.open(QFile::ReadOnly))
         return false;
 
@@ -251,8 +239,6 @@ void DefinitionData::clear()
     indenter.clear();
     author.clear();
     license.clear();
-    mimetypes.clear();
-    extensions.clear();
     delimiters = QStringLiteral("\t !%&()*+,-./:;<=>?[\\]^{|}~"); // must be sorted!
     caseSensitive = Qt::CaseSensitive,
     version = 0.0f;
@@ -262,9 +248,9 @@ void DefinitionData::clear()
 
 bool DefinitionData::loadMetaData(const std::string& definitionFileName)
 {
-    fileName = definitionFileName.c_str();
+    fileName = definitionFileName;
 
-    QFile file(fileName);
+    QFile file(QFile::decodeName(fileName.c_str()));
     if (!file.open(QFile::ReadOnly))
         return false;
 
@@ -290,21 +276,15 @@ bool DefinitionData::loadLanguage(QXmlStreamReader &reader)
         return false;
 
     name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
-    section = reader.attributes().value(QStringLiteral("section")).toString();
+    section = reader.attributes().value(QStringLiteral("section")).toString().toUtf8().constData();
     // toFloat instead of toInt for backward compatibility with old Kate files
     version = reader.attributes().value(QStringLiteral("version")).toFloat();
     priority = reader.attributes().value(QStringLiteral("priority")).toInt();
     hidden = Xml::attrToBool(reader.attributes().value(QStringLiteral("hidden")));
-    style = reader.attributes().value(QStringLiteral("style")).toString();
-    indenter = reader.attributes().value(QStringLiteral("indenter")).toString();
-    author = reader.attributes().value(QStringLiteral("author")).toString();
-    license = reader.attributes().value(QStringLiteral("license")).toString();
-    const auto exts = reader.attributes().value(QStringLiteral("extensions")).toString();
-    foreach (const auto &ext, exts.split(QLatin1Char(';'), QString::SkipEmptyParts))
-        extensions.push_back(ext);
-    const auto mts = reader.attributes().value(QStringLiteral("mimetype")).toString();
-    foreach (const auto &mt, mts.split(QLatin1Char(';'), QString::SkipEmptyParts))
-        mimetypes.push_back(mt);
+    style = reader.attributes().value(QStringLiteral("style")).toString().toUtf8().constData();
+    indenter = reader.attributes().value(QStringLiteral("indenter")).toString().toUtf8().constData();
+    author = reader.attributes().value(QStringLiteral("author")).toString().toUtf8().constData();
+    license = reader.attributes().value(QStringLiteral("license")).toString().toUtf8().constData();
     if (reader.attributes().hasAttribute(QStringLiteral("casesensitive")))
         caseSensitive = Xml::attrToBool(reader.attributes().value(QStringLiteral("casesensitive"))) ? Qt::CaseSensitive : Qt::CaseInsensitive;
     return true;
@@ -436,14 +416,14 @@ bool DefinitionData::checkKateVersion(const QStringRef& verStr)
 {
     const auto idx = verStr.indexOf(QLatin1Char('.'));
     if (idx <= 0) {
-        std::cerr << "Skipping" << fileName.toUtf8().constData() << "due to having no valid kateversion attribute:" << verStr.toUtf8().constData() << std::endl;
+        std::cerr << "Skipping" << fileName << "due to having no valid kateversion attribute:" << verStr.toUtf8().constData() << std::endl;
         return false;
     }
     const auto major = verStr.left(idx).toInt();
     const auto minor = verStr.mid(idx + 1).toInt();
 
     if (major > SyntaxHighlighting_VERSION_MAJOR || (major == SyntaxHighlighting_VERSION_MAJOR && minor > SyntaxHighlighting_VERSION_MINOR)) {
-        std::cerr << "Skipping" << fileName.toUtf8().constData() << "due to being too new, version:" << verStr.toUtf8().constData() << std::endl;
+        std::cerr << "Skipping" << fileName << "due to being too new, version:" << verStr.toUtf8().constData() << std::endl;
         return false;
     }
 

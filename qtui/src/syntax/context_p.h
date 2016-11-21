@@ -23,9 +23,6 @@
 #include "definition.h"
 #include "definitionref_p.h"
 
-#include <QString>
-#include <QVector>
-
 class QXmlStreamReader;
 
 namespace KSyntaxHighlighting {
@@ -39,21 +36,21 @@ public:
     Definition definition() const;
     void setDefinition(const DefinitionRef &def);
 
-    QString name() const;
-    QString attribute() const;
+    const std::string& name() const;
+    const std::string& attribute() const;
     ContextSwitch lineEndContext() const;
     ContextSwitch lineEmptyContext() const;
 
     bool fallthrough() const;
     ContextSwitch fallthroughContext() const;
 
-    QVector<Rule::Ptr> rules() const;
+    const std::vector<Rule::Ptr>& rules() const;
 
     /** Attempts to find the format named @p name in the
      *  enclosing definition, or the source definition of any
      *  included rule.
      */
-    Format formatByName(const QString &name) const;
+    Format formatByName(const std::string& name) const;
 
     void load(QXmlStreamReader &reader);
     void resolveContexts();
@@ -71,13 +68,13 @@ private:
     ResolveState resolveState();
 
     DefinitionRef m_def;
-    QString m_name;
-    QString m_attribute;
+    std::string m_name;
+    std::string m_attribute;
     ContextSwitch m_lineEndContext;
     ContextSwitch m_lineEmptyContext;
     ContextSwitch m_fallthroughContext;
 
-    QVector<Rule::Ptr> m_rules;
+    std::vector<Rule::Ptr> m_rules;
 
     ResolveState m_resolveState;
     bool m_fallthrough;

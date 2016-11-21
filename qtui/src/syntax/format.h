@@ -22,7 +22,6 @@
 #include <QTypeInfo>
 
 class QColor;
-class QString;
 class QXmlStreamReader;
 
 namespace KSyntaxHighlighting {
@@ -53,7 +52,7 @@ public:
     bool isValid() const;
 
     /** The name of this format as used in the syntax definition file. */
-    QString name() const;
+    const std::string& name() const;
 
     /** Returns a unique identifier of this format.
      *  This is useful for efficient storing of formats in a text line. The

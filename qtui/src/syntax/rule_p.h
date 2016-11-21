@@ -25,7 +25,6 @@
 #include "matchresult_p.h"
 
 #include <QRegularExpression>
-#include <QString>
 #include <QVector>
 
 #include <memory>
@@ -45,7 +44,7 @@ public:
     Definition definition() const;
     void setDefinition(const Definition &def);
 
-    QString attribute() const;
+    const std::string& attribute() const;
     ContextSwitch context() const;
     bool isLookAhead() const;
     bool isDynamic() const;
@@ -69,7 +68,7 @@ private:
     Q_DISABLE_COPY(Rule)
 
     DefinitionRef m_def;
-    QString m_attribute;
+    std::string m_attribute;
     ContextSwitch m_context;
     QVector<Rule::Ptr> m_subRules;
     int m_column;
@@ -132,7 +131,7 @@ protected:
 class IncludeRules : public Rule
 {
 public:
-    QString contextName() const;
+    const std::string& contextName() const;
     const std::string& definitionName() const;
     bool includeAttribute() const;
 
@@ -141,7 +140,7 @@ protected:
     MatchResult doMatch(const QString & text, int offset, const QStringList&) Q_DECL_OVERRIDE;
 
 private:
-    QString m_contextName;
+    std::string m_contextName;
     std::string m_defName;
     bool m_includeAttribute;
 };
@@ -183,7 +182,7 @@ protected:
     MatchResult doMatch(const QString & text, int offset, const QStringList&) Q_DECL_OVERRIDE;
 
 private:
-    QString m_listName;
+    std::string m_listName;
     KeywordList m_keywordList;
     bool m_hasCaseSensitivityOverride;
     Qt::CaseSensitivity m_caseSensitivityOverride;

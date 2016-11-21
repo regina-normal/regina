@@ -36,7 +36,7 @@ ContextSwitch::~ContextSwitch()
 
 bool ContextSwitch::isStay() const
 {
-    return m_popCount == 0 && !m_context && m_contextName.isEmpty() && m_defName.empty();
+    return m_popCount == 0 && !m_context && m_contextName.empty() && m_defName.empty();
 }
 
 int ContextSwitch::popCount() const
@@ -56,7 +56,7 @@ void ContextSwitch::parse(const QStringRef& contextInstr)
 
     if (contextInstr.startsWith(QLatin1String("#pop!"))) {
         ++m_popCount;
-        m_contextName = contextInstr.mid(5).toString();
+        m_contextName = contextInstr.mid(5).toString().toUtf8().constData();
         return;
     }
 
@@ -68,10 +68,10 @@ void ContextSwitch::parse(const QStringRef& contextInstr)
 
     const auto idx = contextInstr.indexOf(QLatin1String("##"));
     if (idx >= 0) {
-        m_contextName = contextInstr.left(idx).toString();
+        m_contextName = contextInstr.left(idx).toString().toUtf8().constData();
         m_defName = contextInstr.mid(idx + 2).toString().toUtf8().constData();
     } else {
-        m_contextName = contextInstr.toString();
+        m_contextName = contextInstr.toString().toUtf8().constData();
     }
 }
 
@@ -82,13 +82,13 @@ void ContextSwitch::resolve(const Definition &def)
         d = DefinitionData::get(def)->repo->definitionForName(m_defName);
         auto data = DefinitionData::get(d);
         data->load();
-        if (m_contextName.isEmpty())
+        if (m_contextName.empty())
             m_context = data->initialContext();
     }
 
-    if (!m_contextName.isEmpty()) {
+    if (!m_contextName.empty()) {
         m_context = DefinitionData::get(d)->contextByName(m_contextName);
         if (!m_context)
-            std::cerr << "cannot find context" << m_contextName.toUtf8().constData() << "in" << def.name() << std::endl;
+            std::cerr << "cannot find context" << m_contextName << "in" << def.name() << std::endl;
     }
 }

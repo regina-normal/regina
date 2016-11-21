@@ -48,12 +48,12 @@ void Context::setDefinition(const DefinitionRef &def)
     m_def = def;
 }
 
-QString Context::name() const
+const std::string& Context::name() const
 {
     return m_name;
 }
 
-QString Context::attribute() const
+const std::string& Context::attribute() const
 {
     return m_attribute;
 }
@@ -78,12 +78,12 @@ ContextSwitch Context::fallthroughContext() const
     return m_fallthroughContext;
 }
 
-QVector<Rule::Ptr> Context::rules() const
+const std::vector<Rule::Ptr>& Context::rules() const
 {
     return m_rules;
 }
 
-Format Context::formatByName(const QString &name) const
+Format Context::formatByName(const std::string& name) const
 {
     auto defData = DefinitionData::get(m_def.definition());
     auto format = defData->formatByName(name);
@@ -98,7 +98,7 @@ Format Context::formatByName(const QString &name) const
             return format;
     }
 
-    std::cerr << "Unknown format" << name.toUtf8().constData() << "in context" << m_name.toUtf8().constData() << "of definition" << m_def.definition().name() << std::endl;
+    std::cerr << "Unknown format" << name << "in context" << m_name << "of definition" << m_def.definition().name() << std::endl;
     return format;
 }
 
@@ -107,8 +107,8 @@ void Context::load(QXmlStreamReader& reader)
     Q_ASSERT(reader.name() == QLatin1String("context"));
     Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
 
-    m_name = reader.attributes().value(QStringLiteral("name")).toString();
-    m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString();
+    m_name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
+    m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString().toUtf8().constData();
     m_lineEndContext.parse(reader.attributes().value(QStringLiteral("lineEndContext")));
     m_lineEmptyContext.parse(reader.attributes().value(QStringLiteral("lineEmptyContext")));
     m_fallthrough = Xml::attrToBool(reader.attributes().value(QStringLiteral("fallthrough")));
@@ -197,13 +197,13 @@ void Context::resolveIncludes()
             }
             auto defData = DefinitionData::get(def);
             defData->load();
-            if (inc->contextName().isEmpty())
+            if (inc->contextName().empty())
                 context = defData->initialContext();
             else
                 context = defData->contextByName(inc->contextName());
         }
         if (!context) {
-            std::cerr << "Unable to resolve include rule for definition" << inc->contextName().toUtf8().constData() << "##" << inc->definitionName() << "in" << m_def.definition().name() << std::endl;
+            std::cerr << "Unable to resolve include rule for definition" << inc->contextName() << "##" << inc->definitionName() << "in" << m_def.definition().name() << std::endl;
             ++it;
             continue;
         }

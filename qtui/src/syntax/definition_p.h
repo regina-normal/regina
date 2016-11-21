@@ -20,9 +20,11 @@
 
 #include "definitionref_p.h"
 
-#include <QString>
-#include <QVector>
 #include <map>
+#include <string>
+#include <vector>
+
+#include <QStringRef>
 
 QT_BEGIN_NAMESPACE
 class QXmlStreamReader;
@@ -52,33 +54,31 @@ public:
     void loadContexts(QXmlStreamReader &reader);
     void loadItemData(QXmlStreamReader &reader);
     void loadGeneral(QXmlStreamReader &reader);
-    bool checkKateVersion(const QStringRef &verStr);
+    bool checkKateVersion(const QStringRef& verStr);
 
-    KeywordList keywordList(const QString &name) const;
+    KeywordList keywordList(const std::string& name) const;
     bool isDelimiter(QChar c) const;
 
     Context* initialContext() const;
-    Context* contextByName(const QString &name) const;
+    Context* contextByName(const std::string& name) const;
 
-    Format formatByName(const QString &name) const;
+    Format formatByName(const std::string& name) const;
 
     DefinitionRef q;
 
     Repository *repo;
-    std::map<QString, KeywordList> keywordLists;
-    QVector<Context*> contexts;
-    std::map<QString, Format> formats;
+    std::map<std::string, KeywordList> keywordLists;
+    std::vector<Context*> contexts;
+    std::map<std::string, Format> formats;
     QString delimiters;
 
-    QString fileName;
+    std::string fileName;
     std::string name;
-    QString section;
-    QString style;
-    QString indenter;
-    QString author;
-    QString license;
-    QVector<QString> mimetypes;
-    QVector<QString> extensions;
+    std::string section;
+    std::string style;
+    std::string indenter;
+    std::string author;
+    std::string license;
     Qt::CaseSensitivity caseSensitive;
     int version;
     int priority;
