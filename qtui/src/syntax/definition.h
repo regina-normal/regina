@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_DEFINITION_H
 #define KSYNTAXHIGHLIGHTING_DEFINITION_H
 
-#include <QTypeInfo>
-
 #include <memory>
 #include <string>
 #include <vector>
@@ -45,9 +43,7 @@ class DefinitionData;
  * @section def_info General Information
  *
  * Each Definition contains a non-translated unique name() and a section().
- * The location
- * of the Definition can be obtained through filePath(), which either is the
- * location on disk or a path to a compiled-in Qt resource.
+ * The location of the Definition can be obtained through filePath().
  *
  * @see Repository
  */
