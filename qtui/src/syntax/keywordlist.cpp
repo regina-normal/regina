@@ -48,7 +48,7 @@ bool KeywordList::contains(const QStringRef &str) const
 bool KeywordList::contains(const QStringRef &str, Qt::CaseSensitivity caseSensitivityOverride) const
 {
     if (Q_UNLIKELY(caseSensitivityOverride == Qt::CaseInsensitive && m_lowerCaseKeywords.empty())) {
-        foreach (const auto &kw, m_keywords)
+        for (const auto& kw : m_keywords)
             m_lowerCaseKeywords.insert(kw.toLower());
     }
 

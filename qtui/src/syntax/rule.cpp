@@ -545,11 +545,11 @@ MatchResult KeywordListRule::doMatch(const QString& text, int offset, const QStr
     if (offset > 0 && !isDelimiter(text.at(offset - 1)))
         return offset;
 
-    if (m_keywordList.isEmpty()) {
+    if (! m_keywordList) {
         const auto def = definition();
         Q_ASSERT(def.isValid());
         auto defData = DefinitionData::get(def);
-        m_keywordList = defData->keywordList(m_listName);
+        m_keywordList = &defData->keywordList(m_listName);
     }
 
     auto newOffset = offset;
@@ -559,10 +559,10 @@ MatchResult KeywordListRule::doMatch(const QString& text, int offset, const QStr
         return offset;
 
     if (m_hasCaseSensitivityOverride) {
-        if (m_keywordList.contains(text.midRef(offset, newOffset - offset), m_caseSensitivityOverride))
+        if (m_keywordList->contains(text.midRef(offset, newOffset - offset), m_caseSensitivityOverride))
             return newOffset;
     } else {
-        if (m_keywordList.contains(text.midRef(offset, newOffset - offset)))
+        if (m_keywordList->contains(text.midRef(offset, newOffset - offset)))
             return newOffset;
     }
     return offset;

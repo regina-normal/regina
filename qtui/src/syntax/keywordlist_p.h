@@ -27,7 +27,7 @@ class QXmlStreamReader;
 
 namespace KSyntaxHighlighting {
 
-class KeywordList
+class KeywordList : public boost::noncopyable
 {
 public:
     KeywordList();

@@ -182,9 +182,12 @@ protected:
 
 private:
     std::string m_listName;
-    KeywordList m_keywordList;
+    const KeywordList* m_keywordList; // may be null
     bool m_hasCaseSensitivityOverride;
     Qt::CaseSensitivity m_caseSensitivityOverride;
+
+public:
+    KeywordListRule() : m_keywordList(0) {}
 };
 
 class LineContinue : public Rule
