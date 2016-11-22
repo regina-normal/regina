@@ -1,7 +1,17 @@
-These files were downloaded on 21 Nov 2016 from:
+This is a stripped-down version of the syntax-highlighting framework from
+KDE Frameworks 5.28.0:
+
+- it has been simplified (and silently drops some metadata from the syntax
+  definitions as a result);
+- its Qt dependencies have been replaced with libraries that are already used
+  by Regina's calculation engine (e.g., the C++ standard library and libxml2);
+- its repository is hard-coded to only load syntax definitions for Python
+  from Regina's data directories (though the library retains the functionality
+  for highlighting arbitrary languages if the syntax definitions are provided).
+
+The original KDE framework was downloaded on 21 Nov 2016 from:
 http://download.kde.org/stable/frameworks/5.28/
 
-The code is taken from the syntax-highlighting framework from
-KDE Frameworks 5.28.0, and is licensed under the GNU LGPL (version 2 or above).
+KDE Frameworks 5.28.0 is licensed under the GNU LGPL (version 2 or above).
 See COPYING.LIB for details.
 
