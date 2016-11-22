@@ -22,9 +22,10 @@
 #include "rule_p.h"
 #include "xml_p.h"
 
+#include <cassert>
+#include <iostream>
 #include <QString>
 #include <QXmlStreamReader>
-#include <iostream>
 
 using namespace KSyntaxHighlighting;
 
@@ -175,7 +176,7 @@ void Context::resolveIncludes()
         return;
     }
 
-    Q_ASSERT(resolveState() == Unresolved);
+    assert(resolveState() == Unresolved);
     m_resolveState = Resolving; // cycle guard
 
     for (auto it = m_rules.begin(); it != m_rules.end();) {
@@ -184,7 +185,7 @@ void Context::resolveIncludes()
             ++it;
             continue;
         }
-        Context* context = Q_NULLPTR;
+        Context* context = nullptr;
         auto myDefData = DefinitionData::get(m_def.definition());
         if (inc->definitionName().empty()) { // local include
             context = myDefData->contextByName(inc->contextName());
