@@ -32,7 +32,7 @@ KeywordList::~KeywordList()
 
 bool KeywordList::isEmpty() const
 {
-    return m_keywords.isEmpty();
+    return m_keywords.empty();
 }
 
 const std::string& KeywordList::name() const
@@ -47,15 +47,15 @@ bool KeywordList::contains(const QStringRef &str) const
 
 bool KeywordList::contains(const QStringRef &str, Qt::CaseSensitivity caseSensitivityOverride) const
 {
-    if (Q_UNLIKELY(caseSensitivityOverride == Qt::CaseInsensitive && m_lowerCaseKeywords.isEmpty())) {
+    if (Q_UNLIKELY(caseSensitivityOverride == Qt::CaseInsensitive && m_lowerCaseKeywords.empty())) {
         foreach (const auto &kw, m_keywords)
             m_lowerCaseKeywords.insert(kw.toLower());
     }
 
     // TODO avoid the copy in toString!
     if (caseSensitivityOverride == Qt::CaseSensitive)
-        return m_keywords.contains(str.toString());
-    return m_lowerCaseKeywords.contains(str.toString().toLower());
+        return m_keywords.count(str.toString());
+    return m_lowerCaseKeywords.count(str.toString().toLower());
 }
 
 void KeywordList::load(QXmlStreamReader& reader)

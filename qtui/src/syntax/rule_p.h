@@ -25,15 +25,16 @@
 #include "matchresult_p.h"
 
 #include <QRegularExpression>
-#include <QVector>
 
 #include <memory>
+#include <vector>
+#include <boost/noncopyable.hpp>
 
 class QXmlStreamReader;
 
 namespace KSyntaxHighlighting {
 
-class Rule
+class Rule : public boost::noncopyable
 {
 public:
     Rule();
@@ -65,12 +66,10 @@ protected:
     bool isDelimiter(QChar c) const;
 
 private:
-    Q_DISABLE_COPY(Rule)
-
     DefinitionRef m_def;
     std::string m_attribute;
     ContextSwitch m_context;
-    QVector<Rule::Ptr> m_subRules;
+    std::vector<Rule::Ptr> m_subRules;
     int m_column;
     bool m_firstNonSpace;
     bool m_lookAhead;

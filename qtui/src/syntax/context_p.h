@@ -59,8 +59,6 @@ public:
     void resolveIncludes();
 
 private:
-    Q_DISABLE_COPY(Context)
-
     enum ResolveState {
         Unknown,
         Unresolved,

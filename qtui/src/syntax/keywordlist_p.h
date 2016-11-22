@@ -18,8 +18,10 @@
 #ifndef KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H
 #define KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H
 
-#include <QSet>
-#include <QVector>
+#include <QString>
+#include <set>
+#include <vector>
+#include <boost/noncopyable.hpp>
 
 class QXmlStreamReader;
 
@@ -45,8 +47,8 @@ public:
 
 private:
     std::string m_name;
-    QSet<QString> m_keywords;
-    mutable QSet<QString> m_lowerCaseKeywords;
+    std::set<QString> m_keywords;
+    mutable std::set<QString> m_lowerCaseKeywords;
     Qt::CaseSensitivity m_caseSensitive;
 };
 }

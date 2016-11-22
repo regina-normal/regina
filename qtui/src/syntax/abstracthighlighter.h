@@ -21,6 +21,7 @@
 #include <QObject>
 
 #include <memory>
+#include <boost/noncopyable.hpp>
 
 class QString;
 
@@ -68,7 +69,7 @@ class Theme;
  *
  * @see SyntaxHighlighter
  */
-class AbstractHighlighter
+class AbstractHighlighter : public boost::noncopyable
 {
 public:
     virtual ~AbstractHighlighter();
@@ -146,7 +147,6 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(AbstractHighlighter)
-    Q_DISABLE_COPY(AbstractHighlighter)
 };
 }
 
