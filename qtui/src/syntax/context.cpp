@@ -109,10 +109,10 @@ void Context::load(QXmlStreamReader& reader)
 
     m_name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
     m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString().toUtf8().constData();
-    m_lineEndContext.parse(reader.attributes().value(QStringLiteral("lineEndContext")));
-    m_lineEmptyContext.parse(reader.attributes().value(QStringLiteral("lineEmptyContext")));
+    m_lineEndContext.parse(reader.attributes().value(QStringLiteral("lineEndContext")).toString().toUtf8().constData());
+    m_lineEmptyContext.parse(reader.attributes().value(QStringLiteral("lineEmptyContext")).toString().toUtf8().constData());
     m_fallthrough = Xml::attrToBool(reader.attributes().value(QStringLiteral("fallthrough")));
-    m_fallthroughContext.parse(reader.attributes().value(QStringLiteral("fallthroughContext")));
+    m_fallthroughContext.parse(reader.attributes().value(QStringLiteral("fallthroughContext")).toString().toUtf8().constData());
     if (m_fallthroughContext.isStay())
         m_fallthrough = false;
 

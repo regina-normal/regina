@@ -150,7 +150,7 @@ bool Rule::load(QXmlStreamReader &reader)
 
     m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString().toUtf8().constData();
     if (reader.name() != QLatin1String("IncludeRules")) // IncludeRules uses this with a different semantic
-        m_context.parse(reader.attributes().value(QStringLiteral("context")));
+        m_context.parse(reader.attributes().value(QStringLiteral("context")).toString().toUtf8().constData());
     m_firstNonSpace = Xml::attrToBool(reader.attributes().value(QStringLiteral("firstNonSpace")));
     m_lookAhead = Xml::attrToBool(reader.attributes().value(QStringLiteral("lookAhead")));
     bool colOk = false;

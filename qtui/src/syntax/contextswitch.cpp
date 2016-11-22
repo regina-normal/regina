@@ -20,12 +20,14 @@
 #include "definition_p.h"
 #include "repository.h"
 
+#include "utilities/stringutils.h"
+
 #include <iostream>
 
 using namespace KSyntaxHighlighting;
 
 ContextSwitch::ContextSwitch() :
-    m_context(Q_NULLPTR),
+    m_context(nullptr),
     m_popCount(0)
 {
 }
@@ -49,29 +51,29 @@ Context* ContextSwitch::context() const
     return m_context;
 }
 
-void ContextSwitch::parse(const QStringRef& contextInstr)
+void ContextSwitch::parse(const std::string& contextInstr)
 {
-    if (contextInstr.isEmpty() || contextInstr == QLatin1String("#stay"))
+    if (contextInstr.empty() || contextInstr == "#stay")
         return;
 
-    if (contextInstr.startsWith(QLatin1String("#pop!"))) {
+    if (regina::startsWith(contextInstr, "#pop!")) {
         ++m_popCount;
-        m_contextName = contextInstr.mid(5).toString().toUtf8().constData();
+        m_contextName = contextInstr.substr(5);
         return;
     }
 
-    if (contextInstr.startsWith(QLatin1String("#pop"))) {
+    if (regina::startsWith(contextInstr, "#pop")) {
         ++m_popCount;
-        parse(contextInstr.mid(4));
+        parse(contextInstr.substr(4));
         return;
     }
 
-    const auto idx = contextInstr.indexOf(QLatin1String("##"));
-    if (idx >= 0) {
-        m_contextName = contextInstr.left(idx).toString().toUtf8().constData();
-        m_defName = contextInstr.mid(idx + 2).toString().toUtf8().constData();
+    auto idx = contextInstr.find("##");
+    if (idx != std::string::npos) {
+        m_contextName = contextInstr.substr(0, idx);
+        m_defName = contextInstr.substr(idx + 2);
     } else {
-        m_contextName = contextInstr.toString().toUtf8().constData();
+        m_contextName = contextInstr;
     }
 }
 
