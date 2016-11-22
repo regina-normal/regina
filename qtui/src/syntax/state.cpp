@@ -20,12 +20,13 @@
 
 #include "context_p.h"
 
+#include <cassert>
 #include <QStringList>
 
 using namespace KSyntaxHighlighting;
 
 StateData::StateData() :
-    m_defData(Q_NULLPTR)
+    m_defData(nullptr)
 {
 }
 
@@ -37,7 +38,7 @@ StateData* StateData::get(State &state)
 
 bool StateData::isEmpty() const
 {
-    Q_ASSERT(m_contextStack.size() == m_captureStack.size());
+    assert(m_contextStack.size() == m_captureStack.size());
     return m_contextStack.isEmpty();
 }
 
@@ -49,16 +50,16 @@ void StateData::clear()
 
 int StateData::size() const
 {
-    Q_ASSERT(m_contextStack.size() == m_captureStack.size());
+    assert(m_contextStack.size() == m_captureStack.size());
     return m_contextStack.size();
 }
 
 void StateData::push(Context *context, const QStringList &captures)
 {
-    Q_ASSERT(context);
+    assert(context);
     m_contextStack.push(context);
     m_captureStack.push(captures);
-    Q_ASSERT(m_contextStack.size() == m_captureStack.size());
+    assert(m_contextStack.size() == m_captureStack.size());
 }
 
 void StateData::pop()
@@ -69,13 +70,13 @@ void StateData::pop()
 
 Context* StateData::topContext() const
 {
-    Q_ASSERT(!isEmpty());
+    assert(!isEmpty());
     return m_contextStack.top();
 }
 
 QStringList StateData::topCaptures() const
 {
-    Q_ASSERT(!isEmpty());
+    assert(!isEmpty());
     return m_captureStack.top();
 }
 

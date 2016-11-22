@@ -22,8 +22,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QMetaEnum>
 
+#include <cassert>
 #include <iostream>
 
 using namespace KSyntaxHighlighting;
@@ -119,14 +119,29 @@ bool ThemeData::load(const std::string& filePath)
     m_readOnly = metadata.value(QLatin1String("read-only")).toBool();
 
     // read text styles
-    static const auto idx = Theme::staticMetaObject.indexOfEnumerator("TextStyle");
-    Q_ASSERT(idx >= 0);
-    const auto metaEnum = Theme::staticMetaObject.enumerator(idx);
     const QJsonObject textStyles = obj.value(QLatin1String("text-styles")).toObject();
-    for (int i = 0; i < metaEnum.keyCount(); ++i) {
-        Q_ASSERT(i == metaEnum.value(i));
-        m_textStyles[i] = readThemeData(textStyles.value(QLatin1String(metaEnum.key(i))).toObject());
-    }
+    m_textStyles[Theme::Normal] = readThemeData(textStyles.value(QLatin1String("Normal")).toObject());
+    m_textStyles[Theme::Keyword] = readThemeData(textStyles.value(QLatin1String("Keyword")).toObject());
+    m_textStyles[Theme::Function] = readThemeData(textStyles.value(QLatin1String("Function")).toObject());
+    m_textStyles[Theme::Variable] = readThemeData(textStyles.value(QLatin1String("Variable")).toObject());
+    m_textStyles[Theme::ControlFlow] = readThemeData(textStyles.value(QLatin1String("ControlFlow")).toObject());
+    m_textStyles[Theme::Operator] = readThemeData(textStyles.value(QLatin1String("Operator")).toObject());
+    m_textStyles[Theme::BuiltIn] = readThemeData(textStyles.value(QLatin1String("BuiltIn")).toObject());
+    m_textStyles[Theme::Extension] = readThemeData(textStyles.value(QLatin1String("Extension")).toObject());
+    m_textStyles[Theme::Preprocessor] = readThemeData(textStyles.value(QLatin1String("Preprocessor")).toObject());
+    m_textStyles[Theme::Attribute] = readThemeData(textStyles.value(QLatin1String("Attribute")).toObject());
+    m_textStyles[Theme::Char] = readThemeData(textStyles.value(QLatin1String("Char")).toObject());
+    m_textStyles[Theme::SpecialChar] = readThemeData(textStyles.value(QLatin1String("SpecialChar")).toObject());
+    m_textStyles[Theme::String] = readThemeData(textStyles.value(QLatin1String("String")).toObject());
+    m_textStyles[Theme::VerbatimString] = readThemeData(textStyles.value(QLatin1String("VerbatimString")).toObject());
+    m_textStyles[Theme::SpecialString] = readThemeData(textStyles.value(QLatin1String("SpecialString")).toObject());
+    m_textStyles[Theme::Import] = readThemeData(textStyles.value(QLatin1String("Import")).toObject());
+    m_textStyles[Theme::DataType] = readThemeData(textStyles.value(QLatin1String("DataType")).toObject());
+    m_textStyles[Theme::DecVal] = readThemeData(textStyles.value(QLatin1String("DecVal")).toObject());
+    m_textStyles[Theme::BaseN] = readThemeData(textStyles.value(QLatin1String("BaseN")).toObject());
+    m_textStyles[Theme::Float] = readThemeData(textStyles.value(QLatin1String("Float")).toObject());
+    m_textStyles[Theme::Constant] = readThemeData(textStyles.value(QLatin1String("Constant")).toObject());
+    m_textStyles[Theme::Comment] = readThemeData(textStyles.value(QLatin1String("Comment")).toObject());
 
     // read editor area colors
     const QJsonObject editorColors = obj.value(QLatin1String("editor-colors")).toObject();
@@ -183,54 +198,54 @@ QString ThemeData::filePath() const
 
 QRgb ThemeData::textColor(Theme::TextStyle style) const
 {
-    Q_ASSERT(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
+    assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].textColor;
 }
 
 QRgb ThemeData::selectedTextColor(Theme::TextStyle style) const
 {
-    Q_ASSERT(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
+    assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].selectedTextColor;
 }
 
 QRgb ThemeData::backgroundColor(Theme::TextStyle style) const
 {
-    Q_ASSERT(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
+    assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].backgroundColor;
 }
 
 QRgb ThemeData::selectedBackgroundColor(Theme::TextStyle style) const
 {
-    Q_ASSERT(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
+    assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].selectedBackgroundColor;
 }
 
 bool ThemeData::isBold(Theme::TextStyle style) const
 {
-    Q_ASSERT(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
+    assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].bold;
 }
 
 bool ThemeData::isItalic(Theme::TextStyle style) const
 {
-    Q_ASSERT(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
+    assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].italic;
 }
 
 bool ThemeData::isUnderline(Theme::TextStyle style) const
 {
-    Q_ASSERT(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
+    assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].underline;
 }
 
 bool ThemeData::isStrikeThrough(Theme::TextStyle style) const
 {
-    Q_ASSERT(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
+    assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].strikeThrough;
 }
 
 QRgb ThemeData::editorColor(Theme::EditorColorRole role) const
 {
-    Q_ASSERT(static_cast<int>(role) >= 0 && static_cast<int>(role) <= static_cast<int>(Theme::TemplateReadOnlyPlaceholder));
+    assert(static_cast<int>(role) >= 0 && static_cast<int>(role) <= static_cast<int>(Theme::TemplateReadOnlyPlaceholder));
     return m_editorColors[role];
 }

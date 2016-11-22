@@ -138,6 +138,4 @@ private:
 
 }
 
-Q_DECLARE_TYPEINFO(KSyntaxHighlighting::TextStyleData, Q_MOVABLE_TYPE);
-
 #endif // KSYNTAXHIGHLIGHTING_THEMEDATA_P_H

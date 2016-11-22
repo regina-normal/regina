@@ -144,12 +144,7 @@ protected:
 
 protected:
     AbstractHighlighterPrivate *d_ptr;
-
-private:
-    Q_DECLARE_PRIVATE(AbstractHighlighter)
 };
 }
-
-Q_DECLARE_INTERFACE(KSyntaxHighlighting::AbstractHighlighter, "org.kde.SyntaxHighlighting.AbstractHighlighter")
 
 #endif // KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H

@@ -33,18 +33,15 @@ class SyntaxHighlighter : public QSyntaxHighlighter, public AbstractHighlighter
 {
     Q_OBJECT
 public:
-    explicit SyntaxHighlighter(QObject *parent = Q_NULLPTR);
+    explicit SyntaxHighlighter(QObject *parent = nullptr);
     explicit SyntaxHighlighter(QTextDocument *document);
     ~SyntaxHighlighter();
 
-    void setDefinition(const Definition &def) Q_DECL_OVERRIDE;
+    void setDefinition(const Definition &def) override;
 
 protected:
-    void highlightBlock(const QString & text) Q_DECL_OVERRIDE;
-    void applyFormat(int offset, int length, const Format &format) Q_DECL_OVERRIDE;
-
-private:
-    Q_DECLARE_PRIVATE_D(AbstractHighlighter::d_ptr, SyntaxHighlighter)
+    void highlightBlock(const QString & text) override;
+    void applyFormat(int offset, int length, const Format &format) override;
 };
 }
 

@@ -51,7 +51,7 @@ Repository::~Repository()
 {
     // reset repo so we can detect in still alive definition instances
     // that the repo was deleted
-    foreach (const auto &def, d->m_defs)
+    for (const auto &def : d->m_defs)
         DefinitionData::get(def.second)->repo = nullptr;
 }
 
@@ -146,7 +146,7 @@ quint16 RepositoryPrivate::nextFormatId()
 void Repository::reload()
 {
     std::cerr << "Reloading syntax definitions!" << std::endl;
-    foreach (const auto &def, d->m_defs)
+    for (const auto &def : d->m_defs)
         DefinitionData::get(def.second)->clear();
     d->m_defs.clear();
 

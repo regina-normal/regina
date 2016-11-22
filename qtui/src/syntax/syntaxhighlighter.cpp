@@ -63,8 +63,6 @@ void SyntaxHighlighter::setDefinition(const Definition& def)
 
 void SyntaxHighlighter::highlightBlock(const QString& text)
 {
-    Q_D(SyntaxHighlighter);
-
     State state;
     if (currentBlock().position() > 0) {
         const auto prevBlock = currentBlock().previous();

@@ -24,26 +24,47 @@
 #include "themedata_p.h"
 #include "xml_p.h"
 
+#include <cassert>
 #include <QColor>
 #include <QMetaEnum>
 #include <QXmlStreamReader>
 
+#include "utilities/stringutils.h"
+
 using namespace KSyntaxHighlighting;
 
-static Theme::TextStyle stringToDefaultFormat(const QStringRef &str)
+static Theme::TextStyle stringToDefaultFormat(const std::string& str)
 {
-    if (!str.startsWith(QLatin1String("ds")))
+    if (!regina::startsWith(str, "ds"))
         return Theme::Normal;
-
-    static const auto idx = Theme::staticMetaObject.indexOfEnumerator("TextStyle");
-    Q_ASSERT(idx >= 0);
-    const auto metaEnum = Theme::staticMetaObject.enumerator(idx);
 
     bool ok = false;
-    const auto value = metaEnum.keyToValue(str.mid(2).toLatin1().constData(), &ok);
-    if (!ok || value < 0)
-        return Theme::Normal;
-    return static_cast<Theme::TextStyle>(value);
+
+    // TODO: Make this log-time in the enumerator size.
+    if (str == "dsNormal") return Theme::Normal;
+    if (str == "dsKeyword") return Theme::Keyword;
+    if (str == "dsFunction") return Theme::Function;
+    if (str == "dsVariable") return Theme::Variable;
+    if (str == "dsControlFlow") return Theme::ControlFlow;
+    if (str == "dsOperator") return Theme::Operator;
+    if (str == "dsBuiltIn") return Theme::BuiltIn;
+    if (str == "dsExtension") return Theme::Extension;
+    if (str == "dsPreprocessor") return Theme::Preprocessor;
+    if (str == "dsAttribute") return Theme::Attribute;
+    if (str == "dsChar") return Theme::Char;
+    if (str == "dsSpecialChar") return Theme::SpecialChar;
+    if (str == "dsString") return Theme::String;
+    if (str == "dsVerbatimString") return Theme::VerbatimString;
+    if (str == "dsSpecialString") return Theme::SpecialString;
+    if (str == "dsImport") return Theme::Import;
+    if (str == "dsDataType") return Theme::DataType;
+    if (str == "dsDecVal") return Theme::DecVal;
+    if (str == "dsBaseN") return Theme::BaseN;
+    if (str == "dsFloat") return Theme::Float;
+    if (str == "dsConstant") return Theme::Constant;
+    if (str == "dsComment") return Theme::Comment;
+
+    return Theme::Normal;
 }
 
 FormatPrivate::FormatPrivate()
@@ -166,7 +187,7 @@ bool Format::spellCheck() const
 void FormatPrivate::load(QXmlStreamReader& reader)
 {
     name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
-    defaultStyle = stringToDefaultFormat(reader.attributes().value(QStringLiteral("defStyleNum")));
+    defaultStyle = stringToDefaultFormat(reader.attributes().value(QStringLiteral("defStyleNum")).toString().toUtf8().constData());
 
     QStringRef ref = reader.attributes().value(QStringLiteral("color"));
     if (!ref.isEmpty()) {

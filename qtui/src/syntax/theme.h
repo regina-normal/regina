@@ -71,7 +71,6 @@ class RepositoryPrivate;
  */
 class Theme
 {
-    Q_GADGET
 public:
     /**
      * Default styles that can be referenced from syntax definition XML files.
@@ -154,7 +153,6 @@ public:
         //! styles.
         Others
     };
-    Q_ENUM(TextStyle)
 
     /**
      * Editor color roles, used to paint line numbers, editor background etc.
@@ -223,7 +221,6 @@ public:
         //! Background color for read-only placeholders in text templates.
         TemplateReadOnlyPlaceholder
     };
-    Q_ENUM(EditorColorRole)
 
     /**
      * Default constructor, creating an invalid Theme, see isValid().
@@ -341,7 +338,5 @@ private:
 };
 
 }
-
-Q_DECLARE_TYPEINFO(KSyntaxHighlighting::Theme, Q_MOVABLE_TYPE);
 
 #endif // KSYNTAXHIGHLIGHTING_THEME_H

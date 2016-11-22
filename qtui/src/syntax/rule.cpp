@@ -21,6 +21,7 @@
 
 #include <QString>
 #include <QXmlStreamReader>
+#include <cassert>
 #include <iostream>
 
 using namespace KSyntaxHighlighting;
@@ -146,7 +147,7 @@ int Rule::requiredColumn() const
 
 bool Rule::load(QXmlStreamReader &reader)
 {
-    Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
+    assert(reader.tokenType() == QXmlStreamReader::StartElement);
 
     m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString().toUtf8().constData();
     if (reader.name() != QLatin1String("IncludeRules")) // IncludeRules uses this with a different semantic
@@ -195,25 +196,24 @@ bool Rule::load(QXmlStreamReader &reader)
 void Rule::resolveContext()
 {
     m_context.resolve(m_def.definition());
-    foreach (const auto &rule, m_subRules)
+    for (const auto &rule : m_subRules)
         rule->resolveContext();
 }
 
-bool Rule::doLoad(QXmlStreamReader& reader)
+bool Rule::doLoad(QXmlStreamReader&)
 {
-    Q_UNUSED(reader);
     return true;
 }
 
 MatchResult Rule::match(const QString &text, int offset, const QStringList &captures)
 {
-    Q_ASSERT(!text.isEmpty());
+    assert(!text.isEmpty());
 
     const auto result = doMatch(text, offset, captures);
     if (result.offset() == offset || result.offset() == text.size())
         return result;
 
-    foreach (const auto &subRule, m_subRules) {
+    for (const auto &subRule : m_subRules) {
         const auto subResult = subRule->match(text, result.offset(), QStringList());
         if (subResult.offset() > result.offset())
             return MatchResult(subResult.offset(), result.captures());
@@ -224,7 +224,7 @@ MatchResult Rule::match(const QString &text, int offset, const QStringList &capt
 
 Rule::Ptr Rule::create(const QStringRef& name)
 {
-    Rule *rule = Q_NULLPTR;
+    Rule *rule = nullptr;
     if (name == QLatin1String("AnyChar"))
         rule = new AnyChar;
     else if (name == QLatin1String("DetectChar"))
@@ -329,9 +329,8 @@ bool Detect2Char::doLoad(QXmlStreamReader& reader)
     return true;
 }
 
-MatchResult Detect2Char::doMatch(const QString& text, int offset, const QStringList &captures)
+MatchResult Detect2Char::doMatch(const QString& text, int offset, const QStringList&)
 {
-    Q_UNUSED(captures); // TODO
     if (text.size() - offset < 2)
         return offset;
     if (text.at(offset) == m_char1 && text.at(offset + 1) == m_char2)
@@ -507,20 +506,18 @@ bool IncludeRules::doLoad(QXmlStreamReader& reader)
     return !m_contextName.empty() || !m_defName.empty();
 }
 
-MatchResult IncludeRules::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult IncludeRules::doMatch(const QString&, int offset, const QStringList&)
 {
-    Q_UNUSED(text);
     std::cerr << "Unresolved include rule for" << m_contextName << "##" << m_defName << std::endl;
     return offset;
 }
 
 
-MatchResult Int::doMatch(const QString& text, int offset, const QStringList &captures)
+MatchResult Int::doMatch(const QString& text, int offset, const QStringList&)
 {
     if (offset > 0 && !isDelimiter(text.at(offset - 1)))
         return offset;
 
-    Q_UNUSED(captures); // ### the doc says this can be dynamic, but how??
     while(offset < text.size() && text.at(offset).isDigit())
         ++offset;
     return offset;
@@ -547,7 +544,7 @@ MatchResult KeywordListRule::doMatch(const QString& text, int offset, const QStr
 
     if (! m_keywordList) {
         const auto def = definition();
-        Q_ASSERT(def.isValid());
+        assert(def.isValid());
         auto defData = DefinitionData::get(def);
         m_keywordList = &defData->keywordList(m_listName);
     }
@@ -628,7 +625,7 @@ bool RegExpr::doLoad(QXmlStreamReader& reader)
 
 MatchResult RegExpr::doMatch(const QString& text, int offset, const QStringList &captures)
 {
-    Q_ASSERT(m_regexp.isValid());
+    assert(m_regexp.isValid());
 
     if (isDynamic())
         m_regexp.setPattern(replaceCaptures(m_pattern, captures, true));
@@ -664,9 +661,8 @@ bool WordDetect::doLoad(QXmlStreamReader& reader)
     return !m_word.isEmpty();
 }
 
-MatchResult WordDetect::doMatch(const QString& text, int offset, const QStringList &captures)
+MatchResult WordDetect::doMatch(const QString& text, int offset, const QStringList&)
 {
-    Q_UNUSED(captures); // TODO
     if (text.size() - offset < m_word.size())
         return offset;
 

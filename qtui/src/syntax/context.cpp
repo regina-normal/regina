@@ -92,7 +92,7 @@ Format Context::formatByName(const std::string& name) const
         return format;
 
     // TODO we can avoid multiple lookups in the same definition here, many rules will share definitions
-    foreach (const auto &rule, m_rules) {
+    for (const auto &rule : m_rules) {
         auto defData = DefinitionData::get(rule->definition());
         format = defData->formatByName(name);
         if (format.isValid())
@@ -105,8 +105,8 @@ Format Context::formatByName(const std::string& name) const
 
 void Context::load(QXmlStreamReader& reader)
 {
-    Q_ASSERT(reader.name() == QLatin1String("context"));
-    Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
+    assert(reader.name() == QLatin1String("context"));
+    assert(reader.tokenType() == QXmlStreamReader::StartElement);
 
     m_name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
     m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString().toUtf8().constData();
@@ -148,14 +148,14 @@ void Context::resolveContexts()
     m_lineEndContext.resolve(def);
     m_lineEmptyContext.resolve(def);
     m_fallthroughContext.resolve(def);
-    foreach (const auto &rule, m_rules)
+    for (const auto &rule : m_rules)
         rule->resolveContext();
 }
 
 Context::ResolveState Context::resolveState()
 {
     if (m_resolveState == Unknown) {
-        foreach (const auto &rule, m_rules) {
+        for (const auto &rule : m_rules) {
             auto inc = std::dynamic_pointer_cast<IncludeRules>(rule);
             if (inc) {
                 m_resolveState = Unresolved;
@@ -213,7 +213,7 @@ void Context::resolveIncludes()
             m_attribute = context->attribute();
         }
         it = m_rules.erase(it);
-        foreach (const auto &rule, context->rules()) {
+        for (const auto &rule : context->rules()) {
             it = m_rules.insert(it, rule);
             ++it;
         }

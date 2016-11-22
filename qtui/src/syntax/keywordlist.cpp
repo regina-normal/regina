@@ -17,6 +17,7 @@
 
 #include "keywordlist_p.h"
 
+#include <cassert>
 #include <QXmlStreamReader>
 
 using namespace KSyntaxHighlighting;
@@ -47,7 +48,7 @@ bool KeywordList::contains(const QStringRef &str) const
 
 bool KeywordList::contains(const QStringRef &str, Qt::CaseSensitivity caseSensitivityOverride) const
 {
-    if (Q_UNLIKELY(caseSensitivityOverride == Qt::CaseInsensitive && m_lowerCaseKeywords.empty())) {
+    if (caseSensitivityOverride == Qt::CaseInsensitive && m_lowerCaseKeywords.empty()) {
         for (const auto& kw : m_keywords)
             m_lowerCaseKeywords.insert(kw.toLower());
     }
@@ -60,8 +61,8 @@ bool KeywordList::contains(const QStringRef &str, Qt::CaseSensitivity caseSensit
 
 void KeywordList::load(QXmlStreamReader& reader)
 {
-    Q_ASSERT(reader.name() == QLatin1String("list"));
-    Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
+    assert(reader.name() == QLatin1String("list"));
+    assert(reader.tokenType() == QXmlStreamReader::StartElement);
 
     m_name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
 

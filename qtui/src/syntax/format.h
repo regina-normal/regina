@@ -124,6 +124,4 @@ private:
 };
 }
 
-Q_DECLARE_TYPEINFO(KSyntaxHighlighting::Format, Q_MOVABLE_TYPE);
-
 #endif // KSYNTAXHIGHLIGHTING_FORMAT_H

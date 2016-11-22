@@ -32,6 +32,7 @@
 #include <QXmlStreamReader>
 
 #include <algorithm>
+#include <cassert>
 #include <iostream>
 
 using namespace KSyntaxHighlighting;
@@ -151,13 +152,13 @@ const std::string& Definition::license() const
 
 Context* DefinitionData::initialContext() const
 {
-    Q_ASSERT(!contexts.empty());
+    assert(!contexts.empty());
     return contexts.front();
 }
 
 Context* DefinitionData::contextByName(const std::string& name) const
 {
-    foreach (auto context, contexts) {
+    for (auto context : contexts) {
         if (context->name() == name)
             return context;
     }
@@ -197,7 +198,7 @@ bool DefinitionData::load()
     if (isLoaded())
         return true;
 
-    Q_ASSERT(!fileName.empty());
+    assert(!fileName.empty());
     QFile file(QFile::decodeName(fileName.c_str()));
     if (!file.open(QFile::ReadOnly))
         return false;
@@ -218,12 +219,12 @@ bool DefinitionData::load()
     for (auto it = keywordLists.begin(); it != keywordLists.end(); ++it)
         it->second->setCaseSensitivity(caseSensitive);
 
-    foreach (auto context, contexts) {
+    for (auto context : contexts) {
         context->resolveContexts();
         context->resolveIncludes();
     }
 
-    Q_ASSERT(std::is_sorted(delimiters.constBegin(), delimiters.constEnd()));
+    assert(std::is_sorted(delimiters.constBegin(), delimiters.constEnd()));
     return true;
 }
 
@@ -271,8 +272,8 @@ bool DefinitionData::loadMetaData(const std::string& definitionFileName)
 
 bool DefinitionData::loadLanguage(QXmlStreamReader &reader)
 {
-    Q_ASSERT(reader.name() == QLatin1String("language"));
-    Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
+    assert(reader.name() == QLatin1String("language"));
+    assert(reader.tokenType() == QXmlStreamReader::StartElement);
 
     if (!checkKateVersion(reader.attributes().value(QStringLiteral("kateversion"))))
         return false;
@@ -294,8 +295,8 @@ bool DefinitionData::loadLanguage(QXmlStreamReader &reader)
 
 void DefinitionData::loadHighlighting(QXmlStreamReader& reader)
 {
-    Q_ASSERT(reader.name() == QLatin1String("highlighting"));
-    Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
+    assert(reader.name() == QLatin1String("highlighting"));
+    assert(reader.tokenType() == QXmlStreamReader::StartElement);
 
     while (!reader.atEnd()) {
         switch (reader.tokenType()) {
@@ -324,8 +325,8 @@ void DefinitionData::loadHighlighting(QXmlStreamReader& reader)
 
 void DefinitionData::loadContexts(QXmlStreamReader& reader)
 {
-    Q_ASSERT(reader.name() == QLatin1String("contexts"));
-    Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
+    assert(reader.name() == QLatin1String("contexts"));
+    assert(reader.tokenType() == QXmlStreamReader::StartElement);
 
     while (!reader.atEnd()) {
         switch (reader.tokenType()) {
@@ -349,8 +350,8 @@ void DefinitionData::loadContexts(QXmlStreamReader& reader)
 
 void DefinitionData::loadItemData(QXmlStreamReader& reader)
 {
-    Q_ASSERT(reader.name() == QLatin1String("itemDatas"));
-    Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
+    assert(reader.name() == QLatin1String("itemDatas"));
+    assert(reader.tokenType() == QXmlStreamReader::StartElement);
 
     while (!reader.atEnd()) {
         switch (reader.tokenType()) {
@@ -377,8 +378,8 @@ void DefinitionData::loadItemData(QXmlStreamReader& reader)
 
 void DefinitionData::loadGeneral(QXmlStreamReader& reader)
 {
-    Q_ASSERT(reader.name() == QLatin1String("general"));
-    Q_ASSERT(reader.tokenType() == QXmlStreamReader::StartElement);
+    assert(reader.name() == QLatin1String("general"));
+    assert(reader.tokenType() == QXmlStreamReader::StartElement);
     reader.readNext();
 
     // reference counter to count XML child elements, to not return too early

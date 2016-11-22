@@ -26,6 +26,7 @@
 #include "state_p.h"
 #include "theme.h"
 
+#include <cassert>
 #include <iostream>
 
 using namespace KSyntaxHighlighting;
@@ -41,13 +42,13 @@ AbstractHighlighterPrivate::~AbstractHighlighterPrivate()
 void AbstractHighlighterPrivate::ensureDefinitionLoaded()
 {
     auto defData = DefinitionData::get(m_definition);
-    if (Q_UNLIKELY(!m_definition.isValid() && defData->repo && !m_definition.name().empty())) {
+    if (!m_definition.isValid() && defData->repo && !m_definition.name().empty()) {
         std::cerr << "Definition became invalid, trying re-lookup." << std::endl;
         m_definition = defData->repo->definitionForName(m_definition.name());
         defData = DefinitionData::get(m_definition);
     }
 
-    if (Q_UNLIKELY(!defData->repo && !defData->name.empty()))
+    if (!defData->repo && !defData->name.empty())
         std::cerr << "Repository got deleted while a highlighter is still active!" << std::endl;
 
     if (m_definition.isValid())
@@ -85,41 +86,35 @@ AbstractHighlighter::~AbstractHighlighter()
 
 Definition AbstractHighlighter::definition() const
 {
-    Q_D(const AbstractHighlighter);
     return d_ptr->m_definition;
 }
 
 void AbstractHighlighter::setDefinition(const Definition &def)
 {
-    Q_D(AbstractHighlighter);
-    d->m_definition = def;
+    d_ptr->m_definition = def;
 }
 
 Theme AbstractHighlighter::theme() const
 {
-    Q_D(const AbstractHighlighter);
-    return d->m_theme;
+    return d_ptr->m_theme;
 }
 
 void AbstractHighlighter::setTheme(const Theme &theme)
 {
-    Q_D(AbstractHighlighter);
-    d->m_theme = theme;
+    d_ptr->m_theme = theme;
 }
 
 State AbstractHighlighter::highlightLine(const QString& text, const State &state)
 {
-    Q_D(AbstractHighlighter);
-
     // verify definition, deal with no highlighting being enabled
-    d->ensureDefinitionLoaded();
-    if (!d->m_definition.isValid()) {
+    d_ptr->ensureDefinitionLoaded();
+    if (!d_ptr->m_definition.isValid()) {
         applyFormat(0, text.size(), Format());
         return State();
     }
 
     // verify/initialize state
-    auto defData = DefinitionData::get(d->m_definition);
+    auto defData = DefinitionData::get(d_ptr->m_definition);
     auto newState = state;
     auto stateData = StateData::get(newState);
     if (stateData->m_defData && defData != stateData->m_defData) {
@@ -134,12 +129,12 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
     // process empty lines
     if (text.isEmpty()) {
         while (!stateData->topContext()->lineEmptyContext().isStay())
-            d->switchContext(stateData, stateData->topContext()->lineEmptyContext(), QStringList());
+            d_ptr->switchContext(stateData, stateData->topContext()->lineEmptyContext(), QStringList());
         applyFormat(0, 0, Format());
         return newState;
     }
 
-    Q_ASSERT(!stateData->isEmpty());
+    assert(!stateData->isEmpty());
     int firstNonSpace = firstNonSpaceChar(text);
     if (firstNonSpace < 0) {
         firstNonSpace = text.size();
@@ -155,7 +150,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
         int newOffset = 0;
         std::string newFormat;
         auto newLookupContext = currentLookupContext;
-        foreach (const auto &rule, stateData->topContext()->rules()) {
+        for (const auto &rule : stateData->topContext()->rules()) {
             auto it = skipOffsets.find(rule.get());
             if (it != skipOffsets.end() && it->second > offset)
                 continue;
@@ -178,14 +173,14 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
                 continue;
 
             if (rule->isLookAhead()) {
-                Q_ASSERT(!rule->context().isStay());
-                d->switchContext(stateData, rule->context(), newResult.captures());
+                assert(!rule->context().isStay());
+                d_ptr->switchContext(stateData, rule->context(), newResult.captures());
                 isLookAhead = true;
                 break;
             }
 
             newLookupContext = stateData->topContext();
-            d->switchContext(stateData, rule->context(), newResult.captures());
+            d_ptr->switchContext(stateData, rule->context(), newResult.captures());
             newFormat = rule->attribute().empty() ? stateData->topContext()->attribute() : rule->attribute();
             if (newOffset == text.size() && std::dynamic_pointer_cast<LineContinue>(rule))
                 lineContinuation = true;
@@ -196,7 +191,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
 
         if (newOffset <= offset) { // no matching rule
             if (stateData->topContext()->fallthrough()) {
-                d->switchContext(stateData, stateData->topContext()->fallthroughContext(), QStringList());
+                d_ptr->switchContext(stateData, stateData->topContext()->fallthroughContext(), QStringList());
                 continue;
             }
 
@@ -212,7 +207,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
             currentFormat = newFormat;
             currentLookupContext = newLookupContext;
         }
-        Q_ASSERT(newOffset > offset);
+        assert(newOffset > offset);
         offset = newOffset;
 
     } while (offset < text.size());
@@ -221,7 +216,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
         applyFormat(beginOffset, text.size() - beginOffset, currentLookupContext->formatByName(currentFormat));
 
     while (!stateData->topContext()->lineEndContext().isStay() && !lineContinuation) {
-        if (!d->switchContext(stateData, stateData->topContext()->lineEndContext(), QStringList()))
+        if (!d_ptr->switchContext(stateData, stateData->topContext()->lineEndContext(), QStringList()))
             break;
     }
 
@@ -242,7 +237,7 @@ bool AbstractHighlighterPrivate::switchContext(StateData *data, const ContextSwi
     if (contextSwitch.context())
         data->push(contextSwitch.context(), captures);
 
-    Q_ASSERT(!data->isEmpty());
+    assert(!data->isEmpty());
     return true;
 }
 

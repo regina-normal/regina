@@ -59,6 +59,4 @@ private:
 
 }
 
-Q_DECLARE_TYPEINFO(KSyntaxHighlighting::State, Q_MOVABLE_TYPE);
-
 #endif // KSYNTAXHIGHLIGHTING_STATE_H
