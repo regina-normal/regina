@@ -218,6 +218,8 @@ Version 5.1  [ (under development) ]
                 isNonNegative:
             - Deprecated, with no replacements.  This is because the methods
               here for managing round-off error were quite brutal.
+        Routine valueOf():
+            - The bool version now accepts "1" and "0".
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old
               (and now removed) array vertexSplitDefn[][].
