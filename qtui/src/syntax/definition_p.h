@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include <boost/noncopyable.hpp>
+#include <libxml/xmlreader.h>
 
 #include <QStringRef>
 
@@ -51,12 +52,11 @@ public:
     void clear();
 
     bool load();
-    bool loadLanguage(QXmlStreamReader &reader);
+    bool loadLanguage(xmlTextReaderPtr reader);
     void loadHighlighting(QXmlStreamReader &reader);
     void loadContexts(QXmlStreamReader &reader);
     void loadItemData(QXmlStreamReader &reader);
     void loadGeneral(QXmlStreamReader &reader);
-    bool checkKateVersion(const QStringRef& verStr);
 
     const KeywordList& keywordList(const std::string& name) const;
     bool isDelimiter(QChar c) const;
@@ -83,8 +83,6 @@ public:
     std::string license;
     Qt::CaseSensitivity caseSensitive;
     int version;
-    int priority;
-    bool hidden;
 };
 }
 

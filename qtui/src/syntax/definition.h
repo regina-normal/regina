@@ -104,11 +104,6 @@ public:
     const std::string& section() const;
     /** Returns the definition version. */
     int version() const;
-    /**
-     * Returns the definition priority.
-     * A Definition with higher priority wins over Definitions with lower priorities.
-     */
-    int priority() const;
     /** Returns @c true if this is an internal definition that should not be
      * displayed to the user.
      */

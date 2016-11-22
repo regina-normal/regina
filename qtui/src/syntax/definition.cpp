@@ -35,6 +35,9 @@
 #include <cassert>
 #include <iostream>
 
+#include "utilities/stringutils.h"
+#include "utilities/xmlutils.h"
+
 using namespace KSyntaxHighlighting;
 
 KeywordList nullList;
@@ -43,9 +46,7 @@ DefinitionData::DefinitionData() :
     repo(nullptr),
     delimiters(QStringLiteral("\t !%&()*+,-./:;<=>?[\\]^{|}~")), // must be sorted!
     caseSensitive(Qt::CaseSensitive),
-    version(0.0f),
-    priority(0),
-    hidden(false)
+    version(0.0f)
 {
 }
 
@@ -118,16 +119,6 @@ const std::string& Definition::section() const
 int Definition::version() const
 {
     return d->version;
-}
-
-int Definition::priority() const
-{
-    return d->priority;
-}
-
-bool Definition::isHidden() const
-{
-    return d->hidden;
 }
 
 const std::string& Definition::style() const
@@ -245,51 +236,49 @@ void DefinitionData::clear()
     delimiters = QStringLiteral("\t !%&()*+,-./:;<=>?[\\]^{|}~"); // must be sorted!
     caseSensitive = Qt::CaseSensitive,
     version = 0.0f;
-    priority = 0;
-    hidden = false;
 }
 
 bool DefinitionData::loadMetaData(const std::string& definitionFileName)
 {
     fileName = definitionFileName;
 
-    QFile file(QFile::decodeName(fileName.c_str()));
-    if (!file.open(QFile::ReadOnly))
-        return false;
+    xmlTextReaderPtr reader = xmlNewTextReaderFilename(fileName.c_str());
+    if (! reader)
+        return false; // could not open
 
-    QXmlStreamReader reader(&file);
-    while (!reader.atEnd()) {
-        const auto token = reader.readNext();
-        if (token != QXmlStreamReader::StartElement)
-            continue;
-        if (reader.name() == QLatin1String("language")) {
-            return loadLanguage(reader);
+    bool success = false;
+    while (xmlTextReaderRead(reader) == 1) {
+        if (xmlTextReaderNodeType(reader) == 1 /* start element */) {
+            if (regina::xml::xmlString(xmlTextReaderName(reader)) == "language") {
+                success = loadLanguage(reader);
+                break;
+            }
         }
     }
-
-    return false;
+    // Either could not parse, or end of file.
+    xmlFreeTextReader(reader);
+    return success;
 }
 
-bool DefinitionData::loadLanguage(QXmlStreamReader &reader)
+bool DefinitionData::loadLanguage(xmlTextReaderPtr reader)
 {
-    assert(reader.name() == QLatin1String("language"));
-    assert(reader.tokenType() == QXmlStreamReader::StartElement);
+    // These attributes default to empty strings.
+    name = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"name"));
+    section = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"section"));
+    style = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"style"));
+    indenter = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"indenter"));
+    author = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"author"));
+    license = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"license"));
 
-    if (!checkKateVersion(reader.attributes().value(QStringLiteral("kateversion"))))
-        return false;
+    // Since valueOf() does not have defaults, we must explicitly test validity.
+    double ver;
+    if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"version")), ver))
+        version = ver;
 
-    name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
-    section = reader.attributes().value(QStringLiteral("section")).toString().toUtf8().constData();
-    // toFloat instead of toInt for backward compatibility with old Kate files
-    version = reader.attributes().value(QStringLiteral("version")).toFloat();
-    priority = reader.attributes().value(QStringLiteral("priority")).toInt();
-    hidden = Xml::attrToBool(reader.attributes().value(QStringLiteral("hidden")));
-    style = reader.attributes().value(QStringLiteral("style")).toString().toUtf8().constData();
-    indenter = reader.attributes().value(QStringLiteral("indenter")).toString().toUtf8().constData();
-    author = reader.attributes().value(QStringLiteral("author")).toString().toUtf8().constData();
-    license = reader.attributes().value(QStringLiteral("license")).toString().toUtf8().constData();
-    if (reader.attributes().hasAttribute(QStringLiteral("casesensitive")))
-        caseSensitive = Xml::attrToBool(reader.attributes().value(QStringLiteral("casesensitive"))) ? Qt::CaseSensitive : Qt::CaseInsensitive;
+    bool cs;
+    if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"casesensitive")), cs))
+        caseSensitive = (cs ? Qt::CaseSensitive : Qt::CaseInsensitive);
+
     return true;
 }
 
@@ -413,24 +402,6 @@ void DefinitionData::loadGeneral(QXmlStreamReader& reader)
                 break;
         }
     }
-}
-
-bool DefinitionData::checkKateVersion(const QStringRef& verStr)
-{
-    const auto idx = verStr.indexOf(QLatin1Char('.'));
-    if (idx <= 0) {
-        std::cerr << "Skipping" << fileName << "due to having no valid kateversion attribute:" << verStr.toUtf8().constData() << std::endl;
-        return false;
-    }
-    const auto major = verStr.left(idx).toInt();
-    const auto minor = verStr.mid(idx + 1).toInt();
-
-    if (major > SyntaxHighlighting_VERSION_MAJOR || (major == SyntaxHighlighting_VERSION_MAJOR && minor > SyntaxHighlighting_VERSION_MINOR)) {
-        std::cerr << "Skipping" << fileName << "due to being too new, version:" << verStr.toUtf8().constData() << std::endl;
-        return false;
-    }
-
-    return true;
 }
 
 DefinitionRef::DefinitionRef()
