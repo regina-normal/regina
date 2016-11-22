@@ -220,6 +220,8 @@ Version 5.1  [ (under development) ]
               here for managing round-off error were quite brutal.
         Routine valueOf():
             - The bool version now accepts "1" and "0".
+        Routine xmlString():
+            - New routine for converting between libxml and C++ strings.
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old
               (and now removed) array vertexSplitDefn[][].
