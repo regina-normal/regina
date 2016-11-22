@@ -36,6 +36,8 @@
 
 using namespace KSyntaxHighlighting;
 
+KeywordList nullList;
+
 DefinitionData::DefinitionData() :
     repo(nullptr),
     delimiters(QStringLiteral("\t !%&()*+,-./:;<=>?[\\]^{|}~")), // must be sorted!
@@ -162,13 +164,13 @@ Context* DefinitionData::contextByName(const std::string& name) const
     return nullptr;
 }
 
-KeywordList DefinitionData::keywordList(const std::string& name) const
+const KeywordList& DefinitionData::keywordList(const std::string& name) const
 {
     const auto it = keywordLists.find(name);
     if (it != keywordLists.end())
-        return it->second;
+        return *(it->second);
 
-    return KeywordList();
+    return nullList;
 }
 
 bool DefinitionData::isDelimiter(QChar c) const
@@ -214,7 +216,7 @@ bool DefinitionData::load()
     }
 
     for (auto it = keywordLists.begin(); it != keywordLists.end(); ++it)
-        it->second.setCaseSensitivity(caseSensitive);
+        it->second->setCaseSensitivity(caseSensitive);
 
     foreach (auto context, contexts) {
         context->resolveContexts();
@@ -299,9 +301,9 @@ void DefinitionData::loadHighlighting(QXmlStreamReader& reader)
         switch (reader.tokenType()) {
             case QXmlStreamReader::StartElement:
                 if (reader.name() == QLatin1String("list")) {
-                    KeywordList keywords;
-                    keywords.load(reader);
-                    keywordLists.insert(std::make_pair(keywords.name(), keywords));
+                    KeywordList* keywords = new KeywordList;
+                    keywords->load(reader);
+                    keywordLists.insert(std::make_pair(keywords->name(), std::shared_ptr<KeywordList>(keywords)));
                 } else if (reader.name() == QLatin1String("contexts")) {
                     loadContexts(reader);
                     reader.readNext();

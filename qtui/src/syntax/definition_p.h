@@ -21,6 +21,7 @@
 #include "definitionref_p.h"
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 #include <boost/noncopyable.hpp>
@@ -57,7 +58,7 @@ public:
     void loadGeneral(QXmlStreamReader &reader);
     bool checkKateVersion(const QStringRef& verStr);
 
-    KeywordList keywordList(const std::string& name) const;
+    const KeywordList& keywordList(const std::string& name) const;
     bool isDelimiter(QChar c) const;
 
     Context* initialContext() const;
@@ -68,7 +69,7 @@ public:
     DefinitionRef q;
 
     Repository *repo;
-    std::map<std::string, KeywordList> keywordLists;
+    std::map<std::string, std::shared_ptr<KeywordList>> keywordLists;
     std::vector<Context*> contexts;
     std::map<std::string, Format> formats;
     QString delimiters;
