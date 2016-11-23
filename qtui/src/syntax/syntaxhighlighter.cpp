@@ -96,9 +96,9 @@ void SyntaxHighlighter::applyFormat(int offset, int length, const KSyntaxHighlig
 
     QTextCharFormat tf;
     if (format.hasTextColor(theme()))
-        tf.setForeground(format.textColor(theme()));
+        tf.setForeground(QColor(format.textColor(theme())));
     if (format.hasBackgroundColor(theme()))
-        tf.setBackground(format.backgroundColor(theme()));
+        tf.setBackground(QColor(format.backgroundColor(theme())));
 
     if (format.isBold(theme()))
         tf.setFontWeight(QFont::Bold);
