@@ -19,8 +19,8 @@
 #define KSYNTAXHIGHLIGHTING_THEME_H
 
 #include <QColor>
-#include <QExplicitlySharedDataPointer>
 #include <qobjectdefs.h>
+#include <memory>
 
 namespace KSyntaxHighlighting {
 
@@ -333,7 +333,7 @@ private:
     /**
      * Shared data holder.
      */
-    QExplicitlySharedDataPointer<ThemeData> m_data;
+    std::shared_ptr<ThemeData> m_data;
 };
 
 }

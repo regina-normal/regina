@@ -30,7 +30,7 @@ using namespace KSyntaxHighlighting;
 
 ThemeData* ThemeData::get(const Theme &theme)
 {
-    return theme.m_data.data();
+    return theme.m_data.get();
 }
 
 ThemeData::ThemeData()

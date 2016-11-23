@@ -22,13 +22,12 @@
 #include "textstyledata_p.h"
 #include "theme.h"
 
-#include <QSharedData>
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
 namespace KSyntaxHighlighting {
 
-class FormatPrivate : public QSharedData, public boost::noncopyable
+class FormatPrivate : public boost::noncopyable
 {
 public:
     FormatPrivate();
@@ -40,7 +39,7 @@ public:
     std::string name;
     TextStyleData style;
     Theme::TextStyle defaultStyle;
-    quint16 id;
+    uint16_t id;
     bool spellCheck;
 };
 

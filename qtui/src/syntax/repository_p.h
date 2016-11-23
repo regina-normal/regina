@@ -39,13 +39,13 @@ public:
 
     void addTheme(const Theme &theme);
 
-    quint16 nextFormatId();
+    uint16_t nextFormatId();
 
     std::map<std::string, Definition> m_defs;
 
     std::vector<Theme> m_themes;
 
-    quint16 m_formatId;
+    uint16_t m_formatId;
 };
 }
 

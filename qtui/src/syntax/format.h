@@ -18,7 +18,7 @@
 #ifndef KSYNTAXHIGHLIGHTING_FORMAT_H
 #define KSYNTAXHIGHLIGHTING_FORMAT_H
 
-#include <QExplicitlySharedDataPointer>
+#include <memory>
 
 class QColor;
 
@@ -58,7 +58,7 @@ public:
      *  the repository is reloaded (which also invalidatess the corresponding
      *  Definition anyway).
      */
-    quint16 id() const;
+    uint16_t id() const;
 
     /** Returns @c true if the combination of this format and the theme @p theme
      *  do not change the default text format in any way.
@@ -118,7 +118,7 @@ public:
 
 private:
     friend class FormatPrivate;
-    QExplicitlySharedDataPointer<FormatPrivate> d;
+    std::shared_ptr<FormatPrivate> d;
 };
 }
 

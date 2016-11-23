@@ -22,7 +22,6 @@
 #include "theme.h"
 #include "textstyledata_p.h"
 
-#include <QSharedData>
 #include <boost/noncopyable.hpp>
 
 namespace KSyntaxHighlighting {
@@ -30,7 +29,7 @@ namespace KSyntaxHighlighting {
 /**
  * Data container for a Theme.
  */
-class ThemeData : public QSharedData, boost::noncopyable
+class ThemeData : boost::noncopyable
 {
 public:
     static ThemeData* get(const Theme &theme);

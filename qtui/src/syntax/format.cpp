@@ -74,7 +74,7 @@ FormatPrivate::FormatPrivate()
 
 FormatPrivate* FormatPrivate::get(const Format &format)
 {
-    return format.d.data();
+    return format.d.get();
 }
 
 Format::Format() : d(new FormatPrivate)
@@ -106,7 +106,7 @@ const std::string& Format::name() const
     return d->name;
 }
 
-quint16 Format::id() const
+uint16_t Format::id() const
 {
     return d->id;
 }

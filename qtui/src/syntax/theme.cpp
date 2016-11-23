@@ -48,65 +48,65 @@ Theme &Theme::operator=(const Theme &other)
 
 bool Theme::isValid() const
 {
-    return m_data.data();
+    return m_data.get();
 }
 
 const std::string& Theme::name() const
 {
-    return m_data ? m_data->name() : nullName;
+    return m_data.get() ? m_data->name() : nullName;
 }
 
 bool Theme::isReadOnly() const
 {
-    return m_data ? m_data->isReadOnly() : false;
+    return m_data.get() ? m_data->isReadOnly() : false;
 }
 
 QString Theme::filePath() const
 {
-    return m_data ? m_data->filePath() : QString();
+    return m_data.get() ? m_data->filePath() : QString();
 }
 
 QRgb Theme::textColor(TextStyle style) const
 {
-    return m_data ? m_data->textColor(style) : 0;
+    return m_data.get() ? m_data->textColor(style) : 0;
 }
 
 QRgb Theme::selectedTextColor(TextStyle style) const
 {
-    return m_data ? m_data->selectedTextColor(style) : 0;
+    return m_data.get() ? m_data->selectedTextColor(style) : 0;
 }
 
 QRgb Theme::backgroundColor(TextStyle style) const
 {
-    return m_data ? m_data->backgroundColor(style) : 0;
+    return m_data.get() ? m_data->backgroundColor(style) : 0;
 }
 
 QRgb Theme::selectedBackgroundColor(TextStyle style) const
 {
-    return m_data ? m_data->selectedBackgroundColor(style) : 0;
+    return m_data.get() ? m_data->selectedBackgroundColor(style) : 0;
 }
 
 bool Theme::isBold(TextStyle style) const
 {
-    return m_data ? m_data->isBold(style) : false;
+    return m_data.get() ? m_data->isBold(style) : false;
 }
 
 bool Theme::isItalic(TextStyle style) const
 {
-    return m_data ? m_data->isItalic(style) : false;
+    return m_data.get() ? m_data->isItalic(style) : false;
 }
 
 bool Theme::isUnderline(TextStyle style) const
 {
-    return m_data ? m_data->isUnderline(style) : false;
+    return m_data.get() ? m_data->isUnderline(style) : false;
 }
 
 bool Theme::isStrikeThrough(TextStyle style) const
 {
-    return m_data ? m_data->isStrikeThrough(style) : false;
+    return m_data.get() ? m_data->isStrikeThrough(style) : false;
 }
 
 QRgb Theme::editorColor(EditorColorRole role) const
 {
-    return m_data ? m_data->editorColor(role) : 0;
+    return m_data.get() ? m_data->editorColor(role) : 0;
 }

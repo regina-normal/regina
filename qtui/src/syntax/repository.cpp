@@ -137,9 +137,9 @@ void RepositoryPrivate::addTheme(const Theme &theme)
         *it = theme;
 }
 
-quint16 RepositoryPrivate::nextFormatId()
+uint16_t RepositoryPrivate::nextFormatId()
 {
-    assert(m_formatId < std::numeric_limits<quint16>::max());
+    assert(m_formatId < std::numeric_limits<uint16_t>::max());
     return ++m_formatId;
 }
 
