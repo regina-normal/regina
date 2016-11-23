@@ -29,8 +29,7 @@
 #include <memory>
 #include <vector>
 #include <boost/noncopyable.hpp>
-
-class QXmlStreamReader;
+#include <libxml/xmlreader.h>
 
 namespace KSyntaxHighlighting {
 
@@ -52,15 +51,15 @@ public:
     bool firstNonSpace() const;
     int requiredColumn() const;
 
-    bool load(QXmlStreamReader &reader);
+    bool load(xmlTextReaderPtr reader);
     void resolveContext();
 
     MatchResult match(const QString &text, int offset, const QStringList &captures);
 
-    static Rule::Ptr create(const QStringRef &name);
+    static Rule::Ptr create(const std::string& name);
 
 protected:
-    virtual bool doLoad(QXmlStreamReader &reader);
+    virtual bool doLoad(xmlTextReaderPtr reader);
     virtual MatchResult doMatch(const QString &text, int offset, const QStringList &captures) = 0;
 
     bool isDelimiter(QChar c) const;
@@ -80,17 +79,17 @@ private:
 class AnyChar : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
 
 private:
-    QString m_chars;
+    std::string m_chars;
 };
 
 class DetectChar : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
 
 private:
@@ -101,7 +100,7 @@ private:
 class Detect2Char : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
 
 private:
@@ -135,7 +134,7 @@ public:
     bool includeAttribute() const;
 
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
 
 private:
@@ -177,7 +176,7 @@ protected:
 class KeywordListRule : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
 
 private:
@@ -193,7 +192,7 @@ public:
 class LineContinue : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
 
 private:
@@ -203,7 +202,7 @@ private:
 class RangeDetect : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
 
 private:
@@ -214,7 +213,7 @@ private:
 class RegExpr : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
 
 private:
@@ -225,22 +224,22 @@ private:
 class StringDetect : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
 
 private:
-    QString m_string;
+    std::string m_string;
     Qt::CaseSensitivity m_caseSensitivity;
 };
 
 class WordDetect : public Rule
 {
 protected:
-    bool doLoad(QXmlStreamReader & reader) override;
+    bool doLoad(xmlTextReaderPtr reader) override;
     MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
 
 private:
-    QString m_word;
+    std::string m_word;
 };
 
 }

@@ -22,7 +22,6 @@
 #include <QTypeInfo>
 
 class QColor;
-class QXmlStreamReader;
 
 namespace KSyntaxHighlighting {
 

@@ -20,12 +20,13 @@
 #include "format.h"
 #include "repository.h"
 #include "rule_p.h"
-#include "xml_p.h"
 
 #include <cassert>
 #include <iostream>
 #include <QString>
-#include <QXmlStreamReader>
+
+#include "utilities/stringutils.h"
+#include "utilities/xmlutils.h"
 
 using namespace KSyntaxHighlighting;
 
@@ -99,44 +100,48 @@ Format Context::formatByName(const std::string& name) const
             return format;
     }
 
-    std::cerr << "Unknown format" << name << "in context" << m_name << "of definition" << m_def.definition().name() << std::endl;
+    std::cerr << "Unknown format " << name << " in context " << m_name << " of definition " << m_def.definition().name() << std::endl;
     return format;
 }
 
-void Context::load(QXmlStreamReader& reader)
+void Context::load(xmlTextReaderPtr reader)
 {
-    assert(reader.name() == QLatin1String("context"));
-    assert(reader.tokenType() == QXmlStreamReader::StartElement);
-
-    m_name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
-    m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString().toUtf8().constData();
-    m_lineEndContext.parse(reader.attributes().value(QStringLiteral("lineEndContext")).toString().toUtf8().constData());
-    m_lineEmptyContext.parse(reader.attributes().value(QStringLiteral("lineEmptyContext")).toString().toUtf8().constData());
-    m_fallthrough = Xml::attrToBool(reader.attributes().value(QStringLiteral("fallthrough")));
-    m_fallthroughContext.parse(reader.attributes().value(QStringLiteral("fallthroughContext")).toString().toUtf8().constData());
+    m_name = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"name"));
+    m_attribute = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"attribute"));
+    m_lineEndContext.parse(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"lineEndContext")));
+    m_lineEmptyContext.parse(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"lineEmptyContext")));
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"fallthrough")), m_fallthrough);
+    m_fallthroughContext.parse(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"fallthroughContext")));
     if (m_fallthroughContext.isStay())
         m_fallthrough = false;
 
-    reader.readNext();
-    while (!reader.atEnd()) {
-        switch (reader.tokenType()) {
-            case QXmlStreamReader::StartElement:
+    if (xmlTextReaderIsEmptyElement(reader))
+        return;
+    if (xmlTextReaderRead(reader) != 1)
+        return;
+    while (true) {
+        switch (xmlTextReaderNodeType(reader)) {
+            case 1 /* start element */:
             {
-                auto rule = Rule::create(reader.name());
+                auto rule = Rule::create(regina::xml::xmlString(xmlTextReaderName(reader)));
                 if (rule) {
                     rule->setDefinition(m_def.definition());
                     if (rule->load(reader))
                         m_rules.push_back(rule);
                 } else {
-                    reader.skipCurrentElement();
+                    // Skip current element.
+                    if (xmlTextReaderNext(reader) != 1)
+                        return;
                 }
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
             }
-            case QXmlStreamReader::EndElement:
+            case 15 /* end element */:
                 return;
             default:
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
         }
     }

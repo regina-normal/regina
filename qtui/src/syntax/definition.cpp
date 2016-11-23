@@ -26,10 +26,6 @@
 #include "repository_p.h"
 #include "rule_p.h"
 #include "ksyntaxhighlighting_version.h"
-#include "xml_p.h"
-
-#include <QFile>
-#include <QXmlStreamReader>
 
 #include <algorithm>
 #include <cassert>
@@ -44,7 +40,7 @@ KeywordList nullList;
 
 DefinitionData::DefinitionData() :
     repo(nullptr),
-    delimiters(QStringLiteral("\t !%&()*+,-./:;<=>?[\\]^{|}~")), // must be sorted!
+    delimiters("\t !%&()*+,-./:;<=>?[\\]^{|}~"), // must be sorted!
     caseSensitive(Qt::CaseSensitive),
     version(0.0f)
 {
@@ -165,9 +161,9 @@ const KeywordList& DefinitionData::keywordList(const std::string& name) const
     return nullList;
 }
 
-bool DefinitionData::isDelimiter(QChar c) const
+bool DefinitionData::isDelimiter(char c) const
 {
-    return std::binary_search(delimiters.constBegin(), delimiters.constEnd(), c);
+    return std::binary_search(delimiters.begin(), delimiters.end(), c);
 }
 
 Format DefinitionData::formatByName(const std::string& name) const
@@ -190,22 +186,22 @@ bool DefinitionData::load()
         return true;
 
     assert(!fileName.empty());
-    QFile file(QFile::decodeName(fileName.c_str()));
-    if (!file.open(QFile::ReadOnly))
-        return false;
+    xmlTextReaderPtr reader = xmlNewTextReaderFilename(fileName.c_str());
+    if (! reader)
+        return false; // could not open
 
-    QXmlStreamReader reader(&file);
-    while (!reader.atEnd()) {
-        const auto token = reader.readNext();
-        if (token != QXmlStreamReader::StartElement)
+    std::string name;
+    while (xmlTextReaderRead(reader) == 1) {
+        if (xmlTextReaderNodeType(reader) != 1 /* start element */)
             continue;
 
-        if (reader.name() == QLatin1String("highlighting"))
+        name = regina::xml::xmlString(xmlTextReaderName(reader));
+        if (name == "highlighting")
             loadHighlighting(reader);
-
-        else if (reader.name() == QLatin1String("general"))
+        else if (name == "general")
             loadGeneral(reader);
     }
+    xmlFreeTextReader(reader);
 
     for (auto it = keywordLists.begin(); it != keywordLists.end(); ++it)
         it->second->setCaseSensitivity(caseSensitive);
@@ -215,7 +211,7 @@ bool DefinitionData::load()
         context->resolveIncludes();
     }
 
-    assert(std::is_sorted(delimiters.constBegin(), delimiters.constEnd()));
+    assert(std::is_sorted(delimiters.begin(), delimiters.end()));
     return true;
 }
 
@@ -233,7 +229,7 @@ void DefinitionData::clear()
     indenter.clear();
     author.clear();
     license.clear();
-    delimiters = QStringLiteral("\t !%&()*+,-./:;<=>?[\\]^{|}~"); // must be sorted!
+    delimiters = "\t !%&()*+,-./:;<=>?[\\]^{|}~"; // must be sorted!
     caseSensitive = Qt::CaseSensitive,
     version = 0.0f;
 }
@@ -282,123 +278,141 @@ bool DefinitionData::loadLanguage(xmlTextReaderPtr reader)
     return true;
 }
 
-void DefinitionData::loadHighlighting(QXmlStreamReader& reader)
+void DefinitionData::loadHighlighting(xmlTextReaderPtr reader)
 {
-    assert(reader.name() == QLatin1String("highlighting"));
-    assert(reader.tokenType() == QXmlStreamReader::StartElement);
+    if (xmlTextReaderIsEmptyElement(reader))
+        return;
+    if (xmlTextReaderRead(reader) != 1)
+        return;
 
-    while (!reader.atEnd()) {
-        switch (reader.tokenType()) {
-            case QXmlStreamReader::StartElement:
-                if (reader.name() == QLatin1String("list")) {
+    std::string name;
+    while (true) {
+        switch (xmlTextReaderNodeType(reader)) {
+            case 1 /* start element */:
+                name = regina::xml::xmlString(xmlTextReaderName(reader));
+                if (name == "list") {
                     KeywordList* keywords = new KeywordList;
                     keywords->load(reader);
                     keywordLists.insert(std::make_pair(keywords->name(), std::shared_ptr<KeywordList>(keywords)));
-                } else if (reader.name() == QLatin1String("contexts")) {
+                } else if (name == "contexts") {
                     loadContexts(reader);
-                    reader.readNext();
-                } else if (reader.name() == QLatin1String("itemDatas")) {
+                } else if (name == "itemDatas") {
                     loadItemData(reader);
-                } else {
-                    reader.readNext();
                 }
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
-            case QXmlStreamReader::EndElement:
+            case 15 /* end element */:
                 return;
             default:
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
         }
     }
 }
 
-void DefinitionData::loadContexts(QXmlStreamReader& reader)
+void DefinitionData::loadContexts(xmlTextReaderPtr reader)
 {
-    assert(reader.name() == QLatin1String("contexts"));
-    assert(reader.tokenType() == QXmlStreamReader::StartElement);
-
-    while (!reader.atEnd()) {
-        switch (reader.tokenType()) {
-            case QXmlStreamReader::StartElement:
-                if (reader.name() == QLatin1String("context")) {
+    if (xmlTextReaderIsEmptyElement(reader))
+        return;
+    if (xmlTextReaderRead(reader) != 1)
+        return;
+    while (true) {
+        switch (xmlTextReaderNodeType(reader)) {
+            case 1 /* start element */:
+                if (regina::xml::xmlString(xmlTextReaderName(reader)) == "context") {
                     auto context = new Context;
                     context->setDefinition(q);
                     context->load(reader);
                     contexts.push_back(context);
                 }
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
-            case QXmlStreamReader::EndElement:
+            case 15 /* end element */:
                 return;
             default:
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
         }
     }
 }
 
-void DefinitionData::loadItemData(QXmlStreamReader& reader)
+void DefinitionData::loadItemData(xmlTextReaderPtr reader)
 {
-    assert(reader.name() == QLatin1String("itemDatas"));
-    assert(reader.tokenType() == QXmlStreamReader::StartElement);
+    if (xmlTextReaderIsEmptyElement(reader))
+        return;
+    if (xmlTextReaderRead(reader) != 1)
+        return;
 
-    while (!reader.atEnd()) {
-        switch (reader.tokenType()) {
-            case QXmlStreamReader::StartElement:
-                if (reader.name() == QLatin1String("itemData")) {
+    while (true) {
+        switch (xmlTextReaderNodeType(reader)) {
+            case 1 /* start element */:
+                if (regina::xml::xmlString(xmlTextReaderName(reader)) == "itemData") {
                     Format f;
                     auto formatData = FormatPrivate::get(f);
                     formatData->definition = q;
                     formatData->load(reader);
                     formatData->id = RepositoryPrivate::get(repo)->nextFormatId();
                     formats.insert(std::make_pair(f.name(), f));
-                    reader.readNext();
                 }
-                reader.readNext();
+                if (xmlTextReaderNext(reader) != 1)
+                    return;
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
-            case QXmlStreamReader::EndElement:
+            case 15 /* end element */:
                 return;
             default:
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
         }
     }
 }
 
-void DefinitionData::loadGeneral(QXmlStreamReader& reader)
+void DefinitionData::loadGeneral(xmlTextReaderPtr reader)
 {
-    assert(reader.name() == QLatin1String("general"));
-    assert(reader.tokenType() == QXmlStreamReader::StartElement);
-    reader.readNext();
+    if (xmlTextReaderIsEmptyElement(reader))
+        return;
+    if (xmlTextReaderRead(reader) != 1)
+        return;
 
     // reference counter to count XML child elements, to not return too early
     int elementRefCounter = 1;
 
-    while (!reader.atEnd()) {
-        switch (reader.tokenType()) {
-            case QXmlStreamReader::StartElement:
+    bool cs;
+    while (true) {
+        switch (xmlTextReaderNodeType(reader)) {
+            case 1 /* start element */:
                 ++elementRefCounter;
 
-                if (reader.name() == QLatin1String("keywords")) {
-                    if (reader.attributes().hasAttribute(QStringLiteral("casesensitive")))
-                        caseSensitive = Xml::attrToBool(reader.attributes().value(QStringLiteral("casesensitive"))) ? Qt::CaseSensitive : Qt::CaseInsensitive;
-                    delimiters += reader.attributes().value(QStringLiteral("additionalDeliminator"));
+                if (regina::xml::xmlString(xmlTextReaderName(reader)) == "keywords") {
+                    if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"casesensitive")), cs))
+                        caseSensitive = (cs ? Qt::CaseSensitive : Qt::CaseInsensitive);
+                    delimiters += regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"additionalDeliminator"));
                     std::sort(delimiters.begin(), delimiters.end());
                     auto it = std::unique(delimiters.begin(), delimiters.end());
-                    delimiters.truncate(std::distance(delimiters.begin(), it));
-                    foreach (const auto c, reader.attributes().value(QLatin1String("weakDeliminator")))
-                        delimiters.remove(c);
+                    delimiters.resize(std::distance(delimiters.begin(), it));
+                    for (char c : regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"weakDeliminator")))
+                        std::remove(delimiters.begin(), delimiters.end(), c);
                 } else {
-                    reader.skipCurrentElement();
+                    // Skip current element.
+                    if (xmlTextReaderNext(reader) != 1)
+                        return;
                 }
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
-            case QXmlStreamReader::EndElement:
+            case 15 /* end element */:
                 --elementRefCounter;
                 if (elementRefCounter == 0)
                     return;
             default:
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
         }
     }

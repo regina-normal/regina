@@ -24,8 +24,7 @@
 #include "definitionref_p.h"
 
 #include <boost/noncopyable.hpp>
-
-class QXmlStreamReader;
+#include <libxml/xmlreader.h>
 
 namespace KSyntaxHighlighting {
 
@@ -54,7 +53,7 @@ public:
      */
     Format formatByName(const std::string& name) const;
 
-    void load(QXmlStreamReader &reader);
+    void load(xmlTextReaderPtr reader);
     void resolveContexts();
     void resolveIncludes();
 

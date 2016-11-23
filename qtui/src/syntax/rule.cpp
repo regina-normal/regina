@@ -17,12 +17,13 @@
 
 #include "rule_p.h"
 #include "definition_p.h"
-#include "xml_p.h"
 
 #include <QString>
-#include <QXmlStreamReader>
 #include <cassert>
 #include <iostream>
+
+#include "utilities/stringutils.h"
+#include "utilities/xmlutils.h"
 
 using namespace KSyntaxHighlighting;
 
@@ -145,47 +146,50 @@ int Rule::requiredColumn() const
     return m_column;
 }
 
-bool Rule::load(QXmlStreamReader &reader)
+bool Rule::load(xmlTextReaderPtr reader)
 {
-    assert(reader.tokenType() == QXmlStreamReader::StartElement);
-
-    m_attribute = reader.attributes().value(QStringLiteral("attribute")).toString().toUtf8().constData();
-    if (reader.name() != QLatin1String("IncludeRules")) // IncludeRules uses this with a different semantic
-        m_context.parse(reader.attributes().value(QStringLiteral("context")).toString().toUtf8().constData());
-    m_firstNonSpace = Xml::attrToBool(reader.attributes().value(QStringLiteral("firstNonSpace")));
-    m_lookAhead = Xml::attrToBool(reader.attributes().value(QStringLiteral("lookAhead")));
-    bool colOk = false;
-    m_column = reader.attributes().value(QStringLiteral("column")).toInt(&colOk);
-    if (!colOk)
+    m_attribute = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"attribute"));
+    if (regina::xml::xmlString(xmlTextReaderName(reader)) != "IncludeRules") // IncludeRules uses this with a different semantic
+        m_context.parse(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"context")));
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"firstNonSpace")), m_firstNonSpace);
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"lookAhead")), m_lookAhead);
+    if (! regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"column")), m_column))
         m_column = -1;
-    m_dynamic = Xml::attrToBool(reader.attributes().value(QStringLiteral("dynamic")));
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"dynamic")), m_dynamic);
 
     auto result = doLoad(reader);
 
     if (m_lookAhead && m_context.isStay())
         result = false;
 
-    reader.readNext();
-    while (!reader.atEnd()) {
-        switch (reader.tokenType()) {
-            case QXmlStreamReader::StartElement:
+    if (xmlTextReaderIsEmptyElement(reader))
+        return result;
+    if (xmlTextReaderRead(reader) != 1)
+        return result;
+    while (true) {
+        switch (xmlTextReaderNodeType(reader)) {
+            case 1 /* start element */:
             {
-                auto rule = Rule::create(reader.name());
+                auto rule = Rule::create(regina::xml::xmlString(xmlTextReaderName(reader)));
                 if (rule) {
                     rule->setDefinition(m_def.definition());
                     if (rule->load(reader)) {
                         m_subRules.push_back(rule);
-                        reader.readNext();
+                        if (xmlTextReaderRead(reader) != 1)
+                            return result;
                     }
                 } else {
-                    reader.skipCurrentElement();
+                    // Skip current element.
+                    if (xmlTextReaderNext(reader) != 1)
+                        return result;
                 }
                 break;
             }
-            case QXmlStreamReader::EndElement:
+            case 15 /* end element */:
                 return result;
             default:
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return result;
                 break;
         }
     }
@@ -200,7 +204,7 @@ void Rule::resolveContext()
         rule->resolveContext();
 }
 
-bool Rule::doLoad(QXmlStreamReader&)
+bool Rule::doLoad(xmlTextReaderPtr)
 {
     return true;
 }
@@ -222,47 +226,47 @@ MatchResult Rule::match(const QString &text, int offset, const QStringList &capt
     return result;
 }
 
-Rule::Ptr Rule::create(const QStringRef& name)
+Rule::Ptr Rule::create(const std::string& name)
 {
     Rule *rule = nullptr;
-    if (name == QLatin1String("AnyChar"))
+    if (name == "AnyChar")
         rule = new AnyChar;
-    else if (name == QLatin1String("DetectChar"))
+    else if (name == "DetectChar")
         rule = new DetectChar;
-    else if (name == QLatin1String("Detect2Chars"))
+    else if (name == "Detect2Chars")
         rule = new Detect2Char;
-    else if (name == QLatin1String("DetectIdentifier"))
+    else if (name == "DetectIdentifier")
         rule = new DetectIdentifier;
-    else if (name == QLatin1String("DetectSpaces"))
+    else if (name == "DetectSpaces")
         rule = new DetectSpaces;
-    else if (name == QLatin1String("Float"))
+    else if (name == "Float")
         rule = new Float;
-    else if (name == QLatin1String("Int"))
+    else if (name == "Int")
         rule = new Int;
-    else if (name == QLatin1String("HlCChar"))
+    else if (name == "HlCChar")
         rule = new HlCChar;
-    else if (name == QLatin1String("HlCHex"))
+    else if (name == "HlCHex")
         rule = new HlCHex;
-    else if (name == QLatin1String("HlCOct"))
+    else if (name == "HlCOct")
         rule = new HlCOct;
-    else if (name == QLatin1String("HlCStringChar"))
+    else if (name == "HlCStringChar")
         rule = new HlCStringChar;
-    else if (name == QLatin1String("IncludeRules"))
+    else if (name == "IncludeRules")
         rule = new IncludeRules;
-    else if (name == QLatin1String("keyword"))
+    else if (name == "keyword")
         rule = new KeywordListRule;
-    else if (name == QLatin1String("LineContinue"))
+    else if (name == "LineContinue")
         rule = new LineContinue;
-    else if (name == QLatin1String("RangeDetect"))
+    else if (name == "RangeDetect")
         rule = new RangeDetect;
-    else if (name == QLatin1String("RegExpr"))
+    else if (name == "RegExpr")
         rule = new RegExpr;
-    else if (name == QLatin1String("StringDetect"))
+    else if (name == "StringDetect")
         rule = new StringDetect;
-    else if (name == QLatin1String("WordDetect"))
+    else if (name == "WordDetect")
         rule = new WordDetect;
     else
-        std::cerr << "Unknown rule type:" << name.toUtf8().constData() << std::endl;
+        std::cerr << "Unknown rule type: " << name << std::endl;
 
     return Ptr(rule);
 }
@@ -270,32 +274,32 @@ Rule::Ptr Rule::create(const QStringRef& name)
 bool Rule::isDelimiter(QChar c) const
 {
     auto defData = DefinitionData::get(m_def.definition());
-    return defData->isDelimiter(c);
+    return defData->isDelimiter(c.toLatin1());
 }
 
 
-bool AnyChar::doLoad(QXmlStreamReader& reader)
+bool AnyChar::doLoad(xmlTextReaderPtr reader)
 {
-    m_chars = reader.attributes().value(QStringLiteral("String")).toString();
-    if (m_chars.size() == 1)
+    m_chars = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String"));
+    if (m_chars.length() == 1)
         std::cerr << "AnyChar rule with just one char: use DetectChar instead." << std::endl;
-    return !m_chars.isEmpty();
+    return !m_chars.empty();
 }
 
 MatchResult AnyChar::doMatch(const QString& text, int offset, const QStringList&)
 {
-    if (m_chars.contains(text.at(offset)))
+    if (m_chars.find(text.at(offset).toLatin1()) != std::string::npos)
         return offset + 1;
     return offset;
 }
 
 
-bool DetectChar::doLoad(QXmlStreamReader& reader)
+bool DetectChar::doLoad(xmlTextReaderPtr reader)
 {
-    const auto s = reader.attributes().value(QStringLiteral("char"));
-    if (s.isEmpty())
+    const auto s = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"char"));
+    if (s.empty())
         return false;
-    m_char = s.at(0);
+    m_char = s.front();
     if (isDynamic()) {
         m_captureIndex = m_char.digitValue();
     }
@@ -318,14 +322,14 @@ MatchResult DetectChar::doMatch(const QString& text, int offset, const QStringLi
 }
 
 
-bool Detect2Char::doLoad(QXmlStreamReader& reader)
+bool Detect2Char::doLoad(xmlTextReaderPtr reader)
 {
-    const auto s1 = reader.attributes().value(QStringLiteral("char"));
-    const auto s2 = reader.attributes().value(QStringLiteral("char1"));
-    if (s1.isEmpty() || s2.isEmpty())
+    const auto s1 = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"char"));
+    const auto s2 = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"char1"));
+    if (s1.empty() || s2.empty())
         return false;
-    m_char1 = s1.at(0);
-    m_char2 = s2.at(0);
+    m_char1 = s1.front();
+    m_char2 = s2.front();
     return true;
 }
 
@@ -492,16 +496,21 @@ bool IncludeRules::includeAttribute() const
     return m_includeAttribute;
 }
 
-bool IncludeRules::doLoad(QXmlStreamReader& reader)
+bool IncludeRules::doLoad(xmlTextReaderPtr reader)
 {
-    const auto s = reader.attributes().value(QLatin1String("context"));
-    auto splitted = s.split(QLatin1String("##"), QString::KeepEmptyParts);
-    if (splitted.isEmpty())
+    const auto s = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"context"));
+    if (s.empty())
         return false;
-    m_contextName = splitted.at(0).toString().toUtf8().constData();
-    if (splitted.size() > 1)
-        m_defName = splitted.at(1).toString().toUtf8().constData();
-    m_includeAttribute = Xml::attrToBool(reader.attributes().value(QLatin1String("includeAttrib")));
+
+    auto pos = s.find("##");
+    if (pos != std::string::npos) {
+        m_contextName = s.substr(0, pos);
+        m_defName = s.substr(pos + 2);
+    } else {
+        m_contextName = s;
+    }
+
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"includeAttrib")), m_includeAttribute);
 
     return !m_contextName.empty() || !m_defName.empty();
 }
@@ -524,13 +533,16 @@ MatchResult Int::doMatch(const QString& text, int offset, const QStringList&)
 }
 
 
-bool KeywordListRule::doLoad(QXmlStreamReader& reader)
+bool KeywordListRule::doLoad(xmlTextReaderPtr reader)
 {
-    m_listName = reader.attributes().value(QLatin1String("String")).toString().toUtf8().constData();
-    if (reader.attributes().hasAttribute(QLatin1String("insensitive"))) {
+    m_listName = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String"));
+
+    auto attr = xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive");
+    if (attr) {
+        bool cs;
+        regina::valueOf(regina::xml::xmlString(attr), cs);
+        m_caseSensitivityOverride = cs ? Qt::CaseInsensitive : Qt::CaseSensitive;
         m_hasCaseSensitivityOverride = true;
-        m_caseSensitivityOverride = Xml::attrToBool(reader.attributes().value(QLatin1String("insensitive"))) ?
-            Qt::CaseInsensitive : Qt::CaseSensitive;
     } else {
         m_hasCaseSensitivityOverride = false;
     }
@@ -566,13 +578,13 @@ MatchResult KeywordListRule::doMatch(const QString& text, int offset, const QStr
 }
 
 
-bool LineContinue::doLoad(QXmlStreamReader& reader)
+bool LineContinue::doLoad(xmlTextReaderPtr reader)
 {
-    const auto s = reader.attributes().value(QStringLiteral("char"));
-    if (s.isEmpty())
+    const auto s = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"char"));
+    if (s.empty())
         m_char = QLatin1Char('\\');
     else
-        m_char = s.at(0);
+        m_char = s.front();
     return true;
 }
 
@@ -584,14 +596,14 @@ MatchResult LineContinue::doMatch(const QString& text, int offset, const QString
 }
 
 
-bool RangeDetect::doLoad(QXmlStreamReader& reader)
+bool RangeDetect::doLoad(xmlTextReaderPtr reader)
 {
-    const auto s1 = reader.attributes().value(QStringLiteral("char"));
-    const auto s2 = reader.attributes().value(QStringLiteral("char1"));
-    if (s1.isEmpty() || s2.isEmpty())
+    const auto s1 = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"char"));
+    const auto s2 = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"char1"));
+    if (s1.empty() || s2.empty())
         return false;
-    m_begin = s1.at(0);
-    m_end = s2.at(0);
+    m_begin = s1.front();
+    m_end = s2.front();
     return true;
 }
 
@@ -611,12 +623,14 @@ MatchResult RangeDetect::doMatch(const QString& text, int offset, const QStringL
     return offset;
 }
 
-bool RegExpr::doLoad(QXmlStreamReader& reader)
+bool RegExpr::doLoad(xmlTextReaderPtr reader)
 {
-    m_pattern = reader.attributes().value(QStringLiteral("String")).toString();
+    m_pattern = QString::fromUtf8(
+        regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String")).c_str());
     m_regexp.setPattern(m_pattern);
-    const auto isMinimal = Xml::attrToBool(reader.attributes().value(QStringLiteral("minimal")));
-    const auto isCaseInsensitive = Xml::attrToBool(reader.attributes().value(QStringLiteral("insensitive")));
+    bool isMinimal, isCaseInsensitive;
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"minimal")), isMinimal);
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), isCaseInsensitive);
     m_regexp.setPatternOptions(
         (isMinimal ? QRegularExpression::InvertedGreedinessOption : QRegularExpression::NoPatternOption) |
         (isCaseInsensitive ? QRegularExpression::CaseInsensitiveOption : QRegularExpression::NoPatternOption));
@@ -637,43 +651,47 @@ MatchResult RegExpr::doMatch(const QString& text, int offset, const QStringList 
 }
 
 
-bool StringDetect::doLoad(QXmlStreamReader& reader)
+bool StringDetect::doLoad(xmlTextReaderPtr reader)
 {
-    m_string = reader.attributes().value(QStringLiteral("String")).toString();
-    m_caseSensitivity = Xml::attrToBool(reader.attributes().value(QStringLiteral("insensitive"))) ? Qt::CaseInsensitive : Qt::CaseSensitive;
-    return !m_string.isEmpty();
+    m_string = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String"));
+
+    bool cs;
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), cs);
+    m_caseSensitivity = cs ? Qt::CaseInsensitive : Qt::CaseSensitive;
+
+    return !m_string.empty();
 }
 
 MatchResult StringDetect::doMatch(const QString& text, int offset, const QStringList &captures)
 {
-    auto pattern = m_string;
+    QString pattern = QString::fromUtf8(m_string.c_str());
     if (isDynamic())
-        pattern = replaceCaptures(m_string, captures, false);
-    if (text.midRef(offset, pattern.size()).compare(pattern, m_caseSensitivity) == 0)
+        pattern = replaceCaptures(pattern, captures, false);
+    if (text.midRef(offset, pattern.length()).compare(pattern, m_caseSensitivity) == 0)
         return offset + pattern.size();
     return offset;
 }
 
 
-bool WordDetect::doLoad(QXmlStreamReader& reader)
+bool WordDetect::doLoad(xmlTextReaderPtr reader)
 {
-    m_word = reader.attributes().value(QStringLiteral("String")).toString();
-    return !m_word.isEmpty();
+    m_word = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String"));
+    return !m_word.empty();
 }
 
 MatchResult WordDetect::doMatch(const QString& text, int offset, const QStringList&)
 {
-    if (text.size() - offset < m_word.size())
+    if (text.size() - offset < m_word.length())
         return offset;
 
     if (offset > 0 && !isDelimiter(text.at(offset - 1)))
         return offset;
 
-    if (text.midRef(offset, m_word.size()) != m_word)
+    if (text.midRef(offset, m_word.length()).toString().toUtf8().constData() != m_word)
         return offset;
 
-    if (text.size() == offset + m_word.size() || isDelimiter(text.at(offset + m_word.size())))
-        return offset + m_word.size();
+    if (text.size() == offset + m_word.length() || isDelimiter(text.at(offset + m_word.length())))
+        return offset + m_word.length();
 
     return offset;
 }

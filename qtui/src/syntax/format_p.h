@@ -24,6 +24,7 @@
 
 #include <QSharedData>
 #include <boost/noncopyable.hpp>
+#include <libxml/xmlreader.h>
 
 namespace KSyntaxHighlighting {
 
@@ -33,7 +34,7 @@ public:
     FormatPrivate();
     static FormatPrivate* get(const Format &format);
 
-    void load(QXmlStreamReader &reader);
+    void load(xmlTextReaderPtr reader);
 
     DefinitionRef definition;
     std::string name;

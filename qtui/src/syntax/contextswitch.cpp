@@ -91,6 +91,6 @@ void ContextSwitch::resolve(const Definition &def)
     if (!m_contextName.empty()) {
         m_context = DefinitionData::get(d)->contextByName(m_contextName);
         if (!m_context)
-            std::cerr << "cannot find context" << m_contextName << "in" << def.name() << std::endl;
+            std::cerr << "cannot find context " << m_contextName << " in " << def.name() << std::endl;
     }
 }

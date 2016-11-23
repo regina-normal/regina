@@ -22,14 +22,13 @@
 #include "textstyledata_p.h"
 #include "theme.h"
 #include "themedata_p.h"
-#include "xml_p.h"
 
 #include <cassert>
 #include <QColor>
 #include <QMetaEnum>
-#include <QXmlStreamReader>
 
 #include "utilities/stringutils.h"
+#include "utilities/xmlutils.h"
 
 using namespace KSyntaxHighlighting;
 
@@ -184,57 +183,63 @@ bool Format::spellCheck() const
 }
 
 
-void FormatPrivate::load(QXmlStreamReader& reader)
+void FormatPrivate::load(xmlTextReaderPtr reader)
 {
-    name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
-    defaultStyle = stringToDefaultFormat(reader.attributes().value(QStringLiteral("defStyleNum")).toString().toUtf8().constData());
+    name = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"name"));
+    defaultStyle = stringToDefaultFormat(
+        regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"defStyleNum")));
 
-    QStringRef ref = reader.attributes().value(QStringLiteral("color"));
-    if (!ref.isEmpty()) {
-        style.textColor = QColor(ref.toString()).rgba();
+    std::string ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"color"));
+    if (!ref.empty()) {
+        style.textColor = QColor(ref.c_str()).rgba();
     }
 
-    ref = reader.attributes().value(QStringLiteral("selColor"));
-    if (!ref.isEmpty()) {
-        style.selectedTextColor = QColor(ref.toString()).rgba();
+    ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"selColor"));
+    if (!ref.empty()) {
+        style.selectedTextColor = QColor(ref.c_str()).rgba();
     }
 
-    ref = reader.attributes().value(QStringLiteral("backgroundColor"));
-    if (!ref.isEmpty()) {
-        style.backgroundColor = QColor(ref.toString()).rgba();
+    ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"backgroundColor"));
+    if (!ref.empty()) {
+        style.backgroundColor = QColor(ref.c_str()).rgba();
     }
 
-    ref = reader.attributes().value(QStringLiteral("selBackgroundColor"));
-    if (!ref.isEmpty()) {
-        style.selectedBackgroundColor = QColor(ref.toString()).rgba();
+    ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"selBackgroundColor"));
+    if (!ref.empty()) {
+        style.selectedBackgroundColor = QColor(ref.c_str()).rgba();
     }
 
-    ref = reader.attributes().value(QStringLiteral("italic"));
-    if (!ref.isEmpty()) {
+    bool b;
+    ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"italic"));
+    if (!ref.empty()) {
+        regina::valueOf(ref, b);
         style.hasItalic = true;
-        style.italic = Xml::attrToBool(ref);
+        style.italic = b;
     }
 
-    ref = reader.attributes().value(QStringLiteral("bold"));
-    if (!ref.isEmpty()) {
+    ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"bold"));
+    if (!ref.empty()) {
+        regina::valueOf(ref, b);
         style.hasBold = true;
-        style.bold = Xml::attrToBool(ref);
+        style.bold = b;
     }
 
-    ref = reader.attributes().value(QStringLiteral("underline"));
-    if (!ref.isEmpty()) {
+    ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"underline"));
+    if (!ref.empty()) {
+        regina::valueOf(ref, b);
         style.hasUnderline = true;
-        style.underline = Xml::attrToBool(ref);
+        style.underline = b;
     }
 
-    ref = reader.attributes().value(QStringLiteral("strikeOut"));
-    if (!ref.isEmpty()) {
+    ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"strikeOut"));
+    if (!ref.empty()) {
+        regina::valueOf(ref, b);
         style.hasStrikeThrough = true;
-        style.strikeThrough = Xml::attrToBool(ref);
+        style.strikeThrough = b;
     }
 
-    ref = reader.attributes().value(QStringLiteral("spellChecking"));
-    if (!ref.isEmpty()) {
-        spellCheck = Xml::attrToBool(ref);
+    ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"spellChecking"));
+    if (!ref.empty()) {
+        regina::valueOf(ref, spellCheck);
     }
 }

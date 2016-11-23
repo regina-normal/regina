@@ -22,8 +22,7 @@
 #include <set>
 #include <vector>
 #include <boost/noncopyable.hpp>
-
-class QXmlStreamReader;
+#include <libxml/xmlreader.h>
 
 namespace KSyntaxHighlighting {
 
@@ -42,13 +41,13 @@ public:
     /** Checks if @p str is a keyword in this list, overriding the global case-sensitivity setting. */
     bool contains(const QStringRef &str, Qt::CaseSensitivity caseSensitivityOverride) const;
 
-    void load(QXmlStreamReader &reader);
+    void load(xmlTextReaderPtr reader);
     void setCaseSensitivity(Qt::CaseSensitivity caseSensitive);
 
 private:
     std::string m_name;
-    std::set<QString> m_keywords;
-    mutable std::set<QString> m_lowerCaseKeywords;
+    std::set<std::string> m_keywords;
+    mutable std::set<std::string> m_lowerCaseKeywords;
     Qt::CaseSensitivity m_caseSensitive;
 };
 }

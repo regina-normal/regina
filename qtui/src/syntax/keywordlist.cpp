@@ -18,7 +18,9 @@
 #include "keywordlist_p.h"
 
 #include <cassert>
-#include <QXmlStreamReader>
+
+#include "utilities/stringutils.h"
+#include "utilities/xmlutils.h"
 
 using namespace KSyntaxHighlighting;
 
@@ -48,39 +50,44 @@ bool KeywordList::contains(const QStringRef &str) const
 
 bool KeywordList::contains(const QStringRef &str, Qt::CaseSensitivity caseSensitivityOverride) const
 {
+    // TODO: Make lower-case transformations unicode-aware.
     if (caseSensitivityOverride == Qt::CaseInsensitive && m_lowerCaseKeywords.empty()) {
-        for (const auto& kw : m_keywords)
-            m_lowerCaseKeywords.insert(kw.toLower());
+        std::string lower;
+        for (const auto& kw : m_keywords) {
+            lower = kw;
+            std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+            m_lowerCaseKeywords.insert(lower);
+        }
     }
 
     // TODO avoid the copy in toString!
     if (caseSensitivityOverride == Qt::CaseSensitive)
-        return m_keywords.count(str.toString());
-    return m_lowerCaseKeywords.count(str.toString().toLower());
+        return m_keywords.count(str.toString().toUtf8().constData());
+    return m_lowerCaseKeywords.count(str.toString().toLower().toUtf8().constData());
 }
 
-void KeywordList::load(QXmlStreamReader& reader)
+void KeywordList::load(xmlTextReaderPtr reader)
 {
-    assert(reader.name() == QLatin1String("list"));
-    assert(reader.tokenType() == QXmlStreamReader::StartElement);
+    m_name = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"name"));
 
-    m_name = reader.attributes().value(QStringLiteral("name")).toString().toUtf8().constData();
-
-    while (!reader.atEnd()) {
-        switch (reader.tokenType()) {
-            case QXmlStreamReader::StartElement:
-                if (reader.name() == QLatin1String("item")) {
-                    m_keywords.insert(reader.readElementText().trimmed());
-                    reader.readNextStartElement();
-                    break;
+    if (xmlTextReaderIsEmptyElement(reader))
+        return;
+    if (xmlTextReaderRead(reader) != 1)
+        return;
+    while (true) {
+        switch (xmlTextReaderNodeType(reader)) {
+            case 1 /* start element */:
+                if (regina::xml::xmlString(xmlTextReaderName(reader)) == "item") {
+                    m_keywords.insert(regina::stripWhitespace(regina::xml::xmlString(xmlTextReaderReadInnerXml(reader))));
                 }
-                reader.readNext();
+                if (xmlTextReaderNext(reader) != 1)
+                    return;
                 break;
-            case QXmlStreamReader::EndElement:
-                reader.readNext();
+            case 15 /* end element */:
                 return;
             default:
-                reader.readNext();
+                if (xmlTextReaderRead(reader) != 1)
+                    return;
                 break;
         }
     }
