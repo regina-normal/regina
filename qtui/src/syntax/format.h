@@ -20,8 +20,6 @@
 
 #include <memory>
 
-class QColor;
-
 namespace KSyntaxHighlighting {
 
 class DefinitionRef;
@@ -75,24 +73,28 @@ public:
     bool hasTextColor(const Theme &theme) const;
     /** Returns the foreground color of the combination of this format and the
      *  given theme.
+     *  The color will be returned as an integer of the form #AARRGGBB.
      */
-    QColor textColor(const Theme &theme) const;
+    unsigned textColor(const Theme &theme) const;
     /** Returns the foreground color for selected text of the combination of
      *  this format and the given theme.
+     *  The color will be returned as an integer of the form #AARRGGBB.
      */
-    QColor selectedTextColor(const Theme &theme) const;
+    unsigned selectedTextColor(const Theme &theme) const;
     /** Returns @c true if the combination of this format and the theme @p theme
      *  change the background color compared to the default format.
      */
     bool hasBackgroundColor(const Theme &theme) const;
     /** Returns the background color of the combination of this format and the
      *  given theme.
+     *  The color will be returned as an integer of the form #AARRGGBB.
      */
-    QColor backgroundColor(const Theme &theme) const;
+    unsigned backgroundColor(const Theme &theme) const;
     /** Returns the background color of selected text of the combination of
      *  this format and the given theme.
+     *  The color will be returned as an integer of the form #AARRGGBB.
      */
-    QColor selectedBackgroundColor(const Theme &theme) const;
+    unsigned selectedBackgroundColor(const Theme &theme) const;
 
     /** Returns @c true if the combination of this format and the given theme
      *  results in bold text formatting.

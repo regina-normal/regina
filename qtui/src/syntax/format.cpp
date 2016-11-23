@@ -23,13 +23,18 @@
 #include "theme.h"
 #include "themedata_p.h"
 
-#include <QColor>
 #include <cassert>
 
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
 using namespace KSyntaxHighlighting;
+
+static inline unsigned readColour(const std::string& str) {
+    if (str.empty() || str.front() != '#')
+        return 0;
+    return static_cast<unsigned>(strtoul(str.c_str() + 1, 0, 16));
+}
 
 static Theme::TextStyle stringToDefaultFormat(const std::string& str)
 {
@@ -129,12 +134,12 @@ bool Format::hasTextColor(const Theme &theme) const
         && (d->style.textColor || theme.textColor(d->defaultStyle));
 }
 
-QColor Format::textColor(const Theme &theme) const
+unsigned Format::textColor(const Theme &theme) const
 {
     return d->style.textColor ? d->style.textColor : theme.textColor(d->defaultStyle);
 }
 
-QColor Format::selectedTextColor(const Theme &theme) const
+unsigned Format::selectedTextColor(const Theme &theme) const
 {
     return d->style.selectedTextColor ? d->style.selectedTextColor : theme.selectedTextColor(d->defaultStyle);
 }
@@ -145,12 +150,12 @@ bool Format::hasBackgroundColor(const Theme &theme) const
          && (d->style.backgroundColor || theme.backgroundColor(d->defaultStyle));
 }
 
-QColor Format::backgroundColor(const Theme &theme) const
+unsigned Format::backgroundColor(const Theme &theme) const
 {
     return d->style.backgroundColor ? d->style.backgroundColor : theme.backgroundColor(d->defaultStyle);
 }
 
-QColor Format::selectedBackgroundColor(const Theme &theme) const
+unsigned Format::selectedBackgroundColor(const Theme &theme) const
 {
     return d->style.selectedBackgroundColor ? d->style.selectedBackgroundColor
                             : theme.selectedBackgroundColor(d->defaultStyle);
@@ -190,22 +195,22 @@ void FormatPrivate::load(xmlTextReaderPtr reader)
 
     std::string ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"color"));
     if (!ref.empty()) {
-        style.textColor = QColor(ref.c_str()).rgba();
+        style.textColor = readColour(ref);
     }
 
     ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"selColor"));
     if (!ref.empty()) {
-        style.selectedTextColor = QColor(ref.c_str()).rgba();
+        style.selectedTextColor = readColour(ref);
     }
 
     ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"backgroundColor"));
     if (!ref.empty()) {
-        style.backgroundColor = QColor(ref.c_str()).rgba();
+        style.backgroundColor = readColour(ref);
     }
 
     ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"selBackgroundColor"));
     if (!ref.empty()) {
-        style.selectedBackgroundColor = QColor(ref.c_str()).rgba();
+        style.selectedBackgroundColor = readColour(ref);
     }
 
     bool b;
