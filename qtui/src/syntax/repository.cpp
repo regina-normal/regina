@@ -21,7 +21,6 @@
 #include "definition_p.h"
 #include "theme.h"
 #include "themedata_p.h"
-#include "wildcardmatcher_p.h"
 
 #include "file/globaldirs.h"
 

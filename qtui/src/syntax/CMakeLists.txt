@@ -12,7 +12,6 @@ SET ( FILES
   syntaxhighlighter.cpp
   theme.cpp
   themedata.cpp
-  wildcardmatcher.cpp
   )
 FOREACH( FILE ${FILES} )
   SET( SOURCES ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${FILE})
