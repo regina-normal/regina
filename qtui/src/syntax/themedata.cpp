@@ -18,6 +18,7 @@
 
 #include "themedata_p.h"
 
+#include <QColor>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -44,18 +45,17 @@ ThemeData::ThemeData()
  * Convert QJsonValue @p val into a color, if possible. Valid colors are only
  * in hex format: #rrggbb. On error, returns 0x00000000.
  */
-static inline QRgb readColor(const QJsonValue &val)
+static inline unsigned readColor(const QJsonValue &val)
 {
-    const QRgb unsetColor = 0;
     if (!val.isString()) {
-        return unsetColor;
+        return 0;
     }
     const QString str = val.toString();
     if (str.isEmpty() || str[0] != QLatin1Char('#')) {
-        return unsetColor;
+        return 0;
     }
     const QColor color(str);
-    return color.isValid() ? color.rgb() : unsetColor;
+    return color.isValid() ? color.rgb() : 0;
 }
 
 static inline TextStyleData readThemeData(const QJsonObject &obj)
@@ -114,8 +114,8 @@ bool ThemeData::load(const std::string& filePath)
     const QJsonObject metadata = obj.value(QLatin1String("metadata")).toObject();
     m_name = metadata.value(QLatin1String("name")).toString().toUtf8().constData();
     m_revision = metadata.value(QLatin1String("revision")).toInt();
-    m_author = metadata.value(QLatin1String("author")).toString();
-    m_license = metadata.value(QLatin1String("license")).toString();
+    m_author = metadata.value(QLatin1String("author")).toString().toUtf8().constData();
+    m_license = metadata.value(QLatin1String("license")).toString().toUtf8().constData();
     m_readOnly = metadata.value(QLatin1String("read-only")).toBool();
 
     // read text styles
@@ -191,30 +191,30 @@ bool ThemeData::isReadOnly() const
     return m_readOnly;
 }
 
-QString ThemeData::filePath() const
+const std::string& ThemeData::filePath() const
 {
     return m_filePath;
 }
 
-QRgb ThemeData::textColor(Theme::TextStyle style) const
+unsigned ThemeData::textColor(Theme::TextStyle style) const
 {
     assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].textColor;
 }
 
-QRgb ThemeData::selectedTextColor(Theme::TextStyle style) const
+unsigned ThemeData::selectedTextColor(Theme::TextStyle style) const
 {
     assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].selectedTextColor;
 }
 
-QRgb ThemeData::backgroundColor(Theme::TextStyle style) const
+unsigned ThemeData::backgroundColor(Theme::TextStyle style) const
 {
     assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].backgroundColor;
 }
 
-QRgb ThemeData::selectedBackgroundColor(Theme::TextStyle style) const
+unsigned ThemeData::selectedBackgroundColor(Theme::TextStyle style) const
 {
     assert(static_cast<int>(style) >= 0 && static_cast<int>(style) <= static_cast<int>(Theme::Others));
     return m_textStyles[style].selectedBackgroundColor;
@@ -244,7 +244,7 @@ bool ThemeData::isStrikeThrough(Theme::TextStyle style) const
     return m_textStyles[style].strikeThrough;
 }
 
-QRgb ThemeData::editorColor(Theme::EditorColorRole role) const
+unsigned ThemeData::editorColor(Theme::EditorColorRole role) const
 {
     assert(static_cast<int>(role) >= 0 && static_cast<int>(role) <= static_cast<int>(Theme::TemplateReadOnlyPlaceholder));
     return m_editorColors[role];

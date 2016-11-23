@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_TEXTSTYLEDATA_P_H
 #define KSYNTAXHIGHLIGHTING_TEXTSTYLEDATA_P_H
 
-#include <QColor>
-
 namespace KSyntaxHighlighting {
 
 class TextStyleData
@@ -41,10 +39,11 @@ public:
         , hasStrikeThrough(false)
     {}
 
-    QRgb textColor;
-    QRgb backgroundColor;
-    QRgb selectedTextColor;
-    QRgb selectedBackgroundColor;
+    // All colours are #AARRGGBB.
+    unsigned textColor;
+    unsigned backgroundColor;
+    unsigned selectedTextColor;
+    unsigned selectedBackgroundColor;
     bool bold :1;
     bool italic :1;
     bool underline :1;

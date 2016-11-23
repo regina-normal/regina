@@ -22,6 +22,7 @@
 #include "textstyledata_p.h"
 #include "theme.h"
 
+#include <string>
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 

@@ -22,6 +22,7 @@
 #include "theme.h"
 #include "textstyledata_p.h"
 
+#include <string>
 #include <boost/noncopyable.hpp>
 
 namespace KSyntaxHighlighting {
@@ -65,35 +66,39 @@ public:
      *
      * If the theme is invalid (isValid()), an empty string is returned.
      */
-    QString filePath() const;
+    const std::string& filePath() const;
 
     /**
      * Returns the text color to be used for @p style.
+     * The color will be returned as an integer of the form #AARRGGBB.
      * @c 0 is returned for styles that do not specify a text color,
      * use the default text color in that case.
      */
-    QRgb textColor(Theme::TextStyle style) const;
+    unsigned textColor(Theme::TextStyle style) const;
 
     /**
      * Returns the text color for selected to be used for @p style.
+     * The color will be returned as an integer of the form #AARRGGBB.
      * @c 0 is returned for styles that do not specify a selected text color,
      * use the textColor() in that case.
      */
-    QRgb selectedTextColor(Theme::TextStyle style) const;
+    unsigned selectedTextColor(Theme::TextStyle style) const;
 
     /**
      * Returns the background color to be used for @p style.
+     * The color will be returned as an integer of the form #AARRGGBB.
      * @c 0 is returned for styles that do not specify a background color,
      * use the default background color in that case.
      */
-    QRgb backgroundColor(Theme::TextStyle style) const;
+    unsigned backgroundColor(Theme::TextStyle style) const;
 
     /**
      * Returns the background color for selected text to be used for @p style.
+     * The color will be returned as an integer of the form #AARRGGBB.
      * @c 0 is returned for styles that do not specify a selected background
      * color, use the default backgroundColor() in that case.
      */
-    QRgb selectedBackgroundColor(Theme::TextStyle style) const;
+    unsigned selectedBackgroundColor(Theme::TextStyle style) const;
 
     /**
      * Returns whether the given style should be shown in bold.
@@ -118,22 +123,23 @@ public:
 public:
     /**
      * Returns the editor color for the requested @p role.
+     * The color will be returned as an integer of the form #AARRGGBB.
      */
-    QRgb editorColor(Theme::EditorColorRole role) const;
+    unsigned editorColor(Theme::EditorColorRole role) const;
 
 private:
     int m_revision;
     std::string m_name;
-    QString m_author;
-    QString m_license;
-    QString m_filePath;
+    std::string m_author;
+    std::string m_license;
+    std::string m_filePath;
     bool m_readOnly;
 
     //! TextStyles
     TextStyleData m_textStyles[Theme::Others + 1];
 
     //! Editor area colors
-    QRgb m_editorColors[Theme::TemplateReadOnlyPlaceholder + 1];
+    unsigned m_editorColors[Theme::TemplateReadOnlyPlaceholder + 1];
 };
 
 }

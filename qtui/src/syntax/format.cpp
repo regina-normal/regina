@@ -23,8 +23,8 @@
 #include "theme.h"
 #include "themedata_p.h"
 
-#include <cassert>
 #include <QColor>
+#include <cassert>
 
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"

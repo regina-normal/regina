@@ -20,7 +20,7 @@
 
 using namespace KSyntaxHighlighting;
 
-std::string nullName;
+std::string nullString;
 
 Theme::Theme()
 {
@@ -53,7 +53,7 @@ bool Theme::isValid() const
 
 const std::string& Theme::name() const
 {
-    return m_data.get() ? m_data->name() : nullName;
+    return m_data.get() ? m_data->name() : nullString;
 }
 
 bool Theme::isReadOnly() const
@@ -61,27 +61,27 @@ bool Theme::isReadOnly() const
     return m_data.get() ? m_data->isReadOnly() : false;
 }
 
-QString Theme::filePath() const
+const std::string& Theme::filePath() const
 {
-    return m_data.get() ? m_data->filePath() : QString();
+    return m_data.get() ? m_data->filePath() : nullString;
 }
 
-QRgb Theme::textColor(TextStyle style) const
+unsigned Theme::textColor(TextStyle style) const
 {
     return m_data.get() ? m_data->textColor(style) : 0;
 }
 
-QRgb Theme::selectedTextColor(TextStyle style) const
+unsigned Theme::selectedTextColor(TextStyle style) const
 {
     return m_data.get() ? m_data->selectedTextColor(style) : 0;
 }
 
-QRgb Theme::backgroundColor(TextStyle style) const
+unsigned Theme::backgroundColor(TextStyle style) const
 {
     return m_data.get() ? m_data->backgroundColor(style) : 0;
 }
 
-QRgb Theme::selectedBackgroundColor(TextStyle style) const
+unsigned Theme::selectedBackgroundColor(TextStyle style) const
 {
     return m_data.get() ? m_data->selectedBackgroundColor(style) : 0;
 }
@@ -106,7 +106,7 @@ bool Theme::isStrikeThrough(TextStyle style) const
     return m_data.get() ? m_data->isStrikeThrough(style) : false;
 }
 
-QRgb Theme::editorColor(EditorColorRole role) const
+unsigned Theme::editorColor(EditorColorRole role) const
 {
     return m_data.get() ? m_data->editorColor(role) : 0;
 }

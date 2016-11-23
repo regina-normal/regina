@@ -18,7 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_THEME_H
 #define KSYNTAXHIGHLIGHTING_THEME_H
 
-#include <QColor>
 #include <qobjectdefs.h>
 #include <memory>
 
@@ -265,35 +264,39 @@ public:
      *
      * If the theme is invalid (isValid()), an empty string is returned.
      */
-    QString filePath() const;
+    const std::string& filePath() const;
 
     /**
      * Returns the text color to be used for @p style.
+     * The color will be returned as an integer of the form #AARRGGBB.
      * @c 0 is returned for styles that do not specify a text color,
      * use the default text color in that case.
      */
-    QRgb textColor(TextStyle style) const;
+    unsigned textColor(TextStyle style) const;
 
     /**
      * Returns the selected text color to be used for @p style.
+     * The color will be returned as an integer of the form #AARRGGBB.
      * @c 0 is returned for styles that do not specify a selected text color,
      * use the default textColor() in that case.
      */
-    QRgb selectedTextColor(TextStyle style) const;
+    unsigned selectedTextColor(TextStyle style) const;
 
     /**
      * Returns the background color to be used for @p style.
+     * The color will be returned as an integer of the form #AARRGGBB.
      * @c 0 is returned for styles that do not specify a background color,
      * use the default background color in that case.
      */
-    QRgb backgroundColor(TextStyle style) const;
+    unsigned backgroundColor(TextStyle style) const;
 
     /**
      * Returns the background color to be used for selected text for @p style.
+     * The color will be returned as an integer of the form #AARRGGBB.
      * @c 0 is returned for styles that do not specify a background color,
      * use the default backgroundColor() in that case.
      */
-    QRgb selectedBackgroundColor(TextStyle style) const;
+    unsigned selectedBackgroundColor(TextStyle style) const;
 
     /**
      * Returns whether the given style should be shown in bold.
@@ -318,8 +321,9 @@ public:
 public:
     /**
      * Returns the editor color for the requested @p role.
+     * The color will be returned as an integer of the form #AARRGGBB.
      */
-    QRgb editorColor(EditorColorRole role) const;
+    unsigned editorColor(EditorColorRole role) const;
 
 private:
     /**
