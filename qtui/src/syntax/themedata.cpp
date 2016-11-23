@@ -18,11 +18,7 @@
 
 #include "themedata_p.h"
 
-#include <QColor>
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonValue>
+#include <jansson.h>
 
 #include <cassert>
 #include <iostream>
@@ -42,49 +38,53 @@ ThemeData::ThemeData()
 }
 
 /**
- * Convert QJsonValue @p val into a color, if possible. Valid colors are only
- * in hex format: #rrggbb. On error, returns 0x00000000.
+ * Convert JSON object @p val into a color, if possible. Valid colors are only
+ * in hex format: #rrggbb or #aarrggbb. On error, returns 0x00000000.
  */
-static inline unsigned readColor(const QJsonValue &val)
+static inline unsigned readColor(json_t* val)
 {
-    if (!val.isString()) {
+    const char* str = json_string_value(val);
+    if (! (str && *str == '#'))
         return 0;
-    }
-    const QString str = val.toString();
-    if (str.isEmpty() || str[0] != QLatin1Char('#')) {
-        return 0;
-    }
-    const QColor color(str);
-    return color.isValid() ? color.rgb() : 0;
+    return static_cast<unsigned>(strtoul(str + 1, 0, 16));
 }
 
-static inline TextStyleData readThemeData(const QJsonObject &obj)
+static inline void readString(json_t* val, std::string& result)
+{
+    const char* str = json_string_value(val);
+    if (str)
+        result = str;
+    else
+        result.clear();
+}
+
+static inline TextStyleData readThemeData(json_t* obj)
 {
     TextStyleData td;
 
-    td.textColor = readColor(obj.value(QLatin1String("text-color")));
-    td.backgroundColor = readColor(obj.value(QLatin1String("background-color")));
-    td.selectedTextColor = readColor(obj.value(QLatin1String("selected-text-color")));
-    td.selectedBackgroundColor = readColor(obj.value(QLatin1String("selected-background-color")));
+    td.textColor = readColor(json_object_get(obj, "text-color"));
+    td.backgroundColor = readColor(json_object_get(obj, "background-color"));
+    td.selectedTextColor = readColor(json_object_get(obj, "selected-text-color"));
+    td.selectedBackgroundColor = readColor(json_object_get(obj, "selected-background-color"));
 
-    auto val = obj.value(QLatin1String("bold"));
-    if (val.isBool()) {
-        td.bold = val.toBool();
+    json_t* val = json_object_get(obj, "bold");
+    if (json_is_boolean(val)) {
+        td.bold = json_boolean_value(val);
         td.hasBold = true;
     }
-    val = obj.value(QLatin1String("italic"));
-    if (val.isBool()) {
-        td.italic = val.toBool();
+    val = json_object_get(obj, "italic");
+    if (json_is_boolean(val)) {
+        td.italic = json_boolean_value(val);
         td.hasItalic = true;
     }
-    val = obj.value(QLatin1String("underline"));
-    if (val.isBool()) {
-        td.underline = val.toBool();
+    val = json_object_get(obj, "underline");
+    if (json_is_boolean(val)) {
+        td.underline = json_boolean_value(val);
         td.hasUnderline = true;
     }
-    val = obj.value(QLatin1String("strike-through"));
-    if (val.isBool()) {
-        td.strikeThrough = val.toBool();
+    val = json_object_get(obj, "strike-through");
+    if (json_is_boolean(val)) {
+        td.strikeThrough = json_boolean_value(val);
         td.hasStrikeThrough = true;
     }
 
@@ -93,86 +93,80 @@ static inline TextStyleData readThemeData(const QJsonObject &obj)
 
 bool ThemeData::load(const std::string& filePath)
 {
-    QFile loadFile(filePath.c_str());
-    if (!loadFile.open(QIODevice::ReadOnly)) {
-        return false;
-    }
-    const QByteArray jsonData = loadFile.readAll();
-
-    QJsonParseError parseError;
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData, &parseError);
-    if (parseError.error != QJsonParseError::NoError) {
-        std::cerr << "Failed to parse theme file" << filePath << ":" << parseError.errorString().toUtf8().constData() << std::endl;
-        return false;
-    }
-
     m_filePath = filePath.c_str();
 
-    QJsonObject obj = jsonDoc.object();
+    json_error_t error;
+    json_t* obj = json_load_file(filePath.c_str(), 0, &error);
+    if (! obj) {
+        std::cerr << "Failed to parse theme file " << filePath << std::endl;
+        std::cerr << "Error on line " << error.line << ": " << error.text << std::endl;
+        return false;
+    }
 
     // read metadata
-    const QJsonObject metadata = obj.value(QLatin1String("metadata")).toObject();
-    m_name = metadata.value(QLatin1String("name")).toString().toUtf8().constData();
-    m_revision = metadata.value(QLatin1String("revision")).toInt();
-    m_author = metadata.value(QLatin1String("author")).toString().toUtf8().constData();
-    m_license = metadata.value(QLatin1String("license")).toString().toUtf8().constData();
-    m_readOnly = metadata.value(QLatin1String("read-only")).toBool();
+    json_t* metadata = json_object_get(obj, "metadata");
+    readString(json_object_get(metadata, "name"), m_name);
+    m_revision = json_integer_value(json_object_get(metadata, "revision"));
+    readString(json_object_get(metadata, "author"), m_author);
+    readString(json_object_get(metadata, "license"), m_license);
+    m_readOnly = json_boolean_value(json_object_get(metadata, "read-only"));
 
     // read text styles
-    const QJsonObject textStyles = obj.value(QLatin1String("text-styles")).toObject();
-    m_textStyles[Theme::Normal] = readThemeData(textStyles.value(QLatin1String("Normal")).toObject());
-    m_textStyles[Theme::Keyword] = readThemeData(textStyles.value(QLatin1String("Keyword")).toObject());
-    m_textStyles[Theme::Function] = readThemeData(textStyles.value(QLatin1String("Function")).toObject());
-    m_textStyles[Theme::Variable] = readThemeData(textStyles.value(QLatin1String("Variable")).toObject());
-    m_textStyles[Theme::ControlFlow] = readThemeData(textStyles.value(QLatin1String("ControlFlow")).toObject());
-    m_textStyles[Theme::Operator] = readThemeData(textStyles.value(QLatin1String("Operator")).toObject());
-    m_textStyles[Theme::BuiltIn] = readThemeData(textStyles.value(QLatin1String("BuiltIn")).toObject());
-    m_textStyles[Theme::Extension] = readThemeData(textStyles.value(QLatin1String("Extension")).toObject());
-    m_textStyles[Theme::Preprocessor] = readThemeData(textStyles.value(QLatin1String("Preprocessor")).toObject());
-    m_textStyles[Theme::Attribute] = readThemeData(textStyles.value(QLatin1String("Attribute")).toObject());
-    m_textStyles[Theme::Char] = readThemeData(textStyles.value(QLatin1String("Char")).toObject());
-    m_textStyles[Theme::SpecialChar] = readThemeData(textStyles.value(QLatin1String("SpecialChar")).toObject());
-    m_textStyles[Theme::String] = readThemeData(textStyles.value(QLatin1String("String")).toObject());
-    m_textStyles[Theme::VerbatimString] = readThemeData(textStyles.value(QLatin1String("VerbatimString")).toObject());
-    m_textStyles[Theme::SpecialString] = readThemeData(textStyles.value(QLatin1String("SpecialString")).toObject());
-    m_textStyles[Theme::Import] = readThemeData(textStyles.value(QLatin1String("Import")).toObject());
-    m_textStyles[Theme::DataType] = readThemeData(textStyles.value(QLatin1String("DataType")).toObject());
-    m_textStyles[Theme::DecVal] = readThemeData(textStyles.value(QLatin1String("DecVal")).toObject());
-    m_textStyles[Theme::BaseN] = readThemeData(textStyles.value(QLatin1String("BaseN")).toObject());
-    m_textStyles[Theme::Float] = readThemeData(textStyles.value(QLatin1String("Float")).toObject());
-    m_textStyles[Theme::Constant] = readThemeData(textStyles.value(QLatin1String("Constant")).toObject());
-    m_textStyles[Theme::Comment] = readThemeData(textStyles.value(QLatin1String("Comment")).toObject());
+    json_t* textStyles = json_object_get(obj, "text-styles");
+    m_textStyles[Theme::Normal] = readThemeData(json_object_get(textStyles, "Normal"));
+    m_textStyles[Theme::Keyword] = readThemeData(json_object_get(textStyles, "Keyword"));
+    m_textStyles[Theme::Function] = readThemeData(json_object_get(textStyles, "Function"));
+    m_textStyles[Theme::Variable] = readThemeData(json_object_get(textStyles, "Variable"));
+    m_textStyles[Theme::ControlFlow] = readThemeData(json_object_get(textStyles, "ControlFlow"));
+    m_textStyles[Theme::Operator] = readThemeData(json_object_get(textStyles, "Operator"));
+    m_textStyles[Theme::BuiltIn] = readThemeData(json_object_get(textStyles, "BuiltIn"));
+    m_textStyles[Theme::Extension] = readThemeData(json_object_get(textStyles, "Extension"));
+    m_textStyles[Theme::Preprocessor] = readThemeData(json_object_get(textStyles, "Preprocessor"));
+    m_textStyles[Theme::Attribute] = readThemeData(json_object_get(textStyles, "Attribute"));
+    m_textStyles[Theme::Char] = readThemeData(json_object_get(textStyles, "Char"));
+    m_textStyles[Theme::SpecialChar] = readThemeData(json_object_get(textStyles, "SpecialChar"));
+    m_textStyles[Theme::String] = readThemeData(json_object_get(textStyles, "String"));
+    m_textStyles[Theme::VerbatimString] = readThemeData(json_object_get(textStyles, "VerbatimString"));
+    m_textStyles[Theme::SpecialString] = readThemeData(json_object_get(textStyles, "SpecialString"));
+    m_textStyles[Theme::Import] = readThemeData(json_object_get(textStyles, "Import"));
+    m_textStyles[Theme::DataType] = readThemeData(json_object_get(textStyles, "DataType"));
+    m_textStyles[Theme::DecVal] = readThemeData(json_object_get(textStyles, "DecVal"));
+    m_textStyles[Theme::BaseN] = readThemeData(json_object_get(textStyles, "BaseN"));
+    m_textStyles[Theme::Float] = readThemeData(json_object_get(textStyles, "Float"));
+    m_textStyles[Theme::Constant] = readThemeData(json_object_get(textStyles, "Constant"));
+    m_textStyles[Theme::Comment] = readThemeData(json_object_get(textStyles, "Comment"));
 
     // read editor area colors
-    const QJsonObject editorColors = obj.value(QLatin1String("editor-colors")).toObject();
-    m_editorColors[Theme::BackgroundColor] = readColor(editorColors.value(QLatin1String("background-color")));
-    m_editorColors[Theme::TextSelection] = readColor(editorColors.value(QLatin1String("selection")));
-    m_editorColors[Theme::CurrentLine] = readColor(editorColors.value(QLatin1String("current-line")));
-    m_editorColors[Theme::SearchHighlight] = readColor(editorColors.value(QLatin1String("search-highlight")));
-    m_editorColors[Theme::ReplaceHighlight] = readColor(editorColors.value(QLatin1String("replace-highlight")));
-    m_editorColors[Theme::BracketMatching] = readColor(editorColors.value(QLatin1String("bracket-matching")));
-    m_editorColors[Theme::TabMarker] = readColor(editorColors.value(QLatin1String("tab-marker")));
-    m_editorColors[Theme::SpellChecking] = readColor(editorColors.value(QLatin1String("spell-checking")));
-    m_editorColors[Theme::IndentationLine] = readColor(editorColors.value(QLatin1String("indentation-line")));
-    m_editorColors[Theme::IconBorder] = readColor(editorColors.value(QLatin1String("icon-border")));
-    m_editorColors[Theme::LineNumbers] = readColor(editorColors.value(QLatin1String("line-numbers")));
-    m_editorColors[Theme::CurrentLineNumber] = readColor(editorColors.value(QLatin1String("current-line-number")));
-    m_editorColors[Theme::WordWrapMarker] = readColor(editorColors.value(QLatin1String("word-wrap-marker")));
-    m_editorColors[Theme::ModifiedLines] = readColor(editorColors.value(QLatin1String("modified-lines")));
-    m_editorColors[Theme::SavedLines] = readColor(editorColors.value(QLatin1String("saved-lines")));
-    m_editorColors[Theme::Separator] = readColor(editorColors.value(QLatin1String("separator")));
-    m_editorColors[Theme::MarkBookmark] = readColor(editorColors.value(QLatin1String("mark-bookmark")));
-    m_editorColors[Theme::MarkBreakpointActive] = readColor(editorColors.value(QLatin1String("mark-breakpoint-active")));
-    m_editorColors[Theme::MarkBreakpointReached] = readColor(editorColors.value(QLatin1String("mark-breakpoint-reached")));
-    m_editorColors[Theme::MarkBreakpointDisabled] = readColor(editorColors.value(QLatin1String("mark-breakpoint-disabled")));
-    m_editorColors[Theme::MarkExecution] = readColor(editorColors.value(QLatin1String("mark-execution")));
-    m_editorColors[Theme::MarkWarning] = readColor(editorColors.value(QLatin1String("mark-warning")));
-    m_editorColors[Theme::MarkError] = readColor(editorColors.value(QLatin1String("mark-error")));
-    m_editorColors[Theme::TemplateBackground] = readColor(editorColors.value(QLatin1String("template-background")));
-    m_editorColors[Theme::TemplatePlaceholder] = readColor(editorColors.value(QLatin1String("template-placeholder")));
-    m_editorColors[Theme::TemplateFocusedPlaceholder] = readColor(editorColors.value(QLatin1String("template-focused-placeholder")));
-    m_editorColors[Theme::TemplateReadOnlyPlaceholder] = readColor(editorColors.value(QLatin1String("template-read-only-placeholder")));
+    json_t* editorColors = json_object_get(obj, "editor-colors");
+    m_editorColors[Theme::BackgroundColor] = readColor(json_object_get(editorColors, "background-color"));
+    m_editorColors[Theme::TextSelection] = readColor(json_object_get(editorColors, "selection"));
+    m_editorColors[Theme::CurrentLine] = readColor(json_object_get(editorColors, "current-line"));
+    m_editorColors[Theme::SearchHighlight] = readColor(json_object_get(editorColors, "search-highlight"));
+    m_editorColors[Theme::ReplaceHighlight] = readColor(json_object_get(editorColors, "replace-highlight"));
+    m_editorColors[Theme::BracketMatching] = readColor(json_object_get(editorColors, "bracket-matching"));
+    m_editorColors[Theme::TabMarker] = readColor(json_object_get(editorColors, "tab-marker"));
+    m_editorColors[Theme::SpellChecking] = readColor(json_object_get(editorColors, "spell-checking"));
+    m_editorColors[Theme::IndentationLine] = readColor(json_object_get(editorColors, "indentation-line"));
+    m_editorColors[Theme::IconBorder] = readColor(json_object_get(editorColors, "icon-border"));
+    m_editorColors[Theme::LineNumbers] = readColor(json_object_get(editorColors, "line-numbers"));
+    m_editorColors[Theme::CurrentLineNumber] = readColor(json_object_get(editorColors, "current-line-number"));
+    m_editorColors[Theme::WordWrapMarker] = readColor(json_object_get(editorColors, "word-wrap-marker"));
+    m_editorColors[Theme::ModifiedLines] = readColor(json_object_get(editorColors, "modified-lines"));
+    m_editorColors[Theme::SavedLines] = readColor(json_object_get(editorColors, "saved-lines"));
+    m_editorColors[Theme::Separator] = readColor(json_object_get(editorColors, "separator"));
+    m_editorColors[Theme::MarkBookmark] = readColor(json_object_get(editorColors, "mark-bookmark"));
+    m_editorColors[Theme::MarkBreakpointActive] = readColor(json_object_get(editorColors, "mark-breakpoint-active"));
+    m_editorColors[Theme::MarkBreakpointReached] = readColor(json_object_get(editorColors, "mark-breakpoint-reached"));
+    m_editorColors[Theme::MarkBreakpointDisabled] = readColor(json_object_get(editorColors, "mark-breakpoint-disabled"));
+    m_editorColors[Theme::MarkExecution] = readColor(json_object_get(editorColors, "mark-execution"));
+    m_editorColors[Theme::MarkWarning] = readColor(json_object_get(editorColors, "mark-warning"));
+    m_editorColors[Theme::MarkError] = readColor(json_object_get(editorColors, "mark-error"));
+    m_editorColors[Theme::TemplateBackground] = readColor(json_object_get(editorColors, "template-background"));
+    m_editorColors[Theme::TemplatePlaceholder] = readColor(json_object_get(editorColors, "template-placeholder"));
+    m_editorColors[Theme::TemplateFocusedPlaceholder] = readColor(json_object_get(editorColors, "template-focused-placeholder"));
+    m_editorColors[Theme::TemplateReadOnlyPlaceholder] = readColor(json_object_get(editorColors, "template-read-only-placeholder"));
 
+    json_decref(obj);
     return true;
 }
 

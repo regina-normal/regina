@@ -61,8 +61,6 @@ public:
 
     /**
      * Returns the full path and filename to this Theme.
-     * Themes from the Qt resource return the Qt resource path.
-     * Themes from disk return the local path.
      *
      * If the theme is invalid (isValid()), an empty string is returned.
      */

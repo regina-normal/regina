@@ -32,8 +32,7 @@ class RepositoryPrivate;
  * @section theme_intro Introduction
  *
  * The Theme provides a full color theme for painting the highlighted text.
- * One Theme is defined either as a *.theme file on disk, or as a file compiled
- * into the SyntaxHighlighting library by using Qt's resource system. Each
+ * One Theme is defined as a *.theme file on disk. Each
  * Theme has a unique name().
  * Themes shipped by default are typically read-only, see isReadOnly().
  *
@@ -94,7 +93,7 @@ public:
         Operator,
         //! Text style for built-in language classes and functions.
         BuiltIn,
-        //! Text style for well-known extensions, such as Qt or boost.
+        //! Text style for well-known extensions, such as boost.
         Extension,
         //! Text style for preprocessor statements.
         Preprocessor,
@@ -259,8 +258,6 @@ public:
 
     /**
      * Returns the full path and file name to this Theme.
-     * Themes from the Qt resource return the Qt resource path.
-     * Themes from disk return the local path.
      *
      * If the theme is invalid (isValid()), an empty string is returned.
      */
