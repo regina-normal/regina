@@ -21,7 +21,6 @@
 #include <QColor>
 #include <QExplicitlySharedDataPointer>
 #include <qobjectdefs.h>
-#include <QTypeInfo>
 
 namespace KSyntaxHighlighting {
 

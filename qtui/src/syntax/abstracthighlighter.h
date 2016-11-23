@@ -18,8 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H
 #define KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H
 
-#include <QObject>
-
 #include <memory>
 #include <boost/noncopyable.hpp>
 

@@ -19,7 +19,6 @@
 #define KSYNTAXHIGHLIGHTING_FORMAT_H
 
 #include <QExplicitlySharedDataPointer>
-#include <QTypeInfo>
 
 class QColor;
 

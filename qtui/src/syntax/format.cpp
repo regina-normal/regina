@@ -25,7 +25,6 @@
 
 #include <cassert>
 #include <QColor>
-#include <QMetaEnum>
 
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"

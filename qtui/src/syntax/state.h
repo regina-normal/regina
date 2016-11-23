@@ -19,7 +19,6 @@
 #define KSYNTAXHIGHLIGHTING_STATE_H
 
 #include <QExplicitlySharedDataPointer>
-#include <QTypeInfo>
 
 namespace KSyntaxHighlighting {
 
