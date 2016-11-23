@@ -23,13 +23,14 @@
 #include "textstyledata_p.h"
 
 #include <QSharedData>
+#include <boost/noncopyable.hpp>
 
 namespace KSyntaxHighlighting {
 
 /**
  * Data container for a Theme.
  */
-class ThemeData : public QSharedData
+class ThemeData : public QSharedData, boost::noncopyable
 {
 public:
     static ThemeData* get(const Theme &theme);
