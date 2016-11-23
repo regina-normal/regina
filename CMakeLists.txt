@@ -304,6 +304,14 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "http://www.gnu.org/s/libiconv/"
   TRUE)
 
+FIND_PACKAGE(Jansson)
+INCLUDE_DIRECTORIES(${JANSSON_INCLUDE_DIR})
+MACRO_LOG_FEATURE(JANSSON_FOUND
+  "Jansson"
+  "Essential: JSON support"
+  "http://www.digip.org/jansson/"
+  TRUE)
+
 FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
