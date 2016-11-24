@@ -1406,6 +1406,8 @@ NLayeredSolidTorus : typedef ->  LayeredSolidTorus
 
 NLayeredTorusBundle : typedef ->  LayeredTorusBundle
 
+NLayering : typedef ->  Layering
+
 NLensSpace : typedef ->  LensSpace
 
 NManifold : typedef ->  Manifold

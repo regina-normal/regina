@@ -406,6 +406,14 @@ class REGINA_API Layering : public boost::noncopyable {
             Matrix2& upperReln) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NLayering has now been renamed to * Layering.
+ */
+REGINA_DEPRECATED typedef Layering NLayering;
+
 /*@}*/
 
 // Inline functions for Layering

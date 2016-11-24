@@ -57,5 +57,7 @@ void addLayering() {
         .def("matchesTop", &Layering::matchesTop)
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NLayering") = scope().attr("Layering");
 }
 
