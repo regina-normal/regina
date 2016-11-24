@@ -47,7 +47,7 @@
 #import "subcomplex/layeredloop.h"
 #import "subcomplex/layeredsolidtorus.h"
 #import "subcomplex/layeredsurfacebundle.h"
-#import "subcomplex/npillowtwosphere.h"
+#import "subcomplex/pillowtwosphere.h"
 #import "subcomplex/npluggedtorusbundle.h"
 #import "subcomplex/nplugtrisolidtorus.h"
 #import "subcomplex/nsatblock.h"

@@ -44,7 +44,7 @@
 #include "subcomplex/layeredloop.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/layeredsurfacebundle.h"
-#include "subcomplex/npillowtwosphere.h"
+#include "subcomplex/pillowtwosphere.h"
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsatblock.h"
