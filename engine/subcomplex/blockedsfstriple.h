@@ -133,7 +133,7 @@ class NSatRegion;
  * The optional NStandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
+class REGINA_API BlockedSFSTriple : public NStandardTriangulation {
     private:
         NSatRegion* end_[2];
             /**< The two end regions, i.e., the saturated regions with
@@ -152,7 +152,7 @@ class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
         /**
          * Destroys this structure and its constituent components.
          */
-        ~NBlockedSFSTriple();
+        ~BlockedSFSTriple();
 
         /**
          * Returns details of the requested end region, as described in
@@ -213,7 +213,7 @@ class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
          * blocked triple, or \c null if the given triangulation is not of
          * this form.
          */
-        static NBlockedSFSTriple* isBlockedSFSTriple(Triangulation<3>* tri);
+        static BlockedSFSTriple* isBlockedSFSTriple(Triangulation<3>* tri);
 
     private:
         /**
@@ -233,16 +233,16 @@ class REGINA_API NBlockedSFSTriple : public NStandardTriangulation {
          * @param matchingReln1 describes how the second end region is
          * joined to the central region.
          */
-        NBlockedSFSTriple(NSatRegion* end0, NSatRegion* centre,
+        BlockedSFSTriple(NSatRegion* end0, NSatRegion* centre,
             NSatRegion* end1, const Matrix2& matchingReln0,
             const Matrix2& matchingReln1);
 };
 
 /*@}*/
 
-// Inline functions for NBlockedSFSTriple
+// Inline functions for BlockedSFSTriple
 
-inline NBlockedSFSTriple::NBlockedSFSTriple(NSatRegion* end0,
+inline BlockedSFSTriple::BlockedSFSTriple(NSatRegion* end0,
         NSatRegion* centre, NSatRegion* end1, const Matrix2& matchingReln0,
         const Matrix2& matchingReln1) {
     end_[0] = end0;
@@ -252,15 +252,15 @@ inline NBlockedSFSTriple::NBlockedSFSTriple(NSatRegion* end0,
     matchingReln_[1] = matchingReln1;
 }
 
-inline const NSatRegion& NBlockedSFSTriple::end(int which) const {
+inline const NSatRegion& BlockedSFSTriple::end(int which) const {
     return *end_[which];
 }
 
-inline const NSatRegion& NBlockedSFSTriple::centre() const {
+inline const NSatRegion& BlockedSFSTriple::centre() const {
     return *centre_;
 }
 
-inline const Matrix2& NBlockedSFSTriple::matchingReln(int which) const {
+inline const Matrix2& BlockedSFSTriple::matchingReln(int which) const {
     return matchingReln_[which];
 }
 

@@ -458,7 +458,7 @@
         delete pair;
     }
     
-    regina::NBlockedSFSTriple* triple = regina::NBlockedSFSTriple::isBlockedSFSTriple(self.packet);
+    regina::BlockedSFSTriple* triple = regina::BlockedSFSTriple::isBlockedSFSTriple(self.packet);
     if (triple) {
         [details appendString:@"Blocked SFS Triple\n"];
         

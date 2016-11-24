@@ -37,25 +37,25 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NBlockedSFSTriple;
+using regina::BlockedSFSTriple;
 
-void addNBlockedSFSTriple() {
-    class_<NBlockedSFSTriple, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NBlockedSFSTriple>, boost::noncopyable>
-            ("NBlockedSFSTriple", no_init)
-        .def("end", &NBlockedSFSTriple::end,
+void addBlockedSFSTriple() {
+    class_<BlockedSFSTriple, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<BlockedSFSTriple>, boost::noncopyable>
+            ("BlockedSFSTriple", no_init)
+        .def("end", &BlockedSFSTriple::end,
             return_internal_reference<>())
-        .def("centre", &NBlockedSFSTriple::centre,
+        .def("centre", &BlockedSFSTriple::centre,
             return_internal_reference<>())
-        .def("matchingReln", &NBlockedSFSTriple::matchingReln,
+        .def("matchingReln", &BlockedSFSTriple::matchingReln,
             return_internal_reference<>())
-        .def("isBlockedSFSTriple", &NBlockedSFSTriple::isBlockedSFSTriple,
+        .def("isBlockedSFSTriple", &BlockedSFSTriple::isBlockedSFSTriple,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockedSFSTriple")
     ;
 
-    implicitly_convertible<std::auto_ptr<NBlockedSFSTriple>,
+    implicitly_convertible<std::auto_ptr<BlockedSFSTriple>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

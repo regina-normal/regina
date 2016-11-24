@@ -16,6 +16,9 @@ Equality type : BY_REFERENCE
 BlockedSFSPair : class
 Equality type : BY_REFERENCE
 
+BlockedSFSTriple : class
+Equality type : BY_REFERENCE
+
 BoolSet : class
 Equality type : BY_VALUE
 
@@ -1286,9 +1289,6 @@ Equality type : BY_REFERENCE
 NBlockedSFSLoop : typedef ->  BlockedSFSLoop
 
 NBlockedSFSPair : typedef ->  BlockedSFSPair
-
-NBlockedSFSTriple : class
-Equality type : BY_REFERENCE
 
 NBoolSet : typedef ->  BoolSet
 

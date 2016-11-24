@@ -34,7 +34,7 @@ void addAugTriSolidTorus();
 void addNBlockedSFS();
 void addBlockedSFSLoop();
 void addBlockedSFSPair();
-void addNBlockedSFSTriple();
+void addBlockedSFSTriple();
 void addNL31Pillow();
 void addNLayeredChain();
 void addNLayeredChainPair();
@@ -86,7 +86,7 @@ void addSubcomplexClasses() {
     addNBlockedSFS();
     addBlockedSFSLoop();
     addBlockedSFSPair();
-    addNBlockedSFSTriple();
+    addBlockedSFSTriple();
     addNPluggedTorusBundle();
 }
 

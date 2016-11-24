@@ -107,7 +107,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
     if ((ans = BlockedSFSPair::isBlockedSFSPair(tri)))
         return ans;
-    if ((ans = NBlockedSFSTriple::isBlockedSFSTriple(tri)))
+    if ((ans = BlockedSFSTriple::isBlockedSFSTriple(tri)))
         return ans;
     if ((ans = NPluggedTorusBundle::isPluggedTorusBundle(tri)))
         return ans;
