@@ -10,7 +10,7 @@ SET ( FILES
   l31pillow
   layeredchain
   layeredchainpair
-  nlayeredlensspace
+  layeredlensspace
   nlayeredloop
   nlayeredsolidtorus
   nlayeredsurfacebundle
