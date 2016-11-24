@@ -18,7 +18,7 @@
 #ifndef KSYNTAXHIGHLIGHTING_STATE_H
 #define KSYNTAXHIGHLIGHTING_STATE_H
 
-#include <QExplicitlySharedDataPointer>
+#include <memory>
 
 namespace KSyntaxHighlighting {
 
@@ -38,7 +38,14 @@ public:
     State();
     State(const State &other);
     ~State();
+    /**
+     * Performs a shallow copy.
+     */
     State& operator=(const State &rhs);
+    /**
+     * Performs a deep copy.
+     */
+    State copy() const;
 
     /** Compares two states for equality.
      *  For two equal states and identical text input, AbstractHighlighter
@@ -53,7 +60,7 @@ public:
 
 private:
     friend class StateData;
-    QExplicitlySharedDataPointer<StateData> d;
+    std::shared_ptr<StateData> d;
 };
 
 }

@@ -18,7 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_STATE_P_H
 #define KSYNTAXHIGHLIGHTING_STATE_P_H
 
-#include <QSharedData>
 #include <QStack>
 
 QT_BEGIN_NAMESPACE
@@ -31,7 +30,7 @@ namespace KSyntaxHighlighting
 class Context;
 class DefinitionData;
 
-class StateData : public QSharedData
+class StateData
 {
 public:
     StateData();

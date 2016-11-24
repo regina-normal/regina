@@ -25,6 +25,13 @@
 
 using namespace KSyntaxHighlighting;
 
+State State::copy() const
+{
+    State s;
+    s.d = std::make_shared<StateData>(*d);
+    return s;
+}
+
 StateData::StateData() :
     m_defData(nullptr)
 {
@@ -32,8 +39,7 @@ StateData::StateData() :
 
 StateData* StateData::get(State &state)
 {
-    state.d.detach();
-    return state.d.data();
+    return state.d.get();
 }
 
 bool StateData::isEmpty() const

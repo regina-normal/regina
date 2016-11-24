@@ -115,7 +115,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
 
     // verify/initialize state
     auto defData = DefinitionData::get(d_ptr->m_definition);
-    auto newState = state;
+    auto newState = state.copy();
     auto stateData = StateData::get(newState);
     if (stateData->m_defData && defData != stateData->m_defData) {
         std::cerr << "Got invalid state, resetting." << std::endl;
