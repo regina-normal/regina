@@ -37,23 +37,23 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NBlockedSFSLoop;
+using regina::BlockedSFSLoop;
 
-void addNBlockedSFSLoop() {
-    class_<NBlockedSFSLoop, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NBlockedSFSLoop>, boost::noncopyable>
-            ("NBlockedSFSLoop", no_init)
-        .def("region", &NBlockedSFSLoop::region,
+void addBlockedSFSLoop() {
+    class_<BlockedSFSLoop, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<BlockedSFSLoop>, boost::noncopyable>
+            ("BlockedSFSLoop", no_init)
+        .def("region", &BlockedSFSLoop::region,
             return_internal_reference<>())
-        .def("matchingReln", &NBlockedSFSLoop::matchingReln,
+        .def("matchingReln", &BlockedSFSLoop::matchingReln,
             return_internal_reference<>())
-        .def("isBlockedSFSLoop", &NBlockedSFSLoop::isBlockedSFSLoop,
+        .def("isBlockedSFSLoop", &BlockedSFSLoop::isBlockedSFSLoop,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockedSFSLoop")
     ;
 
-    implicitly_convertible<std::auto_ptr<NBlockedSFSLoop>,
+    implicitly_convertible<std::auto_ptr<BlockedSFSLoop>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

@@ -102,7 +102,7 @@ class NSatRegion;
  * The optional NStandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
+class REGINA_API BlockedSFSLoop : public NStandardTriangulation {
     private:
         NSatRegion* region_;
             /**< The saturated region whose two torus boundaries are joined. */
@@ -114,7 +114,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
         /**
          * Destroys this structure and its constituent components.
          */
-        ~NBlockedSFSLoop();
+        ~BlockedSFSLoop();
 
         /**
          * Returns details of the saturated region from which this
@@ -154,7 +154,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          * blocked self-identified Seifert fibred space, or \c null if
          * the given triangulation is not of this form.
          */
-        static NBlockedSFSLoop* isBlockedSFSLoop(Triangulation<3>* tri);
+        static BlockedSFSLoop* isBlockedSFSLoop(Triangulation<3>* tri);
 
     private:
         /**
@@ -170,23 +170,23 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          * @param matchingReln describes how the two boundaries of the
          * region are joined, as described in the class notes above.
          */
-        NBlockedSFSLoop(NSatRegion* region, const Matrix2& matchingReln);
+        BlockedSFSLoop(NSatRegion* region, const Matrix2& matchingReln);
 };
 
 /*@}*/
 
-// Inline functions for NBlockedSFSLoop
+// Inline functions for BlockedSFSLoop
 
-inline NBlockedSFSLoop::NBlockedSFSLoop(NSatRegion* region,
+inline BlockedSFSLoop::BlockedSFSLoop(NSatRegion* region,
         const Matrix2& matchingReln) :
         region_(region), matchingReln_(matchingReln) {
 }
 
-inline const NSatRegion& NBlockedSFSLoop::region() const {
+inline const NSatRegion& BlockedSFSLoop::region() const {
     return *region_;
 }
 
-inline const Matrix2& NBlockedSFSLoop::matchingReln() const {
+inline const Matrix2& BlockedSFSLoop::matchingReln() const {
     return matchingReln_;
 }
 

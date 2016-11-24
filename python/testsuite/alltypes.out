@@ -10,6 +10,9 @@ Equality type : BY_REFERENCE
 AugTriSolidTorus : class
 Equality type : BY_REFERENCE
 
+BlockedSFSLoop : class
+Equality type : BY_REFERENCE
+
 BoolSet : class
 Equality type : BY_VALUE
 
@@ -1275,9 +1278,6 @@ NAngleStructureList : typedef ->  AngleStructures
 NAugTriSolidTorus : typedef ->  AugTriSolidTorus
 
 NBlockedSFS : class
-Equality type : BY_REFERENCE
-
-NBlockedSFSLoop : class
 Equality type : BY_REFERENCE
 
 NBlockedSFSPair : class

@@ -531,8 +531,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         delete sfs;
     }
 
-    regina::NBlockedSFSLoop* loop =
-        regina::NBlockedSFSLoop::isBlockedSFSLoop(tri);
+    regina::BlockedSFSLoop* loop =
+        regina::BlockedSFSLoop::isBlockedSFSLoop(tri);
     if (loop) {
         id = addComponentSection(tr("Blocked SFS Loop"));
 

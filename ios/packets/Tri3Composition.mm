@@ -427,7 +427,7 @@
         delete sfs;
     }
     
-    regina::NBlockedSFSLoop* loop = regina::NBlockedSFSLoop::isBlockedSFSLoop(self.packet);
+    regina::BlockedSFSLoop* loop = regina::BlockedSFSLoop::isBlockedSFSLoop(self.packet);
     if (loop) {
         [details appendString:@"Blocked SFS Loop\n"];
         
