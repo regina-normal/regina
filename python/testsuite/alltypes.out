@@ -1285,6 +1285,8 @@ Equality type : BY_REFERENCE
 
 NBlockedSFSLoop : typedef ->  BlockedSFSLoop
 
+NBlockedSFSPair : typedef ->  BlockedSFSPair
+
 NBlockedSFSTriple : class
 Equality type : BY_REFERENCE
 

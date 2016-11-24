@@ -169,6 +169,15 @@ class REGINA_API BlockedSFSPair : public NStandardTriangulation {
             const Matrix2& matchingReln);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NBlockedSFSPair has now been renamed to
+ * BlockedSFSPair.
+ */
+REGINA_DEPRECATED typedef BlockedSFSPair NBlockedSFSPair;
+
 /*@}*/
 
 // Inline functions for BlockedSFSPair

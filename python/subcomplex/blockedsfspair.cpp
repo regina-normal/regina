@@ -55,5 +55,7 @@ void addBlockedSFSPair() {
 
     implicitly_convertible<std::auto_ptr<BlockedSFSPair>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NBlockedSFSPair") = scope().attr("BlockedSFSPair");
 }
 
