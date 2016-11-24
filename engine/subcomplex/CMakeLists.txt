@@ -4,7 +4,7 @@
 SET ( FILES
   augtrisolidtorus
   nblockedsfs
-  nblockedsfsloop
+  blockedsfsloop
   nblockedsfspair
   nblockedsfstriple
   nl31pillow
