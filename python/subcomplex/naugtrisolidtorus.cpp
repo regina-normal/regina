@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "manifold/sfs.h"
-#include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/augtrisolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <sstream>
-#include "subcomplex/naugtrisolidtorus.h"
+#include "subcomplex/augtrisolidtorus.h"
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nblockedsfsloop.h"
 #include "subcomplex/nblockedsfspair.h"
