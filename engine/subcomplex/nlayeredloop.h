@@ -54,7 +54,7 @@ namespace regina {
  *
  * A layered loop is a layered chain of \a n tetrahedra whose bottom
  * tetrahedron is layered onto its top tetrahedron to form a complete
- * loop.  See the NLayeredChain class notes for a description of a
+ * loop.  See the LayeredChain class notes for a description of a
  * layered chain.
  *
  * To make a layered chain into a layered

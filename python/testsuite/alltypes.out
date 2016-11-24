@@ -1260,6 +1260,9 @@ Equality type : BY_REFERENCE
 LargeInteger : class
 Equality type : BY_VALUE
 
+LayeredChain : class
+Equality type : BY_REFERENCE
+
 LayeredChainPair : class
 Equality type : BY_REFERENCE
 
@@ -1375,9 +1378,6 @@ NIsomorphism : typedef ->  Isomorphism3
 NL31Pillow : typedef ->  L31Pillow
 
 NLargeInteger : typedef ->  LargeInteger
-
-NLayeredChain : class
-Equality type : BY_REFERENCE
 
 NLayeredChainPair : typedef ->  LayeredChainPair
 

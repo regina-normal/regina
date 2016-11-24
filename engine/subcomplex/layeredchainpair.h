@@ -54,7 +54,7 @@ namespace regina {
  * Represents a layered chain pair component of a triangulation.
  *
  * A layered chain pair consists of two layered chains (as described by
- * class NLayeredChain) glued together in a particular way.
+ * class LayeredChain) glued together in a particular way.
  *
  * Orient the hinge edges and diagonals of each chain so they all point
  * in the same direction around the solid tori formed by each layered
@@ -80,7 +80,7 @@ namespace regina {
  */
 class REGINA_API LayeredChainPair : public NStandardTriangulation {
     private:
-        NLayeredChain* chain_[2];
+        LayeredChain* chain_[2];
             /**< The two layered chains that make up this pair. */
 
     public:
@@ -104,7 +104,7 @@ class REGINA_API LayeredChainPair : public NStandardTriangulation {
          * or 1.
          * @return the requested layered chain.
          */
-        const NLayeredChain* chain(int which) const;
+        const LayeredChain* chain(int which) const;
 
         /**
          * Determines if the given triangulation component is a layered
@@ -151,7 +151,7 @@ inline LayeredChainPair::~LayeredChainPair() {
     if (chain_[1]) delete chain_[1];
 }
 
-inline const NLayeredChain* LayeredChainPair::chain(int which) const {
+inline const LayeredChain* LayeredChainPair::chain(int which) const {
     return chain_[which];
 }
 inline std::ostream& LayeredChainPair::writeName(std::ostream& out) const {

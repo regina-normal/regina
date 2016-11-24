@@ -41,9 +41,9 @@ namespace regina {
 LayeredChainPair* LayeredChainPair::clone() const {
     LayeredChainPair* ans = new LayeredChainPair();
     if (chain_[0])
-        ans->chain_[0] = new NLayeredChain(*chain_[0]);
+        ans->chain_[0] = new LayeredChain(*chain_[0]);
     if (chain_[1])
-        ans->chain_[1] = new NLayeredChain(*chain_[1]);
+        ans->chain_[1] = new LayeredChain(*chain_[1]);
     return ans;
 }
 
@@ -66,8 +66,8 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
     // Start with tetrahedron 0.  This must belong to *some* chain.
     Tetrahedron<3>* base = comp->tetrahedron(0);
 
-    NLayeredChain* first;
-    NLayeredChain* second;
+    LayeredChain* first;
+    LayeredChain* second;
 
     // Note that we only need check permutations in S3 since we can
     // arbitrarily assign the role of one vertex in the tetrahedron.
@@ -78,7 +78,7 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
     Perm<4> firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
 
     for (int p = 0; p < 6; p++) {
-        first = new NLayeredChain(base, Perm<4>::S3[p]);
+        first = new LayeredChain(base, Perm<4>::S3[p]);
         first->extendMaximal();
 
         firstTop = first->top();
@@ -91,7 +91,7 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
             // The only success here will be if we have a chain pair of
             // indices (n-1) and 1, which is in fact a layered loop.
 
-            NLayeredChain* longChain = new NLayeredChain(
+            LayeredChain* longChain = new LayeredChain(
                 firstBottom, firstBottomRoles);
             if (longChain->extendBelow())
                 if (longChain->bottom() == firstTop &&
@@ -102,7 +102,7 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
                     if (nTet == 2) {
                         // The new chain is already too long.
                         delete longChain;
-                        longChain = new NLayeredChain(
+                        longChain = new LayeredChain(
                             firstBottom, firstBottomRoles);
                     }
 
@@ -110,7 +110,7 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
                     while (longChain->index() + 1 < nTet)
                         longChain->extendBelow();
                     ans->chain_[1] = longChain;
-                    ans->chain_[0] = new NLayeredChain(
+                    ans->chain_[0] = new LayeredChain(
                         firstBottom->adjacentTetrahedron(
                             firstBottomRoles[0]),
                         firstBottom->adjacentGluing(
@@ -134,7 +134,7 @@ LayeredChainPair* LayeredChainPair::isLayeredChainPair(
             continue;
         }
 
-        second = new NLayeredChain(secondBottom,
+        second = new LayeredChain(secondBottom,
             firstTop->adjacentGluing(firstTopRoles[3]) *
             firstTopRoles * Perm<4>(1, 3, 0, 2));
         while (second->extendAbove())

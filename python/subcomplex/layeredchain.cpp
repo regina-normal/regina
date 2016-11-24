@@ -36,29 +36,29 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLayeredChain;
+using regina::LayeredChain;
 
-void addNLayeredChain() {
-    class_<NLayeredChain, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NLayeredChain>, boost::noncopyable>
-            ("NLayeredChain", init<regina::Tetrahedron<3>*, regina::Perm<4>>())
-        .def(init<const NLayeredChain&>())
-        .def("bottom", &NLayeredChain::bottom,
+void addLayeredChain() {
+    class_<LayeredChain, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<LayeredChain>, boost::noncopyable>
+            ("LayeredChain", init<regina::Tetrahedron<3>*, regina::Perm<4>>())
+        .def(init<const LayeredChain&>())
+        .def("bottom", &LayeredChain::bottom,
             return_value_policy<reference_existing_object>())
-        .def("top", &NLayeredChain::top,
+        .def("top", &LayeredChain::top,
             return_value_policy<reference_existing_object>())
-        .def("index", &NLayeredChain::index)
-        .def("bottomVertexRoles", &NLayeredChain::bottomVertexRoles)
-        .def("topVertexRoles", &NLayeredChain::topVertexRoles)
-        .def("extendAbove", &NLayeredChain::extendAbove)
-        .def("extendBelow", &NLayeredChain::extendBelow)
-        .def("extendMaximal", &NLayeredChain::extendMaximal)
-        .def("reverse", &NLayeredChain::reverse)
-        .def("invert", &NLayeredChain::invert)
+        .def("index", &LayeredChain::index)
+        .def("bottomVertexRoles", &LayeredChain::bottomVertexRoles)
+        .def("topVertexRoles", &LayeredChain::topVertexRoles)
+        .def("extendAbove", &LayeredChain::extendAbove)
+        .def("extendBelow", &LayeredChain::extendBelow)
+        .def("extendMaximal", &LayeredChain::extendMaximal)
+        .def("reverse", &LayeredChain::reverse)
+        .def("invert", &LayeredChain::invert)
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NLayeredChain>,
+    implicitly_convertible<std::auto_ptr<LayeredChain>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

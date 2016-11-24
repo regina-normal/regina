@@ -86,7 +86,7 @@ namespace regina {
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NLayeredChain : public NStandardTriangulation {
+class REGINA_API LayeredChain : public NStandardTriangulation {
     private:
         Tetrahedron<3>* bottom_;
             /**< The bottom tetrahedron of this layered chain. */
@@ -113,7 +113,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * in the same format as the permutation returned by
          * bottomVertexRoles() and topVertexRoles().
          */
-        NLayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles);
+        LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles);
 
         /**
          * Creates a new layered chain that is a clone of the given
@@ -121,12 +121,12 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          *
          * @param cloneMe the layered chain to clone.
          */
-        NLayeredChain(const NLayeredChain& cloneMe);
+        LayeredChain(const LayeredChain& cloneMe);
 
         /**
          * Destroys this layered chain.
          */
-        virtual ~NLayeredChain();
+        virtual ~LayeredChain();
 
         /**
          * Returns the bottom tetrahedron of this layered chain.
@@ -254,44 +254,44 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
 
 /*@}*/
 
-// Inline functions for NLayeredChain
+// Inline functions for LayeredChain
 
-inline NLayeredChain::NLayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles) :
+inline LayeredChain::LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles) :
         bottom_(tet), top_(tet), index_(1), bottomVertexRoles_(vertexRoles),
         topVertexRoles_(vertexRoles) {
 }
-inline NLayeredChain::NLayeredChain(const NLayeredChain& cloneMe) :
+inline LayeredChain::LayeredChain(const LayeredChain& cloneMe) :
         NStandardTriangulation(), bottom_(cloneMe.bottom_), top_(cloneMe.top_),
         index_(cloneMe.index_), bottomVertexRoles_(cloneMe.bottomVertexRoles_),
         topVertexRoles_(cloneMe.topVertexRoles_) {
 }
-inline NLayeredChain::~NLayeredChain() {
+inline LayeredChain::~LayeredChain() {
 }
 
-inline Tetrahedron<3>* NLayeredChain::bottom() const {
+inline Tetrahedron<3>* LayeredChain::bottom() const {
     return bottom_;
 }
-inline Tetrahedron<3>* NLayeredChain::top() const {
+inline Tetrahedron<3>* LayeredChain::top() const {
     return top_;
 }
-inline unsigned long NLayeredChain::index() const {
+inline unsigned long LayeredChain::index() const {
     return index_;
 }
 
-inline Perm<4> NLayeredChain::bottomVertexRoles() const {
+inline Perm<4> LayeredChain::bottomVertexRoles() const {
     return bottomVertexRoles_;
 }
-inline Perm<4> NLayeredChain::topVertexRoles() const {
+inline Perm<4> LayeredChain::topVertexRoles() const {
     return topVertexRoles_;
 }
 
-inline std::ostream& NLayeredChain::writeName(std::ostream& out) const {
+inline std::ostream& LayeredChain::writeName(std::ostream& out) const {
     return out << "Chain(" << index_ << ')';
 }
-inline std::ostream& NLayeredChain::writeTeXName(std::ostream& out) const {
+inline std::ostream& LayeredChain::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Chain}(" << index_ << ')';
 }
-inline void NLayeredChain::writeTextLong(std::ostream& out) const {
+inline void LayeredChain::writeTextLong(std::ostream& out) const {
     out << "Layered chain of index " << index_;
 }
 

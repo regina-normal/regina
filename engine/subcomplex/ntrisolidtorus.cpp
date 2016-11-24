@@ -84,7 +84,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
 
     // We've successfully identified the first tetrahedron of the
     // layered chain.
-    NLayeredChain chain(adj, roles);
+    LayeredChain chain(adj, roles);
     chain.extendMaximal();
     if (chain.top() != tet[otherAnnulus])
         return 0;
@@ -115,7 +115,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
 
     // We've successfully identified the first tetrahedron of the
     // layered chain.
-    NLayeredChain chain(adj, roles);
+    LayeredChain chain(adj, roles);
     chain.extendMaximal();
     Tetrahedron<3>* top = chain.top();
     Perm<4> topRoles(chain.topVertexRoles());

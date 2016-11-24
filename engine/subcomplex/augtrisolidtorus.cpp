@@ -347,7 +347,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
         int chainType;
         for (i = 0; i < 6; i++) {
             p = Perm<4>::S3[i];
-            NLayeredChain chain(tet, p);
+            LayeredChain chain(tet, p);
             chain.extendMaximal();
 
             // Note that the chain will run into one of the core tetrahedra.

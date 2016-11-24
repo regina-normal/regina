@@ -56,7 +56,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::clone() const {
     ans->core_ = core_->clone();
     for (int i = 0; i < 3; i++) {
         if (chain_[i])
-            ans->chain_[i] = new NLayeredChain(*chain_[i]);
+            ans->chain_[i] = new LayeredChain(*chain_[i]);
         ans->chainType_[i] = chainType_[i];
     }
     ans->equatorType_ = equatorType_;
@@ -180,7 +180,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
     Perm<4> plugRoles[3][2];
     Perm<4> realPlugRoles[2];
 
-    NLayeredChain* chain[3];
+    LayeredChain* chain[3];
     int chainType[3];
     int equatorType = 0;
 
@@ -234,7 +234,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                     coreRoles[(i + 2) % 3] * Perm<4>(2, 1, 0, 3);
                 if (baseRoles[0] == baseRoles[1]) {
                     chainType[i] = CHAIN_MAJOR;
-                    chain[i] = new NLayeredChain(base[0], baseRoles[0]);
+                    chain[i] = new LayeredChain(base[0], baseRoles[0]);
                     while (chain[i]->extendAbove())
                         ;
                     continue;
@@ -249,7 +249,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                     coreRoles[(i + 2) % 3] * Perm<4>(2, 1, 3, 0);
                 if (baseRoles[0] == baseRoles[1]) {
                     chainType[i] = CHAIN_MINOR;
-                    chain[i] = new NLayeredChain(base[0], baseRoles[0]);
+                    chain[i] = new LayeredChain(base[0], baseRoles[0]);
                     while (chain[i]->extendAbove())
                         ;
                     continue;

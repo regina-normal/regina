@@ -120,7 +120,7 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
         NTriSolidTorus* core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
-        NLayeredChain* chain_[3];
+        LayeredChain* chain_[3];
             /**< The layered chains attached to the annuli on the
                  triangular solid torus, or 0 for those annuli without
                  attached layered chains. */
@@ -165,7 +165,7 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * be 0, 1 or 2.
          * @return the corresponding layered chain.
          */
-        const NLayeredChain* chain(int annulus) const;
+        const LayeredChain* chain(int annulus) const;
 
         /**
          * Returns the way in which a layered chain is attached to the
@@ -233,7 +233,7 @@ inline NPlugTriSolidTorus::NPlugTriSolidTorus() : core_(0) {
 inline const NTriSolidTorus& NPlugTriSolidTorus::core() const {
     return *core_;
 }
-inline const NLayeredChain* NPlugTriSolidTorus::chain(int annulus) const {
+inline const LayeredChain* NPlugTriSolidTorus::chain(int annulus) const {
     return chain_[annulus];
 }
 inline int NPlugTriSolidTorus::chainType(int annulus) const {

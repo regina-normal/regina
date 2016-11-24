@@ -185,7 +185,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * the layered chain.
          *
          * To be identified by this routine, the layered chain
-         * (described by NLayeredChain) must be attached as follows.
+         * (described by LayeredChain) must be attached as follows.
          * The two directed major edges of the two annuli should
          * correspond to the two hinge edges of the layered chain (with
          * both hinge edges pointing in the same direction around the
@@ -216,7 +216,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * bottom tetrahedron of the layered chain.
          *
          * To be identified by this routine, the layered chain
-         * (described by NLayeredChain) must be attached as follows.
+         * (described by LayeredChain) must be attached as follows.
          * We shall refer to the two hinge edges of the layered chain as
          * \e first and \e second.
          *

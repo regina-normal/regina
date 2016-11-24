@@ -37,7 +37,7 @@
 
 namespace regina {
 
-bool NLayeredChain::extendAbove() {
+bool LayeredChain::extendAbove() {
     Tetrahedron<3>* adj = top_->adjacentTetrahedron(topVertexRoles_[0]);
     if (adj == bottom_ || adj == top_ || adj == 0)
         return false;
@@ -58,7 +58,7 @@ bool NLayeredChain::extendAbove() {
     return true;
 }
 
-bool NLayeredChain::extendBelow() {
+bool LayeredChain::extendBelow() {
     Tetrahedron<3>* adj = bottom_->adjacentTetrahedron(bottomVertexRoles_[1]);
     if (adj == bottom_ || adj == top_ || adj == 0)
         return false;
@@ -79,7 +79,7 @@ bool NLayeredChain::extendBelow() {
     return true;
 }
 
-bool NLayeredChain::extendMaximal() {
+bool LayeredChain::extendMaximal() {
     bool changed = false;
     while (extendAbove())
         changed = true;
@@ -88,7 +88,7 @@ bool NLayeredChain::extendMaximal() {
     return changed;
 }
 
-void NLayeredChain::reverse() {
+void LayeredChain::reverse() {
     Tetrahedron<3>* tmp = top_;
     top_ = bottom_;
     bottom_ = tmp;
@@ -98,16 +98,16 @@ void NLayeredChain::reverse() {
     bottomVertexRoles_ = pTmp;
 }
 
-void NLayeredChain::invert() {
+void LayeredChain::invert() {
     topVertexRoles_ = topVertexRoles_ * Perm<4>(3, 2, 1, 0);
     bottomVertexRoles_ = bottomVertexRoles_ * Perm<4>(3, 2, 1, 0);
 }
 
-Manifold* NLayeredChain::manifold() const {
+Manifold* LayeredChain::manifold() const {
     return new Handlebody(index_ <= 1 ? 0 : 1, true);
 }
 
-AbelianGroup* NLayeredChain::homology() const {
+AbelianGroup* LayeredChain::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     if (index_ > 1)
         ans->addRank();
