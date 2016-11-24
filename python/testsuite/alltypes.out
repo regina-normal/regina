@@ -1484,6 +1484,8 @@ NSFSFibre : typedef ->  SFSFibre
 
 NSFSpace : typedef ->  SFSpace
 
+NSatAnnulus : typedef ->  SatAnnulus
+
 NSatBlock : class
 Equality type : BY_REFERENCE
 

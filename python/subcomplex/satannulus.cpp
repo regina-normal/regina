@@ -93,5 +93,7 @@ void addSatAnnulus() {
         .def("attachLST", &SatAnnulus::attachLST)
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NSatAnnulus") = scope().attr("SatAnnulus");
 }
 

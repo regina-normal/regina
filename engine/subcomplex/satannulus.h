@@ -446,6 +446,14 @@ struct REGINA_API SatAnnulus {
     void attachLST(Triangulation<3>* tri, long alpha, long beta) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatAnnulus has now been renamed to SatAnnulus.
+ */
+REGINA_DEPRECATED typedef SatAnnulus NSatAnnulus;
+
 /*@}*/
 
 // Inline functions for SatAnnulus
