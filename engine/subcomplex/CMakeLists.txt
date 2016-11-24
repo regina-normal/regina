@@ -14,7 +14,7 @@ SET ( FILES
   layeredloop
   layeredsolidtorus
   layeredsurfacebundle
-  nlayering
+  layering
   npillowtwosphere
   npluggedtorusbundle
   nplugtrisolidtorus
