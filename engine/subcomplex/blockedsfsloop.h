@@ -173,6 +173,15 @@ class REGINA_API BlockedSFSLoop : public NStandardTriangulation {
         BlockedSFSLoop(NSatRegion* region, const Matrix2& matchingReln);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NBlockedSFSLoop has now been renamed to
+ * BlockedSFSLoop.
+ */
+REGINA_DEPRECATED typedef BlockedSFSLoop NBlockedSFSLoop;
+
 /*@}*/
 
 // Inline functions for BlockedSFSLoop

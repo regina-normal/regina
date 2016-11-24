@@ -1280,6 +1280,8 @@ NAugTriSolidTorus : typedef ->  AugTriSolidTorus
 NBlockedSFS : class
 Equality type : BY_REFERENCE
 
+NBlockedSFSLoop : typedef ->  BlockedSFSLoop
+
 NBlockedSFSPair : class
 Equality type : BY_REFERENCE
 

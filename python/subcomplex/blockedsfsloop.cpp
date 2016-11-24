@@ -55,5 +55,7 @@ void addBlockedSFSLoop() {
 
     implicitly_convertible<std::auto_ptr<BlockedSFSLoop>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NBlockedSFSLoop") = scope().attr("BlockedSFSLoop");
 }
 
