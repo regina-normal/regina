@@ -844,10 +844,10 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NPlugTriSolidTorus* plug;
+    regina::PlugTriSolidTorus* plug;
     const regina::LayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(
+        plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(
             tri->component(i));
         if (plug) {
             id = addComponentSection(tr("Plugged triangular solid torus ") +
@@ -870,7 +870,7 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
                 if (chain)
                     lengths += tr("%1 (%2)").arg(chain->index()).
                         arg(plug->chainType(j) ==
-                        regina::NPlugTriSolidTorus::CHAIN_MAJOR ?
+                        regina::PlugTriSolidTorus::CHAIN_MAJOR ?
                         tr("major") : tr("minor"));
                 else
                     lengths += "0";
@@ -883,7 +883,7 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Equator type: ") +
                 (plug->equatorType() ==
-                regina::NPlugTriSolidTorus::EQUATOR_MAJOR ?
+                regina::PlugTriSolidTorus::EQUATOR_MAJOR ?
                 tr("major") : tr("minor")));
 
             delete plug;

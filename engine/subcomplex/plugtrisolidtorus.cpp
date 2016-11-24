@@ -37,13 +37,13 @@
 
 namespace regina {
 
-const int NPlugTriSolidTorus::CHAIN_NONE = 0;
-const int NPlugTriSolidTorus::CHAIN_MAJOR = 1;
-const int NPlugTriSolidTorus::CHAIN_MINOR = 3;
-const int NPlugTriSolidTorus::EQUATOR_MAJOR = 1;
-const int NPlugTriSolidTorus::EQUATOR_MINOR = 3;
+const int PlugTriSolidTorus::CHAIN_NONE = 0;
+const int PlugTriSolidTorus::CHAIN_MAJOR = 1;
+const int PlugTriSolidTorus::CHAIN_MINOR = 3;
+const int PlugTriSolidTorus::EQUATOR_MAJOR = 1;
+const int PlugTriSolidTorus::EQUATOR_MINOR = 3;
 
-NPlugTriSolidTorus::~NPlugTriSolidTorus() {
+PlugTriSolidTorus::~PlugTriSolidTorus() {
     if (core_)
         delete core_;
     for (int i = 0; i < 3; i++)
@@ -51,8 +51,8 @@ NPlugTriSolidTorus::~NPlugTriSolidTorus() {
             delete chain_[i];
 }
 
-NPlugTriSolidTorus* NPlugTriSolidTorus::clone() const {
-    NPlugTriSolidTorus* ans = new NPlugTriSolidTorus();
+PlugTriSolidTorus* PlugTriSolidTorus::clone() const {
+    PlugTriSolidTorus* ans = new PlugTriSolidTorus();
     ans->core_ = core_->clone();
     for (int i = 0; i < 3; i++) {
         if (chain_[i])
@@ -63,7 +63,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::clone() const {
     return ans;
 }
 
-std::ostream& NPlugTriSolidTorus::writeName(std::ostream& out) const {
+std::ostream& PlugTriSolidTorus::writeName(std::ostream& out) const {
     long params[3];
     int nParams = 0;
 
@@ -88,7 +88,7 @@ std::ostream& NPlugTriSolidTorus::writeName(std::ostream& out) const {
     return out << ')';
 }
 
-std::ostream& NPlugTriSolidTorus::writeTeXName(std::ostream& out) const {
+std::ostream& PlugTriSolidTorus::writeTeXName(std::ostream& out) const {
     long params[3];
     int nParams = 0;
 
@@ -113,12 +113,12 @@ std::ostream& NPlugTriSolidTorus::writeTeXName(std::ostream& out) const {
     return out << '}';
 }
 
-void NPlugTriSolidTorus::writeTextLong(std::ostream& out) const {
+void PlugTriSolidTorus::writeTextLong(std::ostream& out) const {
     out << "Plugged triangular solid torus: ";
     writeName(out);
 }
 
-Manifold* NPlugTriSolidTorus::manifold() const {
+Manifold* PlugTriSolidTorus::manifold() const {
     SFSpace* ans = new SFSpace();
     ans->insertFibre(2, -1);
     ans->insertFibre(3, 1);
@@ -142,7 +142,7 @@ Manifold* NPlugTriSolidTorus::manifold() const {
     return ans;
 }
 
-NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
+PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
         Component<3>* comp) {
     // Each triangular solid torus is tested three times since we
     // can't call Tetrahedron<3>::index() from within a component only.
@@ -408,7 +408,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
             }
 
             // Success!
-            NPlugTriSolidTorus* plug = new NPlugTriSolidTorus();
+            PlugTriSolidTorus* plug = new PlugTriSolidTorus();
             plug->core_ = core;
             for (i = 0; i < 3; i++) {
                 plug->chain_[i] = chain[i];

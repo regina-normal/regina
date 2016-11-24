@@ -1464,9 +1464,6 @@ NPerm9 : typedef ->  Perm9
 
 NPillowTwoSphere : typedef ->  PillowTwoSphere
 
-NPlugTriSolidTorus : class
-Equality type : BY_REFERENCE
-
 NPluggedTorusBundle : typedef ->  PluggedTorusBundle
 
 NPolynomial : typedef ->  Polynomial
@@ -1699,6 +1696,9 @@ Perm9 : class
 Equality type : BY_VALUE
 
 PillowTwoSphere : class
+Equality type : BY_REFERENCE
+
+PlugTriSolidTorus : class
 Equality type : BY_REFERENCE
 
 PluggedTorusBundle : class

@@ -45,7 +45,7 @@ void addLayeredSurfaceBundle();
 void addLayering();
 void addPillowTwoSphere();
 void addPluggedTorusBundle();
-void addNPlugTriSolidTorus();
+void addPlugTriSolidTorus();
 void addNSatAnnulus();
 void addNSatBlock();
 void addNSatBlockTypes();
@@ -71,7 +71,7 @@ void addSubcomplexClasses() {
     addLayeredSurfaceBundle();
     addLayering();
     addPillowTwoSphere();
-    addNPlugTriSolidTorus();
+    addPlugTriSolidTorus();
     addNSnapPeaCensusTri();
     addNSnappedBall();
     addNSnappedTwoSphere();

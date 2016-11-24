@@ -306,10 +306,10 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NPlugTriSolidTorus* plug;
+    regina::PlugTriSolidTorus* plug;
     const regina::LayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
+        plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
         if (plug) {
             [details appendFormat:@"Plugged triangular solid torus %s\n", plug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -325,7 +325,7 @@
                 chain = plug->chain(j);
                 if (chain) {
                     [details appendFormat:@"%ld", chain->index()];
-                    if (plug->chainType(j) == regina::NPlugTriSolidTorus::CHAIN_MAJOR)
+                    if (plug->chainType(j) == regina::PlugTriSolidTorus::CHAIN_MAJOR)
                         [details appendString:@" (major)"];
                     else
                         [details appendString:@" (minor)"];
@@ -336,7 +336,7 @@
             }
             [details appendString:@"\n"];
 
-            if (plug->equatorType() == regina::NPlugTriSolidTorus::EQUATOR_MAJOR)
+            if (plug->equatorType() == regina::PlugTriSolidTorus::EQUATOR_MAJOR)
                 [details appendString:@INDENT1 "Equator type: major\n"];
             else
                 [details appendString:@INDENT1 "Equator type: minor\n"];

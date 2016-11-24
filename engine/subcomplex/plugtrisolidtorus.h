@@ -93,7 +93,7 @@ namespace regina {
  * implemented for most plugged triangular solid tori and
  * homology() is not implemented at all.
  */
-class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
+class REGINA_API PlugTriSolidTorus : public NStandardTriangulation {
     public:
         static const int CHAIN_NONE;
             /**< Indicates an annulus on the triangular solid torus
@@ -137,13 +137,13 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * Destroys this plugged solid torus; note that the corresponding
          * triangular solid torus and layered chains will also be destroyed.
          */
-        virtual ~NPlugTriSolidTorus();
+        virtual ~PlugTriSolidTorus();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NPlugTriSolidTorus* clone() const;
+        PlugTriSolidTorus* clone() const;
 
         /**
          * Returns the triangular solid torus at the core of this
@@ -206,7 +206,7 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * plugged triangular solid torus, or \c null if the given
          * component is not a plugged triangular solid torus.
          */
-        static NPlugTriSolidTorus* isPlugTriSolidTorus(Component<3>* comp);
+        static PlugTriSolidTorus* isPlugTriSolidTorus(Component<3>* comp);
 
         Manifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
@@ -218,28 +218,28 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * Creates a new structure with all subcomponent pointers
          * initialised to \c null.
          */
-        NPlugTriSolidTorus();
+        PlugTriSolidTorus();
 };
 
 /*@}*/
 
-// Inline functions for NPlugTriSolidTorus
+// Inline functions for PlugTriSolidTorus
 
-inline NPlugTriSolidTorus::NPlugTriSolidTorus() : core_(0) {
+inline PlugTriSolidTorus::PlugTriSolidTorus() : core_(0) {
     chain_[0] = chain_[1] = chain_[2] = 0;
     chainType_[0] = chainType_[1] = chainType_[2] = CHAIN_NONE;
 }
 
-inline const NTriSolidTorus& NPlugTriSolidTorus::core() const {
+inline const NTriSolidTorus& PlugTriSolidTorus::core() const {
     return *core_;
 }
-inline const LayeredChain* NPlugTriSolidTorus::chain(int annulus) const {
+inline const LayeredChain* PlugTriSolidTorus::chain(int annulus) const {
     return chain_[annulus];
 }
-inline int NPlugTriSolidTorus::chainType(int annulus) const {
+inline int PlugTriSolidTorus::chainType(int annulus) const {
     return chainType_[annulus];
 }
-inline int NPlugTriSolidTorus::equatorType() const {
+inline int PlugTriSolidTorus::equatorType() const {
     return equatorType_;
 }
 
