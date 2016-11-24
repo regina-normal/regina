@@ -261,6 +261,15 @@ class REGINA_API LayeredTorusBundle : public NStandardTriangulation {
             const NTxICore& core);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NLayeredTorusBundle has now been renamed to
+ * LayeredTorusBundle.
+ */
+REGINA_DEPRECATED typedef LayeredTorusBundle NLayeredTorusBundle;
+
 /*@}*/
 
 // Inline functions for LayeredTorusBundle

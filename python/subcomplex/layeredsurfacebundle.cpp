@@ -56,5 +56,7 @@ void addLayeredSurfaceBundle() {
 
     implicitly_convertible<std::auto_ptr<LayeredTorusBundle>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NLayeredTorusBundle") = scope().attr("LayeredTorusBundle");
 }
 

@@ -1401,6 +1401,8 @@ NLayeredLoop : typedef ->  LayeredLoop
 
 NLayeredSolidTorus : typedef ->  LayeredSolidTorus
 
+NLayeredTorusBundle : typedef ->  LayeredTorusBundle
+
 NLayering : class
 Equality type : BY_REFERENCE
 
