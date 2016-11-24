@@ -38,7 +38,7 @@
 #import "subcomplex/augtrisolidtorus.h"
 #import "subcomplex/nblockedsfs.h"
 #import "subcomplex/blockedsfsloop.h"
-#import "subcomplex/nblockedsfspair.h"
+#import "subcomplex/blockedsfspair.h"
 #import "subcomplex/nblockedsfstriple.h"
 #import "subcomplex/nl31pillow.h"
 #import "subcomplex/nlayeredchain.h"

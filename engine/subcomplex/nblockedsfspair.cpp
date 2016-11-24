@@ -32,7 +32,7 @@
 
 #include "manifold/graphpair.h"
 #include "manifold/sfs.h"
-#include "subcomplex/nblockedsfspair.h"
+#include "subcomplex/blockedsfspair.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
