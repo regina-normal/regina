@@ -43,7 +43,7 @@
 #import "subcomplex/l31pillow.h"
 #import "subcomplex/layeredchain.h"
 #import "subcomplex/layeredchainpair.h"
-#import "subcomplex/nlayeredlensspace.h"
+#import "subcomplex/layeredlensspace.h"
 #import "subcomplex/nlayeredloop.h"
 #import "subcomplex/nlayeredsolidtorus.h"
 #import "subcomplex/nlayeredsurfacebundle.h"

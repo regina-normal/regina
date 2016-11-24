@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/nlayeredlensspace.h"
+#include "subcomplex/layeredlensspace.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
