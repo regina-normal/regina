@@ -1379,6 +1379,8 @@ NLargeInteger : typedef ->  LargeInteger
 NLayeredChain : class
 Equality type : BY_REFERENCE
 
+NLayeredChainPair : typedef ->  LayeredChainPair
+
 NLayeredLensSpace : class
 Equality type : BY_REFERENCE
 
