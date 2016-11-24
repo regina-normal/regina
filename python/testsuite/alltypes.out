@@ -1391,6 +1391,8 @@ NLayeredChainPair : typedef ->  LayeredChainPair
 
 NLayeredLensSpace : typedef ->  LayeredLensSpace
 
+NLayeredLoop : typedef ->  LayeredLoop
+
 NLayeredSolidTorus : class
 Equality type : BY_REFERENCE
 

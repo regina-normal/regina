@@ -56,5 +56,7 @@ void addLayeredLoop() {
 
     implicitly_convertible<std::auto_ptr<LayeredLoop>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NLayeredLoop") = scope().attr("LayeredLoop");
 }
 

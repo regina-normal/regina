@@ -148,6 +148,15 @@ class REGINA_API LayeredLoop : public NStandardTriangulation {
         LayeredLoop();
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NLayeredLoop has now been renamed to
+ * LayeredLoop.
+ */
+REGINA_DEPRECATED typedef LayeredLoop NLayeredLoop;
+
 /*@}*/
 
 // Inline functions for LayeredLoop
