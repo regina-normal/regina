@@ -33,7 +33,7 @@
 #include "manifold/graphloop.h"
 #include "manifold/sfs.h"
 #include "subcomplex/blockedsfsloop.h"
-#include "subcomplex/nlayering.h"
+#include "subcomplex/layering.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"
 

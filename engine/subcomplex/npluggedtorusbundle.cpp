@@ -32,7 +32,7 @@
 
 #include "manifold/graphloop.h"
 #include "manifold/sfs.h"
-#include "subcomplex/nlayering.h"
+#include "subcomplex/layering.h"
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
 #include "subcomplex/ntxicore.h"

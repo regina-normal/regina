@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "subcomplex/nlayering.h"
+#include "subcomplex/layering.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
