@@ -141,6 +141,15 @@ class REGINA_API PillowTwoSphere :
         PillowTwoSphere();
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NPillowTwoSphere has now been renamed to
+ * PillowTwoSphere.
+ */
+REGINA_DEPRECATED typedef PillowTwoSphere NPillowTwoSphere;
+
 /*@}*/
 
 // Inline functions for PillowTwoSphere

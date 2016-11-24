@@ -53,5 +53,7 @@ void addPillowTwoSphere() {
         .def(regina::python::add_eq_operators())
         .staticmethod("formsPillowTwoSphere")
     ;
+
+    scope().attr("NPillowTwoSphere") = scope().attr("PillowTwoSphere");
 }
 
