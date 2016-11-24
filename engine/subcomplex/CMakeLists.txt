@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   augtrisolidtorus
-  nblockedsfs
+  blockedsfs
   blockedsfsloop
   blockedsfspair
   blockedsfstriple
