@@ -97,7 +97,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
 
     // Run tests that require entire triangulations.
-    if ((ans = NBlockedSFS::isBlockedSFS(tri)))
+    if ((ans = BlockedSFS::isBlockedSFS(tri)))
         return ans;
     if ((ans = NLayeredTorusBundle::isLayeredTorusBundle(tri)))
         return ans;

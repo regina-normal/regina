@@ -418,7 +418,7 @@
 
 - (void)findBlockedTriangulations:(NSMutableString*)details
 {
-    regina::NBlockedSFS* sfs = regina::NBlockedSFS::isBlockedSFS(self.packet);
+    regina::BlockedSFS* sfs = regina::BlockedSFS::isBlockedSFS(self.packet);
     if (sfs) {
         [details appendString:@"Blocked Seifert Fibred Space\n"];
         [details appendString:@INDENT1 "Saturated region:\n"];

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 void addAugTriSolidTorus();
-void addNBlockedSFS();
+void addBlockedSFS();
 void addBlockedSFSLoop();
 void addBlockedSFSPair();
 void addBlockedSFSTriple();
@@ -83,7 +83,7 @@ void addSubcomplexClasses() {
     addNSatBlock();
     addNSatBlockTypes();
     addNSatRegion();
-    addNBlockedSFS();
+    addBlockedSFS();
     addBlockedSFSLoop();
     addBlockedSFSPair();
     addBlockedSFSTriple();

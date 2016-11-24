@@ -37,30 +37,30 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NBlockedSFS;
+using regina::BlockedSFS;
 
 namespace {
-    boost::python::tuple isPluggedIBundle_tuple(const NBlockedSFS& b) {
+    boost::python::tuple isPluggedIBundle_tuple(const BlockedSFS& b) {
         std::string name;
         bool ans = b.isPluggedIBundle(name);
         return boost::python::make_tuple(ans, name);
     }
 }
 
-void addNBlockedSFS() {
-    class_<NBlockedSFS, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NBlockedSFS>, boost::noncopyable>
-            ("NBlockedSFS", no_init)
-        .def("region", &NBlockedSFS::region,
+void addBlockedSFS() {
+    class_<BlockedSFS, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<BlockedSFS>, boost::noncopyable>
+            ("BlockedSFS", no_init)
+        .def("region", &BlockedSFS::region,
             return_internal_reference<>())
         .def("isPluggedIBundle", isPluggedIBundle_tuple)
-        .def("isBlockedSFS", &NBlockedSFS::isBlockedSFS,
+        .def("isBlockedSFS", &BlockedSFS::isBlockedSFS,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockedSFS")
     ;
 
-    implicitly_convertible<std::auto_ptr<NBlockedSFS>,
+    implicitly_convertible<std::auto_ptr<BlockedSFS>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

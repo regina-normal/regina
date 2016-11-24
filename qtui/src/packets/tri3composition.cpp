@@ -524,7 +524,7 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     QTreeWidgetItem* id;
     QTreeWidgetItem* details;
 
-    regina::NBlockedSFS* sfs = regina::NBlockedSFS::isBlockedSFS(tri);
+    regina::BlockedSFS* sfs = regina::BlockedSFS::isBlockedSFS(tri);
     if (sfs) {
         id = addComponentSection(tr("Blocked Seifert Fibred Space"));
         describeSatRegion(sfs->region(), id);

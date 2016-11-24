@@ -56,7 +56,7 @@ namespace {
  * saturated block, attempts to flesh this out to a saturated region
  * that fills the entire triangulation (including all internal triangles).
  */
-struct NBlockedSFSSearcher : public NSatBlockStarterSearcher {
+struct BlockedSFSSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region;
         /**< The saturated region if one has been found, or 0
              if we are still searching. */
@@ -64,19 +64,19 @@ struct NBlockedSFSSearcher : public NSatBlockStarterSearcher {
     /**
      * Creates a new searcher whose \a region pointer is null.
      */
-    NBlockedSFSSearcher() : region(0) {
+    BlockedSFSSearcher() : region(0) {
     }
 
     protected:
         bool useStarterBlock(NSatBlock* starter);
 };
 
-NBlockedSFS::~NBlockedSFS() {
+BlockedSFS::~BlockedSFS() {
     if (region_)
         delete region_;
 }
 
-bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
+bool BlockedSFS::isPluggedIBundle(std::string& name) const {
     // The triangulation needs to be closed.
     if (region_->numberOfBoundaryAnnuli() > 0)
         return false;
@@ -273,7 +273,7 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
     return false;
 }
 
-Manifold* NBlockedSFS::manifold() const {
+Manifold* BlockedSFS::manifold() const {
     SFSpace* ans = region_->createSFS(false);
     if (! ans)
         return 0;
@@ -316,23 +316,23 @@ Manifold* NBlockedSFS::manifold() const {
     return ans;
 }
 
-std::ostream& NBlockedSFS::writeName(std::ostream& out) const {
+std::ostream& BlockedSFS::writeName(std::ostream& out) const {
     out << "Blocked SFS [";
     region_->writeBlockAbbrs(out, false);
     return out << ']';
 }
 
-std::ostream& NBlockedSFS::writeTeXName(std::ostream& out) const {
+std::ostream& BlockedSFS::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{BSFS}\\left[";
     region_->writeBlockAbbrs(out, true);
     return out << "\\right]";
 }
 
-void NBlockedSFS::writeTextLong(std::ostream& out) const {
+void BlockedSFS::writeTextLong(std::ostream& out) const {
     region_->writeDetail(out, "Blocked SFS");
 }
 
-NBlockedSFS* NBlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
+BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
     // Basic property checks.
     if (tri->countComponents() > 1)
         return 0;
@@ -346,7 +346,7 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
         return 0;
 
     // Hunt for a starting block.
-    NBlockedSFSSearcher searcher;
+    BlockedSFSSearcher searcher;
     searcher.findStarterBlocks(tri);
 
     // Any luck?
@@ -354,14 +354,14 @@ NBlockedSFS* NBlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
         // The region expansion worked, and the triangulation is known
         // to be connected.
         // This means we've got one!
-        return new NBlockedSFS(searcher.region);
+        return new BlockedSFS(searcher.region);
     }
 
     // Nope.
     return 0;
 }
 
-bool NBlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
+bool BlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointer should be null, but just in case...
     if (region) {
         delete starter;
@@ -383,7 +383,7 @@ bool NBlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
     return false;
 }
 
-bool NBlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
+bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
         const NSatBlock* torus0, bool horiz0,
         const NSatBlock* torus1, bool horiz1) {
     long p0, q0;

@@ -85,7 +85,7 @@ void process(Triangulation<3>* t) {
     NStandardTriangulation* s =
         NStandardTriangulation::isStandardTriangulation(t);
     if (s) {
-        NBlockedSFS* sfs = dynamic_cast<NBlockedSFS*>(s);
+        BlockedSFS* sfs = dynamic_cast<BlockedSFS*>(s);
         if (sfs) {
             std::string pluggedName;
             if (sfs->isPluggedIBundle(pluggedName)) {

@@ -145,7 +145,7 @@ void process(Container* c) {
                 spec.name = std->name();
                 spec.hasSpecialName = false;
 
-                NBlockedSFS* sfs = dynamic_cast<NBlockedSFS*>(std);
+                BlockedSFS* sfs = dynamic_cast<BlockedSFS*>(std);
                 if (sfs && sfs->isPluggedIBundle(spec.specialName))
                     spec.hasSpecialName = true;
 

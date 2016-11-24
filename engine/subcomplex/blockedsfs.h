@@ -68,7 +68,7 @@ class NSatRegion;
  * The optional NStandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API NBlockedSFS : public NStandardTriangulation {
+class REGINA_API BlockedSFS : public NStandardTriangulation {
     private:
         NSatRegion* region_;
             /**< The single saturated region that describes this entire
@@ -78,7 +78,7 @@ class REGINA_API NBlockedSFS : public NStandardTriangulation {
         /**
          * Destroys this structure and its constituent components.
          */
-        ~NBlockedSFS();
+        ~BlockedSFS();
 
         /**
          * Returns details of the single saturated region that
@@ -122,7 +122,7 @@ class REGINA_API NBlockedSFS : public NStandardTriangulation {
          * blocked Seifert fibred space, or \c null if the given
          * triangulation is not a blocked Seifert fibred space.
          */
-        static NBlockedSFS* isBlockedSFS(Triangulation<3>* tri);
+        static BlockedSFS* isBlockedSFS(Triangulation<3>* tri);
 
     private:
         /**
@@ -134,7 +134,7 @@ class REGINA_API NBlockedSFS : public NStandardTriangulation {
          *
          * @param region the region describing this entire triangulation.
          */
-        NBlockedSFS(NSatRegion* region);
+        BlockedSFS(NSatRegion* region);
 
         /**
          * Attempts to identify the solid torus plugs in a plugged thin
@@ -196,12 +196,12 @@ class REGINA_API NBlockedSFS : public NStandardTriangulation {
 
 /*@}*/
 
-// Inline functions for NBlockedSFS
+// Inline functions for BlockedSFS
 
-inline NBlockedSFS::NBlockedSFS(NSatRegion* region) : region_(region) {
+inline BlockedSFS::BlockedSFS(NSatRegion* region) : region_(region) {
 }
 
-inline const NSatRegion& NBlockedSFS::region() const {
+inline const NSatRegion& BlockedSFS::region() const {
     return *region_;
 }
 
