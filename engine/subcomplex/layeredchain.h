@@ -252,6 +252,15 @@ class REGINA_API LayeredChain : public NStandardTriangulation {
         void writeTextLong(std::ostream& out) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NLayeredChain has now been renamed to
+ * LayeredChain.
+ */
+REGINA_DEPRECATED typedef LayeredChain NLayeredChain;
+
 /*@}*/
 
 // Inline functions for LayeredChain

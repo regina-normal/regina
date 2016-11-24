@@ -60,5 +60,7 @@ void addLayeredChain() {
 
     implicitly_convertible<std::auto_ptr<LayeredChain>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NLayeredChain") = scope().attr("LayeredChain");
 }
 

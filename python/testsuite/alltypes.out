@@ -1379,6 +1379,8 @@ NL31Pillow : typedef ->  L31Pillow
 
 NLargeInteger : typedef ->  LargeInteger
 
+NLayeredChain : typedef ->  LayeredChain
+
 NLayeredChainPair : typedef ->  LayeredChainPair
 
 NLayeredLensSpace : class
