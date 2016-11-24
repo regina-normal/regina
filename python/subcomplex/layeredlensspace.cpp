@@ -59,5 +59,7 @@ void addLayeredLensSpace() {
 
     implicitly_convertible<std::auto_ptr<LayeredLensSpace>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NLayeredLensSpace") = scope().attr("LayeredLensSpace");
 }
 
