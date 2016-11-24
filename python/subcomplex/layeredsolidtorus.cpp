@@ -75,5 +75,7 @@ void addLayeredSolidTorus() {
 
     implicitly_convertible<std::auto_ptr<LayeredSolidTorus>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NLayeredSolidTorus") = scope().attr("LayeredSolidTorus");
 }
 
