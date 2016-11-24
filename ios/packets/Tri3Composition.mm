@@ -37,7 +37,7 @@
 #import "manifold/manifold.h"
 #import "subcomplex/augtrisolidtorus.h"
 #import "subcomplex/nblockedsfs.h"
-#import "subcomplex/nblockedsfsloop.h"
+#import "subcomplex/blockedsfsloop.h"
 #import "subcomplex/nblockedsfspair.h"
 #import "subcomplex/nblockedsfstriple.h"
 #import "subcomplex/nl31pillow.h"

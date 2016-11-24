@@ -33,7 +33,7 @@
 #include <sstream>
 #include "subcomplex/augtrisolidtorus.h"
 #include "subcomplex/nblockedsfs.h"
-#include "subcomplex/nblockedsfsloop.h"
+#include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/nblockedsfspair.h"
 #include "subcomplex/nblockedsfstriple.h"
 #include "subcomplex/nl31pillow.h"

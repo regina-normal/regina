@@ -46,6 +46,7 @@ if (${REGINA_INSTALL_DEV})
     augtrisolidtorus.h
     naugtrisolidtorus.h
     nblockedsfs.h
+    blockedsfsloop.h
     nblockedsfsloop.h
     nblockedsfspair.h
     nblockedsfstriple.h
