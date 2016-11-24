@@ -9,7 +9,7 @@ SET ( FILES
   blockedsfstriple
   l31pillow
   nlayeredchain
-  nlayeredchainpair
+  layeredchainpair
   nlayeredlensspace
   nlayeredloop
   nlayeredsolidtorus
