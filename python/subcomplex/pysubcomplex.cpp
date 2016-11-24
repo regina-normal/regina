@@ -43,7 +43,7 @@ void addLayeredLoop();
 void addLayeredSolidTorus();
 void addLayeredSurfaceBundle();
 void addLayering();
-void addNPillowTwoSphere();
+void addPillowTwoSphere();
 void addNPluggedTorusBundle();
 void addNPlugTriSolidTorus();
 void addNSatAnnulus();
@@ -70,7 +70,7 @@ void addSubcomplexClasses() {
     addLayeredSolidTorus();
     addLayeredSurfaceBundle();
     addLayering();
-    addNPillowTwoSphere();
+    addPillowTwoSphere();
     addNPlugTriSolidTorus();
     addNSnapPeaCensusTri();
     addNSnappedBall();

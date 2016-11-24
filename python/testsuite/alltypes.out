@@ -1462,9 +1462,6 @@ NPerm8 : typedef ->  Perm8
 
 NPerm9 : typedef ->  Perm9
 
-NPillowTwoSphere : class
-Equality type : BY_REFERENCE
-
 NPlugTriSolidTorus : class
 Equality type : BY_REFERENCE
 
@@ -1699,6 +1696,9 @@ Equality type : BY_VALUE
 
 Perm9 : class
 Equality type : BY_VALUE
+
+PillowTwoSphere : class
+Equality type : BY_REFERENCE
 
 Polynomial : class
 Equality type : BY_VALUE

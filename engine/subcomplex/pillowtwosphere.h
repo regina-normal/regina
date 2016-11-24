@@ -68,8 +68,8 @@ namespace regina {
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class REGINA_API NPillowTwoSphere :
-        public ShortOutput<NPillowTwoSphere>,
+class REGINA_API PillowTwoSphere :
+        public ShortOutput<PillowTwoSphere>,
         public boost::noncopyable {
     private:
         Triangle<3>* triangle_[2];
@@ -85,7 +85,7 @@ class REGINA_API NPillowTwoSphere :
          *
          * @return a newly created clone.
          */
-        NPillowTwoSphere* clone() const;
+        PillowTwoSphere* clone() const;
 
         /**
          * Returns one of the two triangles whose boundaries are joined.
@@ -121,7 +121,7 @@ class REGINA_API NPillowTwoSphere :
          * pillow 2-sphere, or \c null if the given triangles do not
          * form a pillow 2-sphere.
          */
-        static NPillowTwoSphere* formsPillowTwoSphere(Triangle<3>* tri1,
+        static PillowTwoSphere* formsPillowTwoSphere(Triangle<3>* tri1,
             Triangle<3>* tri2);
 
         /**
@@ -138,22 +138,22 @@ class REGINA_API NPillowTwoSphere :
         /**
          * Creates a new uninitialised structure.
          */
-        NPillowTwoSphere();
+        PillowTwoSphere();
 };
 
 /*@}*/
 
-// Inline functions for NPillowTwoSphere
+// Inline functions for PillowTwoSphere
 
-inline NPillowTwoSphere::NPillowTwoSphere() {
+inline PillowTwoSphere::PillowTwoSphere() {
 }
-inline Triangle<3>* NPillowTwoSphere::triangle(int index) const {
+inline Triangle<3>* PillowTwoSphere::triangle(int index) const {
     return triangle_[index];
 }
-inline Perm<4> NPillowTwoSphere::triangleMapping() const {
+inline Perm<4> PillowTwoSphere::triangleMapping() const {
     return triMapping_;
 }
-inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {
+inline void PillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";
 }
 

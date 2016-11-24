@@ -36,18 +36,18 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPillowTwoSphere;
+using regina::PillowTwoSphere;
 
-void addNPillowTwoSphere() {
-    class_<NPillowTwoSphere, std::auto_ptr<NPillowTwoSphere>,
+void addPillowTwoSphere() {
+    class_<PillowTwoSphere, std::auto_ptr<PillowTwoSphere>,
             boost::noncopyable>
-            ("NPillowTwoSphere", no_init)
-        .def("clone", &NPillowTwoSphere::clone,
+            ("PillowTwoSphere", no_init)
+        .def("clone", &PillowTwoSphere::clone,
             return_value_policy<manage_new_object>())
-        .def("triangle", &NPillowTwoSphere::triangle,
+        .def("triangle", &PillowTwoSphere::triangle,
             return_value_policy<reference_existing_object>())
-        .def("triangleMapping", &NPillowTwoSphere::triangleMapping)
-        .def("formsPillowTwoSphere", &NPillowTwoSphere::formsPillowTwoSphere,
+        .def("triangleMapping", &PillowTwoSphere::triangleMapping)
+        .def("formsPillowTwoSphere", &PillowTwoSphere::formsPillowTwoSphere,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())

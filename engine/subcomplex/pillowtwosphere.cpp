@@ -35,15 +35,15 @@
 
 namespace regina {
 
-NPillowTwoSphere* NPillowTwoSphere::clone() const {
-    NPillowTwoSphere* ans = new NPillowTwoSphere();
+PillowTwoSphere* PillowTwoSphere::clone() const {
+    PillowTwoSphere* ans = new PillowTwoSphere();
     ans->triangle_[0] = triangle_[0];
     ans->triangle_[1] = triangle_[1];
     ans->triMapping_ = triMapping_;
     return ans;
 }
 
-NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
+PillowTwoSphere* PillowTwoSphere::formsPillowTwoSphere(
         Triangle<3>* tri1, Triangle<3>* tri2) {
     if (tri1 == tri2 || tri1->isBoundary() || tri2->isBoundary())
         return 0;
@@ -81,7 +81,7 @@ NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
     }
 
     // We have an answer.
-    NPillowTwoSphere* ans = new NPillowTwoSphere();
+    PillowTwoSphere* ans = new PillowTwoSphere();
     ans->triangle_[0] = tri1;
     ans->triangle_[1] = tri2;
     ans->triMapping_ = perm;
