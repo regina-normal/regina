@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/nlayeredsurfacebundle.h"
+#include "subcomplex/layeredsurfacebundle.h"
 #include "subcomplex/ntxicore.h"
 #include "../helpers.h"
 

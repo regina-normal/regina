@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "manifold/torusbundle.h"
-#include "subcomplex/nlayeredsurfacebundle.h"
+#include "subcomplex/layeredsurfacebundle.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/dim3.h"

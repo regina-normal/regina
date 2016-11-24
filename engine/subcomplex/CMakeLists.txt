@@ -65,6 +65,7 @@ if (${REGINA_INSTALL_DEV})
     nlayeredloop.h
     layeredsolidtorus.h
     nlayeredsolidtorus.h
+    layeredsurfacebundle.h
     nlayeredsurfacebundle.h
     nlayering.h
     npillowtwosphere.h

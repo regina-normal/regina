@@ -43,7 +43,7 @@
 #include "subcomplex/layeredlensspace.h"
 #include "subcomplex/layeredloop.h"
 #include "subcomplex/layeredsolidtorus.h"
-#include "subcomplex/nlayeredsurfacebundle.h"
+#include "subcomplex/layeredsurfacebundle.h"
 #include "subcomplex/npillowtwosphere.h"
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
