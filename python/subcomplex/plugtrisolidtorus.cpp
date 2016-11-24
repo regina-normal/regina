@@ -39,30 +39,34 @@ using namespace boost::python;
 using regina::PlugTriSolidTorus;
 
 void addPlugTriSolidTorus() {
-    scope s = class_<PlugTriSolidTorus, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<PlugTriSolidTorus>, boost::noncopyable>
-            ("PlugTriSolidTorus", no_init)
-        .def("clone", &PlugTriSolidTorus::clone,
-            return_value_policy<manage_new_object>())
-        .def("core", &PlugTriSolidTorus::core,
-            return_internal_reference<>())
-        .def("chain", &PlugTriSolidTorus::chain,
-            return_internal_reference<>())
-        .def("chainType", &PlugTriSolidTorus::chainType)
-        .def("equatorType", &PlugTriSolidTorus::equatorType)
-        .def("isPlugTriSolidTorus", &PlugTriSolidTorus::isPlugTriSolidTorus,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isPlugTriSolidTorus")
-    ;
+    {
+        scope s = class_<PlugTriSolidTorus, bases<regina::NStandardTriangulation>,
+                std::auto_ptr<PlugTriSolidTorus>, boost::noncopyable>
+                ("PlugTriSolidTorus", no_init)
+            .def("clone", &PlugTriSolidTorus::clone,
+                return_value_policy<manage_new_object>())
+            .def("core", &PlugTriSolidTorus::core,
+                return_internal_reference<>())
+            .def("chain", &PlugTriSolidTorus::chain,
+                return_internal_reference<>())
+            .def("chainType", &PlugTriSolidTorus::chainType)
+            .def("equatorType", &PlugTriSolidTorus::equatorType)
+            .def("isPlugTriSolidTorus", &PlugTriSolidTorus::isPlugTriSolidTorus,
+                return_value_policy<manage_new_object>())
+            .def(regina::python::add_eq_operators())
+            .staticmethod("isPlugTriSolidTorus")
+        ;
 
-    s.attr("CHAIN_NONE") = PlugTriSolidTorus::CHAIN_NONE;
-    s.attr("CHAIN_MAJOR") = PlugTriSolidTorus::CHAIN_MAJOR;
-    s.attr("CHAIN_MINOR") = PlugTriSolidTorus::CHAIN_MINOR;
-    s.attr("EQUATOR_MAJOR") = PlugTriSolidTorus::EQUATOR_MAJOR;
-    s.attr("EQUATOR_MINOR") = PlugTriSolidTorus::EQUATOR_MINOR;
+        s.attr("CHAIN_NONE") = PlugTriSolidTorus::CHAIN_NONE;
+        s.attr("CHAIN_MAJOR") = PlugTriSolidTorus::CHAIN_MAJOR;
+        s.attr("CHAIN_MINOR") = PlugTriSolidTorus::CHAIN_MINOR;
+        s.attr("EQUATOR_MAJOR") = PlugTriSolidTorus::EQUATOR_MAJOR;
+        s.attr("EQUATOR_MINOR") = PlugTriSolidTorus::EQUATOR_MINOR;
 
-    implicitly_convertible<std::auto_ptr<PlugTriSolidTorus>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        implicitly_convertible<std::auto_ptr<PlugTriSolidTorus>,
+            std::auto_ptr<regina::NStandardTriangulation> >();
+    }
+
+    scope().attr("NPlugTriSolidTorus") = scope().attr("PlugTriSolidTorus");
 }
 

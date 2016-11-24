@@ -1464,6 +1464,8 @@ NPerm9 : typedef ->  Perm9
 
 NPillowTwoSphere : typedef ->  PillowTwoSphere
 
+NPlugTriSolidTorus : typedef ->  PlugTriSolidTorus
+
 NPluggedTorusBundle : typedef ->  PluggedTorusBundle
 
 NPolynomial : typedef ->  Polynomial
