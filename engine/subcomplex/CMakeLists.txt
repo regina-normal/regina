@@ -15,7 +15,7 @@ SET ( FILES
   layeredsolidtorus
   layeredsurfacebundle
   layering
-  npillowtwosphere
+  pillowtwosphere
   npluggedtorusbundle
   nplugtrisolidtorus
   nsatannulus
