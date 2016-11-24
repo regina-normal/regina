@@ -33,7 +33,7 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
 #include "manifold/sfs.h"
-#include "subcomplex/nlayeredloop.h"
+#include "subcomplex/layeredloop.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

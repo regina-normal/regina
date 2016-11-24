@@ -61,6 +61,7 @@ if (${REGINA_INSTALL_DEV})
     nlayeredchainpair.h
     layeredlensspace.h
     nlayeredlensspace.h
+    layeredloop.h
     nlayeredloop.h
     nlayeredsolidtorus.h
     nlayeredsurfacebundle.h

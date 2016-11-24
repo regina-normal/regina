@@ -39,7 +39,7 @@
 #include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchainpair.h"
 #include "subcomplex/layeredlensspace.h"
-#include "subcomplex/nlayeredloop.h"
+#include "subcomplex/layeredloop.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
