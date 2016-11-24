@@ -1254,6 +1254,9 @@ Equality type : BY_REFERENCE
 Isomorphism9 : class
 Equality type : BY_REFERENCE
 
+L31Pillow : class
+Equality type : BY_REFERENCE
+
 LargeInteger : class
 Equality type : BY_VALUE
 
@@ -1365,9 +1368,6 @@ NHomologicalData : typedef ->  HomologicalData
 NInteger : typedef ->  Integer
 
 NIsomorphism : typedef ->  Isomorphism3
-
-NL31Pillow : class
-Equality type : BY_REFERENCE
 
 NLargeInteger : typedef ->  LargeInteger
 

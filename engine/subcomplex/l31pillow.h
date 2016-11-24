@@ -62,7 +62,7 @@ namespace regina {
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NL31Pillow : public NStandardTriangulation {
+class REGINA_API L31Pillow : public NStandardTriangulation {
     private:
         Tetrahedron<3>* tet[2];
             /**< The two tetrahedra in the triangular pillow. */
@@ -74,13 +74,13 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
         /**
          * Destroys this structure.
          */
-        virtual ~NL31Pillow();
+        virtual ~L31Pillow();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NL31Pillow* clone() const;
+        L31Pillow* clone() const;
 
         /**
          * Returns one of the two tetrahedra involved in this structure.
@@ -117,7 +117,7 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          * triangular pillow L(3,1), or \c null if the given component is
          * not a triangular pillow L(3,1).
          */
-        static NL31Pillow* isL31Pillow(const Component<3>* comp);
+        static L31Pillow* isL31Pillow(const Component<3>* comp);
 
         Manifold* manifold() const;
         AbelianGroup* homology() const;
@@ -129,31 +129,31 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        NL31Pillow();
+        L31Pillow();
 };
 
 /*@}*/
 
-// Inline functions for NL31Pillow
+// Inline functions for L31Pillow
 
-inline NL31Pillow::NL31Pillow() {
+inline L31Pillow::L31Pillow() {
 }
-inline NL31Pillow::~NL31Pillow() {
+inline L31Pillow::~L31Pillow() {
 }
 
-inline Tetrahedron<3>* NL31Pillow::tetrahedron(int whichTet) const {
+inline Tetrahedron<3>* L31Pillow::tetrahedron(int whichTet) const {
     return tet[whichTet];
 }
-inline unsigned NL31Pillow::interiorVertex(int whichTet) const {
+inline unsigned L31Pillow::interiorVertex(int whichTet) const {
     return interior[whichTet];
 }
-inline std::ostream& NL31Pillow::writeName(std::ostream& out) const {
+inline std::ostream& L31Pillow::writeName(std::ostream& out) const {
     return out << "L'(3,1)";
 }
-inline std::ostream& NL31Pillow::writeTeXName(std::ostream& out) const {
+inline std::ostream& L31Pillow::writeTeXName(std::ostream& out) const {
     return out << "L'_{3,1}";
 }
-inline void NL31Pillow::writeTextLong(std::ostream& out) const {
+inline void L31Pillow::writeTextLong(std::ostream& out) const {
     out << "Triangular pillow lens space L(3,1)";
 }
 

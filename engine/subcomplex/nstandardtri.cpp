@@ -66,7 +66,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     NStandardTriangulation* ans;
     if ((ans = NTrivialTri::isTrivialTriangulation(comp)))
         return ans;
-    if ((ans = NL31Pillow::isL31Pillow(comp)))
+    if ((ans = L31Pillow::isL31Pillow(comp)))
         return ans;
     if ((ans = NLayeredLensSpace::isLayeredLensSpace(comp)))
         return ans;

@@ -216,9 +216,9 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NL31Pillow* pillow;
+    regina::L31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::NL31Pillow::isL31Pillow(self.packet->component(i));
+        pillow = regina::L31Pillow::isL31Pillow(self.packet->component(i));
         if (pillow) {
             [details appendFormat:@"L(3,1) pillow %s\n", pillow->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];

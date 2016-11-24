@@ -37,8 +37,8 @@
 
 namespace regina {
 
-NL31Pillow* NL31Pillow::clone() const {
-    NL31Pillow* ans = new NL31Pillow();
+L31Pillow* L31Pillow::clone() const {
+    L31Pillow* ans = new L31Pillow();
     ans->tet[0] = tet[0];
     ans->tet[1] = tet[1];
     ans->interior[0] = interior[0];
@@ -46,7 +46,7 @@ NL31Pillow* NL31Pillow::clone() const {
     return ans;
 }
 
-NL31Pillow* NL31Pillow::isL31Pillow(const Component<3>* comp) {
+L31Pillow* L31Pillow::isL31Pillow(const Component<3>* comp) {
     // Basic property check.
     if (comp->size() != 2 ||
             comp->countVertices() != 2 ||
@@ -79,7 +79,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const Component<3>* comp) {
     // At this point we can prove through enumeration of all
     // 2-tetrahedron triangulations that we have our triangular pillow
     // L(3,1).
-    NL31Pillow* ans = new NL31Pillow();
+    L31Pillow* ans = new L31Pillow();
     ans->tet[0] = tet[0];
     ans->tet[1] = tet[1];
 
@@ -95,11 +95,11 @@ NL31Pillow* NL31Pillow::isL31Pillow(const Component<3>* comp) {
     return ans;
 }
 
-Manifold* NL31Pillow::manifold() const {
+Manifold* L31Pillow::manifold() const {
     return new LensSpace(3, 1);
 }
 
-AbelianGroup* NL31Pillow::homology() const {
+AbelianGroup* L31Pillow::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     ans->addTorsionElement(3);
     return ans;

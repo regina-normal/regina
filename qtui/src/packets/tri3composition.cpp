@@ -640,9 +640,9 @@ void Tri3CompositionUI::findL31Pillows() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NL31Pillow* pillow;
+    regina::L31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::NL31Pillow::isL31Pillow(tri->component(i));
+        pillow = regina::L31Pillow::isL31Pillow(tri->component(i));
         if (pillow) {
             id = addComponentSection(tr("L(3,1) pillow ") +
                 pillow->name().c_str());

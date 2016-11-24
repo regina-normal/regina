@@ -36,24 +36,24 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NL31Pillow;
+using regina::L31Pillow;
 
-void addNL31Pillow() {
-    class_<NL31Pillow, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NL31Pillow>, boost::noncopyable>
-            ("NL31Pillow", no_init)
-        .def("clone", &NL31Pillow::clone,
+void addL31Pillow() {
+    class_<L31Pillow, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<L31Pillow>, boost::noncopyable>
+            ("L31Pillow", no_init)
+        .def("clone", &L31Pillow::clone,
             return_value_policy<manage_new_object>())
-        .def("tetrahedron", &NL31Pillow::tetrahedron,
+        .def("tetrahedron", &L31Pillow::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("interiorVertex", &NL31Pillow::interiorVertex)
-        .def("isL31Pillow", &NL31Pillow::isL31Pillow,
+        .def("interiorVertex", &L31Pillow::interiorVertex)
+        .def("isL31Pillow", &L31Pillow::isL31Pillow,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isL31Pillow")
     ;
 
-    implicitly_convertible<std::auto_ptr<NL31Pillow>,
+    implicitly_convertible<std::auto_ptr<L31Pillow>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 
