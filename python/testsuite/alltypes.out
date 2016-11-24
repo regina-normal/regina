@@ -1484,9 +1484,6 @@ NSFSFibre : typedef ->  SFSFibre
 
 NSFSpace : typedef ->  SFSpace
 
-NSatAnnulus : class
-Equality type : BY_VALUE
-
 NSatBlock : class
 Equality type : BY_REFERENCE
 
@@ -1728,6 +1725,9 @@ SFSFibre : class
 Equality type : BY_VALUE
 
 SFSpace : class
+Equality type : BY_VALUE
+
+SatAnnulus : class
 Equality type : BY_VALUE
 
 Script : class

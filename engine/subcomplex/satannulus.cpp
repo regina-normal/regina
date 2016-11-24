@@ -36,7 +36,7 @@
 
 namespace regina {
 
-unsigned NSatAnnulus::meetsBoundary() const {
+unsigned SatAnnulus::meetsBoundary() const {
     unsigned ans = 0;
     if (! tet[0]->adjacentTetrahedron(roles[0][3]))
         ans++;
@@ -45,7 +45,7 @@ unsigned NSatAnnulus::meetsBoundary() const {
     return ans;
 }
 
-void NSatAnnulus::switchSides() {
+void SatAnnulus::switchSides() {
     unsigned which, face;
     for (which = 0; which < 2; which++) {
         face = roles[which][3];
@@ -55,13 +55,13 @@ void NSatAnnulus::switchSides() {
     }
 }
 
-bool NSatAnnulus::isAdjacent(const NSatAnnulus& other, bool* refVert,
+bool SatAnnulus::isAdjacent(const SatAnnulus& other, bool* refVert,
         bool* refHoriz) const {
     if (other.meetsBoundary())
         return false;
 
     // See what is actually attached to the given annulus.
-    NSatAnnulus opposite(other);
+    SatAnnulus opposite(other);
     opposite.switchSides();
 
     if (opposite.tet[0] == tet[0] && opposite.tet[1] == tet[1]) {
@@ -106,12 +106,12 @@ bool NSatAnnulus::isAdjacent(const NSatAnnulus& other, bool* refVert,
     return false;
 }
 
-bool NSatAnnulus::isJoined(const NSatAnnulus& other, Matrix2& matching) const {
+bool SatAnnulus::isJoined(const SatAnnulus& other, Matrix2& matching) const {
     if (other.meetsBoundary())
         return false;
 
     // See what is actually attached to the given annulus.
-    NSatAnnulus opposite(other);
+    SatAnnulus opposite(other);
     opposite.switchSides();
 
     bool swapTriangles;
@@ -157,7 +157,7 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, Matrix2& matching) const {
     return true;
 }
 
-bool NSatAnnulus::isTwoSidedTorus() const {
+bool SatAnnulus::isTwoSidedTorus() const {
     // Check that the edges are identified in opposite pairs and that we
     // have no duplicates.
     Edge<3>* e01 = tet[0]->edge(Edge<3>::edgeNumber[roles[0][0]][roles[0][1]]);
@@ -206,7 +206,7 @@ bool NSatAnnulus::isTwoSidedTorus() const {
     return true;
 }
 
-void NSatAnnulus::transform(const Triangulation<3>* originalTri,
+void SatAnnulus::transform(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     unsigned which;
     unsigned long tetID;
@@ -217,7 +217,7 @@ void NSatAnnulus::transform(const Triangulation<3>* originalTri,
     }
 }
 
-void NSatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
+void SatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
     // Save ourselves headaches later.  Though this should never happen;
     // see the preconditions.
     if (alpha == 0)

@@ -350,7 +350,7 @@
 - (void)describeSatRegion:(const regina::NSatRegion&)region details:(NSMutableString*)details
 {
     regina::NSatBlockSpec spec;
-    regina::NSatAnnulus ann;
+    regina::SatAnnulus ann;
     unsigned nAnnuli;
     long b;
     int a;

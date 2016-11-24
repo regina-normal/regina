@@ -38,28 +38,28 @@
 
 using namespace boost::python;
 using regina::Perm;
-using regina::NSatAnnulus;
+using regina::SatAnnulus;
 using regina::Tetrahedron;
 
 namespace {
-    Tetrahedron<3>* tet_read(NSatAnnulus& a, int which) {
+    Tetrahedron<3>* tet_read(SatAnnulus& a, int which) {
         return a.tet[which];
     }
 
-    void tet_write(NSatAnnulus& a, int which, Tetrahedron<3>* value) {
+    void tet_write(SatAnnulus& a, int which, Tetrahedron<3>* value) {
         a.tet[which] = value;
     }
 
-    Perm<4> roles_read(NSatAnnulus& a, int which) {
+    Perm<4> roles_read(SatAnnulus& a, int which) {
         return a.roles[which];
     }
 
-    void roles_write(NSatAnnulus& a, int which, Perm<4> value) {
+    void roles_write(SatAnnulus& a, int which, Perm<4> value) {
         a.roles[which] = value;
     }
 
-    boost::python::tuple isAdjacent_tuple(const NSatAnnulus& a,
-            const NSatAnnulus& other) {
+    boost::python::tuple isAdjacent_tuple(const SatAnnulus& a,
+            const SatAnnulus& other) {
         bool refVert = false;
         bool refHoriz = false;
         bool ans = a.isAdjacent(other, &refVert, &refHoriz);
@@ -68,29 +68,29 @@ namespace {
     }
 }
 
-void addNSatAnnulus() {
-    class_<NSatAnnulus>("NSatAnnulus")
-        .def(init<const NSatAnnulus&>())
+void addSatAnnulus() {
+    class_<SatAnnulus>("SatAnnulus")
+        .def(init<const SatAnnulus&>())
         .def(init<Tetrahedron<3>*, Perm<4>, Tetrahedron<3>*, Perm<4>>())
         .def("tet", tet_read, return_internal_reference<>())
         .def("roles", roles_read)
         .def("setTet", tet_write)
         .def("setRoles", roles_write)
-        .def("meetsBoundary", &NSatAnnulus::meetsBoundary)
-        .def("switchSides", &NSatAnnulus::switchSides)
-        .def("otherSide", &NSatAnnulus::otherSide)
-        .def("reflectVertical", &NSatAnnulus::reflectVertical)
-        .def("verticalReflection", &NSatAnnulus::verticalReflection)
-        .def("reflectHorizontal", &NSatAnnulus::reflectHorizontal)
-        .def("horizontalReflection", &NSatAnnulus::horizontalReflection)
-        .def("rotateHalfTurn", &NSatAnnulus::rotateHalfTurn)
-        .def("halfTurnRotation", &NSatAnnulus::halfTurnRotation)
+        .def("meetsBoundary", &SatAnnulus::meetsBoundary)
+        .def("switchSides", &SatAnnulus::switchSides)
+        .def("otherSide", &SatAnnulus::otherSide)
+        .def("reflectVertical", &SatAnnulus::reflectVertical)
+        .def("verticalReflection", &SatAnnulus::verticalReflection)
+        .def("reflectHorizontal", &SatAnnulus::reflectHorizontal)
+        .def("horizontalReflection", &SatAnnulus::horizontalReflection)
+        .def("rotateHalfTurn", &SatAnnulus::rotateHalfTurn)
+        .def("halfTurnRotation", &SatAnnulus::halfTurnRotation)
         .def("isAdjacent", isAdjacent_tuple)
-        .def("isJoined", &NSatAnnulus::isJoined)
-        .def("isTwoSidedTorus", &NSatAnnulus::isTwoSidedTorus)
-        .def("transform", &NSatAnnulus::transform)
-        .def("image", &NSatAnnulus::image)
-        .def("attachLST", &NSatAnnulus::attachLST)
+        .def("isJoined", &SatAnnulus::isJoined)
+        .def("isTwoSidedTorus", &SatAnnulus::isTwoSidedTorus)
+        .def("transform", &SatAnnulus::transform)
+        .def("image", &SatAnnulus::image)
+        .def("attachLST", &SatAnnulus::attachLST)
         .def(regina::python::add_eq_operators())
     ;
 }

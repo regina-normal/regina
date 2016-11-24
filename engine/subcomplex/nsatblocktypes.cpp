@@ -146,7 +146,7 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
     return false;
 }
 
-NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
+NSatBlock* NSatBlock::isBlock(const SatAnnulus& annulus, TetList& avoidTets) {
     NSatBlock* ans;
 
     // Run through the types of blocks that we know about.
@@ -210,7 +210,7 @@ void NSatMobius::writeAbbr(std::ostream& out, bool tex) const {
         out << ')';
 }
 
-NSatMobius* NSatMobius::isBlockMobius(const NSatAnnulus& annulus, TetList&) {
+NSatMobius* NSatMobius::isBlockMobius(const SatAnnulus& annulus, TetList&) {
     // The two tetrahedra must be joined together along the annulus triangles.
 
     if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][3]) !=
@@ -290,7 +290,7 @@ void NSatLST::transform(const Triangulation<3>* originalTri,
     lst_->transform(originalTri, iso, newTri);
 }
 
-NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
+NSatLST* NSatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
     // Do we move to a common usable tetrahedron?
 
     if (annulus.tet[0] != annulus.tet[1])
@@ -385,7 +385,7 @@ void NSatTriPrism::adjustSFS(SFSpace& sfs, bool reflect) const {
         sfs.insertFibre(1, reflect ? -2 : 2);
 }
 
-NSatTriPrism* NSatTriPrism::isBlockTriPrism(const NSatAnnulus& annulus,
+NSatTriPrism* NSatTriPrism::isBlockTriPrism(const SatAnnulus& annulus,
         TetList& avoidTets) {
     NSatTriPrism* ans;
 
@@ -394,7 +394,7 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrism(const NSatAnnulus& annulus,
         return ans;
 
     // Now try the reflected version.
-    NSatAnnulus altAnnulus = annulus.verticalReflection();
+    SatAnnulus altAnnulus = annulus.verticalReflection();
     if ((ans = isBlockTriPrismMajor(altAnnulus, avoidTets))) {
         // Reflect it back again but mark it as a minor variant.
         ans->major_ = false;
@@ -410,7 +410,7 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrism(const NSatAnnulus& annulus,
     return 0;
 }
 
-NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
+NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const SatAnnulus& annulus,
         TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
         return 0;
@@ -503,7 +503,7 @@ void NSatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
     sfs.insertFibre(1, reflect ? -2 : 2);
 }
 
-NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
+NSatCube* NSatCube::isBlockCube(const SatAnnulus& annulus,
         TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
         return 0;
@@ -647,7 +647,7 @@ void NSatReflectorStrip::adjustSFS(SFSpace& sfs, bool) const {
 }
 
 NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
-        const NSatAnnulus& annulus, TetList& avoidTets) {
+        const SatAnnulus& annulus, TetList& avoidTets) {
     // Hunt for the initial segment of the reflector strip that lies
     // behind the given annulus.
 
@@ -872,7 +872,7 @@ void NSatLayering::adjustSFS(SFSpace& sfs, bool reflect) const {
     // Over the diagonal, there is no change at all.
 }
 
-NSatLayering* NSatLayering::isBlockLayering(const NSatAnnulus& annulus,
+NSatLayering* NSatLayering::isBlockLayering(const SatAnnulus& annulus,
         TetList& avoidTets) {
     // Must be a common usable tetrahedron.
     if (annulus.tet[0] != annulus.tet[1])

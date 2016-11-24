@@ -431,7 +431,7 @@ void Tri3CompositionUI::describeSatRegion(const NSatRegion& region,
     QTreeWidgetItem* annuli;
 
     regina::NSatBlockSpec spec;
-    regina::NSatAnnulus ann;
+    regina::SatAnnulus ann;
     unsigned long nAnnuli;
     long a, b;
     bool ref, back;

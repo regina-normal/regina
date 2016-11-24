@@ -48,7 +48,7 @@
 
 namespace regina {
 
-struct NSatAnnulus;
+struct SatAnnulus;
 class SFSpace;
 
 /**
@@ -61,12 +61,12 @@ class SFSpace;
  * block is a connected set of tetrahedra built from a subset of fibres
  * (no fibres may enter or exit the boundary of the block).  In addition,
  * the boundary of this block must be a ring of saturated annuli, as
- * described by the NSatAnnulus class.  Aside from this ring of saturated
+ * described by the SatAnnulus class.  Aside from this ring of saturated
  * annuli, there may be no other boundary triangles within the block.
  *
  * The boundary annuli are numbered consecutively as illustrated below,
  * where the markings 0 and 1 within the triangles represent the first
- * and second triangle of each annulus (see the NSatAnnulus class notes for
+ * and second triangle of each annulus (see the SatAnnulus class notes for
  * details).  Note that the following diagram is viewed from \e inside
  * the block.
  *
@@ -91,7 +91,7 @@ class SFSpace;
  * orbifold together, we assume that the boundary of this particular
  * piece runs horizontally in the diagram above (specifically following
  * the horizontal edges of the boundary annuli, as described in the
- * NSatAnnulus class notes).  Insisting on such a boundary may lead to
+ * SatAnnulus class notes).  Insisting on such a boundary may lead to
  * (1,\a k) twists within the block; these are accounted for by the
  * virtual adjustSFS() routine.
  *
@@ -121,7 +121,7 @@ class REGINA_API NSatBlock :
     protected:
         unsigned nAnnuli_;
             /**< The number of boundary annuli. */
-        NSatAnnulus* annulus_;
+        SatAnnulus* annulus_;
             /**< Details of each boundary annulus, as seen from the
                  inside of this saturated block. */
         bool twistedBoundary_;
@@ -194,7 +194,7 @@ class REGINA_API NSatBlock :
          * this must be between 0 and nAnnuli()-1 inclusive.
          * @return a reference to the requested boundary annulus.
          */
-        const NSatAnnulus& annulus(unsigned which) const;
+        const SatAnnulus& annulus(unsigned which) const;
 
         /**
          * Is the ring of boundary annuli twisted to form a long Mobius
@@ -351,7 +351,7 @@ class REGINA_API NSatBlock :
          * Adjusts the structure of this block according to the given
          * isomorphism between triangulations.  Any triangulation-specific
          * information will be transformed accordingly (for instance, the
-         * routine NSatAnnulus::transform() will be called for each
+         * routine SatAnnulus::transform() will be called for each
          * boundary annulus).
          *
          * Information regarding adjacent blocks will \e not be changed.
@@ -426,7 +426,7 @@ class REGINA_API NSatBlock :
          * It is possible that both a horizontal and vertical reflection
          * take place.  Note that any kind of reflection will also
          * affect the locations of the 0/1/2 markings as described in
-         * the NSatAnnulus class notes.
+         * the SatAnnulus class notes.
          *
          * Finally, note that if the large boundary ring is twisted
          * (i.e., it forms a Klein bottle), then following the entire
@@ -551,7 +551,7 @@ class REGINA_API NSatBlock :
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatBlock* isBlock(const NSatAnnulus& annulus,
+        static NSatBlock* isBlock(const SatAnnulus& annulus,
             TetList& avoidTets);
 
         /**
@@ -727,7 +727,7 @@ class REGINA_API NSatBlock :
 
 inline NSatBlock::NSatBlock(unsigned nAnnuli, bool twistedBoundary) :
         nAnnuli_(nAnnuli),
-        annulus_(new NSatAnnulus[nAnnuli]),
+        annulus_(new SatAnnulus[nAnnuli]),
         twistedBoundary_(twistedBoundary),
         adjBlock_(new NSatBlock*[nAnnuli]),
         adjAnnulus_(new unsigned[nAnnuli]),
@@ -754,7 +754,7 @@ inline unsigned NSatBlock::nAnnuli() const {
     return nAnnuli_;
 }
 
-inline const NSatAnnulus& NSatBlock::annulus(unsigned which) const {
+inline const SatAnnulus& NSatBlock::annulus(unsigned which) const {
     return annulus_[which];
 }
 

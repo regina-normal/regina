@@ -191,7 +191,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         return true;
     }
 
-    NSatAnnulus bdry = bdryBlock->annulus(bdryAnnulus);
+    SatAnnulus bdry = bdryBlock->annulus(bdryAnnulus);
 
     // We have a boundary annulus for the first region.
 
@@ -205,7 +205,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
 
     // We make the shell of an other-side boundary annulus; we will fill
     // in the precise vertex role permutations later on.
-    NSatAnnulus otherSide(layering.newBoundaryTet(0), Perm<4>(),
+    SatAnnulus otherSide(layering.newBoundaryTet(0), Perm<4>(),
         layering.newBoundaryTet(1), Perm<4>());
 
     if (otherSide.meetsBoundary()) {

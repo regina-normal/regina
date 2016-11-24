@@ -122,7 +122,7 @@ class Matrix2;
  * so for instance the second triangle vertex roles for the saturated annulus
  * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
  */
-struct REGINA_API NSatAnnulus {
+struct REGINA_API SatAnnulus {
     Tetrahedron<3>* tet[2];
         /**< Describes which tetrahedra provide the first and second
              triangles.  See the class notes for details. */
@@ -135,13 +135,13 @@ struct REGINA_API NSatAnnulus {
      * Creates a new uninitialised structure.  Both tetrahedra will be
      * set to null pointers.
      */
-    NSatAnnulus();
+    SatAnnulus();
     /**
      * Creates a clone of the given structure.
      *
      * @param cloneMe the structure to clone.
      */
-    NSatAnnulus(const NSatAnnulus& cloneMe);
+    SatAnnulus(const SatAnnulus& cloneMe);
     /**
      * Creates a new structure initialised to the given values.  See the
      * class notes for what the various tetrahedra and permutations mean.
@@ -151,14 +151,14 @@ struct REGINA_API NSatAnnulus {
      * @param t1 the tetrahedron to assign to \a tet[1].
      * @param r1 the permutation to assign to \a roles[1].
      */
-    NSatAnnulus(Tetrahedron<3>* t0, Perm<4> r0, Tetrahedron<3>* t1, Perm<4> r1);
+    SatAnnulus(Tetrahedron<3>* t0, Perm<4> r0, Tetrahedron<3>* t1, Perm<4> r1);
     /**
      * Makes this equal to a clone of the given structure.
      *
      * @param cloneMe the structure to clone.
      * @return a reference to this structure.
      */
-    NSatAnnulus& operator = (const NSatAnnulus& cloneMe);
+    SatAnnulus& operator = (const SatAnnulus& cloneMe);
 
     /**
      * Determines whether or not this and the given structure describe
@@ -169,7 +169,7 @@ struct REGINA_API NSatAnnulus {
      * @return \c true if the structures describe the same annulus with
      * the same representation, or \c false if they do not.
      */
-    bool operator == (const NSatAnnulus& other) const;
+    bool operator == (const SatAnnulus& other) const;
     /**
      * Determines whether or not this and the given structure describe
      * the same annulus with the same representation.  This requires
@@ -179,7 +179,7 @@ struct REGINA_API NSatAnnulus {
      * @return \c true if the structures do not describe the same annulus
      * with the same representation, or \c false if they do.
      */
-    bool operator != (const NSatAnnulus& other) const;
+    bool operator != (const SatAnnulus& other) const;
 
     /**
      * Determines how many triangles of this annulus lie on the boundary
@@ -217,7 +217,7 @@ struct REGINA_API NSatAnnulus {
      *
      * @return a new representation of this annulus from the other side.
      */
-    NSatAnnulus otherSide() const;
+    SatAnnulus otherSide() const;
 
     /**
      * Reverses the direction of the vertical fibres in this annulus
@@ -234,7 +234,7 @@ struct REGINA_API NSatAnnulus {
      * @return a new representation of this annulus in which fibres have
      * been reversed.
      */
-    NSatAnnulus verticalReflection() const;
+    SatAnnulus verticalReflection() const;
 
     /**
      * Performs a left-to-right reflection of this annulus
@@ -250,7 +250,7 @@ struct REGINA_API NSatAnnulus {
      *
      * @return a new left-to-right reflection of this annulus.
      */
-    NSatAnnulus horizontalReflection() const;
+    SatAnnulus horizontalReflection() const;
 
     /**
      * Rotates the representation of this annulus by 180 degrees.
@@ -268,7 +268,7 @@ struct REGINA_API NSatAnnulus {
      *
      * @return a new 180 degree rotation of this annulus.
      */
-    NSatAnnulus halfTurnRotation() const;
+    SatAnnulus halfTurnRotation() const;
 
     /**
      * Determines whether this and the given annulus are adjacent,
@@ -315,7 +315,7 @@ struct REGINA_API NSatAnnulus {
      * @return \c true if some adjacency was found (either with or
      * without reflections), or \c false if no adjacency was found at all.
      */
-    bool isAdjacent(const NSatAnnulus& other, bool* refVert, bool* refHoriz)
+    bool isAdjacent(const SatAnnulus& other, bool* refVert, bool* refHoriz)
         const;
 
     /**
@@ -360,7 +360,7 @@ struct REGINA_API NSatAnnulus {
      * @return \c true if this and the given annulus are found to be
      * joined, or \c false if they are not.
      */
-    bool isJoined(const NSatAnnulus& other, Matrix2& matching) const;
+    bool isJoined(const SatAnnulus& other, Matrix2& matching) const;
 
     /**
      * Determines whether this annulus has its boundaries identified to
@@ -411,7 +411,7 @@ struct REGINA_API NSatAnnulus {
      * @param newTri the triangulation to be used by the new annulus
      * representation.
      */
-    NSatAnnulus image(const Triangulation<3>* originalTri,
+    SatAnnulus image(const Triangulation<3>* originalTri,
             const Isomorphism<3>* iso, Triangulation<3>* newTri) const;
 
     /**
@@ -448,56 +448,56 @@ struct REGINA_API NSatAnnulus {
 
 /*@}*/
 
-// Inline functions for NSatAnnulus
+// Inline functions for SatAnnulus
 
-inline NSatAnnulus::NSatAnnulus() {
+inline SatAnnulus::SatAnnulus() {
     tet[0] = tet[1] = 0;
 }
 
-inline NSatAnnulus::NSatAnnulus(const NSatAnnulus& cloneMe) {
+inline SatAnnulus::SatAnnulus(const SatAnnulus& cloneMe) {
     tet[0] = cloneMe.tet[0]; tet[1] = cloneMe.tet[1];
     roles[0] = cloneMe.roles[0]; roles[1] = cloneMe.roles[1];
 }
 
-inline NSatAnnulus::NSatAnnulus(Tetrahedron<3>* t0, Perm<4> r0,
+inline SatAnnulus::SatAnnulus(Tetrahedron<3>* t0, Perm<4> r0,
         Tetrahedron<3>* t1, Perm<4> r1) {
     tet[0] = t0; tet[1] = t1;
     roles[0] = r0; roles[1] = r1;
 }
 
-inline NSatAnnulus& NSatAnnulus::operator = (const NSatAnnulus& cloneMe) {
+inline SatAnnulus& SatAnnulus::operator = (const SatAnnulus& cloneMe) {
     tet[0] = cloneMe.tet[0]; tet[1] = cloneMe.tet[1];
     roles[0] = cloneMe.roles[0]; roles[1] = cloneMe.roles[1];
     return *this;
 }
 
-inline bool NSatAnnulus::operator == (const NSatAnnulus& other) const {
+inline bool SatAnnulus::operator == (const SatAnnulus& other) const {
     return (tet[0] == other.tet[0] && tet[1] == other.tet[1] &&
             roles[0] == other.roles[0] && roles[1] == other.roles[1]);
 }
 
-inline bool NSatAnnulus::operator != (const NSatAnnulus& other) const {
+inline bool SatAnnulus::operator != (const SatAnnulus& other) const {
     return (tet[0] != other.tet[0] || tet[1] != other.tet[1] ||
             roles[0] != other.roles[0] || roles[1] != other.roles[1]);
 }
 
-inline NSatAnnulus NSatAnnulus::otherSide() const {
-    NSatAnnulus a(*this);
+inline SatAnnulus SatAnnulus::otherSide() const {
+    SatAnnulus a(*this);
     a.switchSides();
     return a;
 }
 
-inline void NSatAnnulus::reflectVertical() {
+inline void SatAnnulus::reflectVertical() {
     roles[0] = roles[0] * Perm<4>(0, 1);
     roles[1] = roles[1] * Perm<4>(0, 1);
 }
 
-inline NSatAnnulus NSatAnnulus::verticalReflection() const {
-    return NSatAnnulus(tet[0], roles[0] * Perm<4>(0, 1),
+inline SatAnnulus SatAnnulus::verticalReflection() const {
+    return SatAnnulus(tet[0], roles[0] * Perm<4>(0, 1),
                        tet[1], roles[1] * Perm<4>(0, 1));
 }
 
-inline void NSatAnnulus::reflectHorizontal() {
+inline void SatAnnulus::reflectHorizontal() {
     Tetrahedron<3>* t = tet[0];
     tet[0] = tet[1];
     tet[1] = t;
@@ -507,12 +507,12 @@ inline void NSatAnnulus::reflectHorizontal() {
     roles[1] = r * Perm<4>(0, 1);
 }
 
-inline NSatAnnulus NSatAnnulus::horizontalReflection() const {
-    return NSatAnnulus(tet[1], roles[1] * Perm<4>(0, 1),
+inline SatAnnulus SatAnnulus::horizontalReflection() const {
+    return SatAnnulus(tet[1], roles[1] * Perm<4>(0, 1),
                        tet[0], roles[0] * Perm<4>(0, 1));
 }
 
-inline void NSatAnnulus::rotateHalfTurn() {
+inline void SatAnnulus::rotateHalfTurn() {
     Tetrahedron<3>* t = tet[0];
     tet[0] = tet[1];
     tet[1] = t;
@@ -522,13 +522,13 @@ inline void NSatAnnulus::rotateHalfTurn() {
     roles[1] = r;
 }
 
-inline NSatAnnulus NSatAnnulus::halfTurnRotation() const {
-    return NSatAnnulus(tet[1], roles[1], tet[0], roles[0]);
+inline SatAnnulus SatAnnulus::halfTurnRotation() const {
+    return SatAnnulus(tet[1], roles[1], tet[0], roles[0]);
 }
 
-inline NSatAnnulus NSatAnnulus::image(const Triangulation<3>* originalTri,
+inline SatAnnulus SatAnnulus::image(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) const {
-    NSatAnnulus a(*this);
+    SatAnnulus a(*this);
     a.transform(originalTri, iso, newTri);
     return a;
 }

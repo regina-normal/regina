@@ -73,7 +73,7 @@ NSatRegion::~NSatRegion() {
         delete it->block;
 }
 
-const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
+const SatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
         bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
     for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
@@ -93,7 +93,7 @@ const NSatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
 
     // We need to return a reference, so to keep the compiler happy,
     // create a memory leak.  Again, we should never actually reach this point.
-    return *(new NSatAnnulus());
+    return *(new SatAnnulus());
 }
 
 void NSatRegion::boundaryAnnulus(unsigned long which,
@@ -341,7 +341,7 @@ void NSatRegion::calculateBaseEuler() {
 
     std::set<Edge<3>*> baseVerticesAll;
     std::set<Edge<3>*> baseVerticesBdry;
-    NSatAnnulus annData;
+    SatAnnulus annData;
 
     for (it = blocks_.begin(); it != blocks_.end(); it++)
         for (ann = 0; ann < it->block->nAnnuli(); ann++) {

@@ -221,7 +221,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
     // We either want two disjoint one-annulus boundaries, or else a
     // single two-annulus boundary that is pinched to turn each annulus
     // into a two-sided torus.  The following test handles all cases.
-    NSatAnnulus bdry[2];
+    SatAnnulus bdry[2];
     bdry[0] = bdryBlock[0]->annulus(bdryAnnulus[0]);
     bdry[1] = bdryBlock[1]->annulus(bdryAnnulus[1]);
 
@@ -268,7 +268,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
 
         // We make the shell of an other-side boundary annulus; we will fill
         // in the precise vertex role permutations later on.
-        NSatAnnulus otherSide(layering[e]->newBoundaryTet(0), Perm<4>(),
+        SatAnnulus otherSide(layering[e]->newBoundaryTet(0), Perm<4>(),
             layering[e]->newBoundaryTet(1), Perm<4>());
 
         if (otherSide.meetsBoundary()) {

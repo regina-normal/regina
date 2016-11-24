@@ -37,7 +37,7 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSatAnnulus;
+using regina::SatAnnulus;
 using regina::NSatBlock;
 
 namespace {
@@ -57,7 +57,7 @@ namespace {
         b.writeAbbr(std::cout, tex);
     }
 
-    NSatBlock* isBlock_nolist(const NSatAnnulus& a) {
+    NSatBlock* isBlock_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
         return NSatBlock::isBlock(a, avoidTets);
     }

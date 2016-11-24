@@ -93,7 +93,7 @@ class REGINA_API NSatMobius : public NSatBlock {
          * return value of this routine indicates which edge of the
          * boundary annulus this weight two edge is joined to.
          *
-         * In the NSatAnnulus class notes, the three edges of the
+         * In the SatAnnulus class notes, the three edges of the
          * annulus are denoted vertical, horizontal and boundary, and
          * the vertices of each triangle are given markings 0, 1 and 2.
          *
@@ -128,7 +128,7 @@ class REGINA_API NSatMobius : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatMobius* isBlockMobius(const NSatAnnulus& annulus,
+        static NSatMobius* isBlockMobius(const SatAnnulus& annulus,
             TetList& avoidTets);
 
     private:
@@ -151,7 +151,7 @@ class REGINA_API NSatMobius : public NSatBlock {
  *
  * The three boundary edges of the layered solid torus are attached to
  * the vertical, horizontal and diagonal edges of the boundary annulus;
- * see the NSatAnnulus class notes for details on precisely what
+ * see the SatAnnulus class notes for details on precisely what
  * vertical, horizontal and diagonal mean.
  */
 class REGINA_API NSatLST : public NSatBlock {
@@ -191,7 +191,7 @@ class REGINA_API NSatLST : public NSatBlock {
          *
          * The LayeredSolidTorus class notes describe top-level edge
          * groups 0, 1 and 2 for a layered solid torus.  On the other
-         * hand, the NSatAnnulus class notes define vertical, horizontal
+         * hand, the SatAnnulus class notes define vertical, horizontal
          * and diagonal edges on the boundary annulus.
          *
          * Suppose that the permutation returned by this routine is \a r.
@@ -227,7 +227,7 @@ class REGINA_API NSatLST : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatLST* isBlockLST(const NSatAnnulus& annulus,
+        static NSatLST* isBlockLST(const SatAnnulus& annulus,
             TetList& avoidTets);
 
     private:
@@ -251,7 +251,7 @@ class REGINA_API NSatLST : public NSatBlock {
  * type prism, the horizontal edges of the boundary annuli are all
  * major (degree three) edges of the prism.  Likewise, in a \e minor
  * type prism, the horizontal boundary edges are all minor (degree two)
- * edges of the prism.  See the NSatAnnulus class notes for a definition
+ * edges of the prism.  See the SatAnnulus class notes for a definition
  * of "horizontal" and the NTriSolidTorus class notes for further
  * details regarding "major" and "minor".
  */
@@ -299,7 +299,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatTriPrism* isBlockTriPrism(const NSatAnnulus& annulus,
+        static NSatTriPrism* isBlockTriPrism(const SatAnnulus& annulus,
             TetList& avoidTets);
 
         /**
@@ -340,7 +340,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatTriPrism* isBlockTriPrismMajor(const NSatAnnulus& annulus,
+        static NSatTriPrism* isBlockTriPrismMajor(const SatAnnulus& annulus,
             TetList& avoidTets);
 };
 
@@ -385,7 +385,7 @@ class REGINA_API NSatCube : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatCube* isBlockCube(const NSatAnnulus& annulus,
+        static NSatCube* isBlockCube(const SatAnnulus& annulus,
             TetList& avoidTets);
 
         /**
@@ -462,7 +462,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
          * \c null if none was found.
          */
         static NSatReflectorStrip* isBlockReflectorStrip(
-            const NSatAnnulus& annulus, TetList& avoidTets);
+            const SatAnnulus& annulus, TetList& avoidTets);
 
         /**
          * Inserts a new reflector strip into the given triangulation,
@@ -515,7 +515,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
  * which will give room for the fibres to separate so that they are no
  * longer pinched together.
  *
- * The NSatAnnulus class notes describe horizontal and diagonal edges of
+ * The SatAnnulus class notes describe horizontal and diagonal edges of
  * a saturated annulus.  This block may be one of two types, according
  * to how the tetrahedron is layered onto the boundary annuli.  Either
  * the tetrahedron can be layered over the horizontal edge of each
@@ -542,7 +542,7 @@ class REGINA_API NSatLayering : public NSatBlock {
          * Does this describe a layering over the horizontal edge of the
          * boundary annulus, or a layering over the diagonal edge?
          *
-         * See the NSatAnnulus class notes for definitions of horizontal
+         * See the SatAnnulus class notes for definitions of horizontal
          * and diagonal in this context.
          */
         bool overHorizontal() const;
@@ -565,7 +565,7 @@ class REGINA_API NSatLayering : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatLayering* isBlockLayering(const NSatAnnulus& annulus,
+        static NSatLayering* isBlockLayering(const SatAnnulus& annulus,
             TetList& avoidTets);
 
     protected:

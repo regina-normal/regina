@@ -37,7 +37,7 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSatAnnulus;
+using regina::SatAnnulus;
 using regina::NSatBlock;
 using regina::NSatCube;
 using regina::NSatLayering;
@@ -47,32 +47,32 @@ using regina::NSatReflectorStrip;
 using regina::NSatTriPrism;
 
 namespace {
-    NSatMobius* isBlockMobius_nolist(const NSatAnnulus& a) {
+    NSatMobius* isBlockMobius_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
         return NSatMobius::isBlockMobius(a, avoidTets);
     }
 
-    NSatLST* isBlockLST_nolist(const NSatAnnulus& a) {
+    NSatLST* isBlockLST_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
         return NSatLST::isBlockLST(a, avoidTets);
     }
 
-    NSatTriPrism* isBlockTriPrism_nolist(const NSatAnnulus& a) {
+    NSatTriPrism* isBlockTriPrism_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
         return NSatTriPrism::isBlockTriPrism(a, avoidTets);
     }
 
-    NSatCube* isBlockCube_nolist(const NSatAnnulus& a) {
+    NSatCube* isBlockCube_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
         return NSatCube::isBlockCube(a, avoidTets);
     }
 
-    NSatReflectorStrip* isBlockReflectorStrip_nolist(const NSatAnnulus& a) {
+    NSatReflectorStrip* isBlockReflectorStrip_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
         return NSatReflectorStrip::isBlockReflectorStrip(a, avoidTets);
     }
 
-    NSatLayering* isBlockLayering_nolist(const NSatAnnulus& a) {
+    NSatLayering* isBlockLayering_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
         return NSatLayering::isBlockLayering(a, avoidTets);
     }

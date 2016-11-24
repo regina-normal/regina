@@ -362,7 +362,7 @@ class REGINA_API NSatRegion :
          * @return details of the requested boundary annulus, precisely
          * as it appears within its particular saturated block.
          */
-        const NSatAnnulus& boundaryAnnulus(unsigned long which,
+        const SatAnnulus& boundaryAnnulus(unsigned long which,
             bool& blockRefVert, bool& blockRefHoriz) const;
         /**
          * Returns fine details of the requested saturated annulus on
@@ -431,7 +431,7 @@ class REGINA_API NSatRegion :
          * (see \ref sfsnotation) will be as follows.
          *
          * - Consider the 0/1/2 markings on the first and second triangles
-         *   of each saturated annulus, as described in the NSatAnnulus
+         *   of each saturated annulus, as described in the SatAnnulus
          *   class notes.
          * - The fibres are represented by the oriented edge joining
          *   markings 1 and 0 on the first triangle (or 0 and 1 on the

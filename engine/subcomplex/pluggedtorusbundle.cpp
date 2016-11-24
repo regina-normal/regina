@@ -148,7 +148,7 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
 
     int regionPos;
     Perm<4> annulusToUpperLayer;
-    NSatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
+    SatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
     NSatBlock::TetList avoidTets;
     NSatBlock* starter;
     NSatRegion* region;

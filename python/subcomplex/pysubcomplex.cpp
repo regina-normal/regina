@@ -46,7 +46,7 @@ void addLayering();
 void addPillowTwoSphere();
 void addPluggedTorusBundle();
 void addPlugTriSolidTorus();
-void addNSatAnnulus();
+void addSatAnnulus();
 void addNSatBlock();
 void addNSatBlockTypes();
 void addNSatRegion();
@@ -79,7 +79,7 @@ void addSubcomplexClasses() {
     addNTriSolidTorus();
     addNTrivialTri();
     addNTxICore();
-    addNSatAnnulus();
+    addSatAnnulus();
     addNSatBlock();
     addNSatBlockTypes();
     addNSatRegion();

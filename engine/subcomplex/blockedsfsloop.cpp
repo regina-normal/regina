@@ -168,8 +168,8 @@ bool BlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     // through the layering in the pinched case, since this will fail
     // our test anyway (either boundaries do not form tori, or they are
     // not two-sided).
-    NSatAnnulus bdry0 = bdryBlock[0]->annulus(bdryAnnulus[0]);
-    NSatAnnulus bdry1 = bdryBlock[1]->annulus(bdryAnnulus[1]);
+    SatAnnulus bdry0 = bdryBlock[0]->annulus(bdryAnnulus[0]);
+    SatAnnulus bdry1 = bdryBlock[1]->annulus(bdryAnnulus[1]);
 
     if (! (bdry0.isTwoSidedTorus() && bdry1.isTwoSidedTorus())) {
         delete region;
@@ -183,7 +183,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     Layering layering(bdry0.tet[0], bdry0.roles[0],
         bdry0.tet[1], bdry0.roles[1]);
 
-    NSatAnnulus layerTop;
+    SatAnnulus layerTop;
     Matrix2 layerToBdry1;
     while (true) {
         layerTop.tet[0] = layering.newBoundaryTet(0);
