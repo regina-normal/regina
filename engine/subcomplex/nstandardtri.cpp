@@ -42,7 +42,7 @@
 #include "subcomplex/layeredloop.h"
 #include "subcomplex/layeredsurfacebundle.h"
 #include "subcomplex/pluggedtorusbundle.h"
-#include "subcomplex/nplugtrisolidtorus.h"
+#include "subcomplex/plugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "subcomplex/ntrivialtri.h"
 #include "triangulation/dim3.h"

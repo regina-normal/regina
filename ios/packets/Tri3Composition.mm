@@ -49,7 +49,7 @@
 #import "subcomplex/layeredsurfacebundle.h"
 #import "subcomplex/pillowtwosphere.h"
 #import "subcomplex/pluggedtorusbundle.h"
-#import "subcomplex/nplugtrisolidtorus.h"
+#import "subcomplex/plugtrisolidtorus.h"
 #import "subcomplex/nsatblock.h"
 #import "subcomplex/nsatregion.h"
 #import "subcomplex/nsnappedball.h"

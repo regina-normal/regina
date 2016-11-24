@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/nplugtrisolidtorus.h"
+#include "subcomplex/plugtrisolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

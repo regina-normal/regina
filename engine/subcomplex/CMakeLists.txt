@@ -73,6 +73,7 @@ if (${REGINA_INSTALL_DEV})
     npillowtwosphere.h
     pluggedtorusbundle.h
     npluggedtorusbundle.h
+    plugtrisolidtorus.h
     nplugtrisolidtorus.h
     nsatannulus.h
     nsatblock.h
