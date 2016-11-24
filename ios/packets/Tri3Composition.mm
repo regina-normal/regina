@@ -441,7 +441,7 @@
         delete loop;
     }
     
-    regina::NBlockedSFSPair* pair = regina::NBlockedSFSPair::isBlockedSFSPair(self.packet);
+    regina::BlockedSFSPair* pair = regina::BlockedSFSPair::isBlockedSFSPair(self.packet);
     if (pair) {
         [details appendString:@"Blocked SFS Pair\n"];
         

@@ -95,7 +95,7 @@ class NSatRegion;
  * The optional NStandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API NBlockedSFSPair : public NStandardTriangulation {
+class REGINA_API BlockedSFSPair : public NStandardTriangulation {
     private:
         NSatRegion* region_[2];
             /**< The two saturated regions whose boundaries are joined. */
@@ -107,7 +107,7 @@ class REGINA_API NBlockedSFSPair : public NStandardTriangulation {
         /**
          * Destroys this structure and its constituent components.
          */
-        ~NBlockedSFSPair();
+        ~BlockedSFSPair();
 
         /**
          * Returns details of one of the two bounded saturated regions that
@@ -149,7 +149,7 @@ class REGINA_API NBlockedSFSPair : public NStandardTriangulation {
          * blocked pair, or \c null if the given triangulation is not of
          * this form.
          */
-        static NBlockedSFSPair* isBlockedSFSPair(Triangulation<3>* tri);
+        static BlockedSFSPair* isBlockedSFSPair(Triangulation<3>* tri);
 
     private:
         /**
@@ -165,26 +165,26 @@ class REGINA_API NBlockedSFSPair : public NStandardTriangulation {
          * @param matchingReln describes how the first and second region
          * boundaries are joined, as detailed in the class notes above.
          */
-        NBlockedSFSPair(NSatRegion* region0, NSatRegion* region1,
+        BlockedSFSPair(NSatRegion* region0, NSatRegion* region1,
             const Matrix2& matchingReln);
 };
 
 /*@}*/
 
-// Inline functions for NBlockedSFSPair
+// Inline functions for BlockedSFSPair
 
-inline NBlockedSFSPair::NBlockedSFSPair(NSatRegion* region0,
+inline BlockedSFSPair::BlockedSFSPair(NSatRegion* region0,
         NSatRegion* region1, const Matrix2& matchingReln) :
         matchingReln_(matchingReln) {
     region_[0] = region0;
     region_[1] = region1;
 }
 
-inline const NSatRegion& NBlockedSFSPair::region(int which) const {
+inline const NSatRegion& BlockedSFSPair::region(int which) const {
     return *region_[which];
 }
 
-inline const Matrix2& NBlockedSFSPair::matchingReln() const {
+inline const Matrix2& BlockedSFSPair::matchingReln() const {
     return matchingReln_;
 }
 

@@ -37,23 +37,23 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NBlockedSFSPair;
+using regina::BlockedSFSPair;
 
-void addNBlockedSFSPair() {
-    class_<NBlockedSFSPair, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NBlockedSFSPair>, boost::noncopyable>
-            ("NBlockedSFSPair", no_init)
-        .def("region", &NBlockedSFSPair::region,
+void addBlockedSFSPair() {
+    class_<BlockedSFSPair, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<BlockedSFSPair>, boost::noncopyable>
+            ("BlockedSFSPair", no_init)
+        .def("region", &BlockedSFSPair::region,
             return_internal_reference<>())
-        .def("matchingReln", &NBlockedSFSPair::matchingReln,
+        .def("matchingReln", &BlockedSFSPair::matchingReln,
             return_internal_reference<>())
-        .def("isBlockedSFSPair", &NBlockedSFSPair::isBlockedSFSPair,
+        .def("isBlockedSFSPair", &BlockedSFSPair::isBlockedSFSPair,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockedSFSPair")
     ;
 
-    implicitly_convertible<std::auto_ptr<NBlockedSFSPair>,
+    implicitly_convertible<std::auto_ptr<BlockedSFSPair>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

@@ -105,7 +105,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     // Save non-geometric graph manifolds until last.
     if ((ans = BlockedSFSLoop::isBlockedSFSLoop(tri)))
         return ans;
-    if ((ans = NBlockedSFSPair::isBlockedSFSPair(tri)))
+    if ((ans = BlockedSFSPair::isBlockedSFSPair(tri)))
         return ans;
     if ((ans = NBlockedSFSTriple::isBlockedSFSTriple(tri)))
         return ans;

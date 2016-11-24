@@ -546,8 +546,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         delete loop;
     }
 
-    regina::NBlockedSFSPair* pair =
-        regina::NBlockedSFSPair::isBlockedSFSPair(tri);
+    regina::BlockedSFSPair* pair =
+        regina::BlockedSFSPair::isBlockedSFSPair(tri);
     if (pair) {
         id = addComponentSection(tr("Blocked SFS Pair"));
 

@@ -43,12 +43,12 @@ namespace regina {
  * A subclass of NSatBlockStarterSearcher that, upon finding a starter
  * block, attempts to flesh this out to a pair of saturated regions
  * joined along their single torus boundaries, as desribed by the
- * NBlockedSFSPair class.
+ * BlockedSFSPair class.
  */
-struct NBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
+struct BlockedSFSPairSearcher : public NSatBlockStarterSearcher {
     NSatRegion* region[2];
         /**< The two bounded saturated regions that are joined together,
-             if the entire NBlockedSFSPair structure has been successfully
+             if the entire BlockedSFSPair structure has been successfully
              found; otherwise, two null pointers if we are still searching. */
     Matrix2 matchingReln;
         /**< The matrix describing how the region boundaries are joined
@@ -59,7 +59,7 @@ struct NBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
     /**
      * Creates a new searcher whose \a region pointers are both null.
      */
-    NBlockedSFSPairSearcher() {
+    BlockedSFSPairSearcher() {
         region[0] = region[1] = 0;
     }
 
@@ -67,14 +67,14 @@ struct NBlockedSFSPairSearcher : public NSatBlockStarterSearcher {
         bool useStarterBlock(NSatBlock* starter);
 };
 
-NBlockedSFSPair::~NBlockedSFSPair() {
+BlockedSFSPair::~BlockedSFSPair() {
     if (region_[0])
         delete region_[0];
     if (region_[1])
         delete region_[1];
 }
 
-Manifold* NBlockedSFSPair::manifold() const {
+Manifold* BlockedSFSPair::manifold() const {
     SFSpace* sfs0 = region_[0]->createSFS(false);
     if (! sfs0)
         return 0;
@@ -95,7 +95,7 @@ Manifold* NBlockedSFSPair::manifold() const {
         return new GraphPair(sfs0, sfs1, matchingReln_);
 }
 
-std::ostream& NBlockedSFSPair::writeName(std::ostream& out) const {
+std::ostream& BlockedSFSPair::writeName(std::ostream& out) const {
     out << "Blocked SFS Pair [";
     region_[0]->writeBlockAbbrs(out, false);
     out << " | ";
@@ -103,7 +103,7 @@ std::ostream& NBlockedSFSPair::writeName(std::ostream& out) const {
     return out << ']';
 }
 
-std::ostream& NBlockedSFSPair::writeTeXName(std::ostream& out) const {
+std::ostream& BlockedSFSPair::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{BSFS\\_Pair}\\left[";
     region_[0]->writeBlockAbbrs(out, true);
     out << "\\,|\\,";
@@ -111,14 +111,14 @@ std::ostream& NBlockedSFSPair::writeTeXName(std::ostream& out) const {
     return out << "\\right]";
 }
 
-void NBlockedSFSPair::writeTextLong(std::ostream& out) const {
+void BlockedSFSPair::writeTextLong(std::ostream& out) const {
     out << "Blocked SFS pair, matching relation " << matchingReln_ << "\n";
 
     region_[0]->writeDetail(out, "First region");
     region_[1]->writeDetail(out, "Second region");
 }
 
-NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
+BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
@@ -135,7 +135,7 @@ NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
         return 0;
 
     // Hunt for a starting block.
-    NBlockedSFSPairSearcher searcher;
+    BlockedSFSPairSearcher searcher;
     searcher.findStarterBlocks(tri);
 
     // Any luck?
@@ -143,7 +143,7 @@ NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
         // The full expansion worked, and the triangulation is known
         // to be closed and connected.
         // This means we've got one!
-        return new NBlockedSFSPair(searcher.region[0], searcher.region[1],
+        return new BlockedSFSPair(searcher.region[0], searcher.region[1],
             searcher.matchingReln);
     }
 
@@ -151,7 +151,7 @@ NBlockedSFSPair* NBlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     return 0;
 }
 
-bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
+bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     // The region pointers should be null, but just in case...
     if (region[0] || region[1]) {
         delete starter;
