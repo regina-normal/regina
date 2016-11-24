@@ -1286,6 +1286,8 @@ NAngleStructureList : typedef ->  AngleStructures
 
 NAugTriSolidTorus : typedef ->  AugTriSolidTorus
 
+NBlockedSFS : typedef ->  BlockedSFS
+
 NBlockedSFSLoop : typedef ->  BlockedSFSLoop
 
 NBlockedSFSPair : typedef ->  BlockedSFSPair

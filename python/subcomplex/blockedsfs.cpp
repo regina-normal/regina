@@ -62,5 +62,7 @@ void addBlockedSFS() {
 
     implicitly_convertible<std::auto_ptr<BlockedSFS>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NBlockedSFS") = scope().attr("BlockedSFS");
 }
 
