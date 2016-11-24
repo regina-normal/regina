@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "maths/matrix2.h"
-#include "subcomplex/nsatannulus.h"
+#include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

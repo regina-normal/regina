@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "subcomplex/nsatannulus.h"
+#include "subcomplex/satannulus.h"
 #include <set>
 #include <boost/noncopyable.hpp>
 
