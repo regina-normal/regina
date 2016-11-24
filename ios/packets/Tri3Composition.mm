@@ -262,7 +262,7 @@
             [details appendFormat:@"Layered lens space %s\n", lens->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             
-            const regina::NLayeredSolidTorus& torus(lens->torus());
+            const regina::LayeredSolidTorus& torus(lens->torus());
             [details appendFormat:@INDENT1 "Layered %ld-%ld-%ld solid torus %s\n",
              torus.meridinalCuts(0),
              torus.meridinalCuts(1),
@@ -520,10 +520,10 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::NLayeredSolidTorus* torus;
+    regina::LayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->tetrahedron(i));
+        torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->tetrahedron(i));
         if (torus) {
             [details appendFormat:@"Layered solid torus %s\n", torus->name().c_str()];
             [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->base()->index()];

@@ -312,7 +312,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
         return 0;
 
     // Find the layered solid torus.
-    NLayeredSolidTorus* lst = NLayeredSolidTorus::formsLayeredSolidTorusTop(
+    LayeredSolidTorus* lst = LayeredSolidTorus::formsLayeredSolidTorusTop(
         annulus.tet[0], annulus.roles[0][3], annulus.roles[1][3]);
     if (! lst)
         return 0;

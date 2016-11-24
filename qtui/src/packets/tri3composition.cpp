@@ -706,7 +706,7 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
 
-            const regina::NLayeredSolidTorus& torus(lens->torus());
+            const regina::LayeredSolidTorus& torus(lens->torus());
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
                 "Layered %1-%2-%3 solid torus %4").
@@ -766,10 +766,10 @@ void Tri3CompositionUI::findLayeredSolidTori() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NLayeredSolidTorus* torus;
+    regina::LayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(
+        torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(
             tri->tetrahedron(i));
         if (torus) {
             id = addComponentSection(tr("Layered solid torus ") +

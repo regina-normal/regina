@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NLayeredSolidTorus;
+class LayeredSolidTorus;
 
 /**
  * \weakgroup subcomplex
@@ -147,7 +147,7 @@ class REGINA_API NSatMobius : public NSatBlock {
 
 /**
  * A saturated block that is a layered solid torus.  See the
- * NLayeredSolidTorus class for details.
+ * LayeredSolidTorus class for details.
  *
  * The three boundary edges of the layered solid torus are attached to
  * the vertical, horizontal and diagonal edges of the boundary annulus;
@@ -156,7 +156,7 @@ class REGINA_API NSatMobius : public NSatBlock {
  */
 class REGINA_API NSatLST : public NSatBlock {
     private:
-        NLayeredSolidTorus* lst_;
+        LayeredSolidTorus* lst_;
             /**< Contains details of the layered solid torus that this
                  block represents. */
         Perm<4> roles_;
@@ -184,12 +184,12 @@ class REGINA_API NSatLST : public NSatBlock {
          *
          * @return details of the layered solid torus.
          */
-        const NLayeredSolidTorus* lst() const;
+        const LayeredSolidTorus* lst() const;
         /**
          * Describes how the layered solid torus is attached to the
          * boundary annulus.
          *
-         * The NLayeredSolidTorus class notes describe top-level edge
+         * The LayeredSolidTorus class notes describe top-level edge
          * groups 0, 1 and 2 for a layered solid torus.  On the other
          * hand, the NSatAnnulus class notes define vertical, horizontal
          * and diagonal edges on the boundary annulus.
@@ -241,7 +241,7 @@ class REGINA_API NSatLST : public NSatBlock {
          * attached to the boundary annulus, as explained in the
          * \a roles_ data member documentation.
          */
-        NSatLST(NLayeredSolidTorus* lst, Perm<4> roles);
+        NSatLST(LayeredSolidTorus* lst, Perm<4> roles);
 };
 
 /**
@@ -603,11 +603,11 @@ inline NSatBlock* NSatMobius::clone() const {
 
 // Inline functions for NSatLST
 
-inline NSatLST::NSatLST(NLayeredSolidTorus* lst, Perm<4> roles) : NSatBlock(1),
+inline NSatLST::NSatLST(LayeredSolidTorus* lst, Perm<4> roles) : NSatBlock(1),
         lst_(lst), roles_(roles) {
 }
 
-inline const NLayeredSolidTorus* NSatLST::lst() const {
+inline const LayeredSolidTorus* NSatLST::lst() const {
     return lst_;
 }
 

@@ -2228,7 +2228,7 @@ class REGINA_API Triangulation<3> :
          * numbers.
          * @return the tetrahedron containing the boundary torus.
          *
-         * @see NLayeredSolidTorus
+         * @see LayeredSolidTorus
          */
         Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);

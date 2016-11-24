@@ -258,10 +258,10 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     // boundary annuli on the core, since no other tetrahedron is glued
     // to itself.
     int nLayered = 0;
-    NLayeredSolidTorus* layered[4];
+    LayeredSolidTorus* layered[4];
     unsigned long usedTets = 0;
     for (unsigned long t = 0; t < nTet; t++) {
-        layered[nLayered] = NLayeredSolidTorus::formsLayeredSolidTorusBase(
+        layered[nLayered] = LayeredSolidTorus::formsLayeredSolidTorusBase(
             comp->tetrahedron(t));
         if (layered[nLayered]) {
             usedTets += layered[nLayered]->size();
@@ -673,7 +673,7 @@ std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
     if (chainIndex) {
         // We have a layered solid torus and a layered chain.
         Perm<4> roles = edgeGroupRoles_[torusAnnulus_];
-        const NLayeredSolidTorus* torus = augTorus_[torusAnnulus_];
+        const LayeredSolidTorus* torus = augTorus_[torusAnnulus_];
 
         long params[3];
         if (torus) {
@@ -703,7 +703,7 @@ std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
         std::pair<long, long> allParams[3];
         int nAllParams = 0;
         Perm<4> roles;
-        const NLayeredSolidTorus* torus;
+        const LayeredSolidTorus* torus;
         long params[3];
         std::pair<long, long> lstParams;
         int i;

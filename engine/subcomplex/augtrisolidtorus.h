@@ -102,7 +102,7 @@ class REGINA_API AugTriSolidTorus : public NStandardTriangulation {
         NTriSolidTorus* core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
-        NLayeredSolidTorus* augTorus_[3];
+        LayeredSolidTorus* augTorus_[3];
             /**< The layered solid tori attached to the boundary annuli.
                  If one of the layered solid tori is a degenerate (2,1,1)
                  triangle, the corresponding pointer will be 0.
@@ -156,13 +156,13 @@ class REGINA_API AugTriSolidTorus : public NStandardTriangulation {
          * be 0, 1 or 2.
          * @return the corresponding layered solid torus.
          */
-        const NLayeredSolidTorus* augTorus(int annulus) const;
+        const LayeredSolidTorus* augTorus(int annulus) const;
 
         /**
          * Returns a permutation describing the role played by each top
          * level edge group of the layered solid torus glued to the
          * requested annulus of the core triangular solid torus.  See
-         * NLayeredSolidTorus::topEdge() for details regarding edge groups.
+         * LayeredSolidTorus::topEdge() for details regarding edge groups.
          *
          * If the permutation returned is <tt>p</tt>, edge group <tt>p[0]</tt>
          * will be glued to an axis edge, group <tt>p[1]</tt> will be
@@ -285,7 +285,7 @@ inline AugTriSolidTorus::AugTriSolidTorus() : core_(0),
 inline const NTriSolidTorus& AugTriSolidTorus::core() const {
     return *core_;
 }
-inline const NLayeredSolidTorus* AugTriSolidTorus::augTorus(
+inline const LayeredSolidTorus* AugTriSolidTorus::augTorus(
         int annulus) const {
     return augTorus_[annulus];
 }

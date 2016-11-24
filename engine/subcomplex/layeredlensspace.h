@@ -65,7 +65,7 @@ namespace regina {
  */
 class REGINA_API LayeredLensSpace : public NStandardTriangulation {
     private:
-        NLayeredSolidTorus* torus_;
+        LayeredSolidTorus* torus_;
             /**< The layered solid torus that forms the basis of this
                  layered lens space. */
         int mobiusBoundaryGroup_;
@@ -107,14 +107,14 @@ class REGINA_API LayeredLensSpace : public NStandardTriangulation {
          *
          * @return the layered solid torus.
          */
-        const NLayeredSolidTorus& torus() const;
+        const LayeredSolidTorus& torus() const;
         /**
          * Determines which edge of the layered solid torus is glued to
          * the boundary of the mobius strip (i.e., the weight 2 edge
          * of the degenerate (2,1,1) layered solid torus).  The return
          * value will be one of the three top level tetrahedron edge
          * groups in the layered solid torus; see
-         * NLayeredSolidTorus::topEdge() for further details about
+         * LayeredSolidTorus::topEdge() for further details about
          * edge groups.
          *
          * @return the top level edge group of the layered solid torus to
@@ -185,7 +185,7 @@ inline unsigned long LayeredLensSpace::p() const {
 inline unsigned long LayeredLensSpace::q() const {
     return q_;
 }
-inline const NLayeredSolidTorus& LayeredLensSpace::torus() const {
+inline const LayeredSolidTorus& LayeredLensSpace::torus() const {
     return *torus_;
 }
 inline int LayeredLensSpace::mobiusBoundaryGroup() const {

@@ -62,7 +62,7 @@ namespace regina {
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
+class REGINA_API LayeredSolidTorus : public NStandardTriangulation {
     private:
         size_t nTetrahedra;
             /**< The number of tetrahedra in this torus. */
@@ -106,7 +106,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          *
          * @return a newly created clone.
          */
-        NLayeredSolidTorus* clone() const;
+        LayeredSolidTorus* clone() const;
 
         /**
          * Returns the number of tetrahedra in this layered solid torus.
@@ -311,7 +311,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * layered solid torus, or \c null if the given tetrahedron is
          * not the base of a layered solid torus.
          */
-        static NLayeredSolidTorus* formsLayeredSolidTorusBase(
+        static LayeredSolidTorus* formsLayeredSolidTorusBase(
             Tetrahedron<3>* tet);
 
         /**
@@ -341,7 +341,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * layered solid torus, or \c null if the given tetrahedron with
          * its two faces do not form the top level of a layered solid torus.
          */
-        static NLayeredSolidTorus* formsLayeredSolidTorusTop(
+        static LayeredSolidTorus* formsLayeredSolidTorusTop(
             Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
 
         /**
@@ -359,7 +359,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * layered solid torus, or \c null if the given component is not
          * a layered solid torus.
          */
-        static NLayeredSolidTorus* isLayeredSolidTorus(Component<3>* comp);
+        static LayeredSolidTorus* isLayeredSolidTorus(Component<3>* comp);
 
         Manifold* manifold() const;
         AbelianGroup* homology() const;
@@ -371,7 +371,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
         /**
          * Create a new uninitialised structure.
          */
-        NLayeredSolidTorus();
+        LayeredSolidTorus();
 
         /**
          * Fills <tt>topEdge[destGroup]</tt> with the edges produced by
@@ -399,54 +399,54 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
 
 /*@}*/
 
-// Inline functions for NLayeredSolidTorus
+// Inline functions for LayeredSolidTorus
 
-inline NLayeredSolidTorus::NLayeredSolidTorus() {
+inline LayeredSolidTorus::LayeredSolidTorus() {
 }
 
-inline size_t NLayeredSolidTorus::size() const {
+inline size_t LayeredSolidTorus::size() const {
     return nTetrahedra;
 }
 
-inline Tetrahedron<3>* NLayeredSolidTorus::base() const {
+inline Tetrahedron<3>* LayeredSolidTorus::base() const {
     return base_;
 }
-inline int NLayeredSolidTorus::baseEdge(int group, int index) const {
+inline int LayeredSolidTorus::baseEdge(int group, int index) const {
     return group == 1 ? baseEdge_[index] :
         group == 2 ? baseEdge_[1 + index] : baseEdge_[3 + index];
 }
-inline int NLayeredSolidTorus::baseEdgeGroup(int edge) const {
+inline int LayeredSolidTorus::baseEdgeGroup(int edge) const {
     return baseEdgeGroup_[edge];
 }
-inline int NLayeredSolidTorus::baseFace(int index) const {
+inline int LayeredSolidTorus::baseFace(int index) const {
     return baseFace_[index];
 }
 
-inline Tetrahedron<3>* NLayeredSolidTorus::topLevel() const {
+inline Tetrahedron<3>* LayeredSolidTorus::topLevel() const {
     return topLevel_;
 }
-inline unsigned long NLayeredSolidTorus::meridinalCuts(int group) const {
+inline unsigned long LayeredSolidTorus::meridinalCuts(int group) const {
     return meridinalCuts_[group];
 }
-inline int NLayeredSolidTorus::topEdge(int group, int index) const {
+inline int LayeredSolidTorus::topEdge(int group, int index) const {
     return topEdge_[group][index];
 }
-inline int NLayeredSolidTorus::topEdgeGroup(int edge) const {
+inline int LayeredSolidTorus::topEdgeGroup(int edge) const {
     return topEdgeGroup_[edge];
 }
-inline int NLayeredSolidTorus::topFace(int index) const {
+inline int LayeredSolidTorus::topFace(int index) const {
     return topFace_[index];
 }
 
-inline std::ostream& NLayeredSolidTorus::writeName(std::ostream& out) const {
+inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {
     return out << "LST(" << meridinalCuts_[0] << ',' << meridinalCuts_[1] << ','
         << meridinalCuts_[2] << ')';
 }
-inline std::ostream& NLayeredSolidTorus::writeTeXName(std::ostream& out) const {
+inline std::ostream& LayeredSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm LST}(" << meridinalCuts_[0] << ','
         << meridinalCuts_[1] << ',' << meridinalCuts_[2] << ')';
 }
-inline void NLayeredSolidTorus::writeTextLong(std::ostream& out) const {
+inline void LayeredSolidTorus::writeTextLong(std::ostream& out) const {
     out << "( " << meridinalCuts_[0] << ", " << meridinalCuts_[1] << ", "
         << meridinalCuts_[2] << " ) layered solid torus";
 }

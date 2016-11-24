@@ -38,8 +38,8 @@
 
 namespace regina {
 
-NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
-    NLayeredSolidTorus* ans = new NLayeredSolidTorus();
+LayeredSolidTorus* LayeredSolidTorus::clone() const {
+    LayeredSolidTorus* ans = new LayeredSolidTorus();
     int i,j;
     ans->nTetrahedra = nTetrahedra;
     ans->base_ = base_;
@@ -61,7 +61,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
     return ans;
 }
 
-void NLayeredSolidTorus::transform(const Triangulation<3>* originalTri,
+void LayeredSolidTorus::transform(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     unsigned i, j;
     size_t baseTetID = base_->index();
@@ -109,7 +109,7 @@ void NLayeredSolidTorus::transform(const Triangulation<3>* originalTri,
     topLevel_ = newTri->tetrahedron(iso->tetImage(topTetID));
 }
 
-NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
+LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusBase(
         Tetrahedron<3>* tet) {
     int baseFace1;
     int baseFace2 = -1;
@@ -142,7 +142,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
 
     // We have a layered solid torus!!
     // Fill in the details for the bottom layer.
-    NLayeredSolidTorus* ans = new NLayeredSolidTorus();
+    LayeredSolidTorus* ans = new LayeredSolidTorus();
     ans->nTetrahedra = 1;
     ans->base_ = tet;
     ans->baseFace_[0] = baseFace1;
@@ -294,7 +294,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
     return ans;
 }
 
-NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
+LayeredSolidTorus* LayeredSolidTorus::formsLayeredSolidTorusTop(
         Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
     Tetrahedron<3>* top = tet;
     Tetrahedron<3>* next;
@@ -368,7 +368,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             }
 
             // We got one!
-            NLayeredSolidTorus* ans = new NLayeredSolidTorus();
+            LayeredSolidTorus* ans = new LayeredSolidTorus();
             ans->nTetrahedra = nTets;
 
             ans->base_ = tet;
@@ -582,7 +582,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
     return 0;
 }
 
-NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
+LayeredSolidTorus* LayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
     // Start with some basic property checks.
     if (! comp->isOrientable())
         return 0;
@@ -646,7 +646,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) 
     return formsLayeredSolidTorusBase(currTet);
 }
 
-void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
+void LayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     int pos;
     Perm<4> adjPerm;
     for (int i = 1; i >= 0; i--) {
@@ -658,17 +658,17 @@ void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     }
 }
 
-Manifold* NLayeredSolidTorus::manifold() const {
+Manifold* LayeredSolidTorus::manifold() const {
     return new Handlebody(1, true);
 }
 
-AbelianGroup* NLayeredSolidTorus::homology() const {
+AbelianGroup* LayeredSolidTorus::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;
 }
 
-Triangulation<3>* NLayeredSolidTorus::flatten(const Triangulation<3>* original,
+Triangulation<3>* LayeredSolidTorus::flatten(const Triangulation<3>* original,
         int mobiusBandBdry) const {
     // Create a new triangulation and identify the top-level and
     // base tetrahedra.
