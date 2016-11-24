@@ -36,25 +36,25 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLayeredTorusBundle;
+using regina::LayeredTorusBundle;
 
-void addNLayeredSurfaceBundle() {
-    class_<NLayeredTorusBundle, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NLayeredTorusBundle>, boost::noncopyable>
-            ("NLayeredTorusBundle", no_init)
-        .def("core", &NLayeredTorusBundle::core,
+void addLayeredSurfaceBundle() {
+    class_<LayeredTorusBundle, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<LayeredTorusBundle>, boost::noncopyable>
+            ("LayeredTorusBundle", no_init)
+        .def("core", &LayeredTorusBundle::core,
             return_value_policy<reference_existing_object>())
-        .def("coreIso", &NLayeredTorusBundle::coreIso,
+        .def("coreIso", &LayeredTorusBundle::coreIso,
             return_value_policy<reference_existing_object>())
-        .def("layeringReln", &NLayeredTorusBundle::layeringReln,
+        .def("layeringReln", &LayeredTorusBundle::layeringReln,
             return_value_policy<reference_existing_object>())
-        .def("isLayeredTorusBundle", &NLayeredTorusBundle::isLayeredTorusBundle,
+        .def("isLayeredTorusBundle", &LayeredTorusBundle::isLayeredTorusBundle,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isLayeredTorusBundle")
     ;
 
-    implicitly_convertible<std::auto_ptr<NLayeredTorusBundle>,
+    implicitly_convertible<std::auto_ptr<LayeredTorusBundle>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

@@ -58,11 +58,11 @@ namespace {
     const NTxIParallelCore core_T_p;
 }
 
-NLayeredTorusBundle::~NLayeredTorusBundle() {
+LayeredTorusBundle::~LayeredTorusBundle() {
     delete coreIso_;
 }
 
-NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
+LayeredTorusBundle* LayeredTorusBundle::isLayeredTorusBundle(
         Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
@@ -78,7 +78,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
     // six tetrahedra.
 
     // Hunt for the core thin torus bundle.
-    NLayeredTorusBundle* ans;
+    LayeredTorusBundle* ans;
     if ((ans = hunt(tri, core_T_6_1)))
         return ans;
     if ((ans = hunt(tri, core_T_7_1)))
@@ -117,7 +117,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
     return 0;
 }
 
-NLayeredTorusBundle* NLayeredTorusBundle::hunt(Triangulation<3>* tri,
+LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
         const NTxICore& core) {
     std::list<Isomorphism<3>*> isos;
     if (! core.core().findAllSubcomplexesIn(*tri, back_inserter(isos)))
@@ -143,7 +143,7 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(Triangulation<3>* tri,
                 (*it)->facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
             // It's a match!
-            NLayeredTorusBundle* ans = new NLayeredTorusBundle(core);
+            LayeredTorusBundle* ans = new LayeredTorusBundle(core);
             ans->coreIso_ = *it;
             ans->reln_ = core.bdryReln(0) * matchReln *
                 core.bdryReln(1).inverse();
@@ -165,19 +165,19 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(Triangulation<3>* tri,
     return 0;
 }
 
-Manifold* NLayeredTorusBundle::manifold() const {
+Manifold* LayeredTorusBundle::manifold() const {
     // Note that this one-liner appears again in homology(), where
     // we use the underlying TorusBundle for homology calculations.
     return new TorusBundle(core_.parallelReln() * reln_);
 }
 
-AbelianGroup* NLayeredTorusBundle::homology() const {
+AbelianGroup* LayeredTorusBundle::homology() const {
     // It's implemented in TorusBundle, so ride on that for now.
     // We'll implement it directly here in good time.
     return TorusBundle(core_.parallelReln() * reln_).homology();
 }
 
-std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,
+std::ostream& LayeredTorusBundle::writeCommonName(std::ostream& out,
         bool tex) const {
     if (tex) {
         out << "B_{";
@@ -193,7 +193,7 @@ std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,
     return out << (tex ? "}" : ")");
 }
 
-void NLayeredTorusBundle::writeTextLong(std::ostream& out) const {
+void LayeredTorusBundle::writeTextLong(std::ostream& out) const {
     out << "Layered torus bundle: ";
     writeName(out);
 }

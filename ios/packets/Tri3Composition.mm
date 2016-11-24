@@ -481,7 +481,7 @@
         delete triple;
     }
     
-    regina::NLayeredTorusBundle* bundle = regina::NLayeredTorusBundle::isLayeredTorusBundle(self.packet);
+    regina::LayeredTorusBundle* bundle = regina::LayeredTorusBundle::isLayeredTorusBundle(self.packet);
     if (bundle) {
         [details appendString:@"Layered Torus Bundle\n"];
         

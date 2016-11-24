@@ -41,7 +41,7 @@ void addLayeredChainPair();
 void addLayeredLensSpace();
 void addLayeredLoop();
 void addLayeredSolidTorus();
-void addNLayeredSurfaceBundle();
+void addLayeredSurfaceBundle();
 void addNLayering();
 void addNPillowTwoSphere();
 void addNPluggedTorusBundle();
@@ -68,7 +68,7 @@ void addSubcomplexClasses() {
     addLayeredLensSpace();
     addLayeredLoop();
     addLayeredSolidTorus();
-    addNLayeredSurfaceBundle();
+    addLayeredSurfaceBundle();
     addNLayering();
     addNPillowTwoSphere();
     addNPlugTriSolidTorus();

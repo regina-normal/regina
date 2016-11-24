@@ -99,7 +99,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     // Run tests that require entire triangulations.
     if ((ans = BlockedSFS::isBlockedSFS(tri)))
         return ans;
-    if ((ans = NLayeredTorusBundle::isLayeredTorusBundle(tri)))
+    if ((ans = LayeredTorusBundle::isLayeredTorusBundle(tri)))
         return ans;
 
     // Save non-geometric graph manifolds until last.

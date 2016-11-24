@@ -593,8 +593,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         delete triple;
     }
 
-    regina::NLayeredTorusBundle* bundle =
-        regina::NLayeredTorusBundle::isLayeredTorusBundle(tri);
+    regina::LayeredTorusBundle* bundle =
+        regina::LayeredTorusBundle::isLayeredTorusBundle(tri);
     if (bundle) {
         id = addComponentSection(tr("Layered Torus Bundle"));
 

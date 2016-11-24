@@ -1275,6 +1275,9 @@ Equality type : BY_REFERENCE
 LayeredSolidTorus : class
 Equality type : BY_REFERENCE
 
+LayeredTorusBundle : class
+Equality type : BY_REFERENCE
+
 LensSpace : class
 Equality type : BY_VALUE
 
@@ -1397,9 +1400,6 @@ NLayeredLensSpace : typedef ->  LayeredLensSpace
 NLayeredLoop : typedef ->  LayeredLoop
 
 NLayeredSolidTorus : typedef ->  LayeredSolidTorus
-
-NLayeredTorusBundle : class
-Equality type : BY_REFERENCE
 
 NLayering : class
 Equality type : BY_REFERENCE

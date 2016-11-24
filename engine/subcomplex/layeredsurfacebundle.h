@@ -78,7 +78,7 @@ class NTxICore;
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
+class REGINA_API LayeredTorusBundle : public NStandardTriangulation {
     private:
         const NTxICore& core_;
             /**< The core <tt>T x I</tt> triangulation whose boundaries
@@ -98,7 +98,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * Destroys this layered torus bundle and all of its internal
          * components.
          */
-        virtual ~NLayeredTorusBundle();
+        virtual ~LayeredTorusBundle();
 
         /**
          * Returns the <tt>T x I</tt> triangulation at the core of this
@@ -107,7 +107,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * tetrahedra).
          *
          * Note that the triangulation returned by NTxICore::core()
-         * (that is, NLayeredSurfaceBundle::core().core()) may
+         * (that is, LayeredSurfaceBundle::core().core()) may
          * well use different tetrahedron and vertex numbers.  That is,
          * an isomorphic copy of it appears within this layered surface
          * bundle but the individual tetrahedra and vertices may have
@@ -129,7 +129,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          *
          * This routine returns an isomorphism that maps the tetrahedra
          * and vertices of the core <tt>T x I</tt> triangulation (as
-         * returned by NLayeredSurfaceBundle::core().core()) to the
+         * returned by LayeredSurfaceBundle::core().core()) to the
          * tetrahedra and vertices of this overall layered surface bundle.
          *
          * The isomorphism that is returned belongs to this object, and
@@ -211,7 +211,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * layered surface bundle, or \c null if the given triangulation
          * is not a layered surface bundle.
          */
-        static NLayeredTorusBundle* isLayeredTorusBundle(Triangulation<3>* tri);
+        static LayeredTorusBundle* isLayeredTorusBundle(Triangulation<3>* tri);
 
         Manifold* manifold() const;
         AbelianGroup* homology() const;
@@ -234,7 +234,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * @param whichCore a reference to the core <tt>T x I</tt>
          * triangulation upon which this layered surface bundle is based.
          */
-        NLayeredTorusBundle(const NTxICore& whichCore);
+        LayeredTorusBundle(const NTxICore& whichCore);
 
         /**
          * Contains code common to both writeName() and writeTeXName().
@@ -257,35 +257,35 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * layered surface bundle, or \c null if the given triangulation is
          * not a layered surface bundle with the given <tt>T x I</tt> core.
          */
-        static NLayeredTorusBundle* hunt(Triangulation<3>* tri,
+        static LayeredTorusBundle* hunt(Triangulation<3>* tri,
             const NTxICore& core);
 };
 
 /*@}*/
 
-// Inline functions for NLayeredTorusBundle
+// Inline functions for LayeredTorusBundle
 
-inline NLayeredTorusBundle::NLayeredTorusBundle(const NTxICore& whichCore) :
+inline LayeredTorusBundle::LayeredTorusBundle(const NTxICore& whichCore) :
         core_(whichCore), coreIso_(0) {
 }
 
-inline const NTxICore& NLayeredTorusBundle::core() const {
+inline const NTxICore& LayeredTorusBundle::core() const {
     return core_;
 }
 
-inline const Isomorphism<3>* NLayeredTorusBundle::coreIso() const {
+inline const Isomorphism<3>* LayeredTorusBundle::coreIso() const {
     return coreIso_;
 }
 
-inline const Matrix2& NLayeredTorusBundle::layeringReln() const {
+inline const Matrix2& LayeredTorusBundle::layeringReln() const {
     return reln_;
 }
 
-inline std::ostream& NLayeredTorusBundle::writeName(std::ostream& out) const {
+inline std::ostream& LayeredTorusBundle::writeName(std::ostream& out) const {
     return writeCommonName(out, false);
 }
 
-inline std::ostream& NLayeredTorusBundle::writeTeXName(std::ostream& out)
+inline std::ostream& LayeredTorusBundle::writeTeXName(std::ostream& out)
         const {
     return writeCommonName(out, true);
 }
