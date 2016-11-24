@@ -1290,6 +1290,8 @@ NBlockedSFSLoop : typedef ->  BlockedSFSLoop
 
 NBlockedSFSPair : typedef ->  BlockedSFSPair
 
+NBlockedSFSTriple : typedef ->  BlockedSFSTriple
+
 NBoolSet : typedef ->  BoolSet
 
 NBoundaryComponent : typedef ->  BoundaryComponent3

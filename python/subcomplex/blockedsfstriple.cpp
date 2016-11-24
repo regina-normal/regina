@@ -57,5 +57,7 @@ void addBlockedSFSTriple() {
 
     implicitly_convertible<std::auto_ptr<BlockedSFSTriple>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NBlockedSFSTriple") = scope().attr("BlockedSFSTriple");
 }
 

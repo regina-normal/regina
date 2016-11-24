@@ -240,6 +240,15 @@ class REGINA_API BlockedSFSTriple : public NStandardTriangulation {
 
 /*@}*/
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NBlockedSFSTriple has now been renamed to
+ * BlockedSFSTriple.
+ */
+REGINA_DEPRECATED typedef BlockedSFSTriple NBlockedSFSTriple;
+
 // Inline functions for BlockedSFSTriple
 
 inline BlockedSFSTriple::BlockedSFSTriple(NSatRegion* end0,
