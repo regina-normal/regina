@@ -32,7 +32,7 @@
 
 #include "manifold/graphtriple.h"
 #include "manifold/sfs.h"
-#include "subcomplex/nblockedsfstriple.h"
+#include "subcomplex/blockedsfstriple.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatregion.h"

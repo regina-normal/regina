@@ -36,7 +36,7 @@
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/blockedsfspair.h"
-#include "subcomplex/nblockedsfstriple.h"
+#include "subcomplex/blockedsfstriple.h"
 #include "subcomplex/nl31pillow.h"
 #include "subcomplex/nlayeredchain.h"
 #include "subcomplex/nlayeredchainpair.h"

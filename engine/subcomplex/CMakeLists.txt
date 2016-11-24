@@ -50,6 +50,7 @@ if (${REGINA_INSTALL_DEV})
     nblockedsfsloop.h
     blockedsfspair.h
     nblockedsfspair.h
+    blockedsfstriple.h
     nblockedsfstriple.h
     nl31pillow.h
     nlayeredchain.h

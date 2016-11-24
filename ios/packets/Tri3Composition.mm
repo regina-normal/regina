@@ -39,7 +39,7 @@
 #import "subcomplex/nblockedsfs.h"
 #import "subcomplex/blockedsfsloop.h"
 #import "subcomplex/blockedsfspair.h"
-#import "subcomplex/nblockedsfstriple.h"
+#import "subcomplex/blockedsfstriple.h"
 #import "subcomplex/nl31pillow.h"
 #import "subcomplex/nlayeredchain.h"
 #import "subcomplex/nlayeredchainpair.h"
