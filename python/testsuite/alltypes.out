@@ -1272,6 +1272,8 @@ NAngleStructure : typedef ->  AngleStructure
 
 NAngleStructureList : typedef ->  AngleStructures
 
+NAugTriSolidTorus : typedef ->  AugTriSolidTorus
+
 NBlockedSFS : class
 Equality type : BY_REFERENCE
 

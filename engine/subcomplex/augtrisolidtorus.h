@@ -264,6 +264,15 @@ class REGINA_API AugTriSolidTorus : public NStandardTriangulation {
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NAugTriSolidTorus has now been renamed to
+ * AugTriSolidTorus.
+ */
+REGINA_DEPRECATED typedef AugTriSolidTorus NAugTriSolidTorus;
+
 /*@}*/
 
 // Inline functions for AugTriSolidTorus
