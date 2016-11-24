@@ -38,15 +38,15 @@
 
 namespace regina {
 
-NLayeredLoop* NLayeredLoop::clone() const {
-    NLayeredLoop* ans = new NLayeredLoop();
+LayeredLoop* LayeredLoop::clone() const {
+    LayeredLoop* ans = new LayeredLoop();
     ans->length_ = length_;
     ans->hinge_[0] = hinge_[0];
     ans->hinge_[1] = hinge_[1];
     return ans;
 }
 
-Manifold* NLayeredLoop::manifold() const {
+Manifold* LayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.
         return new LensSpace(length_, 1);
@@ -61,7 +61,7 @@ Manifold* NLayeredLoop::manifold() const {
     }
 }
 
-NLayeredLoop* NLayeredLoop::isLayeredLoop(const Component<3>* comp) {
+LayeredLoop* LayeredLoop::isLayeredLoop(const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
@@ -187,7 +187,7 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const Component<3>* comp) {
                 }
 
                 // We have a solution!
-                NLayeredLoop* ans = new NLayeredLoop();
+                LayeredLoop* ans = new LayeredLoop();
                 ans->length_ = nTet;
                 ans->hinge_[0] = base->edge(hinge0);
                 ans->hinge_[1] = (twisted ? 0 : base->edge(hinge1));
@@ -200,7 +200,7 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const Component<3>* comp) {
     return 0;
 }
 
-AbelianGroup* NLayeredLoop::homology() const {
+AbelianGroup* LayeredLoop::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     if (hinge_[1]) {
         // Untwisted.

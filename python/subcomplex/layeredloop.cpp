@@ -36,25 +36,25 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLayeredLoop;
+using regina::LayeredLoop;
 
-void addNLayeredLoop() {
-    class_<NLayeredLoop, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NLayeredLoop>, boost::noncopyable>
-            ("NLayeredLoop", no_init)
-        .def("clone", &NLayeredLoop::clone,
+void addLayeredLoop() {
+    class_<LayeredLoop, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<LayeredLoop>, boost::noncopyable>
+            ("LayeredLoop", no_init)
+        .def("clone", &LayeredLoop::clone,
             return_value_policy<manage_new_object>())
-        .def("length", &NLayeredLoop::length)
-        .def("isTwisted", &NLayeredLoop::isTwisted)
-        .def("hinge", &NLayeredLoop::hinge,
+        .def("length", &LayeredLoop::length)
+        .def("isTwisted", &LayeredLoop::isTwisted)
+        .def("hinge", &LayeredLoop::hinge,
             return_value_policy<reference_existing_object>())
-        .def("isLayeredLoop", &NLayeredLoop::isLayeredLoop,
+        .def("isLayeredLoop", &LayeredLoop::isLayeredLoop,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isLayeredLoop")
     ;
 
-    implicitly_convertible<std::auto_ptr<NLayeredLoop>,
+    implicitly_convertible<std::auto_ptr<LayeredLoop>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

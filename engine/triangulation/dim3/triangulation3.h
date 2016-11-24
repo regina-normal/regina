@@ -2251,7 +2251,7 @@ class REGINA_API Triangulation<3> :
         void insertLayeredLensSpace(unsigned long p, unsigned long q);
         /**
          * Inserts a layered loop of the given length into this triangulation.
-         * Layered loops are described in more detail in the NLayeredLoop
+         * Layered loops are described in more detail in the LayeredLoop
          * class notes.
          *
          * The new tetrahedra will be inserted at the end of the list of
@@ -2262,7 +2262,7 @@ class REGINA_API Triangulation<3> :
          * @param twisted \c true if the new layered loop should be twisted,
          * or \c false if it should be untwisted.
          *
-         * @see NLayeredLoop
+         * @see LayeredLoop
          */
         void insertLayeredLoop(unsigned long length, bool twisted);
         /**

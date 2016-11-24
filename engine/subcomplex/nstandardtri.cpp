@@ -70,7 +70,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
     if ((ans = LayeredLensSpace::isLayeredLensSpace(comp)))
         return ans;
-    if ((ans = NLayeredLoop::isLayeredLoop(comp)))
+    if ((ans = LayeredLoop::isLayeredLoop(comp)))
         return ans;
     if ((ans = LayeredChainPair::isLayeredChainPair(comp)))
         return ans;

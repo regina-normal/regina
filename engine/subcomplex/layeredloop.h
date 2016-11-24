@@ -77,7 +77,7 @@ namespace regina {
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NLayeredLoop : public NStandardTriangulation {
+class REGINA_API LayeredLoop : public NStandardTriangulation {
     private:
         unsigned long length_;
             /**< The length of this layered loop. */
@@ -89,13 +89,13 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
         /**
          * Destroys this layered loop.
          */
-        virtual ~NLayeredLoop();
+        virtual ~LayeredLoop();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NLayeredLoop* clone() const;
+        LayeredLoop* clone() const;
 
         /**
          * Returns the length of this layered loop.
@@ -133,7 +133,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * layered loop, or \c null if the given component is
          * not a layered loop.
          */
-        static NLayeredLoop* isLayeredLoop(const Component<3>* comp);
+        static LayeredLoop* isLayeredLoop(const Component<3>* comp);
 
         Manifold* manifold() const;
         AbelianGroup* homology() const;
@@ -145,34 +145,34 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        NLayeredLoop();
+        LayeredLoop();
 };
 
 /*@}*/
 
-// Inline functions for NLayeredLoop
+// Inline functions for LayeredLoop
 
-inline NLayeredLoop::NLayeredLoop() {
+inline LayeredLoop::LayeredLoop() {
 }
-inline NLayeredLoop::~NLayeredLoop() {
+inline LayeredLoop::~LayeredLoop() {
 }
 
-inline unsigned long NLayeredLoop::length() const {
+inline unsigned long LayeredLoop::length() const {
     return length_;
 }
-inline bool NLayeredLoop::isTwisted() const {
+inline bool LayeredLoop::isTwisted() const {
     return (hinge_[1] == 0);
 }
-inline Edge<3>* NLayeredLoop::hinge(int which) const {
+inline Edge<3>* LayeredLoop::hinge(int which) const {
     return hinge_[which];
 }
-inline std::ostream& NLayeredLoop::writeName(std::ostream& out) const {
+inline std::ostream& LayeredLoop::writeName(std::ostream& out) const {
     return out << (hinge_[1] ? "C(" : "C~(") << length_ << ')';
 }
-inline std::ostream& NLayeredLoop::writeTeXName(std::ostream& out) const {
+inline std::ostream& LayeredLoop::writeTeXName(std::ostream& out) const {
     return out << (hinge_[1] ? "C_{" : "\\tilde{C}_{") << length_ << '}';
 }
-inline void NLayeredLoop::writeTextLong(std::ostream& out) const {
+inline void LayeredLoop::writeTextLong(std::ostream& out) const {
     out << "Layered loop (" << (hinge_[1] ? "not twisted" : "twisted") <<
         ") of length " << length_;
 }

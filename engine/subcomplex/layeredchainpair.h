@@ -73,7 +73,7 @@ namespace regina {
  *
  * Note that a layered chain pair in which one of the chains contains
  * only one tetrahedron is in fact a layered loop with a twist
- * (see class NLayeredLoop).
+ * (see class LayeredLoop).
  *
  * All optional NStandardTriangulation routines are implemented for this
  * class.

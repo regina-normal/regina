@@ -279,9 +279,9 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NLayeredLoop* loop;
+    regina::LayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
-        loop = regina::NLayeredLoop::isLayeredLoop(self.packet->component(i));
+        loop = regina::LayeredLoop::isLayeredLoop(self.packet->component(i));
         if (loop) {
             [details appendFormat:@"Layered loop %s\n", loop->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];

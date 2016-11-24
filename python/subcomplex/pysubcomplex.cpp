@@ -39,7 +39,7 @@ void addL31Pillow();
 void addLayeredChain();
 void addLayeredChainPair();
 void addLayeredLensSpace();
-void addNLayeredLoop();
+void addLayeredLoop();
 void addNLayeredSolidTorus();
 void addNLayeredSurfaceBundle();
 void addNLayering();
@@ -66,7 +66,7 @@ void addSubcomplexClasses() {
     addLayeredChain();
     addLayeredChainPair();
     addLayeredLensSpace();
-    addNLayeredLoop();
+    addLayeredLoop();
     addNLayeredSolidTorus();
     addNLayeredSurfaceBundle();
     addNLayering();
