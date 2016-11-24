@@ -1260,6 +1260,9 @@ Equality type : BY_REFERENCE
 LargeInteger : class
 Equality type : BY_VALUE
 
+LayeredChainPair : class
+Equality type : BY_REFERENCE
+
 LensSpace : class
 Equality type : BY_VALUE
 
@@ -1374,9 +1377,6 @@ NL31Pillow : typedef ->  L31Pillow
 NLargeInteger : typedef ->  LargeInteger
 
 NLayeredChain : class
-Equality type : BY_REFERENCE
-
-NLayeredChainPair : class
 Equality type : BY_REFERENCE
 
 NLayeredLensSpace : class

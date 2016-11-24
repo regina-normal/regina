@@ -38,8 +38,8 @@
 
 namespace regina {
 
-NLayeredChainPair* NLayeredChainPair::clone() const {
-    NLayeredChainPair* ans = new NLayeredChainPair();
+LayeredChainPair* LayeredChainPair::clone() const {
+    LayeredChainPair* ans = new LayeredChainPair();
     if (chain_[0])
         ans->chain_[0] = new NLayeredChain(*chain_[0]);
     if (chain_[1])
@@ -47,7 +47,7 @@ NLayeredChainPair* NLayeredChainPair::clone() const {
     return ans;
 }
 
-NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
+LayeredChainPair* LayeredChainPair::isLayeredChainPair(
         const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
@@ -98,7 +98,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                         longChain->bottomVertexRoles() ==
                         firstTopRoles * Perm<4>(3, 2, 1, 0)) {
                     // We've got a layered loop!
-                    NLayeredChainPair* ans = new NLayeredChainPair();
+                    LayeredChainPair* ans = new LayeredChainPair();
                     if (nTet == 2) {
                         // The new chain is already too long.
                         delete longChain;
@@ -167,7 +167,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                     firstBottomRoles[1]) * firstBottomRoles *
                     Perm<4>(2, 0, 3, 1)) {
             // We found one!
-            NLayeredChainPair* ans = new NLayeredChainPair();
+            LayeredChainPair* ans = new LayeredChainPair();
             if (first->index() > second->index()) {
                 ans->chain_[0] = second;
                 ans->chain_[1] = first;
@@ -186,7 +186,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     return 0;
 }
 
-Manifold* NLayeredChainPair::manifold() const {
+Manifold* LayeredChainPair::manifold() const {
     SFSpace* ans = new SFSpace();
 
     ans->insertFibre(2, -1);
@@ -197,7 +197,7 @@ Manifold* NLayeredChainPair::manifold() const {
     return ans;
 }
 
-AbelianGroup* NLayeredChainPair::homology() const {
+AbelianGroup* LayeredChainPair::homology() const {
     // The first homology group can be obtained from the matrix:
     //
     //   [  1  -1   1 ]

@@ -72,7 +72,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
     if ((ans = NLayeredLoop::isLayeredLoop(comp)))
         return ans;
-    if ((ans = NLayeredChainPair::isLayeredChainPair(comp)))
+    if ((ans = LayeredChainPair::isLayeredChainPair(comp)))
         return ans;
     if ((ans = AugTriSolidTorus::isAugTriSolidTorus(comp)))
         return ans;

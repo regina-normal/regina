@@ -235,9 +235,9 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NLayeredChainPair* pair;
+    regina::LayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
-        pair = regina::NLayeredChainPair::isLayeredChainPair(self.packet->component(i));
+        pair = regina::LayeredChainPair::isLayeredChainPair(self.packet->component(i));
         if (pair) {
             [details appendFormat:@"Layered chain pair %s\n", pair->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];

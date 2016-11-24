@@ -78,7 +78,7 @@ namespace regina {
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NLayeredChainPair : public NStandardTriangulation {
+class REGINA_API LayeredChainPair : public NStandardTriangulation {
     private:
         NLayeredChain* chain_[2];
             /**< The two layered chains that make up this pair. */
@@ -87,13 +87,13 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
         /**
          * Destroys this layered chain pair.
          */
-        virtual ~NLayeredChainPair();
+        virtual ~LayeredChainPair();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NLayeredChainPair* clone() const;
+        LayeredChainPair* clone() const;
 
         /**
          * Returns the requested layered chain used to form this structure.
@@ -115,7 +115,7 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
          * layered chain pair, or \c null if the given component is
          * not a layered chain pair.
          */
-        static NLayeredChainPair* isLayeredChainPair(const Component<3>* comp);
+        static LayeredChainPair* isLayeredChainPair(const Component<3>* comp);
 
         Manifold* manifold() const;
         AbelianGroup* homology() const;
@@ -127,33 +127,33 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        NLayeredChainPair();
+        LayeredChainPair();
 };
 
 /*@}*/
 
-// Inline functions for NLayeredChainPair
+// Inline functions for LayeredChainPair
 
-inline NLayeredChainPair::NLayeredChainPair() {
+inline LayeredChainPair::LayeredChainPair() {
     chain_[0] = chain_[1] = 0;
 }
-inline NLayeredChainPair::~NLayeredChainPair() {
+inline LayeredChainPair::~LayeredChainPair() {
     if (chain_[0]) delete chain_[0];
     if (chain_[1]) delete chain_[1];
 }
 
-inline const NLayeredChain* NLayeredChainPair::chain(int which) const {
+inline const NLayeredChain* LayeredChainPair::chain(int which) const {
     return chain_[which];
 }
-inline std::ostream& NLayeredChainPair::writeName(std::ostream& out) const {
+inline std::ostream& LayeredChainPair::writeName(std::ostream& out) const {
     return out << "C("
         << chain_[0]->index() << ',' << chain_[1]->index() << ')';
 }
-inline std::ostream& NLayeredChainPair::writeTeXName(std::ostream& out) const {
+inline std::ostream& LayeredChainPair::writeTeXName(std::ostream& out) const {
     return out << "C_{"
         << chain_[0]->index() << ',' << chain_[1]->index() << '}';
 }
-inline void NLayeredChainPair::writeTextLong(std::ostream& out) const {
+inline void LayeredChainPair::writeTextLong(std::ostream& out) const {
     out << "Layered chain pair (chain lengths "
         << chain_[0]->index() << ", " << chain_[1]->index() << ')';
 }

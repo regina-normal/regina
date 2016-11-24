@@ -667,9 +667,9 @@ void Tri3CompositionUI::findLayeredChainPairs() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NLayeredChainPair* pair;
+    regina::LayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
-        pair = regina::NLayeredChainPair::isLayeredChainPair(
+        pair = regina::LayeredChainPair::isLayeredChainPair(
             tri->component(i));
         if (pair) {
             id = addComponentSection(tr("Layered chain pair ") +

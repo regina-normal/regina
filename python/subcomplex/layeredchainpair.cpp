@@ -36,23 +36,23 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLayeredChainPair;
+using regina::LayeredChainPair;
 
-void addNLayeredChainPair() {
-    class_<NLayeredChainPair, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NLayeredChainPair>, boost::noncopyable>
-            ("NLayeredChainPair", no_init)
-        .def("clone", &NLayeredChainPair::clone,
+void addLayeredChainPair() {
+    class_<LayeredChainPair, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<LayeredChainPair>, boost::noncopyable>
+            ("LayeredChainPair", no_init)
+        .def("clone", &LayeredChainPair::clone,
             return_value_policy<manage_new_object>())
-        .def("chain", &NLayeredChainPair::chain,
+        .def("chain", &LayeredChainPair::chain,
             return_internal_reference<>())
-        .def("isLayeredChainPair", &NLayeredChainPair::isLayeredChainPair,
+        .def("isLayeredChainPair", &LayeredChainPair::isLayeredChainPair,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isLayeredChainPair")
     ;
 
-    implicitly_convertible<std::auto_ptr<NLayeredChainPair>,
+    implicitly_convertible<std::auto_ptr<LayeredChainPair>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 
