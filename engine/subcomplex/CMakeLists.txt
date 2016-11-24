@@ -16,7 +16,7 @@ SET ( FILES
   layeredsurfacebundle
   layering
   pillowtwosphere
-  npluggedtorusbundle
+  pluggedtorusbundle
   nplugtrisolidtorus
   nsatannulus
   nsatblock
