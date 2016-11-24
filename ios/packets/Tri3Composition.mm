@@ -36,7 +36,7 @@
 #import "Tri3Composition.h"
 #import "manifold/manifold.h"
 #import "subcomplex/augtrisolidtorus.h"
-#import "subcomplex/nblockedsfs.h"
+#import "subcomplex/blockedsfs.h"
 #import "subcomplex/blockedsfsloop.h"
 #import "subcomplex/blockedsfspair.h"
 #import "subcomplex/blockedsfstriple.h"

@@ -49,7 +49,7 @@
  * All output is written to standard output.
  */
 
-#include <subcomplex/nblockedsfs.h>
+#include <subcomplex/blockedsfs.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/dim3.h>
 

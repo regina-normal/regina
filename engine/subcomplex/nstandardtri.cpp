@@ -32,7 +32,7 @@
 
 #include <sstream>
 #include "subcomplex/augtrisolidtorus.h"
-#include "subcomplex/nblockedsfs.h"
+#include "subcomplex/blockedsfs.h"
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/blockedsfstriple.h"

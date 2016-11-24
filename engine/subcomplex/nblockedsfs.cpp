@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "manifold/sfs.h"
-#include "subcomplex/nblockedsfs.h"
+#include "subcomplex/blockedsfs.h"
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatblocktypes.h"

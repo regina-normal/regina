@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/nblockedsfs.h"
+#include "subcomplex/blockedsfs.h"
 #include "subcomplex/nsatregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
