@@ -63,7 +63,7 @@ namespace regina {
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
+class REGINA_API LayeredLensSpace : public NStandardTriangulation {
     private:
         NLayeredSolidTorus* torus_;
             /**< The layered solid torus that forms the basis of this
@@ -80,13 +80,13 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * Destroys this lens space; note that the corresponding layered
          * solid torus will also be destroyed.
          */
-        virtual ~NLayeredLensSpace();
+        virtual ~LayeredLensSpace();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NLayeredLensSpace* clone() const;
+        LayeredLensSpace* clone() const;
 
         /**
          * Returns the first parameter \a p of this lens space L(p,q).
@@ -145,7 +145,7 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * layered lens space, or \c null if the given component is
          * not a layered lens space.
          */
-        static NLayeredLensSpace* isLayeredLensSpace(const Component<3>* comp);
+        static LayeredLensSpace* isLayeredLensSpace(const Component<3>* comp);
 
         Manifold* manifold() const;
         AbelianGroup* homology() const;
@@ -157,38 +157,38 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        NLayeredLensSpace();
+        LayeredLensSpace();
 };
 
 /*@}*/
 
-// Inline functions for NLayeredLensSpace
+// Inline functions for LayeredLensSpace
 
-inline NLayeredLensSpace::NLayeredLensSpace() {
+inline LayeredLensSpace::LayeredLensSpace() {
 }
-inline NLayeredLensSpace::~NLayeredLensSpace() {
+inline LayeredLensSpace::~LayeredLensSpace() {
     delete torus_;
 }
 
-inline unsigned long NLayeredLensSpace::p() const {
+inline unsigned long LayeredLensSpace::p() const {
     return p_;
 }
-inline unsigned long NLayeredLensSpace::q() const {
+inline unsigned long LayeredLensSpace::q() const {
     return q_;
 }
-inline const NLayeredSolidTorus& NLayeredLensSpace::torus() const {
+inline const NLayeredSolidTorus& LayeredLensSpace::torus() const {
     return *torus_;
 }
-inline int NLayeredLensSpace::mobiusBoundaryGroup() const {
+inline int LayeredLensSpace::mobiusBoundaryGroup() const {
     return mobiusBoundaryGroup_;
 }
-inline bool NLayeredLensSpace::isSnapped() const {
+inline bool LayeredLensSpace::isSnapped() const {
     return (torus_->topEdge(mobiusBoundaryGroup_, 1) == -1);
 }
-inline bool NLayeredLensSpace::isTwisted() const {
+inline bool LayeredLensSpace::isTwisted() const {
     return (torus_->topEdge(mobiusBoundaryGroup_, 1) != -1);
 }
-inline void NLayeredLensSpace::writeTextLong(std::ostream& out) const {
+inline void LayeredLensSpace::writeTextLong(std::ostream& out) const {
     out << "Layered lens space ";
     writeName(out);
 }

@@ -1266,6 +1266,9 @@ Equality type : BY_REFERENCE
 LayeredChainPair : class
 Equality type : BY_REFERENCE
 
+LayeredLensSpace : class
+Equality type : BY_REFERENCE
+
 LensSpace : class
 Equality type : BY_VALUE
 
@@ -1382,9 +1385,6 @@ NLargeInteger : typedef ->  LargeInteger
 NLayeredChain : typedef ->  LayeredChain
 
 NLayeredChainPair : typedef ->  LayeredChainPair
-
-NLayeredLensSpace : class
-Equality type : BY_REFERENCE
 
 NLayeredLoop : class
 Equality type : BY_REFERENCE

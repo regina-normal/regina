@@ -38,8 +38,8 @@
 
 namespace regina {
 
-NLayeredLensSpace* NLayeredLensSpace::clone() const {
-    NLayeredLensSpace* ans = new NLayeredLensSpace();
+LayeredLensSpace* LayeredLensSpace::clone() const {
+    LayeredLensSpace* ans = new LayeredLensSpace();
     ans->torus_ = torus_->clone();
     ans->mobiusBoundaryGroup_ = mobiusBoundaryGroup_;
     ans->p_ = p_;
@@ -47,7 +47,7 @@ NLayeredLensSpace* NLayeredLensSpace::clone() const {
     return ans;
 }
 
-NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
+LayeredLensSpace* LayeredLensSpace::isLayeredLensSpace(
         const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
@@ -79,7 +79,7 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
             }*/
 
             // This is the real thing!
-            NLayeredLensSpace* ans = new NLayeredLensSpace();
+            LayeredLensSpace* ans = new LayeredLensSpace();
             ans->torus_ = torus;
 
             Perm<4> perm = tet->adjacentGluing(tf0);
@@ -139,11 +139,11 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
     return 0;
 }
 
-Manifold* NLayeredLensSpace::manifold() const {
+Manifold* LayeredLensSpace::manifold() const {
     return new LensSpace(p_, q_);
 }
 
-AbelianGroup* NLayeredLensSpace::homology() const {
+AbelianGroup* LayeredLensSpace::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     if (p_ == 0)
         ans->addRank();
@@ -152,7 +152,7 @@ AbelianGroup* NLayeredLensSpace::homology() const {
     return ans;
 }
 
-std::ostream& NLayeredLensSpace::writeName(std::ostream& out) const {
+std::ostream& LayeredLensSpace::writeName(std::ostream& out) const {
     if (p_ == 3 && q_ == 1) {
         out << "L(3,1)";
         if (torus_->size() != 2)
@@ -165,7 +165,7 @@ std::ostream& NLayeredLensSpace::writeName(std::ostream& out) const {
         return out << "L(" << p_ << ',' << q_ << ')';
 }
 
-std::ostream& NLayeredLensSpace::writeTeXName(std::ostream& out) const {
+std::ostream& LayeredLensSpace::writeTeXName(std::ostream& out) const {
     if (p_ == 3 && q_ == 1) {
         out << "L_{3,1}";
         if (torus_->size() != 2)

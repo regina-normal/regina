@@ -695,9 +695,9 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NLayeredLensSpace* lens;
+    regina::LayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::NLayeredLensSpace::isLayeredLensSpace(
+        lens = regina::LayeredLensSpace::isLayeredLensSpace(
             tri->component(i));
         if (lens) {
             id = addComponentSection(tr("Layered lens space ") +

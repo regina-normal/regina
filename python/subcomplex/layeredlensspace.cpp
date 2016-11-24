@@ -36,28 +36,28 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLayeredLensSpace;
+using regina::LayeredLensSpace;
 
-void addNLayeredLensSpace() {
-    class_<NLayeredLensSpace, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NLayeredLensSpace>, boost::noncopyable>
-            ("NLayeredLensSpace", no_init)
-        .def("clone", &NLayeredLensSpace::clone,
+void addLayeredLensSpace() {
+    class_<LayeredLensSpace, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<LayeredLensSpace>, boost::noncopyable>
+            ("LayeredLensSpace", no_init)
+        .def("clone", &LayeredLensSpace::clone,
             return_value_policy<manage_new_object>())
-        .def("p", &NLayeredLensSpace::p)
-        .def("q", &NLayeredLensSpace::q)
-        .def("torus", &NLayeredLensSpace::torus,
+        .def("p", &LayeredLensSpace::p)
+        .def("q", &LayeredLensSpace::q)
+        .def("torus", &LayeredLensSpace::torus,
             return_internal_reference<>())
-        .def("mobiusBoundaryGroup", &NLayeredLensSpace::mobiusBoundaryGroup)
-        .def("isSnapped", &NLayeredLensSpace::isSnapped)
-        .def("isTwisted", &NLayeredLensSpace::isTwisted)
-        .def("isLayeredLensSpace", &NLayeredLensSpace::isLayeredLensSpace,
+        .def("mobiusBoundaryGroup", &LayeredLensSpace::mobiusBoundaryGroup)
+        .def("isSnapped", &LayeredLensSpace::isSnapped)
+        .def("isTwisted", &LayeredLensSpace::isTwisted)
+        .def("isLayeredLensSpace", &LayeredLensSpace::isLayeredLensSpace,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isLayeredLensSpace")
     ;
 
-    implicitly_convertible<std::auto_ptr<NLayeredLensSpace>,
+    implicitly_convertible<std::auto_ptr<LayeredLensSpace>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

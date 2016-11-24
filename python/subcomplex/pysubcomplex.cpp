@@ -38,7 +38,7 @@ void addBlockedSFSTriple();
 void addL31Pillow();
 void addLayeredChain();
 void addLayeredChainPair();
-void addNLayeredLensSpace();
+void addLayeredLensSpace();
 void addNLayeredLoop();
 void addNLayeredSolidTorus();
 void addNLayeredSurfaceBundle();
@@ -65,7 +65,7 @@ void addSubcomplexClasses() {
     addL31Pillow();
     addLayeredChain();
     addLayeredChainPair();
-    addNLayeredLensSpace();
+    addLayeredLensSpace();
     addNLayeredLoop();
     addNLayeredSolidTorus();
     addNLayeredSurfaceBundle();

@@ -2246,7 +2246,7 @@ class REGINA_API Triangulation<3> :
          * @param p a parameter of the desired lens space.
          * @param q a parameter of the desired lens space.
          *
-         * @see NLayeredLensSpace
+         * @see LayeredLensSpace
          */
         void insertLayeredLensSpace(unsigned long p, unsigned long q);
         /**

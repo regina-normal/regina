@@ -255,9 +255,9 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NLayeredLensSpace* lens;
+    regina::LayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::NLayeredLensSpace::isLayeredLensSpace(self.packet->component(i));
+        lens = regina::LayeredLensSpace::isLayeredLensSpace(self.packet->component(i));
         if (lens) {
             [details appendFormat:@"Layered lens space %s\n", lens->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];

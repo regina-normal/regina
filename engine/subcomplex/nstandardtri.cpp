@@ -68,7 +68,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
     if ((ans = L31Pillow::isL31Pillow(comp)))
         return ans;
-    if ((ans = NLayeredLensSpace::isLayeredLensSpace(comp)))
+    if ((ans = LayeredLensSpace::isLayeredLensSpace(comp)))
         return ans;
     if ((ans = NLayeredLoop::isLayeredLoop(comp)))
         return ans;
