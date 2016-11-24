@@ -18,7 +18,7 @@ SET ( FILES
   pillowtwosphere
   pluggedtorusbundle
   plugtrisolidtorus
-  nsatannulus
+  satannulus
   nsatblock
   nsatblockstarter
   nsatblocktypes
