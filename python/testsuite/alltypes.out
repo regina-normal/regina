@@ -1369,6 +1369,8 @@ NInteger : typedef ->  Integer
 
 NIsomorphism : typedef ->  Isomorphism3
 
+NL31Pillow : typedef ->  L31Pillow
+
 NLargeInteger : typedef ->  LargeInteger
 
 NLayeredChain : class

@@ -55,5 +55,7 @@ void addL31Pillow() {
 
     implicitly_convertible<std::auto_ptr<L31Pillow>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NL31Pillow") = scope().attr("L31Pillow");
 }
 
