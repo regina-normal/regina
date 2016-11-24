@@ -74,7 +74,7 @@ class NTxICore;
  * each formed from two triangles of the triangulation.  These boundaries
  * are then joined to the two torus boundaries of the thin I-bundle,
  * possibly with layerings in between (for more detail on layerings, see
- * the NLayering class).  This is illustrated in the following diagram,
+ * the Layering class).  This is illustrated in the following diagram,
  * where the small tunnels show where the torus boundaries are joined
  * (possibly via layerings).
  *

@@ -62,7 +62,7 @@ class NSatRegion;
  * allow for more interesting relationships between the
  * respective boundary curves of each region.  For more detail on
  * saturated regions and their constituent saturated blocks, see the
- * NSatRegion class; for more detail on layerings, see the NLayering class.
+ * NSatRegion class; for more detail on layerings, see the Layering class.
  *
  * The three saturated regions must be joined together as illustrated
  * below.  Each large box represents a saturated region, and the small

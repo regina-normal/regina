@@ -2191,7 +2191,7 @@ class REGINA_API Triangulation<3> :
 
         /**
          * Performs a layering upon the given boundary edge of the
-         * triangulation.  See the NLayering class notes for further
+         * triangulation.  See the Layering class notes for further
          * details on what a layering entails.
          *
          * \pre The given edge is a boundary edge of this triangulation,

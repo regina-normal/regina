@@ -35,7 +35,7 @@
 
 namespace regina {
 
-NLayering::NLayering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
+Layering::Layering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
         Perm<4> roles1) : size_(0), reln(1, 0, 0, 1) {
     oldBdryTet_[0] = newBdryTet_[0] = bdry0;
     oldBdryTet_[1] = newBdryTet_[1] = bdry1;
@@ -44,7 +44,7 @@ NLayering::NLayering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry
     oldBdryRoles_[1] = newBdryRoles_[1] = roles1;
 }
 
-bool NLayering::extendOne() {
+bool Layering::extendOne() {
     // See if we move to a common new tetrahedron.
     // Also make sure this really is a new tetrahedron, so we don't get
     // stuck in a loop.
@@ -116,7 +116,7 @@ bool NLayering::extendOne() {
     return false;
 }
 
-unsigned long NLayering::extend() {
+unsigned long Layering::extend() {
     unsigned long added = 0;
 
     while (extendOne())
@@ -125,7 +125,7 @@ unsigned long NLayering::extend() {
     return added;
 }
 
-bool NLayering::matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
+bool Layering::matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
         Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1, Matrix2& upperReln)
         const {
     // We can cut half our cases by assuming that upperBdry0 meets with

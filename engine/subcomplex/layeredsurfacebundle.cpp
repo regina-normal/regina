@@ -129,7 +129,7 @@ LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
             it != isos.end(); it++) {
         // Apply the layering to the lower boundary and see if it
         // matches nicely with the upper.
-        NLayering layering(
+        Layering layering(
             tri->tetrahedron((*it)->tetImage(core.bdryTet(1,0))),
             (*it)->facePerm(core.bdryTet(1,0)) * core.bdryRoles(1,0),
             tri->tetrahedron((*it)->tetImage(core.bdryTet(1,1))),

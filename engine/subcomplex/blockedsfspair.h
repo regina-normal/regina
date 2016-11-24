@@ -61,7 +61,7 @@ class NSatRegion;
  * boundaries to allow for a more interesting relationship between the boundary
  * curves of each region.  For more detail on saturated regions and their
  * constituent saturated blocks, see the NSatRegion class; for more detail
- * on layerings, see the NLayering class.
+ * on layerings, see the Layering class.
  *
  * Each of the two saturated regions must have precisely one boundary
  * component formed from just one saturated annulus, and this boundary may

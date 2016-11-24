@@ -180,7 +180,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     // Look for a layering on the first boundary annulus.
     // Extend the layering one tetrahedron at a time, to make sure we
     // don't loop back onto ourselves.
-    NLayering layering(bdry0.tet[0], bdry0.roles[0],
+    Layering layering(bdry0.tet[0], bdry0.roles[0],
         bdry0.tet[1], bdry0.roles[1]);
 
     NSatAnnulus layerTop;

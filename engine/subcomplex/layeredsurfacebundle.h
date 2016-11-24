@@ -68,7 +68,7 @@ class NTxICore;
  * due to incompatible boundary edges, and so we allow a layering of
  * tetrahedra over one of the boundari tori in order to adjust the
  * boundary edges accordingly.  Layerings are described in more detail
- * in the NLayering class.
+ * in the Layering class.
  *
  * Given the parameters of the core <tt>T x I</tt> and the specific
  * layering, the monodromy for this torus bundle over the circle can be

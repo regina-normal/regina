@@ -42,7 +42,7 @@ void addLayeredLensSpace();
 void addLayeredLoop();
 void addLayeredSolidTorus();
 void addLayeredSurfaceBundle();
-void addNLayering();
+void addLayering();
 void addNPillowTwoSphere();
 void addNPluggedTorusBundle();
 void addNPlugTriSolidTorus();
@@ -69,7 +69,7 @@ void addSubcomplexClasses() {
     addLayeredLoop();
     addLayeredSolidTorus();
     addLayeredSurfaceBundle();
-    addNLayering();
+    addLayering();
     addNPillowTwoSphere();
     addNPlugTriSolidTorus();
     addNSnapPeaCensusTri();

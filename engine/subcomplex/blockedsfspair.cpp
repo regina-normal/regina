@@ -196,7 +196,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     // We have a boundary annulus for the first region.
 
     // Hunt for a layering.
-    NLayering layering(bdry.tet[0], bdry.roles[0], bdry.tet[1], bdry.roles[1]);
+    Layering layering(bdry.tet[0], bdry.roles[0], bdry.tet[1], bdry.roles[1]);
     layering.extend();
 
     // Relation from fibre/orbifold to layering first triangle markings 01/02:

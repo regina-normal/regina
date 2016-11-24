@@ -93,7 +93,7 @@ namespace regina {
  * these routines do is use the diagram above to define the rules of
  * what forms a valid layering (and in fact the layering itself will
  * often be the cause of these edge identifications).  This allows the
- * NLayering class a little more versatility in degenerate and boundary cases.
+ * Layering class a little more versatility in degenerate and boundary cases.
  *
  * This class keeps track of an \e old boundary, which is the original
  * pair of triangles upon which the first tetrahedron is layered, and a
@@ -110,7 +110,7 @@ namespace regina {
  * how many additional tetrahedra have been layered upon this pair of triangles
  * according to the rules above.
  */
-class REGINA_API NLayering : public boost::noncopyable {
+class REGINA_API Layering : public boost::noncopyable {
     private:
         unsigned long size_;
             /**< The number of tetrahedra that have been layered. */
@@ -161,7 +161,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * @param roles1 the permutation describing how this second triangle is
          * formed from three vertices of tetrahedron \a bdry1.
          */
-        NLayering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
+        Layering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
             Perm<4> roles1);
 
         /**
@@ -182,7 +182,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * These belong to the original boundary before any layerings
          * take place.
          *
-         * See the NLayering class notes for details on how a torus
+         * See the Layering class notes for details on how a torus
          * boundary is formed from two tetrahedra and two permutations.
          *
          * @param which specifies which tetrahedron to return; this must
@@ -195,7 +195,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * These refer to the original boundary before any layerings
          * take place.
          *
-         * See the NLayering class notes for details on how a torus
+         * See the Layering class notes for details on how a torus
          * boundary is formed from two tetrahedra and two permutations.
          *
          * @param which specifies which permutation to return; this must
@@ -208,7 +208,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * These belong to the final boundary after layerings have been
          * performed.
          *
-         * See the NLayering class notes for details on how a torus
+         * See the Layering class notes for details on how a torus
          * boundary is formed from two tetrahedra and two permutations.
          *
          * @param which specifies which tetrahedron to return; this must
@@ -221,7 +221,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * These refer to the final boundary after layerings have been
          * performed.
          *
-         * See the NLayering class notes for details on how a torus
+         * See the Layering class notes for details on how a torus
          * boundary is formed from two tetrahedra and two permutations.
          *
          * @param which specifies which permutation to return; this must
@@ -408,29 +408,29 @@ class REGINA_API NLayering : public boost::noncopyable {
 
 /*@}*/
 
-// Inline functions for NLayering
+// Inline functions for Layering
 
-inline unsigned long NLayering::size() const {
+inline unsigned long Layering::size() const {
     return size_;
 }
 
-inline Tetrahedron<3>* NLayering::oldBoundaryTet(unsigned which) const {
+inline Tetrahedron<3>* Layering::oldBoundaryTet(unsigned which) const {
     return oldBdryTet_[which];
 }
 
-inline Perm<4> NLayering::oldBoundaryRoles(unsigned which) const {
+inline Perm<4> Layering::oldBoundaryRoles(unsigned which) const {
     return oldBdryRoles_[which];
 }
 
-inline Tetrahedron<3>* NLayering::newBoundaryTet(unsigned which) const {
+inline Tetrahedron<3>* Layering::newBoundaryTet(unsigned which) const {
     return newBdryTet_[which];
 }
 
-inline Perm<4> NLayering::newBoundaryRoles(unsigned which) const {
+inline Perm<4> Layering::newBoundaryRoles(unsigned which) const {
     return newBdryRoles_[which];
 }
 
-inline const Matrix2& NLayering::boundaryReln() const {
+inline const Matrix2& Layering::boundaryReln() const {
     return reln;
 }
 

@@ -36,25 +36,25 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLayering;
+using regina::Layering;
 using regina::Perm;
 using regina::Tetrahedron;
 
-void addNLayering() {
-    class_<NLayering, boost::noncopyable, std::auto_ptr<NLayering> >
-            ("NLayering", init<Tetrahedron<3>*, Perm<4>, Tetrahedron<3>*, Perm<4>>())
-        .def("size", &NLayering::size)
-        .def("oldBoundaryTet", &NLayering::oldBoundaryTet,
+void addLayering() {
+    class_<Layering, boost::noncopyable, std::auto_ptr<Layering> >
+            ("Layering", init<Tetrahedron<3>*, Perm<4>, Tetrahedron<3>*, Perm<4>>())
+        .def("size", &Layering::size)
+        .def("oldBoundaryTet", &Layering::oldBoundaryTet,
             return_value_policy<reference_existing_object>())
-        .def("oldBoundaryRoles", &NLayering::oldBoundaryRoles)
-        .def("newBoundaryTet", &NLayering::newBoundaryTet,
+        .def("oldBoundaryRoles", &Layering::oldBoundaryRoles)
+        .def("newBoundaryTet", &Layering::newBoundaryTet,
             return_value_policy<reference_existing_object>())
-        .def("newBoundaryRoles", &NLayering::newBoundaryRoles)
-        .def("boundaryReln", &NLayering::boundaryReln,
+        .def("newBoundaryRoles", &Layering::newBoundaryRoles)
+        .def("boundaryReln", &Layering::boundaryReln,
             return_internal_reference<>())
-        .def("extendOne", &NLayering::extendOne)
-        .def("extend", &NLayering::extend)
-        .def("matchesTop", &NLayering::matchesTop)
+        .def("extendOne", &Layering::extendOne)
+        .def("extend", &Layering::extend)
+        .def("matchesTop", &Layering::matchesTop)
         .def(regina::python::add_eq_operators())
     ;
 }

@@ -505,7 +505,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
  *
  * The four faces of this tetrahedron form two boundary annuli, and the
  * tetrahedron is effectively layered onto each boundary annulus.  See
- * the NLayering class notes for more discussion on layerings in general.
+ * the Layering class notes for more discussion on layerings in general.
  *
  * Although this block is degenerate (the fibres are all pinched
  * together where the opposite edges of the tetrahedron meet), it can be

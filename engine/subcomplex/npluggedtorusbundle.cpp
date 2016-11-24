@@ -158,14 +158,14 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(Triangulation<3>* triang,
     for (std::list<Isomorphism<3>*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
         // Apply layerings to the upper and lower boundaries.
-        NLayering layerUpper(
+        Layering layerUpper(
             triang->tetrahedron((*it)->tetImage(bundle.bdryTet(0,0))),
             (*it)->facePerm(bundle.bdryTet(0,0)) * bundle.bdryRoles(0,0),
             triang->tetrahedron((*it)->tetImage(bundle.bdryTet(0,1))),
             (*it)->facePerm(bundle.bdryTet(0,1)) * bundle.bdryRoles(0,1));
         layerUpper.extend();
 
-        NLayering layerLower(
+        Layering layerLower(
             triang->tetrahedron((*it)->tetImage(bundle.bdryTet(1,0))),
             (*it)->facePerm(bundle.bdryTet(1,0)) * bundle.bdryRoles(1,0),
             triang->tetrahedron((*it)->tetImage(bundle.bdryTet(1,1))),
