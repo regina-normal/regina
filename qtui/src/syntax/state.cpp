@@ -45,7 +45,7 @@ StateData* StateData::get(State &state)
 bool StateData::isEmpty() const
 {
     assert(m_contextStack.size() == m_captureStack.size());
-    return m_contextStack.isEmpty();
+    return m_contextStack.empty();
 }
 
 void StateData::clear()
@@ -63,27 +63,27 @@ int StateData::size() const
 void StateData::push(Context *context, const QStringList &captures)
 {
     assert(context);
-    m_contextStack.push(context);
-    m_captureStack.push(captures);
+    m_contextStack.push_back(context);
+    m_captureStack.push_back(captures);
     assert(m_contextStack.size() == m_captureStack.size());
 }
 
 void StateData::pop()
 {
-    m_contextStack.pop();
-    m_captureStack.pop();
+    m_contextStack.pop_back();
+    m_captureStack.pop_back();
 }
 
 Context* StateData::topContext() const
 {
     assert(!isEmpty());
-    return m_contextStack.top();
+    return m_contextStack.back();
 }
 
 QStringList StateData::topCaptures() const
 {
     assert(!isEmpty());
-    return m_captureStack.top();
+    return m_captureStack.back();
 }
 
 State::State() :

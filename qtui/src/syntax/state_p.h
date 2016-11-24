@@ -18,11 +18,8 @@
 #ifndef KSYNTAXHIGHLIGHTING_STATE_P_H
 #define KSYNTAXHIGHLIGHTING_STATE_P_H
 
-#include <QStack>
-
-QT_BEGIN_NAMESPACE
-class QStringList;
-QT_END_NAMESPACE
+#include <QStringList>
+#include <deque>
 
 namespace KSyntaxHighlighting
 {
@@ -47,8 +44,8 @@ public:
     DefinitionData *m_defData;
 private:
     friend class State;
-    QStack<Context*> m_contextStack;
-    QStack<QStringList> m_captureStack;
+    std::deque<Context*> m_contextStack;
+    std::deque<QStringList> m_captureStack;
 };
 
 }
