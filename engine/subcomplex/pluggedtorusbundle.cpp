@@ -53,12 +53,12 @@ namespace {
     const NTxIParallelCore core_T_p;
 }
 
-NPluggedTorusBundle::~NPluggedTorusBundle() {
+PluggedTorusBundle::~PluggedTorusBundle() {
     delete bundleIso_;
     delete region_;
 }
 
-Manifold* NPluggedTorusBundle::manifold() const {
+Manifold* PluggedTorusBundle::manifold() const {
     SFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
@@ -73,7 +73,7 @@ Manifold* NPluggedTorusBundle::manifold() const {
     return new GraphLoop(sfs, matchingReln_);
 }
 
-std::ostream& NPluggedTorusBundle::writeName(std::ostream& out) const {
+std::ostream& PluggedTorusBundle::writeName(std::ostream& out) const {
     out << "Plugged Torus Bundle [";
     bundle_.writeName(out);
     out << " | ";
@@ -81,7 +81,7 @@ std::ostream& NPluggedTorusBundle::writeName(std::ostream& out) const {
     return out << ']';
 }
 
-std::ostream& NPluggedTorusBundle::writeTeXName(std::ostream& out) const {
+std::ostream& PluggedTorusBundle::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{PTB}\\left[";
     bundle_.writeTeXName(out);
     out << "\\,|\\n";
@@ -89,7 +89,7 @@ std::ostream& NPluggedTorusBundle::writeTeXName(std::ostream& out) const {
     return out << "\\right]";
 }
 
-void NPluggedTorusBundle::writeTextLong(std::ostream& out) const {
+void PluggedTorusBundle::writeTextLong(std::ostream& out) const {
     out << "Plugged torus bundle, fibre/orbifold relation " << matchingReln_
         << '\n';
     out << "Thin I-bundle: ";
@@ -98,7 +98,7 @@ void NPluggedTorusBundle::writeTextLong(std::ostream& out) const {
     region_->writeDetail(out, "Saturated region");
 }
 
-NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
+PluggedTorusBundle* PluggedTorusBundle::isPluggedTorusBundle(
         Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
@@ -115,7 +115,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
     // nine tetrahedra.
 
     // Hunt for the thin torus bundle.
-    NPluggedTorusBundle* ans;
+    PluggedTorusBundle* ans;
     if ((ans = hunt(tri, core_T_6_1)))
         return ans;
     if ((ans = hunt(tri, core_T_7_1)))
@@ -140,7 +140,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
     return 0;
 }
 
-NPluggedTorusBundle* NPluggedTorusBundle::hunt(Triangulation<3>* triang,
+PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
         const NTxICore& bundle) {
     std::list<Isomorphism<3>*> isos;
     if (! bundle.core().findAllSubcomplexesIn(*triang, back_inserter(isos)))
@@ -300,7 +300,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(Triangulation<3>* triang,
             // together -- we worked this out earlier as upperRolesToLower.
             // Note that curvesToBdryAnnulus is self-inverse, so we won't
             // bother inverting it even though we should.
-            NPluggedTorusBundle* ans = new NPluggedTorusBundle(bundle, *it,
+            PluggedTorusBundle* ans = new PluggedTorusBundle(bundle, *it,
                 region, curvesToBdryAnnulus * upperRolesToLower.inverse() *
                 curvesToLowerAnnulus);
 

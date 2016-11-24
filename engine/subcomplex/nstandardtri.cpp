@@ -109,7 +109,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
     if ((ans = BlockedSFSTriple::isBlockedSFSTriple(tri)))
         return ans;
-    if ((ans = NPluggedTorusBundle::isPluggedTorusBundle(tri)))
+    if ((ans = PluggedTorusBundle::isPluggedTorusBundle(tri)))
         return ans;
 
     // Nup.

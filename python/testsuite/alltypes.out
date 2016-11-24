@@ -1467,9 +1467,6 @@ NPillowTwoSphere : typedef ->  PillowTwoSphere
 NPlugTriSolidTorus : class
 Equality type : BY_REFERENCE
 
-NPluggedTorusBundle : class
-Equality type : BY_REFERENCE
-
 NPolynomial : typedef ->  Polynomial
 
 NPrimes : typedef ->  Primes
@@ -1700,6 +1697,9 @@ Perm9 : class
 Equality type : BY_VALUE
 
 PillowTwoSphere : class
+Equality type : BY_REFERENCE
+
+PluggedTorusBundle : class
 Equality type : BY_REFERENCE
 
 Polynomial : class

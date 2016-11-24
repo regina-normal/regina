@@ -38,27 +38,27 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPluggedTorusBundle;
+using regina::PluggedTorusBundle;
 
-void addNPluggedTorusBundle() {
-    class_<NPluggedTorusBundle, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NPluggedTorusBundle>, boost::noncopyable>
-            ("NPluggedTorusBundle", no_init)
-        .def("bundle", &NPluggedTorusBundle::bundle,
+void addPluggedTorusBundle() {
+    class_<PluggedTorusBundle, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<PluggedTorusBundle>, boost::noncopyable>
+            ("PluggedTorusBundle", no_init)
+        .def("bundle", &PluggedTorusBundle::bundle,
             return_value_policy<reference_existing_object>())
-        .def("bundleIso", &NPluggedTorusBundle::bundleIso,
+        .def("bundleIso", &PluggedTorusBundle::bundleIso,
             return_internal_reference<>())
-        .def("region", &NPluggedTorusBundle::region,
+        .def("region", &PluggedTorusBundle::region,
             return_internal_reference<>())
-        .def("matchingReln", &NPluggedTorusBundle::matchingReln,
+        .def("matchingReln", &PluggedTorusBundle::matchingReln,
             return_internal_reference<>())
-        .def("isPluggedTorusBundle", &NPluggedTorusBundle::isPluggedTorusBundle,
+        .def("isPluggedTorusBundle", &PluggedTorusBundle::isPluggedTorusBundle,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isPluggedTorusBundle")
     ;
 
-    implicitly_convertible<std::auto_ptr<NPluggedTorusBundle>,
+    implicitly_convertible<std::auto_ptr<PluggedTorusBundle>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

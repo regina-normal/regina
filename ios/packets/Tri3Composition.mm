@@ -498,7 +498,7 @@
         delete bundle;
     }
     
-    regina::NPluggedTorusBundle* pBundle = regina::NPluggedTorusBundle::isPluggedTorusBundle(self.packet);
+    regina::PluggedTorusBundle* pBundle = regina::PluggedTorusBundle::isPluggedTorusBundle(self.packet);
     if (pBundle) {
         [details appendString:@"Plugged Torus Bundle\n"];
         

@@ -115,7 +115,7 @@ class NTxICore;
  * The optional NStandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
+class REGINA_API PluggedTorusBundle : public NStandardTriangulation {
     private:
         const NTxICore& bundle_;
             /**< The thin I-bundle that appears within this triangulation.
@@ -144,7 +144,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * As an exception, the thin I-bundle is not destroyed, since
          * it is assumed that this is referenced from elsewhere.
          */
-        ~NPluggedTorusBundle();
+        ~PluggedTorusBundle();
 
         /**
          * Returns an isomorphic copy of the thin I-bundle that forms part
@@ -209,7 +209,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * structure that was found, or \c null if the given
          * triangulation is not of the form described by this class.
          */
-        static NPluggedTorusBundle* isPluggedTorusBundle
+        static PluggedTorusBundle* isPluggedTorusBundle
             (Triangulation<3>* tri);
 
     private:
@@ -234,7 +234,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * two saturated region boundaries are joined by the thin
          * I-bundle and layerings, as described in the class notes above.
          */
-        NPluggedTorusBundle(const NTxICore& bundle, Isomorphism<3>* bundleIso,
+        PluggedTorusBundle(const NTxICore& bundle, Isomorphism<3>* bundleIso,
             NSatRegion* region, const Matrix2& matchingReln);
 
         /**
@@ -260,34 +260,34 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * is not of the form described by this class using an isomorphic
          * copy of the given thin I-bundle.
          */
-        static NPluggedTorusBundle* hunt(Triangulation<3>* tri,
+        static PluggedTorusBundle* hunt(Triangulation<3>* tri,
             const NTxICore& bundle);
 };
 
 /*@}*/
 
-// Inline functions for NPluggedTorusBundle
+// Inline functions for PluggedTorusBundle
 
-inline NPluggedTorusBundle::NPluggedTorusBundle(const NTxICore& bundle,
+inline PluggedTorusBundle::PluggedTorusBundle(const NTxICore& bundle,
         Isomorphism<3>* bundleIso, NSatRegion* region,
         const Matrix2& matchingReln) :
         bundle_(bundle), bundleIso_(bundleIso), region_(region),
         matchingReln_(matchingReln) {
 }
 
-inline const NTxICore& NPluggedTorusBundle::bundle() const {
+inline const NTxICore& PluggedTorusBundle::bundle() const {
     return bundle_;
 }
 
-inline const Isomorphism<3>& NPluggedTorusBundle::bundleIso() const {
+inline const Isomorphism<3>& PluggedTorusBundle::bundleIso() const {
     return *bundleIso_;
 }
 
-inline const NSatRegion& NPluggedTorusBundle::region() const {
+inline const NSatRegion& PluggedTorusBundle::region() const {
     return *region_;
 }
 
-inline const Matrix2& NPluggedTorusBundle::matchingReln() const {
+inline const Matrix2& PluggedTorusBundle::matchingReln() const {
     return matchingReln_;
 }
 

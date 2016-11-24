@@ -44,7 +44,7 @@ void addLayeredSolidTorus();
 void addLayeredSurfaceBundle();
 void addLayering();
 void addPillowTwoSphere();
-void addNPluggedTorusBundle();
+void addPluggedTorusBundle();
 void addNPlugTriSolidTorus();
 void addNSatAnnulus();
 void addNSatBlock();
@@ -87,6 +87,6 @@ void addSubcomplexClasses() {
     addBlockedSFSLoop();
     addBlockedSFSPair();
     addBlockedSFSTriple();
-    addNPluggedTorusBundle();
+    addPluggedTorusBundle();
 }
 
