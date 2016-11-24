@@ -33,7 +33,7 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/handlebody.h"
 #include "subcomplex/ntrisolidtorus.h"
-#include "subcomplex/nlayeredchain.h"
+#include "subcomplex/layeredchain.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file subcomplex/nlayeredchain.h
+/*! \file subcomplex/layeredchain.h
  *  \brief Deals with layered chains in a triangulation.
  */
 
-#ifndef __NLAYEREDCHAIN_H
+#ifndef __LAYEREDCHAIN_H
 #ifndef __DOXYGEN
-#define __NLAYEREDCHAIN_H
+#define __LAYEREDCHAIN_H
 #endif
 
 #include "regina-core.h"

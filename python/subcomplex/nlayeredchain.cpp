@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/nlayeredchain.h"
+#include "subcomplex/layeredchain.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

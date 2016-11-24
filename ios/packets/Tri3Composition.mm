@@ -41,7 +41,7 @@
 #import "subcomplex/blockedsfspair.h"
 #import "subcomplex/blockedsfstriple.h"
 #import "subcomplex/l31pillow.h"
-#import "subcomplex/nlayeredchain.h"
+#import "subcomplex/layeredchain.h"
 #import "subcomplex/layeredchainpair.h"
 #import "subcomplex/nlayeredlensspace.h"
 #import "subcomplex/nlayeredloop.h"

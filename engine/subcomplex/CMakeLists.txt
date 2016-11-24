@@ -55,6 +55,7 @@ if (${REGINA_INSTALL_DEV})
     nblockedsfstriple.h
     l31pillow.h
     nl31pillow.h
+    layeredchain.h
     nlayeredchain.h
     layeredchainpair.h
     nlayeredchainpair.h
