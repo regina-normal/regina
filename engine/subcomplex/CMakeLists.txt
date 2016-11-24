@@ -56,6 +56,7 @@ if (${REGINA_INSTALL_DEV})
     l31pillow.h
     nl31pillow.h
     nlayeredchain.h
+    layeredchainpair.h
     nlayeredchainpair.h
     nlayeredlensspace.h
     nlayeredloop.h
