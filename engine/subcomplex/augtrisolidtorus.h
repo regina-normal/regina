@@ -84,7 +84,7 @@ namespace regina {
  * implemented for most augmented triangular solid tori and
  * homology() is not implemented at all.
  */
-class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
+class REGINA_API AugTriSolidTorus : public NStandardTriangulation {
     public:
         static const int CHAIN_NONE;
             /**< Indicates that this augmented triangular solid torus
@@ -130,13 +130,13 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * Destroys this augmented solid torus; note that the corresponding
          * triangular and layered solid tori will also be destroyed.
          */
-        virtual ~NAugTriSolidTorus();
+        virtual ~AugTriSolidTorus();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NAugTriSolidTorus* clone() const;
+        AugTriSolidTorus* clone() const;
 
         /**
          * Returns the triangular solid torus at the core of this
@@ -239,7 +239,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * augmented triangular solid torus, or \c null if the given
          * component is not an augmented triangular solid torus.
          */
-        static NAugTriSolidTorus* isAugTriSolidTorus(const Component<3>* comp);
+        static AugTriSolidTorus* isAugTriSolidTorus(const Component<3>* comp);
 
         Manifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
@@ -251,7 +251,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * Creates a new structure with all subcomponent pointers
          * initialised to \c null.
          */
-        NAugTriSolidTorus();
+        AugTriSolidTorus();
 
         /**
          * Contains code common to both writeName() and writeTeXName().
@@ -266,33 +266,33 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
 
 /*@}*/
 
-// Inline functions for NAugTriSolidTorus
+// Inline functions for AugTriSolidTorus
 
-inline NAugTriSolidTorus::NAugTriSolidTorus() : core_(0),
+inline AugTriSolidTorus::AugTriSolidTorus() : core_(0),
         chainType_(CHAIN_NONE) {
     augTorus_[0] = augTorus_[1] = augTorus_[2] = 0;
 }
 
-inline const NTriSolidTorus& NAugTriSolidTorus::core() const {
+inline const NTriSolidTorus& AugTriSolidTorus::core() const {
     return *core_;
 }
-inline const NLayeredSolidTorus* NAugTriSolidTorus::augTorus(
+inline const NLayeredSolidTorus* AugTriSolidTorus::augTorus(
         int annulus) const {
     return augTorus_[annulus];
 }
-inline Perm<4> NAugTriSolidTorus::edgeGroupRoles(int annulus) const {
+inline Perm<4> AugTriSolidTorus::edgeGroupRoles(int annulus) const {
     return edgeGroupRoles_[annulus];
 }
-inline unsigned long NAugTriSolidTorus::chainLength() const {
+inline unsigned long AugTriSolidTorus::chainLength() const {
     return chainIndex;
 }
-inline int NAugTriSolidTorus::chainType() const {
+inline int AugTriSolidTorus::chainType() const {
     return chainType_;
 }
-inline int NAugTriSolidTorus::torusAnnulus() const {
+inline int AugTriSolidTorus::torusAnnulus() const {
     return torusAnnulus_;
 }
-inline bool NAugTriSolidTorus::hasLayeredChain() const {
+inline bool AugTriSolidTorus::hasLayeredChain() const {
     return (chainIndex != 0);
 }
 

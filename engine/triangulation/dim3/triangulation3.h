@@ -2270,7 +2270,7 @@ class REGINA_API Triangulation<3> :
          * parameters into this triangulation.  Almost all augmented
          * triangular solid tori represent Seifert fibred spaces with three
          * or fewer exceptional fibres.  Augmented triangular solid tori
-         * are described in more detail in the NAugTriSolidTorus class notes.
+         * are described in more detail in the AugTriSolidTorus class notes.
          *
          * The resulting Seifert fibred space will be
          * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)

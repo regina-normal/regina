@@ -37,34 +37,34 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NAugTriSolidTorus;
+using regina::AugTriSolidTorus;
 
-void addNAugTriSolidTorus() {
-    scope s = class_<NAugTriSolidTorus, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NAugTriSolidTorus>, boost::noncopyable>
-            ("NAugTriSolidTorus", no_init)
-        .def("clone", &NAugTriSolidTorus::clone,
+void addAugTriSolidTorus() {
+    scope s = class_<AugTriSolidTorus, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<AugTriSolidTorus>, boost::noncopyable>
+            ("AugTriSolidTorus", no_init)
+        .def("clone", &AugTriSolidTorus::clone,
             return_value_policy<manage_new_object>())
-        .def("core", &NAugTriSolidTorus::core,
+        .def("core", &AugTriSolidTorus::core,
             return_internal_reference<>())
-        .def("augTorus", &NAugTriSolidTorus::augTorus,
+        .def("augTorus", &AugTriSolidTorus::augTorus,
             return_internal_reference<>())
-        .def("edgeGroupRoles", &NAugTriSolidTorus::edgeGroupRoles)
-        .def("chainLength", &NAugTriSolidTorus::chainLength)
-        .def("chainType", &NAugTriSolidTorus::chainType)
-        .def("torusAnnulus", &NAugTriSolidTorus::torusAnnulus)
-        .def("hasLayeredChain", &NAugTriSolidTorus::hasLayeredChain)
-        .def("isAugTriSolidTorus", &NAugTriSolidTorus::isAugTriSolidTorus,
+        .def("edgeGroupRoles", &AugTriSolidTorus::edgeGroupRoles)
+        .def("chainLength", &AugTriSolidTorus::chainLength)
+        .def("chainType", &AugTriSolidTorus::chainType)
+        .def("torusAnnulus", &AugTriSolidTorus::torusAnnulus)
+        .def("hasLayeredChain", &AugTriSolidTorus::hasLayeredChain)
+        .def("isAugTriSolidTorus", &AugTriSolidTorus::isAugTriSolidTorus,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isAugTriSolidTorus")
     ;
 
-    s.attr("CHAIN_NONE") = NAugTriSolidTorus::CHAIN_NONE;
-    s.attr("CHAIN_MAJOR") = NAugTriSolidTorus::CHAIN_MAJOR;
-    s.attr("CHAIN_AXIS") = NAugTriSolidTorus::CHAIN_AXIS;
+    s.attr("CHAIN_NONE") = AugTriSolidTorus::CHAIN_NONE;
+    s.attr("CHAIN_MAJOR") = AugTriSolidTorus::CHAIN_MAJOR;
+    s.attr("CHAIN_AXIS") = AugTriSolidTorus::CHAIN_AXIS;
 
-    implicitly_convertible<std::auto_ptr<NAugTriSolidTorus>,
+    implicitly_convertible<std::auto_ptr<AugTriSolidTorus>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

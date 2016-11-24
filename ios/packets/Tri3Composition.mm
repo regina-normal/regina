@@ -183,9 +183,9 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NAugTriSolidTorus* aug;
+    regina::AugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(self.packet->component(i));
+        aug = regina::AugTriSolidTorus::isAugTriSolidTorus(self.packet->component(i));
         if (aug) {
             [details appendFormat:@"Augmented triangular solid torus %s\n", aug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -197,9 +197,9 @@
              core.tetrahedron(2)->index()];
 
             if (aug->hasLayeredChain()) {
-                if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_MAJOR)
+                if (aug->chainType() == regina::AugTriSolidTorus::CHAIN_MAJOR)
                     [details appendString:@INDENT1 "Attached: layered chain (major) + layered solid torus]n"];
-                else if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_AXIS)
+                else if (aug->chainType() == regina::AugTriSolidTorus::CHAIN_AXIS)
                     [details appendString:@INDENT1 "Attached: layered chain (axis) + layered solid torus\n"];
                 else
                     [details appendString:@INDENT1 "Attached: layered chain (unknown) + layered solid torus\n"];

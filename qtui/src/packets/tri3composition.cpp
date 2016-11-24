@@ -382,9 +382,9 @@ void Tri3CompositionUI::findAugTriSolidTori() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NAugTriSolidTorus* aug;
+    regina::AugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(
+        aug = regina::AugTriSolidTorus::isAugTriSolidTorus(
             tri->component(i));
         if (aug) {
             id = addComponentSection(tr(
@@ -403,10 +403,10 @@ void Tri3CompositionUI::findAugTriSolidTori() {
             if (aug->hasLayeredChain()) {
                 QString chainType;
                 if (aug->chainType() ==
-                        regina::NAugTriSolidTorus::CHAIN_MAJOR)
+                        regina::AugTriSolidTorus::CHAIN_MAJOR)
                     chainType = tr("major");
                 else if (aug->chainType() ==
-                        regina::NAugTriSolidTorus::CHAIN_AXIS)
+                        regina::AugTriSolidTorus::CHAIN_AXIS)
                     chainType = tr("axis");
                 else
                     chainType = tr("unknown");

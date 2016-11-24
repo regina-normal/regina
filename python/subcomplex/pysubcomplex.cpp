@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-void addNAugTriSolidTorus();
+void addAugTriSolidTorus();
 void addNBlockedSFS();
 void addNBlockedSFSLoop();
 void addNBlockedSFSPair();
@@ -61,7 +61,7 @@ void addNTxICore();
 
 void addSubcomplexClasses() {
     addNStandardTriangulation();
-    addNAugTriSolidTorus();
+    addAugTriSolidTorus();
     addNL31Pillow();
     addNLayeredChain();
     addNLayeredChainPair();

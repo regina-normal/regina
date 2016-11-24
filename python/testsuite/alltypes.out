@@ -7,6 +7,9 @@ Equality type : BY_REFERENCE
 AngleStructures : class
 Equality type : BY_REFERENCE
 
+AugTriSolidTorus : class
+Equality type : BY_REFERENCE
+
 BoolSet : class
 Equality type : BY_VALUE
 
@@ -1268,9 +1271,6 @@ NAbelianGroup : typedef ->  AbelianGroup
 NAngleStructure : typedef ->  AngleStructure
 
 NAngleStructureList : typedef ->  AngleStructures
-
-NAugTriSolidTorus : class
-Equality type : BY_REFERENCE
 
 NBlockedSFS : class
 Equality type : BY_REFERENCE

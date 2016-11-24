@@ -40,11 +40,11 @@
 
 namespace regina {
 
-const int NAugTriSolidTorus::CHAIN_NONE = 0;
-const int NAugTriSolidTorus::CHAIN_MAJOR = 1;
-const int NAugTriSolidTorus::CHAIN_AXIS = 2;
+const int AugTriSolidTorus::CHAIN_NONE = 0;
+const int AugTriSolidTorus::CHAIN_MAJOR = 1;
+const int AugTriSolidTorus::CHAIN_AXIS = 2;
 
-NAugTriSolidTorus::~NAugTriSolidTorus() {
+AugTriSolidTorus::~AugTriSolidTorus() {
     if (core_)
         delete core_;
     for (int i = 0; i < 3; i++)
@@ -52,8 +52,8 @@ NAugTriSolidTorus::~NAugTriSolidTorus() {
             delete augTorus_[i];
 }
 
-NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
-    NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+AugTriSolidTorus* AugTriSolidTorus::clone() const {
+    AugTriSolidTorus* ans = new AugTriSolidTorus();
     ans->core_ = core_->clone();
     for (int i = 0; i < 3; i++) {
         if (augTorus_[i])
@@ -66,7 +66,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
     return ans;
 }
 
-Manifold* NAugTriSolidTorus::manifold() const {
+Manifold* AugTriSolidTorus::manifold() const {
     SFSpace* ans = new SFSpace();
     if (chainType_ == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
@@ -178,7 +178,7 @@ Manifold* NAugTriSolidTorus::manifold() const {
     return ans;
 }
 
-NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
+AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
         const Component<3>* comp) {
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
@@ -221,7 +221,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
 
                 if (core) {
                     // We got one!
-                    NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+                    AugTriSolidTorus* ans = new AugTriSolidTorus();
                     ans->core_ = core;
 
                     // Work out how the mobius strip is glued onto each
@@ -315,7 +315,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                         break;
 
                     // We have the entire structure!
-                    NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+                    AugTriSolidTorus* ans = new AugTriSolidTorus();
                     ans->core_ = core;
                     switch (annulusPerm[0]) {
                         case 0:
@@ -383,7 +383,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                                 core->isAnnulusSelfIdentified(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
-                            NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+                            AugTriSolidTorus* ans = new AugTriSolidTorus();
                             ans->core_ = core;
                             switch (annulusPerm[0]) {
                                 case 0:
@@ -443,7 +443,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                                 core->isAnnulusSelfIdentified(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
-                            NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+                            AugTriSolidTorus* ans = new AugTriSolidTorus();
                             ans->core_ = core;
                             switch (annulusPerm[0]) {
                                 case 0:
@@ -632,7 +632,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                 }
 
                 // We've got one!
-                NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+                AugTriSolidTorus* ans = new AugTriSolidTorus();
                 ans->core_ = core;
                 for (j = 0; j < 3; j++) {
                     if (whichLayered[j] >= 0) {
@@ -647,7 +647,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             } else {
                 // We're not looking for a layered chain.
                 // This means we have found the entire structure!
-                NAugTriSolidTorus* ans = new NAugTriSolidTorus();
+                AugTriSolidTorus* ans = new AugTriSolidTorus();
                 ans->core_ = core;
                 for (j = 0; j < 3; j++) {
                     ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
@@ -668,7 +668,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     return 0;
 }
 
-std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
+std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
         bool tex) const {
     if (chainIndex) {
         // We have a layered solid torus and a layered chain.
@@ -739,15 +739,15 @@ std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
     }
 }
 
-std::ostream& NAugTriSolidTorus::writeName(std::ostream& out) const {
+std::ostream& AugTriSolidTorus::writeName(std::ostream& out) const {
     return writeCommonName(out, false);
 }
 
-std::ostream& NAugTriSolidTorus::writeTeXName(std::ostream& out) const {
+std::ostream& AugTriSolidTorus::writeTeXName(std::ostream& out) const {
     return writeCommonName(out, true);
 }
 
-void NAugTriSolidTorus::writeTextLong(std::ostream& out) const {
+void AugTriSolidTorus::writeTextLong(std::ostream& out) const {
     out << (chainIndex ? "Chained " : "Augmented ")
         << "triangular solid torus "
         << (torusAnnulus_ == -1 ? "(three tori): " : "(torus + chain): ");
