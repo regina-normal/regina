@@ -131,6 +131,7 @@ class REGINA_API L31Pillow : public NStandardTriangulation {
          */
         L31Pillow();
 };
+
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
@@ -139,7 +140,6 @@ class REGINA_API L31Pillow : public NStandardTriangulation {
  * L31Pillow.
  */
 REGINA_DEPRECATED typedef L31Pillow NL31Pillow;
-
 
 /*@}*/
 
