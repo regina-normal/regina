@@ -264,6 +264,15 @@ class REGINA_API PluggedTorusBundle : public NStandardTriangulation {
             const NTxICore& bundle);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NPluggedTorusBundle has now been renamed to
+ * PluggedTorusBundle.
+ */
+REGINA_DEPRECATED typedef PluggedTorusBundle NPluggedTorusBundle;
+
 /*@}*/
 
 // Inline functions for PluggedTorusBundle

@@ -60,5 +60,7 @@ void addPluggedTorusBundle() {
 
     implicitly_convertible<std::auto_ptr<PluggedTorusBundle>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NPluggedTorusBundle") = scope().attr("PluggedTorusBundle");
 }
 
