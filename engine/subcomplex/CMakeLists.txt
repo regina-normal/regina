@@ -11,7 +11,7 @@ SET ( FILES
   layeredchain
   layeredchainpair
   layeredlensspace
-  nlayeredloop
+  layeredloop
   nlayeredsolidtorus
   nlayeredsurfacebundle
   nlayering
