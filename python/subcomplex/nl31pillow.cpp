@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/nl31pillow.h"
+#include "subcomplex/l31pillow.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

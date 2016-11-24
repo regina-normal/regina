@@ -37,7 +37,7 @@
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/blockedsfstriple.h"
-#include "subcomplex/nl31pillow.h"
+#include "subcomplex/l31pillow.h"
 #include "subcomplex/nlayeredchain.h"
 #include "subcomplex/nlayeredchainpair.h"
 #include "subcomplex/nlayeredlensspace.h"
