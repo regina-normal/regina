@@ -34,7 +34,7 @@
 #include "manifold/handlebody.h"
 #include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
-#include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/layeredsolidtorus.h"
 
 namespace regina {
 

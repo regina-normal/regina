@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "subcomplex/ntrisolidtorus.h"
-#include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/layeredsolidtorus.h"
 #include "triangulation/forward.h"
 
 namespace regina {

@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
 
 namespace regina {

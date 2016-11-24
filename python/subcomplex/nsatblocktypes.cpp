@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/nsatblocktypes.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"

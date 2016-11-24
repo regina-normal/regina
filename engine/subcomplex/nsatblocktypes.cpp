@@ -32,7 +32,7 @@
 
 #include "manifold/sfs.h"
 #include "subcomplex/nsatblocktypes.h"
-#include "subcomplex/nlayeredsolidtorus.h"
+#include "subcomplex/layeredsolidtorus.h"
 #include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
 #include <algorithm>

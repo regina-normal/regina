@@ -45,7 +45,7 @@
 #import "subcomplex/layeredchainpair.h"
 #import "subcomplex/layeredlensspace.h"
 #import "subcomplex/layeredloop.h"
-#import "subcomplex/nlayeredsolidtorus.h"
+#import "subcomplex/layeredsolidtorus.h"
 #import "subcomplex/nlayeredsurfacebundle.h"
 #import "subcomplex/npillowtwosphere.h"
 #import "subcomplex/npluggedtorusbundle.h"
