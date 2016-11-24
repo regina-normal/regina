@@ -71,6 +71,7 @@ if (${REGINA_INSTALL_DEV})
     nlayering.h
     pillowtwosphere.h
     npillowtwosphere.h
+    pluggedtorusbundle.h
     npluggedtorusbundle.h
     nplugtrisolidtorus.h
     nsatannulus.h

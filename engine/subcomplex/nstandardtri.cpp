@@ -41,7 +41,7 @@
 #include "subcomplex/layeredlensspace.h"
 #include "subcomplex/layeredloop.h"
 #include "subcomplex/layeredsurfacebundle.h"
-#include "subcomplex/npluggedtorusbundle.h"
+#include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "subcomplex/ntrivialtri.h"

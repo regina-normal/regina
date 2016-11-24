@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/npluggedtorusbundle.h"
+#include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/dim3.h"
