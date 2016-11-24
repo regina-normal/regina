@@ -12,7 +12,7 @@ SET ( FILES
   layeredchainpair
   layeredlensspace
   layeredloop
-  nlayeredsolidtorus
+  layeredsolidtorus
   nlayeredsurfacebundle
   nlayering
   npillowtwosphere
