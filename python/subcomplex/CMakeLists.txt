@@ -7,7 +7,7 @@ SET ( FILES
   blockedsfsloop
   blockedsfspair
   blockedsfstriple
-  nl31pillow
+  l31pillow
   nlayeredchain
   nlayeredchainpair
   nlayeredlensspace
