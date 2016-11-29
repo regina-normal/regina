@@ -541,7 +541,7 @@ bool KeywordListRule::doLoad(xmlTextReaderPtr reader)
     if (attr) {
         bool cs;
         regina::valueOf(regina::xml::xmlString(attr), cs);
-        m_caseSensitivityOverride = cs ? Qt::CaseInsensitive : Qt::CaseSensitive;
+        m_caseSensitivityOverride = ! cs;
         m_hasCaseSensitivityOverride = true;
     } else {
         m_hasCaseSensitivityOverride = false;
@@ -657,7 +657,7 @@ bool StringDetect::doLoad(xmlTextReaderPtr reader)
 
     bool cs;
     regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), cs);
-    m_caseSensitivity = cs ? Qt::CaseInsensitive : Qt::CaseSensitive;
+    m_caseSensitivity = ! cs;
 
     return !m_string.empty();
 }
@@ -667,7 +667,7 @@ MatchResult StringDetect::doMatch(const QString& text, int offset, const QString
     QString pattern = QString::fromUtf8(m_string.c_str());
     if (isDynamic())
         pattern = replaceCaptures(pattern, captures, false);
-    if (text.midRef(offset, pattern.length()).compare(pattern, m_caseSensitivity) == 0)
+    if (text.midRef(offset, pattern.length()).compare(pattern, m_caseSensitivity ? Qt::CaseSensitive : Qt::CaseInsensitive) == 0)
         return offset + pattern.size();
     return offset;
 }

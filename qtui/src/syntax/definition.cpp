@@ -41,7 +41,7 @@ KeywordList nullList;
 DefinitionData::DefinitionData() :
     repo(nullptr),
     delimiters("\t !%&()*+,-./:;<=>?[\\]^{|}~"), // must be sorted!
-    caseSensitive(Qt::CaseSensitive),
+    caseSensitive(true),
     version(0.0f)
 {
 }
@@ -230,7 +230,7 @@ void DefinitionData::clear()
     author.clear();
     license.clear();
     delimiters = "\t !%&()*+,-./:;<=>?[\\]^{|}~"; // must be sorted!
-    caseSensitive = Qt::CaseSensitive,
+    caseSensitive = true,
     version = 0.0f;
 }
 
@@ -273,7 +273,7 @@ bool DefinitionData::loadLanguage(xmlTextReaderPtr reader)
 
     bool cs;
     if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"casesensitive")), cs))
-        caseSensitive = (cs ? Qt::CaseSensitive : Qt::CaseInsensitive);
+        caseSensitive = cs;
 
     return true;
 }
@@ -391,7 +391,7 @@ void DefinitionData::loadGeneral(xmlTextReaderPtr reader)
 
                 if (regina::xml::xmlString(xmlTextReaderName(reader)) == "keywords") {
                     if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"casesensitive")), cs))
-                        caseSensitive = (cs ? Qt::CaseSensitive : Qt::CaseInsensitive);
+                        caseSensitive = cs;
                     delimiters += regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"additionalDeliminator"));
                     std::sort(delimiters.begin(), delimiters.end());
                     auto it = std::unique(delimiters.begin(), delimiters.end());

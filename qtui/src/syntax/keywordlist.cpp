@@ -25,7 +25,7 @@
 using namespace KSyntaxHighlighting;
 
 KeywordList::KeywordList() :
-    m_caseSensitive(Qt::CaseSensitive)
+    m_caseSensitive(true)
 {
 }
 
@@ -48,10 +48,10 @@ bool KeywordList::contains(const QStringRef &str) const
     return contains(str, m_caseSensitive);
 }
 
-bool KeywordList::contains(const QStringRef &str, Qt::CaseSensitivity caseSensitivityOverride) const
+bool KeywordList::contains(const QStringRef &str, bool caseSensitivityOverride) const
 {
     // TODO: Make lower-case transformations unicode-aware.
-    if (caseSensitivityOverride == Qt::CaseInsensitive && m_lowerCaseKeywords.empty()) {
+    if ((! caseSensitivityOverride) && m_lowerCaseKeywords.empty()) {
         std::string lower;
         for (const auto& kw : m_keywords) {
             lower = kw;
@@ -61,7 +61,7 @@ bool KeywordList::contains(const QStringRef &str, Qt::CaseSensitivity caseSensit
     }
 
     // TODO avoid the copy in toString!
-    if (caseSensitivityOverride == Qt::CaseSensitive)
+    if (caseSensitivityOverride)
         return m_keywords.count(str.toString().toUtf8().constData());
     return m_lowerCaseKeywords.count(str.toString().toLower().toUtf8().constData());
 }
@@ -93,7 +93,7 @@ void KeywordList::load(xmlTextReaderPtr reader)
     }
 }
 
-void KeywordList::setCaseSensitivity(Qt::CaseSensitivity caseSensitive)
+void KeywordList::setCaseSensitivity(bool caseSensitive)
 {
     m_caseSensitive = caseSensitive;
 }

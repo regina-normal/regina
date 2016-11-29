@@ -27,8 +27,6 @@
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
-#include <QStringRef>
-
 namespace KSyntaxHighlighting {
 
 class Definition;
@@ -77,7 +75,7 @@ public:
     std::string indenter;
     std::string author;
     std::string license;
-    Qt::CaseSensitivity caseSensitive;
+    bool caseSensitive;
     int version;
 };
 }

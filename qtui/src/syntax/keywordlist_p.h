@@ -39,16 +39,16 @@ public:
     /** Checks if @p str is a keyword in this list. */
     bool contains(const QStringRef &str) const;
     /** Checks if @p str is a keyword in this list, overriding the global case-sensitivity setting. */
-    bool contains(const QStringRef &str, Qt::CaseSensitivity caseSensitivityOverride) const;
+    bool contains(const QStringRef &str, bool caseSensitivityOverride) const;
 
     void load(xmlTextReaderPtr reader);
-    void setCaseSensitivity(Qt::CaseSensitivity caseSensitive);
+    void setCaseSensitivity(bool caseSensitive);
 
 private:
     std::string m_name;
     std::set<std::string> m_keywords;
     mutable std::set<std::string> m_lowerCaseKeywords;
-    Qt::CaseSensitivity m_caseSensitive;
+    bool m_caseSensitive;
 };
 }
 

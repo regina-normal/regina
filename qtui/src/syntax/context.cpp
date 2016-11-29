@@ -23,7 +23,6 @@
 
 #include <cassert>
 #include <iostream>
-#include <QString>
 
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
