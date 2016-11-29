@@ -127,6 +127,8 @@ protected:
     /**
      * Reimplement this to apply formats to your output. The provided @p format
      * is valid for the interval [@p offset, @p offset + @p length).
+     * Both @p offset and @p length count unicode characters (not machine-level
+     * characters as might be used for instance in a UTF-8 encoding).
      *
      * @param offset The start column of the interval for which @p format matches
      * @param length The length of the matching text
