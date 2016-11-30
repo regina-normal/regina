@@ -22,7 +22,7 @@
 #include "definition.h"
 #include "definitionref_p.h"
 #include "keywordlist_p.h"
-#include "matchresult_p.h"
+#include "matcher.h"
 
 #include <QRegularExpression>
 

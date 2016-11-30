@@ -5,7 +5,6 @@ SET ( FILES
   definition.cpp
   format.cpp
   keywordlist.cpp
-  matchresult.cpp
   repository.cpp
   rule.cpp
   state.cpp
