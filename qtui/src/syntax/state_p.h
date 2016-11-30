@@ -18,7 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_STATE_P_H
 #define KSYNTAXHIGHLIGHTING_STATE_P_H
 
-#include <QStringList>
 #include <deque>
 
 namespace KSyntaxHighlighting
@@ -36,16 +35,14 @@ public:
     bool isEmpty() const;
     void clear();
     int size() const;
-    void push(Context *context, const QStringList &captures);
+    void push(Context *context);
     void pop();
     Context* topContext() const;
-    QStringList topCaptures() const;
 
     DefinitionData *m_defData;
 private:
     friend class State;
     std::deque<Context*> m_contextStack;
-    std::deque<QStringList> m_captureStack;
 };
 
 }

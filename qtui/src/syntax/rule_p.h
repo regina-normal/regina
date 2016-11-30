@@ -47,20 +47,19 @@ public:
     const std::string& attribute() const;
     ContextSwitch context() const;
     bool isLookAhead() const;
-    bool isDynamic() const;
     bool firstNonSpace() const;
     int requiredColumn() const;
 
     bool load(xmlTextReaderPtr reader);
     void resolveContext();
 
-    MatchResult match(const QString &text, int offset, const QStringList &captures);
+    MatchResult match(const QString &text, int offset);
 
     static Rule::Ptr create(const std::string& name);
 
 protected:
     virtual bool doLoad(xmlTextReaderPtr reader);
-    virtual MatchResult doMatch(const QString &text, int offset, const QStringList &captures) = 0;
+    virtual MatchResult doMatch(const QString &text, int offset) = 0;
 
     bool isDelimiter(QChar c) const;
 
@@ -72,7 +71,6 @@ private:
     int m_column;
     bool m_firstNonSpace;
     bool m_lookAhead;
-    bool m_dynamic;
 };
 
 
@@ -80,7 +78,7 @@ class AnyChar : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     std::string m_chars;
@@ -90,18 +88,17 @@ class DetectChar : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     QChar m_char;
-    int m_captureIndex;
 };
 
 class Detect2Char : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     QChar m_char1;
@@ -111,19 +108,19 @@ private:
 class DetectIdentifier : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 };
 
 class DetectSpaces : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 };
 
 class Float : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 };
 
 class IncludeRules : public Rule
@@ -135,7 +132,7 @@ public:
 
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     std::string m_contextName;
@@ -146,38 +143,38 @@ private:
 class Int : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 };
 
 class HlCChar : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 };
 
 class HlCHex : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 };
 
 class HlCOct : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 };
 
 class HlCStringChar : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 };
 
 class KeywordListRule : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     std::string m_listName;
@@ -193,7 +190,7 @@ class LineContinue : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     QChar m_char;
@@ -203,7 +200,7 @@ class RangeDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList&) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     QChar m_begin;
@@ -214,7 +211,7 @@ class RegExpr : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     QString m_pattern;
@@ -225,7 +222,7 @@ class StringDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     std::string m_string;
@@ -236,7 +233,7 @@ class WordDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset, const QStringList &captures) override;
+    MatchResult doMatch(const QString & text, int offset) override;
 
 private:
     std::string m_word;

@@ -21,7 +21,6 @@
 #include "context_p.h"
 
 #include <cassert>
-#include <QStringList>
 
 using namespace KSyntaxHighlighting;
 
@@ -44,46 +43,34 @@ StateData* StateData::get(State &state)
 
 bool StateData::isEmpty() const
 {
-    assert(m_contextStack.size() == m_captureStack.size());
     return m_contextStack.empty();
 }
 
 void StateData::clear()
 {
     m_contextStack.clear();
-    m_captureStack.clear();
 }
 
 int StateData::size() const
 {
-    assert(m_contextStack.size() == m_captureStack.size());
     return m_contextStack.size();
 }
 
-void StateData::push(Context *context, const QStringList &captures)
+void StateData::push(Context *context)
 {
     assert(context);
     m_contextStack.push_back(context);
-    m_captureStack.push_back(captures);
-    assert(m_contextStack.size() == m_captureStack.size());
 }
 
 void StateData::pop()
 {
     m_contextStack.pop_back();
-    m_captureStack.pop_back();
 }
 
 Context* StateData::topContext() const
 {
     assert(!isEmpty());
     return m_contextStack.back();
-}
-
-QStringList StateData::topCaptures() const
-{
-    assert(!isEmpty());
-    return m_captureStack.back();
 }
 
 State::State() :
@@ -108,7 +95,7 @@ State& State::operator=(const State &other)
 
 bool State::operator==(const State &other) const
 {
-    return d->m_contextStack == other.d->m_contextStack && d->m_captureStack == other.d->m_captureStack && d->m_defData == other.d->m_defData;
+    return d->m_contextStack == other.d->m_contextStack && d->m_defData == other.d->m_defData;
 }
 
 bool State::operator!=(const State &other) const

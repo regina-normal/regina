@@ -84,21 +84,10 @@ static QString quoteCapture(const QString &capture)
     return quoted.replace(QRegularExpression(QStringLiteral("(\\W)")), QStringLiteral("\\\\1"));
 }
 
-static QString replaceCaptures(const QString &pattern, const QStringList &captures, bool quote)
-{
-    auto result = pattern;
-    for (int i = 1; i < captures.size(); ++i) {
-        result.replace(QLatin1Char('%') + QString::number(i), quote ? quoteCapture(captures.at(i)) : captures.at(i));
-    }
-    return result;
-}
-
-
 Rule::Rule() :
     m_column(-1),
     m_firstNonSpace(false),
-    m_lookAhead(false),
-    m_dynamic(false)
+    m_lookAhead(false)
 {
 }
 
@@ -131,11 +120,6 @@ bool Rule::isLookAhead() const
     return m_lookAhead;
 }
 
-bool Rule::isDynamic() const
-{
-    return m_dynamic;
-}
-
 bool Rule::firstNonSpace() const
 {
     return m_firstNonSpace;
@@ -155,7 +139,6 @@ bool Rule::load(xmlTextReaderPtr reader)
     regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"lookAhead")), m_lookAhead);
     if (! regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"column")), m_column))
         m_column = -1;
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"dynamic")), m_dynamic);
 
     auto result = doLoad(reader);
 
@@ -209,18 +192,18 @@ bool Rule::doLoad(xmlTextReaderPtr)
     return true;
 }
 
-MatchResult Rule::match(const QString &text, int offset, const QStringList &captures)
+MatchResult Rule::match(const QString &text, int offset)
 {
     assert(!text.isEmpty());
 
-    const auto result = doMatch(text, offset, captures);
+    const auto result = doMatch(text, offset);
     if (result.offset() == offset || result.offset() == text.size())
         return result;
 
     for (const auto &subRule : m_subRules) {
-        const auto subResult = subRule->match(text, result.offset(), QStringList());
+        const auto subResult = subRule->match(text, result.offset());
         if (subResult.offset() > result.offset())
-            return MatchResult(subResult.offset(), result.captures());
+            return MatchResult(subResult.offset());
     }
 
     return result;
@@ -286,7 +269,7 @@ bool AnyChar::doLoad(xmlTextReaderPtr reader)
     return !m_chars.empty();
 }
 
-MatchResult AnyChar::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult AnyChar::doMatch(const QString& text, int offset)
 {
     if (m_chars.find(text.at(offset).toLatin1()) != std::string::npos)
         return offset + 1;
@@ -300,22 +283,11 @@ bool DetectChar::doLoad(xmlTextReaderPtr reader)
     if (s.empty())
         return false;
     m_char = s.front();
-    if (isDynamic()) {
-        m_captureIndex = m_char.digitValue();
-    }
     return true;
 }
 
-MatchResult DetectChar::doMatch(const QString& text, int offset, const QStringList &captures)
+MatchResult DetectChar::doMatch(const QString& text, int offset)
 {
-    if (isDynamic()) {
-        if (captures.size() <= m_captureIndex || captures.at(m_captureIndex).isEmpty())
-            return offset;
-        if (text.at(offset) == captures.at(m_captureIndex).at(0))
-            return offset + 1;
-        return offset;
-    }
-
     if (text.at(offset) == m_char)
         return offset + 1;
     return offset;
@@ -333,7 +305,7 @@ bool Detect2Char::doLoad(xmlTextReaderPtr reader)
     return true;
 }
 
-MatchResult Detect2Char::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult Detect2Char::doMatch(const QString& text, int offset)
 {
     if (text.size() - offset < 2)
         return offset;
@@ -343,7 +315,7 @@ MatchResult Detect2Char::doMatch(const QString& text, int offset, const QStringL
 }
 
 
-MatchResult DetectIdentifier::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult DetectIdentifier::doMatch(const QString& text, int offset)
 {
     if (!text.at(offset).isLetter() && text.at(offset) != QLatin1Char('_'))
         return offset;
@@ -358,7 +330,7 @@ MatchResult DetectIdentifier::doMatch(const QString& text, int offset, const QSt
 }
 
 
-MatchResult DetectSpaces::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult DetectSpaces::doMatch(const QString& text, int offset)
 {
     while(offset < text.size() && text.at(offset).isSpace())
         ++offset;
@@ -366,7 +338,7 @@ MatchResult DetectSpaces::doMatch(const QString& text, int offset, const QString
 }
 
 
-MatchResult Float::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult Float::doMatch(const QString& text, int offset)
 {
     if (offset > 0 && !isDelimiter(text.at(offset - 1)))
         return offset;
@@ -404,7 +376,7 @@ MatchResult Float::doMatch(const QString& text, int offset, const QStringList&)
 }
 
 
-MatchResult HlCChar::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult HlCChar::doMatch(const QString& text, int offset)
 {
     if (text.size() < offset + 3)
         return offset;
@@ -429,7 +401,7 @@ MatchResult HlCChar::doMatch(const QString& text, int offset, const QStringList&
 }
 
 
-MatchResult HlCHex::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult HlCHex::doMatch(const QString& text, int offset)
 {
     if (offset > 0 && !isDelimiter(text.at(offset - 1)))
         return offset;
@@ -453,7 +425,7 @@ MatchResult HlCHex::doMatch(const QString& text, int offset, const QStringList&)
 }
 
 
-MatchResult HlCOct::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult HlCOct::doMatch(const QString& text, int offset)
 {
     if (offset > 0 && !isDelimiter(text.at(offset - 1)))
         return offset;
@@ -475,7 +447,7 @@ MatchResult HlCOct::doMatch(const QString& text, int offset, const QStringList&)
 }
 
 
-MatchResult HlCStringChar::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult HlCStringChar::doMatch(const QString& text, int offset)
 {
     return matchEscapedChar(text, offset);
 }
@@ -515,14 +487,14 @@ bool IncludeRules::doLoad(xmlTextReaderPtr reader)
     return !m_contextName.empty() || !m_defName.empty();
 }
 
-MatchResult IncludeRules::doMatch(const QString&, int offset, const QStringList&)
+MatchResult IncludeRules::doMatch(const QString&, int offset)
 {
     std::cerr << "Unresolved include rule for" << m_contextName << "##" << m_defName << std::endl;
     return offset;
 }
 
 
-MatchResult Int::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult Int::doMatch(const QString& text, int offset)
 {
     if (offset > 0 && !isDelimiter(text.at(offset - 1)))
         return offset;
@@ -549,7 +521,7 @@ bool KeywordListRule::doLoad(xmlTextReaderPtr reader)
     return !m_listName.empty();
 }
 
-MatchResult KeywordListRule::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult KeywordListRule::doMatch(const QString& text, int offset)
 {
     if (offset > 0 && !isDelimiter(text.at(offset - 1)))
         return offset;
@@ -590,7 +562,7 @@ bool LineContinue::doLoad(xmlTextReaderPtr reader)
     return true;
 }
 
-MatchResult LineContinue::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult LineContinue::doMatch(const QString& text, int offset)
 {
     if (offset == text.size() - 1 && text.at(offset) == m_char)
         return offset + 1;
@@ -609,7 +581,7 @@ bool RangeDetect::doLoad(xmlTextReaderPtr reader)
     return true;
 }
 
-MatchResult RangeDetect::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult RangeDetect::doMatch(const QString& text, int offset)
 {
     if (text.size() - offset < 2)
         return offset;
@@ -639,16 +611,13 @@ bool RegExpr::doLoad(xmlTextReaderPtr reader)
     return !m_pattern.isEmpty(); // m_regexp.isValid() would be better, but parses the regexp and thus is way too expensive
 }
 
-MatchResult RegExpr::doMatch(const QString& text, int offset, const QStringList &captures)
+MatchResult RegExpr::doMatch(const QString& text, int offset)
 {
     assert(m_regexp.isValid());
 
-    if (isDynamic())
-        m_regexp.setPattern(replaceCaptures(m_pattern, captures, true));
-
     auto result = m_regexp.match(text, offset, QRegularExpression::NormalMatch, QRegularExpression::DontCheckSubjectStringMatchOption);
     if (result.capturedStart() == offset)
-        return MatchResult(offset + result.capturedLength(), result.capturedTexts());
+        return MatchResult(offset + result.capturedLength());
     return MatchResult(offset, result.capturedStart());
 }
 
@@ -664,11 +633,9 @@ bool StringDetect::doLoad(xmlTextReaderPtr reader)
     return !m_string.empty();
 }
 
-MatchResult StringDetect::doMatch(const QString& text, int offset, const QStringList &captures)
+MatchResult StringDetect::doMatch(const QString& text, int offset)
 {
     QString pattern = QString::fromUtf8(m_string.c_str());
-    if (isDynamic())
-        pattern = replaceCaptures(pattern, captures, false);
     if (text.midRef(offset, pattern.length()).compare(pattern, m_caseSensitivity ? Qt::CaseSensitive : Qt::CaseInsensitive) == 0)
         return offset + pattern.size();
     return offset;
@@ -681,7 +648,7 @@ bool WordDetect::doLoad(xmlTextReaderPtr reader)
     return !m_word.empty();
 }
 
-MatchResult WordDetect::doMatch(const QString& text, int offset, const QStringList&)
+MatchResult WordDetect::doMatch(const QString& text, int offset)
 {
     if (text.size() - offset < m_word.length())
         return offset;

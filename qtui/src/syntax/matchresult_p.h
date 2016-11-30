@@ -18,22 +18,18 @@
 #ifndef KSYNTAXHIGHLIGHTING_MATCHRESULT_P_H
 #define KSYNTAXHIGHLIGHTING_MATCHRESULT_P_H
 
-#include <QStringList>
-
 namespace KSyntaxHighlighting {
 
 class MatchResult
 {
 public:
-    MatchResult(int offset, const QStringList &captures = QStringList()); // implicit
+    MatchResult(int offset); // implicit
     explicit MatchResult(int offset, int skipOffset);
 
     int offset() const;
     int skipOffset() const;
-    QStringList captures() const;
 
 private:
-    QStringList m_captures;
     int m_offset;
     int m_skipOffset;
 };

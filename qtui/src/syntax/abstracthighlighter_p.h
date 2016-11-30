@@ -21,8 +21,6 @@
 #include "definition.h"
 #include "theme.h"
 
-class QStringList;
-
 namespace KSyntaxHighlighting {
 
 class ContextSwitch;
@@ -35,7 +33,7 @@ public:
     virtual ~AbstractHighlighterPrivate();
 
     void ensureDefinitionLoaded();
-    bool switchContext(StateData* data, const ContextSwitch &contextSwitch, const QStringList &captures);
+    bool switchContext(StateData* data, const ContextSwitch &contextSwitch);
 
     Definition m_definition;
     Theme m_theme;

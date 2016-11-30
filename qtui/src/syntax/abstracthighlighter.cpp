@@ -122,14 +122,14 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
         stateData->clear();
     }
     if (stateData->isEmpty()) {
-        stateData->push(defData->initialContext(), QStringList());
+        stateData->push(defData->initialContext());
         stateData->m_defData = defData;
     }
 
     // process empty lines
     if (text.isEmpty()) {
         while (!stateData->topContext()->lineEmptyContext().isStay())
-            d_ptr->switchContext(stateData, stateData->topContext()->lineEmptyContext(), QStringList());
+            d_ptr->switchContext(stateData, stateData->topContext()->lineEmptyContext());
         applyFormat(0, 0, Format());
         return newState;
     }
@@ -165,7 +165,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
                 continue;
             }
 
-            const auto newResult = rule->match(text, offset, stateData->topCaptures());
+            const auto newResult = rule->match(text, offset);
             newOffset = newResult.offset();
             if (newResult.skipOffset() > newOffset)
                 skipOffsets.insert(std::make_pair(rule.get(), newResult.skipOffset()));
@@ -174,13 +174,13 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
 
             if (rule->isLookAhead()) {
                 assert(!rule->context().isStay());
-                d_ptr->switchContext(stateData, rule->context(), newResult.captures());
+                d_ptr->switchContext(stateData, rule->context());
                 isLookAhead = true;
                 break;
             }
 
             newLookupContext = stateData->topContext();
-            d_ptr->switchContext(stateData, rule->context(), newResult.captures());
+            d_ptr->switchContext(stateData, rule->context());
             newFormat = rule->attribute().empty() ? stateData->topContext()->attribute() : rule->attribute();
             if (newOffset == text.size() && std::dynamic_pointer_cast<LineContinue>(rule))
                 lineContinuation = true;
@@ -191,7 +191,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
 
         if (newOffset <= offset) { // no matching rule
             if (stateData->topContext()->fallthrough()) {
-                d_ptr->switchContext(stateData, stateData->topContext()->fallthroughContext(), QStringList());
+                d_ptr->switchContext(stateData, stateData->topContext()->fallthroughContext());
                 continue;
             }
 
@@ -216,14 +216,14 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
         applyFormat(beginOffset, text.size() - beginOffset, currentLookupContext->formatByName(currentFormat));
 
     while (!stateData->topContext()->lineEndContext().isStay() && !lineContinuation) {
-        if (!d_ptr->switchContext(stateData, stateData->topContext()->lineEndContext(), QStringList()))
+        if (!d_ptr->switchContext(stateData, stateData->topContext()->lineEndContext()))
             break;
     }
 
     return newState;
 }
 
-bool AbstractHighlighterPrivate::switchContext(StateData *data, const ContextSwitch &contextSwitch, const QStringList &captures)
+bool AbstractHighlighterPrivate::switchContext(StateData *data, const ContextSwitch &contextSwitch)
 {
     for (int i = 0; i < contextSwitch.popCount(); ++i) {
         // don't pop the last context if we can't push one
@@ -235,7 +235,7 @@ bool AbstractHighlighterPrivate::switchContext(StateData *data, const ContextSwi
     }
 
     if (contextSwitch.context())
-        data->push(contextSwitch.context(), captures);
+        data->push(contextSwitch.context());
 
     assert(!data->isEmpty());
     return true;
