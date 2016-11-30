@@ -19,6 +19,7 @@
 #define KSYNTAXHIGHLIGHTING_DEFINITION_P_H
 
 #include "definitionref_p.h"
+#include "keywordlist_p.h"
 
 #include <map>
 #include <memory>
