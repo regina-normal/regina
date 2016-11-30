@@ -618,6 +618,8 @@ MatchResult RegExpr::doMatch(const QString& text, int offset)
     auto result = m_regexp.match(text, offset, QRegularExpression::NormalMatch, QRegularExpression::DontCheckSubjectStringMatchOption);
     if (result.capturedStart() == offset)
         return MatchResult(offset + result.capturedLength());
+    // Be kind: if the rule matched later in the string, remember this so we don't check again
+    // until we reach that position.
     return MatchResult(offset, result.capturedStart());
 }
 
