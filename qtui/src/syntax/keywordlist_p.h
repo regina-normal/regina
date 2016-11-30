@@ -18,8 +18,8 @@
 #ifndef KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H
 #define KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H
 
-#include <QString>
 #include <set>
+#include <string>
 #include <vector>
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
@@ -35,11 +35,14 @@ public:
     bool isEmpty() const;
 
     const std::string& name() const;
+    bool caseSensitive() const;
 
-    /** Checks if @p str is a keyword in this list. */
-    bool contains(const QStringRef &str) const;
-    /** Checks if @p str is a keyword in this list, overriding the global case-sensitivity setting. */
-    bool contains(const QStringRef &str, bool caseSensitivityOverride) const;
+    /**
+     * Checks if @p str is a keyword in this list, overriding the global case-sensitivity setting.
+     *
+     * \pre If \a caseSensitivityOverride is \c false, then \a str is lower-case.
+     */
+    bool contains(const std::string& str, bool caseSensitivityOverride) const;
 
     void load(xmlTextReaderPtr reader);
     void setCaseSensitivity(bool caseSensitive);
@@ -50,6 +53,11 @@ private:
     mutable std::set<std::string> m_lowerCaseKeywords;
     bool m_caseSensitive;
 };
+
+inline bool KeywordList::caseSensitive() const {
+    return m_caseSensitive;
+}
+
 }
 
 #endif // KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H

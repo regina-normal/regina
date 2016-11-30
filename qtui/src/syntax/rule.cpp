@@ -567,11 +567,13 @@ MatchResult KeywordListRule::doMatch(const QString& text, int offset, const QStr
     if (newOffset == offset)
         return offset;
 
-    if (m_hasCaseSensitivityOverride) {
-        if (m_keywordList->contains(text.midRef(offset, newOffset - offset), m_caseSensitivityOverride))
+    bool caseSensitivity = (m_hasCaseSensitivityOverride ? m_caseSensitivityOverride : m_keywordList->caseSensitive());
+    if (caseSensitivity) {
+        if (m_keywordList->contains(text.midRef(offset, newOffset - offset).toString().toUtf8().constData(), true))
             return newOffset;
     } else {
-        if (m_keywordList->contains(text.midRef(offset, newOffset - offset)))
+        // We must convert the string to lower-case before calling contains().
+        if (m_keywordList->contains(text.midRef(offset, newOffset - offset).toString().toLower().toUtf8().constData(), false))
             return newOffset;
     }
     return offset;

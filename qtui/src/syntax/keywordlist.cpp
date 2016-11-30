@@ -43,12 +43,7 @@ const std::string& KeywordList::name() const
     return m_name;
 }
 
-bool KeywordList::contains(const QStringRef &str) const
-{
-    return contains(str, m_caseSensitive);
-}
-
-bool KeywordList::contains(const QStringRef &str, bool caseSensitivityOverride) const
+bool KeywordList::contains(const std::string& str, bool caseSensitivityOverride) const
 {
     // TODO: Make lower-case transformations unicode-aware.
     if ((! caseSensitivityOverride) && m_lowerCaseKeywords.empty()) {
@@ -62,8 +57,9 @@ bool KeywordList::contains(const QStringRef &str, bool caseSensitivityOverride) 
 
     // TODO avoid the copy in toString!
     if (caseSensitivityOverride)
-        return m_keywords.count(str.toString().toUtf8().constData());
-    return m_lowerCaseKeywords.count(str.toString().toLower().toUtf8().constData());
+        return m_keywords.count(str);
+    else
+        return m_lowerCaseKeywords.count(str);
 }
 
 void KeywordList::load(xmlTextReaderPtr reader)
