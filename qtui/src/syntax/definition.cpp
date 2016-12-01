@@ -48,7 +48,8 @@ DefinitionData::DefinitionData() :
 
 DefinitionData::~DefinitionData()
 {
-    qDeleteAll(contexts);
+    for (auto i : contexts)
+        delete i;
 }
 
 DefinitionData* DefinitionData::get(const Definition &def)
@@ -219,7 +220,8 @@ void DefinitionData::clear()
 {
     // keep only name and repo, so we can re-lookup to make references persist over repo reloads
     keywordLists.clear();
-    qDeleteAll(contexts);
+    for (auto i : contexts)
+        delete i;
     contexts.clear();
     formats.clear();
 
