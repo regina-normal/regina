@@ -37,6 +37,7 @@
 #ifndef __REGINAMAIN_H_
 #define __REGINAMAIN_H_
 
+#include "packet/packet.h"
 #include "utilities/safeptr.h"
 #include "pythonmanager.h"
 #include "reginaprefset.h"

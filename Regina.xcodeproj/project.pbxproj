@@ -1084,6 +1084,7 @@
 		0542090F1DF0DA450018AB24 /* simplesurfacebundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208F11DF0DA390018AB24 /* simplesurfacebundle.cpp */; };
 		054209101DF0DA450018AB24 /* snappeacensusmfd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208F21DF0DA390018AB24 /* snappeacensusmfd.cpp */; };
 		054209111DF0DA450018AB24 /* torusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208F31DF0DA390018AB24 /* torusbundle.cpp */; };
+		054209121DF0DDBC0018AB24 /* syntaxhighlighter.h in Sources */ = {isa = PBXBuildFile; fileRef = 054208DB1DF0D2E50018AB24 /* syntaxhighlighter.h */; };
 		05431EEC1C40F069009BC072 /* gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* gluingperms.cpp */; };
 		05431EED1C40F071009BC072 /* gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* gluingperms.cpp */; };
 		05431EEF1C40F093009BC072 /* dim2edgepairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EEE1C40F093009BC072 /* dim2edgepairing.h */; };
@@ -8804,6 +8805,7 @@
 				055ABEBA19B49F6800044C1B /* cusped-hyp-or-census-9.zsig in Sources */,
 				050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */,
 				055ABEBB19B49F6800044C1B /* hyp-knot-link-census.zsig in Sources */,
+				054209121DF0DDBC0018AB24 /* syntaxhighlighter.h in Sources */,
 				050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */,
 				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
