@@ -15,13 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "format.h"
-#include "format_p.h"
-#include "definition.h"
-#include "definitionref_p.h"
-#include "textstyledata_p.h"
-#include "theme.h"
-#include "themedata_p.h"
+#include "syntax/format.h"
+#include "syntax/format_p.h"
+#include "syntax/definition.h"
+#include "syntax/definitionref_p.h"
+#include "syntax/textstyledata_p.h"
+#include "syntax/theme.h"
+#include "syntax/themedata_p.h"
 
 #include <cassert>
 

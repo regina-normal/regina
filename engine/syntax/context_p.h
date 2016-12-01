@@ -18,10 +18,10 @@
 #ifndef KSYNTAXHIGHLIGHTING_CONTEXT_P_H
 #define KSYNTAXHIGHLIGHTING_CONTEXT_P_H
 
-#include "rule_p.h"
-#include "contextswitch_p.h"
-#include "definition.h"
-#include "definitionref_p.h"
+#include "syntax/rule_p.h"
+#include "syntax/contextswitch_p.h"
+#include "syntax/definition.h"
+#include "syntax/definitionref_p.h"
 
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>

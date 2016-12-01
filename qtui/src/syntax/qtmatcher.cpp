@@ -15,12 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "contextswitch_p.h"
-#include "definition.h"
-#include "definitionref_p.h"
-#include "definition_p.h"
-#include "qtmatcher.h"
-#include "rule_p.h"
+#include "syntax/contextswitch_p.h"
+#include "syntax/definition.h"
+#include "syntax/definitionref_p.h"
+#include "syntax/definition_p.h"
+#include "syntax/qtmatcher.h"
+#include "syntax/rule_p.h"
 
 #include <cassert>
 #include <iostream>

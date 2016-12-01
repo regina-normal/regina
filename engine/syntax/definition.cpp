@@ -16,16 +16,16 @@
 */
 
 
-#include "definition.h"
-#include "definition_p.h"
-#include "definitionref_p.h"
+#include "syntax/definition.h"
+#include "syntax/definition_p.h"
+#include "syntax/definitionref_p.h"
 
-#include "context_p.h"
-#include "format.h"
-#include "format_p.h"
-#include "repository_p.h"
-#include "rule_p.h"
-#include "ksyntaxhighlighting_version.h"
+#include "syntax/context_p.h"
+#include "syntax/format.h"
+#include "syntax/format_p.h"
+#include "syntax/repository_p.h"
+#include "syntax/rule_p.h"
+#include "syntax/ksyntaxhighlighting_version.h"
 
 #include <algorithm>
 #include <cassert>

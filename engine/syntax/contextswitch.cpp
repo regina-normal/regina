@@ -15,10 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "contextswitch_p.h"
-#include "definition.h"
-#include "definition_p.h"
-#include "repository.h"
+#include "syntax/contextswitch_p.h"
+#include "syntax/definition.h"
+#include "syntax/definition_p.h"
+#include "syntax/repository.h"
 
 #include "utilities/stringutils.h"
 

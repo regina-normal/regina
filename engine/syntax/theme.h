@@ -18,7 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_THEME_H
 #define KSYNTAXHIGHLIGHTING_THEME_H
 
-#include <qobjectdefs.h>
 #include <memory>
 
 namespace KSyntaxHighlighting {

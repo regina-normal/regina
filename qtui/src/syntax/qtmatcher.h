@@ -2,7 +2,7 @@
 #ifndef SYNTAX_QTMATCHER_H
 #define SYNTAX_QTMATCHER_H
 
-#include "matcher.h"
+#include "syntax/matcher.h"
 #include <QString>
 #include <QRegularExpression>
 

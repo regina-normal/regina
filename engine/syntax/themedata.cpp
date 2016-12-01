@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "themedata_p.h"
+#include "syntax/themedata_p.h"
 
 #include <jansson.h>
 

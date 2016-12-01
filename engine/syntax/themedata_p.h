@@ -19,8 +19,8 @@
 #ifndef KSYNTAXHIGHLIGHTING_THEMEDATA_P_H
 #define KSYNTAXHIGHLIGHTING_THEMEDATA_P_H
 
-#include "theme.h"
-#include "textstyledata_p.h"
+#include "syntax/theme.h"
+#include "syntax/textstyledata_p.h"
 
 #include <string>
 #include <boost/noncopyable.hpp>

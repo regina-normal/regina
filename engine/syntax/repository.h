@@ -18,7 +18,6 @@
 #ifndef KSYNTAXHIGHLIGHTING_REPOSITORY_H
 #define KSYNTAXHIGHLIGHTING_REPOSITORY_H
 
-#include <qglobal.h>
 #include <memory>
 #include <vector>
 #include <boost/noncopyable.hpp>

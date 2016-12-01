@@ -18,7 +18,7 @@
 #ifndef KSYNTAXHIGHLIGHTING_QSYNTAXHIGHLIGHTER_H
 #define KSYNTAXHIGHLIGHTING_QSYNTAXHIGHLIGHTER_H
 
-#include "abstracthighlighter.h"
+#include "syntax/abstracthighlighter.h"
 
 #include <QSyntaxHighlighter>
 

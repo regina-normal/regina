@@ -18,8 +18,8 @@
 #ifndef KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_P_H
 #define KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_P_H
 
-#include "definition.h"
-#include "theme.h"
+#include "syntax/definition.h"
+#include "syntax/theme.h"
 
 namespace KSyntaxHighlighting {
 

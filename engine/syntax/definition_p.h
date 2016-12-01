@@ -18,8 +18,8 @@
 #ifndef KSYNTAXHIGHLIGHTING_DEFINITION_P_H
 #define KSYNTAXHIGHLIGHTING_DEFINITION_P_H
 
-#include "definitionref_p.h"
-#include "keywordlist_p.h"
+#include "syntax/definitionref_p.h"
+#include "syntax/keywordlist_p.h"
 
 #include <map>
 #include <memory>

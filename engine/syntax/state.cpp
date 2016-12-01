@@ -15,10 +15,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "state.h"
-#include "state_p.h"
-
-#include "context_p.h"
+#include "syntax/context_p.h"
+#include "syntax/state.h"
+#include "syntax/state_p.h"
 
 #include <cassert>
 

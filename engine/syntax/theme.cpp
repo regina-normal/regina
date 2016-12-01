@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "theme.h"
-#include "themedata_p.h"
+#include "syntax/theme.h"
+#include "syntax/themedata_p.h"
 
 using namespace KSyntaxHighlighting;
 

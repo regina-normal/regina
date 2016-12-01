@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "rule_p.h"
-#include "definition_p.h"
+#include "syntax/rule_p.h"
+#include "syntax/definition_p.h"
 
 #include <cassert>
 #include <iostream>

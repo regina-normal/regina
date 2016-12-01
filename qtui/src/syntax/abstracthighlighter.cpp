@@ -15,17 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "abstracthighlighter.h"
-#include "abstracthighlighter_p.h"
-#include "context_p.h"
-#include "definition_p.h"
-#include "format.h"
-#include "qtmatcher.h"
-#include "repository.h"
-#include "rule_p.h"
-#include "state.h"
-#include "state_p.h"
-#include "theme.h"
+#include "syntax/abstracthighlighter.h"
+#include "syntax/abstracthighlighter_p.h"
+#include "syntax/context_p.h"
+#include "syntax/definition_p.h"
+#include "syntax/format.h"
+#include "syntax/qtmatcher.h"
+#include "syntax/repository.h"
+#include "syntax/rule_p.h"
+#include "syntax/state.h"
+#include "syntax/state_p.h"
+#include "syntax/theme.h"
 
 #include <cassert>
 #include <iostream>

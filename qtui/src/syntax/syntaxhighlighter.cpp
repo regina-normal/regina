@@ -15,12 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "syntaxhighlighter.h"
-#include "abstracthighlighter_p.h"
-#include "definition.h"
-#include "format.h"
-#include "state.h"
-#include "theme.h"
+#include "syntax/syntaxhighlighter.h"
+#include "syntax/abstracthighlighter_p.h"
+#include "syntax/definition.h"
+#include "syntax/format.h"
+#include "syntax/state.h"
+#include "syntax/theme.h"
 
 Q_DECLARE_METATYPE(QTextBlock)
 

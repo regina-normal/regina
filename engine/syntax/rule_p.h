@@ -18,11 +18,11 @@
 #ifndef KSYNTAXHIGHLIGHTING_RULE_P_H
 #define KSYNTAXHIGHLIGHTING_RULE_P_H
 
-#include "contextswitch_p.h"
-#include "definition.h"
-#include "definitionref_p.h"
-#include "keywordlist_p.h"
-#include "matcher.h"
+#include "syntax/contextswitch_p.h"
+#include "syntax/definition.h"
+#include "syntax/definitionref_p.h"
+#include "syntax/keywordlist_p.h"
+#include "syntax/matcher.h"
 
 #include <memory>
 #include <vector>

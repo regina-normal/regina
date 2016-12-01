@@ -15,12 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "repository.h"
-#include "repository_p.h"
-#include "definition.h"
-#include "definition_p.h"
-#include "theme.h"
-#include "themedata_p.h"
+#include "syntax/repository.h"
+#include "syntax/repository_p.h"
+#include "syntax/definition.h"
+#include "syntax/definition_p.h"
+#include "syntax/theme.h"
+#include "syntax/themedata_p.h"
 
 #include "file/globaldirs.h"
 
