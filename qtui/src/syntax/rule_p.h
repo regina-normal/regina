@@ -92,10 +92,10 @@ protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
-    QChar m_char;
+    char m_char;
 
 public:
-    QChar matchChar() const;
+    char matchChar() const;
 };
 
 class Detect2Char : public Rule
@@ -105,12 +105,12 @@ protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
-    QChar m_char1;
-    QChar m_char2;
+    char m_char1;
+    char m_char2;
 
 public:
-    QChar matchChar1() const;
-    QChar matchChar2() const;
+    char matchChar1() const;
+    char matchChar2() const;
 };
 
 class DetectIdentifier : public Rule
@@ -203,10 +203,10 @@ protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
-    QChar m_char;
+    char m_char;
 
 public:
-    QChar continueChar() const;
+    char continueChar() const;
 };
 
 class RangeDetect : public Rule
@@ -216,12 +216,12 @@ protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
-    QChar m_begin;
-    QChar m_end;
+    char m_begin;
+    char m_end;
 
 public:
-    QChar begin() const;
-    QChar end() const;
+    char begin() const;
+    char end() const;
 };
 
 class RegExpr : public Rule
@@ -231,7 +231,7 @@ protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
-    QString m_pattern;
+    std::string m_pattern;
     QRegularExpression m_regexp;
 
 public:
@@ -274,7 +274,7 @@ inline MatchResult AnyChar::doMatch(Matcher& m, int offset) {
     return m.match(*this, offset);
 }
 
-inline QChar DetectChar::matchChar() const {
+inline char DetectChar::matchChar() const {
     return m_char;
 }
 
@@ -282,11 +282,11 @@ inline MatchResult DetectChar::doMatch(Matcher& m, int offset) {
     return m.match(*this, offset);
 }
 
-inline QChar Detect2Char::matchChar1() const {
+inline char Detect2Char::matchChar1() const {
     return m_char1;
 }
 
-inline QChar Detect2Char::matchChar2() const {
+inline char Detect2Char::matchChar2() const {
     return m_char2;
 }
 
@@ -341,7 +341,7 @@ inline MatchResult KeywordListRule::doMatch(Matcher& m, int offset) {
     return m.match(*this, offset);
 }
 
-inline QChar LineContinue::continueChar() const {
+inline char LineContinue::continueChar() const {
     return m_char;
 }
 
@@ -349,11 +349,11 @@ inline MatchResult LineContinue::doMatch(Matcher& m, int offset) {
     return m.match(*this, offset);
 }
 
-inline QChar RangeDetect::begin() const {
+inline char RangeDetect::begin() const {
     return m_begin;
 }
 
-inline QChar RangeDetect::end() const {
+inline char RangeDetect::end() const {
     return m_end;
 }
 

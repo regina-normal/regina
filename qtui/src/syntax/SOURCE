@@ -5,8 +5,10 @@ KDE Frameworks 5.28.0:
   definitions as a result);
 - its Qt dependencies have been replaced with libraries that are already used
   by Regina's calculation engine (e.g., the C++ standard library and libxml2);
-- some unicode awareness in the rules is lost (specifically, hard-coded keywords
+- some unicode awareness in the rules is lost (specifically, hard-coded strings
   and characters in the rules are assumed to be plain ASCII);
+- dynamic rules (which use regex captures instead of hard-coded strings) are
+  not supported;
 - its repository is hard-coded to only load syntax definitions for Python
   from Regina's data directories (though the library retains the functionality
   for highlighting arbitrary languages if the syntax definitions are provided).

@@ -291,7 +291,7 @@ bool LineContinue::doLoad(xmlTextReaderPtr reader)
 {
     const auto s = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"char"));
     if (s.empty())
-        m_char = QLatin1Char('\\');
+        m_char = '\\';
     else
         m_char = s.front();
     return true;
@@ -310,16 +310,15 @@ bool RangeDetect::doLoad(xmlTextReaderPtr reader)
 
 bool RegExpr::doLoad(xmlTextReaderPtr reader)
 {
-    m_pattern = QString::fromUtf8(
-        regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String")).c_str());
-    m_regexp.setPattern(m_pattern);
+    m_pattern = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String"));
+    m_regexp.setPattern(QString::fromUtf8(m_pattern.c_str()));
     bool isMinimal, isCaseInsensitive;
     regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"minimal")), isMinimal);
     regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), isCaseInsensitive);
     m_regexp.setPatternOptions(
         (isMinimal ? QRegularExpression::InvertedGreedinessOption : QRegularExpression::NoPatternOption) |
         (isCaseInsensitive ? QRegularExpression::CaseInsensitiveOption : QRegularExpression::NoPatternOption));
-    return !m_pattern.isEmpty(); // m_regexp.isValid() would be better, but parses the regexp and thus is way too expensive
+    return !m_pattern.empty(); // m_regexp.isValid() would be better, but parses the regexp and thus is way too expensive
 }
 
 bool StringDetect::doLoad(xmlTextReaderPtr reader)
