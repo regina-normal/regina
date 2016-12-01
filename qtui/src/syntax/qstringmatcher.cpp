@@ -78,83 +78,87 @@ static int matchEscapedChar(const QString &text, int offset)
     return offset;
 }
 
-MatchResult AnyChar::doMatch(const QString& text, int offset)
+bool KSyntaxHighlighting::QStringMatcher::isDelimiter(Rule& r, QChar c) const {
+    return DefinitionData::get(r.definition())->isDelimiter(c.toLatin1());
+}
+
+MatchResult KSyntaxHighlighting::QStringMatcher::match(AnyChar& rule, int offset)
 {
-    if (m_chars.find(text.at(offset).toLatin1()) != std::string::npos)
+    if (rule.chars().find(m_text.at(offset).toLatin1()) != std::string::npos)
         return offset + 1;
     return offset;
 }
 
 
-MatchResult DetectChar::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectChar& rule, int offset)
 {
-    if (text.at(offset) == m_char)
+    if (m_text.at(offset) == rule.matchChar())
         return offset + 1;
     return offset;
 }
 
 
-MatchResult Detect2Char::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(Detect2Char& rule, int offset)
 {
-    if (text.size() - offset < 2)
+    if (m_text.size() - offset < 2)
         return offset;
-    if (text.at(offset) == m_char1 && text.at(offset + 1) == m_char2)
+    if (m_text.at(offset) == rule.matchChar1() && m_text.at(offset + 1) == rule.matchChar2())
         return offset + 2;
     return offset;
 }
 
 
-MatchResult DetectIdentifier::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectIdentifier& rule, int offset)
 {
-    if (!text.at(offset).isLetter() && text.at(offset) != QLatin1Char('_'))
+    if (!m_text.at(offset).isLetter() && m_text.at(offset) != QLatin1Char('_'))
         return offset;
 
-    for (int i = offset + 1; i < text.size(); ++i) {
-        const auto c = text.at(i);
+    for (int i = offset + 1; i < m_text.size(); ++i) {
+        const auto c = m_text.at(i);
         if (!c.isLetterOrNumber() && c != QLatin1Char('_'))
             return i;
     }
 
-    return text.size();
+    return m_text.size();
 }
 
 
-MatchResult DetectSpaces::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectSpaces& rule, int offset)
 {
-    while(offset < text.size() && text.at(offset).isSpace())
+    while(offset < m_text.size() && m_text.at(offset).isSpace())
         ++offset;
     return offset;
 }
 
 
-MatchResult Float::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(Float& rule, int offset)
 {
-    if (offset > 0 && !isDelimiter(text.at(offset - 1)))
+    if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
 
     auto newOffset = offset;
-    while (newOffset < text.size() && text.at(newOffset).isDigit())
+    while (newOffset < m_text.size() && m_text.at(newOffset).isDigit())
         ++newOffset;
 
-    if (newOffset >= text.size() || text.at(newOffset) != QLatin1Char('.'))
+    if (newOffset >= m_text.size() || m_text.at(newOffset) != QLatin1Char('.'))
         return offset;
     ++newOffset;
 
-    while (newOffset < text.size() && text.at(newOffset).isDigit())
+    while (newOffset < m_text.size() && m_text.at(newOffset).isDigit())
         ++newOffset;
 
     if (newOffset == offset + 1) // we only found a decimal point
         return offset;
 
     auto expOffset = newOffset;
-    if (expOffset >= text.size() || (text.at(expOffset) != QLatin1Char('e') && text.at(expOffset) != QLatin1Char('E')))
+    if (expOffset >= m_text.size() || (m_text.at(expOffset) != QLatin1Char('e') && m_text.at(expOffset) != QLatin1Char('E')))
         return newOffset;
     ++expOffset;
 
-    if (expOffset < text.size() && (text.at(expOffset) == QLatin1Char('+') || text.at(expOffset) == QLatin1Char('-')))
+    if (expOffset < m_text.size() && (m_text.at(expOffset) == QLatin1Char('+') || m_text.at(expOffset) == QLatin1Char('-')))
         ++expOffset;
     bool foundExpDigit = false;
-    while (expOffset < text.size() && text.at(expOffset).isDigit()) {
+    while (expOffset < m_text.size() && m_text.at(expOffset).isDigit()) {
         ++expOffset;
         foundExpDigit = true;
     }
@@ -165,47 +169,47 @@ MatchResult Float::doMatch(const QString& text, int offset)
 }
 
 
-MatchResult HlCChar::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCChar& rule, int offset)
 {
-    if (text.size() < offset + 3)
+    if (m_text.size() < offset + 3)
         return offset;
 
-    if (text.at(offset) != QLatin1Char('\'') || text.at(offset + 1) == QLatin1Char('\''))
+    if (m_text.at(offset) != QLatin1Char('\'') || m_text.at(offset + 1) == QLatin1Char('\''))
         return offset;
 
-    auto newOffset = matchEscapedChar(text, offset + 1);
+    auto newOffset = matchEscapedChar(m_text, offset + 1);
     if (newOffset == offset + 1) {
-        if (text.at(newOffset) == QLatin1Char('\\'))
+        if (m_text.at(newOffset) == QLatin1Char('\\'))
             return offset;
         else
             ++newOffset;
     }
-    if (newOffset >= text.size())
+    if (newOffset >= m_text.size())
         return offset;
 
-    if (text.at(newOffset) == QLatin1Char('\''))
+    if (m_text.at(newOffset) == QLatin1Char('\''))
         return newOffset + 1;
 
     return offset;
 }
 
 
-MatchResult HlCHex::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCHex& rule, int offset)
 {
-    if (offset > 0 && !isDelimiter(text.at(offset - 1)))
+    if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
 
-    if (text.size() < offset + 3)
+    if (m_text.size() < offset + 3)
         return offset;
 
-    if (text.at(offset) != QLatin1Char('0') || (text.at(offset + 1) != QLatin1Char('x') && text.at(offset + 1) != QLatin1Char('X')))
+    if (m_text.at(offset) != QLatin1Char('0') || (m_text.at(offset + 1) != QLatin1Char('x') && m_text.at(offset + 1) != QLatin1Char('X')))
         return offset;
 
-    if (!isHexChar(text.at(offset + 2)))
+    if (!isHexChar(m_text.at(offset + 2)))
         return offset;
 
     offset += 3;
-    while (offset < text.size() && isHexChar(text.at(offset)))
+    while (offset < m_text.size() && isHexChar(m_text.at(offset)))
         ++offset;
 
     // TODO Kate matches U/L suffix, QtC does not?
@@ -214,108 +218,102 @@ MatchResult HlCHex::doMatch(const QString& text, int offset)
 }
 
 
-MatchResult HlCOct::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCOct& rule, int offset)
 {
-    if (offset > 0 && !isDelimiter(text.at(offset - 1)))
+    if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
 
-    if (text.size() < offset + 2)
+    if (m_text.size() < offset + 2)
         return offset;
 
-    if (text.at(offset) != QLatin1Char('0'))
+    if (m_text.at(offset) != QLatin1Char('0'))
         return offset;
 
-    if (!isOctalChar(text.at(offset + 1)))
+    if (!isOctalChar(m_text.at(offset + 1)))
         return offset;
 
     offset += 2;
-    while (offset < text.size() && isOctalChar(text.at(offset)))
+    while (offset < m_text.size() && isOctalChar(m_text.at(offset)))
         ++offset;
 
     return offset;
 }
 
 
-MatchResult HlCStringChar::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCStringChar& rule, int offset)
 {
-    return matchEscapedChar(text, offset);
+    return matchEscapedChar(m_text, offset);
 }
 
-MatchResult IncludeRules::doMatch(const QString&, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(IncludeRules& rule, int offset)
 {
-    std::cerr << "Unresolved include rule for" << m_contextName << "##" << m_defName << std::endl;
+    std::cerr << "Unresolved include rule for" << rule.contextName() << "##" << rule.definitionName() << std::endl;
     return offset;
 }
 
 
-MatchResult Int::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(Int& rule, int offset)
 {
-    if (offset > 0 && !isDelimiter(text.at(offset - 1)))
+    if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
 
-    while(offset < text.size() && text.at(offset).isDigit())
+    while(offset < m_text.size() && m_text.at(offset).isDigit())
         ++offset;
     return offset;
 }
 
-MatchResult KeywordListRule::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(KeywordListRule& rule, int offset)
 {
-    if (offset > 0 && !isDelimiter(text.at(offset - 1)))
+    if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
 
-    if (! m_keywordList) {
-        const auto def = definition();
-        assert(def.isValid());
-        auto defData = DefinitionData::get(def);
-        m_keywordList = &defData->keywordList(m_listName);
-    }
+    auto keywordList = rule.keywordList();
 
     auto newOffset = offset;
-    while (text.size() > newOffset && !isDelimiter(text.at(newOffset)))
+    while (m_text.size() > newOffset && !isDelimiter(rule, m_text.at(newOffset)))
         ++newOffset;
     if (newOffset == offset)
         return offset;
 
-    bool caseSensitivity = (m_hasCaseSensitivityOverride ? m_caseSensitivityOverride : m_keywordList->caseSensitive());
-    if (caseSensitivity) {
-        if (m_keywordList->contains(text.midRef(offset, newOffset - offset).toString().toUtf8().constData(), true))
+    if (rule.caseSensitivity()) {
+        if (keywordList->contains(m_text.midRef(offset, newOffset - offset).toString().toUtf8().constData(), true))
             return newOffset;
     } else {
         // We must convert the string to lower-case before calling contains().
-        if (m_keywordList->contains(text.midRef(offset, newOffset - offset).toString().toLower().toUtf8().constData(), false))
+        if (keywordList->contains(m_text.midRef(offset, newOffset - offset).toString().toLower().toUtf8().constData(), false))
             return newOffset;
     }
     return offset;
 }
 
-MatchResult LineContinue::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(LineContinue& rule, int offset)
 {
-    if (offset == text.size() - 1 && text.at(offset) == m_char)
+    if (offset == m_text.size() - 1 && m_text.at(offset) == rule.continueChar())
         return offset + 1;
     return offset;
 }
 
-MatchResult RangeDetect::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(RangeDetect& rule, int offset)
 {
-    if (text.size() - offset < 2)
+    if (m_text.size() - offset < 2)
         return offset;
-    if (text.at(offset) != m_begin)
+    if (m_text.at(offset) != rule.begin())
         return offset;
 
     auto newOffset = offset + 1;
-    while (newOffset < text.size()) {
-        if (text.at(newOffset) == m_end)
+    while (newOffset < m_text.size()) {
+        if (m_text.at(newOffset) == rule.end())
             return newOffset + 1;
         ++newOffset;
     }
     return offset;
 }
 
-MatchResult RegExpr::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(RegExpr& rule, int offset)
 {
-    assert(m_regexp.isValid());
+    assert(rule.regexp().isValid());
 
-    auto result = m_regexp.match(text, offset, QRegularExpression::NormalMatch, QRegularExpression::DontCheckSubjectStringMatchOption);
+    auto result = rule.regexp().match(m_text, offset, QRegularExpression::NormalMatch, QRegularExpression::DontCheckSubjectStringMatchOption);
     if (result.capturedStart() == offset)
         return MatchResult(offset + result.capturedLength());
     // Be kind: if the rule matched later in the string, remember this so we don't check again
@@ -323,27 +321,27 @@ MatchResult RegExpr::doMatch(const QString& text, int offset)
     return MatchResult(offset, result.capturedStart());
 }
 
-MatchResult StringDetect::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(StringDetect& rule, int offset)
 {
-    QString pattern = QString::fromUtf8(m_string.c_str());
-    if (text.midRef(offset, pattern.length()).compare(pattern, m_caseSensitivity ? Qt::CaseSensitive : Qt::CaseInsensitive) == 0)
+    QString pattern = QString::fromUtf8(rule.string().c_str());
+    if (m_text.midRef(offset, pattern.length()).compare(pattern, rule.caseSensitivity() ? Qt::CaseSensitive : Qt::CaseInsensitive) == 0)
         return offset + pattern.size();
     return offset;
 }
 
-MatchResult WordDetect::doMatch(const QString& text, int offset)
+MatchResult KSyntaxHighlighting::QStringMatcher::match(WordDetect& rule, int offset)
 {
-    if (text.size() - offset < m_word.length())
+    if (m_text.size() - offset < rule.word().length())
         return offset;
 
-    if (offset > 0 && !isDelimiter(text.at(offset - 1)))
+    if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
 
-    if (text.midRef(offset, m_word.length()).toString().toUtf8().constData() != m_word)
+    if (m_text.midRef(offset, rule.word().length()).toString().toUtf8().constData() != rule.word())
         return offset;
 
-    if (text.size() == offset + m_word.length() || isDelimiter(text.at(offset + m_word.length())))
-        return offset + m_word.length();
+    if (m_text.size() == offset + rule.word().length() || isDelimiter(rule, m_text.at(offset + rule.word().length())))
+        return offset + rule.word().length();
 
     return offset;
 }

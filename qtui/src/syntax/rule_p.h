@@ -53,15 +53,13 @@ public:
     bool load(xmlTextReaderPtr reader);
     void resolveContext();
 
-    MatchResult match(const QString &text, int offset);
+    MatchResult match(Matcher& m, int offset);
 
     static Rule::Ptr create(const std::string& name);
 
 protected:
     virtual bool doLoad(xmlTextReaderPtr reader);
-    virtual MatchResult doMatch(const QString &text, int offset) = 0;
-
-    bool isDelimiter(QChar c) const;
+    virtual MatchResult doMatch(Matcher& m, int offset) = 0;
 
 private:
     DefinitionRef m_def;
@@ -78,49 +76,59 @@ class AnyChar : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     std::string m_chars;
+
+public:
+    const std::string& chars() const;
 };
 
 class DetectChar : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     QChar m_char;
+
+public:
+    QChar matchChar() const;
 };
 
 class Detect2Char : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     QChar m_char1;
     QChar m_char2;
+
+public:
+    QChar matchChar1() const;
+    QChar matchChar2() const;
 };
 
 class DetectIdentifier : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 };
 
 class DetectSpaces : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 };
 
 class Float : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 };
 
 class IncludeRules : public Rule
@@ -132,7 +140,7 @@ public:
 
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     std::string m_contextName;
@@ -143,38 +151,38 @@ private:
 class Int : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 };
 
 class HlCChar : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 };
 
 class HlCHex : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 };
 
 class HlCOct : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 };
 
 class HlCStringChar : public Rule
 {
 protected:
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 };
 
 class KeywordListRule : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     std::string m_listName;
@@ -184,60 +192,202 @@ private:
 
 public:
     KeywordListRule() : m_keywordList(0) {}
+    const KeywordList* keywordList(); // may load the list; return value is non-null
+    bool caseSensitivity() const;
 };
 
 class LineContinue : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     QChar m_char;
+
+public:
+    QChar continueChar() const;
 };
 
 class RangeDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     QChar m_begin;
     QChar m_end;
+
+public:
+    QChar begin() const;
+    QChar end() const;
 };
 
 class RegExpr : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     QString m_pattern;
     QRegularExpression m_regexp;
+
+public:
+    const QRegularExpression& regexp() const;
 };
 
 class StringDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     std::string m_string;
     bool m_caseSensitivity;
+
+public:
+    const std::string& string() const;
+    bool caseSensitivity() const;
 };
 
 class WordDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
-    MatchResult doMatch(const QString & text, int offset) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
 
 private:
     std::string m_word;
+
+public:
+    const std::string& word() const;
 };
+
+inline const std::string& AnyChar::chars() const {
+    return m_chars;
+}
+
+inline MatchResult AnyChar::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline QChar DetectChar::matchChar() const {
+    return m_char;
+}
+
+inline MatchResult DetectChar::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline QChar Detect2Char::matchChar1() const {
+    return m_char1;
+}
+
+inline QChar Detect2Char::matchChar2() const {
+    return m_char2;
+}
+
+inline MatchResult Detect2Char::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult DetectIdentifier::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult DetectSpaces::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult Float::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult IncludeRules::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult Int::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult HlCChar::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult HlCHex::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult HlCOct::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult HlCStringChar::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline bool KeywordListRule::caseSensitivity() const {
+    if (m_hasCaseSensitivityOverride)
+        return m_caseSensitivityOverride;
+    else
+        return m_keywordList->caseSensitive();
+}
+
+inline MatchResult KeywordListRule::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline QChar LineContinue::continueChar() const {
+    return m_char;
+}
+
+inline MatchResult LineContinue::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline QChar RangeDetect::begin() const {
+    return m_begin;
+}
+
+inline QChar RangeDetect::end() const {
+    return m_end;
+}
+
+inline MatchResult RangeDetect::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline const QRegularExpression& RegExpr::regexp() const {
+    return m_regexp;
+}
+
+inline MatchResult RegExpr::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline const std::string& StringDetect::string() const {
+    return m_string;
+}
+
+inline bool StringDetect::caseSensitivity() const {
+    return m_caseSensitivity;
+}
+
+inline MatchResult StringDetect::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline const std::string& WordDetect::word() const {
+    return m_word;
+}
+
+inline MatchResult WordDetect::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
 
 }
 

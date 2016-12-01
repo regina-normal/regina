@@ -1,6 +1,8 @@
 
-#ifndef MATCHER_H
-#define MATCHER_H
+#ifndef SYNTAX_MATCHER_H
+#define SYNTAX_MATCHER_H
+
+#include <cstddef>
 
 namespace KSyntaxHighlighting {
 
@@ -38,24 +40,28 @@ private:
 };
 
 class Matcher {
-    virtual MatchResult match(AnyChar& rule, int offset) = 0;
-    virtual MatchResult match(DetectChar& rule, int offset) = 0;
-    virtual MatchResult match(Detect2Char& rule, int offset) = 0;
-    virtual MatchResult match(DetectIdentifier& rule, int offset) = 0;
-    virtual MatchResult match(DetectSpaces& rule, int offset) = 0;
-    virtual MatchResult match(Float& rule, int offset) = 0;
-    virtual MatchResult match(IncludeRules& rule, int offset) = 0;
-    virtual MatchResult match(Int& rule, int offset) = 0;
-    virtual MatchResult match(HlCChar& rule, int offset) = 0;
-    virtual MatchResult match(HlCHex& rule, int offset) = 0;
-    virtual MatchResult match(HlCOct& rule, int offset) = 0;
-    virtual MatchResult match(HlCStringChar& rule, int offset) = 0;
-    virtual MatchResult match(KeywordListRule& rule, int offset) = 0;
-    virtual MatchResult match(LineContinue& rule, int offset) = 0;
-    virtual MatchResult match(RangeDetect& rule, int offset) = 0;
-    virtual MatchResult match(RegExpr& rule, int offset) = 0;
-    virtual MatchResult match(StringDetect& rule, int offset) = 0;
-    virtual MatchResult match(WordDetect& rule, int offset) = 0;
+    public:
+        virtual bool textEmpty() const = 0;
+        virtual size_t textSize() const = 0;
+
+        virtual MatchResult match(AnyChar& rule, int offset) = 0;
+        virtual MatchResult match(DetectChar& rule, int offset) = 0;
+        virtual MatchResult match(Detect2Char& rule, int offset) = 0;
+        virtual MatchResult match(DetectIdentifier& rule, int offset) = 0;
+        virtual MatchResult match(DetectSpaces& rule, int offset) = 0;
+        virtual MatchResult match(Float& rule, int offset) = 0;
+        virtual MatchResult match(IncludeRules& rule, int offset) = 0;
+        virtual MatchResult match(Int& rule, int offset) = 0;
+        virtual MatchResult match(HlCChar& rule, int offset) = 0;
+        virtual MatchResult match(HlCHex& rule, int offset) = 0;
+        virtual MatchResult match(HlCOct& rule, int offset) = 0;
+        virtual MatchResult match(HlCStringChar& rule, int offset) = 0;
+        virtual MatchResult match(KeywordListRule& rule, int offset) = 0;
+        virtual MatchResult match(LineContinue& rule, int offset) = 0;
+        virtual MatchResult match(RangeDetect& rule, int offset) = 0;
+        virtual MatchResult match(RegExpr& rule, int offset) = 0;
+        virtual MatchResult match(StringDetect& rule, int offset) = 0;
+        virtual MatchResult match(WordDetect& rule, int offset) = 0;
 };
 
 inline MatchResult::MatchResult(int offset) :

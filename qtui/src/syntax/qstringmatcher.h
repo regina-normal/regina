@@ -1,32 +1,54 @@
 
-#ifndef QSTRINGMATCHER_H
-#define QSTRINGMATCHER_H
+#ifndef SYNTAX_QSTRINGMATCHER_H
+#define SYNTAX_QSTRINGMATCHER_H
 
 #include "matcher.h"
 #include <QString>
 
 namespace KSyntaxHighlighting {
 
+class Rule;
+
 class QStringMatcher : public Matcher {
-    virtual MatchResult match(AnyChar& rule, int offset) override;
-    virtual MatchResult match(DetectChar& rule, int offset) override;
-    virtual MatchResult match(Detect2Char& rule, int offset) override;
-    virtual MatchResult match(DetectIdentifier& rule, int offset) override;
-    virtual MatchResult match(DetectSpaces& rule, int offset) override;
-    virtual MatchResult match(Float& rule, int offset) override;
-    virtual MatchResult match(IncludeRules& rule, int offset) override;
-    virtual MatchResult match(Int& rule, int offset) override;
-    virtual MatchResult match(HlCChar& rule, int offset) override;
-    virtual MatchResult match(HlCHex& rule, int offset) override;
-    virtual MatchResult match(HlCOct& rule, int offset) override;
-    virtual MatchResult match(HlCStringChar& rule, int offset) override;
-    virtual MatchResult match(KeywordListRule& rule, int offset) override;
-    virtual MatchResult match(LineContinue& rule, int offset) override;
-    virtual MatchResult match(RangeDetect& rule, int offset) override;
-    virtual MatchResult match(RegExpr& rule, int offset) override;
-    virtual MatchResult match(StringDetect& rule, int offset) override;
-    virtual MatchResult match(WordDetect& rule, int offset) override;
+    private:
+        const QString& m_text;
+
+    public:
+        QStringMatcher(const QString& text) : m_text(text) {}
+
+        bool textEmpty() const override;
+        size_t textSize() const override;
+
+        MatchResult match(AnyChar& rule, int offset) override;
+        MatchResult match(DetectChar& rule, int offset) override;
+        MatchResult match(Detect2Char& rule, int offset) override;
+        MatchResult match(DetectIdentifier& rule, int offset) override;
+        MatchResult match(DetectSpaces& rule, int offset) override;
+        MatchResult match(Float& rule, int offset) override;
+        MatchResult match(IncludeRules& rule, int offset) override;
+        MatchResult match(Int& rule, int offset) override;
+        MatchResult match(HlCChar& rule, int offset) override;
+        MatchResult match(HlCHex& rule, int offset) override;
+        MatchResult match(HlCOct& rule, int offset) override;
+        MatchResult match(HlCStringChar& rule, int offset) override;
+        MatchResult match(KeywordListRule& rule, int offset) override;
+        MatchResult match(LineContinue& rule, int offset) override;
+        MatchResult match(RangeDetect& rule, int offset) override;
+        MatchResult match(RegExpr& rule, int offset) override;
+        MatchResult match(StringDetect& rule, int offset) override;
+        MatchResult match(WordDetect& rule, int offset) override;
+
+    private:
+        bool isDelimiter(Rule& r, QChar c) const;
 };
+
+inline bool QStringMatcher::textEmpty() const {
+    return m_text.isEmpty();
+}
+
+inline size_t QStringMatcher::textSize() const {
+    return m_text.size();
+}
 
 }
 

@@ -135,16 +135,16 @@ bool Rule::doLoad(xmlTextReaderPtr)
     return true;
 }
 
-MatchResult Rule::match(const QString &text, int offset)
+MatchResult Rule::match(Matcher& m, int offset)
 {
-    assert(!text.isEmpty());
+    assert(! m.textEmpty());
 
-    const auto result = doMatch(text, offset);
-    if (result.offset() == offset || result.offset() == text.size())
+    const auto result = doMatch(m, offset);
+    if (result.offset() == offset || result.offset() == m.textSize())
         return result;
 
     for (const auto &subRule : m_subRules) {
-        const auto subResult = subRule->match(text, result.offset());
+        const auto subResult = subRule->match(m, result.offset());
         if (subResult.offset() > result.offset())
             return MatchResult(subResult.offset());
     }
@@ -196,13 +196,6 @@ Rule::Ptr Rule::create(const std::string& name)
 
     return Ptr(rule);
 }
-
-bool Rule::isDelimiter(QChar c) const
-{
-    auto defData = DefinitionData::get(m_def.definition());
-    return defData->isDelimiter(c.toLatin1());
-}
-
 
 bool AnyChar::doLoad(xmlTextReaderPtr reader)
 {
@@ -281,6 +274,17 @@ bool KeywordListRule::doLoad(xmlTextReaderPtr reader)
         m_hasCaseSensitivityOverride = false;
     }
     return !m_listName.empty();
+}
+
+const KeywordList* KeywordListRule::keywordList() {
+    if (! m_keywordList) {
+        const auto def = definition();
+        assert(def.isValid());
+        auto defData = DefinitionData::get(def);
+        m_keywordList = &defData->keywordList(m_listName);
+    }
+
+    return m_keywordList;
 }
 
 bool LineContinue::doLoad(xmlTextReaderPtr reader)
