@@ -19,7 +19,7 @@
 #include "definition.h"
 #include "definitionref_p.h"
 #include "definition_p.h"
-#include "qstringmatcher.h"
+#include "qtmatcher.h"
 #include "rule_p.h"
 
 #include <cassert>
@@ -78,11 +78,11 @@ static int matchEscapedChar(const QString &text, int offset)
     return offset;
 }
 
-bool KSyntaxHighlighting::QStringMatcher::isDelimiter(Rule& r, QChar c) const {
+bool QtMatcher::isDelimiter(Rule& r, QChar c) const {
     return DefinitionData::get(r.definition())->isDelimiter(c.toLatin1());
 }
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(AnyChar& rule, int offset)
+MatchResult QtMatcher::match(AnyChar& rule, int offset)
 {
     if (rule.chars().find(m_text.at(offset).toLatin1()) != std::string::npos)
         return offset + 1;
@@ -90,7 +90,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(AnyChar& rule, int offset
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectChar& rule, int offset)
+MatchResult QtMatcher::match(DetectChar& rule, int offset)
 {
     if (m_text.at(offset) == rule.matchChar())
         return offset + 1;
@@ -98,7 +98,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectChar& rule, int off
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(Detect2Char& rule, int offset)
+MatchResult QtMatcher::match(Detect2Char& rule, int offset)
 {
     if (m_text.size() - offset < 2)
         return offset;
@@ -108,7 +108,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(Detect2Char& rule, int of
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectIdentifier& rule, int offset)
+MatchResult QtMatcher::match(DetectIdentifier& rule, int offset)
 {
     if (!m_text.at(offset).isLetter() && m_text.at(offset) != QLatin1Char('_'))
         return offset;
@@ -123,7 +123,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectIdentifier& rule, i
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectSpaces& rule, int offset)
+MatchResult QtMatcher::match(DetectSpaces& rule, int offset)
 {
     while(offset < m_text.size() && m_text.at(offset).isSpace())
         ++offset;
@@ -131,7 +131,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(DetectSpaces& rule, int o
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(Float& rule, int offset)
+MatchResult QtMatcher::match(Float& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -169,7 +169,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(Float& rule, int offset)
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCChar& rule, int offset)
+MatchResult QtMatcher::match(HlCChar& rule, int offset)
 {
     if (m_text.size() < offset + 3)
         return offset;
@@ -194,7 +194,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCChar& rule, int offset
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCHex& rule, int offset)
+MatchResult QtMatcher::match(HlCHex& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -218,7 +218,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCHex& rule, int offset)
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCOct& rule, int offset)
+MatchResult QtMatcher::match(HlCOct& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -240,19 +240,19 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCOct& rule, int offset)
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(HlCStringChar& rule, int offset)
+MatchResult QtMatcher::match(HlCStringChar& rule, int offset)
 {
     return matchEscapedChar(m_text, offset);
 }
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(IncludeRules& rule, int offset)
+MatchResult QtMatcher::match(IncludeRules& rule, int offset)
 {
     std::cerr << "Unresolved include rule for" << rule.contextName() << "##" << rule.definitionName() << std::endl;
     return offset;
 }
 
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(Int& rule, int offset)
+MatchResult QtMatcher::match(Int& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -262,7 +262,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(Int& rule, int offset)
     return offset;
 }
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(KeywordListRule& rule, int offset)
+MatchResult QtMatcher::match(KeywordListRule& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -286,14 +286,14 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(KeywordListRule& rule, in
     return offset;
 }
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(LineContinue& rule, int offset)
+MatchResult QtMatcher::match(LineContinue& rule, int offset)
 {
     if (offset == m_text.size() - 1 && m_text.at(offset) == rule.continueChar())
         return offset + 1;
     return offset;
 }
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(RangeDetect& rule, int offset)
+MatchResult QtMatcher::match(RangeDetect& rule, int offset)
 {
     if (m_text.size() - offset < 2)
         return offset;
@@ -309,7 +309,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(RangeDetect& rule, int of
     return offset;
 }
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(RegExpr& rule, int offset)
+MatchResult QtMatcher::match(RegExpr& rule, int offset)
 {
     assert(rule.regexp().isValid());
 
@@ -321,7 +321,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(RegExpr& rule, int offset
     return MatchResult(offset, result.capturedStart());
 }
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(StringDetect& rule, int offset)
+MatchResult QtMatcher::match(StringDetect& rule, int offset)
 {
     QString pattern = QString::fromUtf8(rule.string().c_str());
     if (m_text.midRef(offset, pattern.length()).compare(pattern, rule.caseSensitivity() ? Qt::CaseSensitive : Qt::CaseInsensitive) == 0)
@@ -329,7 +329,7 @@ MatchResult KSyntaxHighlighting::QStringMatcher::match(StringDetect& rule, int o
     return offset;
 }
 
-MatchResult KSyntaxHighlighting::QStringMatcher::match(WordDetect& rule, int offset)
+MatchResult QtMatcher::match(WordDetect& rule, int offset)
 {
     if (m_text.size() - offset < rule.word().length())
         return offset;

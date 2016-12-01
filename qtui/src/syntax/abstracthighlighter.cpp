@@ -20,7 +20,7 @@
 #include "context_p.h"
 #include "definition_p.h"
 #include "format.h"
-#include "qstringmatcher.h"
+#include "qtmatcher.h"
 #include "repository.h"
 #include "rule_p.h"
 #include "state.h"
@@ -166,7 +166,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
                 continue;
             }
 
-            KSyntaxHighlighting::QStringMatcher m(text);
+            QtMatcher m(text);
             const auto newResult = rule->match(m, offset);
             newOffset = newResult.offset();
             if (newResult.skipOffset() > newOffset)

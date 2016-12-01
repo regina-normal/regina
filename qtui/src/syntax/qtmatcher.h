@@ -1,6 +1,6 @@
 
-#ifndef SYNTAX_QSTRINGMATCHER_H
-#define SYNTAX_QSTRINGMATCHER_H
+#ifndef SYNTAX_QTMATCHER_H
+#define SYNTAX_QTMATCHER_H
 
 #include "matcher.h"
 #include <QString>
@@ -9,12 +9,12 @@ namespace KSyntaxHighlighting {
 
 class Rule;
 
-class QStringMatcher : public Matcher {
+class QtMatcher : public Matcher {
     private:
         const QString& m_text;
 
     public:
-        QStringMatcher(const QString& text) : m_text(text) {}
+        QtMatcher(const QString& text) : m_text(text) {}
 
         bool textEmpty() const override;
         size_t textSize() const override;
@@ -42,11 +42,11 @@ class QStringMatcher : public Matcher {
         bool isDelimiter(Rule& r, QChar c) const;
 };
 
-inline bool QStringMatcher::textEmpty() const {
+inline bool QtMatcher::textEmpty() const {
     return m_text.isEmpty();
 }
 
-inline size_t QStringMatcher::textSize() const {
+inline size_t QtMatcher::textSize() const {
     return m_text.size();
 }
 

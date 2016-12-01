@@ -5,7 +5,7 @@ SET ( FILES
   definition.cpp
   format.cpp
   keywordlist.cpp
-  qstringmatcher.cpp
+  qtmatcher.cpp
   repository.cpp
   rule.cpp
   state.cpp
