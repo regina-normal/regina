@@ -27,7 +27,8 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 Context::Context()
     : m_resolveState(Unknown)
@@ -225,3 +226,5 @@ void Context::resolveIncludes()
 
     m_resolveState = Resolved;
 }
+
+} } // namespace regina::syntax

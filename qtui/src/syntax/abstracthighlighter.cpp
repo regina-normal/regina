@@ -30,7 +30,8 @@
 #include <cassert>
 #include <iostream>
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 AbstractHighlighterPrivate::AbstractHighlighterPrivate()
 {
@@ -243,3 +244,4 @@ bool AbstractHighlighterPrivate::switchContext(StateData *data, const ContextSwi
     return true;
 }
 
+} } // namespace regina::syntax

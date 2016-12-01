@@ -20,7 +20,8 @@
 
 #include <memory>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class Definition;
 class DefinitionData;
@@ -49,7 +50,7 @@ private:
     std::weak_ptr<DefinitionData> d;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif
 

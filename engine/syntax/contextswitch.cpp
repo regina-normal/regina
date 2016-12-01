@@ -24,7 +24,8 @@
 
 #include <iostream>
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 ContextSwitch::ContextSwitch() :
     m_context(nullptr),
@@ -94,3 +95,5 @@ void ContextSwitch::resolve(const Definition &def)
             std::cerr << "cannot find context " << m_contextName << " in " << def.name() << std::endl;
     }
 }
+
+} } // namespace regina::syntax

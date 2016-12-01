@@ -6,7 +6,8 @@
 #include <QString>
 #include <QRegularExpression>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class Rule;
 
@@ -54,7 +55,7 @@ inline size_t QtMatcher::textSize() const {
     return m_text.size();
 }
 
-}
+} } // namespace regina::syntax
 
 #endif
 

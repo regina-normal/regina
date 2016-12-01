@@ -28,7 +28,8 @@
 #include <limits>
 #include <iostream>
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 RepositoryPrivate::RepositoryPrivate() :
     m_formatId(0)
@@ -155,3 +156,5 @@ void Repository::reload()
 
     d->load(this);
 }
+
+} } // namespace regina::syntax

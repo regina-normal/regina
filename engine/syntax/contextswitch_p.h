@@ -20,7 +20,8 @@
 
 #include <string>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class Context;
 class Definition;
@@ -45,6 +46,7 @@ private:
     Context *m_context;
     int m_popCount;
 };
-}
+
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_CONTEXTSWITCH_P_H

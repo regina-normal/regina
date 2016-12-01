@@ -23,7 +23,8 @@
 
 class QString;
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class AbstractHighlighterPrivate;
 class Definition;
@@ -145,6 +146,7 @@ protected:
 protected:
     AbstractHighlighterPrivate *d_ptr;
 };
-}
+
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H

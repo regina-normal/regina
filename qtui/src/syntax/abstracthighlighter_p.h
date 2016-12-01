@@ -21,7 +21,8 @@
 #include "syntax/definition.h"
 #include "syntax/theme.h"
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class ContextSwitch;
 class StateData;
@@ -39,6 +40,6 @@ public:
     Theme m_theme;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif

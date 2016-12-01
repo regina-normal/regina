@@ -20,7 +20,8 @@
 
 #include <memory>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class StateData;
 
@@ -63,6 +64,6 @@ private:
     std::shared_ptr<StateData> d;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_STATE_H

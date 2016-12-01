@@ -26,7 +26,8 @@
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class Context : public boost::noncopyable
 {
@@ -78,6 +79,7 @@ private:
     ResolveState m_resolveState;
     bool m_fallthrough;
 };
-}
+
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_CONTEXT_P_H

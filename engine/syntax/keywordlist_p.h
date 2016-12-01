@@ -24,7 +24,8 @@
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class KeywordList : public boost::noncopyable
 {
@@ -58,6 +59,6 @@ inline bool KeywordList::caseSensitive() const {
     return m_caseSensitive;
 }
 
-}
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H

@@ -26,7 +26,8 @@
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class FormatPrivate : public boost::noncopyable
 {
@@ -44,6 +45,6 @@ public:
     bool spellCheck;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif

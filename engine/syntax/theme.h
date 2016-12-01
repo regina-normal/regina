@@ -20,7 +20,8 @@
 
 #include <memory>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class ThemeData;
 class RepositoryPrivate;
@@ -336,6 +337,6 @@ private:
     std::shared_ptr<ThemeData> m_data;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_THEME_H

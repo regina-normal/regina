@@ -21,7 +21,8 @@
 #include <map>
 #include <boost/noncopyable.hpp>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class Definition;
 class Repository;
@@ -47,6 +48,7 @@ public:
 
     uint16_t m_formatId;
 };
-}
+
+} } // namespace regina::syntax
 
 #endif

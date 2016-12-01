@@ -25,7 +25,8 @@
 #include <cassert>
 #include <iostream>
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 static bool isOctalChar(QChar c)
 {
@@ -359,3 +360,5 @@ MatchResult QtMatcher::match(WordDetect& rule, int offset)
 
     return offset;
 }
+
+} } // namespace regina::syntax

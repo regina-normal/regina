@@ -21,7 +21,8 @@
 
 #include <cassert>
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 State State::copy() const
 {
@@ -101,3 +102,5 @@ bool State::operator!=(const State &other) const
 {
     return !(*this == other);
 }
+
+} } // namespace regina::syntax

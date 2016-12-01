@@ -22,8 +22,10 @@
 #include <vector>
 #include <boost/noncopyable.hpp>
 
+namespace regina {
+
 /**
- * @namespace KSyntaxHighlighting
+ * @namespace syntax
  *
  * Syntax highlighting engine for Kate syntax definitions.
  * In order to access the syntax highlighting Definition files, use the
@@ -31,7 +33,7 @@
  *
  * @see Repository
  */
-namespace KSyntaxHighlighting {
+namespace syntax {
 
 class Definition;
 class RepositoryPrivate;
@@ -133,6 +135,6 @@ private:
     std::unique_ptr<RepositoryPrivate> d;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_REPOSITORY_H

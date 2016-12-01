@@ -22,7 +22,8 @@
 
 #include <QSyntaxHighlighter>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class SyntaxHighlighterPrivate;
 
@@ -43,6 +44,7 @@ protected:
     void highlightBlock(const QString & text) override;
     void applyFormat(int offset, int length, const Format &format) override;
 };
-}
+
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_QSYNTAXHIGHLIGHTER_H

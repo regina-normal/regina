@@ -29,7 +29,8 @@
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class Rule : public boost::noncopyable
 {
@@ -413,6 +414,6 @@ inline MatchResult WordDetect::doMatch(Matcher& m, int offset) {
     return m.match(*this, offset);
 }
 
-}
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_RULE_P_H

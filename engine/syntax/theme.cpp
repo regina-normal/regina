@@ -18,7 +18,8 @@
 #include "syntax/theme.h"
 #include "syntax/themedata_p.h"
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 std::string nullString;
 
@@ -110,3 +111,5 @@ unsigned Theme::editorColor(EditorColorRole role) const
 {
     return m_data.get() ? m_data->editorColor(role) : 0;
 }
+
+} } // namespace regina::syntax

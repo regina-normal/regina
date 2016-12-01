@@ -23,7 +23,8 @@
 #include <cassert>
 #include <iostream>
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 ThemeData* ThemeData::get(const Theme &theme)
 {
@@ -243,3 +244,5 @@ unsigned ThemeData::editorColor(Theme::EditorColorRole role) const
     assert(static_cast<int>(role) >= 0 && static_cast<int>(role) <= static_cast<int>(Theme::TemplateReadOnlyPlaceholder));
     return m_editorColors[role];
 }
+
+} } // namespace regina::syntax

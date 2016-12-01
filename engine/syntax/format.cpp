@@ -28,7 +28,8 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 static inline unsigned readColour(const std::string& str) {
     if (str.empty() || str.front() != '#')
@@ -247,3 +248,5 @@ void FormatPrivate::load(xmlTextReaderPtr reader)
         regina::valueOf(ref, spellCheck);
     }
 }
+
+} } // namespace regina::syntax

@@ -25,7 +25,8 @@
 #include <string>
 #include <boost/noncopyable.hpp>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 /**
  * Data container for a Theme.
@@ -140,6 +141,6 @@ private:
     unsigned m_editorColors[Theme::TemplateReadOnlyPlaceholder + 1];
 };
 
-}
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_THEMEDATA_P_H

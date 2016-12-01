@@ -18,7 +18,8 @@
 #ifndef KSYNTAXHIGHLIGHTING_TEXTSTYLEDATA_P_H
 #define KSYNTAXHIGHLIGHTING_TEXTSTYLEDATA_P_H
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class TextStyleData
 {
@@ -55,6 +56,6 @@ public:
     bool hasStrikeThrough :1;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif

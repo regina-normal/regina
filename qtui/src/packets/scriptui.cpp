@@ -72,7 +72,7 @@ namespace {
 
     // The syntax highlighting repository of definitions and themes is
     // a singleton: it is created on demand, and never deleted.
-    KSyntaxHighlighting::Repository* repository;
+    regina::syntax::Repository* repository;
 }
 
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
@@ -301,9 +301,9 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     updateTabWidth();
 
     if (! repository)
-        repository = new KSyntaxHighlighting::Repository;
+        repository = new regina::syntax::Repository;
 
-    auto h = new KSyntaxHighlighting::SyntaxHighlighter(editWidget->document());
+    auto h = new regina::syntax::SyntaxHighlighter(editWidget->document());
     h->setDefinition(repository->definitionForName("Python"));
     h->setTheme(repository->theme("Default"));
 

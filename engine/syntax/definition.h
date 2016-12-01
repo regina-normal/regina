@@ -22,7 +22,8 @@
 #include <string>
 #include <vector>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class Context;
 class Format;
@@ -120,6 +121,6 @@ private:
     std::shared_ptr<DefinitionData> d;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif

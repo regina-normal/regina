@@ -33,7 +33,8 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 KeywordList nullList;
 
@@ -444,3 +445,5 @@ Definition DefinitionRef::definition() const
         return Definition(d.lock());
     return Definition();
 }
+
+} } // namespace regina::syntax

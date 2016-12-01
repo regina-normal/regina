@@ -24,16 +24,14 @@
 
 Q_DECLARE_METATYPE(QTextBlock)
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
-namespace KSyntaxHighlighting {
 class TextBlockUserData : public QTextBlockUserData
 {
 public:
     State state;
 };
-
-}
 
 SyntaxHighlighter::SyntaxHighlighter(QObject* parent) :
     QSyntaxHighlighter(parent),
@@ -89,7 +87,7 @@ void SyntaxHighlighter::highlightBlock(const QString& text)
         QMetaObject::invokeMethod(this, "rehighlightBlock", Qt::QueuedConnection, Q_ARG(QTextBlock, nextBlock));
 }
 
-void SyntaxHighlighter::applyFormat(int offset, int length, const KSyntaxHighlighting::Format& format)
+void SyntaxHighlighter::applyFormat(int offset, int length, const Format& format)
 {
     if (format.isDefaultTextStyle(theme()) || length == 0)
         return;
@@ -112,3 +110,4 @@ void SyntaxHighlighter::applyFormat(int offset, int length, const KSyntaxHighlig
     QSyntaxHighlighter::setFormat(offset, length, tf);
 }
 
+} } // namespace regina::syntax

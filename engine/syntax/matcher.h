@@ -4,7 +4,8 @@
 
 #include <cstddef>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class AnyChar;
 class DetectChar;
@@ -85,7 +86,7 @@ inline int MatchResult::skipOffset() const {
     return m_skipOffset;
 }
 
-}
+} } // namespace regina::syntax
 
 #endif
 

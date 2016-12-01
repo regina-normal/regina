@@ -20,8 +20,8 @@
 
 #include <deque>
 
-namespace KSyntaxHighlighting
-{
+namespace regina {
+namespace syntax {
 
 class Context;
 class DefinitionData;
@@ -45,6 +45,6 @@ private:
     std::deque<Context*> m_contextStack;
 };
 
-}
+} } // namespace regina::syntax
 
 #endif

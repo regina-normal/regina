@@ -22,7 +22,8 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-using namespace KSyntaxHighlighting;
+namespace regina {
+namespace syntax {
 
 KeywordList::KeywordList() :
     m_caseSensitive(true)
@@ -93,3 +94,5 @@ void KeywordList::setCaseSensitivity(bool caseSensitive)
 {
     m_caseSensitive = caseSensitive;
 }
+
+} } // namespace regina::syntax

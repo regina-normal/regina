@@ -20,7 +20,8 @@
 
 #include <memory>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class DefinitionRef;
 class FormatPrivate;
@@ -122,6 +123,7 @@ private:
     friend class FormatPrivate;
     std::shared_ptr<FormatPrivate> d;
 };
-}
+
+} } // namespace regina::syntax
 
 #endif // KSYNTAXHIGHLIGHTING_FORMAT_H

@@ -28,7 +28,8 @@
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
-namespace KSyntaxHighlighting {
+namespace regina {
+namespace syntax {
 
 class Definition;
 class Repository;
@@ -79,6 +80,7 @@ public:
     bool caseSensitive;
     int version;
 };
-}
+
+} } // namespace regina::syntax
 
 #endif
