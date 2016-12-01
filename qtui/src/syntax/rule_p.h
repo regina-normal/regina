@@ -24,8 +24,6 @@
 #include "keywordlist_p.h"
 #include "matcher.h"
 
-#include <QRegularExpression>
-
 #include <memory>
 #include <vector>
 #include <boost/noncopyable.hpp>
@@ -232,10 +230,19 @@ protected:
 
 private:
     std::string m_pattern;
-    QRegularExpression m_regexp;
+    bool m_minimal;
+    bool m_caseInsensitive;
+    RegEx* m_regexp; // may be null
 
 public:
-    const QRegularExpression& regexp() const;
+    RegExpr() : m_regexp(0) {}
+    ~RegExpr() { delete m_regexp; }
+    const std::string& pattern() const;
+    bool minimal() const;
+    bool caseInsensitive() const;
+    RegEx* regexp(); // may return null
+
+    void replaceRegEx(RegEx* re);
 };
 
 class StringDetect : public Rule
@@ -361,8 +368,25 @@ inline MatchResult RangeDetect::doMatch(Matcher& m, int offset) {
     return m.match(*this, offset);
 }
 
-inline const QRegularExpression& RegExpr::regexp() const {
+inline const std::string& RegExpr::pattern() const {
+    return m_pattern;
+}
+
+inline bool RegExpr::minimal() const {
+    return m_minimal;
+}
+
+inline bool RegExpr::caseInsensitive() const {
+    return m_caseInsensitive;
+}
+
+inline RegEx* RegExpr::regexp() {
     return m_regexp;
+}
+
+inline void RegExpr::replaceRegEx(RegEx* re) {
+    delete m_regexp;
+    m_regexp = re;
 }
 
 inline MatchResult RegExpr::doMatch(Matcher& m, int offset) {

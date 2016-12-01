@@ -4,10 +4,14 @@
 
 #include "matcher.h"
 #include <QString>
+#include <QRegularExpression>
 
 namespace KSyntaxHighlighting {
 
 class Rule;
+
+class QtRegEx : public RegEx, public QRegularExpression {
+};
 
 class QtMatcher : public Matcher {
     private:

@@ -310,13 +310,10 @@ bool RangeDetect::doLoad(xmlTextReaderPtr reader)
 bool RegExpr::doLoad(xmlTextReaderPtr reader)
 {
     m_pattern = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String"));
-    m_regexp.setPattern(QString::fromUtf8(m_pattern.c_str()));
-    bool isMinimal, isCaseInsensitive;
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"minimal")), isMinimal);
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), isCaseInsensitive);
-    m_regexp.setPatternOptions(
-        (isMinimal ? QRegularExpression::InvertedGreedinessOption : QRegularExpression::NoPatternOption) |
-        (isCaseInsensitive ? QRegularExpression::CaseInsensitiveOption : QRegularExpression::NoPatternOption));
+
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"minimal")), m_minimal);
+    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), m_caseInsensitive);
+
     return !m_pattern.empty(); // m_regexp.isValid() would be better, but parses the regexp and thus is way too expensive
 }
 

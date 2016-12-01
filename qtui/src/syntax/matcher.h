@@ -25,18 +25,23 @@ class RegExpr;
 class StringDetect;
 class WordDetect;
 
+class RegEx {
+    public:
+        virtual ~RegEx() {}
+};
+
 class MatchResult
 {
-public:
-    MatchResult(int offset); // implicit
-    explicit MatchResult(int offset, int skipOffset);
+    public:
+        MatchResult(int offset); // implicit
+        explicit MatchResult(int offset, int skipOffset);
 
-    int offset() const;
-    int skipOffset() const;
+        int offset() const;
+        int skipOffset() const;
 
-private:
-    int m_offset;
-    int m_skipOffset;
+    private:
+        int m_offset;
+        int m_skipOffset;
 };
 
 class Matcher {

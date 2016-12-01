@@ -311,9 +311,23 @@ MatchResult QtMatcher::match(RangeDetect& rule, int offset)
 
 MatchResult QtMatcher::match(RegExpr& rule, int offset)
 {
-    assert(rule.regexp().isValid());
+    RegEx* re = rule.regexp();
+    if (! (re && dynamic_cast<QtRegEx*>(re))) {
+        QtRegEx* qre = new QtRegEx;
 
-    auto result = rule.regexp().match(m_text, offset, QRegularExpression::NormalMatch, QRegularExpression::DontCheckSubjectStringMatchOption);
+        qre->setPattern(QString::fromUtf8(rule.pattern().c_str()));
+        qre->setPatternOptions(
+            (rule.minimal() ? QRegularExpression::InvertedGreedinessOption :
+                QRegularExpression::NoPatternOption) |
+            (rule.caseInsensitive() ? QRegularExpression::CaseInsensitiveOption :
+                QRegularExpression::NoPatternOption));
+
+        assert(qre->isValid());
+        rule.replaceRegEx(re = qre);
+    }
+
+    auto result = static_cast<QtRegEx*>(re)->match(m_text, offset, QRegularExpression::NormalMatch, QRegularExpression::DontCheckSubjectStringMatchOption);
+
     if (result.capturedStart() == offset)
         return MatchResult(offset + result.capturedLength());
     // Be kind: if the rule matched later in the string, remember this so we don't check again
