@@ -30,7 +30,7 @@ INSTALL(FILES
   DESTINATION ${PKGDATADIR}/syntax)
 
 # Install development headers
-if (${REGINA_INSTALL_DEV})
+if (FALSE AND ${REGINA_INSTALL_DEV})
   INSTALL(FILES
     context_p.h
     contextswitch_p.h
