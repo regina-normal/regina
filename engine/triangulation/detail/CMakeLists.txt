@@ -1,6 +1,7 @@
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     boundarycomponent-impl.h
+    boundarycomponent.h
     canonical-impl.h
     component.h
     face.h
