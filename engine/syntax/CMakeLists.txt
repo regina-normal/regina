@@ -40,7 +40,6 @@ if (${REGINA_INSTALL_DEV})
     format.h
     format_p.h
     keywordlist_p.h
-    ksyntaxhighlighting_version.h
     matcher.h
     repository.h
     repository_p.h
