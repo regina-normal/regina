@@ -16,8 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_THEMEDATA_P_H
-#define KSYNTAXHIGHLIGHTING_THEMEDATA_P_H
+#ifndef __SYNTAX_THEMEDATA_P_H
+#ifndef __DOXYGEN
+#define __SYNTAX_THEMEDATA_P_H
+#endif
 
 #include "syntax/theme.h"
 #include "syntax/textstyledata_p.h"
@@ -143,4 +145,4 @@ private:
 
 } } // namespace regina::syntax
 
-#endif // KSYNTAXHIGHLIGHTING_THEMEDATA_P_H
+#endif

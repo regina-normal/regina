@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H
-#define KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H
+#ifndef __SYNTAX_ABSTRACTHIGHLIGHTER_H
+#define __SYNTAX_ABSTRACTHIGHLIGHTER_H
 
 #include <memory>
 #include <boost/noncopyable.hpp>
@@ -149,4 +149,4 @@ protected:
 
 } } // namespace regina::syntax
 
-#endif // KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_H
+#endif

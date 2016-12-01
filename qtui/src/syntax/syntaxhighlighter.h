@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_QSYNTAXHIGHLIGHTER_H
-#define KSYNTAXHIGHLIGHTING_QSYNTAXHIGHLIGHTER_H
+#ifndef __SYNTAX_SYNTAXHIGHLIGHTER_H
+#define __SYNTAX_SYNTAXHIGHLIGHTER_H
 
 #include "syntax/abstracthighlighter.h"
 
@@ -47,4 +47,4 @@ protected:
 
 } } // namespace regina::syntax
 
-#endif // KSYNTAXHIGHLIGHTING_QSYNTAXHIGHLIGHTER_H
+#endif

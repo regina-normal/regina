@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_RULE_P_H
-#define KSYNTAXHIGHLIGHTING_RULE_P_H
+#ifndef __SYNTAX_RULE_P_H
+#ifndef __DOXYGEN
+#define __SYNTAX_RULE_P_H
+#endif
 
 #include "syntax/contextswitch_p.h"
 #include "syntax/definition.h"
@@ -416,4 +418,4 @@ inline MatchResult WordDetect::doMatch(Matcher& m, int offset) {
 
 } } // namespace regina::syntax
 
-#endif // KSYNTAXHIGHLIGHTING_RULE_P_H
+#endif

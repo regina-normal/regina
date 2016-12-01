@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_DEFINITION_P_H
-#define KSYNTAXHIGHLIGHTING_DEFINITION_P_H
+#ifndef __SYNTAX_DEFINITION_P_H
+#ifndef __DOXYGEN
+#define __SYNTAX_DEFINITION_P_H
+#endif
 
 #include "syntax/definitionref_p.h"
 #include "syntax/keywordlist_p.h"

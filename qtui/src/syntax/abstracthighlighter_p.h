@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_P_H
-#define KSYNTAXHIGHLIGHTING_ABSTRACTHIGHLIGHTERM_P_H
+#ifndef __SYNTAX_ABSTRACTHIGHLIGHTER_P_H
+#define __SYNTAX_ABSTRACTHIGHLIGHTER_P_H
 
 #include "syntax/definition.h"
 #include "syntax/theme.h"

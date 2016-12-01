@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_REPOSITORY_H
-#define KSYNTAXHIGHLIGHTING_REPOSITORY_H
+#ifndef __SYNTAX_REPOSITORY_H
+#ifndef __DOXYGEN
+#define __SYNTAX_REPOSITORY_H
+#endif
 
 #include <memory>
 #include <vector>
@@ -137,4 +139,4 @@ private:
 
 } } // namespace regina::syntax
 
-#endif // KSYNTAXHIGHLIGHTING_REPOSITORY_H
+#endif

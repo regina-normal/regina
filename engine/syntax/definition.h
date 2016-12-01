@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_DEFINITION_H
-#define KSYNTAXHIGHLIGHTING_DEFINITION_H
+#ifndef __SYNTAX_DEFINITION_H
+#ifndef __DOXYGEN
+#define __SYNTAX_DEFINITION_H
+#endif
 
 #include <memory>
 #include <string>

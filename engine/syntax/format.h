@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_FORMAT_H
-#define KSYNTAXHIGHLIGHTING_FORMAT_H
+#ifndef __SYNTAX_FORMAT_H
+#ifndef __DOXYGEN
+#define __SYNTAX_FORMAT_H
+#endif
 
 #include <memory>
 
@@ -126,4 +128,4 @@ private:
 
 } } // namespace regina::syntax
 
-#endif // KSYNTAXHIGHLIGHTING_FORMAT_H
+#endif

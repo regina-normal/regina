@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_REPOSITORY_P_H
-#define KSYNTAXHIGHLIGHTING_REPOSITORY_P_H
+#ifndef __SYNTAX_REPOSITORY_P_H
+#ifndef __DOXYGEN
+#define __SYNTAX_REPOSITORY_P_H
+#endif
 
 #include <map>
 #include <boost/noncopyable.hpp>

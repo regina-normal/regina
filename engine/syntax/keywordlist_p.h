@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H
-#define KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H
+#ifndef __SYNTAX_KEYWORDLIST_P_H
+#ifndef __DOXYGEN
+#define __SYNTAX_KEYWORDLIST_P_H
+#endif
 
 #include <set>
 #include <string>
@@ -61,4 +63,4 @@ inline bool KeywordList::caseSensitive() const {
 
 } } // namespace regina::syntax
 
-#endif // KSYNTAXHIGHLIGHTING_KEYWORDLIST_P_H
+#endif

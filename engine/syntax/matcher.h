@@ -1,6 +1,8 @@
 
-#ifndef SYNTAX_MATCHER_H
-#define SYNTAX_MATCHER_H
+#ifndef __SYNTAX_MATCHER_H
+#ifndef __DOXYGEN
+#define __SYNTAX_MATCHER_H
+#endif
 
 #include <cstddef>
 

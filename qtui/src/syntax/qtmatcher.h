@@ -1,6 +1,6 @@
 
-#ifndef SYNTAX_QTMATCHER_H
-#define SYNTAX_QTMATCHER_H
+#ifndef __SYNTAX_QTMATCHER_H
+#define __SYNTAX_QTMATCHER_H
 
 #include "syntax/matcher.h"
 #include <QString>

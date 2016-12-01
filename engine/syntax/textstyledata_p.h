@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_TEXTSTYLEDATA_P_H
-#define KSYNTAXHIGHLIGHTING_TEXTSTYLEDATA_P_H
+#ifndef __SYNTAX_TEXTSTYLEDATA_P_H
+#ifndef __DOXYGEN
+#define __SYNTAX_TEXTSTYLEDATA_P_H
+#endif
 
 namespace regina {
 namespace syntax {

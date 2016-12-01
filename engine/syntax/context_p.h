@@ -15,8 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KSYNTAXHIGHLIGHTING_CONTEXT_P_H
-#define KSYNTAXHIGHLIGHTING_CONTEXT_P_H
+#ifndef __SYNTAX_CONTEXT_P_H
+#ifndef __DOXYGEN
+#define __SYNTAX_CONTEXT_P_H
+#endif
 
 #include "syntax/rule_p.h"
 #include "syntax/contextswitch_p.h"
@@ -82,4 +84,4 @@ private:
 
 } } // namespace regina::syntax
 
-#endif // KSYNTAXHIGHLIGHTING_CONTEXT_P_H
+#endif
