@@ -18,7 +18,6 @@
 #include "rule_p.h"
 #include "definition_p.h"
 
-#include <QString>
 #include <cassert>
 #include <iostream>
 
