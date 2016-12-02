@@ -1086,6 +1086,11 @@
 		054209111DF0DA450018AB24 /* torusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208F31DF0DA390018AB24 /* torusbundle.cpp */; };
 		054209121DF0DDBC0018AB24 /* syntaxhighlighter.h in Sources */ = {isa = PBXBuildFile; fileRef = 054208DB1DF0D2E50018AB24 /* syntaxhighlighter.h */; };
 		054209171DF0E9040018AB24 /* NSMatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054209151DF0E7E60018AB24 /* NSMatcher.mm */; };
+		054209191DF17ED90018AB24 /* alert_indent.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0542084D1DF0D0B50018AB24 /* alert_indent.xml */; };
+		0542091A1DF17ED90018AB24 /* alert.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0542084E1DF0D0B50018AB24 /* alert.xml */; };
+		0542091B1DF17ED90018AB24 /* default.theme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 054208551DF0D0B50018AB24 /* default.theme */; };
+		0542091C1DF17ED90018AB24 /* modelines.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = 054208601DF0D0B50018AB24 /* modelines.xml */; };
+		0542091D1DF17ED90018AB24 /* python.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = 054208611DF0D0B50018AB24 /* python.xml */; };
 		05431EEC1C40F069009BC072 /* gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* gluingperms.cpp */; };
 		05431EED1C40F071009BC072 /* gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* gluingperms.cpp */; };
 		05431EEF1C40F093009BC072 /* dim2edgepairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EEE1C40F093009BC072 /* dim2edgepairing.h */; };
@@ -2213,6 +2218,20 @@
 				0542089A1DF0D17A0018AB24 /* python.xml in Copy Syntax Highlighting */,
 			);
 			name = "Copy Syntax Highlighting";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		054209181DF17EB70018AB24 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = syntax;
+			dstSubfolderSpec = 7;
+			files = (
+				054209191DF17ED90018AB24 /* alert_indent.xml in CopyFiles */,
+				0542091A1DF17ED90018AB24 /* alert.xml in CopyFiles */,
+				0542091B1DF17ED90018AB24 /* default.theme in CopyFiles */,
+				0542091C1DF17ED90018AB24 /* modelines.xml in CopyFiles */,
+				0542091D1DF17ED90018AB24 /* python.xml in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		057118C919B30A13009FEDC5 /* Copy SnapPea Census Data */ = {
@@ -7365,6 +7384,7 @@
 				057118CF19B30BAF009FEDC5 /* CopyFiles */,
 				05F9560919B5296D00377BEC /* CopyFiles */,
 				05249EA11DBB8F16001FE29E /* CopyFiles */,
+				054209181DF17EB70018AB24 /* CopyFiles */,
 			);
 			buildRules = (
 				054BC4C219B4A708005E01A0 /* PBXBuildRule */,

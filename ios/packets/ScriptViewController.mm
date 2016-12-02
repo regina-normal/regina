@@ -34,8 +34,13 @@
 #import "PythonHighlighter.h"
 #import "ScriptViewController.h"
 #import "packet/script.h"
+#import "syntax/repository.h"
 
 #import "../python/PythonConsoleController.h"
+
+// The syntax highlighting repository of definitions and themes is
+// a singleton: it is created on demand, and never deleted.
+regina::syntax::Repository* repository;
 
 #pragma mark - Script variable cell
 
@@ -71,7 +76,13 @@
     self.variables.delegate = self;
     self.variables.dataSource = self;
 
+    if (! repository)
+        repository = new regina::syntax::Repository;
+
     highlighter = [[PythonHighlighter alloc] init];
+    highlighter.definition = repository->definitionForName("Python");
+    highlighter.theme = repository->theme("Default");
+
     self.script.delegate = self;
     self.script.textStorage.delegate = highlighter;
 

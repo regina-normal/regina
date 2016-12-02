@@ -30,156 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
+#import "NSMatcher.h"
 #import "PythonHighlighter.h"
-
-static NSArray* keywords = @[
-    @"and", @"assert", @"break", @"class", @"continue", @"def", @"del", @"elif",
-    @"else", @"except", @"exec", @"finally", @"for", @"from", @"global", @"if",
-    @"import", @"in", @"is", @"lambda", @"not", @"or", @"pass", @"print",
-    @"raise", @"return", @"try", @"while", @"yield", @"None", @"True", @"False"];
-
-static NSArray* operators = @[
-    @"=", @"==", @"!=", @"<", @"<=", @">", @">=",
-    @"\\+", @"-", @"\\*", @"/", @"//", @"%", @"\\*\\*",
-    @"\\+=", @"-=", @"\\*=", @"/=", @"%=",
-    @"\\^", @"\\|", @"&", @"~", @">>", @"<<"];
-
-static NSArray* braces = @[
-    @"{", @"}", @"\\(", @"\\)", @"\\[", @"]"];
-
-static UIColor* darkMagenta = [UIColor colorWithRed:(0x8b / 256.0) green:(0x00 / 256.0) blue:(0x8b / 256.0) alpha:1.0];
-static UIColor* darkGreen = [UIColor colorWithRed:(0x00 / 256.0) green:(0x64 / 256.0) blue:(0x00 / 256.0) alpha:1.0];
-
-@interface HighlightingRule : NSObject
-
-@property (strong, nonatomic) NSRegularExpression* pattern;
-@property (assign, nonatomic) NSInteger match;
-@property (weak, nonatomic) UIColor* colour;
-@property (weak, nonatomic) UIFont* font;
-
-- (id)initWithPattern:(NSString*)p match:(NSInteger)m colour:(UIColor*)c font:(UIFont*)f;
-+ (id)ruleWithPattern:(NSString*)p match:(NSInteger)m colour:(UIColor*)c font:(UIFont*)f;
-
-@end
-
-@implementation HighlightingRule
-
-- (id)initWithPattern:(NSString *)p match:(NSInteger)m colour:(UIColor *)c font:(UIFont *)f
-{
-    self = [super init];
-    if (self) {
-        _pattern = [NSRegularExpression regularExpressionWithPattern:p options:0 error:nil];
-        _match = m;
-        _colour = c;
-        _font = f;
-    }
-    return self;
-}
-
-+ (id)ruleWithPattern:(NSString *)p match:(NSInteger)m colour:(UIColor *)c font:(UIFont *)f
-{
-    return [[HighlightingRule alloc] initWithPattern:p match:m colour:c font:f];
-}
-
-@end
+#import "syntax/context_p.h"
+#import "syntax/definition_p.h"
+#import "syntax/format.h"
+#import "syntax/repository.h"
+#import "syntax/rule_p.h"
+#import "syntax/state.h"
+#import "syntax/state_p.h"
+#import "syntax/theme.h"
 
 @implementation PythonHighlighter {
     UIFont* regular;
     UIFont* bold;
     UIFont* italic;
-    NSMutableArray* rules;
-}
-
-- (void)initRules
-{
-    rules = [[NSMutableArray alloc] init];
-
-    // Keywords:
-    // (Can be overridden by strings and/or comments)
-    for (NSString* s in keywords) {
-        [rules addObject:[HighlightingRule ruleWithPattern:[NSString stringWithFormat:@"\\b%@\\b", s]
-                                                     match:0
-                                                    colour:[UIColor blueColor]
-                                                      font:nil]];
-    }
-
-    // Operators:
-    // (Can be overridden by strings and/or comments)
-    for (NSString* s in operators) {
-        [rules addObject:[HighlightingRule ruleWithPattern:s
-                                                     match:0
-                                                    colour:[UIColor redColor]
-                                                      font:nil]];
-    }
-
-    // Braces:
-    // (Can be overridden by strings and/or comments)
-    for (NSString* s in braces) {
-        [rules addObject:[HighlightingRule ruleWithPattern:s
-                                                     match:0
-                                                    colour:[UIColor darkGrayColor]
-                                                      font:nil]];
-    }
-
-    // Self:
-    // (Can be overridden by strings and/or comments)
-    [rules addObject:[HighlightingRule ruleWithPattern:@"\\bself\\b"
-                                                 match:0
-                                                colour:[UIColor blackColor]
-                                                  font:italic]];
-
-    // "def" or "class" followed by an identifier:
-    // (Can be overridden by strings and/or comments)
-    [rules addObject:[HighlightingRule ruleWithPattern:@"\\bdef\\b\\s*(\\w+)"
-                                                 match:1
-                                                colour:[UIColor blackColor]
-                                                  font:bold]];
-    [rules addObject:[HighlightingRule ruleWithPattern:@"\\bclass\\b\\s*(\\w+)"
-                                                 match:1
-                                                colour:[UIColor blackColor]
-                                                  font:bold]];
-
-    // Numeric literals:
-    // (Can be overridden by strings and/or comments)
-    [rules addObject:[HighlightingRule ruleWithPattern:@"\\b[+-]?[0-9]+[lL]?\\b"
-                                                 match:0
-                                                colour:[UIColor brownColor]
-                                                  font:nil]];
-    [rules addObject:[HighlightingRule ruleWithPattern:@"\\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\\b"
-                                                 match:0
-                                                colour:[UIColor brownColor]
-                                                  font:nil]];
-    [rules addObject:[HighlightingRule ruleWithPattern:@"\\b[+-]?[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b"
-                                                 match:0
-                                                colour:[UIColor brownColor]
-                                                  font:nil]];
-
-    // Strings, possibly including escape sequences:
-    // TODO: I'm not convinced by these regexes (both for iOS and Qt)...
-    // TODO: Make sure this is not inside a comment.
-    [rules addObject:[HighlightingRule ruleWithPattern:@"\"[^\"\\\\]*(\\\\.[^\"\\\\]*)*\""
-                                                 match:0
-                                                colour:[UIColor magentaColor]
-                                                  font:regular]];
-    [rules addObject:[HighlightingRule ruleWithPattern:@"'[^'\\\\]*(\\\\.[^'\\\\]*)*'"
-                                                 match:0
-                                                colour:[UIColor magentaColor]
-                                                  font:regular]];
-    [rules addObject:[HighlightingRule ruleWithPattern:@"\"\"\"[^\"\\\\]*(\\\\.[^\"\\\\]*)*\"\"\""
-                                                 match:0
-                                                colour:darkMagenta
-                                                  font:regular]];
-    [rules addObject:[HighlightingRule ruleWithPattern:@"'''[^'\\\\]*(\\\\.[^'\\\\]*)*'''"
-                                                 match:0
-                                                colour:darkMagenta
-                                                  font:regular]];
-
-    // Single-line comments:
-    // TODO: Make sure this is not inside a string.
-    [rules addObject:[HighlightingRule ruleWithPattern:@"#[^\\n]*"
-                                                 match:0
-                                                colour:darkGreen
-                                                  font:italic]];
 }
 
 - (id)init
@@ -190,10 +55,55 @@ static UIColor* darkGreen = [UIColor colorWithRed:(0x00 / 256.0) green:(0x64 / 2
         regular = [UIFont fontWithName:@"Menlo" size:12];
         bold = [UIFont fontWithName:@"Menlo-Bold" size:12];
         italic = [UIFont fontWithName:@"Menlo-Italic" size:12];
-
-        [self initRules];
     }
     return self;
+}
+
+- (void)ensureDefinitionLoaded
+{
+    auto defData = regina::syntax::DefinitionData::get(self.definition);
+    if (!self.definition.isValid() && defData->repo && !self.definition.name().empty()) {
+        NSLog(@"Definition became invalid, trying re-lookup.");
+        self.definition = defData->repo->definitionForName(self.definition.name());
+        defData = regina::syntax::DefinitionData::get(self.definition);
+    }
+
+    if (!defData->repo && !defData->name.empty())
+        NSLog(@"Repository got deleted while a highlighter is still active!");
+
+    if (self.definition.isValid())
+        defData->load();
+}
+
+/**
+ * Returns the index of the first non-space character. If the line is empty,
+ * or only contains white spaces, -1 is returned.
+ */
++ (int)firstNonSpaceChar:(NSString*)text
+{
+    for (int i = 0; i < text.length; ++i)
+        if (! [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[text characterAtIndex:i]])
+            return i;
+
+    return -1;
+}
+
++ (bool)switchContext:(const regina::syntax::ContextSwitch&)contextSwitch state:(regina::syntax::StateData*)data
+{
+    for (int i = 0; i < contextSwitch.popCount(); ++i) {
+        // don't pop the last context if we can't push one
+        if (data->size() == 1 && !contextSwitch.context())
+            return false;
+        if (data->size() == 0)
+            break;
+        data->pop();
+    }
+
+    if (contextSwitch.context())
+        data->push(contextSwitch.context());
+
+    assert(!data->isEmpty());
+    return true;
 }
 
 - (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta
@@ -208,18 +118,178 @@ static UIColor* darkGreen = [UIColor colorWithRed:(0x00 / 256.0) green:(0x64 / 2
     [textStorage addAttribute:NSFontAttributeName value:regular range:editedRange];
 
     // Highlight what needs to be highlighted.
-    NSString* text = textStorage.string;
-    NSArray<NSTextCheckingResult*>* matches;
-    for (HighlightingRule* rule in rules) {
-        matches = [rule.pattern matchesInString:text options:0 range:NSMakeRange(0, text.length)];
-        for (NSTextCheckingResult* match in matches) {
-            NSRange r = [match rangeAtIndex:rule.match];
-            if (rule.colour)
-                [textStorage addAttribute:NSForegroundColorAttributeName value:rule.colour range:r];
-            if (rule.font)
-                [textStorage addAttribute:NSFontAttributeName value:rule.font range:r];
-        }
+
+    // verify definition, deal with no highlighting being enabled
+    [self ensureDefinitionLoaded];
+    if (!self.definition.isValid()) {
+        [self applyFormat:regina::syntax::Format() textStorage:textStorage offset:0 length:textStorage.length];
+        return;
     }
+
+    // verify/initialize state
+    auto defData = regina::syntax::DefinitionData::get(self.definition);
+    regina::syntax::State newState;
+    auto stateData = regina::syntax::StateData::get(newState);
+    if (stateData->m_defData && defData != stateData->m_defData) {
+        NSLog(@"Got invalid state, resetting.");
+        stateData->clear();
+    }
+    if (stateData->isEmpty()) {
+        stateData->push(defData->initialContext());
+        stateData->m_defData = defData;
+    }
+
+    // process empty lines
+    NSString* text = textStorage.string;
+
+    if (text.length == 0) {
+        while (!stateData->topContext()->lineEmptyContext().isStay())
+            [PythonHighlighter switchContext:stateData->topContext()->lineEmptyContext() state:stateData];
+        return;
+    }
+
+    assert(!stateData->isEmpty());
+    int firstNonSpace = [PythonHighlighter firstNonSpaceChar:text];
+    if (firstNonSpace < 0) {
+        firstNonSpace = text.length;
+    }
+    int offset = 0, beginOffset = 0;
+    auto currentLookupContext = stateData->topContext();
+    auto currentFormat = currentLookupContext->attribute();
+    bool lineContinuation = false;
+    std::map<regina::syntax::Rule*, int> skipOffsets;
+
+    do {
+        bool isLookAhead = false;
+        int newOffset = 0;
+        std::string newFormat;
+        auto newLookupContext = currentLookupContext;
+        for (const auto &rule : stateData->topContext()->rules()) {
+            auto it = skipOffsets.find(rule.get());
+            if (it != skipOffsets.end() && it->second > offset)
+                continue;
+
+            // filter out rules that only match for leading whitespace
+            if (rule->firstNonSpace() && (offset > firstNonSpace)) {
+                continue;
+            }
+
+            // filter out rules that require a specific column
+            if ((rule->requiredColumn() >= 0) && (rule->requiredColumn() != offset)) {
+                continue;
+            }
+
+            NSMatcher m(text);
+            const auto newResult = rule->match(m, offset);
+            newOffset = newResult.offset();
+            if (newResult.skipOffset() > newOffset)
+                skipOffsets.insert(std::make_pair(rule.get(), newResult.skipOffset()));
+            if (newOffset <= offset)
+                continue;
+
+            if (rule->isLookAhead()) {
+                assert(!rule->context().isStay());
+                [PythonHighlighter switchContext:rule->context() state:stateData];
+                isLookAhead = true;
+                break;
+            }
+
+            newLookupContext = stateData->topContext();
+            [PythonHighlighter switchContext:rule->context() state:stateData];
+            newFormat = rule->attribute().empty() ? stateData->topContext()->attribute() : rule->attribute();
+            if (newOffset == text.length && std::dynamic_pointer_cast<regina::syntax::LineContinue>(rule))
+                lineContinuation = true;
+            break;
+        }
+        if (isLookAhead)
+            continue;
+
+        if (newOffset <= offset) { // no matching rule
+            if (stateData->topContext()->fallthrough()) {
+                [PythonHighlighter switchContext:stateData->topContext()->fallthroughContext() state:stateData];
+                continue;
+            }
+
+            newOffset = offset + 1;
+            newLookupContext = stateData->topContext();
+            newFormat = newLookupContext->attribute();
+        }
+
+        if (newFormat != currentFormat /*|| currentLookupDef != newLookupDef*/) {
+            if (offset > 0)
+                [self applyFormat:currentLookupContext->formatByName(currentFormat)
+                      textStorage:textStorage
+                           offset:beginOffset
+                           length:(offset - beginOffset)];
+            beginOffset = offset;
+            currentFormat = newFormat;
+            currentLookupContext = newLookupContext;
+        }
+        assert(newOffset > offset);
+        offset = newOffset;
+
+    } while (offset < text.length);
+
+    if (beginOffset < offset)
+        [self applyFormat:currentLookupContext->formatByName(currentFormat)
+              textStorage:textStorage
+                   offset:beginOffset
+                   length:(text.length - beginOffset)];
+
+    while (!stateData->topContext()->lineEndContext().isStay() && !lineContinuation) {
+        if (! [PythonHighlighter switchContext:stateData->topContext()->lineEndContext() state:stateData])
+            break;
+    }
+}
+
+- (void)applyFormat:(const regina::syntax::Format&)format textStorage:(NSTextStorage*)textStorage offset:(NSInteger)offset length:(NSInteger)length
+{
+    if (length == 0)
+        return;
+
+    NSRange r = NSMakeRange(offset, length);
+
+    // TODO: Allow both bold and italic.
+    // First set the font and clear all other attributes.
+    if (format.isBold(self.theme))
+        [textStorage setAttributes:@{NSFontAttributeName: bold}
+                             range:r];
+    else if (format.isItalic(self.theme))
+        [textStorage setAttributes:@{NSFontAttributeName: italic}
+                             range:r];
+    else
+        [textStorage setAttributes:@{NSFontAttributeName: regular}
+                             range:r];
+
+    if (format.hasTextColor(self.theme)) {
+        unsigned rgb = format.textColor(self.theme);
+        [textStorage addAttribute:NSForegroundColorAttributeName
+                            value:[UIColor colorWithRed:((rgb >> 16) & 0xff) / 256.0
+                                                  green:((rgb >> 8) & 0xff) / 256.0
+                                                   blue:(rgb & 0xff) / 256.0
+                                                  alpha:1.0]
+                            range:r];
+    }
+
+    if (format.hasBackgroundColor(self.theme)) {
+        unsigned rgb = format.backgroundColor(self.theme);
+        [textStorage addAttribute:NSBackgroundColorAttributeName
+                            value:[UIColor colorWithRed:((rgb >> 16) & 0xff) / 256.0
+                                                  green:((rgb >> 8) & 0xff) / 256.0
+                                                   blue:(rgb & 0xff) / 256.0
+                                                  alpha:1.0]
+                            range:r];
+    }
+    
+    if (format.isUnderline(self.theme))
+        [textStorage addAttribute:NSUnderlineStyleAttributeName
+                            value:[NSNumber numberWithInteger:NSUnderlineStyleSingle]
+                            range:r];
+
+    if (format.isStrikeThrough(self.theme))
+        [textStorage addAttribute:NSStrikethroughStyleAttributeName
+                            value:[NSNumber numberWithInteger:NSUnderlineStyleSingle]
+                            range:r];
 }
 
 @end

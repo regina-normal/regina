@@ -31,6 +31,8 @@
  **************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import "syntax/definition.h"
+#import "syntax/theme.h"
 
 /**
  * A delegate for use with text kit classes (such as UITextView) that
@@ -43,6 +45,9 @@
  * The view controller should hold this syntax highlighter strongly.
  */
 @interface PythonHighlighter : NSObject <NSTextStorageDelegate>
+
+@property (assign, nonatomic) regina::syntax::Definition definition;
+@property (assign, nonatomic) regina::syntax::Theme theme;
 
 /**
  * Initialises a new syntax highlighter.
