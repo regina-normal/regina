@@ -1085,6 +1085,7 @@
 		054209101DF0DA450018AB24 /* snappeacensusmfd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208F21DF0DA390018AB24 /* snappeacensusmfd.cpp */; };
 		054209111DF0DA450018AB24 /* torusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208F31DF0DA390018AB24 /* torusbundle.cpp */; };
 		054209121DF0DDBC0018AB24 /* syntaxhighlighter.h in Sources */ = {isa = PBXBuildFile; fileRef = 054208DB1DF0D2E50018AB24 /* syntaxhighlighter.h */; };
+		054209171DF0E9040018AB24 /* NSMatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054209151DF0E7E60018AB24 /* NSMatcher.mm */; };
 		05431EEC1C40F069009BC072 /* gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* gluingperms.cpp */; };
 		05431EED1C40F071009BC072 /* gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* gluingperms.cpp */; };
 		05431EEF1C40F093009BC072 /* dim2edgepairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EEE1C40F093009BC072 /* dim2edgepairing.h */; };
@@ -3183,6 +3184,8 @@
 		054208F11DF0DA390018AB24 /* simplesurfacebundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplesurfacebundle.cpp; sourceTree = "<group>"; };
 		054208F21DF0DA390018AB24 /* snappeacensusmfd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappeacensusmfd.cpp; sourceTree = "<group>"; };
 		054208F31DF0DA390018AB24 /* torusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = torusbundle.cpp; sourceTree = "<group>"; };
+		054209131DF0E7CE0018AB24 /* NSMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMatcher.h; sourceTree = "<group>"; };
+		054209151DF0E7E60018AB24 /* NSMatcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSMatcher.mm; sourceTree = "<group>"; };
 		05431EEB1C40F069009BC072 /* gluingperms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingperms.cpp; sourceTree = "<group>"; };
 		05431EEE1C40F093009BC072 /* dim2edgepairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2edgepairing.h; sourceTree = "<group>"; };
 		05431EF31C40F1F6009BC072 /* component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
@@ -4782,6 +4785,8 @@
 		05249E991DBB508E001FE29E /* python */ = {
 			isa = PBXGroup;
 			children = (
+				054209131DF0E7CE0018AB24 /* NSMatcher.h */,
+				054209151DF0E7E60018AB24 /* NSMatcher.mm */,
 				0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */,
 				0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */,
 				05FF4D3A1DB6BC1E0056D1EA /* PythonHighlighter.h */,
@@ -8590,6 +8595,7 @@
 				054535BC19D90C3A00BED767 /* Skeleton.mm in Sources */,
 				052FA1D31806129B00FAE4DF /* crushandcut.cpp in Sources */,
 				05249ED81DBC16DF001FE29E /* component14.cpp in Sources */,
+				054209171DF0E9040018AB24 /* NSMatcher.mm in Sources */,
 				05249ECA1DBC16D1001FE29E /* pyfile.cpp in Sources */,
 				05C1BEC51DCA7CB3007C946B /* boundary15.cpp in Sources */,
 				052FA2081806129B00FAE4DF /* base64.cpp in Sources */,
