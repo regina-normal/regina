@@ -77,15 +77,15 @@
 
 /**
  * Returns the index of the first non-space character. If the line is empty,
- * or only contains white spaces, -1 is returned.
+ * or only contains white spaces, toOffset is returned.
  */
-+ (int)firstNonSpaceChar:(NSString*)text
++ (int)firstNonSpaceChar:(NSString*)text fromOffset:(NSInteger)fromOffset toOffset:(NSInteger)toOffset
 {
-    for (int i = 0; i < text.length; ++i)
+    for (NSInteger i = fromOffset; i < toOffset; ++i)
         if (! [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[text characterAtIndex:i]])
             return i;
 
-    return -1;
+    return toOffset;
 }
 
 + (bool)switchContext:(const regina::syntax::ContextSwitch&)contextSwitch state:(regina::syntax::StateData*)data
@@ -106,26 +106,8 @@
     return true;
 }
 
-- (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta
+- (void)highlightLine:(NSTextStorage*)textStorage fromOffset:(NSInteger)fromOffset toOffset:(NSInteger)toOffset
 {
-    NSLog(@"willProcessEditing: range %d(%d), delta %d", editedRange.location, editedRange.length, delta);
-
-    // Currently, we highlight the *entire* text all at once.
-    // This is fine for now, where syntax highlighting is only used for read-only script packets.
-    // Once we start allowing users to edit scripts, this may need to change...
-
-    // By default, everything should be in a fixed-width font.
-    [textStorage addAttribute:NSFontAttributeName value:regular range:editedRange];
-
-    // Highlight what needs to be highlighted.
-
-    // verify definition, deal with no highlighting being enabled
-    [self ensureDefinitionLoaded];
-    if (!self.definition.isValid()) {
-        [self applyFormat:regina::syntax::Format() textStorage:textStorage offset:0 length:textStorage.length];
-        return;
-    }
-
     // verify/initialize state
     auto defData = regina::syntax::DefinitionData::get(self.definition);
     regina::syntax::State newState;
@@ -139,21 +121,18 @@
         stateData->m_defData = defData;
     }
 
-    // process empty lines
-    NSString* text = textStorage.string;
+    NSString* text = [textStorage.string substringToIndex:toOffset];
 
-    if (text.length == 0) {
+    // process empty lines
+    if (fromOffset == toOffset) {
         while (!stateData->topContext()->lineEmptyContext().isStay())
             [PythonHighlighter switchContext:stateData->topContext()->lineEmptyContext() state:stateData];
         return;
     }
 
     assert(!stateData->isEmpty());
-    int firstNonSpace = [PythonHighlighter firstNonSpaceChar:text];
-    if (firstNonSpace < 0) {
-        firstNonSpace = text.length;
-    }
-    int offset = 0, beginOffset = 0;
+    int firstNonSpace = [PythonHighlighter firstNonSpaceChar:text fromOffset:fromOffset toOffset:toOffset];
+    int offset = fromOffset, beginOffset = fromOffset;
     auto currentLookupContext = stateData->topContext();
     auto currentFormat = currentLookupContext->attribute();
     bool lineContinuation = false;
@@ -161,7 +140,7 @@
 
     do {
         bool isLookAhead = false;
-        int newOffset = 0;
+        int newOffset = fromOffset;
         std::string newFormat;
         auto newLookupContext = currentLookupContext;
         for (const auto &rule : stateData->topContext()->rules()) {
@@ -175,7 +154,7 @@
             }
 
             // filter out rules that require a specific column
-            if ((rule->requiredColumn() >= 0) && (rule->requiredColumn() != offset)) {
+            if ((rule->requiredColumn() >= 0) && (rule->requiredColumn() != offset - fromOffset)) {
                 continue;
             }
 
@@ -197,7 +176,7 @@
             newLookupContext = stateData->topContext();
             [PythonHighlighter switchContext:rule->context() state:stateData];
             newFormat = rule->attribute().empty() ? stateData->topContext()->attribute() : rule->attribute();
-            if (newOffset == text.length && std::dynamic_pointer_cast<regina::syntax::LineContinue>(rule))
+            if (newOffset == toOffset && std::dynamic_pointer_cast<regina::syntax::LineContinue>(rule))
                 lineContinuation = true;
             break;
         }
@@ -228,17 +207,51 @@
         assert(newOffset > offset);
         offset = newOffset;
 
-    } while (offset < text.length);
+    } while (offset < toOffset);
 
     if (beginOffset < offset)
         [self applyFormat:currentLookupContext->formatByName(currentFormat)
               textStorage:textStorage
                    offset:beginOffset
-                   length:(text.length - beginOffset)];
+                   length:(toOffset - beginOffset)];
 
     while (!stateData->topContext()->lineEndContext().isStay() && !lineContinuation) {
         if (! [PythonHighlighter switchContext:stateData->topContext()->lineEndContext() state:stateData])
             break;
+    }
+}
+
+- (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta
+{
+    NSLog(@"willProcessEditing: range %d(%d), delta %d", editedRange.location, editedRange.length, delta);
+
+    // Currently, we highlight the *entire* text all at once.
+    // This is fine for now, where syntax highlighting is only used for read-only script packets.
+    // Once we start allowing users to edit scripts, this may need to change...
+
+    // verify definition, deal with no highlighting being enabled
+    [self ensureDefinitionLoaded];
+    if (!self.definition.isValid()) {
+        [self applyFormat:regina::syntax::Format() textStorage:textStorage offset:0 length:textStorage.length];
+        return;
+    }
+
+    // Highlight each line separately.
+    NSCharacterSet* newlines = [NSCharacterSet newlineCharacterSet];
+    NSInteger from = 0;
+    NSInteger to;
+    while (true) {
+        while (from < textStorage.length && [newlines characterIsMember:[textStorage.string characterAtIndex:from]])                                             ++from;
+        if (from >= textStorage.length)
+            break;
+
+        to = from + 1;
+        while (to < textStorage.length && ! [newlines characterIsMember:[textStorage.string characterAtIndex:to]])
+            ++to;
+
+        [self highlightLine:textStorage fromOffset:from toOffset:to];
+
+        from = to + 1;
     }
 }
 
