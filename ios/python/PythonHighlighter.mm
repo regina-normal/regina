@@ -195,7 +195,7 @@
         }
 
         if (newFormat != currentFormat /*|| currentLookupDef != newLookupDef*/) {
-            if (offset > 0)
+            if (offset > fromOffset)
                 [self applyFormat:currentLookupContext->formatByName(currentFormat)
                       textStorage:textStorage
                            offset:beginOffset

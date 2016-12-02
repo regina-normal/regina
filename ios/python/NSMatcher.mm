@@ -100,7 +100,8 @@ static int matchEscapedChar(NSString* text, int offset)
 }
 
 bool NSMatcher::isDelimiter(Rule& r, unichar c) const {
-    return DefinitionData::get(r.definition())->isDelimiter(c);
+    return DefinitionData::get(r.definition())->isDelimiter(c) ||
+        [[NSCharacterSet newlineCharacterSet] characterIsMember:c];
 }
 
 MatchResult NSMatcher::match(AnyChar& rule, int offset)
