@@ -78,6 +78,7 @@ if (${REGINA_INSTALL_DEV})
     satannulus.h
     nsatannulus.h
     nsatblock.h
+    satblockstarter.h
     nsatblockstarter.h
     nsatblocktypes.h
     nsatregion.h

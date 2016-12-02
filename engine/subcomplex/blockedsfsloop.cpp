@@ -34,7 +34,7 @@
 #include "manifold/sfs.h"
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/layering.h"
-#include "subcomplex/nsatblockstarter.h"
+#include "subcomplex/satblockstarter.h"
 #include "subcomplex/nsatregion.h"
 
 namespace regina {

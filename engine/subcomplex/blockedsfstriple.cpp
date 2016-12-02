@@ -34,7 +34,7 @@
 #include "manifold/sfs.h"
 #include "subcomplex/blockedsfstriple.h"
 #include "subcomplex/layering.h"
-#include "subcomplex/nsatblockstarter.h"
+#include "subcomplex/satblockstarter.h"
 #include "subcomplex/nsatregion.h"
 #include <memory>
 

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "manifold/sfs.h"
-#include "subcomplex/nsatblockstarter.h"
+#include "subcomplex/satblockstarter.h"
 #include "subcomplex/nsatregion.h"
 #include "triangulation/dim3.h"
 #include "utilities/ptrutils.h"

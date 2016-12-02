@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "subcomplex/nsatblockstarter.h"
+#include "subcomplex/satblockstarter.h"
 #include "subcomplex/nsatblocktypes.h"
 
 namespace regina {
