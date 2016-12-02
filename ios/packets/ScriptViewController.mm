@@ -31,12 +31,12 @@
  **************************************************************************/
 
 #import "PacketManagerIOS.h"
-#import "PythonHighlighter.h"
 #import "ScriptViewController.h"
 #import "packet/script.h"
 #import "syntax/repository.h"
 
 #import "../python/PythonConsoleController.h"
+#import "../python/SyntaxHighlighter.h"
 
 // The syntax highlighting repository of definitions and themes is
 // a singleton: it is created on demand, and never deleted.
@@ -57,7 +57,7 @@ regina::syntax::Repository* repository;
 
 @interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, NSTextStorageDelegate> {
     CGFloat variableHeaderHeight;
-    PythonHighlighter* highlighter;
+    SyntaxHighlighter* highlighter;
     BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UITableView *variables;
@@ -79,7 +79,7 @@ regina::syntax::Repository* repository;
     if (! repository)
         repository = new regina::syntax::Repository;
 
-    highlighter = [[PythonHighlighter alloc] init];
+    highlighter = [[SyntaxHighlighter alloc] init];
     highlighter.definition = repository->definitionForName("Python");
     highlighter.theme = repository->theme("Default");
 

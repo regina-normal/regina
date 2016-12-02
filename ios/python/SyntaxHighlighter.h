@@ -36,17 +36,28 @@
 
 /**
  * A delegate for use with text kit classes (such as UITextView) that
- * performs syntax highlighting for Python.
+ * performs syntax highlighting.
  *
- * To use this, create a new PythonSyntaxHighlighter in your view controller,
- * and set it as <tt>textView.textStorage.delegate</tt>, where \a textView
- * is the corresponding text view (e.g., the relevant UITextView).
+ * To use this, create a new SyntaxHighlighter in your view controller,
+ * set its \a definition and \a theme properties, and then set the
+ * SyntaxHighlighter as <tt>textView.textStorage.delegate</tt>, where
+ * \a textView is the corresponding text view (e.g., the relevant UITextView).
  *
  * The view controller should hold this syntax highlighter strongly.
  */
-@interface PythonHighlighter : NSObject <NSTextStorageDelegate>
+@interface SyntaxHighlighter : NSObject <NSTextStorageDelegate>
 
+/**
+ * The syntax highlighting rules for the particular language to be recognised.
+ * For example, when used with script packets, this should contain the
+ * rules for highlighting Python.
+ */
 @property (assign, nonatomic) regina::syntax::Definition definition;
+
+/**
+ * The theme that describes which visual elements (fonts, colours, etc.)
+ * should be used to display which elements of the underlying language.
+ */
 @property (assign, nonatomic) regina::syntax::Theme theme;
 
 /**
@@ -55,7 +66,7 @@
 - (id)init;
 
 /**
- * Performs the syntax highlighting throught the delegate method.
+ * Performs the syntax highlighting through this delegate method.
  */
 - (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta;
 

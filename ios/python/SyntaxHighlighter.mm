@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #import "NSMatcher.h"
-#import "PythonHighlighter.h"
+#import "SyntaxHighlighter.h"
 #import "syntax/context_p.h"
 #import "syntax/definition_p.h"
 #import "syntax/format.h"
@@ -41,7 +41,7 @@
 #import "syntax/state_p.h"
 #import "syntax/theme.h"
 
-@implementation PythonHighlighter {
+@implementation SyntaxHighlighter {
     UIFont* regular;
     UIFont* bold;
     UIFont* italic;
@@ -76,8 +76,8 @@
 }
 
 /**
- * Returns the index of the first non-space character. If the line is empty,
- * or only contains white spaces, toOffset is returned.
+ * Returns the index of the first non-space character. If the line is empty
+ * or only contains whitespace, toOffset is returned.
  */
 + (int)firstNonSpaceChar:(NSString*)text fromOffset:(NSInteger)fromOffset toOffset:(NSInteger)toOffset
 {
@@ -126,12 +126,12 @@
     // process empty lines
     if (fromOffset == toOffset) {
         while (!stateData->topContext()->lineEmptyContext().isStay())
-            [PythonHighlighter switchContext:stateData->topContext()->lineEmptyContext() state:stateData];
+            [SyntaxHighlighter switchContext:stateData->topContext()->lineEmptyContext() state:stateData];
         return newState;
     }
 
     assert(!stateData->isEmpty());
-    int firstNonSpace = [PythonHighlighter firstNonSpaceChar:text fromOffset:fromOffset toOffset:toOffset];
+    int firstNonSpace = [SyntaxHighlighter firstNonSpaceChar:text fromOffset:fromOffset toOffset:toOffset];
     int offset = fromOffset, beginOffset = fromOffset;
     auto currentLookupContext = stateData->topContext();
     auto currentFormat = currentLookupContext->attribute();
@@ -168,13 +168,13 @@
 
             if (rule->isLookAhead()) {
                 assert(!rule->context().isStay());
-                [PythonHighlighter switchContext:rule->context() state:stateData];
+                [SyntaxHighlighter switchContext:rule->context() state:stateData];
                 isLookAhead = true;
                 break;
             }
 
             newLookupContext = stateData->topContext();
-            [PythonHighlighter switchContext:rule->context() state:stateData];
+            [SyntaxHighlighter switchContext:rule->context() state:stateData];
             newFormat = rule->attribute().empty() ? stateData->topContext()->attribute() : rule->attribute();
             if (newOffset == toOffset && std::dynamic_pointer_cast<regina::syntax::LineContinue>(rule))
                 lineContinuation = true;
@@ -185,7 +185,7 @@
 
         if (newOffset <= offset) { // no matching rule
             if (stateData->topContext()->fallthrough()) {
-                [PythonHighlighter switchContext:stateData->topContext()->fallthroughContext() state:stateData];
+                [SyntaxHighlighter switchContext:stateData->topContext()->fallthroughContext() state:stateData];
                 continue;
             }
 
@@ -216,7 +216,7 @@
                    length:(toOffset - beginOffset)];
 
     while (!stateData->topContext()->lineEndContext().isStay() && !lineContinuation) {
-        if (! [PythonHighlighter switchContext:stateData->topContext()->lineEndContext() state:stateData])
+        if (! [SyntaxHighlighter switchContext:stateData->topContext()->lineEndContext() state:stateData])
             break;
     }
 

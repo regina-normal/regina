@@ -2010,7 +2010,7 @@
 		05FEA07B19C1890900A31924 /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* examplesnappea.cpp */; };
 		05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* examplesnappea.h */; };
 		05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07E19C2B96000A31924 /* PacketPicker.mm */; };
-		05FF4D3E1DB6BE310056D1EA /* PythonHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */; };
+		05FF4D3E1DB6BE310056D1EA /* SyntaxHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -4111,8 +4111,8 @@
 		05FEA07919C1890900A31924 /* examplesnappea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = examplesnappea.h; sourceTree = "<group>"; };
 		05FEA07D19C2B96000A31924 /* PacketPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketPicker.h; sourceTree = "<group>"; };
 		05FEA07E19C2B96000A31924 /* PacketPicker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketPicker.mm; sourceTree = "<group>"; };
-		05FF4D3A1DB6BC1E0056D1EA /* PythonHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonHighlighter.h; sourceTree = "<group>"; };
-		05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonHighlighter.mm; sourceTree = "<group>"; };
+		05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyntaxHighlighter.h; sourceTree = "<group>"; };
+		05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SyntaxHighlighter.mm; sourceTree = "<group>"; };
 		05FF74E31DCB12F700FC2CB4 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -4808,11 +4808,11 @@
 				054209151DF0E7E60018AB24 /* NSMatcher.mm */,
 				0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */,
 				0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */,
-				05FF4D3A1DB6BC1E0056D1EA /* PythonHighlighter.h */,
-				05FF4D3B1DB6BC1E0056D1EA /* PythonHighlighter.mm */,
 				05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */,
 				05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */,
 				05249EA31DBB8FC9001FE29E /* python27.zip */,
+				05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */,
+				05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */,
 			);
 			path = python;
 			sourceTree = "<group>";
@@ -8375,7 +8375,7 @@
 				052FA234180612DD00FAE4DF /* solve_equations.c in Sources */,
 				05249EF61DBC16F1001FE29E /* isomorphism6.cpp in Sources */,
 				054C6A7A1DCC1FF4005373F0 /* example14.cpp in Sources */,
-				05FF4D3E1DB6BE310056D1EA /* PythonHighlighter.mm in Sources */,
+				05FF4D3E1DB6BE310056D1EA /* SyntaxHighlighter.mm in Sources */,
 				05FB46F11DD92D5100BB00E5 /* markedabeliangroup.cpp in Sources */,
 				05249EE71DBC16EA001FE29E /* facetpairing2.cpp in Sources */,
 				059BC68F1DC7F7A300AB4206 /* boundarycomponent8.cpp in Sources */,
