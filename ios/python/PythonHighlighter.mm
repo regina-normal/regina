@@ -106,11 +106,11 @@
     return true;
 }
 
-- (void)highlightLine:(NSTextStorage*)textStorage fromOffset:(NSInteger)fromOffset toOffset:(NSInteger)toOffset
+- (regina::syntax::State)highlightLine:(NSTextStorage*)textStorage fromOffset:(NSInteger)fromOffset toOffset:(NSInteger)toOffset state:(regina::syntax::State)state
 {
     // verify/initialize state
     auto defData = regina::syntax::DefinitionData::get(self.definition);
-    regina::syntax::State newState;
+    regina::syntax::State newState = state.copy();
     auto stateData = regina::syntax::StateData::get(newState);
     if (stateData->m_defData && defData != stateData->m_defData) {
         NSLog(@"Got invalid state, resetting.");
@@ -127,7 +127,7 @@
     if (fromOffset == toOffset) {
         while (!stateData->topContext()->lineEmptyContext().isStay())
             [PythonHighlighter switchContext:stateData->topContext()->lineEmptyContext() state:stateData];
-        return;
+        return newState;
     }
 
     assert(!stateData->isEmpty());
@@ -219,6 +219,8 @@
         if (! [PythonHighlighter switchContext:stateData->topContext()->lineEndContext() state:stateData])
             break;
     }
+
+    return newState;
 }
 
 - (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta
@@ -237,6 +239,8 @@
     }
 
     // Highlight each line separately.
+    regina::syntax::State state;
+
     NSCharacterSet* newlines = [NSCharacterSet newlineCharacterSet];
     NSInteger from = 0;
     NSInteger to;
@@ -249,7 +253,7 @@
         while (to < textStorage.length && ! [newlines characterIsMember:[textStorage.string characterAtIndex:to]])
             ++to;
 
-        [self highlightLine:textStorage fromOffset:from toOffset:to];
+        state = [self highlightLine:textStorage fromOffset:from toOffset:to state:state];
 
         from = to + 1;
     }
