@@ -79,8 +79,7 @@ public:
     /**
      * Sets the syntax definition used for highlighting.
      *
-     * Subclasses can re-implement this method to e.g. trigger
-     * re-highlighting or clear internal data structures if needed.
+     * This will trigger re-highlighting if needed.
      */
     void setDefinition(const regina::syntax::Definition &def);
 
@@ -94,9 +93,6 @@ public:
 
     /**
      * Sets the theme used for highlighting.
-     *
-     * Subclasses can re-implement this method to e.g. trigger
-     * re-highlighing or to do general palette color setup.
      */
     void setTheme(const regina::syntax::Theme &theme);
 
@@ -106,9 +102,8 @@ protected:
         const regina::syntax::ContextSwitch &contextSwitch);
 
     /**
-     * Highlight the given line. Call this from your derived class
-     * where appropriate. This will result in any number of applyFormat()
-     * calls as a result.
+     * Highlight the given line.
+     * This will result in any number of applyFormat() calls as a result.
      * @param text A string containing the text of the line to highlight.
      * @param state The highlighting state handle returned by the call
      *        to highlightLine() for the previous line. For the very first line,
@@ -124,8 +119,8 @@ protected:
         const regina::syntax::State &state);
 
     /**
-     * Reimplement this to apply formats to your output. The provided @p format
-     * is valid for the interval [@p offset, @p offset + @p length).
+     * Applies the given format to the text. The provided @p format
+     * must be valid for the interval [@p offset, @p offset + @p length).
      * Both @p offset and @p length count unicode characters (not machine-level
      * characters as might be used for instance in a UTF-8 encoding).
      *
