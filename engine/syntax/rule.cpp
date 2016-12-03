@@ -315,7 +315,7 @@ bool RegExpr::doLoad(xmlTextReaderPtr reader)
     regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"minimal")), m_minimal);
     regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), m_caseInsensitive);
 
-    return !m_pattern.empty(); // m_regexp.isValid() would be better, but parses the regexp and thus is way too expensive
+    return !m_pattern.empty(); // m_regex.isValid() would be better, but parses the regex and thus is way too expensive
 }
 
 bool StringDetect::doLoad(xmlTextReaderPtr reader)

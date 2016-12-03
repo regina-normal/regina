@@ -235,15 +235,15 @@ private:
     std::string m_pattern;
     bool m_minimal;
     bool m_caseInsensitive;
-    RegEx* m_regexp; // may be null
+    RegEx* m_regex; // may be null
 
 public:
-    RegExpr() : m_regexp(0) {}
-    ~RegExpr() { delete m_regexp; }
+    RegExpr() : m_regex(0) {}
+    ~RegExpr() { delete m_regex; }
     const std::string& pattern() const;
     bool minimal() const;
     bool caseInsensitive() const;
-    RegEx* regexp(); // may return null
+    RegEx* regex(); // may return null
 
     void replaceRegEx(RegEx* re);
 };
@@ -383,13 +383,13 @@ inline bool RegExpr::caseInsensitive() const {
     return m_caseInsensitive;
 }
 
-inline RegEx* RegExpr::regexp() {
-    return m_regexp;
+inline RegEx* RegExpr::regex() {
+    return m_regex;
 }
 
 inline void RegExpr::replaceRegEx(RegEx* re) {
-    delete m_regexp;
-    m_regexp = re;
+    delete m_regex;
+    m_regex = re;
 }
 
 inline MatchResult RegExpr::doMatch(Matcher& m, int offset) {

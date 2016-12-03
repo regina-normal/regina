@@ -341,7 +341,7 @@ MatchResult NSMatcher::match(RangeDetect& rule, int offset)
 
 MatchResult NSMatcher::match(RegExpr& rule, int offset)
 {
-    RegEx* re = rule.regexp();
+    RegEx* re = rule.regex();
     if (! (re && dynamic_cast<NSRegEx*>(re))) {
         NSRegularExpression* r = [NSRegularExpression
                                   regularExpressionWithPattern:[NSString stringWithUTF8String:rule.pattern().c_str()]

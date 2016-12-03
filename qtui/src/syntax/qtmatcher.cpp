@@ -330,7 +330,7 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::RangeDetect& rule, 
 
 regina::syntax::MatchResult QtMatcher::match(regina::syntax::RegExpr& rule, int offset)
 {
-    regina::syntax::RegEx* re = rule.regexp();
+    regina::syntax::RegEx* re = rule.regex();
     if (! (re && dynamic_cast<QtRegEx*>(re))) {
         QtRegEx* qre = new QtRegEx;
 
