@@ -20,7 +20,7 @@ SET ( FILES
   plugtrisolidtorus
   satannulus
   nsatblock
-  nsatblockstarter
+  satblockstarter
   nsatblocktypes
   nsatregion
   nsnappeacensustri
