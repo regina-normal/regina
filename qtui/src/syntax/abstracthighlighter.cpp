@@ -37,7 +37,6 @@
  **************************************************************************/
 
 #include "syntax/abstracthighlighter.h"
-#include "syntax/abstracthighlighter_p.h"
 #include "syntax/context_p.h"
 #include "syntax/definition_p.h"
 #include "syntax/format.h"
@@ -54,15 +53,7 @@
 namespace regina {
 namespace syntax {
 
-AbstractHighlighterPrivate::AbstractHighlighterPrivate()
-{
-}
-
-AbstractHighlighterPrivate::~AbstractHighlighterPrivate()
-{
-}
-
-void AbstractHighlighterPrivate::ensureDefinitionLoaded()
+void AbstractHighlighter::ensureDefinitionLoaded()
 {
     auto defData = DefinitionData::get(m_definition);
     if (!m_definition.isValid() && defData->repo && !m_definition.name().empty()) {
@@ -92,52 +83,37 @@ static inline int firstNonSpaceChar(const QString & text)
     return -1;
 }
 
-AbstractHighlighter::AbstractHighlighter() :
-    d_ptr(new AbstractHighlighterPrivate)
-{
-}
-
-AbstractHighlighter::AbstractHighlighter(AbstractHighlighterPrivate *dd) :
-    d_ptr(dd)
-{
-}
-
-AbstractHighlighter::~AbstractHighlighter()
-{
-    delete d_ptr;
-}
-
 Definition AbstractHighlighter::definition() const
 {
-    return d_ptr->m_definition;
+    return m_definition;
 }
 
 void AbstractHighlighter::setDefinition(const Definition &def)
 {
-    d_ptr->m_definition = def;
+    m_definition = def;
 }
 
 Theme AbstractHighlighter::theme() const
 {
-    return d_ptr->m_theme;
+    return m_theme;
 }
 
 void AbstractHighlighter::setTheme(const Theme &theme)
 {
-    d_ptr->m_theme = theme;
+    m_theme = theme;
 }
 
 State AbstractHighlighter::highlightLine(const QString& text, const State &state)
 {
     // verify definition, deal with no highlighting being enabled
-    d_ptr->ensureDefinitionLoaded();
-    if (!d_ptr->m_definition.isValid()) {
+    ensureDefinitionLoaded();
+    if (!m_definition.isValid()) {
         applyFormat(0, text.size(), Format());
         return State();
     }
 
     // verify/initialize state
-    auto defData = DefinitionData::get(d_ptr->m_definition);
+    auto defData = DefinitionData::get(m_definition);
     auto newState = state.copy();
     auto stateData = StateData::get(newState);
     if (stateData->m_defData && defData != stateData->m_defData) {
@@ -152,7 +128,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
     // process empty lines
     if (text.isEmpty()) {
         while (!stateData->topContext()->lineEmptyContext().isStay())
-            d_ptr->switchContext(stateData, stateData->topContext()->lineEmptyContext());
+            switchContext(stateData, stateData->topContext()->lineEmptyContext());
         applyFormat(0, 0, Format());
         return newState;
     }
@@ -198,13 +174,13 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
 
             if (rule->isLookAhead()) {
                 assert(!rule->context().isStay());
-                d_ptr->switchContext(stateData, rule->context());
+                switchContext(stateData, rule->context());
                 isLookAhead = true;
                 break;
             }
 
             newLookupContext = stateData->topContext();
-            d_ptr->switchContext(stateData, rule->context());
+            switchContext(stateData, rule->context());
             newFormat = rule->attribute().empty() ? stateData->topContext()->attribute() : rule->attribute();
             if (newOffset == text.size() && std::dynamic_pointer_cast<LineContinue>(rule))
                 lineContinuation = true;
@@ -215,7 +191,7 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
 
         if (newOffset <= offset) { // no matching rule
             if (stateData->topContext()->fallthrough()) {
-                d_ptr->switchContext(stateData, stateData->topContext()->fallthroughContext());
+                switchContext(stateData, stateData->topContext()->fallthroughContext());
                 continue;
             }
 
@@ -240,14 +216,14 @@ State AbstractHighlighter::highlightLine(const QString& text, const State &state
         applyFormat(beginOffset, text.size() - beginOffset, currentLookupContext->formatByName(currentFormat));
 
     while (!stateData->topContext()->lineEndContext().isStay() && !lineContinuation) {
-        if (!d_ptr->switchContext(stateData, stateData->topContext()->lineEndContext()))
+        if (!switchContext(stateData, stateData->topContext()->lineEndContext()))
             break;
     }
 
     return newState;
 }
 
-bool AbstractHighlighterPrivate::switchContext(StateData *data, const ContextSwitch &contextSwitch)
+bool AbstractHighlighter::switchContext(StateData *data, const ContextSwitch &contextSwitch)
 {
     for (int i = 0; i < contextSwitch.popCount(); ++i) {
         // don't pop the last context if we can't push one

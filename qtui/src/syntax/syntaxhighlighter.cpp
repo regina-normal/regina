@@ -37,7 +37,6 @@
  **************************************************************************/
 
 #include "syntax/syntaxhighlighter.h"
-#include "syntax/abstracthighlighter_p.h"
 #include "syntax/definition.h"
 #include "syntax/format.h"
 #include "syntax/state.h"
@@ -55,15 +54,13 @@ public:
 };
 
 SyntaxHighlighter::SyntaxHighlighter(QObject* parent) :
-    QSyntaxHighlighter(parent),
-    AbstractHighlighter(new AbstractHighlighterPrivate)
+    QSyntaxHighlighter(parent)
 {
     qRegisterMetaType<QTextBlock>();
 }
 
 SyntaxHighlighter::SyntaxHighlighter(QTextDocument *document) :
-    QSyntaxHighlighter(document),
-    AbstractHighlighter(new AbstractHighlighterPrivate)
+    QSyntaxHighlighter(document)
 {
     qRegisterMetaType<QTextBlock>();
 }

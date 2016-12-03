@@ -39,6 +39,8 @@
 #ifndef __SYNTAX_ABSTRACTHIGHLIGHTER_H
 #define __SYNTAX_ABSTRACTHIGHLIGHTER_H
 
+#include "syntax/definition.h"
+#include "syntax/theme.h"
 #include <memory>
 #include <boost/noncopyable.hpp>
 
@@ -48,9 +50,11 @@ namespace regina {
 namespace syntax {
 
 class AbstractHighlighterPrivate;
+class ContextSwitch;
 class Definition;
 class Format;
 class State;
+class StateData;
 class Theme;
 
 /**
@@ -127,7 +131,6 @@ public:
 
 protected:
     AbstractHighlighter();
-    AbstractHighlighter(AbstractHighlighterPrivate *dd);
 
     /**
      * Highlight the given line. Call this from your derived class
@@ -165,8 +168,18 @@ protected:
     virtual void applyFormat(int offset, int length, const Format &format) = 0;
 
 protected:
-    AbstractHighlighterPrivate *d_ptr;
+    void ensureDefinitionLoaded();
+    bool switchContext(StateData* data, const ContextSwitch &contextSwitch);
+
+    Definition m_definition;
+    Theme m_theme;
 };
+
+inline AbstractHighlighter::AbstractHighlighter() {
+}
+
+inline AbstractHighlighter::~AbstractHighlighter() {
+}
 
 } } // namespace regina::syntax
 
