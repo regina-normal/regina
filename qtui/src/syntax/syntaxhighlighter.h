@@ -39,19 +39,34 @@
 #ifndef __SYNTAX_SYNTAXHIGHLIGHTER_H
 #define __SYNTAX_SYNTAXHIGHLIGHTER_H
 
-#include "syntax/abstracthighlighter.h"
+#include "syntax/definition.h"
+#include "syntax/theme.h"
+#include <memory>
+#include <boost/noncopyable.hpp>
 
 #include <QSyntaxHighlighter>
 
 namespace regina {
 namespace syntax {
 
+class AbstractHighlighterPrivate;
+class ContextSwitch;
+class Format;
+class State;
+class StateData;
+
 class SyntaxHighlighterPrivate;
 
-/** A QSyntaxHighlighter implementation for use with QTextDocument.
- *  This supports partial re-highlighting during editing.
+/**
+ * The SyntaxHighlighter provides an interface to highlight text.
+ * This class derives from QSyntaxHighlighter,
+ * meaning that it can be used to highlight a QTextDocument or a QML TextEdit.
+ * In order to use the SyntaxHighlighter, just call setDefinition() and
+ * setTheme(), and the associated documents will automatically be highlighted.
+ *
+ * This class supports partial re-highlighting during editing.
  */
-class SyntaxHighlighter : public QSyntaxHighlighter, public AbstractHighlighter
+class SyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
@@ -59,13 +74,83 @@ public:
     explicit SyntaxHighlighter(QTextDocument *document);
     ~SyntaxHighlighter();
 
-    void setDefinition(const Definition &def) override;
+    /**
+     * Returns the syntax definition used for highlighting.
+     *
+     * @see setDefinition()
+     */
+    Definition definition() const;
+
+    /**
+     * Sets the syntax definition used for highlighting.
+     *
+     * Subclasses can re-implement this method to e.g. trigger
+     * re-highlighting or clear internal data structures if needed.
+     */
+    void setDefinition(const Definition &def);
+
+    /**
+     * Returns the currently selected theme for highlighting.
+     *
+     * @note If no Theme was set through setTheme(), the returned Theme will be
+     *       invalid, see Theme::isValid().
+     */
+    Theme theme() const;
+
+    /**
+     * Sets the theme used for highlighting.
+     *
+     * Subclasses can re-implement this method to e.g. trigger
+     * re-highlighing or to do general palette color setup.
+     */
+    void setTheme(const Theme &theme);
 
 protected:
+    void ensureDefinitionLoaded();
+    bool switchContext(StateData* data, const ContextSwitch &contextSwitch);
+
+    /**
+     * Highlight the given line. Call this from your derived class
+     * where appropriate. This will result in any number of applyFormat()
+     * calls as a result.
+     * @param text A string containing the text of the line to highlight.
+     * @param state The highlighting state handle returned by the call
+     *        to highlightLine() for the previous line. For the very first line,
+     *        just pass a default constructed State().
+     * @returns The state of the highlighing engine after processing the
+     *        given line. This needs to passed into highlightLine() for the
+     *        next line. You can store the state for efficient partial
+     *        re-highlighting for example during editing.
+     *
+     * @see applyFormat()
+     */
+    State highlightLine(const QString &text, const State &state);
+
+    /**
+     * Reimplement this to apply formats to your output. The provided @p format
+     * is valid for the interval [@p offset, @p offset + @p length).
+     * Both @p offset and @p length count unicode characters (not machine-level
+     * characters as might be used for instance in a UTF-8 encoding).
+     *
+     * @param offset The start column of the interval for which @p format matches
+     * @param length The length of the matching text
+     * @param format The Format that applies to the range [offset, offset + length)
+     *
+     * @note Make sure to set a valid Definition, otherwise the parameter
+     *       @p format is invalid for the entire line passed to highlightLine()
+     *       (cf. Format::isValid()).
+     *
+     * @see highlightLine()
+     */
+    void applyFormat(int offset, int length, const Format &format);
+
     void highlightBlock(const QString & text) override;
-    void applyFormat(int offset, int length, const Format &format) override;
+
+    Definition m_definition;
+    Theme m_theme;
 };
 
 } } // namespace regina::syntax
 
 #endif
+

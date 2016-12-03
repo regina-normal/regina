@@ -1,5 +1,4 @@
 SET ( FILES
-  abstracthighlighter.cpp
   qtmatcher.cpp
   syntaxhighlighter.cpp
   )
