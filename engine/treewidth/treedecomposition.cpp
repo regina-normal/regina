@@ -31,13 +31,13 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "dim2/dim2edgepairing.h"
-#include "dim2/dim2triangulation.h"
-#include "dim4/dim4triangulation.h"
 #include "treewidth/treedecomposition.h"
 #include "treewidth/treedecomposition-impl.h"
-#include "triangulation/nfacepairing.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/facetpairing.h"
+#include "triangulation/facetpairing3.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 namespace regina {
 

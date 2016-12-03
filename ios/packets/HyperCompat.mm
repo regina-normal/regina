@@ -32,7 +32,7 @@
 
 #import "HyperCompat.h"
 #import "HyperViewController.h"
-#import "hypersurface/nnormalhypersurfacelist.h"
+#import "hypersurface/normalhypersurfaces.h"
 
 #define MARGIN 20
 #define TICK_LENGTH 5
@@ -45,7 +45,7 @@
     NSMutableArray* usable;
     NSMutableArray* local;
 }
-@property (assign, nonatomic) regina::NNormalHypersurfaceList* packet;
+@property (assign, nonatomic) regina::NormalHypersurfaces* packet;
 
 @property (assign, nonatomic) CGFloat minCellSize;
 @property (assign, nonatomic) CGFloat maxCellSize;
@@ -93,7 +93,7 @@
     size_t n = self.packet->size();
     size_t i, j;
     NSMutableArray* row;
-    const regina::NNormalHypersurface* s;
+    const regina::NormalHypersurface* s;
     
     local = [[NSMutableArray alloc] initWithCapacity:n];
     for (i = 0; i < n; ++i) {

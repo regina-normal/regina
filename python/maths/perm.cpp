@@ -142,6 +142,7 @@ void addPerm(const char* name) {
         .def("index", &Perm<n>::index)
         .def("rand", &Perm<n>::rand)
         .def("trunc", &Perm<n>::trunc)
+        .def("clear", &Perm<n>::clear)
         .def("__repr__", &Perm<n>::str)
         .def(Perm_extend<n, n-1>())
         .def(Perm_contract<n, n+1>())

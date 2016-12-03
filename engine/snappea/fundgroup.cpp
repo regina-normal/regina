@@ -35,7 +35,7 @@
 
 namespace regina {
 
-const NGroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
+const GroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
             bool simplifyPresentation,
             bool fillingsMayAffectGenerators,
             bool minimiseNumberOfGenerators,
@@ -56,20 +56,20 @@ const NGroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
             (minimiseNumberOfGenerators ? 1 : 0),
             (tryHardToShortenRelators ? 1 : 0));
 
-    // Convert the results into Regina's NGroupPresentation class.
+    // Convert the results into Regina's GroupPresentation class.
     // Note that SnapPea gives a sequence of generators, whereas Regina
     // gives a sequence of (generator, exponent) pairs.  Therefore we
     // "compress" relations below to group consecutive occurrences of
     // the same generator, even if simplifyPresentation is false.
-    NGroupPresentation* ans = new NGroupPresentation();
+    GroupPresentation* ans = new GroupPresentation();
     ans->addGenerator(regina::snappea::fg_get_num_generators(pres));
     unsigned i;
     int *sReln, *sPos;
     int gen, currGen, currExp;
-    NGroupExpression* rReln;
+    GroupExpression* rReln;
     for (i = 0; i < regina::snappea::fg_get_num_relations(pres); ++i) {
         sReln = regina::snappea::fg_get_relation(pres, i);
-        rReln = new NGroupExpression();
+        rReln = new GroupExpression();
         currGen = currExp = 0;
         for (sPos = sReln; *sPos; ++sPos) {
             gen = (*sPos > 0 ? *sPos : -*sPos);

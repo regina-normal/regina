@@ -49,14 +49,7 @@
 namespace regina {
 
 struct NSatAnnulus;
-class NSFSpace;
-
-template <int> class Isomorphism;
-template <int> class Simplex;
-template <int> class Triangulation;
-typedef Isomorphism<3> NIsomorphism;
-typedef Simplex<3> NTetrahedron;
-typedef Triangulation<3> NTriangulation;
+class SFSpace;
 
 /**
  * \weakgroup subcomplex
@@ -121,7 +114,7 @@ class REGINA_API NSatBlock :
         public Output<NSatBlock>,
         public boost::noncopyable {
     public:
-        typedef std::set<NTetrahedron*> TetList;
+        typedef std::set<Tetrahedron<3>*> TetList;
             /**< The data structure used to store a list of tetrahedra
                  that should not be examined by isBlock(). */
 
@@ -352,7 +345,7 @@ class REGINA_API NSatBlock :
          * @param reflect \c true if this block is to be reflected, or
          * \c false if it should be inserted directly.
          */
-        virtual void adjustSFS(NSFSpace& sfs, bool reflect) const = 0;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const = 0;
 
         /**
          * Adjusts the structure of this block according to the given
@@ -385,8 +378,8 @@ class REGINA_API NSatBlock :
          * @param newTri the triangulation to be used by the updated
          * block structure.
          */
-        virtual void transform(const NTriangulation* originalTri,
-                const NIsomorphism* iso, NTriangulation* newTri);
+        virtual void transform(const Triangulation<3>* originalTri,
+                const Isomorphism<3>* iso, Triangulation<3>* newTri);
 
         /**
          * Finds the next (or previous) boundary annulus around from this,
@@ -614,7 +607,7 @@ class REGINA_API NSatBlock :
          * @param list the list in which to search.
          * @return \c true if and only if the given tetrahedron was found.
          */
-        static bool isBad(NTetrahedron* t, const TetList& list);
+        static bool isBad(Tetrahedron<3>* t, const TetList& list);
         /**
          * Determines whether the given tetrahedron is contained within
          * the given list.
@@ -632,7 +625,7 @@ class REGINA_API NSatBlock :
          * @return \c true if and only if the given tetrahedron was found.
          */
         template <class List>
-        static bool isBad(NTetrahedron* t, const List& list) {
+        static bool isBad(Tetrahedron<3>* t, const List& list) {
             for (typename List::const_iterator it = list.begin();
                     it != list.end(); ++it)
                 if (*it == t)
@@ -656,7 +649,7 @@ class REGINA_API NSatBlock :
          * @param test the tetrahedron pointer to test.
          * @return \c true if \a test is null, or \c false otherwise.
          */
-        static bool notUnique(NTetrahedron* test);
+        static bool notUnique(Tetrahedron<3>* test);
         /**
          * Determines whether the given tetrahedron pointer is null
          * or equal to another from the given list.
@@ -671,7 +664,7 @@ class REGINA_API NSatBlock :
          * @return \c true if \a test is null or equal to \a other1,
          * or \c false otherwise.
          */
-        static bool notUnique(NTetrahedron* test, NTetrahedron* other1);
+        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1);
         /**
          * Determines whether the given tetrahedron pointer is null
          * or equal to another from the given list.
@@ -687,8 +680,8 @@ class REGINA_API NSatBlock :
          * @return \c true if \a test is null or equal to \a other1 or
          * \a other2, or \c false otherwise.
          */
-        static bool notUnique(NTetrahedron* test, NTetrahedron* other1,
-            NTetrahedron* other2);
+        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+            Tetrahedron<3>* other2);
         /**
          * Determines whether the given tetrahedron pointer is null
          * or equal to another from the given list.
@@ -705,8 +698,8 @@ class REGINA_API NSatBlock :
          * @return \c true if \a test is null or equal to \a other1,
          * \a other2 or \a other3, or \c false otherwise.
          */
-        static bool notUnique(NTetrahedron* test, NTetrahedron* other1,
-            NTetrahedron* other2, NTetrahedron* other3);
+        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+            Tetrahedron<3>* other2, Tetrahedron<3>* other3);
         /**
          * Determines whether the given tetrahedron pointer is null
          * or equal to another from the given list.
@@ -724,8 +717,8 @@ class REGINA_API NSatBlock :
          * @return \c true if \a test is null or equal to \a other1,
          * \a other2, \a other3 or \a other4, or \c false otherwise.
          */
-        static bool notUnique(NTetrahedron* test, NTetrahedron* other1,
-            NTetrahedron* other2, NTetrahedron* other3, NTetrahedron* other4);
+        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+            Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4);
 };
 
 /*@}*/
@@ -802,26 +795,26 @@ inline void NSatBlock::setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
 }
 
-inline bool NSatBlock::notUnique(NTetrahedron* test) {
+inline bool NSatBlock::notUnique(Tetrahedron<3>* test) {
     return (test == 0);
 }
 
-inline bool NSatBlock::notUnique(NTetrahedron* test, NTetrahedron* other1) {
+inline bool NSatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1) {
     return (test == 0 || test == other1);
 }
 
-inline bool NSatBlock::notUnique(NTetrahedron* test, NTetrahedron* other1,
-        NTetrahedron* other2) {
+inline bool NSatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+        Tetrahedron<3>* other2) {
     return (test == 0 || test == other1 || test == other2);
 }
 
-inline bool NSatBlock::notUnique(NTetrahedron* test, NTetrahedron* other1,
-        NTetrahedron* other2, NTetrahedron* other3) {
+inline bool NSatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+        Tetrahedron<3>* other2, Tetrahedron<3>* other3) {
     return (test == 0 || test == other1 || test == other2 || test == other3);
 }
 
-inline bool NSatBlock::notUnique(NTetrahedron* test, NTetrahedron* other1,
-        NTetrahedron* other2, NTetrahedron* other3, NTetrahedron* other4) {
+inline bool NSatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+        Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4) {
     return (test == 0 || test == other1 || test == other2 || test == other3 ||
         test == other4);
 }

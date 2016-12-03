@@ -33,12 +33,12 @@
 #include <fstream>
 #include <sstream>
 
-#include "dim2/dim2triangulation.h"
-#include "dim4/dim4triangulation.h"
 #include "foreign/isosig.h"
 #include "packet/container.h"
 #include "packet/text.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 namespace regina {
 
@@ -68,9 +68,9 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
 
     std::string isoSig;
     std::string label;
-    Dim2Triangulation* tri2;
-    NTriangulation* tri3;
-    Dim4Triangulation* tri4;
+    Triangulation<2>* tri2;
+    Triangulation<3>* tri3;
+    Triangulation<4>* tri4;
 
     while(! in.eof()) {
         // Read in the next line.
@@ -99,19 +99,19 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
         if (! isoSig.empty()) {
             // Process this isomorphism signature.
             if (dimension == 2) {
-                if ((tri2 = Dim2Triangulation::fromIsoSig(isoSig))) {
+                if ((tri2 = Triangulation<2>::fromIsoSig(isoSig))) {
                     tri2->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri2);
                 } else
                     errStrings = errStrings + '\n' + isoSig;
             } else if (dimension == 3) {
-                if ((tri3 = NTriangulation::fromIsoSig(isoSig))) {
+                if ((tri3 = Triangulation<3>::fromIsoSig(isoSig))) {
                     tri3->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri3);
                 } else
                     errStrings = errStrings + '\n' + isoSig;
             } else if (dimension == 4) {
-                if ((tri4 = Dim4Triangulation::fromIsoSig(isoSig))) {
+                if ((tri4 = Triangulation<4>::fromIsoSig(isoSig))) {
                     tri4->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri4);
                 } else

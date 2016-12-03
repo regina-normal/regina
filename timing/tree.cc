@@ -32,7 +32,7 @@
 
 #include <enumerate/treetraversal.h>
 #include <surfaces/normalsurfaces.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 using namespace regina;
 
@@ -68,7 +68,7 @@ bool writeTypesAndVerify(
     std::cout << std::endl;
     */
 
-    NNormalSurface* s = tree.buildSurface();
+    NormalSurface* s = tree.buildSurface();
     if (! tree.verify(s, static_cast<const MatrixInt*>(eqns)))
         std::cout << "ERROR: Verification failed." << std::endl;
 
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
             usage(argv[0]);
 
         // Process the next triangulation on the command line:
-        NTriangulation* t = NTriangulation::fromIsoSig(argv[i]);
+        Triangulation<3>* t = Triangulation<3>::fromIsoSig(argv[i]);
         if (t) {
             found = true;
 
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
                         << std::endl;
 
                     // Sanity checking:
-                    NNormalSurface* s = search.buildSurface();
+                    NormalSurface* s = search.buildSurface();
                     if (! search.verify(s))
                         std::cout << "ERROR: Verification failed." << std::endl;
                 } else {

@@ -176,7 +176,7 @@ static NSArray* embText;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NormalSurfaces* ans =
-            NormalSurfaces::enumerate((regina::NTriangulation*)self.spec.parent,
+            NormalSurfaces::enumerate((regina::Triangulation<3>*)self.spec.parent,
                                           coords, which, regina::NS_ALG_DEFAULT, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {

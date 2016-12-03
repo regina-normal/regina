@@ -99,7 +99,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     }
 
     // All ready!
-    ans->addOutput(parent->QObject::tr("Ready."));
+    ans->addInfo(parent->QObject::tr("Ready."));
     ans->allowInput();
     return ans;
 }
@@ -127,7 +127,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->executeScript(script, parent->QObject::tr("user script"));
 
     // All ready!
-    ans->addOutput(parent->QObject::tr("\nReady."));
+    ans->addInfo(parent->QObject::tr("\nReady."));
     ans->allowInput();
     return ans;
 }

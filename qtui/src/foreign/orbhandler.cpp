@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "foreign/orb.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include "orbhandler.h"
 #include "reginamain.h"

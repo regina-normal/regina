@@ -31,11 +31,10 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "algebra/nabeliangroup.h"
-#include "manifold/nmanifold.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/manifold.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using namespace boost::python;
@@ -48,9 +47,9 @@ namespace {
     void writeTeXName_stdio(const NStandardTriangulation& t) {
         t.writeTeXName(std::cout);
     }
-    NStandardTriangulation* (*isStandardTri_comp)(regina::NComponent*) =
+    NStandardTriangulation* (*isStandardTri_comp)(regina::Component<3>*) =
         &NStandardTriangulation::isStandardTriangulation;
-    NStandardTriangulation* (*isStandardTri_tri)(regina::NTriangulation*) =
+    NStandardTriangulation* (*isStandardTri_tri)(regina::Triangulation<3>*) =
         &NStandardTriangulation::isStandardTriangulation;
 }
 

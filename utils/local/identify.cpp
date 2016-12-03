@@ -50,10 +50,10 @@
  * All output is written to standard output.
  */
 
-#include <algebra/nabeliangroup.h>
-#include <manifold/nmanifold.h>
+#include <algebra/abeliangroup.h>
+#include <manifold/manifold.h>
 #include <subcomplex/nstandardtri.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -83,7 +83,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
-void process(NTriangulation* t) {
+void process(Triangulation<3>* t) {
     std::cout << t->label() << "  -->  ";
     totTris++;
 
@@ -93,7 +93,7 @@ void process(NTriangulation* t) {
         std::cout << s->name();
         trisOk++;
 
-        NManifold* m = s->manifold();
+        Manifold* m = s->manifold();
         if (m) {
             std::string manifold = m->name();
             std::cout << "  ==  " << manifold;
@@ -103,7 +103,7 @@ void process(NTriangulation* t) {
             if ((! structure.empty()) && (structure != manifold))
                 std::cout << "  ==  " << structure;
 
-            NAbelianGroup* h1 = m->homology();
+            AbelianGroup* h1 = m->homology();
             if (h1) {
                 homChecked++;
                 if (! (*h1 == t->homology())) {
@@ -160,8 +160,8 @@ int main(int argc, char* argv[]) {
 
     // Process the packets.
     for (Packet* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == PACKET_TRIANGULATION)
-            process(static_cast<NTriangulation*>(p));
+        if (p->type() == PACKET_TRIANGULATION3)
+            process(static_cast<Triangulation<3>*>(p));
         else if (outputContainers && p->type() == PACKET_CONTAINER)
             std::cout << "----- " << p->label() << " -----"
                 << std::endl;

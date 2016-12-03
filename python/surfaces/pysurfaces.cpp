@@ -30,17 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-void addNDisc();
-void addNDiscType();
-void addNNormalSurface();
+void addDisc();
+void addDiscType();
+void addNormalSurface();
 void addNormalSurfaces();
 void addNormalCoords();
 void addNormalFlags();
-void addNPrism();
-void addNSurfaceFilter();
-void addNSurfaceFilterCombination();
-void addNSurfaceFilterProperties();
-void addNSurfaceSubset();
+void addPrism();
+void addSurfaceFilter();
 void addSurfaceFilterType();
 
 void addSurfacesClasses() {
@@ -49,14 +46,11 @@ void addSurfacesClasses() {
     addSurfaceFilterType();
 
     addNormalFlags();
-    addNDisc();
-    addNDiscType();
-    addNNormalSurface();
+    addDisc();
+    addDiscType();
+    addNormalSurface();
     addNormalSurfaces();
-    addNPrism();
-    addNSurfaceFilter();
-    addNSurfaceFilterCombination();
-    addNSurfaceFilterProperties();
-    addNSurfaceSubset();
+    addPrism();
+    addSurfaceFilter();
 }
 

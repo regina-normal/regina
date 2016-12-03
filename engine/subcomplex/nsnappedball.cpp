@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nhandlebody.h"
-#include "triangulation/ntetrahedron.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/handlebody.h"
+#include "triangulation/dim3.h"
 #include "subcomplex/nsnappedball.h"
 
 namespace regina {
@@ -44,7 +44,7 @@ NSnappedBall* NSnappedBall::clone() const {
     return ans;
 }
 
-NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
+NSnappedBall* NSnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
     int inFace1, inFace2;
     Perm<4> perm;
     for (inFace1 = 0; inFace1 < 3; inFace1++)
@@ -55,7 +55,7 @@ NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
                 // This is it!
                 NSnappedBall* ans = new NSnappedBall();
                 ans->tet = tet;
-                ans->equator = NEdge::edgeNumber[inFace1][inFace2];
+                ans->equator = Edge<3>::edgeNumber[inFace1][inFace2];
                 return ans;
             }
         }
@@ -63,12 +63,12 @@ NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
     return 0;
 }
 
-NManifold* NSnappedBall::manifold() const {
-    return new NHandlebody(0, true);
+Manifold* NSnappedBall::manifold() const {
+    return new Handlebody(0, true);
 }
 
-NAbelianGroup* NSnappedBall::homology() const {
-    return new NAbelianGroup();
+AbelianGroup* NSnappedBall::homology() const {
+    return new AbelianGroup();
 }
 
 } // namespace regina

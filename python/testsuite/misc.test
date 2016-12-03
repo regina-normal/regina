@@ -36,7 +36,7 @@
 print regina.testEngine(3)
 
 # Some slightly less trivial tests.
-t = regina.NTriangulation()
+t = regina.Triangulation3()
 t.insertLayeredLensSpace(5,1)
 print t.homology()
 
@@ -47,7 +47,7 @@ c = Perm4(2,3)
 print a == c, a == b, b == c
 print a != c, a != b, b != c
 
-t = regina.NExampleTriangulation.poincareHomologySphere()
+t = regina.Example3.poincareHomologySphere()
 a = t.tetrahedron(0)
 b = t.tetrahedron(1)
 c = t.tetrahedron(0)

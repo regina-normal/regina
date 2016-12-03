@@ -36,7 +36,7 @@
 #include "foreign/dehydration.h"
 #include "packet/container.h"
 #include "packet/text.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -66,7 +66,7 @@ Container* readDehydrationList(const char *filename,
 
     std::string dehydration;
     std::string label;
-    NTriangulation* tri;
+    Triangulation<3>* tri;
 
     while(! in.eof()) {
         // Read in the next line.
@@ -94,7 +94,7 @@ Container* readDehydrationList(const char *filename,
 
         if (! dehydration.empty()) {
             // Process this dehydration string.
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             if (tri->insertRehydration(dehydration)) {
                 tri->setLabel(label.empty() ? dehydration : label);
                 ans->insertChildLast(tri);

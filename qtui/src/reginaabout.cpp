@@ -63,7 +63,7 @@ const QString ReginaAbout::regDescription(
 const QString ReginaAbout::regReleased(
     tr("Released %1").arg(QDate(2016, 9, 26).toString(Qt::TextDate)));
 
-const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
+const QString ReginaAbout::regWebsite("http://regina-normal.github.io/");
 
 const QString ReginaAbout::regLicense( tr( 
     "Copyright (c) 1999-2016, The Regina development team\n\n"
@@ -72,7 +72,7 @@ const QString ReginaAbout::regLicense( tr(
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
     "  \"Regina: Software for low-dimensional topology\",\n"
-    "  http://regina.sourceforge.net/, 1999-2016.\n\n"
+    "  http://regina-normal.github.io/, 1999-2016.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"
@@ -122,10 +122,11 @@ const QString ReginaAbout::regLicense( tr(
     "given permission for his code to be distributed under the terms of the\n"
     "GNU General Public License.\n\n"
     "SYNTAX HIGHLIGHTING:\n\n"
-    "Regina includes code from Source-highlight-qt and language definitions\n"
-    "from GNU Source-highlight, which it uses to highlight Python scripts.\n"
-    "Both projects are by Lorenzo Bettini and others, and are distributed\n"
-    "under the terms of the GNU General Public License, version 3.\n\n"
+    "Regina's graphical user interfaces incorporate a modified version of\n"
+    "the KDE syntax-highlighting framework, which they use for highlighting\n"
+    "Python scripts.  This framework is distributed under the GNU Library\n"
+    "General Public License, version 2 or any later version, as published by\n"
+    "the Free Software Foundation.\n\n"
     "ICONS:\n\n"
     "The Oxygen icons are dual-licensed under the Creative Common Attribution-\n"
     "ShareAlike 3.0 License or the GNU Library General Public License.\n"

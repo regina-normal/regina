@@ -196,7 +196,7 @@
    All of &regina;'s objects, classes and methods belong to the
    module called <parameter>regina</parameter>.
    For instance, the main 3-manifold triangulation class is
-   <literal>regina.NTriangulation</literal>, and the main routine to
+   <literal>regina.Triangulation3</literal>, and the main routine to
    read a data file is <literal>regina.open</literal>.
   </para>
   <para>
@@ -212,13 +212,13 @@
   </para>
   <para>
    This means, for instance, that you create a new triangulation by just
-   calling <literal>NTriangulation()</literal>, and you can read a data file
+   calling <literal>Triangulation3()</literal>, and you can read a data file
    by calling <literal>open(filename)</literal>.
    For command-line sessions, if you wish to avoid the heavy-handed
    &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;, you can pass
    the option <option>--noautoimport</option> (in which case you will need to
    use fully qualified names such as
-   <literal>regina.NTriangulation()</literal> and
+   <literal>regina.Triangulation3()</literal> and
    <literal>regina.open(filename)</literal>).
   </para>
 
@@ -326,7 +326,7 @@
    <itemizedlist>
     <listitem><para>
      &regina;'s triangulation classes
-     <classname>NTriangulation</classname> and
+     <classname>Triangulation3</classname> and
      <classname>SnapPeaTriangulation</classname> both have a
      <function>snapPea()</function> function, which gives a string that
      you can pass to &snappy;'s <classname>Manifold</classname> constructor.
@@ -335,7 +335,7 @@
      &snappy;'s <classname>Manifold</classname> class has a
      <function>_to_string()</function> function, which gives a string
      that you can pass to &regina;'s
-     <classname>NTriangulation</classname> or
+     <classname>Triangulation3</classname> or
      <classname>SnapPeaTriangulation</classname> constructor.
     </para></listitem>
    </itemizedlist>
@@ -343,12 +343,12 @@
   <para>
    Regarding fillings and peripheral curves:
    &regina; does not store fillings or peripheral curves for its own native
-   <link linkend="packet-triangulation">triangulation packets</link>,
-   as represented by the <classname>NTriangulation</classname> class.
+   <link linkend="packet-triangulation3">triangulation packets</link>,
+   as represented by the <classname>Triangulation3</classname> class.
    However, it does store fillings and peripheral curves for its hybrid
    <link linkend="packet-snappea">&snappea; triangulation packets</link>,
    as represented by the <classname>SnapPeaTriangulation</classname> class.
-   The trade-off is that the native <classname>NTriangulation</classname>
+   The trade-off is that the native <classname>Triangulation3</classname>
    class offers &regina;'s full fine-grained control over the triangulation,
    whereas the hybrid <classname>SnapPeaTriangulation</classname> class
    has a more limited (largely read-only) interface.
@@ -356,8 +356,8 @@
     <listitem><para>
      When sending data from &regina; to &snappy;,
      if your triangulation is of the class
-     <classname>NTriangulation</classname>,
-     then <function>NTriangulation.snapPea()</function> will
+     <classname>Triangulation3</classname>,
+     then <function>Triangulation3.snapPea()</function> will
      create a &snappy; manifold in which all fillings and peripheral
      curves are marked as unknown.
      If your triangulation is of the class
@@ -369,9 +369,9 @@
     <listitem><para>
      Conversely, when sending data from &snappy; to &regina;, you
      can choose to instantiate a triangulation using either the
-     <classname>NTriangulation</classname> class or the
+     <classname>Triangulation3</classname> class or the
      <classname>SnapPeaTriangulation</classname> class.
-     If you use the <classname>NTriangulation</classname> class then all
+     If you use the <classname>Triangulation3</classname> class then all
      fillings and peripheral curves will be lost.
      If you use the <classname>SnapPeaTriangulation</classname> class then
      fillings and peripheral curves will be preserved (but your interface
@@ -382,7 +382,7 @@
   <para>
    Regarding the interface:
    the <classname>SnapPeaTriangulation</classname> class
-   inherits from <classname>NTriangulation</classname>, and so you can
+   inherits from <classname>Triangulation3</classname>, and so you can
    use it anywhere that a read-only triangulation is expected (in particular,
    you can use it for enumerating vertex normal surfaces or angle structures).
    However, because <classname>SnapPeaTriangulation</classname> must
@@ -461,7 +461,7 @@ True
 1 0 0 ; 0 1 0
 1 0 0 ; 0 0 1
 
-&gt;&gt;&gt; t2 = NExampleTriangulation.figureEight()
+&gt;&gt;&gt; t2 = Example3.figureEight()
 &gt;&gt;&gt; m2 = snappy.Manifold(t2.snapPea())
 &gt;&gt;&gt; print m2.volume()
 2.02988321282

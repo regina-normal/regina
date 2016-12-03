@@ -4,8 +4,8 @@
 SET ( FILES
   hypercoords
   hyperflags
-  nnormalhypersurface
-  nnormalhypersurfacelist
+  normalhypersurface
+  normalhypersurfaces
   pyhypersurface
   )
 

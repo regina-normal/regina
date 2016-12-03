@@ -53,7 +53,7 @@
    <emphasis>exists</emphasis>,
    you should visit the <link linkend="tri-hyperbolic">recognition tab</link>
    in the triangulation viewer (this is available for both &regina;'s native
-   <link linkend="packet-triangulation">triangulation packets</link>
+   <link linkend="packet-triangulation3">triangulation packets</link>
    and its hybrid
    <link linkend="packet-snappea">&snappea; triangulation packets</link>).
    For this &regina; uses fast and exact linear programming techniques.
@@ -137,7 +137,7 @@
       <para>
        This is the triangulation that will contain your angle structures.
        You may chose either one of &regina;'s native
-       <link linkend="packet-triangulation">triangulation packets</link>
+       <link linkend="packet-triangulation3">triangulation packets</link>
        or one of its hybrid
        <link linkend="packet-snappea">&snappea; triangulation packets</link>.
        The new angle structure list will appear as a child of this

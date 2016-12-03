@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nsatregion.h"
 #include <iostream>
 #include "../helpers.h"

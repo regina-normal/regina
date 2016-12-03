@@ -25,6 +25,7 @@
      <row><entry namest="c1" nameend="c2">
 <synopsis>
 packet ::= (&xml-simplices;,
+            &xml-fundgroup;?, &xml-H1;?,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -50,6 +51,8 @@ packet ::= (&xml-simplices;,
    The top-dimensional simplices that form this triangulation and their
    corresponding facet gluings are specified by the child &xml-simplices;
    element.
+   Other optional child elements may store precalculated properties of
+   this triangulation.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -78,6 +81,8 @@ packet ::= (&xml-simplices;,
     The following elements occur in <sgmltag>packet</sgmltag> for
     a <replaceable>dim</replaceable>-dimensional triangulation packet:
     <simplelist type="inline">
+     <member>&xml-fundgroup;</member>
+     <member>&xml-H1;</member>
      <member>&xml-packet;</member>
      <member>&xml-tag;</member>
      <member>&xml-simplices;</member>

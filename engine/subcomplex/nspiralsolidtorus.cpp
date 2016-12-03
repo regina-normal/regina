@@ -32,10 +32,10 @@
 
 #include <set>
 #include <vector>
-#include "algebra/nabeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/handlebody.h"
 #include "subcomplex/nspiralsolidtorus.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -49,7 +49,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
 }
 
 void NSpiralSolidTorus::reverse() {
-    NTetrahedron** newTet = new NTetrahedron*[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
     Perm<4>* newRoles = new Perm<4>[nTet];
 
     Perm<4> switchPerm(3, 2, 1, 0);
@@ -65,7 +65,7 @@ void NSpiralSolidTorus::reverse() {
 }
 
 void NSpiralSolidTorus::cycle(size_t k) {
-    NTetrahedron** newTet = new NTetrahedron*[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
     Perm<4>* newRoles = new Perm<4>[nTet];
 
     for (size_t i = 0; i < nTet; i++) {
@@ -79,7 +79,7 @@ void NSpiralSolidTorus::cycle(size_t k) {
     vertexRoles_ = newRoles;
 }
 
-bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
+bool NSpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     size_t i, index;
 
     size_t baseTet = 0;
@@ -97,7 +97,7 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
     if (baseTet == 0 && (! reverseAlso))
         return false;
 
-    NTetrahedron** newTet = new NTetrahedron*[nTet];
+    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
     Perm<4>* newRoles = new Perm<4>[nTet];
 
     if (reverseAlso) {
@@ -124,7 +124,7 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
     return true;
 }
 
-bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
+bool NSpiralSolidTorus::isCanonical(const Triangulation<3>* tri) const {
     if (vertexRoles_[0][0] > vertexRoles_[0][3])
         return false;
 
@@ -136,22 +136,22 @@ bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
     return true;
 }
 
-NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
+NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
         Perm<4> useVertexRoles) {
     Perm<4> invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
 
-    NTetrahedron* base = tet;
+    Tetrahedron<3>* base = tet;
     Perm<4> baseRoles(useVertexRoles);
 
-    std::vector<NTetrahedron*> tets;
+    std::vector<Tetrahedron<3>*> tets;
     std::vector<Perm<4>> roles;
-    std::set<NTetrahedron*> usedTets;
+    std::set<Tetrahedron<3>*> usedTets;
 
     tets.push_back(tet);
     roles.push_back(useVertexRoles);
     usedTets.insert(tet);
 
-    NTetrahedron* adjTet;
+    Tetrahedron<3>* adjTet;
     Perm<4> adjRoles;
 
     while (1) {
@@ -193,12 +193,12 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
     return ans;
 }
 
-NManifold* NSpiralSolidTorus::manifold() const {
-    return new NHandlebody(1, true);
+Manifold* NSpiralSolidTorus::manifold() const {
+    return new Handlebody(1, true);
 }
 
-NAbelianGroup* NSpiralSolidTorus::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NSpiralSolidTorus::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;
 }

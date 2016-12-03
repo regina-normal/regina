@@ -33,7 +33,7 @@
 #import "SnapPeaViewController.h"
 #import "SnapPeaAlgebra.h"
 #import "TextHelper.h"
-#import "TriAlgebra.h"
+#import "Tri3Algebra.h"
 #import "snappea/snappeatriangulation.h"
 
 @interface SnapPeaAlgebra ()
@@ -96,15 +96,15 @@
         self.filledFundRels.hidden = NO;
         self.filledFundDetails.hidden = NO;
 
-        const regina::NAbelianGroup* h1 = self.packet->homologyFilled();
+        const regina::AbelianGroup* h1 = self.packet->homologyFilled();
         if (h1)
             self.filledHomology.text = @(h1->utf8().c_str());
         else
             self.filledHomology.attributedText = [TextHelper dimString:@"Could not compute"];
 
-        const regina::NGroupPresentation* pi1 = self.packet->fundamentalGroupFilled();
+        const regina::GroupPresentation* pi1 = self.packet->fundamentalGroupFilled();
         if (pi1)
-            [TriAlgebra reloadGroup:*pi1
+            [Tri3Algebra reloadGroup:*pi1
                                name:self.filledFundName
                                gens:self.filledFundGens
                                rels:self.filledFundRels
@@ -133,7 +133,7 @@
         self.unfilledFundDetails.hidden = NO;
 
         self.unfilledHomology.text = @(self.packet->homology().utf8().c_str());
-        [TriAlgebra reloadGroup:self.packet->fundamentalGroup()
+        [Tri3Algebra reloadGroup:self.packet->fundamentalGroup()
                            name:self.unfilledFundName
                            gens:self.unfilledFundGens
                            rels:self.unfilledFundRels

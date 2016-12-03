@@ -31,34 +31,33 @@
  **************************************************************************/
 
 #include <sstream>
-#include "census/ngluingpermsearcher.h"
-#include "triangulation/nedge.h"
-#include "triangulation/nfacepair.h"
-#include "triangulation/ntriangulation.h"
+#include "census/gluingpermsearcher3.h"
+#include "triangulation/dim3.h"
+#include "triangulation/facepair.h"
 #include "utilities/memutils.h"
 
 namespace regina {
 
-const char NEulerSearcher::VLINK_CLOSED = 1;
-const char NEulerSearcher::VLINK_BAD_EULER = 2;
+const char EulerSearcher::VLINK_CLOSED = 1;
+const char EulerSearcher::VLINK_BAD_EULER = 2;
 
-const int NEulerSearcher::vertexLinkNextFace[4][4] = {
+const int EulerSearcher::vertexLinkNextFace[4][4] = {
     { -1, 2, 3, 1},
     { 3, -1, 0, 2},
     { 1, 3, -1, 0},
     { 1, 2, 0, -1}
 };
 
-const int NEulerSearcher::vertexLinkPrevFace[4][4] = {
+const int EulerSearcher::vertexLinkPrevFace[4][4] = {
     { -1, 3, 1, 2},
     { 2, -1, 3, 0},
     { 3, 0, -1, 1},
     { 2, 0, 1, -1}
 };
 
-const char NEulerSearcher::dataTag_ = 'e';
+const char EulerSearcher::dataTag_ = 'e';
 
-void NEulerSearcher::TetVertexState::dumpData(std::ostream& out)
+void EulerSearcher::TetVertexState::dumpData(std::ostream& out)
         const {
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
@@ -73,7 +72,7 @@ void NEulerSearcher::TetVertexState::dumpData(std::ostream& out)
         << static_cast<int>(bdryTwistOld[1]);
 }
 
-bool NEulerSearcher::TetVertexState::readData(std::istream& in,
+bool EulerSearcher::TetVertexState::readData(std::istream& in,
         unsigned long nStates) {
     in >> parent >> rank >> bdry >> euler;
 
@@ -132,7 +131,7 @@ bool NEulerSearcher::TetVertexState::readData(std::istream& in,
     return true;
 }
 
-void NEulerSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
+void EulerSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
         const {
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
@@ -147,7 +146,7 @@ void NEulerSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
         out << char(facesNeg.get(i) + '0');
 }
 
-bool NEulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
+bool EulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
     in >> parent >> rank >> size;
 
     // bounded is a bool, but we need to read it as an int.
@@ -201,10 +200,10 @@ bool NEulerSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
     return true;
 }
 
-NEulerSearcher::NEulerSearcher(int useEuler, const NFacePairing* pairing,
-        const NFacePairing::IsoList* autos, bool orientableOnly,
-        int whichPurge, UseGluingPerms use, void* useArgs) :
-        NGluingPermSearcher(pairing, autos, orientableOnly,
+EulerSearcher::EulerSearcher(int useEuler, const FacetPairing<3>* pairing,
+        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
+        int whichPurge, GluingPermSearcher<3>::Use use, void* useArgs) :
+        GluingPermSearcher<3>(pairing, autos, orientableOnly,
             true /* finiteOnly */, whichPurge, use, useArgs),
         euler_(useEuler) {
     // Initialise the internal arrays to accurately reflect the underlying
@@ -262,7 +261,7 @@ NEulerSearcher::NEulerSearcher(int useEuler, const NFacePairing* pairing,
     }
 }
 
-void NEulerSearcher::runSearch(long maxDepth) {
+void EulerSearcher::runSearch(long maxDepth) {
     unsigned nTets = size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
@@ -297,7 +296,7 @@ void NEulerSearcher::runSearch(long maxDepth) {
     int minOrder = orderElt;
     int maxOrder = orderElt + maxDepth;
 
-    NTetFace face, adj;
+    FacetSpec<3> face, adj;
     int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
@@ -500,8 +499,8 @@ void NEulerSearcher::runSearch(long maxDepth) {
     use_(0, useArgs_);
 }
 
-void NEulerSearcher::dumpData(std::ostream& out) const {
-    NGluingPermSearcher::dumpData(out);
+void EulerSearcher::dumpData(std::ostream& out) const {
+    GluingPermSearcher<3>::dumpData(out);
 
     out << euler_ << std::endl;
 
@@ -533,9 +532,9 @@ void NEulerSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
-NEulerSearcher::NEulerSearcher(std::istream& in,
-        UseGluingPerms use, void* useArgs) :
-        NGluingPermSearcher(in, use, useArgs),
+EulerSearcher::EulerSearcher(std::istream& in,
+        GluingPermSearcher<3>::Use use, void* useArgs) :
+        GluingPermSearcher<3>(in, use, useArgs),
         nVertexClasses(0), vertexState(0), vertexStateChanged(0),
         nEdgeClasses(0), edgeState(0), edgeStateChanged(0) {
     if (inputError_)
@@ -593,10 +592,10 @@ NEulerSearcher::NEulerSearcher(std::istream& in,
         inputError_ = true;
 }
 
-int NEulerSearcher::mergeVertexClasses() {
+int EulerSearcher::mergeVertexClasses() {
     // Merge all three vertex pairs for the current face.
-    NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing_)[face];
+    FacetSpec<3> face = order[orderElt];
+    FacetSpec<3> adj = (*pairing_)[face];
 
     int retVal = 0;
 
@@ -913,10 +912,10 @@ int NEulerSearcher::mergeVertexClasses() {
     return retVal;
 }
 
-void NEulerSearcher::splitVertexClasses() {
+void EulerSearcher::splitVertexClasses() {
     // Split all three vertex pairs for the current face.
-    NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing_)[face];
+    FacetSpec<3> face = order[orderElt];
+    FacetSpec<3> adj = (*pairing_)[face];
 
     int v, w;
     int vIdx, wIdx;
@@ -1012,9 +1011,9 @@ void NEulerSearcher::splitVertexClasses() {
     }
 }
 
-bool NEulerSearcher::mergeEdgeClasses() {
-    NTetFace face = order[orderElt];
-    NTetFace adj = (*pairing_)[face];
+bool EulerSearcher::mergeEdgeClasses() {
+    FacetSpec<3> face = order[orderElt];
+    FacetSpec<3> adj = (*pairing_)[face];
 
     bool retVal = false;
 
@@ -1035,14 +1034,14 @@ bool NEulerSearcher::mergeEdgeClasses() {
         w2 = p[v2];
 
         // Look at the edge opposite v1-v2.
-        e = 5 - NEdge::edgeNumber[v1][v2];
-        f = 5 - NEdge::edgeNumber[w1][w2];
+        e = 5 - Edge<3>::edgeNumber[v1][v2];
+        f = 5 - Edge<3>::edgeNumber[w1][w2];
 
         orderIdx = v2 + 4 * orderElt;
 
         // We declare the natural orientation of an edge to be smaller
         // vertex to larger vertex.
-        hasTwist = (p[NEdge::edgeVertex[e][0]] > p[NEdge::edgeVertex[e][1]] ?
+        hasTwist = (p[Edge<3>::edgeVertex[e][0]] > p[Edge<3>::edgeVertex[e][1]] ?
             1 : 0);
 
         parentTwists = 0;
@@ -1083,8 +1082,8 @@ bool NEulerSearcher::mergeEdgeClasses() {
     return retVal;
 }
 
-void NEulerSearcher::splitEdgeClasses() {
-    NTetFace face = order[orderElt];
+void EulerSearcher::splitEdgeClasses() {
+    FacetSpec<3> face = order[orderElt];
 
     int v1, v2;
     int e;
@@ -1098,7 +1097,7 @@ void NEulerSearcher::splitEdgeClasses() {
             continue;
 
         // Look at the edge opposite v1-v2.
-        e = 5 - NEdge::edgeNumber[v1][v2];
+        e = 5 - Edge<3>::edgeNumber[v1][v2];
 
         eIdx = e + 6 * face.simp;
         orderIdx = v2 + 4 * orderElt;
@@ -1123,7 +1122,7 @@ void NEulerSearcher::splitEdgeClasses() {
     }
 }
 
-void NEulerSearcher::vtxBdryConsistencyCheck() {
+void EulerSearcher::vtxBdryConsistencyCheck() {
     int adj, id, end;
     for (id = 0; id < static_cast<int>(size()) * 4; id++)
         if (vertexState[id].bdryEdges > 0)
@@ -1147,7 +1146,7 @@ void NEulerSearcher::vtxBdryConsistencyCheck() {
             }
 }
 
-void NEulerSearcher::vtxBdryDump(std::ostream& out) {
+void EulerSearcher::vtxBdryDump(std::ostream& out) {
     for (unsigned id = 0; id < size() * 4; id++) {
         if (id > 0)
             out << ' ';

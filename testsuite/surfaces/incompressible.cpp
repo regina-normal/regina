@@ -34,18 +34,18 @@
 #include <memory>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
-#include "testsuite/triangulation/testtriangulation.h"
+#include "triangulation/example3.h"
+#include "triangulation/dim3.h"
+#include "testsuite/dim3/testtriangulation.h"
 
-using regina::NExampleTriangulation;
-using regina::NNormalSurface;
+using regina::Example;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
-using regina::NTetrahedron;
-using regina::NTriangulation;
+using regina::Tetrahedron;
+using regina::Triangulation;
 
 class IncompressibleTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(IncompressibleTest);
@@ -62,7 +62,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void verifyNotIncompressible(const NNormalSurface* s,
+        void verifyNotIncompressible(const NormalSurface* s,
                 const std::string& triName) {
             if (s->isIncompressible()) {
                 CPPUNIT_FAIL(("A compressible surface in " + triName +
@@ -70,7 +70,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             }
         }
 
-        NTriangulation* verifyAllNotIncompressible(NTriangulation* tri,
+        Triangulation<3>* verifyAllNotIncompressible(Triangulation<3>* tri,
                 const std::string& triName) {
             NormalSurfaces* s = NormalSurfaces::enumerate(tri,
                 regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
@@ -80,7 +80,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             return tri;
         }
 
-        NTriangulation* verifyHasIncompressible(NTriangulation* tri,
+        Triangulation<3>* verifyHasIncompressible(Triangulation<3>* tri,
                 const std::string& triName) {
             NormalSurfaces* s = NormalSurfaces::enumerate(tri,
                 regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
@@ -97,40 +97,40 @@ class IncompressibleTest : public CppUnit::TestFixture {
         }
 
         void isIncompressible() {
-            NTriangulation* tri;
+            Triangulation<3>* tri;
 
             // Try the 3-sphere (no incompressible surfaces).
-            tri = NExampleTriangulation::threeSphere();
+            tri = Example<3>::threeSphere();
             delete verifyAllNotIncompressible(tri, "3-sphere");
 
             // Try RP3 (no incompressible surfaces, since we
             // always work with the double cover of a 1-sided surface).
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLensSpace(2, 1);
             delete verifyAllNotIncompressible(tri, "RP3 (1 vtx)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredLoop(2, false);
             delete verifyAllNotIncompressible(tri, "RP3 (2 vtx)");
 
             // Try some other non-Haken manifolds.
-            tri = NExampleTriangulation::poincareHomologySphere();
+            tri = Example<3>::poincareHomologySphere();
             delete verifyAllNotIncompressible(tri,
                 "Poincare homology sphere");
 
             // Try some SFSs that should be Haken.
-            tri = NTriangulation::fromIsoSig("gLALQbccefffemkbemi");
+            tri = Triangulation<3>::fromIsoSig("gLALQbccefffemkbemi");
             delete verifyHasIncompressible(tri,
                 "SFS [S2: (2,1) (2,1) (2,1) (2,-1)]");
 
-            tri = NTriangulation::fromIsoSig("gvLQQedfedffrwawrhh");
+            tri = Triangulation<3>::fromIsoSig("gvLQQedfedffrwawrhh");
             delete verifyHasIncompressible(tri, "T x S1");
 
-            tri = NTriangulation::fromIsoSig("gvLQQcdefeffnwnpkhe");
+            tri = Triangulation<3>::fromIsoSig("gvLQQcdefeffnwnpkhe");
             delete verifyHasIncompressible(tri, "SFS [T: (1,1)]");
         }
 
-        NTriangulation* verifyHasCompressingDisc(NTriangulation* t,
+        Triangulation<3>* verifyHasCompressingDisc(Triangulation<3>* t,
                 const std::string& triName) {
             if (! t->hasCompressingDisc()) {
                 CPPUNIT_FAIL(("The compressing disc was not found in "
@@ -139,7 +139,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             return t;
         }
 
-        NTriangulation* verifyNoCompressingDisc(NTriangulation* t,
+        Triangulation<3>* verifyNoCompressingDisc(Triangulation<3>* t,
                 const std::string& triName) {
             if (t->hasCompressingDisc()) {
                 CPPUNIT_FAIL(("A compressing disc was found in "
@@ -149,25 +149,25 @@ class IncompressibleTest : public CppUnit::TestFixture {
         }
 
         void hasCompressingDisc() {
-            NTriangulation* tri;
-            NTetrahedron* tet[4];
+            Triangulation<3>* tri;
+            Tetrahedron<3>* tet[4];
             
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(1, 2);
             delete verifyHasCompressingDisc(tri, "LST(1,2,3)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->insertLayeredSolidTorus(3, 4);
             delete verifyHasCompressingDisc(tri, "LST(3,4,7)");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             delete verifyNoCompressingDisc(tri, "Empty triangulation");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tri->newTetrahedron();
             delete verifyNoCompressingDisc(tri, "Standalone tetrahedron");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
             tet[0]->join(0, tet[1], Perm<4>());
@@ -175,12 +175,12 @@ class IncompressibleTest : public CppUnit::TestFixture {
             tet[0]->join(2, tet[1], Perm<4>());
             delete verifyNoCompressingDisc(tri, "Triangular pillow");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[0]->join(0, tet[0], Perm<4>(3, 1, 2, 0));
             delete verifyNoCompressingDisc(tri, "Snapped tetrahedron");
 
-            tri = new NTriangulation();
+            tri = new Triangulation<3>();
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
             tet[2] = tri->newTetrahedron();
@@ -193,15 +193,15 @@ class IncompressibleTest : public CppUnit::TestFixture {
             tet[3]->join(2, tet[3], Perm<4>(1,2));
             delete verifyNoCompressingDisc(tri, "4-tetrahedron ball");
 
-            tri = NExampleTriangulation::figureEight();
+            tri = Example<3>::figureEight();
             tri->idealToFinite();
             tri->intelligentSimplify();
             delete verifyNoCompressingDisc(tri, "Figure 8 Knot Complement");
 
-            tri = NTriangulation::fromIsoSig("eHucabdhs");
+            tri = Triangulation<3>::fromIsoSig("eHucabdhs");
             delete verifyHasCompressingDisc(tri, "Solid genus two torus");
 
-            tri = NTriangulation::fromIsoSig(
+            tri = Triangulation<3>::fromIsoSig(
                 "tbLGburuGuqHbKgqGacdjmpqsrqbkltl");
             delete verifyHasCompressingDisc(tri, "Solid genus seven torus");
         }

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include "reginasupport.h"
 #include "recogniserhandler.h"
@@ -42,12 +42,12 @@
 const RecogniserHandler RecogniserHandler::instance;
 
 PacketFilter* RecogniserHandler::canExport() const {
-    return new SubclassFilter<regina::NTriangulation>();
+    return new SubclassFilter<regina::Triangulation<3>>();
 }
 
 bool RecogniserHandler::exportData(regina::Packet* data,
         const QString& fileName, QWidget* parentWidget) const {
-    regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
+    regina::Triangulation<3>* tri = dynamic_cast<regina::Triangulation<3>*>(data);
     if (! tri->isValid()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This triangulation is not valid."),

@@ -116,6 +116,7 @@ class PythonConsole : public QMainWindow {
          */
         void addInput(const QString& input);
         void addOutput(const QString& output);
+        void addInfo(const QString& info);
         void addError(const QString& error);
 
         /**

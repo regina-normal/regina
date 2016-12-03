@@ -30,14 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ngraphloop.h"
-#include "manifold/nsfs.h"
+#include "manifold/graphloop.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/npluggedtorusbundle.h"
 #include "subcomplex/nsatregion.h"
 #include "subcomplex/ntxicore.h"
-#include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -59,8 +58,8 @@ NPluggedTorusBundle::~NPluggedTorusBundle() {
     delete region_;
 }
 
-NManifold* NPluggedTorusBundle::manifold() const {
-    NSFSpace* sfs = region_->createSFS(false);
+Manifold* NPluggedTorusBundle::manifold() const {
+    SFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
     if (sfs->punctures() == 1) {
@@ -71,7 +70,7 @@ NManifold* NPluggedTorusBundle::manifold() const {
 
     sfs->reduce(false);
 
-    return new NGraphLoop(sfs, matchingReln_);
+    return new GraphLoop(sfs, matchingReln_);
 }
 
 std::ostream& NPluggedTorusBundle::writeName(std::ostream& out) const {
@@ -100,7 +99,7 @@ void NPluggedTorusBundle::writeTextLong(std::ostream& out) const {
 }
 
 NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
-        NTriangulation* tri) {
+        Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
@@ -141,9 +140,9 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
     return 0;
 }
 
-NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
+NPluggedTorusBundle* NPluggedTorusBundle::hunt(Triangulation<3>* triang,
         const NTxICore& bundle) {
-    std::list<NIsomorphism*> isos;
+    std::list<Isomorphism<3>*> isos;
     if (! bundle.core().findAllSubcomplexesIn(*triang, back_inserter(isos)))
         return 0;
 
@@ -156,7 +155,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
     bool bdryRefVert, bdryRefHoriz;
 
     // Run through each isomorphism and look for the corresponding layering.
-    for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
+    for (std::list<Isomorphism<3>*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
         // Apply layerings to the upper and lower boundaries.
         NLayering layerUpper(

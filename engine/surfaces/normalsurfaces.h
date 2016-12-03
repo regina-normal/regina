@@ -45,7 +45,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "packet/packet.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/memutils.h"
@@ -55,16 +55,9 @@ namespace regina {
 class NormalSurfaces;
 class ProgressTracker;
 class XMLPacketReader;
-class NXMLNormalSurfaceListReader;
 
 template <typename> class MatrixIntDomain;
 typedef MatrixIntDomain<Integer> MatrixInt;
-
-template <int> class Triangulation;
-// We *must* declare the specialisation here; otherwise this header has
-// the side-effect of instantiating Trianglation<3> using the generic template.
-template <> class Triangulation<3>;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup surfaces
@@ -112,12 +105,12 @@ enum SurfaceExportFields {
              cusps: these written as a list of pairs (\a p, \a q),
              one for each cusp, indicating that the boundary curves of
              the surface run \a p times around the meridian and \a q times
-             around the longitude.  See NNormalSurface::boundaryIntersections()
+             around the longitude.  See NormalSurface::boundaryIntersections()
              for further information on interpreting these values. */
     surfaceExportLink = 0x0020,
         /**< Represents whether a surface is a single vertex link or a
-             thin edge link.  See NNormalSurface::isVertexLink() and
-             NNormalSurface::isThinEdgeLink() for details.  This will be
+             thin edge link.  See NormalSurface::isVertexLink() and
+             NormalSurface::isThinEdgeLink() for details.  This will be
              written as a human-readable string. */
     surfaceExportType = 0x0040,
         /**< Represents any additional high-level properties of a
@@ -143,7 +136,7 @@ enum SurfaceExportFields {
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
-struct PacketInfo<PACKET_NORMALSURFACELIST> {
+struct PacketInfo<PACKET_NORMALSURFACES> {
     typedef NormalSurfaces Class;
     inline static const char* name() {
         return "Normal Surface List";
@@ -157,7 +150,7 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  * which the surfaces were obtained.  If this triangulation changes, the
  * information contained in this packet will become invalid.
  *
- * See the NNormalSurfaceVector class notes for details of what to do
+ * See the NormalSurfaceVector class notes for details of what to do
  * when introducing a new coordinate system.
  *
  * Normal surface lists should be created using the routine enumerate().
@@ -170,13 +163,13 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  * embedded surfaces.
  */
 class REGINA_API NormalSurfaces : public Packet {
-    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACELIST)
+    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACES)
 
     public:
         class VectorIterator;
 
     protected:
-        std::vector<NNormalSurface*> surfaces;
+        std::vector<NormalSurface*> surfaces;
             /**< Contains the normal surfaces stored in this packet. */
         NormalCoords coords_;
             /**< Stores which coordinate system is being
@@ -260,7 +253,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal surface list is created).
          */
-        static NormalSurfaces* enumerate(NTriangulation* owner,
+        static NormalSurfaces* enumerate(Triangulation<3>* owner,
             NormalCoords coords,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
@@ -342,7 +335,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * 
          * @return the triangulation in which these surfaces live.
          */
-        NTriangulation* triangulation() const;
+        Triangulation<3>* triangulation() const;
         /**
          * Returns the number of surfaces stored in this list.
          *
@@ -357,7 +350,7 @@ class REGINA_API NormalSurfaces : public Packet {
          *
          * @return the normal surface at the requested index in this set.
          */
-        const NNormalSurface* surface(size_t index) const;
+        const NormalSurface* surface(size_t index) const;
         /**
          * Writes the number of surfaces in this set followed by the
          * details of each surface to the given output stream.  Output
@@ -545,7 +538,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * In other words, a surface \a S from this list will be placed
          * in the new list if and only if there is some other surface \a T
          * in this list for which \a S and \a T are locally compatible.
-         * See NNormalSurface::locallyCompatible() for further details on
+         * See NormalSurface::locallyCompatible() for further details on
          * compatibility testing.
          *
          * The new list will be inserted as a new child packet of the
@@ -575,7 +568,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * in the new list if and only if there is some other surface \a T
          * in this list for which \a S and \a T can be made to intersect
          * nowhere at all, without changing either normal isotopy class.
-         * See NNormalSurface::disjoint() for further details on disjointness
+         * See NormalSurface::disjoint() for further details on disjointness
          * testing.
          *
          * This routine cannot deal with empty, disconnected or
@@ -595,7 +588,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * \pre This list contains only embedded normal surfaces.  More
          * precisely, isEmbeddedOnly() must return \c true.
          * \pre All surfaces within this list are stored using the same
-         * coordinate system (i.e., the same subclass of NNormalSurfaceVector).
+         * coordinate system (i.e., the same subclass of NormalSurfaceVector).
          *
          * \warning If this list contains a vertex link (plus at least
          * one other surface), then the new list will be identical to
@@ -624,7 +617,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * it is not known whether any given surface in the new list is
          * indeed incompressible.
          *
-         * See NNormalSurface::isIncompressible() for the definition of
+         * See NormalSurface::isIncompressible() for the definition of
          * incompressibility that is used here.  Note in particular that
          * spheres are \e never considered incompressible.
          *
@@ -645,7 +638,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * Currently the heuristic tests include (i) throwing away
          * all vertex links and thin edge links, and then
          * (ii) cutting along the remaining surfaces and running
-         * NTriangulation::hasSimpleCompressingDisc() on the resulting
+         * Triangulation<3>::hasSimpleCompressingDisc() on the resulting
          * bounded triangulations.  For more details on these tests
          * see "The Weber-Seifert dodecahedral space is non-Haken",
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
@@ -794,9 +787,9 @@ class REGINA_API NormalSurfaces : public Packet {
          * \ifacespython Not present.
          */
         class VectorIterator : public std::iterator<
-                std::bidirectional_iterator_tag, const NNormalSurfaceVector*> {
+                std::bidirectional_iterator_tag, Ray> {
             private:
-                std::vector<NNormalSurface*>::const_iterator it_;
+                std::vector<NormalSurface*>::const_iterator it_;
                     /**< An iterator into the underlying list of surfaces. */
 
             public:
@@ -849,7 +842,7 @@ class REGINA_API NormalSurfaces : public Packet {
                  *
                  * @return the corresponding normal surface vector.
                  */
-                const NNormalSurfaceVector* operator *() const;
+                const Ray& operator *() const;
 
                 /**
                  * The preincrement operator.
@@ -887,7 +880,7 @@ class REGINA_API NormalSurfaces : public Packet {
                  * the internal list of normal surfaces.
                  */
                 VectorIterator(
-                    const std::vector<NNormalSurface*>::const_iterator& i);
+                    const std::vector<NormalSurface*>::const_iterator& i);
 
             friend class NormalSurfaces;
         };
@@ -914,9 +907,9 @@ class REGINA_API NormalSurfaces : public Packet {
          * An output iterator used to insert surfaces into an
          * NormalSurfaces.
          *
-         * Objects of type <tt>NNormalSurface*</tt> and
-         * <tt>NNormalSurfaceVector*</tt> can be assigned to this
-         * iterator.  In the latter case, a surrounding NNormalSurface
+         * Objects of type <tt>NormalSurface*</tt> and
+         * <tt>NormalSurfaceVector*</tt> can be assigned to this
+         * iterator.  In the latter case, a surrounding NormalSurface
          * will be automatically created.
          *
          * \warning The behaviour of this class has changed!
@@ -930,10 +923,10 @@ class REGINA_API NormalSurfaces : public Packet {
          * interface (and indeed are now optional, at the user's discretion).
          */
         struct SurfaceInserter : public std::iterator<
-                std::output_iterator_tag, NNormalSurfaceVector*> {
+                std::output_iterator_tag, NormalSurfaceVector*> {
             NormalSurfaces* list;
                 /**< The list into which surfaces will be inserted. */
-            NTriangulation* owner;
+            Triangulation<3>* owner;
                 /**< The triangulation in which the surfaces to be
                  *   inserted are contained. */
 
@@ -947,7 +940,7 @@ class REGINA_API NormalSurfaces : public Packet {
              * to be inserted are contained.
              */
             SurfaceInserter(NormalSurfaces& newList,
-                NTriangulation* newOwner);
+                Triangulation<3>* newOwner);
             /**
              * Creates a new output iterator that is a clone of the
              * given iterator.
@@ -974,7 +967,7 @@ class REGINA_API NormalSurfaces : public Packet {
              * @param surface the normal surface to insert.
              * @return this output iterator.
              */
-            SurfaceInserter& operator =(NNormalSurface* surface);
+            SurfaceInserter& operator =(NormalSurface* surface);
             /**
              * Appends the normal surface corresponding to the given
              * vector to the end of the appropriate surface list.
@@ -991,7 +984,7 @@ class REGINA_API NormalSurfaces : public Packet {
              * @param vector the vector of the normal surface to insert.
              * @return this output iterator.
              */
-            SurfaceInserter& operator =(NNormalSurfaceVector* vector);
+            SurfaceInserter& operator =(NormalSurfaceVector* vector);
 
             /**
              * Returns a reference to this output iterator.
@@ -1090,8 +1083,8 @@ class REGINA_API NormalSurfaces : public Packet {
          * and cancellation requests, or 0 if this is not required.
          */
         template <class Variant>
-        void buildStandardFromReduced(NTriangulation* owner,
-            const std::vector<NNormalSurface*>& reducedList,
+        void buildStandardFromReduced(Triangulation<3>* owner,
+            const std::vector<NormalSurface*>& reducedList,
             ProgressTracker* tracker = 0);
 
         /**
@@ -1111,8 +1104,8 @@ class REGINA_API NormalSurfaces : public Packet {
          * the number of tetrahedra in the given triangulation.
          */
         template <class Variant, class BitmaskType>
-        void buildStandardFromReducedUsing(NTriangulation* owner,
-            const std::vector<NNormalSurface*>& reducedList,
+        void buildStandardFromReducedUsing(Triangulation<3>* owner,
+            const std::vector<NormalSurface*>& reducedList,
             ProgressTracker* tracker);
 
         /**
@@ -1156,7 +1149,7 @@ class REGINA_API NormalSurfaces : public Packet {
             private:
                 NormalSurfaces* list_;
                     /**< The surface list to be filled. */
-                NTriangulation* triang_;
+                Triangulation<3>* triang_;
                     /**< The triangulation in which these surfaces lie. */
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
@@ -1174,7 +1167,7 @@ class REGINA_API NormalSurfaces : public Packet {
                  * capabilities are not required.
                  */
                 Enumerator(NormalSurfaces* list,
-                    NTriangulation* triang, ProgressTracker* tracker);
+                    Triangulation<3>* triang, ProgressTracker* tracker);
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -1362,7 +1355,7 @@ class REGINA_API NormalSurfaces : public Packet {
                 void fillFundamentalFullCone();
         };
 
-    friend class regina::NXMLNormalSurfaceListReader;
+    friend class XMLNormalSurfacesReader;
 };
 
 /**
@@ -1370,7 +1363,7 @@ class REGINA_API NormalSurfaces : public Packet {
  * given triangulation and the given coordinate system.
  * All elements of this vector will be initialised to zero.
  *
- * The new vector will be of the subclass of NNormalSurfaceVector
+ * The new vector will be of the subclass of NormalSurfaceVector
  * corresponding to the given coordinate system.  The caller
  * of this routine is responsible for destroying the new vector.
  *
@@ -1381,8 +1374,8 @@ class REGINA_API NormalSurfaces : public Packet {
  * @param coords the coordinate system to be used.
  * @return a new zero vector of the correct class and length.
  */
-REGINA_API NNormalSurfaceVector* makeZeroVector(
-    const NTriangulation* triangulation, NormalCoords coords);
+REGINA_API NormalSurfaceVector* makeZeroVector(
+    const Triangulation<3>* triangulation, NormalCoords coords);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
@@ -1399,7 +1392,7 @@ REGINA_API NNormalSurfaceVector* makeZeroVector(
  * @return a newly allocated set of matching equations.
  */
 REGINA_API MatrixInt* makeMatchingEquations(
-    const NTriangulation* triangulation, NormalCoords coords);
+    const Triangulation<3>* triangulation, NormalCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
@@ -1413,7 +1406,7 @@ REGINA_API MatrixInt* makeMatchingEquations(
  * @return a newly allocated set of constraints.
  */
 REGINA_API EnumConstraints* makeEmbeddedConstraints(
-    const NTriangulation* triangulation, NormalCoords coords);
+    const Triangulation<3>* triangulation, NormalCoords coords);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1429,7 +1422,7 @@ REGINA_DEPRECATED typedef NormalSurfaces NNormalSurfaceList;
 // Inline functions for NormalSurfaces
 
 inline NormalSurfaces::~NormalSurfaces() {
-    for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
+    for_each(surfaces.begin(), surfaces.end(), FuncDelete<NormalSurface>());
 }
 
 inline NormalCoords NormalSurfaces::coords() const {
@@ -1452,7 +1445,7 @@ inline size_t NormalSurfaces::size() const {
     return surfaces.size();
 }
 
-inline const NNormalSurface* NormalSurfaces::surface(size_t index) const {
+inline const NormalSurface* NormalSurfaces::surface(size_t index) const {
     return surfaces[index];
 }
 
@@ -1484,7 +1477,7 @@ inline bool NormalSurfaces::VectorIterator::operator !=(
     return (it_ != other.it_);
 }
 
-inline const NNormalSurfaceVector* NormalSurfaces::VectorIterator::
+inline const Ray& NormalSurfaces::VectorIterator::
         operator *() const {
     return (*it_)->rawVector();
 }
@@ -1512,7 +1505,7 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::VectorIterator::
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator(
-        const std::vector<NNormalSurface*>::const_iterator& i) : it_(i) {
+        const std::vector<NormalSurface*>::const_iterator& i) : it_(i) {
 }
 
 inline NormalSurfaces::VectorIterator NormalSurfaces::beginVectors()
@@ -1526,7 +1519,7 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors()
 }
 
 inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
-        NormalSurfaces& newList, NTriangulation* newOwner) :
+        NormalSurfaces& newList, Triangulation<3>* newOwner) :
         list(&newList), owner(newOwner) {
 }
 
@@ -1546,15 +1539,15 @@ inline NormalSurfaces::SurfaceInserter&
 
 inline NormalSurfaces::SurfaceInserter&
         NormalSurfaces::SurfaceInserter::operator =(
-        NNormalSurface* surface) {
+        NormalSurface* surface) {
     list->surfaces.push_back(surface);
     return *this;
 }
 
 inline NormalSurfaces::SurfaceInserter&
         NormalSurfaces::SurfaceInserter::operator =(
-        NNormalSurfaceVector* vector) {
-    list->surfaces.push_back(new NNormalSurface(owner, vector));
+        NormalSurfaceVector* vector) {
+    list->surfaces.push_back(new NormalSurface(owner, vector));
     return *this;
 }
 
@@ -1579,7 +1572,7 @@ inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
 }
 
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
-        NTriangulation* triang, ProgressTracker* tracker) :
+        Triangulation<3>* triang, ProgressTracker* tracker) :
         list_(list), triang_(triang), tracker_(tracker) {
 }
 

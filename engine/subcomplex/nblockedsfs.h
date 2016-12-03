@@ -108,7 +108,7 @@ class REGINA_API NBlockedSFS : public NStandardTriangulation {
          */
         bool isPluggedIBundle(std::string& name) const;
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -122,7 +122,7 @@ class REGINA_API NBlockedSFS : public NStandardTriangulation {
          * blocked Seifert fibred space, or \c null if the given
          * triangulation is not a blocked Seifert fibred space.
          */
-        static NBlockedSFS* isBlockedSFS(NTriangulation* tri);
+        static NBlockedSFS* isBlockedSFS(Triangulation<3>* tri);
 
     private:
         /**

@@ -38,9 +38,9 @@
 #ifndef __FACETGRAPHTAB_H
 #define __FACETGRAPHTAB_H
 
+#include "triangulation/forward.h"
 #include "packettabui.h"
 #include "skeletonwindow.h"
-
 
 class MessageLayer;
 
@@ -52,11 +52,6 @@ class QSvgWidget;
 
 namespace regina {
     class Packet;
-
-    template <int> class Triangulation;
-    typedef Triangulation<2> Dim2Triangulation;
-    typedef Triangulation<3> NTriangulation;
-    typedef Triangulation<4> Dim4Triangulation;
 };
 
 /**
@@ -79,10 +74,10 @@ class FacetGraphData {
 
 class Dim2EdgeGraphData : public FacetGraphData {
     private:
-        regina::Dim2Triangulation* tri_;
+        regina::Triangulation<2>* tri_;
 
     public:
-        Dim2EdgeGraphData(regina::Dim2Triangulation* tri) : tri_(tri) {}
+        Dim2EdgeGraphData(regina::Triangulation<2>* tri) : tri_(tri) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);
@@ -96,10 +91,10 @@ class Dim2EdgeGraphData : public FacetGraphData {
 
 class Dim3FaceGraphData : public FacetGraphData {
     private:
-        regina::NTriangulation* tri_;
+        regina::Triangulation<3>* tri_;
 
     public:
-        Dim3FaceGraphData(regina::NTriangulation* tri) : tri_(tri) {}
+        Dim3FaceGraphData(regina::Triangulation<3>* tri) : tri_(tri) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);
@@ -113,10 +108,10 @@ class Dim3FaceGraphData : public FacetGraphData {
 
 class Dim4FacetGraphData : public FacetGraphData {
     private:
-        regina::Dim4Triangulation* tri_;
+        regina::Triangulation<4>* tri_;
 
     public:
-        Dim4FacetGraphData(regina::Dim4Triangulation* tri) : tri_(tri) {}
+        Dim4FacetGraphData(regina::Triangulation<4>* tri) : tri_(tri) {}
 
         regina::Packet* getPacket();
         std::string dual(bool withLabels);

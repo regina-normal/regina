@@ -44,7 +44,7 @@
 #include "surfaces/normalcoords.h"
 
 namespace regina {
-    class NNormalHypersurfaceList;
+    class NormalHypersurfaces;
     class NormalSurfaces;
 }
 
@@ -103,7 +103,7 @@ class HyperCoordinateChooser : public QComboBox {
          */
         void insertSystem(regina::HyperCoords coordSystem);
         void insertAllCreators();
-        void insertAllViewers(regina::NNormalHypersurfaceList* surfaces);
+        void insertAllViewers(regina::NormalHypersurfaces* surfaces);
 
         /**
          * Get and set the currently selected coordinate system.

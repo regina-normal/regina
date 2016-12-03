@@ -41,11 +41,9 @@
 
 #include <string>
 #include "regina-core.h"
+#include "triangulation/forward.h"
 
 namespace regina {
-
-template <int> class Triangulation;
-typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup foreign
@@ -75,7 +73,7 @@ typedef Triangulation<3> NTriangulation;
  *
  * @author Ryan Budney, also with code from Damien Heard
  */
-REGINA_API NTriangulation* readOrb(const char *filename);
+REGINA_API Triangulation<3>* readOrb(const char *filename);
 
 /*@}*/
 

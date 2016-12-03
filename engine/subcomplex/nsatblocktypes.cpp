@@ -30,13 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nsfs.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nsatblocktypes.h"
 #include "subcomplex/nlayeredsolidtorus.h"
-#include "triangulation/nedge.h"
-#include "triangulation/nfacepair.h"
-#include "triangulation/ntetrahedron.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/facepair.h"
+#include "triangulation/dim3.h"
 #include <algorithm>
 #include <cstdlib> // For exit().
 #include <iterator>
@@ -174,7 +172,7 @@ NSatBlock* NSatBlock::isBlock(const NSatAnnulus& annulus, TetList& avoidTets) {
     return 0;
 }
 
-void NSatMobius::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (position_ == 0) {
         // Diagonal:
         sfs.insertFibre(1, reflect ? 1 : -1);
@@ -257,7 +255,7 @@ NSatLST::~NSatLST() {
     delete lst_;
 }
 
-void NSatLST::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
     long cutsVert = lst_->meridinalCuts(roles_[0]);
     long cutsHoriz = lst_->meridinalCuts(roles_[1]);
     if (roles_[2] == 2) {
@@ -283,8 +281,8 @@ void NSatLST::writeAbbr(std::ostream& out, bool tex) const {
         << lst_->meridinalCuts(2) << (tex ? '}' : ')');
 }
 
-void NSatLST::transform(const NTriangulation* originalTri,
-        const NIsomorphism* iso, NTriangulation* newTri) {
+void NSatLST::transform(const Triangulation<3>* originalTri,
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     // Start with the parent implementation.
     NSatBlock::transform(originalTri, iso, newTri);
 
@@ -304,8 +302,8 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
 
     // Here we find the endpoints of the edge from which the two layered
     // triangles fold out.
-    NFacePair centralEdge =
-        NFacePair(annulus.roles[0][3], annulus.roles[1][3]).complement();
+    FacePair centralEdge =
+        FacePair(annulus.roles[0][3], annulus.roles[1][3]).complement();
 
     if (annulus.roles[1] !=
             Perm<4>(annulus.roles[0][3], annulus.roles[1][3]) *
@@ -322,11 +320,11 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     // Make sure we're not about to create a (0,k) curve.
     Perm<4> lstRoles(
         lst->topEdgeGroup(
-            NEdge::edgeNumber[annulus.roles[0][0]][annulus.roles[0][1]]),
+            Edge<3>::edgeNumber[annulus.roles[0][0]][annulus.roles[0][1]]),
         lst->topEdgeGroup(
-            NEdge::edgeNumber[annulus.roles[0][0]][annulus.roles[0][2]]),
+            Edge<3>::edgeNumber[annulus.roles[0][0]][annulus.roles[0][2]]),
         lst->topEdgeGroup(
-            NEdge::edgeNumber[annulus.roles[0][1]][annulus.roles[0][2]]),
+            Edge<3>::edgeNumber[annulus.roles[0][1]][annulus.roles[0][2]]),
         3);
 
     if (lst->meridinalCuts(lstRoles[0]) == 0)
@@ -335,15 +333,15 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     // Make two runs through the full set of tetrahedra.
     // The first run verifies that each tetrahedron is usable.
     // The second run inserts the tetrahedra into avoidTets.
-    NTetrahedron* current = annulus.tet[0];
-    NFacePair currPair = centralEdge;
-    NFacePair nextPair;
+    Tetrahedron<3>* current = annulus.tet[0];
+    FacePair currPair = centralEdge;
+    FacePair nextPair;
     while (current != lst->base()) {
         // INV: The current tetrahedron is usable.
         // INV: The next two faces to push through are in currPair.
 
         // Push through to the next tetrahedron.
-        nextPair = NFacePair(
+        nextPair = FacePair(
             current->adjacentFace(currPair.upper()),
             current->adjacentFace(currPair.lower())
             ).complement();
@@ -364,7 +362,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
         // INV: The next two faces to push through are in currPair.
 
         // Push through to the next tetrahedron.
-        nextPair = NFacePair(
+        nextPair = FacePair(
             current->adjacentFace(currPair.upper()),
             current->adjacentFace(currPair.lower())
             ).complement();
@@ -380,7 +378,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     return ans;
 }
 
-void NSatTriPrism::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatTriPrism::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (major_)
         sfs.insertFibre(1, reflect ? -1 : 1);
     else
@@ -428,7 +426,7 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
     // The two tetrahedra forming the annulus are joined together as
     // expected.  Look for the third tetrahedron.
 
-    NTetrahedron* adj = annulus.tet[0]->adjacentTetrahedron(
+    Tetrahedron<3>* adj = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][1]);
     if (adj == 0 || adj == annulus.tet[0] || adj == annulus.tet[1])
         return 0;
@@ -467,10 +465,10 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const NSatAnnulus& annulus,
     return ans;
 }
 
-NSatTriPrism* NSatTriPrism::insertBlock(NTriangulation& tri, bool major) {
-    NTetrahedron* a = tri.newTetrahedron();
-    NTetrahedron* b = tri.newTetrahedron();
-    NTetrahedron* c = tri.newTetrahedron();
+NSatTriPrism* NSatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
+    Tetrahedron<3>* a = tri.newTetrahedron();
+    Tetrahedron<3>* b = tri.newTetrahedron();
+    Tetrahedron<3>* c = tri.newTetrahedron();
     a->join(1, c, Perm<4>(2, 0, 3, 1));
     b->join(1, a, Perm<4>(2, 0, 3, 1));
     c->join(1, b, Perm<4>(2, 0, 3, 1));
@@ -501,7 +499,7 @@ NSatTriPrism* NSatTriPrism::insertBlock(NTriangulation& tri, bool major) {
     return ans;
 }
 
-void NSatCube::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
     sfs.insertFibre(1, reflect ? -2 : 2);
 }
 
@@ -512,9 +510,9 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
         return 0;
 
-    NTetrahedron* central0 = annulus.tet[0]->adjacentTetrahedron(
+    Tetrahedron<3>* central0 = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][0]);
-    NTetrahedron* central1 = annulus.tet[0]->adjacentTetrahedron(
+    Tetrahedron<3>* central1 = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][1]);
 
     if (central0 == 0 || central0 == annulus.tet[0] ||
@@ -549,10 +547,10 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
     // We've got the two tetrahedra from the annulus boundary completely
     // sorted out.  Just the two new boundary tetrahedra to go.
 
-    NTetrahedron* bdry2 = central0->adjacentTetrahedron(roles0[1]);
+    Tetrahedron<3>* bdry2 = central0->adjacentTetrahedron(roles0[1]);
     Perm<4> roles2 = central0->adjacentGluing(roles0[1]) * roles0;
 
-    NTetrahedron* bdry3 = central0->adjacentTetrahedron(roles0[2]);
+    Tetrahedron<3>* bdry3 = central0->adjacentTetrahedron(roles0[2]);
     Perm<4> roles3 = central0->adjacentGluing(roles0[2]) * roles0;
 
     if (bdry2 == 0 || bdry2 == annulus.tet[0] || bdry2 == annulus.tet[1] ||
@@ -602,13 +600,13 @@ NSatCube* NSatCube::isBlockCube(const NSatAnnulus& annulus,
     return ans;
 }
 
-NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
-    NTetrahedron* bdry0 = tri.newTetrahedron();
-    NTetrahedron* bdry1 = tri.newTetrahedron();
-    NTetrahedron* bdry2 = tri.newTetrahedron();
-    NTetrahedron* bdry3 = tri.newTetrahedron();
-    NTetrahedron* central0 = tri.newTetrahedron();
-    NTetrahedron* central1 = tri.newTetrahedron();
+NSatCube* NSatCube::insertBlock(Triangulation<3>& tri) {
+    Tetrahedron<3>* bdry0 = tri.newTetrahedron();
+    Tetrahedron<3>* bdry1 = tri.newTetrahedron();
+    Tetrahedron<3>* bdry2 = tri.newTetrahedron();
+    Tetrahedron<3>* bdry3 = tri.newTetrahedron();
+    Tetrahedron<3>* central0 = tri.newTetrahedron();
+    Tetrahedron<3>* central1 = tri.newTetrahedron();
 
     const Perm<4> id;
     bdry0->join(1, central0, id);
@@ -643,7 +641,7 @@ NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
     return ans;
 }
 
-void NSatReflectorStrip::adjustSFS(NSFSpace& sfs, bool) const {
+void NSatReflectorStrip::adjustSFS(SFSpace& sfs, bool) const {
     if (! twistedBoundary_)
         sfs.addReflector(false);
 }
@@ -658,7 +656,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     if (isBad(annulus.tet[0], avoidTets) || isBad(annulus.tet[1], avoidTets))
         return 0;
 
-    NTetrahedron* middle = annulus.tet[0]->adjacentTetrahedron(
+    Tetrahedron<3>* middle = annulus.tet[0]->adjacentTetrahedron(
         annulus.roles[0][0]);
     Perm<4> middleRoles = annulus.tet[0]->adjacentGluing(
         annulus.roles[0][0]) * annulus.roles[0] * Perm<4>(3, 1, 0, 2);
@@ -725,7 +723,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     // Make a list storing the tetrahedra from left to right around the
     // boundary ring.  We must use a list and not a set, since we will
     // rely on the tetrahedra being stored in a particular order.
-    std::list<NTetrahedron*> foundSoFar;
+    std::list<Tetrahedron<3>*> foundSoFar;
     foundSoFar.push_back(annulus.tet[0]);
     foundSoFar.push_back(middle);
     foundSoFar.push_back(annulus.tet[1]);
@@ -739,7 +737,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     unsigned length = 1;
     bool twisted = false;
 
-    NTetrahedron *nextLeft, *nextMiddle, *nextRight;
+    Tetrahedron<3> *nextLeft, *nextMiddle, *nextRight;
     Perm<4> nextLeftRoles, nextMiddleRoles, nextRightRoles;
 
     while (1) {
@@ -766,7 +764,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
             std::copy(foundSoFar.begin(), foundSoFar.end(),
                 std::inserter(avoidTets, avoidTets.begin()));
 
-            std::list<NTetrahedron*>::const_iterator tit = foundSoFar.begin();
+            std::list<Tetrahedron<3>*>::const_iterator tit = foundSoFar.begin();
             std::list<Perm<4>>::const_iterator pit = rolesSoFar.begin();
             for (unsigned i = 0; i < length; i++) {
                 ans->annulus_[i].tet[0] = *tit++;
@@ -828,13 +826,13 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     return 0;
 }
 
-NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
+NSatReflectorStrip* NSatReflectorStrip::insertBlock(Triangulation<3>& tri,
         unsigned length, bool twisted) {
     NSatReflectorStrip* ans = new NSatReflectorStrip(length, twisted);
 
     const Perm<4> id;
-    NTetrahedron *upper, *lower, *middle;
-    NTetrahedron *prevRight = 0, *firstLeft = 0;
+    Tetrahedron<3> *upper, *lower, *middle;
+    Tetrahedron<3> *prevRight = 0, *firstLeft = 0;
     for (unsigned i = 0; i < length; i++) {
         // Create the three tetrahedra behind boundary annulus #i.
         upper = tri.newTetrahedron();
@@ -867,7 +865,7 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
     return ans;
 }
 
-void NSatLayering::adjustSFS(NSFSpace& sfs, bool reflect) const {
+void NSatLayering::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (overHorizontal_)
         sfs.insertFibre(1, reflect ? -2 : 2);
 

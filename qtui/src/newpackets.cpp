@@ -30,29 +30,29 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4triangulation.h"
 #include "packet/container.h"
 #include "packet/script.h"
 #include "packet/text.h"
 #include "snappea/snappeatriangulation.h"
+#include "triangulation/dim4.h"
 
 #include "newpacketdialog.h"
 #include "packetcreator.h"
 #include "packetfilter.h"
 #include "packettreeview.h"
 #include "reginamain.h"
-#include "packets/dim2tricreator.h"
-#include "packets/dim4tricreator.h"
+#include "packets/tri2creator.h"
+#include "packets/tri4creator.h"
 #include "packets/anglescreator.h"
-#include "packets/nhypersurfacecreator.h"
-#include "packets/nnormalsurfacecreator.h"
-#include "packets/nsurfacefiltercreator.h"
-#include "packets/ntriangulationcreator.h"
+#include "packets/filtercreator.h"
+#include "packets/hypercreator.h"
+#include "packets/tri3creator.h"
 #include "packets/snappeacreator.h"
+#include "packets/surfacescreator.h"
 
 void ReginaMain::newAngleStructures() {
     newPacket(new AngleStructureCreator(),
-        new SubclassFilter<regina::NTriangulation>(),
+        new SubclassFilter<regina::Triangulation<3>>(),
         tr("New Angle Structure Solutions"));
 }
 
@@ -61,30 +61,20 @@ void ReginaMain::newContainer() {
         tr("New Container"));
 }
 
-void ReginaMain::newDim2Triangulation() {
-    newPacket(new Dim2TriangulationCreator(), 0,
-        tr("New 2-Manifold Triangulation"));
-}
-
-void ReginaMain::newDim4Triangulation() {
-    newPacket(new Dim4TriangulationCreator(this), 0,
-        tr("New 4-Manifold Triangulation"));
-}
-
 void ReginaMain::newFilter() {
-    newPacket(new NSurfaceFilterCreator(), 0,
+    newPacket(new FilterCreator(), 0,
         tr("New Normal Surface Filter"));
 }
 
 void ReginaMain::newNormalSurfaces() {
-    newPacket(new NNormalSurfaceCreator(),
-        new SubclassFilter<regina::NTriangulation>(),
+    newPacket(new SurfacesCreator(),
+        new SubclassFilter<regina::Triangulation<3>>(),
         tr("New Normal Surface List"));
 }
 
 void ReginaMain::newNormalHypersurfaces() {
-    newPacket(new NHypersurfaceCreator(),
-        new SubclassFilter<regina::Dim4Triangulation>(),
+    newPacket(new HyperCreator(),
+        new SubclassFilter<regina::Triangulation<4>>(),
         tr("New Normal Hypersurface List"));
 }
 
@@ -108,14 +98,24 @@ void ReginaMain::newText() {
         tr("New Text Packet"));
 }
 
-void ReginaMain::newTriangulation() {
-    newPacket(new NTriangulationCreator(), 0,
+void ReginaMain::newTriangulation2() {
+    newPacket(new Tri2Creator(), 0,
+        tr("New 2-Manifold Triangulation"));
+}
+
+void ReginaMain::newTriangulation3() {
+    newPacket(new Tri3Creator(), 0,
         tr("New 3-Manifold Triangulation"));
+}
+
+void ReginaMain::newTriangulation4() {
+    newPacket(new Tri4Creator(this), 0,
+        tr("New 4-Manifold Triangulation"));
 }
 
 void ReginaMain::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
         const QString& dialogTitle) {
-    NewPacketDialog dlg(this, creator, packetTree,
+    NewPacketDialog dlg(this, creator, packetTree.get(),
         treeView->selectedPacket(), parentFilter, dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::Packet* newPacket = dlg.createdPacket();

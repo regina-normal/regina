@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nhandlebody.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/handlebody.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
-#include "triangulation/ntetrahedron.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -70,7 +70,7 @@ bool NTriSolidTorus::isAnnulusSelfIdentified(int index, Perm<4>* roleMap) const 
 unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     int right = (otherAnnulus + 1) % 3;
     int left = (otherAnnulus + 2) % 3;
-    NTetrahedron* adj = tet[right]->adjacentTetrahedron(
+    Tetrahedron<3>* adj = tet[right]->adjacentTetrahedron(
         vertexRoles_[right][1]);
     if (adj != tet[left]->adjacentTetrahedron(vertexRoles_[left][2]))
         return 0;
@@ -99,7 +99,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
 unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     int right = (otherAnnulus + 1) % 3;
     int left = (otherAnnulus + 2) % 3;
-    NTetrahedron* adj = tet[right]->adjacentTetrahedron(
+    Tetrahedron<3>* adj = tet[right]->adjacentTetrahedron(
         vertexRoles_[right][1]);
     if (adj != tet[otherAnnulus]->adjacentTetrahedron(
             vertexRoles_[otherAnnulus][2]))
@@ -117,7 +117,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     // layered chain.
     NLayeredChain chain(adj, roles);
     chain.extendMaximal();
-    NTetrahedron* top = chain.top();
+    Tetrahedron<3>* top = chain.top();
     Perm<4> topRoles(chain.topVertexRoles());
 
     if (top->adjacentTetrahedron(topRoles[3]) != tet[left])
@@ -136,7 +136,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     return chain.index();
 }
 
-NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(NTetrahedron* tet,
+NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(Tetrahedron<3>* tet,
         Perm<4> useVertexRoles) {
     NTriSolidTorus* ans = new NTriSolidTorus();
     ans->tet[0] = tet;
@@ -177,14 +177,14 @@ NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(NTetrahedron* tet,
     return ans;
 }
 
-NAbelianGroup* NTriSolidTorus::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NTriSolidTorus::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;
 }
 
-NManifold* NTriSolidTorus::manifold() const {
-    return new NHandlebody(1, true);
+Manifold* NTriSolidTorus::manifold() const {
+    return new Handlebody(1, true);
 }
 
 } // namespace regina

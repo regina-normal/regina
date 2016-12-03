@@ -1,3 +1,6 @@
+AbelianGroup : class
+Equality type : BY_VALUE
+
 AngleStructure : class
 Equality type : BY_REFERENCE
 
@@ -6,6 +9,60 @@ Equality type : BY_REFERENCE
 
 BoolSet : class
 Equality type : BY_VALUE
+
+BoundaryComponent10 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent11 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent12 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent13 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent14 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent15 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent2 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent3 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent4 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent5 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent6 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent7 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent8 : class
+Equality type : BY_REFERENCE
+
+BoundaryComponent9 : class
+Equality type : BY_REFERENCE
+
+Census : class
+Equality type : NEVER_INSTANTIATED
+
+CensusDB : class
+Equality type : BY_REFERENCE
+
+CensusHit : class
+Equality type : BY_REFERENCE
+
+CensusHits : class
+Equality type : BY_REFERENCE
 
 Component10 : class
 Equality type : BY_REFERENCE
@@ -61,8 +118,7 @@ Equality type : BY_REFERENCE
 Cyclotomic : class
 Equality type : BY_VALUE
 
-Dim2BoundaryComponent : class
-Equality type : BY_REFERENCE
+Dim2BoundaryComponent : typedef ->  BoundaryComponent2
 
 Dim2Component : typedef ->  Component2
 
@@ -72,8 +128,7 @@ Dim2EdgeEmbedding : typedef ->  FaceEmbedding2_1
 
 Dim2EdgePairing : typedef ->  FacetPairing2
 
-Dim2ExampleTriangulation : class
-Equality type : NEVER_INSTANTIATED
+Dim2ExampleTriangulation : typedef ->  Example2
 
 Dim2Isomorphism : typedef ->  Isomorphism2
 
@@ -87,8 +142,7 @@ Dim2Vertex : typedef ->  Face2_0
 
 Dim2VertexEmbedding : typedef ->  FaceEmbedding2_0
 
-Dim4BoundaryComponent : class
-Equality type : BY_REFERENCE
+Dim4BoundaryComponent : typedef ->  BoundaryComponent4
 
 Dim4Component : typedef ->  Component4
 
@@ -96,8 +150,7 @@ Dim4Edge : typedef ->  Face4_1
 
 Dim4EdgeEmbedding : typedef ->  FaceEmbedding4_1
 
-Dim4ExampleTriangulation : class
-Equality type : NEVER_INSTANTIATED
+Dim4ExampleTriangulation : typedef ->  Example4
 
 Dim4FacetPairing : typedef ->  FacetPairing4
 
@@ -121,6 +174,116 @@ Dim4Vertex : typedef ->  Face4_0
 
 Dim4VertexEmbedding : typedef ->  FaceEmbedding4_0
 
+DiscSetSurface : class
+Equality type : BY_REFERENCE
+
+DiscSetTet : class
+Equality type : BY_REFERENCE
+
+DiscSpec : class
+Equality type : BY_VALUE
+
+DiscSpecIterator : class
+Equality type : BY_VALUE
+
+DiscType : class
+Equality type : BY_VALUE
+
+Edge10 : typedef ->  Face10_1
+
+Edge11 : typedef ->  Face11_1
+
+Edge12 : typedef ->  Face12_1
+
+Edge13 : typedef ->  Face13_1
+
+Edge14 : typedef ->  Face14_1
+
+Edge15 : typedef ->  Face15_1
+
+Edge2 : typedef ->  Face2_1
+
+Edge3 : typedef ->  Face3_1
+
+Edge4 : typedef ->  Face4_1
+
+Edge5 : typedef ->  Face5_1
+
+Edge6 : typedef ->  Face6_1
+
+Edge7 : typedef ->  Face7_1
+
+Edge8 : typedef ->  Face8_1
+
+Edge9 : typedef ->  Face9_1
+
+EdgeEmbedding10 : typedef ->  FaceEmbedding10_1
+
+EdgeEmbedding11 : typedef ->  FaceEmbedding11_1
+
+EdgeEmbedding12 : typedef ->  FaceEmbedding12_1
+
+EdgeEmbedding13 : typedef ->  FaceEmbedding13_1
+
+EdgeEmbedding14 : typedef ->  FaceEmbedding14_1
+
+EdgeEmbedding15 : typedef ->  FaceEmbedding15_1
+
+EdgeEmbedding2 : typedef ->  FaceEmbedding2_1
+
+EdgeEmbedding3 : typedef ->  FaceEmbedding3_1
+
+EdgeEmbedding4 : typedef ->  FaceEmbedding4_1
+
+EdgeEmbedding5 : typedef ->  FaceEmbedding5_1
+
+EdgeEmbedding6 : typedef ->  FaceEmbedding6_1
+
+EdgeEmbedding7 : typedef ->  FaceEmbedding7_1
+
+EdgeEmbedding8 : typedef ->  FaceEmbedding8_1
+
+EdgeEmbedding9 : typedef ->  FaceEmbedding9_1
+
+Example10 : class
+Equality type : NEVER_INSTANTIATED
+
+Example12 : class
+Equality type : NEVER_INSTANTIATED
+
+Example13 : class
+Equality type : NEVER_INSTANTIATED
+
+Example14 : class
+Equality type : NEVER_INSTANTIATED
+
+Example15 : class
+Equality type : NEVER_INSTANTIATED
+
+Example2 : class
+Equality type : NEVER_INSTANTIATED
+
+Example3 : class
+Equality type : NEVER_INSTANTIATED
+
+Example4 : class
+Equality type : NEVER_INSTANTIATED
+
+Example5 : class
+Equality type : NEVER_INSTANTIATED
+
+Example6 : class
+Equality type : NEVER_INSTANTIATED
+
+Example7 : class
+Equality type : NEVER_INSTANTIATED
+
+Example8 : class
+Equality type : NEVER_INSTANTIATED
+
+Example9 : class
+Equality type : NEVER_INSTANTIATED
+
 ExampleLink : class
 Equality type : NEVER_INSTANTIATED
 
@@ -132,6 +295,8 @@ Equality type : BY_REFERENCE
 
 Face10_1 : class
 Equality type : BY_REFERENCE
+
+Face10_10 : typedef ->  Simplex10
 
 Face10_2 : class
 Equality type : BY_REFERENCE
@@ -165,6 +330,8 @@ Equality type : BY_REFERENCE
 
 Face11_10 : class
 Equality type : BY_REFERENCE
+
+Face11_11 : typedef ->  Simplex11
 
 Face11_2 : class
 Equality type : BY_REFERENCE
@@ -201,6 +368,8 @@ Equality type : BY_REFERENCE
 
 Face12_11 : class
 Equality type : BY_REFERENCE
+
+Face12_12 : typedef ->  Simplex12
 
 Face12_2 : class
 Equality type : BY_REFERENCE
@@ -240,6 +409,8 @@ Equality type : BY_REFERENCE
 
 Face13_12 : class
 Equality type : BY_REFERENCE
+
+Face13_13 : typedef ->  Simplex13
 
 Face13_2 : class
 Equality type : BY_REFERENCE
@@ -282,6 +453,8 @@ Equality type : BY_REFERENCE
 
 Face14_13 : class
 Equality type : BY_REFERENCE
+
+Face14_14 : typedef ->  Simplex14
 
 Face14_2 : class
 Equality type : BY_REFERENCE
@@ -328,6 +501,8 @@ Equality type : BY_REFERENCE
 Face15_14 : class
 Equality type : BY_REFERENCE
 
+Face15_15 : typedef ->  Simplex15
+
 Face15_2 : class
 Equality type : BY_REFERENCE
 
@@ -358,6 +533,8 @@ Equality type : BY_REFERENCE
 Face2_1 : class
 Equality type : BY_REFERENCE
 
+Face2_2 : typedef ->  Simplex2
+
 Face3_0 : class
 Equality type : BY_REFERENCE
 
@@ -366,6 +543,8 @@ Equality type : BY_REFERENCE
 
 Face3_2 : class
 Equality type : BY_REFERENCE
+
+Face3_3 : typedef ->  Simplex3
 
 Face4_0 : class
 Equality type : BY_REFERENCE
@@ -378,6 +557,8 @@ Equality type : BY_REFERENCE
 
 Face4_3 : class
 Equality type : BY_REFERENCE
+
+Face4_4 : typedef ->  Simplex4
 
 Face5_0 : class
 Equality type : BY_REFERENCE
@@ -393,6 +574,8 @@ Equality type : BY_REFERENCE
 
 Face5_4 : class
 Equality type : BY_REFERENCE
+
+Face5_5 : typedef ->  Simplex5
 
 Face6_0 : class
 Equality type : BY_REFERENCE
@@ -411,6 +594,8 @@ Equality type : BY_REFERENCE
 
 Face6_5 : class
 Equality type : BY_REFERENCE
+
+Face6_6 : typedef ->  Simplex6
 
 Face7_0 : class
 Equality type : BY_REFERENCE
@@ -432,6 +617,8 @@ Equality type : BY_REFERENCE
 
 Face7_6 : class
 Equality type : BY_REFERENCE
+
+Face7_7 : typedef ->  Simplex7
 
 Face8_0 : class
 Equality type : BY_REFERENCE
@@ -456,6 +643,8 @@ Equality type : BY_REFERENCE
 
 Face8_7 : class
 Equality type : BY_REFERENCE
+
+Face8_8 : typedef ->  Simplex8
 
 Face9_0 : class
 Equality type : BY_REFERENCE
@@ -483,6 +672,8 @@ Equality type : BY_REFERENCE
 
 Face9_8 : class
 Equality type : BY_REFERENCE
+
+Face9_9 : typedef ->  Simplex9
 
 FaceEmbedding10_0 : class
 Equality type : BY_VALUE
@@ -841,6 +1032,9 @@ Equality type : BY_VALUE
 FaceEmbedding9_8 : class
 Equality type : BY_VALUE
 
+FacePair : class
+Equality type : BY_VALUE
+
 FacetPairing10 : class
 Equality type : BY_REFERENCE
 
@@ -860,6 +1054,9 @@ FacetPairing15 : class
 Equality type : BY_REFERENCE
 
 FacetPairing2 : class
+Equality type : BY_REFERENCE
+
+FacetPairing3 : class
 Equality type : BY_REFERENCE
 
 FacetPairing4 : class
@@ -964,6 +1161,39 @@ Equality type : BY_REFERENCE
 GlobalDirs : class
 Equality type : NEVER_INSTANTIATED
 
+GluingPermSearcher3 : class
+Equality type : BY_REFERENCE
+
+GraphLoop : class
+Equality type : BY_REFERENCE
+
+GraphPair : class
+Equality type : BY_REFERENCE
+
+GraphTriple : class
+Equality type : BY_REFERENCE
+
+GroupExpression : class
+Equality type : BY_VALUE
+
+GroupExpressionTerm : class
+Equality type : BY_VALUE
+
+GroupPresentation : class
+Equality type : BY_REFERENCE
+
+Handlebody : class
+Equality type : BY_VALUE
+
+HomGroupPresentation : class
+Equality type : BY_REFERENCE
+
+HomMarkedAbelianGroup : class
+Equality type : BY_REFERENCE
+
+HomologicalData : class
+Equality type : BY_REFERENCE
+
 HyperAlg : class
 Equality type : BY_VALUE
 
@@ -1024,11 +1254,20 @@ Equality type : BY_VALUE
 Laurent2 : class
 Equality type : BY_VALUE
 
+LensSpace : class
+Equality type : BY_VALUE
+
 Link : class
 Equality type : BY_REFERENCE
 
 Locale : class
 Equality type : NEVER_INSTANTIATED
+
+Manifold : class
+Equality type : BY_REFERENCE
+
+MarkedAbelianGroup : class
+Equality type : BY_REFERENCE
 
 Matrix2 : class
 Equality type : BY_VALUE
@@ -1039,8 +1278,7 @@ Equality type : BY_VALUE
 MatrixInt : class
 Equality type : BY_VALUE
 
-NAbelianGroup : class
-Equality type : BY_VALUE
+NAbelianGroup : typedef ->  AbelianGroup
 
 NAngleStructure : typedef ->  AngleStructure
 
@@ -1063,20 +1301,15 @@ Equality type : BY_REFERENCE
 
 NBoolSet : typedef ->  BoolSet
 
-NBoundaryComponent : class
-Equality type : BY_REFERENCE
+NBoundaryComponent : typedef ->  BoundaryComponent3
 
-NCensus : class
-Equality type : NEVER_INSTANTIATED
+NCensus : typedef ->  Census
 
-NCensusDB : class
-Equality type : BY_REFERENCE
+NCensusDB : typedef ->  CensusDB
 
-NCensusHit : class
-Equality type : BY_REFERENCE
+NCensusHit : typedef ->  CensusHit
 
-NCensusHits : class
-Equality type : BY_REFERENCE
+NCensusHits : typedef ->  CensusHits
 
 NComponent : typedef ->  Component3
 
@@ -1086,20 +1319,15 @@ NCusp : typedef ->  Cusp
 
 NCyclotomic : typedef ->  Cyclotomic
 
-NDiscSetSurface : class
-Equality type : BY_REFERENCE
+NDiscSetSurface : typedef ->  DiscSetSurface
 
-NDiscSetTet : class
-Equality type : BY_REFERENCE
+NDiscSetTet : typedef ->  DiscSetTet
 
-NDiscSpec : class
-Equality type : BY_VALUE
+NDiscSpec : typedef ->  DiscSpec
 
-NDiscSpecIterator : class
-Equality type : BY_VALUE
+NDiscSpecIterator : typedef ->  DiscSpecIterator
 
-NDiscType : class
-Equality type : BY_VALUE
+NDiscType : typedef ->  DiscType
 
 NEdge : typedef ->  Face3_1
 
@@ -1107,51 +1335,37 @@ NEdgeEmbedding : typedef ->  FaceEmbedding3_1
 
 NExampleSnapPeaTriangulation : typedef ->  ExampleSnapPea
 
-NExampleTriangulation : class
-Equality type : NEVER_INSTANTIATED
+NExampleTriangulation : typedef ->  Example3
 
-NFacePair : class
-Equality type : BY_VALUE
+NFacePair : typedef ->  FacePair
 
-NFacePairing : class
-Equality type : BY_REFERENCE
+NFacePairing : typedef ->  FacetPairing3
 
 NFileInfo : typedef ->  FileInfo
 
 NGlobalDirs : typedef ->  GlobalDirs
 
-NGluingPermSearcher : class
-Equality type : BY_REFERENCE
+NGluingPermSearcher : typedef ->  GluingPermSearcher3
 
-NGraphLoop : class
-Equality type : BY_REFERENCE
+NGraphLoop : typedef ->  GraphLoop
 
-NGraphPair : class
-Equality type : BY_REFERENCE
+NGraphPair : typedef ->  GraphPair
 
-NGraphTriple : class
-Equality type : BY_REFERENCE
+NGraphTriple : typedef ->  GraphTriple
 
-NGroupExpression : class
-Equality type : BY_VALUE
+NGroupExpression : typedef ->  GroupExpression
 
-NGroupExpressionTerm : class
-Equality type : BY_VALUE
+NGroupExpressionTerm : typedef ->  GroupExpressionTerm
 
-NGroupPresentation : class
-Equality type : BY_REFERENCE
+NGroupPresentation : typedef ->  GroupPresentation
 
-NHandlebody : class
-Equality type : BY_VALUE
+NHandlebody : typedef ->  Handlebody
 
-NHomGroupPresentation : class
-Equality type : BY_REFERENCE
+NHomGroupPresentation : typedef ->  HomGroupPresentation
 
-NHomMarkedAbelianGroup : class
-Equality type : BY_REFERENCE
+NHomMarkedAbelianGroup : typedef ->  HomMarkedAbelianGroup
 
-NHomologicalData : class
-Equality type : BY_REFERENCE
+NHomologicalData : typedef ->  HomologicalData
 
 NInteger : typedef ->  Integer
 
@@ -1183,14 +1397,11 @@ Equality type : BY_REFERENCE
 NLayering : class
 Equality type : BY_REFERENCE
 
-NLensSpace : class
-Equality type : BY_VALUE
+NLensSpace : typedef ->  LensSpace
 
-NManifold : class
-Equality type : BY_REFERENCE
+NManifold : typedef ->  Manifold
 
-NMarkedAbelianGroup : class
-Equality type : BY_REFERENCE
+NMarkedAbelianGroup : typedef ->  MarkedAbelianGroup
 
 NMatrix2 : typedef ->  Matrix2
 
@@ -1198,14 +1409,11 @@ NMatrix2Row : typedef ->  Matrix2Row
 
 NMatrixInt : typedef ->  MatrixInt
 
-NNormalHypersurface : class
-Equality type : BY_REFERENCE
+NNormalHypersurface : typedef ->  NormalHypersurface
 
-NNormalHypersurfaceList : class
-Equality type : BY_REFERENCE
+NNormalHypersurfaceList : typedef ->  NormalHypersurfaces
 
-NNormalSurface : class
-Equality type : BY_REFERENCE
+NNormalSurface : typedef ->  NormalSurface
 
 NNormalSurfaceList : typedef ->  NormalSurfaces
 
@@ -1256,8 +1464,7 @@ NPolynomial : typedef ->  Polynomial
 
 NPrimes : typedef ->  Primes
 
-NPrismSpec : class
-Equality type : BY_VALUE
+NPrismSpec : typedef ->  PrismSpec
 
 NProgressTracker : typedef ->  ProgressTracker
 
@@ -1265,11 +1472,9 @@ NProgressTrackerOpen : typedef ->  ProgressTrackerOpen
 
 NRational : typedef ->  Rational
 
-NSFSFibre : class
-Equality type : BY_VALUE
+NSFSFibre : typedef ->  SFSFibre
 
-NSFSpace : class
-Equality type : BY_VALUE
+NSFSpace : typedef ->  SFSpace
 
 NSatAnnulus : class
 Equality type : BY_VALUE
@@ -1303,14 +1508,11 @@ Equality type : BY_REFERENCE
 
 NScript : typedef ->  Script
 
-NSignature : class
-Equality type : BY_REFERENCE
+NSignature : typedef ->  Signature
 
-NSimpleSurfaceBundle : class
-Equality type : BY_VALUE
+NSimpleSurfaceBundle : typedef ->  SimpleSurfaceBundle
 
-NSnapPeaCensusManifold : class
-Equality type : BY_VALUE
+NSnapPeaCensusManifold : typedef ->  SnapPeaCensusManifold
 
 NSnapPeaCensusTri : class
 Equality type : BY_VALUE
@@ -1329,17 +1531,11 @@ Equality type : BY_REFERENCE
 NStandardTriangulation : class
 Equality type : BY_REFERENCE
 
-NSurfaceFilter : class
-Equality type : BY_REFERENCE
+NSurfaceFilter : typedef ->  SurfaceFilter
 
-NSurfaceFilterCombination : class
-Equality type : BY_REFERENCE
+NSurfaceFilterCombination : typedef ->  SurfaceFilterCombination
 
-NSurfaceFilterProperties : class
-Equality type : BY_REFERENCE
-
-NSurfaceSubset : class
-Equality type : BY_REFERENCE
+NSurfaceFilterProperties : typedef ->  SurfaceFilterProperties
 
 NTetFace : typedef ->  FacetSpec3
 
@@ -1347,8 +1543,7 @@ NTetrahedron : typedef ->  Simplex3
 
 NText : typedef ->  Text
 
-NTorusBundle : class
-Equality type : BY_REFERENCE
+NTorusBundle : typedef ->  TorusBundle
 
 NTreeBag : typedef ->  TreeBag
 
@@ -1382,8 +1577,17 @@ NVertexEmbedding : typedef ->  FaceEmbedding3_0
 NormalAlg : class
 Equality type : BY_VALUE
 
+NormalHypersurface : class
+Equality type : BY_REFERENCE
+
+NormalHypersurfaces : class
+Equality type : BY_REFERENCE
+
 NormalList : class
 Equality type : BY_VALUE
+
+NormalSurface : class
+Equality type : BY_REFERENCE
 
 NormalSurfaces : class
 Equality type : BY_REFERENCE
@@ -1393,6 +1597,52 @@ Equality type : BY_REFERENCE
 
 Packet : class
 Equality type : BY_REFERENCE
+
+Pentachoron10 : typedef ->  Face10_4
+
+Pentachoron11 : typedef ->  Face11_4
+
+Pentachoron12 : typedef ->  Face12_4
+
+Pentachoron13 : typedef ->  Face13_4
+
+Pentachoron14 : typedef ->  Face14_4
+
+Pentachoron15 : typedef ->  Face15_4
+
+Pentachoron4 : typedef ->  Simplex4
+
+Pentachoron5 : typedef ->  Face5_4
+
+Pentachoron6 : typedef ->  Face6_4
+
+Pentachoron7 : typedef ->  Face7_4
+
+Pentachoron8 : typedef ->  Face8_4
+
+Pentachoron9 : typedef ->  Face9_4
+
+PentachoronEmbedding10 : typedef ->  FaceEmbedding10_4
+
+PentachoronEmbedding11 : typedef ->  FaceEmbedding11_4
+
+PentachoronEmbedding12 : typedef ->  FaceEmbedding12_4
+
+PentachoronEmbedding13 : typedef ->  FaceEmbedding13_4
+
+PentachoronEmbedding14 : typedef ->  FaceEmbedding14_4
+
+PentachoronEmbedding15 : typedef ->  FaceEmbedding15_4
+
+PentachoronEmbedding5 : typedef ->  FaceEmbedding5_4
+
+PentachoronEmbedding6 : typedef ->  FaceEmbedding6_4
+
+PentachoronEmbedding7 : typedef ->  FaceEmbedding7_4
+
+PentachoronEmbedding8 : typedef ->  FaceEmbedding8_4
+
+PentachoronEmbedding9 : typedef ->  FaceEmbedding9_4
 
 Perm10 : class
 Equality type : BY_VALUE
@@ -1445,6 +1695,9 @@ Equality type : BY_VALUE
 Primes : class
 Equality type : NEVER_INSTANTIATED
 
+PrismSpec : class
+Equality type : BY_VALUE
+
 ProgressTracker : class
 Equality type : BY_REFERENCE
 
@@ -1454,8 +1707,20 @@ Equality type : BY_REFERENCE
 Rational : class
 Equality type : BY_VALUE
 
+SFSFibre : class
+Equality type : BY_VALUE
+
+SFSpace : class
+Equality type : BY_VALUE
+
 Script : class
 Equality type : BY_REFERENCE
+
+Signature : class
+Equality type : BY_REFERENCE
+
+SimpleSurfaceBundle : class
+Equality type : BY_VALUE
 
 Simplex10 : class
 Equality type : BY_REFERENCE
@@ -1499,13 +1764,78 @@ Equality type : BY_REFERENCE
 Simplex9 : class
 Equality type : BY_REFERENCE
 
+SnapPeaCensusManifold : class
+Equality type : BY_VALUE
+
 SnapPeaTriangulation : class
 Equality type : BY_REFERENCE
 
 StrandRef : class
 Equality type : BY_VALUE
 
+SurfaceFilter : class
+Equality type : BY_REFERENCE
+
+SurfaceFilterCombination : class
+Equality type : BY_REFERENCE
+
+SurfaceFilterProperties : class
+Equality type : BY_REFERENCE
+
+Tetrahedron10 : typedef ->  Face10_3
+
+Tetrahedron11 : typedef ->  Face11_3
+
+Tetrahedron12 : typedef ->  Face12_3
+
+Tetrahedron13 : typedef ->  Face13_3
+
+Tetrahedron14 : typedef ->  Face14_3
+
+Tetrahedron15 : typedef ->  Face15_3
+
+Tetrahedron3 : typedef ->  Simplex3
+
+Tetrahedron4 : typedef ->  Face4_3
+
+Tetrahedron5 : typedef ->  Face5_3
+
+Tetrahedron6 : typedef ->  Face6_3
+
+Tetrahedron7 : typedef ->  Face7_3
+
+Tetrahedron8 : typedef ->  Face8_3
+
+Tetrahedron9 : typedef ->  Face9_3
+
+TetrahedronEmbedding10 : typedef ->  FaceEmbedding10_3
+
+TetrahedronEmbedding11 : typedef ->  FaceEmbedding11_3
+
+TetrahedronEmbedding12 : typedef ->  FaceEmbedding12_3
+
+TetrahedronEmbedding13 : typedef ->  FaceEmbedding13_3
+
+TetrahedronEmbedding14 : typedef ->  FaceEmbedding14_3
+
+TetrahedronEmbedding15 : typedef ->  FaceEmbedding15_3
+
+TetrahedronEmbedding4 : typedef ->  FaceEmbedding4_3
+
+TetrahedronEmbedding5 : typedef ->  FaceEmbedding5_3
+
+TetrahedronEmbedding6 : typedef ->  FaceEmbedding6_3
+
+TetrahedronEmbedding7 : typedef ->  FaceEmbedding7_3
+
+TetrahedronEmbedding8 : typedef ->  FaceEmbedding8_3
+
+TetrahedronEmbedding9 : typedef ->  FaceEmbedding9_3
+
 Text : class
+Equality type : BY_REFERENCE
+
+TorusBundle : class
 Equality type : BY_REFERENCE
 
 TreeBag : class
@@ -1513,6 +1843,60 @@ Equality type : BY_REFERENCE
 
 TreeDecomposition : class
 Equality type : BY_REFERENCE
+
+Triangle10 : typedef ->  Face10_2
+
+Triangle11 : typedef ->  Face11_2
+
+Triangle12 : typedef ->  Face12_2
+
+Triangle13 : typedef ->  Face13_2
+
+Triangle14 : typedef ->  Face14_2
+
+Triangle15 : typedef ->  Face15_2
+
+Triangle2 : typedef ->  Simplex2
+
+Triangle3 : typedef ->  Face3_2
+
+Triangle4 : typedef ->  Face4_2
+
+Triangle5 : typedef ->  Face5_2
+
+Triangle6 : typedef ->  Face6_2
+
+Triangle7 : typedef ->  Face7_2
+
+Triangle8 : typedef ->  Face8_2
+
+Triangle9 : typedef ->  Face9_2
+
+TriangleEmbedding10 : typedef ->  FaceEmbedding10_2
+
+TriangleEmbedding11 : typedef ->  FaceEmbedding11_2
+
+TriangleEmbedding12 : typedef ->  FaceEmbedding12_2
+
+TriangleEmbedding13 : typedef ->  FaceEmbedding13_2
+
+TriangleEmbedding14 : typedef ->  FaceEmbedding14_2
+
+TriangleEmbedding15 : typedef ->  FaceEmbedding15_2
+
+TriangleEmbedding3 : typedef ->  FaceEmbedding3_2
+
+TriangleEmbedding4 : typedef ->  FaceEmbedding4_2
+
+TriangleEmbedding5 : typedef ->  FaceEmbedding5_2
+
+TriangleEmbedding6 : typedef ->  FaceEmbedding6_2
+
+TriangleEmbedding7 : typedef ->  FaceEmbedding7_2
+
+TriangleEmbedding8 : typedef ->  FaceEmbedding8_2
+
+TriangleEmbedding9 : typedef ->  FaceEmbedding9_2
 
 Triangulation10 : class
 Equality type : BY_REFERENCE
@@ -1555,4 +1939,60 @@ Equality type : BY_REFERENCE
 
 Triangulation9 : class
 Equality type : BY_REFERENCE
+
+Vertex10 : typedef ->  Face10_0
+
+Vertex11 : typedef ->  Face11_0
+
+Vertex12 : typedef ->  Face12_0
+
+Vertex13 : typedef ->  Face13_0
+
+Vertex14 : typedef ->  Face14_0
+
+Vertex15 : typedef ->  Face15_0
+
+Vertex2 : typedef ->  Face2_0
+
+Vertex3 : typedef ->  Face3_0
+
+Vertex4 : typedef ->  Face4_0
+
+Vertex5 : typedef ->  Face5_0
+
+Vertex6 : typedef ->  Face6_0
+
+Vertex7 : typedef ->  Face7_0
+
+Vertex8 : typedef ->  Face8_0
+
+Vertex9 : typedef ->  Face9_0
+
+VertexEmbedding10 : typedef ->  FaceEmbedding10_0
+
+VertexEmbedding11 : typedef ->  FaceEmbedding11_0
+
+VertexEmbedding12 : typedef ->  FaceEmbedding12_0
+
+VertexEmbedding13 : typedef ->  FaceEmbedding13_0
+
+VertexEmbedding14 : typedef ->  FaceEmbedding14_0
+
+VertexEmbedding15 : typedef ->  FaceEmbedding15_0
+
+VertexEmbedding2 : typedef ->  FaceEmbedding2_0
+
+VertexEmbedding3 : typedef ->  FaceEmbedding3_0
+
+VertexEmbedding4 : typedef ->  FaceEmbedding4_0
+
+VertexEmbedding5 : typedef ->  FaceEmbedding5_0
+
+VertexEmbedding6 : typedef ->  FaceEmbedding6_0
+
+VertexEmbedding7 : typedef ->  FaceEmbedding7_0
+
+VertexEmbedding8 : typedef ->  FaceEmbedding8_0
+
+VertexEmbedding9 : typedef ->  FaceEmbedding9_0
 

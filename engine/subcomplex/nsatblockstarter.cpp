@@ -90,7 +90,7 @@ void NSatBlockStarterSet::initialise() {
     insert(starter);
 }
 
-void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
+void NSatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
     // Clean up usedTets if required.
     if (! usedTets.empty())
         usedTets.clear();
@@ -98,8 +98,8 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
     // Hunt for a starting block.
     unsigned long i;
     NSatBlockStarterSet::iterator it;
-    std::list<NIsomorphism*> isos;
-    std::list<NIsomorphism*>::iterator isoIt;
+    std::list<Isomorphism<3>*> isos;
+    std::list<Isomorphism<3>*>::iterator isoIt;
     NSatBlock* starter;
     for (it = NSatBlockStarterSet::begin(); it != NSatBlockStarterSet::end();
             it++) {

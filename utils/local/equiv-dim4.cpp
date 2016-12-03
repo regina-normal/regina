@@ -72,8 +72,8 @@
  * found to be non-minimal will not be saved at all.
  */
 
-#include <dim4/dim4triangulation.h>
 #include <packet/container.h>
+#include <triangulation/dim4.h>
 
 #include <cstdio>
 #include <list>
@@ -97,21 +97,21 @@ Packet* tree = 0;
 Packet* newTree = 0;
 
 // The original triangulation currently being processed.
-Dim4Triangulation* orig;
+Triangulation<4>* orig;
 
 // Triangulations that have been found to be PL-homeomorphic to orig.
 // This list includes orig itself.
-typedef std::set<Dim4Triangulation*> TriSet;
+typedef std::set<Triangulation<4>*> TriSet;
 TriSet equivs;
 
 // Do we know that the original triangulation is non-minimal?
 bool nonMin;
 
 // All triangulations that were found to be non-minimal.
-std::list<Dim4Triangulation*> allNonMin;
+std::list<Triangulation<4>*> allNonMin;
 
 // A mapping from triangulations to equivalence classes.
-typedef std::map<Dim4Triangulation*, int> ClassMap;
+typedef std::map<Triangulation<4>*, int> ClassMap;
 ClassMap eClass;
 int nextClass = 0;
 
@@ -124,13 +124,13 @@ unsigned long nNew = 0;
 /**
  * We have a PL-homeomorphic triangulation of the same size as the original.
  */
-void sameSize(Dim4Triangulation* t) {
+void sameSize(Triangulation<4>* t) {
     // Hunt for it in the packet tree.
-    Dim4Triangulation* found = 0;
+    Triangulation<4>* found = 0;
     for (Packet* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == PACKET_DIM4TRIANGULATION)
-            if (static_cast<Dim4Triangulation*>(p)->isIsomorphicTo(*t).get()) {
-                found = static_cast<Dim4Triangulation*>(p);
+        if (p->type() == PACKET_TRIANGULATION4)
+            if (static_cast<Triangulation<4>*>(p)->isIsomorphicTo(*t).get()) {
+                found = static_cast<Triangulation<4>*>(p);
                 break;
             }
 
@@ -138,7 +138,7 @@ void sameSize(Dim4Triangulation* t) {
         return;
 
     if (! found) {
-        found = new Dim4Triangulation(*t);
+        found = new Triangulation<4>(*t);
         found->setLabel(orig->label() + " - New");
         orig->insertChildLast(found);
         nNew++;
@@ -156,7 +156,7 @@ void sameSize(Dim4Triangulation* t) {
 /**
  * Do the final greedy simplify and process.
  */
-void processAlt(Dim4Triangulation* t) {
+void processAlt(Triangulation<4>* t) {
     t->intelligentSimplify();
 
     if (t->size() < orig->size())
@@ -168,13 +168,13 @@ void processAlt(Dim4Triangulation* t) {
 /**
  * Perform reduction moves.  The given triangulation may be changed.
  */
-void tryMovesDown(Dim4Triangulation* t, int maxLevels) {
+void tryMovesDown(Triangulation<4>* t, int maxLevels) {
     if (maxLevels == 0) {
         processAlt(t);
         return;
     }
 
-    Dim4Triangulation* alt;
+    Triangulation<4>* alt;
     unsigned i;
     bool found = false;
 
@@ -184,7 +184,7 @@ void tryMovesDown(Dim4Triangulation* t, int maxLevels) {
     if (! found)
         for (i = 0; i < t->countEdges(); i++)
             if (t->fourTwoMove(t->edge(i), true, false)) {
-                alt = new Dim4Triangulation(*t);
+                alt = new Triangulation<4>(*t);
                 alt->fourTwoMove(alt->edge(i));
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
@@ -198,7 +198,7 @@ void tryMovesDown(Dim4Triangulation* t, int maxLevels) {
     if (! found)
         for (i = 0; i < t->countTriangles(); i++)
             if (t->threeThreeMove(t->triangle(i), true, false)) {
-                alt = new Dim4Triangulation(*t);
+                alt = new Triangulation<4>(*t);
                 alt->threeThreeMove(alt->triangle(i));
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
@@ -217,16 +217,16 @@ void tryMovesDown(Dim4Triangulation* t, int maxLevels) {
  * Perform 3-3 moves.  The given triangulation may be changed.
  * Moves that revert to prev, prev2 or prev3 will not be considered.
  */
-void tryMovesAcross(Dim4Triangulation* t, int maxLevels,
-        Dim4Triangulation* prev = 0, Dim4Triangulation* prev2 = 0,
-        Dim4Triangulation* prev3 = 0) {
+void tryMovesAcross(Triangulation<4>* t, int maxLevels,
+        Triangulation<4>* prev = 0, Triangulation<4>* prev2 = 0,
+        Triangulation<4>* prev3 = 0) {
     unsigned i;
-    Dim4Triangulation* alt;
+    Triangulation<4>* alt;
 
     if (maxLevels > 0)
         for (i = 0; i < t->countTriangles(); i++)
             if (t->threeThreeMove(t->triangle(i), true, false)) {
-                alt = new Dim4Triangulation(*t);
+                alt = new Triangulation<4>(*t);
                 alt->threeThreeMove(alt->triangle(i));
                 if (prev && alt->isIsomorphicTo(*prev).get()) {
                     // Ignore, reversion.
@@ -249,17 +249,17 @@ void tryMovesAcross(Dim4Triangulation* t, int maxLevels,
 /**
  * Perform 2-4 moves.  The given triangulation will not be changed.
  */
-void tryMovesUp(Dim4Triangulation* t, int levelsRemaining) {
-    Dim4Triangulation* alt;
+void tryMovesUp(Triangulation<4>* t, int levelsRemaining) {
+    Triangulation<4>* alt;
 
     if (levelsRemaining == 0) {
         // We're not allowed to change the original, so clone it.
-        alt = new Dim4Triangulation(*t);
+        alt = new Triangulation<4>(*t);
         tryMovesAcross(alt, argAcross);
         delete alt;
     } else {
         for (unsigned i = 0; i < t->countTetrahedra(); i++) {
-            alt = new Dim4Triangulation(*t);
+            alt = new Triangulation<4>(*t);
             if (alt->twoFourMove(alt->tetrahedron(i))) {
                 if (levelsRemaining > 1)
                     tryMovesUp(alt, levelsRemaining - 1);
@@ -278,17 +278,17 @@ void processTree() {
     TriSet::iterator tit;
     ClassMap::iterator cit, cit2;
     int c, cOld;
-    Dim4Triangulation* t;
+    Triangulation<4>* t;
 
     for (Packet* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == PACKET_DIM4TRIANGULATION) {
+        if (p->type() == PACKET_TRIANGULATION4) {
             // A triangulation to process.
-            t = static_cast<Dim4Triangulation*>(p);
+            t = static_cast<Triangulation<4>*>(p);
             fprintf(stderr, "Processing %s ...\n", t->label().c_str());
             nTris++;
 
             nonMin = false;
-            orig = static_cast<Dim4Triangulation*>(p);
+            orig = static_cast<Triangulation<4>*>(p);
             equivs.clear();
             equivs.insert(orig);
 
@@ -342,7 +342,7 @@ void processTree() {
     // Write the summary of results.
     if (! allNonMin.empty()) {
         printf("NON-MINIMAL TRIANGULATIONS:\n\n");
-        for (std::list<Dim4Triangulation*>::const_iterator it =
+        for (std::list<Triangulation<4>*>::const_iterator it =
                 allNonMin.begin(); it != allNonMin.end(); it++)
             printf("    %s\n", (*it)->label().c_str());
         printf("\n");
@@ -386,7 +386,7 @@ void processTree() {
                         printf("    %s\n",
                             cit2->first->label().c_str());
                         if (outFile) {
-                            t = new Dim4Triangulation(*(cit2->first));
+                            t = new Triangulation<4>(*(cit2->first));
                             t->setLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }

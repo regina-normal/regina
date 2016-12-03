@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "surfaces/nsstandard.h"
-#include "surfaces/nsquad.h"
-#include "surfaces/nsanstandard.h"
-#include "surfaces/nsquadoct.h"
-#include "triangulation/ntriangulation.h"
+#include "surfaces/nsvectorstandard.h"
+#include "surfaces/nsvectorquad.h"
+#include "surfaces/nsvectoranstandard.h"
+#include "surfaces/nsvectorquadoct.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -60,7 +60,7 @@ NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
 template <class Variant>
 NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     // And off we go!
-    NTriangulation* owner = triangulation();
+    Triangulation<3>* owner = triangulation();
 
     // Basic sanity checks:
     if (coords_ != Variant::standardCoords())
@@ -82,14 +82,14 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     }
 
     // We need to get rid of vertex links entirely before we start.
-    typedef const NNormalSurfaceVector* VectorPtr;
+    typedef const Ray* VectorPtr;
     VectorPtr* use = new VectorPtr[surfaces.size()];
     unsigned long nUse = 0;
 
-    std::vector<NNormalSurface*>::const_iterator it;
+    std::vector<NormalSurface*>::const_iterator it;
     for (it = surfaces.begin(); it != surfaces.end(); ++it)
         if (! (*it)->isVertexLinking())
-            use[nUse++] = (*it)->rawVector();
+            use[nUse++] = &(*it)->rawVector();
 
     // We want to take all surfaces with maximal zero sets in quad space.
     // That is, we want surface S if and only if there is no other surface T
@@ -142,7 +142,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
                 for (quad = 0; quad < Variant::reducedPerTet; ++quad)
                     v->setElement(pos++,
                         (*use[i])[Variant::stdPos(tet, 4 + quad)]);
-            ans->surfaces.push_back(new NNormalSurface(owner, v));
+            ans->surfaces.push_back(new NormalSurface(owner, v));
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if

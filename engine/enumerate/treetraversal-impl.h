@@ -48,12 +48,12 @@
 #include "angle/anglestructure.h"
 #include "enumerate/treetraversal.h"
 #include "progress/progresstracker.h"
-#include "surfaces/nsanstandard.h"
-#include "surfaces/nsquad.h"
-#include "surfaces/nsquadoct.h"
-#include "surfaces/nsstandard.h"
+#include "surfaces/nsvectoranstandard.h"
+#include "surfaces/nsvectorquad.h"
+#include "surfaces/nsvectorquadoct.h"
+#include "surfaces/nsvectorstandard.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 /**
  * Optimisation flags:
@@ -87,29 +87,29 @@
 namespace regina {
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
+NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildSurface() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
-    NNormalSurfaceVector* v;
+    NormalSurfaceVector* v;
     if (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT)
-        v = new NNormalSurfaceVectorQuad(3 * nTets_);
+        v = new NSVectorQuad(3 * nTets_);
     else if (coords_ == NS_STANDARD || coords_ == NS_AN_STANDARD)
-        v = new NNormalSurfaceVectorStandard(7 * nTets_);
+        v = new NSVectorStandard(7 * nTets_);
     else
         return 0;
 
     lpSlot_[nTypes_]->extractSolution(*v, type_);
 
     if (coords_ == NS_QUAD || coords_ == NS_STANDARD)
-        return new NNormalSurface(origTableaux_.tri(), v);
+        return new NormalSurface(origTableaux_.tri(), v);
 
     // We have an almost normal surface: restore the octagon
     // coordinates.
-    NNormalSurfaceVector* an;
+    NormalSurfaceVector* an;
     unsigned i, j;
     if (coords_ == NS_AN_QUAD_OCT) {
-        an = new NNormalSurfaceVectorQuadOct(6 * nTets_);
+        an = new NSVectorQuadOct(6 * nTets_);
         for (i = 0; i < nTets_; ++i)
             for (j = 0; j < 3; ++j)
                 an->setElement(6 * i + j, (*v)[3 * i + j]);
@@ -123,7 +123,7 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
                 an->setElement(6 * octTet + j, 0);
         }
     } else {
-        an = new NNormalSurfaceVectorANStandard(10 * nTets_);
+        an = new NSVectorANStandard(10 * nTets_);
         for (i = 0; i < nTets_; ++i)
             for (j = 0; j < 7; ++j)
                 an->setElement(10 * i + j, (*v)[7 * i + j]);
@@ -138,7 +138,7 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         }
     }
     delete v;
-    return new NNormalSurface(origTableaux_.tri(), an);
+    return new NormalSurface(origTableaux_.tri(), an);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -156,7 +156,7 @@ AngleStructure* TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const NNormalSurface* s, const MatrixInt* matchingEqns) const {
+        const NormalSurface* s, const MatrixInt* matchingEqns) const {
     if (coords_ == NS_ANGLE)
         return false;
 
@@ -173,7 +173,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
     for (row = 0; row < matchingEqns->rows(); ++row) {
         LargeInteger ans; // Initialised to zero.
         for (col = 0; col < matchingEqns->columns(); ++col)
-            ans += (LargeInteger(matchingEqns->entry(row, col)) * (*s->rawVector())[col]);
+            ans += (LargeInteger(matchingEqns->entry(row, col)) * (s->rawVector())[col]);
         if (ans != 0) {
             delete tmpEqns;
             return false;
@@ -218,7 +218,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
-        const NTriangulation* tri, NormalCoords coords,
+        const Triangulation<3>* tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
         origTableaux_(tri,
@@ -1195,10 +1195,10 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 std::cout << " (" << idx << " -> " << (int)type_[idx]
                     << ")" << std::endl;
 
-                NNormalSurfaceVector* v =
-                    new NNormalSurfaceVectorStandard(7 * nTets_);
+                NormalSurfaceVector* v =
+                    new NSVectorStandard(7 * nTets_);
                 lpSlot_[level_ + 1]->extractSolution(*v, type_);
-                NNormalSurface* f = new NNormalSurface(
+                NormalSurface* f = new NormalSurface(
                     origTableaux_.tri(), v);
                 std::cout << f->str() << std::endl;
                 delete f;

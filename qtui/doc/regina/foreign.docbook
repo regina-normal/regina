@@ -111,7 +111,7 @@
     this ensures that &snappea;-specific data (such as fillings and
     peripheral curves) will be preserved.
     You can then <link linkend="snappea-toregina">convert this</link>
-    to one of &regina;'s <link linkend="packet-triangulation">native
+    to one of &regina;'s <link linkend="packet-triangulation3">native
     triangulations</link> if you wish.
    </para>
    <para>
@@ -485,7 +485,7 @@
 
    <para>
     You can export a 3-manifold triangulation
-    (either one of &regina;'s <link linkend="packet-triangulation">native
+    (either one of &regina;'s <link linkend="packet-triangulation3">native
     triangulations</link> or a hybrid
     <link linkend="packet-snappea">&snappea; triangulation</link>)
     to the file format used by &snappeapylink;.  This is a plain text format,
@@ -501,7 +501,7 @@
    </para>
    <para>
     If you are exporting one of &regina;'s native
-    <link linkend="packet-triangulation">triangulation packets</link>,
+    <link linkend="packet-triangulation3">triangulation packets</link>,
     then &regina; will mark any &snappea;-specific information
     (such as fillings or peripheral curves) as unknown.
     If you are exporting one of &regina;'s hybrid
@@ -520,7 +520,7 @@
 
    <para>
     You can export a 3-manifold triangulation
-    (either one of &regina;'s <link linkend="packet-triangulation">native
+    (either one of &regina;'s <link linkend="packet-triangulation3">native
     triangulations</link> or a hybrid
     <link linkend="packet-snappea">&snappea; triangulation</link>)
     to a plain text file that can be
@@ -541,7 +541,7 @@
 
    <para>
     You can export a 3-manifold triangulation
-    (either one of &regina;'s <link linkend="packet-triangulation">native
+    (either one of &regina;'s <link linkend="packet-triangulation3">native
     triangulations</link> or a hybrid
     <link linkend="packet-snappea">&snappea; triangulation</link>)
     as &cpp; source code.

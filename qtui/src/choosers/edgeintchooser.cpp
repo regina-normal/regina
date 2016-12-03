@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "triangulation/nedge.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "edgeintchooser.h"
@@ -40,10 +40,10 @@
 #include <QDialogButtonBox>
 #include <QLabel>
 
-using regina::NEdge;
+using regina::Edge;
 
 EdgeIntChooser::EdgeIntChooser(
-        regina::NTriangulation* tri,
+        regina::Triangulation<3>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
@@ -56,16 +56,16 @@ EdgeIntChooser::EdgeIntChooser(
     fill();
 }
 
-std::pair<NEdge*, int> EdgeIntChooser::selected() {
+std::pair<Edge<3>*, int> EdgeIntChooser::selected() {
     if (count() == 0)
-        return std::make_pair((NEdge*)(0), (int)(0));
+        return std::make_pair((Edge<3>*)(0), (int)(0));
     int curr = currentIndex();
-    return (curr < 0 ? std::make_pair((NEdge*)(0), (int)(0)) : options_[curr]);
+    return (curr < 0 ? std::make_pair((Edge<3>*)(0), (int)(0)) : options_[curr]);
 }
 
-void EdgeIntChooser::select(regina::NEdge* option, int arg) {
+void EdgeIntChooser::select(regina::Edge<3>* option, int arg) {
     int index = 0;
-    std::vector<std::pair<regina::NEdge*, int> >::const_iterator it =
+    std::vector<std::pair<regina::Edge<3>*, int> >::const_iterator it =
         options_.begin();
     while (it != options_.end()) {
         if (it->first == option && it->second == arg) {
@@ -82,9 +82,9 @@ void EdgeIntChooser::select(regina::NEdge* option, int arg) {
     return;
 }
 
-QString EdgeIntChooser::description(regina::NEdge* option, int arg) {
+QString EdgeIntChooser::description(regina::Edge<3>* option, int arg) {
     if (option->degree() == 1) {
-        const regina::NEdgeEmbedding& e0 = option->embedding(0);
+        const regina::EdgeEmbedding<3>& e0 = option->embedding(0);
         return trUtf8("Edge %1 [%2 %3] — %4 (%5)")
             .arg(option->index())
             .arg(argDesc_)
@@ -92,8 +92,8 @@ QString EdgeIntChooser::description(regina::NEdge* option, int arg) {
             .arg(e0.tetrahedron()->index())
             .arg(e0.vertices().trunc2().c_str());
     } else {
-        const regina::NEdgeEmbedding& e0 = option->embedding(0);
-        const regina::NEdgeEmbedding& e1 = option->embedding(1);
+        const regina::EdgeEmbedding<3>& e0 = option->embedding(0);
+        const regina::EdgeEmbedding<3>& e1 = option->embedding(1);
         QString base;
         if (option->degree() == 2)
             base = trUtf8("Edge %1 [%2 %3] — %4 (%5), %6 (%7)");
@@ -111,7 +111,7 @@ QString EdgeIntChooser::description(regina::NEdge* option, int arg) {
 }
 
 void EdgeIntChooser::fill() {
-    regina::NTriangulation::EdgeIterator it;
+    regina::Triangulation<3>::EdgeIterator it;
     int i;
     for (it = tri_->edges().begin(); it != tri_->edges().end(); ++it)
         for (i = argMin_; i <= argMax_; ++i)
@@ -122,7 +122,7 @@ void EdgeIntChooser::fill() {
 }
 
 EdgeIntDialog::EdgeIntDialog(QWidget* parent,
-        regina::NTriangulation* tri,
+        regina::Triangulation<3>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
         const QString& title,
@@ -147,8 +147,8 @@ EdgeIntDialog::EdgeIntDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-std::pair<regina::NEdge*, int> EdgeIntDialog::choose(QWidget* parent,
-        regina::NTriangulation* tri,
+std::pair<regina::Edge<3>*, int> EdgeIntDialog::choose(QWidget* parent,
+        regina::Triangulation<3>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
         const QString& title,
@@ -159,6 +159,6 @@ std::pair<regina::NEdge*, int> EdgeIntDialog::choose(QWidget* parent,
     if (dlg.exec())
         return dlg.chooser->selected();
     else
-        return std::make_pair((NEdge*)(0), (int)(0));
+        return std::make_pair((Edge<3>*)(0), (int)(0));
 }
 

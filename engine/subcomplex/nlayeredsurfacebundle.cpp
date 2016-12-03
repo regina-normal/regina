@@ -30,12 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ntorusbundle.h"
+#include "manifold/torusbundle.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/ntxicore.h"
-#include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -64,7 +63,7 @@ NLayeredTorusBundle::~NLayeredTorusBundle() {
 }
 
 NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
-        NTriangulation* tri) {
+        Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
@@ -118,15 +117,15 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
     return 0;
 }
 
-NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
+NLayeredTorusBundle* NLayeredTorusBundle::hunt(Triangulation<3>* tri,
         const NTxICore& core) {
-    std::list<NIsomorphism*> isos;
+    std::list<Isomorphism<3>*> isos;
     if (! core.core().findAllSubcomplexesIn(*tri, back_inserter(isos)))
         return 0;
 
     // Run through each isomorphism and look for the corresponding layering.
     Matrix2 matchReln;
-    for (std::list<NIsomorphism*>::const_iterator it = isos.begin();
+    for (std::list<Isomorphism<3>*>::const_iterator it = isos.begin();
             it != isos.end(); it++) {
         // Apply the layering to the lower boundary and see if it
         // matches nicely with the upper.
@@ -166,16 +165,16 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
     return 0;
 }
 
-NManifold* NLayeredTorusBundle::manifold() const {
+Manifold* NLayeredTorusBundle::manifold() const {
     // Note that this one-liner appears again in homology(), where
-    // we use the underlying NTorusBundle for homology calculations.
-    return new NTorusBundle(core_.parallelReln() * reln_);
+    // we use the underlying TorusBundle for homology calculations.
+    return new TorusBundle(core_.parallelReln() * reln_);
 }
 
-NAbelianGroup* NLayeredTorusBundle::homology() const {
-    // It's implemented in NTorusBundle, so ride on that for now.
+AbelianGroup* NLayeredTorusBundle::homology() const {
+    // It's implemented in TorusBundle, so ride on that for now.
     // We'll implement it directly here in good time.
-    return NTorusBundle(core_.parallelReln() * reln_).homology();
+    return TorusBundle(core_.parallelReln() * reln_).homology();
 }
 
 std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,

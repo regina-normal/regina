@@ -49,7 +49,7 @@
 #include <packet/container.h>
 #include <subcomplex/nblockedsfs.h>
 #include <subcomplex/nstandardtri.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <algorithm>
 #include <cstdlib>
@@ -118,7 +118,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
 bool hasTriangulation(Container* c) {
     for (Packet* child = c->firstChild(); child; child = child->nextSibling())
-        if (child->type() == PACKET_TRIANGULATION)
+        if (child->type() == PACKET_TRIANGULATION3)
             return true;
 
     return false;
@@ -134,11 +134,11 @@ void process(Container* c) {
     for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         spec.packet = child;
-        spec.isTri = (child->type() == PACKET_TRIANGULATION);
+        spec.isTri = (child->type() == PACKET_TRIANGULATION3);
 
         if (spec.isTri) {
             std = NStandardTriangulation::isStandardTriangulation(
-                static_cast<NTriangulation*>(child));
+                static_cast<Triangulation<3>*>(child));
             spec.hasName = (std != 0);
 
             if (spec.hasName) {

@@ -57,7 +57,7 @@
  * are those listed below.  This class also implements UITextFieldDelegate internally,
  * but subclasses should not need to override any UITextFieldDelegate functions.
  */
-@interface EditableTableViewController : UITableViewController <UIActionSheetDelegate, UITextFieldDelegate>
+@interface EditableTableViewController : UITableViewController <UITextFieldDelegate>
 
 /**
  * If the user is currently editing a table cell (e.g., renaming
@@ -156,16 +156,5 @@
  * UITableViewCellEditingStyleDelete.
  */
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
-
-/**
- * Internal implementation to handle the delete confirmation action sheet.
- *
- * Normally there is no need to override this in your subclasses.
- * However, if your subclass needs to override this to support additional action sheets, then you
- * \e must use action sheet tags, and you \e must call the superclass implementation if actionSheet.tag
- * is not one of your own.  All tags used internally by this class are greater than 500 (so if your
- * subclass tags are at most 500 then there will be no conflicts).
- */
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @end

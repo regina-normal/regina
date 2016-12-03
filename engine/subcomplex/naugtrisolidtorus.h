@@ -43,11 +43,9 @@
 #include "regina-core.h"
 #include "subcomplex/ntrisolidtorus.h"
 #include "subcomplex/nlayeredsolidtorus.h"
+#include "triangulation/forward.h"
 
 namespace regina {
-
-template <int> class Component;
-typedef Component<3> NComponent;
 
 /**
  * \weakgroup subcomplex
@@ -241,9 +239,9 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * augmented triangular solid torus, or \c null if the given
          * component is not an augmented triangular solid torus.
          */
-        static NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
+        static NAugTriSolidTorus* isAugTriSolidTorus(const Component<3>* comp);
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

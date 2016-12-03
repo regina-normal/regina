@@ -33,14 +33,14 @@
 #include <cmath>
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
 
-using regina::NManifold;
+using regina::Manifold;
 using regina::NStandardTriangulation;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 class NStandardTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NStandardTriangulationTest);
@@ -58,7 +58,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
 
         void testRecognition(const char* dehydration,
                 const char* triName, const char* mfdName) {
-            NTriangulation t;
+            Triangulation<3> t;
             if (! t.insertRehydration(dehydration)) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -82,7 +82,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NManifold* mfd = std->manifold();
+            Manifold* mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
@@ -103,7 +103,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
 
         void testRecognitionSig(const char* isoSig,
                 const char* triName, const char* mfdName) {
-            NTriangulation* t = NTriangulation::fromIsoSig(isoSig);
+            Triangulation<3>* t = Triangulation<3>::fromIsoSig(isoSig);
             if (! t) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -127,7 +127,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NManifold* mfd = std->manifold();
+            Manifold* mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "

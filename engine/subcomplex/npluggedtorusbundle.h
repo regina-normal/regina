@@ -49,9 +49,6 @@ namespace regina {
 class NSatRegion;
 class NTxICore;
 
-template <int> class Isomorphism;
-typedef Isomorphism<3> NIsomorphism;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -126,7 +123,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
                  is not owned by this object), and its tetrahedra do not
                  belong to this triangulation (instead see the data member
                  \a bundleIso_). */
-        NIsomorphism* bundleIso_;
+        Isomorphism<3>* bundleIso_;
             /**< A mapping from the thin I-bundle \a bundle_ to this
                  triangulation.  This is required since the thin I-bundle
                  \a bundle_ is external, and does not refer directly to this
@@ -178,7 +175,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * @return an isomorphism from the thin I-bundle described
          * by bundle() to the tetrahedra of this triangulation.
          */
-        const NIsomorphism& bundleIso() const;
+        const Isomorphism<3>& bundleIso() const;
         /**
          * Returns the saturated region that forms part of this triangulation.
          * The region refers directly to tetrahedra within this triangulation
@@ -197,7 +194,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          */
         const Matrix2& matchingReln() const;
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -213,7 +210,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * triangulation is not of the form described by this class.
          */
         static NPluggedTorusBundle* isPluggedTorusBundle
-            (NTriangulation* tri);
+            (Triangulation<3>* tri);
 
     private:
         /**
@@ -237,7 +234,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * two saturated region boundaries are joined by the thin
          * I-bundle and layerings, as described in the class notes above.
          */
-        NPluggedTorusBundle(const NTxICore& bundle, NIsomorphism* bundleIso,
+        NPluggedTorusBundle(const NTxICore& bundle, Isomorphism<3>* bundleIso,
             NSatRegion* region, const Matrix2& matchingReln);
 
         /**
@@ -263,7 +260,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
          * is not of the form described by this class using an isomorphic
          * copy of the given thin I-bundle.
          */
-        static NPluggedTorusBundle* hunt(NTriangulation* tri,
+        static NPluggedTorusBundle* hunt(Triangulation<3>* tri,
             const NTxICore& bundle);
 };
 
@@ -272,7 +269,7 @@ class REGINA_API NPluggedTorusBundle : public NStandardTriangulation {
 // Inline functions for NPluggedTorusBundle
 
 inline NPluggedTorusBundle::NPluggedTorusBundle(const NTxICore& bundle,
-        NIsomorphism* bundleIso, NSatRegion* region,
+        Isomorphism<3>* bundleIso, NSatRegion* region,
         const Matrix2& matchingReln) :
         bundle_(bundle), bundleIso_(bundleIso), region_(region),
         matchingReln_(matchingReln) {
@@ -282,7 +279,7 @@ inline const NTxICore& NPluggedTorusBundle::bundle() const {
     return bundle_;
 }
 
-inline const NIsomorphism& NPluggedTorusBundle::bundleIso() const {
+inline const Isomorphism<3>& NPluggedTorusBundle::bundleIso() const {
     return *bundleIso_;
 }
 

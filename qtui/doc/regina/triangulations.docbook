@@ -476,7 +476,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="dim2-id.png"/>
+      <imagedata fileref="tri-id.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2070,7 +2070,7 @@
        See <xref linkend="bib-0-efficiency"/> for details on 0-efficiency.
       </para><para>
        This property is only shown for
-       &regina;'s native <link linkend="packet-triangulation">triangulation
+       &regina;'s native <link linkend="packet-triangulation3">triangulation
        packets</link>, not its hybrid
        <link linkend="packet-snappea">&snappea; triangulation packets</link>.
       </para></glossdef>
@@ -2085,7 +2085,7 @@
        See <xref linkend="bib-burton-phd"/> for details.
       </para><para>
        This property is only shown for
-       &regina;'s native <link linkend="packet-triangulation">triangulation
+       &regina;'s native <link linkend="packet-triangulation3">triangulation
        packets</link>, not its hybrid
        <link linkend="packet-snappea">&snappea; triangulation packets</link>.
       </para></glossdef>
@@ -2236,7 +2236,7 @@
     <itemizedlist>
      <listitem><para>
       If you are working with one of &regina;'s native
-      <link linkend="packet-triangulation">3-manifold triangulation packets</link>,
+      <link linkend="packet-triangulation3">3-manifold triangulation packets</link>,
       you can view some basic information (the solution type and the
       hyperbolic volume) through the triangulation
       <guilabel>&snappea;</guilabel> tab, as described below.
@@ -3185,7 +3185,7 @@
    </para>
    <para>
     The triangulation <replaceable>X</replaceable> must be one of
-    &regina;'s native <link linkend="packet-triangulation">triangulation
+    &regina;'s native <link linkend="packet-triangulation3">triangulation
     packets</link>, since
     <replaceable>X</replaceable> will be modified directly.
     The triangulation <replaceable>Y</replaceable> may be either a

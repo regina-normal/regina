@@ -41,5 +41,17 @@ void addFace8() {
     addFace<8, 5>("Face8_5", "FaceEmbedding8_5");
     addFace<8, 6>("Face8_6", "FaceEmbedding8_6");
     addFace<8, 7>("Face8_7", "FaceEmbedding8_7");
+
+    scope().attr("VertexEmbedding8") = scope().attr("FaceEmbedding8_0");
+    scope().attr("EdgeEmbedding8") = scope().attr("FaceEmbedding8_1");
+    scope().attr("TriangleEmbedding8") = scope().attr("FaceEmbedding8_2");
+    scope().attr("TetrahedronEmbedding8") = scope().attr("FaceEmbedding8_3");
+    scope().attr("PentachoronEmbedding8") = scope().attr("FaceEmbedding8_4");
+
+    scope().attr("Vertex8") = scope().attr("Face8_0");
+    scope().attr("Edge8") = scope().attr("Face8_1");
+    scope().attr("Triangle8") = scope().attr("Face8_2");
+    scope().attr("Tetrahedron8") = scope().attr("Face8_3");
+    scope().attr("Pentachoron8") = scope().attr("Face8_4");
 }
 

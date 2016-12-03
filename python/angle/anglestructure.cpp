@@ -32,14 +32,13 @@
 
 #include <boost/python.hpp>
 #include "angle/anglestructure.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
 using namespace boost::python;
 using namespace regina::python;
 using regina::AngleStructure;
-using regina::NTriangulation;
 
 void addAngleStructure() {
     class_<AngleStructure, std::auto_ptr<AngleStructure>, boost::noncopyable>

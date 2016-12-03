@@ -67,11 +67,11 @@
  * This option may not be used with any of the other options listed above.
  */
 
-#include <algebra/nabeliangroup.h>
-#include <manifold/nmanifold.h>
+#include <algebra/abeliangroup.h>
+#include <manifold/manifold.h>
 #include <packet/container.h>
 #include <subcomplex/nstandardtri.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <algorithm>
 #include <cstdlib>
@@ -94,11 +94,11 @@ Packet* tree;
 struct ManifoldSpec {
     Packet* container;
     bool hasTriangulation;
-    NManifold* manifold; // 0 if unknown
+    Manifold* manifold; // 0 if unknown
 
     ManifoldSpec() : container(0), hasTriangulation(false), manifold(0) {
     }
-    ManifoldSpec(Packet* c, bool t, NManifold* m) :
+    ManifoldSpec(Packet* c, bool t, Manifold* m) :
             container(c), hasTriangulation(t), manifold(m) {
     }
 
@@ -154,17 +154,17 @@ bool process(Container* c) {
     bool foundTri = false;
 
     NStandardTriangulation* std;
-    NManifold* mfd;
+    Manifold* mfd;
     std::string name, structure;
     for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
-        if (child->type() != PACKET_TRIANGULATION)
+        if (child->type() != PACKET_TRIANGULATION3)
             continue;
 
         foundTri = true;
 
         std = NStandardTriangulation::isStandardTriangulation(
-            static_cast<NTriangulation*>(child));
+            static_cast<Triangulation<3>*>(child));
         if (! std)
             continue;
 
@@ -185,7 +185,7 @@ bool process(Container* c) {
         if (rawList) {
             std::cout << name;
 
-            NAbelianGroup* h1 = mfd->homology();
+            AbelianGroup* h1 = mfd->homology();
             if (h1) {
                 std::cout << ", H1 = " << h1->str();
                 delete h1;

@@ -45,11 +45,6 @@
 
 namespace regina {
 
-template <int> class Simplex;
-template <int> class Triangulation;
-typedef Simplex<3> NTetrahedron;
-typedef Triangulation<3> NTriangulation;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -97,7 +92,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
     private:
         size_t nTet;
             /**< The number of tetrahedra in this spiralled solid torus. */
-        NTetrahedron** tet;
+        Tetrahedron<3>** tet;
             /**< The tetrahedra that make up this spiralled solid torus. */
         Perm<4>* vertexRoles_;
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
@@ -133,7 +128,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * be between 0 and size()-1 inclusive.
          * @return the requested tetrahedron.
          */
-        NTetrahedron* tetrahedron(size_t index) const;
+        Tetrahedron<3>* tetrahedron(size_t index) const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -200,7 +195,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * @return \c true if and only if the representation of this
          * spiralled solid torus was actually changed.
          */
-        bool makeCanonical(const NTriangulation* tri);
+        bool makeCanonical(const Triangulation<3>* tri);
 
         /**
          * Determines whether this spiralled solid torus is in canonical
@@ -211,7 +206,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * @return \c true if and only if this spiralled solid torus is
          * in canonical form.
          */
-        bool isCanonical(const NTriangulation* tri) const;
+        bool isCanonical(const Triangulation<3>* tri) const;
 
         /**
          * Determines if the given tetrahedron forms part of a
@@ -233,11 +228,11 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * \c null if the given tetrahedron is not part of a spiralled
          * solid torus with the given vertex roles.
          */
-        static NSpiralSolidTorus* formsSpiralSolidTorus(NTetrahedron* tet,
+        static NSpiralSolidTorus* formsSpiralSolidTorus(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
 
-        NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        Manifold* manifold() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -259,7 +254,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
 // Inline functions for NSpiralSolidTorus
 
 inline NSpiralSolidTorus::NSpiralSolidTorus(size_t newNTet) :
-        nTet(newNTet), tet(new NTetrahedron*[newNTet]),
+        nTet(newNTet), tet(new Tetrahedron<3>*[newNTet]),
         vertexRoles_(new Perm<4>[newNTet]) {
 }
 
@@ -272,7 +267,7 @@ inline size_t NSpiralSolidTorus::size() const {
     return nTet;
 }
 
-inline NTetrahedron* NSpiralSolidTorus::tetrahedron(size_t index) const {
+inline Tetrahedron<3>* NSpiralSolidTorus::tetrahedron(size_t index) const {
     return tet[index];
 }
 inline Perm<4> NSpiralSolidTorus::vertexRoles(size_t index) const {

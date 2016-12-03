@@ -101,7 +101,7 @@ void HyperCoordinateChooser::insertAllCreators() {
 }
 
 void HyperCoordinateChooser::insertAllViewers(
-        regina::NNormalHypersurfaceList*) {
+        regina::NormalHypersurfaces*) {
     insertSystem(regina::HS_STANDARD);
     insertSystem(regina::HS_PRISM);
     insertSystem(regina::HS_EDGE_WEIGHT);

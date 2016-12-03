@@ -50,9 +50,7 @@
 #define __FILTERREGISTRY_IMPL_H
 #endif
 
-#include "surfaces/nsurfacefilter.h"
-#include "surfaces/sfproperties.h"
-#include "surfaces/sfcombination.h"
+#include "surfaces/surfacefilter.h"
 
 namespace regina {
 

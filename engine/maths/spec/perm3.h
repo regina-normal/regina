@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file maths/spec/perm3.h
- *  \brief Deals with permutations of {0,1,2}.
+ *  \brief Internal header for permutations of {0,1,2}.
  *
  *  This file is automatically included from perm.h; there is no need for
  *  end users to include this specialisation header explicitly.
@@ -525,6 +525,22 @@ class REGINA_API Perm<3> {
          * @return a truncated string representation of this permutation.
          */
         std::string trunc2() const;
+
+        /**
+         * Resets the images of all integers from \a from onwards to the
+         * identity map.
+         *
+         * Specifically, for each \a i in the range <i>from</i>,...,2,
+         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * 0,1,...,<i>from</i>-1 will not be altered.
+         *
+         * \pre The images of <i>from</i>,...,2 are exactly
+         * <i>from</i>,...,2, but possibly in a different order.
+         *
+         * @param from the first integer whose image should be reset.
+         * This must be between 0 and 3 inclusive.
+         */
+        void clear(unsigned from);
 
         /**
          * Returns the index of this permutation in the Perm<3>::S3 array.

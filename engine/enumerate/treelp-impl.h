@@ -57,7 +57,7 @@
 #include "enumerate/treelp.h"
 #include "maths/matrixops.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/bitmask.h"
 #include <cstring>
 
@@ -116,7 +116,7 @@ void LPMatrix<IntType>::dump(std::ostream& out) const {
 
 template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
-        const NTriangulation* tri, NormalCoords coords, bool enumeration) :
+        const Triangulation<3>* tri, NormalCoords coords, bool enumeration) :
         tri_(tri), coords_(coords) {
     unsigned r, c;
 
@@ -849,8 +849,9 @@ void LPData<LPConstraint, IntType>::dump(std::ostream& out) const {
 }
 
 template <class LPConstraint, typename IntType>
+template <class RayClass>
 void LPData<LPConstraint, IntType>::extractSolution(
-        Ray& v, const char* type) const {
+        RayClass& v, const char* type) const {
     // Fetch details on how to undo the column permutation.
     const int* columnPerm = origTableaux_->columnPerm();
 

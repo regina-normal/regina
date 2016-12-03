@@ -10,7 +10,7 @@ you would any other paper that you use.  A suggested form of reference is:
 
   Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
   "Regina: Software for low-dimensional topology",
-  http://regina.sourceforge.net/, 1999-2016.
+  http://regina-normal.github.io/, 1999-2016.
 
 
 AUTHORS:
@@ -94,10 +94,10 @@ GNU General Public License.
 
 SYNTAX HIGHLIGHTING:
 
-Regina includes code from Source-highlight-qt and language definitions
-from GNU Source-highlight, which it uses to highlight Python scripts.
-Both projects are by Lorenzo Bettini and others, and are distributed
-under the terms of the GNU General Public License, version 3.
+Regina's graphical user interfaces incorporate a modified version of the KDE
+syntax-highlighting framework, which they use for highlighting Python scripts.
+This framework is distributed under the GNU Library General Public License,
+version 2 or any later version, as published by the Free Software Foundation.
 
 
 ICONS:

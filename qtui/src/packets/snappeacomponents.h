@@ -37,12 +37,8 @@
 #ifndef __SNAPPEACOMPONENTS_H
 #define __SNAPPEACOMPONENTS_H
 
+#include "triangulation/forward.h"
 #include <qlabel.h>
-
-namespace regina {
-    template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
-};
 
 /**
  * Displays a piece of text explaining that SnapPea calculations are not
@@ -59,7 +55,7 @@ class NoSnapPea : public QLabel {
         /**
          * Packet details
          */
-        regina::NTriangulation* tri;
+        regina::Triangulation<3>* tri;
 
     public:
         /**
@@ -71,7 +67,7 @@ class NoSnapPea : public QLabel {
          * triangulation (as may be desirable in a tabbed packet UI, for
          * instance).
          */
-        NoSnapPea(regina::NTriangulation* useTri,
+        NoSnapPea(regina::Triangulation<3>* useTri,
             QWidget* parent = 0, bool delayedRefresh = false);
 
         /**

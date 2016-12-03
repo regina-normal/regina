@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredchain.h"
-#include "triangulation/ntetrahedron.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using namespace boost::python;
@@ -41,7 +41,7 @@ using regina::NLayeredChain;
 void addNLayeredChain() {
     class_<NLayeredChain, bases<regina::NStandardTriangulation>,
             std::auto_ptr<NLayeredChain>, boost::noncopyable>
-            ("NLayeredChain", init<regina::NTetrahedron*, regina::Perm<4>>())
+            ("NLayeredChain", init<regina::Tetrahedron<3>*, regina::Perm<4>>())
         .def(init<const NLayeredChain&>())
         .def("bottom", &NLayeredChain::bottom,
             return_value_policy<reference_existing_object>())

@@ -110,7 +110,7 @@
    </para></tip>
   </sect2>
 
-  <sect2 id="packet-dim2triangulation">
+  <sect2 id="packet-triangulation2">
    <title>2-Manifold Triangulations</title>
    <para>
     A <firstterm>2-manifold triangulation</firstterm> packet describes a
@@ -121,20 +121,20 @@
     2-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-dim2triangulation.png"/>
+      <imagedata fileref="icon-triangulation2.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="dim2triangulation.png"/>
+      <imagedata fileref="triangulation2.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
   </sect2>
 
-  <sect2 id="packet-triangulation">
+  <sect2 id="packet-triangulation3">
    <title>3-Manifold Triangulations</title>
    <para>
     A <firstterm>3-manifold triangulation</firstterm> packet describes a
@@ -149,14 +149,14 @@
     3-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation.png"/>
+      <imagedata fileref="icon-triangulation3.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="triangulation.png"/>
+      <imagedata fileref="triangulation3.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -167,7 +167,7 @@
    <para>
     A <firstterm>&snappea; triangulation</firstterm> packet stores a
     3-manifold using &snappea;'s internal data structures
-    (in contrast, the usual <link linkend="packet-triangulation">3-manifold
+    (in contrast, the usual <link linkend="packet-triangulation3">3-manifold
     triangulation packet</link> uses &regina;'s own structures, which are
     independent of &snappea;).
     You can learn more about using &snappea; triangulations in the
@@ -199,7 +199,7 @@
    </para>
   </sect2>
 
-  <sect2 id="packet-dim4triangulation">
+  <sect2 id="packet-triangulation4">
    <title>4-Manifold Triangulations</title>
    <para>
     A <firstterm>4-manifold triangulation</firstterm> packet describes a
@@ -214,14 +214,14 @@
     4-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-dim4triangulation.png"/>
+      <imagedata fileref="icon-triangulation4.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="dim4triangulation.png"/>
+      <imagedata fileref="triangulation4.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -242,7 +242,7 @@
     simplex-shaped outline:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-dim8triangulation.png"/>
+      <imagedata fileref="icon-triangulation8.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -254,7 +254,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="dim5triangulation.png"/>
+      <imagedata fileref="triangulation5.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -560,7 +560,7 @@
     in the menu, or press the toolbar button with the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation.png"/>
+      <imagedata fileref="icon-triangulation3.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>

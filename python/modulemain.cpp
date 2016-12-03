@@ -70,7 +70,19 @@ namespace {
     }
 }
 
+#ifndef REGINA_LINK_MODULE_INTO_EXECUTABLE
+// This is the normal situation: the C++ module is built as the extension
+// regina/engine.so, which is loaded at runtime from regina/__init__.py.
+// All of regina's classes live in the module regina.engine, and are
+// automatically imported into the module regina by regina/__init__.py.
 BOOST_PYTHON_MODULE(engine) {
+#else
+// This is a special case where the C++ module is linked into Regina's main
+// executable at compile time (specifically, this happens on iOS).
+// Nothing is loaded at runtime from the filesystem; there is no __init__.py,
+// and all of Regina's classes live directly in the module regina.
+BOOST_PYTHON_MODULE(regina) {
+#endif
     // Welcome string:
 
     boost::python::def("welcome", welcome);

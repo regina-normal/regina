@@ -47,9 +47,10 @@
 #include "reginaprefset.h"
 #include "reginasupport.h"
 
-#if ! (NO_SRCHILITE)
-#include "../srchiliteqt/Qt4SyntaxHighlighter.h"
-#endif
+#include "syntax/definition.h"
+#include "syntax/repository.h"
+#include "syntax/syntaxhighlighter.h"
+#include "syntax/theme.h"
 
 #include <cstring>
 #include <QAction>
@@ -68,6 +69,10 @@ using regina::Script;
 
 namespace {
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
+
+    // The syntax highlighting repository of definitions and themes is
+    // a singleton: it is created on demand, and never deleted.
+    regina::syntax::Repository* repository;
 }
 
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
@@ -295,11 +300,12 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
 
-#if ! (NO_SRCHILITE)
-    srchiliteqt::Qt4SyntaxHighlighter* highlighter =
-        new srchiliteqt::Qt4SyntaxHighlighter(editWidget->document());
-    highlighter->init("python.lang", "default.style");
-#endif
+    if (! repository)
+        repository = new regina::syntax::Repository;
+
+    auto h = new SyntaxHighlighter(editWidget->document());
+    h->setDefinition(repository->definitionForName("Python"));
+    h->setTheme(repository->theme("Default"));
 
     editWidget->setFocus();
     editWidget->setWhatsThis(tr("Type the Python script into this "
@@ -358,22 +364,10 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actionBar->addAction(actSep);
     scriptActionList.append(actSep);
 
-    QAction* actCompile = new QAction(this);
-    //scriptActions->addAction("script_compile");;
-    actCompile->setText(tr("&Compile"));
-    actCompile->setIcon(ReginaSupport::themeIcon("run-build-file"));
-    actCompile->setToolTip(tr("Compile the Python script"));
-    actCompile->setWhatsThis(tr("Test whether this Python script "
-        "actually compiles.  Any errors will be shown in a separate "
-        "Python console."));
-    connect(actCompile, SIGNAL(triggered()), this, SLOT(compile()));
-    actionBar->addAction(actCompile);
-    scriptActionList.append(actCompile);
-
     QAction* actRun = new QAction(this);
     //scriptActions->addAction("script_run");;
     actRun->setText(tr("&Run"));
-    actRun->setIcon(ReginaSupport::themeIcon("system-run"));
+    actRun->setIcon(ReginaSupport::regIcon("run"));
     actRun->setToolTip(tr("Execute the Python script"));
     actRun->setWhatsThis(tr("Execute this Python script.  The "
         "script will be run in a separate Python console."));
@@ -536,22 +530,6 @@ void ScriptUI::updateRemoveState() {
         actRemove->setEnabled(script->countVariables() > 0);
     else
         actRemove->setEnabled(false);
-}
-
-void ScriptUI::compile() {
-    endEdit();
-
-    if (enclosingPane->getMainWindow()->getPythonManager().compileScript(ui,
-            editWidget->toPlainText() + "\n\n") == 0) {
-        #ifdef BOOST_PYTHON_FOUND
-        ReginaSupport::success(ui,
-            tr("The script compiles successfully."));
-        #endif
-    } else
-        ReginaSupport::failure(ui,
-            tr("The script does not compile."),
-            tr("See the Python console for details.  You may interact with "
-            "this console to further investigate the problem."));
 }
 
 void ScriptUI::execute() {

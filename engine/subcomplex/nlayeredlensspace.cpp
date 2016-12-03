@@ -30,13 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nlensspace.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/lensspace.h"
 #include "maths/numbertheory.h"
 #include "subcomplex/nlayeredlensspace.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -50,7 +48,7 @@ NLayeredLensSpace* NLayeredLensSpace::clone() const {
 }
 
 NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
-        const NComponent* comp) {
+        const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
@@ -65,7 +63,7 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
         if (torus) {
             // We have found a layered solid torus; either this makes the
             // layered lens space or nothing makes the layered lens space.
-            NTetrahedron* tet = torus->topLevel();
+            Tetrahedron<3>* tet = torus->topLevel();
             int tf0 = torus->topFace(0);
             int tf1 = torus->topFace(1);
             if (tet->adjacentTetrahedron(tf0) != tet) {
@@ -88,11 +86,11 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
             if (perm[tf1] == tf0) {
                 // Snapped shut.
                 ans->mobiusBoundaryGroup_ = torus->topEdgeGroup(
-                    5 - NEdge::edgeNumber[tf0][tf1]);
+                    5 - Edge<3>::edgeNumber[tf0][tf1]);
             } else {
                 // Twisted shut.
                 ans->mobiusBoundaryGroup_ = torus->topEdgeGroup(
-                    NEdge::edgeNumber[perm[tf1]][tf0]);
+                    Edge<3>::edgeNumber[perm[tf1]][tf0]);
             }
 
             // Work out p and q.
@@ -141,12 +139,12 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
     return 0;
 }
 
-NManifold* NLayeredLensSpace::manifold() const {
-    return new NLensSpace(p_, q_);
+Manifold* NLayeredLensSpace::manifold() const {
+    return new LensSpace(p_, q_);
 }
 
-NAbelianGroup* NLayeredLensSpace::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NLayeredLensSpace::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     if (p_ == 0)
         ans->addRank();
     else if (p_ > 1)

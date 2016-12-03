@@ -48,10 +48,10 @@
 
 namespace regina {
 
-class NNormalSurfaceVectorStandard;
-class NNormalSurfaceVectorQuad;
-class NNormalSurfaceVectorANStandard;
-class NNormalSurfaceVectorQuadOct;
+class NSVectorStandard;
+class NSVectorQuad;
+class NSVectorANStandard;
+class NSVectorQuadOct;
 
 /**
  * Constants, typedefs and operations for working with normal (as
@@ -70,11 +70,11 @@ struct REGINA_API NormalSurfaces::NormalSpec {
     /**
      * The underlying class for vectors in standard form.
      */
-    typedef NNormalSurfaceVectorStandard StandardVector;
+    typedef NSVectorStandard StandardVector;
     /**
      * The underlying class for vectors in reduced form.
      */
-    typedef NNormalSurfaceVectorQuad ReducedVector;
+    typedef NSVectorQuad ReducedVector;
 
     /**
      * Returns the coordinate system constant corresponding to standard form.
@@ -152,12 +152,12 @@ struct REGINA_API NormalSurfaces::AlmostNormalSpec {
     /**
      * The underlying class for vectors in standard form.
      */
-    typedef NNormalSurfaceVectorANStandard StandardVector;
+    typedef NSVectorANStandard StandardVector;
 
     /**
      * The underlying class for vectors in reduced form.
      */
-    typedef NNormalSurfaceVectorQuadOct ReducedVector;
+    typedef NSVectorQuadOct ReducedVector;
 
     /**
      * Returns the coordinate system constant corresponding to standard form.

@@ -52,12 +52,12 @@
 #endif
 
 #include "surfaces/coordregistry.h"
-#include "surfaces/nsstandard.h"
-#include "surfaces/nsanstandard.h"
-#include "surfaces/nsquad.h"
-#include "surfaces/nsquadoct.h"
-#include "surfaces/nsoriented.h"
-#include "surfaces/nsorientedquad.h"
+#include "surfaces/nsvectorstandard.h"
+#include "surfaces/nsvectoranstandard.h"
+#include "surfaces/nsvectorquad.h"
+#include "surfaces/nsvectorquadoct.h"
+#include "surfaces/nsvectororiented.h"
+#include "surfaces/nsvectororientedquad.h"
 
 namespace regina {
 

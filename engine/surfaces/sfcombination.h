@@ -31,8 +31,7 @@
  **************************************************************************/
 
 /*! \file surfaces/sfcombination.h
- *  \brief Contains a normal surface filter that simply combines other
- *  filters.
+ *  \brief Deprecated header.
  */
 
 #ifndef __SFCOMBINATION_H
@@ -40,115 +39,9 @@
 #define __SFCOMBINATION_H
 #endif
 
-#include "regina-core.h"
-#include "surfaces/nsurfacefilter.h"
+#warning This header is deprecated; please use surfaces/surfacefilter.h instead.
 
-namespace regina {
-
-class NSurfaceFilterCombination;
-
-/**
- * \weakgroup surfaces
- * @{
- */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
-    typedef NSurfaceFilterCombination Class;
-    inline static const char* name() {
-        return "Combination filter";
-    }
-};
-#endif
-
-/**
- * A normal surface filter that simply combines other filters.
- * This filter will combine, using boolean \a and or \a or, all of the
- * filters that are immediate children of this packet.  This packet may
- * have children that are not normal surface filters; such children will
- * simply be ignored.
- *
- * If there are no immediate child filters, a normal surface will be
- * accepted if this is an \a and filter and rejected if this is an \a or
- * filter.
- */
-class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
-    REGINA_SURFACE_FILTER(NSurfaceFilterCombination, NS_FILTER_COMBINATION)
-
-    private:
-        bool usesAnd_;
-            /**< \c true if children are combined using boolean \a and, or
-                 \c false if children are combined using boolean \a or. */
-
-    public:
-        /**
-         * Creates a new surface filter that accepts all normal surfaces.
-         * This will be an \a and filter.
-         */
-        NSurfaceFilterCombination();
-        /**
-         * Creates a new surface filter that is a clone of the given
-         * surface filter.
-         *
-         * @param cloneMe the surface filter to clone.
-         */
-        NSurfaceFilterCombination(const NSurfaceFilterCombination& cloneMe);
-
-        /**
-         * Determines whether this is an \a and or an \a or combination.
-         *
-         * @return \c true if this is an \a and combination, or \c false
-         * if this is an \a or combination.
-         */
-        bool usesAnd() const;
-        /**
-         * Sets whether this is an \a and or an \a or combination.
-         *
-         * @param value \c true if this is to be an \a and combination,
-         * or \c false if this is to be an \a or combination.
-         */
-        void setUsesAnd(bool value);
-
-        virtual bool accept(const NNormalSurface& surface) const;
-        virtual void writeTextLong(std::ostream& out) const;
-        static NXMLFilterReader* xmlFilterReader(Packet* parent);
-
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLFilterData(std::ostream& out) const;
-};
-
-/*@}*/
-
-// Inline functions for NSurfaceFilterCombination
-
-inline NSurfaceFilterCombination::NSurfaceFilterCombination() : usesAnd_(true) {
-}
-inline NSurfaceFilterCombination::NSurfaceFilterCombination(
-        const NSurfaceFilterCombination& cloneMe) : NSurfaceFilter(),
-        usesAnd_(cloneMe.usesAnd_) {
-}
-
-inline bool NSurfaceFilterCombination::usesAnd() const {
-    return usesAnd_;
-}
-inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
-    if (usesAnd_ != value) {
-        ChangeEventSpan span(this);
-        usesAnd_ = value;
-    }
-}
-
-inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {
-    o << (usesAnd_ ? "AND" : "OR") << " combination normal surface filter\n";
-}
-
-inline Packet* NSurfaceFilterCombination::internalClonePacket(Packet*) const {
-    return new NSurfaceFilterCombination(*this);
-}
-
-} // namespace regina
+#include "surfaces/surfacefilter.h"
 
 #endif
 

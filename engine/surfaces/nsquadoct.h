@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file surfaces/nsquadoct.h
- *  \brief Implements almost normal surface vectors using quad-oct coordinates.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NSQUADOCT_H
@@ -39,100 +39,9 @@
 #define __NSQUADOCT_H
 #endif
 
-#include "regina-core.h"
-#include "surfaces/nsmirrored.h"
+#warning This header is deprecated; please use surfaces/nsvectorquadoct.h instead.
 
-namespace regina {
-
-class NNormalSurfaceVectorQuadOct;
-
-/**
- * \weakgroup surfaces
- * @{
- */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct NormalInfo<NS_AN_QUAD_OCT> {
-    typedef NNormalSurfaceVectorQuadOct Class;
-    typedef NormalInfo<NS_AN_STANDARD> Standard;
-    typedef NormalInfo<NS_AN_QUAD_OCT> Reduced;
-    inline static const char* name() {
-        return "Quad-oct almost normal";
-    }
-    enum {
-        almostNormal = 1,
-        spun = 1,
-        oriented = 0
-    };
-};
-#endif
-
-/**
- * An almost normal surface vector using quad-oct coordinates.
- *
- * If there are \a t tetrahedra in the underlying
- * triangulation, there must be precisely 6<i>t</i> coordinates.
- * The first six coordinates will be for the first tetrahedron, the
- * next six for the second tetrahedron and so on.  For each
- * tetrahedron, the first three coordinates represent the number of
- * quadrilateral discs of type 0, 1 and 2 (see NNormalSurface::quads()),
- * and the final three represent the number of octagonal discs of type
- * 0, 1 and 2 (see NNormalSurface::octs()).
- *
- * \ifacespython Not present.
- */
-class REGINA_API NNormalSurfaceVectorQuadOct :
-        public NNormalSurfaceVectorMirrored {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorQuadOct, NS_AN_QUAD_OCT)
-
-    public:
-        /**
-         * Creates a new vector all of whose entries are initialised to
-         * zero.
-         *
-         * @param length the number of elements in the new vector.
-         */
-        NNormalSurfaceVectorQuadOct(size_t length);
-        /**
-         * Creates a new vector that is a clone of the given vector.
-         *
-         * @param cloneMe the vector to clone.
-         */
-        NNormalSurfaceVectorQuadOct(const Vector<LargeInteger>& cloneMe);
-
-        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
-            const;
-
-        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
-
-        static NNormalSurfaceVector* makeZeroVector(
-            const NTriangulation* triangulation);
-        static MatrixInt* makeMatchingEquations(
-            const NTriangulation* triangulation);
-        static EnumConstraints* makeEmbeddedConstraints(
-            const NTriangulation* triangulation);
-};
-
-/*@}*/
-
-// Inline functions for NNormalSurfaceVectorQuadOct
-
-inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
-        size_t length) : NNormalSurfaceVectorMirrored(length) {
-}
-inline NNormalSurfaceVectorQuadOct::NNormalSurfaceVectorQuadOct(
-        const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVectorMirrored(cloneMe) {
-}
-
-inline const NVertex* NNormalSurfaceVectorQuadOct::isVertexLink(
-        const NTriangulation*) const {
-    // Quad-oct space does not contain vertex links at all.
-    return 0;
-}
-
-} // namespace regina
+#include "surfaces/nsvectorquadoct.h"
 
 #endif
 

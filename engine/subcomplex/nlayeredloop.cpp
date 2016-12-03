@@ -30,13 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nlensspace.h"
-#include "manifold/nsfs.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/lensspace.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nlayeredloop.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -48,13 +46,13 @@ NLayeredLoop* NLayeredLoop::clone() const {
     return ans;
 }
 
-NManifold* NLayeredLoop::manifold() const {
+Manifold* NLayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.
-        return new NLensSpace(length_, 1);
+        return new LensSpace(length_, 1);
     } else {
         // Twisted.
-        NSFSpace* ans = new NSFSpace();
+        SFSpace* ans = new SFSpace();
         ans->insertFibre(2, -1);
         ans->insertFibre(2, 1);
         ans->insertFibre(length_, 1);
@@ -63,7 +61,7 @@ NManifold* NLayeredLoop::manifold() const {
     }
 }
 
-NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
+NLayeredLoop* NLayeredLoop::isLayeredLoop(const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
@@ -81,10 +79,10 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     // a component).
 
     // Pick our base tetrahedron.
-    NTetrahedron* base = comp->tetrahedron(0);
+    Tetrahedron<3>* base = comp->tetrahedron(0);
 
-    NTetrahedron* tet = base;
-    NTetrahedron* next;
+    Tetrahedron<3>* tet = base;
+    Tetrahedron<3>* next;
     int baseTop0, baseTop1, baseBottom0, baseBottom1;
     int top0, top1, bottom0, bottom1;
     int adjTop0 = 0, adjTop1 = 0, adjBottom0 = 0, adjBottom1 = 0;
@@ -110,8 +108,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                     base->adjacentTetrahedron(baseBottom1))
                 continue;
 
-            hinge0 = NEdge::edgeNumber[baseTop0][baseBottom0];
-            hinge1 = NEdge::edgeNumber[baseTop1][baseBottom1];
+            hinge0 = Edge<3>::edgeNumber[baseTop0][baseBottom0];
+            hinge1 = Edge<3>::edgeNumber[baseTop1][baseBottom1];
             if (twisted) {
                 if (base->edge(hinge0) != base->edge(hinge1))
                     continue;
@@ -202,8 +200,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     return 0;
 }
 
-NAbelianGroup* NLayeredLoop::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NLayeredLoop::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     if (hinge_[1]) {
         // Untwisted.
         if (length_ > 1)

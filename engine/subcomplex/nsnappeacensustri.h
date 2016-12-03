@@ -59,8 +59,8 @@ namespace regina {
  *
  * \note The modern cusped hyperbolic census now extends to nine tetrahedra,
  * and indeed the 9-tetrahedron database is accessible through the
- * NCensus lookup routines.  However, for the time being, the scope of these
- * NSnapPeaCensusManifold and NSnapPeaCensusTri classes is restricted to the
+ * Census lookup routines.  However, for the time being, the scope of these
+ * SnapPeaCensusManifold and NSnapPeaCensusTri classes is restricted to the
  * original Callahan-Hildebrand-Weeks 7-tetrahedron census only.
  *
  * The census is split into five different sections according to number
@@ -71,11 +71,11 @@ namespace regina {
  * hyperbolic 3-manifolds", Patrick J. Callahan, Martin V. Hildebrand and
  * Jeffrey R. Weeks, Math. Comp. 68 (1999), no. 225, pp. 321--332.
  *
- * Note that this class is closely tied to NSnapPeaCensusManifold.
- * In particular, the section constants defined in NSnapPeaCensusManifold
+ * Note that this class is closely tied to SnapPeaCensusManifold.
+ * In particular, the section constants defined in SnapPeaCensusManifold
  * and NSnapPeaCensusTri are identical, and so may be freely mixed.
  * Furthermore, the section and index parameters of a NSnapPeaCensusTri
- * are identical to those of its corresponding NSnapPeaCensusManifold.
+ * are identical to those of its corresponding SnapPeaCensusManifold.
  *
  * All of the optional NStandardTriangulation routines are implemented
  * for this class.
@@ -176,10 +176,10 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * triangulations recognised by this routine.
          */
         static NSnapPeaCensusTri* isSmallSnapPeaCensusTri(
-            const NComponent* comp);
+            const Component<3>* comp);
 
-        NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        Manifold* manifold() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 
@@ -191,7 +191,7 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
         REGINA_INLINE_REQUIRED
         NSnapPeaCensusTri(char newSection, unsigned long newIndex);
 
-    friend class NSnapPeaCensusManifold;
+    friend class SnapPeaCensusManifold;
 };
 
 /*@}*/

@@ -42,11 +42,11 @@
 #include "regina-core.h"
 #include "maths/matrix2.h"
 #include "maths/perm.h"
+#include "triangulation/forward.h"
+
+#include <boost/noncopyable.hpp>
 
 namespace regina {
-
-template <int> class Simplex;
-typedef Simplex<3> NTetrahedron;
 
 /**
  * \weakgroup subcomplex
@@ -115,14 +115,14 @@ class REGINA_API NLayering : public boost::noncopyable {
         unsigned long size_;
             /**< The number of tetrahedra that have been layered. */
 
-        NTetrahedron* oldBdryTet_[2];
+        Tetrahedron<3>* oldBdryTet_[2];
             /**< The two tetrahedra of the old boundary (these may be
                  the same).  See the class notes for details. */
         Perm<4> oldBdryRoles_[2];
             /**< The corresponding two permutations of the old boundary.
                  See the class notes for details. */
 
-        NTetrahedron* newBdryTet_[2];
+        Tetrahedron<3>* newBdryTet_[2];
             /**< The two tetrahedra of the new boundary (these may be
                  the same).  See the class notes for details. */
         Perm<4> newBdryRoles_[2];
@@ -161,7 +161,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * @param roles1 the permutation describing how this second triangle is
          * formed from three vertices of tetrahedron \a bdry1.
          */
-        NLayering(NTetrahedron* bdry0, Perm<4> roles0, NTetrahedron* bdry1,
+        NLayering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
             Perm<4> roles1);
 
         /**
@@ -189,7 +189,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * be either 0 or 1.
          * @return the requested tetrahedron of the old boundary.
          */
-        NTetrahedron* oldBoundaryTet(unsigned which) const;
+        Tetrahedron<3>* oldBoundaryTet(unsigned which) const;
         /**
          * Returns the permutations that describe the old boundary triangles.
          * These refer to the original boundary before any layerings
@@ -215,7 +215,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * be either 0 or 1.
          * @return the requested tetrahedron of the new boundary.
          */
-        NTetrahedron* newBoundaryTet(unsigned which) const;
+        Tetrahedron<3>* newBoundaryTet(unsigned which) const;
         /**
          * Returns the permutations that describe the new boundary triangles.
          * These refer to the final boundary after layerings have been
@@ -401,8 +401,8 @@ class REGINA_API NLayering : public boost::noncopyable {
          * @return \c true if the given boundary is found to matche the
          * new boundary of this structure, or \c false otherwise.
          */
-        bool matchesTop(NTetrahedron* upperBdry0, Perm<4> upperRoles0,
-            NTetrahedron* upperBdry1, Perm<4> upperRoles1,
+        bool matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
+            Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
             Matrix2& upperReln) const;
 };
 
@@ -414,7 +414,7 @@ inline unsigned long NLayering::size() const {
     return size_;
 }
 
-inline NTetrahedron* NLayering::oldBoundaryTet(unsigned which) const {
+inline Tetrahedron<3>* NLayering::oldBoundaryTet(unsigned which) const {
     return oldBdryTet_[which];
 }
 
@@ -422,7 +422,7 @@ inline Perm<4> NLayering::oldBoundaryRoles(unsigned which) const {
     return oldBdryRoles_[which];
 }
 
-inline NTetrahedron* NLayering::newBoundaryTet(unsigned which) const {
+inline Tetrahedron<3>* NLayering::newBoundaryTet(unsigned which) const {
     return newBdryTet_[which];
 }
 

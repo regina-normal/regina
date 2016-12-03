@@ -82,7 +82,7 @@
 - (void)viewDidLoad
 {
     NewSnapPeaController* c = static_cast<NewSnapPeaController*>(self.parentViewController.parentViewController);
-    [self.from fill:c.spec.parent->root() type:regina::PACKET_TRIANGULATION allowNone:NO noneText:@"No Regina triangulations in this document"];
+    [self.from fill:c.spec.parent->root() type:regina::PACKET_TRIANGULATION3 allowNone:NO noneText:@"No Regina triangulations in this document"];
 }
 
 - (regina::Packet*)create
@@ -97,7 +97,7 @@
         return 0;
     }
 
-    regina::NTriangulation* tri = static_cast<regina::NTriangulation*>([self.from selectedPacket]);
+    regina::Triangulation<3>* tri = static_cast<regina::Triangulation<3>*>([self.from selectedPacket]);
     if (! tri) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Triangulation Selected"
                                                         message:nil

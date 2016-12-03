@@ -33,7 +33,7 @@
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
@@ -55,20 +55,20 @@ namespace {
         NormalSurfaces::saveCSVEdgeWeight, 1, 2);
 
     // Write manual overload wrappers since these are static member functions.
-    NormalSurfaces* unified_2(regina::NTriangulation* owner,
+    NormalSurfaces* unified_2(regina::Triangulation<3>* owner,
             regina::NormalCoords coords) {
         return NormalSurfaces::enumerate(owner, coords);
     }
-    NormalSurfaces* unified_3(regina::NTriangulation* owner,
+    NormalSurfaces* unified_3(regina::Triangulation<3>* owner,
             regina::NormalCoords coords, regina::NormalList which) {
         return NormalSurfaces::enumerate(owner, coords, which);
     }
-    NormalSurfaces* unified_4(regina::NTriangulation* owner,
+    NormalSurfaces* unified_4(regina::Triangulation<3>* owner,
             regina::NormalCoords coords, regina::NormalList which,
             regina::NormalAlg algHints) {
         return NormalSurfaces::enumerate(owner, coords, which, algHints);
     }
-    NormalSurfaces* unified_5(regina::NTriangulation* owner,
+    NormalSurfaces* unified_5(regina::Triangulation<3>* owner,
             regina::NormalCoords coords, regina::NormalList which,
             regina::NormalAlg algHints, regina::ProgressTracker* tracker) {
         return NormalSurfaces::enumerate(owner, coords, which, algHints,
@@ -143,7 +143,7 @@ void addNormalSurfaces() {
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
             OL_saveCSVEdgeWeight())
         .staticmethod("enumerate")
-        .attr("typeID") = regina::PACKET_NORMALSURFACELIST;
+        .attr("typeID") = regina::PACKET_NORMALSURFACES;
     ;
 
     implicitly_convertible<SafeHeldType<NormalSurfaces>,

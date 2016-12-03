@@ -92,8 +92,9 @@ DoubleDescription::RaySpec<BitmaskType>::RaySpec(
 }
 
 template <class BitmaskType>
+template <typename RayClass>
 void DoubleDescription::RaySpec<BitmaskType>::recover(
-        Ray& dest, const MatrixInt& subspace) const {
+        RayClass& dest, const MatrixInt& subspace) const {
     unsigned long i, j;
 
     unsigned long rows = subspace.rows();

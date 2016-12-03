@@ -34,28 +34,29 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
 #include "packet/container.h"
-#include "split/nsignature.h"
+#include "split/signature.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/nexampletriangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/example3.h"
+#include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/surfaces/testsurfaces.h"
 
-using regina::NAbelianGroup;
+using regina::AbelianGroup;
 using regina::BoolSet;
-using regina::NBoundaryComponent;
+using regina::BoundaryComponent;
 using regina::Container;
-using regina::NEdge;
-using regina::NExampleTriangulation;
-using regina::NNormalSurface;
+using regina::Edge;
+using regina::Example;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
-using regina::NNormalSurfaceVector;
+using regina::NormalSurfaceVector;
 using regina::Packet;
 using regina::Perm;
-using regina::NSignature;
-using regina::NTetrahedron;
-using regina::NTriangulation;
+using regina::Ray;
+using regina::Signature;
+using regina::Tetrahedron;
+using regina::Triangulation;
 
 using regina::NS_STANDARD;
 using regina::NS_QUAD;
@@ -132,29 +133,29 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        NTriangulation empty;
+        Triangulation<3> empty;
             /**< An empty triangulation. */
-        NTriangulation oneTet;
+        Triangulation<3> oneTet;
             /**< A one-tetrahedron ball. */
-        NTriangulation figure8;
+        Triangulation<3> figure8;
             /**< The figure eight knot complement. */
-        NTriangulation gieseking;
+        Triangulation<3> gieseking;
             /**< The Gieseking manifold. */
-        NTriangulation S3;
+        Triangulation<3> S3;
             /**< A one-tetrahedron two-vertex 3-sphere. */
-        NTriangulation loopC2;
+        Triangulation<3> loopC2;
             /**< An untwisted layered loop of length 2. */
-        NTriangulation loopCtw3;
+        Triangulation<3> loopCtw3;
             /**< A twisted layered loop of length 3. */
-        NTriangulation largeS3;
+        Triangulation<3> largeS3;
             /**< A 3-vertex 5-tetrahedron triangulation of the 3-sphere. */
-        NTriangulation largeRP3;
+        Triangulation<3> largeRP3;
             /**< A 2-vertex 5-tetrahedron triangulation of real
                  projective space. */
-        NTriangulation twistedKxI;
+        Triangulation<3> twistedKxI;
             /**< A 3-tetrahedron non-orientable twisted I-bundle over the
                  Klein bottle. */
-        NTriangulation norSFS;
+        Triangulation<3> norSFS;
             /**< A 9-tetrahedron triangulation of the space
                  SFS [RP2: (2,1) (2,1) (2,1)].  Specifically, this is
                  triangulation #5 of this space from the non-orientable
@@ -162,17 +163,17 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
 
     public:
-        void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
+        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
             dest.insertTriangulation(*source);
             delete source;
         }
 
-        void generateFromSig(NTriangulation& tri, const std::string& sigStr) {
-            NSignature* sig = NSignature::parse(sigStr);
+        void generateFromSig(Triangulation<3>& tri, const std::string& sigStr) {
+            Signature* sig = Signature::parse(sigStr);
             if (sig == 0)
                 return;
 
-            NTriangulation* triNew = sig->triangulate();
+            Triangulation<3>* triNew = sig->triangulate();
             delete sig;
             if (triNew == 0)
                 return;
@@ -182,9 +183,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void setUp() {
-            NTetrahedron* r;
-            NTetrahedron* s;
-            NTetrahedron* t;
+            Tetrahedron<3>* r;
+            Tetrahedron<3>* s;
+            Tetrahedron<3>* t;
 
             // Some triangulations have no face identifications at all.
             empty.setLabel("Empty");
@@ -194,10 +195,10 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Use pre-coded triangulations where we can.
             copyAndDelete(figure8,
-                NExampleTriangulation::figureEight());
+                Example<3>::figureEight());
             figure8.setLabel("Figure eight knot complement");
 
-            copyAndDelete(gieseking, NExampleTriangulation::gieseking());
+            copyAndDelete(gieseking, Example<3>::gieseking());
             gieseking.setLabel("Gieseking manifold");
 
             // Layered loops can be constructed automatically.
@@ -240,7 +241,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void defaultArgs() {
-            NTriangulation t(oneTet);
+            Triangulation<3> t(oneTet);
             NormalSurfaces* l;
 
             // Make sure that calls to enumerate() using default arguments
@@ -280,7 +281,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 list->size() == expectedSize);
         }
 
-        void testSurface(const NNormalSurface* surface, const char* triName,
+        void testSurface(const NormalSurface* surface, const char* triName,
                 const char* surfaceName, int euler, bool connected,
                 bool orient, bool twoSided, bool compact, bool realBdry,
                 bool vertexLink, unsigned edgeLink,
@@ -372,7 +373,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 else
                     msg << "be the (thin) link of two edges.";
 
-                std::pair<const regina::NEdge*, const regina::NEdge*> links
+                std::pair<const regina::Edge<3>*, const regina::Edge<3>*> links
                     = surface->isThinEdgeLink();
                 unsigned ans;
                 if (links.first == 0)
@@ -419,7 +420,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             unsigned long tot = 0;
             unsigned long size = list->size();
 
-            const NNormalSurface* s;
+            const NormalSurface* s;
             for (unsigned long i = 0; i < size; i++) {
                 s = list->surface(i);
 
@@ -431,7 +432,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         s->isVertexLinking() == vertexLink &&
                         s->isCentral() == central &&
                         s->isSplitting() == splitting) {
-                    std::pair<const regina::NEdge*, const regina::NEdge*> links
+                    std::pair<const regina::Edge<3>*, const regina::Edge<3>*> links
                         = s->isThinEdgeLink();
                     unsigned linkCount;
                     if (links.first == 0)
@@ -454,8 +455,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE(msg.str(), expectedCount == tot);
         }
 
-        static bool lexLess(const NNormalSurfaceVector* a,
-                const NNormalSurfaceVector* b) {
+        static bool lexLess(const Ray* a, const Ray* b) {
             for (unsigned i = 0; i < a->size(); ++i) {
                 if ((*a)[i] < (*b)[i])
                     return true;
@@ -474,14 +474,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             if (n == 0)
                 return true;
 
-            typedef const NNormalSurfaceVector* VecPtr;
+            typedef const Ray* VecPtr;
             VecPtr* lhsRaw = new VecPtr[n];
             VecPtr* rhsRaw = new VecPtr[n];
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = lhs->surface(i)->rawVector();
-                rhsRaw[i] = rhs->surface(i)->rawVector();
+                lhsRaw[i] = &lhs->surface(i)->rawVector();
+                rhsRaw[i] = &rhs->surface(i)->rawVector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
@@ -1414,7 +1414,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void testStandardLoopCtwGeneric(unsigned len) {
-            NTriangulation loop;
+            Triangulation<3> loop;
             loop.insertLayeredLoop(len, true);
             NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loop, NS_STANDARD);
@@ -1450,7 +1450,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void testQuadLoopCtwGeneric(unsigned len) {
-            NTriangulation loop;
+            Triangulation<3> loop;
             loop.insertLayeredLoop(len, true);
             NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loop, NS_QUAD);
@@ -1479,7 +1479,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         void testAlmostNormalLoopCtwGeneric(unsigned len) {
-            NTriangulation loop;
+            Triangulation<3> loop;
             loop.insertLayeredLoop(len, true);
             NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loop, NS_AN_STANDARD);
@@ -1547,7 +1547,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             testAlmostNormalLoopCtwGeneric(15);
         }
 
-        static void verifyConversions(NTriangulation* tri) {
+        static void verifyConversions(Triangulation<3>* tri) {
             std::unique_ptr<NormalSurfaces> stdDirect(
                 NormalSurfaces::enumerate(
                 tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
@@ -1611,7 +1611,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyConversionsAN(NTriangulation* tri) {
+        static void verifyConversionsAN(Triangulation<3>* tri) {
             std::unique_ptr<NormalSurfaces> stdDirect(
                 NormalSurfaces::enumerate(
                 tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
@@ -1714,7 +1714,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         template <regina::NormalCoords coords>
-        static void verifyTreeVsDD(NTriangulation* tri) {
+        static void verifyTreeVsDD(Triangulation<3>* tri) {
             NormalSurfaces* dd = NormalSurfaces::enumerate(
                 tri, coords, NS_VERTEX, NS_VERTEX_DD | NS_VERTEX_STD_DIRECT);
             NormalSurfaces* tree = NormalSurfaces::enumerate(
@@ -1757,7 +1757,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         }
 
         template <regina::NormalCoords coords>
-        static void verifyFundPrimalVsDual(NTriangulation* tri) {
+        static void verifyFundPrimalVsDual(Triangulation<3>* tri) {
             NormalSurfaces* primal = NormalSurfaces::enumerate(
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_PRIMAL);
             NormalSurfaces* dual = NormalSurfaces::enumerate(
@@ -1799,14 +1799,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             runCensusAllIdeal(verifyFundPrimalVsDual<coords>, true);
         }
 
-        static void testDisjoint(NTriangulation* tri) {
+        static void testDisjoint(Triangulation<3>* tri) {
             NormalSurfaces* list = NormalSurfaces::enumerate(
                 tri, NS_AN_STANDARD);
             unsigned long n = list->size();
 
             unsigned long i, j;
-            const NNormalSurface *s, *t;
-            std::pair<const NEdge*, const NEdge*> edges;
+            const NormalSurface *s, *t;
+            std::pair<const Edge<3>*, const Edge<3>*> edges;
             unsigned long edge;
 
             for (i = 0; i < n; ++i) {
@@ -1917,18 +1917,11 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             runCensusAllIdeal(&testDisjoint);
         }
 
-        static NNormalSurface* doubleSurface(const NNormalSurface* s) {
-            NNormalSurfaceVector* v =
-                static_cast<NNormalSurfaceVector*>(s->rawVector()->clone());
-            (*v) *= 2;
-            return new NNormalSurface(s->triangulation(), v);
-        }
-
         /**
          * PRE: tri is valid with only one component, and all vertex
          * links are spheres or discs.
          */
-        static bool mightBeTwistedProduct(const NTriangulation* tri) {
+        static bool mightBeTwistedProduct(const Triangulation<3>* tri) {
             if (tri->countBoundaryComponents() != 1)
                 return false;
 
@@ -1937,8 +1930,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             //  -  H1 = (2g)Z, H1Bdry = (4g-2)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = Z_2 + (2g-3)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = (2g-2)Z;
-            const NAbelianGroup& h1 = tri->homology();
-            const NAbelianGroup& bdry = tri->homologyBdry();
+            const AbelianGroup& h1 = tri->homology();
+            const AbelianGroup& bdry = tri->homologyBdry();
 
             if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (2g)Z.
@@ -1976,13 +1969,13 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
          * PRE: tri is valid with only one component, and all vertex
          * links are spheres or discs.
          */
-        static bool mightBeUntwistedProduct(const NTriangulation* tri) {
+        static bool mightBeUntwistedProduct(const Triangulation<3>* tri) {
             if (tri->countBoundaryComponents() != 2)
                 return false;
 
             // Check that both boundary components are homeomorphic.
-            NBoundaryComponent* b0 = tri->boundaryComponent(0);
-            NBoundaryComponent* b1 = tri->boundaryComponent(1);
+            BoundaryComponent<3>* b0 = tri->boundaryComponent(0);
+            BoundaryComponent<3>* b1 = tri->boundaryComponent(1);
 
             if (b0->eulerChar() != b1->eulerChar())
                 return false;
@@ -1993,8 +1986,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Check that H1 is of the form (k)Z or Z_2 + (k)Z, and that
             // H1Bdry = 2 H1.
-            const NAbelianGroup& h1 = tri->homology();
-            const NAbelianGroup& bdry = tri->homologyBdry();
+            const AbelianGroup& h1 = tri->homology();
+            const AbelianGroup& bdry = tri->homologyBdry();
 
             if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (k)Z.
@@ -2028,11 +2021,11 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         // be equal to (i) the surface s, (ii) two copies of the surface s,
         // or (iii) a double cover of the surface s.
         // Increment the relevant counters accordingly.
-        static void checkBoundaryType(const NNormalSurface* s,
-                const NTriangulation* tri, unsigned& foundS,
+        static void checkBoundaryType(const NormalSurface* s,
+                const Triangulation<3>* tri, unsigned& foundS,
                 unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
             if (tri->countBoundaryComponents() == 1) {
-                const NBoundaryComponent* b = tri->boundaryComponent(0);
+                const BoundaryComponent<3>* b = tri->boundaryComponent(0);
 
                 if (s->eulerChar() == b->eulerChar()
                         && s->isOrientable() == b->isOrientable())
@@ -2041,8 +2034,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         (b->isOrientable() || ! s->isOrientable()))
                     ++foundDoubleCover;
             } else if (tri->countBoundaryComponents() == 2) {
-                const NBoundaryComponent* b0 = tri->boundaryComponent(0);
-                const NBoundaryComponent* b1 = tri->boundaryComponent(1);
+                const BoundaryComponent<3>* b0 = tri->boundaryComponent(0);
+                const BoundaryComponent<3>* b1 = tri->boundaryComponent(1);
 
                 if (
                         s->eulerChar() == b0->eulerChar() &&
@@ -2056,18 +2049,18 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         /**
          * PRE: tri is valid and has only one component.
          */
-        static void testCutAlong(NTriangulation* tri) {
+        static void testCutAlong(Triangulation<3>* tri) {
             NormalSurfaces* list = NormalSurfaces::enumerate(
                 tri, NS_STANDARD);
             unsigned long n = list->size();
 
-            const NNormalSurface *s;
-            std::unique_ptr<NTriangulation> t;
+            const NormalSurface *s;
+            std::unique_ptr<Triangulation<3>> t;
             std::unique_ptr<Container> comp;
             unsigned long nComp;
 
-            std::unique_ptr<NNormalSurface> sDouble;
-            std::unique_ptr<NTriangulation> tDouble;
+            std::unique_ptr<NormalSurface> sDouble;
+            std::unique_ptr<Triangulation<3>> tDouble;
             std::unique_ptr<Container> compDouble;
             unsigned long nCompDouble;
 
@@ -2084,7 +2077,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 comp.reset(new Container());
                 nComp = t->splitIntoComponents(comp.get(), false);
 
-                sDouble.reset(doubleSurface(s));
+                sDouble.reset(s->doubleSurface());
                 tDouble.reset(sDouble->cutAlong());
                 tDouble->intelligentSimplify();
                 compDouble.reset(new Container());
@@ -2179,7 +2172,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 }
 
                 for (p = comp->firstChild(); p; p = p->nextSibling())
-                    if (! static_cast<NTriangulation*>(p)->
+                    if (! static_cast<Triangulation<3>*>(p)->
                             hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along surface #" << i
@@ -2188,7 +2181,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
                 for (p = compDouble->firstChild(); p; p = p->nextSibling())
-                    if (! static_cast<NTriangulation*>(p)->
+                    if (! static_cast<Triangulation<3>*>(p)->
                             hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along double surface #" << i
@@ -2227,7 +2220,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
                 for (p = comp->firstChild(); p; p = p->nextSibling())
-                    checkBoundaryType(s, static_cast<NTriangulation*>(p),
+                    checkBoundaryType(s, static_cast<Triangulation<3>*>(p),
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
@@ -2262,7 +2255,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
                 for (p = compDouble->firstChild(); p; p = p->nextSibling())
-                    checkBoundaryType(s, static_cast<NTriangulation*>(p),
+                    checkBoundaryType(s, static_cast<Triangulation<3>*>(p),
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
@@ -2278,11 +2271,11 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 for (p = compDouble->firstChild(); p; p = p->nextSibling()) {
                     if (s->isTwoSided()) {
                         if (mightBeUntwistedProduct(
-                                static_cast<NTriangulation*>(p)))
+                                static_cast<Triangulation<3>*>(p)))
                             break;
                     } else {
                         if (mightBeTwistedProduct(
-                                static_cast<NTriangulation*>(p)))
+                                static_cast<Triangulation<3>*>(p)))
                             break;
                     }
                 }

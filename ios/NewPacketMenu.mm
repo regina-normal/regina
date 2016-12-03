@@ -74,22 +74,22 @@ static NSArray* _allRows;
                     [NewPacketRow rowWithType:regina::PACKET_CONTAINER
                                         label:@"Container"
                                          icon:@"Container"],
-                    [NewPacketRow rowWithType:regina::PACKET_DIM2TRIANGULATION
+                    [NewPacketRow rowWithType:regina::PACKET_TRIANGULATION2
                                         label:@"2-D triangulation"
-                                         icon:@"Dim2Triangulation"],
-                    [NewPacketRow rowWithType:regina::PACKET_TRIANGULATION
+                                         icon:@"Triangulation2"],
+                    [NewPacketRow rowWithType:regina::PACKET_TRIANGULATION3
                                         label:@"3-D triangulation"
-                                         icon:@"Triangulation"],
-                    [NewPacketRow rowWithType:regina::PACKET_DIM4TRIANGULATION
+                                         icon:@"Triangulation3"],
+                    [NewPacketRow rowWithType:regina::PACKET_TRIANGULATION4
                                         label:@"4-D triangulation"
-                                         icon:@"Dim4Triangulation"],
-                    [NewPacketRow rowWithType:regina::PACKET_NORMALSURFACELIST
+                                         icon:@"Triangulation4"],
+                    [NewPacketRow rowWithType:regina::PACKET_NORMALSURFACES
                                         label:@"Normal surfaces (3-D)"
                                          icon:@"Surfaces"],
-                    [NewPacketRow rowWithType:regina::PACKET_NORMALHYPERSURFACELIST
+                    [NewPacketRow rowWithType:regina::PACKET_NORMALHYPERSURFACES
                                         label:@"Normal hypersurfaces (4-D)"
                                          icon:@"Hypersurfaces"],
-                    [NewPacketRow rowWithType:regina::PACKET_ANGLESTRUCTURELIST
+                    [NewPacketRow rowWithType:regina::PACKET_ANGLESTRUCTURES
                                         label:@"Angle structures"
                                          icon:@"Angles"],
                     [NewPacketRow rowWithType:regina::PACKET_SNAPPEATRIANGULATION

@@ -18,18 +18,100 @@ Version 5.1  [ (under development) ]
             + NAngleStructureList becomes AngleStructures.
             + NEnumConstraintList becomes EnumConstraints.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
+            + NNormalHypersurfaceList becomes NormalHypersurfaces.
+            + NNormalHypersurfaceVectorMirrored is removed entirely (see below).
+            + NNormalHypersurfaceVectorStandard becomes HSVectorStandard.
             + NNormalSurfaceList becomes NormalSurfaces.
+            + NNormalSurfaceVector{Standard,...} becomes NSVector{Standard,...}.
+            + NSurfaceSubset is removed entirely (see below).
+            + For triangulation-related classes and headers:
+              - All vertex/edge/face/etc, component, boundary component and
+                isomorphism headers are included automatically by the new
+                headers triangulation/{dim2.h, dim3.h, dim4.h, generic.h}.
+                These are now the preferred headers for accessing
+                triangulations, faces, etc. in dimensions {2, 3, 4, >= 5}.  For
+                instance, triangulation/nvertex.h becomes triangulation/dim3.h,
+                dim2/dim2component.h becomes triangulation/dim2.h, and
+                generic/face.h becomes triangulation/generic.h.
+              - All facet pairing headers are included automatically by the
+                new headers triangulation/facetpairing3.h (for dimension 3)
+                and triangulation/facetpairing.h (for all other dimensions).
+              - All gluing permutations headers are replaced by the new header
+                census/gluingperms.h, and all gluing permutation search headers
+                are replaced by census/gluingpermsearcher{2,3,4}.h.
+              - All typedefs of the form Dim2Foo, NFoo and Dim4Foo are now
+                deprecated, in favour of the templated class names Foo<2,3,4>.
+                For instance, Dim2Triangulation becomes Triangulation<2>,
+                NVertex becomes Vertex<3>, and Dim4Isomorphism becomes
+                Isomorphism<4>.
+              - As a special cases:
+                * Dim2TriangleEdge, NTetFace and Dim4PentFacet become
+                  FacetSpec<2,3,4>;
+                * Dim2EdgePairing, NFacePairing and Dim4FacetPairing become
+                  FacetPairing<2,3,4>;
+                * Dim2ExampleTriangulation, NExampleTriangulation and
+                  Dim4ExampleTriangulation become Example<2,3,4>.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
+            + surfaces/sf{combination,properties}.h are both merged into
+              surfaces/surfacefilter.h.
             + utilities/nbooleans.h becomes utilities/boolset.h.
             + Some internal classes do not have backward compatible headers or
               typedefs.  None of these internal classes are exposed to Python,
               and typical C++ users would have no reason to use them either.
     ENGINE:
+        Namespace regina::syntax:
+            - New suite of classes for managing syntax highlighting.
+              These classes should be considered internal - they only appear
+              in the engine so they can be used by both the Qt and iOS GUIs.
         Class AbelianGroup, MarkedAbelianGroup, HomMarkedAbelianGroup:
             - Now works with type Integer, not LargeInteger.
+        Class BoundaryComponent<dim>:
+            - A new generic template for boundary components, which generalises
+              the old standalone Dim2BoundaryComponent, NBoundaryComponent and
+              Dim4BoundaryComponent classes.
+            - New routines size() and facet() to query top-dimensional faces.
+            - New routine countRidges(), to help with higher dimensions
+              where (dim-2)-faces are not actually stored.
+            - New routines facets() and faces(), plus aliases vertices(),
+              edges(), etc. where relevant.
+            - New routine isReal() for dimensions dim = 3,4.
+            - New routine build() for dimensions other than 4 (this was
+              already present for dimension 4).
+            - New routine isOrientable() for dimensions other than 3 (this was
+              already present for dimension 3).
+            - New routine triangulation() to access the enclosing triangulation.
+        Class Component<dim>:
+            - New routine boundaryComponents() in all dimensions, and new
+              routines countBoundaryComponents() and boundaryComponent() in
+              higher dimensions (these were already present for dimensions 2-4).
         Class Crossing, CrossingStrand:
             - Supporting classes for the new Link packet class.
+        Class Cyclotomic:
+            - This class is now thread-safe.  (Previously it was not, because
+              it worked with a global cache of cyclotomic polynomials.)
+        Class Example<dim>:
+            - A new generic template for generating example triangulations,
+              which generalises the old standalone Dim2ExampleTriangulation,
+              NExampleTriangulation and Dim4ExampleTriangulation classes.
+            - New routines sphere(), simplicialSphere(), sphereBundle(),
+              twistedSphereBundle(), ball(), ballBundle() and
+              twistedBallBundle() for dimensions that did not have them.
+            - New routines singleCone() and doubleCone() for dimensions >= 3
+              that did not have them.
+        Class Face<dim, subdim>:
+            - The template parameters are expanded to include the case
+              Face<dim, dim>, which now implements the old class Simplex<dim>.
+              Simplex<dim> remains as a templated type alias, and is still
+              the preferred way to refer to this class.
+            - For higher-dimensional triangulations (dim >= 5), faces now
+              support isBoundary(), boundaryComponent(), and for
+              codimension-1-faces only, inMaximalForest().
+            - Fixed inMaximalForest(), which was broken in dimension >= 8.
+        Class GluingPermSearcher<2,3,4>:
+            - A new generic class that replaces the old Dim2GluingPermSearcher,
+              NGluingPermSearcher and Dim4GluingPermSearcher.  For now this
+              class remains undefined for higher dimensions.
         Class HomologicalData:
             - Now works with type Integer instead of LargeInteger for all
               member functions except for torsionSigmaVector().
@@ -37,6 +119,8 @@ Version 5.1  [ (under development) ]
             - New classes for Laurent polynomials in one and two variables.
         Class Link:
             - New packet class for knots and links in the 3-sphere.
+        Class MarkedVector:
+            - New routine refill() for bulk replacements.
         Class MatrixInt:
             - Now stores elements of type Integer, not LargeInteger.  If
               you need support for infinity, you can always use the class
@@ -45,22 +129,118 @@ Version 5.1  [ (under development) ]
         Class MatrixIntDomain:
             - New generalisation of MatrixInt for working in other
               integral domains.
+        Class NormalSurface:
+            - New routines systemAllowsAlmostNormal(), systemAllowsSpun() and
+              systemAllowsOriented().
+        Class NormalSurfaces, NormalHypersurfaces:
+            - For the inner VectorIterator class, the dereference
+              operator * now returns a Ray&, not a pointer to a
+              NNormal{Surface,Hypersurface}Vector.
+        Class NormalSurfaceVector, NormalHypersurfaceVector:
+            - No longer inherits from Ray, and therefore many of the old
+              vector functions are no longer available.  (It was dangerous
+              to call these in the past, since "mirrored" vector classes
+              were not meant to be modified after their first query.)
+            - New member function coords() to access the underlying Ray
+              (but with const access only).
+            - New const access functions size() and operator [], to replace
+              functions that were lost by not inheriting from Ray.
+            - New non-const operations setElement(), += and scaleDown(), which
+              act correctly in all coordinate systems (unlike the old versions
+              of these functions that were inherited from Ray).
+            - Function rawVector() now returns a Ray&, not a pointer to a
+              NNormal{Surface,Hypersurface}Vector.
+            - Now derives from boost::noncopyable, so the default copy
+              constructor is gone.  Instead, individual vector subclasses now
+              have a copy constructor that takes a member of that same subclass.
+        Class NormalHypersurfaceVectorMirrored:
+            - Removed, since this is never used (at present).
+        Class NormalSurfaceVectorMirrored:
+            - The real work has now moved to a static makeMirror() function,
+              which subclasses must also implement.
+            - Now behaves correctly when the vector is changed, even after
+              the mirror has been created.
+            - Removed the copy constructor.
+        Class Packet:
+            - writeXMLFile() is now available in python (using std::cout only).
+        Class Perm<n>:
+            - New method clear() to reset a suffix of the permutation
+              to the identity map.
+        Class Primes:
+            - This class is now thread-safe.  (Previously it was not, because
+              it worked with a global cache of pre-computed primes.)
+        Class ProgressTracker, ProgressTrackerOpen:
+            - Routine newStage() now accepts C++-style strings as well as
+              C-style strings.
+        Class Property:
+            - New routine swap() for fast swapping of data.
+        Class PropertyBase:
+            - Removed, since it provided no enhancements to Property.
         Class Primes:
             - Now works with type Integer, not LargeInteger.
+        Class SafePtr:
+            - New default constructor, bool conversion and routine reset().
+            - Disabled the default copy assignment operator.
+        Class Simplex<dim>:
+            - This is now implemented as the specialisation Face<dim, dim>.
+              The preferred way to refer to this class is still Simplex<dim>,
+              which is now a templated type alias.
+            - Fixed facetInMaximalForest(), which was broken in dimension >= 8.
+        Class SurfaceSubset:
+            - Removed entirely.  This class has been unused for several years,
+              and was just a trivial wrapper for iterating through a surface
+              list with a filter.
+        Class Triangulation<dim>:
+            - New routines boundaryComponents(), countBoundaryComponents()
+              and boundaryComponent() for higher-dimensional triangulations
+              (these were already present for dimensions 2-4).
+            - New routine eulerCharTri() for all dimensions (this was already
+              present for dimensions 3 and 4).
+            - New routines fundamentalGroup(), simplifiedFundamentalGroup(),
+              homology() and homologyH1() for all dimensions (these were
+              already present for dimensions 3 and 4).  These routines do not
+              require the triangulation to be valid (i.e., the old validity
+              restrictions in dimension 4 have been lifted).
+            - New two-argument copy constructor that allows you to clone
+              a triangulation without cloning its computed properties.
+            - Routine swapContents() now swaps skeletal data and computed
+              properties also, instead of just deleting them.
+        Class Triangulation<3>:
+            - Routine retriangulate() now allows its action argument to
+              change the triangulation that is passed to it.
+            - Routine turaevViro() now takes a progress tracker, and
+              allows cancellation.
+        Typedef UseDim2GluingPerms, UseGluingPerms, UseDim4GluingPerms:
+            - Renamed to GluingPermSearcher<2,3,4>::Use.  The old names are
+              kept but deprecated.
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
               and PACKET_ANGLESTRUCTURELIST to PACKET_ANGLESTRUCTURES.
               The old names are kept but deprecated.
+            - Deprecated the old names PACKET_DIM2TRIANGULATION,
+              PACKET_TRIANGULATION and PACKET_DIM4TRIANGULATION.
+              Instead use the newer names PACKET_TRIANGULATION{2,3,4}.
+        Routine faceOppositeEdge():
+            - New routine for optimised face number calculations.
         Routine preImageOfLattice(), torsionAutInverse():
             - Now works with type Integer instead of LargeInteger.
         Routine isZero, isNonZero, isPositive, isNegative, isNonPositive,
                 isNonNegative:
             - Deprecated, with no replacements.  This is because the methods
               here for managing round-off error were quite brutal.
+        Routine valueOf():
+            - The bool version now accepts "1" and "0".
+        Routine xmlString():
+            - New routine for converting between libxml and C++ strings.
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old
               (and now removed) array vertexSplitDefn[][].
+        Macro REGINA_NORMAL_SURFACE_FLAVOUR, REGINA_NORMAL_HYPERSURFACE_FLAVOUR:
+            - Now takes a third argument, representing the parent vector class.
+        Header triangulation/forward.h:
+            - New header that is now the preferred method of forward-declaring
+              Regina's triangulation-related classes and type aliases.
     PYTHON:
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The
@@ -4181,5 +4361,5 @@ Version 2.1.0  [ 18 December, 2000 ]
     (Initial public release.)
 
 Ben Burton (bab@maths.uq.edu.au)
-http://regina.sourceforge.net/
+http://regina-normal.github.io/
 

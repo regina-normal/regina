@@ -181,5 +181,24 @@
   </xsl:if>
 </xsl:template>
 
+<xsl:template name="gentext.footer-doc-comment"> 
+  <xsl:call-template name="gentext"> 
+    <xsl:with-param name="key" select="'footer-doc-comment'"/> 
+  </xsl:call-template> 
+</xsl:template> 
+ 
+<xsl:template name="gentext.footer-doc-feedback"> 
+  <xsl:call-template name="gentext"> 
+    <xsl:with-param name="key" select="'footer-doc-feedback'"/> 
+  </xsl:call-template> 
+</xsl:template> 
+ 
+<xsl:template name="gentext.footer-doc-teamname"> 
+  <xsl:call-template name="gentext"> 
+    <xsl:with-param name="key" select="'footer-doc-teamname'"/> 
+  </xsl:call-template> 
+</xsl:template> 
+
+
 </xsl:stylesheet>
 <!-- vim: set sw=2: -->

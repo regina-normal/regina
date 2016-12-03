@@ -678,5 +678,5 @@ Version 2.2  [ 7 October, 2001 ]
     (See CHANGES.txt for details beyond this point.)
 
 Ben Burton (bab@maths.uq.edu.au)
-http://regina.sourceforge.net/
+http://regina-normal.github.io/
 

@@ -65,7 +65,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for low-dimensional topology",
- *  http://regina.sourceforge.net/ , 1999-2016.
+ *  http://regina-normal.github.io/ , 1999-2016.
  *
  *  <h3>Authors</h3>
  *
@@ -221,7 +221,7 @@ namespace regina {
  *
  *  - Everything within the C++ namespace \a regina becomes part of the
  *    Python module \a regina.  For example, the C++ class
- *    regina::NTriangulation becomes the Python class regina.NTriangulation.
+ *    regina::Triangulation<3> becomes the Python class regina.Triangulation3.
  *
  *  - Regina's most important C++ classes and functions are wrapped
  *    in Python.  However, not all classes and functions are wrapped.
@@ -232,7 +232,7 @@ namespace regina {
  *  - Most of Regina's classes and functions have the same interface
  *    in both C++ and Python, but occasionally there are differences.
  *    Again, you will see a bold <b>Python:</b> note indicating this.
- *    See for instance the method NTriangulation::tetrahedra(),
+ *    See for instance the method Triangulation<3>::tetrahedra(),
  *    or the global function writeResUsage().
  *
  *  <h3>Testing equality</h3>
@@ -256,7 +256,7 @@ namespace regina {
  *  - Some classes use <i>comparison by value</i>.  Here <tt>x == y</tt>
  *    tests whether the contents of \a x and \a y are mathematically
  *    equivalent.  Examples of such classes are \ref IntegerBase "Integer",
- *    Rational, and NAbelianGroup.
+ *    Rational, and AbelianGroup.
  *
  *    These classes all provide C++ comparison operators == and !=.  You
  *    can read the documentation for these operators to understand
@@ -266,13 +266,13 @@ namespace regina {
  *    tests whether \a x and \a y refer to the same underlying C++ object.
  *    This is similar to how the test <tt>x is y</tt> would behave in a
  *    native Python application.  Examples of such classes are
- *    NTriangulation and NTetrahedron.
+ *    Triangulation<3> and Tetrahedron<3>.
  *
  *    These classes do not provide C++ comparison operators == or !=.
  *
  *  - Some classes are never instantiated, and so can never be compared
  *    at all.  These classes typically contain only static methods.
- *    Examples of such classes are NExampleTriangulation and
+ *    Examples of such classes are Example<dim> and
  *    \ref regina::i18n::Locale "Locale".
  *
  *  If you wish to find out how a particular class \a C behaves, you can
@@ -281,7 +281,7 @@ namespace regina {
  *  respectively:
  *
  *  \code{.unparsed}
- *  >>> print NTriangulation.equalityType
+ *  >>> print Triangulation3.equalityType
  *  BY_REFERENCE
  *  \endcode
  */

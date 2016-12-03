@@ -30,13 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nsnappeacensusmfd.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/snappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntriangle.h"
-#include "triangulation/nvertex.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -47,7 +44,7 @@ const char NSnapPeaCensusTri::SEC_7_OR = 'v';
 const char NSnapPeaCensusTri::SEC_7_NOR = 'y';
 
 NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
-        const NComponent* comp) {
+        const Component<3>* comp) {
     // Currently this routine can recognise SnapPea triangulations
     // m000 -- m004 as well as m129.
 
@@ -76,7 +73,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     int link;
     for (i = 0; i < nVertices; i++) {
         link = comp->vertex(i)->link();
-        if (link != NVertex::TORUS && link != NVertex::KLEIN_BOTTLE)
+        if (link != Vertex<3>::TORUS && link != Vertex<3>::KLEIN_BOTTLE)
             return 0;
     }
     for (i = 0; i < nEdges; i++)
@@ -106,7 +103,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
             // Now we know it's either m003 or m004.  We distinguish
             // between them by triangle types, since all of m003's triangles
             // are Mobius bands and all of m004's triangles are horns.
-            if (comp->triangle(0)->type() == NTriangle::MOBIUS)
+            if (comp->triangle(0)->type() == Triangle<3>::MOBIUS)
                 return new NSnapPeaCensusTri(SEC_5, 3);
             else
                 return new NSnapPeaCensusTri(SEC_5, 4);
@@ -123,7 +120,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                     return 0;
                 // Census says it's m001 if no triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
-                    if (comp->triangle(i)->type() == NTriangle::DUNCEHAT)
+                    if (comp->triangle(i)->type() == Triangle<3>::DUNCEHAT)
                         return 0;
                 return new NSnapPeaCensusTri(SEC_5, 1);
             } else if (comp->countVertices() == 2) {
@@ -135,7 +132,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                     return 0;
                 // Census says it's m002 if some triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
-                    if (comp->triangle(i)->type() == NTriangle::DUNCEHAT)
+                    if (comp->triangle(i)->type() == Triangle<3>::DUNCEHAT)
                         return new NSnapPeaCensusTri(SEC_5, 2);
                 return 0;
             }
@@ -150,9 +147,9 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             if (comp->countEdges() != 4)
                 return 0;
-            if (comp->vertex(0)->link() != NVertex::TORUS)
+            if (comp->vertex(0)->link() != Vertex<3>::TORUS)
                 return 0;
-            if (comp->vertex(1)->link() != NVertex::TORUS)
+            if (comp->vertex(1)->link() != Vertex<3>::TORUS)
                 return 0;
             if (comp->vertex(0)->degree() != 8)
                 return 0;
@@ -171,12 +168,12 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     return 0;
 }
 
-NManifold* NSnapPeaCensusTri::manifold() const {
-    return new NSnapPeaCensusManifold(section_, index_);
+Manifold* NSnapPeaCensusTri::manifold() const {
+    return new SnapPeaCensusManifold(section_, index_);
 }
 
-NAbelianGroup* NSnapPeaCensusTri::homology() const {
-    return NSnapPeaCensusManifold(section_, index_).homology();
+AbelianGroup* NSnapPeaCensusTri::homology() const {
+    return SnapPeaCensusManifold(section_, index_).homology();
 }
 
 std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {

@@ -41,17 +41,13 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "triangulation/forward.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
-class NAbelianGroup;
-class NManifold;
-
-template <int> class Component;
-template <int> class Triangulation;
-typedef Component<3> NComponent;
-typedef Triangulation<3> NTriangulation;
+class AbelianGroup;
+class Manifold;
 
 /**
  * \addtogroup subcomplex Standard Triangulations and Subcomplexes
@@ -62,14 +58,14 @@ typedef Triangulation<3> NTriangulation;
 
 /**
  * Describes a triangulation or subcomplex of a triangulation whose structure
- * is well-understood.  An NStandardTriangulation is generally connected
- * with a real triangulation, i.e., a NTriangulation object, which it
+ * is well-understood.  A NStandardTriangulation is generally connected
+ * with a real triangulation, i.e., a Triangulation<3> object, which it
  * describes some portion of.
  *
  * In general NStandardTriangulation objects cannot be constructed
  * directly, but are instead created through static identification
  * routines such as
- * NStandardTriangulation::isStandardTriangulation(NTriangulation*).
+ * NStandardTriangulation::isStandardTriangulation(Triangulation<3>*).
  *
  * Subclasses corresponding to different families of triangulations may,
  * but not need to, override the output routines writeTextShort() and
@@ -123,14 +119,14 @@ class REGINA_API NStandardTriangulation :
          *
          * @return the underlying 3-manifold.
          */
-        virtual NManifold* manifold() const;
+        virtual Manifold* manifold() const;
         /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
          * homology has not yet been implemented for this triangulation
          * then this routine will return 0.
          *
-         * This routine does not work by calling NTriangulation::homology()
+         * This routine does not work by calling Triangulation<3>::homology()
          * on the associated real triangulation.  Instead the homology is
          * calculated directly from the known properties of this
          * standard triangulation.
@@ -143,10 +139,10 @@ class REGINA_API NStandardTriangulation :
          * The homology group will be newly allocated and must be
          * destroyed by the caller of this routine.
          *
-         * If this NStandardTriangulation describes an entire NTriangulation
+         * If this NStandardTriangulation describes an entire Triangulation<3>
          * (and not just a part thereof) then the results of this routine
          * should be identical to the homology group obtained by calling
-         * NTriangulation::homology() upon the associated real triangulation.
+         * Triangulation<3>::homology() upon the associated real triangulation.
          *
          * This routine can also be accessed via the alias homologyH1()
          * (a name that is more specific, but a little longer to type).
@@ -154,14 +150,14 @@ class REGINA_API NStandardTriangulation :
          * @return the first homology group of this triangulation, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        virtual NAbelianGroup* homology() const;
+        virtual AbelianGroup* homology() const;
         /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
          * homology has not yet been implemented for this triangulation
          * then this routine will return 0.
          *
-         * This routine does not work by calling NTriangulation::homology()
+         * This routine does not work by calling Triangulation<3>::homology()
          * on the associated real triangulation.  Instead the homology is
          * calculated directly from the known properties of this
          * standard triangulation.
@@ -174,10 +170,10 @@ class REGINA_API NStandardTriangulation :
          * The homology group will be newly allocated and must be
          * destroyed by the caller of this routine.
          *
-         * If this NStandardTriangulation describes an entire NTriangulation
+         * If this NStandardTriangulation describes an entire Triangulation<3>
          * (and not just a part thereof) then the results of this routine
          * should be identical to the homology group obtained by calling
-         * NTriangulation::homology() upon the associated real triangulation.
+         * Triangulation<3>::homology() upon the associated real triangulation.
          *
          * This routine can also be accessed via the alias homology()
          * (a name that is less specific, but a little easier to type).
@@ -185,7 +181,7 @@ class REGINA_API NStandardTriangulation :
          * @return the first homology group of this triangulation, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        NAbelianGroup* homologyH1() const;
+        AbelianGroup* homologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable
@@ -255,7 +251,7 @@ class REGINA_API NStandardTriangulation :
          * identifications of these boundary triangles with each other.
          *
          * Note that the triangulation-based routine
-         * isStandardTriangulation(NTriangulation*) may recognise more
+         * isStandardTriangulation(Triangulation<3>*) may recognise more
          * triangulations than this routine, since passing an entire
          * triangulation allows access to more information.
          *
@@ -264,7 +260,7 @@ class REGINA_API NStandardTriangulation :
          * given component is recognised, or 0 otherwise.
          */
         static NStandardTriangulation* isStandardTriangulation(
-            NComponent* component);
+            Component<3>* component);
         /**
          * Determines whether the given triangulation represents one of the
          * standard triangulations understood by Regina.  The list of
@@ -277,7 +273,7 @@ class REGINA_API NStandardTriangulation :
          * identifications of these boundary triangles with each other.
          *
          * This routine may recognise more triangulations than the
-         * component-based isStandardTriangulation(NComponent*),
+         * component-based isStandardTriangulation(Component<3>*),
          * since passing an entire triangulation allows access to
          * more information.
          *
@@ -286,7 +282,7 @@ class REGINA_API NStandardTriangulation :
          * given triangulation is recognised, or 0 otherwise.
          */
         static NStandardTriangulation* isStandardTriangulation(
-            NTriangulation* tri);
+            Triangulation<3>* tri);
 };
 
 /*@}*/
@@ -296,15 +292,15 @@ class REGINA_API NStandardTriangulation :
 inline NStandardTriangulation::~NStandardTriangulation() {
 }
 
-inline NManifold* NStandardTriangulation::manifold() const {
+inline Manifold* NStandardTriangulation::manifold() const {
     return 0;
 }
 
-inline NAbelianGroup* NStandardTriangulation::homology() const {
+inline AbelianGroup* NStandardTriangulation::homology() const {
     return 0;
 }
 
-inline NAbelianGroup* NStandardTriangulation::homologyH1() const {
+inline AbelianGroup* NStandardTriangulation::homologyH1() const {
     return homology();
 }
 

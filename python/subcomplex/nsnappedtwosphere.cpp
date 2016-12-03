@@ -33,8 +33,7 @@
 #include <boost/python.hpp>
 #include "subcomplex/nsnappedball.h"
 #include "subcomplex/nsnappedtwosphere.h"
-#include "triangulation/ntetrahedron.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using namespace boost::python;
@@ -42,7 +41,7 @@ using regina::NSnappedTwoSphere;
 
 namespace {
     NSnappedTwoSphere* (*formsStructure_tets)
-        (regina::NTetrahedron*, regina::NTetrahedron*) =
+        (regina::Tetrahedron<3>*, regina::Tetrahedron<3>*) =
         &NSnappedTwoSphere::formsSnappedTwoSphere;
     NSnappedTwoSphere* (*formsStructure_balls)
         (regina::NSnappedBall*, regina::NSnappedBall*) =

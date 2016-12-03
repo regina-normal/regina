@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "maths/matrix2.h"
 #include "subcomplex/nstandardtri.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -83,7 +83,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
         const NTxICore& core_;
             /**< The core <tt>T x I</tt> triangulation whose boundaries
                  are joined (possibly via a layering of tetrahedra). */
-        NIsomorphism* coreIso_;
+        Isomorphism<3>* coreIso_;
             /**< Describes how the tetrahedra and vertices of the core
                  <tt>T x I</tt> triangulation returned by NTxICore::core()
                  map to the tetrahedra and vertices of the larger layered
@@ -138,7 +138,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * @return the isomorphism from the core <tt>T x I</tt> to this
          * layered surface bundle.
          */
-        const NIsomorphism* coreIso() const;
+        const Isomorphism<3>* coreIso() const;
 
         /**
          * Returns a 2-by-2 matrix describing how the layering of
@@ -211,10 +211,10 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * layered surface bundle, or \c null if the given triangulation
          * is not a layered surface bundle.
          */
-        static NLayeredTorusBundle* isLayeredTorusBundle(NTriangulation* tri);
+        static NLayeredTorusBundle* isLayeredTorusBundle(Triangulation<3>* tri);
 
-        NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        Manifold* manifold() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -257,7 +257,7 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          * layered surface bundle, or \c null if the given triangulation is
          * not a layered surface bundle with the given <tt>T x I</tt> core.
          */
-        static NLayeredTorusBundle* hunt(NTriangulation* tri,
+        static NLayeredTorusBundle* hunt(Triangulation<3>* tri,
             const NTxICore& core);
 };
 
@@ -273,7 +273,7 @@ inline const NTxICore& NLayeredTorusBundle::core() const {
     return core_;
 }
 
-inline const NIsomorphism* NLayeredTorusBundle::coreIso() const {
+inline const Isomorphism<3>* NLayeredTorusBundle::coreIso() const {
     return coreIso_;
 }
 

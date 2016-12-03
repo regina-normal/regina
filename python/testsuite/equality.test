@@ -31,9 +31,9 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-print NAbelianGroup.equalityType
+print AbelianGroup.equalityType
 print Integer.equalityType
-print NTriangulation.equalityType
+print Triangulation3.equalityType
 
 # Test == and != for objects that are equal by value but have different
 # underlying C++ pointers.
@@ -46,46 +46,46 @@ a = Integer(3)
 b = Integer(3)
 print a == b, a != b
 
-print 'NAbelianGroup:'
-a = NAbelianGroup()
-b = NAbelianGroup()
+print 'AbelianGroup:'
+a = AbelianGroup()
+b = AbelianGroup()
 print a == b, a != b
 
 # Cases that should be reported as different (by C++ reference):
 
-print 'NTriangulation:'
-a = NTriangulation()
-b = NTriangulation()
+print 'Triangulation3:'
+a = Triangulation3()
+b = Triangulation3()
 print a == b, a != b
 
-print 'NGroupPresentation:'
-a = NGroupPresentation()
-b = NGroupPresentation()
+print 'GroupPresentation:'
+a = GroupPresentation()
+b = GroupPresentation()
 print a == b, a != b
 
 # Test == and != for objects that have the same underlying C++ pointers,
 # but different python wrappers.
 # In all cases these objects should be reported as equal.
 
-print 'NTriangulation:'
-a = NTriangulation()
+print 'Triangulation3:'
+a = Triangulation3()
 b = a.root()
 print a == b, a != b
 
-print 'NTetrahedron:'
-t = NTriangulation()
+print 'Tetrahedron3:'
+t = Triangulation3()
 a = t.newTetrahedron()
 b = t.tetrahedron(0)
 print a == b, a != b
 
-print 'NAbelianGroup:'
-t = NExampleTriangulation.lens(8,3)
+print 'AbelianGroup:'
+t = Example3.lens(8,3)
 a = t.homology()
 b = t.homology()
 print a == b, a != b
 
-print 'NGroupPresentation:'
-t = NExampleTriangulation.lens(8,3)
+print 'GroupPresentation:'
+t = Example3.lens(8,3)
 a = t.fundamentalGroup()
 b = t.fundamentalGroup()
 print a == b, a != b

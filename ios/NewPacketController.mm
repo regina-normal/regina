@@ -48,17 +48,17 @@
         _viewOnCreation = YES;
 
         regina::Packet* viewing = [ReginaHelper detail].packet;
-        if (type == regina::PACKET_NORMALSURFACELIST || type == regina::PACKET_ANGLESTRUCTURELIST) {
+        if (type == regina::PACKET_NORMALSURFACES || type == regina::PACKET_ANGLESTRUCTURES) {
             if (viewing && [NewPacketSpec isTriangulation:viewing])
                 _parent = viewing;
             else if ([NewPacketSpec isTriangulation:tree.node])
                 _parent = tree.node;
             else
                 _parent = 0;
-        } else if (type == regina::PACKET_NORMALHYPERSURFACELIST) {
-            if (viewing && viewing->type() == regina::PACKET_DIM4TRIANGULATION)
+        } else if (type == regina::PACKET_NORMALHYPERSURFACES) {
+            if (viewing && viewing->type() == regina::PACKET_TRIANGULATION4)
                 _parent = viewing;
-            else if (tree.node->type() == regina::PACKET_DIM4TRIANGULATION)
+            else if (tree.node->type() == regina::PACKET_TRIANGULATION4)
                 _parent = tree.node;
             else
                 _parent = 0;
@@ -97,13 +97,13 @@
     NSString* title = @"Enumerate in which triangulation?";
     NSString* msg;
     switch (self.type) {
-        case regina::PACKET_NORMALSURFACELIST:
+        case regina::PACKET_NORMALSURFACES:
             msg = @"Please select the 3-D triangulation in which I should enumerate normal surfaces.";
             break;
-        case regina::PACKET_NORMALHYPERSURFACELIST:
+        case regina::PACKET_NORMALHYPERSURFACES:
             msg = @"Please select the 4-D triangulation in which I should enumerate normal hypersurfaces.";
             break;
-        case regina::PACKET_ANGLESTRUCTURELIST:
+        case regina::PACKET_ANGLESTRUCTURES:
             msg = @"Please select the 3-D triangulation in which I should enumerate angle structures.";
             break;
         default:
@@ -132,7 +132,7 @@
 
 + (BOOL)isTriangulation:(regina::Packet*)p
 {
-    return (p->type() == regina::PACKET_TRIANGULATION || p->type() == regina::PACKET_SNAPPEATRIANGULATION);
+    return (p->type() == regina::PACKET_TRIANGULATION3 || p->type() == regina::PACKET_SNAPPEATRIANGULATION);
 }
 
 @end

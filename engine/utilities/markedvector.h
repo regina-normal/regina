@@ -241,6 +241,43 @@ class MarkedVector : private std::vector<T*> {
         inline void swap(MarkedVector<T>& other) {
             std::vector<T*>::swap(other);
         }
+
+        /**
+         * Empties this vector and refills it with the given range of items.
+         *
+         * Calling this routine is equivalent to calling clear() followed by
+         * push_back() for each item in the range from \a begin to \a end.
+         * Its implementation, however, is a little more efficient.
+         *
+         * The algorithm only makes a single pass through the given
+         * range of iterators.
+         *
+         * \tparam Iterator an input iterator type, whose dereference
+         * operator returns a pointer of type <tt>T*</tt>.
+         *
+         * @param begin an iterator that points to the beginning of the range
+         * of items with which to refill this vector.
+         * @param end an iterator that points past the end of the range of
+         * items with which to refill this vector.
+         */
+        template <typename Iterator>
+        void refill(Iterator begin, Iterator end) {
+            Iterator it = begin;
+            typename std::vector<T*>::iterator local = std::vector<T*>::begin();
+            while (it != end && local != std::vector<T*>::end())
+                *local++ = *it++;
+
+            if (local != std::vector<T*>::end())
+                std::vector<T*>::erase(local, std::vector<T*>::end());
+            else
+                while (it != end)
+                    std::vector<T*>::push_back(*it++);
+
+            size_t i = 0;
+            for (local = std::vector<T*>::begin();
+                    local != std::vector<T*>::end(); ++local)
+                (*local)->marking_ = i++;
+        }
 };
 
 /*@}*/

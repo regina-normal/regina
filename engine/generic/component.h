@@ -30,83 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __COMPONENT_H
-#ifndef __DOXYGEN
-#define __COMPONENT_H
-#endif
-
 /*! \file generic/component.h
- *  \brief Deals with connected components of triangulations.
+ *  \brief Deprecated header.
  */
 
-#include "generic/detail/component.h"
+#warning This header is deprecated; please use triangulation/generic.h instead.
 
-namespace regina {
-
-/**
- * \weakgroup generic
- * @{
- */
-
-/**
- * A connected component of a <i>dim</i>-manifold triangulation.
- *
- * Components are highly temporary: whenever a triangulation changes, all
- * of its component objects will be deleted and new ones will be created
- * in their place.
- *
- * Component objects are all created, managed and destroyed by the
- * class Triangulation<dim>.  See the Triangulation notes for further
- * information on working with <i>dim</i>-dimensional triangulations.
- *
- * For Regina's \ref stddim "standard dimensions", this template is specialised
- * and offers more functionality.  In order to use these specialised classes,
- * you will need to include the corresponding headers (e.g.,
- * dim2/dim2component.h for \a dim = 2, or triangulation/ncomponent.h for
- * \a dim = 3).  For convenience, there are typedefs available for these
- * specialised classes (such as Dim2Component and NComponent respectively).
- *
- * \ifacespython Python does not support templates.  Instead
- * this class can be used by appending the dimension as a suffix
- * (e.g., Component2 and Component3 for dimensions 2 and 3).
- * The typedefs mentioned above for standard dimensions
- * (e.g., Dim2Component and NComponent) are also available.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- */
-template <int dim>
-class Component : public detail::ComponentBase<dim> {
-    static_assert(! standardDim(dim),
-        "The generic implementation of Component<dim> "
-        "should not be used for Regina's standard dimensions.");
-
-    private:
-        /**
-         * Default constructor.
-         *
-         * Marks the component as orientable, with no boundary facets.
-         */
-        Component();
-
-    friend class detail::TriangulationBase<dim>;
-};
-
-// Note that some of our component classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class Component<2>;
-template <> class Component<3>;
-template <> class Component<4>;
-
-/*@}*/
-
-// Inline functions for Component
-
-template <int dim>
-inline Component<dim>::Component() : detail::ComponentBase<dim>() {
-}
-
-} // namespace regina
-
-#endif
+#include "triangulation/generic.h"
 

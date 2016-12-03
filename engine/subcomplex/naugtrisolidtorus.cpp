@@ -32,13 +32,11 @@
 
 #include <algorithm>
 #include <utility>
-#include "algebra/nabeliangroup.h"
-#include "manifold/nsfs.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntetrahedron.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/sfs.h"
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nlayeredchain.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -68,8 +66,8 @@ NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
     return ans;
 }
 
-NManifold* NAugTriSolidTorus::manifold() const {
-    NSFSpace* ans = new NSFSpace();
+Manifold* NAugTriSolidTorus::manifold() const {
+    SFSpace* ans = new SFSpace();
     if (chainType_ == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
         ans->insertFibre(2, 1);
@@ -181,7 +179,7 @@ NManifold* NAugTriSolidTorus::manifold() const {
 }
 
 NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
-        const NComponent* comp) {
+        const Component<3>* comp) {
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
@@ -197,7 +195,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     // Handle the 3-tetrahedron case separately.
     if (nTet == 3) {
         // Note that there cannot be a layered chain.
-        NTetrahedron* base = comp->tetrahedron(0);
+        Tetrahedron<3>* base = comp->tetrahedron(0);
         NTriSolidTorus* core;
         Perm<4> annulusMap[3];
         // Check every possible choice of vertex roles in tetrahedron 0.
@@ -283,7 +281,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
 
         // Start with tetrahedron 0.  Either it belongs to the chain or
         // it belongs to the core.
-        NTetrahedron* tet = comp->tetrahedron(0);
+        Tetrahedron<3>* tet = comp->tetrahedron(0);
 
         // Run through all possible cores to which it might belong.
         int i;
@@ -341,8 +339,8 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         }
 
         // Wasn't the core.  Must have been the chain.
-        NTetrahedron* top;
-        NTetrahedron* bottom;
+        Tetrahedron<3>* top;
+        Tetrahedron<3>* bottom;
         Perm<4> topRoles;
         Perm<4> bottomRoles;
         int j;
@@ -410,7 +408,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                     bottom = chain.bottom();
                     bottomRoles = chain.bottomVertexRoles();
 
-                    NTetrahedron* startCore = bottom->adjacentTetrahedron(
+                    Tetrahedron<3>* startCore = bottom->adjacentTetrahedron(
                         bottomRoles[2]);
 
                     if (startCore)
@@ -491,7 +489,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     }
 
     // Examine each layered solid torus.
-    NTetrahedron* top[3];
+    Tetrahedron<3>* top[3];
     for (i = 0; i < nLayered; i++) {
         top[i] = layered[i]->topLevel();
         if (top[i]->adjacentTetrahedron(layered[i]->topFace(0)) ==
@@ -507,7 +505,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     // Run to the top of the first layered solid torus; this should give
     // us our core.
     int topFace = layered[0]->topFace(0);
-    NTetrahedron* coreTet = top[0]->adjacentTetrahedron(topFace);
+    Tetrahedron<3>* coreTet = top[0]->adjacentTetrahedron(topFace);
 
     // We will declare that this triangle hooks onto vertex roles 0, 1 and 3
     // of the first core tetrahedron.  Thus the vertex roles permutation
@@ -517,7 +515,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     Perm<4> swap3Top(3, topCoreFace);
     Perm<4> swap23(2, 3);
     NTriSolidTorus* core;
-    NTetrahedron* coreTets[3];
+    Tetrahedron<3>* coreTets[3];
     Perm<4> coreVertexRoles[3];
     int whichLayered[3];
     int usedLayered;
@@ -581,11 +579,11 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             // layered[whichLayered[j]].
                             edgeGroupRoles[j] = Perm<4>(
                                 layered[whichLayered[j]]->topEdgeGroup(
-                                    NEdge::edgeNumber[q[0]][q[3]]),
+                                    Edge<3>::edgeNumber[q[0]][q[3]]),
                                 layered[whichLayered[j]]->topEdgeGroup(
-                                    NEdge::edgeNumber[q[0]][q[1]]),
+                                    Edge<3>::edgeNumber[q[0]][q[1]]),
                                 layered[whichLayered[j]]->topEdgeGroup(
-                                    NEdge::edgeNumber[q[1]][q[3]]),
+                                    Edge<3>::edgeNumber[q[1]][q[3]]),
                                 3);
                             usedLayered++;
                             break;

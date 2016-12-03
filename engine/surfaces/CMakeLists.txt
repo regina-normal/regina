@@ -5,29 +5,25 @@ SET ( FILES
   components
   crushandcut
   csv
+  disc
+  disctype
   enumerator
   enumfilter
   links
-  ndisc
-  ndisctype
-  nnormalsurface
+  normalsurface
   normalsurfaces
-  nprism
-  nsanstandard
-  nsoriented
-  nsorientedquad
-  nsquad
-  nsquadoct
-  nsstandard
-  nsurfacefilter
-  nsurfacesubset
-  nxmlfilterreader
-  nxmlfilterreaders
-  nxmlsurfacereader
+  nsvectoranstandard
+  nsvectororiented
+  nsvectororientedquad
+  nsvectorquad
+  nsvectorquadoct
+  nsvectorstandard
+  prism
+  surfacefilter
+  xmlfilterreader
+  xmlsurfacereader
   orientable
   quadtostd
-  sfcombination
-  sfproperties
   stdtoquad
   )
 
@@ -43,6 +39,8 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     coordregistry.h
     coordregistry-impl.h
+    disc.h
+    disctype.h
     filterregistry.h
     filterregistry-impl.h
     ndisc.h
@@ -52,6 +50,7 @@ if (${REGINA_INSTALL_DEV})
     normalcoords.h
     normalflags.h
     normalspec-impl.h
+    normalsurface.h
     normalsurfaces.h
     nprism.h
     nsanstandard.h
@@ -62,11 +61,19 @@ if (${REGINA_INSTALL_DEV})
     nsquadoct.h
     nsstandard.h
     nsurfacefilter.h
-    nsurfacesubset.h
-    nxmlfilterreader.h
-    nxmlsurfacereader.h
+    nsvectoranstandard.h
+    nsvectormirrored.h
+    nsvectororiented.h
+    nsvectororientedquad.h
+    nsvectorquad.h
+    nsvectorquadoct.h
+    nsvectorstandard.h
+    prism.h
     sfcombination.h
     sfproperties.h
+    surfacefilter.h
     surfacefiltertype.h
+    xmlfilterreader.h
+    xmlsurfacereader.h
     DESTINATION ${INCLUDEDIR}/surfaces COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

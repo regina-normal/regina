@@ -41,7 +41,7 @@
 #include <QGraphicsScene>
 
 namespace regina {
-    class NNormalHypersurfaceList;
+    class NormalHypersurfaces;
     class NormalSurfaces;
 };
 
@@ -84,7 +84,7 @@ class CompatCanvas : public QGraphicsScene {
          * surfaces/hypersurfaces.
          */
         void fillLocal(const regina::NormalSurfaces& surfaces);
-        void fillLocal(const regina::NNormalHypersurfaceList& surfaces);
+        void fillLocal(const regina::NormalHypersurfaces& surfaces);
         void fillGlobal(const regina::NormalSurfaces& surfaces);
 };
 

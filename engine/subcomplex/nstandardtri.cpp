@@ -45,7 +45,7 @@
 #include "subcomplex/nplugtrisolidtorus.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "subcomplex/ntrivialtri.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -62,7 +62,7 @@ std::string NStandardTriangulation::TeXName() const {
 }
 
 NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
-        NComponent* comp) {
+        Component<3>* comp) {
     NStandardTriangulation* ans;
     if ((ans = NTrivialTri::isTrivialTriangulation(comp)))
         return ans;
@@ -87,7 +87,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
 }
 
 NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
-        NTriangulation* tri) {
+        Triangulation<3>* tri) {
     if (tri->countComponents() != 1)
         return 0;
 

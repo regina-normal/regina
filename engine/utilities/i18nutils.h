@@ -80,11 +80,10 @@ class REGINA_API Locale {
          */
         static const char* codeset();
 
-    private:
         /**
          * Disable the default constructor, since all routines are static.
          */
-        Locale();
+        Locale() = delete;
 };
 
 /**
@@ -254,11 +253,6 @@ class REGINA_API IConvStream : public std::ostream {
         IConvStream(std::ostream& dest,
             const char* srcCode, const char* destCode);
 };
-
-// Inline functions for Locale
-
-inline Locale::Locale() {
-}
 
 // Inline functions for IConvStreamBuffer
 

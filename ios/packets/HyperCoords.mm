@@ -37,9 +37,9 @@
 #import "HyperViewController.h"
 #import "TextHelper.h"
 #import "MDSpreadViewClasses.h"
-#import "dim4/dim4triangulation.h"
-#import "hypersurface/nnormalhypersurfacelist.h"
-#import "triangulation/ntriangulation.h"
+#import "hypersurface/normalhypersurfaces.h"
+#import "triangulation/dim3.h"
+#import "triangulation/dim4.h"
 
 #define KEY_HYPER_COORDS_COMPACT @"HypersurfacesCoordsCompact"
 
@@ -203,7 +203,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalHypersurface* s = self.packet->hypersurface(selectedRow - 1);
+    const regina::NormalHypersurface* s = self.packet->hypersurface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Hypersurface Not Compact"
                                                         message:@"I can only triangulate compact hypersurfaces, not spun-normal hypersurfaces."
@@ -223,7 +223,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    regina::NTriangulation* ans = s->triangulate();
+    regina::Triangulation<3>* ans = s->triangulate();
     ans->intelligentSimplify();
     ans->setLabel(self.packet->triangulation()->adornedLabel("Hypersurface #" + std::to_string(selectedRow - 1)));
     self.packet->insertChildLast(ans);
@@ -314,7 +314,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
             cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
 
-    const regina::NNormalHypersurface* s = self.packet->hypersurface(rowPath.row);
+    const regina::NormalHypersurface* s = self.packet->hypersurface(rowPath.row);
 
     int prop = PROP_NONE;
     int coord = columnPath.column;
@@ -372,8 +372,8 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
             return cell;
         case PROP_LINK:
         {
-            const regina::Dim4Vertex* v;
-            const regina::Dim4Edge* e;
+            const regina::Vertex<4>* v;
+            const regina::Edge<4>* e;
 
             if ((v = s->isVertexLink()))
                 cell.textLabel.text = [NSString stringWithFormat:@"Vertex %ld",

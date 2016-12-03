@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/ngraphloop.h"
-#include "manifold/nsfs.h"
+#include "manifold/graphloop.h"
+#include "manifold/sfs.h"
 #include "subcomplex/nblockedsfsloop.h"
 #include "subcomplex/nlayering.h"
 #include "subcomplex/nsatblockstarter.h"
@@ -55,7 +55,7 @@ struct NBlockedSFSLoopSearcher : public NSatBlockStarterSearcher {
              saturated region are joined together.  This matrix expresses
              the fibre/base curves on one boundary annulus in terms of the
              fibre/base curves on the other, as described by
-             NGraphLoop::matchingReln(). */
+             GraphLoop::matchingReln(). */
 
     /**
      * Creates a new searcher whose \a region pointer is null.
@@ -72,8 +72,8 @@ NBlockedSFSLoop::~NBlockedSFSLoop() {
         delete region_;
 }
 
-NManifold* NBlockedSFSLoop::manifold() const {
-    NSFSpace* sfs = region_->createSFS(false);
+Manifold* NBlockedSFSLoop::manifold() const {
+    SFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
     if (sfs->punctures() == 1) {
@@ -84,7 +84,7 @@ NManifold* NBlockedSFSLoop::manifold() const {
 
     sfs->reduce(false);
 
-    return new NGraphLoop(sfs, matchingReln_);
+    return new GraphLoop(sfs, matchingReln_);
 }
 
 std::ostream& NBlockedSFSLoop::writeName(std::ostream& out) const {
@@ -104,7 +104,7 @@ void NBlockedSFSLoop::writeTextLong(std::ostream& out) const {
     region_->writeDetail(out, "Internal region");
 }
 
-NBlockedSFSLoop* NBlockedSFSLoop::isBlockedSFSLoop(NTriangulation* tri) {
+NBlockedSFSLoop* NBlockedSFSLoop::isBlockedSFSLoop(Triangulation<3>* tri) {
     // Basic property checks.
     if (! tri->isClosed())
         return 0;

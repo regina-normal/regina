@@ -98,6 +98,10 @@ public:
     typedef T element_type;
 
     /**
+     * Constructs a new null pointer.
+     */
+    SafePtr();
+    /**
      * Constructs a new safe pointer that points to the given object.
      *
      * @param object the pointee.  This may be \c null.
@@ -120,6 +124,32 @@ public:
      * @return the pointee.
      */
     T* get() const;
+
+    /**
+     * Returns \c true if the pointee is non-null and has not yet been
+     * destroyed.
+     *
+     * This is equivalent to testing whether get() is not \c null.
+     *
+     * @return \c true if and only if the pointee is non-null and has
+     * not yet been destroyed.
+     */
+    operator bool() const;
+
+    /**
+     * Resets this to point to the given object.  This behaves in a
+     * similar manner to destroying the old safe pointer and constructing a
+     * new one: in particular, the old pointee may be destroyed if it meets
+     * the conditions outlined in the class notes above.
+     *
+     * @param object the new pointee.  This may be \c null.
+     */
+    void reset(T* object = 0);
+
+    /**
+     * Disable the default assignment operator.
+     */
+    SafePtr<T>& operator = (const SafePtr<T>&) = delete;
 
 private:
     boost::intrusive_ptr<detail::SafeRemnant<typename T::SafePointeeType>>
@@ -149,6 +179,10 @@ inline T* get_pointer(regina::SafePtr<T> const& ptr) {
 namespace regina {
 
 template<class T>
+inline SafePtr<T>::SafePtr() {
+}
+
+template<class T>
 inline SafePtr<T>::SafePtr(T* object) {
     if (object) {
         remnant_.reset(detail::SafeRemnant<typename T::SafePointeeType>::
@@ -169,6 +203,20 @@ inline T* SafePtr<T>::get() const {
         return 0;
     }
     return static_cast<T*>(remnant_->get());
+}
+
+template<class T>
+inline SafePtr<T>::operator bool() const {
+    return (remnant_ && remnant_->get());
+}
+
+template<class T>
+inline void SafePtr<T>::reset(T* object) {
+    if (object) {
+        remnant_.reset(detail::SafeRemnant<typename T::SafePointeeType>::
+            getOrCreate(object));
+    } else
+        remnant_.reset(0);
 }
 
 } // namespace regina

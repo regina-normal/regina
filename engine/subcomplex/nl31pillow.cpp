@@ -30,12 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nlensspace.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
-#include "triangulation/nvertex.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/lensspace.h"
 #include "subcomplex/nl31pillow.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -48,7 +46,7 @@ NL31Pillow* NL31Pillow::clone() const {
     return ans;
 }
 
-NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
+NL31Pillow* NL31Pillow::isL31Pillow(const Component<3>* comp) {
     // Basic property check.
     if (comp->size() != 2 ||
             comp->countVertices() != 2 ||
@@ -68,7 +66,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
         return 0;
 
     // Verify that all four faces of one tetrahedron join to the other.
-    NTetrahedron* tet[2];
+    Tetrahedron<3>* tet[2];
     tet[0] = comp->tetrahedron(0);
     tet[1] = comp->tetrahedron(1);
 
@@ -86,7 +84,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     ans->tet[1] = tet[1];
 
     for (int i = 0; i < 2; i++) {
-        const NVertexEmbedding& emb = comp->vertex(internalVertex)->
+        const VertexEmbedding<3>& emb = comp->vertex(internalVertex)->
             embedding(i);
         if (emb.tetrahedron() == tet[0])
             ans->interior[0] = emb.vertex();
@@ -97,12 +95,12 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     return ans;
 }
 
-NManifold* NL31Pillow::manifold() const {
-    return new NLensSpace(3, 1);
+Manifold* NL31Pillow::manifold() const {
+    return new LensSpace(3, 1);
 }
 
-NAbelianGroup* NL31Pillow::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NL31Pillow::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     ans->addTorsionElement(3);
     return ans;
 }

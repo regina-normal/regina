@@ -139,7 +139,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          */
         const Matrix2& matchingReln() const;
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -154,7 +154,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          * blocked self-identified Seifert fibred space, or \c null if
          * the given triangulation is not of this form.
          */
-        static NBlockedSFSLoop* isBlockedSFSLoop(NTriangulation* tri);
+        static NBlockedSFSLoop* isBlockedSFSLoop(Triangulation<3>* tri);
 
     private:
         /**

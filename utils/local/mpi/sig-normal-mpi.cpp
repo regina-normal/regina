@@ -44,7 +44,7 @@
 #include "mpi.h"
 
 #include <surfaces/normalsurfaces.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <cstdio>
 #include <cstdlib>
@@ -354,7 +354,7 @@ int mainSlave() {
     char filename[MAX_FILENAME + 1];
     Packet* tree = 0;
     Packet* p;
-    NTriangulation* t;
+    Triangulation<3>* t;
     NormalSurfaces* s;
     long done;
     unsigned long nStd, nQuad;
@@ -392,7 +392,7 @@ int mainSlave() {
             if (feof(dat))
                 break;
 
-            t = NTriangulation::fromIsoSig(signature);
+            t = Triangulation<3>::fromIsoSig(signature);
 
             s = NormalSurfaces::enumerate(t, NS_QUAD);
             nQuad = s->size();

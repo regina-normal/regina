@@ -30,7 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/ngrouppresentation.h"
+#include "algebra/grouppresentation.h"
+#include "packet/packet.h"
 
 #include "messagelayer.h"
 #include "reginamain.h"
@@ -87,7 +88,7 @@ QRegExp reWhitespace("\\s");
 const char* GAP_PROMPT = "gap> ";
 
 GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
-        const regina::NGroupPresentation& useOrigGroup) :
+        const regina::GroupPresentation& useOrigGroup) :
         QDialog(parent),
         proc(0), currOutput(""), partialLine(""), stage(GAP_init),
         cancelled(false), origGroup(useOrigGroup) {
@@ -203,7 +204,7 @@ void GAPRunner::processOutput(const QString& output) {
 
     unsigned long count;
     bool ok;
-    regina::NGroupExpression* reln;
+    regina::GroupExpression* reln;
     switch (stage) {
         case GAP_init:
             // Ignore any output.
@@ -234,7 +235,7 @@ void GAPRunner::processOutput(const QString& output) {
             count = use.toULong(&ok);
             if (ok) {
                 newGenCount = count;
-                newGroup.reset(new regina::NGroupPresentation());
+                newGroup.reset(new regina::GroupPresentation());
                 newGroup->addGenerator(newGenCount);
 
                 if (newGenCount == 0) {
@@ -321,7 +322,7 @@ QString GAPRunner::origGroupRelns() {
 
     QString ans = "[ ";
     for (unsigned long i = 0; i < nRels; i++) {
-        const regina::NGroupExpression& reln(origGroup.relation(i));
+        const regina::GroupExpression& reln(origGroup.relation(i));
         if (reln.terms().empty())
             continue;
 
@@ -336,10 +337,10 @@ QString GAPRunner::origGroupRelns() {
     return ans;
 }
 
-QString GAPRunner::origGroupReln(const regina::NGroupExpression& reln) {
+QString GAPRunner::origGroupReln(const regina::GroupExpression& reln) {
     // Assumes the relation is non-empty.
     QString ans = "";
-    std::list<regina::NGroupExpressionTerm>::const_iterator it;
+    std::list<regina::GroupExpressionTerm>::const_iterator it;
     for (it = reln.terms().begin(); it != reln.terms().end(); it++) {
         if (! ans.isEmpty())
             ans += " * ";
@@ -348,7 +349,7 @@ QString GAPRunner::origGroupReln(const regina::NGroupExpression& reln) {
     return ans;
 }
 
-regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
+regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
     // Newer versions of GAP seem to include spaces where you don't
     // really want them.  Just remove the whitespace completely.
     QString relnLocal = reln;
@@ -361,7 +362,7 @@ regina::NGroupExpression* GAPRunner::parseRelation(const QString& reln) {
         return 0;
     }
 
-    std::unique_ptr<regina::NGroupExpression> ans(new regina::NGroupExpression);
+    std::unique_ptr<regina::GroupExpression> ans(new regina::GroupExpression);
 
     // Make the regex local to this function since we're capturing text.
     QRegExp reGAPTerm("(f[0-9]+)(\\^(-?[0-9]+))?");
@@ -509,7 +510,7 @@ QSize GAPRunner::sizeHint() const {
     return QSize(300, 100);
 }
 
-std::unique_ptr<regina::NGroupPresentation> GAPRunner::simplifiedGroup() {
+std::unique_ptr<regina::GroupPresentation> GAPRunner::simplifiedGroup() {
     if (stage == GAP_done)
         return std::move(newGroup);
     else

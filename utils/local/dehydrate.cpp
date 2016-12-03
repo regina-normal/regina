@@ -47,7 +47,7 @@
  * Mathematics of Computation 68/225, 1999.
  */
 
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -85,9 +85,9 @@ int main(int argc, char* argv[]) {
         }
 
         for (Packet* p = tree; p; p = p->nextTreePacket())
-            if (p->type() == PACKET_TRIANGULATION) {
+            if (p->type() == PACKET_TRIANGULATION3) {
                 found = true;
-                dehydration = static_cast<NTriangulation*>(p)->dehydrate();
+                dehydration = static_cast<Triangulation<3>*>(p)->dehydrate();
 
                 std::cout << p->label() << " : ";
                 if (dehydration.empty())

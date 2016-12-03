@@ -118,7 +118,7 @@ ReginaMain::~ReginaMain() {
     delete treeView;
 
     // Finish cleaning up.
-    delete packetTree;
+    // The SafePtr should delete the packet tree automatically.
 }
 
 void ReginaMain::plugPacketMenu() {
@@ -509,7 +509,8 @@ void ReginaMain::cloneSubtree() {
 }
 
 void ReginaMain::pythonConsole() {
-    consoles.launchPythonConsole(this, packetTree, treeView->selectedPacket());
+    consoles.launchPythonConsole(this, packetTree.get(),
+        treeView->selectedPacket());
 }
 
 void ReginaMain::optionsPreferences() {
@@ -646,14 +647,12 @@ void ReginaMain::setupWidgets() {
 }
 
 void ReginaMain::initPacketTree() {
-    if (packetTree)
-        delete packetTree;
-    packetTree = new regina::Container();
+    packetTree.reset(new regina::Container());
     // No label now, since the root packet is hidden.
     // packetTree->setLabel(tr("Data").toUtf8().constData());
 
     // Update the visual representation.
-    treeView->fill(packetTree);
+    treeView->fill(packetTree.get());
 
     setWindowTitle(tr("Untitled"));
 }
@@ -688,17 +687,15 @@ regina::Packet* ReginaMain::checkSubtreeSelected() {
 bool ReginaMain::initData(regina::Packet* usePacketTree,
         const QString& useLocalFilename,
         const QString& useDisplayName) {
-    if (packetTree) {
-        delete packetTree;
+    if (packetTree)
         setModified(false);
-    }
 
     localFile = useLocalFilename;
     displayName = useDisplayName;
-    packetTree = usePacketTree;
+    packetTree.reset(usePacketTree);
 
     if (packetTree) {
-        treeView->fill(packetTree);
+        treeView->fill(packetTree.get());
         // Expand the first level.
         for (int i = 0; i < treeView->topLevelItemCount(); ++i)
             treeView->expandItem(treeView->topLevelItem(i));
@@ -721,10 +718,10 @@ bool ReginaMain::initData(regina::Packet* usePacketTree,
 bool ReginaMain::saveFile() {
     endEdit();
 
-    regina::Packet* writeTree = packetTree;
+    regina::Packet* writeTree = packetTree.get();
     if (fakeRoot_) {
         // Save the (visible) child, but only if there is exactly one child.
-        regina::Packet* child = packetTree->firstChild();
+        regina::Packet* child = packetTree.get()->firstChild();
         if (child && ! child->nextSibling())
             writeTree = child;
     }

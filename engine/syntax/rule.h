@@ -1,0 +1,421 @@
+/*
+    Copyright (C) 2016 Volker Krause <vkrause@kde.org>
+
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#ifndef __SYNTAX_RULE_H
+#ifndef __DOXYGEN
+#define __SYNTAX_RULE_H
+#endif
+
+#include "syntax/contextswitch.h"
+#include "syntax/definition.h"
+#include "syntax/definitionref.h"
+#include "syntax/keywordlist.h"
+#include "syntax/matcher.h"
+
+#include <memory>
+#include <vector>
+#include <boost/noncopyable.hpp>
+#include <libxml/xmlreader.h>
+
+namespace regina {
+namespace syntax {
+
+class Rule : public boost::noncopyable
+{
+public:
+    Rule();
+    virtual ~Rule();
+
+    typedef std::shared_ptr<Rule> Ptr;
+
+    Definition definition() const;
+    void setDefinition(const Definition &def);
+
+    const std::string& attribute() const;
+    ContextSwitch context() const;
+    bool isLookAhead() const;
+    bool firstNonSpace() const;
+    int requiredColumn() const;
+
+    bool load(xmlTextReaderPtr reader);
+    void resolveContext();
+
+    MatchResult match(Matcher& m, int offset);
+
+    static Rule::Ptr create(const std::string& name);
+
+protected:
+    virtual bool doLoad(xmlTextReaderPtr reader);
+    virtual MatchResult doMatch(Matcher& m, int offset) = 0;
+
+private:
+    DefinitionRef m_def;
+    std::string m_attribute;
+    ContextSwitch m_context;
+    std::vector<Rule::Ptr> m_subRules;
+    int m_column;
+    bool m_firstNonSpace;
+    bool m_lookAhead;
+};
+
+
+class AnyChar : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    std::string m_chars;
+
+public:
+    const std::string& chars() const;
+};
+
+class DetectChar : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    char m_char;
+
+public:
+    char matchChar() const;
+};
+
+class Detect2Char : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    char m_char1;
+    char m_char2;
+
+public:
+    char matchChar1() const;
+    char matchChar2() const;
+};
+
+class DetectIdentifier : public Rule
+{
+protected:
+    MatchResult doMatch(Matcher& m, int offset) override;
+};
+
+class DetectSpaces : public Rule
+{
+protected:
+    MatchResult doMatch(Matcher& m, int offset) override;
+};
+
+class Float : public Rule
+{
+protected:
+    MatchResult doMatch(Matcher& m, int offset) override;
+};
+
+class IncludeRules : public Rule
+{
+public:
+    const std::string& contextName() const;
+    const std::string& definitionName() const;
+    bool includeAttribute() const;
+
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    std::string m_contextName;
+    std::string m_defName;
+    bool m_includeAttribute;
+};
+
+class Int : public Rule
+{
+protected:
+    MatchResult doMatch(Matcher& m, int offset) override;
+};
+
+class HlCChar : public Rule
+{
+protected:
+    MatchResult doMatch(Matcher& m, int offset) override;
+};
+
+class HlCHex : public Rule
+{
+protected:
+    MatchResult doMatch(Matcher& m, int offset) override;
+};
+
+class HlCOct : public Rule
+{
+protected:
+    MatchResult doMatch(Matcher& m, int offset) override;
+};
+
+class HlCStringChar : public Rule
+{
+protected:
+    MatchResult doMatch(Matcher& m, int offset) override;
+};
+
+class KeywordListRule : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    std::string m_listName;
+    const KeywordList* m_keywordList; // may be null
+    bool m_hasCaseSensitivityOverride;
+    bool m_caseSensitivityOverride;
+
+public:
+    KeywordListRule() : m_keywordList(0) {}
+    const KeywordList* keywordList(); // may load the list; return value is non-null
+    bool caseSensitivity() const;
+};
+
+class LineContinue : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    char m_char;
+
+public:
+    char continueChar() const;
+};
+
+class RangeDetect : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    char m_begin;
+    char m_end;
+
+public:
+    char begin() const;
+    char end() const;
+};
+
+class RegExpr : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    std::string m_pattern;
+    bool m_minimal;
+    bool m_caseInsensitive;
+    RegEx* m_regex; // may be null
+
+public:
+    RegExpr() : m_regex(0) {}
+    ~RegExpr() { delete m_regex; }
+    const std::string& pattern() const;
+    bool minimal() const;
+    bool caseInsensitive() const;
+    RegEx* regex(); // may return null
+
+    void replaceRegEx(RegEx* re);
+};
+
+class StringDetect : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    std::string m_string;
+    bool m_caseSensitivity;
+
+public:
+    const std::string& string() const;
+    bool caseSensitivity() const;
+};
+
+class WordDetect : public Rule
+{
+protected:
+    bool doLoad(xmlTextReaderPtr reader) override;
+    MatchResult doMatch(Matcher& m, int offset) override;
+
+private:
+    std::string m_word;
+
+public:
+    const std::string& word() const;
+};
+
+inline const std::string& AnyChar::chars() const {
+    return m_chars;
+}
+
+inline MatchResult AnyChar::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline char DetectChar::matchChar() const {
+    return m_char;
+}
+
+inline MatchResult DetectChar::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline char Detect2Char::matchChar1() const {
+    return m_char1;
+}
+
+inline char Detect2Char::matchChar2() const {
+    return m_char2;
+}
+
+inline MatchResult Detect2Char::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult DetectIdentifier::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult DetectSpaces::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult Float::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult IncludeRules::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult Int::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult HlCChar::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult HlCHex::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult HlCOct::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline MatchResult HlCStringChar::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline bool KeywordListRule::caseSensitivity() const {
+    if (m_hasCaseSensitivityOverride)
+        return m_caseSensitivityOverride;
+    else
+        return m_keywordList->caseSensitive();
+}
+
+inline MatchResult KeywordListRule::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline char LineContinue::continueChar() const {
+    return m_char;
+}
+
+inline MatchResult LineContinue::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline char RangeDetect::begin() const {
+    return m_begin;
+}
+
+inline char RangeDetect::end() const {
+    return m_end;
+}
+
+inline MatchResult RangeDetect::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline const std::string& RegExpr::pattern() const {
+    return m_pattern;
+}
+
+inline bool RegExpr::minimal() const {
+    return m_minimal;
+}
+
+inline bool RegExpr::caseInsensitive() const {
+    return m_caseInsensitive;
+}
+
+inline RegEx* RegExpr::regex() {
+    return m_regex;
+}
+
+inline void RegExpr::replaceRegEx(RegEx* re) {
+    delete m_regex;
+    m_regex = re;
+}
+
+inline MatchResult RegExpr::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline const std::string& StringDetect::string() const {
+    return m_string;
+}
+
+inline bool StringDetect::caseSensitivity() const {
+    return m_caseSensitivity;
+}
+
+inline MatchResult StringDetect::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+inline const std::string& WordDetect::word() const {
+    return m_word;
+}
+
+inline MatchResult WordDetect::doMatch(Matcher& m, int offset) {
+    return m.match(*this, offset);
+}
+
+} } // namespace regina::syntax
+
+#endif

@@ -66,7 +66,7 @@ enum EqualityType {
     /**
      * No objects of the class \a C are ever instantiated.  This means that
      * no comparisons are ever made.  An example of such a class is
-     * NExampleTriangulation, which consists entirely of static functions.
+     * Example<dim>, which consists entirely of static functions.
      */
     NEVER_INSTANTIATED = 3
 };
@@ -99,7 +99,7 @@ struct add_eq_operators;
  * wrapper class should not support the operators == or !=.
  *
  * This should only be used with C++ classes that are never instantiated (such
- * as NExampleTriangulation, which consists entirely of static methods).
+ * as Example<dim>, which consists entirely of static methods).
  * As such, it should be impossible to even call the == and != operators
  * under python.
  *

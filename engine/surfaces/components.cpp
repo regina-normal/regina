@@ -31,9 +31,9 @@
  **************************************************************************/
 
 #include <queue>
-#include "surfaces/ndisc.h"
-#include "surfaces/nsstandard.h"
-#include "surfaces/nsanstandard.h"
+#include "surfaces/disc.h"
+#include "surfaces/nsvectorstandard.h"
+#include "surfaces/nsvectoranstandard.h"
 
 namespace regina {
 
@@ -88,8 +88,8 @@ namespace {
      * be inserted.
      * @return the number of connected components.
      */
-    unsigned splitIntoComponents(const NNormalSurface& s,
-            std::vector<NNormalSurface*>& dest) {
+    unsigned splitIntoComponents(const NormalSurface& s,
+            std::vector<NormalSurface*>& dest) {
         // Shamelessly copied from my orientation/two-sidedness code from
         // years earlier.  Some day I will need to make a generic structure
         // for a depth-first search over normal discs.  Not today.
@@ -102,20 +102,20 @@ namespace {
         // TODO: First check that there aren't too many discs!
 
         // All right.  Off we go.
-        NDiscSetSurfaceData<ComponentData> components(s);
+        DiscSetSurfaceData<ComponentData> components(s);
             // Stores the component ID for each disc.
-        std::queue<NDiscSpec> discQueue;
+        std::queue<DiscSpec> discQueue;
             // A queue of discs whose component IDs must be propagated.
-        NDiscSpecIterator it(components);
+        DiscSpecIterator it(components);
             // Runs through the discs whose component IDs might not have yet
             // been determined.
-        NDiscSpec use;
+        DiscSpec use;
             // The disc that currently holds our interest.
 
         int nGluingArcs;     // The number of arcs on the current disc to
                              //     which an adjacent disc might may be glued.
 
-        NDiscSpec* adjDisc;  // The disc to which the current disc is glued.
+        DiscSpec* adjDisc;  // The disc to which the current disc is glued.
         Perm<4> arc[8];       // Holds each gluing arc for the current disc.
         Perm<4> adjArc;       // Represents the corresponding gluing arc on the
                              //     adjacent disc.
@@ -186,14 +186,14 @@ namespace {
 
         // Create the set of normal surfaces!
         // Note that all vectors are automagically initialised to zero.
-        const NTriangulation* tri = s.triangulation();
-        NNormalSurfaceVector** ans = new NNormalSurfaceVector*[compID];
+        const Triangulation<3>* tri = s.triangulation();
+        NormalSurfaceVector** ans = new NormalSurfaceVector*[compID];
 
-        NNormalSurfaceVector* vec;
+        NormalSurfaceVector* vec;
         long coord;
-        if (s.rawVector()->allowsAlmostNormal()) {
+        if (s.systemAllowsAlmostNormal()) {
             for (i = 0; i < compID; ++i)
-                ans[i] = new NNormalSurfaceVectorANStandard(
+                ans[i] = new NSVectorANStandard(
                     10 * tri->size());
 
             for (it.init(components); ! it.done(); ++it) {
@@ -203,7 +203,7 @@ namespace {
             }
         } else {
             for (i = 0; i < compID; ++i)
-                ans[i] = new NNormalSurfaceVectorStandard(
+                ans[i] = new NSVectorStandard(
                     7 * tri->size());
 
             for (it.init(components); ! it.done(); ++it) {
@@ -214,7 +214,7 @@ namespace {
         }
 
         for (i = 0; i < compID; ++i)
-            dest.push_back(new NNormalSurface(tri, ans[i]));
+            dest.push_back(new NormalSurface(tri, ans[i]));
         delete[] ans;
 
         // All done!
@@ -222,7 +222,7 @@ namespace {
     }
 } // anonymous namespace
 
-bool NNormalSurface::disjoint(const NNormalSurface& other) const {
+bool NormalSurface::disjoint(const NormalSurface& other) const {
     // Some sanity tests before we begin.
     // These should all pass if the user has adhered to the preconditions.
     if (! (isCompact() && other.isCompact()))
@@ -237,12 +237,12 @@ bool NNormalSurface::disjoint(const NNormalSurface& other) const {
     // Now we know that the sum of both surfaces is an embedded surface.
     // Form the sum, pull it apart into connected components, and see
     // whether we get our original two surfaces back.
-    NNormalSurfaceVector* v =
-        static_cast<NNormalSurfaceVector*>(vector->clone());
+    NormalSurfaceVector* v =
+        static_cast<NormalSurfaceVector*>(vector->clone());
     (*v) += *(other.vector);
-    NNormalSurface* sum = new NNormalSurface(triangulation_, v);
+    NormalSurface* sum = new NormalSurface(triangulation_, v);
 
-    typedef std::vector<NNormalSurface*> CompVector;
+    typedef std::vector<NormalSurface*> CompVector;
     CompVector bits;
     splitIntoComponents(*sum, bits);
 

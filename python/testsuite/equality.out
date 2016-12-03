@@ -3,17 +3,17 @@ BY_VALUE
 BY_REFERENCE
 Integer:
 True False
-NAbelianGroup:
+AbelianGroup:
 True False
-NTriangulation:
+Triangulation3:
 False True
-NGroupPresentation:
+GroupPresentation:
 False True
-NTriangulation:
+Triangulation3:
 True False
-NTetrahedron:
+Tetrahedron3:
 True False
-NAbelianGroup:
+AbelianGroup:
 True False
-NGroupPresentation:
+GroupPresentation:
 True False

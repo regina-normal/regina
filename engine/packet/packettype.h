@@ -64,12 +64,11 @@ enum PacketType {
      */
     PACKET_TEXT = 2,
     /**
-     * Represents a 3-dimensional triangulation, of class Triangulation<3>
-     * (or equivalently, NTriangulation).
+     * Deprecated alias for PACKET_TRIANGULATION3.
      *
-     * This is identical to the constant PACKET_TRIANGULATION3.
+     * \deprecated This constant has been renamed to PACKET_TRIANGULATION3.
      */
-    PACKET_TRIANGULATION = 3,
+    REGINA_DEPRECATED_ENUM PACKET_TRIANGULATION = 3,
     /**
      * Represents a normal surface list, of class NormalSurfaces.
      */
@@ -85,7 +84,7 @@ enum PacketType {
      */
     PACKET_SCRIPT = 7,
     /**
-     * Represents a normal surface filter, of class NSurfaceFilter or
+     * Represents a normal surface filter, of class SurfaceFilter or
      * one of its descendant classes.
      */
     PACKET_SURFACEFILTER = 8,
@@ -104,14 +103,13 @@ enum PacketType {
      */
     PACKET_PDF = 10,
     /**
-     * Represents a 4-dimensional triangulation, of class Triangulation<4>
-     * (or equivalently, Dim4Triangulation).
+     * Deprecated alias for PACKET_TRIANGULATION4.
      *
-     * This is identical to the constant PACKET_TRIANGULATION4.
+     * \deprecated This constant has been renamed to PACKET_TRIANGULATION4.
      */
-    PACKET_DIM4TRIANGULATION = 11,
+    REGINA_DEPRECATED_ENUM PACKET_DIM4TRIANGULATION = 11,
     /**
-     * Represents a normal hypersurface list, of class NNormalHypersurfaceList.
+     * Represents a normal hypersurface list, of class NormalHypersurfaces.
      */
     PACKET_NORMALHYPERSURFACES = 13,
     /**
@@ -121,12 +119,11 @@ enum PacketType {
      */
     REGINA_DEPRECATED_ENUM PACKET_NORMALHYPERSURFACELIST = 13,
     /**
-     * Represents a 2-dimensional triangulation, of class Triangulation<2>
-     * (or equivalently, Dim2Triangulation).
+     * Deprecated alias for PACKET_TRIANGULATION2.
      *
-     * This is identical to the constant PACKET_TRIANGULATION2.
+     * \deprecated This constant has been renamed to PACKET_TRIANGULATION2.
      */
-    PACKET_DIM2TRIANGULATION = 15,
+    REGINA_DEPRECATED_ENUM PACKET_DIM2TRIANGULATION = 15,
     /**
      * Represents a triangulation in the embedded SnapPea kernel, of
      * class SnapPeaTriangulation.
@@ -137,24 +134,15 @@ enum PacketType {
      */
     PACKET_LINK = 17,
     /**
-     * Represents a 2-dimensional triangulation, of class Triangulation<2>
-     * (or equivalently, Dim2Triangulation).
-     *
-     * This is identical to the constant PACKET_DIM2TRIANGULATION.
+     * Represents a 2-dimensional triangulation, of class Triangulation<2>.
      */
     PACKET_TRIANGULATION2 = 15,
     /**
-     * Represents a 3-dimensional triangulation, of class Triangulation<3>
-     * (or equivalently, NTriangulation).
-     *
-     * This is identical to the constant PACKET_TRIANGULATION.
+     * Represents a 3-dimensional triangulation, of class Triangulation<3>.
      */
     PACKET_TRIANGULATION3 = 3,
     /**
-     * Represents a 4-dimensional triangulation, of class Triangulation<4>
-     * (or equivalently, Dim4Triangulation).
-     *
-     * This is identical to the constant PACKET_DIM4TRIANGULATION.
+     * Represents a 4-dimensional triangulation, of class Triangulation<4>.
      */
     PACKET_TRIANGULATION4 = 11,
     /**

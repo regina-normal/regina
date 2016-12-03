@@ -39,7 +39,7 @@
 #import "MDSpreadViewClasses.h"
 #import "snappea/snappeatriangulation.h"
 #import "surfaces/normalsurfaces.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 #define KEY_SURFACES_COORDS_COMPACT @"SurfacesCoordsCompact"
 
@@ -231,7 +231,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalSurface* s = self.packet->surface(selectedRow - 1);
+    const regina::NormalSurface* s = self.packet->surface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
                                                         message:@"I can only cut along compact surfaces, not spun-normal surfaces."
@@ -260,7 +260,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    regina::NTriangulation* ans = s->cutAlong();
+    regina::Triangulation<3>* ans = s->cutAlong();
     ans->intelligentSimplify();
     ans->setLabel(self.packet->triangulation()->adornedLabel("Cut #" + std::to_string(selectedRow - 1)));
     self.packet->insertChildLast(ans);
@@ -278,7 +278,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalSurface* s = self.packet->surface(selectedRow - 1);
+    const regina::NormalSurface* s = self.packet->surface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
                                                         message:@"I can only crush compact surfaces, not spun-normal surfaces."
@@ -307,7 +307,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
 
-    regina::NTriangulation* ans = s->crush();
+    regina::Triangulation<3>* ans = s->crush();
     ans->intelligentSimplify();
     ans->setLabel(self.packet->triangulation()->adornedLabel("Crushed #" + std::to_string(selectedRow - 1)));
     self.packet->insertChildLast(ans);
@@ -409,7 +409,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
 
-    const regina::NNormalSurface* s = self.packet->surface(rowPath.row);
+    const regina::NormalSurface* s = self.packet->surface(rowPath.row);
 
     int prop = PROP_NONE;
     int coord = columnPath.column;
@@ -477,8 +477,8 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             return cell;
         case PROP_LINK:
         {
-            const regina::NVertex* v;
-            std::pair<const regina::NEdge*, const regina::NEdge*> e;
+            const regina::Vertex<3>* v;
+            std::pair<const regina::Edge<3>*, const regina::Edge<3>*> e;
 
             if ((v = s->isVertexLink()))
                 cell.textLabel.text = [NSString stringWithFormat:@"Vertex %ld",
@@ -512,8 +512,8 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     if (self.packet->allowsAlmostNormal()) {
         if (coord == 0) {
-            regina::NDiscType oct = s->octPosition();
-            if (oct == regina::NDiscType::NONE) {
+            regina::DiscType oct = s->octPosition();
+            if (oct == regina::DiscType::NONE) {
                 cell.textLabel.text = @"";
                 return cell;
             }

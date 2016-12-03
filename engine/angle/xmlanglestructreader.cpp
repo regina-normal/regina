@@ -32,7 +32,7 @@
 
 #include <vector>
 #include "angle/xmlanglestructreader.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -126,7 +126,7 @@ void XMLAngleStructuresReader::endContentSubElement(
 XMLPacketReader* AngleStructures::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new XMLAngleStructuresReader(
-        dynamic_cast<NTriangulation*>(parent), resolver);
+        dynamic_cast<Triangulation<3>*>(parent), resolver);
 }
 
 } // namespace regina

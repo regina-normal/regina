@@ -36,7 +36,7 @@ print "-----------------------------------------------------------"
 print "Basic:"
 print
 
-print NExampleTriangulation.poincareHomologySphere().isoSig()
+print Example3.poincareHomologySphere().isoSig()
 print Text("Hello World")
 print Text("Hello World").text()
 
@@ -45,9 +45,9 @@ print "-----------------------------------------------------------"
 print "Basic container tests:"
 print
 
-t1 = NTriangulation()
-t2 = NExampleTriangulation.poincareHomologySphere()
-t3 = NExampleTriangulation.figureEight()
+t1 = Triangulation3()
+t2 = Example3.poincareHomologySphere()
+t3 = Example3.figureEight()
 p = PDF()
 
 t = Text()
@@ -148,9 +148,9 @@ print "Make orphan:"
 print "-----------------------------------------------------------"
 print
 
-d1 = NTriangulation(); d1.newTetrahedron()
-d2 = NTriangulation(); d2.newTetrahedron(); d2.newTetrahedron()
-d3 = NTriangulation(); d3.newTetrahedron(); d3.newTetrahedron(); d3.newTetrahedron()
+d1 = Triangulation3(); d1.newTetrahedron()
+d2 = Triangulation3(); d2.newTetrahedron(); d2.newTetrahedron()
+d3 = Triangulation3(); d3.newTetrahedron(); d3.newTetrahedron(); d3.newTetrahedron()
 d1.insertChildLast(d2)
 d2.insertChildLast(d3)
 

@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurface.h"
+#include "hypersurface/normalhypersurface.h"
+#include "triangulation/dim4.h"
 
 namespace regina {
 
-bool NNormalHypersurfaceVector::isVertexLinking(const Dim4Triangulation* triang)
+bool NormalHypersurfaceVector::isVertexLinking(const Triangulation<4>* triang)
         const {
     size_t nPents = triang->size();
     size_t pent;
@@ -48,8 +48,8 @@ bool NNormalHypersurfaceVector::isVertexLinking(const Dim4Triangulation* triang)
     return true;
 }
 
-const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
-        const Dim4Triangulation* triang) const {
+const Vertex<4>* NormalHypersurfaceVector::isVertexLink(
+        const Triangulation<4>* triang) const {
     size_t nPents = triang->size();
     size_t pent;
     int type;
@@ -62,10 +62,10 @@ const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
     }
 
     // Now examine the tetrahedra to see if we link only a single vertex.
-    Dim4Vertex* ans = 0;
+    Vertex<4>* ans = 0;
     LargeInteger ansMult;
 
-    const Dim4Pentachoron* p;
+    const Pentachoron<4>* p;
     LargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
@@ -106,17 +106,17 @@ const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
     return ans;
 }
 
-const Dim4Edge* NNormalHypersurfaceVector::isThinEdgeLink(
-        const Dim4Triangulation* triang) const {
+const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
+        const Triangulation<4>* triang) const {
     size_t nPents = triang->size();
     size_t pent;
     int type;
 
     // Search through prism pieces for one and only one candidate edge.
-    Dim4Edge* ans = 0;
+    Edge<4>* ans = 0;
     LargeInteger ansMult;
 
-    const Dim4Pentachoron* p;
+    const Pentachoron<4>* p;
     LargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
@@ -153,7 +153,7 @@ const Dim4Edge* NNormalHypersurfaceVector::isThinEdgeLink(
 
     // Finally, run through the tetrahedron piece types and make sure
     // that everything checks out.
-    Dim4Vertex* v;
+    Vertex<4>* v;
     bool crosses;
     int i;
     for (pent = 0; pent < nPents; pent++) {
@@ -169,7 +169,7 @@ const Dim4Edge* NNormalHypersurfaceVector::isThinEdgeLink(
                 for (i = 0; i < 5; ++i) {
                     if (i == type)
                         continue;
-                    if (p->edge(Dim4Edge::edgeNumber[type][i]) == ans) {
+                    if (p->edge(Edge<4>::edgeNumber[type][i]) == ans) {
                         crosses = true;
                         break;
                     }

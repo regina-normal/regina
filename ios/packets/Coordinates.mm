@@ -31,18 +31,16 @@
  **************************************************************************/
 
 #import "Coordinates.h"
-#import "dim4/dim4triangulation.h"
-#import "generic/facenumbering.h"
-#import "hypersurface/nnormalhypersurfacelist.h"
+#import "hypersurface/normalhypersurfaces.h"
 #import "surfaces/normalsurfaces.h"
-#import "triangulation/ntriangle.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
+#import "triangulation/dim4.h"
 
 using regina::HyperCoords;
-using regina::NNormalHypersurfaceList;
+using regina::NormalHypersurfaces;
 using regina::NormalSurfaces;
 using regina::NormalCoords;
-using regina::NTriangle;
+using regina::Triangle;
 
 @implementation Coordinates
 
@@ -98,7 +96,7 @@ using regina::NTriangle;
             coordSystem == regina::NS_AN_QUAD_OCT);
 }
 
-+ (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri
++ (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::Triangulation<3>*)tri
 {
     if (coordSystem == regina::NS_STANDARD)
         return tri->size() * 7;
@@ -122,7 +120,7 @@ using regina::NTriangle;
         return 0;
 }
 
-+ (NSString*)columnName:(regina::NormalCoords)coordSystem whichCoord:(unsigned long)whichCoord tri:(regina::NTriangulation*)tri
++ (NSString*)columnName:(regina::NormalCoords)coordSystem whichCoord:(unsigned long)whichCoord tri:(regina::Triangulation<3>*)tri
 {
     if (coordSystem == regina::NS_STANDARD) {
         if (whichCoord % 7 < 4)
@@ -165,7 +163,7 @@ using regina::NTriangle;
         } else {
             // "false" orientation.
             if (stdCoord % 7 < 4)
-                return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), NTriangle::ordering(stdCoord % 7).trunc3().c_str()];
+                return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), Triangle<3>::ordering(stdCoord % 7).trunc3().c_str()];
             else
                 return [NSString stringWithFormat:@"%ld: %d%d", (stdCoord / 7), regina::quadDefn[(stdCoord % 7) - 4][2], regina::quadDefn[(stdCoord % 7) - 4][3]];
         }
@@ -184,7 +182,7 @@ using regina::NTriangle;
     return @"Unknown";
 }
 
-+ (NSString*)longestColumnName:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri
++ (NSString*)longestColumnName:(regina::NormalCoords)coordSystem tri:(regina::Triangulation<3>*)tri
 {
     switch (coordSystem) {
         case regina::NS_STANDARD:
@@ -216,7 +214,7 @@ using regina::NTriangle;
     }
 }
 
-+ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord
++ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NormalSurface&)surface whichCoord:(unsigned long)whichCoord
 {
     if (coordSystem == regina::NS_STANDARD) {
         if (whichCoord % 7 < 4)
@@ -286,7 +284,7 @@ using regina::NTriangle;
     }
 }
 
-+ (size_t)numColumns:(regina::HyperCoords)coordSystem tri:(regina::Dim4Triangulation*)tri
++ (size_t)numColumns:(regina::HyperCoords)coordSystem tri:(regina::Triangulation<4>*)tri
 {
     if (coordSystem == regina::HS_STANDARD)
         return tri->size() * 15;
@@ -298,7 +296,7 @@ using regina::NTriangle;
         return 0;
 }
 
-+ (NSString*)columnName:(regina::HyperCoords)coordSystem whichCoord:(size_t)whichCoord tri:(regina::Dim4Triangulation*)tri
++ (NSString*)columnName:(regina::HyperCoords)coordSystem whichCoord:(size_t)whichCoord tri:(regina::Triangulation<4>*)tri
 {
     if (coordSystem == regina::HS_STANDARD) {
         if (whichCoord % 15 < 5)
@@ -321,7 +319,7 @@ using regina::NTriangle;
     return @"Unknown";
 }
 
-+ (NSString*)longestColumnName:(regina::HyperCoords)coordSystem tri:(regina::Dim4Triangulation*)tri
++ (NSString*)longestColumnName:(regina::HyperCoords)coordSystem tri:(regina::Triangulation<4>*)tri
 {
     switch (coordSystem) {
         case regina::HS_STANDARD:
@@ -338,7 +336,7 @@ using regina::NTriangle;
     }
 }
 
-+ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord
++ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NormalHypersurface&)surface whichCoord:(size_t)whichCoord
 {
     if (coordSystem == regina::HS_STANDARD) {
         if (whichCoord % 15 < 5)

@@ -3,44 +3,21 @@ SET ( FILES
   anglesui
   compatcanvas
   containerui
-  dim2tricreator
-  dim2trigluings
-  dim2triskeleton
-  dim2triui
-  dim4eltmovedialog
-  dim4trialgebra
-  dim4tricreator
-  dim4trigluings
-  dim4triskeleton
-  dim4triui
-  eltmovedialog
+  eltmovedialog3
+  eltmovedialog4
   facetgraphtab
+  filtercomb
+  filtercreator
+  filterprop
   gaprunner
   generictriui
   groupwidget
-  nhypercompatui
-  nhypercoordinateui
-  nhypermatchingui
-  nhypersurfacecreator
-  nhypersummaryui
-  nhypersurfaceui
-  nnormalsurfacecreator
-  nnormalsurfaceui
-  nsurfacecompatui
-  nsurfacecoordinateui
-  nsurfacefiltercomb
-  nsurfacefiltercreator
-  nsurfacefilterprop
-  nsurfacematchingui
-  nsurfacesummaryui
-  ntrialgebra
-  ntriangulationcreator
-  ntriangulationui
-  ntricomposition
-  ntrigluings
-  ntriskeleton
-  ntrisnappea
-  ntrisurfaces
+  hypercompatui
+  hypercoordinateui
+  hypercreator
+  hypermatchingui
+  hypersummaryui
+  hyperui
   pdfui
   scriptui
   skeletonwindow
@@ -51,7 +28,30 @@ SET ( FILES
   snappeagluings
   snappeashapes
   snappeaui
+  surfacescompatui
+  surfacescoordinateui
+  surfacescreator
+  surfacesmatchingui
+  surfacessummaryui
+  surfacesui
   textui
+  tri2creator
+  tri2gluings
+  tri2skeleton
+  tri2ui
+  tri3algebra
+  tri3creator
+  tri3composition
+  tri3gluings
+  tri3skeleton
+  tri3snappea
+  tri3surfaces
+  tri3ui
+  tri4algebra
+  tri4creator
+  tri4gluings
+  tri4skeleton
+  tri4ui
   )
 
 FOREACH( FILE ${FILES} )

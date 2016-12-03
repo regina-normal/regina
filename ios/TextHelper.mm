@@ -45,6 +45,11 @@ static UIColor* altColour2 = [UIColor colorWithRed:(0x73 / 256.0) green:(0x7C / 
 
 @implementation TextHelper
 
++ (NSAttributedString *)plainString:(NSString *)text
+{
+    return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: [UIColor blackColor]}];
+}
+
 + (NSAttributedString *)yesNoString:(NSString *)text yesNo:(BOOL)yesNo
 {
     return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: (yesNo ? yesColour : noColour)}];

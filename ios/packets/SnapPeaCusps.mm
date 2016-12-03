@@ -135,7 +135,7 @@
 
 - (IBAction)fillCusps:(id)sender
 {
-    regina::NTriangulation* s = self.packet->filledTriangulation();
+    regina::Triangulation<3>* s = self.packet->filledTriangulation();
     s->setLabel(self.packet->adornedLabel("Filled"));
     self.packet->insertChildLast(s);
     [ReginaHelper viewPacket:s];

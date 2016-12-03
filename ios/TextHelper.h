@@ -38,6 +38,12 @@
 @interface TextHelper : NSObject
 
 /**
+ * Renders the given text in a plain black font.  The font colour is
+ * explicitly specified in the resulting attributed string.
+ */
++ (NSAttributedString*)plainString:(NSString*)text;
+
+/**
  * Renders the given text in a green "yes" or a red "no" font.
  */
 + (NSAttributedString*)yesNoString:(NSString*)text yesNo:(BOOL)yesNo;

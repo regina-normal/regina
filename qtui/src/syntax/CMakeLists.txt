@@ -1,8 +1,9 @@
-INSTALL(FILES
-  default.style
-  function.lang
-  number.lang
-  python.lang
-  script_comment.lang
-  symbols.lang
-  DESTINATION ${PKGDATADIR}/syntax)
+SET ( FILES
+  qtmatcher.cpp
+  syntaxhighlighter.cpp
+  )
+FOREACH( FILE ${FILES} )
+  SET( SOURCES ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${FILE})
+ENDFOREACH(FILE)
+SET( SOURCES ${SOURCES} PARENT_SCOPE)
+

@@ -54,24 +54,24 @@ def dumpSurfaces(name, slist):
 
 def surfaceStats(tri):
 	dumpSurfaces('Vertex hypersurfaces (std)',
-		regina.NNormalHypersurfaceList.enumerate(tri,
+		regina.NormalHypersurfaces.enumerate(tri,
 		regina.HS_STANDARD, regina.HS_VERTEX))
 	dumpSurfaces('Fundamental surfaces (std, primal)',
-		regina.NNormalHypersurfaceList.enumerate(tri,
+		regina.NormalHypersurfaces.enumerate(tri,
 			regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_PRIMAL))
 	dumpSurfaces('Fundamental surfaces (std, dual)',
-		regina.NNormalHypersurfaceList.enumerate(tri,
+		regina.NormalHypersurfaces.enumerate(tri,
 		regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL))
 
-t = regina.Dim4Triangulation()
+t = regina.Triangulation4()
 t.setLabel("Empty triangulation")
 surfaceStats(t)
 
-surfaceStats(regina.Dim4ExampleTriangulation.fourSphere())
-# surfaceStats(regina.Dim4ExampleTriangulation.simplicialFourSphere())
-surfaceStats(regina.Dim4ExampleTriangulation.rp4())
-surfaceStats(regina.Dim4ExampleTriangulation.s3xs1())
-surfaceStats(regina.Dim4ExampleTriangulation.s3xs1Twisted())
-surfaceStats(regina.Dim4ExampleTriangulation.cappellShaneson())
+surfaceStats(regina.Example4.fourSphere())
+# surfaceStats(regina.Example4.simplicialFourSphere())
+surfaceStats(regina.Example4.rp4())
+surfaceStats(regina.Example4.s3xs1())
+surfaceStats(regina.Example4.s3xs1Twisted())
+surfaceStats(regina.Example4.cappellShaneson())
 # L(8,3) x S1:
-surfaceStats(regina.Dim4Triangulation('kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb'))
+surfaceStats(regina.Triangulation4('kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb'))

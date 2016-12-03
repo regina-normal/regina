@@ -37,7 +37,7 @@
 #import "TextHelper.h"
 #import "angle/anglestructure.h"
 #import "angle/anglestructures.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 #pragma mark - Angle structure view controller
 

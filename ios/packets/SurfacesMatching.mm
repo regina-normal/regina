@@ -37,7 +37,7 @@
 #import "MDSpreadViewClasses.h"
 #import "maths/matrix.h"
 #import "surfaces/normalsurfaces.h"
-#import "triangulation/ntriangulation.h"
+#import "triangulation/dim3.h"
 
 #define KEY_SURFACES_MATCHING_COMPACT @"SurfacesMatchingCompact"
 
@@ -134,7 +134,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    regina::LargeInteger entry = self.matrix->entry(rowPath.row, columnPath.column);
+    regina::Integer entry = self.matrix->entry(rowPath.row, columnPath.column);
     if (entry.isZero())
         return @"";
     else

@@ -32,7 +32,7 @@
 
 #include "angle/anglestructure.h"
 #include "maths/matrix.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -43,13 +43,13 @@ const unsigned long AngleStructure::flagCalculatedType = 4;
 const unsigned long AngleStructure::flagVeering = 8;
 
 MatrixInt* AngleStructureVector::makeAngleEquations(
-        const NTriangulation* tri) {
+        const Triangulation<3>* tri) {
     size_t n = tri->size();
     size_t cols = 3 * n + 1;
 
     // We have one equation per non-boundary edge plus one per tetrahedron.
     long rows = long(tri->countEdges()) + long(tri->size());
-    for (NTriangulation::BoundaryComponentIterator bit =
+    for (Triangulation<3>::BoundaryComponentIterator bit =
             tri->boundaryComponents().begin();
             bit != tri->boundaryComponents().end(); bit++)
         rows -= (*bit)->countEdges();
@@ -58,7 +58,7 @@ MatrixInt* AngleStructureVector::makeAngleEquations(
     size_t row = 0;
 
     size_t index;
-    for (NTriangulation::EdgeIterator eit = tri->edges().begin();
+    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
             eit != tri->edges().end(); eit++) {
         if ((*eit)->isBoundary())
             continue;
@@ -188,7 +188,7 @@ void AngleStructure::calculateType() const {
             long nEdges = triangulation_->countEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
-            const NTetrahedron* tet;
+            const Tetrahedron<3>* tet;
             int orient;
             long e;
             for (unsigned i = 0; i < triangulation_->size();

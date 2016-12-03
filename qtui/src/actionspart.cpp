@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "packet/packet.h"
 #include "iconcache.h"
 #include "reginamain.h"
 #include "reginamanager.h"
@@ -352,43 +353,44 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.append(actContainer);
     treeMenu->addAction(actContainer);
 
-    QAction* actDim2Triangulation = new QAction(this);
-    actDim2Triangulation->setText(tr("New 2-D &Triangulation"));
-    actDim2Triangulation->setIcon(IconCache::icon(
-        IconCache::packet_dim2triangulation));
-    actDim2Triangulation->setShortcut(tr("Alt+2"));
-    actDim2Triangulation->setToolTip(tr("New 2-manifold triangulation"));
-    actDim2Triangulation->setWhatsThis(
+    QAction* actTriangulation2 = new QAction(this);
+    actTriangulation2->setText(tr("New 2-D &Triangulation"));
+    actTriangulation2->setIcon(IconCache::icon(
+        IconCache::packet_triangulation2));
+    actTriangulation2->setShortcut(tr("Alt+2"));
+    actTriangulation2->setToolTip(tr("New 2-manifold triangulation"));
+    actTriangulation2->setWhatsThis(
         tr("Create a new 2-manifold triangulation."));
-    connect(actDim2Triangulation, SIGNAL(triggered()), this,
-        SLOT(newDim2Triangulation()) );
-    treeGeneralEditActions.append(actDim2Triangulation);
-    treeMenu->addAction(actDim2Triangulation);
+    connect(actTriangulation2, SIGNAL(triggered()), this,
+        SLOT(newTriangulation2()) );
+    treeGeneralEditActions.append(actTriangulation2);
+    treeMenu->addAction(actTriangulation2);
 
-    QAction* actTriangulation = new QAction(this);
-    actTriangulation->setText(tr("New 3-D &Triangulation"));
-    actTriangulation->setIcon(IconCache::icon(IconCache::packet_triangulation));
-    actTriangulation->setShortcut(tr("Alt+t"));
-    actTriangulation->setToolTip(tr("New 3-manifold triangulation"));
-    actTriangulation->setWhatsThis(
+    QAction* actTriangulation3 = new QAction(this);
+    actTriangulation3->setText(tr("New 3-D &Triangulation"));
+    actTriangulation3->setIcon(IconCache::icon(
+        IconCache::packet_triangulation3));
+    actTriangulation3->setShortcut(tr("Alt+t"));
+    actTriangulation3->setToolTip(tr("New 3-manifold triangulation"));
+    actTriangulation3->setWhatsThis(
         tr("Create a new 3-manifold triangulation."));
-    connect(actTriangulation, SIGNAL(triggered()), this,
-        SLOT(newTriangulation()) );
-    treeGeneralEditActions.append(actTriangulation);
-    treeMenu->addAction(actTriangulation);
+    connect(actTriangulation3, SIGNAL(triggered()), this,
+        SLOT(newTriangulation3()) );
+    treeGeneralEditActions.append(actTriangulation3);
+    treeMenu->addAction(actTriangulation3);
 
-    QAction* actDim4Triangulation = new QAction(this);
-    actDim4Triangulation->setText(tr("New &4-D Triangulation"));
-    actDim4Triangulation->setIcon(IconCache::icon(
-        IconCache::packet_dim4triangulation));
-    actDim4Triangulation->setShortcut(tr("Alt+4"));
-    actDim4Triangulation->setToolTip(tr("New 4-manifold triangulation"));
-    actDim4Triangulation->setWhatsThis(
+    QAction* actTriangulation4 = new QAction(this);
+    actTriangulation4->setText(tr("New &4-D Triangulation"));
+    actTriangulation4->setIcon(IconCache::icon(
+        IconCache::packet_triangulation4));
+    actTriangulation4->setShortcut(tr("Alt+4"));
+    actTriangulation4->setToolTip(tr("New 4-manifold triangulation"));
+    actTriangulation4->setWhatsThis(
         tr("Create a new 4-manifold triangulation."));
-    connect(actDim4Triangulation, SIGNAL(triggered()), this,
-        SLOT(newDim4Triangulation()) );
-    treeGeneralEditActions.append(actDim4Triangulation);
-    treeMenu->addAction(actDim4Triangulation);
+    connect(actTriangulation4, SIGNAL(triggered()), this,
+        SLOT(newTriangulation4()) );
+    treeGeneralEditActions.append(actTriangulation4);
+    treeMenu->addAction(actTriangulation4);
 
     QAction* actSurfaces = new QAction(this);
     actSurfaces->setText(tr("New &Normal Surface List (3-D)"));
@@ -771,9 +773,9 @@ void ReginaMain::setupActions() {
     toolBarPacket = addToolBar(tr("New Packets"));
     toolBarPacket->addAction(actContainer);
     toolBarPacket->addSeparator();
-    toolBarPacket->addAction(actDim2Triangulation);
-    toolBarPacket->addAction(actTriangulation);
-    toolBarPacket->addAction(actDim4Triangulation);
+    toolBarPacket->addAction(actTriangulation2);
+    toolBarPacket->addAction(actTriangulation3);
+    toolBarPacket->addAction(actTriangulation4);
     toolBarPacket->addAction(actSnapPeaTriangulation);
     toolBarPacket->addSeparator();
     toolBarPacket->addAction(actSurfaces);

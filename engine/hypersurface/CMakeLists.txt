@@ -4,10 +4,10 @@
 SET ( FILES
   enumerate
   links
-  nhsstandard
-  nnormalhypersurface
-  nnormalhypersurfacelist
-  nxmlhypersurfacereader
+  hsvectorstandard
+  normalhypersurface
+  normalhypersurfaces
+  xmlhypersurfacereader
   triangulate
   )
 
@@ -23,12 +23,14 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     hscoordregistry.h
     hscoordregistry-impl.h
+    hsvectorstandard.h
     hypercoords.h
     hyperflags.h
-    nhsmirrored.h
     nhsstandard.h
     nnormalhypersurface.h
     nnormalhypersurfacelist.h
-    nxmlhypersurfacereader.h
+    normalhypersurface.h
+    normalhypersurfaces.h
+    xmlhypersurfacereader.h
     DESTINATION ${INCLUDEDIR}/hypersurface COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

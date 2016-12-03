@@ -35,20 +35,20 @@ def doit(list):
 	for f in list:
 		print f
 
-t = Dim2Triangulation()
+t = Triangulation2()
 s = t.newSimplex()
 
 doit(s.vertex(0).embeddings())
 doit(s.edge(0).embeddings())
 
-t = NTriangulation()
+t = Triangulation3()
 s = t.newSimplex()
 
 doit(s.vertex(0).embeddings())
 doit(s.edge(0).embeddings())
 doit(s.triangle(0).embeddings())
 
-t = Dim4Triangulation()
+t = Triangulation4()
 s = t.newSimplex()
 
 doit(s.vertex(0).embeddings())

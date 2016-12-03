@@ -35,5 +35,5 @@
 /**
  * The controller for viewing and editing high-dimensional triangulations.
  */
-@interface GenericTriangulationViewController : UIViewController <PacketViewer>
+@interface GenericTriViewController : UIViewController <PacketViewer>
 @end

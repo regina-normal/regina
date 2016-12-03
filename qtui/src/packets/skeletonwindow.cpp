@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim2/dim2triangulation.h"
-#include "dim4/dim4triangulation.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 #include "skeletonwindow.h"
 #include "../packetui.h"
@@ -46,24 +46,15 @@
 #include <QScrollBar>
 #include <QStyle>
 
-using regina::NBoundaryComponent;
-using regina::NComponent;
-using regina::NEdge;
-using regina::NTriangle;
-using regina::NTriangleEmbedding;
-using regina::NVertex;
-using regina::Dim2BoundaryComponent;
-using regina::Dim2Component;
-using regina::Dim2Edge;
-using regina::Dim2EdgeEmbedding;
-using regina::Dim2Vertex;
-using regina::Dim4BoundaryComponent;
-using regina::Dim4Component;
-using regina::Dim4Edge;
-using regina::Dim4Tetrahedron;
-using regina::Dim4TetrahedronEmbedding;
-using regina::Dim4Triangle;
-using regina::Dim4Vertex;
+using regina::BoundaryComponent;
+using regina::Component;
+using regina::Edge;
+using regina::EdgeEmbedding;
+using regina::Tetrahedron;
+using regina::TetrahedronEmbedding;
+using regina::Triangle;
+using regina::TriangleEmbedding;
+using regina::Vertex;
 
 #define SKELETON_MAX_ROWS_DEFAULT 10
 namespace {
@@ -162,11 +153,11 @@ void SkeletonWindow::packetToBeDestroyed(regina::Packet*) {
     accepted();
 }
 
-QString VertexModel::caption() const {
+QString Vertex3Model::caption() const {
     return tr("Vertices (%1)").arg(tri->label().c_str());
 }
 
-QString VertexModel::overview() const {
+QString Vertex3Model::overview() const {
     return tr("<qt>Displays details of each "
         "vertex of this triangulation.<p>"
         "The different vertices are numbered from 0 upwards.  "
@@ -177,33 +168,33 @@ QString VertexModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int VertexModel::rowCount(const QModelIndex& parent) const {
+int Vertex3Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countVertices());
 }
 
-int VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Vertex3Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant VertexModel::data(const QModelIndex& index, int role) const {
+QVariant Vertex3Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NVertex* item = tri->vertex(index.row());
+        Vertex<3>* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
             case 1: {
                 switch (item->link()) {
-                    case NVertex::SPHERE:
+                    case Vertex<3>::SPHERE:
                         return QString();
-                    case NVertex::DISC:
+                    case Vertex<3>::DISC:
                         return tr("Bdry");
-                    case NVertex::TORUS:
+                    case Vertex<3>::TORUS:
                         return tr("Ideal: Torus");
-                    case NVertex::KLEIN_BOTTLE:
+                    case Vertex<3>::KLEIN_BOTTLE:
                         return tr("Ideal: Klein bottle");
-                    case NVertex::NON_STANDARD_CUSP: {
+                    case Vertex<3>::NON_STANDARD_CUSP: {
                         if (item->isLinkOrientable())
                             return tr("Ideal: Genus %1 orbl").arg(
                                 1 - (item->linkEulerChar() / 2));
@@ -211,7 +202,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                             return tr("Ideal: Genus %1 non-orbl").arg(
                                 2 - item->linkEulerChar());
                     }
-                    case NVertex::INVALID:
+                    case Vertex<3>::INVALID:
                         return tr("Invalid");
                     default:
                         return tr("Unknown");
@@ -234,7 +225,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant VertexModel::headerData(int section,
+QVariant Vertex3Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -253,7 +244,7 @@ QVariant VertexModel::headerData(int section,
         return QVariant();
 }
 
-QString VertexModel::toolTipForCol(int column) {
+QString Vertex3Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual vertex.  "
             "Vertices are numbered 0,1,2,...,<i>v</i>-1.</qt>");
@@ -269,11 +260,11 @@ QString VertexModel::toolTipForCol(int column) {
     }
 }
 
-QString EdgeModel::caption() const {
+QString Edge3Model::caption() const {
     return tr("Edges (%1)").arg(tri->label().c_str());
 }
 
-QString EdgeModel::overview() const {
+QString Edge3Model::overview() const {
     return tr("<qt>Displays details of each edge of "
         "this triangulation.<p>"
         "The different edges are numbered from 0 upwards.  "
@@ -284,19 +275,19 @@ QString EdgeModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int EdgeModel::rowCount(const QModelIndex& parent) const {
+int Edge3Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countEdges());
 }
 
-int EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Edge3Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant EdgeModel::data(const QModelIndex& index, int role) const {
+QVariant Edge3Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NEdge* item = tri->edge(index.row());
+        Edge<3>* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -324,7 +315,7 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant EdgeModel::headerData(int section,
+QVariant Edge3Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -343,7 +334,7 @@ QVariant EdgeModel::headerData(int section,
         return QVariant();
 }
 
-QString EdgeModel::toolTipForCol(int column) {
+QString Edge3Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual edge.  "
             "Edges are numbered 0,1,2,...,<i>e</i>-1.</qt>");
@@ -358,11 +349,11 @@ QString EdgeModel::toolTipForCol(int column) {
     }
 }
 
-QString TriangleModel::caption() const {
+QString Triangle3Model::caption() const {
     return tr("Triangles (%1)").arg(tri->label().c_str());
 }
 
-QString TriangleModel::overview() const {
+QString Triangle3Model::overview() const {
     return tr("<qt>Displays details of each "
         "triangle of this triangulation.<p>"
         "The different triangles are numbered from 0 upwards.  "
@@ -373,19 +364,19 @@ QString TriangleModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int TriangleModel::rowCount(const QModelIndex& parent) const {
+int Triangle3Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countTriangles());
 }
 
-int TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Triangle3Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant TriangleModel::data(const QModelIndex& index, int role) const {
+QVariant Triangle3Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NTriangle* item = tri->triangle(index.row());
+        Triangle<3>* item = tri->triangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -395,21 +386,21 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                     prefix = tr("(Bdry) ");
 
                 int type = item->type();
-                if (type == NTriangle::TRIANGLE)
+                if (type == Triangle<3>::TRIANGLE)
                     return prefix + tr("Triangle");
-                if (type == NTriangle::SCARF)
+                if (type == Triangle<3>::SCARF)
                     return prefix + tr("Scarf");
-                if (type == NTriangle::PARACHUTE)
+                if (type == Triangle<3>::PARACHUTE)
                     return prefix + tr("Parachute");
-                if (type == NTriangle::MOBIUS)
+                if (type == Triangle<3>::MOBIUS)
                     return prefix + trUtf8("Möbius band");
-                if (type == NTriangle::CONE)
+                if (type == Triangle<3>::CONE)
                     return prefix + tr("Cone");
-                if (type == NTriangle::HORN)
+                if (type == Triangle<3>::HORN)
                     return prefix + tr("Horn");
-                if (type == NTriangle::DUNCEHAT)
+                if (type == Triangle<3>::DUNCEHAT)
                     return prefix + tr("Dunce hat");
-                if (type == NTriangle::L31)
+                if (type == Triangle<3>::L31)
                     return prefix + tr("L(3,1)");
                 return prefix + tr("UNKNOWN");
             }
@@ -430,7 +421,7 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant TriangleModel::headerData(int section,
+QVariant Triangle3Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -449,7 +440,7 @@ QVariant TriangleModel::headerData(int section,
         return QVariant();
 }
 
-QString TriangleModel::toolTipForCol(int column) {
+QString Triangle3Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual triangle.  "
             "Triangles are numbered 0,1,2,...,<i>t</i>-1.</qt>");
@@ -465,11 +456,11 @@ QString TriangleModel::toolTipForCol(int column) {
     }
 }
 
-QString ComponentModel::caption() const {
+QString Component3Model::caption() const {
     return tr("Components (%1)").arg(tri->label().c_str());
 }
 
-QString ComponentModel::overview() const {
+QString Component3Model::overview() const {
     return tr("<qt>Displays details of each "
         "connected component of this triangulation.<p>"
         "The different components are numbered from 0 upwards.  "
@@ -479,19 +470,19 @@ QString ComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int ComponentModel::rowCount(const QModelIndex& parent) const {
+int Component3Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countComponents());
 }
 
-int ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Component3Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant ComponentModel::data(const QModelIndex& index, int role) const {
+QVariant Component3Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NComponent* item = tri->component(index.row());
+        Component<3>* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -515,7 +506,7 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant ComponentModel::headerData(int section,
+QVariant Component3Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -534,7 +525,7 @@ QVariant ComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString ComponentModel::toolTipForCol(int column) {
+QString Component3Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual component.  "
             "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");
@@ -549,11 +540,11 @@ QString ComponentModel::toolTipForCol(int column) {
     }
 }
 
-QString BoundaryComponentModel::caption() const {
+QString BoundaryComponent3Model::caption() const {
     return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
-QString BoundaryComponentModel::overview() const {
+QString BoundaryComponent3Model::overview() const {
     return tr("<qt>Displays details of each "
         "boundary component of this triangulation.  A boundary "
         "component may be a collection of adjacent boundary triangles, "
@@ -568,20 +559,20 @@ QString BoundaryComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+int BoundaryComponent3Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
-int BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int BoundaryComponent3Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant BoundaryComponentModel::data(const QModelIndex& index,
+QVariant BoundaryComponent3Model::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        NBoundaryComponent* item = tri->boundaryComponent(index.row());
+        BoundaryComponent<3>* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -595,7 +586,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                     tr("%1 triangles").arg(item->countTriangles()));
             case 3:
                 if (item->isIdeal()) {
-                    NVertex* v = item->vertex(0);
+                    Vertex<3>* v = item->vertex(0);
                     QString ans;
                     for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
@@ -605,7 +596,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                 } else {
                     QString ans;
                     for (unsigned long i = 0; i < item->countTriangles(); ++i) {
-                        const NTriangleEmbedding& emb =
+                        const TriangleEmbedding<3>& emb =
                             item->triangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
                             arg(emb.tetrahedron()->index()).
@@ -621,7 +612,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
         return QVariant();
 }
 
-QVariant BoundaryComponentModel::headerData(int section,
+QVariant BoundaryComponent3Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -640,7 +631,7 @@ QVariant BoundaryComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString BoundaryComponentModel::toolTipForCol(int column) {
+QString BoundaryComponent3Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual boundary "
             "component.  "
@@ -660,11 +651,11 @@ QString BoundaryComponentModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim2VertexModel::caption() const {
+QString Vertex2Model::caption() const {
     return tr("Vertices (%1)").arg(tri->label().c_str());
 }
 
-QString Dim2VertexModel::overview() const {
+QString Vertex2Model::overview() const {
     return tr("<qt>Displays details of each "
         "vertex of this triangulation.<p>"
         "The different vertices are numbered from 0 upwards.  "
@@ -675,19 +666,19 @@ QString Dim2VertexModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim2VertexModel::rowCount(const QModelIndex& parent) const {
+int Vertex2Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countVertices());
 }
 
-int Dim2VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Vertex2Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
+QVariant Vertex2Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Vertex* item = tri->vertex(index.row());
+        Vertex<2>* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -713,7 +704,7 @@ QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim2VertexModel::headerData(int section,
+QVariant Vertex2Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -732,7 +723,7 @@ QVariant Dim2VertexModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim2VertexModel::toolTipForCol(int column) {
+QString Vertex2Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual vertex.  "
             "Vertices are numbered 0,1,2,...,<i>v</i>-1.</qt>");
@@ -748,11 +739,11 @@ QString Dim2VertexModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim2EdgeModel::caption() const {
+QString Edge2Model::caption() const {
     return tr("Edges (%1)").arg(tri->label().c_str());
 }
 
-QString Dim2EdgeModel::overview() const {
+QString Edge2Model::overview() const {
     return tr("<qt>Displays details of each edge of "
         "this triangulation.<p>"
         "The different edges are numbered from 0 upwards.  "
@@ -763,19 +754,19 @@ QString Dim2EdgeModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim2EdgeModel::rowCount(const QModelIndex& parent) const {
+int Edge2Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countEdges());
 }
 
-int Dim2EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Edge2Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
+QVariant Edge2Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Edge* item = tri->edge(index.row());
+        Edge<2>* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -801,7 +792,7 @@ QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim2EdgeModel::headerData(int section,
+QVariant Edge2Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -820,7 +811,7 @@ QVariant Dim2EdgeModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim2EdgeModel::toolTipForCol(int column) {
+QString Edge2Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual edge.  "
             "Edges are numbered 0,1,2,...,<i>e</i>-1.</qt>");
@@ -835,11 +826,11 @@ QString Dim2EdgeModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim2ComponentModel::caption() const {
+QString Component2Model::caption() const {
     return tr("Components (%1)").arg(tri->label().c_str());
 }
 
-QString Dim2ComponentModel::overview() const {
+QString Component2Model::overview() const {
     return tr("<qt>Displays details of each "
         "connected component of this triangulation.<p>"
         "The different components are numbered from 0 upwards.  "
@@ -849,19 +840,19 @@ QString Dim2ComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim2ComponentModel::rowCount(const QModelIndex& parent) const {
+int Component2Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countComponents());
 }
 
-int Dim2ComponentModel::columnCount(const QModelIndex& /* unused */) const {
+int Component2Model::columnCount(const QModelIndex& /* unused */) const {
     return 4;
 }
 
-QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
+QVariant Component2Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Component* item = tri->component(index.row());
+        Component<2>* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -883,7 +874,7 @@ QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim2ComponentModel::headerData(int section,
+QVariant Component2Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -902,7 +893,7 @@ QVariant Dim2ComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim2ComponentModel::toolTipForCol(int column) {
+QString Component2Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual component.  "
             "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");
@@ -916,11 +907,11 @@ QString Dim2ComponentModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim2BoundaryComponentModel::caption() const {
+QString BoundaryComponent2Model::caption() const {
     return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
-QString Dim2BoundaryComponentModel::overview() const {
+QString BoundaryComponent2Model::overview() const {
     return tr("<qt>Displays details of each "
         "boundary component of this triangulation.<p>"
         "The different boundary components are numbered from 0 upwards.  "
@@ -930,21 +921,21 @@ QString Dim2BoundaryComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim2BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+int BoundaryComponent2Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
-int Dim2BoundaryComponentModel::columnCount(const QModelIndex& /* unused */)
+int BoundaryComponent2Model::columnCount(const QModelIndex& /* unused */)
         const {
     return 3;
 }
 
-QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
+QVariant BoundaryComponent2Model::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2BoundaryComponent* item = tri->boundaryComponent(index.row());
+        BoundaryComponent<2>* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -954,7 +945,7 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
             case 2:
                 QString ans;
                 for (unsigned long i = 0; i < item->countEdges(); ++i) {
-                    const Dim2EdgeEmbedding& emb = item->edge(i)->front();
+                    const EdgeEmbedding<2>& emb = item->edge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.triangle()->index()).
                         arg(emb.vertices().trunc2().c_str()));
@@ -968,7 +959,7 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
         return QVariant();
 }
 
-QVariant Dim2BoundaryComponentModel::headerData(int section,
+QVariant BoundaryComponent2Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -986,7 +977,7 @@ QVariant Dim2BoundaryComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim2BoundaryComponentModel::toolTipForCol(int column) {
+QString BoundaryComponent2Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual boundary "
             "component.  "
@@ -999,11 +990,11 @@ QString Dim2BoundaryComponentModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim4VertexModel::caption() const {
+QString Vertex4Model::caption() const {
     return tr("Vertices (%1)").arg(tri->label().c_str());
 }
 
-QString Dim4VertexModel::overview() const {
+QString Vertex4Model::overview() const {
     return tr("<qt>Displays details of each "
         "vertex of this triangulation.<p>"
         "The different vertices are numbered from 0 upwards.  "
@@ -1014,19 +1005,19 @@ QString Dim4VertexModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim4VertexModel::rowCount(const QModelIndex& parent) const {
+int Vertex4Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countVertices());
 }
 
-int Dim4VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Vertex4Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim4VertexModel::data(const QModelIndex& index, int role) const {
+QVariant Vertex4Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Vertex* item = tri->vertex(index.row());
+        Vertex<4>* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1057,7 +1048,7 @@ QVariant Dim4VertexModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim4VertexModel::headerData(int section,
+QVariant Vertex4Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -1076,7 +1067,7 @@ QVariant Dim4VertexModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim4VertexModel::toolTipForCol(int column) {
+QString Vertex4Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual vertex.  "
             "Vertices are numbered 0,1,2,...,<i>v</i>-1.</qt>");
@@ -1092,11 +1083,11 @@ QString Dim4VertexModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim4EdgeModel::caption() const {
+QString Edge4Model::caption() const {
     return tr("Edges (%1)").arg(tri->label().c_str());
 }
 
-QString Dim4EdgeModel::overview() const {
+QString Edge4Model::overview() const {
     return tr("<qt>Displays details of each edge of "
         "this triangulation.<p>"
         "The different edges are numbered from 0 upwards.  "
@@ -1107,19 +1098,19 @@ QString Dim4EdgeModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim4EdgeModel::rowCount(const QModelIndex& parent) const {
+int Edge4Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countEdges());
 }
 
-int Dim4EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Edge4Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim4EdgeModel::data(const QModelIndex& index, int role) const {
+QVariant Edge4Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Edge* item = tri->edge(index.row());
+        Edge<4>* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1153,7 +1144,7 @@ QVariant Dim4EdgeModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim4EdgeModel::headerData(int section,
+QVariant Edge4Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -1172,7 +1163,7 @@ QVariant Dim4EdgeModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim4EdgeModel::toolTipForCol(int column) {
+QString Edge4Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual edge.  "
             "Edges are numbered 0,1,2,...,<i>e</i>-1.</qt>");
@@ -1187,11 +1178,11 @@ QString Dim4EdgeModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim4TriangleModel::caption() const {
+QString Triangle4Model::caption() const {
     return tr("Triangles (%1)").arg(tri->label().c_str());
 }
 
-QString Dim4TriangleModel::overview() const {
+QString Triangle4Model::overview() const {
     return tr("<qt>Displays details of each triangle of "
         "this triangulation.<p>"
         "The different triangles are numbered from 0 upwards.  "
@@ -1202,19 +1193,19 @@ QString Dim4TriangleModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim4TriangleModel::rowCount(const QModelIndex& parent) const {
+int Triangle4Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countTriangles());
 }
 
-int Dim4TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Triangle4Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim4TriangleModel::data(const QModelIndex& index, int role) const {
+QVariant Triangle4Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Triangle* item = tri->triangle(index.row());
+        Triangle<4>* item = tri->triangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1242,7 +1233,7 @@ QVariant Dim4TriangleModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim4TriangleModel::headerData(int section,
+QVariant Triangle4Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -1261,7 +1252,7 @@ QVariant Dim4TriangleModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim4TriangleModel::toolTipForCol(int column) {
+QString Triangle4Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual triangle.  "
             "Triangles are numbered 0,1,2,...,<i>t</i>-1.</qt>");
@@ -1277,11 +1268,11 @@ QString Dim4TriangleModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim4TetrahedronModel::caption() const {
+QString Tetrahedron4Model::caption() const {
     return tr("Tetrahedra (%1)").arg(tri->label().c_str());
 }
 
-QString Dim4TetrahedronModel::overview() const {
+QString Tetrahedron4Model::overview() const {
     return tr("<qt>Displays details of each "
         "tetrahedron of this triangulation.<p>"
         "The different tetrahedra are numbered from 0 upwards.  "
@@ -1292,20 +1283,20 @@ QString Dim4TetrahedronModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim4TetrahedronModel::rowCount(const QModelIndex& parent) const {
+int Tetrahedron4Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countTetrahedra());
 }
 
-int Dim4TetrahedronModel::columnCount(const QModelIndex& /* unused parent*/)
+int Tetrahedron4Model::columnCount(const QModelIndex& /* unused parent*/)
         const {
     return 4;
 }
 
-QVariant Dim4TetrahedronModel::data(const QModelIndex& index, int role) const {
+QVariant Tetrahedron4Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Tetrahedron* item = tri->tetrahedron(index.row());
+        Tetrahedron<4>* item = tri->tetrahedron(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1333,7 +1324,7 @@ QVariant Dim4TetrahedronModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim4TetrahedronModel::headerData(int section,
+QVariant Tetrahedron4Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -1352,7 +1343,7 @@ QVariant Dim4TetrahedronModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim4TetrahedronModel::toolTipForCol(int column) {
+QString Tetrahedron4Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual tetrahedron.  "
             "Tetrahedra are numbered 0,1,2,...,<i>t</i>-1.</qt>");
@@ -1368,11 +1359,11 @@ QString Dim4TetrahedronModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim4ComponentModel::caption() const {
+QString Component4Model::caption() const {
     return tr("Components (%1)").arg(tri->label().c_str());
 }
 
-QString Dim4ComponentModel::overview() const {
+QString Component4Model::overview() const {
     return tr("<qt>Displays details of each "
         "connected component of this triangulation.<p>"
         "The different components are numbered from 0 upwards.  "
@@ -1382,19 +1373,19 @@ QString Dim4ComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim4ComponentModel::rowCount(const QModelIndex& parent) const {
+int Component4Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countComponents());
 }
 
-int Dim4ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int Component4Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
+QVariant Component4Model::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Component* item = tri->component(index.row());
+        Component<4>* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1418,7 +1409,7 @@ QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant Dim4ComponentModel::headerData(int section,
+QVariant Component4Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -1437,7 +1428,7 @@ QVariant Dim4ComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim4ComponentModel::toolTipForCol(int column) {
+QString Component4Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual component.  "
             "Components are numbered 0,1,2,...,<i>c</i>-1.</qt>");
@@ -1452,11 +1443,11 @@ QString Dim4ComponentModel::toolTipForCol(int column) {
     }
 }
 
-QString Dim4BoundaryComponentModel::caption() const {
+QString BoundaryComponent4Model::caption() const {
     return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
-QString Dim4BoundaryComponentModel::overview() const {
+QString BoundaryComponent4Model::overview() const {
     return tr("<qt>Displays details of each "
         "boundary component of this triangulation.  A boundary "
         "component may be: (i) a collection of adjacent boundary tetrahedra; "
@@ -1473,20 +1464,20 @@ QString Dim4BoundaryComponentModel::overview() const {
         "column of the table means.</qt>");
 }
 
-int Dim4BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
+int BoundaryComponent4Model::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
     return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
-int Dim4BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
+int BoundaryComponent4Model::columnCount(const QModelIndex& /* unused parent*/) const {
     return 4;
 }
 
-QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
+QVariant BoundaryComponent4Model::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4BoundaryComponent* item = tri->boundaryComponent(index.row());
+        BoundaryComponent<4>* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1501,7 +1492,7 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
                     tr("%1 tetrahedra").arg(item->countTetrahedra()));
             case 3:
                 if (item->isIdeal() || item->isInvalidVertex()) {
-                    Dim4Vertex* v = item->vertex(0);
+                    Vertex<4>* v = item->vertex(0);
                     QString ans;
                     for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
@@ -1512,7 +1503,7 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
                     QString ans;
                     for (unsigned long i = 0;
                             i < item->countTetrahedra(); i++) {
-                        const Dim4TetrahedronEmbedding& emb =
+                        const TetrahedronEmbedding<4>& emb =
                             item->tetrahedron(i)->front();
                         appendToList(ans, QString("%1 (%2)").
                             arg(emb.pentachoron()->index()).
@@ -1528,7 +1519,7 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
         return QVariant();
 }
 
-QVariant Dim4BoundaryComponentModel::headerData(int section,
+QVariant BoundaryComponent4Model::headerData(int section,
         Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
@@ -1547,7 +1538,7 @@ QVariant Dim4BoundaryComponentModel::headerData(int section,
         return QVariant();
 }
 
-QString Dim4BoundaryComponentModel::toolTipForCol(int column) {
+QString BoundaryComponent4Model::toolTipForCol(int column) {
     switch (column) {
         case 0: return tr("<qt>The number of the individual boundary "
             "component.  "

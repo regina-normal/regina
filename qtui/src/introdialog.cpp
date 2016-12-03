@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "packet/packet.h"
 #include "iconcache.h"
 #include "introdialog.h"
 #include "reginamain.h"

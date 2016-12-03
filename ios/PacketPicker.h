@@ -63,7 +63,7 @@ namespace regina {
 
 /**
  * Like fill: above, but supports two different packet types.
- * This is useful (for instance) when you wish to allow both NTriangulation and SnapPeaTriangulation.
+ * This is useful (for instance) when you wish to allow both Triangulation<3> and SnapPeaTriangulation.
  */
 - (void)fill:(regina::Packet*)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
 

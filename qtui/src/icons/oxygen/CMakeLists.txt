@@ -37,7 +37,6 @@ set (IMGS
   help-hint
   mail-attachment
   process-stop
-  run-build-file
   system-run
   text-x-c++src
   utilities-terminal

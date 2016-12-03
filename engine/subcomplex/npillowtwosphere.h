@@ -43,14 +43,10 @@
 #include "regina-core.h"
 #include "output.h"
 #include "maths/perm.h"
+#include "triangulation/forward.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
-
-template <int> class Triangulation;
-template <int, int> class Face;
-typedef Triangulation<3> NTriangulation;
-typedef Face<3, 2> NTriangle;
 
 /**
  * \weakgroup subcomplex
@@ -76,7 +72,7 @@ class REGINA_API NPillowTwoSphere :
         public ShortOutput<NPillowTwoSphere>,
         public boost::noncopyable {
     private:
-        NTriangle* triangle_[2];
+        Triangle<3>* triangle_[2];
             /**< The two triangles whose edges are joined. */
         Perm<4> triMapping_;
             /**< A mapping from vertices (0,1,2) of the first triangle to
@@ -98,7 +94,7 @@ class REGINA_API NPillowTwoSphere :
          * this must be either 0 or 1.
          * @return the corresponding triangle.
          */
-        NTriangle* triangle(int index) const;
+        Triangle<3>* triangle(int index) const;
         /**
          * Returns a permutation describing how the boundaries of the two
          * triangles are joined.
@@ -125,8 +121,8 @@ class REGINA_API NPillowTwoSphere :
          * pillow 2-sphere, or \c null if the given triangles do not
          * form a pillow 2-sphere.
          */
-        static NPillowTwoSphere* formsPillowTwoSphere(NTriangle* tri1,
-            NTriangle* tri2);
+        static NPillowTwoSphere* formsPillowTwoSphere(Triangle<3>* tri1,
+            Triangle<3>* tri2);
 
         /**
          * Writes a short text representation of this object to the
@@ -151,7 +147,7 @@ class REGINA_API NPillowTwoSphere :
 
 inline NPillowTwoSphere::NPillowTwoSphere() {
 }
-inline NTriangle* NPillowTwoSphere::triangle(int index) const {
+inline Triangle<3>* NPillowTwoSphere::triangle(int index) const {
     return triangle_[index];
 }
 inline Perm<4> NPillowTwoSphere::triangleMapping() const {

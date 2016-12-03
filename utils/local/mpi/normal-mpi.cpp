@@ -46,7 +46,7 @@
  */
 
 #include <surfaces/normalsurfaces.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <cstdio>
 #include <cstdlib>
@@ -361,7 +361,7 @@ int mainSlave() {
     char filename[MAX_FILENAME + 1];
     Packet* tree = 0;
     Packet* p;
-    NTriangulation* t;
+    Triangulation<3>* t;
     NormalSurfaces* s;
     long done;
 
@@ -391,8 +391,8 @@ int mainSlave() {
 
         done = 0;
         for (p = tree; p; p = p->nextTreePacket())
-            if (p->type() == PACKET_TRIANGULATION) {
-                t = static_cast<NTriangulation*>(p);
+            if (p->type() == PACKET_TRIANGULATION3) {
+                t = static_cast<Triangulation<3>*>(p);
                 s = NormalSurfaces::enumerate(t,
                     (quad ? NS_QUAD : NS_STANDARD));
                 out << t->size() << ' ' << s->size() << " \""

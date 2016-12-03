@@ -101,7 +101,7 @@ void ReginaMain::importFile(const PacketImporter& importer,
     regina::Packet* newTree = importer.importData(file, this);
 
     if (newTree) {
-        ImportDialog dlg(this, newTree, packetTree,
+        ImportDialog dlg(this, newTree, packetTree.get(),
             treeView->selectedPacket(), parentFilter,
             importer.useImportEncoding(), dialogTitle);
         if (dlg.validate() && dlg.exec() == QDialog::Accepted)

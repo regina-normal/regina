@@ -455,6 +455,22 @@ class Perm {
         std::string trunc(unsigned len) const;
 
         /**
+         * Resets the images of all integers from \a from onwards to the
+         * identity map.
+         *
+         * Specifically, for each \a i in the range <i>from</i>,...,<i>n</i>-1,
+         * this routine will ensure that <tt>image[i] == i</tt>.  The images of
+         * 0,1,...,<i>from</i>-1 will not be altered.
+         *
+         * \pre The images of <i>from</i>,...,<i>n</i>-1 are exactly
+         * <i>from</i>,...,<i>n</i>-1, but possibly in a different order.
+         *
+         * @param from the first integer whose image should be reset.
+         * This must be between 0 and \a n inclusive.
+         */
+        void clear(unsigned from);
+
+        /**
          * Extends a <i>k</i>-element permutation to an <i>n</i>-element
          * permutation, where 2 &le; \a k &lt; \a n.
          *

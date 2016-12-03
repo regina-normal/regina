@@ -57,7 +57,7 @@
 
 #include "foreign/casson.h"
 #include "foreign/orb.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -68,16 +68,16 @@ namespace {
 /**
  * Modified from Orb's cassonToTriangulation() routine.
  *
- * The routine was changed to be compatible with Regina's NTriangulation
+ * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure.
  */
-NTriangulation *cassonToNTriangulation( CassonFormat *cf )
+Triangulation<3> *cassonToTriangulation( CassonFormat *cf )
  {
  int i;
- NTriangulation *triang = new NTriangulation();
+ Triangulation<3> *triang = new Triangulation<3>();
  // since CassonFormat does not allow naming of triangulations,
  //  triang is given a name in the readOrb() function.
- //  I try to mimic NTriangulation::readSnapPea and
+ //  I try to mimic Triangulation<3>::readSnapPea and
  //  Orb::cassonToTriangulation as much as possible.
 
  // If the triangulation is empty, leave now before we start allocating
@@ -85,10 +85,10 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
  if (cf->num_tet == 0)
      return triang;
 
- NTetrahedron **tet = new NTetrahedron*[cf->num_tet]; // tet corresponds to tet_array in Orb
+ Tetrahedron<3> **tet = new Tetrahedron<3>*[cf->num_tet]; // tet corresponds to tet_array in Orb
  for (i=0; i<cf->num_tet; i++)
         tet[i]=triang->newTetrahedron();
- // now tet is a pointer to an array of NTetrahedrons,
+ // now tet is a pointer to an array of Tetrahedron<3>s,
  //  so for each tet[i] we need to run
  //   for (j=0; j<4; j++)
  //     tet[i]->join(j,tet[g[j]],Perm<4>(p[j][0],p[j][1],p[j][2],p[j][3],p[j][4]))
@@ -319,11 +319,11 @@ void freeCassonFormat( CassonFormat *cf )
 /**
  * Modified from Orb's readTriangulation() routine.
  *
- * The routine was changed to be compatible with Regina's NTriangulation
+ * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure, and to use standard C++ string and I/O streams
  * instead of Qt strings and I/O streams.
  */
-NTriangulation *readTriangulation( std::istream &ts) {
+Triangulation<3> *readTriangulation( std::istream &ts) {
     std::string line, file_id;
 
     getline(ts, line);
@@ -342,7 +342,7 @@ NTriangulation *readTriangulation( std::istream &ts) {
         return 0;
     }
 
-    NTriangulation* manifold = cassonToNTriangulation( cf );
+    Triangulation<3>* manifold = cassonToTriangulation( cf );
     freeCassonFormat( cf );
 
     manifold->setLabel(file_id);
@@ -351,7 +351,7 @@ NTriangulation *readTriangulation( std::istream &ts) {
 
 } // End anonymous namespace
 
-NTriangulation *readOrb(const char *filename) {
+Triangulation<3> *readOrb(const char *filename) {
     std::ifstream file(filename);
 
     if (! file) {

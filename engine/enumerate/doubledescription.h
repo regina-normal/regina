@@ -293,7 +293,8 @@ class REGINA_API DoubleDescription {
                  * hyperplanes that were intersected with the original cone
                  * (one hyperplane for each row of the matrix).
                  */
-                void recover(Ray& dest, const MatrixInt& subspace) const;
+                template <typename RayClass>
+                void recover(RayClass& dest, const MatrixInt& subspace) const;
         };
 
         /**

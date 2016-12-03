@@ -36,41 +36,41 @@ def printEuler(t, name):
 		'---', name
 
 	# Consistency check, while we're here.
-	eHom = regina.NHomologicalData(t).eulerChar()
+	eHom = regina.HomologicalData(t).eulerChar()
 	if eHom != t.eulerCharManifold():
-		print 'ERROR: NTriangulation::eulerCharManifold() and'
-		print '       NHomologicalData.eulerChar() disagree!'
+		print 'ERROR: Triangulation3::eulerCharManifold() and'
+		print '       HomologicalData.eulerChar() disagree!'
 
 print 'Euler characteristics for triangulation vs compact manifold:'
 
 # Empty:
-printEuler(regina.NTriangulation(), "Empty triangulation")
+printEuler(regina.Triangulation3(), "Empty triangulation")
 
 # Closed:
-printEuler(regina.NExampleTriangulation.lens(8,3), "L(8,3)")
-printEuler(regina.NExampleTriangulation.rp2xs1(), "RP2 x S1")
+printEuler(regina.Example3.lens(8,3), "L(8,3)")
+printEuler(regina.Example3.rp2xs1(), "RP2 x S1")
 
 # Bounded:
-printEuler(regina.NExampleTriangulation.solidKleinBottle(),
+printEuler(regina.Example3.solidKleinBottle(),
 	"Solid Klein bottle")
-printEuler(regina.NExampleTriangulation.lst(3,4), "LST(3,4,7)")
+printEuler(regina.Example3.lst(3,4), "LST(3,4,7)")
 
-tri = regina.NTriangulation()
+tri = regina.Triangulation3()
 tri.newTetrahedron()
 printEuler(tri, "Solid ball")
 
 # Ideal:
-printEuler(regina.NExampleTriangulation.figureEight(),
+printEuler(regina.Example3.figureEight(),
 	"Figure eight knot complement")
-printEuler(regina.NExampleTriangulation.whiteheadLink(),
+printEuler(regina.Example3.whiteheadLink(),
 	"Whitehead link complement")
-printEuler(regina.NExampleTriangulation.gieseking(),
+printEuler(regina.Example3.gieseking(),
 	"Gieseking manifold")
-printEuler(regina.NExampleTriangulation.cuspedGenusTwoTorus(),
+printEuler(regina.Example3.cuspedGenusTwoTorus(),
 	"Cusped genus two torus")
 
 # Edge joined to itself:
-tri = regina.NTriangulation()
+tri = regina.Triangulation3()
 t = tri.newTetrahedron()
 t.join(0, t, regina.Perm4(1,0,3,2))
 t.join(2, t, regina.Perm4(1,0,3,2))
@@ -81,14 +81,14 @@ tri.barycentricSubdivision()
 printEuler(tri, "Two projective plane cusps")
 
 # Invalid boundary vertex links:
-tri = regina.NTriangulation()
+tri = regina.Triangulation3()
 t = tri.newTetrahedron()
 s = tri.newTetrahedron()
 t.join(3, s, regina.Perm4(0,1,2,3))
 t.join(2, s, regina.Perm4(0,3,1,2))
 printEuler(tri, "Pinched solid torus")
 
-tri = regina.NTriangulation()
+tri = regina.Triangulation3()
 t = tri.newTetrahedron()
 s = tri.newTetrahedron()
 t.join(3, s, regina.Perm4(0,1,2,3))

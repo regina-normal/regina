@@ -41,11 +41,9 @@
 
 #include "regina-core.h"
 #include "subcomplex/nlayeredchain.h"
+#include "triangulation/forward.h"
 
 namespace regina {
-
-template <int> class Component;
-typedef Component<3> NComponent;
 
 /**
  * \weakgroup subcomplex
@@ -117,10 +115,10 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
          * layered chain pair, or \c null if the given component is
          * not a layered chain pair.
          */
-        static NLayeredChainPair* isLayeredChainPair(const NComponent* comp);
+        static NLayeredChainPair* isLayeredChainPair(const Component<3>* comp);
 
-        NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        Manifold* manifold() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

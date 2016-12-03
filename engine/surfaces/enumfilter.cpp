@@ -32,7 +32,7 @@
 
 #include <vector>
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -46,7 +46,7 @@ NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     // Find all surfaces that have a compatible partner.
-    std::vector<NNormalSurface*>::const_iterator first, second;
+    std::vector<NormalSurface*>::const_iterator first, second;
     for (first = surfaces.begin(); first != surfaces.end(); ++first) {
         for (second = surfaces.begin(); second != surfaces.end();
                 ++second) {
@@ -74,8 +74,8 @@ NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
 
     // Collect all the surfaces that we might care about.
     // This means non-empty, connected and compact.
-    std::vector<NNormalSurface*> interesting;
-    for (std::vector<NNormalSurface*>::const_iterator it = surfaces.begin();
+    std::vector<NormalSurface*> interesting;
+    for (std::vector<NormalSurface*>::const_iterator it = surfaces.begin();
             it != surfaces.end(); ++it) {
         if ((*it)->isEmpty())
             continue;
@@ -88,7 +88,7 @@ NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
     }
 
     // Find all surfaces that have a disjoint partner.
-    std::vector<NNormalSurface*>::iterator first, second;
+    std::vector<NormalSurface*>::iterator first, second;
     for (first = interesting.begin(); first != interesting.end(); ++first) {
         for (second = interesting.begin(); second != interesting.end();
                 ++second) {
@@ -115,11 +115,11 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
-    NTriangulation* t;
+    Triangulation<3>* t;
 #ifdef DEBUG
     int which = 0;
 #endif
-    for (std::vector<NNormalSurface*>::const_iterator it = surfaces.begin();
+    for (std::vector<NormalSurface*>::const_iterator it = surfaces.begin();
             it != surfaces.end(); ++it) {
 #ifdef DEBUG
         std::cout << "Processing surface " << which++ << "..." << std::endl;

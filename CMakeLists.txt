@@ -304,11 +304,19 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "http://www.gnu.org/s/libiconv/"
   TRUE)
 
-FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python regex)
+FIND_PACKAGE(Jansson)
+INCLUDE_DIRECTORIES(${JANSSON_INCLUDE_DIR})
+MACRO_LOG_FEATURE(JANSSON_FOUND
+  "Jansson"
+  "Essential: JSON support"
+  "http://www.digip.org/jansson/"
+  TRUE)
+
+FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
   "Boost (>= 1.55)"
-  "Essential: C++ components (iostreams, python, regex)"
+  "Essential: C++ components (iostreams, python)"
   "http://www.boost.org/"
   TRUE)
 
@@ -348,7 +356,7 @@ IF (QDBM)
   PKG_CHECK_MODULES(TOKYOCABINET qdbm)
   MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
     "QDBM"
-    "Essential: lighweight database library for accessing census data"
+    "Essential: lightweight database library for census data"
     "http://fallabs.com/qdbm/"
     TRUE)
   SET (QDBM_AS_TOKYOCABINET TRUE)
@@ -357,7 +365,7 @@ ELSE (QDBM)
   PKG_CHECK_MODULES(TOKYOCABINET tokyocabinet)
   MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
     "Tokyo Cabinet"
-    "Essential: lighweight database library for accessing census data"
+    "Essential: lightweight database library for census data"
     "http://fallabs.com/tokyocabinet/"
     TRUE)
   SET (DB_EXT "tdb")
@@ -564,13 +572,6 @@ ELSE(DISABLE_GUI)
     "http://graphviz.org/"
     REGINA_MANDATORY)
 
-  FIND_PACKAGE(SourceHighlight)
-  MACRO_LOG_FEATURE(SRCHILITE_FOUND
-    "Source-highlight"
-    "Syntax highlighting"
-    "http://www.gnu.org/software/src-highlite/"
-    REGINA_MANDATORY)
-
   if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
     set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
     find_package(SharedMimeInfo)
@@ -643,7 +644,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${PACKAGE_VERSION_MINOR})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
   "Regina: Software for low-dimensional topology")
 set(CPACK_PACKAGE_VENDOR "The Regina development team")
-set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.txt)
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
 set(CPACK_GENERATOR TGZ)
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "regina-${PACKAGE_VERSION}")
 set(CPACK_SOURCE_GENERATOR TGZ)

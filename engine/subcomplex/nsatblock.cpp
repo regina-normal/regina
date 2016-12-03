@@ -51,8 +51,8 @@ NSatBlock::NSatBlock(const NSatBlock& cloneMe) : nAnnuli_(cloneMe.nAnnuli_),
     }
 }
 
-void NSatBlock::transform(const NTriangulation* originalTri,
-        const NIsomorphism* iso, NTriangulation* newTri) {
+void NSatBlock::transform(const Triangulation<3>* originalTri,
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     for (unsigned i = 0; i < nAnnuli_; i++)
         annulus_[i].transform(originalTri, iso, newTri);
 }
@@ -99,7 +99,7 @@ std::string NSatBlock::abbr(bool tex) const {
     return s.str();
 }
 
-bool NSatBlock::isBad(NTetrahedron* t, const TetList& list) {
+bool NSatBlock::isBad(Tetrahedron<3>* t, const TetList& list) {
     if (list.find(t) != list.end())
         return true;
     return false;

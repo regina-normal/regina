@@ -74,6 +74,11 @@ inline Perm<2> Perm<2>::contract(Perm<4> p) {
     return Perm<2>(static_cast<Code>(p.permCode2() < 6 ? 0 : 1));
 }
 
+inline void Perm<2>::clear(unsigned from) {
+    if (from == 0)
+        code_ = 0;
+}
+
 template <>
 inline Perm<3> Perm<3>::extend(Perm<2> p) {
     return Perm<3>(static_cast<Code>(
@@ -93,6 +98,11 @@ inline Perm<3> Perm<3>::contract(Perm<4> p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
     Perm<4>::Code c = p.permCode2();
     return Perm<3>::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
+}
+
+inline void Perm<3>::clear(unsigned from) {
+    if (from <= 1)
+        code_ = code012;
 }
 
 template <>
@@ -123,6 +133,13 @@ inline Perm<4> Perm<4>::contract(Perm<5> p) {
     Perm<5>::Code code = p.permCode();
     return Perm<4>(code & 0x03, (code >> 3) & 0x03,
         (code >> 6) & 0x03, (code >> 9) & 0x03);
+}
+
+inline void Perm<4>::clear(unsigned from) {
+    if (from <= 1)
+        code_ = 0;
+    else if (from == 2)
+        code_ = (imageTable[code_][0] == 0 ? 0 /* 0123 */ : 7 /* 1023 */);
 }
 
 template <>
@@ -156,6 +173,13 @@ Perm<5> Perm<5>::contract(Perm<k> p) {
         c |= (static_cast<Code>(p[i]) << (imageBits * i));
 
     return Perm<5>(c);
+}
+
+inline void Perm<5>::clear(unsigned from) {
+    for (int i = from; i < 5; ++i) {
+        code &= ~(7 << (imageBits * i));
+        code |= (static_cast<Code>(i) << (imageBits * i));
+    }
 }
 
 template <int n>
@@ -192,6 +216,14 @@ Perm<n> Perm<n>::contract(Perm<k> p) {
         c |= (static_cast<Code>(p[i]) << (imageBits * i));
 
     return Perm<n>(c);
+}
+
+template <int n>
+inline void Perm<n>::clear(unsigned from) {
+    for (int i = from; i < n; ++i) {
+        code_ &= ~(imageMask_ << (imageBits * i));
+        code_ |= (static_cast<Code>(i) << (imageBits * i));
+    }
 }
 
 } // namespace regina

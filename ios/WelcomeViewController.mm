@@ -197,7 +197,7 @@ public:
 
 #pragma mark - Welcome view controller
 
-@interface WelcomeViewController () <UIActionSheetDelegate>
+@interface WelcomeViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *icon;
 @end
 
@@ -239,13 +239,6 @@ public:
             [self presentViewController:alert animated:YES completion:nil];
         }
     }
-}
-
-#pragma mark Action Sheet
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != actionSheet.cancelButtonIndex)
-        [self runTestSuite:nil];
 }
 
 @end

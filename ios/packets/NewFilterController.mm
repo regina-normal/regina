@@ -33,8 +33,7 @@
 #import "NewFilterController.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "surfaces/sfcombination.h"
-#import "surfaces/sfproperties.h"
+#import "surfaces/surfacefilter.h"
 
 #define KEY_LAST_TYPE @"NewFilterType"
 
@@ -74,11 +73,11 @@ static NSArray* whichText;
     regina::Packet* ans;
     switch (self.whichControl.selectedSegmentIndex) {
         case 0:
-            ans = new regina::NSurfaceFilterProperties;
+            ans = new regina::SurfaceFilterProperties;
             ans->setLabel("Filter");
             break;
         case 1:
-            ans = new regina::NSurfaceFilterCombination;
+            ans = new regina::SurfaceFilterCombination;
             ans->setLabel("Combination filter");
             break;
         default:

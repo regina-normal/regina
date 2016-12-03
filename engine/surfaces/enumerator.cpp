@@ -42,7 +42,7 @@
 #include "progress/progresstracker.h"
 #include "surfaces/coordregistry.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -54,7 +54,7 @@ Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
 NormalSurfaces* NormalSurfaces::enumerate(
-        NTriangulation* owner, NormalCoords coords,
+        Triangulation<3>* owner, NormalCoords coords,
         NormalList which, NormalAlg algHints,
         ProgressTracker* tracker) {
     NormalSurfaces* list = new NormalSurfaces(
@@ -557,7 +557,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         std::vector<std::vector<mpz_class> >::const_iterator hlit;
         EnumConstraints::const_iterator eit;
         std::set<unsigned long>::const_iterator sit;
-        NNormalSurfaceVector* v;
+        NormalSurfaceVector* v;
         LargeInteger tmpInt;
 
         const std::vector<std::vector<mpz_class> > basis =
@@ -583,7 +583,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
             if (! broken) {
                 // Insert a new surface.
                 v = forCoords(list_->coords_,
-                    NewFunction<NNormalSurfaceVector>(), 0, dim);
+                    NewFunction<NormalSurfaceVector>(), 0, dim);
                 if (! v) {
                     // Coordinate system not recognised.
                     // Return an empty list to indicate that something broke.
@@ -598,7 +598,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
                     tmpInt.tryReduce();
                     v->setElement(i, tmpInt);
                 }
-                list_->surfaces.push_back(new NNormalSurface(triang_, v));
+                list_->surfaces.push_back(new NormalSurface(triang_, v));
             }
         }
 

@@ -56,7 +56,7 @@
 #include <cstdio>
 #include <fstream>
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #define MAXLEN 1000
 
@@ -74,7 +74,7 @@ int main() {
         if (feof(stdin))
             break;
 
-        regina::NTriangulation* tri = regina::NTriangulation::fromIsoSig(input);
+        regina::Triangulation<3>* tri = regina::Triangulation<3>::fromIsoSig(input);
         regina::NormalSurfaces* s;
 
         s = regina::NormalSurfaces::enumerate(tri, regina::NS_STANDARD);

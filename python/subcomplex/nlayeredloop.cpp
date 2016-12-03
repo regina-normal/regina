@@ -32,8 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredloop.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/nedge.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using namespace boost::python;

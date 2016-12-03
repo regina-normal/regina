@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<reginadata engine="5.0">
+<packet label="Sample Data File"
+	type="Container" typeid="1"
+	parent="">
+<packet label="Read Me"
+	type="Text" typeid="2"
+	parent="Sample Data File">
+  <text>Welcome to Regina!</text>
+</packet> <!-- Read Me (Text) -->
+<packet label="3-Manifolds"
+	type="Container" typeid="1"
+	id="UE9mmKV/AAA="
+	parent="Sample Data File">
+<packet label="Layered Solid Torus"
+	type="3-Manifold Triangulation" typeid="3"
+	parent="3-Manifolds">
+  <tetrahedra ntet="4">
+    <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
+    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
+    <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
+    <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
+  </tetrahedra>
+  <H1><abeliangroup rank="1"> </abeliangroup></H1>
+</packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
+<packet label="RP² x S¹"
+	type="3-Manifold Triangulation" typeid="3"
+	parent="3-Manifolds">
+  <tetrahedra ntet="3">
+    <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
+    <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
+    <tet desc=""> 0 114 0 156 1 39 1 201 </tet>
+  </tetrahedra>
+  <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
+  <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
+  <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
+  <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
+<packet label="Note"
+	type="Text" typeid="2"
+	parent="RP² x S¹">
+  <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
+</packet> <!-- Note (Text) -->
+</packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
+<packet label="Figure 8 Knot Complement"
+	type="SnapPea Triangulation" typeid="16"
+	parent="3-Manifolds">
+  <snappea>% Triangulation
+m004
+geometric_solution  2.02988321
+oriented_manifold
+CS_unknown
+
+1 0
+    torus   0.000000000000   0.000000000000
+
+2
+   1    1    1    1 
+ 0132 1230 2310 2103
+   0    0    0    0 
+  0  0  0  0  0  0  0  0 -1  1  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0 -1  0  1  1  0 -1  0  0  1  0 -1 -1  0  1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.866025403784
+
+   0    0    0    0 
+ 0132 3201 3012 2103
+   0    0    0    0 
+  0  0  0  0  0  0  0  0  0  0  0  0  1  0 -1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0 -1  0  1 -1  0  1  0  1  0  0 -1  0  1 -1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.866025403784
+
+</snappea>
+<packet label="Angle Structures"
+	type="Angle Structure List" typeid="9"
+	parent="Figure 8 Knot Complement">
+  <angleparams tautonly="F"/>
+  <struct len="7"> 1 1 3 1 6 1 </struct>
+  <struct len="7"> 2 1 5 1 6 1 </struct>
+  <struct len="7"> 0 1 4 1 6 1 </struct>
+  <struct len="7"> 0 1 2 1 3 2 6 2 </struct>
+  <struct len="7"> 1 2 4 1 5 1 6 2 </struct>
+  <spanstrict value="T"/>
+  <spantaut value="T"/>
+</packet> <!-- Angle Structures (Angle Structure List) -->
+</packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
+</packet> <!-- 3_Manifolds (Container) -->
+<packet label="4-Manifolds"
+	type="Container" typeid="1"
+	parent="Sample Data File">
+<packet label="Twisted S³ x~ S¹"
+	type="4-Manifold Triangulation" typeid="11"
+	parent="4-Manifolds">
+  <pentachora npent="2">
+    <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
+    <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>
+  </pentachora>
+<packet label="Normal Hypersurfaces"
+	type="Normal Hypersurface List" typeid="13"
+	parent="Twisted S³ x~ S¹">
+  <params type="5" algorithm="32" flavourid="0"
+	flavour="Standard normal (tet-prism)"/>
+  <hypersurface len="30" name=""> 10 1 25 1 </hypersurface>
+  <hypersurface len="30" name=""> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
+  <hypersurface len="30" name=""> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
+  <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
+  <hypersurface len="30" name=""> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
+</packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
+</packet> <!-- Twisted S³ x~ S¹ (4_Manifold Triangulation) -->
+</packet> <!-- 4_Manifolds (Container) -->
+<packet label="2-Manifolds"
+	type="Container" typeid="1"
+	parent="Sample Data File">
+<packet label="Klein Bottle, version 1"
+	type="2-Manifold Triangulation" typeid="15"
+	parent="2-Manifolds">
+  <triangles ntriangles="2">
+    <triangle desc=""> 1 1 1 5 1 0 </triangle>
+    <triangle desc=""> 0 1 0 5 0 0 </triangle>
+  </triangles>
+</packet> <!-- Klein Bottle, version 1 (2_Manifold Triangulation) -->
+<packet label="Klein Bottle, version 2"
+	type="2-Manifold Triangulation" typeid="15"
+	parent="2-Manifolds">
+  <triangles ntriangles="2">
+    <triangle desc=""> 0 4 1 0 0 2 </triangle>
+    <triangle desc=""> 1 4 0 0 1 2 </triangle>
+  </triangles>
+</packet> <!-- Klein Bottle, version 2 (2_Manifold Triangulation) -->
+</packet> <!-- 2_Manifolds (Container) -->
+<packet label="Normal Surface Filters"
+	type="Container" typeid="1"
+	parent="Sample Data File">
+<packet label="Tori and Annuli"
+	type="Surface Filter" typeid="8"
+	parent="Tori, Annuli and Discs">
+  <filter type="Filter by basic properties" typeid="1">
+    <euler> 0 </euler>
+    <orbl value="T-"/>
+    <compact value="T-"/>
+  </filter>
+</packet> <!-- Tori and Annuli (Surface Filter) -->
+</packet> <!-- Normal Surface Filters (Container) -->
+<packet label="Python Script"
+	type="Script" typeid="7"
+	parent="Sample Data File">
+  <var name="tri" valueid="UE9mmKV/AAA=" value="3-Manifolds"/>
+  <text># This Python script runs through all 3-manifold triangulations in this file
+# and prints the first homology of each.
+#
+# See the Regina handbook for more elaborate sample Python sessions.
+
+# Output the homology of each triangulation.
+t = tri.firstChild()
+while t != None:
+	print t.label() + &quot;:&quot;, t.homology()
+	t = t.nextSibling()
+</text>
+</packet> <!-- Python Script (Script) -->
+</packet> <!-- Sample Data File (Container) -->
+</reginadata>

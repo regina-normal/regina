@@ -30,12 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nsfs.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/sfs.h"
 #include "maths/matrix.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayeredchainpair.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -49,7 +48,7 @@ NLayeredChainPair* NLayeredChainPair::clone() const {
 }
 
 NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
-        const NComponent* comp) {
+        const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
@@ -65,17 +64,17 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     // a component).
 
     // Start with tetrahedron 0.  This must belong to *some* chain.
-    NTetrahedron* base = comp->tetrahedron(0);
+    Tetrahedron<3>* base = comp->tetrahedron(0);
 
     NLayeredChain* first;
     NLayeredChain* second;
 
     // Note that we only need check permutations in S3 since we can
     // arbitrarily assign the role of one vertex in the tetrahedron.
-    NTetrahedron* firstBottom;
-    NTetrahedron* firstTop;
-    NTetrahedron* secondBottom;
-    NTetrahedron* secondTop;
+    Tetrahedron<3>* firstBottom;
+    Tetrahedron<3>* firstTop;
+    Tetrahedron<3>* secondBottom;
+    Tetrahedron<3>* secondTop;
     Perm<4> firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
 
     for (int p = 0; p < 6; p++) {
@@ -187,8 +186,8 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     return 0;
 }
 
-NManifold* NLayeredChainPair::manifold() const {
-    NSFSpace* ans = new NSFSpace();
+Manifold* NLayeredChainPair::manifold() const {
+    SFSpace* ans = new SFSpace();
 
     ans->insertFibre(2, -1);
     ans->insertFibre(chain_[0]->index() + 1, 1);
@@ -198,7 +197,7 @@ NManifold* NLayeredChainPair::manifold() const {
     return ans;
 }
 
-NAbelianGroup* NLayeredChainPair::homology() const {
+AbelianGroup* NLayeredChainPair::homology() const {
     // The first homology group can be obtained from the matrix:
     //
     //   [  1  -1   1 ]
@@ -207,7 +206,7 @@ NAbelianGroup* NLayeredChainPair::homology() const {
     //
     // This is established simply by examining the edges on the boundary
     // of each layered chain.
-    NAbelianGroup* ans = new NAbelianGroup();
+    AbelianGroup* ans = new AbelianGroup();
     MatrixInt mat(3, 3);
     mat.initialise(1);
     mat.entry(0, 1) = mat.entry(2, 2) = -1;

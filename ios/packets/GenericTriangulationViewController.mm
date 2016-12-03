@@ -33,7 +33,7 @@
 #import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "GenericTriangulationViewController.h"
-#import "generic/triangulation.h"
+#import "triangulation/generic.h"
 
 class GenericTriangulationHelper {
 public:
@@ -83,7 +83,7 @@ public:
     }
 };
 
-@interface GenericTriangulationViewController ()
+@interface GenericTriViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *dimension;
 @property (weak, nonatomic) IBOutlet UILabel *type;
 @property (weak, nonatomic) IBOutlet UILabel *fVector;
@@ -91,7 +91,7 @@ public:
 @property (assign, nonatomic) regina::Packet* packet;
 @end
 
-@implementation GenericTriangulationViewController
+@implementation GenericTriViewController
 
 - (void)viewWillAppear:(BOOL)animated
 {

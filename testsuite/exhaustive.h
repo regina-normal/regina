@@ -33,6 +33,8 @@
 #ifndef __EXHAUSTIVE_H
 #define __EXHAUSTIVE_H
 
+#include "triangulation/forward.h"
+
 /**
  * The functions in this header allow you to run a test over all
  * triangulations from a census.  Each triangulation will have its
@@ -43,22 +45,18 @@
  * used; this is appropriate when the corresponding test is extremely slow.
  */
 
-namespace regina {
-    template <int> class Triangulation;
-}
+typedef void (*Triangulation2TestFunction)(regina::Triangulation<2>*);
+typedef void (*Triangulation3TestFunction)(regina::Triangulation<3>*);
+typedef void (*Triangulation4TestFunction)(regina::Triangulation<4>*);
 
-typedef void (*Dim2TriangulationTestFunction)(regina::Triangulation<2>*);
-typedef void (*NTriangulationTestFunction)(regina::Triangulation<3>*);
-typedef void (*Dim4TriangulationTestFunction)(regina::Triangulation<4>*);
+void runCensusMinClosed(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllClosed(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllBounded(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllIdeal(Triangulation3TestFunction f, bool small_ = false);
+void runCensusAllNoBdry(Triangulation3TestFunction f, bool small_ = false);
 
-void runCensusMinClosed(NTriangulationTestFunction f, bool small_ = false);
-void runCensusAllClosed(NTriangulationTestFunction f, bool small_ = false);
-void runCensusAllBounded(NTriangulationTestFunction f, bool small_ = false);
-void runCensusAllIdeal(NTriangulationTestFunction f, bool small_ = false);
-void runCensusAllNoBdry(NTriangulationTestFunction f, bool small_ = false);
-
-void runCensusAllClosed(Dim4TriangulationTestFunction f);
-void runCensusAllBounded(Dim4TriangulationTestFunction f);
-void runCensusAllNoBdry(Dim4TriangulationTestFunction f);
+void runCensusAllClosed(Triangulation4TestFunction f);
+void runCensusAllBounded(Triangulation4TestFunction f);
+void runCensusAllNoBdry(Triangulation4TestFunction f);
 
 #endif

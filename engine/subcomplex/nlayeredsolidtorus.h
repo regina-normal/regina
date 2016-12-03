@@ -44,13 +44,6 @@
 
 namespace regina {
 
-template <int> class Isomorphism;
-template <int> class Simplex;
-template <int> class Triangulation;
-typedef Isomorphism<3> NIsomorphism;
-typedef Simplex<3> NTetrahedron;
-typedef Triangulation<3> NTriangulation;
-
 /**
  * \weakgroup subcomplex
  * @{
@@ -74,7 +67,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
         size_t nTetrahedra;
             /**< The number of tetrahedra in this torus. */
 
-        NTetrahedron* base_;
+        Tetrahedron<3>* base_;
             /**< The tetrahedron that is glued to itself at the base of
                  this torus. */
         int baseEdge_[6];
@@ -89,7 +82,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
             /**< The two faces of the base tetrahedron that are glued to
                  each other. */
 
-        NTetrahedron* topLevel_;
+        Tetrahedron<3>* topLevel_;
             /**< The tetrahedron on the boundary of this torus. */
         int topEdge_[3][2];
             /**< Returns the edges of the top tetrahedron that the meridinal
@@ -128,7 +121,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          *
          * @return the base tetrahedron.
          */
-        NTetrahedron* base() const;
+        Tetrahedron<3>* base() const;
         /**
          * Returns the requested edge of the base tetrahedron belonging
          * to the given group.  The layering identifies the six edges
@@ -186,7 +179,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          *
          * @return the top level tetrahedron.
          */
-        NTetrahedron* topLevel() const;
+        Tetrahedron<3>* topLevel() const;
         /**
          * Returns the number of times the meridinal disc of the torus
          * cuts the top level tetrahedron edges in the given group.
@@ -276,7 +269,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * @return a newly created triangulation in which this layered
          * solid torus has been flattened to a Mobius band.
          */
-        NTriangulation* flatten(const NTriangulation* original,
+        Triangulation<3>* flatten(const Triangulation<3>* original,
                 int mobiusBandBdry) const;
 
         /**
@@ -300,8 +293,8 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * @param newTri the triangulation to be referenced by the updated
          * layered solid torus.
          */
-        void transform(const NTriangulation* originalTri,
-                const NIsomorphism* iso, NTriangulation* newTri);
+        void transform(const Triangulation<3>* originalTri,
+                const Isomorphism<3>* iso, Triangulation<3>* newTri);
 
         /**
          * Determines if the given tetrahedron forms the base of a
@@ -319,7 +312,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * not the base of a layered solid torus.
          */
         static NLayeredSolidTorus* formsLayeredSolidTorusBase(
-            NTetrahedron* tet);
+            Tetrahedron<3>* tet);
 
         /**
          * Determines if the given tetrahedron forms the top level
@@ -349,7 +342,7 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * its two faces do not form the top level of a layered solid torus.
          */
         static NLayeredSolidTorus* formsLayeredSolidTorusTop(
-            NTetrahedron* tet, unsigned topFace1, unsigned topFace2);
+            Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
 
         /**
          * Determines if the given triangulation component forms a
@@ -366,10 +359,10 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * layered solid torus, or \c null if the given component is not
          * a layered solid torus.
          */
-        static NLayeredSolidTorus* isLayeredSolidTorus(NComponent* comp);
+        static NLayeredSolidTorus* isLayeredSolidTorus(Component<3>* comp);
 
-        NManifold* manifold() const;
-        NAbelianGroup* homology() const;
+        Manifold* manifold() const;
+        AbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -415,7 +408,7 @@ inline size_t NLayeredSolidTorus::size() const {
     return nTetrahedra;
 }
 
-inline NTetrahedron* NLayeredSolidTorus::base() const {
+inline Tetrahedron<3>* NLayeredSolidTorus::base() const {
     return base_;
 }
 inline int NLayeredSolidTorus::baseEdge(int group, int index) const {
@@ -429,7 +422,7 @@ inline int NLayeredSolidTorus::baseFace(int index) const {
     return baseFace_[index];
 }
 
-inline NTetrahedron* NLayeredSolidTorus::topLevel() const {
+inline Tetrahedron<3>* NLayeredSolidTorus::topLevel() const {
     return topLevel_;
 }
 inline unsigned long NLayeredSolidTorus::meridinalCuts(int group) const {

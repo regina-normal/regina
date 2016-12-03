@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "reginaprefset.h"
@@ -39,7 +39,7 @@
 
 #include <climits>
 
-NoSnapPea::NoSnapPea(regina::NTriangulation* useTri, QWidget* parent,
+NoSnapPea::NoSnapPea(regina::Triangulation<3>* useTri, QWidget* parent,
         bool delayedRefresh) :
         QLabel(parent), tri(useTri) {
     setWordWrap(true);

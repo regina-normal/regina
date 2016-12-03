@@ -46,13 +46,13 @@
  *  no need for end users to include it explicitly.
  */
 
-#ifndef __HSFLAVOURREGISTRY_IMPL_H
+#ifndef __HSCOORDREGISTRY_IMPL_H
 #ifndef __DOXYGEN
-#define __HSFLAVOURREGISTRY_IMPL_H
+#define __HSCOORDREGISTRY_IMPL_H
 #endif
 
 #include "hypersurface/hscoordregistry.h"
-#include "hypersurface/nhsstandard.h"
+#include "hypersurface/hsvectorstandard.h"
 
 namespace regina {
 
@@ -84,5 +84,5 @@ forCoords(HyperCoords coords, FunctionObject&& func, Args&&... args) {
 
 } // namespace regina
 
-#endif // include guard __HSFLAVOURREGISTRY_IMPL_H
+#endif // include guard __HSCOORDREGISTRY_IMPL_H
 

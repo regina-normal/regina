@@ -12,7 +12,7 @@
 
 # Create a new (3,4,7) layered solid torus.  This is a 3-tetrahedron
 # triangulation of a solid torus.
-t = NTriangulation()
+t = Triangulation3()
 t.insertLayeredSolidTorus(3,4)
 print t
 

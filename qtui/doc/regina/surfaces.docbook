@@ -135,7 +135,7 @@
       <para>
        This is the triangulation that will contain your normal (hyper)surfaces.
        For a normal surface list, you may chose either one of &regina;'s native
-       <link linkend="packet-triangulation">3-manifold triangulation
+       <link linkend="packet-triangulation3">3-manifold triangulation
        packets</link>, or one of its hybrid
        <link linkend="packet-snappea">&snappea; triangulation packets</link>.
        For a normal hypersurface list, you must choose a 4-manifold
@@ -605,7 +605,7 @@
             3-manifolds, and only for
             <link linkend="packet-snappea">&snappea; triangulation
             packets</link> (because &regina;'s native
-            <link linkend="packet-triangulation">triangulation packets</link>
+            <link linkend="packet-triangulation3">triangulation packets</link>
             do not provide a meridian and longitude on each cusp).
            </para>
            <para>

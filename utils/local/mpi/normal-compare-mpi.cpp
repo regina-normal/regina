@@ -62,7 +62,7 @@
  */
 
 #include <surfaces/normalsurfaces.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <cstdio>
 #include <cstdlib>
@@ -300,7 +300,7 @@ int mainController() {
     }
 
     Packet* p = tree;
-    while (p && p->type() != PACKET_TRIANGULATION)
+    while (p && p->type() != PACKET_TRIANGULATION3)
         p = p->nextTreePacket();
     long currTri = 0;
 
@@ -308,7 +308,7 @@ int mainController() {
         ctrlFarmTask(currTri);
 
         p = p->nextTreePacket();
-        while (p && p->type() != PACKET_TRIANGULATION)
+        while (p && p->type() != PACKET_TRIANGULATION3)
             p = p->nextTreePacket();
 
         ++currTri;
@@ -374,11 +374,11 @@ int mainSlave() {
     }
 
     Packet* p = tree;
-    while (p && p->type() != PACKET_TRIANGULATION)
+    while (p && p->type() != PACKET_TRIANGULATION3)
         p = p->nextTreePacket();
     long currTri = 0;
 
-    NTriangulation* t;
+    Triangulation<3>* t;
     NormalSurfaces* q;
     NormalSurfaces* s;
 
@@ -406,7 +406,7 @@ int mainSlave() {
 
         while (p && currTri < useTri) {
             p = p->nextTreePacket();
-            while (p && p->type() != PACKET_TRIANGULATION)
+            while (p && p->type() != PACKET_TRIANGULATION3)
                 p = p->nextTreePacket();
 
             ++currTri;
@@ -416,7 +416,7 @@ int mainSlave() {
             continue;
         }
 
-        t = static_cast<NTriangulation*>(p);
+        t = static_cast<Triangulation<3>*>(p);
         if ((! t->isValid()) || t->isIdeal()) {
             // We only care about valid triangulations with no ideal vertices.
             slaveSendResult(0, 0, 0, 0, 0);

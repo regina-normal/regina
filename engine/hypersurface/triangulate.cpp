@@ -31,17 +31,15 @@
  **************************************************************************/
 
 #include <cassert>
-#include "dim4/dim4edge.h"
-#include "dim4/dim4triangle.h"
-#include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurface.h"
-#include "surfaces/ndisc.h"
-#include "triangulation/ntriangulation.h"
+#include "hypersurface/normalhypersurface.h"
+#include "surfaces/disc.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 namespace regina {
 
 /**
- * This file contains the implementation for NNormalHypersurface::triangulate().
+ * This file contains the implementation for NormalHypersurface::triangulate().
  *
  * As part of the triangulation process, we track the following information:
  *
@@ -81,7 +79,7 @@ namespace {
      * tetrahedron of that normal piece.
      */
     struct TriangleMap {
-        NTetrahedron* dest;
+        Tetrahedron<3>* dest;
         Perm<4> vertexMap;
     };
 
@@ -122,14 +120,14 @@ namespace {
      * into the position that really belongs to vertex y.
      */
     void adjustQuadMaps(TriangleMap& map0, TriangleMap& map1,
-            Perm<4> err, NTriangulation* tri) {
+            Perm<4> err, Triangulation<3>* tri) {
         if (err.isIdentity()) {
             // The mappings are already correct.
             return;
         }
 
-        NTetrahedron* oldd0 = map0.dest;
-        NTetrahedron* oldd1 = map1.dest;
+        Tetrahedron<3>* oldd0 = map0.dest;
+        Tetrahedron<3>* oldd1 = map1.dest;
         Perm<4> oldv0 = map0.vertexMap;
         Perm<4> oldv1 = map1.vertexMap;
 
@@ -145,7 +143,7 @@ namespace {
         if (err == Perm<4>(1,0)) {
             // Reflect A,B.
             // This requires a layering.
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -158,7 +156,7 @@ namespace {
         if (err == Perm<4>(2,3)) {
             // Reflect C,D.
             // This again requires a layering.
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -189,7 +187,7 @@ namespace {
         if (err == Perm<4>(2,3,1,0)) {
             // Rotate the quadrilateral.
             // This requires a layering.
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -202,7 +200,7 @@ namespace {
         if (err == Perm<4>(3,2,0,1)) {
             // Rotate the quadrilateral in the other direction.
             // This also requires a layering.
-            NTetrahedron* tet = tri->newTetrahedron();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(1, oldd0, oldv0 * Perm<4>(1,3));
             tet->join(3, oldd1, oldv1);
 
@@ -221,23 +219,23 @@ namespace {
 // Implementation of triangulate()
 // ------------------------------------------------------------------------
 
-NTriangulation* NNormalHypersurface::triangulate() const {
-    const Dim4Triangulation* outer = triangulation();
-    NTriangulation* inner = new NTriangulation();
+Triangulation<3>* NormalHypersurface::triangulate() const {
+    const Triangulation<4>* outer = triangulation();
+    Triangulation<3>* inner = new Triangulation<3>();
 
     // Get rid of an empty *outer* triangulation now.
     if (outer->isEmpty())
         return inner;
 
-    // Set up one NDiscSetTetData for each tetrahedron, storing the
+    // Set up one DiscSetTetData for each tetrahedron, storing the
     // relevant DiscData maps.  We don't actually need this for the
     // boundary tetrahedra, but for now we'll just do everything.
-    typedef NDiscSetTetData<DiscData> TetData;
+    typedef DiscSetTetData<DiscData> TetData;
     size_t nTets = outer->countTetrahedra();
     TetData** tetData = new TetData*[nTets];
 
-    const Dim4Pentachoron* outerPent;
-    Dim4Tetrahedron* outerTet;
+    const Pentachoron<4>* outerPent;
+    Tetrahedron<4>* outerTet;
     Perm<5> outerTetEmb;
 
     size_t tet;
@@ -251,36 +249,36 @@ NTriangulation* NNormalHypersurface::triangulate() const {
         tetData[tet] = new TetData(
             tetrahedra(pent, outerTetEmb[0]).longValue() +
                 prisms(pent,
-                    Dim4Edge::edgeNumber[outerTetEmb[0]][outerTetEmb[4]]).
+                    Edge<4>::edgeNumber[outerTetEmb[0]][outerTetEmb[4]]).
                     longValue(),
             tetrahedra(pent, outerTetEmb[1]).longValue() +
                 prisms(pent,
-                    Dim4Edge::edgeNumber[outerTetEmb[1]][outerTetEmb[4]]).
+                    Edge<4>::edgeNumber[outerTetEmb[1]][outerTetEmb[4]]).
                     longValue(),
             tetrahedra(pent, outerTetEmb[2]).longValue() +
                 prisms(pent,
-                    Dim4Edge::edgeNumber[outerTetEmb[2]][outerTetEmb[4]]).
+                    Edge<4>::edgeNumber[outerTetEmb[2]][outerTetEmb[4]]).
                     longValue(),
             tetrahedra(pent, outerTetEmb[3]).longValue() +
                 prisms(pent,
-                    Dim4Edge::edgeNumber[outerTetEmb[3]][outerTetEmb[4]]).
+                    Edge<4>::edgeNumber[outerTetEmb[3]][outerTetEmb[4]]).
                     longValue(),
-            prisms(pent, Dim4Edge::edgeNumber
+            prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[0][0]]]
                     [outerTetEmb[quadDefn[0][1]]]).longValue() +
-                prisms(pent, Dim4Edge::edgeNumber
+                prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[0][2]]]
                     [outerTetEmb[quadDefn[0][3]]]).longValue(),
-            prisms(pent, Dim4Edge::edgeNumber
+            prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[1][0]]]
                     [outerTetEmb[quadDefn[1][1]]]).longValue() +
-                prisms(pent, Dim4Edge::edgeNumber
+                prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[1][2]]]
                     [outerTetEmb[quadDefn[1][3]]]).longValue(),
-            prisms(pent, Dim4Edge::edgeNumber
+            prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[2][0]]]
                     [outerTetEmb[quadDefn[2][1]]]).longValue() +
-                prisms(pent, Dim4Edge::edgeNumber
+                prisms(pent, Edge<4>::edgeNumber
                     [outerTetEmb[quadDefn[2][2]]]
                     [outerTetEmb[quadDefn[2][3]]]).longValue());
     }
@@ -293,9 +291,9 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
     DiscData* discData;
     TriangleData* triData;
-    NDiscSpec outerTetDisc;
+    DiscSpec outerTetDisc;
 
-    NTetrahedron* innerTet[3];
+    Tetrahedron<3>* innerTet[3];
     int facet;
 
     for (pent = 0; pent < nPents; ++pent) {
@@ -344,11 +342,11 @@ NTriangulation* NNormalHypersurface::triangulate() const {
     for (pent = 0; pent < nPents; ++pent) {
         outerPent = outer->pentachoron(pent);
         for (type = 0; type < 10; ++type) {
-            e0 = Dim4Edge::edgeVertex[type][0];
-            e1 = Dim4Edge::edgeVertex[type][1];
-            f0 = Dim4Triangle::triangleVertex[type][0];
-            f1 = Dim4Triangle::triangleVertex[type][1];
-            f2 = Dim4Triangle::triangleVertex[type][2];
+            e0 = Edge<4>::edgeVertex[type][0];
+            e1 = Edge<4>::edgeVertex[type][1];
+            f0 = Triangle<4>::triangleVertex[type][0];
+            f1 = Triangle<4>::triangleVertex[type][1];
+            f2 = Triangle<4>::triangleVertex[type][2];
 
             for (pieceNumber = 0; pieceNumber < prisms(pent, type).longValue();
                     ++pieceNumber) {
@@ -423,7 +421,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     outerTetDisc.number = pieceNumber;
                 else
                     outerTetDisc.number = prisms(pent, type).longValue()
-                        + prisms(pent, Dim4Edge::edgeNumber[f1][f2])
+                        + prisms(pent, Edge<4>::edgeNumber[f1][f2])
                             .longValue()
                         - pieceNumber - 1;
 
@@ -475,7 +473,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     outerTetDisc.number = pieceNumber;
                 else
                     outerTetDisc.number = prisms(pent, type).longValue()
-                        + prisms(pent, Dim4Edge::edgeNumber[f0][f2]).longValue()
+                        + prisms(pent, Edge<4>::edgeNumber[f0][f2]).longValue()
                         - pieceNumber - 1;
 
                 discData = &tetData[outerTetDisc.tetIndex]->data(
@@ -526,7 +524,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     outerTetDisc.number = pieceNumber;
                 else
                     outerTetDisc.number = prisms(pent, type).longValue()
-                        + prisms(pent, Dim4Edge::edgeNumber[f0][f1])
+                        + prisms(pent, Edge<4>::edgeNumber[f0][f1])
                             .longValue()
                         - pieceNumber - 1;
 

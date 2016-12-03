@@ -50,7 +50,7 @@
 
 using regina::ExampleSnapPea;
 using regina::SnapPeaTriangulation;
-using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     /**
@@ -137,7 +137,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     convertFrom = new PacketChooser(mainWindow->getPacketTree(),
-        new SingleTypeFilter<regina::NTriangulation>(),
+        new SingleTypeFilter<regina::Triangulation<3>>(),
         PacketChooser::ROOT_AS_PACKET);
     convertFrom->setWhatsThis(expln);
     convertFrom->selectPacket(mainWindow->selectedPacket());
@@ -193,7 +193,7 @@ regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_CONVERT) {
-        NTriangulation* from = dynamic_cast<NTriangulation*>(
+        Triangulation<3>* from = dynamic_cast<Triangulation<3>*>(
             convertFrom->selectedPacket());
         if (! from) {
             ReginaSupport::info(parentWidget,

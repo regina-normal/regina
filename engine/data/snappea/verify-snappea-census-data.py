@@ -22,7 +22,7 @@ def process(tri):
     section = label[0]
     index = int(label[1:])
 
-    manifold = regina.NSnapPeaCensusManifold(section, index)
+    manifold = regina.SnapPeaCensusManifold(section, index)
     con = manifold.construct()
     hom = manifold.homology()
 
@@ -41,7 +41,7 @@ def process(tri):
 
 p = tree
 while p != None:
-    if p.type() == regina.NTriangulation.typeID:
+    if p.type() == regina.PACKET_TRIANGULATION3:
         process(p)
     p = p.nextTreePacket()
 

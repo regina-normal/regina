@@ -34,14 +34,13 @@
 #include "enumerate/doubledescription.h"
 #include "maths/matrix.h"
 #include "maths/ray.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "surfaces/nsstandard.h"
-#include "surfaces/nsquad.h"
-#include "surfaces/nsanstandard.h"
-#include "surfaces/nsquadoct.h"
-#include "triangulation/ntriangulation.h"
-#include "triangulation/nvertex.h"
+#include "surfaces/nsvectorstandard.h"
+#include "surfaces/nsvectorquad.h"
+#include "surfaces/nsvectoranstandard.h"
+#include "surfaces/nsvectorquadoct.h"
+#include "triangulation/dim3.h"
 #include "utilities/bitmask.h"
 #include <iterator>
 #include <vector>
@@ -66,11 +65,11 @@ NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
 }
 
 template void NormalSurfaces::buildStandardFromReduced<
-        NormalSurfaces::NormalSpec>(NTriangulation*,
-        const std::vector<NNormalSurface*>&, ProgressTracker*);
+        NormalSurfaces::NormalSpec>(Triangulation<3>*,
+        const std::vector<NormalSurface*>&, ProgressTracker*);
 template void NormalSurfaces::buildStandardFromReduced<
-        NormalSurfaces::AlmostNormalSpec>(NTriangulation*,
-        const std::vector<NNormalSurface*>&, ProgressTracker*);
+        NormalSurfaces::AlmostNormalSpec>(Triangulation<3>*,
+        const std::vector<NormalSurface*>&, ProgressTracker*);
 
 /**
  * Put helper classes and constants into an anonymous namespace.
@@ -84,12 +83,12 @@ namespace {
      * so we subclass and provide the typedef ourselves.
      */
     class VectorInserter : public std::back_insert_iterator<
-            std::vector<NNormalSurfaceVector*> > {
+            std::vector<NormalSurfaceVector*> > {
         public:
-            typedef NNormalSurfaceVector* value_type;
-            VectorInserter(std::vector<NNormalSurfaceVector*>& v) :
+            typedef NormalSurfaceVector* value_type;
+            VectorInserter(std::vector<NormalSurfaceVector*>& v) :
                     std::back_insert_iterator<
-                        std::vector<NNormalSurfaceVector*> >(v) {
+                        std::vector<NormalSurfaceVector*> >(v) {
             }
     };
 
@@ -129,12 +128,11 @@ namespace {
              *
              * @param v the vector to clone.
              */
-            RaySpec(const NNormalSurfaceVector* v) :
-                    Ray(v->size()), facets_(v->size()) {
+            RaySpec(const Ray& v) : Ray(v.size()), facets_(v.size()) {
                 // Note that the vector is initialised to zero since
                 // this is what LargeInteger's default constructor does.
-                for (size_t i = 0; i < v->size(); ++i)
-                    if ((elements[i] = (*v)[i]) == zero)
+                for (size_t i = 0; i < v.size(); ++i)
+                    if ((elements[i] = v[i]) == zero)
                         facets_.set(i, true);
             }
 
@@ -151,7 +149,7 @@ namespace {
              * working with normal surfaces, or 10 if we are working
              * with almost normal surfaces).
              */
-            RaySpec(const NTriangulation* tri, unsigned long whichLink,
+            RaySpec(const Triangulation<3>* tri, unsigned long whichLink,
                     unsigned coordsPerTet) :
                     Ray(coordsPerTet * tri->size()),
                     facets_(coordsPerTet * tri->size()) {
@@ -288,13 +286,13 @@ namespace {
              * @return a newly created normal surface based on this vector.
              */
             template <class VectorClass>
-            NNormalSurface* recover(NTriangulation* tri) const {
+            NormalSurface* recover(Triangulation<3>* tri) const {
                 VectorClass* v = new VectorClass(size());
 
                 for (size_t i = 0; i < size(); ++i)
                     v->setElement(i, elements[i]);
 
-                return new NNormalSurface(tri, v);
+                return new NormalSurface(tri, v);
             }
 
             /**
@@ -316,7 +314,7 @@ namespace {
 
 template <class Variant>
 NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
-    NTriangulation* owner = triangulation();
+    Triangulation<3>* owner = triangulation();
 
     // Basic sanity checks:
     if (coords_ != Variant::reducedCoords())
@@ -342,8 +340,8 @@ NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
 }
 
 template <class Variant>
-void NormalSurfaces::buildStandardFromReduced(NTriangulation* owner,
-        const std::vector<NNormalSurface*>& reducedList,
+void NormalSurfaces::buildStandardFromReduced(Triangulation<3>* owner,
+        const std::vector<NormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     size_t nFacets = Variant::stdLen(owner->size());
 
@@ -379,8 +377,8 @@ void NormalSurfaces::buildStandardFromReduced(NTriangulation* owner,
 }
 
 template <class Variant, class BitmaskType>
-void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
-        const std::vector<NNormalSurface*>& reducedList,
+void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
+        const std::vector<NormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.
     unsigned long n = owner->size();
@@ -424,13 +422,11 @@ void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
     typedef std::vector<RaySpec<BitmaskType>*> RaySpecList;
     RaySpecList list[2];
 
-    NNormalSurfaceVector* v;
-    std::vector<NNormalSurface*>::const_iterator qit;
+    NormalSurfaceVector* v;
+    std::vector<NormalSurface*>::const_iterator qit;
     for (qit = reducedList.begin(); qit != reducedList.end(); ++qit) {
-        v = static_cast<const typename Variant::ReducedVector*>(
-            (*qit)->rawVector())->makeMirror(owner);
-        list[0].push_back(new RaySpec<BitmaskType>(
-            static_cast<typename Variant::StandardVector*>(v)));
+        v = Variant::ReducedVector::makeMirror((*qit)->rawVector(), owner);
+        list[0].push_back(new RaySpec<BitmaskType>(v->coords()));
         delete v;
     }
 
@@ -459,7 +455,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
     unsigned long slices = 0;
     unsigned iterations;
     for (vtx = 0; vtx < llen; ++vtx) {
-        linkSpec = new RaySpec<BitmaskType>(link[vtx]);
+        linkSpec = new RaySpec<BitmaskType>(link[vtx]->coords());
         delete link[vtx];
 
         list[workingList].push_back(new RaySpec<BitmaskType>(owner, vtx,
@@ -587,7 +583,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
         for (it = list[workingList].begin(); it != list[workingList].end();
                 ++it) {
             for (i = vtx + 1; i < llen; ++i)
-                (*it)->reduce(link[i]);
+                (*it)->reduce(link[i]->coords());
             (*it)->scaleDown();
         }
     }

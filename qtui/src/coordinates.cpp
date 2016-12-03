@@ -30,11 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangle.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 #include "reginaprefset.h"
 
@@ -44,7 +43,7 @@
 using regina::HyperCoords;
 using regina::NormalSurfaces;
 using regina::NormalCoords;
-using regina::NTriangle;
+using regina::Triangle;
 
 namespace Coordinates {
     const char* name(NormalCoords coordSystem, bool capitalise) {
@@ -117,7 +116,7 @@ namespace Coordinates {
                 coordSystem == regina::NS_AN_QUAD_OCT);
     }
 
-    size_t numColumns(NormalCoords coordSystem, regina::NTriangulation* tri) {
+    size_t numColumns(NormalCoords coordSystem, regina::Triangulation<3>* tri) {
         if (coordSystem == regina::NS_STANDARD)
             return tri->size() * 7;
         else if (coordSystem == regina::NS_AN_STANDARD)
@@ -140,7 +139,7 @@ namespace Coordinates {
             return 0;
     }
 
-    size_t numColumns(HyperCoords coordSystem, regina::Dim4Triangulation* tri) {
+    size_t numColumns(HyperCoords coordSystem, regina::Triangulation<4>* tri) {
         if (coordSystem == regina::HS_STANDARD)
             return tri->size() * 15;
         else if (coordSystem == regina::HS_PRISM)
@@ -152,7 +151,7 @@ namespace Coordinates {
     }
 
     QString columnName(NormalCoords coordSystem, size_t whichCoord,
-            regina::NTriangulation* tri) {
+            regina::Triangulation<3>* tri) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return QString("%1: %2").arg(whichCoord / 7).
@@ -214,7 +213,7 @@ namespace Coordinates {
                 // "false" orientation.
                 if (stdCoord % 7 < 4)
                     return QString("%1: %2").arg(stdCoord / 7).
-                        arg(NTriangle::ordering(stdCoord % 7).trunc3().c_str());
+                        arg(Triangle<3>::ordering(stdCoord % 7).trunc3().c_str());
                 else
                     return QString("%1: %2%3").arg(stdCoord / 7).
                         arg(regina::quadDefn[(stdCoord % 7) - 4][2]).
@@ -240,7 +239,7 @@ namespace Coordinates {
     }
 
     QString columnName(HyperCoords coordSystem, size_t whichCoord,
-            regina::Dim4Triangulation* tri) {
+            regina::Triangulation<4>* tri) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)
                 return QString("%1: %2").arg(whichCoord / 15).
@@ -270,7 +269,7 @@ namespace Coordinates {
     }
 
     QString columnDesc(NormalCoords coordSystem, size_t whichCoord,
-            const QObject *context, regina::NTriangulation* tri) {
+            const QObject *context, regina::Triangulation<3>* tri) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return context->tr("Tetrahedron %1, triangle about vertex %2").
@@ -346,7 +345,7 @@ namespace Coordinates {
                     return context->tr("Tetrahedron %1, "
                         "triangle oriented towards face %2").
                         arg(stdCoord / 7).
-                        arg(NTriangle::ordering(stdCoord % 7).trunc3().c_str());
+                        arg(Triangle<3>::ordering(stdCoord % 7).trunc3().c_str());
                 else
                     return context->tr("Tetrahedron %1, "
                         "quad oriented towards edge %2%3").
@@ -378,7 +377,7 @@ namespace Coordinates {
     }
 
     QString columnDesc(HyperCoords coordSystem, size_t whichCoord,
-            const QObject *context, regina::Dim4Triangulation* tri) {
+            const QObject *context, regina::Triangulation<4>* tri) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)
                 return context->tr(
@@ -416,7 +415,7 @@ namespace Coordinates {
     }
 
     regina::LargeInteger getCoordinate(NormalCoords coordSystem,
-            const regina::NNormalSurface& surface, size_t whichCoord) {
+            const regina::NormalSurface& surface, size_t whichCoord) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return surface.triangles(whichCoord / 7, whichCoord % 7);
@@ -461,7 +460,7 @@ namespace Coordinates {
     }
 
     regina::LargeInteger getCoordinate(HyperCoords coordSystem,
-            const regina::NNormalHypersurface& surface, size_t whichCoord) {
+            const regina::NormalHypersurface& surface, size_t whichCoord) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)
                 return surface.tetrahedra(whichCoord / 15, whichCoord % 15);

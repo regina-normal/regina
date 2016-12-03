@@ -2,17 +2,14 @@
 
 # Files to compile
 SET ( FILES
-  ndisc
-  ndisctype
-  nnormalsurface
+  disc
+  disctype
   normalcoords
   normalflags
+  normalsurface
   normalsurfaces
-  nprism
-  nsurfacefilter
-  nsurfacesubset
-  sfcombination
-  sfproperties
+  prism
+  surfacefilter
   surfacefiltertype
   pysurfaces
   )

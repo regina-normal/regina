@@ -135,7 +135,7 @@ class REGINA_API NBlockedSFSPair : public NStandardTriangulation {
          */
         const Matrix2& matchingReln() const;
 
-        NManifold* manifold() const;
+        Manifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -149,7 +149,7 @@ class REGINA_API NBlockedSFSPair : public NStandardTriangulation {
          * blocked pair, or \c null if the given triangulation is not of
          * this form.
          */
-        static NBlockedSFSPair* isBlockedSFSPair(NTriangulation* tri);
+        static NBlockedSFSPair* isBlockedSFSPair(Triangulation<3>* tri);
 
     private:
         /**

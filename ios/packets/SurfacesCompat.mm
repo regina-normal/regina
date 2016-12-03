@@ -104,7 +104,7 @@ static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or 
     unsigned long n = self.packet->size();
     unsigned long i, j;
     NSMutableArray* row;
-    const regina::NNormalSurface* s;
+    const regina::NormalSurface* s;
     
     local = [[NSMutableArray alloc] initWithCapacity:n];
     for (i = 0; i < n; ++i) {
@@ -121,7 +121,7 @@ static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or 
     unsigned long n = self.packet->size();
     unsigned long i, j;
     NSMutableArray* row;
-    const regina::NNormalSurface* s;
+    const regina::NormalSurface* s;
     
     usable = [[NSMutableArray alloc] initWithCapacity:n];
     for (i = 0; i < n; ++i) {

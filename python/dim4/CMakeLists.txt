@@ -2,16 +2,16 @@
 
 # Files to compile
 SET ( FILES
-  dim4boundarycomponent
-  dim4component
-  dim4edge
-  dim4exampletriangulation
-  dim4triangle
-  dim4isomorphism
-  dim4pentachoron
-  dim4tetrahedron
-  dim4triangulation
-  dim4vertex
+  boundarycomponent4
+  component4
+  edge4
+  example4
+  triangle4
+  isomorphism4
+  pentachoron4
+  tetrahedron4
+  triangulation4
+  vertex4
   pydim4
   )
 

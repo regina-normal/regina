@@ -32,8 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/nl31pillow.h"
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+#include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using namespace boost::python;

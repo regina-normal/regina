@@ -49,6 +49,7 @@ enum
  *  (Indeed even the existence of the Tetrahedron structure is private to
  *  the kernel, so we are "cheating" a bit even by including the typedef.)
  */
+struct Tetrahedron; // To distinguish snappea's Tetrahedron from regina's.
 typedef struct Tetrahedron      TetrahedronSneak;
 
 

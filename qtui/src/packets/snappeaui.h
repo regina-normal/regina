@@ -44,7 +44,7 @@ class ClickableLabel;
 class SnapPeaAlgebraUI;
 class SnapPeaGluingsUI;
 class SnapPeaShapesUI;
-class NTriSkeletonUI;
+class Tri3SkeletonUI;
 class PacketEditIface;
 class QLabel;
 class QToolBar;
@@ -65,7 +65,7 @@ class SnapPeaUI : public PacketTabbedUI {
          */
         SnapPeaShapesUI* shapes;
         SnapPeaGluingsUI* gluings;
-        NTriSkeletonUI* skeleton;
+        Tri3SkeletonUI* skeleton;
         SnapPeaAlgebraUI* algebra;
 
         PacketEditIface* editIface;

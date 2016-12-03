@@ -31,9 +31,9 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "hypersurface/nnormalhypersurface.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
-#include "surfaces/nnormalsurface.h"
+#include "hypersurface/normalhypersurface.h"
+#include "hypersurface/normalhypersurfaces.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 
 #define NICE_SIZE 200
@@ -51,9 +51,9 @@
 #include <qcolor.h>
 #include <QGraphicsSimpleTextItem>
 
-using regina::NNormalHypersurface;
-using regina::NNormalHypersurfaceList;
-using regina::NNormalSurface;
+using regina::NormalHypersurface;
+using regina::NormalHypersurfaces;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
 
 CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
@@ -260,7 +260,7 @@ void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
     QBrush fill(Qt::darkCyan);
 
     unsigned i, j;
-    const NNormalSurface *s, *t;
+    const NormalSurface *s, *t;
     for (i = 0; i < nSurfaces; ++i) {
         s = surfaces.surface(i);
 
@@ -295,7 +295,7 @@ void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
     update();
 }
 
-void CompatCanvas::fillLocal(const NNormalHypersurfaceList& surfaces) {
+void CompatCanvas::fillLocal(const NormalHypersurfaces& surfaces) {
     if (filled)
         return;
 
@@ -304,7 +304,7 @@ void CompatCanvas::fillLocal(const NNormalHypersurfaceList& surfaces) {
     QBrush fill(Qt::darkCyan);
 
     unsigned i, j;
-    const NNormalHypersurface *s, *t;
+    const NormalHypersurface *s, *t;
     for (i = 0; i < nSurfaces; ++i) {
         s = surfaces.hypersurface(i);
 
@@ -346,7 +346,7 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
     // We know the surface list is non-empty.
 
     unsigned i, j;
-    const NNormalSurface *s, *t;
+    const NormalSurface *s, *t;
 
     bool* usable = new bool[nSurfaces];
     for (i = 0; i < nSurfaces; ++i) {

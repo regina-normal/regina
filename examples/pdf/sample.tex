@@ -1,0 +1,53 @@
+%&biglatex
+\documentclass[a4paper,10pt]{article}
+
+% Page size (you'll presumably want to remove this for the journal):
+%
+\usepackage[hmargin=35mm,vmargin=40mm]{geometry}
+
+% Packages used within the main body of the paper:
+%
+\usepackage{graphicx}     % For embedding figures
+
+\begin{document}
+
+\thispagestyle{empty}
+\centerline{\large \bf{Welcome to Regina!}}
+
+\bigskip
+
+Did you know that you can embed PDF documents directly inside your
+Regina data files?
+This means that you can annotate your data with diagrams:
+
+\bigskip
+
+\centerline{
+    \includegraphics[scale=0.35]{fig1}\qquad\qquad
+    \includegraphics[scale=0.7]{fig2}}
+
+\medskip
+
+\noindent
+and also with equations:
+
+\[ \ldots
+    \longrightarrow H_n(A \cap B)
+    \stackrel{\Phi}{\longrightarrow} H_n(A) \oplus H_n(B)
+    \stackrel{\Psi}{\longrightarrow} H_n(X)
+    \stackrel{\partial}{\longrightarrow} H_{n-1}(A \cap B)
+    \longrightarrow \ldots
+\]
+
+Simply write a document using your favourite word processor or
+typesetting system (such as \LaTeX), convert it to PDF format, and import
+your PDF into Regina by selecting \emph{New PDF Document} from the
+\emph{Packet Tree} menu.
+
+Regina will display your document using an external viewer, such as
+\emph{evince} or \emph{okular} under Linux, or \emph{Preview} under
+MacOS~X.  You can choose a different viewer by editing the PDF settings
+in Regina's preferences.
+
+\end{document}
+

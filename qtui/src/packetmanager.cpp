@@ -39,20 +39,20 @@
 #include "packetmanager.h"
 #include "reginamain.h"
 #include "reginasupport.h"
-#include "packets/dim2triui.h"
-#include "packets/dim4triui.h"
-#include "packets/generictriui.h"
 #include "packets/anglesui.h"
+#include "packets/tri2ui.h"
+#include "packets/tri4ui.h"
+#include "packets/filtercomb.h"
+#include "packets/filterprop.h"
+#include "packets/generictriui.h"
 #include "packets/containerui.h"
-#include "packets/nhypersurfaceui.h"
-#include "packets/nnormalsurfaceui.h"
+#include "packets/hyperui.h"
 #include "packets/pdfui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
-#include "packets/nsurfacefiltercomb.h"
-#include "packets/nsurfacefilterprop.h"
+#include "packets/surfacesui.h"
 #include "packets/textui.h"
-#include "packets/ntriangulationui.h"
+#include "packets/tri3ui.h"
 
 #include <QPlainTextEdit>
 
@@ -62,24 +62,18 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
     IconCache::IconID id;
 
     switch (packet->type()) {
-        case PACKET_ANGLESTRUCTURELIST :
+        case PACKET_ANGLESTRUCTURES :
             id = IconCache::packet_angles;
             break;
         case PACKET_CONTAINER :
             id = (packet->parent() ? IconCache::packet_container :
                 IconCache::regina);
             break;
-        case PACKET_DIM2TRIANGULATION :
-            id = IconCache::packet_dim2triangulation;
-            break;
-        case PACKET_DIM4TRIANGULATION :
-            id = IconCache::packet_dim4triangulation;
-            break;
         case PACKET_PDF :
             id = IconCache::packet_pdf;
             break;
         case PACKET_SURFACEFILTER :
-            switch (((NSurfaceFilter*)packet)->filterType()) {
+            switch (((SurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION :
                     id = IconCache::filter_comb;
                     break;
@@ -97,17 +91,23 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
         case PACKET_SNAPPEATRIANGULATION :
             id = IconCache::packet_snappea;
             break;
-        case PACKET_NORMALSURFACELIST :
+        case PACKET_NORMALSURFACES :
             id = IconCache::packet_surfaces;
             break;
-        case PACKET_NORMALHYPERSURFACELIST :
+        case PACKET_NORMALHYPERSURFACES :
             id = IconCache::packet_hypersurfaces;
             break;
         case PACKET_TEXT :
             id = IconCache::packet_text;
             break;
-        case PACKET_TRIANGULATION :
-            id = IconCache::packet_triangulation;
+        case PACKET_TRIANGULATION2 :
+            id = IconCache::packet_triangulation2;
+            break;
+        case PACKET_TRIANGULATION3 :
+            id = IconCache::packet_triangulation3;
+            break;
+        case PACKET_TRIANGULATION4 :
+            id = IconCache::packet_triangulation4;
             break;
         // For generic dimensions, we don't cache the icons.
         case PACKET_TRIANGULATION5 :
@@ -146,24 +146,18 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
 PacketUI* PacketManager::createUI(regina::Packet* packet,
         PacketPane* enclosingPane) {
     switch (packet->type()) {
-        case PACKET_ANGLESTRUCTURELIST:
+        case PACKET_ANGLESTRUCTURES:
             return new AngleStructureUI(
                 dynamic_cast<AngleStructures*>(packet), enclosingPane);
         case PACKET_CONTAINER:
             return new ContainerUI(
                 dynamic_cast<Container*>(packet), enclosingPane);
-        case PACKET_DIM2TRIANGULATION:
-            return new Dim2TriangulationUI(
-                dynamic_cast<Dim2Triangulation*>(packet), enclosingPane);
-        case PACKET_DIM4TRIANGULATION:
-            return new Dim4TriangulationUI(
-                dynamic_cast<Dim4Triangulation*>(packet), enclosingPane);
-        case PACKET_NORMALSURFACELIST:
-            return new NNormalSurfaceUI(
+        case PACKET_NORMALSURFACES:
+            return new SurfacesUI(
                 dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
-        case PACKET_NORMALHYPERSURFACELIST:
-            return new NHyperSurfaceUI(
-                dynamic_cast<NNormalHypersurfaceList*>(packet), enclosingPane);
+        case PACKET_NORMALHYPERSURFACES:
+            return new HyperUI(
+                dynamic_cast<NormalHypersurfaces*>(packet), enclosingPane);
         case PACKET_SCRIPT:
             return new ScriptUI(
                 dynamic_cast<Script*>(packet), enclosingPane);
@@ -171,14 +165,14 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
             return new SnapPeaUI(
                 dynamic_cast<SnapPeaTriangulation*>(packet), enclosingPane);
         case PACKET_SURFACEFILTER:
-            switch (((NSurfaceFilter*)packet)->filterType()) {
+            switch (((SurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION:
-                    return new NSurfaceFilterCombUI(
-                        dynamic_cast<NSurfaceFilterCombination*>(packet),
+                    return new FilterCombUI(
+                        dynamic_cast<SurfaceFilterCombination*>(packet),
                         enclosingPane);
                 case NS_FILTER_PROPERTIES:
-                    return new NSurfaceFilterPropUI(
-                        dynamic_cast<NSurfaceFilterProperties*>(packet),
+                    return new FilterPropUI(
+                        dynamic_cast<SurfaceFilterProperties*>(packet),
                         enclosingPane);
                 default:
                     return new DefaultPacketUI(packet, enclosingPane);
@@ -186,9 +180,15 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_TEXT:
             return new TextUI(
                 dynamic_cast<Text*>(packet), enclosingPane);
-        case PACKET_TRIANGULATION:
-            return new NTriangulationUI(
-                dynamic_cast<NTriangulation*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION2:
+            return new Tri2UI(
+                dynamic_cast<Triangulation<2>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION3:
+            return new Tri3UI(
+                dynamic_cast<Triangulation<3>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION4:
+            return new Tri4UI(
+                dynamic_cast<Triangulation<4>*>(packet), enclosingPane);
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(
                 dynamic_cast<Triangulation<5>*>(packet), enclosingPane);

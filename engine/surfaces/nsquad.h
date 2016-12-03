@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file surfaces/nsquad.h
- *  \brief Implements normal surface vectors using quad coordinates.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NSQUAD_H
@@ -39,107 +39,9 @@
 #define __NSQUAD_H
 #endif
 
-#include "regina-core.h"
-#include "surfaces/nsmirrored.h"
+#warning This header is deprecated; please use surfaces/nsvectorquad.h instead.
 
-namespace regina {
-
-class NNormalSurfaceVectorQuad;
-
-/**
- * \weakgroup surfaces
- * @{
- */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct NormalInfo<NS_QUAD> {
-    typedef NNormalSurfaceVectorQuad Class;
-    typedef NormalInfo<NS_STANDARD> Standard;
-    typedef NormalInfo<NS_QUAD> Reduced;
-    inline static const char* name() {
-        return "Quad normal";
-    }
-    enum {
-        almostNormal = 0,
-        spun = 1,
-        oriented = 0
-    };
-};
-#endif
-
-/**
- * A normal surface vector using quad coordinates.
- *
- * If there are \a t tetrahedra in the underlying
- * triangulation, there must be precisely 3<i>t</i> coordinates.
- * The first three coordinates will be for the first tetrahedron, the
- * next three for the second tetrahedron and so on.  For each
- * tetrahedron, the three individual coordinates represent the
- * number of quadrilateral discs of type 0, 1 and 2
- * (see NNormalSurface::quads()).
- *
- * \ifacespython Not present.
- */
-class REGINA_API NNormalSurfaceVectorQuad :
-        public NNormalSurfaceVectorMirrored {
-    REGINA_NORMAL_SURFACE_FLAVOUR(NNormalSurfaceVectorQuad, NS_QUAD)
-
-    public:
-        /**
-         * Creates a new vector all of whose entries are initialised to
-         * zero.
-         *
-         * @param length the number of elements in the new vector.
-         */
-        NNormalSurfaceVectorQuad(size_t length);
-        /**
-         * Creates a new vector that is a clone of the given vector.
-         *
-         * @param cloneMe the vector to clone.
-         */
-        NNormalSurfaceVectorQuad(const Vector<LargeInteger>& cloneMe);
-
-        virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
-            const;
-
-        virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
-
-        virtual LargeInteger octs(size_t tetIndex,
-            int octType, const NTriangulation* triang) const;
-
-        static NNormalSurfaceVector* makeZeroVector(
-            const NTriangulation* triangulation);
-        static MatrixInt* makeMatchingEquations(
-            const NTriangulation* triangulation);
-        static EnumConstraints* makeEmbeddedConstraints(
-            const NTriangulation* triangulation);
-};
-
-/*@}*/
-
-// Inline functions for NNormalSurfaceVectorQuad
-
-inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
-        size_t length) : NNormalSurfaceVectorMirrored(length) {
-}
-inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
-        const Vector<LargeInteger>& cloneMe) :
-        NNormalSurfaceVectorMirrored(cloneMe) {
-}
-
-inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
-        const NTriangulation*) const {
-    // Quad space does not contain vertex links at all.
-    return 0;
-}
-
-inline LargeInteger NNormalSurfaceVectorQuad::octs(
-        size_t, int, const NTriangulation*) const {
-    return zero;
-}
-
-} // namespace regina
+#include "surfaces/nsvectorquad.h"
 
 #endif
 

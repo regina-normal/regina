@@ -2,14 +2,14 @@
 
 # Files to compile
 SET ( FILES
-  dim2boundarycomponent
-  dim2component
-  dim2edge
-  dim2exampletriangulation
-  dim2triangle
-  dim2isomorphism
-  dim2triangulation
-  dim2vertex
+  boundarycomponent2
+  component2
+  edge2
+  example2
+  triangle2
+  isomorphism2
+  triangulation2
+  vertex2
   pydim2
   )
 

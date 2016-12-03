@@ -73,7 +73,7 @@
  */
 
 #include <packet/container.h>
-#include <triangulation/ntriangulation.h>
+#include <triangulation/dim3.h>
 
 #include <cstdio>
 #include <list>
@@ -97,21 +97,21 @@ Packet* tree = 0;
 Packet* newTree = 0;
 
 // The original triangulation currently being processed.
-NTriangulation* orig;
+Triangulation<3>* orig;
 
 // Triangulations that have been found to be homeomorphic to orig.
 // This list includes orig itself.
-typedef std::set<NTriangulation*> TriSet;
+typedef std::set<Triangulation<3>*> TriSet;
 TriSet equivs;
 
 // Do we know that the original triangulation is non-minimal?
 bool nonMin;
 
 // All triangulations that were found to be non-minimal.
-std::list<NTriangulation*> allNonMin;
+std::list<Triangulation<3>*> allNonMin;
 
 // A mapping from triangulations to equivalence classes.
-typedef std::map<NTriangulation*, int> ClassMap;
+typedef std::map<Triangulation<3>*, int> ClassMap;
 ClassMap eClass;
 int nextClass = 0;
 
@@ -124,13 +124,13 @@ unsigned long nNew = 0;
 /**
  * We have a homeomorphic triangulation of the same size as the original.
  */
-void sameSize(NTriangulation* t) {
+void sameSize(Triangulation<3>* t) {
     // Hunt for it in the packet tree.
-    NTriangulation* found = 0;
+    Triangulation<3>* found = 0;
     for (Packet* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == PACKET_TRIANGULATION)
-            if (static_cast<NTriangulation*>(p)->isIsomorphicTo(*t).get()) {
-                found = static_cast<NTriangulation*>(p);
+        if (p->type() == PACKET_TRIANGULATION3)
+            if (static_cast<Triangulation<3>*>(p)->isIsomorphicTo(*t).get()) {
+                found = static_cast<Triangulation<3>*>(p);
                 break;
             }
 
@@ -138,7 +138,7 @@ void sameSize(NTriangulation* t) {
         return;
 
     if (! found) {
-        found = new NTriangulation(*t);
+        found = new Triangulation<3>(*t);
         found->setLabel(orig->adornedLabel("New"));
         orig->insertChildLast(found);
         nNew++;
@@ -156,7 +156,7 @@ void sameSize(NTriangulation* t) {
 /**
  * Do the final greedy simplify and process.
  */
-void processAlt(NTriangulation* t) {
+void processAlt(Triangulation<3>* t) {
     t->intelligentSimplify();
 
     if (t->size() < orig->size())
@@ -168,19 +168,19 @@ void processAlt(NTriangulation* t) {
 /**
  * Perform reduction moves.  The given triangulation may be changed.
  */
-void tryMovesDown(NTriangulation* t, int maxLevels) {
+void tryMovesDown(Triangulation<3>* t, int maxLevels) {
     if (maxLevels == 0) {
         processAlt(t);
         return;
     }
 
-    NTriangulation* alt;
+    Triangulation<3>* alt;
     unsigned i, j;
     bool found = false;
 
     for (i = 0; i < t->countEdges(); i++)
         if (t->twoZeroMove(t->edge(i), true, false)) {
-            alt = new NTriangulation(*t);
+            alt = new Triangulation<3>(*t);
             alt->twoZeroMove(alt->edge(i));
             tryMovesDown(alt, maxLevels - 1);
             found = true;
@@ -193,7 +193,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
     for (i = 0; i < t->countEdges(); i++)
         for (j = 0; j < 2; j++)
             if (t->twoOneMove(t->edge(i), j, true, false)) {
-                alt = new NTriangulation(*t);
+                alt = new Triangulation<3>(*t);
                 alt->twoOneMove(alt->edge(i), j);
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
@@ -207,7 +207,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
     if (! found)
         for (i = 0; i < t->countEdges(); i++)
             if (t->threeTwoMove(t->edge(i), true, false)) {
-                alt = new NTriangulation(*t);
+                alt = new Triangulation<3>(*t);
                 alt->threeTwoMove(alt->edge(i));
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
@@ -222,7 +222,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
         for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->edge(i), j, true, false)) {
-                    alt = new NTriangulation(*t);
+                    alt = new Triangulation<3>(*t);
                     alt->fourFourMove(alt->edge(i), j);
                     tryMovesDown(alt, maxLevels - 1);
                     found = true;
@@ -241,17 +241,17 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
  * Perform 4-4 moves.  The given triangulation may be changed.
  * Moves that revert to prev, prev2 or prev3 will not be considered.
  */
-void tryMovesAcross(NTriangulation* t, int maxLevels,
-        NTriangulation* prev = 0, NTriangulation* prev2 = 0,
-        NTriangulation* prev3 = 0) {
+void tryMovesAcross(Triangulation<3>* t, int maxLevels,
+        Triangulation<3>* prev = 0, Triangulation<3>* prev2 = 0,
+        Triangulation<3>* prev3 = 0) {
     unsigned i, j;
-    NTriangulation* alt;
+    Triangulation<3>* alt;
 
     if (maxLevels > 0)
         for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->edge(i), j, true, false)) {
-                    alt = new NTriangulation(*t);
+                    alt = new Triangulation<3>(*t);
                     alt->fourFourMove(alt->edge(i), j);
                     if (prev && alt->isIsomorphicTo(*prev).get()) {
                         // Ignore, reversion.
@@ -274,17 +274,17 @@ void tryMovesAcross(NTriangulation* t, int maxLevels,
 /**
  * Perform 2-3 moves.  The given triangulation will not be changed.
  */
-void tryMovesUp(NTriangulation* t, int levelsRemaining) {
-    NTriangulation* alt;
+void tryMovesUp(Triangulation<3>* t, int levelsRemaining) {
+    Triangulation<3>* alt;
 
     if (levelsRemaining == 0) {
         // We're not allowed to change the original, so clone it.
-        alt = new NTriangulation(*t);
+        alt = new Triangulation<3>(*t);
         tryMovesAcross(alt, argAcross);
         delete alt;
     } else {
         for (unsigned i = 0; i < t->countTriangles(); i++) {
-            alt = new NTriangulation(*t);
+            alt = new Triangulation<3>(*t);
             if (alt->twoThreeMove(alt->triangle(i))) {
                 if (levelsRemaining > 1)
                     tryMovesUp(alt, levelsRemaining - 1);
@@ -303,17 +303,17 @@ void processTree() {
     TriSet::iterator tit;
     ClassMap::iterator cit, cit2;
     int c, cOld;
-    NTriangulation* t;
+    Triangulation<3>* t;
 
     for (Packet* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == PACKET_TRIANGULATION) {
+        if (p->type() == PACKET_TRIANGULATION3) {
             // A triangulation to process.
-            t = static_cast<NTriangulation*>(p);
+            t = static_cast<Triangulation<3>*>(p);
             fprintf(stderr, "Processing %s ...\n", t->label().c_str());
             nTris++;
 
             nonMin = false;
-            orig = static_cast<NTriangulation*>(p);
+            orig = static_cast<Triangulation<3>*>(p);
             equivs.clear();
             equivs.insert(orig);
 
@@ -367,7 +367,7 @@ void processTree() {
     // Write the summary of results.
     if (! allNonMin.empty()) {
         printf("NON-MINIMAL TRIANGULATIONS:\n\n");
-        for (std::list<NTriangulation*>::const_iterator it = allNonMin.begin();
+        for (std::list<Triangulation<3>*>::const_iterator it = allNonMin.begin();
                 it != allNonMin.end(); it++)
             printf("    %s\n", (*it)->label().c_str());
         printf("\n");
@@ -410,7 +410,7 @@ void processTree() {
                         printf("    %s\n",
                             cit2->first->label().c_str());
                         if (outFile) {
-                            t = new NTriangulation(*(cit2->first));
+                            t = new Triangulation<3>(*(cit2->first));
                             t->setLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }

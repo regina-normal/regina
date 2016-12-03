@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayering.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
-NLayering::NLayering(NTetrahedron* bdry0, Perm<4> roles0, NTetrahedron* bdry1,
+NLayering::NLayering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
         Perm<4> roles1) : size_(0), reln(1, 0, 0, 1) {
     oldBdryTet_[0] = newBdryTet_[0] = bdry0;
     oldBdryTet_[1] = newBdryTet_[1] = bdry1;
@@ -48,7 +48,7 @@ bool NLayering::extendOne() {
     // See if we move to a common new tetrahedron.
     // Also make sure this really is a new tetrahedron, so we don't get
     // stuck in a loop.
-    NTetrahedron* next = newBdryTet_[0]->adjacentTetrahedron(
+    Tetrahedron<3>* next = newBdryTet_[0]->adjacentTetrahedron(
         newBdryRoles_[0][3]);
 
     if (next == 0 || next == newBdryTet_[0] || next == newBdryTet_[1] ||
@@ -125,8 +125,8 @@ unsigned long NLayering::extend() {
     return added;
 }
 
-bool NLayering::matchesTop(NTetrahedron* upperBdry0, Perm<4> upperRoles0,
-        NTetrahedron* upperBdry1, Perm<4> upperRoles1, Matrix2& upperReln)
+bool NLayering::matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
+        Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1, Matrix2& upperReln)
         const {
     // We can cut half our cases by assuming that upperBdry0 meets with
     // newBdryTet[0] and that upperBdry1 meets with newBdryTet[1].
@@ -136,7 +136,7 @@ bool NLayering::matchesTop(NTetrahedron* upperBdry0, Perm<4> upperRoles0,
         // If it does match, it's the opposite matching (upperBdry0 with
         // newBdryTet[1] and vice versa).  Switch them and remember what
         // we did.
-        NTetrahedron* tmpTet = upperBdry0;
+        Tetrahedron<3>* tmpTet = upperBdry0;
         upperBdry0 = upperBdry1;
         upperBdry1 = tmpTet;
 

@@ -32,10 +32,7 @@
 
 #include "maths/matrix2.h"
 #include "subcomplex/nsatannulus.h"
-#include "triangulation/nedge.h"
-#include "triangulation/nisomorphism.h"
-#include "triangulation/ntetrahedron.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -163,15 +160,15 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, Matrix2& matching) const {
 bool NSatAnnulus::isTwoSidedTorus() const {
     // Check that the edges are identified in opposite pairs and that we
     // have no duplicates.
-    NEdge* e01 = tet[0]->edge(NEdge::edgeNumber[roles[0][0]][roles[0][1]]);
-    NEdge* e02 = tet[0]->edge(NEdge::edgeNumber[roles[0][0]][roles[0][2]]);
-    NEdge* e12 = tet[0]->edge(NEdge::edgeNumber[roles[0][1]][roles[0][2]]);
+    Edge<3>* e01 = tet[0]->edge(Edge<3>::edgeNumber[roles[0][0]][roles[0][1]]);
+    Edge<3>* e02 = tet[0]->edge(Edge<3>::edgeNumber[roles[0][0]][roles[0][2]]);
+    Edge<3>* e12 = tet[0]->edge(Edge<3>::edgeNumber[roles[0][1]][roles[0][2]]);
 
-    if (e01 != tet[1]->edge(NEdge::edgeNumber[roles[1][0]][roles[1][1]]))
+    if (e01 != tet[1]->edge(Edge<3>::edgeNumber[roles[1][0]][roles[1][1]]))
         return false;
-    if (e02 != tet[1]->edge(NEdge::edgeNumber[roles[1][0]][roles[1][2]]))
+    if (e02 != tet[1]->edge(Edge<3>::edgeNumber[roles[1][0]][roles[1][2]]))
         return false;
-    if (e12 != tet[1]->edge(NEdge::edgeNumber[roles[1][1]][roles[1][2]]))
+    if (e12 != tet[1]->edge(Edge<3>::edgeNumber[roles[1][1]][roles[1][2]]))
         return false;
 
     if (e01 == e02 || e02 == e12 || e12 == e01)
@@ -192,9 +189,9 @@ bool NSatAnnulus::isTwoSidedTorus() const {
 
         // Get mappings from tetrahedron edge roles to annulus vertex roles.
         map0 = roles[0].inverse() * tet[0]->edgeMapping(
-            NEdge::edgeNumber[roles[0][a]][roles[0][b]]);
+            Edge<3>::edgeNumber[roles[0][a]][roles[0][b]]);
         map1 = roles[1].inverse() * tet[1]->edgeMapping(
-            NEdge::edgeNumber[roles[1][a]][roles[1][b]]);
+            Edge<3>::edgeNumber[roles[1][a]][roles[1][b]]);
 
         // We should have {a,b} -> {a,b} and {x,y} -> {x,y} for each map.
 
@@ -209,8 +206,8 @@ bool NSatAnnulus::isTwoSidedTorus() const {
     return true;
 }
 
-void NSatAnnulus::transform(const NTriangulation* originalTri,
-        const NIsomorphism* iso, NTriangulation* newTri) {
+void NSatAnnulus::transform(const Triangulation<3>* originalTri,
+        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     unsigned which;
     unsigned long tetID;
     for (which = 0; which < 2; which++) {
@@ -220,7 +217,7 @@ void NSatAnnulus::transform(const NTriangulation* originalTri,
     }
 }
 
-void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
+void NSatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
     // Save ourselves headaches later.  Though this should never happen;
     // see the preconditions.
     if (alpha == 0)
@@ -305,7 +302,7 @@ void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
         }
     }
 
-    NTetrahedron* lst = tri->insertLayeredSolidTorus(cuts0, cuts1);
+    Tetrahedron<3>* lst = tri->insertLayeredSolidTorus(cuts0, cuts1);
 
     // The boundary of the new LST sits differently for the special
     // cases (0,1,1) and (1,1,2); see the insertLayeredSolidTorus()

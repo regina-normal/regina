@@ -2,10 +2,10 @@
 
 # Files to compile
 SET ( FILES
-  nabeliangroup
-  ngrouppresentation
-  nhomgrouppresentation
-  nmarkedabeliangroup
+  abeliangroup
+  grouppresentation
+  homgrouppresentation
+  markedabeliangroup
   pyalgebra
   )
 

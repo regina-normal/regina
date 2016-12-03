@@ -30,23 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
-void addDim2BoundaryComponent();
-void addDim2Component();
-void addDim2Edge();
-void addDim2ExampleTriangulation();
-void addDim2Isomorphism();
-void addDim2Triangle();
-void addDim2Triangulation();
-void addDim2Vertex();
+void addBoundaryComponent2();
+void addComponent2();
+void addEdge2();
+void addExample2();
+void addIsomorphism2();
+void addTriangle2();
+void addTriangulation2();
+void addVertex2();
 
 void addDim2Classes() {
-    addDim2BoundaryComponent();
-    addDim2Component();
-    addDim2Edge();
-    addDim2ExampleTriangulation();
-    addDim2Isomorphism();
-    addDim2Triangle();
-    addDim2Triangulation();
-    addDim2Vertex();
+    addBoundaryComponent2();
+    addComponent2();
+    addEdge2();
+    addExample2();
+    addIsomorphism2();
+    addTriangle2();
+    addTriangulation2();
+    addVertex2();
 }
 

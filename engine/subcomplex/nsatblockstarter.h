@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "subcomplex/nsatblock.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/listoncall.h"
 
 namespace regina {
@@ -62,7 +62,7 @@ namespace regina {
  *
  * This class is well-suited for subcomplex testing: if the
  * triangulation here is found to be a subcomplex of some larger
- * triangulation (see NTriangulation::isContainedIn()), then the
+ * triangulation (see Triangulation<3>::isContainedIn()), then the
  * corresponding isomorphism can be used to copy this block structure
  * and transform it to describe the corresponding block in the larger
  * triangulation.
@@ -77,7 +77,7 @@ namespace regina {
  */
 class REGINA_API NSatBlockStarter : boost::noncopyable {
     private:
-        NTriangulation triangulation_;
+        Triangulation<3> triangulation_;
             /**< The triangulation of the saturated block. */
         NSatBlock* block_;
             /**< Structural details of the saturated block. */
@@ -94,7 +94,7 @@ class REGINA_API NSatBlockStarter : boost::noncopyable {
          *
          * @return the block triangulation.
          */
-        const NTriangulation& triangulation() const;
+        const Triangulation<3>& triangulation() const;
 
         /**
          * Returns details that describe the structure of the saturated
@@ -196,7 +196,7 @@ class REGINA_API NSatBlockStarterSet : private ListOnCall<NSatBlockStarter> {
  * given triangulation.  More specifically, given some triangulation \a t,
  * this class can locate every isomorphic embedding of every starter
  * block in the global NSatBlockStarterSet as a subcomplex of \a t (see
- * NTriangulation::isContainedIn() for what is meant by "isomorphic
+ * Triangulation<3>::isContainedIn() for what is meant by "isomorphic
  * embedding").
  *
  * The routine findStarterBlocks() runs the search.  Each time an
@@ -249,7 +249,7 @@ class REGINA_API NSatBlockStarterSearcher {
          * @param tri the triangulation in which to search for starter
          * blocks.
          */
-        void findStarterBlocks(NTriangulation* tri);
+        void findStarterBlocks(Triangulation<3>* tri);
 
     protected:
         /**
@@ -316,7 +316,7 @@ inline NSatBlockStarter::~NSatBlockStarter() {
         delete block_;
 }
 
-inline const NTriangulation& NSatBlockStarter::triangulation() const {
+inline const Triangulation<3>& NSatBlockStarter::triangulation() const {
     return triangulation_;
 }
 

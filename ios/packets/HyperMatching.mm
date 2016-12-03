@@ -35,9 +35,9 @@
 #import "HyperMatching.h"
 #import "HyperViewController.h"
 #import "MDSpreadViewClasses.h"
-#import "dim4/dim4triangulation.h"
-#import "hypersurface/nnormalhypersurfacelist.h"
+#import "hypersurface/normalhypersurfaces.h"
 #import "maths/matrix.h"
+#import "triangulation/dim4.h"
 
 #define KEY_HYPER_MATCHING_COMPACT @"HypersurfacesMatchingCompact"
 
@@ -134,7 +134,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    regina::LargeInteger entry = self.matrix->entry(rowPath.row, columnPath.column);
+    regina::Integer entry = self.matrix->entry(rowPath.row, columnPath.column);
     if (entry.isZero())
         return @"";
     else

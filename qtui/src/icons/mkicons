@@ -32,8 +32,6 @@ my @actionIcons = qw/
 my @packetIcons = qw/
     angles
     container
-    dim2triangulation
-    dim4triangulation
     filter
     filter_comb
     filter_prop
@@ -42,7 +40,20 @@ my @packetIcons = qw/
     snappea
     surfaces
     text
-    triangulation
+    triangulation2
+    triangulation3
+    triangulation4
+    triangulation5
+    triangulation6
+    triangulation7
+    triangulation8
+    triangulation9
+    triangulation10
+    triangulation11
+    triangulation12
+    triangulation13
+    triangulation14
+    triangulation15
     /;
 
 my $aux = undef;

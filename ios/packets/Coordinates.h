@@ -34,14 +34,11 @@
 #import "hypersurface/hypercoords.h"
 #import "maths/integer.h"
 #import "surfaces/normalcoords.h"
+#import "triangulation/forward.h"
 
 namespace regina {
-    template <int> class Triangulation;
-    typedef Triangulation<3> NTriangulation;
-    typedef Triangulation<4> Dim4Triangulation;
-
-    class NNormalHypersurface;
-    class NNormalSurface;
+    class NormalHypersurface;
+    class NormalSurface;
 }
 
 @interface Coordinates : NSObject
@@ -64,7 +61,7 @@ namespace regina {
  * Return the number of coordinate columns in the given coordinate
  * system.
  */
-+ (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri;
++ (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::Triangulation<3>*)tri;
 
 /**
  * Return a column header for the given coordinate of the given
@@ -74,20 +71,20 @@ namespace regina {
  * information can be returned, though this routine will behave
  * well without it.
  */
-+ (NSString*)columnName:(regina::NormalCoords)coordSystem whichCoord:(unsigned long)whichCoord tri:(regina::NTriangulation*)tri;
++ (NSString*)columnName:(regina::NormalCoords)coordSystem whichCoord:(unsigned long)whichCoord tri:(regina::Triangulation<3>*)tri;
 
 /**
  * Returns the longest coordinate column header that we might expect to see.
  *
  * Here the associated triangulation is mandatory.
  */
-+ (NSString*)longestColumnName:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri;
++ (NSString*)longestColumnName:(regina::NormalCoords)coordSystem tri:(regina::Triangulation<3>*)tri;
 
 /**
  * Return a particular coordinate of a normal surface in the given
  * coordinate system.
  */
-+ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord;
++ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NormalSurface&)surface whichCoord:(unsigned long)whichCoord;
 
 @end
 
@@ -102,7 +99,7 @@ namespace regina {
  * Return the number of coordinate columns in the given coordinate
  * system.
  */
-+ (size_t)numColumns:(regina::HyperCoords)coordSystem tri:(regina::Dim4Triangulation*)tri;
++ (size_t)numColumns:(regina::HyperCoords)coordSystem tri:(regina::Triangulation<4>*)tri;
 
 /**
  * Return a column header for the given coordinate of the given
@@ -112,19 +109,19 @@ namespace regina {
  * information can be returned, though this routine will behave
  * well without it.
  */
-+ (NSString*)columnName:(regina::HyperCoords)coordSystem whichCoord:(size_t)whichCoord tri:(regina::Dim4Triangulation*)tri;
++ (NSString*)columnName:(regina::HyperCoords)coordSystem whichCoord:(size_t)whichCoord tri:(regina::Triangulation<4>*)tri;
 
 /**
  * Returns the longest coordinate column header that we might expect to see.
  *
  * Here the associated triangulation is mandatory.
  */
-+ (NSString*)longestColumnName:(regina::HyperCoords)coordSystem tri:(regina::Dim4Triangulation*)tri;
++ (NSString*)longestColumnName:(regina::HyperCoords)coordSystem tri:(regina::Triangulation<4>*)tri;
 
 /**
  * Return a particular coordinate of a normal surface in the given
  * coordinate system.
  */
-+ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord;
++ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NormalHypersurface&)surface whichCoord:(size_t)whichCoord;
 
 @end

@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "manifold/nsfs.h"
-#include "triangulation/ntriangulation.h"
+#include "manifold/sfs.h"
+#include "triangulation/dim3.h"
 #include "subcomplex/nplugtrisolidtorus.h"
 
 namespace regina {
@@ -118,8 +118,8 @@ void NPlugTriSolidTorus::writeTextLong(std::ostream& out) const {
     writeName(out);
 }
 
-NManifold* NPlugTriSolidTorus::manifold() const {
-    NSFSpace* ans = new NSFSpace();
+Manifold* NPlugTriSolidTorus::manifold() const {
+    SFSpace* ans = new SFSpace();
     ans->insertFibre(2, -1);
     ans->insertFibre(3, 1);
 
@@ -143,9 +143,9 @@ NManifold* NPlugTriSolidTorus::manifold() const {
 }
 
 NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
-        NComponent* comp) {
+        Component<3>* comp) {
     // Each triangular solid torus is tested three times since we
-    // can't call NTetrahedron::index() from within a component only.
+    // can't call Tetrahedron<3>::index() from within a component only.
     // TODO: Update - yes we can now.  This constraint was from an
     // ancient version of regina.  Fix this code accordingly.
 
@@ -168,15 +168,15 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
     unsigned long tetIndex;
     int coreIndex;
     NTriSolidTorus* core;
-    NTetrahedron* coreTet[3];
-    NEdge* axis[3];
+    Tetrahedron<3>* coreTet[3];
+    Edge<3>* axis[3];
     Perm<4> coreRoles[3];
-    NTetrahedron* base[2];
+    Tetrahedron<3>* base[2];
     Perm<4> baseRoles[2];
     int i, j;
     bool error;
 
-    NTetrahedron* plugTet[3][2];
+    Tetrahedron<3>* plugTet[3][2];
     Perm<4> plugRoles[3][2];
     Perm<4> realPlugRoles[2];
 
@@ -201,7 +201,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 coreTet[i] = core->tetrahedron(i);
                 coreRoles[i] = core->vertexRoles(i);
                 axis[i] = coreTet[i]->edge(
-                    NEdge::edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
+                    Edge<3>::edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
             }
 
             if (axis[0] == axis[1] || axis[1] == axis[2] ||

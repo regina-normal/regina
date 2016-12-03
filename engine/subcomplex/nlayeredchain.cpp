@@ -30,16 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/nabeliangroup.h"
-#include "manifold/nhandlebody.h"
-#include "triangulation/nedge.h"
-#include "triangulation/ntetrahedron.h"
+#include "algebra/abeliangroup.h"
+#include "manifold/handlebody.h"
+#include "triangulation/dim3.h"
 #include "subcomplex/nlayeredchain.h"
 
 namespace regina {
 
 bool NLayeredChain::extendAbove() {
-    NTetrahedron* adj = top_->adjacentTetrahedron(topVertexRoles_[0]);
+    Tetrahedron<3>* adj = top_->adjacentTetrahedron(topVertexRoles_[0]);
     if (adj == bottom_ || adj == top_ || adj == 0)
         return false;
     if (adj != top_->adjacentTetrahedron(topVertexRoles_[3]))
@@ -60,7 +59,7 @@ bool NLayeredChain::extendAbove() {
 }
 
 bool NLayeredChain::extendBelow() {
-    NTetrahedron* adj = bottom_->adjacentTetrahedron(bottomVertexRoles_[1]);
+    Tetrahedron<3>* adj = bottom_->adjacentTetrahedron(bottomVertexRoles_[1]);
     if (adj == bottom_ || adj == top_ || adj == 0)
         return false;
     if (adj != bottom_->adjacentTetrahedron(bottomVertexRoles_[2]))
@@ -90,7 +89,7 @@ bool NLayeredChain::extendMaximal() {
 }
 
 void NLayeredChain::reverse() {
-    NTetrahedron* tmp = top_;
+    Tetrahedron<3>* tmp = top_;
     top_ = bottom_;
     bottom_ = tmp;
 
@@ -104,12 +103,12 @@ void NLayeredChain::invert() {
     bottomVertexRoles_ = bottomVertexRoles_ * Perm<4>(3, 2, 1, 0);
 }
 
-NManifold* NLayeredChain::manifold() const {
-    return new NHandlebody(index_ <= 1 ? 0 : 1, true);
+Manifold* NLayeredChain::manifold() const {
+    return new Handlebody(index_ <= 1 ? 0 : 1, true);
 }
 
-NAbelianGroup* NLayeredChain::homology() const {
-    NAbelianGroup* ans = new NAbelianGroup();
+AbelianGroup* NLayeredChain::homology() const {
+    AbelianGroup* ans = new AbelianGroup();
     if (index_ > 1)
         ans->addRank();
     return ans;

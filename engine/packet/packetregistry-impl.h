@@ -51,18 +51,18 @@
 
 #include "packet/container.h"
 #include "packet/text.h"
-#include "triangulation/ntriangulation.h"
 #include "surfaces/normalsurfaces.h"
 #include "packet/script.h"
-#include "surfaces/nsurfacefilter.h"
+#include "surfaces/surfacefilter.h"
 #include "angle/anglestructures.h"
 #include "packet/pdf.h"
-#include "dim2/dim2triangulation.h"
-#include "dim4/dim4triangulation.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "snappea/snappeatriangulation.h"
 #include "link/link.h"
-#include "generic/triangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
+#include "triangulation/generic.h"
 
 namespace regina {
 
@@ -176,11 +176,11 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_TEXT : return
             func.template operator()<PacketInfo<PACKET_TEXT>>(
             std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION>>(
+        case PACKET_TRIANGULATION3 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION3>>(
             std::forward<Args>(args)...);
-        case PACKET_NORMALSURFACELIST : return
-            func.template operator()<PacketInfo<PACKET_NORMALSURFACELIST>>(
+        case PACKET_NORMALSURFACES : return
+            func.template operator()<PacketInfo<PACKET_NORMALSURFACES>>(
             std::forward<Args>(args)...);
         case PACKET_SCRIPT : return
             func.template operator()<PacketInfo<PACKET_SCRIPT>>(
@@ -188,20 +188,20 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_SURFACEFILTER : return
             func.template operator()<PacketInfo<PACKET_SURFACEFILTER>>(
             std::forward<Args>(args)...);
-        case PACKET_ANGLESTRUCTURELIST : return
-            func.template operator()<PacketInfo<PACKET_ANGLESTRUCTURELIST>>(
+        case PACKET_ANGLESTRUCTURES : return
+            func.template operator()<PacketInfo<PACKET_ANGLESTRUCTURES>>(
             std::forward<Args>(args)...);
         case PACKET_PDF : return
             func.template operator()<PacketInfo<PACKET_PDF>>(
             std::forward<Args>(args)...);
-        case PACKET_DIM2TRIANGULATION : return
-            func.template operator()<PacketInfo<PACKET_DIM2TRIANGULATION>>(
+        case PACKET_TRIANGULATION2 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION2>>(
             std::forward<Args>(args)...);
-        case PACKET_DIM4TRIANGULATION : return
-            func.template operator()<PacketInfo<PACKET_DIM4TRIANGULATION>>(
+        case PACKET_TRIANGULATION4 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION4>>(
             std::forward<Args>(args)...);
-        case PACKET_NORMALHYPERSURFACELIST : return
-            func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACELIST>>(
+        case PACKET_NORMALHYPERSURFACES : return
+            func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACES>>(
             std::forward<Args>(args)...);
         case PACKET_SNAPPEATRIANGULATION : return
             func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
@@ -256,11 +256,11 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
         case PACKET_TEXT :
             func.template operator()<PacketInfo<PACKET_TEXT>>(
             std::forward<Args>(args)...); break;
-        case PACKET_TRIANGULATION :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION>>(
+        case PACKET_TRIANGULATION3 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION3>>(
             std::forward<Args>(args)...); break;
-        case PACKET_NORMALSURFACELIST :
-            func.template operator()<PacketInfo<PACKET_NORMALSURFACELIST>>(
+        case PACKET_NORMALSURFACES :
+            func.template operator()<PacketInfo<PACKET_NORMALSURFACES>>(
             std::forward<Args>(args)...); break;
         case PACKET_SCRIPT :
             func.template operator()<PacketInfo<PACKET_SCRIPT>>(
@@ -268,20 +268,20 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
         case PACKET_SURFACEFILTER :
             func.template operator()<PacketInfo<PACKET_SURFACEFILTER>>(
             std::forward<Args>(args)...); break;
-        case PACKET_ANGLESTRUCTURELIST :
-            func.template operator()<PacketInfo<PACKET_ANGLESTRUCTURELIST>>(
+        case PACKET_ANGLESTRUCTURES :
+            func.template operator()<PacketInfo<PACKET_ANGLESTRUCTURES>>(
             std::forward<Args>(args)...); break;
         case PACKET_PDF :
             func.template operator()<PacketInfo<PACKET_PDF>>(
             std::forward<Args>(args)...); break;
-        case PACKET_DIM2TRIANGULATION :
-            func.template operator()<PacketInfo<PACKET_DIM2TRIANGULATION>>(
+        case PACKET_TRIANGULATION2 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION2>>(
             std::forward<Args>(args)...); break;
-        case PACKET_DIM4TRIANGULATION :
-            func.template operator()<PacketInfo<PACKET_DIM4TRIANGULATION>>(
+        case PACKET_TRIANGULATION4 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION4>>(
             std::forward<Args>(args)...); break;
-        case PACKET_NORMALHYPERSURFACELIST :
-            func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACELIST>>(
+        case PACKET_NORMALHYPERSURFACES :
+            func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACES>>(
             std::forward<Args>(args)...); break;
         case PACKET_SNAPPEATRIANGULATION :
             func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(

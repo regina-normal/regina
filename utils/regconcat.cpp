@@ -103,8 +103,10 @@ int main(int argc, char* argv[]) {
     // Tidy up the final data file and write it.
     if (outputFile.empty())
         ans->writeXMLFile(std::cout);
-    else if (! ans->save(outputFile.c_str()))
+    else if (! ans->save(outputFile.c_str())) {
         std::cerr << "File " << outputFile << " could not be written.\n";
+        error = true;
+    }
 
     delete ans;
     return (error ? 1 : 0);

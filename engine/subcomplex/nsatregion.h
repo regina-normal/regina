@@ -458,7 +458,7 @@ class REGINA_API NSatRegion :
          * @return the newly created structure of the underlying Seifert
          * fibred space.
          */
-        NSFSpace* createSFS(bool reflect) const;
+        SFSpace* createSFS(bool reflect) const;
 
         /**
          * Expands this region as far as possible within the overall
@@ -495,7 +495,7 @@ class REGINA_API NSatRegion :
          * create invalid edges (e.g., by joining a one-annulus
          * untwisted boundary to a one-annulus twisted boundary).
          * This routine does \e not check for such conditions.  It is
-         * recommended that you run NTriangulation::isValid() before
+         * recommended that you run Triangulation<3>::isValid() before
          * calling this routine.
          *
          * \pre If any blocks already belonging to this region have

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include "reginaprefset.h"
 #include "reginasupport.h"
@@ -46,12 +46,12 @@
 const SourceHandler SourceHandler::instance;
 
 PacketFilter* SourceHandler::canExport() const {
-    return new SubclassFilter<regina::NTriangulation>();
+    return new SubclassFilter<regina::Triangulation<3>>();
 }
 
 bool SourceHandler::exportData(regina::Packet* data, const QString& fileName,
         QWidget* parentWidget) const {
-    regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
+    regina::Triangulation<3>* tri = dynamic_cast<regina::Triangulation<3>*>(data);
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {

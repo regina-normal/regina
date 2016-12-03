@@ -1,7 +1,7 @@
 SET ( FILES
-  boundarycomponentchooser
+  boundary3chooser
+  boundary4chooser
   cuspchooser
-  dim4boundarycomponentchooser
   edgeintchooser
   )
 

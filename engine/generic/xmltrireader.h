@@ -31,100 +31,10 @@
  **************************************************************************/
 
 /*! \file generic/xmltrireader.h
- *  \brief Deals with parsing XML data for triangulation packets.
+ *  \brief Deprecated header.
  */
 
-#ifndef __XMLTRIREADER_H
-#ifndef __DOXYGEN
-#define __XMLTRIREADER_H
-#endif
+#warning This header is deprecated; please use triangulation/xmltrireader.h instead.
 
-#include "generic/detail/xmltrireader.h"
-
-namespace regina {
-
-/**
- * \weakgroup generic
- * @{
- */
-
-/**
- * An XML packet reader that reads a single <i>dim</i>-dimensional
- * triangulation.
- *
- * In some dimensions this template is specialised so that it can read in
- * additional properties of the triangulation.  In order to use these
- * specialised classes, you will need to include the corresponding headers
- * (e.g., triangulation/nxmltrireader.h for \a dim = 3).
- *
- * \ifacespython Not present.
- *
- * \tparam dim The dimension of the triangulation being read.
- * This must be between 2 and 15 inclusive.
- */
-template <int dim>
-class XMLTriangulationReader :
-        public detail::XMLTriangulationReaderBase<dim> {
-    static_assert(! standardDim(dim),
-        "The generic implementation of XMLTriangulationReader<dim> "
-        "should not be used for Regina's standard dimensions.");
-
-    public:
-        /**
-         * Creates a new triangulation reader.
-         *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
-         */
-        XMLTriangulationReader(XMLTreeResolver& resolver);
-
-        /**
-         * Returns an XML element reader for the given optional property of a
-         * <i>dim</i>-dimensional triangulation.
-         *
-         * If \a subTagName names an XML element that describes an optional
-         * property of a triangulation (such as \c H1 or \c fundgroup for
-         * 3-manifold triangulations), then this function should return
-         * a corresponding element reader.
-         *
-         * Otherwise this function should return a new XMLElementReader,
-         * which will cause the XML element to be ignored.
-         *
-         * @param subTagName the name of the XML subelement opening tag.
-         * @param subTagProps the properties associated with the
-         * subelement opening tag.
-         * @return a newly created element reader that will be used to
-         * parse the subelement.  This class should not take care of the
-         * new reader's destruction; that will be done by the parser.
-         */
-        XMLElementReader* startPropertySubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
-};
-
-// Note that some of our classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class XMLTriangulationReader<2>;
-template <> class XMLTriangulationReader<3>;
-template <> class XMLTriangulationReader<4>;
-
-/*@}*/
-
-// Inline functions for XMLTriangulationReader
-
-template <int dim>
-inline XMLTriangulationReader<dim>::XMLTriangulationReader(
-        XMLTreeResolver& resolver) :
-        detail::XMLTriangulationReaderBase<dim>(resolver) {
-}
-
-template <int dim>
-inline XMLElementReader* XMLTriangulationReader<dim>::startPropertySubElement(
-        const std::string&, const regina::xml::XMLPropertyDict&) {
-    return new XMLElementReader();
-}
-
-} // namespace regina
-
-#endif
+#include "triangulation/xmltrireader.h"
 

@@ -33,7 +33,6 @@
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/ntxicore.h"
-#include "triangulation/nisomorphism.h"
 #include "../helpers.h"
 
 using namespace boost::python;

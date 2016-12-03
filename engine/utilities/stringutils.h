@@ -309,10 +309,12 @@ REGINA_API bool valueOf(const std::string& str, double& dest);
  * Converts the entire given string to a boolean and reports whether
  * this conversion was successful.
  *
- * If the given string begins with <tt>T</tt> or <tt>F</tt> (either
- * upper- or lower-case), the string will be successfully converted to
- * \c true or \c false respectively.  Otherwise the conversion will be
- * unsuccessful and argument \a dest will be set to \c false.
+ * If the given string begins with <tt>T</tt>, <tt>t</tt> or <tt>1</tt>,
+ * then the string will be successfully converted to \c true.
+ * If the given string begins with <tt>F</tt>, <tt>f</tt> or <tt>0</tt>,
+ * then the string will be successfully converted to \c false.
+ * Otherwise the conversion will be unsuccessful and argument \a dest will
+ * be set to \c false.
  *
  * \ifacespython Not present.
  *

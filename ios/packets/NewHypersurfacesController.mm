@@ -34,13 +34,13 @@
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "progress/progresstracker.h"
-#import "hypersurface/nnormalhypersurfacelist.h"
+#import "hypersurface/normalhypersurfaces.h"
 
 #define KEY_LAST_TYPE @"NewHypersurfacesType"
 #define KEY_LAST_COORDS @"NewHypersurfacesCoords"
 #define KEY_LAST_EMB @"NewHypersurfacesEmb"
 
-using regina::NNormalHypersurfaceList;
+using regina::NormalHypersurfaces;
 
 static NSArray* whichText;
 static NSArray* coordText;
@@ -170,8 +170,8 @@ static NSArray* embText;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NNormalHypersurfaceList* ans =
-            NNormalHypersurfaceList::enumerate((regina::Dim4Triangulation*)self.spec.parent,
+        NormalHypersurfaces* ans =
+            NormalHypersurfaces::enumerate((regina::Triangulation<4>*)self.spec.parent,
                                           coords, which, regina::HS_ALG_DEFAULT, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {

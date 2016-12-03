@@ -86,14 +86,14 @@
     [self.tetrahedra reloadData];
 }
 
-+ (NSString*)destStringFromFace:(int)srcFace dest:(regina::NTetrahedron*)destTet gluing:(const regina::Perm<4>&)gluing
++ (NSString*)destStringFromFace:(int)srcFace dest:(regina::Tetrahedron<3>*)destTet gluing:(const regina::Perm<4>&)gluing
 {
     if (! destTet)
         return @" ";
     else
         return [NSString stringWithFormat:@"%ld (%s)",
                 destTet->markedIndex(),
-                (gluing * regina::NTriangle::ordering(srcFace)).trunc3().c_str()];
+                (gluing * regina::Triangle<3>::ordering(srcFace)).trunc3().c_str()];
 }
 
 - (IBAction)randomise:(id)sender {
@@ -131,7 +131,7 @@
         return;
     }
     
-    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
+    regina::Triangulation<3>* ans = new regina::Triangulation<3>(*self.packet);
     ans->setLabel(self.packet->label());
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
@@ -150,7 +150,7 @@
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
     
     SnapPeaGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
-    regina::NTetrahedron* t = self.packet->simplex(indexPath.row - 1);
+    regina::Tetrahedron<3>* t = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
     cell.face0.text = [SnapPeaGluings destStringFromFace:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.face1.text = [SnapPeaGluings destStringFromFace:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];

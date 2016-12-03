@@ -34,7 +34,7 @@
 
 #include "maths/matrix.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -82,7 +82,7 @@ namespace {
      * Writes a piece of the CSV data for the given normal surface
      * corresponding to the given set of optional fields.
      */
-    void writePropData(std::ostream& out, const NNormalSurface* s, int fields) {
+    void writePropData(std::ostream& out, const NormalSurface* s, int fields) {
         if (fields & surfaceExportName) {
             if (! s->name().empty())
                 writeCSVQuotedString(out, s->name().c_str());
@@ -126,11 +126,11 @@ namespace {
         if (fields & surfaceExportLink) {
             // Mirror the information that gets shown in the Link column
             // in the GUI.
-            const NVertex* v = s->isVertexLink();
+            const Vertex<3>* v = s->isVertexLink();
             if (v)
                 out << "\"Vertex " << v->index() << "\"";
             else {
-                std::pair<const regina::NEdge*, const regina::NEdge*> e =
+                std::pair<const regina::Edge<3>*, const regina::Edge<3>*> e =
                     s->isThinEdgeLink();
                 if (e.second)
                     out << "\"Thin edges " << e.first->index()
@@ -194,7 +194,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
 
     // Write the data for individual surfaces.
     unsigned long tot = size();
-    const NNormalSurface* s;
+    const NormalSurface* s;
     for (i = 0; i < tot; ++i) {
         s = surface(i);
 
@@ -252,7 +252,7 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
 
     // Write the data for individual surfaces.
     unsigned long tot = size();
-    const NNormalSurface* s;
+    const NormalSurface* s;
     for (i = 0; i < tot; ++i) {
         s = surface(i);
 

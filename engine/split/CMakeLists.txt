@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  nsigcensus
-  nsigisomorphism
-  nsignature
+  sigcensus
+  sigisomorphism
+  signature
   )
 
 # Prepend folder name
@@ -20,5 +20,8 @@ if (${REGINA_INSTALL_DEV})
     nsigcensus.h
     nsigisomorphism.h
     nsignature.h
+    sigcensus.h
+    sigisomorphism.h
+    signature.h
     DESTINATION ${INCLUDEDIR}/split COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

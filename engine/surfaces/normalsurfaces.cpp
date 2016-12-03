@@ -32,7 +32,7 @@
 
 #include "surfaces/coordregistry.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -63,15 +63,15 @@ void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
 }
 
 namespace {
-    struct ZeroVector : public Returns<NNormalSurfaceVector*> {
+    struct ZeroVector : public Returns<NormalSurfaceVector*> {
         template <typename Coords>
-        inline NNormalSurfaceVector* operator() (const NTriangulation* tri) {
+        inline NormalSurfaceVector* operator() (const Triangulation<3>* tri) {
             return Coords::Class::makeZeroVector(tri);
         }
     };
 }
 
-NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
+NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
         NormalCoords coords) {
     return forCoords(coords, ZeroVector(), 0, triangulation);
 }
@@ -79,13 +79,13 @@ NNormalSurfaceVector* makeZeroVector(const NTriangulation* triangulation,
 namespace {
     struct MatchingEquations : public Returns<MatrixInt*> {
         template <typename Coords>
-        inline MatrixInt* operator() (const NTriangulation* tri) {
+        inline MatrixInt* operator() (const Triangulation<3>* tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
-MatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
+MatrixInt* makeMatchingEquations(const Triangulation<3>* triangulation,
         NormalCoords coords) {
     return forCoords(coords, MatchingEquations(), 0, triangulation);
 }
@@ -93,19 +93,19 @@ MatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
 namespace {
     struct EmbeddedConstraints : public Returns<EnumConstraints*> {
         template <typename Coords>
-        inline EnumConstraints* operator() (const NTriangulation* tri) {
+        inline EnumConstraints* operator() (const Triangulation<3>* tri) {
             return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
 }
 
 EnumConstraints* makeEmbeddedConstraints(
-        const NTriangulation* triangulation, NormalCoords coords) {
+        const Triangulation<3>* triangulation, NormalCoords coords) {
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-NTriangulation* NormalSurfaces::triangulation() const {
-    return dynamic_cast<NTriangulation*>(parent());
+Triangulation<3>* NormalSurfaces::triangulation() const {
+    return dynamic_cast<Triangulation<3>*>(parent());
 }
 
 namespace {
@@ -231,7 +231,7 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
     out << "\"/>\n";
 
     // Write the individual surfaces.
-    std::vector<NNormalSurface*>::const_iterator it;
+    std::vector<NormalSurface*>::const_iterator it;
     for (it = surfaces.begin(); it != surfaces.end(); it++)
         (*it)->writeXMLData(out);
 }
@@ -240,7 +240,7 @@ Packet* NormalSurfaces::internalClonePacket(Packet* /* parent */) const {
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, which_, algorithm_);
     transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),
-        FuncNewClonePtr<NNormalSurface>());
+        FuncNewClonePtr<NormalSurface>());
     return ans;
 }
 

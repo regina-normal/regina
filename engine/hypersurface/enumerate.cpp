@@ -31,23 +31,23 @@
  **************************************************************************/
 
 #include <thread>
-#include "dim4/dim4triangulation.h"
 #include "enumerate/doubledescription.h"
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
-#include "hypersurface/nnormalhypersurfacelist.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "hypersurface/hscoordregistry.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
+#include "triangulation/dim4.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
 
-NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
-        Dim4Triangulation* owner, HyperCoords coords,
+NormalHypersurfaces* NormalHypersurfaces::enumerate(
+        Triangulation<4>* owner, HyperCoords coords,
         HyperList which, HyperAlg algHints,
         ProgressTracker* tracker) {
-    NNormalHypersurfaceList* list = new NNormalHypersurfaceList(
+    NormalHypersurfaces* list = new NormalHypersurfaces(
         coords, which, algHints);
 
     if (tracker)
@@ -59,7 +59,7 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::Enumerator::operator() () {
+void NormalHypersurfaces::Enumerator::operator() () {
     // Clean up the "type of list" flag.
     list_->which_ &= (
         HS_EMBEDDED_ONLY | HS_IMMERSED_SINGULAR | HS_VERTEX | HS_FUNDAMENTAL);
@@ -82,7 +82,7 @@ void NNormalHypersurfaceList::Enumerator::operator() () {
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::Enumerator::fillVertex() {
+void NormalHypersurfaces::Enumerator::fillVertex() {
     // ----- Decide which algorithm to use -----
 
     // Here we will set the algorithm_ flag to precisely what we plan to do.
@@ -104,7 +104,7 @@ void NNormalHypersurfaceList::Enumerator::fillVertex() {
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::Enumerator::fillVertexDD() {
+void NormalHypersurfaces::Enumerator::fillVertexDD() {
     MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
     EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
@@ -118,7 +118,7 @@ void NNormalHypersurfaceList::Enumerator::fillVertexDD() {
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::Enumerator::fillFundamental() {
+void NormalHypersurfaces::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
     if (triang_->isEmpty()) {
         list_->algorithm_ = HS_HILBERT_DUAL; /* shrug */
@@ -144,7 +144,7 @@ void NNormalHypersurfaceList::Enumerator::fillFundamental() {
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::Enumerator::fillFundamentalPrimal() {
+void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
     // enumeration has finished (since we might want to pass additional flags
     // to and/or from that routine).
@@ -160,7 +160,7 @@ void NNormalHypersurfaceList::Enumerator::fillFundamentalPrimal() {
     if (tracker_)
         tracker_->newStage("Enumerating extremal rays", 0.4);
 
-    NNormalHypersurfaceList* vtx = new NNormalHypersurfaceList(list_->coords_,
+    NormalHypersurfaces* vtx = new NormalHypersurfaces(list_->coords_,
         HS_VERTEX | (list_->which_.has(HS_EMBEDDED_ONLY) ?
             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
@@ -184,7 +184,7 @@ void NNormalHypersurfaceList::Enumerator::fillFundamentalPrimal() {
 }
 
 template <typename Coords>
-void NNormalHypersurfaceList::Enumerator::fillFundamentalDual() {
+void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
     list_->algorithm_ = HS_HILBERT_DUAL;
 
     if (tracker_)
