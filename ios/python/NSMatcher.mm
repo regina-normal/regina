@@ -43,7 +43,7 @@
 #import "syntax/definition.h"
 #import "syntax/definitionref_p.h"
 #import "syntax/definition_p.h"
-#import "syntax/rule_p.h"
+#import "syntax/rule.h"
 
 using namespace regina::syntax;
 

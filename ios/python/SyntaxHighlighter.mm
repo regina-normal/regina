@@ -42,7 +42,7 @@
 #import "syntax/definition_p.h"
 #import "syntax/format.h"
 #import "syntax/repository.h"
-#import "syntax/rule_p.h"
+#import "syntax/rule.h"
 #import "syntax/state.h"
 #import "syntax/state_p.h"
 #import "syntax/theme.h"

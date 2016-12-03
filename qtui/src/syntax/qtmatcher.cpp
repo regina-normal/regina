@@ -41,7 +41,7 @@
 #include "syntax/definitionref_p.h"
 #include "syntax/definition_p.h"
 #include "syntax/qtmatcher.h"
-#include "syntax/rule_p.h"
+#include "syntax/rule.h"
 
 #include <cassert>
 #include <iostream>

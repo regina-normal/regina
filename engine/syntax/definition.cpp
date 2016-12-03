@@ -24,7 +24,7 @@
 #include "syntax/format.h"
 #include "syntax/format_p.h"
 #include "syntax/repository_p.h"
-#include "syntax/rule_p.h"
+#include "syntax/rule.h"
 
 #include <algorithm>
 #include <cassert>

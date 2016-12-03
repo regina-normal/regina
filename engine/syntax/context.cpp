@@ -19,7 +19,7 @@
 #include "syntax/definition_p.h"
 #include "syntax/format.h"
 #include "syntax/repository.h"
-#include "syntax/rule_p.h"
+#include "syntax/rule.h"
 
 #include <cassert>
 #include <iostream>

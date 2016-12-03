@@ -43,7 +43,7 @@ if (FALSE AND ${REGINA_INSTALL_DEV})
     matcher.h
     repository.h
     repository_p.h
-    rule_p.h
+    rule.h
     state.h
     state_p.h
     textstyledata_p.h

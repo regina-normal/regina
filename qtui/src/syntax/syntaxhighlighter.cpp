@@ -42,7 +42,7 @@
 #include "syntax/format.h"
 #include "syntax/qtmatcher.h"
 #include "syntax/repository.h"
-#include "syntax/rule_p.h"
+#include "syntax/rule.h"
 #include "syntax/state.h"
 #include "syntax/state_p.h"
 #include "syntax/syntaxhighlighter.h"

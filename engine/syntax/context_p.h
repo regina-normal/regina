@@ -20,7 +20,7 @@
 #define __SYNTAX_CONTEXT_P_H
 #endif
 
-#include "syntax/rule_p.h"
+#include "syntax/rule.h"
 #include "syntax/contextswitch_p.h"
 #include "syntax/definition.h"
 #include "syntax/definitionref_p.h"
