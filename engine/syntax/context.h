@@ -42,11 +42,11 @@ public:
 
     const std::string& name() const;
     const std::string& attribute() const;
-    ContextSwitch lineEndContext() const;
-    ContextSwitch lineEmptyContext() const;
+    const ContextSwitch& lineEndContext() const;
+    const ContextSwitch& lineEmptyContext() const;
 
     bool fallthrough() const;
-    ContextSwitch fallthroughContext() const;
+    const ContextSwitch& fallthroughContext() const;
 
     const std::vector<Rule::Ptr>& rules() const;
 

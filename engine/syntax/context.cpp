@@ -60,12 +60,12 @@ const std::string& Context::attribute() const
     return m_attribute;
 }
 
-ContextSwitch Context::lineEndContext() const
+const ContextSwitch& Context::lineEndContext() const
 {
     return m_lineEndContext;
 }
 
-ContextSwitch Context::lineEmptyContext() const
+const ContextSwitch& Context::lineEmptyContext() const
 {
     return m_lineEmptyContext;
 }
@@ -75,7 +75,7 @@ bool Context::fallthrough() const
     return m_fallthrough;
 }
 
-ContextSwitch Context::fallthroughContext() const
+const ContextSwitch& Context::fallthroughContext() const
 {
     return m_fallthroughContext;
 }

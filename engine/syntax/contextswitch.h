@@ -21,6 +21,7 @@
 #endif
 
 #include <string>
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace syntax {
@@ -28,7 +29,7 @@ namespace syntax {
 class Context;
 class Definition;
 
-class ContextSwitch
+class ContextSwitch : public boost::noncopyable
 {
 public:
     ContextSwitch();

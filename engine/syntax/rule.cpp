@@ -53,7 +53,7 @@ const std::string& Rule::attribute() const
     return m_attribute;
 }
 
-ContextSwitch Rule::context() const
+const ContextSwitch& Rule::context() const
 {
     return m_context;
 }

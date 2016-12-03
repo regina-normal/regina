@@ -46,7 +46,7 @@ public:
     void setDefinition(const Definition &def);
 
     const std::string& attribute() const;
-    ContextSwitch context() const;
+    const ContextSwitch& context() const;
     bool isLookAhead() const;
     bool firstNonSpace() const;
     int requiredColumn() const;

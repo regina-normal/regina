@@ -20,10 +20,12 @@
 #define __SYNTAX_TEXTSTYLEDATA_P_H
 #endif
 
+#include <boost/noncopyable.hpp>
+
 namespace regina {
 namespace syntax {
 
-class TextStyleData
+class TextStyleData : public boost::noncopyable
 {
 public:
     // Constructor initializing all data.
