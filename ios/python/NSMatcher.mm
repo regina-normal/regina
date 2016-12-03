@@ -39,9 +39,9 @@
 
 #import "NSMatcher.h"
 
-#import "syntax/contextswitch_p.h"
+#import "syntax/contextswitch.h"
 #import "syntax/definition.h"
-#import "syntax/definitionref_p.h"
+#import "syntax/definitionref.h"
 #import "syntax/definition_p.h"
 #import "syntax/rule.h"
 

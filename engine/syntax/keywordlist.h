@@ -15,9 +15,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __SYNTAX_KEYWORDLIST_P_H
+#ifndef __SYNTAX_KEYWORDLIST_H
 #ifndef __DOXYGEN
-#define __SYNTAX_KEYWORDLIST_P_H
+#define __SYNTAX_KEYWORDLIST_H
 #endif
 
 #include <set>

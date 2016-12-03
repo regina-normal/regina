@@ -38,7 +38,7 @@
 
 #import "NSMatcher.h"
 #import "SyntaxHighlighter.h"
-#import "syntax/context_p.h"
+#import "syntax/context.h"
 #import "syntax/definition_p.h"
 #import "syntax/format.h"
 #import "syntax/repository.h"

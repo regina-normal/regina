@@ -20,8 +20,8 @@
 #define __SYNTAX_DEFINITION_P_H
 #endif
 
-#include "syntax/definitionref_p.h"
-#include "syntax/keywordlist_p.h"
+#include "syntax/definitionref.h"
+#include "syntax/keywordlist.h"
 
 #include <map>
 #include <memory>

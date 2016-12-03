@@ -20,10 +20,10 @@
 #define __SYNTAX_RULE_H
 #endif
 
-#include "syntax/contextswitch_p.h"
+#include "syntax/contextswitch.h"
 #include "syntax/definition.h"
-#include "syntax/definitionref_p.h"
-#include "syntax/keywordlist_p.h"
+#include "syntax/definitionref.h"
+#include "syntax/keywordlist.h"
 #include "syntax/matcher.h"
 
 #include <memory>

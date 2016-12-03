@@ -32,14 +32,14 @@ INSTALL(FILES
 # Install development headers
 if (FALSE AND ${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    context_p.h
-    contextswitch_p.h
+    context.h
+    contextswitch.h
     definition.h
     definition_p.h
-    definitionref_p.h
+    definitionref.h
     format.h
     format_p.h
-    keywordlist_p.h
+    keywordlist.h
     matcher.h
     repository.h
     repository_p.h

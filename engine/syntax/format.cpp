@@ -18,7 +18,7 @@
 #include "syntax/format.h"
 #include "syntax/format_p.h"
 #include "syntax/definition.h"
-#include "syntax/definitionref_p.h"
+#include "syntax/definitionref.h"
 #include "syntax/textstyledata_p.h"
 #include "syntax/theme.h"
 #include "syntax/themedata_p.h"

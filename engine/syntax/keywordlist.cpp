@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "syntax/keywordlist_p.h"
+#include "syntax/keywordlist.h"
 
 #include <cassert>
 

@@ -36,9 +36,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "syntax/contextswitch_p.h"
+#include "syntax/contextswitch.h"
 #include "syntax/definition.h"
-#include "syntax/definitionref_p.h"
+#include "syntax/definitionref.h"
 #include "syntax/definition_p.h"
 #include "syntax/qtmatcher.h"
 #include "syntax/rule.h"

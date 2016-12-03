@@ -15,15 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __SYNTAX_CONTEXT_P_H
+#ifndef __SYNTAX_CONTEXT_H
 #ifndef __DOXYGEN
-#define __SYNTAX_CONTEXT_P_H
+#define __SYNTAX_CONTEXT_H
 #endif
 
 #include "syntax/rule.h"
-#include "syntax/contextswitch_p.h"
+#include "syntax/contextswitch.h"
 #include "syntax/definition.h"
-#include "syntax/definitionref_p.h"
+#include "syntax/definitionref.h"
 
 #include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>

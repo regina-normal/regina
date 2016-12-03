@@ -18,9 +18,9 @@
 
 #include "syntax/definition.h"
 #include "syntax/definition_p.h"
-#include "syntax/definitionref_p.h"
+#include "syntax/definitionref.h"
 
-#include "syntax/context_p.h"
+#include "syntax/context.h"
 #include "syntax/format.h"
 #include "syntax/format_p.h"
 #include "syntax/repository_p.h"

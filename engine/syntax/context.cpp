@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "syntax/context_p.h"
+#include "syntax/context.h"
 #include "syntax/definition_p.h"
 #include "syntax/format.h"
 #include "syntax/repository.h"
