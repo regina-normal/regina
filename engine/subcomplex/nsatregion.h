@@ -175,7 +175,7 @@ struct REGINA_API NSatBlockSpec {
  * and passing this to the NSatRegion constructor, and then by calling
  * expand() to locate adjacent blocks and expand the region as far as
  * possible.  For locating initial blocks, the class
- * NSatBlockStarterSearcher may be of use.
+ * SatBlockStarterSearcher may be of use.
  *
  * \warning It is crucial that the adjacency information stored in the
  * blocks is consistent with the region containing them.  All this
@@ -243,7 +243,7 @@ class REGINA_API NSatRegion :
          *
          * Typically a region is initialised using this constructor, and
          * then grown using the expand() routine.  For help in finding
-         * an initial starter block, see the NSatBlockStarterSearcher class.
+         * an initial starter block, see the SatBlockStarterSearcher class.
          *
          * This region will claim ownership of the given block, and upon
          * destruction it will destroy this block also.

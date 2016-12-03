@@ -40,12 +40,12 @@
 namespace regina {
 
 /**
- * A subclass of NSatBlockStarterSearcher that, upon finding a starter
+ * A subclass of SatBlockStarterSearcher that, upon finding a starter
  * block, attempts to flesh this out to a pair of saturated regions
  * joined along their single torus boundaries, as desribed by the
  * BlockedSFSPair class.
  */
-struct BlockedSFSPairSearcher : public NSatBlockStarterSearcher {
+struct BlockedSFSPairSearcher : public SatBlockStarterSearcher {
     NSatRegion* region[2];
         /**< The two bounded saturated regions that are joined together,
              if the entire BlockedSFSPair structure has been successfully

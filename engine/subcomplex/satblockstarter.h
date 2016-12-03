@@ -57,7 +57,7 @@ namespace regina {
  * accompanying saturated block description.  Different objects of this
  * class will correspond to different types of saturated block.
  *
- * This is a support class for NSatBlockStarterSet, and as such it is a
+ * This is a support class for SatBlockStarterSet, and as such it is a
  * read-only class to the rest of the world.
  *
  * This class is well-suited for subcomplex testing: if the
@@ -70,12 +70,12 @@ namespace regina {
  * As such, one of the core uses of this class is as a starting point
  * for identifying regions within triangulations that are formed by
  * joining saturated blocks together along their boundary annuli.  See
- * the routines NSatBlockStarterSearcher::findStarterBlocks() and
+ * the routines SatBlockStarterSearcher::findStarterBlocks() and
  * NSatRegion::expand() for implementations of this.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSatBlockStarter : boost::noncopyable {
+class REGINA_API SatBlockStarter : boost::noncopyable {
     private:
         Triangulation<3> triangulation_;
             /**< The triangulation of the saturated block. */
@@ -86,7 +86,7 @@ class REGINA_API NSatBlockStarter : boost::noncopyable {
         /**
          * Destroys both the internal triangulation and block structure.
          */
-        ~NSatBlockStarter();
+        ~SatBlockStarter();
 
         /**
          * Returns a reference to the triangulation of the saturated
@@ -112,9 +112,9 @@ class REGINA_API NSatBlockStarter : boost::noncopyable {
          * The triangulation must be fleshed out and the block structure
          * created before this object can be used.
          */
-        NSatBlockStarter();
+        SatBlockStarter();
 
-    friend class NSatBlockStarterSet;
+    friend class SatBlockStarterSet;
 };
 
 /**
@@ -123,7 +123,7 @@ class REGINA_API NSatBlockStarter : boost::noncopyable {
  *
  * This class provides a list of saturated blocks that can be used as
  * starting points for recognising triangulations; see the
- * NSatBlockStarter class notes for details.
+ * SatBlockStarter class notes for details.
  *
  * More importantly, this list is global and hard-coded.  The only
  * access to the list is through the static routines begin() and end().
@@ -139,17 +139,17 @@ class REGINA_API NSatBlockStarter : boost::noncopyable {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSatBlockStarterSet : private ListOnCall<NSatBlockStarter> {
+class REGINA_API SatBlockStarterSet : private ListOnCall<SatBlockStarter> {
     public:
         /**
          * An iterator over the starter blocks in this list.  This operates
          * as a forward iterator in a manner consistent with the standard C++
          * library.
          */
-        typedef ListOnCall<NSatBlockStarter>::iterator iterator;
+        typedef ListOnCall<SatBlockStarter>::iterator iterator;
 
     private:
-        static const NSatBlockStarterSet blocks;
+        static const SatBlockStarterSet blocks;
             /**< The hard-coded list of starter blocks. */
 
     public:
@@ -184,7 +184,7 @@ class REGINA_API NSatBlockStarterSet : private ListOnCall<NSatBlockStarter> {
          * private since the only list that should exist is the global
          * hard-coded list.
          */
-        NSatBlockStarterSet();
+        SatBlockStarterSet();
 };
 
 /**
@@ -192,10 +192,10 @@ class REGINA_API NSatBlockStarterSet : private ListOnCall<NSatBlockStarter> {
  * triangulation.
  *
  * This class provides a means for searching for each starter
- * block in the global hard-coded NSatBlockStarterSet within a
+ * block in the global hard-coded SatBlockStarterSet within a
  * given triangulation.  More specifically, given some triangulation \a t,
  * this class can locate every isomorphic embedding of every starter
- * block in the global NSatBlockStarterSet as a subcomplex of \a t (see
+ * block in the global SatBlockStarterSet as a subcomplex of \a t (see
  * Triangulation<3>::isContainedIn() for what is meant by "isomorphic
  * embedding").
  *
@@ -205,10 +205,10 @@ class REGINA_API NSatBlockStarterSet : private ListOnCall<NSatBlockStarter> {
  * be called.  The block that is passed to useStarterBlock() will be a
  * new block that refers to the particular embedding of the starter block
  * within the given triangulation (as opposed to the original block
- * structure referring to the prebuilt triangulation in NSatBlockStarter).
+ * structure referring to the prebuilt triangulation in SatBlockStarter).
  *
  * For each situation that requires searching for starter blocks, a
- * subclass of NSatBlockStarterSearcher will be required.  This subclass
+ * subclass of SatBlockStarterSearcher will be required.  This subclass
  * should override useStarterBlock() to perform whatever action is
  * necessary.
  *
@@ -219,7 +219,7 @@ class REGINA_API NSatBlockStarterSet : private ListOnCall<NSatBlockStarter> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSatBlockStarterSearcher {
+class REGINA_API SatBlockStarterSearcher {
     protected:
         NSatBlock::TetList usedTets;
             /**< Keeps track of which tetrahedra have used by the
@@ -230,15 +230,15 @@ class REGINA_API NSatBlockStarterSearcher {
         /**
          * Destroys this object and its internal structures.
          */
-        virtual ~NSatBlockStarterSearcher();
+        virtual ~SatBlockStarterSearcher();
 
         /**
          * Runs a search for every isomorphic embedding of every
-         * starter block from the global NSatBlockStarterSet within the
+         * starter block from the global SatBlockStarterSet within the
          * given triangulation.  Each time an embedding is discovered,
          * the pure virtual routine useStarterBlock() will be called.
          *
-         * See the NSatBlockStarterSearcher class notes for greater
+         * See the SatBlockStarterSearcher class notes for greater
          * detail on what this search does and how it runs.
          *
          * For subclasses that make use of the \a usedTets data member,
@@ -260,7 +260,7 @@ class REGINA_API NSatBlockStarterSearcher {
          * been called with some triangulation \a t.  Each time it
          * locates an isomorphic embedding of a starter block within \a t,
          * it will call useStarterBlock().  Subclasses of
-         * NSatBlockStarterSearcher should therefore override
+         * SatBlockStarterSearcher should therefore override
          * useStarterBlock() to process each embedding in whatever way
          * is appropriate for the problem at hand.
          *
@@ -306,40 +306,40 @@ class REGINA_API NSatBlockStarterSearcher {
 
 /*@}*/
 
-// Inline functions for NSatBlockStarter
+// Inline functions for SatBlockStarter
 
-inline NSatBlockStarter::NSatBlockStarter() : block_(0) {
+inline SatBlockStarter::SatBlockStarter() : block_(0) {
 }
 
-inline NSatBlockStarter::~NSatBlockStarter() {
+inline SatBlockStarter::~SatBlockStarter() {
     if (block_)
         delete block_;
 }
 
-inline const Triangulation<3>& NSatBlockStarter::triangulation() const {
+inline const Triangulation<3>& SatBlockStarter::triangulation() const {
     return triangulation_;
 }
 
-inline const NSatBlock* NSatBlockStarter::block() const {
+inline const NSatBlock* SatBlockStarter::block() const {
     return block_;
 }
 
-// Inline functions for NSatBlockStarterSet
+// Inline functions for SatBlockStarterSet
 
-inline NSatBlockStarterSet::NSatBlockStarterSet() {
+inline SatBlockStarterSet::SatBlockStarterSet() {
 }
 
-inline NSatBlockStarterSet::iterator NSatBlockStarterSet::begin() {
-    return blocks.ListOnCall<NSatBlockStarter>::begin();
+inline SatBlockStarterSet::iterator SatBlockStarterSet::begin() {
+    return blocks.ListOnCall<SatBlockStarter>::begin();
 }
 
-inline NSatBlockStarterSet::iterator NSatBlockStarterSet::end() {
-    return blocks.ListOnCall<NSatBlockStarter>::end();
+inline SatBlockStarterSet::iterator SatBlockStarterSet::end() {
+    return blocks.ListOnCall<SatBlockStarter>::end();
 }
 
-// Inline functions for NSatBlockStarterSearcher
+// Inline functions for SatBlockStarterSearcher
 
-inline NSatBlockStarterSearcher::~NSatBlockStarterSearcher() {
+inline SatBlockStarterSearcher::~SatBlockStarterSearcher() {
 }
 
 } // namespace regina

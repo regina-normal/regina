@@ -41,7 +41,7 @@
 namespace regina {
 
 /**
- * A subclass of NSatBlockStarterSearcher that, upon finding a starter
+ * A subclass of SatBlockStarterSearcher that, upon finding a starter
  * block, attempts to flesh this out to a group of three saturated regions
  * joined along their torus boundaries, as desribed by the
  * BlockedSFSTriple class.
@@ -49,7 +49,7 @@ namespace regina {
  * The starter block will be assumed to belong to the central region (not
  * one of the end regions).
  */
-struct BlockedSFSTripleSearcher : public NSatBlockStarterSearcher {
+struct BlockedSFSTripleSearcher : public SatBlockStarterSearcher {
     NSatRegion* end[2];
         /**< The two end regions of the BlockedSFSTriple structure,
              if such a structure has been successfully found; otherwise,
