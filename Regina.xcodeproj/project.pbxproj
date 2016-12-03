@@ -1059,7 +1059,6 @@
 		054208CF1DF0D2A60018AB24 /* simplesurfacebundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208AB1DF0D2740018AB24 /* simplesurfacebundle.cpp */; };
 		054208D01DF0D2A60018AB24 /* snappeacensusmfd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208AD1DF0D2740018AB24 /* snappeacensusmfd.cpp */; };
 		054208D11DF0D2A60018AB24 /* torusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208AF1DF0D2740018AB24 /* torusbundle.cpp */; };
-		054208E31DF0D2EE0018AB24 /* abstracthighlighter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208D41DF0D2E50018AB24 /* abstracthighlighter.cpp */; };
 		054208E41DF0D2F30018AB24 /* qtmatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208D71DF0D2E50018AB24 /* qtmatcher.cpp */; };
 		054208E51DF0D2F70018AB24 /* syntaxhighlighter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208DA1DF0D2E50018AB24 /* syntaxhighlighter.cpp */; };
 		054208E71DF0D65A0018AB24 /* jansson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E61DF0D6590018AB24 /* jansson.framework */; };
@@ -3182,13 +3181,8 @@
 		054208AE1DF0D2740018AB24 /* snappeacensusmfd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = snappeacensusmfd.h; sourceTree = "<group>"; };
 		054208AF1DF0D2740018AB24 /* torusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = torusbundle.cpp; sourceTree = "<group>"; };
 		054208B01DF0D2740018AB24 /* torusbundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = torusbundle.h; sourceTree = "<group>"; };
-		054208D31DF0D2E50018AB24 /* abstracthighlighter_p.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = abstracthighlighter_p.h; sourceTree = "<group>"; };
-		054208D41DF0D2E50018AB24 /* abstracthighlighter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = abstracthighlighter.cpp; sourceTree = "<group>"; };
-		054208D51DF0D2E50018AB24 /* abstracthighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = abstracthighlighter.h; sourceTree = "<group>"; };
-		054208D61DF0D2E50018AB24 /* COPYING.LIB */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING.LIB; sourceTree = "<group>"; };
 		054208D71DF0D2E50018AB24 /* qtmatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qtmatcher.cpp; sourceTree = "<group>"; };
 		054208D81DF0D2E50018AB24 /* qtmatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qtmatcher.h; sourceTree = "<group>"; };
-		054208D91DF0D2E50018AB24 /* SOURCE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SOURCE; sourceTree = "<group>"; };
 		054208DA1DF0D2E50018AB24 /* syntaxhighlighter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = syntaxhighlighter.cpp; sourceTree = "<group>"; };
 		054208DB1DF0D2E50018AB24 /* syntaxhighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = syntaxhighlighter.h; sourceTree = "<group>"; };
 		054208E61DF0D6590018AB24 /* jansson.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jansson.framework; path = ../../Library/Frameworks/osx/jansson.framework; sourceTree = "<group>"; };
@@ -6408,14 +6402,9 @@
 		0564A60C1811D920002CC2AE /* syntax */ = {
 			isa = PBXGroup;
 			children = (
-				054208D31DF0D2E50018AB24 /* abstracthighlighter_p.h */,
-				054208D41DF0D2E50018AB24 /* abstracthighlighter.cpp */,
-				054208D51DF0D2E50018AB24 /* abstracthighlighter.h */,
 				0564A60D1811D920002CC2AE /* CMakeLists.txt */,
-				054208D61DF0D2E50018AB24 /* COPYING.LIB */,
 				054208D71DF0D2E50018AB24 /* qtmatcher.cpp */,
 				054208D81DF0D2E50018AB24 /* qtmatcher.h */,
-				054208D91DF0D2E50018AB24 /* SOURCE */,
 				054208DA1DF0D2E50018AB24 /* syntaxhighlighter.cpp */,
 				054208DB1DF0D2E50018AB24 /* syntaxhighlighter.h */,
 			);
@@ -8879,7 +8868,6 @@
 				05A73CE619B2F9DC0099C617 /* snappeaui.h in Sources */,
 				0543AEAD1811E12A002758F8 /* surfacescompatui.h in Sources */,
 				0543AEAE1811E12A002758F8 /* surfacescoordinateui.h in Sources */,
-				054208E31DF0D2EE0018AB24 /* abstracthighlighter.cpp in Sources */,
 				0543AEAF1811E12A002758F8 /* filtercomb.h in Sources */,
 				0543AEB01811E12A002758F8 /* filterprop.h in Sources */,
 				0543AEB11811E12A002758F8 /* surfacesmatchingui.h in Sources */,
