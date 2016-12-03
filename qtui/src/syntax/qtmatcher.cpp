@@ -1,19 +1,40 @@
-/*
-    Copyright (C) 2016 Volker Krause <vkrause@kde.org>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
-
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Qt User Interface                                                     *
+ *                                                                        *
+ *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This file is modified from the KDE syntax-highlighting framework,     *
+ *  which is copyright (C) 2016 Volker Krause <vkrause@kde.org>           *
+ *  and is distributed under the GNU Library General Public License as    *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
 
 #include "syntax/contextswitch_p.h"
 #include "syntax/definition.h"
@@ -24,9 +45,6 @@
 
 #include <cassert>
 #include <iostream>
-
-namespace regina {
-namespace syntax {
 
 static bool isOctalChar(QChar c)
 {
@@ -79,11 +97,11 @@ static int matchEscapedChar(const QString &text, int offset)
     return offset;
 }
 
-bool QtMatcher::isDelimiter(Rule& r, QChar c) const {
-    return DefinitionData::get(r.definition())->isDelimiter(c.toLatin1());
+bool QtMatcher::isDelimiter(regina::syntax::Rule& r, QChar c) const {
+    return regina::syntax::DefinitionData::get(r.definition())->isDelimiter(c.toLatin1());
 }
 
-MatchResult QtMatcher::match(AnyChar& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::AnyChar& rule, int offset)
 {
     if (rule.chars().find(m_text.at(offset).toLatin1()) != std::string::npos)
         return offset + 1;
@@ -91,7 +109,7 @@ MatchResult QtMatcher::match(AnyChar& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(DetectChar& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::DetectChar& rule, int offset)
 {
     if (m_text.at(offset) == rule.matchChar())
         return offset + 1;
@@ -99,7 +117,7 @@ MatchResult QtMatcher::match(DetectChar& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(Detect2Char& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::Detect2Char& rule, int offset)
 {
     if (m_text.size() - offset < 2)
         return offset;
@@ -109,7 +127,7 @@ MatchResult QtMatcher::match(Detect2Char& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(DetectIdentifier& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::DetectIdentifier& rule, int offset)
 {
     if (!m_text.at(offset).isLetter() && m_text.at(offset) != QLatin1Char('_'))
         return offset;
@@ -124,7 +142,7 @@ MatchResult QtMatcher::match(DetectIdentifier& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(DetectSpaces& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::DetectSpaces& rule, int offset)
 {
     while(offset < m_text.size() && m_text.at(offset).isSpace())
         ++offset;
@@ -132,7 +150,7 @@ MatchResult QtMatcher::match(DetectSpaces& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(Float& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::Float& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -170,7 +188,7 @@ MatchResult QtMatcher::match(Float& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(HlCChar& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCChar& rule, int offset)
 {
     if (m_text.size() < offset + 3)
         return offset;
@@ -195,7 +213,7 @@ MatchResult QtMatcher::match(HlCChar& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(HlCHex& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCHex& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -219,7 +237,7 @@ MatchResult QtMatcher::match(HlCHex& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(HlCOct& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCOct& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -241,19 +259,19 @@ MatchResult QtMatcher::match(HlCOct& rule, int offset)
 }
 
 
-MatchResult QtMatcher::match(HlCStringChar& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCStringChar& rule, int offset)
 {
     return matchEscapedChar(m_text, offset);
 }
 
-MatchResult QtMatcher::match(IncludeRules& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::IncludeRules& rule, int offset)
 {
     std::cerr << "Unresolved include rule for" << rule.contextName() << "##" << rule.definitionName() << std::endl;
     return offset;
 }
 
 
-MatchResult QtMatcher::match(Int& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::Int& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -263,7 +281,7 @@ MatchResult QtMatcher::match(Int& rule, int offset)
     return offset;
 }
 
-MatchResult QtMatcher::match(KeywordListRule& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::KeywordListRule& rule, int offset)
 {
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
@@ -287,14 +305,14 @@ MatchResult QtMatcher::match(KeywordListRule& rule, int offset)
     return offset;
 }
 
-MatchResult QtMatcher::match(LineContinue& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::LineContinue& rule, int offset)
 {
     if (offset == m_text.size() - 1 && m_text.at(offset) == rule.continueChar())
         return offset + 1;
     return offset;
 }
 
-MatchResult QtMatcher::match(RangeDetect& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::RangeDetect& rule, int offset)
 {
     if (m_text.size() - offset < 2)
         return offset;
@@ -310,9 +328,9 @@ MatchResult QtMatcher::match(RangeDetect& rule, int offset)
     return offset;
 }
 
-MatchResult QtMatcher::match(RegExpr& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::RegExpr& rule, int offset)
 {
-    RegEx* re = rule.regexp();
+    regina::syntax::RegEx* re = rule.regexp();
     if (! (re && dynamic_cast<QtRegEx*>(re))) {
         QtRegEx* qre = new QtRegEx;
 
@@ -330,13 +348,13 @@ MatchResult QtMatcher::match(RegExpr& rule, int offset)
     auto result = static_cast<QtRegEx*>(re)->match(m_text, offset, QRegularExpression::NormalMatch, QRegularExpression::DontCheckSubjectStringMatchOption);
 
     if (result.capturedStart() == offset)
-        return MatchResult(offset + result.capturedLength());
+        return regina::syntax::MatchResult(offset + result.capturedLength());
     // Be kind: if the rule matched later in the string, remember this so we don't check again
     // until we reach that position.
-    return MatchResult(offset, result.capturedStart());
+    return regina::syntax::MatchResult(offset, result.capturedStart());
 }
 
-MatchResult QtMatcher::match(StringDetect& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::StringDetect& rule, int offset)
 {
     QString pattern = QString::fromUtf8(rule.string().c_str());
     if (m_text.midRef(offset, pattern.length()).compare(pattern, rule.caseSensitivity() ? Qt::CaseSensitive : Qt::CaseInsensitive) == 0)
@@ -344,7 +362,7 @@ MatchResult QtMatcher::match(StringDetect& rule, int offset)
     return offset;
 }
 
-MatchResult QtMatcher::match(WordDetect& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::WordDetect& rule, int offset)
 {
     if (m_text.size() - offset < rule.word().length())
         return offset;
@@ -360,5 +378,3 @@ MatchResult QtMatcher::match(WordDetect& rule, int offset)
 
     return offset;
 }
-
-} } // namespace regina::syntax

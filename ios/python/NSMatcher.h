@@ -33,10 +33,10 @@
 
 #import "syntax/matcher.h"
 
-namespace regina { namespace syntax {
-    class Rule;
-} }
-
+/**
+ * A subclass of regina::syntax::RegEx that holds an Objective-C regular
+ * expression, designed for working with unicode strings of type NSString.
+ */
 class NSRegEx : public regina::syntax::RegEx {
     private:
         NSRegularExpression* m_regex;
@@ -47,6 +47,10 @@ class NSRegEx : public regina::syntax::RegEx {
         NSRegularExpression* regex();
 };
 
+/**
+ * A subclass of regina::syntax::Matcher designed for matching unicode
+ * strings of type NSString.
+ */
 class NSMatcher : public regina::syntax::Matcher {
     private:
         NSString* m_text;

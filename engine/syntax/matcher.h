@@ -9,6 +9,8 @@
 namespace regina {
 namespace syntax {
 
+class Rule;
+
 class AnyChar;
 class DetectChar;
 class Detect2Char;
