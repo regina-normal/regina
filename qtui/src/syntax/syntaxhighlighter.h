@@ -49,13 +49,10 @@
 namespace regina {
 namespace syntax {
 
-class AbstractHighlighterPrivate;
 class ContextSwitch;
 class Format;
 class State;
 class StateData;
-
-class SyntaxHighlighterPrivate;
 
 /**
  * The SyntaxHighlighter provides an interface to highlight text.
