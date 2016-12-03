@@ -51,10 +51,17 @@
 #include <cassert>
 #include <iostream>
 
-Q_DECLARE_METATYPE(QTextBlock)
+using regina::syntax::ContextSwitch;
+using regina::syntax::Definition;
+using regina::syntax::DefinitionData;
+using regina::syntax::Format;
+using regina::syntax::LineContinue;
+using regina::syntax::Rule;
+using regina::syntax::State;
+using regina::syntax::StateData;
+using regina::syntax::Theme;
 
-namespace regina {
-namespace syntax {
+Q_DECLARE_METATYPE(QTextBlock)
 
 class TextBlockUserData : public QTextBlockUserData
 {
@@ -319,7 +326,4 @@ bool SyntaxHighlighter::switchContext(StateData *data, const ContextSwitch &cont
     assert(!data->isEmpty());
     return true;
 }
-
-
-} } // namespace regina::syntax
 

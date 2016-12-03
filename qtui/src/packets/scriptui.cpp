@@ -303,7 +303,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     if (! repository)
         repository = new regina::syntax::Repository;
 
-    auto h = new regina::syntax::SyntaxHighlighter(editWidget->document());
+    auto h = new SyntaxHighlighter(editWidget->document());
     h->setDefinition(repository->definitionForName("Python"));
     h->setTheme(repository->theme("Default"));
 

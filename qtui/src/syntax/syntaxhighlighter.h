@@ -46,13 +46,11 @@
 
 #include <QSyntaxHighlighter>
 
-namespace regina {
-namespace syntax {
-
-class ContextSwitch;
-class Format;
-class State;
-class StateData;
+namespace regina { namespace syntax {
+    class ContextSwitch;
+    class State;
+    class StateData;
+} }
 
 /**
  * The SyntaxHighlighter provides an interface to highlight text.
@@ -76,7 +74,7 @@ public:
      *
      * @see setDefinition()
      */
-    Definition definition() const;
+    regina::syntax::Definition definition() const;
 
     /**
      * Sets the syntax definition used for highlighting.
@@ -84,7 +82,7 @@ public:
      * Subclasses can re-implement this method to e.g. trigger
      * re-highlighting or clear internal data structures if needed.
      */
-    void setDefinition(const Definition &def);
+    void setDefinition(const regina::syntax::Definition &def);
 
     /**
      * Returns the currently selected theme for highlighting.
@@ -92,7 +90,7 @@ public:
      * @note If no Theme was set through setTheme(), the returned Theme will be
      *       invalid, see Theme::isValid().
      */
-    Theme theme() const;
+    regina::syntax::Theme theme() const;
 
     /**
      * Sets the theme used for highlighting.
@@ -100,11 +98,12 @@ public:
      * Subclasses can re-implement this method to e.g. trigger
      * re-highlighing or to do general palette color setup.
      */
-    void setTheme(const Theme &theme);
+    void setTheme(const regina::syntax::Theme &theme);
 
 protected:
     void ensureDefinitionLoaded();
-    bool switchContext(StateData* data, const ContextSwitch &contextSwitch);
+    bool switchContext(regina::syntax::StateData* data,
+        const regina::syntax::ContextSwitch &contextSwitch);
 
     /**
      * Highlight the given line. Call this from your derived class
@@ -121,7 +120,8 @@ protected:
      *
      * @see applyFormat()
      */
-    State highlightLine(const QString &text, const State &state);
+    regina::syntax::State highlightLine(const QString &text,
+        const regina::syntax::State &state);
 
     /**
      * Reimplement this to apply formats to your output. The provided @p format
@@ -139,15 +139,13 @@ protected:
      *
      * @see highlightLine()
      */
-    void applyFormat(int offset, int length, const Format &format);
+    void applyFormat(int offset, int length, const regina::syntax::Format &format);
 
     void highlightBlock(const QString & text) override;
 
-    Definition m_definition;
-    Theme m_theme;
+    regina::syntax::Definition m_definition;
+    regina::syntax::Theme m_theme;
 };
-
-} } // namespace regina::syntax
 
 #endif
 
