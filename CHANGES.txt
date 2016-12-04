@@ -63,6 +63,8 @@ Version 5.1  [ (under development) ]
             - New suite of classes for managing syntax highlighting.
               These classes should be considered internal - they only appear
               in the engine so they can be used by both the Qt and iOS GUIs.
+            - Thanks to these new classes, Regina no longer builds against
+              source-highlight.
         Class AbelianGroup, MarkedAbelianGroup, HomMarkedAbelianGroup:
             - Now works with type Integer, not LargeInteger.
         Class BoundaryComponent<dim>:
