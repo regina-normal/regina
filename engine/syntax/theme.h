@@ -21,6 +21,7 @@
 #endif
 
 #include <memory>
+#include <string>
 
 namespace regina {
 namespace syntax {
@@ -317,6 +318,11 @@ public:
      */
     bool isStrikeThrough(TextStyle style) const;
 
+    /**
+     * Sorts themes alphabetically by name.
+     */
+    bool operator < (const Theme& rhs) const;
+
 public:
     /**
      * Returns the editor color for the requested @p role.
@@ -338,6 +344,10 @@ private:
      */
     std::shared_ptr<ThemeData> m_data;
 };
+
+inline bool Theme::operator < (const Theme& rhs) const {
+    return name() < rhs.name();
+}
 
 } } // namespace regina::syntax
 
