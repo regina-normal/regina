@@ -118,6 +118,15 @@ class REGINA_API SatBlockStarter : boost::noncopyable {
 };
 
 /**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatBlockStarter has now been renamed to
+ * SatBlockStarter.
+ */
+REGINA_DEPRECATED typedef SatBlockStarter NSatBlockStarter;
+
+/**
  * Represents a set of starter blocks that can be used for identifying
  * triangulations of Seifert fibred spaces.
  *
@@ -186,6 +195,15 @@ class REGINA_API SatBlockStarterSet : private ListOnCall<SatBlockStarter> {
          */
         SatBlockStarterSet();
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatBlockStarterSet has now been renamed to
+ * SatBlockStarterSet.
+ */
+REGINA_DEPRECATED typedef SatBlockStarterSet NSatBlockStarterSet;
 
 /**
  * A helper class for locating and using starter blocks within a
@@ -303,6 +321,15 @@ class REGINA_API SatBlockStarterSearcher {
          */
         virtual bool useStarterBlock(NSatBlock* starter) = 0;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatBlockStarterSearcher has now been renamed to
+ * SatBlockStarterSearcher.
+ */
+REGINA_DEPRECATED typedef SatBlockStarterSearcher NSatBlockStarterSearcher;
 
 /*@}*/
 
