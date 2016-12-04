@@ -30,6 +30,16 @@
  *                                                                        *
  **************************************************************************/
 
+/**
+ * \file syntax/matcher.h
+ * \brief Part of the private syntax highlighting framework that is shared
+ * between Regina's different graphical user interfaces.
+ *
+ * The syntax highlighting headers are private in the following sense: they are
+ * not installed along with Regina's other headers, they do not appear in the
+ * API documentation, and the syntax highlighting API is subject to change
+ * without notice between different versions of Regina.
+ */
 
 #ifndef __SYNTAX_MATCHER_H
 #ifndef __DOXYGEN
