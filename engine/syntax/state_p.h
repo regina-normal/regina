@@ -43,6 +43,9 @@ public:
 
     DefinitionData *m_defData;
 private:
+    StateData(const StateData&) = default;
+    StateData& operator = (const StateData&) = delete;
+
     friend class State;
     std::deque<Context*> m_contextStack;
 };

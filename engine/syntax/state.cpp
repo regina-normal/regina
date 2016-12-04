@@ -27,7 +27,7 @@ namespace syntax {
 State State::copy() const
 {
     State s;
-    s.d = std::make_shared<StateData>(*d);
+    s.d.reset(new StateData(*d));
     return s;
 }
 
