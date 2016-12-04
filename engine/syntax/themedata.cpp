@@ -41,6 +41,7 @@
 #include <jansson.h>
 
 #include <cassert>
+#include <cstring>
 #include <iostream>
 
 namespace regina {

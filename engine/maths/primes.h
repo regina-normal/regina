@@ -43,6 +43,7 @@
 #include "maths/integer.h"
 #include <thread>
 #include <vector>
+#include <mutex>
 
 namespace regina {
 

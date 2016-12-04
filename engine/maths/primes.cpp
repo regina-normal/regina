@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "maths/primes.h"
-#include <mutex>
 
 namespace regina {
 
