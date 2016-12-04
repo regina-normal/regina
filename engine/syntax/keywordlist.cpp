@@ -17,6 +17,7 @@
 
 #include "syntax/keywordlist.h"
 
+#include <algorithm>
 #include <cassert>
 
 #include "utilities/stringutils.h"
