@@ -1100,6 +1100,19 @@ class TriangulationBase :
         void makeDoubleCover();
 
         /**
+         * Does a barycentric subdivision of the triangulation.
+         * Each top-dimensional simplex is divided into (\a dim+1) factorial
+         * simplices by placing an extra vertex at the centroid of every
+         * face of every dimension.
+         *
+         * \pre \a dim is one of Regina's standard dimensions.
+         * This precondition is a safety net, since in higher dimensions the
+         * triangulation would explode too quickly in size (and for the
+         * highest dimensions, possibly beyond the limits of \c size_t).
+         */
+        void barycentricSubdivision();
+
+        /**
          * Converts each real boundary component into a cusp (i.e., an
          * ideal vertex).  Only boundary components formed from real
          * (<i>dim</i>-1)-faces will be affected; ideal boundary components
@@ -2694,6 +2707,75 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // Tidy up.
     delete[] upper;
     delete[] queue;
+}
+
+template <int dim>
+void TriangulationBase<dim>::barycentricSubdivision() {
+    // IMPORTANT: If the labelling of new simplices ever changes, then the
+    // 3-dimensional drillEdge() code must be rewritten as well (since it
+    // relies on the specific labelling scheme that we use here).
+
+    size_t nOld = simplices_.size();
+    if (nOld == 0)
+        return;
+
+    Triangulation<dim> staging;
+    typename Triangulation<dim>::ChangeEventSpan span(&staging);
+
+    static_assert(standardDim(dim),
+        "barycentricSubdivision() may only be used in standard dimensions.");
+
+    Simplex<dim>** newSimp = new Simplex<dim>*[nOld * Perm<dim+1>::nPerms];
+    Simplex<dim>* oldSimp;
+
+    // A top-dimensional simplex in the subdivision is uniquely defined
+    // by a permutation p on (dim+1) elements.
+    //
+    // Specifically, this is the simplex that:
+    // - meets the boundary in the facet opposite vertex p[0];
+    // - meets that facet in the (dim-2)-face opposite vertex p[1];
+    // - meets that (dim-2)-face in the (dim-3)-face opposite vertex p[2];
+    // - ...
+    // - meets that edge in the vertex opposite vertex p[dim-1];
+    // - directly touches vertex p[dim].
+
+    size_t simp;
+    for (simp = 0; simp < Perm<dim+1>::nPerms * nOld; ++simp)
+        newSimp[simp] = staging.newSimplex();
+
+    // Do all of the internal gluings
+    int permIdx;
+    Perm<dim+1> perm, glue;
+    int i;
+    for (simp=0; simp < nOld; ++simp)
+        for (permIdx = 0; permIdx < Perm<dim+1>::nPerms; ++permIdx) {
+            perm = Perm<dim+1>::Sn[permIdx];
+
+            // Internal gluings within the old simplex:
+            for (i = 0; i < dim; ++i)
+                newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i+1],
+                    newSimp[Perm<dim+1>::nPerms * simp +
+                        (perm * Perm<dim+1>(i+1, i)).SnIndex()],
+                    Perm<dim+1>(perm[i+1], perm[i]));
+
+            // Adjacent gluings to the adjacent simplex:
+            oldSimp = simplex(simp);
+            if (! oldSimp->adjacentSimplex(perm[0]))
+                continue; // This hits a boundary facet.
+            if (newSimp[Perm<dim+1>::nPerms * simp + permIdx]->adjacentSimplex(
+                    perm[0]))
+                continue; // We've already done this gluing from the other side.
+
+            glue = oldSimp->adjacentGluing(perm[0]);
+            newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[0],
+                newSimp[Perm<dim+1>::nPerms * oldSimp->adjacentSimplex(
+                    perm[0])->index() + (glue * perm).SnIndex()],
+                glue);
+        }
+
+    // Delete the existing simplices and put in the new ones.
+    swapContents(staging);
+    delete[] newSimp;
 }
 
 template <int dim>

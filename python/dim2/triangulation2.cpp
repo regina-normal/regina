@@ -219,6 +219,8 @@ void addTriangulation2() {
             OL_oneThreeMove())
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<2>::makeDoubleCover)
+        .def("barycentricSubdivision",
+            &Triangulation<2>::barycentricSubdivision)
         .def("insertTriangulation", &Triangulation<2>::insertTriangulation)
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)

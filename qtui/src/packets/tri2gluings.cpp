@@ -378,6 +378,22 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     triActionList.append(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
+    QAction* actBarycentricSubdivide = new QAction(this);
+    actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
+    actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
+    actBarycentricSubdivide->setToolTip(tr(
+        "Perform a barycentric subdivision"));
+    actBarycentricSubdivide->setEnabled(readWrite);
+    actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
+        "subdivision on this triangulation.  The triangulation will be "
+        "changed directly.<p>"
+        "This operation involves subdividing each triangle into "
+        "6 smaller triangles."));
+    enableWhenWritable.append(actBarycentricSubdivide);
+    triActionList.append(actBarycentricSubdivide);
+    connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
+        SLOT(barycentricSubdivide()));
+
     QAction* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("&Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
@@ -550,6 +566,12 @@ void Tri2GluingsUI::orient() {
     }
 
     tri->orient();
+}
+
+void Tri2GluingsUI::barycentricSubdivide() {
+    endEdit();
+
+    tri->barycentricSubdivision();
 }
 
 void Tri2GluingsUI::doubleCover() {
