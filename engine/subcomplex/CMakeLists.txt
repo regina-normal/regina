@@ -21,7 +21,7 @@ SET ( FILES
   satannulus
   nsatblock
   satblockstarter
-  nsatblocktypes
+  satblocktypes
   nsatregion
   nsnappeacensustri
   nsnappedball
