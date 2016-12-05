@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "subcomplex/satblockstarter.h"
-#include "subcomplex/nsatblocktypes.h"
+#include "subcomplex/satblocktypes.h"
 
 namespace regina {
 

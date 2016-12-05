@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "manifold/sfs.h"
-#include "subcomplex/nsatblocktypes.h"
+#include "subcomplex/satblocktypes.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "triangulation/facepair.h"
 #include "triangulation/dim3.h"

@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/layeredsolidtorus.h"
-#include "subcomplex/nsatblocktypes.h"
+#include "subcomplex/satblocktypes.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
