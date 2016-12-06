@@ -47,6 +47,7 @@
 #endif
 
 #include <cstddef>
+#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace syntax {
