@@ -217,6 +217,8 @@ void addTriangulation(const char* name) {
             return_internal_reference<>())
         .def("homologyH1", &Triangulation<dim>::homologyH1,
             return_internal_reference<>())
+        .def("barycentricSubdivision",
+             &Triangulation<dim>::barycentricSubdivision)
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)

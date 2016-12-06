@@ -2150,16 +2150,6 @@ class REGINA_API Triangulation<3> :
         bool idealToFinite();
 
         /**
-         * Does a barycentric subdivision of the triangulation.
-         * Each tetrahedron is divided into 24 tetrahedra by placing
-         * an extra vertex at the centroid of each tetrahedron, the
-         * centroid of each triangle and the midpoint of each edge.
-         *
-         * @author David Letscher
-         */
-        void barycentricSubdivision();
-
-        /**
          * Drills out a regular neighbourhood of the given edge of the
          * triangulation.
          *

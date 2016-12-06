@@ -38,104 +38,28 @@
 
 namespace regina {
 
-void Triangulation<3>::barycentricSubdivision() {
-    // Rewritten for Regina 4.94 to use a more sensible labelling scheme.
-
-    // IMPORTANT: If this code is ever rewritten (and in particular, if
-    // the labelling of new tetrahedra ever changes), then the
-    // drillEdge() code must be rewritten as well (since it relies on
-    // the specific labelling scheme that we use here).
-
-    unsigned long nOldTet = simplices_.size();
-    if (nOldTet == 0)
-        return;
-
-    Triangulation<3> staging;
-    ChangeEventSpan span1(&staging);
-
-    Tetrahedron<3>** newTet = new Tetrahedron<3>*[nOldTet * 24];
-    Tetrahedron<3>* oldTet;
-
-    // A tetrahedron in the subdivision is uniquely defined by the
-    // permutation (face, edge, vtx, corner) of (0, 1, 2, 3).
-    // This is the tetrahedron that:
-    // - meets the boundary in the face opposite vertex "face";
-    // - meets that face in the edge opposite vertex "edge";
-    // - meets that edge in the vertex opposite vertex "vtx";
-    // - directly touches vertex "corner".
-
-    unsigned long tet;
-    for (tet = 0; tet < 24 * nOldTet; ++tet)
-        newTet[tet] = staging.newTetrahedron();
-
-    // Do all of the internal gluings
-    int permIdx;
-    Perm<4> perm, glue;
-    for (tet=0; tet < nOldTet; ++tet)
-        for (permIdx = 0; permIdx < 24; ++permIdx) {
-            perm = Perm<4>::S4[permIdx];
-            // (0, 1, 2, 3) -> (face, edge, vtx, corner)
-
-            // Internal gluings within the old tetrahedron:
-            newTet[24 * tet + permIdx]->join(perm[3],
-                newTet[24 * tet + (perm * Perm<4>(3, 2)).S4Index()],
-                Perm<4>(perm[3], perm[2]));
-
-            newTet[24 * tet + permIdx]->join(perm[2],
-                newTet[24 * tet + (perm * Perm<4>(2, 1)).S4Index()],
-                Perm<4>(perm[2], perm[1]));
-
-            newTet[24 * tet + permIdx]->join(perm[1],
-                newTet[24 * tet + (perm * Perm<4>(1, 0)).S4Index()],
-                Perm<4>(perm[1], perm[0]));
-
-            // Adjacent gluings to the adjacent tetrahedron:
-            oldTet = tetrahedron(tet);
-            if (! oldTet->adjacentTetrahedron(perm[0]))
-                continue; // This hits a boundary triangle.
-            if (newTet[24 * tet + permIdx]->adjacentTetrahedron(perm[0]))
-                continue; // We've already done this gluing from the other side.
-
-            glue = oldTet->adjacentGluing(perm[0]);
-            newTet[24 * tet + permIdx]->join(perm[0],
-                newTet[24 * oldTet->adjacentTetrahedron(perm[0])->index() +
-                    (glue * perm).S4Index()],
-                glue);
-        }
-
-
-    // Delete the existing tetrahedra and put in the new ones.
-    swapContents(staging);
-    delete[] newTet;
-}
-
 void Triangulation<3>::drillEdge(Edge<3>* e) {
-    // Recall from the barycentric subdivision code above that
-    // a tetrahedron in the subdivision is uniquely defined by the
-    // permutation (face, edge, vtx, corner) of (0, 1, 2, 3).
-    //
-    // For an edge (i,j) opposite vertices (k,l), the tetrahedra that
-    // meet it are:
-    //
-    // (k,l,i,j) and (l,k,i,j), both containing the half-edge touching vertex j;
-    // (k,l,j,i) and (l,k,j,i), both containing the half-edge touching vertex i.
-    //
-    // In each case the corresponding edge number in the new tetrahedron
-    // equals the edge number from the original tetrahedron.
+    // Recall from the barycentric subdivision code that a
+    // subsimplex of the barycentric subdivision of an original simplex
+    // correspond to a permutation p.
+    // Namely, vertex 0 of the subsimplex is at vertex p[0] of the
+    // original simplex, vertex 1 at the center of the edge joining vertex p[0]
+    // and p[1] of the original simplex, etc.
+    // In particular, an edge embedding of the given edge e provides us a
+    // permutation that corresponds to a subsimplex adjacent to one half of e.
+    // By applying the transposition 0-1 to the permutation, we get the
+    // neighboring subsimplex adjacent to the other half of e.
 
-    int edgeNum = e->front().edge();
-    long tetNum = e->front().tetrahedron()->index();
+    const Perm<4> flip(0, 1);
+    const int flipIndex = flip.index();
 
-    int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision
-                     // that contain the two corresponding half-edges.
-    oldToNew[0] = Perm<4>(
-        Edge<3>::edgeVertex[5 - edgeNum][0], Edge<3>::edgeVertex[5 - edgeNum][1],
-        Edge<3>::edgeVertex[edgeNum][0], Edge<3>::edgeVertex[edgeNum][1]).
-        S4Index();
-    oldToNew[1] = Perm<4>(
-        Edge<3>::edgeVertex[5 - edgeNum][0], Edge<3>::edgeVertex[5 - edgeNum][1],
-        Edge<3>::edgeVertex[edgeNum][1], Edge<3>::edgeVertex[edgeNum][0]).
-        S4Index();
+    const Perm<4>& edgeEmbed        = e->front().vertices();
+    const Perm<4>& flippedEdgeEmbed = edgeEmbed * flip;
+    const int subsimplexIndices[2] = {
+        edgeEmbed.index(), flippedEdgeEmbed.index()
+    };
+
+    const long originalTetNum      = e->front().tetrahedron()->index();
 
     ChangeEventSpan span(this);
     barycentricSubdivision();
@@ -143,22 +67,26 @@ void Triangulation<3>::drillEdge(Edge<3>* e) {
 
     std::set<unsigned long> toRemove;
 
-    int i, j, k;
-    unsigned long finalTet;
-    Vertex<3>* finalVertex;
-    for (i = 0; i < 2; ++i)
-        for (j = 0; j < 2; ++j) {
-            finalTet = 24 * (24 * tetNum + oldToNew[i]) + oldToNew[j];
+    for (int i = 0; i < 2; ++i) {
+        // Subsimplex adjacent to one of the half edges coming from
+        // subdividing given edge
+        const long intermediateTetNum =
+            24 * originalTetNum + subsimplexIndices[i];
+        for (int j = 0; j < 2; ++j) {
+            // The half edges join vertex 0 and 1 of the subsimplex
+            // The next subdivision produces quarter edges
+            const long finalTet =
+                24 * intermediateTetNum + j * flipIndex;
 
-            // Remove all tetrahedra that touch each endpoint of the
-            // resulting edge in the second barycentric subdivision.
-            for (k = 0; k < 2; ++k) {
-                finalVertex = simplices_[finalTet]->edge(edgeNum)->
-                    vertex(k);
+            // Remove all subsubsimplices that touch an endpoint of the
+            // resulting quarter edge from the second barycentric subdivision.
+            for (int k = 0; k < 2; ++k) {
+                const Vertex<3>* finalVertex = simplices_[finalTet]->vertex(k);
                 for (auto& emb : *finalVertex)
                     toRemove.insert(emb.tetrahedron()->index());
             }
         }
+    }
 
     // Make sure we remove tetrahedra in reverse order, so the numbering
     // doesn't change.

@@ -1092,6 +1092,16 @@ class TriangulationBase :
         /*@{*/
 
         /**
+         * Performs a barycentric subdivision on the the triangulation
+         * (in place).
+         *
+         * Each simplex is divided into <i>dim</i>+1 factorial simplicies
+         * such that vertex i of a new simplex corresponds to the center of
+         * an i-dimensional face of the original simplex.
+         */
+        void barycentricSubdivision();
+
+        /**
          * Converts this triangulation into its double cover.
          * Each orientable component will be duplicated, and each
          * non-orientable component will be converted into its
@@ -3002,5 +3012,6 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
 } } // namespace regina::detail
 
 #include "triangulation/detail/canonical-impl.h"
+#include "triangulation/detail/barycentric-impl.h"
 
 #endif

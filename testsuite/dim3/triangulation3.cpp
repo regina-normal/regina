@@ -1333,9 +1333,9 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Triangulation with RP^2 cusps");
             verifyVertexSphere(twoProjPlaneCusps, 0,
                 "Triangulation with RP^2 cusps");
-            verifyVertexSphere(twoProjPlaneCusps, 1,
+            verifyVertexProjPlane(twoProjPlaneCusps, 1,
                 "Triangulation with RP^2 cusps");
-            verifyVertexProjPlane(twoProjPlaneCusps, 2,
+            verifyVertexSphere(twoProjPlaneCusps, 2,
                 "Triangulation with RP^2 cusps");
             verifyVertexSphere(twoProjPlaneCusps, 3,
                 "Triangulation with RP^2 cusps");
