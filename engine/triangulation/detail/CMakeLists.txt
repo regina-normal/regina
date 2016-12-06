@@ -1,5 +1,6 @@
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    barycentric-impl.h
     boundarycomponent-impl.h
     boundarycomponent.h
     canonical-impl.h
