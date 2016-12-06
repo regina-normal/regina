@@ -87,10 +87,10 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
 
     // Try one thing at a time.
     const NSatBlock* block;
-    const NSatCube* cube;
-    const NSatReflectorStrip* ref;
-    const NSatTriPrism* tri;
-    const NSatTriPrism* triAdj;
+    const SatCube* cube;
+    const SatReflectorStrip* ref;
+    const SatTriPrism* tri;
+    const SatTriPrism* triAdj;
     unsigned adjAnn;
     unsigned long i, j;
     int delta, deltaAdj;
@@ -98,7 +98,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
     for (i = 0; i < n; i++) {
         block = region_->block(i).block;
 
-        cube = dynamic_cast<const NSatCube*>(block);
+        cube = dynamic_cast<const SatCube*>(block);
         if (cube) {
             if (cube->adjacentBlock(0) == cube &&
                     cube->adjacentAnnulus(0) == 2) {
@@ -145,13 +145,13 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
             }
         }
 
-        ref = dynamic_cast<const NSatReflectorStrip*>(block);
+        ref = dynamic_cast<const SatReflectorStrip*>(block);
         if (ref) {
             if (ref->twistedBoundary())
                 return false;
 
             if (ref->nAnnuli() == 1) {
-                tri = dynamic_cast<const NSatTriPrism*>(ref->adjacentBlock(0));
+                tri = dynamic_cast<const SatTriPrism*>(ref->adjacentBlock(0));
                 if (! tri)
                     return false;
 
@@ -172,7 +172,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
                 return false;
         }
 
-        tri = dynamic_cast<const NSatTriPrism*>(block);
+        tri = dynamic_cast<const SatTriPrism*>(block);
         if (tri) {
             for (j = 0; j < 3; j++) {
                 // Try the thick case...
@@ -181,7 +181,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
                     if (tri->adjacentReflected(j) || tri->adjacentBackwards(j))
                         return false;
 
-                    triAdj = dynamic_cast<const NSatTriPrism*>(
+                    triAdj = dynamic_cast<const SatTriPrism*>(
                         tri->adjacentBlock((j + 2) % 3));
                     if (! triAdj)
                         return false;
@@ -220,7 +220,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
                 }
 
                 // ... and try the thin case.
-                if (! (triAdj = dynamic_cast<const NSatTriPrism*>(
+                if (! (triAdj = dynamic_cast<const SatTriPrism*>(
                         tri->adjacentBlock(j))))
                     continue;
 
@@ -398,11 +398,11 @@ bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
     if (torus1->adjacentBackwards(1))
         horiz1 = ! horiz1;
 
-    const NSatLST* lst;
-    const NSatMobius* mobius;
+    const SatLST* lst;
+    const SatMobius* mobius;
     Perm<4> roles;
 
-    if ((mobius = dynamic_cast<const NSatMobius*>(torus0))) {
+    if ((mobius = dynamic_cast<const SatMobius*>(torus0))) {
         if (mobius->position() == 2) {
             p0 = 2;
             q0 = -1;
@@ -413,7 +413,7 @@ bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
             p0 = 1;
             q0 = (horiz0 ? 1 : -2);
         }
-    } else if ((lst = dynamic_cast<const NSatLST*>(torus0))) {
+    } else if ((lst = dynamic_cast<const SatLST*>(torus0))) {
         roles = lst->roles();
         p0 = lst->lst()->meridinalCuts(roles[0]);
         q0 = lst->lst()->meridinalCuts(roles[horiz0 ? 1 : 2]);
@@ -422,7 +422,7 @@ bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
     } else
         return false;
 
-    if ((mobius = dynamic_cast<const NSatMobius*>(torus1))) {
+    if ((mobius = dynamic_cast<const SatMobius*>(torus1))) {
         if (mobius->position() == 2) {
             p1 = 2;
             q1 = -1;
@@ -433,7 +433,7 @@ bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
             p1 = 1;
             q1 = (horiz1 ? 1 : -2);
         }
-    } else if ((lst = dynamic_cast<const NSatLST*>(torus1))) {
+    } else if ((lst = dynamic_cast<const SatLST*>(torus1))) {
         roles = lst->roles();
         p1 = lst->lst()->meridinalCuts(roles[0]);
         q1 = lst->lst()->meridinalCuts(roles[horiz1 ? 1 : 2]);

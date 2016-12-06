@@ -43,8 +43,8 @@
 namespace regina {
 
 bool NSatBlock::operator < (const NSatBlock& compare) const {
-    const NSatTriPrism* tri1 = dynamic_cast<const NSatTriPrism*>(this);
-    const NSatTriPrism* tri2 = dynamic_cast<const NSatTriPrism*>(&compare);
+    const SatTriPrism* tri1 = dynamic_cast<const SatTriPrism*>(this);
+    const SatTriPrism* tri2 = dynamic_cast<const SatTriPrism*>(&compare);
     if (tri1 && ! tri2)
         return true;
     if (tri2 && ! tri1)
@@ -54,8 +54,8 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
         return (tri1->isMajor() && ! tri2->isMajor());
     }
 
-    const NSatCube* cube1 = dynamic_cast<const NSatCube*>(this);
-    const NSatCube* cube2 = dynamic_cast<const NSatCube*>(&compare);
+    const SatCube* cube1 = dynamic_cast<const SatCube*>(this);
+    const SatCube* cube2 = dynamic_cast<const SatCube*>(&compare);
     if (cube1 && ! cube2)
         return true;
     if (cube2 && ! cube1)
@@ -65,10 +65,10 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
         return false;
     }
 
-    const NSatReflectorStrip* ref1 =
-        dynamic_cast<const NSatReflectorStrip*>(this);
-    const NSatReflectorStrip* ref2 =
-        dynamic_cast<const NSatReflectorStrip*>(&compare);
+    const SatReflectorStrip* ref1 =
+        dynamic_cast<const SatReflectorStrip*>(this);
+    const SatReflectorStrip* ref2 =
+        dynamic_cast<const SatReflectorStrip*>(&compare);
     if (ref1 && ! ref2)
         return true;
     if (ref2 && ! ref1)
@@ -82,8 +82,8 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
         return (ref1->nAnnuli() < ref2->nAnnuli());
     }
 
-    const NSatLST* lst1 = dynamic_cast<const NSatLST*>(this);
-    const NSatLST* lst2 = dynamic_cast<const NSatLST*>(&compare);
+    const SatLST* lst1 = dynamic_cast<const SatLST*>(this);
+    const SatLST* lst2 = dynamic_cast<const SatLST*>(&compare);
     if (lst1 && ! lst2)
         return true;
     if (lst2 && ! lst1)
@@ -120,8 +120,8 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
         return false;
     }
 
-    const NSatMobius* mob1 = dynamic_cast<const NSatMobius*>(this);
-    const NSatMobius* mob2 = dynamic_cast<const NSatMobius*>(&compare);
+    const SatMobius* mob1 = dynamic_cast<const SatMobius*>(this);
+    const SatMobius* mob2 = dynamic_cast<const SatMobius*>(&compare);
     if (mob1 && ! mob2)
         return true;
     if (mob2 && ! mob1)
@@ -132,8 +132,8 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
         return (mob1->position() > mob2->position());
     }
 
-    const NSatLayering* layer1 = dynamic_cast<const NSatLayering*>(this);
-    const NSatLayering* layer2 = dynamic_cast<const NSatLayering*>(&compare);
+    const SatLayering* layer1 = dynamic_cast<const SatLayering*>(this);
+    const SatLayering* layer2 = dynamic_cast<const SatLayering*>(&compare);
     if (layer1 && ! layer2)
         return true;
     if (layer2 && ! layer1)
@@ -150,29 +150,29 @@ NSatBlock* NSatBlock::isBlock(const SatAnnulus& annulus, TetList& avoidTets) {
     NSatBlock* ans;
 
     // Run through the types of blocks that we know about.
-    if ((ans = NSatMobius::isBlockMobius(annulus, avoidTets)))
+    if ((ans = SatMobius::isBlockMobius(annulus, avoidTets)))
         return ans;
-    if ((ans = NSatLST::isBlockLST(annulus, avoidTets)))
+    if ((ans = SatLST::isBlockLST(annulus, avoidTets)))
         return ans;
-    if ((ans = NSatTriPrism::isBlockTriPrism(annulus, avoidTets)))
+    if ((ans = SatTriPrism::isBlockTriPrism(annulus, avoidTets)))
         return ans;
-    if ((ans = NSatCube::isBlockCube(annulus, avoidTets)))
+    if ((ans = SatCube::isBlockCube(annulus, avoidTets)))
         return ans;
-    if ((ans = NSatReflectorStrip::isBlockReflectorStrip(annulus, avoidTets)))
+    if ((ans = SatReflectorStrip::isBlockReflectorStrip(annulus, avoidTets)))
         return ans;
 
     // As a last attempt, try a single layering.  We don't have to worry
     // about the degeneracy, since we'll never get a loop of these
     // things (since that would form a disconnected component, and we
     // never use one as a starting block).
-    if ((ans = NSatLayering::isBlockLayering(annulus, avoidTets)))
+    if ((ans = SatLayering::isBlockLayering(annulus, avoidTets)))
         return ans;
 
     // Nothing was found.
     return 0;
 }
 
-void NSatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {
+void SatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (position_ == 0) {
         // Diagonal:
         sfs.insertFibre(1, reflect ? 1 : -1);
@@ -185,7 +185,7 @@ void NSatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {
     }
 }
 
-void NSatMobius::writeTextShort(std::ostream& out) const {
+void SatMobius::writeTextShort(std::ostream& out) const {
     out << "Saturated Mobius band, boundary on ";
     if (position_ == 0)
         out << "diagonal";
@@ -198,7 +198,7 @@ void NSatMobius::writeTextShort(std::ostream& out) const {
     out << " edge";
 }
 
-void NSatMobius::writeAbbr(std::ostream& out, bool tex) const {
+void SatMobius::writeAbbr(std::ostream& out, bool tex) const {
     out << (tex ? "M_" : "Mob(");
     if (position_ == 0)
         out << 'd';
@@ -210,7 +210,7 @@ void NSatMobius::writeAbbr(std::ostream& out, bool tex) const {
         out << ')';
 }
 
-NSatMobius* NSatMobius::isBlockMobius(const SatAnnulus& annulus, TetList&) {
+SatMobius* SatMobius::isBlockMobius(const SatAnnulus& annulus, TetList&) {
     // The two tetrahedra must be joined together along the annulus triangles.
 
     if (annulus.tet[0]->adjacentTetrahedron(annulus.roles[0][3]) !=
@@ -242,20 +242,20 @@ NSatMobius* NSatMobius::isBlockMobius(const SatAnnulus& annulus, TetList&) {
 
     // Got it!
 
-    NSatMobius* ans = new NSatMobius(position);
+    SatMobius* ans = new SatMobius(position);
     ans->annulus_[0] = annulus;
     return ans;
 }
 
-NSatLST::NSatLST(const NSatLST& cloneMe) : NSatBlock(cloneMe),
+SatLST::SatLST(const SatLST& cloneMe) : NSatBlock(cloneMe),
         lst_(cloneMe.lst_->clone()), roles_(cloneMe.roles_) {
 }
 
-NSatLST::~NSatLST() {
+SatLST::~SatLST() {
     delete lst_;
 }
 
-void NSatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
+void SatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
     long cutsVert = lst_->meridinalCuts(roles_[0]);
     long cutsHoriz = lst_->meridinalCuts(roles_[1]);
     if (roles_[2] == 2) {
@@ -267,21 +267,21 @@ void NSatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
     sfs.insertFibre(cutsVert, reflect ? -cutsHoriz : cutsHoriz);
 }
 
-void NSatLST::writeTextShort(std::ostream& out) const {
+void SatLST::writeTextShort(std::ostream& out) const {
     out << "Saturated ("
         << lst_->meridinalCuts(0) << ", "
         << lst_->meridinalCuts(1) << ", "
         << lst_->meridinalCuts(2) << ") layered solid torus";
 }
 
-void NSatLST::writeAbbr(std::ostream& out, bool tex) const {
+void SatLST::writeAbbr(std::ostream& out, bool tex) const {
     out << (tex ? "\\mathrm{LST}_{" : "LST(")
         << lst_->meridinalCuts(0) << ", "
         << lst_->meridinalCuts(1) << ", "
         << lst_->meridinalCuts(2) << (tex ? '}' : ')');
 }
 
-void NSatLST::transform(const Triangulation<3>* originalTri,
+void SatLST::transform(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     // Start with the parent implementation.
     NSatBlock::transform(originalTri, iso, newTri);
@@ -290,7 +290,7 @@ void NSatLST::transform(const Triangulation<3>* originalTri,
     lst_->transform(originalTri, iso, newTri);
 }
 
-NSatLST* NSatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
+SatLST* SatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
     // Do we move to a common usable tetrahedron?
 
     if (annulus.tet[0] != annulus.tet[1])
@@ -373,21 +373,21 @@ NSatLST* NSatLST::isBlockLST(const SatAnnulus& annulus, TetList& avoidTets) {
         avoidTets.insert(current);
     }
 
-    NSatLST* ans = new NSatLST(lst, lstRoles);
+    SatLST* ans = new SatLST(lst, lstRoles);
     ans->annulus_[0] = annulus;
     return ans;
 }
 
-void NSatTriPrism::adjustSFS(SFSpace& sfs, bool reflect) const {
+void SatTriPrism::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (major_)
         sfs.insertFibre(1, reflect ? -1 : 1);
     else
         sfs.insertFibre(1, reflect ? -2 : 2);
 }
 
-NSatTriPrism* NSatTriPrism::isBlockTriPrism(const SatAnnulus& annulus,
+SatTriPrism* SatTriPrism::isBlockTriPrism(const SatAnnulus& annulus,
         TetList& avoidTets) {
-    NSatTriPrism* ans;
+    SatTriPrism* ans;
 
     // First try for one of major type.
     if ((ans = isBlockTriPrismMajor(annulus, avoidTets)))
@@ -410,7 +410,7 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrism(const SatAnnulus& annulus,
     return 0;
 }
 
-NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const SatAnnulus& annulus,
+SatTriPrism* SatTriPrism::isBlockTriPrismMajor(const SatAnnulus& annulus,
         TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
         return 0;
@@ -445,7 +445,7 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const SatAnnulus& annulus,
 
     // All three tetrahedra are joined together as expected!
 
-    NSatTriPrism* ans = new NSatTriPrism(true);
+    SatTriPrism* ans = new SatTriPrism(true);
 
     const Perm<4> pairSwap(1, 0, 3, 2);
     ans->annulus_[0] = annulus;
@@ -465,7 +465,7 @@ NSatTriPrism* NSatTriPrism::isBlockTriPrismMajor(const SatAnnulus& annulus,
     return ans;
 }
 
-NSatTriPrism* NSatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
+SatTriPrism* SatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
     Tetrahedron<3>* a = tri.newTetrahedron();
     Tetrahedron<3>* b = tri.newTetrahedron();
     Tetrahedron<3>* c = tri.newTetrahedron();
@@ -473,7 +473,7 @@ NSatTriPrism* NSatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
     b->join(1, a, Perm<4>(2, 0, 3, 1));
     c->join(1, b, Perm<4>(2, 0, 3, 1));
 
-    NSatTriPrism* ans = new NSatTriPrism(major);
+    SatTriPrism* ans = new SatTriPrism(major);
 
     const Perm<4> id;
     const Perm<4> pairSwap(1, 0, 3, 2);
@@ -499,11 +499,11 @@ NSatTriPrism* NSatTriPrism::insertBlock(Triangulation<3>& tri, bool major) {
     return ans;
 }
 
-void NSatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
+void SatCube::adjustSFS(SFSpace& sfs, bool reflect) const {
     sfs.insertFibre(1, reflect ? -2 : 2);
 }
 
-NSatCube* NSatCube::isBlockCube(const SatAnnulus& annulus,
+SatCube* SatCube::isBlockCube(const SatAnnulus& annulus,
         TetList& avoidTets) {
     if (annulus.tet[0] == annulus.tet[1])
         return 0;
@@ -573,7 +573,7 @@ NSatCube* NSatCube::isBlockCube(const SatAnnulus& annulus,
 
     // All looking good!
 
-    NSatCube* ans = new NSatCube();
+    SatCube* ans = new SatCube();
 
     const Perm<4> id;
     ans->annulus_[0] = annulus;
@@ -600,7 +600,7 @@ NSatCube* NSatCube::isBlockCube(const SatAnnulus& annulus,
     return ans;
 }
 
-NSatCube* NSatCube::insertBlock(Triangulation<3>& tri) {
+SatCube* SatCube::insertBlock(Triangulation<3>& tri) {
     Tetrahedron<3>* bdry0 = tri.newTetrahedron();
     Tetrahedron<3>* bdry1 = tri.newTetrahedron();
     Tetrahedron<3>* bdry2 = tri.newTetrahedron();
@@ -618,7 +618,7 @@ NSatCube* NSatCube::insertBlock(Triangulation<3>& tri) {
     bdry3->join(3, central0, Perm<4>(0, 3, 1, 2));
     bdry3->join(1, central1, Perm<4>(1, 2));
 
-    NSatCube* ans = new NSatCube();
+    SatCube* ans = new SatCube();
 
     ans->annulus_[0].tet[0] = bdry0;
     ans->annulus_[0].tet[1] = bdry1;
@@ -641,12 +641,12 @@ NSatCube* NSatCube::insertBlock(Triangulation<3>& tri) {
     return ans;
 }
 
-void NSatReflectorStrip::adjustSFS(SFSpace& sfs, bool) const {
+void SatReflectorStrip::adjustSFS(SFSpace& sfs, bool) const {
     if (! twistedBoundary_)
         sfs.addReflector(false);
 }
 
-NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
+SatReflectorStrip* SatReflectorStrip::isBlockReflectorStrip(
         const SatAnnulus& annulus, TetList& avoidTets) {
     // Hunt for the initial segment of the reflector strip that lies
     // behind the given annulus.
@@ -691,7 +691,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
         if (annulus.roles[1] == annulus.tet[0]->adjacentGluing(
                 annulus.roles[0][2]) * annulus.roles[0] * Perm<4>(0, 1)) {
             // Got one that's untwisted.
-            NSatReflectorStrip* ans = new NSatReflectorStrip(1, false);
+            SatReflectorStrip* ans = new SatReflectorStrip(1, false);
             ans->annulus_[0] = annulus;
 
             avoidTets.insert(annulus.tet[0]);
@@ -704,7 +704,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
         if (annulus.roles[1] == annulus.tet[0]->adjacentGluing(
                 annulus.roles[0][2]) * annulus.roles[0]) {
             // Got one that's twisted.
-            NSatReflectorStrip* ans = new NSatReflectorStrip(1, true);
+            SatReflectorStrip* ans = new SatReflectorStrip(1, true);
             ans->annulus_[0] = annulus;
 
             avoidTets.insert(annulus.tet[0]);
@@ -759,7 +759,7 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
                 return 0;
             }
 
-            NSatReflectorStrip* ans = new NSatReflectorStrip(length, twisted);
+            SatReflectorStrip* ans = new SatReflectorStrip(length, twisted);
 
             std::copy(foundSoFar.begin(), foundSoFar.end(),
                 std::inserter(avoidTets, avoidTets.begin()));
@@ -826,9 +826,9 @@ NSatReflectorStrip* NSatReflectorStrip::isBlockReflectorStrip(
     return 0;
 }
 
-NSatReflectorStrip* NSatReflectorStrip::insertBlock(Triangulation<3>& tri,
+SatReflectorStrip* SatReflectorStrip::insertBlock(Triangulation<3>& tri,
         unsigned length, bool twisted) {
-    NSatReflectorStrip* ans = new NSatReflectorStrip(length, twisted);
+    SatReflectorStrip* ans = new SatReflectorStrip(length, twisted);
 
     const Perm<4> id;
     Tetrahedron<3> *upper, *lower, *middle;
@@ -865,14 +865,14 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(Triangulation<3>& tri,
     return ans;
 }
 
-void NSatLayering::adjustSFS(SFSpace& sfs, bool reflect) const {
+void SatLayering::adjustSFS(SFSpace& sfs, bool reflect) const {
     if (overHorizontal_)
         sfs.insertFibre(1, reflect ? -2 : 2);
 
     // Over the diagonal, there is no change at all.
 }
 
-NSatLayering* NSatLayering::isBlockLayering(const SatAnnulus& annulus,
+SatLayering* SatLayering::isBlockLayering(const SatAnnulus& annulus,
         TetList& avoidTets) {
     // Must be a common usable tetrahedron.
     if (annulus.tet[0] != annulus.tet[1])
@@ -885,7 +885,7 @@ NSatLayering* NSatLayering::isBlockLayering(const SatAnnulus& annulus,
             annulus.roles[0][2] == annulus.roles[1][0]) {
         avoidTets.insert(annulus.tet[0]);
 
-        NSatLayering* ans = new NSatLayering(true);
+        SatLayering* ans = new SatLayering(true);
         ans->annulus_[0] = annulus;
         ans->annulus_[1].tet[0] = ans->annulus_[1].tet[1] = annulus.tet[0];
         ans->annulus_[1].roles[0] = annulus.roles[1] * Perm<4>(1, 0, 3, 2);
@@ -899,7 +899,7 @@ NSatLayering* NSatLayering::isBlockLayering(const SatAnnulus& annulus,
             annulus.roles[0][2] == annulus.roles[1][1]) {
         avoidTets.insert(annulus.tet[0]);
 
-        NSatLayering* ans = new NSatLayering(false);
+        SatLayering* ans = new SatLayering(false);
         ans->annulus_[0] = annulus;
         ans->annulus_[1].tet[0] = ans->annulus_[1].tet[1] = annulus.tet[0];
         ans->annulus_[1].roles[0] = annulus.roles[1] * Perm<4>(1, 0, 3, 2);

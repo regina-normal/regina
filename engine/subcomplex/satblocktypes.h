@@ -57,7 +57,7 @@ class LayeredSolidTorus;
  * attaching a Mobius band to a single annulus boundary.
  *
  * This is a degenerate case of the layered solid torus (see the class
- * NSatLST), where instead of joining a solid torus to an annulus
+ * SatLST), where instead of joining a solid torus to an annulus
  * boundary we join a Mobius band.  The Mobius band can be thought of as
  * a zero-tetrahedron solid torus with two boundary triangles, which in fact
  * are opposite sides of the same triangle.  By attaching a zero-tetrahedron
@@ -69,7 +69,7 @@ class LayeredSolidTorus;
  * a degenerate (1,1,2) layered solid torus.  Note that the weight 2 edge
  * is the boundary edge of the Mobius strip.
  */
-class REGINA_API NSatMobius : public NSatBlock {
+class REGINA_API SatMobius : public NSatBlock {
     private:
         int position_;
             /**< Describes how the Mobius band is attached to the
@@ -82,7 +82,7 @@ class REGINA_API NSatMobius : public NSatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        NSatMobius(const NSatMobius& cloneMe);
+        SatMobius(const SatMobius& cloneMe);
 
         /**
          * Describes how the Mobius band is attached to the
@@ -128,7 +128,7 @@ class REGINA_API NSatMobius : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatMobius* isBlockMobius(const SatAnnulus& annulus,
+        static SatMobius* isBlockMobius(const SatAnnulus& annulus,
             TetList& avoidTets);
 
     private:
@@ -142,7 +142,7 @@ class REGINA_API NSatMobius : public NSatBlock {
          * the position() member function documentation.  This value
          * must be 0, 1 or 2.
          */
-        NSatMobius(int position);
+        SatMobius(int position);
 };
 
 /**
@@ -154,7 +154,7 @@ class REGINA_API NSatMobius : public NSatBlock {
  * see the SatAnnulus class notes for details on precisely what
  * vertical, horizontal and diagonal mean.
  */
-class REGINA_API NSatLST : public NSatBlock {
+class REGINA_API SatLST : public NSatBlock {
     private:
         LayeredSolidTorus* lst_;
             /**< Contains details of the layered solid torus that this
@@ -172,11 +172,11 @@ class REGINA_API NSatLST : public NSatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        NSatLST(const NSatLST& cloneMe);
+        SatLST(const SatLST& cloneMe);
         /**
          * Destroys this structure and its internal components.
          */
-        ~NSatLST();
+        ~SatLST();
 
         /**
          * Returns details of the layered solid torus that this block
@@ -227,7 +227,7 @@ class REGINA_API NSatLST : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatLST* isBlockLST(const SatAnnulus& annulus,
+        static SatLST* isBlockLST(const SatAnnulus& annulus,
             TetList& avoidTets);
 
     private:
@@ -241,7 +241,7 @@ class REGINA_API NSatLST : public NSatBlock {
          * attached to the boundary annulus, as explained in the
          * \a roles_ data member documentation.
          */
-        NSatLST(LayeredSolidTorus* lst, Perm<4> roles);
+        SatLST(LayeredSolidTorus* lst, Perm<4> roles);
 };
 
 /**
@@ -255,7 +255,7 @@ class REGINA_API NSatLST : public NSatBlock {
  * of "horizontal" and the NTriSolidTorus class notes for further
  * details regarding "major" and "minor".
  */
-class REGINA_API NSatTriPrism : public NSatBlock {
+class REGINA_API SatTriPrism : public NSatBlock {
     private:
         bool major_;
             /**< Is this prism of major type or of minor type? */
@@ -266,7 +266,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        NSatTriPrism(const NSatTriPrism& cloneMe);
+        SatTriPrism(const SatTriPrism& cloneMe);
 
         /**
          * Is this prism of major type or minor type?  See the class
@@ -299,7 +299,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatTriPrism* isBlockTriPrism(const SatAnnulus& annulus,
+        static SatTriPrism* isBlockTriPrism(const SatAnnulus& annulus,
             TetList& avoidTets);
 
         /**
@@ -315,7 +315,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
          * or \c false if a block of minor type should be inserted.
          * @return structural details of the newly inserted block.
          */
-        static NSatTriPrism* insertBlock(Triangulation<3>& tri, bool major);
+        static SatTriPrism* insertBlock(Triangulation<3>& tri, bool major);
 
     protected:
         /**
@@ -326,7 +326,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
          * @param major \c true if this block is of major type, or
          * \c false if it is of minor type.
          */
-        NSatTriPrism(bool major);
+        SatTriPrism(bool major);
 
     private:
         /**
@@ -340,7 +340,7 @@ class REGINA_API NSatTriPrism : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatTriPrism* isBlockTriPrismMajor(const SatAnnulus& annulus,
+        static SatTriPrism* isBlockTriPrismMajor(const SatAnnulus& annulus,
             TetList& avoidTets);
 };
 
@@ -359,14 +359,14 @@ class REGINA_API NSatTriPrism : public NSatBlock {
  * triangulations) this cube cannot be split vertically into two
  * triangular prisms.
  */
-class REGINA_API NSatCube : public NSatBlock {
+class REGINA_API SatCube : public NSatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
          *
          * @param cloneMe the block structure to clone.
          */
-        NSatCube(const NSatCube& cloneMe);
+        SatCube(const SatCube& cloneMe);
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
@@ -385,7 +385,7 @@ class REGINA_API NSatCube : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatCube* isBlockCube(const SatAnnulus& annulus,
+        static SatCube* isBlockCube(const SatAnnulus& annulus,
             TetList& avoidTets);
 
         /**
@@ -399,14 +399,14 @@ class REGINA_API NSatCube : public NSatBlock {
          * be inserted.
          * @return structural details of the newly inserted block.
          */
-        static NSatCube* insertBlock(Triangulation<3>& tri);
+        static SatCube* insertBlock(Triangulation<3>& tri);
 
     protected:
         /**
          * Constructs an uninitialised block.  The boundary annuli
          * must be initialised before this block can be used.
          */
-        NSatCube();
+        SatCube();
 };
 
 /**
@@ -435,14 +435,14 @@ class REGINA_API NSatCube : public NSatBlock {
  * prisms that are joined together, or equivalently the number of
  * saturated annuli on the boundary.
  */
-class REGINA_API NSatReflectorStrip : public NSatBlock {
+class REGINA_API SatReflectorStrip : public NSatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
          *
          * @param cloneMe the block structure to clone.
          */
-        NSatReflectorStrip(const NSatReflectorStrip& cloneMe);
+        SatReflectorStrip(const SatReflectorStrip& cloneMe);
 
         virtual NSatBlock* clone() const;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
@@ -461,7 +461,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatReflectorStrip* isBlockReflectorStrip(
+        static SatReflectorStrip* isBlockReflectorStrip(
             const SatAnnulus& annulus, TetList& avoidTets);
 
         /**
@@ -480,7 +480,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
          * \c false if the new strip should not be twisted.
          * @return structural details of the newly inserted block.
          */
-        static NSatReflectorStrip* insertBlock(Triangulation<3>& tri,
+        static SatReflectorStrip* insertBlock(Triangulation<3>& tri,
             unsigned length, bool twisted);
 
     protected:
@@ -494,7 +494,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
          * @param twisted \c true if the strip should be twisted (giving
          * a twisted ring of boundary annuli), or \c false if not.
          */
-        NSatReflectorStrip(unsigned length, bool twisted);
+        SatReflectorStrip(unsigned length, bool twisted);
 };
 
 /**
@@ -524,7 +524,7 @@ class REGINA_API NSatReflectorStrip : public NSatBlock {
  * each annulus (with the fibres pinched together between the two
  * horizontal edges).
  */
-class REGINA_API NSatLayering : public NSatBlock {
+class REGINA_API SatLayering : public NSatBlock {
     private:
         bool overHorizontal_;
             /**< Do we layer over the horizontal annulus edge, or the
@@ -536,7 +536,7 @@ class REGINA_API NSatLayering : public NSatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        NSatLayering(const NSatLayering& cloneMe);
+        SatLayering(const SatLayering& cloneMe);
 
         /**
          * Does this describe a layering over the horizontal edge of the
@@ -565,7 +565,7 @@ class REGINA_API NSatLayering : public NSatBlock {
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatLayering* isBlockLayering(const SatAnnulus& annulus,
+        static SatLayering* isBlockLayering(const SatAnnulus& annulus,
             TetList& avoidTets);
 
     protected:
@@ -578,120 +578,120 @@ class REGINA_API NSatLayering : public NSatBlock {
          * layering over the horizontal edge of the boundary annulus, or
          * \c false if it describes a layering over the diagonal edge.
          */
-        NSatLayering(bool overHorizontal);
+        SatLayering(bool overHorizontal);
 };
 
 /*@}*/
 
-// Inline functions for NSatMobius
+// Inline functions for SatMobius
 
-inline NSatMobius::NSatMobius(const NSatMobius& cloneMe) : NSatBlock(cloneMe),
+inline SatMobius::SatMobius(const SatMobius& cloneMe) : NSatBlock(cloneMe),
         position_(cloneMe.position_) {
 }
 
-inline NSatMobius::NSatMobius(int position) : NSatBlock(1),
+inline SatMobius::SatMobius(int position) : NSatBlock(1),
         position_(position) {
 }
 
-inline int NSatMobius::position() const {
+inline int SatMobius::position() const {
     return position_;
 }
 
-inline NSatBlock* NSatMobius::clone() const {
-    return new NSatMobius(*this);
+inline NSatBlock* SatMobius::clone() const {
+    return new SatMobius(*this);
 }
 
-// Inline functions for NSatLST
+// Inline functions for SatLST
 
-inline NSatLST::NSatLST(LayeredSolidTorus* lst, Perm<4> roles) : NSatBlock(1),
+inline SatLST::SatLST(LayeredSolidTorus* lst, Perm<4> roles) : NSatBlock(1),
         lst_(lst), roles_(roles) {
 }
 
-inline const LayeredSolidTorus* NSatLST::lst() const {
+inline const LayeredSolidTorus* SatLST::lst() const {
     return lst_;
 }
 
-inline Perm<4> NSatLST::roles() const {
+inline Perm<4> SatLST::roles() const {
     return roles_;
 }
 
-inline NSatBlock* NSatLST::clone() const {
-    return new NSatLST(*this);
+inline NSatBlock* SatLST::clone() const {
+    return new SatLST(*this);
 }
 
-// Inline functions for NSatTriPrism
+// Inline functions for SatTriPrism
 
-inline NSatTriPrism::NSatTriPrism(const NSatTriPrism& cloneMe) :
+inline SatTriPrism::SatTriPrism(const SatTriPrism& cloneMe) :
         NSatBlock(cloneMe), major_(cloneMe.major_) {
 }
 
-inline NSatTriPrism::NSatTriPrism(bool major) : NSatBlock(3), major_(major) {
+inline SatTriPrism::SatTriPrism(bool major) : NSatBlock(3), major_(major) {
 }
 
-inline bool NSatTriPrism::isMajor() const {
+inline bool SatTriPrism::isMajor() const {
     return major_;
 }
 
-inline NSatBlock* NSatTriPrism::clone() const {
-    return new NSatTriPrism(*this);
+inline NSatBlock* SatTriPrism::clone() const {
+    return new SatTriPrism(*this);
 }
 
-inline void NSatTriPrism::writeTextShort(std::ostream& out) const {
+inline void SatTriPrism::writeTextShort(std::ostream& out) const {
     out << "Saturated triangular prism of "
         << (major_ ? "major" : "minor") << " type";
 }
 
-inline void NSatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
+inline void SatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
     if (tex)
         out << "\\triangle";
     else
         out << "Tri";
 }
 
-// Inline functions for NSatCube
+// Inline functions for SatCube
 
-inline NSatCube::NSatCube(const NSatCube& cloneMe) : NSatBlock(cloneMe) {
+inline SatCube::SatCube(const SatCube& cloneMe) : NSatBlock(cloneMe) {
 }
 
-inline NSatCube::NSatCube() : NSatBlock(4) {
+inline SatCube::SatCube() : NSatBlock(4) {
 }
 
-inline NSatBlock* NSatCube::clone() const {
-    return new NSatCube(*this);
+inline NSatBlock* SatCube::clone() const {
+    return new SatCube(*this);
 }
 
-inline void NSatCube::writeTextShort(std::ostream& out) const {
+inline void SatCube::writeTextShort(std::ostream& out) const {
     out << "Saturated cube";
 }
 
-inline void NSatCube::writeAbbr(std::ostream& out, bool tex) const {
+inline void SatCube::writeAbbr(std::ostream& out, bool tex) const {
     if (tex)
         out << "\\square";
     else
         out << "Cube";
 }
 
-// Inline functions for NSatReflectorStrip
+// Inline functions for SatReflectorStrip
 
-inline NSatReflectorStrip::NSatReflectorStrip(
-        const NSatReflectorStrip& cloneMe) : NSatBlock(cloneMe) {
+inline SatReflectorStrip::SatReflectorStrip(
+        const SatReflectorStrip& cloneMe) : NSatBlock(cloneMe) {
 }
 
-inline NSatReflectorStrip::NSatReflectorStrip(unsigned length, bool twisted) :
+inline SatReflectorStrip::SatReflectorStrip(unsigned length, bool twisted) :
         NSatBlock(length, twisted) {
 }
 
-inline NSatBlock* NSatReflectorStrip::clone() const {
-    return new NSatReflectorStrip(*this);
+inline NSatBlock* SatReflectorStrip::clone() const {
+    return new SatReflectorStrip(*this);
 }
 
-inline void NSatReflectorStrip::writeTextShort(std::ostream& out) const {
+inline void SatReflectorStrip::writeTextShort(std::ostream& out) const {
     out << "Saturated reflector strip of length " << nAnnuli();
     if (twistedBoundary())
         out << " (twisted)";
 }
 
-inline void NSatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
+inline void SatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
     if (twistedBoundary()) {
         if (tex)
             out << "\\tilde{\\circledash}_" << nAnnuli();
@@ -705,30 +705,30 @@ inline void NSatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
     }
 }
 
-// Inline functions for NSatLayering
+// Inline functions for SatLayering
 
-inline NSatLayering::NSatLayering(const NSatLayering& cloneMe) :
+inline SatLayering::SatLayering(const SatLayering& cloneMe) :
         NSatBlock(cloneMe), overHorizontal_(cloneMe.overHorizontal_) {
 }
 
-inline NSatLayering::NSatLayering(bool overHorizontal) :
+inline SatLayering::SatLayering(bool overHorizontal) :
         NSatBlock(2), overHorizontal_(overHorizontal) {
 }
 
-inline bool NSatLayering::overHorizontal() const {
+inline bool SatLayering::overHorizontal() const {
     return overHorizontal_;
 }
 
-inline NSatBlock* NSatLayering::clone() const {
-    return new NSatLayering(*this);
+inline NSatBlock* SatLayering::clone() const {
+    return new SatLayering(*this);
 }
 
-inline void NSatLayering::writeTextShort(std::ostream& out) const {
+inline void SatLayering::writeTextShort(std::ostream& out) const {
     out << "Saturated single layering over "
         << (overHorizontal_ ? "horizontal" : "diagonal") << " edge";
 }
 
-inline void NSatLayering::writeAbbr(std::ostream& out, bool tex) const {
+inline void SatLayering::writeAbbr(std::ostream& out, bool tex) const {
     if (tex)
         out << "lozenge";
     else

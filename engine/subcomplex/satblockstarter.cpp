@@ -41,51 +41,51 @@ void SatBlockStarterSet::initialise() {
     SatBlockStarter* starter;
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatTriPrism::insertBlock(starter->triangulation_, true);
+    starter->block_ = SatTriPrism::insertBlock(starter->triangulation_, true);
     insert(starter);
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatCube::insertBlock(starter->triangulation_);
+    starter->block_ = SatCube::insertBlock(starter->triangulation_);
     insert(starter);
 
     // Try various reflector strips of small length.
     starter = new SatBlockStarter;
-    starter->block_ = NSatReflectorStrip::insertBlock(starter->triangulation_,
+    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
         1, false);
     insert(starter);
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatReflectorStrip::insertBlock(starter->triangulation_,
+    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
         1, true);
     insert(starter);
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatReflectorStrip::insertBlock(starter->triangulation_,
+    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
         2, false);
     insert(starter);
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatReflectorStrip::insertBlock(starter->triangulation_,
+    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
         2, true);
     insert(starter);
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatReflectorStrip::insertBlock(starter->triangulation_,
+    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
         3, false);
     insert(starter);
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatReflectorStrip::insertBlock(starter->triangulation_,
+    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
         3, true);
     insert(starter);
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatReflectorStrip::insertBlock(starter->triangulation_,
+    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
         4, false);
     insert(starter);
 
     starter = new SatBlockStarter;
-    starter->block_ = NSatReflectorStrip::insertBlock(starter->triangulation_,
+    starter->block_ = SatReflectorStrip::insertBlock(starter->triangulation_,
         4, true);
     insert(starter);
 }

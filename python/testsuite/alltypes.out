@@ -1492,25 +1492,7 @@ Equality type : BY_REFERENCE
 NSatBlockSpec : class
 Equality type : BY_VALUE
 
-NSatCube : class
-Equality type : BY_REFERENCE
-
-NSatLST : class
-Equality type : BY_REFERENCE
-
-NSatLayering : class
-Equality type : BY_REFERENCE
-
-NSatMobius : class
-Equality type : BY_REFERENCE
-
-NSatReflectorStrip : class
-Equality type : BY_REFERENCE
-
 NSatRegion : class
-Equality type : BY_REFERENCE
-
-NSatTriPrism : class
 Equality type : BY_REFERENCE
 
 NScript : typedef ->  Script
@@ -1731,6 +1713,24 @@ Equality type : BY_VALUE
 
 SatAnnulus : class
 Equality type : BY_VALUE
+
+SatCube : class
+Equality type : BY_REFERENCE
+
+SatLST : class
+Equality type : BY_REFERENCE
+
+SatLayering : class
+Equality type : BY_REFERENCE
+
+SatMobius : class
+Equality type : BY_REFERENCE
+
+SatReflectorStrip : class
+Equality type : BY_REFERENCE
+
+SatTriPrism : class
+Equality type : BY_REFERENCE
 
 Script : class
 Equality type : BY_REFERENCE

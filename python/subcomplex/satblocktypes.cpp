@@ -39,141 +39,141 @@
 using namespace boost::python;
 using regina::SatAnnulus;
 using regina::NSatBlock;
-using regina::NSatCube;
-using regina::NSatLayering;
-using regina::NSatLST;
-using regina::NSatMobius;
-using regina::NSatReflectorStrip;
-using regina::NSatTriPrism;
+using regina::SatCube;
+using regina::SatLayering;
+using regina::SatLST;
+using regina::SatMobius;
+using regina::SatReflectorStrip;
+using regina::SatTriPrism;
 
 namespace {
-    NSatMobius* isBlockMobius_nolist(const SatAnnulus& a) {
+    SatMobius* isBlockMobius_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
-        return NSatMobius::isBlockMobius(a, avoidTets);
+        return SatMobius::isBlockMobius(a, avoidTets);
     }
 
-    NSatLST* isBlockLST_nolist(const SatAnnulus& a) {
+    SatLST* isBlockLST_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
-        return NSatLST::isBlockLST(a, avoidTets);
+        return SatLST::isBlockLST(a, avoidTets);
     }
 
-    NSatTriPrism* isBlockTriPrism_nolist(const SatAnnulus& a) {
+    SatTriPrism* isBlockTriPrism_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
-        return NSatTriPrism::isBlockTriPrism(a, avoidTets);
+        return SatTriPrism::isBlockTriPrism(a, avoidTets);
     }
 
-    NSatCube* isBlockCube_nolist(const SatAnnulus& a) {
+    SatCube* isBlockCube_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
-        return NSatCube::isBlockCube(a, avoidTets);
+        return SatCube::isBlockCube(a, avoidTets);
     }
 
-    NSatReflectorStrip* isBlockReflectorStrip_nolist(const SatAnnulus& a) {
+    SatReflectorStrip* isBlockReflectorStrip_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
-        return NSatReflectorStrip::isBlockReflectorStrip(a, avoidTets);
+        return SatReflectorStrip::isBlockReflectorStrip(a, avoidTets);
     }
 
-    NSatLayering* isBlockLayering_nolist(const SatAnnulus& a) {
+    SatLayering* isBlockLayering_nolist(const SatAnnulus& a) {
         NSatBlock::TetList avoidTets;
-        return NSatLayering::isBlockLayering(a, avoidTets);
+        return SatLayering::isBlockLayering(a, avoidTets);
     }
 }
 
 void addNSatBlockTypes() {
-    class_<NSatMobius, bases<regina::NSatBlock>,
-            std::auto_ptr<NSatMobius>, boost::noncopyable>
-            ("NSatMobius", init<const NSatMobius&>())
-        .def("position", &NSatMobius::position)
+    class_<SatMobius, bases<regina::NSatBlock>,
+            std::auto_ptr<SatMobius>, boost::noncopyable>
+            ("SatMobius", init<const SatMobius&>())
+        .def("position", &SatMobius::position)
         .def("isBlockMobius", isBlockMobius_nolist,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockMobius")
     ;
 
-    implicitly_convertible<std::auto_ptr<NSatMobius>,
+    implicitly_convertible<std::auto_ptr<SatMobius>,
         std::auto_ptr<regina::NSatBlock> >();
 
 
 
-    class_<NSatLST, bases<regina::NSatBlock>,
-            std::auto_ptr<NSatLST>, boost::noncopyable>
-            ("NSatLST", init<const NSatLST&>())
-        .def("lst", &NSatLST::lst,
+    class_<SatLST, bases<regina::NSatBlock>,
+            std::auto_ptr<SatLST>, boost::noncopyable>
+            ("SatLST", init<const SatLST&>())
+        .def("lst", &SatLST::lst,
             return_internal_reference<>())
-        .def("roles", &NSatLST::roles)
+        .def("roles", &SatLST::roles)
         .def("isBlockLST", isBlockLST_nolist,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockLST")
     ;
 
-    implicitly_convertible<std::auto_ptr<NSatLST>,
+    implicitly_convertible<std::auto_ptr<SatLST>,
         std::auto_ptr<regina::NSatBlock> >();
 
 
 
-    class_<NSatTriPrism, bases<regina::NSatBlock>,
-            std::auto_ptr<NSatTriPrism>, boost::noncopyable>
-            ("NSatTriPrism", init<const NSatTriPrism&>())
-        .def("isMajor", &NSatTriPrism::isMajor)
+    class_<SatTriPrism, bases<regina::NSatBlock>,
+            std::auto_ptr<SatTriPrism>, boost::noncopyable>
+            ("SatTriPrism", init<const SatTriPrism&>())
+        .def("isMajor", &SatTriPrism::isMajor)
         .def("isBlockTriPrism", isBlockTriPrism_nolist,
             return_value_policy<manage_new_object>())
-        .def("insertBlock", &NSatTriPrism::insertBlock,
+        .def("insertBlock", &SatTriPrism::insertBlock,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockTriPrism")
         .staticmethod("insertBlock")
     ;
 
-    implicitly_convertible<std::auto_ptr<NSatTriPrism>,
+    implicitly_convertible<std::auto_ptr<SatTriPrism>,
         std::auto_ptr<regina::NSatBlock> >();
 
 
 
-    class_<NSatCube, bases<regina::NSatBlock>,
-            std::auto_ptr<NSatCube>, boost::noncopyable>
-            ("NSatCube", init<const NSatCube&>())
+    class_<SatCube, bases<regina::NSatBlock>,
+            std::auto_ptr<SatCube>, boost::noncopyable>
+            ("SatCube", init<const SatCube&>())
         .def("isBlockCube", isBlockCube_nolist,
             return_value_policy<manage_new_object>())
-        .def("insertBlock", &NSatCube::insertBlock,
+        .def("insertBlock", &SatCube::insertBlock,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockCube")
         .staticmethod("insertBlock")
     ;
 
-    implicitly_convertible<std::auto_ptr<NSatCube>,
+    implicitly_convertible<std::auto_ptr<SatCube>,
         std::auto_ptr<regina::NSatBlock> >();
 
 
 
-    class_<NSatReflectorStrip, bases<regina::NSatBlock>,
-            std::auto_ptr<NSatReflectorStrip>, boost::noncopyable>
-            ("NSatReflectorStrip", init<const NSatReflectorStrip&>())
+    class_<SatReflectorStrip, bases<regina::NSatBlock>,
+            std::auto_ptr<SatReflectorStrip>, boost::noncopyable>
+            ("SatReflectorStrip", init<const SatReflectorStrip&>())
         .def("isBlockReflectorStrip", isBlockReflectorStrip_nolist,
             return_value_policy<manage_new_object>())
-        .def("insertBlock", &NSatReflectorStrip::insertBlock,
+        .def("insertBlock", &SatReflectorStrip::insertBlock,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockReflectorStrip")
         .staticmethod("insertBlock")
     ;
 
-    implicitly_convertible<std::auto_ptr<NSatReflectorStrip>,
+    implicitly_convertible<std::auto_ptr<SatReflectorStrip>,
         std::auto_ptr<regina::NSatBlock> >();
 
 
 
-    class_<NSatLayering, bases<regina::NSatBlock>,
-            std::auto_ptr<NSatLayering>, boost::noncopyable>
-            ("NSatLayering", init<const NSatLayering&>())
-        .def("overHorizontal", &NSatLayering::overHorizontal)
+    class_<SatLayering, bases<regina::NSatBlock>,
+            std::auto_ptr<SatLayering>, boost::noncopyable>
+            ("SatLayering", init<const SatLayering&>())
+        .def("overHorizontal", &SatLayering::overHorizontal)
         .def("isBlockLayering", isBlockLayering_nolist,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlockLayering")
     ;
 
-    implicitly_convertible<std::auto_ptr<NSatLayering>,
+    implicitly_convertible<std::auto_ptr<SatLayering>,
         std::auto_ptr<regina::NSatBlock> >();
 }
 

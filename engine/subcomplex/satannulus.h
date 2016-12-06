@@ -426,7 +426,7 @@ struct REGINA_API SatAnnulus {
      * exceptional fibre into the Seifert fibred space space, where
      * the vertical edges run parallel to the fibres and the horizontal
      * edges represent the base orbifold.  The sign of the fibre is
-     * consistent with the fibre inserted by NSatLST::adjustSFS()
+     * consistent with the fibre inserted by SatLST::adjustSFS()
      * (in particular, negating \a beta will negate the fibre).
      *
      * In the case of a (2,1) fibre, the layered solid torus will be
