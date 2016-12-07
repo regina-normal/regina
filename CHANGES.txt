@@ -198,9 +198,10 @@ Version 5.1  [ (under development) ]
               restrictions in dimension 4 have been lifted).
             - New two-argument copy constructor that allows you to clone
               a triangulation without cloning its computed properties.
-            - Routine barycentricSubdivision() is now available in
-              dimension 2, and uses a consistent generic implementation
-              for all of Regina's standard dimensions.
+            - Routine barycentricSubdivision() is now available in dimension 2,
+              uses a consistent generic implementation for all of Regina's
+              standard dimensions, and now comes with guarantees about the
+              labelling and ordering of sub-simplices.
             - Routine swapContents() now swaps skeletal data and computed
               properties also, instead of just deleting them.
         Class Triangulation<3>:

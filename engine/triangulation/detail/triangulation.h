@@ -1100,15 +1100,49 @@ class TriangulationBase :
         void makeDoubleCover();
 
         /**
-         * Does a barycentric subdivision of the triangulation.
-         * Each top-dimensional simplex is divided into (\a dim+1) factorial
-         * simplices by placing an extra vertex at the centroid of every
-         * face of every dimension.
+         * Does a barycentric subdivision of the triangulation.  This is done 
+         * in-place, i.e., the triangulation will be modified directly.
+         *
+         * Each top-dimensional simplex \a s is divided into
+         * (\a dim + 1) factorial sub-simplices by placing an extra vertex at
+         * the centroid of every face of every dimension.  Each of these
+         * sub-simplices \a t is described by a permutation \a p of
+         * (0, ..., \a dim).  The vertices of such a sub-simplex \a t are:
+         *
+         * - vertex \a p[0] of \a s;
+         * - the centre of edge (\a p[0], \a p[1]) of \a s;
+         * - the centroid of triangle (\a p[0], \a p[1], \a p[2]) of \a s;
+         * - ...
+         * - the centroid of face (\a p[0], \a p[1], \a p[2], \a p[\a dim])
+         *   of \a s, which is the entire simplex \a s itself.
+         *
+         * The sub-simplices have their vertices numbered in a way that
+         * mirrors the original simplex \a s:
+         *
+         * - vertex \a p[0] of \a s will be labelled \a p[0] in \a t;
+         * - the centre of edge (\a p[0], \a p[1]) of \a s will be labelled
+         *   \a p[1] in \a t;
+         * - the centroid of triangle (\a p[0], \a p[1], \a p[2]) of \a s
+         *   will be labelled \a p[2] in \a t;
+         * - ...
+         * - the centroid of \a s itself will be labelled \a p[\a dim] in \a t.
+         *
+         * If simplex \a s has index \a i in the original triangulation, then
+         * its sub-simplex corresponding to permutation \a p will have index
+         * <tt>((dim + 1)! * i + p.index())</tt> in the resulting triangulation.
+         * In other words: sub-simplices are ordered first according to the
+         * original simplex that contains them, and then according to the
+         * lexicographical ordering of the corresponding permutations \a p.
          *
          * \pre \a dim is one of Regina's standard dimensions.
          * This precondition is a safety net, since in higher dimensions the
          * triangulation would explode too quickly in size (and for the
          * highest dimensions, possibly beyond the limits of \c size_t).
+         *
+         * \warning In dimensions 3 and 4, both the labelling and ordering of
+         * sub-simplices in the subdivided triangulation has changed as of
+         * Regina 5.1.  (Earlier versions of Regina made no guarantee about the
+         * labelling and ordering; these guarantees are also new to Regina 5.1).
          */
         void barycentricSubdivision();
 
