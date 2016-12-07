@@ -41,13 +41,13 @@ namespace regina {
 void Triangulation<3>::drillEdge(Edge<3>* e) {
     // Recall from the barycentric subdivision code above that
     // a tetrahedron in the subdivision is uniquely defined by the
-    // permutation (face, edge, vtx, corner) of (0, 1, 2, 3).
+    // permutation (corner, vtx, edge, face) of (0, 1, 2, 3).
     //
     // For an edge (i,j) opposite vertices (k,l), the tetrahedra that
     // meet it are:
     //
-    // (k,l,i,j) and (l,k,i,j), both containing the half-edge touching vertex j;
-    // (k,l,j,i) and (l,k,j,i), both containing the half-edge touching vertex i.
+    // (i,j,k,l) and (i,j,l,k), both containing the half-edge touching vertex i;
+    // (j,i,k,l) and (j,i,l,k), both containing the half-edge touching vertex j.
     //
     // In each case the corresponding edge number in the new tetrahedron
     // equals the edge number from the original tetrahedron.
@@ -58,12 +58,16 @@ void Triangulation<3>::drillEdge(Edge<3>* e) {
     int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision
                      // that contain the two corresponding half-edges.
     oldToNew[0] = Perm<4>(
-        Edge<3>::edgeVertex[5 - edgeNum][0], Edge<3>::edgeVertex[5 - edgeNum][1],
-        Edge<3>::edgeVertex[edgeNum][0], Edge<3>::edgeVertex[edgeNum][1]).
+        Edge<3>::edgeVertex[edgeNum][0],
+        Edge<3>::edgeVertex[edgeNum][1],
+        Edge<3>::edgeVertex[5 - edgeNum][0],
+        Edge<3>::edgeVertex[5 - edgeNum][1]).
         index();
     oldToNew[1] = Perm<4>(
-        Edge<3>::edgeVertex[5 - edgeNum][0], Edge<3>::edgeVertex[5 - edgeNum][1],
-        Edge<3>::edgeVertex[edgeNum][1], Edge<3>::edgeVertex[edgeNum][0]).
+        Edge<3>::edgeVertex[edgeNum][1],
+        Edge<3>::edgeVertex[edgeNum][0],
+        Edge<3>::edgeVertex[5 - edgeNum][0],
+        Edge<3>::edgeVertex[5 - edgeNum][1]).
         index();
 
     ChangeEventSpan span(this);

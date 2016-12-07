@@ -2731,13 +2731,14 @@ void TriangulationBase<dim>::barycentricSubdivision() {
     // A top-dimensional simplex in the subdivision is uniquely defined
     // by a permutation p on (dim+1) elements.
     //
-    // Specifically, this is the simplex that:
-    // - meets the boundary in the facet opposite vertex p[0];
-    // - meets that facet in the (dim-2)-face opposite vertex p[1];
-    // - meets that (dim-2)-face in the (dim-3)-face opposite vertex p[2];
+    // As described in the documentation for barycentricSubdivision(),
+    // this is the simplex that:
+    // - meets the boundary in the facet opposite vertex p[dim];
+    // - meets that facet in the (dim-2)-face opposite vertex p[dim-1];
+    // - meets that (dim-2)-face in the (dim-3)-face opposite vertex p[dim-2];
     // - ...
-    // - meets that edge in the vertex opposite vertex p[dim-1];
-    // - directly touches vertex p[dim].
+    // - meets that edge in the vertex opposite vertex p[1];
+    // - directly touches vertex p[0].
 
     size_t simp;
     for (simp = 0; simp < Perm<dim+1>::nPerms * nOld; ++simp)
@@ -2753,23 +2754,23 @@ void TriangulationBase<dim>::barycentricSubdivision() {
 
             // Internal gluings within the old simplex:
             for (i = 0; i < dim; ++i)
-                newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i+1],
+                newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i],
                     newSimp[Perm<dim+1>::nPerms * simp +
-                        (perm * Perm<dim+1>(i+1, i)).index()],
-                    Perm<dim+1>(perm[i+1], perm[i]));
+                        (perm * Perm<dim+1>(i, i+1)).index()],
+                    Perm<dim+1>(perm[i], perm[i+1]));
 
             // Adjacent gluings to the adjacent simplex:
             oldSimp = simplex(simp);
-            if (! oldSimp->adjacentSimplex(perm[0]))
+            if (! oldSimp->adjacentSimplex(perm[dim]))
                 continue; // This hits a boundary facet.
             if (newSimp[Perm<dim+1>::nPerms * simp + permIdx]->adjacentSimplex(
-                    perm[0]))
+                    perm[dim]))
                 continue; // We've already done this gluing from the other side.
 
-            glue = oldSimp->adjacentGluing(perm[0]);
-            newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[0],
+            glue = oldSimp->adjacentGluing(perm[dim]);
+            newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[dim],
                 newSimp[Perm<dim+1>::nPerms * oldSimp->adjacentSimplex(
-                    perm[0])->index() + (glue * perm).index()],
+                    perm[dim])->index() + (glue * perm).index()],
                 glue);
         }
 
