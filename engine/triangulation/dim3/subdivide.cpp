@@ -60,11 +60,11 @@ void Triangulation<3>::drillEdge(Edge<3>* e) {
     oldToNew[0] = Perm<4>(
         Edge<3>::edgeVertex[5 - edgeNum][0], Edge<3>::edgeVertex[5 - edgeNum][1],
         Edge<3>::edgeVertex[edgeNum][0], Edge<3>::edgeVertex[edgeNum][1]).
-        S4Index();
+        index();
     oldToNew[1] = Perm<4>(
         Edge<3>::edgeVertex[5 - edgeNum][0], Edge<3>::edgeVertex[5 - edgeNum][1],
         Edge<3>::edgeVertex[edgeNum][1], Edge<3>::edgeVertex[edgeNum][0]).
-        S4Index();
+        index();
 
     ChangeEventSpan span(this);
     barycentricSubdivision();

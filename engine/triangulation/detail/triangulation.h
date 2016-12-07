@@ -2749,13 +2749,13 @@ void TriangulationBase<dim>::barycentricSubdivision() {
     int i;
     for (simp=0; simp < nOld; ++simp)
         for (permIdx = 0; permIdx < Perm<dim+1>::nPerms; ++permIdx) {
-            perm = Perm<dim+1>::Sn[permIdx];
+            perm = Perm<dim+1>::atIndex(permIdx);
 
             // Internal gluings within the old simplex:
             for (i = 0; i < dim; ++i)
                 newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i+1],
                     newSimp[Perm<dim+1>::nPerms * simp +
-                        (perm * Perm<dim+1>(i+1, i)).SnIndex()],
+                        (perm * Perm<dim+1>(i+1, i)).index()],
                     Perm<dim+1>(perm[i+1], perm[i]));
 
             // Adjacent gluings to the adjacent simplex:
@@ -2769,7 +2769,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
             glue = oldSimp->adjacentGluing(perm[0]);
             newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[0],
                 newSimp[Perm<dim+1>::nPerms * oldSimp->adjacentSimplex(
-                    perm[0])->index() + (glue * perm).SnIndex()],
+                    perm[0])->index() + (glue * perm).index()],
                 glue);
         }
 
