@@ -251,6 +251,15 @@ class REGINA_API SpiralSolidTorus : public NStandardTriangulation {
 
 /*@}*/
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSpiralSolidTorus has now been renamed to
+ * SpiralSolidTorus.
+ */
+REGINA_DEPRECATED typedef SpiralSolidTorus NSpiralSolidTorus;
+
 // Inline functions for SpiralSolidTorus
 
 inline SpiralSolidTorus::SpiralSolidTorus(size_t newNTet) :

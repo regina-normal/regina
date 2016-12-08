@@ -60,5 +60,7 @@ void addSpiralSolidTorus() {
 
     implicitly_convertible<std::auto_ptr<SpiralSolidTorus>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NSpiralSolidTorus") = scope().attr("SpiralSolidTorus");
 }
 
