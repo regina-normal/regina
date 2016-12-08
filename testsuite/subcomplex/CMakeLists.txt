@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  nstandardtriangulation
+  standardtriangulation
   )
 
 # Prepend folder name

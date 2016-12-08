@@ -27,7 +27,7 @@ SET ( FILES
   snappedball
   snappedtwosphere
   spiralsolidtorus
-  nstandardtri
+  standardtri
   ntrisolidtorus
   ntrivialtri
   ntxicore
