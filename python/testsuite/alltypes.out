@@ -1552,6 +1552,12 @@ NTriangulation : typedef ->  Triangulation3
 
 NTrivialTri : typedef ->  TrivialTri
 
+NTxICore : typedef ->  TxICore
+
+NTxIDiagonalCore : typedef ->  TxIDiagonalCore
+
+NTxIParallelCore : typedef ->  TxIParallelCore
+
 NVertex : typedef ->  Face3_0
 
 NVertexEmbedding : typedef ->  FaceEmbedding3_0

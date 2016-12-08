@@ -314,6 +314,15 @@ class REGINA_API TxICore :
 };
 
 /**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NTxICore has now been renamed to
+ * TxICore.
+ */
+REGINA_DEPRECATED typedef TxICore NTxICore;
+
+/**
  * One of a family of thin <tt>T x I</tt> triangulations that typically
  * appear at the centres of layered torus bundles.  Different
  * triangulations in this family use different numbers of tetrahedra,
@@ -415,6 +424,15 @@ class REGINA_API TxIDiagonalCore : public TxICore {
 };
 
 /**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NTxIDiagonalCore has now been renamed to
+ * TxIDiagonalCore.
+ */
+REGINA_DEPRECATED typedef TxIDiagonalCore NTxIDiagonalCore;
+
+/**
  * A specific six-tetrahedron TxICore triangulation that does not fit
  * neatly into other families.
  *
@@ -452,6 +470,15 @@ class REGINA_API TxIParallelCore : public TxICore {
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NTxIParallelCore has now been renamed to
+ * TxIParallelCore.
+ */
+REGINA_DEPRECATED typedef TxIParallelCore NTxIParallelCore;
 
 /*@}*/
 

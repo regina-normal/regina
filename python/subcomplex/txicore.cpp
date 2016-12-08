@@ -67,6 +67,8 @@ void addTxICore() {
         .def(regina::python::add_eq_operators())
     ;
 
+    scope().attr("NTxICore") = scope().attr("TxICore");
+
     class_<TxIDiagonalCore, bases<regina::TxICore>,
             std::auto_ptr<TxIDiagonalCore>, boost::noncopyable>
             ("TxIDiagonalCore", init<unsigned long, unsigned long>())
@@ -75,11 +77,15 @@ void addTxICore() {
         .def(regina::python::add_eq_operators())
     ;
 
+    scope().attr("NTxIDiagonalCore") = scope().attr("TxIDiagonalCore");
+
     class_<TxIParallelCore, bases<regina::TxICore>,
             std::auto_ptr<TxIParallelCore>, boost::noncopyable>
             ("TxIParallelCore", init<>())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NTxIParallelCore") = scope().attr("TxIParallelCore");
 
     implicitly_convertible<std::auto_ptr<TxIDiagonalCore>,
         std::auto_ptr<regina::TxICore> >();
