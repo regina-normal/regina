@@ -64,7 +64,7 @@ std::string StandardTriangulation::TeXName() const {
 StandardTriangulation* StandardTriangulation::isStandardTriangulation(
         Component<3>* comp) {
     StandardTriangulation* ans;
-    if ((ans = NTrivialTri::isTrivialTriangulation(comp)))
+    if ((ans = TrivialTri::isTrivialTriangulation(comp)))
         return ans;
     if ((ans = L31Pillow::isL31Pillow(comp)))
         return ans;

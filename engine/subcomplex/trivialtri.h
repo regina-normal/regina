@@ -56,7 +56,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NTrivialTri : public StandardTriangulation {
+class REGINA_API TrivialTri : public StandardTriangulation {
     public:
         /**
          * Represents the two-tetrahedron four-vertex triangulation of
@@ -104,7 +104,7 @@ class REGINA_API NTrivialTri : public StandardTriangulation {
          *
          * @return a newly created clone.
          */
-        NTrivialTri* clone() const;
+        TrivialTri* clone() const;
 
         /**
          * Returns the specific trivial triangulation being represented.
@@ -123,7 +123,7 @@ class REGINA_API NTrivialTri : public StandardTriangulation {
          * triangulation, or \c null if the given component is not one
          * of the triangulations recognised by this class.
          */
-        static NTrivialTri* isTrivialTriangulation(const Component<3>* comp);
+        static TrivialTri* isTrivialTriangulation(const Component<3>* comp);
 
         Manifold* manifold() const;
         AbelianGroup* homology() const;
@@ -135,21 +135,21 @@ class REGINA_API NTrivialTri : public StandardTriangulation {
         /**
          * Creates a new structure.
          */
-        NTrivialTri(int newType);
+        TrivialTri(int newType);
 };
 
 /*@}*/
 
-// Inline functions for NTrivialTri
+// Inline functions for TrivialTri
 
-inline NTrivialTri::NTrivialTri(int newType) : type_(newType) {
+inline TrivialTri::TrivialTri(int newType) : type_(newType) {
 }
 
-inline NTrivialTri* NTrivialTri::clone() const {
-    return new NTrivialTri(type_);
+inline TrivialTri* TrivialTri::clone() const {
+    return new TrivialTri(type_);
 }
 
-inline int NTrivialTri::type() const {
+inline int TrivialTri::type() const {
     return type_;
 }
 

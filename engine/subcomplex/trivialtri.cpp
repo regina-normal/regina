@@ -40,14 +40,14 @@
 
 namespace regina {
 
-const int NTrivialTri::N2 = 200;
-const int NTrivialTri::N3_1 = 301;
-const int NTrivialTri::N3_2 = 302;
-const int NTrivialTri::SPHERE_4_VERTEX = 5000;
-const int NTrivialTri::BALL_3_VERTEX = 5100;
-const int NTrivialTri::BALL_4_VERTEX = 5101;
+const int TrivialTri::N2 = 200;
+const int TrivialTri::N3_1 = 301;
+const int TrivialTri::N3_2 = 302;
+const int TrivialTri::SPHERE_4_VERTEX = 5000;
+const int TrivialTri::BALL_3_VERTEX = 5100;
+const int TrivialTri::BALL_4_VERTEX = 5101;
 
-NTrivialTri* NTrivialTri::isTrivialTriangulation(const Component<3>* comp) {
+TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     // Since the triangulations are so small we can use census results
     // to recognise the triangulations by properties alone.
 
@@ -62,9 +62,9 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const Component<3>* comp) {
                 // Look for a one-tetrahedron ball.
                 if (comp->size() == 1) {
                     if (bc->countTriangles() == 4)
-                        return new NTrivialTri(BALL_4_VERTEX);
+                        return new TrivialTri(BALL_4_VERTEX);
                     if (bc->countTriangles() == 2 && comp->countVertices() == 3)
-                        return new NTrivialTri(BALL_3_VERTEX);
+                        return new TrivialTri(BALL_3_VERTEX);
                 }
             }
         }
@@ -96,12 +96,12 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const Component<3>* comp) {
             if (comp->countVertices() == 4) {
                 // There's only one closed valid two-tetrahedron
                 // four-vertex orientable triangulation.
-                return new NTrivialTri(SPHERE_4_VERTEX);
+                return new TrivialTri(SPHERE_4_VERTEX);
             }
         } else {
             // There's only one closed valid two-tetrahedron non-orientable
             // triangulation.
-            return new NTrivialTri(N2);
+            return new TrivialTri(N2);
         }
         return 0;
     }
@@ -127,8 +127,8 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const Component<3>* comp) {
                 unsigned long nTriangles = comp->countTriangles();
                 for (i = 0; i < nTriangles; i++)
                     if (comp->triangle(i)->isMobiusBand())
-                        return new NTrivialTri(N3_2);
-                return new NTrivialTri(N3_1);
+                        return new TrivialTri(N3_2);
+                return new TrivialTri(N3_1);
             }
         }
     }
@@ -136,7 +136,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     return 0;
 }
 
-Manifold* NTrivialTri::manifold() const {
+Manifold* TrivialTri::manifold() const {
     if (type_ == SPHERE_4_VERTEX)
         return new LensSpace(1, 0);
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
@@ -148,7 +148,7 @@ Manifold* NTrivialTri::manifold() const {
     return 0;
 }
 
-AbelianGroup* NTrivialTri::homology() const {
+AbelianGroup* TrivialTri::homology() const {
     AbelianGroup* ans = new AbelianGroup();
 
     if (type_ == N2)
@@ -161,7 +161,7 @@ AbelianGroup* NTrivialTri::homology() const {
     return ans;
 }
 
-std::ostream& NTrivialTri::writeName(std::ostream& out) const {
+std::ostream& TrivialTri::writeName(std::ostream& out) const {
     if (type_ == SPHERE_4_VERTEX)
         out << "S3 (4-vtx)";
     else if (type_ == BALL_3_VERTEX)
@@ -176,7 +176,7 @@ std::ostream& NTrivialTri::writeName(std::ostream& out) const {
         out << "N(3,2)";
     return out;
 }
-std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
+std::ostream& TrivialTri::writeTeXName(std::ostream& out) const {
     if (type_ == SPHERE_4_VERTEX)
         out << "S^3_{v=4}";
     else if (type_ == BALL_3_VERTEX)
@@ -191,7 +191,7 @@ std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
         out << "N_{3,2}";
     return out;
 }
-void NTrivialTri::writeTextLong(std::ostream& out) const {
+void TrivialTri::writeTextLong(std::ostream& out) const {
     if (type_ == SPHERE_4_VERTEX)
         out << "Two-tetrahedron four-vertex 3-sphere";
     else if (type_ == BALL_3_VERTEX)

@@ -36,29 +36,29 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NTrivialTri;
+using regina::TrivialTri;
 
-void addNTrivialTri() {
-    scope s = class_<NTrivialTri, bases<regina::StandardTriangulation>,
-            std::auto_ptr<NTrivialTri>, boost::noncopyable>
-            ("NTrivialTri", no_init)
-        .def("clone", &NTrivialTri::clone,
+void addTrivialTri() {
+    scope s = class_<TrivialTri, bases<regina::StandardTriangulation>,
+            std::auto_ptr<TrivialTri>, boost::noncopyable>
+            ("TrivialTri", no_init)
+        .def("clone", &TrivialTri::clone,
             return_value_policy<manage_new_object>())
-        .def("type", &NTrivialTri::type)
-        .def("isTrivialTriangulation", &NTrivialTri::isTrivialTriangulation,
+        .def("type", &TrivialTri::type)
+        .def("isTrivialTriangulation", &TrivialTri::isTrivialTriangulation,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("isTrivialTriangulation")
     ;
 
-    s.attr("SPHERE_4_VERTEX") = NTrivialTri::SPHERE_4_VERTEX;
-    s.attr("BALL_3_VERTEX") = NTrivialTri::BALL_3_VERTEX;
-    s.attr("BALL_4_VERTEX") = NTrivialTri::BALL_4_VERTEX;
-    s.attr("N2") = NTrivialTri::N2;
-    s.attr("N3_1") = NTrivialTri::N3_1;
-    s.attr("N3_2") = NTrivialTri::N3_2;
+    s.attr("SPHERE_4_VERTEX") = TrivialTri::SPHERE_4_VERTEX;
+    s.attr("BALL_3_VERTEX") = TrivialTri::BALL_3_VERTEX;
+    s.attr("BALL_4_VERTEX") = TrivialTri::BALL_4_VERTEX;
+    s.attr("N2") = TrivialTri::N2;
+    s.attr("N3_1") = TrivialTri::N3_1;
+    s.attr("N3_2") = TrivialTri::N3_2;
 
-    implicitly_convertible<std::auto_ptr<NTrivialTri>,
+    implicitly_convertible<std::auto_ptr<TrivialTri>,
         std::auto_ptr<regina::StandardTriangulation> >();
 }
 
