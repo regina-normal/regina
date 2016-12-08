@@ -46,7 +46,7 @@ namespace regina {
  * BlockedSFSPair class.
  */
 struct BlockedSFSPairSearcher : public SatBlockStarterSearcher {
-    NSatRegion* region[2];
+    SatRegion* region[2];
         /**< The two bounded saturated regions that are joined together,
              if the entire BlockedSFSPair structure has been successfully
              found; otherwise, two null pointers if we are still searching. */
@@ -161,7 +161,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
     // Flesh out the triangulation as far as we can.  We're aiming for
     // just one boundary annulus remaining.
     // Note that the starter block will now be owned by region[0].
-    region[0] = new NSatRegion(starter);
+    region[0] = new SatRegion(starter);
     region[0]->expand(usedTets);
 
     if (region[0]->numberOfBoundaryAnnuli() != 1) {
@@ -258,7 +258,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
         otherSide.switchSides();
 
         if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
-            region[1] = new NSatRegion(otherStarter);
+            region[1] = new SatRegion(otherStarter);
             region[1]->expand(usedTets);
 
             if (region[1]->numberOfBoundaryAnnuli() == 1) {

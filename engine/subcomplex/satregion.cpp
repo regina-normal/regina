@@ -51,7 +51,7 @@ namespace {
     }
 }
 
-NSatRegion::NSatRegion(SatBlock* starter) :
+SatRegion::SatRegion(SatBlock* starter) :
         baseEuler_(1),
         baseOrbl_(true),
         hasTwist_(false),
@@ -59,7 +59,7 @@ NSatRegion::NSatRegion(SatBlock* starter) :
         shiftedAnnuli_(0),
         twistedBlocks_(0),
         nBdryAnnuli_(starter->nAnnuli()) {
-    blocks_.push_back(NSatBlockSpec(starter, false, false));
+    blocks_.push_back(SatBlockSpec(starter, false, false));
 
     if (starter->twistedBoundary()) {
         hasTwist_ = true;
@@ -68,12 +68,12 @@ NSatRegion::NSatRegion(SatBlock* starter) :
     }
 }
 
-NSatRegion::~NSatRegion() {
+SatRegion::~SatRegion() {
     for (BlockSet::iterator it = blocks_.begin(); it != blocks_.end(); it++)
         delete it->block;
 }
 
-const SatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
+const SatAnnulus& SatRegion::boundaryAnnulus(unsigned long which,
         bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
     for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
@@ -96,7 +96,7 @@ const SatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
     return *(new SatAnnulus());
 }
 
-void NSatRegion::boundaryAnnulus(unsigned long which,
+void SatRegion::boundaryAnnulus(unsigned long which,
         SatBlock*& block, unsigned& annulus,
         bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
@@ -118,7 +118,7 @@ void NSatRegion::boundaryAnnulus(unsigned long which,
     // Given the precondition, we should never reach this point.
 }
 
-SFSpace* NSatRegion::createSFS(bool reflect) const {
+SFSpace* SatRegion::createSFS(bool reflect) const {
     // Count boundary components.
     unsigned untwisted, twisted;
     countBoundaries(untwisted, twisted);
@@ -175,8 +175,8 @@ SFSpace* NSatRegion::createSFS(bool reflect) const {
     return sfs;
 }
 
-bool NSatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
-    NSatBlockSpec currBlockSpec;
+bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
+    SatBlockSpec currBlockSpec;
     SatBlock *currBlock, *adjBlock;
     unsigned ann, adjAnn;
     unsigned long adjPos;
@@ -222,7 +222,7 @@ bool NSatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
                 // Note that, since the annuli are not horizontally
                 // reflected, the blocks themselves will be.
                 currBlock->setAdjacent(ann, adjBlock, 0, false, false);
-                blocks_.push_back(NSatBlockSpec(adjBlock, false,
+                blocks_.push_back(SatBlockSpec(adjBlock, false,
                     ! currBlockSpec.refHoriz));
                 nBdryAnnuli_ = nBdryAnnuli_ + adjBlock->nAnnuli() - 2;
 
@@ -307,7 +307,7 @@ bool NSatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     return true;
 }
 
-long NSatRegion::blockIndex(const SatBlock* block) const {
+long SatRegion::blockIndex(const SatBlock* block) const {
     BlockSet::const_iterator it;
     unsigned long id;
 
@@ -318,7 +318,7 @@ long NSatRegion::blockIndex(const SatBlock* block) const {
     return -1;
 }
 
-void NSatRegion::calculateBaseEuler() {
+void SatRegion::calculateBaseEuler() {
     BlockSet::const_iterator it;
     unsigned ann;
 
@@ -368,7 +368,7 @@ void NSatRegion::calculateBaseEuler() {
     baseEuler_ = faces - edgesBdry - (edgesInternalDoubled / 2) + vertices;
 }
 
-void NSatRegion::writeBlockAbbrs(std::ostream& out, bool tex) const {
+void SatRegion::writeBlockAbbrs(std::ostream& out, bool tex) const {
     typedef std::multiset<const SatBlock*, LessDeref<SatBlock> >
         OrderedBlockSet;
     OrderedBlockSet blockOrder;
@@ -385,7 +385,7 @@ void NSatRegion::writeBlockAbbrs(std::ostream& out, bool tex) const {
     }
 }
 
-void NSatRegion::writeDetail(std::ostream& out, const std::string& title)
+void SatRegion::writeDetail(std::ostream& out, const std::string& title)
         const {
     out << title << ":\n";
 
@@ -436,13 +436,13 @@ void NSatRegion::writeDetail(std::ostream& out, const std::string& title)
         }
 }
 
-void NSatRegion::writeTextShort(std::ostream& out) const {
+void SatRegion::writeTextShort(std::ostream& out) const {
     unsigned long size = blocks_.size();
     out << "Saturated region with " << size <<
         (size == 1 ? " block" : " blocks");
 }
 
-void NSatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
+void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
     untwisted = twisted = 0;
 
     // Just trace around each boundary component in turn.

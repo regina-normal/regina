@@ -77,7 +77,7 @@
 using regina::Edge;
 using regina::Packet;
 using regina::Perm;
-using regina::NSatRegion;
+using regina::SatRegion;
 using regina::Triangulation;
 
 Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
@@ -425,12 +425,12 @@ void Tri3CompositionUI::findAugTriSolidTori() {
     }
 }
 
-void Tri3CompositionUI::describeSatRegion(const NSatRegion& region,
+void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
         QTreeWidgetItem* parent) {
     QTreeWidgetItem* details;
     QTreeWidgetItem* annuli;
 
-    regina::NSatBlockSpec spec;
+    regina::SatBlockSpec spec;
     regina::SatAnnulus ann;
     unsigned long nAnnuli;
     long a, b;

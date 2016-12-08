@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NSatRegion;
+class SatRegion;
 
 /**
  * \weakgroup subcomplex
@@ -60,7 +60,7 @@ class NSatRegion;
  * identified.  An optional layering may be placed between the two torus
  * boundaries to allow for a more interesting relationship between the boundary
  * curves of each region.  For more detail on saturated regions and their
- * constituent saturated blocks, see the NSatRegion class; for more detail
+ * constituent saturated blocks, see the SatRegion class; for more detail
  * on layerings, see the Layering class.
  *
  * Each of the two saturated regions must have precisely one boundary
@@ -97,7 +97,7 @@ class NSatRegion;
  */
 class REGINA_API BlockedSFSPair : public NStandardTriangulation {
     private:
-        NSatRegion* region_[2];
+        SatRegion* region_[2];
             /**< The two saturated regions whose boundaries are joined. */
         Matrix2 matchingReln_;
             /**< Specifies how the two region boundaries are joined, as
@@ -118,7 +118,7 @@ class REGINA_API BlockedSFSPair : public NStandardTriangulation {
          * 1 if the second region should be returned.
          * @return details of the requested saturated region.
          */
-        const NSatRegion& region(int which) const;
+        const SatRegion& region(int which) const;
 
         /**
          * Returns the matrix describing how the two saturated region
@@ -165,7 +165,7 @@ class REGINA_API BlockedSFSPair : public NStandardTriangulation {
          * @param matchingReln describes how the first and second region
          * boundaries are joined, as detailed in the class notes above.
          */
-        BlockedSFSPair(NSatRegion* region0, NSatRegion* region1,
+        BlockedSFSPair(SatRegion* region0, SatRegion* region1,
             const Matrix2& matchingReln);
 };
 
@@ -182,14 +182,14 @@ REGINA_DEPRECATED typedef BlockedSFSPair NBlockedSFSPair;
 
 // Inline functions for BlockedSFSPair
 
-inline BlockedSFSPair::BlockedSFSPair(NSatRegion* region0,
-        NSatRegion* region1, const Matrix2& matchingReln) :
+inline BlockedSFSPair::BlockedSFSPair(SatRegion* region0,
+        SatRegion* region1, const Matrix2& matchingReln) :
         matchingReln_(matchingReln) {
     region_[0] = region0;
     region_[1] = region1;
 }
 
-inline const NSatRegion& BlockedSFSPair::region(int which) const {
+inline const SatRegion& BlockedSFSPair::region(int which) const {
     return *region_[which];
 }
 

@@ -1488,9 +1488,6 @@ NSatAnnulus : typedef ->  SatAnnulus
 
 NSatBlock : typedef ->  SatBlock
 
-NSatBlockSpec : class
-Equality type : BY_VALUE
-
 NSatCube : typedef ->  SatCube
 
 NSatLST : typedef ->  SatLST
@@ -1500,9 +1497,6 @@ NSatLayering : typedef ->  SatLayering
 NSatMobius : typedef ->  SatMobius
 
 NSatReflectorStrip : typedef ->  SatReflectorStrip
-
-NSatRegion : class
-Equality type : BY_REFERENCE
 
 NSatTriPrism : typedef ->  SatTriPrism
 
@@ -1728,6 +1722,9 @@ Equality type : BY_VALUE
 SatBlock : class
 Equality type : BY_REFERENCE
 
+SatBlockSpec : class
+Equality type : BY_VALUE
+
 SatCube : class
 Equality type : BY_REFERENCE
 
@@ -1741,6 +1738,9 @@ SatMobius : class
 Equality type : BY_REFERENCE
 
 SatReflectorStrip : class
+Equality type : BY_REFERENCE
+
+SatRegion : class
 Equality type : BY_REFERENCE
 
 SatTriPrism : class

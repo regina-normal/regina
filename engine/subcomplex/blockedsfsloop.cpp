@@ -46,7 +46,7 @@ namespace regina {
  * class.
  */
 struct BlockedSFSLoopSearcher : public SatBlockStarterSearcher {
-    NSatRegion* region;
+    SatRegion* region;
         /**< The bounded saturated region, if the entire BlockedSFSLoop
              structure has been successfully found; otherwise, 0 if we are
              still searching. */
@@ -144,7 +144,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(SatBlock* starter) {
     // Flesh out the triangulation as far as we can.  We're aiming for
     // precisely two boundary annuli remaining.
     // Note that the starter block will now be owned by region.
-    region = new NSatRegion(starter);
+    region = new SatRegion(starter);
     region->expand(usedTets);
 
     if (region->numberOfBoundaryAnnuli() != 2) {

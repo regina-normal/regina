@@ -38,11 +38,11 @@
 
 using namespace boost::python;
 using regina::SatBlock;
-using regina::NSatBlockSpec;
-using regina::NSatRegion;
+using regina::SatBlockSpec;
+using regina::SatRegion;
 
 namespace {
-    boost::python::tuple boundaryAnnulus_tuple(const NSatRegion& r,
+    boost::python::tuple boundaryAnnulus_tuple(const SatRegion& r,
             unsigned which) {
         SatBlock* block;
         unsigned annulus;
@@ -54,16 +54,16 @@ namespace {
             ptr(block), annulus, blockRefVert, blockRefHoriz);
     }
 
-    bool expand_nolist(NSatRegion& r, bool stopIfIncomplete = false) {
+    bool expand_nolist(SatRegion& r, bool stopIfIncomplete = false) {
         SatBlock::TetList avoidTets;
         return r.expand(avoidTets, stopIfIncomplete);
     }
 
-    void writeBlockAbbrs_stdio(const NSatRegion& r, bool tex = false) {
+    void writeBlockAbbrs_stdio(const SatRegion& r, bool tex = false) {
         r.writeBlockAbbrs(std::cout, tex);
     }
 
-    void writeDetail_stdio(const NSatRegion& r, const std::string& title) {
+    void writeDetail_stdio(const SatRegion& r, const std::string& title) {
         r.writeDetail(std::cout, title);
     }
 
@@ -73,23 +73,23 @@ namespace {
         writeBlockAbbrs_stdio, 1, 2);
 }
 
-void addNSatRegion() {
-    class_<NSatBlockSpec>("NSatBlockSpec")
+void addSatRegion() {
+    class_<SatBlockSpec>("SatBlockSpec")
         .def(init<SatBlock*, bool, bool>())
-        .def_readonly("block", &NSatBlockSpec::block)
-        .def_readonly("refVert", &NSatBlockSpec::refVert)
-        .def_readonly("refHoriz", &NSatBlockSpec::refHoriz)
+        .def_readonly("block", &SatBlockSpec::block)
+        .def_readonly("refVert", &SatBlockSpec::refVert)
+        .def_readonly("refHoriz", &SatBlockSpec::refHoriz)
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NSatRegion, boost::noncopyable,
-            std::auto_ptr<NSatRegion> >("NSatRegion", init<SatBlock*>())
-        .def("numberOfBlocks", &NSatRegion::numberOfBlocks)
-        .def("block", &NSatRegion::block, return_internal_reference<>())
-        .def("blockIndex", &NSatRegion::blockIndex)
-        .def("numberOfBoundaryAnnuli", &NSatRegion::numberOfBoundaryAnnuli)
+    class_<SatRegion, boost::noncopyable,
+            std::auto_ptr<SatRegion> >("SatRegion", init<SatBlock*>())
+        .def("numberOfBlocks", &SatRegion::numberOfBlocks)
+        .def("block", &SatRegion::block, return_internal_reference<>())
+        .def("blockIndex", &SatRegion::blockIndex)
+        .def("numberOfBoundaryAnnuli", &SatRegion::numberOfBoundaryAnnuli)
         .def("boundaryAnnulus", boundaryAnnulus_tuple)
-        .def("createSFS", &NSatRegion::createSFS,
+        .def("createSFS", &SatRegion::createSFS,
             return_value_policy<manage_new_object>())
         .def("expand", expand_nolist, OL_expand())
         .def("writeBlockAbbrs", writeBlockAbbrs_stdio, OL_writeBlockAbbrs())

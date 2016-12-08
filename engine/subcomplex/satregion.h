@@ -87,7 +87,7 @@ namespace regina {
  * \ifacespython The data members \a block, \a refVert and \a refHoriz
  * are read-only.
  */
-struct REGINA_API NSatBlockSpec {
+struct REGINA_API SatBlockSpec {
     SatBlock* block;
         /**< Details of the saturated block structure. */
     bool refVert;
@@ -100,7 +100,7 @@ struct REGINA_API NSatBlockSpec {
     /**
      * Creates a new structure that is completely uninitialised.
      */
-    NSatBlockSpec();
+    SatBlockSpec();
     /**
      * Creates a new structure that is initialised to the given set of
      * values.
@@ -111,7 +111,7 @@ struct REGINA_API NSatBlockSpec {
      * @param useRefHoriz \c true if the block is reflected horizontally
      * within the larger region, or \c false otherwise.
      */
-    NSatBlockSpec(SatBlock* useBlock, bool useRefVert, bool useRefHoriz);
+    SatBlockSpec(SatBlock* useBlock, bool useRefVert, bool useRefHoriz);
     /**
      * Determines whether this and the given structure contain identical
      * information.  In particular, their \a block pointers must be
@@ -121,7 +121,7 @@ struct REGINA_API NSatBlockSpec {
      * @return \c true if and only if this and \a other contain
      * identical information.
      */
-    bool operator == (const NSatBlockSpec& other) const;
+    bool operator == (const SatBlockSpec& other) const;
     /**
      * Determines whether this and the given structure contain different
      * information.  In particular, they are considered different if their
@@ -132,7 +132,7 @@ struct REGINA_API NSatBlockSpec {
      * @return \c true if and only if this and \a other contain
      * different information.
      */
-    bool operator != (const NSatBlockSpec& other) const;
+    bool operator != (const SatBlockSpec& other) const;
 };
 
 /**
@@ -164,7 +164,7 @@ struct REGINA_API NSatBlockSpec {
  * there may be adjacent tetrahedra that are not recognised as part of
  * this saturated structure).
  *
- * The NSatRegion class stores a list of its constituent blocks, but it
+ * The SatRegion class stores a list of its constituent blocks, but it
  * does not directly store which block boundary annuli are joined to
  * which.  This adjacency information is stored within the blocks
  * themselves; see the notes regarding adjacency in the SatBlock class
@@ -172,7 +172,7 @@ struct REGINA_API NSatBlockSpec {
  *
  * Blocks cannot be added to a region by hand.  The way a region is
  * constructed is by locating some initial block within a triangulation
- * and passing this to the NSatRegion constructor, and then by calling
+ * and passing this to the SatRegion constructor, and then by calling
  * expand() to locate adjacent blocks and expand the region as far as
  * possible.  For locating initial blocks, the class
  * SatBlockStarterSearcher may be of use.
@@ -189,11 +189,11 @@ struct REGINA_API NSatBlockSpec {
  * with annuli grouped and oriented according to the region boundaries (as
  * opposed to individual block boundaries).
  */
-class REGINA_API NSatRegion :
-        public Output<NSatRegion>,
+class REGINA_API SatRegion :
+        public Output<SatRegion>,
         public boost::noncopyable {
     private:
-        typedef std::vector<NSatBlockSpec> BlockSet;
+        typedef std::vector<SatBlockSpec> BlockSet;
             /**< The data structure used to store the list of
                  constituent blocks. */
 
@@ -239,7 +239,7 @@ class REGINA_API NSatRegion :
          * All boundary annuli of the given block will become boundary
          * annuli of this region.  It is guaranteed that this block will
          * be stored in the region without any kind of reflection (see
-         * NSatBlockSpec for details).
+         * SatBlockSpec for details).
          *
          * Typically a region is initialised using this constructor, and
          * then grown using the expand() routine.  For help in finding
@@ -254,13 +254,13 @@ class REGINA_API NSatRegion :
          *
          * @param starter the single block that this region will describe.
          */
-        NSatRegion(SatBlock* starter);
+        SatRegion(SatBlock* starter);
 
         /**
          * Destroys this structure and all of its internal data,
          * including the individual blocks that make up this region.
          */
-        ~NSatRegion();
+        ~SatRegion();
 
         /**
          * Returns the number of saturated blocks that come together
@@ -279,7 +279,7 @@ class REGINA_API NSatRegion :
          * inclusive.
          * @return details of the requested saturated block.
          */
-        const NSatBlockSpec& block(unsigned long which) const;
+        const SatBlockSpec& block(unsigned long which) const;
         /**
          * Returns the index of the given block within this region.
          * This index corresponds to the integer parameter that is passed
@@ -319,13 +319,13 @@ class REGINA_API NSatRegion :
          * component might not even be given a consecutive range of numbers.
          *
          * It is guaranteed however that, if the starter block passed to
-         * the NSatRegion constructor provides any boundary annuli for
+         * the SatRegion constructor provides any boundary annuli for
          * the overall region, then the first such annulus in the starter
          * block will be numbered 0 here.
          *
          * The structure returned will be the annulus precisely as it
          * appears within its particular saturated block.  As discussed
-         * in the NSatBlockSpec class notes, the block might be
+         * in the SatBlockSpec class notes, the block might be
          * reflected horizontally and/or vertically within the overall
          * region, which will affect how the annulus is positioned as
          * part of the overall region boundary (e.g., the annulus might
@@ -351,12 +351,12 @@ class REGINA_API NSatRegion :
          * inclusive.
          * @param blockRefVert used to return whether the block
          * containing the requested annulus is vertically reflected
-         * within this region (see NSatBlockSpec for details).  This
+         * within this region (see SatBlockSpec for details).  This
          * will be set to \c true if the block is vertically reflected,
          * or \c false if not.
          * @param blockRefHoriz used to return whether the block
          * containing the requested annulus is horizontally reflected
-         * within this region (see NSatBlockSpec for details).  This
+         * within this region (see SatBlockSpec for details).  This
          * will be set to \c true if the block is horizontally reflected,
          * or \c false if not.
          * @return details of the requested boundary annulus, precisely
@@ -378,7 +378,7 @@ class REGINA_API NSatRegion :
          *
          * Be aware that the block containing the requested annulus
          * might be reflected horizontally and/or vertically within the
-         * overall region, as discussed in the NSatBlockSpec class notes.
+         * overall region, as discussed in the SatBlockSpec class notes.
          * This will affect how the annulus is positioned as
          * part of the overall region boundary (e.g., the annulus might
          * be positioned upside-down in the overall region boundary,
@@ -407,12 +407,12 @@ class REGINA_API NSatRegion :
          * 0 and block->nAnnuli() inclusive.
          * @param blockRefVert used to return whether the block
          * containing the requested annulus is vertically reflected
-         * within this region (see NSatBlockSpec for details).  This
+         * within this region (see SatBlockSpec for details).  This
          * will be set to \c true if the block is vertically reflected,
          * or \c false if not.
          * @param blockRefHoriz used to return whether the block
          * containing the requested annulus is horizontally reflected
-         * within this region (see NSatBlockSpec for details).  This
+         * within this region (see SatBlockSpec for details).  This
          * will be set to \c true if the block is horizontally reflected,
          * or \c false if not.
          */
@@ -442,7 +442,7 @@ class REGINA_API NSatRegion :
          *   (or 2 and 0 on the second triangle).  This is reversed if the
          *   block containing the boundary annulus is horizontally
          *   reflected.
-         * - See the NSatBlockSpec overview for descriptions of
+         * - See the SatBlockSpec overview for descriptions of
          *   horizontal and vertical reflection.
          *
          * If the argument \a reflect is \c true, the Seifert fibred
@@ -501,7 +501,7 @@ class REGINA_API NSatRegion :
          * \pre If any blocks already belonging to this region have
          * adjacencies listed in their SatBlock structures, then these
          * adjacent blocks belong to this region also.  This precondition
-         * is easily satisfied if you let the NSatRegion constructor
+         * is easily satisfied if you let the SatRegion constructor
          * and expand() do all of the adjacency handling, as described
          * in the class notes.
          * \pre The list \a avoidTets includes all tetrahedra on the
@@ -614,41 +614,41 @@ class REGINA_API NSatRegion :
 
 /*@}*/
 
-// Inline functions for NSatBlockSpec
+// Inline functions for SatBlockSpec
 
-inline NSatBlockSpec::NSatBlockSpec() {
+inline SatBlockSpec::SatBlockSpec() {
 }
 
-inline NSatBlockSpec::NSatBlockSpec(SatBlock* useBlock, bool useRefVert,
+inline SatBlockSpec::SatBlockSpec(SatBlock* useBlock, bool useRefVert,
         bool useRefHoriz) : block(useBlock), refVert(useRefVert),
         refHoriz(useRefHoriz) {
 }
 
-inline bool NSatBlockSpec::operator == (const NSatBlockSpec& other) const {
+inline bool SatBlockSpec::operator == (const SatBlockSpec& other) const {
     return block == other.block && refVert == other.refVert &&
         refHoriz == other.refHoriz;
 }
 
-inline bool NSatBlockSpec::operator != (const NSatBlockSpec& other) const {
+inline bool SatBlockSpec::operator != (const SatBlockSpec& other) const {
     return block != other.block || refVert != other.refVert ||
         refHoriz != other.refHoriz;
 }
 
-// Inline functions for NSatRegion
+// Inline functions for SatRegion
 
-inline unsigned long NSatRegion::numberOfBlocks() const {
+inline unsigned long SatRegion::numberOfBlocks() const {
     return blocks_.size();
 }
 
-inline const NSatBlockSpec& NSatRegion::block(unsigned long which) const {
+inline const SatBlockSpec& SatRegion::block(unsigned long which) const {
     return blocks_[which];
 }
 
-inline unsigned long NSatRegion::numberOfBoundaryAnnuli() const {
+inline unsigned long SatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
 }
 
-inline void NSatRegion::writeTextLong(std::ostream& out) const {
+inline void SatRegion::writeTextLong(std::ostream& out) const {
     writeDetail(out, "Saturated region");
 }
 

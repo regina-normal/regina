@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NSatRegion;
+class SatRegion;
 
 /**
  * \weakgroup subcomplex
@@ -62,7 +62,7 @@ class NSatRegion;
  * allow for more interesting relationships between the
  * respective boundary curves of each region.  For more detail on
  * saturated regions and their constituent saturated blocks, see the
- * NSatRegion class; for more detail on layerings, see the Layering class.
+ * SatRegion class; for more detail on layerings, see the Layering class.
  *
  * The three saturated regions must be joined together as illustrated
  * below.  Each large box represents a saturated region, and the small
@@ -135,10 +135,10 @@ class NSatRegion;
  */
 class REGINA_API BlockedSFSTriple : public NStandardTriangulation {
     private:
-        NSatRegion* end_[2];
+        SatRegion* end_[2];
             /**< The two end regions, i.e., the saturated regions with
                  just one boundary annulus. */
-        NSatRegion* centre_;
+        SatRegion* centre_;
             /**< The central region, i.e., the saturated region with two
                  boundary annuli that meets both end regions. */
         Matrix2 matchingReln_[2];
@@ -166,7 +166,7 @@ class REGINA_API BlockedSFSTriple : public NStandardTriangulation {
          * in the class notes).
          * @return details of the requested end region.
          */
-        const NSatRegion& end(int which) const;
+        const SatRegion& end(int which) const;
 
         /**
          * Returns details of the central saturated region, as described
@@ -176,7 +176,7 @@ class REGINA_API BlockedSFSTriple : public NStandardTriangulation {
          *
          * @return details of the central region.
          */
-        const NSatRegion& centre() const;
+        const SatRegion& centre() const;
 
         /**
          * Returns the matrix describing how the given end region is
@@ -233,8 +233,8 @@ class REGINA_API BlockedSFSTriple : public NStandardTriangulation {
          * @param matchingReln1 describes how the second end region is
          * joined to the central region.
          */
-        BlockedSFSTriple(NSatRegion* end0, NSatRegion* centre,
-            NSatRegion* end1, const Matrix2& matchingReln0,
+        BlockedSFSTriple(SatRegion* end0, SatRegion* centre,
+            SatRegion* end1, const Matrix2& matchingReln0,
             const Matrix2& matchingReln1);
 };
 
@@ -251,8 +251,8 @@ REGINA_DEPRECATED typedef BlockedSFSTriple NBlockedSFSTriple;
 
 // Inline functions for BlockedSFSTriple
 
-inline BlockedSFSTriple::BlockedSFSTriple(NSatRegion* end0,
-        NSatRegion* centre, NSatRegion* end1, const Matrix2& matchingReln0,
+inline BlockedSFSTriple::BlockedSFSTriple(SatRegion* end0,
+        SatRegion* centre, SatRegion* end1, const Matrix2& matchingReln0,
         const Matrix2& matchingReln1) {
     end_[0] = end0;
     centre_ = centre;
@@ -261,11 +261,11 @@ inline BlockedSFSTriple::BlockedSFSTriple(NSatRegion* end0,
     matchingReln_[1] = matchingReln1;
 }
 
-inline const NSatRegion& BlockedSFSTriple::end(int which) const {
+inline const SatRegion& BlockedSFSTriple::end(int which) const {
     return *end_[which];
 }
 
-inline const NSatRegion& BlockedSFSTriple::centre() const {
+inline const SatRegion& BlockedSFSTriple::centre() const {
     return *centre_;
 }
 

@@ -151,7 +151,7 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
     SatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
     SatBlock::TetList avoidTets;
     SatBlock* starter;
-    NSatRegion* region;
+    SatRegion* region;
     bool bdryRefVert, bdryRefHoriz;
 
     // Run through each isomorphism and look for the corresponding layering.
@@ -221,7 +221,7 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
 
             // We have a starter block.  Make a region out of it, and
             // ensure that region has precisely two boundary annuli.
-            region = new NSatRegion(starter);
+            region = new SatRegion(starter);
             region->expand(avoidTets, false);
 
             if (region->numberOfBoundaryAnnuli() != 2) {
@@ -229,7 +229,7 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
                 continue;
             }
 
-            // From the NSatRegion specifications we know that the first
+            // From the SatRegion specifications we know that the first
             // boundary annulus will be upperAnnulus.  Find the second.
             bdryAnnulus = region->boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
 

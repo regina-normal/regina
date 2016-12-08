@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NSatRegion;
+class SatRegion;
 class NTxICore;
 
 /**
@@ -63,7 +63,7 @@ class NTxICore;
  * <tt>T x I</tt> with two boundary tori.  Moreover, it must be isomorphic
  * to some existing instance of the class NTxICore.
  *
- * The saturated region is described by an object of the class NSatRegion.
+ * The saturated region is described by an object of the class SatRegion.
  * This region must have precisely two boundary annuli.  These may be
  * two separate torus boundaries (each formed from its own saturated annulus).
  * Alternatively, the saturated region may have a single boundary formed
@@ -128,7 +128,7 @@ class REGINA_API PluggedTorusBundle : public NStandardTriangulation {
                  triangulation.  This is required since the thin I-bundle
                  \a bundle_ is external, and does not refer directly to this
                  triangulation. */
-        NSatRegion* region_;
+        SatRegion* region_;
             /**< The saturated region that appears within this
                  triangulation.  This region is owned by this object, and
                  refers to tetrahedra within this triangulation. */
@@ -184,7 +184,7 @@ class REGINA_API PluggedTorusBundle : public NStandardTriangulation {
          *
          * @return the saturated region.
          */
-        const NSatRegion& region() const;
+        const SatRegion& region() const;
         /**
          * Returns the matrix describing how the two torus boundaries of
          * the saturated region are joined by the thin I-bundle and
@@ -235,7 +235,7 @@ class REGINA_API PluggedTorusBundle : public NStandardTriangulation {
          * I-bundle and layerings, as described in the class notes above.
          */
         PluggedTorusBundle(const NTxICore& bundle, Isomorphism<3>* bundleIso,
-            NSatRegion* region, const Matrix2& matchingReln);
+            SatRegion* region, const Matrix2& matchingReln);
 
         /**
          * Determines whether the given triangulation is of the form
@@ -278,7 +278,7 @@ REGINA_DEPRECATED typedef PluggedTorusBundle NPluggedTorusBundle;
 // Inline functions for PluggedTorusBundle
 
 inline PluggedTorusBundle::PluggedTorusBundle(const NTxICore& bundle,
-        Isomorphism<3>* bundleIso, NSatRegion* region,
+        Isomorphism<3>* bundleIso, SatRegion* region,
         const Matrix2& matchingReln) :
         bundle_(bundle), bundleIso_(bundleIso), region_(region),
         matchingReln_(matchingReln) {
@@ -292,7 +292,7 @@ inline const Isomorphism<3>& PluggedTorusBundle::bundleIso() const {
     return *bundleIso_;
 }
 
-inline const NSatRegion& PluggedTorusBundle::region() const {
+inline const SatRegion& PluggedTorusBundle::region() const {
     return *region_;
 }
 

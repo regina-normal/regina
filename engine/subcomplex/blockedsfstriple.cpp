@@ -50,11 +50,11 @@ namespace regina {
  * one of the end regions).
  */
 struct BlockedSFSTripleSearcher : public SatBlockStarterSearcher {
-    NSatRegion* end[2];
+    SatRegion* end[2];
         /**< The two end regions of the BlockedSFSTriple structure,
              if such a structure has been successfully found; otherwise,
              two null pointers if we are still searching. */
-    NSatRegion* centre;
+    SatRegion* centre;
         /**< The central region of the BlockedSFSTriple structure,
              if such a structure has been successfully found; otherwise,
              a null pointer if we are still searching. */
@@ -194,7 +194,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
     // Flesh out the triangulation as far as we can.  We're aiming for
     // precisely two disjoint boundary annuli remaining.
     // Note that the starter block will now be owned by centre.
-    centre = new NSatRegion(starter);
+    centre = new SatRegion(starter);
     centre->expand(usedTets);
 
     if (centre->numberOfBoundaryAnnuli() != 2) {
@@ -324,7 +324,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
             otherSide.switchSides();
 
             if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
-                end[e] = new NSatRegion(otherStarter);
+                end[e] = new SatRegion(otherStarter);
                 end[e]->expand(usedTets);
 
                 if (end[e]->numberOfBoundaryAnnuli() == 1) {

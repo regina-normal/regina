@@ -71,7 +71,7 @@ namespace regina {
  * for identifying regions within triangulations that are formed by
  * joining saturated blocks together along their boundary annuli.  See
  * the routines SatBlockStarterSearcher::findStarterBlocks() and
- * NSatRegion::expand() for implementations of this.
+ * SatRegion::expand() for implementations of this.
  *
  * \ifacespython Not present.
  */
@@ -298,7 +298,7 @@ class REGINA_API SatBlockStarterSearcher {
          * as it pleases, since the main search routine will empty the
          * list anyway when useStarterBlock() returns.  One possible use
          * for the \a usedTets data member is for passing to
-         * SatBlock::isBlock() or NSatRegion::expand() as the list of
+         * SatBlock::isBlock() or SatRegion::expand() as the list of
          * tetrahedra to avoid in further searches.
          *
          * This routine must return a boolean; this allows subclasses to

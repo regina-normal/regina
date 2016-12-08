@@ -57,7 +57,7 @@ namespace {
  * that fills the entire triangulation (including all internal triangles).
  */
 struct BlockedSFSSearcher : public SatBlockStarterSearcher {
-    NSatRegion* region;
+    SatRegion* region;
         /**< The saturated region if one has been found, or 0
              if we are still searching. */
 
@@ -371,7 +371,7 @@ bool BlockedSFSSearcher::useStarterBlock(SatBlock* starter) {
     // See if we can flesh out an entire triangulation component from
     // the starter block.  At this point the region will own the given
     // starter block.
-    region = new NSatRegion(starter);
+    region = new SatRegion(starter);
     if (! region->expand(usedTets, true)) {
         // Nup.  Destroy the temporary structures and keep searching.
         delete region;

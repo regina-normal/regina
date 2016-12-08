@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NSatRegion;
+class SatRegion;
 
 /**
  * \weakgroup subcomplex
@@ -61,7 +61,7 @@ class NSatRegion;
  * between the two torus boundaries to allow for a more interesting
  * relationship between the two sets of boundary curves.  For more
  * detail on saturated regions and their constituent saturated blocks,
- * see the NSatRegion class; for more detail on layerings, see the
+ * see the SatRegion class; for more detail on layerings, see the
  * Layering class.
  *
  * The saturated region may have two boundary components formed from one
@@ -104,7 +104,7 @@ class NSatRegion;
  */
 class REGINA_API BlockedSFSLoop : public NStandardTriangulation {
     private:
-        NSatRegion* region_;
+        SatRegion* region_;
             /**< The saturated region whose two torus boundaries are joined. */
         Matrix2 matchingReln_;
             /**< Specifies how the two boundary tori are joined, as described
@@ -123,7 +123,7 @@ class REGINA_API BlockedSFSLoop : public NStandardTriangulation {
          *
          * @return details of the saturated region.
          */
-        const NSatRegion& region() const;
+        const SatRegion& region() const;
         /**
          * Returns the matrix describing how the two torus boundaries of
          * the saturated region are joined.  Note that if a layering is
@@ -170,7 +170,7 @@ class REGINA_API BlockedSFSLoop : public NStandardTriangulation {
          * @param matchingReln describes how the two boundaries of the
          * region are joined, as described in the class notes above.
          */
-        BlockedSFSLoop(NSatRegion* region, const Matrix2& matchingReln);
+        BlockedSFSLoop(SatRegion* region, const Matrix2& matchingReln);
 };
 
 /**
@@ -186,12 +186,12 @@ REGINA_DEPRECATED typedef BlockedSFSLoop NBlockedSFSLoop;
 
 // Inline functions for BlockedSFSLoop
 
-inline BlockedSFSLoop::BlockedSFSLoop(NSatRegion* region,
+inline BlockedSFSLoop::BlockedSFSLoop(SatRegion* region,
         const Matrix2& matchingReln) :
         region_(region), matchingReln_(matchingReln) {
 }
 
-inline const NSatRegion& BlockedSFSLoop::region() const {
+inline const SatRegion& BlockedSFSLoop::region() const {
     return *region_;
 }
 

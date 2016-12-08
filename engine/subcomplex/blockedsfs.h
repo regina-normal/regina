@@ -46,7 +46,7 @@
 namespace regina {
 
 class SatBlock;
-class NSatRegion;
+class SatRegion;
 
 /**
  * \weakgroup subcomplex
@@ -58,7 +58,7 @@ class NSatRegion;
  * This is a particular type of triangulation of a Seifert fibred space,
  * where this triangulation is formed from a single saturated region.
  * A saturated region is in turn formed from saturated blocks by identifying
- * their boundary annuli in pairs; see the NSatRegion class for details.
+ * their boundary annuli in pairs; see the SatRegion class for details.
  *
  * Note that the routines writeName() and writeTeXName() do \e not
  * offer enough information to uniquely identify the triangulation,
@@ -70,7 +70,7 @@ class NSatRegion;
  */
 class REGINA_API BlockedSFS : public NStandardTriangulation {
     private:
-        NSatRegion* region_;
+        SatRegion* region_;
             /**< The single saturated region that describes this entire
                  triangulation. */
 
@@ -86,7 +86,7 @@ class REGINA_API BlockedSFS : public NStandardTriangulation {
          *
          * @return the single saturated region.
          */
-        const NSatRegion& region() const;
+        const SatRegion& region() const;
 
         /**
          * Determines whether this triangulation is a plugged thin
@@ -134,7 +134,7 @@ class REGINA_API BlockedSFS : public NStandardTriangulation {
          *
          * @param region the region describing this entire triangulation.
          */
-        BlockedSFS(NSatRegion* region);
+        BlockedSFS(SatRegion* region);
 
         /**
          * Attempts to identify the solid torus plugs in a plugged thin
@@ -207,10 +207,10 @@ REGINA_DEPRECATED typedef BlockedSFS NBlockedSFS;
 
 // Inline functions for BlockedSFS
 
-inline BlockedSFS::BlockedSFS(NSatRegion* region) : region_(region) {
+inline BlockedSFS::BlockedSFS(SatRegion* region) : region_(region) {
 }
 
-inline const NSatRegion& BlockedSFS::region() const {
+inline const SatRegion& BlockedSFS::region() const {
     return *region_;
 }
 

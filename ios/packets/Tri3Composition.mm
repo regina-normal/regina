@@ -347,9 +347,9 @@
     }
 }
 
-- (void)describeSatRegion:(const regina::NSatRegion&)region details:(NSMutableString*)details
+- (void)describeSatRegion:(const regina::SatRegion&)region details:(NSMutableString*)details
 {
-    regina::NSatBlockSpec spec;
+    regina::SatBlockSpec spec;
     regina::SatAnnulus ann;
     unsigned nAnnuli;
     long b;
