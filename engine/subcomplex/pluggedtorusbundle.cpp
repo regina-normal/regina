@@ -34,7 +34,7 @@
 #include "manifold/sfs.h"
 #include "subcomplex/layering.h"
 #include "subcomplex/pluggedtorusbundle.h"
-#include "subcomplex/nsatregion.h"
+#include "subcomplex/satregion.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/dim3.h"
 

@@ -32,7 +32,7 @@
 
 #include "manifold/sfs.h"
 #include "subcomplex/satblockstarter.h"
-#include "subcomplex/nsatregion.h"
+#include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "utilities/ptrutils.h"
 #include <set>

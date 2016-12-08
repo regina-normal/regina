@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/blockedsfsloop.h"
-#include "subcomplex/nsatregion.h"
+#include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

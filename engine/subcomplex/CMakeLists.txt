@@ -83,6 +83,7 @@ if (${REGINA_INSTALL_DEV})
     nsatblockstarter.h
     satblocktypes.h
     nsatblocktypes.h
+    satregion.h
     nsatregion.h
     nsnappeacensustri.h
     nsnappedball.h

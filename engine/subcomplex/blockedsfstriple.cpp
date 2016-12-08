@@ -35,7 +35,7 @@
 #include "subcomplex/blockedsfstriple.h"
 #include "subcomplex/layering.h"
 #include "subcomplex/satblockstarter.h"
-#include "subcomplex/nsatregion.h"
+#include "subcomplex/satregion.h"
 #include <memory>
 
 namespace regina {

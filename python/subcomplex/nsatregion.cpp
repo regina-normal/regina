@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "manifold/sfs.h"
-#include "subcomplex/nsatregion.h"
+#include "subcomplex/satregion.h"
 #include <iostream>
 #include "../helpers.h"
 

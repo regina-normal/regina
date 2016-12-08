@@ -51,7 +51,7 @@
 #import "subcomplex/pluggedtorusbundle.h"
 #import "subcomplex/plugtrisolidtorus.h"
 #import "subcomplex/satblock.h"
-#import "subcomplex/nsatregion.h"
+#import "subcomplex/satregion.h"
 #import "subcomplex/nsnappedball.h"
 #import "subcomplex/nsnappedtwosphere.h"
 #import "subcomplex/nspiralsolidtorus.h"

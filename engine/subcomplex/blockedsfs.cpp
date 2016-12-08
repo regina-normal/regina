@@ -35,7 +35,7 @@
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/satblockstarter.h"
 #include "subcomplex/satblocktypes.h"
-#include "subcomplex/nsatregion.h"
+#include "subcomplex/satregion.h"
 #include <cstdlib> // For labs().
 #include <sstream>
 
