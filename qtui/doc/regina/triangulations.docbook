@@ -3045,7 +3045,7 @@
   </sect2>
 
   <sect2 id="tri-barycentric">
-   <title>Subdivision (3-D and 4-D)</title>
+   <title>Subdivision (All Dimensions)</title>
 
    <para>
     You can perform a barycentric subdivision on your triangulation by
@@ -3054,12 +3054,16 @@
      <guimenu>Triangulation</guimenu>
      <guimenuitem>Barycentric Subdivision</guimenuitem>
     </menuchoice>.
+    In 2-D this involves splitting each original triangle into
+    6&nbsp;=&nbsp;3! smaller triangles, with new vertices added at the
+    centroid of each original triangle and the centre of each original edge.
     In 3-D this involves splitting each original tetrahedron into
     24&nbsp;=&nbsp;4! smaller
-    tetrahedra, with new vertices added at the
-    centroid of each tetrahedron, triangle and edge.
+    tetrahedra, with new vertices at the
+    centroid of each original tetrahedron, triangle and edge.
     In 4-D, each original pentachoron splits into
-    120&nbsp;=&nbsp;5! smaller pentachora.
+    120&nbsp;=&nbsp;5! smaller pentachora, with new vertices added in a
+    similar fashion.
    </para>
    <para>
     <inlinemediaobject>
