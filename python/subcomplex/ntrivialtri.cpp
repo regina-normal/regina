@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/ntrivialtri.h"
+#include "subcomplex/trivialtri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

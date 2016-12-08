@@ -44,7 +44,7 @@
 #include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/plugtrisolidtorus.h"
 #include "subcomplex/snappeacensustri.h"
-#include "subcomplex/ntrivialtri.h"
+#include "subcomplex/trivialtri.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
