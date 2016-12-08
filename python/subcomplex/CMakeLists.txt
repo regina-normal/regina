@@ -19,7 +19,7 @@ SET ( FILES
   pluggedtorusbundle
   plugtrisolidtorus
   satannulus
-  nsatblock
+  satblock
   satblocktypes
   nsatregion
   nsnappeacensustri
