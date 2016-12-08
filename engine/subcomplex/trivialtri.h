@@ -138,6 +138,15 @@ class REGINA_API TrivialTri : public StandardTriangulation {
         TrivialTri(int newType);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NTrivialTri has now been renamed to
+ * TrivialTri.
+ */
+REGINA_DEPRECATED typedef TrivialTri NTrivialTri;
+
 /*@}*/
 
 // Inline functions for TrivialTri

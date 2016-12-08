@@ -1550,6 +1550,8 @@ NTriangleEmbedding : typedef ->  FaceEmbedding3_2
 
 NTriangulation : typedef ->  Triangulation3
 
+NTrivialTri : typedef ->  TrivialTri
+
 NTxICore : class
 Equality type : BY_REFERENCE
 
