@@ -50,7 +50,7 @@ void addSatAnnulus();
 void addSatBlock();
 void addSatBlockTypes();
 void addSatRegion();
-void addNSnapPeaCensusTri();
+void addSnapPeaCensusTri();
 void addNSnappedBall();
 void addNSnappedTwoSphere();
 void addNSpiralSolidTorus();
@@ -72,7 +72,7 @@ void addSubcomplexClasses() {
     addLayering();
     addPillowTwoSphere();
     addPlugTriSolidTorus();
-    addNSnapPeaCensusTri();
+    addSnapPeaCensusTri();
     addNSnappedBall();
     addNSnappedTwoSphere();
     addNSpiralSolidTorus();

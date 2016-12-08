@@ -1512,9 +1512,6 @@ NSimpleSurfaceBundle : typedef ->  SimpleSurfaceBundle
 
 NSnapPeaCensusManifold : typedef ->  SnapPeaCensusManifold
 
-NSnapPeaCensusTri : class
-Equality type : BY_VALUE
-
 NSnapPeaTriangulation : typedef ->  SnapPeaTriangulation
 
 NSnappedBall : class
@@ -1802,6 +1799,9 @@ Simplex9 : class
 Equality type : BY_REFERENCE
 
 SnapPeaCensusManifold : class
+Equality type : BY_VALUE
+
+SnapPeaCensusTri : class
 Equality type : BY_VALUE
 
 SnapPeaTriangulation : class

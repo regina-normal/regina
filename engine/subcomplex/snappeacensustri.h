@@ -60,7 +60,7 @@ namespace regina {
  * \note The modern cusped hyperbolic census now extends to nine tetrahedra,
  * and indeed the 9-tetrahedron database is accessible through the
  * Census lookup routines.  However, for the time being, the scope of these
- * SnapPeaCensusManifold and NSnapPeaCensusTri classes is restricted to the
+ * SnapPeaCensusManifold and SnapPeaCensusTri classes is restricted to the
  * original Callahan-Hildebrand-Weeks 7-tetrahedron census only.
  *
  * The census is split into five different sections according to number
@@ -73,14 +73,14 @@ namespace regina {
  *
  * Note that this class is closely tied to SnapPeaCensusManifold.
  * In particular, the section constants defined in SnapPeaCensusManifold
- * and NSnapPeaCensusTri are identical, and so may be freely mixed.
- * Furthermore, the section and index parameters of a NSnapPeaCensusTri
+ * and SnapPeaCensusTri are identical, and so may be freely mixed.
+ * Furthermore, the section and index parameters of a SnapPeaCensusTri
  * are identical to those of its corresponding SnapPeaCensusManifold.
  *
  * All of the optional NStandardTriangulation routines are implemented
  * for this class.
  */
-class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
+class REGINA_API SnapPeaCensusTri: public NStandardTriangulation {
     public:
         static const char SEC_5;
             /**< Represents the collection of triangulations formed from five
@@ -119,7 +119,7 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          *
          * @return a newly created clone.
          */
-        NSnapPeaCensusTri* clone() const;
+        SnapPeaCensusTri* clone() const;
 
         /**
          * Returns the section of the SnapPea census to which this
@@ -147,7 +147,7 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * @return \c true if and only if this and the given structure
          * represent the same SnapPea census triangulation.
          */
-        bool operator == (const NSnapPeaCensusTri& compare) const;
+        bool operator == (const SnapPeaCensusTri& compare) const;
 
         /**
          * Determines whether this and the given structure represent
@@ -157,7 +157,7 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * @return \c true if and only if this and the given structure
          * represent different SnapPea census triangulations.
          */
-        bool operator != (const NSnapPeaCensusTri& compare) const;
+        bool operator != (const SnapPeaCensusTri& compare) const;
 
         /**
          * Determines if the given triangulation component is one of the
@@ -175,7 +175,7 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * component is not one of the few SnapPea census
          * triangulations recognised by this routine.
          */
-        static NSnapPeaCensusTri* isSmallSnapPeaCensusTri(
+        static SnapPeaCensusTri* isSmallSnapPeaCensusTri(
             const Component<3>* comp);
 
         Manifold* manifold() const;
@@ -189,38 +189,38 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * parameters.
          */
         REGINA_INLINE_REQUIRED
-        NSnapPeaCensusTri(char newSection, unsigned long newIndex);
+        SnapPeaCensusTri(char newSection, unsigned long newIndex);
 
     friend class SnapPeaCensusManifold;
 };
 
 /*@}*/
 
-// Inline functions for NSnapPeaCensusTri
+// Inline functions for SnapPeaCensusTri
 
-inline NSnapPeaCensusTri* NSnapPeaCensusTri::clone() const {
-    return new NSnapPeaCensusTri(section_, index_);
+inline SnapPeaCensusTri* SnapPeaCensusTri::clone() const {
+    return new SnapPeaCensusTri(section_, index_);
 }
 
-inline char NSnapPeaCensusTri::section() const {
+inline char SnapPeaCensusTri::section() const {
     return section_;
 }
 
-inline unsigned long NSnapPeaCensusTri::index() const {
+inline unsigned long SnapPeaCensusTri::index() const {
     return index_;
 }
 
-inline bool NSnapPeaCensusTri::operator == (const NSnapPeaCensusTri& compare)
+inline bool SnapPeaCensusTri::operator == (const SnapPeaCensusTri& compare)
         const {
     return (section_ == compare.section_ && index_ == compare.index_);
 }
 
-inline bool NSnapPeaCensusTri::operator != (const NSnapPeaCensusTri& compare)
+inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
         const {
     return (section_ != compare.section_ || index_ != compare.index_);
 }
 
-inline NSnapPeaCensusTri::NSnapPeaCensusTri(char newSection,
+inline SnapPeaCensusTri::SnapPeaCensusTri(char newSection,
         unsigned long newIndex) :
         section_(newSection), index_(newIndex) {
 }

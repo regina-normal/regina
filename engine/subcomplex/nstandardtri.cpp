@@ -80,7 +80,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         return ans;
     if ((ans = LayeredSolidTorus::isLayeredSolidTorus(comp)))
         return ans;
-    if ((ans = NSnapPeaCensusTri::isSmallSnapPeaCensusTri(comp)))
+    if ((ans = SnapPeaCensusTri::isSmallSnapPeaCensusTri(comp)))
         return ans;
 
     return 0;

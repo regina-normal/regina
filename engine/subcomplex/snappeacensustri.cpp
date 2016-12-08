@@ -37,13 +37,13 @@
 
 namespace regina {
 
-const char NSnapPeaCensusTri::SEC_5 = 'm';
-const char NSnapPeaCensusTri::SEC_6_OR = 's';
-const char NSnapPeaCensusTri::SEC_6_NOR = 'x';
-const char NSnapPeaCensusTri::SEC_7_OR = 'v';
-const char NSnapPeaCensusTri::SEC_7_NOR = 'y';
+const char SnapPeaCensusTri::SEC_5 = 'm';
+const char SnapPeaCensusTri::SEC_6_OR = 's';
+const char SnapPeaCensusTri::SEC_6_NOR = 'x';
+const char SnapPeaCensusTri::SEC_7_OR = 'v';
+const char SnapPeaCensusTri::SEC_7_NOR = 'y';
 
-NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
+SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
         const Component<3>* comp) {
     // Currently this routine can recognise SnapPea triangulations
     // m000 -- m004 as well as m129.
@@ -88,7 +88,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
         // anyway just to be safe.
         if (comp->isOrientable())
             return 0;
-        return new NSnapPeaCensusTri(SEC_5, 0);
+        return new SnapPeaCensusTri(SEC_5, 0);
     } else if (comp->size() == 2) {
         if (comp->isOrientable()) {
             // Orientable.  Looking for m003 or m004.
@@ -104,9 +104,9 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
             // between them by triangle types, since all of m003's triangles
             // are Mobius bands and all of m004's triangles are horns.
             if (comp->triangle(0)->type() == Triangle<3>::MOBIUS)
-                return new NSnapPeaCensusTri(SEC_5, 3);
+                return new SnapPeaCensusTri(SEC_5, 3);
             else
-                return new NSnapPeaCensusTri(SEC_5, 4);
+                return new SnapPeaCensusTri(SEC_5, 4);
         } else {
             // Non-orientable.  Looking for m001 or m002.
             if (comp->countVertices() == 1) {
@@ -122,7 +122,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 for (int i = 0; i < 4; i++)
                     if (comp->triangle(i)->type() == Triangle<3>::DUNCEHAT)
                         return 0;
-                return new NSnapPeaCensusTri(SEC_5, 1);
+                return new SnapPeaCensusTri(SEC_5, 1);
             } else if (comp->countVertices() == 2) {
                 // Looking for m002.
                 if (comp->countEdges() != 2)
@@ -133,7 +133,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 // Census says it's m002 if some triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
                     if (comp->triangle(i)->type() == Triangle<3>::DUNCEHAT)
-                        return new NSnapPeaCensusTri(SEC_5, 2);
+                        return new SnapPeaCensusTri(SEC_5, 2);
                 return 0;
             }
         }
@@ -159,7 +159,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
             // degree 8.
             for (int i = 0; i < 4; i++)
                 if (comp->edge(i)->degree() == 8)
-                    return new NSnapPeaCensusTri(SEC_5, 129);
+                    return new SnapPeaCensusTri(SEC_5, 129);
             return 0;
         }
     }
@@ -168,15 +168,15 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     return 0;
 }
 
-Manifold* NSnapPeaCensusTri::manifold() const {
+Manifold* SnapPeaCensusTri::manifold() const {
     return new SnapPeaCensusManifold(section_, index_);
 }
 
-AbelianGroup* NSnapPeaCensusTri::homology() const {
+AbelianGroup* SnapPeaCensusTri::homology() const {
     return SnapPeaCensusManifold(section_, index_).homology();
 }
 
-std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {
+std::ostream& SnapPeaCensusTri::writeName(std::ostream& out) const {
     out << "SnapPea " << section_;
 
     // Pad the index with leading zeroes.
@@ -193,7 +193,7 @@ std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {
     return out;
 }
 
-std::ostream& NSnapPeaCensusTri::writeTeXName(std::ostream& out) const {
+std::ostream& SnapPeaCensusTri::writeTeXName(std::ostream& out) const {
     out << section_ << "_{";
 
     // Pad the index with leading zeroes.
