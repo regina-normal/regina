@@ -157,134 +157,138 @@ namespace {
 }
 
 void addTriangulation4() {
-    class_<Triangulation<4>, bases<regina::Packet>,
-            SafeHeldType<Triangulation<4>>,
-            boost::noncopyable>("Triangulation4")
-        .def(init<const Triangulation<4>&>())
-        .def(init<const std::string&>())
-        .def("size", &Triangulation<4>::size)
-        .def("countPentachora", &Triangulation<4>::countPentachora)
-        .def("pentachora", Dim4_pentachora_list)
-        .def("simplices", Dim4_pentachora_list)
-        .def("pentachoron", pentachoron_non_const,
-            return_internal_reference<>())
-        .def("simplex", pentachoron_non_const,
-            return_internal_reference<>())
-        .def("newPentachoron", newPentachoron_void,
-            return_internal_reference<>())
-        .def("newSimplex", newPentachoron_void,
-            return_internal_reference<>())
-        .def("newPentachoron", newPentachoron_string,
-            return_internal_reference<>())
-        .def("newSimplex", newPentachoron_string,
-            return_internal_reference<>())
-        .def("removePentachoron", &Triangulation<4>::removePentachoron)
-        .def("removeSimplex", &Triangulation<4>::removeSimplex)
-        .def("removePentachoronAt", &Triangulation<4>::removePentachoronAt)
-        .def("removeSimplexAt", &Triangulation<4>::removeSimplexAt)
-        .def("removeAllPentachora", &Triangulation<4>::removeAllPentachora)
-        .def("removeAllSimplices", &Triangulation<4>::removeAllSimplices)
-        .def("swapContents", &Triangulation<4>::swapContents)
-        .def("moveContentsTo", &Triangulation<4>::moveContentsTo)
-        .def("countComponents", &Triangulation<4>::countComponents)
-        .def("countBoundaryComponents",
-            &Triangulation<4>::countBoundaryComponents)
-        .def("countFaces", &regina::python::countFaces<Triangulation<4>, 4>)
-        .def("countVertices", &Triangulation<4>::countVertices)
-        .def("countEdges", &Triangulation<4>::countEdges)
-        .def("countTriangles", &Triangulation<4>::countTriangles)
-        .def("countTetrahedra", &Triangulation<4>::countTetrahedra)
-        .def("fVector", fVector_list)
-        .def("components", Dim4_components_list)
-        .def("boundaryComponents", Dim4_boundaryComponents_list)
-        .def("faces", &regina::python::faces<Triangulation<4>, 4>)
-        .def("vertices", regina::python::faces_list<Triangulation<4>, 4, 0>)
-        .def("edges", regina::python::faces_list<Triangulation<4>, 4, 1>)
-        .def("triangles", regina::python::faces_list<Triangulation<4>, 4, 2>)
-        .def("tetrahedra", regina::python::faces_list<Triangulation<4>, 4, 3>)
-        .def("component", &Triangulation<4>::component,
-            return_internal_reference<>())
-        .def("boundaryComponent", &Triangulation<4>::boundaryComponent,
-            return_internal_reference<>())
-        .def("face", &regina::python::face<Triangulation<4>, 4, size_t>)
-        .def("vertex", &Triangulation<4>::vertex,
-            return_internal_reference<>())
-        .def("edge", &Triangulation<4>::edge,
-            return_internal_reference<>())
-        .def("triangle", &Triangulation<4>::triangle,
-            return_internal_reference<>())
-        .def("tetrahedron", &Triangulation<4>::tetrahedron,
-            return_internal_reference<>())
-        .def("isIdenticalTo", &Triangulation<4>::isIdenticalTo)
-        .def("isIsomorphicTo",
-            +[](const Triangulation<4>& t, const Triangulation<4>& s) {
-                return t.isIsomorphicTo(s).release(); },
-            return_value_policy<manage_new_object>())
-        .def("makeCanonical", &Triangulation<4>::makeCanonical)
-        .def("isContainedIn",
-            +[](const Triangulation<4>& t, const Triangulation<4>& s) {
-                return t.isContainedIn(s).release(); },
-            return_value_policy<manage_new_object>())
-        .def("findAllIsomorphisms", findAllIsomorphisms_list)
-        .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
-        .def("isEmpty", &Triangulation<4>::isEmpty)
-        .def("eulerCharTri", &Triangulation<4>::eulerCharTri)
-        .def("eulerCharManifold", &Triangulation<4>::eulerCharManifold)
-        .def("isValid", &Triangulation<4>::isValid)
-        .def("isIdeal", &Triangulation<4>::isIdeal)
-        .def("hasBoundaryFacets", &Triangulation<4>::hasBoundaryFacets)
-        .def("hasBoundaryTetrahedra", &Triangulation<4>::hasBoundaryTetrahedra)
-        .def("countBoundaryFacets", &Triangulation<4>::countBoundaryFacets)
-        .def("countBoundaryTetrahedra",
-            &Triangulation<4>::countBoundaryTetrahedra)
-        .def("isClosed", &Triangulation<4>::isClosed)
-        .def("isOrientable", &Triangulation<4>::isOrientable)
-        .def("isOriented", &Triangulation<4>::isOriented)
-        .def("isConnected", &Triangulation<4>::isConnected)
-        .def("fundamentalGroup", &Triangulation<4>::fundamentalGroup,
-            return_internal_reference<>())
-        .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_clone)
-        .def("homology", &Triangulation<4>::homology,
-            return_internal_reference<>())
-        .def("homologyH1", &Triangulation<4>::homologyH1,
-            return_internal_reference<>())
-        .def("homologyH2", &Triangulation<4>::homologyH2,
-            return_internal_reference<>())
-        .def("orient", &Triangulation<4>::orient)
-        .def("splitIntoComponents", splitIntoComponents,
-            OL_splitIntoComponents())
-        .def("intelligentSimplify", &Triangulation<4>::intelligentSimplify)
-        .def("simplifyToLocalMinimum",
-            &Triangulation<4>::simplifyToLocalMinimum,
-            OL_simplifyToLocalMinimum())
-        .def("fourTwoMove", &Triangulation<4>::fourTwoMove, OL_fourTwoMove())
-        .def("threeThreeMove", &Triangulation<4>::threeThreeMove,
-            OL_threeThreeMove())
-        .def("twoFourMove", &Triangulation<4>::twoFourMove, OL_twoFourMove())
-        .def("oneFiveMove", &Triangulation<4>::oneFiveMove, OL_oneFiveMove())
-        .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
-        .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
-        .def("openBook", &Triangulation<4>::openBook, OL_openBook())
-        .def("shellBoundary", &Triangulation<4>::shellBoundary,
-            OL_shellBoundary())
-        .def("collapseEdge", &Triangulation<4>::collapseEdge,
-            OL_collapseEdge())
-        .def("finiteToIdeal", &Triangulation<4>::finiteToIdeal)
-        .def("makeDoubleCover", &Triangulation<4>::makeDoubleCover)
-        .def("barycentricSubdivision",
-            &Triangulation<4>::barycentricSubdivision)
-        .def("idealToFinite", &Triangulation<4>::idealToFinite)
-        .def("insertTriangulation", &Triangulation<4>::insertTriangulation)
-        .def("isoSig", isoSig_void)
-        .def("isoSigDetail", isoSig_relabelling)
-        .def("fromIsoSig", &Triangulation<4>::fromIsoSig,
-            return_value_policy<to_held_type<>>())
-        .def("isoSigComponentSize", &Triangulation<4>::isoSigComponentSize)
-        .def("dumpConstruction", &Triangulation<4>::dumpConstruction)
-        .staticmethod("fromIsoSig")
-        .staticmethod("isoSigComponentSize")
-        .attr("typeID") = regina::PACKET_TRIANGULATION4;
-    ;
+    {
+        boost::python::scope s = class_<Triangulation<4>, bases<regina::Packet>,
+                SafeHeldType<Triangulation<4>>,
+                boost::noncopyable>("Triangulation4")
+            .def(init<const Triangulation<4>&>())
+            .def(init<const std::string&>())
+            .def("size", &Triangulation<4>::size)
+            .def("countPentachora", &Triangulation<4>::countPentachora)
+            .def("pentachora", Dim4_pentachora_list)
+            .def("simplices", Dim4_pentachora_list)
+            .def("pentachoron", pentachoron_non_const,
+                return_internal_reference<>())
+            .def("simplex", pentachoron_non_const,
+                return_internal_reference<>())
+            .def("newPentachoron", newPentachoron_void,
+                return_internal_reference<>())
+            .def("newSimplex", newPentachoron_void,
+                return_internal_reference<>())
+            .def("newPentachoron", newPentachoron_string,
+                return_internal_reference<>())
+            .def("newSimplex", newPentachoron_string,
+                return_internal_reference<>())
+            .def("removePentachoron", &Triangulation<4>::removePentachoron)
+            .def("removeSimplex", &Triangulation<4>::removeSimplex)
+            .def("removePentachoronAt", &Triangulation<4>::removePentachoronAt)
+            .def("removeSimplexAt", &Triangulation<4>::removeSimplexAt)
+            .def("removeAllPentachora", &Triangulation<4>::removeAllPentachora)
+            .def("removeAllSimplices", &Triangulation<4>::removeAllSimplices)
+            .def("swapContents", &Triangulation<4>::swapContents)
+            .def("moveContentsTo", &Triangulation<4>::moveContentsTo)
+            .def("countComponents", &Triangulation<4>::countComponents)
+            .def("countBoundaryComponents",
+                &Triangulation<4>::countBoundaryComponents)
+            .def("countFaces", &regina::python::countFaces<Triangulation<4>, 4>)
+            .def("countVertices", &Triangulation<4>::countVertices)
+            .def("countEdges", &Triangulation<4>::countEdges)
+            .def("countTriangles", &Triangulation<4>::countTriangles)
+            .def("countTetrahedra", &Triangulation<4>::countTetrahedra)
+            .def("fVector", fVector_list)
+            .def("components", Dim4_components_list)
+            .def("boundaryComponents", Dim4_boundaryComponents_list)
+            .def("faces", &regina::python::faces<Triangulation<4>, 4>)
+            .def("vertices", regina::python::faces_list<Triangulation<4>, 4, 0>)
+            .def("edges", regina::python::faces_list<Triangulation<4>, 4, 1>)
+            .def("triangles", regina::python::faces_list<Triangulation<4>, 4, 2>)
+            .def("tetrahedra", regina::python::faces_list<Triangulation<4>, 4, 3>)
+            .def("component", &Triangulation<4>::component,
+                return_internal_reference<>())
+            .def("boundaryComponent", &Triangulation<4>::boundaryComponent,
+                return_internal_reference<>())
+            .def("face", &regina::python::face<Triangulation<4>, 4, size_t>)
+            .def("vertex", &Triangulation<4>::vertex,
+                return_internal_reference<>())
+            .def("edge", &Triangulation<4>::edge,
+                return_internal_reference<>())
+            .def("triangle", &Triangulation<4>::triangle,
+                return_internal_reference<>())
+            .def("tetrahedron", &Triangulation<4>::tetrahedron,
+                return_internal_reference<>())
+            .def("isIdenticalTo", &Triangulation<4>::isIdenticalTo)
+            .def("isIsomorphicTo",
+                +[](const Triangulation<4>& t, const Triangulation<4>& s) {
+                    return t.isIsomorphicTo(s).release(); },
+                return_value_policy<manage_new_object>())
+            .def("makeCanonical", &Triangulation<4>::makeCanonical)
+            .def("isContainedIn",
+                +[](const Triangulation<4>& t, const Triangulation<4>& s) {
+                    return t.isContainedIn(s).release(); },
+                return_value_policy<manage_new_object>())
+            .def("findAllIsomorphisms", findAllIsomorphisms_list)
+            .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
+            .def("isEmpty", &Triangulation<4>::isEmpty)
+            .def("eulerCharTri", &Triangulation<4>::eulerCharTri)
+            .def("eulerCharManifold", &Triangulation<4>::eulerCharManifold)
+            .def("isValid", &Triangulation<4>::isValid)
+            .def("isIdeal", &Triangulation<4>::isIdeal)
+            .def("hasBoundaryFacets", &Triangulation<4>::hasBoundaryFacets)
+            .def("hasBoundaryTetrahedra", &Triangulation<4>::hasBoundaryTetrahedra)
+            .def("countBoundaryFacets", &Triangulation<4>::countBoundaryFacets)
+            .def("countBoundaryTetrahedra",
+                &Triangulation<4>::countBoundaryTetrahedra)
+            .def("isClosed", &Triangulation<4>::isClosed)
+            .def("isOrientable", &Triangulation<4>::isOrientable)
+            .def("isOriented", &Triangulation<4>::isOriented)
+            .def("isConnected", &Triangulation<4>::isConnected)
+            .def("fundamentalGroup", &Triangulation<4>::fundamentalGroup,
+                return_internal_reference<>())
+            .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_clone)
+            .def("homology", &Triangulation<4>::homology,
+                return_internal_reference<>())
+            .def("homologyH1", &Triangulation<4>::homologyH1,
+                return_internal_reference<>())
+            .def("homologyH2", &Triangulation<4>::homologyH2,
+                return_internal_reference<>())
+            .def("orient", &Triangulation<4>::orient)
+            .def("splitIntoComponents", splitIntoComponents,
+                OL_splitIntoComponents())
+            .def("intelligentSimplify", &Triangulation<4>::intelligentSimplify)
+            .def("simplifyToLocalMinimum",
+                &Triangulation<4>::simplifyToLocalMinimum,
+                OL_simplifyToLocalMinimum())
+            .def("fourTwoMove", &Triangulation<4>::fourTwoMove, OL_fourTwoMove())
+            .def("threeThreeMove", &Triangulation<4>::threeThreeMove,
+                OL_threeThreeMove())
+            .def("twoFourMove", &Triangulation<4>::twoFourMove, OL_twoFourMove())
+            .def("oneFiveMove", &Triangulation<4>::oneFiveMove, OL_oneFiveMove())
+            .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
+            .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
+            .def("openBook", &Triangulation<4>::openBook, OL_openBook())
+            .def("shellBoundary", &Triangulation<4>::shellBoundary,
+                OL_shellBoundary())
+            .def("collapseEdge", &Triangulation<4>::collapseEdge,
+                OL_collapseEdge())
+            .def("finiteToIdeal", &Triangulation<4>::finiteToIdeal)
+            .def("makeDoubleCover", &Triangulation<4>::makeDoubleCover)
+            .def("barycentricSubdivision",
+                &Triangulation<4>::barycentricSubdivision)
+            .def("idealToFinite", &Triangulation<4>::idealToFinite)
+            .def("insertTriangulation", &Triangulation<4>::insertTriangulation)
+            .def("isoSig", isoSig_void)
+            .def("isoSigDetail", isoSig_relabelling)
+            .def("fromIsoSig", &Triangulation<4>::fromIsoSig,
+                return_value_policy<to_held_type<>>())
+            .def("isoSigComponentSize", &Triangulation<4>::isoSigComponentSize)
+            .def("dumpConstruction", &Triangulation<4>::dumpConstruction)
+            .staticmethod("fromIsoSig")
+            .staticmethod("isoSigComponentSize")
+        ;
+
+        s.attr("typeID") = regina::PACKET_TRIANGULATION4;
+        s.attr("dimension") = 4;
+    }
 
     implicitly_convertible<SafeHeldType<Triangulation<4>>,
         SafeHeldType<regina::Packet> >();

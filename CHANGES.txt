@@ -207,6 +207,7 @@ Version 5.1  [ (under development) ]
               labelling and ordering of sub-simplices.
             - Routine swapContents() now swaps skeletal data and computed
               properties also, instead of just deleting them.
+            - New compile-time constant Triangulation<dim>::dimension.
         Class Triangulation<3>:
             - Routine retriangulate() now allows its action argument to
               change the triangulation that is passed to it.

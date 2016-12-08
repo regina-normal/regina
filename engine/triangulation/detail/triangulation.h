@@ -409,6 +409,10 @@ class TriangulationBase :
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
+        static constexpr int dimension = dim;
+            /**< A compile-time constant that gives the dimension of the
+                 triangulation. */
+
         typedef typename std::vector<Simplex<dim>*>::const_iterator
                 SimplexIterator;
             /**< Used to iterate through top-dimensional simplices. */
