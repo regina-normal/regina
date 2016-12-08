@@ -97,5 +97,7 @@ void addSatBlock() {
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlock")
     ;
+    scope().attr("NSatBlock") = scope().attr("SatBlock");
+
 }
 

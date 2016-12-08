@@ -1486,6 +1486,8 @@ NSFSpace : typedef ->  SFSpace
 
 NSatAnnulus : typedef ->  SatAnnulus
 
+NSatBlock : typedef ->  SatBlock
+
 NSatBlockSpec : class
 Equality type : BY_VALUE
 
