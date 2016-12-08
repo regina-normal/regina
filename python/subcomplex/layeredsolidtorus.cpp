@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::LayeredSolidTorus;
 
 void addLayeredSolidTorus() {
-    class_<LayeredSolidTorus, bases<regina::NStandardTriangulation>,
+    class_<LayeredSolidTorus, bases<regina::StandardTriangulation>,
             std::auto_ptr<LayeredSolidTorus>, boost::noncopyable>
             ("LayeredSolidTorus", no_init)
         .def("clone", &LayeredSolidTorus::clone,
@@ -74,7 +74,7 @@ void addLayeredSolidTorus() {
     ;
 
     implicitly_convertible<std::auto_ptr<LayeredSolidTorus>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NLayeredSolidTorus") = scope().attr("LayeredSolidTorus");
 }

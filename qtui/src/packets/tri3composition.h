@@ -55,7 +55,7 @@ namespace regina {
     class Matrix2;
     class Packet;
     class SatRegion;
-    class NStandardTriangulation;
+    class StandardTriangulation;
     template <int> class Perm;
 };
 

@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::L31Pillow;
 
 void addL31Pillow() {
-    class_<L31Pillow, bases<regina::NStandardTriangulation>,
+    class_<L31Pillow, bases<regina::StandardTriangulation>,
             std::auto_ptr<L31Pillow>, boost::noncopyable>
             ("L31Pillow", no_init)
         .def("clone", &L31Pillow::clone,
@@ -54,7 +54,7 @@ void addL31Pillow() {
     ;
 
     implicitly_convertible<std::auto_ptr<L31Pillow>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NL31Pillow") = scope().attr("L31Pillow");
 }

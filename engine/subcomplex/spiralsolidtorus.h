@@ -85,10 +85,10 @@ namespace regina {
  * torus with precisely three tetrahedra.  A spiralled solid torus with
  * only one tetrahedron is in fact a (1,2,3) layered solid torus.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API SpiralSolidTorus : public NStandardTriangulation {
+class REGINA_API SpiralSolidTorus : public StandardTriangulation {
     private:
         size_t nTet;
             /**< The number of tetrahedra in this spiralled solid torus. */

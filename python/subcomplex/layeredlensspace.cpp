@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::LayeredLensSpace;
 
 void addLayeredLensSpace() {
-    class_<LayeredLensSpace, bases<regina::NStandardTriangulation>,
+    class_<LayeredLensSpace, bases<regina::StandardTriangulation>,
             std::auto_ptr<LayeredLensSpace>, boost::noncopyable>
             ("LayeredLensSpace", no_init)
         .def("clone", &LayeredLensSpace::clone,
@@ -58,7 +58,7 @@ void addLayeredLensSpace() {
     ;
 
     implicitly_convertible<std::auto_ptr<LayeredLensSpace>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NLayeredLensSpace") = scope().attr("LayeredLensSpace");
 }

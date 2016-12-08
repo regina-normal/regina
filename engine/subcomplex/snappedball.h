@@ -55,10 +55,10 @@ namespace regina {
  * A snapped 3-ball is a single tetrahedron with two faces glued to each
  * other to form a 3-ball with a two triangle boundary.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API SnappedBall : public NStandardTriangulation {
+class REGINA_API SnappedBall : public StandardTriangulation {
     private:
         Tetrahedron<3>* tet;
             /**< The tetrahedron that forms the snapped ball. */

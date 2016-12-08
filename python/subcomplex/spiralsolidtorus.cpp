@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::SpiralSolidTorus;
 
 void addSpiralSolidTorus() {
-    class_<SpiralSolidTorus, bases<regina::NStandardTriangulation>,
+    class_<SpiralSolidTorus, bases<regina::StandardTriangulation>,
             std::auto_ptr<SpiralSolidTorus>, boost::noncopyable>
             ("SpiralSolidTorus", no_init)
         .def("clone", &SpiralSolidTorus::clone,
@@ -59,7 +59,7 @@ void addSpiralSolidTorus() {
     ;
 
     implicitly_convertible<std::auto_ptr<SpiralSolidTorus>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NSpiralSolidTorus") = scope().attr("SpiralSolidTorus");
 }

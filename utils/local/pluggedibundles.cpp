@@ -82,8 +82,8 @@ void process(Triangulation<3>* t) {
     std::cout << t->label();
     totTris++;
 
-    NStandardTriangulation* s =
-        NStandardTriangulation::isStandardTriangulation(t);
+    StandardTriangulation* s =
+        StandardTriangulation::isStandardTriangulation(t);
     if (s) {
         BlockedSFS* sfs = dynamic_cast<BlockedSFS*>(s);
         if (sfs) {

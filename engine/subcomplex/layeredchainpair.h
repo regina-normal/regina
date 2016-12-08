@@ -75,10 +75,10 @@ namespace regina {
  * only one tetrahedron is in fact a layered loop with a twist
  * (see class LayeredLoop).
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredChainPair : public NStandardTriangulation {
+class REGINA_API LayeredChainPair : public StandardTriangulation {
     private:
         LayeredChain* chain_[2];
             /**< The two layered chains that make up this pair. */

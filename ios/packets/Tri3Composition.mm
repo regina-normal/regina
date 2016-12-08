@@ -125,7 +125,7 @@
 
     self.isosig.text = @(self.packet->isoSig().c_str());
     
-    regina::NStandardTriangulation* stdTri = regina::NStandardTriangulation::isStandardTriangulation(self.packet);
+    regina::StandardTriangulation* stdTri = regina::StandardTriangulation::isStandardTriangulation(self.packet);
     if (stdTri)
         self.standard.text = @(stdTri->name().c_str());
     else

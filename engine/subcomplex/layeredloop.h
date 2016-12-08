@@ -74,10 +74,10 @@ namespace regina {
  * The \a length of the layered loop is the number of tetrahedra it
  * contains.  A layered loop must contain at least one tetrahedron.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredLoop : public NStandardTriangulation {
+class REGINA_API LayeredLoop : public StandardTriangulation {
     private:
         unsigned long length_;
             /**< The length of this layered loop. */

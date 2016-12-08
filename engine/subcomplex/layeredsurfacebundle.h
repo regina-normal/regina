@@ -75,10 +75,10 @@ class NTxICore;
  * calculated.  The manifold() routine returns details of the
  * corresponding 3-manifold.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredTorusBundle : public NStandardTriangulation {
+class REGINA_API LayeredTorusBundle : public StandardTriangulation {
     private:
         const NTxICore& core_;
             /**< The core <tt>T x I</tt> triangulation whose boundaries

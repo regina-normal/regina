@@ -53,10 +53,10 @@ namespace regina {
  * Represents one of a few particular hard-coded trivial triangulations
  * that do not belong to any of the other larger families.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NTrivialTri : public NStandardTriangulation {
+class REGINA_API NTrivialTri : public StandardTriangulation {
     public:
         /**
          * Represents the two-tetrahedron four-vertex triangulation of

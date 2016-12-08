@@ -59,10 +59,10 @@ namespace regina {
  * boundary (including the minimal (1,1,0) triangulation) are not
  * described by this class.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredSolidTorus : public NStandardTriangulation {
+class REGINA_API LayeredSolidTorus : public StandardTriangulation {
     private:
         size_t nTetrahedra;
             /**< The number of tetrahedra in this torus. */

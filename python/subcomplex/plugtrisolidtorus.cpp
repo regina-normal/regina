@@ -40,7 +40,7 @@ using regina::PlugTriSolidTorus;
 
 void addPlugTriSolidTorus() {
     {
-        scope s = class_<PlugTriSolidTorus, bases<regina::NStandardTriangulation>,
+        scope s = class_<PlugTriSolidTorus, bases<regina::StandardTriangulation>,
                 std::auto_ptr<PlugTriSolidTorus>, boost::noncopyable>
                 ("PlugTriSolidTorus", no_init)
             .def("clone", &PlugTriSolidTorus::clone,
@@ -64,7 +64,7 @@ void addPlugTriSolidTorus() {
         s.attr("EQUATOR_MINOR") = PlugTriSolidTorus::EQUATOR_MINOR;
 
         implicitly_convertible<std::auto_ptr<PlugTriSolidTorus>,
-            std::auto_ptr<regina::NStandardTriangulation> >();
+            std::auto_ptr<regina::StandardTriangulation> >();
     }
 
     scope().attr("NPlugTriSolidTorus") = scope().attr("PlugTriSolidTorus");

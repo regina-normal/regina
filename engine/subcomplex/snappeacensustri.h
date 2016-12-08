@@ -77,10 +77,10 @@ namespace regina {
  * Furthermore, the section and index parameters of a SnapPeaCensusTri
  * are identical to those of its corresponding SnapPeaCensusManifold.
  *
- * All of the optional NStandardTriangulation routines are implemented
+ * All of the optional StandardTriangulation routines are implemented
  * for this class.
  */
-class REGINA_API SnapPeaCensusTri: public NStandardTriangulation {
+class REGINA_API SnapPeaCensusTri: public StandardTriangulation {
     public:
         static const char SEC_5;
             /**< Represents the collection of triangulations formed from five

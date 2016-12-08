@@ -81,10 +81,10 @@ namespace regina {
  * Note that all three tetrahedra in the triangular solid torus must be
  * distinct.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NTriSolidTorus : public NStandardTriangulation {
+class REGINA_API NTriSolidTorus : public StandardTriangulation {
     private:
         Tetrahedron<3>* tet[3];
             /**< The tetrahedra that make up this solid torus. */

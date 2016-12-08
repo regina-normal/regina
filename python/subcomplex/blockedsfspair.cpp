@@ -40,7 +40,7 @@ using namespace boost::python;
 using regina::BlockedSFSPair;
 
 void addBlockedSFSPair() {
-    class_<BlockedSFSPair, bases<regina::NStandardTriangulation>,
+    class_<BlockedSFSPair, bases<regina::StandardTriangulation>,
             std::auto_ptr<BlockedSFSPair>, boost::noncopyable>
             ("BlockedSFSPair", no_init)
         .def("region", &BlockedSFSPair::region,
@@ -54,7 +54,7 @@ void addBlockedSFSPair() {
     ;
 
     implicitly_convertible<std::auto_ptr<BlockedSFSPair>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NBlockedSFSPair") = scope().attr("BlockedSFSPair");
 }

@@ -153,7 +153,7 @@ bool ManifoldSpec::operator < (const ManifoldSpec& other) const {
 bool process(Container* c) {
     bool foundTri = false;
 
-    NStandardTriangulation* std;
+    StandardTriangulation* std;
     Manifold* mfd;
     std::string name, structure;
     for (Packet* child = c->firstChild(); child;
@@ -163,7 +163,7 @@ bool process(Container* c) {
 
         foundTri = true;
 
-        std = NStandardTriangulation::isStandardTriangulation(
+        std = StandardTriangulation::isStandardTriangulation(
             static_cast<Triangulation<3>*>(child));
         if (! std)
             continue;

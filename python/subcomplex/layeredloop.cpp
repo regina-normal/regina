@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::LayeredLoop;
 
 void addLayeredLoop() {
-    class_<LayeredLoop, bases<regina::NStandardTriangulation>,
+    class_<LayeredLoop, bases<regina::StandardTriangulation>,
             std::auto_ptr<LayeredLoop>, boost::noncopyable>
             ("LayeredLoop", no_init)
         .def("clone", &LayeredLoop::clone,
@@ -55,7 +55,7 @@ void addLayeredLoop() {
     ;
 
     implicitly_convertible<std::auto_ptr<LayeredLoop>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NLayeredLoop") = scope().attr("LayeredLoop");
 }

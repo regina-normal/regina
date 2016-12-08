@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::SnappedBall;
 
 void addSnappedBall() {
-    class_<SnappedBall, bases<regina::NStandardTriangulation>,
+    class_<SnappedBall, bases<regina::StandardTriangulation>,
             std::auto_ptr<SnappedBall>, boost::noncopyable>
             ("SnappedBall", no_init)
         .def("clone", &SnappedBall::clone,
@@ -57,7 +57,7 @@ void addSnappedBall() {
     ;
 
     implicitly_convertible<std::auto_ptr<SnappedBall>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NSnappedBall") = scope().attr("SnappedBall");
 

@@ -130,10 +130,10 @@ class SatRegion;
  * since this essentially requires 2-dimensional assemblings of
  * saturated blocks.  For full details, writeTextLong() may be used instead.
  *
- * The optional NStandardTriangulation routine manifold() is
+ * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API BlockedSFSTriple : public NStandardTriangulation {
+class REGINA_API BlockedSFSTriple : public StandardTriangulation {
     private:
         SatRegion* end_[2];
             /**< The two end regions, i.e., the saturated regions with

@@ -112,10 +112,10 @@ class NTxICore;
  * essentially requires 2-dimensional assemblings of saturated blocks.
  * For more detail, writeTextLong() may be used instead.
  *
- * The optional NStandardTriangulation routine manifold() is
+ * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API PluggedTorusBundle : public NStandardTriangulation {
+class REGINA_API PluggedTorusBundle : public StandardTriangulation {
     private:
         const NTxICore& bundle_;
             /**< The thin I-bundle that appears within this triangulation.

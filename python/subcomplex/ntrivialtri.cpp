@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::NTrivialTri;
 
 void addNTrivialTri() {
-    scope s = class_<NTrivialTri, bases<regina::NStandardTriangulation>,
+    scope s = class_<NTrivialTri, bases<regina::StandardTriangulation>,
             std::auto_ptr<NTrivialTri>, boost::noncopyable>
             ("NTrivialTri", no_init)
         .def("clone", &NTrivialTri::clone,
@@ -59,6 +59,6 @@ void addNTrivialTri() {
     s.attr("N3_2") = NTrivialTri::N3_2;
 
     implicitly_convertible<std::auto_ptr<NTrivialTri>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 }
 

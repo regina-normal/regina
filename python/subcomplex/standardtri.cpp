@@ -38,32 +38,32 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NStandardTriangulation;
+using regina::StandardTriangulation;
 
 namespace {
-    void writeName_stdio(const NStandardTriangulation& t) {
+    void writeName_stdio(const StandardTriangulation& t) {
         t.writeName(std::cout);
     }
-    void writeTeXName_stdio(const NStandardTriangulation& t) {
+    void writeTeXName_stdio(const StandardTriangulation& t) {
         t.writeTeXName(std::cout);
     }
-    NStandardTriangulation* (*isStandardTri_comp)(regina::Component<3>*) =
-        &NStandardTriangulation::isStandardTriangulation;
-    NStandardTriangulation* (*isStandardTri_tri)(regina::Triangulation<3>*) =
-        &NStandardTriangulation::isStandardTriangulation;
+    StandardTriangulation* (*isStandardTri_comp)(regina::Component<3>*) =
+        &StandardTriangulation::isStandardTriangulation;
+    StandardTriangulation* (*isStandardTri_tri)(regina::Triangulation<3>*) =
+        &StandardTriangulation::isStandardTriangulation;
 }
 
-void addNStandardTriangulation() {
-    class_<NStandardTriangulation, boost::noncopyable,
-            std::auto_ptr<NStandardTriangulation> >
-            ("NStandardTriangulation", no_init)
-        .def("name", &NStandardTriangulation::name)
-        .def("TeXName", &NStandardTriangulation::TeXName)
-        .def("manifold", &NStandardTriangulation::manifold,
+void addStandardTriangulation() {
+    class_<StandardTriangulation, boost::noncopyable,
+            std::auto_ptr<StandardTriangulation> >
+            ("StandardTriangulation", no_init)
+        .def("name", &StandardTriangulation::name)
+        .def("TeXName", &StandardTriangulation::TeXName)
+        .def("manifold", &StandardTriangulation::manifold,
             return_value_policy<manage_new_object>())
-        .def("homology", &NStandardTriangulation::homology,
+        .def("homology", &StandardTriangulation::homology,
             return_value_policy<manage_new_object>())
-        .def("homologyH1", &NStandardTriangulation::homologyH1,
+        .def("homologyH1", &StandardTriangulation::homologyH1,
             return_value_policy<manage_new_object>())
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)

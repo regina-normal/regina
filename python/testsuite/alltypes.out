@@ -1522,9 +1522,6 @@ NSnappedTwoSphere : typedef ->  SnappedTwoSphere
 
 NSpiralSolidTorus : typedef ->  SpiralSolidTorus
 
-NStandardTriangulation : class
-Equality type : BY_REFERENCE
-
 NSurfaceFilter : typedef ->  SurfaceFilter
 
 NSurfaceFilterCombination : typedef ->  SurfaceFilterCombination
@@ -1813,6 +1810,9 @@ SnappedTwoSphere : class
 Equality type : BY_REFERENCE
 
 SpiralSolidTorus : class
+Equality type : BY_REFERENCE
+
+StandardTriangulation : class
 Equality type : BY_REFERENCE
 
 SurfaceFilter : class

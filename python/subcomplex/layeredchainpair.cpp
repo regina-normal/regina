@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::LayeredChainPair;
 
 void addLayeredChainPair() {
-    class_<LayeredChainPair, bases<regina::NStandardTriangulation>,
+    class_<LayeredChainPair, bases<regina::StandardTriangulation>,
             std::auto_ptr<LayeredChainPair>, boost::noncopyable>
             ("LayeredChainPair", no_init)
         .def("clone", &LayeredChainPair::clone,
@@ -53,7 +53,7 @@ void addLayeredChainPair() {
     ;
 
     implicitly_convertible<std::auto_ptr<LayeredChainPair>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NLayeredChainPair") = scope().attr("LayeredChainPair");
 }

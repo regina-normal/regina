@@ -326,8 +326,8 @@ void Tri3SurfacesUI::refresh() {
 
     // Begin with the combinatorial recognition.
     std::string name;
-    regina::NStandardTriangulation* std =
-        regina::NStandardTriangulation::isStandardTriangulation(tri);
+    regina::StandardTriangulation* std =
+        regina::StandardTriangulation::isStandardTriangulation(tri);
     if (std) {
         regina::Manifold* mfd = std->manifold();
         if (mfd) {

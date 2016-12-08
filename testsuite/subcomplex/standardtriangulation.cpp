@@ -39,11 +39,11 @@
 #include "testsuite/subcomplex/testsubcomplex.h"
 
 using regina::Manifold;
-using regina::NStandardTriangulation;
+using regina::StandardTriangulation;
 using regina::Triangulation;
 
-class NStandardTriangulationTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NStandardTriangulationTest);
+class StandardTriangulationTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(StandardTriangulationTest);
 
     CPPUNIT_TEST(recognition);
 
@@ -66,8 +66,8 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NStandardTriangulation* std =
-                NStandardTriangulation::isStandardTriangulation(&t);
+            StandardTriangulation* std =
+                StandardTriangulation::isStandardTriangulation(&t);
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -111,8 +111,8 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NStandardTriangulation* std =
-                NStandardTriangulation::isStandardTriangulation(t);
+            StandardTriangulation* std =
+                StandardTriangulation::isStandardTriangulation(t);
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -210,7 +210,7 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
         }
 };
 
-void addNStandardTriangulation(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NStandardTriangulationTest::suite());
+void addStandardTriangulation(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(StandardTriangulationTest::suite());
 }
 

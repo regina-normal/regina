@@ -80,11 +80,11 @@ namespace regina {
  * edge glued to an axis edge) the resulting space will be a Seifert
  * fibred space over the 2-sphere with at most three exceptional fibres.
  *
- * Of the optional NStandardTriangulation routines, manifold() is
+ * Of the optional StandardTriangulation routines, manifold() is
  * implemented for most augmented triangular solid tori and
  * homology() is not implemented at all.
  */
-class REGINA_API AugTriSolidTorus : public NStandardTriangulation {
+class REGINA_API AugTriSolidTorus : public StandardTriangulation {
     public:
         static const int CHAIN_NONE;
             /**< Indicates that this augmented triangular solid torus

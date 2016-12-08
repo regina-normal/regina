@@ -41,7 +41,7 @@ using regina::AugTriSolidTorus;
 
 void addAugTriSolidTorus() {
     {
-        scope s = class_<AugTriSolidTorus, bases<regina::NStandardTriangulation>,
+        scope s = class_<AugTriSolidTorus, bases<regina::StandardTriangulation>,
                 std::auto_ptr<AugTriSolidTorus>, boost::noncopyable>
                 ("AugTriSolidTorus", no_init)
             .def("clone", &AugTriSolidTorus::clone,
@@ -67,7 +67,7 @@ void addAugTriSolidTorus() {
 
 
         implicitly_convertible<std::auto_ptr<AugTriSolidTorus>,
-            std::auto_ptr<regina::NStandardTriangulation> >();
+            std::auto_ptr<regina::StandardTriangulation> >();
     }
 
     scope().attr("NAugTriSolidTorus") = scope().attr("AugTriSolidTorus");

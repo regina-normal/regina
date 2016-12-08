@@ -89,11 +89,11 @@ namespace regina {
  * interior triangle).  The gluings must also be made so that the resulting
  * triangulation component is orientable.
  *
- * Of the optional NStandardTriangulation routines, manifold() is
+ * Of the optional StandardTriangulation routines, manifold() is
  * implemented for most plugged triangular solid tori and
  * homology() is not implemented at all.
  */
-class REGINA_API PlugTriSolidTorus : public NStandardTriangulation {
+class REGINA_API PlugTriSolidTorus : public StandardTriangulation {
     public:
         static const int CHAIN_NONE;
             /**< Indicates an annulus on the triangular solid torus

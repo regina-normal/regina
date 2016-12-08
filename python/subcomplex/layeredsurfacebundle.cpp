@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::LayeredTorusBundle;
 
 void addLayeredSurfaceBundle() {
-    class_<LayeredTorusBundle, bases<regina::NStandardTriangulation>,
+    class_<LayeredTorusBundle, bases<regina::StandardTriangulation>,
             std::auto_ptr<LayeredTorusBundle>, boost::noncopyable>
             ("LayeredTorusBundle", no_init)
         .def("core", &LayeredTorusBundle::core,
@@ -55,7 +55,7 @@ void addLayeredSurfaceBundle() {
     ;
 
     implicitly_convertible<std::auto_ptr<LayeredTorusBundle>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NLayeredTorusBundle") = scope().attr("LayeredTorusBundle");
 }

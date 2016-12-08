@@ -114,7 +114,7 @@
     {
         regina::Triangulation<3> simp(*self.packet);
         simp.intelligentSimplify();
-        regina::NStandardTriangulation* std = regina::NStandardTriangulation::isStandardTriangulation(&simp);
+        regina::StandardTriangulation* std = regina::StandardTriangulation::isStandardTriangulation(&simp);
         if (std) {
             regina::Manifold* mfd = std->manifold();
             if (mfd) {

@@ -54,13 +54,13 @@ void addSnapPeaCensusTri();
 void addSnappedBall();
 void addSnappedTwoSphere();
 void addSpiralSolidTorus();
-void addNStandardTriangulation();
+void addStandardTriangulation();
 void addNTriSolidTorus();
 void addNTrivialTri();
 void addNTxICore();
 
 void addSubcomplexClasses() {
-    addNStandardTriangulation();
+    addStandardTriangulation();
     addAugTriSolidTorus();
     addL31Pillow();
     addLayeredChain();

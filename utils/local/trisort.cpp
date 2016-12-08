@@ -128,7 +128,7 @@ void process(Container* c) {
     if (! hasTriangulation(c))
         return;
 
-    NStandardTriangulation* std;
+    StandardTriangulation* std;
     std::vector<TriSpec> children;
     TriSpec spec;
     for (Packet* child = c->firstChild(); child;
@@ -137,7 +137,7 @@ void process(Container* c) {
         spec.isTri = (child->type() == PACKET_TRIANGULATION3);
 
         if (spec.isTri) {
-            std = NStandardTriangulation::isStandardTriangulation(
+            std = StandardTriangulation::isStandardTriangulation(
                 static_cast<Triangulation<3>*>(child));
             spec.hasName = (std != 0);
 

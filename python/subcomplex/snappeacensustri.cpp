@@ -40,7 +40,7 @@ using regina::SnapPeaCensusTri;
 
 void addSnapPeaCensusTri() {
     {
-        scope s = class_<SnapPeaCensusTri, bases<regina::NStandardTriangulation>,
+        scope s = class_<SnapPeaCensusTri, bases<regina::StandardTriangulation>,
                 std::auto_ptr<SnapPeaCensusTri>, boost::noncopyable>
                 ("SnapPeaCensusTri", no_init)
             .def("clone", &SnapPeaCensusTri::clone,
@@ -61,7 +61,7 @@ void addSnapPeaCensusTri() {
         s.attr("SEC_7_NOR") = SnapPeaCensusTri::SEC_7_NOR;
 
         implicitly_convertible<std::auto_ptr<SnapPeaCensusTri>,
-            std::auto_ptr<regina::NStandardTriangulation> >();
+            std::auto_ptr<regina::StandardTriangulation> >();
     }
 
     scope().attr("NSnapPeaCensusTri") = scope().attr("SnapPeaCensusTri");

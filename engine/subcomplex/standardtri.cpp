@@ -49,21 +49,21 @@
 
 namespace regina {
 
-std::string NStandardTriangulation::name() const {
+std::string StandardTriangulation::name() const {
     std::ostringstream ans;
     writeName(ans);
     return ans.str();
 }
 
-std::string NStandardTriangulation::TeXName() const {
+std::string StandardTriangulation::TeXName() const {
     std::ostringstream ans;
     writeTeXName(ans);
     return ans.str();
 }
 
-NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
+StandardTriangulation* StandardTriangulation::isStandardTriangulation(
         Component<3>* comp) {
-    NStandardTriangulation* ans;
+    StandardTriangulation* ans;
     if ((ans = NTrivialTri::isTrivialTriangulation(comp)))
         return ans;
     if ((ans = L31Pillow::isL31Pillow(comp)))
@@ -86,13 +86,13 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
     return 0;
 }
 
-NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
+StandardTriangulation* StandardTriangulation::isStandardTriangulation(
         Triangulation<3>* tri) {
     if (tri->countComponents() != 1)
         return 0;
 
     // Do what we can through components.
-    NStandardTriangulation* ans;
+    StandardTriangulation* ans;
     if ((ans = isStandardTriangulation(tri->component(0))))
         return ans;
 

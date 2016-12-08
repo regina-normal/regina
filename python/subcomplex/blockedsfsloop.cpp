@@ -40,7 +40,7 @@ using namespace boost::python;
 using regina::BlockedSFSLoop;
 
 void addBlockedSFSLoop() {
-    class_<BlockedSFSLoop, bases<regina::NStandardTriangulation>,
+    class_<BlockedSFSLoop, bases<regina::StandardTriangulation>,
             std::auto_ptr<BlockedSFSLoop>, boost::noncopyable>
             ("BlockedSFSLoop", no_init)
         .def("region", &BlockedSFSLoop::region,
@@ -54,7 +54,7 @@ void addBlockedSFSLoop() {
     ;
 
     implicitly_convertible<std::auto_ptr<BlockedSFSLoop>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NBlockedSFSLoop") = scope().attr("BlockedSFSLoop");
 }

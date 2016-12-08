@@ -83,10 +83,10 @@ namespace regina {
  * layered chain containing only one tetrahedron will be considered as a
  * standalone tetrahedron that forms a 3-ball (and not a solid torus).
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredChain : public NStandardTriangulation {
+class REGINA_API LayeredChain : public StandardTriangulation {
     private:
         Tetrahedron<3>* bottom_;
             /**< The bottom tetrahedron of this layered chain. */
@@ -270,7 +270,7 @@ inline LayeredChain::LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles) :
         topVertexRoles_(vertexRoles) {
 }
 inline LayeredChain::LayeredChain(const LayeredChain& cloneMe) :
-        NStandardTriangulation(), bottom_(cloneMe.bottom_), top_(cloneMe.top_),
+        StandardTriangulation(), bottom_(cloneMe.bottom_), top_(cloneMe.top_),
         index_(cloneMe.index_), bottomVertexRoles_(cloneMe.bottomVertexRoles_),
         topVertexRoles_(cloneMe.topVertexRoles_) {
 }

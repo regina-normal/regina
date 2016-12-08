@@ -60,10 +60,10 @@ namespace regina {
  * 
  * A layered lens space must contain at least one tetrahedron.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredLensSpace : public NStandardTriangulation {
+class REGINA_API LayeredLensSpace : public StandardTriangulation {
     private:
         LayeredSolidTorus* torus_;
             /**< The layered solid torus that forms the basis of this

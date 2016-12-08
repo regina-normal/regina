@@ -59,10 +59,10 @@ namespace regina {
  * degree three vertex in the interior of the pillow.  The two boundary
  * triangles of this pillow are then identified with a one-third twist.
  *
- * All optional NStandardTriangulation routines are implemented for this
+ * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API L31Pillow : public NStandardTriangulation {
+class REGINA_API L31Pillow : public StandardTriangulation {
     private:
         Tetrahedron<3>* tet[2];
             /**< The two tetrahedra in the triangular pillow. */

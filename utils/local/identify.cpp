@@ -87,8 +87,8 @@ void process(Triangulation<3>* t) {
     std::cout << t->label() << "  -->  ";
     totTris++;
 
-    NStandardTriangulation* s =
-        NStandardTriangulation::isStandardTriangulation(t);
+    StandardTriangulation* s =
+        StandardTriangulation::isStandardTriangulation(t);
     if (s) {
         std::cout << s->name();
         trisOk++;

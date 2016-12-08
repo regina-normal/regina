@@ -40,7 +40,7 @@ using namespace boost::python;
 using regina::BlockedSFSTriple;
 
 void addBlockedSFSTriple() {
-    class_<BlockedSFSTriple, bases<regina::NStandardTriangulation>,
+    class_<BlockedSFSTriple, bases<regina::StandardTriangulation>,
             std::auto_ptr<BlockedSFSTriple>, boost::noncopyable>
             ("BlockedSFSTriple", no_init)
         .def("end", &BlockedSFSTriple::end,
@@ -56,7 +56,7 @@ void addBlockedSFSTriple() {
     ;
 
     implicitly_convertible<std::auto_ptr<BlockedSFSTriple>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NBlockedSFSTriple") = scope().attr("BlockedSFSTriple");
 }

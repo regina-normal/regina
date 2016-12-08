@@ -48,7 +48,7 @@ namespace {
 }
 
 void addBlockedSFS() {
-    class_<BlockedSFS, bases<regina::NStandardTriangulation>,
+    class_<BlockedSFS, bases<regina::StandardTriangulation>,
             std::auto_ptr<BlockedSFS>, boost::noncopyable>
             ("BlockedSFS", no_init)
         .def("region", &BlockedSFS::region,
@@ -61,7 +61,7 @@ void addBlockedSFS() {
     ;
 
     implicitly_convertible<std::auto_ptr<BlockedSFS>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NBlockedSFS") = scope().attr("BlockedSFS");
 }

@@ -58,14 +58,14 @@ class Manifold;
 
 /**
  * Describes a triangulation or subcomplex of a triangulation whose structure
- * is well-understood.  A NStandardTriangulation is generally connected
+ * is well-understood.  A StandardTriangulation is generally connected
  * with a real triangulation, i.e., a Triangulation<3> object, which it
  * describes some portion of.
  *
- * In general NStandardTriangulation objects cannot be constructed
+ * In general StandardTriangulation objects cannot be constructed
  * directly, but are instead created through static identification
  * routines such as
- * NStandardTriangulation::isStandardTriangulation(Triangulation<3>*).
+ * StandardTriangulation::isStandardTriangulation(Triangulation<3>*).
  *
  * Subclasses corresponding to different families of triangulations may,
  * but not need to, override the output routines writeTextShort() and
@@ -73,14 +73,14 @@ class Manifold;
  * of both routines, which call the pure virtual function writeName()
  * (which every subclass must override).
  */
-class REGINA_API NStandardTriangulation :
-        public Output<NStandardTriangulation>,
+class REGINA_API StandardTriangulation :
+        public Output<StandardTriangulation>,
         public boost::noncopyable {
     public:
         /**
          * A destructor that does nothing.
          */
-        virtual ~NStandardTriangulation();
+        virtual ~StandardTriangulation();
 
         /**
          * Returns the name of this specific triangulation as a
@@ -107,7 +107,7 @@ class REGINA_API NStandardTriangulation :
          *
          * The details of which standard triangulations have 3-manifold
          * recognition routines can be found in the notes for the
-         * corresponding subclasses of NStandardTriangulation.  The
+         * corresponding subclasses of StandardTriangulation.  The
          * default implementation of this routine returns 0.
          *
          * It is expected that the number of triangulations whose
@@ -133,13 +133,13 @@ class REGINA_API NStandardTriangulation :
          *
          * The details of which standard triangulations have homology
          * calculation routines can be found in the notes for the
-         * corresponding subclasses of NStandardTriangulation.  The
+         * corresponding subclasses of StandardTriangulation.  The
          * default implementation of this routine returns 0.
          *
          * The homology group will be newly allocated and must be
          * destroyed by the caller of this routine.
          *
-         * If this NStandardTriangulation describes an entire Triangulation<3>
+         * If this StandardTriangulation describes an entire Triangulation<3>
          * (and not just a part thereof) then the results of this routine
          * should be identical to the homology group obtained by calling
          * Triangulation<3>::homology() upon the associated real triangulation.
@@ -164,13 +164,13 @@ class REGINA_API NStandardTriangulation :
          *
          * The details of which standard triangulations have homology
          * calculation routines can be found in the notes for the
-         * corresponding subclasses of NStandardTriangulation.  The
+         * corresponding subclasses of StandardTriangulation.  The
          * default implementation of this routine returns 0.
          *
          * The homology group will be newly allocated and must be
          * destroyed by the caller of this routine.
          *
-         * If this NStandardTriangulation describes an entire Triangulation<3>
+         * If this StandardTriangulation describes an entire Triangulation<3>
          * (and not just a part thereof) then the results of this routine
          * should be identical to the homology group obtained by calling
          * Triangulation<3>::homology() upon the associated real triangulation.
@@ -216,7 +216,7 @@ class REGINA_API NStandardTriangulation :
          * given output stream.
          *
          * This may be reimplemented by subclasses, but the parent
-         * NStandardTriangulation class offers a reasonable default
+         * StandardTriangulation class offers a reasonable default
          * implementation based on writeName().
          *
          * \ifacespython Not present.
@@ -230,7 +230,7 @@ class REGINA_API NStandardTriangulation :
          * given output stream.
          *
          * This may be reimplemented by subclasses, but the parent
-         * NStandardTriangulation class offers a reasonable default
+         * StandardTriangulation class offers a reasonable default
          * implementation based on writeName().
          *
          * \ifacespython Not present.
@@ -259,7 +259,7 @@ class REGINA_API NStandardTriangulation :
          * @return the details of the standard triangulation if the
          * given component is recognised, or 0 otherwise.
          */
-        static NStandardTriangulation* isStandardTriangulation(
+        static StandardTriangulation* isStandardTriangulation(
             Component<3>* component);
         /**
          * Determines whether the given triangulation represents one of the
@@ -281,34 +281,34 @@ class REGINA_API NStandardTriangulation :
          * @return the details of the standard triangualation if the
          * given triangulation is recognised, or 0 otherwise.
          */
-        static NStandardTriangulation* isStandardTriangulation(
+        static StandardTriangulation* isStandardTriangulation(
             Triangulation<3>* tri);
 };
 
 /*@}*/
 
-// Inline functions for NStandardTriangulation
+// Inline functions for StandardTriangulation
 
-inline NStandardTriangulation::~NStandardTriangulation() {
+inline StandardTriangulation::~StandardTriangulation() {
 }
 
-inline Manifold* NStandardTriangulation::manifold() const {
+inline Manifold* StandardTriangulation::manifold() const {
     return 0;
 }
 
-inline AbelianGroup* NStandardTriangulation::homology() const {
+inline AbelianGroup* StandardTriangulation::homology() const {
     return 0;
 }
 
-inline AbelianGroup* NStandardTriangulation::homologyH1() const {
+inline AbelianGroup* StandardTriangulation::homologyH1() const {
     return homology();
 }
 
-inline void NStandardTriangulation::writeTextShort(std::ostream& out) const {
+inline void StandardTriangulation::writeTextShort(std::ostream& out) const {
     writeName(out);
 }
 
-inline void NStandardTriangulation::writeTextLong(std::ostream& out) const {
+inline void StandardTriangulation::writeTextLong(std::ostream& out) const {
     writeName(out);
     out << '\n';
 }

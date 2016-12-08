@@ -41,7 +41,7 @@ using namespace boost::python;
 using regina::PluggedTorusBundle;
 
 void addPluggedTorusBundle() {
-    class_<PluggedTorusBundle, bases<regina::NStandardTriangulation>,
+    class_<PluggedTorusBundle, bases<regina::StandardTriangulation>,
             std::auto_ptr<PluggedTorusBundle>, boost::noncopyable>
             ("PluggedTorusBundle", no_init)
         .def("bundle", &PluggedTorusBundle::bundle,
@@ -59,7 +59,7 @@ void addPluggedTorusBundle() {
     ;
 
     implicitly_convertible<std::auto_ptr<PluggedTorusBundle>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        std::auto_ptr<regina::StandardTriangulation> >();
 
     scope().attr("NPluggedTorusBundle") = scope().attr("PluggedTorusBundle");
 }
