@@ -92,6 +92,7 @@ void addNSatBlockTypes() {
     implicitly_convertible<std::auto_ptr<SatMobius>,
         std::auto_ptr<regina::NSatBlock> >();
 
+    scope().attr("NSatMobius") = scope().attr("SatMobius");
 
 
     class_<SatLST, bases<regina::NSatBlock>,
@@ -109,6 +110,7 @@ void addNSatBlockTypes() {
     implicitly_convertible<std::auto_ptr<SatLST>,
         std::auto_ptr<regina::NSatBlock> >();
 
+    scope().attr("NSatLST") = scope().attr("SatLST");
 
 
     class_<SatTriPrism, bases<regina::NSatBlock>,
@@ -127,6 +129,7 @@ void addNSatBlockTypes() {
     implicitly_convertible<std::auto_ptr<SatTriPrism>,
         std::auto_ptr<regina::NSatBlock> >();
 
+    scope().attr("NSatTriPrism") = scope().attr("SatTriPrism");
 
 
     class_<SatCube, bases<regina::NSatBlock>,
@@ -144,6 +147,7 @@ void addNSatBlockTypes() {
     implicitly_convertible<std::auto_ptr<SatCube>,
         std::auto_ptr<regina::NSatBlock> >();
 
+    scope().attr("NSatCube") = scope().attr("SatCube");
 
 
     class_<SatReflectorStrip, bases<regina::NSatBlock>,
@@ -161,6 +165,7 @@ void addNSatBlockTypes() {
     implicitly_convertible<std::auto_ptr<SatReflectorStrip>,
         std::auto_ptr<regina::NSatBlock> >();
 
+    scope().attr("NSatReflectorStrip") = scope().attr("SatReflectorStrip");
 
 
     class_<SatLayering, bases<regina::NSatBlock>,
@@ -175,5 +180,7 @@ void addNSatBlockTypes() {
 
     implicitly_convertible<std::auto_ptr<SatLayering>,
         std::auto_ptr<regina::NSatBlock> >();
+
+    scope().attr("NSatLayering") = scope().attr("SatLayering");
 }
 

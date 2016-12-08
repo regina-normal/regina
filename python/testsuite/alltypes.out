@@ -1492,8 +1492,20 @@ Equality type : BY_REFERENCE
 NSatBlockSpec : class
 Equality type : BY_VALUE
 
+NSatCube : typedef ->  SatCube
+
+NSatLST : typedef ->  SatLST
+
+NSatLayering : typedef ->  SatLayering
+
+NSatMobius : typedef ->  SatMobius
+
+NSatReflectorStrip : typedef ->  SatReflectorStrip
+
 NSatRegion : class
 Equality type : BY_REFERENCE
+
+NSatTriPrism : typedef ->  SatTriPrism
 
 NScript : typedef ->  Script
 

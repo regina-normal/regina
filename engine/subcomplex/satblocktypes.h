@@ -146,6 +146,15 @@ class REGINA_API SatMobius : public NSatBlock {
 };
 
 /**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatMobius has now been renamed to
+ * SatMobius.
+ */
+REGINA_DEPRECATED typedef SatMobius NSatMobius;
+
+/**
  * A saturated block that is a layered solid torus.  See the
  * LayeredSolidTorus class for details.
  *
@@ -243,6 +252,15 @@ class REGINA_API SatLST : public NSatBlock {
          */
         SatLST(LayeredSolidTorus* lst, Perm<4> roles);
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatLST has now been renamed to
+ * SatLST.
+ */
+REGINA_DEPRECATED typedef SatLST NSatLST;
 
 /**
  * A saturated block that is a three-tetrahedron triangular prism.
@@ -345,6 +363,15 @@ class REGINA_API SatTriPrism : public NSatBlock {
 };
 
 /**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatTriPrism has now been renamed to
+ * SatTriPrism.
+ */
+REGINA_DEPRECATED typedef SatTriPrism NSatTriPrism;
+
+/**
  * A saturated block that is a six-tetrahedron cube.
  *
  * There are several ways of triangulating a cube with six tetrahedra;
@@ -408,6 +435,15 @@ class REGINA_API SatCube : public NSatBlock {
          */
         SatCube();
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatCube has now been renamed to
+ * SatCube.
+ */
+REGINA_DEPRECATED typedef SatCube NSatCube;
 
 /**
  * A saturated block that is a reflector strip.
@@ -498,6 +534,15 @@ class REGINA_API SatReflectorStrip : public NSatBlock {
 };
 
 /**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatReflectorStrip has now been renamed to
+ * SatReflectorStrip.
+ */
+REGINA_DEPRECATED typedef SatReflectorStrip NSatReflectorStrip;
+
+/**
  * A degenerate saturated block that is a single tetrahedron wrapped
  * around so that two opposite edges touch.  This forms a degenerate
  * one-tetrahedron solid torus that is pinched along a single meridinal
@@ -580,6 +625,15 @@ class REGINA_API SatLayering : public NSatBlock {
          */
         SatLayering(bool overHorizontal);
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSatLayering has now been renamed to
+ * SatLayering.
+ */
+REGINA_DEPRECATED typedef SatLayering NSatLayering;
 
 /*@}*/
 
