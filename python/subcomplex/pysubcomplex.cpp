@@ -55,7 +55,7 @@ void addSnappedBall();
 void addSnappedTwoSphere();
 void addSpiralSolidTorus();
 void addStandardTriangulation();
-void addNTriSolidTorus();
+void addTriSolidTorus();
 void addNTrivialTri();
 void addNTxICore();
 
@@ -76,7 +76,7 @@ void addSubcomplexClasses() {
     addSnappedBall();
     addSnappedTwoSphere();
     addSpiralSolidTorus();
-    addNTriSolidTorus();
+    addTriSolidTorus();
     addNTrivialTri();
     addNTxICore();
     addSatAnnulus();

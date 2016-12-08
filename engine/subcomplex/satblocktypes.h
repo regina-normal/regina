@@ -270,7 +270,7 @@ REGINA_DEPRECATED typedef SatLST NSatLST;
  * major (degree three) edges of the prism.  Likewise, in a \e minor
  * type prism, the horizontal boundary edges are all minor (degree two)
  * edges of the prism.  See the SatAnnulus class notes for a definition
- * of "horizontal" and the NTriSolidTorus class notes for further
+ * of "horizontal" and the TriSolidTorus class notes for further
  * details regarding "major" and "minor".
  */
 class REGINA_API SatTriPrism : public SatBlock {

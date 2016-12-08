@@ -1542,9 +1542,6 @@ NTreeBag : typedef ->  TreeBag
 
 NTreeDecomposition : typedef ->  TreeDecomposition
 
-NTriSolidTorus : class
-Equality type : BY_REFERENCE
-
 NTriangle : typedef ->  Face3_2
 
 NTriangleEmbedding : typedef ->  FaceEmbedding3_2
@@ -1886,6 +1883,9 @@ TreeBag : class
 Equality type : BY_REFERENCE
 
 TreeDecomposition : class
+Equality type : BY_REFERENCE
+
+TriSolidTorus : class
 Equality type : BY_REFERENCE
 
 Triangle10 : typedef ->  Face10_2

@@ -81,7 +81,7 @@ namespace regina {
  * Note that all tetrahedra in the spiralled solid torus must be distinct
  * and there must be at least one tetrahedron.
  *
- * Note also that class NTriSolidTorus represents a spiralled solid
+ * Note also that class TriSolidTorus represents a spiralled solid
  * torus with precisely three tetrahedra.  A spiralled solid torus with
  * only one tetrahedron is in fact a (1,2,3) layered solid torus.
  *

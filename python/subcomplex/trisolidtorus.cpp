@@ -36,28 +36,28 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NTriSolidTorus;
+using regina::TriSolidTorus;
 
-void addNTriSolidTorus() {
-    class_<NTriSolidTorus, bases<regina::StandardTriangulation>,
-            std::auto_ptr<NTriSolidTorus>, boost::noncopyable>
-            ("NTriSolidTorus", no_init)
-        .def("clone", &NTriSolidTorus::clone,
+void addTriSolidTorus() {
+    class_<TriSolidTorus, bases<regina::StandardTriangulation>,
+            std::auto_ptr<TriSolidTorus>, boost::noncopyable>
+            ("TriSolidTorus", no_init)
+        .def("clone", &TriSolidTorus::clone,
             return_value_policy<manage_new_object>())
-        .def("tetrahedron", &NTriSolidTorus::tetrahedron,
+        .def("tetrahedron", &TriSolidTorus::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("vertexRoles", &NTriSolidTorus::vertexRoles)
+        .def("vertexRoles", &TriSolidTorus::vertexRoles)
         .def("isAnnulusSelfIdentified",
-            &NTriSolidTorus::isAnnulusSelfIdentified)
-        .def("areAnnuliLinkedMajor", &NTriSolidTorus::areAnnuliLinkedMajor)
-        .def("areAnnuliLinkedAxis", &NTriSolidTorus::areAnnuliLinkedAxis)
-        .def("formsTriSolidTorus", &NTriSolidTorus::formsTriSolidTorus,
+            &TriSolidTorus::isAnnulusSelfIdentified)
+        .def("areAnnuliLinkedMajor", &TriSolidTorus::areAnnuliLinkedMajor)
+        .def("areAnnuliLinkedAxis", &TriSolidTorus::areAnnuliLinkedAxis)
+        .def("formsTriSolidTorus", &TriSolidTorus::formsTriSolidTorus,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("formsTriSolidTorus")
     ;
 
-    implicitly_convertible<std::auto_ptr<NTriSolidTorus>,
+    implicitly_convertible<std::auto_ptr<TriSolidTorus>,
         std::auto_ptr<regina::StandardTriangulation> >();
 }
 

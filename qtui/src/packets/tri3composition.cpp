@@ -393,7 +393,7 @@ void Tri3CompositionUI::findAugTriSolidTori() {
             details = new QTreeWidgetItem(id);
             details->setText(0,tr("Component %1").arg(i));
 
-            const regina::NTriSolidTorus& core = aug->core();
+            const regina::TriSolidTorus& core = aug->core();
             details = new QTreeWidgetItem(id, details);
             details->setText(0,tr("Core: tets %1, %2, %3").
                 arg(core.tetrahedron(0)->index()).
@@ -856,7 +856,7 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
 
-            const regina::NTriSolidTorus& core(plug->core());
+            const regina::TriSolidTorus& core(plug->core());
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Core: tets %1, %2, %3").

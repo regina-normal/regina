@@ -38,8 +38,8 @@
 
 namespace regina {
 
-NTriSolidTorus* NTriSolidTorus::clone() const {
-    NTriSolidTorus* ans = new NTriSolidTorus();
+TriSolidTorus* TriSolidTorus::clone() const {
+    TriSolidTorus* ans = new TriSolidTorus();
     for (int i = 0; i < 3; i++) {
         ans->tet[i] = tet[i];
         ans->vertexRoles_[i] = vertexRoles_[i];
@@ -47,7 +47,7 @@ NTriSolidTorus* NTriSolidTorus::clone() const {
     return ans;
 }
 
-bool NTriSolidTorus::isAnnulusSelfIdentified(int index, Perm<4>* roleMap) const {
+bool TriSolidTorus::isAnnulusSelfIdentified(int index, Perm<4>* roleMap) const {
     int lower = (index + 1) % 3;
     int upper = (index + 2) % 3;
     if (tet[lower]->adjacentTetrahedron(vertexRoles_[lower][2]) !=
@@ -67,7 +67,7 @@ bool NTriSolidTorus::isAnnulusSelfIdentified(int index, Perm<4>* roleMap) const 
     return true;
 }
 
-unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
+unsigned long TriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     int right = (otherAnnulus + 1) % 3;
     int left = (otherAnnulus + 2) % 3;
     Tetrahedron<3>* adj = tet[right]->adjacentTetrahedron(
@@ -96,7 +96,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     return chain.index() - 1;
 }
 
-unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
+unsigned long TriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     int right = (otherAnnulus + 1) % 3;
     int left = (otherAnnulus + 2) % 3;
     Tetrahedron<3>* adj = tet[right]->adjacentTetrahedron(
@@ -136,9 +136,9 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     return chain.index();
 }
 
-NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(Tetrahedron<3>* tet,
+TriSolidTorus* TriSolidTorus::formsTriSolidTorus(Tetrahedron<3>* tet,
         Perm<4> useVertexRoles) {
-    NTriSolidTorus* ans = new NTriSolidTorus();
+    TriSolidTorus* ans = new TriSolidTorus();
     ans->tet[0] = tet;
     ans->vertexRoles_[0] = useVertexRoles;
 
@@ -177,13 +177,13 @@ NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(Tetrahedron<3>* tet,
     return ans;
 }
 
-AbelianGroup* NTriSolidTorus::homology() const {
+AbelianGroup* TriSolidTorus::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;
 }
 
-Manifold* NTriSolidTorus::manifold() const {
+Manifold* TriSolidTorus::manifold() const {
     return new Handlebody(1, true);
 }
 

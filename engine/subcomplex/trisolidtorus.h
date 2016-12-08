@@ -84,7 +84,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NTriSolidTorus : public StandardTriangulation {
+class REGINA_API TriSolidTorus : public StandardTriangulation {
     private:
         Tetrahedron<3>* tet[3];
             /**< The tetrahedra that make up this solid torus. */
@@ -99,13 +99,13 @@ class REGINA_API NTriSolidTorus : public StandardTriangulation {
         /**
          * Destroys this solid torus.
          */
-        virtual ~NTriSolidTorus();
+        virtual ~TriSolidTorus();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NTriSolidTorus* clone() const;
+        TriSolidTorus* clone() const;
 
         /**
          * Returns the requested tetrahedron in this solid torus.
@@ -260,7 +260,7 @@ class REGINA_API NTriSolidTorus : public StandardTriangulation {
          * \c null if the given tetrahedron is not part of a triangular
          * solid torus with the given vertex roles.
          */
-        static NTriSolidTorus* formsTriSolidTorus(Tetrahedron<3>* tet,
+        static TriSolidTorus* formsTriSolidTorus(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
 
         Manifold* manifold() const;
@@ -273,32 +273,32 @@ class REGINA_API NTriSolidTorus : public StandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        NTriSolidTorus();
+        TriSolidTorus();
 };
 
 /*@}*/
 
-// Inline functions for NTriSolidTorus
+// Inline functions for TriSolidTorus
 
-inline NTriSolidTorus::NTriSolidTorus() {
+inline TriSolidTorus::TriSolidTorus() {
 }
-inline NTriSolidTorus::~NTriSolidTorus() {
+inline TriSolidTorus::~TriSolidTorus() {
 }
 
-inline Tetrahedron<3>* NTriSolidTorus::tetrahedron(int index) const {
+inline Tetrahedron<3>* TriSolidTorus::tetrahedron(int index) const {
     return tet[index];
 }
-inline Perm<4> NTriSolidTorus::vertexRoles(int index) const {
+inline Perm<4> TriSolidTorus::vertexRoles(int index) const {
     return vertexRoles_[index];
 }
 
-inline std::ostream& NTriSolidTorus::writeName(std::ostream& out) const {
+inline std::ostream& TriSolidTorus::writeName(std::ostream& out) const {
     return out << "TST";
 }
-inline std::ostream& NTriSolidTorus::writeTeXName(std::ostream& out) const {
+inline std::ostream& TriSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm TST}";
 }
-inline void NTriSolidTorus::writeTextLong(std::ostream& out) const {
+inline void TriSolidTorus::writeTextLong(std::ostream& out) const {
     out << "3-tetrahedron triangular solid torus";
 }
 

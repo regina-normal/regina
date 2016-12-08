@@ -190,7 +190,7 @@
             [details appendFormat:@"Augmented triangular solid torus %s\n", aug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
 
-            const regina::NTriSolidTorus& core = aug->core();
+            const regina::TriSolidTorus& core = aug->core();
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
              core.tetrahedron(0)->index(),
              core.tetrahedron(1)->index(),
@@ -314,7 +314,7 @@
             [details appendFormat:@"Plugged triangular solid torus %s\n", plug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
 
-            const regina::NTriSolidTorus& core(plug->core());
+            const regina::TriSolidTorus& core(plug->core());
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
              core.tetrahedron(0)->index(),
              core.tetrahedron(1)->index(),

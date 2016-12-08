@@ -167,7 +167,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
     // just once.
     unsigned long tetIndex;
     int coreIndex;
-    NTriSolidTorus* core;
+    TriSolidTorus* core;
     Tetrahedron<3>* coreTet[3];
     Edge<3>* axis[3];
     Perm<4> coreRoles[3];
@@ -192,7 +192,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
             if (coreRoles[0][0] > coreRoles[0][3])
                 continue;
 
-            core = NTriSolidTorus::formsTriSolidTorus(
+            core = TriSolidTorus::formsTriSolidTorus(
                 comp->tetrahedron(tetIndex), coreRoles[0]);
             if (! core)
                 continue;

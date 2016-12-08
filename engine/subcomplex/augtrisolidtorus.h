@@ -56,7 +56,7 @@ namespace regina {
  * Represents an augmented triangular solid torus component of a
  * triangulation.  Such a component is obtained as follows.  Begin with
  * a three-tetrahedron triangular solid torus (as described by
- * NTriSolidTorus).  Observe that the three axis edges divide the
+ * TriSolidTorus).  Observe that the three axis edges divide the
  * boundary into three annuli.  Then take one of the following actions.
  *
  *   - To each of these annuli, glue a layered solid torus.
@@ -67,8 +67,8 @@ namespace regina {
  *   - To one of these annuli, glue a layered solid torus as described
  *     above.  Join the other two annuli with a layered chain
  *     in either the manner described by
- *     NTriSolidTorus::areAnnuliLinkedMajor() or the manner described by
- *     NTriSolidTorus::areAnnuliLinkedAxis().
+ *     TriSolidTorus::areAnnuliLinkedMajor() or the manner described by
+ *     TriSolidTorus::areAnnuliLinkedAxis().
  *
  * It will be assumed that all layered solid tori other than the
  * degenerate (2,1,1) will have (3,2,1) layered solid tori at their
@@ -92,14 +92,14 @@ class REGINA_API AugTriSolidTorus : public StandardTriangulation {
         static const int CHAIN_MAJOR;
             /**< Indicates that this augmented triangular solid torus
                  contains a layered chain attached as described by
-                 NTriSolidTorus::areAnnuliLinkedMajor(). */
+                 TriSolidTorus::areAnnuliLinkedMajor(). */
         static const int CHAIN_AXIS;
             /**< Indicates that this augmented triangular solid torus
                  contains a layered chain attached as described by
-                 NTriSolidTorus::areAnnuliLinkedAxis(). */
+                 TriSolidTorus::areAnnuliLinkedAxis(). */
 
     private:
-        NTriSolidTorus* core_;
+        TriSolidTorus* core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
         LayeredSolidTorus* augTorus_[3];
@@ -144,7 +144,7 @@ class REGINA_API AugTriSolidTorus : public StandardTriangulation {
          *
          * @return the core triangular solid torus.
          */
-        const NTriSolidTorus& core() const;
+        const TriSolidTorus& core() const;
         /**
          * Returns the layered solid torus attached to the requested
          * annulus on the boundary of the core triangular solid torus.
@@ -211,7 +211,7 @@ class REGINA_API AugTriSolidTorus : public StandardTriangulation {
          * by a layered chain.
          *
          * The integer returned will be 0, 1 or 2; see the
-         * NTriSolidTorus class notes for how the boundary annuli are
+         * TriSolidTorus class notes for how the boundary annuli are
          * numbered.
          *
          * @return the single annulus to which the layered solid torus
@@ -282,7 +282,7 @@ inline AugTriSolidTorus::AugTriSolidTorus() : core_(0),
     augTorus_[0] = augTorus_[1] = augTorus_[2] = 0;
 }
 
-inline const NTriSolidTorus& AugTriSolidTorus::core() const {
+inline const TriSolidTorus& AugTriSolidTorus::core() const {
     return *core_;
 }
 inline const LayeredSolidTorus* AugTriSolidTorus::augTorus(

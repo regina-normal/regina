@@ -57,7 +57,7 @@ namespace regina {
  * triangulation.  Such a component is obtained as follows.
  *
  * Begin with a three-tetrahedron triangular solid torus (as described by
- * class NTriSolidTorus).  Observe that the three axis edges divide the
+ * class TriSolidTorus).  Observe that the three axis edges divide the
  * boundary into three annuli.
  *
  * To each of these annuli a layered chain may be optionally attached.
@@ -117,7 +117,7 @@ class REGINA_API PlugTriSolidTorus : public StandardTriangulation {
                  core triangular solid torus. */
 
     private:
-        NTriSolidTorus* core_;
+        TriSolidTorus* core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
         LayeredChain* chain_[3];
@@ -151,7 +151,7 @@ class REGINA_API PlugTriSolidTorus : public StandardTriangulation {
          *
          * @return the core triangular solid torus.
          */
-        const NTriSolidTorus& core() const;
+        const TriSolidTorus& core() const;
 
         /**
          * Returns the layered chain attached to the requested
@@ -239,7 +239,7 @@ inline PlugTriSolidTorus::PlugTriSolidTorus() : core_(0) {
     chainType_[0] = chainType_[1] = chainType_[2] = CHAIN_NONE;
 }
 
-inline const NTriSolidTorus& PlugTriSolidTorus::core() const {
+inline const TriSolidTorus& PlugTriSolidTorus::core() const {
     return *core_;
 }
 inline const LayeredChain* PlugTriSolidTorus::chain(int annulus) const {
