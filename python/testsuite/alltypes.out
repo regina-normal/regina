@@ -1552,15 +1552,6 @@ NTriangulation : typedef ->  Triangulation3
 
 NTrivialTri : typedef ->  TrivialTri
 
-NTxICore : class
-Equality type : BY_REFERENCE
-
-NTxIDiagonalCore : class
-Equality type : BY_REFERENCE
-
-NTxIParallelCore : class
-Equality type : BY_REFERENCE
-
 NVertex : typedef ->  Face3_0
 
 NVertexEmbedding : typedef ->  FaceEmbedding3_0
@@ -1986,6 +1977,15 @@ Triangulation9 : class
 Equality type : BY_REFERENCE
 
 TrivialTri : class
+Equality type : BY_REFERENCE
+
+TxICore : class
+Equality type : BY_REFERENCE
+
+TxIDiagonalCore : class
+Equality type : BY_REFERENCE
+
+TxIParallelCore : class
 Equality type : BY_REFERENCE
 
 Vertex10 : typedef ->  Face10_0

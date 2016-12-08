@@ -57,7 +57,7 @@ void addSpiralSolidTorus();
 void addStandardTriangulation();
 void addTriSolidTorus();
 void addTrivialTri();
-void addNTxICore();
+void addTxICore();
 
 void addSubcomplexClasses() {
     addStandardTriangulation();
@@ -78,7 +78,7 @@ void addSubcomplexClasses() {
     addSpiralSolidTorus();
     addTriSolidTorus();
     addTrivialTri();
-    addNTxICore();
+    addTxICore();
     addSatAnnulus();
     addSatBlock();
     addSatBlockTypes();

@@ -39,23 +39,23 @@
 namespace regina {
 
 namespace {
-    const NTxIDiagonalCore core_T_6_1(6, 1);
-    const NTxIDiagonalCore core_T_7_1(7, 1);
-    const NTxIDiagonalCore core_T_8_1(8, 1);
-    const NTxIDiagonalCore core_T_8_2(8, 2);
-    const NTxIDiagonalCore core_T_9_1(9, 1);
-    const NTxIDiagonalCore core_T_9_2(9, 2);
-    const NTxIDiagonalCore core_T_10_1(10, 1);
-    const NTxIDiagonalCore core_T_10_2(10, 2);
-    const NTxIDiagonalCore core_T_10_3(10, 3);
-    const NTxIDiagonalCore core_T_11_1(11, 1);
-    const NTxIDiagonalCore core_T_11_2(11, 2);
-    const NTxIDiagonalCore core_T_11_3(11, 3);
-    const NTxIDiagonalCore core_T_12_1(12, 1);
-    const NTxIDiagonalCore core_T_12_2(12, 2);
-    const NTxIDiagonalCore core_T_12_3(12, 3);
-    const NTxIDiagonalCore core_T_12_4(12, 4);
-    const NTxIParallelCore core_T_p;
+    const TxIDiagonalCore core_T_6_1(6, 1);
+    const TxIDiagonalCore core_T_7_1(7, 1);
+    const TxIDiagonalCore core_T_8_1(8, 1);
+    const TxIDiagonalCore core_T_8_2(8, 2);
+    const TxIDiagonalCore core_T_9_1(9, 1);
+    const TxIDiagonalCore core_T_9_2(9, 2);
+    const TxIDiagonalCore core_T_10_1(10, 1);
+    const TxIDiagonalCore core_T_10_2(10, 2);
+    const TxIDiagonalCore core_T_10_3(10, 3);
+    const TxIDiagonalCore core_T_11_1(11, 1);
+    const TxIDiagonalCore core_T_11_2(11, 2);
+    const TxIDiagonalCore core_T_11_3(11, 3);
+    const TxIDiagonalCore core_T_12_1(12, 1);
+    const TxIDiagonalCore core_T_12_2(12, 2);
+    const TxIDiagonalCore core_T_12_3(12, 3);
+    const TxIDiagonalCore core_T_12_4(12, 4);
+    const TxIParallelCore core_T_p;
 }
 
 LayeredTorusBundle::~LayeredTorusBundle() {
@@ -118,7 +118,7 @@ LayeredTorusBundle* LayeredTorusBundle::isLayeredTorusBundle(
 }
 
 LayeredTorusBundle* LayeredTorusBundle::hunt(Triangulation<3>* tri,
-        const NTxICore& core) {
+        const TxICore& core) {
     std::list<Isomorphism<3>*> isos;
     if (! core.core().findAllSubcomplexesIn(*tri, back_inserter(isos)))
         return 0;

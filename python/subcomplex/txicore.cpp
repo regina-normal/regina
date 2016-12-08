@@ -35,55 +35,55 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NTxICore;
-using regina::NTxIDiagonalCore;
-using regina::NTxIParallelCore;
+using regina::TxICore;
+using regina::TxIDiagonalCore;
+using regina::TxIParallelCore;
 
 namespace {
-    void writeName_stdio(const NTxICore& c) {
+    void writeName_stdio(const TxICore& c) {
         c.writeName(std::cout);
     }
-    void writeTeXName_stdio(const NTxICore& c) {
+    void writeTeXName_stdio(const TxICore& c) {
         c.writeTeXName(std::cout);
     }
 }
 
-void addNTxICore() {
-    class_<NTxICore, std::auto_ptr<NTxICore>, boost::noncopyable>
-            ("NTxICore", no_init)
-        .def("core", &NTxICore::core,
+void addTxICore() {
+    class_<TxICore, std::auto_ptr<TxICore>, boost::noncopyable>
+            ("TxICore", no_init)
+        .def("core", &TxICore::core,
             return_internal_reference<>())
-        .def("bdryTet", &NTxICore::bdryTet)
-        .def("bdryRoles", &NTxICore::bdryRoles)
-        .def("bdryReln", &NTxICore::bdryReln,
+        .def("bdryTet", &TxICore::bdryTet)
+        .def("bdryRoles", &TxICore::bdryRoles)
+        .def("bdryReln", &TxICore::bdryReln,
             return_internal_reference<>())
-        .def("parallelReln", &NTxICore::parallelReln,
+        .def("parallelReln", &TxICore::parallelReln,
             return_internal_reference<>())
-        .def("name", &NTxICore::name)
-        .def("TeXName", &NTxICore::TeXName)
+        .def("name", &TxICore::name)
+        .def("TeXName", &TxICore::TeXName)
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NTxIDiagonalCore, bases<regina::NTxICore>,
-            std::auto_ptr<NTxIDiagonalCore>, boost::noncopyable>
-            ("NTxIDiagonalCore", init<unsigned long, unsigned long>())
-        .def("size", &NTxIDiagonalCore::size)
-        .def("k", &NTxIDiagonalCore::k)
+    class_<TxIDiagonalCore, bases<regina::TxICore>,
+            std::auto_ptr<TxIDiagonalCore>, boost::noncopyable>
+            ("TxIDiagonalCore", init<unsigned long, unsigned long>())
+        .def("size", &TxIDiagonalCore::size)
+        .def("k", &TxIDiagonalCore::k)
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NTxIParallelCore, bases<regina::NTxICore>,
-            std::auto_ptr<NTxIParallelCore>, boost::noncopyable>
-            ("NTxIParallelCore", init<>())
+    class_<TxIParallelCore, bases<regina::TxICore>,
+            std::auto_ptr<TxIParallelCore>, boost::noncopyable>
+            ("TxIParallelCore", init<>())
         .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<NTxIDiagonalCore>,
-        std::auto_ptr<regina::NTxICore> >();
-    implicitly_convertible<std::auto_ptr<NTxIParallelCore>,
-        std::auto_ptr<regina::NTxICore> >();
+    implicitly_convertible<std::auto_ptr<TxIDiagonalCore>,
+        std::auto_ptr<regina::TxICore> >();
+    implicitly_convertible<std::auto_ptr<TxIParallelCore>,
+        std::auto_ptr<regina::TxICore> >();
 }
 

@@ -47,7 +47,7 @@
 
 namespace regina {
 
-class NTxICore;
+class TxICore;
 
 /**
  * \weakgroup subcomplex
@@ -61,7 +61,7 @@ class NTxICore;
  * We begin with a thin I-bundle over the torus, i.e,. a triangulation
  * of the product <tt>T x I</tt> that is only one tetrahedron thick.
  * This is referred to as the \a core, and is described by an object
- * of type NTxICore.
+ * of type TxICore.
  *
  * We then identify the upper and lower torus boundaries of this core
  * according to some homeomorphism of the torus.  This may be impossible
@@ -80,12 +80,12 @@ class NTxICore;
  */
 class REGINA_API LayeredTorusBundle : public StandardTriangulation {
     private:
-        const NTxICore& core_;
+        const TxICore& core_;
             /**< The core <tt>T x I</tt> triangulation whose boundaries
                  are joined (possibly via a layering of tetrahedra). */
         Isomorphism<3>* coreIso_;
             /**< Describes how the tetrahedra and vertices of the core
-                 <tt>T x I</tt> triangulation returned by NTxICore::core()
+                 <tt>T x I</tt> triangulation returned by TxICore::core()
                  map to the tetrahedra and vertices of the larger layered
                  torus bundle under consideration. */
         Matrix2 reln_;
@@ -106,24 +106,24 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
          * whose boundaries are joined (possibly via some layering of
          * tetrahedra).
          *
-         * Note that the triangulation returned by NTxICore::core()
+         * Note that the triangulation returned by TxICore::core()
          * (that is, LayeredSurfaceBundle::core().core()) may
          * well use different tetrahedron and vertex numbers.  That is,
          * an isomorphic copy of it appears within this layered surface
          * bundle but the individual tetrahedra and vertices may have
-         * been permuted.  For a precise mapping from the NTxICore::core()
+         * been permuted.  For a precise mapping from the TxICore::core()
          * triangulation to this triangulation, see the routine coreIso().
          *
          * @return the core <tt>T x I</tt> triangulation.
          */
-        const NTxICore& core() const;
+        const TxICore& core() const;
 
         /**
          * Returns the isomorphism describing how the core <tt>T x I</tt>
          * appears as a subcomplex of this layered surface bundle.
          *
          * As described in the core() notes, the core <tt>T x I</tt>
-         * triangulation returned by NTxICore::core() appears within this
+         * triangulation returned by TxICore::core() appears within this
          * layered surface bundle, but not necessarily with the same
          * tetrahedron or vertex numbers.
          *
@@ -145,7 +145,7 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
          * tetrahedra relates curves on the two torus boundaries of the
          * core <tt>T x I</tt>.
          *
-         * The NTxICore class documentation describes generating \a alpha
+         * The TxICore class documentation describes generating \a alpha
          * and \a beta curves on the two torus boundaries of the core
          * <tt>T x I</tt> (which are referred to as the \e upper and
          * \e lower boundaries).  The two boundary tori are parallel in
@@ -154,7 +154,7 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
          * the two sets of boundary curves in each direction.
          *
          * The relationship through the core is already described by
-         * NTxICore::parallelReln().  This routine describes the
+         * TxICore::parallelReln().  This routine describes the
          * relationship through the layering.
          *
          * Let \a a_u and \a b_u be the \a alpha and \a beta curves on
@@ -181,7 +181,7 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
          *
          * It can be observed that this matrix expresses the upper
          * boundary curves in terms of the lower, whereas
-         * NTxICore::parallelReln() expresses the lower boundary curves
+         * TxICore::parallelReln() expresses the lower boundary curves
          * in terms of the upper.  This means that the monodromy
          * describing the overall torus bundle over the circle can be
          * calculated as
@@ -234,7 +234,7 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
          * @param whichCore a reference to the core <tt>T x I</tt>
          * triangulation upon which this layered surface bundle is based.
          */
-        LayeredTorusBundle(const NTxICore& whichCore);
+        LayeredTorusBundle(const TxICore& whichCore);
 
         /**
          * Contains code common to both writeName() and writeTeXName().
@@ -258,7 +258,7 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
          * not a layered surface bundle with the given <tt>T x I</tt> core.
          */
         static LayeredTorusBundle* hunt(Triangulation<3>* tri,
-            const NTxICore& core);
+            const TxICore& core);
 };
 
 /**
@@ -274,11 +274,11 @@ REGINA_DEPRECATED typedef LayeredTorusBundle NLayeredTorusBundle;
 
 // Inline functions for LayeredTorusBundle
 
-inline LayeredTorusBundle::LayeredTorusBundle(const NTxICore& whichCore) :
+inline LayeredTorusBundle::LayeredTorusBundle(const TxICore& whichCore) :
         core_(whichCore), coreIso_(0) {
 }
 
-inline const NTxICore& LayeredTorusBundle::core() const {
+inline const TxICore& LayeredTorusBundle::core() const {
     return core_;
 }
 

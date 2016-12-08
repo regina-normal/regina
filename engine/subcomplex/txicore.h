@@ -79,8 +79,8 @@ namespace regina {
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
  */
-class REGINA_API NTxICore :
-        public Output<NTxICore>,
+class REGINA_API TxICore :
+        public Output<TxICore>,
         public boost::noncopyable {
     protected:
         Triangulation<3> core_;
@@ -109,7 +109,7 @@ class REGINA_API NTxICore :
         /**
          * Destroys this object.
          */
-        virtual ~NTxICore();
+        virtual ~TxICore();
         /**
          * Returns a full copy of the <tt>T x I</tt> triangulation that
          * this object describes.
@@ -310,7 +310,7 @@ class REGINA_API NTxICore :
         /**
          * Default constructor that performs no initialisation.
          */
-        NTxICore();
+        TxICore();
 };
 
 /**
@@ -372,7 +372,7 @@ class REGINA_API NTxICore :
  *
  * \image html diag92.png
  */
-class REGINA_API NTxIDiagonalCore : public NTxICore {
+class REGINA_API TxIDiagonalCore : public TxICore {
     private:
         unsigned long size_;
             /**< The number of tetrahedra in this <tt>T x I</tt>
@@ -392,7 +392,7 @@ class REGINA_API NTxIDiagonalCore : public NTxICore {
          * class notes.  This must be between 1 and (\a newSize - 5)
          * inclusive.
          */
-        NTxIDiagonalCore(unsigned long newSize, unsigned long newK);
+        TxIDiagonalCore(unsigned long newSize, unsigned long newK);
 
         /**
          * Returns the total number of tetrahedra in this <tt>T x I</tt>
@@ -415,16 +415,16 @@ class REGINA_API NTxIDiagonalCore : public NTxICore {
 };
 
 /**
- * A specific six-tetrahedron NTxICore triangulation that does not fit
+ * A specific six-tetrahedron TxICore triangulation that does not fit
  * neatly into other families.
  *
  * This triangulation contains the fewest possible number of tetrahedra
- * (NTxICore triangulations are not seen below six tetrahedra).  It is
+ * (TxICore triangulations are not seen below six tetrahedra).  It is
  * referred to as <tt>T_6^1</tt> in the paper "Structures of small closed
  * non-orientable 3-manifold triangulations", Benjamin A. Burton,
  * J. Knot Theory Ramifications 16 (2007), 545--574.
  * In Regina it is given the name <tt>T_6*</tt>, to avoid confusion with
- * the different NTxIDiagonalCore triangulation <tt>T_6:1</tt>.
+ * the different TxIDiagonalCore triangulation <tt>T_6:1</tt>.
  *
  * The triangulations of the upper and lower boundary tori are completely
  * parallel (and in particular, the upper and lower \a alpha curves are
@@ -442,12 +442,12 @@ class REGINA_API NTxIDiagonalCore : public NTxICore {
  *
  * \image html parallel.png
  */
-class REGINA_API NTxIParallelCore : public NTxICore {
+class REGINA_API TxIParallelCore : public TxICore {
     public:
         /**
          * Creates a new copy of this <tt>T x I</tt> triangulation.
          */
-        NTxIParallelCore();
+        TxIParallelCore();
 
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -455,69 +455,69 @@ class REGINA_API NTxIParallelCore : public NTxICore {
 
 /*@}*/
 
-// Inline functions for NTxICore
+// Inline functions for TxICore
 
-inline NTxICore::NTxICore() {
+inline TxICore::TxICore() {
 }
 
-inline NTxICore::~NTxICore() {
+inline TxICore::~TxICore() {
 }
 
-inline const Triangulation<3>& NTxICore::core() const {
+inline const Triangulation<3>& TxICore::core() const {
     return core_;
 }
 
-inline unsigned NTxICore::bdryTet(unsigned whichBdry, unsigned whichTri)
+inline unsigned TxICore::bdryTet(unsigned whichBdry, unsigned whichTri)
         const {
     return bdryTet_[whichBdry][whichTri];
 }
 
-inline Perm<4> NTxICore::bdryRoles(unsigned whichBdry, unsigned whichTri)
+inline Perm<4> TxICore::bdryRoles(unsigned whichBdry, unsigned whichTri)
         const {
     return bdryRoles_[whichBdry][whichTri];
 }
 
-inline const Matrix2& NTxICore::bdryReln(unsigned whichBdry) const {
+inline const Matrix2& TxICore::bdryReln(unsigned whichBdry) const {
     return bdryReln_[whichBdry];
 }
 
-inline const Matrix2& NTxICore::parallelReln() const {
+inline const Matrix2& TxICore::parallelReln() const {
     return parallelReln_;
 }
 
-inline void NTxICore::writeTextShort(std::ostream& out) const {
+inline void TxICore::writeTextShort(std::ostream& out) const {
     writeName(out);
 }
 
-inline void NTxICore::writeTextLong(std::ostream& out) const {
+inline void TxICore::writeTextLong(std::ostream& out) const {
     out << "TxI core: ";
     writeName(out);
     out << std::endl;
 }
 
-// Inline functions for NTxIDiagonalCore
+// Inline functions for TxIDiagonalCore
 
-inline unsigned long NTxIDiagonalCore::size() const {
+inline unsigned long TxIDiagonalCore::size() const {
     return size_;
 }
 
-inline unsigned long NTxIDiagonalCore::k() const {
+inline unsigned long TxIDiagonalCore::k() const {
     return k_;
 }
 
-inline std::ostream& NTxIDiagonalCore::writeName(std::ostream& out) const {
+inline std::ostream& TxIDiagonalCore::writeName(std::ostream& out) const {
     return out << 'T' << size_ << ':' << k_;
 }
 
-inline std::ostream& NTxIDiagonalCore::writeTeXName(std::ostream& out) const {
+inline std::ostream& TxIDiagonalCore::writeTeXName(std::ostream& out) const {
     return out << "T_{" << size_ << ':' << k_ << '}';
 }
 
-inline std::ostream& NTxIParallelCore::writeName(std::ostream& out) const {
+inline std::ostream& TxIParallelCore::writeName(std::ostream& out) const {
     return out << "T6*";
 }
 
-inline std::ostream& NTxIParallelCore::writeTeXName(std::ostream& out) const {
+inline std::ostream& TxIParallelCore::writeTeXName(std::ostream& out) const {
     return out << "T_{6\\ast}";
 }
 

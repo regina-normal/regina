@@ -35,19 +35,19 @@
 
 namespace regina {
 
-std::string NTxICore::name() const {
+std::string TxICore::name() const {
     std::ostringstream out;
     writeName(out);
     return out.str();
 }
 
-std::string NTxICore::TeXName() const {
+std::string TxICore::TeXName() const {
     std::ostringstream out;
     writeTeXName(out);
     return out.str();
 }
 
-NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
+TxIDiagonalCore::TxIDiagonalCore(unsigned long newSize, unsigned long newK) :
         size_(newSize), k_(newK) {
     // We'll build the actual triangulation last.  Meanwhile, fill in
     // the remaining bits and pieces.
@@ -113,7 +113,7 @@ NTxIDiagonalCore::NTxIDiagonalCore(unsigned long newSize, unsigned long newK) :
     delete[] t;
 }
 
-NTxIParallelCore::NTxIParallelCore() {
+TxIParallelCore::TxIParallelCore() {
     // We'll build the actual triangulation last.  Meanwhile, fill in
     // the remaining bits and pieces.
     bdryTet_[0][0] = 0;

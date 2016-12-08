@@ -41,16 +41,16 @@
 namespace regina {
 
 namespace {
-    const NTxIDiagonalCore core_T_6_1(6, 1);
-    const NTxIDiagonalCore core_T_7_1(7, 1);
-    const NTxIDiagonalCore core_T_8_1(8, 1);
-    const NTxIDiagonalCore core_T_8_2(8, 2);
-    const NTxIDiagonalCore core_T_9_1(9, 1);
-    const NTxIDiagonalCore core_T_9_2(9, 2);
-    const NTxIDiagonalCore core_T_10_1(10, 1);
-    const NTxIDiagonalCore core_T_10_2(10, 2);
-    const NTxIDiagonalCore core_T_10_3(10, 3);
-    const NTxIParallelCore core_T_p;
+    const TxIDiagonalCore core_T_6_1(6, 1);
+    const TxIDiagonalCore core_T_7_1(7, 1);
+    const TxIDiagonalCore core_T_8_1(8, 1);
+    const TxIDiagonalCore core_T_8_2(8, 2);
+    const TxIDiagonalCore core_T_9_1(9, 1);
+    const TxIDiagonalCore core_T_9_2(9, 2);
+    const TxIDiagonalCore core_T_10_1(10, 1);
+    const TxIDiagonalCore core_T_10_2(10, 2);
+    const TxIDiagonalCore core_T_10_3(10, 3);
+    const TxIParallelCore core_T_p;
 }
 
 PluggedTorusBundle::~PluggedTorusBundle() {
@@ -141,7 +141,7 @@ PluggedTorusBundle* PluggedTorusBundle::isPluggedTorusBundle(
 }
 
 PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
-        const NTxICore& bundle) {
+        const TxICore& bundle) {
     std::list<Isomorphism<3>*> isos;
     if (! bundle.core().findAllSubcomplexesIn(*triang, back_inserter(isos)))
         return 0;

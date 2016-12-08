@@ -47,7 +47,7 @@
 namespace regina {
 
 class SatRegion;
-class NTxICore;
+class TxICore;
 
 /**
  * \weakgroup subcomplex
@@ -61,7 +61,7 @@ class NTxICore;
  *
  * The thin I-bundle must be untwisted, so that it forms the product
  * <tt>T x I</tt> with two boundary tori.  Moreover, it must be isomorphic
- * to some existing instance of the class NTxICore.
+ * to some existing instance of the class TxICore.
  *
  * The saturated region is described by an object of the class SatRegion.
  * This region must have precisely two boundary annuli.  These may be
@@ -117,7 +117,7 @@ class NTxICore;
  */
 class REGINA_API PluggedTorusBundle : public StandardTriangulation {
     private:
-        const NTxICore& bundle_;
+        const TxICore& bundle_;
             /**< The thin I-bundle that appears within this triangulation.
                  This thin I-bundle is referenced from elsewhere (i.e., it
                  is not owned by this object), and its tetrahedra do not
@@ -148,7 +148,7 @@ class REGINA_API PluggedTorusBundle : public StandardTriangulation {
 
         /**
          * Returns an isomorphic copy of the thin I-bundle that forms part
-         * of this triangulation.  Like all objects of class NTxICore, the
+         * of this triangulation.  Like all objects of class TxICore, the
          * thin I-bundle that is returned is an external object with its own
          * separate triangulation of the product <tt>T x I</tt>.  For
          * information on how the thin I-bundle is embedded within this
@@ -157,7 +157,7 @@ class REGINA_API PluggedTorusBundle : public StandardTriangulation {
          * @return the an isomorphic copy of the thin I-bundle within
          * this triangulation.
          */
-        const NTxICore& bundle() const;
+        const TxICore& bundle() const;
         /**
          * Returns an isomorphism describing how the thin I-bundle forms
          * a subcomplex of this triangulation.
@@ -165,7 +165,7 @@ class REGINA_API PluggedTorusBundle : public StandardTriangulation {
          * The thin I-bundle returned by bundle() does not directly
          * refer to tetrahedra within this triangulation.  Instead it
          * contains its own isomorphic copy of the thin I-bundle
-         * triangulation (as is usual for objects of class NTxICore).
+         * triangulation (as is usual for objects of class TxICore).
          *
          * The isomorphism returned by this routine is a mapping from
          * the triangulation bundle().core() to this triangulation,
@@ -234,7 +234,7 @@ class REGINA_API PluggedTorusBundle : public StandardTriangulation {
          * two saturated region boundaries are joined by the thin
          * I-bundle and layerings, as described in the class notes above.
          */
-        PluggedTorusBundle(const NTxICore& bundle, Isomorphism<3>* bundleIso,
+        PluggedTorusBundle(const TxICore& bundle, Isomorphism<3>* bundleIso,
             SatRegion* region, const Matrix2& matchingReln);
 
         /**
@@ -261,7 +261,7 @@ class REGINA_API PluggedTorusBundle : public StandardTriangulation {
          * copy of the given thin I-bundle.
          */
         static PluggedTorusBundle* hunt(Triangulation<3>* tri,
-            const NTxICore& bundle);
+            const TxICore& bundle);
 };
 
 /**
@@ -277,14 +277,14 @@ REGINA_DEPRECATED typedef PluggedTorusBundle NPluggedTorusBundle;
 
 // Inline functions for PluggedTorusBundle
 
-inline PluggedTorusBundle::PluggedTorusBundle(const NTxICore& bundle,
+inline PluggedTorusBundle::PluggedTorusBundle(const TxICore& bundle,
         Isomorphism<3>* bundleIso, SatRegion* region,
         const Matrix2& matchingReln) :
         bundle_(bundle), bundleIso_(bundleIso), region_(region),
         matchingReln_(matchingReln) {
 }
 
-inline const NTxICore& PluggedTorusBundle::bundle() const {
+inline const TxICore& PluggedTorusBundle::bundle() const {
     return bundle_;
 }
 
