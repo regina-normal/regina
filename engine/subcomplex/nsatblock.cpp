@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "subcomplex/nsatblock.h"
+#include "subcomplex/satblock.h"
 #include <sstream>
 
 namespace regina {

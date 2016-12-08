@@ -77,6 +77,7 @@ if (${REGINA_INSTALL_DEV})
     nplugtrisolidtorus.h
     satannulus.h
     nsatannulus.h
+    satblock.h
     nsatblock.h
     satblockstarter.h
     nsatblockstarter.h

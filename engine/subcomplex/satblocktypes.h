@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/nsatblock.h"
+#include "subcomplex/satblock.h"
 
 namespace regina {
 

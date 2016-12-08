@@ -50,7 +50,7 @@
 #import "subcomplex/pillowtwosphere.h"
 #import "subcomplex/pluggedtorusbundle.h"
 #import "subcomplex/plugtrisolidtorus.h"
-#import "subcomplex/nsatblock.h"
+#import "subcomplex/satblock.h"
 #import "subcomplex/nsatregion.h"
 #import "subcomplex/nsnappedball.h"
 #import "subcomplex/nsnappedtwosphere.h"

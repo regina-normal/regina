@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "subcomplex/nsatblock.h"
+#include "subcomplex/satblock.h"
 #include <vector>
 #include <boost/noncopyable.hpp>
 

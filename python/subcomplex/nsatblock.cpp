@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "manifold/sfs.h"
-#include "subcomplex/nsatblock.h"
+#include "subcomplex/satblock.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

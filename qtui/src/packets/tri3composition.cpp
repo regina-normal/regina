@@ -47,7 +47,7 @@
 #include "subcomplex/pillowtwosphere.h"
 #include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/plugtrisolidtorus.h"
-#include "subcomplex/nsatblock.h"
+#include "subcomplex/satblock.h"
 #include "subcomplex/nsatregion.h"
 #include "subcomplex/nsnappedball.h"
 #include "subcomplex/nsnappedtwosphere.h"
