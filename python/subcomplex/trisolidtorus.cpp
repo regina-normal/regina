@@ -59,5 +59,7 @@ void addTriSolidTorus() {
 
     implicitly_convertible<std::auto_ptr<TriSolidTorus>,
         std::auto_ptr<regina::StandardTriangulation> >();
+
+    scope().attr("NTriSolidTorus") = scope().attr("TriSolidTorus");
 }
 

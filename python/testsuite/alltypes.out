@@ -1542,6 +1542,8 @@ NTreeBag : typedef ->  TreeBag
 
 NTreeDecomposition : typedef ->  TreeDecomposition
 
+NTriSolidTorus : typedef ->  TriSolidTorus
+
 NTriangle : typedef ->  Face3_2
 
 NTriangleEmbedding : typedef ->  FaceEmbedding3_2
