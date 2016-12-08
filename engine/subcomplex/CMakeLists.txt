@@ -30,7 +30,7 @@ SET ( FILES
   standardtri
   trisolidtorus
   trivialtri
-  ntxicore
+  txicore
   )
 
 # Prepend folder name

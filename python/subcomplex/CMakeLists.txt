@@ -29,7 +29,7 @@ SET ( FILES
   standardtri
   trisolidtorus
   trivialtri
-  ntxicore
+  txicore
   pysubcomplex
   )
 
