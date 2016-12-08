@@ -88,7 +88,7 @@ namespace regina {
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
+class REGINA_API SpiralSolidTorus : public NStandardTriangulation {
     private:
         size_t nTet;
             /**< The number of tetrahedra in this spiralled solid torus. */
@@ -103,13 +103,13 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
         /**
          * Destroys this spiralled solid torus.
          */
-        virtual ~NSpiralSolidTorus();
+        virtual ~SpiralSolidTorus();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NSpiralSolidTorus* clone() const;
+        SpiralSolidTorus* clone() const;
 
         /**
          * Returns the number of tetrahedra in this spiralled solid torus.
@@ -228,7 +228,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * \c null if the given tetrahedron is not part of a spiralled
          * solid torus with the given vertex roles.
          */
-        static NSpiralSolidTorus* formsSpiralSolidTorus(Tetrahedron<3>* tet,
+        static SpiralSolidTorus* formsSpiralSolidTorus(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
 
         Manifold* manifold() const;
@@ -246,41 +246,41 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * @param newNTet the number of tetrahedra in this spiralled
          * solid torus; this must be strictly positive.
          */
-        NSpiralSolidTorus(size_t newNTet);
+        SpiralSolidTorus(size_t newNTet);
 };
 
 /*@}*/
 
-// Inline functions for NSpiralSolidTorus
+// Inline functions for SpiralSolidTorus
 
-inline NSpiralSolidTorus::NSpiralSolidTorus(size_t newNTet) :
+inline SpiralSolidTorus::SpiralSolidTorus(size_t newNTet) :
         nTet(newNTet), tet(new Tetrahedron<3>*[newNTet]),
         vertexRoles_(new Perm<4>[newNTet]) {
 }
 
-inline NSpiralSolidTorus::~NSpiralSolidTorus() {
+inline SpiralSolidTorus::~SpiralSolidTorus() {
     delete[] tet;
     delete[] vertexRoles_;
 }
 
-inline size_t NSpiralSolidTorus::size() const {
+inline size_t SpiralSolidTorus::size() const {
     return nTet;
 }
 
-inline Tetrahedron<3>* NSpiralSolidTorus::tetrahedron(size_t index) const {
+inline Tetrahedron<3>* SpiralSolidTorus::tetrahedron(size_t index) const {
     return tet[index];
 }
-inline Perm<4> NSpiralSolidTorus::vertexRoles(size_t index) const {
+inline Perm<4> SpiralSolidTorus::vertexRoles(size_t index) const {
     return vertexRoles_[index];
 }
 
-inline std::ostream& NSpiralSolidTorus::writeName(std::ostream& out) const {
+inline std::ostream& SpiralSolidTorus::writeName(std::ostream& out) const {
     return out << "Spiral(" << nTet << ')';
 }
-inline std::ostream& NSpiralSolidTorus::writeTeXName(std::ostream& out) const {
+inline std::ostream& SpiralSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Spiral}(" << nTet << ')';
 }
-inline void NSpiralSolidTorus::writeTextLong(std::ostream& out) const {
+inline void SpiralSolidTorus::writeTextLong(std::ostream& out) const {
     out << nTet << "-tetrahedron spiralled solid torus";
 }
 

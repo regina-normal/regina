@@ -39,8 +39,8 @@
 
 namespace regina {
 
-NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
-    NSpiralSolidTorus* ans = new NSpiralSolidTorus(nTet);
+SpiralSolidTorus* SpiralSolidTorus::clone() const {
+    SpiralSolidTorus* ans = new SpiralSolidTorus(nTet);
     for (size_t i = 0; i < nTet; i++) {
         ans->tet[i] = tet[i];
         ans->vertexRoles_[i] = vertexRoles_[i];
@@ -48,7 +48,7 @@ NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
     return ans;
 }
 
-void NSpiralSolidTorus::reverse() {
+void SpiralSolidTorus::reverse() {
     Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
     Perm<4>* newRoles = new Perm<4>[nTet];
 
@@ -64,7 +64,7 @@ void NSpiralSolidTorus::reverse() {
     vertexRoles_ = newRoles;
 }
 
-void NSpiralSolidTorus::cycle(size_t k) {
+void SpiralSolidTorus::cycle(size_t k) {
     Tetrahedron<3>** newTet = new Tetrahedron<3>*[nTet];
     Perm<4>* newRoles = new Perm<4>[nTet];
 
@@ -79,7 +79,7 @@ void NSpiralSolidTorus::cycle(size_t k) {
     vertexRoles_ = newRoles;
 }
 
-bool NSpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
+bool SpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     size_t i, index;
 
     size_t baseTet = 0;
@@ -124,7 +124,7 @@ bool NSpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     return true;
 }
 
-bool NSpiralSolidTorus::isCanonical(const Triangulation<3>* tri) const {
+bool SpiralSolidTorus::isCanonical(const Triangulation<3>* tri) const {
     if (vertexRoles_[0][0] > vertexRoles_[0][3])
         return false;
 
@@ -136,7 +136,7 @@ bool NSpiralSolidTorus::isCanonical(const Triangulation<3>* tri) const {
     return true;
 }
 
-NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
+SpiralSolidTorus* SpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
         Perm<4> useVertexRoles) {
     Perm<4> invRoleMap(1, 2, 3, 0);  // Maps upper roles to lower roles.
 
@@ -187,17 +187,17 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(Tetrahedron<3>* tet,
     }
 
     // We've found a spiralled solid torus.
-    NSpiralSolidTorus* ans = new NSpiralSolidTorus(tets.size());
+    SpiralSolidTorus* ans = new SpiralSolidTorus(tets.size());
     copy(tets.begin(), tets.end(), ans->tet);
     copy(roles.begin(), roles.end(), ans->vertexRoles_);
     return ans;
 }
 
-Manifold* NSpiralSolidTorus::manifold() const {
+Manifold* SpiralSolidTorus::manifold() const {
     return new Handlebody(1, true);
 }
 
-AbelianGroup* NSpiralSolidTorus::homology() const {
+AbelianGroup* SpiralSolidTorus::homology() const {
     AbelianGroup* ans = new AbelianGroup();
     ans->addRank();
     return ans;

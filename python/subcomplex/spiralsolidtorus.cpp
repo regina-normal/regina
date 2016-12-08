@@ -36,29 +36,29 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSpiralSolidTorus;
+using regina::SpiralSolidTorus;
 
-void addNSpiralSolidTorus() {
-    class_<NSpiralSolidTorus, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NSpiralSolidTorus>, boost::noncopyable>
-            ("NSpiralSolidTorus", no_init)
-        .def("clone", &NSpiralSolidTorus::clone,
+void addSpiralSolidTorus() {
+    class_<SpiralSolidTorus, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<SpiralSolidTorus>, boost::noncopyable>
+            ("SpiralSolidTorus", no_init)
+        .def("clone", &SpiralSolidTorus::clone,
             return_value_policy<manage_new_object>())
-        .def("size", &NSpiralSolidTorus::size)
-        .def("tetrahedron", &NSpiralSolidTorus::tetrahedron,
+        .def("size", &SpiralSolidTorus::size)
+        .def("tetrahedron", &SpiralSolidTorus::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("vertexRoles", &NSpiralSolidTorus::vertexRoles)
-        .def("reverse", &NSpiralSolidTorus::reverse)
-        .def("cycle", &NSpiralSolidTorus::cycle)
-        .def("makeCanonical", &NSpiralSolidTorus::makeCanonical)
-        .def("isCanonical", &NSpiralSolidTorus::isCanonical)
-        .def("formsSpiralSolidTorus", &NSpiralSolidTorus::formsSpiralSolidTorus,
+        .def("vertexRoles", &SpiralSolidTorus::vertexRoles)
+        .def("reverse", &SpiralSolidTorus::reverse)
+        .def("cycle", &SpiralSolidTorus::cycle)
+        .def("makeCanonical", &SpiralSolidTorus::makeCanonical)
+        .def("isCanonical", &SpiralSolidTorus::isCanonical)
+        .def("formsSpiralSolidTorus", &SpiralSolidTorus::formsSpiralSolidTorus,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("formsSpiralSolidTorus")
     ;
 
-    implicitly_convertible<std::auto_ptr<NSpiralSolidTorus>,
+    implicitly_convertible<std::auto_ptr<SpiralSolidTorus>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 

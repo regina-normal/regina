@@ -956,7 +956,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NSpiralSolidTorus* spiral;
+    regina::SpiralSolidTorus* spiral;
     regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
@@ -966,7 +966,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
             if (Perm<4>::S4[whichPerm][0] > Perm<4>::S4[whichPerm][3])
                 continue;
 
-            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet,
+            spiral = regina::SpiralSolidTorus::formsSpiralSolidTorus(tet,
                 Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;

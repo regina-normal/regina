@@ -555,7 +555,7 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::NSpiralSolidTorus* spiral;
+    regina::SpiralSolidTorus* spiral;
     regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
@@ -565,7 +565,7 @@
             if (regina::Perm<4>::S4[whichPerm][0] > regina::Perm<4>::S4[whichPerm][3])
                 continue;
             
-            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet, regina::Perm<4>::S4[whichPerm]);
+            spiral = regina::SpiralSolidTorus::formsSpiralSolidTorus(tet, regina::Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
             if (! spiral->isCanonical(self.packet)) {
