@@ -25,7 +25,7 @@ SET ( FILES
   satregion
   snappeacensustri
   snappedball
-  nsnappedtwosphere
+  snappedtwosphere
   nspiralsolidtorus
   nstandardtri
   ntrisolidtorus
