@@ -24,7 +24,7 @@ SET ( FILES
   satblocktypes
   satregion
   snappeacensustri
-  nsnappedball
+  snappedball
   nsnappedtwosphere
   nspiralsolidtorus
   nstandardtri
