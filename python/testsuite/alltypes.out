@@ -1488,6 +1488,8 @@ NSatAnnulus : typedef ->  SatAnnulus
 
 NSatBlock : typedef ->  SatBlock
 
+NSatBlockSpec : typedef ->  SatBlockSpec
+
 NSatCube : typedef ->  SatCube
 
 NSatLST : typedef ->  SatLST
@@ -1497,6 +1499,8 @@ NSatLayering : typedef ->  SatLayering
 NSatMobius : typedef ->  SatMobius
 
 NSatReflectorStrip : typedef ->  SatReflectorStrip
+
+NSatRegion : typedef ->  SatRegion
 
 NSatTriPrism : typedef ->  SatTriPrism
 

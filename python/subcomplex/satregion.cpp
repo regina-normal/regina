@@ -82,6 +82,8 @@ void addSatRegion() {
         .def(regina::python::add_eq_operators())
     ;
 
+    scope().attr("NSatBlockSpec") = scope().attr("SatBlockSpec");
+
     class_<SatRegion, boost::noncopyable,
             std::auto_ptr<SatRegion> >("SatRegion", init<SatBlock*>())
         .def("numberOfBlocks", &SatRegion::numberOfBlocks)
@@ -97,5 +99,8 @@ void addSatRegion() {
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NSatRegion") = scope().attr("SatRegion");
+
 }
 
