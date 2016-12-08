@@ -70,6 +70,8 @@ void addScript() {
         .def("setVariableName", &Script::setVariableName)
         .def("setVariableValue", &Script::setVariableValue)
         .def("addVariable", &Script::addVariable)
+        .def("addVariableName", &Script::addVariableName,
+            return_value_policy<return_by_value>())
         .def("removeVariable", removeVariable_long)
         .def("removeVariable", removeVariable_string)
         .def("removeAllVariables", &Script::removeAllVariables)

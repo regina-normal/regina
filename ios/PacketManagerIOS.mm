@@ -38,6 +38,7 @@
 #import "ReginaHelper.h"
 #import "packet/container.h"
 #import "packet/packet.h"
+#import "packet/script.h"
 #import "packet/text.h"
 #import "surfaces/surfacefilter.h"
 
@@ -184,6 +185,16 @@
         case regina::PACKET_SURFACEFILTER:
             [PacketManagerIOS newPacket:spec formSheet:@"newFilter"];
             break;
+        case regina::PACKET_SCRIPT:
+        {
+            // We can do this immediately, no input required.
+            regina::Script* t = new regina::Script();
+            t->setLabel("Script");
+            t->setText("# Type your Python script here.");
+            spec.parent->insertChildLast(t);
+            [spec created:t];
+            break;
+        }
         default:
             // We don't create other packet types in the iOS version of Regina.
             break;

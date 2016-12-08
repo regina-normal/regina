@@ -176,6 +176,9 @@ Version 5.1  [ (under development) ]
         Class SafePtr:
             - New default constructor, bool conversion and routine reset().
             - Disabled the default copy assignment operator.
+        Class Script:
+            - New routine addVariableName(), which changes the name if
+              necessary to ensure that the variable can indeed be added.
         Class Simplex<dim>:
             - This is now implemented as the specialisation Face<dim, dim>.
               The preferred way to refer to this class is still Simplex<dim>,

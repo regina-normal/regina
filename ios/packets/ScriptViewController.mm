@@ -155,22 +155,29 @@ regina::syntax::Repository* repository;
     self.script.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
+- (IBAction)newVariable:(id)sender {
+    self.packet->addVariableName("var", nil);
+    // TODO: Scroll to visible
+}
+
 - (IBAction)run:(id)sender {
     [PythonConsoleController openConsoleFromViewController:self root:nil item:nil script:self.packet];
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return NO;
-}
+#pragma mark - Table view
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
 
+    /*
     if (self.packet->countVariables() == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
+     */
+
+    if (indexPath.row == self.packet->countVariables() + 1)
+        return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
     ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
     cell.variable.text = [NSString stringWithUTF8String:self.packet->variableName(indexPath.row - 1).c_str()];
@@ -192,7 +199,22 @@ regina::syntax::Repository* repository;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     unsigned long nVar = self.packet->countVariables();
-    return 1 + (nVar > 0 ? nVar : 1);
+    return 2 + nVar;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return (indexPath.row > 0 && indexPath.row <= self.packet->countVariables());
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == 0 || indexPath.row > self.packet->countVariables())
+        return;
+
+    // For now, we rely on the automatic packet reload.
+    // TODO: Just reload the section of the table that changed.
+    self.packet->removeVariable(indexPath.row - 1);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
