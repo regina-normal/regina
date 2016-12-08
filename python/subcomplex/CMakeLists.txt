@@ -27,7 +27,7 @@ SET ( FILES
   snappedtwosphere
   spiralsolidtorus
   standardtri
-  ntrisolidtorus
+  trisolidtorus
   ntrivialtri
   ntxicore
   pysubcomplex
