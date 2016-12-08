@@ -34,7 +34,7 @@
 #include <vector>
 #include "algebra/abeliangroup.h"
 #include "manifold/handlebody.h"
-#include "subcomplex/nspiralsolidtorus.h"
+#include "subcomplex/spiralsolidtorus.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
