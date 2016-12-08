@@ -285,6 +285,15 @@ class REGINA_API StandardTriangulation :
             Triangulation<3>* tri);
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NStandardTriangulation has now been renamed to
+ * StandardTriangulation.
+ */
+REGINA_DEPRECATED typedef StandardTriangulation NStandardTriangulation;
+
 /*@}*/
 
 // Inline functions for StandardTriangulation

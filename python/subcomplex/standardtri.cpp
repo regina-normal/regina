@@ -75,5 +75,7 @@ void addStandardTriangulation() {
         .def(regina::python::add_eq_operators())
         .staticmethod("isStandardTriangulation")
     ;
+
+    scope().attr("NStandardTriangulation") = scope().attr("StandardTriangulation");
 }
 

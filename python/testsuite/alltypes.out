@@ -1522,6 +1522,8 @@ NSnappedTwoSphere : typedef ->  SnappedTwoSphere
 
 NSpiralSolidTorus : typedef ->  SpiralSolidTorus
 
+NStandardTriangulation : typedef ->  StandardTriangulation
+
 NSurfaceFilter : typedef ->  SurfaceFilter
 
 NSurfaceFilterCombination : typedef ->  SurfaceFilterCombination
