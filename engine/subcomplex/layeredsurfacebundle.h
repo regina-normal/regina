@@ -42,7 +42,7 @@
 #include <memory>
 #include "regina-core.h"
 #include "maths/matrix2.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

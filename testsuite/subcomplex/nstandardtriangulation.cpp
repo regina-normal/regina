@@ -34,7 +34,7 @@
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
 #include "manifold/manifold.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
 

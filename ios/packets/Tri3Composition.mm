@@ -55,7 +55,7 @@
 #import "subcomplex/snappedball.h"
 #import "subcomplex/snappedtwosphere.h"
 #import "subcomplex/spiralsolidtorus.h"
-#import "subcomplex/nstandardtri.h"
+#import "subcomplex/standardtri.h"
 #import "subcomplex/ntxicore.h"
 #import "triangulation/dim3.h"
 

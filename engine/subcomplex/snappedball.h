@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

@@ -33,7 +33,7 @@
 #include <boost/python.hpp>
 #include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

@@ -34,7 +34,7 @@
 #include "census/census.h"
 #include "manifold/manifold.h"
 #include "snappea/snappeatriangulation.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 
 // UI includes:

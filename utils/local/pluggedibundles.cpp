@@ -50,7 +50,7 @@
  */
 
 #include <subcomplex/blockedsfs.h>
-#include <subcomplex/nstandardtri.h>
+#include <subcomplex/standardtri.h>
 #include <triangulation/dim3.h>
 
 #include <cstdlib>

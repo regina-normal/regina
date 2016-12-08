@@ -70,7 +70,7 @@
 #include <algebra/abeliangroup.h>
 #include <manifold/manifold.h>
 #include <packet/container.h>
-#include <subcomplex/nstandardtri.h>
+#include <subcomplex/standardtri.h>
 #include <triangulation/dim3.h>
 
 #include <algorithm>

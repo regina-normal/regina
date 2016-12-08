@@ -40,7 +40,7 @@
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "split/signature.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim2.h"

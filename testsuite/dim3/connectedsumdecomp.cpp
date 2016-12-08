@@ -38,7 +38,7 @@
 #include "manifold/manifold.h"
 #include "packet/container.h"
 #include "split/signature.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 
 #include "testsuite/exhaustive.h"

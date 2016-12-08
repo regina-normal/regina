@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/example4.h"
 #include "manifold/manifold.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"

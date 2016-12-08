@@ -93,6 +93,7 @@ if (${REGINA_INSTALL_DEV})
     nsnappedtwosphere.h
     spiralsolidtorus.h
     nspiralsolidtorus.h
+    standardtri.h
     nstandardtri.h
     ntrisolidtorus.h
     ntrivialtri.h

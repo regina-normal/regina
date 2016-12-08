@@ -52,7 +52,7 @@
 #include "subcomplex/snappedball.h"
 #include "subcomplex/snappedtwosphere.h"
 #include "subcomplex/spiralsolidtorus.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "subcomplex/ntxicore.h"
 #include "triangulation/dim3.h"
 

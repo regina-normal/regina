@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 
 namespace regina {
 

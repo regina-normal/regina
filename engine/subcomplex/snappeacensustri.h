@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "nstandardtri.h"
+#include "standardtri.h"
 
 namespace regina {
 
