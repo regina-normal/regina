@@ -32,7 +32,7 @@
 
 #include "algebra/abeliangroup.h"
 #include "manifold/snappeacensusmfd.h"
-#include "subcomplex/nsnappeacensustri.h"
+#include "subcomplex/snappeacensustri.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

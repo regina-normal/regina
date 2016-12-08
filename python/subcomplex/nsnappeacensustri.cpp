@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/nsnappeacensustri.h"
+#include "subcomplex/snappeacensustri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
