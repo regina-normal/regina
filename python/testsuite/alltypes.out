@@ -1516,6 +1516,8 @@ NSnapPeaCensusTri : typedef ->  SnapPeaCensusTri
 
 NSnapPeaTriangulation : typedef ->  SnapPeaTriangulation
 
+NSnappedBall : typedef ->  SnappedBall
+
 NSnappedTwoSphere : class
 Equality type : BY_REFERENCE
 

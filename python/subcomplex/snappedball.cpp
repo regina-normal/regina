@@ -58,5 +58,8 @@ void addSnappedBall() {
 
     implicitly_convertible<std::auto_ptr<SnappedBall>,
         std::auto_ptr<regina::NStandardTriangulation> >();
+
+    scope().attr("NSnappedBall") = scope().attr("SnappedBall");
+
 }
 
