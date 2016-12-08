@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/ntrisolidtorus.h"
+#include "subcomplex/trisolidtorus.h"
 #include "subcomplex/layeredchain.h"
 #include "triangulation/forward.h"
 

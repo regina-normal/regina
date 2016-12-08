@@ -95,6 +95,7 @@ if (${REGINA_INSTALL_DEV})
     nspiralsolidtorus.h
     standardtri.h
     nstandardtri.h
+    trisolidtorus.h
     ntrisolidtorus.h
     ntrivialtri.h
     ntxicore.h
