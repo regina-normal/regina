@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/snappedball.h"
-#include "subcomplex/nsnappedtwosphere.h"
+#include "subcomplex/snappedtwosphere.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 

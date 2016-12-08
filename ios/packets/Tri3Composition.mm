@@ -53,7 +53,7 @@
 #import "subcomplex/satblock.h"
 #import "subcomplex/satregion.h"
 #import "subcomplex/snappedball.h"
-#import "subcomplex/nsnappedtwosphere.h"
+#import "subcomplex/snappedtwosphere.h"
 #import "subcomplex/nspiralsolidtorus.h"
 #import "subcomplex/nstandardtri.h"
 #import "subcomplex/ntxicore.h"

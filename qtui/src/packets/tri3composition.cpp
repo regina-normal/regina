@@ -50,7 +50,7 @@
 #include "subcomplex/satblock.h"
 #include "subcomplex/satregion.h"
 #include "subcomplex/snappedball.h"
-#include "subcomplex/nsnappedtwosphere.h"
+#include "subcomplex/snappedtwosphere.h"
 #include "subcomplex/nspiralsolidtorus.h"
 #include "subcomplex/nstandardtri.h"
 #include "subcomplex/ntxicore.h"

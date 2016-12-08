@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "subcomplex/nsnappedtwosphere.h"
+#include "subcomplex/snappedtwosphere.h"
 #include "subcomplex/snappedball.h"
 #include "triangulation/dim3.h"
 
