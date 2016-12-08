@@ -925,12 +925,12 @@ void Tri3CompositionUI::findSnappedSpheres() {
     unsigned long i, j;
     regina::Tetrahedron<3>* t1;
     regina::Tetrahedron<3>* t2;
-    regina::NSnappedTwoSphere* sphere;
+    regina::SnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = tri->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = tri->tetrahedron(j);
-            sphere = regina::NSnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
+            sphere = regina::SnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
             if (sphere) {
                 id = addComponentSection(tr("Snapped 2-sphere"));
 

@@ -693,12 +693,12 @@
     unsigned long i, j;
     regina::Tetrahedron<3>* t1;
     regina::Tetrahedron<3>* t2;
-    regina::NSnappedTwoSphere* sphere;
+    regina::SnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = self.packet->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = self.packet->tetrahedron(j);
-            sphere = regina::NSnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
+            sphere = regina::SnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
             if (sphere) {
                 [details appendString:@"Snapped 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Tetrahedra: %ld, %ld\n", i, j];

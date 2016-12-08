@@ -36,14 +36,14 @@
 
 namespace regina {
 
-NSnappedTwoSphere* NSnappedTwoSphere::clone() const {
-    NSnappedTwoSphere* ans = new NSnappedTwoSphere();
+SnappedTwoSphere* SnappedTwoSphere::clone() const {
+    SnappedTwoSphere* ans = new SnappedTwoSphere();
     ans->ball[0] = ball[0]->clone();
     ans->ball[1] = ball[1]->clone();
     return ans;
 }
 
-NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
+SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
         Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
     SnappedBall* ball[2];
     if (! (ball[0] = SnappedBall::formsSnappedBall(tet1)))
@@ -60,20 +60,20 @@ NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
     }
 
     // This is it.
-    NSnappedTwoSphere* ans = new NSnappedTwoSphere();
+    SnappedTwoSphere* ans = new SnappedTwoSphere();
     ans->ball[0] = ball[0];
     ans->ball[1] = ball[1];
     return ans;
 }
 
-NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
+SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
         SnappedBall* ball1, SnappedBall* ball2) {
     if (ball1->tetrahedron()->edge(ball1->equatorEdge()) !=
             ball2->tetrahedron()->edge(ball2->equatorEdge()))
         return 0;
 
     // This is it.
-    NSnappedTwoSphere* ans = new NSnappedTwoSphere();
+    SnappedTwoSphere* ans = new SnappedTwoSphere();
     ans->ball[0] = ball1->clone();
     ans->ball[1] = ball2->clone();
     return ans;

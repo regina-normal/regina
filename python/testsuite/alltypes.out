@@ -1518,9 +1518,6 @@ NSnapPeaTriangulation : typedef ->  SnapPeaTriangulation
 
 NSnappedBall : typedef ->  SnappedBall
 
-NSnappedTwoSphere : class
-Equality type : BY_REFERENCE
-
 NSpiralSolidTorus : class
 Equality type : BY_REFERENCE
 
@@ -1809,6 +1806,9 @@ SnapPeaTriangulation : class
 Equality type : BY_REFERENCE
 
 SnappedBall : class
+Equality type : BY_REFERENCE
+
+SnappedTwoSphere : class
 Equality type : BY_REFERENCE
 
 SurfaceFilter : class

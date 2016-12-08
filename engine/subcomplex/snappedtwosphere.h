@@ -68,8 +68,8 @@ class SnappedBall;
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class REGINA_API NSnappedTwoSphere :
-        public ShortOutput<NSnappedTwoSphere>,
+class REGINA_API SnappedTwoSphere :
+        public ShortOutput<SnappedTwoSphere>,
         public boost::noncopyable {
     private:
         SnappedBall* ball[2];
@@ -80,13 +80,13 @@ class REGINA_API NSnappedTwoSphere :
          * Destroys this snapped 2-sphere; note that the corresponding
          * snapped 3-balls will also be destroyed.
          */
-        ~NSnappedTwoSphere();
+        ~SnappedTwoSphere();
         /**
          * Returns a newly created clone of this structure.
          *
          * @return a newly created clone.
          */
-        NSnappedTwoSphere* clone() const;
+        SnappedTwoSphere* clone() const;
 
         /**
          * Returns one of the two snapped 3-balls whose equators are
@@ -110,7 +110,7 @@ class REGINA_API NSnappedTwoSphere :
          * snapped 2-sphere, or \c null if the given tetrahedra do not
          * form a snapped 2-sphere.
          */
-        static NSnappedTwoSphere* formsSnappedTwoSphere(Tetrahedron<3>* tet1,
+        static SnappedTwoSphere* formsSnappedTwoSphere(Tetrahedron<3>* tet1,
             Tetrahedron<3>* tet2);
         /**
          * Determines if the two given snapped 3-balls together form a snapped
@@ -128,7 +128,7 @@ class REGINA_API NSnappedTwoSphere :
          * snapped 2-sphere, or \c null if the given snapped 3-balls do not
          * form a snapped 2-sphere.
          */
-        static NSnappedTwoSphere* formsSnappedTwoSphere(SnappedBall* ball1,
+        static SnappedTwoSphere* formsSnappedTwoSphere(SnappedBall* ball1,
             SnappedBall* ball2);
 
         /**
@@ -145,22 +145,22 @@ class REGINA_API NSnappedTwoSphere :
         /**
          * Creates a new uninitialised structure.
          */
-        NSnappedTwoSphere();
+        SnappedTwoSphere();
 };
 
 /*@}*/
 
-// Inline functions for NSnappedTwoSphere
+// Inline functions for SnappedTwoSphere
 
-inline NSnappedTwoSphere::NSnappedTwoSphere() {
+inline SnappedTwoSphere::SnappedTwoSphere() {
 }
-inline NSnappedTwoSphere::~NSnappedTwoSphere() {
+inline SnappedTwoSphere::~SnappedTwoSphere() {
     delete ball[0]; delete ball[1];
 }
-inline const SnappedBall* NSnappedTwoSphere::snappedBall(int index) const {
+inline const SnappedBall* SnappedTwoSphere::snappedBall(int index) const {
     return ball[index];
 }
-inline void NSnappedTwoSphere::writeTextShort(std::ostream& out) const {
+inline void SnappedTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Snapped 2-sphere";
 }
 

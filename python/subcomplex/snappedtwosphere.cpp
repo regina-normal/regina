@@ -37,23 +37,23 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSnappedTwoSphere;
+using regina::SnappedTwoSphere;
 
 namespace {
-    NSnappedTwoSphere* (*formsStructure_tets)
+    SnappedTwoSphere* (*formsStructure_tets)
         (regina::Tetrahedron<3>*, regina::Tetrahedron<3>*) =
-        &NSnappedTwoSphere::formsSnappedTwoSphere;
-    NSnappedTwoSphere* (*formsStructure_balls)
+        &SnappedTwoSphere::formsSnappedTwoSphere;
+    SnappedTwoSphere* (*formsStructure_balls)
         (regina::SnappedBall*, regina::SnappedBall*) =
-        &NSnappedTwoSphere::formsSnappedTwoSphere;
+        &SnappedTwoSphere::formsSnappedTwoSphere;
 }
 
-void addNSnappedTwoSphere() {
-    class_<NSnappedTwoSphere, std::auto_ptr<NSnappedTwoSphere>,
-            boost::noncopyable> ("NSnappedTwoSphere", no_init)
-        .def("clone", &NSnappedTwoSphere::clone,
+void addSnappedTwoSphere() {
+    class_<SnappedTwoSphere, std::auto_ptr<SnappedTwoSphere>,
+            boost::noncopyable> ("SnappedTwoSphere", no_init)
+        .def("clone", &SnappedTwoSphere::clone,
             return_value_policy<manage_new_object>())
-        .def("snappedBall", &NSnappedTwoSphere::snappedBall,
+        .def("snappedBall", &SnappedTwoSphere::snappedBall,
             return_internal_reference<>())
         .def("formsSnappedTwoSphere", formsStructure_tets,
             return_value_policy<manage_new_object>())
