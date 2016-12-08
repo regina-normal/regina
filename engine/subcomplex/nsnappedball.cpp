@@ -33,7 +33,7 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/handlebody.h"
 #include "triangulation/dim3.h"
-#include "subcomplex/nsnappedball.h"
+#include "subcomplex/snappedball.h"
 
 namespace regina {
 

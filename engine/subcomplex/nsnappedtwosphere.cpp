@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "subcomplex/nsnappedtwosphere.h"
-#include "subcomplex/nsnappedball.h"
+#include "subcomplex/snappedball.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

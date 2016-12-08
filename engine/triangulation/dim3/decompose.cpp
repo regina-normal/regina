@@ -35,7 +35,7 @@
 
 #include "enumerate/treetraversal.h"
 #include "packet/container.h"
-#include "subcomplex/nsnappedball.h"
+#include "subcomplex/snappedball.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"

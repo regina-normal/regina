@@ -87,6 +87,7 @@ if (${REGINA_INSTALL_DEV})
     nsatregion.h
     snappeacensustri.h
     nsnappeacensustri.h
+    snappedball.h
     nsnappedball.h
     nsnappedtwosphere.h
     nspiralsolidtorus.h

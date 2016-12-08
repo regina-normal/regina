@@ -52,7 +52,7 @@
 #import "subcomplex/plugtrisolidtorus.h"
 #import "subcomplex/satblock.h"
 #import "subcomplex/satregion.h"
-#import "subcomplex/nsnappedball.h"
+#import "subcomplex/snappedball.h"
 #import "subcomplex/nsnappedtwosphere.h"
 #import "subcomplex/nspiralsolidtorus.h"
 #import "subcomplex/nstandardtri.h"

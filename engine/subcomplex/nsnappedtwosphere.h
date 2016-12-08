@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "subcomplex/nsnappedball.h"
+#include "subcomplex/snappedball.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
