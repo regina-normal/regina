@@ -56,7 +56,7 @@
 #import "subcomplex/snappedtwosphere.h"
 #import "subcomplex/spiralsolidtorus.h"
 #import "subcomplex/standardtri.h"
-#import "subcomplex/ntxicore.h"
+#import "subcomplex/txicore.h"
 #import "triangulation/dim3.h"
 
 #define INDENT1 "\t• "

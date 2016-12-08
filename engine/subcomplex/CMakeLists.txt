@@ -99,6 +99,7 @@ if (${REGINA_INSTALL_DEV})
     ntrisolidtorus.h
     trivialtri.h
     ntrivialtri.h
+    txicore.h
     ntxicore.h
     DESTINATION ${INCLUDEDIR}/subcomplex COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "subcomplex/ntxicore.h"
+#include "subcomplex/txicore.h"
 #include <sstream>
 
 namespace regina {

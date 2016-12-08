@@ -35,7 +35,7 @@
 #include "subcomplex/layering.h"
 #include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/satregion.h"
-#include "subcomplex/ntxicore.h"
+#include "subcomplex/txicore.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

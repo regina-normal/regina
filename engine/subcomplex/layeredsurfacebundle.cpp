@@ -33,7 +33,7 @@
 #include "manifold/torusbundle.h"
 #include "subcomplex/layeredsurfacebundle.h"
 #include "subcomplex/layering.h"
-#include "subcomplex/ntxicore.h"
+#include "subcomplex/txicore.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "subcomplex/layeredsurfacebundle.h"
-#include "subcomplex/ntxicore.h"
+#include "subcomplex/txicore.h"
 #include "../helpers.h"
 
 using namespace boost::python;
