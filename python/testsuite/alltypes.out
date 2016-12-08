@@ -1516,9 +1516,6 @@ NSnapPeaCensusTri : typedef ->  SnapPeaCensusTri
 
 NSnapPeaTriangulation : typedef ->  SnapPeaTriangulation
 
-NSnappedBall : class
-Equality type : BY_REFERENCE
-
 NSnappedTwoSphere : class
 Equality type : BY_REFERENCE
 
@@ -1807,6 +1804,9 @@ SnapPeaCensusTri : class
 Equality type : BY_VALUE
 
 SnapPeaTriangulation : class
+Equality type : BY_REFERENCE
+
+SnappedBall : class
 Equality type : BY_REFERENCE
 
 SurfaceFilter : class

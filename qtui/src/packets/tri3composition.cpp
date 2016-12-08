@@ -897,9 +897,9 @@ void Tri3CompositionUI::findSnappedBalls() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NSnappedBall* ball;
+    regina::SnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
-        ball = regina::NSnappedBall::formsSnappedBall(
+        ball = regina::SnappedBall::formsSnappedBall(
             tri->tetrahedron(i));
         if (ball) {
             id = addComponentSection(tr("Snapped 3-ball"));
@@ -938,7 +938,7 @@ void Tri3CompositionUI::findSnappedSpheres() {
                 details->setText(0, tr("Tetrahedra: %1, %2").
                     arg(i).arg(j));
 
-                const regina::NSnappedBall* ball = sphere->snappedBall(0);
+                const regina::SnappedBall* ball = sphere->snappedBall(0);
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Equator: edge %1").arg(

@@ -58,7 +58,7 @@ namespace regina {
  * All optional NStandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API NSnappedBall : public NStandardTriangulation {
+class REGINA_API SnappedBall : public NStandardTriangulation {
     private:
         Tetrahedron<3>* tet;
             /**< The tetrahedron that forms the snapped ball. */
@@ -71,7 +71,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          *
          * @return a newly created clone.
          */
-        NSnappedBall* clone() const;
+        SnappedBall* clone() const;
 
         /**
          * Returns the tetrahedron that forms this snapped ball.
@@ -134,7 +134,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * snapped 3-ball, or \c null if the given tetrahedron is
          * not a snapped 3-ball.
          */
-        static NSnappedBall* formsSnappedBall(Tetrahedron<3>* tet);
+        static SnappedBall* formsSnappedBall(Tetrahedron<3>* tet);
 
         Manifold* manifold() const;
         AbelianGroup* homology() const;
@@ -146,41 +146,41 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        NSnappedBall();
+        SnappedBall();
 };
 
 /*@}*/
 
-// Inline functions for NSnappedBall
+// Inline functions for SnappedBall
 
-inline NSnappedBall::NSnappedBall() {
+inline SnappedBall::SnappedBall() {
 }
-inline Tetrahedron<3>* NSnappedBall::tetrahedron() const {
+inline Tetrahedron<3>* SnappedBall::tetrahedron() const {
     return tet;
 }
-inline int NSnappedBall::boundaryFace(int index) const {
+inline int SnappedBall::boundaryFace(int index) const {
     return index == 0 ?
         Edge<3>::edgeVertex[5 - equator][0] :
         Edge<3>::edgeVertex[5 - equator][1];
 }
-inline int NSnappedBall::internalFace(int index) const {
+inline int SnappedBall::internalFace(int index) const {
     return index == 0 ?
         Edge<3>::edgeVertex[equator][0] :
         Edge<3>::edgeVertex[equator][1];
 }
-inline int NSnappedBall::equatorEdge() const {
+inline int SnappedBall::equatorEdge() const {
     return equator;
 }
-inline int NSnappedBall::internalEdge() const {
+inline int SnappedBall::internalEdge() const {
     return 5 - equator;
 }
-inline std::ostream& NSnappedBall::writeName(std::ostream& out) const {
+inline std::ostream& SnappedBall::writeName(std::ostream& out) const {
     return out << "Snap";
 }
-inline std::ostream& NSnappedBall::writeTeXName(std::ostream& out) const {
+inline std::ostream& SnappedBall::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Snap}";
 }
-inline void NSnappedBall::writeTextLong(std::ostream& out) const {
+inline void SnappedBall::writeTextLong(std::ostream& out) const {
     out << "Snapped 3-ball";
 }
 

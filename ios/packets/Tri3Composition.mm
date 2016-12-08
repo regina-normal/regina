@@ -642,9 +642,9 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::NSnappedBall* ball;
+    regina::SnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
-        ball = regina::NSnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
+        ball = regina::SnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
         if (ball) {
             [details appendString:@"Snapped 3-ball\n"];
             [details appendFormat:@INDENT1 "Tetrahedron %ld\n", i];
@@ -703,7 +703,7 @@
                 [details appendString:@"Snapped 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Tetrahedra: %ld, %ld\n", i, j];
                 
-                const regina::NSnappedBall* ball = sphere->snappedBall(0);
+                const regina::SnappedBall* ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
                  ball->tetrahedron()->edge(ball->equatorEdge())->index()];
                 

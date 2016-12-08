@@ -44,7 +44,7 @@ namespace {
         (regina::Tetrahedron<3>*, regina::Tetrahedron<3>*) =
         &NSnappedTwoSphere::formsSnappedTwoSphere;
     NSnappedTwoSphere* (*formsStructure_balls)
-        (regina::NSnappedBall*, regina::NSnappedBall*) =
+        (regina::SnappedBall*, regina::SnappedBall*) =
         &NSnappedTwoSphere::formsSnappedTwoSphere;
 }
 

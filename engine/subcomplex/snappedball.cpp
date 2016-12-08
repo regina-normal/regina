@@ -37,14 +37,14 @@
 
 namespace regina {
 
-NSnappedBall* NSnappedBall::clone() const {
-    NSnappedBall* ans = new NSnappedBall();
+SnappedBall* SnappedBall::clone() const {
+    SnappedBall* ans = new SnappedBall();
     ans->tet = tet;
     ans->equator = equator;
     return ans;
 }
 
-NSnappedBall* NSnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
+SnappedBall* SnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
     int inFace1, inFace2;
     Perm<4> perm;
     for (inFace1 = 0; inFace1 < 3; inFace1++)
@@ -53,7 +53,7 @@ NSnappedBall* NSnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
             inFace2 = perm[inFace1];
             if (perm == Perm<4>(inFace1, inFace2)) {
                 // This is it!
-                NSnappedBall* ans = new NSnappedBall();
+                SnappedBall* ans = new SnappedBall();
                 ans->tet = tet;
                 ans->equator = Edge<3>::edgeNumber[inFace1][inFace2];
                 return ans;
@@ -63,11 +63,11 @@ NSnappedBall* NSnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
     return 0;
 }
 
-Manifold* NSnappedBall::manifold() const {
+Manifold* SnappedBall::manifold() const {
     return new Handlebody(0, true);
 }
 
-AbelianGroup* NSnappedBall::homology() const {
+AbelianGroup* SnappedBall::homology() const {
     return new AbelianGroup();
 }
 

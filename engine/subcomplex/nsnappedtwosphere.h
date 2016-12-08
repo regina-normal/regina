@@ -47,7 +47,7 @@
 
 namespace regina {
 
-class NSnappedBall;
+class SnappedBall;
 
 /**
  * \weakgroup subcomplex
@@ -72,7 +72,7 @@ class REGINA_API NSnappedTwoSphere :
         public ShortOutput<NSnappedTwoSphere>,
         public boost::noncopyable {
     private:
-        NSnappedBall* ball[2];
+        SnappedBall* ball[2];
             /**< The two snapped 3-balls whose equators are joined. */
 
     public:
@@ -96,7 +96,7 @@ class REGINA_API NSnappedTwoSphere :
          * this must be either 0 or 1.
          * @return the corresponding snapped 3-ball.
          */
-        const NSnappedBall* snappedBall(int index) const;
+        const SnappedBall* snappedBall(int index) const;
 
         /**
          * Determines if the two given tetrahedra together form a snapped
@@ -128,8 +128,8 @@ class REGINA_API NSnappedTwoSphere :
          * snapped 2-sphere, or \c null if the given snapped 3-balls do not
          * form a snapped 2-sphere.
          */
-        static NSnappedTwoSphere* formsSnappedTwoSphere(NSnappedBall* ball1,
-            NSnappedBall* ball2);
+        static NSnappedTwoSphere* formsSnappedTwoSphere(SnappedBall* ball1,
+            SnappedBall* ball2);
 
         /**
          * Writes a short text representation of this object to the
@@ -157,7 +157,7 @@ inline NSnappedTwoSphere::NSnappedTwoSphere() {
 inline NSnappedTwoSphere::~NSnappedTwoSphere() {
     delete ball[0]; delete ball[1];
 }
-inline const NSnappedBall* NSnappedTwoSphere::snappedBall(int index) const {
+inline const SnappedBall* NSnappedTwoSphere::snappedBall(int index) const {
     return ball[index];
 }
 inline void NSnappedTwoSphere::writeTextShort(std::ostream& out) const {

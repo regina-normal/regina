@@ -36,27 +36,27 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSnappedBall;
+using regina::SnappedBall;
 
-void addNSnappedBall() {
-    class_<NSnappedBall, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<NSnappedBall>, boost::noncopyable>
-            ("NSnappedBall", no_init)
-        .def("clone", &NSnappedBall::clone,
+void addSnappedBall() {
+    class_<SnappedBall, bases<regina::NStandardTriangulation>,
+            std::auto_ptr<SnappedBall>, boost::noncopyable>
+            ("SnappedBall", no_init)
+        .def("clone", &SnappedBall::clone,
             return_value_policy<manage_new_object>())
-        .def("tetrahedron", &NSnappedBall::tetrahedron,
+        .def("tetrahedron", &SnappedBall::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("boundaryFace", &NSnappedBall::boundaryFace)
-        .def("internalFace", &NSnappedBall::internalFace)
-        .def("equatorEdge", &NSnappedBall::equatorEdge)
-        .def("internalEdge", &NSnappedBall::internalEdge)
-        .def("formsSnappedBall", &NSnappedBall::formsSnappedBall,
+        .def("boundaryFace", &SnappedBall::boundaryFace)
+        .def("internalFace", &SnappedBall::internalFace)
+        .def("equatorEdge", &SnappedBall::equatorEdge)
+        .def("internalEdge", &SnappedBall::internalEdge)
+        .def("formsSnappedBall", &SnappedBall::formsSnappedBall,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
         .staticmethod("formsSnappedBall")
     ;
 
-    implicitly_convertible<std::auto_ptr<NSnappedBall>,
+    implicitly_convertible<std::auto_ptr<SnappedBall>,
         std::auto_ptr<regina::NStandardTriangulation> >();
 }
 
