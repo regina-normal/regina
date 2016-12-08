@@ -28,7 +28,7 @@ SET ( FILES
   spiralsolidtorus
   standardtri
   trisolidtorus
-  ntrivialtri
+  trivialtri
   ntxicore
   pysubcomplex
   )
