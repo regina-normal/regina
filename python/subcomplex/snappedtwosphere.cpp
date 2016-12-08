@@ -63,5 +63,7 @@ void addSnappedTwoSphere() {
         .def(regina::python::add_eq_operators())
         .staticmethod("formsSnappedTwoSphere")
     ;
+
+    scope().attr("NSnappedTwoSphere") = scope().attr("SnappedTwoSphere");
 }
 

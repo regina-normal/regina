@@ -148,6 +148,15 @@ class REGINA_API SnappedTwoSphere :
         SnappedTwoSphere();
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSnappedTwoSphere has now been renamed to
+ * SnappedTwoSphere.
+ */
+REGINA_DEPRECATED typedef SnappedTwoSphere NSnappedTwoSphere;
+
 /*@}*/
 
 // Inline functions for SnappedTwoSphere
