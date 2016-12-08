@@ -1512,6 +1512,8 @@ NSimpleSurfaceBundle : typedef ->  SimpleSurfaceBundle
 
 NSnapPeaCensusManifold : typedef ->  SnapPeaCensusManifold
 
+NSnapPeaCensusTri : typedef ->  SnapPeaCensusTri
+
 NSnapPeaTriangulation : typedef ->  SnapPeaTriangulation
 
 NSnappedBall : class

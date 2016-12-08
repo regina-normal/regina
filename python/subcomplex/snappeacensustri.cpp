@@ -39,27 +39,31 @@ using namespace boost::python;
 using regina::SnapPeaCensusTri;
 
 void addSnapPeaCensusTri() {
-    scope s = class_<SnapPeaCensusTri, bases<regina::NStandardTriangulation>,
-            std::auto_ptr<SnapPeaCensusTri>, boost::noncopyable>
-            ("SnapPeaCensusTri", no_init)
-        .def("clone", &SnapPeaCensusTri::clone,
-            return_value_policy<manage_new_object>())
-        .def("section", &SnapPeaCensusTri::section)
-        .def("index", &SnapPeaCensusTri::index)
-        .def("isSmallSnapPeaCensusTri",
-            &SnapPeaCensusTri::isSmallSnapPeaCensusTri,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isSmallSnapPeaCensusTri")
-    ;
+    {
+        scope s = class_<SnapPeaCensusTri, bases<regina::NStandardTriangulation>,
+                std::auto_ptr<SnapPeaCensusTri>, boost::noncopyable>
+                ("SnapPeaCensusTri", no_init)
+            .def("clone", &SnapPeaCensusTri::clone,
+                return_value_policy<manage_new_object>())
+            .def("section", &SnapPeaCensusTri::section)
+            .def("index", &SnapPeaCensusTri::index)
+            .def("isSmallSnapPeaCensusTri",
+                &SnapPeaCensusTri::isSmallSnapPeaCensusTri,
+                return_value_policy<manage_new_object>())
+            .def(regina::python::add_eq_operators())
+            .staticmethod("isSmallSnapPeaCensusTri")
+        ;
 
-    s.attr("SEC_5") = SnapPeaCensusTri::SEC_5;
-    s.attr("SEC_6_OR") = SnapPeaCensusTri::SEC_6_OR;
-    s.attr("SEC_6_NOR") = SnapPeaCensusTri::SEC_6_NOR;
-    s.attr("SEC_7_OR") = SnapPeaCensusTri::SEC_7_OR;
-    s.attr("SEC_7_NOR") = SnapPeaCensusTri::SEC_7_NOR;
+        s.attr("SEC_5") = SnapPeaCensusTri::SEC_5;
+        s.attr("SEC_6_OR") = SnapPeaCensusTri::SEC_6_OR;
+        s.attr("SEC_6_NOR") = SnapPeaCensusTri::SEC_6_NOR;
+        s.attr("SEC_7_OR") = SnapPeaCensusTri::SEC_7_OR;
+        s.attr("SEC_7_NOR") = SnapPeaCensusTri::SEC_7_NOR;
 
-    implicitly_convertible<std::auto_ptr<SnapPeaCensusTri>,
-        std::auto_ptr<regina::NStandardTriangulation> >();
+        implicitly_convertible<std::auto_ptr<SnapPeaCensusTri>,
+            std::auto_ptr<regina::NStandardTriangulation> >();
+    }
+
+    scope().attr("NSnapPeaCensusTri") = scope().attr("SnapPeaCensusTri");
 }
 

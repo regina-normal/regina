@@ -194,6 +194,15 @@ class REGINA_API SnapPeaCensusTri: public NStandardTriangulation {
     friend class SnapPeaCensusManifold;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NSnapPeaCensusTri has now been renamed to
+ * SnapPeaCensusTri.
+ */
+REGINA_DEPRECATED typedef SnapPeaCensusTri NSnapPeaCensusTri;
+
 /*@}*/
 
 // Inline functions for SnapPeaCensusTri
