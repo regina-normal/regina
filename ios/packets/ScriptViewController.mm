@@ -213,7 +213,7 @@ regina::syntax::Repository* repository;
         return;
 
     // For now, we rely on the automatic packet reload.
-    // TODO: Just reload the section of the table that changed.
+    // TODO: Set myEdit and instead reload just the section of the table that changed.
     self.packet->removeVariable(indexPath.row - 1);
 }
 
