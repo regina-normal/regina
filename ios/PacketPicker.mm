@@ -41,9 +41,9 @@
 @property (strong, nonatomic, readonly) NSString* text;
 
 - (id)initWithPacket:(regina::Packet*)p;
-- (id)initEmptyWithText:(NSString*)text;
+- (id)initWithPacket:(regina::Packet*)p text:(NSString*)text;
 + (id)packetChoiceWithPacket:(regina::Packet*)p;
-+ (id)packetChoiceEmptyWithText:(NSString*)text;
++ (id)packetChoiceWithPacket:(regina::Packet*)p text:(NSString*)text;
 
 @end
 
@@ -58,22 +58,21 @@
     return self;
 }
 
-- (id)initEmptyWithText:(NSString *)text
-{
+- (id)initWithPacket:(regina::Packet*)p text:(NSString*)text {
     self = [super init];
     if (self) {
-        _packet = 0;
+        _packet = p;
         _text = text;
     }
     return self;
 }
 
-+ (id)packetChoiceWithPacket:(regina::Packet*)p {
-    return [[PacketChoice alloc] initWithPacket:p];
++ (id)packetChoiceWithPacket:(regina::Packet*)p text:(NSString*)text {
+    return [[PacketChoice alloc] initWithPacket:p text:text];
 }
 
-+ (id)packetChoiceEmptyWithText:(NSString *)text {
-    return [[PacketChoice alloc] initEmptyWithText:text];
++ (id)packetChoiceWithPacket:(regina::Packet*)p {
+    return [[PacketChoice alloc] initWithPacket:p];
 }
 
 @end
@@ -83,11 +82,31 @@
 @interface PacketPicker () <UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray* choices;
-@property (assign, nonatomic) BOOL allowNone; // Always NO for now.
+@property (assign, nonatomic) BOOL allowNone;
 
 @end
 
 @implementation PacketPicker
+
+- (void)fill:(regina::Packet *)tree allowNone:(BOOL)allowNone noneText:(NSString *)noneText allowRoot:(BOOL)allowRoot rootText:(NSString *)rootText
+{
+    self.allowNone = allowNone;
+
+    self.choices = [NSMutableArray array];
+    if (allowNone)
+        [self.choices addObject:[PacketChoice packetChoiceWithPacket:nullptr text:noneText]];
+    if (allowRoot)
+        [self.choices addObject:[PacketChoice packetChoiceWithPacket:tree text:rootText]];
+
+    for (regina::Packet* p = tree->nextTreePacket(); p; p = p->nextTreePacket())
+        [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
+
+    if (self.choices.count == 0)
+        [self.choices addObject:[PacketChoice packetChoiceWithPacket:nullptr text:noneText]];
+
+    self.delegate = self;
+    self.dataSource = self;
+}
 
 - (void)fill:(regina::Packet *)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString *)noneText
 {
@@ -95,15 +114,14 @@
 
     self.choices = [NSMutableArray array];
     if (allowNone)
-        [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
+        [self.choices addObject:[PacketChoice packetChoiceWithPacket:nullptr text:noneText]];
 
-    regina::Packet* p;
-    for (p = tree; p; p = p->nextTreePacket())
+    for (regina::Packet* p = tree->nextTreePacket(); p; p = p->nextTreePacket())
         if (p->type() == packetType)
             [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
 
     if (self.choices.count == 0)
-        [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
+        [self.choices addObject:[PacketChoice packetChoiceWithPacket:nullptr text:noneText]];
 
     self.delegate = self;
     self.dataSource = self;
@@ -115,15 +133,14 @@
 
     self.choices = [NSMutableArray array];
     if (allowNone)
-        [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
+        [self.choices addObject:[PacketChoice packetChoiceWithPacket:nullptr text:noneText]];
 
-    regina::Packet* p;
-    for (p = tree; p; p = p->nextTreePacket())
+    for (regina::Packet* p = tree->nextTreePacket(); p; p = p->nextTreePacket())
         if (p->type() == packetType1 || p->type() == packetType2)
             [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
 
     if (self.choices.count == 0)
-        [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
+        [self.choices addObject:[PacketChoice packetChoiceWithPacket:nullptr text:noneText]];
 
     self.delegate = self;
     self.dataSource = self;
