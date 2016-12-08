@@ -68,7 +68,7 @@ struct BlockedSFSSearcher : public SatBlockStarterSearcher {
     }
 
     protected:
-        bool useStarterBlock(NSatBlock* starter);
+        bool useStarterBlock(SatBlock* starter);
 };
 
 BlockedSFS::~BlockedSFS() {
@@ -86,7 +86,7 @@ bool BlockedSFS::isPluggedIBundle(std::string& name) const {
         return false;
 
     // Try one thing at a time.
-    const NSatBlock* block;
+    const SatBlock* block;
     const SatCube* cube;
     const SatReflectorStrip* ref;
     const SatTriPrism* tri;
@@ -361,7 +361,7 @@ BlockedSFS* BlockedSFS::isBlockedSFS(Triangulation<3>* tri) {
     return 0;
 }
 
-bool BlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
+bool BlockedSFSSearcher::useStarterBlock(SatBlock* starter) {
     // The region pointer should be null, but just in case...
     if (region) {
         delete starter;
@@ -384,8 +384,8 @@ bool BlockedSFSSearcher::useStarterBlock(NSatBlock* starter) {
 }
 
 bool BlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
-        const NSatBlock* torus0, bool horiz0,
-        const NSatBlock* torus1, bool horiz1) {
+        const SatBlock* torus0, bool horiz0,
+        const SatBlock* torus1, bool horiz1) {
     long p0, q0;
     long p1, q1;
 

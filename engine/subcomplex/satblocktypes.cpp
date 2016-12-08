@@ -42,7 +42,7 @@
 
 namespace regina {
 
-bool NSatBlock::operator < (const NSatBlock& compare) const {
+bool SatBlock::operator < (const SatBlock& compare) const {
     const SatTriPrism* tri1 = dynamic_cast<const SatTriPrism*>(this);
     const SatTriPrism* tri2 = dynamic_cast<const SatTriPrism*>(&compare);
     if (tri1 && ! tri2)
@@ -146,8 +146,8 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
     return false;
 }
 
-NSatBlock* NSatBlock::isBlock(const SatAnnulus& annulus, TetList& avoidTets) {
-    NSatBlock* ans;
+SatBlock* SatBlock::isBlock(const SatAnnulus& annulus, TetList& avoidTets) {
+    SatBlock* ans;
 
     // Run through the types of blocks that we know about.
     if ((ans = SatMobius::isBlockMobius(annulus, avoidTets)))
@@ -247,7 +247,7 @@ SatMobius* SatMobius::isBlockMobius(const SatAnnulus& annulus, TetList&) {
     return ans;
 }
 
-SatLST::SatLST(const SatLST& cloneMe) : NSatBlock(cloneMe),
+SatLST::SatLST(const SatLST& cloneMe) : SatBlock(cloneMe),
         lst_(cloneMe.lst_->clone()), roles_(cloneMe.roles_) {
 }
 
@@ -284,7 +284,7 @@ void SatLST::writeAbbr(std::ostream& out, bool tex) const {
 void SatLST::transform(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     // Start with the parent implementation.
-    NSatBlock::transform(originalTri, iso, newTri);
+    SatBlock::transform(originalTri, iso, newTri);
 
     // Transform the layered solid torus also.
     lst_->transform(originalTri, iso, newTri);

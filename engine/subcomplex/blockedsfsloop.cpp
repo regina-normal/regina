@@ -64,7 +64,7 @@ struct BlockedSFSLoopSearcher : public SatBlockStarterSearcher {
     }
 
     protected:
-        bool useStarterBlock(NSatBlock* starter);
+        bool useStarterBlock(SatBlock* starter);
 };
 
 BlockedSFSLoop::~BlockedSFSLoop() {
@@ -134,7 +134,7 @@ BlockedSFSLoop* BlockedSFSLoop::isBlockedSFSLoop(Triangulation<3>* tri) {
     return 0;
 }
 
-bool BlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
+bool BlockedSFSLoopSearcher::useStarterBlock(SatBlock* starter) {
     // The region pointer should be null, but just in case...
     if (region) {
         delete starter;
@@ -153,7 +153,7 @@ bool BlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
         return true;
     }
 
-    NSatBlock* bdryBlock[2];
+    SatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
     bool bdryRefVert[2], bdryRefHoriz[2];
     region->boundaryAnnulus(0, bdryBlock[0], bdryAnnulus[0],

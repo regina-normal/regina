@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NSatBlock;
+class SatBlock;
 class NSatRegion;
 
 /**
@@ -190,8 +190,8 @@ class REGINA_API BlockedSFS : public NStandardTriangulation {
          * otherwise.
          */
         static bool findPluggedTori(bool thin, int id, std::string& name,
-            const NSatBlock* torus0, bool horiz0,
-            const NSatBlock* torus1, bool horiz1);
+            const SatBlock* torus0, bool horiz0,
+            const SatBlock* torus1, bool horiz1);
 };
 
 /**

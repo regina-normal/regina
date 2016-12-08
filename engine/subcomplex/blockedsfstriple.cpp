@@ -74,7 +74,7 @@ struct BlockedSFSTripleSearcher : public SatBlockStarterSearcher {
     }
 
     protected:
-        bool useStarterBlock(NSatBlock* starter);
+        bool useStarterBlock(SatBlock* starter);
 };
 
 BlockedSFSTriple::~BlockedSFSTriple() {
@@ -184,7 +184,7 @@ BlockedSFSTriple* BlockedSFSTriple::isBlockedSFSTriple(
     return 0;
 }
 
-bool BlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
+bool BlockedSFSTripleSearcher::useStarterBlock(SatBlock* starter) {
     // The region pointers should be null, but just in case...
     if (end[0] || end[1] || centre) {
         delete starter;
@@ -204,7 +204,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
     }
 
     // Insist on the boundary annuli being disjoint and untwisted.
-    NSatBlock* bdryBlock[2];
+    SatBlock* bdryBlock[2];
     unsigned bdryAnnulus[2];
     bool bdryVert[2], bdryHoriz[2], bdryRef[2];
 
@@ -257,7 +257,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
 
     // Start looking for the end regions.
     int plugPos;
-    NSatBlock* otherStarter;
+    SatBlock* otherStarter;
     Matrix2 curvesCentreToLayering, layeringToEndAnnulus;
 
     for (e = 0; e < 2; e++) {
@@ -323,7 +323,7 @@ bool BlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
             // See if we can flesh the other side out to an entire region.
             otherSide.switchSides();
 
-            if ((otherStarter = NSatBlock::isBlock(otherSide, usedTets))) {
+            if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
                 end[e] = new NSatRegion(otherStarter);
                 end[e]->expand(usedTets);
 

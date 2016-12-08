@@ -69,7 +69,7 @@ class LayeredSolidTorus;
  * a degenerate (1,1,2) layered solid torus.  Note that the weight 2 edge
  * is the boundary edge of the Mobius strip.
  */
-class REGINA_API SatMobius : public NSatBlock {
+class REGINA_API SatMobius : public SatBlock {
     private:
         int position_;
             /**< Describes how the Mobius band is attached to the
@@ -110,7 +110,7 @@ class REGINA_API SatMobius : public NSatBlock {
          */
         int position() const;
 
-        virtual NSatBlock* clone() const;
+        virtual SatBlock* clone() const;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
@@ -118,7 +118,7 @@ class REGINA_API SatMobius : public NSatBlock {
         /**
          * Determines whether the given annulus is a boundary annulus for
          * a block of this type (Mobius band).  This routine is
-         * a specific case of NSatBlock::isBlock(); see that routine for
+         * a specific case of SatBlock::isBlock(); see that routine for
          * further details.
          *
          * @param annulus the proposed boundary annulus that should form
@@ -163,7 +163,7 @@ REGINA_DEPRECATED typedef SatMobius NSatMobius;
  * see the SatAnnulus class notes for details on precisely what
  * vertical, horizontal and diagonal mean.
  */
-class REGINA_API SatLST : public NSatBlock {
+class REGINA_API SatLST : public SatBlock {
     private:
         LayeredSolidTorus* lst_;
             /**< Contains details of the layered solid torus that this
@@ -216,7 +216,7 @@ class REGINA_API SatLST : public NSatBlock {
          */
         Perm<4> roles() const;
 
-        virtual NSatBlock* clone() const;
+        virtual SatBlock* clone() const;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void transform(const Triangulation<3>* originalTri,
             const Isomorphism<3>* iso, Triangulation<3>* newTri);
@@ -226,7 +226,7 @@ class REGINA_API SatLST : public NSatBlock {
         /**
          * Determines whether the given annulus is a boundary annulus for
          * a block of this type (layered solid torus).  This routine is
-         * a specific case of NSatBlock::isBlock(); see that routine for
+         * a specific case of SatBlock::isBlock(); see that routine for
          * further details.
          *
          * @param annulus the proposed boundary annulus that should form
@@ -273,7 +273,7 @@ REGINA_DEPRECATED typedef SatLST NSatLST;
  * of "horizontal" and the NTriSolidTorus class notes for further
  * details regarding "major" and "minor".
  */
-class REGINA_API SatTriPrism : public NSatBlock {
+class REGINA_API SatTriPrism : public SatBlock {
     private:
         bool major_;
             /**< Is this prism of major type or of minor type? */
@@ -299,7 +299,7 @@ class REGINA_API SatTriPrism : public NSatBlock {
          */
         bool isMajor() const;
 
-        virtual NSatBlock* clone() const;
+        virtual SatBlock* clone() const;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
@@ -307,7 +307,7 @@ class REGINA_API SatTriPrism : public NSatBlock {
         /**
          * Determines whether the given annulus is a boundary annulus for
          * a block of this type (triangular prism).  This routine is
-         * a specific case of NSatBlock::isBlock(); see that routine for
+         * a specific case of SatBlock::isBlock(); see that routine for
          * further details.
          *
          * @param annulus the proposed boundary annulus that should form
@@ -386,7 +386,7 @@ REGINA_DEPRECATED typedef SatTriPrism NSatTriPrism;
  * triangulations) this cube cannot be split vertically into two
  * triangular prisms.
  */
-class REGINA_API SatCube : public NSatBlock {
+class REGINA_API SatCube : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
@@ -395,7 +395,7 @@ class REGINA_API SatCube : public NSatBlock {
          */
         SatCube(const SatCube& cloneMe);
 
-        virtual NSatBlock* clone() const;
+        virtual SatBlock* clone() const;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
@@ -403,7 +403,7 @@ class REGINA_API SatCube : public NSatBlock {
         /**
          * Determines whether the given annulus is a boundary annulus for
          * a block of this type (cube).  This routine is a specific case
-         * of NSatBlock::isBlock(); see that routine for further details.
+         * of SatBlock::isBlock(); see that routine for further details.
          *
          * @param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
@@ -465,13 +465,13 @@ REGINA_DEPRECATED typedef SatCube NSatCube;
  * A reflector strip may have arbitrary length, and it may also include
  * a twist as the ring of prisms wraps back around to meet itself.  Note
  * that a twisted reflector strip will have a twisted ring of boundary
- * annuli, as described by NSatBlock::twistedBoundary().
+ * annuli, as described by SatBlock::twistedBoundary().
  *
  * The \e length of a reflector strip is defined to be the number of
  * prisms that are joined together, or equivalently the number of
  * saturated annuli on the boundary.
  */
-class REGINA_API SatReflectorStrip : public NSatBlock {
+class REGINA_API SatReflectorStrip : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
@@ -480,7 +480,7 @@ class REGINA_API SatReflectorStrip : public NSatBlock {
          */
         SatReflectorStrip(const SatReflectorStrip& cloneMe);
 
-        virtual NSatBlock* clone() const;
+        virtual SatBlock* clone() const;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
@@ -488,7 +488,7 @@ class REGINA_API SatReflectorStrip : public NSatBlock {
         /**
          * Determines whether the given annulus is a boundary annulus for
          * a block of this type (reflector strip).  This routine is a specific
-         * case of NSatBlock::isBlock(); see that routine for further details.
+         * case of SatBlock::isBlock(); see that routine for further details.
          *
          * @param annulus the proposed boundary annulus that should form
          * part of the new saturated block.
@@ -569,7 +569,7 @@ REGINA_DEPRECATED typedef SatReflectorStrip NSatReflectorStrip;
  * each annulus (with the fibres pinched together between the two
  * horizontal edges).
  */
-class REGINA_API SatLayering : public NSatBlock {
+class REGINA_API SatLayering : public SatBlock {
     private:
         bool overHorizontal_;
             /**< Do we layer over the horizontal annulus edge, or the
@@ -592,7 +592,7 @@ class REGINA_API SatLayering : public NSatBlock {
          */
         bool overHorizontal() const;
 
-        virtual NSatBlock* clone() const;
+        virtual SatBlock* clone() const;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeAbbr(std::ostream& out, bool tex = false) const;
@@ -600,7 +600,7 @@ class REGINA_API SatLayering : public NSatBlock {
         /**
          * Determines whether the given annulus is a boundary annulus for
          * a block of this type (single layering).  This routine is
-         * a specific case of NSatBlock::isBlock(); see that routine for
+         * a specific case of SatBlock::isBlock(); see that routine for
          * further details.
          *
          * @param annulus the proposed boundary annulus that should form
@@ -639,11 +639,11 @@ REGINA_DEPRECATED typedef SatLayering NSatLayering;
 
 // Inline functions for SatMobius
 
-inline SatMobius::SatMobius(const SatMobius& cloneMe) : NSatBlock(cloneMe),
+inline SatMobius::SatMobius(const SatMobius& cloneMe) : SatBlock(cloneMe),
         position_(cloneMe.position_) {
 }
 
-inline SatMobius::SatMobius(int position) : NSatBlock(1),
+inline SatMobius::SatMobius(int position) : SatBlock(1),
         position_(position) {
 }
 
@@ -651,13 +651,13 @@ inline int SatMobius::position() const {
     return position_;
 }
 
-inline NSatBlock* SatMobius::clone() const {
+inline SatBlock* SatMobius::clone() const {
     return new SatMobius(*this);
 }
 
 // Inline functions for SatLST
 
-inline SatLST::SatLST(LayeredSolidTorus* lst, Perm<4> roles) : NSatBlock(1),
+inline SatLST::SatLST(LayeredSolidTorus* lst, Perm<4> roles) : SatBlock(1),
         lst_(lst), roles_(roles) {
 }
 
@@ -669,24 +669,24 @@ inline Perm<4> SatLST::roles() const {
     return roles_;
 }
 
-inline NSatBlock* SatLST::clone() const {
+inline SatBlock* SatLST::clone() const {
     return new SatLST(*this);
 }
 
 // Inline functions for SatTriPrism
 
 inline SatTriPrism::SatTriPrism(const SatTriPrism& cloneMe) :
-        NSatBlock(cloneMe), major_(cloneMe.major_) {
+        SatBlock(cloneMe), major_(cloneMe.major_) {
 }
 
-inline SatTriPrism::SatTriPrism(bool major) : NSatBlock(3), major_(major) {
+inline SatTriPrism::SatTriPrism(bool major) : SatBlock(3), major_(major) {
 }
 
 inline bool SatTriPrism::isMajor() const {
     return major_;
 }
 
-inline NSatBlock* SatTriPrism::clone() const {
+inline SatBlock* SatTriPrism::clone() const {
     return new SatTriPrism(*this);
 }
 
@@ -704,13 +704,13 @@ inline void SatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
 
 // Inline functions for SatCube
 
-inline SatCube::SatCube(const SatCube& cloneMe) : NSatBlock(cloneMe) {
+inline SatCube::SatCube(const SatCube& cloneMe) : SatBlock(cloneMe) {
 }
 
-inline SatCube::SatCube() : NSatBlock(4) {
+inline SatCube::SatCube() : SatBlock(4) {
 }
 
-inline NSatBlock* SatCube::clone() const {
+inline SatBlock* SatCube::clone() const {
     return new SatCube(*this);
 }
 
@@ -728,14 +728,14 @@ inline void SatCube::writeAbbr(std::ostream& out, bool tex) const {
 // Inline functions for SatReflectorStrip
 
 inline SatReflectorStrip::SatReflectorStrip(
-        const SatReflectorStrip& cloneMe) : NSatBlock(cloneMe) {
+        const SatReflectorStrip& cloneMe) : SatBlock(cloneMe) {
 }
 
 inline SatReflectorStrip::SatReflectorStrip(unsigned length, bool twisted) :
-        NSatBlock(length, twisted) {
+        SatBlock(length, twisted) {
 }
 
-inline NSatBlock* SatReflectorStrip::clone() const {
+inline SatBlock* SatReflectorStrip::clone() const {
     return new SatReflectorStrip(*this);
 }
 
@@ -762,18 +762,18 @@ inline void SatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
 // Inline functions for SatLayering
 
 inline SatLayering::SatLayering(const SatLayering& cloneMe) :
-        NSatBlock(cloneMe), overHorizontal_(cloneMe.overHorizontal_) {
+        SatBlock(cloneMe), overHorizontal_(cloneMe.overHorizontal_) {
 }
 
 inline SatLayering::SatLayering(bool overHorizontal) :
-        NSatBlock(2), overHorizontal_(overHorizontal) {
+        SatBlock(2), overHorizontal_(overHorizontal) {
 }
 
 inline bool SatLayering::overHorizontal() const {
     return overHorizontal_;
 }
 
-inline NSatBlock* SatLayering::clone() const {
+inline SatBlock* SatLayering::clone() const {
     return new SatLayering(*this);
 }
 

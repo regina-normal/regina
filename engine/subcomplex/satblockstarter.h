@@ -79,7 +79,7 @@ class REGINA_API SatBlockStarter : boost::noncopyable {
     private:
         Triangulation<3> triangulation_;
             /**< The triangulation of the saturated block. */
-        NSatBlock* block_;
+        SatBlock* block_;
             /**< Structural details of the saturated block. */
 
     public:
@@ -102,7 +102,7 @@ class REGINA_API SatBlockStarter : boost::noncopyable {
          *
          * @return the block structure.
          */
-        const NSatBlock* block() const;
+        const SatBlock* block() const;
 
     private:
         /**
@@ -239,7 +239,7 @@ REGINA_DEPRECATED typedef SatBlockStarterSet NSatBlockStarterSet;
  */
 class REGINA_API SatBlockStarterSearcher {
     protected:
-        NSatBlock::TetList usedTets;
+        SatBlock::TetList usedTets;
             /**< Keeps track of which tetrahedra have used by the
                  current embedding of the current starter block.
                  See useStarterBlock() for further details. */
@@ -298,7 +298,7 @@ class REGINA_API SatBlockStarterSearcher {
          * as it pleases, since the main search routine will empty the
          * list anyway when useStarterBlock() returns.  One possible use
          * for the \a usedTets data member is for passing to
-         * NSatBlock::isBlock() or NSatRegion::expand() as the list of
+         * SatBlock::isBlock() or NSatRegion::expand() as the list of
          * tetrahedra to avoid in further searches.
          *
          * This routine must return a boolean; this allows subclasses to
@@ -319,7 +319,7 @@ class REGINA_API SatBlockStarterSearcher {
          * @return \c true if the search for embeddings of starter blocks
          * should continue, or \c false if the search should stop immediately.
          */
-        virtual bool useStarterBlock(NSatBlock* starter) = 0;
+        virtual bool useStarterBlock(SatBlock* starter) = 0;
 };
 
 /**
@@ -347,7 +347,7 @@ inline const Triangulation<3>& SatBlockStarter::triangulation() const {
     return triangulation_;
 }
 
-inline const NSatBlock* SatBlockStarter::block() const {
+inline const SatBlock* SatBlockStarter::block() const {
     return block_;
 }
 

@@ -100,7 +100,7 @@ void SatBlockStarterSearcher::findStarterBlocks(Triangulation<3>* tri) {
     SatBlockStarterSet::iterator it;
     std::list<Isomorphism<3>*> isos;
     std::list<Isomorphism<3>*>::iterator isoIt;
-    NSatBlock* starter;
+    SatBlock* starter;
     for (it = SatBlockStarterSet::begin(); it != SatBlockStarterSet::end();
             it++) {
         // Look for this particular starting block.

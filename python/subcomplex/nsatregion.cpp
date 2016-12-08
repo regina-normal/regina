@@ -37,14 +37,14 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NSatBlock;
+using regina::SatBlock;
 using regina::NSatBlockSpec;
 using regina::NSatRegion;
 
 namespace {
     boost::python::tuple boundaryAnnulus_tuple(const NSatRegion& r,
             unsigned which) {
-        NSatBlock* block;
+        SatBlock* block;
         unsigned annulus;
         bool blockRefVert, blockRefHoriz;
 
@@ -55,7 +55,7 @@ namespace {
     }
 
     bool expand_nolist(NSatRegion& r, bool stopIfIncomplete = false) {
-        NSatBlock::TetList avoidTets;
+        SatBlock::TetList avoidTets;
         return r.expand(avoidTets, stopIfIncomplete);
     }
 
@@ -75,7 +75,7 @@ namespace {
 
 void addNSatRegion() {
     class_<NSatBlockSpec>("NSatBlockSpec")
-        .def(init<NSatBlock*, bool, bool>())
+        .def(init<SatBlock*, bool, bool>())
         .def_readonly("block", &NSatBlockSpec::block)
         .def_readonly("refVert", &NSatBlockSpec::refVert)
         .def_readonly("refHoriz", &NSatBlockSpec::refHoriz)
@@ -83,7 +83,7 @@ void addNSatRegion() {
     ;
 
     class_<NSatRegion, boost::noncopyable,
-            std::auto_ptr<NSatRegion> >("NSatRegion", init<NSatBlock*>())
+            std::auto_ptr<NSatRegion> >("NSatRegion", init<SatBlock*>())
         .def("numberOfBlocks", &NSatRegion::numberOfBlocks)
         .def("block", &NSatRegion::block, return_internal_reference<>())
         .def("blockIndex", &NSatRegion::blockIndex)

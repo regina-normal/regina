@@ -38,12 +38,12 @@
 
 using namespace boost::python;
 using regina::SatAnnulus;
-using regina::NSatBlock;
+using regina::SatBlock;
 
 namespace {
-    boost::python::tuple nextBoundaryAnnulus_tuple(NSatBlock& b, unsigned a,
+    boost::python::tuple nextBoundaryAnnulus_tuple(SatBlock& b, unsigned a,
             bool fromPrev) {
-        NSatBlock* nextBlock;
+        SatBlock* nextBlock;
         unsigned nextAnnulus;
         bool refVert, refHoriz;
 
@@ -53,42 +53,42 @@ namespace {
         return boost::python::make_tuple(
             ptr(nextBlock), nextAnnulus, refVert, refHoriz);
     }
-    void writeAbbr_stdio(const NSatBlock& b, bool tex = false) {
+    void writeAbbr_stdio(const SatBlock& b, bool tex = false) {
         b.writeAbbr(std::cout, tex);
     }
 
-    NSatBlock* isBlock_nolist(const SatAnnulus& a) {
-        NSatBlock::TetList avoidTets;
-        return NSatBlock::isBlock(a, avoidTets);
+    SatBlock* isBlock_nolist(const SatAnnulus& a) {
+        SatBlock::TetList avoidTets;
+        return SatBlock::isBlock(a, avoidTets);
     }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_abbr,
-        NSatBlock::abbr, 0, 1);
+        SatBlock::abbr, 0, 1);
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeAbbr,
         writeAbbr_stdio, 1, 2);
 }
 
-void addNSatBlock() {
-    class_<NSatBlock, boost::noncopyable,
-            std::auto_ptr<NSatBlock> >("NSatBlock", no_init)
-        .def("clone", &NSatBlock::clone,
+void addSatBlock() {
+    class_<SatBlock, boost::noncopyable,
+            std::auto_ptr<SatBlock> >("SatBlock", no_init)
+        .def("clone", &SatBlock::clone,
             return_value_policy<manage_new_object>())
-        .def("nAnnuli", &NSatBlock::nAnnuli)
-        .def("annulus", &NSatBlock::annulus,
+        .def("nAnnuli", &SatBlock::nAnnuli)
+        .def("annulus", &SatBlock::annulus,
             return_internal_reference<>())
-        .def("twistedBoundary", &NSatBlock::twistedBoundary)
-        .def("hasAdjacentBlock", &NSatBlock::hasAdjacentBlock)
-        .def("adjacentBlock", &NSatBlock::adjacentBlock,
+        .def("twistedBoundary", &SatBlock::twistedBoundary)
+        .def("hasAdjacentBlock", &SatBlock::hasAdjacentBlock)
+        .def("adjacentBlock", &SatBlock::adjacentBlock,
             return_value_policy<reference_existing_object>())
-        .def("adjacentAnnulus", &NSatBlock::adjacentAnnulus)
-        .def("adjacentReflected", &NSatBlock::adjacentReflected)
-        .def("adjacentBackwards", &NSatBlock::adjacentBackwards)
-        .def("setAdjacent", &NSatBlock::setAdjacent)
-        .def("adjustSFS", &NSatBlock::adjustSFS)
-        .def("transform", &NSatBlock::transform)
+        .def("adjacentAnnulus", &SatBlock::adjacentAnnulus)
+        .def("adjacentReflected", &SatBlock::adjacentReflected)
+        .def("adjacentBackwards", &SatBlock::adjacentBackwards)
+        .def("setAdjacent", &SatBlock::setAdjacent)
+        .def("adjustSFS", &SatBlock::adjustSFS)
+        .def("transform", &SatBlock::transform)
         .def("nextBoundaryAnnulus", nextBoundaryAnnulus_tuple)
-        .def("abbr", &NSatBlock::abbr, OL_abbr())
+        .def("abbr", &SatBlock::abbr, OL_abbr())
         .def("writeAbbr", writeAbbr_stdio, OL_writeAbbr())
         .def(self < self)
         .def("isBlock", isBlock_nolist,

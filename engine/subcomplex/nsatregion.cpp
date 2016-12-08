@@ -51,7 +51,7 @@ namespace {
     }
 }
 
-NSatRegion::NSatRegion(NSatBlock* starter) :
+NSatRegion::NSatRegion(SatBlock* starter) :
         baseEuler_(1),
         baseOrbl_(true),
         hasTwist_(false),
@@ -97,7 +97,7 @@ const SatAnnulus& NSatRegion::boundaryAnnulus(unsigned long which,
 }
 
 void NSatRegion::boundaryAnnulus(unsigned long which,
-        NSatBlock*& block, unsigned& annulus,
+        SatBlock*& block, unsigned& annulus,
         bool& blockRefVert, bool& blockRefHoriz) const {
     unsigned ann;
     for (BlockSet::const_iterator it = blocks_.begin(); it != blocks_.end();
@@ -175,9 +175,9 @@ SFSpace* NSatRegion::createSFS(bool reflect) const {
     return sfs;
 }
 
-bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
+bool NSatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     NSatBlockSpec currBlockSpec;
-    NSatBlock *currBlock, *adjBlock;
+    SatBlock *currBlock, *adjBlock;
     unsigned ann, adjAnn;
     unsigned long adjPos;
     bool adjVert, adjHoriz;
@@ -215,7 +215,7 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
             // We can happily jump to the other side, since we know
             // there are tetrahedra present.
             // Is there a new block there?
-            if ((adjBlock = NSatBlock::isBlock(
+            if ((adjBlock = SatBlock::isBlock(
                     currBlock->annulus(ann).otherSide(), avoidTets))) {
                 // We found a new adjacent block that we haven't seen before.
 
@@ -307,7 +307,7 @@ bool NSatRegion::expand(NSatBlock::TetList& avoidTets, bool stopIfIncomplete) {
     return true;
 }
 
-long NSatRegion::blockIndex(const NSatBlock* block) const {
+long NSatRegion::blockIndex(const SatBlock* block) const {
     BlockSet::const_iterator it;
     unsigned long id;
 
@@ -369,7 +369,7 @@ void NSatRegion::calculateBaseEuler() {
 }
 
 void NSatRegion::writeBlockAbbrs(std::ostream& out, bool tex) const {
-    typedef std::multiset<const NSatBlock*, LessDeref<NSatBlock> >
+    typedef std::multiset<const SatBlock*, LessDeref<SatBlock> >
         OrderedBlockSet;
     OrderedBlockSet blockOrder;
 
@@ -465,7 +465,7 @@ void NSatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
     std::fill(used, used + totAnnuli, false);
 
     // Off we go!
-    NSatBlock *b, *currBlock, *tmpBlock;
+    SatBlock *b, *currBlock, *tmpBlock;
     unsigned currBlockIndex, currAnnulus, tmpAnnulus;
     bool hTwist, vTwist, tmpHTwist, tmpVTwist;
     for (i = 0; i < blocks_.size(); ++i) {

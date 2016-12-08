@@ -110,8 +110,8 @@ class SFSpace;
  * triangulation-specific information stored in the subclass.  See the
  * transform() documentation for further details.
  */
-class REGINA_API NSatBlock :
-        public Output<NSatBlock>,
+class REGINA_API SatBlock :
+        public Output<SatBlock>,
         public boost::noncopyable {
     public:
         typedef std::set<Tetrahedron<3>*> TetList;
@@ -128,7 +128,7 @@ class REGINA_API NSatBlock :
             /**< Is the ring of boundary annuli twisted to form a Mobius
                  band? */
 
-        NSatBlock** adjBlock_;
+        SatBlock** adjBlock_;
             /**< The saturated block joined to each boundary annulus;
                  this may be null if there is no adjacency or if this
                  information is not known. */
@@ -159,23 +159,23 @@ class REGINA_API NSatBlock :
          *
          * @param cloneMe the saturated block to clone.
          */
-        NSatBlock(const NSatBlock& cloneMe);
+        SatBlock(const SatBlock& cloneMe);
         /**
          * Destroys all internal arrays.  Note that any adjacent blocks
          * that are referenced by the \a adjBlock array will \e not be
          * destroyed.
          */
-        virtual ~NSatBlock();
+        virtual ~SatBlock();
 
         /**
          * Returns a newly created clone of this saturated block structure.
-         * A clone of the correct subclass of NSatBlock will be returned.
-         * For this reason, each subclass of NSatBlock must implement this
+         * A clone of the correct subclass of SatBlock will be returned.
+         * For this reason, each subclass of SatBlock must implement this
          * routine.
          *
          * @return a new clone of this block.
          */
-        virtual NSatBlock* clone() const = 0;
+        virtual SatBlock* clone() const = 0;
 
         /**
          * Returns the number of annuli on the boundary of this
@@ -230,7 +230,7 @@ class REGINA_API NSatBlock :
          * @return the other block adjacent along this annulus, or 0
          * if there is no adjacent block listed.
          */
-        NSatBlock* adjacentBlock(unsigned whichAnnulus) const;
+        SatBlock* adjacentBlock(unsigned whichAnnulus) const;
 
         /**
          * Returns which specific annulus of the adjacent block is
@@ -298,7 +298,7 @@ class REGINA_API NSatBlock :
          * @param adjBackwards indicates whether the new adjacency is
          * backwards (see the class notes for details).
          */
-        void setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
+        void setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
                 unsigned adjAnnulus, bool adjReflected, bool adjBackwards);
 
         /**
@@ -319,7 +319,7 @@ class REGINA_API NSatBlock :
          * saturated block containing a solid torus whose meridinal curve
          * runs \a p times horizontally around the boundary in order through
          * annuli 0,1,... and follows the fibres \a q times from bottom
-         * to top (as depicted in the diagram in the NSatBlock class
+         * to top (as depicted in the diagram in the SatBlock class
          * notes).  Then this saturated block adds a positive (\a p, \a q)
          * fibre to the underlying Seifert fibred space.
          *
@@ -367,9 +367,9 @@ class REGINA_API NSatBlock :
          * \pre This block currently refers to tetrahedra in \a originalTri,
          * and \a iso describes a mapping from \a originalTri to \a newTri.
          *
-         * \warning Any subclasses of NSatBlock that store additional
+         * \warning Any subclasses of SatBlock that store additional
          * triangulation-specific information will need to override this
-         * routine.  When doing so, be sure to call NSatBlock::transform()
+         * routine.  When doing so, be sure to call SatBlock::transform()
          * so that the generic changes defined here will still take place.
          *
          * @param originalTri the triangulation currently used by this
@@ -467,7 +467,7 @@ class REGINA_API NSatBlock :
          * @param followPrev \c true if we should find the previous boundary
          * annulus, or \c false if we should find the next boundary annulus.
          */
-        void nextBoundaryAnnulus(unsigned thisAnnulus, NSatBlock*& nextBlock,
+        void nextBoundaryAnnulus(unsigned thisAnnulus, SatBlock*& nextBlock,
                 unsigned& nextAnnulus, bool& refVert, bool& refHoriz,
                 bool followPrev);
 
@@ -516,7 +516,7 @@ class REGINA_API NSatBlock :
          * if either the blocks are identical or this block comes after
          * the given block.
          */
-        bool operator < (const NSatBlock& compare) const;
+        bool operator < (const SatBlock& compare) const;
 
         /**
          * Determines whether the given annulus is in fact a boundary
@@ -551,7 +551,7 @@ class REGINA_API NSatBlock :
          * @return details of the saturated block if one was found, or
          * \c null if none was found.
          */
-        static NSatBlock* isBlock(const SatAnnulus& annulus,
+        static SatBlock* isBlock(const SatAnnulus& annulus,
             TetList& avoidTets);
 
         /**
@@ -571,7 +571,7 @@ class REGINA_API NSatBlock :
          * given output stream.
          *
          * This may be reimplemented by subclasses, but the parent
-         * NSatBlock class offers a reasonable default implementation.
+         * SatBlock class offers a reasonable default implementation.
          *
          * \ifacespython Not present.
          *
@@ -594,7 +594,7 @@ class REGINA_API NSatBlock :
          * is twisted to form a long Mobius band, or \c false (the default)
          * if it is not.
          */
-        NSatBlock(unsigned nAnnuli, bool twistedBoundary = false);
+        SatBlock(unsigned nAnnuli, bool twistedBoundary = false);
 
         /**
          * Determines whether the given tetrahedron is contained within the
@@ -723,13 +723,13 @@ class REGINA_API NSatBlock :
 
 /*@}*/
 
-// Inline functions for NSatBlock
+// Inline functions for SatBlock
 
-inline NSatBlock::NSatBlock(unsigned nAnnuli, bool twistedBoundary) :
+inline SatBlock::SatBlock(unsigned nAnnuli, bool twistedBoundary) :
         nAnnuli_(nAnnuli),
         annulus_(new SatAnnulus[nAnnuli]),
         twistedBoundary_(twistedBoundary),
-        adjBlock_(new NSatBlock*[nAnnuli]),
+        adjBlock_(new SatBlock*[nAnnuli]),
         adjAnnulus_(new unsigned[nAnnuli]),
         adjReflected_(new bool[nAnnuli]),
         adjBackwards_(new bool[nAnnuli]) {
@@ -737,7 +737,7 @@ inline NSatBlock::NSatBlock(unsigned nAnnuli, bool twistedBoundary) :
         adjBlock_[i] = 0;
 }
 
-inline NSatBlock::~NSatBlock() {
+inline SatBlock::~SatBlock() {
     delete[] annulus_;
     delete[] adjBlock_;
     delete[] adjAnnulus_;
@@ -745,44 +745,44 @@ inline NSatBlock::~NSatBlock() {
     delete[] adjBackwards_;
 }
 
-inline void NSatBlock::writeTextLong(std::ostream& out) const {
+inline void SatBlock::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << '\n';
 }
 
-inline unsigned NSatBlock::nAnnuli() const {
+inline unsigned SatBlock::nAnnuli() const {
     return nAnnuli_;
 }
 
-inline const SatAnnulus& NSatBlock::annulus(unsigned which) const {
+inline const SatAnnulus& SatBlock::annulus(unsigned which) const {
     return annulus_[which];
 }
 
-inline bool NSatBlock::twistedBoundary() const {
+inline bool SatBlock::twistedBoundary() const {
     return twistedBoundary_;
 }
 
-inline bool NSatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
+inline bool SatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
     return (adjBlock_[whichAnnulus] != 0);
 }
 
-inline NSatBlock* NSatBlock::adjacentBlock(unsigned whichAnnulus) const {
+inline SatBlock* SatBlock::adjacentBlock(unsigned whichAnnulus) const {
     return adjBlock_[whichAnnulus];
 }
 
-inline unsigned NSatBlock::adjacentAnnulus(unsigned whichAnnulus) const {
+inline unsigned SatBlock::adjacentAnnulus(unsigned whichAnnulus) const {
     return adjAnnulus_[whichAnnulus];
 }
 
-inline bool NSatBlock::adjacentReflected(unsigned whichAnnulus) const {
+inline bool SatBlock::adjacentReflected(unsigned whichAnnulus) const {
     return adjReflected_[whichAnnulus];
 }
 
-inline bool NSatBlock::adjacentBackwards(unsigned whichAnnulus) const {
+inline bool SatBlock::adjacentBackwards(unsigned whichAnnulus) const {
     return adjBackwards_[whichAnnulus];
 }
 
-inline void NSatBlock::setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
+inline void SatBlock::setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
         unsigned adjAnnulus, bool adjReflected, bool adjBackwards) {
     adjBlock_[whichAnnulus] = adjBlock;
     adjAnnulus_[whichAnnulus] = adjAnnulus;
@@ -795,25 +795,25 @@ inline void NSatBlock::setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
 }
 
-inline bool NSatBlock::notUnique(Tetrahedron<3>* test) {
+inline bool SatBlock::notUnique(Tetrahedron<3>* test) {
     return (test == 0);
 }
 
-inline bool NSatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1) {
+inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1) {
     return (test == 0 || test == other1);
 }
 
-inline bool NSatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
         Tetrahedron<3>* other2) {
     return (test == 0 || test == other1 || test == other2);
 }
 
-inline bool NSatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
         Tetrahedron<3>* other2, Tetrahedron<3>* other3) {
     return (test == 0 || test == other1 || test == other2 || test == other3);
 }
 
-inline bool NSatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
+inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
         Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4) {
     return (test == 0 || test == other1 || test == other2 || test == other3 ||
         test == other4);

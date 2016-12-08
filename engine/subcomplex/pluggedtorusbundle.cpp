@@ -149,8 +149,8 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
     int regionPos;
     Perm<4> annulusToUpperLayer;
     SatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
-    NSatBlock::TetList avoidTets;
-    NSatBlock* starter;
+    SatBlock::TetList avoidTets;
+    SatBlock* starter;
     NSatRegion* region;
     bool bdryRefVert, bdryRefHoriz;
 
@@ -215,7 +215,7 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
             avoidTets.insert(layerLower.newBoundaryTet(0));
             avoidTets.insert(layerLower.newBoundaryTet(1));
 
-            starter = NSatBlock::isBlock(upperAnnulus, avoidTets);
+            starter = SatBlock::isBlock(upperAnnulus, avoidTets);
             if (! starter)
                 continue;
 

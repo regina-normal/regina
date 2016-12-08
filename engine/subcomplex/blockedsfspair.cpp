@@ -64,7 +64,7 @@ struct BlockedSFSPairSearcher : public SatBlockStarterSearcher {
     }
 
     protected:
-        bool useStarterBlock(NSatBlock* starter);
+        bool useStarterBlock(SatBlock* starter);
 };
 
 BlockedSFSPair::~BlockedSFSPair() {
@@ -151,7 +151,7 @@ BlockedSFSPair* BlockedSFSPair::isBlockedSFSPair(Triangulation<3>* tri) {
     return 0;
 }
 
-bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
+bool BlockedSFSPairSearcher::useStarterBlock(SatBlock* starter) {
     // The region pointers should be null, but just in case...
     if (region[0] || region[1]) {
         delete starter;
@@ -171,7 +171,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     }
 
     // Insist on this boundary being untwisted.
-    NSatBlock* bdryBlock;
+    SatBlock* bdryBlock;
     unsigned bdryAnnulus;
     bool bdryVert, bdryHoriz;
     region[0]->boundaryAnnulus(0, bdryBlock, bdryAnnulus,
@@ -180,7 +180,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     bool firstRegionReflected =
         ((bdryVert && ! bdryHoriz) || (bdryHoriz && ! bdryVert));
 
-    NSatBlock* tmpBlock;
+    SatBlock* tmpBlock;
     unsigned tmpAnnulus;
     bool tmpVert, tmpHoriz;
     bdryBlock->nextBoundaryAnnulus(bdryAnnulus, tmpBlock, tmpAnnulus,
@@ -220,7 +220,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
     Matrix2 layeringToAnnulus1;
 
     // Try the three possible orientations for fibres on the other side.
-    NSatBlock* otherStarter;
+    SatBlock* otherStarter;
     for (int plugPos = 0; plugPos < 3; plugPos++) {
         // Construct the boundary annulus for the second region.
         // Refresh the tetrahedra as well as the vertex roles, since
@@ -257,7 +257,7 @@ bool BlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         // See if we can flesh the other side out to an entire region.
         otherSide.switchSides();
 
-        if ((otherStarter = NSatBlock::isBlock(otherSide, usedTets))) {
+        if ((otherStarter = SatBlock::isBlock(otherSide, usedTets))) {
             region[1] = new NSatRegion(otherStarter);
             region[1]->expand(usedTets);
 

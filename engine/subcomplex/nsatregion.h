@@ -82,13 +82,13 @@ namespace regina {
  *
  * This helper structure is small, and can be copied by value if
  * necessary.  Be aware that when this structure is destroyed, the
- * internal block structure of type NSatBlock is \e not destroyed.
+ * internal block structure of type SatBlock is \e not destroyed.
  *
  * \ifacespython The data members \a block, \a refVert and \a refHoriz
  * are read-only.
  */
 struct REGINA_API NSatBlockSpec {
-    NSatBlock* block;
+    SatBlock* block;
         /**< Details of the saturated block structure. */
     bool refVert;
         /**< Indicates whether the block is reflected vertically within
@@ -111,7 +111,7 @@ struct REGINA_API NSatBlockSpec {
      * @param useRefHoriz \c true if the block is reflected horizontally
      * within the larger region, or \c false otherwise.
      */
-    NSatBlockSpec(NSatBlock* useBlock, bool useRefVert, bool useRefHoriz);
+    NSatBlockSpec(SatBlock* useBlock, bool useRefVert, bool useRefHoriz);
     /**
      * Determines whether this and the given structure contain identical
      * information.  In particular, their \a block pointers must be
@@ -139,7 +139,7 @@ struct REGINA_API NSatBlockSpec {
  * A large saturated region in a Seifert fibred space formed by joining
  * together saturated blocks.
  *
- * Like a saturated block (described in the class NSatBlock), a
+ * Like a saturated block (described in the class SatBlock), a
  * saturated region is a connected set of tetrahedra built from a subset
  * of fibres.  Unlike a saturated block however, a saturated region has
  * no constraints on its boundary - it may have several boundary
@@ -158,7 +158,7 @@ struct REGINA_API NSatBlockSpec {
  * region.  In this way, each boundary component of the region (if there
  * are any at all) is formed from a ring of boundary annuli, in the same
  * way that the boundary of a block is.  Note that the routine
- * NSatBlock::nextBoundaryAnnulus() can be used to trace around a region
+ * SatBlock::nextBoundaryAnnulus() can be used to trace around a region
  * boundary.  Like block boundaries, the boundary of a saturated region
  * need not be part of the boundary of the larger triangulation (i.e.,
  * there may be adjacent tetrahedra that are not recognised as part of
@@ -167,7 +167,7 @@ struct REGINA_API NSatBlockSpec {
  * The NSatRegion class stores a list of its constituent blocks, but it
  * does not directly store which block boundary annuli are joined to
  * which.  This adjacency information is stored within the blocks
- * themselves; see the notes regarding adjacency in the NSatBlock class
+ * themselves; see the notes regarding adjacency in the SatBlock class
  * description.
  *
  * Blocks cannot be added to a region by hand.  The way a region is
@@ -180,7 +180,7 @@ struct REGINA_API NSatBlockSpec {
  * \warning It is crucial that the adjacency information stored in the
  * blocks is consistent with the region containing them.  All this
  * requires is that the blocks are not manipulated externally (e.g.,
- * NSatBlock::setAdjacent() is not called on any of the blocks), but
+ * SatBlock::setAdjacent() is not called on any of the blocks), but
  * instead all adjacency information is managed by this class.  Routines
  * such as expand() which may add more blocks to the region will update
  * the block adjacencies accordingly.
@@ -226,7 +226,7 @@ class REGINA_API NSatRegion :
         unsigned long twistedBlocks_;
             /**< The number of constituent blocks with twisted boundary.
                  Each such block provides an additional twisted reflector
-                 boundary to the base orbifold; see NSatBlock::adjustSFS()
+                 boundary to the base orbifold; see SatBlock::adjustSFS()
                  for details. */
 
         unsigned long nBdryAnnuli_;
@@ -250,11 +250,11 @@ class REGINA_API NSatRegion :
          *
          * \pre The given block has no adjacencies listed.  That is,
          * for every boundary annulus of the given block,
-         * NSatBlock::hasAdjacentBlock() returns \c false.
+         * SatBlock::hasAdjacentBlock() returns \c false.
          *
          * @param starter the single block that this region will describe.
          */
-        NSatRegion(NSatBlock* starter);
+        NSatRegion(SatBlock* starter);
 
         /**
          * Destroys this structure and all of its internal data,
@@ -293,7 +293,7 @@ class REGINA_API NSatRegion :
          * 0 and numberOfBlocks()-1 inclusive), or -1 if the block is
          * not part of this region.
          */
-        long blockIndex(const NSatBlock* block) const;
+        long blockIndex(const SatBlock* block) const;
 
         /**
          * Returns the number of saturated annuli that together form the
@@ -417,7 +417,7 @@ class REGINA_API NSatRegion :
          * or \c false if not.
          */
         void boundaryAnnulus(unsigned long which,
-            NSatBlock*& block, unsigned& annulus,
+            SatBlock*& block, unsigned& annulus,
             bool& blockRefVert, bool& blockRefHoriz) const;
 
         /**
@@ -499,7 +499,7 @@ class REGINA_API NSatRegion :
          * calling this routine.
          *
          * \pre If any blocks already belonging to this region have
-         * adjacencies listed in their NSatBlock structures, then these
+         * adjacencies listed in their SatBlock structures, then these
          * adjacent blocks belong to this region also.  This precondition
          * is easily satisfied if you let the NSatRegion constructor
          * and expand() do all of the adjacency handling, as described
@@ -523,14 +523,14 @@ class REGINA_API NSatRegion :
          * triangulation component as described above, or \c true in all
          * other cases.
          */
-        bool expand(NSatBlock::TetList& avoidTets,
+        bool expand(SatBlock::TetList& avoidTets,
             bool stopIfIncomplete = false);
 
         /**
          * Writes an abbreviated list of blocks within this region to
          * the given output stream.  Blocks will be written using their
          * abbreviated names, and these names will be separated by
-         * commas.  See NSatBlock::writeAbbr() for further details.
+         * commas.  See SatBlock::writeAbbr() for further details.
          *
          * The blocks within this region will be sorted before their
          * abbreviated names are output.  The particular method of sorting
@@ -619,7 +619,7 @@ class REGINA_API NSatRegion :
 inline NSatBlockSpec::NSatBlockSpec() {
 }
 
-inline NSatBlockSpec::NSatBlockSpec(NSatBlock* useBlock, bool useRefVert,
+inline NSatBlockSpec::NSatBlockSpec(SatBlock* useBlock, bool useRefVert,
         bool useRefHoriz) : block(useBlock), refVert(useRefVert),
         refHoriz(useRefHoriz) {
 }

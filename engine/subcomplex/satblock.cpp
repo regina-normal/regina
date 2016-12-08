@@ -35,10 +35,10 @@
 
 namespace regina {
 
-NSatBlock::NSatBlock(const NSatBlock& cloneMe) : nAnnuli_(cloneMe.nAnnuli_),
+SatBlock::SatBlock(const SatBlock& cloneMe) : nAnnuli_(cloneMe.nAnnuli_),
         annulus_(new SatAnnulus[cloneMe.nAnnuli_]),
         twistedBoundary_(cloneMe.twistedBoundary_),
-        adjBlock_(new NSatBlock*[cloneMe.nAnnuli_]),
+        adjBlock_(new SatBlock*[cloneMe.nAnnuli_]),
         adjAnnulus_(new unsigned[cloneMe.nAnnuli_]),
         adjReflected_(new bool[cloneMe.nAnnuli_]),
         adjBackwards_(new bool[cloneMe.nAnnuli_]) {
@@ -51,14 +51,14 @@ NSatBlock::NSatBlock(const NSatBlock& cloneMe) : nAnnuli_(cloneMe.nAnnuli_),
     }
 }
 
-void NSatBlock::transform(const Triangulation<3>* originalTri,
+void SatBlock::transform(const Triangulation<3>* originalTri,
         const Isomorphism<3>* iso, Triangulation<3>* newTri) {
     for (unsigned i = 0; i < nAnnuli_; i++)
         annulus_[i].transform(originalTri, iso, newTri);
 }
 
-void NSatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
-        NSatBlock*& nextBlock, unsigned& nextAnnulus, bool& refVert,
+void SatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
+        SatBlock*& nextBlock, unsigned& nextAnnulus, bool& refVert,
         bool& refHoriz, bool followPrev) {
     // Don't worry about testing the precondition (this annulus has no
     // adjacency) -- things won't break even if it's false.
@@ -93,13 +93,13 @@ void NSatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
     }
 }
 
-std::string NSatBlock::abbr(bool tex) const {
+std::string SatBlock::abbr(bool tex) const {
     std::ostringstream s;
     writeAbbr(s, tex);
     return s.str();
 }
 
-bool NSatBlock::isBad(Tetrahedron<3>* t, const TetList& list) {
+bool SatBlock::isBad(Tetrahedron<3>* t, const TetList& list) {
     if (list.find(t) != list.end())
         return true;
     return false;
