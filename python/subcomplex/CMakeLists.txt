@@ -22,7 +22,7 @@ SET ( FILES
   satblock
   satblocktypes
   satregion
-  nsnappeacensustri
+  snappeacensustri
   nsnappedball
   nsnappedtwosphere
   nspiralsolidtorus
