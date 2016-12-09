@@ -39,7 +39,7 @@
 #import "manifold/manifold.h"
 #import "packet/container.h"
 #import "snappea/snappeatriangulation.h"
-#import "subcomplex/nstandardtri.h"
+#import "subcomplex/standardtri.h"
 #import "triangulation/dim3.h"
 
 #define PROP_SPHERE 1
@@ -114,7 +114,7 @@
     {
         regina::Triangulation<3> simp(*self.packet);
         simp.intelligentSimplify();
-        regina::NStandardTriangulation* std = regina::NStandardTriangulation::isStandardTriangulation(&simp);
+        regina::StandardTriangulation* std = regina::StandardTriangulation::isStandardTriangulation(&simp);
         if (std) {
             regina::Manifold* mfd = std->manifold();
             if (mfd) {

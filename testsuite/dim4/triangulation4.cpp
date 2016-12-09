@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/example4.h"
 #include "manifold/manifold.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
@@ -53,7 +53,7 @@ using regina::GroupPresentation;
 using regina::Isomorphism;
 using regina::Pentachoron;
 using regina::Perm;
-using regina::NStandardTriangulation;
+using regina::StandardTriangulation;
 using regina::Tetrahedron;
 using regina::Triangulation;
 using regina::Vertex;
@@ -581,8 +581,8 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
             }
 
-            NStandardTriangulation* std =
-                NStandardTriangulation::isStandardTriangulation(&t);
+            StandardTriangulation* std =
+                StandardTriangulation::isStandardTriangulation(&t);
             if (! std)
                 ans = "<unrecognised triangulation>";
             else {
@@ -729,8 +729,8 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
 
                 std::string link;
-                NStandardTriangulation* std =
-                    NStandardTriangulation::isStandardTriangulation(&t);
+                StandardTriangulation* std =
+                    StandardTriangulation::isStandardTriangulation(&t);
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
@@ -762,8 +762,8 @@ class Triangulation4Test : public TriangulationTest<4> {
                 t.intelligentSimplify();
 
                 std::string link;
-                NStandardTriangulation* std =
-                    NStandardTriangulation::isStandardTriangulation(&t);
+                StandardTriangulation* std =
+                    StandardTriangulation::isStandardTriangulation(&t);
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
@@ -794,8 +794,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             Triangulation<3> t(*(tri.vertex(whichVertex)->buildLink()));
             t.intelligentSimplify();
 
-            NStandardTriangulation* std =
-                NStandardTriangulation::isStandardTriangulation(&t);
+            StandardTriangulation* std =
+                StandardTriangulation::isStandardTriangulation(&t);
             if (! std)
                 link = "<unrecognised triangulation>";
             else {

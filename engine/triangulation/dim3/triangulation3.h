@@ -2210,7 +2210,7 @@ class REGINA_API Triangulation<3> :
 
         /**
          * Performs a layering upon the given boundary edge of the
-         * triangulation.  See the NLayering class notes for further
+         * triangulation.  See the Layering class notes for further
          * details on what a layering entails.
          *
          * \pre The given edge is a boundary edge of this triangulation,
@@ -2247,7 +2247,7 @@ class REGINA_API Triangulation<3> :
          * numbers.
          * @return the tetrahedron containing the boundary torus.
          *
-         * @see NLayeredSolidTorus
+         * @see LayeredSolidTorus
          */
         Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);
@@ -2265,12 +2265,12 @@ class REGINA_API Triangulation<3> :
          * @param p a parameter of the desired lens space.
          * @param q a parameter of the desired lens space.
          *
-         * @see NLayeredLensSpace
+         * @see LayeredLensSpace
          */
         void insertLayeredLensSpace(unsigned long p, unsigned long q);
         /**
          * Inserts a layered loop of the given length into this triangulation.
-         * Layered loops are described in more detail in the NLayeredLoop
+         * Layered loops are described in more detail in the LayeredLoop
          * class notes.
          *
          * The new tetrahedra will be inserted at the end of the list of
@@ -2281,7 +2281,7 @@ class REGINA_API Triangulation<3> :
          * @param twisted \c true if the new layered loop should be twisted,
          * or \c false if it should be untwisted.
          *
-         * @see NLayeredLoop
+         * @see LayeredLoop
          */
         void insertLayeredLoop(unsigned long length, bool twisted);
         /**
@@ -2289,7 +2289,7 @@ class REGINA_API Triangulation<3> :
          * parameters into this triangulation.  Almost all augmented
          * triangular solid tori represent Seifert fibred spaces with three
          * or fewer exceptional fibres.  Augmented triangular solid tori
-         * are described in more detail in the NAugTriSolidTorus class notes.
+         * are described in more detail in the AugTriSolidTorus class notes.
          *
          * The resulting Seifert fibred space will be
          * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)

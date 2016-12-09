@@ -32,7 +32,7 @@
 
 #include "file/globaldirs.h"
 #include "manifold/snappeacensusmfd.h"
-#include "subcomplex/nsnappeacensustri.h"
+#include "subcomplex/snappeacensustri.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 
@@ -217,18 +217,18 @@ std::ostream& SnapPeaCensusManifold::writeName(std::ostream& out) const {
     }
 
     // No special names, just the usual SnapPea notation.
-    return NSnapPeaCensusTri(section_, index_).writeName(out);
+    return SnapPeaCensusTri(section_, index_).writeName(out);
 }
 
 std::ostream& SnapPeaCensusManifold::writeTeXName(std::ostream& out) const {
-    return NSnapPeaCensusTri(section_, index_).writeTeXName(out);
+    return SnapPeaCensusTri(section_, index_).writeTeXName(out);
 }
 
 std::ostream& SnapPeaCensusManifold::writeStructure(std::ostream& out) const {
     // If we didn't give the usual SnapPea name in writeName(), give it here.
     if (section_ == SEC_5) {
         if (index_ == 0 || index_ == 4 || index_ == 129)
-            return NSnapPeaCensusTri(section_, index_).writeName(out);
+            return SnapPeaCensusTri(section_, index_).writeName(out);
     }
 
     return out;

@@ -32,28 +32,28 @@
 
 // Regina core includes:
 #include "manifold/manifold.h"
-#include "subcomplex/naugtrisolidtorus.h"
-#include "subcomplex/nblockedsfs.h"
-#include "subcomplex/nblockedsfsloop.h"
-#include "subcomplex/nblockedsfspair.h"
-#include "subcomplex/nblockedsfstriple.h"
-#include "subcomplex/nl31pillow.h"
-#include "subcomplex/nlayeredchain.h"
-#include "subcomplex/nlayeredchainpair.h"
-#include "subcomplex/nlayeredlensspace.h"
-#include "subcomplex/nlayeredloop.h"
-#include "subcomplex/nlayeredsolidtorus.h"
-#include "subcomplex/nlayeredsurfacebundle.h"
-#include "subcomplex/npillowtwosphere.h"
-#include "subcomplex/npluggedtorusbundle.h"
-#include "subcomplex/nplugtrisolidtorus.h"
-#include "subcomplex/nsatblock.h"
-#include "subcomplex/nsatregion.h"
-#include "subcomplex/nsnappedball.h"
-#include "subcomplex/nsnappedtwosphere.h"
-#include "subcomplex/nspiralsolidtorus.h"
-#include "subcomplex/nstandardtri.h"
-#include "subcomplex/ntxicore.h"
+#include "subcomplex/augtrisolidtorus.h"
+#include "subcomplex/blockedsfs.h"
+#include "subcomplex/blockedsfsloop.h"
+#include "subcomplex/blockedsfspair.h"
+#include "subcomplex/blockedsfstriple.h"
+#include "subcomplex/l31pillow.h"
+#include "subcomplex/layeredchain.h"
+#include "subcomplex/layeredchainpair.h"
+#include "subcomplex/layeredlensspace.h"
+#include "subcomplex/layeredloop.h"
+#include "subcomplex/layeredsolidtorus.h"
+#include "subcomplex/layeredsurfacebundle.h"
+#include "subcomplex/pillowtwosphere.h"
+#include "subcomplex/pluggedtorusbundle.h"
+#include "subcomplex/plugtrisolidtorus.h"
+#include "subcomplex/satblock.h"
+#include "subcomplex/satregion.h"
+#include "subcomplex/snappedball.h"
+#include "subcomplex/snappedtwosphere.h"
+#include "subcomplex/spiralsolidtorus.h"
+#include "subcomplex/standardtri.h"
+#include "subcomplex/txicore.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -77,7 +77,7 @@
 using regina::Edge;
 using regina::Packet;
 using regina::Perm;
-using regina::NSatRegion;
+using regina::SatRegion;
 using regina::Triangulation;
 
 Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
@@ -189,8 +189,8 @@ void Tri3CompositionUI::refresh() {
     components = lastComponent = 0;
 
     // Try to identify the 3-manifold.
-    std::unique_ptr<regina::NStandardTriangulation> standardTri(
-        regina::NStandardTriangulation::isStandardTriangulation(tri));
+    std::unique_ptr<regina::StandardTriangulation> standardTri(
+        regina::StandardTriangulation::isStandardTriangulation(tri));
     if (standardTri.get()) {
         addTopLevelSection(
             tr("Triangulation: ") + standardTri->name().c_str());
@@ -382,9 +382,9 @@ void Tri3CompositionUI::findAugTriSolidTori() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NAugTriSolidTorus* aug;
+    regina::AugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(
+        aug = regina::AugTriSolidTorus::isAugTriSolidTorus(
             tri->component(i));
         if (aug) {
             id = addComponentSection(tr(
@@ -393,7 +393,7 @@ void Tri3CompositionUI::findAugTriSolidTori() {
             details = new QTreeWidgetItem(id);
             details->setText(0,tr("Component %1").arg(i));
 
-            const regina::NTriSolidTorus& core = aug->core();
+            const regina::TriSolidTorus& core = aug->core();
             details = new QTreeWidgetItem(id, details);
             details->setText(0,tr("Core: tets %1, %2, %3").
                 arg(core.tetrahedron(0)->index()).
@@ -403,10 +403,10 @@ void Tri3CompositionUI::findAugTriSolidTori() {
             if (aug->hasLayeredChain()) {
                 QString chainType;
                 if (aug->chainType() ==
-                        regina::NAugTriSolidTorus::CHAIN_MAJOR)
+                        regina::AugTriSolidTorus::CHAIN_MAJOR)
                     chainType = tr("major");
                 else if (aug->chainType() ==
-                        regina::NAugTriSolidTorus::CHAIN_AXIS)
+                        regina::AugTriSolidTorus::CHAIN_AXIS)
                     chainType = tr("axis");
                 else
                     chainType = tr("unknown");
@@ -425,13 +425,13 @@ void Tri3CompositionUI::findAugTriSolidTori() {
     }
 }
 
-void Tri3CompositionUI::describeSatRegion(const NSatRegion& region,
+void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
         QTreeWidgetItem* parent) {
     QTreeWidgetItem* details;
     QTreeWidgetItem* annuli;
 
-    regina::NSatBlockSpec spec;
-    regina::NSatAnnulus ann;
+    regina::SatBlockSpec spec;
+    regina::SatAnnulus ann;
     unsigned long nAnnuli;
     long a, b;
     bool ref, back;
@@ -524,15 +524,15 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     QTreeWidgetItem* id;
     QTreeWidgetItem* details;
 
-    regina::NBlockedSFS* sfs = regina::NBlockedSFS::isBlockedSFS(tri);
+    regina::BlockedSFS* sfs = regina::BlockedSFS::isBlockedSFS(tri);
     if (sfs) {
         id = addComponentSection(tr("Blocked Seifert Fibred Space"));
         describeSatRegion(sfs->region(), id);
         delete sfs;
     }
 
-    regina::NBlockedSFSLoop* loop =
-        regina::NBlockedSFSLoop::isBlockedSFSLoop(tri);
+    regina::BlockedSFSLoop* loop =
+        regina::BlockedSFSLoop::isBlockedSFSLoop(tri);
     if (loop) {
         id = addComponentSection(tr("Blocked SFS Loop"));
 
@@ -546,8 +546,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         delete loop;
     }
 
-    regina::NBlockedSFSPair* pair =
-        regina::NBlockedSFSPair::isBlockedSFSPair(tri);
+    regina::BlockedSFSPair* pair =
+        regina::BlockedSFSPair::isBlockedSFSPair(tri);
     if (pair) {
         id = addComponentSection(tr("Blocked SFS Pair"));
 
@@ -565,8 +565,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         delete pair;
     }
 
-    regina::NBlockedSFSTriple* triple =
-        regina::NBlockedSFSTriple::isBlockedSFSTriple(tri);
+    regina::BlockedSFSTriple* triple =
+        regina::BlockedSFSTriple::isBlockedSFSTriple(tri);
     if (triple) {
         id = addComponentSection(tr("Blocked SFS Triple"));
 
@@ -593,8 +593,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         delete triple;
     }
 
-    regina::NLayeredTorusBundle* bundle =
-        regina::NLayeredTorusBundle::isLayeredTorusBundle(tri);
+    regina::LayeredTorusBundle* bundle =
+        regina::LayeredTorusBundle::isLayeredTorusBundle(tri);
     if (bundle) {
         id = addComponentSection(tr("Layered Torus Bundle"));
 
@@ -613,8 +613,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         delete bundle;
     }
 
-    regina::NPluggedTorusBundle* pBundle =
-        regina::NPluggedTorusBundle::isPluggedTorusBundle(tri);
+    regina::PluggedTorusBundle* pBundle =
+        regina::PluggedTorusBundle::isPluggedTorusBundle(tri);
     if (pBundle) {
         id = addComponentSection(tr("Plugged Torus Bundle"));
 
@@ -640,9 +640,9 @@ void Tri3CompositionUI::findL31Pillows() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NL31Pillow* pillow;
+    regina::L31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::NL31Pillow::isL31Pillow(tri->component(i));
+        pillow = regina::L31Pillow::isL31Pillow(tri->component(i));
         if (pillow) {
             id = addComponentSection(tr("L(3,1) pillow ") +
                 pillow->name().c_str());
@@ -667,9 +667,9 @@ void Tri3CompositionUI::findLayeredChainPairs() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NLayeredChainPair* pair;
+    regina::LayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
-        pair = regina::NLayeredChainPair::isLayeredChainPair(
+        pair = regina::LayeredChainPair::isLayeredChainPair(
             tri->component(i));
         if (pair) {
             id = addComponentSection(tr("Layered chain pair ") +
@@ -695,9 +695,9 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NLayeredLensSpace* lens;
+    regina::LayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::NLayeredLensSpace::isLayeredLensSpace(
+        lens = regina::LayeredLensSpace::isLayeredLensSpace(
             tri->component(i));
         if (lens) {
             id = addComponentSection(tr("Layered lens space ") +
@@ -706,7 +706,7 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
 
-            const regina::NLayeredSolidTorus& torus(lens->torus());
+            const regina::LayeredSolidTorus& torus(lens->torus());
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
                 "Layered %1-%2-%3 solid torus %4").
@@ -727,9 +727,9 @@ void Tri3CompositionUI::findLayeredLoops() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NLayeredLoop* loop;
+    regina::LayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
-        loop = regina::NLayeredLoop::isLayeredLoop(tri->component(i));
+        loop = regina::LayeredLoop::isLayeredLoop(tri->component(i));
         if (loop) {
             id = addComponentSection(tr("Layered loop ") +
                 loop->name().c_str());
@@ -766,10 +766,10 @@ void Tri3CompositionUI::findLayeredSolidTori() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NLayeredSolidTorus* torus;
+    regina::LayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(
+        torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(
             tri->tetrahedron(i));
         if (torus) {
             id = addComponentSection(tr("Layered solid torus ") +
@@ -812,12 +812,12 @@ void Tri3CompositionUI::findPillowSpheres() {
     unsigned long i, j;
     regina::Triangle<3>* f1;
     regina::Triangle<3>* f2;
-    regina::NPillowTwoSphere* pillow;
+    regina::PillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
         f1 = tri->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
             f2 = tri->triangle(j);
-            pillow = regina::NPillowTwoSphere::formsPillowTwoSphere(f1, f2);
+            pillow = regina::PillowTwoSphere::formsPillowTwoSphere(f1, f2);
             if (pillow) {
                 id = addComponentSection(tr("Pillow 2-sphere"));
 
@@ -844,10 +844,10 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NPlugTriSolidTorus* plug;
-    const regina::NLayeredChain* chain;
+    regina::PlugTriSolidTorus* plug;
+    const regina::LayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(
+        plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(
             tri->component(i));
         if (plug) {
             id = addComponentSection(tr("Plugged triangular solid torus ") +
@@ -856,7 +856,7 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
 
-            const regina::NTriSolidTorus& core(plug->core());
+            const regina::TriSolidTorus& core(plug->core());
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Core: tets %1, %2, %3").
@@ -870,7 +870,7 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
                 if (chain)
                     lengths += tr("%1 (%2)").arg(chain->index()).
                         arg(plug->chainType(j) ==
-                        regina::NPlugTriSolidTorus::CHAIN_MAJOR ?
+                        regina::PlugTriSolidTorus::CHAIN_MAJOR ?
                         tr("major") : tr("minor"));
                 else
                     lengths += "0";
@@ -883,7 +883,7 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Equator type: ") +
                 (plug->equatorType() ==
-                regina::NPlugTriSolidTorus::EQUATOR_MAJOR ?
+                regina::PlugTriSolidTorus::EQUATOR_MAJOR ?
                 tr("major") : tr("minor")));
 
             delete plug;
@@ -897,9 +897,9 @@ void Tri3CompositionUI::findSnappedBalls() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NSnappedBall* ball;
+    regina::SnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
-        ball = regina::NSnappedBall::formsSnappedBall(
+        ball = regina::SnappedBall::formsSnappedBall(
             tri->tetrahedron(i));
         if (ball) {
             id = addComponentSection(tr("Snapped 3-ball"));
@@ -925,12 +925,12 @@ void Tri3CompositionUI::findSnappedSpheres() {
     unsigned long i, j;
     regina::Tetrahedron<3>* t1;
     regina::Tetrahedron<3>* t2;
-    regina::NSnappedTwoSphere* sphere;
+    regina::SnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = tri->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = tri->tetrahedron(j);
-            sphere = regina::NSnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
+            sphere = regina::SnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
             if (sphere) {
                 id = addComponentSection(tr("Snapped 2-sphere"));
 
@@ -938,7 +938,7 @@ void Tri3CompositionUI::findSnappedSpheres() {
                 details->setText(0, tr("Tetrahedra: %1, %2").
                     arg(i).arg(j));
 
-                const regina::NSnappedBall* ball = sphere->snappedBall(0);
+                const regina::SnappedBall* ball = sphere->snappedBall(0);
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Equator: edge %1").arg(
@@ -956,7 +956,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
 
-    regina::NSpiralSolidTorus* spiral;
+    regina::SpiralSolidTorus* spiral;
     regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
@@ -966,7 +966,7 @@ void Tri3CompositionUI::findSpiralSolidTori() {
             if (Perm<4>::S4[whichPerm][0] > Perm<4>::S4[whichPerm][3])
                 continue;
 
-            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet,
+            spiral = regina::SpiralSolidTorus::formsSpiralSolidTorus(tet,
                 Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;

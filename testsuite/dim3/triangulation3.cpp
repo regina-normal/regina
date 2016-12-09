@@ -40,7 +40,7 @@
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "split/signature.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim2.h"
@@ -60,7 +60,7 @@ using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
 using regina::Signature;
-using regina::NStandardTriangulation;
+using regina::StandardTriangulation;
 using regina::Tetrahedron;
 using regina::Triangle;
 using regina::Triangulation;
@@ -3659,8 +3659,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NStandardTriangulation* std =
-                NStandardTriangulation::isStandardTriangulation(&t);
+            StandardTriangulation* std =
+                StandardTriangulation::isStandardTriangulation(&t);
             if (std == 0) {
                 std::ostringstream msg;
                 msg << "Large triangulation should simplify to " << simpleName

@@ -35,7 +35,7 @@
 
 #include "enumerate/treetraversal.h"
 #include "packet/container.h"
-#include "subcomplex/nsnappedball.h"
+#include "subcomplex/snappedball.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
@@ -985,9 +985,9 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // The boundary edge on the outside will surround a disc that cuts
     // right through the tetrahedron.
     TetrahedronIterator tit;
-    NSnappedBall* ball;
+    SnappedBall* ball;
     for (tit = use.simplices_.begin(); tit != use.simplices_.end(); ++tit) {
-        ball = NSnappedBall::formsSnappedBall(*tit);
+        ball = SnappedBall::formsSnappedBall(*tit);
         if (! ball)
             continue;
 
