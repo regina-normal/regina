@@ -88,24 +88,38 @@
 
 @implementation PacketPicker
 
-- (void)fill:(regina::Packet *)tree allowNone:(BOOL)allowNone noneText:(NSString *)noneText allowRoot:(BOOL)allowRoot rootText:(NSString *)rootText
+- (void)fill:(regina::Packet *)tree allowNone:(BOOL)allowNone noneText:(NSString *)noneText allowRoot:(BOOL)allowRoot rootText:(NSString *)rootText select:(regina::Packet *)packet
 {
+    NSInteger initSelection = -1;
+
     self.allowNone = allowNone;
 
     self.choices = [NSMutableArray array];
-    if (allowNone)
+    if (allowNone) {
+        if (packet == nullptr)
+            initSelection = self.choices.count;
         [self.choices addObject:[PacketChoice packetChoiceWithPacket:nullptr text:noneText]];
-    if (allowRoot)
+    }
+    if (allowRoot) {
+        if (packet == tree)
+            initSelection = self.choices.count;
         [self.choices addObject:[PacketChoice packetChoiceWithPacket:tree text:rootText]];
+    }
 
-    for (regina::Packet* p = tree->nextTreePacket(); p; p = p->nextTreePacket())
+    for (regina::Packet* p = tree->nextTreePacket(); p; p = p->nextTreePacket()) {
+        if (packet == p)
+            initSelection = self.choices.count;
         [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
+    }
 
     if (self.choices.count == 0)
         [self.choices addObject:[PacketChoice packetChoiceWithPacket:nullptr text:noneText]];
 
     self.delegate = self;
     self.dataSource = self;
+
+    if (initSelection >= 0)
+        [self selectRow:initSelection inComponent:0 animated:NO];
 }
 
 - (void)fill:(regina::Packet *)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString *)noneText
@@ -169,6 +183,11 @@
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     return [self.choices[row] text];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    [self.watcher packetPicker:self selected:[self.choices[row] packet]];
 }
 
 @end

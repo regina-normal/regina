@@ -31,6 +31,8 @@
  **************************************************************************/
 
 #import "PacketManagerIOS.h"
+#import "PacketPicker.h"
+#import "ReginaHelper.h"
 #import "ScriptViewController.h"
 #import "packet/script.h"
 #import "syntax/repository.h"
@@ -42,23 +44,118 @@
 // a singleton: it is created on demand, and never deleted.
 regina::syntax::Repository* repository;
 
+#pragma mark - Script variable value field
+
+@implementation ScriptVariableValueField
+
+- (CGRect)caretRectForPosition:(UITextPosition *)position
+{
+    // Hide the blinking cursor.
+    return CGRectZero;
+}
+
+@end
+
 #pragma mark - Script variable cell
 
-@interface ScriptVariableCell ()
+@interface ScriptVariableCell () <UITextFieldDelegate, PacketPickerWatcher> {
+    std::string _name;
+    regina::Packet* _packet;
+    regina::Packet* _tree;
+}
+// To initialise the contents of a cell, call initVariable.
+// These will fill the UI elements with appropriate contents - there is no need
+// to fill the UI elements variable, value and icon directly.
 @property (weak, nonatomic) IBOutlet UILabel *variable;
-@property (weak, nonatomic) IBOutlet UILabel *value;
+@property (weak, nonatomic) IBOutlet UITextField *value;
 @property (weak, nonatomic) IBOutlet UIImageView *icon;
+@property (weak, nonatomic) ScriptViewController *scriptView;
 @end
 
 @implementation ScriptVariableCell
+
+- (void)updateValueDisplay
+{
+    if (_packet) {
+        self.icon.image = [PacketManagerIOS iconFor:_packet];
+        if (_packet->parent())
+            self.value.text = [NSString stringWithUTF8String:_packet->label().c_str()];
+        else
+            self.value.text = @"⟨Entire tree⟩";
+    } else {
+        self.icon.image = nil;
+        self.value.text = @"⟨None⟩";
+    }
+}
+
+- (void)initVariable:(const std::string&)name value:(regina::Packet*)packet tree:(regina::Packet*)tree
+{
+    _name = name;
+    _packet = packet;
+    _tree = tree;
+
+    self.variable.text = [NSString stringWithUTF8String:_name.c_str()];
+    [self updateValueDisplay];
+
+    self.value.delegate = self;
+}
+
+- (IBAction)finishEditing:(id)sender {
+    [sender resignFirstResponder];
+}
+
+- (IBAction)beginEditValue:(id)sender {
+    PacketPicker* p = [[PacketPicker alloc] init];
+    [p fill:_tree allowNone:YES noneText:@"⟨None⟩" allowRoot:YES rootText:@"⟨Entire tree⟩" select:_packet];
+    p.watcher = self;
+    self.value.inputView = p;
+
+    UIBarButtonItem* done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                          target:self.value
+                                                                          action:@selector(resignFirstResponder)];
+
+    // TODO: Fix the baseline movement on edit.
+    if ([ReginaHelper ios9]) {
+        UIBarButtonItemGroup* group = [[UIBarButtonItemGroup alloc] initWithBarButtonItems:@[done] representativeItem:nil];
+        self.value.inputAssistantItem.leadingBarButtonGroups = @[];
+        self.value.inputAssistantItem.trailingBarButtonGroups = @[group];
+    } else {
+        // TODO: Get the Done button working properly in iOS 8.
+        UIToolbar* bar = [[UIToolbar alloc] init];
+        bar.items = @[done];
+        bar.barStyle = UIBarStyleBlack;
+        self.value.inputAccessoryView = bar;
+    }
+}
+
+- (IBAction)endEditValue:(id)sender {
+    self.value.inputView = nil;
+}
+
+- (void)packetPicker:(PacketPicker *)picker selected:(regina::Packet *)packet
+{
+    if (packet != _packet) {
+        _packet = packet;
+        [self.scriptView editedValue:_name value:packet];
+        [self updateValueDisplay];
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    // Disable external keyboards, clipboard actions, etc.
+    return NO;
+}
+
 @end
 
 #pragma mark - Script view controller
 
-@interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, NSTextStorageDelegate> {
+@interface ScriptViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate> {
     CGFloat variableHeaderHeight;
     SyntaxHighlighter* highlighter;
     BOOL myEdit;
+    regina::Packet* tree;
 }
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
@@ -66,6 +163,12 @@ regina::syntax::Repository* repository;
 @end
 
 @implementation ScriptViewController
+
+- (void)setPacket:(regina::Script *)packet
+{
+    _packet = packet;
+    tree = packet->root();
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -112,6 +215,13 @@ regina::syntax::Repository* repository;
     [self.variables reloadData];
 }
 
+- (NSIndexPath*)pathForVariable:(const std::string&)name {
+    long index = self.packet->variableIndex(name);
+    if (index < 0)
+        return nil;
+    return [NSIndexPath indexPathForRow:(index + 1) inSection:0];
+}
+
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     myEdit = YES;
@@ -156,8 +266,23 @@ regina::syntax::Repository* repository;
 }
 
 - (IBAction)newVariable:(id)sender {
-    self.packet->addVariableName("var", nil);
-    // TODO: Scroll to visible
+    myEdit = true;
+    NSIndexPath* path = [self pathForVariable:self.packet->addVariableName("var", nil)];
+    myEdit = false;
+
+    if (path) {
+        [self.variables insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.variables scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionNone animated:YES];
+    }
+}
+
+- (void)editedValue:(const std::string&)name value:(regina::Packet*)value
+{
+    myEdit = true;
+    long index = self.packet->variableIndex(name);
+    if (index >= 0)
+        self.packet->setVariableValue(index, value);
+    myEdit = false;
 }
 
 - (IBAction)run:(id)sender {
@@ -180,19 +305,10 @@ regina::syntax::Repository* repository;
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
     ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
-    cell.variable.text = [NSString stringWithUTF8String:self.packet->variableName(indexPath.row - 1).c_str()];
-
-    regina::Packet* value = self.packet->variableValue(indexPath.row - 1);
-    if (value) {
-        cell.icon.image = [PacketManagerIOS iconFor:value];
-        if (value->parent())
-            cell.value.text = [NSString stringWithUTF8String:value->label().c_str()];
-        else
-            cell.value.text = @"⟨Entire tree⟩";
-    } else {
-        cell.icon.image = nil;
-        cell.value.text = @"⟨None⟩";
-    }
+    cell.scriptView = self;
+    [cell initVariable:self.packet->variableName(indexPath.row - 1)
+                 value:self.packet->variableValue(indexPath.row - 1)
+                  tree:tree];
     return cell;
 }
 
@@ -212,9 +328,10 @@ regina::syntax::Repository* repository;
     if (indexPath.row == 0 || indexPath.row > self.packet->countVariables())
         return;
 
-    // For now, we rely on the automatic packet reload.
-    // TODO: Set myEdit and instead reload just the section of the table that changed.
+    myEdit = true;
     self.packet->removeVariable(indexPath.row - 1);
+    myEdit = false;
+    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

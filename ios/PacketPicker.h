@@ -37,6 +37,8 @@ namespace regina {
     class Packet;
 }
 
+@protocol PacketPickerWatcher;
+
 /**
  * A picker view that displays all packets of the given type in the
  * current document.
@@ -61,8 +63,9 @@ namespace regina {
  * \a allowRoot are \c true, then the null packet will appear first.
  * @param rootText The text to display for the root packet.
  * If \a allowRoot is \c false then this may be \c nil.
+ * @select The packet that should be initially selected in the picker.
  */
-- (void)fill:(regina::Packet*)tree allowNone:(BOOL)allowNone noneText:(NSString*)noneText allowRoot:(BOOL)allowRoot rootText:(NSString*)rootText;
+- (void)fill:(regina::Packet*)tree allowNone:(BOOL)allowNone noneText:(NSString*)noneText allowRoot:(BOOL)allowRoot rootText:(NSString*)rootText select:(regina::Packet*)packet;
 
 /**
  * Fills the picker with all packets of the given type.  The root of the packet
@@ -108,4 +111,20 @@ namespace regina {
  */
 - (BOOL)empty;
 
+/**
+ * If non-nil, this watcher is notified whenever the user selects a
+ * packet in the packet picker.
+ */
+@property (strong, nonatomic) NSObject<PacketPickerWatcher>* watcher;
+
+@end
+
+/**
+ * A protocol for objects that can respond to selections in a packet picker.
+ */
+@protocol PacketPickerWatcher <NSObject>
+/**
+ * Called when the user selects a packet in a packet picker.
+ */
+- (void)packetPicker:(PacketPicker*)picker selected:(regina::Packet*)packet;
 @end
