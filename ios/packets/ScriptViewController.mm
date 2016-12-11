@@ -66,7 +66,7 @@ regina::syntax::Repository* repository;
 // To initialise the contents of a cell, call initVariable.
 // These will fill the UI elements with appropriate contents - there is no need
 // to fill the UI elements variable, value and icon directly.
-@property (weak, nonatomic) IBOutlet UILabel *variable;
+@property (weak, nonatomic) IBOutlet UITextField *variable;
 @property (weak, nonatomic) IBOutlet UITextField *value;
 @property (weak, nonatomic) IBOutlet UIImageView *icon;
 @property (weak, nonatomic) ScriptViewController *scriptView;
@@ -104,6 +104,11 @@ regina::syntax::Repository* repository;
     [sender resignFirstResponder];
 }
 
+- (IBAction)endEditName:(id)sender {
+    // TODO: Implement
+    // TODO: Include sorting in table, and checking that this looks like a variable name.
+}
+
 - (IBAction)beginEditValue:(id)sender {
     PacketPicker* p = [[PacketPicker alloc] init];
     [p fill:_tree allowNone:YES noneText:@"⟨None⟩" allowRoot:YES rootText:@"⟨Entire tree⟩" select:_packet];
@@ -120,10 +125,11 @@ regina::syntax::Repository* repository;
         self.value.inputAssistantItem.leadingBarButtonGroups = @[];
         self.value.inputAssistantItem.trailingBarButtonGroups = @[group];
     } else {
-        // TODO: Get the Done button working properly in iOS 8.
-        UIToolbar* bar = [[UIToolbar alloc] init];
-        bar.items = @[done];
-        bar.barStyle = UIBarStyleBlack;
+        UIToolbar* bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.scriptView.view.frame.size.width, 50)];
+        bar.barStyle = UIBarStyleDefault;
+        UIBarButtonItem* gap = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        bar.items = @[gap, done];
+        [bar sizeToFit];
         self.value.inputAccessoryView = bar;
     }
 }
