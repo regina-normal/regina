@@ -134,8 +134,9 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
 
 - (void)viewDidLoad
 {
-    options = @[[Example3 exampleWithName:@"3-sphere (1 tetrahedron)" creator:&regina::Example<3>::threeSphere],
+    options = @[[Example3 exampleWithName:@"3-sphere (minimal)" creator:&regina::Example<3>::threeSphere],
                 [Example3 exampleWithName:@"3-sphere (dual to Bing's house)" creator:&regina::Example<3>::bingsHouse],
+                [Example3 exampleWithName:@"3-sphere (simplex boundary)" creator:&regina::Example<3>::simplicialSphere],
                 [Example3 exampleWithName:@"3-sphere (600-cell)" creator:&regina::Example<3>::sphere600],
                 [Example3 exampleWithName:@"Connected sum ℝP³ # ℝP³" creator:&regina::Example<3>::rp3rp3],
                 [Example3 exampleWithName:@"Figure eight knot complement" creator:&regina::Example<3>::figureEight],
@@ -144,8 +145,11 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
                 [Example3 exampleWithName:@"Poincaré homology sphere" creator:&regina::Example<3>::poincareHomologySphere],
                 [Example3 exampleWithName:@"Product ℝP² × S¹" creator:&regina::Example<3>::rp2xs1],
                 [Example3 exampleWithName:@"Product S² × S¹" creator:&regina::Example<3>::s2xs1],
-                [Example3 exampleWithName:@"Solid Klein bottle" creator:&regina::Example<3>::solidKleinBottle],
+                [Example3 exampleWithName:@"ℝP³" creator:[](){ return regina::Example<3>::lens(2, 1); }],
+                [Example3 exampleWithName:@"Solid Klein bottle (B² ×~ S¹)" creator:&regina::Example<3>::solidKleinBottle],
+                [Example3 exampleWithName:@"Solid Torus (B² × S¹)" creator:&regina::Example<3>::ballBundle],
                 [Example3 exampleWithName:@"Trefoil knot complement" creator:&regina::Example<3>::trefoil],
+                [Example3 exampleWithName:@"Twisted product S² ×~ S¹" creator:&regina::Example<3>::twistedSphereBundle],
                 [Example3 exampleWithName:@"Weeks manifold" creator:&regina::Example<3>::weeks],
                 [Example3 exampleWithName:@"Weber-Seifert dodecahedral space" creator:&regina::Example<3>::weberSeifert],
                 [Example3 exampleWithName:@"Whitehead link complement" creator:&regina::Example<3>::whiteheadLink]];

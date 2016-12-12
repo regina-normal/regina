@@ -36,6 +36,7 @@
 #include "triangulation/dim4.h"
 
 // UI includes:
+#include "examplecreator.h"
 #include "tri4creator.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
@@ -68,16 +69,17 @@ namespace {
     };
 
     /**
-     * Example IDs that correspond to indices in the example
-     * triangulation combo box.
+     * The list of ready-made example triangulations.
      */
-    enum {
-        EXAMPLE_S4,
-        EXAMPLE_SIMPLICIAL_S4,
-        EXAMPLE_RP4,
-        EXAMPLE_S3xS1,
-        EXAMPLE_S3xS1TWISTED,
-        EXAMPLE_CAPPELL_SHANESON
+    std::vector<ExampleCreator<4>> examples = {
+        ExampleCreator<4>(QObject::tr("4-sphere (minimal)"), &regina::Example<4>::sphere),
+        ExampleCreator<4>(QObject::tr("4-sphere (simplex boundary)"), &regina::Example<4>::simplicialFourSphere),
+        ExampleCreator<4>(QObject::tr("Cappell-Shaneson knot complement"), &regina::Example<4>::cappellShaneson),
+        ExampleCreator<4>(QObject::trUtf8("Product B³ × S¹"), &regina::Example<4>::ballBundle),
+        ExampleCreator<4>(QObject::trUtf8("Product S³ × S¹"), &regina::Example<4>::sphereBundle),
+        ExampleCreator<4>(QObject::trUtf8("ℝP⁴"), &regina::Example<4>::rp4),
+        ExampleCreator<4>(QObject::trUtf8("Twisted product B³ ×~ S¹"), &regina::Example<4>::twistedBallBundle),
+        ExampleCreator<4>(QObject::trUtf8("Twisted product S³ ×~ S¹"), &regina::Example<4>::twistedSphereBundle)
     };
 
     /**
@@ -195,12 +197,8 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    exampleWhich->insertItem(0, QObject::tr("Minimal 4-sphere (2 pentachora)"));
-    exampleWhich->insertItem(1, QObject::tr("Simplicial 4-sphere (6 pentachora)"));
-    exampleWhich->insertItem(2, QObject::trUtf8("RP⁴"));
-    exampleWhich->insertItem(3, QObject::trUtf8("Product S³ x S¹"));
-    exampleWhich->insertItem(4, QObject::trUtf8("Twisted product S³ x S¹"));
-    exampleWhich->insertItem(5, QObject::tr("Cappell-Shaneson 2-knot complement"));
+    for (size_t i = 0; i < examples.size(); ++i)
+        exampleWhich->insertItem(i, examples[i].name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -292,24 +290,7 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
             "analogous scheme.</qt>"));
         return 0;
     } else if (typeId == TRI_EXAMPLE) {
-        switch (exampleWhich->currentIndex()) {
-            case EXAMPLE_S4:
-                return Example<4>::fourSphere();
-            case EXAMPLE_SIMPLICIAL_S4:
-                return Example<4>::simplicialFourSphere();
-            case EXAMPLE_RP4:
-                return Example<4>::rp4();
-            case EXAMPLE_S3xS1:
-                return Example<4>::s3xs1();
-            case EXAMPLE_S3xS1TWISTED:
-                return Example<4>::s3xs1Twisted();
-            case EXAMPLE_CAPPELL_SHANESON:
-                return Example<4>::cappellShaneson();
-        }
-
-        ReginaSupport::info(parentWidget,
-            QObject::tr("Please select an example triangulation."));
-        return 0;
+        return examples[exampleWhich->currentIndex()].create();
     }
 
     ReginaSupport::info(parentWidget,
