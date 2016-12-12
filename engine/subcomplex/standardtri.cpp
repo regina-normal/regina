@@ -40,7 +40,7 @@
 #include "subcomplex/layeredchainpair.h"
 #include "subcomplex/layeredlensspace.h"
 #include "subcomplex/layeredloop.h"
-#include "subcomplex/layeredsurfacebundle.h"
+#include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/plugtrisolidtorus.h"
 #include "subcomplex/snappeacensustri.h"

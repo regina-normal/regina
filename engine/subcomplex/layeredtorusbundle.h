@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file subcomplex/layeredsurfacebundle.h
+/*! \file subcomplex/layeredtorusbundle.h
  *  \brief Deals with layered surface bundle triangulations.
  */
 
-#ifndef __LAYEREDSURFACEBUNDLE_H
+#ifndef __LAYEREDTORUSBUNDLE_H
 #ifndef __DOXYGEN
-#define __LAYEREDSURFACEBUNDLE_H
+#define __LAYEREDTORUSBUNDLE_H
 #endif
 
 #include <memory>
@@ -107,7 +107,7 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
          * tetrahedra).
          *
          * Note that the triangulation returned by TxICore::core()
-         * (that is, LayeredSurfaceBundle::core().core()) may
+         * (that is, LayeredTorusBundle::core().core()) may
          * well use different tetrahedron and vertex numbers.  That is,
          * an isomorphic copy of it appears within this layered surface
          * bundle but the individual tetrahedra and vertices may have
@@ -129,7 +129,7 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
          *
          * This routine returns an isomorphism that maps the tetrahedra
          * and vertices of the core <tt>T x I</tt> triangulation (as
-         * returned by LayeredSurfaceBundle::core().core()) to the
+         * returned by LayeredTorusBundle::core().core()) to the
          * tetrahedra and vertices of this overall layered surface bundle.
          *
          * The isomorphism that is returned belongs to this object, and

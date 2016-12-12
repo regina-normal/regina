@@ -13,7 +13,7 @@ SET ( FILES
   layeredlensspace
   layeredloop
   layeredsolidtorus
-  layeredsurfacebundle
+  layeredtorusbundle
   layering
   pillowtwosphere
   pluggedtorusbundle
@@ -65,7 +65,7 @@ if (${REGINA_INSTALL_DEV})
     nlayeredloop.h
     layeredsolidtorus.h
     nlayeredsolidtorus.h
-    layeredsurfacebundle.h
+    layeredtorusbundle.h
     nlayeredsurfacebundle.h
     layering.h
     nlayering.h

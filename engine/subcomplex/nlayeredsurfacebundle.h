@@ -39,9 +39,9 @@
 #define __NLAYEREDSURFACEBUNDLE_H
 #endif
 
-#warning This header is deprecated; please use subcomplex/layeredsurfacebundle.h instead.
+#warning This header is deprecated; please use subcomplex/layeredtorusbundle.h instead.
 
-#include "subcomplex/layeredsurfacebundle.h"
+#include "subcomplex/layeredtorusbundle.h"
 
 #endif
 

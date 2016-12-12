@@ -31,14 +31,14 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "subcomplex/layeredsurfacebundle.h"
+#include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/txicore.h"
 #include "../helpers.h"
 
 using namespace boost::python;
 using regina::LayeredTorusBundle;
 
-void addLayeredSurfaceBundle() {
+void addLayeredTorusBundle() {
     class_<LayeredTorusBundle, bases<regina::StandardTriangulation>,
             std::auto_ptr<LayeredTorusBundle>, boost::noncopyable>
             ("LayeredTorusBundle", no_init)

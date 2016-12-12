@@ -13,7 +13,7 @@ SET ( FILES
   layeredlensspace
   layeredloop
   layeredsolidtorus
-  layeredsurfacebundle
+  layeredtorusbundle
   layering
   pillowtwosphere
   pluggedtorusbundle

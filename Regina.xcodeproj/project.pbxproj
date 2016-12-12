@@ -1586,7 +1586,7 @@
 		05A0669E1DFA67D40047872E /* layeredlensspace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066661DFA67CB0047872E /* layeredlensspace.cpp */; };
 		05A0669F1DFA67D40047872E /* layeredloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066671DFA67CB0047872E /* layeredloop.cpp */; };
 		05A066A01DFA67D40047872E /* layeredsolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066681DFA67CB0047872E /* layeredsolidtorus.cpp */; };
-		05A066A11DFA67D40047872E /* layeredsurfacebundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066691DFA67CB0047872E /* layeredsurfacebundle.cpp */; };
+		05A066A11DFA67D40047872E /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066691DFA67CB0047872E /* layeredtorusbundle.cpp */; };
 		05A066A21DFA67D40047872E /* layering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0666A1DFA67CB0047872E /* layering.cpp */; };
 		05A066A31DFA67D40047872E /* pillowtwosphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0666B1DFA67CB0047872E /* pillowtwosphere.cpp */; };
 		05A066A41DFA67D40047872E /* pluggedtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0666C1DFA67CB0047872E /* pluggedtorusbundle.cpp */; };
@@ -1614,7 +1614,7 @@
 		05A066BA1DFA67D50047872E /* layeredlensspace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066661DFA67CB0047872E /* layeredlensspace.cpp */; };
 		05A066BB1DFA67D50047872E /* layeredloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066671DFA67CB0047872E /* layeredloop.cpp */; };
 		05A066BC1DFA67D50047872E /* layeredsolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066681DFA67CB0047872E /* layeredsolidtorus.cpp */; };
-		05A066BD1DFA67D50047872E /* layeredsurfacebundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066691DFA67CB0047872E /* layeredsurfacebundle.cpp */; };
+		05A066BD1DFA67D50047872E /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066691DFA67CB0047872E /* layeredtorusbundle.cpp */; };
 		05A066BE1DFA67D50047872E /* layering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0666A1DFA67CB0047872E /* layering.cpp */; };
 		05A066BF1DFA67D50047872E /* pillowtwosphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0666B1DFA67CB0047872E /* pillowtwosphere.cpp */; };
 		05A066C01DFA67D50047872E /* pluggedtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0666C1DFA67CB0047872E /* pluggedtorusbundle.cpp */; };
@@ -1653,8 +1653,6 @@
 		05A0671B1DFA68190047872E /* layeredloop.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A066E11DFA68190047872E /* layeredloop.h */; };
 		05A0671C1DFA68190047872E /* layeredsolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E21DFA68190047872E /* layeredsolidtorus.cpp */; };
 		05A0671D1DFA68190047872E /* layeredsolidtorus.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A066E31DFA68190047872E /* layeredsolidtorus.h */; };
-		05A0671E1DFA68190047872E /* layeredsurfacebundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E41DFA68190047872E /* layeredsurfacebundle.cpp */; };
-		05A0671F1DFA68190047872E /* layeredsurfacebundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A066E51DFA68190047872E /* layeredsurfacebundle.h */; };
 		05A067201DFA68190047872E /* layering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E61DFA68190047872E /* layering.cpp */; };
 		05A067211DFA68190047872E /* layering.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A066E71DFA68190047872E /* layering.h */; };
 		05A067221DFA68190047872E /* pillowtwosphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E81DFA68190047872E /* pillowtwosphere.cpp */; };
@@ -1700,7 +1698,6 @@
 		05A0674A1DFA68470047872E /* layeredlensspace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066DE1DFA68190047872E /* layeredlensspace.cpp */; };
 		05A0674B1DFA68470047872E /* layeredloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E01DFA68190047872E /* layeredloop.cpp */; };
 		05A0674C1DFA68470047872E /* layeredsolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E21DFA68190047872E /* layeredsolidtorus.cpp */; };
-		05A0674D1DFA68470047872E /* layeredsurfacebundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E41DFA68190047872E /* layeredsurfacebundle.cpp */; };
 		05A0674E1DFA68470047872E /* layering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E61DFA68190047872E /* layering.cpp */; };
 		05A0674F1DFA68470047872E /* pillowtwosphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066E81DFA68190047872E /* pillowtwosphere.cpp */; };
 		05A067501DFA68470047872E /* pluggedtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066EA1DFA68190047872E /* pluggedtorusbundle.cpp */; };
@@ -1794,6 +1791,9 @@
 		05AB5F081B9429BB007034C8 /* QtDBus.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F051B9429BA007034C8 /* QtDBus.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05AB5F091B9429BB007034C8 /* QtNetwork.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F061B9429BB007034C8 /* QtNetwork.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
+		05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */; };
+		05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
@@ -3819,7 +3819,7 @@
 		05A066661DFA67CB0047872E /* layeredlensspace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredlensspace.cpp; sourceTree = "<group>"; };
 		05A066671DFA67CB0047872E /* layeredloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredloop.cpp; sourceTree = "<group>"; };
 		05A066681DFA67CB0047872E /* layeredsolidtorus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredsolidtorus.cpp; sourceTree = "<group>"; };
-		05A066691DFA67CB0047872E /* layeredsurfacebundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredsurfacebundle.cpp; sourceTree = "<group>"; };
+		05A066691DFA67CB0047872E /* layeredtorusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredtorusbundle.cpp; sourceTree = "<group>"; };
 		05A0666A1DFA67CB0047872E /* layering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layering.cpp; sourceTree = "<group>"; };
 		05A0666B1DFA67CB0047872E /* pillowtwosphere.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pillowtwosphere.cpp; sourceTree = "<group>"; };
 		05A0666C1DFA67CB0047872E /* pluggedtorusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pluggedtorusbundle.cpp; sourceTree = "<group>"; };
@@ -3858,8 +3858,6 @@
 		05A066E11DFA68190047872E /* layeredloop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredloop.h; sourceTree = "<group>"; };
 		05A066E21DFA68190047872E /* layeredsolidtorus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredsolidtorus.cpp; sourceTree = "<group>"; };
 		05A066E31DFA68190047872E /* layeredsolidtorus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredsolidtorus.h; sourceTree = "<group>"; };
-		05A066E41DFA68190047872E /* layeredsurfacebundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredsurfacebundle.cpp; sourceTree = "<group>"; };
-		05A066E51DFA68190047872E /* layeredsurfacebundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredsurfacebundle.h; sourceTree = "<group>"; };
 		05A066E61DFA68190047872E /* layering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layering.cpp; sourceTree = "<group>"; };
 		05A066E71DFA68190047872E /* layering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layering.h; sourceTree = "<group>"; };
 		05A066E81DFA68190047872E /* pillowtwosphere.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pillowtwosphere.cpp; sourceTree = "<group>"; };
@@ -3978,6 +3976,8 @@
 		05AB5F051B9429BA007034C8 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = ../../Library/Frameworks/osx/QtDBus.framework; sourceTree = "<group>"; };
 		05AB5F061B9429BB007034C8 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = ../../Library/Frameworks/osx/QtNetwork.framework; sourceTree = "<group>"; };
 		05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = ../../Library/Frameworks/osx/QtPrintSupport.framework; sourceTree = "<group>"; };
+		05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredtorusbundle.cpp; sourceTree = "<group>"; };
+		05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredtorusbundle.h; sourceTree = "<group>"; };
 		05B14EA319B423A0002138C0 /* mkcensusdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mkcensusdb; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B14EB019B4240D002138C0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
@@ -4657,7 +4657,7 @@
 				05A066661DFA67CB0047872E /* layeredlensspace.cpp */,
 				05A066671DFA67CB0047872E /* layeredloop.cpp */,
 				05A066681DFA67CB0047872E /* layeredsolidtorus.cpp */,
-				05A066691DFA67CB0047872E /* layeredsurfacebundle.cpp */,
+				05A066691DFA67CB0047872E /* layeredtorusbundle.cpp */,
 				05A0666A1DFA67CB0047872E /* layering.cpp */,
 				05A0666B1DFA67CB0047872E /* pillowtwosphere.cpp */,
 				05A0666C1DFA67CB0047872E /* pluggedtorusbundle.cpp */,
@@ -5423,8 +5423,8 @@
 				05A066E11DFA68190047872E /* layeredloop.h */,
 				05A066E21DFA68190047872E /* layeredsolidtorus.cpp */,
 				05A066E31DFA68190047872E /* layeredsolidtorus.h */,
-				05A066E41DFA68190047872E /* layeredsurfacebundle.cpp */,
-				05A066E51DFA68190047872E /* layeredsurfacebundle.h */,
+				05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */,
+				05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */,
 				05A066E61DFA68190047872E /* layering.cpp */,
 				05A066E71DFA68190047872E /* layering.h */,
 				052F9DB4180600FB00FAE4DF /* naugtrisolidtorus.h */,
@@ -7087,7 +7087,6 @@
 				055114D61DCC71A700EC753C /* xmltrireader.h in Headers */,
 				052FA017180600FB00FAE4DF /* nspiralsolidtorus.h in Headers */,
 				052F9F99180600FB00FAE4DF /* SnapPea.h in Headers */,
-				05A0671F1DFA68190047872E /* layeredsurfacebundle.h in Headers */,
 				052FA011180600FB00FAE4DF /* nsnappeacensustri.h in Headers */,
 				052FA063180600FB00FAE4DF /* example3.h in Headers */,
 				054208B21DF0D2740018AB24 /* graphloop.h in Headers */,
@@ -7318,6 +7317,7 @@
 				052F9FE9180600FB00FAE4DF /* nblockedsfs.h in Headers */,
 				052FA003180600FB00FAE4DF /* npluggedtorusbundle.h in Headers */,
 				0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */,
+				05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */,
 				05431F011C40F1F6009BC072 /* isomorphism.h in Headers */,
 				054208B81DF0D2740018AB24 /* handlebody.h in Headers */,
 				054208781DF0D0B50018AB24 /* format_p.h in Headers */,
@@ -7956,7 +7956,7 @@
 				057EE4BF1C600A3600C4D155 /* simplex7.cpp in Sources */,
 				050F5E081B9BAB9C00C1F681 /* script.cpp in Sources */,
 				0591E8191C4F763B00793A9C /* tetrahedron4.cpp in Sources */,
-				05A066A11DFA67D40047872E /* layeredsurfacebundle.cpp in Sources */,
+				05A066A11DFA67D40047872E /* layeredtorusbundle.cpp in Sources */,
 				054209021DF0DA450018AB24 /* lensspace.cpp in Sources */,
 				0591E8631C50D2B000793A9C /* hyperflags.cpp in Sources */,
 				05CAFB531C4CEA160001C253 /* face15.cpp in Sources */,
@@ -8457,7 +8457,6 @@
 				052FA21E180612DD00FAE4DF /* cusp_shapes.c in Sources */,
 				052FA231180612DD00FAE4DF /* precision.c in Sources */,
 				052FA1871806129B00FAE4DF /* dehydration.cpp in Sources */,
-				05A0674D1DFA68470047872E /* layeredsurfacebundle.cpp in Sources */,
 				052FA21D180612DD00FAE4DF /* cusp_neighborhoods.c in Sources */,
 				052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */,
 				054208901DF0D0CF0018AB24 /* repository.cpp in Sources */,
@@ -8513,7 +8512,7 @@
 				05249EEB1DBC16EA001FE29E /* facetpairing7.cpp in Sources */,
 				05F0A0631DBF0B7000117BFC /* triangle3.cpp in Sources */,
 				054535B919D8EA7100BED767 /* TextPopover.mm in Sources */,
-				05A066BD1DFA67D50047872E /* layeredsurfacebundle.cpp in Sources */,
+				05A066BD1DFA67D50047872E /* layeredtorusbundle.cpp in Sources */,
 				05249ECB1DBC16D6001FE29E /* dehydration.cpp in Sources */,
 				054208911DF0D0CF0018AB24 /* rule.cpp in Sources */,
 				05A73C9F19B2EF5A0099C617 /* homology.c in Sources */,
@@ -8764,6 +8763,7 @@
 				058FADAE19D3C3640001B5B5 /* Tri2Gluings.mm in Sources */,
 				05A066BE1DFA67D50047872E /* layering.cpp in Sources */,
 				05FB46D61DD92D2900BB00E5 /* abeliangroup.cpp in Sources */,
+				05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */,
 				05F0A0601DBF0B7000117BFC /* snappea.cpp in Sources */,
 				05249F121DBC16FA001FE29E /* triangulation11.cpp in Sources */,
 				05249EC21DBC16CA001FE29E /* pentachoron4.cpp in Sources */,
@@ -9213,6 +9213,7 @@
 				05A067321DFA68190047872E /* snappeacensustri.cpp in Sources */,
 				05431F8A1C40F40D009BC072 /* HilbertSeries.cpp in Sources */,
 				05F0A0501DBF0B5E00117BFC /* vertex3.cpp in Sources */,
+				05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */,
 				05C1BEAB1DCA7CA9007C946B /* boundary3.cpp in Sources */,
 				05669D951DCB0E9A00C870C6 /* facetpairing3.cpp in Sources */,
 				05F0A0041DBF078800117BFC /* subdivide.cpp in Sources */,
@@ -9386,7 +9387,6 @@
 				05F0A00B1DBF078800117BFC /* vertex4.cpp in Sources */,
 				05A73C7A19B2EDFC0099C617 /* xmlcallback.cpp in Sources */,
 				052F9F0E180600FB00FAE4DF /* isosig.cpp in Sources */,
-				05A0671E1DFA68190047872E /* layeredsurfacebundle.cpp in Sources */,
 				050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */,
 				055114DE1DCC85F200EC753C /* xmltrireader2.cpp in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
