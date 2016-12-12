@@ -280,6 +280,7 @@ regina::syntax::Repository* repository;
     self.script.textStorage.delegate = highlighter;
 
     [self reloadPacket];
+    [self.script setSelectedRange:NSMakeRange(0,0)];
 
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
@@ -295,13 +296,20 @@ regina::syntax::Repository* repository;
     [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+
+    // TODO: This doesn't work when the device is rotated.
+    [self.script scrollRangeToVisible:self.script.selectedRange];
+}
+
 - (void)reloadPacket
 {
     if (myEdit)
         return;
 
     self.script.text = [NSString stringWithUTF8String:self.packet->text().c_str()];
-    [self.script scrollRangeToVisible:NSMakeRange(0, 0)];
     [self.variables reloadData];
 }
 
