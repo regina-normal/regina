@@ -97,6 +97,7 @@ regina::syntax::Repository* repository;
     self.variable.text = [NSString stringWithUTF8String:_name.c_str()];
     [self updateValueDisplay];
 
+    self.variable.delegate = self;
     self.value.delegate = self;
 }
 
@@ -105,8 +106,79 @@ regina::syntax::Repository* repository;
 }
 
 - (IBAction)endEditName:(id)sender {
-    // TODO: Implement
-    // TODO: Include sorting in table, and checking that this looks like a variable name.
+    NSString* rename = [self.variable.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (rename.length == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Empty Variable Name"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        self.variable.text = [NSString stringWithUTF8String:_name.c_str()];
+        return;
+    }
+
+    // Check if this looks like a variable name.
+    NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:@"\\A[A-Za-z_][A-Za-z0-9_]*\\Z" options:0 error:nil];
+    NSTextCheckingResult* result = [regex firstMatchInString:rename options:0 range:NSMakeRange(0, rename.length)];
+    bool changedName = false;
+    if (! result) {
+        // Construct a better variable name.
+        rename = [rename stringByReplacingOccurrencesOfString:@"[^A-Za-z0-9_]" withString:@""
+                                                      options:NSRegularExpressionSearch
+                                                        range:NSMakeRange(0, rename.length)];
+        if (rename.length == 0) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Variable Name"
+                                                            message:nil
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            self.variable.text = [NSString stringWithUTF8String:_name.c_str()];
+            return;
+        }
+
+        if (! [regex firstMatchInString:rename options:0 range:NSMakeRange(0, rename.length)])
+            rename = [NSString stringWithFormat:@"_%@", rename];
+
+        changedName = true;
+    }
+
+    std::string newName = rename.UTF8String;
+    if (newName == _name)
+        return;
+
+    // Check if this variable name is already being used.
+    if ([self.scriptView hasVariable:newName]) {
+        NSString* title;
+        if (changedName)
+            title = @"Invalid Variable Name";
+        else
+            title = @"Duplicate Variable Name";
+
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        self.variable.text = [NSString stringWithUTF8String:_name.c_str()];
+        return;
+    }
+
+    // The changed name is usable.
+    if (changedName) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Variable Name"
+                                                        message:[NSString stringWithFormat:@"I have changed the variable name to %@.", rename]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+
+    self.variable.text = rename;
+    [self.scriptView editedName:_name rename:newName];
+    _name = newName;
 }
 
 - (IBAction)beginEditValue:(id)sender {
@@ -147,10 +219,22 @@ regina::syntax::Repository* repository;
     }
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    // Make the [Done] key do the right thing when editing the variable name.
+    // Don't check textField, since this is harmless for variable values also.
+    [textField resignFirstResponder];
+    return NO;
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    // Disable external keyboards, clipboard actions, etc.
-    return NO;
+    if (textField == self.value) {
+        // For variable values, we should only use the packet picker.
+        // Disable external keyboards, clipboard actions, etc.
+        return NO;
+    }
+    return YES;
 }
 
 @end
@@ -262,13 +346,18 @@ regina::syntax::Repository* repository;
     self.script.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height - gap, 0);
     self.script.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height - gap, 0);
 
-    [self ensureCursorVisible];
+    if (self.script.isFirstResponder)
+        [self ensureCursorVisible];
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification
 {
     self.script.contentInset = UIEdgeInsetsZero;
     self.script.scrollIndicatorInsets = UIEdgeInsetsZero;
+}
+
+- (bool)hasVariable:(const std::string &)name {
+    return self.packet->variableIndex(name) >= 0;
 }
 
 - (IBAction)newVariable:(id)sender {
@@ -280,6 +369,26 @@ regina::syntax::Repository* repository;
         [self.variables insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.variables scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionNone animated:YES];
     }
+}
+
+- (void)editedName:(const std::string&)oldName rename:(const std::string&)newName
+{
+    if (oldName == newName)
+        return;
+
+    myEdit = true;
+    long index = self.packet->variableIndex(oldName);
+    if (index >= 0) {
+        self.packet->setVariableName(index, newName);
+        long newIndex = self.packet->variableIndex(newName);
+        if (index != newIndex) {
+            NSIndexPath* oldPath = [NSIndexPath indexPathForRow:(index + 1) inSection:0];
+            NSIndexPath* newPath = [NSIndexPath indexPathForRow:(newIndex + 1) inSection:0];
+            [self.variables moveRowAtIndexPath:oldPath toIndexPath:newPath];
+            [self.variables scrollToRowAtIndexPath:newPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
+        }
+    }
+    myEdit = false;
 }
 
 - (void)editedValue:(const std::string&)name value:(regina::Packet*)value
