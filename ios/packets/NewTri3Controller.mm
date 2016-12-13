@@ -33,6 +33,7 @@
 #import "NewTri3Controller.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
+#import "maths/numbertheory.h"
 #import "triangulation/example3.h"
 #import "triangulation/dim3.h"
 
@@ -47,7 +48,7 @@
 - (void)viewDidLoad
 {
     self.pages = static_cast<NewPacketPageViewController*>(self.childViewControllers.lastObject);
-    [self.pages fillWithPages:@[@"newTri3Empty", @"newTri3Example", @"newTri3Isosig"]
+    [self.pages fillWithPages:@[@"newTri3Empty", @"newTri3Example", @"newTri3Construction", @"newTri3Isosig"]
                  pageSelector:self.types
                    defaultKey:@"NewTri3Page"];
 }
@@ -183,6 +184,238 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
 - (regina::Packet *)create
 {
     return [options[[self.example selectedRowInComponent:0]] create];
+}
+
+@end
+
+#pragma mark - Construction page
+
+@interface NewTri3ConstructionPage ()
+@property (weak, nonatomic) IBOutlet UISegmentedControl *type;
+@property (weak, nonatomic) IBOutlet UILabel *paramName;
+@property (weak, nonatomic) IBOutlet UILabel *paramExpln;
+@property (weak, nonatomic) IBOutlet UITextField *parameters;
+@end
+
+#define KEY_LAST_CONSTRUCTION @"NewTri3Construction"
+
+@implementation NewTri3ConstructionPage
+
+- (void)viewDidLoad
+{
+    [self.type setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_CONSTRUCTION]];
+
+    // Set up the initial parameter explanation message.
+    [self typeChanged:nil];
+}
+
+- (NSArray<NSNumber*>*)checkParams
+{
+    // Resign first responder, so that error messages don't invoke hide/show/hide of the keyboard.
+    [self.parameters resignFirstResponder];
+
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"(?<=[^0-9\\-]|\\A)(-?\\d+)(?=[^0-9\\-]|\\Z)"
+                                                                           options:0
+                                                                             error:nil];
+    NSArray<NSTextCheckingResult*>* results = [regex matchesInString:self.parameters.text
+                                                             options:0
+                                                               range:NSMakeRange(0, self.parameters.text.length)];
+    if (results.count == 0) {
+        UIAlertView* alert = [[UIAlertView alloc]
+                              initWithTitle:@"Please Enter Parameters"
+                              message:@"The parameters should be given as a sequence of integers, separated by spaces and/or punctuation."
+                              delegate:nil
+                              cancelButtonTitle:@"Close"
+                              otherButtonTitles:nil];
+        [alert show];
+        return nil;
+    }
+
+    // Collect the integers from the sequence.
+    NSMutableArray<NSNumber*>* ans = [NSMutableArray<NSNumber*> array];
+    for (NSUInteger i = 0; i < results.count; ++i) {
+        [ans addObject:[NSNumber numberWithInt:[self.parameters.text substringWithRange:results[i].range].intValue]];
+    }
+
+    switch (self.type.selectedSegmentIndex) {
+        case 0:
+        {
+            if (ans.count != 3) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Incorrect Number of Parameters"
+                                      message:@"A layered torus requires exactly three parameters (a, b and c)."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+
+            int a = ans[0].intValue;
+            int b = ans[1].intValue;
+            int c = ans[2].intValue;
+
+            if (a < 0 || b < 0 || c < 0) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Invalid Parameters"
+                                      message:@"The layered solid torus parameters a, b and c cannot be negative."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+            if (a == 0 && b == 0 && c == 0) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Invalid Parameters"
+                                      message:@"At least one of the layered solid torus parameters must be strictly positive."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+            if (regina::gcd(a, b) != 1) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Invalid Parameters"
+                                      message:@"The layered solid torus parameters a, b and c must be relatively prime."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+
+            if (a + b == c)
+                return @[[NSNumber numberWithInt:a], [NSNumber numberWithInt:b]];
+            else if (a + c == b)
+                return @[[NSNumber numberWithInt:a], [NSNumber numberWithInt:c]];
+            else if (b + c == a)
+                return @[[NSNumber numberWithInt:b], [NSNumber numberWithInt:c]];
+            else {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Invalid Parameters"
+                                      message:@"Two of the layered solid torus parameters must add to give the third."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+        }
+        case 1:
+        {
+            if (ans.count != 2) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Incorrect Number of Parameters"
+                                      message:@"A lens space requires exactly two parameters (p and q)."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+
+            int p = ans[0].intValue;
+            int q = ans[1].intValue;
+
+            if (p < 0 || q < 0) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Invalid Parameters"
+                                      message:@"The lens space parameters p and q cannot be negative."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+
+            if (p <= q && ! (p == 0 && q == 1)) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Invalid Parameters"
+                                      message:@"The second parameter (q) must be smaller than the first (p)."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+            if (regina::gcd(p, q) != 1) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Invalid Parameters"
+                                      message:@"The lens space parameters p and q must be relatively prime."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+
+            return ans;
+        }
+        case 2:
+        {
+            if (ans.count != 2) {
+                UIAlertView* alert = [[UIAlertView alloc]
+                                      initWithTitle:@"Incorrect Number of Parameters"
+                                      message:@"A Seifert fibred space requires an even number of parameters (two for each exceptional fibre)."
+                                      delegate:nil
+                                      cancelButtonTitle:@"Close"
+                                      otherButtonTitles:nil];
+                [alert show];
+                return nil;
+            }
+            // TODO: Sanity checking.
+            return ans;
+        }
+        default:
+            return nil;
+    }
+}
+
+- (IBAction)typeChanged:(id)sender {
+    switch (self.type.selectedSegmentIndex) {
+        case 0:
+            self.paramExpln.text = @"The parameters describe the meridional curve on the boundary.";
+            self.paramName.text = @"Parameters (a,b,c):";
+            break;
+        case 1:
+            self.paramExpln.text = @"The parameters describe the lens space.";
+            self.paramName.text = @"Parameters (p,q):";
+            break;
+        case 2:
+            self.paramExpln.text = @"The parameters describe the exceptional fibres.";
+            self.paramName.text = @"Parameters (a₁, b₁), ..., (aᵢ, bᵢ):";
+            break;
+    }
+
+    [[NSUserDefaults standardUserDefaults] setInteger:self.type.selectedSegmentIndex forKey:KEY_LAST_CONSTRUCTION];
+}
+
+- (IBAction)paramEditingEnded:(id)sender
+{
+    [self checkParams];
+}
+
+- (regina::Packet*)create
+{
+    NSArray<NSNumber*>* p = [self checkParams];
+    if (! p) {
+        // The error message has already been shown in checkParams.
+        return 0;
+    }
+
+    switch (self.type.selectedSegmentIndex) {
+        case 0:
+            return regina::Example<3>::lst(p[0].intValue, p[1].intValue);
+        case 1:
+            return regina::Example<3>::lens(p[0].intValue, p[1].intValue);
+        case 2:
+            // TODO: Implement SFS construction.
+            return 0;
+        default:
+            return 0;
+    }
 }
 
 @end
