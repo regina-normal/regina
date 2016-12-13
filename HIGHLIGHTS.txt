@@ -6,6 +6,8 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 5.1  [ (under development) ]
+
 Version 5.0  [ 26 September, 2016 ]
 
     Features:
