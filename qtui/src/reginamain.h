@@ -126,6 +126,13 @@ class ReginaMain : public QMainWindow {
         QMenu* toolMenu;
         QToolBar* toolBarMain;
         QToolBar* toolBarPacket;
+        static QMenu* windowMenu;
+
+        // The document action and menu are owned by this window itself, and
+        // so will be destroyed automatically (and thereby removed from any
+        // menus that contain them) when the window closes.
+        QAction* docAction;
+        QMenu* docMenu;
 
         /**
          * Other widgets and components
@@ -166,6 +173,17 @@ class ReginaMain : public QMainWindow {
          * Remove the packet specific menu
          */
         void unplugPacketMenu();
+
+        /**
+         * Plug the action for a packet window into the window submenu
+         * for this file.
+         */
+        void registerWindow(QAction* windowAction);
+
+        /**
+         * Access the global window menu.
+         */
+        static QMenu* getWindowMenu();
 
         /**
          * Allow access to the python manager.
@@ -243,6 +261,7 @@ class ReginaMain : public QMainWindow {
         void fileOpenExample(const QUrl& url, const QString& description);
         void fileSave();
         void fileSaveAs();
+        void raiseWindow();
 
         /**
          * View, rename or delete the currently selected packet.
@@ -397,12 +416,13 @@ class ReginaMain : public QMainWindow {
             const QString& fileFilter, const QString& dialogTitle);
 
         /**
-         * Open and save files.
+         * Open, save and rename files.
          */
         bool initData(regina::Packet* usePacketTree,
             const QString& useLocalFilename,
             const QString& useDisplayName);
         bool saveFile();
+        void renameWindow(const QString& newName);
 
     private slots:
         /**
@@ -417,6 +437,10 @@ inline PythonManager& ReginaMain::getPythonManager() {
 
 inline regina::Packet* ReginaMain::getPacketTree() {
     return packetTree.get();
+}
+
+inline QMenu* ReginaMain::getWindowMenu() {
+    return windowMenu;
 }
 
 #endif

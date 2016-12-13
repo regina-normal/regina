@@ -61,6 +61,11 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
     setCentralWidget(newPane);
 
     setupMenus();
+
+    windowAction = new QAction(heldPane->getPacket()->humanLabel().c_str(),
+        this);
+    connect(windowAction, SIGNAL(triggered()), this, SLOT(raiseWindow()));
+    parent->registerWindow(windowAction);
 }
 
 void PacketWindow::closeEvent(QCloseEvent* event) {
@@ -127,6 +132,10 @@ void PacketWindow::setupMenus() {
         "your own preferences for how Regina behaves."));
     connect(act, SIGNAL(triggered()), mainWindow, SLOT(optionsPreferences()));
     toolMenu->addAction(act);
+
+    // The window menu:
+
+    menuBar()->addMenu(ReginaMain::getWindowMenu());
 
     // The help menu:
 
@@ -199,8 +208,19 @@ void PacketWindow::setupMenus() {
     helpMenu->addAction(act);
 }
 
+void PacketWindow::renameWindow(const QString& newName) {
+    setWindowTitle(newName);
+    windowAction->setText(newName);
+}
+
 void PacketWindow::pythonConsole() {
     mainWindow->getPythonManager().launchPythonConsole(
         this, mainWindow->getPacketTree(), heldPane->getPacket());
+}
+
+void PacketWindow::raiseWindow() {
+    raise();
+    activateWindow();
+    showNormal();
 }
 

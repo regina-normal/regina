@@ -74,6 +74,8 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
+QMenu* ReginaMain::windowMenu = 0;
+
 ReginaMain::ReginaMain(ReginaManager* useManager, bool starterWindow) :
         QMainWindow(),
         manager(useManager),
@@ -135,6 +137,10 @@ void ReginaMain::unplugPacketMenu() {
         delete packetMenu;
         packetMenu = 0;
     }
+}
+
+void ReginaMain::registerWindow(QAction* windowAction) {
+    docMenu->addAction(windowAction);
 }
 
 regina::Packet* ReginaMain::selectedPacket() {
@@ -409,11 +415,17 @@ void ReginaMain::fileSaveAs() {
     // Go ahead and save it.
     if (localFile != file) {
         localFile = file;
-        setWindowTitle(localFile);
+        renameWindow(localFile);
     }
 
     saveFile();
     ReginaPrefSet::addRecentFile(QUrl::fromLocalFile(localFile));
+}
+
+void ReginaMain::raiseWindow() {
+    raise();
+    activateWindow();
+    showNormal();
 }
 
 void ReginaMain::packetView() {
@@ -654,7 +666,7 @@ void ReginaMain::initPacketTree() {
     // Update the visual representation.
     treeView->fill(packetTree.get());
 
-    setWindowTitle(tr("Untitled"));
+    renameWindow(tr("Untitled"));
 }
 
 void ReginaMain::view(PacketPane* newPane) {
@@ -701,9 +713,9 @@ bool ReginaMain::initData(regina::Packet* usePacketTree,
             treeView->expandItem(treeView->topLevelItem(i));
 
         if (! displayName.isEmpty())
-            setWindowTitle(displayName);
+            renameWindow(displayName);
         else
-            setWindowTitle(localFile);
+            renameWindow(localFile);
 
         if (! localFile.isEmpty())
             ReginaPrefSet::addRecentFile(QUrl::fromLocalFile(localFile));
@@ -738,6 +750,11 @@ bool ReginaMain::saveFile() {
                 "to this file."));
         return false;
     }
+}
+
+void ReginaMain::renameWindow(const QString& newName) {
+    setWindowTitle(newName);
+    docMenu->setTitle(newName);
 }
 
 void ReginaMain::updatePreferences() {

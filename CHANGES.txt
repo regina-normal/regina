@@ -250,6 +250,12 @@ Version 5.1  [ (under development) ]
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The
           file ~/.regina-libs is now ignored, and you can happily delete it.
+    USER INTERFACES:
+        - The desktop interface has (at last) gained a "Window" menu.
+        - The iPad interface now gives access to Python, offers syntax
+          highlighting for script packets, and offers a range of parameterised
+          3-manifold constructions similar to those in the desktop interface.
+        - Several other minor enhancements and updates.
 
 Version 5.0  [ 26 September, 2016 ]
 
