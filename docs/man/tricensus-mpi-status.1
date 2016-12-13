@@ -11,6 +11,13 @@ tricensus-mpi-status \- Summarise the log file of an MPI census of triangulation
 
 \fBtricensus-mpi-status\fR \fB\fIlog-file\fB\fR
 
+.SH "CAUTION"
+.PP
+The MPI utilities in Regina are deprecated, and will be removed from
+Regina in a future release.
+If you wish to parallelise the generation of a census, we recommend
+splitting up the input pairing files into chunks, and using typical
+queue systems (such as PBS) to parallelise.
 .SH "DESCRIPTION"
 .PP
 This utility reads a log file produced by a
