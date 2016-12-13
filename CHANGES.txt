@@ -250,6 +250,9 @@ Version 5.1  [ (under development) ]
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The
           file ~/.regina-libs is now ignored, and you can happily delete it.
+    UTILITIES:
+        - Added deprecation warnings to all MPI-enabled utilities. These will
+          be removed in some upcoming version of Regina
 
 Version 5.0  [ 26 September, 2016 ]
 
