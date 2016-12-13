@@ -257,8 +257,8 @@ Version 5.1  [ (under development) ]
           3-manifold constructions similar to those in the desktop interface.
         - Several other minor enhancements and updates.
     UTILITIES:
-        - Added deprecation warnings to all MPI-enabled utilities. These will
-          be removed in some upcoming version of Regina
+        - All MPI-enabled utilities are now deprecated. These will
+          be removed in some upcoming version of Regina.
 
 Version 5.0  [ 26 September, 2016 ]
 

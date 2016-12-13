@@ -1097,7 +1097,7 @@ int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);
 
     std::cerr <<
-R"(Warning: The MPI utilities in Regina are deprecated, and will be removed from
+R"(WARNING: The MPI utilities in Regina are deprecated, and will be removed from
 Regina in a future release.
 If you wish to parallelise the generation of a census, we recommend splitting up
 the input pairing files into chunks, and using typical queue systems (such as
