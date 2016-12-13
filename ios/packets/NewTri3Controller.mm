@@ -34,6 +34,7 @@
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "maths/numbertheory.h"
+#import "manifold/sfs.h"
 #import "triangulation/example3.h"
 #import "triangulation/dim3.h"
 
@@ -220,7 +221,7 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
     NSArray<NSTextCheckingResult*>* results = [regex matchesInString:self.parameters.text
                                                              options:0
                                                                range:NSMakeRange(0, self.parameters.text.length)];
-    if (results.count == 0) {
+    if (results.count == 0 && self.type.selectedSegmentIndex != 2 /* SFS */) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Please Enter Parameters"
                               message:@"The parameters should be given as a sequence of integers, separated by spaces and/or punctuation."
@@ -355,7 +356,7 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
         }
         case 2:
         {
-            if (ans.count != 2) {
+            if (ans.count % 2 != 0) {
                 UIAlertView* alert = [[UIAlertView alloc]
                                       initWithTitle:@"Incorrect Number of Parameters"
                                       message:@"A Seifert fibred space requires an even number of parameters (two for each exceptional fibre)."
@@ -365,7 +366,36 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
                 [alert show];
                 return nil;
             }
-            // TODO: Sanity checking.
+            for (NSUInteger i = 0; i < ans.count; i += 2) {
+                int a = ans[i].intValue;
+                int b = ans[i+1].intValue;
+
+                if (a == 0) {
+                    UIAlertView* alert = [[UIAlertView alloc]
+                                          initWithTitle:@"Invalid Parameters"
+                                          message:@"In each exceptional fibre (aᵢ, bᵢ), the parameter aᵢ cannot be zero."
+                                          delegate:nil
+                                          cancelButtonTitle:@"Close"
+                                          otherButtonTitles:nil];
+                    [alert show];
+                    return nil;
+                }
+
+                // For gcd calculations, use gcdWithCoeffs() which can cope with
+                // negatives.
+                long d, u, v;
+                d = regina::gcdWithCoeffs(a, b, u, v);
+                if (d != 1 && d != -1) {
+                    UIAlertView* alert = [[UIAlertView alloc]
+                                          initWithTitle:@"Invalid Parameters"
+                                          message:@"In each exceptional fibre (aᵢ, bᵢ), the parameters aᵢ and bᵢ must be relatively prime."
+                                          delegate:nil
+                                          cancelButtonTitle:@"Close"
+                                          otherButtonTitles:nil];
+                    [alert show];
+                    return nil;
+                }
+            }
             return ans;
         }
         default:
@@ -385,7 +415,7 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
             break;
         case 2:
             self.paramExpln.text = @"The parameters describe the exceptional fibres.";
-            self.paramName.text = @"Parameters (a₁, b₁), ..., (aᵢ, bᵢ):";
+            self.paramName.text = @"Parameters (a₁, b₁), ..., (aᵣ, bᵣ):";
             break;
     }
 
@@ -411,8 +441,23 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
         case 1:
             return regina::Example<3>::lens(p[0].intValue, p[1].intValue);
         case 2:
-            // TODO: Implement SFS construction.
-            return 0;
+        {
+            regina::SFSpace sfs;
+
+            for (NSUInteger i = 0; i < p.count; i += 2) {
+                int a = p[i].intValue;
+                int b = p[i+1].intValue;
+
+                if (a < 0)
+                    sfs.insertFibre(-a, -b);
+                else
+                    sfs.insertFibre(a, b);
+            }
+
+            regina::Triangulation<3>* ans = sfs.construct();
+            ans->setLabel(sfs.structure());
+            return ans;
+        }
         default:
             return 0;
     }
