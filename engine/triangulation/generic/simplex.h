@@ -31,7 +31,11 @@
  **************************************************************************/
 
 /*! \file triangulation/generic/simplex.h
- *  \brief Deals with top-dimensional simplices in a triangulation.
+ *  \brief Internal header for top-dimensional simplices of
+ *  higher-dimensional triangulations.
+ *
+ *  This file is automatically included from triangulation/generic.h;
+ *  there is no need for end users to include this header explicitly.
  */
 
 #ifndef __SIMPLEX_H
@@ -86,6 +90,8 @@ namespace regina {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim>
 class Face<dim, dim> : public detail::SimplexBase<dim> {

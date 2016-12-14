@@ -64,6 +64,8 @@ namespace regina {
  * This 3-dimensional specialisation contains some extra functionality.
  * In particular, each 3-dimensional component also stores details on
  * lower-dimensional faces (i.e., vertices, edges and triangles).
+ *
+ * \headerfile triangulation/dim3.h
  */
 template <>
 class REGINA_API Component<3> : public detail::ComponentBase<3>,

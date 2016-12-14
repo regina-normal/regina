@@ -36,7 +36,11 @@
 #endif
 
 /*! \file triangulation/generic/component.h
- *  \brief Deals with connected components of triangulations.
+ *  \brief Internal header for connected components of higher-dimensional
+ *  triangulations.
+ *
+ *  This file is automatically included from triangulation/generic.h;
+ *  there is no need for end users to include this header explicitly.
  */
 
 #include "triangulation/detail/component.h"
@@ -71,6 +75,8 @@ namespace regina {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim>
 class Component : public detail::ComponentBase<dim> {

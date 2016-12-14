@@ -36,7 +36,10 @@
 #endif
 
 /*! \file triangulation/generic/facetpairing.h
- *  \brief Deals with dual graphs of <i>n</i>-dimensional triangulations.
+ *  \brief Internal header for dual graphs of higher-dimensional triangulations.
+ *
+ *  This file is automatically included from triangulation/facetpairing.h;
+ *  there is no need for end users to include this header explicitly.
  */
 
 #include "triangulation/detail/facetpairing.h"
@@ -76,6 +79,8 @@ namespace regina {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim>
 class FacetPairing : public detail::FacetPairingBase<dim> {

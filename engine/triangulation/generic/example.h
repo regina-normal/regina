@@ -84,6 +84,8 @@ namespace regina {
  *
  * \tparam dim the dimension of the example triangulations to construct.
  * This must be between 2 and 15 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim>
 class Example : public detail::ExampleBase<dim> {

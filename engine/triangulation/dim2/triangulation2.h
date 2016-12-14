@@ -81,6 +81,8 @@ struct PacketInfo<PACKET_TRIANGULATION2> {
  *
  * This 2-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 2-manifolds.
+ *
+ * \headerfile triangulation/dim2.h
  */
 template <>
 class REGINA_API Triangulation<2> :

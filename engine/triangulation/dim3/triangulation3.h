@@ -141,6 +141,8 @@ enum TuraevViroAlg {
  * triangulation.  Include routines to crush a subcomplex or to expand a
  * subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
+ *
+ * \headerfile triangulation/dim3.h
  */
 template <>
 class REGINA_API Triangulation<3> :
