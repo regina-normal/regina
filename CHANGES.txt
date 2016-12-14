@@ -219,6 +219,10 @@ Version 5.1  [ (under development) ]
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The
           file ~/.regina-libs is now ignored, and you can happily delete it.
+    USER INTERFACE:
+        - Normal surface packets created with the interface are now given a
+          default name that includes the coordinate system used by said normal
+          surfaces.
 
 Version 5.0  [ 26 September, 2016 ]
 
