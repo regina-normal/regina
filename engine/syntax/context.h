@@ -52,6 +52,7 @@
 #define __SYNTAX_CONTEXT_H
 #endif
 
+#include "regina-core.h"
 #include "syntax/rule.h"
 #include "syntax/contextswitch.h"
 #include "syntax/definition.h"

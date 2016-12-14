@@ -52,6 +52,7 @@
 #define __SYNTAX_THEME_H
 #endif
 
+#include "regina-core.h"
 #include <memory>
 #include <string>
 

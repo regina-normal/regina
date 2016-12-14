@@ -52,6 +52,7 @@
 #define __SYNTAX_STATE_P_H
 #endif
 
+#include "regina-core.h"
 #include <deque>
 
 namespace regina {

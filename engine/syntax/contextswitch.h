@@ -52,6 +52,7 @@
 #define __SYNTAX_CONTEXTSWITCH_H
 #endif
 
+#include "regina-core.h"
 #include <string>
 #include <boost/noncopyable.hpp>
 

@@ -46,6 +46,7 @@
 #define __SYNTAX_MATCHER_H
 #endif
 
+#include "regina-core.h"
 #include <cstddef>
 #include <boost/noncopyable.hpp>
 

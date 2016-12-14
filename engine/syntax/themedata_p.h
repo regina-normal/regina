@@ -52,6 +52,7 @@
 #define __SYNTAX_THEMEDATA_P_H
 #endif
 
+#include "regina-core.h"
 #include "syntax/theme.h"
 #include "syntax/textstyledata_p.h"
 

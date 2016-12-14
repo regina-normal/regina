@@ -52,6 +52,7 @@
 #define __SYNTAX_FORMAT_H
 #endif
 
+#include "regina-core.h"
 #include <memory>
 
 namespace regina {

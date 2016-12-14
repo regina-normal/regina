@@ -52,6 +52,7 @@
 #define __SYNTAX_REPOSITORY_P_H
 #endif
 
+#include "regina-core.h"
 #include <map>
 #include <boost/noncopyable.hpp>
 

@@ -52,6 +52,7 @@
 #define __SYNTAX_KEYWORDLIST_H
 #endif
 
+#include "regina-core.h"
 #include <set>
 #include <string>
 #include <vector>

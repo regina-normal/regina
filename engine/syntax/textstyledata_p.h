@@ -52,6 +52,7 @@
 #define __SYNTAX_TEXTSTYLEDATA_P_H
 #endif
 
+#include "regina-core.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {

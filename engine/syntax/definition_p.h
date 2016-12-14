@@ -52,6 +52,7 @@
 #define __SYNTAX_DEFINITION_P_H
 #endif
 
+#include "regina-core.h"
 #include "syntax/definitionref.h"
 #include "syntax/keywordlist.h"
 
