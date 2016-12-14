@@ -60,7 +60,7 @@ namespace syntax {
 class Context;
 class DefinitionData;
 
-class StateData
+class REGINA_API StateData
 {
 public:
     StateData();

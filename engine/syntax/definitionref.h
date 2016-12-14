@@ -69,7 +69,7 @@ class DefinitionPrivate;
  *
  * @internal
  */
-class DefinitionRef
+class REGINA_API DefinitionRef
 {
 public:
     DefinitionRef();

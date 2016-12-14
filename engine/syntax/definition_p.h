@@ -68,7 +68,7 @@ namespace syntax {
 class Definition;
 class Repository;
 
-class DefinitionData : boost::noncopyable
+class REGINA_API DefinitionData : boost::noncopyable
 {
 public:
     DefinitionData();

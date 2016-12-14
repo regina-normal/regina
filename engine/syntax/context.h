@@ -63,7 +63,7 @@
 namespace regina {
 namespace syntax {
 
-class Context : public boost::noncopyable
+class REGINA_API Context : public boost::noncopyable
 {
 public:
     Context();

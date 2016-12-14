@@ -63,7 +63,7 @@
 namespace regina {
 namespace syntax {
 
-class FormatPrivate : public boost::noncopyable
+class REGINA_API FormatPrivate : public boost::noncopyable
 {
 public:
     FormatPrivate();

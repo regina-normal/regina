@@ -62,7 +62,7 @@ class Definition;
 class Repository;
 class Theme;
 
-class RepositoryPrivate : public boost::noncopyable
+class REGINA_API RepositoryPrivate : public boost::noncopyable
 {
 public:
     RepositoryPrivate();

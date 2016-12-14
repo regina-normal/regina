@@ -57,7 +57,7 @@
 namespace regina {
 namespace syntax {
 
-class TextStyleData : public boost::noncopyable
+class REGINA_API TextStyleData : public boost::noncopyable
 {
 public:
     // Constructor initializing all data.

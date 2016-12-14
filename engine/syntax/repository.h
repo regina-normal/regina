@@ -101,7 +101,7 @@ class Theme;
  *
  * @see Definition, Theme, AbstractHighlighter
  */
-class Repository : public boost::noncopyable
+class REGINA_API Repository : public boost::noncopyable
 {
 public:
     /**

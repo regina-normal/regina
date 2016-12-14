@@ -61,7 +61,7 @@
 namespace regina {
 namespace syntax {
 
-class KeywordList : public boost::noncopyable
+class REGINA_API KeywordList : public boost::noncopyable
 {
 public:
     KeywordList();

@@ -61,7 +61,7 @@ namespace syntax {
 class Context;
 class Definition;
 
-class ContextSwitch : public boost::noncopyable
+class REGINA_API ContextSwitch : public boost::noncopyable
 {
 public:
     ContextSwitch();

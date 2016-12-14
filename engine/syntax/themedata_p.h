@@ -64,7 +64,7 @@ namespace syntax {
 /**
  * Data container for a Theme.
  */
-class ThemeData : boost::noncopyable
+class REGINA_API ThemeData : boost::noncopyable
 {
 public:
     static ThemeData* get(const Theme &theme);
