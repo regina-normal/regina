@@ -36,7 +36,8 @@
 #endif
 
 /*! \file triangulation/generic/facetpairing.h
- *  \brief Internal header for dual graphs of higher-dimensional triangulations.
+ *  \brief Internal header for dual graphs of triangulations of
+ *  arbitrary dimension.
  *
  *  This file is automatically included from triangulation/facetpairing.h;
  *  there is no need for end users to include this header explicitly.

@@ -31,7 +31,8 @@
  **************************************************************************/
 
 /*! \file triangulation/generic/triangulation.h
- *  \brief Internal header for working with higher-dimensional triangulations.
+ *  \brief Internal header for working with triangulations of arbitrary
+ *  dimension.
  *
  *  This file is automatically included from triangulation/generic.h;
  *  there is no need for end users to include this header explicitly.
