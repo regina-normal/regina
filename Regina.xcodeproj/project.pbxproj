@@ -1138,7 +1138,6 @@
 		054C6A7E1DCC20DA005373F0 /* example.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A7C1DCC20DA005373F0 /* example.h */; };
 		054C6A7F1DCC20DA005373F0 /* strings.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A7D1DCC20DA005373F0 /* strings.h */; };
 		054C6A821DCC2127005373F0 /* example.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A811DCC2127005373F0 /* example.h */; };
-		054C6A861DCC2148005373F0 /* example.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A851DCC2148005373F0 /* example.h */; };
 		054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 054F7E28180B93770090B1F3 /* WelcomePopupController.m */; };
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
@@ -3288,7 +3287,6 @@
 		054C6A7D1DCC20DA005373F0 /* strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = strings.h; sourceTree = "<group>"; };
 		054C6A811DCC2127005373F0 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		054C6A841DCC2148005373F0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		054C6A851DCC2148005373F0 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
 		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
@@ -6168,7 +6166,6 @@
 				055114F51DCDF63000EC753C /* boundarycomponent.h */,
 				054C6A841DCC2148005373F0 /* CMakeLists.txt */,
 				055114F61DCDF63000EC753C /* component.h */,
-				054C6A851DCC2148005373F0 /* example.h */,
 				055114F71DCDF63000EC753C /* face.h */,
 				055114F81DCDF63000EC753C /* facetpairing.h */,
 				055114F91DCDF63000EC753C /* isomorphism.h */,
@@ -7209,7 +7206,6 @@
 				05431F241C40F260009BC072 /* facetpairing-impl.h in Headers */,
 				05FB46E51DD92D4A00BB00E5 /* abeliangroup.h in Headers */,
 				0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */,
-				054C6A861DCC2148005373F0 /* example.h in Headers */,
 				052FA02A180600FB00FAE4DF /* disc.h in Headers */,
 				05431F9E1C40F537009BC072 /* testgeneric.h in Headers */,
 				05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */,
