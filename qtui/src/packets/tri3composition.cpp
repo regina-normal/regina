@@ -145,10 +145,7 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     // Set up the composition viewer.
     msg = tr("<qt>Displays (i) the precise name of the triangulation "
         "and/or underlying 3-manifold if these can be recognised "
-        "immediately, (ii) the isomorphism signature from which the "
-        "triangulation can be reconstructed, "
-        "(iii) the Callahan-Hildebrand-Weeks dehydration "
-        "string if the triangulation supports it, and (iv) the details "
+        "immediately, and (ii) the details "
         "of any standard combinatorial structures found within the "
         "triangulation.<p>"
         "You can right-click on any line of text to copy it to the "
@@ -203,14 +200,6 @@ void Tri3CompositionUI::refresh() {
             addTopLevelSection(tr("3-manifold not recognised"));
     } else
         addTopLevelSection(tr("Triangulation not recognised"));
-
-    // Add the isomorphism signature.
-    addTopLevelSection(tr("Isomorphism signature: ") + tri->isoSig().c_str());
-
-    // Offer a dehydration string if we have one.
-    std::string dehydration = tri->dehydrate();
-    if (! dehydration.empty())
-        addTopLevelSection(tr("Dehydration: ") + dehydration.c_str());
 
     // Look for complete closed triangulations.
     findAugTriSolidTori();

@@ -256,6 +256,9 @@ Version 5.1  [ (under development) ]
           highlighting for script packets, and offers a range of parameterised
           3-manifold constructions similar to those in the desktop interface.
         - Turaev-Viro calculations now show progress, and can be cancelled.
+        - Moved isomorphism signatures and dehydration strings from the
+          components tab to the recognition tab. These, along with manifold
+          name and census location, are selectable with the mouse.
         - The default label for new normal surface packets now includes the
           coordinate system that was used to enumerate them.
         - Several other minor enhancements and updates.
