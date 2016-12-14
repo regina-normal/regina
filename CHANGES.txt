@@ -255,6 +255,7 @@ Version 5.1  [ (under development) ]
         - The iPad interface now gives access to Python, offers syntax
           highlighting for script packets, and offers a range of parameterised
           3-manifold constructions similar to those in the desktop interface.
+        - Turaev-Viro calculations now show progress, and can be cancelled.
         - Several other minor enhancements and updates.
     UTILITIES:
         - All MPI-enabled utilities are now deprecated. These will

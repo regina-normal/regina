@@ -1513,9 +1513,14 @@
      </inlinemediaobject>
     </para>
     <caution><para>
-     Only small values of <replaceable>r</replaceable>
-     should be used, since the time required to calculate the
-     invariant grows exponentially with <replaceable>r</replaceable>.
+     The time required to calculate the invariant grows exponentially with
+     <replaceable>r</replaceable>, and so it is highly recommended that you
+     start with small values of <replaceable>r</replaceable> and work
+     upwards from there.
+    </para><para>
+     &regina; will show the (estimated) percentage progress of each calculation
+     as it runs, and will offer a <guibutton>Cancel</guibutton> that
+     you can press if a calculation appears to be running too slowly.
     </para></caution>
    </sect3>
    <sect3 id="tri-algebra-cellular">
