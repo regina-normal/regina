@@ -31,7 +31,11 @@
  **************************************************************************/
 
 /*! \file triangulation/generic/triangulation.h
- *  \brief Deals with triangulations of arbitrary dimension.
+ *  \brief Internal header for working with triangulations of arbitrary
+ *  dimension.
+ *
+ *  This file is automatically included from triangulation/generic.h;
+ *  there is no need for end users to include this header explicitly.
  */
 
 #ifndef __TRIANGULATION_H
@@ -82,6 +86,8 @@ template <int> class XMLTriangulationReader;
  * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class stores.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim, int subdim>
 class FaceList {
@@ -265,6 +271,8 @@ namespace regina {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim>
 class Triangulation :

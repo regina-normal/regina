@@ -64,6 +64,8 @@ namespace regina {
  * This 2-dimensional specialisation contains some extra functionality.
  * In particular, each 2-dimensional component also stores details on
  * lower-dimensional faces (i.e., vertices and edges).
+ *
+ * \headerfile triangulation/dim2.h
  */
 template <>
 class REGINA_API Component<2> : public detail::ComponentBase<2>,

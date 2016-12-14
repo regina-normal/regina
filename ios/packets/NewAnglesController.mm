@@ -130,7 +130,10 @@ static NSArray* whichText;
                                                       otherButtonTitles:nil];
                 [alert show];
             } else {
-                ans->setLabel("Angle structures");
+                if (tautOnly)
+                    ans->setLabel("Taut angle structures");
+                else
+                    ans->setLabel("Vertex angle structures");
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];

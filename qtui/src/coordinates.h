@@ -59,9 +59,25 @@ namespace Coordinates {
         bool capitalise = true);
 
     /**
+     * Return a human-readable adjective for the given coordinate system.
+     * Unlike the human-readable name, this is a very short (often one-word)
+     * adjective that is designed to be slotted into a longer sentence.
+     */
+    const char* adjective(regina::NormalCoords coordSystem,
+        bool capitalise = true);
+
+    /**
      * Return a human-readable name for the given coordinate system.
      */
     const char* name(regina::HyperCoords coordSystem,
+        bool capitalise = true);
+
+    /**
+     * Return a human-readable adjective for the given coordinate system.
+     * Unlike the human-readable name, this is a very short (often one-word)
+     * adjective that is designed to be slotted into a longer sentence.
+     */
+    const char* adjective(regina::HyperCoords coordSystem,
         bool capitalise = true);
 
     /**

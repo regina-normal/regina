@@ -259,6 +259,8 @@ Version 5.1  [ (under development) ]
         - Moved isomorphism signatures and dehydration strings from the
           components tab to the recognition tab. These, along with manifold
           name and census location, are selectable with the mouse.
+        - The default label for new normal surface packets now includes the
+          coordinate system that was used to enumerate them.
         - Several other minor enhancements and updates.
     UTILITIES:
         - All MPI-enabled utilities are now deprecated. These will

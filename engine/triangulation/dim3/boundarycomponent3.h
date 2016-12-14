@@ -66,6 +66,8 @@ namespace regina {
  * In particular, it allows you to query the Euler characteristic and
  * orientability of a boundary component, without the heavyweight process
  * of triangulating the boundary component first.
+ *
+ * \headerfile triangulation/dim3.h
  */
 template <>
 class BoundaryComponent<3>: public detail::BoundaryComponentBase<3> {
