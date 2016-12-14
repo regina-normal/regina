@@ -192,7 +192,8 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             regina::NS_ALG_DEFAULT, &tracker);
 
         if (dlg.run()) {
-            ans->setLabel("Vertex normal surfaces");
+            QString label("Vertex %1normal surfaces");
+            ans->setLabel(label.arg(Coordinates::adjective(coordSystem, false)).toStdString());
             return ans;
         } else {
             delete ans;
@@ -214,7 +215,8 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             regina::NS_ALG_DEFAULT, &tracker);
 
         if (dlg.run()) {
-            ans->setLabel("Fundamental normal surfaces");
+            QString label("Fundamental %1normal surfaces");
+            ans->setLabel(label.arg(Coordinates::adjective(coordSystem, false)).toStdString());
             return ans;
         } else {
             delete ans;
