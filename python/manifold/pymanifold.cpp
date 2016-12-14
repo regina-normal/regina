@@ -30,27 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-void addNGraphLoop();
-void addNGraphPair();
-void addNGraphTriple();
-void addNHandlebody();
-void addNManifold();
-void addNLensSpace();
-void addNSFSpace();
-void addNSimpleSurfaceBundle();
-void addNSnapPeaCensusManifold();
-void addNTorusBundle();
+void addGraphLoop();
+void addGraphPair();
+void addGraphTriple();
+void addHandlebody();
+void addManifold();
+void addLensSpace();
+void addSFSpace();
+void addSimpleSurfaceBundle();
+void addSnapPeaCensusManifold();
+void addTorusBundle();
 
 void addManifoldClasses() {
-    addNManifold();
-    addNHandlebody();
-    addNLensSpace();
-    addNSFSpace();
-    addNSimpleSurfaceBundle();
-    addNSnapPeaCensusManifold();
-    addNTorusBundle();
-    addNGraphLoop();
-    addNGraphPair();
-    addNGraphTriple();
+    addManifold();
+    addHandlebody();
+    addLensSpace();
+    addSFSpace();
+    addSimpleSurfaceBundle();
+    addSnapPeaCensusManifold();
+    addTorusBundle();
+    addGraphLoop();
+    addGraphPair();
+    addGraphTriple();
 }
 

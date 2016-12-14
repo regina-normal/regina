@@ -291,6 +291,20 @@ class REGINA_API XMLParser {
 };
 
 /**
+ * Converts the given string from libxml into a C++ string, optionally
+ * deallocating the original libxml string.
+ *
+ * The given libxml string \a str may be \c null, in which case the
+ * resulting C++ string will be the empty string.
+ *
+ * @param str the string to convert.
+ * @param free \c true if the original libxml string \a str should be
+ * deallocated, or \c false if it should be preserved.
+ * @return the given string as a C++ string.
+ */
+REGINA_API std::string xmlString(xmlChar* str, bool free = true);
+
+/**
  * Returns the given string with special characters converted to XML
  * entities.  For instance, the string <tt>"a \< b"</tt> would be
  * converted to <tt>"a \&lt; b"</tt>.
@@ -411,6 +425,18 @@ inline void XMLParser::parse_chunk(const std::string& s) {
 
 inline void XMLParser::finish() {
     xmlParseChunk(_context, 0, 0, 1);
+}
+
+// Inline global functions
+
+inline std::string xmlString(xmlChar* str, bool free) {
+    if (! str)
+        return std::string();
+
+    std::string ans((const char*)str);
+    if (free)
+        xmlFree(str);
+    return ans;
 }
 
 } } // namespace regina::xml

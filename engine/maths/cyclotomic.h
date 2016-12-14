@@ -74,6 +74,9 @@ namespace regina {
  * require all operands to belong to the same field.
  *
  * This class requires that the order \a n is strictly positive.
+ *
+ * Although this class makes use of global data in its implementation, all
+ * of its methods are thread-safe.
  */
 class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
     private:
@@ -456,6 +459,9 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * Cyclotomic polynomials are cached after they are computed, and
          * so after the first call to <tt>cyclotomic(n)</tt>, all subsequent
          * calls with the same value of \a n will be essentially instantaneous.
+         *
+         * Although it queries and manipulates a global cache, this routine
+         * is thread-safe.
          *
          * \pre The given integer \a n must be strictly positive.
          *

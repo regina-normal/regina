@@ -409,6 +409,10 @@ class TriangulationBase :
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
+        static constexpr int dimension = dim;
+            /**< A compile-time constant that gives the dimension of the
+                 triangulation. */
+
         typedef typename std::vector<Simplex<dim>*>::const_iterator
                 SimplexIterator;
             /**< Used to iterate through top-dimensional simplices. */
@@ -1098,6 +1102,53 @@ class TriangulationBase :
          * orientable double cover.
          */
         void makeDoubleCover();
+
+        /**
+         * Does a barycentric subdivision of the triangulation.  This is done 
+         * in-place, i.e., the triangulation will be modified directly.
+         *
+         * Each top-dimensional simplex \a s is divided into
+         * (\a dim + 1) factorial sub-simplices by placing an extra vertex at
+         * the centroid of every face of every dimension.  Each of these
+         * sub-simplices \a t is described by a permutation \a p of
+         * (0, ..., \a dim).  The vertices of such a sub-simplex \a t are:
+         *
+         * - vertex \a p[0] of \a s;
+         * - the centre of edge (\a p[0], \a p[1]) of \a s;
+         * - the centroid of triangle (\a p[0], \a p[1], \a p[2]) of \a s;
+         * - ...
+         * - the centroid of face (\a p[0], \a p[1], \a p[2], \a p[\a dim])
+         *   of \a s, which is the entire simplex \a s itself.
+         *
+         * The sub-simplices have their vertices numbered in a way that
+         * mirrors the original simplex \a s:
+         *
+         * - vertex \a p[0] of \a s will be labelled \a p[0] in \a t;
+         * - the centre of edge (\a p[0], \a p[1]) of \a s will be labelled
+         *   \a p[1] in \a t;
+         * - the centroid of triangle (\a p[0], \a p[1], \a p[2]) of \a s
+         *   will be labelled \a p[2] in \a t;
+         * - ...
+         * - the centroid of \a s itself will be labelled \a p[\a dim] in \a t.
+         *
+         * If simplex \a s has index \a i in the original triangulation, then
+         * its sub-simplex corresponding to permutation \a p will have index
+         * <tt>((dim + 1)! * i + p.index())</tt> in the resulting triangulation.
+         * In other words: sub-simplices are ordered first according to the
+         * original simplex that contains them, and then according to the
+         * lexicographical ordering of the corresponding permutations \a p.
+         *
+         * \pre \a dim is one of Regina's standard dimensions.
+         * This precondition is a safety net, since in higher dimensions the
+         * triangulation would explode too quickly in size (and for the
+         * highest dimensions, possibly beyond the limits of \c size_t).
+         *
+         * \warning In dimensions 3 and 4, both the labelling and ordering of
+         * sub-simplices in the subdivided triangulation has changed as of
+         * Regina 5.1.  (Earlier versions of Regina made no guarantee about the
+         * labelling and ordering; these guarantees are also new to Regina 5.1).
+         */
+        void barycentricSubdivision();
 
         /**
          * Converts each real boundary component into a cusp (i.e., an
@@ -2694,6 +2745,76 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // Tidy up.
     delete[] upper;
     delete[] queue;
+}
+
+template <int dim>
+void TriangulationBase<dim>::barycentricSubdivision() {
+    // IMPORTANT: If the labelling of new simplices ever changes, then the
+    // 3-dimensional drillEdge() code must be rewritten as well (since it
+    // relies on the specific labelling scheme that we use here).
+
+    size_t nOld = simplices_.size();
+    if (nOld == 0)
+        return;
+
+    Triangulation<dim> staging;
+    typename Triangulation<dim>::ChangeEventSpan span(&staging);
+
+    static_assert(standardDim(dim),
+        "barycentricSubdivision() may only be used in standard dimensions.");
+
+    Simplex<dim>** newSimp = new Simplex<dim>*[nOld * Perm<dim+1>::nPerms];
+    Simplex<dim>* oldSimp;
+
+    // A top-dimensional simplex in the subdivision is uniquely defined
+    // by a permutation p on (dim+1) elements.
+    //
+    // As described in the documentation for barycentricSubdivision(),
+    // this is the simplex that:
+    // - meets the boundary in the facet opposite vertex p[dim];
+    // - meets that facet in the (dim-2)-face opposite vertex p[dim-1];
+    // - meets that (dim-2)-face in the (dim-3)-face opposite vertex p[dim-2];
+    // - ...
+    // - meets that edge in the vertex opposite vertex p[1];
+    // - directly touches vertex p[0].
+
+    size_t simp;
+    for (simp = 0; simp < Perm<dim+1>::nPerms * nOld; ++simp)
+        newSimp[simp] = staging.newSimplex();
+
+    // Do all of the internal gluings
+    int permIdx;
+    Perm<dim+1> perm, glue;
+    int i;
+    for (simp=0; simp < nOld; ++simp)
+        for (permIdx = 0; permIdx < Perm<dim+1>::nPerms; ++permIdx) {
+            perm = Perm<dim+1>::atIndex(permIdx);
+
+            // Internal gluings within the old simplex:
+            for (i = 0; i < dim; ++i)
+                newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i],
+                    newSimp[Perm<dim+1>::nPerms * simp +
+                        (perm * Perm<dim+1>(i, i+1)).index()],
+                    Perm<dim+1>(perm[i], perm[i+1]));
+
+            // Adjacent gluings to the adjacent simplex:
+            oldSimp = simplex(simp);
+            if (! oldSimp->adjacentSimplex(perm[dim]))
+                continue; // This hits a boundary facet.
+            if (newSimp[Perm<dim+1>::nPerms * simp + permIdx]->adjacentSimplex(
+                    perm[dim]))
+                continue; // We've already done this gluing from the other side.
+
+            glue = oldSimp->adjacentGluing(perm[dim]);
+            newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[dim],
+                newSimp[Perm<dim+1>::nPerms * oldSimp->adjacentSimplex(
+                    perm[dim])->index() + (glue * perm).index()],
+                glue);
+        }
+
+    // Delete the existing simplices and put in the new ones.
+    swapContents(staging);
+    delete[] newSimp;
 }
 
 template <int dim>

@@ -47,8 +47,8 @@
  */
 
 #include <packet/container.h>
-#include <subcomplex/nblockedsfs.h>
-#include <subcomplex/nstandardtri.h>
+#include <subcomplex/blockedsfs.h>
+#include <subcomplex/standardtri.h>
 #include <triangulation/dim3.h>
 
 #include <algorithm>
@@ -128,7 +128,7 @@ void process(Container* c) {
     if (! hasTriangulation(c))
         return;
 
-    NStandardTriangulation* std;
+    StandardTriangulation* std;
     std::vector<TriSpec> children;
     TriSpec spec;
     for (Packet* child = c->firstChild(); child;
@@ -137,7 +137,7 @@ void process(Container* c) {
         spec.isTri = (child->type() == PACKET_TRIANGULATION3);
 
         if (spec.isTri) {
-            std = NStandardTriangulation::isStandardTriangulation(
+            std = StandardTriangulation::isStandardTriangulation(
                 static_cast<Triangulation<3>*>(child));
             spec.hasName = (std != 0);
 
@@ -145,7 +145,7 @@ void process(Container* c) {
                 spec.name = std->name();
                 spec.hasSpecialName = false;
 
-                NBlockedSFS* sfs = dynamic_cast<NBlockedSFS*>(std);
+                BlockedSFS* sfs = dynamic_cast<BlockedSFS*>(std);
                 if (sfs && sfs->isPluggedIBundle(spec.specialName))
                     spec.hasSpecialName = true;
 

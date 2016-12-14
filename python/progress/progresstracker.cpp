@@ -39,10 +39,23 @@ using regina::ProgressTracker;
 using regina::ProgressTrackerOpen;
 
 namespace {
+    void (ProgressTracker::*newStage_char)(const char*, double) =
+        &ProgressTracker::newStage;
+    void (ProgressTracker::*newStage_str)(const std::string&, double) =
+        &ProgressTracker::newStage;
+
+    void (ProgressTrackerOpen::*newStage_open_char)(const char*) =
+        &ProgressTrackerOpen::newStage;
+    void (ProgressTrackerOpen::*newStage_open_str)(const std::string&) =
+        &ProgressTrackerOpen::newStage;
+
     bool (ProgressTrackerOpen::*incSteps_void)() =
         &ProgressTrackerOpen::incSteps;
     bool (ProgressTrackerOpen::*incSteps_arg)(unsigned long) =
         &ProgressTrackerOpen::incSteps;
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_newStage,
+        ProgressTracker::newStage, 1, 2);
 }
 
 void addProgressTracker() {
@@ -54,7 +67,8 @@ void addProgressTracker() {
         .def("percent", &ProgressTracker::percent)
         .def("description", &ProgressTracker::description)
         .def("cancel", &ProgressTracker::cancel)
-        .def("newStage", &ProgressTracker::newStage)
+        .def("newStage", newStage_char, OL_newStage())
+        .def("newStage", newStage_str, OL_newStage())
         .def("isCancelled", &ProgressTracker::isCancelled)
         .def("setPercent", &ProgressTracker::setPercent)
         .def("setFinished", &ProgressTracker::setFinished)
@@ -69,7 +83,8 @@ void addProgressTracker() {
         .def("steps", &ProgressTrackerOpen::steps)
         .def("description", &ProgressTrackerOpen::description)
         .def("cancel", &ProgressTrackerOpen::cancel)
-        .def("newStage", &ProgressTrackerOpen::newStage)
+        .def("newStage", newStage_open_char)
+        .def("newStage", newStage_open_str)
         .def("isCancelled", &ProgressTrackerOpen::isCancelled)
         .def("incSteps", incSteps_void)
         .def("incSteps", incSteps_arg)

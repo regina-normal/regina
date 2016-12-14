@@ -54,8 +54,8 @@ class QTreeWidgetItem;
 namespace regina {
     class Matrix2;
     class Packet;
-    class NSatRegion;
-    class NStandardTriangulation;
+    class SatRegion;
+    class StandardTriangulation;
     template <int> class Perm;
 };
 
@@ -148,7 +148,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         void findSnappedBalls();
         void findSnappedSpheres();
         void findSpiralSolidTori();
-        void describeSatRegion(const regina::NSatRegion& region,
+        void describeSatRegion(const regina::SatRegion& region,
             QTreeWidgetItem* parent);
 
         /**

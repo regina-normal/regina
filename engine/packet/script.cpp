@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <iterator>
+#include <sstream>
 #include "packet/script.h"
 #include "utilities/xmlutils.h"
 
@@ -92,6 +93,25 @@ void Script::setVariableValue(size_t index, Packet* value) {
     it->second = value;
     if (it->second)
         it->second->listen(this);
+}
+
+const std::string& Script::addVariableName(const std::string& name,
+        Packet* value) {
+    ChangeEventSpan span(this);
+
+    auto result = variables.insert(std::make_pair(name, value));
+    int which = 2;
+    while (! result.second) {
+        std::ostringstream s;
+        s << name << ' ' << which;
+        result = variables.insert(std::make_pair(s.str(), value));
+
+        ++which;
+    }
+
+    if (value)
+        value->listen(this);
+    return result.first->first;
 }
 
 void Script::removeVariable(const std::string& name) {

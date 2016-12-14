@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "manifold/nlensspace.h"
-#include "manifold/nsfs.h"
+#include "manifold/lensspace.h"
+#include "manifold/sfs.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
@@ -277,7 +277,7 @@ void Triangulation<3>::insertAugTriSolidTorus(long a1, long b1,
 void Triangulation<3>::insertSFSOverSphere(long a1, long b1, long a2, long b2,
         long a3, long b3) {
     // Construct the SFS that we seek.
-    NSFSpace sfs;
+    SFSpace sfs;
     if (a1 < 0)
         sfs.insertFibre(-a1, -b1);
     else

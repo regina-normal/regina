@@ -35,12 +35,15 @@
 #include "maths/cyclotomic.h"
 #include "maths/integer.h"
 #include <cmath>
+#include <mutex>
+#include <thread>
 #include <vector>
 
 namespace regina {
 
 namespace {
     std::vector<Polynomial<Integer> > cyclotomicCache;
+    std::mutex cacheMutex;
 }
 
 std::complex<double> Cyclotomic::evaluate(size_t whichRoot) const {
@@ -91,6 +94,8 @@ Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
 }
 
 const Polynomial<Integer>& Cyclotomic::cyclotomic(size_t n) {
+    std::lock_guard<std::mutex> lock(cacheMutex);
+
     if (cyclotomicCache.size() < n)
         cyclotomicCache.resize(n);
     if (cyclotomicCache[n - 1].degree() == 0) {

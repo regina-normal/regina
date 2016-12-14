@@ -678,31 +678,31 @@ inline bool Polynomial<T>::operator != (const Polynomial<T>& rhs) const {
 }
 
 template <typename T>
-Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& other) {
-    // This works even if &other == this, since we don't reallocate if
+Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& value) {
+    // This works even if &value == this, since we don't reallocate if
     // the degrees are equal.
-    if (degree_ < other.degree_) {
+    if (degree_ < value.degree_) {
         delete[] coeff_;
-        coeff_ = new T[other.degree_ + 1];
+        coeff_ = new T[value.degree_ + 1];
     }
-    degree_ = other.degree_;
+    degree_ = value.degree_;
     for (size_t i = 0; i <= degree_; ++i)
-        coeff_[i] = other.coeff_[i];
+        coeff_[i] = value.coeff_[i];
     return *this;
 }
 
 template <typename T>
 template <typename U>
-Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& other) {
-    // This works even if &other == this, since we don't reallocate if
+Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
+    // This works even if &value == this, since we don't reallocate if
     // the degrees are equal.
-    if (degree_ < other.degree()) {
+    if (degree_ < value.degree()) {
         delete[] coeff_;
-        coeff_ = new T[other.degree() + 1];
+        coeff_ = new T[value.degree() + 1];
     }
-    degree_ = other.degree();
+    degree_ = value.degree();
     for (size_t i = 0; i <= degree_; ++i)
-        coeff_[i] = other[i];
+        coeff_[i] = value[i];
     return *this;
 }
 

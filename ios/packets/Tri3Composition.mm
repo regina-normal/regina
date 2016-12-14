@@ -34,29 +34,29 @@
 #import "TextHelper.h"
 #import "Tri3ViewController.h"
 #import "Tri3Composition.h"
-#import "manifold/nmanifold.h"
-#import "subcomplex/naugtrisolidtorus.h"
-#import "subcomplex/nblockedsfs.h"
-#import "subcomplex/nblockedsfsloop.h"
-#import "subcomplex/nblockedsfspair.h"
-#import "subcomplex/nblockedsfstriple.h"
-#import "subcomplex/nl31pillow.h"
-#import "subcomplex/nlayeredchain.h"
-#import "subcomplex/nlayeredchainpair.h"
-#import "subcomplex/nlayeredlensspace.h"
-#import "subcomplex/nlayeredloop.h"
-#import "subcomplex/nlayeredsolidtorus.h"
-#import "subcomplex/nlayeredsurfacebundle.h"
-#import "subcomplex/npillowtwosphere.h"
-#import "subcomplex/npluggedtorusbundle.h"
-#import "subcomplex/nplugtrisolidtorus.h"
-#import "subcomplex/nsatblock.h"
-#import "subcomplex/nsatregion.h"
-#import "subcomplex/nsnappedball.h"
-#import "subcomplex/nsnappedtwosphere.h"
-#import "subcomplex/nspiralsolidtorus.h"
-#import "subcomplex/nstandardtri.h"
-#import "subcomplex/ntxicore.h"
+#import "manifold/manifold.h"
+#import "subcomplex/augtrisolidtorus.h"
+#import "subcomplex/blockedsfs.h"
+#import "subcomplex/blockedsfsloop.h"
+#import "subcomplex/blockedsfspair.h"
+#import "subcomplex/blockedsfstriple.h"
+#import "subcomplex/l31pillow.h"
+#import "subcomplex/layeredchain.h"
+#import "subcomplex/layeredchainpair.h"
+#import "subcomplex/layeredlensspace.h"
+#import "subcomplex/layeredloop.h"
+#import "subcomplex/layeredsolidtorus.h"
+#import "subcomplex/layeredtorusbundle.h"
+#import "subcomplex/pillowtwosphere.h"
+#import "subcomplex/pluggedtorusbundle.h"
+#import "subcomplex/plugtrisolidtorus.h"
+#import "subcomplex/satblock.h"
+#import "subcomplex/satregion.h"
+#import "subcomplex/snappedball.h"
+#import "subcomplex/snappedtwosphere.h"
+#import "subcomplex/spiralsolidtorus.h"
+#import "subcomplex/standardtri.h"
+#import "subcomplex/txicore.h"
 #import "triangulation/dim3.h"
 
 #define INDENT1 "\t• "
@@ -125,7 +125,7 @@
 
     self.isosig.text = @(self.packet->isoSig().c_str());
     
-    regina::NStandardTriangulation* stdTri = regina::NStandardTriangulation::isStandardTriangulation(self.packet);
+    regina::StandardTriangulation* stdTri = regina::StandardTriangulation::isStandardTriangulation(self.packet);
     if (stdTri)
         self.standard.text = @(stdTri->name().c_str());
     else
@@ -183,23 +183,23 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NAugTriSolidTorus* aug;
+    regina::AugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(self.packet->component(i));
+        aug = regina::AugTriSolidTorus::isAugTriSolidTorus(self.packet->component(i));
         if (aug) {
             [details appendFormat:@"Augmented triangular solid torus %s\n", aug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
 
-            const regina::NTriSolidTorus& core = aug->core();
+            const regina::TriSolidTorus& core = aug->core();
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
              core.tetrahedron(0)->index(),
              core.tetrahedron(1)->index(),
              core.tetrahedron(2)->index()];
 
             if (aug->hasLayeredChain()) {
-                if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_MAJOR)
+                if (aug->chainType() == regina::AugTriSolidTorus::CHAIN_MAJOR)
                     [details appendString:@INDENT1 "Attached: layered chain (major) + layered solid torus]n"];
-                else if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_AXIS)
+                else if (aug->chainType() == regina::AugTriSolidTorus::CHAIN_AXIS)
                     [details appendString:@INDENT1 "Attached: layered chain (axis) + layered solid torus\n"];
                 else
                     [details appendString:@INDENT1 "Attached: layered chain (unknown) + layered solid torus\n"];
@@ -216,9 +216,9 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NL31Pillow* pillow;
+    regina::L31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::NL31Pillow::isL31Pillow(self.packet->component(i));
+        pillow = regina::L31Pillow::isL31Pillow(self.packet->component(i));
         if (pillow) {
             [details appendFormat:@"L(3,1) pillow %s\n", pillow->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -235,9 +235,9 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NLayeredChainPair* pair;
+    regina::LayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
-        pair = regina::NLayeredChainPair::isLayeredChainPair(self.packet->component(i));
+        pair = regina::LayeredChainPair::isLayeredChainPair(self.packet->component(i));
         if (pair) {
             [details appendFormat:@"Layered chain pair %s\n", pair->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -255,14 +255,14 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NLayeredLensSpace* lens;
+    regina::LayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::NLayeredLensSpace::isLayeredLensSpace(self.packet->component(i));
+        lens = regina::LayeredLensSpace::isLayeredLensSpace(self.packet->component(i));
         if (lens) {
             [details appendFormat:@"Layered lens space %s\n", lens->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             
-            const regina::NLayeredSolidTorus& torus(lens->torus());
+            const regina::LayeredSolidTorus& torus(lens->torus());
             [details appendFormat:@INDENT1 "Layered %ld-%ld-%ld solid torus %s\n",
              torus.meridinalCuts(0),
              torus.meridinalCuts(1),
@@ -279,9 +279,9 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NLayeredLoop* loop;
+    regina::LayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
-        loop = regina::NLayeredLoop::isLayeredLoop(self.packet->component(i));
+        loop = regina::LayeredLoop::isLayeredLoop(self.packet->component(i));
         if (loop) {
             [details appendFormat:@"Layered loop %s\n", loop->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -306,15 +306,15 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::NPlugTriSolidTorus* plug;
-    const regina::NLayeredChain* chain;
+    regina::PlugTriSolidTorus* plug;
+    const regina::LayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
+        plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
         if (plug) {
             [details appendFormat:@"Plugged triangular solid torus %s\n", plug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
 
-            const regina::NTriSolidTorus& core(plug->core());
+            const regina::TriSolidTorus& core(plug->core());
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
              core.tetrahedron(0)->index(),
              core.tetrahedron(1)->index(),
@@ -325,7 +325,7 @@
                 chain = plug->chain(j);
                 if (chain) {
                     [details appendFormat:@"%ld", chain->index()];
-                    if (plug->chainType(j) == regina::NPlugTriSolidTorus::CHAIN_MAJOR)
+                    if (plug->chainType(j) == regina::PlugTriSolidTorus::CHAIN_MAJOR)
                         [details appendString:@" (major)"];
                     else
                         [details appendString:@" (minor)"];
@@ -336,7 +336,7 @@
             }
             [details appendString:@"\n"];
 
-            if (plug->equatorType() == regina::NPlugTriSolidTorus::EQUATOR_MAJOR)
+            if (plug->equatorType() == regina::PlugTriSolidTorus::EQUATOR_MAJOR)
                 [details appendString:@INDENT1 "Equator type: major\n"];
             else
                 [details appendString:@INDENT1 "Equator type: minor\n"];
@@ -347,10 +347,10 @@
     }
 }
 
-- (void)describeSatRegion:(const regina::NSatRegion&)region details:(NSMutableString*)details
+- (void)describeSatRegion:(const regina::SatRegion&)region details:(NSMutableString*)details
 {
-    regina::NSatBlockSpec spec;
-    regina::NSatAnnulus ann;
+    regina::SatBlockSpec spec;
+    regina::SatAnnulus ann;
     unsigned nAnnuli;
     long b;
     int a;
@@ -418,7 +418,7 @@
 
 - (void)findBlockedTriangulations:(NSMutableString*)details
 {
-    regina::NBlockedSFS* sfs = regina::NBlockedSFS::isBlockedSFS(self.packet);
+    regina::BlockedSFS* sfs = regina::BlockedSFS::isBlockedSFS(self.packet);
     if (sfs) {
         [details appendString:@"Blocked Seifert Fibred Space\n"];
         [details appendString:@INDENT1 "Saturated region:\n"];
@@ -427,7 +427,7 @@
         delete sfs;
     }
     
-    regina::NBlockedSFSLoop* loop = regina::NBlockedSFSLoop::isBlockedSFSLoop(self.packet);
+    regina::BlockedSFSLoop* loop = regina::BlockedSFSLoop::isBlockedSFSLoop(self.packet);
     if (loop) {
         [details appendString:@"Blocked SFS Loop\n"];
         
@@ -441,7 +441,7 @@
         delete loop;
     }
     
-    regina::NBlockedSFSPair* pair = regina::NBlockedSFSPair::isBlockedSFSPair(self.packet);
+    regina::BlockedSFSPair* pair = regina::BlockedSFSPair::isBlockedSFSPair(self.packet);
     if (pair) {
         [details appendString:@"Blocked SFS Pair\n"];
         
@@ -458,7 +458,7 @@
         delete pair;
     }
     
-    regina::NBlockedSFSTriple* triple = regina::NBlockedSFSTriple::isBlockedSFSTriple(self.packet);
+    regina::BlockedSFSTriple* triple = regina::BlockedSFSTriple::isBlockedSFSTriple(self.packet);
     if (triple) {
         [details appendString:@"Blocked SFS Triple\n"];
         
@@ -481,7 +481,7 @@
         delete triple;
     }
     
-    regina::NLayeredTorusBundle* bundle = regina::NLayeredTorusBundle::isLayeredTorusBundle(self.packet);
+    regina::LayeredTorusBundle* bundle = regina::LayeredTorusBundle::isLayeredTorusBundle(self.packet);
     if (bundle) {
         [details appendString:@"Layered Torus Bundle\n"];
         
@@ -498,7 +498,7 @@
         delete bundle;
     }
     
-    regina::NPluggedTorusBundle* pBundle = regina::NPluggedTorusBundle::isPluggedTorusBundle(self.packet);
+    regina::PluggedTorusBundle* pBundle = regina::PluggedTorusBundle::isPluggedTorusBundle(self.packet);
     if (pBundle) {
         [details appendString:@"Plugged Torus Bundle\n"];
         
@@ -520,10 +520,10 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::NLayeredSolidTorus* torus;
+    regina::LayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->tetrahedron(i));
+        torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->tetrahedron(i));
         if (torus) {
             [details appendFormat:@"Layered solid torus %s\n", torus->name().c_str()];
             [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->base()->index()];
@@ -555,7 +555,7 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::NSpiralSolidTorus* spiral;
+    regina::SpiralSolidTorus* spiral;
     regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
@@ -565,7 +565,7 @@
             if (regina::Perm<4>::S4[whichPerm][0] > regina::Perm<4>::S4[whichPerm][3])
                 continue;
             
-            spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet, regina::Perm<4>::S4[whichPerm]);
+            spiral = regina::SpiralSolidTorus::formsSpiralSolidTorus(tet, regina::Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
             if (! spiral->isCanonical(self.packet)) {
@@ -642,9 +642,9 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::NSnappedBall* ball;
+    regina::SnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
-        ball = regina::NSnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
+        ball = regina::SnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
         if (ball) {
             [details appendString:@"Snapped 3-ball\n"];
             [details appendFormat:@INDENT1 "Tetrahedron %ld\n", i];
@@ -665,12 +665,12 @@
     unsigned long i, j;
     regina::Triangle<3>* f1;
     regina::Triangle<3>* f2;
-    regina::NPillowTwoSphere* pillow;
+    regina::PillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
         f1 = self.packet->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
             f2 = self.packet->triangle(j);
-            pillow = regina::NPillowTwoSphere::formsPillowTwoSphere(f1, f2);
+            pillow = regina::PillowTwoSphere::formsPillowTwoSphere(f1, f2);
             if (pillow) {
                 [details appendString:@"Pillow 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Triangles: %ld, %ld\n", i, j];
@@ -693,17 +693,17 @@
     unsigned long i, j;
     regina::Tetrahedron<3>* t1;
     regina::Tetrahedron<3>* t2;
-    regina::NSnappedTwoSphere* sphere;
+    regina::SnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = self.packet->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = self.packet->tetrahedron(j);
-            sphere = regina::NSnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
+            sphere = regina::SnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
             if (sphere) {
                 [details appendString:@"Snapped 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Tetrahedra: %ld, %ld\n", i, j];
                 
-                const regina::NSnappedBall* ball = sphere->snappedBall(0);
+                const regina::SnappedBall* ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
                  ball->tetrahedron()->edge(ball->equatorEdge())->index()];
                 

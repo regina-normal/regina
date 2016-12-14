@@ -50,6 +50,7 @@
     self.detail.delegate = self;
 
     [self reloadPacket];
+    [self.detail setSelectedRange:NSMakeRange(0,0)];
 
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
@@ -65,14 +66,19 @@
     [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+
+    // TODO: This doesn't work when the device is rotated.
+    [self.detail scrollRangeToVisible:self.detail.selectedRange];
+}
+
 - (void)reloadPacket {
     if (myEdit)
         return;
 
     self.detail.text = [NSString stringWithUTF8String:self.packet->text().c_str()];
-    [self.detail scrollRangeToVisible:NSMakeRange(0, 0)];
-    // TODO: It still doesn't scroll quite far enough up (same for scripts also).
-    // Find out what we need to set the contentOffset to.
 }
 
 - (void)endEditing

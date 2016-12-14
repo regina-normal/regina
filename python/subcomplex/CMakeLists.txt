@@ -2,34 +2,34 @@
 
 # Files to compile
 SET ( FILES
-  naugtrisolidtorus
-  nblockedsfs
-  nblockedsfsloop
-  nblockedsfspair
-  nblockedsfstriple
-  nl31pillow
-  nlayeredchain
-  nlayeredchainpair
-  nlayeredlensspace
-  nlayeredloop
-  nlayeredsolidtorus
-  nlayeredsurfacebundle
-  nlayering
-  npillowtwosphere
-  npluggedtorusbundle
-  nplugtrisolidtorus
-  nsatannulus
-  nsatblock
-  nsatblocktypes
-  nsatregion
-  nsnappeacensustri
-  nsnappedball
-  nsnappedtwosphere
-  nspiralsolidtorus
-  nstandardtri
-  ntrisolidtorus
-  ntrivialtri
-  ntxicore
+  augtrisolidtorus
+  blockedsfs
+  blockedsfsloop
+  blockedsfspair
+  blockedsfstriple
+  l31pillow
+  layeredchain
+  layeredchainpair
+  layeredlensspace
+  layeredloop
+  layeredsolidtorus
+  layeredtorusbundle
+  layering
+  pillowtwosphere
+  pluggedtorusbundle
+  plugtrisolidtorus
+  satannulus
+  satblock
+  satblocktypes
+  satregion
+  snappeacensustri
+  snappedball
+  snappedtwosphere
+  spiralsolidtorus
+  standardtri
+  trisolidtorus
+  trivialtri
+  txicore
   pysubcomplex
   )
 

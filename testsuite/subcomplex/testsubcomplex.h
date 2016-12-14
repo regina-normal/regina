@@ -42,5 +42,5 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addNStandardTriangulation(CppUnit::TextUi::TestRunner& runner);
+void addStandardTriangulation(CppUnit::TextUi::TestRunner& runner);
 

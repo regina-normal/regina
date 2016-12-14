@@ -2,16 +2,16 @@
 
 # Files to compile
 SET ( FILES
-  ngraphloop
-  ngraphpair
-  ngraphtriple
-  nhandlebody
-  nlensspace
-  nmanifold
-  nsfs
-  nsimplesurfacebundle
-  nsnappeacensusmfd
-  ntorusbundle
+  graphloop
+  graphpair
+  graphtriple
+  handlebody
+  lensspace
+  manifold
+  sfs
+  simplesurfacebundle
+  snappeacensusmfd
+  torusbundle
   pymanifold
   )
 

@@ -31,6 +31,13 @@
  **************************************************************************/
 
 #import "PacketViewer.h"
+#import <string>
+
+/**
+ * The text field that displays the value of a script variable.
+ */
+@interface ScriptVariableValueField : UITextField
+@end
 
 /**
  * A cell in a table of script variables.
@@ -42,4 +49,10 @@
  * The controller for viewing script packets.
  */
 @interface ScriptViewController : UIViewController <PacketViewer>
+- (bool)hasVariable:(const std::string&)name;
+// The following methods must only be called from ScriptVariableCell.
+// They assume the cell has already been edited; their job is to push the
+// updates to the packet itself.
+- (void)editedValue:(const std::string&)name value:(regina::Packet*)value;
+- (void)editedName:(const std::string&)name rename:(const std::string&)newName;
 @end

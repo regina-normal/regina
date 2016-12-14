@@ -352,7 +352,7 @@ struct NormalInfo;
 class REGINA_API NormalSurfaceVector : public boost::noncopyable {
     protected:
         Ray coords_;
-            /** The raw vector of normal coordinates. */
+            /**< The raw vector of normal coordinates. */
 
     public:
         /**

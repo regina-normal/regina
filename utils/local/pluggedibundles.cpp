@@ -49,8 +49,8 @@
  * All output is written to standard output.
  */
 
-#include <subcomplex/nblockedsfs.h>
-#include <subcomplex/nstandardtri.h>
+#include <subcomplex/blockedsfs.h>
+#include <subcomplex/standardtri.h>
 #include <triangulation/dim3.h>
 
 #include <cstdlib>
@@ -82,10 +82,10 @@ void process(Triangulation<3>* t) {
     std::cout << t->label();
     totTris++;
 
-    NStandardTriangulation* s =
-        NStandardTriangulation::isStandardTriangulation(t);
+    StandardTriangulation* s =
+        StandardTriangulation::isStandardTriangulation(t);
     if (s) {
-        NBlockedSFS* sfs = dynamic_cast<NBlockedSFS*>(s);
+        BlockedSFS* sfs = dynamic_cast<BlockedSFS*>(s);
         if (sfs) {
             std::string pluggedName;
             if (sfs->isPluggedIBundle(pluggedName)) {

@@ -46,7 +46,11 @@
 #include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "syntax/pythonsyntaxhighlighter.h"
+
+#include "syntax/definition.h"
+#include "syntax/repository.h"
+#include "syntax/syntaxhighlighter.h"
+#include "syntax/theme.h"
 
 #include <cstring>
 #include <QAction>
@@ -65,6 +69,10 @@ using regina::Script;
 
 namespace {
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
+
+    // The syntax highlighting repository of definitions and themes is
+    // a singleton: it is created on demand, and never deleted.
+    regina::syntax::Repository* repository;
 }
 
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
@@ -292,7 +300,12 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
 
-    new PythonSyntaxHighlighter(editWidget->document());
+    if (! repository)
+        repository = new regina::syntax::Repository;
+
+    auto h = new SyntaxHighlighter(editWidget->document());
+    h->setDefinition(repository->definitionForName("Python"));
+    h->setTheme(repository->theme("Default"));
 
     editWidget->setFocus();
     editWidget->setWhatsThis(tr("Type the Python script into this "

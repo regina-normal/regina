@@ -13,7 +13,7 @@ SET (PACKAGE_PRETTY_NAME Regina)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Version
-SET (PACKAGE_VERSION 5.0)
+SET (PACKAGE_VERSION 5.1)
 SET (SNAPPY_VERSION 2.4)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
@@ -302,6 +302,14 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "iconv"
   "Essential: internationalisation support"
   "http://www.gnu.org/s/libiconv/"
+  TRUE)
+
+FIND_PACKAGE(Jansson)
+INCLUDE_DIRECTORIES(${JANSSON_INCLUDE_DIR})
+MACRO_LOG_FEATURE(JANSSON_FOUND
+  "Jansson"
+  "Essential: JSON support"
+  "http://www.digip.org/jansson/"
   TRUE)
 
 FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
