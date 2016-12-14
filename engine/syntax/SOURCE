@@ -9,10 +9,8 @@ framework from KDE Frameworks 5.28.0:
   (not unicode);
 - dynamic rules (which use regex captures instead of hard-coded strings) are
   not supported;
-- the repository of highlighting definitions is hard-coded to only load the
-  Python definitions from Regina's data directories (though the library itself
-  retains functionality for arbitrary languages, excluding the caveats listed
-  above).
+- the repository is hard-coded to only load those definitions and themes that
+  Regina needs, and these are loaded directly from Regina's data directories.
 
 The original KDE framework was downloaded on 21 Nov 2016 from:
 http://download.kde.org/stable/frameworks/5.28/

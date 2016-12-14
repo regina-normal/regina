@@ -38,6 +38,7 @@
 #include "triangulation/dim3.h"
 
 // UI includes:
+#include "examplecreator.h"
 #include "tri3creator.h"
 #include "reginasupport.h"
 
@@ -72,25 +73,28 @@ namespace {
     };
 
     /**
-     * Example IDs that correspond to indices in the example
-     * triangulation combo box.
+     * The list of ready-made example triangulations.
      */
-    enum {
-        EXAMPLE_S3_ONETET,
-        EXAMPLE_S3_BING,
-        EXAMPLE_S3_600CELL,
-        EXAMPLE_RP3RP3,
-        EXAMPLE_FIGURE8,
-        EXAMPLE_GIESEKING,
-        EXAMPLE_LENS8_3,
-        EXAMPLE_POINCARE,
-        EXAMPLE_RP2xS1,
-        EXAMPLE_S2xS1,
-        EXAMPLE_SOLIDKLEIN,
-        EXAMPLE_TREFOIL,
-        EXAMPLE_WEEKS,
-        EXAMPLE_WEBERSEIFERT,
-        EXAMPLE_WHITEHEAD
+    std::vector<ExampleCreator<3>> examples = {
+        ExampleCreator<3>(QObject::tr("3-sphere (minimal)"), &regina::Example<3>::threeSphere),
+        ExampleCreator<3>(QObject::tr("3-sphere (dual to Bing's house)"), &regina::Example<3>::bingsHouse),
+        ExampleCreator<3>(QObject::tr("3-sphere (simplex boundary)"), &regina::Example<3>::simplicialSphere),
+        ExampleCreator<3>(QObject::tr("3-sphere (600-cell)"), &regina::Example<3>::sphere600),
+        ExampleCreator<3>(QObject::trUtf8("Connected sum ℝP³ # ℝP³"), &regina::Example<3>::rp3rp3),
+        ExampleCreator<3>(QObject::tr("Figure eight knot complement"), &regina::Example<3>::figureEight),
+        ExampleCreator<3>(QObject::tr("Gieseking manifold"), &regina::Example<3>::gieseking),
+        ExampleCreator<3>(QObject::tr("Lens space L(8,3)"), [](){ return regina::Example<3>::lens(8, 3); }),
+        ExampleCreator<3>(QObject::trUtf8("Poincaré homology sphere"), &regina::Example<3>::poincareHomologySphere),
+        ExampleCreator<3>(QObject::trUtf8("Product ℝP² × S¹"), &regina::Example<3>::rp2xs1),
+        ExampleCreator<3>(QObject::trUtf8("Product S² × S¹"), &regina::Example<3>::s2xs1),
+        ExampleCreator<3>(QObject::trUtf8("ℝP³"), [](){ return regina::Example<3>::lens(2, 1); }),
+        ExampleCreator<3>(QObject::trUtf8("Solid Klein bottle (B² ×~ S¹)"), &regina::Example<3>::solidKleinBottle),
+        ExampleCreator<3>(QObject::trUtf8("Solid Torus (B² × S¹)"), &regina::Example<3>::ballBundle),
+        ExampleCreator<3>(QObject::tr("Trefoil knot complement"), &regina::Example<3>::trefoil),
+        ExampleCreator<3>(QObject::trUtf8("Twisted product S² ×~ S¹"), &regina::Example<3>::twistedSphereBundle),
+        ExampleCreator<3>(QObject::tr("Weeks manifold"), &regina::Example<3>::weeks),
+        ExampleCreator<3>(QObject::tr("Weber-Seifert dodecahedral space"), &regina::Example<3>::weberSeifert),
+        ExampleCreator<3>(QObject::tr("Whitehead link complement"), &regina::Example<3>::whiteheadLink),
     };
 
     /**
@@ -289,21 +293,8 @@ Tri3Creator::Tri3Creator() {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     exampleWhich = new QComboBox(hArea);
-    exampleWhich->insertItem(0, QObject::tr("3-sphere (1 tetrahedron)"));
-    exampleWhich->insertItem(1, QObject::tr("3-sphere (dual to Bing's house)"));
-    exampleWhich->insertItem(2, QObject::tr("3-sphere (600-cell)"));
-    exampleWhich->insertItem(3, QObject::trUtf8("Connected sum RP³ # RP³"));
-    exampleWhich->insertItem(4, QObject::tr("Figure eight knot complement"));
-    exampleWhich->insertItem(5, QObject::tr("Gieseking manifold"));
-    exampleWhich->insertItem(6, QObject::tr("Lens space L(8,3)"));
-    exampleWhich->insertItem(7, QObject::trUtf8("Poincaré homology sphere"));
-    exampleWhich->insertItem(8, QObject::trUtf8("Product RP² x S¹"));
-    exampleWhich->insertItem(9, QObject::trUtf8("Product S² x S¹"));
-    exampleWhich->insertItem(10, QObject::tr("Solid Klein bottle"));
-    exampleWhich->insertItem(11, QObject::tr("Trefoil knot complement"));
-    exampleWhich->insertItem(12, QObject::tr("Weeks manifold"));
-    exampleWhich->insertItem(13, QObject::tr("Weber-Seifert dodecahedral space"));
-    exampleWhich->insertItem(14, QObject::tr("Whitehead link complement"));
+    for (size_t i = 0; i < examples.size(); ++i)
+        exampleWhich->insertItem(i, examples[i].name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);
@@ -568,42 +559,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
         ans->setLabel(sigString);
         return ans;
     } else if (typeId == TRI_EXAMPLE) {
-        switch (exampleWhich->currentIndex()) {
-            case EXAMPLE_S3_ONETET:
-                return Example<3>::threeSphere();
-            case EXAMPLE_S3_BING:
-                return Example<3>::bingsHouse();
-            case EXAMPLE_S3_600CELL:
-                return Example<3>::sphere600();
-            case EXAMPLE_RP3RP3:
-                return Example<3>::rp3rp3();
-            case EXAMPLE_FIGURE8:
-                return Example<3>::figureEight();
-            case EXAMPLE_GIESEKING:
-                return Example<3>::gieseking();
-            case EXAMPLE_LENS8_3:
-                return Example<3>::lens(8, 3);
-            case EXAMPLE_POINCARE:
-                return Example<3>::poincareHomologySphere();
-            case EXAMPLE_RP2xS1:
-                return Example<3>::rp2xs1();
-            case EXAMPLE_S2xS1:
-                return Example<3>::s2xs1();
-            case EXAMPLE_SOLIDKLEIN:
-                return Example<3>::solidKleinBottle();
-            case EXAMPLE_TREFOIL:
-                return Example<3>::trefoil();
-            case EXAMPLE_WEEKS:
-                return Example<3>::weeks();
-            case EXAMPLE_WEBERSEIFERT:
-                return Example<3>::weberSeifert();
-            case EXAMPLE_WHITEHEAD:
-                return Example<3>::whiteheadLink();
-        }
-
-        ReginaSupport::info(parentWidget,
-            QObject::tr("Please select an example triangulation."));
-        return 0;
+        return examples[exampleWhich->currentIndex()].create();
     }
 
     ReginaSupport::info(parentWidget,

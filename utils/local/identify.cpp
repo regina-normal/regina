@@ -52,7 +52,7 @@
 
 #include <algebra/abeliangroup.h>
 #include <manifold/manifold.h>
-#include <subcomplex/nstandardtri.h>
+#include <subcomplex/standardtri.h>
 #include <triangulation/dim3.h>
 
 #include <cstdlib>
@@ -87,8 +87,8 @@ void process(Triangulation<3>* t) {
     std::cout << t->label() << "  -->  ";
     totTris++;
 
-    NStandardTriangulation* s =
-        NStandardTriangulation::isStandardTriangulation(t);
+    StandardTriangulation* s =
+        StandardTriangulation::isStandardTriangulation(t);
     if (s) {
         std::cout << s->name();
         trisOk++;

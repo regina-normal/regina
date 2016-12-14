@@ -37,20 +37,39 @@ namespace regina {
     class Packet;
 }
 
+@protocol PacketPickerWatcher;
+
 /**
  * A picker view that displays all packets of the given type in the
  * current document.
  *
- * You must call \a fill in order to fill the picker with options.
+ * You must call one of the \a fill functions in order to fill the picker
+ * with options before the picker can be used.
  */
 @interface PacketPicker : UIPickerView
 
 /**
- * Fills the picker with options.  This function must be called before
- * the picker can be used.
+ * Fills the picker with all packets in the given tree.
  *
- * Note that if (for whatever reason) you call \a fill a second time,
- * you will need to call \a reloadAllComponents to update the view.
+ * @param tree The root of the packet tree for the current document.
+ * @param allowNone Indicates whether the null packet should be offered
+ * at the top of the list of options.  If the packet tree is empty and
+ * \a allowRoot is \c false, then the null packet will be offered regardless
+ * of what you pass as \a allowNone.
+ * @param noneText The text to display for the null packet.
+ * This must not be \c nil.
+ * @param allowRoot Indicates whether the root of the packet tree should be
+ * offered at the top of the list of options.  If both \a allowNone and
+ * \a allowRoot are \c true, then the null packet will appear first.
+ * @param rootText The text to display for the root packet.
+ * If \a allowRoot is \c false then this may be \c nil.
+ * @select The packet that should be initially selected in the picker.
+ */
+- (void)fill:(regina::Packet*)tree allowNone:(BOOL)allowNone noneText:(NSString*)noneText allowRoot:(BOOL)allowRoot rootText:(NSString*)rootText select:(regina::Packet*)packet;
+
+/**
+ * Fills the picker with all packets of the given type.  The root of the packet
+ * tree will not be displayed.
  *
  * @param tree The root of the packet tree for the current document.
  * @param packetType The type of packets that will be offered.
@@ -58,17 +77,30 @@ namespace regina {
  * at the top of the list of options.  If there are no packets of the given type,
  * then the null packet will be offered regardless of what you pass as \a allowNone.
  * @param noneText The text to display for the null packet.
+ * This must not be \c nil.
  */
 - (void)fill:(regina::Packet*)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
 
 /**
- * Like fill: above, but supports two different packet types.
- * This is useful (for instance) when you wish to allow both Triangulation<3> and SnapPeaTriangulation.
+ * Fills the picker with all packets of either of the given two types.
+ * The root of the packet tree will not be displayed.
+ *
+ * This function is useful (for instance) when you wish to allow both
+ * Triangulation<3> and SnapPeaTriangulation.
+ *
+ * @param tree The root of the packet tree for the current document.
+ * @param packetType The type of packets that will be offered.
+ * @param allowNone Indicates whether the null packet should be offered
+ * at the top of the list of options.  If there are no packets of either of the
+ * given types, then the null packet will be offered regardless of what you pass
+ * as \a allowNone.
+ * @param noneText The text to display for the null packet.
+ * This must not be \c nil.
  */
 - (void)fill:(regina::Packet*)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
 
 /**
- * Returns the packet selected in this picker, or 0 if the null packet is selected.
+ * Returns the packet selected in this picker, or \c null if the null packet is selected.
  */
 - (regina::Packet*)selectedPacket;
 
@@ -79,4 +111,20 @@ namespace regina {
  */
 - (BOOL)empty;
 
+/**
+ * If non-nil, this watcher is notified whenever the user selects a
+ * packet in the packet picker.
+ */
+@property (strong, nonatomic) NSObject<PacketPickerWatcher>* watcher;
+
+@end
+
+/**
+ * A protocol for objects that can respond to selections in a packet picker.
+ */
+@protocol PacketPickerWatcher <NSObject>
+/**
+ * Called when the user selects a packet in a packet picker.
+ */
+- (void)packetPicker:(PacketPicker*)picker selected:(regina::Packet*)packet;
 @end

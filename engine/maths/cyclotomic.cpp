@@ -35,6 +35,7 @@
 #include "maths/cyclotomic.h"
 #include "maths/integer.h"
 #include <cmath>
+#include <mutex>
 #include <thread>
 #include <vector>
 

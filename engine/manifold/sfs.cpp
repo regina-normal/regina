@@ -38,7 +38,7 @@
 #include "manifold/sfs.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
-#include "subcomplex/nsatannulus.h"
+#include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
@@ -761,10 +761,10 @@ Triangulation<3>* SFSpace::construct() const {
     c->join(3, a, Perm<4>(1, 2, 3, 0));
 
     std::list<SFSFibre>::const_iterator fit = fibres_.begin();
-    NSatAnnulus(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3)).
+    SatAnnulus(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3)).
         attachLST(ans, fit->alpha, fit->beta);
     fit++;
-    NSatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
+    SatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
         attachLST(ans, fit->alpha, fit->beta);
     fit++;
 
@@ -785,7 +785,7 @@ Triangulation<3>* SFSpace::construct() const {
         b->join(2, c, Perm<4>());
         c->join(3, a, Perm<4>(1, 2, 3, 0));
 
-        NSatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
+        SatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
             attachLST(ans, nextFibre.alpha, nextFibre.beta);
 
         prevA = a;
@@ -795,7 +795,7 @@ Triangulation<3>* SFSpace::construct() const {
 
     // We have one remaining fibre.  Fill in the final annulus of the
     // last triangular solid torus.
-    NSatAnnulus(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1)).attachLST(ans,
+    SatAnnulus(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1)).attachLST(ans,
         nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
 
     return ans;

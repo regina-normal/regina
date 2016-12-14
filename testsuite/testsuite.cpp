@@ -142,7 +142,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addGenericTriangulation(runner);
 
     // Subcomplexes:
-    addNStandardTriangulation(runner);
+    addStandardTriangulation(runner);
 
     // Surfaces:
     addNormalSurfaces(runner);

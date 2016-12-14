@@ -1,26 +1,47 @@
-/*
-    Copyright (C) 2016 Volker Krause <vkrause@kde.org>
-    Copyright (C) 2016 Dominik Haumann <dhaumann@kde.org>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
-
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Qt User Interface                                                     *
+ *                                                                        *
+ *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This file is modified from the KDE syntax-highlighting framework,     *
+ *  which is copyright (C) 2016 Volker Krause <vkrause@kde.org>           *
+ *  and is distributed under the GNU Library General Public License as    *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
 
 #include "syntax/themedata_p.h"
 
 #include <jansson.h>
 
 #include <cassert>
+#include <cstring>
 #include <iostream>
 
 namespace regina {
@@ -59,37 +80,33 @@ static inline void readString(json_t* val, std::string& result)
         result.clear();
 }
 
-static inline TextStyleData readThemeData(json_t* obj)
+static void readThemeData(json_t* obj, TextStyleData& dest)
 {
-    TextStyleData td;
-
-    td.textColor = readColor(json_object_get(obj, "text-color"));
-    td.backgroundColor = readColor(json_object_get(obj, "background-color"));
-    td.selectedTextColor = readColor(json_object_get(obj, "selected-text-color"));
-    td.selectedBackgroundColor = readColor(json_object_get(obj, "selected-background-color"));
+    dest.textColor = readColor(json_object_get(obj, "text-color"));
+    dest.backgroundColor = readColor(json_object_get(obj, "background-color"));
+    dest.selectedTextColor = readColor(json_object_get(obj, "selected-text-color"));
+    dest.selectedBackgroundColor = readColor(json_object_get(obj, "selected-background-color"));
 
     json_t* val = json_object_get(obj, "bold");
     if (json_is_boolean(val)) {
-        td.bold = json_boolean_value(val);
-        td.hasBold = true;
+        dest.bold = json_boolean_value(val);
+        dest.hasBold = true;
     }
     val = json_object_get(obj, "italic");
     if (json_is_boolean(val)) {
-        td.italic = json_boolean_value(val);
-        td.hasItalic = true;
+        dest.italic = json_boolean_value(val);
+        dest.hasItalic = true;
     }
     val = json_object_get(obj, "underline");
     if (json_is_boolean(val)) {
-        td.underline = json_boolean_value(val);
-        td.hasUnderline = true;
+        dest.underline = json_boolean_value(val);
+        dest.hasUnderline = true;
     }
     val = json_object_get(obj, "strike-through");
     if (json_is_boolean(val)) {
-        td.strikeThrough = json_boolean_value(val);
-        td.hasStrikeThrough = true;
+        dest.strikeThrough = json_boolean_value(val);
+        dest.hasStrikeThrough = true;
     }
-
-    return td;
 }
 
 bool ThemeData::load(const std::string& filePath)
@@ -114,28 +131,28 @@ bool ThemeData::load(const std::string& filePath)
 
     // read text styles
     json_t* textStyles = json_object_get(obj, "text-styles");
-    m_textStyles[Theme::Normal] = readThemeData(json_object_get(textStyles, "Normal"));
-    m_textStyles[Theme::Keyword] = readThemeData(json_object_get(textStyles, "Keyword"));
-    m_textStyles[Theme::Function] = readThemeData(json_object_get(textStyles, "Function"));
-    m_textStyles[Theme::Variable] = readThemeData(json_object_get(textStyles, "Variable"));
-    m_textStyles[Theme::ControlFlow] = readThemeData(json_object_get(textStyles, "ControlFlow"));
-    m_textStyles[Theme::Operator] = readThemeData(json_object_get(textStyles, "Operator"));
-    m_textStyles[Theme::BuiltIn] = readThemeData(json_object_get(textStyles, "BuiltIn"));
-    m_textStyles[Theme::Extension] = readThemeData(json_object_get(textStyles, "Extension"));
-    m_textStyles[Theme::Preprocessor] = readThemeData(json_object_get(textStyles, "Preprocessor"));
-    m_textStyles[Theme::Attribute] = readThemeData(json_object_get(textStyles, "Attribute"));
-    m_textStyles[Theme::Char] = readThemeData(json_object_get(textStyles, "Char"));
-    m_textStyles[Theme::SpecialChar] = readThemeData(json_object_get(textStyles, "SpecialChar"));
-    m_textStyles[Theme::String] = readThemeData(json_object_get(textStyles, "String"));
-    m_textStyles[Theme::VerbatimString] = readThemeData(json_object_get(textStyles, "VerbatimString"));
-    m_textStyles[Theme::SpecialString] = readThemeData(json_object_get(textStyles, "SpecialString"));
-    m_textStyles[Theme::Import] = readThemeData(json_object_get(textStyles, "Import"));
-    m_textStyles[Theme::DataType] = readThemeData(json_object_get(textStyles, "DataType"));
-    m_textStyles[Theme::DecVal] = readThemeData(json_object_get(textStyles, "DecVal"));
-    m_textStyles[Theme::BaseN] = readThemeData(json_object_get(textStyles, "BaseN"));
-    m_textStyles[Theme::Float] = readThemeData(json_object_get(textStyles, "Float"));
-    m_textStyles[Theme::Constant] = readThemeData(json_object_get(textStyles, "Constant"));
-    m_textStyles[Theme::Comment] = readThemeData(json_object_get(textStyles, "Comment"));
+    readThemeData(json_object_get(textStyles, "Normal"), m_textStyles[Theme::Normal]);
+    readThemeData(json_object_get(textStyles, "Keyword"), m_textStyles[Theme::Keyword]);
+    readThemeData(json_object_get(textStyles, "Function"), m_textStyles[Theme::Function]);
+    readThemeData(json_object_get(textStyles, "Variable"), m_textStyles[Theme::Variable]);
+    readThemeData(json_object_get(textStyles, "ControlFlow"), m_textStyles[Theme::ControlFlow]);
+    readThemeData(json_object_get(textStyles, "Operator"), m_textStyles[Theme::Operator]);
+    readThemeData(json_object_get(textStyles, "BuiltIn"), m_textStyles[Theme::BuiltIn]);
+    readThemeData(json_object_get(textStyles, "Extension"), m_textStyles[Theme::Extension]);
+    readThemeData(json_object_get(textStyles, "Preprocessor"), m_textStyles[Theme::Preprocessor]);
+    readThemeData(json_object_get(textStyles, "Attribute"), m_textStyles[Theme::Attribute]);
+    readThemeData(json_object_get(textStyles, "Char"), m_textStyles[Theme::Char]);
+    readThemeData(json_object_get(textStyles, "SpecialChar"), m_textStyles[Theme::SpecialChar]);
+    readThemeData(json_object_get(textStyles, "String"), m_textStyles[Theme::String]);
+    readThemeData(json_object_get(textStyles, "VerbatimString"), m_textStyles[Theme::VerbatimString]);
+    readThemeData(json_object_get(textStyles, "SpecialString"), m_textStyles[Theme::SpecialString]);
+    readThemeData(json_object_get(textStyles, "Import"), m_textStyles[Theme::Import]);
+    readThemeData(json_object_get(textStyles, "DataType"), m_textStyles[Theme::DataType]);
+    readThemeData(json_object_get(textStyles, "DecVal"), m_textStyles[Theme::DecVal]);
+    readThemeData(json_object_get(textStyles, "BaseN"), m_textStyles[Theme::BaseN]);
+    readThemeData(json_object_get(textStyles, "Float"), m_textStyles[Theme::Float]);
+    readThemeData(json_object_get(textStyles, "Constant"), m_textStyles[Theme::Constant]);
+    readThemeData(json_object_get(textStyles, "Comment"), m_textStyles[Theme::Comment]);
 
     // read editor area colors
     json_t* editorColors = json_object_get(obj, "editor-colors");

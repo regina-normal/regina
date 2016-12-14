@@ -57,6 +57,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(eltMove13);
+    CPPUNIT_TEST(barycentricSubdivision);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -259,6 +260,72 @@ class Triangulation2Test : public TriangulationTest<2> {
         void eltMove13() {
             testManualAll(verifyEltMove13);
         }
+
+        static void verifyBary(Triangulation<2>* tri) {
+            Triangulation<2> b(*tri);
+            b.barycentricSubdivision();
+
+            if (tri->hasBoundaryEdges() != b.hasBoundaryEdges()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks boundary edges.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->isClosed() != b.isClosed()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks closedness.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->isOrientable() != b.isOrientable()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks orientability.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->isConnected() != b.isConnected()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks connectedness.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->countComponents() != b.countComponents()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks connected components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->countBoundaryComponents() != b.countBoundaryComponents()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks boundary components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->eulerCharTri() != b.eulerCharTri()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks Euler char (tri).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! (tri->homology() == b.homology())) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks H1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void barycentricSubdivision() {
+            testManualAll(verifyBary);
+        }
+
 };
 
 void addTriangulation2(CppUnit::TextUi::TestRunner& runner) {

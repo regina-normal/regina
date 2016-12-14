@@ -70,7 +70,7 @@
 #include <algebra/abeliangroup.h>
 #include <manifold/manifold.h>
 #include <packet/container.h>
-#include <subcomplex/nstandardtri.h>
+#include <subcomplex/standardtri.h>
 #include <triangulation/dim3.h>
 
 #include <algorithm>
@@ -153,7 +153,7 @@ bool ManifoldSpec::operator < (const ManifoldSpec& other) const {
 bool process(Container* c) {
     bool foundTri = false;
 
-    NStandardTriangulation* std;
+    StandardTriangulation* std;
     Manifold* mfd;
     std::string name, structure;
     for (Packet* child = c->firstChild(); child;
@@ -163,7 +163,7 @@ bool process(Container* c) {
 
         foundTri = true;
 
-        std = NStandardTriangulation::isStandardTriangulation(
+        std = StandardTriangulation::isStandardTriangulation(
             static_cast<Triangulation<3>*>(child));
         if (! std)
             continue;

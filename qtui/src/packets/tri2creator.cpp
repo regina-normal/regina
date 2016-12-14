@@ -35,6 +35,7 @@
 #include "triangulation/dim2.h"
 
 // UI includes:
+#include "examplecreator.h"
 #include "tri2creator.h"
 #include "reginasupport.h"
 
@@ -64,19 +65,18 @@ namespace {
     };
 
     /**
-     * Example IDs that correspond to indices in the example
-     * triangulation combo box.
+     * The list of ready-made example triangulations.
      */
-    enum {
-        EXAMPLE_S2,
-        EXAMPLE_S2_TETRAHEDRON,
-        EXAMPLE_S2_OCTAHEDRON,
-        EXAMPLE_DISC,
-        EXAMPLE_ANNULUS,
-        EXAMPLE_MOBIUS,
-        EXAMPLE_TORUS,
-        EXAMPLE_PP,
-        EXAMPLE_KB
+    std::vector<ExampleCreator<2>> examples = {
+        ExampleCreator<2>(QObject::tr("2-sphere (minimal)"), &regina::Example<2>::sphere),
+        ExampleCreator<2>(QObject::tr("2-sphere (simplex boundary)"), &regina::Example<2>::sphereTetrahedron),
+        ExampleCreator<2>(QObject::tr("2-sphere (octahedron boundary)"), &regina::Example<2>::sphereOctahedron),
+        ExampleCreator<2>(QObject::tr("Annulus"), &regina::Example<2>::annulus),
+        ExampleCreator<2>(QObject::tr("Disc"), &regina::Example<2>::disc),
+        ExampleCreator<2>(QObject::tr("Klein bottle"), &regina::Example<2>::kb),
+        ExampleCreator<2>(QObject::trUtf8("Möbius band"), &regina::Example<2>::mobius),
+        ExampleCreator<2>(QObject::tr("Projective plane"), &regina::Example<2>::rp2),
+        ExampleCreator<2>(QObject::tr("Torus"), &regina::Example<2>::torus)
     };
 
     /**
@@ -210,15 +210,8 @@ Tri2Creator::Tri2Creator() {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     exampleWhich = new QComboBox(hArea);
-    exampleWhich->insertItem(0, QObject::tr("Sphere (2 triangles)"));
-    exampleWhich->insertItem(1, QObject::tr("Sphere (tetrahedron boundary)"));
-    exampleWhich->insertItem(2, QObject::tr("Sphere (octahedron boundary)"));
-    exampleWhich->insertItem(3, QObject::tr("Disc"));
-    exampleWhich->insertItem(4, QObject::tr("Annulus"));
-    exampleWhich->insertItem(5, QObject::trUtf8("Möbius band"));
-    exampleWhich->insertItem(6, QObject::tr("Torus"));
-    exampleWhich->insertItem(7, QObject::tr("Projective plane"));
-    exampleWhich->insertItem(8, QObject::tr("Klein bottle"));
+    for (size_t i = 0; i < examples.size(); ++i)
+        exampleWhich->insertItem(i, examples[i].name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);
@@ -293,30 +286,7 @@ regina::Packet* Tri2Creator::createPacket(regina::Packet*,
             "analogous scheme.</qt>"));
         return 0;
     } else if (typeId == TRI_EXAMPLE) {
-        switch (exampleWhich->currentIndex()) {
-            case EXAMPLE_S2:
-                return Example<2>::sphere();
-            case EXAMPLE_S2_TETRAHEDRON:
-                return Example<2>::sphereTetrahedron();
-            case EXAMPLE_S2_OCTAHEDRON:
-                return Example<2>::sphereOctahedron();
-            case EXAMPLE_DISC:
-                return Example<2>::disc();
-            case EXAMPLE_ANNULUS:
-                return Example<2>::annulus();
-            case EXAMPLE_MOBIUS:
-                return Example<2>::mobius();
-            case EXAMPLE_TORUS:
-                return Example<2>::torus();
-            case EXAMPLE_PP:
-                return Example<2>::rp2();
-            case EXAMPLE_KB:
-                return Example<2>::kb();
-        }
-
-        ReginaSupport::info(parentWidget,
-            QObject::tr("Please select an example triangulation."));
-        return 0;
+        return examples[exampleWhich->currentIndex()].create();
     }
 
     ReginaSupport::info(parentWidget,

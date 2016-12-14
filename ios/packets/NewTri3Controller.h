@@ -58,6 +58,14 @@
 @end
 
 /**
+ * The controller for creating triangulations from parameterised families.
+ *
+ * This represents an individual page within the larger NewTri3Controller.
+ */
+@interface NewTri3ConstructionPage : UIViewController <PacketCreator>
+@end
+
+/**
  * The controller for creating a new triangulation from an isomorphism signature.
  *
  * This represents an individual page within the larger NewTri3Controller.

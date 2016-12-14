@@ -53,6 +53,8 @@ Version 5.1  [ (under development) ]
                   Dim4ExampleTriangulation become Example<2,3,4>.
             + maths/nperm{2,3,4,5}.h are all replaced by maths/perm.h.
             + maths/nmatrixint.h is now merged into maths/matrix.h.
+            + subcomplex/nlayeredsurfacebundle.h has been renamed to
+              subcomplex/layeredtorusbundle.h.
             + surfaces/sf{combination,properties}.h are both merged into
               surfaces/surfacefilter.h.
             + utilities/nbooleans.h becomes utilities/boolset.h.
@@ -64,6 +66,8 @@ Version 5.1  [ (under development) ]
             - New suite of classes for managing syntax highlighting.
               These classes should be considered internal - they only appear
               in the engine so they can be used by both the Qt and iOS GUIs.
+            - Thanks to these new classes, Regina no longer builds against
+              source-highlight.
         Class AbelianGroup, MarkedAbelianGroup, HomMarkedAbelianGroup:
             - Now works with type Integer, not LargeInteger.
         Class BoundaryComponent<dim>:
@@ -181,6 +185,9 @@ Version 5.1  [ (under development) ]
         Class SafePtr:
             - New default constructor, bool conversion and routine reset().
             - Disabled the default copy assignment operator.
+        Class Script:
+            - New routine addVariableName(), which changes the name if
+              necessary to ensure that the variable can indeed be added.
         Class Simplex<dim>:
             - This is now implemented as the specialisation Face<dim, dim>.
               The preferred way to refer to this class is still Simplex<dim>,
@@ -203,8 +210,13 @@ Version 5.1  [ (under development) ]
               restrictions in dimension 4 have been lifted).
             - New two-argument copy constructor that allows you to clone
               a triangulation without cloning its computed properties.
+            - Routine barycentricSubdivision() is now available in dimension 2,
+              uses a consistent generic implementation for all of Regina's
+              standard dimensions, and now comes with guarantees about the
+              labelling and ordering of sub-simplices.
             - Routine swapContents() now swaps skeletal data and computed
               properties also, instead of just deleting them.
+            - New compile-time constant Triangulation<dim>::dimension.
         Class Triangulation<3>:
             - Routine retriangulate() now allows its action argument to
               change the triangulation that is passed to it.
@@ -245,6 +257,15 @@ Version 5.1  [ (under development) ]
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The
           file ~/.regina-libs is now ignored, and you can happily delete it.
+    USER INTERFACES:
+        - The desktop interface has (at last) gained a "Window" menu.
+        - The iPad interface now gives access to Python, offers syntax
+          highlighting for script packets, and offers a range of parameterised
+          3-manifold constructions similar to those in the desktop interface.
+        - Several other minor enhancements and updates.
+    UTILITIES:
+        - All MPI-enabled utilities are now deprecated. These will
+          be removed in some upcoming version of Regina.
 
 Version 5.0  [ 26 September, 2016 ]
 
