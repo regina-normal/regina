@@ -91,6 +91,9 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnStrict;
         QLabel* manifold;
         QLabel* census;
+        QLabel* isoSig;
+        QLabel* dehydration;
+        QLabel* dehydrationLabel;
 
     public:
         /**

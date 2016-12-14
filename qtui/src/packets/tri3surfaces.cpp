@@ -281,27 +281,79 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
 
     layout->addStretch(1);
 
-    QBoxLayout* mfdArea = new QHBoxLayout();
-    manifold = new QLabel();
-    manifold->setAlignment(Qt::AlignCenter);
-    manifold->setWordWrap(true);
-    mfdArea->addWidget(manifold, 1);
+    QGridLayout* sigArea = new QGridLayout();
+
+    QLabel *manifoldLabel = new QLabel();
+    manifoldLabel->setAlignment(Qt::AlignCenter);
+    manifoldLabel->setText(tr("<qt><b>Manifold:</b> </qt>"));
+    sigArea->addWidget(manifoldLabel, 1, 1, Qt::AlignRight);
     msg = tr("<qt>Displays the name of the underlying 3-manifold if "
         "this is known, or if it can be recognised from the combinatorial "
         "structure of the triangulation.</qt>");
-    manifold->setWhatsThis(msg);
-    layout->addLayout(mfdArea);
+    manifoldLabel->setWhatsThis(msg);
+    sigArea->addWidget(manifoldLabel, 1, 1, Qt::AlignRight);
 
-    QBoxLayout* censusArea = new QHBoxLayout();
-    census = new QLabel();
-    census->setAlignment(Qt::AlignCenter);
-    census->setWordWrap(true);
-    censusArea->addWidget(census, 1);
+    manifold = new QLabel();
+    manifold->setTextInteractionFlags(Qt::TextSelectableByMouse |
+                                      Qt::TextSelectableByKeyboard);
+    manifold->setAlignment(Qt::AlignLeft);
+    manifold->setWordWrap(true);
+    manifold->setWhatsThis(msg);
+    sigArea->addWidget(manifold, 1, 2, Qt::AlignLeft);
+
+    QLabel *censusLabel = new QLabel();
+    censusLabel->setAlignment(Qt::AlignCenter);
+    censusLabel->setText(tr("<qt><b>Census:</b> </qt>"));
     msg = tr("<qt>Indicates whether this triangulation appears in any of "
         "Regina's in-built census databases.  If so, the name of the "
         "triangulation and/or the underlying 3-manifold will be shown.</qt>");
+    censusLabel->setWhatsThis(msg);
+    sigArea->addWidget(censusLabel, 2, 1, Qt::AlignRight | Qt::AlignTop);
+
+    census = new QLabel();
+    census->setTextInteractionFlags(Qt::TextSelectableByMouse |
+                                    Qt::TextSelectableByKeyboard);
+    census->setAlignment(Qt::AlignLeft);
+    census->setWordWrap(false);
     census->setWhatsThis(msg);
-    layout->addLayout(censusArea);
+    sigArea->addWidget(census, 2, 2, Qt::AlignLeft);
+
+    QLabel *spacerLabel = new QLabel();
+    spacerLabel->setText(("<qt>&nbsp;</qt>"));
+    sigArea->addWidget(spacerLabel, 3, 1, Qt::AlignLeft);
+
+    QLabel *isoLabel = new QLabel();
+    isoLabel->setAlignment(Qt::AlignCenter);
+    isoLabel->setText(tr("<qt><b>Isomorphism signature:</b> </qt>"));
+    isoLabel->setWhatsThis(msg);
+    sigArea->addWidget(isoLabel, 4, 1, Qt::AlignRight);
+
+    isoSig = new QLabel();
+    isoSig->setTextInteractionFlags(Qt::TextSelectableByMouse |
+                                      Qt::TextSelectableByKeyboard);
+    isoSig->setAlignment(Qt::AlignLeft);
+    isoSig->setWordWrap(true);
+    msg = tr("<qt>Displays the isomorphism signature of the triangulation.</qt>");
+    isoSig->setWhatsThis(msg);
+    sigArea->addWidget(isoSig, 4, 2, Qt::AlignLeft);
+
+
+    dehydrationLabel = new QLabel();
+    dehydrationLabel->setAlignment(Qt::AlignCenter);
+    dehydrationLabel->setText(tr("<qt><b>Dehydration string:</b> </qt>"));
+    sigArea->addWidget(dehydrationLabel, 5, 1, Qt::AlignRight);
+    dehydrationLabel->setWhatsThis(msg);
+
+    dehydration = new QLabel();
+    dehydration->setTextInteractionFlags(Qt::TextSelectableByMouse |
+                                      Qt::TextSelectableByKeyboard);
+    dehydration->setAlignment(Qt::AlignLeft);
+    dehydration->setWordWrap(true);
+    sigArea->addWidget(dehydration, 5, 2, Qt::AlignLeft);
+    msg = tr("<qt>Displays the dehydration string of the triangulation.</qt>");
+    dehydration->setWhatsThis(msg);
+
+    layout->addLayout(sigArea);
 
     layout->addStretch(2);
 
@@ -643,26 +695,25 @@ void Tri3SurfacesUI::refresh() {
     }
 
     if (! name.empty()) {
-        manifold->setText(tr("<qt><b>Manifold:</b>&nbsp;&nbsp;%1</qt>")
+        manifold->setText(tr("<qt>%1</qt>")
             .arg(QString(name.c_str()).toHtmlEscaped()));
     } else {
-        manifold->setText(tr("<qt><b>Manifold:</b>&nbsp;&nbsp;"
-            "Not recognised</qt>"));
+        manifold->setText(tr("<qt>Not recognised</qt>"));
     }
 
     if (tri->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
         regina::CensusHits* hits = regina::Census::lookup(tri->isoSig());
         if (hits->empty()) {
-            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
+            census->setText(tr("<qt>Not found</qt>"));
         } else if (hits->count() == 1) {
-            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
+            census->setText(tr("<qt>%1</qt>")
                 .arg(QString(hits->first()->name().c_str()).toHtmlEscaped()));
         } else {
-            QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
+            QString ans = tr("<qt>%1 matches")
                 .arg(hits->count());
             const regina::CensusHit* hit = hits->first();
             for ( ; hit; hit = hit->next()) {
-                ans += "<br>";
+                ans += "<br> - ";
                 ans += QString(hit->name().c_str()).toHtmlEscaped();
             }
             ans += "</qt>";
@@ -672,7 +723,21 @@ void Tri3SurfacesUI::refresh() {
     } else {
         // The triangulation is too large to be found in the census.
         // Avoid the overhead of calling isoSig().
-        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
+        census->setText(tr("<qt>Not found</qt>"));
+    }
+
+    isoSig->setText(tr("<qt>%1</qt>").arg(QString(tri->isoSig().c_str())));
+
+    // If there is no dehydration, hide the text and corresponding label.
+    if (tri->dehydrate().empty()) {
+        dehydrationLabel->hide();
+        dehydration->hide();
+    } else {
+        // Don't forget to show the label+string if we do find a dehydration
+        // string, in case we them earlier.
+        dehydrationLabel->show();
+        dehydration->show();
+        dehydration->setText(tr("<qt>%1</qt>").arg(QString(tri->dehydrate().c_str())));
     }
 }
 
