@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file subcomplex/nlayeredlensspace.h
- *  \brief Deals with layered lens space components of a triangulation.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NLAYEREDLENSSPACE_H
@@ -39,161 +39,9 @@
 #define __NLAYEREDLENSSPACE_H
 #endif
 
-#include "regina-core.h"
-#include "subcomplex/nlayeredsolidtorus.h"
-#include "subcomplex/nstandardtri.h"
+#warning This header is deprecated; please use subcomplex/layeredlensspace.h instead.
 
-namespace regina {
-
-/**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
- * Represents a layered lens space component of a triangulation.
- * A layered lens space is considered to be any layered solid torus glued
- * to a degenerate (2,1,1) layered solid torus (i.e., a one-triangle mobius
- * strip).  Note that the three possible gluing options represent the
- * three possible ways of closing the initial torus - either twisting it
- * shut (in one of two possible ways) or snapping it shut without any twist.
- * 
- * A layered lens space must contain at least one tetrahedron.
- *
- * All optional NStandardTriangulation routines are implemented for this
- * class.
- */
-class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
-    private:
-        NLayeredSolidTorus* torus_;
-            /**< The layered solid torus that forms the basis of this
-                 layered lens space. */
-        int mobiusBoundaryGroup_;
-            /**< The edge group of the top level tetrahedron in the
-                 layered solid torus to which the boundary of the mobius
-                 strip is glued. */
-        unsigned long p_,q_;
-            /**< The lens space parameters for L(p,q). */
-
-    public:
-        /**
-         * Destroys this lens space; note that the corresponding layered
-         * solid torus will also be destroyed.
-         */
-        virtual ~NLayeredLensSpace();
-        /**
-         * Returns a newly created clone of this structure.
-         *
-         * @return a newly created clone.
-         */
-        NLayeredLensSpace* clone() const;
-
-        /**
-         * Returns the first parameter \a p of this lens space L(p,q).
-         *
-         * @return the first parameter \a p.
-         */
-        unsigned long p() const;
-        /**
-         * Returns the second parameter \a q of this lens space L(p,q).
-         *
-         * @return the second parameter \a q.
-         */
-        unsigned long q() const;
-
-        /**
-         * Returns the layered solid torus to which the mobius strip is
-         * glued.
-         *
-         * @return the layered solid torus.
-         */
-        const NLayeredSolidTorus& torus() const;
-        /**
-         * Determines which edge of the layered solid torus is glued to
-         * the boundary of the mobius strip (i.e., the weight 2 edge
-         * of the degenerate (2,1,1) layered solid torus).  The return
-         * value will be one of the three top level tetrahedron edge
-         * groups in the layered solid torus; see
-         * NLayeredSolidTorus::topEdge() for further details about
-         * edge groups.
-         *
-         * @return the top level edge group of the layered solid torus to
-         * which the mobius strip boundary is glued.
-         */
-        int mobiusBoundaryGroup() const;
-        /**
-         * Determines if the layered solid torus that forms the basis for
-         * this lens space is snapped shut (folded closed without a twist).
-         *
-         * @return \c true if and only if the torus is snapped shut.
-         */
-        bool isSnapped() const;
-        /**
-         * Determines if the layered solid torus that forms the basis for
-         * this lens space is twisted shut (folded closed with a twist).
-         *
-         * @return \c true if and only if the torus is twisted shut.
-         */
-        bool isTwisted() const;
-
-        /**
-         * Determines if the given triangulation component is a layered
-         * lens space.
-         *
-         * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * layered lens space, or \c null if the given component is
-         * not a layered lens space.
-         */
-        static NLayeredLensSpace* isLayeredLensSpace(const Component<3>* comp);
-
-        NManifold* manifold() const;
-        AbelianGroup* homology() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
-    private:
-        /**
-         * Creates a new uninitialised structure.
-         */
-        NLayeredLensSpace();
-};
-
-/*@}*/
-
-// Inline functions for NLayeredLensSpace
-
-inline NLayeredLensSpace::NLayeredLensSpace() {
-}
-inline NLayeredLensSpace::~NLayeredLensSpace() {
-    delete torus_;
-}
-
-inline unsigned long NLayeredLensSpace::p() const {
-    return p_;
-}
-inline unsigned long NLayeredLensSpace::q() const {
-    return q_;
-}
-inline const NLayeredSolidTorus& NLayeredLensSpace::torus() const {
-    return *torus_;
-}
-inline int NLayeredLensSpace::mobiusBoundaryGroup() const {
-    return mobiusBoundaryGroup_;
-}
-inline bool NLayeredLensSpace::isSnapped() const {
-    return (torus_->topEdge(mobiusBoundaryGroup_, 1) == -1);
-}
-inline bool NLayeredLensSpace::isTwisted() const {
-    return (torus_->topEdge(mobiusBoundaryGroup_, 1) != -1);
-}
-inline void NLayeredLensSpace::writeTextLong(std::ostream& out) const {
-    out << "Layered lens space ";
-    writeName(out);
-}
-
-} // namespace regina
+#include "subcomplex/layeredlensspace.h"
 
 #endif
 

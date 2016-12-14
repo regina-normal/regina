@@ -136,12 +136,14 @@ typedef regina::Triangulation<4>* (*Tri4Creator)();
 
 - (void)viewDidLoad
 {
-    options = @[[Example4 exampleWithName:@"Minimal 4-sphere (2 pentachora)" creator:&regina::Example<4>::fourSphere],
-                [Example4 exampleWithName:@"Simplicial 4-sphere (6 pentachora)" creator:&regina::Example<4>::simplicialFourSphere],
+    options = @[[Example4 exampleWithName:@"4-sphere (minimal)" creator:&regina::Example<4>::fourSphere],
+                [Example4 exampleWithName:@"4-sphere (simplex boundary)" creator:&regina::Example<4>::simplicialFourSphere],
+                [Example4 exampleWithName:@"Cappell-Shaneson knot complement" creator:&regina::Example<4>::cappellShaneson],
+                [Example4 exampleWithName:@"Product B³ × S¹" creator:&regina::Example<4>::ballBundle],
+                [Example4 exampleWithName:@"Product S³ × S¹" creator:&regina::Example<4>::sphereBundle],
                 [Example4 exampleWithName:@"ℝP⁴" creator:&regina::Example<4>::rp4],
-                [Example4 exampleWithName:@"Product S³ × S¹" creator:&regina::Example<4>::s3xs1],
-                [Example4 exampleWithName:@"Twisted product S³ ×~ S¹" creator:&regina::Example<4>::s3xs1Twisted],
-                [Example4 exampleWithName:@"Cappell-Shaneson knot complement" creator:&regina::Example<4>::cappellShaneson]];
+                [Example4 exampleWithName:@"Twisted product B³ ×~ S¹" creator:&regina::Example<4>::twistedBallBundle],
+                [Example4 exampleWithName:@"Twisted product S³ ×~ S¹" creator:&regina::Example<4>::twistedSphereBundle]];
 
     self.example.dataSource = self;
     self.example.delegate = self;

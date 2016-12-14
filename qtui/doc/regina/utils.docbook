@@ -1258,6 +1258,16 @@
   </refsynopsisdiv>
 
   <refsect1>
+   <title>Caution</title>
+   <para>
+    The MPI utilities in Regina are deprecated, and will be removed from
+    Regina in a future release.
+    If you wish to parallelise the generation of a census, we recommend
+    splitting up the input pairing files into chunks, and using typical
+    queue systems (such as PBS) to parallelise.
+   </para>
+  </refsect1>
+  <refsect1>
    <title>Description</title>
    <para>
     Allows multiple processes, possibly running on a cluster of
@@ -1607,6 +1617,16 @@
    </cmdsynopsis>
   </refsynopsisdiv>
 
+  <refsect1>
+   <title>Caution</title>
+   <para>
+    The MPI utilities in Regina are deprecated, and will be removed from
+    Regina in a future release.
+    If you wish to parallelise the generation of a census, we recommend
+    splitting up the input pairing files into chunks, and using typical
+    queue systems (such as PBS) to parallelise.
+   </para>
+  </refsect1>
   <refsect1>
    <title>Description</title>
    <para>

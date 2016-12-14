@@ -141,111 +141,116 @@ namespace {
 
 template <int dim>
 void addTriangulation(const char* name) {
-    class_<Triangulation<dim>, bases<regina::Packet>,
-            SafeHeldType<Triangulation<dim>>, boost::noncopyable>(name)
-        .def(init<const Triangulation<dim>&>())
-        .def("size", &Triangulation<dim>::size)
-        .def("simplices", PyTriHelper<dim>::simplices_list)
-        .def("simplex", typename PyTriHelper<dim>::simplex_non_const_type(
-            &Triangulation<dim>::simplex),
-            return_internal_reference<>())
-        .def("newSimplex", typename PyTriHelper<dim>::newSimplex_void_type(
-            &Triangulation<dim>::newSimplex),
-            return_internal_reference<>())
-        .def("newSimplex", typename PyTriHelper<dim>::newSimplex_string_type(
-            &Triangulation<dim>::newSimplex),
-            return_internal_reference<>())
-        .def("removeSimplex", &Triangulation<dim>::removeSimplex)
-        .def("removeSimplexAt", &Triangulation<dim>::removeSimplexAt)
-        .def("removeAllSimplices", &Triangulation<dim>::removeAllSimplices)
-        .def("swapContents", &Triangulation<dim>::swapContents)
-        .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
-        .def("countComponents", &Triangulation<dim>::countComponents)
-        .def("countBoundaryComponents",
-            &Triangulation<dim>::countBoundaryComponents)
-        .def("countFaces", &regina::python::countFaces<Triangulation<dim>, dim>)
-        .def("fVector", PyTriHelper<dim>::fVector_list)
-        .def("components", PyTriHelper<dim>::components_list)
-        .def("boundaryComponents", PyTriHelper<dim>::boundaryComponents_list)
-        .def("faces", &regina::python::faces<Triangulation<dim>, dim>)
-        .def("component", &Triangulation<dim>::component,
-            return_internal_reference<>())
-        .def("boundaryComponent", &Triangulation<dim>::boundaryComponent,
-            return_internal_reference<>())
-        .def("face", &regina::python::face<Triangulation<dim>, dim, size_t>)
-        .def("countVertices", &Triangulation<dim>::countVertices)
-        .def("countEdges", &Triangulation<dim>::countEdges)
-        .def("countTriangles", &Triangulation<dim>::countTriangles)
-        .def("countTetrahedra", &Triangulation<dim>::countTetrahedra)
-        .def("countPentachora", &Triangulation<dim>::countPentachora)
-        .def("vertices", regina::python::faces_list<Triangulation<dim>, dim, 0>)
-        .def("edges", regina::python::faces_list<Triangulation<dim>, dim, 1>)
-        .def("triangles",
-            regina::python::faces_list<Triangulation<dim>, dim, 2>)
-        .def("tetrahedra",
-            regina::python::faces_list<Triangulation<dim>, dim, 3>)
-        .def("pentachora",
-            regina::python::faces_list<Triangulation<dim>, dim, 4>)
-        .def("vertex", &Triangulation<dim>::vertex,
-            return_internal_reference<>())
-        .def("edge", &Triangulation<dim>::edge,
-            return_internal_reference<>())
-        .def("triangle", &Triangulation<dim>::triangle,
-            return_internal_reference<>())
-        .def("tetrahedron", &Triangulation<dim>::tetrahedron,
-            return_internal_reference<>())
-        .def("pentachoron", &Triangulation<dim>::pentachoron,
-            return_internal_reference<>())
-        .def("isEmpty", &Triangulation<dim>::isEmpty)
-        .def("isValid", &Triangulation<dim>::isValid)
-        .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
-        .def("countBoundaryFacets", &Triangulation<dim>::countBoundaryFacets)
-        .def("isOrientable", &Triangulation<dim>::isOrientable)
-        .def("isOriented", &Triangulation<dim>::isOriented)
-        .def("isConnected", &Triangulation<dim>::isConnected)
-        .def("orient", &Triangulation<dim>::orient)
-        .def("splitIntoComponents",
-            typename PyTriHelper<dim>::splitIntoComponents_type(
-                &Triangulation<dim>::splitIntoComponents),
-            typename PyTriHelper<dim>::OL_splitIntoComponents())
-        .def("eulerCharTri", &Triangulation<dim>::eulerCharTri)
-        .def("fundamentalGroup", &Triangulation<dim>::fundamentalGroup,
-            return_internal_reference<>())
-        .def("simplifiedFundamentalGroup",
-            PyTriHelper<dim>::simplifiedFundamentalGroup_clone)
-        .def("homology", &Triangulation<dim>::homology,
-            return_internal_reference<>())
-        .def("homologyH1", &Triangulation<dim>::homologyH1,
-            return_internal_reference<>())
-        .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
-        .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
-        .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
-        .def("isIsomorphicTo",
-            +[](const Triangulation<dim>& t, const Triangulation<dim>& s) {
-                return t.isIsomorphicTo(s).release(); },
-            return_value_policy<manage_new_object>())
-        .def("isContainedIn",
-            +[](const Triangulation<dim>& t, const Triangulation<dim>& s) {
-                return t.isContainedIn(s).release(); },
-            return_value_policy<manage_new_object>())
-        .def("findAllIsomorphisms", PyTriHelper<dim>::findAllIsomorphisms)
-        .def("findAllSubcomplexesIn", PyTriHelper<dim>::findAllSubcomplexesIn)
-        .def("makeCanonical", &Triangulation<dim>::makeCanonical)
-        .def("insertTriangulation", &Triangulation<dim>::insertTriangulation)
-        .def("isoSig", PyTriHelper<dim>::isoSig_void)
-        .def("isoSigDetail", PyTriHelper<dim>::isoSig_relabelling)
-        .def("fromIsoSig", &Triangulation<dim>::fromIsoSig,
-            return_value_policy<to_held_type<>>())
-        .def("isoSigComponentSize", &Triangulation<dim>::isoSigComponentSize)
-        .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromIsoSig")
-        .staticmethod("isoSigComponentSize")
-        // We cast to PacketType so that boost.python sees this as a value,
-        // not a reference.
-        .attr("typeID") = regina::PacketType(Triangulation<dim>::typeID)
-    ;
+    {
+        boost::python::scope s = class_<Triangulation<dim>,
+            bases<regina::Packet>, SafeHeldType<Triangulation<dim>>,
+            boost::noncopyable>(name)
+            .def(init<const Triangulation<dim>&>())
+            .def("size", &Triangulation<dim>::size)
+            .def("simplices", PyTriHelper<dim>::simplices_list)
+            .def("simplex", typename PyTriHelper<dim>::simplex_non_const_type(
+                &Triangulation<dim>::simplex),
+                return_internal_reference<>())
+            .def("newSimplex", typename PyTriHelper<dim>::newSimplex_void_type(
+                &Triangulation<dim>::newSimplex),
+                return_internal_reference<>())
+            .def("newSimplex", typename PyTriHelper<dim>::newSimplex_string_type(
+                &Triangulation<dim>::newSimplex),
+                return_internal_reference<>())
+            .def("removeSimplex", &Triangulation<dim>::removeSimplex)
+            .def("removeSimplexAt", &Triangulation<dim>::removeSimplexAt)
+            .def("removeAllSimplices", &Triangulation<dim>::removeAllSimplices)
+            .def("swapContents", &Triangulation<dim>::swapContents)
+            .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
+            .def("countComponents", &Triangulation<dim>::countComponents)
+            .def("countBoundaryComponents",
+                &Triangulation<dim>::countBoundaryComponents)
+            .def("countFaces", &regina::python::countFaces<Triangulation<dim>, dim>)
+            .def("fVector", PyTriHelper<dim>::fVector_list)
+            .def("components", PyTriHelper<dim>::components_list)
+            .def("boundaryComponents", PyTriHelper<dim>::boundaryComponents_list)
+            .def("faces", &regina::python::faces<Triangulation<dim>, dim>)
+            .def("component", &Triangulation<dim>::component,
+                return_internal_reference<>())
+            .def("boundaryComponent", &Triangulation<dim>::boundaryComponent,
+                return_internal_reference<>())
+            .def("face", &regina::python::face<Triangulation<dim>, dim, size_t>)
+            .def("countVertices", &Triangulation<dim>::countVertices)
+            .def("countEdges", &Triangulation<dim>::countEdges)
+            .def("countTriangles", &Triangulation<dim>::countTriangles)
+            .def("countTetrahedra", &Triangulation<dim>::countTetrahedra)
+            .def("countPentachora", &Triangulation<dim>::countPentachora)
+            .def("vertices", regina::python::faces_list<Triangulation<dim>, dim, 0>)
+            .def("edges", regina::python::faces_list<Triangulation<dim>, dim, 1>)
+            .def("triangles",
+                regina::python::faces_list<Triangulation<dim>, dim, 2>)
+            .def("tetrahedra",
+                regina::python::faces_list<Triangulation<dim>, dim, 3>)
+            .def("pentachora",
+                regina::python::faces_list<Triangulation<dim>, dim, 4>)
+            .def("vertex", &Triangulation<dim>::vertex,
+                return_internal_reference<>())
+            .def("edge", &Triangulation<dim>::edge,
+                return_internal_reference<>())
+            .def("triangle", &Triangulation<dim>::triangle,
+                return_internal_reference<>())
+            .def("tetrahedron", &Triangulation<dim>::tetrahedron,
+                return_internal_reference<>())
+            .def("pentachoron", &Triangulation<dim>::pentachoron,
+                return_internal_reference<>())
+            .def("isEmpty", &Triangulation<dim>::isEmpty)
+            .def("isValid", &Triangulation<dim>::isValid)
+            .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
+            .def("countBoundaryFacets", &Triangulation<dim>::countBoundaryFacets)
+            .def("isOrientable", &Triangulation<dim>::isOrientable)
+            .def("isOriented", &Triangulation<dim>::isOriented)
+            .def("isConnected", &Triangulation<dim>::isConnected)
+            .def("orient", &Triangulation<dim>::orient)
+            .def("splitIntoComponents",
+                typename PyTriHelper<dim>::splitIntoComponents_type(
+                    &Triangulation<dim>::splitIntoComponents),
+                typename PyTriHelper<dim>::OL_splitIntoComponents())
+            .def("eulerCharTri", &Triangulation<dim>::eulerCharTri)
+            .def("fundamentalGroup", &Triangulation<dim>::fundamentalGroup,
+                return_internal_reference<>())
+            .def("simplifiedFundamentalGroup",
+                PyTriHelper<dim>::simplifiedFundamentalGroup_clone)
+            .def("homology", &Triangulation<dim>::homology,
+                return_internal_reference<>())
+            .def("homologyH1", &Triangulation<dim>::homologyH1,
+                return_internal_reference<>())
+            .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
+            .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
+            .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
+            .def("isIsomorphicTo",
+                +[](const Triangulation<dim>& t, const Triangulation<dim>& s) {
+                    return t.isIsomorphicTo(s).release(); },
+                return_value_policy<manage_new_object>())
+            .def("isContainedIn",
+                +[](const Triangulation<dim>& t, const Triangulation<dim>& s) {
+                    return t.isContainedIn(s).release(); },
+                return_value_policy<manage_new_object>())
+            .def("findAllIsomorphisms", PyTriHelper<dim>::findAllIsomorphisms)
+            .def("findAllSubcomplexesIn", PyTriHelper<dim>::findAllSubcomplexesIn)
+            .def("makeCanonical", &Triangulation<dim>::makeCanonical)
+            .def("insertTriangulation", &Triangulation<dim>::insertTriangulation)
+            .def("isoSig", PyTriHelper<dim>::isoSig_void)
+            .def("isoSigDetail", PyTriHelper<dim>::isoSig_relabelling)
+            .def("fromIsoSig", &Triangulation<dim>::fromIsoSig,
+                return_value_policy<to_held_type<>>())
+            .def("isoSigComponentSize", &Triangulation<dim>::isoSigComponentSize)
+            .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
+            .def(regina::python::add_output())
+            .def(regina::python::add_eq_operators())
+            .staticmethod("fromIsoSig")
+            .staticmethod("isoSigComponentSize")
+        ;
+
+        // We cast to the relevant types so that boost.python sees these
+        // compile-time constants as values, not references.
+        s.attr("typeID") = regina::PacketType(Triangulation<dim>::typeID);
+        s.attr("dimension") = int(Triangulation<dim>::dimension);
+    }
 
     implicitly_convertible<SafeHeldType<Triangulation<dim>>,
         SafeHeldType<regina::Packet>>();

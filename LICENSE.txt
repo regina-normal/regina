@@ -94,10 +94,10 @@ GNU General Public License.
 
 SYNTAX HIGHLIGHTING:
 
-Regina's graphical user interface includes the PythonSyntaxHighlighter class
-by Frankie Simon and others, which it uses for highlighting Python scripts.
-This class is distributed under the X11 license; see the class header for
-the license details.
+Regina's graphical user interfaces incorporate a modified version of the KDE
+syntax-highlighting framework, which they use for highlighting Python scripts.
+This framework is distributed under the GNU Library General Public License,
+version 2 or any later version, as published by the Free Software Foundation.
 
 
 ICONS:

@@ -1,0 +1,20 @@
+This is a stripped-down and heavily modified version of the syntax-highlighting
+framework from KDE Frameworks 5.28.0:
+
+- it has been simplified (and silently drops some metadata from the syntax
+  definitions as a result);
+- its Qt dependencies have been replaced with libraries that are already used
+  by Regina's calculation engine (e.g., the C++ standard library and libxml2);
+- all hard-coded string and characters in the rules are treated as plain ASCII
+  (not unicode);
+- dynamic rules (which use regex captures instead of hard-coded strings) are
+  not supported;
+- the repository is hard-coded to only load those definitions and themes that
+  Regina needs, and these are loaded directly from Regina's data directories.
+
+The original KDE framework was downloaded on 21 Nov 2016 from:
+http://download.kde.org/stable/frameworks/5.28/
+
+KDE Frameworks 5.28.0 is licensed under the GNU LGPL (version 2 or above).
+See COPYING.LIB for details.
+

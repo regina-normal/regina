@@ -35,10 +35,12 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
+#include <thread>
 #include "regina-config.h"
 #include "libnormaliz/cone.h"
 #include "maths/cyclotomic.h"
 #include "maths/numbertheory.h"
+#include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/dim3.h"
 #include "utilities/sequence.h"
@@ -51,6 +53,12 @@
 #define TV_UNCOLOURED -1
 #define TV_AGGREGATED -2
 
+// When tracking progress, try to give much more weight to larger bags.
+// (Of course, this should *really* be exponential, but it's nice to see
+// some visual progress for smaller bags, so we try not to completely
+// dwarf them in the weightings.)
+#define HARD_BAG_WEIGHT(bag) (double(bag->size())*(bag->size())*(bag->size()))
+
 namespace regina {
 
 namespace {
@@ -61,12 +69,20 @@ namespace {
     struct TuraevViroDetails<true> {
         typedef Cyclotomic TVType;
         typedef Cyclotomic TVResult;
+
+        static TVResult zero() {
+            return Cyclotomic(1);
+        }
     };
 
     template <>
     struct TuraevViroDetails<false> {
         typedef std::complex<double> TVType;
         typedef double TVResult;
+
+        static TVResult zero() {
+            return 0;
+        }
     };
 
     /**
@@ -424,8 +440,12 @@ namespace {
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroBacktrack(
             const Triangulation<3>& tri,
-            const InitialData<exact>& init) {
+            const InitialData<exact>& init,
+            ProgressTracker* tracker) {
         typedef typename InitialData<exact>::TVType TVType;
+
+        if (tracker)
+            tracker->newStage("Enumerating colourings");
 
         unsigned long nEdges = tri.countEdges();
         unsigned long nTriangles = tri.countTriangles();
@@ -511,6 +531,18 @@ namespace {
         bool admissible;
         const Tetrahedron<3>* tet;
         const Triangle<3>* triangle;
+
+        double percent;
+        double* coeff;
+        if (tracker) {
+            coeff = new double[nEdges];
+            if (nEdges) {
+                coeff[0] = 100.0 / (init.r - 1);
+                for (i = 1; i < nEdges; ++i)
+                    coeff[i] = coeff[i - 1] / (init.r - 1);
+            }
+        }
+
         while (curr >= 0) {
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {
@@ -536,6 +568,17 @@ namespace {
                 if (curr >= 0)
                     colour[sortedEdges[curr]]++;
                 continue;
+            }
+
+            // From here we have 0 <= curr < nEdges.
+
+            if (tracker) {
+                percent = 0;
+                for (i = 0; i <= curr; ++i)
+                    percent += coeff[i] * colour[sortedEdges[i]];
+
+                if (! tracker->setPercent(percent))
+                    break;
             }
 
             // Have we run out of values to try at this level?
@@ -609,6 +652,12 @@ namespace {
         delete[] triangleCache;
         delete[] tetCache;
 
+        if (tracker) {
+            delete[] coeff;
+            if (tracker->isCancelled())
+                return TuraevViroDetails<exact>::zero();
+        }
+
         // Compute the vertex contributions separately, since these are
         // constant.
         for (i = 0; i < tri.countVertices(); i++)
@@ -620,8 +669,12 @@ namespace {
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroNaive(
             const Triangulation<3>& tri,
-            const InitialData<exact>& init) {
+            const InitialData<exact>& init,
+            ProgressTracker* tracker) {
         typedef typename InitialData<exact>::TVType TVType;
+
+        if (tracker)
+            tracker->newStage("Enumerating colourings");
 
         unsigned long nEdges = tri.countEdges();
 
@@ -654,6 +707,18 @@ namespace {
         bool admissible;
         long index1, index2;
         const Tetrahedron<3>* tet;
+
+        double percent;
+        double* coeff;
+        if (tracker) {
+            coeff = new double[nEdges];
+            if (nEdges) {
+                coeff[0] = 100.0 / (init.r - 1);
+                for (i = 1; i < nEdges; ++i)
+                    coeff[i] = coeff[i - 1] / (init.r - 1);
+            }
+        }
+
         while (curr >= 0) {
             // Have we found an admissible colouring?
             if (curr >= static_cast<long>(nEdges)) {
@@ -688,6 +753,17 @@ namespace {
                 if (curr >= 0)
                     colour[sortedEdges[curr]]++;
                 continue;
+            }
+
+            // From here we have 0 <= curr < nEdges.
+
+            if (tracker) {
+                percent = 0;
+                for (i = 0; i <= curr; ++i)
+                    percent += coeff[i] * colour[sortedEdges[i]];
+
+                if (! tracker->setPercent(percent))
+                    break;
             }
 
             // Have we run out of values to try at this level?
@@ -731,6 +807,12 @@ namespace {
         delete[] sortedEdges;
         delete[] edgePos;
 
+        if (tracker) {
+            delete[] coeff;
+            if (tracker->isCancelled())
+                return TuraevViroDetails<exact>::zero();
+        }
+
         // Compute the vertex contributions separately, since these are
         // constant.
         for (i = 0; i < tri.countVertices(); i++)
@@ -742,18 +824,35 @@ namespace {
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroTreewidth(
             const Triangulation<3>& tri,
-            InitialData<exact>& init) {
+            InitialData<exact>& init,
+            ProgressTracker* tracker) {
         typedef typename InitialData<exact>::TVType TVType;
+
+        // Progress:
+        // - weight of forget/join bag processing is 0.9
+        // - weight of leaf/introduce bag processing is 0.05
+        // - weight of other miscellaneous tasks is 0.05
+
+        if (tracker)
+            tracker->newStage("Building tree decomposition", 0.03);
 
         const TreeDecomposition& d = tri.niceTreeDecomposition();
 
         int nEdges = tri.countEdges();
-        int nBags = d.size();
+        size_t nBags = d.size();
+        size_t nEasyBags = 0;
+        double hardBagWeightSum = 0;
         const TreeBag *bag, *child, *sibling;
         int i, j;
         int index;
         const Tetrahedron<3>* tet;
         const Edge<3>* edge;
+
+        if (tracker) {
+            if (tracker->isCancelled())
+                return TuraevViroDetails<exact>::zero();
+            tracker->newStage("Analysing bags", 0.01);
+        }
 
         // In the seenDegree[] array, an edge that has been seen in all
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as
@@ -767,16 +866,19 @@ namespace {
             seenDegree[index].init(nEdges);
 
             if (bag->isLeaf()) {
+                ++nEasyBags;
                 std::fill(seenDegree[index].begin(),
                     seenDegree[index].end(), 0);
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
+                ++nEasyBags;
                 child = bag->children();
                 std::copy(seenDegree[child->index()].begin(),
                     seenDegree[child->index()].end(),
                     seenDegree[index].begin());
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
+                hardBagWeightSum += HARD_BAG_WEIGHT(bag);
                 child = bag->children();
                 tet = tri.tetrahedron(child->element(bag->subtype()));
                 std::copy(seenDegree[child->index()].begin(),
@@ -790,6 +892,7 @@ namespace {
                 }
             } else {
                 // Join bag.
+                hardBagWeightSum += HARD_BAG_WEIGHT(bag);
                 child = bag->children();
                 sibling = child->sibling();
                 for (i = 0; i < nEdges; ++i) {
@@ -806,8 +909,10 @@ namespace {
         typedef typename SolnSet::iterator SolnIterator;
 
         SolnSet** partial = new SolnSet*[nBags];
+        std::fill(partial, partial + nBags, nullptr);
+
         LightweightSequence<int>* seq;
-        SolnIterator it, it2;
+        SolnIterator it;
         std::pair<SolnIterator, bool> existingSoln;
         int tetEdge[6];
         int colour[6];
@@ -821,6 +926,7 @@ namespace {
         size_t nLeft, nRight;
         SolnIterator *subit, *subit2;
         std::pair<SolnIterator*, SolnIterator*> subrange, subrange2;
+        double increment, percent;
 
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
@@ -839,6 +945,15 @@ namespace {
             index = bag->index();
 
             if (bag->isLeaf()) {
+                if (tracker) {
+                    if (tracker->isCancelled())
+                        break;
+                    tracker->newStage(
+                        "Processing leaf bag (" + std::to_string(index) +
+                            '/' + std::to_string(nBags) + ')',
+                        0.05 / nEasyBags);
+                }
+
                 // A single empty colouring.
                 seq = new LightweightSequence<int>(nEdges);
                 std::fill(seq->begin(), seq->end(), TV_UNCOLOURED);
@@ -848,11 +963,29 @@ namespace {
                 partial[index]->insert(std::make_pair(seq, val));
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
+                if (tracker) {
+                    if (tracker->isCancelled())
+                        break;
+                    tracker->newStage(
+                        "Processing introduce bag (" + std::to_string(index) +
+                            '/' + std::to_string(nBags) + ')',
+                        0.05 / nEasyBags);
+                }
+
                 child = bag->children();
                 partial[index] = partial[child->index()];
                 partial[child->index()] = 0;
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
+                if (tracker) {
+                    if (tracker->isCancelled())
+                        break;
+                    tracker->newStage(
+                        "Processing forget bag (" + std::to_string(index) +
+                            '/' + std::to_string(nBags) + ')',
+                        0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+                }
+
                 child = bag->children();
                 tet = tri.tetrahedron(child->element(bag->subtype()));
 
@@ -876,8 +1009,16 @@ namespace {
 
                 partial[index] = new SolnSet;
 
+                increment = 100.0 / partial[child->index()]->size();
+                percent = 0;
+
                 for (it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it) {
+                    if (tracker) {
+                        percent += increment;
+                        if (! tracker->setPercent(percent))
+                            break;
+                    }
                     for (i = 0; i < 6; ++i)
                         colour[i] = (choiceType[i] < 0 ?
                             (*(it->first))[tetEdge[i]] : -1);
@@ -968,13 +1109,21 @@ namespace {
                     }
                 }
 
-                for (it = partial[child->index()]->begin();
-                        it != partial[child->index()]->end(); ++it)
-                    delete it->first;
+                for (auto& soln : *(partial[child->index()]))
+                    delete soln.first;
                 delete partial[child->index()];
                 partial[child->index()] = 0;
             } else {
                 // Join bag.
+                if (tracker) {
+                    if (tracker->isCancelled())
+                        break;
+                    tracker->newStage(
+                        "Processing join bag (" + std::to_string(index) +
+                            '/' + std::to_string(nBags) + ')',
+                        0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+                }
+
                 partial[index] = new SolnSet;
 
                 child = bag->children();
@@ -989,12 +1138,18 @@ namespace {
                 LightweightSequence<int>::SubsequenceCompareFirstPtr<
                     SolnIterator> compare(nOverlap, overlap);
 
+                if (tracker && tracker->isCancelled())
+                    break;
+
                 nLeft = 0;
                 leftIndexed = new SolnIterator[partial[child->index()]->size()];
                 for (it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
                     leftIndexed[nLeft++] = it;
                 std::sort(leftIndexed, leftIndexed + nLeft, compare);
+
+                if (tracker && tracker->isCancelled())
+                    break;
 
                 nRight = 0;
                 rightIndexed = new SolnIterator[
@@ -1009,6 +1164,15 @@ namespace {
 
                 while (subrange.second != leftIndexed + nLeft &&
                         subrange2.second != rightIndexed + nRight) {
+                    if (tracker) {
+                        percent = 100.0 * (
+                            (subrange.second - leftIndexed) +
+                            (subrange2.second - rightIndexed)) /
+                            (nLeft + nRight);
+                        if (! tracker->setPercent(percent))
+                            break;
+                    }
+
                     subrange.first = subrange.second;
                     while (subrange.second != leftIndexed + nLeft &&
                             compare.equal(*subrange.first, *subrange.second))
@@ -1060,15 +1224,13 @@ namespace {
                 delete[] leftIndexed;
                 delete[] rightIndexed;
 
-                for (it2 = partial[child->index()]->begin();
-                        it2 != partial[child->index()]->end(); ++it2)
-                    delete it2->first;
+                for (auto& soln : *(partial[child->index()]))
+                    delete soln.first;
                 delete partial[child->index()];
                 partial[child->index()] = 0;
 
-                for (it2 = partial[sibling->index()]->begin();
-                        it2 != partial[sibling->index()]->end(); ++it2)
-                    delete it2->first;
+                for (auto& soln : *(partial[sibling->index()]))
+                    delete soln.first;
                 delete partial[sibling->index()];
                 partial[sibling->index()] = 0;
             }
@@ -1082,22 +1244,42 @@ namespace {
 #endif
         }
 
-        // The final bag contains no tetrahedra, and so there should be
-        // only one colouring stored (in which all edge colours are aggregated).
-        TVType ans = partial[nBags - 1]->begin()->second;
-        for (i = 0; i < tri.countVertices(); i++)
-            ans *= init.vertexContrib;
-
-        for (it = partial[nBags - 1]->begin(); it != partial[nBags - 1]->end();
-                ++it)
-            delete it->first;
-        delete partial[nBags - 1];
-        partial[nBags - 1] = 0;
+        // Clean up.
+        // Unfortunately, if we have cancelled mid-calculation, the
+        // cleanup could be significant.
+        // If we made it to the end, then the cleanup is O(1).
 
         delete[] seenDegree;
-        delete[] partial;
         delete[] overlap;
 
+        if (tracker && tracker->isCancelled()) {
+            // We don't know which elements of partial[] have been
+            // deallocated, so check them all.
+            for (i = 0; i < nBags; ++i)
+                if (partial[i]) {
+                    for (auto& soln : *(partial[i]))
+                        delete soln.first;
+                    delete partial[i];
+                }
+            delete[] partial;
+
+            return TuraevViroDetails<exact>::zero();
+        }
+
+        // We made it to the end.
+        // All elements of partial[] except the last should have already
+        // been deallocated (during the processing of their parent bags).
+        // The final bag contains no tetrahedra, and so it should have
+        // only one colouring stored (in which all edge colours are aggregated).
+        TVType ans = partial[nBags - 1]->begin()->second;
+
+        for (auto& soln : *(partial[nBags - 1]))
+            delete soln.first;
+        delete partial[nBags - 1];
+        delete[] partial;
+
+        for (i = 0; i < tri.countVertices(); i++)
+            ans *= init.vertexContrib;
         return ans;
     }
 
@@ -1190,13 +1372,13 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
     switch (alg) {
         case TV_DEFAULT:
         case TV_BACKTRACK:
-            ans = turaevViroBacktrack(*this, init);
+            ans = turaevViroBacktrack(*this, init, 0);
             break;
         case TV_TREEWIDTH:
-            ans = turaevViroTreewidth(*this, init);
+            ans = turaevViroTreewidth(*this, init, 0);
             break;
         case TV_NAIVE:
-            ans = turaevViroNaive(*this, init);
+            ans = turaevViroNaive(*this, init, 0);
             break;
     }
     /*
@@ -1217,10 +1399,13 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 }
 
 Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
-        TuraevViroAlg alg) const {
+        TuraevViroAlg alg, ProgressTracker* tracker) const {
     // Do some basic parameter checks.
-    if (r < 3)
+    if (r < 3) {
+        if (tracker)
+            tracker->setFinished();
         return Cyclotomic();
+    }
     if (r % 2 == 0)
         parity = false; // As required by allCalculatedTuraevViroInvariants().
 
@@ -1228,28 +1413,59 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
     std::pair<unsigned long, bool> tvParams(r, parity);
 #ifndef TV_IGNORE_CACHE
     TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
-    if (it != turaevViroCache_.end())
+    if (it != turaevViroCache_.end()) {
+        if (tracker)
+            tracker->setFinished();
         return (*it).second;
+    }
 #endif
 
-    // Set up our initial data.
-    InitialData<true> init(r, (parity ? 1 : 0));
+    if (tracker) {
+        std::thread([=]{
+            // Set up our initial data.
+            InitialData<true> init(r, (parity ? 1 : 0));
 
-    InitialData<true>::TVType ans;
-    switch (alg) {
-        case TV_DEFAULT:
-        case TV_BACKTRACK:
-            ans = turaevViroBacktrack(*this, init);
-            break;
-        case TV_TREEWIDTH:
-            ans = turaevViroTreewidth(*this, init);
-            break;
-        case TV_NAIVE:
-            ans = turaevViroNaive(*this, init);
-            break;
+            InitialData<true>::TVType ans;
+            switch (alg) {
+                case TV_DEFAULT:
+                case TV_BACKTRACK:
+                    ans = turaevViroBacktrack(*this, init, tracker);
+                    break;
+                case TV_TREEWIDTH:
+                    ans = turaevViroTreewidth(*this, init, tracker);
+                    break;
+                case TV_NAIVE:
+                    ans = turaevViroNaive(*this, init, tracker);
+                    break;
+            }
+
+            if (! tracker->isCancelled())
+                turaevViroCache_[tvParams] = ans;
+
+            tracker->setFinished();
+        }).detach();
+
+        return Cyclotomic(1); // Zero element of a trivial field.
+    } else {
+        // Set up our initial data.
+        InitialData<true> init(r, (parity ? 1 : 0));
+
+        InitialData<true>::TVType ans;
+        switch (alg) {
+            case TV_DEFAULT:
+            case TV_BACKTRACK:
+                ans = turaevViroBacktrack(*this, init, tracker);
+                break;
+            case TV_TREEWIDTH:
+                ans = turaevViroTreewidth(*this, init, tracker);
+                break;
+            case TV_NAIVE:
+                ans = turaevViroNaive(*this, init, tracker);
+                break;
+        }
+
+        return (turaevViroCache_[tvParams] = ans);
     }
-
-    return (turaevViroCache_[tvParams] = ans);
 }
 
 } // namespace regina

@@ -199,9 +199,13 @@ class REGINA_API Script : public Packet, public PacketListener {
         void setVariableValue(size_t index, Packet* value);
 
         /**
-         * Adds a new variable to be associated with this script.
+         * Attempts to add a new variable to be associated with this script.
          * If a variable with the given name is already stored, this
          * routine will do nothing.
+         *
+         * If you need to ensure that a new variable is always added,
+         * even if the variable name needs to change, see the routine
+         * addVariableName() instead.
          *
          * \warning The index of the new variable might not be
          * countVariables()-1, and this operation may change the
@@ -215,6 +219,27 @@ class REGINA_API Script : public Packet, public PacketListener {
          * \c false if a variable with the given name was already stored.
          */
         bool addVariable(const std::string& name, Packet* value);
+        /**
+         * Adds a new variable to be associated with this script, changing
+         * its name if necessary.  If the given variable name does not already
+         * exist as a variable name in this script, then it will be used
+         * without modification.  Otherwise a new variable name will
+         * be constructed by appending additional characters to \a name.
+         *
+         * \warning The index of the new variable might not be
+         * countVariables()-1, and this operation may change the
+         * indices of other variables also.  This is because (at present)
+         * variables are kept stored in sorted order by name.
+         *
+         * @param name the string upon which the new variable name will
+         * be based.
+         * @param value the value of the new variable; this is allowed
+         * to be \c null.
+         * @return the name of the variable that was added; this might
+         * or might not be equal to \a name.
+         */
+        const std::string& addVariableName(const std::string& name,
+            Packet* value);
         /**
          * Removes the variable stored with the given name.
          * If no variable is stored with the given name, this routine

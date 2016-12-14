@@ -63,6 +63,7 @@ namespace regina {
 class AngleStructure;
 class GroupPresentation;
 class NormalSurface;
+class ProgressTracker;
 class ProgressTrackerOpen;
 class XMLPacketReader;
 
@@ -289,7 +290,7 @@ class REGINA_API Triangulation<3> :
          * The constituent tetrahedra, the cellular structure and all other
          * properties will also be destroyed.
          */
-        virtual ~Triangulation();
+        REGINA_INLINE_REQUIRED virtual ~Triangulation();
 
         /*@}*/
         /**
@@ -574,6 +575,29 @@ class REGINA_API Triangulation<3> :
          * performs significantly more floating point operations, and so is
          * subject to a much larger potential numerical error.
          *
+         * If the requested Turaev-Viro invariant has already been computed,
+         * then the result will be cached and so this routine will be
+         * very fast (since it just returns the previously computed result).
+         * Otherwise the computation could be quite slow, particularly
+         * for larger triangulations and/or larger values of \a r.
+         * This (potentially) long computation can be managed by passing
+         * a progress tracker:
+         *
+         * - If a progress tracker is passed and the requested invariant has
+         *   not yet been computed, then the calculation will take place in a
+         *   new thread and this routine will return immediately.  Once the
+         *   progress tracker indicates that the calculation has finished,
+         *   you can call turaevViro() again with the same arguments for
+         *   \a r and \a parity to retrieve the value of the invariant.
+         *
+         * - If no progress tracker is passed and the requested invariant has
+         *   not yet been computed, the calculation will run in the current
+         *   thread and this routine will not return until it is complete.
+         *
+         * - If the requested invariant has already been computed, then this
+         *   routine will return immediately with the pre-computed value.  If
+         *   a progress tracker is passed then it will be marked as finished.
+         *
          * \pre This triangulation is valid, closed and non-empty.
          *
          * @param r the integer \a r as described above; this must be at
@@ -582,12 +606,17 @@ class REGINA_API Triangulation<3> :
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
          * @param alg the algorithm with which to compute the invariant.
          * If you are not sure, the default value (TV_DEFAULT) is a safe choice.
-         * @return the requested Turaev-Viro invariant.
+         * @param tracker a progress tracker through will progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return the requested Turaev-Viro invariant.  As an exception,
+         * if \a tracker is non-null and the value of this invariant has
+         * not been computed before, then (since the calculation will
+         * still be running in a new thread) the return value is undefined.
          *
          * @see allCalculatedTuraevViro
          */
         Cyclotomic turaevViro(unsigned long r, bool parity = true,
-            TuraevViroAlg alg = TV_DEFAULT) const;
+            TuraevViroAlg alg = TV_DEFAULT, ProgressTracker* tracker = 0) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
          * 3-manifold using a fast but inexact floating-point approximation.
@@ -2121,16 +2150,6 @@ class REGINA_API Triangulation<3> :
         bool idealToFinite();
 
         /**
-         * Does a barycentric subdivision of the triangulation.
-         * Each tetrahedron is divided into 24 tetrahedra by placing
-         * an extra vertex at the centroid of each tetrahedron, the
-         * centroid of each triangle and the midpoint of each edge.
-         *
-         * @author David Letscher
-         */
-        void barycentricSubdivision();
-
-        /**
          * Drills out a regular neighbourhood of the given edge of the
          * triangulation.
          *
@@ -2191,7 +2210,7 @@ class REGINA_API Triangulation<3> :
 
         /**
          * Performs a layering upon the given boundary edge of the
-         * triangulation.  See the NLayering class notes for further
+         * triangulation.  See the Layering class notes for further
          * details on what a layering entails.
          *
          * \pre The given edge is a boundary edge of this triangulation,
@@ -2228,7 +2247,7 @@ class REGINA_API Triangulation<3> :
          * numbers.
          * @return the tetrahedron containing the boundary torus.
          *
-         * @see NLayeredSolidTorus
+         * @see LayeredSolidTorus
          */
         Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);
@@ -2246,12 +2265,12 @@ class REGINA_API Triangulation<3> :
          * @param p a parameter of the desired lens space.
          * @param q a parameter of the desired lens space.
          *
-         * @see NLayeredLensSpace
+         * @see LayeredLensSpace
          */
         void insertLayeredLensSpace(unsigned long p, unsigned long q);
         /**
          * Inserts a layered loop of the given length into this triangulation.
-         * Layered loops are described in more detail in the NLayeredLoop
+         * Layered loops are described in more detail in the LayeredLoop
          * class notes.
          *
          * The new tetrahedra will be inserted at the end of the list of
@@ -2262,7 +2281,7 @@ class REGINA_API Triangulation<3> :
          * @param twisted \c true if the new layered loop should be twisted,
          * or \c false if it should be untwisted.
          *
-         * @see NLayeredLoop
+         * @see LayeredLoop
          */
         void insertLayeredLoop(unsigned long length, bool twisted);
         /**
@@ -2270,7 +2289,7 @@ class REGINA_API Triangulation<3> :
          * parameters into this triangulation.  Almost all augmented
          * triangular solid tori represent Seifert fibred spaces with three
          * or fewer exceptional fibres.  Augmented triangular solid tori
-         * are described in more detail in the NAugTriSolidTorus class notes.
+         * are described in more detail in the AugTriSolidTorus class notes.
          *
          * The resulting Seifert fibred space will be
          * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)

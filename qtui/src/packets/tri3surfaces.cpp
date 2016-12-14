@@ -32,9 +32,9 @@
 
 // Regina core includes:
 #include "census/census.h"
-#include "manifold/nmanifold.h"
+#include "manifold/manifold.h"
 #include "snappea/snappeatriangulation.h"
-#include "subcomplex/nstandardtri.h"
+#include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -326,10 +326,10 @@ void Tri3SurfacesUI::refresh() {
 
     // Begin with the combinatorial recognition.
     std::string name;
-    regina::NStandardTriangulation* std =
-        regina::NStandardTriangulation::isStandardTriangulation(tri);
+    regina::StandardTriangulation* std =
+        regina::StandardTriangulation::isStandardTriangulation(tri);
     if (std) {
-        regina::NManifold* mfd = std->manifold();
+        regina::Manifold* mfd = std->manifold();
         if (mfd) {
             isHyp = mfd->isHyperbolic();
             name = mfd->name();

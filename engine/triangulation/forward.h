@@ -87,7 +87,6 @@ template <int dim> using EdgeEmbedding = FaceEmbedding<dim, 1>;
 template <int dim> using TriangleEmbedding = FaceEmbedding<dim, 2>;
 template <int dim> using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
 template <int dim> using PentachoronEmbedding = FaceEmbedding<dim, 4>;
-template <int dim> using SimplexEmbedding = FaceEmbedding<dim, dim>;
 
 template <int> class FacetPairing;
 template <> class FacetPairing<3>;

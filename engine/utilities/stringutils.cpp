@@ -53,7 +53,13 @@ char* duplicate(const std::string& str) {
 bool startsWith(const std::string& str, const std::string& prefix) {
     if (str.length() < prefix.length())
         return false;
-    return (str.substr(0, prefix.length()).compare(prefix) == 0);
+
+    auto a = str.begin();
+    auto b = prefix.begin();
+    for ( ; b != prefix.end(); ++a, ++b)
+        if (*a != *b)
+            return false;
+    return true;
 }
 
 std::string stripWhitespace(const std::string& str) {
@@ -145,12 +151,12 @@ bool valueOf(const std::string& str, bool& dest) {
         dest = false;
         return false;
     }
-    if (str[0] == 't' || str[0] == 'T') {
+    if (str[0] == 't' || str[0] == 'T' || str[0] == '1') {
         dest = true;
         return true;
     }
     dest = false;
-    return (str[0] == 'F' || str[0] == 'f');
+    return (str[0] == 'F' || str[0] == 'f' || str[0] == '0');
 }
 
 bool valueOf(const std::string& str, BoolSet& dest) {

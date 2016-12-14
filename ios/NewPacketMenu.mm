@@ -101,7 +101,10 @@ static NSArray* _allRows;
                     [NewPacketRow rowWithType:regina::PACKET_TEXT
                                         label:@"Text"
                                          icon:@"Text"],
-                    nil];
+                    [NewPacketRow rowWithType:regina::PACKET_SCRIPT
+                                        label:@"Script"
+                                         icon:@"Script"],
+                   nil];
     return _allRows;
 }
 

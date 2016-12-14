@@ -134,16 +134,16 @@ typedef regina::Triangulation<2>* (*Tri2Creator)();
 
 - (void)viewDidLoad
 {
-    options = @[[Example2 exampleWithName:@"Sphere (2 triangles)" creator:&regina::Example<2>::sphere],
-                [Example2 exampleWithName:@"Sphere (tetrahedron boundary)" creator:&regina::Example<2>::sphereTetrahedron],
-                [Example2 exampleWithName:@"Sphere (octahedron boundary)" creator:&regina::Example<2>::sphereOctahedron],
-                [Example2 exampleWithName:@"Disc" creator:&regina::Example<2>::disc],
+    options = @[[Example2 exampleWithName:@"2-sphere (minimal)" creator:&regina::Example<2>::sphere],
+                [Example2 exampleWithName:@"2-sphere (simplex boundary)" creator:&regina::Example<2>::sphereTetrahedron],
+                [Example2 exampleWithName:@"2-sphere (octahedron boundary)" creator:&regina::Example<2>::sphereOctahedron],
                 [Example2 exampleWithName:@"Annulus" creator:&regina::Example<2>::annulus],
+                [Example2 exampleWithName:@"Disc" creator:&regina::Example<2>::disc],
+                [Example2 exampleWithName:@"Klein bottle" creator:&regina::Example<2>::kb],
                 [Example2 exampleWithName:@"Möbius band" creator:&regina::Example<2>::mobius],
-                [Example2 exampleWithName:@"Torus" creator:&regina::Example<2>::torus],
                 [Example2 exampleWithName:@"Projective plane" creator:&regina::Example<2>::rp2],
-                [Example2 exampleWithName:@"Klein bottle" creator:&regina::Example<2>::kb]];
-   
+                [Example2 exampleWithName:@"Torus" creator:&regina::Example<2>::torus]];
+
     self.example.dataSource = self;
     self.example.delegate = self;
     

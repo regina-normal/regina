@@ -60,7 +60,12 @@ class PacketWindow : public QMainWindow {
             /**< The main window for the corresponding data file. */
 
         QAction* packetMenu;
-            /**< The packet-specific menu. */
+            /**< The menu of actions for this packet type. */
+        QAction* windowAction;
+            /**< The "window menu" item that refers to this specific window.
+                 This action is owned by the window itself, and will be
+                 destroyed automatically (and thereby removed from any menus
+                 that contain it) when the window closes. */
 
     private:
         /**
@@ -70,8 +75,12 @@ class PacketWindow : public QMainWindow {
 
         void setupMenus();
 
+    public:
+        void renameWindow(const QString& newName);
+
     public slots:
         void pythonConsole();
+        void raiseWindow();
 
     protected:
         /**

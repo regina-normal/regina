@@ -679,6 +679,19 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
     toolMenu->addAction(act);
 
+    // --- Window actions ---
+
+    if (! windowMenu)
+        windowMenu = new QMenu(tr("&Window"));
+
+    docMenu = new QMenu(windowTitle(), this);
+    docAction = new QAction(trUtf8("– Main window –"), this);
+    connect(docAction, SIGNAL(triggered()), this, SLOT(raiseWindow()));
+
+    docMenu->addAction(docAction);
+    windowMenu->addMenu(docMenu);
+    menuBar()->addMenu(windowMenu);
+
     // --- Help actions ---
 
     QMenu *helpMenu =  menuBar()->addMenu(tr("&Help"));

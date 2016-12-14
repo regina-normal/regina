@@ -312,6 +312,15 @@
     [ReginaHelper viewChildren:base];
 }
 
+- (IBAction)barycentricSubdivision:(id)sender
+{
+    [self endEditing];
+    if (! [self checkEditable])
+        return;
+
+    self.packet->barycentricSubdivision();
+}
+
 - (IBAction)doubleCover:(id)sender
 {
     [self endEditing];
@@ -327,6 +336,7 @@
                                               cancelButtonTitle:@"Cancel"
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"Extract components",
+                                                                @"Barycentric subdivision",
                                                                 @"Double cover",
                                                                 nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
@@ -562,6 +572,8 @@ cleanUpGluing:
         case 0:
             [self extractComponents:nil]; break;
         case 1:
+            [self barycentricSubdivision:nil]; break;
+        case 2:
             [self doubleCover:nil]; break;
     }
 }

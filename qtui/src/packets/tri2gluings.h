@@ -195,6 +195,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
          * Triangulation actions.
          */
         void orient();
+        void barycentricSubdivide();
         void doubleCover();
         void splitIntoComponents();
 

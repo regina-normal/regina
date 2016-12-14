@@ -35,11 +35,15 @@
 namespace regina {
 
 std::vector<Integer> Primes::largePrimes;
+std::mutex Primes::largeMutex;
 
 Integer Primes::prime(unsigned long which, bool autoGrow) {
     // Can we grab it straight out of the hard-coded seed list?
     if (which < numPrimeSeeds)
         return primeSeedList[which];
+
+    // From here we need to ensure thread safety.
+    std::lock_guard<std::mutex> lock(largeMutex);
 
     // Do we even have the requested prime stored?
     if (which >= numPrimeSeeds + largePrimes.size()) {

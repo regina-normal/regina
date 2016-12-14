@@ -7,6 +7,21 @@ Equality type : BY_REFERENCE
 AngleStructures : class
 Equality type : BY_REFERENCE
 
+AugTriSolidTorus : class
+Equality type : BY_REFERENCE
+
+BlockedSFS : class
+Equality type : BY_REFERENCE
+
+BlockedSFSLoop : class
+Equality type : BY_REFERENCE
+
+BlockedSFSPair : class
+Equality type : BY_REFERENCE
+
+BlockedSFSTriple : class
+Equality type : BY_REFERENCE
+
 BoolSet : class
 Equality type : BY_VALUE
 
@@ -1158,6 +1173,15 @@ Equality type : NEVER_INSTANTIATED
 GluingPermSearcher3 : class
 Equality type : BY_REFERENCE
 
+GraphLoop : class
+Equality type : BY_REFERENCE
+
+GraphPair : class
+Equality type : BY_REFERENCE
+
+GraphTriple : class
+Equality type : BY_REFERENCE
+
 GroupExpression : class
 Equality type : BY_VALUE
 
@@ -1166,6 +1190,9 @@ Equality type : BY_VALUE
 
 GroupPresentation : class
 Equality type : BY_REFERENCE
+
+Handlebody : class
+Equality type : BY_VALUE
 
 HomGroupPresentation : class
 Equality type : BY_REFERENCE
@@ -1227,11 +1254,41 @@ Equality type : BY_REFERENCE
 Isomorphism9 : class
 Equality type : BY_REFERENCE
 
+L31Pillow : class
+Equality type : BY_REFERENCE
+
 LargeInteger : class
+Equality type : BY_VALUE
+
+LayeredChain : class
+Equality type : BY_REFERENCE
+
+LayeredChainPair : class
+Equality type : BY_REFERENCE
+
+LayeredLensSpace : class
+Equality type : BY_REFERENCE
+
+LayeredLoop : class
+Equality type : BY_REFERENCE
+
+LayeredSolidTorus : class
+Equality type : BY_REFERENCE
+
+LayeredTorusBundle : class
+Equality type : BY_REFERENCE
+
+Layering : class
+Equality type : BY_REFERENCE
+
+LensSpace : class
 Equality type : BY_VALUE
 
 Locale : class
 Equality type : NEVER_INSTANTIATED
+
+Manifold : class
+Equality type : BY_REFERENCE
 
 MarkedAbelianGroup : class
 Equality type : BY_REFERENCE
@@ -1251,20 +1308,15 @@ NAngleStructure : typedef ->  AngleStructure
 
 NAngleStructureList : typedef ->  AngleStructures
 
-NAugTriSolidTorus : class
-Equality type : BY_REFERENCE
+NAugTriSolidTorus : typedef ->  AugTriSolidTorus
 
-NBlockedSFS : class
-Equality type : BY_REFERENCE
+NBlockedSFS : typedef ->  BlockedSFS
 
-NBlockedSFSLoop : class
-Equality type : BY_REFERENCE
+NBlockedSFSLoop : typedef ->  BlockedSFSLoop
 
-NBlockedSFSPair : class
-Equality type : BY_REFERENCE
+NBlockedSFSPair : typedef ->  BlockedSFSPair
 
-NBlockedSFSTriple : class
-Equality type : BY_REFERENCE
+NBlockedSFSTriple : typedef ->  BlockedSFSTriple
 
 NBoolSet : typedef ->  BoolSet
 
@@ -1314,14 +1366,11 @@ NGlobalDirs : typedef ->  GlobalDirs
 
 NGluingPermSearcher : typedef ->  GluingPermSearcher3
 
-NGraphLoop : class
-Equality type : BY_REFERENCE
+NGraphLoop : typedef ->  GraphLoop
 
-NGraphPair : class
-Equality type : BY_REFERENCE
+NGraphPair : typedef ->  GraphPair
 
-NGraphTriple : class
-Equality type : BY_REFERENCE
+NGraphTriple : typedef ->  GraphTriple
 
 NGroupExpression : typedef ->  GroupExpression
 
@@ -1329,8 +1378,7 @@ NGroupExpressionTerm : typedef ->  GroupExpressionTerm
 
 NGroupPresentation : typedef ->  GroupPresentation
 
-NHandlebody : class
-Equality type : BY_VALUE
+NHandlebody : typedef ->  Handlebody
 
 NHomGroupPresentation : typedef ->  HomGroupPresentation
 
@@ -1342,37 +1390,27 @@ NInteger : typedef ->  Integer
 
 NIsomorphism : typedef ->  Isomorphism3
 
-NL31Pillow : class
-Equality type : BY_REFERENCE
+NL31Pillow : typedef ->  L31Pillow
 
 NLargeInteger : typedef ->  LargeInteger
 
-NLayeredChain : class
-Equality type : BY_REFERENCE
+NLayeredChain : typedef ->  LayeredChain
 
-NLayeredChainPair : class
-Equality type : BY_REFERENCE
+NLayeredChainPair : typedef ->  LayeredChainPair
 
-NLayeredLensSpace : class
-Equality type : BY_REFERENCE
+NLayeredLensSpace : typedef ->  LayeredLensSpace
 
-NLayeredLoop : class
-Equality type : BY_REFERENCE
+NLayeredLoop : typedef ->  LayeredLoop
 
-NLayeredSolidTorus : class
-Equality type : BY_REFERENCE
+NLayeredSolidTorus : typedef ->  LayeredSolidTorus
 
-NLayeredTorusBundle : class
-Equality type : BY_REFERENCE
+NLayeredTorusBundle : typedef ->  LayeredTorusBundle
 
-NLayering : class
-Equality type : BY_REFERENCE
+NLayering : typedef ->  Layering
 
-NLensSpace : class
-Equality type : BY_VALUE
+NLensSpace : typedef ->  LensSpace
 
-NManifold : class
-Equality type : BY_REFERENCE
+NManifold : typedef ->  Manifold
 
 NMarkedAbelianGroup : typedef ->  MarkedAbelianGroup
 
@@ -1424,14 +1462,11 @@ NPerm8 : typedef ->  Perm8
 
 NPerm9 : typedef ->  Perm9
 
-NPillowTwoSphere : class
-Equality type : BY_REFERENCE
+NPillowTwoSphere : typedef ->  PillowTwoSphere
 
-NPlugTriSolidTorus : class
-Equality type : BY_REFERENCE
+NPlugTriSolidTorus : typedef ->  PlugTriSolidTorus
 
-NPluggedTorusBundle : class
-Equality type : BY_REFERENCE
+NPluggedTorusBundle : typedef ->  PluggedTorusBundle
 
 NPolynomial : typedef ->  Polynomial
 
@@ -1445,68 +1480,49 @@ NProgressTrackerOpen : typedef ->  ProgressTrackerOpen
 
 NRational : typedef ->  Rational
 
-NSFSFibre : class
-Equality type : BY_VALUE
+NSFSFibre : typedef ->  SFSFibre
 
-NSFSpace : class
-Equality type : BY_VALUE
+NSFSpace : typedef ->  SFSpace
 
-NSatAnnulus : class
-Equality type : BY_VALUE
+NSatAnnulus : typedef ->  SatAnnulus
 
-NSatBlock : class
-Equality type : BY_REFERENCE
+NSatBlock : typedef ->  SatBlock
 
-NSatBlockSpec : class
-Equality type : BY_VALUE
+NSatBlockSpec : typedef ->  SatBlockSpec
 
-NSatCube : class
-Equality type : BY_REFERENCE
+NSatCube : typedef ->  SatCube
 
-NSatLST : class
-Equality type : BY_REFERENCE
+NSatLST : typedef ->  SatLST
 
-NSatLayering : class
-Equality type : BY_REFERENCE
+NSatLayering : typedef ->  SatLayering
 
-NSatMobius : class
-Equality type : BY_REFERENCE
+NSatMobius : typedef ->  SatMobius
 
-NSatReflectorStrip : class
-Equality type : BY_REFERENCE
+NSatReflectorStrip : typedef ->  SatReflectorStrip
 
-NSatRegion : class
-Equality type : BY_REFERENCE
+NSatRegion : typedef ->  SatRegion
 
-NSatTriPrism : class
-Equality type : BY_REFERENCE
+NSatTriPrism : typedef ->  SatTriPrism
 
 NScript : typedef ->  Script
 
 NSignature : typedef ->  Signature
 
-NSimpleSurfaceBundle : class
-Equality type : BY_VALUE
+NSimpleSurfaceBundle : typedef ->  SimpleSurfaceBundle
 
-NSnapPeaCensusManifold : class
-Equality type : BY_VALUE
+NSnapPeaCensusManifold : typedef ->  SnapPeaCensusManifold
 
-NSnapPeaCensusTri : class
-Equality type : BY_VALUE
+NSnapPeaCensusTri : typedef ->  SnapPeaCensusTri
 
 NSnapPeaTriangulation : typedef ->  SnapPeaTriangulation
 
-NSnappedBall : class
-Equality type : BY_REFERENCE
+NSnappedBall : typedef ->  SnappedBall
 
-NSnappedTwoSphere : class
-Equality type : BY_REFERENCE
+NSnappedTwoSphere : typedef ->  SnappedTwoSphere
 
-NSpiralSolidTorus : class
-Equality type : BY_REFERENCE
+NSpiralSolidTorus : typedef ->  SpiralSolidTorus
 
-NStandardTriangulation : class
-Equality type : BY_REFERENCE
+NStandardTriangulation : typedef ->  StandardTriangulation
 
 NSurfaceFilter : typedef ->  SurfaceFilter
 
@@ -1520,15 +1536,13 @@ NTetrahedron : typedef ->  Simplex3
 
 NText : typedef ->  Text
 
-NTorusBundle : class
-Equality type : BY_REFERENCE
+NTorusBundle : typedef ->  TorusBundle
 
 NTreeBag : typedef ->  TreeBag
 
 NTreeDecomposition : typedef ->  TreeDecomposition
 
-NTriSolidTorus : class
-Equality type : BY_REFERENCE
+NTriSolidTorus : typedef ->  TriSolidTorus
 
 NTriangle : typedef ->  Face3_2
 
@@ -1536,17 +1550,13 @@ NTriangleEmbedding : typedef ->  FaceEmbedding3_2
 
 NTriangulation : typedef ->  Triangulation3
 
-NTrivialTri : class
-Equality type : BY_REFERENCE
+NTrivialTri : typedef ->  TrivialTri
 
-NTxICore : class
-Equality type : BY_REFERENCE
+NTxICore : typedef ->  TxICore
 
-NTxIDiagonalCore : class
-Equality type : BY_REFERENCE
+NTxIDiagonalCore : typedef ->  TxIDiagonalCore
 
-NTxIParallelCore : class
-Equality type : BY_REFERENCE
+NTxIParallelCore : typedef ->  TxIParallelCore
 
 NVertex : typedef ->  Face3_0
 
@@ -1667,6 +1677,15 @@ Equality type : BY_VALUE
 Perm9 : class
 Equality type : BY_VALUE
 
+PillowTwoSphere : class
+Equality type : BY_REFERENCE
+
+PlugTriSolidTorus : class
+Equality type : BY_REFERENCE
+
+PluggedTorusBundle : class
+Equality type : BY_REFERENCE
+
 Polynomial : class
 Equality type : BY_VALUE
 
@@ -1685,11 +1704,50 @@ Equality type : BY_REFERENCE
 Rational : class
 Equality type : BY_VALUE
 
+SFSFibre : class
+Equality type : BY_VALUE
+
+SFSpace : class
+Equality type : BY_VALUE
+
+SatAnnulus : class
+Equality type : BY_VALUE
+
+SatBlock : class
+Equality type : BY_REFERENCE
+
+SatBlockSpec : class
+Equality type : BY_VALUE
+
+SatCube : class
+Equality type : BY_REFERENCE
+
+SatLST : class
+Equality type : BY_REFERENCE
+
+SatLayering : class
+Equality type : BY_REFERENCE
+
+SatMobius : class
+Equality type : BY_REFERENCE
+
+SatReflectorStrip : class
+Equality type : BY_REFERENCE
+
+SatRegion : class
+Equality type : BY_REFERENCE
+
+SatTriPrism : class
+Equality type : BY_REFERENCE
+
 Script : class
 Equality type : BY_REFERENCE
 
 Signature : class
 Equality type : BY_REFERENCE
+
+SimpleSurfaceBundle : class
+Equality type : BY_VALUE
 
 Simplex10 : class
 Equality type : BY_REFERENCE
@@ -1733,7 +1791,25 @@ Equality type : BY_REFERENCE
 Simplex9 : class
 Equality type : BY_REFERENCE
 
+SnapPeaCensusManifold : class
+Equality type : BY_VALUE
+
+SnapPeaCensusTri : class
+Equality type : BY_VALUE
+
 SnapPeaTriangulation : class
+Equality type : BY_REFERENCE
+
+SnappedBall : class
+Equality type : BY_REFERENCE
+
+SnappedTwoSphere : class
+Equality type : BY_REFERENCE
+
+SpiralSolidTorus : class
+Equality type : BY_REFERENCE
+
+StandardTriangulation : class
 Equality type : BY_REFERENCE
 
 SurfaceFilter : class
@@ -1798,10 +1874,16 @@ TetrahedronEmbedding9 : typedef ->  FaceEmbedding9_3
 Text : class
 Equality type : BY_REFERENCE
 
+TorusBundle : class
+Equality type : BY_REFERENCE
+
 TreeBag : class
 Equality type : BY_REFERENCE
 
 TreeDecomposition : class
+Equality type : BY_REFERENCE
+
+TriSolidTorus : class
 Equality type : BY_REFERENCE
 
 Triangle10 : typedef ->  Face10_2
@@ -1898,6 +1980,18 @@ Triangulation8 : class
 Equality type : BY_REFERENCE
 
 Triangulation9 : class
+Equality type : BY_REFERENCE
+
+TrivialTri : class
+Equality type : BY_REFERENCE
+
+TxICore : class
+Equality type : BY_REFERENCE
+
+TxIDiagonalCore : class
+Equality type : BY_REFERENCE
+
+TxIParallelCore : class
 Equality type : BY_REFERENCE
 
 Vertex10 : typedef ->  Face10_0

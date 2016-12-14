@@ -88,7 +88,7 @@ struct NormalInfo<NS_AN_STANDARD> {
  */
 class REGINA_API NSVectorANStandard : public NormalSurfaceVector {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorANStandard, NS_AN_STANDARD,
-        NormalSurfaceVector)
+        NormalSurfaceVector);
 
     public:
         /**

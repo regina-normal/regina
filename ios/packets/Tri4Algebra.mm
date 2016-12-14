@@ -37,7 +37,7 @@
 #import "triangulation/dim4.h"
 #import "utilities/stringutils.h"
 
-@interface Tri4Algebra () <UITableViewDataSource, UIAlertViewDelegate>
+@interface Tri4Algebra ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
 

@@ -748,14 +748,6 @@ class REGINA_API Triangulation<4> :
         /*@{*/
 
         /**
-         * Does a barycentric subdivision of the triangulation.
-         * Each pentachoron is divided into 120 pentachora by placing an
-         * extra vertex at the centroid of each pentachoron,
-         * tetrahedron, triangle, and edge.
-         */
-        void barycentricSubdivision();
-
-        /**
          * Converts an ideal triangulation into a finite triangulation.
          * All ideal or invalid vertices are truncated and thus
          * converted into real boundary components made from unglued

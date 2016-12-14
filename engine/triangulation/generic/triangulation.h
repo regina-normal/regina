@@ -339,6 +339,13 @@ class Triangulation :
          * should have all properties marked as unknown.
          */
         Triangulation(const Triangulation& copy, bool cloneProps);
+        /**
+         * Destroys this triangulation.
+         *
+         * The constituent simplices, the cellular structure and all other
+         * properties will also be destroyed.
+         */
+        virtual ~Triangulation();
 
         /*@}*/
         /**
@@ -574,6 +581,11 @@ template <int dim>
 inline Triangulation<dim>::Triangulation(const Triangulation& copy,
         bool cloneProps) : detail::TriangulationBase<dim>(copy, cloneProps) {
     // All properties to clone are held by TriangulationBase.
+}
+
+template <int dim>
+inline Triangulation<dim>::~Triangulation() {
+    clearAllProperties();
 }
 
 template <int dim>
