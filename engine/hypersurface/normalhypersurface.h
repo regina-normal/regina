@@ -183,7 +183,7 @@ struct HyperInfo;
 class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
     protected:
         Ray coords_;
-            /** The raw vector of normal coordinates. */
+            /**< The raw vector of normal coordinates. */
 
     public:
         /**

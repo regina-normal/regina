@@ -84,7 +84,7 @@ struct NormalInfo<NS_QUAD> {
 class REGINA_API NSVectorQuad :
         public NSVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuad, NS_QUAD,
-        NSVectorMirrored)
+        NSVectorMirrored);
 
     public:
         /**
