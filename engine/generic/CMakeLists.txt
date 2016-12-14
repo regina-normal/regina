@@ -5,6 +5,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    boundarycomponent.h
     component.h
     face.h
     facenumbering.h
