@@ -95,17 +95,17 @@ namespace Coordinates {
             if (coordSystem == regina::NS_STANDARD)
                 return QT_TR_NOOP("Standard ");
             if (coordSystem == regina::NS_AN_STANDARD)
-                return QT_TR_NOOP("Standard almost ");
+                return QT_TR_NOOP("Standard almost normal ");
             if (coordSystem == regina::NS_AN_LEGACY)
-                return QT_TR_NOOP("Legacy almost ");
+                return QT_TR_NOOP("Legacy almost normal ");
             if (coordSystem == regina::NS_QUAD)
                 return QT_TR_NOOP("Quad ");
             if (coordSystem == regina::NS_AN_QUAD_OCT)
                 return QT_TR_NOOP("Quad-oct ");
             if (coordSystem == regina::NS_EDGE_WEIGHT)
-                return QT_TR_NOOP("Edge weight");
+                return QT_TR_NOOP("Edge weight ");
             if (coordSystem == regina::NS_TRIANGLE_ARCS)
-                return QT_TR_NOOP("Triangle arc");
+                return QT_TR_NOOP("Triangle arc ");
             if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("Transversely oriented ");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
@@ -115,17 +115,17 @@ namespace Coordinates {
             if (coordSystem == regina::NS_STANDARD)
                 return QT_TR_NOOP("standard ");
             if (coordSystem == regina::NS_AN_STANDARD)
-                return QT_TR_NOOP("standard almost ");
+                return QT_TR_NOOP("standard almost normal ");
             if (coordSystem == regina::NS_AN_LEGACY)
-                return QT_TR_NOOP("legacy almost ");
+                return QT_TR_NOOP("legacy almost normal ");
             if (coordSystem == regina::NS_QUAD)
                 return QT_TR_NOOP("quad ");
             if (coordSystem == regina::NS_AN_QUAD_OCT)
                 return QT_TR_NOOP("quad-oct ");
             if (coordSystem == regina::NS_EDGE_WEIGHT)
-                return QT_TR_NOOP("edge weight");
+                return QT_TR_NOOP("edge weight ");
             if (coordSystem == regina::NS_TRIANGLE_ARCS)
-                return QT_TR_NOOP("triangle arc");
+                return QT_TR_NOOP("triangle arc ");
             if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("transversely oriented ");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
@@ -161,7 +161,7 @@ namespace Coordinates {
             if (coordSystem == regina::HS_PRISM)
                 return QT_TR_NOOP("Prism ");
             if (coordSystem == regina::HS_EDGE_WEIGHT)
-                return QT_TR_NOOP("Edge weight");
+                return QT_TR_NOOP("Edge weight ");
             return QT_TR_NOOP("");
         } else {
             if (coordSystem == regina::HS_STANDARD)
@@ -169,7 +169,7 @@ namespace Coordinates {
             if (coordSystem == regina::HS_PRISM)
                 return QT_TR_NOOP("prism ");
             if (coordSystem == regina::HS_EDGE_WEIGHT)
-                return QT_TR_NOOP("edge weight");
+                return QT_TR_NOOP("edge weight ");
             return QT_TR_NOOP("");
         }
     }

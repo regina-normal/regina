@@ -256,9 +256,8 @@ Version 5.1  [ (under development) ]
           highlighting for script packets, and offers a range of parameterised
           3-manifold constructions similar to those in the desktop interface.
         - Turaev-Viro calculations now show progress, and can be cancelled.
-        - Normal surface packets created with the interface are now given a
-          default name that includes the coordinate system used by said normal
-          surfaces.
+        - The default label for new normal surface packets now includes the
+          coordinate system that was used to enumerate them.
         - Several other minor enhancements and updates.
     UTILITIES:
         - All MPI-enabled utilities are now deprecated. These will
