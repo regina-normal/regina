@@ -2,7 +2,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     boundarycomponent.h
     component.h
-    example.h
     face.h
     facetpairing.h
     isomorphism.h

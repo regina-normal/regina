@@ -65,6 +65,11 @@ template <> class Component<2>;
 template <> class Component<3>;
 template <> class Component<4>;
 
+template <int> class Example;
+template <> class Example<2>;
+template <> class Example<3>;
+template <> class Example<4>;
+
 template <int, int> class Face;
 template <int dim> class Face<dim, dim>;
 template <> class Face<2, 2>;
