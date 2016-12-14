@@ -52,9 +52,6 @@ namespace regina {
  * Return a human-readable adjective for the given coordinate system.
  * Unlike the human-readable name, this is a very short (often one-word)
  * adjective that is designed to be slotted into a longer sentence.
- *
- * The returned adjective string includes a trailing space, unless the
- * coordinate system is unknown in which case an empty string is returned.
  */
 + (NSString*)adjective:(regina::NormalCoords)coordSystem capitalise:(BOOL)capitalise;
 
@@ -109,9 +106,6 @@ namespace regina {
  * Return a human-readable adjective for the given coordinate system.
  * Unlike the human-readable name, this is a very short (often one-word)
  * adjective that is designed to be slotted into a longer sentence.
- *
- * The returned adjective string includes a trailing space, unless the
- * coordinate system is unknown in which case an empty string is returned.
  */
 + (NSString*)adjective:(regina::HyperCoords)coordSystem capitalise:(BOOL)capitalise;
 

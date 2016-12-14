@@ -62,9 +62,6 @@ namespace Coordinates {
      * Return a human-readable adjective for the given coordinate system.
      * Unlike the human-readable name, this is a very short (often one-word)
      * adjective that is designed to be slotted into a longer sentence.
-     *
-     * The returned adjective string includes a trailing space, unless the
-     * coordinate system is unknown in which case an empty string is returned.
      */
     const char* adjective(regina::NormalCoords coordSystem,
         bool capitalise = true);
@@ -79,9 +76,6 @@ namespace Coordinates {
      * Return a human-readable adjective for the given coordinate system.
      * Unlike the human-readable name, this is a very short (often one-word)
      * adjective that is designed to be slotted into a longer sentence.
-     *
-     * The returned adjective string includes a trailing space, unless the
-     * coordinate system is unknown in which case an empty string is returned.
      */
     const char* adjective(regina::HyperCoords coordSystem,
         bool capitalise = true);
