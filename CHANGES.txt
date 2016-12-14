@@ -219,6 +219,10 @@ Version 5.1  [ (under development) ]
         - Removed Regina's ancient "python libraries" facility, since Python
           itself offers better and more standardised ways of doing this.  The
           file ~/.regina-libs is now ignored, and you can happily delete it.
+    USER INTERFACE:
+        - Moved isomorphism signatures and dehydration strings from the
+          components tab to the recognition tab. These, along with manifold
+          name and census location, are selectable with the mouse.
 
 Version 5.0  [ 26 September, 2016 ]
 
