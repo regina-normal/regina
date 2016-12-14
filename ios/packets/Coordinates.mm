@@ -89,6 +89,51 @@ using regina::Triangle;
     }
 }
 
++ (NSString*)adjective:(regina::NormalCoords)coordSystem capitalise:(BOOL)capitalise
+{
+    if (capitalise) {
+        if (coordSystem == regina::NS_STANDARD)
+            return @"Standard ";
+        if (coordSystem == regina::NS_AN_STANDARD)
+            return @"Standard almost normal ";
+        if (coordSystem == regina::NS_AN_LEGACY)
+            return @"Legacy almost normal ";
+        if (coordSystem == regina::NS_QUAD)
+            return @"Quad ";
+        if (coordSystem == regina::NS_AN_QUAD_OCT)
+            return @"Quad-oct ";
+        if (coordSystem == regina::NS_EDGE_WEIGHT)
+            return @"Edge weight ";
+        if (coordSystem == regina::NS_TRIANGLE_ARCS)
+            return @"Triangle arc ";
+        if (coordSystem == regina::NS_ORIENTED)
+            return @"Transversely oriented ";
+        if (coordSystem == regina::NS_ORIENTED_QUAD)
+            return @"Transversely oriented quad ";
+        return @"";
+    } else {
+        if (coordSystem == regina::NS_STANDARD)
+            return @"standard ";
+        if (coordSystem == regina::NS_AN_STANDARD)
+            return @"standard almost normal ";
+        if (coordSystem == regina::NS_AN_LEGACY)
+            return @"legacy almost normal ";
+        if (coordSystem == regina::NS_QUAD)
+            return @"quad ";
+        if (coordSystem == regina::NS_AN_QUAD_OCT)
+            return @"quad-oct ";
+        if (coordSystem == regina::NS_EDGE_WEIGHT)
+            return @"edge weight ";
+        if (coordSystem == regina::NS_TRIANGLE_ARCS)
+            return @"triangle arc ";
+        if (coordSystem == regina::NS_ORIENTED)
+            return @"transversely oriented ";
+        if (coordSystem == regina::NS_ORIENTED_QUAD)
+            return @"transversely oriented quad ";
+        return @"";
+    }
+}
+
 + (BOOL)generatesAlmostNormal:(regina::NormalCoords)coordSystem
 {
     return (coordSystem == regina::NS_AN_STANDARD ||
@@ -281,6 +326,26 @@ using regina::Triangle;
         if (coordSystem == regina::HS_EDGE_WEIGHT)
             return @"edge weight";
         return @"unknown";
+    }
+}
+
++ (NSString*)adjective:(regina::HyperCoords)coordSystem capitalise:(BOOL)capitalise
+    if (capitalise) {
+        if (coordSystem == regina::HS_STANDARD)
+            return @"Standard ";
+        if (coordSystem == regina::HS_PRISM)
+            return @"Prism ";
+        if (coordSystem == regina::HS_EDGE_WEIGHT)
+            return @"Edge weight ";
+        return @"";
+    } else {
+        if (coordSystem == regina::HS_STANDARD)
+            return @"standard ";
+        if (coordSystem == regina::HS_PRISM)
+            return @"prism ";
+        if (coordSystem == regina::HS_EDGE_WEIGHT)
+            return @"edge weight ";
+        return @"";
     }
 }
 

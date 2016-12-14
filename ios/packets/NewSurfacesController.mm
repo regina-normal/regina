@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#import "Coordinates.h"
 #import "NewSurfacesController.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
@@ -198,7 +199,14 @@ static NSArray* embText;
                                                       otherButtonTitles:nil];
                 [alert show];
             } else {
-                ans->setLabel("Normal surfaces");
+                switch (_whichControl.selectedSegmentIndex) {
+                    case 0: ans->setLabel([NSString stringWithFormat:@"Vertex %@surfaces",
+                                           [Coordinates adjective:coords capitalise:NO]].UTF8String); break;
+                    case 1: ans->setLabel([NSString stringWithFormat:@"Fundamental %@surfaces",
+                                           [Coordinates adjective:coords capitalise:NO]].UTF8String); break;
+                    default: ans->setLabel("Normal surfaces"); break;
+                }
+
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];
