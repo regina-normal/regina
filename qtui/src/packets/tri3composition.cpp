@@ -121,6 +121,7 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     isoSig = new QLabel(ui);
     isoSig->setTextInteractionFlags(
         Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+    isoSig->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
     isoSig->setWordWrap(false);
     isoSig->setWhatsThis(msg);
     line->addWidget(isoSig, 1);
