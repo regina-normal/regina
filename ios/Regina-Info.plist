@@ -69,7 +69,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>5.1.0.0</string>
+	<string>5.1.0.1</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>dbapi-1</string>
