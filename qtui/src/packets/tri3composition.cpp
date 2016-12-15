@@ -226,8 +226,15 @@ void Tri3CompositionUI::refresh() {
     details->clear();
     lastComponent = 0;
 
-    // Add the isomorphism signature.
+    // Show the isomorphism signature.
     isoSig->setText(tri->isoSig().c_str());
+    /*
+    // If the signature is very long then add an ellipsis to the end.
+    // Update: don't do this, since we would like clipboard copy to
+    // capture the entire signature, not something with ... at the end.
+    isoSig->setText(QFontMetrics(isoSig->font()).elidedText(
+        tri->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
+    */
 
     // Try to identify the triangulation.
     std::unique_ptr<regina::StandardTriangulation> foundTri(
