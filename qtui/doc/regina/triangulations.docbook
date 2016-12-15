@@ -351,9 +351,8 @@
     <para>
      Only some 3-manifold triangulations have dehydration strings.
      The dehydration string (if it exists) for an existing triangulation
-     can be viewed
-     through the <link linkend="tri-composition-dehydration">triangulation
-     composition</link> tab.
+     can be accessed through <link linkend="python">&python; scripting</link>
+     by calling <literal>Triangulation3.dehydrate()</literal>.
     </para>
    </sect3>
 
@@ -1802,8 +1801,8 @@
    </sect3>
 
    <sect3 id="tri-composition-composition">
-    <title>Combinatorial Recognition, Building Blocks,
-     Isomorphism Signatures and Dehydrations</title>
+    <title>Isomorphism Signatures, Combinatorial Recognition and
+     Building Blocks</title>
     <para>
      In the lower portion of the composition tab is a large box
      containing details on the combinatorial composition of the triangulation.
@@ -1895,43 +1894,6 @@
       lower-case matters).
       To copy the isomorphism signature to the clipboard, simply select
       the line in the box and choose
-      <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
-     </para>
-    </sect4>
-    <sect4 id="tri-composition-dehydration">
-     <title>Dehydration</title>
-     <para>
-      Like isomorphism signatures, a <emphasis>dehydration string</emphasis>
-      is a short sequence of letters from which you can reconstruct
-      your triangulation.  Only some triangulations have dehydration
-      strings (they must be connected with no boundary triangles and
-      &le;&nbsp;25 tetrahedra), and they are not unique up to isomorphism
-      (so relabelling tetrahedra might change the dehydration string).
-      If it exists, the dehydration string will be reported here.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="tri-composition-dehydration.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-     <para>
-      Dehydration strings first appeared in early censuses of hyperbolic
-      3-manifolds.  See <xref linkend="bib-cuspedcensus"/> for details.
-     </para>
-     <para>
-      To convert a dehydration string back into a triangulation,
-      you can either <link linkend="tri-new-dehydration">create a new
-      triangulation</link> from its dehydration, or
-      <link linkend="import-dehydrationlist">import a list of
-      dehydration strings</link>.  Be aware that the resulting triangulation
-      might not use the same tetrahedron and vertex labels as the
-      original.
-     </para>
-     <para>
-      As with isomorphism signatures, you can copy a dehydration string
-      to the clipboard by selecting the line in the box and choosing
       <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
      </para>
     </sect4>

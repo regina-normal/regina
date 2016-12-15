@@ -459,7 +459,7 @@
    a list of dehydration strings</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">rehydrating from
    a dehydration string</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-dehydration">viewing
+  <secondaryie><link linkend="tri-new-dehydration">viewing
    the dehydration string for a triangulation</link></secondaryie>
  </indexentry>
 
