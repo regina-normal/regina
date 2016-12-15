@@ -1497,6 +1497,12 @@
       </imageobject>
      </inlinemediaobject>
     </para>
+    <caution><para>
+     The time required to calculate the invariant grows exponentially with
+     <replaceable>r</replaceable>, and so it is highly recommended that you
+     start with small values of <replaceable>r</replaceable> and work
+     upwards from there.
+    </para></caution>
     <para>
      &regina; will compute the corresponding invariant(s) as requested,
      and display them in the table below as elements of the corresponding
@@ -1511,16 +1517,18 @@
       </imageobject>
      </inlinemediaobject>
     </para>
-    <caution><para>
-     The time required to calculate the invariant grows exponentially with
-     <replaceable>r</replaceable>, and so it is highly recommended that you
-     start with small values of <replaceable>r</replaceable> and work
-     upwards from there.
-    </para><para>
+    <para>
      &regina; will show the (estimated) percentage progress of each calculation
-     as it runs, and will offer a <guibutton>Cancel</guibutton> that
+     as it runs, and will offer a <guibutton>Cancel</guibutton> button that
      you can press if a calculation appears to be running too slowly.
-    </para></caution>
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-tv-progress.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
    </sect3>
    <sect3 id="tri-algebra-cellular">
     <title>Cellular Information (3-D)</title>
