@@ -50,4 +50,4 @@ if (FALSE AND ${REGINA_INSTALL_DEV})
     theme.h
     themedata_p.h
     DESTINATION ${INCLUDEDIR}/syntax COMPONENT Development)
-endif (${REGINA_INSTALL_DEV})
+endif (FALSE AND ${REGINA_INSTALL_DEV})
