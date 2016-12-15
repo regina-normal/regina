@@ -258,6 +258,9 @@ Version 5.1  [ (under development) ]
         - Turaev-Viro calculations now show progress, and can be cancelled.
         - The default label for new normal surface packets now includes the
           coordinate system that was used to enumerate them.
+        - In the triangulation composition tab on the desktop, isomorphism
+          signatures are now selectable, and dehydration strings have been
+          removed.  You can still access dehydration strings through python.
         - Several other minor enhancements and updates.
     UTILITIES:
         - All MPI-enabled utilities are now deprecated. These will

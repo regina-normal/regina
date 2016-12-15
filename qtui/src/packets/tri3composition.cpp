@@ -82,11 +82,78 @@ using regina::Triangulation;
 
 Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        tri(packet), comparingTri(0), components(0), lastComponent(0) {
+        tri(packet), comparingTri(0), lastComponent(0) {
     // Set up the UI.
 
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
+
+    // Add the triangulation name and isomorphism signature.
+
+    QBoxLayout* line = new QHBoxLayout();
+    QString msg = tr("Regina is able to recognise many "
+        "common constructions of triangulations, including several "
+        "infinite parameterised families.  If the triangulation "
+        "is isomorphic to one of these constructions, then the name "
+        "of the triangulation will be reported here.");
+    QLabel* label = new QLabel(tr("<qt><b>Triangulation:<b></qt>"), ui);
+    label->setWhatsThis(msg);
+    line->addWidget(label);
+    standardTri = new QLabel(ui);
+    standardTri->setTextInteractionFlags(
+        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+    standardTri->setWordWrap(true);
+    standardTri->setWhatsThis(msg);
+    line->addWidget(standardTri, 1);
+    layout->addLayout(line);
+
+    line = new QHBoxLayout();
+    msg = tr("<qt>Displays the isomorphism signature of the triangulation.<p>"
+        "This is a piece of text that identifies the triangulation uniquely "
+        "up to combinatorial isomorphism.  Isomorphism signatures "
+        "are described in detail in "
+        "<i>Simplification paths in the Pachner graphs "
+        "of closed orientable 3-manifold triangulations</i>, Burton, "
+        "preprint, <tt>arXiv:1110.6080</tt>, October 2011.</qt>");
+    label = new QLabel(tr("<qt><b>Isomorphism signature:</b></qt>"), ui);
+    label->setWhatsThis(msg);
+    line->addWidget(label);
+    isoSig = new QLabel(ui);
+    isoSig->setTextInteractionFlags(
+        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+    isoSig->setWordWrap(false);
+    isoSig->setWhatsThis(msg);
+    line->addWidget(isoSig, 1);
+    layout->addLayout(line);
+
+    // Set up the composition viewer.
+    msg = tr("<qt>Displays the details "
+        "of any standard combinatorial structures found within the "
+        "triangulation.<p>"
+        "You can right-click on any line of text to copy it to the "
+        "clipboard.<p>"
+        "See the users' handbook for further details on the information "
+        "listed here.</qt>");
+
+    label = new QLabel(tr("<qt><b>Components:</b></qt>"), ui);
+    label->setWhatsThis(msg);
+    layout->addWidget(label);
+
+    details = new QTreeWidget(ui);
+    details->setHeaderHidden(true);
+    details->setAlternatingRowColors(true);
+    details->setSelectionMode(QAbstractItemView::SingleSelection);
+    details->setWhatsThis(msg);
+    layout->addWidget(details, 1);
+
+    editIface = new PacketEditTreeWidgetSingleLine(details);
+
+    /*
+    // Add a central divider.
+    QFrame* divider = new QFrame(ui);
+    divider->setFrameStyle(QFrame::HLine | QFrame::Sunken);
+    layout->addWidget(divider);
+    */
 
     // Set up the isomorphism tester.
     QBoxLayout* wideIsoArea = new QHBoxLayout();
@@ -95,7 +162,7 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     QBoxLayout* leftIsoArea = new QVBoxLayout();
     wideIsoArea->addLayout(leftIsoArea, 1);
 
-    QString msg = tr("<qt>Compare this with another triangulation to "
+    msg = tr("<qt>Compare this with another triangulation to "
         "see whether the triangulations are isomorphic, or whether one is "
         "isomorphic to a subcomplex of the other.<p>"
         "Select the other triangulation in the drop-down box.  The "
@@ -104,7 +171,8 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
         "If a relationship is found, the specific isomorphism can be "
         "examined through the <i>Details</i> button.");
 
-    QLabel* label = new QLabel(tr("Isomorphism / subcomplex test:"), ui);
+    label = new QLabel(
+        tr("<qt><b>Isomorphism / subcomplex test:</b></qt>"), ui);
     label->setWhatsThis(msg);
     leftIsoArea->addWidget(label);
 
@@ -137,37 +205,6 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
     wideIsoArea->addWidget(isoView);
 
-    // Add a central divider.
-    QFrame* divider = new QFrame(ui);
-    divider->setFrameStyle(QFrame::HLine | QFrame::Sunken);
-    layout->addWidget(divider);
-
-    // Set up the composition viewer.
-    msg = tr("<qt>Displays (i) the precise name of the triangulation "
-        "and/or underlying 3-manifold if these can be recognised "
-        "immediately, (ii) the isomorphism signature from which the "
-        "triangulation can be reconstructed, "
-        "(iii) the Callahan-Hildebrand-Weeks dehydration "
-        "string if the triangulation supports it, and (iv) the details "
-        "of any standard combinatorial structures found within the "
-        "triangulation.<p>"
-        "You can right-click on any line of text to copy it to the "
-        "clipboard.<p>"
-        "See the users' handbook for further details on the information "
-        "listed here.</qt>");
-
-    label = new QLabel(tr("Triangulation composition:"), ui);
-    label->setWhatsThis(msg);
-    layout->addWidget(label);
-
-    details = new QTreeWidget(ui);
-    details->setHeaderHidden(true);
-    details->setAlternatingRowColors(true);
-    details->setSelectionMode(QAbstractItemView::SingleSelection);
-    details->setWhatsThis(msg);
-    layout->addWidget(details, 1);
-
-    editIface = new PacketEditTreeWidgetSingleLine(details);
 }
 
 Tri3CompositionUI::~Tri3CompositionUI() {
@@ -186,31 +223,23 @@ void Tri3CompositionUI::refresh() {
     updateIsoPanel();
 
     details->clear();
-    components = lastComponent = 0;
-
-    // Try to identify the 3-manifold.
-    std::unique_ptr<regina::StandardTriangulation> standardTri(
-        regina::StandardTriangulation::isStandardTriangulation(tri));
-    if (standardTri.get()) {
-        addTopLevelSection(
-            tr("Triangulation: ") + standardTri->name().c_str());
-
-        std::unique_ptr<regina::Manifold> manifold(standardTri->manifold());
-        if (manifold.get())
-            addTopLevelSection(
-                tr("3-manifold: ") + manifold->name().c_str());
-        else
-            addTopLevelSection(tr("3-manifold not recognised"));
-    } else
-        addTopLevelSection(tr("Triangulation not recognised"));
+    lastComponent = 0;
 
     // Add the isomorphism signature.
-    addTopLevelSection(tr("Isomorphism signature: ") + tri->isoSig().c_str());
+    isoSig->setText(tri->isoSig().c_str());
 
-    // Offer a dehydration string if we have one.
-    std::string dehydration = tri->dehydrate();
-    if (! dehydration.empty())
-        addTopLevelSection(tr("Dehydration: ") + dehydration.c_str());
+    // Try to identify the triangulation.
+    std::unique_ptr<regina::StandardTriangulation> foundTri(
+        regina::StandardTriangulation::isStandardTriangulation(tri));
+    if (foundTri.get()) {
+        standardTri->setText(foundTri->name().c_str());
+        standardTri->setStyleSheet(
+            "QLabel { color : black ; }");
+    } else {
+        standardTri->setText(tr("Not recognised"));
+        standardTri->setStyleSheet(
+            "QLabel { color : darkgrey ; }");
+    }
 
     // Look for complete closed triangulations.
     findAugTriSolidTori();
@@ -351,28 +380,9 @@ void Tri3CompositionUI::viewIsomorphism() {
         title, msg + "<p>" + details.join("<br>") + "<qt>");
 }
 
-QTreeWidgetItem* Tri3CompositionUI::addTopLevelSection(const QString& text) {
-    QTreeWidgetItem* newItem = new QTreeWidgetItem(details);
-    newItem->setText(0,text);
-    return newItem;
-    //if (details->lastItem())
-    //    return new QTreeWidgetItem(details, details->lastItem(), text);
-    //else
-    //    return new QTreeWidgetItem(details, text);
-}
-
 QTreeWidgetItem* Tri3CompositionUI::addComponentSection(const QString& text) {
-    if (! components)
-        components = addTopLevelSection(tr("Components"));
-
-    //if (lastComponent)
-    //    lastComponent = new QTreeWidgetItem(components, lastComponent, text);
-    //else
-    //    lastComponent = new QTreeWidgetItem(components, text);
-    
-    lastComponent = new QTreeWidgetItem(components);
+    lastComponent = new QTreeWidgetItem(details);
     lastComponent->setText(0,text);
-
     return lastComponent;
 }
 
