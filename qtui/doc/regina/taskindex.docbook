@@ -284,7 +284,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-composition-composition">combinatorial
+  <primaryie><link linkend="tri-composition">combinatorial
    composition</link></primaryie>
  </indexentry>
 
@@ -1599,7 +1599,7 @@
    converting real to ideal</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">boundary,
    testing for</link></secondaryie>
-  <secondaryie><link linkend="tri-composition-composition">combinatorial
+  <secondaryie><link linkend="tri-composition">combinatorial
    composition</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-component">component
    decomposition</link></secondaryie>
