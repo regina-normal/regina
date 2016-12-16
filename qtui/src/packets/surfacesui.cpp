@@ -35,7 +35,7 @@
 #include "triangulation/dim3.h"
 
 // UI includes:
-#include "coordinates.h"
+#include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
 #include "surfacesui.h"
 #include "surfacescompatui.h"
 #include "surfacescoordinateui.h"

@@ -37,7 +37,7 @@
 
 // UI includes:
 #include "coordinatechooser.h"
-#include "coordinates.h"
+#include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
 #include "hypercreator.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"

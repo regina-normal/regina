@@ -41,7 +41,7 @@
 #include "triangulation/dim4.h" // To avoid generic Triangulation<4>.
 
 #include "../packettabui.h"
-#include "coordinates.h"
+#include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
 
 #include <QAbstractItemModel>
 #include <QAction>

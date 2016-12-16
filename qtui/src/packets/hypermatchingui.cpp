@@ -35,7 +35,7 @@
 #include "hypersurface/normalhypersurfaces.h"
 
 // UI includes:
-#include "coordinates.h"
+#include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
 #include "hypermatchingui.h"
 
 #include <QHeaderView>

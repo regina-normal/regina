@@ -35,7 +35,7 @@
 #include "surfaces/normalsurfaces.h"
 
 // UI includes:
-#include "coordinates.h"
+#include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
 #include "surfacesmatchingui.h"
 
 #include <QHeaderView>
