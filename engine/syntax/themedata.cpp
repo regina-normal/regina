@@ -89,22 +89,22 @@ static void readThemeData(json_t* obj, TextStyleData& dest)
 
     json_t* val = json_object_get(obj, "bold");
     if (json_is_boolean(val)) {
-        dest.bold = json_boolean_value(val);
+        dest.bold = json_is_true(val);
         dest.hasBold = true;
     }
     val = json_object_get(obj, "italic");
     if (json_is_boolean(val)) {
-        dest.italic = json_boolean_value(val);
+        dest.italic = json_is_true(val);
         dest.hasItalic = true;
     }
     val = json_object_get(obj, "underline");
     if (json_is_boolean(val)) {
-        dest.underline = json_boolean_value(val);
+        dest.underline = json_is_true(val);
         dest.hasUnderline = true;
     }
     val = json_object_get(obj, "strike-through");
     if (json_is_boolean(val)) {
-        dest.strikeThrough = json_boolean_value(val);
+        dest.strikeThrough = json_is_true(val);
         dest.hasStrikeThrough = true;
     }
 }
@@ -127,7 +127,7 @@ bool ThemeData::load(const std::string& filePath)
     m_revision = json_integer_value(json_object_get(metadata, "revision"));
     readString(json_object_get(metadata, "author"), m_author);
     readString(json_object_get(metadata, "license"), m_license);
-    m_readOnly = json_boolean_value(json_object_get(metadata, "read-only"));
+    m_readOnly = json_is_true(json_object_get(metadata, "read-only"));
 
     // read text styles
     json_t* textStyles = json_object_get(obj, "text-styles");
