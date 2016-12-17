@@ -42,9 +42,14 @@
 #include "helpers/equality.h"
 #include "helpers/output.h"
 
-#if BOOST_VERSION >= 106000 && BOOST_VERSION < 106100
+#if (! defined(REGINA_BOOST_DO_NOT_FIX_CONVERTERS)) && BOOST_VERSION >= 106000 && BOOST_VERSION < 106100
     // Boost.Python 1.60 did not automatically register to_python converters
-    // for SafeHeldType.
+    // for SafeHeldType.  Work around this here.
+    //
+    // If you are building against a patched version of Boost 1.60 that
+    // does not suffer from this fault, then you should pass
+    // -DREGINA_BOOST_DO_NOT_FIX_CONVERTERS to regina's cmake, since
+    // otherwise this workaround will produce spurious warnings at runtime.
     #define FIX_REGINA_BOOST_CONVERTERS(T) \
         register_ptr_to_python<regina::python::SafeHeldType<T>>()
 #else
