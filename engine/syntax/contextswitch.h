@@ -52,6 +52,7 @@
 #define __SYNTAX_CONTEXTSWITCH_H
 #endif
 
+#include "regina-core.h"
 #include <string>
 #include <boost/noncopyable.hpp>
 
@@ -61,7 +62,7 @@ namespace syntax {
 class Context;
 class Definition;
 
-class ContextSwitch : public boost::noncopyable
+class REGINA_API ContextSwitch : public boost::noncopyable
 {
 public:
     ContextSwitch();

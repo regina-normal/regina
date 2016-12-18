@@ -64,6 +64,8 @@ namespace regina {
  * This 4-dimensional specialisation contains some extra functionality.
  * In particular, each 4-dimensional component also stores details on
  * lower-dimensional faces (i.e., vertices, edges, triangles and tetrahedra).
+ *
+ * \headerfile triangulation/dim4.h
  */
 template <>
 class REGINA_API Component<4> : public detail::ComponentBase<4>,
@@ -183,6 +185,8 @@ REGINA_DEPRECATED typedef Component<4> Dim4Component;
 inline Component<4>::Component() : detail::ComponentBase<4>(), ideal_(false) {
 }
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 template <>
 inline size_t Component<4>::countFaces<3>() const {
     return tetrahedra_.size();
@@ -202,8 +206,6 @@ template <>
 inline size_t Component<4>::countFaces<0>() const {
     return vertices_.size();
 }
-
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
 
 template <>
 inline const std::vector<Tetrahedron<4>*>& Component<4>::faces<3>() const {

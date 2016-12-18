@@ -52,6 +52,7 @@
 #define __SYNTAX_DEFINITION_H
 #endif
 
+#include "regina-core.h"
 #include <memory>
 #include <string>
 #include <vector>
@@ -82,7 +83,7 @@ class DefinitionData;
  *
  * @see Repository
  */
-class Definition
+class REGINA_API Definition
 {
 public:
     /**

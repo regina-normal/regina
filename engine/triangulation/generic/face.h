@@ -31,7 +31,10 @@
  **************************************************************************/
 
 /*! \file triangulation/generic/face.h
- *  \brief Deals with lower-dimensional faces of triangulations.
+ *  \brief Internal header for faces of triangulations of arbitrary dimension.
+ *
+ *  This file is automatically included from triangulation/generic.h;
+ *  there is no need for end users to include this header explicitly.
  */
 
 #ifndef __FACE_H
@@ -78,6 +81,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim, int subdim>
 class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
@@ -160,6 +165,8 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class represents.
  * This must be between 0 and <i>dim</i> inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim, int subdim>
 class Face : public detail::FaceBase<dim, subdim> {

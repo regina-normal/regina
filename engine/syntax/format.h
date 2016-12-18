@@ -52,6 +52,7 @@
 #define __SYNTAX_FORMAT_H
 #endif
 
+#include "regina-core.h"
 #include <memory>
 
 namespace regina {
@@ -67,7 +68,7 @@ class Theme;
  *
  *  @see Theme
  */
-class Format
+class REGINA_API Format
 {
 public:
     /** Creates an empty/invalid format. */

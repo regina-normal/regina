@@ -6,7 +6,26 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 5.1  [ (under development) ]
+Version 5.1  [ 19 December, 2016 ]
+
+    Features:
+        - This release is a major overhaul for Python and C++ users.  There
+          are also enhancements to the mathematics and the user interface,
+          but these are relatively minor (and are not listed here).
+    Python and C++:
+        - All of the code that was deprecated in version 5.0 has now been
+          removed entirely.  See http://regina-normal.github.io/regina4to5.html
+          for instructions on how to update your scripts.
+        - Many class and header names have changed, but most of these changes
+          follow a standard pattern (classes of the form NFoo become Foo, and
+          headers of the form nfoo.h become foo.h).  The old class and header
+          names have been kept, and will not be removed until Regina 6.0.
+          See http://regina-normal.github.io/regina5to6.html for details.
+        - More of Regina's triangulation code is now generic, which means
+          you can do more with higher-dimensional triangulations (e.g.,
+          triangulate boundary components, or compute homology).
+        - The old "python libraries" facility has been removed, since Python
+          itself offers better and more standardised ways of importing code.
 
 Version 5.0  [ 26 September, 2016 ]
 

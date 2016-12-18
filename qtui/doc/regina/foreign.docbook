@@ -248,9 +248,11 @@
     triangulations in a space-efficient, plain-text manner.
    </para>
    <para>
-    Dehydration strings are
-    <link linkend="tri-composition-dehydration">less powerful</link>
-    than isomorphism signatures.  They feature in hyperbolic census papers
+    Dehydration strings are less powerful than isomorphism signatures:
+    only some triangulations have them (the triangulation must be connected
+    with no boundary triangles and &le;&nbsp;25 tetrahedra), and they are
+    not unique up to isomorphism (so relabelling tetrahedra might change the
+    dehydration string).  They feature in hyperbolic census papers
     such as <xref linkend="bib-cuspedcensus"/>,
     in which the dehydration format is explicitly described.
    </para>

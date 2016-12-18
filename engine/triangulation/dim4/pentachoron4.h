@@ -69,6 +69,8 @@ namespace regina {
  *
  * See the documentation for the partial specialisation Face<dim, dim> for an
  * overview of how a top-dimensional simplex class works.
+ *
+ * \headerfile triangulation/dim4.h
  */
 template <>
 class REGINA_API Face<4, 4> : public detail::SimplexBase<4> {

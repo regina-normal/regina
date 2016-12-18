@@ -49,6 +49,13 @@ namespace regina {
 + (NSString*)name:(regina::NormalCoords)coordSystem capitalise:(BOOL)capitalise;
 
 /**
+ * Return a human-readable adjective for the given coordinate system.
+ * Unlike the human-readable name, this is a very short (often one-word)
+ * adjective that is designed to be slotted into a longer sentence.
+ */
++ (NSString*)adjective:(regina::NormalCoords)coordSystem capitalise:(BOOL)capitalise;
+
+/**
  * Does the given coordinate system generate almost normal
  * surfaces when used with NormalSurfaces::enumerate()?
  *
@@ -94,6 +101,13 @@ namespace regina {
  * Return a human-readable name for the given coordinate system.
  */
 + (NSString*)name:(regina::HyperCoords)coordSystem capitalise:(BOOL)capitalise;
+
+/**
+ * Return a human-readable adjective for the given coordinate system.
+ * Unlike the human-readable name, this is a very short (often one-word)
+ * adjective that is designed to be slotted into a longer sentence.
+ */
++ (NSString*)adjective:(regina::HyperCoords)coordSystem capitalise:(BOOL)capitalise;
 
 /**
  * Return the number of coordinate columns in the given coordinate

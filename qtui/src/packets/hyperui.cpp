@@ -35,7 +35,7 @@
 #include "triangulation/dim4.h"
 
 // UI includes:
-#include "coordinates.h"
+#include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
 #include "tri4ui.h"
 #include "hyperui.h"
 #include "hypercompatui.h"

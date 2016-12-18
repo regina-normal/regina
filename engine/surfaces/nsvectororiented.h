@@ -87,7 +87,7 @@ struct NormalInfo<NS_ORIENTED> {
  */
 class REGINA_API NSVectorOriented : public NormalSurfaceVector {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOriented, NS_ORIENTED,
-        NormalSurfaceVector)
+        NormalSurfaceVector);
 
     public:
         /**

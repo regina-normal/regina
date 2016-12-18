@@ -46,6 +46,7 @@
 #define __SYNTAX_MATCHER_H
 #endif
 
+#include "regina-core.h"
 #include <cstddef>
 #include <boost/noncopyable.hpp>
 
@@ -73,12 +74,12 @@ class RegExpr;
 class StringDetect;
 class WordDetect;
 
-class RegEx : public boost::noncopyable {
+class REGINA_API RegEx : public boost::noncopyable {
     public:
         virtual ~RegEx() {}
 };
 
-class MatchResult
+class REGINA_API MatchResult
 {
     public:
         MatchResult(int offset); // implicit
@@ -92,7 +93,7 @@ class MatchResult
         int m_skipOffset;
 };
 
-class Matcher : public boost::noncopyable {
+class REGINA_API Matcher : public boost::noncopyable {
     public:
         virtual bool textEmpty() const = 0;
         virtual size_t textSize() const = 0;

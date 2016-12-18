@@ -52,6 +52,7 @@
 #define __SYNTAX_THEME_H
 #endif
 
+#include "regina-core.h"
 #include <memory>
 #include <string>
 
@@ -101,7 +102,7 @@ class RepositoryPrivate;
  *
  * @see Format
  */
-class Theme
+class REGINA_API Theme
 {
 public:
     /**

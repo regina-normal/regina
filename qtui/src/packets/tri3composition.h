@@ -89,8 +89,9 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         PacketChooser* isoTest;
         QLabel* isoResult;
         QPushButton* isoView;
+        QLabel* standardTri;
+        QLabel* isoSig;
         QTreeWidget* details;
-        QTreeWidgetItem* components;
         QTreeWidgetItem* lastComponent;
         PacketEditIface* editIface;
 
@@ -130,7 +131,6 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         /**
          * Add new items to the list view.
          */
-        QTreeWidgetItem* addTopLevelSection(const QString& text);
         QTreeWidgetItem* addComponentSection(const QString& text);
 
         /**

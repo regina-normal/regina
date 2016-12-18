@@ -4,6 +4,7 @@ if (${REGINA_INSTALL_DEV})
     boundarycomponent.h
     canonical-impl.h
     component.h
+    example.h
     face.h
     facenumbering.h
     facetpairing.h

@@ -36,7 +36,11 @@
 #endif
 
 /*! \file triangulation/generic/boundarycomponent.h
- *  \brief Deals with boundary components of triangulations.
+ *  \brief Internal header for boundary components of triangulations of
+ *  arbitrary dimension.
+ *
+ *  This file is automatically included from triangulation/generic.h;
+ *  there is no need for end users to include this header explicitly.
  */
 
 #include "triangulation/detail/boundarycomponent.h"
@@ -119,6 +123,8 @@ namespace regina {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim>
 class BoundaryComponent : public detail::BoundaryComponentBase<dim> {

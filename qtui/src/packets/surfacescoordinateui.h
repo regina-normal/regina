@@ -41,7 +41,7 @@
 #include "surfaces/normalsurfaces.h"
 
 #include "../packettabui.h"
-#include "coordinates.h"
+#include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
 
 #include <QAbstractItemModel>
 #include <QAction>

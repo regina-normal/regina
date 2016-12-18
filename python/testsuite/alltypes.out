@@ -263,6 +263,9 @@ EdgeEmbedding9 : typedef ->  FaceEmbedding9_1
 Example10 : class
 Equality type : NEVER_INSTANTIATED
 
+Example11 : class
+Equality type : NEVER_INSTANTIATED
+
 Example12 : class
 Equality type : NEVER_INSTANTIATED
 

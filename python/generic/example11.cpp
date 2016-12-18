@@ -33,5 +33,5 @@
 #include "example-bindings.h"
 
 void addExample11() {
-    addExample<11>("Example5");
+    addExample<11>("Example11");
 }

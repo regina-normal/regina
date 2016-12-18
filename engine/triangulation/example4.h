@@ -40,7 +40,9 @@
 #define __EXAMPLE4_H
 #endif
 
-#include "triangulation/generic/example.h"
+#include "regina-core.h"
+#include "triangulation/forward.h"
+#include "triangulation/detail/example.h"
 
 namespace regina {
 

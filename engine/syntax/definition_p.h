@@ -52,6 +52,7 @@
 #define __SYNTAX_DEFINITION_P_H
 #endif
 
+#include "regina-core.h"
 #include "syntax/definitionref.h"
 #include "syntax/keywordlist.h"
 
@@ -68,7 +69,7 @@ namespace syntax {
 class Definition;
 class Repository;
 
-class DefinitionData : boost::noncopyable
+class REGINA_API DefinitionData : boost::noncopyable
 {
 public:
     DefinitionData();

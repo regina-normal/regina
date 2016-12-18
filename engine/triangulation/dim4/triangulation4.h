@@ -86,6 +86,8 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  *
  * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
  * 4-dimensional simplex, with five vertices.
+ *
+ * \headerfile triangulation/dim4.h
  */
 template <>
 class REGINA_API Triangulation<4> :

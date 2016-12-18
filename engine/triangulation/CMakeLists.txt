@@ -35,6 +35,7 @@ if (${REGINA_INSTALL_DEV})
     dim2.h
     dim3.h
     dim4.h
+    example.h
     example2.h
     example3.h
     example4.h

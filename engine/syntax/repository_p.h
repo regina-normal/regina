@@ -52,6 +52,7 @@
 #define __SYNTAX_REPOSITORY_P_H
 #endif
 
+#include "regina-core.h"
 #include <map>
 #include <boost/noncopyable.hpp>
 
@@ -62,7 +63,7 @@ class Definition;
 class Repository;
 class Theme;
 
-class RepositoryPrivate : public boost::noncopyable
+class REGINA_API RepositoryPrivate : public boost::noncopyable
 {
 public:
     RepositoryPrivate();

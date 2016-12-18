@@ -52,6 +52,7 @@
 #define __SYNTAX_CONTEXT_H
 #endif
 
+#include "regina-core.h"
 #include "syntax/rule.h"
 #include "syntax/contextswitch.h"
 #include "syntax/definition.h"
@@ -63,7 +64,7 @@
 namespace regina {
 namespace syntax {
 
-class Context : public boost::noncopyable
+class REGINA_API Context : public boost::noncopyable
 {
 public:
     Context();

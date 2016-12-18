@@ -52,6 +52,7 @@
 #define __SYNTAX_DEFINITIONREF_H
 #endif
 
+#include "regina-core.h"
 #include <memory>
 
 namespace regina {
@@ -69,7 +70,7 @@ class DefinitionPrivate;
  *
  * @internal
  */
-class DefinitionRef
+class REGINA_API DefinitionRef
 {
 public:
     DefinitionRef();

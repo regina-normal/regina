@@ -62,6 +62,8 @@ namespace regina {
  *
  * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
+ *
+ * \headerfile triangulation/dim3.h
  */
 template <>
 class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0> {

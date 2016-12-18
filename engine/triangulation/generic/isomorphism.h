@@ -31,7 +31,11 @@
  **************************************************************************/
 
 /*! \file triangulation/generic/isomorphism.h
- *  \brief Deals with combinatorial isomorphisms between triangulations.
+ *  \brief Internal header for combinatorial isomorphisms between
+ *  triangulations of arbitrary dimension.
+ *
+ *  This file is automatically included from triangulation/generic.h;
+ *  there is no need for end users to include this header explicitly.
  */
 
 #ifndef __ISOMORPHISM_H
@@ -93,6 +97,8 @@ namespace regina {
  *
  * \tparam dim The dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \headerfile triangulation/generic.h
  */
 template <int dim>
 class Isomorphism : public detail::IsomorphismBase<dim> {

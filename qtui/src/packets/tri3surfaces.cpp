@@ -284,6 +284,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     QBoxLayout* mfdArea = new QHBoxLayout();
     manifold = new QLabel();
     manifold->setAlignment(Qt::AlignCenter);
+    manifold->setTextInteractionFlags(
+        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     manifold->setWordWrap(true);
     mfdArea->addWidget(manifold, 1);
     msg = tr("<qt>Displays the name of the underlying 3-manifold if "
@@ -295,6 +297,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     QBoxLayout* censusArea = new QHBoxLayout();
     census = new QLabel();
     census->setAlignment(Qt::AlignCenter);
+    census->setTextInteractionFlags(
+        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     census->setWordWrap(true);
     censusArea->addWidget(census, 1);
     msg = tr("<qt>Indicates whether this triangulation appears in any of "

@@ -340,6 +340,12 @@ IF (Boost_FOUND)
     BOOST_IOSTREAMS_ZLIB_FOUND)
   SET (CMAKE_REQUIRED_INCLUDES ${OLD_INCLUDES})
   SET (CMAKE_REQUIRED_LIBRARIES ${OLD_LIBRARIES})
+
+  IF(NOT REGINA_BOOST_DO_NOT_FIX_CONVERTERS)
+    SET (REGINA_BOOST_DO_NOT_FIX_CONVERTERS OFF CACHE STRING
+      "Do not work around the pointer registration bug from Boost 1.60.  You should set this if you are compiling against a patched version of Boost 1.60."
+      FORCE)
+  ENDIF(NOT REGINA_BOOST_DO_NOT_FIX_CONVERTERS)
 ENDIF (Boost_FOUND)
 
 FIND_PACKAGE(PkgConfig)
