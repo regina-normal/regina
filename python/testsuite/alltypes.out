@@ -1295,7 +1295,6 @@ Equality type : BY_REFERENCE
 
 Layering : class
 Equality type : BY_REFERENCE
->>>>>>> master
 
 LensSpace : class
 Equality type : BY_VALUE
