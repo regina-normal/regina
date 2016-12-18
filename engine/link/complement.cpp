@@ -32,7 +32,7 @@
 
 #include "link/link.h"
 #include "packet/container.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 

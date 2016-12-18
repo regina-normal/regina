@@ -99,21 +99,21 @@ enum CrossingState {
     CROSSING_SPLICE_2 = 7
 };
 
-Laurent2<NInteger>* Link::homflyAZ() const {
+Laurent2<Integer>* Link::homflyAZ() const {
     // Throughout this code, delta = (alpha - alpha^-1) / z.
 
     size_t n = crossings_.size();
     if (n == 0) {
         if (components_.size() == 0)
-            return new Laurent2<NInteger>();
+            return new Laurent2<Integer>();
 
         // We have an unlink with no crossings.
         // The HOMFLY polynomial is delta^(#components - 1).
-        Laurent2<NInteger> delta(1, -1);
+        Laurent2<Integer> delta(1, -1);
         delta.set(-1, -1, -1);
 
         // The following constructor initialises ans to 1.
-        Laurent2<NInteger>* ans = new Laurent2<NInteger>(0, 0);
+        Laurent2<Integer>* ans = new Laurent2<Integer>(0, 0);
         for (size_t i = 1; i < components_.size(); ++i)
             (*ans) *= delta;
 
@@ -149,7 +149,7 @@ Laurent2<NInteger>* Link::homflyAZ() const {
     // Since we are assured at least one crossing at this point,
     // we have 0 <= i <= #components + #crossings - 1.
     size_t maxComp = 0;
-    Laurent2<NInteger>* coeff = new Laurent2<NInteger>[
+    Laurent2<Integer>* coeff = new Laurent2<Integer>[
         n + components_.size()];
 
     // Iterate through a tree of states:
@@ -162,7 +162,7 @@ Laurent2<NInteger>* Link::homflyAZ() const {
     bool* seen = new bool[2 * n]; // index = 2 * crossing_index + strand
     std::fill(seen, seen + 2 * n, false);
 
-    Laurent2<NInteger> term;
+    Laurent2<Integer> term;
     StrandRef s = StrandRef(crossings_.front(), 0);
     long pos = 0;
     bool backtrack;
@@ -359,12 +359,12 @@ Laurent2<NInteger>* Link::homflyAZ() const {
 
     // Piece together the final polynomial.
 
-    Laurent2<NInteger>* ans = new Laurent2<NInteger>;
+    Laurent2<Integer>* ans = new Laurent2<Integer>;
 
-    Laurent2<NInteger> delta(1, -1);
+    Laurent2<Integer> delta(1, -1);
     delta.set(-1, -1, -1);
 
-    Laurent2<NInteger> deltaPow(0, 0); // Initialises to delta^0 == 1.
+    Laurent2<Integer> deltaPow(0, 0); // Initialises to delta^0 == 1.
     for (size_t i = 0; i < unknots; ++i)
         deltaPow *= delta;
     for (size_t i = 0; i < maxComp; ++i) {
@@ -379,8 +379,8 @@ Laurent2<NInteger>* Link::homflyAZ() const {
     return ans;
 }
 
-Laurent2<NInteger>* Link::homflyLM() const {
-    Laurent2<NInteger>* ans = homflyAZ();
+Laurent2<Integer>* Link::homflyLM() const {
+    Laurent2<Integer>* ans = homflyAZ();
 
     // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
     // Note that i-j should always be 0 or 2 (mod 4), never odd.

@@ -31,34 +31,33 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "maths/laurent.h"
 #include "../helpers.h"
 
 using namespace boost::python;
 using regina::Laurent;
-using regina::NInteger;
 
 namespace {
-    const regina::NInteger& getItem(const Laurent<NInteger>& p, long exp) {
+    const regina::Integer& getItem(const Laurent<regina::Integer>& p, long exp) {
         return p[exp];
     }
-    void setItem(Laurent<NInteger>& p, long exp,
-            const regina::NInteger& value) {
+    void setItem(Laurent<regina::Integer>& p, long exp,
+            const regina::Integer& value) {
         p.set(exp, value);
     }
 
-    NInteger* seqFromList(boost::python::list l) {
+    regina::Integer* seqFromList(boost::python::list l) {
         long len = boost::python::len(l);
-        NInteger* coeffs = new NInteger[len];
+        regina::Integer* coeffs = new regina::Integer[len];
         for (long i = 0; i < len; ++i) {
             // Accept any type that we know how to convert to a rational.
-            extract<regina::NInteger&> x_rat(l[i]);
+            extract<regina::Integer&> x_rat(l[i]);
             if (x_rat.check()) {
                 coeffs[i] = x_rat();
                 continue;
             }
-            extract<regina::NLargeInteger&> x_large(l[i]);
+            extract<regina::LargeInteger&> x_large(l[i]);
             if (x_large.check()) {
                 coeffs[i] = x_large();
                 continue;
@@ -76,10 +75,10 @@ namespace {
         return coeffs;
     }
 
-    Laurent<NInteger>* create_seq(long minExp, boost::python::list l) {
-        NInteger* coeffs = seqFromList(l);
+    Laurent<regina::Integer>* create_seq(long minExp, boost::python::list l) {
+        regina::Integer* coeffs = seqFromList(l);
         if (coeffs) {
-            Laurent<NInteger>* ans = new Laurent<NInteger>(
+            Laurent<regina::Integer>* ans = new Laurent<regina::Integer>(
                 minExp, coeffs, coeffs + boost::python::len(l));
             delete[] coeffs;
             return ans;
@@ -87,49 +86,49 @@ namespace {
         return 0;
     }
 
-    void init_seq(Laurent<NInteger>& p, long minExp, boost::python::list l) {
-        NInteger* coeffs = seqFromList(l);
+    void init_seq(Laurent<regina::Integer>& p, long minExp, boost::python::list l) {
+        regina::Integer* coeffs = seqFromList(l);
         if (coeffs) {
             p.init(minExp, coeffs, coeffs + boost::python::len(l));
             delete[] coeffs;
         }
     }
 
-    void (Laurent<NInteger>::*init_void)() =
-        &Laurent<NInteger>::init;
-    void (Laurent<NInteger>::*init_degree)(long) =
-        &Laurent<NInteger>::init;
-    std::string (Laurent<NInteger>::*str_variable)(const char*) const =
-        &Laurent<NInteger>::str;
-    std::string (Laurent<NInteger>::*utf8_variable)(const char*) const =
-        &Laurent<NInteger>::utf8;
+    void (Laurent<regina::Integer>::*init_void)() =
+        &Laurent<regina::Integer>::init;
+    void (Laurent<regina::Integer>::*init_degree)(long) =
+        &Laurent<regina::Integer>::init;
+    std::string (Laurent<regina::Integer>::*str_variable)(const char*) const =
+        &Laurent<regina::Integer>::str;
+    std::string (Laurent<regina::Integer>::*utf8_variable)(const char*) const =
+        &Laurent<regina::Integer>::utf8;
 }
 
 void addLaurent() {
-    scope s = class_<Laurent<NInteger>,
-            std::auto_ptr<Laurent<NInteger> >,
+    scope s = class_<Laurent<regina::Integer>,
+            std::auto_ptr<Laurent<regina::Integer> >,
             boost::noncopyable>("Laurent")
         .def(init<long>())
-        .def(init<const Laurent<NInteger>&>())
+        .def(init<const Laurent<regina::Integer>&>())
         .def("__init__", make_constructor(create_seq))
         .def("init", init_void)
         .def("init", init_degree)
         .def("init", init_seq)
-        .def("minExp", &Laurent<NInteger>::minExp)
-        .def("maxExp", &Laurent<NInteger>::maxExp)
-        .def("isZero", &Laurent<NInteger>::isZero)
+        .def("minExp", &Laurent<regina::Integer>::minExp)
+        .def("maxExp", &Laurent<regina::Integer>::maxExp)
+        .def("isZero", &Laurent<regina::Integer>::isZero)
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
-        .def("set", &Laurent<NInteger>::set)
-        .def("swap", &Laurent<NInteger>::swap)
-        .def("shift", &Laurent<NInteger>::shift)
-        .def("scaleUp", &Laurent<NInteger>::scaleUp)
-        .def("scaleDown", &Laurent<NInteger>::scaleDown)
-        .def("negate", &Laurent<NInteger>::negate)
+        .def("set", &Laurent<regina::Integer>::set)
+        .def("swap", &Laurent<regina::Integer>::swap)
+        .def("shift", &Laurent<regina::Integer>::shift)
+        .def("scaleUp", &Laurent<regina::Integer>::scaleUp)
+        .def("scaleDown", &Laurent<regina::Integer>::scaleDown)
+        .def("negate", &Laurent<regina::Integer>::negate)
         .def("str", str_variable)
         .def("utf8", utf8_variable)
-        .def(self *= NInteger())
-        .def(self /= NInteger())
+        .def(self *= regina::Integer())
+        .def(self /= regina::Integer())
         .def(self += self)
         .def(self -= self)
         .def(self *= self)

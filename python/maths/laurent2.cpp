@@ -31,16 +31,15 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "maths/laurent2.h"
 #include "../helpers.h"
 
 using namespace boost::python;
 using regina::Laurent2;
-using regina::NInteger;
 
 namespace {
-    const regina::NInteger& getItem(const Laurent2<NInteger>& p,
+    const regina::Integer& getItem(const Laurent2<regina::Integer>& p,
             boost::python::tuple exponents) {
         if (boost::python::len(exponents) != 2) {
             PyErr_SetString(PyExc_ValueError,
@@ -53,8 +52,8 @@ namespace {
         return p(x(), y());
     }
 
-    void setItem(Laurent2<NInteger>& p, boost::python::tuple exponents,
-            const regina::NInteger& value) {
+    void setItem(Laurent2<regina::Integer>& p, boost::python::tuple exponents,
+            const regina::Integer& value) {
         if (boost::python::len(exponents) != 2) {
             PyErr_SetString(PyExc_ValueError,
                 "Argument to [...] must be a pair of exponents.");
@@ -66,39 +65,39 @@ namespace {
         p.set(x(), y(), value);
     }
 
-    void (Laurent2<NInteger>::*init_void)() =
-        &Laurent2<NInteger>::init;
-    void (Laurent2<NInteger>::*init_degrees)(long, long) =
-        &Laurent2<NInteger>::init;
-    std::string (Laurent2<NInteger>::*str_variables)(const char*, const char*)
-        const = &Laurent2<NInteger>::str;
-    std::string (Laurent2<NInteger>::*utf8_variables)(const char*, const char*)
-        const = &Laurent2<NInteger>::utf8;
+    void (Laurent2<regina::Integer>::*init_void)() =
+        &Laurent2<regina::Integer>::init;
+    void (Laurent2<regina::Integer>::*init_degrees)(long, long) =
+        &Laurent2<regina::Integer>::init;
+    std::string (Laurent2<regina::Integer>::*str_variables)(const char*, const char*)
+        const = &Laurent2<regina::Integer>::str;
+    std::string (Laurent2<regina::Integer>::*utf8_variables)(const char*, const char*)
+        const = &Laurent2<regina::Integer>::utf8;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str_variables,
-        Laurent2<NInteger>::str, 1, 2);
+        Laurent2<regina::Integer>::str, 1, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8_variables,
-        Laurent2<NInteger>::utf8, 1, 2);
+        Laurent2<regina::Integer>::utf8, 1, 2);
 }
 
 void addLaurent2() {
-    scope s = class_<Laurent2<NInteger>,
-            std::auto_ptr<Laurent2<NInteger> >,
+    scope s = class_<Laurent2<regina::Integer>,
+            std::auto_ptr<Laurent2<regina::Integer> >,
             boost::noncopyable>("Laurent2")
         .def(init<long, long>())
-        .def(init<const Laurent2<NInteger>&>())
+        .def(init<const Laurent2<regina::Integer>&>())
         .def("init", init_void)
         .def("init", init_degrees)
-        .def("isZero", &Laurent2<NInteger>::isZero)
-        .def("set", &Laurent2<NInteger>::set)
-        .def("swap", &Laurent2<NInteger>::swap)
-        .def("negate", &Laurent2<NInteger>::negate)
+        .def("isZero", &Laurent2<regina::Integer>::isZero)
+        .def("set", &Laurent2<regina::Integer>::set)
+        .def("swap", &Laurent2<regina::Integer>::swap)
+        .def("negate", &Laurent2<regina::Integer>::negate)
         .def("str", str_variables, OL_str_variables())
         .def("utf8", utf8_variables, OL_utf8_variables())
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
-        .def(self *= NInteger())
-        .def(self /= NInteger())
+        .def(self *= regina::Integer())
+        .def(self /= regina::Integer())
         .def(self += self)
         .def(self -= self)
         .def(self *= self)

@@ -1361,7 +1361,7 @@ class REGINA_API Link : public Packet {
          *
          * @return the bracket polynomial, as a newly-created object.
          */
-        Laurent<NInteger>* bracket() const;
+        Laurent<Integer>* bracket() const;
 
         /**
          * Returns the Jones polynomial of this link, but with all
@@ -1401,7 +1401,7 @@ class REGINA_API Link : public Packet {
          *
          * @return the Jones polynomial, as a newly-created object.
          */
-        Laurent<NInteger>* jones() const;
+        Laurent<Integer>* jones() const;
 
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -1438,7 +1438,7 @@ class REGINA_API Link : public Packet {
          *
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        Laurent2<NInteger>* homflyAZ() const;
+        Laurent2<Integer>* homflyAZ() const;
 
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -1473,7 +1473,7 @@ class REGINA_API Link : public Packet {
          *
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        Laurent2<NInteger>* homflyLM() const;
+        Laurent2<Integer>* homflyLM() const;
 
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -1489,7 +1489,7 @@ class REGINA_API Link : public Packet {
          *
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        Laurent2<NInteger>* homfly() const;
+        Laurent2<Integer>* homfly() const;
 
         /*@}*/
         /**
@@ -2234,7 +2234,7 @@ inline long Link::writhe() const {
     return ans;
 }
 
-inline Laurent2<NInteger>* Link::homfly() const {
+inline Laurent2<Integer>* Link::homfly() const {
     return homflyAZ();
 }
 

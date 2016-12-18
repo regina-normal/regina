@@ -65,7 +65,7 @@ namespace regina {
  *   tests of the form <tt>x == int</tt> and <tt>x < int</tt>;
  * - have a default constructor that assigns an explicit value of zero.
  *
- * This means that Regina's numerical types such as NInteger and NRational
+ * This means that Regina's numerical types such as Integer and Rational
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
@@ -76,7 +76,7 @@ namespace regina {
  * two variables.
  *
  * \ifacespython In Python, the class Laurent refers to the specific
- * template class Laurent<NInteger>.
+ * template class Laurent<Integer>.
  */
 template <typename T>
 class Laurent : public ShortOutput<Laurent<T>, true> {

@@ -33,22 +33,22 @@
 #include <cmath>
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
-#include "census/ncensus.h"
+#include "census/census.h"
 #include "link/examplelink.h"
 #include "link/link.h"
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "packet/container.h"
-#include "surfaces/nnormalsurface.h"
+#include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 
 #include "testsuite/link/testlink.h"
 
 using regina::Crossing;
 using regina::ExampleLink;
 using regina::Link;
-using regina::NTriangulation;
+using regina::Triangulation;
 using regina::StrandRef;
 
 // Isomorphism signatures for various knot/link complements that regina's
@@ -336,7 +336,7 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementBasic(Link* l) {
-            NTriangulation* c = l->complement();
+            Triangulation<3>* c = l->complement();
 
             if (c->countComponents() != 1) {
                 std::ostringstream msg;
@@ -373,7 +373,7 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementS3(Link* l) {
-            NTriangulation* c = l->complement();
+            Triangulation<3>* c = l->complement();
             if (! c->isThreeSphere()) {
                 std::ostringstream msg;
                 msg << l->label() << " complement: not a 3-sphere "
@@ -385,7 +385,7 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementUnknot(Link* l) {
-            NTriangulation* c = l->complement();
+            Triangulation<3>* c = l->complement();
             if (! c->isSolidTorus()) {
                 std::ostringstream msg;
                 msg << l->label() << " complement: not a solid torus "
@@ -398,7 +398,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testComplementSig(Link* l,
                 std::initializer_list<const char*> expected) {
-            NTriangulation* c = l->complement();
+            Triangulation<3>* c = l->complement();
             std::string sig = c->isoSig();
             delete c;
 
@@ -417,12 +417,12 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementCensus(Link* l, std::string prefix) {
-            NTriangulation* c = l->complement();
+            Triangulation<3>* c = l->complement();
             std::string sig = c->isoSig();
             delete c;
 
-            regina::NCensusHits* hits = regina::NCensus::lookup(sig);
-            const regina::NCensusHit* hit = hits->first();
+            regina::CensusHits* hits = regina::Census::lookup(sig);
+            const regina::CensusHit* hit = hits->first();
             while (hit) {
                 if (hit->name().substr(0, prefix.size()) == prefix) {
                     delete hits;
@@ -441,7 +441,7 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementFree(Link* l, unsigned nGen) {
-            NTriangulation* c = l->complement();
+            Triangulation<3>* c = l->complement();
             const regina::NGroupPresentation& fg = c->fundamentalGroup();
             if (fg.countGenerators() != nGen || fg.countRelations() != 0) {
                 std::ostringstream msg;
@@ -458,7 +458,7 @@ class LinkTest : public CppUnit::TestFixture {
             std::ostringstream expected;
             expected << nGen << " Z";
 
-            NTriangulation* c = l->complement();
+            Triangulation<3>* c = l->complement();
             const regina::NGroupPresentation& fg = c->fundamentalGroup();
             if (fg.recogniseGroup() != expected.str()) {
                 std::ostringstream msg;
@@ -472,19 +472,19 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testComplementTrefoilUnknot(Link* l) {
-            NTriangulation* c = l->complement();
+            Triangulation<3>* c = l->complement();
 
             // Find a separating sphere.
             regina::NormalSurfaces* vtx =
                 regina::NormalSurfaces::enumerate(c, regina::NS_STANDARD);
-            const regina::NNormalSurface* s;
+            const regina::NormalSurface* s;
             for (size_t i = 0; i < vtx->size(); ++i) {
                 s = vtx->surface(i);
                 if (s->eulerChar() != 2)
                     continue;
                 // s must be a 2-sphere.
 
-                NTriangulation* cut = s->cutAlong();
+                Triangulation<3>* cut = s->cutAlong();
                 cut->finiteToIdeal(); // Fills the sphere boundaries with balls.
                 if (cut->isConnected()) {
                     // Should never happen...
@@ -500,9 +500,9 @@ class LinkTest : public CppUnit::TestFixture {
                 cut->intelligentSimplify();
                 cut->splitIntoComponents(&parent);
 
-                NTriangulation* c1 = static_cast<NTriangulation*>(
+                Triangulation<3>* c1 = static_cast<Triangulation<3>*>(
                     parent.firstChild());
-                NTriangulation* c2 = static_cast<NTriangulation*>(
+                Triangulation<3>* c2 = static_cast<Triangulation<3>*>(
                     parent.lastChild());
 
                 if ((sigMatches(c1->isoSig(), TREFOIL_SIGS) &&

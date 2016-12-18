@@ -37,7 +37,7 @@ namespace regina {
 
 const char* Link::jonesVar = "\u221At"; // \u221A = square root
 
-Laurent<NInteger>* Link::bracket() const {
+Laurent<Integer>* Link::bracket() const {
     /**
      * \ /         \ /            \_/
      *  /   ->   A | |   +   A^-1  _
@@ -47,7 +47,7 @@ Laurent<NInteger>* Link::bracket() const {
      */
 
     if (components_.size() == 0)
-        return new Laurent<NInteger>();
+        return new Laurent<Integer>();
 
     // It is guaranteed that we have at least one strand, though we
     // might have zero crossings.
@@ -65,7 +65,7 @@ Laurent<NInteger>* Link::bracket() const {
     // In count[i-1], the coefficient of A^k reflects the number of
     // resolutions with i loops and multiplier A^k.
     // We will always have 1 <= i <= #components + #crossings.
-    Laurent<NInteger>* count = new Laurent<NInteger>[n + components_.size()];
+    Laurent<Integer>* count = new Laurent<Integer>[n + components_.size()];
 
     size_t maxLoops = 0;
 
@@ -147,14 +147,14 @@ Laurent<NInteger>* Link::bracket() const {
     }
     delete[] found;
 
-    Laurent<NInteger>* ans = new Laurent<NInteger>;
+    Laurent<Integer>* ans = new Laurent<Integer>;
 
-    Laurent<NInteger> loopPoly;
+    Laurent<Integer> loopPoly;
     loopPoly.set(0, -1);
     loopPoly.set(4, -1);
     loopPoly.shift(-2);
 
-    Laurent<NInteger> loopPow(0); // Initialises to x^0 == 1.
+    Laurent<Integer> loopPow(0); // Initialises to x^0 == 1.
     for (loops = 0; loops < maxLoops; ++loops) {
         // std::cerr << "count[" << loops << "] = " << count[loops] << std::endl;
         if (! count[loops].isZero()) {
@@ -169,9 +169,9 @@ Laurent<NInteger>* Link::bracket() const {
     return ans;
 }
 
-Laurent<NInteger>* Link::jones() const {
+Laurent<Integer>* Link::jones() const {
     // (-A^3)^(-w) * bracket, then multiply all exponents by -1/4.
-    Laurent<NInteger>* ans = bracket();
+    Laurent<Integer>* ans = bracket();
     if (ans == 0)
         return ans;
 

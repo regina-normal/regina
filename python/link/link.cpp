@@ -33,7 +33,7 @@
 #include "link/link.h"
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
-#include "triangulation/ntriangulation.h"
+#include "triangulation/dim3.h"
 #include "../safeheldtype.h"
 
 // Held type must be declared before boost/python.hpp
