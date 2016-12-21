@@ -572,7 +572,7 @@ Packet* Packet::clone(bool cloneDescendants, bool end) const {
 }
 
 bool Packet::save(const char* filename, bool compressed) const {
-    std::ofstream out(filename);
+    std::ofstream out(filename, std::ios_base::out | std::ios_base::binary);
     // We don't test whether the file was opened, since
     // save(std::ostream&, bool) tests this for us as the first thing it does.
     return save(out, compressed);
