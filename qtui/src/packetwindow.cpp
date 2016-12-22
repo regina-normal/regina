@@ -45,8 +45,7 @@
 #include <QMenuBar>
 
 PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
-        QMainWindow(parent,
-        Qt::Window | Qt::WindowContextHelpButtonHint),
+        QMainWindow(0, Qt::Window | Qt::WindowContextHelpButtonHint),
         heldPane(newPane), mainWindow(parent) {
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
@@ -66,6 +65,9 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
         this);
     connect(windowAction, SIGNAL(triggered()), this, SLOT(raiseWindow()));
     parent->registerWindow(windowAction);
+
+    // If the main window closes, its packet windows must close also.
+    connect(parent, SIGNAL(destroyed()), this, SLOT(deleteLater()));
 }
 
 void PacketWindow::closeEvent(QCloseEvent* event) {

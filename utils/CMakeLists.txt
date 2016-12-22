@@ -1,3 +1,10 @@
+# Some utilities need to know about the installation type.
+IF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  ADD_DEFINITIONS(-DREGINA_INSTALL_BUNDLE=1)
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
+  ADD_DEFINITIONS(-DREGINA_INSTALL_WINDOWS=1)
+ENDIF ()
+
 include_directories(${ENGINE_INCLUDES})
 include_directories(${CMAKE_BINARY_DIR}/engine)
 include_directories(${POPT_INCLUDE_DIR})
