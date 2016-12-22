@@ -142,6 +142,20 @@ class REGINA_API ExampleLink {
          * destroyed by the caller of this routine.
          */
         static Link* borromean();
+
+        /**
+         * Returns a 48-crossing potential counterexample to the
+         * slice-ribbon conjecture, as described by Gompf, Scharlemann
+         * and Thompson.
+         *
+         * Specifically, this knot is Figure 2 from their paper
+         * "Fibered knots and potential counterexamples to the property
+         * 2R and slice-ribbon conjectures", arXiv:1103.1601.
+         *
+         * @return a newly constructed link, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Link* gst();
 };
 
 /*@}*/
