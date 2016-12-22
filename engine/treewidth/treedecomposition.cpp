@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
+#include "link/link.h"
 #include "treewidth/treedecomposition.h"
 #include "treewidth/treedecomposition-impl.h"
 #include "triangulation/facetpairing.h"
@@ -134,6 +135,24 @@ void TreeDecomposition::Graph::dump(std::ostream& out) const {
             out << (adj_[i][j] ? '*' : '_');
         out << std::endl;
     }
+}
+
+TreeDecomposition::TreeDecomposition(const Link& link,
+        TreeDecompositionAlg alg) :
+        width_(0), root_(0) {
+    Graph g(link.size());
+
+    int i, j;
+    const Crossing* c;
+    for (i = 0; i < g.order_; ++i) {
+        c = link.crossing(i);
+        for (j = 0; j < 2; ++j) {
+            g.adj_[i][c->next(j).crossing()->index()] = true;
+            g.adj_[i][c->prev(j).crossing()->index()] = true;
+        }
+    }
+
+    construct(g, alg);
 }
 
 void TreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
