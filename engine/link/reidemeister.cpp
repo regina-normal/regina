@@ -108,6 +108,8 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         return ! check;
     }
 
+    // The move was successfully performed.
+    clearAllProperties();
     return true;
 }
 
@@ -134,6 +136,8 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
                         *it = StrandRef(c, 1);
                     else
                         *it = StrandRef(c, 0);
+
+                    clearAllProperties();
                 }
 
                 return true;
@@ -169,6 +173,7 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
     }
     crossings_.push_back(c);
 
+    clearAllProperties();
     return true;
 }
 
@@ -367,6 +372,7 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
     delete arc.crossing();
     delete to.crossing();
 
+    clearAllProperties();
     return true;
 }
 
@@ -585,6 +591,7 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     crossings_.push_back(pos);
     crossings_.push_back(neg);
 
+    clearAllProperties();
     return true;
 }
 
@@ -682,6 +689,7 @@ bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
         second.crossing()->prev_[second.strand()] = x;
     }
 
+    clearAllProperties();
     return true;
 }
 

@@ -44,7 +44,9 @@
 #include "regina-core.h"
 #include "maths/integer.h"
 #include "packet/packet.h"
+#include "treewidth/treedecomposition.h"
 #include "utilities/markedvector.h"
+#include "utilities/property.h"
 
 namespace regina {
 
@@ -552,6 +554,11 @@ class REGINA_API Link : public Packet {
                  used to traverse the component).  If a component has no
                  crossings, then it is represented in this array by a
                  null reference. */
+
+        mutable Property<TreeDecomposition, StoreManagedPtr>
+                niceTreeDecomposition_;
+            /**< A nice tree decomposition of the planar 4-valent multigraph
+                 formed by the link diagram. */
 
     public:
         /**
@@ -1491,6 +1498,30 @@ class REGINA_API Link : public Packet {
          */
         Laurent2<Integer>* homfly() const;
 
+        /**
+         * Returns a nice tree decomposition of the planar 4-valent
+         * multigraph formed by this link diagram.  This can (for example)
+         * be used in implementing algorithms that are fixed-parameter
+         * tractable in the treewidth of this graph.
+         *
+         * See TreeDecomposition for further details on tree decompositions,
+         * and see TreeDecomposition::makeNice() for details on what it
+         * means to be a \e nice tree decomposition.
+         *
+         * This routine is fast: it will use a greedy algorithm to find
+         * a tree decomposition with (hopefully) small width, but with
+         * no guarantees that the width of this tree decomposition is
+         * the smallest possible.
+         *
+         * The tree decomposition will be cached, so that if this
+         * routine is called a second time (and the underlying link has
+         * not been changed) then the same tree decomposition will be
+         * returned immediately.
+         *
+         * @return a nice tree decomposition of this link diagram.
+         */
+        const TreeDecomposition& niceTreeDecomposition() const;
+
         /*@}*/
         /**
          * \name Packet Administration
@@ -1935,6 +1966,15 @@ class REGINA_API Link : public Packet {
 
     private:
         /**
+         * Clears any calculated properties, and declares them all unknown.
+         * This must be called by any internal function that changes the link.
+         *
+         * In most cases this routine is followed immediately by firing
+         * a packet change event.
+         */
+        void clearAllProperties();
+
+        /**
          * Translates a strand reference for some other link into the
          * corresponding strand reference for this link.
          *
@@ -2203,6 +2243,7 @@ inline Link::Link(size_t unknots) {
 }
 
 inline Link::~Link() {
+    clearAllProperties();
     for (Crossing* c : crossings_)
         delete c;
 }
@@ -2256,12 +2297,25 @@ inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
     return r3(s, side, check, perform);
 }
 
+inline const TreeDecomposition& Link::niceTreeDecomposition() const {
+    if (niceTreeDecomposition_.known())
+        return *niceTreeDecomposition_.value();
+
+    TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
+    ans->makeNice();
+    return *(niceTreeDecomposition_ = ans);
+}
+
 inline bool Link::dependsOnParent() const {
     return false;
 }
 
 inline Packet* Link::internalClonePacket(Packet*) const {
     return new Link(*this);
+}
+
+inline void Link::clearAllProperties() {
+    niceTreeDecomposition_.clear();
 }
 
 inline StrandRef Link::translate(const StrandRef& other) const {

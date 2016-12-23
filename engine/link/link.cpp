@@ -143,6 +143,8 @@ void Link::reflect() {
     ChangeEventSpan span(this);
     for (Crossing* cross : crossings_)
         cross->sign_ = -cross->sign_;
+
+    clearAllProperties();
 }
 
 void Link::rotate() {
@@ -159,6 +161,8 @@ void Link::rotate() {
         cross->prev_[0].strand_ ^= 1;
         cross->prev_[1].strand_ ^= 1;
     }
+
+    clearAllProperties();
 }
 
 std::string Link::brief() const {

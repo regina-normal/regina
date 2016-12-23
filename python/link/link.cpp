@@ -162,6 +162,8 @@ void addLink() {
             return_value_policy<manage_new_object>())
         .def("homflyLM", &Link::homflyLM,
             return_value_policy<manage_new_object>())
+        .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
+            return_internal_reference<>())
         .def("brief", &Link::brief)
         .def("jenkins", jenkins_str)
         .def("dumpConstruction", &Link::dumpConstruction)
