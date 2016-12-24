@@ -12,6 +12,10 @@ Version 5.2  [ (under development) ]
     ENGINE:
         Class TreeDecomposition:
             - New constructor that takes a Link.
+        Enum Algorithm, TuraevViroAlg:
+            - Renamed TuraevViroAlg to the more general Algorithm enum type.
+              The old type name TuraevViroAlg and constants TV_... are now
+              deprecated but kept for backward compatibility.
 
 Version 5.1  [ 19 December, 2016 ]
 

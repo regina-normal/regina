@@ -188,18 +188,6 @@ namespace {
 }
 
 void addTriangulation3() {
-    enum_<regina::TuraevViroAlg>("TuraevViroAlg")
-        .value("TV_DEFAULT", regina::TV_DEFAULT)
-        .value("TV_BACKTRACK", regina::TV_BACKTRACK)
-        .value("TV_TREEWIDTH", regina::TV_TREEWIDTH)
-        .value("TV_NAIVE", regina::TV_NAIVE)
-        ;
-
-    scope().attr("TV_DEFAULT") = regina::TV_DEFAULT;
-    scope().attr("TV_BACKTRACK") = regina::TV_BACKTRACK;
-    scope().attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
-    scope().attr("TV_NAIVE") = regina::TV_NAIVE;
-
     {
         boost::python::scope s = class_<Triangulation<3>, bases<regina::Packet>,
                 SafeHeldType<Triangulation<3>>,
@@ -417,5 +405,6 @@ void addTriangulation3() {
     FIX_REGINA_BOOST_CONVERTERS(Triangulation<3>);
 
     scope().attr("NTriangulation") = scope().attr("Triangulation3");
+    scope().attr("TuraevViroAlg") = scope().attr("Algorithm");
 }
 

@@ -46,23 +46,18 @@ Acknowledgements (in addition to primary authors listed in the license):
 
 Don't forget:
     changes & highlights
-    what's this & tooltips
     documentation in handbook, feature set, index & file format
-    any new tips of the day?
     journal references (www, KDE docs, example files, headers;
         search for arXiv and "to appear")
     check that all headers are installed correctly
     check for doxygen warnings
     check for docbook warnings/errors
+    run valgrind over the test suite and GUI
     python bindings for new routines
     rebuild manpages
     website, including updated news, what's new and deprecation guide
-    debian-based packages (debian/ubuntu)
-    rpm-based packages (fedora/mandriva/suse)
-    windows installer
-    macos DMG (purge libiconv-dev, libxml2 from fink first)
+    build binary packages
     update tips for building on different platforms
-    update debian/ubuntu/fink READMEs as required (both text and html)
     update census download file sizes if there have been changes
     tag the git repository
     update docs/ and engine-docs/ on the website
