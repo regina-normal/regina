@@ -86,42 +86,6 @@ struct PacketInfo<PACKET_TRIANGULATION3> {
 #endif
 
 /**
- * Represents the various algorithms available for computing Turaev-Viro
- * invariants.
- */
-enum TuraevViroAlg {
-    /**
-     * The default algorithm.  Here Regina will choose whichever
-     * algorithm it thinks (rightly or wrongly) is most appropriate.
-     */
-    TV_DEFAULT = 0,
-    /**
-     * An optimised backtracking algorithm.  This enumerates edge colourings
-     * and sums their corresponding weights.  This can be slow in general
-     * (since there could be exponentially many edge colourings),
-     * but it has very small memory usage.
-     */
-    TV_BACKTRACK = 1,
-    /**
-     * A treewidth-based algorithm.  This uses dynamic programming over
-     * a tree decomposition of the face pairing graph.  This can be fast
-     * for triangulations whose face pairing graphs have small treewidth,
-     * but it may require extremely large amounts of memory.
-     */
-    TV_TREEWIDTH = 2,
-    /**
-     * An unoptimised backtracking algorithm.  Like TV_BACKTRACK, this
-     * enumerates edge colourings and sums weights.  However, the
-     * implementation is more naive.
-     *
-     * \warning This algorithm should only be used for comparison and
-     * experimentation.  Due to its slow performance, it is not suitable
-     * for "real" applications.
-     */
-    TV_NAIVE = 3
-};
-
-/**
  * Represents a 3-dimensional triangulation, typically of a 3-manifold.
  *
  * This is a specialisation of the generic Triangulation class template;
@@ -606,8 +570,8 @@ class REGINA_API Triangulation<3> :
          * least 3.
          * @param parity determines for odd \a r whether \a q0 is a primitive
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
-         * @param alg the algorithm with which to compute the invariant.
-         * If you are not sure, the default value (TV_DEFAULT) is a safe choice.
+         * @param alg the algorithm with which to compute the invariant.  If
+         * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * @param tracker a progress tracker through will progress will
          * be reported, or 0 if no progress reporting is required.
          * @return the requested Turaev-Viro invariant.  As an exception,
@@ -618,7 +582,7 @@ class REGINA_API Triangulation<3> :
          * @see allCalculatedTuraevViro
          */
         Cyclotomic turaevViro(unsigned long r, bool parity = true,
-            TuraevViroAlg alg = TV_DEFAULT, ProgressTracker* tracker = 0) const;
+            Algorithm alg = ALG_DEFAULT, ProgressTracker* tracker = 0) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
          * 3-manifold using a fast but inexact floating-point approximation.
@@ -660,14 +624,14 @@ class REGINA_API Triangulation<3> :
          * least 3.
          * @param whichRoot specifies which root of unity is used for \a q0,
          * as described above.
-         * @param alg the algorithm with which to compute the invariant.
-         * If you are not sure, the default value (TV_DEFAULT) is a safe choice.
+         * @param alg the algorithm with which to compute the invariant.  If
+         * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * @return the requested Turaev-Viro invariant.
          *
          * @see allCalculatedTuraevViro
          */
         double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
-            TuraevViroAlg alg = TV_DEFAULT) const;
+            Algorithm alg = ALG_DEFAULT) const;
         /**
          * Returns the cache of all Turaev-Viro state sum invariants that
          * have been calculated for this 3-manifold.

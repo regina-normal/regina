@@ -44,23 +44,6 @@
  * @{
  */
 
-namespace regina {
-
-/**
- * Indicates whether the given dimension is one of Regina's
- * \ref stddim "standard dimensions".
- * Standard dimensions offer significantly richer functionality for
- * triangulations than generic dimensions.
- *
- * @param dim the dimension in question.
- * @return \c true if and only if \a dim is one of Regina's standard dimensions.
- */
-constexpr bool standardDim(int dim) {
-    return (dim == 2 || dim == 3 || dim == 4);
-}
-
-} // namespace regina
-
 /**
  * A synonym for \c inline, used in some special cases to avoid
  * noisy warnings under Windows.
@@ -198,6 +181,111 @@ constexpr bool standardDim(int dim) {
     #define REGINA_DEPRECATED_ENUM
   #endif
 #endif // doxygen
+
+namespace regina {
+
+/**
+ * Indicates whether the given dimension is one of Regina's
+ * \ref stddim "standard dimensions".
+ * Standard dimensions offer significantly richer functionality for
+ * triangulations than generic dimensions.
+ *
+ * @param dim the dimension in question.
+ * @return \c true if and only if \a dim is one of Regina's standard dimensions.
+ */
+constexpr bool standardDim(int dim) {
+    return (dim == 2 || dim == 3 || dim == 4);
+}
+
+/**
+ * Represents various classes of algorithms that Regina can use for
+ * computations.  A function that takes an Algorithm argument need not
+ * support all types of algorithm - if an unsupported algorithm is
+ * passed then Regina will fall back to ALG_DEFAULT.
+ *
+ * This enumeration type does \e not allow constants to be combined using
+ * the OR operator.
+ *
+ * For some computations where the user can exert more fine-grained control
+ * over the underlying algorithm, a more specialised enumeration type is
+ * used instead.  For example, see NormalSurfaces::enumerate(), which uses the
+ * specialised algorithm types NormalAlg and NormalAlgFlags.
+ */
+enum Algorithm {
+    /**
+     * The default algorithm.  Here Regina will choose whichever
+     * algorithm it thinks (rightly or wrongly) is most appropriate.
+     */
+    ALG_DEFAULT = 0,
+    /**
+     * An optimised backtracking algorithm.  This typically works over
+     * some search tree (often of exponential size or worse), but
+     * include significant optimisations to prune the search tree and/or
+     * cache computations where possible.
+     */
+    ALG_BACKTRACK = 1,
+    /**
+     * A treewidth-based algorithm.  Typically this uses dynamic
+     * programming over a tree decomposition of some underlying graph.
+     * Such algorithms are often fast for triangulations or links with
+     * small treewidth, but may require large amounts of memory.
+     */
+    ALG_TREEWIDTH = 2,
+    /**
+     * A naive algorithm.  This typically works directly with the
+     * underlying definitions (e.g., computing Turaev-Viro as a state sum),
+     * without further optimisations.
+     *
+     * \warning Naive algorithms should only be used for comparison and
+     * experimentation.  Due to their slow performance, they are not
+     * suitable for "real" applications.
+     */
+    ALG_NAIVE = 3,
+    /**
+     * Deprecated alias for ALG_DEFAULT.
+     *
+     * \deprecated The old constant TV_DEFAULT has been replaced by the
+     * constant ALG_DEFAULT, and the underlying enumeration type has
+     * been renamed from TuraevViroAlg to Algorithm.
+     */
+    REGINA_DEPRECATED_ENUM TV_DEFAULT = 0,
+    /**
+     * Deprecated alias for ALG_BACKTRACK.
+     *
+     * \deprecated The old constant TV_BACKTRACK has been replaced by the
+     * constant ALG_BACKTRACK, and the underlying enumeration type has
+     * been renamed from TuraevViroAlg to Algorithm.
+     */
+    REGINA_DEPRECATED_ENUM TV_BACKTRACK = 1,
+    /**
+     * Deprecated alias for ALG_TREEWIDTH.
+     *
+     * \deprecated The old constant TV_TREEWIDTH has been replaced by the
+     * constant ALG_TREEWIDTH, and the underlying enumeration type has
+     * been renamed from TuraevViroAlg to Algorithm.
+     */
+    REGINA_DEPRECATED_ENUM TV_TREEWIDTH = 2,
+    /**
+     * Deprecated alias for ALG_NAIVE.
+     *
+     * \deprecated The old constant TV_NAIVE has been replaced by the
+     * constant ALG_NAIVE, and the underlying enumeration type has
+     * been renamed from TuraevViroAlg to Algorithm.
+     */
+    REGINA_DEPRECATED_ENUM TV_NAIVE = 3
+};
+
+/**
+ * Deprecated alias for Algorithm.
+ *
+ * \deprecated The TuraevViroAlg enumeration is deprecated, in favour of the
+ * more general Algorithm enumeration type.  The old constants TV_DEFAULT,
+ * TV_BACKTRACK, TV_TREEWIDTH and TV_NAIVE correspond to the new constants
+ * ALG_DEFAULT, ALG_BACKTRACK, ALG_TREEWIDTH and ALG_NAIVE respectively.
+ */
+REGINA_DEPRECATED typedef Algorithm TuraevViroAlg;
+
+} // namespace regina
 
 /*@}*/
 
