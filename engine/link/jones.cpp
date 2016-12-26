@@ -37,7 +37,7 @@ namespace regina {
 
 const char* Link::jonesVar = "\u221At"; // \u221A = square root
 
-Laurent<Integer>* Link::bracket() const {
+Laurent<Integer>* Link::bracketNaive() const {
     /**
      * \ /         \ /            \_/
      *  /   ->   A | |   +   A^-1  _
@@ -169,9 +169,23 @@ Laurent<Integer>* Link::bracket() const {
     return ans;
 }
 
-Laurent<Integer>* Link::jones() const {
+Laurent<Integer>* Link::bracketTreewidth() const {
+    // TODO: implement
+    return bracketNaive();
+}
+
+Laurent<Integer>* Link::bracket(Algorithm alg) const {
+    switch (alg) {
+        case ALG_TREEWIDTH:
+            return bracketTreewidth();
+        default:
+            return bracketNaive();
+    }
+}
+
+Laurent<Integer>* Link::jones(Algorithm alg) const {
     // (-A^3)^(-w) * bracket, then multiply all exponents by -1/4.
-    Laurent<Integer>* ans = bracket();
+    Laurent<Integer>* ans = bracket(alg);
     if (ans == 0)
         return ans;
 

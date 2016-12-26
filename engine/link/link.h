@@ -1366,9 +1366,11 @@ class REGINA_API Link : public Packet {
          * crossings.  This will eventually be replaced with a more
          * efficient implementation.
          *
+         * @return alg the algorithm with which to compute the polynomial.
+         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * @return the bracket polynomial, as a newly-created object.
          */
-        Laurent<Integer>* bracket() const;
+        Laurent<Integer>* bracket(Algorithm alg = ALG_DEFAULT) const;
 
         /**
          * Returns the Jones polynomial of this link, but with all
@@ -1406,9 +1408,11 @@ class REGINA_API Link : public Packet {
          * crossings.  This will eventually be replaced with a more
          * efficient implementation.
          *
+         * @return alg the algorithm with which to compute the polynomial.
+         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * @return the Jones polynomial, as a newly-created object.
          */
-        Laurent<Integer>* jones() const;
+        Laurent<Integer>* jones(Algorithm alg = ALG_DEFAULT) const;
 
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -2071,6 +2075,22 @@ class REGINA_API Link : public Packet {
          * for this terminating call simply means \a strandsRemaining == 0.
          */
         bool addComponents(size_t strandsRemaining);
+
+        /**
+         * Compute the Kauffman bracket polynomial using a naive
+         * algorithm that sums over all resolutions of all crossings.
+         *
+         * See bracket() for further details.
+         */
+        Laurent<Integer>* bracketNaive() const;
+
+        /**
+         * Compute the Kauffman bracket polynomial using a fixed-parameter
+         * tractable algorithm based on a tree decomposition.
+         *
+         * See bracket() for further details.
+         */
+        Laurent<Integer>* bracketTreewidth() const;
 
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
