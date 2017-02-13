@@ -2167,6 +2167,7 @@ class REGINA_API Triangulation<3> :
          * @param e the edge to drill out.
          */
         void drillEdge(Edge<3>* e);
+        void drillEdges(const std::vector<Edge<3>*> &edges);
 
         /**
          * Punctures this manifold by removing a 3-ball from the interior of

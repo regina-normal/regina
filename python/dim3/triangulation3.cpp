@@ -185,6 +185,18 @@ namespace {
                 boost::python::manage_new_object::
                 apply<regina::Isomorphism<3>*>::type()(iso))));
     }
+
+    void drillEdges_list(Triangulation<3>& t, boost::python::list l) {
+        std::vector<regina::Edge<3>*> edges;
+        
+        const long len = boost::python::len(l);
+        edges.reserve(len);
+        for (long i = 0; i < len; i++) {
+            edges.push_back(extract<regina::Edge<3>*>(l[i]));
+        }
+
+        t.drillEdges(edges);
+    }
 }
 
 void addTriangulation3() {
@@ -367,6 +379,7 @@ void addTriangulation3() {
             .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal)
             .def("barycentricSubdivision", &Triangulation<3>::barycentricSubdivision)
             .def("drillEdge", &Triangulation<3>::drillEdge)
+            .def("drillEdges", drillEdges_list)
             .def("puncture", &Triangulation<3>::puncture, OL_puncture())
             .def("layerOn", &Triangulation<3>::layerOn,
                 return_value_policy<reference_existing_object>())
