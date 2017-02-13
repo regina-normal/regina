@@ -39,6 +39,25 @@
 namespace regina {
 
 void Triangulation<3>::drillEdge(Edge<3>* e) {
+    drillEdges(std::vector<Edge<3>*>({e}));
+}
+
+void Triangulation<3>::drillEdges(const std::vector<Edge<3>*> &edges) {
+    std::vector<std::pair<int, long>> edgeAndTetNums;
+    edgeAndTetNums.reserve(edges.size());
+
+    for (const Edge<3>* e : edges) {
+        edgeAndTetNums.push_back(
+            std::pair<int, long>(
+                e->front().edge(), e->front().tetrahedron()->index()));
+    }
+
+    ChangeEventSpan span(this);
+    barycentricSubdivision();
+    barycentricSubdivision();
+
+    std::set<unsigned long> toRemove;
+
     // Recall from the barycentric subdivision code above that
     // a tetrahedron in the subdivision is uniquely defined by the
     // permutation (corner, vtx, edge, face) of (0, 1, 2, 3).
@@ -51,47 +70,43 @@ void Triangulation<3>::drillEdge(Edge<3>* e) {
     //
     // In each case the corresponding edge number in the new tetrahedron
     // equals the edge number from the original tetrahedron.
-
-    int edgeNum = e->front().edge();
-    long tetNum = e->front().tetrahedron()->index();
-
     int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision
                      // that contain the two corresponding half-edges.
-    oldToNew[0] = Perm<4>(
-        Edge<3>::edgeVertex[edgeNum][0],
-        Edge<3>::edgeVertex[edgeNum][1],
-        Edge<3>::edgeVertex[5 - edgeNum][0],
-        Edge<3>::edgeVertex[5 - edgeNum][1]).
-        index();
-    oldToNew[1] = Perm<4>(
-        Edge<3>::edgeVertex[edgeNum][1],
-        Edge<3>::edgeVertex[edgeNum][0],
-        Edge<3>::edgeVertex[5 - edgeNum][0],
-        Edge<3>::edgeVertex[5 - edgeNum][1]).
-        index();
-
-    ChangeEventSpan span(this);
-    barycentricSubdivision();
-    barycentricSubdivision();
-
-    std::set<unsigned long> toRemove;
-
     int i, j, k;
     unsigned long finalTet;
     Vertex<3>* finalVertex;
-    for (i = 0; i < 2; ++i)
-        for (j = 0; j < 2; ++j) {
-            finalTet = 24 * (24 * tetNum + oldToNew[i]) + oldToNew[j];
 
-            // Remove all tetrahedra that touch each endpoint of the
-            // resulting edge in the second barycentric subdivision.
-            for (k = 0; k < 2; ++k) {
-                finalVertex = simplices_[finalTet]->edge(edgeNum)->
-                    vertex(k);
-                for (auto& emb : *finalVertex)
-                    toRemove.insert(emb.tetrahedron()->index());
+    for (const auto &edgeAndTetNum : edgeAndTetNums) {
+        const int edgeNum = edgeAndTetNum.first;
+        const long tetNum = edgeAndTetNum.second;
+
+        oldToNew[0] = Perm<4>(
+            Edge<3>::edgeVertex[edgeNum][0],
+            Edge<3>::edgeVertex[edgeNum][1],
+            Edge<3>::edgeVertex[5 - edgeNum][0],
+            Edge<3>::edgeVertex[5 - edgeNum][1]).
+            index();
+        oldToNew[1] = Perm<4>(
+            Edge<3>::edgeVertex[edgeNum][1],
+            Edge<3>::edgeVertex[edgeNum][0],
+            Edge<3>::edgeVertex[5 - edgeNum][0],
+            Edge<3>::edgeVertex[5 - edgeNum][1]).
+            index();
+
+        for (i = 0; i < 2; ++i)
+            for (j = 0; j < 2; ++j) {
+                finalTet = 24 * (24 * tetNum + oldToNew[i]) + oldToNew[j];
+
+                // Remove all tetrahedra that touch each endpoint of the
+                // resulting edge in the second barycentric subdivision.
+                for (k = 0; k < 2; ++k) {
+                    finalVertex = simplices_[finalTet]->edge(edgeNum)->
+                        vertex(k);
+                    for (auto& emb : *finalVertex)
+                        toRemove.insert(emb.tetrahedron()->index());
+                }
             }
-        }
+    }
 
     // Make sure we remove tetrahedra in reverse order, so the numbering
     // doesn't change.
