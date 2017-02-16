@@ -98,6 +98,8 @@ namespace {
         Triangulation<3>::splitIntoComponents, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_connectedSumDecomposition,
         Triangulation<3>::connectedSumDecomposition, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_drillEdge,
+        Triangulation<3>::drillEdge, 1, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
         Triangulation<3>::puncture, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turaevViro,
@@ -366,7 +368,7 @@ void addTriangulation3() {
             .def("idealToFinite", &Triangulation<3>::idealToFinite)
             .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal)
             .def("barycentricSubdivision", &Triangulation<3>::barycentricSubdivision)
-            .def("drillEdge", &Triangulation<3>::drillEdge)
+            .def("drillEdge", &Triangulation<3>::drillEdge, OL_drillEdge())
             .def("puncture", &Triangulation<3>::puncture, OL_puncture())
             .def("layerOn", &Triangulation<3>::layerOn,
                 return_value_policy<reference_existing_object>())

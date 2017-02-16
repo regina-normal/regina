@@ -38,7 +38,7 @@
 
 namespace regina {
 
-void Triangulation<3>::drillEdge(Edge<3>* e) {
+void Triangulation<3>::drillEdge(Edge<3>* e, bool simplify) {
     // Recall from the barycentric subdivision code above that
     // a tetrahedron in the subdivision is uniquely defined by the
     // permutation (corner, vtx, edge, face) of (0, 1, 2, 3).
@@ -99,8 +99,9 @@ void Triangulation<3>::drillEdge(Edge<3>* e) {
             rit != toRemove.rend(); ++rit)
         removeTetrahedronAt(*rit);
 
-    // We have lots of tetrahedra now.  Simplify.
-    intelligentSimplify();
+    // We have lots of tetrahedra now.  Simplify (unless we were asked not to).
+    if (simplify)
+        intelligentSimplify();
 }
 
 bool Triangulation<3>::idealToFinite() {

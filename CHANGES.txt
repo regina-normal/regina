@@ -7,6 +7,13 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Verison 5.2  [ (under development) ]
+
+    ENGINE:
+        Class Triangulation<3>:
+            - Added an optional argument to drillEdge() that inhibits
+              simplification.
+
 Version 5.1  [ 19 December, 2016 ]
 
     GENERAL:

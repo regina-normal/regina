@@ -2157,7 +2157,8 @@ class REGINA_API Triangulation<3> :
          *
          * This is done by (i) performing two barycentric subdivisions,
          * (ii) removing all tetrahedra that touch the original edge,
-         * and (iii) simplifying the resulting triangulation.
+         * and then (iii) simplifying the resulting triangulation (unless
+         * the optional argument \a simplify is \c false).
          *
          * \warning The second barycentric subdivision will multiply the
          * number of tetrahedra by 576; as a result this routine might
@@ -2165,8 +2166,11 @@ class REGINA_API Triangulation<3> :
          * large (even taking the simplification into account).
          *
          * @param e the edge to drill out.
+         * @param simplify \c true if the triangulation should be simplified,
+         * as described above.  This is highly recommended, due to the second
+         * barycentric subdivision.
          */
-        void drillEdge(Edge<3>* e);
+        void drillEdge(Edge<3>* e, bool simplify = true);
 
         /**
          * Punctures this manifold by removing a 3-ball from the interior of
