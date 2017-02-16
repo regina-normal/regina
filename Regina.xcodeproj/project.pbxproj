@@ -7868,7 +7868,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --preserve-metadata=identifier,entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign FDA4865E0F0A4DE4B8060E4F2D5F52B326558A21 --preserve-metadata=identifier,entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7896,7 +7896,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in sigcensus tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in sigcensus tricensus; do\n/usr/bin/codesign --force --sign FDA4865E0F0A4DE4B8060E4F2D5F52B326558A21 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
