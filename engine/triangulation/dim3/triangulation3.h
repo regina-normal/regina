@@ -1557,13 +1557,22 @@ class REGINA_API Triangulation<3> :
         bool shellBoundary(Tetrahedron<3>* t,
                 bool check = true, bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a collapse of
-         * an edge in such a way that the topology of the manifold
-         * does not change and the number of vertices of the triangulation
-         * decreases by one.
+         * Checks the eligibility of and/or performs a collapse of an edge
+         * between two distinct vertices, so that the topology of the
+         * manifold does not change and the number of vertices decreases by one.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If you are trying to reduce the number of vertices without changing
+         * the topology, you should consider which of collapseEdge() or
+         * mergeVertices() is more appropriate for your situation.
+         * The advantage of collapseEdge() is that it decreases the
+         * number of tetrahedra, whereas mergeVertices() increases this
+         * number (but only by a small constant).  The disadvantage of
+         * collapseEdge() is that it cannot always be performed (and
+         * also requires non-trivial validity tests), whereas mergeVertices()
+         * can be safely called on any edge.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -1589,6 +1598,45 @@ class REGINA_API Triangulation<3> :
          * is \c false, the function simply returns \c true.
          */
         bool collapseEdge(Edge<3>* e, bool check = true, bool perform = true);
+
+        /**
+         * Collapses the given edge to a point in a way that has no further
+         * topological side-effects, and that increases the number of
+         * tetrahedra by two.
+         *
+         * Two useful cases for this routine are:
+         *
+         * - If the edge joins an internal vertex with some different vertex
+         *   (which may be internal, boundary, ideal or invalid), then
+         *   this move does not change the topology of the manifold at all,
+         *   and it reduces the total number of vertices by one.  In
+         *   this sense, it acts as an alternative to collapseEdge() which
+         *   can \e always be performed.
+         *
+         * - If the edge runs from an internal vertex back to itself,
+         *   then this move effectively drills out the edge, leaving
+         *   an ideal torus or Klein bottle boundary component.
+         *
+         * If you are trying to reduce the number of vertices without changing
+         * the topology, you should consider which of collapseEdge() or
+         * mergeVertices() is more appropriate for your situation.
+         * The advantage of collapseEdge() is that it decreases the
+         * number of tetrahedra, whereas mergeVertices() increases this
+         * number (but only by a small constant).  The disadvantage of
+         * collapseEdge() is that it cannot always be performed (and
+         * also requires non-trivial validity tests), whereas mergeVertices()
+         * can be safely called on any edge.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * @param e the edge to collapse.
+         */
+        void mergeVertices(Edge<3>* e);
 
         /**
          * Reorders the tetrahedra of this triangulation using a

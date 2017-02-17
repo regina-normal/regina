@@ -1141,6 +1141,34 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     return true;
 }
 
+void Triangulation<3>::mergeVertices(Edge<3>* e) {
+    // Find a triangular face containing e (this will be face 012 of open).
+    // Our plan is to insert two tetrahedra in its place.
+    Tetrahedron<3>* open = e->front().tetrahedron();
+    Perm<4> vertices = e->front().vertices();
+
+    ChangeEventSpan span(this);
+    
+    Tetrahedron<3>* t0 = newTetrahedron();
+    Tetrahedron<3>* t1 = newTetrahedron();
+    t0->join(0, t1, Perm<4>(1, 2));
+    t0->join(3, t1, Perm<4>(0, 1));
+    t1->join(1, t1, Perm<4>(1, 2));
+
+    // The boundary triangles of this auxiliary structure are t0: 013 / 023.
+    // Whatever vertex is glued to t0: 3 will be (topologically) unaffected.
+    // Whatever vertices glue to t0: 0 and t0: 1=2 will have their links
+    // joined by a connected sum.
+
+    Tetrahedron<3>* adj = open->adjacentTetrahedron(vertices[3]);
+    if (adj) {
+        Perm<4> glue = open->adjacentGluing(vertices[3]);
+        open->unjoin(vertices[3]);
+        t0->join(1, adj, glue * vertices * Perm<4>(0, 3, 1, 2));
+    }
+    t0->join(2, open, vertices * Perm<4>(2, 3));
+}
+
 void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     unsigned long n = size();
     if (n == 0)

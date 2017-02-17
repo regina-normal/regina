@@ -338,7 +338,9 @@ void addTriangulation3() {
             .def("closeBook", &Triangulation<3>::closeBook, OL_closeBook())
             .def("shellBoundary", &Triangulation<3>::shellBoundary,
                 OL_shellBoundary())
-            .def("collapseEdge", &Triangulation<3>::collapseEdge, OL_collapseEdge())
+            .def("collapseEdge", &Triangulation<3>::collapseEdge,
+                OL_collapseEdge())
+            .def("mergeVertices", &Triangulation<3>::mergeVertices)
             .def("reorderTetrahedraBFS", &Triangulation<3>::reorderTetrahedraBFS,
                 OL_reorderTetrahedraBFS())
             .def("orient", &Triangulation<3>::orient)
