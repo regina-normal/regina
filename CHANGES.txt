@@ -11,10 +11,13 @@ Verison 5.2  [ (under development) ]
 
     ENGINE:
         Class Triangulation<3>:
-            - New routine mergeVertices() to collapse an edge, which can be
+            - New routine pinchEdge() to collapse an edge, which can be
               performed on any edge, but which adds two tetrahedra.
             - Added an optional argument to drillEdge() that inhibits
               simplification.
+            - Deprecated drillEdge(), since in all cases that matter,
+              pinchEdge() performs the same topological operation with
+              vastly fewer tetrahedra.
 
 Version 5.1  [ 19 December, 2016 ]
 
