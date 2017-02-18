@@ -36,13 +36,13 @@
 // Affects the number of random 4-4 moves attempted during simplification.
 #define COEFF_4_4 5
 
-// If you define MERGE_NOT_COLLAPSE, then intelligentSimplify() will use
-// mergeVertices() instead of collapseEdge() to reduce the number of vertices.
+// If you define PINCH_NOT_COLLAPSE, then intelligentSimplify() will use
+// pinchEdge() instead of collapseEdge() to reduce the number of vertices.
 // This may *increase* the number of tetrahedra, and so it should be used with
 // great care -- it may break the requirements of intelligentSimplify(), and
 // so may adversely affect other code that expects monotonic behaviour.
 //
-// #define MERGE_NOT_COLLAPSE
+// #define PINCH_NOT_COLLAPSE
 
 namespace regina {
 
@@ -233,12 +233,12 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
             if (countVertices() > components().size() &&
                     countVertices() > countBoundaryComponents()) {
                 for (Edge<3>* edge : edges()) {
-#ifdef MERGE_NOT_COLLAPSE
+#ifdef PINCH_NOT_COLLAPSE
                     if (edge->vertex(0) != edge->vertex(1) &&
                             (edge->vertex(0)->link() == Vertex<3>::SPHERE ||
                              edge->vertex(1)->link() == Vertex<3>::SPHERE)) {
                         // Note: this *increases* the number of tetrahedra.
-                        mergeVertices(edge);
+                        pinchEdge(edge);
                         changedNow = changed = true;
                         break;
                     }

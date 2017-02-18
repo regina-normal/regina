@@ -1141,14 +1141,18 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     return true;
 }
 
-void Triangulation<3>::mergeVertices(Edge<3>* e) {
+void Triangulation<3>::pinchEdge(Edge<3>* e) {
     // Find a triangular face containing e (this will be face 012 of open).
     // Our plan is to insert two tetrahedra in its place.
     Tetrahedron<3>* open = e->front().tetrahedron();
     Perm<4> vertices = e->front().vertices();
 
+    #ifdef DEBUG
+    std::cerr << "Performing edge pinch move\n";
+    #endif
+
     ChangeEventSpan span(this);
-    
+
     Tetrahedron<3>* t0 = newTetrahedron();
     Tetrahedron<3>* t1 = newTetrahedron();
     t0->join(0, t1, Perm<4>(1, 2));

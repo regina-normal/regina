@@ -1566,12 +1566,12 @@ class REGINA_API Triangulation<3> :
          *
          * If you are trying to reduce the number of vertices without changing
          * the topology, you should consider which of collapseEdge() or
-         * mergeVertices() is more appropriate for your situation.
+         * pinchEdge() is more appropriate for your situation.
          * The advantage of collapseEdge() is that it decreases the
-         * number of tetrahedra, whereas mergeVertices() increases this
+         * number of tetrahedra, whereas pinchEdge() increases this
          * number (but only by a small constant).  The disadvantage of
          * collapseEdge() is that it cannot always be performed (and
-         * also requires non-trivial validity tests), whereas mergeVertices()
+         * also requires non-trivial validity tests), whereas pinchEdge()
          * can be safely called on any edge.
          *
          * Note that after performing this move, all skeletal objects
@@ -1619,12 +1619,12 @@ class REGINA_API Triangulation<3> :
          *
          * If you are trying to reduce the number of vertices without changing
          * the topology, you should consider which of collapseEdge() or
-         * mergeVertices() is more appropriate for your situation.
+         * pinchEdge() is more appropriate for your situation.
          * The advantage of collapseEdge() is that it decreases the
-         * number of tetrahedra, whereas mergeVertices() increases this
+         * number of tetrahedra, whereas pinchEdge() increases this
          * number (but only by a small constant).  The disadvantage of
          * collapseEdge() is that it cannot always be performed (and
-         * also requires non-trivial validity tests), whereas mergeVertices()
+         * also requires non-trivial validity tests), whereas pinchEdge()
          * can be safely called on any edge.
          *
          * Note that after performing this move, all skeletal objects
@@ -1636,7 +1636,7 @@ class REGINA_API Triangulation<3> :
          *
          * @param e the edge to collapse.
          */
-        void mergeVertices(Edge<3>* e);
+        void pinchEdge(Edge<3>* e);
 
         /**
          * Reorders the tetrahedra of this triangulation using a

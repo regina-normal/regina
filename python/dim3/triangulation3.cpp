@@ -340,7 +340,7 @@ void addTriangulation3() {
                 OL_shellBoundary())
             .def("collapseEdge", &Triangulation<3>::collapseEdge,
                 OL_collapseEdge())
-            .def("mergeVertices", &Triangulation<3>::mergeVertices)
+            .def("pinchEdge", &Triangulation<3>::pinchEdge)
             .def("reorderTetrahedraBFS", &Triangulation<3>::reorderTetrahedraBFS,
                 OL_reorderTetrahedraBFS())
             .def("orient", &Triangulation<3>::orient)
