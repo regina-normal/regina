@@ -1274,6 +1274,22 @@ class REGINA_API Triangulation<3> :
         bool fourFourMove(Edge<3>* e, int newAxis, bool check = true,
                 bool perform = true);
         /**
+         * Performs a 0-2 move over the given edge.
+         * This involves layering two tetrahedra on top of the given edge of
+         * the given tetrahedron, and can always be done.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre The given tetrahedron is a tetrahedron of this triangulation.
+         *
+         * @param t the tetrahedron on which to perform the move
+         * @param e the edge of said tetrahedron on which to perform the move.
+         */
+        void zeroTwoMove(Tetrahedron<3>* t, int edge);
+        /**
          * Checks the eligibility of and/or performs a 2-0 move
          * about the given edge of degree 2.
          * This involves taking the two tetrahedra joined at that edge

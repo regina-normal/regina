@@ -430,6 +430,62 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     return true;
 }
 
+void Triangulation<3>::zeroTwoMove(Tetrahedron<3>* t, int edge) {
+
+    Perm<4> oldGluings[2];
+    Tetrahedron<3>* otherTet[2];
+    int faces[2];
+
+
+    // Pull out the faces of this tetrahedron which border this edge, which
+    // other tetrahedra these two faces are glued to, and which permutations
+    // are used for these gluings.
+    for (int i = 0; i < 2; ++i) {
+        faces[i] = FaceNumbering<3,1>::edgeVertex[5-edge][i];
+        oldGluings[i] = t->adjacentGluing(faces[i]);
+        otherTet[i] = t->adjacentTetrahedron(faces[i]);
+    }
+
+    // Are these two faces joined together?
+    bool snapped = ((otherTet[0] == t) &&
+                    (oldGluings[0][faces[0]] == faces[1]));
+
+    #ifdef DEBUG
+    std::cerr << "Performing 0-2 move about vertex\n";
+    #endif
+
+    // Actually perform the move.
+    ChangeEventSpan span(this);
+
+    // Unglue faces.
+    t->unjoin(faces[0]);
+    if (!snapped)
+        t->unjoin(faces[1]);
+
+    Tetrahedron<3>* newTet[2];
+    for (int i = 0; i < 2; ++i)
+        newTet[i] = newTetrahedron();
+
+
+    t->join(faces[0], newTet[0], Perm<4>());
+    t->join(faces[1], newTet[0], Perm<4>());
+
+    newTet[0]->join( FaceNumbering<3,1>::edgeVertex[edge][0], newTet[1], Perm<4>());
+    newTet[0]->join( FaceNumbering<3,1>::edgeVertex[edge][1], newTet[1], Perm<4>());
+
+    if (snapped) {
+        newTet[1]->join(faces[0], newTet[1], oldGluings[0]);
+    } else {
+        for(int i = 0; i < 2; ++i) {
+            if (otherTet[i] != nullptr) {
+                newTet[1]->join( faces[i], otherTet[i], oldGluings[i]);
+            }
+        }
+    }
+
+    return;
+}
+
 bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())

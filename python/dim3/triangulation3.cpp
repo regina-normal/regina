@@ -332,6 +332,7 @@ void addTriangulation3() {
             .def("twoZeroMove", twoZeroMove_vertex, OL_twoZeroMove())
             .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
             .def("twoOneMove", &Triangulation<3>::twoOneMove, OL_twoOneMove())
+            .def("zeroTwoMove", &Triangulation<3>::zeroTwoMove)
             .def("openBook", &Triangulation<3>::openBook, OL_openBook())
             .def("closeBook", &Triangulation<3>::closeBook, OL_closeBook())
             .def("shellBoundary", &Triangulation<3>::shellBoundary,
