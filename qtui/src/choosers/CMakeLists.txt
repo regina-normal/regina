@@ -3,6 +3,7 @@ SET ( FILES
   boundary4chooser
   cuspchooser
   edgeintchooser
+  tetintchooser
   )
 
 FOREACH( FILE ${FILES} )

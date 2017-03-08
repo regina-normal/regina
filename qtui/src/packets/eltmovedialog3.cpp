@@ -31,10 +31,10 @@
  **************************************************************************/
 
 #include "triangulation/dim3.h"
-
 #include "eltmovedialog3.h"
 #include "reginasupport.h"
 #include "choosers/edgeintchooser.h"
+#include "choosers/tetintchooser.h"
 #include "choosers/facechooser.h"
 #include "choosers/simplexchooser.h"
 
@@ -54,11 +54,12 @@ namespace {
     const int ID_44 = 3;
     const int ID_20E = 4;
     const int ID_20V = 5;
-    const int ID_21 = 6;
-    const int ID_OPENBOOK = 7;
-    const int ID_CLOSEBOOK = 8;
-    const int ID_SHELLBDRY = 9;
-    const int ID_COLLAPSEEDGE = 10;
+    const int ID_02 = 6;
+    const int ID_21 = 7;
+    const int ID_OPENBOOK = 8;
+    const int ID_CLOSEBOOK = 9;
+    const int ID_SHELLBDRY = 10;
+    const int ID_COLLAPSEEDGE = 11;
 
     bool has20v(regina::Vertex<3>* v) {
         return v->triangulation()->twoZeroMove(v, true, false);
@@ -98,6 +99,13 @@ namespace {
 
     bool hasShellBoundary(regina::Tetrahedron<3>* t) {
         return t->triangulation()->shellBoundary(t, true, false);
+    }
+
+    QString edgeDescription(int edge) {
+        return QObject::trUtf8("Edge %1%2")
+            .arg(regina::FaceNumbering<3,1>::edgeVertex[edge][0])
+            .arg(regina::FaceNumbering<3,1>::edgeVertex[edge][1])
+                ;
     }
 }
 
@@ -169,6 +177,13 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(use20v, 5, 0);
+    use02 = new QRadioButton(tr("0-2"), this);
+    use02->setWhatsThis( tr("<qt>Perform a 0-2 move on this "
+        "triangulation.<p>"
+        "A <i>0-2 move</i> involves expanding two faces which intersect in "
+        "an edge into two tetrahedra. This is the reverse of the 2-0 move."
+        "</qt>"));
+    layout->addWidget(use02, 6, 0);
     use21 = new QRadioButton(tr("2-&1"), this);
     use21->setWhatsThis( tr("<qt>Perform a 2-1 move on this "
         "triangulation.<p>"
@@ -177,7 +192,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "tetrahedron.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(use21, 6, 0);
+    layout->addWidget(use21, 7, 0);
     useOpenBook = new QRadioButton(tr("&Open book"), this);
     useOpenBook->setWhatsThis( tr("<qt>Perform a book opening "
         "move on this triangulation.<p>"
@@ -189,7 +204,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "the boundary.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useOpenBook, 7, 0);
+    layout->addWidget(useOpenBook, 8, 0);
     useCloseBook = new QRadioButton(tr("C&lose book"), this);
     useCloseBook->setWhatsThis( tr("<qt>Perform a book closing "
         "move on this triangulation.<p>"
@@ -199,7 +214,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "of the triangulation.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useCloseBook, 8, 0);
+    layout->addWidget(useCloseBook, 9, 0);
     useShellBdry = new QRadioButton(tr("&Shell boundary"), this);
     useShellBdry->setWhatsThis( tr("<qt>Perform a boundary shelling "
         "move on this triangulation.<p>"
@@ -208,7 +223,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "more of its faces.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useShellBdry, 9, 0);
+    layout->addWidget(useShellBdry, 10, 0);
     useCollapseEdge = new QRadioButton(tr("&Collapse edge"), this);
     useCollapseEdge->setWhatsThis( tr("<qt>Collapse an edge in this "
         "triangulation.<p>"
@@ -217,7 +232,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "tetrahedra containing that edge will be flattened into triangles.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useCollapseEdge, 10, 0);
+    layout->addWidget(useCollapseEdge, 11, 0);
 
     box32 = new FaceChooser<3, 1>(tri, &has32, this, false);
     box32->setWhatsThis( tr("<qt>Select the degree three edge about which "
@@ -267,6 +282,12 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box20v, 5, 1);
+    box02 = new TetIntChooser(tri, 0, 5, nullptr, &edgeDescription, this, false);
+    box02->setTetWhatsThis( tr("<qt>Select the tetrahedron which contains the "
+        "edge on which the 0-2 move will be performed.</qt>"));
+    box02->setIntWhatsThis( tr("<qt>Select the tetrahedron edge on which "
+        "the 0-2 move will be performed.</qt>"));
+    layout->addLayout(box02, 6, 1);
     box21 = new EdgeIntChooser(tri, 0, 1, tr("end"), &has21, this, false);
     box21->setWhatsThis( tr("<qt>Select the degree one edge about which "
         "the 2-1 move will be performed.  You must also select at which "
@@ -276,7 +297,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "when viewing the triangulation skeleton.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
-    layout->addWidget(box21, 6, 1);
+    layout->addWidget(box21, 7, 1);
     boxOpenBook = new FaceChooser<3, 2>(tri, &hasOpenBook, this, false);
     boxOpenBook->setWhatsThis( tr("<qt>Select the internal triangle "
         "that should be opened out.  The triangle numbers in this list "
@@ -284,7 +305,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxOpenBook, 7, 1);
+    layout->addWidget(boxOpenBook, 8, 1);
     boxCloseBook = new FaceChooser<3, 1>(tri, &hasCloseBook, this, false);
     boxCloseBook->setWhatsThis( tr("<qt>Select the boundary edge "
         "around which the book will be closed.  The edge numbers in this list "
@@ -292,14 +313,14 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxCloseBook, 8, 1);
+    layout->addWidget(boxCloseBook, 9, 1);
     boxShellBdry = new SimplexChooser<3>(tri, &hasShellBoundary, this, false);
     boxShellBdry->setWhatsThis( tr("<qt>Select the boundary tetrahedron "
         "that should be removed.  The tetrahedron numbers in this list "
         "are the usual tetrahedron numbers seen in the gluings editor.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxShellBdry, 9, 1);
+    layout->addWidget(boxShellBdry, 10, 1);
     boxCollapseEdge = new FaceChooser<3, 1>(tri, &hasCollapseEdge, this, false);
     boxCollapseEdge->setWhatsThis( tr("<qt>Select the edge joining "
         "two distinct vertices that should be collapsed.  "
@@ -307,7 +328,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "when viewing the triangulation skeleton.<p>"
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxCollapseEdge, 10, 1);
+    layout->addWidget(boxCollapseEdge, 11, 1);
 
     moveTypes = new QButtonGroup();
     moveTypes->addButton(use32, ID_32);
@@ -316,6 +337,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
     moveTypes->addButton(use44, ID_44);
     moveTypes->addButton(use20e, ID_20E);
     moveTypes->addButton(use20v, ID_20V);
+    moveTypes->addButton(use02, ID_02);
     moveTypes->addButton(use21, ID_21);
     moveTypes->addButton(useOpenBook, ID_OPENBOOK);
     moveTypes->addButton(useCloseBook, ID_CLOSEBOOK);
@@ -371,6 +393,10 @@ void EltMoveDialog3::clicked(QAbstractButton* btn) {
         regina::Vertex<3>* v = box20v->selected();
         if (v)
             tri->twoZeroMove(v);
+    } else if (use02->isChecked()) {
+        std::pair<regina::Tetrahedron<3>*, int> s = box02->selected();
+        if (s.first)
+            tri->zeroTwoMove(s.first, s.second);
     } else if (use21->isChecked()) {
         std::pair<regina::Edge<3>*, int> s = box21->selected();
         if (s.first)
@@ -428,6 +454,7 @@ void EltMoveDialog3::packetWasChanged(regina::Packet*) {
     updateStates(box44, use44);
     updateStates(box20e, use20e);
     updateStates(box20v, use20v);
+    updateStates(box02, use02);
     updateStates(box21, use21);
     updateStates(boxOpenBook, useOpenBook);
     updateStates(boxCloseBook, useCloseBook);

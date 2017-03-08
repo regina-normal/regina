@@ -50,6 +50,7 @@ class QDialogButtonBox;
 class QLabel;
 class QRadioButton;
 class EdgeIntChooser;
+class TetIntChooser;
 template <int, int> class FaceChooser;
 template <int> class SimplexChooser;
 
@@ -73,6 +74,7 @@ class EltMoveDialog3 : public QDialog, public regina::PacketListener {
         EdgeIntChooser* box44;
         FaceChooser<3, 1>* box20e;
         FaceChooser<3, 0>* box20v;
+        TetIntChooser* box02;
         EdgeIntChooser* box21;
         FaceChooser<3, 2>* boxOpenBook;
         FaceChooser<3, 1>* boxCloseBook;
@@ -84,6 +86,7 @@ class EltMoveDialog3 : public QDialog, public regina::PacketListener {
         QRadioButton* use44;
         QRadioButton* use20e;
         QRadioButton* use20v;
+        QRadioButton* use02;
         QRadioButton* use21;
         QRadioButton* useOpenBook;
         QRadioButton* useCloseBook;

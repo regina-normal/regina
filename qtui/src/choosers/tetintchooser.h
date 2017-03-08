@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,37 +30,39 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file edgeintchooser.h
- *  \brief Provides a widget for selecting a single edge
- *  of a 3-manifold triangulation along with an integer argument.
+/*! \file tetintchooser.h
+ *  \brief Provides a widget for selecting a tetrahedron in a 3-manifold
+ *  triangulation, along with an integer.
  */
 
-#ifndef __EDGEINTCHOOSER_H
-#define __EDGEINTCHOOSER_H
+#ifndef __TETINTCHOOSER_H
+#define __TETINTCHOOSER_H
 
 #include "packet/packetlistener.h"
 #include "triangulation/forward.h"
 
 #include <QDialog>
 #include <QComboBox>
+#include <QBoxLayout>
 #include <vector>
 
 /**
- * A filter function, used to determine whether a given edge with
- * integer argument should appear in the list.
+ * A filter function, used to determine whether a given integer
+ * should appear in the list.
  */
-typedef bool (*EdgeIntFilterFunc)(regina::Edge<3>*, int);
+typedef bool (*TetIntFilterFunc)(regina::Tetrahedron<3>*, int);
 
 /**
- * A widget through which a single edge of some triangulation along with
- * an integer argument can be selected.  The integer argument must be
- * within a given range; it may, for example, indicate one of the two
- * ends of the edge, or one of the embeddings.  An optional filter may be
- * applied to restrict the available selections.
- *
- * For now the integer range must be hard-coded in the class constructor.
- * If/when it becomes necessary, this class will be extended to allow
- * the range to be computed dynamically from each edge.
+ * A function used to describea given integer when it appears in the list.
+ */
+typedef QString (*TetIntDescFunc)(int);
+
+/**
+ * A widget through which a tetrahedron in a 3-manifold triangulation and an
+ * integer can be selected. Note that this chooser is different from others in
+ * that it offers two distinct combo boxes from which to make a selection (one
+ * for the tetrahedron and one for the integer) to keep the number of items in
+ * a single box low.
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
@@ -70,20 +72,27 @@ typedef bool (*EdgeIntFilterFunc)(regina::Edge<3>*, int);
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * classes do not use slots or signals, I believe this is okay.
  */
-class EdgeIntChooser : public QComboBox, public regina::PacketListener {
+class TetIntChooser : public QBoxLayout, public regina::PacketListener {
     private:
         regina::Triangulation<3>* tri_;
             /**< The triangulation whose edges we are
                  choosing from. */
-        EdgeIntFilterFunc filter_;
+        TetIntFilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<std::pair<regina::Edge<3>*, int> > options_;
-            /**< A list of the available options to choose from. */
+        TetIntDescFunc desc_;
+            /**< A function to describe a given integer in the appropriate
+             * context. */
+        std::vector<regina::Tetrahedron<3>*> options_;
+            /**< A list of the available tetrahedra to choose from. */
         int argMin_, argMax_;
             /**< The allowable integer range. */
         QString argDesc_;
             /**< What does the integer argument describe? */
+        QComboBox *tetChooser;
+            /**< A combo box to select a tetrahedron. */
+        QComboBox *intChooser;
+            /**< A combo box to select the integer. */
 
     public:
         /**
@@ -101,9 +110,11 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every edge/integer
          * combination will be offered.
          */
-        EdgeIntChooser(regina::Triangulation<3>* tri,
-                int argMin, int argMax, const QString& argDesc,
-                EdgeIntFilterFunc filter, QWidget* parent,
+        TetIntChooser(regina::Triangulation<3>* tri,
+                int argMin, int argMax,
+                TetIntFilterFunc filter,
+                TetIntDescFunc desc,
+                QWidget* parent,
                 bool autoUpdate = true);
 
         /**
@@ -112,7 +123,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * If there are no available edges to choose from,
          * this routine will return (0, 0).
          */
-        std::pair<regina::Edge<3>*, int> selected();
+        std::pair<regina::Tetrahedron<3>*, int> selected();
 
         /**
          * Changes the selection to the given edge and argument.
@@ -123,7 +134,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::Edge<3>* option, int arg);
+        void select(regina::Tetrahedron<3>* option, int arg);
 
         /**
          * Forces a manual refresh of the contents of this chooser.
@@ -131,6 +142,16 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * (i.e., at least one option is present) after the refresh.
          */
         bool refresh();
+
+        /**
+         * Set the WhatsThis string for the tetrahedron chooser.
+         */
+        void setTetWhatsThis(QString whatsThis);
+
+        /**
+         * Set the WhatsThis string for the int chooser.
+         */
+        void setIntWhatsThis(QString whatsThis);
 
         /**
          * PacketListener overrides.
@@ -141,9 +162,9 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
 
     private:
         /**
-         * The text to be displayed for a given option.
+         * The text to be displayed for a given tetrahedron.
          */
-        QString description(regina::Edge<3>* option, int arg);
+        QString tetDescription(regina::Tetrahedron<3>* tet);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -160,52 +181,65 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * dialog classes do not use slots or signals, I believe this is okay.
  */
-class EdgeIntDialog : public QDialog {
+class TetIntDialog : public QDialog {
     private:
         /**
          * Internal components:
          */
-        EdgeIntChooser* chooser;
+        TetIntChooser* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
-        EdgeIntDialog(QWidget* parent,
+        TetIntDialog(QWidget* parent,
             regina::Triangulation<3>* tri,
-            int argMin, int argMax, const QString& argDesc,
-            EdgeIntFilterFunc filter,
+            int argMin, int argMax,
+            TetIntFilterFunc filter,
+            TetIntDescFunc desc,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
-        static std::pair<regina::Edge<3>*, int> choose(QWidget* parent,
+        static std::pair<regina::Tetrahedron<3>*, int> choose(QWidget* parent,
             regina::Triangulation<3>* tri,
-            int argMin, int argMax, const QString& argDesc,
-            EdgeIntFilterFunc filter,
+            int argMin, int argMax,
+            TetIntFilterFunc filter,
+            TetIntDescFunc desc,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
 
-inline bool EdgeIntChooser::refresh() {
-    clear();
+inline bool TetIntChooser::refresh() {
+    tetChooser->clear();
+    intChooser->clear();
     options_.clear();
     fill();
-    return (count() > 0);
+    return (tetChooser->count() > 0);
 }
 
-inline void EdgeIntChooser::packetToBeChanged(regina::Packet*) {
-    clear();
+inline void TetIntChooser::setTetWhatsThis(QString whatsThis) {
+    tetChooser->setWhatsThis(whatsThis);
+}
+
+inline void TetIntChooser::setIntWhatsThis(QString whatsThis) {
+    intChooser->setWhatsThis(whatsThis);
+}
+
+inline void TetIntChooser::packetToBeChanged(regina::Packet*) {
+    tetChooser->clear();
+    intChooser->clear();
     options_.clear();
 }
 
-inline void EdgeIntChooser::packetWasChanged(regina::Packet*) {
+inline void TetIntChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void EdgeIntChooser::packetToBeDestroyed(regina::Packet*) {
-    clear();
+inline void TetIntChooser::packetToBeDestroyed(regina::Packet*) {
+    tetChooser->clear();
+    intChooser->clear();
     options_.clear();
 }
 
