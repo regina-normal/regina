@@ -70,6 +70,8 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2c, Link::r2, 4, 6);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3a, Link::r3, 2, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3b, Link::r3, 2, 4);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_jones, Link::jones, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_bracket, Link::bracket, 0, 1);
 
     Link* fromOrientedGauss_list(boost::python::list terms) {
         long len = boost::python::len(terms);
@@ -153,9 +155,9 @@ void addLink() {
             OL_complement()[return_value_policy<to_held_type<>>()])
         .def("connected", &Link::connected)
         .def("bracket", &Link::bracket,
-            return_value_policy<manage_new_object>())
+            OL_bracket()[return_value_policy<manage_new_object>()])
         .def("jones", &Link::jones,
-            return_value_policy<manage_new_object>())
+            OL_jones()[return_value_policy<manage_new_object>()])
         .def("homfly", &Link::homfly,
             return_value_policy<manage_new_object>())
         .def("homflyAZ", &Link::homflyAZ,
