@@ -1338,6 +1338,9 @@ class REGINA_API Link : public Packet {
          * The triangulation will be newly created, and it is the
          * responsibility of the caller of this routine to destroy it.
          *
+         * @param simplify \c true if and only if the triangulation of
+         * the complement should be simplified (thereby losing information
+         * about the orientation), as described above.
          * @return the complement of this link, as a newly-created object.
          */
         Triangulation<3>* complement(bool simplify = true) const;
