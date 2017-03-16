@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file link/nlink.h
+/*! \file link/link.h
  *  \brief Deals with knots and links in the 3-sphere.
  */
 
