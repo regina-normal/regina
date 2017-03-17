@@ -150,6 +150,7 @@ void addLink() {
             return_value_policy<to_held_type<>>())
         .def("reflect", &Link::reflect)
         .def("rotate", &Link::rotate)
+        .def("change", &Link::change)
         .def("writhe", &Link::writhe)
         .def("complement", &Link::complement,
             OL_complement()[return_value_policy<to_held_type<>>()])

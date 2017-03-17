@@ -165,6 +165,46 @@ void Link::rotate() {
     clearAllProperties();
 }
 
+void Link::change(Crossing* c) {
+    ChangeEventSpan span(this);
+
+    for (StrandRef& s : components_)
+        if (s.crossing_ == c)
+            s.strand_ ^= 1;
+
+    StrandRef s;
+
+    // We need to ensure that the following code works in the case of
+    // loop(s) at the given crossing.
+
+    // 1. Flip next[...].strand bits from previous crossings.
+    // In this code:
+    // - s.strand is from a prev[] array, and has not been flipped;
+    // - the next[...] array has not been reordered.
+    s = c->prev_[0];
+    s.crossing_->next_[s.strand_].strand_ ^= 1;
+    s = c->prev_[1];
+    s.crossing_->next_[s.strand_].strand_ ^= 1;
+
+    // 2. Reorder next[] and prev[] arrays.
+    std::swap(c->next_[0], c->next_[1]);
+    std::swap(c->prev_[0], c->prev_[1]);
+
+    // 3. Flip prev[...].strand bits from next crossings.
+    // In this code:
+    // - s.strand is from a next[] array, and has been flipped if necessary;
+    // - the prev[...] array has been reordered if necessary.
+    s = c->next_[0];
+    s.crossing_->prev_[s.strand_].strand_ ^= 1;
+    s = c->next_[1];
+    s.crossing_->prev_[s.strand_].strand_ ^= 1;
+
+    // Finally: the crossing sign will change.
+    c->sign_ = -c->sign_;
+
+    clearAllProperties();
+}
+
 std::string Link::brief() const {
     if (components_.empty())
         return std::string();

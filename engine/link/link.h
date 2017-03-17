@@ -790,6 +790,13 @@ class REGINA_API Link : public Packet {
         /*@{*/
 
         /**
+         * Switches the upper and lower strands of the given crossing.
+         *
+         * @param c the crossing to change.
+         */
+        void change(Crossing* c);
+
+        /**
          * Converts this link into its reflection.
          *
          * This routine changes the sign of every crossing, but leaves
