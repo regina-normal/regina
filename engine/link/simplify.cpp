@@ -33,7 +33,7 @@
 #include "link/link.h"
 
 // Affects the number of random type III moves attempted during simplification.
-#define COEFF_TYPE_3 5
+#define COEFF_TYPE_3 20
 
 namespace regina {
 
