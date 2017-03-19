@@ -70,6 +70,8 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2c, Link::r2, 4, 6);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3a, Link::r3, 2, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3b, Link::r3, 2, 4);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
+        Link::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_jones, Link::jones, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_bracket, Link::bracket, 0, 1);
 
@@ -148,6 +150,7 @@ void addLink() {
             return_value_policy<to_held_type<>>())
         .def("fromJenkins", fromJenkins_str,
             return_value_policy<to_held_type<>>())
+        .def("swapContents", &Link::swapContents)
         .def("reflect", &Link::reflect)
         .def("rotate", &Link::rotate)
         .def("change", &Link::change)
@@ -177,6 +180,9 @@ void addLink() {
         .def("r2", r2c, OL_r2c())
         .def("r3", r3a, OL_r3a())
         .def("r3", r3b, OL_r3b())
+        .def("intelligentSimplify", &Link::intelligentSimplify)
+        .def("simplifyToLocalMinimum", &Link::simplifyToLocalMinimum,
+             OL_simplifyToLocalMinimum())
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
     ;

@@ -10,6 +10,7 @@ SET ( FILES
   jones
   link
   reidemeister
+  simplify
   xmllinkreader
   )
 

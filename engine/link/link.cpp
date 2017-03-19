@@ -139,6 +139,21 @@ void Link::writeTextLong(std::ostream& out) const {
     out << std::endl;
 }
 
+void Link::swapContents(Link& other) {
+    if (&other == this)
+        return;
+
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
+    // Swap core data:
+    crossings_.swap(other.crossings_);
+    components_.swap(other.components_);
+
+    // Swap properties:
+    niceTreeDecomposition_.swap(other.niceTreeDecomposition_);
+}
+
 void Link::reflect() {
     ChangeEventSpan span(this);
     for (Crossing* cross : crossings_)

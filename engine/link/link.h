@@ -790,6 +790,24 @@ class REGINA_API Link : public Packet {
         /*@{*/
 
         /**
+         * Swaps the contents of this and the given link.
+         *
+         * All crossings that belong to this link will be moved to \a other,
+         * and all crossings that belong to \a other will be moved to this link.
+         * Likewise, all cached properties (e.g., tree decompositions) will be
+         * swapped.
+         *
+         * In particular, any Crossing pointers or references and any
+         * StrandRef objects will remain valid.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this link.
+         *
+         * @param other the link whose contents should be swapped with this.
+         */
+        void swapContents(Link& other);
+
+        /**
          * Switches the upper and lower strands of the given crossing.
          *
          * @param c the crossing to change.
@@ -1299,6 +1317,48 @@ class REGINA_API Link : public Packet {
          */
         bool r3(Crossing* crossing, int side, bool check = true,
             bool perform = true);
+
+        /**
+         * Attempts to simplify the link diagram using fast and greedy
+         * heuristics.  Specifically, this routine tries combinations of
+         * Reidemeister moves with the aim of reducing the number of
+         * crossings.
+         *
+         * Currently this routine uses simplifyToLocalMinimum() in
+         * combination with random type III Reidemeister moves.
+         *
+         * \warning Running this routine multiple times upon the same link may
+         * return different results, since the implementation makes random
+         * decisions.  More broadly, the implementation of this routine
+         * (and therefore its results) may change between different releases
+         * of Regina.
+         */
+        bool intelligentSimplify();
+        /**
+         * Uses type I and II Reidemeister moves to reduce the link
+         * monotonically to some local minimum number of crossings.
+         *
+         * End users will probably not want to call this routine.
+         * You should call intelligentSimplify() if you want a fast means of
+         * simplifying a link.
+         *
+         * Type III Reidemeister moves (which do not reduce the number of
+         * crossings) are not used in this routine.  Such moves do however
+         * feature in intelligentSimplify().
+         *
+         * \warning The implementation of this routine (and therefore
+         * its results) may change between different releases of Regina.
+         *
+         * @param perform \c true if we are to perform the
+         * simplifications, or \c false if we are only to investigate
+         * whether simplifications are possible (defaults to \c true).
+         * @return if \a perform is \c true, this routine returns
+         * \c true if and only if the link was changed to
+         * reduce the number of crossings; if \a perform is \c false,
+         * this routine returns \c true if and only if it determines
+         * that it is capable of performing such a change.
+         */
+        bool simplifyToLocalMinimum(bool perform = true);
 
         /*@}*/
         /**
