@@ -136,9 +136,9 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
 
     regina::NormalCoords coordSystem = coords->getCurrentSystem();
 
-    if (! coordSystem == regina::NS_QUAD_CLOSED && ! (
+    if (coordSystem == regina::NS_QUAD_CLOSED && ! (
             tri->countVertices() == 1 &&
-            tri->vertex(0)->link() == Vertex<3>::TORUS &&
+            tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
             tri->isOriented())) {
         ReginaSupport::sorry(ui,
             ui->tr("I cannot use quad closed coordinates with this triangulation."),
