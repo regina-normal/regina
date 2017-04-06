@@ -53,6 +53,11 @@ template class TreeTraversal<LPConstraintEuler, BanNone, NNativeLong>;
 template class TreeSingleSoln<LPConstraintEuler, BanNone, Integer>;
 template class TreeSingleSoln<LPConstraintEuler, BanNone, NNativeLong>;
 
+template class TreeTraversal<LPConstraintNonSpun, BanNone, Integer>;
+template class TreeTraversal<LPConstraintNonSpun, BanNone, NNativeLong>;
+template class TreeEnumeration<LPConstraintNonSpun, BanNone, Integer>;
+template class TreeEnumeration<LPConstraintNonSpun, BanNone, NNativeLong>;
+
 #ifdef INT128_AVAILABLE
 template class TreeTraversal<LPConstraintNone, BanNone, NativeInteger<16> >;
 template class TreeEnumeration<LPConstraintNone, BanNone, NativeInteger<16> >;
@@ -63,6 +68,9 @@ template class TreeEnumeration<LPConstraintNone, BanBoundary, NativeInteger<16> 
 
 template class TreeTraversal<LPConstraintEuler, BanNone, NativeInteger<16> >;
 template class TreeSingleSoln<LPConstraintEuler, BanNone, NativeInteger<16> >;
+
+template class TreeTraversal<LPConstraintNonSpun, BanNone, NativeInteger<16> >;
+template class TreeEnumeration<LPConstraintNonSpun, BanNone, NativeInteger<16> >;
 #endif
 
 } // namespace regina

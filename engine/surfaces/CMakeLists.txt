@@ -16,6 +16,7 @@ SET ( FILES
   nsvectororiented
   nsvectororientedquad
   nsvectorquad
+  nsvectorquadclosed
   nsvectorquadoct
   nsvectorstandard
   prism
@@ -66,6 +67,7 @@ if (${REGINA_INSTALL_DEV})
     nsvectororiented.h
     nsvectororientedquad.h
     nsvectorquad.h
+    nsvectorquadclosed.h
     nsvectorquadoct.h
     nsvectorstandard.h
     prism.h

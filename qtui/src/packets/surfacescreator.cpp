@@ -123,7 +123,9 @@ QString SurfacesCreator::parentWhatsThis() {
 regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    if (! dynamic_cast<regina::Triangulation<3>*>(parent)) {
+    regina::Triangulation<3>* tri =
+        dynamic_cast<regina::Triangulation<3>*>(parent);
+    if (! tri) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
             ui->tr("Normal surfaces must live within a 3-manifold "
@@ -133,6 +135,19 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
     }
 
     regina::NormalCoords coordSystem = coords->getCurrentSystem();
+
+    if (! coordSystem == regina::NS_QUAD_CLOSED && ! (
+            tri->countVertices() == 1 &&
+            tri->vertex(0)->link() == Vertex<3>::TORUS &&
+            tri->isOriented())) {
+        ReginaSupport::sorry(ui,
+            ui->tr("I cannot use quad closed coordinates with this triangulation."),
+            ui->tr("At the present time, quad closed coordinates are "
+                "only available for oriented ideal triangulations with "
+                "one torus cusp and no other boundary components or "
+                "internal vertices."));
+        return 0;
+    }
 
     int basisId = basis->currentIndex();
 
@@ -185,7 +200,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalSurfaces* ans = NormalSurfaces::enumerate(
-            dynamic_cast<regina::Triangulation<3>*>(parent),
+            tri,
             coordSystem,
             regina::NS_VERTEX | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
@@ -208,7 +223,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalSurfaces* ans = NormalSurfaces::enumerate(
-            dynamic_cast<regina::Triangulation<3>*>(parent),
+            tri,
             coordSystem,
             regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),

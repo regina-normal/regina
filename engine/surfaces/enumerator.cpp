@@ -53,6 +53,25 @@ namespace regina {
 Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
+namespace {
+    // The linear programming arguments to use with the tree traversal
+    // enumeration algorithm for each coordinate system.
+    template <class Coords>
+    struct LPArgs;
+
+    template <NormalCoords coords>
+    struct LPArgs<NormalInfo<coords>> {
+        typedef LPConstraintNone Constraint;
+        static const NormalCoords coords_ = coords;
+    };
+
+    template <>
+    struct LPArgs<NormalInfo<NS_QUAD_CLOSED>> {
+        typedef LPConstraintNonSpun Constraint;
+        static const NormalCoords coords_ = NS_QUAD;
+    };
+}
+
 NormalSurfaces* NormalSurfaces::enumerate(
         Triangulation<3>* owner, NormalCoords coords,
         NormalList which, NormalAlg algHints,
@@ -140,8 +159,8 @@ void NormalSurfaces::Enumerator::fillVertex() {
     // is unimportant here; we just use Integer.
     if (list_->algorithm_.has(NS_VERTEX_TREE) &&
             ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
-                TreeTraversal<LPConstraintNone, BanNone, Integer>::supported(
-                list_->coords_)))
+                TreeTraversal<typename LPArgs<Coords>::Constraint,
+                    BanNone, Integer>::supported(LPArgs<Coords>::coords_)))
         list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
 
     // ----- Run the enumeration algorithm -----
@@ -242,7 +261,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     // Here we use the fact that the coordinate system is known to be
     // supported by the tree traversal algorithm, and therefore is one
-    // of NS_STANDARD, NS_QUAD, NS_AN_STANDARD or NS_AN_QUAD.
+    // of NS_STANDARD, NS_QUAD, NS_QUAD_CLOSED, NS_AN_STANDARD or NS_AN_QUAD.
 
     // The matching equation matrix that will be used by the tree traversal
     // tableaux, which is always based on NS_STANDARD or NSQUAD (even
@@ -272,7 +291,8 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
             maxColsRHS = triang_->size() + 1;
             break;
         default:
-            // We shouldn't be here.. just use arbitrary precision arithmetic.
+            // Note that NS_QUAD_CLOSED falls through to here.
+            // Just use arbitrary precision arithmetic.
             fillVertexTreeWith<Coords, Integer>();
             return;
     }
@@ -383,8 +403,8 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
 template <typename Coords, typename Integer>
 void NormalSurfaces::Enumerator::fillVertexTreeWith() {
-    TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
-        triang_, list_->coords_);
+    TreeEnumeration<typename LPArgs<Coords>::Constraint,
+        BanNone, Integer> search(triang_, LPArgs<Coords>::coords_);
     while (search.next(tracker_)) {
         list_->surfaces.push_back(search.buildSurface());
         if (tracker_ && tracker_->isCancelled())

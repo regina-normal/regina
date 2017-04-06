@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -51,6 +51,8 @@ void CoordinateChooser::insertAllCreators() {
     insertSystem(regina::NS_STANDARD);
     insertSystem(regina::NS_AN_STANDARD);
     insertSystem(regina::NS_QUAD);
+    // TODO: Only insert QUAD_CLOSED for the right kind of ideal triangulations.
+    insertSystem(regina::NS_QUAD_CLOSED);
     insertSystem(regina::NS_AN_QUAD_OCT);
     if (ReginaPrefSet::global().surfacesSupportOriented) {
         insertSystem(regina::NS_ORIENTED);
