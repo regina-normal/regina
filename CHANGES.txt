@@ -10,6 +10,10 @@ Regina - A Normal Surface Theory Calculator
 Version 5.2  [ (under development) ]
 
     ENGINE:
+        Class SnapPeaTriangulation:
+            - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
+              would sometimes retriangulate unexpectedly during the
+              SnapPeaTriangulation(const Triangulation<3>&) constructor.
         Enum Algorithm, TuraevViroAlg:
             - Renamed TuraevViroAlg to the more general Algorithm enum type.
               The old type name TuraevViroAlg and constants TV_... are now
