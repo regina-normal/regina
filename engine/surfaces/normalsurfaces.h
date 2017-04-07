@@ -533,6 +533,22 @@ class REGINA_API NormalSurfaces : public Packet {
         NormalSurfaces* standardANToQuadOct() const;
 
         /**
+         * Sorts the surfaces in this list according to the given criterion.
+         *
+         * This sort is stable, i.e., surfaces that are equivalent under the
+         * given criterion will remain in the same relative order.
+         *
+         * The implementation of this routine uses std::stable_sort.
+         *
+         * @param comp a binary function (or function object) that
+         * accepts two const NormalSurface pointers, and returns \c true
+         * if and only if the first surface should appear before the second
+         * in the sorted list.
+         */
+        template <typename Comparison>
+        void sort(Comparison&& comp);
+
+        /**
          * Creates a new list filled with the surfaces from this list
          * that have at least one locally compatible partner.
          * In other words, a surface \a S from this list will be placed
@@ -1451,6 +1467,12 @@ inline const NormalSurface* NormalSurfaces::surface(size_t index) const {
 
 inline bool NormalSurfaces::dependsOnParent() const {
     return true;
+}
+
+template <typename Comparison>
+inline void NormalSurfaces::sort(Comparison&& comp) {
+    ChangeEventSpan span(this);
+    std::stable_sort(surfaces.begin(), surfaces.end(), comp);
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator() {

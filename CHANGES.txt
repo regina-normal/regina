@@ -10,6 +10,8 @@ Regina - A Normal Surface Theory Calculator
 Version 5.2  [ (under development) ]
 
     ENGINE:
+        Class NormalSurfaces:
+            - New routine sort() to sort surfaces by arbitrary criteria.
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the
