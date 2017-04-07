@@ -184,7 +184,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     // SnapPea no longer removes finite vertices automatically - we need
     // to do it here ourselves.  Otherwise snappea will crash shortly
     // after when it tries to initialise the gluing equations.
-    if (countVertices() > countBoundaryComponents())
+    if (tri.countVertices() > tri.countBoundaryComponents())
         regina::snappea::remove_finite_vertices(data_);
 
     // Regina triangulations know nothing about peripheral curves.
