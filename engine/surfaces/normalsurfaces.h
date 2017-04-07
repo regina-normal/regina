@@ -540,6 +540,8 @@ class REGINA_API NormalSurfaces : public Packet {
          *
          * The implementation of this routine uses std::stable_sort.
          *
+         * \ifacespython Not present.
+         *
          * @param comp a binary function (or function object) that
          * accepts two const NormalSurface pointers, and returns \c true
          * if and only if the first surface should appear before the second
