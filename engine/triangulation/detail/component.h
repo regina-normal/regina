@@ -278,7 +278,7 @@ class ComponentBase :
 
 template <int dim>
 inline ComponentBase<dim>::ComponentBase() :
-        valid_(true), orientable_(true), boundaryFacets_(0) {
+        valid_(true), boundaryFacets_(0), orientable_(true) {
 }
 
 template <int dim>

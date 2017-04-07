@@ -1430,9 +1430,9 @@ namespace regina {
 extern template class REGINA_API LPMatrix<Integer>;
 extern template class REGINA_API LPMatrix<NNativeLong>;
 
-extern template class REGINA_API LPCol<LPConstraintNone>;
-extern template class REGINA_API LPCol<LPConstraintEuler>;
-extern template class REGINA_API LPCol<LPConstraintNonSpun>;
+extern template struct REGINA_API LPCol<LPConstraintNone>;
+extern template struct REGINA_API LPCol<LPConstraintEuler>;
+extern template struct REGINA_API LPCol<LPConstraintNonSpun>;
 
 extern template class REGINA_API LPInitialTableaux<LPConstraintNone>;
 extern template class REGINA_API LPInitialTableaux<LPConstraintEuler>;
