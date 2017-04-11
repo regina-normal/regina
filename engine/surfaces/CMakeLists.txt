@@ -12,6 +12,7 @@ SET ( FILES
   links
   normalsurface
   normalsurfaces
+  normalise
   nsvectoranstandard
   nsvectororiented
   nsvectororientedquad

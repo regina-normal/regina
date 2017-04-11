@@ -152,6 +152,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Surface list actions
          */
+        QAction* actRemoveOct;
         QAction* actCutAlong;
         QAction* actCrush;
         QLinkedList<QAction*> surfaceActionList;
@@ -193,6 +194,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Surface list actions.
          */
+        void removeOctagons();
         void cutAlong();
         void crush();
 

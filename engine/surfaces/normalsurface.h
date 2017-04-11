@@ -1417,6 +1417,20 @@ class REGINA_API NormalSurface :
         bool isIncompressible() const;
 
         /**
+         * Create a new triangulation which is homeomorphic to the
+         * triangulation underlying this almost normal surface, but which can
+         * contain a normal surface which is isotopic to this normal surface
+         * but has no octagons.
+         *
+         * If this normal surface contains no octagons (possibly because the
+         * normal surface system doesn't allow it), this simply returns a
+         * duplicate of the underlying triangulation without modifications.
+         *
+         * @return a pointer to the newly allocated resulting triangulation.
+         */
+        Triangulation<3> * removeOctagons() const;
+
+        /**
          * Cuts the associated triangulation along this surface and
          * returns a newly created resulting triangulation.
          * The original triangulation is not changed.

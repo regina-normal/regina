@@ -532,6 +532,21 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
     connect(table->header(), SIGNAL(sectionResized(int, int, int)),
         this, SLOT(columnResized(int, int, int)));
 
+    actRemoveOct = new QAction(this);
+    actRemoveOct->setText(tr("Remove &Octagons"));
+    actRemoveOct->setToolTip(tr("Enlarge the triangulation so the "
+         "selected surface can be isotoped to remove octagons"));
+    actRemoveOct->setEnabled(false);
+    actRemoveOct->setWhatsThis(tr("<qt>Performs 0-2 moves on the triangulation "
+         "to allow an isotopy of the selected surface to exist without "
+         "octagons. This triangulation will not be changed; instead a new"
+         "enlarged triangulation will be created.<p>"
+         "This operation will never change the topology of the underlying "
+         "3-manifold. However, new tetrahedra will be added for every current "
+         "tetrahedron which contains an octagon of the given surface.</qt>"));
+    connect(actRemoveOct, SIGNAL(triggered()), this, SLOT(removeOctagons()));
+    surfaceActionList.append(actRemoveOct);
+
     actCutAlong = new QAction(this);
     actCutAlong->setText(tr("Cu&t Along Surface"));
     actCutAlong->setToolTip(tr("Cut the triangulation along the "
@@ -637,6 +652,27 @@ void SurfacesCoordinateUI::packetToBeDestroyed(Packet*) {
     refresh();
 }
 
+void SurfacesCoordinateUI::removeOctagons() {
+    if (table->selectionModel()->selectedIndexes().empty()) {
+        ReginaSupport::info(ui,
+            tr("Please select a normal surface to remove octagons from."));
+        return;
+    }
+
+    size_t whichSurface = model->surfaceIndex(
+        table->selectionModel()->selectedIndexes().front());
+    const regina::NormalSurface* toRemoveFrom =
+        model->surfaces()->surface(whichSurface);
+
+    // Don't simplify the triangulation, that will undo the work done!
+    regina::Triangulation<3>* ans = toRemoveFrom->removeOctagons();
+    ans->setLabel(surfaces->triangulation()->adornedLabel(
+        "Octagons removed #" + std::to_string(whichSurface)));
+    surfaces->insertChildLast(ans);
+
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
+}
+
 void SurfacesCoordinateUI::cutAlong() {
     if (table->selectionModel()->selectedIndexes().empty()) {
         ReginaSupport::info(ui,
@@ -696,10 +732,13 @@ void SurfacesCoordinateUI::crush() {
 }
 
 void SurfacesCoordinateUI::updateActionStates() {
+    bool canRemoveOct = isReadWrite &&
+        table->selectionModel()->hasSelection();
     bool canCrushOrCut = isReadWrite &&
         table->selectionModel()->hasSelection() &&
         (! surfaces->allowsAlmostNormal()) && surfaces->isEmbeddedOnly();
 
+    actRemoveOct->setEnabled(canRemoveOct);
     actCutAlong->setEnabled(canCrushOrCut);
     actCrush->setEnabled(canCrushOrCut);
 }

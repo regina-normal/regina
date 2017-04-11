@@ -160,6 +160,8 @@ void addNormalSurface() {
         .def("isCompressingDisc", &NormalSurface::isCompressingDisc,
             OL_isCompressingDisc())
         .def("isIncompressible", &NormalSurface::isIncompressible)
+        .def("removeOctagons", &NormalSurface::removeOctagons,
+            return_value_policy<to_held_type<> >())
         .def("cutAlong", &NormalSurface::cutAlong,
             return_value_policy<to_held_type<> >())
         .def("crush", &NormalSurface::crush,
