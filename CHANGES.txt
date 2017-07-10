@@ -12,6 +12,10 @@ Version 5.2  [ (under development) ]
     ENGINE:
         Class NormalSurfaces:
             - New routine sort() to sort surfaces by arbitrary criteria.
+            - The postconditions for enumerate() and makeMatchingEquations()
+              now allow Regina to return null in certain coordinate systems.
+              Currently NS_QUAD_CLOSED is the only coordinate system
+              where this can happen.
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the

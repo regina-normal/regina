@@ -165,6 +165,10 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
     if (! matchingEqns) {
         tmpEqns = regina::makeMatchingEquations(
             origTableaux_.tri(), coords_);
+        if (! tmpEqns) {
+            // The matching equations could not be constructed.
+            return false;
+        }
         matchingEqns = tmpEqns;
     }
 

@@ -420,6 +420,11 @@ class TreeTraversal : public BanConstraint {
          * reuse the same matrix to avoid the overhead of reconstructing it
          * every time this routine is called.
          *
+         * If you do not pass your own matching equations and Regina is
+         * unable to construct them (which can happen when the underlying
+         * triangulation is not supported by the normal coordinate system),
+         * then this routine will return \c false.
+         *
          * \pre The normal or almost normal surface \a s uses the same
          * coordinate system as was passed to the TreeTraversal constructor.
          * Moreover, this coordinate system is in fact a normal or
@@ -473,7 +478,7 @@ class TreeTraversal : public BanConstraint {
          * @param angleEqns the angle equations to check against
          * the given angle structure; this may be 0, in which case the angle
          * equations will be temporarily reconstructed for you using
-         * AngleStructureVector::makeMatchingEquations().
+         * AngleStructureVector::makeAngleEquations().
          * @return \c true if the given angle structure passes all of the tests
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).

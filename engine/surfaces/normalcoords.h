@@ -79,9 +79,12 @@ enum NormalCoords {
      * in SCG ’13: Proceedings of the 29th Annual Symposium on Computational
      * Geometry, ACM, 2013, pp. 405–414.
      *
-     * \warning Currently this coordinate system can \e only be used with
-     * oriented ideal triangulations with precisely one torus cusp and
-     * no other boundary components or internal vertices.
+     * \pre Regina can only create matching equations in this coordinate system
+     * for a limited class of triangulations.  Currently, such triangulations
+     * \e must be oriented and ideal, with precisely one torus cusp and no
+     * other boundary components or internal vertices.  Moreover, SnapPea must
+     * be able to work with them without retriangulating (though this should
+     * follow from the other constraints).
      */
     NS_QUAD_CLOSED = 10,
     /**

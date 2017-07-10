@@ -122,6 +122,8 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
 
     // Fetch the original (unadjusted) matrix of matching equations.
     if (coords_ != NS_ANGLE) {
+        // Here coords must be one of NS_QUAD or NS_STANDARD, and so we
+        // know that makeMatchingEquations() must succeed.
         eqns_ = regina::makeMatchingEquations(tri, coords);
         scaling_ = 0;
     } else {
