@@ -206,6 +206,24 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
             regina::NS_ALG_DEFAULT, &tracker);
 
+        if (! ans) {
+            if (coordSystem == NS_QUAD_CLOSED) {
+                ReginaSupport::info(parentWidget,
+                    ui->tr("<qt>I could not enumerate vertex normal "
+                    "surfaces in quad closed coordinates.  This could be "
+                    "because SnapPea was unable to construct the slope "
+                    "equations, or because it tried to retriangulate when "
+                    "doing so.<p>"
+                    "Please report this to the Regina developers.</qt>"));
+            } else {
+                ReginaSupport::failure(parentWidget,
+                    ui->tr("<qt>I could not enumerate vertex normal "
+                    "surfaces.<p>"
+                    "Please report this to the Regina developers.</qt>"));
+            }
+            return 0;
+        }
+
         if (dlg.run()) {
             ans->setLabel(ui->tr("%1 vertex surfaces").arg(
                 Coordinates::adjective(coordSystem, true)).toStdString());
@@ -228,6 +246,23 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
             regina::NS_ALG_DEFAULT, &tracker);
+
+        if (! ans) {
+            if (coordSystem == NS_QUAD_CLOSED) {
+                ReginaSupport::info(parentWidget,
+                    ui->tr("<qt>I could not enumerate fundamental normal "
+                    "surfaces in quad closed coordinates.  This could be "
+                    "because SnapPea was unable to construct the slope "
+                    "equations, or it tried to retriangulate when doing so.<p>"
+                    "Please report this to the Regina developers.</qt>"));
+            } else {
+                ReginaSupport::failure(parentWidget,
+                    ui->tr("<qt>I could not enumerate fundamental normal "
+                    "surfaces.<p>"
+                    "Please report this to the Regina developers.</qt>"));
+            }
+            return 0;
+        }
 
         if (dlg.run()) {
             ans->setLabel(ui->tr("%1 fundamental surfaces").arg(

@@ -184,7 +184,14 @@ static NSArray* embText;
         dispatch_async(dispatch_get_main_queue(), ^{
             [UIApplication sharedApplication].idleTimerDisabled = NO;
 
-            if (_tracker.isCancelled()) {
+            if (! ans) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Failed"
+                                                                    message:@"I could not complete the normal hypersurface enumeration.  Please report this to the Regina developers."
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"Close"
+                                                          otherButtonTitles:nil];
+                [alert show];
+            } else if (_tracker.isCancelled()) {
                 delete ans;
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Cancelled"
                                                                 message:nil

@@ -180,6 +180,14 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
                 regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
             regina::HS_ALG_DEFAULT, &tracker);
 
+        if (! ans) {
+            ReginaSupport::failure(parentWidget,
+                ui->tr("<qt>I could not enumerate vertex normal "
+                "hypersurfaces.<p>"
+                "Please report this to the Regina developers.</qt>"));
+            return 0;
+        }
+
         if (dlg.run()) {
             ans->setLabel("Vertex normal hypersurfaces");
             return ans;
@@ -201,6 +209,14 @@ regina::Packet* HyperCreator::createPacket(regina::Packet* parent,
             regina::HS_FUNDAMENTAL | (embedded->isChecked() ?
                 regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
             regina::HS_ALG_DEFAULT, &tracker);
+
+        if (! ans) {
+            ReginaSupport::failure(parentWidget,
+                ui->tr("<qt>I could not enumerate fundamental normal "
+                "hypersurfaces.<p>"
+                "Please report this to the Regina developers.</qt>"));
+            return 0;
+        }
 
         if (dlg.run()) {
             ans->setLabel("Fundamental normal hypersurfaces");

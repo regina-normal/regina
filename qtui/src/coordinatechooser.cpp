@@ -89,6 +89,17 @@ void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
     std::vector<regina::NormalCoords>::const_iterator it =
         std::find(systems.begin(), systems.end(), newSystem);
 
+    if (it == systems.end()) {
+        // Try to find a reasonable fallback.
+        if (newSystem == regina::NS_QUAD_CLOSED ||
+                newSystem == regina::NS_ORIENTED_QUAD)
+            it = std::find(systems.begin(), systems.end(), regina::NS_QUAD);
+        else if (newSystem == regina::NS_ORIENTED)
+            it = std::find(systems.begin(), systems.end(), regina::NS_STANDARD);
+        else if (newSystem == regina::NS_AN_LEGACY)
+            it = std::find(systems.begin(), systems.end(), regina::NS_AN_STANDARD);
+    }
+
     if (it != systems.end())
         setCurrentIndex(it - systems.begin());
 }
