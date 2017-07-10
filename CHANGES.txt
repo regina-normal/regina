@@ -10,6 +10,12 @@ Regina - A Normal Surface Theory Calculator
 Version 5.2  [ (under development) ]
 
     ENGINE:
+        Class NormalHypersurfaces:
+            - New routine sort() to sort hypersurfaces by arbitrary criteria.
+            - The postconditions for enumerate() and makeMatchingEquations()
+              now allow Regina to return null in certain coordinate systems,
+              though there are not yet any coordinate systems where this can
+              happen.
         Class NormalSurfaces:
             - New routine sort() to sort surfaces by arbitrary criteria.
             - The postconditions for enumerate() and makeMatchingEquations()

@@ -270,6 +270,25 @@ class REGINA_API NormalHypersurfaces : public Packet {
         virtual bool dependsOnParent() const;
 
         /**
+         * Sorts the hypersurfaces in this list according to the given
+         * criterion.
+         *
+         * This sort is stable, i.e., hypersurfaces that are equivalent under
+         * the given criterion will remain in the same relative order.
+         *
+         * The implementation of this routine uses std::stable_sort.
+         *
+         * \ifacespython Not present.
+         *
+         * @param comp a binary function (or function object) that
+         * accepts two const HyperSurface pointers, and returns \c true
+         * if and only if the first hypersurface should appear before the
+         * second in the sorted list.
+         */
+        template <typename Comparison>
+        void sort(Comparison&& comp);
+
+        /**
          * Returns a newly created matrix containing the matching
          * equations that were used to create this normal hypersurface list.
          * The destruction of this matrix is the responsibility of the
@@ -798,6 +817,12 @@ inline const NormalHypersurface* NormalHypersurfaces::hypersurface(
 
 inline bool NormalHypersurfaces::dependsOnParent() const {
     return true;
+}
+
+template <typename Comparison>
+inline void HyperSurfaces::sort(Comparison&& comp) {
+    ChangeEventSpan span(this);
+    std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 
 inline MatrixInt* NormalHypersurfaces::recreateMatchingEquations() const {
