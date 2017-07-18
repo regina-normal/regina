@@ -1634,8 +1634,8 @@ inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
 }
 
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
-        Triangulation<3>* triang, ProgressTracker* tracker) :
-        list_(list), triang_(triang), tracker_(tracker) {
+        Triangulation<3>* triang, MatrixInt* eqns, ProgressTracker* tracker) :
+        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
 }
 
 } // namespace regina

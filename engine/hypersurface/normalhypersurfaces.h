@@ -820,7 +820,7 @@ inline bool NormalHypersurfaces::dependsOnParent() const {
 }
 
 template <typename Comparison>
-inline void HyperSurfaces::sort(Comparison&& comp) {
+inline void NormalHypersurfaces::sort(Comparison&& comp) {
     ChangeEventSpan span(this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
@@ -949,8 +949,8 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
 
 inline NormalHypersurfaces::Enumerator::Enumerator(
         NormalHypersurfaces* list, Triangulation<4>* triang,
-        ProgressTracker* tracker) :
-        list_(list), triang_(triang), tracker_(tracker) {
+        MatrixInt* eqns, ProgressTracker* tracker) :
+        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
 }
 
 } // namespace regina
