@@ -22,6 +22,8 @@ Version 5.2  [ (under development) ]
               now allow Regina to return null in certain coordinate systems.
               Currently NS_QUAD_CLOSED is the only coordinate system
               where this can happen.
+        Class NSVectorQuadClosed:
+            - New normal surface coordinate class to implement NS_QUAD_CLOSED.
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the
