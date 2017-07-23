@@ -207,7 +207,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             regina::NS_ALG_DEFAULT, &tracker);
 
         if (! ans) {
-            if (coordSystem == NS_QUAD_CLOSED) {
+            if (coordSystem == regina::NS_QUAD_CLOSED) {
                 ReginaSupport::info(parentWidget,
                     ui->tr("<qt>I could not enumerate vertex normal "
                     "surfaces in quad closed coordinates.  This could be "
@@ -248,7 +248,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             regina::NS_ALG_DEFAULT, &tracker);
 
         if (! ans) {
-            if (coordSystem == NS_QUAD_CLOSED) {
+            if (coordSystem == regina::NS_QUAD_CLOSED) {
                 ReginaSupport::info(parentWidget,
                     ui->tr("<qt>I could not enumerate fundamental normal "
                     "surfaces in quad closed coordinates.  This could be "

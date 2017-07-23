@@ -36,6 +36,7 @@
 #import "ReginaHelper.h"
 #import "progress/progresstracker.h"
 #import "surfaces/normalsurfaces.h"
+#import "triangulation/dim3.h"
 
 #define KEY_LAST_TYPE @"NewSurfacesType"
 #define KEY_LAST_COORDS @"NewSurfacesCoords"
@@ -207,7 +208,7 @@ static NSArray* embText;
 
             if (! ans) {
                 UIAlertView *alert;
-                if (coords == NS_QUAD_CLOSED) {
+                if (coords == regina::NS_QUAD_CLOSED) {
                     alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Failed"
                                                                     message:@"I could not complete the normal surface enumeration. This could be because SnapPea was unable to construct the slope equations, or because it tried to retriangulate when doing so. Please report this to the Regina developers."
                                                                    delegate:nil
