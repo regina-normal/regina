@@ -42,6 +42,7 @@
 #define __TRIANGULATION3_H
 #endif
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <vector>
