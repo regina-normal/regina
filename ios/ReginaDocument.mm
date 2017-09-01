@@ -89,18 +89,25 @@ enum DocError {
         NSLog(@"Inbox URL is not a file URL: %@", u);
         return nil;
     }
+ 
+    NSString* uPath = [NSString stringWithUTF8String:u.fileSystemRepresentation];
+    if (! [[NSFileManager defaultManager] fileExistsAtPath:uPath]) {
+        NSLog(@"Inbox URL does not exist: %@", u);
+        return nil;
+    }
 
     // Move from the inbox into the documents folder.
     NSLog(@"Moving file out of inbox: %@", u);
     BOOL moveOk = NO;
     NSURL* docURL = [ReginaDocument uniqueDocURLFor:(name ? name : u)];
+    NSError* err = NULL;
     if (docURL)
-        moveOk = [[NSFileManager defaultManager] moveItemAtURL:u toURL:docURL error:nil];
+        moveOk = [[NSFileManager defaultManager] moveItemAtURL:u toURL:docURL error:&err];
     if (moveOk) {
         NSLog(@"New URL: %@", docURL);
         u = docURL;
     } else
-        NSLog(@"Could not move to new URL: %@", docURL);
+        NSLog(@"Could not move to new URL: %@ - %@", docURL, err.localizedDescription);
 
     self = [super initWithFileURL:u];
     if (self) {
