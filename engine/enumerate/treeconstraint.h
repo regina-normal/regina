@@ -48,7 +48,7 @@ namespace regina {
 class AngleStructure;
 
 template <typename IntType> class LPMatrix;
-template <class LPConstraint> class LPCol;
+template <class LPConstraint> struct LPCol;
 template <class LPConstraint> class LPInitialTableaux;
 template <class LPConstraint, typename IntType> class LPData;
 
