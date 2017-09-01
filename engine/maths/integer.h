@@ -1493,9 +1493,19 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
 //   REGINA_API.  This is possible because our library explicitly instantiates
 //   IntegerBase for all possible template parameters.
 //
+// Note that we still do use "extern template" for class constants.
+//
 // I would *love* to hear of a better way of doing this that correctly
 // sets the dllexport / dllimport attributes under windows, and that
 // doesn't require marking the entire template as REGINA_API.
+
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+extern template REGINA_API const IntegerBase<true> IntegerBase<true>::zero;
+extern template REGINA_API const IntegerBase<false> IntegerBase<false>::zero;
+extern template REGINA_API const IntegerBase<true> IntegerBase<true>::one;
+extern template REGINA_API const IntegerBase<false> IntegerBase<false>::one;
+extern template REGINA_API const IntegerBase<true> IntegerBase<true>::infinity;
+#endif // __DOXYGEN
 
 /**
  * LargeInteger is a typedef for IntegerBase<true>, which offers
