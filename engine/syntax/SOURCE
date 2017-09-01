@@ -15,6 +15,9 @@ framework from KDE Frameworks 5.28.0:
 The original KDE framework was downloaded on 21 Nov 2016 from:
 http://download.kde.org/stable/frameworks/5.28/
 
+The ongoing development of the original KDE framework can be tracked at:
+git://anongit.kde.org/syntax-highlighting
+
 KDE Frameworks 5.28.0 is licensed under the GNU LGPL (version 2 or above).
 See COPYING.LIB for details.
 
