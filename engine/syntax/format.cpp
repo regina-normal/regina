@@ -63,8 +63,6 @@ static Theme::TextStyle stringToDefaultFormat(const std::string& str)
     if (!regina::startsWith(str, "ds"))
         return Theme::Normal;
 
-    bool ok = false;
-
     // TODO: Make this log-time in the enumerator size.
     if (str == "dsNormal") return Theme::Normal;
     if (str == "dsKeyword") return Theme::Keyword;
