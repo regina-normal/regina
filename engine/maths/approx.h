@@ -65,7 +65,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-REGINA_DEPRECATED REGINA_API extern const double epsilon;
+[[deprecated]] REGINA_API extern const double epsilon;
 
 /**
  * Deprecated routine for managing floating-point roundoff errors.
