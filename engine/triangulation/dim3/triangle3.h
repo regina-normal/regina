@@ -165,7 +165,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2> {
          * Creates a new triangle and marks it as belonging to the
          * given triangulation component.
          *
-         * @param myComponent the triangulation component to which this
+         * @param component the triangulation component to which this
          * triangle belongs.
          */
         Face(Component<3>* component);

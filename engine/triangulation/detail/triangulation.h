@@ -1861,7 +1861,6 @@ class TriangulationBase :
          * of its vertices becomes simplex zero with vertices
          * 0,...,\a dim under the "canonical isomorphism".
          *
-         * @param tri the triangulation under consideration.
          * @param simp the index of some top-dimensional simplex in this
          * triangulation.
          * @param vertices some ordering of the vertices of the given simplex.
@@ -1910,7 +1909,7 @@ class TriangulationBase :
          * isomorphic copy of this triangulation.
          * @param output the output iterator to which the isomorphisms
          * will be written.
-         * @param completeIsomorphism \c true if isomorphisms must be
+         * @param complete \c true if isomorphisms must be
          * onto and boundary complete, or \c false if neither of these
          * restrictions should be imposed.
          * @param firstOnly \c true if only one isomorphism should be
@@ -1939,7 +1938,7 @@ class TriangulationBase :
          *
          * @param other the triangulation in which we are searching for an
          * isomorphic copy of this triangulation.
-         * @param completeIsomorphism \c true if the isomorphism must be
+         * @param complete \c true if the isomorphism must be
          * onto and boundary complete, or \c false if neither of these
          * restrictions should be imposed.
          * @return \c true if no immediate obstructions were found, or
