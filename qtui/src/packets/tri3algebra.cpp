@@ -479,7 +479,7 @@ bool Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
 
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing invariant"), ui);
-    tri->turaevViro(r, parity, regina::TV_DEFAULT, &tracker);
+    tri->turaevViro(r, parity, regina::ALG_DEFAULT, &tracker);
     if (! dlg.run())
         return false;
     dlg.hide();

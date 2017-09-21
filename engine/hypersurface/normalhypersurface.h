@@ -234,7 +234,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * must be between 0 and size()-1 inclusive.
          * @return the coordinate at the given index.
          */
-        const NLargeInteger& operator [] (size_t index) const;
+        const LargeInteger& operator [] (size_t index) const;
 
         /**
          * Sets the given normal coordinate to the given value.
@@ -983,7 +983,7 @@ inline size_t NormalHypersurfaceVector::size() const {
     return coords_.size();
 }
 
-inline const NLargeInteger& NormalHypersurfaceVector::operator []
+inline const LargeInteger& NormalHypersurfaceVector::operator []
         (size_t index) const {
     return coords_[index];
 }
