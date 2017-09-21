@@ -98,7 +98,7 @@ class BoundaryComponent<3>: public detail::BoundaryComponentBase<3> {
  * \deprecated Instead of the old typedef NBoundaryComponent, you should use
  * the real class name BoundaryComponent<3>.
  */
-REGINA_DEPRECATED typedef BoundaryComponent<3> NBoundaryComponent;
+[[deprecated]] typedef BoundaryComponent<3> NBoundaryComponent;
 
 /*@}*/
 

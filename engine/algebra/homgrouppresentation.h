@@ -374,7 +374,7 @@ class REGINA_API HomGroupPresentation :
  * \deprecated The class NHomGroupPresentation has now been renamed to
  * HomGroupPresentation.
  */
-REGINA_DEPRECATED typedef HomGroupPresentation NHomGroupPresentation;
+[[deprecated]] typedef HomGroupPresentation NHomGroupPresentation;
 
 /*@}*/
 

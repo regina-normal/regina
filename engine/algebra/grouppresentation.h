@@ -158,7 +158,7 @@ struct REGINA_API GroupExpressionTerm {
  * \deprecated The struct NGroupExpressionTerm has now been renamed to
  * GroupExpressionTerm.
  */
-REGINA_DEPRECATED typedef GroupExpressionTerm NGroupExpressionTerm;
+[[deprecated]] typedef GroupExpressionTerm NGroupExpressionTerm;
 
 /**
  * Writes the given term to the given output stream.
@@ -666,7 +666,7 @@ class REGINA_API GroupExpression :
  * \deprecated The struct NGroupExpression has now been renamed to
  * GroupExpression.
  */
-REGINA_DEPRECATED typedef GroupExpression NGroupExpression;
+[[deprecated]] typedef GroupExpression NGroupExpression;
 
 /**
  * Represents a finite presentation of a group.
@@ -1450,7 +1450,7 @@ class REGINA_API GroupPresentation :
  * \deprecated The struct NGroupPresentation has now been renamed to
  * GroupPresentation.
  */
-REGINA_DEPRECATED typedef GroupPresentation NGroupPresentation;
+[[deprecated]] typedef GroupPresentation NGroupPresentation;
 
 /*@}*/
 

@@ -201,7 +201,7 @@ class REGINA_API SnapPeaCensusTri: public StandardTriangulation {
  * \deprecated The class NSnapPeaCensusTri has now been renamed to
  * SnapPeaCensusTri.
  */
-REGINA_DEPRECATED typedef SnapPeaCensusTri NSnapPeaCensusTri;
+[[deprecated]] typedef SnapPeaCensusTri NSnapPeaCensusTri;
 
 /*@}*/
 

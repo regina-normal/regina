@@ -155,7 +155,7 @@ class REGINA_API SnappedTwoSphere :
  * \deprecated The class NSnappedTwoSphere has now been renamed to
  * SnappedTwoSphere.
  */
-REGINA_DEPRECATED typedef SnappedTwoSphere NSnappedTwoSphere;
+[[deprecated]] typedef SnappedTwoSphere NSnappedTwoSphere;
 
 /*@}*/
 

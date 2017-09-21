@@ -126,7 +126,7 @@ class REGINA_API NSVectorQuad :
  * \deprecated The class NNormalSurfaceVectorQuad has now been
  * renamed to NSVectorQuad.
  */
-REGINA_DEPRECATED typedef NSVectorQuad NNormalSurfaceVectorQuad;
+[[deprecated]] typedef NSVectorQuad NNormalSurfaceVectorQuad;
 
 /*@}*/
 

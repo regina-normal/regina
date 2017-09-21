@@ -68,7 +68,7 @@ enum PacketType {
      *
      * \deprecated This constant has been renamed to PACKET_TRIANGULATION3.
      */
-    REGINA_DEPRECATED_ENUM PACKET_TRIANGULATION = 3,
+    PACKET_TRIANGULATION [[deprecated]] = 3,
     /**
      * Represents a normal surface list, of class NormalSurfaces.
      */
@@ -78,7 +78,7 @@ enum PacketType {
      *
      * \deprecated This constant has been renamed to PACKET_NORMALSURFACES.
      */
-    REGINA_DEPRECATED_ENUM PACKET_NORMALSURFACELIST = 6,
+    PACKET_NORMALSURFACELIST [[deprecated]] = 6,
     /**
      * Represents a script packet, of class Script.
      */
@@ -97,7 +97,7 @@ enum PacketType {
      *
      * \deprecated This constant has been renamed to PACKET_ANGLESTRUCTURES.
      */
-    REGINA_DEPRECATED_ENUM PACKET_ANGLESTRUCTURELIST = 9,
+    PACKET_ANGLESTRUCTURELIST [[deprecated]] = 9,
     /**
      * Represents a PDF document, of class PDF.
      */
@@ -107,7 +107,7 @@ enum PacketType {
      *
      * \deprecated This constant has been renamed to PACKET_TRIANGULATION4.
      */
-    REGINA_DEPRECATED_ENUM PACKET_DIM4TRIANGULATION = 11,
+    PACKET_DIM4TRIANGULATION [[deprecated]] = 11,
     /**
      * Represents a normal hypersurface list, of class NormalHypersurfaces.
      */
@@ -117,13 +117,13 @@ enum PacketType {
      *
      * \deprecated This constant has been renamed to PACKET_NORMALHYPERSURFACES.
      */
-    REGINA_DEPRECATED_ENUM PACKET_NORMALHYPERSURFACELIST = 13,
+    PACKET_NORMALHYPERSURFACELIST [[deprecated]] = 13,
     /**
      * Deprecated alias for PACKET_TRIANGULATION2.
      *
      * \deprecated This constant has been renamed to PACKET_TRIANGULATION2.
      */
-    REGINA_DEPRECATED_ENUM PACKET_DIM2TRIANGULATION = 15,
+    PACKET_DIM2TRIANGULATION [[deprecated]] = 15,
     /**
      * Represents a triangulation in the embedded SnapPea kernel, of
      * class SnapPeaTriangulation.

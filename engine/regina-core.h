@@ -248,7 +248,7 @@ enum Algorithm {
      * constant ALG_DEFAULT, and the underlying enumeration type has
      * been renamed from TuraevViroAlg to Algorithm.
      */
-    REGINA_DEPRECATED_ENUM TV_DEFAULT = 0,
+    TV_DEFAULT [[deprecated]] = 0,
     /**
      * Deprecated alias for ALG_BACKTRACK.
      *
@@ -256,7 +256,7 @@ enum Algorithm {
      * constant ALG_BACKTRACK, and the underlying enumeration type has
      * been renamed from TuraevViroAlg to Algorithm.
      */
-    REGINA_DEPRECATED_ENUM TV_BACKTRACK = 1,
+    TV_BACKTRACK [[deprecated]] = 1,
     /**
      * Deprecated alias for ALG_TREEWIDTH.
      *
@@ -264,7 +264,7 @@ enum Algorithm {
      * constant ALG_TREEWIDTH, and the underlying enumeration type has
      * been renamed from TuraevViroAlg to Algorithm.
      */
-    REGINA_DEPRECATED_ENUM TV_TREEWIDTH = 2,
+    TV_TREEWIDTH [[deprecated]] = 2,
     /**
      * Deprecated alias for ALG_NAIVE.
      *
@@ -272,7 +272,7 @@ enum Algorithm {
      * constant ALG_NAIVE, and the underlying enumeration type has
      * been renamed from TuraevViroAlg to Algorithm.
      */
-    REGINA_DEPRECATED_ENUM TV_NAIVE = 3
+    TV_NAIVE [[deprecated]] = 3
 };
 
 /**
@@ -283,7 +283,7 @@ enum Algorithm {
  * TV_BACKTRACK, TV_TREEWIDTH and TV_NAIVE correspond to the new constants
  * ALG_DEFAULT, ALG_BACKTRACK, ALG_TREEWIDTH and ALG_NAIVE respectively.
  */
-REGINA_DEPRECATED typedef Algorithm TuraevViroAlg;
+[[deprecated]] typedef Algorithm TuraevViroAlg;
 
 } // namespace regina
 

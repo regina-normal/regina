@@ -553,7 +553,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
  *
  * \deprecated The class NCyclotomic has now been renamed to Cyclotomic.
  */
-REGINA_DEPRECATED typedef Cyclotomic NCyclotomic;
+[[deprecated]] typedef Cyclotomic NCyclotomic;
 
 /*@}*/
 

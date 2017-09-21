@@ -504,7 +504,7 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
  * \deprecated The class NSurfaceFilter has now been renamed to
  * SurfaceFilter.
  */
-REGINA_DEPRECATED typedef SurfaceFilter NSurfaceFilter;
+[[deprecated]] typedef SurfaceFilter NSurfaceFilter;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -513,7 +513,7 @@ REGINA_DEPRECATED typedef SurfaceFilter NSurfaceFilter;
  * \deprecated The class NSurfaceFilterCombination has now been renamed to
  * SurfaceFilterCombination.
  */
-REGINA_DEPRECATED typedef SurfaceFilterCombination NSurfaceFilterCombination;
+[[deprecated]] typedef SurfaceFilterCombination NSurfaceFilterCombination;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -522,7 +522,7 @@ REGINA_DEPRECATED typedef SurfaceFilterCombination NSurfaceFilterCombination;
  * \deprecated The class NSurfaceFilterProperties has now been renamed to
  * SurfaceFilterProperties.
  */
-REGINA_DEPRECATED typedef SurfaceFilterProperties NSurfaceFilterProperties;
+[[deprecated]] typedef SurfaceFilterProperties NSurfaceFilterProperties;
 
 /*@}*/
 

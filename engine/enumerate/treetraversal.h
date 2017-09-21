@@ -1415,7 +1415,7 @@ class TreeSingleSoln :
  * \deprecated The class NTreeTraversal has now been renamed to TreeTraversal.
  */
 template <class LPConstraint, typename BanConstraint, typename IntType>
-using NTreeTraversal REGINA_DEPRECATED =
+using NTreeTraversal [[deprecated]] =
     TreeTraversal<LPConstraint, BanConstraint, IntType>;
 
 /**
@@ -1428,7 +1428,7 @@ using NTreeTraversal REGINA_DEPRECATED =
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
-using NTreeEnumeration REGINA_DEPRECATED =
+using NTreeEnumeration [[deprecated]] =
     TreeEnumeration<LPConstraint, BanConstraint, IntType>;
 
 /**
@@ -1441,7 +1441,7 @@ using NTreeEnumeration REGINA_DEPRECATED =
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
-using NTautEnumeration REGINA_DEPRECATED =
+using NTautEnumeration [[deprecated]] =
     TautEnumeration<LPConstraint, BanConstraint, IntType>;
 
 /**
@@ -1453,7 +1453,7 @@ using NTautEnumeration REGINA_DEPRECATED =
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
-using NTreeSingleSoln REGINA_DEPRECATED =
+using NTreeSingleSoln [[deprecated]] =
     TreeSingleSoln<LPConstraint, BanConstraint, IntType>;
 
 /*@}*/

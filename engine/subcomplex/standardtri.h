@@ -292,7 +292,7 @@ class REGINA_API StandardTriangulation :
  * \deprecated The class NStandardTriangulation has now been renamed to
  * StandardTriangulation.
  */
-REGINA_DEPRECATED typedef StandardTriangulation NStandardTriangulation;
+[[deprecated]] typedef StandardTriangulation NStandardTriangulation;
 
 /*@}*/
 

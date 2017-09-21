@@ -259,7 +259,7 @@ class REGINA_API LayeredChain : public StandardTriangulation {
  * \deprecated The class NLayeredChain has now been renamed to
  * LayeredChain.
  */
-REGINA_DEPRECATED typedef LayeredChain NLayeredChain;
+[[deprecated]] typedef LayeredChain NLayeredChain;
 
 /*@}*/
 

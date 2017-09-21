@@ -2270,7 +2270,7 @@ typedef NativeInteger<sizeof(long)> NNativeLong;
  *
  * \deprecated The class NInteger has now been renamed to Integer.
  */
-REGINA_DEPRECATED typedef Integer NInteger;
+[[deprecated]] typedef Integer NInteger;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2278,7 +2278,7 @@ REGINA_DEPRECATED typedef Integer NInteger;
  *
  * \deprecated The class NLargeInteger has now been renamed to LargeInteger.
  */
-REGINA_DEPRECATED typedef LargeInteger NLargeInteger;
+[[deprecated]] typedef LargeInteger NLargeInteger;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2287,7 +2287,7 @@ REGINA_DEPRECATED typedef LargeInteger NLargeInteger;
  * \deprecated The class NNativeInteger has now been renamed to NativeInteger.
  */
 template <int bytes>
-using NNativeInteger REGINA_DEPRECATED = NativeInteger<bytes>;
+using NNativeInteger [[deprecated]] = NativeInteger<bytes>;
 
 /*@}*/
 

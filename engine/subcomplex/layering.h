@@ -412,7 +412,7 @@ class REGINA_API Layering : public boost::noncopyable {
  *
  * \deprecated The class NLayering has now been renamed to * Layering.
  */
-REGINA_DEPRECATED typedef Layering NLayering;
+[[deprecated]] typedef Layering NLayering;
 
 /*@}*/
 

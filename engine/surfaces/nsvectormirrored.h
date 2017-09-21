@@ -174,7 +174,7 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
  * \deprecated The class NNormalSurfaceVectorMirrored has now been renamed to
  * NSVectorMirrored.
  */
-REGINA_DEPRECATED typedef NSVectorMirrored NNormalSurfaceVectorMirrored;
+[[deprecated]] typedef NSVectorMirrored NNormalSurfaceVectorMirrored;
 
 /*@}*/
 

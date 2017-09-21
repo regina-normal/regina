@@ -1112,7 +1112,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
  * \deprecated Instead of the old typedef Dim4GluingPermSearcher, you should
  * use the full class name GluingPermSearcher<4>.
  */
-REGINA_DEPRECATED typedef GluingPermSearcher<4> Dim4GluingPermSearcher;
+[[deprecated]] typedef GluingPermSearcher<4> Dim4GluingPermSearcher;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1121,7 +1121,7 @@ REGINA_DEPRECATED typedef GluingPermSearcher<4> Dim4GluingPermSearcher;
  * \deprecated Instead of the old typedef UseDim4GluingPerms, you should use
  * the new type name GluingPermSearcher<4>::Use.
  */
-REGINA_DEPRECATED typedef GluingPermSearcher<4>::Use UseDim4GluingPerms;
+[[deprecated]] typedef GluingPermSearcher<4>::Use UseDim4GluingPerms;
 
 /*@}*/
 

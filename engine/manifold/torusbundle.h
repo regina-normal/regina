@@ -218,7 +218,7 @@ class REGINA_API TorusBundle : public Manifold {
  * \deprecated The class NTorusBundle has now been renamed to
  * TorusBundle.
  */
-REGINA_DEPRECATED typedef TorusBundle NTorusBundle;
+[[deprecated]] typedef TorusBundle NTorusBundle;
 
 /*@}*/
 

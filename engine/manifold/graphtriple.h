@@ -292,7 +292,7 @@ class REGINA_API GraphTriple : public Manifold {
  * \deprecated The class NGraphTriple has now been renamed to
  * GraphTriple.
  */
-REGINA_DEPRECATED typedef GraphTriple NGraphTriple;
+[[deprecated]] typedef GraphTriple NGraphTriple;
 
 // Inline functions for GraphTriple
 

@@ -246,7 +246,7 @@ class REGINA_API SigPartialIsomorphism {
  * \deprecated The class NSigPartialIsomorphism has now been renamed to
  * SigPartialIsomorphism.
  */
-REGINA_DEPRECATED typedef SigPartialIsomorphism NSigPartialIsomorphism;
+[[deprecated]] typedef SigPartialIsomorphism NSigPartialIsomorphism;
 
 /*@}*/
 

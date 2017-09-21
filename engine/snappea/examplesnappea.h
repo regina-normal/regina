@@ -109,7 +109,7 @@ class REGINA_API ExampleSnapPea {
  * \deprecated The class NExampleSnapPeaTriangulation has now been renamed to
  * ExampleSnapPea.
  */
-REGINA_DEPRECATED typedef ExampleSnapPea NExampleSnapPeaTriangulation;
+[[deprecated]] typedef ExampleSnapPea NExampleSnapPeaTriangulation;
 
 /*@}*/
 

@@ -228,7 +228,7 @@ class REGINA_API PlugTriSolidTorus : public StandardTriangulation {
  * \deprecated The class NPlugTriSolidTorus has now been renamed to
  * PlugTriSolidTorus.
  */
-REGINA_DEPRECATED typedef PlugTriSolidTorus NPlugTriSolidTorus;
+[[deprecated]] typedef PlugTriSolidTorus NPlugTriSolidTorus;
 
 /*@}*/
 

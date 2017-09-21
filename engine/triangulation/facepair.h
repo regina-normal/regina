@@ -221,7 +221,7 @@ class REGINA_API FacePair {
  *
  * \deprecated The class NFacePair has now been renamed to FacePair.
  */
-REGINA_DEPRECATED typedef FacePair NFacePair;
+[[deprecated]] typedef FacePair NFacePair;
 
 /*@}*/
 

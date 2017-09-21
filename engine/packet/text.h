@@ -129,7 +129,7 @@ class REGINA_API Text : public Packet {
  *
  * \deprecated The class NText has now been renamed to Text.
  */
-REGINA_DEPRECATED typedef Text NText;
+[[deprecated]] typedef Text NText;
 
 /*@}*/
 

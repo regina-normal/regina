@@ -36,7 +36,7 @@ namespace regina {
 
 // We don't include approx.h, since this generates a warning (the header
 // is deprecated).  Instead we copy the declaration of epsilon verbatim.
-REGINA_DEPRECATED REGINA_API extern const double epsilon;
+[[deprecated]] REGINA_API extern const double epsilon;
 
 // And... the definition.
 const double epsilon = 0.00000001;

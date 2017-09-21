@@ -247,7 +247,7 @@ class REGINA_API BlockedSFSTriple : public StandardTriangulation {
  * \deprecated The class NBlockedSFSTriple has now been renamed to
  * BlockedSFSTriple.
  */
-REGINA_DEPRECATED typedef BlockedSFSTriple NBlockedSFSTriple;
+[[deprecated]] typedef BlockedSFSTriple NBlockedSFSTriple;
 
 // Inline functions for BlockedSFSTriple
 

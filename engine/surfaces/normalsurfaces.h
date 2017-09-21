@@ -1471,7 +1471,7 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
  * \deprecated The class NNormalSurfaceList has now been renamed to
  * NormalSurfaces.
  */
-REGINA_DEPRECATED typedef NormalSurfaces NNormalSurfaceList;
+[[deprecated]] typedef NormalSurfaces NNormalSurfaceList;
 
 /*@}*/
 

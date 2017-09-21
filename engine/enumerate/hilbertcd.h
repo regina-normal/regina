@@ -194,7 +194,7 @@ class HilbertCD {
  *
  * \deprecated The class NHilbertCD has now been renamed to HilbertCD.
  */
-REGINA_DEPRECATED typedef HilbertCD NHilbertCD;
+[[deprecated]] typedef HilbertCD NHilbertCD;
 
 /*@}*/
 

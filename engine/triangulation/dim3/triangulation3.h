@@ -2822,7 +2822,7 @@ class REGINA_API Triangulation<3> :
  * \deprecated Instead of the old typedef NTriangulation, you should use
  * the templated class name Triangulation<3>.
  */
-REGINA_DEPRECATED typedef Triangulation<3> NTriangulation;
+[[deprecated]] typedef Triangulation<3> NTriangulation;
 
 // Additional face typedefs that do not have their own headers:
 
@@ -2834,7 +2834,7 @@ REGINA_DEPRECATED typedef Triangulation<3> NTriangulation;
  * use either the new alias EdgeEmbedding<3>, or the full class name
  * FaceEmbedding<3, 1>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<3, 1> NEdgeEmbedding;
+[[deprecated]] typedef FaceEmbedding<3, 1> NEdgeEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2843,7 +2843,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<3, 1> NEdgeEmbedding;
  * \deprecated Instead of the old typedef NEdge, you should use
  * either the new alias Edge<3>, or the full class name Face<3, 1>.
  */
-REGINA_DEPRECATED typedef Face<3, 1> NEdge;
+[[deprecated]] typedef Face<3, 1> NEdge;
 
 /*@}*/
 

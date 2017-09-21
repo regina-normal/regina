@@ -448,7 +448,7 @@ class HilbertDual {
  *
  * \deprecated The class NHilbertDual has now been renamed to HilbertDual.
  */
-REGINA_DEPRECATED typedef HilbertDual NHilbertDual;
+[[deprecated]] typedef HilbertDual NHilbertDual;
 
 /*@}*/
 

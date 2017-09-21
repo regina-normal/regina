@@ -228,7 +228,7 @@ class REGINA_API GraphPair : public Manifold {
  * \deprecated The class NGraphPair has now been renamed to
  * GraphPair.
  */
-REGINA_DEPRECATED typedef GraphPair NGraphPair;
+[[deprecated]] typedef GraphPair NGraphPair;
 
 /*@}*/
 

@@ -271,7 +271,7 @@ class REGINA_API AugTriSolidTorus : public StandardTriangulation {
  * \deprecated The class NAugTriSolidTorus has now been renamed to
  * AugTriSolidTorus.
  */
-REGINA_DEPRECATED typedef AugTriSolidTorus NAugTriSolidTorus;
+[[deprecated]] typedef AugTriSolidTorus NAugTriSolidTorus;
 
 /*@}*/
 

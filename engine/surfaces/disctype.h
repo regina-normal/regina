@@ -160,7 +160,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const DiscType& type);
  *
  * \deprecated The class NDiscType has now been renamed to DiscType.
  */
-REGINA_DEPRECATED typedef DiscType NDiscType;
+[[deprecated]] typedef DiscType NDiscType;
 
 /*@}*/
 

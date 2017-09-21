@@ -283,7 +283,7 @@ class REGINA_API Signature :
  *
  * \deprecated The class NSignature has now been renamed to Signature.
  */
-REGINA_DEPRECATED typedef Signature NSignature;
+[[deprecated]] typedef Signature NSignature;
 
 /*@}*/
 

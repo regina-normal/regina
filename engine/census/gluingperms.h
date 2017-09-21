@@ -439,7 +439,7 @@ class GluingPerms {
  * you should use the new class name GluingPerms<dim>.
  */
 template <int dim>
-using NGenericGluingPerms REGINA_DEPRECATED = GluingPerms<dim>;
+using NGenericGluingPerms [[deprecated]] = GluingPerms<dim>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -448,7 +448,7 @@ using NGenericGluingPerms REGINA_DEPRECATED = GluingPerms<dim>;
  * \deprecated Instead of the old typedef Dim2GluingPerms, you should use
  * the full class name GluingPerms<2>.
  */
-REGINA_DEPRECATED typedef GluingPerms<2> Dim2GluingPerms;
+[[deprecated]] typedef GluingPerms<2> Dim2GluingPerms;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -457,7 +457,7 @@ REGINA_DEPRECATED typedef GluingPerms<2> Dim2GluingPerms;
  * \deprecated Instead of the old typedef NGluingPerms, you should use
  * the full class name GluingPerms<3>.
  */
-REGINA_DEPRECATED typedef GluingPerms<3> NGluingPerms;
+[[deprecated]] typedef GluingPerms<3> NGluingPerms;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -466,7 +466,7 @@ REGINA_DEPRECATED typedef GluingPerms<3> NGluingPerms;
  * \deprecated Instead of the old typedef Dim4GluingPerms, you should use
  * the full class name GluingPerms<4>.
  */
-REGINA_DEPRECATED typedef GluingPerms<4> Dim4GluingPerms;
+[[deprecated]] typedef GluingPerms<4> Dim4GluingPerms;
 
 /*@}*/
 

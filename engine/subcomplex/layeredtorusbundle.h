@@ -268,7 +268,7 @@ class REGINA_API LayeredTorusBundle : public StandardTriangulation {
  * \deprecated The class NLayeredTorusBundle has now been renamed to
  * LayeredTorusBundle.
  */
-REGINA_DEPRECATED typedef LayeredTorusBundle NLayeredTorusBundle;
+[[deprecated]] typedef LayeredTorusBundle NLayeredTorusBundle;
 
 /*@}*/
 

@@ -764,7 +764,7 @@ public:
  * \deprecated The class NHomologicalData has now been renamed to
  * HomologicalData.
  */
-REGINA_DEPRECATED typedef HomologicalData NHomologicalData;
+[[deprecated]] typedef HomologicalData NHomologicalData;
 
 /*@}*/
 

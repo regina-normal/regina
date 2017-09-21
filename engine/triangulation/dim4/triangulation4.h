@@ -811,7 +811,7 @@ class REGINA_API Triangulation<4> :
  * \deprecated Instead of the old typedef Dim4Triangulation, you should use
  * the templated class name Triangulation<4>.
  */
-REGINA_DEPRECATED typedef Triangulation<4> Dim4Triangulation;
+[[deprecated]] typedef Triangulation<4> Dim4Triangulation;
 
 // Additional face typedefs that do not have their own headers:
 
@@ -823,7 +823,7 @@ REGINA_DEPRECATED typedef Triangulation<4> Dim4Triangulation;
  * use either the new alias TriangleEmbedding<4>, or the full class name
  * FaceEmbedding<4, 2>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<4, 2> Dim4TriangleEmbedding;
+[[deprecated]] typedef FaceEmbedding<4, 2> Dim4TriangleEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -833,7 +833,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<4, 2> Dim4TriangleEmbedding;
  * use either the new alias TetrahedronEmbedding<4>, or the full class name
  * FaceEmbedding<4, 3>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<4, 3> Dim4TetrahedronEmbedding;
+[[deprecated]] typedef FaceEmbedding<4, 3> Dim4TetrahedronEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -842,7 +842,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<4, 3> Dim4TetrahedronEmbedding;
  * \deprecated Instead of the old typedef Dim4Triangle, you should use
  * either the new alias Triangle<4>, or the full class name Face<4, 2>.
  */
-REGINA_DEPRECATED typedef Face<4, 2> Dim4Triangle;
+[[deprecated]] typedef Face<4, 2> Dim4Triangle;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -851,7 +851,7 @@ REGINA_DEPRECATED typedef Face<4, 2> Dim4Triangle;
  * \deprecated Instead of the old typedef Dim4Tetrahedron, you should use
  * either the new alias Tetrahedron<4>, or the full class name Face<4, 3>.
  */
-REGINA_DEPRECATED typedef Face<4, 3> Dim4Tetrahedron;
+[[deprecated]] typedef Face<4, 3> Dim4Tetrahedron;
 
 /*@}*/
 

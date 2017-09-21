@@ -53,7 +53,7 @@ namespace regina {
  * \deprecated Instead of the old typedef NIsomorphism, you should use
  * the full class name Isomorphism<3>.
  */
-REGINA_DEPRECATED typedef Isomorphism<3> NIsomorphism;
+[[deprecated]] typedef Isomorphism<3> NIsomorphism;
 
 } // namespace regina
 

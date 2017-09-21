@@ -115,7 +115,7 @@ class REGINA_API Face<2, 2> : public detail::SimplexBase<2> {
  * \deprecated Instead of the old typedef Dim2Triangle, you should use
  * the new alias Simplex<2> (or, if you prefer, the full class name Face<2, 2>).
  */
-REGINA_DEPRECATED typedef Simplex<2> Dim2Triangle;
+[[deprecated]] typedef Simplex<2> Dim2Triangle;
 
 /*@}*/
 

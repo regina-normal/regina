@@ -181,7 +181,7 @@ class REGINA_API FileInfo :
  *
  * \deprecated The class NFileInfo has now been renamed to FileInfo.
  */
-REGINA_DEPRECATED typedef FileInfo NFileInfo;
+[[deprecated]] typedef FileInfo NFileInfo;
 
 /*@}*/
 

@@ -158,7 +158,7 @@ class TypeTrie {
  * \deprecated The class NTypeTrie has now been renamed to TypeTrie.
  */
 template <int nTypes>
-using NTypeTrie REGINA_DEPRECATED = TypeTrie<nTypes>;
+using NTypeTrie [[deprecated]] = TypeTrie<nTypes>;
 
 /*@}*/
 

@@ -115,7 +115,7 @@ class REGINA_API Ray : public Vector<LargeInteger> {
  *
  * \deprecated The class NRay has now been renamed to Ray.
  */
-REGINA_DEPRECATED typedef Ray NRay;
+[[deprecated]] typedef Ray NRay;
 
 /*@}*/
 

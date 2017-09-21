@@ -111,7 +111,7 @@ class REGINA_API EnumConstraints :
  * \deprecated The class NEnumConstraintList has now been renamed to
  * EnumConstraints.
  */
-REGINA_DEPRECATED typedef EnumConstraints NEnumConstraintList;
+[[deprecated]] typedef EnumConstraints NEnumConstraintList;
 
 /*@}*/
 

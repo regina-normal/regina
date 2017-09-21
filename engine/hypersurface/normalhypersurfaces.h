@@ -779,7 +779,7 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
  * \deprecated The class NNormalHypersurfaceList has now been renamed to
  * NormalHypersurfaces.
  */
-REGINA_DEPRECATED typedef NormalHypersurfaces NNormalHypersurfaceList;
+[[deprecated]] typedef NormalHypersurfaces NNormalHypersurfaceList;
 
 /*@}*/
 

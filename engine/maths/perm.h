@@ -553,7 +553,7 @@ template <> class Perm<5>;
  * \deprecated The class NPerm has now been renamed to Perm.
  */
 template <int n>
-using NPerm REGINA_DEPRECATED = Perm<n>;
+using NPerm [[deprecated]] = Perm<n>;
 
 /*@}*/
 

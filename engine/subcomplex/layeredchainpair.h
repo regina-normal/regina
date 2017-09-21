@@ -137,7 +137,7 @@ class REGINA_API LayeredChainPair : public StandardTriangulation {
  * \deprecated The class NLayeredChainPair has now been renamed to
  * LayeredChainPair.
  */
-REGINA_DEPRECATED typedef LayeredChainPair NLayeredChainPair;
+[[deprecated]] typedef LayeredChainPair NLayeredChainPair;
 
 /*@}*/
 

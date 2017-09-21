@@ -473,7 +473,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const Rational& rat);
  *
  * \deprecated The class NRational has now been renamed to Rational.
  */
-REGINA_DEPRECATED typedef Rational NRational;
+[[deprecated]] typedef Rational NRational;
 
 /*@}*/
 

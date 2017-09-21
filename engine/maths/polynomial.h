@@ -526,7 +526,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
  * \deprecated The class NPolynomial has now been renamed to Polynomial.
  */
 template <typename T>
-using NPolynomial REGINA_DEPRECATED = Polynomial<T>;
+using NPolynomial [[deprecated]] = Polynomial<T>;
 
 /*@}*/
 

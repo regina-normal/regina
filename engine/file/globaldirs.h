@@ -252,7 +252,7 @@ class REGINA_API GlobalDirs {
  *
  * \deprecated The class NGlobalDirs has now been renamed to GlobalDirs.
  */
-REGINA_DEPRECATED typedef GlobalDirs NGlobalDirs;
+[[deprecated]] typedef GlobalDirs NGlobalDirs;
 
 /*@}*/
 

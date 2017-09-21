@@ -1744,7 +1744,7 @@ class REGINA_API NormalSurface :
  * \deprecated The class NNormalSurfaceVector has now been renamed to
  * NormalSurfaceVector.
  */
-REGINA_DEPRECATED typedef NormalSurfaceVector NNormalSurfaceVector;
+[[deprecated]] typedef NormalSurfaceVector NNormalSurfaceVector;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1752,7 +1752,7 @@ REGINA_DEPRECATED typedef NormalSurfaceVector NNormalSurfaceVector;
  *
  * \deprecated The class NNormalSurface has now been renamed to NormalSurface.
  */
-REGINA_DEPRECATED typedef NormalSurface NNormalSurface;
+[[deprecated]] typedef NormalSurface NNormalSurface;
 
 /*@}*/
 

@@ -452,7 +452,7 @@ struct REGINA_API SatAnnulus {
  *
  * \deprecated The class NSatAnnulus has now been renamed to SatAnnulus.
  */
-REGINA_DEPRECATED typedef SatAnnulus NSatAnnulus;
+[[deprecated]] typedef SatAnnulus NSatAnnulus;
 
 /*@}*/
 

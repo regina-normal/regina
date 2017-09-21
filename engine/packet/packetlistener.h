@@ -323,7 +323,7 @@ class REGINA_API PacketListener {
  *
  * \deprecated The class NPacketListener has now been renamed to PacketListener.
  */
-REGINA_DEPRECATED typedef PacketListener NPacketListener;
+[[deprecated]] typedef PacketListener NPacketListener;
 
 /*@}*/
 

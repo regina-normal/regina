@@ -111,7 +111,7 @@ class REGINA_API Face<4, 4> : public detail::SimplexBase<4> {
  * \deprecated Instead of the old typedef Dim4Pentachoron, you should use
  * the new alias Simplex<4> (or, if you prefer, the full class name Face<4, 4>).
  */
-REGINA_DEPRECATED typedef Simplex<4> Dim4Pentachoron;
+[[deprecated]] typedef Simplex<4> Dim4Pentachoron;
 
 /*@}*/
 

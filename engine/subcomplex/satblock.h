@@ -728,7 +728,7 @@ class REGINA_API SatBlock :
  * \deprecated The class NSatBlock has now been renamed to
  * SatBlock.
  */
-REGINA_DEPRECATED typedef SatBlock NSatBlock;
+[[deprecated]] typedef SatBlock NSatBlock;
 
 /*@}*/
 

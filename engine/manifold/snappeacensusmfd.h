@@ -196,7 +196,7 @@ class REGINA_API SnapPeaCensusManifold : public Manifold {
  * \deprecated The class NSnapPeaCensusManifold has now been renamed to
  * SnapPeaCensusManifold.
  */
-REGINA_DEPRECATED typedef SnapPeaCensusManifold NSnapPeaCensusManifold;
+[[deprecated]] typedef SnapPeaCensusManifold NSnapPeaCensusManifold;
 
 /*@}*/
 

@@ -513,7 +513,7 @@ class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
  * \deprecated Instead of the old typedef NFacePairing, you should use
  * the full class name FacetPairing<3>.
  */
-REGINA_DEPRECATED typedef FacetPairing<3> NFacePairing;
+[[deprecated]] typedef FacetPairing<3> NFacePairing;
 
 /*@}*/
 

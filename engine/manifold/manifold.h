@@ -276,7 +276,7 @@ class REGINA_API Manifold :
  * \deprecated The class NManifold has now been renamed to
  * Manifold.
  */
-REGINA_DEPRECATED typedef Manifold NManifold;
+[[deprecated]] typedef Manifold NManifold;
 
 /*@}*/
 

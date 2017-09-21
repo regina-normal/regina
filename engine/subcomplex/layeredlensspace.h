@@ -167,7 +167,7 @@ class REGINA_API LayeredLensSpace : public StandardTriangulation {
  * \deprecated The class NLayeredLensSpace has now been renamed to
  * LayeredLensSpace.
  */
-REGINA_DEPRECATED typedef LayeredLensSpace NLayeredLensSpace;
+[[deprecated]] typedef LayeredLensSpace NLayeredLensSpace;
 
 /*@}*/
 

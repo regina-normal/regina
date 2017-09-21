@@ -201,7 +201,7 @@ class REGINA_API BlockedSFS : public StandardTriangulation {
  * \deprecated The class NBlockedSFS has now been renamed to
  * BlockedSFS.
  */
-REGINA_DEPRECATED typedef BlockedSFS NBlockedSFS;
+[[deprecated]] typedef BlockedSFS NBlockedSFS;
 
 /*@}*/
 

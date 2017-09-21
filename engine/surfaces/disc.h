@@ -776,7 +776,7 @@ class REGINA_API DiscSpecIterator {
  *
  * \deprecated The class NDiscSpec has now been renamed to DiscSpec.
  */
-REGINA_DEPRECATED typedef DiscSpec NDiscSpec;
+[[deprecated]] typedef DiscSpec NDiscSpec;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -784,7 +784,7 @@ REGINA_DEPRECATED typedef DiscSpec NDiscSpec;
  *
  * \deprecated The class NDiscSetTet has now been renamed to DiscSetTet.
  */
-REGINA_DEPRECATED typedef DiscSetTet NDiscSetTet;
+[[deprecated]] typedef DiscSetTet NDiscSetTet;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -793,7 +793,7 @@ REGINA_DEPRECATED typedef DiscSetTet NDiscSetTet;
  * \deprecated The class NDiscSetTetData has now been renamed to DiscSetTetData.
  */
 template <class T>
-using NDiscSetTetData REGINA_DEPRECATED = DiscSetTetData<T>;
+using NDiscSetTetData [[deprecated]] = DiscSetTetData<T>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -801,7 +801,7 @@ using NDiscSetTetData REGINA_DEPRECATED = DiscSetTetData<T>;
  *
  * \deprecated The class NDiscSetSurface has now been renamed to DiscSetSurface.
  */
-REGINA_DEPRECATED typedef DiscSetSurface NDiscSetSurface;
+[[deprecated]] typedef DiscSetSurface NDiscSetSurface;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -811,7 +811,7 @@ REGINA_DEPRECATED typedef DiscSetSurface NDiscSetSurface;
  * DiscSetSurfaceData.
  */
 template <class T>
-using NDiscSetSurfaceData REGINA_DEPRECATED = DiscSetSurfaceData<T>;
+using NDiscSetSurfaceData [[deprecated]] = DiscSetSurfaceData<T>;
 
 /*@}*/
 
