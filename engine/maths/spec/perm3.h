@@ -654,7 +654,7 @@ class REGINA_API Perm<3> {
  *
  * \deprecated The class NPerm3 has now been renamed to Perm<3>.
  */
-typedef Perm<3> NPerm3;
+[[deprecated]] typedef Perm<3> NPerm3;
 
 /*@}*/
 

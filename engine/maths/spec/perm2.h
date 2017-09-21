@@ -557,7 +557,7 @@ class REGINA_API Perm<2> {
  *
  * \deprecated The class NPerm2 has now been renamed to Perm<2>.
  */
-typedef Perm<2> NPerm2;
+[[deprecated]] typedef Perm<2> NPerm2;
 
 /*@}*/
 
