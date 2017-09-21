@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 5.2  [ 29 September, 2017 ]
 
     GENERAL:
+        - Now requires C++14 (not C++11).  However, the only feature of C++14
+          that is currently used is the [[deprecated]] attribute, which means
+          that partially compliant compilers (such as gcc4.9) should be fine.
         - Now builds under gcc7.
     ENGINE:
         Class NormalHypersurfaces:
