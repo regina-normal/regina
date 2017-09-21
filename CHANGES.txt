@@ -7,8 +7,10 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 5.2  [ (under development) ]
+Version 5.2  [ 29 September, 2017 ]
 
+    GENERAL:
+        - Now builds under gcc7.
     ENGINE:
         Class NormalHypersurfaces:
             - New routine sort() to sort hypersurfaces by arbitrary criteria.
