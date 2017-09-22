@@ -64,21 +64,9 @@ enum PacketType {
      */
     PACKET_TEXT = 2,
     /**
-     * Deprecated alias for PACKET_TRIANGULATION3.
-     *
-     * \deprecated This constant has been renamed to PACKET_TRIANGULATION3.
-     */
-    PACKET_TRIANGULATION [[deprecated]] = 3,
-    /**
      * Represents a normal surface list, of class NormalSurfaces.
      */
     PACKET_NORMALSURFACES = 6,
-    /**
-     * Deprecated alias for PACKET_NORMALSURFACES.
-     *
-     * \deprecated This constant has been renamed to PACKET_NORMALSURFACES.
-     */
-    PACKET_NORMALSURFACELIST [[deprecated]] = 6,
     /**
      * Represents a script packet, of class Script.
      */
@@ -93,37 +81,13 @@ enum PacketType {
      */
     PACKET_ANGLESTRUCTURES = 9,
     /**
-     * Deprecated alias for PACKET_ANGLESTRUCTURES.
-     *
-     * \deprecated This constant has been renamed to PACKET_ANGLESTRUCTURES.
-     */
-    PACKET_ANGLESTRUCTURELIST [[deprecated]] = 9,
-    /**
      * Represents a PDF document, of class PDF.
      */
     PACKET_PDF = 10,
     /**
-     * Deprecated alias for PACKET_TRIANGULATION4.
-     *
-     * \deprecated This constant has been renamed to PACKET_TRIANGULATION4.
-     */
-    PACKET_DIM4TRIANGULATION [[deprecated]] = 11,
-    /**
      * Represents a normal hypersurface list, of class NormalHypersurfaces.
      */
     PACKET_NORMALHYPERSURFACES = 13,
-    /**
-     * Deprecated alias for PACKET_NORMALHYPERSURFACES.
-     *
-     * \deprecated This constant has been renamed to PACKET_NORMALHYPERSURFACES.
-     */
-    PACKET_NORMALHYPERSURFACELIST [[deprecated]] = 13,
-    /**
-     * Deprecated alias for PACKET_TRIANGULATION2.
-     *
-     * \deprecated This constant has been renamed to PACKET_TRIANGULATION2.
-     */
-    PACKET_DIM2TRIANGULATION [[deprecated]] = 15,
     /**
      * Represents a triangulation in the embedded SnapPea kernel, of
      * class SnapPeaTriangulation.
@@ -186,6 +150,43 @@ enum PacketType {
      */
     PACKET_TRIANGULATION15 = 115
 };
+
+/**
+ * Deprecated alias for PACKET_TRIANGULATION3.
+ *
+ * \deprecated This constant has been renamed to PACKET_TRIANGULATION3.
+ */
+[[deprecated]] constexpr PacketType PACKET_TRIANGULATION = PACKET_TRIANGULATION3;
+/**
+ * Deprecated alias for PACKET_NORMALSURFACES.
+ *
+ * \deprecated This constant has been renamed to PACKET_NORMALSURFACES.
+ */
+[[deprecated]] constexpr PacketType PACKET_NORMALSURFACELIST = PACKET_NORMALSURFACES;
+/**
+ * Deprecated alias for PACKET_ANGLESTRUCTURES.
+ *
+ * \deprecated This constant has been renamed to PACKET_ANGLESTRUCTURES.
+ */
+[[deprecated]] constexpr PacketType PACKET_ANGLESTRUCTURELIST = PACKET_ANGLESTRUCTURES;
+/**
+ * Deprecated alias for PACKET_TRIANGULATION4.
+ *
+ * \deprecated This constant has been renamed to PACKET_TRIANGULATION4.
+ */
+[[deprecated]] constexpr PacketType PACKET_DIM4TRIANGULATION = PACKET_TRIANGULATION4;
+/**
+ * Deprecated alias for PACKET_NORMALHYPERSURFACES.
+ *
+ * \deprecated This constant has been renamed to PACKET_NORMALHYPERSURFACES.
+ */
+[[deprecated]] constexpr PacketType PACKET_NORMALHYPERSURFACELIST = PACKET_NORMALHYPERSURFACES;
+/**
+ * Deprecated alias for PACKET_TRIANGULATION2.
+ *
+ * \deprecated This constant has been renamed to PACKET_TRIANGULATION2.
+ */
+[[deprecated]] constexpr PacketType PACKET_DIM2TRIANGULATION = PACKET_TRIANGULATION2;
 
 /*@}*/
 

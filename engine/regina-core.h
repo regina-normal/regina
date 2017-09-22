@@ -184,38 +184,6 @@ enum Algorithm {
      * suitable for "real" applications.
      */
     ALG_NAIVE = 3,
-    /**
-     * Deprecated alias for ALG_DEFAULT.
-     *
-     * \deprecated The old constant TV_DEFAULT has been replaced by the
-     * constant ALG_DEFAULT, and the underlying enumeration type has
-     * been renamed from TuraevViroAlg to Algorithm.
-     */
-    TV_DEFAULT [[deprecated]] = 0,
-    /**
-     * Deprecated alias for ALG_BACKTRACK.
-     *
-     * \deprecated The old constant TV_BACKTRACK has been replaced by the
-     * constant ALG_BACKTRACK, and the underlying enumeration type has
-     * been renamed from TuraevViroAlg to Algorithm.
-     */
-    TV_BACKTRACK [[deprecated]] = 1,
-    /**
-     * Deprecated alias for ALG_TREEWIDTH.
-     *
-     * \deprecated The old constant TV_TREEWIDTH has been replaced by the
-     * constant ALG_TREEWIDTH, and the underlying enumeration type has
-     * been renamed from TuraevViroAlg to Algorithm.
-     */
-    TV_TREEWIDTH [[deprecated]] = 2,
-    /**
-     * Deprecated alias for ALG_NAIVE.
-     *
-     * \deprecated The old constant TV_NAIVE has been replaced by the
-     * constant ALG_NAIVE, and the underlying enumeration type has
-     * been renamed from TuraevViroAlg to Algorithm.
-     */
-    TV_NAIVE [[deprecated]] = 3
 };
 
 /**
@@ -227,6 +195,39 @@ enum Algorithm {
  * ALG_DEFAULT, ALG_BACKTRACK, ALG_TREEWIDTH and ALG_NAIVE respectively.
  */
 [[deprecated]] typedef Algorithm TuraevViroAlg;
+
+/**
+ * Deprecated alias for ALG_DEFAULT.
+ *
+ * \deprecated The old constant TV_DEFAULT has been replaced by the
+ * constant ALG_DEFAULT, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_DEFAULT = ALG_DEFAULT;
+/**
+ * Deprecated alias for ALG_BACKTRACK.
+ *
+ * \deprecated The old constant TV_BACKTRACK has been replaced by the
+ * constant ALG_BACKTRACK, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_BACKTRACK = ALG_BACKTRACK;
+/**
+ * Deprecated alias for ALG_TREEWIDTH.
+ *
+ * \deprecated The old constant TV_TREEWIDTH has been replaced by the
+ * constant ALG_TREEWIDTH, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_TREEWIDTH = ALG_TREEWIDTH;
+/**
+ * Deprecated alias for ALG_NAIVE.
+ *
+ * \deprecated The old constant TV_NAIVE has been replaced by the
+ * constant ALG_NAIVE, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_NAIVE = ALG_NAIVE;
 
 } // namespace regina
 
