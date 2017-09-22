@@ -34,9 +34,6 @@
 /* Define if we are replacing Tokyo Cabinet with the older QDBM. */
 /* #undef QDBM_AS_TOKYOCABINET */
 
-/* Define if we can use [[deprecated]] for enum values. */
-#define HAS_CXX17_DEPRECATED_ENUM
-
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST 
 
