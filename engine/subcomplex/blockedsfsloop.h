@@ -180,7 +180,7 @@ class REGINA_API BlockedSFSLoop : public StandardTriangulation {
  * \deprecated The class NBlockedSFSLoop has now been renamed to
  * BlockedSFSLoop.
  */
-REGINA_DEPRECATED typedef BlockedSFSLoop NBlockedSFSLoop;
+[[deprecated]] typedef BlockedSFSLoop NBlockedSFSLoop;
 
 /*@}*/
 

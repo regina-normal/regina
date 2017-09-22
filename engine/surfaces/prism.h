@@ -137,7 +137,7 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  *
  * \deprecated The class NPrismSpec has now been renamed to PrismSpec.
  */
-REGINA_DEPRECATED typedef PrismSpec NPrismSpec;
+[[deprecated]] typedef PrismSpec NPrismSpec;
 
 /*@}*/
 

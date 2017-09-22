@@ -970,7 +970,7 @@ class REGINA_API TreeDecomposition :
  *
  * \deprecated The class NTreeBag has now been renamed to TreeBag.
  */
-REGINA_DEPRECATED typedef TreeBag NTreeBag;
+[[deprecated]] typedef TreeBag NTreeBag;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -979,7 +979,7 @@ REGINA_DEPRECATED typedef TreeBag NTreeBag;
  * \deprecated The class NTreeDecomposition has now been renamed to
  * TreeDecomposition.
  */
-REGINA_DEPRECATED typedef TreeDecomposition NTreeDecomposition;
+[[deprecated]] typedef TreeDecomposition NTreeDecomposition;
 
 /*@}*/
 

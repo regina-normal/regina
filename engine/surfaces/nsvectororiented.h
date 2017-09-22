@@ -134,7 +134,7 @@ class REGINA_API NSVectorOriented : public NormalSurfaceVector {
  * \deprecated The class NNormalSurfaceVectorOriented has now been
  * renamed to NSVectorOriented.
  */
-REGINA_DEPRECATED typedef NSVectorOriented NNormalSurfaceVectorOriented;
+[[deprecated]] typedef NSVectorOriented NNormalSurfaceVectorOriented;
 
 /*@}*/
 

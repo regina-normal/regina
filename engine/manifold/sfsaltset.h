@@ -240,7 +240,7 @@ class REGINA_API SFSAltSet {
  * \deprecated The class NSFSAltSet has now been renamed to
  * SFSAltSet.
  */
-REGINA_DEPRECATED typedef SFSAltSet NSFSAltSet;
+[[deprecated]] typedef SFSAltSet NSFSAltSet;
 
 /*@}*/
 

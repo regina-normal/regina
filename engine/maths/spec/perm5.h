@@ -699,7 +699,7 @@ class REGINA_API Perm<5> {
  *
  * \deprecated The class NPerm5 has now been renamed to Perm<5>.
  */
-typedef Perm<5> NPerm5;
+[[deprecated]] typedef Perm<5> NPerm5;
 
 /*@}*/
 

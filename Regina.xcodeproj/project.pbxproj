@@ -1797,6 +1797,9 @@
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		05B1EF181C54299C008E7B49 /* boundary4chooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B1EF141C542991008E7B49 /* boundary4chooser.cpp */; };
+		05B27D521E96681D00E2B7C4 /* nsvectorquadclosed.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B27D501E96681D00E2B7C4 /* nsvectorquadclosed.h */; };
+		05B27D531E96681D00E2B7C4 /* nsvectorquadclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */; };
+		05B27D541E96682200E2B7C4 /* nsvectorquadclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708319C92A5000E2E558 /* ScriptViewController.mm */; };
 		05B7708719CA4FF100E2E558 /* FilterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708619CA4FF100E2E558 /* FilterViewController.mm */; };
@@ -2083,7 +2086,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
-			script = "~/Qt5/5.7/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
+			script = "~/Qt5.7.1/5.7/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
 		};
 		054BC4C219B4A708005E01A0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -3981,6 +3984,8 @@
 		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
 		05B1EF141C542991008E7B49 /* boundary4chooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundary4chooser.cpp; sourceTree = "<group>"; };
 		05B1EF151C542991008E7B49 /* boundary4chooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundary4chooser.h; sourceTree = "<group>"; };
+		05B27D501E96681D00E2B7C4 /* nsvectorquadclosed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorquadclosed.h; sourceTree = "<group>"; };
+		05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorquadclosed.cpp; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B7708219C92A5000E2E558 /* ScriptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptViewController.h; sourceTree = "<group>"; };
 		05B7708319C92A5000E2E558 /* ScriptViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScriptViewController.mm; sourceTree = "<group>"; };
@@ -5548,6 +5553,8 @@
 				052F9E17180600FB00FAE4DF /* nsvectororientedquad.h */,
 				052F9E18180600FB00FAE4DF /* nsvectorquad.cpp */,
 				052F9E19180600FB00FAE4DF /* nsvectorquad.h */,
+				05B27D501E96681D00E2B7C4 /* nsvectorquadclosed.h */,
+				05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */,
 				052F9E1A180600FB00FAE4DF /* nsvectorquadoct.cpp */,
 				052F9E1B180600FB00FAE4DF /* nsvectorquadoct.h */,
 				052F9E1C180600FB00FAE4DF /* nsvectorstandard.cpp */,
@@ -7371,6 +7378,7 @@
 				05A067291DFA68190047872E /* satannulus.h in Headers */,
 				052F9EBF180600FB00FAE4DF /* engine.h in Headers */,
 				055114C81DCC45FD00EC753C /* example4.h in Headers */,
+				05B27D521E96681D00E2B7C4 /* nsvectorquadclosed.h in Headers */,
 				052F9F22180600FB00FAE4DF /* ngraphpair.h in Headers */,
 				05A73C7C19B2EDFC0099C617 /* xmlcallback.h in Headers */,
 				05431EFF1C40F1F6009BC072 /* facenumbering.h in Headers */,
@@ -7709,7 +7717,7 @@
 		0575E6511805F36D009E3FC4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Regina Development Team";
 				TargetAttributes = {
 					050F5CDC1B9BAAAA00C1F681 = {
@@ -7868,7 +7876,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --preserve-metadata=identifier,entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign FDA4865E0F0A4DE4B8060E4F2D5F52B326558A21 --preserve-metadata=identifier,entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7896,7 +7904,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in sigcensus tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in sigcensus tricensus; do\n/usr/bin/codesign --force --sign FDA4865E0F0A4DE4B8060E4F2D5F52B326558A21 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8431,6 +8439,7 @@
 				054C6A761DCC1FF4005373F0 /* example10.cpp in Sources */,
 				0591E7E91C4F751B00793A9C /* normalhypersurface.cpp in Sources */,
 				058FADBC19D506160001B5B5 /* Tri3Skeleton.mm in Sources */,
+				05B27D541E96682200E2B7C4 /* nsvectorquadclosed.cpp in Sources */,
 				05249EB81DBC16C4001FE29E /* isomorphism2.cpp in Sources */,
 				05249EB11DBC16BE001FE29E /* census.cpp in Sources */,
 				05249ED61DBC16DF001FE29E /* component12.cpp in Sources */,
@@ -9256,6 +9265,7 @@
 				05A067341DFA68190047872E /* snappedball.cpp in Sources */,
 				054208B31DF0D2740018AB24 /* graphpair.cpp in Sources */,
 				054208821DF0D0B50018AB24 /* rule.cpp in Sources */,
+				05B27D531E96681D00E2B7C4 /* nsvectorquadclosed.cpp in Sources */,
 				052F9F94180600FB00FAE4DF /* positioned_tet.c in Sources */,
 				05A73C9A19B2EF5A0099C617 /* abelian_group.c in Sources */,
 				0591E7E61C4F750200793A9C /* triangulate.cpp in Sources */,
@@ -9464,7 +9474,7 @@
 		050F5CE51B9BAAAB00C1F681 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -9516,7 +9526,7 @@
 		050F5CE61B9BAAAB00C1F681 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -9564,7 +9574,7 @@
 		052FA0C71806072900FAE4DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -9593,7 +9603,7 @@
 		052FA0C81806072900FAE4DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -9620,8 +9630,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -9667,8 +9677,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -9711,7 +9721,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -9754,7 +9764,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -9795,7 +9805,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -9838,7 +9848,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -9879,7 +9889,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -9922,7 +9932,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -9963,7 +9973,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10006,7 +10016,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10047,7 +10057,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10090,7 +10100,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10131,7 +10141,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10174,7 +10184,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10215,7 +10225,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10258,7 +10268,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10299,7 +10309,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10342,7 +10352,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -10383,7 +10393,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "";
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -10436,7 +10446,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "";
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -10490,14 +10500,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -10540,14 +10556,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -10579,7 +10601,7 @@
 		0575E65E1805F36D009E3FC4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_INSTALL_NAME_BASE = "@loader_path";
@@ -10611,7 +10633,7 @@
 		0575E65F1805F36D009E3FC4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_INSTALL_NAME_BASE = "@loader_path";
@@ -10643,7 +10665,7 @@
 		05B14EA919B423A0002138C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -10674,7 +10696,7 @@
 		05B14EAA19B423A0002138C0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (

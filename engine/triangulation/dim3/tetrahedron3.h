@@ -115,7 +115,7 @@ class REGINA_API Face<3, 3> : public detail::SimplexBase<3> {
  * \deprecated Instead of the old typedef NTetrahedron, you should use
  * the new alias Simplex<3> (or, if you prefer, the full class name Face<3, 3>).
  */
-REGINA_DEPRECATED typedef Simplex<3> NTetrahedron;
+[[deprecated]] typedef Simplex<3> NTetrahedron;
 
 /*@}*/
 

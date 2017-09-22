@@ -132,7 +132,7 @@ class REGINA_API SimpleSurfaceBundle : public Manifold {
  * \deprecated The class NSimpleSurfaceBundle has now been renamed to
  * SimpleSurfaceBundle.
  */
-REGINA_DEPRECATED typedef SimpleSurfaceBundle NSimpleSurfaceBundle;
+[[deprecated]] typedef SimpleSurfaceBundle NSimpleSurfaceBundle;
 
 /*@}*/
 

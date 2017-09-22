@@ -127,7 +127,7 @@ class REGINA_API Handlebody : public Manifold {
  * \deprecated The class NHandlebody has now been renamed to
  * Handlebody.
  */
-REGINA_DEPRECATED typedef Handlebody NHandlebody;
+[[deprecated]] typedef Handlebody NHandlebody;
 
 /*@}*/
 

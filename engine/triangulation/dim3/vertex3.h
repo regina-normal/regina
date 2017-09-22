@@ -285,7 +285,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0> {
          * Creates a new vertex and marks it as belonging to the
          * given triangulation component.
          *
-         * @param myComponent the triangulation component to which this
+         * @param component the triangulation component to which this
          * vertex belongs.
          */
         Face(Component<3>* component);
@@ -302,7 +302,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0> {
  * use either the new alias VertexEmbedding<3>, or the full class name
  * FaceEmbedding<3, 0>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<3, 0> NVertexEmbedding;
+[[deprecated]] typedef FaceEmbedding<3, 0> NVertexEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -311,7 +311,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<3, 0> NVertexEmbedding;
  * \deprecated Instead of the old typedef NVertex, you should use
  * either the new alias Vertex<3>, or the full class name Face<3, 0>.
  */
-REGINA_DEPRECATED typedef Face<3, 0> NVertex;
+[[deprecated]] typedef Face<3, 0> NVertex;
 
 /*@}*/
 

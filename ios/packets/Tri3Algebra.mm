@@ -353,7 +353,7 @@
         self->tvTracker = tracker;
         [self.tvLock unlock];
 
-        self.packet->turaevViro(r, parity, regina::TV_DEFAULT, tracker);
+        self.packet->turaevViro(r, parity, regina::ALG_DEFAULT, tracker);
 
         NSString* desc;
         float progress;

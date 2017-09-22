@@ -688,7 +688,7 @@ class REGINA_API MarkedAbelianGroup :
  * \deprecated The class NMarkedAbelianGroup has now been renamed to
  * MarkedAbelianGroup.
  */
-REGINA_DEPRECATED typedef MarkedAbelianGroup NMarkedAbelianGroup;
+[[deprecated]] typedef MarkedAbelianGroup NMarkedAbelianGroup;
 
 /**
  * Represents a homomorphism of finitely generated abelian groups.
@@ -1079,7 +1079,7 @@ class REGINA_API HomMarkedAbelianGroup :
  * \deprecated The class NHomMarkedAbelianGroup has now been renamed to
  * HomMarkedAbelianGroup.
  */
-REGINA_DEPRECATED typedef HomMarkedAbelianGroup NHomMarkedAbelianGroup;
+[[deprecated]] typedef HomMarkedAbelianGroup NHomMarkedAbelianGroup;
 
 /*@}*/
 

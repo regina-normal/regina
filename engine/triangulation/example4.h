@@ -247,7 +247,7 @@ class REGINA_API Example<4> : public detail::ExampleBase<4> {
  * \deprecated Instead of the old typedef Dim4ExampleTriangulation, you should
  * use the full class name Example<4>.
  */
-REGINA_DEPRECATED typedef Example<4> Dim4ExampleTriangulation;
+[[deprecated]] typedef Example<4> Dim4ExampleTriangulation;
 
 /*@}*/
 

@@ -265,7 +265,7 @@ class REGINA_API PDF : public Packet {
  *
  * \deprecated The class NPDF has now been renamed to PDF.
  */
-REGINA_DEPRECATED typedef PDF NPDF;
+[[deprecated]] typedef PDF NPDF;
 
 /*@}*/
 

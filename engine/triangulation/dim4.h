@@ -53,7 +53,7 @@ namespace regina {
  * \deprecated Instead of the old typedef Dim4Isomorphism, you should use
  * the full class name Isomorphism<4>.
  */
-REGINA_DEPRECATED typedef Isomorphism<4> Dim4Isomorphism;
+[[deprecated]] typedef Isomorphism<4> Dim4Isomorphism;
 
 } // namespace regina
 

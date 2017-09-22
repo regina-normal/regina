@@ -271,7 +271,7 @@ class REGINA_API PluggedTorusBundle : public StandardTriangulation {
  * \deprecated The class NPluggedTorusBundle has now been renamed to
  * PluggedTorusBundle.
  */
-REGINA_DEPRECATED typedef PluggedTorusBundle NPluggedTorusBundle;
+[[deprecated]] typedef PluggedTorusBundle NPluggedTorusBundle;
 
 /*@}*/
 

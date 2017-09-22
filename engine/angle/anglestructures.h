@@ -413,7 +413,7 @@ REGINA_API MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
  * \deprecated The class NAngleStructureList has now been renamed to
  * AngleStructures.
  */
-REGINA_DEPRECATED typedef AngleStructures NAngleStructureList;
+[[deprecated]] typedef AngleStructures NAngleStructureList;
 
 /*@}*/
 

@@ -155,7 +155,7 @@ class REGINA_API LayeredLoop : public StandardTriangulation {
  * \deprecated The class NLayeredLoop has now been renamed to
  * LayeredLoop.
  */
-REGINA_DEPRECATED typedef LayeredLoop NLayeredLoop;
+[[deprecated]] typedef LayeredLoop NLayeredLoop;
 
 /*@}*/
 

@@ -36,6 +36,7 @@
 #import "ReginaHelper.h"
 #import "progress/progresstracker.h"
 #import "surfaces/normalsurfaces.h"
+#import "triangulation/dim3.h"
 
 #define KEY_LAST_TYPE @"NewSurfacesType"
 #define KEY_LAST_COORDS @"NewSurfacesCoords"
@@ -137,8 +138,9 @@ static NSArray* embText;
     switch (_coordControl.selectedSegmentIndex) {
         case 0: coords = regina::NS_STANDARD; break;
         case 1: coords = regina::NS_QUAD; break;
-        case 2: coords = regina::NS_AN_STANDARD; almostNormal = true; break;
-        case 3: coords = regina::NS_AN_QUAD_OCT; almostNormal = true; break;
+        case 2: coords = regina::NS_QUAD_CLOSED; break;
+        case 3: coords = regina::NS_AN_STANDARD; almostNormal = true; break;
+        case 4: coords = regina::NS_AN_QUAD_OCT; almostNormal = true; break;
         default: broken = true; break;
     }
     if (broken) {
@@ -160,7 +162,22 @@ static NSArray* embText;
         [alert show];
         return;
     }
-    
+
+    regina::Triangulation<3>* tri = (regina::Triangulation<3>*)self.spec.parent;
+
+    if (coords == regina::NS_QUAD_CLOSED && ! (
+            tri->countVertices() == 1 &&
+            tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
+            tri->isOriented())) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selection Not Supported"
+                                                        message:@"At present, quad closed coordinates are only available for oriented ideal triangulations with one torus cusp and no other boundary components or internal vertices."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
     _whichControl.enabled = NO;
     _coordControl.enabled = NO;
     _embControl.enabled = NO;
@@ -177,8 +194,7 @@ static NSArray* embText;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NormalSurfaces* ans =
-            NormalSurfaces::enumerate((regina::Triangulation<3>*)self.spec.parent,
-                                          coords, which, regina::NS_ALG_DEFAULT, &_tracker);
+            NormalSurfaces::enumerate(tri, coords, which, regina::NS_ALG_DEFAULT, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
                 // This operation blocks until the UI is updated:
@@ -190,7 +206,23 @@ static NSArray* embText;
         dispatch_async(dispatch_get_main_queue(), ^{
             [UIApplication sharedApplication].idleTimerDisabled = NO;
 
-            if (_tracker.isCancelled()) {
+            if (! ans) {
+                UIAlertView *alert;
+                if (coords == regina::NS_QUAD_CLOSED) {
+                    alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Failed"
+                                                                    message:@"I could not complete the normal surface enumeration. This could be because SnapPea was unable to construct the slope equations, or because it tried to retriangulate when doing so. Please report this to the Regina developers."
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"Close"
+                                                          otherButtonTitles:nil];
+                } else {
+                    alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Failed"
+                                                                    message:@"I could not complete the normal surface enumeration.  Please report this to the Regina developers."
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"Close"
+                                                          otherButtonTitles:nil];
+                }
+                [alert show];
+            } else if (_tracker.isCancelled()) {
                 delete ans;
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Cancelled"
                                                                 message:nil
@@ -222,6 +254,7 @@ static NSArray* embText;
     coordText = [NSArray arrayWithObjects:
                  @"Normal coordinates: triangles and quadrilaterals",
                  @"Normal coordinates: quadrilaterals only",
+                 @"Normal coordinates: quads, closed (non-spun) surfaces only",
                  @"Almost normal coordinates: triangles, quadrilaterals, octagons",
                  @"Almost normal coordinates: quadrilaterals and octagons only",
                  nil];

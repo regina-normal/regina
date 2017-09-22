@@ -156,7 +156,7 @@ class REGINA_API SnappedBall : public StandardTriangulation {
  * \deprecated The class NSnappedBall has now been renamed to
  * SnappedBall.
  */
-REGINA_DEPRECATED typedef SnappedBall NSnappedBall;
+[[deprecated]] typedef SnappedBall NSnappedBall;
 
 /*@}*/
 

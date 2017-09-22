@@ -145,7 +145,7 @@ class REGINA_API TrivialTri : public StandardTriangulation {
  * \deprecated The class NTrivialTri has now been renamed to
  * TrivialTri.
  */
-REGINA_DEPRECATED typedef TrivialTri NTrivialTri;
+[[deprecated]] typedef TrivialTri NTrivialTri;
 
 /*@}*/
 

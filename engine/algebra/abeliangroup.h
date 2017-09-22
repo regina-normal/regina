@@ -379,7 +379,7 @@ class REGINA_API AbelianGroup :
  * \deprecated The class NAbelianGroup has now been renamed to
  * AbelianGroup.
  */
-REGINA_DEPRECATED typedef AbelianGroup NAbelianGroup;
+[[deprecated]] typedef AbelianGroup NAbelianGroup;
 
 /*@}*/
 

@@ -404,7 +404,7 @@ T Vector<T>::minusOne(-1L);
  * \deprecated The class NVector has now been renamed to Vector.
  */
 template <class T>
-using NVector REGINA_DEPRECATED = Vector<T>;
+using NVector [[deprecated]] = Vector<T>;
 
 /*@}*/
 

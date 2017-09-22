@@ -272,7 +272,7 @@ class REGINA_API Primes {
  *
  * \deprecated The class NPrimes has now been renamed to Primes.
  */
-REGINA_DEPRECATED typedef Primes NPrimes;
+[[deprecated]] typedef Primes NPrimes;
 
 /*@}*/
 

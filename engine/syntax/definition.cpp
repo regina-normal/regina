@@ -252,7 +252,7 @@ void DefinitionData::clear()
     author.clear();
     license.clear();
     delimiters = "\t !%&()*+,-./:;<=>?[\\]^{|}~"; // must be sorted!
-    caseSensitive = true,
+    caseSensitive = true;
     version = 0.0f;
 }
 

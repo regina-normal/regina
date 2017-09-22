@@ -339,7 +339,7 @@ REGINA_API bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
  *
  * \deprecated The class NMatrix2 has now been renamed to Matrix2.
  */
-REGINA_DEPRECATED typedef Matrix2 NMatrix2;
+[[deprecated]] typedef Matrix2 NMatrix2;
 
 /*@}*/
 

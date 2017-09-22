@@ -228,7 +228,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0> {
  * use either the new alias VertexEmbedding<4>, or the full class name
  * FaceEmbedding<4, 0>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<4, 0> Dim4VertexEmbedding;
+[[deprecated]] typedef FaceEmbedding<4, 0> Dim4VertexEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -237,7 +237,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<4, 0> Dim4VertexEmbedding;
  * \deprecated Instead of the old typedef Dim4Vertex, you should use
  * either the new alias Vertex<4>, or the full class name Face<4, 0>.
  */
-REGINA_DEPRECATED typedef Face<4, 0> Dim4Vertex;
+[[deprecated]] typedef Face<4, 0> Dim4Vertex;
 
 /*@}*/
 

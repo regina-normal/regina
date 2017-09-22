@@ -69,6 +69,25 @@ enum NormalCoords {
      */
     NS_QUAD = 1,
     /**
+     * Represents quadrilateral coordinates in ideal triangulations for
+     * enumerating closed surfaces only (thus excluding spun-normal surfaces).
+     * The coordinates themselves are identical to quadrilateral
+     * coordinates, as described by NS_QUAD; however, the enumeration
+     * procedure introduces additional constraints.  The resulting
+     * solution space is the space Q_0 as described in "Computing closed
+     * essential surfaces in knot complements", by Burton, Coward and Tillmann,
+     * in SCG ’13: Proceedings of the 29th Annual Symposium on Computational
+     * Geometry, ACM, 2013, pp. 405–414.
+     *
+     * \pre Regina can only create matching equations in this coordinate system
+     * for a limited class of triangulations.  Currently, such triangulations
+     * \e must be oriented and ideal, with precisely one torus cusp and no
+     * other boundary components or internal vertices.  Moreover, SnapPea must
+     * be able to work with them without retriangulating (though this should
+     * follow from the other constraints).
+     */
+    NS_QUAD_CLOSED = 10,
+    /**
      * Indicates that a list of almost normal surfaces was created
      * using Regina 4.5.1 or earlier, where surfaces with more than
      * one octagon of the same type were stripped out of the final

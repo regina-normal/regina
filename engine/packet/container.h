@@ -103,7 +103,7 @@ class REGINA_API Container : public Packet {
  *
  * \deprecated The class NContainer has now been renamed to Container.
  */
-REGINA_DEPRECATED typedef Container NContainer;
+[[deprecated]] typedef Container NContainer;
 
 /*@}*/
 

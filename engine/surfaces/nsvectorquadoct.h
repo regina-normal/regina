@@ -124,7 +124,7 @@ class REGINA_API NSVectorQuadOct :
  * \deprecated The class NNormalSurfaceVectorQuadOct has now been
  * renamed to NSVectorQuadOct.
  */
-REGINA_DEPRECATED typedef NSVectorQuadOct NNormalSurfaceVectorQuadOct;
+[[deprecated]] typedef NSVectorQuadOct NNormalSurfaceVectorQuadOct;
 
 /*@}*/
 

@@ -951,7 +951,7 @@ class REGINA_API NormalHypersurface :
  * \deprecated The class NNormalHypersurfaceVector has now been renamed to
  * NormalHypersurfaceVector.
  */
-REGINA_DEPRECATED typedef NormalHypersurfaceVector NNormalHypersurfaceVector;
+[[deprecated]] typedef NormalHypersurfaceVector NNormalHypersurfaceVector;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -960,7 +960,7 @@ REGINA_DEPRECATED typedef NormalHypersurfaceVector NNormalHypersurfaceVector;
  * \deprecated The class NNormalHypersurface has now been renamed to
  * NormalHypersurface.
  */
-REGINA_DEPRECATED typedef NormalHypersurface NNormalHypersurface;
+[[deprecated]] typedef NormalHypersurface NNormalHypersurface;
 
 /*@}*/
 

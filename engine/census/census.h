@@ -383,7 +383,7 @@ class REGINA_API Census {
  *
  * \deprecated The class NCensusDB has now been renamed to CensusDB.
  */
-REGINA_DEPRECATED typedef CensusDB NCensusDB;
+[[deprecated]] typedef CensusDB NCensusDB;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -391,7 +391,7 @@ REGINA_DEPRECATED typedef CensusDB NCensusDB;
  *
  * \deprecated The class NCensusHit has now been renamed to CensusHit.
  */
-REGINA_DEPRECATED typedef CensusHit NCensusHit;
+[[deprecated]] typedef CensusHit NCensusHit;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -399,7 +399,7 @@ REGINA_DEPRECATED typedef CensusHit NCensusHit;
  *
  * \deprecated The class NCensusHits has now been renamed to CensusHits.
  */
-REGINA_DEPRECATED typedef CensusHits NCensusHits;
+[[deprecated]] typedef CensusHits NCensusHits;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -407,7 +407,7 @@ REGINA_DEPRECATED typedef CensusHits NCensusHits;
  *
  * \deprecated The class NCensus has now been renamed to Census.
  */
-REGINA_DEPRECATED typedef Census NCensus;
+[[deprecated]] typedef Census NCensus;
 
 /*@}*/
 

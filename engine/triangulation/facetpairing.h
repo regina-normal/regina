@@ -52,7 +52,7 @@ namespace regina {
  * \deprecated Instead of the old typedef Dim2EdgePairing, you should use
  * the full class name FacetPairing<2>.
  */
-REGINA_DEPRECATED typedef FacetPairing<2> Dim2EdgePairing;
+[[deprecated]] typedef FacetPairing<2> Dim2EdgePairing;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -61,7 +61,7 @@ REGINA_DEPRECATED typedef FacetPairing<2> Dim2EdgePairing;
  * \deprecated Instead of the old typedef Dim4FacetPairing, you should use
  * the full class name FacetPairing<4>.
  */
-REGINA_DEPRECATED typedef FacetPairing<4> Dim4FacetPairing;
+[[deprecated]] typedef FacetPairing<4> Dim4FacetPairing;
 
 } // namespace regina
 

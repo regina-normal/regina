@@ -7,15 +7,41 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 5.2  [ (under development) ]
+Version 5.2  [ 29 September, 2017 ]
 
+    GENERAL:
+        - Now requires C++14 (not C++11).  However, the only feature of C++14
+          that is currently used is the [[deprecated]] attribute, which means
+          that partially compliant compilers (such as gcc4.9) should be fine.
+        - Now builds under gcc7.
     ENGINE:
+        Class NormalHypersurfaces:
+            - New routine sort() to sort hypersurfaces by arbitrary criteria.
+            - The postconditions for enumerate() and makeMatchingEquations()
+              now allow Regina to return null in certain coordinate systems,
+              though there are not yet any coordinate systems where this can
+              happen.
+        Class NormalSurfaces:
+            - New routine sort() to sort surfaces by arbitrary criteria.
+            - The postconditions for enumerate() and makeMatchingEquations()
+              now allow Regina to return null in certain coordinate systems.
+              Currently NS_QUAD_CLOSED is the only coordinate system
+              where this can happen.
+        Class NSVectorQuadClosed:
+            - New normal surface coordinate class to implement NS_QUAD_CLOSED.
+        Class SnapPeaTriangulation:
+            - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
+              would sometimes retriangulate unexpectedly during the
+              SnapPeaTriangulation(const Triangulation<3>&) constructor.
         Class TreeDecomposition:
             - New constructor that takes a Link.
         Enum Algorithm, TuraevViroAlg:
             - Renamed TuraevViroAlg to the more general Algorithm enum type.
               The old type name TuraevViroAlg and constants TV_... are now
               deprecated but kept for backward compatibility.
+        Enum NormalCoords:
+            - Added NS_QUAD_CLOSED for quad coordinates that restrict to
+              closed surfaces only.
 
 Version 5.1  [ 19 December, 2016 ]
 

@@ -176,7 +176,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
  * \deprecated Instead of the old typedef Dim4Component, you should use
  * the real class name Component<4>.
  */
-REGINA_DEPRECATED typedef Component<4> Dim4Component;
+[[deprecated]] typedef Component<4> Dim4Component;
 
 /*@}*/
 

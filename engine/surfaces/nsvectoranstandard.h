@@ -128,10 +128,10 @@ class REGINA_API NSVectorANStandard : public NormalSurfaceVector {
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
- * \deprecated The class NNormalSurfaceVectorStandard has now been
- * renamed to NSVectorStandard.
+ * \deprecated The class NNormalSurfaceVectorANStandard has now been
+ * renamed to NSVectorANStandard.
  */
-REGINA_DEPRECATED typedef NSVectorANStandard NNormalSurfaceVectorANStandard;
+[[deprecated]] typedef NSVectorANStandard NNormalSurfaceVectorANStandard;
 
 /*@}*/
 

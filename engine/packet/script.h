@@ -287,7 +287,7 @@ class REGINA_API Script : public Packet, public PacketListener {
  *
  * \deprecated The class NScript has now been renamed to Script.
  */
-REGINA_DEPRECATED typedef Script NScript;
+[[deprecated]] typedef Script NScript;
 
 /*@}*/
 

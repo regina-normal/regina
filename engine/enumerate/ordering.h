@@ -108,7 +108,7 @@ class PosOrder {
  *
  * \deprecated The class NPosOrder has now been renamed to PosOrder.
  */
-REGINA_DEPRECATED typedef PosOrder NPosOrder;
+[[deprecated]] typedef PosOrder NPosOrder;
 
 /*@}*/
 

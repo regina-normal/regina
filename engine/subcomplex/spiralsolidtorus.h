@@ -258,7 +258,7 @@ class REGINA_API SpiralSolidTorus : public StandardTriangulation {
  * \deprecated The class NSpiralSolidTorus has now been renamed to
  * SpiralSolidTorus.
  */
-REGINA_DEPRECATED typedef SpiralSolidTorus NSpiralSolidTorus;
+[[deprecated]] typedef SpiralSolidTorus NSpiralSolidTorus;
 
 // Inline functions for SpiralSolidTorus
 

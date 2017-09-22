@@ -152,7 +152,7 @@ class REGINA_API LensSpace : public Manifold {
  * \deprecated The class NLensSpace has now been renamed to
  * LensSpace.
  */
-REGINA_DEPRECATED typedef LensSpace NLensSpace;
+[[deprecated]] typedef LensSpace NLensSpace;
 
 /*@}*/
 

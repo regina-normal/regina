@@ -1408,7 +1408,7 @@ REGINA_API Packet* open(std::istream& in);
  *
  * \deprecated The class NPacket has now been renamed to Packet.
  */
-REGINA_DEPRECATED typedef Packet NPacket;
+[[deprecated]] typedef Packet NPacket;
 
 /*@}*/
 

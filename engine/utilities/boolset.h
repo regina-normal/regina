@@ -349,7 +349,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const BoolSet& set);
  *
  * \deprecated The class NBoolSet has now been renamed to BoolSet.
  */
-REGINA_DEPRECATED typedef BoolSet NBoolSet;
+[[deprecated]] typedef BoolSet NBoolSet;
 
 /*@}*/
 

@@ -304,7 +304,7 @@ class REGINA_API Example<3> : public detail::ExampleBase<3> {
  * \deprecated Instead of the old typedef NExampleTriangulation, you should
  * use the full class name Example<3>.
  */
-REGINA_DEPRECATED typedef Example<3> NExampleTriangulation;
+[[deprecated]] typedef Example<3> NExampleTriangulation;
 
 inline Triangulation<3>* Example<3>::s2xs1() {
     return sphereBundle();

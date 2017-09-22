@@ -208,7 +208,7 @@ REGINA_API unsigned long formSigCensus(unsigned order, UseSignature use,
  *
  * \deprecated The class NSigCensus has now been renamed to SigCensus.
  */
-REGINA_DEPRECATED typedef SigCensus NSigCensus;
+[[deprecated]] typedef SigCensus NSigCensus;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -216,7 +216,7 @@ REGINA_DEPRECATED typedef SigCensus NSigCensus;
  *
  * \deprecated The typedef NSigIsoList has now been renamed to SigIsoList.
  */
-REGINA_DEPRECATED typedef SigIsoList NSigIsoList;
+[[deprecated]] typedef SigIsoList NSigIsoList;
 
 /*@}*/
 

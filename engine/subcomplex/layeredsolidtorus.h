@@ -404,7 +404,7 @@ class REGINA_API LayeredSolidTorus : public StandardTriangulation {
  * \deprecated The class NLayeredSolidTorus has now been renamed to
  * LayeredSolidTorus.
  */
-REGINA_DEPRECATED typedef LayeredSolidTorus NLayeredSolidTorus;
+[[deprecated]] typedef LayeredSolidTorus NLayeredSolidTorus;
 
 /*@}*/
 

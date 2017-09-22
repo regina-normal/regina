@@ -96,38 +96,6 @@
    * Use of this macro is optional.
    */
   #define REGINA_LOCAL
-
-  /**
-   * Any deprecated class, function, typedef or constant in Regina's API must
-   * be declared with REGINA_DEPRECATED.
-   *
-   * If the user passes the compile flag <tt>-DREGINA_STRICT</tt>, then
-   * this macro attempts to declare the <tt>deprecated</tt> attribute.
-   * If it cannot work out how to declare such an attribute under the
-   * current compiler, then this macro expands to nothing instead.
-   *
-   * If a function or constant is declared as both REGINA_API and
-   * REGINA_DEPRECATED, the REGINA_DEPRECATED attribute should be listed first.
-   *
-   * Conversely, if a class or struct is declared as both REGINA_API and
-   * REGINA_DEPRECATED, the REGINA_API attribute should be listed first.
-   *
-   * If/when Regina moves to C++14, this macro can be replaced with
-   * <tt>[[deprecated]]</tt> instead.
-   */
-  #define REGINA_DEPRECATED
-
-  /**
-   * Any deprecated enumeration constant in Regina's API must be
-   * declared with REGINA_DEPRECATED_ENUM.
-   *
-   * This macro plays a similar role to REGINA_DEPRECATED.  It is defined
-   * separately because some compilers support the deprecated attribute on
-   * classes and functions, but not on enumeration constants.
-   *
-   * See the REGINA_DEPRECATED macro for further details.
-   */
-  #define REGINA_DEPRECATED_ENUM
 #else
   // The real definitions go here.
   // The macros below are modified from the instructions at
@@ -155,31 +123,6 @@
     #define REGINA_API REGINA_HELPER_DLL_IMPORT
   #endif
   #define REGINA_LOCAL REGINA_HELPER_DLL_LOCAL
-
-  #if defined REGINA_STRICT
-    // Try to find deprecated attributes that the compiler understands.
-    #if __llvm__
-      #define REGINA_DEPRECATED [[deprecated]]
-      #define REGINA_DEPRECATED_ENUM [[deprecated]]
-    #else
-      #if __GNUC__
-        #define REGINA_DEPRECATED __attribute__((deprecated))
-        #if __GNUC__ >= 6
-          #define REGINA_DEPRECATED_ENUM __attribute__((deprecated))
-        #else
-          #define REGINA_DEPRECATED_ENUM
-        #endif
-      #else
-        // We don't know this compiler.
-        #define REGINA_DEPRECATED
-        #define REGINA_DEPRECATED_ENUM
-      #endif
-    #endif
-  #else
-    // The user doesn't want deprecation warnings.
-    #define REGINA_DEPRECATED
-    #define REGINA_DEPRECATED_ENUM
-  #endif
 #endif // doxygen
 
 namespace regina {
@@ -241,38 +184,6 @@ enum Algorithm {
      * suitable for "real" applications.
      */
     ALG_NAIVE = 3,
-    /**
-     * Deprecated alias for ALG_DEFAULT.
-     *
-     * \deprecated The old constant TV_DEFAULT has been replaced by the
-     * constant ALG_DEFAULT, and the underlying enumeration type has
-     * been renamed from TuraevViroAlg to Algorithm.
-     */
-    REGINA_DEPRECATED_ENUM TV_DEFAULT = 0,
-    /**
-     * Deprecated alias for ALG_BACKTRACK.
-     *
-     * \deprecated The old constant TV_BACKTRACK has been replaced by the
-     * constant ALG_BACKTRACK, and the underlying enumeration type has
-     * been renamed from TuraevViroAlg to Algorithm.
-     */
-    REGINA_DEPRECATED_ENUM TV_BACKTRACK = 1,
-    /**
-     * Deprecated alias for ALG_TREEWIDTH.
-     *
-     * \deprecated The old constant TV_TREEWIDTH has been replaced by the
-     * constant ALG_TREEWIDTH, and the underlying enumeration type has
-     * been renamed from TuraevViroAlg to Algorithm.
-     */
-    REGINA_DEPRECATED_ENUM TV_TREEWIDTH = 2,
-    /**
-     * Deprecated alias for ALG_NAIVE.
-     *
-     * \deprecated The old constant TV_NAIVE has been replaced by the
-     * constant ALG_NAIVE, and the underlying enumeration type has
-     * been renamed from TuraevViroAlg to Algorithm.
-     */
-    REGINA_DEPRECATED_ENUM TV_NAIVE = 3
 };
 
 /**
@@ -283,7 +194,40 @@ enum Algorithm {
  * TV_BACKTRACK, TV_TREEWIDTH and TV_NAIVE correspond to the new constants
  * ALG_DEFAULT, ALG_BACKTRACK, ALG_TREEWIDTH and ALG_NAIVE respectively.
  */
-REGINA_DEPRECATED typedef Algorithm TuraevViroAlg;
+[[deprecated]] typedef Algorithm TuraevViroAlg;
+
+/**
+ * Deprecated alias for ALG_DEFAULT.
+ *
+ * \deprecated The old constant TV_DEFAULT has been replaced by the
+ * constant ALG_DEFAULT, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_DEFAULT = ALG_DEFAULT;
+/**
+ * Deprecated alias for ALG_BACKTRACK.
+ *
+ * \deprecated The old constant TV_BACKTRACK has been replaced by the
+ * constant ALG_BACKTRACK, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_BACKTRACK = ALG_BACKTRACK;
+/**
+ * Deprecated alias for ALG_TREEWIDTH.
+ *
+ * \deprecated The old constant TV_TREEWIDTH has been replaced by the
+ * constant ALG_TREEWIDTH, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_TREEWIDTH = ALG_TREEWIDTH;
+/**
+ * Deprecated alias for ALG_NAIVE.
+ *
+ * \deprecated The old constant TV_NAIVE has been replaced by the
+ * constant ALG_NAIVE, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_NAIVE = ALG_NAIVE;
 
 } // namespace regina
 

@@ -47,14 +47,21 @@ NormalHypersurfaces* NormalHypersurfaces::enumerate(
         Triangulation<4>* owner, HyperCoords coords,
         HyperList which, HyperAlg algHints,
         ProgressTracker* tracker) {
+    MatrixInt* eqns = makeMatchingEquations(owner, coords);
+    if (! eqns) {
+        if (tracker)
+            tracker->setFinished();
+        return 0;
+    }
+
     NormalHypersurfaces* list = new NormalHypersurfaces(
         coords, which, algHints);
 
     if (tracker)
         std::thread(forCoords<Enumerator>,
-            coords, Enumerator(list, owner, tracker)).detach();
+            coords, Enumerator(list, owner, eqns, tracker)).detach();
     else
-        forCoords(coords, Enumerator(list, owner, tracker));
+        forCoords(coords, Enumerator(list, owner, eqns, tracker));
     return list;
 }
 
@@ -79,6 +86,9 @@ void NormalHypersurfaces::Enumerator::operator() () {
 
     if (tracker_)
         tracker_->setFinished();
+
+    // Clean up.
+    delete eqns_;
 }
 
 template <typename Coords>
@@ -105,16 +115,13 @@ void NormalHypersurfaces::Enumerator::fillVertex() {
 
 template <typename Coords>
 void NormalHypersurfaces::Enumerator::fillVertexDD() {
-    MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
-
     EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
+        HypersurfaceInserter(*list_, triang_), *eqns_, constraints, tracker_);
 
     delete constraints;
-    delete eqns;
 }
 
 template <typename Coords>
@@ -164,7 +171,9 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         HS_VERTEX | (list_->which_.has(HS_EMBEDDED_ONLY) ?
             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator e(vtx, triang_, 0 /* Don't set another progress tracker */);
+    Enumerator e(vtx, triang_,
+        new MatrixInt(*eqns_) /* clone which will be destroyed */,
+        0 /* don't set another progress tracker */);
     e.fillVertex<Coords>();
 
     // Finalise the algorithm flags for this list: combine HS_HILBERT_PRIMAL
@@ -190,16 +199,13 @@ void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
-    MatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
-
     EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-        HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
+        HypersurfaceInserter(*list_, triang_), *eqns_, constraints, tracker_);
 
     delete constraints;
-    delete eqns;
 }
 
 } // namespace regina

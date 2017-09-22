@@ -141,9 +141,19 @@ NEED_CXX11_FEATURE("stdexceptionptr")
 NEED_CXX11_FEATURE("stdthread")
 NEED_CXX11_FEATURE("variadic_templates")
 IF(NOT HAVE_CXX11_FEATURES)
-  MESSAGE(FATAL_ERROR "Regina requires C++11 support to compile.")
+  MESSAGE(FATAL_ERROR "Regina requires full C++11 support to compile.")
 ENDIF()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_SWITCH}")
+
+# C++14 partial requirements
+INCLUDE(CheckCXX14Features)
+SET(HAVE_CXX14_FEATURES TRUE)
+NEED_CXX14_FEATURE("deprecated")
+NEED_CXX14_FEATURE("deprecated_typedef")
+NEED_CXX14_FEATURE("deprecated_using")
+IF(NOT HAVE_CXX14_FEATURES)
+  MESSAGE(FATAL_ERROR "Regina requires partial C++14 support to compile.")
+ENDIF()
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX14_SWITCH}")
 
 # Regina's own cmake scripts:
 INCLUDE( ReginaMacros )
@@ -211,19 +221,6 @@ IF (NOT DISABLE_RPATH)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
   endif (APPLE)
 ENDIF (NOT DISABLE_RPATH)
-
-# Deprecation warnings.
-IF(NOT STRICT_MODE)
-  SET (STRICT_MODE OFF CACHE STRING
-    "Compiles Regina with -DREGINA_STRICT, which (for supported compilers) issues warnings whenever deprecated code is used."
-    FORCE)
-ENDIF(NOT STRICT_MODE)
-IF(STRICT_MODE)
-  SET (CONFIG_STRICT_FLAGS "-DREGINA_STRICT")
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CONFIG_STRICT_FLAGS}")
-ELSE(STRICT_MODE)
-  SET (CONFIG_STRICT_FLAGS "")
-ENDIF(STRICT_MODE)
 
 # i18n checks.
 CHECK_CXX_SOURCE_COMPILES("

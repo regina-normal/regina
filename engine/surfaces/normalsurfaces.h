@@ -239,6 +239,18 @@ class REGINA_API NormalSurfaces : public Packet {
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
          *
+         * If an error occurs, then this routine will return \c null,
+         * no normal surface list will be created, and the progress
+         * tracker (if passed) will be marked as finished.  Errors can occur
+         * in the following scenarios:
+         *
+         * - Regina could not create the matching equations for the given
+         *   triangulation in the given coordinate system.  This is only
+         *   possible in certain coordinate systems, and all such coordinate
+         *   systems are marked as such in the NormalCoords enum documentation.
+         *
+         * - A progress tracker is passed but a new thread could not be started.
+         *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
          * @param coords the coordinate system to be used.
@@ -249,9 +261,8 @@ class REGINA_API NormalSurfaces : public Packet {
          * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal surface list.  Note that if
          * a progress tracker is passed then this list may not be completely
-         * filled when this routine returns.  If a progress tracker is
-         * passed and a new thread could not be started, this routine
-         * returns 0 (and no normal surface list is created).
+         * filled when this routine returns.  If an error occurs (as
+         * described above) then this routine will return \c null instead.
          */
         static NormalSurfaces* enumerate(Triangulation<3>* owner,
             NormalCoords coords,
@@ -533,6 +544,24 @@ class REGINA_API NormalSurfaces : public Packet {
         NormalSurfaces* standardANToQuadOct() const;
 
         /**
+         * Sorts the surfaces in this list according to the given criterion.
+         *
+         * This sort is stable, i.e., surfaces that are equivalent under the
+         * given criterion will remain in the same relative order.
+         *
+         * The implementation of this routine uses std::stable_sort.
+         *
+         * \ifacespython Not present.
+         *
+         * @param comp a binary function (or function object) that
+         * accepts two const NormalSurface pointers, and returns \c true
+         * if and only if the first surface should appear before the second
+         * in the sorted list.
+         */
+        template <typename Comparison>
+        void sort(Comparison&& comp);
+
+        /**
          * Creates a new list filled with the surfaces from this list
          * that have at least one locally compatible partner.
          * In other words, a surface \a S from this list will be placed
@@ -673,7 +702,14 @@ class REGINA_API NormalSurfaces : public Packet {
          *
          * The format of the matrix is identical to that returned by
          * makeMatchingEquations().
-         * 
+         *
+         * Note that there are situations in which makeMatchingEquations()
+         * returns \c null (because the triangulation is not supported
+         * by the chosen coordinate system).  However, this routine should
+         * never return \c null, because if makeMatchingEquations() had
+         * returned \c null then this normal surface list would not have
+         * been created in the first place.
+         *
          * @return the matching equations used to create this normal
          * surface list.
          */
@@ -1151,6 +1187,9 @@ class REGINA_API NormalSurfaces : public Packet {
                     /**< The surface list to be filled. */
                 Triangulation<3>* triang_;
                     /**< The triangulation in which these surfaces lie. */
+                MatrixInt* eqns_;
+                    /**< The matching equations for the given triangulation in
+                         the coordinate system corresponding to list_. */
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
@@ -1162,12 +1201,18 @@ class REGINA_API NormalSurfaces : public Packet {
                  *
                  * @param list the surface list to be filled.
                  * @param triang the triangulation in which these surfaces lie.
+                 * @param eqns the matching equations for the given
+                 * triangulation in the coordinate system corresopnding to
+                 * \a list.  This object will take ownership of \a eqns, and
+                 * the bracket operator will delete it once the enumeration
+                 * has finished.  This pointer \e must be non-null, i.e., Regina
+                 * must have been able to construct the matching equations.
                  * @param tracker the progress tracker to use for progress
                  * reporting and cancellation polling, or 0 if these
                  * capabilities are not required.
                  */
-                Enumerator(NormalSurfaces* list,
-                    Triangulation<3>* triang, ProgressTracker* tracker);
+                Enumerator(NormalSurfaces* list, Triangulation<3>* triang,
+                    MatrixInt* eqns, ProgressTracker* tracker);
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -1180,6 +1225,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * This routine fills \a list_ with surfaces, and then once
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
+                 *
+                 * The matching equation matrix \a eqns_ will be deleted
+                 * at the end of this routine.
                  *
                  * \tparam Coords an instance of the NormalInfo<> template
                  * class.
@@ -1386,10 +1434,18 @@ REGINA_API NormalSurfaceVector* makeZeroVector(
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
+ * For some coordinate systems, Regina may not be able to create matching
+ * equations for all triangulations (these coordinate systems are explicitly
+ * mentioned as such in the NormalCoords enum documentation).  If Regina
+ * cannot create the matching equations as requested, this routine will
+ * return \c null instead.
+ *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
  * @param coords the coordinate system to be used.
- * @return a newly allocated set of matching equations.
+ * @return a newly allocated set of matching equations, or \c null if
+ * Regina is not able to construct them for the given combination of
+ * triangulation and coordinate system.
  */
 REGINA_API MatrixInt* makeMatchingEquations(
     const Triangulation<3>* triangulation, NormalCoords coords);
@@ -1415,7 +1471,7 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
  * \deprecated The class NNormalSurfaceList has now been renamed to
  * NormalSurfaces.
  */
-REGINA_DEPRECATED typedef NormalSurfaces NNormalSurfaceList;
+[[deprecated]] typedef NormalSurfaces NNormalSurfaceList;
 
 /*@}*/
 
@@ -1451,6 +1507,12 @@ inline const NormalSurface* NormalSurfaces::surface(size_t index) const {
 
 inline bool NormalSurfaces::dependsOnParent() const {
     return true;
+}
+
+template <typename Comparison>
+inline void NormalSurfaces::sort(Comparison&& comp) {
+    ChangeEventSpan span(this);
+    std::stable_sort(surfaces.begin(), surfaces.end(), comp);
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator() {
@@ -1572,8 +1634,8 @@ inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
 }
 
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
-        Triangulation<3>* triang, ProgressTracker* tracker) :
-        list_(list), triang_(triang), tracker_(tracker) {
+        Triangulation<3>* triang, MatrixInt* eqns, ProgressTracker* tracker) :
+        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
 }
 
 } // namespace regina

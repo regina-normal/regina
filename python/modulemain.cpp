@@ -113,20 +113,20 @@ BOOST_PYTHON_MODULE(regina) {
         .value("ALG_BACKTRACK", regina::ALG_BACKTRACK)
         .value("ALG_TREEWIDTH", regina::ALG_TREEWIDTH)
         .value("ALG_NAIVE", regina::ALG_NAIVE)
-        .value("TV_DEFAULT", regina::TV_DEFAULT)
-        .value("TV_BACKTRACK", regina::TV_BACKTRACK)
-        .value("TV_TREEWIDTH", regina::TV_TREEWIDTH)
-        .value("TV_NAIVE", regina::TV_NAIVE)
+        .value("TV_DEFAULT", regina::ALG_DEFAULT)
+        .value("TV_BACKTRACK", regina::ALG_BACKTRACK)
+        .value("TV_TREEWIDTH", regina::ALG_TREEWIDTH)
+        .value("TV_NAIVE", regina::ALG_NAIVE)
         ;
 
     boost::python::scope().attr("ALG_DEFAULT") = regina::ALG_DEFAULT;
     boost::python::scope().attr("ALG_BACKTRACK") = regina::ALG_BACKTRACK;
     boost::python::scope().attr("ALG_TREEWIDTH") = regina::ALG_TREEWIDTH;
     boost::python::scope().attr("ALG_NAIVE") = regina::ALG_NAIVE;
-    boost::python::scope().attr("TV_DEFAULT") = regina::TV_DEFAULT;
-    boost::python::scope().attr("TV_BACKTRACK") = regina::TV_BACKTRACK;
-    boost::python::scope().attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
-    boost::python::scope().attr("TV_NAIVE") = regina::TV_NAIVE;
+    boost::python::scope().attr("TV_DEFAULT") = regina::ALG_DEFAULT;
+    boost::python::scope().attr("TV_BACKTRACK") = regina::ALG_BACKTRACK;
+    boost::python::scope().attr("TV_TREEWIDTH") = regina::ALG_TREEWIDTH;
+    boost::python::scope().attr("TV_NAIVE") = regina::ALG_NAIVE;
 
     // Components from subdirectories (in approximate dependency order):
 

@@ -196,7 +196,7 @@ class HilbertPrimal {
  *
  * \deprecated The class NHilbertPrimal has now been renamed to HilbertPrimal.
  */
-REGINA_DEPRECATED typedef HilbertPrimal NHilbertPrimal;
+[[deprecated]] typedef HilbertPrimal NHilbertPrimal;
 
 /*@}*/
 

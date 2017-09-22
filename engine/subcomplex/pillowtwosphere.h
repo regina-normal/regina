@@ -148,7 +148,7 @@ class REGINA_API PillowTwoSphere :
  * \deprecated The class NPillowTwoSphere has now been renamed to
  * PillowTwoSphere.
  */
-REGINA_DEPRECATED typedef PillowTwoSphere NPillowTwoSphere;
+[[deprecated]] typedef PillowTwoSphere NPillowTwoSphere;
 
 /*@}*/
 

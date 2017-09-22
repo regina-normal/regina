@@ -139,7 +139,7 @@ class REGINA_API L31Pillow : public StandardTriangulation {
  * \deprecated The class NL31Pillow has now been renamed to
  * L31Pillow.
  */
-REGINA_DEPRECATED typedef L31Pillow NL31Pillow;
+[[deprecated]] typedef L31Pillow NL31Pillow;
 
 /*@}*/
 

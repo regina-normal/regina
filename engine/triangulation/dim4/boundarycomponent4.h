@@ -62,7 +62,7 @@ namespace regina {
  * \deprecated Instead of the old typedef Dim4BoundaryComponent, you should use
  * the real class name BoundaryComponent<4>.
  */
-REGINA_DEPRECATED typedef BoundaryComponent<4> Dim4BoundaryComponent;
+[[deprecated]] typedef BoundaryComponent<4> Dim4BoundaryComponent;
 
 /*@}*/
 

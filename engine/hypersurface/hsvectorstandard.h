@@ -119,7 +119,7 @@ class REGINA_API HSVectorStandard :
  * \deprecated The class NNormalHypersurfaceVectorStandard has now been
  * renamed to HSVectorStandard.
  */
-REGINA_DEPRECATED typedef HSVectorStandard NNormalHypersurfaceVectorStandard;
+[[deprecated]] typedef HSVectorStandard NNormalHypersurfaceVectorStandard;
 
 /*@}*/
 

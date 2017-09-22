@@ -392,7 +392,7 @@ class REGINA_API DoubleDescription {
  * \deprecated The class NDoubleDescription has now been renamed to
  * DoubleDescription.
  */
-REGINA_DEPRECATED typedef DoubleDescription NDoubleDescription;
+[[deprecated]] typedef DoubleDescription NDoubleDescription;
 
 /*@}*/
 
