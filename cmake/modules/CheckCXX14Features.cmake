@@ -5,7 +5,6 @@
 # Checks for C++14 features
 #  CXX14_FEATURE_LIST - a list containing all supported features
 #  HAS_CXX14_DEPRECATED         - deprecated attribute
-#  HAS_CXX14_DEPRECATED_ENUM    - deprecated enum constants
 #  HAS_CXX14_DEPRECATED_TYPEDEF - deprecated typedefs
 #  HAS_CXX14_DEPRECATED_USING   - deprecated "using" declarations
 #
@@ -90,7 +89,6 @@ MACRO(CXX14_CHECK_FEATURE FEATURE_NAME FEATURE_NUMBER RESULT_VAR)
 ENDMACRO(CXX14_CHECK_FEATURE)
 
 CXX14_CHECK_FEATURE("deprecated"           "" HAS_CXX14_DEPRECATED)
-CXX14_CHECK_FEATURE("deprecated_enum"      "" HAS_CXX14_DEPRECATED_ENUM)
 CXX14_CHECK_FEATURE("deprecated_typedef"   "" HAS_CXX14_DEPRECATED_TYPEDEF)
 CXX14_CHECK_FEATURE("deprecated_using"     "" HAS_CXX14_DEPRECATED_USING)
 

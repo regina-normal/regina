@@ -144,17 +144,28 @@ IF(NOT HAVE_CXX11_FEATURES)
   MESSAGE(FATAL_ERROR "Regina requires full C++11 support to compile.")
 ENDIF()
 
-# C++14 requirements
+# C++14 partial requirements
 INCLUDE(CheckCXX14Features)
 SET(HAVE_CXX14_FEATURES TRUE)
 NEED_CXX14_FEATURE("deprecated")
-NEED_CXX14_FEATURE("deprecated_enum")
 NEED_CXX14_FEATURE("deprecated_typedef")
 NEED_CXX14_FEATURE("deprecated_using")
 IF(NOT HAVE_CXX14_FEATURES)
   MESSAGE(FATAL_ERROR "Regina requires partial C++14 support to compile.")
 ENDIF()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX14_SWITCH}")
+
+# C++17 optional requirements
+INCLUDE(CheckCXX17Features)
+SET(HAVE_CXX17_FEATURES TRUE)
+NEED_CXX17_FEATURE("deprecated_enum")
+
+IF(HAVE_CXX17_FEATURES)
+  MESSAGE(STATUS "Building Regina using C++17.")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX17_SWITCH}")
+ELSE(HAVE_CXX17_FEATURES)
+  MESSAGE(STATUS "Building Regina using C++14.")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX14_SWITCH}")
+ENDIF()
 
 # Regina's own cmake scripts:
 INCLUDE( ReginaMacros )
