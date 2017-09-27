@@ -33,6 +33,10 @@ Version 5.2  [ 29 September, 2017 ]
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the
               SnapPeaTriangulation(const Triangulation<3>&) constructor.
+        Class Triangulation<dim>:
+            - Now implements the Boost Graph Library (BGL) interface.  The dual
+              graph of a triangulation can be accessed seamlessly through the
+              BGL by using the triangulation itself as the graph data structure.
         Enum Algorithm, TuraevViroAlg:
             - Renamed TuraevViroAlg to the more general Algorithm enum type.
               The old type name TuraevViroAlg and constants TV_... are now
