@@ -30,13 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
+// Begin with the BGL includes, so we ensure that the compiler correctly
+// handles regina's boost::graph_traits specialisations *after* the
+// headers in which these graph_traits classes are used.
+#include <boost/graph/graph_concepts.hpp>
+#include <boost/graph/bandwidth.hpp>
+
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/dim3.h"
 #include "triangulation/graph.h"
 #include "testsuite/dim3/testtriangulation.h"
-#include <boost/graph/graph_concepts.hpp>
-#include <boost/graph/bandwidth.hpp>
 
 using regina::Triangulation;
 
