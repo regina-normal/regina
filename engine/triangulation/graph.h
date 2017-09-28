@@ -43,6 +43,7 @@
 #include <iostream>
 #include <triangulation/generic.h>
 #include <boost/graph/graph_traits.hpp>
+#include <boost/graph/properties.hpp>
 
 namespace regina {
 
@@ -58,8 +59,12 @@ namespace regina {
  * between two adjacent <i>dim</i>-simplices.
  *
  * Triangulations implement several BGL graph concepts, including:
- * vertex link graph; edge list graph; adjacency graph; incidence graph;
- * and bidirectional graph.
+ * - vertex link graph;
+ * - edge list graph;
+ * - adjacency graph;
+ * - incidence graph;
+ * - bidirectional graph;
+ * - the read-only portions of property graph.
  *
  * Triangulations are \e not mutable graphs - for the purposes of the BGL,
  * they are considered read-only.
@@ -578,6 +583,28 @@ namespace graph {
             void skipBoundary();
     };
 
+    /**
+     * Allows the Boost Graph Library to access inherent properties of the
+     * dual graph of a triangulation.  Here "inherent properties" means
+     * properties that are already stored as part of the triangulation,
+     * as opposed to a list of additional properties that are stored
+     * separately.
+     *
+     * This class is lightweight - it contains no data or no methods.
+     * Its only use is to convey type information - specifically, to
+     * indicate to other Boost routines what property is being queried.
+     *
+     * This class implements the Boost readable property map concept.
+     *
+     * \tparam PropertyType specifies which graph property is to be studied.
+     * This type must model the Boost property tag concept.  Currently
+     * supported properties include boost::vertex_index_t and
+     * boost::vertex_name_t.
+     */
+    template <typename PropertyType>
+    class InherentPropertyMap {
+    };
+
     } // leaving namespace regina::graph, returning to namespace regina
 
     /**
@@ -779,6 +806,114 @@ namespace graph {
             graph::IncidentDualEdgeIterator<dim, true>>
         out_edges(Simplex<dim>* v, const Triangulation<dim>& t);
 
+    /**
+     * Returns the index of the given vertex of the dual graph of a
+     * triangulation.  This routine is compatible with the Boost Graph
+     * Library, where Triangulation<dim> can be used directly as the
+     * underlying graph type.
+     *
+     * The first argument does not matter: it is only used to convey
+     * type information (to indicate which graph property is being queried).
+     *
+     * @param v the vertex of the dual graph that we are examining.
+     * @return the index of the top-dimensional simplex corresponding to
+     * \a v in the underlying triangulation.
+     */
+    template <int dim>
+    size_t get(graph::InherentPropertyMap<boost::vertex_index_t>,
+            Simplex<dim>* v);
+
+    /**
+     * Returns the description of the given vertex of the dual graph of a
+     * triangulation.  This routine is compatible with the Boost Graph
+     * Library, where Triangulation<dim> can be used directly as the
+     * underlying graph type.
+     *
+     * The first argument does not matter: it is only used to convey
+     * type information (to indicate which graph property is being queried).
+     *
+     * @param v the vertex of the dual graph that we are examining.
+     * @return the description of the top-dimensional simplex corresponding to
+     * \a v in the underlying triangulation.
+     */
+    template <int dim>
+    const std::string& get(graph::InherentPropertyMap<boost::vertex_name_t>,
+            Simplex<dim>* v);
+
+    /**
+     * Returns a Boost property map that can be used to query indices
+     * of vertices in the dual graph of a triangulation.  This routine is
+     * compatible with the Boost Graph Library, where Triangulation<dim>
+     * can be used directly as the underlying graph type.
+     *
+     * The first argument does not matter: it is only used to convey
+     * type information (to indicate which graph property is being queried).
+     * Likewise, the second argument does not matter, since this type of
+     * property map carries no data; however, it would typically be the
+     * triangulation whose dual graph we are studying.
+     *
+     * @return a property map for querying indices of dual vertices.
+     */
+    template <int dim>
+    graph::InherentPropertyMap<boost::vertex_index_t> get(boost::vertex_index_t,
+            const Triangulation<dim>&);
+
+    /**
+     * Returns a Boost property map that can be used to query descriptions
+     * of vertices in the dual graph of a triangulation.  This routine is
+     * compatible with the Boost Graph Library, where Triangulation<dim>
+     * can be used directly as the underlying graph type.
+     *
+     * The first argument does not matter: it is only used to convey
+     * type information (to indicate which graph property is being queried).
+     * Likewise, the second argument does not matter, since this type of
+     * property map carries no data; however, it would typically be the
+     * triangulation whose dual graph we are studying.
+     *
+     * @return a property map for querying descriptions of dual vertices.
+     */
+    template <int dim>
+    graph::InherentPropertyMap<boost::vertex_name_t> get(boost::vertex_name_t,
+            const Triangulation<dim>&);
+
+    /**
+     * Returns the index of the given vertex of the dual graph of a
+     * triangulation.  This routine is compatible with the Boost Graph
+     * Library, where Triangulation<dim> can be used directly as the
+     * underlying graph type.
+     *
+     * The first argument does not matter: it is only used to convey
+     * type information (to indicate which graph property is being queried).
+     * Likewise, the second argument does not matter (but typically it
+     * would be the triangulation whose dual graph we are studying).
+     *
+     * @param v the vertex of the dual graph that we are examining.
+     * @return the index of the top-dimensional simplex corresponding to
+     * \a v in the underlying triangulation.
+     */
+    template <int dim>
+    size_t get(boost::vertex_index_t, const Triangulation<dim>&,
+            Simplex<dim>* v);
+
+    /**
+     * Returns the description of the given vertex of the dual graph of a
+     * triangulation.  This routine is compatible with the Boost Graph
+     * Library, where Triangulation<dim> can be used directly as the
+     * underlying graph type.
+     *
+     * The first argument does not matter: it is only used to convey
+     * type information (to indicate which graph property is being queried).
+     * Likewise, the second argument does not matter (but typically it
+     * would be the triangulation whose dual graph we are studying).
+     *
+     * @param v the vertex of the dual graph that we are examining.
+     * @return the description of the top-dimensional simplex corresponding to
+     * \a v in the underlying triangulation.
+     */
+    template <int dim>
+    const std::string& get(boost::vertex_name_t, const Triangulation<dim>&,
+            Simplex<dim>* v);
+
 } // namespace regina
 
 namespace std {
@@ -814,6 +949,29 @@ namespace std {
 } // namespace std
 
 namespace boost {
+    template <>
+    struct property_traits<
+            regina::graph::InherentPropertyMap<boost::vertex_index_t>> {
+        typedef size_t value_type;
+        typedef size_t reference;
+        typedef void key_type;
+        typedef boost::readable_property_map_tag category;
+    };
+
+    template <>
+    struct property_traits<
+            regina::graph::InherentPropertyMap<boost::vertex_name_t>> {
+        typedef std::string value_type;
+        typedef const std::string& reference;
+        typedef void key_type;
+        typedef boost::readable_property_map_tag category;
+    };
+
+    template <int dim, typename PropertyType>
+    struct property_map<regina::Triangulation<dim>, PropertyType> {
+        typedef regina::graph::InherentPropertyMap<PropertyType> const_type;
+    };
+
     template <int dim>
     struct graph_traits<regina::Triangulation<dim>> {
         typedef regina::Simplex<dim>* vertex_descriptor;
@@ -1119,6 +1277,42 @@ namespace graph {
         return std::make_pair(
             graph::IncidentDualEdgeIterator<dim, true>(source, 0),
             graph::IncidentDualEdgeIterator<dim, true>(source, dim + 1));
+    }
+
+    template <int dim>
+    inline size_t get(graph::InherentPropertyMap<boost::vertex_index_t>,
+            Simplex<dim>* v) {
+        return v->index();
+    }
+
+    template <int dim>
+    inline const std::string& get(
+            graph::InherentPropertyMap<boost::vertex_name_t>, Simplex<dim>* v) {
+        return v->description();
+    }
+
+    template <int dim>
+    inline graph::InherentPropertyMap<boost::vertex_index_t> get(
+            boost::vertex_index_t, const Triangulation<dim>&) {
+        return graph::InherentPropertyMap<boost::vertex_index_t>();
+    }
+
+    template <int dim>
+    inline graph::InherentPropertyMap<boost::vertex_name_t> get(
+            boost::vertex_name_t, const Triangulation<dim>&) {
+        return graph::InherentPropertyMap<boost::vertex_name_t>();
+    }
+
+    template <int dim>
+    inline size_t get(
+            boost::vertex_index_t, const Triangulation<dim>&, Simplex<dim>* v) {
+        return v->index();
+    }
+
+    template <int dim>
+    inline const std::string& get(
+            boost::vertex_name_t, const Triangulation<dim>&, Simplex<dim>* v) {
+        return v->desc();
     }
 
 } // namespace regina
