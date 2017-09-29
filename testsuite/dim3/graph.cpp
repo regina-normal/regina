@@ -35,6 +35,7 @@
 // headers in which these graph_traits classes are used.
 #include <boost/graph/graph_concepts.hpp>
 #include <boost/graph/bandwidth.hpp>
+#include <boost/graph/bipartite.hpp>
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
@@ -58,6 +59,7 @@ class DualGraph3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(DualGraph3Test);
 
     CPPUNIT_TEST(bandwidth);
+    CPPUNIT_TEST(bipartite);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -88,12 +90,13 @@ class DualGraph3Test : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void testBandwidth(const Triangulation<3>& t, long bandwidth) {
+        void testBandwidth(const Triangulation<3>& t, long expected) {
             long result = boost::bandwidth(t);
-            if (result != bandwidth) {
+            if (result != expected) {
                 std::ostringstream msg;
-                msg << "Bandwidth of " << t.label() <<
-                    " gives " << result << ", not " << bandwidth << ".";
+                msg << "Bandwidth of " << t.label()
+                    << " returns " << result << ", not " << expected
+                    << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -102,6 +105,24 @@ class DualGraph3Test : public CppUnit::TestFixture {
             testBandwidth(lens13_3, 1);
             testBandwidth(aug, 3);
             testBandwidth(ball, 0);
+        }
+
+        void testBipartite(const Triangulation<3>& t, bool expected) {
+            bool result = boost::is_bipartite(t,
+                regina::graph::InherentPropertyMap<3, boost::vertex_index_t>());
+            if (result != expected) {
+                std::ostringstream msg;
+                msg << "Bipartite test for " << t.label()
+                    << " returns " << result << ", not " << expected
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void bipartite() {
+            testBipartite(lens13_3, false);
+            testBipartite(aug, false);
+            testBipartite(ball, true);
         }
 };
 
