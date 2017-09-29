@@ -1000,7 +1000,7 @@ namespace boost {
         typedef size_t edges_size_type;
         typedef unsigned degree_size_type;
 
-        vertex_descriptor null_vertex() {
+        static vertex_descriptor null_vertex() {
             return nullptr;
         };
     };
