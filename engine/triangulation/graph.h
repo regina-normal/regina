@@ -596,12 +596,14 @@ namespace graph {
      *
      * This class implements the Boost readable property map concept.
      *
+     * \tparam dim the dimension of the triangulation whose dual graph
+     * is being studied.
      * \tparam PropertyType specifies which graph property is to be studied.
      * This type must model the Boost property tag concept.  Currently
      * supported properties include boost::vertex_index_t and
      * boost::vertex_name_t.
      */
-    template <typename PropertyType>
+    template <int dim, typename PropertyType>
     class InherentPropertyMap {
     };
 
@@ -820,8 +822,8 @@ namespace graph {
      * \a v in the underlying triangulation.
      */
     template <int dim>
-    size_t get(graph::InherentPropertyMap<boost::vertex_index_t>,
-            Simplex<dim>* v);
+    size_t get(graph::InherentPropertyMap<dim, boost::vertex_index_t>,
+        Simplex<dim>* v);
 
     /**
      * Returns the description of the given vertex of the dual graph of a
@@ -837,8 +839,8 @@ namespace graph {
      * \a v in the underlying triangulation.
      */
     template <int dim>
-    const std::string& get(graph::InherentPropertyMap<boost::vertex_name_t>,
-            Simplex<dim>* v);
+    const std::string& get(
+        graph::InherentPropertyMap<dim, boost::vertex_name_t>, Simplex<dim>* v);
 
     /**
      * Returns a Boost property map that can be used to query indices
@@ -855,8 +857,8 @@ namespace graph {
      * @return a property map for querying indices of dual vertices.
      */
     template <int dim>
-    graph::InherentPropertyMap<boost::vertex_index_t> get(boost::vertex_index_t,
-            const Triangulation<dim>&);
+    graph::InherentPropertyMap<dim, boost::vertex_index_t> get(
+        boost::vertex_index_t, const Triangulation<dim>&);
 
     /**
      * Returns a Boost property map that can be used to query descriptions
@@ -873,8 +875,8 @@ namespace graph {
      * @return a property map for querying descriptions of dual vertices.
      */
     template <int dim>
-    graph::InherentPropertyMap<boost::vertex_name_t> get(boost::vertex_name_t,
-            const Triangulation<dim>&);
+    graph::InherentPropertyMap<dim, boost::vertex_name_t> get(
+        boost::vertex_name_t, const Triangulation<dim>&);
 
     /**
      * Returns the index of the given vertex of the dual graph of a
@@ -949,27 +951,28 @@ namespace std {
 } // namespace std
 
 namespace boost {
-    template <>
+    template <int dim>
     struct property_traits<
-            regina::graph::InherentPropertyMap<boost::vertex_index_t>> {
+            regina::graph::InherentPropertyMap<dim, boost::vertex_index_t>> {
         typedef size_t value_type;
         typedef size_t reference;
-        typedef void key_type;
+        typedef regina::Simplex<dim>* key_type;
         typedef boost::readable_property_map_tag category;
     };
 
-    template <>
+    template <int dim>
     struct property_traits<
-            regina::graph::InherentPropertyMap<boost::vertex_name_t>> {
+            regina::graph::InherentPropertyMap<dim, boost::vertex_name_t>> {
         typedef std::string value_type;
         typedef const std::string& reference;
-        typedef void key_type;
+        typedef regina::Simplex<dim>* key_type;
         typedef boost::readable_property_map_tag category;
     };
 
     template <int dim, typename PropertyType>
     struct property_map<regina::Triangulation<dim>, PropertyType> {
-        typedef regina::graph::InherentPropertyMap<PropertyType> const_type;
+        typedef regina::graph::InherentPropertyMap<dim, PropertyType>
+            const_type;
     };
 
     template <int dim>
@@ -1280,27 +1283,28 @@ namespace graph {
     }
 
     template <int dim>
-    inline size_t get(graph::InherentPropertyMap<boost::vertex_index_t>,
+    inline size_t get(graph::InherentPropertyMap<dim, boost::vertex_index_t>,
             Simplex<dim>* v) {
         return v->index();
     }
 
     template <int dim>
     inline const std::string& get(
-            graph::InherentPropertyMap<boost::vertex_name_t>, Simplex<dim>* v) {
+            graph::InherentPropertyMap<dim, boost::vertex_name_t>,
+            Simplex<dim>* v) {
         return v->description();
     }
 
     template <int dim>
-    inline graph::InherentPropertyMap<boost::vertex_index_t> get(
+    inline graph::InherentPropertyMap<dim, boost::vertex_index_t> get(
             boost::vertex_index_t, const Triangulation<dim>&) {
-        return graph::InherentPropertyMap<boost::vertex_index_t>();
+        return graph::InherentPropertyMap<dim, boost::vertex_index_t>();
     }
 
     template <int dim>
-    inline graph::InherentPropertyMap<boost::vertex_name_t> get(
+    inline graph::InherentPropertyMap<dim, boost::vertex_name_t> get(
             boost::vertex_name_t, const Triangulation<dim>&) {
-        return graph::InherentPropertyMap<boost::vertex_name_t>();
+        return graph::InherentPropertyMap<dim, boost::vertex_name_t>();
     }
 
     template <int dim>
