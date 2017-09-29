@@ -108,8 +108,7 @@ class DualGraph3Test : public CppUnit::TestFixture {
         }
 
         void testBipartite(const Triangulation<3>& t, bool expected) {
-            bool result = boost::is_bipartite(t,
-                regina::graph::InherentPropertyMap<3, boost::vertex_index_t>());
+            bool result = boost::is_bipartite(t);
             if (result != expected) {
                 std::ostringstream msg;
                 msg << "Bipartite test for " << t.label()
