@@ -46,7 +46,7 @@
 
 using regina::Triangulation;
 
-void testConcepts() {
+void testDualGraph3Concepts() {
     // Compile-time test.
     boost::function_requires<boost::GraphConcept<regina::Triangulation<3>>>();
     boost::function_requires<boost::VertexListGraphConcept<regina::Triangulation<3>>>();
