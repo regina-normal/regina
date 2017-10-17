@@ -2159,7 +2159,7 @@ class REGINA_API Link : public Packet {
  */
 class CrossingIterator {
     private:
-        const Link& link_;
+        const Link* link_;
             /**< The underlying link. */
         size_t index_;
             /**< The index of the crossing that we are currently visiting. */
@@ -2256,7 +2256,7 @@ class CrossingIterator {
  */
 class ArcIterator {
     private:
-        const Link& link_;
+        const Link* link_;
             /**< The underlying link. */
         size_t index_;
             /**< The index of the crossing that we are currently visiting. */
@@ -2584,7 +2584,7 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 // Inline functions for CrossingIterator
 
 inline CrossingIterator::CrossingIterator(const Link& link, size_t index) :
-        link_(link), index_(index) {
+        link_(&link), index_(index) {
 }
 
 inline CrossingIterator& CrossingIterator::operator ++ () {
@@ -2593,11 +2593,11 @@ inline CrossingIterator& CrossingIterator::operator ++ () {
 }
 
 inline CrossingIterator CrossingIterator::operator ++ (int) {
-    return CrossingIterator(link_, index_++);
+    return CrossingIterator(*link_, index_++);
 }
 
 inline Crossing* CrossingIterator::operator * () const {
-    return link_.crossing(index_);
+    return link_->crossing(index_);
 }
 
 inline bool CrossingIterator::operator == (const CrossingIterator& rhs) const {
@@ -2611,7 +2611,7 @@ inline bool CrossingIterator::operator != (const CrossingIterator& rhs) const {
 // Inline functions for ArcIterator
 
 inline ArcIterator::ArcIterator(const Link& link, size_t index, bool upper) :
-        link_(link), index_(index), upper_(upper) {
+        link_(&link), index_(index), upper_(upper) {
 }
 
 inline ArcIterator& ArcIterator::operator ++ () {
@@ -2634,7 +2634,7 @@ inline ArcIterator ArcIterator::operator ++ (int) {
 }
 
 inline StrandRef ArcIterator::operator * () const {
-    return StrandRef(link_.crossing(index_), upper_ ? 1 : 0);
+    return StrandRef(link_->crossing(index_), upper_ ? 1 : 0);
 }
 
 inline bool ArcIterator::operator == (const ArcIterator& rhs) const {
