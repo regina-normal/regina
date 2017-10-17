@@ -719,24 +719,7 @@ class REGINA_API Link : public Packet {
          * be between 0 and size()-1 inclusive.
          * @return the crossing at the given index.
          */
-        Crossing* crossing(size_t index);
-        /**
-         * Returns a pointer to the crossing at the given index within
-         * this link.
-         *
-         * For a link with \a n crossings, the crossings are numbered
-         * from 0 to <i>n</i>-1 inclusive.
-         *
-         * \warning If some crossings are added or removed then the indices
-         * of other crossings might change.  If you wish to track a particular
-         * crossing through such operations then you should use the pointer
-         * to the relevant Crossing object instead.
-         *
-         * @param index the index of the requested crossing.  This must
-         * be between 0 and size()-1 inclusive.
-         * @return the crossing at the given index.
-         */
-        const Crossing* crossing(size_t index) const;
+        Crossing* crossing(size_t index) const;
 
         /**
          * Returns a strand in the given component of this link.
@@ -2179,7 +2162,7 @@ class REGINA_API Link : public Packet {
  */
 class CrossingIterator {
     private:
-        Link& link_;
+        const Link& link_;
             /**< The underlying link. */
         size_t index_;
             /**< The index of the crossing that we are currently visiting. */
@@ -2207,7 +2190,7 @@ class CrossingIterator {
          * between 0 and link.size()-1 for a deferencable iterator,
          * or must be exactly link.size() for a past-the-end iterator.
          */
-        CrossingIterator(Link& link, size_t index = 0);
+        CrossingIterator(const Link& link, size_t index = 0);
 
         /**
          * Preincrement operator.
@@ -2278,7 +2261,7 @@ class CrossingIterator {
  */
 class ArcIterator {
     private:
-        Link& link_;
+        const Link& link_;
             /**< The underlying link. */
         size_t index_;
             /**< The index of the crossing that we are currently visiting. */
@@ -2314,7 +2297,7 @@ class ArcIterator {
          * from the upper or lower strand respectively.  For a
          * past-the-end iterator, this should always be \c false.
          */
-        ArcIterator(Link& link, size_t index = 0, bool upper = false);
+        ArcIterator(const Link& link, size_t index = 0, bool upper = false);
 
         /**
          * Preincrement operator.
@@ -2543,11 +2526,7 @@ inline size_t Link::countComponents() const {
     return components_.size();
 }
 
-inline Crossing* Link::crossing(size_t index) {
-    return crossings_[index];
-}
-
-inline const Crossing* Link::crossing(size_t index) const {
+inline Crossing* Link::crossing(size_t index) const {
     return crossings_[index];
 }
 
@@ -2613,7 +2592,7 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 
 // Inline functions for CrossingIterator
 
-inline CrossingIterator::CrossingIterator(Link& link, size_t index) :
+inline CrossingIterator::CrossingIterator(const Link& link, size_t index) :
         link_(link), index_(index) {
 }
 
@@ -2640,7 +2619,7 @@ inline bool CrossingIterator::operator != (const CrossingIterator& rhs) const {
 
 // Inline functions for ArcIterator
 
-inline ArcIterator::ArcIterator(Link& link, size_t index, bool upper) :
+inline ArcIterator::ArcIterator(const Link& link, size_t index, bool upper) :
         link_(link), index_(index), upper_(upper) {
 }
 

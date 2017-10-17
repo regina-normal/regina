@@ -47,7 +47,6 @@ using regina::StrandRef;
 using regina::Link;
 
 namespace {
-    regina::Crossing* (Link::*crossing_nonconst)(size_t) = &Link::crossing;
     std::string (Link::*jenkins_str)() const = &Link::jenkins;
     Link* (*fromOrientedGauss_str)(const std::string&) =
         &Link::fromOrientedGauss;
@@ -141,8 +140,7 @@ void addLink() {
         .def(init<const Link&>())
         .def("size", &Link::size)
         .def("countComponents", &Link::countComponents)
-        .def("crossing", crossing_nonconst,
-            return_internal_reference<>())
+        .def("crossing", &Link::crossing, return_internal_reference<>())
         .def("component", &Link::component)
         .def("fromOrientedGauss", fromOrientedGauss_list,
             return_value_policy<to_held_type<>>())
