@@ -2159,6 +2159,8 @@ class REGINA_API Link : public Packet {
  * from 0 to Link::size()-1.
  *
  * This header also specialises std::iterator_traits for this iterator type.
+ *
+ * \ifacespython Not present.
  */
 class CrossingIterator {
     private:
@@ -2258,6 +2260,8 @@ class CrossingIterator {
  * Zero-crossing unknot components are not visited at all by this iterator type.
  *
  * This header also specialises std::iterator_traits for this iterator type.
+ *
+ * \ifacespython Not present.
  */
 class ArcIterator {
     private:
