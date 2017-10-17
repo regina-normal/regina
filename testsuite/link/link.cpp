@@ -348,10 +348,10 @@ class LinkTest : public CppUnit::TestFixture {
 
             size_t ideal = 0;
             for (auto v : c->vertices()) {
-                regina::NVertex::LinkType t = v->link();
-                if (t == regina::NVertex::TORUS)
+                regina::Vertex<3>::LinkType t = v->link();
+                if (t == regina::Vertex<3>::TORUS)
                     ++ideal;
-                else if (t != regina::NVertex::SPHERE) {
+                else if (t != regina::Vertex<3>::SPHERE) {
                     std::ostringstream msg;
                     msg << l->label() << " complement: "
                         "contains a vertex with unexpected link type.";
@@ -442,7 +442,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testComplementFree(Link* l, unsigned nGen) {
             Triangulation<3>* c = l->complement();
-            const regina::NGroupPresentation& fg = c->fundamentalGroup();
+            const regina::GroupPresentation& fg = c->fundamentalGroup();
             if (fg.countGenerators() != nGen || fg.countRelations() != 0) {
                 std::ostringstream msg;
                 msg << l->label() << " complement: fundamental group is "
@@ -459,7 +459,7 @@ class LinkTest : public CppUnit::TestFixture {
             expected << nGen << " Z";
 
             Triangulation<3>* c = l->complement();
-            const regina::NGroupPresentation& fg = c->fundamentalGroup();
+            const regina::GroupPresentation& fg = c->fundamentalGroup();
             if (fg.recogniseGroup() != expected.str()) {
                 std::ostringstream msg;
                 msg << l->label() << " complement: fundamental group is "
