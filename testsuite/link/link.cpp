@@ -168,6 +168,7 @@ class LinkTest : public CppUnit::TestFixture {
             delete trefoil_unknot0;
             delete trefoil_unknot1;
             delete trefoil_unknot_overlap;
+            delete adams6_28;
         }
 
         void sanity(Link* l) {
