@@ -48,32 +48,10 @@
 namespace regina {
 
 /**
- * Provides an interface for using triangulations directly with the
- * Boost Graph Library (BGL).
+ * Provides an interface for various types of objects from Regina
+ * to work directly with the Boost Graph Library (BGL).
  *
- * After including the header triangulation/graph.h, any pointer of type
- * <tt>regina::Triangulation<dim>*</tt> can be used directly as a graph with
- * the BGL.  Here the graph will be the <i>dual graph</i> of the triangulation:
- * this is an undirected multigraph in which each node represents a
- * <i>dim</i>-simplex of the triangulation, and each arc represents a gluing
- * between two adjacent <i>dim</i>-simplices.
- *
- * Triangulations implement several BGL graph concepts, including:
- * - vertex link graph;
- * - edge list graph;
- * - adjacency graph;
- * - incidence graph;
- * - bidirectional graph;
- * - the read-only portions of property graph.
- *
- * Triangulations are \e not mutable graphs - for the purposes of the BGL,
- * they are considered read-only.
- *
- * Dual vertices of the graph represent <i>dim</i>-dimensional simplices
- * of the underlying triangulation, and so are represented directly by a
- * pointer of type <tt>regina::Simplex<dim>*</tt>.  Dual edges (when
- * accessed through the BGL) must come with an orientation, and so are
- * represented by lightweight objects of type regina::graph::DualEdge<dim>.
+ * See the \ref bgl "Boost Graph Library interface page" for details.
  */
 namespace graph {
 
@@ -345,8 +323,8 @@ namespace graph {
      * (<i>dim</i>+1), since a dual edge iterator will skip past those
      * facets of the simplex that lie on the boundary of the triangulation.
      *
-     * When a DualEdgeIterator is dereferenced, the resulting dual edge
-     * must be given an orientation (as required by the DualEdge class).
+     * When an IncidentDualEdgeIterator is dereferenced, the resulting dual
+     * edge must be given an orientation (as required by the DualEdge class).
      * This orientation is determined by the template parameter \a out.
      * If \a out is \c true then the dual edges will be oriented away from
      * the dual vertex \a v (so \a v is the source), and if \a out is \c false
@@ -543,7 +521,7 @@ namespace graph {
             AdjacentDualVertexIterator operator ++ (int);
 
             /**
-             * Returns the dual vertex (that is, the :top-dimensional simplex)
+             * Returns the dual vertex (that is, the top-dimensional simplex)
              * to which this iterator points.
              *
              * \pre This iterator is not past-the-end.
