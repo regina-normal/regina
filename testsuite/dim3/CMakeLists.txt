@@ -4,6 +4,7 @@
 SET ( FILES
   connectedsumdecomp
   eltmoves
+  graph
   homologicaldata
   isomorphism
   triangulation3

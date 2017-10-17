@@ -46,6 +46,7 @@ if (${REGINA_INSTALL_DEV})
     facetpairing3.h
     facetspec.h
     generic.h
+    graph.h
     homologicaldata.h
     nboundarycomponent.h
     ncomponent.h
