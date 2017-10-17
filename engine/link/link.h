@@ -131,11 +131,6 @@ class REGINA_API StrandRef {
         StrandRef(const StrandRef&) = default;
 
         /**
-         * Default move constructor.
-         */
-        StrandRef(StrandRef&&) = default;
-
-        /**
          * The crossing that this reference points to.
          *
          * The information returned by crossing() and strand() together
@@ -2178,10 +2173,6 @@ class CrossingIterator {
          * Default copy constructor.
          */
         CrossingIterator(const CrossingIterator&) = default;
-        /**
-         * Default move constructor.
-         */
-        CrossingIterator(CrossingIterator&&) = default;
 
         /**
          * Creates a new iterator pointing to the given crossing of the
@@ -2283,10 +2274,6 @@ class ArcIterator {
          * Default copy constructor.
          */
         ArcIterator(const ArcIterator&) = default;
-        /**
-         * Default move constructor.
-         */
-        ArcIterator(ArcIterator&&) = default;
 
         /**
          * Creates a new iterator pointing to the arc exiting the

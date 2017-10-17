@@ -100,10 +100,6 @@ namespace graph {
              * Default copy constructor.
              */
             IncidentArcIterator(const IncidentArcIterator&) = default;
-            /**
-             * Default move constructor.
-             */
-            IncidentArcIterator(IncidentArcIterator&&) = default;
 
             /**
              * Preincrement operator.
@@ -207,10 +203,6 @@ namespace graph {
              * Default copy constructor.
              */
             AdjacentCrossingIterator(const AdjacentCrossingIterator&) = default;
-            /**
-             * Default move constructor.
-             */
-            AdjacentCrossingIterator(AdjacentCrossingIterator&&) = default;
 
             /**
              * Preincrement operator.
