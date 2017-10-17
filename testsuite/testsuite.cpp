@@ -165,5 +165,6 @@ void populateTests(CppUnit::TextTestRunner& runner) {
 
     // Knots and links:
     addLink(runner);
+    addLinkGraph(runner);
 }
 
