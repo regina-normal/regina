@@ -94,18 +94,18 @@ Triangulation<3>* Link::complement(bool simplify) const {
     //   side-effect is that our triangulation might be disconnected, and
     //   we fix this before returning by connect summing the pieces together.
 
-    NTriangulation* ans = new NTriangulation();
+    Triangulation<3>* ans = new Triangulation<3>();
 
     // Empty link?  Just return the 3-sphere.
     if (components_.empty()) {
-        NTetrahedron* t = ans->newTetrahedron();
+        Tetrahedron<3>* t = ans->newTetrahedron();
         t->join(0, t, Perm<4>(0,1));
         t->join(2, t, Perm<4>(2,3));
         return ans;
     }
 
     struct CrossingTet {
-        NTetrahedron* tet[4];
+        Tetrahedron<3>* tet[4];
         /**
          *
          * Tetrahedra, for -ve crossing:
@@ -193,7 +193,7 @@ Triangulation<3>* Link::complement(bool simplify) const {
         // our link is a k-component unlink for some k).
         // Build a 3-sphere for now; we will pick up the missing unknot
         // components shortly.
-        NTetrahedron* t = ans->newTetrahedron();
+        Tetrahedron<3>* t = ans->newTetrahedron();
         t->join(0, t, Perm<4>(0,1));
         t->join(2, t, Perm<4>(2,3));
     }
@@ -204,14 +204,14 @@ Triangulation<3>* Link::complement(bool simplify) const {
         ans->splitIntoComponents(&parent, false /* setLabels */);
 
         // Use the first component to form the connected sum.
-        NTriangulation* newAns = static_cast<NTriangulation*>(
+        Triangulation<3>* newAns = static_cast<Triangulation<3>*>(
             parent.firstChild());
 
-        NTriangulation* comp = static_cast<NTriangulation*>(
+        Triangulation<3>* comp = static_cast<Triangulation<3>*>(
             newAns->nextSibling());
         while (comp) {
             newAns->connectedSumWith(*comp);
-            comp = static_cast<NTriangulation*>(comp->nextSibling());
+            comp = static_cast<Triangulation<3>*>(comp->nextSibling());
         }
 
         newAns->makeOrphan();
@@ -239,15 +239,15 @@ Triangulation<3>* Link::complement(bool simplify) const {
         // We do this by prying open a face and inserting a punctured
         // unknot complement with a triangular pillow boundary.
 
-        NTriangle* f = ans->triangle(0);
-        NTetrahedron* tet0 = f->embedding(0).simplex();
+        Triangle<3>* f = ans->triangle(0);
+        Tetrahedron<3>* tet0 = f->embedding(0).simplex();
         Perm<4> vert0 = f->embedding(0).vertices();
-        NTetrahedron* tet1 = f->embedding(1).simplex();
+        Tetrahedron<3>* tet1 = f->embedding(1).simplex();
         Perm<4> vert1 = f->embedding(1).vertices();
 
         ans->insertConstruction(6, puncturedUnknotAdjacencies,
             puncturedUnknotGluings);
-        NTetrahedron* unknotBdry = ans->tetrahedra().back();
+        Tetrahedron<3>* unknotBdry = ans->tetrahedra().back();
         // Boundary triangles are 013 and 213.
 
         tet0->unjoin(vert0[3]);
