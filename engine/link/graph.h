@@ -514,6 +514,7 @@ namespace graph {
 } // namespace regina
 
 namespace std {
+    template <>
     struct iterator_traits<regina::graph::AdjacentCrossingIterator> {
         typedef int difference_type;
         typedef regina::Crossing* value_type;
