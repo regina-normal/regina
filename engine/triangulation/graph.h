@@ -103,10 +103,6 @@ namespace graph {
          */
         DualEdge(const DualEdge&) = default;
         /**
-         * Default move constructor.
-         */
-        DualEdge(DualEdge&&) = default;
-        /**
          * Default assignment operator.
          */
         DualEdge& operator = (const DualEdge&) = default;
@@ -225,10 +221,6 @@ namespace graph {
              * Default copy constructor.
              */
             DualEdgeIterator(const DualEdgeIterator&) = default;
-            /**
-             * Default move constructor.
-             */
-            DualEdgeIterator(DualEdgeIterator&&) = default;
 
             /**
              * Creates a new dual edge iterator corresponding to the given
@@ -377,10 +369,6 @@ namespace graph {
              * Default copy constructor.
              */
             IncidentDualEdgeIterator(const IncidentDualEdgeIterator&) = default;
-            /**
-             * Default move constructor.
-             */
-            IncidentDualEdgeIterator(IncidentDualEdgeIterator&&) = default;
 
             /**
              * Preincrement operator.
@@ -502,10 +490,6 @@ namespace graph {
              */
             AdjacentDualVertexIterator(const AdjacentDualVertexIterator&) =
                 default;
-            /**
-             * Default move constructor.
-             */
-            AdjacentDualVertexIterator(AdjacentDualVertexIterator&&) = default;
 
             /**
              * Preincrement operator.
