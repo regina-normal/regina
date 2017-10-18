@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Rename and sort triangulations within their 3-manifold containers     *
  *                                                                        *
- *  Copyright (c) 2005-2016, Ben Burton                                   *
+ *  Copyright (c) 2005-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *

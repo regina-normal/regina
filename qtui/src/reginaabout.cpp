@@ -72,7 +72,7 @@ const QString ReginaAbout::regLicense( tr(
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
     "  \"Regina: Software for low-dimensional topology\",\n"
-    "  http://regina-normal.github.io/, 1999-2016.\n\n"
+    "  http://regina-normal.github.io/, 1999-2017.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"
