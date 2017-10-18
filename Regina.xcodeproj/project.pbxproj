@@ -3578,6 +3578,24 @@
 		0575A7D91DCE8B700027CE31 /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
 		0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomologicaldata.h; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0577E6DD1F97087900CBDF15 /* generic.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generic.out; sourceTree = "<group>"; };
+		0577E6DE1F97087900CBDF15 /* safeheldtype_basic.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = safeheldtype_basic.out; sourceTree = "<group>"; };
+		0577E6DF1F97087A00CBDF15 /* embeddings.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = embeddings.out; sourceTree = "<group>"; };
+		0577E6E01F97087A00CBDF15 /* safeheldtype_packet.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = safeheldtype_packet.out; sourceTree = "<group>"; };
+		0577E6E11F97087B00CBDF15 /* memory1.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memory1.out; sourceTree = "<group>"; };
+		0577E6E21F97087B00CBDF15 /* memory1.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memory1.test; sourceTree = "<group>"; };
+		0577E6E31F97087C00CBDF15 /* facenumbering.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = facenumbering.test; sourceTree = "<group>"; };
+		0577E6E41F97087C00CBDF15 /* safeheldtype_packet.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = safeheldtype_packet.test; sourceTree = "<group>"; };
+		0577E6E51F97087D00CBDF15 /* hypersurfaces.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hypersurfaces.test; sourceTree = "<group>"; };
+		0577E6E61F97087E00CBDF15 /* facenumbering.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = facenumbering.out; sourceTree = "<group>"; };
+		0577E6E71F97087E00CBDF15 /* safeheldtype_basic.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = safeheldtype_basic.test; sourceTree = "<group>"; };
+		0577E6E81F97087F00CBDF15 /* generic.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generic.test; sourceTree = "<group>"; };
+		0577E6E91F97087F00CBDF15 /* hypersurfaces.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hypersurfaces.out; sourceTree = "<group>"; };
+		0577E6EA1F97088000CBDF15 /* embeddings.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = embeddings.test; sourceTree = "<group>"; };
+		0577E6EB1F97088000CBDF15 /* utf8.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = utf8.out; sourceTree = "<group>"; };
+		0577E6EC1F97088100CBDF15 /* memory2.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memory2.out; sourceTree = "<group>"; };
+		0577E6ED1F97088200CBDF15 /* utf8.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = utf8.test; sourceTree = "<group>"; };
+		0577E6EE1F97088300CBDF15 /* memory2.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memory2.test; sourceTree = "<group>"; };
 		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
 		057EE4371C6009E600C4D155 /* component5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component5.cpp; sourceTree = "<group>"; };
@@ -4708,22 +4726,34 @@
 				050F5D851B9BAB9C00C1F681 /* CMakeLists.txt */,
 				050F5D861B9BAB9C00C1F681 /* cube.orb */,
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
+				0577E6DF1F97087A00CBDF15 /* embeddings.out */,
+				0577E6EA1F97088000CBDF15 /* embeddings.test */,
 				05431FD21C40F67C009BC072 /* equality.out */,
 				05431FD31C40F67C009BC072 /* equality.test */,
 				050F5D881B9BAB9C00C1F681 /* euler.out */,
 				050F5D891B9BAB9C00C1F681 /* euler.test */,
+				0577E6E61F97087E00CBDF15 /* facenumbering.out */,
+				0577E6E31F97087C00CBDF15 /* facenumbering.test */,
 				050F5D8A1B9BAB9C00C1F681 /* file.out */,
 				050F5D8B1B9BAB9C00C1F681 /* file.test */,
 				050F5D8C1B9BAB9C00C1F681 /* file1.rga */,
 				050F5D8D1B9BAB9C00C1F681 /* file2.rga */,
+				0577E6DD1F97087900CBDF15 /* generic.out */,
+				0577E6E81F97087F00CBDF15 /* generic.test */,
 				050F5D8E1B9BAB9C00C1F681 /* groups.out */,
 				050F5D8F1B9BAB9C00C1F681 /* groups.test */,
+				0577E6E91F97087F00CBDF15 /* hypersurfaces.out */,
+				0577E6E51F97087D00CBDF15 /* hypersurfaces.test */,
 				050F5D901B9BAB9C00C1F681 /* i18n-latin1.rga */,
 				050F5D911B9BAB9C00C1F681 /* i18n-utf8.rga */,
 				050F5D921B9BAB9C00C1F681 /* i18n.out */,
 				050F5D931B9BAB9C00C1F681 /* i18n.test */,
 				050F5D941B9BAB9C00C1F681 /* italian.orb */,
 				050F5D951B9BAB9C00C1F681 /* knotted-Y.orb */,
+				0577E6E11F97087B00CBDF15 /* memory1.out */,
+				0577E6E21F97087B00CBDF15 /* memory1.test */,
+				0577E6EC1F97088100CBDF15 /* memory2.out */,
+				0577E6EE1F97088300CBDF15 /* memory2.test */,
 				050F5D961B9BAB9C00C1F681 /* misc.out */,
 				050F5D971B9BAB9C00C1F681 /* misc.test */,
 				050F5D981B9BAB9C00C1F681 /* O2_1.rga */,
@@ -4733,6 +4763,10 @@
 				050F5D9C1B9BAB9C00C1F681 /* pdf.out */,
 				050F5D9D1B9BAB9C00C1F681 /* pdf.test */,
 				050F5D9E1B9BAB9C00C1F681 /* README.txt */,
+				0577E6DE1F97087900CBDF15 /* safeheldtype_basic.out */,
+				0577E6E71F97087E00CBDF15 /* safeheldtype_basic.test */,
+				0577E6E01F97087A00CBDF15 /* safeheldtype_packet.out */,
+				0577E6E41F97087C00CBDF15 /* safeheldtype_packet.test */,
 				050F5D9F1B9BAB9C00C1F681 /* sample.pdf */,
 				05431FD41C40F67C009BC072 /* skeleton.out */,
 				05431FD51C40F67C009BC072 /* skeleton.test */,
@@ -4742,6 +4776,8 @@
 				050F5DA31B9BAB9C00C1F681 /* theta_in_solid_torus.orb */,
 				050F5DA41B9BAB9C00C1F681 /* trigeneral.out */,
 				050F5DA51B9BAB9C00C1F681 /* trigeneral.test */,
+				0577E6EB1F97088000CBDF15 /* utf8.out */,
+				0577E6ED1F97088200CBDF15 /* utf8.test */,
 			);
 			path = testsuite;
 			sourceTree = "<group>";
