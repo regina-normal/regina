@@ -1255,6 +1255,7 @@
 		05617B7F1D9DC7AB00B1E33B /* regconvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE61D9DC02900B1E33B /* regconvert.cpp */; };
 		05617B801D9DC7AE00B1E33B /* regconcat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE51D9DC02900B1E33B /* regconcat.cpp */; };
 		05617B811D9DC7B000B1E33B /* censuslookup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE41D9DC02900B1E33B /* censuslookup.cpp */; };
+		056184231F97F6980080E7E2 /* linkcreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056184201F97F6910080E7E2 /* linkcreator.cpp */; };
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
 		0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40A1811D91E002CC2AE /* bigwidget.cpp */; };
 		0564A7FA1811D921002CC2AE /* boundary3chooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40D1811D91E002CC2AE /* boundary3chooser.cpp */; };
@@ -3417,6 +3418,8 @@
 		05617B2D1D9DC54500B1E33B /* regfiletype */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regfiletype; sourceTree = BUILT_PRODUCTS_DIR; };
 		05617B381D9DC55000B1E33B /* sigcensus */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sigcensus; sourceTree = BUILT_PRODUCTS_DIR; };
 		05617B431D9DC55B00B1E33B /* trisetcmp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = trisetcmp; sourceTree = BUILT_PRODUCTS_DIR; };
+		0561841F1F97F68E0080E7E2 /* linkcreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkcreator.h; sourceTree = "<group>"; };
+		056184201F97F6910080E7E2 /* linkcreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkcreator.cpp; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -6816,6 +6819,8 @@
 				051691AA1C5AD59000DC69EC /* hypersummaryui.h */,
 				051691AB1C5AD59000DC69EC /* hyperui.cpp */,
 				051691AC1C5AD59000DC69EC /* hyperui.h */,
+				056184201F97F6910080E7E2 /* linkcreator.cpp */,
+				0561841F1F97F68E0080E7E2 /* linkcreator.h */,
 				0564A5A21811D920002CC2AE /* pdfui.cpp */,
 				0564A5A31811D920002CC2AE /* pdfui.h */,
 				0564A5A41811D920002CC2AE /* scriptui.cpp */,
@@ -9726,6 +9731,7 @@
 				0564A96B1811D921002CC2AE /* tri3surfaces.cpp in Sources */,
 				0564A80D1811D921002CC2AE /* orbhandler.cpp in Sources */,
 				0564A96F1811D921002CC2AE /* packetwindow.cpp in Sources */,
+				056184231F97F6980080E7E2 /* linkcreator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

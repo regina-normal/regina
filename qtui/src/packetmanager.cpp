@@ -69,6 +69,9 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
             id = (packet->parent() ? IconCache::packet_container :
                 IconCache::regina);
             break;
+        case PACKET_LINK:
+            id = IconCache::packet_link;
+            break;
         case PACKET_PDF :
             id = IconCache::packet_pdf;
             break;

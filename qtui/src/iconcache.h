@@ -56,6 +56,7 @@ class IconCache {
             packet_container,
             packet_filter,
             packet_hypersurfaces,
+            packet_link,
             packet_pdf,
             packet_script,
             packet_snappea,

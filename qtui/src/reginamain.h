@@ -300,6 +300,7 @@ class ReginaMain : public QMainWindow {
         void newAngleStructures();
         void newContainer();
         void newFilter();
+        void newLink();
         void newNormalSurfaces();
         void newNormalHypersurfaces();
         void newPDF();

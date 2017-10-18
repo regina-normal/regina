@@ -59,6 +59,8 @@
             return [UIImage imageNamed:@"Triangulation3"];
         case regina::PACKET_TRIANGULATION4:
             return [UIImage imageNamed:@"Triangulation4"];
+        case regina::PACKET_LINK:
+            return [UIImage imageNamed:@"Link"];
         case regina::PACKET_NORMALSURFACES:
             return [UIImage imageNamed:@"Surfaces"];
         case regina::PACKET_NORMALHYPERSURFACES:
@@ -103,6 +105,7 @@
 + (NSString *)viewerFor:(regina::Packet *)p {
     switch (p->type()) {
         case regina::PACKET_ANGLESTRUCTURES: return @"viewAngles";
+        case regina::PACKET_LINK: return @"viewLink";
         case regina::PACKET_NORMALSURFACES: return @"viewSurfaces";
         case regina::PACKET_NORMALHYPERSURFACES: return @"viewHypersurfaces";
         case regina::PACKET_SCRIPT: return @"viewScript";

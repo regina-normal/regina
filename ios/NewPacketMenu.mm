@@ -95,6 +95,9 @@ static NSArray* _allRows;
                     [NewPacketRow rowWithType:regina::PACKET_SNAPPEATRIANGULATION
                                         label:@"SnapPea triangulation"
                                          icon:@"SnapPea"],
+                    [NewPacketRow rowWithType:regina::PACKET_LINK
+                                        label:@"Knot or link"
+                                         icon:@"Link"],
                     [NewPacketRow rowWithType:regina::PACKET_SURFACEFILTER
                                         label:@"Surface filter"
                                          icon:@"Filter"],

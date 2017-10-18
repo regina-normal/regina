@@ -18,6 +18,7 @@ SET ( FILES
   hypermatchingui
   hypersummaryui
   hyperui
+  linkcreator
   pdfui
   scriptui
   skeletonwindow
