@@ -3559,6 +3559,16 @@
 		05669D911DCB0E9A00C870C6 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
+		05685F661F970E6100085B44 /* cmakelint.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = cmakelint.pl; sourceTree = "<group>"; };
+		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
+		05685F681F970E6200085B44 /* updateyear */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = updateyear; sourceTree = "<group>"; };
+		05685F691F970E6200085B44 /* size.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = size.pl; sourceTree = "<group>"; };
+		05685F6A1F970E6400085B44 /* replacetabs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = replacetabs; sourceTree = "<group>"; };
+		05685F6B1F970E6400085B44 /* index2gloss */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = index2gloss; sourceTree = "<group>"; };
+		05685F6C1F970E6400085B44 /* RELEASE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = RELEASE.txt; sourceTree = "<group>"; };
+		05685F6D1F970E6400085B44 /* mksums */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = mksums; sourceTree = "<group>"; };
+		05685F6E1F970E6500085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05685F6F1F970E6500085B44 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		056AA9931C41C10100FA81D3 /* boost-python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python.framework"; path = "../../Library/Frameworks/osx/boost-python.framework"; sourceTree = "<group>"; };
 		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
@@ -3602,6 +3612,44 @@
 		0577E6EF1F9709C700CBDF15 /* nsignature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsignature.h; sourceTree = "<group>"; };
 		0577E6F01F9709C800CBDF15 /* nsigisomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsigisomorphism.h; sourceTree = "<group>"; };
 		0577E6F11F9709CA00CBDF15 /* nsigcensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsigcensus.h; sourceTree = "<group>"; };
+		0577E6F51F970B2E00CBDF15 /* examplecreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = examplecreator.h; sourceTree = "<group>"; };
+		0577E6F81F970BE300CBDF15 /* trisort.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trisort.cpp; sourceTree = "<group>"; };
+		0577E6F91F970BE300CBDF15 /* dehydrate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dehydrate.cpp; sourceTree = "<group>"; };
+		0577E6FA1F970BE400CBDF15 /* identify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = identify.cpp; sourceTree = "<group>"; };
+		0577E6FB1F970BE400CBDF15 /* mklocaldist */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = mklocaldist; sourceTree = "<group>"; };
+		0577E6FC1F970BE400CBDF15 /* equiv.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = equiv.cpp; sourceTree = "<group>"; };
+		0577E6FD1F970BE400CBDF15 /* volume.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = volume.cpp; sourceTree = "<group>"; };
+		0577E6FE1F970BE500CBDF15 /* sig-freq.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "sig-freq.cpp"; sourceTree = "<group>"; };
+		0577E6FF1F970BE500CBDF15 /* distinguish.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = distinguish.cpp; sourceTree = "<group>"; };
+		0577E7001F970BE500CBDF15 /* censuscat.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = censuscat.cpp; sourceTree = "<group>"; };
+		0577E7011F970BE600CBDF15 /* manifolds.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = manifolds.cpp; sourceTree = "<group>"; };
+		0577E7021F970BE600CBDF15 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		0577E7031F970BE600CBDF15 /* normal-compare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "normal-compare.cpp"; sourceTree = "<group>"; };
+		0577E7041F970BE700CBDF15 /* normal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = normal.cpp; sourceTree = "<group>"; };
+		0577E7051F970BE700CBDF15 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		0577E7061F970BE700CBDF15 /* edgelinks.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = edgelinks.cpp; sourceTree = "<group>"; };
+		0577E7071F970BE800CBDF15 /* reduce.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = reduce.cpp; sourceTree = "<group>"; };
+		0577E7081F970BE800CBDF15 /* equiv-dim4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "equiv-dim4.cpp"; sourceTree = "<group>"; };
+		0577E7091F970BE900CBDF15 /* pluggedibundles.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pluggedibundles.cpp; sourceTree = "<group>"; };
+		0577E70C1F970C9200CBDF15 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		0577E70D1F970C9300CBDF15 /* tricensus-sanity-tricount */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "tricensus-sanity-tricount"; sourceTree = "<group>"; };
+		0577E70E1F970C9300CBDF15 /* normal-mpi-sanity */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "normal-mpi-sanity"; sourceTree = "<group>"; };
+		0577E70F1F970C9300CBDF15 /* tricensus-normal-mpi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "tricensus-normal-mpi.cpp"; sourceTree = "<group>"; };
+		0577E7101F970C9300CBDF15 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		0577E7111F970C9300CBDF15 /* normal-compare-mpi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "normal-compare-mpi.cpp"; sourceTree = "<group>"; };
+		0577E7121F970C9300CBDF15 /* tricensus-freq-mpi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "tricensus-freq-mpi.cpp"; sourceTree = "<group>"; };
+		0577E7131F970C9400CBDF15 /* tricensus-sanity-pairs-done */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "tricensus-sanity-pairs-done"; sourceTree = "<group>"; };
+		0577E7141F970C9400CBDF15 /* distinguish-mpi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "distinguish-mpi.cpp"; sourceTree = "<group>"; };
+		0577E7151F970C9400CBDF15 /* normal-mpi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "normal-mpi.cpp"; sourceTree = "<group>"; };
+		0577E7161F970C9400CBDF15 /* equiv-mpi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "equiv-mpi.cpp"; sourceTree = "<group>"; };
+		0577E7171F970C9500CBDF15 /* tricensus-sanity-pairs-coverage */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "tricensus-sanity-pairs-coverage"; sourceTree = "<group>"; };
+		0577E7181F970C9500CBDF15 /* sig-normal-mpi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "sig-normal-mpi.cpp"; sourceTree = "<group>"; };
+		0577E71B1F970D4600CBDF15 /* HIGHLIGHTS.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = HIGHLIGHTS.txt; sourceTree = "<group>"; };
+		0577E71C1F970D4600CBDF15 /* CHANGES.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHANGES.txt; sourceTree = "<group>"; };
+		0577E71D1F970D4600CBDF15 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0577E71E1F970D4600CBDF15 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		0577E71F1F970D6800CBDF15 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		0577E7201F970D6800CBDF15 /* findtext */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = findtext; sourceTree = "<group>"; };
 		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
 		057EE4371C6009E600C4D155 /* component5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component5.cpp; sourceTree = "<group>"; };
@@ -6250,6 +6298,7 @@
 				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
 				052DB5C01D9F1FF100EDEA68 /* alt */,
 				050C64A01DA1C28F00C9420F /* mpi */,
+				0577E70A1F970BF900CBDF15 /* local */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -6437,6 +6486,7 @@
 				0564A5911811D920002CC2AE /* eltmovedialog3.h */,
 				0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */,
 				0507C5A41C54494E00D1C86C /* eltmovedialog4.h */,
+				0577E6F51F970B2E00CBDF15 /* examplecreator.h */,
 				0564A5921811D920002CC2AE /* facetgraphtab.cpp */,
 				0564A5931811D920002CC2AE /* facetgraphtab.h */,
 				0564A5AA1811D920002CC2AE /* filtercomb.cpp */,
@@ -6547,6 +6597,23 @@
 			path = syntax;
 			sourceTree = "<group>";
 		};
+		05685F641F970E2600085B44 /* admin */ = {
+			isa = PBXGroup;
+			children = (
+				05685F661F970E6100085B44 /* cmakelint.pl */,
+				05685F671F970E6200085B44 /* distcheck */,
+				05685F6B1F970E6400085B44 /* index2gloss */,
+				05685F6F1F970E6500085B44 /* Makefile */,
+				05685F6D1F970E6400085B44 /* mksums */,
+				05685F6E1F970E6500085B44 /* README.txt */,
+				05685F6C1F970E6400085B44 /* RELEASE.txt */,
+				05685F6A1F970E6400085B44 /* replacetabs */,
+				05685F691F970E6200085B44 /* size.pl */,
+				05685F681F970E6200085B44 /* updateyear */,
+			);
+			path = admin;
+			sourceTree = "<group>";
+		};
 		057118AF19B307A3009FEDC5 /* data */ = {
 			isa = PBXGroup;
 			children = (
@@ -6583,6 +6650,7 @@
 				05617ADE1D9DBFBF00B1E33B /* utils */,
 				057118AF19B307A3009FEDC5 /* data */,
 				05A47F961809CB7500F86BFD /* examples */,
+				0577E71A1F970D2600CBDF15 /* admin */,
 				0575E65A1805F36D009E3FC4 /* Products */,
 				052FA0AF180604A900FAE4DF /* Frameworks */,
 				05AB5F041B942903007034C8 /* Plugins */,
@@ -6608,6 +6676,66 @@
 				05617B431D9DC55B00B1E33B /* trisetcmp */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		0577E70A1F970BF900CBDF15 /* local */ = {
+			isa = PBXGroup;
+			children = (
+				0577E7001F970BE500CBDF15 /* censuscat.cpp */,
+				0577E6F91F970BE300CBDF15 /* dehydrate.cpp */,
+				0577E6FF1F970BE500CBDF15 /* distinguish.cpp */,
+				0577E7061F970BE700CBDF15 /* edgelinks.cpp */,
+				0577E7081F970BE800CBDF15 /* equiv-dim4.cpp */,
+				0577E6FC1F970BE400CBDF15 /* equiv.cpp */,
+				0577E6FA1F970BE400CBDF15 /* identify.cpp */,
+				0577E7021F970BE600CBDF15 /* Makefile */,
+				0577E7011F970BE600CBDF15 /* manifolds.cpp */,
+				0577E6FB1F970BE400CBDF15 /* mklocaldist */,
+				0577E7031F970BE600CBDF15 /* normal-compare.cpp */,
+				0577E7041F970BE700CBDF15 /* normal.cpp */,
+				0577E7091F970BE900CBDF15 /* pluggedibundles.cpp */,
+				0577E7051F970BE700CBDF15 /* README.txt */,
+				0577E7071F970BE800CBDF15 /* reduce.cpp */,
+				0577E6FE1F970BE500CBDF15 /* sig-freq.cpp */,
+				0577E6F81F970BE300CBDF15 /* trisort.cpp */,
+				0577E6FD1F970BE400CBDF15 /* volume.cpp */,
+				0577E70B1F970C7000CBDF15 /* mpi */,
+			);
+			path = local;
+			sourceTree = "<group>";
+		};
+		0577E70B1F970C7000CBDF15 /* mpi */ = {
+			isa = PBXGroup;
+			children = (
+				0577E7141F970C9400CBDF15 /* distinguish-mpi.cpp */,
+				0577E7161F970C9400CBDF15 /* equiv-mpi.cpp */,
+				0577E7101F970C9300CBDF15 /* Makefile */,
+				0577E7111F970C9300CBDF15 /* normal-compare-mpi.cpp */,
+				0577E70E1F970C9300CBDF15 /* normal-mpi-sanity */,
+				0577E7151F970C9400CBDF15 /* normal-mpi.cpp */,
+				0577E70C1F970C9200CBDF15 /* README.txt */,
+				0577E7181F970C9500CBDF15 /* sig-normal-mpi.cpp */,
+				0577E7121F970C9300CBDF15 /* tricensus-freq-mpi.cpp */,
+				0577E70F1F970C9300CBDF15 /* tricensus-normal-mpi.cpp */,
+				0577E7171F970C9500CBDF15 /* tricensus-sanity-pairs-coverage */,
+				0577E7131F970C9400CBDF15 /* tricensus-sanity-pairs-done */,
+				0577E70D1F970C9300CBDF15 /* tricensus-sanity-tricount */,
+			);
+			path = mpi;
+			sourceTree = "<group>";
+		};
+		0577E71A1F970D2600CBDF15 /* admin */ = {
+			isa = PBXGroup;
+			children = (
+				0577E71C1F970D4600CBDF15 /* CHANGES.txt */,
+				0577E71F1F970D6800CBDF15 /* CMakeLists.txt */,
+				0577E7201F970D6800CBDF15 /* findtext */,
+				0577E71B1F970D4600CBDF15 /* HIGHLIGHTS.txt */,
+				0577E71E1F970D4600CBDF15 /* LICENSE.txt */,
+				0577E71D1F970D4600CBDF15 /* README.md */,
+				05685F641F970E2600085B44 /* admin */,
+			);
+			name = admin;
 			sourceTree = "<group>";
 		};
 		0583656618DB88D9008B08D9 /* dim2 */ = {
