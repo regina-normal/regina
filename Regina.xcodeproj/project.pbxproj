@@ -3561,12 +3561,10 @@
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
 		05685F661F970E6100085B44 /* cmakelint.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = cmakelint.pl; sourceTree = "<group>"; };
 		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
-		05685F681F970E6200085B44 /* updateyear */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = updateyear; sourceTree = "<group>"; };
 		05685F691F970E6200085B44 /* size.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = size.pl; sourceTree = "<group>"; };
 		05685F6A1F970E6400085B44 /* replacetabs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = replacetabs; sourceTree = "<group>"; };
 		05685F6B1F970E6400085B44 /* index2gloss */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = index2gloss; sourceTree = "<group>"; };
 		05685F6C1F970E6400085B44 /* RELEASE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = RELEASE.txt; sourceTree = "<group>"; };
-		05685F6D1F970E6400085B44 /* mksums */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = mksums; sourceTree = "<group>"; };
 		05685F6E1F970E6500085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685F6F1F970E6500085B44 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
@@ -6604,12 +6602,10 @@
 				05685F671F970E6200085B44 /* distcheck */,
 				05685F6B1F970E6400085B44 /* index2gloss */,
 				05685F6F1F970E6500085B44 /* Makefile */,
-				05685F6D1F970E6400085B44 /* mksums */,
 				05685F6E1F970E6500085B44 /* README.txt */,
 				05685F6C1F970E6400085B44 /* RELEASE.txt */,
 				05685F6A1F970E6400085B44 /* replacetabs */,
 				05685F691F970E6200085B44 /* size.pl */,
-				05685F681F970E6200085B44 /* updateyear */,
 			);
 			path = admin;
 			sourceTree = "<group>";
