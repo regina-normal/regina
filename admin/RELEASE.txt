@@ -6,6 +6,7 @@ Program version:
     CHANGES.txt, HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
     docs/man/*.1 (windows executable path)
+    engine/regina-engine-config.1 (date)
     ios/Regina-Info.plist (CFBundleShortVersionString, CFBundleVersion)
     qtui/src/regina.plist (CFBundleShortVersionString, CFBundleVersion)
     qtui/src/reginaabout.cpp (regReleased)
