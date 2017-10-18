@@ -3688,6 +3688,8 @@
 		05685FEB1F97110500085B44 /* data-packet-dim4triangulation.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-dim4triangulation.docbook"; sourceTree = "<group>"; };
 		05685FEC1F97110500085B44 /* data-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-surface.docbook"; sourceTree = "<group>"; };
 		05685FED1F97116B00085B44 /* fix-bundle-paths */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "fix-bundle-paths"; sourceTree = "<group>"; };
+		05685FEF1F9713D900085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05685FF01F9713D900085B44 /* testutils.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testutils.sh; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		056AA9931C41C10100FA81D3 /* boost-python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python.framework"; path = "../../Library/Frameworks/osx/boost-python.framework"; sourceTree = "<group>"; };
 		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
@@ -6519,6 +6521,7 @@
 				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
 				052DB5C01D9F1FF100EDEA68 /* alt */,
 				050C64A01DA1C28F00C9420F /* mpi */,
+				05685FEE1F9713B000085B44 /* testsuite */,
 				0577E70A1F970BF900CBDF15 /* local */,
 			);
 			path = utils;
@@ -6873,6 +6876,15 @@
 				05685F851F97103D00085B44 /* README.txt */,
 			);
 			path = srcutils;
+			sourceTree = "<group>";
+		};
+		05685FEE1F9713B000085B44 /* testsuite */ = {
+			isa = PBXGroup;
+			children = (
+				05685FEF1F9713D900085B44 /* README.txt */,
+				05685FF01F9713D900085B44 /* testutils.sh */,
+			);
+			path = testsuite;
 			sourceTree = "<group>";
 		};
 		057118AF19B307A3009FEDC5 /* data */ = {
