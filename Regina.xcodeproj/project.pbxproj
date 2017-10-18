@@ -3561,12 +3561,133 @@
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
 		05685F661F970E6100085B44 /* cmakelint.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = cmakelint.pl; sourceTree = "<group>"; };
 		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
-		05685F691F970E6200085B44 /* size.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = size.pl; sourceTree = "<group>"; };
 		05685F6A1F970E6400085B44 /* replacetabs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = replacetabs; sourceTree = "<group>"; };
 		05685F6B1F970E6400085B44 /* index2gloss */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = index2gloss; sourceTree = "<group>"; };
 		05685F6C1F970E6400085B44 /* RELEASE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = RELEASE.txt; sourceTree = "<group>"; };
 		05685F6E1F970E6500085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685F6F1F970E6500085B44 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		05685F711F970F3600085B44 /* CheckCXX11Features.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CheckCXX11Features.cmake; sourceTree = "<group>"; };
+		05685F721F970F3600085B44 /* FindJansson.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindJansson.cmake; sourceTree = "<group>"; };
+		05685F731F970F3600085B44 /* ReginaMacros.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReginaMacros.cmake; sourceTree = "<group>"; };
+		05685F741F970F3600085B44 /* CheckCXX14Features.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CheckCXX14Features.cmake; sourceTree = "<group>"; };
+		05685F751F970F4100085B44 /* FindICONV.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindICONV.cmake; sourceTree = "<group>"; };
+		05685F761F970F4100085B44 /* MacroLogFeature.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = MacroLogFeature.cmake; sourceTree = "<group>"; };
+		05685F771F970F4100085B44 /* FindPOPT.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindPOPT.cmake; sourceTree = "<group>"; };
+		05685F781F970F4100085B44 /* FindGMP.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindGMP.cmake; sourceTree = "<group>"; };
+		05685F791F970F4100085B44 /* MacroEnsureVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = MacroEnsureVersion.cmake; sourceTree = "<group>"; };
+		05685F7A1F970F4100085B44 /* FindGMPXX.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindGMPXX.cmake; sourceTree = "<group>"; };
+		05685F7B1F970F4100085B44 /* FindSharedMimeInfo.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindSharedMimeInfo.cmake; sourceTree = "<group>"; };
+		05685F7D1F970FF300085B44 /* tree.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tree.cc; sourceTree = "<group>"; };
+		05685F7E1F970FF300085B44 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05685F7F1F970FF300085B44 /* loadlarge.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = loadlarge.cpp; sourceTree = "<group>"; };
+		05685F801F970FF300085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05685F811F970FF300085B44 /* dd-tree.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "dd-tree.py"; sourceTree = "<group>"; };
+		05685F821F970FF400085B44 /* all */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = all; sourceTree = "<group>"; };
+		05685F841F97103D00085B44 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05685F851F97103D00085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05685F861F97103D00085B44 /* props */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = props; sourceTree = "<group>"; };
+		05685F881F9710C200085B44 /* bibliography.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = bibliography.docbook; sourceTree = "<group>"; };
+		05685F891F9710C200085B44 /* kde-default.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "kde-default.css"; sourceTree = "<group>"; };
+		05685F8A1F9710C300085B44 /* angles.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = angles.docbook; sourceTree = "<group>"; };
+		05685F8B1F9710C300085B44 /* foreign.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = foreign.docbook; sourceTree = "<group>"; };
+		05685F8C1F9710C300085B44 /* services.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = services.docbook; sourceTree = "<group>"; };
+		05685F8D1F9710C300085B44 /* packet.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = packet.docbook; sourceTree = "<group>"; };
+		05685F8E1F9710C300085B44 /* trouble.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = trouble.docbook; sourceTree = "<group>"; };
+		05685F8F1F9710C400085B44 /* options.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = options.docbook; sourceTree = "<group>"; };
+		05685F901F9710C400085B44 /* surfaces.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = surfaces.docbook; sourceTree = "<group>"; };
+		05685F911F9710C400085B44 /* about.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = about.docbook; sourceTree = "<group>"; };
+		05685F921F9710C400085B44 /* python.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = python.docbook; sourceTree = "<group>"; };
+		05685F931F9710C400085B44 /* reginaman.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = reginaman.docbook; sourceTree = "<group>"; };
+		05685F941F9710C400085B44 /* taskindex.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = taskindex.docbook; sourceTree = "<group>"; };
+		05685F951F9710C500085B44 /* triangulation.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = triangulation.session; sourceTree = "<group>"; };
+		05685F961F9710C500085B44 /* gpl-license.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "gpl-license.html"; sourceTree = "<group>"; };
+		05685F971F9710C500085B44 /* manonly.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = manonly.docbook; sourceTree = "<group>"; };
+		05685F981F9710C500085B44 /* progress.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = progress.session; sourceTree = "<group>"; };
+		05685F991F9710C600085B44 /* snappea.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = snappea.docbook; sourceTree = "<group>"; };
+		05685F9A1F9710C600085B44 /* tree.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = tree.session; sourceTree = "<group>"; };
+		05685F9B1F9710C600085B44 /* featureset.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = featureset.docbook; sourceTree = "<group>"; };
+		05685F9C1F9710C600085B44 /* submani18n.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = submani18n.docbook; sourceTree = "<group>"; };
+		05685F9D1F9710C600085B44 /* credits.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = credits.docbook; sourceTree = "<group>"; };
+		05685F9E1F9710C700085B44 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05685F9F1F9710C700085B44 /* triangulations.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = triangulations.docbook; sourceTree = "<group>"; };
+		05685FA01F9710C700085B44 /* utils.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = utils.docbook; sourceTree = "<group>"; };
+		05685FA11F9710C800085B44 /* compiling.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = compiling.docbook; sourceTree = "<group>"; };
+		05685FA21F9710EF00085B44 /* data-abeliangroup.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-abeliangroup.docbook"; sourceTree = "<group>"; };
+		05685FA31F9710F000085B44 /* data-connected.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-connected.docbook"; sourceTree = "<group>"; };
+		05685FA41F9710F000085B44 /* data-compact-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-compact-surface.docbook"; sourceTree = "<group>"; };
+		05685FA51F9710F000085B44 /* data-orbl-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-orbl-surface.docbook"; sourceTree = "<group>"; };
+		05685FA61F9710F000085B44 /* data-packet-pdf.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-pdf.docbook"; sourceTree = "<group>"; };
+		05685FA71F9710F100085B44 /* data-turaevviro.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-turaevviro.docbook"; sourceTree = "<group>"; };
+		05685FA81F9710F100085B44 /* data-euler-filter.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-euler-filter.docbook"; sourceTree = "<group>"; };
+		05685FA91F9710F100085B44 /* data-filter-properties.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-filter-properties.docbook"; sourceTree = "<group>"; };
+		05685FAA1F9710F200085B44 /* data-zeroeff.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-zeroeff.docbook"; sourceTree = "<group>"; };
+		05685FAB1F9710F200085B44 /* data-spanstrict.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-spanstrict.docbook"; sourceTree = "<group>"; };
+		05685FAC1F9710F200085B44 /* data-tetrahedra.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tetrahedra.docbook"; sourceTree = "<group>"; };
+		05685FAD1F9710F300085B44 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05685FAE1F9710F300085B44 /* data-simplex.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-simplex.docbook"; sourceTree = "<group>"; };
+		05685FAF1F9710F300085B44 /* data-spantaut.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-spantaut.docbook"; sourceTree = "<group>"; };
+		05685FB01F9710F300085B44 /* data-packet-container.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-container.docbook"; sourceTree = "<group>"; };
+		05685FB11F9710F400085B44 /* data-line.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-line.docbook"; sourceTree = "<group>"; };
+		05685FB21F9710F400085B44 /* data-irreducible.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-irreducible.docbook"; sourceTree = "<group>"; };
+		05685FB31F9710F400085B44 /* data-H1Rel.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-H1Rel.docbook"; sourceTree = "<group>"; };
+		05685FB41F9710F500085B44 /* data-twosided.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-twosided.docbook"; sourceTree = "<group>"; };
+		05685FB51F9710F500085B44 /* data-triangle.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-triangle.docbook"; sourceTree = "<group>"; };
+		05685FB61F9710F500085B44 /* data-compressingdisc.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-compressingdisc.docbook"; sourceTree = "<group>"; };
+		05685FB71F9710F600085B44 /* data-filter-combination.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-filter-combination.docbook"; sourceTree = "<group>"; };
+		05685FB81F9710F600085B44 /* data-H2.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-H2.docbook"; sourceTree = "<group>"; };
+		05685FB91F9710F600085B44 /* data-flags.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-flags.docbook"; sourceTree = "<group>"; };
+		05685FBA1F9710F600085B44 /* data-orbl-filter.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-orbl-filter.docbook"; sourceTree = "<group>"; };
+		05685FBB1F9710F700085B44 /* data-packet-dim2triangulation.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-dim2triangulation.docbook"; sourceTree = "<group>"; };
+		05685FBC1F9710F700085B44 /* data-haken.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-haken.docbook"; sourceTree = "<group>"; };
+		05685FBD1F9710F700085B44 /* data-group.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-group.docbook"; sourceTree = "<group>"; };
+		05685FBE1F9710F700085B44 /* data-pent.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-pent.docbook"; sourceTree = "<group>"; };
+		05685FBF1F9710F800085B44 /* data-packet-script.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-script.docbook"; sourceTree = "<group>"; };
+		05685FC01F9710F800085B44 /* data-allowtaut.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-allowtaut.docbook"; sourceTree = "<group>"; };
+		05685FC11F9710F800085B44 /* data-packet.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet.docbook"; sourceTree = "<group>"; };
+		05685FC21F9710F900085B44 /* regina_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = regina_logo.png; sourceTree = "<group>"; };
+		05685FC31F9710F900085B44 /* data-pentachora.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-pentachora.docbook"; sourceTree = "<group>"; };
+		05685FC41F9710F900085B44 /* data-fundgroup.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-fundgroup.docbook"; sourceTree = "<group>"; };
+		05685FC51F9710FA00085B44 /* data-compact-filter.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-compact-filter.docbook"; sourceTree = "<group>"; };
+		05685FC61F9710FA00085B44 /* data-H1.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-H1.docbook"; sourceTree = "<group>"; };
+		05685FC71F9710FA00085B44 /* data-H1Bdry.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-H1Bdry.docbook"; sourceTree = "<group>"; };
+		05685FC81F9710FB00085B44 /* data-packet-snappea.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-snappea.docbook"; sourceTree = "<group>"; };
+		05685FC91F9710FB00085B44 /* data-packet-surfacefilter.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-surfacefilter.docbook"; sourceTree = "<group>"; };
+		05685FCA1F9710FB00085B44 /* data-pdf.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-pdf.docbook"; sourceTree = "<group>"; };
+		05685FCB1F9710FB00085B44 /* data-euler-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-euler-surface.docbook"; sourceTree = "<group>"; };
+		05685FCC1F9710FC00085B44 /* data-packet-text.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-text.docbook"; sourceTree = "<group>"; };
+		05685FCD1F9710FC00085B44 /* data-reln.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-reln.docbook"; sourceTree = "<group>"; };
+		05685FCE1F9710FC00085B44 /* data-simplices.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-simplices.docbook"; sourceTree = "<group>"; };
+		05685FCF1F9710FD00085B44 /* data-hypersurface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-hypersurface.docbook"; sourceTree = "<group>"; };
+		05685FD01F9710FD00085B44 /* data-allowstrict.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-allowstrict.docbook"; sourceTree = "<group>"; };
+		05685FD11F9710FD00085B44 /* data-filter.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-filter.docbook"; sourceTree = "<group>"; };
+		05685FD21F9710FE00085B44 /* data-struct.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-struct.docbook"; sourceTree = "<group>"; };
+		05685FD31F9710FE00085B44 /* data-tag.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tag.docbook"; sourceTree = "<group>"; };
+		05685FD41F9710FE00085B44 /* data-tet.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tet.docbook"; sourceTree = "<group>"; };
+		05685FD51F9710FE00085B44 /* data-triangles.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-triangles.docbook"; sourceTree = "<group>"; };
+		05685FD61F9710FF00085B44 /* data-var.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-var.docbook"; sourceTree = "<group>"; };
+		05685FD71F9710FF00085B44 /* data-angleparams.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-angleparams.docbook"; sourceTree = "<group>"; };
+		05685FD81F9710FF00085B44 /* data-threeball.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-threeball.docbook"; sourceTree = "<group>"; };
+		05685FD91F97110000085B44 /* dataformat.ent */ = {isa = PBXFileReference; lastKnownFileType = text; path = dataformat.ent; sourceTree = "<group>"; };
+		05685FDA1F97110000085B44 /* data-op.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-op.docbook"; sourceTree = "<group>"; };
+		05685FDB1F97110000085B44 /* data-realbdry-filter.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-realbdry-filter.docbook"; sourceTree = "<group>"; };
+		05685FDC1F97110100085B44 /* data-realbdry-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-realbdry-surface.docbook"; sourceTree = "<group>"; };
+		05685FDD1F97110100085B44 /* data-snappea.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-snappea.docbook"; sourceTree = "<group>"; };
+		05685FDE1F97110100085B44 /* data-packet-normalhypersurfacelist.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-normalhypersurfacelist.docbook"; sourceTree = "<group>"; };
+		05685FDF1F97110100085B44 /* data-params.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-params.docbook"; sourceTree = "<group>"; };
+		05685FE01F97110200085B44 /* data-packet-anglestructurelist.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-anglestructurelist.docbook"; sourceTree = "<group>"; };
+		05685FE11F97110200085B44 /* data-text.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-text.docbook"; sourceTree = "<group>"; };
+		05685FE21F97110200085B44 /* data-splitsfce.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-splitsfce.docbook"; sourceTree = "<group>"; };
+		05685FE31F97110300085B44 /* dataformat.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = dataformat.docbook; sourceTree = "<group>"; };
+		05685FE41F97110300085B44 /* data-packet-normalsurfacelist.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-normalsurfacelist.docbook"; sourceTree = "<group>"; };
+		05685FE51F97110300085B44 /* data-packet-dim3triangulation.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-dim3triangulation.docbook"; sourceTree = "<group>"; };
+		05685FE61F97110300085B44 /* data-packet-triangulation.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-triangulation.docbook"; sourceTree = "<group>"; };
+		05685FE71F97110400085B44 /* data-reginadata.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-reginadata.docbook"; sourceTree = "<group>"; };
+		05685FE81F97110400085B44 /* data-solidtorus.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-solidtorus.docbook"; sourceTree = "<group>"; };
+		05685FE91F97110400085B44 /* data-threesphere.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-threesphere.docbook"; sourceTree = "<group>"; };
+		05685FEA1F97110500085B44 /* kde-default.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "kde-default.css"; sourceTree = "<group>"; };
+		05685FEB1F97110500085B44 /* data-packet-dim4triangulation.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-dim4triangulation.docbook"; sourceTree = "<group>"; };
+		05685FEC1F97110500085B44 /* data-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-surface.docbook"; sourceTree = "<group>"; };
+		05685FED1F97116B00085B44 /* fix-bundle-paths */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "fix-bundle-paths"; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		056AA9931C41C10100FA81D3 /* boost-python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python.framework"; path = "../../Library/Frameworks/osx/boost-python.framework"; sourceTree = "<group>"; };
 		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
@@ -4564,6 +4685,7 @@
 				052942D61C5CDCBF0011C1E6 /* safeheldtype.h */,
 				050F5D4D1B9BAB9C00C1F681 /* snappea */,
 				050F5D521B9BAB9C00C1F681 /* split */,
+				05685F831F97101E00085B44 /* srcutils */,
 				050F5D561B9BAB9C00C1F681 /* subcomplex */,
 				050F5D751B9BAB9C00C1F681 /* surfaces */,
 				050F5D841B9BAB9C00C1F681 /* testsuite */,
@@ -4931,6 +5053,32 @@
 			isa = PBXGroup;
 			children = (
 				0514CAE71D9CD4B500EDB2E6 /* index.docbook */,
+				05685F911F9710C400085B44 /* about.docbook */,
+				05685F8A1F9710C300085B44 /* angles.docbook */,
+				05685F881F9710C200085B44 /* bibliography.docbook */,
+				05685F9E1F9710C700085B44 /* CMakeLists.txt */,
+				05685FA11F9710C800085B44 /* compiling.docbook */,
+				05685F9D1F9710C600085B44 /* credits.docbook */,
+				05685F9B1F9710C600085B44 /* featureset.docbook */,
+				05685F8B1F9710C300085B44 /* foreign.docbook */,
+				05685F961F9710C500085B44 /* gpl-license.html */,
+				05685F891F9710C200085B44 /* kde-default.css */,
+				05685F971F9710C500085B44 /* manonly.docbook */,
+				05685F8F1F9710C400085B44 /* options.docbook */,
+				05685F8D1F9710C300085B44 /* packet.docbook */,
+				05685F981F9710C500085B44 /* progress.session */,
+				05685F921F9710C400085B44 /* python.docbook */,
+				05685F931F9710C400085B44 /* reginaman.docbook */,
+				05685F8C1F9710C300085B44 /* services.docbook */,
+				05685F991F9710C600085B44 /* snappea.docbook */,
+				05685F9C1F9710C600085B44 /* submani18n.docbook */,
+				05685F901F9710C400085B44 /* surfaces.docbook */,
+				05685F941F9710C400085B44 /* taskindex.docbook */,
+				05685F9A1F9710C600085B44 /* tree.session */,
+				05685F951F9710C500085B44 /* triangulation.session */,
+				05685F9F1F9710C700085B44 /* triangulations.docbook */,
+				05685F8E1F9710C300085B44 /* trouble.docbook */,
+				05685FA01F9710C700085B44 /* utils.docbook */,
 			);
 			path = regina;
 			sourceTree = "<group>";
@@ -4939,6 +5087,81 @@
 			isa = PBXGroup;
 			children = (
 				0514CAE81D9CD4CE00EDB2E6 /* index.docbook */,
+				05685FAD1F9710F300085B44 /* CMakeLists.txt */,
+				05685FA21F9710EF00085B44 /* data-abeliangroup.docbook */,
+				05685FD01F9710FD00085B44 /* data-allowstrict.docbook */,
+				05685FC01F9710F800085B44 /* data-allowtaut.docbook */,
+				05685FD71F9710FF00085B44 /* data-angleparams.docbook */,
+				05685FC51F9710FA00085B44 /* data-compact-filter.docbook */,
+				05685FA41F9710F000085B44 /* data-compact-surface.docbook */,
+				05685FB61F9710F500085B44 /* data-compressingdisc.docbook */,
+				05685FA31F9710F000085B44 /* data-connected.docbook */,
+				05685FA81F9710F100085B44 /* data-euler-filter.docbook */,
+				05685FCB1F9710FB00085B44 /* data-euler-surface.docbook */,
+				05685FB71F9710F600085B44 /* data-filter-combination.docbook */,
+				05685FA91F9710F100085B44 /* data-filter-properties.docbook */,
+				05685FD11F9710FD00085B44 /* data-filter.docbook */,
+				05685FB91F9710F600085B44 /* data-flags.docbook */,
+				05685FC41F9710F900085B44 /* data-fundgroup.docbook */,
+				05685FBD1F9710F700085B44 /* data-group.docbook */,
+				05685FC61F9710FA00085B44 /* data-H1.docbook */,
+				05685FC71F9710FA00085B44 /* data-H1Bdry.docbook */,
+				05685FB31F9710F400085B44 /* data-H1Rel.docbook */,
+				05685FB81F9710F600085B44 /* data-H2.docbook */,
+				05685FBC1F9710F700085B44 /* data-haken.docbook */,
+				05685FCF1F9710FD00085B44 /* data-hypersurface.docbook */,
+				05685FB21F9710F400085B44 /* data-irreducible.docbook */,
+				05685FB11F9710F400085B44 /* data-line.docbook */,
+				05685FDA1F97110000085B44 /* data-op.docbook */,
+				05685FBA1F9710F600085B44 /* data-orbl-filter.docbook */,
+				05685FA51F9710F000085B44 /* data-orbl-surface.docbook */,
+				05685FE01F97110200085B44 /* data-packet-anglestructurelist.docbook */,
+				05685FB01F9710F300085B44 /* data-packet-container.docbook */,
+				05685FBB1F9710F700085B44 /* data-packet-dim2triangulation.docbook */,
+				05685FE51F97110300085B44 /* data-packet-dim3triangulation.docbook */,
+				05685FEB1F97110500085B44 /* data-packet-dim4triangulation.docbook */,
+				05685FDE1F97110100085B44 /* data-packet-normalhypersurfacelist.docbook */,
+				05685FE41F97110300085B44 /* data-packet-normalsurfacelist.docbook */,
+				05685FA61F9710F000085B44 /* data-packet-pdf.docbook */,
+				05685FBF1F9710F800085B44 /* data-packet-script.docbook */,
+				05685FC81F9710FB00085B44 /* data-packet-snappea.docbook */,
+				05685FC91F9710FB00085B44 /* data-packet-surfacefilter.docbook */,
+				05685FCC1F9710FC00085B44 /* data-packet-text.docbook */,
+				05685FE61F97110300085B44 /* data-packet-triangulation.docbook */,
+				05685FC11F9710F800085B44 /* data-packet.docbook */,
+				05685FDF1F97110100085B44 /* data-params.docbook */,
+				05685FCA1F9710FB00085B44 /* data-pdf.docbook */,
+				05685FBE1F9710F700085B44 /* data-pent.docbook */,
+				05685FC31F9710F900085B44 /* data-pentachora.docbook */,
+				05685FDB1F97110000085B44 /* data-realbdry-filter.docbook */,
+				05685FDC1F97110100085B44 /* data-realbdry-surface.docbook */,
+				05685FE71F97110400085B44 /* data-reginadata.docbook */,
+				05685FCD1F9710FC00085B44 /* data-reln.docbook */,
+				05685FAE1F9710F300085B44 /* data-simplex.docbook */,
+				05685FCE1F9710FC00085B44 /* data-simplices.docbook */,
+				05685FDD1F97110100085B44 /* data-snappea.docbook */,
+				05685FE81F97110400085B44 /* data-solidtorus.docbook */,
+				05685FAB1F9710F200085B44 /* data-spanstrict.docbook */,
+				05685FAF1F9710F300085B44 /* data-spantaut.docbook */,
+				05685FE21F97110200085B44 /* data-splitsfce.docbook */,
+				05685FD21F9710FE00085B44 /* data-struct.docbook */,
+				05685FEC1F97110500085B44 /* data-surface.docbook */,
+				05685FD31F9710FE00085B44 /* data-tag.docbook */,
+				05685FD41F9710FE00085B44 /* data-tet.docbook */,
+				05685FAC1F9710F200085B44 /* data-tetrahedra.docbook */,
+				05685FE11F97110200085B44 /* data-text.docbook */,
+				05685FD81F9710FF00085B44 /* data-threeball.docbook */,
+				05685FE91F97110400085B44 /* data-threesphere.docbook */,
+				05685FB51F9710F500085B44 /* data-triangle.docbook */,
+				05685FD51F9710FE00085B44 /* data-triangles.docbook */,
+				05685FA71F9710F100085B44 /* data-turaevviro.docbook */,
+				05685FB41F9710F500085B44 /* data-twosided.docbook */,
+				05685FD61F9710FF00085B44 /* data-var.docbook */,
+				05685FAA1F9710F200085B44 /* data-zeroeff.docbook */,
+				05685FE31F97110300085B44 /* dataformat.docbook */,
+				05685FD91F97110000085B44 /* dataformat.ent */,
+				05685FEA1F97110500085B44 /* kde-default.css */,
+				05685FC21F9710F900085B44 /* regina_logo.png */,
 			);
 			name = "regina-xml";
 			path = "qtui/doc/regina-xml";
@@ -6342,6 +6565,7 @@
 				0564A4221811D91E002CC2AE /* examplesaction.cpp */,
 				0564A4231811D91E002CC2AE /* examplesaction.h */,
 				0564A4241811D91E002CC2AE /* exports.cpp */,
+				05685FED1F97116B00085B44 /* fix-bundle-paths */,
 				0564A4251811D91E002CC2AE /* foreign */,
 				0564A4411811D91E002CC2AE /* iconcache.cpp */,
 				0564A4421811D91E002CC2AE /* iconcache.h */,
@@ -6605,9 +6829,50 @@
 				05685F6E1F970E6500085B44 /* README.txt */,
 				05685F6C1F970E6400085B44 /* RELEASE.txt */,
 				05685F6A1F970E6400085B44 /* replacetabs */,
-				05685F691F970E6200085B44 /* size.pl */,
 			);
 			path = admin;
+			sourceTree = "<group>";
+		};
+		05685F701F970F0500085B44 /* cmake */ = {
+			isa = PBXGroup;
+			children = (
+				05685F711F970F3600085B44 /* CheckCXX11Features.cmake */,
+				05685F741F970F3600085B44 /* CheckCXX14Features.cmake */,
+				05685F781F970F4100085B44 /* FindGMP.cmake */,
+				05685F7A1F970F4100085B44 /* FindGMPXX.cmake */,
+				05685F751F970F4100085B44 /* FindICONV.cmake */,
+				05685F721F970F3600085B44 /* FindJansson.cmake */,
+				05685F771F970F4100085B44 /* FindPOPT.cmake */,
+				05685F7B1F970F4100085B44 /* FindSharedMimeInfo.cmake */,
+				05685F791F970F4100085B44 /* MacroEnsureVersion.cmake */,
+				05685F761F970F4100085B44 /* MacroLogFeature.cmake */,
+				05685F731F970F3600085B44 /* ReginaMacros.cmake */,
+			);
+			name = cmake;
+			path = cmake/modules;
+			sourceTree = "<group>";
+		};
+		05685F7C1F970FC100085B44 /* timing */ = {
+			isa = PBXGroup;
+			children = (
+				05685F821F970FF400085B44 /* all */,
+				05685F7E1F970FF300085B44 /* CMakeLists.txt */,
+				05685F811F970FF300085B44 /* dd-tree.py */,
+				05685F7F1F970FF300085B44 /* loadlarge.cpp */,
+				05685F801F970FF300085B44 /* README.txt */,
+				05685F7D1F970FF300085B44 /* tree.cc */,
+			);
+			path = timing;
+			sourceTree = "<group>";
+		};
+		05685F831F97101E00085B44 /* srcutils */ = {
+			isa = PBXGroup;
+			children = (
+				05685F841F97103D00085B44 /* CMakeLists.txt */,
+				05685F861F97103D00085B44 /* props */,
+				05685F851F97103D00085B44 /* README.txt */,
+			);
+			path = srcutils;
 			sourceTree = "<group>";
 		};
 		057118AF19B307A3009FEDC5 /* data */ = {
@@ -6730,6 +6995,8 @@
 				0577E71E1F970D4600CBDF15 /* LICENSE.txt */,
 				0577E71D1F970D4600CBDF15 /* README.md */,
 				05685F641F970E2600085B44 /* admin */,
+				05685F701F970F0500085B44 /* cmake */,
+				05685F7C1F970FC100085B44 /* timing */,
 			);
 			name = admin;
 			sourceTree = "<group>";
