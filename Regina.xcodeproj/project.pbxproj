@@ -1369,6 +1369,9 @@
 		057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
 		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
 		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
+		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
+		0577E6F31F9709CA00CBDF15 /* nsigisomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6F01F9709C800CBDF15 /* nsigisomorphism.h */; };
+		0577E6F41F9709CA00CBDF15 /* nsigcensus.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6F11F9709CA00CBDF15 /* nsigcensus.h */; };
 		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4561C6009F300C4D155 /* component5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4371C6009E600C4D155 /* component5.cpp */; };
 		057EE4571C6009F300C4D155 /* component6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4381C6009E600C4D155 /* component6.cpp */; };
@@ -3596,6 +3599,9 @@
 		0577E6EC1F97088100CBDF15 /* memory2.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memory2.out; sourceTree = "<group>"; };
 		0577E6ED1F97088200CBDF15 /* utf8.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = utf8.test; sourceTree = "<group>"; };
 		0577E6EE1F97088300CBDF15 /* memory2.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memory2.test; sourceTree = "<group>"; };
+		0577E6EF1F9709C700CBDF15 /* nsignature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsignature.h; sourceTree = "<group>"; };
+		0577E6F01F9709C800CBDF15 /* nsigisomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsigisomorphism.h; sourceTree = "<group>"; };
+		0577E6F11F9709CA00CBDF15 /* nsigcensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsigcensus.h; sourceTree = "<group>"; };
 		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
 		057EE4371C6009E600C4D155 /* component5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component5.cpp; sourceTree = "<group>"; };
@@ -5411,6 +5417,9 @@
 			isa = PBXGroup;
 			children = (
 				052F9D9B180600FB00FAE4DF /* CMakeLists.txt */,
+				0577E6F11F9709CA00CBDF15 /* nsigcensus.h */,
+				0577E6F01F9709C800CBDF15 /* nsigisomorphism.h */,
+				0577E6EF1F9709C700CBDF15 /* nsignature.h */,
 				052F9D9C180600FB00FAE4DF /* sigcensus.cpp */,
 				052F9D9D180600FB00FAE4DF /* sigcensus.h */,
 				052F9D9E180600FB00FAE4DF /* sigisomorphism.cpp */,
@@ -7097,6 +7106,7 @@
 				05A067251DFA68190047872E /* pluggedtorusbundle.h in Headers */,
 				055115001DCDF63000EC753C /* isomorphism.h in Headers */,
 				05A0672F1DFA68190047872E /* satblocktypes.h in Headers */,
+				0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */,
 				054209261DF28C990018AB24 /* keywordlist.h in Headers */,
 				055114E11DCC85F200EC753C /* xmltrireader3.h in Headers */,
 				054208C21DF0D2740018AB24 /* simplesurfacebundle.h in Headers */,
@@ -7298,6 +7308,7 @@
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
 				055114D51DCC71A700EC753C /* facetspec.h in Headers */,
 				05431F781C40F3C9009BC072 /* map_operations.h in Headers */,
+				0577E6F31F9709CA00CBDF15 /* nsigisomorphism.h in Headers */,
 				052F9FF7180600FB00FAE4DF /* nlayeredlensspace.h in Headers */,
 				052F9FFB180600FB00FAE4DF /* nlayeredsolidtorus.h in Headers */,
 				052F9F4F180600FB00FAE4DF /* numbertheory.h in Headers */,
@@ -7341,6 +7352,7 @@
 				050C646C1DA1019B00C9420F /* anglestructures.h in Headers */,
 				052FA05E180600FB00FAE4DF /* nboundarycomponent.h in Headers */,
 				05431F021C40F1F6009BC072 /* simplex.h in Headers */,
+				0577E6F41F9709CA00CBDF15 /* nsigcensus.h in Headers */,
 				058E398D1DCBC67C00D463A4 /* generic.h in Headers */,
 				052FA041180600FB00FAE4DF /* nsvectorquadoct.h in Headers */,
 				052F9FF9180600FB00FAE4DF /* nlayeredloop.h in Headers */,
