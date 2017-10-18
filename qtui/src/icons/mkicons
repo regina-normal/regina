@@ -35,6 +35,7 @@ my @packetIcons = qw/
     filter
     filter_comb
     filter_prop
+    link
     pdf
     script
     snappea
@@ -112,7 +113,7 @@ sub process {
 
 $aux = ($#ARGV < 0 ? "$ENV{'HOME'}/git/regina-aux" : $ARGV[0]);
 -d "$aux" or usage "Argument \"$aux\" is not a directory.";
--e "$aux/icons/src/packets/triangulation.svg" or
+-e "$aux/icons/src/packets/triangulation3.svg" or
     usage "Argument \"$aux\" does not look like a regina-aux checkout.";
 
 foreach my $i (@actionIcons) {
