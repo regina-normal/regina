@@ -1588,6 +1588,10 @@
 		05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */; };
 		05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */; };
 		05937B2319CF819C00160F9A /* PacketTabBarController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937B2219CF819C00160F9A /* PacketTabBarController.mm */; };
+		059474E61F98151700F04273 /* SnapPea.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474E41F98151600F04273 /* SnapPea.storyboard */; };
+		059474EE1F981E5700F04273 /* Tri2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F01F981E5700F04273 /* Tri2.storyboard */; };
+		059474F11F981F0300F04273 /* Tri3.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F31F981F0300F04273 /* Tri3.storyboard */; };
+		059474F41F981F1800F04273 /* Tri4.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F61F981F1800F04273 /* Tri4.storyboard */; };
 		0598F9761DBC9D3700E6CE11 /* PythonConsoleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */; };
 		05998ED219F9362D00855238 /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECB19F9360200855238 /* closed-hyp-census.rga */; };
 		05998ED319F9362D00855238 /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECC19F9360200855238 /* closed-nor-census.rga */; };
@@ -4054,6 +4058,10 @@
 		05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewHeaderCell.m; sourceTree = "<group>"; };
 		05937B2119CF819C00160F9A /* PacketTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTabBarController.h; sourceTree = "<group>"; };
 		05937B2219CF819C00160F9A /* PacketTabBarController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTabBarController.mm; sourceTree = "<group>"; };
+		059474E51F98151700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SnapPea.storyboard; sourceTree = "<group>"; };
+		059474EF1F981E5700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri2.storyboard; sourceTree = "<group>"; };
+		059474F21F981F0300F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri3.storyboard; sourceTree = "<group>"; };
+		059474F51F981F1800F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri4.storyboard; sourceTree = "<group>"; };
 		0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonConsoleController.h; sourceTree = "<group>"; };
 		0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonConsoleController.mm; sourceTree = "<group>"; };
 		05998ECB19F9360200855238 /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
@@ -6221,9 +6229,7 @@
 		052FA12F1806102F00FAE4DF /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				052FA13B1806103000FAE4DF /* Main.storyboard */,
-				052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */,
-				0506EC1C19F65B43003E455B /* iPhone.storyboard */,
+				059474E71F98181700F04273 /* Storyboards */,
 				052FA1381806103000FAE4DF /* AppDelegate.h */,
 				052FA1391806103000FAE4DF /* AppDelegate.mm */,
 				0503DCD919B7E4F10085F3CC /* CensusListController.h */,
@@ -7276,6 +7282,20 @@
 				05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		059474E71F98181700F04273 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				052FA13B1806103000FAE4DF /* Main.storyboard */,
+				059474E41F98151600F04273 /* SnapPea.storyboard */,
+				059474F01F981E5700F04273 /* Tri2.storyboard */,
+				059474F31F981F0300F04273 /* Tri3.storyboard */,
+				059474F61F981F1800F04273 /* Tri4.storyboard */,
+				052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */,
+				0506EC1C19F65B43003E455B /* iPhone.storyboard */,
+			);
+			name = Storyboards;
 			sourceTree = "<group>";
 		};
 		05998ECA19F9360200855238 /* ios */ = {
@@ -8402,13 +8422,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				059474F11F981F0300F04273 /* Tri3.storyboard in Resources */,
 				0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */,
+				059474EE1F981E5700F04273 /* Tri2.storyboard in Resources */,
+				059474F41F981F1800F04273 /* Tri4.storyboard in Resources */,
 				0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */,
 				05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */,
 				05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */,
 				054BC4C919B4A73D005E01A0 /* closed-hyp-census-full.zsig in Resources */,
 				054BC4CA19B4A73D005E01A0 /* closed-nor-census-11.zsig in Resources */,
 				054BC4CB19B4A73D005E01A0 /* closed-or-census-11.zsig in Resources */,
+				059474E61F98151700F04273 /* SnapPea.storyboard in Resources */,
 				054BC4CC19B4A73D005E01A0 /* cusped-hyp-nor-census-9.zsig in Resources */,
 				054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */,
 				0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */,
@@ -10101,6 +10125,38 @@
 				052FA13C1806103000FAE4DF /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		059474E41F98151600F04273 /* SnapPea.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				059474E51F98151700F04273 /* Base */,
+			);
+			name = SnapPea.storyboard;
+			sourceTree = "<group>";
+		};
+		059474F01F981E5700F04273 /* Tri2.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				059474EF1F981E5700F04273 /* Base */,
+			);
+			name = Tri2.storyboard;
+			sourceTree = "<group>";
+		};
+		059474F31F981F0300F04273 /* Tri3.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				059474F21F981F0300F04273 /* Base */,
+			);
+			name = Tri3.storyboard;
+			sourceTree = "<group>";
+		};
+		059474F61F981F1800F04273 /* Tri4.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				059474F51F981F1800F04273 /* Base */,
+			);
+			name = Tri4.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
