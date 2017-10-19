@@ -1357,6 +1357,7 @@
 		056AA9A71C41DE9100FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */; };
 		056AA9AA1C41DE9E00FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
 		056AA9AB1C41DE9E00FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; };
+		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
 		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
 		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
 		057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
@@ -3703,6 +3704,7 @@
 		056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/osx/libgmpxx.framework; sourceTree = "<group>"; };
 		056AA9A81C41DE9D00FA81D3 /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/ios/libgmp.framework; sourceTree = "<group>"; };
 		056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/ios/libgmpxx.framework; sourceTree = "<group>"; };
+		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		057118B119B308F8009FEDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		057118B219B308F8009FEDC5 /* create-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-snappea-census-data.py"; sourceTree = "<group>"; };
 		057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec5.dat"; sourceTree = "<group>"; };
@@ -5927,6 +5929,7 @@
 				055114D11DCC71A700EC753C /* facetspec.h */,
 				058C305E1DCAF6F8006162D2 /* forward.h */,
 				058E398C1DCBC67C00D463A4 /* generic.h */,
+				056E071E1F994D9000DF136B /* graph.h */,
 				052F9E46180600FB00FAE4DF /* homologicaldata.cpp */,
 				052F9E47180600FB00FAE4DF /* homologicaldata.h */,
 				052F9E3A180600FB00FAE4DF /* nboundarycomponent.h */,
@@ -7857,6 +7860,7 @@
 				05F09FFA1DBF078800117BFC /* boundarycomponent4.h in Headers */,
 				052F9EB3180600FB00FAE4DF /* dim2isomorphism.h in Headers */,
 				052F9F26180600FB00FAE4DF /* nhandlebody.h in Headers */,
+				056E071F1F994D9000DF136B /* graph.h in Headers */,
 				059BC6681DC7F77F00AB4206 /* boundarycomponent.h in Headers */,
 				05431F821C40F3C9009BC072 /* simplex.h in Headers */,
 				052FA09D180600FB00FAE4DF /* stringutils-impl.h in Headers */,
