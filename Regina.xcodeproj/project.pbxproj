@@ -183,6 +183,7 @@
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
 		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
+		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		05249E961DBAE7E9001FE29E /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E951DBAE7E8001FE29E /* Python.framework */; };
 		05249E981DBAEB82001FE29E /* boost-python-static.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E971DBAEB80001FE29E /* boost-python-static.framework */; };
@@ -2672,6 +2673,7 @@
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
 		051CEA8B1F98969500971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Hypersurfaces.storyboard; sourceTree = "<group>"; };
+		051CEA951F98995D00971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Link.storyboard; sourceTree = "<group>"; };
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
@@ -7293,6 +7295,7 @@
 			children = (
 				052FA13B1806103000FAE4DF /* Main.storyboard */,
 				051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */,
+				051CEA961F98995D00971F25 /* Link.storyboard */,
 				059474E41F98151600F04273 /* SnapPea.storyboard */,
 				0566DC921F9893E60068ACAD /* Surfaces.storyboard */,
 				059474F01F981E5700F04273 /* Tri2.storyboard */,
@@ -8430,6 +8433,7 @@
 			files = (
 				059474F11F981F0300F04273 /* Tri3.storyboard in Resources */,
 				0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */,
+				051CEA941F98995D00971F25 /* Link.storyboard in Resources */,
 				059474EE1F981E5700F04273 /* Tri2.storyboard in Resources */,
 				059474F41F981F1800F04273 /* Tri4.storyboard in Resources */,
 				0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */,
@@ -10125,6 +10129,14 @@
 				051CEA8B1F98969500971F25 /* Base */,
 			);
 			name = Hypersurfaces.storyboard;
+			sourceTree = "<group>";
+		};
+		051CEA961F98995D00971F25 /* Link.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				051CEA951F98995D00971F25 /* Base */,
+			);
+			name = Link.storyboard;
 			sourceTree = "<group>";
 		};
 		052FA1321806102F00FAE4DF /* InfoPlist.strings */ = {
