@@ -182,6 +182,7 @@
 		051691C01C5AD61200DC69EC /* hyperui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AC1C5AD59000DC69EC /* hyperui.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
 		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
+		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		05249E961DBAE7E9001FE29E /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E951DBAE7E8001FE29E /* Python.framework */; };
 		05249E981DBAEB82001FE29E /* boost-python-static.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E971DBAEB80001FE29E /* boost-python-static.framework */; };
@@ -1343,6 +1344,7 @@
 		05669D951DCB0E9A00C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
 		05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D931DCB0E9A00C870C6 /* facetpairing3.h */; };
 		05669D971DCB0EA200C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
+		0566DC901F9893E60068ACAD /* Surfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0566DC921F9893E60068ACAD /* Surfaces.storyboard */; };
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
 		056AA9941C41C10100FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
 		056AA9951C41C11C00FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
@@ -2669,6 +2671,7 @@
 		051691AC1C5AD59000DC69EC /* hyperui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperui.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
+		051CEA8B1F98969500971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Hypersurfaces.storyboard; sourceTree = "<group>"; };
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
@@ -3611,6 +3614,7 @@
 		05669D911DCB0E9A00C870C6 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
+		0566DC911F9893E60068ACAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Surfaces.storyboard; sourceTree = "<group>"; };
 		05685F661F970E6100085B44 /* cmakelint.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = cmakelint.pl; sourceTree = "<group>"; };
 		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
 		05685F6A1F970E6400085B44 /* replacetabs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = replacetabs; sourceTree = "<group>"; };
@@ -7288,7 +7292,9 @@
 			isa = PBXGroup;
 			children = (
 				052FA13B1806103000FAE4DF /* Main.storyboard */,
+				051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */,
 				059474E41F98151600F04273 /* SnapPea.storyboard */,
+				0566DC921F9893E60068ACAD /* Surfaces.storyboard */,
 				059474F01F981E5700F04273 /* Tri2.storyboard */,
 				059474F31F981F0300F04273 /* Tri3.storyboard */,
 				059474F61F981F1800F04273 /* Tri4.storyboard */,
@@ -8433,10 +8439,12 @@
 				054BC4CA19B4A73D005E01A0 /* closed-nor-census-11.zsig in Resources */,
 				054BC4CB19B4A73D005E01A0 /* closed-or-census-11.zsig in Resources */,
 				059474E61F98151700F04273 /* SnapPea.storyboard in Resources */,
+				051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */,
 				054BC4CC19B4A73D005E01A0 /* cusped-hyp-nor-census-9.zsig in Resources */,
 				054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */,
 				0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */,
 				054BC4CE19B4A73D005E01A0 /* hyp-knot-link-census.zsig in Resources */,
+				0566DC901F9893E60068ACAD /* Surfaces.storyboard in Resources */,
 				058E398B1DCBC0D500D463A4 /* Launch.storyboard in Resources */,
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
 				05B62166180B9D7300CCB90B /* title.png in Resources */,
@@ -10111,6 +10119,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				051CEA8B1F98969500971F25 /* Base */,
+			);
+			name = Hypersurfaces.storyboard;
+			sourceTree = "<group>";
+		};
 		052FA1321806102F00FAE4DF /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -10125,6 +10141,14 @@
 				052FA13C1806103000FAE4DF /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		0566DC921F9893E60068ACAD /* Surfaces.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0566DC911F9893E60068ACAD /* Base */,
+			);
+			name = Surfaces.storyboard;
 			sourceTree = "<group>";
 		};
 		059474E41F98151600F04273 /* SnapPea.storyboard */ = {
