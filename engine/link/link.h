@@ -2157,7 +2157,7 @@ class REGINA_API Link : public Packet {
  *
  * \ifacespython Not present.
  */
-class CrossingIterator {
+class REGINA_API CrossingIterator {
     private:
         const Link* link_;
             /**< The underlying link. */
@@ -2254,7 +2254,7 @@ class CrossingIterator {
  *
  * \ifacespython Not present.
  */
-class ArcIterator {
+class REGINA_API ArcIterator {
     private:
         const Link* link_;
             /**< The underlying link. */
