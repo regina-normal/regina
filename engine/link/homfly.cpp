@@ -40,7 +40,7 @@ namespace regina {
 const char* Link::homflyAZVarX = "\u03B1"; // alpha
 const char* Link::homflyAZVarY = "z";
 
-const char* Link::homflyLMVarX = "l";
+const char* Link::homflyLMVarX = "\U0001D4C1"; // mathematical script small l
 const char* Link::homflyLMVarY = "m";
 
 const char* Link::homflyVarX = homflyAZVarX;

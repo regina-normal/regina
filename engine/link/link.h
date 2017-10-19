@@ -605,7 +605,8 @@ class REGINA_API Link : public Packet {
          * help with pretty-printing HOMFLY polynomials for human consumption.
          *
          * Since homflyLM() returns a Laurent polynomial in \a l and \a m,
-         * this string just contains the single character \a l.
+         * this string just contains the mathematical script symbol for \a l
+         * (encoded in UTF-8).
          *
          * To pretty-print this HOMFLY polynomial for human consumption, you can
          * call <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
