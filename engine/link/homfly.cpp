@@ -99,13 +99,16 @@ enum CrossingState {
     CROSSING_SPLICE_2 = 7
 };
 
-Laurent2<Integer>* Link::homflyAZ() const {
+const Laurent2<Integer>& Link::homflyAZ() const {
     // Throughout this code, delta = (alpha - alpha^-1) / z.
+
+    if (homflyAZ_.known())
+        return *homflyAZ_.value();
 
     size_t n = crossings_.size();
     if (n == 0) {
         if (components_.size() == 0)
-            return new Laurent2<Integer>();
+            return *(homflyAZ_ = new Laurent2<Integer>());
 
         // We have an unlink with no crossings.
         // The HOMFLY polynomial is delta^(#components - 1).
@@ -117,7 +120,7 @@ Laurent2<Integer>* Link::homflyAZ() const {
         for (size_t i = 1; i < components_.size(); ++i)
             (*ans) *= delta;
 
-        return ans;
+        return *(homflyAZ_ = ans);
     }
 
     // From here, we know there is at least one crossing.
@@ -376,11 +379,11 @@ Laurent2<Integer>* Link::homflyAZ() const {
     }
 
     delete[] coeff;
-    return ans;
+    return *(homflyAZ_ = ans);
 }
 
-Laurent2<Integer>* Link::homflyLM() const {
-    Laurent2<Integer>* ans = homflyAZ();
+const Laurent2<Integer>& Link::homflyLM() const {
+    Laurent2<Integer>* ans = new Laurent2<Integer>(homflyAZ());
 
     // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
     // Note that i-j should always be 0 or 2 (mod 4), never odd.
@@ -389,7 +392,7 @@ Laurent2<Integer>* Link::homflyLM() const {
             term.second.negate();
     }
 
-    return ans;
+    return *(homflyLM_ = ans);
 }
 
 } // namespace regina

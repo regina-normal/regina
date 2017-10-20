@@ -43,6 +43,8 @@
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "maths/integer.h"
+#include "maths/laurent.h"
+#include "maths/laurent2.h"
 #include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
 #include "utilities/markedvector.h"
@@ -551,6 +553,19 @@ class REGINA_API Link : public Packet {
                  used to traverse the component).  If a component has no
                  crossings, then it is represented in this array by a
                  null reference. */
+
+        mutable Property<Laurent<Integer>, StoreManagedPtr> jones_;
+            /**< The Jones polynomial of the link. */
+        mutable Property<Laurent2<Integer>, StoreManagedPtr> homflyLM_;
+            /**< The HOMFLY polynomial of the link, as a polynomial in
+                 \a l and \a m.  This property will be known if and only
+                 if \a homflyAZ_ is known. */
+        mutable Property<Laurent2<Integer>, StoreManagedPtr> homflyAZ_;
+            /**< The HOMFLY polynomial of the link, as a polynomial in
+                 \a alpha and \a z.  This property will be known if and
+                 only if \a homflyLM_ is known. */
+        mutable Property<Laurent<Integer>, StoreManagedPtr> bracket_;
+            /**< The Kauffman bracket polynomial of the link diagram. */
 
         mutable Property<TreeDecomposition, StoreManagedPtr>
                 niceTreeDecomposition_;
@@ -1413,6 +1428,12 @@ class REGINA_API Link : public Packet {
          * The polynomial that is returned will be newly created, and it
          * is the responsibility of the caller of this routine to destroy it.
          *
+         * Bear in mind that each time the link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, bracket() should be called again; this will be
+         * instantaneous if the bracket polynomial has already been calculated.
+         *
          * \warning If there are too many crossings for the algorithm to
          * handle, then this routine will return \c null.  Currently this
          * happens when the link contains at least 2^<i>b</i> crossings,
@@ -1429,7 +1450,17 @@ class REGINA_API Link : public Packet {
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * @return the bracket polynomial, as a newly-created object.
          */
-        Laurent<Integer>* bracket(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT) const;
+        /**
+         * Is the Kauffman bracket polynomial of this link diagram
+         * already known?  See bracket() for further details.
+         *
+         * If this property is already known, future calls to bracket() will
+         * be very fast (simply returning the precalculated value).
+         *
+         * @return \c true if and only if this property is already known.
+         */
+        bool knowsBracket() const;
 
         /**
          * Returns the Jones polynomial of this link, but with all
@@ -1455,6 +1486,12 @@ class REGINA_API Link : public Packet {
          * To pretty-print this polynomial for human consumption, you can
          * call <tt>Laurent::str(Link::jonesVar)</tt>.
          *
+         * Bear in mind that each time the link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, jones() should be called again; this will be
+         * instantaneous if the Jones polynomial has already been calculated.
+         *
          * \warning If there are too many crossings for the algorithm to
          * handle, then this routine will return \c null.  Currently this
          * happens when the link contains at least 2^<i>b</i> crossings,
@@ -1471,7 +1508,17 @@ class REGINA_API Link : public Packet {
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * @return the Jones polynomial, as a newly-created object.
          */
-        Laurent<Integer>* jones(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT) const;
+        /**
+         * Is the Jones polynomial of this link diagram already known?
+         * See jones() for further details.
+         *
+         * If this property is already known, future calls to jones() will be
+         * very fast (simply returning the precalculated value).
+         *
+         * @return \c true if and only if this property is already known.
+         */
+        bool knowsJones() const;
 
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
@@ -1506,10 +1553,15 @@ class REGINA_API Link : public Packet {
          * polynomials by using Gauss codes, with a skein-template algorithm",
          * Applied Mathematics and Computation 105 (1999), 271-289.
          *
+         * Bear in mind that each time the link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, homflyAZ() should be called again; this will be
+         * instantaneous if the HOMFLY polynomial has already been calculated.
+         *
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        Laurent2<Integer>* homflyAZ() const;
-
+        const Laurent2<Integer>& homflyAZ() const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
          * in \a l and \a m.
@@ -1541,10 +1593,15 @@ class REGINA_API Link : public Packet {
          * polynomials by using Gauss codes, with a skein-template algorithm",
          * Applied Mathematics and Computation 105 (1999), 271-289.
          *
+         * Bear in mind that each time the link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, homflyLM() should be called again; this will be
+         * instantaneous if the HOMFLY polynomial has already been calculated.
+         *
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        Laurent2<Integer>* homflyLM() const;
-
+        const Laurent2<Integer>& homflyLM() const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
          * in \a alpha and \a z.
@@ -1557,9 +1614,26 @@ class REGINA_API Link : public Packet {
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
          *
+         * Bear in mind that each time the link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, homfly() should be called again; this will be
+         * instantaneous if the HOMFLY polynomial has already been calculated.
+         *
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        Laurent2<Integer>* homfly() const;
+        const Laurent2<Integer>& homfly() const;
+        /**
+         * Is the HOMFLY polynomial of this link diagram already known?
+         * See homflyAZ() and homflyLM() for further details.
+         *
+         * If this property is already known, future calls to homfly(),
+         * homflyAZ() and homflyLM() will all be very fast (simply returning
+         * the precalculated values).
+         *
+         * @return \c true if and only if this property is already known.
+         */
+        bool knowsHomfly() const;
 
         /**
          * Returns a nice tree decomposition of the planar 4-valent
@@ -2597,8 +2671,19 @@ inline long Link::writhe() const {
     return ans;
 }
 
-inline Laurent2<Integer>* Link::homfly() const {
+inline const Laurent2<Integer>& Link::homfly() const {
     return homflyAZ();
+}
+
+inline bool Link::knowsBracket() const {
+    return bracket_.known();
+}
+inline bool Link::knowsJones() const {
+    return jones_.known();
+}
+inline bool Link::knowsHomfly() const {
+    // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
+    return homflyAZ_.known();
 }
 
 inline bool Link::r2(Crossing* crossing, bool check, bool perform) {
@@ -2637,6 +2722,10 @@ inline Packet* Link::internalClonePacket(Packet*) const {
 }
 
 inline void Link::clearAllProperties() {
+    jones_.clear();
+    homflyAZ_.clear();
+    homflyLM_.clear();
+    bracket_.clear();
     niceTreeDecomposition_.clear();
 }
 

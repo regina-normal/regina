@@ -159,15 +159,18 @@ void addLink() {
             OL_complement()[return_value_policy<to_held_type<>>()])
         .def("connected", &Link::connected)
         .def("bracket", &Link::bracket,
-            OL_bracket()[return_value_policy<manage_new_object>()])
+            OL_bracket()[return_internal_reference<>()])
         .def("jones", &Link::jones,
-            OL_jones()[return_value_policy<manage_new_object>()])
+            OL_jones()[return_internal_reference<>()])
         .def("homfly", &Link::homfly,
-            return_value_policy<manage_new_object>())
+            return_internal_reference<>())
         .def("homflyAZ", &Link::homflyAZ,
-            return_value_policy<manage_new_object>())
+            return_internal_reference<>())
         .def("homflyLM", &Link::homflyLM,
-            return_value_policy<manage_new_object>())
+            return_internal_reference<>())
+        .def("knowsBracket", &Link::knowsBracket)
+        .def("knowsJones", &Link::knowsJones)
+        .def("knowsHomfly", &Link::knowsHomfly)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             return_internal_reference<>())
         .def("brief", &Link::brief)

@@ -219,9 +219,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testJones(Link* l, const char* expected) {
             std::ostringstream s;
-            regina::Laurent<regina::Integer>* found = l->jones();
-            s << *found;
-            delete found;
+            s << l->jones();
 
             if (s.str() != expected) {
                 std::ostringstream msg;
@@ -255,9 +253,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testHomflyAZ(Link* l, const char* expected) {
             std::ostringstream s;
-            regina::Laurent2<regina::Integer>* found = l->homflyAZ();
-            s << *found;
-            delete found;
+            s << l->homflyAZ();
 
             if (s.str() != expected) {
                 std::ostringstream msg;
@@ -269,9 +265,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testHomflyLM(Link* l, const char* expected) {
             std::ostringstream s;
-            regina::Laurent2<regina::Integer>* found = l->homflyLM();
-            s << *found;
-            delete found;
+            s << l->homflyLM();
 
             if (s.str() != expected) {
                 std::ostringstream msg;

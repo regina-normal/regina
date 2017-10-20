@@ -174,20 +174,29 @@ Laurent<Integer>* Link::bracketTreewidth() const {
     return bracketNaive();
 }
 
-Laurent<Integer>* Link::bracket(Algorithm alg) const {
+const Laurent<Integer>& Link::bracket(Algorithm alg) const {
+    if (bracket_.known())
+        return *bracket_.value();
+
     switch (alg) {
         case ALG_TREEWIDTH:
-            return bracketTreewidth();
+            bracket_ = bracketTreewidth();
+            break;
         default:
-            return bracketNaive();
+            bracket_ = bracketNaive();
+            break;
     }
+    return *bracket_.value();
 }
 
-Laurent<Integer>* Link::jones(Algorithm alg) const {
+const Laurent<Integer>& Link::jones(Algorithm alg) const {
+    if (jones_.known())
+        return *jones_.value();
+
     // (-A^3)^(-w) * bracket, then multiply all exponents by -1/4.
-    Laurent<Integer>* ans = bracket(alg);
+    Laurent<Integer>* ans = new Laurent<Integer>(bracket(alg));
     if (ans == 0)
-        return ans;
+        return *(jones_ = ans);
 
     long w = writhe();
     ans->shift(-3 * w);
@@ -197,7 +206,7 @@ Laurent<Integer>* Link::jones(Algorithm alg) const {
     // We only scale exponents by -1/2, since we are returning a Laurent
     // polynomial in sqrt(t).
     ans->scaleDown(-2);
-    return ans;
+    return *(jones_ = ans);
 }
 
 } // namespace regina
