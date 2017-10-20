@@ -2057,6 +2057,7 @@
 		05F0A0641DBF0B7000117BFC /* triangulation3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0311DBF0B5E00117BFC /* triangulation3.cpp */; };
 		05F0A0651DBF0B7000117BFC /* turaevviro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */; };
 		05F0A0661DBF0B7000117BFC /* vertex3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0341DBF0B5E00117BFC /* vertex3.cpp */; };
+		05F232791F9AB2B100101A9E /* LinkPolynomials.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F232751F9AB2A000101A9E /* LinkPolynomials.mm */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
 		05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1219C1305A005B53B5 /* NewAnglesController.mm */; };
@@ -4422,6 +4423,8 @@
 		05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = turaevviro.cpp; sourceTree = "<group>"; };
 		05F0A0341DBF0B5E00117BFC /* vertex3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertex3.cpp; sourceTree = "<group>"; };
 		05F0A0351DBF0B5E00117BFC /* vertex3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
+		05F232751F9AB2A000101A9E /* LinkPolynomials.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkPolynomials.mm; sourceTree = "<group>"; };
+		05F232771F9AB2A900101A9E /* LinkPolynomials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkPolynomials.h; sourceTree = "<group>"; };
 		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
 		05F23E0E19C08834005B53B5 /* snappea-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-320.png"; sourceTree = "<group>"; };
 		05F23E1119C1305A005B53B5 /* NewAnglesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewAnglesController.h; sourceTree = "<group>"; };
@@ -4677,6 +4680,8 @@
 				05C0643E1C55921E006E6483 /* HyperViewController.mm */,
 				05C0DB0A1F9969D2001773C3 /* LinkGraph.h */,
 				05C0DB081F9969CE001773C3 /* LinkGraph.mm */,
+				05F232771F9AB2A900101A9E /* LinkPolynomials.h */,
+				05F232751F9AB2A000101A9E /* LinkPolynomials.mm */,
 				05C0DB0B1F9969D2001773C3 /* LinkViewController.h */,
 				05C0DB091F9969D0001773C3 /* LinkViewController.mm */,
 				05F23E1119C1305A005B53B5 /* NewAnglesController.h */,
@@ -9504,6 +9509,7 @@
 				052FA1891806129B00FAE4DF /* orb.cpp in Sources */,
 				05937AD419CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.m in Sources */,
 				050C64891DA1249B00C9420F /* fileinfo.cpp in Sources */,
+				05F232791F9AB2B100101A9E /* LinkPolynomials.mm in Sources */,
 				05249EB31DBC16BE001FE29E /* pycensus.cpp in Sources */,
 				05D1173019EE0172003BEC55 /* isomorphism.cpp in Sources */,
 				05A067451DFA68470047872E /* blockedsfspair.cpp in Sources */,
