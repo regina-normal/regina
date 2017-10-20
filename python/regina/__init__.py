@@ -27,7 +27,16 @@
 #
 
 import sys, os
+from . import engine
 from .engine import *
+
+# Typing "from regina import *" is not supposed to import "open".
+# To achieve this, we skip it in __all__.
+__all__ = (
+    [ name for name in engine.__dict__.keys()
+      if name != 'open' and not name.startswith('_') ] +
+    [ 'reginaSetup' ])
+    
 
 def reginaSetup(quiet = False, readline = True, banner = False,
                 snappyPath = True, namespace = None, builtinOpen = True):
