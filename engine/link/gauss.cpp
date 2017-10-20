@@ -91,5 +91,38 @@ bool Link::parseOrientedGaussTerm(const char* s,
     return (*endPtr == 0 && crossing > 0 && crossing <= nCross);
 }
 
+std::string Link::orientedGauss() const {
+    std::ostringstream out;
+    orientedGauss(out);
+    return out.str();
+}
+
+void Link::orientedGauss(std::ostream& out) const {
+    if (components_.size() != 1)
+        return;
+    if (crossings_.empty())
+        return;
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    do {
+        if (s != start)
+            out << ' ';
+
+        if (s.strand() == 0)
+            out << '-';
+        else
+            out << '+';
+        if ((s.strand() == 0 && s.crossing()->sign() < 0) ||
+                (s.strand() == 1 && s.crossing()->sign() > 0))
+            out << '<';
+        else
+            out << '>';
+        out << (s.crossing()->index() + 1);
+
+        ++s;
+    } while (s != start);
+}
+
 } // namespace regina
 

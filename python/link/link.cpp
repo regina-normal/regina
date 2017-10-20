@@ -47,6 +47,7 @@ using regina::StrandRef;
 using regina::Link;
 
 namespace {
+    std::string (Link::*orientedGauss_str)() const = &Link::orientedGauss;
     std::string (Link::*jenkins_str)() const = &Link::jenkins;
     Link* (*fromOrientedGauss_str)(const std::string&) =
         &Link::fromOrientedGauss;
@@ -170,6 +171,7 @@ void addLink() {
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             return_internal_reference<>())
         .def("brief", &Link::brief)
+        .def("orientedGauss", orientedGauss_str)
         .def("jenkins", jenkins_str)
         .def("dumpConstruction", &Link::dumpConstruction)
         .def("r1", r1a, OL_r1a())

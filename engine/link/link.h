@@ -1647,6 +1647,58 @@ class REGINA_API Link : public Packet {
         std::string brief() const;
 
         /**
+         * Outputs an oriented Gauss code for this knot.
+         *
+         * The oriented Gauss code, based on a format used by Andreeva et al.,
+         * is an extension of the classical Gauss code with additional
+         * characters to describe the orientation of the other strand
+         * passing by at each crossing.  For details of this format, see the
+         * documentation for fromOrientedGauss(const std::string&), which
+         * imports links in this format.
+         *
+         * Currently Regina only supports oriented Gauss codes for knots,
+         * not multiple-component links.  If this link does not have
+         * precisely one component then the empty string will be returned.
+         *
+         * The string will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of returning a string, writes directly to an output stream.
+         *
+         * @return an oriented Gauss code for this knot, or the empty
+         * string if this is a link with zero or multiple components.
+         */
+        std::string orientedGauss() const;
+
+        /**
+         * Writes an oriented Gauss code for this knot to the given output
+         * stream.
+         *
+         * The oriented Gauss code, based on a format used by Andreeva et al.,
+         * is an extension of the classical Gauss code with additional
+         * characters to describe the orientation of the other strand
+         * passing by at each crossing.  For details of this format, see the
+         * documentation for fromOrientedGauss(const std::string&), which
+         * imports links in this format.
+         *
+         * Currently Regina only supports oriented Gauss codes for knots,
+         * not multiple-component links.  If this link does not have
+         * precisely one component then nothing will be output at all.
+         *
+         * The output will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of using an output stream, simply returns a string.
+         *
+         * \ifacespython This routine is not available in Python.  Instead,
+         * Python users can use the variant orientedGauss(), which takes no
+         * arguments and returns the output as a string.
+         *
+         * @param out the output stream to which to write.
+         */
+        void orientedGauss(std::ostream& out) const;
+
+        /**
          * Exports this link as a string using the text representation
          * described by Bob Jenkins.  Jenkins uses this representation in his
          * HOMFLY polynomial software, which is available online from
