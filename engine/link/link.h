@@ -683,6 +683,14 @@ class REGINA_API Link : public Packet {
         /*@{*/
 
         /**
+         * Determines whether this link is empty.
+         * An empty link is one with no components at all.
+         *
+         * @return \c true if and only if this link is empty.
+         */
+        bool isEmpty() const;
+
+        /**
          * Returns the number of crossings in this link.
          *
          * Note that a link can have more components than crossings
@@ -2512,6 +2520,10 @@ inline Link::~Link() {
 
 inline size_t Link::size() const {
     return crossings_.size();
+}
+
+inline bool Link::isEmpty() const {
+    return components_.empty();
 }
 
 inline size_t Link::countComponents() const {

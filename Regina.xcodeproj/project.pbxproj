@@ -1872,6 +1872,8 @@
 		05C0646E1C56C9E0006E6483 /* Tri4Algebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C0646B1C56C9D0006E6483 /* Tri4Algebra.mm */; };
 		05C064731C56E460006E6483 /* Tri4Skeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064701C56E456006E6483 /* Tri4Skeleton.mm */; };
 		05C064781C585628006E6483 /* GenericTriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064751C585619006E6483 /* GenericTriangulationViewController.mm */; };
+		05C0DB101F9969E2001773C3 /* LinkGraph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C0DB081F9969CE001773C3 /* LinkGraph.mm */; };
+		05C0DB111F9969E6001773C3 /* LinkViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C0DB091F9969D0001773C3 /* LinkViewController.mm */; };
 		05C1BE981DCA7C77007C946B /* boundarycomponent-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */; };
 		05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BE971DCA7C77007C946B /* skeleton-impl.h */; };
 		05C1BEAA1DCA7CA9007C946B /* boundary2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BE9B1DCA7CA9007C946B /* boundary2.cpp */; };
@@ -4304,6 +4306,10 @@
 		05C064701C56E456006E6483 /* Tri4Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri4Skeleton.mm; sourceTree = "<group>"; };
 		05C064741C585619006E6483 /* GenericTriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericTriangulationViewController.h; sourceTree = "<group>"; };
 		05C064751C585619006E6483 /* GenericTriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GenericTriangulationViewController.mm; sourceTree = "<group>"; };
+		05C0DB081F9969CE001773C3 /* LinkGraph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkGraph.mm; sourceTree = "<group>"; };
+		05C0DB091F9969D0001773C3 /* LinkViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkViewController.mm; sourceTree = "<group>"; };
+		05C0DB0A1F9969D2001773C3 /* LinkGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkGraph.h; sourceTree = "<group>"; };
+		05C0DB0B1F9969D2001773C3 /* LinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkViewController.h; sourceTree = "<group>"; };
 		05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "boundarycomponent-impl.h"; sourceTree = "<group>"; };
 		05C1BE971DCA7C77007C946B /* skeleton-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "skeleton-impl.h"; sourceTree = "<group>"; };
 		05C1BE9B1DCA7CA9007C946B /* boundary2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundary2.cpp; sourceTree = "<group>"; };
@@ -4669,6 +4675,10 @@
 				05C064531C55C80B006E6483 /* HyperSummary.mm */,
 				05C0643D1C55921E006E6483 /* HyperViewController.h */,
 				05C0643E1C55921E006E6483 /* HyperViewController.mm */,
+				05C0DB0A1F9969D2001773C3 /* LinkGraph.h */,
+				05C0DB081F9969CE001773C3 /* LinkGraph.mm */,
+				05C0DB0B1F9969D2001773C3 /* LinkViewController.h */,
+				05C0DB091F9969D0001773C3 /* LinkViewController.mm */,
 				05F23E1119C1305A005B53B5 /* NewAnglesController.h */,
 				05F23E1219C1305A005B53B5 /* NewAnglesController.mm */,
 				05F23E1419C13432005B53B5 /* NewFilterController.h */,
@@ -9232,6 +9242,7 @@
 				05249F781DBC1747001FE29E /* triangulation3.cpp in Sources */,
 				05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */,
 				058FADBB19D506160001B5B5 /* Tri3Composition.mm in Sources */,
+				05C0DB111F9969E6001773C3 /* LinkViewController.mm in Sources */,
 				0541AF631B8BE411002E166B /* treedecomposition.cpp in Sources */,
 				05249ED31DBC16DF001FE29E /* component9.cpp in Sources */,
 				052FA1E41806129B00FAE4DF /* surfacefilter.cpp in Sources */,
@@ -9406,6 +9417,7 @@
 				05249EAF1DBC16BA001FE29E /* anglestructures.cpp in Sources */,
 				05A73CA519B2EF5A0099C617 /* Moebius_transformations.c in Sources */,
 				052FA232180612DD00FAE4DF /* shortest_cusp_basis.c in Sources */,
+				05C0DB101F9969E2001773C3 /* LinkGraph.mm in Sources */,
 				052FA228180612DD00FAE4DF /* hyperbolic_structure.c in Sources */,
 				05D1173D19EE0197003BEC55 /* perm5.cpp in Sources */,
 				05249F151DBC16FA001FE29E /* triangulation14.cpp in Sources */,

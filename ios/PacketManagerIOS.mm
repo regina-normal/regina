@@ -105,7 +105,7 @@
 + (NSString *)viewerFor:(regina::Packet *)p {
     switch (p->type()) {
         case regina::PACKET_ANGLESTRUCTURES: return @"viewAngles";
-        // case regina::PACKET_LINK: return @"viewLink";
+        case regina::PACKET_LINK: return @"viewLink";
         case regina::PACKET_NORMALSURFACES: return @"viewSurfaces";
         case regina::PACKET_NORMALHYPERSURFACES: return @"viewHypersurfaces";
         case regina::PACKET_SCRIPT: return @"viewScript";
