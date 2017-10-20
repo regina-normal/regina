@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -393,7 +393,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ilC-fe-PBM">
                                 <rect key="frame" x="331" y="668" width="32" height="32"/>
-                                <state key="normal" image="Triangulation">
+                                <state key="normal" image="Triangulation3">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -2409,6 +2409,6 @@
         <image name="Tab-Graph" width="27" height="27"/>
         <image name="Tab-Recognition" width="25" height="25"/>
         <image name="Tab-Skeleton" width="25" height="25"/>
-        <image name="Triangulation" width="32" height="32"/>
+        <image name="Triangulation3" width="32" height="32"/>
     </resources>
 </document>
