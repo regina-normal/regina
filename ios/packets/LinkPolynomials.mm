@@ -87,10 +87,12 @@
         
         [self becomeFirstResponder];
         
+        UIMenuItem *menuItem = [[UIMenuItem alloc] initWithTitle:@"Copy Plain Text" action:@selector(copyPlain:)];
         UIMenuController *copyMenu = [UIMenuController sharedMenuController];
         CGRect textBounds = [copyFrom textRectForBounds:copyFrom.bounds limitedToNumberOfLines:copyFrom.numberOfLines];
         [copyMenu setTargetRect:textBounds inView:copyFrom];
         copyMenu.arrowDirection = UIMenuControllerArrowDefault;
+        copyMenu.menuItems = [NSArray arrayWithObject:menuItem];
         [copyMenu setMenuVisible:YES animated:YES];
     }
 }
@@ -199,6 +201,31 @@
 {
     if (copyFrom)
         [[UIPasteboard generalPasteboard] setString:copyFrom.text];
+}
+
+- (void)copyPlain:(id)sender
+{
+    // Copy the selected polynomial in plain ASCII only.
+    if (copyFrom == self.jones) {
+        if (self.packet->knowsJones())
+            [[UIPasteboard generalPasteboard] setString:@(self.packet->jones().str("x").c_str())];
+        else
+            [[UIPasteboard generalPasteboard] setString:@""];
+    } else if (copyFrom == self.homfly) {
+        if (self.packet->knowsHomfly()) {
+            if (self.homflyType.selectedSegmentIndex == 0)
+                [[UIPasteboard generalPasteboard] setString:@(self.packet->homflyAZ().str("a", "z").c_str())];
+            else
+                [[UIPasteboard generalPasteboard] setString:@(self.packet->homflyLM().str("l", "m").c_str())];
+        } else
+            [[UIPasteboard generalPasteboard] setString:@""];
+    } else if (copyFrom == self.bracket) {
+        if (self.packet->knowsBracket())
+            [[UIPasteboard generalPasteboard] setString:@(self.packet->bracket().str("A").c_str())];
+        else
+            [[UIPasteboard generalPasteboard] setString:@""];
+    } else
+        [[UIPasteboard generalPasteboard] setString:@""];
 }
 
 @end
