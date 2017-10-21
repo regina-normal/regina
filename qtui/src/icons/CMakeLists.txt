@@ -8,6 +8,10 @@ set (IMGS
   cone
   connectedsum
   connectedsumwith
+  crossing-l
+  crossing-u
+  crossing+l
+  crossing+u
   csvexport
   dehydrated
   delete
