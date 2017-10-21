@@ -53,13 +53,13 @@
         if (self.packet->size() == 1)
             header.text = @"Knot with 1 crossing";
         else
-            header.text = [NSString stringWithFormat:@"Knot with %d crossings", self.packet->size()];
+            header.text = [NSString stringWithFormat:@"Knot with %zu crossings", self.packet->size()];
     } else {
         // Multiple component link:
         if (self.packet->size() == 1)
-            header.text = [NSString stringWithFormat:@"Link with %d components, 1 crossing", self.packet->countComponents()];
+            header.text = [NSString stringWithFormat:@"Link with %zu components, 1 crossing", self.packet->countComponents()];
         else
-            header.text = [NSString stringWithFormat:@"Link with %d components, %d crossings", self.packet->countComponents(), self.packet->size()];
+            header.text = [NSString stringWithFormat:@"Link with %zu components, %zu crossings", self.packet->countComponents(), self.packet->size()];
     }
 }
 
