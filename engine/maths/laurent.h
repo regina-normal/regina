@@ -425,14 +425,14 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * given variable name instead of \c x.
          *
          * If \a utf8 is passed as \c true then unicode superscript characters
-         * will be used for exponents; these will be encoded using UTF-8.
-         * This will make the output nicer, but will require more complex
-         * fonts to be available on the user's machine.
+         * will be used for exponents and the minus sign; these will be encoded
+         * using UTF-8.  This will make the output nicer, but will require more
+         * complex fonts to be available on the user's machine.
          *
          * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
-         * @param utf8 \c true if unicode superscript characters may be used.
+         * @param utf8 \c true if unicode characters may be used.
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
@@ -461,7 +461,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          *
          * This is similar to the output from str(), except that it uses
          * unicode characters to make the output more pleasant to read.
-         * In particular, it makes use of superscript digits for exponents.
+         * In particular, it makes use of superscript digits for exponents
+         * and a wider minus sign.
          *
          * The string is encoded in UTF-8.
          *
@@ -916,12 +917,18 @@ void Laurent<T>::writeTextShort(std::ostream& out, bool utf8,
         if (exp == maxExp()) {
             // This is the first term being output.
             if (writeCoeff < 0) {
-                out << '-';
+                if (utf8)
+                    out << "\u2212";
+                else
+                    out << '-';
                 writeCoeff = -writeCoeff;
             }
         } else {
             if (writeCoeff < 0) {
-                out << " - ";
+                if (utf8)
+                    out << " \u2212 ";
+                else
+                    out << " - ";
                 writeCoeff = -writeCoeff;
             } else
                 out << " + ";

@@ -101,7 +101,7 @@
 
     if (self.packet->knowsJones() || self.packet->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         self.calculateJones.hidden = YES;
-        self.jones.text = @(self.packet->jones().str(regina::Link::jonesVar).c_str());
+        self.jones.text = @(self.packet->jones().utf8(regina::Link::jonesVar).c_str());
     } else {
         self.jones.text = @" ";
         self.calculateJones.hidden = NO;
@@ -111,9 +111,9 @@
     if (self.packet->knowsHomfly() || self.packet->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         self.calculateHomfly.hidden = YES;
         if (self.homflyType.selectedSegmentIndex == 0)
-            self.homfly.text = @(self.packet->homflyAZ().str(regina::Link::homflyAZVarX, regina::Link::homflyAZVarY).c_str());
+            self.homfly.text = @(self.packet->homflyAZ().utf8(regina::Link::homflyAZVarX, regina::Link::homflyAZVarY).c_str());
         else
-            self.homfly.text = @(self.packet->homflyLM().str(regina::Link::homflyLMVarX, regina::Link::homflyLMVarY).c_str());
+            self.homfly.text = @(self.packet->homflyLM().utf8(regina::Link::homflyLMVarX, regina::Link::homflyLMVarY).c_str());
     } else {
         self.homfly.text = @" ";
         self.calculateHomfly.hidden = NO;
@@ -122,7 +122,7 @@
 
     if (self.packet->knowsBracket() || self.packet->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         self.calculateBracket.hidden = YES;
-        self.bracket.text = @(self.packet->bracket().str("A").c_str());
+        self.bracket.text = @(self.packet->bracket().utf8("A").c_str());
     } else {
         self.bracket.text = @" ";
         self.calculateBracket.hidden = NO;
