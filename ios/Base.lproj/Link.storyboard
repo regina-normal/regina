@@ -187,7 +187,7 @@
             </objects>
             <point key="canvasLocation" x="6798" y="-1785"/>
         </scene>
-        <!--Graph-->
+        <!--Graphs-->
         <scene sceneID="L3r-jZ-QMc">
             <objects>
                 <viewController id="Q9r-bH-ncD" customClass="LinkGraph" sceneMemberID="viewController">
@@ -243,7 +243,7 @@
                             <constraint firstItem="4NM-QE-Mdh" firstAttribute="top" secondItem="gYZ-rz-Xbx" secondAttribute="top" constant="20" id="zf7-qL-p2c"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Graph" image="Tab-Graph" id="9Bn-8w-xGG"/>
+                    <tabBarItem key="tabBarItem" title="Graphs" image="Tab-Graph" id="9Bn-8w-xGG"/>
                     <connections>
                         <outlet property="graph" destination="aVE-Rd-UUC" id="fk3-AL-wx1"/>
                         <outlet property="graphProperties" destination="7Rt-wo-exa" id="Uxw-fj-jhv"/>
