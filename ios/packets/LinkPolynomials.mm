@@ -74,13 +74,14 @@
 - (IBAction)longPress:(id)sender {
     UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
     if (press.state == UIGestureRecognizerStateBegan) {
-        /* TODO
         copyFrom = nil;
         CGPoint location = [press locationInView:self.view];
-        if (CGRectContainsPoint(self.isosig.frame, location))
-            copyFrom = self.isosig;
-        else if (CGRectContainsPoint(self.standard.frame, location))
-            copyFrom = self.standard;
+        if (self.packet->knowsJones() && CGRectContainsPoint(self.jones.frame, location))
+            copyFrom = self.jones;
+        else if (self.packet->knowsHomfly() && CGRectContainsPoint(self.homfly.frame, location))
+            copyFrom = self.homfly;
+        else if (self.packet->knowsBracket() && CGRectContainsPoint(self.bracket.frame, location))
+            copyFrom = self.bracket;
         if (! copyFrom)
             return;
         
@@ -91,7 +92,6 @@
         [copyMenu setTargetRect:textBounds inView:copyFrom];
         copyMenu.arrowDirection = UIMenuControllerArrowDefault;
         [copyMenu setMenuVisible:YES animated:YES];
-        */
     }
 }
 
@@ -197,7 +197,6 @@
 
 - (void)copy:(id)sender
 {
-    // TODO
     if (copyFrom)
         [[UIPasteboard generalPasteboard] setString:copyFrom.text];
 }
