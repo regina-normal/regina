@@ -35,7 +35,7 @@
 #import "ReginaHelper.h"
 #import "link/link.h"
 
-#define MAX_LINK_AUTO_POLYNOMIALS 2 // TODO
+#define MAX_LINK_AUTO_POLYNOMIALS 6
 #define KEY_LINK_HOMFLY_TYPE @"LinkHomflyType"
 
 @interface LinkPolynomials () <UITextFieldDelegate> {
