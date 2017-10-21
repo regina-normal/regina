@@ -31,36 +31,62 @@
  **************************************************************************/
 
 #import "LinkViewController.h"
+#import "LinkCodes.h"
 #import "link/link.h"
 
-@implementation LinkViewController
+#define KEY_LINK_CODE_TYPE @"LinkCodeType"
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self setSelectedImages:@[[NSNull null] /* Polynomials */,
-                              [NSNull null] /* Codes */,
-                              @"Tab-Graph-Bold"]];
-    [self registerDefaultKey:@"ViewLinkTab"];
+@interface LinkCodes () {
+    UIFont* codeFont;
 }
 
-- (void)updateHeader:(UILabel *)header
+@property (weak, nonatomic) IBOutlet UILabel *header;
+
+@property (weak, nonatomic) IBOutlet UITextView *code;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *codeType;
+
+@property (assign, nonatomic) regina::Link* packet;
+@end
+
+@implementation LinkCodes
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    codeFont = [UIFont fontWithName:@"Menlo" size:self.header.font.pointSize];
+
+    self.codeType.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LINK_CODE_TYPE];
+    
+    self.packet = static_cast<regina::Link*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
+
+    [self reloadPacket];
+}
+
+- (void)reloadPacket
 {
-    if (self.packet->isEmpty())
-        header.text = @"Empty";
-    else if (self.packet->countComponents() == 1) {
-        // Knot:
-        if (self.packet->size() == 1)
-            header.text = @"Knot with 1 crossing";
-        else
-            header.text = [NSString stringWithFormat:@"Knot with %d crossings", self.packet->size()];
-    } else {
-        // Multiple component link:
-        if (self.packet->size() == 1)
-            header.text = [NSString stringWithFormat:@"Link with %d components, 1 crossing", self.packet->countComponents()];
-        else
-            header.text = [NSString stringWithFormat:@"Link with %d components, %d crossings", self.packet->countComponents(), self.packet->size()];
+    [static_cast<LinkViewController*>(self.parentViewController) updateHeader:self.header];
+
+    switch (self.codeType.selectedSegmentIndex) {
+        case 0:
+            if (self.packet->countComponents() == 1)
+                self.code.text = @(self.packet->orientedGauss().c_str());
+            else {
+                self.code.text = @"Oriented Gauss codes are currently only available for knots.";
+                self.code.font = self.header.font;
+                return; // to avoid resetting the font below.
+            }
+            break;
+        case 1:
+            self.code.text = @(self.packet->jenkins().c_str());
+            break;
     }
+    
+    self.code.font = codeFont;
+}
+
+- (IBAction)codeTypeChanged:(id)sender {
+    [[NSUserDefaults standardUserDefaults] setInteger:self.codeType.selectedSegmentIndex forKey:KEY_LINK_CODE_TYPE];
+    [self reloadPacket];
 }
 
 @end

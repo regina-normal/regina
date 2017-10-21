@@ -1942,6 +1942,7 @@
 		05CAFB531C4CEA160001C253 /* face15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB461C4CEA020001C253 /* face15.cpp */; };
 		05CAFB551C4D8FCF0001C253 /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CAFB541C4D8FCE0001C253 /* graphviz.framework */; };
 		05CAFB561C4D904A0001C253 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
+		05CB9FF01F9AD7D5002ECB18 /* LinkCodes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */; };
 		05D0A1101812F0BE005ED097 /* Tri3ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */; };
 		05D1172919EDF43F003BEC55 /* WelcomeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1172819EDF43F003BEC55 /* WelcomeViewController.mm */; };
 		05D1172B19EE0166003BEC55 /* bitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1011806088B00FAE4DF /* bitmask.cpp */; };
@@ -4352,6 +4353,8 @@
 		05CAFB451C4CEA020001C253 /* face14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face14.cpp; sourceTree = "<group>"; };
 		05CAFB461C4CEA020001C253 /* face15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face15.cpp; sourceTree = "<group>"; };
 		05CAFB541C4D8FCE0001C253 /* graphviz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = graphviz.framework; path = ../../Library/Frameworks/osx/graphviz.framework; sourceTree = "<group>"; };
+		05CB9FEC1F9AD7C6002ECB18 /* LinkCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkCodes.h; sourceTree = "<group>"; };
+		05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkCodes.mm; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* Tri3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3ViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3ViewController.mm; sourceTree = "<group>"; };
 		05D1172719EDF43F003BEC55 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
@@ -4678,6 +4681,8 @@
 				05C064531C55C80B006E6483 /* HyperSummary.mm */,
 				05C0643D1C55921E006E6483 /* HyperViewController.h */,
 				05C0643E1C55921E006E6483 /* HyperViewController.mm */,
+				05CB9FEC1F9AD7C6002ECB18 /* LinkCodes.h */,
+				05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */,
 				05C0DB0A1F9969D2001773C3 /* LinkGraph.h */,
 				05C0DB081F9969CE001773C3 /* LinkGraph.mm */,
 				05F232771F9AB2A900101A9E /* LinkPolynomials.h */,
@@ -9383,6 +9388,7 @@
 				057F317419B8935800D30520 /* Example.mm in Sources */,
 				052FA1991806129B00FAE4DF /* order.cpp in Sources */,
 				054C6A771DCC1FF4005373F0 /* example11.cpp in Sources */,
+				05CB9FF01F9AD7D5002ECB18 /* LinkCodes.mm in Sources */,
 				05D1174119EE0197003BEC55 /* permconv.cpp in Sources */,
 				05249EBA1DBC16C4001FE29E /* triangulation2.cpp in Sources */,
 				05249F351DBC1711001FE29E /* pymaths.cpp in Sources */,
