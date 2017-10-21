@@ -15,6 +15,9 @@ Version 5.2  [ 29 September, 2017 ]
           that partially compliant compilers (such as gcc4.9) should be fine.
         - Now builds under gcc7.
     ENGINE:
+        Class Link, Crossing, StrandRef:
+            - New classes to support knots and links, plus other additional
+              classes and methods to interface with the Boost Graph Library.
         Class NormalHypersurfaces:
             - New routine sort() to sort hypersurfaces by arbitrary criteria.
             - The postconditions for enumerate() and makeMatchingEquations()
