@@ -892,68 +892,78 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZBd-K1-ajn">
-                                <rect key="frame" x="20" y="20" width="663.5" height="20.5"/>
+                                <rect key="frame" x="20" y="20" width="664" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" text="HOMFLY-PT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F7Y-Ec-xVg">
-                                <rect key="frame" x="20" y="182" width="98" height="21"/>
+                                <rect key="frame" x="20" y="183" width="98" height="21"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jones" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zqg-I0-hvk">
-                                <rect key="frame" x="20" y="80" width="48" height="21"/>
+                                <rect key="frame" x="20" y="81" width="48" height="21"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kauffman bracket" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5CC-Fh-4Dx">
-                                <rect key="frame" x="20" y="284" width="663.5" height="21"/>
+                                <rect key="frame" x="20" y="285" width="664" height="21"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3cf-nn-shC">
-                                <rect key="frame" x="20" y="121" width="663.5" height="21"/>
+                                <rect key="frame" x="20" y="122" width="664" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="djS-jC-p26">
-                                <rect key="frame" x="20" y="223" width="663.5" height="21"/>
+                                <rect key="frame" x="20" y="224" width="664" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nQK-kR-jdX">
-                                <rect key="frame" x="20" y="325" width="663.5" height="21"/>
+                                <rect key="frame" x="20" y="326" width="664" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Va-rG-wbB">
-                                <rect key="frame" x="20" y="121" width="64" height="30"/>
+                                <rect key="frame" x="20" y="122" width="64" height="30"/>
                                 <state key="normal" title="Calculate"/>
                                 <connections>
                                     <action selector="computeJones:" destination="8P2-HT-Ie2" eventType="touchUpInside" id="kIZ-LW-HCa"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ck-pJ-g8c">
-                                <rect key="frame" x="20" y="223" width="64" height="30"/>
+                                <rect key="frame" x="20" y="224" width="64" height="30"/>
                                 <state key="normal" title="Calculate"/>
                                 <connections>
                                     <action selector="computeHomfly:" destination="8P2-HT-Ie2" eventType="touchUpInside" id="iIM-hF-6J6"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uiH-gc-kiF">
-                                <rect key="frame" x="20" y="325" width="64" height="30"/>
+                                <rect key="frame" x="20" y="326" width="64" height="30"/>
                                 <state key="normal" title="Calculate"/>
                                 <connections>
                                     <action selector="computeBracket:" destination="8P2-HT-Ie2" eventType="touchUpInside" id="5VA-qJ-Nsh"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="wxB-fq-1ul">
+                                <rect key="frame" x="582.5" y="180" width="101" height="29"/>
+                                <segments>
+                                    <segment title="(α, z)"/>
+                                    <segment title="(𝓁, m)"/>
+                                </segments>
+                                <connections>
+                                    <action selector="homflyTypeChanged:" destination="8P2-HT-Ie2" eventType="valueChanged" id="bQp-M7-hRH"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -973,10 +983,12 @@
                             <constraint firstItem="nQK-kR-jdX" firstAttribute="top" secondItem="5CC-Fh-4Dx" secondAttribute="bottom" constant="20" id="Ur8-ul-qGu"/>
                             <constraint firstItem="F7Y-Ec-xVg" firstAttribute="leading" secondItem="Jgx-pf-1KC" secondAttribute="leading" constant="20" id="YF0-Ts-AHc"/>
                             <constraint firstItem="F7Y-Ec-xVg" firstAttribute="leading" secondItem="5CC-Fh-4Dx" secondAttribute="leading" id="Yhw-AB-0OZ"/>
+                            <constraint firstAttribute="trailing" secondItem="wxB-fq-1ul" secondAttribute="trailing" constant="20" id="buU-q8-waD"/>
                             <constraint firstAttribute="trailing" secondItem="5CC-Fh-4Dx" secondAttribute="trailing" constant="20" id="cUc-EN-02j"/>
                             <constraint firstItem="F7Y-Ec-xVg" firstAttribute="top" secondItem="3cf-nn-shC" secondAttribute="bottom" constant="40" id="flU-EZ-ydo"/>
                             <constraint firstItem="ZBd-K1-ajn" firstAttribute="top" secondItem="Jgx-pf-1KC" secondAttribute="top" constant="20" symbolic="YES" id="hph-Rn-xWe"/>
                             <constraint firstItem="2Va-rG-wbB" firstAttribute="leading" secondItem="Jgx-pf-1KC" secondAttribute="leading" constant="20" id="iO5-NB-B7T"/>
+                            <constraint firstItem="wxB-fq-1ul" firstAttribute="centerY" secondItem="F7Y-Ec-xVg" secondAttribute="centerY" id="n0A-6a-v1g"/>
                             <constraint firstItem="nQK-kR-jdX" firstAttribute="leading" secondItem="Jgx-pf-1KC" secondAttribute="leading" constant="20" id="o36-Ld-Vr7"/>
                             <constraint firstItem="0Ck-pJ-g8c" firstAttribute="leading" secondItem="Jgx-pf-1KC" secondAttribute="leading" constant="20" id="qFe-CF-Hi6"/>
                             <constraint firstItem="ZBd-K1-ajn" firstAttribute="leading" secondItem="Jgx-pf-1KC" secondAttribute="leading" constant="20" id="rtN-vr-hnp"/>
@@ -992,6 +1004,7 @@
                         <outlet property="calculateJones" destination="2Va-rG-wbB" id="szw-Ll-v5e"/>
                         <outlet property="header" destination="ZBd-K1-ajn" id="zmp-r9-gAc"/>
                         <outlet property="homfly" destination="djS-jC-p26" id="Ugz-db-fVL"/>
+                        <outlet property="homflyType" destination="wxB-fq-1ul" id="gVg-eT-xOA"/>
                         <outlet property="jones" destination="3cf-nn-shC" id="MW5-eN-xnf"/>
                     </connections>
                 </viewController>

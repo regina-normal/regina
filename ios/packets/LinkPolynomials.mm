@@ -36,6 +36,7 @@
 #import "link/link.h"
 
 #define MAX_LINK_AUTO_POLYNOMIALS 2 // TODO
+#define KEY_LINK_HOMFLY_TYPE @"LinkHomflyType"
 
 @interface LinkPolynomials () <UITextFieldDelegate> {
     UILabel* copyFrom;
@@ -48,6 +49,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *calculateJones;
 @property (weak, nonatomic) IBOutlet UIButton *calculateHomfly;
 @property (weak, nonatomic) IBOutlet UIButton *calculateBracket;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *homflyType;
 
 @property (assign, nonatomic) regina::Link* packet;
 @end
@@ -62,6 +64,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.homflyType.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LINK_HOMFLY_TYPE];
+    
     self.packet = static_cast<regina::Link*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
     [self reloadPacket];
@@ -106,7 +110,10 @@
 
     if (self.packet->knowsHomfly() || self.packet->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         self.calculateHomfly.hidden = YES;
-        self.homfly.text = @(self.packet->homfly().str(regina::Link::homflyVarX, regina::Link::homflyVarY).c_str());
+        if (self.homflyType.selectedSegmentIndex == 0)
+            self.homfly.text = @(self.packet->homflyAZ().str(regina::Link::homflyAZVarX, regina::Link::homflyAZVarY).c_str());
+        else
+            self.homfly.text = @(self.packet->homflyLM().str(regina::Link::homflyLMVarX, regina::Link::homflyLMVarY).c_str());
     } else {
         self.homfly.text = @" ";
         self.calculateHomfly.hidden = NO;
@@ -121,12 +128,15 @@
         self.calculateBracket.hidden = NO;
         self.calculateBracket.enabled = YES;
     }
+    
+    self.homflyType.enabled = YES;
 }
 
 - (IBAction)computeJones:(id)sender {
     self.calculateJones.enabled = NO;
     self.calculateHomfly.enabled = NO;
     self.calculateBracket.enabled = NO;
+    self.homflyType.enabled = NO;
     [ReginaHelper runWithHUD:@"Calculating…"
                         code:^{
                             self.packet->jones();
@@ -140,6 +150,7 @@
     self.calculateHomfly.enabled = NO;
     self.calculateJones.enabled = NO;
     self.calculateBracket.enabled = NO;
+    self.homflyType.enabled = NO;
     [ReginaHelper runWithHUD:@"Calculating…"
                         code:^{
                             self.packet->homfly();
@@ -153,6 +164,7 @@
     self.calculateBracket.enabled = NO;
     self.calculateJones.enabled = NO;
     self.calculateHomfly.enabled = NO;
+    self.homflyType.enabled = NO;
     [ReginaHelper runWithHUD:@"Calculating…"
                         code:^{
                             self.packet->bracket();
@@ -160,6 +172,12 @@
                      cleanup:^{
                          [self reloadPacket];
                      }];
+}
+
+- (IBAction)homflyTypeChanged:(id)sender {
+    [[NSUserDefaults standardUserDefaults] setInteger:self.homflyType.selectedSegmentIndex forKey:KEY_LINK_HOMFLY_TYPE];
+    if (self.packet->knowsHomfly())
+        [self reloadPacket];
 }
 
 #pragma mark - UIResponder
