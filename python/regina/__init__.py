@@ -37,6 +37,9 @@ __all__ = (
       if name != 'open' and not name.startswith('_') ] +
     [ 'reginaSetup' ])
     
+# Adds additional methods to NTriangulation, ...
+from . import addlPyMethods
+del addlPyMethods
 
 def reginaSetup(quiet = False, readline = True, banner = False,
                 snappyPath = True, namespace = None, builtinOpen = True):
