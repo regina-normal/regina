@@ -2283,11 +2283,14 @@ class REGINA_API Link : public Packet {
 
 /**
  * Iterates through all crossings of a link.
- * This class implements the Boost multipass input iterator concept.
  *
  * The order of iteration follows the indexing of the crossings
  * from 0 to Link::size()-1.
  *
+ * This class implements the Boost multipass input iterator concept,
+ * which is similar to the standard C++ forward iterator except that
+ * the \a reference type may be the same as \a value_type (and so,
+ * in particular, the dereference operator may return by value).
  * This header also specialises std::iterator_traits for this iterator type.
  *
  * \ifacespython Not present.
@@ -2301,9 +2304,9 @@ class REGINA_API CrossingIterator {
 
     public:
         /**
-         * Default constructor that performs no initialisation.
+         * Creates a singular iterator.
          */
-        CrossingIterator() = default;
+        CrossingIterator();
         /**
          * Default copy constructor.
          */
@@ -2376,7 +2379,6 @@ class REGINA_API CrossingIterator {
 
 /**
  * Iterates through all directed arcs of a knot or link.
- * This class implements the Boost multipass input iterator concept.
  *
  * The order of iteration is as follows.  The iterator works through
  * crossings 0,1,... of the underlying link in turn.  For each crossing,
@@ -2385,6 +2387,10 @@ class REGINA_API CrossingIterator {
  *
  * Zero-crossing unknot components are not visited at all by this iterator type.
  *
+ * This class implements the Boost multipass input iterator concept,
+ * which is similar to the standard C++ forward iterator except that
+ * the \a reference type may be the same as \a value_type (and so,
+ * in particular, the dereference operator may return by value).
  * This header also specialises std::iterator_traits for this iterator type.
  *
  * \ifacespython Not present.
@@ -2402,9 +2408,9 @@ class REGINA_API ArcIterator {
 
     public:
         /**
-         * Default constructor that performs no initialisation.
+         * Creates a singular iterator.
          */
-        ArcIterator() = default;
+        ArcIterator();
         /**
          * Default copy constructor.
          */
@@ -2737,6 +2743,9 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 
 // Inline functions for CrossingIterator
 
+inline CrossingIterator::CrossingIterator() : link_(nullptr), index_(0) {
+}
+
 inline CrossingIterator::CrossingIterator(const Link& link, size_t index) :
         link_(&link), index_(index) {
 }
@@ -2763,6 +2772,9 @@ inline bool CrossingIterator::operator != (const CrossingIterator& rhs) const {
 }
 
 // Inline functions for ArcIterator
+
+inline ArcIterator::ArcIterator() : link_(nullptr), index_(0), upper_(false) {
+}
 
 inline ArcIterator::ArcIterator(const Link& link, size_t index, bool upper) :
         link_(&link), index_(index), upper_(upper) {
@@ -2808,7 +2820,7 @@ namespace std {
         typedef regina::Crossing* value_type;
         typedef regina::Crossing* const* pointer;
         typedef regina::Crossing* const& reference;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef std::input_iterator_tag iterator_category;
     };
 
     template <>
@@ -2817,7 +2829,7 @@ namespace std {
         typedef typename regina::StrandRef value_type;
         typedef typename regina::StrandRef const* pointer;
         typedef typename regina::StrandRef reference;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef std::input_iterator_tag iterator_category;
     };
 } // namespace std
 

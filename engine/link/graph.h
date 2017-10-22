@@ -50,7 +50,6 @@ namespace graph {
     /**
      * Iterates through the two directed arcs either entering or exiting a
      * given crossing of a knot or link.
-     * This class implements the Boost multipass input iterator concept.
      *
      * If the template argument \a out is \c true, then this will
      * iterate through the two directed arcs \e exiting the given crossing:
@@ -62,6 +61,10 @@ namespace graph {
      * first the arc entering into the lower strand, and then the arc
      * entering into the upper strand.
      *
+     * This class implements the Boost multipass input iterator concept,
+     * which is similar to the standard C++ forward iterator except that
+     * the \a reference type may be the same as \a value_type (and so,
+     * in particular, the dereference operator may return by value).
      * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam out indicates whether to iterate through arcs exiting or
@@ -80,9 +83,9 @@ namespace graph {
 
         public:
             /**
-             * Default constructor that performs no initialisation.
+             * Creates a singular iterator.
              */
-            IncidentArcIterator() = default;
+            IncidentArcIterator();
             /**
              * Creates a new iterator that runs through the two arcs
              * entering or exiting the given crossing (depending on the
@@ -163,13 +166,16 @@ namespace graph {
     /**
      * Iterates through the two crossings adjacent to a given crossing of a
      * knot or link via an outgoing arc.
-     * This class implements the Boost multipass input iterator concept.
      *
      * The order of iteration is as follows: first this will visit the
      * crossing adjacent via the arc leaving the lower strand of the
      * given crossing; then it will visit the crossing adjacent via the
      * arc leaving the upper strand of the given crossing.
      *
+     * This class implements the Boost multipass input iterator concept,
+     * which is similar to the standard C++ forward iterator except that
+     * the \a reference type may be the same as \a value_type (and so,
+     * in particular, the dereference operator may return by value).
      * This header also specialises std::iterator_traits for this iterator type.
      */
     class REGINA_API AdjacentCrossingIterator {
@@ -184,9 +190,9 @@ namespace graph {
 
         public:
             /**
-             * Default constructor that performs no initialisation.
+             * Creates a singular iterator.
              */
-            AdjacentCrossingIterator() = default;
+            AdjacentCrossingIterator();
             /**
              * Creates a new iterator that runs through the two crossings
              * adjacent to the given crossing via an outgoing arc.
@@ -513,8 +519,8 @@ namespace std {
         typedef int difference_type;
         typedef regina::Crossing* value_type;
         typedef regina::Crossing* const* pointer;
-        typedef regina::Crossing* const& reference;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef regina::Crossing* reference;
+        typedef std::input_iterator_tag iterator_category;
     };
 
     template <bool out>
@@ -523,7 +529,7 @@ namespace std {
         typedef typename regina::StrandRef value_type;
         typedef typename regina::StrandRef const* pointer;
         typedef typename regina::StrandRef reference;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef std::input_iterator_tag iterator_category;
     };
 } // namespace std
 
@@ -578,6 +584,11 @@ namespace graph {
     // Inline functions for IncidentArcIterator
 
     template <bool out>
+    inline IncidentArcIterator<out>::IncidentArcIterator() :
+            crossing_(0), strand_(0) {
+    }
+
+    template <bool out>
     inline IncidentArcIterator<out>::IncidentArcIterator(
             Crossing* crossing, int strand) :
             crossing_(crossing), strand_(strand) {
@@ -617,6 +628,10 @@ namespace graph {
     }
 
     // Inline functions for AdjacentCrossingIterator
+
+    inline AdjacentCrossingIterator::AdjacentCrossingIterator() :
+            crossing_(nullptr), strand_(0) {
+    }
 
     inline AdjacentCrossingIterator::AdjacentCrossingIterator(
             Crossing* crossing, int strand) :
