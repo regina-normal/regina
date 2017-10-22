@@ -1450,8 +1450,9 @@ class REGINA_API Packet :
  * passes it through unchanged to low-level C/C++ file I/O routines.
  *
  * \ifacespython This function is not automatically imported into the
- * global namespace when running regina-python or when opening a Python
- * console in the graphical user interface.  This is to avoid overriding
+ * global namespace when running regina-python, or when opening a Python
+ * console in the graphical user interface, or even when typing
+ * <tt>from regina import *</tt>.  This is to avoid overriding
  * Python's own built-in open() function.  You can access Regina's open()
  * function by calling <tt>regina.open()</tt>.
  *
