@@ -34,7 +34,20 @@ def _descendants(self):
 
 Packet.descendants = _descendants
 
-# C'tor for Triangulation3 to take SnapPy Triangulation's and Manifold's
+def _subtree(self):
+    """
+    Iterate through the entire subtree rooted at this Packet, including
+    the packet itself.
+    """
+
+    yield self
+    for child in self.children():
+        for desc in child.subtree():
+            yield desc
+
+Packet.subtree = _subtree
+
+# C'tor for Triangulation3 to take a SnapPy Triangulation or Manifold
 
 _original_trig_ctor = Triangulation3.__init__
 
