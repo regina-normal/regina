@@ -211,10 +211,12 @@ namespace graph {
             InternalIterator end_;
                 /**< The end of the iterator range for all
                      (<i>dim</i>-1)-faces of the triangulation. */
+            DualEdge<dim> current_;
+                /**< The dual edge to which this iterator currently points. */
 
         public:
             /**
-             * Default constructor that performs no initialisation.
+             * Creates a singular iterator.
              */
             DualEdgeIterator() = default;
             /**
@@ -270,7 +272,7 @@ namespace graph {
              *
              * @return the dual edge to which this iterator points.
              */
-            DualEdge<dim> operator * () const;
+            const DualEdge<dim>& operator * () const;
 
             /**
              * Default assignment operator.
@@ -296,10 +298,16 @@ namespace graph {
 
         private:
             /**
-             * Ensures that the internal (<i>dim</i>-1)-face iterator does not
-             * point to a boundary facet of the underlying triangulation.
+             * Update the internal data structures to put the iterator
+             * in a valid state.
+             *
+             * Currently this (i) advances the internal (<i>dim</i>-1)-face
+             * iterator until it does not point to a boundary facet of the
+             * underlying triangulation; and (ii) updates the cached
+             * DualEdge<dim> that will be returned when the iterator is
+             * dereferenced.
              */
-            void skipBoundary();
+            void makeValid();
     };
 
     /**
@@ -337,10 +345,12 @@ namespace graph {
             unsigned facet_;
                 /**< The facet of \a simp_ through which the dual edge
                      that we are currently pointing to passes. */
+            DualEdge<dim> current_;
+                /**< The dual edge to which this iterator currently points. */
 
         public:
             /**
-             * Default constructor that performs no initialisation.
+             * Creates a singular iterator.
              */
             IncidentDualEdgeIterator();
             /**
@@ -397,7 +407,7 @@ namespace graph {
              *
              * @return the dual edge to which this iterator points.
              */
-            DualEdge<dim> operator * () const;
+            const DualEdge<dim>& operator * () const;
 
             /**
              * Default assignment operator.
@@ -424,10 +434,16 @@ namespace graph {
 
         private:
             /**
-             * Ensures that this iterator does not reference a boundary facet
-             * of the corresponding simplex in the underlying triangulation.
+             * Update the internal data structures to put the iterator
+             * in a valid state.
+             *
+             * Currently this (i) advances the internal facet number until
+             * it does not reference a boundary facet of the corresponding
+             * simplex in the underlying triangulation; and (ii) updates the
+             * cached DualEdge<dim> that will be returned when the iterator is
+             * dereferenced.
              */
-            void skipBoundary();
+            void makeValid();
     };
 
     /**
@@ -889,7 +905,7 @@ namespace std {
             InternalIterator::difference_type difference_type;
         typedef typename regina::graph::DualEdge<dim> value_type;
         typedef typename regina::graph::DualEdge<dim> const* pointer;
-        typedef typename regina::graph::DualEdge<dim> reference;
+        typedef typename regina::graph::DualEdge<dim> const& reference;
         typedef std::forward_iterator_tag iterator_category;
     };
 
@@ -909,7 +925,7 @@ namespace std {
         typedef int difference_type;
         typedef typename regina::graph::DualEdge<dim> value_type;
         typedef typename regina::graph::DualEdge<dim> const* pointer;
-        typedef typename regina::graph::DualEdge<dim> reference;
+        typedef typename regina::graph::DualEdge<dim> const& reference;
         typedef std::forward_iterator_tag iterator_category;
     };
 } // namespace std
@@ -1009,13 +1025,13 @@ namespace graph {
     inline DualEdgeIterator<dim>::DualEdgeIterator(
             const InternalIterator& it, const InternalIterator& end) :
             it_(it), end_(end) {
-        skipBoundary();
+        makeValid();
     }
 
     template <int dim>
     inline DualEdgeIterator<dim>& DualEdgeIterator<dim>::operator ++ () {
         ++it_;
-        skipBoundary();
+        makeValid();
         return *this;
     }
 
@@ -1025,8 +1041,8 @@ namespace graph {
     }
 
     template <int dim>
-    inline DualEdge<dim> DualEdgeIterator<dim>::operator * () const {
-        return DualEdge<dim>(*it_);
+    inline const DualEdge<dim>& DualEdgeIterator<dim>::operator * () const {
+        return current_;
     }
 
     template <int dim>
@@ -1042,30 +1058,31 @@ namespace graph {
     }
 
     template <int dim>
-    inline void DualEdgeIterator<dim>::skipBoundary() {
+    inline void DualEdgeIterator<dim>::makeValid() {
         while (it_ != end_ && (*it_)->isBoundary())
             ++it_;
+        current_.face = (it_ == end_ ? nullptr : *it_);
     }
 
     // Inline functions for IncidentDualEdgeIterator
 
     template <int dim, bool out>
     inline IncidentDualEdgeIterator<dim, out>::IncidentDualEdgeIterator() :
-            simp_(0) {
+            simp_(0), facet_(0) {
     }
 
     template <int dim, bool out>
     inline IncidentDualEdgeIterator<dim, out>::IncidentDualEdgeIterator(
             Simplex<dim>* simp, unsigned facet) :
             simp_(simp), facet_(facet) {
-        skipBoundary();
+        makeValid();
     }
 
     template <int dim, bool out>
     inline IncidentDualEdgeIterator<dim, out>&
             IncidentDualEdgeIterator<dim, out>::operator ++ () {
         ++facet_;
-        skipBoundary();
+        makeValid();
         return *this;
     }
 
@@ -1074,15 +1091,14 @@ namespace graph {
             IncidentDualEdgeIterator<dim, out>::operator ++ (int) {
         IncidentDualEdgeIterator prev(*this);
         ++facet_;
-        skipBoundary();
+        makeValid();
         return prev;
     }
 
     template <int dim, bool out>
-    inline DualEdge<dim> IncidentDualEdgeIterator<dim, out>::operator * ()
-            const {
-        Face<dim, dim-1>* f = simp_->template face<dim-1>(facet_);
-        return DualEdge<dim>(f, f->embedding(out ? 0 : 1).simplex() == simp_);
+    inline const DualEdge<dim>& IncidentDualEdgeIterator<dim, out>::
+            operator * () const {
+        return current_;
     }
 
     template <int dim, bool out>
@@ -1098,9 +1114,13 @@ namespace graph {
     }
 
     template <int dim, bool out>
-    inline void IncidentDualEdgeIterator<dim, out>::skipBoundary() {
+    inline void IncidentDualEdgeIterator<dim, out>::makeValid() {
         while (facet_ <= dim && ! simp_->adjacentSimplex(facet_))
             ++facet_;
+
+        current_.face = simp_->template face<dim-1>(facet_);
+        auto& emb = current_.face->embedding(out ? 0 : 1);
+        current_.forward = (emb.simplex() == simp_ && emb.face() == facet_);
     }
 
     // Inline functions for AdjacentDualVertexIterator
