@@ -848,7 +848,11 @@ class REGINA_API Packet :
          * \note This routine is non-const because \e dereferencing
          * a SubtreeIterator returns a non-const packet pointer.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present.  However, Regina does supply two
+         * Python generators for iterating over subtrees:
+         * <tt>Packet.subtree()</tt> which (just like these iterators)
+         * includes the root of the subtree itself, and
+         * <tt>Packet.descendants()</tt> which does not.
          *
          * @return an iterator at the beginning of this subtree.
          */
@@ -872,7 +876,11 @@ class REGINA_API Packet :
          * \note This routine is non-const because \e dereferencing
          * a SubtreeIterator returns a non-const packet pointer.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present.  However, Regina does supply two
+         * Python generators for iterating over subtrees:
+         * <tt>Packet.subtree()</tt> which (just like these iterators)
+         * includes the root of the subtree itself, and
+         * <tt>Packet.descendants()</tt> which does not.
          *
          * @return an iterator beyond the end of this subtree.
          */
@@ -898,7 +906,8 @@ class REGINA_API Packet :
          * See also begin() and end() for iterating through the entire
          * subtree rooted at this packet, not just the immediate children.
          *
-         * \ifacespython Not present.
+         * \ifacespython This function does not return an object of
+         * class PacketChildren; instead it acts as a Python generator.
          *
          * @return an object for iterating through the children of this packet.
          */

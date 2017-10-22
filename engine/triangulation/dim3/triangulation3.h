@@ -251,6 +251,34 @@ class REGINA_API Triangulation<3> :
          * triangulation.
          */
         Triangulation(const std::string& description);
+#ifdef __DOXYGEN
+        /**
+         * Python-only constructor that copies the given SnapPy manifold.
+         *
+         * \warning Only the tetrahedron gluings will be copied; all other
+         * SnapPy-specific information (such as peripheral curves) will
+         * be lost.  See fromSnapPea() for details, and for other
+         * alternatives that preserve SnapPy-specific data.
+         *
+         * \ifacescpp Not present.
+         *
+         * @param m a SnapPy object of type snappy.Manifold.
+         */
+        Triangulation(snappy.Manifold m);
+        /**
+         * Python-only constructor that copies the given SnapPy triangulation.
+         *
+         * \warning Only the tetrahedron gluings will be copied; all other
+         * SnapPy-specific information (such as peripheral curves) will
+         * be lost.  See fromSnapPea() for details, and for other
+         * alternatives that preserve SnapPy-specific data.
+         *
+         * \ifacescpp Not present.
+         *
+         * @param m a SnapPy object of type snappy.Triangulation.
+         */
+        Triangulation(snappy.Triangulation t);
+#endif
         /**
          * Destroys this triangulation.
          *
