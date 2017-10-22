@@ -30,38 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#import "LinkViewController.h"
-#import "link/link.h"
+#import <UIKit/UIKit.h>
+#import "PacketViewer.h"
 
-@implementation LinkViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self setSelectedImages:@[@"Tab-Crossings-Bold",
-                              [NSNull null] /* Polynomials */,
-                              [NSNull null] /* Codes */,
-                              @"Tab-Graph-Bold"]];
-    [self registerDefaultKey:@"ViewLinkTab"];
-}
-
-- (void)updateHeader:(UILabel *)header
-{
-    if (self.packet->isEmpty())
-        header.text = @"Empty";
-    else if (self.packet->countComponents() == 1) {
-        // Knot:
-        if (self.packet->size() == 1)
-            header.text = @"Knot with 1 crossing";
-        else
-            header.text = [NSString stringWithFormat:@"Knot with %zu crossings", self.packet->size()];
-    } else {
-        // Multiple component link:
-        if (self.packet->size() == 1)
-            header.text = [NSString stringWithFormat:@"Link with %zu components, 1 crossing", self.packet->countComponents()];
-        else
-            header.text = [NSString stringWithFormat:@"Link with %zu components, %zu crossings", self.packet->countComponents(), self.packet->size()];
-    }
-}
+@interface LinkCrossings : UIViewController <PacketViewer>
 
 @end
