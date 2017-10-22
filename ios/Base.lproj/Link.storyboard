@@ -348,7 +348,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pgq-76-LQH">
-                                <rect key="frame" x="0.0" y="61" width="704" height="588"/>
+                                <rect key="frame" x="0.0" y="109" width="704" height="539"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="9kv-86-ucN">
                                     <size key="itemSize" width="50" height="50"/>
@@ -485,6 +485,31 @@
                                             <outlet property="index" destination="Fmx-pe-e2n" id="se2-jN-ChS"/>
                                         </connections>
                                     </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="text" id="qTk-bQ-A6j" customClass="LinkCrossingCell">
+                                        <rect key="frame" x="263.5" y="40" width="50" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="40"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ht-0M-kwf">
+                                                    <rect key="frame" x="0.0" y="9.5" width="50" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="3ht-0M-kwf" secondAttribute="trailing" id="6sf-HL-kLD"/>
+                                            <constraint firstItem="3ht-0M-kwf" firstAttribute="leading" secondItem="qTk-bQ-A6j" secondAttribute="leading" id="Soz-3N-NPR"/>
+                                            <constraint firstItem="3ht-0M-kwf" firstAttribute="centerY" secondItem="qTk-bQ-A6j" secondAttribute="centerY" id="sS5-IZ-6dv"/>
+                                        </constraints>
+                                        <size key="customSize" width="50" height="40"/>
+                                        <connections>
+                                            <outlet property="index" destination="3ht-0M-kwf" id="txm-Fs-IQU"/>
+                                        </connections>
+                                    </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="component" id="27W-Gj-Gp9" customClass="LinkComponentHeader">
                                     <rect key="frame" x="0.0" y="0.0" width="704" height="40"/>
@@ -508,21 +533,33 @@
                                     </connections>
                                 </collectionReusableView>
                             </collectionView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="pt5-t0-Akg">
+                                <rect key="frame" x="287.5" y="61" width="129" height="29"/>
+                                <segments>
+                                    <segment title="Pictures"/>
+                                    <segment title="Text"/>
+                                </segments>
+                                <connections>
+                                    <action selector="styleChanged:" destination="GqR-9J-PWO" eventType="valueChanged" id="1Kg-J2-Fks"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="pgq-76-LQH" firstAttribute="top" secondItem="pt5-t0-Akg" secondAttribute="bottom" constant="20" id="2lj-QJ-SN6"/>
                             <constraint firstItem="pgq-76-LQH" firstAttribute="leading" secondItem="bSY-Mx-pyT" secondAttribute="leading" id="4vl-f7-l13"/>
                             <constraint firstAttribute="trailing" secondItem="SBk-co-0GS" secondAttribute="trailing" id="55B-5z-DUr"/>
                             <constraint firstItem="qOC-5w-dik" firstAttribute="centerY" secondItem="SBk-co-0GS" secondAttribute="centerY" id="5di-tG-OvQ"/>
                             <constraint firstItem="uf0-7h-qNm" firstAttribute="leading" secondItem="0yE-Uq-53y" secondAttribute="leading" constant="20" id="786-9R-knY"/>
                             <constraint firstItem="fpL-eF-k7p" firstAttribute="leading" secondItem="bSY-Mx-pyT" secondAttribute="trailing" id="DUQ-Hk-o1v"/>
+                            <constraint firstItem="pt5-t0-Akg" firstAttribute="top" secondItem="uf0-7h-qNm" secondAttribute="bottom" constant="20" id="F3r-Z3-5XQ"/>
                             <constraint firstItem="qOC-5w-dik" firstAttribute="centerY" secondItem="QmH-4w-eVM" secondAttribute="centerY" id="Hwx-tf-3Iy"/>
                             <constraint firstItem="SBk-co-0GS" firstAttribute="leading" secondItem="uLP-PG-s3q" secondAttribute="trailing" id="JHP-my-FsW"/>
+                            <constraint firstItem="pt5-t0-Akg" firstAttribute="centerX" secondItem="0yE-Uq-53y" secondAttribute="centerX" id="JkN-Mc-tg8"/>
                             <constraint firstItem="5Zq-2Q-lHj" firstAttribute="leading" secondItem="31b-Uh-LaT" secondAttribute="trailing" id="Kna-sW-5wS"/>
                             <constraint firstItem="bSY-Mx-pyT" firstAttribute="centerY" secondItem="fpL-eF-k7p" secondAttribute="centerY" id="Lqv-QP-Gn4"/>
                             <constraint firstItem="31b-Uh-LaT" firstAttribute="leading" secondItem="hNg-3F-G4b" secondAttribute="trailing" id="MrI-sB-o9r"/>
                             <constraint firstItem="fpL-eF-k7p" firstAttribute="centerY" secondItem="hNg-3F-G4b" secondAttribute="centerY" id="NVd-kz-ixQ"/>
-                            <constraint firstItem="pgq-76-LQH" firstAttribute="top" secondItem="uf0-7h-qNm" secondAttribute="bottom" constant="20" id="SOF-20-KUc"/>
                             <constraint firstItem="5Zq-2Q-lHj" firstAttribute="centerY" secondItem="31b-Uh-LaT" secondAttribute="centerY" id="Svd-93-hKI"/>
                             <constraint firstItem="bSY-Mx-pyT" firstAttribute="leading" secondItem="0yE-Uq-53y" secondAttribute="leading" id="YUC-Qc-zeI"/>
                             <constraint firstItem="qOC-5w-dik" firstAttribute="leading" secondItem="5Zq-2Q-lHj" secondAttribute="trailing" constant="8" id="ZBF-3y-N6H"/>
@@ -539,13 +576,14 @@
                             <constraint firstItem="qOC-5w-dik" firstAttribute="centerY" secondItem="hNg-3F-G4b" secondAttribute="centerY" id="u1n-hk-uKn"/>
                             <constraint firstItem="5Zq-2Q-lHj" firstAttribute="centerY" secondItem="qOC-5w-dik" secondAttribute="centerY" id="uqv-qA-e0p"/>
                             <constraint firstItem="hNg-3F-G4b" firstAttribute="leading" secondItem="fpL-eF-k7p" secondAttribute="trailing" constant="8" id="wHy-tf-cbc"/>
-                            <constraint firstItem="fpL-eF-k7p" firstAttribute="top" secondItem="pgq-76-LQH" secondAttribute="bottom" constant="19" id="wvt-vv-7ve"/>
+                            <constraint firstItem="fpL-eF-k7p" firstAttribute="top" secondItem="pgq-76-LQH" secondAttribute="bottom" constant="20" id="wvt-vv-7ve"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Crossings" image="Tab-Crossings" id="NQx-Ac-2wO"/>
                     <connections>
                         <outlet property="crossings" destination="pgq-76-LQH" id="bd0-nn-BqR"/>
                         <outlet property="header" destination="uf0-7h-qNm" id="fFU-jU-1Rt"/>
+                        <outlet property="style" destination="pt5-t0-Akg" id="GoB-zq-4Yc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KQa-XT-sP9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1127,7 +1165,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2za-Sx-Q4h">
-                                <rect key="frame" x="244" y="60" width="217" height="29"/>
+                                <rect key="frame" x="244" y="61" width="217" height="29"/>
                                 <segments>
                                     <segment title="Oriented Gauss"/>
                                     <segment title="Jenkins"/>
@@ -1137,7 +1175,7 @@
                                 </connections>
                             </segmentedControl>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="uY0-Qt-h72">
-                                <rect key="frame" x="20" y="128" width="663.5" height="591"/>
+                                <rect key="frame" x="20" y="129" width="663.5" height="590"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1153,7 +1191,7 @@
                             <constraint firstAttribute="trailing" secondItem="lFj-ce-V3S" secondAttribute="trailing" constant="20" id="nF1-ZC-hDF"/>
                             <constraint firstItem="uY0-Qt-h72" firstAttribute="top" secondItem="2za-Sx-Q4h" secondAttribute="bottom" constant="40" id="pGP-rw-oWh"/>
                             <constraint firstItem="uY0-Qt-h72" firstAttribute="leading" secondItem="SaN-75-uJe" secondAttribute="leading" constant="20" id="sTw-TE-OU4"/>
-                            <constraint firstItem="2za-Sx-Q4h" firstAttribute="top" secondItem="lFj-ce-V3S" secondAttribute="bottom" constant="19" id="zfh-Ru-ViL"/>
+                            <constraint firstItem="2za-Sx-Q4h" firstAttribute="top" secondItem="lFj-ce-V3S" secondAttribute="bottom" constant="20" id="zfh-Ru-ViL"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Codes" image="Tab-Codes" id="uLz-cK-dFh"/>

@@ -34,6 +34,18 @@
 #import "LinkCrossings.h"
 #import "link/link.h"
 
+#define KEY_LINK_CROSSINGS_STYLE @"LinkCrossingsStyle"
+
+static UIColor* negColour = [UIColor colorWithRed:(0xB8 / 256.0)
+                                            green:(0x86 / 256.0)
+                                             blue:(0x0B / 256.0)
+                                            alpha:1.0]; // Dark goldenrod
+
+static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
+                                            green:(0x54 / 256.0)
+                                             blue:(0x7E / 256.0)
+                                            alpha:1.0]; // Blue jay
+
 #pragma mark - Crossing cell
 
 @interface LinkCrossingCell : UICollectionViewCell
@@ -63,6 +75,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *header;
 
+@property (weak, nonatomic) IBOutlet UISegmentedControl *style;
 @property (weak, nonatomic) IBOutlet UICollectionView *crossings;
 
 @property (assign, nonatomic) regina::Link* packet;
@@ -72,6 +85,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.style.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LINK_CROSSINGS_STYLE];
 
     self.packet = static_cast<regina::Link*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
     
@@ -117,7 +131,13 @@
     else
         refLabel = @"00000";
     
-    sizeLabel = [refLabel sizeWithAttributes:@{NSFontAttributeName: self.header.font}];
+    if (self.style.selectedSegmentIndex == 0) {
+        // Pictorial display
+        sizeLabel = [refLabel sizeWithAttributes:@{NSFontAttributeName: self.header.font}];
+    } else {
+        // Text display
+        sizeLabel = [[NSString stringWithFormat:@"%@₊", refLabel] sizeWithAttributes:@{NSFontAttributeName: self.header.font}];
+    }
     sizeHeader = [refLabel sizeWithAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:self.header.font.pointSize]}];
     
     [self.crossings reloadData];
@@ -135,6 +155,11 @@
     // TODO
 }
 
+- (IBAction)styleChanged:(id)sender {
+    [[NSUserDefaults standardUserDefaults] setInteger:self.style.selectedSegmentIndex forKey:KEY_LINK_CROSSINGS_STYLE];
+    [self reloadPacket];
+}
+
 #pragma mark - Collection view
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -146,26 +171,47 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    // TODO: Offer two options via a segmented control: diagrams vs 0^+ 0_+ attributed text.
     regina::StrandRef s;
     [(NSValue*)components[indexPath.section][indexPath.row] getValue:&s];
     
-    NSString* cellId;
-    if (s.crossing()->sign() > 0) {
-        if (s.strand() == 0)
-            cellId = @"+l";
-        else
-            cellId = @"+u";
+    if (self.style.selectedSegmentIndex == 0) {
+        // Pictorial display.
+        NSString* cellId;
+        if (s.crossing()->sign() > 0) {
+            if (s.strand() == 0)
+                cellId = @"+l";
+            else
+                cellId = @"+u";
+        } else {
+            if (s.strand() == 0)
+                cellId = @"-l";
+            else
+                cellId = @"-u";
+        }
+        
+        LinkCrossingCell* cell = (LinkCrossingCell*)[collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
+        cell.index.text = [NSString stringWithFormat:@"%d", s.crossing()->index()];
+        return cell;
     } else {
-        if (s.strand() == 0)
-            cellId = @"-l";
-        else
-            cellId = @"-u";
+        // Text-based display.
+        LinkCrossingCell* cell = (LinkCrossingCell*)[collectionView dequeueReusableCellWithReuseIdentifier:@"text" forIndexPath:indexPath];
+        
+        if (s.crossing()->sign() > 0) {
+            if (s.strand() == 0)
+                cell.index.text = [NSString stringWithFormat:@"%d₊", s.crossing()->index()];
+            else
+                cell.index.text = [NSString stringWithFormat:@"%d⁺", s.crossing()->index()];
+            cell.index.textColor = posColour;
+        } else {
+            if (s.strand() == 0)
+                cell.index.text = [NSString stringWithFormat:@"%d₋", s.crossing()->index()];
+            else
+                cell.index.text = [NSString stringWithFormat:@"%d⁻", s.crossing()->index()];
+            cell.index.textColor = negColour;
+        }
+        
+        return cell;
     }
-    
-    LinkCrossingCell* cell = (LinkCrossingCell*)[collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
-    cell.index.text = [NSString stringWithFormat:@"%d", s.crossing()->index()];
-    return cell;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
@@ -175,15 +221,24 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    // Labels are positioned 10 points from the left edge of the cell, though
-    // the UILabel itself will add a bit more padding.
-    // The crossing image in the cell is 22x22, and we need to clear a bit more than
-    // halfway in both directions.
-    // We give a minimum width of 40 because, if the original width is smaller,
-    // it means there are very few crossings and we do not exactly need to cram
-    // things in.
-    return CGSizeMake(fmax(ceil(sizeLabel.width) + 18, 40),
-                      ceil(sizeLabel.height) + 18);
+    if (self.style.selectedSegmentIndex == 0) {
+        // Pictorial display
+
+        // Labels are positioned 10 points from the left edge of the cell, though
+        // the UILabel itself will add a bit more padding.
+        // The crossing image in the cell is 22x22, and we need to clear a bit more than
+        // halfway in both directions.
+        // We give a minimum width of 40 because, if the original width is smaller,
+        // it means there are very few crossings and we do not exactly need to cram
+        // things in.
+        return CGSizeMake(fmax(ceil(sizeLabel.width) + 18, 40),
+                          ceil(sizeLabel.height) + 18);
+    } else {
+        // Text display
+        // Labels are vertically centred, horizontally push to the very left of the cell.
+        return CGSizeMake(ceil(sizeLabel.width) + 10,
+                          ceil(sizeLabel.height) + 10);
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
