@@ -175,7 +175,6 @@ namespace graph {
     /**
      * Used to iterate through all dual edges of a
      * <i>dim</i>-dimensional triangulation.
-     * This class implements the Boost multipass input iterator concept.
      *
      * Each dual edge is dual to some (<i>dim</i>-1)-face of the
      * underlying triangulation, and the order of iteration will follow
@@ -193,6 +192,10 @@ namespace graph {
      * if it is obtained by some other means (e.g., by dereferencing an
      * IncidentDualEdgeIterator).
      *
+     * This class implements the Boost multipass input iterator concept,
+     * which is similar to the standard C++ forward iterator except that
+     * the \a reference type may be the same as \a value_type (and so,
+     * in particular, the dereference operator may return by value).
      * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam dim the dimension of the underlying triangulation.
@@ -211,8 +214,6 @@ namespace graph {
             InternalIterator end_;
                 /**< The end of the iterator range for all
                      (<i>dim</i>-1)-faces of the triangulation. */
-            DualEdge<dim> current_;
-                /**< The dual edge to which this iterator currently points. */
 
         public:
             /**
@@ -272,7 +273,7 @@ namespace graph {
              *
              * @return the dual edge to which this iterator points.
              */
-            const DualEdge<dim>& operator * () const;
+            DualEdge<dim> operator * () const;
 
             /**
              * Default assignment operator.
@@ -301,11 +302,9 @@ namespace graph {
              * Update the internal data structures to put the iterator
              * in a valid state.
              *
-             * Currently this (i) advances the internal (<i>dim</i>-1)-face
+             * Currently this just advances the internal (<i>dim</i>-1)-face
              * iterator until it does not point to a boundary facet of the
-             * underlying triangulation; and (ii) updates the cached
-             * DualEdge<dim> that will be returned when the iterator is
-             * dereferenced.
+             * underlying triangulation.
              */
             void makeValid();
     };
@@ -313,7 +312,6 @@ namespace graph {
     /**
      * Used to iterate through all dual edges incident to a given
      * dual vertex of a <i>dim</i>-dimensional triangulation.
-     * This class implements the Boost multipass input iterator concept.
      *
      * Let \a v denote this vertex; note that \a v corresponds to a
      * top-dimensional simplex of the triangulation.
@@ -330,6 +328,10 @@ namespace graph {
      * the dual vertex \a v (so \a v is the source), and if \a out is \c false
      * then they will be oriented towards \a v (so \a v is the target).
      *
+     * This class implements the Boost multipass input iterator concept,
+     * which is similar to the standard C++ forward iterator except that
+     * the \a reference type may be the same as \a value_type (and so,
+     * in particular, the dereference operator may return by value).
      * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam dim the dimension of the underlying triangulation.
@@ -345,8 +347,6 @@ namespace graph {
             unsigned facet_;
                 /**< The facet of \a simp_ through which the dual edge
                      that we are currently pointing to passes. */
-            DualEdge<dim> current_;
-                /**< The dual edge to which this iterator currently points. */
 
         public:
             /**
@@ -407,7 +407,7 @@ namespace graph {
              *
              * @return the dual edge to which this iterator points.
              */
-            const DualEdge<dim>& operator * () const;
+            DualEdge<dim> operator * () const;
 
             /**
              * Default assignment operator.
@@ -437,11 +437,9 @@ namespace graph {
              * Update the internal data structures to put the iterator
              * in a valid state.
              *
-             * Currently this (i) advances the internal facet number until
+             * Currently this just advances the internal facet number until
              * it does not reference a boundary facet of the corresponding
-             * simplex in the underlying triangulation; and (ii) updates the
-             * cached DualEdge<dim> that will be returned when the iterator is
-             * dereferenced.
+             * simplex in the underlying triangulation.
              */
             void makeValid();
     };
@@ -449,7 +447,6 @@ namespace graph {
     /**
      * Used to iterate through the dual vertices adjacent to a given
      * dual vertex of a <i>dim</i>-dimensional triangulation.
-     * This class implements the Boost multipass input iterator concept.
      *
      * Let \a v denote the given dual vertex; note that \a v corresponds to a
      * top-dimensional simplex of the triangulation.
@@ -459,6 +456,10 @@ namespace graph {
      * (<i>dim</i>+1), since an iterator will skip past those facets of the
      * simplex that lie on the boundary of the triangulation.
      *
+     * This class implements the Boost multipass input iterator concept,
+     * which is similar to the standard C++ forward iterator except that
+     * the \a reference type may be the same as \a value_type (and so,
+     * in particular, the dereference operator may return by value).
      * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam dim the dimension of the underlying triangulation.
@@ -905,8 +906,8 @@ namespace std {
             InternalIterator::difference_type difference_type;
         typedef typename regina::graph::DualEdge<dim> value_type;
         typedef typename regina::graph::DualEdge<dim> const* pointer;
-        typedef typename regina::graph::DualEdge<dim> const& reference;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef typename regina::graph::DualEdge<dim> reference;
+        typedef std::input_iterator_tag iterator_category;
     };
 
     template <int dim>
@@ -915,8 +916,8 @@ namespace std {
         typedef int difference_type;
         typedef regina::Simplex<dim>* value_type;
         typedef regina::Simplex<dim>* const* pointer;
-        typedef regina::Simplex<dim>* const& reference;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef regina::Simplex<dim>* reference;
+        typedef std::input_iterator_tag iterator_category;
     };
 
     template <int dim, bool out>
@@ -925,8 +926,8 @@ namespace std {
         typedef int difference_type;
         typedef typename regina::graph::DualEdge<dim> value_type;
         typedef typename regina::graph::DualEdge<dim> const* pointer;
-        typedef typename regina::graph::DualEdge<dim> const& reference;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef typename regina::graph::DualEdge<dim> reference;
+        typedef std::input_iterator_tag iterator_category;
     };
 } // namespace std
 
@@ -1041,8 +1042,8 @@ namespace graph {
     }
 
     template <int dim>
-    inline const DualEdge<dim>& DualEdgeIterator<dim>::operator * () const {
-        return current_;
+    inline DualEdge<dim> DualEdgeIterator<dim>::operator * () const {
+        return DualEdge<dim>(*it_);
     }
 
     template <int dim>
@@ -1061,9 +1062,6 @@ namespace graph {
     inline void DualEdgeIterator<dim>::makeValid() {
         while (it_ != end_ && (*it_)->isBoundary())
             ++it_;
-
-        if (it_ != end_)
-            current_.face = *it_;
     }
 
     // Inline functions for IncidentDualEdgeIterator
@@ -1098,9 +1096,11 @@ namespace graph {
     }
 
     template <int dim, bool out>
-    inline const DualEdge<dim>& IncidentDualEdgeIterator<dim, out>::
-            operator * () const {
-        return current_;
+    inline DualEdge<dim> IncidentDualEdgeIterator<dim, out>::operator * ()
+            const {
+        Face<dim, dim-1>* f = simp_->template face<dim-1>(facet_);
+        auto& emb = f->embedding(out ? 0 : 1);
+        return DualEdge<dim>(f, emb.simplex() == simp_ && emb.face() == facet_);
     }
 
     template <int dim, bool out>
@@ -1119,12 +1119,6 @@ namespace graph {
     inline void IncidentDualEdgeIterator<dim, out>::makeValid() {
         while (facet_ <= dim && ! simp_->adjacentSimplex(facet_))
             ++facet_;
-
-        if (facet_ <= dim) {
-            current_.face = simp_->template face<dim-1>(facet_);
-            auto& emb = current_.face->embedding(out ? 0 : 1);
-            current_.forward = (emb.simplex() == simp_ && emb.face() == facet_);
-        }
     }
 
     // Inline functions for AdjacentDualVertexIterator
