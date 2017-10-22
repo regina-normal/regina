@@ -9,11 +9,11 @@ try:
 except:
     _within_sage = False
 
-# Additional method for Packet
+# Additional methods for Packet
 
 def _children(self):
     """
-    Iterate through all children of this NPacket.
+    Iterate through all immediate children of this Packet.
     """
     child = self.firstChild()
     while child:
@@ -22,10 +22,9 @@ def _children(self):
 
 Packet.children = _children
 
-
 def _descendants(self):
     """
-    Iterate through all descendants of this NPacket.
+    Iterate through all descendants of this Packet, excluding the packet itself.
     """
 
     for child in self.children():
