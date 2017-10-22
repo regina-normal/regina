@@ -1061,7 +1061,9 @@ namespace graph {
     inline void DualEdgeIterator<dim>::makeValid() {
         while (it_ != end_ && (*it_)->isBoundary())
             ++it_;
-        current_.face = (it_ == end_ ? nullptr : *it_);
+
+        if (it_ != end_)
+            current_.face = *it_;
     }
 
     // Inline functions for IncidentDualEdgeIterator
@@ -1118,9 +1120,11 @@ namespace graph {
         while (facet_ <= dim && ! simp_->adjacentSimplex(facet_))
             ++facet_;
 
-        current_.face = simp_->template face<dim-1>(facet_);
-        auto& emb = current_.face->embedding(out ? 0 : 1);
-        current_.forward = (emb.simplex() == simp_ && emb.face() == facet_);
+        if (facet_ <= dim) {
+            current_.face = simp_->template face<dim-1>(facet_);
+            auto& emb = current_.face->embedding(out ? 0 : 1);
+            current_.forward = (emb.simplex() == simp_ && emb.face() == facet_);
+        }
     }
 
     // Inline functions for AdjacentDualVertexIterator
