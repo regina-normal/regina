@@ -144,7 +144,12 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  *
  * Each such appearance is described by a single FaceEmbedding object.  You can
  * iterate through these appearances using begin() and end(), or using a
- * C++11 range-based \c for loop: <tt>for (auto& emb : F) { ... }</tt>.
+ * C++11 range-based \c for loop:
+ *
+ * \code{.cpp}
+ * for (auto& emb : face) { ... }
+ * \endcode
+ *
  * You can count these appearances by calling degree(), and you can also
  * examine them using routines such as front(), back() and embedding().
  *
