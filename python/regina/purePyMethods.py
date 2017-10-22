@@ -1,3 +1,6 @@
+# Thanks to Matthias Goerner for writing these helper functions to make
+# the Python experience more pleasant in Regina.
+
 from .engine import Packet, Triangulation3, GroupPresentation
 
 try:
