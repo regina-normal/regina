@@ -29,6 +29,14 @@ Version 5.2  [ 29 September, 2017 ]
               where this can happen.
         Class NSVectorQuadClosed:
             - New normal surface coordinate class to implement NS_QUAD_CLOSED.
+        Class Packet, PacketChildren, ChildIterator, SubtreeIterator:
+            - Supports iterating through packets using range-based for loops:
+                + Packet has new routines begin() and end() for iterating
+                  through the entire subtree rooted at a given packet.
+                + Packet has a new routine children() for iterating through
+                  immediate children of a given packet.
+                + New lightweight classes PacketChildren, ChildIterator and
+                  SubtreeIterator to support this functionality.
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the

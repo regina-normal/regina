@@ -173,14 +173,13 @@ int main(int argc, char* argv[]) {
     }
 
     if (dumpOpt != 'n') {
-        Packet* p;
         if (packets.empty())
-            for (p = tree; p; p = p->nextTreePacket())
+            for (Packet* p : *tree)
                 dumpPacket(out, p, dumpOpt);
         else
             for (StringList::const_iterator it = packets.begin();
                     it != packets.end(); it++) {
-                p = tree->findPacketLabel(*it);
+                Packet* p = tree->findPacketLabel(*it);
                 if (p)
                     dumpPacket(out, p, dumpOpt);
                 else
