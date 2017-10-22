@@ -56,6 +56,9 @@
 
 @interface LinkCrossings () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> {
     NSMutableArray* components;
+    NSString* refLabel;
+    CGSize sizeLabel;
+    CGSize sizeHeader;
 }
 
 @property (weak, nonatomic) IBOutlet UILabel *header;
@@ -74,7 +77,7 @@
     
     self.crossings.delegate = self;
     self.crossings.dataSource = self;
-
+    
     components = [[NSMutableArray alloc] initWithCapacity:self.packet->countComponents()];
     [self reloadPacket];
 }
@@ -96,6 +99,26 @@
         } while (s != start);
         [components addObject:comp];
     }
+    
+    if (self.packet->size() < 10)
+        refLabel = @"0";
+    else if (self.packet->size() < 20)
+        refLabel = @"10";
+    else if (self.packet->size() < 100)
+        refLabel = @"00";
+    else if (self.packet->size() < 200)
+        refLabel = @"100";
+    else if (self.packet->size() < 1000)
+        refLabel = @"000";
+    else if (self.packet->size() < 2000)
+        refLabel = @"1000";
+    else if (self.packet->size() < 10000)
+        refLabel = @"0000";
+    else
+        refLabel = @"00000";
+    
+    sizeLabel = [refLabel sizeWithAttributes:@{NSFontAttributeName: self.header.font}];
+    sizeHeader = [refLabel sizeWithAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:self.header.font.pointSize]}];
     
     [self.crossings reloadData];
 }
@@ -152,12 +175,19 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    // TODO: Make the width 10 + epsilon + width(00...0)
-    return CGSizeMake(50, 40);
+    // Labels are positioned 10 points from the left edge of the cell, though
+    // the UILabel itself will add a bit more padding.
+    // The crossing image in the cell is 22x22, and we need to clear a bit more than
+    // halfway in both directions.
+    // We give a minimum width of 40 because, if the original width is smaller,
+    // it means there are very few crossings and we do not exactly need to cram
+    // things in.
+    return CGSizeMake(fmax(ceil(sizeLabel.width) + 18, 40),
+                      ceil(sizeLabel.height) + 18);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    return CGSizeMake(0, 40);
+    return CGSizeMake(0, ceil(sizeHeader.height) + 30);
 }
 
 @end
