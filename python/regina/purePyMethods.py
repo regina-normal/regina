@@ -20,17 +20,17 @@ def _children(self):
 Packet.children = _children
 
 
-def _descendents(self):
+def _descendants(self):
     """
-    Iterate through all descendents of this NPacket.
+    Iterate through all descendants of this NPacket.
     """
 
     for child in self.children():
         yield child
-        for desc in child.descendents():
+        for desc in child.descendants():
             yield desc
 
-Packet.descendents = _descendents
+Packet.descendants = _descendants
 
 # C'tor for Triangulation3 to take SnapPy Triangulation's and Manifold's
 
