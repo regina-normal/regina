@@ -72,14 +72,15 @@ class ReginaProgress : public CppUnit::TextTestProgressListener {
 /**
  * Runs the entire test suite, outputting progress and results.
  */
-bool runAllTests() {
+bool runAllTests(int argc, char* argv[]) {
     std::cout << "Regina calculation engine test suite\n\n" << std::flush;
     checkTestParams();
 
     CppUnit::TextTestRunner runner;
     ReginaProgress progress;
 
-    populateTests(runner);
+    if (! populateTests(runner, argc, argv))
+        return false;
 
     runner.eventManager().addListener(&progress);
     return runner.run("", false, true, false);
@@ -90,7 +91,7 @@ bool runAllTests() {
  */
 #ifndef __NO_TESTSUITE_MAIN
 int main(int argc, char* argv[]) {
-    return (runAllTests() ? 0 : 1);
+    return (runAllTests(argc, argv) ? 0 : 1);
 }
 #endif
 

@@ -69,6 +69,9 @@ Version 5.2  [ 29 September, 2017 ]
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.
+    TEST SUITE:
+        - The test suite executable now takes optional arguments that,
+          if present, indicate a subset of tests to perform.
 
 Version 5.1  [ 19 December, 2016 ]
 
