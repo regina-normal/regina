@@ -48,6 +48,13 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
                                              blue:(0x7E / 256.0)
                                             alpha:1.0]; // Blue jay
 
+static UIColor* unknotColour = [UIColor colorWithRed:0.5
+                                               green:0.5
+                                                blue:0.5
+                                               alpha:1.0];
+
+static NSString* unknotText = @"Unknot, no crossings";
+
 #pragma mark - Crossing cell
 
 @interface LinkCrossingCell : UICollectionViewCell
@@ -247,10 +254,21 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return ((NSArray*)components[section]).count;
+    if (self.packet->component(section).crossing())
+        return ((NSArray*)components[section]).count;
+    else
+        return 1; // zero-crossing component
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (! self.packet->component(indexPath.section).crossing()) {
+        // This is a zero-crossing component.
+        LinkCrossingCell* cell = (LinkCrossingCell*)[collectionView dequeueReusableCellWithReuseIdentifier:@"text" forIndexPath:indexPath];
+        cell.index.text = unknotText;
+        cell.index.textColor = unknotColour;
+        return cell;
+    }
+
     regina::StrandRef s;
     [(NSValue*)components[indexPath.section][indexPath.row] getValue:&s];
     
@@ -296,14 +314,18 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     LinkComponentHeader* header = (LinkComponentHeader*)[collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"component" forIndexPath:indexPath];
-    if (self.packet->component(indexPath.section).crossing())
-        header.label.text = [NSString stringWithFormat:@"Component %ld", (long)indexPath.section];
-    else
-        header.label.text = [NSString stringWithFormat:@"Component %ld  –  no crossings", (long)indexPath.section];
+    header.label.text = [NSString stringWithFormat:@"Component %ld", (long)indexPath.section];
     return header;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (! self.packet->component(indexPath.section).crossing()) {
+        // This is a zero-crossing component.
+        CGSize text = [unknotText sizeWithAttributes:@{NSFontAttributeName: self.header.font}];
+        return CGSizeMake(ceil(text.width + 10),
+                          ceil(text.height) + 10);
+    }
+    
     if (self.style.selectedSegmentIndex == 0) {
         // Pictorial display
 
