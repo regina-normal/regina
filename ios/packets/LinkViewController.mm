@@ -47,20 +47,47 @@
 
 - (void)updateHeader:(UILabel *)header
 {
+    NSString* signs = nil;
+    if (self.packet->size() > 1) {
+        size_t plus = 0, minus = 0;
+        for (size_t i = 0; i < self.packet->size(); ++i)
+            if (self.packet->crossing(i)->sign() > 0)
+                ++plus;
+            else
+                ++minus;
+        
+        if (minus == 0)
+            signs = @"all +";
+        else if (plus == 0)
+            signs = @"all −";
+        else
+            signs = [NSString stringWithFormat:@"%zu +ve, %zu −ve", plus, minus];
+    }
+    
     if (self.packet->isEmpty())
         header.text = @"Empty";
     else if (self.packet->countComponents() == 1) {
         // Knot:
-        if (self.packet->size() == 1)
-            header.text = @"Knot with 1 crossing";
-        else
-            header.text = [NSString stringWithFormat:@"Knot with %zu crossings", self.packet->size()];
+        if (self.packet->size() == 0) {
+            header.text = @"Unknot with no crossings";
+        } else if (self.packet->size() == 1) {
+            if (self.packet->crossing(0)->sign() > 0)
+                header.text = @"Knot with 1 crossing (+ve)";
+            else
+                header.text = @"Knot with 1 crossing (−ve)";
+        } else
+            header.text = [NSString stringWithFormat:@"Knot with %zu crossings (%@)", self.packet->size(), signs];
     } else {
         // Multiple component link:
-        if (self.packet->size() == 1)
-            header.text = [NSString stringWithFormat:@"Link with %zu components, 1 crossing", self.packet->countComponents()];
-        else
-            header.text = [NSString stringWithFormat:@"Link with %zu components, %zu crossings", self.packet->countComponents(), self.packet->size()];
+        if (self.packet->size() == 0) {
+            header.text = [NSString stringWithFormat:@"Unlink with %zu components, no crossings", self.packet->countComponents()];
+        } else if (self.packet->size() == 1) {
+            if (self.packet->crossing(0)->sign() > 0)
+                header.text = [NSString stringWithFormat:@"Link with %zu components, 1 crossing (+ve)", self.packet->countComponents()];
+            else
+                header.text = [NSString stringWithFormat:@"Link with %zu components, 1 crossing (−ve)", self.packet->countComponents()];
+        } else
+            header.text = [NSString stringWithFormat:@"Link with %zu components, %zu crossings (%@)", self.packet->countComponents(), self.packet->size(), signs];
     }
 }
 
