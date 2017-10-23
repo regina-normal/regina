@@ -225,7 +225,6 @@ static NSString* unknotText = @"Unknot, no crossings";
     [(NSValue*)components[indexPath.section][indexPath.row] getValue:&s];
 
     if (state == UIGestureRecognizerStateBegan) {
-        // TODO: Change crossing.
         LinkCrossingCell *cell = static_cast<LinkCrossingCell*>([self.crossings cellForItemAtIndexPath:indexPath]);
         
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
