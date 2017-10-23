@@ -166,7 +166,6 @@ static NSString* unknotText = @"Unknot, no crossings";
 }
 
 - (IBAction)simplify:(id)sender {
-    // TODO: icon
     if (! self.packet->intelligentSimplify()) {
         // Greedy simplification failed.
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Simplify"
