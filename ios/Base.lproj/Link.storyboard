@@ -285,7 +285,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fpL-eF-k7p">
                                 <rect key="frame" x="108.5" y="668" width="32" height="32"/>
-                                <state key="normal" image="Action-Orient">
+                                <state key="normal" image="Action-SimplifyLink">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -1208,7 +1208,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Action-Orient" width="32" height="32"/>
+        <image name="Action-SimplifyLink" width="32" height="32"/>
         <image name="Crossing+L" width="22" height="22"/>
         <image name="Crossing+U" width="22" height="22"/>
         <image name="Crossing-L" width="22" height="22"/>
