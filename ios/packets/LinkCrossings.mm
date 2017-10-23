@@ -109,11 +109,13 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
     for (size_t i = 0; i < self.packet->countComponents(); ++i) {
         NSMutableArray* comp = [[NSMutableArray alloc] init];
         regina::StrandRef start = self.packet->component(i);
-        regina::StrandRef s = start;
-        do {
-            [comp addObject:[NSValue valueWithBytes:&s objCType:@encode(regina::StrandRef)]];
-            ++s;
-        } while (s != start);
+        if (start.crossing()) {
+            regina::StrandRef s = start;
+            do {
+                [comp addObject:[NSValue valueWithBytes:&s objCType:@encode(regina::StrandRef)]];
+                ++s;
+            } while (s != start);
+        }
         [components addObject:comp];
     }
     
@@ -288,7 +290,10 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     LinkComponentHeader* header = (LinkComponentHeader*)[collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"component" forIndexPath:indexPath];
-    header.label.text = [NSString stringWithFormat:@"Component %ld", (long)indexPath.section];
+    if (self.packet->component(indexPath.section).crossing())
+        header.label.text = [NSString stringWithFormat:@"Component %ld", (long)indexPath.section];
+    else
+        header.label.text = [NSString stringWithFormat:@"Component %ld  –  no crossings", (long)indexPath.section];
     return header;
 }
 
