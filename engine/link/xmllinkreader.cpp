@@ -129,6 +129,11 @@ void XMLLinkComponentsReader::initialChars(const std::string& chars) {
             link_ = 0;
             return;
         }
+        
+        if (s == "(null)") {
+            link_->components_.push_back(StrandRef(nullptr, 0));
+            continue;
+        }
 
         if (s[0] == '^')
             strand = 1;
