@@ -11,6 +11,10 @@ my @actionIcons = qw/
     cone
     connectedsum
     connectedsumwith
+    crossing+l
+    crossing-l
+    crossing+u
+    crossing-u
     csvexport
     dehydrated
     doublecover
@@ -106,6 +110,7 @@ sub process {
     }
 
     foreach (@$sizes) {
+        $icon =~ /^crossing[+-][lu]$/ and $_ == 32 and next;
         render($src, $_, "$icon-$_.png");
         render($src, 2 * $_, "$icon-$_\@2x.png");
     }
