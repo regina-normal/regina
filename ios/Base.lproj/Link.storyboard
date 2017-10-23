@@ -581,6 +581,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Crossings" image="Tab-Crossings" id="NQx-Ac-2wO"/>
                     <connections>
+                        <outlet property="actionsButton" destination="uLP-PG-s3q" id="jRP-do-QM6"/>
                         <outlet property="crossings" destination="pgq-76-LQH" id="bd0-nn-BqR"/>
                         <outlet property="header" destination="uf0-7h-qNm" id="fFU-jU-1Rt"/>
                         <outlet property="style" destination="pt5-t0-Akg" id="GoB-zq-4Yc"/>

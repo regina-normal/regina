@@ -66,7 +66,7 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
 
 #pragma mark - Link crossings
 
-@interface LinkCrossings () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> {
+@interface LinkCrossings () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIActionSheetDelegate> {
     NSMutableArray* components;
     NSString* refLabel;
     CGSize sizeLabel;
@@ -77,6 +77,7 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *style;
 @property (weak, nonatomic) IBOutlet UICollectionView *crossings;
+@property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
 @property (assign, nonatomic) regina::Link* packet;
 @end
@@ -94,11 +95,13 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
     
     components = [[NSMutableArray alloc] initWithCapacity:self.packet->countComponents()];
     [self reloadPacket];
+    
+    UILongPressGestureRecognizer *r = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    [self.crossings addGestureRecognizer:r];
 }
 
 - (void)reloadPacket
 {
-    
     [static_cast<LinkViewController*>(self.parentViewController) updateHeader:self.header];
 
     // Cache the crossings for each component.
@@ -148,16 +151,85 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
 }
 
 - (IBAction)simplify:(id)sender {
-    // TODO... both code and icon
+    // TODO: icon
+    if (! self.packet->intelligentSimplify()) {
+        // Greedy simplification failed.
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Simplify"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (IBAction)reflect:(id)sender {
+    self.packet->reflect();
+}
+
+- (IBAction)rotate:(id)sender {
+    self.packet->rotate();
+}
+
+- (IBAction)reidemeister:(id)sender {
+    // TODO
 }
 
 - (IBAction)actions:(id)sender {
-    // TODO
+    UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"Reflect",
+                                                                @"Rotate",
+                                                                @"Reidemeister moves",
+                                                                nil];
+    [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
 }
 
 - (IBAction)styleChanged:(id)sender {
     [[NSUserDefaults standardUserDefaults] setInteger:self.style.selectedSegmentIndex forKey:KEY_LINK_CROSSINGS_STYLE];
     [self reloadPacket];
+}
+
+- (IBAction)longPress:(id)sender {
+    UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
+    UIGestureRecognizerState state = press.state;
+    
+    CGPoint location = [press locationInView:self.crossings];
+    NSIndexPath *indexPath = [self.crossings indexPathForItemAtPoint:location];
+
+    if (! indexPath)
+        return;
+    if (indexPath.section >= components.count)
+        return;
+    if (indexPath.row >= ((NSArray*)components[indexPath.section]).count)
+        return;
+
+    regina::StrandRef s;
+    [(NSValue*)components[indexPath.section][indexPath.row] getValue:&s];
+
+    if (state == UIGestureRecognizerStateBegan) {
+        // TODO: Change crossing.
+        LinkCrossingCell *cell = static_cast<LinkCrossingCell*>([self.crossings cellForItemAtIndexPath:indexPath]);
+        
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleActionSheet];
+        [alert addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"Change crossing %d", s.crossing()->index()]
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction*){
+                                                    self.packet->change(s.crossing());
+                                                }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                  style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction*) {
+                                                }]];
+        [alert setModalPresentationStyle:UIModalPresentationPopover];
+        alert.popoverPresentationController.sourceView = self.crossings;
+        alert.popoverPresentationController.sourceRect = cell.frame;
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 #pragma mark - Collection view
@@ -243,6 +315,23 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     return CGSizeMake(0, ceil(sizeHeader.height) + 30);
+}
+
+#pragma mark - Action sheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // Note: We implement didDismissWithButtonIndex: instead of clickedButtonAtIndex:,
+    // since this ensures that the action sheet popover is already dismissed before we
+    // try to open any other popover (such as the Reidemeister moves view).
+    switch (buttonIndex) {
+        case 0:
+            [self reflect:nil]; break;
+        case 1:
+            [self rotate:nil]; break;
+        case 2:
+            [self reidemeister:nil]; break;
+    }
 }
 
 @end
