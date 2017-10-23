@@ -32,7 +32,9 @@
 
 #import "LinkViewController.h"
 #import "LinkCrossings.h"
+#import "ReginaHelper.h"
 #import "link/link.h"
+#import "triangulation/dim3.h"
 
 #define KEY_LINK_CROSSINGS_STYLE @"LinkCrossingsStyle"
 
@@ -149,7 +151,11 @@ static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
 }
 
 - (IBAction)complement:(id)sender {
-    // TODO
+    regina::Triangulation<3>* c = self.packet->complement();
+    c->setLabel(self.packet->adornedLabel("Complement"));
+    
+    self.packet->insertChildLast(c);
+    [ReginaHelper viewPacket:c];
 }
 
 - (IBAction)simplify:(id)sender {
