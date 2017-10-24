@@ -784,8 +784,8 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TCZ-2r-CFJ">
-                                <rect key="frame" x="20" y="182" width="75" height="30"/>
-                                <state key="normal" title="R1, untwist">
+                                <rect key="frame" x="20" y="182" width="71" height="30"/>
+                                <state key="normal" title="R1 untwist">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -793,26 +793,17 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lWB-CA-2B8">
-                                <rect key="frame" x="20" y="256" width="87" height="30"/>
-                                <state key="normal" title="R2, separate">
+                                <rect key="frame" x="20" y="324.5" width="83" height="30"/>
+                                <state key="normal" title="R2 separate">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="doR2Down:" destination="fbl-T9-hmG" eventType="touchUpInside" id="dlu-ZP-bKq"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bnr-lw-0lP">
-                                <rect key="frame" x="20" y="293" width="31" height="30"/>
-                                <state key="normal" title="R3   ">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="doR3:" destination="fbl-T9-hmG" eventType="touchUpInside" id="Wvk-7D-chK"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ayb-Eh-gg7">
-                                <rect key="frame" x="20" y="219" width="77" height="30"/>
-                                <state key="normal" title="R2, overlap">
+                                <rect key="frame" x="20" y="251" width="73" height="30"/>
+                                <state key="normal" title="R2 overlap">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -820,8 +811,8 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CZf-FV-Mvo">
-                                <rect key="frame" x="20" y="145" width="57" height="30"/>
-                                <state key="normal" title="R1, twist">
+                                <rect key="frame" x="20" y="145" width="54" height="30"/>
+                                <state key="normal" title="R1 twist">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -829,75 +820,96 @@
                                 </connections>
                             </button>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="kwr-Si-LuD">
-                                <rect key="frame" x="127" y="145" width="94" height="29"/>
+                                <rect key="frame" x="123" y="145" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR1Up:" destination="fbl-T9-hmG" eventType="valueChanged" id="dlL-n3-ACC"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="QOA-37-4Ob">
-                                <rect key="frame" x="127" y="182" width="94" height="29"/>
+                                <rect key="frame" x="123" y="182" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR1Down:" destination="fbl-T9-hmG" eventType="valueChanged" id="f6c-Vr-lan"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Gsk-7N-sbW">
-                                <rect key="frame" x="127" y="219" width="94" height="29"/>
+                                <rect key="frame" x="123" y="251" width="94" height="29"/>
                                 <connections>
-                                    <action selector="changedR2Up:" destination="fbl-T9-hmG" eventType="valueChanged" id="MPM-Kl-Z5l"/>
+                                    <action selector="changedR2UpOver:" destination="fbl-T9-hmG" eventType="valueChanged" id="TLo-gy-pWH"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="crA-N5-irk">
-                                <rect key="frame" x="127" y="256" width="94" height="29"/>
+                                <rect key="frame" x="123" y="325" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR2Down:" destination="fbl-T9-hmG" eventType="valueChanged" id="NdU-eQ-t3j"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="clV-0L-SY9">
-                                <rect key="frame" x="127" y="293" width="94" height="29"/>
+                                <rect key="frame" x="123" y="394" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR3:" destination="fbl-T9-hmG" eventType="valueChanged" id="opI-Ld-Mty"/>
                                 </connections>
                             </stepper>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zNS-vP-JIv">
-                                <rect key="frame" x="241" y="186" width="763" height="21"/>
+                                <rect key="frame" x="237" y="186" width="767" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x0U-q8-zoC">
-                                <rect key="frame" x="241" y="223" width="763" height="21"/>
+                                <rect key="frame" x="237" y="255" width="767" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PPd-qn-1zw">
-                                <rect key="frame" x="241" y="260" width="763" height="21"/>
+                                <rect key="frame" x="237" y="328.5" width="767" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zM8-Pw-osD">
-                                <rect key="frame" x="241" y="297" width="763" height="21"/>
+                                <rect key="frame" x="237" y="397.5" width="767" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jZ-1d-CEw">
-                                <rect key="frame" x="241" y="149" width="763" height="21"/>
+                                <rect key="frame" x="237" y="149" width="767" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="uN6-gT-gdd">
+                                <rect key="frame" x="123" y="288" width="94" height="29"/>
+                                <connections>
+                                    <action selector="changedR2UpUnder:" destination="fbl-T9-hmG" eventType="valueChanged" id="ZDE-21-Nqs"/>
+                                </connections>
+                            </stepper>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fa1-c1-QFo">
+                                <rect key="frame" x="237" y="292" width="767" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bnr-lw-0lP">
+                                <rect key="frame" x="20" y="393.5" width="31" height="30"/>
+                                <state key="normal" title="R3   ">
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="doR3:" destination="fbl-T9-hmG" eventType="touchUpInside" id="Wvk-7D-chK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Gsk-7N-sbW" firstAttribute="leading" secondItem="QOA-37-4Ob" secondAttribute="leading" id="0xt-vw-93J"/>
-                            <constraint firstItem="Gsk-7N-sbW" firstAttribute="top" secondItem="QOA-37-4Ob" secondAttribute="bottom" constant="8" id="2VV-Ya-Kdn"/>
+                            <constraint firstItem="Gsk-7N-sbW" firstAttribute="top" secondItem="QOA-37-4Ob" secondAttribute="bottom" constant="40" id="2VV-Ya-Kdn"/>
                             <constraint firstAttribute="trailing" secondItem="pHZ-aI-iKO" secondAttribute="trailing" id="37e-vy-XKi"/>
+                            <constraint firstItem="uN6-gT-gdd" firstAttribute="top" secondItem="Gsk-7N-sbW" secondAttribute="bottom" constant="8" id="5M3-Yn-T4r"/>
                             <constraint firstAttribute="bottom" secondItem="pHZ-aI-iKO" secondAttribute="bottom" id="7YR-QY-bPr"/>
                             <constraint firstItem="kwr-Si-LuD" firstAttribute="top" secondItem="xNY-AK-Ka8" secondAttribute="bottom" constant="40" id="7xv-mm-kLn"/>
                             <constraint firstAttribute="centerX" secondItem="xNY-AK-Ka8" secondAttribute="centerX" id="9K0-mz-zVP"/>
-                            <constraint firstItem="crA-N5-irk" firstAttribute="top" secondItem="Gsk-7N-sbW" secondAttribute="bottom" constant="8" id="Avw-99-KyF"/>
                             <constraint firstItem="zM8-Pw-osD" firstAttribute="leading" secondItem="4jZ-1d-CEw" secondAttribute="leading" id="B0b-Re-KWQ"/>
                             <constraint firstItem="pHZ-aI-iKO" firstAttribute="leading" secondItem="WYt-7v-7Fb" secondAttribute="leading" id="BHn-Np-fVF"/>
                             <constraint firstAttribute="trailing" secondItem="4jZ-1d-CEw" secondAttribute="trailing" constant="20" id="E6d-Ub-B3d"/>
@@ -907,18 +919,22 @@
                             <constraint firstItem="ayb-Eh-gg7" firstAttribute="leading" secondItem="lWB-CA-2B8" secondAttribute="leading" id="IB4-1q-aHi"/>
                             <constraint firstItem="zM8-Pw-osD" firstAttribute="trailing" secondItem="PPd-qn-1zw" secondAttribute="trailing" id="KGI-VL-utX"/>
                             <constraint firstItem="lWB-CA-2B8" firstAttribute="centerY" secondItem="crA-N5-irk" secondAttribute="centerY" id="LF4-c8-p8v"/>
+                            <constraint firstItem="zM8-Pw-osD" firstAttribute="trailing" secondItem="fa1-c1-QFo" secondAttribute="trailing" id="LWU-Kh-NXo"/>
                             <constraint firstItem="c7q-TB-gNm" firstAttribute="top" secondItem="xka-6a-Eg9" secondAttribute="bottom" id="MYz-BE-3Kd"/>
                             <constraint firstItem="QOA-37-4Ob" firstAttribute="centerY" secondItem="TCZ-2r-CFJ" secondAttribute="centerY" id="NOo-HW-1NA"/>
                             <constraint firstItem="kwr-Si-LuD" firstAttribute="leading" secondItem="QOA-37-4Ob" secondAttribute="leading" id="Oao-cp-4Ty"/>
                             <constraint firstItem="PPd-qn-1zw" firstAttribute="baseline" secondItem="lWB-CA-2B8" secondAttribute="baseline" id="OcG-ev-Dwn"/>
+                            <constraint firstItem="uN6-gT-gdd" firstAttribute="leading" secondItem="QOA-37-4Ob" secondAttribute="leading" id="OhB-6W-2ry"/>
                             <constraint firstItem="ayb-Eh-gg7" firstAttribute="leading" secondItem="CZf-FV-Mvo" secondAttribute="leading" id="PlA-6B-OvD"/>
                             <constraint firstItem="kwr-Si-LuD" firstAttribute="centerY" secondItem="CZf-FV-Mvo" secondAttribute="centerY" id="Ptq-TC-Bfp"/>
                             <constraint firstItem="zM8-Pw-osD" firstAttribute="trailing" secondItem="4jZ-1d-CEw" secondAttribute="trailing" id="PyZ-so-VQk"/>
+                            <constraint firstItem="fa1-c1-QFo" firstAttribute="centerY" secondItem="uN6-gT-gdd" secondAttribute="centerY" id="Rfn-Gh-Qi4"/>
                             <constraint firstItem="clV-0L-SY9" firstAttribute="leading" secondItem="QOA-37-4Ob" secondAttribute="leading" id="TPC-bL-wc4"/>
                             <constraint firstItem="zM8-Pw-osD" firstAttribute="trailing" secondItem="x0U-q8-zoC" secondAttribute="trailing" id="Wjk-3h-962"/>
                             <constraint firstItem="crA-N5-irk" firstAttribute="leading" secondItem="QOA-37-4Ob" secondAttribute="leading" id="X2c-FX-Ia1"/>
-                            <constraint firstItem="clV-0L-SY9" firstAttribute="top" secondItem="crA-N5-irk" secondAttribute="bottom" constant="8" id="Xyf-AV-TIq"/>
+                            <constraint firstItem="clV-0L-SY9" firstAttribute="top" secondItem="crA-N5-irk" secondAttribute="bottom" constant="40" id="Xyf-AV-TIq"/>
                             <constraint firstItem="CZf-FV-Mvo" firstAttribute="baseline" secondItem="4jZ-1d-CEw" secondAttribute="baseline" id="Y3e-20-RAD"/>
+                            <constraint firstItem="crA-N5-irk" firstAttribute="top" secondItem="uN6-gT-gdd" secondAttribute="bottom" constant="8" id="auJ-Uh-jJ3"/>
                             <constraint firstItem="QOA-37-4Ob" firstAttribute="top" secondItem="kwr-Si-LuD" secondAttribute="bottom" constant="8" id="b8W-yZ-7eN"/>
                             <constraint firstItem="crA-N5-irk" firstAttribute="leading" secondItem="lWB-CA-2B8" secondAttribute="trailing" constant="20" id="d0l-bU-HdM"/>
                             <constraint firstItem="zM8-Pw-osD" firstAttribute="leading" secondItem="PPd-qn-1zw" secondAttribute="leading" id="dad-sN-pw4"/>
@@ -934,6 +950,7 @@
                             <constraint firstItem="zM8-Pw-osD" firstAttribute="baseline" secondItem="bnr-lw-0lP" secondAttribute="baseline" id="w98-hG-qCM"/>
                             <constraint firstItem="Gsk-7N-sbW" firstAttribute="centerY" secondItem="ayb-Eh-gg7" secondAttribute="centerY" id="xVz-p7-oAu"/>
                             <constraint firstItem="zM8-Pw-osD" firstAttribute="leading" secondItem="x0U-q8-zoC" secondAttribute="leading" id="y68-VQ-0gI"/>
+                            <constraint firstItem="zM8-Pw-osD" firstAttribute="leading" secondItem="fa1-c1-QFo" secondAttribute="leading" id="yIu-Lx-j9j"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
@@ -948,12 +965,14 @@
                         <outlet property="detail1down" destination="zNS-vP-JIv" id="LKS-m2-yfN"/>
                         <outlet property="detail1up" destination="4jZ-1d-CEw" id="jW7-QT-gaa"/>
                         <outlet property="detail2down" destination="PPd-qn-1zw" id="mMz-aT-nut"/>
-                        <outlet property="detail2up" destination="x0U-q8-zoC" id="HdS-15-dYb"/>
+                        <outlet property="detail2upOver" destination="x0U-q8-zoC" id="N0c-wC-9XY"/>
+                        <outlet property="detail2upUnder" destination="fa1-c1-QFo" id="gWl-m2-27B"/>
                         <outlet property="detail3" destination="zM8-Pw-osD" id="PlI-ew-XBr"/>
                         <outlet property="stepper1down" destination="QOA-37-4Ob" id="q2r-XL-3NC"/>
                         <outlet property="stepper1up" destination="kwr-Si-LuD" id="yOF-KE-d4Q"/>
                         <outlet property="stepper2down" destination="crA-N5-irk" id="XPg-Ui-Dyp"/>
-                        <outlet property="stepper2up" destination="Gsk-7N-sbW" id="v5z-gn-hUz"/>
+                        <outlet property="stepper2upOver" destination="Gsk-7N-sbW" id="3nG-3s-Q52"/>
+                        <outlet property="stepper2upUnder" destination="uN6-gT-gdd" id="f3R-QF-ksi"/>
                         <outlet property="stepper3" destination="clV-0L-SY9" id="DDp-6H-lhR"/>
                     </connections>
                 </viewController>

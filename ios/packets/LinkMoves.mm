@@ -34,6 +34,8 @@
 #import "TextHelper.h"
 #import "link/link.h"
 
+// TODO: Sort R2 up
+
 static UIColor* negColour = [UIColor colorWithRed:(0xB8 / 256.0)
                                             green:(0x86 / 256.0)
                                              blue:(0x0B / 256.0)
@@ -121,25 +123,44 @@ namespace {
 }
 @end
 
-#pragma mark - R2 up
+#pragma mark - R1 down
 
-@interface R2UpArg : NSObject
-@property (assign, nonatomic) regina::StrandRef upperStrand;
-@property (assign, nonatomic) int upperSide;
-@property (assign, nonatomic) regina::StrandRef lowerStrand;
-@property (assign, nonatomic) int lowerSide;
-- (id)init:(const regina::StrandRef&)upperStrand upperSide:(int)upperSide lowerStrand:(const regina::StrandRef&)lowerStrand lowerSide:(int)lowerSide;
+@interface R1DownArg : NSObject
+@property (assign, nonatomic) regina::Crossing* crossing;
+- (id)init:(regina::Crossing*)crossing;
+- (NSString*)display;
 @end
 
-@implementation R2UpArg
-- (id)init:(const regina::StrandRef&)upperStrand upperSide:(int)upperSide lowerStrand:(const regina::StrandRef&)lowerStrand lowerSide:(int)lowerSide
+@implementation R1DownArg
+- (id)init:(regina::Crossing*)crossing
 {
     self = [super init];
     if (self) {
-        _upperStrand = upperStrand;
-        _upperSide = upperSide;
-        _lowerStrand = lowerStrand;
-        _lowerSide = lowerSide;
+        _crossing = crossing;
+    }
+    return self;
+}
+- (NSString*)display
+{
+    return [NSString stringWithFormat:@"Crossing %d", self.crossing->index()];
+}
+@end
+
+#pragma mark - R2 up
+
+@interface R2UpArg : NSObject
+@property (assign, nonatomic) regina::StrandRef strand;
+@property (assign, nonatomic) int side;
+- (id)init:(const regina::StrandRef&)strand side:(int)side;
+@end
+
+@implementation R2UpArg
+- (id)init:(const regina::StrandRef&)strand side:(int)side
+{
+    self = [super init];
+    if (self) {
+        _strand = strand;
+        _side = side;
     }
     return self;
 }
@@ -255,7 +276,8 @@ namespace {
 @interface LinkMoves () {
     NSMutableArray* options1up;
     NSMutableArray* options1down;
-    NSMutableArray* options2up;
+    NSMutableArray* options2upOver;
+    NSMutableArray* options2upUnder;
     NSMutableArray* options2down;
     NSMutableArray* options3;
 
@@ -270,13 +292,15 @@ namespace {
 
 @property (weak, nonatomic) IBOutlet UIStepper *stepper1up;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper1down;
-@property (weak, nonatomic) IBOutlet UIStepper *stepper2up;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper2upOver;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper2upUnder;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper2down;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper3;
 
 @property (weak, nonatomic) IBOutlet UILabel *detail1up;
 @property (weak, nonatomic) IBOutlet UILabel *detail1down;
-@property (weak, nonatomic) IBOutlet UILabel *detail2up;
+@property (weak, nonatomic) IBOutlet UILabel *detail2upOver;
+@property (weak, nonatomic) IBOutlet UILabel *detail2upUnder;
 @property (weak, nonatomic) IBOutlet UILabel *detail2down;
 @property (weak, nonatomic) IBOutlet UILabel *detail3;
 
@@ -338,7 +362,7 @@ namespace {
     options1down = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
         if (self.packet->r1(self.packet->crossing(i), true, false))
-            [options1down addObject:@(i)];
+            [options1down addObject:[[R1DownArg alloc] init:self.packet->crossing(i)]];
     if (options1down.count > 0) {
         self.button1down.enabled = self.stepper1down.enabled = YES;
         self.stepper1down.maximumValue = options1down.count - 1;
@@ -351,7 +375,8 @@ namespace {
         self.detail1down.attributedText = unavailable;
     }
     
-    // TODO: Fill R2 up
+    // TODO: Fill R2 up, over
+    [self changedR2UpOver:nil];
 
     options2down = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
@@ -408,8 +433,8 @@ namespace {
         NSLog(@"Invalid R1 untwist stepper value: %ld", (long)use);
         return;
     }
-    long crossing = [options1down[use] longValue];
-    self.packet->r1(self.packet->crossing(crossing), true, true);
+    R1DownArg* arg = (R1DownArg*)options1down[use];
+    self.packet->r1(arg.crossing, true, true);
     [self reloadMoves];
 }
 
@@ -461,13 +486,19 @@ namespace {
         NSLog(@"Invalid R1 untwist stepper value: %ld", (long)use);
         return;
     }
-    
-    long crossing = [options1down[use] longValue];
+    R1DownArg* arg = (R1DownArg*)options1down[use];
     self.detail1down.attributedText = [[NSAttributedString alloc]
-                                       initWithString:[NSString stringWithFormat:@"Crossing %ld", crossing]];
+                                       initWithString:arg.display];
 }
 
-- (IBAction)changedR2Up:(id)sender
+- (IBAction)changedR2UpOver:(id)sender
+{
+    // TODO: Implement
+    
+    // TODO: Fill R2 up, under
+}
+
+- (IBAction)changedR2UpUnder:(id)sender
 {
     // TODO: Implement
 }
