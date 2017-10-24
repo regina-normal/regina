@@ -103,16 +103,15 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
                 ++minus;
         
         if (minus == 0)
-            signs = [[NSAttributedString alloc] initWithString:@"all +"
+            signs = [[NSAttributedString alloc] initWithString:@"all +ve"
                                                     attributes:@{NSForegroundColorAttributeName: posColour}];
         else if (plus == 0)
-            signs = [[NSAttributedString alloc] initWithString:@"all −"
+            signs = [[NSAttributedString alloc] initWithString:@"all −ve"
                                                     attributes:@{NSForegroundColorAttributeName: negColour}];
         else {
-            NSMutableAttributedString* s = [[NSMutableAttributedString alloc] init];
-            [s appendAttributedString:[[NSAttributedString alloc]
-                                       initWithString:[NSString stringWithFormat:@"%zu +ve", plus]
-                                                                      attributes:@{NSForegroundColorAttributeName: posColour}]];
+            NSMutableAttributedString* s = [[NSMutableAttributedString alloc]
+                                            initWithString:[NSString stringWithFormat:@"%zu +ve", plus]
+                                                attributes:@{NSForegroundColorAttributeName: posColour}];
             [s appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
             [s appendAttributedString:[[NSAttributedString alloc]
                                        initWithString:[NSString stringWithFormat:@"%zu −ve", minus]
