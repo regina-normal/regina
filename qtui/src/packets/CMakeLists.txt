@@ -19,6 +19,8 @@ SET ( FILES
   hypersummaryui
   hyperui
   linkcreator
+  linkcrossings
+  linkui
   pdfui
   scriptui
   skeletonwindow

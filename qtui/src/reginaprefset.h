@@ -168,6 +168,9 @@ class ReginaPrefSet : public QObject {
         unsigned tabHypersurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  hypersurface list viewer. */
+        unsigned tabLink;
+            /**< The index of the initial sub-tab to open in a knot/link
+                 viewer. */
         unsigned tabSnapPeaTri;
             /**< The index of the initial tab to open in a SnapPea
                  triangulation viewer. */

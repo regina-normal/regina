@@ -47,6 +47,7 @@
 #include "packets/generictriui.h"
 #include "packets/containerui.h"
 #include "packets/hyperui.h"
+#include "packets/linkui.h"
 #include "packets/pdfui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
@@ -155,6 +156,9 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_CONTAINER:
             return new ContainerUI(
                 dynamic_cast<Container*>(packet), enclosingPane);
+        case PACKET_LINK:
+            return new LinkUI(
+                dynamic_cast<Link*>(packet), enclosingPane);
         case PACKET_NORMALSURFACES:
             return new SurfacesUI(
                 dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
