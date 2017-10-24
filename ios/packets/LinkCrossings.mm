@@ -39,16 +39,6 @@
 
 #define KEY_LINK_CROSSINGS_STYLE @"LinkCrossingsStyle"
 
-static UIColor* negColour = [UIColor colorWithRed:(0xB8 / 256.0)
-                                            green:(0x86 / 256.0)
-                                             blue:(0x0B / 256.0)
-                                            alpha:1.0]; // Dark goldenrod
-
-static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
-                                            green:(0x54 / 256.0)
-                                             blue:(0x7E / 256.0)
-                                            alpha:1.0]; // Blue jay
-
 static UIColor* unknotColour = [UIColor colorWithRed:0.5
                                                green:0.5
                                                 blue:0.5
@@ -300,13 +290,13 @@ static NSString* unknotText = @"Unknot, no crossings";
                 cell.index.text = [NSString stringWithFormat:@"%d₊", s.crossing()->index()];
             else
                 cell.index.text = [NSString stringWithFormat:@"%d⁺", s.crossing()->index()];
-            cell.index.textColor = posColour;
+            cell.index.textColor = LinkViewController.posColour;
         } else {
             if (s.strand() == 0)
                 cell.index.text = [NSString stringWithFormat:@"%d₋", s.crossing()->index()];
             else
                 cell.index.text = [NSString stringWithFormat:@"%d⁻", s.crossing()->index()];
-            cell.index.textColor = negColour;
+            cell.index.textColor = LinkViewController.negColour;
         }
         
         return cell;

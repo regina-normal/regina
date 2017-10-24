@@ -33,7 +33,47 @@
 #import "LinkViewController.h"
 #import "link/link.h"
 
+static UIColor* negColour = [UIColor colorWithRed:(0xB8 / 256.0)
+                                            green:(0x86 / 256.0)
+                                             blue:(0x0B / 256.0)
+                                            alpha:1.0]; // Dark goldenrod
+
+static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
+                                            green:(0x54 / 256.0)
+                                             blue:(0x7E / 256.0)
+                                            alpha:1.0]; // Blue jay
+
+static UIColor* leftColour = [UIColor colorWithRed:0.6
+                                             green:0.0
+                                              blue:0.0
+                                             alpha:1.0]; // Colour for port
+
+static UIColor* rightColour = [UIColor colorWithRed:0.0
+                                              green:0.5
+                                               blue:0.0
+                                              alpha:1.0]; // Colour for starboard
+
 @implementation LinkViewController
+
++ (UIColor *)posColour
+{
+    return posColour;
+}
+
++ (UIColor *)negColour
+{
+    return negColour;
+}
+
++ (UIColor *)leftColour
+{
+    return leftColour;
+}
+
++ (UIColor *)rightColour
+{
+    return rightColour;
+}
 
 - (void)viewDidLoad
 {

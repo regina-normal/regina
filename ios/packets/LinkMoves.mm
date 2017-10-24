@@ -31,28 +31,9 @@
  **************************************************************************/
 
 #import "LinkMoves.h"
+#import "LinkViewController.h"
 #import "TextHelper.h"
 #import "link/link.h"
-
-static UIColor* negColour = [UIColor colorWithRed:(0xB8 / 256.0)
-                                            green:(0x86 / 256.0)
-                                             blue:(0x0B / 256.0)
-                                            alpha:1.0]; // Dark goldenrod
-
-static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
-                                            green:(0x54 / 256.0)
-                                             blue:(0x7E / 256.0)
-                                            alpha:1.0]; // Blue jay
-
-static UIColor* leftColour = [UIColor colorWithRed:0.6
-                                             green:0.0
-                                              blue:0.0
-                                             alpha:1.0]; // Colour for port
-
-static UIColor* rightColour = [UIColor colorWithRed:0.0
-                                              green:0.5
-                                               blue:0.0
-                                              alpha:1.0]; // Colour for starboard
 
 namespace {
     NSString* strandDesc(const regina::StrandRef& strand) {
@@ -99,9 +80,9 @@ namespace {
         [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
         
         if (self.side == 0)
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"left" attributes:@{NSForegroundColorAttributeName: leftColour}]];
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"left" attributes:@{NSForegroundColorAttributeName: LinkViewController.leftColour}]];
         else
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"right" attributes:@{NSForegroundColorAttributeName: rightColour}]];
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"right" attributes:@{NSForegroundColorAttributeName: LinkViewController.rightColour}]];
     } else {
         [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"Unknotted circle"]];
     }
@@ -109,9 +90,9 @@ namespace {
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
     
     if (self.sign < 0) {
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"−ve" attributes:@{NSForegroundColorAttributeName: negColour}]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"−ve" attributes:@{NSForegroundColorAttributeName: LinkViewController.negColour}]];
     } else {
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"+ve" attributes:@{NSForegroundColorAttributeName: posColour}]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"+ve" attributes:@{NSForegroundColorAttributeName: LinkViewController.posColour}]];
     }
     
     return text;
@@ -186,9 +167,9 @@ namespace {
     [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
     
     if (self.side == 0)
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"left" attributes:@{NSForegroundColorAttributeName: leftColour}]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"left" attributes:@{NSForegroundColorAttributeName: LinkViewController.leftColour}]];
     else
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"right" attributes:@{NSForegroundColorAttributeName: rightColour}]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"right" attributes:@{NSForegroundColorAttributeName: LinkViewController.rightColour}]];
 
     return text;
 }
