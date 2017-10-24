@@ -41,6 +41,7 @@
 #endif
 
 #include <iostream>
+#include <iterator>
 #include <memory>
 #include <set>
 
@@ -53,7 +54,9 @@
 
 namespace regina {
 
+class PacketChildren;
 class PacketListener;
+class SubtreeIterator;
 class XMLPacketReader;
 class XMLTreeResolver;
 
@@ -827,6 +830,90 @@ class REGINA_API Packet :
         /*@{*/
 
         /**
+         * Returns an iterator at the beginning of the range of packets
+         * in the subtree rooted at this packet.
+         *
+         * Subtree iteration is depth-first, where a parent packet is always
+         * processed before its descendants.  Therefore the iterator returned
+         * by begin() will always point to this packet itself.
+         *
+         * The begin() and end() routines allow you to iterate through
+         * an entire packet subtree using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * Packet* subtree = ...;
+         * for (Packet* p : *subtree) { ... }
+         * \endcode
+         *
+         * \note This routine is non-const because \e dereferencing
+         * a SubtreeIterator returns a non-const packet pointer.
+         *
+         * \ifacespython Not present.  However, Regina does supply two
+         * Python generators for iterating over subtrees:
+         * <tt>Packet.subtree()</tt> which (just like these iterators)
+         * includes the root of the subtree itself, and
+         * <tt>Packet.descendants()</tt> which does not.
+         *
+         * @return an iterator at the beginning of this subtree.
+         */
+        SubtreeIterator begin();
+
+        /**
+         * Returns an iterator beyond the end of the range of packets
+         * in the subtree rooted at this packet.
+         *
+         * The begin() and end() routines allow you to iterate through
+         * an entire packet subtree using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * Packet* subtree = ...;
+         * for (Packet* p : *subtree) { ... }
+         * \endcode
+         *
+         * See also children() for iterating just through the immediate
+         * children of this packet, as opposed to the entire subtree.
+         *
+         * \note This routine is non-const because \e dereferencing
+         * a SubtreeIterator returns a non-const packet pointer.
+         *
+         * \ifacespython Not present.  However, Regina does supply two
+         * Python generators for iterating over subtrees:
+         * <tt>Packet.subtree()</tt> which (just like these iterators)
+         * includes the root of the subtree itself, and
+         * <tt>Packet.descendants()</tt> which does not.
+         *
+         * @return an iterator beyond the end of this subtree.
+         */
+        SubtreeIterator end();
+
+        /**
+         * Returns a lightweight object for iterating through the
+         * immediate children of this packet.
+         *
+         * This routine allows you to iterate through the immediate children
+         * of a given packet using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * Packet* parent = ...;
+         * for (Packet* child : parent->children()) { ... }
+         * \endcode
+         *
+         * This function returns a lightweight object in the sense that
+         * it does not generate a full list of children, but instead
+         * just works with iterators.  In particular, this routine has
+         * small constant time and memory.
+         *
+         * See also begin() and end() for iterating through the entire
+         * subtree rooted at this packet, not just the immediate children.
+         *
+         * \ifacespython This function does not return an object of
+         * class PacketChildren; instead it acts as a Python generator.
+         *
+         * @return an object for iterating through the children of this packet.
+         */
+        PacketChildren children() const;
+
+        /**
          * Finds the next packet after this in a complete depth-first
          * iteration of the entire tree structure to which this packet
          * belongs.  Note that this packet need not be the tree
@@ -1372,8 +1459,9 @@ class REGINA_API Packet :
  * passes it through unchanged to low-level C/C++ file I/O routines.
  *
  * \ifacespython This function is not automatically imported into the
- * global namespace when running regina-python or when opening a Python
- * console in the graphical user interface.  This is to avoid overriding
+ * global namespace when running regina-python, or when opening a Python
+ * console in the graphical user interface, or even when typing
+ * <tt>from regina import *</tt>.  This is to avoid overriding
  * Python's own built-in open() function.  You can access Regina's open()
  * function by calling <tt>regina.open()</tt>.
  *
@@ -1410,7 +1498,247 @@ REGINA_API Packet* open(std::istream& in);
  */
 [[deprecated]] typedef Packet NPacket;
 
+/**
+ * A forward iterator for iterating through all immediate children of a
+ * given packet.
+ *
+ * This header also specialises std::iterator_traits for this iterator class.
+ */
+class REGINA_API ChildIterator {
+    private:
+        Packet* current_;
+            /**< The child packet that this iterator is pointing to, or
+                 0 for a past-the-end iterator. */
+
+    public:
+        /**
+         * Creates a past-the-end iterator.
+         */
+        ChildIterator();
+        /**
+         * Default copy constructor.
+         */
+        ChildIterator(const ChildIterator&) = default;
+        /**
+         * Creates a new iterator pointing to the given child packet.
+         *
+         * @param current the child packet that the new iterator should
+         * point to, or 0 if the new iterator should be past-the-end.
+         */
+        ChildIterator(Packet* current);
+
+        /**
+         * Default copy assignment operator.
+         */
+        ChildIterator& operator = (const ChildIterator&) = default;
+
+        /**
+         * Tests whether this and the given iterator are equal.
+         *
+         * @return true if and only if the two iterators are equal.
+         */
+        bool operator == (const ChildIterator& rhs) const;
+        /**
+         * Tests whether this and the given iterator are different.
+         *
+         * @return true if and only if the two iterators are different.
+         */
+        bool operator != (const ChildIterator& rhs) const;
+
+        /**
+         * Preincrement operator.
+         *
+         * @return a reference to this iterator.
+         */
+        ChildIterator& operator ++ ();
+        /**
+         * Postincrement operator.
+         *
+         * @return a a copy of this iterator before it was incremented.
+         */
+        ChildIterator operator ++ (int);
+
+        /**
+         * Returns the packet that this operator is currently pointing to.
+         *
+         * @return the current packet.
+         */
+        Packet* const& operator * () const;
+};
+
+/**
+ * A forward iterator for iterating through the entire packet subtree
+ * rooted at a given packet.
+ *
+ * The order of iteration is depth-first, where a parent packet is always
+ * processed before its descendants.
+ *
+ * This header also specialises std::iterator_traits for this iterator class.
+ */
+class REGINA_API SubtreeIterator {
+    private:
+        Packet* subtree_;
+            /**< The root of the packet subtree that we are iterating over. */
+        Packet* current_;
+            /**< The packet that this iterator is pointing to, or
+                 0 for a past-the-end iterator. */
+
+    public:
+        /**
+         * Creates a past-the-end iterator.
+         */
+        SubtreeIterator();
+        /**
+         * Default copy constructor.
+         */
+        SubtreeIterator(const SubtreeIterator&) = default;
+        /**
+         * Creates a new iterator pointing to the first packet within
+         * the given subtree.  Dereferencing this iterator will return
+         * \a subtree itself.
+         *
+         * @param subtree the packet subtree that we are iterating through.
+         * This does not need to be the root of the overall packet tree
+         * (i.e., \a subtree is allowed to have a non-null parent).
+         */
+        SubtreeIterator(Packet* subtree);
+        /**
+         * Creates a new iterator pointing to the given packet within
+         * the given subtree.
+         *
+         * @param subtree the packet subtree that we are iterating through.
+         * This does not need to be the root of the overall packet tree
+         * (i.e., \a subtree is allowed to have a non-null parent).
+         * @param current the packet within the subtree that the new iterator
+         * should point to, or 0 if the new iterator should be past-the-end.
+         * If \a current is not null, then it must be equal to or a
+         * descendant of \a subtree.
+         */
+        SubtreeIterator(Packet* subtree, Packet* current);
+
+        /**
+         * Default copy assignment operator.
+         */
+        SubtreeIterator& operator = (const SubtreeIterator&) = default;
+
+        /**
+         * Tests whether this and the given iterator are equal.
+         *
+         * \note This routine only compares the packets that each iterator
+         * is currently pointing to.  It does not compare the roots of the
+         * subtrees themselves.
+         *
+         * @return true if and only if the two iterators are equal.
+         */
+        bool operator == (const SubtreeIterator& rhs) const;
+        /**
+         * Tests whether this and the given iterator are different.
+         *
+         * \note This routine only compares the packets that each iterator
+         * is currently pointing to.  It does not compare the roots of the
+         * subtrees themselves.
+         *
+         * @return true if and only if the two iterators are different.
+         */
+        bool operator != (const SubtreeIterator& rhs) const;
+
+        /**
+         * Preincrement operator.
+         *
+         * @return a reference to this iterator.
+         */
+        SubtreeIterator& operator ++ ();
+        /**
+         * Postincrement operator.
+         *
+         * @return a a copy of this iterator before it was incremented.
+         */
+        SubtreeIterator operator ++ (int);
+
+        /**
+         * Returns the packet that this operator is currently pointing to.
+         *
+         * @return the current packet.
+         */
+        Packet* const& operator * () const;
+};
+
+/**
+ * A lightweight object that gives access to all immediate children of a
+ * given packet.
+ *
+ * The purpose of this class is to support iteration through all children of a
+ * packet \a p using C++11 range-based \c for loops:
+ *
+ * \code{.cpp}
+ * Packet* parent = ...;
+ * for (Packet* child : parent->children()) { ... }
+ * \endcode
+ *
+ * \ifacespython Not present.
+ */
+class REGINA_API PacketChildren {
+    private:
+        const Packet* parent_;
+            /**< The packet whose children we are iterating through. */
+
+    public:
+        /**
+         * Default copy constructor.
+         */
+        PacketChildren(const PacketChildren&) = default;
+        /**
+         * Creates a new object for iterating through the immediate
+         * children of the given packet.
+         *
+         * @param parent the packet whose children we will iterate through.
+         */
+        PacketChildren(const Packet* parent);
+
+        /**
+         * Default copy assignment operator.
+         */
+        PacketChildren& operator = (const PacketChildren&) = default;
+
+        /**
+         * Returns an iterator at the beginning of the range of children.
+         *
+         * @return the beginning iterator.
+         */
+        ChildIterator begin() const;
+        /**
+         * Returns an iterator at the end of the range of children.
+         *
+         * @return the past-the-end iterator.
+         */
+        ChildIterator end() const;
+};
+
+} // namespace regina
+
 /*@}*/
+
+namespace std {
+    template <>
+    struct iterator_traits<regina::ChildIterator> {
+        typedef ptrdiff_t difference_type;
+        typedef regina::Packet* value_type;
+        typedef regina::Packet** pointer_type;
+        typedef regina::Packet* const& reference_type;
+        typedef std::forward_iterator_tag iterator_category;
+    };
+
+    template <>
+    struct iterator_traits<regina::SubtreeIterator> {
+        typedef ptrdiff_t difference_type;
+        typedef regina::Packet* value_type;
+        typedef regina::Packet** pointer_type;
+        typedef regina::Packet* const& reference_type;
+        typedef std::forward_iterator_tag iterator_category;
+    };
+} // namespace std
+
+namespace regina {
 
 // Inline functions for Packet
 
@@ -1495,6 +1823,18 @@ inline bool Packet::hasOwner() const {
     return treeParent_;
 }
 
+inline SubtreeIterator Packet::begin() {
+    return SubtreeIterator(this);
+}
+
+inline SubtreeIterator Packet::end() {
+    return SubtreeIterator(this, nullptr);
+}
+
+inline PacketChildren Packet::children() const {
+    return PacketChildren(this);
+}
+
 inline Packet::ChangeEventSpan::ChangeEventSpan(Packet* packet) :
         packet_(packet) {
     if (! packet_->changeEventSpans_)
@@ -1508,6 +1848,91 @@ inline Packet::ChangeEventSpan::~ChangeEventSpan() {
 
     if (! packet_->changeEventSpans_)
         packet_->fireEvent(&PacketListener::packetWasChanged);
+}
+
+// Inline functions for child/subtree iterators and related classes
+
+inline ChildIterator::ChildIterator() : current_(0) {
+}
+
+inline ChildIterator::ChildIterator(Packet* current) : current_(current) {
+}
+
+inline bool ChildIterator::operator == (const ChildIterator& rhs) const {
+    return current_ == rhs.current_;
+}
+
+inline bool ChildIterator::operator != (const ChildIterator& rhs) const {
+    return current_ != rhs.current_;
+}
+
+inline ChildIterator& ChildIterator::operator ++ () {
+    current_ = current_->nextSibling();
+    return *this;
+}
+
+inline ChildIterator ChildIterator::operator ++ (int) {
+    Packet* ret = current_;
+    current_ = current_->nextSibling();
+    return ChildIterator(ret);
+}
+
+inline Packet* const& ChildIterator::operator * () const {
+    return current_;
+}
+
+inline SubtreeIterator::SubtreeIterator() : subtree_(0), current_(0) {
+}
+
+inline SubtreeIterator::SubtreeIterator(Packet* subtree) :
+        subtree_(subtree), current_(subtree) {
+}
+
+inline SubtreeIterator::SubtreeIterator(Packet* subtree, Packet* current) :
+        subtree_(subtree), current_(current) {
+}
+
+inline bool SubtreeIterator::operator == (const SubtreeIterator& rhs) const {
+    return current_ == rhs.current_;
+}
+
+inline bool SubtreeIterator::operator != (const SubtreeIterator& rhs) const {
+    return current_ != rhs.current_;
+}
+
+inline SubtreeIterator& SubtreeIterator::operator ++ () {
+    if (current_->firstChild())
+        current_ = current_->firstChild();
+    else {
+        while (current_ != subtree_ && ! current_->nextSibling())
+            current_ = current_->parent();
+        if (current_ == subtree_)
+            current_ = 0;
+        else
+            current_ = current_->nextSibling();
+    }
+    return *this;
+}
+
+inline SubtreeIterator SubtreeIterator::operator ++ (int) {
+    Packet* ret = current_;
+    ++(*this);
+    return SubtreeIterator(subtree_, ret);
+}
+
+inline Packet* const& SubtreeIterator::operator * () const {
+    return current_;
+}
+
+inline PacketChildren::PacketChildren(const Packet* parent) : parent_(parent) {
+}
+
+inline ChildIterator PacketChildren::begin() const {
+    return ChildIterator(parent_->firstChild());
+}
+
+inline ChildIterator PacketChildren::end() const {
+    return ChildIterator(nullptr);
 }
 
 } // namespace regina

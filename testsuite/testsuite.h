@@ -39,8 +39,15 @@ namespace CppUnit {
 /**
  * Populates the given test suite with individual tests for various
  * components of Regina.
+ *
+ * If passed, \a argc should be the full set of command-line options to
+ * the test suite, including the program name itself.  Because of this,
+ * the first string in \a argv will always be ignored.
+ *
+ * Returns \c false if the user requested a test that does not exist.
  */
-void populateTests(CppUnit::TextTestRunner& runner);
+bool populateTests(CppUnit::TextTestRunner& runner,
+    int argc = 0, char* argv[] = 0);
 
 /**
  * Improves the readability of the test name "FIXTURE.TEST".
