@@ -231,7 +231,22 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
         self.detail2down.attributedText = unavailable;
     }
     
-    // TODO: Fill R3
+    options3 = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->size(); ++i)
+        for (side = 0; side < 2; ++side)
+            if (self.packet->r3(self.packet->crossing(i), side, true, false))
+                [options3 addObject:[[R3Arg alloc] init:i side:side]];
+    if (options3.count > 0) {
+        self.button3.enabled = self.stepper3.enabled = YES;
+        self.stepper3.maximumValue = options3.count - 1;
+        if (self.stepper3.value >= options3.count)
+            self.stepper3.value = options3.count - 1;
+        else
+            [self changedR3:nil];
+    } else {
+        self.button3.enabled = self.stepper3.enabled = NO;
+        self.detail3.attributedText = unavailable;
+    }
 }
 
 - (IBAction)doR1Up:(id)sender
@@ -278,7 +293,13 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
 
 - (IBAction)doR3:(id)sender
 {
-    // TODO: implement
+    NSInteger use = self.stepper3.value;
+    if (use < 0 || use >= options3.count) {
+        NSLog(@"Invalid R3 stepper value: %ld", (long)use);
+        return;
+    }
+    R3Arg* arg = (R3Arg*)options3[use];
+    self.packet->r3(self.packet->crossing(arg.crossing), arg.side, true, true);
     [self reloadMoves];
 }
 
@@ -368,7 +389,25 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
 
 - (IBAction)changedR3:(id)sender
 {
-    // TODO: Implement
+    NSInteger use = self.stepper3.value;
+    if (use < 0 || use >= options3.count) {
+        NSLog(@"Invalid R3 stepper value: %ld", (long)use);
+        return;
+    }
+    R3Arg* arg = (R3Arg*)options3[use];
+    
+    regina::Crossing* c1 = self.packet->crossing(arg.crossing);
+    regina::Crossing* c2 = c1->upper().next().crossing();
+    // The upper arc of the move is c1 -> c2 in the forward direction.
+    regina::Crossing* c3;
+    if ((arg.side == 0 && c2->sign() > 0) || (arg.side == 1 && c2->sign() < 0))
+        c3 = c2->lower().next().crossing();
+    else
+        c3 = c2->lower().prev().crossing();
+        
+    self.detail3.attributedText = [[NSAttributedString alloc]
+                                   initWithString:[NSString stringWithFormat:@"Crossings %d, %d, %d",
+                                                   c1->index(), c2->index(), c3->index()]];
 }
 
 - (IBAction)close:(id)sender
