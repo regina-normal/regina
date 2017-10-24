@@ -54,11 +54,27 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
                                                blue:0.0
                                               alpha:1.0]; // Colour for starboard
 
+namespace {
+    NSString* strandDesc(const regina::StrandRef& strand) {
+        if (strand.crossing()) {
+            if (strand.strand() == 0)
+                return [NSString stringWithFormat:@"%d lower", strand.crossing()->index()];
+            else
+                return [NSString stringWithFormat:@"%d upper", strand.crossing()->index()];
+        } else {
+            return @"unknot component";
+        }
+    }
+}
+
+#pragma mark - R1 up
+
 @interface R1UpArg : NSObject
 @property (assign, nonatomic) regina::StrandRef strand;
 @property (assign, nonatomic) int side;
 @property (assign, nonatomic) int sign;
 - (id)init:(const regina::StrandRef&)strand side:(int)side sign:(int)sign;
+- (NSAttributedString*)display;
 @end
 
 @implementation R1UpArg
@@ -72,7 +88,40 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     }
     return self;
 }
+- (NSAttributedString*)display
+{
+    NSMutableAttributedString* text = [[NSMutableAttributedString alloc] init];
+    
+    if (self.strand.crossing()) {
+        regina::StrandRef s = self.strand;
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:strandDesc(s)]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@" → "]];
+        ++s;
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:strandDesc(s)]];
+        
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
+        
+        if (self.side == 0)
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"left" attributes:@{NSForegroundColorAttributeName: leftColour}]];
+        else
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"right" attributes:@{NSForegroundColorAttributeName: rightColour}]];
+    } else {
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"Unknotted circle"]];
+    }
+    
+    [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
+    
+    if (self.sign < 0) {
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"−ve" attributes:@{NSForegroundColorAttributeName: negColour}]];
+    } else {
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"+ve" attributes:@{NSForegroundColorAttributeName: posColour}]];
+    }
+    
+    return text;
+}
 @end
+
+#pragma mark - R2 up
 
 @interface R2UpArg : NSObject
 @property (assign, nonatomic) regina::StrandRef upperStrand;
@@ -96,13 +145,15 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
 }
 @end
 
+#pragma mark - R2 down
+
 @interface R2DownArg : NSObject {
     int _displayCrossing[2];
 }
 @property (assign, nonatomic, readonly) regina::Crossing* crossing;
 
 - (id)init:(regina::Crossing*)crossing;
-- (NSString*)displayCrossings;
+- (NSString*)display;
 - (NSComparisonResult)compare:(R2DownArg*)otherObject;
 @end
 
@@ -120,7 +171,7 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     }
     return self;
 }
-- (NSString*)displayCrossings
+- (NSString*)display
 {
     return [NSString stringWithFormat:@"Crossings %d, %d",
             _displayCrossing[0], _displayCrossing[1]];
@@ -139,6 +190,8 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
 }
 @end
 
+#pragma mark - R3
+
 @interface R3Arg : NSObject {
     int _displayCrossing[3];
 }
@@ -146,7 +199,7 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
 @property (assign, nonatomic, readonly) int side;
 
 - (id)init:(regina::Crossing*)crossing side:(int)side;
-- (NSString*)displayCrossings;
+- (NSString*)display;
 - (NSComparisonResult)compare:(R3Arg*)otherObject;
 @end
 
@@ -174,7 +227,7 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     }
     return self;
 }
-- (NSString*)displayCrossings
+- (NSString*)display
 {
     return [NSString stringWithFormat:@"Crossings %d, %d, %d",
             _displayCrossing[0], _displayCrossing[1], _displayCrossing[2]];
@@ -196,6 +249,8 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     return NSOrderedSame;
 }
 @end
+
+#pragma mark - Link moves
 
 @interface LinkMoves () {
     NSMutableArray* options1up;
@@ -388,18 +443,6 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     [self reloadMoves];
 }
 
-+ (NSString*)strandDesc:(const regina::StrandRef&)strand
-{
-    if (strand.crossing()) {
-        if (strand.strand() == 0)
-            return [NSString stringWithFormat:@"%d lower", strand.crossing()->index()];
-        else
-            return [NSString stringWithFormat:@"%d upper", strand.crossing()->index()];
-    } else {
-        return @"unknot component";
-    }
-}
-
 - (IBAction)changedR1Up:(id)sender
 {
     NSInteger use = self.stepper1up.value;
@@ -408,35 +451,7 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
         return;
     }
     R1UpArg* arg = (R1UpArg*)options1up[use];
-
-    NSMutableAttributedString* text = [[NSMutableAttributedString alloc] init];
-
-    if (arg.strand.crossing()) {
-        regina::StrandRef s = arg.strand;
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[LinkMoves strandDesc:s]]];
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@" → "]];
-        ++s;
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[LinkMoves strandDesc:s]]];
-
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
-        
-        if (arg.side == 0)
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"left" attributes:@{NSForegroundColorAttributeName: leftColour}]];
-        else
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"right" attributes:@{NSForegroundColorAttributeName: rightColour}]];
-    } else {
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"Unknotted circle"]];
-    }
-
-    [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
-    
-    if (arg.sign < 0) {
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"−ve" attributes:@{NSForegroundColorAttributeName: negColour}]];
-    } else {
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"+ve" attributes:@{NSForegroundColorAttributeName: posColour}]];
-    }
-
-    self.detail1up.attributedText = text;
+    self.detail1up.attributedText = arg.display;
 }
 
 - (IBAction)changedR1Down:(id)sender
@@ -466,7 +481,7 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     }
     R2DownArg* arg = (R2DownArg*)options2down[use];
     self.detail2down.attributedText = [[NSAttributedString alloc]
-                                       initWithString:arg.displayCrossings];
+                                       initWithString:arg.display];
 }
 
 - (IBAction)changedR3:(id)sender
@@ -478,7 +493,7 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     }
     R3Arg* arg = (R3Arg*)options3[use];
     self.detail3.attributedText = [[NSAttributedString alloc]
-                                   initWithString:arg.displayCrossings];
+                                   initWithString:arg.display];
 }
 
 - (IBAction)close:(id)sender
