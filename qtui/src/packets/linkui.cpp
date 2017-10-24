@@ -54,25 +54,15 @@ using regina::Link;
 LinkUI::LinkUI(regina::Link* packet, PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabLink) {
     LinkHeaderUI* header = new LinkHeaderUI(packet, this);
-    crossings = new LinkCrossingsUI(packet, this);
-    /*
-    gluings = new LinkGluingsUI(packet, this, newEnclosingPane->isReadWrite());
-    skeleton = new LinkSkeletonUI(packet, this);
-    algebra = new LinkAlgebraUI(packet, this);
-    surfaces = new LinkSurfacesUI(packet, this);
-    snapPea = new LinkSnapPeaUI(packet, this);
-    */
+    crossings = new LinkCrossingsUI(packet, this,
+        newEnclosingPane->isReadWrite());
+    // TODO: More tabs.
 
     crossings->fillToolBar(header->getToolBar());
 
     addHeader(header);
     addTab(crossings, QObject::tr("&Crossings"));
-    /*
-    addTab(skeleton, QObject::tr("&Skeleton"));
-    addTab(algebra, QObject::tr("&Algebra"));
-    addTab(surfaces, QObject::tr("&Recognition"));
-    addTab(snapPea, QObject::tr("Snap&Pea"));
-    */
+    // TODO: More tabs.
 
     editIface = new PacketEditTabbedUI(this);
 }

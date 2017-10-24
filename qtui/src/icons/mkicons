@@ -30,6 +30,7 @@ my @actionIcons = qw/
     signature-2d
     signature-3d
     simplify
+    simplify-link
     vtxlinks
     /;
 

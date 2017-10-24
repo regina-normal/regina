@@ -59,6 +59,7 @@ set (IMGS
   signature-3d
   signature-4d
   simplify
+  simplify-link
   snappea
   vtxlinks
   )

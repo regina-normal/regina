@@ -68,16 +68,20 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * Gluing actions
          */
+        QAction* actSimplify;
+        QAction* actComplement;
         QLinkedList<QAction*> actionList;
+        QLinkedList<QAction*> enableWhenWritable;
 
     public:
         /**
          * Constructor and destructor.
          */
-        LinkCrossingsUI(regina::Link* packet, PacketTabbedUI* useParentUI);
+        LinkCrossingsUI(regina::Link* packet,
+            PacketTabbedUI* useParentUI, bool readWrite);
 
         /**
-         * Fill the given toolbar with knot/link  actions.
+         * Fill the given toolbar with knot/link actions.
          *
          * This is necessary since the toolbar will not be a part of
          * this page, but this page (as the editor) keeps track of the
@@ -98,8 +102,11 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * Knot/link actions.
          */
+        void simplify();
         void reflect();
         void rotate();
+        void moves();
+        void complement();
 };
 
 #endif
