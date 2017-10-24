@@ -96,21 +96,104 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
 }
 @end
 
-@interface R3Arg : NSObject
-@property (assign, nonatomic) int crossing;
-@property (assign, nonatomic) int side;
-- (id)init:(int)crossing side:(int)side;
+@interface R2DownArg : NSObject {
+    int _displayCrossing[2];
+}
+@property (assign, nonatomic, readonly) regina::Crossing* crossing;
+
+- (id)init:(regina::Crossing*)crossing;
+- (NSString*)displayCrossings;
+- (NSComparisonResult)compare:(R2DownArg*)otherObject;
+@end
+
+@implementation R2DownArg
+- (id)init:(regina::Crossing*)crossing
+{
+    self = [super init];
+    if (self) {
+        _crossing = crossing;
+        
+        _displayCrossing[0] = crossing->index();
+        _displayCrossing[1] = crossing->next(1).crossing()->index();
+        
+        std::sort(_displayCrossing, _displayCrossing + 2);
+    }
+    return self;
+}
+- (NSString*)displayCrossings
+{
+    return [NSString stringWithFormat:@"Crossings %d, %d",
+            _displayCrossing[0], _displayCrossing[1]];
+}
+- (NSComparisonResult)compare:(R2DownArg*)rhs
+{
+    if (_displayCrossing[0] < rhs->_displayCrossing[0])
+        return NSOrderedAscending;
+    if (_displayCrossing[0] > rhs->_displayCrossing[0])
+        return NSOrderedDescending;
+    if (_displayCrossing[1] < rhs->_displayCrossing[1])
+        return NSOrderedAscending;
+    if (_displayCrossing[1] > rhs->_displayCrossing[1])
+        return NSOrderedDescending;
+    return NSOrderedSame;
+}
+@end
+
+@interface R3Arg : NSObject {
+    int _displayCrossing[3];
+}
+@property (assign, nonatomic, readonly) regina::Crossing* crossing;
+@property (assign, nonatomic, readonly) int side;
+
+- (id)init:(regina::Crossing*)crossing side:(int)side;
+- (NSString*)displayCrossings;
+- (NSComparisonResult)compare:(R3Arg*)otherObject;
 @end
 
 @implementation R3Arg
-- (id)init:(int)crossing side:(int)side
+- (id)init:(regina::Crossing*)crossing side:(int)side
 {
     self = [super init];
     if (self) {
         _crossing = crossing;
         _side = side;
+        
+        regina::Crossing* c2 = crossing->upper().next().crossing();
+        // The upper arc of the move is crossing -> c2 in the forward direction.
+        regina::Crossing* c3;
+        if ((side == 0 && c2->sign() > 0) || (side == 1 && c2->sign() < 0))
+            c3 = c2->lower().next().crossing();
+        else
+            c3 = c2->lower().prev().crossing();
+
+        _displayCrossing[0] = crossing->index();
+        _displayCrossing[1] = c2->index();
+        _displayCrossing[2] = c3->index();
+        
+        std::sort(_displayCrossing, _displayCrossing + 3);
     }
     return self;
+}
+- (NSString*)displayCrossings
+{
+    return [NSString stringWithFormat:@"Crossings %d, %d, %d",
+            _displayCrossing[0], _displayCrossing[1], _displayCrossing[2]];
+}
+- (NSComparisonResult)compare:(R3Arg*)rhs
+{
+    if (_displayCrossing[0] < rhs->_displayCrossing[0])
+        return NSOrderedAscending;
+    if (_displayCrossing[0] > rhs->_displayCrossing[0])
+        return NSOrderedDescending;
+    if (_displayCrossing[1] < rhs->_displayCrossing[1])
+        return NSOrderedAscending;
+    if (_displayCrossing[1] > rhs->_displayCrossing[1])
+        return NSOrderedDescending;
+    if (_displayCrossing[2] < rhs->_displayCrossing[2])
+        return NSOrderedAscending;
+    if (_displayCrossing[2] > rhs->_displayCrossing[2])
+        return NSOrderedDescending;
+    return NSOrderedSame;
 }
 @end
 
@@ -218,8 +301,9 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     options2down = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
         if (self.packet->r2(self.packet->crossing(i), true, false))
-            [options2down addObject:@(i)];
+            [options2down addObject:[[R2DownArg alloc] init:self.packet->crossing(i)]];
     if (options2down.count > 0) {
+        [options2down sortUsingSelector:@selector(compare:)];
         self.button2down.enabled = self.stepper2down.enabled = YES;
         self.stepper2down.maximumValue = options2down.count - 1;
         if (self.stepper2down.value >= options2down.count)
@@ -235,8 +319,9 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
     for (i = 0; i < self.packet->size(); ++i)
         for (side = 0; side < 2; ++side)
             if (self.packet->r3(self.packet->crossing(i), side, true, false))
-                [options3 addObject:[[R3Arg alloc] init:i side:side]];
+                [options3 addObject:[[R3Arg alloc] init:self.packet->crossing(i) side:side]];
     if (options3.count > 0) {
+        [options3 sortUsingSelector:@selector(compare:)];
         self.button3.enabled = self.stepper3.enabled = YES;
         self.stepper3.maximumValue = options3.count - 1;
         if (self.stepper3.value >= options3.count)
@@ -286,8 +371,8 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
         NSLog(@"Invalid R2 separate stepper value: %ld", (long)use);
         return;
     }
-    long crossing = [options2down[use] longValue];
-    self.packet->r2(self.packet->crossing(crossing), true, true);
+    R2DownArg* arg = (R2DownArg*)options2down[use];
+    self.packet->r2(arg.crossing, true, true);
     [self reloadMoves];
 }
 
@@ -299,7 +384,7 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
         return;
     }
     R3Arg* arg = (R3Arg*)options3[use];
-    self.packet->r3(self.packet->crossing(arg.crossing), arg.side, true, true);
+    self.packet->r3(arg.crossing, arg.side, true, true);
     [self reloadMoves];
 }
 
@@ -379,12 +464,9 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
         NSLog(@"Invalid R2 separate stepper value: %ld", (long)use);
         return;
     }
-    
-    long crossing = [options2down[use] longValue];
+    R2DownArg* arg = (R2DownArg*)options2down[use];
     self.detail2down.attributedText = [[NSAttributedString alloc]
-                                       initWithString:[NSString stringWithFormat:@"Crossings %ld, %d",
-                                                       crossing,
-                                                       self.packet->crossing(crossing)->next(1).crossing()->index()]];
+                                       initWithString:arg.displayCrossings];
 }
 
 - (IBAction)changedR3:(id)sender
@@ -395,19 +477,8 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
         return;
     }
     R3Arg* arg = (R3Arg*)options3[use];
-    
-    regina::Crossing* c1 = self.packet->crossing(arg.crossing);
-    regina::Crossing* c2 = c1->upper().next().crossing();
-    // The upper arc of the move is c1 -> c2 in the forward direction.
-    regina::Crossing* c3;
-    if ((arg.side == 0 && c2->sign() > 0) || (arg.side == 1 && c2->sign() < 0))
-        c3 = c2->lower().next().crossing();
-    else
-        c3 = c2->lower().prev().crossing();
-        
     self.detail3.attributedText = [[NSAttributedString alloc]
-                                   initWithString:[NSString stringWithFormat:@"Crossings %d, %d, %d",
-                                                   c1->index(), c2->index(), c3->index()]];
+                                   initWithString:arg.displayCrossings];
 }
 
 - (IBAction)close:(id)sender
