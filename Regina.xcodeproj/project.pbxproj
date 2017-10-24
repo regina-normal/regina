@@ -1829,7 +1829,6 @@
 		05AB5EE21B94285C007034C8 /* libqcocoa.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EE31B94285C007034C8 /* libqminimal.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EE01B94285B007034C8 /* libqminimal.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EE41B94285C007034C8 /* libqoffscreen.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF21B9428B3007034C8 /* libqdds.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE61B9428B0007034C8 /* libqdds.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EF31B9428B3007034C8 /* libqgif.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE71B9428B0007034C8 /* libqgif.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EF41B9428B3007034C8 /* libqicns.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE81B9428B1007034C8 /* libqicns.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EF51B9428B3007034C8 /* libqico.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE91B9428B1007034C8 /* libqico.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -2394,7 +2393,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				054739E31D9B188000C7B56F /* libqmacjp2.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EF21B9428B3007034C8 /* libqdds.dylib in Copy Qt Plugins (imageformats) */,
 				05AB5EF31B9428B3007034C8 /* libqgif.dylib in Copy Qt Plugins (imageformats) */,
 				05AB5EF41B9428B3007034C8 /* libqicns.dylib in Copy Qt Plugins (imageformats) */,
 				05AB5EF51B9428B3007034C8 /* libqico.dylib in Copy Qt Plugins (imageformats) */,
@@ -4254,7 +4252,6 @@
 		05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/platforms/libqcocoa.dylib; sourceTree = "<group>"; };
 		05AB5EE01B94285B007034C8 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/platforms/libqminimal.dylib; sourceTree = "<group>"; };
 		05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/platforms/libqoffscreen.dylib; sourceTree = "<group>"; };
-		05AB5EE61B9428B0007034C8 /* libqdds.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqdds.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqdds.dylib; sourceTree = "<group>"; };
 		05AB5EE71B9428B0007034C8 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqgif.dylib; sourceTree = "<group>"; };
 		05AB5EE81B9428B1007034C8 /* libqicns.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqicns.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqicns.dylib; sourceTree = "<group>"; };
 		05AB5EE91B9428B1007034C8 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqico.dylib; sourceTree = "<group>"; };
@@ -7405,7 +7402,6 @@
 			children = (
 				05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */,
 				05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */,
-				05AB5EE61B9428B0007034C8 /* libqdds.dylib */,
 				05AB5EE71B9428B0007034C8 /* libqgif.dylib */,
 				05AB5EE81B9428B1007034C8 /* libqicns.dylib */,
 				05AB5EE91B9428B1007034C8 /* libqico.dylib */,
