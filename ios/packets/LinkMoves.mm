@@ -146,11 +146,12 @@ namespace {
     NSMutableAttributedString* text = [[NSMutableAttributedString alloc] init];
     
     if (position > 0) {
-        [text appendAttributedString:[TextHelper markedString:@"Over: "]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"Over:" attributes:@{NSUnderlineStyleAttributeName: @1}]];
     } else {
-        [text appendAttributedString:[TextHelper markedString:@"Under: "]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"Under:" attributes:@{NSUnderlineStyleAttributeName: @1}]];
     }
-    
+    [text appendAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
+
     if (self.strand.crossing()) {
         regina::StrandRef s = self.strand;
         [text appendAttributedString:[[NSAttributedString alloc] initWithString:strandDesc(s)]];
