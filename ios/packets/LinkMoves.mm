@@ -1,0 +1,379 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  iOS User Interface                                                    *
+ *                                                                        *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public             *
+ *  License along with this program; if not, write to the Free            *
+ *  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,       *
+ *  MA 02110-1301, USA.                                                   *
+ *                                                                        *
+ **************************************************************************/
+
+#import "LinkMoves.h"
+#import "TextHelper.h"
+#import "link/link.h"
+
+static UIColor* negColour = [UIColor colorWithRed:(0xB8 / 256.0)
+                                            green:(0x86 / 256.0)
+                                             blue:(0x0B / 256.0)
+                                            alpha:1.0]; // Dark goldenrod
+
+static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
+                                            green:(0x54 / 256.0)
+                                             blue:(0x7E / 256.0)
+                                            alpha:1.0]; // Blue jay
+
+static UIColor* leftColour = [UIColor colorWithRed:0.6
+                                             green:0.0
+                                              blue:0.0
+                                             alpha:1.0]; // Colour for port
+
+static UIColor* rightColour = [UIColor colorWithRed:0.0
+                                              green:0.5
+                                               blue:0.0
+                                              alpha:1.0]; // Colour for starboard
+
+@interface R1UpArg : NSObject
+@property (assign, nonatomic) regina::StrandRef strand;
+@property (assign, nonatomic) int side;
+@property (assign, nonatomic) int sign;
+- (id)init:(const regina::StrandRef&)strand side:(int)side sign:(int)sign;
+@end
+
+@implementation R1UpArg
+- (id)init:(const regina::StrandRef&)strand side:(int)side sign:(int)sign
+{
+    self = [super init];
+    if (self) {
+        _strand = strand;
+        _side = side;
+        _sign = sign;
+    }
+    return self;
+}
+@end
+
+@interface R2UpArg : NSObject
+@property (assign, nonatomic) regina::StrandRef upperStrand;
+@property (assign, nonatomic) int upperSide;
+@property (assign, nonatomic) regina::StrandRef lowerStrand;
+@property (assign, nonatomic) int lowerSide;
+- (id)init:(const regina::StrandRef&)upperStrand upperSide:(int)upperSide lowerStrand:(const regina::StrandRef&)lowerStrand lowerSide:(int)lowerSide;
+@end
+
+@implementation R2UpArg
+- (id)init:(const regina::StrandRef&)upperStrand upperSide:(int)upperSide lowerStrand:(const regina::StrandRef&)lowerStrand lowerSide:(int)lowerSide
+{
+    self = [super init];
+    if (self) {
+        _upperStrand = upperStrand;
+        _upperSide = upperSide;
+        _lowerStrand = lowerStrand;
+        _lowerSide = lowerSide;
+    }
+    return self;
+}
+@end
+
+@interface R3Arg : NSObject
+@property (assign, nonatomic) int crossing;
+@property (assign, nonatomic) int side;
+- (id)init:(int)crossing side:(int)side;
+@end
+
+@implementation R3Arg
+- (id)init:(int)crossing side:(int)side
+{
+    self = [super init];
+    if (self) {
+        _crossing = crossing;
+        _side = side;
+    }
+    return self;
+}
+@end
+
+@interface LinkMoves () {
+    NSMutableArray* options1up;
+    NSMutableArray* options1down;
+    NSMutableArray* options2up;
+    NSMutableArray* options2down;
+    NSMutableArray* options3;
+
+    NSAttributedString* unavailable;
+}
+
+@property (weak, nonatomic) IBOutlet UIButton *button1up;
+@property (weak, nonatomic) IBOutlet UIButton *button1down;
+@property (weak, nonatomic) IBOutlet UIButton *button2up;
+@property (weak, nonatomic) IBOutlet UIButton *button2down;
+@property (weak, nonatomic) IBOutlet UIButton *button3;
+
+@property (weak, nonatomic) IBOutlet UIStepper *stepper1up;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper1down;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper2up;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper2down;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper3;
+
+@property (weak, nonatomic) IBOutlet UILabel *detail1up;
+@property (weak, nonatomic) IBOutlet UILabel *detail1down;
+@property (weak, nonatomic) IBOutlet UILabel *detail2up;
+@property (weak, nonatomic) IBOutlet UILabel *detail2down;
+@property (weak, nonatomic) IBOutlet UILabel *detail3;
+
+@property (weak, nonatomic) IBOutlet UILabel *crossings;
+
+@end
+
+@implementation LinkMoves
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    unavailable = [TextHelper dimString:@"Not available"];
+    [self reloadMoves];
+}
+
+- (void)reloadMoves
+{
+    if (self.packet->size() == 1)
+        self.crossings.text = @"1 crossing";
+    else
+        self.crossings.text = [NSString stringWithFormat:@"%zu crossings", self.packet->size()];
+
+    unsigned long i;
+    int strand, side;
+    
+    // R1 twist moves on arcs are always valid.
+    options1up = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->size(); ++i)
+        for (strand = 0; strand < 2; ++strand)
+            for (side = 0; side < 2; ++side) {
+                [options1up addObject:[[R1UpArg alloc] init:self.packet->crossing(i)->strand(strand)
+                                                       side:side
+                                                       sign:1]];
+                [options1up addObject:[[R1UpArg alloc] init:self.packet->crossing(i)->strand(strand)
+                                                       side:side
+                                                       sign:-1]];
+            }
+    if (self.packet->r1(regina::StrandRef(nullptr, 0), 0, 1, true, false)) {
+        // We have unknot component(s) that we can use for R1 twists also.
+        [options1up addObject:[[R1UpArg alloc] init:regina::StrandRef(nullptr, 0)
+                                               side:0
+                                               sign:1]];
+        [options1up addObject:[[R1UpArg alloc] init:regina::StrandRef(nullptr, 0)
+                                               side:0
+                                               sign:-1]];
+    }
+    if (options1up.count > 0) {
+        self.button1up.enabled = self.stepper1up.enabled = YES;
+        self.stepper1up.maximumValue = options1up.count - 1;
+        if (self.stepper1up.value >= options1up.count)
+            self.stepper1up.value = options1up.count - 1;
+        else
+            [self changedR1Up:nil];
+    } else {
+        self.button1up.enabled = self.stepper1up.enabled = NO;
+        self.detail1up.attributedText = unavailable;
+    }
+
+    options1down = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->size(); ++i)
+        if (self.packet->r1(self.packet->crossing(i), true, false))
+            [options1down addObject:@(i)];
+    if (options1down.count > 0) {
+        self.button1down.enabled = self.stepper1down.enabled = YES;
+        self.stepper1down.maximumValue = options1down.count - 1;
+        if (self.stepper1down.value >= options1down.count)
+            self.stepper1down.value = options1down.count - 1;
+        else
+            [self changedR1Down:nil];
+    } else {
+        self.button1down.enabled = self.stepper1down.enabled = NO;
+        self.detail1down.attributedText = unavailable;
+    }
+    
+    // TODO: Fill R2 up
+
+    options2down = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->size(); ++i)
+        if (self.packet->r2(self.packet->crossing(i), true, false))
+            [options2down addObject:@(i)];
+    if (options2down.count > 0) {
+        self.button2down.enabled = self.stepper2down.enabled = YES;
+        self.stepper2down.maximumValue = options2down.count - 1;
+        if (self.stepper2down.value >= options2down.count)
+            self.stepper2down.value = options2down.count - 1;
+        else
+            [self changedR2Down:nil];
+    } else {
+        self.button2down.enabled = self.stepper2down.enabled = NO;
+        self.detail2down.attributedText = unavailable;
+    }
+    
+    // TODO: Fill R3
+}
+
+- (IBAction)doR1Up:(id)sender
+{
+    NSInteger use = self.stepper1up.value;
+    if (use < 0 || use >= options1up.count) {
+        NSLog(@"Invalid R1 twist stepper value: %ld", (long)use);
+        return;
+    }
+    R1UpArg* arg = (R1UpArg*)options1up[use];
+    self.packet->r1(arg.strand, arg.side, arg.sign, true, true);
+    [self reloadMoves];
+}
+
+- (IBAction)doR1Down:(id)sender
+{
+    NSInteger use = self.stepper1down.value;
+    if (use < 0 || use >= options1down.count) {
+        NSLog(@"Invalid R1 untwist stepper value: %ld", (long)use);
+        return;
+    }
+    long crossing = [options1down[use] longValue];
+    self.packet->r1(self.packet->crossing(crossing), true, true);
+    [self reloadMoves];
+}
+
+- (IBAction)doR2Up:(id)sender
+{
+    // TODO: implement
+    [self reloadMoves];
+}
+
+- (IBAction)doR2Down:(id)sender
+{
+    NSInteger use = self.stepper2down.value;
+    if (use < 0 || use >= options2down.count) {
+        NSLog(@"Invalid R2 separate stepper value: %ld", (long)use);
+        return;
+    }
+    long crossing = [options2down[use] longValue];
+    self.packet->r2(self.packet->crossing(crossing), true, true);
+    [self reloadMoves];
+}
+
+- (IBAction)doR3:(id)sender
+{
+    // TODO: implement
+    [self reloadMoves];
+}
+
++ (NSString*)strandDesc:(const regina::StrandRef&)strand
+{
+    if (strand.crossing()) {
+        if (strand.strand() == 0)
+            return [NSString stringWithFormat:@"%d lower", strand.crossing()->index()];
+        else
+            return [NSString stringWithFormat:@"%d upper", strand.crossing()->index()];
+    } else {
+        return @"unknot component";
+    }
+}
+
+- (IBAction)changedR1Up:(id)sender
+{
+    NSInteger use = self.stepper1up.value;
+    if (use < 0 || use >= options1up.count) {
+        self.detail1up.attributedText = [TextHelper badString:@"Invalid R1 arguments"];
+        return;
+    }
+    R1UpArg* arg = (R1UpArg*)options1up[use];
+
+    NSMutableAttributedString* text = [[NSMutableAttributedString alloc] init];
+
+    if (arg.strand.crossing()) {
+        regina::StrandRef s = arg.strand;
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[LinkMoves strandDesc:s]]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@" → "]];
+        ++s;
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[LinkMoves strandDesc:s]]];
+
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
+        
+        if (arg.side == 0)
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"left" attributes:@{NSForegroundColorAttributeName: leftColour}]];
+        else
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"right" attributes:@{NSForegroundColorAttributeName: rightColour}]];
+    } else {
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"Unknotted circle"]];
+    }
+
+    [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
+    
+    if (arg.sign < 0) {
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"−ve" attributes:@{NSForegroundColorAttributeName: negColour}]];
+    } else {
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"+ve" attributes:@{NSForegroundColorAttributeName: posColour}]];
+    }
+
+    self.detail1up.attributedText = text;
+}
+
+- (IBAction)changedR1Down:(id)sender
+{
+    NSInteger use = self.stepper1down.value;
+    if (use < 0 || use >= options1down.count) {
+        NSLog(@"Invalid R1 untwist stepper value: %ld", (long)use);
+        return;
+    }
+    
+    long crossing = [options1down[use] longValue];
+    self.detail1down.attributedText = [[NSAttributedString alloc]
+                                       initWithString:[NSString stringWithFormat:@"Crossing %ld", crossing]];
+}
+
+- (IBAction)changedR2Up:(id)sender
+{
+    // TODO: Implement
+}
+
+- (IBAction)changedR2Down:(id)sender
+{
+    NSInteger use = self.stepper2down.value;
+    if (use < 0 || use >= options2down.count) {
+        NSLog(@"Invalid R2 separate stepper value: %ld", (long)use);
+        return;
+    }
+    
+    long crossing = [options2down[use] longValue];
+    self.detail2down.attributedText = [[NSAttributedString alloc]
+                                       initWithString:[NSString stringWithFormat:@"Crossings %ld, %d",
+                                                       crossing,
+                                                       self.packet->crossing(crossing)->next(1).crossing()->index()]];
+}
+
+- (IBAction)changedR3:(id)sender
+{
+    // TODO: Implement
+}
+
+- (IBAction)close:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+@end

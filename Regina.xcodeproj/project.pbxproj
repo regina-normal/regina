@@ -1944,6 +1944,7 @@
 		05CAFB561C4D904A0001C253 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05CB9FF01F9AD7D5002ECB18 /* LinkCodes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */; };
 		05CB9FF51F9B890F002ECB18 /* LinkCrossings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FF11F9B8905002ECB18 /* LinkCrossings.mm */; };
+		05CB9FFA1F9EA3CF002ECB18 /* LinkMoves.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */; };
 		05D0A1101812F0BE005ED097 /* Tri3ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */; };
 		05D1172919EDF43F003BEC55 /* WelcomeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1172819EDF43F003BEC55 /* WelcomeViewController.mm */; };
 		05D1172B19EE0166003BEC55 /* bitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1011806088B00FAE4DF /* bitmask.cpp */; };
@@ -4358,6 +4359,8 @@
 		05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkCodes.mm; sourceTree = "<group>"; };
 		05CB9FF11F9B8905002ECB18 /* LinkCrossings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkCrossings.mm; sourceTree = "<group>"; };
 		05CB9FF21F9B8907002ECB18 /* LinkCrossings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkCrossings.h; sourceTree = "<group>"; };
+		05CB9FF61F9E9FD8002ECB18 /* LinkMoves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkMoves.h; sourceTree = "<group>"; };
+		05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkMoves.mm; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* Tri3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3ViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3ViewController.mm; sourceTree = "<group>"; };
 		05D1172719EDF43F003BEC55 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
@@ -4690,6 +4693,8 @@
 				05CB9FF11F9B8905002ECB18 /* LinkCrossings.mm */,
 				05C0DB0A1F9969D2001773C3 /* LinkGraph.h */,
 				05C0DB081F9969CE001773C3 /* LinkGraph.mm */,
+				05CB9FF61F9E9FD8002ECB18 /* LinkMoves.h */,
+				05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */,
 				05F232771F9AB2A900101A9E /* LinkPolynomials.h */,
 				05F232751F9AB2A000101A9E /* LinkPolynomials.mm */,
 				05C0DB0B1F9969D2001773C3 /* LinkViewController.h */,
@@ -9205,6 +9210,7 @@
 				054208911DF0D0CF0018AB24 /* rule.cpp in Sources */,
 				05A73C9F19B2EF5A0099C617 /* homology.c in Sources */,
 				05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */,
+				05CB9FFA1F9EA3CF002ECB18 /* LinkMoves.mm in Sources */,
 				0503DCD819B7E3AD0085F3CC /* DocumentListController.mm in Sources */,
 				0542090E1DF0DA450018AB24 /* sfs.cpp in Sources */,
 				05249EAD1DBC16B3001FE29E /* pyalgebra.cpp in Sources */,

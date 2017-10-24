@@ -32,6 +32,7 @@
 
 #import "LinkViewController.h"
 #import "LinkCrossings.h"
+#import "LinkMoves.h"
 #import "ReginaHelper.h"
 #import "link/link.h"
 #import "triangulation/dim3.h"
@@ -186,7 +187,9 @@ static NSString* unknotText = @"Unknot, no crossings";
 }
 
 - (IBAction)reidemeister:(id)sender {
-    // TODO
+    UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"linkMoves"];
+    static_cast<LinkMoves*>(sheet).packet = self.packet;
+    [self presentViewController:sheet animated:YES completion:nil];
 }
 
 - (IBAction)actions:(id)sender {
