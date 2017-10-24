@@ -39,10 +39,10 @@ namespace regina {
 
 @interface LinkViewController : PacketTabBarController <PacketEditor>
 
-@property (class) UIColor* posColour;
-@property (class) UIColor* negColour;
-@property (class) UIColor* leftColour;
-@property (class) UIColor* rightColour;
+@property (class, readonly) UIColor* posColour;
+@property (class, readonly) UIColor* negColour;
+@property (class, readonly) UIColor* leftColour;
+@property (class, readonly) UIColor* rightColour;
 
 @property (assign, nonatomic) regina::Link* packet;
 

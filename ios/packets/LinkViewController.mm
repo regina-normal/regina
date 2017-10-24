@@ -38,10 +38,16 @@ static UIColor* negColour = [UIColor colorWithRed:(0xB8 / 256.0)
                                              blue:(0x0B / 256.0)
                                             alpha:1.0]; // Dark goldenrod
 
+/*
 static UIColor* posColour = [UIColor colorWithRed:(0x2B / 256.0)
                                             green:(0x54 / 256.0)
                                              blue:(0x7E / 256.0)
                                             alpha:1.0]; // Blue jay
+*/
+static UIColor* posColour = [UIColor colorWithRed:(0.0)
+                                            green:(0x71 / 256.0)
+                                             blue:(0xBC / 256.0)
+                                            alpha:1.0];
 
 static UIColor* leftColour = [UIColor colorWithRed:0.6
                                              green:0.0
@@ -87,7 +93,7 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
 
 - (void)updateHeader:(UILabel *)header
 {
-    NSString* signs = nil;
+    NSAttributedString* signs = nil;
     if (self.packet->size() > 1) {
         size_t plus = 0, minus = 0;
         for (size_t i = 0; i < self.packet->size(); ++i)
@@ -97,37 +103,67 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
                 ++minus;
         
         if (minus == 0)
-            signs = @"all +";
+            signs = [[NSAttributedString alloc] initWithString:@"all +"
+                                                    attributes:@{NSForegroundColorAttributeName: posColour}];
         else if (plus == 0)
-            signs = @"all −";
+            signs = [[NSAttributedString alloc] initWithString:@"all −"
+                                                    attributes:@{NSForegroundColorAttributeName: negColour}];
+        else {
+            NSMutableAttributedString* s = [[NSMutableAttributedString alloc] init];
+            [s appendAttributedString:[[NSAttributedString alloc]
+                                       initWithString:[NSString stringWithFormat:@"%zu +ve", plus]
+                                                                      attributes:@{NSForegroundColorAttributeName: posColour}]];
+            [s appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
+            [s appendAttributedString:[[NSAttributedString alloc]
+                                       initWithString:[NSString stringWithFormat:@"%zu −ve", minus]
+                                       attributes:@{NSForegroundColorAttributeName: negColour}]];
+            signs = s;
+        }
+    } else if (self.packet->size() == 1) {
+        if (self.packet->crossing(0)->sign() > 0)
+            signs = [[NSAttributedString alloc] initWithString:@"+ve"
+                                                    attributes:@{NSForegroundColorAttributeName: posColour}];
         else
-            signs = [NSString stringWithFormat:@"%zu +ve, %zu −ve", plus, minus];
+            signs = [[NSAttributedString alloc] initWithString:@"−ve"
+                                                    attributes:@{NSForegroundColorAttributeName: negColour}];
     }
     
     if (self.packet->isEmpty())
-        header.text = @"Empty";
+        header.attributedText = [[NSAttributedString alloc] initWithString:@"Empty"];
     else if (self.packet->countComponents() == 1) {
         // Knot:
         if (self.packet->size() == 0) {
-            header.text = @"Unknot with no crossings";
+            header.attributedText = [[NSAttributedString alloc] initWithString:@"Unknot with no crossings"];
         } else if (self.packet->size() == 1) {
-            if (self.packet->crossing(0)->sign() > 0)
-                header.text = @"Knot with 1 crossing (+ve)";
-            else
-                header.text = @"Knot with 1 crossing (−ve)";
-        } else
-            header.text = [NSString stringWithFormat:@"Knot with %zu crossings (%@)", self.packet->size(), signs];
+            NSMutableAttributedString* s = [[NSMutableAttributedString alloc] initWithString:@"Knot with 1 crossing ("];
+            [s appendAttributedString:signs];
+            [s appendAttributedString:[[NSAttributedString alloc] initWithString:@")"]];
+            header.attributedText = s;
+        } else {
+            NSMutableAttributedString* s = [[NSMutableAttributedString alloc]
+                                            initWithString:[NSString stringWithFormat:@"Knot with %zu crossings (", self.packet->size()]];
+            [s appendAttributedString:signs];
+            [s appendAttributedString:[[NSAttributedString alloc] initWithString:@")"]];
+            header.attributedText = s;
+        }
     } else {
         // Multiple component link:
         if (self.packet->size() == 0) {
-            header.text = [NSString stringWithFormat:@"Unlink with %zu components, no crossings", self.packet->countComponents()];
+            header.attributedText = [[NSAttributedString alloc]
+                                     initWithString:[NSString stringWithFormat:@"Unlink with %zu components, no crossings", self.packet->countComponents()]];
         } else if (self.packet->size() == 1) {
-            if (self.packet->crossing(0)->sign() > 0)
-                header.text = [NSString stringWithFormat:@"Link with %zu components, 1 crossing (+ve)", self.packet->countComponents()];
-            else
-                header.text = [NSString stringWithFormat:@"Link with %zu components, 1 crossing (−ve)", self.packet->countComponents()];
-        } else
-            header.text = [NSString stringWithFormat:@"Link with %zu components, %zu crossings (%@)", self.packet->countComponents(), self.packet->size(), signs];
+            NSMutableAttributedString* s = [[NSMutableAttributedString alloc]
+                                            initWithString:[NSString stringWithFormat:@"Link with %zu components, 1 crossing (", self.packet->countComponents()]];
+            [s appendAttributedString:signs];
+            [s appendAttributedString:[[NSAttributedString alloc] initWithString:@")"]];
+            header.attributedText = s;
+        } else {
+            NSMutableAttributedString* s = [[NSMutableAttributedString alloc]
+                                            initWithString:[NSString stringWithFormat:@"Link with %zu components, %zu crossings (", self.packet->countComponents(), self.packet->size()]];
+            [s appendAttributedString:signs];
+            [s appendAttributedString:[[NSAttributedString alloc] initWithString:@")"]];
+            header.attributedText = s;
+        }
     }
 }
 
