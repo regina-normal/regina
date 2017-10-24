@@ -34,8 +34,6 @@
 #import "TextHelper.h"
 #import "link/link.h"
 
-// TODO: Sort R2 up
-
 static UIColor* negColour = [UIColor colorWithRed:(0xB8 / 256.0)
                                             green:(0x86 / 256.0)
                                              blue:(0x0B / 256.0)
@@ -58,14 +56,11 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
 
 namespace {
     NSString* strandDesc(const regina::StrandRef& strand) {
-        if (strand.crossing()) {
-            if (strand.strand() == 0)
-                return [NSString stringWithFormat:@"%d lower", strand.crossing()->index()];
-            else
-                return [NSString stringWithFormat:@"%d upper", strand.crossing()->index()];
-        } else {
-            return @"unknot component";
-        }
+        // PRE: strand is not a null strand.
+        if (strand.strand() == 0)
+            return [NSString stringWithFormat:@"%d lower", strand.crossing()->index()];
+        else
+            return [NSString stringWithFormat:@"%d upper", strand.crossing()->index()];
     }
 }
 
@@ -152,6 +147,7 @@ namespace {
 @property (assign, nonatomic) regina::StrandRef strand;
 @property (assign, nonatomic) int side;
 - (id)init:(const regina::StrandRef&)strand side:(int)side;
+- (NSAttributedString*)display:(int)position;
 @end
 
 @implementation R2UpArg
@@ -163,6 +159,38 @@ namespace {
         _side = side;
     }
     return self;
+}
+- (NSAttributedString*)display:(int)position
+{
+    NSMutableAttributedString* text = [[NSMutableAttributedString alloc] init];
+    
+    if (position > 0) {
+        [text appendAttributedString:[TextHelper markedString:@"Over: "]];
+    } else {
+        [text appendAttributedString:[TextHelper markedString:@"Under: "]];
+    }
+    
+    if (self.strand.crossing()) {
+        regina::StrandRef s = self.strand;
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:strandDesc(s)]];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@" → "]];
+        ++s;
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:strandDesc(s)]];
+    } else {
+        if (position > 0)
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"Unknotted circle #1"]];
+        else
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"Unknotted circle #2"]];
+    }
+    
+    [text appendAttributedString:[[NSAttributedString alloc] initWithString:@", "]];
+    
+    if (self.side == 0)
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"left" attributes:@{NSForegroundColorAttributeName: leftColour}]];
+    else
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"right" attributes:@{NSForegroundColorAttributeName: rightColour}]];
+
+    return text;
 }
 @end
 
@@ -375,8 +403,52 @@ namespace {
         self.detail1down.attributedText = unavailable;
     }
     
-    // TODO: Fill R2 up, over
-    [self changedR2UpOver:nil];
+    // R2 overlap moves can be done with any arc that is not the inside of a twist.
+    // Note that, if you are the inside of a twist, then you cannot also be the outside of a twist.
+    options2upOver = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->size(); ++i) {
+        regina::Crossing* crossing = self.packet->crossing(i);
+        for (strand = 0; strand < 2; ++strand) {
+            if (crossing->next(strand).crossing() == crossing) {
+                // We are part of a twist.
+                if ((strand == 0 && crossing->sign() > 0) || (strand == 1 && crossing->sign() < 0)) {
+                    // Left side is bad.
+                    [options2upOver addObject:[[R2UpArg alloc] init:crossing->strand(strand)
+                                                               side:1]];
+                } else {
+                    // Right side is bad.
+                    [options2upOver addObject:[[R2UpArg alloc] init:crossing->strand(strand)
+                                                               side:0]];
+                }
+            } else {
+                // We are not part of a twist.
+                // Both sides are usable.
+                for (side = 0; side < 2; ++side) {
+                    [options2upOver addObject:[[R2UpArg alloc] init:crossing->strand(strand)
+                                                               side:side]];
+                }
+            }
+        }
+    }
+    if (self.packet->countComponents() > 1 && self.packet->r1(regina::StrandRef(nullptr, 0), 0, 1, true, false)) {
+        // We have unknot component(s), as identified by the R1 test, and we
+        // can use R2 on this with any *different* component.
+        [options2upOver addObject:[[R2UpArg alloc] init:regina::StrandRef(nullptr, 0)
+                                                   side:0]];
+        [options2upOver addObject:[[R2UpArg alloc] init:regina::StrandRef(nullptr, 0)
+                                                   side:1]];
+    }
+    if (options2upOver.count > 0) {
+        self.button2up.enabled = self.stepper2upOver.enabled = self.stepper2upUnder.enabled = YES;
+        self.stepper2upOver.maximumValue = options2upOver.count - 1;
+        if (self.stepper2upOver.value >= options2upOver.count)
+            self.stepper2upOver.value = options2upOver.count - 1;
+        else
+            [self changedR2UpOver:nil];
+    } else {
+        self.button2up.enabled = self.stepper2upOver.enabled = self.stepper2upUnder.enabled = NO;
+        self.detail2upOver.attributedText = self.detail2upUnder.attributedText = unavailable;
+    }
 
     options2down = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
@@ -440,7 +512,21 @@ namespace {
 
 - (IBAction)doR2Up:(id)sender
 {
-    // TODO: implement
+    NSInteger useOver = self.stepper2upOver.value;
+    if (useOver < 0 || useOver >= options2upOver.count) {
+        NSLog(@"Invalid R2 overlap (over) stepper value: %ld", (long)useOver);
+        return;
+    }
+    R2UpArg* over = (R2UpArg*)options2upOver[useOver];
+
+    NSInteger useUnder = self.stepper2upUnder.value;
+    if (useUnder < 0 || useUnder >= options2upUnder.count) {
+        NSLog(@"Invalid R2 overlap (under) stepper value: %ld", (long)useUnder);
+        return;
+    }
+    R2UpArg* under = (R2UpArg*)options2upUnder[useUnder];
+
+    self.packet->r2(over.strand, over.side, under.strand, under.side, true, true);
     [self reloadMoves];
 }
 
@@ -493,14 +579,55 @@ namespace {
 
 - (IBAction)changedR2UpOver:(id)sender
 {
-    // TODO: Implement
+    NSInteger use = self.stepper2upOver.value;
+    if (use < 0 || use >= options2upOver.count) {
+        NSLog(@"Invalid R2 overlap (over) stepper value: %ld", (long)use);
+        return;
+    }
+    R2UpArg* over = (R2UpArg*)options2upOver[use];
+    self.detail2upOver.attributedText = [over display:1];
     
-    // TODO: Fill R2 up, under
+    // TODO: Make this faster by walking around the region (and then sorting),
+    // instead of iterating through all potential strands.
+    
+    options2upUnder = [[NSMutableArray alloc] init];
+    int i, strand, side;
+    for (i = 0; i < self.packet->size(); ++i)
+        for (strand = 0; strand < 2; ++strand)
+            for (side = 0; side < 2; ++side)
+                if (self.packet->r2(over.strand, over.side,
+                                    self.packet->crossing(i)->strand(strand), side,
+                                    true, false))
+                    [options2upUnder addObject:[[R2UpArg alloc] init:self.packet->crossing(i)->strand(strand) side:side]];
+    for (side = 0; side < 2; ++side)
+        if (self.packet->r2(over.strand, over.side,
+                            regina::StrandRef(nullptr, 0), side,
+                            true, false))
+            [options2upUnder addObject:[[R2UpArg alloc] init:regina::StrandRef(nullptr, 0) side:side]];
+    if (options2upUnder.count > 0) {
+        // [options2upUnder sortUsingSelector:@selector(compare:)];
+        self.stepper2upUnder.maximumValue = options2upUnder.count - 1;
+        if (self.stepper2upUnder.value >= options2upUnder.count)
+            self.stepper2upUnder.value = options2upUnder.count - 1;
+        else
+            [self changedR2UpUnder:nil];
+    } else {
+        // This should never happen.
+        self.button2up.enabled = self.stepper2upOver.enabled = self.stepper2upUnder.enabled = NO;
+        self.detail2upOver.attributedText = self.detail2upUnder.attributedText = unavailable;
+        NSLog(@"ERROR: No viable options for R2 up (under).");
+    }
 }
 
 - (IBAction)changedR2UpUnder:(id)sender
 {
-    // TODO: Implement
+    NSInteger use = self.stepper2upUnder.value;
+    if (use < 0 || use >= options2upUnder.count) {
+        NSLog(@"Invalid R2 overlap (under) stepper value: %ld", (long)use);
+        return;
+    }
+    R2UpArg* arg = (R2UpArg*)options2upUnder[use];
+    self.detail2upUnder.attributedText = [arg display:-1];
 }
 
 - (IBAction)changedR2Down:(id)sender
