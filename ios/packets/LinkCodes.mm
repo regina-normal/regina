@@ -36,10 +36,7 @@
 
 #define KEY_LINK_CODE_TYPE @"LinkCodeType"
 
-@interface LinkCodes () {
-    UIFont* codeFont;
-}
-
+@interface LinkCodes () <UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *header;
 
 @property (weak, nonatomic) IBOutlet UITextView *code;
@@ -50,10 +47,14 @@
 
 @implementation LinkCodes
 
+- (void)viewDidLoad
+{
+    UILongPressGestureRecognizer *r = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    [self.view addGestureRecognizer:r];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    codeFont = [UIFont fontWithName:@"Menlo" size:self.header.font.pointSize];
 
     self.codeType.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LINK_CODE_TYPE];
     
@@ -66,27 +67,75 @@
 {
     [static_cast<LinkViewController*>(self.parentViewController) updateHeader:self.header];
 
+    NSString* ans = nil;
     switch (self.codeType.selectedSegmentIndex) {
         case 0:
-            if (self.packet->countComponents() == 1)
-                self.code.text = @(self.packet->orientedGauss().c_str());
-            else {
+            if (self.packet->countComponents() != 1) {
                 self.code.text = @"Oriented Gauss codes are currently only available for knots.";
-                self.code.font = self.header.font;
-                return; // to avoid resetting the font below.
+                return;
             }
+
+            ans = @(self.packet->orientedGauss().c_str());
             break;
+
         case 1:
-            self.code.text = @(self.packet->jenkins().c_str());
+            ans = @(self.packet->jenkins().c_str());
             break;
     }
     
-    self.code.font = codeFont;
+    ans = [ans stringByReplacingOccurrencesOfString:@"-" withString:@"−"]; /* minus sign */
+    ans = [ans stringByReplacingOccurrencesOfString:@" " withString:@"\u2002"]; /* enspace */
+    self.code.text = ans;
 }
 
 - (IBAction)codeTypeChanged:(id)sender {
     [[NSUserDefaults standardUserDefaults] setInteger:self.codeType.selectedSegmentIndex forKey:KEY_LINK_CODE_TYPE];
     [self reloadPacket];
+}
+
+- (IBAction)longPress:(id)sender {
+    UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
+    if (press.state == UIGestureRecognizerStateBegan) {
+        CGPoint location = [press locationInView:self.view];
+        if (! CGRectContainsPoint(self.code.frame, location))
+            return;
+        
+        [self becomeFirstResponder];
+        
+        UIMenuController *copyMenu = [UIMenuController sharedMenuController];
+        [copyMenu setTargetRect:CGRectMake(location.x, location.y, 0, 0) inView:self.view];
+        copyMenu.arrowDirection = UIMenuControllerArrowDefault;
+        [copyMenu setMenuVisible:YES animated:YES];
+    }
+}
+
+#pragma mark - UIResponder
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+    if (action == @selector(copy:)) {
+        // Don't allow us to copy a Gauss code that is not being displayed.
+        return ! (self.codeType.selectedSegmentIndex == 0 && self.packet->countComponents() != 1);
+    } else
+        return [super canPerformAction:action withSender:sender];
+}
+
+- (void)copy:(id)sender
+{
+    switch (self.codeType.selectedSegmentIndex) {
+        case 0:
+            if (self.packet->countComponents() == 1)
+                [[UIPasteboard generalPasteboard] setString:@(self.packet->orientedGauss().c_str())];
+            return;
+        case 1:
+            [[UIPasteboard generalPasteboard] setString:@(self.packet->jenkins().c_str())];
+            return;
+    }
 }
 
 @end

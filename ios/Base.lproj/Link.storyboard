@@ -1008,7 +1008,7 @@
                                     <action selector="codeTypeChanged:" destination="iap-t2-Oyb" eventType="valueChanged" id="Qht-nF-nRp"/>
                                 </connections>
                             </segmentedControl>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="uY0-Qt-h72">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uY0-Qt-h72">
                                 <rect key="frame" x="20" y="129" width="663.5" height="590"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
