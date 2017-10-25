@@ -74,6 +74,7 @@ ReginaPrefSet::ReginaPrefSet() :
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HS_STANDARD),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
+        linkHomflyType(HomflyAZ),
         linkInitialGraphType(TreeDecomposition),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
@@ -235,7 +236,12 @@ void ReginaPrefSet::readInternal() {
         "CreationList", regina::HS_LIST_DEFAULT).toInt());
 
     settings.beginGroup("Link");
-    QString str = settings.value("InitialGraphType").toString();
+    QString str = settings.value("HomflyType").toString();
+    if (str == "LM")
+        linkHomflyType = ReginaPrefSet::HomflyLM;
+    else
+        linkHomflyType = ReginaPrefSet::HomflyAZ; /* default */
+    str = settings.value("InitialGraphType").toString();
     if (str == "NiceTree")
         linkInitialGraphType = ReginaPrefSet::NiceTreeDecomposition;
     else
@@ -358,6 +364,12 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationList", hypersurfacesCreationList.intValue());
 
     settings.beginGroup("Link");
+    switch (linkHomflyType) {
+        case ReginaPrefSet::HomflyLM:
+            settings.setValue("HomflyType", "LM"); break;
+        default:
+            settings.setValue("HomflyType", "AZ"); break;
+    }
     switch (linkInitialGraphType) {
         case ReginaPrefSet::NiceTreeDecomposition:
             settings.setValue("InitialGraphType", "NiceTree"); break;

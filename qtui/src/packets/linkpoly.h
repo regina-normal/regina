@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,60 +30,33 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file linkui.h
- *  \brief Provides an interface for viewing knots and links.
+/*! \file linkpoly.h
+ *  \brief Provides a tab for viewing link polynomials.
  */
 
-#ifndef __LINKUI_H
-#define __LINKUI_H
+#ifndef __LINKPOLY_H
+#define __LINKPOLY_H
 
-#include "../packettabui.h"
+#include "packettabui.h"
 
-class LinkCrossingsUI;
-class PacketEditIface;
+class QAbstractButton;
 class QLabel;
-class QToolBar;
+class QRadioButton;
 
 namespace regina {
     class Link;
-}
+    class Packet;
+};
 
 /**
- * A packet interface for viewing knots and links.
+ * A packet viewer tab for viewing graphs related to a link.
  */
-class LinkUI : public PacketTabbedUI {
+class LinkPolynomialUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
-         * Internal components
-         */
-        LinkCrossingsUI* crossings;
-
-        PacketEditIface* editIface;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        LinkUI(regina::Link* packet, PacketPane* newEnclosingPane);
-        ~LinkUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-};
-
-/**
- * A header for the knot/link viewer.
- */
-class LinkHeaderUI : public PacketViewerTab {
-    private:
-        /**
-         * Packet details
+         * The link itself
          */
         regina::Link* link;
 
@@ -91,19 +64,20 @@ class LinkHeaderUI : public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
-        QToolBar* bar;
+        QLabel* jones;
+        QLabel* homfly;
+        QLabel* bracket;
+        QAbstractButton* btnJones;
+        QAbstractButton* btnHomfly;
+        QAbstractButton* btnBracket;
+        QRadioButton* btnAZ;
+        QRadioButton* btnLM;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        LinkHeaderUI(regina::Link* packet, PacketTabbedUI* useParentUI);
-
-        /**
-         * Component queries.
-         */
-        QToolBar* getToolBar();
+        LinkPolynomialUI(regina::Link* useLink, PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -112,18 +86,29 @@ class LinkHeaderUI : public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
 
+    public slots:
         /**
-         * Allow other UIs to access the summary information.
+         * Calculate properties.
          */
-        static QString summaryInfo(regina::Link* tri);
+        void calculateJones();
+        void calculateHomfly();
+        void calculateBracket();
+
+        /**
+         * Change the display style.
+         */
+        void homflyTypeChanged(bool checked);
+
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
+
+    private:
+        /**
+         * Update the UI to reflect the current unicode setting.
+         */
+        void updateLabels();
 };
-
-inline PacketEditIface* LinkUI::getEditIface() {
-    return editIface;
-}
-
-inline QToolBar* LinkHeaderUI::getToolBar() {
-    return bar;
-}
 
 #endif

@@ -86,6 +86,8 @@ class ReginaPrefSet : public QObject {
 
         // The preferences themselves:
 
+        enum HomflyType { HomflyAZ, HomflyLM };
+            /**< Possible flavours of the HOMFLY-PT polynomial to display. */
         enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
@@ -111,6 +113,9 @@ class ReginaPrefSet : public QObject {
         regina::HyperList hypersurfacesCreationList;
             /**< The default options for which normal hypersurfaces to
                  enumerate in a 4-manifold triangulation. */
+        HomflyType linkHomflyType;
+            /**< The default flavour of HOMFLY-PT polynomial to display
+                 for knots and links. */
         TriGraphType linkInitialGraphType;
             /**< Indicates which graph to initially display in a
                  link viewer.  Must not be DualGraph. */

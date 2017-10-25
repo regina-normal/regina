@@ -1981,6 +1981,8 @@
 		05D322CB1F9FFF9600E5F9B8 /* simplify_triangulation.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D4D180600FA00FAE4DF /* simplify_triangulation.c */; };
 		05D322D01FA0415000E5F9B8 /* linkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D322CD1FA0414400E5F9B8 /* linkgraph.cpp */; };
 		05D322D11FA0416000E5F9B8 /* linkgraph.h in Sources */ = {isa = PBXBuildFile; fileRef = 05D322CC1FA0414200E5F9B8 /* linkgraph.h */; };
+		05D322D61FA1415700E5F9B8 /* linkpoly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D322D21FA1414F00E5F9B8 /* linkpoly.cpp */; };
+		05D322D71FA1416700E5F9B8 /* linkpoly.h in Sources */ = {isa = PBXBuildFile; fileRef = 05D322D31FA1415200E5F9B8 /* linkpoly.h */; };
 		05D6CFA41A01D0A60039150F /* Tri3Graph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6CFA31A01D0A60039150F /* Tri3Graph.mm */; };
 		05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
 		05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051E1C41B87200C76D71 /* boost.framework */; };
@@ -4380,6 +4382,8 @@
 		05D322C61F9FED7700E5F9B8 /* linkcrossings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkcrossings.cpp; sourceTree = "<group>"; };
 		05D322CC1FA0414200E5F9B8 /* linkgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkgraph.h; sourceTree = "<group>"; };
 		05D322CD1FA0414400E5F9B8 /* linkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkgraph.cpp; sourceTree = "<group>"; };
+		05D322D21FA1414F00E5F9B8 /* linkpoly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkpoly.cpp; sourceTree = "<group>"; };
+		05D322D31FA1415200E5F9B8 /* linkpoly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkpoly.h; sourceTree = "<group>"; };
 		05D6CFA21A01D0A60039150F /* Tri3Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Graph.h; sourceTree = "<group>"; };
 		05D6CFA31A01D0A60039150F /* Tri3Graph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Graph.mm; sourceTree = "<group>"; };
 		05D81A8B1C66B0E500DDCE64 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
@@ -6888,6 +6892,8 @@
 				05D322C51F9FED7500E5F9B8 /* linkcrossings.h */,
 				05D322CD1FA0414400E5F9B8 /* linkgraph.cpp */,
 				05D322CC1FA0414200E5F9B8 /* linkgraph.h */,
+				05D322D21FA1414F00E5F9B8 /* linkpoly.cpp */,
+				05D322D31FA1415200E5F9B8 /* linkpoly.h */,
 				05D322C01F9FE72100E5F9B8 /* linkui.cpp */,
 				05D322BF1F9FE72000E5F9B8 /* linkui.h */,
 				0564A5A21811D920002CC2AE /* pdfui.cpp */,
@@ -9721,6 +9727,7 @@
 				05D322C41F9FE8BE00E5F9B8 /* linkui.h in Sources */,
 				05D322CA1F9FEEA400E5F9B8 /* linkcrossings.h in Sources */,
 				05D322D11FA0416000E5F9B8 /* linkgraph.h in Sources */,
+				05D322D71FA1416700E5F9B8 /* linkpoly.h in Sources */,
 				0543AE911811DE79002758F8 /* packetui.h in Sources */,
 				0543AEBD1811E12A002758F8 /* packetwindow.h in Sources */,
 				051691BA1C5AD5AC00DC69EC /* hypersummaryui.cpp in Sources */,
@@ -9788,6 +9795,7 @@
 				0564A95E1811D921002CC2AE /* filtercomb.cpp in Sources */,
 				0564A95B1811D921002CC2AE /* scriptui.cpp in Sources */,
 				05D322C91F9FED7F00E5F9B8 /* linkcrossings.cpp in Sources */,
+				05D322D61FA1415700E5F9B8 /* linkpoly.cpp in Sources */,
 				0564A96A1811D921002CC2AE /* tri3snappea.cpp in Sources */,
 				0564A9651811D921002CC2AE /* tri3creator.cpp in Sources */,
 				05A73CCA19B2F1AB0099C617 /* groupwidget.cpp in Sources */,

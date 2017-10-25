@@ -20,6 +20,8 @@ SET ( FILES
   hyperui
   linkcreator
   linkcrossings
+  linkgraph
+  linkpoly
   linkui
   pdfui
   scriptui
