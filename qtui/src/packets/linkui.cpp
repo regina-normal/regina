@@ -35,6 +35,7 @@
 
 // UI includes:
 #include "linkcrossings.h"
+#include "linkgraph.h"
 #include "linkui.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
@@ -62,6 +63,7 @@ LinkUI::LinkUI(regina::Link* packet, PacketPane* newEnclosingPane) :
 
     addHeader(header);
     addTab(crossings, QObject::tr("&Crossings"));
+    addTab(new LinkGraphUI(packet, this), QObject::tr("&Graphs"));
     // TODO: More tabs.
 
     editIface = new PacketEditTabbedUI(this);

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,64 +30,37 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file linkui.h
- *  \brief Provides an interface for viewing knots and links.
+/*! \file linkgraph.h
+ *  \brief Provides a tab for viewing the graphs related to a knot or link.
  */
 
-#ifndef __LINKUI_H
-#define __LINKUI_H
+#ifndef __LINKGRAPH_H
+#define __LINKGRAPH_H
 
-#include "../packettabui.h"
+#include "packettabui.h"
 
-class LinkCrossingsUI;
-class LinkPolynomialsUI;
-class LinkCodesUI;
-class PacketEditIface;
+class MessageLayer;
+
+class QComboBox;
 class QLabel;
-class QToolBar;
+class QScrollArea;
+class QStackedWidget;
+class QSvgWidget;
 
 namespace regina {
     class Link;
-}
+    class Packet;
+};
 
 /**
- * A packet interface for viewing knots and links.
+ * A packet viewer tab for viewing graphs related to a link.
  */
-class LinkUI : public PacketTabbedUI {
+class LinkGraphUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
-         * Internal components
-         */
-        LinkCrossingsUI* crossings;
-        LinkPolynomialsUI* polynomials;
-        LinkCodesUI* codes;
-
-        PacketEditIface* editIface;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        LinkUI(regina::Link* packet, PacketPane* newEnclosingPane);
-        ~LinkUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-};
-
-/**
- * A header for the knot/link viewer.
- */
-class LinkHeaderUI : public PacketViewerTab {
-    private:
-        /**
-         * Packet details
+         * The link itself.
          */
         regina::Link* link;
 
@@ -95,19 +68,19 @@ class LinkHeaderUI : public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
-        QToolBar* bar;
+        QComboBox* chooseType;
+        QLabel* graphMetrics;
+        QStackedWidget* stack;
+        QScrollArea* layerGraph;
+        MessageLayer* layerInfo;
+        MessageLayer* layerError;
+        QSvgWidget* graph;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        LinkHeaderUI(regina::Link* packet, PacketTabbedUI* useParentUI);
-
-        /**
-         * Component queries.
-         */
-        QToolBar* getToolBar();
+        LinkGraphUI(regina::Link* useLink, PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -116,18 +89,20 @@ class LinkHeaderUI : public PacketViewerTab {
         QWidget* getInterface();
         void refresh();
 
+    private:
         /**
-         * Allow other UIs to access the summary information.
+         * Set up internal components.
          */
-        static QString summaryInfo(regina::Link* tri);
+        void showInfo(const QString& msg);
+        void showError(const QString& msg);
+
+        std::string treeDecomp(bool nice, int& bags, int& width);
+
+    private slots:
+        /**
+         * Change graphs.
+         */
+        void changeType(int index);
 };
-
-inline PacketEditIface* LinkUI::getEditIface() {
-    return editIface;
-}
-
-inline QToolBar* LinkHeaderUI::getToolBar() {
-    return bar;
-}
 
 #endif

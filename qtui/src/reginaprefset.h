@@ -111,6 +111,9 @@ class ReginaPrefSet : public QObject {
         regina::HyperList hypersurfacesCreationList;
             /**< The default options for which normal hypersurfaces to
                  enumerate in a 4-manifold triangulation. */
+        TriGraphType linkInitialGraphType;
+            /**< Indicates which graph to initially display in a
+                 link viewer.  Must not be DualGraph. */
         QString pdfExternalViewer;
             /**< The external program used to view PDFs.
                  This string may contain

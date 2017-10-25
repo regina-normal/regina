@@ -74,6 +74,7 @@ ReginaPrefSet::ReginaPrefSet() :
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HS_STANDARD),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
+        linkInitialGraphType(TreeDecomposition),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
@@ -233,6 +234,14 @@ void ReginaPrefSet::readInternal() {
     hypersurfacesCreationList = regina::HyperList::fromInt(settings.value(
         "CreationList", regina::HS_LIST_DEFAULT).toInt());
 
+    settings.beginGroup("Link");
+    QString str = settings.value("InitialGraphType").toString();
+    if (str == "NiceTree")
+        linkInitialGraphType = ReginaPrefSet::NiceTreeDecomposition;
+    else
+        linkInitialGraphType = ReginaPrefSet::TreeDecomposition; /* default */
+    settings.endGroup();
+
     settings.beginGroup("Python");
     pythonAutoIndent = settings.value("AutoIndent", true).toBool();
     pythonSpacesPerTab = settings.value("SpacesPerTab", 4).toInt();
@@ -252,7 +261,7 @@ void ReginaPrefSet::readInternal() {
     surfacesCreationList = regina::NormalList::fromInt(settings.value(
         "CreationList", regina::NS_LIST_DEFAULT).toInt());
 
-    QString str = settings.value("InitialCompat").toString();
+    str = settings.value("InitialCompat").toString();
     if (str == "Global")
         surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
     else
@@ -347,6 +356,15 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Hypersurfaces");
     settings.setValue("CreationCoordinates", hypersurfacesCreationCoords);
     settings.setValue("CreationList", hypersurfacesCreationList.intValue());
+
+    settings.beginGroup("Link");
+    switch (linkInitialGraphType) {
+        case ReginaPrefSet::NiceTreeDecomposition:
+            settings.setValue("InitialGraphType", "NiceTree"); break;
+        default:
+            settings.setValue("InitialGraphType", "Tree"); break;
+    }
+    settings.endGroup();
 
     settings.beginGroup("Python");
     settings.setValue("AutoIndent", pythonAutoIndent);
