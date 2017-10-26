@@ -43,8 +43,11 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 
+#include <QApplication>
+#include <QClipboard>
 #include <QLabel>
 #include <QLayout>
+#include <QMenu>
 #include <QPushButton>
 #include <QToolTip>
 #include <QWhatsThis>
@@ -284,8 +287,6 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     QBoxLayout* mfdArea = new QHBoxLayout();
     manifold = new QLabel();
     manifold->setAlignment(Qt::AlignCenter);
-    manifold->setTextInteractionFlags(
-        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     manifold->setWordWrap(true);
     mfdArea->addWidget(manifold, 1);
     msg = tr("<qt>Displays the name of the underlying 3-manifold if "
@@ -297,8 +298,6 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     QBoxLayout* censusArea = new QHBoxLayout();
     census = new QLabel();
     census->setAlignment(Qt::AlignCenter);
-    census->setTextInteractionFlags(
-        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     census->setWordWrap(true);
     censusArea->addWidget(census, 1);
     msg = tr("<qt>Indicates whether this triangulation appears in any of "
@@ -311,6 +310,13 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
+            
+    manifold->setContextMenuPolicy(Qt::CustomContextMenu);
+    census->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(census, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextCensus(const QPoint&)));
+    connect(manifold, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextManifold(const QPoint&)));
 }
 
 regina::Packet* Tri3SurfacesUI::getPacket() {
@@ -329,7 +335,6 @@ void Tri3SurfacesUI::refresh() {
         isHyp = false;
 
     // Begin with the combinatorial recognition.
-    std::string name;
     regina::StandardTriangulation* std =
         regina::StandardTriangulation::isStandardTriangulation(tri);
     if (std) {
@@ -673,7 +678,8 @@ void Tri3SurfacesUI::refresh() {
     }
 
     if (tri->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        regina::CensusHits* hits = regina::Census::lookup(tri->isoSig());
+        hits = std::unique_ptr<regina::CensusHits>(
+            regina::Census::lookup(tri->isoSig()));
         if (hits->empty()) {
             census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
         } else if (hits->count() == 1) {
@@ -690,8 +696,9 @@ void Tri3SurfacesUI::refresh() {
             ans += "</qt>";
             census->setText(ans);
         }
-        delete hits;
     } else {
+        hits.reset();
+        
         // The triangulation is too large to be found in the census.
         // Avoid the overhead of calling isoSig().
         census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
@@ -784,5 +791,47 @@ void Tri3SurfacesUI::calculateStrict() {
     delete dlg;
 
     refresh();
+}
+
+void Tri3SurfacesUI::contextManifold(const QPoint& pos) {
+    if (name.empty())
+        return;
+    
+    QMenu m(tr("Context menu"), manifold);
+    QAction a("Copy manifold", manifold);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyManifold()));
+    m.addAction(&a);
+    m.exec(manifold->mapToGlobal(pos));
+}
+
+void Tri3SurfacesUI::contextCensus(const QPoint& pos) {
+    if (! (hits.get() && ! hits->empty()))
+        return;
+    
+    QMenu m(tr("Context menu"), census);
+    QAction a("Copy census", census);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyCensus()));
+    m.addAction(&a);
+    m.exec(census->mapToGlobal(pos));
+}
+
+void Tri3SurfacesUI::copyManifold() {
+    QApplication::clipboard()->setText(name.c_str());
+}
+
+void Tri3SurfacesUI::copyCensus() {
+    QString ans;
+    
+    if (hits->count() == 1) {
+        ans = hits->first()->name().c_str();
+    } else {
+        for (const regina::CensusHit* hit = hits->first() ; hit;
+            hit = hit->next()) {
+            ans += hit->name().c_str();
+            ans += "\n";
+        }
+    }
+
+    QApplication::clipboard()->setText(ans);
 }
 
