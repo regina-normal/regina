@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,60 +30,32 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file linkui.h
- *  \brief Provides an interface for viewing knots and links.
+/*! \file linkcodes.h
+ *  \brief Provides a tab for viewing text-based codes for links.
  */
 
-#ifndef __LINKUI_H
-#define __LINKUI_H
+#ifndef __LINKCODES_H
+#define __LINKCODES_H
 
-#include "../packettabui.h"
+#include "packettabui.h"
 
-class LinkCrossingsUI;
-class PacketEditIface;
-class QLabel;
-class QToolBar;
+class QTextEdit;
+class QComboBox;
 
 namespace regina {
     class Link;
-}
+    class Packet;
+};
 
 /**
- * A packet interface for viewing knots and links.
+ * A packet viewer tab for viewing text-based codes for a link.
  */
-class LinkUI : public PacketTabbedUI {
+class LinkCodesUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
-         * Internal components
-         */
-        LinkCrossingsUI* crossings;
-
-        PacketEditIface* editIface;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        LinkUI(regina::Link* packet, PacketPane* newEnclosingPane);
-        ~LinkUI();
-
-        /**
-         * PacketUI overrides.
-         */
-        PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-};
-
-/**
- * A header for the knot/link viewer.
- */
-class LinkHeaderUI : public PacketViewerTab {
-    private:
-        /**
-         * Packet details
+         * The link itself
          */
         regina::Link* link;
 
@@ -91,19 +63,16 @@ class LinkHeaderUI : public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
-        QLabel* header;
-        QToolBar* bar;
+        QComboBox* type;
+        QTextEdit* code;
+        PacketEditIface* editIface;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        LinkHeaderUI(regina::Link* packet, PacketTabbedUI* useParentUI);
-
-        /**
-         * Component queries.
-         */
-        QToolBar* getToolBar();
+        LinkCodesUI(regina::Link* useLink, PacketTabbedUI* useParentUI);
+        ~LinkCodesUI();
 
         /**
          * PacketViewerTab overrides.
@@ -111,19 +80,22 @@ class LinkHeaderUI : public PacketViewerTab {
         regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
+        PacketEditIface* getEditIface();
+
+    public slots:
+        /**
+         * Change which code is displayed.
+         */
+        void typeChanged(int index);
 
         /**
-         * Allow other UIs to access the summary information.
+         * Notify that preferences have changed.
          */
-        static QString summaryInfo(regina::Link* tri);
+        void updatePreferences();
 };
 
-inline PacketEditIface* LinkUI::getEditIface() {
+inline PacketEditIface* LinkCodesUI::getEditIface() {
     return editIface;
-}
-
-inline QToolBar* LinkHeaderUI::getToolBar() {
-    return bar;
 }
 
 #endif

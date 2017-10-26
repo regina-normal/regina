@@ -74,6 +74,7 @@ ReginaPrefSet::ReginaPrefSet() :
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HS_STANDARD),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
+        linkCodeType(OrientedGauss),
         linkHomflyType(HomflyAZ),
         linkInitialGraphType(TreeDecomposition),
         pythonAutoIndent(true),
@@ -236,7 +237,12 @@ void ReginaPrefSet::readInternal() {
         "CreationList", regina::HS_LIST_DEFAULT).toInt());
 
     settings.beginGroup("Link");
-    QString str = settings.value("HomflyType").toString();
+    QString str = settings.value("CodeType").toString();
+    if (str == "Jenkins")
+        linkCodeType = ReginaPrefSet::Jenkins;
+    else
+        linkCodeType = ReginaPrefSet::OrientedGauss; /* default */
+    str = settings.value("HomflyType").toString();
     if (str == "LM")
         linkHomflyType = ReginaPrefSet::HomflyLM;
     else
@@ -364,6 +370,12 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationList", hypersurfacesCreationList.intValue());
 
     settings.beginGroup("Link");
+    switch (linkCodeType) {
+        case ReginaPrefSet::Jenkins:
+            settings.setValue("CodeType", "Jenkins"); break;
+        default:
+            settings.setValue("CodeType", "OrientedGauss"); break;
+    }
     switch (linkHomflyType) {
         case ReginaPrefSet::HomflyLM:
             settings.setValue("HomflyType", "LM"); break;

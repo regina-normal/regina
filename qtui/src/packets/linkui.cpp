@@ -34,6 +34,7 @@
 #include "link/link.h"
 
 // UI includes:
+#include "linkcodes.h"
 #include "linkcrossings.h"
 #include "linkgraph.h"
 #include "linkpoly.h"
@@ -58,15 +59,20 @@ LinkUI::LinkUI(regina::Link* packet, PacketPane* newEnclosingPane) :
     LinkHeaderUI* header = new LinkHeaderUI(packet, this);
     crossings = new LinkCrossingsUI(packet, this,
         newEnclosingPane->isReadWrite());
-    // TODO: More tabs.
 
     crossings->fillToolBar(header->getToolBar());
 
     addHeader(header);
     addTab(crossings, QObject::tr("&Crossings"));
     addTab(new LinkPolynomialUI(packet, this), QObject::tr("&Polynomials"));
+    addTab(new LinkCodesUI(packet, this), QObject::tr("C&odes"));
     addTab(new LinkGraphUI(packet, this), QObject::tr("&Graphs"));
-    // TODO: More tabs.
+
+    editIface = new PacketEditTabbedUI(this);
+}
+
+LinkUI::~LinkUI() {
+    delete editIface;
 }
 
 const QLinkedList<QAction*>& LinkUI::getPacketTypeActions() {

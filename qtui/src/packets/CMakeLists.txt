@@ -18,6 +18,7 @@ SET ( FILES
   hypermatchingui
   hypersummaryui
   hyperui
+  linkcodes
   linkcreator
   linkcrossings
   linkgraph
