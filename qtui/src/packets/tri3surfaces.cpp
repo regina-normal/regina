@@ -379,7 +379,9 @@ void Tri3SurfacesUI::refresh() {
             btnZeroEff->setEnabled(false);
         } else {
             zeroEff->setText(tr("Unknown"));
-            zeroEff->setPalette(QPalette());
+            QPalette pal = zeroEff->palette();
+            pal.setColor(zeroEff->foregroundRole(), Qt::darkGray);
+            zeroEff->setPalette(pal);
             btnZeroEff->setEnabled(true);
         }
 
@@ -399,7 +401,9 @@ void Tri3SurfacesUI::refresh() {
             btnSplitting->setEnabled(false);
         } else {
             splitting->setText(tr("Unknown"));
-            splitting->setPalette(QPalette());
+            QPalette pal = splitting->palette();
+            pal.setColor(splitting->foregroundRole(), Qt::darkGray);
+            splitting->setPalette(pal);
             btnSplitting->setEnabled(true);
         }
     } else {
@@ -437,7 +441,9 @@ void Tri3SurfacesUI::refresh() {
             btnThreeSphere->setEnabled(false);
         } else {
             threeSphere->setText(tr("Unknown"));
-            threeSphere->setPalette(QPalette());
+            QPalette pal = threeSphere->palette();
+            pal.setColor(threeSphere->foregroundRole(), Qt::darkGray);
+            threeSphere->setPalette(pal);
             btnThreeSphere->setEnabled(true);
         }
     } else {
@@ -471,7 +477,9 @@ void Tri3SurfacesUI::refresh() {
             btnThreeBall->setEnabled(false);
         } else {
             threeBall->setText(tr("Unknown"));
-            threeBall->setPalette(QPalette());
+            QPalette pal = threeBall->palette();
+            pal.setColor(threeBall->foregroundRole(), Qt::darkGray);
+            threeBall->setPalette(pal);
             btnThreeBall->setEnabled(true);
         }
     } else {
@@ -505,7 +513,9 @@ void Tri3SurfacesUI::refresh() {
             btnSolidTorus->setEnabled(false);
         } else {
             solidTorus->setText(tr("Unknown"));
-            solidTorus->setPalette(QPalette());
+            QPalette pal = solidTorus->palette();
+            pal.setColor(solidTorus->foregroundRole(), Qt::darkGray);
+            solidTorus->setPalette(pal);
             btnSolidTorus->setEnabled(true);
         }
     } else {
@@ -538,7 +548,9 @@ void Tri3SurfacesUI::refresh() {
             btnIrreducible->setEnabled(false);
         } else {
             irreducible->setText(tr("Unknown"));
-            irreducible->setPalette(QPalette());
+            QPalette pal = irreducible->palette();
+            pal.setColor(irreducible->foregroundRole(), Qt::darkGray);
+            irreducible->setPalette(pal);
             btnIrreducible->setEnabled(true);
         }
     } else {
@@ -581,7 +593,9 @@ void Tri3SurfacesUI::refresh() {
             btnHaken->setEnabled(false);
         } else {
             haken->setText(tr("Unknown"));
-            haken->setPalette(QPalette());
+            QPalette pal = haken->palette();
+            pal.setColor(haken->foregroundRole(), Qt::darkGray);
+            haken->setPalette(pal);
             btnHaken->setEnabled(true);
         }
     } else {
@@ -617,7 +631,9 @@ void Tri3SurfacesUI::refresh() {
             btnStrict->setEnabled(false);
         } else {
             strict->setText(tr("Unknown"));
-            strict->setPalette(QPalette());
+            QPalette pal = strict->palette();
+            pal.setColor(strict->foregroundRole(), Qt::darkGray);
+            strict->setPalette(pal);
             btnStrict->setEnabled(true);
         }
 
@@ -635,7 +651,9 @@ void Tri3SurfacesUI::refresh() {
             }
         } else {
                 hyperbolic->setText("Unknown");
-                hyperbolic->setPalette(QPalette());
+                QPalette pal = hyperbolic->palette();
+                pal.setColor(hyperbolic->foregroundRole(), Qt::darkGray);
+                hyperbolic->setPalette(pal);
         }
     } else {
         titleStrict->setVisible(false);
