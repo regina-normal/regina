@@ -67,7 +67,20 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actionList.append(actSimplify);
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
 
-    // TODO: moves
+    QAction* actMoves = new QAction(this);
+    actMoves->setText(tr("Reidemeister &Moves..."));
+    actMoves->setToolTip(tr(
+        "Modify the link diagram using Reidemeister moves"));
+    actMoves->setEnabled(readWrite);
+    actMoves->setWhatsThis(tr("Perform Reidemeister moves upon this "
+        "link diagram.  <i>Reidemeister moves</i> are modifications "
+        "local to a small number of crossings that do not change "
+        "the underlying link.<p>"
+        "A dialog will be presented for you to select which "
+        "Reidemeister moves to apply."));
+    enableWhenWritable.append(actMoves);
+    actionList.append(actMoves);
+    connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
 
     QAction* sep = new QAction(this);
     sep->setSeparator(true);
@@ -100,7 +113,18 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     enableWhenWritable.append(actRotate);
     connect(actRotate, SIGNAL(triggered()), this, SLOT(rotate()));
 
-    // TODO: Separator, then complement.
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    actionList.append(sep);
+
+    actComplement = new QAction(this);
+    actComplement->setText(tr("&Complement"));
+    actComplement->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
+    actComplement->setToolTip(tr("Triangulate the complement of this link."));
+    actComplement->setWhatsThis(tr("Construct the complement of this "
+        "knot or link as an ideal 3-manifold triangulation."));
+    actionList.append(actComplement);
+    connect(actComplement, SIGNAL(triggered()), this, SLOT(complement()));
 
     // Tidy up.
 
@@ -109,6 +133,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
 
 void LinkCrossingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actSimplify);
+    bar->addSeparator();
+    bar->addAction(actComplement);
 }
 
 regina::Packet* LinkCrossingsUI::getPacket() {
