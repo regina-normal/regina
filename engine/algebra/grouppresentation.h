@@ -1291,6 +1291,19 @@ class REGINA_API GroupPresentation :
          */
         void writeTextLong(std::ostream& out) const;
 
+#ifdef __DOXYGEN
+        /**
+         * A Sage-only routine that returns a copy of this group presentation
+         * in a format native to Sage.
+         *
+         * \ifacescpp Not present.
+         * \ifacespython Only present when run within Sage.
+         *
+         * @return a copy of this group as a mathematical object native to Sage.
+         */
+        FinitelyPresentedGroup sage() const;
+#endif
+
     private:
         /**
          * Attempts to rewrite the presentation as a group extension.

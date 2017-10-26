@@ -15,6 +15,9 @@ Version 5.2  [ 29 September, 2017 ]
           that partially compliant compilers (such as gcc4.9) should be fine.
         - Now builds under gcc7.
     ENGINE:
+        Class GroupPresentation:
+            - New Python-only sage() routine that converts a Regina
+              group presentation to a mathematical object native to Sage.
         Class NormalHypersurfaces:
             - New routine sort() to sort hypersurfaces by arbitrary criteria.
             - The postconditions for enumerate() and makeMatchingEquations()
@@ -29,6 +32,16 @@ Version 5.2  [ 29 September, 2017 ]
               where this can happen.
         Class NSVectorQuadClosed:
             - New normal surface coordinate class to implement NS_QUAD_CLOSED.
+        Class Packet, PacketChildren, ChildIterator, SubtreeIterator:
+            - Supports iterating through packets using range-based for loops:
+                + Packet has new routines begin() and end() for iterating
+                  through the entire subtree rooted at a given packet.
+                + Packet has a new routine children() for iterating through
+                  immediate children of a given packet.
+                + New lightweight classes PacketChildren, ChildIterator and
+                  SubtreeIterator to support this functionality.
+                + In Python, Packet has new generators children(), subtree()
+                  and descendants() (thanks to Matthias Goerner).
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the
@@ -45,6 +58,8 @@ Version 5.2  [ 29 September, 2017 ]
             - Deprecated drillEdge(), since in all cases that matter,
               pinchEdge() performs the same topological operation with
               vastly fewer tetrahedra.
+            - New Python constructor that accepts a snappy.Manifold or a
+              SnapPy.Triangulation (thanks to Matthias Goerner).
         Enum Algorithm, TuraevViroAlg:
             - Renamed TuraevViroAlg to the more general Algorithm enum type.
               The old type name TuraevViroAlg and constants TV_... are now
@@ -62,6 +77,9 @@ Version 5.2  [ 29 September, 2017 ]
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.
+    TEST SUITE:
+        - The test suite executable now takes optional arguments that,
+          if present, indicate a subset of tests to perform.
 
 Version 5.1  [ 19 December, 2016 ]
 

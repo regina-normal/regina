@@ -35,6 +35,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <iostream>
+#include <map>
 #include <cppunit/Test.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TextTestProgressListener.h>
@@ -55,6 +56,8 @@ namespace {
     static bool checkedParams = false;
     static bool useDetailedTests = false;
 }
+
+typedef void (*TestSet)(CppUnit::TextUi::TestRunner& runner);
 
 void checkTestParams() {
     if (checkedParams)
@@ -102,64 +105,86 @@ std::string truncateFixture(const std::string& testName) {
     return testName;
 }
 
-void populateTests(CppUnit::TextTestRunner& runner) {
+bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
+    std::map<std::string, TestSet> sets;
+
     // Utilities:
-    addBase64(runner);
-    addBitmask(runner);
+    sets.insert(std::make_pair("base64", &addBase64));
+    sets.insert(std::make_pair("bitmask", &addBitmask));
 
     // Maths:
-    addInteger(runner);
-    addRational(runner);
-    addPerm2(runner);
-    addPerm3(runner);
-    addPerm4(runner);
-    addPerm5(runner);
-    addPerm(runner);
-    addPrimes(runner);
-    addNumberTheory(runner);
-    addMatrixOps(runner);
-    addPermConv(runner);
+    sets.insert(std::make_pair("integer", &addInteger));
+    sets.insert(std::make_pair("rational", &addRational));
+    sets.insert(std::make_pair("perm2", &addPerm2));
+    sets.insert(std::make_pair("perm3", &addPerm3));
+    sets.insert(std::make_pair("perm4", &addPerm4));
+    sets.insert(std::make_pair("perm5", &addPerm5));
+    sets.insert(std::make_pair("perm", &addPerm));
+    sets.insert(std::make_pair("primes", &addPrimes));
+    sets.insert(std::make_pair("numbertheory", &addNumberTheory));
+    sets.insert(std::make_pair("matrixops", &addMatrixOps));
+    sets.insert(std::make_pair("permconv", &addPermConv));
 
     // Algebra:
-    addGroupPresentation(runner);
+    sets.insert(std::make_pair("grouppresentation", &addGroupPresentation));
 
     // 2-manifold triangulations:
-    addTriangulation2(runner);
+    sets.insert(std::make_pair("triangulation2", &addTriangulation2));
 
     // 3-manifold triangulations:
-    addTriangulation3(runner);
-    addElementaryMoves(runner);
-    addConnectedSumDecomp(runner);
-    addIsomorphism3(runner);
-    addDualGraph3(runner);
-    addHomologicalData(runner);
+    sets.insert(std::make_pair("triangulation3", &addTriangulation3));
+    sets.insert(std::make_pair("elementarymoves", &addElementaryMoves));
+    sets.insert(std::make_pair("connectedsumdecomp", &addConnectedSumDecomp));
+    sets.insert(std::make_pair("isomorphism3", &addIsomorphism3));
+    sets.insert(std::make_pair("dualgraph3", &addDualGraph3));
+    sets.insert(std::make_pair("homologicaldata", &addHomologicalData));
 
     // 4-manifold triangulations:
-    addTriangulation4(runner);
+    sets.insert(std::make_pair("triangulation4", &addTriangulation4));
 
     // Generic triangulations:
-    addFaceNumbering(runner);
-    addGenericTriangulation(runner);
+    sets.insert(std::make_pair("facenumbering", &addFaceNumbering));
+    sets.insert(std::make_pair("generictriangulation",
+        &addGenericTriangulation));
 
     // Subcomplexes:
-    addStandardTriangulation(runner);
+    sets.insert(std::make_pair("standardtriangulation",
+        &addStandardTriangulation));
 
     // Surfaces:
-    addNormalSurfaces(runner);
-    addIncompressible(runner);
+    sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));
+    sets.insert(std::make_pair("incompressible", &addIncompressible));
 
     // Angle structures:
-    addAngleStructures(runner);
+    sets.insert(std::make_pair("anglestructures", &addAngleStructures));
 
     // Census:
-    addCensus3(runner);
-    addFacetPairing3(runner);
-    addCensus2(runner);
-    addFacetPairing2(runner);
-    addCensus4(runner);
-    addFacetPairing4(runner);
+    sets.insert(std::make_pair("census2", &addCensus2));
+    sets.insert(std::make_pair("facetpairing2", &addFacetPairing2));
+    sets.insert(std::make_pair("census3", &addCensus3));
+    sets.insert(std::make_pair("facetpairing3", &addFacetPairing3));
+    sets.insert(std::make_pair("census4", &addCensus4));
+    sets.insert(std::make_pair("facetpairing4", &addFacetPairing4));
 
     // SnapPea:
-    addSnapPeaTriangulation(runner);
+    sets.insert(std::make_pair("snappeatriangulation",
+        &addSnapPeaTriangulation));
+
+    if (argc <= 1)
+        for (const auto& i : sets)
+            (i.second)(runner);
+    else {
+        for (int i = 1; i < argc; ++i) {
+            auto it = sets.find(std::string(argv[i]));
+            if (it == sets.end()) {
+                std::cerr << "ERROR: No test set named " << argv[i] << '.'
+                    << std::endl;
+                return false;
+            } else
+                (it->second)(runner);
+        }
+    }
+
+    return true;
 }
 

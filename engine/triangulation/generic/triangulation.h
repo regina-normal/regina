@@ -68,7 +68,11 @@ template <int> class XMLTriangulationReader;
  * This object provides basic container-like behaviour.  It supports begin(),
  * end(), size(), and the random access operator <tt>[]</tt>.
  * In particular, you can iterate through all <i>subdim</i>-faces using C++11
- * range-based \c for loops: <tt>for (auto f : faceList) { ... }</tt>.
+ * range-based \c for loops:
+ *
+ * \code{.cpp}
+ * for (Face<dim, subdim>* f : faceList) { ... }
+ * \endcode
  *
  * Strictly speaking, this list holds \e pointers to Face<dim, subdim> objects.
  * So, for example, dereferencing an iterator will return a pointer of type
