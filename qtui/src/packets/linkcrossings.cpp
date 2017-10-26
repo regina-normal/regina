@@ -32,6 +32,7 @@
 
 // Regina core includes:
 #include "link/link.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "linkcrossings.h"
@@ -157,7 +158,7 @@ void LinkCrossingsUI::setReadWrite(bool readWrite) {
 }
 
 void LinkCrossingsUI::refresh() {
-    // TODO.
+    // TODO: implement a crossings display (x2)
 }
 
 void LinkCrossingsUI::simplify() {
@@ -189,10 +190,13 @@ void LinkCrossingsUI::rotate() {
 }
 
 void LinkCrossingsUI::moves() {
-    // TODO.
+    // TODO: implement Reidemeister moves
 }
 
 void LinkCrossingsUI::complement() {
-    // TODO.
+    regina::Triangulation<3>* ans = link->complement();
+    ans->setLabel(link->adornedLabel("Complement"));
+    link->insertChildLast(ans);
+    enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
