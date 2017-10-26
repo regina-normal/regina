@@ -87,9 +87,9 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actionList.append(sep);
 
     // Set up the link actions.
-    QAction* actReflect = new QAction(this);
+    actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
-    // TODO: actReflect->setIcon(ReginaSupport::regIcon("reflectlink"));
+    actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr("Reflect this link"));
     actReflect->setEnabled(readWrite);
     actReflect->setWhatsThis(tr("Reflect this link about some axis in "
@@ -101,7 +101,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
 
     QAction* actRotate = new QAction(this);
     actRotate->setText(tr("&Rotate"));
-    // TODO: actRotate->setIcon(ReginaSupport::regIcon("rotatelink"));
+    actRotate->setIcon(ReginaSupport::regIcon("rotate"));
     actRotate->setToolTip(tr("Rotate this link"));
     actRotate->setEnabled(readWrite);
     actRotate->setWhatsThis(tr("Rotate this link about some axis in "
@@ -132,6 +132,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
 }
 
 void LinkCrossingsUI::fillToolBar(QToolBar* bar) {
+    bar->addAction(actReflect);
     bar->addAction(actSimplify);
     bar->addSeparator();
     bar->addAction(actComplement);

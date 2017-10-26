@@ -53,7 +53,9 @@ set (IMGS
   packet_view
   puncture
   randomise
+  reflect
   regina
+  rotate
   run
   signature-2d
   signature-3d

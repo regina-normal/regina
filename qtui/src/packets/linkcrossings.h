@@ -68,6 +68,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * Gluing actions
          */
+        QAction* actReflect;
         QAction* actSimplify;
         QAction* actComplement;
         QLinkedList<QAction*> actionList;
