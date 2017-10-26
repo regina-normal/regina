@@ -393,16 +393,16 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     triActionList.append(actSimplify);
 
     QAction* actEltMove = new QAction(this);
-    actEltMove->setText(tr("&Elementary Move..."));
+    actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
-        "Select an elementary move with which to modify the triangulation"));
+        "Modify the triangulation using elementary moves"));
     actEltMove->setEnabled(readWrite);
-    actEltMove->setWhatsThis(tr("<qt>Perform an elementary move upon this "
+    actEltMove->setWhatsThis(tr("<qt>Perform elementary moves upon this "
         "triangulation.  <i>Elementary moves</i> are modifications local to "
         "a small number of pentachora that do not change the underlying "
         "4-manifold.<p>"
-        "A dialog will be presented in which you can select the precise "
-        "elementary move to apply.</qt>"));
+        "A dialog will be presented for you to select which "
+        "elementary moves to apply.</qt>"));
     enableWhenWritable.append(actEltMove);
     triActionList.append(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));

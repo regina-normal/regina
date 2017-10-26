@@ -104,7 +104,7 @@ namespace {
 EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
-    setWindowTitle(tr("Elementary Move"));
+    setWindowTitle(tr("Elementary Moves"));
     QVBoxLayout *dialogLayout = new QVBoxLayout(this);
 
     name = new QLabel();
