@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -413,7 +413,7 @@ REGINA_API MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
  * \deprecated The class NAngleStructureList has now been renamed to
  * AngleStructures.
  */
-REGINA_DEPRECATED typedef AngleStructures NAngleStructureList;
+[[deprecated]] typedef AngleStructures NAngleStructureList;
 
 /*@}*/
 

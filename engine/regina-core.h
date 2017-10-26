@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,23 +43,6 @@
  * \weakgroup engine
  * @{
  */
-
-namespace regina {
-
-/**
- * Indicates whether the given dimension is one of Regina's
- * \ref stddim "standard dimensions".
- * Standard dimensions offer significantly richer functionality for
- * triangulations than generic dimensions.
- *
- * @param dim the dimension in question.
- * @return \c true if and only if \a dim is one of Regina's standard dimensions.
- */
-constexpr bool standardDim(int dim) {
-    return (dim == 2 || dim == 3 || dim == 4);
-}
-
-} // namespace regina
 
 /**
  * A synonym for \c inline, used in some special cases to avoid
@@ -113,38 +96,6 @@ constexpr bool standardDim(int dim) {
    * Use of this macro is optional.
    */
   #define REGINA_LOCAL
-
-  /**
-   * Any deprecated class, function, typedef or constant in Regina's API must
-   * be declared with REGINA_DEPRECATED.
-   *
-   * If the user passes the compile flag <tt>-DREGINA_STRICT</tt>, then
-   * this macro attempts to declare the <tt>deprecated</tt> attribute.
-   * If it cannot work out how to declare such an attribute under the
-   * current compiler, then this macro expands to nothing instead.
-   *
-   * If a function or constant is declared as both REGINA_API and
-   * REGINA_DEPRECATED, the REGINA_DEPRECATED attribute should be listed first.
-   *
-   * Conversely, if a class or struct is declared as both REGINA_API and
-   * REGINA_DEPRECATED, the REGINA_API attribute should be listed first.
-   *
-   * If/when Regina moves to C++14, this macro can be replaced with
-   * <tt>[[deprecated]]</tt> instead.
-   */
-  #define REGINA_DEPRECATED
-
-  /**
-   * Any deprecated enumeration constant in Regina's API must be
-   * declared with REGINA_DEPRECATED_ENUM.
-   *
-   * This macro plays a similar role to REGINA_DEPRECATED.  It is defined
-   * separately because some compilers support the deprecated attribute on
-   * classes and functions, but not on enumeration constants.
-   *
-   * See the REGINA_DEPRECATED macro for further details.
-   */
-  #define REGINA_DEPRECATED_ENUM
 #else
   // The real definitions go here.
   // The macros below are modified from the instructions at
@@ -172,32 +123,113 @@ constexpr bool standardDim(int dim) {
     #define REGINA_API REGINA_HELPER_DLL_IMPORT
   #endif
   #define REGINA_LOCAL REGINA_HELPER_DLL_LOCAL
-
-  #if defined REGINA_STRICT
-    // Try to find deprecated attributes that the compiler understands.
-    #if __llvm__
-      #define REGINA_DEPRECATED [[deprecated]]
-      #define REGINA_DEPRECATED_ENUM [[deprecated]]
-    #else
-      #if __GNUC__
-        #define REGINA_DEPRECATED __attribute__((deprecated))
-        #if __GNUC__ >= 6
-          #define REGINA_DEPRECATED_ENUM __attribute__((deprecated))
-        #else
-          #define REGINA_DEPRECATED_ENUM
-        #endif
-      #else
-        // We don't know this compiler.
-        #define REGINA_DEPRECATED
-        #define REGINA_DEPRECATED_ENUM
-      #endif
-    #endif
-  #else
-    // The user doesn't want deprecation warnings.
-    #define REGINA_DEPRECATED
-    #define REGINA_DEPRECATED_ENUM
-  #endif
 #endif // doxygen
+
+namespace regina {
+
+/**
+ * Indicates whether the given dimension is one of Regina's
+ * \ref stddim "standard dimensions".
+ * Standard dimensions offer significantly richer functionality for
+ * triangulations than generic dimensions.
+ *
+ * @param dim the dimension in question.
+ * @return \c true if and only if \a dim is one of Regina's standard dimensions.
+ */
+constexpr bool standardDim(int dim) {
+    return (dim == 2 || dim == 3 || dim == 4);
+}
+
+/**
+ * Represents various classes of algorithms that Regina can use for
+ * computations.  A function that takes an Algorithm argument need not
+ * support all types of algorithm - if an unsupported algorithm is
+ * passed then Regina will fall back to ALG_DEFAULT.
+ *
+ * This enumeration type does \e not allow constants to be combined using
+ * the OR operator.
+ *
+ * For some computations where the user can exert more fine-grained control
+ * over the underlying algorithm, a more specialised enumeration type is
+ * used instead.  For example, see NormalSurfaces::enumerate(), which uses the
+ * specialised algorithm types NormalAlg and NormalAlgFlags.
+ */
+enum Algorithm {
+    /**
+     * The default algorithm.  Here Regina will choose whichever
+     * algorithm it thinks (rightly or wrongly) is most appropriate.
+     */
+    ALG_DEFAULT = 0,
+    /**
+     * An optimised backtracking algorithm.  This typically works over
+     * some search tree (often of exponential size or worse), but
+     * include significant optimisations to prune the search tree and/or
+     * cache computations where possible.
+     */
+    ALG_BACKTRACK = 1,
+    /**
+     * A treewidth-based algorithm.  Typically this uses dynamic
+     * programming over a tree decomposition of some underlying graph.
+     * Such algorithms are often fast for triangulations or links with
+     * small treewidth, but may require large amounts of memory.
+     */
+    ALG_TREEWIDTH = 2,
+    /**
+     * A naive algorithm.  This typically works directly with the
+     * underlying definitions (e.g., computing Turaev-Viro as a state sum),
+     * without further optimisations.
+     *
+     * \warning Naive algorithms should only be used for comparison and
+     * experimentation.  Due to their slow performance, they are not
+     * suitable for "real" applications.
+     */
+    ALG_NAIVE = 3,
+};
+
+/**
+ * Deprecated alias for Algorithm.
+ *
+ * \deprecated The TuraevViroAlg enumeration is deprecated, in favour of the
+ * more general Algorithm enumeration type.  The old constants TV_DEFAULT,
+ * TV_BACKTRACK, TV_TREEWIDTH and TV_NAIVE correspond to the new constants
+ * ALG_DEFAULT, ALG_BACKTRACK, ALG_TREEWIDTH and ALG_NAIVE respectively.
+ */
+[[deprecated]] typedef Algorithm TuraevViroAlg;
+
+/**
+ * Deprecated alias for ALG_DEFAULT.
+ *
+ * \deprecated The old constant TV_DEFAULT has been replaced by the
+ * constant ALG_DEFAULT, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_DEFAULT = ALG_DEFAULT;
+/**
+ * Deprecated alias for ALG_BACKTRACK.
+ *
+ * \deprecated The old constant TV_BACKTRACK has been replaced by the
+ * constant ALG_BACKTRACK, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_BACKTRACK = ALG_BACKTRACK;
+/**
+ * Deprecated alias for ALG_TREEWIDTH.
+ *
+ * \deprecated The old constant TV_TREEWIDTH has been replaced by the
+ * constant ALG_TREEWIDTH, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_TREEWIDTH = ALG_TREEWIDTH;
+/**
+ * Deprecated alias for ALG_NAIVE.
+ *
+ * \deprecated The old constant TV_NAIVE has been replaced by the
+ * constant ALG_NAIVE, and the underlying enumeration type has
+ * been renamed from TuraevViroAlg to Algorithm.
+ */
+[[deprecated]] constexpr Algorithm TV_NAIVE = ALG_NAIVE;
+
+} // namespace regina
 
 /*@}*/
 

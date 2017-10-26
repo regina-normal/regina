@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -278,7 +278,7 @@ class ComponentBase :
 
 template <int dim>
 inline ComponentBase<dim>::ComponentBase() :
-        valid_(true), orientable_(true), boundaryFacets_(0) {
+        valid_(true), boundaryFacets_(0), orientable_(true) {
 }
 
 template <int dim>

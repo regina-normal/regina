@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -841,7 +841,7 @@ typedef MatrixIntDomain<Integer> MatrixInt;
  * \deprecated The class NMatrix has now been renamed to Matrix.
  */
 template <class T>
-using NMatrix REGINA_DEPRECATED = Matrix<T>;
+using NMatrix [[deprecated]] = Matrix<T>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -850,7 +850,7 @@ using NMatrix REGINA_DEPRECATED = Matrix<T>;
  * \deprecated The class NMatrixRing has now been renamed to MatrixRing.
  */
 template <class T>
-using NMatrixRing REGINA_DEPRECATED = MatrixRing<T>;
+using NMatrixRing [[deprecated]] = MatrixRing<T>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -858,7 +858,7 @@ using NMatrixRing REGINA_DEPRECATED = MatrixRing<T>;
  *
  * \deprecated The class NMatrixInt has now been renamed to MatrixInt.
  */
-REGINA_DEPRECATED typedef MatrixInt NMatrixInt;
+[[deprecated]] typedef MatrixInt NMatrixInt;
 
 /*@}*/
 

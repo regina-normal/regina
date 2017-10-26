@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,7 +65,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nSoftware for low-dimensional topology" +
-            "\nCopyright (c) 1999-2016, The Regina development team";
+            "\nCopyright (c) 1999-2017, The Regina development team";
     }
 }
 
@@ -106,6 +106,26 @@ BOOST_PYTHON_MODULE(regina) {
     boost::python::def("versionSnapPea", regina::versionSnapPea);
     boost::python::def("hasInt128", regina::hasInt128);
     boost::python::def("testEngine", regina::testEngine);
+
+    boost::python::enum_<regina::Algorithm>("Algorithm")
+        .value("ALG_DEFAULT", regina::ALG_DEFAULT)
+        .value("ALG_BACKTRACK", regina::ALG_BACKTRACK)
+        .value("ALG_TREEWIDTH", regina::ALG_TREEWIDTH)
+        .value("ALG_NAIVE", regina::ALG_NAIVE)
+        .value("TV_DEFAULT", regina::ALG_DEFAULT)
+        .value("TV_BACKTRACK", regina::ALG_BACKTRACK)
+        .value("TV_TREEWIDTH", regina::ALG_TREEWIDTH)
+        .value("TV_NAIVE", regina::ALG_NAIVE)
+        ;
+
+    boost::python::scope().attr("ALG_DEFAULT") = regina::ALG_DEFAULT;
+    boost::python::scope().attr("ALG_BACKTRACK") = regina::ALG_BACKTRACK;
+    boost::python::scope().attr("ALG_TREEWIDTH") = regina::ALG_TREEWIDTH;
+    boost::python::scope().attr("ALG_NAIVE") = regina::ALG_NAIVE;
+    boost::python::scope().attr("TV_DEFAULT") = regina::ALG_DEFAULT;
+    boost::python::scope().attr("TV_BACKTRACK") = regina::ALG_BACKTRACK;
+    boost::python::scope().attr("TV_TREEWIDTH") = regina::ALG_TREEWIDTH;
+    boost::python::scope().attr("TV_NAIVE") = regina::ALG_NAIVE;
 
     // Components from subdirectories (in approximate dependency order):
 

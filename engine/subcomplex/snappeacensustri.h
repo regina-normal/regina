@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -201,7 +201,7 @@ class REGINA_API SnapPeaCensusTri: public StandardTriangulation {
  * \deprecated The class NSnapPeaCensusTri has now been renamed to
  * SnapPeaCensusTri.
  */
-REGINA_DEPRECATED typedef SnapPeaCensusTri NSnapPeaCensusTri;
+[[deprecated]] typedef SnapPeaCensusTri NSnapPeaCensusTri;
 
 /*@}*/
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2016, Ben Burton                                   *
+ *  Copyright (c) 2011-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -158,7 +158,7 @@ class TypeTrie {
  * \deprecated The class NTypeTrie has now been renamed to TypeTrie.
  */
 template <int nTypes>
-using NTypeTrie REGINA_DEPRECATED = TypeTrie<nTypes>;
+using NTypeTrie [[deprecated]] = TypeTrie<nTypes>;
 
 /*@}*/
 

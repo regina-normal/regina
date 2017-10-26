@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2016, Ben Burton                                   *
+ *  Copyright (c) 2011-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,7 +48,7 @@ namespace regina {
 class AngleStructure;
 
 template <typename IntType> class LPMatrix;
-template <class LPConstraint> class LPCol;
+template <class LPConstraint> struct LPCol;
 template <class LPConstraint> class LPInitialTableaux;
 template <class LPConstraint, typename IntType> class LPData;
 

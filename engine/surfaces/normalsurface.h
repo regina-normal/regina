@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -403,7 +403,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
          * must be between 0 and size()-1 inclusive.
          * @return the coordinate at the given index.
          */
-        const NLargeInteger& operator [] (size_t index) const;
+        const LargeInteger& operator [] (size_t index) const;
 
         /**
          * Sets the given normal coordinate to the given value.
@@ -1744,7 +1744,7 @@ class REGINA_API NormalSurface :
  * \deprecated The class NNormalSurfaceVector has now been renamed to
  * NormalSurfaceVector.
  */
-REGINA_DEPRECATED typedef NormalSurfaceVector NNormalSurfaceVector;
+[[deprecated]] typedef NormalSurfaceVector NNormalSurfaceVector;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1752,7 +1752,7 @@ REGINA_DEPRECATED typedef NormalSurfaceVector NNormalSurfaceVector;
  *
  * \deprecated The class NNormalSurface has now been renamed to NormalSurface.
  */
-REGINA_DEPRECATED typedef NormalSurface NNormalSurface;
+[[deprecated]] typedef NormalSurface NNormalSurface;
 
 /*@}*/
 
@@ -1775,7 +1775,7 @@ inline size_t NormalSurfaceVector::size() const {
     return coords_.size();
 }
 
-inline const NLargeInteger& NormalSurfaceVector::operator [](size_t index)
+inline const LargeInteger& NormalSurfaceVector::operator [](size_t index)
         const {
     return coords_[index];
 }

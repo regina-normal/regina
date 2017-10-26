@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,10 +36,6 @@
 #import "ReginaHelper.h"
 #import "file/globaldirs.h"
 
-@interface AppDelegate ()
-@property (strong, nonatomic) NSURL* launchedURL;
-@end
-
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -53,15 +49,14 @@
     //
     [ReginaHelper initWithApp:self];
 
-    // Have we been asked to open an URL (e.g., from an "Open with..." action)?
-    self.launchedURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
-    
     // Make sure that Regina knows where to find its internal data files.
     NSString* path = [[NSBundle mainBundle] resourcePath];
     const char* home = [path UTF8String];
     regina::GlobalDirs::setDirs(home, "", home);
-    
-    return NO;
+
+    // If an URL was passed (e.g., from an "Open with..." action), then ask the
+    // system to go ahead and called application:openURL:sourceApplication:annotation.
+    return YES;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -72,15 +67,6 @@
     return [[ReginaHelper master] openURL:url];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    if (self.launchedURL) {
-        // Open the URL that was passed at launch time.
-        [[ReginaHelper master] openURL:self.launchedURL];
-        self.launchedURL = nil;
-    }
-}
-							
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     // We need to save data, and also remember what we were doing so that

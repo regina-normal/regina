@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1415,7 +1415,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
  *
  * \deprecated The class NCusp has now been renamed to Cusp.
  */
-REGINA_DEPRECATED typedef Cusp NCusp;
+[[deprecated]] typedef Cusp NCusp;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1424,7 +1424,7 @@ REGINA_DEPRECATED typedef Cusp NCusp;
  * \deprecated The class NSnapPeaTriangulation has now been renamed to
  * SnapPeaTriangulation.
  */
-REGINA_DEPRECATED typedef SnapPeaTriangulation NSnapPeaTriangulation;
+[[deprecated]] typedef SnapPeaTriangulation NSnapPeaTriangulation;
 
 /*@}*/
 

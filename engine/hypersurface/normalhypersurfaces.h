@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -162,6 +162,18 @@ class REGINA_API NormalHypersurfaces : public Packet {
          * the enumeration is complete.  Note that this enumeration can
          * be extremely slow for larger triangulations.
          *
+         * If an error occurs, then this routine will return \c null,
+         * no normal hypersurface list will be created, and the progress
+         * tracker (if passed) will be marked as finished.  Errors can occur
+         * in the following scenarios:
+         *
+         * - Regina could not create the matching equations for the given
+         *   triangulation in the given coordinate system.  This is only
+         *   possible in certain coordinate systems, and all such coordinate
+         *   systems are marked as such in the HyperCoords enum documentation.
+         *
+         * - A progress tracker is passed but a new thread could not be started.
+         *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
          * @param coords the coordinate system to be used.
@@ -173,15 +185,14 @@ class REGINA_API NormalHypersurfaces : public Packet {
          * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal hypersurface list.  Note that if
          * a progress tracker is passed then this list may not be completely
-         * filled when this routine returns.  If a progress tracker is
-         * passed and a new thread could not be started, this routine
-         * returns 0 (and no normal hypersurface list is created).
+         * filled when this routine returns.  If an error occurs (as
+         * described above) then this routine will return \c null instead.
          */
         static NormalHypersurfaces* enumerate(Triangulation<4>* owner,
             HyperCoords coords,
             HyperList which = HS_LIST_DEFAULT,
             HyperAlg algHints = HS_ALG_DEFAULT,
-            ProgressTracker* tracker = 0); // TODO
+            ProgressTracker* tracker = 0);
 
         /**
          * Returns the coordinate system being used by the
@@ -259,6 +270,25 @@ class REGINA_API NormalHypersurfaces : public Packet {
         virtual bool dependsOnParent() const;
 
         /**
+         * Sorts the hypersurfaces in this list according to the given
+         * criterion.
+         *
+         * This sort is stable, i.e., hypersurfaces that are equivalent under
+         * the given criterion will remain in the same relative order.
+         *
+         * The implementation of this routine uses std::stable_sort.
+         *
+         * \ifacespython Not present.
+         *
+         * @param comp a binary function (or function object) that
+         * accepts two const HyperSurface pointers, and returns \c true
+         * if and only if the first hypersurface should appear before the
+         * second in the sorted list.
+         */
+        template <typename Comparison>
+        void sort(Comparison&& comp);
+
+        /**
          * Returns a newly created matrix containing the matching
          * equations that were used to create this normal hypersurface list.
          * The destruction of this matrix is the responsibility of the
@@ -269,7 +299,14 @@ class REGINA_API NormalHypersurfaces : public Packet {
          *
          * The format of the matrix is identical to that returned by
          * makeMatchingEquations().
-         * 
+         *
+         * Note that there are situations in which makeMatchingEquations()
+         * returns \c null (because the triangulation is not supported
+         * by the chosen coordinate system).  However, this routine should
+         * never return \c null, because if makeMatchingEquations() had
+         * returned \c null then this normal hypersurface list would not have
+         * been created in the first place.
+         *
          * @return the matching equations used to create this normal
          * hypersurface list.
          */
@@ -523,6 +560,9 @@ class REGINA_API NormalHypersurfaces : public Packet {
                     /**< The hypersurface list to be filled. */
                 Triangulation<4>* triang_;
                     /**< The triangulation in which these hypersurfaces lie. */
+                MatrixInt* eqns_;
+                    /**< The matching equations for the given triangulation in
+                         the coordinate system corresponding to \a list_. */
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
@@ -535,12 +575,18 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * @param list the hypersurface list to be filled.
                  * @param triang the triangulation in which these
                  * hypersurfaces lie.
+                 * @param eqns the matching equations for the given
+                 * triangulation in the coordinate system corresponding to
+                 * \a list.  This object will take ownership of \a eqns, and
+                 * the bracket operator will delete it once the enumeration
+                 * has finished.  This pointer \e must be non-null, i.e., Regina
+                 * must have been able to construct the matching equations.
                  * @param tracker the progress tracker to use for
                  * progress reporting and cancellation polling, or 0 if
                  * these capabilities are not required.
                  */
-                Enumerator(NormalHypersurfaces* list,
-                    Triangulation<4>* triang, ProgressTracker* tracker);
+                Enumerator(NormalHypersurfaces* list, Triangulation<4>* triang,
+                    MatrixInt* eqns, ProgressTracker* tracker);
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -553,6 +599,9 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * This routine fills \a list_ with surfaces, and then once
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
+                 *
+                 * The matching equation matrix \a eqns_ will be deleted
+                 * at the end of this routine.
                  *
                  * \tparam Coords an instance of the HyperInfo<> template class.
                  */
@@ -689,12 +738,20 @@ REGINA_API NormalHypersurfaceVector* makeZeroVector(
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
+ * For some coordinate systems, Regina may not be able to create matching
+ * equations for all triangulations (any such coordinate systems will be
+ * explicitly mentioned as such in the HyperCoords enum documentation).  If
+ * Regina cannot create the matching equations as requested, this routine will
+ * return \c null instead.
+ *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
  * @param coords the coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NormalHypersurfaces.
- * @return a newly allocated set of matching equations.
+ * @return a newly allocated set of matching equations, or \c null if
+ * Regina is not able to construct them for the given combination of
+ * triangulation and coordinate system.
  */
 REGINA_API MatrixInt* makeMatchingEquations(
     const Triangulation<4>* triangulation, HyperCoords coords);
@@ -722,7 +779,7 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
  * \deprecated The class NNormalHypersurfaceList has now been renamed to
  * NormalHypersurfaces.
  */
-REGINA_DEPRECATED typedef NormalHypersurfaces NNormalHypersurfaceList;
+[[deprecated]] typedef NormalHypersurfaces NNormalHypersurfaceList;
 
 /*@}*/
 
@@ -760,6 +817,12 @@ inline const NormalHypersurface* NormalHypersurfaces::hypersurface(
 
 inline bool NormalHypersurfaces::dependsOnParent() const {
     return true;
+}
+
+template <typename Comparison>
+inline void NormalHypersurfaces::sort(Comparison&& comp) {
+    ChangeEventSpan span(this);
+    std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 
 inline MatrixInt* NormalHypersurfaces::recreateMatchingEquations() const {
@@ -886,8 +949,8 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
 
 inline NormalHypersurfaces::Enumerator::Enumerator(
         NormalHypersurfaces* list, Triangulation<4>* triang,
-        ProgressTracker* tracker) :
-        list_(list), triang_(triang), tracker_(tracker) {
+        MatrixInt* eqns, ProgressTracker* tracker) :
+        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
 }
 
 } // namespace regina

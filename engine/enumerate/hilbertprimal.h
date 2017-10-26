@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -196,7 +196,7 @@ class HilbertPrimal {
  *
  * \deprecated The class NHilbertPrimal has now been renamed to HilbertPrimal.
  */
-REGINA_DEPRECATED typedef HilbertPrimal NHilbertPrimal;
+[[deprecated]] typedef HilbertPrimal NHilbertPrimal;
 
 /*@}*/
 

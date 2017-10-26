@@ -5,7 +5,7 @@
 
   <!ENTITY regversion "5.1">
   <!ENTITY regdate "2016-12-19">
-  <!ENTITY copyrightyears "1999&ndash;2016">
+  <!ENTITY copyrightyears "1999&ndash;2017">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
    "Copyright &copy; &copyrightyears;, &copyrightholder;">

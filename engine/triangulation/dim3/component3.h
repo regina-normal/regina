@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -170,7 +170,7 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
  * \deprecated Instead of the old typedef NComponent, you should use
  * the real class name Component<3>.
  */
-REGINA_DEPRECATED typedef Component<3> NComponent;
+[[deprecated]] typedef Component<3> NComponent;
 
 /*@}*/
 

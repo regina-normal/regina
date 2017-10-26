@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1408,7 +1408,7 @@ REGINA_API Packet* open(std::istream& in);
  *
  * \deprecated The class NPacket has now been renamed to Packet.
  */
-REGINA_DEPRECATED typedef Packet NPacket;
+[[deprecated]] typedef Packet NPacket;
 
 /*@}*/
 

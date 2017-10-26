@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -954,7 +954,7 @@ class REGINA_API TreeDecomposition :
  *
  * \deprecated The class NTreeBag has now been renamed to TreeBag.
  */
-REGINA_DEPRECATED typedef TreeBag NTreeBag;
+[[deprecated]] typedef TreeBag NTreeBag;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -963,7 +963,7 @@ REGINA_DEPRECATED typedef TreeBag NTreeBag;
  * \deprecated The class NTreeDecomposition has now been renamed to
  * TreeDecomposition.
  */
-REGINA_DEPRECATED typedef TreeDecomposition NTreeDecomposition;
+[[deprecated]] typedef TreeDecomposition NTreeDecomposition;
 
 /*@}*/
 

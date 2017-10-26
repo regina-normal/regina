@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -124,7 +124,7 @@ class REGINA_API SatBlockStarter : boost::noncopyable {
  * \deprecated The class NSatBlockStarter has now been renamed to
  * SatBlockStarter.
  */
-REGINA_DEPRECATED typedef SatBlockStarter NSatBlockStarter;
+[[deprecated]] typedef SatBlockStarter NSatBlockStarter;
 
 /**
  * Represents a set of starter blocks that can be used for identifying
@@ -203,7 +203,7 @@ class REGINA_API SatBlockStarterSet : private ListOnCall<SatBlockStarter> {
  * \deprecated The class NSatBlockStarterSet has now been renamed to
  * SatBlockStarterSet.
  */
-REGINA_DEPRECATED typedef SatBlockStarterSet NSatBlockStarterSet;
+[[deprecated]] typedef SatBlockStarterSet NSatBlockStarterSet;
 
 /**
  * A helper class for locating and using starter blocks within a
@@ -329,7 +329,7 @@ class REGINA_API SatBlockStarterSearcher {
  * \deprecated The class NSatBlockStarterSearcher has now been renamed to
  * SatBlockStarterSearcher.
  */
-REGINA_DEPRECATED typedef SatBlockStarterSearcher NSatBlockStarterSearcher;
+[[deprecated]] typedef SatBlockStarterSearcher NSatBlockStarterSearcher;
 
 /*@}*/
 

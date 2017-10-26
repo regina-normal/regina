@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -98,7 +98,7 @@ class BoundaryComponent<3>: public detail::BoundaryComponentBase<3> {
  * \deprecated Instead of the old typedef NBoundaryComponent, you should use
  * the real class name BoundaryComponent<3>.
  */
-REGINA_DEPRECATED typedef BoundaryComponent<3> NBoundaryComponent;
+[[deprecated]] typedef BoundaryComponent<3> NBoundaryComponent;
 
 /*@}*/
 

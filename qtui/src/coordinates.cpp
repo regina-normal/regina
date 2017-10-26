@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -56,6 +56,8 @@ namespace Coordinates {
                 return QT_TR_NOOP("Legacy almost normal (pruned tri-quad-oct)");
             if (coordSystem == regina::NS_QUAD)
                 return QT_TR_NOOP("Quad normal");
+            if (coordSystem == regina::NS_QUAD_CLOSED)
+                return QT_TR_NOOP("Quad closed (non-spun)");
             if (coordSystem == regina::NS_AN_QUAD_OCT)
                 return QT_TR_NOOP("Quad-oct almost normal");
             if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -76,6 +78,8 @@ namespace Coordinates {
                 return QT_TR_NOOP("legacy almost normal (pruned tri-quad-oct)");
             if (coordSystem == regina::NS_QUAD)
                 return QT_TR_NOOP("quad normal");
+            if (coordSystem == regina::NS_QUAD_CLOSED)
+                return QT_TR_NOOP("quad closed (non-spun)");
             if (coordSystem == regina::NS_AN_QUAD_OCT)
                 return QT_TR_NOOP("quad-oct almost normal");
             if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -100,6 +104,8 @@ namespace Coordinates {
                 return QT_TR_NOOP("Legacy");
             if (coordSystem == regina::NS_QUAD)
                 return QT_TR_NOOP("Quad");
+            if (coordSystem == regina::NS_QUAD_CLOSED)
+                return QT_TR_NOOP("Quad closed");
             if (coordSystem == regina::NS_AN_QUAD_OCT)
                 return QT_TR_NOOP("Quad-oct");
             if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -120,6 +126,8 @@ namespace Coordinates {
                 return QT_TR_NOOP("legacy");
             if (coordSystem == regina::NS_QUAD)
                 return QT_TR_NOOP("quad");
+            if (coordSystem == regina::NS_QUAD_CLOSED)
+                return QT_TR_NOOP("quad closed");
             if (coordSystem == regina::NS_AN_QUAD_OCT)
                 return QT_TR_NOOP("quad-oct");
             if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -189,6 +197,8 @@ namespace Coordinates {
             return tri->size() * 10;
         else if (coordSystem == regina::NS_QUAD)
             return tri->size() * 3;
+        else if (coordSystem == regina::NS_QUAD_CLOSED)
+            return tri->size() * 3;
         else if (coordSystem == regina::NS_AN_QUAD_OCT)
             return tri->size() * 6;
         else if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -234,7 +244,8 @@ namespace Coordinates {
             else
                 return QString("K%1: %2").arg(whichCoord / 10).
                     arg(regina::quadString[(whichCoord % 10) - 7]);
-        } else if (coordSystem == regina::NS_QUAD) {
+        } else if (coordSystem == regina::NS_QUAD ||
+                coordSystem == regina::NS_QUAD_CLOSED) {
             return QString("%1: %2").arg(whichCoord / 3).
                 arg(regina::quadString[whichCoord % 3]);
         } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
@@ -355,7 +366,8 @@ namespace Coordinates {
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 10).
                     arg(regina::quadString[(whichCoord % 10) - 7]);
-        } else if (coordSystem == regina::NS_QUAD) {
+        } else if (coordSystem == regina::NS_QUAD ||
+                coordSystem == regina::NS_QUAD_CLOSED) {
             return context->tr("Tetrahedron %1, quad splitting vertices %2").
                 arg(whichCoord / 3).
                 arg(regina::quadString[whichCoord % 3]);
@@ -493,7 +505,8 @@ namespace Coordinates {
                 return surface.quads(whichCoord / 10, (whichCoord % 10) - 4);
             else
                 return surface.octs(whichCoord / 10, (whichCoord % 10) - 7);
-        } else if (coordSystem == regina::NS_QUAD) {
+        } else if (coordSystem == regina::NS_QUAD ||
+                coordSystem == regina::NS_QUAD_CLOSED) {
             return surface.quads(whichCoord / 3, whichCoord % 3);
         } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)

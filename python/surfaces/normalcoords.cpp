@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,7 @@ void addNormalCoords() {
         .value("NS_STANDARD", regina::NS_STANDARD)
         .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)
         .value("NS_QUAD", regina::NS_QUAD)
+        .value("NS_QUAD_CLOSED", regina::NS_QUAD_CLOSED)
         .value("NS_AN_QUAD_OCT", regina::NS_AN_QUAD_OCT)
         .value("NS_EDGE_WEIGHT", regina::NS_EDGE_WEIGHT)
         .value("NS_TRIANGLE_ARCS", regina::NS_TRIANGLE_ARCS)
@@ -55,6 +56,7 @@ void addNormalCoords() {
     global.attr("NS_STANDARD") = regina::NS_STANDARD;
     global.attr("NS_AN_STANDARD") = regina::NS_AN_STANDARD;
     global.attr("NS_QUAD") = regina::NS_QUAD;
+    global.attr("NS_QUAD_CLOSED") = regina::NS_QUAD_CLOSED;
     global.attr("NS_AN_QUAD_OCT") = regina::NS_AN_QUAD_OCT;
     global.attr("NS_EDGE_WEIGHT") = regina::NS_EDGE_WEIGHT;
     global.attr("NS_TRIANGLE_ARCS") = regina::NS_TRIANGLE_ARCS;

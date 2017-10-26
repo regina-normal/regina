@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,7 @@ namespace regina {
  * \deprecated Instead of the old typedef NIsomorphism, you should use
  * the full class name Isomorphism<3>.
  */
-REGINA_DEPRECATED typedef Isomorphism<3> NIsomorphism;
+[[deprecated]] typedef Isomorphism<3> NIsomorphism;
 
 } // namespace regina
 

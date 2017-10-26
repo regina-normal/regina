@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -142,7 +142,7 @@ struct REGINA_API SatBlockSpec {
  * \deprecated The class NSatBlockSpec has now been renamed to
  * SatBlockSpec.
  */
-REGINA_DEPRECATED typedef SatBlockSpec NSatBlockSpec;
+[[deprecated]] typedef SatBlockSpec NSatBlockSpec;
 
 /**
  * A large saturated region in a Seifert fibred space formed by joining
@@ -628,7 +628,7 @@ class REGINA_API SatRegion :
  * \deprecated The class NSatRegion has now been renamed to
  * SatRegion.
  */
-REGINA_DEPRECATED typedef SatRegion NSatRegion;
+[[deprecated]] typedef SatRegion NSatRegion;
 
 /*@}*/
 

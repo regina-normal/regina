@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -339,7 +339,7 @@ REGINA_API bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
  *
  * \deprecated The class NMatrix2 has now been renamed to Matrix2.
  */
-REGINA_DEPRECATED typedef Matrix2 NMatrix2;
+[[deprecated]] typedef Matrix2 NMatrix2;
 
 /*@}*/
 

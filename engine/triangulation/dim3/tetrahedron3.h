@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -115,7 +115,7 @@ class REGINA_API Face<3, 3> : public detail::SimplexBase<3> {
  * \deprecated Instead of the old typedef NTetrahedron, you should use
  * the new alias Simplex<3> (or, if you prefer, the full class name Face<3, 3>).
  */
-REGINA_DEPRECATED typedef Simplex<3> NTetrahedron;
+[[deprecated]] typedef Simplex<3> NTetrahedron;
 
 /*@}*/
 

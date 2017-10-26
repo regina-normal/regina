@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,6 +55,8 @@ using regina::Triangle;
             return @"Legacy almost normal (pruned tri-quad-oct)";
         if (coordSystem == regina::NS_QUAD)
             return @"Quad normal";
+        if (coordSystem == regina::NS_QUAD_CLOSED)
+            return @"Quad closed (non-spun)";
         if (coordSystem == regina::NS_AN_QUAD_OCT)
             return @"Quad-oct almost normal";
         if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -75,6 +77,8 @@ using regina::Triangle;
             return @"legacy almost normal (pruned tri-quad-oct)";
         if (coordSystem == regina::NS_QUAD)
             return @"quad normal";
+        if (coordSystem == regina::NS_QUAD_CLOSED)
+            return @"quad closed (non-spun)";
         if (coordSystem == regina::NS_AN_QUAD_OCT)
             return @"quad-oct almost normal";
         if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -100,6 +104,8 @@ using regina::Triangle;
             return @"Legacy";
         if (coordSystem == regina::NS_QUAD)
             return @"Quad";
+        if (coordSystem == regina::NS_QUAD_CLOSED)
+            return @"Quad closed";
         if (coordSystem == regina::NS_AN_QUAD_OCT)
             return @"Quad-oct";
         if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -120,6 +126,8 @@ using regina::Triangle;
             return @"legacy";
         if (coordSystem == regina::NS_QUAD)
             return @"quad";
+        if (coordSystem == regina::NS_QUAD_CLOSED)
+            return @"quad closed";
         if (coordSystem == regina::NS_AN_QUAD_OCT)
             return @"quad-oct";
         if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -151,6 +159,8 @@ using regina::Triangle;
         return tri->size() * 10;
     else if (coordSystem == regina::NS_QUAD)
         return tri->size() * 3;
+    else if (coordSystem == regina::NS_QUAD_CLOSED)
+        return tri->size() * 3;
     else if (coordSystem == regina::NS_AN_QUAD_OCT)
         return tri->size() * 6;
     else if (coordSystem == regina::NS_EDGE_WEIGHT)
@@ -179,7 +189,7 @@ using regina::Triangle;
             return [NSString stringWithFormat:@"Q%ld: %s", (whichCoord / 10), regina::quadString[(whichCoord % 10) - 4]];
         else
             return [NSString stringWithFormat:@"K%ld: %s", (whichCoord / 10), regina::quadString[(whichCoord % 10) - 7]];
-    } else if (coordSystem == regina::NS_QUAD) {
+    } else if (coordSystem == regina::NS_QUAD || coordSystem == regina::NS_QUAD_CLOSED) {
         return [NSString stringWithFormat:@"%ld: %s", (whichCoord / 3), regina::quadString[whichCoord % 3]];
     } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
         if (whichCoord % 6 < 3)
@@ -232,6 +242,7 @@ using regina::Triangle;
     switch (coordSystem) {
         case regina::NS_STANDARD:
         case regina::NS_QUAD:
+        case regina::NS_QUAD_CLOSED:
         case regina::NS_AN_STANDARD:
         case regina::NS_AN_QUAD_OCT:
         case regina::NS_AN_LEGACY:
@@ -274,7 +285,7 @@ using regina::Triangle;
             return surface.quads(whichCoord / 10, (whichCoord % 10) - 4);
         else
             return surface.octs(whichCoord / 10, (whichCoord % 10) - 7);
-    } else if (coordSystem == regina::NS_QUAD) {
+    } else if (coordSystem == regina::NS_QUAD || coordSystem == regina::NS_QUAD_CLOSED) {
         return surface.quads(whichCoord / 3, whichCoord % 3);
     } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
         if (whichCoord % 6 < 3)

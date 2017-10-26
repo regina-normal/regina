@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -152,7 +152,7 @@ class REGINA_API SatMobius : public SatBlock {
  * \deprecated The class NSatMobius has now been renamed to
  * SatMobius.
  */
-REGINA_DEPRECATED typedef SatMobius NSatMobius;
+[[deprecated]] typedef SatMobius NSatMobius;
 
 /**
  * A saturated block that is a layered solid torus.  See the
@@ -260,7 +260,7 @@ class REGINA_API SatLST : public SatBlock {
  * \deprecated The class NSatLST has now been renamed to
  * SatLST.
  */
-REGINA_DEPRECATED typedef SatLST NSatLST;
+[[deprecated]] typedef SatLST NSatLST;
 
 /**
  * A saturated block that is a three-tetrahedron triangular prism.
@@ -369,7 +369,7 @@ class REGINA_API SatTriPrism : public SatBlock {
  * \deprecated The class NSatTriPrism has now been renamed to
  * SatTriPrism.
  */
-REGINA_DEPRECATED typedef SatTriPrism NSatTriPrism;
+[[deprecated]] typedef SatTriPrism NSatTriPrism;
 
 /**
  * A saturated block that is a six-tetrahedron cube.
@@ -443,7 +443,7 @@ class REGINA_API SatCube : public SatBlock {
  * \deprecated The class NSatCube has now been renamed to
  * SatCube.
  */
-REGINA_DEPRECATED typedef SatCube NSatCube;
+[[deprecated]] typedef SatCube NSatCube;
 
 /**
  * A saturated block that is a reflector strip.
@@ -540,7 +540,7 @@ class REGINA_API SatReflectorStrip : public SatBlock {
  * \deprecated The class NSatReflectorStrip has now been renamed to
  * SatReflectorStrip.
  */
-REGINA_DEPRECATED typedef SatReflectorStrip NSatReflectorStrip;
+[[deprecated]] typedef SatReflectorStrip NSatReflectorStrip;
 
 /**
  * A degenerate saturated block that is a single tetrahedron wrapped
@@ -633,7 +633,7 @@ class REGINA_API SatLayering : public SatBlock {
  * \deprecated The class NSatLayering has now been renamed to
  * SatLayering.
  */
-REGINA_DEPRECATED typedef SatLayering NSatLayering;
+[[deprecated]] typedef SatLayering NSatLayering;
 
 /*@}*/
 

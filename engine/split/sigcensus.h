@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -208,7 +208,7 @@ REGINA_API unsigned long formSigCensus(unsigned order, UseSignature use,
  *
  * \deprecated The class NSigCensus has now been renamed to SigCensus.
  */
-REGINA_DEPRECATED typedef SigCensus NSigCensus;
+[[deprecated]] typedef SigCensus NSigCensus;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -216,7 +216,7 @@ REGINA_DEPRECATED typedef SigCensus NSigCensus;
  *
  * \deprecated The typedef NSigIsoList has now been renamed to SigIsoList.
  */
-REGINA_DEPRECATED typedef SigIsoList NSigIsoList;
+[[deprecated]] typedef SigIsoList NSigIsoList;
 
 /*@}*/
 

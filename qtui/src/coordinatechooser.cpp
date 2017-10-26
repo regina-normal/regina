@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,6 +51,8 @@ void CoordinateChooser::insertAllCreators() {
     insertSystem(regina::NS_STANDARD);
     insertSystem(regina::NS_AN_STANDARD);
     insertSystem(regina::NS_QUAD);
+    // TODO: Only insert QUAD_CLOSED for the right kind of ideal triangulations.
+    insertSystem(regina::NS_QUAD_CLOSED);
     insertSystem(regina::NS_AN_QUAD_OCT);
     if (ReginaPrefSet::global().surfacesSupportOriented) {
         insertSystem(regina::NS_ORIENTED);
@@ -86,6 +88,17 @@ void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
 void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
     std::vector<regina::NormalCoords>::const_iterator it =
         std::find(systems.begin(), systems.end(), newSystem);
+
+    if (it == systems.end()) {
+        // Try to find a reasonable fallback.
+        if (newSystem == regina::NS_QUAD_CLOSED ||
+                newSystem == regina::NS_ORIENTED_QUAD)
+            it = std::find(systems.begin(), systems.end(), regina::NS_QUAD);
+        else if (newSystem == regina::NS_ORIENTED)
+            it = std::find(systems.begin(), systems.end(), regina::NS_STANDARD);
+        else if (newSystem == regina::NS_AN_LEGACY)
+            it = std::find(systems.begin(), systems.end(), regina::NS_AN_STANDARD);
+    }
 
     if (it != systems.end())
         setCurrentIndex(it - systems.begin());

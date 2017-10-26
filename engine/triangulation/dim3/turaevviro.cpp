@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1356,7 +1356,7 @@ namespace {
 }
 
 double Triangulation<3>::turaevViroApprox(unsigned long r,
-        unsigned long whichRoot, TuraevViroAlg alg) const {
+        unsigned long whichRoot, Algorithm alg) const {
     // Do some basic parameter checks.
     if (r < 3)
         return 0;
@@ -1370,15 +1370,14 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 
     InitialData<false>::TVType ans;
     switch (alg) {
-        case TV_DEFAULT:
-        case TV_BACKTRACK:
-            ans = turaevViroBacktrack(*this, init, 0);
-            break;
-        case TV_TREEWIDTH:
+        case ALG_TREEWIDTH:
             ans = turaevViroTreewidth(*this, init, 0);
             break;
-        case TV_NAIVE:
+        case ALG_NAIVE:
             ans = turaevViroNaive(*this, init, 0);
+            break;
+        default:
+            ans = turaevViroBacktrack(*this, init, 0);
             break;
     }
     /*
@@ -1399,7 +1398,7 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 }
 
 Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
-        TuraevViroAlg alg, ProgressTracker* tracker) const {
+        Algorithm alg, ProgressTracker* tracker) const {
     // Do some basic parameter checks.
     if (r < 3) {
         if (tracker)
@@ -1427,15 +1426,14 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
 
             InitialData<true>::TVType ans;
             switch (alg) {
-                case TV_DEFAULT:
-                case TV_BACKTRACK:
-                    ans = turaevViroBacktrack(*this, init, tracker);
-                    break;
-                case TV_TREEWIDTH:
+                case ALG_TREEWIDTH:
                     ans = turaevViroTreewidth(*this, init, tracker);
                     break;
-                case TV_NAIVE:
+                case ALG_NAIVE:
                     ans = turaevViroNaive(*this, init, tracker);
+                    break;
+                default:
+                    ans = turaevViroBacktrack(*this, init, tracker);
                     break;
             }
 
@@ -1452,15 +1450,14 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
 
         InitialData<true>::TVType ans;
         switch (alg) {
-            case TV_DEFAULT:
-            case TV_BACKTRACK:
-                ans = turaevViroBacktrack(*this, init, tracker);
-                break;
-            case TV_TREEWIDTH:
+            case ALG_TREEWIDTH:
                 ans = turaevViroTreewidth(*this, init, tracker);
                 break;
-            case TV_NAIVE:
+            case ALG_NAIVE:
                 ans = turaevViroNaive(*this, init, tracker);
+                break;
+            default:
+                ans = turaevViroBacktrack(*this, init, tracker);
                 break;
         }
 

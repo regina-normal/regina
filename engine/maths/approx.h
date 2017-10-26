@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,7 +65,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-REGINA_DEPRECATED REGINA_API extern const double epsilon;
+[[deprecated]] REGINA_API extern const double epsilon;
 
 /**
  * Deprecated routine for managing floating-point roundoff errors.
@@ -86,7 +86,7 @@ REGINA_DEPRECATED REGINA_API extern const double epsilon;
  * @return \c true if and only if the given number is approximately zero.
  */
 template <class R>
-inline REGINA_DEPRECATED bool isZero(R x) {
+inline [[deprecated]] bool isZero(R x) {
     return (x > -epsilon && x < epsilon);
 }
 
@@ -109,7 +109,7 @@ inline REGINA_DEPRECATED bool isZero(R x) {
  * @return \c true if and only if the given number is approximately non-zero.
  */
 template <class R>
-inline REGINA_DEPRECATED bool isNonZero(R x) {
+inline [[deprecated]] bool isNonZero(R x) {
     return (x < -epsilon || x > epsilon);
 }
 
@@ -132,7 +132,7 @@ inline REGINA_DEPRECATED bool isNonZero(R x) {
  * @return \c true if and only if the given number is strictly positive.
  */
 template <class R>
-inline REGINA_DEPRECATED bool isPositive(R x) {
+inline [[deprecated]] bool isPositive(R x) {
     return (x > epsilon);
 }
 
@@ -155,7 +155,7 @@ inline REGINA_DEPRECATED bool isPositive(R x) {
  * @return \c true if and only if the given number is strictly negative.
  */
 template <class R>
-inline REGINA_DEPRECATED bool isNegative(R x) {
+inline [[deprecated]] bool isNegative(R x) {
     return (x < -epsilon);
 }
 
@@ -178,7 +178,7 @@ inline REGINA_DEPRECATED bool isNegative(R x) {
  * @return \c true if and only if the given number is non-negative.
  */
 template <class R>
-inline REGINA_DEPRECATED bool isNonNegative(R x) {
+inline [[deprecated]] bool isNonNegative(R x) {
     return (x > -epsilon);
 }
 
@@ -201,7 +201,7 @@ inline REGINA_DEPRECATED bool isNonNegative(R x) {
  * @return \c true if and only if the given number is non-positive.
  */
 template <class R>
-inline REGINA_DEPRECATED bool isNonPositive(R x) {
+inline [[deprecated]] bool isNonPositive(R x) {
     return (x < epsilon);
 }
 

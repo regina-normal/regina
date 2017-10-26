@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,5 +46,6 @@ void addTriangulation3(CppUnit::TextUi::TestRunner& runner);
 void addElementaryMoves(CppUnit::TextUi::TestRunner& runner);
 void addConnectedSumDecomp(CppUnit::TextUi::TestRunner& runner);
 void addIsomorphism3(CppUnit::TextUi::TestRunner& runner);
+void addDualGraph3(CppUnit::TextUi::TestRunner& runner);
 void addHomologicalData(CppUnit::TextUi::TestRunner& runner);
 

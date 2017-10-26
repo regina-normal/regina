@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -496,7 +496,6 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * @param variable the symbol to use for the polynomial variable.
          * This may be \c null, in which case the default variable \c x
          * will be used.
-         * @return a reference to the given output stream.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
             const char* variable = 0) const;
@@ -553,7 +552,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
  *
  * \deprecated The class NCyclotomic has now been renamed to Cyclotomic.
  */
-REGINA_DEPRECATED typedef Cyclotomic NCyclotomic;
+[[deprecated]] typedef Cyclotomic NCyclotomic;
 
 /*@}*/
 

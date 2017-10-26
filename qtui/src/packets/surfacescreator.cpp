@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -123,7 +123,9 @@ QString SurfacesCreator::parentWhatsThis() {
 regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    if (! dynamic_cast<regina::Triangulation<3>*>(parent)) {
+    regina::Triangulation<3>* tri =
+        dynamic_cast<regina::Triangulation<3>*>(parent);
+    if (! tri) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
             ui->tr("Normal surfaces must live within a 3-manifold "
@@ -133,6 +135,19 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
     }
 
     regina::NormalCoords coordSystem = coords->getCurrentSystem();
+
+    if (coordSystem == regina::NS_QUAD_CLOSED && ! (
+            tri->countVertices() == 1 &&
+            tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
+            tri->isOriented())) {
+        ReginaSupport::sorry(ui,
+            ui->tr("I cannot use quad closed coordinates with this triangulation."),
+            ui->tr("At the present time, quad closed coordinates are "
+                "only available for oriented ideal triangulations with "
+                "one torus cusp and no other boundary components or "
+                "internal vertices."));
+        return 0;
+    }
 
     int basisId = basis->currentIndex();
 
@@ -185,11 +200,29 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalSurfaces* ans = NormalSurfaces::enumerate(
-            dynamic_cast<regina::Triangulation<3>*>(parent),
+            tri,
             coordSystem,
             regina::NS_VERTEX | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
             regina::NS_ALG_DEFAULT, &tracker);
+
+        if (! ans) {
+            if (coordSystem == regina::NS_QUAD_CLOSED) {
+                ReginaSupport::info(parentWidget,
+                    ui->tr("<qt>I could not enumerate vertex normal "
+                    "surfaces in quad closed coordinates.  This could be "
+                    "because SnapPea was unable to construct the slope "
+                    "equations, or because it tried to retriangulate when "
+                    "doing so.<p>"
+                    "Please report this to the Regina developers.</qt>"));
+            } else {
+                ReginaSupport::failure(parentWidget,
+                    ui->tr("<qt>I could not enumerate vertex normal "
+                    "surfaces.<p>"
+                    "Please report this to the Regina developers.</qt>"));
+            }
+            return 0;
+        }
 
         if (dlg.run()) {
             ans->setLabel(ui->tr("%1 vertex surfaces").arg(
@@ -208,11 +241,28 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalSurfaces* ans = NormalSurfaces::enumerate(
-            dynamic_cast<regina::Triangulation<3>*>(parent),
+            tri,
             coordSystem,
             regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
             regina::NS_ALG_DEFAULT, &tracker);
+
+        if (! ans) {
+            if (coordSystem == regina::NS_QUAD_CLOSED) {
+                ReginaSupport::info(parentWidget,
+                    ui->tr("<qt>I could not enumerate fundamental normal "
+                    "surfaces in quad closed coordinates.  This could be "
+                    "because SnapPea was unable to construct the slope "
+                    "equations, or it tried to retriangulate when doing so.<p>"
+                    "Please report this to the Regina developers.</qt>"));
+            } else {
+                ReginaSupport::failure(parentWidget,
+                    ui->tr("<qt>I could not enumerate fundamental normal "
+                    "surfaces.<p>"
+                    "Please report this to the Regina developers.</qt>"));
+            }
+            return 0;
+        }
 
         if (dlg.run()) {
             ans->setLabel(ui->tr("%1 fundamental surfaces").arg(

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -165,7 +165,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2> {
          * Creates a new triangle and marks it as belonging to the
          * given triangulation component.
          *
-         * @param myComponent the triangulation component to which this
+         * @param component the triangulation component to which this
          * triangle belongs.
          */
         Face(Component<3>* component);
@@ -182,7 +182,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2> {
  * use either the new alias TriangleEmbedding<3>, or the full class name
  * FaceEmbedding<3, 2>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<3, 2> NTriangleEmbedding;
+[[deprecated]] typedef FaceEmbedding<3, 2> NTriangleEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -191,7 +191,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<3, 2> NTriangleEmbedding;
  * \deprecated Instead of the old typedef NTriangle, you should use
  * either the new alias Triangle<3>, or the full class name Face<3, 2>.
  */
-REGINA_DEPRECATED typedef Face<3, 2> NTriangle;
+[[deprecated]] typedef Face<3, 2> NTriangle;
 
 /*@}*/
 

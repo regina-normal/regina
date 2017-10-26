@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -174,7 +174,7 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
  * \deprecated The class NNormalSurfaceVectorMirrored has now been renamed to
  * NSVectorMirrored.
  */
-REGINA_DEPRECATED typedef NSVectorMirrored NNormalSurfaceVectorMirrored;
+[[deprecated]] typedef NSVectorMirrored NNormalSurfaceVectorMirrored;
 
 /*@}*/
 

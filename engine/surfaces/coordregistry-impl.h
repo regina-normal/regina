@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,6 +55,7 @@
 #include "surfaces/nsvectorstandard.h"
 #include "surfaces/nsvectoranstandard.h"
 #include "surfaces/nsvectorquad.h"
+#include "surfaces/nsvectorquadclosed.h"
 #include "surfaces/nsvectorquadoct.h"
 #include "surfaces/nsvectororiented.h"
 #include "surfaces/nsvectororientedquad.h"
@@ -75,6 +76,9 @@ forCoords(NormalCoords coords, FunctionObject&& func,
             std::forward<Args>(args)...);
         case NS_QUAD : return
             func.template operator()<NormalInfo<NS_QUAD>>(
+            std::forward<Args>(args)...);
+        case NS_QUAD_CLOSED : return
+            func.template operator()<NormalInfo<NS_QUAD_CLOSED>>(
             std::forward<Args>(args)...);
         case NS_AN_QUAD_OCT : return
             func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
@@ -101,6 +105,9 @@ forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args) {
             std::forward<Args>(args)...); break;
         case NS_QUAD :
             func.template operator()<NormalInfo<NS_QUAD>>(
+            std::forward<Args>(args)...); break;
+        case NS_QUAD_CLOSED :
+            func.template operator()<NormalInfo<NS_QUAD_CLOSED>>(
             std::forward<Args>(args)...); break;
         case NS_AN_QUAD_OCT :
             func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(

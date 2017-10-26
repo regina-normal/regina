@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -553,7 +553,7 @@ template <> class Perm<5>;
  * \deprecated The class NPerm has now been renamed to Perm.
  */
 template <int n>
-using NPerm REGINA_DEPRECATED = Perm<n>;
+using NPerm [[deprecated]] = Perm<n>;
 
 /*@}*/
 

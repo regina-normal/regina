@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -194,7 +194,7 @@ class HilbertCD {
  *
  * \deprecated The class NHilbertCD has now been renamed to HilbertCD.
  */
-REGINA_DEPRECATED typedef HilbertCD NHilbertCD;
+[[deprecated]] typedef HilbertCD NHilbertCD;
 
 /*@}*/
 

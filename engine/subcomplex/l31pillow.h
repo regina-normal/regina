@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -139,7 +139,7 @@ class REGINA_API L31Pillow : public StandardTriangulation {
  * \deprecated The class NL31Pillow has now been renamed to
  * L31Pillow.
  */
-REGINA_DEPRECATED typedef L31Pillow NL31Pillow;
+[[deprecated]] typedef L31Pillow NL31Pillow;
 
 /*@}*/
 

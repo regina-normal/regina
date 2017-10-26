@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -469,7 +469,7 @@ class REGINA_API ProgressTrackerOpen : public ProgressTrackerBase {
  * \deprecated The class NProgressTrackerBase has now been renamed to
  * ProgressTrackerBase.
  */
-REGINA_DEPRECATED typedef ProgressTrackerBase NProgressTrackerBase;
+[[deprecated]] typedef ProgressTrackerBase NProgressTrackerBase;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -478,7 +478,7 @@ REGINA_DEPRECATED typedef ProgressTrackerBase NProgressTrackerBase;
  * \deprecated The class NProgressTracker has now been renamed to
  * ProgressTracker.
  */
-REGINA_DEPRECATED typedef ProgressTracker NProgressTracker;
+[[deprecated]] typedef ProgressTracker NProgressTracker;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -487,7 +487,7 @@ REGINA_DEPRECATED typedef ProgressTracker NProgressTracker;
  * \deprecated The class NProgressTrackerOpen has now been renamed to
  * ProgressTrackerOpen.
  */
-REGINA_DEPRECATED typedef ProgressTrackerOpen NProgressTrackerOpen;
+[[deprecated]] typedef ProgressTrackerOpen NProgressTrackerOpen;
 
 /*@}*/
 

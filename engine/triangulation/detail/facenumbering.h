@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -99,12 +99,6 @@ REGINA_API extern const int* const binomSmall_[17];
  * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces being numbered.
  * This must be between 0 and <i>dim</i>-1 inclusive.
- * \tparam lex \c true if faces are numbered in lexicographical order
- * according to their vertices (the scheme for low-dimensional faces),
- * or \c false if faces are numbered in reverse lexicographical order
- * (the scheme for high-dimensional faces).  The value of this parameter
- * is forced by \a dim and \a subdim; its purpose is to help with
- * template specialisations.
  */
 template <int dim, int subdim>
 class FaceNumberingAPI {

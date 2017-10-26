@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -103,7 +103,7 @@ class REGINA_API Container : public Packet {
  *
  * \deprecated The class NContainer has now been renamed to Container.
  */
-REGINA_DEPRECATED typedef Container NContainer;
+[[deprecated]] typedef Container NContainer;
 
 /*@}*/
 

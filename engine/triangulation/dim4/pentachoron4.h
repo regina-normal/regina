@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -111,7 +111,7 @@ class REGINA_API Face<4, 4> : public detail::SimplexBase<4> {
  * \deprecated Instead of the old typedef Dim4Pentachoron, you should use
  * the new alias Simplex<4> (or, if you prefer, the full class name Face<4, 4>).
  */
-REGINA_DEPRECATED typedef Simplex<4> Dim4Pentachoron;
+[[deprecated]] typedef Simplex<4> Dim4Pentachoron;
 
 /*@}*/
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
@@ -62,8 +62,6 @@ static Theme::TextStyle stringToDefaultFormat(const std::string& str)
 {
     if (!regina::startsWith(str, "ds"))
         return Theme::Normal;
-
-    bool ok = false;
 
     // TODO: Make this log-time in the enumerator size.
     if (str == "dsNormal") return Theme::Normal;

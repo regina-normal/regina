@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2016, Ben Burton                                   *
+ *  Copyright (c) 2011-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1430,9 +1430,9 @@ namespace regina {
 extern template class REGINA_API LPMatrix<Integer>;
 extern template class REGINA_API LPMatrix<NNativeLong>;
 
-extern template class REGINA_API LPCol<LPConstraintNone>;
-extern template class REGINA_API LPCol<LPConstraintEuler>;
-extern template class REGINA_API LPCol<LPConstraintNonSpun>;
+extern template struct REGINA_API LPCol<LPConstraintNone>;
+extern template struct REGINA_API LPCol<LPConstraintEuler>;
+extern template struct REGINA_API LPCol<LPConstraintNonSpun>;
 
 extern template class REGINA_API LPInitialTableaux<LPConstraintNone>;
 extern template class REGINA_API LPInitialTableaux<LPConstraintEuler>;

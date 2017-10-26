@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -205,7 +205,7 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1> {
  * use either the new alias EdgeEmbedding<4>, or the full class name
  * FaceEmbedding<4, 1>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<4, 1> Dim4EdgeEmbedding;
+[[deprecated]] typedef FaceEmbedding<4, 1> Dim4EdgeEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -214,7 +214,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<4, 1> Dim4EdgeEmbedding;
  * \deprecated Instead of the old typedef Dim4Edge, you should use
  * either the new alias Edge<4>, or the full class name Face<4, 1>.
  */
-REGINA_DEPRECATED typedef Face<4, 1> Dim4Edge;
+[[deprecated]] typedef Face<4, 1> Dim4Edge;
 
 /*@}*/
 

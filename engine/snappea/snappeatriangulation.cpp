@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -184,7 +184,8 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
     // SnapPea no longer removes finite vertices automatically - we need
     // to do it here ourselves.  Otherwise snappea will crash shortly
     // after when it tries to initialise the gluing equations.
-    regina::snappea::remove_finite_vertices(data_);
+    if (tri.countVertices() > tri.countBoundaryComponents())
+        regina::snappea::remove_finite_vertices(data_);
 
     // Regina triangulations know nothing about peripheral curves.
     // Install a sensible basis for each cusp, if SnapPea will let us.

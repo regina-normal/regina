@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -115,7 +115,7 @@ class REGINA_API Face<2, 2> : public detail::SimplexBase<2> {
  * \deprecated Instead of the old typedef Dim2Triangle, you should use
  * the new alias Simplex<2> (or, if you prefer, the full class name Face<2, 2>).
  */
-REGINA_DEPRECATED typedef Simplex<2> Dim2Triangle;
+[[deprecated]] typedef Simplex<2> Dim2Triangle;
 
 /*@}*/
 

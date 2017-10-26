@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2016, Ben Burton                                   *
+ *  Copyright (c) 2011-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -420,6 +420,11 @@ class TreeTraversal : public BanConstraint {
          * reuse the same matrix to avoid the overhead of reconstructing it
          * every time this routine is called.
          *
+         * If you do not pass your own matching equations and Regina is
+         * unable to construct them (which can happen when the underlying
+         * triangulation is not supported by the normal coordinate system),
+         * then this routine will return \c false.
+         *
          * \pre The normal or almost normal surface \a s uses the same
          * coordinate system as was passed to the TreeTraversal constructor.
          * Moreover, this coordinate system is in fact a normal or
@@ -473,7 +478,7 @@ class TreeTraversal : public BanConstraint {
          * @param angleEqns the angle equations to check against
          * the given angle structure; this may be 0, in which case the angle
          * equations will be temporarily reconstructed for you using
-         * AngleStructureVector::makeMatchingEquations().
+         * AngleStructureVector::makeAngleEquations().
          * @return \c true if the given angle structure passes all of the tests
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).
@@ -1410,7 +1415,7 @@ class TreeSingleSoln :
  * \deprecated The class NTreeTraversal has now been renamed to TreeTraversal.
  */
 template <class LPConstraint, typename BanConstraint, typename IntType>
-using NTreeTraversal REGINA_DEPRECATED =
+using NTreeTraversal [[deprecated]] =
     TreeTraversal<LPConstraint, BanConstraint, IntType>;
 
 /**
@@ -1423,7 +1428,7 @@ using NTreeTraversal REGINA_DEPRECATED =
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
-using NTreeEnumeration REGINA_DEPRECATED =
+using NTreeEnumeration [[deprecated]] =
     TreeEnumeration<LPConstraint, BanConstraint, IntType>;
 
 /**
@@ -1436,7 +1441,7 @@ using NTreeEnumeration REGINA_DEPRECATED =
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
-using NTautEnumeration REGINA_DEPRECATED =
+using NTautEnumeration [[deprecated]] =
     TautEnumeration<LPConstraint, BanConstraint, IntType>;
 
 /**
@@ -1448,7 +1453,7 @@ using NTautEnumeration REGINA_DEPRECATED =
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
           typename IntType = Integer>
-using NTreeSingleSoln REGINA_DEPRECATED =
+using NTreeSingleSoln [[deprecated]] =
     TreeSingleSoln<LPConstraint, BanConstraint, IntType>;
 
 /*@}*/

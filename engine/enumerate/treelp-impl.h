@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2016, Ben Burton                                   *
+ *  Copyright (c) 2011-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -122,6 +122,8 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
 
     // Fetch the original (unadjusted) matrix of matching equations.
     if (coords_ != NS_ANGLE) {
+        // Here coords must be one of NS_QUAD or NS_STANDARD, and so we
+        // know that makeMatchingEquations() must succeed.
         eqns_ = regina::makeMatchingEquations(tri, coords);
         scaling_ = 0;
     } else {

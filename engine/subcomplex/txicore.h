@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -320,7 +320,7 @@ class REGINA_API TxICore :
  * \deprecated The class NTxICore has now been renamed to
  * TxICore.
  */
-REGINA_DEPRECATED typedef TxICore NTxICore;
+[[deprecated]] typedef TxICore NTxICore;
 
 /**
  * One of a family of thin <tt>T x I</tt> triangulations that typically
@@ -430,7 +430,7 @@ class REGINA_API TxIDiagonalCore : public TxICore {
  * \deprecated The class NTxIDiagonalCore has now been renamed to
  * TxIDiagonalCore.
  */
-REGINA_DEPRECATED typedef TxIDiagonalCore NTxIDiagonalCore;
+[[deprecated]] typedef TxIDiagonalCore NTxIDiagonalCore;
 
 /**
  * A specific six-tetrahedron TxICore triangulation that does not fit
@@ -478,7 +478,7 @@ class REGINA_API TxIParallelCore : public TxICore {
  * \deprecated The class NTxIParallelCore has now been renamed to
  * TxIParallelCore.
  */
-REGINA_DEPRECATED typedef TxIParallelCore NTxIParallelCore;
+[[deprecated]] typedef TxIParallelCore NTxIParallelCore;
 
 /*@}*/
 

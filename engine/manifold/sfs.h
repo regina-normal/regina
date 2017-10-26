@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -146,7 +146,7 @@ struct REGINA_API SFSFibre {
  * \deprecated The class NSFSFibre has now been renamed to
  * SFSFibre.
  */
-REGINA_DEPRECATED typedef SFSFibre NSFSFibre;
+[[deprecated]] typedef SFSFibre NSFSFibre;
 
 /**
  * Writes the given fibre in human-readable format to the given output
@@ -847,7 +847,7 @@ class REGINA_API SFSpace : public Manifold {
  * \deprecated The class NSFSpace has now been renamed to
  * SFSpace.
  */
-REGINA_DEPRECATED typedef SFSpace NSFSpace;
+[[deprecated]] typedef SFSpace NSFSpace;
 
 /*@}*/
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -323,7 +323,7 @@ class REGINA_API PacketListener {
  *
  * \deprecated The class NPacketListener has now been renamed to PacketListener.
  */
-REGINA_DEPRECATED typedef PacketListener NPacketListener;
+[[deprecated]] typedef PacketListener NPacketListener;
 
 /*@}*/
 

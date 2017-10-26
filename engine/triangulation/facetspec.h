@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -273,7 +273,7 @@ struct FacetSpec {
  * \deprecated Instead of the old typedef Dim2TriangleEdge, you should
  * use the real class name FacetSpec<2>.
  */
-REGINA_DEPRECATED typedef FacetSpec<2> Dim2TriangleEdge;
+[[deprecated]] typedef FacetSpec<2> Dim2TriangleEdge;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -282,7 +282,7 @@ REGINA_DEPRECATED typedef FacetSpec<2> Dim2TriangleEdge;
  * \deprecated Instead of the old typedef NTetFace, you should
  * use the real class name FacetSpec<3>.
  */
-REGINA_DEPRECATED typedef FacetSpec<3> NTetFace;
+[[deprecated]] typedef FacetSpec<3> NTetFace;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -291,7 +291,7 @@ REGINA_DEPRECATED typedef FacetSpec<3> NTetFace;
  * \deprecated Instead of the old typedef Dim4PentFacet, you should
  * use the real class name FacetSpec<4>.
  */
-REGINA_DEPRECATED typedef FacetSpec<4> Dim4PentFacet;
+[[deprecated]] typedef FacetSpec<4> Dim4PentFacet;
 
 /*@}*/
 

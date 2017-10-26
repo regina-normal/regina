@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -178,7 +178,7 @@ class REGINA_API Example<2> : public detail::ExampleBase<2> {
  * \deprecated Instead of the old typedef Dim2ExampleTriangulation, you should
  * use the full class name Example<2>.
  */
-REGINA_DEPRECATED typedef Example<2> Dim2ExampleTriangulation;
+[[deprecated]] typedef Example<2> Dim2ExampleTriangulation;
 
 /*@}*/
 

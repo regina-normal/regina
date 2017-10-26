@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -422,7 +422,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
  * \deprecated Instead of the old typedef Dim2GluingPermSearcher, you should
  * use the full class name GluingPermSearcher<2>.
  */
-REGINA_DEPRECATED typedef GluingPermSearcher<2> Dim2GluingPermSearcher;
+[[deprecated]] typedef GluingPermSearcher<2> Dim2GluingPermSearcher;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -431,7 +431,7 @@ REGINA_DEPRECATED typedef GluingPermSearcher<2> Dim2GluingPermSearcher;
  * \deprecated Instead of the old typedef UseDim2GluingPerms, you should use
  * the new type name GluingPermSearcher<2>::Use.
  */
-REGINA_DEPRECATED typedef GluingPermSearcher<2>::Use UseDim2GluingPerms;
+[[deprecated]] typedef GluingPermSearcher<2>::Use UseDim2GluingPerms;
 
 /*@}*/
 

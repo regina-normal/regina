@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -2616,7 +2616,7 @@ class REGINA_API HyperbolicMinSearcher : public EulerSearcher {
  * \deprecated Instead of the old typedef NGluingPermSearcher, you should use
  * the full class name GluingPermSearcher<3>.
  */
-REGINA_DEPRECATED typedef GluingPermSearcher<3> NGluingPermSearcher;
+[[deprecated]] typedef GluingPermSearcher<3> NGluingPermSearcher;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2625,7 +2625,7 @@ REGINA_DEPRECATED typedef GluingPermSearcher<3> NGluingPermSearcher;
  * \deprecated Instead of the old typedef UseGluingPerms, you should use
  * the new type name GluingPermSearcher<3>::Use.
  */
-REGINA_DEPRECATED typedef GluingPermSearcher<3>::Use UseGluingPerms;
+[[deprecated]] typedef GluingPermSearcher<3>::Use UseGluingPerms;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2633,7 +2633,7 @@ REGINA_DEPRECATED typedef GluingPermSearcher<3>::Use UseGluingPerms;
  *
  * \deprecated The class NEulerSearcher has now been renamed to EulerSearcher.
  */
-REGINA_DEPRECATED typedef EulerSearcher NEulerSearcher;
+[[deprecated]] typedef EulerSearcher NEulerSearcher;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2642,7 +2642,7 @@ REGINA_DEPRECATED typedef EulerSearcher NEulerSearcher;
  * \deprecated The class NCompactSearcher has now been renamed to
  * CompactSearcher.
  */
-REGINA_DEPRECATED typedef CompactSearcher NCompactSearcher;
+[[deprecated]] typedef CompactSearcher NCompactSearcher;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2651,7 +2651,7 @@ REGINA_DEPRECATED typedef CompactSearcher NCompactSearcher;
  * \deprecated The class NClosedPrimeMinSearcher has now been renamed to
  * ClosedPrimeMinSearcher.
  */
-REGINA_DEPRECATED typedef ClosedPrimeMinSearcher NClosedPrimeMinSearcher;
+[[deprecated]] typedef ClosedPrimeMinSearcher NClosedPrimeMinSearcher;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2660,7 +2660,7 @@ REGINA_DEPRECATED typedef ClosedPrimeMinSearcher NClosedPrimeMinSearcher;
  * \deprecated The class NHyperbolicMinSearcher has now been renamed to
  * HyperbolicMinSearcher.
  */
-REGINA_DEPRECATED typedef HyperbolicMinSearcher NHyperbolicMinSearcher;
+[[deprecated]] typedef HyperbolicMinSearcher NHyperbolicMinSearcher;
 
 /*@}*/
 

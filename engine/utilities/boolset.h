@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -349,7 +349,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const BoolSet& set);
  *
  * \deprecated The class NBoolSet has now been renamed to BoolSet.
  */
-REGINA_DEPRECATED typedef BoolSet NBoolSet;
+[[deprecated]] typedef BoolSet NBoolSet;
 
 /*@}*/
 

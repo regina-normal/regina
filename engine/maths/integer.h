@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1493,9 +1493,22 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
 //   REGINA_API.  This is possible because our library explicitly instantiates
 //   IntegerBase for all possible template parameters.
 //
+// Note that we still do use "extern template" for class constants.
+//
 // I would *love* to hear of a better way of doing this that correctly
 // sets the dllexport / dllimport attributes under windows, and that
 // doesn't require marking the entire template as REGINA_API.
+
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+extern template REGINA_API const IntegerBase<true> IntegerBase<true>::zero;
+extern template REGINA_API const IntegerBase<false> IntegerBase<false>::zero;
+extern template REGINA_API const IntegerBase<true> IntegerBase<true>::one;
+extern template REGINA_API const IntegerBase<false> IntegerBase<false>::one;
+
+// This class constant is specialised, even though the class itself is not.
+template <> const IntegerBase<true> IntegerBase<true>::infinity;
+extern template REGINA_API const IntegerBase<true> IntegerBase<true>::infinity;
+#endif // __DOXYGEN
 
 /**
  * LargeInteger is a typedef for IntegerBase<true>, which offers
@@ -2257,7 +2270,7 @@ typedef NativeInteger<sizeof(long)> NNativeLong;
  *
  * \deprecated The class NInteger has now been renamed to Integer.
  */
-REGINA_DEPRECATED typedef Integer NInteger;
+[[deprecated]] typedef Integer NInteger;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2265,7 +2278,7 @@ REGINA_DEPRECATED typedef Integer NInteger;
  *
  * \deprecated The class NLargeInteger has now been renamed to LargeInteger.
  */
-REGINA_DEPRECATED typedef LargeInteger NLargeInteger;
+[[deprecated]] typedef LargeInteger NLargeInteger;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -2274,7 +2287,7 @@ REGINA_DEPRECATED typedef LargeInteger NLargeInteger;
  * \deprecated The class NNativeInteger has now been renamed to NativeInteger.
  */
 template <int bytes>
-using NNativeInteger REGINA_DEPRECATED = NativeInteger<bytes>;
+using NNativeInteger [[deprecated]] = NativeInteger<bytes>;
 
 /*@}*/
 

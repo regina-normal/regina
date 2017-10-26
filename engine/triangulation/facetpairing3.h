@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -513,7 +513,7 @@ class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
  * \deprecated Instead of the old typedef NFacePairing, you should use
  * the full class name FacetPairing<3>.
  */
-REGINA_DEPRECATED typedef FacetPairing<3> NFacePairing;
+[[deprecated]] typedef FacetPairing<3> NFacePairing;
 
 /*@}*/
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -363,7 +363,7 @@ class REGINA_API Triangulation<2> :
  * \deprecated Instead of the old typedef Dim2Triangulation, you should use
  * the templated class name Triangulation<2>.
  */
-REGINA_DEPRECATED typedef Triangulation<2> Dim2Triangulation;
+[[deprecated]] typedef Triangulation<2> Dim2Triangulation;
 
 // Additional face typedefs that do not have their own headers:
 
@@ -375,7 +375,7 @@ REGINA_DEPRECATED typedef Triangulation<2> Dim2Triangulation;
  * use either the new alias VertexEmbedding<2>, or the full class name
  * FaceEmbedding<2, 0>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
+[[deprecated]] typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -385,7 +385,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<2, 0> Dim2VertexEmbedding;
  * use either the new alias EdgeEmbedding<2>, or the full class name
  * FaceEmbedding<2, 1>.
  */
-REGINA_DEPRECATED typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
+[[deprecated]] typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -394,7 +394,7 @@ REGINA_DEPRECATED typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
  * \deprecated Instead of the old typedef Dim2Vertex, you should use
  * either the new alias Vertex<2>, or the full class name Face<2, 0>.
  */
-REGINA_DEPRECATED typedef Face<2, 0> Dim2Vertex;
+[[deprecated]] typedef Face<2, 0> Dim2Vertex;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -403,7 +403,7 @@ REGINA_DEPRECATED typedef Face<2, 0> Dim2Vertex;
  * \deprecated Instead of the old typedef Dim2Edge, you should use
  * either the new alias Edge<2>, or the full class name Face<2, 1>.
  */
-REGINA_DEPRECATED typedef Face<2, 1> Dim2Edge;
+[[deprecated]] typedef Face<2, 1> Dim2Edge;
 
 /*@}*/
 

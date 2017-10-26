@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -234,7 +234,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
          * must be between 0 and size()-1 inclusive.
          * @return the coordinate at the given index.
          */
-        const NLargeInteger& operator [] (size_t index) const;
+        const LargeInteger& operator [] (size_t index) const;
 
         /**
          * Sets the given normal coordinate to the given value.
@@ -951,7 +951,7 @@ class REGINA_API NormalHypersurface :
  * \deprecated The class NNormalHypersurfaceVector has now been renamed to
  * NormalHypersurfaceVector.
  */
-REGINA_DEPRECATED typedef NormalHypersurfaceVector NNormalHypersurfaceVector;
+[[deprecated]] typedef NormalHypersurfaceVector NNormalHypersurfaceVector;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -960,7 +960,7 @@ REGINA_DEPRECATED typedef NormalHypersurfaceVector NNormalHypersurfaceVector;
  * \deprecated The class NNormalHypersurface has now been renamed to
  * NormalHypersurface.
  */
-REGINA_DEPRECATED typedef NormalHypersurface NNormalHypersurface;
+[[deprecated]] typedef NormalHypersurface NNormalHypersurface;
 
 /*@}*/
 
@@ -983,7 +983,7 @@ inline size_t NormalHypersurfaceVector::size() const {
     return coords_.size();
 }
 
-inline const NLargeInteger& NormalHypersurfaceVector::operator []
+inline const LargeInteger& NormalHypersurfaceVector::operator []
         (size_t index) const {
     return coords_[index];
 }

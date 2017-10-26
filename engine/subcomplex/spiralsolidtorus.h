@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -258,7 +258,7 @@ class REGINA_API SpiralSolidTorus : public StandardTriangulation {
  * \deprecated The class NSpiralSolidTorus has now been renamed to
  * SpiralSolidTorus.
  */
-REGINA_DEPRECATED typedef SpiralSolidTorus NSpiralSolidTorus;
+[[deprecated]] typedef SpiralSolidTorus NSpiralSolidTorus;
 
 // Inline functions for SpiralSolidTorus
 

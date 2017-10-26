@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2016, Ben Burton                                   *
+ *  Copyright (c) 1999-2017, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@
  *  <center><b>
  *  Regina<br>
  *  Software for low-dimensional topology<br>
- *  Copyright &copy; 1999-2016, The Regina development team
+ *  Copyright &copy; 1999-2017, The Regina development team
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related
@@ -65,7 +65,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for low-dimensional topology",
- *  http://regina-normal.github.io/ , 1999-2016.
+ *  http://regina-normal.github.io/ , 1999-2017.
  *
  *  <h3>Authors</h3>
  *
@@ -203,6 +203,39 @@
 
 // Put ourselves in the regina namespace so that automatic links work.
 namespace regina {
+
+/*! \page bgl Boost Graph Library interface
+ *
+/**
+ * The namespace regina::graph provides an interface for various types of
+ * objects from Regina to work directly with the Boost Graph Library (BGL).
+ *
+ * <h3>Triangulations</h3>
+ *
+ * After including the header triangulation/graph.h, any object of type
+ * <tt>regina::Triangulation<dim></tt> can be used directly as a graph with
+ * the BGL.  Here the graph will be the <i>dual graph</i> of the triangulation:
+ * this is an undirected multigraph in which each node represents a
+ * <i>dim</i>-simplex of the triangulation, and each arc represents a gluing
+ * between two adjacent <i>dim</i>-simplices.
+ *
+ * Triangulations implement several BGL graph concepts, including:
+ * - vertex link graph;
+ * - edge list graph;
+ * - adjacency graph;
+ * - incidence graph;
+ * - bidirectional graph;
+ * - the read-only portions of property graph.
+ *
+ * Triangulations are \e not mutable graphs - for the purposes of the BGL,
+ * they are considered read-only.
+ *
+ * Dual vertices of the graph represent <i>dim</i>-dimensional simplices
+ * of the underlying triangulation, and so are represented directly by a
+ * pointer of type <tt>regina::Simplex<dim>*</tt>.  Dual edges (when
+ * accessed through the BGL) must come with an orientation, and so are
+ * represented by lightweight objects of type regina::graph::DualEdge<dim>.
+ */
 
 /*! \page pythonapi Python users
  *
