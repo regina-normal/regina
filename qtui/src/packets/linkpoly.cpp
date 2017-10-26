@@ -75,6 +75,10 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
     QHBoxLayout* sublayout = new QHBoxLayout();
     sublayout->setContentsMargins(0, 0, 0, 0);
     sublayout->setSpacing(0);
+    jones = new QLabel(ui);
+    jones->setWordWrap(true);
+    jones->setWhatsThis(msg);
+    sublayout->addWidget(jones, 1);
     btnJones = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
     btnJones->setToolTip(tr("Calculate the Jones polynomial"));
@@ -85,10 +89,6 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
         "always computed automatically).</qt>"));
     sublayout->addWidget(btnJones);
     connect(btnJones, SIGNAL(clicked()), this, SLOT(calculateJones()));
-    jones = new QLabel(ui);
-    jones->setWordWrap(true);
-    jones->setWhatsThis(msg);
-    sublayout->addWidget(jones);
     layout->addLayout(sublayout);
 
     layout->addSpacing(10);
@@ -140,6 +140,10 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
     sublayout = new QHBoxLayout();
     sublayout->setContentsMargins(0, 0, 0, 0);
     sublayout->setSpacing(0);
+    homfly = new QLabel(ui);
+    homfly->setWordWrap(true);
+    homfly->setWhatsThis(msg);
+    sublayout->addWidget(homfly, 1);
     btnHomfly = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
     btnHomfly->setToolTip(tr("Calculate the HOMFLY-PT polynomial"));
@@ -150,10 +154,6 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
         "always computed automatically).</qt>"));
     sublayout->addWidget(btnHomfly);
     connect(btnHomfly, SIGNAL(clicked()), this, SLOT(calculateHomfly()));
-    homfly = new QLabel(ui);
-    homfly->setWordWrap(true);
-    homfly->setWhatsThis(msg);
-    sublayout->addWidget(homfly);
     layout->addLayout(sublayout);
 
     layout->addSpacing(10);
@@ -168,6 +168,10 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
     sublayout = new QHBoxLayout();
     sublayout->setContentsMargins(0, 0, 0, 0);
     sublayout->setSpacing(0);
+    bracket = new QLabel(ui);
+    bracket->setWordWrap(true);
+    bracket->setWhatsThis(msg);
+    sublayout->addWidget(bracket, 1);
     btnBracket = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
     btnBracket->setToolTip(tr("Calculate the Kauffman bracket"));
@@ -178,10 +182,6 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
         "always computed automatically).</qt>"));
     sublayout->addWidget(btnBracket);
     connect(btnBracket, SIGNAL(clicked()), this, SLOT(calculateBracket()));
-    bracket = new QLabel(ui);
-    bracket->setWordWrap(true);
-    bracket->setWhatsThis(msg);
-    sublayout->addWidget(bracket);
     layout->addLayout(sublayout);
 
     layout->addStretch(1);
@@ -209,8 +209,14 @@ void LinkPolynomialUI::refresh() {
             jones->setText(link->jones().utf8(regina::Link::jonesVar).c_str());
         else
             jones->setText(link->jones().str("x").c_str());
+        QPalette pal = jones->palette();
+        pal.setColor(jones->foregroundRole(), Qt::black);
+        jones->setPalette(pal);
     } else {
-        jones->setText(QString());
+        jones->setText(tr("Unknown"));
+        QPalette pal = jones->palette();
+        pal.setColor(jones->foregroundRole(), Qt::darkGray);
+        jones->setPalette(pal);
         btnJones->setVisible(true);
     }
 
@@ -232,8 +238,14 @@ void LinkPolynomialUI::refresh() {
                 homfly->setText(link->homflyLM().str(
                     "l", regina::Link::homflyLMVarY).c_str());
         }
+        QPalette pal = homfly->palette();
+        pal.setColor(homfly->foregroundRole(), Qt::black);
+        homfly->setPalette(pal);
     } else {
-        homfly->setText(QString());
+        homfly->setText(tr("Unknown"));
+        QPalette pal = homfly->palette();
+        pal.setColor(homfly->foregroundRole(), Qt::darkGray);
+        homfly->setPalette(pal);
         btnHomfly->setVisible(true);
     }
 
@@ -243,8 +255,14 @@ void LinkPolynomialUI::refresh() {
             bracket->setText(link->bracket().utf8("A").c_str());
         else
             bracket->setText(link->bracket().str("A").c_str());
+        QPalette pal = bracket->palette();
+        pal.setColor(bracket->foregroundRole(), Qt::black);
+        bracket->setPalette(pal);
     } else {
-        bracket->setText(QString());
+        bracket->setText(tr("Unknown"));
+        QPalette pal = bracket->palette();
+        pal.setColor(bracket->foregroundRole(), Qt::darkGray);
+        bracket->setPalette(pal);
         btnBracket->setVisible(true);
     }
 }
