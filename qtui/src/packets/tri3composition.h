@@ -94,7 +94,6 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         QLabel* isoSig;
         QTreeWidget* details;
         QTreeWidgetItem* lastComponent;
-        PacketEditIface* editIface;
 
     public:
         /**
@@ -102,14 +101,12 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          */
         Tri3CompositionUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
-        ~Tri3CompositionUI();
 
         /**
          * PacketViewerTab overrides.
          */
         regina::Packet* getPacket();
         QWidget* getInterface();
-        PacketEditIface* getEditIface();
         void refresh();
 
         /**
@@ -133,8 +130,10 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          */
         void contextStandardTri(const QPoint& pos);
         void contextIsoSig(const QPoint& pos);
+        void contextComposition(const QPoint& pos);
         void copyStandardTri();
         void copyIsoSig();
+        void copyCompositionLine();
 
     private:
         /**
@@ -169,9 +168,5 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
             const regina::Perm<4>& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::Matrix2& matrix);
 };
-
-inline PacketEditIface* Tri3CompositionUI::getEditIface() {
-    return editIface;
-}
 
 #endif

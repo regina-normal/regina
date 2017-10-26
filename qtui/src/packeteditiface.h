@@ -123,21 +123,6 @@ class PacketEditPlainTextEditor : public PacketEditIface {
         void sendPasteToEditor();
 };
 
-class PacketEditTreeWidgetSingleLine : public PacketEditIface {
-    Q_OBJECT
-
-    private:
-        QTreeWidget* tree_;
-
-    public:
-        PacketEditTreeWidgetSingleLine(QTreeWidget* tree);
-
-        virtual bool copyEnabled() const;
-
-    public slots:
-        virtual void copy();
-};
-
 class PacketEditTabbedUI : public PacketEditIface {
     Q_OBJECT
 

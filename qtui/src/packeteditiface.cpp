@@ -117,22 +117,6 @@ void PacketEditPlainTextEditor::paste() {
     emit sendPasteToEditor();
 }
 
-PacketEditTreeWidgetSingleLine::PacketEditTreeWidgetSingleLine(
-        QTreeWidget* tree) : tree_(tree) {
-    connect(tree_, SIGNAL(itemSelectionChanged()), this,
-        SLOT(fireStatesChanged()));
-}
-
-bool PacketEditTreeWidgetSingleLine::copyEnabled() const {
-    return (! tree_->selectedItems().empty());
-}
-
-void PacketEditTreeWidgetSingleLine::copy() {
-    if (! tree_->selectedItems().empty())
-        QApplication::clipboard()->setText(
-            tree_->selectedItems().front()->text(0), QClipboard::Clipboard);
-}
-
 PacketEditTabbedUI::PacketEditTabbedUI(PacketTabbedUI* tabs) :
         tabs_(tabs) {
     connect(tabs_->tabs, SIGNAL(currentChanged(int)),

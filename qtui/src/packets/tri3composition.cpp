@@ -143,14 +143,15 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     details->setWhatsThis(msg);
     layout->addWidget(details, 1);
 
-    editIface = new PacketEditTreeWidgetSingleLine(details);
-            
     standardTri->setContextMenuPolicy(Qt::CustomContextMenu);
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
+    details->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(standardTri, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextStandardTri(const QPoint&)));
     connect(isoSig, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextIsoSig(const QPoint&)));
+    connect(details, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextComposition(const QPoint&)));
 
     /*
     // Add a central divider.
@@ -209,10 +210,6 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
     wideIsoArea->addWidget(isoView);
 
-}
-
-Tri3CompositionUI::~Tri3CompositionUI() {
-    delete editIface;
 }
 
 regina::Packet* Tri3CompositionUI::getPacket() {
@@ -1118,10 +1115,25 @@ void Tri3CompositionUI::contextIsoSig(const QPoint& pos) {
     m.exec(isoSig->mapToGlobal(pos));
 }
 
+void Tri3CompositionUI::contextComposition(const QPoint& pos) {
+    if (details->selectedItems().empty())
+        return;
+    
+    QMenu m(tr("Context menu"), details);
+    QAction a("Copy line", details);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyCompositionLine()));
+    m.addAction(&a);
+    m.exec(details->mapToGlobal(pos));
+}
+
 void Tri3CompositionUI::copyStandardTri() {
     QApplication::clipboard()->setText(standardTri->text());
 }
 
 void Tri3CompositionUI::copyIsoSig() {
     QApplication::clipboard()->setText(isoSig->text());
+}
+
+void Tri3CompositionUI::copyCompositionLine() {
+    QApplication::clipboard()->setText(details->selectedItems().front()->text(0));
 }

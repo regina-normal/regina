@@ -75,12 +75,6 @@ Tri3UI::Tri3UI(regina::Triangulation<3>* packet,
     addTab(new Tri3CompositionUI(packet, this), QObject::tr("&Composition"));
     addTab(surfaces, QObject::tr("&Recognition"));
     addTab(snapPea, QObject::tr("Snap&Pea"));
-
-    editIface = new PacketEditTabbedUI(this);
-}
-
-Tri3UI::~Tri3UI() {
-    delete editIface;
 }
 
 const QLinkedList<QAction*>& Tri3UI::getPacketTypeActions() {
