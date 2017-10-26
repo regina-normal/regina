@@ -46,7 +46,6 @@
 #include <memory>
 
 class PacketChooser;
-class PacketEditIface;
 class QMenu;
 class QPushButton;
 class QTreeWidget;

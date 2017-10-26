@@ -47,7 +47,6 @@ class Tri3GluingsUI;
 class Tri3SkeletonUI;
 class Tri3SurfacesUI;
 class Tri3SnapPeaUI;
-class PacketEditIface;
 class QLabel;
 class QToolBar;
 

@@ -45,7 +45,6 @@ class ClickableLabel;
 class Tri4AlgebraUI;
 class Tri4GluingsUI;
 class Tri4SkeletonUI;
-class PacketEditIface;
 class QLabel;
 class QToolBar;
 

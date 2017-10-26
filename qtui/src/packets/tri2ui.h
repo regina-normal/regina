@@ -43,7 +43,6 @@
 class QToolBar;
 class Tri2GluingsUI;
 class Tri2SkeletonUI;
-class PacketEditIface;
 class QLabel;
 
 /**
