@@ -38,7 +38,8 @@
 #define __TRI3COMPOSITION_H
 
 #include "packet/packetlistener.h"
-#include "triangulation/forward.h"
+#include "subcomplex/standardtri.h"
+#include "triangulation/dim3.h"
 
 #include "../packettabui.h"
 
@@ -53,10 +54,7 @@ class QTreeWidgetItem;
 
 namespace regina {
     class Matrix2;
-    class Packet;
     class SatRegion;
-    class StandardTriangulation;
-    template <int> class Perm;
 };
 
 /**
