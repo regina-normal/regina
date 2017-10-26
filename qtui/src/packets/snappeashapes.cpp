@@ -322,7 +322,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
 
     actToRegina = new QAction(this);
     actToRegina->setText(tr("&Convert to Regina"));
-    actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation"));
+    actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
     actToRegina->setToolTip(tr("Convert this to a Regina triangulation"));
     actToRegina->setWhatsThis(tr("<qt>Convert this to one of Regina's native "
         "3-manifold triangulations.  The original SnapPea triangulation "
