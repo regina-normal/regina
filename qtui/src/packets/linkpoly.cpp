@@ -41,8 +41,12 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 
+#include <QAction>
+#include <QApplication>
+#include <QClipboard>
 #include <QLabel>
 #include <QLayout>
+#include <QMenu>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QToolTip>
@@ -190,6 +194,17 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
+
+    jones->setContextMenuPolicy(Qt::CustomContextMenu);
+    homfly->setContextMenuPolicy(Qt::CustomContextMenu);
+    bracket->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(jones, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextJones(const QPoint&)));
+    connect(homfly, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextHomfly(const QPoint&)));
+    connect(bracket, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextBracket(const QPoint&)));
 }
 
 regina::Packet* LinkPolynomialUI::getPacket() {
@@ -298,6 +313,83 @@ void LinkPolynomialUI::calculateBracket() {
     delete dlg;
 
     refresh();
+}
+
+void LinkPolynomialUI::contextJones(const QPoint& pos) {
+    if (! link->knowsJones())
+        return;
+
+    QMenu m(tr("Context menu"), jones);
+
+    QAction copy("Copy", this);
+    QAction copyPlain("Copy plain text", this);
+    connect(&copy, SIGNAL(triggered()), this, SLOT(copyJones()));
+    connect(&copyPlain, SIGNAL(triggered()), this, SLOT(copyJonesPlain()));
+    m.addAction(&copy);
+    m.addAction(&copyPlain);
+
+    m.exec(jones->mapToGlobal(pos));
+}
+
+void LinkPolynomialUI::contextHomfly(const QPoint& pos) {
+    if (! link->knowsHomfly())
+        return;
+
+    QMenu m(tr("Context menu"), homfly);
+
+    QAction copy("Copy", this);
+    QAction copyPlain("Copy plain text", this);
+    connect(&copy, SIGNAL(triggered()), this, SLOT(copyHomfly()));
+    connect(&copyPlain, SIGNAL(triggered()), this, SLOT(copyHomflyPlain()));
+    m.addAction(&copy);
+    m.addAction(&copyPlain);
+
+    m.exec(homfly->mapToGlobal(pos));
+}
+
+void LinkPolynomialUI::contextBracket(const QPoint& pos) {
+    if (! link->knowsBracket())
+        return;
+
+    QMenu m(tr("Context menu"), bracket);
+
+    QAction copy("Copy", this);
+    QAction copyPlain("Copy plain text", this);
+    connect(&copy, SIGNAL(triggered()), this, SLOT(copyBracket()));
+    connect(&copyPlain, SIGNAL(triggered()), this, SLOT(copyBracketPlain()));
+    m.addAction(&copy);
+    m.addAction(&copyPlain);
+
+    m.exec(bracket->mapToGlobal(pos));
+}
+
+void LinkPolynomialUI::copyJones() {
+    QApplication::clipboard()->setText(jones->text());
+}
+
+void LinkPolynomialUI::copyHomfly() {
+    QApplication::clipboard()->setText(homfly->text());
+}
+
+void LinkPolynomialUI::copyBracket() {
+    QApplication::clipboard()->setText(bracket->text());
+}
+
+void LinkPolynomialUI::copyJonesPlain() {
+    QApplication::clipboard()->setText(link->jones().str("x").c_str());
+}
+
+void LinkPolynomialUI::copyHomflyPlain() {
+    if (! btnLM->isChecked())
+        QApplication::clipboard()->setText(link->homflyAZ().str("a", "z").
+            c_str());
+    else
+        QApplication::clipboard()->setText(link->homflyLM().str("l", "m").
+            c_str());
+}
+
+void LinkPolynomialUI::copyBracketPlain() {
+    QApplication::clipboard()->setText(link->bracket().str("A").c_str());
 }
 
 void LinkPolynomialUI::homflyTypeChanged(bool checked) {

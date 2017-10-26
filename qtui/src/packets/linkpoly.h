@@ -104,6 +104,19 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
          */
         void updatePreferences();
 
+        /**
+         * Support clipboard actions.
+         */
+        void contextJones(const QPoint& pos);
+        void contextHomfly(const QPoint& pos);
+        void contextBracket(const QPoint& pos);
+        void copyJones();
+        void copyHomfly();
+        void copyBracket();
+        void copyJonesPlain();
+        void copyHomflyPlain();
+        void copyBracketPlain();
+
     private:
         /**
          * Update the UI to reflect the current unicode setting.
