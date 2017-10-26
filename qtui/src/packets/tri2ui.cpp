@@ -60,12 +60,6 @@ Tri2UI::Tri2UI(regina::Triangulation<2>* packet,
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
-
-    editIface = new PacketEditTabbedUI(this);
-}
-
-Tri2UI::~Tri2UI() {
-    delete editIface;
 }
 
 const QLinkedList<QAction*>& Tri2UI::getPacketTypeActions() {

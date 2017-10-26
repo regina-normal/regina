@@ -60,19 +60,15 @@ class LinkUI : public PacketTabbedUI {
          */
         LinkCrossingsUI* crossings;
 
-        PacketEditIface* editIface;
-
     public:
         /**
          * Constructor and destructor.
          */
         LinkUI(regina::Link* packet, PacketPane* newEnclosingPane);
-        ~LinkUI();
 
         /**
          * PacketUI overrides.
          */
-        PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 };
@@ -117,10 +113,6 @@ class LinkHeaderUI : public PacketViewerTab {
          */
         static QString summaryInfo(regina::Link* tri);
 };
-
-inline PacketEditIface* LinkUI::getEditIface() {
-    return editIface;
-}
 
 inline QToolBar* LinkHeaderUI::getToolBar() {
     return bar;

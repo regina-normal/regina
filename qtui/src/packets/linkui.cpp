@@ -67,12 +67,6 @@ LinkUI::LinkUI(regina::Link* packet, PacketPane* newEnclosingPane) :
     addTab(new LinkPolynomialUI(packet, this), QObject::tr("&Polynomials"));
     addTab(new LinkGraphUI(packet, this), QObject::tr("&Graphs"));
     // TODO: More tabs.
-
-    editIface = new PacketEditTabbedUI(this);
-}
-
-LinkUI::~LinkUI() {
-    delete editIface;
 }
 
 const QLinkedList<QAction*>& LinkUI::getPacketTypeActions() {

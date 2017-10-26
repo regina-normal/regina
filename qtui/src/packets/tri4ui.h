@@ -63,20 +63,16 @@ class Tri4UI : public PacketTabbedUI {
         Tri4SkeletonUI* skeleton;
         Tri4AlgebraUI* algebra;
 
-        PacketEditIface* editIface;
-
     public:
         /**
          * Constructor and destructor.
          */
         Tri4UI(regina::Triangulation<4>* packet,
             PacketPane* newEnclosingPane);
-        ~Tri4UI();
 
         /**
          * PacketUI overrides.
          */
-        PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 };
@@ -150,10 +146,6 @@ class Tri4HeaderUI : public QObject, public PacketViewerTab,
          */
         void customEvent(QEvent* event);
 };
-
-inline PacketEditIface* Tri4UI::getEditIface() {
-    return editIface;
-}
 
 inline QToolBar* Tri4HeaderUI::getToolBar() {
     return bar;
