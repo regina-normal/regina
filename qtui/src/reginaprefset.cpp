@@ -75,6 +75,7 @@ ReginaPrefSet::ReginaPrefSet() :
         hypersurfacesCreationCoords(regina::HS_STANDARD),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
         linkCodeType(OrientedGauss),
+        linkCrossingsStyle(PictorialCrossings),
         linkHomflyType(HomflyAZ),
         linkInitialGraphType(TreeDecomposition),
         pythonAutoIndent(true),
@@ -242,6 +243,11 @@ void ReginaPrefSet::readInternal() {
         linkCodeType = ReginaPrefSet::Jenkins;
     else
         linkCodeType = ReginaPrefSet::OrientedGauss; /* default */
+    str = settings.value("CrossingsStyle").toString();
+    if (str == "Text")
+        linkCrossingsStyle = ReginaPrefSet::TextCrossings;
+    else
+        linkCrossingsStyle = ReginaPrefSet::PictorialCrossings; /* default */
     str = settings.value("HomflyType").toString();
     if (str == "LM")
         linkHomflyType = ReginaPrefSet::HomflyLM;
@@ -375,6 +381,12 @@ void ReginaPrefSet::saveInternal() const {
             settings.setValue("CodeType", "Jenkins"); break;
         default:
             settings.setValue("CodeType", "OrientedGauss"); break;
+    }
+    switch (linkCrossingsStyle) {
+        case ReginaPrefSet::TextCrossings:
+            settings.setValue("CrossingsStyle", "Text"); break;
+        default:
+            settings.setValue("CrossingsStyle", "Pictorial"); break;
     }
     switch (linkHomflyType) {
         case ReginaPrefSet::HomflyLM:

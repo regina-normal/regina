@@ -88,6 +88,8 @@ class ReginaPrefSet : public QObject {
 
         enum LinkCodeType { OrientedGauss, Jenkins };
             /**< Possible export codes that can be displayed for links. */
+        enum LinkCrossingsStyle { PictorialCrossings, TextCrossings };
+            /**< Possible styles for displaying crossings for links. */
         enum LinkHomflyType { HomflyAZ, HomflyLM };
             /**< Possible flavours of the HOMFLY-PT polynomial to display. */
         enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
@@ -117,6 +119,8 @@ class ReginaPrefSet : public QObject {
                  enumerate in a 4-manifold triangulation. */
         LinkCodeType linkCodeType;
             /**< The export code to display for knots and links. */
+        LinkCrossingsStyle linkCrossingsStyle;
+            /**< The style for displaying crossings for knots and links. */
         LinkHomflyType linkHomflyType;
             /**< The flavour of HOMFLY-PT polynomial to display for
                  knots and links. */
