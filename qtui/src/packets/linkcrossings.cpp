@@ -35,23 +35,69 @@
 #include "triangulation/dim3.h"
 
 // UI includes:
+#include "iconcache.h" // TODO
 #include "linkcrossings.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
 #include <QAction>
+#include <QComboBox>
 #include <QLabel>
+#include <QLayout>
+#include <QListView>
 #include <QMessageBox>
 #include <QToolBar>
 
 using regina::Link;
 using regina::Packet;
 
+inline CrossingModel::CrossingModel(regina::Link* link, int component) {
+    regina::StrandRef start = link->component(component);
+    if (start.crossing()) {
+        regina::StrandRef s = start;
+        do {
+            strands_.push_back(s);
+            ++s;
+        } while (s != start);
+    }
+}
+
+int CrossingModel::rowCount(const QModelIndex& /* unused parent */) const {
+    return strands_.size();
+}
+
+int CrossingModel::columnCount(const QModelIndex& /* unused parent */) const {
+    return 1;
+}
+
+QVariant CrossingModel::data(const QModelIndex& index, int role) const {
+    // TODO
+    if (role == Qt::DisplayRole) {
+        const regina::StrandRef& s = strands_[index.row()];
+        if (s.crossing()->sign() > 0) {
+            if (s.strand() == 0)
+                return trUtf8("%1₊").arg(s.crossing()->index());
+            else
+                return trUtf8("%1⁺").arg(s.crossing()->index());
+        } else {
+            if (s.strand() == 0)
+                return trUtf8("%1₋").arg(s.crossing()->index());
+            else
+                return trUtf8("%1⁻").arg(s.crossing()->index());
+        }
+    } else if (role == Qt::DecorationRole) {
+        return IconCache::icon(IconCache::packet_link);
+    } else
+        return QVariant();
+}
+
 LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), link(packet) {
     ui = new QWidget();
-    // TODO: Ensure there is a way to switch crossings.
+    layout = new QVBoxLayout(ui);
+
+    // TODO: whatsthis
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
@@ -132,6 +178,13 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     refresh();
 }
 
+LinkCrossingsUI::~LinkCrossingsUI() {
+    for (auto w : componentWidgets)
+        delete w;
+    for (auto m : componentModels)
+        delete m;
+}
+
 void LinkCrossingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actReflect);
     bar->addAction(actSimplify);
@@ -158,6 +211,36 @@ void LinkCrossingsUI::setReadWrite(bool readWrite) {
 }
 
 void LinkCrossingsUI::refresh() {
+    for (auto w : componentWidgets)
+        delete w;
+    componentWidgets.clear();
+
+    for (auto m : componentModels)
+        delete m;
+    componentModels.clear();
+
+    for (int i = 0; i < link->countComponents(); ++i) {
+        CrossingModel* model = new CrossingModel(link, i);
+        componentModels.push_back(model);
+
+        QLabel* label = new QLabel(tr("<b>Component %1</b>").arg(i));
+        layout->addWidget(label);
+
+        QListView* crossings = new QListView();
+        crossings->setViewMode(QListView::ListMode);
+        crossings->setFlow(QListView::LeftToRight);
+        crossings->setMovement(QListView::Static);
+        crossings->setWrapping(true);
+        crossings->setResizeMode(QListView::Adjust);
+        // TODO crossings->setUniformItemSizes(true);
+        crossings->setModel(model);
+        layout->addWidget(crossings, 1);
+
+        componentWidgets.push_back(label);
+        componentWidgets.push_back(crossings);
+    }
+
+
     // TODO: implement a crossings display (x2)
 }
 
@@ -200,3 +283,10 @@ void LinkCrossingsUI::complement() {
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
+void LinkCrossingsUI::typeChanged(int) {
+    // TODO: Support multiple viewing modes.
+}
+
+void LinkCrossingsUI::switchCrossing() {
+    // TODO: Implement crossing switches.
+}

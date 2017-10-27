@@ -37,15 +37,44 @@
 #ifndef __LINKCROSSINGS_H
 #define __LINKCROSSINGS_H
 
-#include "../packettabui.h"
+#include "link/link.h"
+
+#include "packettabui.h"
 #include "reginaprefset.h"
 
+#include <vector>
+#include <QAbstractItemModel>
+
 class EditTableView;
+class QBoxLayout;
+class QComboBox;
+class QListView;
 class QToolBar;
 
 namespace regina {
     class Link;
     class Packet;
+};
+
+/**
+ * Stores the strands of crossings for a single link component, in order of
+ * traversal along the component.
+ */
+class CrossingModel : public QAbstractItemModel {
+    private:
+        std::vector<regina::StrandRef> strands_;
+
+    public:
+        CrossingModel(regina::Link* link, int component);
+
+        /**
+         * Overrides for describing data in the model.
+         */
+        QModelIndex index(int row, int column, const QModelIndex& parent) const;
+        QModelIndex parent(const QModelIndex& index) const;
+        int rowCount(const QModelIndex& parent) const;
+        int columnCount(const QModelIndex& parent) const;
+        QVariant data(const QModelIndex& index, int role) const;
 };
 
 /**
@@ -59,11 +88,15 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         regina::Link* link;
+        std::vector<CrossingModel*> componentModels;
 
         /**
          * Internal components
          */
         QWidget* ui;
+        QBoxLayout* layout;
+        QComboBox* type;
+        std::vector<QWidget*> componentWidgets;
 
         /**
          * Gluing actions
@@ -80,6 +113,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          */
         LinkCrossingsUI(regina::Link* packet,
             PacketTabbedUI* useParentUI, bool readWrite);
+        ~LinkCrossingsUI();
 
         /**
          * Fill the given toolbar with knot/link actions.
@@ -108,6 +142,22 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void rotate();
         void moves();
         void complement();
+
+        /**
+         * Other user interface actions.
+         */
+        void typeChanged(int);
+        void switchCrossing();
 };
+
+inline QModelIndex CrossingModel::index(int row, int column,
+        const QModelIndex& /* unused parent */) const {
+    return createIndex(row, column, row /* unique ID */);
+}
+
+inline QModelIndex CrossingModel::parent(const QModelIndex& /* unused index */) const {
+    // All items are top-level.
+    return QModelIndex();
+}
 
 #endif
