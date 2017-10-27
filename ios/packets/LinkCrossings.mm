@@ -89,13 +89,13 @@ static NSString* unknotText = @"Unknot, no crossings";
     self.style.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LINK_CROSSINGS_STYLE];
 
     self.packet = static_cast<regina::Link*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
-    
+
     self.crossings.delegate = self;
     self.crossings.dataSource = self;
-    
+
     components = [[NSMutableArray alloc] initWithCapacity:self.packet->countComponents()];
     [self reloadPacket];
-    
+
     UILongPressGestureRecognizer *r = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [self.crossings addGestureRecognizer:r];
 }
@@ -118,7 +118,7 @@ static NSString* unknotText = @"Unknot, no crossings";
         }
         [components addObject:comp];
     }
-    
+
     if (self.packet->size() < 10)
         refLabel = @"0";
     else if (self.packet->size() < 20)
@@ -135,7 +135,7 @@ static NSString* unknotText = @"Unknot, no crossings";
         refLabel = @"0000";
     else
         refLabel = @"00000";
-    
+
     if (self.style.selectedSegmentIndex == 0) {
         // Pictorial display
         sizeLabel = [refLabel sizeWithAttributes:@{NSFontAttributeName: self.header.font}];
@@ -144,14 +144,14 @@ static NSString* unknotText = @"Unknot, no crossings";
         sizeLabel = [[NSString stringWithFormat:@"%@₊", refLabel] sizeWithAttributes:@{NSFontAttributeName: self.header.font}];
     }
     sizeHeader = [refLabel sizeWithAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:self.header.font.pointSize]}];
-    
+
     [self.crossings reloadData];
 }
 
 - (IBAction)complement:(id)sender {
     regina::Triangulation<3>* c = self.packet->complement();
     c->setLabel(self.packet->adornedLabel("Complement"));
-    
+
     self.packet->insertChildLast(c);
     [ReginaHelper viewPacket:c];
 }
@@ -202,7 +202,7 @@ static NSString* unknotText = @"Unknot, no crossings";
 - (IBAction)longPress:(id)sender {
     UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
     UIGestureRecognizerState state = press.state;
-    
+
     CGPoint location = [press locationInView:self.crossings];
     NSIndexPath *indexPath = [self.crossings indexPathForItemAtPoint:location];
 
@@ -218,7 +218,7 @@ static NSString* unknotText = @"Unknot, no crossings";
 
     if (state == UIGestureRecognizerStateBegan) {
         LinkCrossingCell *cell = static_cast<LinkCrossingCell*>([self.crossings cellForItemAtIndexPath:indexPath]);
-        
+
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
                                                                        message:nil
                                                                 preferredStyle:UIAlertControllerStyleActionSheet];
@@ -262,7 +262,7 @@ static NSString* unknotText = @"Unknot, no crossings";
 
     regina::StrandRef s;
     [(NSValue*)components[indexPath.section][indexPath.row] getValue:&s];
-    
+
     if (self.style.selectedSegmentIndex == 0) {
         // Pictorial display.
         NSString* cellId;
@@ -277,14 +277,14 @@ static NSString* unknotText = @"Unknot, no crossings";
             else
                 cellId = @"-u";
         }
-        
+
         LinkCrossingCell* cell = (LinkCrossingCell*)[collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
         cell.index.text = [NSString stringWithFormat:@"%d", s.crossing()->index()];
         return cell;
     } else {
         // Text-based display.
         LinkCrossingCell* cell = (LinkCrossingCell*)[collectionView dequeueReusableCellWithReuseIdentifier:@"text" forIndexPath:indexPath];
-        
+
         if (s.crossing()->sign() > 0) {
             if (s.strand() == 0)
                 cell.index.text = [NSString stringWithFormat:@"%d₊", s.crossing()->index()];
@@ -298,7 +298,7 @@ static NSString* unknotText = @"Unknot, no crossings";
                 cell.index.text = [NSString stringWithFormat:@"%d⁻", s.crossing()->index()];
             cell.index.textColor = LinkViewController.negColour;
         }
-        
+
         return cell;
     }
 }
@@ -316,7 +316,7 @@ static NSString* unknotText = @"Unknot, no crossings";
         return CGSizeMake(ceil(text.width + 10),
                           ceil(text.height) + 10);
     }
-    
+
     if (self.style.selectedSegmentIndex == 0) {
         // Pictorial display
 
