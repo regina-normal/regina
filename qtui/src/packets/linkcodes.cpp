@@ -84,10 +84,6 @@ LinkCodesUI::LinkCodesUI(regina::Link* packet,
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
 
-    code->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(code, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(contextCode(const QPoint&)));
-
     editIface = new PacketEditTextEditor(code);
 }
 
