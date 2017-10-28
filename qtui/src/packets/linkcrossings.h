@@ -64,11 +64,12 @@ namespace regina {
  */
 class CrossingModel : public QAbstractItemModel {
     private:
-        LinkCrossingsUI* ui_;
         std::vector<regina::StrandRef> strands_;
+        bool pictorial_;
 
     public:
-        CrossingModel(LinkCrossingsUI* ui, regina::Link* link, int component);
+        CrossingModel(bool pictorial, regina::Link* link, int component);
+        void setPictorial(bool pictorial);
 
         /**
          * Overrides for describing data in the model.
@@ -100,6 +101,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         QBoxLayout* layout;
         QComboBox* type;
         std::vector<QWidget*> componentWidgets;
+        std::vector<QListView*> componentLists;
 
         /**
          * Gluing actions
@@ -144,7 +146,6 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * Crossings display.
          */
-        bool pictorialCrossings();
         static QIcon crossingIcon(int sign, int strand);
 
     public slots:

@@ -55,8 +55,8 @@ using regina::Packet;
 
 QIcon LinkCrossingsUI::icon[2][2];
 
-inline CrossingModel::CrossingModel(LinkCrossingsUI* ui, regina::Link* link,
-        int component) : ui_(ui) {
+inline CrossingModel::CrossingModel(bool pictorial, regina::Link* link,
+        int component) : pictorial_(pictorial) {
     regina::StrandRef start = link->component(component);
     if (start.crossing()) {
         regina::StrandRef s = start;
@@ -65,6 +65,12 @@ inline CrossingModel::CrossingModel(LinkCrossingsUI* ui, regina::Link* link,
             ++s;
         } while (s != start);
     }
+}
+
+void CrossingModel::setPictorial(bool pictorial) {
+    layoutAboutToBeChanged();
+    pictorial_ = pictorial;
+    layoutChanged();
 }
 
 int CrossingModel::rowCount(const QModelIndex& /* unused parent */) const {
@@ -79,7 +85,7 @@ QVariant CrossingModel::data(const QModelIndex& index, int role) const {
     // TODO: Clean up crossings display
     const regina::StrandRef& s = strands_[index.row()];
     if (role == Qt::DisplayRole) {
-        if (ui_->pictorialCrossings())
+        if (pictorial_)
             return QString::number(s.crossing()->index());
         else {
             if (s.crossing()->sign() > 0) {
@@ -95,12 +101,12 @@ QVariant CrossingModel::data(const QModelIndex& index, int role) const {
             }
         }
     } else if (role == Qt::DecorationRole) {
-        if (ui_->pictorialCrossings())
+        if (pictorial_)
             return LinkCrossingsUI::crossingIcon(s.crossing()->sign(), s.strand());
         else
             return QVariant();
     } else if (role == Qt::ForegroundRole) {
-        if (ui_->pictorialCrossings())
+        if (pictorial_)
             return QColor(Qt::black);
         else {
             if (s.crossing()->sign() > 0)
@@ -247,10 +253,6 @@ void LinkCrossingsUI::setReadWrite(bool readWrite) {
         (it.next())->setEnabled(readWrite);
 }
 
-bool LinkCrossingsUI::pictorialCrossings() {
-    return type->currentIndex() == 0;
-}
-
 QIcon LinkCrossingsUI::crossingIcon(int sign, int strand) {
     // Normalise sign from { -1, +1 } to an array index.
     sign = (sign < 0 ? 0 : 1);
@@ -298,7 +300,8 @@ void LinkCrossingsUI::refresh() {
             continue;
         }
 
-        CrossingModel* model = new CrossingModel(this, link, i);
+        CrossingModel* model = new CrossingModel(type->currentIndex() == 0,
+                                                 link, i);
         componentModels.push_back(model);
 
         QListView* crossings = new QListView();
@@ -311,6 +314,7 @@ void LinkCrossingsUI::refresh() {
         crossings->setModel(model);
         layout->addWidget(crossings, 1);
         componentWidgets.push_back(crossings);
+        componentLists.push_back(crossings);
     }
 
     if (link->size() == 0) {
@@ -321,7 +325,6 @@ void LinkCrossingsUI::refresh() {
     }
 
     // TODO: Fix vertical sizing of the list views.
-    // TODO: Implement both variants of a crossing display.
 }
 
 void LinkCrossingsUI::simplify() {
@@ -364,12 +367,13 @@ void LinkCrossingsUI::complement() {
 }
 
 void LinkCrossingsUI::typeChanged(int) {
+    bool pictorial = (type->currentIndex() != 1);
     ReginaPrefSet::global().linkCrossingsStyle =
-        (type->currentIndex() == 1 ? ReginaPrefSet::TextCrossings :
-         ReginaPrefSet::PictorialCrossings);
+        (pictorial ? ReginaPrefSet::PictorialCrossings :
+         ReginaPrefSet::TextCrossings);
 
-    // TODO: Support multiple viewing modes.
-    refresh();
+    for (auto m : componentModels)
+        m->setPictorial(pictorial);
 }
 
 void LinkCrossingsUI::switchCrossing() {
