@@ -44,8 +44,10 @@
 
 #include <vector>
 #include <QAbstractItemModel>
+#include <QIcon>
 
 class EditTableView;
+class LinkCrossingsUI;
 class QBoxLayout;
 class QComboBox;
 class QListView;
@@ -62,10 +64,11 @@ namespace regina {
  */
 class CrossingModel : public QAbstractItemModel {
     private:
+        LinkCrossingsUI* ui_;
         std::vector<regina::StrandRef> strands_;
 
     public:
-        CrossingModel(regina::Link* link, int component);
+        CrossingModel(LinkCrossingsUI* ui, regina::Link* link, int component);
 
         /**
          * Overrides for describing data in the model.
@@ -107,6 +110,11 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         QLinkedList<QAction*> actionList;
         QLinkedList<QAction*> enableWhenWritable;
 
+        /**
+         * Crossing icons
+         */
+        static QIcon icon[2 /* sign */][2 /* strand */];
+
     public:
         /**
          * Constructor and destructor.
@@ -132,6 +140,12 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         const QLinkedList<QAction*>& getPacketTypeActions();
         void refresh();
         void setReadWrite(bool readWrite);
+
+        /**
+         * Crossings display.
+         */
+        bool pictorialCrossings();
+        static QIcon crossingIcon(int sign, int strand);
 
     public slots:
         /**
