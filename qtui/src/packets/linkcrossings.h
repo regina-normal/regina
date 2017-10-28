@@ -92,16 +92,16 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         regina::Link* link;
-        std::vector<CrossingModel*> componentModels;
-
+ 
         /**
          * Internal components
          */
         QWidget* ui;
         QBoxLayout* layout;
         QComboBox* type;
-        std::vector<QWidget*> componentWidgets;
         std::vector<QListView*> componentLists;
+            /**< One list for each component.  For a 0-crossing unknot
+                 component, the corresponding list is nullptr. */
 
         /**
          * Gluing actions

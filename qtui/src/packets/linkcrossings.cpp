@@ -222,10 +222,9 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
 }
 
 LinkCrossingsUI::~LinkCrossingsUI() {
-    for (auto w : componentWidgets)
-        delete w;
-    for (auto m : componentModels)
-        delete m;
+    for (auto l : componentLists)
+        if (l)
+            delete l->model();
 }
 
 void LinkCrossingsUI::fillToolBar(QToolBar* bar) {
@@ -275,56 +274,129 @@ QIcon LinkCrossingsUI::crossingIcon(int sign, int strand) {
 }
 
 void LinkCrossingsUI::refresh() {
-    // TODO: Reuse component views to stop flashing
-    for (auto w : componentWidgets)
-        delete w;
-    componentWidgets.clear();
+    // We reuse existing QListViews and QLabels where possible, to avoid
+    // flashing.
 
-    for (auto m : componentModels)
-        delete m;
-    componentModels.clear();
+    // The layout should contain the following items:
+    // - 1 sublayout for the combo box and related items;
+    // - 2 widgets per component (the component header, then the content);
+    // - optionally 1 final widget for extra space if there are no crossings.
+
+    // First remove the optional extra space if we have it.
+    if (layout->count() > 1 + 2 * componentLists.size())
+        delete layout->itemAt(layout->count() - 1);
+
+    // If we now have fewer components than before, remove the extraneous
+    // widgets.  The widgets should be deleted from bottom to top,
+    // to avoid excessive re-layouts.
+    size_t n = link->countComponents();
+    if (componentLists.size() > n) {
+        QAbstractItemModel* m;
+        for (int i = componentLists.size() - 1; i >= n; --i) {
+            // Remove the widgets for component #i.
+            // Be sure to delete models *after* their corresponding views.
+            m = (componentLists[i] ? componentLists[i]->model() : nullptr);
+            delete layout->itemAt(2 * i + 2);
+            delete layout->itemAt(2 * i + 1);
+            delete m;
+        }
+        componentLists.resize(n);
+    }
 
     QLabel* label;
-    for (int i = 0; i < link->countComponents(); ++i) {
-        label = new QLabel(tr("<b>Component %1</b>").arg(i));
-        layout->addWidget(label);
-        componentWidgets.push_back(label);
+    CrossingModel* model;
+    QListView* crossings;
+    for (int i = 0; i < n; ++i) {
+        if (componentLists.size() <= i) {
+            // This is a new component that we did not have before.
+            label = new QLabel(tr("<b>Component %1</b>").arg(i));
+            layout->addWidget(label);
+        }
 
         if (! link->component(i).crossing()) {
-            label = new QLabel(tr("Unknot, no crossings"));
-            QPalette pal = label->palette();
-            pal.setColor(label->foregroundRole(), Qt::darkGray);
-            label->setPalette(pal);
-            layout->addWidget(label);
-            componentWidgets.push_back(label);
+            // We have a 0-crossing unknot.
+            if (i < componentLists.size()) {
+                // This is an old component.
+                // If the previous version of this component was also a
+                // zero-crossing unknot, there is nothing to do.
+                if (componentLists[i]) {
+                    // The previous version of this component was a
+                    // real list of crossings.
+                    // Replace the old QListView with a "no crossings" label.
+                    delete componentLists[i]->model();
+                    delete componentLists[i];
+                    componentLists[i] = nullptr;
+
+                    label = new QLabel(tr("Unknot, no crossings"));
+                    QPalette pal = label->palette();
+                    pal.setColor(label->foregroundRole(), Qt::darkGray);
+                    label->setPalette(pal);
+                    layout->insertWidget(2 * i + 2, label);
+                }
+            } else {
+                // This is a new component.
+                label = new QLabel(tr("Unknot, no crossings"));
+                QPalette pal = label->palette();
+                pal.setColor(label->foregroundRole(), Qt::darkGray);
+                label->setPalette(pal);
+                layout->addWidget(label);
+
+                componentLists.push_back(nullptr);
+            }
             continue;
         }
 
-        CrossingModel* model = new CrossingModel(type->currentIndex() == 0,
-                                                 link, i);
-        componentModels.push_back(model);
+        // We have actual crossings.
+        model = new CrossingModel(type->currentIndex() == 0, link, i);
+        if (i < componentLists.size()) {
+            // This is an old component.
+            // If the previous version also had crossings, we can just
+            // replace the model in the QListView.
+            if (componentLists[i]) {
+                QAbstractItemModel* oldModel = componentLists[i]->model();
+                componentLists[i]->setModel(model);
+                delete oldModel;
+                continue;
+            } else {
+                // The previous verison was a zero-crossing unknot.
+                // Replace the old QLabel with a new QListView.
+                delete layout->itemAt(2 * i + 2);
 
-        QListView* crossings = new QListView();
-        crossings->setViewMode(QListView::ListMode);
-        crossings->setFlow(QListView::LeftToRight);
-        crossings->setMovement(QListView::Static);
-        crossings->setWrapping(true);
-        crossings->setResizeMode(QListView::Adjust);
-        // crossings->setUniformItemSizes(true);
-        crossings->setModel(model);
-        layout->addWidget(crossings, 1);
-        componentWidgets.push_back(crossings);
-        componentLists.push_back(crossings);
+                crossings = new QListView();
+                crossings->setViewMode(QListView::ListMode);
+                crossings->setFlow(QListView::LeftToRight);
+                crossings->setMovement(QListView::Static);
+                crossings->setWrapping(true);
+                crossings->setResizeMode(QListView::Adjust);
+                // crossings->setUniformItemSizes(true);
+                crossings->setModel(model);
+                layout->insertWidget(2 * i + 2, crossings, 1);
+
+                componentLists[i] = crossings;
+            }
+        } else {
+            // This is a new component.
+            crossings = new QListView();
+            crossings->setViewMode(QListView::ListMode);
+            crossings->setFlow(QListView::LeftToRight);
+            crossings->setMovement(QListView::Static);
+            crossings->setWrapping(true);
+            crossings->setResizeMode(QListView::Adjust);
+            // crossings->setUniformItemSizes(true);
+            crossings->setModel(model);
+            layout->addWidget(crossings, 1);
+
+            componentLists.push_back(crossings);
+        }
     }
 
     if (link->size() == 0) {
         // There are no list views at all.
+        // Add some extra space at the end to avoid the "no crossing" labels
+        // spreading themselves across the entire widget.
         QWidget* stretch = new QWidget();
         layout->addWidget(stretch, 1);
-        componentWidgets.push_back(stretch);
     }
-
-    // TODO: Fix vertical sizing of the list views.
 }
 
 void LinkCrossingsUI::simplify() {
@@ -372,8 +444,9 @@ void LinkCrossingsUI::typeChanged(int) {
         (pictorial ? ReginaPrefSet::PictorialCrossings :
          ReginaPrefSet::TextCrossings);
 
-    for (auto m : componentModels)
-        m->setPictorial(pictorial);
+    for (auto l : componentLists)
+        if (l)
+            static_cast<CrossingModel*>(l->model())->setPictorial(pictorial);
 }
 
 void LinkCrossingsUI::switchCrossing() {
