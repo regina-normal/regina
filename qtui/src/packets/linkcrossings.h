@@ -69,6 +69,7 @@ class CrossingModel : public QAbstractItemModel {
 
     public:
         CrossingModel(bool pictorial, regina::Link* link, int component);
+        const regina::StrandRef& strandAt(const QModelIndex& index) const;
         void setPictorial(bool pictorial);
 
         /**
@@ -101,7 +102,8 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         QComboBox* type;
         std::vector<QListView*> componentLists;
             /**< One list for each component.  For a 0-crossing unknot
-                 component, the corresponding list is nullptr. */
+                 component, the corresponding list is \c nullptr. */
+        int useCrossing;
 
         /**
          * Gluing actions
@@ -162,8 +164,15 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          * Other user interface actions.
          */
         void typeChanged(int);
-        void switchCrossing();
+        void contextCrossing(const QPoint&);
+        void changeCrossing();
+        void resolveCrossing();
 };
+
+inline const regina::StrandRef& CrossingModel::strandAt(
+        const QModelIndex& index) const {
+    return strands_[index.row()];
+}
 
 inline QModelIndex CrossingModel::index(int row, int column,
         const QModelIndex& /* unused parent */) const {

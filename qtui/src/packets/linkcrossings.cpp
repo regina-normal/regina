@@ -44,6 +44,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QListView>
+#include <QMenu>
 #include <QMessageBox>
 #include <QToolBar>
 
@@ -120,7 +121,7 @@ QVariant CrossingModel::data(const QModelIndex& index, int role) const {
 
 LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
-        PacketEditorTab(useParentUI), link(packet) {
+        PacketEditorTab(useParentUI), link(packet), useCrossing(-1) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
 
@@ -139,6 +140,10 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     sublayout->addWidget(type, 1);
     layout->addLayout(sublayout);
     connect(type, SIGNAL(activated(int)), this, SLOT(typeChanged(int)));
+
+    ui->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextCrossing(const QPoint&)));
 
     // TODO: whatsthis
 
@@ -449,7 +454,43 @@ void LinkCrossingsUI::typeChanged(int) {
             static_cast<CrossingModel*>(l->model())->setPictorial(pictorial);
 }
 
-void LinkCrossingsUI::switchCrossing() {
-    // TODO: Implement crossing switches.
+void LinkCrossingsUI::contextCrossing(const QPoint& pos) {
+    for (auto l : componentLists) {
+        if (l && l->geometry().contains(pos)) {
+            QModelIndex index = l->indexAt(l->mapFrom(ui, pos));
+            if (! index.isValid()) {
+                useCrossing = -1;
+                return;
+            }
+
+            useCrossing = static_cast<CrossingModel*>(l->model())->
+                strandAt(index).crossing()->index();
+
+            QMenu m(tr("Context menu"), ui);
+
+            QAction change(tr("Change crossing %1").arg(useCrossing), this);
+            QAction resolve(tr("Resolve crossing %1").arg(useCrossing), this);
+            connect(&change, SIGNAL(triggered()), this, SLOT(changeCrossing()));
+            connect(&resolve, SIGNAL(triggered()), this, SLOT(resolveCrossing()));
+            m.addAction(&change);
+            m.addAction(&resolve);
+
+            m.exec(ui->mapToGlobal(pos));
+            return;
+        }
+    }
+    useCrossing = -1;
+}
+
+void LinkCrossingsUI::changeCrossing() {
+    if (useCrossing >= 0 && useCrossing < link->size())
+        link->change(link->crossing(useCrossing));
+    useCrossing = -1;
+}
+
+void LinkCrossingsUI::resolveCrossing() {
+    if (useCrossing >= 0 && useCrossing < link->size())
+        link->resolve(link->crossing(useCrossing));
+    useCrossing = -1;
 }
 
