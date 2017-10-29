@@ -284,7 +284,7 @@ void LinkCrossingsUI::refresh() {
 
     // First remove the optional extra space if we have it.
     if (layout->count() > 1 + 2 * componentLists.size())
-        delete layout->itemAt(layout->count() - 1);
+        delete layout->itemAt(layout->count() - 1)->widget();
 
     // If we now have fewer components than before, remove the extraneous
     // widgets.  The widgets should be deleted from bottom to top,
@@ -296,8 +296,8 @@ void LinkCrossingsUI::refresh() {
             // Remove the widgets for component #i.
             // Be sure to delete models *after* their corresponding views.
             m = (componentLists[i] ? componentLists[i]->model() : nullptr);
-            delete layout->itemAt(2 * i + 2);
-            delete layout->itemAt(2 * i + 1);
+            delete layout->itemAt(2 * i + 2)->widget();
+            delete layout->itemAt(2 * i + 1)->widget();
             delete m;
         }
         componentLists.resize(n);
@@ -360,7 +360,7 @@ void LinkCrossingsUI::refresh() {
             } else {
                 // The previous verison was a zero-crossing unknot.
                 // Replace the old QLabel with a new QListView.
-                delete layout->itemAt(2 * i + 2);
+                delete layout->itemAt(2 * i + 2)->widget();
 
                 crossings = new QListView();
                 crossings->setViewMode(QListView::ListMode);
