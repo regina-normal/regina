@@ -373,6 +373,7 @@ void LinkCrossingsUI::refresh() {
                 crossings->setMovement(QListView::Static);
                 crossings->setWrapping(true);
                 crossings->setResizeMode(QListView::Adjust);
+                crossings->setSelectionMode(QListView::NoSelection);
                 // crossings->setUniformItemSizes(true);
                 crossings->setModel(model);
                 layout->insertWidget(2 * i + 2, crossings, 1);
@@ -387,6 +388,7 @@ void LinkCrossingsUI::refresh() {
             crossings->setMovement(QListView::Static);
             crossings->setWrapping(true);
             crossings->setResizeMode(QListView::Adjust);
+            crossings->setSelectionMode(QListView::NoSelection);
             // crossings->setUniformItemSizes(true);
             crossings->setModel(model);
             layout->addWidget(crossings, 1);
