@@ -819,6 +819,18 @@ class REGINA_API Link : public Packet {
         void change(Crossing* c);
 
         /**
+         * Resolves the given crossing.  The two incoming strands will
+         * switch connections with the two outgoing strands, with the
+         * result that the given crossing is removed entirely.
+         *
+         * \note The number of components in the link \e will change
+         * as a result of this operation.
+         *
+         * @param c the crossing to resolve.
+         */
+        void resolve(Crossing* c);
+
+        /**
          * Converts this link into its reflection.
          *
          * This routine changes the sign of every crossing, but leaves

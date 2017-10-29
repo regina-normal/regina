@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "link.h"
+#include <algorithm>
 #include <sstream>
 
 namespace regina {
@@ -218,6 +219,124 @@ void Link::change(Crossing* c) {
     c->sign_ = -c->sign_;
 
     clearAllProperties();
+}
+
+void Link::resolve(Crossing* c) {
+    ChangeEventSpan span(this);
+
+    if (c->next_[0].crossing() == c) {
+        if (c->prev_[0].crossing() == c) {
+            // This is a 1-crossing unknot component, and it resolves
+            // into two 0-crossing unknot component.
+            for (StrandRef& s : components_)
+                if (s.crossing_ == c) {
+                    // 0-crossing component #1:
+                    s.crossing_ = nullptr;
+                    s.strand_ = 0;
+                    break;
+                }
+            // 0-crossing component #2:
+            components_.push_back(StrandRef());
+
+            crossings_.erase(crossings_.begin() + c->index());
+            delete c;
+        } else {
+            // This is a twist: prev_[0] should connect to next_[1], and
+            // we spin off a new 0-crossing unknot component.
+            StrandRef from = c->prev_[0];
+            StrandRef to = c->next_[1];
+            from.crossing()->next_[from.strand()] = to;
+            to.crossing()->prev_[to.strand()] = from;
+
+            // Ensure that no component uses c as its starting point.
+            for (StrandRef& s : components_)
+                if (s.crossing_ == c) {
+                    s = to;
+                    break;
+                }
+
+            components_.push_back(StrandRef());
+            crossings_.erase(crossings_.begin() + c->index());
+            delete c;
+        }
+    } else if (c->prev_[0].crossing() == c) {
+        // This is again a twist: prev_[1] should connect to next_[0], and
+        // we spin off a new 0-crossing unknot component.
+        StrandRef from = c->prev_[1];
+        StrandRef to = c->next_[0];
+        from.crossing()->next_[from.strand()] = to;
+        to.crossing()->prev_[to.strand()] = from;
+
+        // Ensure that no component uses c as its starting point.
+        for (StrandRef& s : components_)
+            if (s.crossing_ == c) {
+                s = to;
+                break;
+            }
+
+        components_.push_back(StrandRef());
+        crossings_.erase(crossings_.begin() + c->index());
+        delete c;
+    } else {
+        // This crossing does not connect to itself at all.
+        // Depending on whether next_[0] is connected with next_[1], we either
+        // break one component into two, or merge two components into one.
+
+        // Ensure that no component uses c as its starting point.
+        // Note that this could potentially happen twice.
+        for (StrandRef& s : components_)
+            if (s.crossing_ == c)
+                ++s;
+
+        // See whether c belongs to one or two components.
+        std::vector<StrandRef>::iterator comp = components_.end();
+        StrandRef s = c->next_[1];
+        while (s.crossing_ != c) {
+            if (comp == components_.end())
+                comp = std::find(components_.begin(), components_.end(), s);
+            ++s;
+        }
+        if (s.strand_ == 1) {
+            // We walked all the way back to the same strand of c
+            // without seeing c again in between - this means that c
+            // belongs to two components.
+            // Since we traversed one of these components entirely, it
+            // must be stored in comp.
+            // The two components will be merged as a result of this
+            // operation, so we delete comp and keep the other (unknown)
+            // component reference.
+            components_.erase(comp);
+        } else {
+            // We returned to the other strand of c.
+            // This means that c belongs entirely to a single component,
+            // and as a result of this operation it will split into two
+            // components.
+            if (comp == components_.end()) {
+                // The existing component marker must be between c->next_[0]
+                // and c->prev_[1].
+                components_.push_back(c->next_[1]);
+            } else {
+                // The existing component marker was found between c->next_[1]
+                // and c->prev_[0].
+                components_.push_back(c->next_[0]);
+            }
+        }
+
+        // Merge the strands that need to be merged.
+        StrandRef from = c->prev_[0];
+        StrandRef to = c->next_[1];
+        from.crossing()->next_[from.strand()] = to;
+        to.crossing()->prev_[to.strand()] = from;
+
+        from = c->prev_[1];
+        to = c->next_[0];
+        from.crossing()->next_[from.strand()] = to;
+        to.crossing()->prev_[to.strand()] = from;
+
+        // Finally, remove and delete the crossing.
+        crossings_.erase(crossings_.begin() + c->index());
+        delete c;
+    }
 }
 
 std::string Link::brief() const {

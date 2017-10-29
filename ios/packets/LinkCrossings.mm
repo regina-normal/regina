@@ -227,6 +227,11 @@ static NSString* unknotText = @"Unknot, no crossings";
                                                 handler:^(UIAlertAction*){
                                                     self.packet->change(s.crossing());
                                                 }]];
+        [alert addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"Resolve crossing %d", s.crossing()->index()]
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction*){
+                                                    self.packet->resolve(s.crossing());
+                                                }]];
         [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                                   style:UIAlertActionStyleCancel
                                                 handler:^(UIAlertAction*) {

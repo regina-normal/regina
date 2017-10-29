@@ -67,6 +67,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(r2Count);
     CPPUNIT_TEST(r3Count);
     CPPUNIT_TEST(r123Perform);
+    CPPUNIT_TEST(resolve);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1545,6 +1546,132 @@ class LinkTest : public CppUnit::TestFixture {
                 "( ) ( _0 ^1 _6 _5 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _4 ) ( ) ( )");
             verifyR2Up(l, 1, 1, 1, 2, 0, 0, "++---+- "
                 "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )");
+            delete l;
+        }
+
+        void verifyResolve(const Link* l, int crossing,
+                const char* briefResult) {
+            Link clone(*l);
+            clone.setLabel(l->label());
+
+            clone.resolve(clone.crossing(crossing));
+
+            sanity(&clone);
+
+            if (clone.brief() != briefResult) {
+                std::ostringstream msg;
+                msg << l->label() << ": resolve(" << crossing << ") gives "
+                    << clone.brief() << ", not " << briefResult
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void resolve() {
+            Link* l;
+
+            l = Link::fromData({ +1 }, { 1, -1 });
+            l->setLabel("One twist (a)");
+            verifyResolve(l, 0, "( ) ( )");
+            delete l;
+
+            l = Link::fromData({ +1 }, { -1, 1 });
+            l->setLabel("One twist (b)");
+            verifyResolve(l, 0, "( ) ( )");
+            delete l;
+
+            l = Link::fromData({ -1 }, { 1, -1 });
+            l->setLabel("One twist (c)");
+            verifyResolve(l, 0, "( ) ( )");
+            delete l;
+
+            l = Link::fromData({ -1 }, { -1, 1 });
+            l->setLabel("One twist (d)");
+            verifyResolve(l, 0, "( ) ( )");
+            delete l;
+
+            l = Link::fromData({ -1, +1, -1, -1 },
+                { 4, -1, 2, -2, 3, -4, 1, -3 });
+            l->setLabel("Trefoil with + twist (a)");
+            verifyResolve(l, 1, "--- ( ^2 _0 ^1 _2 ^0 _1 ) ( )");
+            delete l;
+
+            l = Link::fromData({ -1, +1, -1, -1 },
+                { 2, -2, 3, -4, 1, -3, 4, -1 });
+            l->setLabel("Trefoil with + twist (b)");
+            verifyResolve(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+            delete l;
+
+            l = Link::fromData({ -1, +1, -1, -1 },
+                { -2, 3, -4, 1, -3, 4, -1, 2 });
+            l->setLabel("Trefoil with + twist (c)");
+            verifyResolve(l, 1, "--- ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+            delete l;
+
+            l = Link::fromData({ +1, -1, +1, +1 },
+                { 4, -1, -2, 2, 3, -4, 1, -3 });
+            l->setLabel("Trefoil with - twist (a)");
+            verifyResolve(l, 1, "+++ ( ^2 _0 ^1 _2 ^0 _1 ) ( )");
+            delete l;
+
+            l = Link::fromData({ +1, -1, +1, +1 },
+                { -2, 2, 3, -4, 1, -3, 4, -1 });
+            l->setLabel("Trefoil with - twist (b)");
+            verifyResolve(l, 1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+            delete l;
+
+            l = Link::fromData({ +1, -1, +1, +1 },
+                { 2, 3, -4, 1, -3, 4, -1, -2 });
+            l->setLabel("Trefoil with - twist (c)");
+            verifyResolve(l, 1, "+++ ( ^1 _2 ^0 _1 ^2 _0 ) ( )");
+            delete l;
+
+            l = Link::fromData({ +1, +1, -1, -1 },
+                { 3, -1, 2, -3, 4, -2, 1, -4 });
+            l->setLabel("Figure eight (a)");
+            verifyResolve(l, 2, "++- ( _0 ^1 ) ( ^2 _1 ^0 _2 )");
+            delete l;
+
+            l = Link::fromData({ +1, +1, -1, -1 },
+                { -3, 4, -2, 1, -4, 3, -1, 2 });
+            l->setLabel("Figure eight (b)");
+            verifyResolve(l, 2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )");
+            delete l;
+
+            l = Link::fromData({ +1, +1, -1, -1 },
+                { 2, -3, 4, -2, 1, -4, 3, -1 });
+            l->setLabel("Figure eight (c)");
+            verifyResolve(l, 2, "++- ( ^1 _0 ) ( ^2 _1 ^0 _2 )");
+            delete l;
+
+            l = Link::fromData({ +1, +1, -1, -1 },
+                { 4, -2, 1, -4, 3, -1, 2, -3 });
+            l->setLabel("Figure eight (d)");
+            verifyResolve(l, 2, "++- ( ^2 _1 ^0 _2 ) ( _0 ^1 )");
+            delete l;
+
+            l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
+                { 2, -5, 6, -2, 1, 3, -4, -6, 5, -1 }, { -3, 4 });
+            l->setLabel("Figure eight with link (a)");
+            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+            delete l;
+
+            l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
+                { 2, -5, 6, -2, 1, 3, -4, -6, 5, -1 }, { 4, -3 });
+            l->setLabel("Figure eight with link (b)");
+            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+            delete l;
+
+            l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
+                { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { -3, 4 });
+            l->setLabel("Figure eight with link (c)");
+            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+            delete l;
+
+            l = Link::fromData({ +1, +1, +1, +1, -1, -1 },
+                { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { 4, -3 });
+            l->setLabel("Figure eight with link (d)");
+            verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
             delete l;
         }
 };
