@@ -44,13 +44,14 @@
 
 #include <vector>
 #include <QAbstractItemModel>
-#include <QIcon>
+#include <QStyledItemDelegate>
 
 class EditTableView;
 class LinkCrossingsUI;
 class QBoxLayout;
 class QComboBox;
 class QListView;
+class QPixmap;
 class QToolBar;
 
 namespace regina {
@@ -65,21 +66,60 @@ namespace regina {
 class CrossingModel : public QAbstractItemModel {
     private:
         std::vector<regina::StrandRef> strands_;
+        size_t maxIndex_;
         bool pictorial_;
+
+        static QPixmap* icon_;
+            /**< Loaded on demand.  We use a dynamic array because Qt does not
+                 let us construct a QPixmap statically.
+                 Array index is (1 + sign + strand). */
 
     public:
         CrossingModel(bool pictorial, regina::Link* link, int component);
         const regina::StrandRef& strandAt(const QModelIndex& index) const;
+        bool isPictorial() const;
         void setPictorial(bool pictorial);
+
+        static const QPixmap& icon(int sign, int strand);
 
         /**
          * Overrides for describing data in the model.
+         *
+         * If an invalid index is passed to data(), Qt::DisplayRole will return
+         * text for what should be approximately the longest string that we
+         * need to render.
          */
         QModelIndex index(int row, int column, const QModelIndex& parent) const;
         QModelIndex parent(const QModelIndex& index) const;
         int rowCount(const QModelIndex& parent) const;
         int columnCount(const QModelIndex& parent) const;
         QVariant data(const QModelIndex& index, int role) const;
+};
+
+/**
+ * Used to draw crossing information in a QListView.
+ */
+class CrossingDelegate : public QStyledItemDelegate {
+    Q_OBJECT
+
+    public:
+        static constexpr int hPadding = 5;
+            /**< Horizontal, between information and cell edge. */
+        static constexpr int vPadding = 5;
+            /**< Vertical, between information and cell edge. */
+        static constexpr int hOffset = 7;
+            /**< Horizontal, between icon centre and text. */
+        static constexpr int vOffset = 5;
+            /**< Vertical, between icon centre and text. */
+        static constexpr int iconSize = 22;
+
+    public:
+        CrossingDelegate(QWidget *parent = 0);
+
+        void paint(QPainter *painter, const QStyleOptionViewItem &option,
+            const QModelIndex &index) const;
+        QSize sizeHint(const QStyleOptionViewItem &option,
+            const QModelIndex &index) const;
 };
 
 /**
@@ -114,11 +154,6 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         QLinkedList<QAction*> actionList;
         QLinkedList<QAction*> enableWhenWritable;
 
-        /**
-         * Crossing icons
-         */
-        static QIcon icon[2 /* sign */][2 /* strand */];
-
     public:
         /**
          * Constructor and destructor.
@@ -145,11 +180,6 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void refresh();
         void setReadWrite(bool readWrite);
 
-        /**
-         * Crossings display.
-         */
-        static QIcon crossingIcon(int sign, int strand);
-
     public slots:
         /**
          * Knot/link actions.
@@ -167,11 +197,20 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void contextCrossing(const QPoint&);
         void changeCrossing();
         void resolveCrossing();
+
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
 };
 
 inline const regina::StrandRef& CrossingModel::strandAt(
         const QModelIndex& index) const {
     return strands_[index.row()];
+}
+
+inline bool CrossingModel::isPictorial() const {
+    return pictorial_;
 }
 
 inline QModelIndex CrossingModel::index(int row, int column,
