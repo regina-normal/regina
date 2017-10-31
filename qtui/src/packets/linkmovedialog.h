@@ -76,6 +76,35 @@ struct R1DownArg {
 };
 
 /**
+ * Identifies a potential type 2 move to remove two crossings.
+ */
+struct R2DownArg {
+    regina::Crossing* crossing;
+    int displayCrossing[2];
+
+    R2DownArg() = default;
+    R2DownArg(regina::Crossing* c);
+    QString display() const;
+
+    bool operator < (const R2DownArg& rhs) const;
+};
+
+/**
+ * Identifies a potential type 3 move.
+ */
+struct R3Arg {
+    regina::Crossing* crossing;
+    int side;
+    int displayCrossing[3];
+
+    R3Arg() = default;
+    R3Arg(regina::Crossing* c, int useSide);
+    QString display() const;
+
+    bool operator < (const R3Arg& rhs) const;
+};
+
+/**
  * A dialog used to select and perform Reidemeister moves on a knot or link.
  */
 class LinkMoveDialog : public QDialog, public regina::PacketListener {
@@ -107,6 +136,8 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
          */
         std::vector<R1UpArg> options1up;
         std::vector<R1DownArg> options1down;
+        std::vector<R2DownArg> options2down;
+        std::vector<R3Arg> options3;
 
         /**
          * Packet tree structure:
@@ -148,6 +179,30 @@ inline R1UpArg::R1UpArg(const regina::StrandRef& s, int useSide, int useSign) :
 }
 
 inline R1DownArg::R1DownArg(regina::Crossing* c) : crossing(c) {
+}
+
+inline bool R2DownArg::operator < (const R2DownArg& rhs) const {
+    if (displayCrossing[0] < rhs.displayCrossing[0])
+        return true;
+    if (displayCrossing[0] > rhs.displayCrossing[0])
+        return false;
+    if (displayCrossing[1] < rhs.displayCrossing[1])
+        return true;
+    return false;
+}
+
+inline bool R3Arg::operator < (const R3Arg& rhs) const {
+    if (displayCrossing[0] < rhs.displayCrossing[0])
+        return true;
+    if (displayCrossing[0] > rhs.displayCrossing[0])
+        return false;
+    if (displayCrossing[1] < rhs.displayCrossing[1])
+        return true;
+    if (displayCrossing[1] > rhs.displayCrossing[1])
+        return false;
+    if (displayCrossing[2] < rhs.displayCrossing[2])
+        return true;
+    return false;
 }
 
 #endif

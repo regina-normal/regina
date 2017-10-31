@@ -79,6 +79,42 @@ QString R1DownArg::display() const {
     return QObject::tr("Crossing %1").arg(crossing->index());
 }
 
+R2DownArg::R2DownArg(regina::Crossing* c) : crossing(c) {
+    displayCrossing[0] = c->index();
+    displayCrossing[1] = c->next(1).crossing()->index();
+
+    std::sort(displayCrossing, displayCrossing + 2);
+}
+
+QString R2DownArg::display() const {
+    return QObject::tr("Crossings %1, %2")
+        .arg(displayCrossing[0])
+        .arg(displayCrossing[1]);
+}
+
+R3Arg::R3Arg(regina::Crossing* c, int useSide) : crossing(c), side(useSide) {
+    regina::Crossing* c2 = c->upper().next().crossing();
+    // The upper arc of the move is c -> c2 in the forward direction.
+    regina::Crossing* c3;
+    if ((side == 0 && c2->sign() > 0) || (side == 1 && c2->sign() < 0))
+        c3 = c2->lower().next().crossing();
+    else
+        c3 = c2->lower().prev().crossing();
+
+    displayCrossing[0] = c->index();
+    displayCrossing[1] = c2->index();
+    displayCrossing[2] = c3->index();
+
+    std::sort(displayCrossing, displayCrossing + 3);
+}
+
+QString R3Arg::display() const {
+    return QObject::tr("Crossings %1, %2, %3")
+        .arg(displayCrossing[0])
+        .arg(displayCrossing[1])
+        .arg(displayCrossing[2]);
+}
+
 LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
         QDialog(parent), link(useLink) {
     setWindowTitle(tr("Reidemeister Moves"));
@@ -266,14 +302,15 @@ void LinkMoveDialog::clicked(QAbstractButton* btn) {
     if (buttons->buttonRole(btn) != QDialogButtonBox::ApplyRole)
         return;
 
+    int use;
     if (use1up->isChecked()) {
-        int use = box1up->currentIndex();
+        use = box1up->currentIndex();
         if (use >= 0 && use < options1up.size()) {
             const R1UpArg& a(options1up[use]);
             link->r1(a.strand, a.side, a.sign, true, true);
         }
     } else if (use1down->isChecked()) {
-        int use = box1down->currentIndex();
+        use = box1down->currentIndex();
         if (use >= 0 && use < options1down.size()) {
             const R1DownArg& a(options1down[use]);
             link->r1(a.crossing, true, true);
@@ -282,11 +319,17 @@ void LinkMoveDialog::clicked(QAbstractButton* btn) {
         // TODO: get selected move
         // TODO: if move exists, do it
     } else if (use2down->isChecked()) {
-        // TODO: get selected move
-        // TODO: if move exists, do it
+        use = box2down->currentIndex();
+        if (use >= 0 && use < options2down.size()) {
+            const R2DownArg& a(options2down[use]);
+            link->r2(a.crossing, true, true);
+        }
     } else if (use3->isChecked()) {
-        // TODO: get selected move
-        // TODO: if move exists, do it
+        use = box3->currentIndex();
+        if (use >= 0 && use < options3.size()) {
+            const R3Arg& a(options3[use]);
+            link->r3(a.crossing, a.side, true, true);
+        }
     } else
         ReginaSupport::info(this, tr("Please select a move."));
 }
@@ -304,9 +347,11 @@ void LinkMoveDialog::fill() {
     box2down->clear();
     box3->clear();
 
-    // TODO: Clear and refill combo boxes and option arrays
+    // TODO: Clear R2 up
     options1up.clear();
     options1down.clear();
+    options2down.clear();
+    options3.clear();
 
     unsigned long i;
     int strand, side;
@@ -333,6 +378,23 @@ void LinkMoveDialog::fill() {
             options1down.push_back(R1DownArg(link->crossing(i)));
     for (const auto& o : options1down)
         box1down->addItem(o.display());
+
+    // TODO: Fill R2 up
+
+    for (i = 0; i < link->size(); ++i)
+        if (link->r2(link->crossing(i), true, false))
+            options2down.push_back(R2DownArg(link->crossing(i)));
+    std::sort(options2down.begin(), options2down.end());
+    for (const auto& o : options2down)
+        box2down->addItem(o.display());
+
+    for (i = 0; i < link->size(); ++i)
+        for (side = 0; side < 2; ++side)
+            if (link->r3(link->crossing(i), side, true, false))
+                options3.push_back(R3Arg(link->crossing(i), side));
+    std::sort(options3.begin(), options3.end());
+    for (const auto& o : options3)
+        box3->addItem(o.display());
 
     updateStates(box1up, use1up);
     updateStates(box1down, use1down);
