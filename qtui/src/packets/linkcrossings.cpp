@@ -36,6 +36,7 @@
 
 // UI includes:
 #include "linkcrossings.h"
+#include "linkmovedialog.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -526,7 +527,7 @@ void LinkCrossingsUI::rotate() {
 }
 
 void LinkCrossingsUI::moves() {
-    // TODO: implement Reidemeister moves
+    (new LinkMoveDialog(ui, link))->show();
 }
 
 void LinkCrossingsUI::complement() {

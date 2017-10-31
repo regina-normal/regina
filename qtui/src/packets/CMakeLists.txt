@@ -22,6 +22,7 @@ SET ( FILES
   linkcreator
   linkcrossings
   linkgraph
+  linkmovedialog
   linkpoly
   linkui
   pdfui

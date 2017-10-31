@@ -1986,6 +1986,8 @@
 		05D322DC1FA1EC1C00E5F9B8 /* linkcodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D322D91FA1EC1400E5F9B8 /* linkcodes.cpp */; };
 		05D322DD1FA1EC3B00E5F9B8 /* linkcodes.h in Sources */ = {isa = PBXBuildFile; fileRef = 05D322D81FA1EC1200E5F9B8 /* linkcodes.h */; };
 		05D322DF1FA606E200E5F9B8 /* purePyMethods.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 05D322DE1FA606D100E5F9B8 /* purePyMethods.py */; };
+		05D322E41FA923FB00E5F9B8 /* linkmovedialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D322E11FA923F000E5F9B8 /* linkmovedialog.cpp */; };
+		05D322E51FA9241E00E5F9B8 /* linkmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 05D322E01FA923ED00E5F9B8 /* linkmovedialog.h */; };
 		05D6CFA41A01D0A60039150F /* Tri3Graph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6CFA31A01D0A60039150F /* Tri3Graph.mm */; };
 		05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
 		05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051E1C41B87200C76D71 /* boost.framework */; };
@@ -4391,6 +4393,8 @@
 		05D322D81FA1EC1200E5F9B8 /* linkcodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkcodes.h; sourceTree = "<group>"; };
 		05D322D91FA1EC1400E5F9B8 /* linkcodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkcodes.cpp; sourceTree = "<group>"; };
 		05D322DE1FA606D100E5F9B8 /* purePyMethods.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = purePyMethods.py; path = regina/purePyMethods.py; sourceTree = "<group>"; };
+		05D322E01FA923ED00E5F9B8 /* linkmovedialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkmovedialog.h; sourceTree = "<group>"; };
+		05D322E11FA923F000E5F9B8 /* linkmovedialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkmovedialog.cpp; sourceTree = "<group>"; };
 		05D6CFA21A01D0A60039150F /* Tri3Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Graph.h; sourceTree = "<group>"; };
 		05D6CFA31A01D0A60039150F /* Tri3Graph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Graph.mm; sourceTree = "<group>"; };
 		05D81A8B1C66B0E500DDCE64 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
@@ -6902,6 +6906,8 @@
 				05D322C51F9FED7500E5F9B8 /* linkcrossings.h */,
 				05D322CD1FA0414400E5F9B8 /* linkgraph.cpp */,
 				05D322CC1FA0414200E5F9B8 /* linkgraph.h */,
+				05D322E11FA923F000E5F9B8 /* linkmovedialog.cpp */,
+				05D322E01FA923ED00E5F9B8 /* linkmovedialog.h */,
 				05D322D21FA1414F00E5F9B8 /* linkpoly.cpp */,
 				05D322D31FA1415200E5F9B8 /* linkpoly.h */,
 				05D322C01F9FE72100E5F9B8 /* linkui.cpp */,
@@ -9738,6 +9744,7 @@
 				05D322DD1FA1EC3B00E5F9B8 /* linkcodes.h in Sources */,
 				05D322CA1F9FEEA400E5F9B8 /* linkcrossings.h in Sources */,
 				05D322D11FA0416000E5F9B8 /* linkgraph.h in Sources */,
+				05D322E51FA9241E00E5F9B8 /* linkmovedialog.h in Sources */,
 				05D322DC1FA1EC1C00E5F9B8 /* linkcodes.cpp in Sources */,
 				05D322D71FA1416700E5F9B8 /* linkpoly.h in Sources */,
 				0543AE911811DE79002758F8 /* packetui.h in Sources */,
@@ -9781,6 +9788,7 @@
 				0564A9541811D921002CC2AE /* anglescreator.cpp in Sources */,
 				0564A9831811D921002CC2AE /* reginasupport.cpp in Sources */,
 				0564A8041811D921002CC2AE /* coordinates.cpp in Sources */,
+				05D322E41FA923FB00E5F9B8 /* linkmovedialog.cpp in Sources */,
 				0564A9551811D921002CC2AE /* anglesui.cpp in Sources */,
 				0591E8401C4F769100793A9C /* tri4creator.cpp in Sources */,
 				0564A96D1811D921002CC2AE /* snappeacomponents.cpp in Sources */,
