@@ -76,6 +76,18 @@ struct R1DownArg {
 };
 
 /**
+ * Identifies a potential type 2 move to add two new crossings.
+ */
+struct R2UpArg {
+    regina::StrandRef strand;
+    int side;
+
+    R2UpArg() = default;
+    R2UpArg(const regina::StrandRef& s, int useSide);
+    QString display(int position) const;
+};
+
+/**
  * Identifies a potential type 2 move to remove two crossings.
  */
 struct R2DownArg {
@@ -136,6 +148,8 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
          */
         std::vector<R1UpArg> options1up;
         std::vector<R1DownArg> options1down;
+        std::vector<R2UpArg> options2upOver;
+        std::vector<R2UpArg> options2upUnder;
         std::vector<R2DownArg> options2down;
         std::vector<R3Arg> options3;
 
@@ -169,6 +183,11 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
          */
         void updateApply();
 
+        /**
+         * Update the available under-strands for R2.
+         */
+        void changedR2UpOver(int);
+
     private:
         void fill();
         void updateStates(QComboBox* chooser, QRadioButton* button);
@@ -176,6 +195,10 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
 
 inline R1UpArg::R1UpArg(const regina::StrandRef& s, int useSide, int useSign) :
         strand(s), side(useSide), sign(useSign) {
+}
+
+inline R2UpArg::R2UpArg(const regina::StrandRef& s, int useSide) :
+        strand(s), side(useSide) {
 }
 
 inline R1DownArg::R1DownArg(regina::Crossing* c) : crossing(c) {

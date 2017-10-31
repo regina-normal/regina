@@ -33,6 +33,7 @@
 #include "link/link.h"
 
 #include "linkmovedialog.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 
 #include <QButtonGroup>
@@ -45,20 +46,24 @@
 #include <QWhatsThis>
 
 QString R1UpArg::display() const {
-    // TODO: No utf-8?
+    bool utf8 = ReginaPrefSet::global().displayUnicode;
     QString ans;
 
     if (strand.crossing()) {
         regina::StrandRef s = strand;
         if (s.strand() == 0)
-            ans = QObject::trUtf8("%1 lower → ").arg(s.crossing()->index());
+            ans = QObject::tr("%1 lower ").arg(s.crossing()->index());
         else
-            ans = QObject::trUtf8("%1 upper → ").arg(s.crossing()->index());
+            ans = QObject::tr("%1 upper ").arg(s.crossing()->index());
+        if (utf8)
+            ans += QObject::trUtf8("→ ");
+        else
+            ans += "-> ";
         ++s;
         if (s.strand() == 0)
-            ans += QObject::trUtf8("%1 lower, ").arg(s.crossing()->index());
+            ans += QObject::tr("%1 lower, ").arg(s.crossing()->index());
         else
-            ans += QObject::trUtf8("%1 upper, ").arg(s.crossing()->index());
+            ans += QObject::tr("%1 upper, ").arg(s.crossing()->index());
 
         if (side == 0)
             ans += QObject::tr("left, ");
@@ -67,9 +72,12 @@ QString R1UpArg::display() const {
     } else
         ans = QObject::tr("Unknotted circle, ");
 
-    if (sign < 0)
-        ans += QObject::trUtf8("−ve");
-    else
+    if (sign < 0) {
+        if (utf8)
+            ans += QObject::trUtf8("−ve");
+        else
+            ans += QObject::tr("-ve");
+    } else
         ans += QObject::tr("+ve");
 
     return ans;
@@ -77,6 +85,38 @@ QString R1UpArg::display() const {
 
 QString R1DownArg::display() const {
     return QObject::tr("Crossing %1").arg(crossing->index());
+}
+
+QString R2UpArg::display(int position) const {
+    bool utf8 = ReginaPrefSet::global().displayUnicode;
+    QString ans;
+
+    // TODO: Don't use position for unknotted circle if there is only
+    // one unknotted circle involved.  Same for iOS.
+    if (strand.crossing()) {
+        regina::StrandRef s = strand;
+        if (s.strand() == 0)
+            ans = QObject::tr("%1 lower ").arg(s.crossing()->index());
+        else
+            ans = QObject::tr("%1 upper ").arg(s.crossing()->index());
+        if (utf8)
+            ans += QObject::trUtf8("→ ");
+        else
+            ans += "-> ";
+        ++s;
+        if (s.strand() == 0)
+            ans += QObject::tr("%1 lower, ").arg(s.crossing()->index());
+        else
+            ans += QObject::tr("%1 upper, ").arg(s.crossing()->index());
+    } else
+        ans = QObject::tr("Unknotted circle #%1, ").arg(position > 0 ? 1 : 2);
+
+    if (side == 0)
+        ans += QObject::tr("left");
+    else
+        ans += QObject::tr("right");
+
+    return ans;
 }
 
 R2DownArg::R2DownArg(regina::Crossing* c) : crossing(c) {
@@ -179,7 +219,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
         "be removed as a result of this move.<p>"
         "The drop-down list allows you to select which bigon to remove "
         "by choosing the two crossings that surround it.</qt>"));
-    layout->addWidget(use2down, 4, 0);
+    layout->addWidget(use2down, 3, 0);
     use3 = new QRadioButton(tr("R&3"), this);
     use3->setWhatsThis(tr("<qt>Perform a type&nbsp;3 move to "
         "rearrange three crossings.<p>"
@@ -192,7 +232,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
         "The drop-down list allows you to select which triangle "
         "to transform by choosing the three crossings that "
         "surround it.</qt>"));
-    layout->addWidget(use3, 5, 0);
+    layout->addWidget(use3, 4, 0);
 
     box1up = new QComboBox(this);
     box1up->setMinimumContentsLength(30);
@@ -210,8 +250,13 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
     box1down->setWhatsThis(tr("Select which twist to undo, by choosing the "
         "crossing at which the twist appears."));
     layout->addWidget(box1down, 1, 1);
+    QGridLayout* sublayout = new QGridLayout();
+    sublayout->setContentsMargins(0, 0, 0, 0);
+    sublayout->setColumnStretch(1, 1);
+    sublayout->addWidget(new QLabel(tr("Over:")), 0, 0);
+    sublayout->addWidget(new QLabel(tr("Under:")), 1, 0);
     box2upOver = new QComboBox(this);
-    box2upOver->setMinimumContentsLength(30);
+    box2upOver->setMinimumContentsLength(20);
     box2upOver->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
     box2upOver->setWhatsThis(tr("Select how to pass one strand over "
         "another.  First you should use this drop-down box to "
@@ -224,9 +269,9 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
         "In particular, the second box below will <i>only</i> display "
         "options that are compatible with the over-strand that you "
         "select here this box."));
-    layout->addWidget(box2upOver, 2, 1);
+    sublayout->addWidget(box2upOver, 0, 1);
     box2upUnder = new QComboBox(this);
-    box2upUnder->setMinimumContentsLength(30);
+    box2upUnder->setMinimumContentsLength(20);
     box2upUnder->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
     box2upUnder->setWhatsThis(tr("Select how to pass one strand over "
         "another.  First you should use the drop-down box above this to "
@@ -239,19 +284,20 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
         "In particular, this drop-down box will <i>only</i> display "
         "options that are compatible with the over-strand that you have "
         "already selected in the box above."));
-    layout->addWidget(box2upUnder, 3, 1);
+    sublayout->addWidget(box2upUnder, 1, 1);
+    layout->addLayout(sublayout, 2, 1);
     box2down = new QComboBox(this);
     box2down->setMinimumContentsLength(30);
     box2down->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
     box2down->setWhatsThis(tr("Select which two strands to pull apart, "
         "by choosing the two adjacent crossings at which they meet."));
-    layout->addWidget(box2down, 4, 1);
+    layout->addWidget(box2down, 3, 1);
     box3 = new QComboBox(this);
     box3->setMinimumContentsLength(30);
     box3->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
     box3->setWhatsThis(tr("Select which triangular region to "
         "reorganise, by choosing the three crossings that surround it."));
-    layout->addWidget(box3, 5, 1);
+    layout->addWidget(box3, 4, 1);
 
     moveTypes = new QButtonGroup();
     moveTypes->addButton(use1up);
@@ -264,6 +310,8 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
         QDialogButtonBox::Apply | QDialogButtonBox::Close);
     dialogLayout->addWidget(buttons);
 
+    connect(box2upOver, SIGNAL(activated(int)), this,
+        SLOT(changedR2UpOver(int)));
     connect(buttons, SIGNAL(clicked(QAbstractButton*)), this,
         SLOT(clicked(QAbstractButton*)));
     connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
@@ -316,8 +364,16 @@ void LinkMoveDialog::clicked(QAbstractButton* btn) {
             link->r1(a.crossing, true, true);
         }
     } else if (use2up->isChecked()) {
-        // TODO: get selected move
-        // TODO: if move exists, do it
+        use = box2upOver->currentIndex();
+        if (use < 0 || use >= options2upOver.size())
+            return;
+        int useUnder = box2upUnder->currentIndex();
+        if (useUnder < 0 || useUnder >= options2upUnder.size())
+            return;
+
+        const R2UpArg& over(options2upOver[use]);
+        const R2UpArg& under(options2upUnder[useUnder]);
+        link->r2(over.strand, over.side, under.strand, under.side, true, true);
     } else if (use2down->isChecked()) {
         use = box2down->currentIndex();
         if (use >= 0 && use < options2down.size()) {
@@ -343,13 +399,12 @@ void LinkMoveDialog::fill() {
     box1up->clear();
     box1down->clear();
     box2upOver->clear();
-    box2upUnder->clear();
     box2down->clear();
     box3->clear();
 
-    // TODO: Clear R2 up
     options1up.clear();
     options1down.clear();
+    options2upOver.clear();
     options2down.clear();
     options3.clear();
 
@@ -379,7 +434,40 @@ void LinkMoveDialog::fill() {
     for (const auto& o : options1down)
         box1down->addItem(o.display());
 
-    // TODO: Fill R2 up
+    // R2 overlap moves can be done with any arc that is not the inside of a twist.
+    // Note that, if you are the inside of a twist, then you cannot also be the outside of a twist.
+    for (i = 0; i < link->size(); ++i) {
+        regina::Crossing* crossing = link->crossing(i);
+        for (strand = 0; strand < 2; ++strand) {
+            if (crossing->next(strand).crossing() == crossing) {
+                // We are part of a twist.
+                if ((strand == 0 && crossing->sign() > 0) || (strand == 1 && crossing->sign() < 0)) {
+                    // Left side is bad.
+                    options2upOver.push_back(R2UpArg(crossing->strand(strand), 1));
+                } else {
+                    // Right side is bad.
+                    options2upOver.push_back(R2UpArg(crossing->strand(strand), 0));
+                }
+            } else {
+                // We are not part of a twist.
+                // Both sides are usable.
+                for (side = 0; side < 2; ++side) {
+                    options2upOver.push_back(R2UpArg(crossing->strand(strand), side));
+                }
+            }
+        }
+    }
+    if (link->countComponents() > 1 && link->r1(regina::StrandRef(nullptr, 0), 0, 1, true, false)) {
+        // We have unknot component(s), as identified by the R1 test, and we
+        // can use R2 on this with any *different* component.
+        options2upOver.push_back(R2UpArg(regina::StrandRef(nullptr, 0), 0));
+        options2upOver.push_back(R2UpArg(regina::StrandRef(nullptr, 0), 1));
+    }
+    for (const auto& o : options2upOver)
+        box2upOver->addItem(o.display(1));
+
+    // Trigger a refill of the under-strand chooser.
+    changedR2UpOver(-1);
 
     for (i = 0; i < link->size(); ++i)
         if (link->r2(link->crossing(i), true, false))
@@ -404,6 +492,38 @@ void LinkMoveDialog::fill() {
     updateStates(box3, use3);
 
     updateApply();
+}
+
+void LinkMoveDialog::changedR2UpOver(int) {
+    options2upUnder.clear();
+    box2upUnder->clear();
+
+    std::cerr << "R2 under refill" << std::endl;
+
+    int use = box2upOver->currentIndex();
+    if (use < 0 || use >= options2upOver.size())
+        return;
+
+    const R2UpArg& over(options2upOver[use]);
+
+    // TODO: Make this faster by walking around the region (and then sorting),
+    // instead of iterating through all potential strands.
+
+    int i, strand, side;
+    for (i = 0; i < link->size(); ++i)
+        for (strand = 0; strand < 2; ++strand)
+            for (side = 0; side < 2; ++side)
+                if (link->r2(over.strand, over.side,
+                        link->crossing(i)->strand(strand), side,
+                        true, false))
+                    options2upUnder.push_back(R2UpArg(link->crossing(i)->strand(strand), side));
+    for (side = 0; side < 2; ++side)
+        if (link->r2(over.strand, over.side,
+                regina::StrandRef(nullptr, 0), side,
+                true, false))
+            options2upUnder.push_back(R2UpArg(regina::StrandRef(nullptr, 0), side));
+    for (const auto& o : options2upUnder)
+        box2upUnder->addItem(o.display(0));
 }
 
 void LinkMoveDialog::updateStates(QComboBox* chooser, QRadioButton* button) {
