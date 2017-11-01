@@ -152,6 +152,10 @@ void Link::swapContents(Link& other) {
     components_.swap(other.components_);
 
     // Swap properties:
+    jones_.swap(other.jones_);
+    homflyAZ_.swap(other.homflyAZ_);
+    homflyLM_.swap(other.homflyLM_);
+    bracket_.swap(other.bracket_);
     niceTreeDecomposition_.swap(other.niceTreeDecomposition_);
 }
 
