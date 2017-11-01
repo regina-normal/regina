@@ -146,6 +146,12 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         int useCrossing;
 
         /**
+         * "What's this" texts that are created on demand.
+         */
+        static QString explnPictorial;
+        static QString explnText;
+
+        /**
          * Gluing actions
          */
         QAction* actReflect;

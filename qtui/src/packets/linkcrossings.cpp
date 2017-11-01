@@ -53,10 +53,17 @@
 #define NEG_COLOUR QColor(0xb8, 0x86, 0x0b, 0xff)
 #define POS_COLOUR QColor(0x00, 0x71, 0xbc, 0xff)
 
+#define NEG_COLOUR_HTML "#b8860b"
+#define POS_COLOUR_HTML "#0071bc"
+#define OPP_COLOUR_HTML "#808080"
+
 using regina::Link;
 using regina::Packet;
 
 QPixmap* CrossingModel::icon_ = nullptr;
+
+QString LinkCrossingsUI::explnText;
+QString LinkCrossingsUI::explnPictorial;
 
 inline CrossingModel::CrossingModel(bool pictorial, regina::Link* link,
         int component) : pictorial_(pictorial), maxIndex_(0) {
@@ -237,6 +244,11 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     QLabel* label = new QLabel(tr("Display crossings:"));
     sublayout->addWidget(label);
     type = new QComboBox();
+    type->setWhatsThis(tr("Allows you to switch between different "
+        "visual representations of the link.<p>"
+        "Selecting <i>Pictures</i> will show a visual representation "
+        "of each crossing, and selecting <i>Text</i> will give a "
+        "sequence of strands and crossing signs."));
     type->insertItem(0, tr("Pictures"));
     type->insertItem(1, tr("Text"));
     switch (ReginaPrefSet::global().linkCrossingsStyle) {
@@ -253,7 +265,43 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     connect(ui, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextCrossing(const QPoint&)));
 
-    // TODO: whatsthis
+    if (explnPictorial.isNull())
+        explnPictorial = tr("Shows a pictorial representation of each "
+            "component of the link.<p>"
+            "For each component, the display shows a "
+            "sequence of crossings in order as you encounter them when "
+            "you walk around the component.  The strand you are walking "
+            "along is pointing to the right, and is coloured "
+            "<span style='color:" POS_COLOUR_HTML ";'>blue</span> "
+            "for a positive crossing or "
+            "<span style='color:" NEG_COLOUR_HTML ";'>brown</span> "
+            "for a negative crossing.  The other strand involved in the "
+            "crossing is vertical, and is coloured "
+            "<span style='color:" OPP_COLOUR_HTML ";'>grey</span>.<p>"
+            "The index of each crossing is written beside its picture.  "
+            "Note that each number appears twice in the overall link, "
+            "since you encounter each crossing two times (once from "
+            "above, and once from below).");
+    if (explnText.isNull())
+        explnText = tr("Shows a text representation of each "
+            "component of the link.<p>"
+            "For each component, the display shows a "
+            "sequence of crossings in order as you encounter them when "
+            "you walk around the component.  Each crossing consists of: "
+            "(i)&nbsp;a number, which is the index of the crossing; and "
+            "(ii)&nbsp;a sign, which is positive or negative according "
+            "to the sign of the crossing.  "
+            "The sign will appear as a subscript or a superscript "
+            "according to whether you pass through the crossing on the "
+            "lower strand or the upper strand.<p>"
+            "Each crossing is coloured to highlight the sign: "
+            "<span style='color:" POS_COLOUR_HTML ";'>blue</span> "
+            "for a positive crossing, or "
+            "<span style='color:" NEG_COLOUR_HTML ";'>brown</span> "
+            "for a negative crossing.  "
+            "Note also that each index appears twice in the overall link, "
+            "since you encounter each crossing two times (once from "
+            "above, and once from below).");
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
@@ -469,6 +517,11 @@ void LinkCrossingsUI::refresh() {
                 crossings->setModel(model);
                 layout->insertWidget(2 * i + 2, crossings, 1);
 
+                if (type->currentIndex() == 0)
+                    crossings->setWhatsThis(explnPictorial);
+                else
+                    crossings->setWhatsThis(explnText);
+
                 componentLists[i] = crossings;
             }
         } else {
@@ -484,6 +537,11 @@ void LinkCrossingsUI::refresh() {
             crossings->setItemDelegate(new CrossingDelegate(crossings));
             crossings->setModel(model);
             layout->addWidget(crossings, 1);
+
+            if (type->currentIndex() == 0)
+                crossings->setWhatsThis(explnPictorial);
+            else
+                crossings->setWhatsThis(explnText);
 
             componentLists.push_back(crossings);
         }
@@ -544,8 +602,13 @@ void LinkCrossingsUI::typeChanged(int) {
          ReginaPrefSet::TextCrossings);
 
     for (auto l : componentLists)
-        if (l)
+        if (l) {
             static_cast<CrossingModel*>(l->model())->setPictorial(pictorial);
+            if (pictorial)
+                l->setWhatsThis(explnPictorial);
+            else
+                l->setWhatsThis(explnText);
+        }
 }
 
 void LinkCrossingsUI::contextCrossing(const QPoint& pos) {
