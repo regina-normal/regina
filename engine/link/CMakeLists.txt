@@ -9,6 +9,7 @@ SET ( FILES
   jenkins
   jones
   link
+  modellinkgraph
   reidemeister
   simplify
   xmllinkreader
