@@ -30,13 +30,55 @@
  *                                                                        *
  **************************************************************************/
 
-void addExampleLink();
-void addLink();
-void addModelLinkGraph();
+#include "link/modellinkgraph.h"
+#include "../safeheldtype.h"
 
-void addLinkClasses() {
-    addExampleLink();
-    addLink();
-    addModelLinkGraph();
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
+#include "../helpers.h"
+
+using namespace boost::python;
+using namespace regina::python;
+using regina::ModelLinkGraphNode;
+using regina::ModelLinkGraphArc;
+using regina::ModelLinkGraph;
+
+void addModelLinkGraph() {
+    class_<ModelLinkGraphArc>("ModelLinkGraphArc", init<>())
+        .def(init<ModelLinkGraphNode*, int>())
+        .def(init<const ModelLinkGraphArc&>())
+        .def("node", &ModelLinkGraphArc::node,
+            return_value_policy<reference_existing_object>())
+        .def("arc", &ModelLinkGraphArc::arc)
+        .def("opposite", &ModelLinkGraphArc::opposite)
+        .def("traverse", &ModelLinkGraphArc::traverse)
+        .def("next", &ModelLinkGraphArc::next)
+        .def("prev", &ModelLinkGraphArc::prev)
+        .def(self_ns::str(self))
+        .def(self_ns::repr(self))
+        .def(regina::python::add_eq_operators())
+    ;
+
+    class_<ModelLinkGraphNode, std::auto_ptr<ModelLinkGraphNode>,
+            boost::noncopyable>("ModelLinkGraphNode", no_init)
+        .def("index", &ModelLinkGraphNode::index)
+        .def("arc", &ModelLinkGraphNode::arc)
+        .def("adj", &ModelLinkGraphNode::adj,
+            return_value_policy<return_by_value>())
+        .def(regina::python::add_output())
+        .def(regina::python::add_eq_operators())
+    ;
+
+    class_<ModelLinkGraph, std::auto_ptr<ModelLinkGraph>,
+            boost::noncopyable>("ModelLinkGraph", init<>())
+        .def(init<const ModelLinkGraph&>())
+        .def("size", &ModelLinkGraph::size)
+        .def("node", &ModelLinkGraph::node, return_internal_reference<>())
+        .def("swapContents", &ModelLinkGraph::swapContents)
+        .def("reflect", &ModelLinkGraph::reflect)
+        .def("fromPlantri", &ModelLinkGraph::fromPlantri,
+            return_value_policy<manage_new_object>())
+        .def(regina::python::add_output())
+        .staticmethod("fromPlantri")
+    ;
 }
-

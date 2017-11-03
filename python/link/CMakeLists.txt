@@ -4,6 +4,7 @@
 SET ( FILES
   examplelink
   link
+  modellinkgraph
   pylink
   )
 
