@@ -193,6 +193,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void simplify();
         void reflect();
         void rotate();
+        void reverse();
         void moves();
         void complement();
 

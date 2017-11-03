@@ -27,6 +27,9 @@ my @actionIcons = qw/
     packet_view
     puncture
     randomise
+    reflect
+    reverse
+    rotate
     signature-2d
     signature-3d
     simplify

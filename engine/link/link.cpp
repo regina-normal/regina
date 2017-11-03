@@ -167,6 +167,16 @@ void Link::reflect() {
     clearAllProperties();
 }
 
+void Link::reverse() {
+    ChangeEventSpan span(this);
+    for (Crossing* cross : crossings_) {
+        std::swap(cross->next_[0], cross->prev_[0]);
+        std::swap(cross->next_[1], cross->prev_[1]);
+    }
+
+    clearAllProperties();
+}
+
 void Link::rotate() {
     ChangeEventSpan span(this);
 

@@ -364,6 +364,19 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     enableWhenWritable.append(actRotate);
     connect(actRotate, SIGNAL(triggered()), this, SLOT(rotate()));
 
+    QAction* actReverse = new QAction(this);
+    actReverse->setText(tr("Re&verse"));
+    actReverse->setIcon(ReginaSupport::regIcon("reverse"));
+    actReverse->setToolTip(tr("Reverse this link"));
+    actReverse->setEnabled(readWrite);
+    actReverse->setWhatsThis(tr("Reverse the orientation of each component "
+        "of this link.  Every crossing will keep the same sign and the "
+        "same upper/lower strands, but the order in which you traverse "
+        "the strands will be reversed."));
+    actionList.append(actReverse);
+    enableWhenWritable.append(actReverse);
+    connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
+
     sep = new QAction(this);
     sep->setSeparator(true);
     actionList.append(sep);
@@ -582,6 +595,10 @@ void LinkCrossingsUI::reflect() {
 
 void LinkCrossingsUI::rotate() {
     link->rotate();
+}
+
+void LinkCrossingsUI::reverse() {
+    link->reverse();
 }
 
 void LinkCrossingsUI::moves() {

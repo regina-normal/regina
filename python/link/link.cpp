@@ -153,6 +153,7 @@ void addLink() {
         .def("swapContents", &Link::swapContents)
         .def("reflect", &Link::reflect)
         .def("rotate", &Link::rotate)
+        .def("reverse", &Link::reverse)
         .def("change", &Link::change)
         .def("resolve", &Link::resolve)
         .def("writhe", &Link::writhe)

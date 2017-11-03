@@ -55,6 +55,7 @@ set (IMGS
   randomise
   reflect
   regina
+  reverse
   rotate
   run
   signature-2d

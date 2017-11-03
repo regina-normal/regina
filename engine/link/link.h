@@ -851,6 +851,16 @@ class REGINA_API Link : public Packet {
         void rotate();
 
         /**
+         * Reverses the orientation of every component of this link.
+         *
+         * This routine preserves both the sign and the upper/lower positions
+         * at every crossing, but switches all incoming strands with outgoing
+         * strands and vice versa (so next() becomes prev(), and prev()
+         * becomes next()).
+         */
+        void reverse();
+
+        /**
          * Tests for and/or performs a type I Reidemeister move to remove a
          * crossing.
          *

@@ -176,6 +176,10 @@ static NSString* unknotText = @"Unknot, no crossings";
     self.packet->rotate();
 }
 
+- (IBAction)reverse:(id)sender {
+    self.packet->reverse();
+}
+
 - (IBAction)reidemeister:(id)sender {
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"linkMoves"];
     static_cast<LinkMoves*>(sheet).packet = self.packet;
@@ -189,6 +193,7 @@ static NSString* unknotText = @"Unknot, no crossings";
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"Reflect",
                                                                 @"Rotate",
+                                                                @"Reverse",
                                                                 @"Reidemeister moves",
                                                                 nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
@@ -359,6 +364,8 @@ static NSString* unknotText = @"Unknot, no crossings";
         case 1:
             [self rotate:nil]; break;
         case 2:
+            [self reverse:nil]; break;
+        case 3:
             [self reidemeister:nil]; break;
     }
 }
