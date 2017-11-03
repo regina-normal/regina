@@ -41,7 +41,7 @@
 
 #include <vector>
 #include <boost/noncopyable.hpp>
-#include "regina-core.h"
+#include "output.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
@@ -375,7 +375,8 @@ class ModelLinkGraphNode : public MarkedElement,
  * you include link/graph.h, you can use a Link directly as a directed graph
  * type with the Boost Graph Library.
  */
-class REGINA_API ModelLinkGraph : public boost::noncopyable {
+class REGINA_API ModelLinkGraph :
+        public Output<ModelLinkGraph>, public boost::noncopyable {
     private:
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
@@ -577,7 +578,7 @@ inline ModelLinkGraphArc::operator bool() const {
 
 inline std::ostream& operator << (std::ostream& out,
         const ModelLinkGraphArc& a) {
-    if (s.crossing())
+    if (a.node())
         return out << a.node()->index() << ':' << a.arc();
     else
         return out << "(null)";
@@ -594,7 +595,7 @@ inline ModelLinkGraphArc ModelLinkGraphNode::arc(int which) {
 }
 
 inline const ModelLinkGraphArc& ModelLinkGraphNode::adj(int which) const {
-    return next_[which];
+    return adj_[which];
 }
 
 inline void ModelLinkGraphNode::writeTextShort(std::ostream& out) const {
@@ -627,7 +628,7 @@ inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
 
 inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) {
     if (&other != this)
-        crossings_.swap(other.crossings_);
+        nodes_.swap(other.nodes_);
 }
 
 inline void ModelLinkGraph::reflect() {

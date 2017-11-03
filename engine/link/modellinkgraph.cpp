@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "modellinkgraph.h"
+#include <iomanip>
 #include <sstream>
 
 namespace regina {
@@ -43,66 +44,195 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) {
     for (ModelLinkGraphNode* n : nodes_) {
         for (int i = 0; i < 4; ++i) {
             n->adj_[i].node_ = nodes_[(*it)->adj_[i].node_->index()];
-            n->adj_[i].arc_ = (*it)->adj_[i].arc;
+            n->adj_[i].arc_ = (*it)->adj_[i].arc_;
         }
         ++it;
     }
 }
 
 void ModelLinkGraph::writeTextShort(std::ostream& out) const {
-    if (components_.empty())
-        out << "empty link";
-    else if (components_.size() == 1)
-        out << crossings_.size() << "-crossing knot";
+    if (nodes_.empty())
+        out << "empty model link graph";
     else
-        out << crossings_.size() << "-crossing, "
-            << components_.size() << "-component link";
+        out << nodes_.size() << "-node model link graph";
 }
 
 void ModelLinkGraph::writeTextLong(std::ostream& out) const {
-    if (components_.empty()) {
-        out << "Empty link" << std::endl;
+    if (nodes_.empty()) {
+        out << "Empty model link graph" << std::endl;
         return;
     }
 
-    if (components_.size() == 1)
-        out << crossings_.size() << "-crossing knot";
-    else
-        out << crossings_.size() << "-crossing, "
-            << components_.size() << "-component link";
-    out << "\n\n";
+    out << nodes_.size() << "-node model link graph\n\n";
 
-    int comp = 0;
-    ModelLinkGraphArc s;
-    for (ModelLinkGraphArc start : components_) {
-        out << "Component " << comp++ << ": ";
-        if (! start) {
-            out << "no crossings (separate unknot)" << std::endl;
-            continue;
-        }
-        s = start;
-        out << s;
-        for (++s; s != start; ++s)
-            out << ' ' << s;
+    out << "Node  |  adjacent to:      (0)      (1)      (2)      (3)\n";
+    out << "------+--------------------------------------------------\n";
+
+    size_t i;
+    int j;
+    ModelLinkGraphNode* n;
+    for (i = 0; i < nodes_.size(); ++i) {
+        n = nodes_[i];
+        out << std::setw(4) << i << "  |              ";
+        for (j = 0; j < 4; ++j)
+            out << "  " << std::setw(3) << n->adj_[j].node()->index() << " ("
+                << n->adj_[j].arc() << ')';
         out << '\n';
     }
-
-    out << "\nModelLinkGraphNodes:";
-    for (ModelLinkGraphNode* c : crossings_)
-        out << ' ' << (c->sign() > 0 ? '+' : '-') << c->index();
     out << std::endl;
 }
 
-void ModelLinkGraph::writeTextShort(std::ostream& out) const {
-    // TODO
-}
-
-void ModelLinkGraph::writeTextLong(std::ostream& out) const {
-    // TODO
-}
-
 ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
-    // TODO
+    // Extract the graph size and run some basic sanity checks.
+    if (plantri.size() % 5 != 4)
+        return 0;
+    size_t n = (plantri.size() + 1) / 5;
+    if (n > 26)
+        return 0;
+
+    size_t i, j;
+    for (i = 0; i < plantri.size(); ++i)
+        if (i % 5 == 4) {
+            if (plantri[i] != ',')
+                return 0;
+        } else {
+            if (plantri[i] < 'a' || plantri[i] >= ('a' + n))
+                return 0;
+        }
+
+    ModelLinkGraph* g = new ModelLinkGraph();
+    for (i = 0; i < n; ++i)
+        g->nodes_.push_back(new ModelLinkGraphNode());
+
+    // First set up adj_[..].node_.
+    for (i = 0; i < n; ++i)
+        for (j = 0; j < 4; ++j) {
+            g->nodes_[i]->adj_[j].node_ =
+                g->nodes_[plantri[5 * i + j] - 'a'];
+            g->nodes_[i]->adj_[j].arc_ = -1;
+        }
+
+    // Now set up adj_[..].arc_.
+    // For each pair of adjacent nodes, we guarantee to set up all edges
+    // between those nodes, in both directions, at the same time.
+    int count;
+    int k;
+    ModelLinkGraphNode *src, *dest;
+    for (i = 0; i < n; ++i) {
+        src = g->nodes_[i];
+        for (j = 0; j < 4; ++j) {
+            if (src->adj_[j].arc_ >= 0)
+                continue;
+
+            // Examine node i, arc j.
+            dest = src->adj_[j].node_;
+
+            // Is this one of a double / triple / quadruple edge?
+            count = 1;
+            for (k = j + 1; k < 4; ++k)
+                if (src->adj_[k].node_ == dest)
+                    ++count;
+
+            // Be careful about when we can have loops.
+            if (src == dest && count % 2 != 0) {
+                delete g;
+                return 0;
+            }
+
+            // In the code below, we use the fact that plantri only produces
+            // 4-valent graphs whose dual quadrangulations are simple.
+            if (count == 1) {
+                // This is just a single edge.  Find the matching arc
+                // from dest.
+                for (k = 0; k < 4; ++k)
+                    if (dest->adj_[k].node_ == src) {
+                        if (dest->adj_[k].arc_ >= 0) {
+                            delete g;
+                            return 0;
+                        }
+                        src->adj_[j].arc_ = k;
+                        dest->adj_[k].arc_ = j;
+                        break;
+                    }
+                if (k == 4) {
+                    delete g;
+                    return 0;
+                }
+            } else if (count == 2) {
+                if (src->adj_[j ^ 2].node_ == dest) {
+                    // We have two parallel edges that are not adjacent
+                    // around src.
+                    //
+                    // Because the dual quadrangulation must be simple,
+                    // it follows that any double edge of this type must
+                    // actually be part of a quadruple edge.
+                    delete g;
+                    return 0;
+                } else {
+                    // We have two parallel edges that are adjacent around src.
+                    //
+                    // Because the dual quadrangulation must be simple,
+                    // these parallel edges must bound a bigon.
+                    // This means that we follow them clockwise around one node
+                    // and anticlockwise around the other.
+
+                    // We already have j as the first of the two arcs
+                    // around src.
+                    // Find the "clockwise first" arc around dest.
+                    for (k = 0; k < 4; ++k)
+                        if (dest->adj_[k].node_ == src &&
+                                dest->adj_[(k + 1) % 4].node_ == src) {
+                            if (dest->adj_[k].arc_ >= 0 ||
+                                    dest->adj_[(k + 1) % 4].arc_ >= 0) {
+                                delete g;
+                                return 0;
+                            }
+                            break;
+                        }
+                    if (k == 4) {
+                        delete g;
+                        return 0;
+                    }
+
+                    if (j < 3 && src->adj_[j + 1].node_ == dest) {
+                        src->adj_[j].arc_ = (k + 1) % 4;
+                        src->adj_[j + 1].arc_ = k;
+                        dest->adj_[k].arc_ = j + 1;
+                        dest->adj_[(k + 1) % 4].arc_ = j;
+                    } else {
+                        // The arcs from src must be 0 and 3.
+                        src->adj_[3].arc_ = (k + 1) % 4;
+                        src->adj_[0].arc_ = k;
+                        dest->adj_[k].arc_ = 0;
+                        dest->adj_[(k + 1) % 4].arc_ = 3;
+                    }
+                }
+            } else if (count == 3) {
+                // Because the dual quadrangulation must be simple, it
+                // follows that any triple edge must actually be part
+                // of a quadruple edge.
+                delete g;
+                return 0;
+            } else {
+                // A quadruple edge.
+                // As we walk clockwise around one node, we must walk
+                // anticlockwise around the other.
+                //
+                // We will match up (0,1,2,3) <-> (3,2,1,0).
+                // Note that this scheme also works if src == dest.
+                for (k = 0; k < 4; ++k) {
+                    if (dest->adj_[k].node_ != src || dest->adj_[k].arc_ >= 0) {
+                        delete g;
+                        return 0;
+                    }
+                    src->adj_[k].arc_ = 3 - k;
+                    dest->adj_[3 - k].arc_ = k;
+                }
+            }
+        }
+    }
+
+    return g;
 }
 
 } // namespace regina
