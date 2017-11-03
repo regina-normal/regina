@@ -1490,6 +1490,11 @@
 		0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426A19D92D550019E056 /* SurfacesMatching.mm */; };
 		0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426D19D982D00019E056 /* SpreadHelper.mm */; };
 		0586427119DA258E0019E056 /* SurfacesCoords.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586427019DA258E0019E056 /* SurfacesCoords.mm */; };
+		05870CAE1FAD24EF00835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */; };
+		05870CAF1FAD24F000835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */; };
+		05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 05870CB01FAD250900835F9E /* modellinkgraph.h */; };
+		05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
+		05870CB41FAD250E00835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
 		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		0589FAC3181484860064CD57 /* Tri3Gluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC2181484860064CD57 /* Tri3Gluings.mm */; };
@@ -3962,6 +3967,9 @@
 		0586426D19D982D00019E056 /* SpreadHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SpreadHelper.mm; sourceTree = "<group>"; };
 		0586426F19DA258E0019E056 /* SurfacesCoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesCoords.h; sourceTree = "<group>"; };
 		0586427019DA258E0019E056 /* SurfacesCoords.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesCoords.mm; sourceTree = "<group>"; };
+		05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
+		05870CB01FAD250900835F9E /* modellinkgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modellinkgraph.h; sourceTree = "<group>"; };
+		05870CB11FAD250900835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
 		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		0589FAC1181484860064CD57 /* Tri3Gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Gluings.h; sourceTree = "<group>"; };
@@ -7102,6 +7110,8 @@
 				05721ED41F97153C00A83FFC /* jones.cpp */,
 				05721EE01F97153C00A83FFC /* link.cpp */,
 				05721EDF1F97153C00A83FFC /* link.h */,
+				05870CB11FAD250900835F9E /* modellinkgraph.cpp */,
+				05870CB01FAD250900835F9E /* modellinkgraph.h */,
 				05721EDB1F97153C00A83FFC /* reidemeister.cpp */,
 				05721ED71F97153C00A83FFC /* simplify.cpp */,
 				05721EDE1F97153C00A83FFC /* xmllinkreader.cpp */,
@@ -7115,8 +7125,9 @@
 			children = (
 				05721F0A1F97162600A83FFC /* CMakeLists.txt */,
 				05721F0B1F97162600A83FFC /* examplelink.cpp */,
-				05721F0C1F97162600A83FFC /* pylink.cpp */,
 				05721F0D1F97162600A83FFC /* link.cpp */,
+				05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */,
+				05721F0C1F97162600A83FFC /* pylink.cpp */,
 			);
 			path = link;
 			sourceTree = "<group>";
@@ -7786,6 +7797,7 @@
 				055114F21DCD618100EC753C /* dim4gluingpermsearcher.h in Headers */,
 				052FA052180600FB00FAE4DF /* sfproperties.h in Headers */,
 				05F0A04E1DBF0B5E00117BFC /* triangulation3.h in Headers */,
+				05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */,
 				052F9F8C180600FB00FAE4DF /* kernel.h in Headers */,
 				054208741DF0D0B50018AB24 /* definition_p.h in Headers */,
 				05F09FC01DBEF01800117BFC /* dim3.h in Headers */,
@@ -8698,6 +8710,7 @@
 				050F5E4D1B9BAB9C00C1F681 /* pytriangulation.cpp in Sources */,
 				050F5E0E1B9BAB9C00C1F681 /* progresstracker.cpp in Sources */,
 				059BC6841DC7F7A200AB4206 /* boundarycomponent8.cpp in Sources */,
+				05870CAE1FAD24EF00835F9E /* modellinkgraph.cpp in Sources */,
 				057EE4E81C600A3600C4D155 /* facetpairing13.cpp in Sources */,
 				05A0669D1DFA67D40047872E /* layeredchainpair.cpp in Sources */,
 				050F5E381B9BAB9C00C1F681 /* prism.cpp in Sources */,
@@ -9226,6 +9239,7 @@
 				05249F6A1DBC1737001FE29E /* surfacefiltertype.cpp in Sources */,
 				05249F611DBC1730001FE29E /* pysubcomplex.cpp in Sources */,
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,
+				05870CB41FAD250E00835F9E /* modellinkgraph.cpp in Sources */,
 				0503DCDB19B7E4F10085F3CC /* CensusListController.mm in Sources */,
 				05431F8F1C40F40E009BC072 /* HilbertSeries.cpp in Sources */,
 				05F0A0591DBF0B7000117BFC /* hydrate.cpp in Sources */,
@@ -9275,6 +9289,7 @@
 				05A066B21DFA67D50047872E /* augtrisolidtorus.cpp in Sources */,
 				050AFC5F19DCC68B00835ED6 /* SurfacesCompat.mm in Sources */,
 				052FA22E180612DD00FAE4DF /* orient.c in Sources */,
+				05870CAF1FAD24F000835F9E /* modellinkgraph.cpp in Sources */,
 				05721EF61F97156600A83FFC /* examplelink.cpp in Sources */,
 				05249ED91DBC16DF001FE29E /* component15.cpp in Sources */,
 				05249F6B1DBC1737001FE29E /* pysurfaces.cpp in Sources */,
@@ -10075,6 +10090,7 @@
 				054208C11DF0D2740018AB24 /* simplesurfacebundle.cpp in Sources */,
 				052FA04B180600FB00FAE4DF /* xmlsurfacereader.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* facepair.cpp in Sources */,
+				05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */,
 				05C1BEDE1DCA89DA007C946B /* triangulation12.cpp in Sources */,
 				052F9F5D180600FB00FAE4DF /* text.cpp in Sources */,
 				05FB46E81DD92D4A00BB00E5 /* homgrouppresentation.cpp in Sources */,
