@@ -244,6 +244,81 @@ class REGINA_API ModelLinkGraphArc {
         ModelLinkGraphArc prev() const;
 
         /**
+         * Changes to the next outgoing link arc from the same node.
+         *
+         * This effectively rotates the arc in a clockwise direction
+         * around the node.  In particular, it increments the value
+         * returned by arc(), modulo 4.
+         *
+         * This is a preincrement operator: the object will be changed,
+         * and then a reference to it will be returned.
+         *
+         * \pre This is not a null arc, i.e., node() does not
+         * return \c null.
+         *
+         * \ifacespython This routine is available under the name inc().
+         *
+         * @return a reference to this object.
+         */
+        ModelLinkGraphArc& operator ++ ();
+        /**
+         * Changes to the next outgoing link arc from the same node.
+         *
+         * This effectively rotates the arc in a clockwise direction
+         * around the node.  In particular, it increments the value
+         * returned by arc(), modulo 4.
+         *
+         * This is a postincrement operator: the object will be changed,
+         * but a copy of the original arc will be returned.
+         *
+         * \pre This is not a null arc, i.e., node() does not
+         * return \c null.
+         *
+         * \ifacespython This routine is not available; however, the
+         * preincrement operator is available under the name inc().
+         *
+         * @return a copy of this object before the change took place.
+         */
+        ModelLinkGraphArc operator ++ (int);
+        /**
+         * Changes to the previous outgoing link arc from the same node.
+         *
+         * This effectively rotates the arc in an anticlockwise direction
+         * around the node.  In particular, it decrements the value
+         * returned by arc(), modulo 4.
+         *
+         * This is a preincrement operator: the object will be changed,
+         * and then a reference to it will be returned.
+         *
+         * \pre This is not a null arc, i.e., node() does not
+         * return \c null.
+         *
+         * \ifacespython This routine is available under the name inc().
+         *
+         * @return a reference to this object.
+         */
+        ModelLinkGraphArc& operator -- ();
+        /**
+         * Changes to the previous outgoing link arc from the same node.
+         *
+         * This effectively rotates the arc in an anticlockwise direction
+         * around the node.  In particular, it decrements the value
+         * returned by arc(), modulo 4.
+         *
+         * This is a postincrement operator: the object will be changed,
+         * but a copy of the original arc will be returned.
+         *
+         * \pre This is not a null arc, i.e., node() does not
+         * return \c null.
+         *
+         * \ifacespython This routine is not available; however, the
+         * preincrement operator is available under the name inc().
+         *
+         * @return a copy of this object before the change took place.
+         */
+        ModelLinkGraphArc operator -- (int);
+
+        /**
          * Tests whether this is a non-null arc.
          *
          * \ifacespython This is not available to python users.
@@ -570,6 +645,40 @@ inline ModelLinkGraphArc ModelLinkGraphArc::next() const {
 
 inline ModelLinkGraphArc ModelLinkGraphArc::prev() const {
     return node_->adj(arc_ ^ 2);
+}
+
+inline ModelLinkGraphArc& ModelLinkGraphArc::operator ++ () {
+    if (arc_ == 3)
+        arc_ = 0;
+    else
+        ++arc_;
+    return *this;
+}
+
+inline ModelLinkGraphArc ModelLinkGraphArc::operator ++ (int) {
+    int old(arc_);
+    if (arc_ == 3)
+        arc_ = 0;
+    else
+        ++arc_;
+    return ModelLinkGraphArc(node_, old);
+}
+
+inline ModelLinkGraphArc& ModelLinkGraphArc::operator -- () {
+    if (arc_ == 0)
+        arc_ = 3;
+    else
+        --arc_;
+    return *this;
+}
+
+inline ModelLinkGraphArc ModelLinkGraphArc::operator -- (int) {
+    int old(arc_);
+    if (arc_ == 0)
+        arc_ = 3;
+    else
+        --arc_;
+    return ModelLinkGraphArc(node_, old);
 }
 
 inline ModelLinkGraphArc::operator bool() const {

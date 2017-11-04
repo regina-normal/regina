@@ -42,6 +42,17 @@ using namespace regina::python;
 using regina::ModelLinkGraphNode;
 using regina::ModelLinkGraphArc;
 using regina::ModelLinkGraph;
+using regina::ModelLinkGraphCells;
+
+namespace {
+    void arc_inc_operator(ModelLinkGraphArc& a) {
+       ++a;
+    }
+
+    void arc_dec_operator(ModelLinkGraphArc& a) {
+       --a;
+    }
+}
 
 void addModelLinkGraph() {
     class_<ModelLinkGraphArc>("ModelLinkGraphArc", init<>())
@@ -54,6 +65,8 @@ void addModelLinkGraph() {
         .def("traverse", &ModelLinkGraphArc::traverse)
         .def("next", &ModelLinkGraphArc::next)
         .def("prev", &ModelLinkGraphArc::prev)
+        .def("inc", arc_inc_operator)
+        .def("dec", arc_dec_operator)
         .def(self_ns::str(self))
         .def(self_ns::repr(self))
         .def(regina::python::add_eq_operators())
