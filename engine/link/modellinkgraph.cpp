@@ -371,8 +371,11 @@ void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
     out << std::endl;
 }
 
-std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraphCells::findFlype(
+std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraph::findFlype(
         const ModelLinkGraphArc& from) const {
+    // Ensure that the cellular decomposition has been computed.
+    cells();
+
     /*
 
              Cell A
@@ -392,7 +395,7 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraphCells::findFlype(
     ModelLinkGraphArc back = from;
     ++back;
 
-    if (cell(upper) == cell(back)) {
+    if (cells_->cell(upper) == cells_->cell(back)) {
         // Following upper must return back to from.
         // This means that the crossing (X) is redundant, and can be
         // undone by twisting everything from upper around to from.
@@ -402,11 +405,11 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraphCells::findFlype(
     // For each cell adjacent to C, we identify the first arc of C in a
     // clockwise direction from the vertex (X) that borders it.  A null arc
     // means the cell is not adjacent to C at all.
-    ModelLinkGraphArc* adjC = new ModelLinkGraphArc[nCells_];
+    ModelLinkGraphArc* adjC = new ModelLinkGraphArc[cells_->nCells_];
     ModelLinkGraphArc a = back;
     do {
         a = a.traverse();
-        adjC[cell(a)] = a;
+        adjC[cells_->cell(a)] = a;
         ++a;
     } while (a != back);
 
@@ -420,7 +423,7 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraphCells::findFlype(
     size_t common;
     while (a != upper) {
         b = a.traverse();
-        common = cell(b);
+        common = cells_->cell(b);
         if (adjC[common])
             break;
         a = b;

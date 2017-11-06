@@ -544,6 +544,23 @@ class REGINA_API ModelLinkGraph :
         const ModelLinkGraphCells& cells() const;
 
         /**
+         * TODO: Flype is between arc-- and arc, i.e., over the region
+         * defined by cell(arc).  Returns (null, null) if the crossing
+         * is trivial (in that the cells on either side are the same),
+         * or if the cell above the flype is the same as the cell below.
+         * Note that neither scenario can occur in the minimal diagram
+         * of a knot or link.
+         * Otherwise returns (left outgoing arc, right outgoing arc).
+         *
+         * \pre This graph is connected and TODO: valid.
+         *
+         * \ifacespython Instead of a C++ pair, this routine returns a
+         * Python tuple containing two ModelLinkGraphArc objects.
+         */
+        std::pair<ModelLinkGraphArc, ModelLinkGraphArc> findFlype(
+            const ModelLinkGraphArc& from) const;
+
+        /**
          * Writes a short text representation of this graph to the
          * given output stream.
          *
@@ -855,21 +872,6 @@ class REGINA_API ModelLinkGraphCells :
          * <tt>size(cell(arc))-1</tt> inclusive.
          */
         size_t cellPos(const ModelLinkGraphArc& arc) const;
-
-        /**
-         * TODO: Flype is between arc-- and arc, i.e., over the region
-         * defined by cell(arc).  Returns (null, null) if the crossing
-         * is trivial (in that the cells on either side are the same),
-         * or if the cell above the flype is the same as the cell below.
-         * Note that neither scenario can occur in the minimal diagram
-         * of a knot or link.
-         * Otherwise returns (left outgoing arc, right outgoing arc).
-         *
-         * \ifacespython Instead of a C++ pair, this routine returns a
-         * Python tuple containing two ModelLinkGraphArc objects.
-         */
-        std::pair<ModelLinkGraphArc, ModelLinkGraphArc> findFlype(
-            const ModelLinkGraphArc& from) const;
 
         /**
          * Writes a short text representation of this object to the

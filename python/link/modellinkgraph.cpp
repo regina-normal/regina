@@ -53,9 +53,9 @@ namespace {
        --a;
     }
 
-    boost::python::tuple findFlype_tuple(const ModelLinkGraphCells& c,
+    boost::python::tuple findFlype_tuple(const ModelLinkGraph& g,
             const ModelLinkGraphArc& a) {
-        auto ans = c.findFlype(a);
+        auto ans = g.findFlype(a);
         return boost::python::make_tuple(ans.first, ans.second);
     }
 }
@@ -95,6 +95,7 @@ void addModelLinkGraph() {
         .def("node", &ModelLinkGraph::node, return_internal_reference<>())
         .def("swapContents", &ModelLinkGraph::swapContents)
         .def("reflect", &ModelLinkGraph::reflect)
+        .def("findFlype", findFlype_tuple)
         .def("fromPlantri", &ModelLinkGraph::fromPlantri,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
@@ -111,7 +112,6 @@ void addModelLinkGraph() {
             return_value_policy<return_by_value>())
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
-        .def("findFlype", findFlype_tuple)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
