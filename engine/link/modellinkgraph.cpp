@@ -363,5 +363,72 @@ void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
     out << std::endl;
 }
 
+std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraphCells::findFlype(
+        const ModelLinkGraphArc& from) const {
+    /*
+
+             Cell A
+
+          __   __upper
+            \ /                    ----> result.first
+             X         Cell B
+      back__/ \__from              ----> result.second
+
+             Cell C
+
+    */
+
+    ModelLinkGraphArc upper = from;
+    --upper;
+
+    ModelLinkGraphArc back = from;
+    ++back;
+
+    if (cell(upper) == cell(back)) {
+        // Following upper must return back to from.
+        // This means that the crossing (X) is redundant, and can be
+        // undone by twisting everything from upper around to from.
+        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+    }
+
+    // For each cell adjacent to C, we identify the first arc of C in a
+    // clockwise direction from the vertex (X) that borders it.  A null arc
+    // means the cell is not adjacent to C at all.
+    ModelLinkGraphArc* adjC = new ModelLinkGraphArc[nCells_];
+    ModelLinkGraphArc a = back;
+    do {
+        a = a.traverse();
+        adjC[cell(a)] = a;
+        ++a;
+    } while (a != back);
+
+    // Now walk anticlockwise around cell A from vertex (X) and see if
+    // we are ever adjacent to one of the cells that was also adjacent to C.
+    // However, to avoid the do-nothing flype, we must pass at least one
+    // crossing from X first.
+    a = upper.traverse();
+    ++a;
+    ModelLinkGraphArc b;
+    size_t common;
+    while (a != upper) {
+        b = a.traverse();
+        common = cell(b);
+        if (adjC[common])
+            break;
+        a = b;
+        ++a;
+    }
+
+    delete[] adjC;
+
+    if (a == upper) {
+        // The strand upper comes straight back to (X), with no
+        // crossings in between.  Note that this means there is a
+        // trivial twist that we can undo.
+        return std::make_pair(ModelLinkGraphArc(), ModelLinkGraphArc());
+    } else
+        return std::make_pair(a, adjC[common]);
+}
+
 } // namespace regina
 

@@ -52,6 +52,12 @@ namespace {
     void arc_dec_operator(ModelLinkGraphArc& a) {
        --a;
     }
+
+    boost::python::tuple findFlype_tuple(const ModelLinkGraphCells& c,
+            const ModelLinkGraphArc& a) {
+        auto ans = c.findFlype(a);
+        return boost::python::make_tuple(ans.first, ans.second);
+    }
 }
 
 void addModelLinkGraph() {
@@ -107,6 +113,7 @@ void addModelLinkGraph() {
             return_value_policy<return_by_value>())
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
+        .def("findFlype", findFlype_tuple)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
