@@ -103,9 +103,7 @@ void addModelLinkGraph() {
     ;
 
     class_<ModelLinkGraphCells, std::auto_ptr<ModelLinkGraphCells>,
-            boost::noncopyable>("ModelLinkGraphCells",
-            init<const ModelLinkGraph&>())
-        .def(init<const ModelLinkGraphCells&>())
+            boost::noncopyable>("ModelLinkGraphCells", no_init)
         .def("isValid", &ModelLinkGraphCells::isValid)
         .def("countCells", &ModelLinkGraphCells::countCells)
         .def("size", &ModelLinkGraphCells::size)

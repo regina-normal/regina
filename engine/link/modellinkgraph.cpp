@@ -36,7 +36,8 @@
 
 namespace regina {
 
-ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) {
+ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
+        cells_(nullptr) {
     for (ModelLinkGraphNode* n : cloneMe.nodes_)
         nodes_.push_back(new ModelLinkGraphNode());
 
@@ -48,6 +49,10 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) {
         }
         ++it;
     }
+
+    // The cellular decomposition takes linear time to copy and linear
+    // time to compute, so just recompute it on demand and don't attempt
+    // to copy it here.
 }
 
 void ModelLinkGraph::writeTextShort(std::ostream& out) const {
@@ -65,21 +70,24 @@ void ModelLinkGraph::writeTextLong(std::ostream& out) const {
 
     out << nodes_.size() << "-node model link graph\n\n";
 
-    out << "Node  |  adjacent to:      (0)      (1)      (2)      (3)\n";
-    out << "------+--------------------------------------------------\n";
+    out << "Outgoing arcs:\n";
+    out << "  Node  |  adjacent:      (0)      (1)      (2)      (3)\n";
+    out << "  ------+-----------------------------------------------\n";
 
     size_t i;
     int j;
     ModelLinkGraphNode* n;
     for (i = 0; i < nodes_.size(); ++i) {
         n = nodes_[i];
-        out << std::setw(4) << i << "  |              ";
+        out << std::setw(6) << i << "  |           ";
         for (j = 0; j < 4; ++j)
             out << "  " << std::setw(3) << n->adj_[j].node()->index() << " ("
                 << n->adj_[j].arc() << ')';
         out << '\n';
     }
     out << std::endl;
+
+    cells().writeTextLong(out);
 }
 
 ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
@@ -325,7 +333,7 @@ void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
     }
 
     // Must have nCells_ >= 3, so use the plural.
-    out << "Cell structure with " << nCells_ << " cells\n\n";
+    // out << "Cell structure with " << nCells_ << " cells\n\n";
 
     out << "Cell boundaries:\n";
     out << "  Cell  |  node (arc) - (arc) node (arc) - ... - (arc) node\n";
@@ -344,7 +352,7 @@ void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
             << '\n';
     }
     out << '\n';
-    out << "Node neighbourhoods:\n";
+    out << "Cells around each node:\n";
     out << "  Node  |  (arc)  cell_pos  (arc)  cell_pos  ...\n";
     out << "  ------+----------------------------------------\n";
 

@@ -53,6 +53,7 @@ namespace regina {
 
 class ModelLinkGraph;
 class ModelLinkGraphArc;
+class ModelLinkGraphCells;
 class ModelLinkGraphNode;
 
 /**
@@ -455,6 +456,9 @@ class REGINA_API ModelLinkGraph :
     private:
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
+        ModelLinkGraphCells* cells_;
+            /**< The induced cellular decomposition of the sphere, or 0
+                 if this has not yet been computed. */
 
     public:
         /**
@@ -523,6 +527,21 @@ class REGINA_API ModelLinkGraph :
          * outgoing arcs around every node.
          */
         void reflect();
+
+        /**
+         * Returns details of the cellular decomposition of the sphere
+         * that is induced by this graph.
+         *
+         * This cellular decomposition will only be computed on demand.
+         * This means that the first call to this function will take
+         * linear time (as the decomposition is computed), but subsequent
+         * calls will be constant time (since the decomposition is cached).
+         *
+         * \pre This graph is connected.
+         *
+         * @return the induced cellular decomposition of the sphere.
+         */
+        const ModelLinkGraphCells& cells() const;
 
         /**
          * Writes a short text representation of this graph to the
@@ -644,43 +663,6 @@ class REGINA_API ModelLinkGraphCells :
                  has a non-planar embedding or is empty. */
 
     public:
-        /**
-         * Creates a new cellular decomposition for the given planar
-         * 4-valent graph.
-         *
-         * As described in the class notes: this class can only work
-         * with graphs that are non-empty and connected (so that each
-         * resulting 2-cell is a topological disc).
-         *
-         * You are required to ensure beforehand that the graph \a g is
-         * connected.  However, this constructor will detect if \a g
-         * is empty or does not describe a planar embedding, and isValid()
-         * will return \c false in such cases.
-         *
-         * \warning This object contains references into the graph \a g,
-         * and so \a g must not be destroyed until after this cellular
-         * decomposition is destroyed.
-         *
-         * \pre The graph \a g must be connected.
-         *
-         * @param g the 4-valent graph, including its planar embedding, that
-         * defines this new cellular decomposition.
-         */
-        ModelLinkGraphCells(const ModelLinkGraph& g);
-        /**
-         * Creates a duplicate copy of the given cellular decomposition.
-         * Both decompositions will refer to the same underlying ModelLinkGraph.
-         *
-         * The given graph may be marked as invalid (i.e., it is allowed
-         * to be empty or to not describe a planar embedding).  In other
-         * words, <tt>cloneMe.isValid()</tt> is allowed to return \c false.
-         * In this case, the validity data will be carried across to the
-         * new decomposition and <tt>this->isValid()</tt> will return
-         * \c false also.
-         *
-         * @param cloneMe the cellular decomposition to clone.
-         */
-        ModelLinkGraphCells(const ModelLinkGraphCells& cloneMe);
         /**
          * Destroys this cellular decomposition.
          */
@@ -907,6 +889,45 @@ class REGINA_API ModelLinkGraphCells :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+    private:
+        /**
+         * Creates a new cellular decomposition for the given planar
+         * 4-valent graph.
+         *
+         * As described in the class notes: this class can only work
+         * with graphs that are non-empty and connected (so that each
+         * resulting 2-cell is a topological disc).
+         *
+         * The caller of this routine must ensure beforehand that the graph
+         * \a g is connected.  However, this constructor will detect if \a g
+         * is empty or does not describe a planar embedding, and isValid()
+         * will return \c false in such cases.
+         *
+         * \warning This object contains references into the graph \a g,
+         * and so \a g must not be destroyed until after this cellular
+         * decomposition is destroyed.
+         *
+         * \pre The graph \a g must be connected.
+         *
+         * @param g the 4-valent graph, including its planar embedding, that
+         * defines this new cellular decomposition.
+         */
+        ModelLinkGraphCells(const ModelLinkGraph& g);
+        /**
+         * Creates a duplicate copy of the given cellular decomposition.
+         * Both decompositions will refer to the same underlying ModelLinkGraph.
+         *
+         * It is allowed for <tt>cloneMe.isValid()</tt> to return \c false;
+         * in this case, the validity data will be carried across to the
+         * new decomposition and <tt>this->isValid()</tt> will return
+         * \c false also.
+         *
+         * @param cloneMe the cellular decomposition to clone.
+         */
+        ModelLinkGraphCells(const ModelLinkGraphCells& cloneMe);
+
+    friend class ModelLinkGraph;
 };
 
 /*@}*/
@@ -1028,10 +1049,11 @@ inline void ModelLinkGraphNode::writeTextLong(std::ostream& out) const {
 
 // Inline functions for ModelLinkGraph
 
-inline ModelLinkGraph::ModelLinkGraph() {
+inline ModelLinkGraph::ModelLinkGraph() : cells_(nullptr) {
 }
 
 inline ModelLinkGraph::~ModelLinkGraph() {
+    delete cells_;
     for (ModelLinkGraphNode* n : nodes_)
         delete n;
 }
@@ -1045,13 +1067,29 @@ inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
 }
 
 inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) {
-    if (&other != this)
+    if (&other != this) {
         nodes_.swap(other.nodes_);
+        std::swap(cells_, other.cells_);
+    }
 }
 
 inline void ModelLinkGraph::reflect() {
     for (ModelLinkGraphNode* n : nodes_)
         std::swap(n->adj_[1], n->adj_[3]);
+
+    if (cells_) {
+        // The cellular decomposition takes linear time to reflect and
+        // linear time to rebuild.  Just rebuild it.
+        delete cells_;
+        cells_ = nullptr;
+    }
+}
+
+inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
+    if (! cells_)
+        const_cast<ModelLinkGraph*>(this)->cells_ =
+            new ModelLinkGraphCells(*this);
+    return *cells_;
 }
 
 // Inline functions for ModelLinkGraphCells
