@@ -92,6 +92,22 @@ void addModelLinkGraph() {
         .def("fromPlantri", &ModelLinkGraph::fromPlantri,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
+        .def(regina::python::add_eq_operators())
         .staticmethod("fromPlantri")
+    ;
+
+    class_<ModelLinkGraphCells, std::auto_ptr<ModelLinkGraphCells>,
+            boost::noncopyable>("ModelLinkGraphCells",
+            init<const ModelLinkGraph&>())
+        .def(init<const ModelLinkGraphCells&>())
+        .def("isValid", &ModelLinkGraphCells::isValid)
+        .def("countCells", &ModelLinkGraphCells::countCells)
+        .def("size", &ModelLinkGraphCells::size)
+        .def("arc", &ModelLinkGraphNode::arc,
+            return_value_policy<return_by_value>())
+        .def("cell", &ModelLinkGraphCells::cell)
+        .def("cellPos", &ModelLinkGraphCells::cellPos)
+        .def(regina::python::add_output())
+        .def(regina::python::add_eq_operators())
     ;
 }

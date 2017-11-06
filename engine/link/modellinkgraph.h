@@ -600,6 +600,300 @@ class REGINA_API ModelLinkGraph :
         static ModelLinkGraph* fromPlantri(const std::string& plantri);
 };
 
+/**
+ * Describes the cellular decomposition of the sphere that is induced by a
+ * given planar 4-valent graph.
+ *
+ * The graph is represented by an object of type ModelLinkGraph, which
+ * also encodes a specific planar embedding of the graph.  The nodes
+ * and arcs of this graph then form the vertices and edges of a cellular
+ * decomposition; the main purpose of this class is to deduce and
+ * describe the resulting 2-cells.
+ *
+ * At present, this class insists that each 2-cell is a topological disc.
+ * As a consequence, this class cannot work with empty or disconnected graphs.
+ */
+class REGINA_API ModelLinkGraphCells :
+        public Output<ModelLinkGraphCells>, public boost::noncopyable {
+    private:
+        ModelLinkGraphArc* arcs_;
+            /**< Stores the boundary of each cell.  Specifically, for cell
+                 number \a i, positions start_[i], ..., (start_[i+1]-1) of
+                 this array store the arcs in order as they would appear if
+                 you walked anticlockwise around the cell boundary (so the
+                 2-cell is on the left of each arc as you follow them around).
+                 Each arc is described as an \e outgoing arc as you exit each
+                 node in turn.  Note that this array contains every arc of the
+                 underlying graph exactly once. */
+        size_t* start_;
+            /**< Indicates where in the \a arcs_ array the boundary of each
+                 cell begins and end.  This array has length (nCells_+1). */
+        size_t* cell_;
+            /**< For the <i>k</i>th arc exiting node \a n of the underlying
+                 graph, cell_[4n+k] identifies which cell sits to the left
+                 of the arc as you walk along it away from node \a n. */
+        size_t* step_;
+            /**< Let \a a be the <i>k</i>th arc exiting node \a n of the
+                 underlying graph, and let \a c be the cell to the left
+                 of the arc (as stored in the \a cell_ array).  Then
+                 step_[4n+k] identifies where in the boundary of cell \a c
+                 the arc \a a appears.  Specifically, arc \a a appears in the
+                 \a arcs_ array as element arcs_[start_[c]+step_[4n+k]]. */
+        size_t nCells_;
+            /**< The number of cells, or 0 if the underlying graph either
+                 has a non-planar embedding or is empty. */
+
+    public:
+        /**
+         * Creates a new cellular decomposition for the given planar
+         * 4-valent graph.
+         *
+         * As described in the class notes: this class can only work
+         * with graphs that are non-empty and connected (so that each
+         * resulting 2-cell is a topological disc).
+         *
+         * You are required to ensure beforehand that the graph \a g is
+         * connected.  However, this constructor will detect if \a g
+         * is empty or does not describe a planar embedding, and isValid()
+         * will return \c false in such cases.
+         *
+         * \warning This object contains references into the graph \a g,
+         * and so \a g must not be destroyed until after this cellular
+         * decomposition is destroyed.
+         *
+         * \pre The graph \a g must be connected.
+         *
+         * @param g the 4-valent graph, including its planar embedding, that
+         * defines this new cellular decomposition.
+         */
+        ModelLinkGraphCells(const ModelLinkGraph& g);
+        /**
+         * Creates a duplicate copy of the given cellular decomposition.
+         * Both decompositions will refer to the same underlying ModelLinkGraph.
+         *
+         * The given graph may be marked as invalid (i.e., it is allowed
+         * to be empty or to not describe a planar embedding).  In other
+         * words, <tt>cloneMe.isValid()</tt> is allowed to return \c false.
+         * In this case, the validity data will be carried across to the
+         * new decomposition and <tt>this->isValid()</tt> will return
+         * \c false also.
+         *
+         * @param cloneMe the cellular decomposition to clone.
+         */
+        ModelLinkGraphCells(const ModelLinkGraphCells& cloneMe);
+        /**
+         * Destroys this cellular decomposition.
+         */
+        ~ModelLinkGraphCells();
+
+        /**
+         * Determines whether the underlying graph is non-empty with a
+         * planar embedding, assuming that it is already known to be connected.
+         *
+         * As described in the class notes, this class can only work
+         * with non-empty connected graphs where the corresponding
+         * ModelLinkGraph object also describes a planar embedding.
+         *
+         * The constructor for this class requires you to pass a graph
+         * that is already known to be connected.  However, \e assuming
+         * the graph is connected, the constructor then tests for the
+         * remaining conditions.  This routine returns the results of these
+         * tests: if the underlying graph is empty or does not describe a
+         * planar embedding, then this routine will return \c false.
+         *
+         * This routine is constant time, since the necessary work will
+         * have already been completed by the class constructor.
+         *
+         * \warning Most of the routines in this class require isValid() to
+         * return \c true.  Essentially, if isValid() returns \c false, you
+         * should not attempt to query the details of the cell decomposition.
+         * See the preconditions on individual routines for further details.
+         *
+         * @return \c true if and only if the underlying ModelLinkGraph
+         * describes a planar embedding of a non-empty graph.
+         */
+        bool isValid() const;
+        /**
+         * Returns the number of 2-cells in this cellular decomposition.
+         *
+         * If isValid() returns \c false (i.e., the underlying ModelLinkGraph
+         * is either empty or does not describe a planar embedding), then
+         * this routine will return 0 instead.  Note that this routine
+         * \e cannot be used to test for connectivity, which is a
+         * non-negotiable precondition required by the class constructor.
+         *
+         * Note that, if isValid() returns \c true, then countCells()
+         * will always return <i>n</i>+2 where \a n is the number of
+         * nodes in the underlying graph.
+         *
+         * @return a strictly positive number of 2-cells if isValid()
+         * returns \c true, or 0 if isValid() returns \c false.
+         */
+        size_t countCells() const;
+
+        /**
+         * Returns the given arc along the boundary of the given 2-cell.
+         *
+         * For each cell, the arcs along the boundary are given in order
+         * as you walk anticlockwise around the cell (so the cell is on
+         * the left of each arc as you walk around the cell boundary).
+         *
+         * Each arc is described in the form of an \e outgoing arc from some
+         * node of the underlying graph (so if the return ModelLinkGraphArc
+         * is \a a then this describes an outgoing arc from a.node()).
+         * It follows that, if the underlying graph has \a n nodes, then
+         * each of the 4<i>n</i> possible ModelLinkGraphArc values
+         * appears exactly once as <tt>arc(cell, which)</tt> for some
+         * integers \a cell and \a which.
+         *
+         * \pre The underlying ModelLinkGraph is non-empty, connected,
+         * and describes a planar graph embedding.  Note that connectivity
+         * is already required by the class constructor, and you can test
+         * the remaining conditions by calling isValid().
+         *
+         * @param cell indicates which cell to query; this must be
+         * between 0 and countCells()-1 inclusive.
+         * @param which indicates which arc along the boundary of the
+         * corresponding cell to return; this must be between 0 and
+         * <tt>size(cell)-1</tt> inclusive.
+         * @return the requested arc on the boundary of the given 2-cell.
+         */
+        const ModelLinkGraphArc& arc(size_t cell, size_t which) const;
+        /**
+         * Returns the number of arcs aloung the boundary of the given 2-cell.
+         * If the given cell is a <i>k</i>-gon, then this routine returns the
+         * integer \a k.
+         *
+         * \pre The underlying ModelLinkGraph is non-empty, connected,
+         * and describes a planar graph embedding.  Note that connectivity
+         * is already required by the class constructor, and you can test
+         * the remaining conditions by calling isValid().
+         *
+         * @param cell indicates which cell to query; this must be
+         * between 0 and countCells()-1 inclusive.
+         * @return the size of the correpsonding 2-cell.
+         */
+        size_t size(size_t cell) const;
+        /**
+         * Returns the beginning of an iterator range for walking around the
+         * boundary of the given 2-cell.
+         *
+         * Suppose that the <i>i</i>th cell is a <i>k</i>-gon.  Then the
+         * iterator range described by <tt>begin(i)</tt> and <tt>end(i)</tt>
+         * will iterate through the \a k arcs along the boundary of the
+         * <i>i</i>th cell in the same order as described by arc(); that
+         * is, walking anticlockwise around the cell boundary with the
+         * cell to the left of each arc.
+         *
+         * Dereferencing the <i>j</i>th iterator in this range gives the
+         * same result as calling <tt>arc(cell, j)</tt>.
+         *
+         * \pre The underlying ModelLinkGraph is non-empty, connected,
+         * and describes a planar graph embedding.  Note that connectivity
+         * is already required by the class constructor, and you can test
+         * the remaining conditions by calling isValid().
+         *
+         * \ifacespython Not present.  Use arc() and size() instead.
+         *
+         * @return the beginning of an iterator range for the boundary
+         * of the given cell.
+         */
+        const ModelLinkGraphArc* begin(size_t cell) const;
+        /**
+         * Returns the end of an iterator range for walking around the
+         * boundary of the given 2-cell.  As is usual for iterator
+         * ranges, this is a past-the-end value (i.e., this iterator
+         * cannot be dereferenced).
+         *
+         * Suppose that the <i>i</i>th cell is a <i>k</i>-gon.  Then the
+         * iterator range described by <tt>begin(i)</tt> and <tt>end(i)</tt>
+         * will iterate through the \a k arcs along the boundary of the
+         * <i>i</i>th cell in the same order as described by arc(); that
+         * is, walking anticlockwise around the cell boundary with the
+         * cell to the left of each arc.
+         *
+         * Dereferencing the <i>j</i>th iterator in this range gives the
+         * same result as calling <tt>arc(cell, j)</tt>.
+         *
+         * \pre The underlying ModelLinkGraph is non-empty, connected,
+         * and describes a planar graph embedding.  Note that connectivity
+         * is already required by the class constructor, and you can test
+         * the remaining conditions by calling isValid().
+         *
+         * \ifacespython Not present.  Use arc() and size() instead.
+         *
+         * @return the end of an iterator range for the boundary
+         * of the given cell.
+         */
+        const ModelLinkGraphArc* end(size_t cell) const;
+
+        /**
+         * Returns the 2-cell that lies to the left of the given arc.
+         *
+         * Specifically, this function returns the number of the cell
+         * that lies to the left of the given arc as you walk along it
+         * away from <tt>arc.node()</tt>.
+         *
+         * For any arc \a a, calling <tt>arc(cell(a), cellPos(a))</tt>
+         * will return the same arc \a a again.
+         *
+         * \pre The underlying ModelLinkGraph is non-empty, connected,
+         * and describes a planar graph embedding.  Note that connectivity
+         * is already required by the class constructor, and you can test
+         * the remaining conditions by calling isValid().
+         *
+         * @param arc the given arc of the underlying graph.
+         * @return the number of the cell that lies to the left of the
+         * given arc; this will be an integer between 0 and
+         * <tt>countCells()-1</tt> inclusive.
+         */
+        size_t cell(const ModelLinkGraphArc& arc) const;
+        /**
+         * Returns where the given arc appears along the boundary of the
+         * 2-cell to its left.
+         *
+         * Consider the cell \a c to the left of the given arc as you follow
+         * the arc away from <tt>arc.node()</tt>.  The routine arc()
+         * can be used to enumerate the sequence of arcs along the boundary of
+         * this cell \a c, in order as you walk anticlockwise around the cell
+         * boundary.  The purpose of this routine is to identify \e where in
+         * this sequence the given arc occurs.
+         *
+         * For any arc \a a, calling <tt>arc(cell(a), cellPos(a))</tt>
+         * will return the same arc \a a again.
+         *
+         * \pre The underlying ModelLinkGraph is non-empty, connected,
+         * and describes a planar graph embedding.  Note that connectivity
+         * is already required by the class constructor, and you can test
+         * the remaining conditions by calling isValid().
+         *
+         * @param arc the given arc of the underlying graph.
+         * @return the position of the given arc on the boundary of the
+         * cell to its left; this will be an integer between 0 and
+         * <tt>size(cell(arc))-1</tt> inclusive.
+         */
+        size_t cellPos(const ModelLinkGraphArc& arc) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
+};
+
 /*@}*/
 
 // Inline functions for ModelLinkGraphArc
@@ -743,6 +1037,48 @@ inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) {
 inline void ModelLinkGraph::reflect() {
     for (ModelLinkGraphNode* n : nodes_)
         std::swap(n->adj_[1], n->adj_[3]);
+}
+
+// Inline functions for ModelLinkGraphCells
+
+inline ModelLinkGraphCells::~ModelLinkGraphCells() {
+    delete[] arcs_;
+    delete[] start_;
+    delete[] cell_;
+    delete[] step_;
+}
+
+inline size_t ModelLinkGraphCells::countCells() const {
+    return nCells_;
+}
+
+inline bool ModelLinkGraphCells::isValid() const {
+    return (nCells_ > 0);
+}
+
+inline size_t ModelLinkGraphCells::size(size_t cell) const {
+    return start_[cell + 1] - start_[cell];
+}
+
+inline const ModelLinkGraphArc& ModelLinkGraphCells::arc(size_t cell,
+        size_t which) const {
+    return arcs_[start_[cell] + which];
+}
+
+inline const ModelLinkGraphArc* ModelLinkGraphCells::begin(size_t cell) const {
+    return arcs_ + start_[cell];
+}
+
+inline const ModelLinkGraphArc* ModelLinkGraphCells::end(size_t cell) const {
+    return arcs_ + start_[cell + 1];
+}
+
+inline size_t ModelLinkGraphCells::cell(const ModelLinkGraphArc& arc) const {
+    return cell_[(arc.node()->index() << 2) | arc.arc()];
+}
+
+inline size_t ModelLinkGraphCells::cellPos(const ModelLinkGraphArc& arc) const {
+    return step_[(arc.node()->index() << 2) | arc.arc()];
 }
 
 } // namespace regina

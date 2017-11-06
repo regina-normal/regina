@@ -235,5 +235,133 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
     return g;
 }
 
+ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraphCells& c) :
+        arcs_(new ModelLinkGraphArc[4 * (c.nCells_ == 0 ? 0 : c.nCells_ - 2)]),
+        start_(new size_t[1 + c.nCells_]),
+        cell_(new size_t[4 * (c.nCells_ == 0 ? 0 : c.nCells_ - 2)]),
+        step_(new size_t[4 * (c.nCells_ == 0 ? 0 : c.nCells_ - 2)]),
+        nCells_(c.nCells_) {
+    if (nCells_ == 0) {
+        start_[0] = 0;
+        return;
+    }
+
+    size_t nArcs = 4 * (nCells_ - 2);
+    std::copy(c.arcs_, c.arcs_ + nArcs, arcs_);
+    std::copy(c.start_, c.start_ + nCells_ + 1, start_);
+    std::copy(c.cell_, c.cell_ + nArcs, cell_);
+    std::copy(c.step_, c.step_ + nArcs, step_);
+}
+
+
+ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraph& g) :
+        arcs_(new ModelLinkGraphArc[4 * g.size()]),
+        start_(new size_t[3 + g.size()]),
+        cell_(new size_t[4 * g.size()]),
+        step_(new size_t[4 * g.size()]),
+        nCells_(2 + g.size()) {
+    if (g.size() == 0) {
+        nCells_ = 0;
+        start_[0] = 0;
+        return;
+    }
+
+    // Euler characteristic: vertices - arcs + cells = 2
+    // Since arcs = 2 * vertices, we have cells = 2 + vertices.
+
+    std::fill(cell_, cell_ + 4 * g.size(), nCells_);
+
+    size_t cell = 0;
+    size_t nextArc = 0;
+    size_t nextPos = 0;
+    start_[0] = 0;
+    while (nextArc < 4 * g.size() && cell < nCells_) {
+        ModelLinkGraphArc from(g.node(nextArc >> 2), nextArc & 3);
+        ModelLinkGraphArc curr(from);
+        do {
+            cell_[(curr.node()->index() << 2) | curr.arc()] = cell;
+            step_[(curr.node()->index() << 2) | curr.arc()] =
+                nextPos - start_[cell];
+            arcs_[nextPos++] = curr;
+            curr = curr.traverse();
+            ++curr;
+        } while (curr != from);
+
+        while (nextArc < 4 * g.size() && cell_[nextArc] != nCells_)
+            ++nextArc;
+
+        start_[++cell] = nextPos;
+    }
+    if (nextArc < 4 * g.size()) {
+        // We found too many cells.
+        nCells_ = 0;
+        /*
+        while (next < 4 * g.size())
+            step_[next++] = -1;
+        */
+    } else if (cell < nCells_) {
+        // We did not find enough cells.
+        nCells_ = 0;
+        /*
+        while (cell < 2 + g.size())
+            start_[++cell] = 4 * g.size();
+        */
+    }
+}
+
+void ModelLinkGraphCells::writeTextShort(std::ostream& out) const {
+    if (nCells_ == 0)
+        out << "invalid cell structure";
+    else {
+        // Must have nCells_ >= 3, so use the plural.
+        out << "cell structure with " << nCells_ << " cells";
+    }
+}
+
+void ModelLinkGraphCells::writeTextLong(std::ostream& out) const {
+    if (nCells_ == 0) {
+        out << "Invalid cell structure" << std::endl;
+        return;
+    }
+
+    // Must have nCells_ >= 3, so use the plural.
+    out << "Cell structure with " << nCells_ << " cells\n\n";
+
+    out << "Cell boundaries:\n";
+    out << "  Cell  |  node (arc) - (arc) node (arc) - ... - (arc) node\n";
+    out << "  ------+--------------------------------------------------\n";
+    size_t i;
+    const ModelLinkGraphArc* a;
+    for (i = 0; i < nCells_; ++i) {
+        out << std::setw(6) << i << "  |  ";
+        for (a = begin(i); a != end(i); ++a) {
+            if (a != begin(i))
+                out << " - (" << (a->arc() + 3) % 4 << ") ";
+            out << a->node()->index() << " (" << a->arc() << ')';
+        }
+        a = begin(i);
+        out << " - (" << (a->arc() + 3) % 4 << ") " << a->node()->index()
+            << '\n';
+    }
+    out << '\n';
+    out << "Node neighbourhoods:\n";
+    out << "  Node  |  (arc)  cell_pos  (arc)  cell_pos  ...\n";
+    out << "  ------+----------------------------------------\n";
+
+    int j;
+    for (i = 0; i < nCells_ - 2; ++i) {
+        out << std::setw(6) << i << "  |";
+        j = 0;
+        do {
+            out << "  (" << j << ")  ";
+            j = (j + 1) % 4;
+            out << cell_[(i << 2) | j] << '_' << step_[(i << 2) | j];
+        } while (j != 0);
+        out << '\n';
+    }
+
+    out << std::endl;
+}
+
 } // namespace regina
 
