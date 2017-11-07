@@ -1820,6 +1820,8 @@
 		05A73CE419B2F9DC0099C617 /* snappeagluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC519B2F1AB0099C617 /* snappeagluings.h */; };
 		05A73CE519B2F9DC0099C617 /* snappeashapes.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC719B2F1AB0099C617 /* snappeashapes.h */; };
 		05A73CE619B2F9DC0099C617 /* snappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* snappeaui.h */; };
+		05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AA71ED1FB17DFF00186E30 /* flype.cpp */; };
+		05AA71EF1FB17E0600186E30 /* flype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AA71ED1FB17DFF00186E30 /* flype.cpp */; };
 		05AB5ECF1B8ED9FA007034C8 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */; };
 		05AB5ED01B8ED9FA007034C8 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */; };
 		05AB5ED11B8ED9FA007034C8 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */; };
@@ -4267,6 +4269,7 @@
 		05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
+		05AA71ED1FB17DFF00186E30 /* flype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flype.cpp; sourceTree = "<group>"; };
 		05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../Library/Frameworks/osx/QtCore.framework; sourceTree = "<group>"; };
 		05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../Library/Frameworks/osx/QtGui.framework; sourceTree = "<group>"; };
 		05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../Library/Frameworks/osx/QtWidgets.framework; sourceTree = "<group>"; };
@@ -7102,6 +7105,7 @@
 				05721ECF1F97153C00A83FFC /* data-impl.h */,
 				05721ED61F97153C00A83FFC /* examplelink.cpp */,
 				05721EE11F97153C00A83FFC /* examplelink.h */,
+				05AA71ED1FB17DFF00186E30 /* flype.cpp */,
 				05721ED21F97153C00A83FFC /* gauss.cpp */,
 				05721EDD1F97153C00A83FFC /* gauss-impl.h */,
 				05721ED91F97153C00A83FFC /* graph.h */,
@@ -9135,6 +9139,7 @@
 				054208CF1DF0D2A60018AB24 /* simplesurfacebundle.cpp in Sources */,
 				052FA1B01806129B00FAE4DF /* snappeatriangulation.cpp in Sources */,
 				05F0A0551DBF0B7000117BFC /* decompose.cpp in Sources */,
+				05AA71EF1FB17E0600186E30 /* flype.cpp in Sources */,
 				05249E9E1DBB50B7001FE29E /* PythonInterpreter.mm in Sources */,
 				05A067441DFA68470047872E /* blockedsfsloop.cpp in Sources */,
 				05C1BEBC1DCA7CB3007C946B /* boundary6.cpp in Sources */,
@@ -10091,6 +10096,7 @@
 				052FA04B180600FB00FAE4DF /* xmlsurfacereader.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* facepair.cpp in Sources */,
 				05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */,
+				05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */,
 				05C1BEDE1DCA89DA007C946B /* triangulation12.cpp in Sources */,
 				052F9F5D180600FB00FAE4DF /* text.cpp in Sources */,
 				05FB46E81DD92D4A00BB00E5 /* homgrouppresentation.cpp in Sources */,

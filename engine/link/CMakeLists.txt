@@ -4,6 +4,7 @@
 SET ( FILES
   complement
   examplelink
+  flype
   gauss
   homfly
   jenkins
@@ -29,6 +30,7 @@ if (${REGINA_INSTALL_DEV})
     examplelink.h
     gauss-impl.h
     link.h
+    modellinkgraph.h
     xmllinkreader.h
     DESTINATION ${INCLUDEDIR}/link COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

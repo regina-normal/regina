@@ -45,6 +45,12 @@ using regina::ModelLinkGraph;
 using regina::ModelLinkGraphCells;
 
 namespace {
+    ModelLinkGraph* (ModelLinkGraph::*flype1)(const ModelLinkGraphArc&) const =
+        &ModelLinkGraph::flype;
+    ModelLinkGraph* (ModelLinkGraph::*flype3)(const ModelLinkGraphArc&,
+        const ModelLinkGraphArc&, const ModelLinkGraphArc&) const =
+        &ModelLinkGraph::flype;
+
     void arc_inc_operator(ModelLinkGraphArc& a) {
        ++a;
     }
@@ -96,6 +102,8 @@ void addModelLinkGraph() {
         .def("swapContents", &ModelLinkGraph::swapContents)
         .def("reflect", &ModelLinkGraph::reflect)
         .def("findFlype", findFlype_tuple)
+        .def("flype", flype3, return_value_policy<manage_new_object>())
+        .def("flype", flype1, return_value_policy<manage_new_object>())
         .def("fromPlantri", &ModelLinkGraph::fromPlantri,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())

@@ -545,12 +545,14 @@ class REGINA_API ModelLinkGraph :
 
         /**
          * TODO: Flype is between arc-- and arc, i.e., over the region
-         * defined by cell(arc).  Returns (null, null) if the crossing
-         * is trivial (in that the cells on either side are the same),
-         * or if the cell above the flype is the same as the cell below.
-         * Note that neither scenario can occur in the minimal diagram
-         * of a knot or link.
+         * defined by cell(arc).  Returns (null, null) iff flype() will
+         * refuse to work with this.
          * Otherwise returns (left outgoing arc, right outgoing arc).
+         *
+         * Conditions that explicitly return \c null:
+         *
+         * - The upper and lower cells are the same.
+         * - The common cell is the inside cell at from.node().
          *
          * \pre This graph is connected and TODO: valid.
          *
@@ -559,6 +561,36 @@ class REGINA_API ModelLinkGraph :
          */
         std::pair<ModelLinkGraphArc, ModelLinkGraphArc> findFlype(
             const ModelLinkGraphArc& from) const;
+
+        /**
+         * TODO: Document.
+         *
+           \verbatim
+                  Cell A
+          
+               __   __
+                 \ /                    ----> left
+                  X         Cell B
+               __/ \__from              ----> right
+          
+                  Cell C
+           \endverbatim
+         *
+         * Conditions that explicitly return 0:
+         *
+         * - Neither left nor right ends at from.node().
+         * - The upper and lower bounding cells are distinct,
+         * - The cell between left and right is not the inside cell
+         * where the flype begins from from.node().
+         */
+        ModelLinkGraph* flype(const ModelLinkGraphArc& from,
+            const ModelLinkGraphArc& left, const ModelLinkGraphArc& right)
+            const;
+
+        /**
+         * TODO: Document.
+         */
+        ModelLinkGraph* flype(const ModelLinkGraphArc& from) const;
 
         /**
          * Writes a short text representation of this graph to the
@@ -1092,6 +1124,12 @@ inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
         const_cast<ModelLinkGraph*>(this)->cells_ =
             new ModelLinkGraphCells(*this);
     return *cells_;
+}
+
+inline ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from)
+        const {
+    auto use = findFlype(from);
+    return (use.first ? flype(from, use.first, use.second) : nullptr);
 }
 
 // Inline functions for ModelLinkGraphCells
