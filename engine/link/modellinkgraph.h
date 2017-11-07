@@ -615,7 +615,8 @@ class REGINA_API ModelLinkGraph :
          * \pre TODO: Connected, non-empty, <= 26, and dual is a simple
          * quadrangulation.
          */
-        std::string canonicalPlantri(bool useReflection = true) const;
+        std::string canonicalPlantri(bool useReflection = true,
+            bool tight = false) const;
 
         /**
          * Writes a short text representation of this graph to the

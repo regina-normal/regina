@@ -117,7 +117,8 @@ std::string ModelLinkGraph::plantri() const {
     return ans;
 }
 
-std::string ModelLinkGraph::canonicalPlantri(bool useReflection) const {
+std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
+        bool tight) const {
     std::string best;
 
     // The image and preimage for each node, and the image of arc 0
@@ -146,7 +147,7 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection) const {
                 arcOffset[start->index()] = (offset == 0 ? 0 : 4 - offset);
 
                 for (nodeImg = 0; nodeImg < size(); ++nodeImg) {
-                    if (nodeImg > 0)
+                    if ((! tight) && nodeImg > 0)
                         curr += ',';
 
                     // In the image, work out who the neighbours of nodeImg are.
@@ -206,16 +207,26 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection) const {
 }
 
 ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
+    bool tight = (plantri.size() == 4 ||
+        (plantri.size() > 4 && plantri[4] != ','));
+
     // Extract the graph size and run some basic sanity checks.
-    if (plantri.size() % 5 != 4)
-        return 0;
-    size_t n = (plantri.size() + 1) / 5;
+    size_t n;
+    if (tight) {
+        if (plantri.size() % 4 != 0)
+            return 0;
+        n = plantri.size() / 4;
+    } else {
+        if (plantri.size() % 5 != 4)
+            return 0;
+        n = (plantri.size() + 1) / 5;
+    }
     if (n > 26)
         return 0;
 
     size_t i, j;
     for (i = 0; i < plantri.size(); ++i)
-        if (i % 5 == 4) {
+        if ((! tight) && i % 5 == 4) {
             if (plantri[i] != ',')
                 return 0;
         } else {
@@ -231,7 +242,7 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
     for (i = 0; i < n; ++i)
         for (j = 0; j < 4; ++j) {
             g->nodes_[i]->adj_[j].node_ =
-                g->nodes_[plantri[5 * i + j] - 'a'];
+                g->nodes_[plantri[(tight ? 4 : 5) * i + j] - 'a'];
             g->nodes_[i]->adj_[j].arc_ = -1;
         }
 
