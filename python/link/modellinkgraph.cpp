@@ -64,6 +64,9 @@ namespace {
         auto ans = g.findFlype(a);
         return boost::python::make_tuple(ans.first, ans.second);
     }
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_canonicalPlantri,
+        ModelLinkGraph::canonicalPlantri, 0, 1);
 }
 
 void addModelLinkGraph() {
@@ -104,6 +107,9 @@ void addModelLinkGraph() {
         .def("findFlype", findFlype_tuple)
         .def("flype", flype3, return_value_policy<manage_new_object>())
         .def("flype", flype1, return_value_policy<manage_new_object>())
+        .def("plantri", &ModelLinkGraph::plantri)
+        .def("canonicalPlantri", &ModelLinkGraph::canonicalPlantri,
+            OL_canonicalPlantri())
         .def("fromPlantri", &ModelLinkGraph::fromPlantri,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())

@@ -593,6 +593,31 @@ class REGINA_API ModelLinkGraph :
         ModelLinkGraph* flype(const ModelLinkGraphArc& from) const;
 
         /**
+         * TODO: Document.
+         * Note that this need not be the actual output from plantri;
+         * however, it can be interpreted by fromPlantri().
+         *
+         * This function preserves the labelling of nodes and arcs.
+         *
+         * \pre TODO: Connected, non-empty, <= 26, and dual is a simple
+         * quadrangulation.
+         */
+        std::string plantri() const;
+
+        /**
+         * TODO: Document.
+         * Note that this need not be the actual output from plantri;
+         * however, it can be interpreted by fromPlantri().
+         *
+         * More importantly, the output from this function is unique up
+         * to planar isomorphism.
+         *
+         * \pre TODO: Connected, non-empty, <= 26, and dual is a simple
+         * quadrangulation.
+         */
+        std::string canonicalPlantri(bool useReflection = true) const;
+
+        /**
          * Writes a short text representation of this graph to the
          * given output stream.
          *
@@ -652,6 +677,12 @@ class REGINA_API ModelLinkGraph :
          * nodes.  If the graph contains more than 27 nodes then the
          * \e plantri output will contain punctuation, Regina will not
          * be able to parse it, and this function will return \c null.
+         *
+         * TODO: Needs:
+         * - <= 26 nodes
+         * - Dual to a simple quadrangulation of the sphere (note:
+         * otherwise we have a sum of links)
+         * - Connected and non-empty
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the graph.

@@ -106,6 +106,103 @@ void ModelLinkGraph::writeTextLong(std::ostream& out) const {
     cells().writeTextLong(out);
 }
 
+std::string ModelLinkGraph::plantri() const {
+    std::string ans;
+    for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
+        if (it != nodes_.begin())
+            ans += ',';
+        for (int arc = 0; arc < 4; ++arc)
+            ans += ('a' + (*it)->adj_[arc].node()->index());
+    }
+    return ans;
+}
+
+std::string ModelLinkGraph::canonicalPlantri(bool useReflection) const {
+    std::string best;
+
+    // The image and preimage for each node, and the image of arc 0
+    // for each node:
+    ptrdiff_t* image = new ptrdiff_t[size()];
+    ptrdiff_t* preimage = new ptrdiff_t[size()];
+    int* arcOffset = new int[size()];
+
+    size_t nextUnusedNode, nodeImg, nodeSrc, adjSrcNode;
+    int arcImg;
+    ModelLinkGraphArc adjSrc;
+    bool better;
+    for (auto start : nodes_)
+        for (int offset = 0; offset < 4; ++offset) {
+            better = false;
+            std::string curr;
+
+            // Map arc (start, offset) -> (0, 0).
+            std::fill(image, image + size(), -1);
+            std::fill(preimage, preimage + size(), -1);
+            nextUnusedNode = 1;
+
+            image[start->index()] = 0;
+            preimage[0] = start->index();
+            arcOffset[start->index()] = (offset == 0 ? 0 : 4 - offset);
+
+            for (nodeImg = 0; nodeImg < size(); ++nodeImg) {
+                if (nodeImg > 0)
+                    curr += ',';
+
+                // In the image, work out who the neighbours of nodeImg are.
+                nodeSrc = preimage[nodeImg];
+
+                for (arcImg = 0; arcImg < 4; ++arcImg) {
+                    adjSrc = nodes_[nodeSrc]->
+                        adj_[(arcImg + 4 - arcOffset[nodeSrc]) % 4];
+                    adjSrcNode = adjSrc.node()->index();
+
+                    // Is it a new node?
+                    if (image[adjSrcNode] < 0) {
+                        // Yes.
+                        // Map it to the next available image node, and
+                        // make the corresponding source arc map to 0.
+                        image[adjSrcNode] = nextUnusedNode++;
+                        preimage[image[adjSrcNode]] = adjSrcNode;
+                        arcOffset[adjSrcNode] =
+                            (adjSrc.arc() == 0 ? 0 : 4 - adjSrc.arc());
+                    }
+
+                    curr += ('a' + image[adjSrcNode]);
+
+                    if ((! best.empty()) && ! better) {
+                        if (curr[curr.length() - 1] < best[curr.length() - 1])
+                            better = true;
+                        else if (curr[curr.length() - 1] >
+                                best[curr.length() - 1]) {
+                            // There is no chance of this being canonical.
+                            goto noncanonical;
+                        }
+                    }
+                }
+            }
+
+            if (best.empty() || curr < best)
+                best.swap(curr);
+
+            noncanonical:
+                ;
+        }
+
+    delete[] image;
+    delete[] preimage;
+    delete[] arcOffset;
+
+    if (useReflection) {
+        ModelLinkGraph ref(*this);
+        ref.reflect();
+        std::string curr = ref.canonicalPlantri(false);
+        if (curr < best)
+            best.swap(curr);
+    }
+
+    return best;
+}
+
 ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
     // Extract the graph size and run some basic sanity checks.
     if (plantri.size() % 5 != 4)
