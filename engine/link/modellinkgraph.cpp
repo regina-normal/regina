@@ -129,76 +129,78 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection) const {
     size_t nextUnusedNode, nodeImg, nodeSrc, adjSrcNode;
     int arcImg;
     ModelLinkGraphArc adjSrc;
-    bool better;
-    for (auto start : nodes_)
-        for (int offset = 0; offset < 4; ++offset) {
-            better = false;
-            std::string curr;
+    bool currBetter;
+    for (int reflect = 0; reflect < 2; ++reflect) {
+        for (auto start : nodes_)
+            for (int offset = 0; offset < 4; ++offset) {
+                std::string curr;
+                currBetter = best.empty();
 
-            // Map arc (start, offset) -> (0, 0).
-            std::fill(image, image + size(), -1);
-            std::fill(preimage, preimage + size(), -1);
-            nextUnusedNode = 1;
+                // Map arc (start, offset) -> (0, 0).
+                std::fill(image, image + size(), -1);
+                std::fill(preimage, preimage + size(), -1);
+                nextUnusedNode = 1;
 
-            image[start->index()] = 0;
-            preimage[0] = start->index();
-            arcOffset[start->index()] = (offset == 0 ? 0 : 4 - offset);
+                image[start->index()] = 0;
+                preimage[0] = start->index();
+                arcOffset[start->index()] = (offset == 0 ? 0 : 4 - offset);
 
-            for (nodeImg = 0; nodeImg < size(); ++nodeImg) {
-                if (nodeImg > 0)
-                    curr += ',';
+                for (nodeImg = 0; nodeImg < size(); ++nodeImg) {
+                    if (nodeImg > 0)
+                        curr += ',';
 
-                // In the image, work out who the neighbours of nodeImg are.
-                nodeSrc = preimage[nodeImg];
+                    // In the image, work out who the neighbours of nodeImg are.
+                    nodeSrc = preimage[nodeImg];
 
-                for (arcImg = 0; arcImg < 4; ++arcImg) {
-                    adjSrc = nodes_[nodeSrc]->
-                        adj_[(arcImg + 4 - arcOffset[nodeSrc]) % 4];
-                    adjSrcNode = adjSrc.node()->index();
+                    for (arcImg = 0; arcImg < 4; ++arcImg) {
+                        adjSrc = (reflect ?
+                            nodes_[nodeSrc]->
+                                adj_[(8 - arcOffset[nodeSrc] - arcImg) % 4] :
+                            nodes_[nodeSrc]->
+                                adj_[(arcImg + 4 - arcOffset[nodeSrc]) % 4]);
+                        adjSrcNode = adjSrc.node()->index();
 
-                    // Is it a new node?
-                    if (image[adjSrcNode] < 0) {
-                        // Yes.
-                        // Map it to the next available image node, and
-                        // make the corresponding source arc map to 0.
-                        image[adjSrcNode] = nextUnusedNode++;
-                        preimage[image[adjSrcNode]] = adjSrcNode;
-                        arcOffset[adjSrcNode] =
-                            (adjSrc.arc() == 0 ? 0 : 4 - adjSrc.arc());
-                    }
+                        // Is it a new node?
+                        if (image[adjSrcNode] < 0) {
+                            // Yes.
+                            // Map it to the next available image node, and
+                            // make the corresponding source arc map to 0.
+                            image[adjSrcNode] = nextUnusedNode++;
+                            preimage[image[adjSrcNode]] = adjSrcNode;
+                            arcOffset[adjSrcNode] =
+                                (adjSrc.arc() == 0 ? 0 : 4 - adjSrc.arc());
+                        }
 
-                    curr += ('a' + image[adjSrcNode]);
+                        curr += ('a' + image[adjSrcNode]);
 
-                    if ((! best.empty()) && ! better) {
-                        if (curr[curr.length() - 1] < best[curr.length() - 1])
-                            better = true;
-                        else if (curr[curr.length() - 1] >
-                                best[curr.length() - 1]) {
-                            // There is no chance of this being canonical.
-                            goto noncanonical;
+                        if (! currBetter) {
+                            // curr == best for the characters seen so far.
+                            if (curr[curr.length() - 1] <
+                                    best[curr.length() - 1])
+                                currBetter = true;
+                            else if (curr[curr.length() - 1] >
+                                    best[curr.length() - 1]) {
+                                // There is no chance of this being canonical.
+                                goto noncanonical;
+                            }
                         }
                     }
                 }
+
+                if (best.empty() || curr < best)
+                    best.swap(curr);
+
+                noncanonical:
+                    ;
             }
 
-            if (best.empty() || curr < best)
-                best.swap(curr);
-
-            noncanonical:
-                ;
-        }
+        if (! useReflection)
+            break;
+    }
 
     delete[] image;
     delete[] preimage;
     delete[] arcOffset;
-
-    if (useReflection) {
-        ModelLinkGraph ref(*this);
-        ref.reflect();
-        std::string curr = ref.canonicalPlantri(false);
-        if (curr < best)
-            best.swap(curr);
-    }
 
     return best;
 }
