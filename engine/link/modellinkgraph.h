@@ -1107,18 +1107,6 @@ inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) {
     }
 }
 
-inline void ModelLinkGraph::reflect() {
-    for (ModelLinkGraphNode* n : nodes_)
-        std::swap(n->adj_[1], n->adj_[3]);
-
-    if (cells_) {
-        // The cellular decomposition takes linear time to reflect and
-        // linear time to rebuild.  Just rebuild it.
-        delete cells_;
-        cells_ = nullptr;
-    }
-}
-
 inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
     if (! cells_)
         const_cast<ModelLinkGraph*>(this)->cells_ =

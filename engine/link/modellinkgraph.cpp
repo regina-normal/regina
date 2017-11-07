@@ -55,6 +55,22 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
     // to copy it here.
 }
 
+void ModelLinkGraph::reflect() {
+    for (ModelLinkGraphNode* n : nodes_) {
+        std::swap(n->adj_[1], n->adj_[3]);
+        for (int i = 0; i < 4; ++i)
+            if (n->adj_[i].arc_ % 2)
+                n->adj_[i].arc_ ^= 2;
+    }
+
+    if (cells_) {
+        // The cellular decomposition takes linear time to reflect and
+        // linear time to rebuild.  Just rebuild it.
+        delete cells_;
+        cells_ = nullptr;
+    }
+}
+
 void ModelLinkGraph::writeTextShort(std::ostream& out) const {
     if (nodes_.empty())
         out << "empty model link graph";
