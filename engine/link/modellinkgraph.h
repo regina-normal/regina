@@ -593,27 +593,111 @@ class REGINA_API ModelLinkGraph :
         ModelLinkGraph* flype(const ModelLinkGraphArc& from) const;
 
         /**
-         * TODO: Document.
-         * Note that this need not be the actual output from plantri;
-         * however, it can be interpreted by fromPlantri().
+         * Outputs this graph in the ASCII text format used by \e plantri.
          *
-         * This function preserves the labelling of nodes and arcs.
+         * The software \e plantri, by Gunnar Brinkmann and Brendan McKay,
+         * can be used to enumerate 4-valent planar graphs (amongst many
+         * other things).  This routine outputs this graph in a format
+         * that mimics \e plantri's own dual ASCII format (i.e., the format
+         * that \e plantri outputs when run with the flags <tt>-adq</tt>).
          *
-         * \pre TODO: Connected, non-empty, <= 26, and dual is a simple
-         * quadrangulation.
+         * Specifically, the output will be a comma-separated sequence
+         * of alphabetical strings.  The <i>i</i>th such string will consist
+         * of four lower-case letters, encoding the endpoints of the four
+         * edges in clockwise order that leave node <i>i</i>.  The letters
+         * \c a,\c b,\c c,... represent nodes 0,1,2,... respectively.
+         * An example of such a string is:
+         *
+           \verbatim
+           bcdd,aeec,abfd,acfa,bffb,ceed
+           \endverbatim
+         *
+         * This routine is an inverse to fromPlantri(): for any graph \a g
+         * that satisfies the preconditions below,
+         * <tt>fromPlantri(g.plantri())</tt> is identical to \a g.  Likewise,
+         * for any string \a s that satisfies the preconditions for
+         * fromPlantri(), calling <tt>fromPlantri(s).plantri()</tt> will
+         * recover the original string \a s.
+         *
+         * It is important to note the preconditions below: in particular,
+         * that this graph must be dual to a \e simple quadrangulation of
+         * the sphere.  This is because the planar embeddings for more general
+         * graphs (i.e., the duals of non-simple quadrangulations) cannot
+         * always be uniquely reconstructed from their \e plantri output.
+         *
+         * \note The output of this function might not correspond to any
+         * possible output from the program \e plantri itself.  This is
+         * because \e plantri only outputs graphs with a certain canonical
+         * labelling.  In contrast, plantri() can be called on any graph
+         * that satisfies the preconditions below, and it will preserve
+         * the labels of the nodes and the order of the arcs around each node.
+         *
+         * \pre This graph is connected.
+         * \pre This graph has between 1 and 26 nodes inclusive.
+         * \pre The dual to this graph is a \e simple quadrangulation of the
+         * sphere.  In particular, the dual must not have any parallel edges.
+         * Note that any graph that fails this condition will the model
+         * graph for a link diagram that is an "obvious" connected sum.
+         *
+         * @return a \e plantri format ASCII representation of this graph.
          */
         std::string plantri() const;
 
         /**
-         * TODO: Document.
-         * Note that this need not be the actual output from plantri;
-         * however, it can be interpreted by fromPlantri().
+         * Outputs a text representation of this graph in the \e plantri
+         * ASCII format, using a canonical relabelling of nodes and arcs,
+         * and with optional compression.
          *
-         * More importantly, the output from this function is unique up
-         * to planar isomorphism.
+         * This routine is similar to plantri(), but with two
+         * significant differences:
          *
-         * \pre TODO: Connected, non-empty, <= 26, and dual is a simple
-         * quadrangulation.
+         * - This routine does not preserve the labelling of nodes and
+         *   the order of arcs around each node.  Instead it reorders the
+         *   nodes and arcs so that any two relabellings of the "same"
+         *   planar embedding will produce the same canonicalPlantri() output.
+         *   By "same" we allow for relabelling and isotopy (sliding the
+         *   graph around the sphere); if the argument \a useReflection is
+         *   \c true then we allow for reflection also.
+         *
+         * - If the argument \a tight is \c true, then this routine uses
+         *   an abbreviated output format.  The resulting compression is
+         *   only trivial (it reduces the length by roughly 40%), but
+         *   the resulting string is still human-parseable (though with a
+         *   little more effort required).  This compression will simply
+         *   remove the commas, and for each node after the first it
+         *   will suppress the destination of the first arc (since this
+         *   can be deduced from the canonical labelling).
+         *
+         * Regardless of whether \e tight is \c true or \c false, the
+         * resulting string can be parsed by fromPlantri() to
+         * reconstruct the original graph.  Note however that, due to
+         * the canonical labelling, the resulting graph might be a
+         * relabelling of the original (and might even be a reflection
+         * of the original, if \a useReflection was passed as \c true).
+         *
+         * See plantri() for further details on the ASCII format itself.
+         *
+         * The running time for this routine is quadratic in the size of
+         * the graph.
+         *
+         * \pre This graph is connected.
+         * \pre This graph has between 1 and 26 nodes inclusive.
+         * \pre The dual to this graph is a \e simple quadrangulation of the
+         * sphere.  In particular, the dual must not have any parallel edges.
+         * Note that any graph that fails this condition will the model
+         * graph for a link diagram that is an "obvious" connected sum.
+         *
+         * @param useReflection \c true if a graph and its reflection
+         * should be considered the same (i.e., produce the same canonical
+         * output), or \c false if they should be considered different.
+         * Of course, if a graph is symmetric under reflection then the
+         * graph and its reflection will produce the same canonical
+         * output regardless of this parameter.
+         * @param tight \c false if the usual \e plantri ASCII format should
+         * be used (as described by plantri() and fromPlantri()), or \c true
+         * if the abbreviated format should be used as described above.
+         * @return an optionally compressed \e plantri ASCII representation
+         * of this graph.
          */
         std::string canonicalPlantri(bool useReflection = true,
             bool tight = false) const;
@@ -647,7 +731,7 @@ class REGINA_API ModelLinkGraph :
          * with directly.
          *
          * The output from \e plantri must be in ASCII format, and must
-         * be the dual graph of a quadrangulation of the sphere.  The
+         * be the dual graph of a simple quadrangulation of the sphere.  The
          * corresponding flags that must be passed to \e plantri to
          * obtain such output are <tt>-adq</tt> (although you will
          * may wish to pass additional flags to expand or restrict
@@ -679,17 +763,32 @@ class REGINA_API ModelLinkGraph :
          * \e plantri output will contain punctuation, Regina will not
          * be able to parse it, and this function will return \c null.
          *
-         * TODO: Needs:
-         * - <= 26 nodes
-         * - Dual to a simple quadrangulation of the sphere (note:
-         * otherwise we have a sum of links)
-         * - Connected and non-empty
+         * The given string does not \e need to be come from the program
+         * \e plantri itself.  Whereas \e plantri always outputs graphs
+         * with a particular canonical labelling, this function can
+         * accept an arbitrary ordering of nodes and arcs - in particular,
+         * it can accept the string <tt>g.plantri()</tt> for any graph
+         * \a g that meets the preconditions below.  Nevertheless, the graph
+         * must still meet these preconditions, since otherwise the \e plantri
+         * format might not be enough to uniquely reconstruct the graph and
+         * its planar embedding.
+         *
+         * This routine can also interpret the "tight" format that is output
+         * by the member function canonicalPlantri() (even though such output
+         * would certainly \e not be produced by the program \e plantri).
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the graph.
          * Of course \e plantri does not output non-planar graphs, but
          * if a user constructs one by hand and passes it to this
          * routine then the resulting behaviour is undefined.
+         *
+         * \pre The graph being described is connected.
+         * \pre The graph being described has between 1 and 26 nodes inclusive.
+         * \pre The graph being described is dual to a \e simple quadrangulation
+         * of the sphere.  In particular, the dual must not have any parallel
+         * edges.  Note that any graph that fails this condition will the model
+         * graph for a link diagram that is an "obvious" connected sum.
          *
          * @param plantri a string containing the comma-separated
          * sequence of alphabetical strings output by \e plantri, as
