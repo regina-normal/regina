@@ -153,7 +153,8 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
                     // In the image, work out who the neighbours of nodeImg are.
                     nodeSrc = preimage[nodeImg];
 
-                    for (arcImg = 0; arcImg < 4; ++arcImg) {
+                    for (arcImg = (tight && nodeImg > 0 ? 1 : 0);
+                            arcImg < 4; ++arcImg) {
                         adjSrc = (reflect ?
                             nodes_[nodeSrc]->
                                 adj_[(8 - arcOffset[nodeSrc] - arcImg) % 4] :
@@ -207,15 +208,14 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
 }
 
 ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
-    bool tight = (plantri.size() == 4 ||
-        (plantri.size() > 4 && plantri[4] != ','));
+    bool tight = (plantri.size() > 4 && plantri[4] != ',');
 
     // Extract the graph size and run some basic sanity checks.
     size_t n;
     if (tight) {
-        if (plantri.size() % 4 != 0)
+        if (plantri.size() % 3 != 1)
             return 0;
-        n = plantri.size() / 4;
+        n = (plantri.size() - 1) / 3;
     } else {
         if (plantri.size() % 5 != 4)
             return 0;
@@ -239,12 +239,27 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
         g->nodes_.push_back(new ModelLinkGraphNode());
 
     // First set up adj_[..].node_.
-    for (i = 0; i < n; ++i)
-        for (j = 0; j < 4; ++j) {
-            g->nodes_[i]->adj_[j].node_ =
-                g->nodes_[plantri[(tight ? 4 : 5) * i + j] - 'a'];
-            g->nodes_[i]->adj_[j].arc_ = -1;
-        }
+    if (tight) {
+        for (i = 0; i < n; ++i)
+            for (j = (i == 0 ? 0 : 1); j < 4; ++j) {
+                g->nodes_[i]->adj_[j].node_ =
+                    g->nodes_[plantri[(i == 0 ? j : 3 * i + j)] - 'a'];
+                if (! g->nodes_[i]->adj_[j].node_->adj_[0].node_) {
+                    // This is the first time we've seen this adjacent node.
+                    // Make the link in the reverse direction also.
+                    g->nodes_[i]->adj_[j].node_->adj_[0].node_ = g->nodes_[i];
+                    g->nodes_[i]->adj_[j].node_->adj_[0].arc_ = -1;
+                }
+                g->nodes_[i]->adj_[j].arc_ = -1;
+            }
+    } else {
+        for (i = 0; i < n; ++i)
+            for (j = 0; j < 4; ++j) {
+                g->nodes_[i]->adj_[j].node_ =
+                    g->nodes_[plantri[5 * i + j] - 'a'];
+                g->nodes_[i]->adj_[j].arc_ = -1;
+            }
+    }
 
     // Now set up adj_[..].arc_.
     // For each pair of adjacent nodes, we guarantee to set up all edges

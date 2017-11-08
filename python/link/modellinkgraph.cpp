@@ -66,7 +66,7 @@ namespace {
     }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_canonicalPlantri,
-        ModelLinkGraph::canonicalPlantri, 0, 1);
+        ModelLinkGraph::canonicalPlantri, 0, 2);
 }
 
 void addModelLinkGraph() {
