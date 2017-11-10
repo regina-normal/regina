@@ -664,9 +664,9 @@ class REGINA_API ModelLinkGraph :
          *   only trivial (it reduces the length by roughly 40%), but
          *   the resulting string is still human-parseable (though with a
          *   little more effort required).  This compression will simply
-         *   remove the commas, and for each node after the first it
-         *   will suppress the destination of the first arc (since this
-         *   can be deduced from the canonical labelling).
+         *   remove the commas, and for each node it will suppress the
+         *   destination of the first arc (since this can be deduced from
+         *   the canonical labelling).
          *
          * Regardless of whether \e tight is \c true or \c false, the
          * resulting string can be parsed by fromPlantri() to

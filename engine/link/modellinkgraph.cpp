@@ -173,6 +173,13 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
                                 (adjSrc.arc() == 0 ? 0 : 4 - adjSrc.arc());
                         }
 
+                        if (tight && arcImg == 0) {
+                            // For node 0, arc 0, we did need to sort
+                            // out images and preimages above, but we do not
+                            // need to write the corresponding output.
+                            continue;
+                        }
+
                         curr += ('a' + image[adjSrcNode]);
 
                         if (! currBetter) {
@@ -208,14 +215,15 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
 }
 
 ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
-    bool tight = (plantri.size() > 4 && plantri[4] != ',');
+    bool tight = plantri.size() == 3 ||
+        (plantri.size() > 4 && plantri[4] != ',');
 
     // Extract the graph size and run some basic sanity checks.
     size_t n;
     if (tight) {
-        if (plantri.size() % 3 != 1)
+        if (plantri.size() % 3 != 0)
             return 0;
-        n = (plantri.size() - 1) / 3;
+        n = plantri.size() / 3;
     } else {
         if (plantri.size() % 5 != 4)
             return 0;
@@ -240,10 +248,24 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
 
     // First set up adj_[..].node_.
     if (tight) {
+        // Node 0, arc 0 is a special case.
+        if (n == 1) {
+            // (0, 0) links to node 0 - there is no other option.
+            g->nodes_[0]->adj_[0].node_ = g->nodes_[0];
+        } else {
+            // The dual quadrangulation is simple, and this means we
+            // cannot have loops for n > 1.  Therefore (0, 0) links to node 1.
+            // Since node 1 is new, make the link in both directions.
+            g->nodes_[0]->adj_[0].node_ = g->nodes_[1];
+            g->nodes_[1]->adj_[0].node_ = g->nodes_[0];
+            g->nodes_[1]->adj_[0].arc_ = -1;
+        }
+        g->nodes_[0]->adj_[0].arc_ = -1;
+
         for (i = 0; i < n; ++i)
-            for (j = (i == 0 ? 0 : 1); j < 4; ++j) {
+            for (j = 1; j < 4; ++j) {
                 g->nodes_[i]->adj_[j].node_ =
-                    g->nodes_[plantri[(i == 0 ? j : 3 * i + j)] - 'a'];
+                    g->nodes_[plantri[3 * i + j - 1] - 'a'];
                 if (! g->nodes_[i]->adj_[j].node_->adj_[0].node_) {
                     // This is the first time we've seen this adjacent node.
                     // Make the link in the reverse direction also.
