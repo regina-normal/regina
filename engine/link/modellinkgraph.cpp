@@ -392,7 +392,11 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                 // We will match up (0,1,2,3) <-> (3,2,1,0).
                 // Note that this scheme also works if src == dest.
                 for (k = 0; k < 4; ++k) {
-                    if (dest->adj_[k].node_ != src || dest->adj_[k].arc_ >= 0) {
+                    if (dest->adj_[3 - k].node_ != src) {
+                        delete g;
+                        return 0;
+                    }
+                    if (dest != src && dest->adj_[3 - k].arc_ >= 0) {
                         delete g;
                         return 0;
                     }
