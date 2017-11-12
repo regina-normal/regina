@@ -69,7 +69,7 @@ bool Link::intelligentSimplify() {
             while (true) {
                 // Calculate the list of available type III moves.
                 type3Available.clear();
-                for (Crossing* c : crossings_)
+                for (Crossing* c : use->crossings_)
                     for (side = 0; side < 2; ++side)
                         if (use->r3(c, side, true, false))
                             type3Available.push_back(std::make_pair(c, side));
