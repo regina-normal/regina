@@ -316,6 +316,7 @@ class REGINA_API StrandRef {
         operator bool() const;
 
     friend class Link;
+    friend class ModelLinkGraph;
 };
 
 /**
@@ -520,6 +521,7 @@ class REGINA_API Crossing : public MarkedElement,
         Crossing(int sign);
 
     friend class Link;
+    friend class ModelLinkGraph;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkConnectionsReader;
 };
@@ -2299,6 +2301,7 @@ class REGINA_API Link : public Packet {
          */
         Laurent<Integer>* bracketTreewidth() const;
 
+    friend class ModelLinkGraph;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
 };

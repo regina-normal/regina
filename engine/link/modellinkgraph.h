@@ -51,6 +51,7 @@ namespace regina {
  * @{
  */
 
+class Link;
 class ModelLinkGraph;
 class ModelLinkGraphArc;
 class ModelLinkGraphCells;
@@ -453,6 +454,23 @@ class ModelLinkGraphNode : public MarkedElement,
  */
 class REGINA_API ModelLinkGraph :
         public Output<ModelLinkGraph>, public boost::noncopyable {
+    public:
+        /**
+         * A routine that can do arbitrary processing upon a knot or link.
+         * Such routines are used to process links that are found when
+         * running generateMinimalLinks().
+         *
+         * The first parameter passed should be a link, which \e must be
+         * deallocated by this routine.  The second parameter may
+         * contain arbitrary data as passed to generateMinimalLinks().
+         *
+         * Note that the first parameter might be \c null to signal that
+         * link generation has finished.
+         *
+         * \apinotfinal
+         */
+        typedef void (*Use)(Link*, void*);
+
     private:
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
@@ -591,6 +609,20 @@ class REGINA_API ModelLinkGraph :
          * TODO: Document.
          */
         ModelLinkGraph* flype(const ModelLinkGraphArc& from) const;
+
+        /**
+         * TODO: Document.  Only aims for minimal, ignores reflections.
+         *
+         * Node n will become crossing n.
+         *
+         * Arc (0,0) will always be forwards, and crossing 0 will always
+         * be positive.
+         *
+         * TODO: PRE: Knot, not link.
+         *
+         * \apinotfinal
+         */
+        void generateMinimalLinks(Use use, void* useArgs = 0) const;
 
         /**
          * Outputs this graph in the ASCII text format used by \e plantri.
