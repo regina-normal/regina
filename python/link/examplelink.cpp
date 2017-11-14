@@ -61,6 +61,8 @@ void addExampleLink() {
             return_value_policy<to_held_type<> >())
         .def("borromean", &ExampleLink::borromean,
             return_value_policy<to_held_type<> >())
+        .def("kinoshitaTerasaka", &ExampleLink::kinoshitaTerasaka,
+            return_value_policy<to_held_type<> >())
         .def("gst", &ExampleLink::gst,
             return_value_policy<to_held_type<> >())
         .def(regina::python::no_eq_operators())
@@ -73,6 +75,7 @@ void addExampleLink() {
         .staticmethod("hopf")
         .staticmethod("whitehead")
         .staticmethod("borromean")
+        .staticmethod("kinoshitaTerasaka")
         .staticmethod("gst")
     ;
 }

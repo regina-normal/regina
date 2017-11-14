@@ -144,6 +144,18 @@ class REGINA_API ExampleLink {
         static Link* borromean();
 
         /**
+         * Returns one of the two Kinoshita-Terasaka mutant knots.
+         *
+         * These are the 12-crossing diagrams presented in Figure 2.32 of
+         * "The Knot Book", by Colin C. Adams, W H Freeman and Co., 1994.
+         *
+         * @param which either 0 or 1, to indicate whether to return the
+         * first or second diagram respectively.
+         * @return the requested member of the Kinoshita-Terasaka mutant pair.
+         */
+        static Link* kinoshitaTerasaka(int which);
+
+        /**
          * Returns a 48-crossing potential counterexample to the
          * slice-ribbon conjecture, as described by Gompf, Scharlemann
          * and Thompson.

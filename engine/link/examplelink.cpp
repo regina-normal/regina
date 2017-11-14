@@ -86,6 +86,29 @@ Link* ExampleLink::borromean() {
     return ans;
 }
 
+Link* ExampleLink::kinoshitaTerasaka(int which) {
+    Link* ans;
+    switch (which) {
+        case 0:
+            ans = Link::fromData(
+                { -1, -1, -1, -1, +1, +1, +1, +1, +1, -1, -1, -1 },
+                { -1, 2, 3, -4, 5, -6, -2, 1, 7, -5, 6, -7,
+                  8, -9, 4, -3, -10, 11, 9, -8, -12, 10, -11, 12 });
+            ans->setLabel("Kinoshita-Terasaka mutant #1");
+            break;
+        case 1:
+            ans = Link::fromData(
+                { -1, -1, -1, -1, +1, +1, +1, -1, -1, -1, +1, +1 },
+                { -1, 2, 3, -4, 5, -6, -2, 1, 7, -5, 6, -7,
+                  -8, 9, -10, 8, 11, -12, -9, 10, 4, -3, 12, -11 });
+            ans->setLabel("Kinoshita-Terasaka mutant #2");
+            break;
+        default:
+            ans = nullptr;
+    }
+    return ans;
+}
+
 Link* ExampleLink::gordian() {
     Link* ans = Link::fromData(
         { +1, -1, +1, +1, -1, +1, +1, -1, -1, +1, +1, -1, +1, +1, +1,
