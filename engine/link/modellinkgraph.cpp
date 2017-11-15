@@ -38,7 +38,7 @@
 namespace regina {
 
 namespace {
-    int upperOutArc[2 /* 0,1 for -,+ */][13 /* dir */] = {
+    const int upperOutArc[2 /* 0,1 for -,+ */][13 /* dir */] = {
         { -1, -1, -1, 0, -1, -1, 1, -1, -1, 3, -1, -1, 2 },
         { -1, -1, -1, 1, -1, -1, 2, -1, -1, 0, -1, -1, 3 }
     };
