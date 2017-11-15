@@ -42,7 +42,7 @@
 namespace regina {
 namespace syntax {
 
-std::string nullString;
+const std::string nullString;
 
 Theme::Theme()
 {

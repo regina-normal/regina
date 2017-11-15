@@ -47,10 +47,10 @@ namespace {
     /**
      * Some small exceptional fibres that we will use for comparisons.
      */
-    SFSFibre two(2, 1);
-    SFSFibre three(3, 1);
-    SFSFibre threeB(3, 2);
-    SFSFibre four(4, 1);
+    const SFSFibre two(2, 1);
+    const SFSFibre three(3, 1);
+    const SFSFibre threeB(3, 2);
+    const SFSFibre four(4, 1);
 }
 
 typedef std::list<SFSFibre>::iterator FibreIterator;

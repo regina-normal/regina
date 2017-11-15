@@ -56,7 +56,7 @@
 namespace regina {
 namespace syntax {
 
-KeywordList nullList;
+const KeywordList nullList;
 
 DefinitionData::DefinitionData() :
     repo(nullptr),
