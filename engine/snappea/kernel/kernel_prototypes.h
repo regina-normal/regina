@@ -81,7 +81,7 @@ extern void close_cusps(Triangulation *manifold, Boolean fill_cusp[]);
 /*                                                                      */
 /************************************************************************/
 
-extern Complex  Zero,
+extern const Complex  Zero,
                 One,
                 Two,
                 Four,
@@ -651,9 +651,9 @@ extern void recognize_embedded_surface( Triangulation   *manifold,
 /*                                                                      */
 /************************************************************************/
 
-extern O31Matrix    O31_identity;
+extern const O31Matrix    O31_identity;
 
-extern void         o31_copy(O31Matrix dest, O31Matrix source);
+extern void         o31_copy(O31Matrix dest, const O31Matrix source);
 extern void         o31_invert(O31Matrix m, O31Matrix m_inverse);
 extern FuncResult   gl4R_invert(GL4RMatrix m, GL4RMatrix m_inverse);
 extern void         o31_product(O31Matrix a, O31Matrix b, O31Matrix product);
