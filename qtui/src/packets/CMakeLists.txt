@@ -10,7 +10,6 @@ SET ( FILES
   filtercreator
   filterprop
   gaprunner
-  generictriui
   groupwidget
   hypercompatui
   hypercoordinateui
@@ -57,4 +56,15 @@ SET ( FILES
 FOREACH( FILE ${FILES} )
   SET( SOURCES ${SOURCES} packets/${FILE})
 ENDFOREACH(FILE)
+
+SET ( FILES
+  generictriui
+  )
+
+IF(HIGHDIM)
+  FOREACH( FILE ${FILES} )
+    SET( SOURCES ${SOURCES} packets/${FILE})
+  ENDFOREACH(FILE)
+ENDIF(HIGHDIM)
+
 SET( SOURCES ${SOURCES} PARENT_SCOPE)

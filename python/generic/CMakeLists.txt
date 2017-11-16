@@ -1,5 +1,15 @@
 # Files to compile
 SET ( FILES
+  face
+  facehelper
+  )
+
+# Prepend folder name
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} generic/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
+
+SET ( FILES
   boundarycomponent5
   boundarycomponent6
   boundarycomponent7
@@ -33,7 +43,6 @@ SET ( FILES
   example13
   example14
   example15
-  face
   face5
   face6
   face7
@@ -45,7 +54,6 @@ SET ( FILES
   face13
   face14
   face15
-  facehelper
   facetpairing2
   facetpairing4
   facetpairing5
@@ -96,10 +104,12 @@ SET ( FILES
   triangulation15
   )
 
-# Prepend folder name
-FOREACH ( SOURCE_FILE ${FILES} )
-  SET ( SOURCES ${SOURCES} generic/${SOURCE_FILE})
-ENDFOREACH(SOURCE_FILE)
+IF(HIGHDIM)
+  # Prepend folder name
+  FOREACH ( SOURCE_FILE ${FILES} )
+    SET ( SOURCES ${SOURCES} generic/${SOURCE_FILE})
+  ENDFOREACH(SOURCE_FILE)
+ENDIF(HIGHDIM)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)

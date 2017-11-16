@@ -31,6 +31,11 @@ IF(NOT CMAKE_BUILD_TYPE)
   FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
+SET(HIGHDIM OFF)
+IF(HIGHDIM)
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHIGHDIM")
+ENDIF(HIGHDIM)
+
 # Every year I swear I will drop windows support, and this year is no different.
 # The windows build (as of November 2015) crashes in the test suite with -O3.
 # It looks as though this might be a compiler problem: the ipa-cp-clone
