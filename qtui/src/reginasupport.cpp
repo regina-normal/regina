@@ -40,8 +40,8 @@
 #include <QPainter>
 
 namespace {
-    int iconSizes[] = { 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
-    int iconSizesRaw[] = { 16, 22, 32, 44, 48, 64, 96, 128, 256, 0 };
+    const int iconSizes[] = { 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
+    const int iconSizesRaw[] = { 16, 22, 32, 44, 48, 64, 96, 128, 256, 0 };
         /**< The union of (iconSizes) and (2 * iconSizes). */
 }
 

@@ -54,7 +54,7 @@
 #include <QUrl>
 
 namespace {
-    QString INACTIVE("## INACTIVE ##");
+    const QString INACTIVE("## INACTIVE ##");
 }
 
 ReginaPrefSet ReginaPrefSet::instance_;
