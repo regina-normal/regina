@@ -63,3 +63,25 @@
  #include <iostream>
  #include <assert.h>
  
+--- bottom.cpp
++++ bottom.cpp
+@@ -52,7 +52,7 @@ class SCIP;
+ namespace libnormaliz {
+ using namespace std;
+ 
+-long ScipBound = 1000000;
++const long ScipBound = 1000000;
+ 
+ template<typename Integer>
+ vector<Integer> best_point(const list<vector<Integer> >& bottom_candidates, const Matrix<Integer>& gens, const Matrix<Integer>& SuppHyp, const vector<Integer>& grading);
+--- bottom.h
++++ bottom.h
+@@ -33,7 +33,7 @@
+ namespace libnormaliz {
+ using namespace std;
+ 
+-extern long ScipBound;
++extern const long ScipBound;
+ 
+ template<typename Integer>
+ void bottom_points(list< vector<Integer> >& new_points, Matrix<Integer> gens,const vector<Integer>& grading, long app_level, long recursion_depth);

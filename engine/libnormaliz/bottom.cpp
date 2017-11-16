@@ -52,7 +52,7 @@ class SCIP;
 namespace libnormaliz {
 using namespace std;
 
-long ScipBound = 1000000;
+const long ScipBound = 1000000;
 
 template<typename Integer>
 vector<Integer> best_point(const list<vector<Integer> >& bottom_candidates, const Matrix<Integer>& gens, const Matrix<Integer>& SuppHyp, const vector<Integer>& grading);
