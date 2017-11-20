@@ -420,10 +420,10 @@ void LinkMoveDialog::fill() {
                 options1up.push_back(
                     R1UpArg(link->crossing(i)->strand(strand), side, -1));
             }
-    if (link->r1(regina::StrandRef(nullptr, 0), 0, 1, true, false)) {
+    if (link->r1(regina::StrandRef(), 0, 1, true, false)) {
         // We have unknot component(s) that we can use for R1 twists also.
-        options1up.push_back(R1UpArg(regina::StrandRef(nullptr, 0), 0, 1));
-        options1up.push_back(R1UpArg(regina::StrandRef(nullptr, 0), 0, -1));
+        options1up.push_back(R1UpArg(regina::StrandRef(), 0, 1));
+        options1up.push_back(R1UpArg(regina::StrandRef(), 0, -1));
     }
     for (const auto& o : options1up)
         box1up->addItem(o.display());
@@ -457,11 +457,11 @@ void LinkMoveDialog::fill() {
             }
         }
     }
-    if (link->countComponents() > 1 && link->r1(regina::StrandRef(nullptr, 0), 0, 1, true, false)) {
+    if (link->countComponents() > 1 && link->r1(regina::StrandRef(), 0, 1, true, false)) {
         // We have unknot component(s), as identified by the R1 test, and we
         // can use R2 on this with any *different* component.
-        options2upOver.push_back(R2UpArg(regina::StrandRef(nullptr, 0), 0));
-        options2upOver.push_back(R2UpArg(regina::StrandRef(nullptr, 0), 1));
+        options2upOver.push_back(R2UpArg(regina::StrandRef(), 0));
+        options2upOver.push_back(R2UpArg(regina::StrandRef(), 1));
     }
     for (const auto& o : options2upOver)
         box2upOver->addItem(o.display(1));
@@ -519,9 +519,9 @@ void LinkMoveDialog::changedR2UpOver(int) {
                     options2upUnder.push_back(R2UpArg(link->crossing(i)->strand(strand), side));
     for (side = 0; side < 2; ++side)
         if (link->r2(over.strand, over.side,
-                regina::StrandRef(nullptr, 0), side,
+                regina::StrandRef(), side,
                 true, false))
-            options2upUnder.push_back(R2UpArg(regina::StrandRef(nullptr, 0), side));
+            options2upUnder.push_back(R2UpArg(regina::StrandRef(), side));
     for (const auto& o : options2upUnder)
         box2upUnder->addItem(o.display(0));
 }
