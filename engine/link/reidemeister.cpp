@@ -647,7 +647,7 @@ bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
             return false;
         if (s[0].crossing() == s[1].crossing() ||
                 s[1].crossing() == s[2].crossing() ||
-                s[1].crossing() == s[2].crossing())
+                s[0].crossing() == s[2].crossing())
             return false;
         if (s[0].strand() == s[1].strand() && s[1].strand() == s[2].strand())
             return false;
