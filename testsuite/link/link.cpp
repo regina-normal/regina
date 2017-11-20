@@ -68,6 +68,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(r3Count);
     CPPUNIT_TEST(r123Perform);
     CPPUNIT_TEST(resolve);
+    CPPUNIT_TEST(knotSig);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1672,6 +1673,125 @@ class LinkTest : public CppUnit::TestFixture {
                 { 3, -4, -6, 5, -1, 2, -5, 6, -2, 1 }, { 4, -3 });
             l->setLabel("Figure eight with link (d)");
             verifyResolve(l, 2, "+++-- ( ^2 _2 _4 ^3 _0 ^1 _3 ^4 _1 ^0 )");
+            delete l;
+        }
+
+        void verifyKnotSig(const Link* l, bool reflect, bool reverse) {
+            std::string sig = l->knotSig(reflect, reverse);
+            if (sig.empty()) {
+                std::ostringstream msg;
+                msg << l->label() << ": empty knotSig.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            {
+                Link alt(*l);
+                alt.rotate();
+                std::string altSig = alt.knotSig(reflect, reverse);
+                if (altSig != sig) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": rotation gives different knotSig.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (reflect) {
+                Link alt(*l);
+                alt.reflect();
+                std::string altSig = alt.knotSig(reflect, reverse);
+                if (altSig != sig) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": reflection gives different knotSig.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (reverse) {
+                Link alt(*l);
+                alt.reverse();
+                std::string altSig = alt.knotSig(reflect, reverse);
+                if (altSig != sig) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": reversal gives different knotSig.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            Link* recon = Link::fromKnotSig(sig);
+            if (! recon) {
+                std::ostringstream msg;
+                msg << l->label() << ": cannot reconstruct from knotSig.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->size() != l->size()) {
+                std::ostringstream msg;
+                msg << l->label() << ": knotSig reconstruction has "
+                    "different size.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->countComponents() != l->countComponents()) {
+                std::ostringstream msg;
+                msg << l->label() << ": knotSig reconstruction has "
+                    "different number of components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->knotSig(reflect, reverse) != sig) {
+                std::ostringstream msg;
+                msg << l->label() << ": knotSig reconstruction has "
+                    "different knotSig.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (l->size() <= 12 && ! reflect) {
+                if (recon->jones() != l->jones()) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": knotSig reconstruction has "
+                        "different Jones polynomial.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            delete recon;
+        }
+
+        void verifyKnotSig(const Link* l) {
+            verifyKnotSig(l, true, true);
+            verifyKnotSig(l, true, false);
+            verifyKnotSig(l, false, true);
+            verifyKnotSig(l, false, false);
+        }
+
+        void verifyKnotSig(const Link* l, bool reflect, bool reverse,
+                const char* expect) {
+            std::string sig = l->knotSig(reflect, reverse);
+            if (sig != expect) {
+                std::ostringstream msg;
+                msg << l->label() << ": knotSig("
+                    << (reflect ? 't' : 'f') << ", "
+                    << (reverse ? 't' : 'f')
+                    << ") is " << sig << ", not " << expect << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void knotSig() {
+            verifyKnotSig(unknot0);
+            verifyKnotSig(unknot1);
+            verifyKnotSig(unknot3);
+            verifyKnotSig(unknotGordian);
+            verifyKnotSig(trefoilLeft);
+            verifyKnotSig(trefoilRight);
+            verifyKnotSig(figureEight);
+
+            verifyKnotSig(trefoilRight, true, true, "dabcabcv-");
+            verifyKnotSig(trefoilRight, false, true, "dabcabcv-");
+            verifyKnotSig(trefoilLeft, true, true, "dabcabcv-");
+            verifyKnotSig(trefoilLeft, false, true, "dabcabcva");
+
+            // A link where all four boolean options give different sigs.
+            Link* l = Link::fromOrientedGauss(
+                "-<6 +>3 -<5 +>2 -<4 -<1 +>1 +>5 -<3 +>6 -<2 +>4");
+            l->setLabel("Antisymmetric knot");
+            verifyKnotSig(l, true,  true,  "gaabcdefbcfedPQ--");
+            verifyKnotSig(l, true,  false, "gaabcdefdcbefPQ--");
+            verifyKnotSig(l, false, true,  "gaabcdefbcfedPQaa");
+            verifyKnotSig(l, false, false, "gaabcdefdcbefPQaa");
             delete l;
         }
 };

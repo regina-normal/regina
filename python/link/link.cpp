@@ -74,6 +74,7 @@ namespace {
         Link::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_jones, Link::jones, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_bracket, Link::bracket, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_knotSig, Link::knotSig, 0, 2);
 
     Link* fromOrientedGauss_list(boost::python::list terms) {
         long len = boost::python::len(terms);
@@ -150,6 +151,8 @@ void addLink() {
             return_value_policy<to_held_type<>>())
         .def("fromJenkins", fromJenkins_str,
             return_value_policy<to_held_type<>>())
+        .def("fromKnotSig", &Link::fromKnotSig,
+            return_value_policy<to_held_type<>>())
         .def("swapContents", &Link::swapContents)
         .def("reflect", &Link::reflect)
         .def("rotate", &Link::rotate)
@@ -178,6 +181,7 @@ void addLink() {
         .def("brief", &Link::brief)
         .def("orientedGauss", orientedGauss_str)
         .def("jenkins", jenkins_str)
+        .def("knotSig", &Link::knotSig, OL_knotSig())
         .def("dumpConstruction", &Link::dumpConstruction)
         .def("r1", r1a, OL_r1a())
         .def("r1", r1b, OL_r1b())
@@ -191,6 +195,7 @@ void addLink() {
              OL_simplifyToLocalMinimum())
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
+        .staticmethod("fromKnotSig")
     ;
 
     s.attr("typeID") = regina::PACKET_LINK;
