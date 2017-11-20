@@ -164,7 +164,6 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
     delete[] preimage;
     delete[] image;
     delete[] curr;
-    delete[] best;
 
     // Text: n c_1 c_2 ... c_2n [packed strand bits] [packed sign bits]
     std::string ans;
@@ -207,6 +206,7 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
         ans += regina::detail::IsoSigHelper::SCHAR(write);
     }
 
+    delete[] best;
     return ans;
 }
 
