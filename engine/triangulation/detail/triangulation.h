@@ -1668,7 +1668,7 @@ class TriangulationBase :
          * for different dimensions \a p and \a q.
          *
          * @param sig the isomorphism signature of the triangulation to
-         * construct.  Note that isomorphism signature are case-sensitive
+         * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * @return a newly allocated triangulation if the reconstruction was
          * successful, or \c null if the given string was not a valid
