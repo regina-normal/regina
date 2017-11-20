@@ -39,6 +39,7 @@
 #define __LINK_H
 #endif
 
+#include <functional>
 #include <vector>
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
@@ -46,6 +47,7 @@
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "packet/packet.h"
+#include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
@@ -1371,6 +1373,11 @@ class REGINA_API Link : public Packet {
          * Currently this routine uses simplifyToLocalMinimum() in
          * combination with random type III Reidemeister moves.
          *
+         * Although intelligentSimplify() often works well, it can sometimes
+         * get stuck.  If this link is a knot (i.e., it has precisely one
+         * component), then in such cases you can try the more powerful but
+         * (much) slower simplifyExhaustive() instead.
+         *
          * \warning Running this routine multiple times upon the same link may
          * return different results, since the implementation makes random
          * decisions.  More broadly, the implementation of this routine
@@ -1383,8 +1390,11 @@ class REGINA_API Link : public Packet {
          * monotonically to some local minimum number of crossings.
          *
          * End users will probably not want to call this routine.
-         * You should call intelligentSimplify() if you want a fast means of
-         * simplifying a link.
+         * You should call intelligentSimplify() if you want a fast (and
+         * usually effective) means of simplifying a link.  If this link is
+         * a knot (i.e., it has precisely one component), then you can also
+         * call simplifyExhaustive() if you are still stuck and you want to
+         * try a slower but more powerful method instead.
          *
          * Type III Reidemeister moves (which do not reduce the number of
          * crossings) are not used in this routine.  Such moves do however
@@ -1403,6 +1413,185 @@ class REGINA_API Link : public Packet {
          * that it is capable of performing such a change.
          */
         bool simplifyToLocalMinimum(bool perform = true);
+
+        /**
+         * Attempts to simplify this knot diagram using a slow but
+         * exhaustive search through the Reidemeister graph.  This routine is
+         * more powerful but much slower than intelligentSimplify().
+         *
+         * This routine is only available for knots at the present time.
+         * If this link has multiple (or zero) components, then this
+         * routine will return immediately (as described below).
+         *
+         * This routine will iterate through all knot diagrams that can be
+         * reached from this via Reidemeister moves, without ever exceeding
+         * \a height additional crossings beyond the original number.
+         *
+         * If at any stage it finds a diagram with \e fewer
+         * crossings than the original, then this routine will call
+         * intelligentSimplify() to simplify the diagram further if
+         * possible and will then return \c true.  If it cannot find a
+         * diagram with fewer crossings then it will leave this
+         * knot diagram unchanged and return \c false.
+         *
+         * This routine can be very slow and very memory-intensive: the
+         * number of knot diagrams it visits may be exponential in
+         * the number of crossings, and it records every diagram
+         * that it visits (so as to avoid revisiting the same diagram
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if this fails then try increasing \a height one at a time until
+         * either you find a simplification or the routine becomes
+         * too expensive to run.
+         *
+         * If you want a \e fast simplification routine, you should call
+         * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
+         * is that, for very stubborn knot diagrams where intelligentSimplify()
+         * finds itself stuck at a local minimum, simplifyExhaustive() is able
+         * to "climb out" of such wells.
+         *
+         * If a progress tracker is passed, then the exhaustive simplification
+         * will take place in a new thread and this routine will return
+         * immediately.  In this case, you will need to use some other
+         * means to determine whether the knot diagram was eventually
+         * simplified (e.g., by examining size() after the tracker
+         * indicates that the operation has finished).
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
+         * processing has finished (i.e., either the diagram was
+         * simplified or the search was exhausted).
+         *
+         * If this routine is unable to simplify the knot diagram, then
+         * this knot diagram will not be changed.
+         *
+         * If \a height is negative, or if this link does not have
+         * precisely one component, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
+         *
+         * @param height the maximum number of \e additional crossings to
+         * allow, beyond the number of crossings originally present in this
+         * diagram.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if and only if this diagram was successfully simplified to
+         * fewer crossings.
+         */
+        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+            ProgressTrackerOpen* tracker = 0);
+
+        /**
+         * Explores all knot diagrams that can be reached from this via
+         * Reidemeister moves, without exceeding a given number of additional
+         * crossings.
+         *
+         * This routine is only available for knots at the present time.
+         * If this link has multiple (or zero) components, then this
+         * routine will return immediately (as described below).
+         *
+         * This routine iterates through all knot diagrams that can be reached
+         * from this via Reidemeister moves, without ever exceeding
+         * \a height additional crossings beyond the original number.
+         *
+         * For every such knot diagram (including this starting
+         * diagram), this routine will call \a action (which must
+         * be a function or some other callable object).
+         *
+         * - \a action must take at least one argument.  The first argument
+         *   will be of type Link&, and will reference the
+         *   knot diagram that has been found.  If there are any
+         *   additional arguments supplied in the list \a args, then
+         *   these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return a boolean.  If \a action ever returns
+         *   \c true, then this indicates that processing should stop
+         *   immediately (i.e., no more knot diagrams will be processed).
+         *
+         * - \a action may, if it chooses, make changes to this knot
+         *   (i.e., the original knot upon which rewrite() was called).
+         *   This will not affect the search: all knot diagrams
+         *   that this routine visits will be obtained via Reidemeister moves
+         *   from the original knot diagram, before any subsequent changes
+         *   (if any) were made.
+         *
+         * - \a action may, if it chooses, make changes to the knot
+         *   that is passed in its argument (though it must not delete it).
+         *   This will likewise not affect the search, since the knot diagram
+         *   that is passed to \a action will be destroyed immediately after
+         *   \a action is called.
+         *
+         * - \a action will only be called once for each knot diagram
+         *   (including this starting diagram).  In other words, no
+         *   knot diagram will be revisited a second time in a single call
+         *   to rewrite().
+         *
+         * This routine can be very slow and very memory-intensive, since the
+         * number of knot diagrams it visits may be exponential in
+         * the number of crossings, and it records every knot diagram
+         * that it visits (so as to avoid revisiting the same diagram
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if necessary try increasing \a height one at a time until
+         * this routine becomes too expensive to run.
+         *
+         * If a progress tracker is passed, then the exploration of
+         * knot diagrams will take place in a new thread and this
+         * routine will return immediately.
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
+         * processing has finished (i.e., either \a action returned \c true,
+         * or the search was exhausted).  All calls to \a action will be
+         * protected by a mutex (i.e., different threads will never be
+         * calling \a action at the same time).
+         *
+         * If \a height is negative, or if this link does not have
+         * precisely one component, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap them in std::ref or
+         * std::cref.
+         *
+         * \apinotfinal
+         *
+         * \ifacespython Not present.
+         *
+         * @param height the maximum number of \e additional crossings to
+         * allow, beyond the number of crossings originally present in this
+         * knot diagram.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @param action a function (or other callable object) to call
+         * upon each knot diagram that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial knot argument.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if some call to \a action returned \c true (thereby terminating
+         * the search early), or \c false if the search ran to completion.
+         */
+        template <typename Action, typename... Args>
+        bool rewrite(int height, unsigned nThreads,
+            ProgressTrackerOpen* tracker,
+            Action&& action, Args&&... args) const;
 
         /*@}*/
         /**
@@ -2375,6 +2564,21 @@ class REGINA_API Link : public Packet {
          */
         Laurent<Integer>* bracketTreewidth() const;
 
+        /**
+         * A non-templated version of rewrite().
+         *
+         * This is identical to rewrite(), except that the action
+         * function is given in the form of a std::function.
+         * This routine contains the bulk of the implementation of
+         * rewrite().
+         *
+         * Because this routine is not templated, its implementation
+         * can be kept out of the main headers.
+         */
+        bool rewriteInternal(int height, unsigned nThreads,
+            ProgressTrackerOpen* tracker,
+            const std::function<bool(Link&)>& action) const;
+
     friend class ModelLinkGraph;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
@@ -2841,6 +3045,13 @@ inline StrandRef Link::translate(const StrandRef& other) const {
     return (other.crossing() ?
         crossings_[other.crossing()->index()]->strand(other.strand()) :
         StrandRef(0, other.strand()));
+}
+
+template <typename Action, typename... Args>
+inline bool Link::rewrite(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    return rewriteInternal(height, nThreads, tracker,
+        std::bind(action, std::placeholders::_1, args...));
 }
 
 // Inline functions for CrossingIterator

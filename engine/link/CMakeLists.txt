@@ -12,6 +12,7 @@ SET ( FILES
   link
   modellinkgraph
   reidemeister
+  rewrite
   sig
   simplify
   xmllinkreader

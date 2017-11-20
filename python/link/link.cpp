@@ -75,6 +75,8 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_jones, Link::jones, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_bracket, Link::bracket, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_knotSig, Link::knotSig, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
+        Link::simplifyExhaustive, 0, 3);
 
     Link* fromOrientedGauss_list(boost::python::list terms) {
         long len = boost::python::len(terms);
@@ -194,6 +196,8 @@ void addLink() {
         .def("intelligentSimplify", &Link::intelligentSimplify)
         .def("simplifyToLocalMinimum", &Link::simplifyToLocalMinimum,
              OL_simplifyToLocalMinimum())
+        .def("simplifyExhaustive", &Link::simplifyExhaustive,
+             OL_simplifyExhaustive())
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
         .staticmethod("fromKnotSig")
