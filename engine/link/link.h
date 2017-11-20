@@ -2795,7 +2795,7 @@ class REGINA_API ArcIterator {
 
 // Inline functions for StrandRef
 
-inline StrandRef::StrandRef() : crossing_(0), strand_(0) {
+inline StrandRef::StrandRef() : crossing_(nullptr), strand_(0) {
 }
 
 inline StrandRef::StrandRef(Crossing* crossing, int strand) :
