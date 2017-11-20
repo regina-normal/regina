@@ -62,7 +62,7 @@ bool Link::intelligentSimplify() {
             // or might not lead to a simplification.
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
-            use = (changed ? this : new Link(*this));
+            use = (changed ? this : new Link(*this, false));
 
             // Make random type III Reidemeister moves.
             type3Attempts = type3Cap = 0;

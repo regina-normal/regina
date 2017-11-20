@@ -886,7 +886,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyR1Down(const Link* l, int crossing,
                 const char* briefResult) {
-            Link clone(*l);
+            Link clone(*l, false);
             clone.setLabel(l->label());
 
             if (! clone.r1(clone.crossing(crossing))) {
@@ -909,7 +909,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyR1Up(const Link* l, int crossing, int strand,
                 int side, int sign, const char* briefResult) {
-            Link clone(*l);
+            Link clone(*l, false);
             clone.setLabel(l->label());
 
             StrandRef s;
@@ -936,7 +936,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyR2Down(const Link* l, int crossing,
                 const char* briefResult) {
-            Link clone(*l);
+            Link clone(*l, false);
             clone.setLabel(l->label());
 
             if (! clone.r2(clone.crossing(crossing))) {
@@ -959,7 +959,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyR2Down(const Link* l, int crossing, int strand,
                 const char* briefResult) {
-            Link clone(*l);
+            Link clone(*l, false);
             clone.setLabel(l->label());
 
             if (! clone.r2(clone.crossing(crossing)->strand(strand))) {
@@ -985,7 +985,7 @@ class LinkTest : public CppUnit::TestFixture {
         void verifyR2Up(const Link* l, int upperCrossing, int upperStrand,
                 int upperSide, int lowerCrossing, int lowerStrand,
                 int lowerSide, const char* briefResult) {
-            Link clone(*l);
+            Link clone(*l, false);
             clone.setLabel(l->label());
 
             StrandRef upper, lower;
@@ -1016,7 +1016,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyR3(const Link* l, int crossing, int side,
                 const char* briefResult) {
-            Link clone(*l);
+            Link clone(*l, false);
             clone.setLabel(l->label());
 
             if (! clone.r3(clone.crossing(crossing), side)) {
@@ -1040,7 +1040,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyR3(const Link* l, int crossing, int strand, int side,
                 const char* briefResult) {
-            Link clone(*l);
+            Link clone(*l, false);
             clone.setLabel(l->label());
 
             if (! clone.r3(clone.crossing(crossing)->strand(strand), side)) {
@@ -1552,7 +1552,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyResolve(const Link* l, int crossing,
                 const char* briefResult) {
-            Link clone(*l);
+            Link clone(*l, false);
             clone.setLabel(l->label());
 
             clone.resolve(clone.crossing(crossing));
@@ -1685,7 +1685,7 @@ class LinkTest : public CppUnit::TestFixture {
             }
 
             {
-                Link alt(*l);
+                Link alt(*l, false);
                 alt.rotate();
                 std::string altSig = alt.knotSig(reflect, reverse);
                 if (altSig != sig) {
@@ -1695,7 +1695,7 @@ class LinkTest : public CppUnit::TestFixture {
                 }
             }
             if (reflect) {
-                Link alt(*l);
+                Link alt(*l, false);
                 alt.reflect();
                 std::string altSig = alt.knotSig(reflect, reverse);
                 if (altSig != sig) {
@@ -1705,7 +1705,7 @@ class LinkTest : public CppUnit::TestFixture {
                 }
             }
             if (reverse) {
-                Link alt(*l);
+                Link alt(*l, false);
                 alt.reverse();
                 std::string altSig = alt.knotSig(reflect, reverse);
                 if (altSig != sig) {

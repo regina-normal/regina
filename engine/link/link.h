@@ -682,9 +682,25 @@ class REGINA_API Link : public Packet {
          * Constructs a new copy of the given link.
          * The packet tree structure and packet label are \e not copied.
          *
+         * This will clone any computed properties (such as Jones
+         * polynomial and so on) of the given link also.  If you want a
+         * "clean" copy that resets all properties to unknown, you can
+         * use the two-argument copy constructor instead.
+         *
          * @param copy the link to copy.
          */
         Link(const Link& copy);
+        /**
+         * Constructs a new copy of the given link, with the option of
+         * whether or not to clone its computed properties also.
+         *
+         * @param copy the link to copy.
+         * @param cloneProps \c true if this should also clone any
+         * computed properties of the given link (such as Jones
+         * polynomial and so on), or \c false if the new link should
+         * have all properties marked as unknown.
+         */
+        Link(const Link& copy, bool cloneProps);
 
         /**
          * Destroys this link.
@@ -2725,6 +2741,9 @@ inline Link::Link() {
 inline Link::Link(size_t unknots) {
     components_.resize(unknots);
     std::fill(components_.begin(), components_.end(), StrandRef());
+}
+
+inline Link::Link(const Link& cloneMe) : Link(cloneMe, true) {
 }
 
 inline Link::~Link() {

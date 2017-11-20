@@ -36,7 +36,7 @@
 
 namespace regina {
 
-Link::Link(const Link& cloneMe) {
+Link::Link(const Link& cloneMe, bool cloneProps) {
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
 
@@ -51,6 +51,19 @@ Link::Link(const Link& cloneMe) {
 
     for (const StrandRef& comp : cloneMe.components_)
         components_.push_back(translate(comp));
+
+    if (! cloneProps)
+        return;
+
+    // Clone properties:
+    if (cloneMe.jones_.known())
+        jones_ = new Laurent<Integer>(*(cloneMe.jones_.value()));
+    if (cloneMe.homflyAZ_.known())
+        homflyAZ_ = new Laurent2<Integer>(*(cloneMe.homflyAZ_.value()));
+    if (cloneMe.homflyLM_.known())
+        homflyLM_ = new Laurent2<Integer>(*(cloneMe.homflyLM_.value()));
+    if (cloneMe.bracket_.known())
+        bracket_ = new Laurent<Integer>(*(cloneMe.bracket_.value()));
 }
 
 bool Link::connected(const Crossing* a, const Crossing* b) const {

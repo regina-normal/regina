@@ -140,6 +140,7 @@ void addLink() {
             boost::noncopyable>("Link", init<>())
         .def(init<size_t>())
         .def(init<const Link&>())
+        .def(init<const Link&, bool>())
         .def("isEmpty", &Link::isEmpty)
         .def("size", &Link::size)
         .def("countComponents", &Link::countComponents)
