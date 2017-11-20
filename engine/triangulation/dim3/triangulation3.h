@@ -1012,6 +1012,11 @@ class REGINA_API Triangulation<3> :
          * If this routine is unable to simplify the triangulation, then
          * the triangulation will not be changed.
          *
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
+         *
          * \pre This triangulation is connected.
          *
          * @param height the maximum number of \e additional tetrahedra to
@@ -1094,9 +1099,10 @@ class REGINA_API Triangulation<3> :
          * protected by a mutex (i.e., different threads will never be
          * calling \a action at the same time).
          *
-         * If \a height is negative, then this routine will do nothing
-         * and immediately return \c false, and any progress tracker
-         * that was passed will immediately be marked as finished.
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
