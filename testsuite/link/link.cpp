@@ -69,6 +69,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(r123Perform);
     CPPUNIT_TEST(resolve);
     CPPUNIT_TEST(knotSig);
+    CPPUNIT_TEST(rewrite);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1793,6 +1794,25 @@ class LinkTest : public CppUnit::TestFixture {
             verifyKnotSig(l, false, true,  "gaabcdefbcfedPQaa");
             verifyKnotSig(l, false, false, "gaabcdefdcbefPQaa");
             delete l;
+        }
+
+        void verifyRewrite(const Link* l, int height) {
+            // For now, this should only be called for knots that are
+            // equivalent to their mirror image.
+            if (l->rewrite(height, 1 /* threads */, nullptr,
+                    [l](const Link& alt) {
+                        return (alt.jones() != l->jones());
+                    })) {
+                std::ostringstream msg;
+                msg << l->label() << ": rewrite() produced a different "
+                    "jones polynomial.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void rewrite() {
+            verifyRewrite(figureEight, 1);
+            verifyRewrite(figureEight, 2);
         }
 };
 

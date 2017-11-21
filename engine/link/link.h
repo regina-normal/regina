@@ -782,6 +782,22 @@ class REGINA_API Link : public Packet {
         StrandRef component(size_t index) const;
 
         /**
+         * Translates a strand reference for some other link into the
+         * corresponding strand reference for this link.
+         *
+         * Specifically: if \a other refers to some strand (upper or lower)
+         * of crossing number \a k of some other link, then the return
+         * value will refer to the same strand (upper or lower) of
+         * crossing number \a k of this link.
+         *
+         * This routine behaves correctly even if \a other is a null reference.
+         *
+         * @param other the strand reference to translate.
+         * @return the corresponding strand reference for this link.
+         */
+        StrandRef translate(const StrandRef& other) const;
+
+        /**
          * Determines whether the two given crossings are connected in the
          * underlying 4-valent graph of the link diagram.
          *
@@ -2449,22 +2465,6 @@ class REGINA_API Link : public Packet {
          * a packet change event.
          */
         void clearAllProperties();
-
-        /**
-         * Translates a strand reference for some other link into the
-         * corresponding strand reference for this link.
-         *
-         * Specifically: if \a other refers to some strand (upper or lower)
-         * of crossing number \a k of some other link, then the return
-         * value will refer to the same strand (upper or lower) of
-         * crossing number \a k of this link.
-         *
-         * This routine behaves correctly even if \a other is a null reference.
-         *
-         * @param other the strand reference to translate.
-         * @return the corresponding strand reference for this link.
-         */
-        StrandRef translate(const StrandRef& other) const;
 
         /**
          * Internal to fromOrientedGauss().
