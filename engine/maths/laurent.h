@@ -647,6 +647,10 @@ void Laurent<T>::set(long exp, const T& value) {
     // From here, value is non-zero.
     if (exp >= minExp_ && exp <= maxExp_) {
         coeff_[exp - base_] = value;
+    } else if (isZero()) {
+        // Both min and max exponents change.
+        minExp_ = maxExp_ = base_ = exp;
+        coeff_[0] = value;
     } else if (exp < base_) {
         // The minimum exponent decreases, and we must reallocate.
         T* newCoeff = new T[maxExp_ - exp + 1];
@@ -1025,10 +1029,12 @@ void Laurent<T>::reallocateForRange(long newMin, long newMax) {
         }
     } else if (minExp_ > newMin) {
         // base_ <= newMin  &&  newMax <= maxExp_
-        // We don't need to reallocate, but we must zero out everything
-        // from newMin to minExp_-1.
+        // We don't need to reallocate, but minExp_ will drop - we must
+        // zero out everything from newMin to minExp_-1.
         for (exp = newMin; exp < minExp_; ++exp)
             coeff_[exp - base_] = 0;
+
+        minExp_ = newMin;
     }
 }
 
