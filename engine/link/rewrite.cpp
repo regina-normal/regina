@@ -62,17 +62,25 @@ namespace {
         private:
             typedef std::set<std::string> SigSet;
 
+            static bool lowerPriority(SigSet::iterator a, SigSet::iterator b) {
+                return ((*a)[0] > (*b)[0]);
+            }
+
             const size_t maxCrossings_;
             std::function<bool(Link&)> action_;
             bool done_;
 
             SigSet sigs_;
-            std::queue<SigSet::iterator> process_;
+            std::priority_queue<SigSet::iterator,
+                std::vector<SigSet::iterator>,
+                std::function<bool(SigSet::iterator, SigSet::iterator)>>
+                process_;
 
         public:
             LinkBFS(size_t maxCrossings,
                 const std::function<bool(Link&)>& action) :
-                maxCrossings_(maxCrossings), action_(action), done_(false) {
+                maxCrossings_(maxCrossings), action_(action), done_(false),
+                process_(lowerPriority) {
             }
 
             bool seed(const Link& link);
@@ -284,7 +292,7 @@ namespace {
             if (tracker && tracker->isCancelled())
                 break;
 
-            next = process_.front();
+            next = process_.top();
             process_.pop();
 
             propagateFrom(next);
@@ -307,7 +315,7 @@ namespace {
                 if (tracker && tracker->isCancelled())
                     break;
 
-                next = process_.front();
+                next = process_.top();
                 process_.pop();
 
                 lock.unlock();
