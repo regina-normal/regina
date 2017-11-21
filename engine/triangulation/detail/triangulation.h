@@ -1194,8 +1194,8 @@ class TriangulationBase :
          * inserted as children of the given parent packet.  The original
          * triangulation (i.e., this triangulation) will be left unchanged.
          *
-         * If the given parent packet is 0, the new component triangulations
-         * will be inserted as children of this triangulation.
+         * If the given parent packet is \c null, the new component
+         * triangulations will be inserted as children of this triangulation.
          *
          * By default, this routine will assign sensible packet labels to each
          * of the new component triangulations.  If these component
@@ -1205,14 +1205,14 @@ class TriangulationBase :
          * that these packet labels incur.
          *
          * @param componentParent the packet beneath which the new
-         * component triangulations will be inserted, or 0 if they
+         * component triangulations will be inserted, or \c null if they
          * should be inserted directly beneath this triangulation.
          * @param setLabels \c true if the new component triangulations
          * should be assigned sensible packet labels, or \c false if
          * they should be left without labels at all.
          * @return the number of new component triangulations constructed.
          */
-        size_t splitIntoComponents(Packet* componentParent = 0,
+        size_t splitIntoComponents(Packet* componentParent = nullptr,
             bool setLabels = true);
 
         /*@}*/
