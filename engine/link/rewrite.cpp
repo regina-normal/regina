@@ -63,7 +63,11 @@ namespace {
             typedef std::set<std::string> SigSet;
 
             static bool lowerPriority(SigSet::iterator a, SigSet::iterator b) {
-                return ((*a)[0] > (*b)[0]);
+                // The function should compute whether a.size > b.size,
+                // where "size" measures number of crossings.
+                // We will use string length, which is fast to compute
+                // and (for knots) should have the same effect.
+                return a->length() > b->length();
             }
 
             const size_t maxCrossings_;
