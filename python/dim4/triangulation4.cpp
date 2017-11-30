@@ -252,6 +252,7 @@ void addTriangulation4() {
             .def("homologyH2", &Triangulation<4>::homologyH2,
                 return_internal_reference<>())
             .def("orient", &Triangulation<4>::orient)
+            .def("reflect", &Triangulation<4>::reflect)
             .def("splitIntoComponents", splitIntoComponents,
                 OL_splitIntoComponents())
             .def("intelligentSimplify", &Triangulation<4>::intelligentSimplify)

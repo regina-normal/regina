@@ -1089,6 +1089,18 @@ class TriangulationBase :
          */
         void orient();
 
+        /**
+         * Relabels the vertices of top-dimensional simplices in this
+         * triangulation so that all simplices reflect their orientation.
+         * In particular, if this triangulation is oriented,
+         * then it will be converted into an isomorphic triangulation
+         * with the opposite orientation.
+         *
+         * This routine works by flipping vertices (\a dim - 1) and \a dim
+         * of every top-dimensional simplex.
+         */
+        void reflect();
+
         /*@}*/
         /**
          * \name Subdivisions, Extensions and Covers
@@ -2643,6 +2655,33 @@ void TriangulationBase<dim>::orient() {
                     }
                 }
         }
+
+    // Don't forget to call clearAllProperties(), since we are manipulating
+    // the gluing-related data members of Simplex<dim> directly.
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+}
+
+template <int dim>
+void TriangulationBase<dim>::reflect() {
+    ensureSkeleton();
+
+    typename Triangulation<dim>::ChangeEventSpan span(
+        static_cast<Triangulation<dim>*>(this));
+
+    int f;
+    for (auto s : simplices_) {
+        // Flip vertices (dim - 1) and dim of s.
+        std::swap(s->adj_[dim - 1], s->adj_[dim]);
+        std::swap(s->gluing_[dim - 1], s->gluing_[dim]);
+
+        for (f = 0; f <= dim; ++f)
+            if (s->adj_[f]) {
+                // Fix the gluing from this side now, and fix it from
+                // the other side when we process the other simplex.
+                s->gluing_[f] = Perm<dim + 1>(dim - 1, dim) *
+                    s->gluing_[f] * Perm<dim + 1>(dim - 1, dim);
+            }
+    }
 
     // Don't forget to call clearAllProperties(), since we are manipulating
     // the gluing-related data members of Simplex<dim> directly.

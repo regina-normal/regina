@@ -55,6 +55,7 @@ Version 5.2  [ 29 September, 2017 ]
             - Now implements the Boost Graph Library (BGL) interface.  The dual
               graph of a triangulation can be accessed seamlessly through the
               BGL by using the triangulation itself as the graph data structure.
+            - New routine reflect().
             - New Python constructor that accepts a snappy.Manifold or a
               SnapPy.Triangulation (thanks to Matthias Goerner).
         Enum Algorithm, TuraevViroAlg:

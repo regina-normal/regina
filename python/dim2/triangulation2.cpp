@@ -210,6 +210,7 @@ void addTriangulation2() {
             .def("isConnected", &Triangulation<2>::isConnected)
             .def("isMinimal", &Triangulation<2>::isMinimal)
             .def("orient", &Triangulation<2>::orient)
+            .def("reflect", &Triangulation<2>::reflect)
             .def("splitIntoComponents", splitIntoComponents,
                 OL_splitIntoComponents())
             .def("homology", &Triangulation<2>::homology,

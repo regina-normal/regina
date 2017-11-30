@@ -328,6 +328,7 @@ void addTriangulation3() {
             .def("reorderTetrahedraBFS", &Triangulation<3>::reorderTetrahedraBFS,
                 OL_reorderTetrahedraBFS())
             .def("orient", &Triangulation<3>::orient)
+            .def("reflect", &Triangulation<3>::reflect)
             .def("order", &Triangulation<3>::order, OL_order(args("force_oriented")))
             .def("splitIntoComponents", splitIntoComponents,
                 OL_splitIntoComponents())
