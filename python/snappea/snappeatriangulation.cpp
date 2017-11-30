@@ -125,6 +125,7 @@ void addSnapPeaTriangulation() {
             [return_internal_reference<>()])
         .def("homologyFilled", &SnapPeaTriangulation::homologyFilled,
             return_internal_reference<>())
+        .def("coverHash", &SnapPeaTriangulation::coverHash)
         .def("protoCanonize", &SnapPeaTriangulation::protoCanonize,
             return_value_policy<to_held_type<> >())
         .def("protoCanonise", &SnapPeaTriangulation::protoCanonise,

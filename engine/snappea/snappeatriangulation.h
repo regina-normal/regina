@@ -1117,6 +1117,8 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
             bool minimiseNumberOfGenerators = true,
             bool tryHardToShortenRelators = true) const;
 
+        std::string coverHash(int degree) const;
+
         /*@}*/
         /**
          * \name Manipulating SnapPea triangulations
