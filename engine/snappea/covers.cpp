@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "algebra/abeliangroup.h"
 #include "snappea/snappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
 #include <sstream>
@@ -45,57 +46,54 @@ std::string SnapPeaTriangulation::coverHash(int degree) const {
         regina::snappea::find_representations(data_, degree,
         regina::snappea::permutation_subgroup_Sn);
 
-    std::vector<std::pair<int, regina::snappea::AbelianGroup*>> covers;
+    std::vector<std::pair<int, AbelianGroup*>> covers;
 
     regina::snappea::RepresentationIntoSn* rep = reps->list;
     regina::snappea::Triangulation* cover;
-    regina::snappea::AbelianGroup* h1;
     int i;
     while (rep) {
         cover = regina::snappea::construct_cover(data_, rep, reps->num_sheets);
 
-        h1 = regina::snappea::homology(cover);
-        if (! h1) {
-            // The homology calculation overflowed.
-            for (auto c : covers)
-                regina::snappea::free_abelian_group(c.second);
-
-            regina::snappea::free_triangulation(cover);
-            regina::snappea::free_representation_list(reps);
-            return std::string(); // Error: Homology overflow.
-        }
-
-        regina::snappea::compress_abelian_group(h1);
-        covers.push_back(std::make_pair(rep->covering_type, h1));
-
+        Triangulation<3> regCover;
+        fillRegina(cover, regCover);
         regina::snappea::free_triangulation(cover);
+
+        covers.push_back(std::make_pair(rep->covering_type,
+            new AbelianGroup(regCover.homology())));
+
         rep = rep->next;
     }
 
     std::sort(covers.begin(), covers.end(),
-        [](const std::pair<int, regina::snappea::AbelianGroup*>& a,
-           const std::pair<int, regina::snappea::AbelianGroup*>& b) {
+        [](const std::pair<int, AbelianGroup*>& a,
+           const std::pair<int, AbelianGroup*>& b) {
             // Compare cover types.
             if (a.first < b.first)
                 return true;
             if (a.first > b.first)
                 return false;
 
-            // Compare number of torsion coefficients.
-            if (a.second->num_torsion_coefficients <
-                    b.second->num_torsion_coefficients)
+            // Compare ranks.
+            if (a.second->rank() < b.second->rank())
                 return true;
-            if (a.second->num_torsion_coefficients >
-                    b.second->num_torsion_coefficients)
+            if (a.second->rank() > b.second->rank())
+                return false;
+
+            // Compare number of torsion coefficients.
+            if (a.second->countInvariantFactors() <
+                    b.second->countInvariantFactors())
+                return true;
+            if (a.second->countInvariantFactors() >
+                    b.second->countInvariantFactors())
                 return false;
 
             // Compare the coefficients themselves.
-            for (int i = 0; i < a.second->num_torsion_coefficients; ++i) {
-                if (a.second->torsion_coefficients[i] <
-                        b.second->torsion_coefficients[i])
+            for (int i = 0; i < a.second->countInvariantFactors(); ++i) {
+                if (a.second->invariantFactor(i) <
+                        b.second->invariantFactor(i))
                     return true;
-                if (a.second->torsion_coefficients[i] >
-                        b.second->torsion_coefficients[i])
+                if (a.second->invariantFactor(i) >
+                        b.second->invariantFactor(i))
                     return false;
             }
 
@@ -117,12 +115,13 @@ std::string SnapPeaTriangulation::coverHash(int degree) const {
             case regina::snappea::cyclic_cover:
                 ans << 'c'; break;
         }
-        for (int i = 0; i < c.second->num_torsion_coefficients; ++i) {
+        ans << c.second->rank() << ':';
+        for (int i = 0; i < c.second->countInvariantFactors(); ++i) {
             if (i > 0)
                 ans << ',';
-            ans << c.second->torsion_coefficients[i];
+            ans << c.second->invariantFactor(i);
         }
-        regina::snappea::free_abelian_group(c.second);
+        delete c.second;
     }
 
     regina::snappea::free_representation_list(reps);
