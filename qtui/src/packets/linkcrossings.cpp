@@ -574,17 +574,20 @@ void LinkCrossingsUI::refresh() {
 
 void LinkCrossingsUI::simplify() {
     if (link->isEmpty()) {
-        QMessageBox msgBox(ui);
-        msgBox.setWindowTitle(tr("Information"));
-        msgBox.setIcon(QMessageBox::Information);
-        msgBox.setText(tr("This link is empty."));
-        msgBox.setStandardButtons(QMessageBox::Close);
-        msgBox.setDefaultButton(QMessageBox::Close);
-        msgBox.exec();
+        ReginaSupport::info(ui, tr("This link is empty."));
         return;
     }
 
     if (! link->intelligentSimplify()) {
+        if (link->countComponents() > 1) {
+            ReginaSupport::info(ui, tr("I could not simplify the link."),
+                tr("<qt>I have only tried fast heuristics so far.<p>"
+                    "For knots I can try a more exaustive approach, "
+                    "but for multiple-component links this is not "
+                    "yet available.</qt>"));
+            return;
+        }
+
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
         msgBox.setIcon(QMessageBox::Information);

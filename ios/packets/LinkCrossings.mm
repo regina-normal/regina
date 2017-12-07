@@ -269,11 +269,13 @@ static NSString* unknotText = @"Unknot, no crossings";
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
                                                                        message:nil
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Try harder"
-                                                  style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction* action) {
-                                                    [self simplifyExhaustiveWithHeight:1];
-                                                }]];
+        if (self.packet->countComponents() > 1) {
+            [alert addAction:[UIAlertAction actionWithTitle:@"Try harder"
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction* action) {
+                                                        [self simplifyExhaustiveWithHeight:1];
+                                                    }]];
+        }
         [alert addAction:[UIAlertAction actionWithTitle:@"Close"
                                                   style:UIAlertActionStyleCancel
                                                 handler:^(UIAlertAction * action) {}]];
