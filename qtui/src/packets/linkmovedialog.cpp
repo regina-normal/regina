@@ -498,8 +498,6 @@ void LinkMoveDialog::changedR2UpOver(int) {
     options2upUnder.clear();
     box2upUnder->clear();
 
-    std::cerr << "R2 under refill" << std::endl;
-
     int use = box2upOver->currentIndex();
     if (use < 0 || use >= options2upOver.size())
         return;
