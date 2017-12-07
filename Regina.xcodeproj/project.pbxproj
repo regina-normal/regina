@@ -1495,6 +1495,14 @@
 		05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 05870CB01FAD250900835F9E /* modellinkgraph.h */; };
 		05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
 		05870CB41FAD250E00835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
+		0588C2A31FD8D1350093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
+		0588C2A41FD8D1350093C2C9 /* sig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A21FD8D1340093C2C9 /* sig.cpp */; };
+		0588C2A51FD8D13C0093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
+		0588C2A61FD8D13C0093C2C9 /* sig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A21FD8D1340093C2C9 /* sig.cpp */; };
+		0588C2A91FD8D1750093C2C9 /* representations.c in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A71FD8D1740093C2C9 /* representations.c */; };
+		0588C2AA1FD8D1750093C2C9 /* cover.c in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A81FD8D1750093C2C9 /* cover.c */; };
+		0588C2AB1FD8D17A0093C2C9 /* cover.c in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A81FD8D1750093C2C9 /* cover.c */; };
+		0588C2AC1FD8D17A0093C2C9 /* representations.c in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A71FD8D1740093C2C9 /* representations.c */; };
 		0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1161808D43B006BDC79 /* packetregistry-impl.h */; };
 		0588F1191808D43B006BDC79 /* packettype.h in Headers */ = {isa = PBXBuildFile; fileRef = 0588F1171808D43B006BDC79 /* packettype.h */; };
 		0589FAC3181484860064CD57 /* Tri3Gluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0589FAC2181484860064CD57 /* Tri3Gluings.mm */; };
@@ -3972,6 +3980,10 @@
 		05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
 		05870CB01FAD250900835F9E /* modellinkgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modellinkgraph.h; sourceTree = "<group>"; };
 		05870CB11FAD250900835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
+		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
+		0588C2A21FD8D1340093C2C9 /* sig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sig.cpp; sourceTree = "<group>"; };
+		0588C2A71FD8D1740093C2C9 /* representations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = representations.c; sourceTree = "<group>"; };
+		0588C2A81FD8D1750093C2C9 /* cover.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = cover.c; sourceTree = "<group>"; };
 		0588F1161808D43B006BDC79 /* packetregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "packetregistry-impl.h"; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		0589FAC1181484860064CD57 /* Tri3Gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Gluings.h; sourceTree = "<group>"; };
@@ -5773,6 +5785,7 @@
 				052F9D28180600FA00FAE4DF /* CMakeLists.txt */,
 				052F9D29180600FA00FAE4DF /* complex.c */,
 				052F9D2A180600FA00FAE4DF /* core_geodesics.c */,
+				0588C2A81FD8D1750093C2C9 /* cover.c */,
 				052F9D2B180600FA00FAE4DF /* covers.h */,
 				052F9D2C180600FA00FAE4DF /* current_curve_basis.c */,
 				052F9D2D180600FA00FAE4DF /* cusp_cross_sections.c */,
@@ -5815,6 +5828,7 @@
 				052F9D4A180600FA00FAE4DF /* precision.c */,
 				052F9D4B180600FA00FAE4DF /* README.txt */,
 				0583656118DB8876008B08D9 /* real_type.h */,
+				0588C2A71FD8D1740093C2C9 /* representations.c */,
 				052F9D4C180600FA00FAE4DF /* shortest_cusp_basis.c */,
 				052F9D4D180600FA00FAE4DF /* simplify_triangulation.c */,
 				05A73C9719B2EF5A0099C617 /* sl2c_matrices.c */,
@@ -7117,6 +7131,8 @@
 				05870CB11FAD250900835F9E /* modellinkgraph.cpp */,
 				05870CB01FAD250900835F9E /* modellinkgraph.h */,
 				05721EDB1F97153C00A83FFC /* reidemeister.cpp */,
+				0588C2A11FD8D1340093C2C9 /* rewrite.cpp */,
+				0588C2A21FD8D1340093C2C9 /* sig.cpp */,
 				05721ED71F97153C00A83FFC /* simplify.cpp */,
 				05721EDE1F97153C00A83FFC /* xmllinkreader.cpp */,
 				05721ED11F97153C00A83FFC /* xmllinkreader.h */,
@@ -9008,6 +9024,7 @@
 				05249EB91DBC16C4001FE29E /* triangle2.cpp in Sources */,
 				05249F3D1DBC1718001FE29E /* text.cpp in Sources */,
 				05937AD319CECF4300160F9A /* MDSpreadViewCellBackground.m in Sources */,
+				0588C2AC1FD8D17A0093C2C9 /* representations.c in Sources */,
 				05249EFB1DBC16F1001FE29E /* isomorphism11.cpp in Sources */,
 				052FA1681806129B00FAE4DF /* compact.cpp in Sources */,
 				05249F081DBC16F6001FE29E /* simplex12.cpp in Sources */,
@@ -9034,6 +9051,7 @@
 				05249F1A1DBC1704001FE29E /* normalhypersurfaces.cpp in Sources */,
 				054208C81DF0D29C0018AB24 /* graphpair.cpp in Sources */,
 				050C646E1DA101A900C9420F /* anglestructures.cpp in Sources */,
+				0588C2AB1FD8D17A0093C2C9 /* cover.c in Sources */,
 				05F0A0661DBF0B7000117BFC /* vertex3.cpp in Sources */,
 				05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */,
 				052FA22B180612DD00FAE4DF /* intersection_numbers.c in Sources */,
@@ -9312,6 +9330,7 @@
 				05A73CA119B2EF5A0099C617 /* matrix_conversion.c in Sources */,
 				05249EBD1DBC16CA001FE29E /* boundarycomponent4.cpp in Sources */,
 				05249EFE1DBC16F1001FE29E /* isomorphism14.cpp in Sources */,
+				0588C2A61FD8D13C0093C2C9 /* sig.cpp in Sources */,
 				05249F261DBC170A001FE29E /* pymanifold.cpp in Sources */,
 				05249ED11DBC16DF001FE29E /* component7.cpp in Sources */,
 				052FA16C1806129B00FAE4DF /* gluingpermsearcher2.cpp in Sources */,
@@ -9593,6 +9612,7 @@
 				05A73C9B19B2EF5A0099C617 /* abelian_group.c in Sources */,
 				05A0674E1DFA68470047872E /* layering.cpp in Sources */,
 				05A066B81DFA67D50047872E /* layeredchain.cpp in Sources */,
+				0588C2A51FD8D13C0093C2C9 /* rewrite.cpp in Sources */,
 				052FA1DF1806129B00FAE4DF /* nsvectororiented.cpp in Sources */,
 				0542088F1DF0D0CF0018AB24 /* keywordlist.cpp in Sources */,
 				05C1BEE71DCA89E3007C946B /* triangulation7.cpp in Sources */,
@@ -9915,6 +9935,7 @@
 				05F0A0401DBF0B5E00117BFC /* hydrate.cpp in Sources */,
 				055ABEAA19B49C1900044C1B /* hyp-knot-link-census.zsig in Sources */,
 				052FA044180600FB00FAE4DF /* surfacefilter.cpp in Sources */,
+				0588C2A91FD8D1750093C2C9 /* representations.c in Sources */,
 				05721EEF1F97153E00A83FFC /* xmllinkreader.cpp in Sources */,
 				052F9EBE180600FB00FAE4DF /* engine.cpp in Sources */,
 				052F9FD8180600FB00FAE4DF /* update_shapes.c in Sources */,
@@ -9974,6 +9995,7 @@
 				052F9F75180600FB00FAE4DF /* complex.c in Sources */,
 				05C1BEB21DCA7CA9007C946B /* boundary10.cpp in Sources */,
 				052F9FDB180600FB00FAE4DF /* snappeatriangulation.cpp in Sources */,
+				0588C2A41FD8D1350093C2C9 /* sig.cpp in Sources */,
 				052FA099180600FB00FAE4DF /* osutils.cpp in Sources */,
 				052F9F87180600FB00FAE4DF /* hyperbolic_structure.c in Sources */,
 				052F9F6F180600FB00FAE4DF /* canonize_part_2.c in Sources */,
@@ -9992,6 +10014,7 @@
 				05431F8A1C40F40D009BC072 /* HilbertSeries.cpp in Sources */,
 				05F0A0501DBF0B5E00117BFC /* vertex3.cpp in Sources */,
 				05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */,
+				0588C2AA1FD8D1750093C2C9 /* cover.c in Sources */,
 				05C1BEAB1DCA7CA9007C946B /* boundary3.cpp in Sources */,
 				05669D951DCB0E9A00C870C6 /* facetpairing3.cpp in Sources */,
 				05F0A0041DBF078800117BFC /* subdivide.cpp in Sources */,
@@ -10029,6 +10052,7 @@
 				052F9F80180600FB00FAE4DF /* filling.c in Sources */,
 				052F9FD9180600FB00FAE4DF /* volume.c in Sources */,
 				052F9F56180600FB00FAE4DF /* packetlistener.cpp in Sources */,
+				0588C2A31FD8D1350093C2C9 /* rewrite.cpp in Sources */,
 				05A067081DFA68190047872E /* augtrisolidtorus.cpp in Sources */,
 				054208791DF0D0B50018AB24 /* format.cpp in Sources */,
 				050C647B1DA1056700C9420F /* xmlanglestructreader.cpp in Sources */,
