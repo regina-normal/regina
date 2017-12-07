@@ -32,11 +32,13 @@
 
 // Regina core includes:
 #include "link/link.h"
+#include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
 #include "linkcrossings.h"
 #include "linkmovedialog.h"
+#include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -48,6 +50,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QPainter>
+#include <QPushButton>
 #include <QToolBar>
 
 #define NEG_COLOUR QColor(0xb8, 0x86, 0x0b, 0xff)
@@ -570,22 +573,67 @@ void LinkCrossingsUI::refresh() {
 }
 
 void LinkCrossingsUI::simplify() {
+    if (link->isEmpty()) {
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("This link is empty."));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        return;
+    }
+    
     if (! link->intelligentSimplify()) {
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
         msgBox.setIcon(QMessageBox::Information);
-        if (link->countComponents() > 1) {
+        if (link->countComponents() > 1)
             msgBox.setText(tr("I could not simplify the link."));
-            msgBox.setInformativeText(tr("I have only tried fast heuristics."));
-        } else if (link->countComponents() == 1) {
+        else
             msgBox.setText(tr("I could not simplify the knot."));
-            msgBox.setInformativeText(tr("I have only tried fast heuristics."));
-        } else {
-            msgBox.setText(tr("This link is empty."));
-        }
+        msgBox.setInformativeText(tr("I have only tried fast heuristics "
+            "so far."));
         msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Try harder"), QMessageBox::ActionRole);
         msgBox.setDefaultButton(QMessageBox::Close);
         msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            simplifyExhaustive(1);
+    }
+}
+
+void LinkCrossingsUI::simplifyExhaustive(int height) {
+    size_t initSize = link->size();
+    
+    bool knot = (link->countComponents() == 1);
+    
+    regina::ProgressTrackerOpen tracker;
+    ProgressDialogOpen dlg(&tracker, tr("Searching Reidemeister graph..."),
+        (knot ? tr("Tried %1 knots") : tr("Tried %1 links")), ui);
+    
+    link->simplifyExhaustive(height, 1 /* threads */, &tracker);
+    
+    if (dlg.run() && link->size() == initSize) {
+        dlg.hide();
+        
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("I still could not simplify the %1.")
+            .arg(knot ? "knot" : "link"));
+        msgBox.setInformativeText(tr("<qt>I have exhaustively searched "
+            "the Reidemeister graph up to %1 crossings.<p>"
+            "I can look further, but be warned: the time and memory "
+            "required could grow <i>very</i> rapidly.").arg(initSize + height));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Keep trying"), QMessageBox::ActionRole);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            simplifyExhaustive(height + 1);
     }
 }
 

@@ -30,11 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
+#import "MBProgressHUD.h"
 #import "LinkViewController.h"
 #import "LinkCrossings.h"
 #import "LinkMoves.h"
 #import "ReginaHelper.h"
 #import "link/link.h"
+#import "progress/progresstracker.h"
 #import "triangulation/dim3.h"
 
 #define KEY_LINK_CROSSINGS_STYLE @"LinkCrossingsStyle"
@@ -71,6 +73,7 @@ static NSString* unknotText = @"Unknot, no crossings";
     NSString* refLabel;
     CGSize sizeLabel;
     CGSize sizeHeader;
+    regina::ProgressTrackerOpen* simplifyTracker; // for cancellation
 }
 
 @property (weak, nonatomic) IBOutlet UILabel *header;
@@ -80,6 +83,9 @@ static NSString* unknotText = @"Unknot, no crossings";
 @property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
 @property (assign, nonatomic) regina::Link* packet;
+
+
+@property (strong, nonatomic) NSLock* simplifyLock; // locks the simplifyTracker _pointer_, not the tracker itself.
 @end
 
 @implementation LinkCrossings
@@ -156,15 +162,122 @@ static NSString* unknotText = @"Unknot, no crossings";
     [ReginaHelper viewPacket:c];
 }
 
-- (IBAction)simplify:(id)sender {
-    if (! self.packet->intelligentSimplify()) {
-        // Greedy simplification failed.
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Simplify"
+- (IBAction)simplifyCancel:(id)sender
+{
+    // Cancel the exhaustive simplification, if one is running.
+    
+    // Note: the lock is created before the HUD (and the HUD calls this routine),
+    // so by the time this routine is called, we are guaranteed that
+    // self.simplifyLock is non-nil.
+    
+    [self.simplifyLock lock];
+    if (self->simplifyTracker)
+        self->simplifyTracker->cancel();
+    [self.simplifyLock unlock];
+}
+
+- (void)simplifyExhaustiveWithHeight:(int)height
+{
+    if (! self.simplifyLock)
+        self.simplifyLock = [[NSLock alloc] init];
+    
+    // Run the exhaustive simplification within a HUD.
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
+    UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
+    hud.label.text = @"Searching Reidemeister graph…";
+    
+    [hud.button setTitle:@"Cancel" forState:UIControlStateNormal];
+    [hud.button addTarget:self action:@selector(simplifyCancel:) forControlEvents:UIControlEventTouchUpInside];
+    
+    size_t initSize = self.packet->size();
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        regina::ProgressTrackerOpen* tracker = new regina::ProgressTrackerOpen();
+        bool cancelled = false;
+        
+        bool knot = (self.packet->countComponents() == 1);
+        
+        [self.simplifyLock lock];
+        self->simplifyTracker = tracker;
+        [self.simplifyLock unlock];
+        
+        self.packet->simplifyExhaustive(height, 1 /* threads */, tracker);
+        
+        unsigned long steps;
+        while (! tracker->isFinished()) {
+            if (tracker->stepsChanged()) {
+                steps = tracker->steps();
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (knot)
+                        hud.detailsLabel.text = [NSString stringWithFormat:@"Tried %ld knots", steps];
+                    else
+                        hud.detailsLabel.text = [NSString stringWithFormat:@"Tried %ld links", steps];
+                });
+            }
+            usleep(100000);
+        }
+        [self.simplifyLock lock];
+        self->simplifyTracker = nullptr;
+        [self.simplifyLock unlock];
+        
+        cancelled = tracker->isCancelled();
+        delete tracker;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud hideAnimated:NO];
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
+            
+            if ((! cancelled) && self.packet->size() == initSize) {
+                // We still couldn't simplify.
+                UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
+                                                                               message:[NSString stringWithFormat:@"I still could not simplify the %@, even after exhaustively searching the Reidemeister graph up to %ld crossings.\n\nI can look further, but be warned: the time and memory required could grow very rapidly.",
+                                                                                        (knot ? @"knot" : @"link"),
+                                                                                        initSize + height]
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Keep trying"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction* action) {
+                                                            [self simplifyExhaustiveWithHeight:(height + 1)];
+                                                        }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Close"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:^(UIAlertAction * action) {}]];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        });
+    });
+    
+}
+
+- (IBAction)simplify:(id)sender
+{
+    if (self.packet->isEmpty()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"This Link is Empty"
                                                         message:nil
                                                        delegate:nil
                                               cancelButtonTitle:@"Close"
                                               otherButtonTitles:nil];
         [alert show];
+        return;
+    }
+    
+    if (! self.packet->intelligentSimplify()) {
+        // Greedy simplification failed.
+        // Offer a more exhaustive alternative.
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Try harder"
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction* action) {
+                                                    [self simplifyExhaustiveWithHeight:1];
+                                                }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Close"
+                                                  style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction * action) {}]];
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 

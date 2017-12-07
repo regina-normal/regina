@@ -191,6 +191,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          * Knot/link actions.
          */
         void simplify();
+        void simplifyExhaustive(int height);
         void reflect();
         void rotate();
         void reverse();
