@@ -583,7 +583,7 @@ void LinkCrossingsUI::simplify() {
         msgBox.exec();
         return;
     }
-    
+
     if (! link->intelligentSimplify()) {
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
@@ -606,18 +606,18 @@ void LinkCrossingsUI::simplify() {
 
 void LinkCrossingsUI::simplifyExhaustive(int height) {
     size_t initSize = link->size();
-    
+
     bool knot = (link->countComponents() == 1);
-    
+
     regina::ProgressTrackerOpen tracker;
     ProgressDialogOpen dlg(&tracker, tr("Searching Reidemeister graph..."),
         (knot ? tr("Tried %1 knots") : tr("Tried %1 links")), ui);
-    
+
     link->simplifyExhaustive(height, 1 /* threads */, &tracker);
-    
+
     if (dlg.run() && link->size() == initSize) {
         dlg.hide();
-        
+
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
         msgBox.setIcon(QMessageBox::Information);
