@@ -73,6 +73,9 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Link::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_jones, Link::jones, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homfly, Link::homfly, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homflyAZ, Link::homflyAZ, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homflyLM, Link::homflyLM, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_bracket, Link::bracket, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_knotSig, Link::knotSig, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
@@ -171,11 +174,11 @@ void addLink() {
         .def("jones", &Link::jones,
             OL_jones()[return_internal_reference<>()])
         .def("homfly", &Link::homfly,
-            return_internal_reference<>())
+            OL_homfly()[return_internal_reference<>()])
         .def("homflyAZ", &Link::homflyAZ,
-            return_internal_reference<>())
+            OL_homflyAZ()[return_internal_reference<>()])
         .def("homflyLM", &Link::homflyLM,
-            return_internal_reference<>())
+            OL_homflyLM()[return_internal_reference<>()])
         .def("knowsBracket", &Link::knowsBracket)
         .def("knowsJones", &Link::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly)

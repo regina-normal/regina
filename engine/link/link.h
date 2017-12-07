@@ -1751,6 +1751,9 @@ class REGINA_API Link : public Packet {
          *
          * @return alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
+         * Currently there is only one implementation (and so this argument
+         * will be ignored), but this is expected to change in future
+         * versions of Regina..
          * @return the Jones polynomial, as a newly-created object.
          */
         const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT) const;
@@ -1791,7 +1794,7 @@ class REGINA_API Link : public Packet {
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
          *
-         * The current implementation uses Kauffman's skein-template algorithm;
+         * The default implementation uses Kauffman's skein-template algorithm;
          * see L. H. Kauffman, "State models for link polynomials",
          * L'enseignement mathematique 36 (1990), 1-37, or for a more recent
          * summary see G. Gouesbet et al., "Computer evaluation of Homfly
@@ -1804,9 +1807,15 @@ class REGINA_API Link : public Packet {
          * Instead, homflyAZ() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
+         * @return alg the algorithm with which to compute the polynomial.
+         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
+         * If you wish to specify a particular algorithm, there are
+         * currently two choices: ALG_BACKTRACK will use Kauffman's
+         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * fixed-parameter tractable treewidth-based algorithm.
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        const Laurent2<Integer>& homflyAZ() const;
+        const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT) const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
          * in \a l and \a m.
@@ -1831,7 +1840,7 @@ class REGINA_API Link : public Packet {
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
          *
-         * The current implementation uses Kauffman's skein-template algorithm;
+         * The default implementation uses Kauffman's skein-template algorithm;
          * see L. H. Kauffman, "State models for link polynomials",
          * L'enseignement mathematique 36 (1990), 1-37, or for a more recent
          * summary see G. Gouesbet et al., "Computer evaluation of Homfly
@@ -1844,9 +1853,15 @@ class REGINA_API Link : public Packet {
          * Instead, homflyLM() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
+         * @return alg the algorithm with which to compute the polynomial.
+         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
+         * If you wish to specify a particular algorithm, there are
+         * currently two choices: ALG_BACKTRACK will use Kauffman's
+         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * fixed-parameter tractable treewidth-based algorithm.
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        const Laurent2<Integer>& homflyLM() const;
+        const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT) const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
          * in \a alpha and \a z.
@@ -1865,9 +1880,15 @@ class REGINA_API Link : public Packet {
          * Instead, homfly() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
+         * @return alg the algorithm with which to compute the polynomial.
+         * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
+         * If you wish to specify a particular algorithm, there are
+         * currently two choices: ALG_BACKTRACK will use Kauffman's
+         * skein-template algorithm, and ALG_TREEWIDTH will use a
+         * fixed-parameter tractable treewidth-based algorithm.
          * @return the HOMFLY polynomial, as a newly-created object.
          */
-        const Laurent2<Integer>& homfly() const;
+        const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT) const;
         /**
          * Is the HOMFLY polynomial of this link diagram already known?
          * See homflyAZ() and homflyLM() for further details.
@@ -2561,8 +2582,34 @@ class REGINA_API Link : public Packet {
          * tractable algorithm based on a tree decomposition.
          *
          * See bracket() for further details.
+         *
+         * \warning This routine is not yet implemented!  Currently it
+         * just a placeholder (not accessible to external code) that
+         * falls back to bracketNaive().  This algorithm is expected to be
+         * implemented in a future version of Regina.
          */
         Laurent<Integer>* bracketTreewidth() const;
+
+        /**
+         * Compute the HOMFLY polynomial of this link, as a polynomial
+         * in \a alpha and \a z, using Kauffman's skein-template algorithm.
+         *
+         * See homflyAZ() for further details.
+         *
+         * \pre This link contains at least one crossing.
+         */
+        Laurent2<Integer>* homflyKauffman() const;
+
+        /**
+         * Compute the HOMFLY polynomial of this link, as a polynomial
+         * in \a alpha and \a z, using a fixed-parameter tractable algorithm
+         * based on a tree decomposition.
+         *
+         * See homflyAZ() for further details.
+         *
+         * \pre This link contains at least one crossing.
+         */
+        Laurent2<Integer>* homflyTreewidth() const;
 
         /**
          * A non-templated version of rewrite().
@@ -2983,8 +3030,8 @@ inline long Link::writhe() const {
     return ans;
 }
 
-inline const Laurent2<Integer>& Link::homfly() const {
-    return homflyAZ();
+inline const Laurent2<Integer>& Link::homfly(Algorithm alg) const {
+    return homflyAZ(alg);
 }
 
 inline bool Link::knowsBracket() const {

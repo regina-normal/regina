@@ -99,31 +99,11 @@ enum CrossingState {
     CROSSING_SPLICE_2 = 7
 };
 
-const Laurent2<Integer>& Link::homflyAZ() const {
+Laurent2<Integer>* Link::homflyKauffman() const {
     // Throughout this code, delta = (alpha - alpha^-1) / z.
 
-    if (homflyAZ_.known())
-        return *homflyAZ_.value();
-
+    // We know from the preconditions that there is at least one crossing.
     size_t n = crossings_.size();
-    if (n == 0) {
-        if (components_.size() == 0)
-            return *(homflyAZ_ = new Laurent2<Integer>());
-
-        // We have an unlink with no crossings.
-        // The HOMFLY polynomial is delta^(#components - 1).
-        Laurent2<Integer> delta(1, -1);
-        delta.set(-1, -1, -1);
-
-        // The following constructor initialises ans to 1.
-        Laurent2<Integer>* ans = new Laurent2<Integer>(0, 0);
-        for (size_t i = 1; i < components_.size(); ++i)
-            (*ans) *= delta;
-
-        return *(homflyAZ_ = ans);
-    }
-
-    // From here, we know there is at least one crossing.
 
     // We order the arcs as follows:
     // - crossing 0, entering lower strand
@@ -379,11 +359,51 @@ const Laurent2<Integer>& Link::homflyAZ() const {
     }
 
     delete[] coeff;
-    return *(homflyAZ_ = ans);
+    return ans;
 }
 
-const Laurent2<Integer>& Link::homflyLM() const {
-    Laurent2<Integer>* ans = new Laurent2<Integer>(homflyAZ());
+Laurent2<Integer>* Link::homflyTreewidth() const {
+    // TODO: Implement this!
+    return homflyKauffman();
+}
+
+const Laurent2<Integer>& Link::homflyAZ(Algorithm alg) const {
+    if (homflyAZ_.known())
+        return *homflyAZ_.value();
+
+    if (crossings_.empty()) {
+        if (components_.empty())
+            return *(homflyAZ_ = new Laurent2<Integer>());
+
+        // We have an unlink with no crossings.
+        // The HOMFLY polynomial is delta^(#components - 1).
+        Laurent2<Integer> delta(1, -1);
+        delta.set(-1, -1, -1);
+
+        // The following constructor initialises ans to 1.
+        Laurent2<Integer>* ans = new Laurent2<Integer>(0, 0);
+        for (size_t i = 1; i < components_.size(); ++i)
+            (*ans) *= delta;
+
+        return *(homflyAZ_ = ans);
+    }
+
+    switch (alg) {
+        case ALG_TREEWIDTH:
+            homflyAZ_ = homflyTreewidth();
+            break;
+        default:
+            homflyAZ_ = homflyKauffman();
+            break;
+    }
+    return *homflyAZ_.value();
+}
+
+const Laurent2<Integer>& Link::homflyLM(Algorithm alg) const {
+    if (homflyLM_.known())
+        return *homflyLM_.value();
+
+    Laurent2<Integer>* ans = new Laurent2<Integer>(homflyAZ(alg));
 
     // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
     // Note that i-j should always be 0 or 2 (mod 4), never odd.
