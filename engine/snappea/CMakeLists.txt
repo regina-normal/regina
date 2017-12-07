@@ -2,7 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  covers
   fundgroup
   homology
   examplesnappea
