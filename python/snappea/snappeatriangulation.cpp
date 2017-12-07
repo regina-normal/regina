@@ -66,6 +66,8 @@ namespace {
         SnapPeaTriangulation::fill, 2, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_unfill,
         SnapPeaTriangulation::unfill, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_coverHash,
+        SnapPeaTriangulation::coverHash, 1, 2);
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_enableKernelMessages,
         SnapPeaTriangulation::enableKernelMessages, 0, 1);
@@ -125,7 +127,7 @@ void addSnapPeaTriangulation() {
             [return_internal_reference<>()])
         .def("homologyFilled", &SnapPeaTriangulation::homologyFilled,
             return_internal_reference<>())
-        .def("coverHash", &SnapPeaTriangulation::coverHash)
+        .def("coverHash", &SnapPeaTriangulation::coverHash, OL_coverHash())
         .def("protoCanonize", &SnapPeaTriangulation::protoCanonize,
             return_value_policy<to_held_type<> >())
         .def("protoCanonise", &SnapPeaTriangulation::protoCanonise,

@@ -38,7 +38,7 @@
 
 namespace regina {
 
-std::string SnapPeaTriangulation::coverHash(int degree) const {
+std::string SnapPeaTriangulation::coverHash(int degree, bool light) const {
     if (! data_)
         return std::string(); // Error: Null triangulation.
 
@@ -46,9 +46,38 @@ std::string SnapPeaTriangulation::coverHash(int degree) const {
         regina::snappea::find_representations(data_, degree,
         regina::snappea::permutation_subgroup_Sn);
 
-    std::vector<std::pair<int, AbelianGroup*>> covers;
-
     regina::snappea::RepresentationIntoSn* rep = reps->list;
+
+    if (light) {
+        // Just count covers of each type.
+        size_t nUnknown = 0;
+        size_t nRegular = 0;
+        size_t nIrregular = 0;
+        size_t nCyclic = 0;
+
+        while (rep) {
+            switch (rep->covering_type) {
+                case regina::snappea::unknown_cover:
+                    ++nUnknown; break;
+                case regina::snappea::regular_cover:
+                    ++nRegular; break;
+                case regina::snappea::irregular_cover:
+                    ++nIrregular; break;
+                case regina::snappea::cyclic_cover:
+                    ++nCyclic; break;
+            }
+            rep = rep->next;
+        }
+
+        regina::snappea::free_representation_list(reps);
+
+        std::ostringstream ans;
+        ans << nCyclic << ',' << nIrregular << ',' << nRegular << ','
+            << nUnknown;
+        return ans.str();
+    }
+
+    std::vector<std::pair<int, AbelianGroup*>> covers;
     regina::snappea::Triangulation* cover;
     int i;
     while (rep) {
@@ -57,6 +86,10 @@ std::string SnapPeaTriangulation::coverHash(int degree) const {
         Triangulation<3> regCover;
         fillRegina(cover, regCover);
         regina::snappea::free_triangulation(cover);
+
+        std::cerr << regCover.size() << '/' << regCover.countVertices() << ' ';
+        regCover.intelligentSimplify();
+        std::cerr << regCover.size() << '/' << regCover.countVertices() << std::endl;
 
         covers.push_back(std::make_pair(rep->covering_type,
             new AbelianGroup(regCover.homology())));
