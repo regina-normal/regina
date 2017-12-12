@@ -1089,6 +1089,18 @@ class TriangulationBase :
          */
         void orient();
 
+        /**
+         * Relabels the vertices of top-dimensional simplices in this
+         * triangulation so that all simplices reflect their orientation.
+         * In particular, if this triangulation is oriented,
+         * then it will be converted into an isomorphic triangulation
+         * with the opposite orientation.
+         *
+         * This routine works by flipping vertices (\a dim - 1) and \a dim
+         * of every top-dimensional simplex.
+         */
+        void reflect();
+
         /*@}*/
         /**
          * \name Subdivisions, Extensions and Covers
@@ -1194,8 +1206,8 @@ class TriangulationBase :
          * inserted as children of the given parent packet.  The original
          * triangulation (i.e., this triangulation) will be left unchanged.
          *
-         * If the given parent packet is 0, the new component triangulations
-         * will be inserted as children of this triangulation.
+         * If the given parent packet is \c null, the new component
+         * triangulations will be inserted as children of this triangulation.
          *
          * By default, this routine will assign sensible packet labels to each
          * of the new component triangulations.  If these component
@@ -1205,14 +1217,14 @@ class TriangulationBase :
          * that these packet labels incur.
          *
          * @param componentParent the packet beneath which the new
-         * component triangulations will be inserted, or 0 if they
+         * component triangulations will be inserted, or \c null if they
          * should be inserted directly beneath this triangulation.
          * @param setLabels \c true if the new component triangulations
          * should be assigned sensible packet labels, or \c false if
          * they should be left without labels at all.
          * @return the number of new component triangulations constructed.
          */
-        size_t splitIntoComponents(Packet* componentParent = 0,
+        size_t splitIntoComponents(Packet* componentParent = nullptr,
             bool setLabels = true);
 
         /*@}*/
@@ -1668,7 +1680,7 @@ class TriangulationBase :
          * for different dimensions \a p and \a q.
          *
          * @param sig the isomorphism signature of the triangulation to
-         * construct.  Note that isomorphism signature are case-sensitive
+         * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * @return a newly allocated triangulation if the reconstruction was
          * successful, or \c null if the given string was not a valid
@@ -2643,6 +2655,33 @@ void TriangulationBase<dim>::orient() {
                     }
                 }
         }
+
+    // Don't forget to call clearAllProperties(), since we are manipulating
+    // the gluing-related data members of Simplex<dim> directly.
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+}
+
+template <int dim>
+void TriangulationBase<dim>::reflect() {
+    ensureSkeleton();
+
+    typename Triangulation<dim>::ChangeEventSpan span(
+        static_cast<Triangulation<dim>*>(this));
+
+    int f;
+    for (auto s : simplices_) {
+        // Flip vertices (dim - 1) and dim of s.
+        std::swap(s->adj_[dim - 1], s->adj_[dim]);
+        std::swap(s->gluing_[dim - 1], s->gluing_[dim]);
+
+        for (f = 0; f <= dim; ++f)
+            if (s->adj_[f]) {
+                // Fix the gluing from this side now, and fix it from
+                // the other side when we process the other simplex.
+                s->gluing_[f] = Perm<dim + 1>(dim - 1, dim) *
+                    s->gluing_[f] * Perm<dim + 1>(dim - 1, dim);
+            }
+    }
 
     // Don't forget to call clearAllProperties(), since we are manipulating
     // the gluing-related data members of Simplex<dim> directly.

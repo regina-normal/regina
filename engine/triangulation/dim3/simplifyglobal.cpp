@@ -51,11 +51,10 @@ bool Triangulation<3>::intelligentSimplify() {
         Triangulation<3>* use;
 
         // Variables used for selecting random 4-4 moves.
-        std::vector<std::pair<Edge<3>*, int> > fourFourAvailable;
+        std::vector<std::pair<Edge<3>*, int>> fourFourAvailable;
         std::pair<Edge<3>*, int> fourFourChoice;
 
-        unsigned long fourFourAttempts;
-        unsigned long fourFourCap;
+        size_t fourFourAttempts, fourFourCap;
 
         Edge<3>* edge;
         EdgeIterator eit;
@@ -105,7 +104,7 @@ bool Triangulation<3>::intelligentSimplify() {
                     // Start all over again.
                     fourFourAttempts = fourFourCap = 0;
                 } else
-                    fourFourAttempts++;
+                    ++fourFourAttempts;
             }
 
             // Sync the real triangulation with the clone if appropriate.
@@ -205,10 +204,10 @@ bool Triangulation<3>::intelligentSimplify() {
 }
 
 bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
-    unsigned long nTriangles;
-    unsigned long iTriangle;
-    // unsigned long nEdges;
-    // unsigned long iEdge;
+    size_t nTriangles;
+    size_t iTriangle;
+    // size_t nEdges;
+    // size_t iEdge;
     // std::deque<EdgeEmbedding<3>>::const_iterator embit, embbeginit, embendit;
 
     bool changed = false;   // Has anything changed ever (for return value)?

@@ -18,6 +18,9 @@ Version 5.2  [ 29 September, 2017 ]
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.
+        Class Link, Crossing, StrandRef:
+            - New classes to support knots and links, plus other additional
+              classes and methods to interface with the Boost Graph Library.
         Class NormalHypersurfaces:
             - New routine sort() to sort hypersurfaces by arbitrary criteria.
             - The postconditions for enumerate() and makeMatchingEquations()
@@ -46,10 +49,13 @@ Version 5.2  [ 29 September, 2017 ]
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the
               SnapPeaTriangulation(const Triangulation<3>&) constructor.
+        Class TreeDecomposition:
+            - New constructor that takes a Link.
         Class Triangulation<dim>:
             - Now implements the Boost Graph Library (BGL) interface.  The dual
               graph of a triangulation can be accessed seamlessly through the
               BGL by using the triangulation itself as the graph data structure.
+            - New routine reflect().
             - New Python constructor that accepts a snappy.Manifold or a
               SnapPy.Triangulation (thanks to Matthias Goerner).
         Enum Algorithm, TuraevViroAlg:
@@ -76,6 +82,7 @@ Version 5.2  [ 29 September, 2017 ]
 Version 5.1  [ 19 December, 2016 ]
 
     GENERAL:
+        - Now supports knots and links.
         - Removed all code that was deprecated in or before version 5.0.
         - Renamed all types NFoo to Foo, and renamed the headers accordingly.
           The old types and headers are deprecated but kept for backward
@@ -154,6 +161,8 @@ Version 5.1  [ 19 December, 2016 ]
             - New routine boundaryComponents() in all dimensions, and new
               routines countBoundaryComponents() and boundaryComponent() in
               higher dimensions (these were already present for dimensions 2-4).
+        Class Crossing, CrossingStrand:
+            - Supporting classes for the new Link packet class.
         Class Cyclotomic:
             - This class is now thread-safe.  (Previously it was not, because
               it worked with a global cache of cyclotomic polynomials.)
@@ -182,6 +191,10 @@ Version 5.1  [ 19 December, 2016 ]
         Class HomologicalData:
             - Now works with type Integer instead of LargeInteger for all
               member functions except for torsionSigmaVector().
+        Class Laurent, Laurent2:
+            - New classes for Laurent polynomials in one and two variables.
+        Class Link:
+            - New packet class for knots and links in the 3-sphere.
         Class MarkedVector:
             - New routine refill() for bulk replacements.
         Class MatrixInt:

@@ -43,8 +43,11 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 
+#include <QApplication>
+#include <QClipboard>
 #include <QLabel>
 #include <QLayout>
+#include <QMenu>
 #include <QPushButton>
 #include <QToolTip>
 #include <QWhatsThis>
@@ -284,8 +287,6 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     QBoxLayout* mfdArea = new QHBoxLayout();
     manifold = new QLabel();
     manifold->setAlignment(Qt::AlignCenter);
-    manifold->setTextInteractionFlags(
-        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     manifold->setWordWrap(true);
     mfdArea->addWidget(manifold, 1);
     msg = tr("<qt>Displays the name of the underlying 3-manifold if "
@@ -297,8 +298,6 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     QBoxLayout* censusArea = new QHBoxLayout();
     census = new QLabel();
     census->setAlignment(Qt::AlignCenter);
-    census->setTextInteractionFlags(
-        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     census->setWordWrap(true);
     censusArea->addWidget(census, 1);
     msg = tr("<qt>Indicates whether this triangulation appears in any of "
@@ -311,6 +310,13 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
+            
+    manifold->setContextMenuPolicy(Qt::CustomContextMenu);
+    census->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(census, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextCensus(const QPoint&)));
+    connect(manifold, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextManifold(const QPoint&)));
 }
 
 regina::Packet* Tri3SurfacesUI::getPacket() {
@@ -329,7 +335,6 @@ void Tri3SurfacesUI::refresh() {
         isHyp = false;
 
     // Begin with the combinatorial recognition.
-    std::string name;
     regina::StandardTriangulation* std =
         regina::StandardTriangulation::isStandardTriangulation(tri);
     if (std) {
@@ -379,7 +384,9 @@ void Tri3SurfacesUI::refresh() {
             btnZeroEff->setEnabled(false);
         } else {
             zeroEff->setText(tr("Unknown"));
-            zeroEff->setPalette(QPalette());
+            QPalette pal = zeroEff->palette();
+            pal.setColor(zeroEff->foregroundRole(), Qt::darkGray);
+            zeroEff->setPalette(pal);
             btnZeroEff->setEnabled(true);
         }
 
@@ -399,7 +406,9 @@ void Tri3SurfacesUI::refresh() {
             btnSplitting->setEnabled(false);
         } else {
             splitting->setText(tr("Unknown"));
-            splitting->setPalette(QPalette());
+            QPalette pal = splitting->palette();
+            pal.setColor(splitting->foregroundRole(), Qt::darkGray);
+            splitting->setPalette(pal);
             btnSplitting->setEnabled(true);
         }
     } else {
@@ -437,7 +446,9 @@ void Tri3SurfacesUI::refresh() {
             btnThreeSphere->setEnabled(false);
         } else {
             threeSphere->setText(tr("Unknown"));
-            threeSphere->setPalette(QPalette());
+            QPalette pal = threeSphere->palette();
+            pal.setColor(threeSphere->foregroundRole(), Qt::darkGray);
+            threeSphere->setPalette(pal);
             btnThreeSphere->setEnabled(true);
         }
     } else {
@@ -471,7 +482,9 @@ void Tri3SurfacesUI::refresh() {
             btnThreeBall->setEnabled(false);
         } else {
             threeBall->setText(tr("Unknown"));
-            threeBall->setPalette(QPalette());
+            QPalette pal = threeBall->palette();
+            pal.setColor(threeBall->foregroundRole(), Qt::darkGray);
+            threeBall->setPalette(pal);
             btnThreeBall->setEnabled(true);
         }
     } else {
@@ -505,7 +518,9 @@ void Tri3SurfacesUI::refresh() {
             btnSolidTorus->setEnabled(false);
         } else {
             solidTorus->setText(tr("Unknown"));
-            solidTorus->setPalette(QPalette());
+            QPalette pal = solidTorus->palette();
+            pal.setColor(solidTorus->foregroundRole(), Qt::darkGray);
+            solidTorus->setPalette(pal);
             btnSolidTorus->setEnabled(true);
         }
     } else {
@@ -538,7 +553,9 @@ void Tri3SurfacesUI::refresh() {
             btnIrreducible->setEnabled(false);
         } else {
             irreducible->setText(tr("Unknown"));
-            irreducible->setPalette(QPalette());
+            QPalette pal = irreducible->palette();
+            pal.setColor(irreducible->foregroundRole(), Qt::darkGray);
+            irreducible->setPalette(pal);
             btnIrreducible->setEnabled(true);
         }
     } else {
@@ -581,7 +598,9 @@ void Tri3SurfacesUI::refresh() {
             btnHaken->setEnabled(false);
         } else {
             haken->setText(tr("Unknown"));
-            haken->setPalette(QPalette());
+            QPalette pal = haken->palette();
+            pal.setColor(haken->foregroundRole(), Qt::darkGray);
+            haken->setPalette(pal);
             btnHaken->setEnabled(true);
         }
     } else {
@@ -617,7 +636,9 @@ void Tri3SurfacesUI::refresh() {
             btnStrict->setEnabled(false);
         } else {
             strict->setText(tr("Unknown"));
-            strict->setPalette(QPalette());
+            QPalette pal = strict->palette();
+            pal.setColor(strict->foregroundRole(), Qt::darkGray);
+            strict->setPalette(pal);
             btnStrict->setEnabled(true);
         }
 
@@ -635,7 +656,9 @@ void Tri3SurfacesUI::refresh() {
             }
         } else {
                 hyperbolic->setText("Unknown");
-                hyperbolic->setPalette(QPalette());
+                QPalette pal = hyperbolic->palette();
+                pal.setColor(hyperbolic->foregroundRole(), Qt::darkGray);
+                hyperbolic->setPalette(pal);
         }
     } else {
         titleStrict->setVisible(false);
@@ -655,7 +678,8 @@ void Tri3SurfacesUI::refresh() {
     }
 
     if (tri->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        regina::CensusHits* hits = regina::Census::lookup(tri->isoSig());
+        hits = std::unique_ptr<regina::CensusHits>(
+            regina::Census::lookup(tri->isoSig()));
         if (hits->empty()) {
             census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
         } else if (hits->count() == 1) {
@@ -672,8 +696,9 @@ void Tri3SurfacesUI::refresh() {
             ans += "</qt>";
             census->setText(ans);
         }
-        delete hits;
     } else {
+        hits.reset();
+        
         // The triangulation is too large to be found in the census.
         // Avoid the overhead of calling isoSig().
         census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
@@ -766,5 +791,47 @@ void Tri3SurfacesUI::calculateStrict() {
     delete dlg;
 
     refresh();
+}
+
+void Tri3SurfacesUI::contextManifold(const QPoint& pos) {
+    if (name.empty())
+        return;
+    
+    QMenu m(tr("Context menu"), manifold);
+    QAction a("Copy manifold", manifold);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyManifold()));
+    m.addAction(&a);
+    m.exec(manifold->mapToGlobal(pos));
+}
+
+void Tri3SurfacesUI::contextCensus(const QPoint& pos) {
+    if (! (hits.get() && ! hits->empty()))
+        return;
+    
+    QMenu m(tr("Context menu"), census);
+    QAction a("Copy census", census);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyCensus()));
+    m.addAction(&a);
+    m.exec(census->mapToGlobal(pos));
+}
+
+void Tri3SurfacesUI::copyManifold() {
+    QApplication::clipboard()->setText(name.c_str());
+}
+
+void Tri3SurfacesUI::copyCensus() {
+    QString ans;
+    
+    if (hits->count() == 1) {
+        ans = hits->first()->name().c_str();
+    } else {
+        for (const regina::CensusHit* hit = hits->first() ; hit;
+            hit = hit->next()) {
+            ans += hit->name().c_str();
+            ans += "\n";
+        }
+    }
+
+    QApplication::clipboard()->setText(ans);
 }
 

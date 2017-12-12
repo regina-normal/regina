@@ -27,6 +27,8 @@ if (${REGINA_INSTALL_DEV})
     approx.h
     cyclotomic.h
     integer.h
+    laurent.h
+    laurent2.h
     matrix.h
     matrix2.h
     matrixops.h

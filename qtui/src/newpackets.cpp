@@ -45,6 +45,7 @@
 #include "packets/tri4creator.h"
 #include "packets/anglescreator.h"
 #include "packets/filtercreator.h"
+#include "packets/linkcreator.h"
 #include "packets/hypercreator.h"
 #include "packets/tri3creator.h"
 #include "packets/snappeacreator.h"
@@ -91,6 +92,10 @@ void ReginaMain::newScript() {
 void ReginaMain::newSnapPeaTriangulation() {
     newPacket(new SnapPeaTriangulationCreator(this), 0,
         tr("New SnapPea Triangulation"));
+}
+
+void ReginaMain::newLink() {
+    newPacket(new LinkCreator(this), 0, tr("New Knot or Link"));
 }
 
 void ReginaMain::newText() {

@@ -206,6 +206,7 @@ void addTriangulation(const char* name) {
             .def("isOriented", &Triangulation<dim>::isOriented)
             .def("isConnected", &Triangulation<dim>::isConnected)
             .def("orient", &Triangulation<dim>::orient)
+            .def("reflect", &Triangulation<dim>::reflect)
             .def("splitIntoComponents",
                 typename PyTriHelper<dim>::splitIntoComponents_type(
                     &Triangulation<dim>::splitIntoComponents),

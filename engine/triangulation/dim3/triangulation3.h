@@ -920,8 +920,11 @@ class REGINA_API Triangulation<3> :
          * it can occasionally get stuck; in such cases you may wish to try
          * the more powerful but (much) slower simplifyExhaustive() instead.
          *
-         * \warning The specific behaviour of this routine may well
-         * change between releases.
+         * \warning Running this routine multiple times upon the same
+         * triangulation may return different results, since the implementation
+         * makes random decisions.  More broadly, the implementation of this
+         * routine (and therefore its results) may change between different
+         * releases of Regina.
          *
          * \todo \opt Include random 2-3 moves to get out of wells.
          *
@@ -946,8 +949,8 @@ class REGINA_API Triangulation<3> :
          * (such as 4-4 moves or book opening moves) are not used in this
          * routine.  Such moves do however feature in intelligentSimplify().
          *
-         * \warning The specific behaviour of this routine is
-         * very likely to change between releases.
+         * \warning The implementation of this routine (and therefore
+         * its results) may change between different releases of Regina.
          *
          * @param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
@@ -1008,6 +1011,11 @@ class REGINA_API Triangulation<3> :
          *
          * If this routine is unable to simplify the triangulation, then
          * the triangulation will not be changed.
+         *
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
          *
          * \pre This triangulation is connected.
          *
@@ -1091,9 +1099,10 @@ class REGINA_API Triangulation<3> :
          * protected by a mutex (i.e., different threads will never be
          * calling \a action at the same time).
          *
-         * If \a height is negative, then this routine will do nothing
-         * and immediately return \c false, and any progress tracker
-         * that was passed will immediately be marked as finished.
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some

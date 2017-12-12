@@ -15,6 +15,7 @@ SET ( FILES
   close_cusps
   complex
   core_geodesics
+  cover
   current_curve_basis
   cusp_cross_sections
   cusp_neighborhoods
@@ -41,6 +42,7 @@ SET ( FILES
   peripheral_curves
   positioned_tet
   precision
+  representations
   shortest_cusp_basis
   simplify_triangulation
   sl2c_matrices

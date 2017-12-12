@@ -48,6 +48,7 @@
 #ifdef HIGHDIM
 #include "testsuite/generic/testgeneric.h"
 #endif
+#include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
@@ -173,6 +174,10 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // SnapPea:
     sets.insert(std::make_pair("snappeatriangulation",
         &addSnapPeaTriangulation));
+
+    // Knots and links:
+    sets.insert(std::make_pair("link", &addLink));
+    sets.insert(std::make_pair("linkgraph", &addLinkGraph));
 
     if (argc <= 1)
         for (const auto& i : sets)

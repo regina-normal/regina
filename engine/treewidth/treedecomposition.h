@@ -53,6 +53,7 @@ namespace regina {
  * @{
  */
 
+class Link;
 class TreeBag;
 
 /**
@@ -688,6 +689,21 @@ class REGINA_API TreeDecomposition :
         template <int dim>
         TreeDecomposition(
             const FacetPairing<dim>& pairing,
+            TreeDecompositionAlg alg = TD_UPPER);
+
+        /**
+         * Builds a tree decomposition of the planar multigraph
+         * corresponding to the given knot or link diagram.
+         *
+         * The nodes of the graph will be numbered in the same way as
+         * the crossings of the given knot / link.
+         *
+         * @param link the knot or link that we are working with.
+         * @param alg the algorithm that should be used to compute the
+         * tree decomposition; in particular, this specifies whether to
+         * use a slow exact algorithm or a fast greedy algorithm.
+         */
+        TreeDecomposition(const Link& link,
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**

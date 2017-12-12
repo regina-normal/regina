@@ -34,6 +34,8 @@ void addMatrixOps();
 void addCyclotomic();
 void addInteger();
 void addLargeInteger();
+void addLaurent();
+void addLaurent2();
 void addMatrix2();
 void addMatrixInt();
 void addPerm2();
@@ -51,6 +53,8 @@ void addMathsClasses() {
     addCyclotomic();
     addInteger();
     addLargeInteger();
+    addLaurent();
+    addLaurent2();
     addMatrix2();
     addMatrixInt();
     addPerm2();

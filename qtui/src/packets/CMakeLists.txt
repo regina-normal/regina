@@ -17,6 +17,13 @@ SET ( FILES
   hypermatchingui
   hypersummaryui
   hyperui
+  linkcodes
+  linkcreator
+  linkcrossings
+  linkgraph
+  linkmovedialog
+  linkpoly
+  linkui
   pdfui
   scriptui
   skeletonwindow

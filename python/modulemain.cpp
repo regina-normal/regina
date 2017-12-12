@@ -49,6 +49,7 @@ void addForeignClasses();
 void addGenericClasses();
 #endif
 void addHypersurfaceClasses();
+void addLinkClasses();
 void addManifoldClasses();
 void addMathsClasses();
 void addPacketClasses();
@@ -153,5 +154,6 @@ BOOST_PYTHON_MODULE(regina) {
     addGenericClasses();
 #endif
     addTreewidthClasses();
+    addLinkClasses();
 }
 

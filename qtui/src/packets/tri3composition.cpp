@@ -100,8 +100,6 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     label->setWhatsThis(msg);
     line->addWidget(label);
     standardTri = new QLabel(ui);
-    standardTri->setTextInteractionFlags(
-        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     standardTri->setWordWrap(true);
     standardTri->setWhatsThis(msg);
     line->addWidget(standardTri, 1);
@@ -119,8 +117,6 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     label->setWhatsThis(msg);
     line->addWidget(label);
     isoSig = new QLabel(ui);
-    isoSig->setTextInteractionFlags(
-        Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     isoSig->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
     isoSig->setWordWrap(false);
     isoSig->setWhatsThis(msg);
@@ -147,7 +143,15 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
     details->setWhatsThis(msg);
     layout->addWidget(details, 1);
 
-    editIface = new PacketEditTreeWidgetSingleLine(details);
+    standardTri->setContextMenuPolicy(Qt::CustomContextMenu);
+    isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
+    details->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(standardTri, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextStandardTri(const QPoint&)));
+    connect(isoSig, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextIsoSig(const QPoint&)));
+    connect(details, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextComposition(const QPoint&)));
 
     /*
     // Add a central divider.
@@ -208,10 +212,6 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* packet,
 
 }
 
-Tri3CompositionUI::~Tri3CompositionUI() {
-    delete editIface;
-}
-
 regina::Packet* Tri3CompositionUI::getPacket() {
     return tri;
 }
@@ -237,10 +237,10 @@ void Tri3CompositionUI::refresh() {
     */
 
     // Try to identify the triangulation.
-    std::unique_ptr<regina::StandardTriangulation> foundTri(
+    standard = std::unique_ptr<regina::StandardTriangulation>(
         regina::StandardTriangulation::isStandardTriangulation(tri));
-    if (foundTri.get()) {
-        standardTri->setText(foundTri->name().c_str());
+    if (standard.get()) {
+        standardTri->setText(standard->name().c_str());
         standardTri->setStyleSheet(
             "QLabel { color : black ; }");
     } else {
@@ -1096,3 +1096,44 @@ QString Tri3CompositionUI::matrixString(const regina::Matrix2& matrix) {
         arg(matrix[0][0]).arg(matrix[0][1]).arg(matrix[1][0]).arg(matrix[1][1]);
 }
 
+void Tri3CompositionUI::contextStandardTri(const QPoint& pos) {
+    if (! standard.get())
+        return;
+    
+    QMenu m(tr("Context menu"), standardTri);
+    QAction a("Copy triangulation", standardTri);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyStandardTri()));
+    m.addAction(&a);
+    m.exec(standardTri->mapToGlobal(pos));
+}
+
+void Tri3CompositionUI::contextIsoSig(const QPoint& pos) {
+    QMenu m(tr("Context menu"), isoSig);
+    QAction a("Copy isomorphism signature", isoSig);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyIsoSig()));
+    m.addAction(&a);
+    m.exec(isoSig->mapToGlobal(pos));
+}
+
+void Tri3CompositionUI::contextComposition(const QPoint& pos) {
+    if (details->selectedItems().empty())
+        return;
+    
+    QMenu m(tr("Context menu"), details);
+    QAction a("Copy line", details);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyCompositionLine()));
+    m.addAction(&a);
+    m.exec(details->mapToGlobal(pos));
+}
+
+void Tri3CompositionUI::copyStandardTri() {
+    QApplication::clipboard()->setText(standardTri->text());
+}
+
+void Tri3CompositionUI::copyIsoSig() {
+    QApplication::clipboard()->setText(isoSig->text());
+}
+
+void Tri3CompositionUI::copyCompositionLine() {
+    QApplication::clipboard()->setText(details->selectedItems().front()->text(0));
+}

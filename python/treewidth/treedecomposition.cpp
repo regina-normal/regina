@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
+#include "link/link.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/facetpairing3.h"
@@ -186,6 +187,9 @@ void addTreeDecomposition() {
             regina::TreeDecompositionAlg>())
         .def(init<const regina::FacetPairing<4>&>())
         .def(init<const regina::FacetPairing<4>&,
+            regina::TreeDecompositionAlg>())
+        .def(init<const regina::Link&>())
+        .def(init<const regina::Link&,
             regina::TreeDecompositionAlg>())
         .def("__init__", make_constructor(fromListAlg))
         .def("__init__", make_constructor(fromList))

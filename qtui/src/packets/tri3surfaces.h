@@ -37,6 +37,7 @@
 #ifndef __TRI3SURFACES_H
 #define __TRI3SURFACES_H
 
+#include "census/census.h"
 #include "triangulation/forward.h"
 #include "../packettabui.h"
 
@@ -58,6 +59,8 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
          * Packet details
          */
         regina::Triangulation<3>* tri;
+        std::string name;
+        std::unique_ptr<regina::CensusHits> hits;
 
         /**
          * Internal components
@@ -123,6 +126,14 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
          * Notify that preferences have changed.
          */
         void updatePreferences();
+    
+        /**
+         * Support clipboard actions.
+         */
+        void contextManifold(const QPoint& pos);
+        void contextCensus(const QPoint& pos);
+        void copyManifold();
+        void copyCensus();
 };
 
 inline void Tri3SurfacesUI::updatePreferences() {

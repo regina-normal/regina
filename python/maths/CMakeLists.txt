@@ -2,6 +2,8 @@
 
 # Files to compile
 SET ( FILES
+  laurent
+  laurent2
   matrixops
   cyclotomic
   integer

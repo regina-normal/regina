@@ -47,7 +47,6 @@ class Tri3GluingsUI;
 class Tri3SkeletonUI;
 class Tri3SurfacesUI;
 class Tri3SnapPeaUI;
-class PacketEditIface;
 class QLabel;
 class QToolBar;
 
@@ -67,20 +66,16 @@ class Tri3UI : public PacketTabbedUI {
         Tri3SurfacesUI* surfaces;
         Tri3SnapPeaUI* snapPea;
 
-        PacketEditIface* editIface;
-
     public:
         /**
          * Constructor and destructor.
          */
         Tri3UI(regina::Triangulation<3>* packet,
             PacketPane* newEnclosingPane);
-        ~Tri3UI();
-
+ 
         /**
          * PacketUI overrides.
          */
-        PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 };
@@ -154,10 +149,6 @@ class Tri3HeaderUI : public QObject, public PacketViewerTab,
          */
         void customEvent(QEvent* event);
 };
-
-inline PacketEditIface* Tri3UI::getEditIface() {
-    return editIface;
-}
 
 inline QToolBar* Tri3HeaderUI::getToolBar() {
     return bar;

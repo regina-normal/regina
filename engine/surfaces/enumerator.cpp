@@ -50,7 +50,7 @@ namespace regina {
 /**
  * The largest possible signed 128-bit integer,
  */
-Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
+const Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
 namespace {
