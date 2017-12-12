@@ -45,7 +45,7 @@ void addDim2Classes();
 void addDim4Classes();
 void addFileClasses();
 void addForeignClasses();
-#ifdef HIGHDIM
+#ifndef REGINA_LOWDIMONLY
 void addGenericClasses();
 #endif
 void addHypersurfaceClasses();
@@ -150,7 +150,7 @@ BOOST_PYTHON_MODULE(regina) {
     addSurfacesClasses();
     addHypersurfaceClasses();
     addDim2Classes();
-#ifdef HIGHDIM
+#ifndef REGINA_LOWDIMONLY
     addGenericClasses();
 #endif
     addTreewidthClasses();

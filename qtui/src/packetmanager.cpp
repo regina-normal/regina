@@ -113,7 +113,7 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
         case PACKET_TRIANGULATION4 :
             id = IconCache::packet_triangulation4;
             break;
-#ifdef HIGHDIM
+#ifndef REGINA_LOWDIMONLY
         // For generic dimensions, we don't cache the icons.
         case PACKET_TRIANGULATION5 :
             return ReginaSupport::regIcon("packet_triangulation5");
@@ -137,7 +137,7 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
             return ReginaSupport::regIcon("packet_triangulation14");
         case PACKET_TRIANGULATION15 :
             return ReginaSupport::regIcon("packet_triangulation15");
-#endif /* HIGHDIM */
+#endif /* ! REGINA_LOWDIMONLY */
         default:
             // Unknown packet type.
             return QIcon();
@@ -198,7 +198,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_TRIANGULATION4:
             return new Tri4UI(
                 dynamic_cast<Triangulation<4>*>(packet), enclosingPane);
-#ifdef HIGHDIM
+#ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(
                 dynamic_cast<Triangulation<5>*>(packet), enclosingPane);
@@ -232,7 +232,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_TRIANGULATION15:
             return new GenericTriangulationUI<15>(
                 dynamic_cast<Triangulation<15>*>(packet), enclosingPane);
-#endif /* HIGHDIM */
+#endif /* ! REGINA_LOWDIMONLY */
         default:
             return new DefaultPacketUI(packet, enclosingPane);
     }

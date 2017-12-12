@@ -65,7 +65,7 @@ void addFacetSpec() {
     addFacetSpec<2>("FacetSpec2");
     addFacetSpec<3>("FacetSpec3");
     addFacetSpec<4>("FacetSpec4");
-#ifdef HIGHDIM
+#ifndef REGINA_LOWDIMONLY
     addFacetSpec<5>("FacetSpec5");
     addFacetSpec<6>("FacetSpec6");
     addFacetSpec<7>("FacetSpec7");

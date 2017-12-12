@@ -81,7 +81,7 @@ namespace regina {
 // possible packet types.
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-#ifdef HIGHDIM
+#ifndef REGINA_LOWDIMONLY
 template <>
 struct PacketInfo<PACKET_TRIANGULATION5> {
     typedef Triangulation<5> Class;
@@ -159,7 +159,7 @@ struct PacketInfo<PACKET_TRIANGULATION15> {
         return "15-Manifold Triangulation";
     }
 };
-#endif /* HIGHDIM */
+#endif /* ! REGINA_LOWDIMONLY */
 #endif
 
 // ----------------------------------------------------------------------
@@ -211,7 +211,7 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_LINK : return
             func.template operator()<PacketInfo<PACKET_LINK>>(
             std::forward<Args>(args)...);
-#ifdef HIGHDIM
+#ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5 : return
             func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
             std::forward<Args>(args)...);
@@ -245,7 +245,7 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_TRIANGULATION15 : return
             func.template operator()<PacketInfo<PACKET_TRIANGULATION15>>(
             std::forward<Args>(args)...);
-#endif /* HIGHDIM */
+#endif /* ! REGINA_LOWDIMONLY */
         default: return defaultReturn;
     }
 }
@@ -293,7 +293,7 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
         case PACKET_LINK :
             func.template operator()<PacketInfo<PACKET_LINK>>(
             std::forward<Args>(args)...); break;
-#ifdef HIGHDIM
+#ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5 :
             func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
             std::forward<Args>(args)...); break;
@@ -327,7 +327,7 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
         case PACKET_TRIANGULATION15 :
             func.template operator()<PacketInfo<PACKET_TRIANGULATION15>>(
             std::forward<Args>(args)...); break;
-#endif /* HIGHDIM */
+#endif /* ! REGINA_LOWDIMONLY */
         default: break;
     }
 }

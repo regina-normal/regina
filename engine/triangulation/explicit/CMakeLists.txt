@@ -12,7 +12,7 @@ FOREACH ( SOURCE_FILE ${FILES} )
   SET ( SOURCES ${SOURCES} triangulation/explicit/${SOURCE_FILE})
 ENDFOREACH (SOURCE_FILE)
 
-# These files are only included if LOWDIM is not set
+# These files are only included if LOWDIMONLY is not set
 SET ( FILES
   boundary5
   boundary6
@@ -37,12 +37,12 @@ SET ( FILES
   triangulation14
   triangulation15
   )
-IF(HIGHDIM)
+IF(NOT LOWDIMONLY)
   # Prepend folder name
   FOREACH ( SOURCE_FILE ${FILES} )
     SET ( SOURCES ${SOURCES} triangulation/explicit/${SOURCE_FILE})
   ENDFOREACH (SOURCE_FILE)
-ENDIF(HIGHDIM)
+ENDIF(NOT LOWDIMONLY)
 
 # Set the variable in the parent directory
 SET(SOURCES ${SOURCES} PARENT_SCOPE)

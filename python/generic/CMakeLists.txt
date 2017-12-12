@@ -104,12 +104,12 @@ SET ( FILES
   triangulation15
   )
 
-IF(HIGHDIM)
+IF(NOT LOWDIMONLY)
   # Prepend folder name
   FOREACH ( SOURCE_FILE ${FILES} )
     SET ( SOURCES ${SOURCES} generic/${SOURCE_FILE})
   ENDFOREACH(SOURCE_FILE)
-ENDIF(HIGHDIM)
+ENDIF(NOT LOWDIMONLY)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
