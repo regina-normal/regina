@@ -217,5 +217,6 @@ void addGenericClasses() {
     addTriangulations13();
     addTriangulations14();
     addTriangulations15();
+#endif /* ! REGINA_LOWDIMONLY */
 }
 
