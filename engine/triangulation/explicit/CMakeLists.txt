@@ -3,6 +3,17 @@ SET ( FILES
   boundary2
   boundary3
   boundary4
+  triangulation2
+  triangulation3
+  triangulation4
+  )
+# Prepend folder name
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} triangulation/explicit/${SOURCE_FILE})
+ENDFOREACH (SOURCE_FILE)
+
+# These files are only included if LOWDIMONLY is not set
+SET ( FILES
   boundary5
   boundary6
   boundary7
@@ -14,9 +25,6 @@ SET ( FILES
   boundary13
   boundary14
   boundary15
-  triangulation2
-  triangulation3
-  triangulation4
   triangulation5
   triangulation6
   triangulation7
@@ -29,11 +37,12 @@ SET ( FILES
   triangulation14
   triangulation15
   )
-
-# Prepend folder name
-FOREACH ( SOURCE_FILE ${FILES} )
-  SET ( SOURCES ${SOURCES} triangulation/explicit/${SOURCE_FILE})
-ENDFOREACH (SOURCE_FILE)
+IF(NOT LOWDIMONLY)
+  # Prepend folder name
+  FOREACH ( SOURCE_FILE ${FILES} )
+    SET ( SOURCES ${SOURCES} triangulation/explicit/${SOURCE_FILE})
+  ENDFOREACH (SOURCE_FILE)
+ENDIF(NOT LOWDIMONLY)
 
 # Set the variable in the parent directory
 SET(SOURCES ${SOURCES} PARENT_SCOPE)

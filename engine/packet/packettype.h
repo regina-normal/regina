@@ -109,6 +109,7 @@ enum PacketType {
      * Represents a 4-dimensional triangulation, of class Triangulation<4>.
      */
     PACKET_TRIANGULATION4 = 11,
+#ifndef REGINA_LOWDIMONLY
     /**
      * Represents a 5-dimensional triangulation, of class Triangulation<5>.
      */
@@ -153,6 +154,7 @@ enum PacketType {
      * Represents a 15-dimensional triangulation, of class Triangulation<15>.
      */
     PACKET_TRIANGULATION15 = 115
+#endif /* ! REGINA_LOWDIMONLY */
 };
 
 /**

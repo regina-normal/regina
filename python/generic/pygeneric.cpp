@@ -125,6 +125,10 @@ void addTriangulations15();
 
 void addGenericClasses() {
     addFacetSpec();
+    addFacetPairing2();
+    addFacetPairing4();
+    addFace();
+#ifndef REGINA_LOWDIMONLY
     addComponent5();
     addComponent6();
     addComponent7();
@@ -158,8 +162,6 @@ void addGenericClasses() {
     addExample13();
     addExample14();
     addExample15();
-    addFacetPairing2();
-    addFacetPairing4();
     addFacetPairing5();
     addFacetPairing6();
     addFacetPairing7();
@@ -182,7 +184,6 @@ void addGenericClasses() {
     addIsomorphism13();
     addIsomorphism14();
     addIsomorphism15();
-    addFace();
     addFace5();
     addFace6();
     addFace7();
@@ -216,5 +217,6 @@ void addGenericClasses() {
     addTriangulations13();
     addTriangulations14();
     addTriangulations15();
+#endif /* ! REGINA_LOWDIMONLY */
 }
 

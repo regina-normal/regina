@@ -45,7 +45,9 @@
 #include "testsuite/dim2/testdim2.h"
 #include "testsuite/dim3/testtriangulation.h"
 #include "testsuite/dim4/testdim4.h"
+#ifndef REGINA_LOWDIMONLY
 #include "testsuite/generic/testgeneric.h"
+#endif
 #include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
@@ -143,10 +145,12 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // 4-manifold triangulations:
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
 
-    // Generic triangulations:
+#ifndef REGINA_LOWDIMONLY
+    // Higher-dimensional triangulations:
     sets.insert(std::make_pair("facenumbering", &addFaceNumbering));
     sets.insert(std::make_pair("generictriangulation",
         &addGenericTriangulation));
+#endif
 
     // Subcomplexes:
     sets.insert(std::make_pair("standardtriangulation",
