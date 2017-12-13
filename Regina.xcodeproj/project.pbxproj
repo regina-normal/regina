@@ -1521,6 +1521,12 @@
 		058FADBD19D506160001B5B5 /* Tri3SnapPea.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADB919D506160001B5B5 /* Tri3SnapPea.mm */; };
 		058FADC319D508070001B5B5 /* SurfacesSummary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADC219D508070001B5B5 /* SurfacesSummary.mm */; };
 		058FADC619D50DA10001B5B5 /* Coordinates.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADC519D50DA10001B5B5 /* Coordinates.mm */; };
+		058FC86B1FE188A0006D04B4 /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		058FC86C1FE188A0006D04B4 /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		058FC86D1FE188A0006D04B4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		058FC86E1FE188A0006D04B4 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		058FC8731FE188E0006D04B4 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058FC8651FE18826006D04B4 /* retriangulate.cpp */; };
+		058FC8761FE18943006D04B4 /* retriangulate in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 058FC8721FE188A0006D04B4 /* retriangulate */; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
@@ -2260,6 +2266,13 @@
 			remoteGlobalIDString = 05617B371D9DC55000B1E33B;
 			remoteInfo = "Utils - SigCensus";
 		};
+		058FC8741FE18904006D04B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 058FC8671FE188A0006D04B4;
+			remoteInfo = "Utils - Retriangulate";
+		};
 		05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
@@ -2300,6 +2313,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				058FC8761FE18943006D04B4 /* retriangulate in Copy Engine and Utilities */,
 				05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */,
 				05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */,
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
@@ -4014,6 +4028,8 @@
 		058FADC219D508070001B5B5 /* SurfacesSummary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesSummary.mm; sourceTree = "<group>"; };
 		058FADC419D50C5D0001B5B5 /* Coordinates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Coordinates.h; sourceTree = "<group>"; };
 		058FADC519D50DA10001B5B5 /* Coordinates.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Coordinates.mm; sourceTree = "<group>"; };
+		058FC8651FE18826006D04B4 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
+		058FC8721FE188A0006D04B4 /* retriangulate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = retriangulate; sourceTree = BUILT_PRODUCTS_DIR; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101191813230A000A8D16 /* NewPacketMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketMenu.h; sourceTree = "<group>"; };
@@ -4690,6 +4706,17 @@
 				056AA9A41C41DE8700FA81D3 /* libgmp.framework in Frameworks */,
 				056AA9A51C41DE8700FA81D3 /* libgmpxx.framework in Frameworks */,
 				056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		058FC86A1FE188A0006D04B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				058FC86B1FE188A0006D04B4 /* libregina-engine.dylib in Frameworks */,
+				058FC86C1FE188A0006D04B4 /* popt.framework in Frameworks */,
+				058FC86D1FE188A0006D04B4 /* libiconv.dylib in Frameworks */,
+				058FC86E1FE188A0006D04B4 /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6701,6 +6728,7 @@
 				05617AE61D9DC02900B1E33B /* regconvert.cpp */,
 				05617AE71D9DC02900B1E33B /* regfiledump.cpp */,
 				05617AE81D9DC02900B1E33B /* regfiletype.cpp */,
+				058FC8651FE18826006D04B4 /* retriangulate.cpp */,
 				05617AE91D9DC02900B1E33B /* sigcensus.cpp */,
 				05617AEA1D9DC02900B1E33B /* tricensus.cpp */,
 				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
@@ -7198,6 +7226,7 @@
 				05617B2D1D9DC54500B1E33B /* regfiletype */,
 				05617B381D9DC55000B1E33B /* sigcensus */,
 				05617B431D9DC55B00B1E33B /* trisetcmp */,
+				058FC8721FE188A0006D04B4 /* retriangulate */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -8396,6 +8425,7 @@
 			dependencies = (
 				055ABEB419B49F1100044C1B /* PBXTargetDependency */,
 				050F5E6F1B9BD3A000C1F681 /* PBXTargetDependency */,
+				058FC8751FE18904006D04B4 /* PBXTargetDependency */,
 				05617B711D9DC70E00B1E33B /* PBXTargetDependency */,
 				05617AF71D9DC0E000B1E33B /* PBXTargetDependency */,
 			);
@@ -8422,6 +8452,22 @@
 			productName = Regina;
 			productReference = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
+		};
+		058FC8671FE188A0006D04B4 /* Utils - Retriangulate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 058FC86F1FE188A0006D04B4 /* Build configuration list for PBXNativeTarget "Utils - Retriangulate" */;
+			buildPhases = (
+				058FC8681FE188A0006D04B4 /* Sources */,
+				058FC86A1FE188A0006D04B4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - Retriangulate";
+			productName = "Utils - Retriangulate";
+			productReference = 058FC8721FE188A0006D04B4 /* retriangulate */;
+			productType = "com.apple.product-type.tool";
 		};
 		05B14EA219B423A0002138C0 /* Census Tools */ = {
 			isa = PBXNativeTarget;
@@ -8495,6 +8541,9 @@
 							};
 						};
 					};
+					058FC8671FE188A0006D04B4 = {
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 0575E6541805F36D009E3FC4 /* Build configuration list for PBXProject "Regina" */;
@@ -8521,6 +8570,7 @@
 				05617B161D9DC52B00B1E33B /* Utils - RegConvert */,
 				05617B211D9DC53400B1E33B /* Utils - RegFileDump */,
 				05617B2C1D9DC54500B1E33B /* Utils - RegFileType */,
+				058FC8671FE188A0006D04B4 /* Utils - Retriangulate */,
 				05617B371D9DC55000B1E33B /* Utils - SigCensus */,
 				05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */,
 				05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */,
@@ -8639,7 +8689,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in sigcensus tricensus; do\n/usr/bin/codesign --force --sign FDA4865E0F0A4DE4B8060E4F2D5F52B326558A21 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in retriangulate sigcensus tricensus; do\n/usr/bin/codesign --force --sign FDA4865E0F0A4DE4B8060E4F2D5F52B326558A21 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10213,6 +10263,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		058FC8681FE188A0006D04B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				058FC8731FE188E0006D04B4 /* retriangulate.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		05B14E9F19B423A0002138C0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -10248,6 +10306,11 @@
 			isa = PBXTargetDependency;
 			target = 05617B371D9DC55000B1E33B /* Utils - SigCensus */;
 			targetProxy = 05617B701D9DC70E00B1E33B /* PBXContainerItemProxy */;
+		};
+		058FC8751FE18904006D04B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 058FC8671FE188A0006D04B4 /* Utils - Retriangulate */;
+			targetProxy = 058FC8741FE18904006D04B4 /* PBXContainerItemProxy */;
 		};
 		05B14EBB19B427AC002138C0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -11523,6 +11586,90 @@
 			};
 			name = Release;
 		};
+		058FC8701FE188A0006D04B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/retriangulate.plist",
+				);
+				PRODUCT_NAME = retriangulate;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		058FC8711FE188A0006D04B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/retriangulate.plist",
+				);
+				PRODUCT_NAME = retriangulate;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		05B14EA919B423A0002138C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11706,6 +11853,15 @@
 			buildConfigurations = (
 				0575E65E1805F36D009E3FC4 /* Debug */,
 				0575E65F1805F36D009E3FC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		058FC86F1FE188A0006D04B4 /* Build configuration list for PBXNativeTarget "Utils - Retriangulate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				058FC8701FE188A0006D04B4 /* Debug */,
+				058FC8711FE188A0006D04B4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

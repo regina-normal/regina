@@ -54,6 +54,13 @@
 			<key>orderHint</key>
 			<integer>10</integer>
 		</dict>
+		<key>Utils - Retriangulate.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>13</integer>
+		</dict>
 		<key>Utils - SigCensus.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -159,6 +166,11 @@
 			<true/>
 		</dict>
 		<key>0575E6581805F36D009E3FC4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>058FC8671FE188A0006D04B4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
