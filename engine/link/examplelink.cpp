@@ -86,26 +86,19 @@ Link* ExampleLink::borromean() {
     return ans;
 }
 
-Link* ExampleLink::kinoshitaTerasaka(int which) {
-    Link* ans;
-    switch (which) {
-        case 0:
-            ans = Link::fromData(
-                { -1, -1, -1, -1, +1, +1, +1, +1, +1, -1, -1, -1 },
-                { -1, 2, 3, -4, 5, -6, -2, 1, 7, -5, 6, -7,
-                  8, -9, 4, -3, -10, 11, 9, -8, -12, 10, -11, 12 });
-            ans->setLabel("Kinoshita-Terasaka mutant #1");
-            break;
-        case 1:
-            ans = Link::fromData(
-                { -1, -1, -1, -1, +1, +1, +1, -1, -1, -1, +1, +1 },
-                { -1, 2, 3, -4, 5, -6, -2, 1, 7, -5, 6, -7,
-                  -8, 9, -10, 8, 11, -12, -9, 10, 4, -3, 12, -11 });
-            ans->setLabel("Kinoshita-Terasaka mutant #2");
-            break;
-        default:
-            ans = nullptr;
-    }
+Link* ExampleLink::kinoshitaTerasaka() {
+    Link* ans = Link::fromData({ -1, -1, +1, -1, -1, +1, -1, +1, +1, +1, -1 },
+        { 1, -2, 3, 4, -5, -6, 2, -7, -8, 9, -4, 5, -10, 8, -9, 10, 11,
+          -1, 6, -3, 7, -11 });
+    ans->setLabel("Kinoshita-Terasaka knot");
+    return ans;
+}
+
+Link* ExampleLink::conway() {
+    Link* ans = Link::fromData({ +1, -1, -1, -1, -1, -1, -1, +1, +1, +1, +1 },
+        { 1, -2, 3, 4, -5, -6, 7, -1, 8, -3, 6, -7, 2, -8, -9, 10, -11,
+          9, -4, 5, -10, 11 });
+    ans->setLabel("Conway knot");
     return ans;
 }
 
@@ -144,6 +137,14 @@ Link* ExampleLink::gordian() {
     ans->setLabel("Gordian unknot");
     return ans;
 }
+
+/*
+Link* ExampleLink::torus(int p, int q) {
+    // TODO: Implement
+    Link* ans = 0;
+    return ans;
+}
+*/
 
 Link* ExampleLink::gst() {
     Link* ans = Link::fromData(

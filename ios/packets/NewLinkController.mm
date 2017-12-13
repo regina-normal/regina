@@ -122,8 +122,10 @@ typedef regina::Link* (*LinkCreator)();
 - (void)viewDidLoad
 {
     options = @[[ExampleLink exampleWithName:@"Borromean rings" creator:&regina::ExampleLink::borromean],
+                [ExampleLink exampleWithName:@"Conway knot" creator:&regina::ExampleLink::conway],
                 [ExampleLink exampleWithName:@"Figure eight knot" creator:&regina::ExampleLink::figureEight],
                 [ExampleLink exampleWithName:@"Hopf link" creator:&regina::ExampleLink::hopf],
+                [ExampleLink exampleWithName:@"Kinoshita-Terasaka knot" creator:&regina::ExampleLink::kinoshitaTerasaka],
                 [ExampleLink exampleWithName:@"Trefoil (left)" creator:&regina::ExampleLink::trefoilLeft],
                 [ExampleLink exampleWithName:@"Trefoil (right)" creator:&regina::ExampleLink::trefoilRight],
                 [ExampleLink exampleWithName:@"Unknot (no crossings)" creator:&regina::ExampleLink::unknot],

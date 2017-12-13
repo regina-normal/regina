@@ -68,8 +68,10 @@ namespace {
      */
     enum {
         EXAMPLE_BORROMEAN,
+        EXAMPLE_CONWAY,
         EXAMPLE_FIGURE_EIGHT,
         EXAMPLE_HOPF,
+        EXAMPLE_KT,
         EXAMPLE_TREFOIL_LEFT,
         EXAMPLE_TREFOIL_RIGHT,
         EXAMPLE_UNKNOT,
@@ -161,13 +163,15 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
     exampleWhich->insertItem(0, QObject::tr("Borromean rings"));
-    exampleWhich->insertItem(1, QObject::tr("Figure eight knot"));
-    exampleWhich->insertItem(2, QObject::tr("Hopf link"));
-    exampleWhich->insertItem(3, QObject::tr("Trefoil (left)"));
-    exampleWhich->insertItem(4, QObject::tr("Trefoil (right)"));
-    exampleWhich->insertItem(5, QObject::tr("Unknot (no crossings)"));
-    exampleWhich->insertItem(6, QObject::tr("Unknot (Gordian)"));
-    exampleWhich->insertItem(7, QObject::tr("Whitehead link"));
+    exampleWhich->insertItem(1, QObject::tr("Conway knot"));
+    exampleWhich->insertItem(2, QObject::tr("Figure eight knot"));
+    exampleWhich->insertItem(3, QObject::tr("Hopf link"));
+    exampleWhich->insertItem(4, QObject::tr("Kinoshita-Terasaka knot"));
+    exampleWhich->insertItem(5, QObject::tr("Trefoil (left)"));
+    exampleWhich->insertItem(6, QObject::tr("Trefoil (right)"));
+    exampleWhich->insertItem(7, QObject::tr("Unknot (no crossings)"));
+    exampleWhich->insertItem(8, QObject::tr("Unknot (Gordian)"));
+    exampleWhich->insertItem(9, QObject::tr("Whitehead link"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -217,10 +221,14 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_BORROMEAN:
                 return ExampleLink::borromean();
+            case EXAMPLE_CONWAY:
+                return ExampleLink::conway();
             case EXAMPLE_FIGURE_EIGHT:
                 return ExampleLink::figureEight();
             case EXAMPLE_HOPF:
                 return ExampleLink::hopf();
+            case EXAMPLE_KT:
+                return ExampleLink::kinoshitaTerasaka();
             case EXAMPLE_TREFOIL_LEFT:
                 return ExampleLink::trefoilLeft();
             case EXAMPLE_TREFOIL_RIGHT:

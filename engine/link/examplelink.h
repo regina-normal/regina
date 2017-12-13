@@ -144,16 +144,40 @@ class REGINA_API ExampleLink {
         static Link* borromean();
 
         /**
-         * Returns one of the two Kinoshita-Terasaka mutant knots.
+         * Returns the 11-crossing Conway knot.
          *
-         * These are the 12-crossing diagrams presented in Figure 2.32 of
-         * "The Knot Book", by Colin C. Adams, W H Freeman and Co., 1994.
+         * This is the reflection of \a K11n34 in the Knot Atlas, and is
+         * a mutant of the Kinoshita-Terasaka knot.
          *
-         * @param which either 0 or 1, to indicate whether to return the
-         * first or second diagram respectively.
-         * @return the requested member of the Kinoshita-Terasaka mutant pair.
+         * @return a newly constructed link, which must be
+         * destroyed by the caller of this routine.
          */
-        static Link* kinoshitaTerasaka(int which);
+        static Link* conway();
+
+        /**
+         * Returns the 11-crossing Kinoshita-Terasaka knot.
+         *
+         * This is the reflection of \a K11n42 in the Knot Atlas, and is
+         * a mutant of the Conway knot.  It has trivial Alexander polynomial.
+         *
+         * @return a newly constructed link, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Link* kinoshitaTerasaka();
+
+        /**
+         * Returns the (\a p,\a q) torus link.
+         *
+         * The parameters \a p and \a q must be positive, but they do
+         * not need to be coprime.
+         *
+         * @param p the first parameter of the torus link; this must be
+         * strictly positive.
+         * @param q the second parameter of the torus link; this must
+         * also be strictly positive.
+         * @return the (\a p, \a q) torus link.
+         */
+        // static Link* torus(int p, int q);
 
         /**
          * Returns a 48-crossing potential counterexample to the
