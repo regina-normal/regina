@@ -86,6 +86,14 @@ Link* ExampleLink::borromean() {
     return ans;
 }
 
+Link* ExampleLink::monster() {
+    Link* ans = Link::fromData({ -1, -1, +1, -1, +1, +1, +1, +1, +1, -1 },
+        { 1, -2, 3, 4, 5, -6, 7, -8, 9, -3, 10, -1, 2, -10, -4, -9, 8, -5,
+          6, -7 });
+    ans->setLabel("Monster unknot");
+    return ans;
+}
+
 Link* ExampleLink::kinoshitaTerasaka() {
     Link* ans = Link::fromData({ -1, -1, +1, -1, -1, +1, -1, +1, +1, +1, -1 },
         { 1, -2, 3, 4, -5, -6, 2, -7, -8, 9, -4, 5, -10, 8, -9, 10, 11,

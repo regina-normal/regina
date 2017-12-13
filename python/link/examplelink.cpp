@@ -61,6 +61,8 @@ void addExampleLink() {
             return_value_policy<to_held_type<> >())
         .def("borromean", &ExampleLink::borromean,
             return_value_policy<to_held_type<> >())
+        .def("monster", &ExampleLink::monster,
+            return_value_policy<to_held_type<> >())
         .def("conway", &ExampleLink::conway,
             return_value_policy<to_held_type<> >())
         .def("kinoshitaTerasaka", &ExampleLink::kinoshitaTerasaka,
@@ -81,6 +83,7 @@ void addExampleLink() {
         .staticmethod("hopf")
         .staticmethod("whitehead")
         .staticmethod("borromean")
+        .staticmethod("monster")
         .staticmethod("conway")
         .staticmethod("kinoshitaTerasaka")
         // .staticmethod("torus")

@@ -75,6 +75,7 @@ namespace {
         EXAMPLE_TREFOIL_LEFT,
         EXAMPLE_TREFOIL_RIGHT,
         EXAMPLE_UNKNOT,
+        EXAMPLE_MONSTER,
         EXAMPLE_GORDIAN,
         EXAMPLE_WHITEHEAD
     };
@@ -170,8 +171,9 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     exampleWhich->insertItem(5, QObject::tr("Trefoil (left)"));
     exampleWhich->insertItem(6, QObject::tr("Trefoil (right)"));
     exampleWhich->insertItem(7, QObject::tr("Unknot (no crossings)"));
-    exampleWhich->insertItem(8, QObject::tr("Unknot (Gordian)"));
-    exampleWhich->insertItem(9, QObject::tr("Whitehead link"));
+    exampleWhich->insertItem(8, QObject::tr("Unknot (10-crossing monster)"));
+    exampleWhich->insertItem(9, QObject::tr("Unknot (141-crossing Gordian)"));
+    exampleWhich->insertItem(10, QObject::tr("Whitehead link"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -235,6 +237,8 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 return ExampleLink::trefoilRight();
             case EXAMPLE_UNKNOT:
                 return ExampleLink::unknot();
+            case EXAMPLE_MONSTER:
+                return ExampleLink::monster();
             case EXAMPLE_GORDIAN:
                 return ExampleLink::gordian();
             case EXAMPLE_WHITEHEAD:

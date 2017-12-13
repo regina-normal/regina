@@ -129,7 +129,8 @@ typedef regina::Link* (*LinkCreator)();
                 [ExampleLink exampleWithName:@"Trefoil (left)" creator:&regina::ExampleLink::trefoilLeft],
                 [ExampleLink exampleWithName:@"Trefoil (right)" creator:&regina::ExampleLink::trefoilRight],
                 [ExampleLink exampleWithName:@"Unknot (no crossings)" creator:&regina::ExampleLink::unknot],
-                [ExampleLink exampleWithName:@"Unknot (Gordian)" creator:&regina::ExampleLink::gordian],
+                [ExampleLink exampleWithName:@"Unknot (10-crossing monster)" creator:&regina::ExampleLink::monster],
+                [ExampleLink exampleWithName:@"Unknot (141-crossing Gordian)" creator:&regina::ExampleLink::gordian],
                 [ExampleLink exampleWithName:@"Whitehead link" creator:&regina::ExampleLink::whitehead]];
    
     self.example.dataSource = self;

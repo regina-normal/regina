@@ -76,6 +76,15 @@ class REGINA_API ExampleLink {
         static Link* unknot();
 
         /**
+         * Returns the monster unknot, a 10-crossing diagram of the
+         * unknot that is difficult to untangle.
+         *
+         * @return a newly constructed link, which must be
+         * destroyed by the caller of this routine.
+         */
+        static Link* monster();
+
+        /**
          * Returns Haken's Gordian unknot, a 141-crossing diagram of the
          * unknot that is difficult to untangle.
          *
