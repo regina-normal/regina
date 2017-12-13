@@ -193,7 +193,7 @@
 
 - (void)keyboardDidShow:(NSNotification*)notification
 {
-    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
 
     CGRect tableInDetail = [self.parentViewController.view convertRect:self.cusps.bounds fromView:self.cusps];
     CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;

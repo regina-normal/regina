@@ -114,7 +114,7 @@
 - (void)keyboardDidShow:(NSNotification*)notification
 {
     // On iOS 8 (but not all orientations for iOS 7), what we need is kbSize.height.
-    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
 
     self.detail.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height, 0);
     self.detail.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height, 0);
