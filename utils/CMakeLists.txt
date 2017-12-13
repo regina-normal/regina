@@ -15,6 +15,7 @@ set(UTILS
   regconvert
   regfiledump
   regfiletype
+  retriangulate
   sigcensus
   tricensus
   trisetcmp

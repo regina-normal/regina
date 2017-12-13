@@ -75,6 +75,9 @@ Version 5.2  [ 29 September, 2017 ]
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.
+    UTILITIES:
+        retriangulate:
+            - New utility that exhaustively retriangulates a given manifold.
     TEST SUITE:
         - The test suite executable now takes optional arguments that,
           if present, indicate a subset of tests to perform.
