@@ -42,6 +42,7 @@
 #define __TRIANGULATION4_H
 #endif
 
+#include <functional>
 #include <list>
 #include <memory>
 #include <vector>
@@ -54,6 +55,8 @@
 
 namespace regina {
 
+class ProgressTracker;
+class ProgressTrackerOpen;
 class XMLPacketReader;
 
 template <int> class XMLTriangulationReader;
@@ -376,6 +379,185 @@ class REGINA_API Triangulation<4> :
          * capable of performing such a change.
          */
         bool simplifyToLocalMinimum(bool perform = true);
+
+        /**
+         * Attempts to simplify this triangulation using a slow but
+         * exhaustive search through the Pachner graph.  This routine is
+         * more powerful but much slower than intelligentSimplify().
+         *
+         * Specifically, this routine will iterate through all
+         * triangulations that can be reached from this triangulation via
+         * 1-5, 2-4, 3-3 and 4-2 Pachner moves, without ever exceeding
+         * \a height additional pentachora beyond the original number.
+         * Note that 5-1 moves are currently not supported, though this
+         * may be added in a future verson of Regina.
+         *
+         * If at any stage it finds a triangulation with \e fewer
+         * pentachora than the original, then this routine will call
+         * intelligentSimplify() to shrink the triangulation further if
+         * possible and will then return \c true.  If it cannot find a
+         * triangulation with fewer pentachora then it will leave this
+         * triangulation unchanged and return \c false.
+         *
+         * This routine can be very slow and very memory-intensive: the
+         * number of triangulations it visits may be superexponential in
+         * the number of pentachora, and it records every triangulation
+         * that it visits (so as to avoid revisiting the same triangulation
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if this fails then try increasing \a height one at a time until
+         * either you find a simplification or the routine becomes
+         * too expensive to run.
+         *
+         * If you want a \e fast simplification routine, you should call
+         * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
+         * is that, for very stubborn triangulations where intelligentSimplify()
+         * finds itself stuck at a local minimum, simplifyExhaustive() is able
+         * to "climb out" of such wells.
+         *
+         * If a progress tracker is passed, then the exhaustive simplification
+         * will take place in a new thread and this routine will return
+         * immediately.  In this case, you will need to use some other
+         * means to determine whether the triangulation was eventually
+         * simplified (e.g., by examining size() after the tracker
+         * indicates that the operation has finished).
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
+         * processing has finished (i.e., either the triangulation was
+         * simplified or the search was exhausted).
+         *
+         * If this routine is unable to simplify the triangulation, then
+         * the triangulation will not be changed.
+         *
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
+         *
+         * \pre This triangulation is connected.
+         *
+         * @param height the maximum number of \e additional pentachora to
+         * allow, beyond the number of pentachora originally present in the
+         * triangulation.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if and only if the triangulation was successfully simplified to
+         * fewer pentachora.
+         */
+        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+            ProgressTrackerOpen* tracker = 0);
+
+        /**
+         * Explores all triangulations that can be reached from this via
+         * Pachner moves, without exceeding a given number of additional
+         * pentachora.
+         *
+         * Specifically, this routine will iterate through all
+         * triangulations that can be reached from this triangulation via
+         * 1-5, 2-4, 3-3 and 4-2 Pachner moves, without ever exceeding
+         * \a height additional pentachora beyond the original number.
+         * Note that 5-1 moves are currently not supported, though this
+         * may be added in a future verson of Regina.
+         *
+         * For every such triangulation (including this starting
+         * triangulation), this routine will call \a action (which must
+         * be a function or some other callable object).
+         *
+         * - \a action must take at least one argument.  The first argument
+         *   will be of type Triangulation<4>&, and will reference the
+         *   triangulation that has been found.  If there are any
+         *   additional arguments supplied in the list \a args, then
+         *   these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return a boolean.  If \a action ever returns
+         *   \c true, then this indicates that processing should stop
+         *   immediately (i.e., no more triangulations will be processed).
+         *
+         * - \a action may, if it chooses, make changes to this triangulation
+         *   (i.e., the original triangulation upon which retriangulate()
+         *   was called).  This will not affect the search: all triangulations
+         *   that this routine visits will be obtained via Pachner moves
+         *   from the original form of this triangulation, before any
+         *   subsequent changes (if any) were made.
+         *
+         * - \a action may, if it chooses, make changes to the triangulation
+         *   that is passed in its argument (though it must not delete it).
+         *   This will likewise not affect the search, since the triangulation
+         *   that is passed to \a action will be destroyed immediately after
+         *   \a action is called.
+         *
+         * - \a action will only be called once for each triangulation
+         *   (including this starting triangulation).  In other words, no
+         *   triangulation will be revisited a second time in a single call
+         *   to retriangulate().
+         *
+         * This routine can be very slow and very memory-intensive, since the
+         * number of triangulations it visits may be superexponential in
+         * the number of tetrahedra, and it records every triangulation
+         * that it visits (so as to avoid revisiting the same triangulation
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if necessary try increasing \a height one at a time until
+         * this routine becomes too expensive to run.
+         *
+         * If a progress tracker is passed, then the exploration of
+         * triangulations will take place in a new thread and this
+         * routine will return immediately.
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
+         * processing has finished (i.e., either \a action returned \c true,
+         * or the search was exhausted).  All calls to \a action will be
+         * protected by a mutex (i.e., different threads will never be
+         * calling \a action at the same time).
+         *
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap them in std::ref or
+         * std::cref.
+         *
+         * \pre This triangulation is connected.
+         *
+         * \apinotfinal
+         *
+         * \ifacespython Not present.
+         *
+         * @param height the maximum number of \e additional pentachora to
+         * allow, beyond the number of pentachora originally present in the
+         * triangulation.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @param action a function (or other callable object) to call
+         * upon each triangulation that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial triangulation argument.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if some call to \a action returned \c true (thereby terminating
+         * the search early), or \c false if the search ran to completion.
+         */
+        template <typename Action, typename... Args>
+        bool retriangulate(int height, unsigned nThreads,
+            ProgressTrackerOpen* tracker,
+            Action&& action, Args&&... args) const;
 
         /**
          * Checks the eligibility of and/or performs a 4-2 move
@@ -798,6 +980,21 @@ class REGINA_API Triangulation<4> :
          */
         void calculateEdgeLinks();
 
+        /**
+         * A non-templated version of retriangulate().
+         *
+         * This is identical to retriangulate(), except that the action
+         * function is given in the form of a std::function.
+         * This routine contains the bulk of the implementation of
+         * retriangulate().
+         *
+         * Because this routine is not templated, its implementation
+         * can be kept out of the main headers.
+         */
+        bool retriangulateInternal(int height, unsigned nThreads,
+            ProgressTrackerOpen* tracker,
+            const std::function<bool(Triangulation<4>&)>& action) const;
+
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
@@ -911,6 +1108,13 @@ inline bool Triangulation<4>::isIdeal() const {
 inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
+}
+
+template <typename Action, typename... Args>
+inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    return retriangulateInternal(height, nThreads, tracker,
+        std::bind(action, std::placeholders::_1, args...));
 }
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {

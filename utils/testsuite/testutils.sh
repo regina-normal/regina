@@ -231,8 +231,9 @@ testutil regfiletype "$testdir"/test.rga "$invalidfile" "$badfile" "$testdir"/b5
 testutil retriangulate
 testutil retriangulate foo
 testutil retriangulate cPcbbbadu hLLMAkacdefeggjkaknkxn
-testutil retriangulate -h 0 cPcbbbadu
+testutil retriangulate -h -1 cPcbbbadu
 testutil retriangulate -t 0 cPcbbbadu
+testutil retriangulate -4 -h 3 eLMQcbcddcddaaaa8a8a8a8a8a
 # --- retriangulate when successful:
 testutil retriangulate fLAMcbcbdeehhjqqs
 testutil retriangulate cPcbbbadu
@@ -242,6 +243,7 @@ testutil retriangulate -h 3 -t 2 cPcbbbadu
 testutil retriangulate hLLMAkacdefeggjkaknkxn
 testutil retriangulate -h 2 -t 2 hLLAAkbdceefggdonxdjxn
 testutil retriangulate -h 3 -t 2 hLLAAkbdceefggdonxdjxn
+testutil retriangulate -4 eLMQcbcddcddaaaa8a8a8a8a8a
 
 # --- trisetcmp with errors:
 testutil trisetcmp

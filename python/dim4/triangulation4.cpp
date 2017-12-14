@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "algebra/grouppresentation.h"
+#include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
@@ -59,6 +60,8 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Triangulation<4>::simplifyToLocalMinimum, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
+        Triangulation<4>::simplifyExhaustive, 0, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fourTwoMove,
         Triangulation<4>::fourTwoMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_threeThreeMove,
@@ -259,6 +262,8 @@ void addTriangulation4() {
             .def("simplifyToLocalMinimum",
                 &Triangulation<4>::simplifyToLocalMinimum,
                 OL_simplifyToLocalMinimum())
+            .def("simplifyExhaustive", &Triangulation<4>::simplifyExhaustive,
+                OL_simplifyExhaustive())
             .def("fourTwoMove", &Triangulation<4>::fourTwoMove, OL_fourTwoMove())
             .def("threeThreeMove", &Triangulation<4>::threeThreeMove,
                 OL_threeThreeMove())

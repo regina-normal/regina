@@ -56,6 +56,8 @@ Version 5.2  [ 29 September, 2017 ]
               graph of a triangulation can be accessed seamlessly through the
               BGL by using the triangulation itself as the graph data structure.
             - New routine reflect().
+            - retriangulate() and simplifyExhaustive() are now available in
+              dimension 4 (as well as the original dimension 3).
             - New Python constructor that accepts a snappy.Manifold or a
               SnapPy.Triangulation (thanks to Matthias Goerner).
         Enum Algorithm, TuraevViroAlg:
