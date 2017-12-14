@@ -87,7 +87,7 @@ if [ ! -e "$badfile" ]; then
 fi
 
 # The utilities being tested:
-utils="censuslookup regconcat regconvert regfiledump regfiletype trisetcmp"
+utils="censuslookup regconcat regconvert regfiledump regfiletype retriangulate trisetcmp"
 for i in $utils; do
     if [ ! -x $i ]; then
         echo "ERROR: Could not find the utility $i in the current directory."
@@ -226,6 +226,22 @@ testutil regfiletype "$invalidfile"
 testutil regfiletype "$badfile"
 testutil regfiletype "$testdir"/test.rga "$testdir"/b5.rga
 testutil regfiletype "$testdir"/test.rga "$invalidfile" "$badfile" "$testdir"/b5.rga "$testdir"/8-or.rga
+
+# --- retriangulate with errors:
+testutil retriangulate
+testutil retriangulate foo
+testutil retriangulate cPcbbbadu hLLMAkacdefeggjkaknkxn
+testutil retriangulate -h 0 cPcbbbadu
+testutil retriangulate -t 0 cPcbbbadu
+# --- retriangulate when successful:
+testutil retriangulate fLAMcbcbdeehhjqqs
+testutil retriangulate cPcbbbadu
+testutil retriangulate -h 2 cPcbbbadu
+testutil retriangulate -h 3 cPcbbbadu
+testutil retriangulate -h 3 -t 2 cPcbbbadu
+testutil retriangulate hLLMAkacdefeggjkaknkxn
+testutil retriangulate -h 2 -t 2 hLLAAkbdceefggdonxdjxn
+testutil retriangulate -h 3 -t 2 hLLAAkbdceefggdonxdjxn
 
 # --- trisetcmp with errors:
 testutil trisetcmp
