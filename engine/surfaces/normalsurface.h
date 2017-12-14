@@ -314,7 +314,8 @@ struct NormalInfo;
  * <b>When deriving classes from NormalSurfaceVector:</b>
  * <ul>
  *   <li>A new value must must be added to the NormalCoords enum in
- *   normalcoords.h to represent the new coordinate system.</li>
+ *   normalcoords.h to represent the new coordinate system (do not
+ *   forget to add this constant to the python bindings also).</li>
  *   <li>The file coordregistry-impl.h must be updated to reflect the new
  *   coordinate system (the file itself contains instructions
  *   on how to do this).</li>
