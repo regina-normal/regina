@@ -137,6 +137,10 @@ namespace {
     }
 }
 
+bool Triangulation<4>::fiveOneMove(Vertex<4>* v, bool check, bool perform) {
+    return false;
+}
+
 bool Triangulation<4>::fourTwoMove(Edge<4>* e, bool check, bool perform) {
     if (check) {
         // e must be valid and non-boundary.

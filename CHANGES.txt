@@ -56,10 +56,11 @@ Version 5.2  [ 29 September, 2017 ]
               graph of a triangulation can be accessed seamlessly through the
               BGL by using the triangulation itself as the graph data structure.
             - New routine reflect().
-            - retriangulate() and simplifyExhaustive() are now available in
-              dimension 4 (as well as the original dimension 3).
             - New Python constructor that accepts a snappy.Manifold or a
               SnapPy.Triangulation (thanks to Matthias Goerner).
+        Class Triangulation<4>:
+            - New routines retriangulate() and simplifyExhaustive().
+            - New routine fiveOneMove().
         Enum Algorithm, TuraevViroAlg:
             - Renamed TuraevViroAlg to the more general Algorithm enum type.
               The old type name TuraevViroAlg and constants TV_... are now

@@ -62,6 +62,8 @@ namespace {
         Triangulation<4>::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
         Triangulation<4>::simplifyExhaustive, 0, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fiveOneMove,
+        Triangulation<4>::fiveOneMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fourTwoMove,
         Triangulation<4>::fourTwoMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_threeThreeMove,
@@ -264,11 +266,16 @@ void addTriangulation4() {
                 OL_simplifyToLocalMinimum())
             .def("simplifyExhaustive", &Triangulation<4>::simplifyExhaustive,
                 OL_simplifyExhaustive())
-            .def("fourTwoMove", &Triangulation<4>::fourTwoMove, OL_fourTwoMove())
+            .def("fiveOneMove", &Triangulation<4>::fiveOneMove,
+                OL_fiveOneMove())
+            .def("fourTwoMove", &Triangulation<4>::fourTwoMove,
+                OL_fourTwoMove())
             .def("threeThreeMove", &Triangulation<4>::threeThreeMove,
                 OL_threeThreeMove())
-            .def("twoFourMove", &Triangulation<4>::twoFourMove, OL_twoFourMove())
-            .def("oneFiveMove", &Triangulation<4>::oneFiveMove, OL_oneFiveMove())
+            .def("twoFourMove", &Triangulation<4>::twoFourMove,
+                OL_twoFourMove())
+            .def("oneFiveMove", &Triangulation<4>::oneFiveMove,
+                OL_oneFiveMove())
             .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
             .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
             .def("openBook", &Triangulation<4>::openBook, OL_openBook())

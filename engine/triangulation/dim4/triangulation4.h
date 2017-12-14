@@ -560,6 +560,41 @@ class REGINA_API Triangulation<4> :
             Action&& action, Args&&... args) const;
 
         /**
+         * Checks the eligibility of and/or performs a 5-1 move
+         * about the given vertex.  This involves replacing the five
+         * pentachora meeting that vertex with one pentachoron.
+         * This can be done iff (i) the vertex is valid and non-boundary,
+         * (ii) the five pentachora are distinct, and (iii) the pentachora
+         * are joined in such a way that the link of the vertex is the
+         * standard 4-simplex triangulation of the 3-sphere.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * @param v the vertex about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool fiveOneMove(Vertex<4>* v, bool check = true, bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a 4-2 move
          * about the given edge.  This involves replacing the four pentachora
          * joined at that edge with two pentachora joined along a single facet.
