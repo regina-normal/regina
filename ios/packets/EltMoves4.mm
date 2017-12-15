@@ -35,6 +35,7 @@
 #import "triangulation/dim4.h"
 
 @interface EltMoves4 () {
+    NSMutableArray* options51;
     NSMutableArray* options42;
     NSMutableArray* options33;
     NSMutableArray* options24;
@@ -48,6 +49,7 @@
     NSAttributedString* unavailable;
 }
 
+@property (weak, nonatomic) IBOutlet UIButton *button51;
 @property (weak, nonatomic) IBOutlet UIButton *button42;
 @property (weak, nonatomic) IBOutlet UIButton *button33;
 @property (weak, nonatomic) IBOutlet UIButton *button24;
@@ -58,6 +60,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonShell;
 @property (weak, nonatomic) IBOutlet UIButton *buttonCollapseEdge;
 
+@property (weak, nonatomic) IBOutlet UIStepper *stepper51;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper42;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper33;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper24;
@@ -68,6 +71,7 @@
 @property (weak, nonatomic) IBOutlet UIStepper *stepperShell;
 @property (weak, nonatomic) IBOutlet UIStepper *stepperCollapseEdge;
 
+@property (weak, nonatomic) IBOutlet UILabel *detail51;
 @property (weak, nonatomic) IBOutlet UILabel *detail42;
 @property (weak, nonatomic) IBOutlet UILabel *detail33;
 @property (weak, nonatomic) IBOutlet UILabel *detail24;
@@ -100,6 +104,22 @@
                          self.packet->size()];
 
     size_t i;
+
+    options51 = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->countVertices(); ++i)
+        if (self.packet->fiveOneMove(self.packet->vertex(i), true, false))
+            [options51 addObject:@(i)];
+    if (options51.count > 0) {
+        self.button51.enabled = self.stepper51.enabled = YES;
+        self.stepper51.maximumValue = options51.count - 1;
+        if (self.stepper51.value >= options51.count)
+            self.stepper51.value = options51.count - 1;
+        else
+            [self changed51:nil];
+    } else {
+        self.button51.enabled = self.stepper51.enabled = NO;
+        self.detail51.attributedText = unavailable;
+    }
 
     options42 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
@@ -403,6 +423,16 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
+- (IBAction)do51:(id)sender
+{
+    regina::Vertex<4>* use = [self vertexFor:self.stepper51 options:options51];
+    if (! use)
+        return;
+
+    self.packet->fiveOneMove(use, true, true);
+    [self reloadMoves];
+}
+
 - (IBAction)do42:(id)sender
 {
     regina::Edge<4>* use = [self edgeFor:self.stepper42 options:options42];
@@ -491,6 +521,11 @@
 
     self.packet->collapseEdge(use, true, true);
     [self reloadMoves];
+}
+
+- (IBAction)changed51:(id)sender
+{
+    self.detail51.attributedText = [self vertexDesc:[self vertexFor:self.stepper51 options:options51]];
 }
 
 - (IBAction)changed42:(id)sender
