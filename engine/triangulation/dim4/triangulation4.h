@@ -577,7 +577,8 @@ class REGINA_API Triangulation<4> :
          * can no longer be used.
          *
          * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.
+         * relating to Pachner moves.  After the move, the new pentachoron
+         * will be <tt>pentachora().back()</tt>.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.

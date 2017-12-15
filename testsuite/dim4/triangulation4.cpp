@@ -82,6 +82,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(eltMove15);
+    CPPUNIT_TEST(eltMove51);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
     CPPUNIT_TEST(idealToFinite);
@@ -1195,6 +1196,53 @@ class Triangulation4Test : public TriangulationTest<4> {
             testManualAll(verifyEltMove15);
             runCensusAllBounded(verifyEltMove15);
             runCensusAllNoBdry(verifyEltMove15);
+        }
+
+        static void verifyEltMove51(Triangulation<4>* tri) {
+            unsigned long n = tri->size();
+            for (unsigned long i = 0; i < n; ++i) {
+                // Do a 1-5 move, then a random isomorphism, and then a
+                // 5-1 move to restore the original triangulation.
+                Triangulation<4> large(*tri);
+                large.oneFiveMove(large.pentachoron(i));
+
+                if (large.size() != n + 4) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", pent " << i << ": "
+                        << "1-5 move gives wrong # pentachora.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                Isomorphism<4>* iso = Isomorphism<4>::random(n + 4);
+                iso->applyInPlace(&large);
+
+                bool res = large.fiveOneMove(
+                    large.pentachoron(iso->simpImage(n + 3))->
+                        vertex(iso->facetPerm(n + 3)[4]),
+                    true, true);
+
+                if (! res) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", pent " << i << ": "
+                        << "could not undo 1-5 move with 5-1 move.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! large.isIsomorphicTo(*tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", pent " << i << ": "
+                        << "1-5 move then 5-1 move is not isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete iso;
+            }
+        }
+
+        void eltMove51() {
+            testManualAll(verifyEltMove51);
+            runCensusAllBounded(verifyEltMove51);
+            runCensusAllNoBdry(verifyEltMove51);
         }
 
         static void verifyVertexLinks(Triangulation<4>* tri) {
