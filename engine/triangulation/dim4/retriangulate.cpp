@@ -114,6 +114,18 @@ namespace {
         Triangulation<4>* t = Triangulation<4>::fromIsoSig(*it);
         size_t i;
 
+        for (i = 0; i < t->countVertices(); ++i)
+            if (t->fiveOneMove(t->vertex(i), true, false)) {
+                Triangulation<4> alt(*t, false);
+                alt.fiveOneMove(alt.vertex(i), false, true);
+                if (candidate(alt)) {
+                    delete t;
+                    return;
+                }
+                // We cannot use alt from here, since candidate() might
+                // have changed it.
+            }
+
         for (i = 0; i < t->countEdges(); ++i)
             if (t->fourTwoMove(t->edge(i), true, false)) {
                 Triangulation<4> alt(*t, false);
