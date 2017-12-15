@@ -62,17 +62,32 @@ namespace {
         private:
             typedef std::set<std::string> SigSet;
 
+            static bool lowerPriority(SigSet::iterator a, SigSet::iterator b) {
+                // The function should compute whether a.size > b.size,
+                // where "size" measures number of top-dimensional simplices.
+                //
+                // Here we use the string length, which is fast to compute,
+                // and which should have the same effect for triangulations
+                // with the same number of boundary facets (which is
+                // preserved under Pachner moves).
+                return a->length() > b->length();
+            }
+
             const size_t maxSimp_;
             std::function<bool(Triangulation<4>&)> action_;
             bool done_;
 
             SigSet sigs_;
-            std::queue<SigSet::iterator> process_;
+            std::priority_queue<SigSet::iterator,
+                std::vector<SigSet::iterator>,
+                std::function<bool(SigSet::iterator, SigSet::iterator)>>
+                process_;
 
         public:
             TriBFS(size_t maxSimp,
                 const std::function<bool(Triangulation<4>&)>& action) :
-                maxSimp_(maxSimp), action_(action), done_(false) {
+                maxSimp_(maxSimp), action_(action), done_(false),
+                process_(lowerPriority) {
             }
 
             bool seed(const Triangulation<4>& tri);
@@ -187,7 +202,7 @@ namespace {
             if (tracker && tracker->isCancelled())
                 break;
 
-            next = process_.front();
+            next = process_.top();
             process_.pop();
 
             propagateFrom(next);
@@ -210,7 +225,7 @@ namespace {
                 if (tracker && tracker->isCancelled())
                     break;
 
-                next = process_.front();
+                next = process_.top();
                 process_.pop();
 
                 lock.unlock();
