@@ -138,7 +138,57 @@ namespace {
 }
 
 bool Triangulation<4>::fiveOneMove(Vertex<4>* v, bool check, bool perform) {
-    return false;
+    if (check) {
+        // Since both invalid and ideal vertices are considered boundary,
+        // this test is enough to ensure a 3-sphere link.
+        if (v->isBoundary())
+            return false;
+        // v must have degree five.
+        if (v->degree() != 5)
+            return false;
+    }
+
+    // v must meet five distinct pentachora, which must be glued around
+    // the vertex in a way that gives a 4-simplex link.  Find these pentachora.
+    Pentachoron<4>* oldPent[5];
+    Perm<5> oldVertices[5]; // 0 -> vertex, 1234 -> link
+
+    // We will permute oldVertices so that:
+    // - oldPent[i] has vertex i = v
+    // - oldPent[i] <-> oldPent[j] with permutation i <-> j
+    // This is possible iff we have a 4-simplex link.
+
+    oldPent[0] = v->front().pentachoron();
+    oldVertices[0] = v->front().vertices();
+
+    int i,j;
+    for (i = 1; i < 5; ++i) {
+        oldPent[i] = oldPent[0]->adjacentPentachoron(oldVertices[0][i]);
+        if (check)
+            for (j = 0; j < i; ++j)
+                if (oldPent[i] == oldPent[j])
+                    return false;
+        oldVertices[i] = oldPent[0]->adjacentGluing(oldVertices[0][i]) *
+            oldVertices[0] * Perm<5>(0, i);
+    }
+
+    if (check) {
+        for (i = 1; i < 5; ++i)
+            for (j = 1; j < i; ++j) {
+                if (oldPent[i] != oldPent[j]->adjacentPentachoron(
+                        oldVertices[j][i]))
+                    return false;
+                if (oldVertices[i] !=
+                        oldPent[j]->adjacentGluing(oldVertices[j][i]) *
+                        oldVertices[j] * Perm<5>(i, j))
+                    return false;
+            }
+    }
+
+    if (! perform)
+        return true;
+
+    return true;
 }
 
 bool Triangulation<4>::fourTwoMove(Edge<4>* e, bool check, bool perform) {

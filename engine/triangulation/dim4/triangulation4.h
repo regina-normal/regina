@@ -563,7 +563,7 @@ class REGINA_API Triangulation<4> :
          * Checks the eligibility of and/or performs a 5-1 move
          * about the given vertex.  This involves replacing the five
          * pentachora meeting that vertex with one pentachoron.
-         * This can be done iff (i) the vertex is valid and non-boundary,
+         * This can be done iff (i) the vertex is non-boundary,
          * (ii) the five pentachora are distinct, and (iii) the pentachora
          * are joined in such a way that the link of the vertex is the
          * standard 4-simplex triangulation of the 3-sphere.

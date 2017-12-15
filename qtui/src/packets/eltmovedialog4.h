@@ -67,6 +67,7 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         QLabel* name;
         QLabel* overview;
 
+        FaceChooser<4, 0>* box51;
         FaceChooser<4, 1>* box42;
         FaceChooser<4, 2>* box33;
         FaceChooser<4, 3>* box24;
@@ -76,6 +77,7 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         FaceChooser<4, 3>* boxOpenBook;
         SimplexChooser<4>* boxShellBdry;
         FaceChooser<4, 1>* boxCollapseEdge;
+        QRadioButton* use51;
         QRadioButton* use42;
         QRadioButton* use33;
         QRadioButton* use24;

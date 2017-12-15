@@ -47,15 +47,20 @@
 #include <QWhatsThis>
 
 namespace {
-    const int ID_42 = 0;
-    const int ID_33 = 1;
-    const int ID_24 = 2;
-    const int ID_15 = 3;
-    const int ID_20T = 4;
-    const int ID_20E = 5;
-    const int ID_OPENBOOK = 6;
-    const int ID_SHELLBDRY = 7;
-    const int ID_COLLAPSEEDGE = 8;
+    const int ID_51 = 0;
+    const int ID_42 = 1;
+    const int ID_33 = 2;
+    const int ID_24 = 3;
+    const int ID_15 = 4;
+    const int ID_20T = 5;
+    const int ID_20E = 6;
+    const int ID_OPENBOOK = 7;
+    const int ID_SHELLBDRY = 8;
+    const int ID_COLLAPSEEDGE = 9;
+
+    bool has51(regina::Vertex<4>* v) {
+        return v->triangulation()->fiveOneMove(v, true, false);
+    }
 
     bool has42(regina::Edge<4>* e) {
         return e->triangulation()->fourTwoMove(e, true, false);
@@ -108,6 +113,14 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
       //, 10, 2, 0 /* margin */, spacingHint());
     dialogLayout->addLayout(layout);
 
+    use51 = new QRadioButton(tr("&5-1"), this);
+    use51->setWhatsThis( tr("<qt>Perform a 5-1 move on this "
+        "triangulation.<p>"
+        "A <i>5-1 move</i> involves replacing five pentachora joined at "
+        "a vertex of degree five with a single pentachoron.<p>"
+        "Only moves that do not change the underlying 4-manifold are "
+        "offered in the adjacent drop-down list.</qt>"));
+    layout->addWidget(use51, 0, 0);
     use42 = new QRadioButton(tr("&4-2"), this);
     use42->setWhatsThis( tr("<qt>Perform a 4-2 move on this "
         "triangulation.<p>"
@@ -116,7 +129,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "single tetrahedron.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(use42, 0, 0);
+    layout->addWidget(use42, 1, 0);
     use33 = new QRadioButton(tr("&3-3"), this);
     use33->setWhatsThis( tr("<qt>Perform a 3-3 move on this "
         "triangulation.<p>"
@@ -125,7 +138,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "a transverse triangle.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(use33, 1, 0);
+    layout->addWidget(use33, 2, 0);
     use24 = new QRadioButton(tr("&2-4"), this);
     use24->setWhatsThis( tr("<qt>Perform a 2-4 move on this "
         "triangulation.<p>"
@@ -134,14 +147,14 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "degree four.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(use24, 2, 0);
+    layout->addWidget(use24, 3, 0);
     use15 = new QRadioButton(tr("&1-5"), this);
     use15->setWhatsThis( tr("<qt>Perform a 1-5 move on this "
         "triangulation.<p>"
         "A <i>1-5 move</i> involves replacing one pentachoron "
         "with five pentachora that meet at a new internal vertex.<p>"
         "This move will never change the underlying 4-manifold.</qt>"));
-    layout->addWidget(use15, 3, 0);
+    layout->addWidget(use15, 4, 0);
     use20t = new QRadioButton(tr("2-0 (&triangle)"), this);
     use20t->setWhatsThis(tr("<qt>Perform a 2-0 triangle move on this "
         "triangulation.<p>"
@@ -149,7 +162,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "along a triangle of degree two and squashing them flat.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(use20t, 4, 0);
+    layout->addWidget(use20t, 5, 0);
     use20e = new QRadioButton(tr("2-0 (&edge)"), this);
     use20e->setWhatsThis( tr("<qt>Perform a 2-0 edge move on this "
         "triangulation.<p>"
@@ -157,7 +170,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "an edge of degree two and squashing them together.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(use20e, 5, 0);
+    layout->addWidget(use20e, 6, 0);
     useOpenBook = new QRadioButton(tr("&Open book"), this);
     useOpenBook->setWhatsThis( tr("<qt>Perform a book opening "
         "move on this triangulation.<p>"
@@ -169,7 +182,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "to the boundary.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useOpenBook, 6, 0);
+    layout->addWidget(useOpenBook, 7, 0);
     useShellBdry = new QRadioButton(tr("&Shell boundary"), this);
     useShellBdry->setWhatsThis( tr("<qt>Perform a boundary shelling "
         "move on this triangulation.<p>"
@@ -178,7 +191,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "more of its facets.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useShellBdry, 7, 0);
+    layout->addWidget(useShellBdry, 8, 0);
     useCollapseEdge = new QRadioButton(tr("&Collapse edge"), this);
     useCollapseEdge->setWhatsThis( tr("<qt>Collapse an edge in this "
         "triangulation.<p>"
@@ -187,8 +200,16 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "pentachora containing that edge will be flattened into tetrahedra.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered in the adjacent drop-down list.</qt>"));
-    layout->addWidget(useCollapseEdge, 8, 0);
+    layout->addWidget(useCollapseEdge, 9, 0);
 
+    box51 = new FaceChooser<4, 0>(tri, &has51, this, false);
+    box51->setWhatsThis( tr("<qt>Select the degree five vertex about which "
+        "the 5-1 move will be performed.  The vertex numbers in this list "
+        "correspond to the vertex numbers seen when viewing the "
+        "triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 4-manifold are "
+        "offered.</qt>"));
+    layout->addWidget(box51, 0, 1);
     box42 = new FaceChooser<4, 1>(tri, &has42, this, false);
     box42->setWhatsThis( tr("<qt>Select the degree four edge about which "
         "the 4-2 move will be performed.  The edge numbers in this list "
@@ -196,7 +217,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
-    layout->addWidget(box42, 0, 1);
+    layout->addWidget(box42, 1, 1);
     box33 = new FaceChooser<4, 2>(tri, &has33, this, false);
     box33->setWhatsThis( tr("<qt>Select the degree three triangle about which "
         "the 3-3 move will be performed.  The triangle numbers in this list "
@@ -204,7 +225,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
-    layout->addWidget(box33, 1, 1);
+    layout->addWidget(box33, 2, 1);
     box24 = new FaceChooser<4, 3>(tri, &has24, this, false);
     box24->setWhatsThis( tr("<qt>Select the tetrahedron about which "
         "the 2-4 move will be performed.  The tetrahedron numbers in this list "
@@ -212,13 +233,13 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
-    layout->addWidget(box24, 2, 1);
+    layout->addWidget(box24, 3, 1);
     box15 = new SimplexChooser<4>(tri, 0, this, false);
     box15->setWhatsThis( tr("<qt>Select the pentachoron upon which "
         "the 1-5 move will be performed.<p>"
         "All pentachora are offered here, since "
         "this move will never change the underlying 4-manifold.</qt>"));
-    layout->addWidget(box15, 3, 1);
+    layout->addWidget(box15, 4, 1);
     box20t = new FaceChooser<4, 2>(tri, &has20t, this, false);
     box20t->setWhatsThis( tr("<qt>Select the degree two triangle about "
         "which the 2-0 triangle move will be performed.  The triangle numbers "
@@ -226,7 +247,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
-    layout->addWidget(box20t, 4, 1);
+    layout->addWidget(box20t, 5, 1);
     box20e = new FaceChooser<4, 1>(tri, &has20e, this, false);
     box20e->setWhatsThis( tr("<qt>Select the degree two edge about which "
         "the 2-0 edge move will be performed.  The edge numbers in this list "
@@ -234,7 +255,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
-    layout->addWidget(box20e, 5, 1);
+    layout->addWidget(box20e, 6, 1);
     boxOpenBook = new FaceChooser<4, 3>(tri, &hasOpenBook, this, false);
     boxOpenBook->setWhatsThis( tr("<qt>Select the internal tetrahedron "
         "that should be opened out.  The tetrahedron numbers in this list "
@@ -242,14 +263,14 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "triangulation skeleton.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxOpenBook, 6, 1);
+    layout->addWidget(boxOpenBook, 7, 1);
     boxShellBdry = new SimplexChooser<4>(tri, &hasShellBoundary, this, false);
     boxShellBdry->setWhatsThis( tr("<qt>Select the boundary pentachoron "
         "that should be removed.  The pentachoron numbers in this list "
         "are the usual pentachoron numbers seen in the gluings editor.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxShellBdry, 7, 1);
+    layout->addWidget(boxShellBdry, 8, 1);
     boxCollapseEdge = new FaceChooser<4, 1>(tri, &hasCollapseEdge, this, false);
     boxCollapseEdge->setWhatsThis( tr("<qt>Select the edge joining "
         "two distinct vertices that should be collapsed.  "
@@ -257,9 +278,10 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "when viewing the triangulation skeleton.<p>"
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
-    layout->addWidget(boxCollapseEdge, 8, 1);
+    layout->addWidget(boxCollapseEdge, 9, 1);
 
     moveTypes = new QButtonGroup();
+    moveTypes->addButton(use51, ID_51);
     moveTypes->addButton(use42, ID_42);
     moveTypes->addButton(use33, ID_33);
     moveTypes->addButton(use24, ID_24);
@@ -295,7 +317,11 @@ void EltMoveDialog4::clicked(QAbstractButton* btn) {
     if (buttons->buttonRole(btn) != QDialogButtonBox::ApplyRole)
         return;
 
-    if (use42->isChecked()) {
+    if (use51->isChecked()) {
+        regina::Vertex<4>* v = box51->selected();
+        if (v)
+            tri->fiveOneMove(v);
+    } else if (use42->isChecked()) {
         regina::Edge<4>* e = box42->selected();
         if (e)
             tri->fourTwoMove(e);
@@ -362,6 +388,7 @@ void EltMoveDialog4::packetWasChanged(regina::Packet*) {
         overview->setText(tr("%1 pentachora").
             arg(tri->size()));
 
+    updateStates(box51, use51);
     updateStates(box42, use42);
     updateStates(box33, use33);
     updateStates(box24, use24);
