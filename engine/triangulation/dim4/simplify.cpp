@@ -188,6 +188,53 @@ bool Triangulation<4>::fiveOneMove(Vertex<4>* v, bool check, bool perform) {
     if (! perform)
         return true;
 
+    // Perform the move.
+    bool rememberSimpleLinks = knownSimpleLinks_;
+
+    ChangeEventSpan span(this);
+
+    Pentachoron<4>* newPent = newPentachoron();
+
+    // Find where their facets need to be glued.
+    // Old pentachoron i, facet i <-> New pentachoron, facet i.
+    Pentachoron<4>* adjPent[5];
+    Perm<5> adjGluing[5];
+    for (i = 0; i < 5; ++i) {
+        adjPent[i] = oldPent[i]->adjacentPentachoron(oldVertices[i][i]);
+        adjGluing[i] = oldPent[i]->adjacentGluing(oldVertices[i][i]) *
+            oldVertices[i];
+
+        // Are we are gluing the new pentachoron to itself?
+        for (j = 0; j < 5; ++j) {
+            if (adjPent[i] == oldPent[j]) {
+                // This glues to old pentachoron j, facet oldVertices[j].
+                if (i > j) {
+                    // Ensure we make the gluing in just one
+                    // direction, not both directions.
+                    adjPent[i] = 0;
+                } else {
+                    // Adjust the gluing to point to the new pentachoron.
+                    adjPent[i] = newPent;
+                    adjGluing[i] = oldVertices[j].inverse() * adjGluing[i];
+                }
+                break;
+            }
+        }
+    }
+
+    // Now go ahead and make the gluings.
+    for (i = 0; i < 5; ++i)
+        oldPent[i]->isolate();
+    for (i = 0; i < 5; ++i)
+        if (adjPent[i])
+            newPent->join(i, adjPent[i], adjGluing[i]);
+
+    // Delete the old pentachora.
+    for (i = 0; i < 5; ++i)
+        removePentachoron(oldPent[i]);
+
+    // All done!
+    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -311,7 +358,7 @@ bool Triangulation<4>::fourTwoMove(Edge<4>* e, bool check, bool perform) {
                 newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
     newPent[0]->join(4, newPent[1], Perm<5>());
 
-    // Delete the old pentachora and insert the new.
+    // Delete the old pentachora.
     for (i = 0; i < 4; ++i)
         removePentachoron(oldPent[i]);
 
@@ -409,7 +456,7 @@ bool Triangulation<4>::threeThreeMove(Triangle<4>* f, bool check,
     newPent[1]->join(3, newPent[2], Perm<5>(3, 4));
     newPent[2]->join(3, newPent[0], Perm<5>(3, 4));
 
-    // Delete the old pentachora and insert the new.
+    // Delete the old pentachora.
     for (i = 0; i < 3; ++i)
         removePentachoron(oldPent[i]);
 
@@ -507,7 +554,7 @@ bool Triangulation<4>::twoFourMove(Tetrahedron<4>* f, bool check,
     newPent[1]->join(3, newPent[3], Perm<5>(2, 4));
     newPent[2]->join(2, newPent[3], Perm<5>(3, 4));
 
-    // Delete the old pentachora and insert the new.
+    // Delete the old pentachora.
     for (i = 0; i < 2; ++i)
         removePentachoron(oldPent[i]);
 
