@@ -96,12 +96,9 @@ MatrixInt* NSVectorQuadClosed::makeMatchingEquations(
     // and longitude equations.
     int i, j;
     for (i = 0; i < triangulation->countBoundaryComponents(); ++i) {
-        // The coefficients here are differencdes of terms from SnapPy's
-        // get_cusp_equation(), which works in native integers; therefore we
-        // will happily convert them back to native integers now.
         for (j = 0; j < 3 * triangulation->size(); ++j) {
-            ans->entry(row, j) = coeffs->entry(2 * i, j).longValue();
-            ans->entry(row + 1, j) = coeffs->entry(2 * i + 1, j).longValue();
+            ans->entry(row, j) = coeffs->entry(2 * i, j);
+            ans->entry(row + 1, j) = coeffs->entry(2 * i + 1, j);
         }
 
         row += 2;
