@@ -560,29 +560,17 @@ class REGINA_API Triangulation<4> :
             Action&& action, Args&&... args) const;
 
         /**
-         * Checks the eligibility of and/or performs a 5-1 move
-         * about the given vertex.  This involves replacing the five
-         * pentachora meeting that vertex with one pentachoron.
-         * This can be done iff (i) the vertex is non-boundary,
-         * (ii) the five pentachora are distinct, and (iii) the pentachora
-         * are joined in such a way that the link of the vertex is the
-         * standard 4-simplex triangulation of the 3-sphere.
+         * Deprecated function that checks the eligibility of and/or
+         * performs a 5-1 Pachner move upon the given vertex.
          *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
-         * can no longer be used.
-         *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new pentachoron
-         * will be <tt>pentachora().back()</tt>.
+         * This is an alias for pachner(Vertex<4>*, bool, bool);
+         * see that routine for further details.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
-         * \pre The given edge is an edge of this triangulation.
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
          *
          * @param v the vertex about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -594,7 +582,9 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool fiveOneMove(Vertex<4>* v, bool check = true, bool perform = true);
+        [[deprecated]] bool fiveOneMove(Vertex<4>* v, bool check = true,
+            bool perform = true);
+
         /**
          * Checks the eligibility of and/or performs a 4-2 move
          * about the given edge.  This involves replacing the four pentachora
@@ -704,38 +694,24 @@ class REGINA_API Triangulation<4> :
             bool perform = true);
 
         /**
-         * Checks the eligibility of and/or performs a 1-5 move
-         * upon the given pentachoron.
-         * This involves replacing one pentachoron with five pentachora:
-         * each new pentachoron runs from one facet of
-         * the original pentachoron to a new common internal degree five vertex.
+         * Deprecated function that checks the eligibility of and/or
+         * performs a 1-5 Pachner move upon the given pentachoron.
          *
-         * This move can always be performed.  The \a check argument is
-         * present (as for other moves), but is simply ignored (since
-         * the move is always legal).  The \a perform argument is also
-         * present for consistency with other moves, but if it is set to
-         * \c false then this routine does nothing and returns no useful
-         * information.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a p)
-         * can no longer be used.
-         *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>pentachora().back()->vertex(4)</tt>.
+         * This is an alias for pachner(Simplex<4>*, bool, bool);
+         * see that routine for further details.
          *
          * \pre The given pentachoron is a pentachoron of this triangulation.
          *
+         * \deprecated You should use the identical routine pachner() instead.
+         *
          * @param p the pentachoron about which to perform the move.
          * @param check this argument is ignored, since this move is
-         * always legal (see the notes above).
+         * always legal.
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return \c true always.
          */
-        bool oneFiveMove(Pentachoron<4>* p, bool check = true,
+        [[deprecated]] bool oneFiveMove(Pentachoron<4>* p, bool check = true,
             bool perform = true);
 
         /**
@@ -1151,6 +1127,16 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
+}
+
+inline bool Triangulation<4>::oneFiveMove(
+        Pentachoron<4>* pen, bool check, bool perform) {
+    return pachner(pen, check, perform);
+}
+
+inline bool Triangulation<4>::fiveOneMove(
+        Vertex<4>* v, bool check, bool perform) {
+    return pachner(v, check, perform);
 }
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {

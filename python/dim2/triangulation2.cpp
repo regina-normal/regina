@@ -52,9 +52,13 @@ namespace {
         size_t) = &Triangulation<2>::triangle;
     size_t (Triangulation<2>::*splitIntoComponents)(
         regina::Packet*, bool) = &Triangulation<2>::splitIntoComponents;
+    bool (Triangulation<2>::*pachner_13)(regina::Simplex<2>*, bool, bool) =
+        &Triangulation<2>::pachner;
+    bool (Triangulation<2>::*pachner_31)(regina::Vertex<2>*, bool, bool) =
+        &Triangulation<2>::pachner;
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
-        Triangulation<2>::oneThreeMove, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
+        Triangulation<2>::pachner, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
         Triangulation<2>::splitIntoComponents, 0, 2);
 
@@ -217,8 +221,10 @@ void addTriangulation2() {
                 return_internal_reference<>())
             .def("homologyH1", &Triangulation<2>::homologyH1,
                 return_internal_reference<>())
-            .def("oneThreeMove", &Triangulation<2>::oneThreeMove,
-                OL_oneThreeMove())
+            .def("pachner", pachner_13, OL_pachner())
+            .def("pachner", pachner_31, OL_pachner())
+            .def("oneThreeMove", pachner_13, OL_pachner())
+            .def("threeOneMove", pachner_31, OL_pachner())
             .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal)
             .def("makeDoubleCover", &Triangulation<2>::makeDoubleCover)
             .def("barycentricSubdivision",

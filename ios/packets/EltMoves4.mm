@@ -107,7 +107,7 @@
 
     options51 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countVertices(); ++i)
-        if (self.packet->fiveOneMove(self.packet->vertex(i), true, false))
+        if (self.packet->pachner(self.packet->vertex(i), true, false))
             [options51 addObject:@(i)];
     if (options51.count > 0) {
         self.button51.enabled = self.stepper51.enabled = YES;
@@ -171,7 +171,7 @@
 
     options15 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
-        if (self.packet->oneFiveMove(self.packet->pentachoron(i), true, false))
+        if (self.packet->pachner(self.packet->pentachoron(i), true, false))
             [options15 addObject:@(i)];
     if (options15.count > 0) {
         self.button15.enabled = self.stepper15.enabled = YES;
@@ -429,7 +429,7 @@
     if (! use)
         return;
 
-    self.packet->fiveOneMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 
@@ -469,7 +469,7 @@
     if (! use)
         return;
 
-    self.packet->oneFiveMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 

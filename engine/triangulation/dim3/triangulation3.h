@@ -1139,6 +1139,31 @@ class REGINA_API Triangulation<3> :
             Action&& action, Args&&... args) const;
 
         /**
+         * Deprecated function that checks the eligibility of and/or
+         * performs a 4-1 Pachner move upon the given vertex.
+         *
+         * This is an alias for pachner(Vertex<3>*, bool, bool);
+         * see that routine for further details.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
+         *
+         * @param v the vertex about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        [[deprecated]] bool fourOneMove(Vertex<3>* v, bool check = true,
+            bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a 3-2 move
          * about the given edge.
          * This involves replacing the three tetrahedra joined at that
@@ -1202,35 +1227,26 @@ class REGINA_API Triangulation<3> :
          */
         bool twoThreeMove(Triangle<3>* t, bool check = true, bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 1-4 move
-         * upon the given tetrahedron.
-         * This involves replacing one tetrahedron with four tetrahedra:
-         * each new tetrahedron runs from one face of
-         * the original tetrahedron to a new common internal degree four vertex.
+         * Deprecated function that checks the eligibility of and/or
+         * performs a 1-4 Pachner move upon the given tetrahedron.
          *
-         * This move can always be performed.  The \a check argument is
-         * present (as for other moves), but is simply ignored (since
-         * the move is always legal).  The \a perform argument is also
-         * present for consistency with other moves, but if it is set to
-         * \c false then this routine does nothing and returns no useful
-         * information.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (edges, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a t)
-         * can no longer be used.
+         * This is an alias for pachner(Simplex<3>*, bool, bool);
+         * see that routine for further details.
          *
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
+         * \deprecated You should use the identical routine pachner() instead.
+         *
          * @param t the tetrahedron about which to perform the move.
          * @param check this argument is ignored, since this move is
-         * always legal (see the notes above).
+         * always legal.
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return \c true always.
          */
-        bool oneFourMove(Tetrahedron<3>* t, bool check = true,
+        [[deprecated]] bool oneFourMove(Tetrahedron<3>* t, bool check = true,
             bool perform = true);
+
         /**
          * Checks the eligibility of and/or performs a 4-4 move
          * about the given edge.
@@ -2989,6 +3005,16 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
+}
+
+inline bool Triangulation<3>::oneFourMove(
+        Tetrahedron<3>* tet, bool check, bool perform) {
+    return pachner(tet, check, perform);
+}
+
+inline bool Triangulation<3>::fourOneMove(
+        Vertex<3>* v, bool check, bool perform) {
+    return pachner(v, check, perform);
 }
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()

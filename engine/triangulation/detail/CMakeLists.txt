@@ -11,6 +11,7 @@ if (${REGINA_INSTALL_DEV})
     facetpairing-impl.h
     isomorphism.h
     isosig-impl.h
+    pachner-impl.h
     simplex.h
     skeleton-impl.h
     strings.h

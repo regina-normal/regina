@@ -136,6 +136,8 @@ namespace {
 
         BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
             Triangulation<dim>::splitIntoComponents, 0, 2);
+        BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
+            Triangulation<dim>::pachner, 1, 3);
     };
 }
 
@@ -221,6 +223,14 @@ void addTriangulation(const char* name) {
             .def("homologyH1", &Triangulation<dim>::homologyH1,
                 return_internal_reference<>())
             .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
+            .def("pachner",
+                static_cast<bool (Triangulation<dim>::*)(regina::Vertex<dim>*,
+                    bool, bool)>(&Triangulation<dim>::pachner),
+                typename PyTriHelper<dim>::OL_pachner())
+            .def("pachner",
+                static_cast<bool (Triangulation<dim>::*)(regina::Simplex<dim>*,
+                    bool, bool)>(&Triangulation<dim>::pachner),
+                typename PyTriHelper<dim>::OL_pachner())
             .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
             .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
             .def("isIsomorphicTo",

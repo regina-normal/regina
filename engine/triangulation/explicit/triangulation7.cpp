@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "triangulation/detail/isosig-impl.h"
+#include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
 #include "triangulation/generic.h"
 
@@ -49,5 +50,8 @@ template REGINA_API void TriangulationBase<7>::calculateSkeleton();
 template REGINA_API void TriangulationBase<7>::clearBaseProperties();
 template REGINA_API void TriangulationBase<7>::swapBaseProperties(
     TriangulationBase<7>&);
+
+template REGINA_API bool TriangulationBase<7>::pachner(Vertex<7>*, bool, bool);
+template REGINA_API bool TriangulationBase<7>::pachner(Simplex<7>*, bool, bool);
 
 } }

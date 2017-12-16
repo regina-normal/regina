@@ -161,7 +161,7 @@
 
     options14 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
-        if (self.packet->oneFourMove(self.packet->tetrahedron(i), true, false))
+        if (self.packet->pachner(self.packet->tetrahedron(i), true, false))
             [options14 addObject:@(i)];
     if (options14.count > 0) {
         self.button14.enabled = self.stepper14.enabled = YES;
@@ -492,7 +492,7 @@
     if (! use)
         return;
 
-    self.packet->oneFourMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 

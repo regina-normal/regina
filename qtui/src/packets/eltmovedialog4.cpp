@@ -59,7 +59,7 @@ namespace {
     const int ID_COLLAPSEEDGE = 9;
 
     bool has51(regina::Vertex<4>* v) {
-        return v->triangulation()->fiveOneMove(v, true, false);
+        return v->triangulation()->pachner(v, true, false);
     }
 
     bool has42(regina::Edge<4>* e) {
@@ -320,7 +320,7 @@ void EltMoveDialog4::clicked(QAbstractButton* btn) {
     if (use51->isChecked()) {
         regina::Vertex<4>* v = box51->selected();
         if (v)
-            tri->fiveOneMove(v);
+            tri->pachner(v);
     } else if (use42->isChecked()) {
         regina::Edge<4>* e = box42->selected();
         if (e)
@@ -336,7 +336,7 @@ void EltMoveDialog4::clicked(QAbstractButton* btn) {
     } else if (use15->isChecked()) {
         regina::Pentachoron<4>* p = box15->selected();
         if (p)
-            tri->oneFiveMove(p);
+            tri->pachner(p);
     } else if (use20t->isChecked()) {
         regina::Triangle<4>* t = box20t->selected();
         if (t)

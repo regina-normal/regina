@@ -1101,6 +1101,93 @@ class TriangulationBase :
          */
         void reflect();
 
+        /**
+         * Checks the eligibility of and/or performs a (\a dim + 1)-1
+         * Pachner move about the given vertex.  This involves replacing the
+         * (\a dim + 1) top-dimensional simplices meeting that vertex with one
+         * top-dimensional simplex.
+         * This can be done iff (i) the vertex is non-boundary;
+         * (ii) the (\a dim + 1) simplices are distinct; and
+         * (iii) these simplices are joined in such a way that the link of the
+         * vertex is the standard <i>dim</i>-simplex triangulation of the
+         * (\a dim - 1)-sphere.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a v)
+         * can no longer be used.
+         *
+         * If this triangulation is currently oriented, then this Pachner move
+         * will label the new top-dimensional simplices in a way that
+         * preserves the orientation.
+         *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.  After the move, the new
+         * top-dimensional simplex will be <tt>simplices().back()</tt>.
+         *
+         * \note At present, the generic triangulation class only offers
+         * (\a dim + 1)-1 and 1-(\a dim + 1) Pachner moves, whereas
+         * triangulations in Regina's \ref stddim "standard dimensions"
+         * offer a full suite of all <i>i</i>-<i>j</i> Pachner moves.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * @param v the vertex about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool pachner(Vertex<dim>* v, bool check = true, bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a 1-(\a dim + 1)
+         * Pachner move upon the given top-dimensional simplex.
+         * This involves replacing one top-dimensional simplex with
+         * (\a dim + 1) top-dimensional simplices:
+         * each new simplex runs from one facet of the original
+         * simplex to a new common internal degree (\a dim + 1) vertex.
+         *
+         * This move can always be performed.  The \a check argument is
+         * present (as for other moves), but is simply ignored (since
+         * the move is always legal).  The \a perform argument is also
+         * present for consistency with other moves, but if it is set to
+         * \c false then this routine does nothing and returns no useful
+         * information.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a s)
+         * can no longer be used.
+         *
+         * If this triangulation is currently oriented, then this Pachner move
+         * will label the new top-dimensional simplices in a way that
+         * preserves the orientation.
+         *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.  After the move, the new belt face will be
+         * <tt>simplices().back()->vertex(dim)</tt>.
+         *
+         * \pre The given simplex is a top-dimensional simplex of this
+         * triangulation.
+         *
+         * @param s the top-dimensional simplex about which to perform the move.
+         * @param check this argument is ignored, since this move is
+         * always legal (see the notes above).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return \c true always.
+         */
+        bool pachner(Simplex<dim>* s, bool check = true, bool perform = true);
+
         /*@}*/
         /**
          * \name Subdivisions, Extensions and Covers

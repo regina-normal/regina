@@ -358,7 +358,7 @@ void EltMoveDialog3::clicked(QAbstractButton* btn) {
     } else if (use14->isChecked()) {
         regina::Tetrahedron<3>* t = box14->selected();
         if (t)
-            tri->oneFourMove(t);
+            tri->pachner(t);
     } else if (use44->isChecked()) {
         std::pair<regina::Edge<3>*, int> s = box44->selected();
         if (s.first)

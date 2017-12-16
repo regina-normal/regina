@@ -130,9 +130,9 @@ namespace {
         size_t i;
 
         for (i = 0; i < t->countVertices(); ++i)
-            if (t->fiveOneMove(t->vertex(i), true, false)) {
+            if (t->pachner(t->vertex(i), true, false)) {
                 Triangulation<4> alt(*t, false);
-                alt.fiveOneMove(alt.vertex(i), false, true);
+                alt.pachner(alt.vertex(i), false, true);
                 if (candidate(alt)) {
                     delete t;
                     return;
@@ -182,7 +182,7 @@ namespace {
             for (i = 0; i < t->size(); ++i) {
                 // 1-5 moves are always legal.
                 Triangulation<4> alt(*t, false);
-                alt.oneFiveMove(alt.pentachoron(i), true, true);
+                alt.pachner(alt.pentachoron(i), true, true);
                 if (candidate(alt)) {
                     delete t;
                     return;

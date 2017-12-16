@@ -65,7 +65,13 @@ namespace {
         &Triangulation<3>::recognizer;
     size_t (Triangulation<3>::*splitIntoComponents)(regina::Packet*, bool) =
         &Triangulation<3>::splitIntoComponents;
+    bool (Triangulation<3>::*pachner_14)(regina::Simplex<3>*, bool, bool) =
+        &Triangulation<3>::pachner;
+    bool (Triangulation<3>::*pachner_41)(regina::Vertex<3>*, bool, bool) =
+        &Triangulation<3>::pachner;
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
+        Triangulation<3>::pachner, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Triangulation<3>::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
@@ -74,8 +80,6 @@ namespace {
         Triangulation<3>::threeTwoMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoThreeMove,
         Triangulation<3>::twoThreeMove, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFourMove,
-        Triangulation<3>::oneFourMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fourFourMove,
         Triangulation<3>::fourFourMove, 2, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoZeroMove,
@@ -313,9 +317,12 @@ void addTriangulation3() {
                 OL_simplifyToLocalMinimum())
             .def("simplifyExhaustive", &Triangulation<3>::simplifyExhaustive,
                 OL_simplifyExhaustive())
+            .def("pachner", pachner_14, OL_pachner())
+            .def("pachner", pachner_41, OL_pachner())
+            .def("oneFourMove", pachner_14, OL_pachner())
+            .def("fourOneMove", pachner_41, OL_pachner())
             .def("threeTwoMove", &Triangulation<3>::threeTwoMove, OL_threeTwoMove())
             .def("twoThreeMove", &Triangulation<3>::twoThreeMove, OL_twoThreeMove())
-            .def("oneFourMove", &Triangulation<3>::oneFourMove, OL_oneFourMove())
             .def("fourFourMove", &Triangulation<3>::fourFourMove, OL_fourFourMove())
             .def("twoZeroMove", twoZeroMove_vertex, OL_twoZeroMove())
             .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
