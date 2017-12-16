@@ -32,6 +32,7 @@
 
 // Regina core includes:
 #include "packet/container.h"
+#include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
@@ -39,6 +40,7 @@
 #include "eltmovedialog4.h"
 #include "tri4gluings.h"
 #include "edittableview.h"
+#include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "choosers/boundary4chooser.h"
@@ -49,6 +51,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QRegExp>
 #include <QToolBar>
 
@@ -660,11 +663,51 @@ void Tri4GluingsUI::removeSelectedPents() {
 void Tri4GluingsUI::simplify() {
     endEdit();
 
-    if (! tri->intelligentSimplify())
-        ReginaSupport::info(ui,
-            tr("I could not simplify the triangulation further."),
-            tr("This does not mean that the triangulation is minimal; it "
-            "simply means that I could not find a way of reducing it."));
+    if (! tri->intelligentSimplify()) {
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("I could not simplify the triangulation."));
+        msgBox.setInformativeText(tr("I have only tried fast heuristics "
+            "so far."));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Try harder"), QMessageBox::ActionRole);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            simplifyExhaustive(2);
+    }
+}
+
+void Tri4GluingsUI::simplifyExhaustive(int height) {
+    size_t initSize = tri->size();
+
+    regina::ProgressTrackerOpen tracker;
+    ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
+        tr("Tried %1 triangulations"), ui);
+
+    tri->simplifyExhaustive(height, 1 /* threads */, &tracker);
+
+    if (dlg.run() && tri->size() == initSize) {
+        dlg.hide();
+
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("I still could not simplify the triangulation."));
+        msgBox.setInformativeText(tr("<qt>I have exhaustively searched "
+            "the Pachner graph up to %1 pentachora.<p>"
+            "I can look further, but be warned: the time and memory "
+            "required could grow <i>very</i> rapidly.").arg(initSize + height));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Keep trying"), QMessageBox::ActionRole);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            simplifyExhaustive(height + 2);
+    }
 }
 
 void Tri4GluingsUI::orient() {
