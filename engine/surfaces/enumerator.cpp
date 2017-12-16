@@ -75,6 +75,13 @@ namespace {
         typedef LPConstraintNonSpun Constraint;
         static const NormalCoords coords_ = NS_QUAD;
     };
+
+    template <>
+    struct LPArgs<NormalInfo<NS_AN_QUAD_OCT_CLOSED>> {
+        // See comment for LPArgs<NormalInfo<NS_QUAD_CLOSED>>
+        typedef LPConstraintNonSpun Constraint;
+        static const NormalCoords coords_ = NS_AN_QUAD_OCT;
+    };
 }
 
 NormalSurfaces* NormalSurfaces::enumerate(

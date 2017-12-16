@@ -18,6 +18,7 @@ SET ( FILES
   nsvectorquad
   nsvectorquadclosed
   nsvectorquadoct
+  nsvectorquadoctclosed
   nsvectorstandard
   prism
   surfacefilter
@@ -69,6 +70,7 @@ if (${REGINA_INSTALL_DEV})
     nsvectorquad.h
     nsvectorquadclosed.h
     nsvectorquadoct.h
+    nsvectorquadoctclosed.h
     nsvectorstandard.h
     prism.h
     sfcombination.h

@@ -114,6 +114,21 @@ enum NormalCoords {
      */
     NS_AN_STANDARD = 102,
     /**
+     * Represents quadrilateral-octagon coordinates in ideal triangulations for
+     * enumerating closed surfaces only (thus excluding spun-almost normal surfaces).
+     * The coordinates themselves are identical to quadrilateral-octagon
+     * coordinates, as described by NS_AN_QUAD_OCT; however, the enumeration
+     * procedure introduces additional constraints.
+     *
+     * \pre Regina can only create matching equations in this coordinate system
+     * for a limited class of triangulations.  Currently, such triangulations
+     * \e must be oriented and ideal, with precisely one torus cusp and no
+     * other boundary components or internal vertices.  Moreover, SnapPea must
+     * be able to work with them without retriangulating (though this should
+     * follow from the other constraints).
+     */
+    NS_AN_QUAD_OCT_CLOSED = 111,
+    /**
      * Represents edge weight coordinates for normal surfaces.
      * This coordinate system is for display only; surface
      * vectors and lists cannot be created in this coordinate system.
