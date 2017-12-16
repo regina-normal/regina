@@ -109,12 +109,12 @@ MatrixInt* NSVectorQuadOctClosed::makeMatchingEquations(
         for (j = 0; j < triangulation->size(); ++j) {
 	    for (k = 0; k < 3; ++k){
 		// Quad contributions
-		ans->entry(row, 6*j + k) = coeffs->entry(2 * i, 3*j + k).longValue();
-		ans->entry(row + 1, 6*j + k) = coeffs->entry(2 * i + 1, 3*j + k).longValue();
+		ans->entry(row, 6*j + k) = coeffs->entry(2 * i, 3*j + k);
+		ans->entry(row + 1, 6*j + k) = coeffs->entry(2 * i + 1, 3*j + k);
 		// Oct contributions; signs are opposite of those for
 		// the quads as with the edge equations.
-		ans->entry(row, 6*j + 3 + k) = -coeffs->entry(2 * i, 3*j + k).longValue();
-		ans->entry(row + 1, 6*j + 3 + k) = -coeffs->entry(2 * i + 1, 3*j + k).longValue();
+		ans->entry(row, 6*j + 3 + k) = -coeffs->entry(2 * i, 3*j + k);
+		ans->entry(row + 1, 6*j + 3 + k) = -coeffs->entry(2 * i + 1, 3*j + k);
 	    }
         }
 
