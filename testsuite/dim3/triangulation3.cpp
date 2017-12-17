@@ -2115,6 +2115,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (name)
                 tri->setLabel(name);
 
+            clearProperties(*tri);
             if (! tri->isThreeSphere()) {
                 CPPUNIT_FAIL(("The 3-sphere " + tri->label() +
                     " is not recognised as such.").c_str());
@@ -2123,6 +2124,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Try again with a barycentric subdivision.
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
+            clearProperties(big);
             if (! big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-sphere "
                     + tri->label() + " is not recognised as such.").c_str());
@@ -2131,6 +2133,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::Container parent;
+                clearProperties(*tri);
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (comps != 0) {
                     std::ostringstream msg;
@@ -2149,6 +2152,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (name)
                 tri->setLabel(name);
 
+            clearProperties(*tri);
             if (tri->isThreeSphere()) {
                 CPPUNIT_FAIL(("The non-3-sphere " + tri->label() +
                     " is recognised as a 3-sphere.").c_str());
@@ -2157,6 +2161,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Try again with a barycentric subdivision.
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
+            clearProperties(big);
             if (big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-sphere "
                     + tri->label()
@@ -2166,6 +2171,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::Container parent;
+                clearProperties(*tri);
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (comps == 0) {
                     std::ostringstream msg;
@@ -2210,8 +2216,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             // the Poincare homology sphere it is 0.947214.
 
             // What did 3-sphere recognition say?
+            clearProperties(*tri);
             bool found = tri->isThreeSphere();
 
+            clearProperties(*tri);
             bool expected = (tri->isValid() &&
                          tri->isClosed() &&
                          tri->isOrientable() &&
@@ -2234,6 +2242,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::Container parent;
+                clearProperties(*tri);
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (expected && comps != 0) {
                     std::ostringstream msg;
@@ -2459,6 +2468,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         Triangulation<3>* verifyThreeBall(Triangulation<3>* tri,
                 const std::string& triName) {
+            clearProperties(*tri);
             if (! tri->isBall()) {
                 CPPUNIT_FAIL(("The 3-ball " + triName +
                     " is not recognised as such.").c_str());
@@ -2467,6 +2477,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Try again with a barycentric subdivision.
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
+            clearProperties(big);
             if (! big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-ball "
                     + triName + " is not recognised as such.").c_str());
@@ -2477,6 +2488,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         Triangulation<3>* verifyNotThreeBall(Triangulation<3>* tri,
                 const std::string& triName) {
+            clearProperties(*tri);
             if (tri->isBall()) {
                 CPPUNIT_FAIL(("The non-3-ball" + triName +
                     " is recognised as a 3-ball.").c_str());
@@ -2485,6 +2497,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Try again with a barycentric subdivision.
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
+            clearProperties(big);
             if (big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-ball "
                     + triName + " is recognised as a 3-ball.").c_str());
@@ -2581,8 +2594,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             // eHLObcdddwuj, both representing SFS [D: (2,1) (3,-2)].
 
             // What did solid torus recognition say?
+            clearProperties(*tri);
             bool found = tri->isSolidTorus();
 
+            clearProperties(*tri);
             bool expected = (tri->isValid() &&
                          (! tri->isIdeal()) &&
                          tri->isOrientable() &&
@@ -2616,16 +2631,20 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> bounded(*tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
+            clearProperties(bounded);
 
             Triangulation<3> ideal(*tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
+            clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
             boundedBig.barycentricSubdivision();
+            clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
             idealBig.barycentricSubdivision();
+            clearProperties(idealBig);
 
             if (! bounded.isSolidTorus()) {
                 CPPUNIT_FAIL(("The real solid torus " +
@@ -2655,16 +2674,20 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> bounded(*tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
+            clearProperties(bounded);
 
             Triangulation<3> ideal(*tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
+            clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
             boundedBig.barycentricSubdivision();
+            clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
             idealBig.barycentricSubdivision();
+            clearProperties(idealBig);
 
             if (bounded.isSolidTorus()) {
                 CPPUNIT_FAIL(("The real non-solid-torus " +
@@ -2966,6 +2989,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyBary(Triangulation<3>* tri) {
             Triangulation<3> b(*tri);
             b.barycentricSubdivision();
+            clearProperties(b);
 
             // Note that subdivisions can turn invalid into valid, but
             // they can never turn valid into invalid.
@@ -3078,6 +3102,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyIdealToFinite(Triangulation<3>* tri) {
             Triangulation<3> finite(*tri);
             finite.idealToFinite();
+            clearProperties(finite);
 
             // Are there any ideal vertices remaining?
             if (finite.isIdeal()) {
@@ -3165,6 +3190,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyFiniteToIdeal(Triangulation<3>* tri) {
             Triangulation<3> ideal(*tri);
             ideal.finiteToIdeal();
+            clearProperties(ideal);
 
             // Are there any boundary triangles remaining?
             if (ideal.hasBoundaryTriangles()) {
@@ -3649,6 +3675,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 unsigned simpleSize, const char* simpleName) {
             Triangulation<3> t(tri);
             t.intelligentSimplify();
+            clearProperties(t);
 
             if (t.size() != simpleSize) {
                 std::ostringstream msg;
@@ -3745,6 +3772,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     "properly.");
 
             tri->intelligentSimplify();
+            clearProperties(*tri);
             if (tri->size() != 1)
                 CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
                     "to 1 tetrahedron.");
@@ -3767,6 +3795,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->homology().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
             tri->intelligentSimplify();
+            clearProperties(*tri);
             if (tri->homology().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus simplifies to "
                     "something different.");
@@ -3820,19 +3849,24 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void testReordering(Triangulation<3>* t) {
             Triangulation<3> a(*t);
             a.reorderTetrahedraBFS();
+            clearProperties(a);
 
             Triangulation<3> b(*t);
             b.reorderTetrahedraBFS(true);
+            clearProperties(b);
 
             Isomorphism<3>* iso = Isomorphism<3>::random(t->size());
             Triangulation<3>* c = iso->apply(t);
             delete iso;
+            clearProperties(*c);
 
             Triangulation<3> d(*c);
             d.reorderTetrahedraBFS();
+            clearProperties(d);
 
             Triangulation<3> e(*c);
             e.reorderTetrahedraBFS(true);
+            clearProperties(e);
 
             if (! t->isIsomorphicTo(a).get()) {
                 std::ostringstream msg;

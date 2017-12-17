@@ -50,13 +50,13 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryEdges);
+    CPPUNIT_TEST(pachner);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(eulerChar);
-    CPPUNIT_TEST(pachner);
     CPPUNIT_TEST(barycentricSubdivision);
 
     CPPUNIT_TEST_SUITE_END();
@@ -149,6 +149,10 @@ class Triangulation2Test : public TriangulationTest<2> {
             testManualAll(verifyBoundaryFacets);
         }
 
+        void pachner() {
+            testManualAll(verifyPachner);
+        }
+
         void validity() {
             verifyValid(empty);
             verifyValid(sphere);
@@ -213,13 +217,10 @@ class Triangulation2Test : public TriangulationTest<2> {
             verifyEulerCharTri(disjoint3, 2);
         }
 
-        void pachner() {
-            testManualAll(verifyPachner);
-        }
-
         static void verifyBary(Triangulation<2>* tri) {
             Triangulation<2> b(*tri);
             b.barycentricSubdivision();
+            clearProperties(b);
 
             if (tri->hasBoundaryEdges() != b.hasBoundaryEdges()) {
                 std::ostringstream msg;

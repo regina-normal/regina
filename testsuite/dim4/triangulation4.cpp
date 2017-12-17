@@ -68,6 +68,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(pachner);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
@@ -81,7 +82,6 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(barycentricSubdivision);
-    CPPUNIT_TEST(pachner);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
     CPPUNIT_TEST(idealToFinite);
@@ -334,6 +334,12 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void boundaryBuild() {
             testManualAll(verifyBoundaryBuild);
+        }
+
+        void pachner() {
+            testManualAll(verifyPachner);
+            runCensusAllBounded(verifyPachner);
+            runCensusAllNoBdry(verifyPachner);
         }
 
         void verifyInvalid(const Triangulation<4>& tri,
@@ -987,6 +993,7 @@ class Triangulation4Test : public TriangulationTest<4> {
         static void verifyBary(Triangulation<4>* tri) {
             Triangulation<4> b(*tri);
             b.barycentricSubdivision();
+            clearProperties(b);
 
             // Note that subdivisions can turn invalid into valid, but
             // they can never turn valid into invalid.
@@ -1096,12 +1103,6 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void barycentricSubdivision() {
             testManualTiny(verifyBary);
-        }
-
-        void pachner() {
-            testManualAll(verifyPachner);
-            runCensusAllBounded(verifyPachner);
-            runCensusAllNoBdry(verifyPachner);
         }
 
         static void verifyVertexLinks(Triangulation<4>* tri) {
@@ -1539,6 +1540,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 }
 
                 other.idealToFinite();
+                clearProperties(other);
 
                 if (other.isIdenticalTo(*tri)) {
                     std::ostringstream msg;

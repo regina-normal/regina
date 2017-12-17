@@ -196,6 +196,10 @@ class Isomorphism3Test : public CppUnit::TestFixture {
 
             Triangulation<3>* image = iso.apply(&rp2xs1);
 
+            // Clear all computed topological properties of image.
+            image->newSimplex();
+            image->removeSimplexAt(image->size() - 1);
+
             std::ostringstream msg;
             msg << "Isomorphism #" << which << " created a copy of RP2xS1 ";
 

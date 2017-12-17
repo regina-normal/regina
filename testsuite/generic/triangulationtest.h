@@ -40,6 +40,17 @@ using regina::Perm;
 using regina::Triangulation;
 
 /**
+ * Clear all computed properties of the given triangulation.
+ */
+template <int dim>
+void clearProperties(Triangulation<dim>& tri) {
+    // Make and undo a trivial modification that will cause all
+    // computed properties to be flushed.
+    tri.newSimplex();
+    tri.removeSimplexAt(tri.size() - 1);
+}
+
+/**
  * Used to perform barycentric subdivisions in those dimensions that
  * support them.
  */
@@ -370,6 +381,7 @@ struct PachnerHelperCollapseEdge<dim, true> {
                     [iso->facetPerm(orig.size() + dim - 1)[0]]
                     [iso->facetPerm(orig.size() + dim - 1)[dim]]),
             true, true);
+        clearProperties(copy);
 
         if (! res) {
             std::ostringstream msg;
@@ -532,6 +544,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             Triangulation<dim>* oriented = new Triangulation<dim>(*tri, false);
             oriented->orient();
+            clearProperties(*oriented);
             verifyOrient(tri, oriented);
             delete oriented;
 
@@ -541,6 +554,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete iso;
 
                 t->orient();
+                clearProperties(*t);
                 verifyOrient(tri, t);
                 delete t;
             }
@@ -556,6 +570,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             Triangulation<dim> canonical(*tri);
             canonical.makeCanonical();
+            clearProperties(canonical);
 
             for (int i = 0; i < trials; ++i) {
                 Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
@@ -563,6 +578,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete iso;
 
                 t->makeCanonical();
+                clearProperties(*t);
 
                 if (! t->isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
@@ -983,6 +999,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             for (size_t i = 0; i < n; ++i) {
                 Triangulation<dim> large(*tri);
                 large.pachner(large.simplex(i));
+                clearProperties(large);
 
                 if (large.size() != n + dim) {
                     std::ostringstream msg;
@@ -1050,6 +1067,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 // Randomly relabel the simplices.
                 Isomorphism<dim>* iso = Isomorphism<dim>::random(n + dim);
                 iso->applyInPlace(&large);
+                clearProperties(large);
 
                 // Shrink by edge collapse.
                 PachnerHelperCollapseEdge<dim>::verifyCollapseEdge(
@@ -1063,6 +1081,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                         copy.simplex(iso->simpImage(n + dim - 1))->
                             vertex(iso->facetPerm(n + dim - 1)[dim]),
                         true, true);
+                    clearProperties(copy);
 
                     if (! res) {
                         std::ostringstream msg;
