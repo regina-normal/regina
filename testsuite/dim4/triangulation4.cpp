@@ -1101,8 +1101,37 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
         }
 
+        void verifyBarycentricInvalidToValid(const Triangulation<4>& tri) {
+            Triangulation<4> use(tri);
+
+            if (use.isValid()) {
+                std::ostringstream msg;
+                msg << tri.label() << ": Incorrectly marked as valid.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            use.barycentricSubdivision();
+
+            if (! use.isValid()) {
+                std::ostringstream msg;
+                msg << tri.label() << ": Barycentric subdivision is invalid.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            clearProperties(use);
+
+            if (! use.isValid()) {
+                std::ostringstream msg;
+                msg << tri.label() << ": Barycentric subdivision is invalid.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void barycentricSubdivision() {
             testManualTiny(verifyBary);
+
+            verifyBarycentricInvalidToValid(pillow_threeCycle);
+            verifyBarycentricInvalidToValid(pillow_fourCycle);
         }
 
         static void verifyVertexLinks(Triangulation<4>* tri) {
