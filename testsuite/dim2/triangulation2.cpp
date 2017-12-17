@@ -56,7 +56,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(eulerChar);
-    CPPUNIT_TEST(eltMove13);
+    CPPUNIT_TEST(pachner);
     CPPUNIT_TEST(barycentricSubdivision);
 
     CPPUNIT_TEST_SUITE_END();
@@ -213,52 +213,8 @@ class Triangulation2Test : public TriangulationTest<2> {
             verifyEulerCharTri(disjoint3, 2);
         }
 
-        static void verifyEltMove13(Triangulation<2>* tri) {
-            unsigned long n = tri->size();
-            for (unsigned long i = 0; i < n; ++i) {
-                Triangulation<2> large(*tri);
-                large.oneThreeMove(large.triangle(i));
-
-                if (large.size() != n + 2) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tri " << i << ": "
-                        << "1-3 move gives wrong # triangles.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.isOrientable() != tri->isOrientable()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tri " << i << ": "
-                        << "1-3 move changes orientability.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.isClosed() != tri->isClosed()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tri " << i << ": "
-                        << "1-3 move changes closedness.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.countBoundaryComponents() !=
-                        tri->countBoundaryComponents()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tri " << i << ": "
-                        << "1-3 move changes # boundary components.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.eulerChar() != tri->eulerChar()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tri " << i << ": "
-                        << "1-3 move changes Euler characteristic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        void eltMove13() {
-            testManualAll(verifyEltMove13);
+        void pachner() {
+            testManualAll(verifyPachner);
         }
 
         static void verifyBary(Triangulation<2>* tri) {

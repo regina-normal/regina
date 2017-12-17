@@ -108,7 +108,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(retriangulation);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
-    CPPUNIT_TEST(eltMove14);
+    CPPUNIT_TEST(pachner);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -3930,104 +3930,11 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "is orientable.", ! t.isOrientable());
         }
 
-        static void verifyEltMove14(Triangulation<3>* tri) {
-            unsigned long n = tri->size();
-            for (unsigned long i = 0; i < n; ++i) {
-                Triangulation<3> large(*tri);
-                large.oneFourMove(large.tetrahedron(i));
-
-                if (large.size() != n + 3) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move gives wrong # tetrahedra.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.isValid() != tri->isValid()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes validity.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.isOrientable() != tri->isOrientable()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes orientability.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.isClosed() != tri->isClosed()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes closedness.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.countBoundaryComponents() !=
-                        tri->countBoundaryComponents()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes # boundary components.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.eulerCharTri() != tri->eulerCharTri()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes Euler characteristic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (tri->isValid()) {
-                    if (! (large.homology() == tri->homology())) {
-                        std::ostringstream msg;
-                        msg << tri->label() << ", tet " << i << ": "
-                            << "1-4 move changes H1.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-
-                    if (! (large.homologyH2() == tri->homologyH2())) {
-                        std::ostringstream msg;
-                        msg << tri->label() << ", tet " << i << ": "
-                            << "1-4 move changes H2.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-                }
-
-                // Shrink.
-                if (large.isIsomorphicTo(*tri).get()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move: result is isomorphic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                bool res =
-                    large.collapseEdge(large.tetrahedron(n + 2)->edge(
-                    regina::Edge<3>::edgeNumber[0][3]), true, true);
-
-                if (! res) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move: could not recollapse edge.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (! large.isIsomorphicTo(*tri).get()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move: recollapse is not isomorphic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        void eltMove14() {
-            testManualSmall(verifyEltMove14);
-            runCensusAllClosed(verifyEltMove14, true);
-            runCensusAllBounded(verifyEltMove14, true);
-            runCensusAllIdeal(verifyEltMove14, true);
+        void pachner() {
+            testManualSmall(verifyPachner);
+            runCensusAllClosed(verifyPachner, true);
+            runCensusAllBounded(verifyPachner, true);
+            runCensusAllIdeal(verifyPachner, true);
         }
 };
 
