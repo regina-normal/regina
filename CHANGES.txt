@@ -31,10 +31,13 @@ Version 5.2  [ 29 September, 2017 ]
             - New routine sort() to sort surfaces by arbitrary criteria.
             - The postconditions for enumerate() and makeMatchingEquations()
               now allow Regina to return null in certain coordinate systems.
-              Currently NS_QUAD_CLOSED is the only coordinate system
-              where this can happen.
+              Currently NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED are the only
+              coordinate systems where this can happen.
         Class NSVectorQuadClosed:
             - New normal surface coordinate class to implement NS_QUAD_CLOSED.
+        Class NSVectorQuadOctClosed:
+            - New normal surface coordinate class to implement
+              NS_AN_QUAD_OCT_CLOSED (thanks to Nathan Dunfield).
         Class Packet, PacketChildren, ChildIterator, SubtreeIterator:
             - Supports iterating through packets using range-based for loops:
                 + Packet has new routines begin() and end() for iterating
@@ -81,8 +84,8 @@ Version 5.2  [ 29 September, 2017 ]
               enumeration type, and are now declared as standalone
               compile-time constants of type Algorithm.
         Enum NormalCoords:
-            - Added NS_QUAD_CLOSED for quad coordinates that restrict to
-              closed surfaces only.
+            - Added NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED for quad and
+              quad-oct coordinates that restrict to closed surfaces only.
         Enum PacketType:
             - The deprecated values (PACKET_TRIANGULATION, etc.) have been
               removed from the enumeration type, and are now declared as
