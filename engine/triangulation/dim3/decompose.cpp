@@ -48,6 +48,10 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
     if (! (isValid() && isClosed() && isConnected()))
         return 0;
 
+    // Do we already know the answer?
+    if (threeSphere_.known() && threeSphere_.value())
+        return 0;
+
     if (! primeParent)
         primeParent = this;
 
