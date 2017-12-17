@@ -119,6 +119,7 @@ bool Triangulation<3>::threeTwoMove(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
     int oldPos2, newPos, newPos2;
 
@@ -237,6 +238,7 @@ bool Triangulation<3>::twoThreeMove(Triangle<3>* f, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
     int oldPos2, newPos, newPos2;
 
@@ -359,6 +361,7 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     #endif
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
     Triangle<3>* tri23 = (newAxis == 0 ?
         oldTet[0]->triangle(e->embedding(0).vertices()[2]) :
@@ -429,6 +432,7 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
@@ -515,6 +519,7 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
@@ -604,6 +609,7 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
     #endif
 
     // Go ahead and perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // First glue together the two faces that will be flattened.
@@ -717,7 +723,8 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
+    // Don't bother with a change event block since this is so simple.
+    TopologyLock lock(this);
     tet->unjoin(emb.triangle());
     return true;
 }
@@ -763,8 +770,9 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
+    // Don't bother with a change event block since this is so simple.
 
+    TopologyLock lock(this);
     t0->join(p0[3], t1, p1 * Perm<4>(2, 3) * p0.inverse());
     return true;
 }
@@ -821,7 +829,8 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
     #endif
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
+    // Don't bother with a change event block since this is so simple.
+    TopologyLock lock(this);
     removeTetrahedron(t);
     return true;
 }
@@ -1047,6 +1056,7 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
     Perm<4> topPerm, botPerm;
     Tetrahedron<3> *top, *bot;
@@ -1088,6 +1098,7 @@ void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     if (n == 0)
         return;
 
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Run a breadth-first search over all tetrahedra.

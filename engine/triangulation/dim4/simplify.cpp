@@ -198,8 +198,7 @@ bool Triangulation<4>::fourTwoMove(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Create two new pentachora.
@@ -262,7 +261,6 @@ bool Triangulation<4>::fourTwoMove(Edge<4>* e, bool check, bool perform) {
         removePentachoron(oldPent[i]);
 
     // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -294,8 +292,7 @@ bool Triangulation<4>::threeThreeMove(Triangle<4>* f, bool check,
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Create three new pentachora.
@@ -360,7 +357,6 @@ bool Triangulation<4>::threeThreeMove(Triangle<4>* f, bool check,
         removePentachoron(oldPent[i]);
 
     // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -389,8 +385,7 @@ bool Triangulation<4>::twoFourMove(Tetrahedron<4>* f, bool check,
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Create four new pentachora.
@@ -458,7 +453,6 @@ bool Triangulation<4>::twoFourMove(Tetrahedron<4>* f, bool check,
         removePentachoron(oldPent[i]);
 
     // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -597,8 +591,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -631,7 +624,6 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
     removePentachoron(pent[0]);
     removePentachoron(pent[1]);
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -698,8 +690,7 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -732,7 +723,6 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
     removePentachoron(pent[0]);
     removePentachoron(pent[1]);
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -798,12 +788,10 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    // Don't bother with a change event block since this is so simple.
+    TopologyLock lock(this);
     pent->unjoin(emb.tetrahedron());
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -881,12 +869,10 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         return true;
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    // Don't bother with a change event block since this is so simple.
+    TopologyLock lock(this);
     removePentachoron(p);
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -1234,8 +1220,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
     Perm<5> topPerm, botPerm;
     Pentachoron<4> *top, *bot;
@@ -1271,7 +1256,6 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     delete[] embPent;
     delete[] embVert;
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 

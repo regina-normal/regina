@@ -551,8 +551,10 @@ void TriangulationBase<dim>::clearBaseProperties() {
     }
 
     // Clear properties.
-    fundGroup_.clear();
-    H1_.clear();
+    if (! topologyLock_) {
+        fundGroup_.clear();
+        H1_.clear();
+    }
 }
 
 template <int dim>

@@ -60,6 +60,8 @@ Version 5.2  [ 29 September, 2017 ]
               SnapPy.Triangulation (thanks to Matthias Goerner).
             - New pachner() routines to support (dim+1)-1 and 1-(dim+1)
               Pachner moves in all dimensions.
+            - Now preserves computed properties of the underlying manifold
+              when the manifold is retriangulated.
         Class Triangulation<4>:
             - New routines retriangulate() and simplifyExhaustive().
             - New deprecated routine fiveOneMove().

@@ -233,6 +233,9 @@ class IsomorphismBase :
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
+         * \todo Lock the topological properties of the underlying manifold,
+         * to avoid recomputing them after the isomorphism is applied.
+         *
          * @param original the triangulation to which this isomorphism
          * should be applied.
          * @return the new isomorphic triangulation, or 0 if a problem
@@ -262,6 +265,9 @@ class IsomorphismBase :
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
+         *
+         * \todo Lock the topological properties of the underlying manifold,
+         * to avoid recomputing them after the isomorphism is applied.
          *
          * @param tri the triangulation to which this isomorphism
          * should be applied.

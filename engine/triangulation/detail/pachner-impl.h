@@ -101,8 +101,7 @@ bool TriangulationBase<dim>::pachner(Vertex<dim>* v, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
@@ -147,7 +146,6 @@ bool TriangulationBase<dim>::pachner(Vertex<dim>* v, bool check, bool perform) {
         removeSimplex(oldSimp[i]);
 
     // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -157,8 +155,7 @@ bool TriangulationBase<dim>::pachner(Simplex<dim>* simp, bool /* check */,
     if ( !perform )
         return true; // You can always do this move.
 
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
@@ -210,7 +207,6 @@ bool TriangulationBase<dim>::pachner(Simplex<dim>* simp, bool /* check */,
     removeSimplex(simp);
 
     // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 

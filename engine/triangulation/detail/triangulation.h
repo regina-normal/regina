@@ -432,6 +432,19 @@ class TriangulationBase :
             /**< Is this triangulation valid?  See isValid() for details
                  on what this means. */
 
+        int topologyLock_;
+            /**< If non-zero, this will cause
+                 Triangulation<dim>::clearAllProperties() to preserve any
+                 computed properties that related to the manifold (as
+                 opposed to the specific triangulation).  This allows
+                 you to avoid recomputing expensive invariants when the
+                 underlying manifold is retriangulated.
+
+                 This property should be managed by creating and
+                 destroying TopologyLock objects.  The precise value of
+                 topologyLock_ indicates the number of TopologyLock
+                 objects that currently exist for this triangulation. */
+
     private:
         bool calculatedSkeleton_;
             /**< Has the skeleton been calculated?  This is only done
@@ -1246,6 +1259,13 @@ class TriangulationBase :
          * sub-simplices in the subdivided triangulation has changed as of
          * Regina 5.1.  (Earlier versions of Regina made no guarantee about the
          * labelling and ordering; these guarantees are also new to Regina 5.1).
+         *
+         * \todo Lock the topological properties of the underlying manifold,
+         * to avoid recomputing them after the subdivision.  However, only
+         * do this for \e valid triangulations (since we can have scenarios
+         * where invalid triangulations becoming valid and ideal after
+         * subdivision, which may change properties such as
+         * Triangulation<4>::knownSimpleLinks).
          */
         void barycentricSubdivision();
 
@@ -2077,6 +2097,53 @@ class TriangulationBase :
         template <int subdim>
         void relabelFace(Face<dim, subdim>* f, const Perm<dim + 1>& adjust);
 
+    protected:
+        /**
+         * Creates a temporary lock on the topological properties of
+         * the given triangulation.  While this object exists, any
+         * computed properties of the underlying \e manifold will be
+         * preserved even when the triangulation changes.  This allows
+         * you to avoid recomputing expensive invariants when the
+         * underlying manifold is retriangulated.
+         *
+         * The lock will be created by the class constructor and removed
+         * by the class destructor.  That is, the lock will remain in
+         * effect until the TopologyLock object goes out of scope (or is
+         * otherwise destroyed).
+         *
+         * Multiple locks are allowed.  If multiple locks are created, then
+         * computed properties of the manifold will be preserved as
+         * long as any one of these locks still exists.  Multiple locks
+         * do not necessarily need to be nested (i.e., the order of
+         * destruction does not need to be the reverse order of construction).
+         *
+         * \note If you are creating a ChangeEventSpan before retriangulating
+         * the manifold and you wish to use a TopologyLock, then you should
+         * create the TopologyLock \e before the ChangeEventSpan (since the
+         * ChangeEventSpan calls clearAllProperties() in its destructor,
+         * and you need your topology lock to still exist at that point).
+         */
+        class TopologyLock {
+            private:
+                TriangulationBase<dim>* tri_;
+                    /**< The triangulation whose topological properties
+                         are locked. */
+
+            public:
+                /**
+                 * Creates a new lock on the given triangulation.
+                 *
+                 * @param tri the triangulation whose topological
+                 * properties are to be locked.  This may be \c null
+                 * (in which case the lock has no effect).
+                 */
+                TopologyLock(TriangulationBase<dim>* tri);
+                /**
+                 * Removes this lock on the associated triangulation.
+                 */
+                ~TopologyLock();
+        };
+
     template <int, int, int> friend struct FaceCalculator;
     template <int, int> friend struct BoundaryComponentCalculator;
     template <int, int> friend class WeakFaceList;
@@ -2153,7 +2220,7 @@ inline bool FaceListSuite<dim, 0>::sameDegrees(
 
 template <int dim>
 inline TriangulationBase<dim>::TriangulationBase() :
-        calculatedSkeleton_(false) {
+        topologyLock_(0), calculatedSkeleton_(false) {
 }
 
 template <int dim>
@@ -2164,7 +2231,7 @@ inline TriangulationBase<dim>::TriangulationBase(
 template <int dim>
 TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
         bool cloneProps) :
-        calculatedSkeleton_(false) {
+        topologyLock_(0), calculatedSkeleton_(false) {
     // We don't fire a change event here since this is a constructor.
     // There should be nobody listening on events yet.
     // Likewise, we don't clearAllProperties() since no properties
@@ -2714,6 +2781,7 @@ template <int dim>
 void TriangulationBase<dim>::orient() {
     ensureSkeleton();
 
+    TopologyLock lock(this);
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
@@ -2752,6 +2820,7 @@ template <int dim>
 void TriangulationBase<dim>::reflect() {
     ensureSkeleton();
 
+    TopologyLock lock(this);
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
@@ -3243,6 +3312,21 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
         H1_.value()->writeXMLData(out);
         out << "</H1>\n";
     }
+}
+
+// Inline functions for TriangulationBase::TopologyLock
+
+template <int dim>
+TriangulationBase<dim>::TopologyLock::TopologyLock(
+        TriangulationBase<dim>* tri) : tri_(tri) {
+    if (tri_)
+        ++tri_->topologyLock_;
+}
+
+template <int dim>
+TriangulationBase<dim>::TopologyLock::~TopologyLock() {
+    if (tri_)
+        --tri_->topologyLock_;
 }
 
 } } // namespace regina::detail

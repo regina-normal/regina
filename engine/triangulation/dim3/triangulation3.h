@@ -1851,6 +1851,8 @@ class REGINA_API Triangulation<3> :
          * \pre This triangulation is valid, closed, orientable and
          * connected.
          *
+         * \todo Preserve computed properties of the underlying manifold.
+         *
          * @return 0 if the underlying 3-manifold is prime (in which
          * case the original triangulation was modified directly), or
          * a newly allocated connected sum decomposition if the

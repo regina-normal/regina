@@ -226,8 +226,10 @@ Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
 void Triangulation<4>::clearAllProperties() {
     clearBaseProperties();
 
-    knownSimpleLinks_ = false;
-    H2_.clear();
+    if (! topologyLock_) {
+        knownSimpleLinks_ = false;
+        H2_.clear();
+    }
 }
 
 void Triangulation<4>::swapAllProperties(Triangulation<4>& other) {
