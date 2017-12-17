@@ -108,6 +108,7 @@ BOOST_PYTHON_MODULE(regina) {
     boost::python::def("versionSnapPy", regina::versionSnapPy);
     boost::python::def("versionSnapPea", regina::versionSnapPea);
     boost::python::def("hasInt128", regina::hasInt128);
+    boost::python::def("politeThreads", regina::politeThreads);
     boost::python::def("testEngine", regina::testEngine);
 
     boost::python::enum_<regina::Algorithm>("Algorithm")
