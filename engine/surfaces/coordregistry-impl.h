@@ -57,6 +57,7 @@
 #include "surfaces/nsvectorquad.h"
 #include "surfaces/nsvectorquadclosed.h"
 #include "surfaces/nsvectorquadoct.h"
+#include "surfaces/nsvectorquadoctclosed.h"
 #include "surfaces/nsvectororiented.h"
 #include "surfaces/nsvectororientedquad.h"
 
@@ -82,6 +83,9 @@ forCoords(NormalCoords coords, FunctionObject&& func,
             std::forward<Args>(args)...);
         case NS_AN_QUAD_OCT : return
             func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
+            std::forward<Args>(args)...);
+        case NS_AN_QUAD_OCT_CLOSED : return
+            func.template operator()<NormalInfo<NS_AN_QUAD_OCT_CLOSED>>(
             std::forward<Args>(args)...);
         case NS_ORIENTED : return
             func.template operator()<NormalInfo<NS_ORIENTED>>(
@@ -111,6 +115,9 @@ forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args) {
             std::forward<Args>(args)...); break;
         case NS_AN_QUAD_OCT :
             func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
+            std::forward<Args>(args)...); break;
+        case NS_AN_QUAD_OCT_CLOSED :
+            func.template operator()<NormalInfo<NS_AN_QUAD_OCT_CLOSED>>(
             std::forward<Args>(args)...); break;
         case NS_ORIENTED :
             func.template operator()<NormalInfo<NS_ORIENTED>>(
