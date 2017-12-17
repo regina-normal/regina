@@ -35,6 +35,7 @@
 #import "LinkCrossings.h"
 #import "LinkMoves.h"
 #import "ReginaHelper.h"
+#import "engine.h"
 #import "link/link.h"
 #import "progress/progresstracker.h"
 #import "triangulation/dim3.h"
@@ -203,7 +204,7 @@ static NSString* unknotText = @"Unknot, no crossings";
         self->simplifyTracker = tracker;
         [self.simplifyLock unlock];
         
-        self.packet->simplifyExhaustive(height, 1 /* threads */, tracker);
+        self.packet->simplifyExhaustive(height, regina::politeThreads(), tracker);
         
         unsigned long steps;
         while (! tracker->isFinished()) {

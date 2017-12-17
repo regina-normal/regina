@@ -34,6 +34,7 @@
 #import "EltMoves4.h"
 #import "Tri4ViewController.h"
 #import "Tri4Gluings.h"
+#import "engine.h"
 #import "packet/container.h"
 #import "progress/progresstracker.h"
 #import "triangulation/dim4.h"
@@ -285,7 +286,7 @@
         self->simplifyTracker = tracker;
         [self.simplifyLock unlock];
 
-        self.packet->simplifyExhaustive(height, 1 /* threads */, tracker);
+        self.packet->simplifyExhaustive(height, regina::politeThreads(), tracker);
 
         unsigned long steps;
         while (! tracker->isFinished()) {

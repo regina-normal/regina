@@ -31,6 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
+#include "engine.h"
 #include "link/link.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
@@ -616,7 +617,7 @@ void LinkCrossingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Reidemeister graph..."),
         (knot ? tr("Tried %1 knots") : tr("Tried %1 links")), ui);
 
-    link->simplifyExhaustive(height, 1 /* threads */, &tracker);
+    link->simplifyExhaustive(height, regina::politeThreads(), &tracker);
 
     if (dlg.run() && link->size() == initSize) {
         dlg.hide();

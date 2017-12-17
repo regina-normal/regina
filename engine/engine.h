@@ -147,6 +147,17 @@ REGINA_API const char* versionSnapPea();
 REGINA_API bool hasInt128();
 
 /**
+ * A suggestion for user interfaces as to how many threads should be
+ * used for parallel computations.
+ *
+ * The current implementation returns approximately half the number of
+ * cores available on the machine.
+ *
+ * @return the suggested number of threads to use.
+ */
+REGINA_API int politeThreads();
+
+/**
  * Tests to see if an interface can successfully communicate with the
  * underlying C++ calculation engine.
  *

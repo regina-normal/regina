@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include <regina-config.h>
+#include <thread>
 
 #include "engine.h"
 #include "utilities/intutils.h"
@@ -101,6 +102,13 @@ bool hasInt128() {
 #else
     return false;
 #endif
+}
+
+int politeThreads() {
+    int result = std::thread::hardware_concurrency() / 2;
+    if (result < 1)
+        result = 1;
+    return result;
 }
 
 int testEngine(int value) {

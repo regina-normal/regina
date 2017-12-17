@@ -31,6 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
+#include "engine.h"
 #include "packet/container.h"
 #include "packet/text.h"
 #include "progress/progresstracker.h"
@@ -788,7 +789,7 @@ void Tri3GluingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
         tr("Tried %1 triangulations"), ui);
 
-    tri->simplifyExhaustive(height, 1 /* threads */, &tracker);
+    tri->simplifyExhaustive(height, regina::politeThreads(), &tracker);
 
     if (dlg.run() && tri->size() == initSize) {
         dlg.hide();

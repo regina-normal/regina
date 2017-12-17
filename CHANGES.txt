@@ -85,6 +85,9 @@ Version 5.2  [ 29 September, 2017 ]
             - The deprecated values (PACKET_TRIANGULATION, etc.) have been
               removed from the enumeration type, and are now declared as
               standalone compile-time constants of type PacketType.
+        Routine politeThreads():
+            - New routine to help user interfaces choose an appropriate
+              level of parallelisation.
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.
