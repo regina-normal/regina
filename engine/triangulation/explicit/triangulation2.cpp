@@ -57,5 +57,7 @@ template REGINA_API bool PachnerHelper<2, 1>::pachner(
     Triangulation<2>*, Face<2, 1>*, bool, bool);
 template REGINA_API bool PachnerHelper<2, 2>::pachner(
     Triangulation<2>*, Face<2, 2>*, bool, bool);
+template REGINA_API bool PachnerHelper<2, 2>::pachnerOld(
+    Triangulation<2>*, Face<2, 2>*, bool, bool);
 
 } }
