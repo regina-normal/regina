@@ -61,21 +61,22 @@ Version 5.2  [ 29 September, 2017 ]
             - New routine reflect().
             - New Python constructor that accepts a snappy.Manifold or a
               SnapPy.Triangulation (thanks to Matthias Goerner).
-            - New pachner() routines to support (dim+1)-1 and 1-(dim+1)
-              Pachner moves in all dimensions.
+            - New pachner() routines to support Pachner moves of all types
+              in all dimensions.  In dimensions 2-4, the old names
+              (e.g., oneFourMove(), threeThreeMove(), etc.) are deprecated,
+              and simply call these new routines.
             - Now preserves computed properties of the underlying manifold
               when the manifold is retriangulated.
         Class Triangulation<4>:
             - New routines retriangulate() and simplifyExhaustive().
-            - New deprecated routine fiveOneMove().
+            - New deprecated routine fiveOneMove(), added for completeness.
+              Use the new pachner() routines instead.
         Class Triangulation<3>:
-            - New deprecated routine fourOneMove().
-            - Deprecated the old routine oneFourMove() in favour of the
-              new generic pachner() routines.
+            - New deprecated routine fourOneMove(), added for completeness.
+              Use the new pachner() routines instead.
         Class Triangulation<2>:
-            - New deprecated routine threeOneMove().
-            - Deprecated the old routine oneThreeMove() in favour of the
-              new generic pachner() routines.
+            - New deprecated routines threeOneMove() and twoTwoMove(),
+              added for completeness.  Use the new pachner() routines instead.
         Enum Algorithm, TuraevViroAlg:
             - Renamed TuraevViroAlg to the more general Algorithm enum type.
               The old type name TuraevViroAlg and constants TV_... are now

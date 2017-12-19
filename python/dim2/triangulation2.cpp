@@ -54,6 +54,8 @@ namespace {
         regina::Packet*, bool) = &Triangulation<2>::splitIntoComponents;
     bool (Triangulation<2>::*pachner_13)(regina::Simplex<2>*, bool, bool) =
         &Triangulation<2>::pachner;
+    bool (Triangulation<2>::*pachner_22)(regina::Edge<2>*, bool, bool) =
+        &Triangulation<2>::pachner;
     bool (Triangulation<2>::*pachner_31)(regina::Vertex<2>*, bool, bool) =
         &Triangulation<2>::pachner;
 
@@ -222,8 +224,10 @@ void addTriangulation2() {
             .def("homologyH1", &Triangulation<2>::homologyH1,
                 return_internal_reference<>())
             .def("pachner", pachner_13, OL_pachner())
+            .def("pachner", pachner_22, OL_pachner())
             .def("pachner", pachner_31, OL_pachner())
             .def("oneThreeMove", pachner_13, OL_pachner())
+            .def("twoTwoMove", pachner_22, OL_pachner())
             .def("threeOneMove", pachner_31, OL_pachner())
             .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal)
             .def("makeDoubleCover", &Triangulation<2>::makeDoubleCover)

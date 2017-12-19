@@ -50,7 +50,8 @@ namespace regina {
 namespace detail {
 
 template <int dim>
-bool TriangulationBase<dim>::pachner(Vertex<dim>* v, bool check, bool perform) {
+bool PachnerHelper<dim, 0>::pachner(Triangulation<dim>* tri,
+        Vertex<dim>* v, bool check, bool perform) {
     if (check) {
         // Recall that both invalid and ideal vertices are considered boundary.
         if (v->isBoundary())
@@ -101,11 +102,10 @@ bool TriangulationBase<dim>::pachner(Vertex<dim>* v, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    TopologyLock lock(this);
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>*>(this));
+    typename Triangulation<dim>::TopologyLock lock(tri);
+    typename Triangulation<dim>::ChangeEventSpan span(tri);
 
-    Simplex<dim>* newSimp = newSimplex();
+    Simplex<dim>* newSimp = tri->newSimplex();
 
     // Find where their facets need to be glued.
     // Old simplex i, facet i <-> New simplex, facet i.
@@ -143,21 +143,20 @@ bool TriangulationBase<dim>::pachner(Vertex<dim>* v, bool check, bool perform) {
 
     // Delete the old simplices.
     for (i = 0; i <= dim; ++i)
-        removeSimplex(oldSimp[i]);
+        tri->removeSimplex(oldSimp[i]);
 
     // All done!
     return true;
 }
 
 template <int dim>
-bool TriangulationBase<dim>::pachner(Simplex<dim>* simp, bool /* check */,
-        bool perform) {
+bool PachnerHelper<dim, dim>::pachner(Triangulation<dim>* tri,
+        Simplex<dim>* simp, bool /* check */, bool perform) {
     if ( !perform )
         return true; // You can always do this move.
 
-    TopologyLock lock(this);
-    typename Triangulation<dim>::ChangeEventSpan span(
-        static_cast<Triangulation<dim>*>(this));
+    typename Triangulation<dim>::TopologyLock lock(tri);
+    typename Triangulation<dim>::ChangeEventSpan span(tri);
 
     // Before we unglue, record how the adjacent simplices are glued to simp.
     Simplex<dim>* adjSimp[dim + 1];
@@ -179,7 +178,7 @@ bool TriangulationBase<dim>::pachner(Simplex<dim>* simp, bool /* check */,
     // that they had in the old simplex.
     Simplex<dim>* newSimp[dim + 1];
     for (i = 0; i <= dim; ++i)
-        newSimp[i] = newSimplex();
+        newSimp[i] = tri->newSimplex();
 
     // Glue the new simplices to each other internally.
     for (i = 0; i <= dim; ++i)
@@ -204,10 +203,21 @@ bool TriangulationBase<dim>::pachner(Simplex<dim>* simp, bool /* check */,
     }
 
     // Delete the old simplex.
-    removeSimplex(simp);
+    tri->removeSimplex(simp);
 
     // All done!
     return true;
+}
+
+template <int dim, int k>
+bool PachnerHelper<dim, k>::pachner(Triangulation<dim>* tri,
+        Face<dim, k>* f, bool check, bool perform) {
+    static_assert(k > 0 && k < dim,
+        "The generic implementation of pachner() cannot be used "
+        "for 0-faces or dim-faces.");
+
+    // TODO: Implement!
+    return false;
 }
 
 } } // namespace regina::detail

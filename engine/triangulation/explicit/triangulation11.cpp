@@ -51,7 +51,29 @@ template REGINA_API void TriangulationBase<11>::clearBaseProperties();
 template REGINA_API void TriangulationBase<11>::swapBaseProperties(
     TriangulationBase<11>&);
 
-template REGINA_API bool TriangulationBase<11>::pachner(Vertex<11>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(Simplex<11>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 0>::pachner(
+    Triangulation<11>*, Face<11, 0>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 1>::pachner(
+    Triangulation<11>*, Face<11, 1>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 2>::pachner(
+    Triangulation<11>*, Face<11, 2>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 3>::pachner(
+    Triangulation<11>*, Face<11, 3>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 4>::pachner(
+    Triangulation<11>*, Face<11, 4>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 5>::pachner(
+    Triangulation<11>*, Face<11, 5>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 6>::pachner(
+    Triangulation<11>*, Face<11, 6>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 7>::pachner(
+    Triangulation<11>*, Face<11, 7>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 8>::pachner(
+    Triangulation<11>*, Face<11, 8>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 9>::pachner(
+    Triangulation<11>*, Face<11, 9>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 10>::pachner(
+    Triangulation<11>*, Face<11, 10>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 11>::pachner(
+    Triangulation<11>*, Face<11, 11>*, bool, bool);
 
 } }

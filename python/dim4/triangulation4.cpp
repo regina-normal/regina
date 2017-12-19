@@ -59,6 +59,12 @@ namespace {
         &Triangulation<4>::splitIntoComponents;
     bool (Triangulation<4>::*pachner_15)(regina::Simplex<4>*, bool, bool) =
         &Triangulation<4>::pachner;
+    bool (Triangulation<4>::*pachner_24)(regina::Tetrahedron<4>*, bool, bool) =
+        &Triangulation<4>::pachner;
+    bool (Triangulation<4>::*pachner_33)(regina::Triangle<4>*, bool, bool) =
+        &Triangulation<4>::pachner;
+    bool (Triangulation<4>::*pachner_42)(regina::Edge<4>*, bool, bool) =
+        &Triangulation<4>::pachner;
     bool (Triangulation<4>::*pachner_51)(regina::Vertex<4>*, bool, bool) =
         &Triangulation<4>::pachner;
 
@@ -269,15 +275,15 @@ void addTriangulation4() {
             .def("simplifyExhaustive", &Triangulation<4>::simplifyExhaustive,
                 OL_simplifyExhaustive())
             .def("pachner", pachner_15, OL_pachner())
+            .def("pachner", pachner_24, OL_pachner())
+            .def("pachner", pachner_33, OL_pachner())
+            .def("pachner", pachner_42, OL_pachner())
             .def("pachner", pachner_51, OL_pachner())
             .def("oneFiveMove", pachner_15, OL_pachner())
+            .def("twoFourMove", pachner_24, OL_pachner())
+            .def("threeThreeMove", pachner_33, OL_pachner())
+            .def("fourTwoMove", pachner_42, OL_pachner())
             .def("fiveOneMove", pachner_51, OL_pachner())
-            .def("fourTwoMove", &Triangulation<4>::fourTwoMove,
-                OL_fourTwoMove())
-            .def("threeThreeMove", &Triangulation<4>::threeThreeMove,
-                OL_threeThreeMove())
-            .def("twoFourMove", &Triangulation<4>::twoFourMove,
-                OL_twoFourMove())
             .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
             .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
             .def("openBook", &Triangulation<4>::openBook, OL_openBook())

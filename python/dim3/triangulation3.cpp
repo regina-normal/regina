@@ -67,6 +67,10 @@ namespace {
         &Triangulation<3>::splitIntoComponents;
     bool (Triangulation<3>::*pachner_14)(regina::Simplex<3>*, bool, bool) =
         &Triangulation<3>::pachner;
+    bool (Triangulation<3>::*pachner_23)(regina::Triangle<3>*, bool, bool) =
+        &Triangulation<3>::pachner;
+    bool (Triangulation<3>::*pachner_32)(regina::Edge<3>*, bool, bool) =
+        &Triangulation<3>::pachner;
     bool (Triangulation<3>::*pachner_41)(regina::Vertex<3>*, bool, bool) =
         &Triangulation<3>::pachner;
 
@@ -318,11 +322,13 @@ void addTriangulation3() {
             .def("simplifyExhaustive", &Triangulation<3>::simplifyExhaustive,
                 OL_simplifyExhaustive())
             .def("pachner", pachner_14, OL_pachner())
+            .def("pachner", pachner_23, OL_pachner())
+            .def("pachner", pachner_32, OL_pachner())
             .def("pachner", pachner_41, OL_pachner())
             .def("oneFourMove", pachner_14, OL_pachner())
+            .def("twoThreeMove", pachner_23, OL_pachner())
+            .def("threeTwoMove", pachner_32, OL_pachner())
             .def("fourOneMove", pachner_41, OL_pachner())
-            .def("threeTwoMove", &Triangulation<3>::threeTwoMove, OL_threeTwoMove())
-            .def("twoThreeMove", &Triangulation<3>::twoThreeMove, OL_twoThreeMove())
             .def("fourFourMove", &Triangulation<3>::fourFourMove, OL_fourFourMove())
             .def("twoZeroMove", twoZeroMove_vertex, OL_twoZeroMove())
             .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())

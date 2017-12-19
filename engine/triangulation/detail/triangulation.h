@@ -376,6 +376,65 @@ struct EulerCalculator<dim, dim> {
 #endif // __DOXYGEN
 
 /**
+ * Internal class used to perform Pachner moves on a triangulation.
+ *
+ * Specifically, this class performs (\a dim - \a k + 1)-(\a k + 1) moves
+ * about <i>k</i>-faces of <i>dim</i>-dimensional triangulations.
+ *
+ * Pachner moves are implemented in a separate class (i.e., this class)
+ * instead of TriangulationBase because we wish to offer specialised
+ * implementations for certain facial dimensions \a k, and C++ does not
+ * allow partial specialisation of functions.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam k the dimension of the faces about which to perform Pachner moves.
+ */
+template <int dim, int k>
+struct PachnerHelper {
+    static_assert(0 < k && k < dim,
+        "The generic PachnerHelper template cannot be used "
+        "for 0-faces or dim-faces.");
+    /**
+     * Performs a (\a dim - \a k + 1)-(\a k + 1) move about the given face.
+     *
+     * This routine contains the real implementation of
+     * TriangulationBase::pachner<k>(); see that routine for further details.
+     *
+     * \pre If the move is being performed and no check is being run,
+     * it must be known in advance that the move is legal.
+     * \pre The given <i>k</i>-face is a <i>k</i>-face of the given
+     * triangulation.
+     *
+     * @param tri the triangulation upon which to perform the Pachner move.
+     * @param f the specific <i>k</i>-face about which to perform the move.
+     * @param check \c true if the move should be tested for eligibility.
+     * @param perform \c true if the move should actually be performed.
+     * @return If \a check is \c true, this function returns \c true
+     * if and only if the requested move may be performed
+     * without changing the topology of the manifold.  If \a check
+     * is \c false, this function simply returns \c true.
+     */
+    static bool pachner(Triangulation<dim>* tri, Face<dim, k>* f,
+        bool check, bool perform);
+};
+
+#ifndef __DOXYGEN
+
+template <int dim>
+struct PachnerHelper<dim, 0> {
+    static bool pachner(Triangulation<dim>* tri, Vertex<dim>* v,
+        bool check, bool perform);
+};
+
+template <int dim>
+struct PachnerHelper<dim, dim> {
+    static bool pachner(Triangulation<dim>* tri, Simplex<dim>* s,
+        bool check, bool perform);
+};
+
+#endif // __DOXYGEN
+
+/**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
  *
  * Such a triangulation is represented by the class Triangulation<dim>,
@@ -1115,18 +1174,23 @@ class TriangulationBase :
         void reflect();
 
         /**
-         * Checks the eligibility of and/or performs a (\a dim + 1)-1
-         * Pachner move about the given vertex.  This involves replacing the
-         * (\a dim + 1) top-dimensional simplices meeting that vertex with one
-         * top-dimensional simplex.
-         * This can be done iff (i) the vertex is non-boundary;
-         * (ii) the (\a dim + 1) simplices are distinct; and
-         * (iii) these simplices are joined in such a way that the link of the
-         * vertex is the standard <i>dim</i>-simplex triangulation of the
-         * (\a dim - 1)-sphere.
+         * Checks the eligibility of and/or performs a
+         * (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the given
+         * <i>k</i>-face.  This involves replacing the (\a dim + 1 - \a k)
+         * top-dimensional simplices meeting that <i>k</i>-face with
+         * (\a k + 1) new top-dimensional simplices joined along a new
+         * internal (\a dim - \a k)-face.
+         * This can be done iff (i) the given <i>k</i>-face is valid and
+         * non-boundary; (ii) the (\a dim + 1 - \a k) top-dimensional simplices
+         * that contain it are distinct; and (iii) these simplices are joined
+         * in such a way that the link of the given <i>k</i>-face is the
+         * standard triangulation of the (\a dim - 1 - \a k)-sphere as
+         * the boundary of a (\a dim - \k)-simplex.
          *
          * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * will only be performed if the check shows it is legal.  In
+         * In the special case \a k = \a dim, the move is always legal
+         * and so the \a check argument will simply be ignored.
          *
          * Note that after performing this move, all skeletal objects
          * (facets, components, etc.) will be reconstructed, which means
@@ -1138,19 +1202,16 @@ class TriangulationBase :
          * preserves the orientation.
          *
          * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new
-         * top-dimensional simplex will be <tt>simplices().back()</tt>.
-         *
-         * \note At present, the generic triangulation class only offers
-         * (\a dim + 1)-1 and 1-(\a dim + 1) Pachner moves, whereas
-         * triangulations in Regina's \ref stddim "standard dimensions"
-         * offer a full suite of all <i>i</i>-<i>j</i> Pachner moves.
+         * relating to Pachner moves.  After the move, the new belt face
+         * will be the face formed from vertices 0,1,...,(\a dim - \a k)
+         * of <tt>simplices().back()</tt>.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
-         * \pre The given vertex is a vertex of this triangulation.
+         * \pre The given <i>k</i>-face is a <i>k</i>-face of this
+         * triangulation.
          *
-         * @param v the vertex about which to perform the move.
+         * @param f the <i>k</i>-face about which to perform the move.
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move
@@ -1159,47 +1220,15 @@ class TriangulationBase :
          * if and only if the requested move may be performed
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
+         *
+         * \tparam k the dimension of the given face.  This must be
+         * between 0 and (\a dim) inclusive.  You can still perform
+         * a Pachner move about a 0-face <i>dim</i>-face, but these moves
+         * use specialised implementations (as opposed to this generic
+         * template implementation).
          */
-        bool pachner(Vertex<dim>* v, bool check = true, bool perform = true);
-        /**
-         * Checks the eligibility of and/or performs a 1-(\a dim + 1)
-         * Pachner move upon the given top-dimensional simplex.
-         * This involves replacing one top-dimensional simplex with
-         * (\a dim + 1) top-dimensional simplices:
-         * each new simplex runs from one facet of the original
-         * simplex to a new common internal degree (\a dim + 1) vertex.
-         *
-         * This move can always be performed.  The \a check argument is
-         * present (as for other moves), but is simply ignored (since
-         * the move is always legal).  The \a perform argument is also
-         * present for consistency with other moves, but if it is set to
-         * \c false then this routine does nothing and returns no useful
-         * information.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a s)
-         * can no longer be used.
-         *
-         * If this triangulation is currently oriented, then this Pachner move
-         * will label the new top-dimensional simplices in a way that
-         * preserves the orientation.
-         *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>simplices().back()->vertex(dim)</tt>.
-         *
-         * \pre The given simplex is a top-dimensional simplex of this
-         * triangulation.
-         *
-         * @param s the top-dimensional simplex about which to perform the move.
-         * @param check this argument is ignored, since this move is
-         * always legal (see the notes above).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return \c true always.
-         */
-        bool pachner(Simplex<dim>* s, bool check = true, bool perform = true);
+        template <int k>
+        bool pachner(Face<dim, k>* f, bool check = true, bool perform = true);
 
         /*@}*/
         /**
@@ -2146,6 +2175,7 @@ class TriangulationBase :
 
     template <int, int, int> friend struct FaceCalculator;
     template <int, int> friend struct BoundaryComponentCalculator;
+    template <int, int> friend struct PachnerHelper;
     template <int, int> friend class WeakFaceList;
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
@@ -2775,6 +2805,14 @@ bool TriangulationBase<dim>::isOriented() const {
 template <int dim>
 inline long TriangulationBase<dim>::eulerCharTri() const {
     return EulerCalculator<dim, 0>::compute(*this);
+}
+
+template <int dim>
+template <int k>
+inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
+        bool perform) {
+    return PachnerHelper<dim, k>::pachner(
+        static_cast<Triangulation<dim>*>(this), f, check, perform);
 }
 
 template <int dim>

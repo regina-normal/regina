@@ -319,6 +319,31 @@ class REGINA_API Triangulation<2> :
             bool perform = true);
         /**
          * Deprecated function that checks the eligibility of and/or
+         * performs a 2-2 Pachner move upon the given edge.
+         *
+         * This is an alias for pachner(Edge<2>*, bool, bool);
+         * see that routine for further details.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
+         *
+         * @param e the edge about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        [[deprecated]] bool twoTwoMove(Edge<2>* e, bool check = true,
+            bool perform = true);
+        /**
+         * Deprecated function that checks the eligibility of and/or
          * performs a 1-3 Pachner move upon the given triangle.
          *
          * This is an alias for pachner(Simplex<2>*, bool, bool);
@@ -503,6 +528,11 @@ inline bool Triangulation<2>::isIdeal() const {
 inline bool Triangulation<2>::oneThreeMove(
         Triangle<2>* tri, bool check, bool perform) {
     return pachner(tri, check, perform);
+}
+
+inline bool Triangulation<2>::twoTwoMove(
+        Edge<2>* e, bool check, bool perform) {
+    return pachner(e, check, perform);
 }
 
 inline bool Triangulation<2>::threeOneMove(

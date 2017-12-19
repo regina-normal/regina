@@ -139,6 +139,34 @@ namespace {
         BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
             Triangulation<dim>::pachner, 1, 3);
     };
+
+    template <int dim, int k = dim>
+    struct add_pachner : boost::python::def_visitor<add_pachner<dim, k>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("pachner",
+                static_cast<bool (Triangulation<dim>::*)(regina::Face<dim, k>*,
+                    bool, bool)>(&Triangulation<dim>::pachner),
+                typename PyTriHelper<dim>::OL_pachner());
+            c.def(add_pachner<dim, k - 1>());
+        }
+    };
+
+    template <int dim>
+    struct add_pachner<dim, 0> :
+            boost::python::def_visitor<add_pachner<dim, 0>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("pachner",
+                static_cast<bool (Triangulation<dim>::*)(regina::Face<dim, 0>*,
+                    bool, bool)>(&Triangulation<dim>::pachner),
+                typename PyTriHelper<dim>::OL_pachner());
+        }
+    };
 }
 
 template <int dim>
@@ -223,14 +251,7 @@ void addTriangulation(const char* name) {
             .def("homologyH1", &Triangulation<dim>::homologyH1,
                 return_internal_reference<>())
             .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
-            .def("pachner",
-                static_cast<bool (Triangulation<dim>::*)(regina::Vertex<dim>*,
-                    bool, bool)>(&Triangulation<dim>::pachner),
-                typename PyTriHelper<dim>::OL_pachner())
-            .def("pachner",
-                static_cast<bool (Triangulation<dim>::*)(regina::Simplex<dim>*,
-                    bool, bool)>(&Triangulation<dim>::pachner),
-                typename PyTriHelper<dim>::OL_pachner())
+            .def(add_pachner<dim>())
             .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
             .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
             .def("isIsomorphicTo",

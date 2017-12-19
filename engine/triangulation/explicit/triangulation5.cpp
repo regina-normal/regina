@@ -51,7 +51,17 @@ template REGINA_API void TriangulationBase<5>::clearBaseProperties();
 template REGINA_API void TriangulationBase<5>::swapBaseProperties(
     TriangulationBase<5>&);
 
-template REGINA_API bool TriangulationBase<5>::pachner(Vertex<5>*, bool, bool);
-template REGINA_API bool TriangulationBase<5>::pachner(Simplex<5>*, bool, bool);
+template REGINA_API bool PachnerHelper<5, 0>::pachner(
+    Triangulation<5>*, Face<5, 0>*, bool, bool);
+template REGINA_API bool PachnerHelper<5, 1>::pachner(
+    Triangulation<5>*, Face<5, 1>*, bool, bool);
+template REGINA_API bool PachnerHelper<5, 2>::pachner(
+    Triangulation<5>*, Face<5, 2>*, bool, bool);
+template REGINA_API bool PachnerHelper<5, 3>::pachner(
+    Triangulation<5>*, Face<5, 3>*, bool, bool);
+template REGINA_API bool PachnerHelper<5, 4>::pachner(
+    Triangulation<5>*, Face<5, 4>*, bool, bool);
+template REGINA_API bool PachnerHelper<5, 5>::pachner(
+    Triangulation<5>*, Face<5, 5>*, bool, bool);
 
 } }

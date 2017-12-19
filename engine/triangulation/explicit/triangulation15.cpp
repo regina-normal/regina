@@ -51,7 +51,37 @@ template REGINA_API void TriangulationBase<15>::clearBaseProperties();
 template REGINA_API void TriangulationBase<15>::swapBaseProperties(
     TriangulationBase<15>&);
 
-template REGINA_API bool TriangulationBase<15>::pachner(Vertex<15>*, bool, bool);
-template REGINA_API bool TriangulationBase<15>::pachner(Simplex<15>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 0>::pachner(
+    Triangulation<15>*, Face<15, 0>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 1>::pachner(
+    Triangulation<15>*, Face<15, 1>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 2>::pachner(
+    Triangulation<15>*, Face<15, 2>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 3>::pachner(
+    Triangulation<15>*, Face<15, 3>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 4>::pachner(
+    Triangulation<15>*, Face<15, 4>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 5>::pachner(
+    Triangulation<15>*, Face<15, 5>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 6>::pachner(
+    Triangulation<15>*, Face<15, 6>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 7>::pachner(
+    Triangulation<15>*, Face<15, 7>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 8>::pachner(
+    Triangulation<15>*, Face<15, 8>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 9>::pachner(
+    Triangulation<15>*, Face<15, 9>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 10>::pachner(
+    Triangulation<15>*, Face<15, 10>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 11>::pachner(
+    Triangulation<15>*, Face<15, 11>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 12>::pachner(
+    Triangulation<15>*, Face<15, 12>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 13>::pachner(
+    Triangulation<15>*, Face<15, 13>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 14>::pachner(
+    Triangulation<15>*, Face<15, 14>*, bool, bool);
+template REGINA_API bool PachnerHelper<15, 15>::pachner(
+    Triangulation<15>*, Face<15, 15>*, bool, bool);
 
 } }
