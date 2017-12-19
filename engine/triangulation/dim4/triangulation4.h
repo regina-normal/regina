@@ -697,12 +697,21 @@ class REGINA_API Triangulation<4> :
          * Deprecated function that checks the eligibility of and/or
          * performs a 1-5 Pachner move upon the given pentachoron.
          *
-         * This is an alias for pachner(Simplex<4>*, bool, bool);
-         * see that routine for further details.
+         * This differs from pachner(Simplex<4>*, bool, bool) in
+         * the labelling of the new pentachora:
+         *
+         * - pachner() will create the new vertex as
+         *   <tt>simplices().back()->vertex(0)</tt>, for consistency
+         *   with Pachner moves on faces of other dimensions;
+         *
+         * - oneFiveMove() will create the new vertex as
+         *   <tt>simplices().back()->vertex(4)</tt>, for consistency
+         *   with earlier versions of Regina.
          *
          * \pre The given pentachoron is a pentachoron of this triangulation.
          *
-         * \deprecated You should use the identical routine pachner() instead.
+         * \deprecated You should use the new routine pachner() instead
+         * (though note that this changes the labelling of the new pentachora).
          *
          * @param p the pentachoron about which to perform the move.
          * @param check this argument is ignored, since this move is
@@ -1131,7 +1140,7 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
 
 inline bool Triangulation<4>::oneFiveMove(
         Pentachoron<4>* pen, bool check, bool perform) {
-    return pachner(pen, check, perform);
+    return detail::PachnerHelper<4, 4>::pachnerOld(this, pen, check, perform);
 }
 
 inline bool Triangulation<4>::fiveOneMove(

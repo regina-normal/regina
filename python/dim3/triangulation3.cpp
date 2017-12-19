@@ -76,6 +76,8 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
         Triangulation<3>::pachner, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFourMove,
+        Triangulation<3>::oneFourMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Triangulation<3>::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
@@ -325,7 +327,8 @@ void addTriangulation3() {
             .def("pachner", pachner_23, OL_pachner())
             .def("pachner", pachner_32, OL_pachner())
             .def("pachner", pachner_41, OL_pachner())
-            .def("oneFourMove", pachner_14, OL_pachner())
+            .def("oneFourMove", &Triangulation<3>::oneFourMove,
+                OL_oneFourMove())
             .def("twoThreeMove", pachner_23, OL_pachner())
             .def("threeTwoMove", pachner_32, OL_pachner())
             .def("fourOneMove", pachner_41, OL_pachner())

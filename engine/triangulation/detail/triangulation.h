@@ -430,6 +430,25 @@ template <int dim>
 struct PachnerHelper<dim, dim> {
     static bool pachner(Triangulation<dim>* tri, Simplex<dim>* s,
         bool check, bool perform);
+
+    /**
+     * An alternate implementation to use for the deprecated routines
+     * Triangulation<2>::oneThreeMove(), Triangulation<3>::oneFourMove()
+     * and Triangulation<4>::oneFiveMove().
+     *
+     * This differs from pachner() in the labelling of the new simplices:
+     *
+     * - pachner() creates the new vertex as
+     *   <tt>simplices().back()->vertex(0)</tt>;
+     *
+     * - pachnerOld() creates the new vertex as
+     *   <tt>simplices().back()->vertex(dim)</tt>.
+     *
+     * \pre This may only be used in dimensions 2, 3 and 4 (which is
+     * where backward compatibility needs to be maintained).
+     */
+    static bool pachnerOld(Triangulation<dim>* tri, Simplex<dim>* s,
+        bool check, bool perform);
 };
 
 #endif // __DOXYGEN
@@ -1203,8 +1222,17 @@ class TriangulationBase :
          *
          * See the page on \ref pachner for definitions and terminology
          * relating to Pachner moves.  After the move, the new belt face
-         * will be the face formed from vertices 0,1,...,(\a dim - \a k)
-         * of <tt>simplices().back()</tt>.
+         * will be formed from vertices 0,1,...,(\a dim - \a k) of
+         * <tt>simplices().back()</tt>.
+         *
+         * \warning For the case \a k = \a dim in Regina's
+         * \ref stddim "standard dimensions", the labelling of the belt face
+         * has changed as of Regina 5.2.  In versions 5.1 and earlier, the
+         * belt face was <tt>simplices().back()->vertex(dim)</tt>, and
+         * as of version 5.2 it is now <tt>simplices().back()->vertex(0)</tt>.
+         * The deprecated routines Triangulation<2>::oneThreeMove(),
+         * Triangulation<3>::oneFourMove() and Triangulation<4>::oneFiveMove()
+         * maintain the old behaviour if you need it.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.

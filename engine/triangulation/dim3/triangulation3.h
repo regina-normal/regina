@@ -1230,12 +1230,21 @@ class REGINA_API Triangulation<3> :
          * Deprecated function that checks the eligibility of and/or
          * performs a 1-4 Pachner move upon the given tetrahedron.
          *
-         * This is an alias for pachner(Simplex<3>*, bool, bool);
-         * see that routine for further details.
+         * This differs from pachner(Simplex<3>*, bool, bool) in
+         * the labelling of the new tetrahedra:
+         *
+         * - pachner() will create the new vertex as
+         *   <tt>simplices().back()->vertex(0)</tt>, for consistency
+         *   with Pachner moves on faces of other dimensions;
+         *
+         * - oneFourMove() will create the new vertex as
+         *   <tt>simplices().back()->vertex(3)</tt>, for consistency
+         *   with earlier versions of Regina.
          *
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * \deprecated You should use the identical routine pachner() instead.
+         * \deprecated You should use the new routine pachner() instead
+         * (though note that this changes the labelling of the new tetrahedra).
          *
          * @param t the tetrahedron about which to perform the move.
          * @param check this argument is ignored, since this move is
@@ -3011,7 +3020,7 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
 
 inline bool Triangulation<3>::oneFourMove(
         Tetrahedron<3>* tet, bool check, bool perform) {
-    return pachner(tet, check, perform);
+    return detail::PachnerHelper<3, 3>::pachnerOld(this, tet, check, perform);
 }
 
 inline bool Triangulation<3>::fourOneMove(

@@ -161,6 +161,73 @@ bool PachnerHelper<dim, dim>::pachner(Triangulation<dim>* tri,
     // Before we unglue, record how the adjacent simplices are glued to simp.
     Simplex<dim>* adjSimp[dim + 1];
     Perm<dim + 1> adjGlue[dim + 1];
+    int i, j;
+    for (i = 0; i <= dim; i++) {
+        adjSimp[i] = simp->adjacentSimplex(i);
+        if (adjSimp[i])
+            adjGlue[i] = simp->adjacentGluing(i);
+    }
+
+    // Unglue the old simplex.
+    simp->isolate();
+
+    // The new simplices.
+    // Facet i of the old simplex will become a facet of newSimp[i].
+    // Vertex i of newSimp[i] will become the new internal vertex, and
+    // the other dim vertices of newSimp[i] will keep the same vertex numbers
+    // that they had in the old simplex.
+    //
+    // We insert the new simplices in reverse order so that the new
+    // vertex becomes vertex 0 of the last simplex of the triangulation.
+    Simplex<dim>* newSimp[dim + 1];
+    for (i = dim; i >= 0; --i)
+        newSimp[i] = tri->newSimplex();
+
+    // Glue the new simplices to each other internally.
+    for (i = 0; i <= dim; ++i)
+        for (j = i + 1; j <= dim; ++j)
+            newSimp[i]->join(j, newSimp[j], Perm<dim + 1>(i, j));
+
+    // Attach the new simplices to the old triangulation.
+    for (i = 0; i <= dim; ++i) {
+        if (adjSimp[i] == simp) {
+            // The old simplex was glued to itself.
+
+            // We might have already made this gluing from the other side:
+            if (newSimp[i]->adjacentSimplex(i))
+                continue;
+
+            // Nope, do it now.
+            newSimp[i]->join(i, newSimp[adjGlue[i][i]], adjGlue[i]);
+        } else if (adjSimp[i]) {
+            // The old simplex was glued elsewhere.
+            newSimp[i]->join(i, adjSimp[i], adjGlue[i]);
+        }
+    }
+
+    // Delete the old simplex.
+    tri->removeSimplex(simp);
+
+    // All done!
+    return true;
+}
+
+template <int dim>
+bool PachnerHelper<dim, dim>::pachnerOld(Triangulation<dim>* tri,
+        Simplex<dim>* simp, bool /* check */, bool perform) {
+    static_assert(dim >= 2 && dim <= 4,
+        "The implementation of pachnerOld() should only be used "
+        "in dimensions 2, 3 and 4.");
+
+    if ( !perform )
+        return true; // You can always do this move.
+
+    typename Triangulation<dim>::TopologyLock lock(tri);
+    typename Triangulation<dim>::ChangeEventSpan span(tri);
+
+    // Before we unglue, record how the adjacent simplices are glued to simp.
+    Simplex<dim>* adjSimp[dim + 1];
+    Perm<dim + 1> adjGlue[dim + 1];
     unsigned i, j;
     for (i = 0; i <= dim; i++) {
         adjSimp[i] = simp->adjacentSimplex(i);

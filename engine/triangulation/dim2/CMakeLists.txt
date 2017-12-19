@@ -1,6 +1,5 @@
 # Files to compile
 SET ( FILES
-  simplify
   skeleton
   triangulation2
   )

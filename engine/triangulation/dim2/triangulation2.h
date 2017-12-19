@@ -346,12 +346,21 @@ class REGINA_API Triangulation<2> :
          * Deprecated function that checks the eligibility of and/or
          * performs a 1-3 Pachner move upon the given triangle.
          *
-         * This is an alias for pachner(Simplex<2>*, bool, bool);
-         * see that routine for further details.
+         * This differs from pachner(Simplex<2>*, bool, bool) in
+         * the labelling of the new triangles:
+         *
+         * - pachner() will create the new vertex as
+         *   <tt>simplices().back()->vertex(0)</tt>, for consistency
+         *   with Pachner moves on faces of other dimensions;
+         *
+         * - oneThreeMove() will create the new vertex as
+         *   <tt>simplices().back()->vertex(2)</tt>, for consistency
+         *   with earlier versions of Regina.
          *
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * \deprecated You should use the identical routine pachner() instead.
+         * \deprecated You should use the new routine pachner() instead
+         * (though note that this changes the labelling of the new triangles).
          *
          * @param t the triangle about which to perform the move.
          * @param check this argument is ignored, since this move is
@@ -527,7 +536,7 @@ inline bool Triangulation<2>::isIdeal() const {
 
 inline bool Triangulation<2>::oneThreeMove(
         Triangle<2>* tri, bool check, bool perform) {
-    return pachner(tri, check, perform);
+    return detail::PachnerHelper<2, 2>::pachnerOld(this, tri, check, perform);
 }
 
 inline bool Triangulation<2>::twoTwoMove(
