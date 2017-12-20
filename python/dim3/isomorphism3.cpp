@@ -44,6 +44,8 @@ namespace {
         &Isomorphism<3>::simpImage;
     regina::Perm<4> (Isomorphism<3>::*facetPerm_const)(unsigned) const =
         &Isomorphism<3>::facetPerm;
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_random, Isomorphism<3>::random, 1, 2);
 }
 
 void addIsomorphism3() {
@@ -60,7 +62,7 @@ void addIsomorphism3() {
             return_value_policy<to_held_type<> >())
         .def("applyInPlace", &Isomorphism<3>::applyInPlace)
         .def("random", &Isomorphism<3>::random,
-            return_value_policy<manage_new_object>())
+            OL_random()[return_value_policy<manage_new_object>()])
         .def("identity", &Isomorphism<3>::identity,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())

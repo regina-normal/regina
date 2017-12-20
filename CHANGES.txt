@@ -18,6 +18,9 @@ Version 5.2  [ 29 September, 2017 ]
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.
+        Class Isomorphism<dim>:
+            - The random() function now takes an optional argument to enforce
+              orientation-preserving isomorphisms only.
         Class Link, Crossing, StrandRef:
             - New classes to support knots and links, plus other additional
               classes and methods to interface with the Boost Graph Library.
@@ -48,6 +51,9 @@ Version 5.2  [ 29 September, 2017 ]
                   SubtreeIterator to support this functionality.
                 + In Python, Packet has new generators children(), subtree()
                   and descendants() (thanks to Matthias Goerner).
+        Class Perm<n>:
+            - The rand() function now takes an optional argument to enforce
+              even permutations only.
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the

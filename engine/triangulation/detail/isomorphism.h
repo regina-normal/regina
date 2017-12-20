@@ -323,9 +323,13 @@ class IsomorphismBase :
          *
          * @param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
+         * @param even if \c true, then every simplex will have its
+         * vertices permuted with an even permutation.  This means that,
+         * if the random isomorphism is applied to an oriented triangulation,
+         * it will preserve the orientation.
          * @return the newly constructed random isomorphism.
          */
-        static Isomorphism<dim>* random(unsigned nSimplices);
+        static Isomorphism<dim>* random(unsigned nSimplices, bool even = false);
 };
 
 /*@}*/
@@ -477,7 +481,7 @@ inline Isomorphism<dim>* IsomorphismBase<dim>::identity(unsigned nSimplices) {
 }
 
 template <int dim>
-Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices) {
+Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices, bool even) {
     Isomorphism<dim>* ans = new Isomorphism<dim>(nSimplices);
 
     // Randomly choose the destination simplices.
@@ -488,7 +492,7 @@ Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices) {
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nSimplices; i++)
-        ans->facetPerm_[i] = Perm<dim+1>::rand();
+        ans->facetPerm_[i] = Perm<dim+1>::rand(even);
 
     return ans;
 }

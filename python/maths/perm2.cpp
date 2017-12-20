@@ -68,6 +68,8 @@ namespace {
             c.def("contract", &Perm<2>::contract<16>);
         }
     };
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_rand, Perm<2>::rand, 0, 1);
 }
 
 void addPerm2() {
@@ -89,7 +91,7 @@ void addPerm2() {
             .def("isIdentity", &Perm<2>::isIdentity)
             .def("atIndex", &Perm<2>::atIndex)
             .def("index", &Perm<2>::index)
-            .def("rand", &Perm<2>::rand)
+            .def("rand", &Perm<2>::rand, OL_rand())
             .def("trunc", &Perm<2>::trunc)
             .def("clear", &Perm<2>::clear)
             .def("S2Index", &Perm<2>::S2Index)

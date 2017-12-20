@@ -594,9 +594,12 @@ class REGINA_API Perm<4> {
          * The implementation uses the C standard ::rand() function for its
          * random number generation.
          *
+         * @param even if \c true, then the resulting permutation is
+         * guaranteed to be even (and again all even permutations are
+         * returned with equal probability).
          * @return a random permutation.
          */
-        static Perm rand();
+        static Perm rand(bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -910,8 +913,11 @@ inline Perm<4>::Index Perm<4>::index() const {
     return orderedS4Index();
 }
 
-inline Perm<4> Perm<4>::rand() {
-    return S4[::rand() % 24];
+inline Perm<4> Perm<4>::rand(bool even) {
+    if (even)
+        return S4[2 * (::rand() % 12)];
+    else
+        return S4[::rand() % 24];
 }
 
 inline bool Perm<4>::operator == (const Perm<4>& other) const {
