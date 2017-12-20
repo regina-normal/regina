@@ -56,7 +56,8 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::verifyDoubleCover;
         using TriangulationTest<dim>::verifyBoundaryFacets;
         using TriangulationTest<dim>::verifyBoundaryBuild;
-        using TriangulationTest<dim>::verifyPachner;
+        using TriangulationTest<dim>::verifyPachner_1;
+        using TriangulationTest<dim>::verifyPachner_2;
 
         using TriangulationTest<dim>::verifyValid;
         using TriangulationTest<dim>::verifyConnected;
@@ -106,8 +107,12 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
             testManualAll(TriangulationTest<dim>::verifyBoundaryBuild);
         }
 
-        void pachner() {
-            testManualAll(TriangulationTest<dim>::verifyPachner);
+        void pachner1() {
+            testManualAll(TriangulationTest<dim>::verifyPachner_1);
+        }
+
+        void pachner2() {
+            testManualAll(TriangulationTest<dim>::verifyPachner_2);
         }
 
         void validity() {
@@ -203,7 +208,8 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
-    CPPUNIT_TEST(pachner);
+    CPPUNIT_TEST(pachner1);
+    CPPUNIT_TEST(pachner2);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -226,7 +232,8 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
-    CPPUNIT_TEST(pachner);
+    CPPUNIT_TEST(pachner1);
+    CPPUNIT_TEST(pachner2);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -253,7 +260,8 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
-    CPPUNIT_TEST(pachner);
+    CPPUNIT_TEST(pachner1);
+    CPPUNIT_TEST(pachner2);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);

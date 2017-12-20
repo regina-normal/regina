@@ -68,7 +68,8 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
-    CPPUNIT_TEST(pachner);
+    CPPUNIT_TEST(pachner1);
+    CPPUNIT_TEST(pachner2);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
@@ -336,10 +337,16 @@ class Triangulation4Test : public TriangulationTest<4> {
             testManualAll(verifyBoundaryBuild);
         }
 
-        void pachner() {
-            testManualAll(verifyPachner);
-            runCensusAllBounded(verifyPachner);
-            runCensusAllNoBdry(verifyPachner);
+        void pachner1() {
+            testManualAll(verifyPachner_1);
+            runCensusAllBounded(verifyPachner_1);
+            runCensusAllNoBdry(verifyPachner_1);
+        }
+
+        void pachner2() {
+            testManualAll(verifyPachner_2);
+            runCensusAllBounded(verifyPachner_2);
+            runCensusAllNoBdry(verifyPachner_2);
         }
 
         void verifyInvalid(const Triangulation<4>& tri,

@@ -316,19 +316,18 @@ struct PachnerHelperClosed {
         "The no-op PachnerHelperClosed should not be used for "
         "standard dimensions.");
     static void verifyClosed(const Triangulation<dim>& /* orig */,
-            const Triangulation<dim>& /* altered */, int /* simplex */) {
+            const Triangulation<dim>& /* altered */, int /* pos */) {
     };
 };
 
 template <int dim>
 struct PachnerHelperClosed<dim, true> {
     static void verifyClosed(const Triangulation<dim>& orig,
-            const Triangulation<dim>& altered, int simplex) {
+            const Triangulation<dim>& altered, int pos) {
         if (altered.isClosed() != orig.isClosed()) {
             std::ostringstream msg;
-            msg << orig.label() << ", simplex " << simplex << ": "
-                << "1-" << (dim+1) << " move "
-                "changes closedness.";
+            msg << orig.label() << ", position " << pos << ": "
+                << "Pachner move changes closedness.";
             CPPUNIT_FAIL(msg.str());
         }
     };
@@ -339,19 +338,18 @@ struct PachnerHelperH2 {
     static_assert(dim < 3 || dim > 4,
         "The no-op PachnerHelperH2 should not be used for dimensions 3 or 4.");
     static void verifyH2(const Triangulation<dim>& /* orig */,
-            const Triangulation<dim>& /* altered */, int /* simplex */) {
+            const Triangulation<dim>& /* altered */, int /* pos */) {
     };
 };
 
 template <int dim>
 struct PachnerHelperH2<dim, true> {
     static void verifyH2(const Triangulation<dim>& orig,
-            const Triangulation<dim>& altered, int simplex) {
+            const Triangulation<dim>& altered, int pos) {
         if (! (altered.homologyH2() == orig.homologyH2())) {
             std::ostringstream msg;
-            msg << orig.label() << ", simplex " << simplex << ": "
-                << "1-" << (dim+1) << " move "
-                "changes H2.";
+            msg << orig.label() << ", position " << pos << ": "
+                << "Pachner move changes H2.";
             CPPUNIT_FAIL(msg.str());
         }
     };
@@ -994,11 +992,19 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyPachner(Triangulation<dim>* tri) {
+        static void verifyPachner_1(Triangulation<dim>* tri) {
+            // Tests 1-(dim+1) and (dim+1)-1 moves.
             size_t n = tri->size();
             for (size_t i = 0; i < n; ++i) {
                 Triangulation<dim> large(*tri);
-                large.pachner(large.simplex(i));
+                bool res = large.pachner(large.simplex(i));
+                if (! res) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", simplex " << i << ": "
+                        << "1-" << (dim+1) << " move "
+                        "not allowed.";
+                    CPPUNIT_FAIL(msg.str());
+                }
                 clearProperties(large);
 
                 if (large.size() != n + dim) {
@@ -1077,9 +1083,9 @@ class TriangulationTest : public CppUnit::TestFixture {
                 {
                     regina::Triangulation<dim> copy(large);
 
-                    bool res = copy.pachner(
+                    res = copy.pachner(
                         copy.simplex(iso->simpImage(n + dim - 1))->
-                            vertex(iso->facetPerm(n + dim - 1)[dim]),
+                            vertex(iso->facetPerm(n + dim - 1)[0]),
                         true, true);
                     clearProperties(copy);
 
@@ -1097,6 +1103,153 @@ class TriangulationTest : public CppUnit::TestFixture {
                             << "1-" << (dim+1)
                             << " move then " << (dim+1)
                             << "-1 move is not isomorphic.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                delete iso;
+            }
+        }
+
+        static void verifyPachner_2(Triangulation<dim>* tri) {
+            // Tests 2-dim and dim-2 moves.
+            for (size_t i = 0; i < tri->template countFaces<dim - 1>(); ++i) {
+                Triangulation<dim> large(*tri);
+                bool res = large.pachner(large.template face<dim - 1>(i));
+                clearProperties(large);
+
+                auto f = tri->template face<dim - 1>(i);
+                if (f->isBoundary() ||
+                        f->embedding(0).simplex() ==
+                        f->embedding(1).simplex()) {
+                    // The move should not be allowed.
+                    if (res) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", position " << i << ": "
+                            << "2-" << dim << " move "
+                            "was incorrectly allowed.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (large.size() != tri->size()) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", position " << i << ": "
+                            << "disallowed 2-" << dim << " move "
+                            "changed # simplices.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (! large.isIsomorphicTo(*tri).get()) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", position " << i << ": "
+                            << "disallowed 2-" << dim << " move "
+                            "result is not isomorphic.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    continue;
+                }
+
+                // The move should be allowed.
+
+                if (! res) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", position " << i << ": "
+                        << "2-" << dim << " move "
+                        "was incorrectly disallowed.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.size() != tri->size() + dim - 2) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", position " << i << ": "
+                        << "2-" << dim << " move "
+                        "gives wrong # simplices.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isValid() != tri->isValid()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", position " << i << ": "
+                        << "2-" << dim << " move "
+                        "changes validity.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isOrientable() != tri->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", position " << i << ": "
+                        << "2-" << dim << " move "
+                        "changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                PachnerHelperClosed<dim>::verifyClosed(*tri, large, i);
+
+                if (large.countBoundaryComponents() !=
+                        tri->countBoundaryComponents()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", position " << i << ": "
+                        << "2-" << dim << " move "
+                        "changes # boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.eulerCharTri() != tri->eulerCharTri()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", position " << i << ": "
+                        << "2-" << dim << " move "
+                        "changes Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isValid()) {
+                    if (! (large.homologyH1() == tri->homologyH1())) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", position " << i << ": "
+                            << "2-" << dim << " move "
+                            "changes H1.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    PachnerHelperH2<dim>::verifyH2(*tri, large, i);
+                }
+
+                if (dim != 2 && large.isIsomorphicTo(*tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", position " << i << ": "
+                        << "2-" << dim << " move "
+                        "result is isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // Randomly relabel the simplices.
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(large.size());
+                iso->applyInPlace(&large);
+                clearProperties(large);
+
+                // Shrink by the inverse Pachner move.
+                {
+                    regina::Triangulation<dim> copy(large);
+
+                    res = copy.pachner(
+                        copy.simplex(iso->simpImage(large.size() - 1))->edge(
+                            regina::Edge<dim>::faceNumber(
+                                iso->facetPerm(large.size() - 1))),
+                        true, true);
+                    clearProperties(copy);
+
+                    if (! res) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", position " << i << ": "
+                            << "could not undo 2-" << dim
+                            << " move with " << dim << "-2 move.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! copy.isIsomorphicTo(*tri).get()) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", position " << i << ": "
+                            << "2-" << dim
+                            << " move then " << dim
+                            << "-2 move is not isomorphic.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }

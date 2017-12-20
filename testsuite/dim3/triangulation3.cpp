@@ -108,7 +108,8 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(retriangulation);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
-    CPPUNIT_TEST(pachner);
+    CPPUNIT_TEST(pachner1);
+    CPPUNIT_TEST(pachner2);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -3964,11 +3965,18 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "is orientable.", ! t.isOrientable());
         }
 
-        void pachner() {
-            testManualSmall(verifyPachner);
-            runCensusAllClosed(verifyPachner, true);
-            runCensusAllBounded(verifyPachner, true);
-            runCensusAllIdeal(verifyPachner, true);
+        void pachner1() {
+            testManualSmall(verifyPachner_1);
+            runCensusAllClosed(verifyPachner_1, true);
+            runCensusAllBounded(verifyPachner_1, true);
+            runCensusAllIdeal(verifyPachner_1, true);
+        }
+
+        void pachner2() {
+            testManualSmall(verifyPachner_2);
+            runCensusAllClosed(verifyPachner_2, true);
+            runCensusAllBounded(verifyPachner_2, true);
+            runCensusAllIdeal(verifyPachner_2, true);
         }
 };
 
