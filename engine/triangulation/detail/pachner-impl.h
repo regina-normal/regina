@@ -403,6 +403,27 @@ bool PachnerHelper<dim, k>::pachner(Triangulation<dim>* tri,
     oldSimp[0] = f->front().simplex();
     oldVertices[0] = f->front().vertices();
 
+    bool fixOrientation;
+    if ((dim % 2 == 0) && (k % 2 == 1)) {
+        // The old and new simplices will switch orientation in our
+        // numbering scheme.
+        fixOrientation = (oldVertices[0].sign() > 0);
+    } else {
+        // The old and new simplices will have the same orientation.
+        fixOrientation = (oldVertices[0].sign() < 0);
+    }
+
+    if (fixOrientation) {
+        // We can fix the orientation now by permuting two elements
+        // of oldVertices[0].  These must either both refer to the
+        // vertices of the given k-face, or must both *not* refer to
+        // vertices of the given k-face.
+        if (k < dim - 1)
+            oldVertices[0] = oldVertices[0] * Perm<dim + 1>(dim - 1, dim);
+        else
+            oldVertices[0] = oldVertices[0] * Perm<dim + 1>(0, 1);
+    }
+
     int i,j;
     for (i = 1; i <= dim - k; ++i) {
         oldSimp[i] = oldSimp[0]->adjacentSimplex(oldVertices[0][i + k]);
