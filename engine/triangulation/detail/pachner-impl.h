@@ -118,6 +118,11 @@ bool PachnerHelper<dim, 0>::pachner(Triangulation<dim>* tri,
     oldSimp[0] = v->front().simplex();
     oldVertices[0] = v->front().vertices();
 
+    if (oldVertices[0].sign() < 0) {
+        // We need to preserve orientation.
+        oldVertices[0] = oldVertices[0] * Perm<dim + 1>(dim - 1, dim);
+    }
+
     int i,j;
     for (i = 1; i <= dim; ++i) {
         oldSimp[i] = oldSimp[0]->adjacentSimplex(oldVertices[0][i]);
