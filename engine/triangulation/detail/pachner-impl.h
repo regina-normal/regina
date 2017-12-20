@@ -49,6 +49,50 @@
 namespace regina {
 namespace detail {
 
+namespace {
+    /**
+     * In the move described by PachnerHelper<dim, k>, this routine
+     * considers the external facet common to old simplex oldSimp and
+     * new simplex newSimp, and returns the corresponding mapping of
+     * vertices from oldSimp to newSimp.
+     *
+     * See the implementation of PachnerHelper<dim, k> for the detailed
+     * numbering scheme (in particular, point (2) in that description).
+     *
+     * Here 0 <= oldSimp <= dim-k, and 0 <= newSimp <= k.
+     */
+    template <int dim>
+    Perm<dim + 1> movePerm(int k, int oldSimp, int newSimp) {
+        int image[dim + 1];
+        int i;
+        int oldFacet, newFacet;
+
+        for (i = 0; i < k; ++i)
+            if (newSimp != i)
+                image[i] = dim - k + i;
+            else
+                oldFacet = i;
+        if (newSimp != k)
+            image[k + oldSimp] = dim;
+        else
+            oldFacet = k + oldSimp;
+
+        for (i = 0; i < dim-k; ++i)
+            if (oldSimp != i)
+                image[k + i] = i;
+            else
+                newFacet = i;
+        if (oldSimp != dim-k)
+            image[dim] = dim - k + newSimp;
+        else
+            newFacet = dim - k + newSimp;
+
+        image[oldFacet] = newFacet;
+
+        return Perm<dim + 1>(image);
+    }
+}
+
 template <int dim>
 bool PachnerHelper<dim, 0>::pachner(Triangulation<dim>* tri,
         Vertex<dim>* v, bool check, bool perform) {
@@ -283,8 +327,199 @@ bool PachnerHelper<dim, k>::pachner(Triangulation<dim>* tri,
         "The generic implementation of pachner() cannot be used "
         "for 0-faces or dim-faces.");
 
-    // TODO: Implement!
-    return false;
+    if (check) {
+        // The face must be valid and non-boundary.
+        if (f->isBoundary() || ! f->isValid())
+            return false;
+        // f must have the right degree.
+        if (f->degree() != dim + 1 - k)
+            return false;
+    }
+
+    // f must meet (dim + 1 - k) distinct top-dimensional simplices, which
+    // must be glued around the face in a way that makes the link of f
+    // the standard simplex boundary.
+
+    /**
+     * Our numbering scheme is as follows.
+     *
+     * 1) Suppose we have a k-face f, meeting (dim+1-k) top-dimensional
+     * simplices, and with the correct link as required for this move.
+     * Then we will label these (dim+1-k) simplices so that:
+     *
+     * - For simplex i, face f is formed from vertices 0..(k-1) and (i+k);
+     * - For i != j, simplex i facet (j+k) is glued to simplex j facet (i+k),
+     *   with the permutation that swaps i+k <-> j+k.
+     *
+     * 2) Suppose we have a k-face f meeting (dim+1-k) top-dimensional
+     * simplices as before, and we wish to replace this with a (dim-k)-face g
+     * meeting (k+1) top-dimensional simplices.  Then:
+     *
+     * - Consider the external facet of the overall structure that is
+     *   common to old simplex i and new simplex i'.  Then the vertices
+     *   of i map to the vertices of i' as follows:
+     *
+     *   * The vertices of old face f map
+     *     0..(k-1),(k+i) of simplex i -> (d-k)..d of simplex i',
+     *     excluding vertex (d-k+i') of simplex i' and its preimage in i;
+     *
+     *   * The vertices of new face g map
+     *     k..d of simplex i -> 0..(d-k-1),(d-k+i') of simplex i',
+     *     excluding vertex (k+i) of simplex i and its image in i';
+     *
+     *   This maps d vertices in total (i.e., the entire facet).
+     *   The missing vertex of f (which would have mapped to (d-k+i'))
+     *   is the index of this facet in i, and the missing vertex of g
+     *   (which would have mapped from (k+i)) is the index of this facet in i'.
+     *
+     * - Consider the external facet of the overall structure that is
+     *   facet j of old simplex i (i <= d-k; j is one of 0..(k-1),(k+i)).
+     *   Then this maps to facet j' of new simplex i', where:
+     *
+     *   * i' = { j if j < k ; k if j = k+i }
+     *
+     *   * j' = { i if i < d-k ; d-k+i' if i = d-k }
+     *
+     * - Note that this mapping is inverse to the corresponding mapping
+     *   for the inverse Pachner move (i.e., a Pachner move on a (dim-k)-face).
+     *
+     * All of the new simplices will have a consistent orientation.
+     * However, this will be *opposite* to the the orientation of the
+     * original simplices when d is even and k is odd.  Otherwise the
+     * original and new orientations will match.
+     */
+
+    // Find these original top-dimensional simplices.
+    // We will let oldVertices[i] describe our numbering scheme for the
+    // vertices of simplex i, as described in (1) above.
+    Simplex<dim>* oldSimp[dim + 1 - k];
+    Perm<dim + 1> oldVertices[dim + 1 - k];
+
+    oldSimp[0] = f->front().simplex();
+    oldVertices[0] = f->front().vertices();
+
+    int i,j;
+    for (i = 1; i <= dim - k; ++i) {
+        oldSimp[i] = oldSimp[0]->adjacentSimplex(oldVertices[0][i + k]);
+        if (check)
+            for (j = 0; j < i; ++j)
+                if (oldSimp[i] == oldSimp[j])
+                    return false;
+        oldVertices[i] = oldSimp[0]->adjacentGluing(oldVertices[0][i + k]) *
+            oldVertices[0] * Perm<dim + 1>(k, i + k);
+    }
+
+    if (check) {
+        for (i = 1; i <= dim - k; ++i)
+            for (j = 1; j < i; ++j) {
+                if (oldSimp[i] != oldSimp[j]->adjacentSimplex(
+                        oldVertices[j][i + k]))
+                    return false;
+                if (oldVertices[i] !=
+                        oldSimp[j]->adjacentGluing(oldVertices[j][i + k]) *
+                        oldVertices[j] * Perm<dim + 1>(i + k, j + k))
+                    return false;
+            }
+    }
+
+    if (! perform)
+        return true;
+
+    // Perform the move.
+    typename Triangulation<dim>::TopologyLock lock(tri);
+    typename Triangulation<dim>::ChangeEventSpan span(tri);
+
+    // Create (k + 1) new top-dimensional simplices.
+    // We insert them in reverse order to ensure that the new internal
+    // (dim-k)-face is formed from vertices 0,...,(dim-k) of the last
+    // simplex in the resulting triangulation.
+    Simplex<dim>* newSimp[k + 1];
+    for (i = k; i >= 0; --i)
+        newSimp[i] = tri->newSimplex();
+
+    // Find where their facets need to be glued.
+    // The following arrays adj*[i][j] store the destination of new simplex i,
+    // facet j, with the exception that facet dim - k should be interpreted to
+    // mean facet (i + dim - k) instead.
+    Simplex<dim>* adjSimp[k + 1][dim + 1];
+    Perm<dim + 1> adjGluing[k + 1][dim + 1];
+    int l, oldFacet, destFacet;
+    for (i = 0; i <= k; ++i) { // new simplices
+        for (j = 0; j <= dim - k; ++j) { // new facets
+            // This facet belongs to old simplex j.
+            // Find the facet of this old simplex, in our numbering scheme.
+            oldFacet = (i < k ? i : k + j);
+            adjSimp[i][j] = oldSimp[j]->adjacentSimplex(
+                oldVertices[j][oldFacet]);
+            adjGluing[i][j] = oldSimp[j]->adjacentGluing(
+                oldVertices[j][oldFacet]) *
+                oldVertices[j] * movePerm<dim>(dim - k, i, j);
+
+            // Is the destination of the gluing one of the old simplices
+            // that we are about to remove?
+            for (l = 0; l <= dim - k; ++l) { // old simplex
+                if (adjSimp[i][j] == oldSimp[l]) {
+                    // Yes!  The destination is old simplex l.
+                    // We only need to fix the gluing from one side only.
+                    if (j < l /* the case j == l comes later */) {
+                        adjSimp[i][j] = nullptr;
+                        break;
+                    }
+                    // Which facet of the old simplex is the destination
+                    // of the gluing (using our own numbering scheme)?
+                    destFacet = oldVertices[l].preImageOf(
+                        adjGluing[i][j][j < dim - k ? j : i + dim - k]);
+
+                    if (j == l && oldFacet < destFacet) {
+                        // Again: make the gluing from one side only.
+                        adjSimp[i][j] = nullptr;
+                        break;
+                    }
+
+                    // Which new simplex does this translate to?
+                    if (destFacet > k)
+                        destFacet = k;
+
+                    // Glued to the facet of old simplex l which is
+                    // shared by new simplex destFacet.
+
+                    // Adjust the gluing to point to the new simplex.
+                    adjSimp[i][j] = newSimp[destFacet];
+                    adjGluing[i][j] =
+                        movePerm<dim>(k, l, destFacet) *
+                        oldVertices[l].inverse() *
+                        adjGluing[i][j];
+
+                    break;
+                }
+            }
+        }
+    }
+
+    // Now go ahead and make the gluings.
+    for (i = 0; i <= dim - k; ++i)
+        oldSimp[i]->isolate();
+    for (i = 0; i <= k; ++i) {
+        for (j = 0; j < dim - k; ++j)
+            if (adjSimp[i][j])
+                newSimp[i]->join(j, adjSimp[i][j], adjGluing[i][j]);
+        // Now j == dim - k.
+        if (adjSimp[i][j])
+            newSimp[i]->join(i + dim - k, adjSimp[i][j], adjGluing[i][j]);
+    }
+
+    // Make the internal gluings for the new simplices.
+    for (i = 1; i <= k; ++i)
+        for (j = 0; j < i; ++j)
+            newSimp[i]->join(j + dim - k, newSimp[j],
+                Perm<dim + 1>(i + dim - k, j + dim - k));
+
+    // Delete the old pentachora.
+    for (i = 0; i <= dim - k; ++i)
+        tri->removeSimplex(oldSimp[i]);
+
+    // All done!
+    return true;
 }
 
 } } // namespace regina::detail
