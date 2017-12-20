@@ -997,6 +997,8 @@ class TriangulationTest : public CppUnit::TestFixture {
             size_t n = tri->size();
             for (size_t i = 0; i < n; ++i) {
                 Triangulation<dim> large(*tri);
+                if (large.isOrientable())
+                    large.orient();
                 bool res = large.pachner(large.simplex(i));
                 if (! res) {
                     std::ostringstream msg;
@@ -1028,6 +1030,14 @@ class TriangulationTest : public CppUnit::TestFixture {
                     msg << tri->label() << ", simplex " << i << ": "
                         << "1-" << (dim+1) << " move "
                         "changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isOrientable() && ! large.isOriented()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", simplex " << i << ": "
+                        << "1-" << (dim+1) << " move "
+                        "loses orientation.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
@@ -1070,8 +1080,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                // Randomly relabel the simplices.
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(n + dim);
+                // Randomly relabel the simplices, but preserve orientation.
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(n + dim, true);
                 iso->applyInPlace(&large);
                 clearProperties(large);
 
@@ -1105,6 +1115,15 @@ class TriangulationTest : public CppUnit::TestFixture {
                             << "-1 move is not isomorphic.";
                         CPPUNIT_FAIL(msg.str());
                     }
+
+                    if (tri->isOrientable() && ! copy.isOriented()) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", simplex " << i << ": "
+                            << "1-" << (dim+1)
+                            << " move then " << (dim+1)
+                            << "-1 move loses orientation.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
 
                 delete iso;
@@ -1115,6 +1134,8 @@ class TriangulationTest : public CppUnit::TestFixture {
             // Tests 2-dim and dim-2 moves.
             for (size_t i = 0; i < tri->template countFaces<dim - 1>(); ++i) {
                 Triangulation<dim> large(*tri);
+                if (large.isOrientable())
+                    large.orient();
                 bool res = large.pachner(large.template face<dim - 1>(i));
                 clearProperties(large);
 
@@ -1137,11 +1158,14 @@ class TriangulationTest : public CppUnit::TestFixture {
                             "changed # simplices.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    if (! large.isIsomorphicTo(*tri).get()) {
+                    Triangulation<dim> oriented(*tri);
+                    if (tri->isOrientable())
+                        oriented.orient();
+                    if (! large.isIdenticalTo(oriented)) {
                         std::ostringstream msg;
                         msg << tri->label() << ", position " << i << ": "
                             << "disallowed 2-" << dim << " move "
-                            "result is not isomorphic.";
+                            "result is not identical.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     continue;
@@ -1178,6 +1202,14 @@ class TriangulationTest : public CppUnit::TestFixture {
                     msg << tri->label() << ", position " << i << ": "
                         << "2-" << dim << " move "
                         "changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isOrientable() && ! large.isOriented()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", simplex " << i << ": "
+                        << "2-" << dim << " move "
+                        "loses orientation.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
@@ -1220,8 +1252,9 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                // Randomly relabel the simplices.
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(large.size());
+                // Randomly relabel the simplices, but preserve orientation.
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(large.size(),
+                    true);
                 iso->applyInPlace(&large);
                 clearProperties(large);
 
@@ -1250,6 +1283,15 @@ class TriangulationTest : public CppUnit::TestFixture {
                             << "2-" << dim
                             << " move then " << dim
                             << "-2 move is not isomorphic.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (tri->isOrientable() && ! copy.isOriented()) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", simplex " << i << ": "
+                            << "2-" << dim
+                            << " move then " << dim
+                            << "-2 move loses orientation.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
