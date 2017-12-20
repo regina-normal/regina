@@ -50,6 +50,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryEdges);
+    CPPUNIT_TEST(pachner0);
     CPPUNIT_TEST(pachner1);
     CPPUNIT_TEST(pachner2);
 
@@ -150,12 +151,16 @@ class Triangulation2Test : public TriangulationTest<2> {
             testManualAll(verifyBoundaryFacets);
         }
 
+        void pachner0() {
+            testManualAll(verifyPachnerDefault<0>);
+        }
+
         void pachner1() {
-            testManualAll(verifyPachner_1);
+            testManualAll(verifyPachnerDefault<1>);
         }
 
         void pachner2() {
-            testManualAll(verifyPachner_2);
+            testManualAll(verifyPachnerDefault<2>);
         }
 
         void validity() {

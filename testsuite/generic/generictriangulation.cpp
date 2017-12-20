@@ -56,8 +56,8 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::verifyDoubleCover;
         using TriangulationTest<dim>::verifyBoundaryFacets;
         using TriangulationTest<dim>::verifyBoundaryBuild;
-        using TriangulationTest<dim>::verifyPachner_1;
-        using TriangulationTest<dim>::verifyPachner_2;
+        using TriangulationTest<dim>::verifyPachner;
+        using TriangulationTest<dim>::verifyPachnerDefault;
 
         using TriangulationTest<dim>::verifyValid;
         using TriangulationTest<dim>::verifyConnected;
@@ -107,12 +107,34 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
             testManualAll(TriangulationTest<dim>::verifyBoundaryBuild);
         }
 
+        void pachner0() {
+            testManualAll(
+                TriangulationTest<dim>::template verifyPachnerDefault<0>);
+        }
+
         void pachner1() {
-            testManualAll(TriangulationTest<dim>::verifyPachner_1);
+            testManualAll(
+                TriangulationTest<dim>::template verifyPachnerDefault<1>);
         }
 
         void pachner2() {
-            testManualAll(TriangulationTest<dim>::verifyPachner_2);
+            testManualAll(
+                TriangulationTest<dim>::template verifyPachnerDefault<2>);
+        }
+
+        void pachner3() {
+            testManualAll(
+                TriangulationTest<dim>::template verifyPachnerDefault<3>);
+        }
+
+        void pachner4() {
+            testManualAll(
+                TriangulationTest<dim>::template verifyPachnerDefault<4>);
+        }
+
+        void pachner5() {
+            testManualAll(
+                TriangulationTest<dim>::template verifyPachnerDefault<5>);
         }
 
         void validity() {
@@ -208,8 +230,12 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(pachner0);
     CPPUNIT_TEST(pachner1);
     CPPUNIT_TEST(pachner2);
+    CPPUNIT_TEST(pachner3);
+    CPPUNIT_TEST(pachner4);
+    CPPUNIT_TEST(pachner5);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -232,8 +258,13 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(pachner0);
     CPPUNIT_TEST(pachner1);
     CPPUNIT_TEST(pachner2);
+    CPPUNIT_TEST(pachner3);
+    CPPUNIT_TEST(pachner4);
+    CPPUNIT_TEST(pachner5);
+    CPPUNIT_TEST(pachner6);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -245,6 +276,12 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(fundGroup);
 
     CPPUNIT_TEST_SUITE_END();
+
+    public:
+        void pachner6() {
+            testManualAll(
+                Triangulation6Test::template verifyPachnerDefault<6>);
+        }
 };
 
 class Triangulation8Test : public GenericTriangulationTest<8> {
@@ -260,8 +297,15 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(pachner0);
     CPPUNIT_TEST(pachner1);
     CPPUNIT_TEST(pachner2);
+    CPPUNIT_TEST(pachner3);
+    CPPUNIT_TEST(pachner4);
+    CPPUNIT_TEST(pachner5);
+    CPPUNIT_TEST(pachner6);
+    CPPUNIT_TEST(pachner7);
+    CPPUNIT_TEST(pachner8);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -273,6 +317,22 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(fundGroup);
 
     CPPUNIT_TEST_SUITE_END();
+
+    public:
+        void pachner6() {
+            testManualAll(
+                Triangulation8Test::template verifyPachnerDefault<6>);
+        }
+
+        void pachner7() {
+            testManualAll(
+                Triangulation8Test::template verifyPachnerDefault<7>);
+        }
+
+        void pachner8() {
+            testManualAll(
+                Triangulation8Test::template verifyPachnerDefault<8>);
+        }
 };
 
 void addGenericTriangulation(CppUnit::TextUi::TestRunner& runner) {

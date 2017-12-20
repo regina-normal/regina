@@ -68,8 +68,11 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(pachner0);
     CPPUNIT_TEST(pachner1);
     CPPUNIT_TEST(pachner2);
+    CPPUNIT_TEST(pachner3);
+    CPPUNIT_TEST(pachner4);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
@@ -337,16 +340,34 @@ class Triangulation4Test : public TriangulationTest<4> {
             testManualAll(verifyBoundaryBuild);
         }
 
+        void pachner0() {
+            testManualAll(verifyPachnerDefault<0>);
+            runCensusAllBounded(verifyPachnerDefault<0>);
+            runCensusAllNoBdry(verifyPachnerDefault<0>);
+        }
+
         void pachner1() {
-            testManualAll(verifyPachner_1);
-            runCensusAllBounded(verifyPachner_1);
-            runCensusAllNoBdry(verifyPachner_1);
+            testManualAll(verifyPachnerDefault<1>);
+            runCensusAllBounded(verifyPachnerDefault<1>);
+            runCensusAllNoBdry(verifyPachnerDefault<1>);
         }
 
         void pachner2() {
-            testManualAll(verifyPachner_2);
-            runCensusAllBounded(verifyPachner_2);
-            runCensusAllNoBdry(verifyPachner_2);
+            testManualAll(verifyPachnerDefault<2>);
+            runCensusAllBounded(verifyPachnerDefault<2>);
+            runCensusAllNoBdry(verifyPachnerDefault<2>);
+        }
+
+        void pachner3() {
+            testManualAll(verifyPachnerDefault<3>);
+            runCensusAllBounded(verifyPachnerDefault<3>);
+            runCensusAllNoBdry(verifyPachnerDefault<3>);
+        }
+
+        void pachner4() {
+            testManualAll(verifyPachnerDefault<4>);
+            runCensusAllBounded(verifyPachnerDefault<4>);
+            runCensusAllNoBdry(verifyPachnerDefault<4>);
         }
 
         void verifyInvalid(const Triangulation<4>& tri,

@@ -108,8 +108,10 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(retriangulation);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
+    CPPUNIT_TEST(pachner0);
     CPPUNIT_TEST(pachner1);
     CPPUNIT_TEST(pachner2);
+    CPPUNIT_TEST(pachner3);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -3965,18 +3967,32 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "is orientable.", ! t.isOrientable());
         }
 
+        void pachner0() {
+            testManualSmall(verifyPachnerDefault<0>);
+            runCensusAllClosed(verifyPachnerDefault<0>, true);
+            runCensusAllBounded(verifyPachnerDefault<0>, true);
+            runCensusAllIdeal(verifyPachnerDefault<0>, true);
+        }
+
         void pachner1() {
-            testManualSmall(verifyPachner_1);
-            runCensusAllClosed(verifyPachner_1, true);
-            runCensusAllBounded(verifyPachner_1, true);
-            runCensusAllIdeal(verifyPachner_1, true);
+            testManualSmall(verifyPachnerDefault<1>);
+            runCensusAllClosed(verifyPachnerDefault<1>, true);
+            runCensusAllBounded(verifyPachnerDefault<1>, true);
+            runCensusAllIdeal(verifyPachnerDefault<1>, true);
         }
 
         void pachner2() {
-            testManualSmall(verifyPachner_2);
-            runCensusAllClosed(verifyPachner_2, true);
-            runCensusAllBounded(verifyPachner_2, true);
-            runCensusAllIdeal(verifyPachner_2, true);
+            testManualSmall(verifyPachnerDefault<2>);
+            runCensusAllClosed(verifyPachnerDefault<2>, true);
+            runCensusAllBounded(verifyPachnerDefault<2>, true);
+            runCensusAllIdeal(verifyPachnerDefault<2>, true);
+        }
+
+        void pachner3() {
+            testManualSmall(verifyPachnerDefault<3>);
+            runCensusAllClosed(verifyPachnerDefault<3>, true);
+            runCensusAllBounded(verifyPachnerDefault<3>, true);
+            runCensusAllIdeal(verifyPachnerDefault<3>, true);
         }
 };
 
