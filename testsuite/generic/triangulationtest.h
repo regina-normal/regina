@@ -1048,6 +1048,14 @@ class TriangulationTest : public CppUnit::TestFixture {
                 Triangulation<dim> large(*tri);
                 if (large.isOrientable())
                     large.orient();
+
+                // Test whether *we* think the move should be allowed.
+                // This is only computed for the case k == dim - 1;
+                // for all other k it simply returns true.
+                bool expected = PachnerHelperMoveLegal<dim, dim - k>::
+                    legal(FaceHelper<dim, k>::face(large, i));
+
+                // Perform the move (if we can).
                 bool res = large.pachner(FaceHelper<dim, k>::face(large, i));
                 clearProperties(large);
 
@@ -1061,10 +1069,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
                 } else if (k == dim - 1) {
-                    // It is easy to tell when the move should be allowed.
-                    bool expected = PachnerHelperMoveLegal<dim, dim - k>::
-                        legal(FaceHelper<dim, k>::face(*tri, i));
-
+                    // It is easy to tell when the move should be allowed,
+                    // and we just tested this ourselves above.
                     if (res && ! expected) {
                         std::ostringstream msg;
                         msg << tri->label() << ", face " << i << ": "
