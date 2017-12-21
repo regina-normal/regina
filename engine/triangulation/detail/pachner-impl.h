@@ -49,22 +49,54 @@
 namespace regina {
 namespace detail {
 
-namespace {
+#ifndef __DOXYGEN
+    // The template function movePerm(), which is implemented and then
+    // specialised below, is purely for use within the generic implementation
+    // of pachner(), and does not form part of Regina's public API.
+    //
+    // It is not a private member of the PachnerHelper class, because we
+    // wish to specialise it for standard dimensions without causing the
+    // compiler to instantiate the entire Triangulation<dim> class.
+
     /**
-     * In the move described by PachnerHelper<dim, k>, this routine
-     * considers the external facet common to old simplex oldSimp and
-     * new simplex newSimp, and returns the corresponding mapping of
-     * vertices from oldSimp to newSimp.
+     * Calculates how the vertices of an old simplex correspond to the vertices
+     * of a new simplex in a (\a dim - \a k + 1)-(\a k + 1) Pachner move about
+     * a <i>k</i>-face of a <i>dim</i>-dimensional triangulation.
      *
-     * See the implementation of PachnerHelper<dim, k> for the detailed
-     * numbering scheme (in particular, point (2) in that description).
+     * The old and new simplices will have precisely \a dim vertices in
+     * common, which together identify an external facet of the
+     * topological ball that is replace by this Pachner move.
      *
-     * Here 0 <= oldSimp <= dim-k, and 0 <= newSimp <= k.
+     * This mapping of vertices is relative to Regina's own "canonical"
+     * labelling of the old and new simplices that make up this
+     * topological ball.  For the new simplices, this will be the actual
+     * labelling of the simplices (since Regina gets to create the
+     * new simplices).  For the old simplices, however, this will
+     * \e not be the actual labelling of the simplices (since this is
+     * provided by the user, and is out of Regina's control).
+     *
+     * For the details of Regina's "canonical" labelling of simplices,
+     * and for a detailed description of what this mapping looks like,
+     * see the implementation of PachnerHelper<dim, k>::pachner().
+     *
+     * \tparam dim the dimension of the underlying triangulation.
+     * \tparam k the dimension of the face about which we are performing a
+     * Pachner move.
+     *
+     * @param oldSimp identifies one of the old simplices that will
+     * be removed by this Pachner move; this must be between
+     * 0 and (\a dim - \a k) inclusive.
+     * @param newSimp identifies one of the new simplices that will
+     * be added by this Pachner move; this must be between
+     * 0 and \a k inclusive.
      */
     template <int dim, int k>
     Perm<dim + 1> movePerm(int oldSimp, int newSimp) {
         static_assert(0 < k && k < dim,
             "movePerm() may not be called for 0-faces or dim-faces.");
+        static_assert(! standardDim(dim),
+            "The generic movePerm() implementation cannot be used in "
+            "standard dimensions.");
 
         int image[dim + 1];
         int i;
@@ -94,7 +126,51 @@ namespace {
 
         return Perm<dim + 1>(image);
     }
-}
+
+    // Precalculated values of movePerm() for use in standard dimensions.
+    // These are not marked REGINA_API, since they should not be considered
+    // a part of Regina's public API.  The calculation engine already
+    // links in implementations of all possible Pachner moves, and so the
+    // end user should have no need to refer to these arrays.
+    extern const Perm<3> movePerm_2_1[2][2];
+    extern const Perm<4> movePerm_3_1[3][2];
+    extern const Perm<4> movePerm_3_2[2][3];
+    extern const Perm<5> movePerm_4_1[4][2];
+    extern const Perm<5> movePerm_4_2[3][3];
+    extern const Perm<5> movePerm_4_3[2][4];
+
+    // Specialised implementations of movePerm() that use these
+    // precalculated values.
+    template <>
+    inline Perm<3> movePerm<2, 1>(int oldSimp, int newSimp) {
+        return movePerm_2_1[oldSimp][newSimp];
+    }
+
+    template <>
+    inline Perm<4> movePerm<3, 1>(int oldSimp, int newSimp) {
+        return movePerm_3_1[oldSimp][newSimp];
+    }
+
+    template <>
+    inline Perm<4> movePerm<3, 2>(int oldSimp, int newSimp) {
+        return movePerm_3_2[oldSimp][newSimp];
+    }
+
+    template <>
+    inline Perm<5> movePerm<4, 1>(int oldSimp, int newSimp) {
+        return movePerm_4_1[oldSimp][newSimp];
+    }
+
+    template <>
+    inline Perm<5> movePerm<4, 2>(int oldSimp, int newSimp) {
+        return movePerm_4_2[oldSimp][newSimp];
+    }
+
+    template <>
+    inline Perm<5> movePerm<4, 3>(int oldSimp, int newSimp) {
+        return movePerm_4_3[oldSimp][newSimp];
+    }
+#endif // __DOXYGEN
 
 template <int dim>
 bool PachnerHelper<dim, 0>::pachner(Triangulation<dim>* tri,
