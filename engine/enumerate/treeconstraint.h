@@ -983,7 +983,7 @@ inline bool LPConstraintNonSpun::verify(const AngleStructure*) {
 }
 
 inline bool LPConstraintNonSpun::supported(NormalCoords coords) {
-    return (coords == NS_QUAD);
+    return (coords == NS_QUAD || coords == NS_AN_QUAD_OCT);
 }
 
 inline BanConstraintBase::~BanConstraintBase() {
