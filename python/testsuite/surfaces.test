@@ -34,6 +34,13 @@
 import string
 
 def dumpSurfaces(name, slist):
+	if slist == None:
+		print "-------------------------------"
+		print name
+		print 'ENUMERATION FAILED'
+		print "-------------------------------"
+		print
+		return
 	print "-------------------------------"
 	print slist.triangulation().label()
 	print name
@@ -61,6 +68,10 @@ def surfaceStats(tri):
 		regina.NormalSurfaces.enumerate(tri, regina.NS_AN_STANDARD))
 	dumpSurfaces('Vertex surfaces (quad-oct almost normal)',
 		regina.NormalSurfaces.enumerate(tri, regina.NS_AN_QUAD_OCT))
+	dumpSurfaces('Vertex surfaces (closed quad)',
+		regina.NormalSurfaces.enumerate(tri, regina.NS_QUAD_CLOSED))
+	dumpSurfaces('Vertex surfaces (closed quad-oct)',
+		regina.NormalSurfaces.enumerate(tri, regina.NS_AN_QUAD_OCT_CLOSED))
 	dumpSurfaces('Fundamental surfaces (std)',
 		regina.NormalSurfaces.enumerate(tri, regina.NS_STANDARD, regina.NS_FUNDAMENTAL))
 	dumpSurfaces('Fundamental surfaces (quad)',
@@ -69,6 +80,10 @@ def surfaceStats(tri):
 		regina.NormalSurfaces.enumerate(tri, regina.NS_AN_STANDARD, regina.NS_FUNDAMENTAL))
 	dumpSurfaces('Fundamental surfaces (quad-oct almost normal)',
 		regina.NormalSurfaces.enumerate(tri, regina.NS_AN_QUAD_OCT, regina.NS_FUNDAMENTAL))
+	dumpSurfaces('Fundamental surfaces (closed quad)',
+		regina.NormalSurfaces.enumerate(tri, regina.NS_QUAD_CLOSED, regina.NS_FUNDAMENTAL))
+	dumpSurfaces('Fundamental surfaces (closed quad-oct)',
+		regina.NormalSurfaces.enumerate(tri, regina.NS_AN_QUAD_OCT_CLOSED, regina.NS_FUNDAMENTAL))
 
 t = regina.Triangulation3()
 t.setLabel("Empty triangulation")
@@ -85,3 +100,4 @@ surfaceStats(regina.Example3.solidKleinBottle())
 surfaceStats(regina.Example3.figureEight())
 surfaceStats(regina.Example3.whiteheadLink())
 surfaceStats(regina.Example3.gieseking())
+surfaceStats(regina.Example3.trefoil())
