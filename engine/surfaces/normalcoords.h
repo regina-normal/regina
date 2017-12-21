@@ -127,7 +127,7 @@ enum NormalCoords {
      * be able to work with them without retriangulating (though this should
      * follow from the other constraints).
      */
-    NS_AN_QUAD_OCT_CLOSED = 111,
+    NS_AN_QUAD_OCT_CLOSED = 110,
     /**
      * Represents edge weight coordinates for normal surfaces.
      * This coordinate system is for display only; surface
