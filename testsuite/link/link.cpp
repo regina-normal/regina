@@ -53,7 +53,7 @@ using regina::StrandRef;
 
 // Isomorphism signatures for various knot/link complements that regina's
 // simplification heuristics are found to reduce to in practice.
-#define TREFOIL_SIGS { "cPcbbbadh", "cPcbbbadu", "dLQbcbcdlcj" }
+#define TREFOIL_SIGS { "cPcbbbadh", "cPcbbbadu", "dLQbcbcdlcj", "dLQbcbcdlcn" }
 #define FIG8_SIGS { "cPcbbbiht" }
 
 class LinkTest : public CppUnit::TestFixture {
