@@ -117,6 +117,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         case regina::NS_QUAD:
         case regina::NS_QUAD_CLOSED:
         case regina::NS_AN_QUAD_OCT:
+        case regina::NS_AN_QUAD_OCT_CLOSED:
         case regina::NS_ORIENTED_QUAD:
             self.selectCoords.selectedSegmentIndex = 1;
             break;

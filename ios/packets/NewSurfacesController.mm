@@ -138,9 +138,10 @@ static NSArray* embText;
     switch (_coordControl.selectedSegmentIndex) {
         case 0: coords = regina::NS_STANDARD; break;
         case 1: coords = regina::NS_QUAD; break;
-        case 2: coords = regina::NS_QUAD_CLOSED; break;
-        case 3: coords = regina::NS_AN_STANDARD; almostNormal = true; break;
-        case 4: coords = regina::NS_AN_QUAD_OCT; almostNormal = true; break;
+        case 2: coords = regina::NS_AN_STANDARD; almostNormal = true; break;
+        case 3: coords = regina::NS_AN_QUAD_OCT; almostNormal = true; break;
+        case 4: coords = regina::NS_QUAD_CLOSED; break;
+        case 5: coords = regina::NS_AN_QUAD_OCT_CLOSED; almostNormal = true; break;
         default: broken = true; break;
     }
     if (broken) {
@@ -165,12 +166,12 @@ static NSArray* embText;
 
     regina::Triangulation<3>* tri = (regina::Triangulation<3>*)self.spec.parent;
 
-    if (coords == regina::NS_QUAD_CLOSED && ! (
+    if ((coords == regina::NS_QUAD_CLOSED || coords == regina::NS_AN_QUAD_OCT_CLOSED) && ! (
             tri->countVertices() == 1 &&
             tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
             tri->isOriented())) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selection Not Supported"
-                                                        message:@"At present, quad closed coordinates are only available for oriented ideal triangulations with one torus cusp and no other boundary components or internal vertices."
+                                                        message:@"At present, closed quad and closed quad-oct coordinates are only available for oriented ideal triangulations with one torus cusp and no other boundary components or internal vertices."
                                                        delegate:nil
                                               cancelButtonTitle:@"Close"
                                               otherButtonTitles:nil];
@@ -208,7 +209,7 @@ static NSArray* embText;
 
             if (! ans) {
                 UIAlertView *alert;
-                if (coords == regina::NS_QUAD_CLOSED) {
+                if (coords == regina::NS_QUAD_CLOSED || coords == regina::NS_AN_QUAD_OCT_CLOSED) {
                     alert = [[UIAlertView alloc] initWithTitle:@"Enumeration Failed"
                                                                     message:@"I could not complete the normal surface enumeration. This could be because SnapPea was unable to construct the slope equations, or because it tried to retriangulate when doing so. Please report this to the Regina developers."
                                                                    delegate:nil
@@ -254,9 +255,10 @@ static NSArray* embText;
     coordText = [NSArray arrayWithObjects:
                  @"Normal coordinates: triangles and quadrilaterals",
                  @"Normal coordinates: quadrilaterals only",
-                 @"Normal coordinates: quads, closed (non-spun) surfaces only",
                  @"Almost normal coordinates: triangles, quadrilaterals, octagons",
                  @"Almost normal coordinates: quadrilaterals and octagons only",
+                 @"Normal coordinates: quads, closed (non-spun) surfaces only",
+                 @"Almost normal coordinates: quads & octs, closed (non-spun) only",
                  nil];
     embText = [NSArray arrayWithObjects:
                @"Properly embedded surfaces only",
