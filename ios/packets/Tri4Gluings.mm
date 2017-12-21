@@ -32,6 +32,7 @@
 
 #import "ReginaHelper.h"
 #import "EltMoves4.h"
+#import "MBProgressHUD.h"
 #import "Tri4ViewController.h"
 #import "Tri4Gluings.h"
 #import "engine.h"
