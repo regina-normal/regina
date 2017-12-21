@@ -142,9 +142,9 @@ namespace {
             }
 
         for (i = 0; i < t->countEdges(); ++i)
-            if (t->fourTwoMove(t->edge(i), true, false)) {
+            if (t->pachner(t->edge(i), true, false)) {
                 Triangulation<4> alt(*t, false);
-                alt.fourTwoMove(alt.edge(i), false, true);
+                alt.pachner(alt.edge(i), false, true);
                 if (candidate(alt)) {
                     delete t;
                     return;
@@ -154,9 +154,9 @@ namespace {
             }
 
         for (i = 0; i < t->countTriangles(); ++i)
-            if (t->threeThreeMove(t->triangle(i), true, false)) {
+            if (t->pachner(t->triangle(i), true, false)) {
                 Triangulation<4> alt(*t, false);
-                alt.threeThreeMove(alt.triangle(i), false, true);
+                alt.pachner(alt.triangle(i), false, true);
                 if (candidate(alt)) {
                     delete t;
                     return;
@@ -167,9 +167,9 @@ namespace {
 
         if (t->size() + 2 <= maxSimp_)
             for (i = 0; i < t->countTetrahedra(); ++i)
-                if (t->twoFourMove(t->tetrahedron(i), true, false)) {
+                if (t->pachner(t->tetrahedron(i), true, false)) {
                     Triangulation<4> alt(*t, false);
-                    alt.twoFourMove(alt.tetrahedron(i), false, true);
+                    alt.pachner(alt.tetrahedron(i), false, true);
                     if (candidate(alt)) {
                         delete t;
                         return;

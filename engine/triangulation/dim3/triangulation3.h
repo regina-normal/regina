@@ -1164,25 +1164,17 @@ class REGINA_API Triangulation<3> :
         [[deprecated]] bool fourOneMove(Vertex<3>* v, bool check = true,
             bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 3-2 move
-         * about the given edge.
-         * This involves replacing the three tetrahedra joined at that
-         * edge with two tetrahedra joined by a triangle.
-         * This can be done iff (i) the edge is valid and non-boundary,
-         * and (ii) the three tetrahedra are distinct.
+         * Deprecated function that checks the eligibility of and/or performs
+         * a 3-2 move about the given edge.
          *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * This is an alias for pachner(Edge<3>*, bool, bool);
+         * see that routine for further details.
          *
-         * Note that after performing this move, all skeletal objects
-         * (triangles, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
-         * can no longer be used.
-         *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
          *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1194,25 +1186,17 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool threeTwoMove(Edge<3>* e, bool check = true, bool perform = true);
+        [[deprecated]] bool threeTwoMove(Edge<3>* e, bool check = true,
+            bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-3 move
-         * about the given triangle.
-         * This involves replacing the two tetrahedra joined at that
-         * triangle with three tetrahedra joined by an edge.
-         * This can be done iff the two tetrahedra are distinct.
+         * Deprecated function that checks the eligibility of and/or performs
+         * a 2-3 move about the given triangle.
          *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * This is an alias for pachner(Triangle<3>*, bool, bool);
+         * see that routine for further details.
          *
-         * Note that after performing this move, all skeletal objects
-         * (triangles, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
-         * can no longer be used.
-         *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
          * \pre The given triangle is a triangle of this triangulation.
          *
          * @param t the triangle about which to perform the move.
@@ -1225,7 +1209,8 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoThreeMove(Triangle<3>* t, bool check = true, bool perform = true);
+        [[deprecated]] bool twoThreeMove(Triangle<3>* t, bool check = true,
+            bool perform = true);
         /**
          * Deprecated function that checks the eligibility of and/or
          * performs a 1-4 Pachner move upon the given tetrahedron.
@@ -3021,6 +3006,16 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
 inline bool Triangulation<3>::oneFourMove(
         Tetrahedron<3>* tet, bool check, bool perform) {
     return detail::PachnerHelper<3, 3>::pachnerOld(this, tet, check, perform);
+}
+
+inline bool Triangulation<3>::twoThreeMove(
+        Triangle<3>* t, bool check, bool perform) {
+    return pachner(t, check, perform);
+}
+
+inline bool Triangulation<3>::threeTwoMove(
+        Edge<3>* e, bool check, bool perform) {
+    return pachner(e, check, perform);
 }
 
 inline bool Triangulation<3>::fourOneMove(

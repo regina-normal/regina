@@ -63,15 +63,15 @@ namespace {
     }
 
     bool has42(regina::Edge<4>* e) {
-        return e->triangulation()->fourTwoMove(e, true, false);
+        return e->triangulation()->pachner(e, true, false);
     }
 
     bool has33(regina::Triangle<4>* f) {
-        return f->triangulation()->threeThreeMove(f, true, false);
+        return f->triangulation()->pachner(f, true, false);
     }
 
     bool has24(regina::Tetrahedron<4>* f) {
-        return f->triangulation()->twoFourMove(f, true, false);
+        return f->triangulation()->pachner(f, true, false);
     }
 
     bool has20t(regina::Triangle<4>* t) {
@@ -324,15 +324,15 @@ void EltMoveDialog4::clicked(QAbstractButton* btn) {
     } else if (use42->isChecked()) {
         regina::Edge<4>* e = box42->selected();
         if (e)
-            tri->fourTwoMove(e);
+            tri->pachner(e);
     } else if (use33->isChecked()) {
         regina::Triangle<4>* t = box33->selected();
         if (t)
-            tri->threeThreeMove(t);
+            tri->pachner(t);
     } else if (use24->isChecked()) {
         regina::Tetrahedron<4>* t = box24->selected();
         if (t)
-            tri->twoFourMove(t);
+            tri->pachner(t);
     } else if (use15->isChecked()) {
         regina::Pentachoron<4>* p = box15->selected();
         if (p)

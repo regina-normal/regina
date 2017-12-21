@@ -76,12 +76,6 @@ namespace {
         Triangulation<4>::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
         Triangulation<4>::simplifyExhaustive, 0, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fourTwoMove,
-        Triangulation<4>::fourTwoMove, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_threeThreeMove,
-        Triangulation<4>::threeThreeMove, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoFourMove,
-        Triangulation<4>::twoFourMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoZeroMove,
         Triangulation<4>::twoZeroMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_openBook,

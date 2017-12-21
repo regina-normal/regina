@@ -129,9 +129,9 @@ namespace {
         Triangulation<3>* t = Triangulation<3>::fromIsoSig(*it);
         size_t i;
         for (i = 0; i < t->countEdges(); ++i)
-            if (t->threeTwoMove(t->edge(i), true, false)) {
+            if (t->pachner(t->edge(i), true, false)) {
                 Triangulation<3> alt(*t, false);
-                alt.threeTwoMove(alt.edge(i), false, true);
+                alt.pachner(alt.edge(i), false, true);
                 if (candidate(alt)) {
                     delete t;
                     return;
@@ -142,9 +142,9 @@ namespace {
 
         if (t->size() < maxTet_)
             for (i = 0; i < t->countTriangles(); ++i)
-                if (t->twoThreeMove(t->triangle(i), true, false)) {
+                if (t->pachner(t->triangle(i), true, false)) {
                     Triangulation<3> alt(*t, false);
-                    alt.twoThreeMove(alt.triangle(i), false, true);
+                    alt.pachner(alt.triangle(i), false, true);
                     if (candidate(alt)) {
                         delete t;
                         return;

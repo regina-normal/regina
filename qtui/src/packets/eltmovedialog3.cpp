@@ -65,7 +65,7 @@ namespace {
     }
 
     bool has32(regina::Edge<3>* e) {
-        return e->triangulation()->threeTwoMove(e, true, false);
+        return e->triangulation()->pachner(e, true, false);
     }
 
     bool has20e(regina::Edge<3>* e) {
@@ -89,7 +89,7 @@ namespace {
     }
 
     bool has23(regina::Triangle<3>* f) {
-        return f->triangulation()->twoThreeMove(f, true, false);
+        return f->triangulation()->pachner(f, true, false);
     }
 
     bool hasOpenBook(regina::Triangle<3>* f) {
@@ -350,11 +350,11 @@ void EltMoveDialog3::clicked(QAbstractButton* btn) {
     if (use32->isChecked()) {
         regina::Edge<3>* e = box32->selected();
         if (e)
-            tri->threeTwoMove(e);
+            tri->pachner(e);
     } else if (use23->isChecked()) {
         regina::Triangle<3>* f = box23->selected();
         if (f)
-            tri->twoThreeMove(f);
+            tri->pachner(f);
     } else if (use14->isChecked()) {
         regina::Tetrahedron<3>* t = box14->selected();
         if (t)

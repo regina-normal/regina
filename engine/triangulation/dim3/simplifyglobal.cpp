@@ -238,7 +238,7 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
 
             // Look for internal simplifications.
             for (Edge<3>* edge : edges()) {
-                if (threeTwoMove(edge, true, perform)) {
+                if (pachner(edge, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }

@@ -123,7 +123,7 @@
 
     options42 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
-        if (self.packet->fourTwoMove(self.packet->edge(i), true, false))
+        if (self.packet->pachner(self.packet->edge(i), true, false))
             [options42 addObject:@(i)];
     if (options42.count > 0) {
         self.button42.enabled = self.stepper42.enabled = YES;
@@ -139,7 +139,7 @@
 
     options33 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countTriangles(); ++i)
-        if (self.packet->threeThreeMove(self.packet->triangle(i), true, false))
+        if (self.packet->pachner(self.packet->triangle(i), true, false))
             [options33 addObject:@(i)];
     if (options33.count > 0) {
         self.button33.enabled = self.stepper33.enabled = YES;
@@ -155,7 +155,7 @@
 
     options24 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countTetrahedra(); ++i)
-        if (self.packet->twoFourMove(self.packet->tetrahedron(i), true, false))
+        if (self.packet->pachner(self.packet->tetrahedron(i), true, false))
             [options24 addObject:@(i)];
     if (options24.count > 0) {
         self.button24.enabled = self.stepper24.enabled = YES;
@@ -439,7 +439,7 @@
     if (! use)
         return;
 
-    self.packet->fourTwoMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 
@@ -449,7 +449,7 @@
     if (! use)
         return;
 
-    self.packet->threeThreeMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 
@@ -459,7 +459,7 @@
     if (! use)
         return;
 
-    self.packet->twoFourMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 
