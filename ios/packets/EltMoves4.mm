@@ -42,6 +42,7 @@
     NSMutableArray* options15;
     NSMutableArray* options20Triangle;
     NSMutableArray* options20Edge;
+    NSMutableArray* options20Vertex;
     NSMutableArray* optionsOpenBook;
     NSMutableArray* optionsShell;
     NSMutableArray* optionsCollapseEdge;
@@ -56,6 +57,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *button15;
 @property (weak, nonatomic) IBOutlet UIButton *button20Triangle;
 @property (weak, nonatomic) IBOutlet UIButton *button20Edge;
+@property (weak, nonatomic) IBOutlet UIButton *button20Vertex;
 @property (weak, nonatomic) IBOutlet UIButton *buttonOpenBook;
 @property (weak, nonatomic) IBOutlet UIButton *buttonShell;
 @property (weak, nonatomic) IBOutlet UIButton *buttonCollapseEdge;
@@ -67,6 +69,7 @@
 @property (weak, nonatomic) IBOutlet UIStepper *stepper15;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper20Triangle;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper20Edge;
+@property (weak, nonatomic) IBOutlet UIStepper *stepper20Vertex;
 @property (weak, nonatomic) IBOutlet UIStepper *stepperOpenBook;
 @property (weak, nonatomic) IBOutlet UIStepper *stepperShell;
 @property (weak, nonatomic) IBOutlet UIStepper *stepperCollapseEdge;
@@ -78,6 +81,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *detail15;
 @property (weak, nonatomic) IBOutlet UILabel *detail20Triangle;
 @property (weak, nonatomic) IBOutlet UILabel *detail20Edge;
+@property (weak, nonatomic) IBOutlet UILabel *detail20Vertex;
 @property (weak, nonatomic) IBOutlet UILabel *detailOpenBook;
 @property (weak, nonatomic) IBOutlet UILabel *detailShell;
 @property (weak, nonatomic) IBOutlet UILabel *detailCollapseEdge;
@@ -215,6 +219,22 @@
     } else {
         self.button20Edge.enabled = self.stepper20Edge.enabled = NO;
         self.detail20Edge.attributedText = unavailable;
+    }
+
+    options20Vertex = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->countVertices(); ++i)
+        if (self.packet->twoZeroMove(self.packet->vertex(i), true, false))
+            [options20Vertex addObject:@(i)];
+    if (options20Vertex.count > 0) {
+        self.button20Vertex.enabled = self.stepper20Vertex.enabled = YES;
+        self.stepper20Vertex.maximumValue = options20Vertex.count - 1;
+        if (self.stepper20Vertex.value >= options20Vertex.count)
+            self.stepper20Vertex.value = options20Vertex.count - 1;
+        else
+            [self changed20Vertex:nil];
+    } else {
+        self.button20Vertex.enabled = self.stepper20Vertex.enabled = NO;
+        self.detail20Vertex.attributedText = unavailable;
     }
 
     optionsOpenBook = [[NSMutableArray alloc] init];
@@ -493,6 +513,16 @@
     [self reloadMoves];
 }
 
+- (IBAction)do20Vertex:(id)sender
+{
+    regina::Vertex<4>* use = [self vertexFor:self.stepper20Vertex options:options20Vertex];
+    if (! use)
+        return;
+
+    self.packet->twoZeroMove(use, true, true);
+    [self reloadMoves];
+}
+
 - (IBAction)doOpenBook:(id)sender
 {
     regina::Tetrahedron<4>* use = [self tetrahedronFor:self.stepperOpenBook options:optionsOpenBook];
@@ -556,6 +586,11 @@
 - (IBAction)changed20Edge:(id)sender
 {
     self.detail20Edge.attributedText = [self edgeDesc:[self edgeFor:self.stepper20Edge options:options20Edge]];
+}
+
+- (IBAction)changed20Vertex:(id)sender
+{
+    self.detail20Vertex.attributedText = [self vertexDesc:[self vertexFor:self.stepper20Vertex options:options20Vertex]];
 }
 
 - (IBAction)changedOpenBook:(id)sender

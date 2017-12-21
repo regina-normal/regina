@@ -342,6 +342,85 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
     return true;
 }
 
+bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
+    if (check) {
+        // For a valid vertex, the link must be a 3-ball or a closed 3-manifold.
+        // Moreover: *both* ideal and invalid vertices are considered to
+        // be on the boundary.
+        // Therefore, if a vertex is non-boundary, its link must be a 3-sphere.
+        if (v->isBoundary())
+            return false;
+        if (v->degree() != 2)
+            return false;
+    }
+
+    // Note: there is only one 2-tetrahedron 3-sphere triangulation
+    // where each tetrahedron is glued to the other along all four faces
+    // (and this is the vertex link we are looking for).
+
+    Simplex<4>* pent[2];
+    int vertex[2];
+
+    int i = 0;
+    for (auto& emb : *v) {
+        pent[i] = emb.pentachoron();
+        vertex[i] = emb.vertex();
+        i++;
+    }
+
+    if (check) {
+        if (pent[0] == pent[1])
+            return false;
+
+        Tetrahedron<4>* tetrahedron[2];
+        for (i = 0; i < 2; i++)
+            tetrahedron[i] = pent[i]->tetrahedron(vertex[i]);
+        if (tetrahedron[0] == tetrahedron[1])
+            return false;
+        if (tetrahedron[0]->isBoundary() && tetrahedron[1]->isBoundary())
+            return false;
+
+        // Check that the pentachora are joined along all four tetrahedra.
+        for (i = 0; i < 5; ++i) {
+            if (i == vertex[0])
+                continue;
+            if (pent[0]->adjacentSimplex(i) != pent[1])
+                return false;
+        }
+    }
+
+    if (! perform)
+        return true;
+
+    // Actually perform the move.
+    TopologyLock lock(this);
+    ChangeEventSpan span(this);
+
+    // Unglue faces from the doomed pentachora and glue them to each other.
+    Pentachoron<4>* top = pent[0]->adjacentPentachoron(vertex[0]);
+    Pentachoron<4>* bottom = pent[1]->adjacentPentachoron(vertex[1]);
+
+    if (! top) {
+        pent[1]->unjoin(vertex[1]);
+    } else if (! bottom) {
+        pent[0]->unjoin(vertex[0]);
+    } else {
+        Perm<5> crossover;
+        crossover = pent[0]->adjacentGluing(vertex[0] == 0 ? 1 : 0);
+        int topFacet = pent[0]->adjacentFacet(vertex[0]);
+        Perm<5> gluing = pent[1]->adjacentGluing(vertex[1]) *
+            crossover * top->adjacentGluing(topFacet);
+        pent[0]->unjoin(vertex[0]);
+        pent[1]->unjoin(vertex[1]);
+        top->join(topFacet, bottom, gluing);
+    }
+
+    // Finally remove and dispose of the pentachora.
+    removeSimplex(pent[0]);
+    removeSimplex(pent[1]);
+
+    return true;
+}
 bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
     const TetrahedronEmbedding<4>& emb = t->front();
     Pentachoron<4>* pent = emb.pentachoron();

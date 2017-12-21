@@ -55,6 +55,8 @@ namespace {
         bool, bool) = &Triangulation<4>::twoZeroMove;
     bool (Triangulation<4>::*twoZeroMove_edge)(regina::Edge<4>*,
         bool, bool) = &Triangulation<4>::twoZeroMove;
+    bool (Triangulation<4>::*twoZeroMove_vertex)(regina::Vertex<4>*,
+        bool, bool) = &Triangulation<4>::twoZeroMove;
     size_t(Triangulation<4>::*splitIntoComponents)(regina::Packet*, bool) =
         &Triangulation<4>::splitIntoComponents;
     bool (Triangulation<4>::*pachner_15)(regina::Simplex<4>*, bool, bool) =
@@ -283,6 +285,7 @@ void addTriangulation4() {
             .def("fiveOneMove", pachner_51, OL_pachner())
             .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
             .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
+            .def("twoZeroMove", twoZeroMove_vertex, OL_twoZeroMove())
             .def("openBook", &Triangulation<4>::openBook, OL_openBook())
             .def("shellBoundary", &Triangulation<4>::shellBoundary,
                 OL_shellBoundary())

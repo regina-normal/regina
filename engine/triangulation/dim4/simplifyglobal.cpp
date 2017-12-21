@@ -231,6 +231,19 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
+            for (Vertex<4>* v : vertices()) {
+                if (twoZeroMove(v, true, perform)) {
+                    changedNow = changed = true;
+                    break;
+                }
+            }
+            if (changedNow) {
+                if (perform)
+                    continue;
+                else
+                    return true;
+            }
+
             for (Edge<4>* e : edges()) {
                 if (pachner(e, true, perform)) {
                     changedNow = changed = true;

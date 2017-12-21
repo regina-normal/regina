@@ -77,6 +77,8 @@ Version 5.2  [ 29 September, 2017 ]
               when the manifold is retriangulated.
         Class Triangulation<4>:
             - New routines retriangulate() and simplifyExhaustive().
+            - Now supports 2-0 moves on vertices of degree two (in addition to
+              the pre-existing 2-0 moves on edges and triangles).
             - New deprecated routine fiveOneMove(), added for completeness.
               Use the new pachner() routines instead.
         Class Triangulation<3>:
