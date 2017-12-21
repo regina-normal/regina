@@ -66,7 +66,7 @@ struct FaceHelper {
     }
 
     static regina::Face<dim, subdim>* face(
-            regina::Simplex<dim>* s, const Perm<dim + 1>& vertices) {
+            regina::Simplex<dim>* s, Perm<dim + 1> vertices) {
         return s->template face<subdim>(
             regina::Face<dim, subdim>::faceNumber(vertices));
     }
@@ -82,8 +82,7 @@ struct FaceHelper<dim, dim> {
         return tri.simplex(index);
     }
 
-    static regina::Simplex<dim>* face(regina::Simplex<dim>* s,
-            const Perm<dim + 1>&) {
+    static regina::Simplex<dim>* face(regina::Simplex<dim>* s, Perm<dim + 1>) {
         return s;
     }
 };
