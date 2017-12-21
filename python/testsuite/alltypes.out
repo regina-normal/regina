@@ -1320,6 +1320,18 @@ Equality type : BY_VALUE
 MatrixInt : class
 Equality type : BY_VALUE
 
+ModelLinkGraph : class
+Equality type : BY_REFERENCE
+
+ModelLinkGraphArc : class
+Equality type : BY_VALUE
+
+ModelLinkGraphCells : class
+Equality type : BY_REFERENCE
+
+ModelLinkGraphNode : class
+Equality type : BY_REFERENCE
+
 NAbelianGroup : typedef ->  AbelianGroup
 
 NAngleStructure : typedef ->  AngleStructure
