@@ -294,7 +294,7 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
 
     /**
      * Isomorphism-related routines have running times that include
-     * a factor of (dim+1)!, which makes them Too slow in higher dimensions.
+     * a factor of (dim+1)!, which makes them too slow in higher dimensions.
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
      */
@@ -302,6 +302,10 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    /**
+     * Pachner moves are also taking a long time to test thoroughly
+     * in higher dimensions.  Since we already have non-standard even
+     * dimensions in our test suite (dim = 6), we leave these out for now.
     CPPUNIT_TEST(pachner0);
     CPPUNIT_TEST(pachner1);
     CPPUNIT_TEST(pachner2);
@@ -311,6 +315,7 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(pachner6);
     CPPUNIT_TEST(pachner7);
     CPPUNIT_TEST(pachner8);
+     */
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
