@@ -61,8 +61,11 @@ namespace {
      *
      * Here 0 <= oldSimp <= dim-k, and 0 <= newSimp <= k.
      */
-    template <int dim>
-    Perm<dim + 1> movePerm(int k, int oldSimp, int newSimp) {
+    template <int dim, int k>
+    Perm<dim + 1> movePerm(int oldSimp, int newSimp) {
+        static_assert(0 < k && k < dim,
+            "movePerm() may not be called for 0-faces or dim-faces.");
+
         int image[dim + 1];
         int i;
         int oldFacet, newFacet;
@@ -479,7 +482,7 @@ bool PachnerHelper<dim, k>::pachner(Triangulation<dim>* tri,
                 oldVertices[j][oldFacet]);
             adjGluing[i][j] = oldSimp[j]->adjacentGluing(
                 oldVertices[j][oldFacet]) *
-                oldVertices[j] * movePerm<dim>(dim - k, i, j);
+                oldVertices[j] * movePerm<dim, dim - k>(i, j);
 
             // Is the destination of the gluing one of the old simplices
             // that we are about to remove?
@@ -512,7 +515,7 @@ bool PachnerHelper<dim, k>::pachner(Triangulation<dim>* tri,
                     // Adjust the gluing to point to the new simplex.
                     adjSimp[i][j] = newSimp[destFacet];
                     adjGluing[i][j] =
-                        movePerm<dim>(k, l, destFacet) *
+                        movePerm<dim, k>(l, destFacet) *
                         oldVertices[l].inverse() *
                         adjGluing[i][j];
 
