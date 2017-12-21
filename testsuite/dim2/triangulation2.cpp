@@ -152,15 +152,18 @@ class Triangulation2Test : public TriangulationTest<2> {
         }
 
         void pachner0() {
-            testManualAll(verifyPachnerDefault<0>);
+            testManualAll(verifyPachner<0>);
+            verifyPachnerSimplicial<0>();
         }
 
         void pachner1() {
-            testManualAll(verifyPachnerDefault<1>);
+            testManualAll(verifyPachner<1>);
+            verifyPachnerSimplicial<1>();
         }
 
         void pachner2() {
-            testManualAll(verifyPachnerDefault<2>);
+            testManualAll(verifyPachner<2>);
+            verifyPachnerSimplicial<2>();
         }
 
         void validity() {

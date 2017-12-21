@@ -461,8 +461,8 @@ class TriangulationTest : public CppUnit::TestFixture {
             /**< The dim-sphere, with two simplices whose boundaries
                  are identified according to the identity map. */
         Triangulation<dim> simplicialSphere;
-            /**< The dim-sphere, with two simplices whose boundaries
-                 are identified according to the identity map. */
+            /**< The dim-sphere, with (dim + 2) simplices glued together
+                 to form the boundary of a (dim + 1)-simplex. */
         Triangulation<dim> sphereBundle;
             /**< The product S^(dim-1) x S^1. */
 
@@ -1042,8 +1042,8 @@ class TriangulationTest : public CppUnit::TestFixture {
         }
 
         template <int k>
-        static void verifyPachner(Triangulation<dim>* tri,
-                bool standardSimplex = false) {
+        static void verifyPachnerDetail(Triangulation<dim>* tri,
+                bool standardSimplex) {
             // Tests Pachner moves on k-faces, and their inverses.
             for (size_t i = 0; i < FaceHelper<dim, k>::count(*tri); ++i) {
                 Triangulation<dim> large(*tri);
@@ -1245,11 +1245,13 @@ class TriangulationTest : public CppUnit::TestFixture {
         }
 
         template <int k>
-        static void verifyPachnerDefault(Triangulation<dim>* tri) {
-            // The point of this function is that we can cast it to a
-            // Triangulation<dim>TestFunction (which requires exactly one
-            // argument).
-            verifyPachner<k>(tri, false);
+        static void verifyPachner(Triangulation<dim>* tri) {
+            verifyPachnerDetail<k>(tri, false);
+        }
+
+        template <int k>
+        void verifyPachnerSimplicial() {
+            verifyPachnerDetail<k>(&simplicialSphere, true);
         }
 };
 

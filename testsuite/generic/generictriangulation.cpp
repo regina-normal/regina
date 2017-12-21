@@ -56,8 +56,6 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::verifyDoubleCover;
         using TriangulationTest<dim>::verifyBoundaryFacets;
         using TriangulationTest<dim>::verifyBoundaryBuild;
-        using TriangulationTest<dim>::verifyPachner;
-        using TriangulationTest<dim>::verifyPachnerDefault;
 
         using TriangulationTest<dim>::verifyValid;
         using TriangulationTest<dim>::verifyConnected;
@@ -109,32 +107,38 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
 
         void pachner0() {
             testManualAll(
-                TriangulationTest<dim>::template verifyPachnerDefault<0>);
+                TriangulationTest<dim>::template verifyPachner<0>);
+            TriangulationTest<dim>::template verifyPachnerSimplicial<0>();
         }
 
         void pachner1() {
             testManualAll(
-                TriangulationTest<dim>::template verifyPachnerDefault<1>);
+                TriangulationTest<dim>::template verifyPachner<1>);
+            TriangulationTest<dim>::template verifyPachnerSimplicial<1>();
         }
 
         void pachner2() {
             testManualAll(
-                TriangulationTest<dim>::template verifyPachnerDefault<2>);
+                TriangulationTest<dim>::template verifyPachner<2>);
+            TriangulationTest<dim>::template verifyPachnerSimplicial<2>();
         }
 
         void pachner3() {
             testManualAll(
-                TriangulationTest<dim>::template verifyPachnerDefault<3>);
+                TriangulationTest<dim>::template verifyPachner<3>);
+            TriangulationTest<dim>::template verifyPachnerSimplicial<3>();
         }
 
         void pachner4() {
             testManualAll(
-                TriangulationTest<dim>::template verifyPachnerDefault<4>);
+                TriangulationTest<dim>::template verifyPachner<4>);
+            TriangulationTest<dim>::template verifyPachnerSimplicial<4>();
         }
 
         void pachner5() {
             testManualAll(
-                TriangulationTest<dim>::template verifyPachnerDefault<5>);
+                TriangulationTest<dim>::template verifyPachner<5>);
+            TriangulationTest<dim>::template verifyPachnerSimplicial<5>();
         }
 
         void validity() {
@@ -280,7 +284,8 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     public:
         void pachner6() {
             testManualAll(
-                Triangulation6Test::template verifyPachnerDefault<6>);
+                Triangulation6Test::template verifyPachner<6>);
+            Triangulation6Test::template verifyPachnerSimplicial<6>();
         }
 };
 
@@ -321,17 +326,20 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     public:
         void pachner6() {
             testManualAll(
-                Triangulation8Test::template verifyPachnerDefault<6>);
+                Triangulation8Test::template verifyPachner<6>);
+            Triangulation8Test::template verifyPachnerSimplicial<6>();
         }
 
         void pachner7() {
             testManualAll(
-                Triangulation8Test::template verifyPachnerDefault<7>);
+                Triangulation8Test::template verifyPachner<7>);
+            Triangulation8Test::template verifyPachnerSimplicial<7>();
         }
 
         void pachner8() {
             testManualAll(
-                Triangulation8Test::template verifyPachnerDefault<8>);
+                Triangulation8Test::template verifyPachner<8>);
+            Triangulation8Test::template verifyPachnerSimplicial<8>();
         }
 };
 

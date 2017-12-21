@@ -3968,31 +3968,35 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void pachner0() {
-            testManualSmall(verifyPachnerDefault<0>);
-            runCensusAllClosed(verifyPachnerDefault<0>, true);
-            runCensusAllBounded(verifyPachnerDefault<0>, true);
-            runCensusAllIdeal(verifyPachnerDefault<0>, true);
+            testManualSmall(verifyPachner<0>);
+            runCensusAllClosed(verifyPachner<0>, true);
+            runCensusAllBounded(verifyPachner<0>, true);
+            runCensusAllIdeal(verifyPachner<0>, true);
+            verifyPachnerSimplicial<0>();
         }
 
         void pachner1() {
-            testManualSmall(verifyPachnerDefault<1>);
-            runCensusAllClosed(verifyPachnerDefault<1>, true);
-            runCensusAllBounded(verifyPachnerDefault<1>, true);
-            runCensusAllIdeal(verifyPachnerDefault<1>, true);
+            testManualSmall(verifyPachner<1>);
+            runCensusAllClosed(verifyPachner<1>, true);
+            runCensusAllBounded(verifyPachner<1>, true);
+            runCensusAllIdeal(verifyPachner<1>, true);
+            verifyPachnerSimplicial<1>();
         }
 
         void pachner2() {
-            testManualSmall(verifyPachnerDefault<2>);
-            runCensusAllClosed(verifyPachnerDefault<2>, true);
-            runCensusAllBounded(verifyPachnerDefault<2>, true);
-            runCensusAllIdeal(verifyPachnerDefault<2>, true);
+            testManualSmall(verifyPachner<2>);
+            runCensusAllClosed(verifyPachner<2>, true);
+            runCensusAllBounded(verifyPachner<2>, true);
+            runCensusAllIdeal(verifyPachner<2>, true);
+            verifyPachnerSimplicial<2>();
         }
 
         void pachner3() {
-            testManualSmall(verifyPachnerDefault<3>);
-            runCensusAllClosed(verifyPachnerDefault<3>, true);
-            runCensusAllBounded(verifyPachnerDefault<3>, true);
-            runCensusAllIdeal(verifyPachnerDefault<3>, true);
+            testManualSmall(verifyPachner<3>);
+            runCensusAllClosed(verifyPachner<3>, true);
+            runCensusAllBounded(verifyPachner<3>, true);
+            runCensusAllIdeal(verifyPachner<3>, true);
+            verifyPachnerSimplicial<3>();
         }
 };
 
