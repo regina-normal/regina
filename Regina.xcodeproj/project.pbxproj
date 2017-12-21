@@ -2018,6 +2018,9 @@
 		05DC137F1FEB86AB00171D66 /* pachner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC137B1FEB868F00171D66 /* pachner.cpp */; };
 		05DC13811FEB86E900171D66 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13801FEB86E900171D66 /* retriangulate.cpp */; };
 		05DC13821FEB86EF00171D66 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13801FEB86E900171D66 /* retriangulate.cpp */; };
+		05DC13851FEB942B00171D66 /* nsvectorquadoctclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13831FEB942900171D66 /* nsvectorquadoctclosed.cpp */; };
+		05DC13861FEB942B00171D66 /* nsvectorquadoctclosed.h in Headers */ = {isa = PBXBuildFile; fileRef = 05DC13841FEB942A00171D66 /* nsvectorquadoctclosed.h */; };
+		05DC13871FEB942E00171D66 /* nsvectorquadoctclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13831FEB942900171D66 /* nsvectorquadoctclosed.cpp */; };
 		05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */; };
 		05E49D251DA38C7D00B55E31 /* ncyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D241DA38C7D00B55E31 /* ncyclotomic.h */; };
 		05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMoves3.mm */; };
@@ -4445,6 +4448,8 @@
 		05DC137B1FEB868F00171D66 /* pachner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pachner.cpp; sourceTree = "<group>"; };
 		05DC137C1FEB869100171D66 /* pachner-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pachner-impl.h"; sourceTree = "<group>"; };
 		05DC13801FEB86E900171D66 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
+		05DC13831FEB942900171D66 /* nsvectorquadoctclosed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorquadoctclosed.cpp; sourceTree = "<group>"; };
+		05DC13841FEB942A00171D66 /* nsvectorquadoctclosed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorquadoctclosed.h; sourceTree = "<group>"; };
 		05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurfacelist.h; sourceTree = "<group>"; };
 		05E49D241DA38C7D00B55E31 /* ncyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncyclotomic.h; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
@@ -6089,6 +6094,8 @@
 				05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */,
 				052F9E1A180600FB00FAE4DF /* nsvectorquadoct.cpp */,
 				052F9E1B180600FB00FAE4DF /* nsvectorquadoct.h */,
+				05DC13831FEB942900171D66 /* nsvectorquadoctclosed.cpp */,
+				05DC13841FEB942A00171D66 /* nsvectorquadoctclosed.h */,
 				052F9E1C180600FB00FAE4DF /* nsvectorstandard.cpp */,
 				052F9E1D180600FB00FAE4DF /* nsvectorstandard.h */,
 				052F9E27180600FB00FAE4DF /* orientable.cpp */,
@@ -8038,6 +8045,7 @@
 				052FA03B180600FB00FAE4DF /* nsvectororiented.h in Headers */,
 				0591E7E51C4F750200793A9C /* xmlhypersurfacereader.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,
+				05DC13861FEB942B00171D66 /* nsvectorquadoctclosed.h in Headers */,
 				054208BA1DF0D2740018AB24 /* lensspace.h in Headers */,
 				052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */,
 				05074A7C1DA47E060007773C /* nvector.h in Headers */,
@@ -9684,6 +9692,7 @@
 				059BC68D1DC7F7A300AB4206 /* boundarycomponent6.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
+				05DC13871FEB942E00171D66 /* nsvectorquadoctclosed.cpp in Sources */,
 				05249F0F1DBC16F9001FE29E /* triangulation8.cpp in Sources */,
 				05C0645E1C56B1F7006E6483 /* Tri4ViewController.mm in Sources */,
 				05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */,
@@ -10043,6 +10052,7 @@
 				054208B91DF0D2740018AB24 /* lensspace.cpp in Sources */,
 				052F9F7C180600FB00FAE4DF /* cusps.c in Sources */,
 				05C1BEAE1DCA7CA9007C946B /* boundary6.cpp in Sources */,
+				05DC13851FEB942B00171D66 /* nsvectorquadoctclosed.cpp in Sources */,
 				052F9E9D180600FB00FAE4DF /* census.cpp in Sources */,
 				05A73C9C19B2EF5A0099C617 /* fundamental_group.c in Sources */,
 				052F9F4E180600FB00FAE4DF /* numbertheory.cpp in Sources */,
