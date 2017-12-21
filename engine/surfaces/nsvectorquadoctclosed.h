@@ -87,7 +87,8 @@ struct NormalInfo<NS_AN_QUAD_OCT_CLOSED> {
  * coordinates need not be a vertex in "plain" quad-oct coordinates.
  *
  * \pre This coordinate system can only be used with a limited class of
- * triangulations, as documented in the coordinate constant NS_AN_QUAD_CLOSED_OCT.
+ * triangulations, as documented in the coordinate constant
+ * NS_AN_QUAD_OCT_CLOSED.
  * Currently, such triangulations \e must be oriented and ideal, with precisely
  * one torus cusp and no other boundary components or internal vertices.
  * Moreover, SnapPea must be able to work with them without retriangulating
