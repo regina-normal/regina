@@ -283,7 +283,8 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     // Here we use the fact that the coordinate system is known to be
     // supported by the tree traversal algorithm, and therefore is one
-    // of NS_STANDARD, NS_QUAD, NS_QUAD_CLOSED, NS_AN_STANDARD or NS_AN_QUAD.
+    // of NS_STANDARD, NS_QUAD, NS_QUAD_CLOSED, NS_AN_STANDARD,
+    // NS_AN_QUAD_OCT, or NS_AN_QUAD_OCT_CLOSED.
 
     // The matching equation matrix that will be used by the tree traversal
     // tableaux, which is always based on NS_STANDARD or NSQUAD (even
@@ -312,9 +313,9 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
             eqns = makeMatchingEquations(triang_, NS_QUAD);
             maxColsRHS = triang_->size() + 1;
             break;
-        // TODO: Support NS_QUAD_CLOSED here.
+        // TODO: Support NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED here.
         default:
-            // Note that NS_QUAD_CLOSED falls through to here.
+            // NS_QUAD_CLOSED / NS_AN_QUAD_OCT_CLOSED fall through to here.
             // Just use arbitrary precision arithmetic.
             fillVertexTreeWith<Coords, Integer>();
             return;
