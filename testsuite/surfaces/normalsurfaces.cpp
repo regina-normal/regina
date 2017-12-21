@@ -60,8 +60,10 @@ using regina::Triangulation;
 
 using regina::NS_STANDARD;
 using regina::NS_QUAD;
+using regina::NS_QUAD_CLOSED;
 using regina::NS_AN_STANDARD;
 using regina::NS_AN_QUAD_OCT;
+using regina::NS_AN_QUAD_OCT_CLOSED;
 
 using regina::NS_VERTEX;
 using regina::NS_FUNDAMENTAL;
@@ -121,10 +123,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(treeVsDDCensus<NS_STANDARD>);
     CPPUNIT_TEST(treeVsDDCensus<NS_AN_QUAD_OCT>);
     CPPUNIT_TEST(treeVsDDCensus<NS_AN_STANDARD>);
+    CPPUNIT_TEST(treeVsDDCensus<NS_QUAD_CLOSED>);
+    CPPUNIT_TEST(treeVsDDCensus<NS_AN_QUAD_OCT_CLOSED>);
     CPPUNIT_TEST(fundPrimalVsDual<NS_QUAD>);
     CPPUNIT_TEST(fundPrimalVsDual<NS_STANDARD>);
     CPPUNIT_TEST(fundPrimalVsDual<NS_AN_QUAD_OCT>);
     CPPUNIT_TEST(fundPrimalVsDual<NS_AN_STANDARD>);
+    CPPUNIT_TEST(fundPrimalVsDual<NS_QUAD_CLOSED>);
+    CPPUNIT_TEST(fundPrimalVsDual<NS_AN_QUAD_OCT_CLOSED>);
     CPPUNIT_TEST(disjointConstructed);
     CPPUNIT_TEST(disjointCensus);
     CPPUNIT_TEST(cutAlongConstructed);
@@ -248,8 +254,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             // fall through to the correct enumerate() function, which takes
             // NormalFlags and NormalAlg.
 
-            l = NormalSurfaces::enumerate(&t, regina::NS_QUAD);
-            if (l->which() != (regina::NS_VERTEX | regina::NS_EMBEDDED_ONLY)) {
+            l = NormalSurfaces::enumerate(&t, NS_QUAD);
+            if (l->which() != (NS_VERTEX | regina::NS_EMBEDDED_ONLY)) {
                 std::ostringstream msg;
                 msg << "Enumeration with default (flags, algorithm) gave "
                     "incorrect flags " << l->which().intValue() << ".";
@@ -257,10 +263,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             }
             delete l;
 
-            l = NormalSurfaces::enumerate(&t, regina::NS_QUAD,
+            l = NormalSurfaces::enumerate(&t, NS_QUAD,
                 regina::NS_IMMERSED_SINGULAR);
-            if (l->which() !=
-                    (regina::NS_VERTEX | regina::NS_IMMERSED_SINGULAR)) {
+            if (l->which() != (NS_VERTEX | regina::NS_IMMERSED_SINGULAR)) {
                 std::ostringstream msg;
                 msg << "Enumeration with default algorithm gave "
                     "incorrect flags " << l->which().intValue() << ".";
@@ -1719,6 +1724,31 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 tri, coords, NS_VERTEX, NS_VERTEX_DD | NS_VERTEX_STD_DIRECT);
             NormalSurfaces* tree = NormalSurfaces::enumerate(
                 tri, coords, NS_VERTEX, NS_VERTEX_TREE | NS_VERTEX_STD_DIRECT);
+            if (dd && ! tree) {
+                std::ostringstream msg;
+                msg << "Enumeration in coordinate system "
+                    << coords << " fails via tree traversal "
+                    "but not double description for " << tri->label() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (tree && ! dd) {
+                std::ostringstream msg;
+                msg << "Enumeration in coordinate system "
+                    << coords << " fails via double description "
+                    "but not tree traversal for " << tri->label() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! dd) {
+                if (coords != NS_QUAD_CLOSED &&
+                        coords != NS_AN_QUAD_OCT_CLOSED) {
+                    // Enumeration should not fail in this coordinate system.
+                    std::ostringstream msg;
+                    msg << "Enumeration in coordinate system "
+                        << coords << " fails for " << tri->label() << '.';
+                    CPPUNIT_FAIL(msg.str());
+                } else
+                    return;
+            }
             if ((! tri->isEmpty()) &&
                     (dd->algorithm().has(NS_VERTEX_TREE) ||
                     ! dd->algorithm().has(NS_VERTEX_DD))) {
@@ -1762,6 +1792,31 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_PRIMAL);
             NormalSurfaces* dual = NormalSurfaces::enumerate(
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_DUAL);
+            if (primal && ! dual) {
+                std::ostringstream msg;
+                msg << "Hilbert basis enumeration in coordinate system "
+                    << coords << " fails via dual method "
+                    "but not primal method for " << tri->label() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (dual && ! primal) {
+                std::ostringstream msg;
+                msg << "Hilbert basis enumeration in coordinate system "
+                    << coords << " fails via primal method "
+                    "but not dual method for " << tri->label() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! primal) {
+                if (coords != NS_QUAD_CLOSED &&
+                        coords != NS_AN_QUAD_OCT_CLOSED) {
+                    // Enumeration should not fail in this coordinate system.
+                    std::ostringstream msg;
+                    msg << "Hilbert basis enumeration in coordinate system "
+                        << coords << " fails for " << tri->label() << '.';
+                    CPPUNIT_FAIL(msg.str());
+                } else
+                    return;
+            }
             if ((! tri->isEmpty()) &&
                     (primal->algorithm().has(NS_HILBERT_DUAL) ||
                     ! primal->algorithm().has(NS_HILBERT_PRIMAL))) {
