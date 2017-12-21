@@ -68,11 +68,11 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
-    CPPUNIT_TEST(pachner0);
-    CPPUNIT_TEST(pachner1);
-    CPPUNIT_TEST(pachner2);
-    CPPUNIT_TEST(pachner3);
-    CPPUNIT_TEST(pachner4);
+    CPPUNIT_TEST(pachner<0>);
+    CPPUNIT_TEST(pachner<1>);
+    CPPUNIT_TEST(pachner<2>);
+    CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(pachner<4>);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
@@ -340,39 +340,12 @@ class Triangulation4Test : public TriangulationTest<4> {
             testManualAll(verifyBoundaryBuild);
         }
 
-        void pachner0() {
-            testManualAll(verifyPachner<0>);
-            runCensusAllBounded(verifyPachner<0>);
-            runCensusAllNoBdry(verifyPachner<0>);
-            verifyPachnerSimplicial<0>();
-        }
-
-        void pachner1() {
-            testManualAll(verifyPachner<1>);
-            runCensusAllBounded(verifyPachner<1>);
-            runCensusAllNoBdry(verifyPachner<1>);
-            verifyPachnerSimplicial<1>();
-        }
-
-        void pachner2() {
-            testManualAll(verifyPachner<2>);
-            runCensusAllBounded(verifyPachner<2>);
-            runCensusAllNoBdry(verifyPachner<2>);
-            verifyPachnerSimplicial<2>();
-        }
-
-        void pachner3() {
-            testManualAll(verifyPachner<3>);
-            runCensusAllBounded(verifyPachner<3>);
-            runCensusAllNoBdry(verifyPachner<3>);
-            verifyPachnerSimplicial<3>();
-        }
-
-        void pachner4() {
-            testManualAll(verifyPachner<4>);
-            runCensusAllBounded(verifyPachner<4>);
-            runCensusAllNoBdry(verifyPachner<4>);
-            verifyPachnerSimplicial<4>();
+        template <int k>
+        void pachner() {
+            testManualAll(verifyPachner<k>);
+            runCensusAllBounded(verifyPachner<k>);
+            runCensusAllNoBdry(verifyPachner<k>);
+            verifyPachnerSimplicial<k>();
         }
 
         void verifyInvalid(const Triangulation<4>& tri,

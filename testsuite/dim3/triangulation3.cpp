@@ -108,10 +108,10 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(retriangulation);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
-    CPPUNIT_TEST(pachner0);
-    CPPUNIT_TEST(pachner1);
-    CPPUNIT_TEST(pachner2);
-    CPPUNIT_TEST(pachner3);
+    CPPUNIT_TEST(pachner<0>);
+    CPPUNIT_TEST(pachner<1>);
+    CPPUNIT_TEST(pachner<2>);
+    CPPUNIT_TEST(pachner<3>);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -3967,36 +3967,13 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "is orientable.", ! t.isOrientable());
         }
 
-        void pachner0() {
-            testManualSmall(verifyPachner<0>);
-            runCensusAllClosed(verifyPachner<0>, true);
-            runCensusAllBounded(verifyPachner<0>, true);
-            runCensusAllIdeal(verifyPachner<0>, true);
-            verifyPachnerSimplicial<0>();
-        }
-
-        void pachner1() {
-            testManualSmall(verifyPachner<1>);
-            runCensusAllClosed(verifyPachner<1>, true);
-            runCensusAllBounded(verifyPachner<1>, true);
-            runCensusAllIdeal(verifyPachner<1>, true);
-            verifyPachnerSimplicial<1>();
-        }
-
-        void pachner2() {
-            testManualSmall(verifyPachner<2>);
-            runCensusAllClosed(verifyPachner<2>, true);
-            runCensusAllBounded(verifyPachner<2>, true);
-            runCensusAllIdeal(verifyPachner<2>, true);
-            verifyPachnerSimplicial<2>();
-        }
-
-        void pachner3() {
-            testManualSmall(verifyPachner<3>);
-            runCensusAllClosed(verifyPachner<3>, true);
-            runCensusAllBounded(verifyPachner<3>, true);
-            runCensusAllIdeal(verifyPachner<3>, true);
-            verifyPachnerSimplicial<3>();
+        template <int k>
+        void pachner() {
+            testManualSmall(verifyPachner<k>);
+            runCensusAllClosed(verifyPachner<k>, true);
+            runCensusAllBounded(verifyPachner<k>, true);
+            runCensusAllIdeal(verifyPachner<k>, true);
+            verifyPachnerSimplicial<k>();
         }
 };
 
