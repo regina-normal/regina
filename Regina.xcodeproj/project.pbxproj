@@ -2013,6 +2013,11 @@
 		05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
 		05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051E1C41B87200C76D71 /* boost.framework */; };
 		05DC05201C41B88D00C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
+		05DC137D1FEB869200171D66 /* pachner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC137B1FEB868F00171D66 /* pachner.cpp */; };
+		05DC137E1FEB869200171D66 /* pachner-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05DC137C1FEB869100171D66 /* pachner-impl.h */; };
+		05DC137F1FEB86AB00171D66 /* pachner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC137B1FEB868F00171D66 /* pachner.cpp */; };
+		05DC13811FEB86E900171D66 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13801FEB86E900171D66 /* retriangulate.cpp */; };
+		05DC13821FEB86EF00171D66 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13801FEB86E900171D66 /* retriangulate.cpp */; };
 		05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */; };
 		05E49D251DA38C7D00B55E31 /* ncyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D241DA38C7D00B55E31 /* ncyclotomic.h */; };
 		05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMoves3.mm */; };
@@ -2021,12 +2026,10 @@
 		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
 		05F09FD31DBF01B600117BFC /* boundarycomponent2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FC61DBF01B600117BFC /* boundarycomponent2.h */; };
 		05F09FD41DBF01B600117BFC /* component2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FC81DBF01B600117BFC /* component2.h */; };
-		05F09FD71DBF01B600117BFC /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCB1DBF01B600117BFC /* simplify.cpp */; };
 		05F09FD81DBF01B600117BFC /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCC1DBF01B600117BFC /* skeleton.cpp */; };
 		05F09FD91DBF01B600117BFC /* triangle2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FCD1DBF01B600117BFC /* triangle2.h */; };
 		05F09FDA1DBF01B600117BFC /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCE1DBF01B600117BFC /* triangulation2.cpp */; };
 		05F09FDB1DBF01B600117BFC /* triangulation2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FCF1DBF01B600117BFC /* triangulation2.h */; };
-		05F09FE01DBF01D100117BFC /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCB1DBF01B600117BFC /* simplify.cpp */; };
 		05F09FE11DBF01D100117BFC /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCC1DBF01B600117BFC /* skeleton.cpp */; };
 		05F09FE21DBF01D100117BFC /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCE1DBF01B600117BFC /* triangulation2.cpp */; };
 		05F09FFA1DBF078800117BFC /* boundarycomponent4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FE51DBF078800117BFC /* boundarycomponent4.h */; };
@@ -4439,6 +4442,9 @@
 		05D81A8B1C66B0E500DDCE64 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05DC051C1C41B85100C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/osx/boost.framework; sourceTree = "<group>"; };
 		05DC051E1C41B87200C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/ios/boost.framework; sourceTree = "<group>"; };
+		05DC137B1FEB868F00171D66 /* pachner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pachner.cpp; sourceTree = "<group>"; };
+		05DC137C1FEB869100171D66 /* pachner-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pachner-impl.h"; sourceTree = "<group>"; };
+		05DC13801FEB86E900171D66 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
 		05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurfacelist.h; sourceTree = "<group>"; };
 		05E49D241DA38C7D00B55E31 /* ncyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncyclotomic.h; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
@@ -4450,7 +4456,6 @@
 		05F09FC61DBF01B600117BFC /* boundarycomponent2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundarycomponent2.h; sourceTree = "<group>"; };
 		05F09FC71DBF01B600117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05F09FC81DBF01B600117BFC /* component2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component2.h; sourceTree = "<group>"; };
-		05F09FCB1DBF01B600117BFC /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
 		05F09FCC1DBF01B600117BFC /* skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skeleton.cpp; sourceTree = "<group>"; };
 		05F09FCD1DBF01B600117BFC /* triangle2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle2.h; sourceTree = "<group>"; };
 		05F09FCE1DBF01B600117BFC /* triangulation2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation2.cpp; sourceTree = "<group>"; };
@@ -6518,6 +6523,8 @@
 				05431F1B1C40F260009BC072 /* facetpairing.h */,
 				05431F1C1C40F260009BC072 /* isomorphism.h */,
 				05431F1D1C40F260009BC072 /* isosig-impl.h */,
+				05DC137B1FEB868F00171D66 /* pachner.cpp */,
+				05DC137C1FEB869100171D66 /* pachner-impl.h */,
 				05431F1E1C40F260009BC072 /* simplex.h */,
 				05C1BE971DCA7C77007C946B /* skeleton-impl.h */,
 				054C6A7D1DCC20DA005373F0 /* strings.h */,
@@ -7639,7 +7646,6 @@
 				05F09FC61DBF01B600117BFC /* boundarycomponent2.h */,
 				05F09FC71DBF01B600117BFC /* CMakeLists.txt */,
 				05F09FC81DBF01B600117BFC /* component2.h */,
-				05F09FCB1DBF01B600117BFC /* simplify.cpp */,
 				05F09FCC1DBF01B600117BFC /* skeleton.cpp */,
 				05F09FCD1DBF01B600117BFC /* triangle2.h */,
 				05F09FCE1DBF01B600117BFC /* triangulation2.cpp */,
@@ -7691,6 +7697,7 @@
 				05F09FE91DBF078800117BFC /* edge4.h */,
 				05F09FEA1DBF078800117BFC /* homology.cpp */,
 				05F09FEC1DBF078800117BFC /* pentachoron4.h */,
+				05DC13801FEB86E900171D66 /* retriangulate.cpp */,
 				05F09FED1DBF078800117BFC /* simplify.cpp */,
 				05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */,
 				05F09FEF1DBF078800117BFC /* skeleton.cpp */,
@@ -8019,6 +8026,7 @@
 				0591E7A91C4F74C400793A9C /* dim4pentachoron.h in Headers */,
 				05431F751C40F3C9009BC072 /* libnormaliz.h in Headers */,
 				055114DF1DCC85F200EC753C /* xmltrireader2.h in Headers */,
+				05DC137E1FEB869200171D66 /* pachner-impl.h in Headers */,
 				05431F251C40F260009BC072 /* facetpairing.h in Headers */,
 				052F9FFF180600FB00FAE4DF /* nlayering.h in Headers */,
 				05431EFD1C40F1F6009BC072 /* face.h in Headers */,
@@ -9046,6 +9054,7 @@
 				05249F381DBC1718001FE29E /* packet.cpp in Sources */,
 				05431EED1C40F071009BC072 /* gluingperms.cpp in Sources */,
 				05721EFA1F97156600A83FFC /* complement.cpp in Sources */,
+				05DC13821FEB86EF00171D66 /* retriangulate.cpp in Sources */,
 				0542090D1DF0DA450018AB24 /* manifold.cpp in Sources */,
 				05249F311DBC1711001FE29E /* perm4.cpp in Sources */,
 				054208941DF0D0CF0018AB24 /* themedata.cpp in Sources */,
@@ -9172,6 +9181,7 @@
 				0591E84E1C4F777000793A9C /* facetpairing4.cpp in Sources */,
 				052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				05F0A05D1DBF0B7000117BFC /* simplify.cpp in Sources */,
+				05DC137F1FEB86AB00171D66 /* pachner.cpp in Sources */,
 				05721F1C1F97165E00A83FFC /* graph.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
 				05D1174319EE01A1003BEC55 /* census2.cpp in Sources */,
@@ -9404,7 +9414,6 @@
 				05249EE01DBC16E4001FE29E /* face10.cpp in Sources */,
 				052FA16D1806129B00FAE4DF /* census.cpp in Sources */,
 				05249F141DBC16FA001FE29E /* triangulation13.cpp in Sources */,
-				05F09FE01DBF01D100117BFC /* simplify.cpp in Sources */,
 				052FA1DC1806129B00FAE4DF /* normalsurfaces.cpp in Sources */,
 				05249EDA1DBC16E4001FE29E /* face.cpp in Sources */,
 				05249F061DBC16F6001FE29E /* simplex10.cpp in Sources */,
@@ -9998,7 +10007,6 @@
 				052F9F3B180600FB00FAE4DF /* integer.cpp in Sources */,
 				052F9F9B180600FB00FAE4DF /* subdivide.c in Sources */,
 				05A0672E1DFA68190047872E /* satblocktypes.cpp in Sources */,
-				05F09FD71DBF01B600117BFC /* simplify.cpp in Sources */,
 				0591E7DE1C4F750200793A9C /* hsvectorstandard.cpp in Sources */,
 				05721EF11F97153E00A83FFC /* link.cpp in Sources */,
 				05A73C8E19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */,
@@ -10047,6 +10055,7 @@
 				052F9FDB180600FB00FAE4DF /* snappeatriangulation.cpp in Sources */,
 				0588C2A41FD8D1350093C2C9 /* sig.cpp in Sources */,
 				052FA099180600FB00FAE4DF /* osutils.cpp in Sources */,
+				05DC13811FEB86E900171D66 /* retriangulate.cpp in Sources */,
 				052F9F87180600FB00FAE4DF /* hyperbolic_structure.c in Sources */,
 				052F9F6F180600FB00FAE4DF /* canonize_part_2.c in Sources */,
 				05FB46EA1DD92D4A00BB00E5 /* markedabeliangroup.cpp in Sources */,
@@ -10241,6 +10250,7 @@
 				05F0A0431DBF0B5E00117BFC /* retriangulate.cpp in Sources */,
 				05A0670C1DFA68190047872E /* blockedsfsloop.cpp in Sources */,
 				05C1BEE11DCA89DA007C946B /* triangulation15.cpp in Sources */,
+				05DC137D1FEB869200171D66 /* pachner.cpp in Sources */,
 				05431F881C40F40D009BC072 /* bottom.cpp in Sources */,
 				05A067181DFA68190047872E /* layeredlensspace.cpp in Sources */,
 				052F9F10180600FB00FAE4DF /* orb.cpp in Sources */,
