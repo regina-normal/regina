@@ -39,22 +39,28 @@
 #import "triangulation/dim3.h"
 
 #define KEY_LAST_TYPE @"NewSurfacesType"
-#define KEY_LAST_COORDS @"NewSurfacesCoords"
+#define KEY_LAST_NORMAL @"NewSurfacesNormal"
+#define KEY_LAST_COORDS @"NewSurfacesCoordsV2"
 #define KEY_LAST_EMB @"NewSurfacesEmb"
 
 using regina::NormalSurfaces;
 
 static NSArray* whichText;
-static NSArray* coordText;
+static NSArray* normalText;
+static NSArray* coordTextNormal;
+static NSArray* coordTextAlmostNormal;
 static NSArray* embText;
 
 @interface NewSurfacesController () {
     bool _running;
     regina::ProgressTracker _tracker;
+    NSArray* coordText;
 }
 @property (weak, nonatomic) IBOutlet UILabel *triangulation;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *whichControl;
 @property (weak, nonatomic) IBOutlet UILabel *whichDesc;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *normalControl;
+@property (weak, nonatomic) IBOutlet UILabel *normalDesc;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *coordControl;
 @property (weak, nonatomic) IBOutlet UILabel *coordDesc;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *embControl;
@@ -64,6 +70,7 @@ static NSArray* embText;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *enumerateButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 - (IBAction)whichChanged:(id)sender;
+- (IBAction)normalChanged:(id)sender;
 - (IBAction)coordChanged:(id)sender;
 - (IBAction)embChanged:(id)sender;
 - (IBAction)cancel:(id)sender;
@@ -81,11 +88,15 @@ static NSArray* embText;
         _triangulation.text = [NSString stringWithUTF8String:self.spec.parent->label().c_str()];
 
     self.whichControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TYPE];
+    self.normalControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_NORMAL];
     self.coordControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_COORDS];
     self.embControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_EMB];
 
     // Update the description labels.
+    // Note that normalChanged *must* be called before coordChanged, since
+    // normalChanged sets the pointer coordText (which coordChanged uses).
     [self whichChanged:nil];
+    [self normalChanged:nil];
     [self coordChanged:nil];
     [self embChanged:nil];
 }
@@ -93,6 +104,25 @@ static NSArray* embText;
 - (IBAction)whichChanged:(id)sender {
     _whichDesc.text = whichText[_whichControl.selectedSegmentIndex];
     [[NSUserDefaults standardUserDefaults] setInteger:self.whichControl.selectedSegmentIndex forKey:KEY_LAST_TYPE];
+}
+
+- (IBAction)normalChanged:(id)sender {
+    _normalDesc.text = normalText[_normalControl.selectedSegmentIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.normalControl.selectedSegmentIndex forKey:KEY_LAST_NORMAL];
+
+    switch (_normalControl.selectedSegmentIndex) {
+        case 0:
+            [_coordControl setTitle:@"Quad" forSegmentAtIndex:1];
+            coordText = coordTextNormal;
+            break;
+        case 1:
+            [_coordControl setTitle:@"Quad-oct" forSegmentAtIndex:1];
+            coordText = coordTextAlmostNormal;
+            break;
+    }
+
+    // The coordinate system description might need to change also.
+    [self coordChanged:nil];
 }
 
 - (IBAction)coordChanged:(id)sender {
@@ -122,12 +152,17 @@ static NSArray* embText;
     regina::NormalCoords coords;
     regina::NormalList which;
     regina::NormalAlg alg;
+    bool almostNormal;
     
     bool broken = false;
-    bool almostNormal = false;
     switch (_whichControl.selectedSegmentIndex) {
         case 0: which = regina::NS_VERTEX; break;
         case 1: which = regina::NS_FUNDAMENTAL; break;
+        default: broken = true; break;
+    }
+    switch (_normalControl.selectedSegmentIndex) {
+        case 0: almostNormal = false; break;
+        case 1: almostNormal = true; break;
         default: broken = true; break;
     }
     switch (_embControl.selectedSegmentIndex) {
@@ -136,12 +171,9 @@ static NSArray* embText;
         default: broken = true; break;
     }
     switch (_coordControl.selectedSegmentIndex) {
-        case 0: coords = regina::NS_STANDARD; break;
-        case 1: coords = regina::NS_QUAD; break;
-        case 2: coords = regina::NS_AN_STANDARD; almostNormal = true; break;
-        case 3: coords = regina::NS_AN_QUAD_OCT; almostNormal = true; break;
-        case 4: coords = regina::NS_QUAD_CLOSED; break;
-        case 5: coords = regina::NS_AN_QUAD_OCT_CLOSED; almostNormal = true; break;
+        case 0: coords = (almostNormal ? regina::NS_AN_STANDARD : regina::NS_STANDARD); break;
+        case 1: coords = (almostNormal ? regina::NS_AN_QUAD_OCT : regina::NS_QUAD); break;
+        case 2: coords = (almostNormal ? regina::NS_AN_QUAD_OCT_CLOSED : regina::NS_QUAD_CLOSED); break;
         default: broken = true; break;
     }
     if (broken) {
@@ -180,6 +212,7 @@ static NSArray* embText;
     }
 
     _whichControl.enabled = NO;
+    _normalControl.enabled = NO;
     _coordControl.enabled = NO;
     _embControl.enabled = NO;
     _enumerateButton.enabled = NO;
@@ -237,7 +270,8 @@ static NSArray* embText;
                                            [Coordinates adjective:coords capitalise:YES]].UTF8String); break;
                     case 1: ans->setLabel([NSString stringWithFormat:@"%@ fundamental surfaces",
                                            [Coordinates adjective:coords capitalise:YES]].UTF8String); break;
-                    default: ans->setLabel("Normal surfaces"); break;
+                    default: // Should never happen:
+                        ans->setLabel("Normal surfaces"); break;
                 }
 
                 [self.spec created:ans];
@@ -252,14 +286,21 @@ static NSArray* embText;
                  @"Vertex surfaces (extreme rays)",
                  @"Fundamental surfaces (Hilbert basis)",
                  nil];
-    coordText = [NSArray arrayWithObjects:
-                 @"Normal coordinates: triangles and quadrilaterals",
-                 @"Normal coordinates: quadrilaterals only",
-                 @"Almost normal coordinates: triangles, quadrilaterals, octagons",
-                 @"Almost normal coordinates: quadrilaterals and octagons only",
-                 @"Normal coordinates: quads, closed (non-spun) surfaces only",
-                 @"Almost normal coordinates: quads & octs, closed (non-spun) only",
+    normalText = [NSArray arrayWithObjects:
+                  @"Normal surfaces: only triangles and/or quadrilaterals",
+                  @"Almost normal surfaces: one non-zero octagon type allowed",
+                  nil];
+    coordTextNormal = [NSArray arrayWithObjects:
+                 @"Standard coordinates: triangles and quadrilaterals",
+                 @"Quad coordinates: quadrilaterals only",
+                 @"Closed quad coordinates: closed (non-spun) surfaces only",
                  nil];
+    coordTextAlmostNormal = [NSArray arrayWithObjects:
+                 @"Standard coordinates: triangles, quadrilaterals and octagons",
+                 @"Quad-oct coordinates: quadrilaterals and octagons only",
+                 @"Closed quad-oct coordinates: closed (non-spun) surfaces only",
+                 nil];
+
     embText = [NSArray arrayWithObjects:
                @"Properly embedded surfaces only",
                @"Include immersed and/or singular surfaces",
