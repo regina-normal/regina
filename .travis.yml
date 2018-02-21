@@ -1,0 +1,42 @@
+language: c++
+
+dist: trusty
+
+compiler:
+    - clang
+    - gcc
+
+addons:
+    apt:
+        packages:
+            - libtokyocabinet-dev
+            - libboost-dev
+            - libboost-iostreams-dev
+            - libboost-python-dev
+            - libboost-regex-dev
+            - libgmp-dev
+            - libxml2-dev
+            - libjansson-dev
+            - zlib1g-dev
+            - qtbase5-dev
+            - libqt5svg5-dev
+            - libpopt0
+            - libpopt-dev
+            - libcppunit-dev
+            - libgraphviz-dev
+            - python-dev
+            - xsltproc
+            - doxygen
+            - mpi-default-dev
+            - mpi-default-bin
+
+
+before_script:
+    - mkdir build
+    - cd build
+    - cmake .. -DLOWDIMONLY=ON
+
+script:
+    - make -j2
+    - cd testsuite
+    - ./regtestsuite
