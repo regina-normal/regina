@@ -71,7 +71,7 @@ namespace regina {
  *
  * @author Ryan Budney
  */
-class REGINA_API NBilinearForm : public ShareableObject {
+class REGINA_API NBilinearForm {
     private:
 	/**
 	 * Stores the pairing in SNF coordinates for all 3 groups. 

@@ -449,24 +449,24 @@ const NBilinearForm* CellularData::bilinearForm(
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         { // each STD_REL_BDRY cell has <= 3 boundary 1-cells, 
           // each one corresponds to a DUAL cell...
-         const NTriangle* fac( tri3->face( rIx[2][i] ) ); 
+         const NTriangle* fac( tri3->triangle( rIx[2][i] ) ); 
          const NEdge* edg(NULL);
          const NTetrahedron* tet( fac->embedding(1).tetrahedron() );
          for (unsigned long j=0; j<3; j++)
 	  {
-	   edg = fac->getEdge(j); if (!edg->isBoundary())
+	   edg = fac->edge(j); if (!edg->isBoundary())
 	    { // intM[ J, i, 2*numNonIdealCells[2] + 3*i+j ] += whatever.  
           // For orientation we need to compare normal orientation 
           // of these edges to product normal orientations
           unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), 
-           tri3->edgeIndex( edg ) ) - dcIx[2].begin() );
+           edg->index() ) - dcIx[2].begin() );
 	     NMultiIndex< unsigned long > x(3); x[0] = J; 
          x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
-	     // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge 
+	     // fac->edgeMapping(j)[0] and [1] are the vertices of the edge 
          // in the face, so we apply facinc to that, 
          // then get the corresp edge number
 	     NPerm4 facinc( fac->embedding(1).vertices() );
-	     NPerm4 edginc( tet->getEdgeMapping( 
+	     NPerm4 edginc( tet->edgeMapping( 
            NEdge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) );
          // edginc[2,3] give orientation of part of dual 2-cell in this tet...
 	     // normalize edginc to ambient orientation
@@ -479,7 +479,7 @@ const NBilinearForm* CellularData::bilinearForm(
      if ( (f_desc.ldomain.dim == 2) && (f_desc.rdomain.dim == 1) )
        for (unsigned long i=0; i<numRelativeCells[1]; i++)
         {
-         const NEdge* edg( tri3->getEdge( rIx[1][i] ) ); 
+         const NEdge* edg( tri3->edge( rIx[1][i] ) ); 
          const NTetrahedron* tet( edg->embedding(0).tetrahedron() );
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), 
           rIx[1][i] ) - dcIx[2].begin() );
@@ -492,7 +492,7 @@ const NBilinearForm* CellularData::bilinearForm(
      if ( (f_desc.ldomain.dim == 1) && (f_desc.rdomain.dim == 2) )
        for (unsigned long i=0; i<numRelativeCells[2]; i++)
         {
-         const NTriangle* fac( tri3->face( rIx[2][i] ) ); 
+         const NTriangle* fac( tri3->triangle( rIx[2][i] ) ); 
          const NTetrahedron* tet( fac->embedding(0).tetrahedron() );
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), 
           rIx[2][i] ) - dcIx[1].begin() );
@@ -541,7 +541,7 @@ const NBilinearForm* CellularData::bilinearForm(
      if ( (f_desc.ldomain.dim == 3) && (f_desc.rdomain.dim == 1) )
       for (unsigned long i=0; i<numRelativeCells[1]; i++)
         {
-         const Dim4Edge* edg( tri4->getEdge( rIx[1][i] ) );
+         const Dim4Edge* edg( tri4->edge( rIx[1][i] ) );
          const Dim4Pentachoron* pen( edg->embedding(0).pentachoron() );
          NPerm5 edginc( edg->embedding(0).vertices() );
          unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), 
@@ -567,7 +567,7 @@ const NBilinearForm* CellularData::bilinearForm(
           //  += whatever for orientation we need to compare normal 
           // orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), 
-                              tri4->triangleIndex( fac ) ) - dcIx[2].begin() );
+                              fac->index() ) - dcIx[2].begin() );
 	     NMultiIndex< unsigned long > x(3); 
          x[0] = J; x[1] = i; 
          x[2] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*rIx[3][i] + j;
@@ -595,15 +595,15 @@ const NBilinearForm* CellularData::bilinearForm(
          NPerm5 facinc( fac->embedding(0).vertices() );
          for (unsigned long j=0; j<3; j++)
 	  {
-	   edg = fac->getEdge(j); if (!edg->isBoundary())
+	   edg = fac->edge(j); if (!edg->isBoundary())
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 
           // 4*i+j ] += whatever for orientation we need to compare normal 
           // orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), 
-                              tri4->edgeIndex( edg ) ) - dcIx[3].begin() );
+                              edg->index() ) - dcIx[3].begin() );
 	     NMultiIndex< unsigned long > x(3); 
          x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j; 
-	     NPerm5 edginc( pen->getEdgeMapping( 
+	     NPerm5 edginc( pen->edgeMapping( 
            Dim4Edge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) ); 
 	     // adjust for coherent oriented normal fibres
 	     if (facinc.sign() != pen->orientation()) facinc = facinc*NPerm5(3,4);
@@ -628,19 +628,19 @@ const NBilinearForm* CellularData::bilinearForm(
          // [0,1,2,3]->tet in pen, 4->tet num in pen.
          for (unsigned long j=0; j<6; j++)
 	  {
-	   edg = tet->getEdge(j); if (!edg->isBoundary())
+	   edg = tet->edge(j); if (!edg->isBoundary())
 	    { // intM[ J, i, 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*i+j ]
           //  += whatever.  for orientation we need to compare normal 
           // orientation of intersection to product normal orientations
          unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), 
-                          tri4->edgeIndex( edg ) ) - dcIx[3].begin() );
+                          edg->index() ) - dcIx[3].begin() );
 	     NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; 
          x[2] = 3*numNonIdealCells[2] + 6*i + j;
-	     NPerm5 edgintet( tet->getEdgeMapping( j ) ); 
+	     NPerm5 edgintet( tet->edgeMapping( j ) ); 
          // [0,1] --> verts in tet, 4->4. 
          NPerm5 ordual2cell( tetinc * edgintet ); 
          // [0,1] --> verts in pen, 4->tet in pen
-	     NPerm5 edginc( pen->getEdgeMapping( 
+	     NPerm5 edginc( pen->edgeMapping( 
                        Dim4Edge::edgeNumber[ordual2cell[0]][ordual2cell[1]] ) );
 	     // adjust for coherent oriented normal fibres
 	     if (edginc.sign() != pen->orientation()) edginc = edginc*NPerm5(0,1);
@@ -771,7 +771,7 @@ const NBilinearForm* CellularData::bilinearForm(
 	   Integer sum(Integer::zero);
        for (unsigned long k=0; k<dual_1vec.size(); k++)
         {
-         const NTriangle* fac( tri3->face( rIx[2][k] ) ); 
+         const NTriangle* fac( tri3->triangle( rIx[2][k] ) ); 
          // shouldn't this be k? previously i
          const NTetrahedron* tet( fac->embedding(0).tetrahedron() );
          NPerm4 facinc( fac->embedding(0).vertices() );
@@ -1174,8 +1174,8 @@ const NMatrixRing< NSVPolynomialRing< Integer > >*
  for (std::set<unsigned long>::const_iterator i=maxTreeStd.begin(); 
                                               i!=maxTreeStd.end(); i++)
   { // this is a local def.
-   if (tri3) if (!tri3->face( nicIx[2][*i] )->isBoundary()) 
-              maxTreedcIx.insert( dcIxLookup( tri3->face( nicIx[2][*i] ) ) );
+   if (tri3) if (!tri3->triangle( nicIx[2][*i] )->isBoundary()) 
+              maxTreedcIx.insert( dcIxLookup( tri3->triangle( nicIx[2][*i] ) ) );
    if (tri4) if (!tri4->tetrahedron( nicIx[3][*i] )->isBoundary()) 
                  maxTreedcIx.insert( 
                    dcIxLookup( tri4->tetrahedron( nicIx[3][*i] ) ) );

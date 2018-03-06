@@ -59,8 +59,9 @@
 
 namespace regina {
 
-class NTriangulation;
-class Dim4Triangulation;
+// TODO these lines not needed anymore?
+//class NTriangulation;
+//class Dim4Triangulation;
 
 /**
  * \weakgroup algebra
@@ -236,7 +237,7 @@ class Dim4Triangulation;
  *
  * @author Ryan Budney
  */
-class REGINA_API CellularData : public ShareableObject {
+class REGINA_API CellularData {
 public:
 
  /**
@@ -1290,9 +1291,9 @@ public:
 
     /**
      * Determine if the torsion linking form is hyperbolic.  Returns true if 
-     * it is, false if not, unknown if the request doesn't make sense.
+     * it is, false if not, or if the request does not make sense.
      */
-    NTriBool torsionLinkingFormIsHyperbolic() const;
+    bool torsionLinkingFormIsHyperbolic() const;
 
     /**
      * Verifies that the maps used to define the various homology groups for 
@@ -1552,7 +1553,7 @@ public:
 // Inline functions for CellularData
 
 // copy constructor
-inline CellularData::CellularData(const CellularData& g) : ShareableObject(),
+inline CellularData::CellularData(const CellularData& g) : 
         tri4(clonePtr(g.tri4)), tri3(clonePtr(g.tri3)), 
  // chain complex indexing
     nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), rIx(g.rIx), 

@@ -40,7 +40,7 @@ NBilinearForm::NBilinearForm(const NMarkedAbelianGroup &ldomain,
                              const NMarkedAbelianGroup &rdomain,
 			                 const NMarkedAbelianGroup &range,   
                              const NSparseGridRing< Integer > &pairing) : 
-ShareableObject(), reducedPairing(NULL), unreducedPairing(NULL), 
+reducedPairing(NULL), unreducedPairing(NULL), 
 lDomain(ldomain), rDomain(rdomain), Range(range)
 {
  unreducedPairing = new NSparseGridRing< Integer > (pairing);
@@ -70,7 +70,7 @@ lDomain(ldomain), rDomain(rdomain), Range(range)
  KKinvariantsComputed=false;
 }
 
-NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : ShareableObject(),
+NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : 
  reducedPairing(clonePtr(cloneMe.reducedPairing)), 
  unreducedPairing(clonePtr(cloneMe.unreducedPairing)),
  lDomain(cloneMe.lDomain),  rDomain(cloneMe.rDomain), 
