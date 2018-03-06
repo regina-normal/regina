@@ -55,7 +55,7 @@ namespace regina {
  */
 
 /**
- * Represents a tetrahedron within a 2-manifold triangulation.
+ * Represents a triangle within a 2-manifold triangulation.
  *
  * This class is typically referred to by the aliases Simplex<2> or
  * Triangle<2> (or, for Python users, \c Simplex2 and \c Triangle2).
