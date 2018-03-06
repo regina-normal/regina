@@ -56,5 +56,7 @@ if (${REGINA_INSTALL_DEV})
     rational.h
     ray.h
     vector.h
+    sparsegrid.h
+    partition.h
     DESTINATION ${INCLUDEDIR}/maths COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

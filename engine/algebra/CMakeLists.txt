@@ -7,6 +7,18 @@ SET ( FILES
   homgrouppresentation
   markedabeliangroup
   xmlalgebrareader
+  cellulardata          
+  cellulardata.init.hom      
+  cellulardata.init.pi1  
+  cellulardata.lookups  
+  cellulardata.simpaut
+  cellulardata.init.cc  
+  cellulardata.init.indexing  
+  cellulardata.locators
+  cellulardata.output   
+  cellulardata.tests
+  bilinearform
+  svpolynomialring
   )
 
 # Prepend folder name
@@ -26,5 +38,9 @@ if (${REGINA_INSTALL_DEV})
     markedabeliangroup.h
     nmarkedabeliangroup.h
     xmlalgebrareader.h
+    cellulardata.h  
+    cellulardata.simpaut.h
+    bilinearform.h
+    svpolynomialring.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
