@@ -61,7 +61,7 @@ namespace regina {
  * subsets of a fixed size. 
  */
 class REGINA_API NPartition {
-        NBitmask part;
+        Bitmask part;
         unsigned long setSize;
         unsigned long subSetSize;
         bool beforeStart, afterEnd; 
@@ -94,9 +94,9 @@ public:
          */
         bool atStart();
         /**
-         * Request the current partition's NBitmask representation.
+         * Request the current partition's Bitmask representation.
          */
-        const NBitmask& partition() const;    
+        const Bitmask& partition() const;    
         /**
          * What is the order of set?
          */
@@ -114,11 +114,11 @@ public:
          */    
         std::vector< unsigned long > vectorDesc() const;
         /**
-         * Text output in form of a NBitMask
+         * Text output in form of a BitMask
          */
         std::string textString() const;
         /**
-         * Text output in form of a NBitMask.  If there are n elements in your
+         * Text output in form of a BitMask.  If there are n elements in your
          * set your output will be a binary string of length n, with entries
          * either 0 or 1.  00...0 indicates the empty subset, 11...1 indicates 
          * the entire set. 
@@ -186,7 +186,7 @@ inline bool NPartition::atEnd()
 inline bool NPartition::atStart()
 { return beforeStart; }
 
-inline const NBitmask& NPartition::partition() const
+inline const Bitmask& NPartition::partition() const
 { return part; }      
  
 inline bool NPartition::operator<(const NPartition &that) const

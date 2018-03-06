@@ -86,7 +86,7 @@ const NAbelianGroup* CellularData::unmarkedGroup(
  if (g_desc.var == coVariant) // homology requested
   {
    if (g_desc.cof == 0) mgptr = new NAbelianGroup( *ccM, *ccN );
-    else mgptr = new NAbelianGroup( *ccM, *ccN, NLargeInteger(g_desc.cof) );
+    else mgptr = new NAbelianGroup( *ccM, *ccN, Integer(g_desc.cof) );
 
    std::map< GroupLocator, NAbelianGroup* > *mabgptr =  
  	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
@@ -103,7 +103,7 @@ const NAbelianGroup* CellularData::unmarkedGroup(
     for (unsigned long j=0; j<ccNt.columns(); j++)
      ccNt.entry(i,j) = ccM->entry(j,i);
    if (g_desc.cof == 0) mgptr = new NAbelianGroup( ccMt, ccNt );
-    else mgptr = new NAbelianGroup( ccMt, ccNt, NLargeInteger(g_desc.cof) ); 
+    else mgptr = new NAbelianGroup( ccMt, ccNt, Integer(g_desc.cof) ); 
 
    std::map< GroupLocator, NAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NAbelianGroup* > *> (&abelianGroups);
@@ -115,14 +115,14 @@ const NAbelianGroup* CellularData::unmarkedGroup(
 }
 
 // todo add an aDim and ensure request is with dimension bounds
-const NMarkedAbelianGroup* CellularData::markedGroup( 
+const MarkedAbelianGroup* CellularData::markedGroup( 
                             const GroupLocator &g_desc) const
 {
  unsigned long aDim = ( (tri4 != NULL) ? 4 : 3 );
  unsigned long topDim = ( (g_desc.hcs==STD_BDRY_coord) || 
    (g_desc.hcs==DUAL_BDRY_coord) || (g_desc.hcs==MIX_BDRY_coord) ) ?
            aDim-1 : aDim; // the highest dimensional cell for this cell complex.
- std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator p;
+ std::map< GroupLocator, MarkedAbelianGroup* >::const_iterator p;
  p = markedAbelianGroups.find(g_desc);
  if (p != markedAbelianGroups.end()) return (p->second);
  // we know there's no group matching g_desc in markedAbelianGroups. 
@@ -148,18 +148,18 @@ const NMarkedAbelianGroup* CellularData::markedGroup(
    ccN = tempMat;
   } 
  // let's construct the group, this will be it, eventually.
- NMarkedAbelianGroup* mgptr(NULL);
+ MarkedAbelianGroup* mgptr(NULL);
 
  if (g_desc.var == coVariant) // homology requested
   {
-   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( *ccM, *ccN );
-    else mgptr = new NMarkedAbelianGroup( *ccM, *ccN, 
-                        NLargeInteger(g_desc.cof) );
+   if (g_desc.cof == 0) mgptr = new MarkedAbelianGroup( *ccM, *ccN );
+    else mgptr = new MarkedAbelianGroup( *ccM, *ccN, 
+                        Integer(g_desc.cof) );
 
-   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr =  
- 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> 
+   std::map< GroupLocator, MarkedAbelianGroup* > *mabgptr =  
+ 	const_cast< std::map< GroupLocator, MarkedAbelianGroup* > *> 
         (&markedAbelianGroups);
-   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
+   mabgptr->insert(std::pair<GroupLocator,MarkedAbelianGroup*>(g_desc,mgptr)); 
   }
  else // cohomology requested
   { 
@@ -171,15 +171,15 @@ const NMarkedAbelianGroup* CellularData::markedGroup(
    for (unsigned long i=0; i<ccNt.rows(); i++) 
     for (unsigned long j=0; j<ccNt.columns(); j++)
      ccNt.entry(i,j) = ccM->entry(j,i);
-   if (g_desc.cof == 0) mgptr = new NMarkedAbelianGroup( ccMt, ccNt );
-    else mgptr = new NMarkedAbelianGroup( ccMt, ccNt, 
-        NLargeInteger(g_desc.cof) ); 
+   if (g_desc.cof == 0) mgptr = new MarkedAbelianGroup( ccMt, ccNt );
+    else mgptr = new MarkedAbelianGroup( ccMt, ccNt, 
+        Integer(g_desc.cof) ); 
 
-   std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
-	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> 
+   std::map< GroupLocator, MarkedAbelianGroup* > *mabgptr = 
+	const_cast< std::map< GroupLocator, MarkedAbelianGroup* > *> 
         (&markedAbelianGroups);
 
-   mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
+   mabgptr->insert(std::pair<GroupLocator,MarkedAbelianGroup*>(g_desc,mgptr)); 
   }
  // clean up
 
@@ -209,7 +209,7 @@ const HomMarkedAbelianGroup* CellularData::homGroup(
    if ( (h_desc.domain.dim == h_desc.range.dim) && 
         (h_desc.domain.hcs == h_desc.range.hcs) )
     {
-      unsigned long ccdim = markedGroup( h_desc.domain )->getRankCC();
+      unsigned long ccdim = markedGroup( h_desc.domain )->rankCC();
       CM = new NMatrixInt(ccdim, ccdim); CM->makeIdentity(); 
     }
 
@@ -328,8 +328,8 @@ const HomMarkedAbelianGroup* CellularData::homGroup(
  if ( CM ) // make sure we have the domain and range, then we're happy.
  {
   //  ensure we have domain and range
-  const NMarkedAbelianGroup* dom = markedGroup( h_desc.domain );
-  const NMarkedAbelianGroup* ran = markedGroup( h_desc.range );
+  const MarkedAbelianGroup* dom = markedGroup( h_desc.domain );
+  const MarkedAbelianGroup* ran = markedGroup( h_desc.range );
 
   if ( dom && ran )
    {
@@ -349,13 +349,13 @@ const HomMarkedAbelianGroup* CellularData::homGroup(
  return NULL;
 }
 
-NSVPolynomialRing< NLargeInteger > CellularData::poincarePolynomial() const
+NSVPolynomialRing< Integer > CellularData::poincarePolynomial() const
 {
- NSVPolynomialRing< NLargeInteger > retval;
+ NSVPolynomialRing< Integer > retval;
  unsigned long aDim( tri3 ? 3 : 4 );
  for (unsigned long i=0; i<=aDim; i++) retval += 
-  NSVPolynomialRing< NLargeInteger >( NLargeInteger( unmarkedGroup( 
-                 GroupLocator(i, coVariant, DUAL_coord, 0))->getRank() ), i );
+  NSVPolynomialRing< Integer >( Integer( unmarkedGroup( 
+                 GroupLocator(i, coVariant, DUAL_coord, 0))->rank() ), i );
 return retval;
 }
 
@@ -404,14 +404,14 @@ const NBilinearForm* CellularData::bilinearForm(
       ( f_desc.ldomain.cof == f_desc.rdomain.cof ) && 
       ( f_desc.ldomain.hcs == f_desc.rdomain.hcs ) ) 
   { // homology-cohomology pairing definable.
-   const NMarkedAbelianGroup* lDom( markedGroup(f_desc.ldomain) );
-   const NMarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
-   NMarkedAbelianGroup rAng( 1, f_desc.rdomain.cof );
+   const MarkedAbelianGroup* lDom( markedGroup(f_desc.ldomain) );
+   const MarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
+   MarkedAbelianGroup rAng( 1, f_desc.rdomain.cof );
 
-   NSparseGridRing< NLargeInteger > intM(3); 
+   NSparseGridRing< Integer > intM(3); 
    NMultiIndex< unsigned long > x(3); 
 
-   for (unsigned long i=0; i<lDom->getRankCC(); i++)
+   for (unsigned long i=0; i<lDom->rankCC(); i++)
     { x[0] = i; x[1] = i; x[2] = 0;
       intM.setEntry( x, 1 ); } 
 
@@ -435,12 +435,12 @@ const NBilinearForm* CellularData::bilinearForm(
   {// check its orientable if R != Z_2
    if ( (f_desc.ldomain.cof != 2) && 
         ( tri3 ? !tri3->isOrientable() : !tri4->isOrientable() ) ) return NULL;
-   const NMarkedAbelianGroup* lDom( markedGroup(f_desc.ldomain) );
-   const NMarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
-   const NMarkedAbelianGroup* rAng( markedGroup( 
+   const MarkedAbelianGroup* lDom( markedGroup(f_desc.ldomain) );
+   const MarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
+   const MarkedAbelianGroup* rAng( markedGroup( 
          GroupLocator( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim,
 					coVariant, MIX_coord, f_desc.ldomain.cof ) ) );
-   NSparseGridRing< NLargeInteger > intM(3); 
+   NSparseGridRing< Integer > intM(3); 
    
    if (aDim == 3) // aDim==3  
     {
@@ -465,7 +465,7 @@ const NBilinearForm* CellularData::bilinearForm(
 	     // fac->getEdgeMapping(j)[0] and [1] are the vertices of the edge 
          // in the face, so we apply facinc to that, 
          // then get the corresp edge number
-	     NPerm4 facinc( fac->embedding(1).getVertices() );
+	     NPerm4 facinc( fac->embedding(1).vertices() );
 	     NPerm4 edginc( tet->getEdgeMapping( 
            NEdge::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) );
          // edginc[2,3] give orientation of part of dual 2-cell in this tet...
@@ -485,7 +485,7 @@ const NBilinearForm* CellularData::bilinearForm(
           rIx[1][i] ) - dcIx[2].begin() );
          NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; 
          x[2] = numNonIdealCells[0] + i;
-         NPerm4 edginc( edg->embedding(0).getVertices() );
+         NPerm4 edginc( edg->embedding(0).vertices() );
          intM.setEntry( x, edginc.sign()*tet->orientation() ); 
         }
       // (dual)H_1 x (std_rel)H_2 --> (mix)H_0 
@@ -498,7 +498,7 @@ const NBilinearForm* CellularData::bilinearForm(
           rIx[2][i] ) - dcIx[1].begin() );
          NMultiIndex< unsigned long > x(3); x[0] = J; 
          x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
-         NPerm4 facinc( fac->embedding(0).getVertices() );
+         NPerm4 facinc( fac->embedding(0).vertices() );
          intM.setEntry( x, facinc.sign()*tet->orientation() ); 
         }
 
@@ -516,7 +516,7 @@ const NBilinearForm* CellularData::bilinearForm(
         {
          const Dim4Triangle* fac( tri4->triangle( rIx[2][i] ) );
          const Dim4Pentachoron* pen( fac->embedding(0).pentachoron() );
-         NPerm5 facinc( fac->embedding(0).getVertices() );
+         NPerm5 facinc( fac->embedding(0).vertices() );
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), 
           rIx[2][i] ) - dcIx[2].begin() );
          NMultiIndex< unsigned long > x(3); x[0] = J; 
@@ -529,7 +529,7 @@ const NBilinearForm* CellularData::bilinearForm(
         {
          const Dim4Tetrahedron* tet( tri4->tetrahedron( rIx[3][i] ) );
          const Dim4Pentachoron* pen( tet->embedding(0).pentachoron() );
-         NPerm5 tetinc( tet->embedding(0).getVertices() );
+         NPerm5 tetinc( tet->embedding(0).vertices() );
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), 
           rIx[3][i] ) - dcIx[1].begin() );
          NMultiIndex< unsigned long > x(3); x[0] = J; 
@@ -543,7 +543,7 @@ const NBilinearForm* CellularData::bilinearForm(
         {
          const Dim4Edge* edg( tri4->getEdge( rIx[1][i] ) );
          const Dim4Pentachoron* pen( edg->embedding(0).pentachoron() );
-         NPerm5 edginc( edg->embedding(0).getVertices() );
+         NPerm5 edginc( edg->embedding(0).vertices() );
          unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), 
           rIx[1][i] ) - dcIx[3].begin() );
          NMultiIndex< unsigned long > x(3); x[0] = J; 
@@ -559,7 +559,7 @@ const NBilinearForm* CellularData::bilinearForm(
          const Dim4Tetrahedron* tet( tri4->tetrahedron( rIx[3][i] ) ); 
          const Dim4Triangle* fac(NULL);
          const Dim4Pentachoron* pen( tet->embedding(1).pentachoron() );
-         NPerm5 tetinc( tet->embedding(1).getVertices() );
+         NPerm5 tetinc( tet->embedding(1).vertices() );
          for (unsigned long j=0; j<4; j++)
 	  {
 	   fac = tet->triangle(j); if (!fac->isBoundary())
@@ -592,7 +592,7 @@ const NBilinearForm* CellularData::bilinearForm(
          const Dim4Triangle* fac( tri4->triangle( rIx[2][i] ) ); 
          const Dim4Edge* edg(NULL);
          const Dim4Pentachoron* pen( fac->embedding(0).pentachoron() );
-         NPerm5 facinc( fac->embedding(0).getVertices() );
+         NPerm5 facinc( fac->embedding(0).vertices() );
          for (unsigned long j=0; j<3; j++)
 	  {
 	   edg = fac->getEdge(j); if (!edg->isBoundary())
@@ -624,7 +624,7 @@ const NBilinearForm* CellularData::bilinearForm(
          const Dim4Tetrahedron* tet( tri4->tetrahedron( rIx[3][i] ) ); 
          const Dim4Edge* edg(NULL);
          const Dim4Pentachoron* pen( tet->embedding(1).pentachoron() );
-         NPerm5 tetinc( tet->embedding(1).getVertices() ); 
+         NPerm5 tetinc( tet->embedding(1).vertices() ); 
          // [0,1,2,3]->tet in pen, 4->tet num in pen.
          for (unsigned long j=0; j<6; j++)
 	  {
@@ -685,7 +685,7 @@ const NBilinearForm* CellularData::bilinearForm(
    const HomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) );
    const HomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
    const HomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-   std::auto_ptr<HomMarkedAbelianGroup> f( 
+   std::unique_ptr<HomMarkedAbelianGroup> f( 
      (*sc_sb) * *(*(sc_mc->inverseHom()) * (*dc_mc)) );
    FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
    bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(*f) );
@@ -712,7 +712,7 @@ const NBilinearForm* CellularData::bilinearForm(
     f_desc.rdomain.cof );
    const HomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
    const HomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-   std::auto_ptr<HomMarkedAbelianGroup> f( (*dc_mc->inverseHom()) * (*sc_mc) );
+   std::unique_ptr<HomMarkedAbelianGroup> f( (*dc_mc->inverseHom()) * (*sc_mc) );
    FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord;
    bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(*f) );
    std::map< FormLocator, NBilinearForm* > *mbfptr = 
@@ -738,116 +738,116 @@ const NBilinearForm* CellularData::bilinearForm(
      f_desc.ldomain.hcs, f_desc.ldomain.cof );
    GroupLocator rdd( f_desc.rdomain.dim, f_desc.rdomain.var, 
      f_desc.rdomain.hcs, f_desc.rdomain.cof );
-   const NMarkedAbelianGroup* ld(markedGroup(ldd));     
-   const NMarkedAbelianGroup* rd(markedGroup(rdd));
+   const MarkedAbelianGroup* ld(markedGroup(ldd));     
+   const MarkedAbelianGroup* rd(markedGroup(rdd));
    // now we build ldomain and rdomain
-   std::auto_ptr<NMarkedAbelianGroup> ldomain = 
+   std::unique_ptr<MarkedAbelianGroup> ldomain = 
     ld->torsionSubgroup(); // triv pres torsion subgroups
-   std::auto_ptr<NMarkedAbelianGroup> rdomain = rd->torsionSubgroup(); // ...
+   std::unique_ptr<MarkedAbelianGroup> rdomain = rd->torsionSubgroup(); // ...
 
-   NLargeInteger N(NLargeInteger::one);
+   Integer N(Integer::one);
    if ( !ldomain->isTrivial() && !rdomain->isTrivial() ) 
-      N=ld->getInvariantFactor( ld->getNumberOfInvariantFactors()-1 ).gcd(
-        rd->getInvariantFactor( rd->getNumberOfInvariantFactors()-1 ) );
-   NMarkedAbelianGroup range( 1, N ); 
+      N=ld->invariantFactor( ld->countInvariantFactors()-1 ).gcd(
+        rd->invariantFactor( rd->countInvariantFactors()-1 ) );
+   MarkedAbelianGroup range( 1, N ); 
    // Z_N with triv pres 0 --> Z --N--> Z --> Z_N --> 0
-   NSparseGridRing< NLargeInteger > intM(3); 
+   NSparseGridRing< Integer > intM(3); 
 
    // TLF step 2: dimension-specific constructions
    if (aDim == 3)
     {
-     for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
- 	  for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
+     for (unsigned long i=0; i<ld->countInvariantFactors(); i++)
+ 	  for (unsigned long j=0; j<rd->countInvariantFactors(); j++)
 	   {
-	   // take ccRep(j), multiply by order rd->getInvariantFactor(j), 
+	   // take ccRep(j), multiply by order rd->invariantFactor(j), 
        //  apply writeAsBoundary, 
-       std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
+       std::vector< Integer > rFac( rd->torsionRep(j) );
        for (unsigned long k=0; k<rFac.size(); k++) 
-        rFac[k]*=rd->getInvariantFactor(j);
-       std::vector< NLargeInteger > std_rel_bdry_2vec( 
+        rFac[k]*=rd->invariantFactor(j);
+       std::vector< Integer > std_rel_bdry_2vec( 
         rd->writeAsBoundary( rFac ) );
-       std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
-	   // intersect with ld->getInvariantFactor(i)
-	   NLargeInteger sum(NLargeInteger::zero);
+       std::vector< Integer > dual_1vec( ld->torsionRep(i) );
+	   // intersect with ld->invariantFactor(i)
+	   Integer sum(Integer::zero);
        for (unsigned long k=0; k<dual_1vec.size(); k++)
         {
          const NTriangle* fac( tri3->face( rIx[2][k] ) ); 
          // shouldn't this be k? previously i
          const NTetrahedron* tet( fac->embedding(0).tetrahedron() );
-         NPerm4 facinc( fac->embedding(0).getVertices() );
+         NPerm4 facinc( fac->embedding(0).vertices() );
          sum += std_rel_bdry_2vec[k]*dual_1vec[k]*
                 facinc.sign()*tet->orientation(); 
          // orientation convention...
         }
        // rescale sum, check if relevant, append to intM if so...
-       sum *= (N / rd->getInvariantFactor(j));
-       sum %= N; if (sum < NLargeInteger::zero) sum += N;
+       sum *= (N / rd->invariantFactor(j));
+       sum %= N; if (sum < Integer::zero) sum += N;
        NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
-       if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
+       if (sum != Integer::zero) intM.setEntry( x, sum );
 	   } 
      }
     
     if ( (aDim == 4) && (f_desc.ldomain.dim == 2) )
      {
-	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
- 	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
+	for (unsigned long i=0; i<ld->countInvariantFactors(); i++)
+ 	 for (unsigned long j=0; j<rd->countInvariantFactors(); j++)
 	  {
-	   // take ccRep(j), multiply by order rd->getInvariantFactor(j), 
+	   // take ccRep(j), multiply by order rd->invariantFactor(j), 
        //  apply writeAsBoundary, 
-       std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
+       std::vector< Integer > rFac( rd->torsionRep(j) );
        for (unsigned long k=0; k<rFac.size(); k++) 
-        rFac[k]*=rd->getInvariantFactor(j);
-       std::vector< NLargeInteger > std_rel_bdry_2vec( 
+        rFac[k]*=rd->invariantFactor(j);
+       std::vector< Integer > std_rel_bdry_2vec( 
                                        rd->writeAsBoundary( rFac ) );
-       std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
-	   // intersect with ld->getInvariantFactor(i)
-	   NLargeInteger sum(NLargeInteger::zero);
+       std::vector< Integer > dual_1vec( ld->torsionRep(i) );
+	   // intersect with ld->invariantFactor(i)
+	   Integer sum(Integer::zero);
            for (unsigned long k=0; k<dual_1vec.size(); k++)
             {
              const Dim4Triangle* fac( tri4->triangle( rIx[2][i] ) ); 
              const Dim4Pentachoron* pen( 
                 fac->embedding(0).pentachoron() );
-             NPerm5 facinc( fac->embedding(0).getVertices() );
+             NPerm5 facinc( fac->embedding(0).vertices() );
              sum += std_rel_bdry_2vec[k]*dual_1vec[k]*
                     facinc.sign()*pen->orientation(); 
              // orientation convention...
             }
            // rescale sum, check if relevant, append to intM if so...
-           sum *= (N / rd->getInvariantFactor(j));
-           sum %= N; if (sum < NLargeInteger::zero) sum += N;
+           sum *= (N / rd->invariantFactor(j));
+           sum %= N; if (sum < Integer::zero) sum += N;
            NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
-           if (sum != NLargeInteger::zero) intM.setEntry( x, sum );
+           if (sum != Integer::zero) intM.setEntry( x, sum );
 	  }
      } 
     if ( (aDim == 4) && (f_desc.ldomain.dim == 1) )
      {
- 	for (unsigned long i=0; i<ld->getNumberOfInvariantFactors(); i++)
- 	 for (unsigned long j=0; j<rd->getNumberOfInvariantFactors(); j++)
+ 	for (unsigned long i=0; i<ld->countInvariantFactors(); i++)
+ 	 for (unsigned long j=0; j<rd->countInvariantFactors(); j++)
 	  {
-	   // take ccRep(j), multiply by order rd->getInvariantFactor(j), 
+	   // take ccRep(j), multiply by order rd->invariantFactor(j), 
        // apply writeAsBoundary, 
-       std::vector< NLargeInteger > rFac( rd->getTorsionRep(j) );
+       std::vector< Integer > rFac( rd->torsionRep(j) );
        for (unsigned long k=0; k<rFac.size(); k++) 
-            rFac[k]*=rd->getInvariantFactor(j);
-       std::vector< NLargeInteger > std_rel_bdry_2vec( 
+            rFac[k]*=rd->invariantFactor(j);
+       std::vector< Integer > std_rel_bdry_2vec( 
             rd->writeAsBoundary( rFac ) );
-       std::vector< NLargeInteger > dual_1vec( ld->getTorsionRep(i) );
-	   // intersect with ld->getInvariantFactor(i)
-	   NLargeInteger sum(NLargeInteger::zero);
+       std::vector< Integer > dual_1vec( ld->torsionRep(i) );
+	   // intersect with ld->invariantFactor(i)
+	   Integer sum(Integer::zero);
        for (unsigned long k=0; k<dual_1vec.size(); k++)
         {
          const Dim4Tetrahedron* tet( tri4->tetrahedron( rIx[1][i] ) ); 
          const Dim4Pentachoron* pen( tet->embedding(1).pentachoron() );
-         NPerm5 tetinc( tet->embedding(1).getVertices() );
+         NPerm5 tetinc( tet->embedding(1).vertices() );
          sum += std_rel_bdry_2vec[k]*dual_1vec[k]*
                 tetinc.sign()*pen->orientation(); 
          // orientation convention...
         }
        // rescale sum, check if relevant, append to intM if so...
-       sum *= (N / rd->getInvariantFactor(j));
-       sum %= N; if (sum < NLargeInteger::zero) sum += N;
+       sum *= (N / rd->invariantFactor(j));
+       sum %= N; if (sum < Integer::zero) sum += N;
        NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
-       if (sum != NLargeInteger::zero) intM.setEntry( x, sum );	  }
+       if (sum != Integer::zero) intM.setEntry( x, sum );	  }
     } 
     bfptr = new NBilinearForm( *ldomain, *rdomain, range, intM );
     std::map< FormLocator, NBilinearForm* > *fptr = 
@@ -879,29 +879,29 @@ const NBilinearForm* CellularData::bilinearForm(
     const HomMarkedAbelianGroup* sc_sb(homGroup( HomLocator( sc, sb ) ) );
     const HomMarkedAbelianGroup* sc_mc(homGroup( HomLocator( sc, mc ) ) );
     const HomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
-    std::auto_ptr<NMarkedAbelianGroup> rtrivG(
-      dc_mc->getDomain().torsionSubgroup() );
+    std::unique_ptr<MarkedAbelianGroup> rtrivG(
+      dc_mc->domain().torsionSubgroup() );
     // trivially presented dual torsion subgroup 
-    std::auto_ptr<HomMarkedAbelianGroup> rinc(
-     dc_mc->getDomain().torsionInclusion() );
+    std::unique_ptr<HomMarkedAbelianGroup> rinc(
+     dc_mc->domain().torsionInclusion() );
     // triv pres dual torsion inclusion     
-    std::auto_ptr<NMarkedAbelianGroup> ltrivG(
-     sc_sb->getRange().torsionSubgroup() );
+    std::unique_ptr<MarkedAbelianGroup> ltrivG(
+     sc_sb->range().torsionSubgroup() );
     // triv pres std torsion subgroup
 
-    NMatrixInt lMap( sc_sb->getRange().getNumberOfInvariantFactors(), 
-      sc_sb->getRange().getRankCC() );    
+    NMatrixInt lMap( sc_sb->range().countInvariantFactors(), 
+      sc_sb->range().rankCC() );    
     for (unsigned long j=0; j<lMap.columns(); j++)
     	{
-         std::vector<NLargeInteger> jtor( sc_sb->getRange().snfRep( 
-            sc_sb->getRange().cycleProjection( j ) ) );
+         std::vector<Integer> jtor( sc_sb->range().snfRep( 
+            sc_sb->range().cycleProjection( j ) ) );
          for (unsigned long i=0; i<lMap.rows(); i++)
           lMap.entry( i, j ) = jtor[i];
     	}
-    HomMarkedAbelianGroup lproj( sc_sb->getRange(), *ltrivG, lMap );
+    HomMarkedAbelianGroup lproj( sc_sb->range(), *ltrivG, lMap );
     // map std-rel-bdry to std coord
 
-    std::auto_ptr<HomMarkedAbelianGroup> f(
+    std::unique_ptr<HomMarkedAbelianGroup> f(
       lproj * *((*sc_sb) * *((*sc_mc->inverseHom()) * *((*dc_mc) * (*rinc) )))); 
     // dual -> std_rel_bdry
     FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
@@ -931,13 +931,13 @@ const NBilinearForm* CellularData::bilinearForm(
       f_desc.rdomain.cof );
     GroupLocator sb( f_desc.rdomain.dim, coVariant, STD_REL_BDRY_coord,
       f_desc.rdomain.cof );
-    std::auto_ptr<HomMarkedAbelianGroup> sc_sb(
+    std::unique_ptr<HomMarkedAbelianGroup> sc_sb(
         homGroup( HomLocator( sc, sb ) )->torsionSubgroup() ); 
-    std::auto_ptr<HomMarkedAbelianGroup> sc_mc(
+    std::unique_ptr<HomMarkedAbelianGroup> sc_mc(
         homGroup( HomLocator( sc, mc ) )->torsionSubgroup() );
-    std::auto_ptr<HomMarkedAbelianGroup> dc_mc(
+    std::unique_ptr<HomMarkedAbelianGroup> dc_mc(
         homGroup( HomLocator( dc, mc ) )->torsionSubgroup() );
-    std::auto_ptr<HomMarkedAbelianGroup> fl( 
+    std::unique_ptr<HomMarkedAbelianGroup> fl( 
         (*dc_mc->inverseHom())*(*sc_mc) ); // STD -> DUAL
       FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord; 
     prim.rdomain.hcs = STD_REL_BDRY_coord;
@@ -1154,12 +1154,12 @@ unsigned long num_less_than(const std::set<unsigned long> &thelist,
 // At present this algorithm collapses the maximal tree in the 1-skeleton 
 // of the dual CW-decomposition.  Assumes triangulation is connected. 
 // So the 1->0 chain map is just a [t^a-1, ..., t^p-1] type of matrix.  
-const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* 
+const NMatrixRing< NSVPolynomialRing< Integer > >* 
  CellularData::alexanderChainComplex( 
      const ChainComplexLocator &a_desc ) const
 { 
  std::map< ChainComplexLocator, NMatrixRing< 
-            NSVPolynomialRing< NLargeInteger > >* >::const_iterator p;
+            NSVPolynomialRing< Integer > >* >::const_iterator p;
  ChainComplexLocator range_desc(a_desc); range_desc.dim--;
  // reasons for giving up.
  p = alexanderChainComplexes.find(a_desc);
@@ -1185,13 +1185,13 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >*
   // fundamental group and its abelianization. 
   const NGroupPresentation* pi1( groupPresentation( 
                                 GroupPresLocator( whole_manifold, 0 ) ) );
-  std::auto_ptr<NMarkedAbelianGroup> pi1Ab( pi1->markedAbelianisation() );
+  std::unique_ptr<MarkedAbelianGroup> pi1Ab( pi1->markedAbelianisation() );
   // We adapt the chain complex because of the reduced number of 0 and 1-cells, 
   // since we're using a maximal tree in dual 1-skeleton to reduce the cell 
   // structure. this is an ad-hoc solution since we don't have good 
   // algorithms implemented to compute homology of chain complexes over a 
   // single-variable Laurent polynomial ring implemented.
-  NMatrixRing<NSVPolynomialRing< NLargeInteger > >* buildMat( NULL ); 
+  NMatrixRing<NSVPolynomialRing< Integer > >* buildMat( NULL ); 
   unsigned long ranDim; unsigned long domDim; 
    // lower rank of domain by one for every element of the maximal tree
   if (a_desc.dim==1) { ranDim = 1;  
@@ -1199,7 +1199,7 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >*
    // lower rank of range by one for every element of the maximal tree
   if (a_desc.dim==2) { ranDim = cellCount(range_desc) - maxTreedcIx.size(); 
                        domDim = cellCount(a_desc); }
-  buildMat = new NMatrixRing<NSVPolynomialRing< NLargeInteger > >
+  buildMat = new NMatrixRing<NSVPolynomialRing< Integer > >
         ( ranDim, domDim );
 
   // build entries
@@ -1218,13 +1218,13 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >*
 
     // now we take the cover facet data pointed to by ci and convert it to 
     // something in the chain complex for the abelianization of pi1. 
-    std::vector<NLargeInteger> ccI( pi1->getNumberOfGenerators() );  
+    std::vector<Integer> ccI( pi1->countGenerators() );  
     // to put into pi1Ab
-    for (unsigned long i=0; i<ci->second->trans.getNumberOfTerms(); i++)
-      ccI[ci->second->trans.getTerm(i).generator] += 
-        ci->second->trans.getTerm(i).exponent;
+    for (unsigned long i=0; i<ci->second->trans.countTerms(); i++)
+      ccI[ci->second->trans.term(i).generator] += 
+        ci->second->trans.term(i).exponent;
     signed long levelOfCell ( 
-        pi1Ab->snfRep(ccI)[pi1Ab->getNumberOfInvariantFactors()].longValue() );
+        pi1Ab->snfRep(ccI)[pi1Ab->countInvariantFactors()].longValue() );
     // level of cell is the index i, for the covering space trans t^i
     unsigned long cR, cC;  
     // so we need to chuck the 1-cell if it is not in the dual 1-skeleton, 
@@ -1235,17 +1235,17 @@ const NMatrixRing< NSVPolynomialRing< NLargeInteger > >*
     if (a_desc.dim==2) { cR=ci->second->cellNo - 
         num_less_than(maxTreedcIx, ci->second->cellNo);
                          cC = ci->first.entry(0); }
-    buildMat->entry( cR,  cC ) += NSVPolynomialRing< NLargeInteger >( 
-        NLargeInteger(ci->second->sig), levelOfCell ); 
+    buildMat->entry( cR,  cC ) += NSVPolynomialRing< Integer >( 
+        Integer(ci->second->sig), levelOfCell ); 
     }
    // insert
   std::map< ChainComplexLocator, 
-            NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *Mptr = 
+            NMatrixRing<NSVPolynomialRing< Integer > >* > *Mptr = 
   const_cast< std::map< ChainComplexLocator, 
-              NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > *>
+              NMatrixRing<NSVPolynomialRing< Integer > >* > *>
     (&alexanderChainComplexes);
   Mptr->insert( std::pair< ChainComplexLocator, 
-              NMatrixRing<NSVPolynomialRing< NLargeInteger > >* > 
+              NMatrixRing<NSVPolynomialRing< Integer > >* > 
     ( a_desc, buildMat ) );
   return buildMat; 
 }
@@ -1261,18 +1261,18 @@ void signedLongDivAlg( signed long n, signed long m,
 
 } // end anonymous namespace
 
-std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > 
+std::unique_ptr< NMatrixRing< NSVPolynomialRing< Integer > > > 
   CellularData::alexanderPresentationMatrix() const
 {
- const NMatrixRing<NSVPolynomialRing< NLargeInteger > >* 
+ const NMatrixRing<NSVPolynomialRing< Integer > >* 
   M( alexanderChainComplex( ChainComplexLocator(1, CellularData::DUAL_coord)));
- const NMatrixRing<NSVPolynomialRing< NLargeInteger > >* 
+ const NMatrixRing<NSVPolynomialRing< Integer > >* 
   N( alexanderChainComplex( ChainComplexLocator(2, CellularData::DUAL_coord)));
- NMatrixRing<NSVPolynomialRing< NLargeInteger > > workM(*M);  
- NMatrixRing<NSVPolynomialRing< NLargeInteger > > 
+ NMatrixRing<NSVPolynomialRing< Integer > > workM(*M);  
+ NMatrixRing<NSVPolynomialRing< Integer > > 
     rowOpMat(M->columns(), M->columns());
- NMatrixRing<NSVPolynomialRing< NLargeInteger > > workN(*N);  
- NMatrixRing<NSVPolynomialRing< NLargeInteger > > 
+ NMatrixRing<NSVPolynomialRing< Integer > > workN(*N);  
+ NMatrixRing<NSVPolynomialRing< Integer > > 
     rowOpInvMat(M->columns(), M->columns());
 
  rowOpMat.makeIdentity(); rowOpInvMat.makeIdentity();
@@ -1303,11 +1303,11 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > >
    signed long d, r; 
    signedLongDivAlg( workM.entry(0,pivotCol).degree(), 
                      workM.entry(0,i).degree(), d, r);
-   // t^m-1 = NSVPolynomialRing< NLargeInteger >(n,m,d)*(t^n-1) + t^r-1  
-   NSVPolynomialRing< NLargeInteger > Fac( NSVPolynomialRing< NLargeInteger >
+   // t^m-1 = NSVPolynomialRing< Integer >(n,m,d)*(t^n-1) + t^r-1  
+   NSVPolynomialRing< Integer > Fac( NSVPolynomialRing< Integer >
          ( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d) );
-   workM.entry(0,i) = NSVPolynomialRing< NLargeInteger >( 
-         NLargeInteger::one, r ) - NSVPolynomialRing< NLargeInteger >::one;
+   workM.entry(0,i) = NSVPolynomialRing< Integer >( 
+         Integer::one, r ) - NSVPolynomialRing< Integer >::one;
    // now do corresponding row op on workN, ie subtract NSVP(n,m,d) of 
    // the pivot row from the ith row
    workN.addRow( i, pivotCol, Fac );
@@ -1317,8 +1317,8 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > >
  if (nonZeroFlag) goto find_small_degree;
  // okay, all entries except pivotCol are killed, so pivotCol in workM 
  // must be t^{\pm}-1. 
- std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > retval( 
-   new NMatrixRing< NSVPolynomialRing< NLargeInteger > >
+ std::unique_ptr< NMatrixRing< NSVPolynomialRing< Integer > > > retval( 
+   new NMatrixRing< NSVPolynomialRing< Integer > >
     (N->rows()-1,N->columns()) );
  for (unsigned long i=0; i<retval->rows(); i++) 
   for (unsigned long j=0; j<retval->columns(); j++)
@@ -1328,17 +1328,17 @@ std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > >
 }
 
 // compute the Alexander ideal of the Alexander module. 
-std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > 
+std::unique_ptr< std::list< NSVPolynomialRing< Integer > > > 
     CellularData::alexanderIdeal() const
 {
- std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > 
+ std::unique_ptr< NMatrixRing< NSVPolynomialRing< Integer > > > 
     aPM(alexanderPresentationMatrix());
- std::list< NSVPolynomialRing< NLargeInteger > > alexIdeal;
+ std::list< NSVPolynomialRing< Integer > > alexIdeal;
  // degenerate matrices first.
  if (aPM->rows()==0) 
-    alexIdeal.push_back( NSVPolynomialRing< NLargeInteger >::one );
+    alexIdeal.push_back( NSVPolynomialRing< Integer >::one );
  else if (aPM->columns()==0) 
-    alexIdeal.push_back( NSVPolynomialRing< NLargeInteger >::zero );
+    alexIdeal.push_back( NSVPolynomialRing< Integer >::zero );
  else
   {
   // in general aPM might be wider than it is tall
@@ -1349,7 +1349,7 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >
   NPartition skipCols( aPM->columns(), colToErase );
   while ( !skipCols.atEnd() )
    {
-    NMatrixRing< NSVPolynomialRing< NLargeInteger > > 
+    NMatrixRing< NSVPolynomialRing< Integer > > 
         sqSubMat( aPM->rows(), aPM->rows() );
     unsigned long delta=0;
     for (unsigned long j=0; j<sqSubMat.columns(); j++)
@@ -1359,7 +1359,7 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >
         sqSubMat.entry(i,j) = aPM->entry( i, j+delta );
      }
 
-    NSVPolynomialRing< NLargeInteger > TEMP(sqSubMat.det());
+    NSVPolynomialRing< Integer > TEMP(sqSubMat.det());
     if (!TEMP.isZero()) alexIdeal.push_back( TEMP );
     ++skipCols; // next!
    }
@@ -1368,12 +1368,12 @@ std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >
  reduceIdeal(alexIdeal);
 
  // clean up the polynomials a little, if possible. 
- std::list< NSVPolynomialRing< NLargeInteger > >::iterator it;
+ std::list< NSVPolynomialRing< Integer > >::iterator it;
  for (it = alexIdeal.begin(); it!=alexIdeal.end(); it++)
    { prettifyPolynomial(*it); }
 
- return std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > >
-        (new std::list< NSVPolynomialRing< NLargeInteger > >(alexIdeal));
+ return std::unique_ptr< std::list< NSVPolynomialRing< Integer > > >
+        (new std::list< NSVPolynomialRing< Integer > >(alexIdeal));
 }
 
 namespace {
@@ -1427,10 +1427,10 @@ std::string embeddabilityString(const NTriangulation* tri,
     unsigned long totbcomp( cdat->components(CellularData::standard_boundary) + 
                             cdat->components(CellularData::ideal_boundary) );
 
-    if (tri->getNumberOfTetrahedra() == 0)
+    if (tri->countTetrahedra() == 0)
       return std::string("Manifold is empty.");
     
-   const NMarkedAbelianGroup* homol( cdat->markedGroup( 
+   const MarkedAbelianGroup* homol( cdat->markedGroup( 
         CellularData::GroupLocator(1, CellularData::coVariant, 
                                        CellularData::STD_coord, 0 )
         ) );
@@ -1441,7 +1441,7 @@ std::string embeddabilityString(const NTriangulation* tri,
 
         if (totbcomp==0) 
         { // no boundary : orientable
-            if (homol->getNumberOfInvariantFactors()==0) 
+            if (homol->countInvariantFactors()==0) 
             { // no torsion : no boundary, orientable
                 if (tri->knowsThreeSphere() && tri->isThreeSphere())
                     retval = "This manifold is S^3.";
@@ -1462,7 +1462,7 @@ std::string embeddabilityString(const NTriangulation* tri,
                 else
                     retval = "The torsion linking form is "
                         "of hyperbolic type.";
-                if (homol->getRank()==0)
+                if (homol->rank()==0)
                     retval += "  Manifold is a rational "
                         "homology sphere.";
             } // torsion : no boundary, orientable
@@ -1475,11 +1475,11 @@ std::string embeddabilityString(const NTriangulation* tri,
            CellularData::GroupLocator( 1, CellularData::coVariant,
            CellularData::STD_coord, 0) ) ) );
 
-         const NMarkedAbelianGroup bhomol( *cdat->markedGroup( 
+         const MarkedAbelianGroup bhomol( *cdat->markedGroup( 
           CellularData::GroupLocator( 1, CellularData::coVariant,
            CellularData::STD_BDRY_coord, 0) ) );
 
-         if (homol->getNumberOfInvariantFactors()==0)   
+         if (homol->countInvariantFactors()==0)   
           {
            // orientable with boundary, no torsion. We have no tests
            // so far for checking if it embeds in a homology 4-sphere
@@ -1490,28 +1490,28 @@ std::string embeddabilityString(const NTriangulation* tri,
            if (bhomolMap.isEpic())
             {
              retval = "Embeds in a homology 3-sphere as a ";
-             if (bhomol.getRank() == 2*totbcomp)
+             if (bhomol.rank() == 2*totbcomp)
               {
                if (totbcomp==1) retval += "knot complement.";
                else retval += "link complement.";
               }
              else
               {
-               if (bhomol.getRank() == 0) retval += "ball complement.";
+               if (bhomol.rank() == 0) retval += "ball complement.";
                else retval += "graph complement.";
               }
             }
-           else if (bhomolMap.getCokernel().getRank()==0)
+           else if (bhomolMap.cokernel().rank()==0)
             {
              retval = "Embeds in a rational homology 3-sphere as a ";
-             if (bhomol.getRank() == 2*totbcomp )
+             if (bhomol.rank() == 2*totbcomp )
               {
                if (totbcomp==1) retval += "knot complement.";
                else retval += "link complement.";
               }
              else
               {
-               if (bhomol.getRank() == 0) retval += "ball complement.";
+               if (bhomol.rank() == 0) retval += "ball complement.";
                else retval += "graph complement.";
               }
             } 
@@ -1525,7 +1525,7 @@ std::string embeddabilityString(const NTriangulation* tri,
              if (bhomolMap.isEpic())
               retval = "Embeds in homology 3-sphere "
                        "but not homology 4-sphere.";
-             else if (bhomolMap.getCokernel().getRank()==0)
+             else if (bhomolMap.cokernel().rank()==0)
                retval = "Embeds in rational homology 3-sphere but not "
                         "homology 4-sphere.";
              else retval = "Does not embed in homology 3-sphere, "
@@ -1536,7 +1536,7 @@ std::string embeddabilityString(const NTriangulation* tri,
              if (bhomolMap.isEpic())
               retval = "Embeds in homology 3-sphere.  "
                        "KK 2-tor condition satisfied.";
-             else if (bhomolMap.getCokernel().getRank()==0)
+             else if (bhomolMap.cokernel().rank()==0)
               retval = "Embeds in rational homology 3-sphere.  "
                        "KK 2-tor condition satisfied.";
              else 

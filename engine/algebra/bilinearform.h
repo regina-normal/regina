@@ -76,11 +76,11 @@ class REGINA_API NBilinearForm : public ShareableObject {
 	/**
 	 * Stores the pairing in SNF coordinates for all 3 groups. 
 	 */
-	NSparseGridRing< NLargeInteger > *reducedPairing; 
+	NSparseGridRing< Integer > *reducedPairing; 
 	/**
 	 * The defining pairing.
 	 */
-    NSparseGridRing< NLargeInteger > *unreducedPairing;
+    NSparseGridRing< Integer > *unreducedPairing;
 
 	/**
 	 * record of ldomain, rdomain and range
@@ -111,7 +111,7 @@ class REGINA_API NBilinearForm : public ShareableObject {
         NBilinearForm(const NMarkedAbelianGroup &ldomain, 
               const NMarkedAbelianGroup &rdomain, 
 		      const NMarkedAbelianGroup &range,   
-              const NSparseGridRing< NLargeInteger > &pairing);
+              const NSparseGridRing< Integer > &pairing);
 
         /**
          * Creates a clone of the given bilinear form.
@@ -133,29 +133,29 @@ class REGINA_API NBilinearForm : public ShareableObject {
          * @param rcc chain complex representative in rdomain
          * @returns chain complex representative in range. 
          */
-        std::vector<NLargeInteger> evalCC(std::vector<NLargeInteger> &lcc, 
-                                      std::vector<NLargeInteger> &rcc) const;
+        std::vector<Integer> evalCC(std::vector<Integer> &lcc, 
+                                      std::vector<Integer> &rcc) const;
 
     	/**
 	     * Access to the unreducedPairing map.
     	 */
-        const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & 
+        const std::map< NMultiIndex< unsigned long >, Integer* > & 
             unreducedMap() const;
 
         /**
          * Access to the reducedPairing map.  So if you wanted to iterate 
          * through the values of the bilinear form evaluated on the generators 
          * of the homology of ldomain and rdomain, you'd construct an iterator 
-         * to a std::map< NMultiIndex< unsigned long >, NLargeInteger* > type 
+         * to a std::map< NMultiIndex< unsigned long >, Integer* > type 
          * and iterate through reducedMap(). 
          */
-        const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & 
+        const std::map< NMultiIndex< unsigned long >, Integer* > & 
             reducedMap() const;
 
         /**
          * reducedPairing access as an NSparseGridRing
         */
-        const NSparseGridRing< NLargeInteger >* reducedSparseGrid() const;
+        const NSparseGridRing< Integer >* reducedSparseGrid() const;
  
         /**
          *  Given a bilinear form whose range is the integers, we can ask 
@@ -382,8 +382,8 @@ class REGINA_API NBilinearForm : public ShareableObject {
  *   factors of the order of A. 
  */
 REGINA_API void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
-std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppVec, 
-std::vector< std::pair< NLargeInteger, std::vector< unsigned long > > > &ppList,
+std::vector< std::pair< Integer, std::vector< unsigned long > > > &ppVec, 
+std::vector< std::pair< Integer, std::vector< unsigned long > > > &ppList,
 std::vector<unsigned long> &ttVec, 
 std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
 std::vector< NMatrixRing<NRational>* > &linkingFormPD );
@@ -392,9 +392,9 @@ std::vector< NMatrixRing<NRational>* > &linkingFormPD );
  * Function takes as input the output of computeTorsionLinkingFormInvariants, 
  * and returns various text human-readable strings that interpret the result.
  */
-REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger, 
+REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< Integer, 
                                      std::vector< unsigned long > > > &ppVec,
-        const std::vector< std::pair< NLargeInteger, 
+        const std::vector< std::pair< Integer, 
                            std::vector< unsigned long > > > &ppList,
         const std::vector<unsigned long> &ttVec, 
         const std::vector< std::pair< unsigned long, 
@@ -409,7 +409,7 @@ REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< NLargeInteger,
 
 /*@}*/
 
-inline REGINA_API const NSparseGridRing< NLargeInteger >* 
+inline REGINA_API const NSparseGridRing< Integer >* 
  NBilinearForm::reducedSparseGrid() const
 { return reducedPairing; }
 

@@ -792,7 +792,7 @@ private:
     std::map< HomGroupPresLocator, NHomGroupPresentation* > homGroupPresentations;
     // for alexander module chain complexes
     std::map< ChainComplexLocator, NMatrixRing< 
-        NSVPolynomialRing< NLargeInteger > >* > alexanderChainComplexes;
+        NSVPolynomialRing< Integer > >* > alexanderChainComplexes;
 
     /** 
      * numStandardCells = number of cells in the standard CW decomposition in 
@@ -1246,7 +1246,7 @@ public:
      * coefficient of t^i is the rank of the i-th homology group of the 
      * manifold. 
      */
-    NSVPolynomialRing< NLargeInteger > poincarePolynomial() const;
+    NSVPolynomialRing< Integer > poincarePolynomial() const;
 
     /**
      * If this is a 4-manifold, this routine returns the signature of the H_2 
@@ -1503,20 +1503,20 @@ public:
      * manifold is not 1. Presently only the C_2 -> C_1 -> C_0 part of the 
      * complex is defined, in dual coordinates, for 4-manifolds.
      */
-    const NMatrixRing< NSVPolynomialRing< NLargeInteger > >* 
+    const NMatrixRing< NSVPolynomialRing< Integer > >* 
           alexanderChainComplex( const ChainComplexLocator &a_desc ) const;
 
     /**
      *  Computes the presentation matrix for the 1-dimensional Alexander module. 
      *  Returns null if rank H1 != 1. 
      */
-    std::auto_ptr< NMatrixRing< NSVPolynomialRing< NLargeInteger > > > 
+    std::unique_ptr< NMatrixRing< NSVPolynomialRing< Integer > > > 
             alexanderPresentationMatrix() const;
 
     /**
      *  Computes the H1 Alexander ideal. Tries to reduce it as much as possible.
      */
-    std::auto_ptr< std::list< NSVPolynomialRing< NLargeInteger > > > 
+    std::unique_ptr< std::list< NSVPolynomialRing< Integer > > > 
         alexanderIdeal() const;
 
     /**
@@ -1620,11 +1620,11 @@ for (hpi = g.homGroupPresentations.begin();
   NHomGroupPresentation* >(hpi->first, clonePtr(hpi->second) ) );
  // alexanderChainComplexes
 std::map< ChainComplexLocator, NMatrixRing< 
-          NSVPolynomialRing< NLargeInteger > >* >::const_iterator amci;
+          NSVPolynomialRing< Integer > >* >::const_iterator amci;
 for (amci = g.alexanderChainComplexes.begin(); 
      amci != g.alexanderChainComplexes.end(); amci++)
  alexanderChainComplexes.insert( std::pair< ChainComplexLocator, 
-    NMatrixRing< NSVPolynomialRing< NLargeInteger > >* >
+    NMatrixRing< NSVPolynomialRing< Integer > >* >
   (amci->first, clonePtr(amci->second) ) );
 
 // numStandardCells[5], numDualCells[5], numMixCells[5],numStandardBdryCells[4], 
@@ -1717,7 +1717,7 @@ inline CellularData::~CellularData() {
     delete hi->second; 
  // alexanderChainComplexes
  std::map< ChainComplexLocator, NMatrixRing< 
-           NSVPolynomialRing< NLargeInteger > >* >::iterator amci;
+           NSVPolynomialRing< Integer > >* >::iterator amci;
  for (amci = alexanderChainComplexes.begin(); 
       amci != alexanderChainComplexes.end(); amci++)
   delete amci->second;

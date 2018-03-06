@@ -292,7 +292,7 @@ class NSVPolynomialRing {
  * Ideals in Laurent Polynomial Rings and their Application to Systems of 
  * Difference Equations.  AAECC 9, 271--291 (1999). 
  */
-REGINA_API void reduceIdeal(  std::list< NSVPolynomialRing< NLargeInteger > > 
+REGINA_API void reduceIdeal(  std::list< NSVPolynomialRing< Integer > > 
  &ideal, bool laurentPoly=true );
 /**
  * Given an element elt of NSVPolynomialRing, this algorithm checks to see if
@@ -301,27 +301,27 @@ REGINA_API void reduceIdeal(  std::list< NSVPolynomialRing< NLargeInteger > >
  * if you want to be in Z[t]. 
  */
 REGINA_API bool reduceByIdeal( const std::list< NSVPolynomialRing< 
-        NLargeInteger > > &ideal, 
-        NSVPolynomialRing< NLargeInteger > &elt, bool laurentPoly=true );
+        Integer > > &ideal, 
+        NSVPolynomialRing< Integer > &elt, bool laurentPoly=true );
 /**
  *  Some kind of ordering < on ideals.  Useful? 
  */
-REGINA_API bool ideal_comparison( const NSVPolynomialRing< NLargeInteger > 
- &first, const NSVPolynomialRing< NLargeInteger > &second);
+REGINA_API bool ideal_comparison( const NSVPolynomialRing< Integer > 
+ &first, const NSVPolynomialRing< Integer > &second);
 /**
  * Check if idealA is contained in idealB. Assumes you've run them through 
  * reduceIdeal -- that they have their Groebner basis. 
  */
 REGINA_API bool isSubIdeal( 
- const std::list< NSVPolynomialRing< NLargeInteger > > &idealA,  
- const std::list< NSVPolynomialRing< NLargeInteger > > &idealB );
+ const std::list< NSVPolynomialRing< Integer > > &idealA,  
+ const std::list< NSVPolynomialRing< Integer > > &idealB );
 
 /**
  * Checks to see if elements of the ideal can be expressed in terms of 
  * others, if so erases them. 
  */
 REGINA_API void elementaryReductions( 
- std::list< NSVPolynomialRing< NLargeInteger > > &ideal );
+ std::list< NSVPolynomialRing< Integer > > &ideal );
 
 /**
  *  Computes the GCD of elements in input, output is a vector such that the sum
@@ -329,11 +329,11 @@ REGINA_API void elementaryReductions(
  *  size of input.  Sum over i, input[i]*outputN[i] == 0 (for a non-trivial 
  *  outputN) Assumes input.size()>=1. If input.size()==1, outputN will be zero. 
  */
-REGINA_API NLargeInteger gcd( const std::vector< NLargeInteger > &input,
- std::vector< NLargeInteger > &outputG, std::vector< NLargeInteger > &outputN );
+REGINA_API Integer gcd( const std::vector< Integer > &input,
+ std::vector< Integer > &outputG, std::vector< Integer > &outputN );
 
 REGINA_API inline void prettifyPolynomial( 
- NSVPolynomialRing< NLargeInteger > &poly );
+ NSVPolynomialRing< Integer > &poly );
 
 /*@}*/
 
@@ -547,7 +547,7 @@ inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator *
   for (J=q.cof.begin(); J!=q.cof.end(); J++)
   {
    // lets multiply *I->second and *J->second
-   T* P(new NLargeInteger( (*I->second)*(*J->second) ) );
+   T* P(new Integer( (*I->second)*(*J->second) ) );
    std::pair< typename std::map< signed long, T* >::iterator, bool > res = 
     retval.cof.insert( std::pair< signed long, T* > (
     I->first+J->first, P ) );
@@ -557,7 +557,7 @@ inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator *
  //  now run through find zero coefficients and deallocate.
  typename std::map< signed long, T* >::iterator K;
  for (K = retval.cof.begin(); K!=retval.cof.end(); K++)
-   while ( (*K->second) == NLargeInteger(0) ) 
+   while ( (*K->second) == Integer(0) ) 
     { delete K->second; retval.cof.erase(K++);  
       if (K==retval.cof.end()) continue; }
  return retval;
@@ -638,7 +638,7 @@ inline NSVPolynomialRing<T> NSVPolynomialRing<T>::operator -
             new T(-(*j->second) ) ) );
        j++; }
     else
-     { T* temp(new NLargeInteger( (*i->second) - (*j->second) ) );
+     { T* temp(new Integer( (*i->second) - (*j->second) ) );
        if ( (*temp) != T::zero )
        retval.cof.insert( std::pair< signed long, T* >(i->first, temp ) );
 	else delete temp;
@@ -837,20 +837,20 @@ return retval;
  * is positive. 
  */
 REGINA_API inline void prettifyPolynomial( 
- NSVPolynomialRing< NLargeInteger > &poly )
+ NSVPolynomialRing< Integer > &poly )
 {
  // step 1: check if polynomial is zero
   if (poly.isZero()) return;
 
  // step 2: if not, multiply by t^k to ensure smallest degree term is t^0
-  std::pair<signed long, NLargeInteger> firstAPterm(poly.firstTerm());
-  std::pair<signed long, NLargeInteger> lastAPterm( poly.lastTerm() );
-  NSVPolynomialRing< NLargeInteger > trans 
-   ( NLargeInteger::one, -firstAPterm.first );  
+  std::pair<signed long, Integer> firstAPterm(poly.firstTerm());
+  std::pair<signed long, Integer> lastAPterm( poly.lastTerm() );
+  NSVPolynomialRing< Integer > trans 
+   ( Integer::one, -firstAPterm.first );  
   poly = poly * trans;
  // step 3: multiply by -1 if polynomial evaluates to negative at t=1. 
-  NLargeInteger evalone( poly.eval(NLargeInteger::one) );
-  if (evalone < 0) poly=(NSVPolynomialRing<NLargeInteger>(-1))*poly;
+  Integer evalone( poly.eval(Integer::one) );
+  if (evalone < 0) poly=(NSVPolynomialRing<Integer>(-1))*poly;
 }
 
 /** 

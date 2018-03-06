@@ -39,28 +39,28 @@ namespace regina {
 NBilinearForm::NBilinearForm(const NMarkedAbelianGroup &ldomain, 
                              const NMarkedAbelianGroup &rdomain,
 			                 const NMarkedAbelianGroup &range,   
-                             const NSparseGridRing< NLargeInteger > &pairing) : 
+                             const NSparseGridRing< Integer > &pairing) : 
 ShareableObject(), reducedPairing(NULL), unreducedPairing(NULL), 
 lDomain(ldomain), rDomain(rdomain), Range(range)
 {
- unreducedPairing = new NSparseGridRing< NLargeInteger > (pairing);
+ unreducedPairing = new NSparseGridRing< Integer > (pairing);
  // now we construct the reducedPairing
- reducedPairing = new NSparseGridRing< NLargeInteger > (3);
+ reducedPairing = new NSparseGridRing< Integer > (3);
 
  for (unsigned long i=0; i<ldomain.minNumberOfGenerators(); i++)
-  { std::vector< NLargeInteger > lv(ldomain.ccRep(i));
+  { std::vector< Integer > lv(ldomain.ccRep(i));
    for (unsigned long j=0; j<rdomain.minNumberOfGenerators(); j++)
-    { std::vector< NLargeInteger > rv(rdomain.ccRep(j));
-      std::vector< NLargeInteger > evalcc( range.getRankCC(), 
-                                           NLargeInteger::zero );
+    { std::vector< Integer > rv(rdomain.ccRep(j));
+      std::vector< Integer > evalcc( range.getRankCC(), 
+                                           Integer::zero );
       // sum_{ii, jj, k} lv[ii] * rv[jj] * pairing[ii,jj,k] e_k
       // is reducedPairing[i,j,k], record if non-zero.  
       std::map< NMultiIndex< unsigned long >, 
-                NLargeInteger* >::const_iterator I;
+                Integer* >::const_iterator I;
       for (I=pairing.getGrid().begin(); I!=pairing.getGrid().end(); I++)
 	  evalcc[ I->first.entry(2) ] += lv[ I->first.entry(0) ] * 
        rv[ I->first.entry(1) ] * (*(I->second));
-      std::vector< NLargeInteger > evalsnf( range.snfRep( evalcc ) );
+      std::vector< Integer > evalsnf( range.snfRep( evalcc ) );
 
       NMultiIndex< unsigned long > J(3); J[0] = i; J[1]=j;
       for (J[2]=0; J[2]<evalsnf.size(); J[2]++) 
@@ -86,22 +86,22 @@ NBilinearForm::~NBilinearForm()
 { if (reducedPairing) delete reducedPairing;
   if (unreducedPairing) delete unreducedPairing; }
 
-const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & 
+const std::map< NMultiIndex< unsigned long >, Integer* > & 
  NBilinearForm::unreducedMap() const
  { return unreducedPairing->getGrid(); }
 
-const std::map< NMultiIndex< unsigned long >, NLargeInteger* > & 
+const std::map< NMultiIndex< unsigned long >, Integer* > & 
  NBilinearForm::reducedMap() const
  { return reducedPairing->getGrid(); }
 
-std::vector<NLargeInteger> NBilinearForm::evalCC(
-    std::vector<NLargeInteger> &lcc, std::vector<NLargeInteger> &rcc) const
+std::vector<Integer> NBilinearForm::evalCC(
+    std::vector<Integer> &lcc, std::vector<Integer> &rcc) const
 {
- std::vector<NLargeInteger> retval(Range.getRankCC(), NLargeInteger::zero);
- static const std::vector<NLargeInteger> nullVec(0);
+ std::vector<Integer> retval(Range.getRankCC(), Integer::zero);
+ static const std::vector<Integer> nullVec(0);
  if ( (lcc.size() != lDomain.getRankCC()) || 
       (rcc.size() != rDomain.getRankCC()) ) return nullVec;
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
  for (J = unreducedPairing->getGrid().begin(); 
       J!=unreducedPairing->getGrid().end(); J++)
    retval[ J->first.entry(2) ] += lcc[J->first.entry(0)]*
@@ -111,11 +111,11 @@ std::vector<NLargeInteger> NBilinearForm::evalCC(
 
 unsigned long NBilinearForm::rank() const
 {
- if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, NLargeInteger::zero))) 
+ if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, Integer::zero))) 
     return 0;
  NMatrixInt cM( lDomain.getRank(), rDomain.getRank() );
 
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator i;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
@@ -129,7 +129,7 @@ unsigned long NBilinearForm::rank() const
  metricalSmithNormalForm(cM);
  unsigned long rk=0;
  for (unsigned long i=0; i<cM.rows(); i++)
-  if (cM.entry(i,i) != NLargeInteger::zero) rk++;
+  if (cM.entry(i,i) != Integer::zero) rk++;
 
  return rk;
 }
@@ -137,14 +137,14 @@ unsigned long NBilinearForm::rank() const
 long int NBilinearForm::zFormSignature() const 
 {
  if (!isSymmetric()) return 0; 
- if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, NLargeInteger::zero))) 
+ if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, Integer::zero))) 
      return 0;
  // ldomain == rdomain, form symmetric, range == Z.
  // so reducedpairing is nxnx1 -- think of it as a matrix M, computed Det(tI-M)
- NMatrixRing< NSVPolynomialRing< NLargeInteger > > cM( lDomain.getRank(), 
+ NMatrixRing< NSVPolynomialRing< Integer > > cM( lDomain.getRank(), 
                                                        rDomain.getRank() );
  // iterate through reducedPairing, insert into cM
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator i;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
@@ -152,12 +152,12 @@ long int NBilinearForm::zFormSignature() const
        (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
   cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
             i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
-            NSVPolynomialRing< NLargeInteger >(-(*i->second), 0); }
+            NSVPolynomialRing< Integer >(-(*i->second), 0); }
  for (unsigned long j=0; j<cM.rows(); j++) cM.entry(j,j) += 
-        NSVPolynomialRing< NLargeInteger >::pvar;
+        NSVPolynomialRing< Integer >::pvar;
  // grab an adjoint, get its defining matrix, compute char poly, use Descartes
  // to get number of pos - neg roots. 
- NSVPolynomialRing< NLargeInteger > charPoly(cM.det());
+ NSVPolynomialRing< Integer > charPoly(cM.det());
  return charPoly.descartesNo();
 }
 
@@ -165,7 +165,7 @@ std::pair< bool, int > NBilinearForm::zFormType() const
 {
  NMatrixInt cM( lDomain.getRank(), rDomain.getRank() );
 
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator i;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
@@ -193,9 +193,9 @@ const std::string& NBilinearForm::kkTorRank() const
 {
  if (!KKinvariantsComputed)
   {
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppVec;
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
@@ -218,9 +218,9 @@ const std::string& NBilinearForm::kkTorSigma() const
 {
  if (!KKinvariantsComputed)
   {
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppVec;
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
@@ -243,9 +243,9 @@ const std::string& NBilinearForm::kkTorLegendre() const
 {
  if (!KKinvariantsComputed)
   {
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppVec;
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
@@ -268,9 +268,9 @@ bool NBilinearForm::kkIsSplit() const
 {
  if (!KKinvariantsComputed)
   {
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppVec;
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
@@ -293,9 +293,9 @@ bool NBilinearForm::kkIsHyperbolic() const
 {
  if (!KKinvariantsComputed)
   {
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppVec;
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
@@ -318,9 +318,9 @@ bool NBilinearForm::kkTwoTor() const
 {
  if (!KKinvariantsComputed)
   {
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppVec;
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
@@ -344,9 +344,9 @@ NMarkedAbelianGroup NBilinearForm::image() const
 { 
  // lets compute the image based off of the reducedpairing. 
  NMarkedAbelianGroup dom(lDomain.minNumberOfGenerators()*
-                         rDomain.minNumberOfGenerators(), NLargeInteger::zero );
+                         rDomain.minNumberOfGenerators(), Integer::zero );
  NMatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
  for (J = reducedPairing->getGrid().begin(); 
       J!=reducedPairing->getGrid().end(); J++)
    mat.entry( J->first.entry(2), J->first.entry(0)*
@@ -366,14 +366,14 @@ bool NBilinearForm::isSymmetric() const
 {
  if (!lDomain.equalTo(rDomain)) return 0;
  // now we check symmetry.... we'll use the reduced matrix for this...
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
 
  for (J = reducedPairing->getGrid().begin(); 
       J!=reducedPairing->getGrid().end(); J++)
   { 
   NMultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
-  const NLargeInteger* t( reducedPairing->getEntry(x));
+  const Integer* t( reducedPairing->getEntry(x));
   if (!t) return false;
   if ( (*J->second) != (*t) ) return false;
   }
@@ -387,19 +387,19 @@ bool NBilinearForm::isAntiSymmetric() const
 {
 if (!lDomain.equalTo(rDomain)) return 0;
 // now we check symmetry.... we'll use the reduced matrix for this...
-std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
 
 for (J = reducedPairing->getGrid().begin(); 
      J!=reducedPairing->getGrid().end(); J++)
   { 
   NMultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
-  const NLargeInteger* t( reducedPairing->getEntry(x));
+  const Integer* t( reducedPairing->getEntry(x));
   if (!t) return false;
   if ( x[2] < lDomain.getNumberOfInvariantFactors() ) 
    { if ( ((*J->second) + (*t)) % lDomain.getInvariantFactor(x[2]) != 
-     NLargeInteger::zero ) return false; }
-  else if ( (*J->second) + (*t) != NLargeInteger::zero ) return false;
+     Integer::zero ) return false; }
+  else if ( (*J->second) + (*t) != Integer::zero ) return false;
   }
 return true;
 }
@@ -417,11 +417,11 @@ NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
     std::endl; exit(1); }
  #endif
  // compute the new unreducedPairing
- NSparseGridRing< NLargeInteger > newPairing(3);
+ NSparseGridRing< Integer > newPairing(3);
  // 0th index is lDomain SNF coord, 
  // 1st index rDomain SNF coord, 
  // 3rd index Range SNF coord
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
 
  for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
   for (J = unreducedPairing->getGrid().begin(); 
@@ -449,8 +449,8 @@ NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
                std::endl; exit(1); }
  #endif
  // we need to compute the new unreducedPairing
- NSparseGridRing< NLargeInteger > newPairing(3);
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ NSparseGridRing< Integer > newPairing(3);
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
 
  for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
   for (J = unreducedPairing->getGrid().begin(); 
@@ -475,9 +475,9 @@ NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
                std::endl; exit(1); }
  #endif
 
- NSparseGridRing< NLargeInteger > newPairing(3);
+ NSparseGridRing< Integer > newPairing(3);
 
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator J;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
 
  for (J = unreducedPairing->getGrid().begin(); 
       J!=unreducedPairing->getGrid().end(); J++)
@@ -509,13 +509,13 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
       if ( j < Range.getNumberOfInvariantFactors() ) 
        N.entry( k, k ) = rDomain.getInvariantFactor( i ).gcd( 
                          Range.getInvariantFactor( j ) );
-      else N.entry( k, k ) = NLargeInteger::one;
+      else N.entry( k, k ) = Integer::one;
     } 
     else
     { 
      if ( j < Range.getNumberOfInvariantFactors() ) 
         N.entry( k, k ) = Range.getInvariantFactor( j );
-     else N.entry( k, k ) = NLargeInteger::zero;
+     else N.entry( k, k ) = Integer::zero;
     } 
   }
  NMarkedAbelianGroup HOM(M,N);
@@ -524,16 +524,16 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
  NMatrixInt adjmat( 
     rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),
     lDomain.minNumberOfGenerators() );
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator I;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator I;
  for (I=reducedPairing->getGrid().begin(); 
       I!=reducedPairing->getGrid().end(); I++)
   {
    if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) && 
         ( I->first.entry(1) < rDomain.getNumberOfInvariantFactors() ) )
     {
-     NLargeInteger P( rDomain.getInvariantFactor(I->first.entry(1)) );
-     NLargeInteger Q( Range.getInvariantFactor(I->first.entry(2)) );
-     NLargeInteger divBy( Q.divExact( P.gcd(Q) ) ); 
+     Integer P( rDomain.getInvariantFactor(I->first.entry(1)) );
+     Integer Q( Range.getInvariantFactor(I->first.entry(2)) );
+     Integer divBy( Q.divExact( P.gcd(Q) ) ); 
      adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + 
      I->first.entry(2), I->first.entry(0) ) = I->second->divExact( divBy ); 
     } 
@@ -575,13 +575,13 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
       if ( j < Range.getNumberOfInvariantFactors() ) 
        N.entry( k, k ) = lDomain.getInvariantFactor( i ).gcd( 
                          Range.getInvariantFactor( j ) );
-      else N.entry( k, k ) = NLargeInteger::one; 
+      else N.entry( k, k ) = Integer::one; 
      } 
     else
      { 
       if ( j < Range.getNumberOfInvariantFactors() ) 
        N.entry( k, k ) = Range.getInvariantFactor( j );
-      else N.entry( k, k ) = NLargeInteger::zero; 
+      else N.entry( k, k ) = Integer::zero; 
      } 
    }
  NMarkedAbelianGroup HOM(M,N);
@@ -589,16 +589,16 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
  // step 2: find matrix B --> Hom(A,C)
  NMatrixInt adjmat( lDomain.minNumberOfGenerators()*
              Range.minNumberOfGenerators(), rDomain.minNumberOfGenerators() );
- std::map< NMultiIndex< unsigned long >, NLargeInteger* >::const_iterator I;
+ std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator I;
  for (I=reducedPairing->getGrid().begin(); 
       I!=reducedPairing->getGrid().end(); I++)
   {
    if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) &&
         ( I->first.entry(0) < lDomain.getNumberOfInvariantFactors() ) )
    {
-    NLargeInteger P( lDomain.getInvariantFactor( I->first.entry(0) ) );
-    NLargeInteger Q( Range.getInvariantFactor( I->first.entry(2) ) );
-    NLargeInteger divBy( Q.divExact( P.gcd(Q) ) );
+    Integer P( lDomain.getInvariantFactor( I->first.entry(0) ) );
+    Integer Q( Range.getInvariantFactor( I->first.entry(2) ) );
+    Integer divBy( Q.divExact( P.gcd(Q) ) );
     adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + 
      I->first.entry(2), I->first.entry(1) ) = I->second->divExact( divBy );
    }
@@ -651,21 +651,21 @@ void NBilinearForm::writeTextLong(std::ostream& out) const
  *                form. 
  */
 void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
-	std::vector< std::pair< NLargeInteger, 
+	std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > &ppVec, 
-    std::vector< std::pair< NLargeInteger, 
+    std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > &ppList, 
     std::vector<unsigned long> &ttVec, 
     std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
     std::vector< NMatrixRing<NRational>* > &linkingFormPD ) 
 {
-    NLargeInteger tN,tD,tR;
+    Integer tN,tD,tR;
     // number of torsion generators:
     unsigned long niv(intP.ldomain().getNumberOfInvariantFactors());
     // for holding prime decompositions.:
-    std::vector<std::pair<NLargeInteger, unsigned long> > tFac;
-    NLargeInteger tI;
-    std::vector< NLargeInteger > tV; // temporary vector for dual cc vectors.
+    std::vector<std::pair<Integer, unsigned long> > tFac;
+    Integer tI;
+    std::vector< Integer > tV; // temporary vector for dual cc vectors.
 
     // step 1: go through H1 of the manifold, take prime power decomposition
     //            of each summand.  building primePowerH1Torsion vector and
@@ -677,9 +677,9 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     // 1) pPrList is the list of prime powers, (p,n) 
     // 2) PPList  is p^n
     // 3) pvList  is the CC coordinates in H1.  Of the generator of Z_{p^n}
-    std::vector< std::pair<NLargeInteger, unsigned long> > pPrList; 
-    std::vector< NLargeInteger > PPList;
-    std::vector< std::vector<NLargeInteger> > pvList;
+    std::vector< std::pair<Integer, unsigned long> > pPrList; 
+    std::vector< Integer > PPList;
+    std::vector< std::vector<Integer> > pvList;
     unsigned long i, j, k, l;
 
     for (i=0; i<niv; i++) {
@@ -687,7 +687,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
         tFac = NPrimes::primePowerDecomp(tI); 
         for (j=0; j<tFac.size(); j++) {
             pPrList.push_back(tFac[j]);
-            NLargeInteger fac1, fac2, fac1i, fac2i;
+            Integer fac1, fac2, fac1i, fac2i;
             fac1 = tFac[j].first; fac1.raiseToPower(tFac[j].second);
             fac2 = tI; fac2.divByExact(fac1); 
             fac2.gcdWithCoeffs( fac1, fac1i, fac2i ); 
@@ -710,7 +710,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 
     typedef std::vector<std::pair<unsigned long, 
                                   unsigned long> > IndexingPowerVector;
-    typedef std::pair<NLargeInteger, IndexingPowerVector> IndexingPrimePair;
+    typedef std::pair<Integer, IndexingPowerVector> IndexingPrimePair;
     typedef std::list<IndexingPrimePair> IndexingList;
     IndexingList indexing;
     // indexing[i] is the i-th prime in increasing order, the first bit is
@@ -777,7 +777,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     ppList.resize(indexingSize); // one entry for every prime divisor of |H1|
     linkingFormPD.resize(indexingSize);
     // find the denominator of all our NRationals in our linking form matrices
-    NLargeInteger DenOm( (intP.range().getNumberOfInvariantFactors()==0) ? 1 : 
+    Integer DenOm( (intP.range().getNumberOfInvariantFactors()==0) ? 1 : 
         intP.range().getInvariantFactor(0) ); // only one invariant factor in 
                               // the range unless the torsion group is trivial
     for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) 
@@ -792,13 +792,13 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 
      for (j=0; j<it1->second.size(); j++) 
       { // need pvList[ appropriate index ]
-       std::vector< NLargeInteger > ccL( pvList[ it1->second[j].second ] );
+       std::vector< Integer > ccL( pvList[ it1->second[j].second ] );
        
        for (k=0; k<it1->second.size(); k++)
         { // again need pvList [ appropriate index ]
-         std::vector< NLargeInteger > ccR( pvList[ it1->second[k].second ] );
-         NLargeInteger num( intP.evalCC(ccL, ccR)[0] % DenOm );
-         NLargeInteger G( num.gcd(DenOm) );
+         std::vector< Integer > ccR( pvList[ it1->second[k].second ] );
+         Integer num( intP.evalCC(ccL, ccR)[0] % DenOm );
+         Integer G( num.gcd(DenOm) );
          linkingFormPD[i]->entry(j,k) = NRational( num / G, DenOm / G );
          // perhaps reduce this NRational? 
         } 
@@ -820,7 +820,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 
     // step 1: rank vectors (done)
     //
-    // this will be a std::vector< std::pair< NLargeInteger,
+    // this will be a std::vector< std::pair< Integer,
     //                                        std::vector< unsigned long > > >
     // rankv[i].first is the prime, and rankv[i].second is the vector which
     // lists the ranks
@@ -828,12 +828,12 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     // there are no copies of Z_3, one copy of Z_9, no copies of Z_27 but two
     // copies of Z_{3^4}, etc.
 
-    // std::vector< std::pair< NLargeInteger,
+    // std::vector< std::pair< Integer,
     //     std::vector<std::pair<unsigned long, unsigned long> > > > indexing;
     //                         prime        , list of (exponents, index)
 
     ppVec.resize(indexingSize);
-    // std::vector< std::pair< NLargeInteger,
+    // std::vector< std::pair< Integer,
     //     std::vector< unsigned long > > > ppVec(indexing.size());
     // vector which lists the primes and the number of each power...
     for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) {
@@ -849,11 +849,11 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 
     // step 2: KK 2-torsion invariant
     // decide on if there is 2-torsion...
-    NLargeInteger twoPow;
+    Integer twoPow;
     static const NRational pi = NRational(
-                NLargeInteger("314159265358979323846264338327950288"),
-                NLargeInteger("100000000000000000000000000000000000") );
-    std::vector< NLargeInteger > groupV;
+                Integer("314159265358979323846264338327950288"),
+                Integer("100000000000000000000000000000000000") );
+    std::vector< Integer > groupV;
     bool notatend;
     NRational tSum;
 
@@ -862,21 +862,21 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     long double tLD;
     long double xlD, ylD;
 
-    std::vector< NLargeInteger > ProperPrimePower;
+    std::vector< Integer > ProperPrimePower;
 
     if (ppList.size() > 0)
-        if (ppList[0].first == NLargeInteger(2)) { 
+        if (ppList[0].first == Integer(2)) { 
             // there is 2-torsion. now we put together the sigma vector
             // twoTorSigmaV
             // first initialize the length of twoTorSigmaV
             ttVec.resize(ppVec[0].second.size());
 
             groupV.resize(ppList[0].second.size(),
-                NLargeInteger("0") );
+                Integer("0") );
 
             ProperPrimePower.resize( ppList[0].second.size() );
             for (i=0; i<ProperPrimePower.size(); i++) {
-                ProperPrimePower[i] = NLargeInteger(2);
+                ProperPrimePower[i] = Integer(2);
                 ProperPrimePower[i].raiseToPower(ppList[0].
                     second[i] );
             }
@@ -892,7 +892,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                 // the idea will be to have a start vector (0,0,...,0) and then
                 // increment it until at the end vector.  For this purpose it
                 // makes more sense to use the
-                // std::vector< std::pair< NLargeInteger,
+                // std::vector< std::pair< Integer,
                 //     std::vector<unsigned long> > > ppList;
                 // as it's easier to work with.
                 // ppList[0].first == 2
@@ -900,7 +900,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                 // ppList[0].second which is an increasing list
                 // of the powers of 2, ie: 2^j...
 
-                twoPow = NLargeInteger(2);
+                twoPow = Integer(2);
                 twoPow.raiseToPower(i+1);
 
                 xlD=0.0;
@@ -937,7 +937,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                     incrun=true; // tells while loop to increment at incind
 
                     while (incrun) {
-                        groupV[incind] += NLargeInteger::one;
+                        groupV[incind] += Integer::one;
                         groupV[incind] %= ProperPrimePower[incind];
                         if (groupV[incind] == 0) {
                             incind++;
@@ -981,7 +981,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     // step 3: Seifert odd p-torsion legendre symbol invariant (done)
     //           to do this I need to add a determinant to NMatrixRing class
     //           this invariant will be expressed as a
-    //           std::vector< std::pair< NLargeInteger, std::vector< int > > >
+    //           std::vector< std::pair< Integer, std::vector< int > > >
     //           storing the odd prime, list of Legendre symbols -1, 0, 1.
     //           one for each quotient up to p^k where k is the largest order of
     //           p in the torsion subgroup.
@@ -989,7 +989,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     unsigned long starti=0;
 
     if (ppVec.size() > 0)
-        if (ppVec[0].first == NLargeInteger(2))
+        if (ppVec[0].first == Integer(2))
             starti=1;
     // this ensures we skip the 2-torsion
     std::vector<int> tempa;
@@ -1001,7 +1001,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
         curri=0;
 
         // now we cut out the appropriate section of linkingFormPD[i]
-        // std::vector< std::pair< NLargeInteger,
+        // std::vector< std::pair< Integer,
         //     std::vector< unsigned long > > > ppVec(indexing.size());
         // starting at curri ending at ppVec[i].second[j]
 
@@ -1043,9 +1043,9 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
  *
  */
 void readTeaLeavesTLF(
-        const std::vector< std::pair< NLargeInteger, 
+        const std::vector< std::pair< Integer, 
                            std::vector< unsigned long > > > &ppVec,
-        const std::vector< std::pair< NLargeInteger, 
+        const std::vector< std::pair< Integer, 
                            std::vector< unsigned long > > > &ppList,
         const std::vector<unsigned long> &ttVec, 
         const std::vector< std::pair< unsigned long, 
@@ -1060,7 +1060,7 @@ void readTeaLeavesTLF(
         std::string* torsionLegendreString )
 {
     unsigned long starti, i, j; 
-    NLargeInteger tN, tD, tR, tI;
+    Integer tN, tD, tR, tI;
 
     // step 4: kk test for: split, hyperbolic, and the embeddability
     //           2^k-torsion condition.
@@ -1071,7 +1071,7 @@ void readTeaLeavesTLF(
     
     starti=0;
     if (ppVec.size() > 0)
-        if (ppVec[0].first == NLargeInteger(2))
+        if (ppVec[0].first == Integer(2))
             starti=1;
 
     for (i=0; i<ppVec.size(); i++)
@@ -1081,10 +1081,10 @@ void readTeaLeavesTLF(
     if (torsionLinkingFormIsSplit) {
         for (i=0; i<ptVec.size(); i++)
             for (j=0; j<ptVec[i].second.size(); j++) {
-                if ( ( (NLargeInteger(ppVec[i+starti].second[j])*
+                if ( ( (Integer(ppVec[i+starti].second[j])*
                         (ppVec[i+starti].first -
-                        NLargeInteger::one))/NLargeInteger(4) ) %
-                        NLargeInteger(2) == 0 ) {
+                        Integer::one))/Integer(4) ) %
+                        Integer(2) == 0 ) {
                     if (ptVec[i].second[j] != 1)
                         (*torsionLinkingFormIsSplit)=false;
                 } // does this know how to deal with .second[j]==0??
@@ -1116,7 +1116,7 @@ void readTeaLeavesTLF(
     if (starti==1) { // starti==1 means we have 2-torsion.  
         // for each k need to compute 2^{k-1}*form(x,x) on all
         // elements of order 2^k, check to see if it is zero.
-        // std::vector< std::pair< NLargeInteger,
+        // std::vector< std::pair< Integer,
         //     std::vector<unsigned long> > > ppList;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
         //std::vector< NMatrixRing<NRational>* > linkingFormPD;
@@ -1124,7 +1124,7 @@ void readTeaLeavesTLF(
             // run down diagonal of linkingFormPD[0], for each (i,i) entry
             // multiply it by 2^{ppList[0].second[i]-1} check if
             // congruent to zero. if not, trigger flag.
-            tI = NLargeInteger("2");
+            tI = Integer("2");
             tI.raiseToPower(ppList[0].second[i]-1);
             tRat = NRational(tI) * linkingFormPD[0]->entry(i,i);
             tN = tRat.getNumerator();
@@ -1141,7 +1141,7 @@ void readTeaLeavesTLF(
             torsionRankString->append("(");
             for (j=0; j<ppVec[i].second.size(); j++) {
                 torsionRankString->append(
-                    NLargeInteger(ppVec[i].second[j]).stringValue() );
+                    Integer(ppVec[i].second[j]).stringValue() );
                 if (j < ppVec[i].second.size()-1)
                     torsionRankString->append(" ");
             }
@@ -1175,7 +1175,7 @@ void readTeaLeavesTLF(
             torsionLegendreString->append(tempS);           
             torsionLegendreString->append("(");
             for (j=0; j<ptVec[i].second.size(); j++) {
-                torsionLegendreString->append( NLargeInteger(
+                torsionLegendreString->append( Integer(
                     ptVec[i].second[j]).stringValue());
                 if (j<ptVec[i].second.size()-1)
                     torsionLegendreString->append(" ");
