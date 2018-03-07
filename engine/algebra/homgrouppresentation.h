@@ -371,7 +371,7 @@ class REGINA_API HomGroupPresentation :
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
- * \deprecated The class NHomGroupPresentation has now been renamed to
+ * \deprecated The class HomGroupPresentation has now been renamed to
  * HomGroupPresentation.
  */
 [[deprecated]] typedef HomGroupPresentation NHomGroupPresentation;

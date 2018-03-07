@@ -66,7 +66,7 @@ for (homology_coordinate_system i=first_coord; i != last_implemented_coord; ++i)
   {
    const MatrixInt* A = integerChainComplex( ChainComplexLocator( j, i) );
    const MatrixInt* B = integerChainComplex( ChainComplexLocator( j+1, i) );
-   std::auto_ptr< NMatrixRing<NLargeInteger> > prod = (*A)*(*B);
+   std::auto_ptr< MatrixRing<NLargeInteger> > prod = (*A)*(*B);
    if (!prod->isZero()) return false;
   }
  }
@@ -92,8 +92,8 @@ for (unsigned long i=1; i<smCM.size(); i++)
  {
   if ( (mCC[i]->columns() != smCM[i]->rows()) || 
        (smCM[i-1]->columns() != sCC[i]->rows()) ) return false;
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*smCM[i]);
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*smCM[i-1])*(*sCC[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*smCM[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod2 = (*smCM[i-1])*(*sCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify mCC[i]*dmCM[i] == dmCM[i-1]*dCC[i]
@@ -102,8 +102,8 @@ for (unsigned long i=1; i<dmCM.size(); i++)
  {
   if ( (mCC[i]->columns() != dmCM[i]->rows()) || 
        (dmCM[i-1]->columns() != dCC[i]->rows()) ) return false;
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*dmCM[i]);
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*dmCM[i-1])*(*dCC[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*dmCM[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod2 = (*dmCM[i-1])*(*dCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify srCC[i]*strCM[i] == strCM[i-1]*sCC[i]
@@ -112,8 +112,8 @@ for (unsigned long i=1; i<strCM.size(); i++)
  { // srCC 
   if ( (srCC[i]->columns() != strCM[i]->rows()) || 
        (strCM[i-1]->columns() != sCC[i]->rows()) ) return false;
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*srCC[i])*(*strCM[i]);
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*strCM[i-1])*(*sCC[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod1 = (*srCC[i])*(*strCM[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod2 = (*strCM[i-1])*(*sCC[i]);
   if ( (*prod1) != (*prod2) ) return false;
  }
 // verify sCC[i]*sbiCM[i] == sbiCM[i-1]*sbCC[i]
@@ -122,8 +122,8 @@ for (unsigned long i=1; i<sbiCM.size(); i++)
  {
   if ( (sCC[i]->columns() != sbiCM[i]->rows()) || 
        (sbiCM[i-1]->columns() != sbCC[i]->rows()) ) return false;
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1 = (*sCC[i])*(*sbiCM[i]);
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2 = (*sbiCM[i-1])*(*sbCC[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod1 = (*sCC[i])*(*sbiCM[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod2 = (*sbiCM[i-1])*(*sbCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify sbCC[i]*schCM[i] == (-1)*schCM[i-1]*srCC[i+1]
@@ -132,8 +132,8 @@ for (unsigned long i=1; i<schCM.size(); i++)
  { 
   if ( (sbCC[i]->columns() != schCM[i]->rows()) || 
        (schCM[i-1]->columns() != srCC[i+1]->rows()) ) return false;
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod1= (*sbCC[i])*(*schCM[i]);
-  std::auto_ptr< NMatrixRing<NLargeInteger> > prod2= (*schCM[i-1])*(*srCC[i+1]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod1= (*sbCC[i])*(*schCM[i]);
+  std::auto_ptr< MatrixRing<NLargeInteger> > prod2= (*schCM[i-1])*(*srCC[i+1]);
   for (unsigned long j=0; j<prod1->rows(); j++) 
    for (unsigned long k=0; k<prod1->columns(); k++)
 	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false; 
@@ -178,8 +178,8 @@ for (unsigned long i=0; i<aDim; i++)
         STD_BDRY_coord : STD_REL_BDRY_coord), coef);
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
-  const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
-  const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
+  const HomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
+  const HomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap)->isZero()) flag=1;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) 
     flag = 2; 
@@ -201,8 +201,8 @@ for (unsigned long i=1; i<=aDim; i++)
     (var == coVariant ? STD_REL_BDRY_coord : STD_coord), coef );
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
-  const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
-  const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
+  const HomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
+  const HomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap)->isZero()) flag=5;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag=6;
  } 
@@ -219,8 +219,8 @@ for (unsigned long i=1; i<=aDim; i++)
      (var == coVariant ? STD_coord : STD_BDRY_coord), coef );
   HomLocator secondMapLoc( middleG, rightG );
   HomLocator firstMapLoc( leftG, middleG );
-  const NHomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
-  const NHomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
+  const HomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
+  const HomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap)->isZero()) flag=7;
   if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag=8;
   if ( (i == aDim) && (var == coVariant) ) if (!firstMap.isMonic()) flag=9; 
@@ -245,7 +245,7 @@ for (unsigned long i=0; i <= aDim; i++)
  {
   GroupLocator homoL( i, coVariant, DUAL_coord, coeff );
   GroupLocator cohomoL( aDim-i, contraVariant, STD_REL_BDRY_coord, coeff);
-  const NHomMarkedAbelianGroup duality( 
+  const HomMarkedAbelianGroup duality( 
      *homGroup( HomLocator(homoL, cohomoL) ) );
   if (!duality.isIsomorphism()) return false;
  }
@@ -254,7 +254,7 @@ for (unsigned long i=0; i <= aDim; i++)
  {
   GroupLocator cohomoL( i, contraVariant, DUAL_coord, coeff );
   GroupLocator homoL( aDim-i, coVariant, STD_REL_BDRY_coord, coeff);
-  const NHomMarkedAbelianGroup duality( 
+  const HomMarkedAbelianGroup duality( 
      *homGroup( HomLocator(cohomoL, homoL) ) );
   if (!duality.isIsomorphism()) return false;
  }
@@ -278,9 +278,9 @@ for (unsigned long i=1; i<=(aDim/2); i++)
   GroupLocator RDom( aDim-i, coVariant, STD_REL_BDRY_coord, coeff );
   FormLocator intFloc( intersectionForm, LDom, RDom );
   const NBilinearForm intF( *bilinearForm( intFloc ) );   
-  NHomMarkedAbelianGroup lHom(intF.leftAdjoint());
+  HomMarkedAbelianGroup lHom(intF.leftAdjoint());
   if (!lHom.isEpic()) retval=false;
-  NMarkedAbelianGroup ker(lHom.getKernel()); 
+  MarkedAbelianGroup ker(lHom.getKernel()); 
   // todo: add test to check kernel is the torsion subgroup
   //       in non-orientable case ker is trivial.
   if (coeff == 2) { if (!ker.isTrivial()) retval=false; }

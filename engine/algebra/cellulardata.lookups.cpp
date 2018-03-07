@@ -52,13 +52,13 @@ unsigned long CellularData::nicIxLookup(const Simplex<3>* tet) const
 unsigned long CellularData::nicIxLookup(const Face<4,0>* vrt) const
 { return lower_bound( nicIx[0].begin(), nicIx[0].end(), 
   tri4->vertexIndex(vrt) ) - nicIx[0].begin(); }
-unsigned long CellularData::nicIxLookup(const Dim4Edge* edg) const
+unsigned long CellularData::nicIxLookup(const Face<4,1>* edg) const
 { return lower_bound( nicIx[1].begin(), nicIx[1].end(), 
   tri4->edgeIndex(edg) ) - nicIx[1].begin(); }
 unsigned long CellularData::nicIxLookup(const Dim4Triangle* fac) const
 { return lower_bound( nicIx[2].begin(), nicIx[2].end(), 
   tri4->triangleIndex(fac) ) - nicIx[2].begin(); }
-unsigned long CellularData::nicIxLookup(const Dim4Tetrahedron* tet) const
+unsigned long CellularData::nicIxLookup(const Face<4,3>* tet) const
 { return lower_bound( nicIx[3].begin(), nicIx[3].end(), 
   tri4->tetrahedronIndex(tet) ) - nicIx[3].begin(); }
 unsigned long CellularData::nicIxLookup(const Simplex<4>* pen) const
@@ -79,7 +79,7 @@ unsigned long CellularData::icIxLookup(const Simplex<3>* tet,
   4*tri3->tetrahedronIndex(tet)+i ) - icIx[2].begin(); }
 
 // ideal vertices
-unsigned long CellularData::icIxLookup(const Dim4Edge* edg, unsigned long i) 
+unsigned long CellularData::icIxLookup(const Face<4,1>* edg, unsigned long i) 
  const
 { return lower_bound( icIx[0].begin(), icIx[0].end(), 
   2*tri4->edgeIndex(edg) + i) - icIx[0].begin(); }
@@ -88,7 +88,7 @@ unsigned long CellularData::icIxLookup(const Dim4Triangle* fac,
  unsigned long i) const
 { return lower_bound( icIx[1].begin(), icIx[1].end(), 
   3*tri4->triangleIndex(fac) + i) - icIx[1].begin(); }
-unsigned long CellularData::icIxLookup(const Dim4Tetrahedron* tet, 
+unsigned long CellularData::icIxLookup(const Face<4,3>* tet, 
  unsigned long i) const
 { return lower_bound( icIx[2].begin(), icIx[2].end(), 
   4*tri4->tetrahedronIndex(tet) + i) - icIx[2].begin(); }
@@ -113,13 +113,13 @@ unsigned long CellularData::dcIxLookup(const Face<3,0>* vrt) const
 unsigned long CellularData::dcIxLookup(const Simplex<4>* pen) const 
 { return lower_bound( dcIx[0].begin(), dcIx[0].end(), 
   tri4->pentachoronIndex(pen) ) - dcIx[0].begin(); }
-unsigned long CellularData::dcIxLookup(const Dim4Tetrahedron* tet) const 
+unsigned long CellularData::dcIxLookup(const Face<4,3>* tet) const 
 { return lower_bound( dcIx[1].begin(), dcIx[1].end(), 
   tri4->tetrahedronIndex(tet) ) - dcIx[1].begin(); }
 unsigned long CellularData::dcIxLookup(const Dim4Triangle* fac) const 
 { return lower_bound( dcIx[2].begin(), dcIx[2].end(), 
   tri4->triangleIndex(fac) ) - dcIx[2].begin(); }
-unsigned long CellularData::dcIxLookup(const Dim4Edge* edg) const 
+unsigned long CellularData::dcIxLookup(const Face<4,1>* edg) const 
 { return lower_bound( dcIx[3].begin(), dcIx[3].end(), 
   tri4->edgeIndex(edg) ) - dcIx[3].begin(); }
 unsigned long CellularData::dcIxLookup(const Face<4,0>* vrt) const 
@@ -139,13 +139,13 @@ unsigned long CellularData::bcIxLookup(const Face<3,2>* fac) const
 unsigned long CellularData::bcIxLookup(const Face<4,0>* vrt) const
 { return lower_bound( bcIx[0].begin(), bcIx[0].end(), 
   tri4->vertexIndex(vrt) ) - bcIx[0].begin(); }
-unsigned long CellularData::bcIxLookup(const Dim4Edge* edg) const
+unsigned long CellularData::bcIxLookup(const Face<4,1>* edg) const
 { return lower_bound( bcIx[1].begin(), bcIx[1].end(), 
   tri4->edgeIndex(edg) ) - bcIx[1].begin(); }
 unsigned long CellularData::bcIxLookup(const Dim4Triangle* fac) const
 { return lower_bound( bcIx[2].begin(), bcIx[2].end(), 
   tri4->triangleIndex(fac) ) - bcIx[2].begin(); }
-unsigned long CellularData::bcIxLookup(const Dim4Tetrahedron* tet) const
+unsigned long CellularData::bcIxLookup(const Face<4,3>* tet) const
 { return lower_bound( bcIx[3].begin(), bcIx[3].end(), 
   tri4->tetrahedronIndex(tet) ) - bcIx[3].begin(); }
 
@@ -165,13 +165,13 @@ unsigned long CellularData::rIxLookup(const Simplex<3>* tet) const
 unsigned long CellularData::rIxLookup(const Face<4,0>* vrt) const
 { return lower_bound( rIx[0].begin(), rIx[0].end(), 
   tri4->vertexIndex(vrt) ) - rIx[0].begin(); }
-unsigned long CellularData::rIxLookup(const Dim4Edge* edg) const
+unsigned long CellularData::rIxLookup(const Face<4,1>* edg) const
 { return lower_bound( rIx[1].begin(), rIx[1].end(), 
   tri4->edgeIndex(edg) ) - rIx[1].begin(); }
 unsigned long CellularData::rIxLookup(const Dim4Triangle* fac) const
 { return lower_bound( rIx[2].begin(), rIx[2].end(), 
   tri4->triangleIndex(fac) ) - rIx[2].begin(); }
-unsigned long CellularData::rIxLookup(const Dim4Tetrahedron* tet) const
+unsigned long CellularData::rIxLookup(const Face<4,3>* tet) const
 { return lower_bound( rIx[3].begin(), rIx[3].end(), 
   tri4->tetrahedronIndex(tet) ) - rIx[3].begin(); }
 unsigned long CellularData::rIxLookup(const Simplex<4>* pen) const
@@ -187,12 +187,12 @@ unsigned long CellularData::pi1Lookup(const Dim4Triangle* fac) const
 // standard boundary
 { unsigned long I = bcIxLookup( fac );
   return I - num_less_than( maxTreeStB, I ); }
-unsigned long CellularData::pi1Lookup(const Dim4Tetrahedron* tet, 
+unsigned long CellularData::pi1Lookup(const Face<4,3>* tet, 
                                        unsigned long num) const 
 { unsigned long I = icIxLookup( tet, num );
   return (numNonIdealBdryCells[2] - maxTreeStB.size()) + 
           I - num_less_than( maxTreeIdB, I ); } 
-unsigned long CellularData::pi1Lookup(const Dim4Tetrahedron* tet) const 
+unsigned long CellularData::pi1Lookup(const Face<4,3>* tet) const 
 // standard 1-cells in interior
 { unsigned long I = nicIxLookup( tet );
   return (numNonIdealBdryCells[2] - maxTreeStB.size()) + 

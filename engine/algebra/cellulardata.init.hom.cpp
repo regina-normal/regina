@@ -77,7 +77,7 @@ void CellularData::fillStandardToMixedHomCM()
   } // d for loop
 }
 
-void fillDualToMixedHomCM( const Dim4Triangulation* tri, 
+void fillDualToMixedHomCM( const Triangulation<4>* tri, 
     const unsigned long numDualCells[5], const unsigned long numMixCells[5], 
     const unsigned long numNonIdealCells[5],
     std::vector< std::vector< unsigned long > > &dcIx, 
@@ -95,8 +95,8 @@ void fillDualToMixedHomCM( const Dim4Triangulation* tri,
  delta[4] = 0;
 
  // various useful pointers, index holders.
- const Face<4,0>* vrt(NULL);  const Dim4Edge* edg(NULL);  
-   const Dim4Triangle* fac(NULL); const Dim4Tetrahedron* tet(NULL); 
+ const Face<4,0>* vrt(NULL);  const Face<4,1>* edg(NULL);  
+   const Dim4Triangle* fac(NULL); const Face<4,3>* tet(NULL); 
    const Simplex<4>* pen(NULL);
  unsigned long J;
 
@@ -263,7 +263,7 @@ void fillStandardToRelativeHomCM( unsigned aDim, // ambient dimension
 }
 
 // H_{d+1}(M, \partial M) --> H_d(\partial M)
-void fillDifferentialHomCM( const Dim4Triangulation* tri,  
+void fillDifferentialHomCM( const Triangulation<4>* tri,  
     const unsigned long numRelativeCells[5], 
     const unsigned long numStandardBdryCells[4],      
     const unsigned long numNonIdealBdryCells[4],    
@@ -276,8 +276,8 @@ void fillDifferentialHomCM( const Dim4Triangulation* tri,
    schCM[d] = new MatrixInt( numStandardBdryCells[d], numRelativeCells[d+1] );
  unsigned long I;
  // various useful pointers, index holders.
- const Dim4Edge* edg(NULL);  const Dim4Triangle* fac(NULL); 
- const Dim4Tetrahedron* tet(NULL); const Simplex<4>* pen(NULL);
+ const Face<4,1>* edg(NULL);  const Dim4Triangle* fac(NULL); 
+ const Face<4,3>* tet(NULL); const Simplex<4>* pen(NULL);
  // boundary relative 1-cells
  unsigned long D=1;
  for (unsigned long j=0; j<numRelativeCells[D]; j++)
@@ -460,7 +460,7 @@ void fillDifferentialHomCM( const Triangulation<3>* tri,
 // map inducing Poincare duality so we need to correct the signs down the
 //  diagonal -- we assume CM is an identity matrix to begin with.
 void correctRelOrMat( MatrixInt &CM, unsigned long domdim, 
- const Triangulation<3>* tri3, const Dim4Triangulation* tri4, 
+ const Triangulation<3>* tri3, const Triangulation<4>* tri4, 
  const std::vector< std::vector<unsigned long> > &dcIx )
 {
 // CM is from dual to std_rel_bdry coord
@@ -503,7 +503,7 @@ else
 	}
   else if (domdim == 1) for (unsigned long i=0; i<CM.rows(); i++)
 	{
-	 const Dim4Tetrahedron* tet( tri4->tetrahedron( dcIx[domdim][i] ) );
+	 const Face<4,3>* tet( tri4->tetrahedron( dcIx[domdim][i] ) );
          const Simplex<4>* pen( tet->embedding(0).pentachoron() );
          Perm<5> emb( tet->embedding(0).vertices() );
 	 CM.entry( i, i ) = emb.sign()*pen->orientation();  
@@ -517,7 +517,7 @@ else
        }
   else if (domdim == 3) for (unsigned long i=0; i<CM.rows(); i++)
 	{	 
-	 const Dim4Edge* edg( tri4->edge( dcIx[domdim][i] ) );
+	 const Face<4,1>* edg( tri4->edge( dcIx[domdim][i] ) );
          const Simplex<4>* pen( edg->embedding(0).pentachoron() );
          Perm<5> emb( edg->embedding(0).vertices() );
 	 CM.entry( i, i ) = emb.sign()*pen->orientation();  
@@ -533,7 +533,7 @@ else
 }
 // end of chain map constructions
 
-void fillChainMaps( Triangulation<3>* tri3, Dim4Triangulation* tri4, 
+void fillChainMaps( Triangulation<3>* tri3, Triangulation<4>* tri4, 
     unsigned long numStandardCells[5],    unsigned long numDualCells[5],     
     unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4],
     unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 

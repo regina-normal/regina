@@ -49,7 +49,7 @@ void CellularData::writeTextShort(std::ostream& out) const
 {
 bool written=false;
 // run through list of everything computed, and print. 
- std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
+ std::map< GroupLocator, AbelianGroup* >::const_iterator abi;
  for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
 	{
 	 if (written) out<<" ";
@@ -58,7 +58,7 @@ bool written=false;
 	 abi->second->writeTextShort(out);
 	 written = true;
         }
- std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
+ std::map< GroupLocator, MarkedAbelianGroup* >::const_iterator mabi;
  for (mabi = markedAbelianGroups.begin(); 
       mabi != markedAbelianGroups.end(); mabi++)
 	{
@@ -68,7 +68,7 @@ bool written=false;
 	 mabi->second->writeTextShort(out);
 	 written = true;
         }
- std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
+ std::map< HomLocator, HomMarkedAbelianGroup* >::const_iterator hmabi;
  for (hmabi = homMarkedAbelianGroups.begin(); 
       hmabi != homMarkedAbelianGroups.end(); hmabi++)
 	{
@@ -139,14 +139,14 @@ else
  else out<<" no boundary";
 }
 // run through list of everything computed, and print. 
- std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
+ std::map< GroupLocator, AbelianGroup* >::const_iterator abi;
  for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
   {
    out<<" ";
    abi->first.writeTextShort(out); out<<" is ";
    abi->second->writeTextShort(out); out<<", ";
   }
- std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
+ std::map< GroupLocator, MarkedAbelianGroup* >::const_iterator mabi;
  for (mabi = markedAbelianGroups.begin(); 
       mabi != markedAbelianGroups.end(); mabi++)
   {
@@ -154,7 +154,7 @@ else
    out<<" is "; mabi->second->writeTextShort(out);
    out<<", ";
   }
- std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
+ std::map< HomLocator, HomMarkedAbelianGroup* >::const_iterator hmabi;
  for (hmabi = homMarkedAbelianGroups.begin(); 
       hmabi != homMarkedAbelianGroups.end(); hmabi++)
   {

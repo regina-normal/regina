@@ -685,7 +685,7 @@ class REGINA_API MarkedAbelianGroup :
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
- * \deprecated The class NMarkedAbelianGroup has now been renamed to
+ * \deprecated The class MarkedAbelianGroup has now been renamed to
  * MarkedAbelianGroup.
  */
 [[deprecated]] typedef MarkedAbelianGroup NMarkedAbelianGroup;
@@ -1076,7 +1076,7 @@ class REGINA_API HomMarkedAbelianGroup :
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
- * \deprecated The class NHomMarkedAbelianGroup has now been renamed to
+ * \deprecated The class HomMarkedAbelianGroup has now been renamed to
  * HomMarkedAbelianGroup.
  */
 [[deprecated]] typedef HomMarkedAbelianGroup NHomMarkedAbelianGroup;

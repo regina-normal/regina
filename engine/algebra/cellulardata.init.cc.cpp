@@ -60,8 +60,8 @@ void CellularData::fillStandardHomologyCC()
     GroupExpression wordle; // temp
 
     // various useful pointers, index holders.
-    const Dim4Edge* edg(NULL);  const Dim4Triangle* fac(NULL); 
-    const Dim4Tetrahedron* tet(NULL); const Simplex<4>* pen(NULL);
+    const Face<4,1>* edg(NULL);  const Dim4Triangle* fac(NULL); 
+    const Face<4,3>* tet(NULL); const Simplex<4>* pen(NULL);
     unsigned long I;
 
     // fill out CC
@@ -365,9 +365,9 @@ void CellularData::fillDualHomologyCC()
  if (tri4 != NULL)
  {
   // various useful pointers, index holders.
-  const Face<4,0>* vrt(NULL);  const Dim4Edge* edg(NULL);  
+  const Face<4,0>* vrt(NULL);  const Face<4,1>* edg(NULL);  
   const Dim4Triangle* fac(NULL); 
-  const Dim4Tetrahedron* tet(NULL); const Simplex<4>* pen(NULL);
+  const Face<4,3>* tet(NULL); const Simplex<4>* pen(NULL);
 
   CC = new ccMapType(2);
   unsigned long D = 1; // outer loop the row parameter. We start with dCC[1]
@@ -424,7 +424,7 @@ void CellularData::fillDualHomologyCC()
 	   // natural inclusions of our face and edge into the ambient pentachoron
 	   Perm<5> facinc( fac->embedding(0).vertices() );
 	   Perm<5> edginc( pen->edgeMapping( 
-        Dim4Edge::edgeNumber[facinc[(j<=0) ? 1 : 0]][facinc[(j<=1)? 2 : 1]] ) );
+        Face<4,1>::edgeNumber[facinc[(j<=0) ? 1 : 0]][facinc[(j<=1)? 2 : 1]] ) );
        Perm<5> delta( edginc.inverse()*facinc*Perm<5>(2, j) ); 
        // consider as permutation of {2,3,4}
        delta = delta * Perm<5>( 0, delta[0] ); 
@@ -563,8 +563,8 @@ void CellularData::fillMixedHomologyCC()
  if (tri4!=NULL)
   {
    // various useful pointers, index holders.
-   const Face<4,0>* vrt(NULL);  const Dim4Edge* edg(NULL);  
-   const Dim4Triangle* fac(NULL); const Dim4Tetrahedron* tet(NULL); 
+   const Face<4,0>* vrt(NULL);  const Face<4,1>* edg(NULL);  
+   const Dim4Triangle* fac(NULL); const Face<4,3>* tet(NULL); 
    const Simplex<4>* pen(NULL);
    unsigned long I;
    // we'll also need to remember some placeholder indices
@@ -851,12 +851,12 @@ void CellularData::fillMixedHomologyCC()
          coverFacetData( 4*I + tetinc.preImageOf( j%5 ), 
           tetinc.sign(), wordle ) ); 
 	    // part dual to edges 0,i
-	    edg = pen->edge( Dim4Edge::edgeNumber[j%5][(i+j)%5] );
+	    edg = pen->edge( Face<4,1>::edgeNumber[j%5][(i+j)%5] );
 	    Perm<5> edginc( pen->edgeMapping( 
-                       Dim4Edge::edgeNumber[j%5][(i+j)%5] ) );
+                       Face<4,1>::edgeNumber[j%5][(i+j)%5] ) );
         // TODO fill wordle
         CC->setEntry( NMultiIndex< unsigned long >( j, 5+(i%5) ), 
-         coverFacetData( ri1 + 10*(j/5) + Dim4Edge::edgeNumber[j%5][(i+j)%5], 
+         coverFacetData( ri1 + 10*(j/5) + Face<4,1>::edgeNumber[j%5][(i+j)%5], 
           ( (edginc[1] == (j%5)) ? 1 : -1)*edginc.sign(), wordle ) ); 
        }
       // potentially ideal boundary part
@@ -1088,8 +1088,8 @@ void CellularData::fillBoundaryHomologyCC()
  if (tri4!=NULL)
   {
    // various useful pointers, index holders.
-   const Dim4Edge* edg(NULL);  const Dim4Triangle* fac(NULL); 
-   const Dim4Tetrahedron* tet(NULL); const Simplex<4>* pen(NULL);
+   const Face<4,1>* edg(NULL);  const Dim4Triangle* fac(NULL); 
+   const Face<4,3>* tet(NULL); const Simplex<4>* pen(NULL);
    unsigned long I;
 
    // now we fill them out, first sbCC.  sbCC[0] is zero, 
@@ -1309,8 +1309,8 @@ void CellularData::fillRelativeHomologyCC()
  if (tri4 != NULL)
   {
    // various useful pointers, index holders.
-   const Dim4Edge* edg(NULL);  const Dim4Triangle* fac(NULL); 
-   const Dim4Tetrahedron* tet(NULL); const Simplex<4>* pen(NULL);
+   const Face<4,1>* edg(NULL);  const Dim4Triangle* fac(NULL); 
+   const Face<4,3>* tet(NULL); const Simplex<4>* pen(NULL);
    unsigned long I;
     
    // now we fill them out, first srCC.  srCC[0] is zero, 
@@ -1469,8 +1469,8 @@ void fillBoundaryDualHomologyCC(const Dim4Triangulation* tri,  // fills dbCC
     dbCC[4] = new MatrixInt(numDualBdryCells[3], 1);
 
     // various useful pointers, index holders.
-    const Face<4,0>* vrt(NULL);  const Dim4Edge* edg(NULL);  const Dim4Triangle* fac(NULL); 
-    const Dim4Tetrahedron* tet(NULL); const Simplex<4>* pen(NULL);
+    const Face<4,0>* vrt(NULL);  const Face<4,1>* edg(NULL);  const Dim4Triangle* fac(NULL); 
+    const Face<4,3>* tet(NULL); const Simplex<4>* pen(NULL);
     unsigned long J;
 
     // now we fill them out, first dbCC.  dbCC[0] is zero, 
@@ -1483,7 +1483,7 @@ void fillBoundaryDualHomologyCC(const Dim4Triangulation* tri,  // fills dbCC
 	  for (unsigned long j=0; j<4; j++)
 	   {
 	    fac = tet->triangle(j); 
-            const Dim4Tetrahedron* itet(NULL);// internal tet bounding fac
+            const Face<4,3>* itet(NULL);// internal tet bounding fac
 	    // now we have to look at the embeddings of fac into pen, the first and last have
             // boundary tets so that's how we'll order them.
 

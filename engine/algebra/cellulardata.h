@@ -51,7 +51,7 @@
 #include "utilities/ptrutils.h"
 #include "utilities/boolset.h"
 #include "maths/sparsegrid.h"
-#include "maths/nperm3.h"
+#include "maths/perm.h"
 
 #include <algorithm>
 #include <memory>
@@ -60,8 +60,8 @@
 namespace regina {
 
 // TODO these lines not needed anymore?
-//class NTriangulation;
-//class Dim4Triangulation;
+//class Triangulation<3>;
+//class Triangulation<4>;
 
 /**
  * \weakgroup algebra
@@ -208,7 +208,7 @@ namespace regina {
  *                           CellularData::alexanderChainComplex
  *
  *  CellularData.init.indexing.cpp 
- *  - the CellularData::CellularData(NTriangulation / Dim4Triangulation)
+ *  - the CellularData::CellularData(Triangulation<3> / Triangulation<4>)
  *    constructor, and the routines that set up the internal indices like icIx
  *
  * CellularData.init.cc.cpp 
@@ -602,7 +602,7 @@ public:
   * torsionlinkingForm is the induced pairing on the torsion classes in 
   * shifted degree. At present the domain of this routine is a product of 
   * the trivially-presented torsion subgroups you request, so if you call 
-  * lDomain or rDomain you will not get an NMarkedAbelianGroup isomorphic to 
+  * lDomain or rDomain you will not get an MarkedAbelianGroup isomorphic to 
   * the group you want but not identical.  Call torsionInclusion() if you want 
   * the map identifying the two. 
   */
@@ -747,11 +747,11 @@ public:
    * closed loop, therefore generates an element of pi1 of the fundamental
    * group of the manifold.  This is one such representative. 
    */
-  NGroupExpression trans;
+  GroupExpression trans;
    /**
     * Constructor.
     */
-  coverFacetData( unsigned long cellN, signed long Sig, const NGroupExpression& word );
+  coverFacetData( unsigned long cellN, signed long Sig, const GroupExpression& word );
    /**
     * Copy constructor.
     */
@@ -772,27 +772,27 @@ private:
      * or tri3 as reference, and only one will be allocated. This is the 
      * triangulation CellularData is initialised by.
      */
-    Dim4Triangulation* tri4;
-    NTriangulation* tri3;
+    Triangulation<4>* tri4;
+    Triangulation<3>* tri3;
 
     // for integer chain complexes
-    std::map< ChainComplexLocator, NMatrixInt* > integerChainComplexes; 
+    std::map< ChainComplexLocator, MatrixInt* > integerChainComplexes; 
     // for maps of integer chain complexes
-    std::map< ChainMapLocator, NMatrixInt* > integerChainMaps;
+    std::map< ChainMapLocator, MatrixInt* > integerChainMaps;
     // for abelian groups
-    std::map< GroupLocator, NAbelianGroup* > abelianGroups;
+    std::map< GroupLocator, AbelianGroup* > abelianGroups;
     // for marked abelian groups
-    std::map< GroupLocator, NMarkedAbelianGroup* > markedAbelianGroups;
+    std::map< GroupLocator, MarkedAbelianGroup* > markedAbelianGroups;
     // for homomorphisms of marked abelian group
-    std::map< HomLocator, NHomMarkedAbelianGroup* > homMarkedAbelianGroups;
+    std::map< HomLocator, HomMarkedAbelianGroup* > homMarkedAbelianGroups;
     // for bilinear forms
     std::map< FormLocator, NBilinearForm* > bilinearForms;
     // for group presentations
-    std::map< GroupPresLocator, NGroupPresentation* > groupPresentations;
+    std::map< GroupPresLocator, GroupPresentation* > groupPresentations;
     // for homomorphisms of group presentations
-    std::map< HomGroupPresLocator, NHomGroupPresentation* > homGroupPresentations;
+    std::map< HomGroupPresLocator, HomGroupPresentation* > homGroupPresentations;
     // for alexander module chain complexes
-    std::map< ChainComplexLocator, NMatrixRing< 
+    std::map< ChainComplexLocator, MatrixRing< 
         NSVPolynomialRing< Integer > >* > alexanderChainComplexes;
 
     /** 
@@ -892,7 +892,7 @@ private:
   * srmCM  :  srCC -> mrCC  standard to mixed,   relative map  TODO & TESTS      
   * drmCM  :  drCC -> mrCC  dual to mixed,       relative map  TODO & TESTS 
   */
-  std::vector< NMatrixInt* > sbiCM, strCM, schCM,   dbiCM, dtrCM, dchCM,   
+  std::vector< MatrixInt* > sbiCM, strCM, schCM,   dbiCM, dtrCM, dchCM,   
     mbiCM, mtrCM, mchCM,  smCM, dmCM, smbCM, dmbCM, srmCM, drmCM;
 
    /**
@@ -912,37 +912,37 @@ private:
     // 1-cells in maximal tree
 
    struct dim4BoundaryFaceInclusion
-    { Dim4Tetrahedron *firsttet, *secondtet;
+    { Face<4,3> *firsttet, *secondtet;
       unsigned long firstfacnum, secondfacnum; };
 
    struct dim4BoundaryEdgeInclusion
-    { std::vector< Dim4Tetrahedron* > tet;
+    { std::vector< Face<4,3>* > tet;
       std::vector< unsigned long > edgenum; 
-      std::vector< NPerm4 > edginc; };
+      std::vector< Perm<4> > edginc; };
 
    struct dim4BoundaryVertexInclusion
-    { std::vector< Dim4Tetrahedron* > tet;
+    { std::vector< Face<4,3>* > tet;
       std::vector< unsigned long > vrtnum; 
-      std::vector< NPerm4 > vrtinc; };
+      std::vector< Perm<4> > vrtinc; };
 
    struct dim3BoundaryEdgeInclusion
-    { NTriangle *firstfac, *secondfac;
+    { Face<3,2> *firstfac, *secondfac;
       unsigned long firstedgnum, secondedgnum; 
-      NPerm3 firstperm, secondperm; };
+      Perm<3> firstperm, secondperm; };
 
    struct dim3BoundaryVertexInclusion
-    { std::vector< NTriangle* > face;
+    { std::vector< Face<3,2>* > face;
       std::vector< unsigned long > vrtnum; 
-      std::vector< NPerm3 > vrtinc; };
+      std::vector< Perm<3> > vrtinc; };
 
     /**
      * Normal orientations for cells Regina does not naturally give normal 
      * orientations to. We will have to build this by hand.  For a 
-     * dim4Triangulation we need to build the boundary NTriangulation class
+     * dim4Triangulation we need to build the boundary Triangulation<3> class
      * Ben suggests iterating through the dim4Boundary components, appending 
-     * them into an NTriangulation using dim4BoundaryComponent::getTriangulation
-     * and NTriangulation::insertTriangulation.  Building up the NTriangulation
-     *  -> Dim4Triangulation indices using dim4BoundaryComponent::getEdge 
+     * them into an Triangulation<3> using dim4BoundaryComponent::getTriangulation
+     * and Triangulation<3>::insertTriangulation.  Building up the Triangulation<3>
+     *  -> Triangulation<4> indices using dim4BoundaryComponent::getEdge 
      * getFace, etc, maps.  Then we can build the classes below.  For 3-manifold
      * and boundary 2-manifold triangulations we'll likely have to build these
      *  by hands.  The edges shouldn't be bad, the vertices might take work.
@@ -963,7 +963,7 @@ private:
      *
      * normalsDim3BdryEdges is a vector that assigns to the i-th boundary face 
      * [tri3->getEdge(bcIx[1][i])] the two boundary faces that contain it and 
-     * the edge number of the edge in the NTriangle.  firstperm and secondperm
+     * the edge number of the edge in the Face<3,2>.  firstperm and secondperm
      * describe where the edge vertices 0, 1 get sent to in the face, with 2 
      * going to the edge number in the face. 
      *
@@ -1019,86 +1019,86 @@ private:
      * Corresponds to maxTreeStd, maxTreeStB, maxTreeIdB, and MaxTreeSttIdB 
      * respectively.
      */
-    bool inMaximalTree(const Dim4Tetrahedron* tet) const;
-    bool inMaximalTree(const Dim4Triangle* fac) const;
-    bool inMaximalTree(const Dim4Tetrahedron* tet, unsigned long num) const;
-    bool inMaximalTree(const Dim4Pentachoron* pen, unsigned long num) const;
+    bool inMaximalTree(const Face<4,3>* tet) const;
+    bool inMaximalTree(const Face<4,2>* fac) const;
+    bool inMaximalTree(const Face<4,3>* tet, unsigned long num) const;
+    bool inMaximalTree(const Simplex<4>* pen, unsigned long num) const;
     /**
      * Same routines for 3-dimensional triangulations.
      */
-    bool inMaximalTree(const NTriangle* fac) const;
-    bool inMaximalTree(const NEdge* edg) const;
-    bool inMaximalTree(const NTriangle* fac, unsigned long num) const;
-    bool inMaximalTree(const NTetrahedron* tet, unsigned long num) const;
+    bool inMaximalTree(const Face<3,2>* fac) const;
+    bool inMaximalTree(const Face<3,1>* edg) const;
+    bool inMaximalTree(const Face<3,2>* fac, unsigned long num) const;
+    bool inMaximalTree(const Simplex<3>* tet, unsigned long num) const;
     
  public:
    /**
     * During initialization many reverse-lookups are needed.  We proved 
     * them in one place. see cellulardata.lookups.cpp for implementations.
     */ 
-   unsigned long nicIxLookup(const NVertex* vrt) const;
-   unsigned long nicIxLookup(const NEdge* edg) const;
-   unsigned long nicIxLookup(const NTriangle* fac) const;
-   unsigned long nicIxLookup(const NTetrahedron* tet) const;
-   unsigned long nicIxLookup(const Dim4Vertex* vrt) const;
-   unsigned long nicIxLookup(const Dim4Edge* edg) const;
-   unsigned long nicIxLookup(const Dim4Triangle* fac) const;
-   unsigned long nicIxLookup(const Dim4Tetrahedron* tet) const;
-   unsigned long nicIxLookup(const Dim4Pentachoron* pen) const;
+   unsigned long nicIxLookup(const Face<3,0>* vrt) const;
+   unsigned long nicIxLookup(const Face<3,1>* edg) const;
+   unsigned long nicIxLookup(const Face<3,2>* fac) const;
+   unsigned long nicIxLookup(const Simplex<3>* tet) const;
+   unsigned long nicIxLookup(const Face<4,0>* vrt) const;
+   unsigned long nicIxLookup(const Face<4,1>* edg) const;
+   unsigned long nicIxLookup(const Face<4,2>* fac) const;
+   unsigned long nicIxLookup(const Face<4,3>* tet) const;
+   unsigned long nicIxLookup(const Simplex<4>* pen) const;
 
-   unsigned long icIxLookup(const NEdge* edg, unsigned long i) const;
-   unsigned long icIxLookup(const NTriangle* fac, unsigned long i) const;
-   unsigned long icIxLookup(const NTetrahedron* tet, unsigned long i) const;
-   unsigned long icIxLookup(const Dim4Edge* edg, unsigned long i) const;
-   unsigned long icIxLookup(const Dim4Triangle* fac, unsigned long i) const;
-   unsigned long icIxLookup(const Dim4Tetrahedron* tet, unsigned long i) const;
-   unsigned long icIxLookup(const Dim4Pentachoron* edg, unsigned long i) const;
+   unsigned long icIxLookup(const Face<3,1>* edg, unsigned long i) const;
+   unsigned long icIxLookup(const Face<3,2>* fac, unsigned long i) const;
+   unsigned long icIxLookup(const Simplex<3>* tet, unsigned long i) const;
+   unsigned long icIxLookup(const Face<4,1>* edg, unsigned long i) const;
+   unsigned long icIxLookup(const Face<4,2>* fac, unsigned long i) const;
+   unsigned long icIxLookup(const Face<4,3>* tet, unsigned long i) const;
+   unsigned long icIxLookup(const Simplex<4>* edg, unsigned long i) const;
 
-   unsigned long dcIxLookup(const NTetrahedron* tet) const; 
-   unsigned long dcIxLookup(const NTriangle* fac) const; 
-   unsigned long dcIxLookup(const NEdge* edg) const; 
-   unsigned long dcIxLookup(const NVertex* vrt) const; 
-   unsigned long dcIxLookup(const Dim4Pentachoron* pen) const; 
-   unsigned long dcIxLookup(const Dim4Tetrahedron* tet) const; 
-   unsigned long dcIxLookup(const Dim4Triangle* fac) const; 
-   unsigned long dcIxLookup(const Dim4Edge* edg) const; 
-   unsigned long dcIxLookup(const Dim4Vertex* vrt) const; 
+   unsigned long dcIxLookup(const Simplex<3>* tet) const; 
+   unsigned long dcIxLookup(const Face<3,2>* fac) const; 
+   unsigned long dcIxLookup(const Face<3,1>* edg) const; 
+   unsigned long dcIxLookup(const Face<3,0>* vrt) const; 
+   unsigned long dcIxLookup(const Simplex<4>* pen) const; 
+   unsigned long dcIxLookup(const Face<4,3>* tet) const; 
+   unsigned long dcIxLookup(const Face<4,2>* fac) const; 
+   unsigned long dcIxLookup(const Face<4,1>* edg) const; 
+   unsigned long dcIxLookup(const Face<4,0>* vrt) const; 
 
-   unsigned long bcIxLookup(const NVertex* vrt) const; 
-   unsigned long bcIxLookup(const NEdge* edg) const; 
-   unsigned long bcIxLookup(const NTriangle* fac) const; 
-   unsigned long bcIxLookup(const Dim4Vertex* vrt) const;
-   unsigned long bcIxLookup(const Dim4Edge* edg) const;
-   unsigned long bcIxLookup(const Dim4Triangle* fac) const;
-   unsigned long bcIxLookup(const Dim4Tetrahedron* tet) const;
+   unsigned long bcIxLookup(const Face<3,0>* vrt) const; 
+   unsigned long bcIxLookup(const Face<3,1>* edg) const; 
+   unsigned long bcIxLookup(const Face<3,2>* fac) const; 
+   unsigned long bcIxLookup(const Face<4,0>* vrt) const;
+   unsigned long bcIxLookup(const Face<4,1>* edg) const;
+   unsigned long bcIxLookup(const Face<4,2>* fac) const;
+   unsigned long bcIxLookup(const Face<4,3>* tet) const;
 
-   unsigned long rIxLookup(const NVertex* vrt) const;
-   unsigned long rIxLookup(const NEdge* edg) const;
-   unsigned long rIxLookup(const NTriangle* fac) const;
-   unsigned long rIxLookup(const NTetrahedron* tet) const;
-   unsigned long rIxLookup(const Dim4Vertex* vrt) const;
-   unsigned long rIxLookup(const Dim4Edge* edg) const;
-   unsigned long rIxLookup(const Dim4Triangle* fac) const;
-   unsigned long rIxLookup(const Dim4Tetrahedron* tet) const;
-   unsigned long rIxLookup(const Dim4Pentachoron* pen) const;
+   unsigned long rIxLookup(const Face<3,0>* vrt) const;
+   unsigned long rIxLookup(const Face<3,1>* edg) const;
+   unsigned long rIxLookup(const Face<3,2>* fac) const;
+   unsigned long rIxLookup(const Simplex<3>* tet) const;
+   unsigned long rIxLookup(const Face<4,0>* vrt) const;
+   unsigned long rIxLookup(const Face<4,1>* edg) const;
+   unsigned long rIxLookup(const Face<4,2>* fac) const;
+   unsigned long rIxLookup(const Face<4,3>* tet) const;
+   unsigned long rIxLookup(const Simplex<4>* pen) const;
 
-   unsigned long pi1Lookup(const Dim4Tetrahedron* tet) const;
-   unsigned long pi1Lookup(const Dim4Triangle* fac) const;
-   unsigned long pi1Lookup(const Dim4Tetrahedron* tet, unsigned long num) const;
-   unsigned long pi1Lookup(const Dim4Pentachoron* pen, unsigned long num) const;
-   unsigned long pi1Lookup(const NTriangle* fac) const;
-   unsigned long pi1Lookup(const NEdge* edg) const;
-   unsigned long pi1Lookup(const NTriangle* fac, unsigned long num) const;
-   unsigned long pi1Lookup(const NTetrahedron* tet, unsigned long num) const;
+   unsigned long pi1Lookup(const Face<4,3>* tet) const;
+   unsigned long pi1Lookup(const Face<4,2>* fac) const;
+   unsigned long pi1Lookup(const Face<4,3>* tet, unsigned long num) const;
+   unsigned long pi1Lookup(const Simplex<4>* pen, unsigned long num) const;
+   unsigned long pi1Lookup(const Face<3,2>* fac) const;
+   unsigned long pi1Lookup(const Face<3,1>* edg) const;
+   unsigned long pi1Lookup(const Face<3,2>* fac, unsigned long num) const;
+   unsigned long pi1Lookup(const Simplex<3>* tet, unsigned long num) const;
 
    /**
-    * Returns the NTriangulation/Dim4Triangulation index of the cell with 
+    * Returns the Triangulation<3>/Triangulation<4> index of the cell with 
     * CellularData STD_coord index idx.  
     */
    unsigned long nicIndex( const unsigned long dim, 
                            const unsigned long idx ) const; // nicIx
    /**
-    * Returns the NTriangulation/Dim4Triangulation index of the cell with 
+    * Returns the Triangulation<3>/Triangulation<4> index of the cell with 
     * CellularData STD_coord index idx.  The first entry is the index of
     * the simplex, and the 2nd is the index of the facet in that simplex
     * corresponding to the ideal cell.  So icIndex( 0, 2 ) is represents
@@ -1109,7 +1109,7 @@ private:
    std::pair< unsigned long, unsigned long > icIndex( const unsigned long dim, 
                                       const unsigned long idx ) const; // icIx
    /**
-    * Returns the NTriangulation/Dim4Triangulation index of the cell with 
+    * Returns the Triangulation<3>/Triangulation<4> index of the cell with 
     * CellularData DUAL_coord index idx.
     */
    unsigned long dcIndex( const unsigned long dim, 
@@ -1164,22 +1164,22 @@ private:
 public:
 
     /**
-     * Takes as input an Dim4Triangulation -- this class will make its own 
+     * Takes as input an Triangulation<4> -- this class will make its own 
      * internal copy of the triangulation so it is okay to deallocate whatever
      *  you pass, after the initial call is made. 
      *
-     * @param the triangulation to use -- must be valid Dim4Triangulation. 
+     * @param the triangulation to use -- must be valid Triangulation<4>. 
      */
-    CellularData(const Dim4Triangulation &input);
+    CellularData(const Triangulation<4> &input);
     /**
-     * Takes as input an NTriangulation -- this class will make its own internal
+     * Takes as input an Triangulation<3> -- this class will make its own internal
      * copy of the triangulation so it is okay to deallocate whatever you pass, 
      * after the initial call is made. 
      *
      * @param pointer to the triangulation to use -- must be a valid 
-     * NTriangulation. 
+     * Triangulation<3>. 
      */
-    CellularData(const NTriangulation &input);
+    CellularData(const Triangulation<3> &input);
     /**
      * Copy constructor.
      *
@@ -1229,11 +1229,11 @@ public:
      * vertex treated as a surface boundary component.
      *
      * This routine returns the same value as
-     * NTriangulation::getEulerCharManifold(), though it computes it
+     * Triangulation<3>::getEulerCharManifold(), though it computes it
      * in a different way.
      *
      * On the other hand, this routine differs from
-     * NTriangulation::getEulerCharTri(), which handles ideal triangulations
+     * Triangulation<3>::getEulerCharTri(), which handles ideal triangulations
      * in a non-standard way (treating each ideal vertex as just a single
      * vertex).
      *
@@ -1265,7 +1265,7 @@ public:
      *
      * \apinotfinal moreover, this routine is not fully implemented yet. 
      */
-    NMatrixInt hurewicz_map_H1() const;
+    MatrixInt hurewicz_map_H1() const;
 
     /**
      *  This returns the i-th Stiefel-Whitney class of the manifold.  It 
@@ -1358,26 +1358,26 @@ public:
     /**
      * Computes a chain complex or retrieves it from the precomputed pile.
      */
-    const NMatrixInt* integerChainComplex( 
+    const MatrixInt* integerChainComplex( 
             const ChainComplexLocator &c_desc ) const;
 
     /**
      * Computes a map of chain complexes or retrieves it from the precomputed
      * pile.
      */
-    const NMatrixInt* integerChainMap( const ChainMapLocator &m_desc ) const;
+    const MatrixInt* integerChainMap( const ChainMapLocator &m_desc ) const;
 
     /**
-     * Computes an NAbelianGroup or retrieves it from the precomputed pile. 
+     * Computes an AbelianGroup or retrieves it from the precomputed pile. 
      */
-    const NAbelianGroup* unmarkedGroup( const GroupLocator &g_desc) const;
+    const AbelianGroup* unmarkedGroup( const GroupLocator &g_desc) const;
     /**
-     * Computes an NMarkedAbelianGroup or retrieves it from the precomputed 
+     * Computes an MarkedAbelianGroup or retrieves it from the precomputed 
      * pile. 
      */
-    const NMarkedAbelianGroup* markedGroup( const GroupLocator &g_desc) const;
+    const MarkedAbelianGroup* markedGroup( const GroupLocator &g_desc) const;
     /**
-     * Computes an NHomMarkedAbelianGroup or retrieves it from the 
+     * Computes an HomMarkedAbelianGroup or retrieves it from the 
      * precomputed pile. 
      *
      * At present there's 4 basic varieties of homomorphisms that Regina knows
@@ -1428,7 +1428,7 @@ public:
      *  5) Convienience maps.  These are natural maps users might be interested
      *     in that are composites of maps (1)--(4) and their inverses.  TODO
      */
-    const NHomMarkedAbelianGroup* homGroup( const HomLocator &h_desc) const;
+    const HomMarkedAbelianGroup* homGroup( const HomLocator &h_desc) const;
 
     /**
      *  Computes an NBilinearForm or retrieves it from the precomputed pile. 
@@ -1468,11 +1468,11 @@ public:
      *  groups of the various boundary components.
      *
      *  The fundamental groups are computed by first finding a maximal tree in 
-     *  the dual 1-skeleton to the manifold.  Unlike NTriangulation and 
-     *  Dim4Triangulation's maximal forest routines, this routine produces a 
+     *  the dual 1-skeleton to the manifold.  Unlike Triangulation<3> and 
+     *  Triangulation<4>'s maximal forest routines, this routine produces a 
      *  maximal tree in the dual 1-skeleton that restricts to maximal trees in 
      *  the boundary and ideal boundaries of the manifold. So it is quite a bit 
-     *  larger in general than the NTriangulation and Dim4Triangulation routine
+     *  larger in general than the Triangulation<3> and Triangulation<4> routine
      *  outputs. But this allows for computations of maps between groups.
      *  The generators of pi1 are the dual 1-cells not in the maximal tree. 
      *  They are indexed in this order:
@@ -1485,7 +1485,7 @@ public:
      *  Fourth, the dual 1-cells connecting top-dimensional simplex barycentres
      *  to ideal boundary simplex barycentres.
      */
-    const NGroupPresentation* groupPresentation( 
+    const GroupPresentation* groupPresentation( 
           const GroupPresLocator &g_desc ) const;
 
     /**
@@ -1495,7 +1495,7 @@ public:
      *  forest in the dual 1-skeleton which restricts to maximal forests in 
      *  the boundary and ideal boundary components. 
      */
-    const NHomGroupPresentation* homGroupPresentation( 
+    const HomGroupPresentation* homGroupPresentation( 
             const HomGroupPresLocator &h_desc ) const;
 
     /**
@@ -1504,14 +1504,14 @@ public:
      * manifold is not 1. Presently only the C_2 -> C_1 -> C_0 part of the 
      * complex is defined, in dual coordinates, for 4-manifolds.
      */
-    const NMatrixRing< NSVPolynomialRing< Integer > >* 
+    const MatrixRing< NSVPolynomialRing< Integer > >* 
           alexanderChainComplex( const ChainComplexLocator &a_desc ) const;
 
     /**
      *  Computes the presentation matrix for the 1-dimensional Alexander module. 
      *  Returns null if rank H1 != 1. 
      */
-    std::unique_ptr< NMatrixRing< NSVPolynomialRing< Integer > > > 
+    std::unique_ptr< MatrixRing< NSVPolynomialRing< Integer > > > 
             alexanderPresentationMatrix() const;
 
     /**
@@ -1576,56 +1576,56 @@ for (cmi = g.genCM.begin(); cmi != g.genCM.end(); cmi++)
  genCM.insert( std::pair< ChainMapLocator, ccMapType* >
     (cmi->first, clonePtr(cmi->second) ) );
  // integer chain complexes
-std::map< ChainComplexLocator, NMatrixInt* >::const_iterator ci;
+std::map< ChainComplexLocator, MatrixInt* >::const_iterator ci;
 for (ci = g.integerChainComplexes.begin(); ci != g.integerChainComplexes.end(); 
      ci++) integerChainComplexes.insert( 
- std::pair< ChainComplexLocator, NMatrixInt* >
+ std::pair< ChainComplexLocator, MatrixInt* >
     ( ci->first, clonePtr(ci->second) ) );
  // integer chain maps
-std::map< ChainMapLocator, NMatrixInt* >::const_iterator mi;
+std::map< ChainMapLocator, MatrixInt* >::const_iterator mi;
 for (mi = g.integerChainMaps.begin(); mi != g.integerChainMaps.end(); 
      mi++) integerChainMaps.insert( 
- std::pair< ChainMapLocator, NMatrixInt* >( mi->first, clonePtr(mi->second) ) );
+ std::pair< ChainMapLocator, MatrixInt* >( mi->first, clonePtr(mi->second) ) );
  // abelianGroups
-std::map< GroupLocator, NAbelianGroup* >::const_iterator abi;
+std::map< GroupLocator, AbelianGroup* >::const_iterator abi;
 for (abi = g.abelianGroups.begin(); abi != g.abelianGroups.end(); abi++) 
- abelianGroups.insert( std::pair< GroupLocator, NAbelianGroup* >
+ abelianGroups.insert( std::pair< GroupLocator, AbelianGroup* >
     ( abi->first, clonePtr(abi->second) ) );
  // markedAbelianGroups
-std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
+std::map< GroupLocator, MarkedAbelianGroup* >::const_iterator mabi;
 for (mabi = g.markedAbelianGroups.begin(); mabi != g.markedAbelianGroups.end(); 
      mabi++)    markedAbelianGroups.insert(  
-     std::pair< GroupLocator, NMarkedAbelianGroup* >
+     std::pair< GroupLocator, MarkedAbelianGroup* >
      (mabi->first, clonePtr(mabi->second) ) );
  // homMarkedAbelianGroups
-std::map< HomLocator, NHomMarkedAbelianGroup* >::const_iterator hmabi;
+std::map< HomLocator, HomMarkedAbelianGroup* >::const_iterator hmabi;
 for (hmabi = g.homMarkedAbelianGroups.begin(); 
      hmabi != g.homMarkedAbelianGroups.end(); hmabi++) 
  homMarkedAbelianGroups.insert( std::pair< HomLocator, 
- NHomMarkedAbelianGroup* >(hmabi->first, clonePtr(hmabi->second) ) );
+ HomMarkedAbelianGroup* >(hmabi->first, clonePtr(hmabi->second) ) );
  // bilinearForms
 std::map< FormLocator, NBilinearForm* >::const_iterator fi;
 for (fi = g.bilinearForms.begin(); fi != g.bilinearForms.end(); fi++) 
  bilinearForms.insert( std::pair< FormLocator, NBilinearForm* >
    (fi->first, clonePtr(fi->second) ) );
  // groupPresentations
-std::map< GroupPresLocator, NGroupPresentation* >::const_iterator pi;
+std::map< GroupPresLocator, GroupPresentation* >::const_iterator pi;
 for (pi = g.groupPresentations.begin(); pi != g.groupPresentations.end(); pi++) 
- groupPresentations.insert( std::pair< GroupPresLocator, NGroupPresentation* >
+ groupPresentations.insert( std::pair< GroupPresLocator, GroupPresentation* >
  (pi->first, clonePtr(pi->second) ) );
  // homGroupPresentations
-std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hpi;
+std::map< HomGroupPresLocator, HomGroupPresentation* >::const_iterator hpi;
 for (hpi = g.homGroupPresentations.begin(); 
      hpi != g.homGroupPresentations.end(); hpi++) 
  homGroupPresentations.insert( std::pair< HomGroupPresLocator, 
-  NHomGroupPresentation* >(hpi->first, clonePtr(hpi->second) ) );
+  HomGroupPresentation* >(hpi->first, clonePtr(hpi->second) ) );
  // alexanderChainComplexes
-std::map< ChainComplexLocator, NMatrixRing< 
+std::map< ChainComplexLocator, MatrixRing< 
           NSVPolynomialRing< Integer > >* >::const_iterator amci;
 for (amci = g.alexanderChainComplexes.begin(); 
      amci != g.alexanderChainComplexes.end(); amci++)
  alexanderChainComplexes.insert( std::pair< ChainComplexLocator, 
-    NMatrixRing< NSVPolynomialRing< Integer > >* >
+    MatrixRing< NSVPolynomialRing< Integer > >* >
   (amci->first, clonePtr(amci->second) ) );
 
 // numStandardCells[5], numDualCells[5], numMixCells[5],numStandardBdryCells[4], 
@@ -1681,25 +1681,25 @@ inline CellularData::~CellularData() {
  for (cmi = genCM.begin(); cmi != genCM.end(); cmi++)
   delete cmi->second;
  // integer chain complexes.
- std::map< ChainComplexLocator, NMatrixInt* >::const_iterator ci;
+ std::map< ChainComplexLocator, MatrixInt* >::const_iterator ci;
  for (ci = integerChainComplexes.begin(); 
       ci != integerChainComplexes.end(); ci++) 
   delete ci->second;
  // integer chain maps
- std::map< ChainMapLocator, NMatrixInt* >::const_iterator mi;
+ std::map< ChainMapLocator, MatrixInt* >::const_iterator mi;
  for (mi = integerChainMaps.begin(); mi != integerChainMaps.end(); mi++) 
   delete mi->second;
  // abelian groups
- std::map< GroupLocator, NAbelianGroup* >::iterator abi;
+ std::map< GroupLocator, AbelianGroup* >::iterator abi;
  for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
     delete abi->second;
  // marked abelian groups
- std::map< GroupLocator, NMarkedAbelianGroup* >::iterator mabi;
+ std::map< GroupLocator, MarkedAbelianGroup* >::iterator mabi;
  for (mabi = markedAbelianGroups.begin(); 
       mabi != markedAbelianGroups.end(); mabi++)
     delete mabi->second;
  // hom marked abelian groups
- std::map< HomLocator, NHomMarkedAbelianGroup* >::iterator hmabi;
+ std::map< HomLocator, HomMarkedAbelianGroup* >::iterator hmabi;
  for (hmabi = homMarkedAbelianGroups.begin(); 
       hmabi != homMarkedAbelianGroups.end(); hmabi++)
     delete hmabi->second; 
@@ -1708,16 +1708,16 @@ inline CellularData::~CellularData() {
  for (fi = bilinearForms.begin(); fi != bilinearForms.end(); fi++)
     delete fi->second;
  // group presentations
- std::map< GroupPresLocator, NGroupPresentation* >::iterator gi;
+ std::map< GroupPresLocator, GroupPresentation* >::iterator gi;
  for (gi = groupPresentations.begin(); gi != groupPresentations.end(); gi++) 
     delete gi->second;
  // homomorphisms of group presentations
- std::map< HomGroupPresLocator, NHomGroupPresentation* >::iterator hi;
+ std::map< HomGroupPresLocator, HomGroupPresentation* >::iterator hi;
  for (hi = homGroupPresentations.begin(); 
       hi != homGroupPresentations.end(); hi++)
     delete hi->second; 
  // alexanderChainComplexes
- std::map< ChainComplexLocator, NMatrixRing< 
+ std::map< ChainComplexLocator, MatrixRing< 
            NSVPolynomialRing< Integer > >* >::iterator amci;
  for (amci = alexanderChainComplexes.begin(); 
       amci != alexanderChainComplexes.end(); amci++)

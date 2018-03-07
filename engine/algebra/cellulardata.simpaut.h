@@ -83,7 +83,7 @@ struct linearFacet; // forward ref
  *  but it references it.
  */
 class REGINA_API NSimplicialAutGrp : public ShareableObject {
-  const NTriangulation *tri3;
+  const Triangulation<3> *tri3;
   const Dim4Triangulation *tri4;
   std::vector< isoStruct > fullMap;
 
@@ -91,7 +91,7 @@ class REGINA_API NSimplicialAutGrp : public ShareableObject {
  /**
   * Class enumerates all simplicial automorphisms on initialization.
   */
- NSimplicialAutGrp(const NTriangulation &input);
+ NSimplicialAutGrp(const Triangulation<3> &input);
  /**
   * Class enumerates all simplicial automorphisms on initialization.
   */
@@ -104,7 +104,7 @@ class REGINA_API NSimplicialAutGrp : public ShareableObject {
   *  At present we'll just enable it for STD_coord, all dimensions in both 
   * homology and cohomology.
   */
- std::vector<NHomMarkedAbelianGroup*> homologyAction( 
+ std::vector<HomMarkedAbelianGroup*> homologyAction( 
             const CellularData::GroupLocator &gloc ) const;
 
  /**
@@ -130,7 +130,7 @@ std::vector< std::set< linearFacet >* > fixedPoints() const;
   * The end user must de-allocate the pointers before destroying
   * the return value.
   */
- std::vector<NMatrixInt*> homologyH1action() const;
+ std::vector<MatrixInt*> homologyH1action() const;
 
  /**
   * Returns the order of the symmetry group. 
@@ -147,7 +147,7 @@ std::vector< std::set< linearFacet >* > fixedPoints() const;
   * very slow for n over 400 or so.  At about n=700 it takes my laptop
   * several hours. 
   *
-  * TODO: eventually store as an NHomGroupPresentation. Domain will be a
+  * TODO: eventually store as an HomGroupPresentation. Domain will be a
   * free group on all symmetries, target will be the reduced presentation. 
   */
  NGroupPresentation groupPresentation() const;
@@ -216,7 +216,7 @@ struct linearFacet {
     for debugging purposes. */
  bool isValid() const;
  /** Returns true if the facet runs through any ideal vertices. */
- bool isIdeal(const NTriangulation *tri3, const Dim4Triangulation* tri4) const;
+ bool isIdeal(const Triangulation<3> *tri3, const Dim4Triangulation* tri4) const;
 
  /** ouput operator */
  friend std::ostream& operator << (std::ostream& out, const linearFacet& p);
@@ -233,7 +233,7 @@ struct linearFacet {
  /** List the boundaries of this facet, subject to the ambient triangulation. 
      One of the triangulations must be a non-null pointer, the other must be 
      null. */
- std::set< linearFacet > bdryFacets(const NTriangulation *tri3, 
+ std::set< linearFacet > bdryFacets(const Triangulation<3> *tri3, 
     const Dim4Triangulation* tri4) const;
 };
 

@@ -376,7 +376,7 @@ class REGINA_API AbelianGroup :
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
- * \deprecated The class NAbelianGroup has now been renamed to
+ * \deprecated The class AbelianGroup has now been renamed to
  * AbelianGroup.
  */
 [[deprecated]] typedef AbelianGroup NAbelianGroup;

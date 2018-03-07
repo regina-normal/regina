@@ -97,7 +97,7 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
  CellularData* cDat;
  if (tri3) cDat = new CellularData(*tri3);
       else cDat = new CellularData(*tri4);
- const NMarkedAbelianGroup* H1P( cDat->markedGroup( CellularData::GroupLocator( 
+ const MarkedAbelianGroup* H1P( cDat->markedGroup( CellularData::GroupLocator( 
     1, CellularData::coVariant, CellularData::STD_coord, 0) ) );
 
  if ( (H1P->getRank()==1) && (H1P->getNumberOfInvariantFactors()==0) )
@@ -142,7 +142,7 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
            unsigned long tPen( fullMap[i].germ[ tetnum4 ].pen ); // target pen
            Perm<5> mPerm( Perm<5>::S5[ fullMap[i].germ[ tetnum4 ].perm ] );
            // edge number in tet tPen. 
-           unsigned long eNum( Dim4Edge::edgeNumber[ mPerm[per4[0]] ]
+           unsigned long eNum( Face<4,1>::edgeNumber[ mPerm[per4[0]] ]
                                                    [ mPerm[per4[1]] ] );
            Perm<5> eOr( tri4->getSimplex( tPen )->edgeMapping(eNum) );
            // now we need to find this edge, Pen::edgeMapping class.  
@@ -194,7 +194,7 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
           mat.entry( edgCount + INDX, edgCount + j ) = SIG;
          }
  
-        NHomMarkedAbelianGroup hom( *H1P, *H1P, mat );
+        HomMarkedAbelianGroup hom( *H1P, *H1P, mat );
         // basic checks isChainMap, isCycleMap, isIso
         #ifdef DEBUG
         if (!hom.isCycleMap()) { 
@@ -215,10 +215,10 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
 
 // TODO: update to allow for cohomology
 // TODO: perhaps allow coordinate systems other than STD_coord?  why? 
-std::vector<NHomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction( 
+std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction( 
         const CellularData::GroupLocator &gloc ) const
 {
- std::vector< NHomMarkedAbelianGroup* > retval;
+ std::vector< HomMarkedAbelianGroup* > retval;
  // initial tests
  if (gloc.hcs != CellularData::STD_coord) return retval; 
     // only STD_coord implemented
@@ -227,7 +227,7 @@ std::vector<NHomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
  CellularData* cDat;
  if (tri3) cDat = new CellularData(*tri3);
       else cDat = new CellularData(*tri4);
- const NMarkedAbelianGroup* HP( cDat->markedGroup( gloc ) );
+ const MarkedAbelianGroup* HP( cDat->markedGroup( gloc ) );
  if (!HP) return retval;
  retval.resize( fullMap.size() );
  unsigned long stdCount( cDat->stdCellCount( gloc.dim ) );
@@ -314,7 +314,7 @@ std::vector<NHomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
          mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-         unsigned long eNum( Dim4Edge::edgeNumber[mPerm5[domPerm5[0]]]
+         unsigned long eNum( Face<4,1>::edgeNumber[mPerm5[domPerm5[0]]]
                                                  [mPerm5[domPerm5[1]]] );
          Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
          i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->edge(eNum) );
@@ -429,7 +429,7 @@ std::vector<NHomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
         ranSim = fullMap[A].germ[ domSim ].pen;
         mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-        unsigned long eNum( Dim4Edge::edgeNumber[ mPerm5[domPerm5[domFacV]] ]
+        unsigned long eNum( Face<4,1>::edgeNumber[ mPerm5[domPerm5[domFacV]] ]
                                         [ mPerm5[domPerm5[(domFacV+1) % 2]] ] );
 
         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
@@ -488,7 +488,7 @@ std::vector<NHomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
       mat.entry( i+stdCount, j+stdCount ) = SIG;
     }
 
-   retval[A] = new NHomMarkedAbelianGroup( *HP, *HP, mat );
+   retval[A] = new HomMarkedAbelianGroup( *HP, *HP, mat );
    if (!retval[A]->isCycleMap()) { 
      std::cout<<"NSimplicialAutGrp::homologyAction() ERROR! isCycleMap()."<<
      std::endl; exit(1); }
@@ -564,7 +564,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const Triangulation<3> *tri3,
         if (VU.size() != 1) 
          { std::cout<<"linearFacet::bdryFacets ERROR 4."<<std::endl; exit(1); }
         #endif
-        const Dim4Edge* edg( tri4->edge( cDat->nicIndex( sdim, sindx ) ) );
+        const Face<4,1>* edg( tri4->edge( cDat->nicIndex( sdim, sindx ) ) );
         unsigned long I( *VU.begin() );
         if ( !edg->vertex(I)->isIdeal() ) 
          { retval.insert( linearFacet( 0, 0, 
@@ -731,7 +731,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const Triangulation<3> *tri3,
       }
      else 
       { // dim4, copy dim3 case above 
-       const Dim4Tetrahedron* tet( tri4->tetrahedron( 
+       const Face<4,3>* tet( tri4->tetrahedron( 
                                    cDat->nicIndex( sdim, sindx ) ) );
        if (vCentres.size()==4) // whole tetrahedron
         {
@@ -917,7 +917,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const Triangulation<3> *tri3,
              }
             else
              { // two vertices, i.e. proper edge
-               unsigned long eNum( Dim4Edge::edgeNumber[*VU.begin()]
+               unsigned long eNum( Face<4,1>::edgeNumber[*VU.begin()]
                 [*VU.rbegin()] );
                linearFacet temp( 1, 1, 
                  cDat->nicIxLookup( pen->edge( eNum ) ) );
@@ -1017,7 +1017,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const Triangulation<3> *tri3,
                retval.insert(temp);
               } else // edg
               {
-               unsigned long eNum( Dim4Edge::edgeNumber
+               unsigned long eNum( Face<4,1>::edgeNumber
                     [*VU.begin()][*VU.rbegin()] );
                linearFacet temp( 0, 1, cDat->nicIxLookup( 
                 pen->edge( eNum ) ) );
@@ -1445,7 +1445,7 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
          mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
 
-         unsigned long eNum( Dim4Edge::edgeNumber
+         unsigned long eNum( Face<4,1>::edgeNumber
             [mPerm5[domPerm5[0]]][mPerm5[domPerm5[1]]] );
          Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
          if ( domFac == cDat->nicIxLookup( 

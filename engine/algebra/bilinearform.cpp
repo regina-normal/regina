@@ -36,9 +36,9 @@
 
 namespace regina {
 
-NBilinearForm::NBilinearForm(const NMarkedAbelianGroup &ldomain, 
-                             const NMarkedAbelianGroup &rdomain,
-			                 const NMarkedAbelianGroup &range,   
+NBilinearForm::NBilinearForm(const MarkedAbelianGroup &ldomain, 
+                             const MarkedAbelianGroup &rdomain,
+			                 const MarkedAbelianGroup &range,   
                              const NSparseGridRing< Integer > &pairing) : 
 reducedPairing(NULL), unreducedPairing(NULL), 
 lDomain(ldomain), rDomain(rdomain), Range(range)
@@ -111,7 +111,7 @@ std::vector<Integer> NBilinearForm::evalCC(
 
 unsigned long NBilinearForm::rank() const
 {
- if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, Integer::zero))) 
+ if (!Range.isIsomorphicTo(MarkedAbelianGroup(1, Integer::zero))) 
     return 0;
  MatrixInt cM( lDomain.getRank(), rDomain.getRank() );
 
@@ -137,11 +137,11 @@ unsigned long NBilinearForm::rank() const
 long int NBilinearForm::zFormSignature() const 
 {
  if (!isSymmetric()) return 0; 
- if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, Integer::zero))) 
+ if (!Range.isIsomorphicTo(MarkedAbelianGroup(1, Integer::zero))) 
      return 0;
  // ldomain == rdomain, form symmetric, range == Z.
  // so reducedpairing is nxnx1 -- think of it as a matrix M, computed Det(tI-M)
- NMatrixRing< NSVPolynomialRing< Integer > > cM( lDomain.getRank(), 
+ MatrixRing< NSVPolynomialRing< Integer > > cM( lDomain.getRank(), 
                                                        rDomain.getRank() );
  // iterate through reducedPairing, insert into cM
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
@@ -199,7 +199,7 @@ const std::string& NBilinearForm::kkTorRank() const
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
-    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    std::vector< MatrixRing<Rational>* > linkingFormPD;
     computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, 
                                          ttVec, ptVec, linkingFormPD );
     readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
@@ -224,7 +224,7 @@ const std::string& NBilinearForm::kkTorSigma() const
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
-    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    std::vector< MatrixRing<Rational>* > linkingFormPD;
     computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, 
                                          ttVec, ptVec, linkingFormPD );
     readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
@@ -249,7 +249,7 @@ const std::string& NBilinearForm::kkTorLegendre() const
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
-    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    std::vector< MatrixRing<Rational>* > linkingFormPD;
     computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, 
                                          ttVec, ptVec, linkingFormPD );
     readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
@@ -274,7 +274,7 @@ bool NBilinearForm::kkIsSplit() const
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
-    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    std::vector< MatrixRing<Rational>* > linkingFormPD;
     computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, 
                                          ttVec, ptVec, linkingFormPD );
     readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
@@ -299,7 +299,7 @@ bool NBilinearForm::kkIsHyperbolic() const
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
-    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    std::vector< MatrixRing<Rational>* > linkingFormPD;
     computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, 
                                          ttVec, ptVec, linkingFormPD );
     readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
@@ -324,7 +324,7 @@ bool NBilinearForm::kkTwoTor() const
                  std::vector< unsigned long > > > ppList;
     std::vector<unsigned long> ttVec;
     std::vector< std::pair< unsigned long, std::vector< int > > > ptVec; 
-    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    std::vector< MatrixRing<Rational>* > linkingFormPD;
     computeTorsionLinkingFormInvariants( (*this), ppVec, ppList, 
                                          ttVec, ptVec, linkingFormPD );
     readTeaLeavesTLF( ppVec, ppList, ttVec, ptVec, linkingFormPD, true, 
@@ -340,10 +340,10 @@ bool NBilinearForm::kkTwoTor() const
 }
 
 
-NMarkedAbelianGroup NBilinearForm::image() const
+MarkedAbelianGroup NBilinearForm::image() const
 { 
  // lets compute the image based off of the reducedpairing. 
- NMarkedAbelianGroup dom(lDomain.minNumberOfGenerators()*
+ MarkedAbelianGroup dom(lDomain.minNumberOfGenerators()*
                          rDomain.minNumberOfGenerators(), Integer::zero );
  MatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
@@ -356,8 +356,8 @@ NMarkedAbelianGroup NBilinearForm::image() const
                   Range.getNumberOfInvariantFactors() );
  for (unsigned long i=0; i<Range.getNumberOfInvariantFactors(); i++)
   redN.entry(i,i) = Range.getInvariantFactor(i);
- NMarkedAbelianGroup modRange( zeroM, redN );
- NHomMarkedAbelianGroup hom( dom, modRange, mat );
+ MarkedAbelianGroup modRange( zeroM, redN );
+ HomMarkedAbelianGroup hom( dom, modRange, mat );
  return hom.getImage();
 }
 
@@ -408,7 +408,7 @@ return true;
 /* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
  * p' = p( f x I ), p'^k_ij = sum_l f^l_i p^k_lj
  */
-NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
+NBilinearForm NBilinearForm::lCompose(const HomMarkedAbelianGroup &f) const
 {
  // check to see if this is a valid operation
  #ifdef DEBUG
@@ -440,7 +440,7 @@ NBilinearForm NBilinearForm::lCompose(const NHomMarkedAbelianGroup &f) const
 /* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
  * p' = p( I x f ), p'^k_ij = sum_l f^l_j p^k_il
  */
-NBilinearForm NBilinearForm::rCompose(const NHomMarkedAbelianGroup &f) const
+NBilinearForm NBilinearForm::rCompose(const HomMarkedAbelianGroup &f) const
 {
  // check to see if this is a valid operation
  #ifdef DEBUG
@@ -467,7 +467,7 @@ return NBilinearForm( lDomain, f.getDomain(), Range, newPairing );
 
 
 
-NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
+NBilinearForm NBilinearForm::postCompose(const HomMarkedAbelianGroup &f) const
 {
  #ifdef DEBUG
  if (!Range.equalTo(f.getDomain()))
@@ -494,7 +494,7 @@ NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
 
 
 // A x B --> C   turned into   A --> Hom(B,C)
-NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
+HomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 { 
  MatrixInt M( 1, 
                rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
@@ -518,7 +518,7 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
      else N.entry( k, k ) = Integer::zero;
     } 
   }
- NMarkedAbelianGroup HOM(M,N);
+ MarkedAbelianGroup HOM(M,N);
 
  // step 2: find matrix A --> Hom(B,C)
  MatrixInt adjmat( 
@@ -552,14 +552,14 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
  for (unsigned long i=0; i<lDomain.getNumberOfInvariantFactors(); i++)
    lN.entry(i,i) = lDomain.getInvariantFactor(i);
 
- NMarkedAbelianGroup simpleLdomain( lM, lN );
+ MarkedAbelianGroup simpleLdomain( lM, lN );
 
- return NHomMarkedAbelianGroup( simpleLdomain, HOM, adjmat );
+ return HomMarkedAbelianGroup( simpleLdomain, HOM, adjmat );
 }
 
 
 // A x B --> C   turned into   B --> Hom(A,C)
-NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
+HomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
 {
  MatrixInt M(1, 
               lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
@@ -584,7 +584,7 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
       else N.entry( k, k ) = Integer::zero; 
      } 
    }
- NMarkedAbelianGroup HOM(M,N);
+ MarkedAbelianGroup HOM(M,N);
 
  // step 2: find matrix B --> Hom(A,C)
  MatrixInt adjmat( lDomain.minNumberOfGenerators()*
@@ -615,9 +615,9 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
  for (unsigned long i=0; i<rDomain.getNumberOfInvariantFactors(); i++)
   rN.entry(i,i) = rDomain.getInvariantFactor(i);
 
- NMarkedAbelianGroup simpleRdomain( rM, rN );
+ MarkedAbelianGroup simpleRdomain( rM, rN );
 
- return NHomMarkedAbelianGroup( simpleRdomain, HOM, adjmat );
+ return HomMarkedAbelianGroup( simpleRdomain, HOM, adjmat );
 }
 
 void NBilinearForm::writeTextShort(std::ostream& out) const
@@ -657,7 +657,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                  std::vector< unsigned long > > > &ppList, 
     std::vector<unsigned long> &ttVec, 
     std::vector< std::pair< unsigned long, std::vector< int > > > &ptVec, 
-    std::vector< NMatrixRing<NRational>* > &linkingFormPD ) 
+    std::vector< MatrixRing<Rational>* > &linkingFormPD ) 
 {
     Integer tN,tD,tR;
     // number of torsion generators:
@@ -776,7 +776,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     unsigned long indexingSize = indexing.size();
     ppList.resize(indexingSize); // one entry for every prime divisor of |H1|
     linkingFormPD.resize(indexingSize);
-    // find the denominator of all our NRationals in our linking form matrices
+    // find the denominator of all our Rationals in our linking form matrices
     Integer DenOm( (intP.range().getNumberOfInvariantFactors()==0) ? 1 : 
         intP.range().getInvariantFactor(0) ); // only one invariant factor in 
                               // the range unless the torsion group is trivial
@@ -787,7 +787,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
      for (j=0; j<it1->second.size(); j++) 
         ppList[i].second[j] = it1->second[j].first;
 
-     linkingFormPD[i] = new NMatrixRing<NRational>(it1->second.size(), 
+     linkingFormPD[i] = new MatrixRing<Rational>(it1->second.size(), 
                                                    it1->second.size() );
 
      for (j=0; j<it1->second.size(); j++) 
@@ -799,8 +799,8 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
          std::vector< Integer > ccR( pvList[ it1->second[k].second ] );
          Integer num( intP.evalCC(ccL, ccR)[0] % DenOm );
          Integer G( num.gcd(DenOm) );
-         linkingFormPD[i]->entry(j,k) = NRational( num / G, DenOm / G );
-         // perhaps reduce this NRational? 
+         linkingFormPD[i]->entry(j,k) = Rational( num / G, DenOm / G );
+         // perhaps reduce this Rational? 
         } 
       }
     }
@@ -850,12 +850,12 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     // step 2: KK 2-torsion invariant
     // decide on if there is 2-torsion...
     Integer twoPow;
-    static const NRational pi = NRational(
+    static const Rational pi = Rational(
                 Integer("314159265358979323846264338327950288"),
                 Integer("100000000000000000000000000000000000") );
     std::vector< Integer > groupV;
     bool notatend;
-    NRational tSum;
+    Rational tSum;
 
     unsigned long incind;
     bool incrun;
@@ -913,11 +913,11 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                     // call doubleApprox()
                     // first we evaluate the form(x,x) for x==groupV.
                     // the form is linkingformPD[0]
-                    tSum=NRational::zero;
+                    tSum=Rational::zero;
                     for (j=0; j<linkingFormPD[0]->rows(); j++)
                         for (k=0; k<linkingFormPD[0]->columns();
                                 k++)
-                            tSum += NRational(groupV[j]*groupV[k])*
+                            tSum += Rational(groupV[j]*groupV[k])*
                                 linkingFormPD[0]->entry(j,k);
 
                     // reduce mod 1, then turn into a long double and
@@ -925,7 +925,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
                     tN = tSum.getNumerator();
                     tD = tSum.getDenominator();
                     tN.divisionAlg(tD,tR);
-                    tSum = NRational(twoPow) * pi * NRational( tR, tD );
+                    tSum = Rational(twoPow) * pi * Rational( tR, tD );
                     tLD = tSum.doubleApprox();
                     // we ignore `inrange' parameter as the number is reduced
                     // mod 1, so either way it is
@@ -979,7 +979,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
             }
         }
     // step 3: Seifert odd p-torsion legendre symbol invariant (done)
-    //           to do this I need to add a determinant to NMatrixRing class
+    //           to do this I need to add a determinant to MatrixRing class
     //           this invariant will be expressed as a
     //           std::vector< std::pair< Integer, std::vector< int > > >
     //           storing the odd prime, list of Legendre symbols -1, 0, 1.
@@ -1018,7 +1018,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 
             for (k=0; k<ppVec[i].second[j]; k++)
                 for (l=0; l<ppVec[i].second[j]; l++)
-                    tempM.entry(k,l) = (NRational(tI)*linkingFormPD[i]->
+                    tempM.entry(k,l) = (Rational(tI)*linkingFormPD[i]->
                         entry(k+curri,l+curri)).getNumerator();
             tempa.push_back( tempM.det().legendre(ppVec[i].first) );
             // legendre symbol, compute and append to tempa
@@ -1050,7 +1050,7 @@ void readTeaLeavesTLF(
         const std::vector<unsigned long> &ttVec, 
         const std::vector< std::pair< unsigned long, 
                            std::vector< int > > > &ptVec, 
-        const std::vector< NMatrixRing<NRational>* > &linkingFormPD, 
+        const std::vector< MatrixRing<Rational>* > &linkingFormPD, 
         bool orientable, 
         bool* torsionLinkingFormIsSplit, 
         bool* torsionLinkingFormIsHyperbolic, 
@@ -1111,7 +1111,7 @@ void readTeaLeavesTLF(
                 (*torsionLinkingFormIsHyperbolic)=false;
     }
 
-    NRational tRat;
+    Rational tRat;
 
     if (starti==1) { // starti==1 means we have 2-torsion.  
         // for each k need to compute 2^{k-1}*form(x,x) on all
@@ -1119,14 +1119,14 @@ void readTeaLeavesTLF(
         // std::vector< std::pair< Integer,
         //     std::vector<unsigned long> > > ppList;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
-        //std::vector< NMatrixRing<NRational>* > linkingFormPD;
+        //std::vector< MatrixRing<Rational>* > linkingFormPD;
         for (i=0; i<ppList[0].second.size(); i++) {
             // run down diagonal of linkingFormPD[0], for each (i,i) entry
             // multiply it by 2^{ppList[0].second[i]-1} check if
             // congruent to zero. if not, trigger flag.
             tI = Integer("2");
             tI.raiseToPower(ppList[0].second[i]-1);
-            tRat = NRational(tI) * linkingFormPD[0]->entry(i,i);
+            tRat = Rational(tI) * linkingFormPD[0]->entry(i,i);
             tN = tRat.getNumerator();
             tD = tRat.getDenominator();
             tN.divisionAlg(tD,tR);

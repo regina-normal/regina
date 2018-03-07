@@ -32,10 +32,9 @@
 /* end stub */
 
 #include "algebra/cellulardata.h"
-#include "maths/nperm3.h"
-#include "maths/nperm4.h"
-#include "algebra/ngrouppresentation.h"
-#include "algebra/nhomgrouppresentation.h"
+#include "maths/perm.h"
+#include "algebra/grouppresentation.h"
+#include "algebra/homgrouppresentation.h"
 
 #include <map>
 #include <list>
@@ -70,34 +69,34 @@ unsigned long num_less_than(const std::set<unsigned long> &thelist,
 }
 
 // dim4
-bool CellularData::inMaximalTree(const Dim4Tetrahedron* tet) const
+bool CellularData::inMaximalTree(const Face<4,3>* tet) const
 {
  if (!binary_search( nicIx[3].begin(), nicIx[3].end(), 
-  tri4->tetrahedronIndex( tet ) ) ) return false; // not in list of tetrahedra!
+  tet->index() ) ) return false; // not in list of tetrahedra!
  unsigned long I = lower_bound( nicIx[3].begin(), nicIx[3].end(), 
-    tri4->tetrahedronIndex( tet ) ) - nicIx[3].begin();
+    tet->index() ) - nicIx[3].begin();
  if (!binary_search( maxTreeStd.begin(), maxTreeStd.end(), I ) ) return false;
  return true;
 }
 
-bool CellularData::inMaximalTree(const Dim4Triangle* fac) const
+bool CellularData::inMaximalTree(const Face<4,2>* fac) const
 {
  if (!binary_search(bcIx[2].begin(), bcIx[2].end(), 
-    tri4->triangleIndex( fac ) ) ) return false; // not in list of faces!
+    fac->index() ) ) return false; // not in list of faces!
  unsigned long I = lower_bound( bcIx[2].begin(), bcIx[2].end(), 
-    tri4->triangleIndex( fac ) ) - bcIx[2].begin();
+    fac->index() ) - bcIx[2].begin();
  if (!binary_search( maxTreeStB.begin(), maxTreeStB.end(), I ) ) return false;
  return true; 
 }
 
 bool CellularData::inMaximalTree(
-    const Dim4Tetrahedron* tet, unsigned long num) const
+    const Face<4,3>* tet, unsigned long num) const
 {
  if (!binary_search(icIx[2].begin(), icIx[2].end(), 
-    4*tri4->tetrahedronIndex( tet ) + num ) ) return false; 
+    4*tet->index() + num ) ) return false; 
  // not in list of ideal ends of tetrahedra
  unsigned long I = lower_bound( icIx[2].begin(), icIx[2].end(), 
-    4*tri4->tetrahedronIndex( tet ) + num ) - icIx[2].begin();
+    4*tet->index() + num ) - icIx[2].begin();
  if (!binary_search( maxTreeIdB.begin(), maxTreeIdB.end(), I ) ) return false; 
  return true;
 }
@@ -106,9 +105,9 @@ bool CellularData::inMaximalTree(
     const Simplex<4>* pen, unsigned long num) const
 {
  if (!binary_search(icIx[3].begin(), icIx[3].end(), 
-    5*tri4->pentachoronIndex( pen ) + num ) ) return false; 
+    5*pen->index() + num ) ) return false; 
  unsigned long I = lower_bound( icIx[3].begin(), icIx[3].end(), 
-    5*tri4->pentachoronIndex( pen ) + num ) - icIx[3].begin();
+    5*pen->index() + num ) - icIx[3].begin();
  if (!binary_search( maxTreeSttIdB.begin(), maxTreeSttIdB.end(), I ) ) 
     return false;
  return true;
@@ -119,9 +118,9 @@ bool CellularData::inMaximalTree(
 bool CellularData::inMaximalTree(const Face<3,2>* fac) const
 {
  if (!binary_search( nicIx[2].begin(), nicIx[2].end(), 
-    tri3->faceIndex( fac ) ) ) return false; // not in list of faces!
+    fac->index() ) ) return false; // not in list of faces!
  unsigned long I = lower_bound( nicIx[2].begin(), nicIx[2].end(), 
-    tri3->faceIndex( fac ) ) - nicIx[2].begin();
+    fac->index() ) - nicIx[2].begin();
  if (!binary_search( maxTreeStd.begin(), maxTreeStd.end(), I ) ) return false;
  return true;
 }
@@ -129,9 +128,9 @@ bool CellularData::inMaximalTree(const Face<3,2>* fac) const
 bool CellularData::inMaximalTree(const Face<3,1>* edg) const
 {
  if (!binary_search(bcIx[1].begin(), bcIx[1].end(), 
-    tri3->edgeIndex( edg ) ) ) return false; // not in list of edges!
+    edg->index() ) ) return false; // not in list of edges!
  unsigned long I = lower_bound( bcIx[1].begin(), bcIx[1].end(), 
-    tri3->edgeIndex( edg ) ) - bcIx[1].begin();
+    edg->index() ) - bcIx[1].begin();
  if (!binary_search( maxTreeStB.begin(), maxTreeStB.end(), I ) ) return false;
  return true; 
 }
@@ -139,10 +138,10 @@ bool CellularData::inMaximalTree(const Face<3,1>* edg) const
 bool CellularData::inMaximalTree(const Face<3,2>* fac, unsigned long num) const
 {
  if (!binary_search(icIx[1].begin(), icIx[1].end(), 
-    3*tri3->faceIndex( fac ) + num ) ) return false; 
+    3*fac->index() + num ) ) return false; 
     // not in list of ideal ends of faces
  unsigned long I = lower_bound( icIx[1].begin(), icIx[1].end(), 
-    3*tri3->faceIndex( fac ) + num ) - icIx[1].begin();
+    3*fac->index() + num ) - icIx[1].begin();
  if (!binary_search( maxTreeIdB.begin(), maxTreeIdB.end(), I ) ) return false; 
  return true;
 }
@@ -151,9 +150,9 @@ bool CellularData::inMaximalTree(const Simplex<3>* tet,
                                   unsigned long num) const
 {
  if (!binary_search(icIx[2].begin(), icIx[2].end(), 
-    4*tri3->tetrahedronIndex( tet ) + num ) ) return false; 
+    4*tet->index() + num ) ) return false; 
  unsigned long I = lower_bound( icIx[2].begin(), icIx[2].end(), 
-    4*tri3->tetrahedronIndex( tet ) + num ) - icIx[2].begin();
+    4*tet->index() + num ) - icIx[2].begin();
  if (!binary_search( maxTreeSttIdB.begin(), maxTreeSttIdB.end(), I ) ) 
     return false;
  return true;
@@ -196,14 +195,14 @@ void CellularData::buildExtraNormalData()
   normalsDim4BdryVertices.resize( bcIx[0].size() );
 
   // iterate through boundary components
-  const std::vector<Dim4BoundaryComponent*> 
-    bComps(tri4->getBoundaryComponents());
+  const std::vector<BoundaryComponent<4>*> 
+    bComps(tri4->boundaryComponents());
   for (Dim4Triangulation::BoundaryComponentIterator 
-       bcit=tri4->getBoundaryComponents().begin(); 
-       bcit!=tri4->getBoundaryComponents().end(); bcit++) 
+       bcit=tri4->boundaryComponents().begin(); 
+       bcit!=tri4->boundaryComponents().end(); bcit++) 
   if ( !(*bcit)->isIdeal() )
    {
-    const Triangulation<3>* bTriComp( (*bcit)->getTriangulation() );
+    const Triangulation<3>* bTriComp( (*bcit)->build() );
      
     // run through vertices, edges, faces in bTriComp, find corresponding Dim4 
     // object, get its bcIx, call it j for the same objects get incidence data, 
@@ -214,10 +213,11 @@ void CellularData::buildExtraNormalData()
     for (Triangulation<3>::VertexIterator vit=bTriComp->vertices().begin(); 
          vit!=bTriComp->vertices().end(); vit++)
      {
-      unsigned long I = bcIxLookup( 
-            (*bcit)->vertex( bTriComp->vertexIndex(*vit) ) );
+      unsigned long I = bcIxLookup( (*bcit)->vertex( (*vit)->index() ) );
       // find vit's embeddings
-      const std::vector<Face<3,0>Embedding> tri3vrtEmb( (*vit)->embeddings() ); 
+      // TODO: switch to Ben's iterators here.
+
+      const std::vector< FaceEmbedding<3,0> > tri3vrtEmb( (*vit)->embeddings() ); 
       // vertex embeddings in bdry triangulation
  
       dim4BoundaryVertexInclusion dim4bvrtInc;
@@ -427,10 +427,10 @@ void CellularData::buildExtraNormalData()
   {
   stdBdryCompIndexCD1.resize( bcIx[2].size() ); 
   idBdryCompIndexCD1.resize( icIx[2].size() );
-  for (unsigned long i=0; i<tri4->getNumberOfBoundaryComponents(); i++) 
+  for (unsigned long i=0; i<tri4->countBoundaryComponents(); i++) 
    { // now we can run through all the faces in this boundary component, 
      //  and fill out the appropriate array stdBdryCompIndex
-    const Dim4BoundaryComponent* bcomp( tri4->getBoundaryComponent(i) );
+    const BoundaryComponent<4>* bcomp( tri4->boundaryComponent(i) );
     if (!bcomp->isIdeal())
      {
       for (unsigned long j=0; j<bcomp->getNumberOfTriangles(); j++)
@@ -444,10 +444,10 @@ void CellularData::buildExtraNormalData()
       //  ideal vertex is in bcomp
       for (unsigned long j=0; j<icIx[2].size(); j++)
        {
-        const Dim4Tetrahedron* tet( tri4->tetrahedron( icIx[2][j] / 4 ) ); 
+        const Face<4,3>* tet( tri4->tetrahedron( icIx[2][j] / 4 ) ); 
         const Face<4,0>* vrt( tet->vertex(icIx[2][j] % 4 ) );
         if (vrt->isIdeal()) 
-         if (tri4->boundaryComponentIndex( vrt->getBoundaryComponent() )==i)
+         if (tri4->boundaryComponentIndex( vrt->boundaryComponent() )==i)
          idBdryCompIndexCD1[j] = numIdealBdryComps;
        }
       numIdealBdryComps++;
@@ -458,10 +458,10 @@ void CellularData::buildExtraNormalData()
   {
   stdBdryCompIndexCD1.resize( bcIx[1].size() ); 
   idBdryCompIndexCD1.resize( icIx[1].size() );
-  for (unsigned long i=0; i<tri3->getNumberOfBoundaryComponents(); i++) 
+  for (unsigned long i=0; i<tri3->countBoundaryComponents(); i++) 
    { // now we can run through all the faces in this boundary component, 
      //  and fill out the appropriate array stdBdryCompIndex
-    const NBoundaryComponent* bcomp( tri3->getBoundaryComponent(i) );
+    const NBoundaryComponent* bcomp( tri3->boundaryComponent(i) );
     if (!bcomp->isIdeal())
      {
       for (unsigned long j=0; j<bcomp->getNumberOfEdges(); j++)
@@ -477,7 +477,7 @@ void CellularData::buildExtraNormalData()
         const Face<3,2>* fac( tri3->face( icIx[1][j] / 3 ) ); 
         const Face<3,0>* vrt( fac->vertex(icIx[1][j] % 3 ) );
         if (vrt->isIdeal()) 
-         if (tri3->boundaryComponentIndex( vrt->getBoundaryComponent() )==i)
+         if (tri3->boundaryComponentIndex( vrt->boundaryComponent() )==i)
           idBdryCompIndexCD1[j] = numIdealBdryComps;
        }
       numIdealBdryComps++;
@@ -529,7 +529,7 @@ void CellularData::buildMaximalTree()
 
     // *unexploredV is the icIx[3]-index of the ideal dual 0-cell
     const Simplex<4>* pen(NULL); unsigned long idvnum; 
-     const Dim4Tetrahedron* septet(NULL); const Simplex<4>* adjpen(NULL);
+     const Face<4,3>* septet(NULL); const Simplex<4>* adjpen(NULL);
     Perm<5> adjglue, tetmap;
 
     pen = tri4 -> pentachoron( icIx[3][*unexploredV]/5 );
@@ -559,12 +559,12 @@ void CellularData::buildMaximalTree()
     unexploredV = newVertexListB.begin();
 
     // *unexploredV is the bcIx[3]-index of the standard boundary dual 0-cell
-    const Dim4Tetrahedron* btet(NULL); 
+    const Face<4,3>* btet(NULL); 
     btet = tri4 -> tetrahedron( bcIx[3][*unexploredV] ); // btet
 
     for (unsigned long i=0; i<4; i++) // cross all faces
       {
-       const Dim4Triangle* fac( btet->triangle(i) ); 
+       const Face<4,2>* fac( btet->triangle(i) ); 
        // lookup in normalsDim4BdryFaces, for that we need the bcIx[2] index.
        unsigned long facidx( bcIxLookup( fac ) );
        // one of normalsDim4BdryFaces[facidx] first/second represents this
@@ -626,7 +626,7 @@ void CellularData::buildMaximalTree()
     for (unsigned long i=0; i<5; i++) 
         if ( pen -> tetrahedron(int(i)) -> isBoundary() )
      {
-      const Dim4Tetrahedron* btet( pen -> tetrahedron(i) );
+      const Face<4,3>* btet( pen -> tetrahedron(i) );
       unsigned long I = bcIxLookup( btet );
       unsigned long J = nicIxLookup( btet );
       if (!binary_search( visitedBd.begin(), visitedBd.end(), I ) ) // not found
@@ -859,8 +859,8 @@ void CellularData::buildFundGrpPres() const
 
  if (tri4)
   {
-   Dim4Tetrahedron* currTet (NULL); Simplex<4>* currPen (NULL); 
-        Dim4Tetrahedron* tet (NULL); unsigned long currPenFace;
+   Face<4,3>* currTet (NULL); Simplex<4>* currPen (NULL); 
+        Face<4,3>* tet (NULL); unsigned long currPenFace;
 
    // start finding relators. Relators dual faces. There are two types. 
    //  1) Non-boundary. 
@@ -969,7 +969,7 @@ void CellularData::buildFundGrpPres() const
    // now for boundary dual 2-cells -- pure boundary relator. run through 
    // bcIx[1], for each edge call embeddings(), this describes a disc 
    //  and we need to crawl around the boundary.
-   Dim4Edge* edg(NULL);
+   Face<4,1>* edg(NULL);
    for (unsigned long i=0; i<bcIx[1].size(); i++)
     {
      edg = tri4->edge( bcIx[1][i] );
@@ -978,11 +978,11 @@ void CellularData::buildFundGrpPres() const
      // call normalsDim4BdryEdges[i] for bcIx[1][i] normal data.
      for (unsigned long j=0; j<normalsDim4BdryEdges[i].tet.size(); j++)
       {
-       const Dim4Tetrahedron* tet( normalsDim4BdryEdges[i].tet[j] );
+       const Face<4,3>* tet( normalsDim4BdryEdges[i].tet[j] );
         // unsigned long edgnum ( normalsDim4BdryEdges[i].edgenum[j] );
        Perm<4> edginc ( normalsDim4BdryEdges[i].edginc[j] );
        // find the face that edginc[2] [3] comes out of
-       const Dim4Triangle* bfac (tet -> triangle( edginc[3] ) ); 
+       const Face<4,2>* bfac (tet -> triangle( edginc[3] ) ); 
        if (!inMaximalTree(bfac))
         {
          // find this bfac's bcIx[2] index
@@ -1023,7 +1023,7 @@ void CellularData::buildFundGrpPres() const
      GroupExpression relator, brelator; 
      unsigned long bcompidx(0);
 
-     const Dim4Triangle* fac ( tri4->triangle( icIx[1][i]/3 ) );
+     const Face<4,2>* fac ( tri4->triangle( icIx[1][i]/3 ) );
      unsigned long idEdg ( icIx[1][i] % 3 );  // ideal edge number of fac
      // lets acquire all the Dim4Pentachora incident to fac. 
      for (unsigned long j=0; j<fac->getNumberOfEmbeddings(); j++)
@@ -1035,7 +1035,7 @@ void CellularData::buildFundGrpPres() const
        // in pentachoral and look up the relevant ideal tets. So we are going 
        // across the tetrahedron in pen whose vertices are marked by 
        // facemb[0][1][2] and [3] ie tetrahedron labelled by facemb[4]. 
-       const Dim4Tetrahedron* tet ( pen->tetrahedron( facemb[4] ) );
+       const Face<4,3>* tet ( pen->tetrahedron( facemb[4] ) );
        Perm<5> tetemb( pen->tetrahedronMapping( facemb[4] ) );
        // vertex idEdg of fac corresponds to tetemb^{-1} facemb[idEdg] of tet.  
        // see if it is in the maximal tree icIx[2] stored as 4*tetindx + num
@@ -1070,7 +1070,7 @@ void CellularData::buildFundGrpPres() const
    for (unsigned long i=0; i<icIx[2].size(); i++)
     {
      GroupExpression relator; 
-     const Dim4Tetrahedron* tet ( tri4->tetrahedron( icIx[2][i]/4 ) );
+     const Face<4,3>* tet ( tri4->tetrahedron( icIx[2][i]/4 ) );
      unsigned long idFac ( icIx[2][i] % 4 );  // ideal end number of tet
 
      // these relators have at most 4 terms depending on how many of the 
@@ -1205,13 +1205,16 @@ void CellularData::buildFundGrpPres() const
         } 
 
        // end pad
-        // TODO: fix this embeddings() call
-       currTetFace= (*edg)->embeddings().back().vertices()[2];
+
+       // TODO: fix this embeddings() call, original commented out
+       //currTetFace= (*edg)->embeddings().back().vertices()[2];
+       currTetFace= (*edg)->back().vertices()[2];
+
        fac = currTet->triangle(currTetFace);
        if (!fac->isBoundary()) std::cout<<"CellularData::buildFundGrpPres()"
             " ERROR unexpected face (2)."<<std::endl;
        if (!inMaximalTree(fac))
-        {
+        
          facind = delta1 + fac->index()  -
                   num_less_than( maxTreeStd, fac->index() );
          relator.addTermFirst( facind, 1 ); 
