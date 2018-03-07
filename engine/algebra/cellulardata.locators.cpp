@@ -326,7 +326,7 @@ void CellularData::HomGroupPresLocator::writeTextLong(std::ostream& out) const
 { writeTextShort(out); } 
 
 CellularData::coverFacetData::coverFacetData( unsigned long cellN, 
- signed long Sig, const NGroupExpression& word )
+ signed long Sig, const GroupExpression& word )
 {  
  cellNo = cellN; 
  sig = Sig; 

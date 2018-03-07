@@ -87,7 +87,7 @@ bool written=false;
 	 fmit->second->writeTextShort(out);
 	 written = true;
 	}
- std::map< GroupPresLocator, NGroupPresentation* >::const_iterator git;
+ std::map< GroupPresLocator, GroupPresentation* >::const_iterator git;
  for (git = groupPresentations.begin(); git != groupPresentations.end(); git++)
  	{
 	 if (written) out<<" ";
@@ -97,7 +97,7 @@ bool written=false;
 //	 git->second->writeTextShort(out);
 	 written = true;
 	}
- std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hit;
+ std::map< HomGroupPresLocator, HomGroupPresentation* >::const_iterator hit;
  for (hit = homGroupPresentations.begin(); 
       hit != homGroupPresentations.end(); hit++)
  	{
@@ -171,7 +171,7 @@ else
    fmit->second->writeTextShort(out);
    out<<", ";
   }
- std::map< GroupPresLocator, NGroupPresentation* >::const_iterator git;
+ std::map< GroupPresLocator, GroupPresentation* >::const_iterator git;
  for (git = groupPresentations.begin(); git != groupPresentations.end(); git++)
   {
    out<<" ";
@@ -179,7 +179,7 @@ else
    out<<" is ";
    git->second->writeTextLong(out);
   }
- std::map< HomGroupPresLocator, NHomGroupPresentation* >::const_iterator hit;
+ std::map< HomGroupPresLocator, HomGroupPresentation* >::const_iterator hit;
  for (hit = homGroupPresentations.begin(); 
       hit != homGroupPresentations.end(); hit++)
   {

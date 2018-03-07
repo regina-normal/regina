@@ -113,7 +113,7 @@ unsigned long NBilinearForm::rank() const
 {
  if (!Range.isIsomorphicTo(NMarkedAbelianGroup(1, Integer::zero))) 
     return 0;
- NMatrixInt cM( lDomain.getRank(), rDomain.getRank() );
+ MatrixInt cM( lDomain.getRank(), rDomain.getRank() );
 
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
@@ -163,7 +163,7 @@ long int NBilinearForm::zFormSignature() const
 
 std::pair< bool, int > NBilinearForm::zFormType() const
 {
- NMatrixInt cM( lDomain.getRank(), rDomain.getRank() );
+ MatrixInt cM( lDomain.getRank(), rDomain.getRank() );
 
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
@@ -345,14 +345,14 @@ NMarkedAbelianGroup NBilinearForm::image() const
  // lets compute the image based off of the reducedpairing. 
  NMarkedAbelianGroup dom(lDomain.minNumberOfGenerators()*
                          rDomain.minNumberOfGenerators(), Integer::zero );
- NMatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
+ MatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
  for (J = reducedPairing->getGrid().begin(); 
       J!=reducedPairing->getGrid().end(); J++)
    mat.entry( J->first.entry(2), J->first.entry(0)*
      rDomain.minNumberOfGenerators() + J->first.entry(1) ) = (*J->second);
- NMatrixInt zeroM(1, Range.minNumberOfGenerators() );
- NMatrixInt redN( Range.minNumberOfGenerators(), 
+ MatrixInt zeroM(1, Range.minNumberOfGenerators() );
+ MatrixInt redN( Range.minNumberOfGenerators(), 
                   Range.getNumberOfInvariantFactors() );
  for (unsigned long i=0; i<Range.getNumberOfInvariantFactors(); i++)
   redN.entry(i,i) = Range.getInvariantFactor(i);
@@ -496,9 +496,9 @@ NBilinearForm NBilinearForm::postCompose(const NHomMarkedAbelianGroup &f) const
 // A x B --> C   turned into   A --> Hom(B,C)
 NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 { 
- NMatrixInt M( 1, 
+ MatrixInt M( 1, 
                rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
- NMatrixInt N( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),  
+ MatrixInt N( rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),  
                rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() ); 
  for (unsigned long i=0; i<rDomain.minNumberOfGenerators(); i++) 
   for (unsigned long j=0; j<Range.minNumberOfGenerators(); j++)
@@ -521,7 +521,7 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
  NMarkedAbelianGroup HOM(M,N);
 
  // step 2: find matrix A --> Hom(B,C)
- NMatrixInt adjmat( 
+ MatrixInt adjmat( 
     rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),
     lDomain.minNumberOfGenerators() );
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator I;
@@ -545,8 +545,8 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
  // step 3: return the adjoint
  //         for this we need the SNF presentation of lDomain. 
 
- NMatrixInt lM( 1, lDomain.minNumberOfGenerators() );
- NMatrixInt lN( lDomain.minNumberOfGenerators(), 
+ MatrixInt lM( 1, lDomain.minNumberOfGenerators() );
+ MatrixInt lN( lDomain.minNumberOfGenerators(), 
                 lDomain.minNumberOfGenerators() );
 
  for (unsigned long i=0; i<lDomain.getNumberOfInvariantFactors(); i++)
@@ -561,9 +561,9 @@ NHomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 // A x B --> C   turned into   B --> Hom(A,C)
 NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
 {
- NMatrixInt M(1, 
+ MatrixInt M(1, 
               lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
- NMatrixInt N( lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(), 
+ MatrixInt N( lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(), 
                lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
 
  for (unsigned long i=0; i<lDomain.minNumberOfGenerators(); i++) 
@@ -587,7 +587,7 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
  NMarkedAbelianGroup HOM(M,N);
 
  // step 2: find matrix B --> Hom(A,C)
- NMatrixInt adjmat( lDomain.minNumberOfGenerators()*
+ MatrixInt adjmat( lDomain.minNumberOfGenerators()*
              Range.minNumberOfGenerators(), rDomain.minNumberOfGenerators() );
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator I;
  for (I=reducedPairing->getGrid().begin(); 
@@ -608,8 +608,8 @@ NHomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
   }
  // step 3: return the adjoint
  //	    simplified SNF pres of rDomain
- NMatrixInt rM( 1, rDomain.minNumberOfGenerators() );
- NMatrixInt rN( rDomain.minNumberOfGenerators(), 
+ MatrixInt rM( 1, rDomain.minNumberOfGenerators() );
+ MatrixInt rN( rDomain.minNumberOfGenerators(), 
                 rDomain.minNumberOfGenerators() );
 
  for (unsigned long i=0; i<rDomain.getNumberOfInvariantFactors(); i++)
@@ -1009,7 +1009,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
         // dimensions of p^{j+1} subspace
         {
             // initialize a ppVec[i].second[j] square matrix.
-            NMatrixInt tempM(ppVec[i].second[j], ppVec[i].second[j]);
+            MatrixInt tempM(ppVec[i].second[j], ppVec[i].second[j]);
 
             // tempM will be the ppVec[i].second[j] square submatrix
             // starting at curri, multiplied by tI == p^j

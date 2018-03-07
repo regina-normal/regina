@@ -38,7 +38,7 @@
 
 namespace regina {
 
-NSimplicialAutGrp::NSimplicialAutGrp(const NTriangulation &input)
+NSimplicialAutGrp::NSimplicialAutGrp(const Triangulation<3> &input)
 {
  tri3 = &input; tri4 = NULL;
  std::list< NIsomorphism* > isoList;
@@ -80,20 +80,20 @@ std::vector< int > NSimplicialAutGrp::orientationAction() const
  std::vector< int > retval( fullMap.size() );
  for (unsigned long i=0; i<retval.size(); i++)
   {
-  if (tri3) retval[i] = tri3->getTetrahedron(0)->orientation()*
-                 NPerm4::S4[ fullMap[i].germ[0].perm ].sign()*
-                 tri3->getTetrahedron( fullMap[i].germ[0].pen )->orientation();
-  if (tri4) retval[i] = tri4->getPentachoron(0)->orientation()*
-                 NPerm5::S5[ fullMap[i].germ[0].perm ].sign()*
-                 tri4->getPentachoron( fullMap[i].germ[0].pen )->orientation();
+  if (tri3) retval[i] = tri3->tetrahedron(0)->orientation()*
+                 Perm<4>::S4[ fullMap[i].germ[0].perm ].sign()*
+                 tri3->tetrahedron( fullMap[i].germ[0].pen )->orientation();
+  if (tri4) retval[i] = tri4->pentachoron(0)->orientation()*
+                 Perm<5>::S5[ fullMap[i].germ[0].perm ].sign()*
+                 tri4->pentachoron( fullMap[i].germ[0].pen )->orientation();
   }
  return retval;
 }
 
 
-std::vector<NMatrixInt*> NSimplicialAutGrp::homologyH1action() const
+std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
 {
- std::vector<NMatrixInt*> retval;
+ std::vector<MatrixInt*> retval;
  CellularData* cDat;
  if (tri3) cDat = new CellularData(*tri3);
       else cDat = new CellularData(*tri4);
@@ -106,7 +106,7 @@ std::vector<NMatrixInt*> NSimplicialAutGrp::homologyH1action() const
     for (unsigned long i=0; i<retval.size(); i++) 
      {
         // now we fill out the matrix.
-        NMatrixInt mat( H1P->getRankCC(), H1P->getRankCC() );
+        MatrixInt mat( H1P->getRankCC(), H1P->getRankCC() );
         // using STD_coord. these are indexed by nicIx followed by icIx.
         // so computing the H1 CC map is going to be relatively straightforward. 
         unsigned long cellCount( cDat->cellCount( 
@@ -122,31 +122,31 @@ std::vector<NMatrixInt*> NSimplicialAutGrp::homologyH1action() const
           //  check where the vertices go.  We then compute what edge that is...
 
           if (tri3) { // 3-dimensional case
-           NPerm4 per3( tri3->getEdge(j)->getEmbedding(0).getVertices() );
+           Perm<4> per3( tri3->edge(j)->embedding(0).vertices() );
            unsigned long tetnum3( tri3->simplexIndex( 
-                        tri3->getEdge(j)->getEmbedding(0).getTetrahedron() ) );
+                        tri3->edge(j)->embedding(0).tetrahedron() ) );
            unsigned long tPen( fullMap[i].germ[ tetnum3 ].pen ); // target pen
-           NPerm4 mPerm( NPerm4::S4[ fullMap[i].germ[ tetnum3 ].perm ] );
+           Perm<4> mPerm( Perm<4>::S4[ fullMap[i].germ[ tetnum3 ].perm ] );
            // edge number in tet tPen. 
-           unsigned long eNum( NEdge::edgeNumber[ mPerm[per3[0]] ]
+           unsigned long eNum( Face<3,1>::edgeNumber[ mPerm[per3[0]] ]
                                                 [ mPerm[per3[1]] ] );
-           NPerm4 eOr( tri3->getSimplex( tPen )->getEdgeMapping(eNum) );
-           // now we need to find this edge Pen::getEdgeMapping class.  
-           mat.entry( cDat->nicIxLookup( tri3->getSimplex(tPen)->getEdge(eNum)
+           Perm<4> eOr( tri3->getSimplex( tPen )->edgeMapping(eNum) );
+           // now we need to find this edge Pen::edgeMapping class.  
+           mat.entry( cDat->nicIxLookup( tri3->getSimplex(tPen)->edge(eNum)
                   ), j ) 
                 = ( (eOr[0] == mPerm[per3[0]]) ? 1 : -1 );
            } else { // 4-dimensional case
-           NPerm5 per4( tri4->getEdge(j)->getEmbedding(0).getVertices() );
+           Perm<5> per4( tri4->edge(j)->embedding(0).vertices() );
            unsigned long tetnum4( tri4->simplexIndex( 
-                        tri4->getEdge(j)->getEmbedding(0).getPentachoron() ) );
+                        tri4->edge(j)->embedding(0).pentachoron() ) );
            unsigned long tPen( fullMap[i].germ[ tetnum4 ].pen ); // target pen
-           NPerm5 mPerm( NPerm5::S5[ fullMap[i].germ[ tetnum4 ].perm ] );
+           Perm<5> mPerm( Perm<5>::S5[ fullMap[i].germ[ tetnum4 ].perm ] );
            // edge number in tet tPen. 
            unsigned long eNum( Dim4Edge::edgeNumber[ mPerm[per4[0]] ]
                                                    [ mPerm[per4[1]] ] );
-           NPerm5 eOr( tri4->getSimplex( tPen )->getEdgeMapping(eNum) );
-           // now we need to find this edge, Pen::getEdgeMapping class.  
-           mat.entry( cDat->nicIxLookup( tri4->getSimplex(tPen)->getEdge(eNum)
+           Perm<5> eOr( tri4->getSimplex( tPen )->edgeMapping(eNum) );
+           // now we need to find this edge, Pen::edgeMapping class.  
+           mat.entry( cDat->nicIxLookup( tri4->getSimplex(tPen)->edge(eNum)
                   ), j ) 
                 = ( (eOr[0] == mPerm[per4[0]]) ? 1 : -1 );
           }
@@ -159,37 +159,37 @@ std::vector<NMatrixInt*> NSimplicialAutGrp::homologyH1action() const
           int SIG; // sign of matrix at this entry
 
           if (tri3) { // 3-dim
-            NPerm4 per3( tri3->getTriangle( 
-                   cDat->icIndex(1,j).first )->getEmbedding(0).getVertices() );
+            Perm<4> per3( tri3->triangle( 
+                   cDat->icIndex(1,j).first )->embedding(0).vertices() );
             unsigned long tetnum3( tri3->simplexIndex( 
-                tri3->getTriangle( cDat->icIndex(1,j).first )->
-                getEmbedding(0).getTetrahedron() ) );
+                tri3->triangle( cDat->icIndex(1,j).first )->
+                embedding(0).tetrahedron() ) );
             unsigned long tPen( fullMap[i].germ[ tetnum3 ].pen );
-            NPerm4 mPerm( NPerm4::S4[ fullMap[i].germ[ tetnum3 ].perm ] );
+            Perm<4> mPerm( Perm<4>::S4[ fullMap[i].germ[ tetnum3 ].perm ] );
             unsigned long tNum( mPerm[ per3[ 3 ] ] );
-            NPerm4 tOr( tri3->getSimplex( tPen )->getTriangleMapping( tNum ) );
-            NPerm4 tOor( tOr.inverse()*mPerm*per3 ); // sign 
+            Perm<4> tOr( tri3->getSimplex( tPen )->triangleMapping( tNum ) );
+            Perm<4> tOor( tOr.inverse()*mPerm*per3 ); // sign 
             SIG = tOor.sign();
 
-            INDX = cDat->icIxLookup(tri3->getSimplex( tPen )->getTriangle(tNum), 
+            INDX = cDat->icIxLookup(tri3->getSimplex( tPen )->triangle(tNum), 
                                     tOor[cDat->icIndex(1,j).second] );
             } else { // 4-dim
-            NPerm5 per4( tri4->getTriangle( 
-                cDat->icIndex(1,j).first )->getEmbedding(0).getVertices() );
+            Perm<5> per4( tri4->triangle( 
+                cDat->icIndex(1,j).first )->embedding(0).vertices() );
             unsigned long tetnum4( tri4->simplexIndex( 
-                tri4->getTriangle( cDat->icIndex(1,j).first )->
-                getEmbedding(0).getPentachoron() ) );
+                tri4->triangle( cDat->icIndex(1,j).first )->
+                embedding(0).pentachoron() ) );
             unsigned long tPen( fullMap[i].germ[ tetnum4 ].pen );
-            NPerm5 mPerm( NPerm5::S5[ fullMap[i].germ[ tetnum4 ].perm ] );
+            Perm<5> mPerm( Perm<5>::S5[ fullMap[i].germ[ tetnum4 ].perm ] );
             unsigned long tNum( Dim4Triangle::triangleNumber[ mPerm[ per4[0] ] ]
                                    [ mPerm[ per4[1] ] ][ mPerm[ per4[2] ] ] );
-            NPerm5 tOr( tri4->getSimplex( tPen )->getTriangleMapping( tNum ) );
-            NPerm5 tOor( tOr.inverse()*mPerm*per4 ); // we can recover the sign 
-             //from this once we re-cast it to an NPerm3. 
-            NPerm3 tOOr( tOor[0], tOor[1], tOor[2] ); 
+            Perm<5> tOr( tri4->getSimplex( tPen )->triangleMapping( tNum ) );
+            Perm<5> tOor( tOr.inverse()*mPerm*per4 ); // we can recover the sign 
+             //from this once we re-cast it to an Perm<3>. 
+            Perm<3> tOOr( tOor[0], tOor[1], tOor[2] ); 
             SIG = tOOr.sign(); 
             INDX = cDat->icIxLookup( tri4->getSimplex( tPen )->
-                getTriangle(tNum), tOor[cDat->icIndex(1,j).second] );
+                triangle(tNum), tOor[cDat->icIndex(1,j).second] );
           }
           mat.entry( edgCount + INDX, edgCount + j ) = SIG;
          }
@@ -205,7 +205,7 @@ std::vector<NMatrixInt*> NSimplicialAutGrp::homologyH1action() const
             std::cout<<"ERROR! isIso."<<std::endl; exit(1); }
         #endif 
         // put matrix associated to hom into retval.
-        retval[i] = new NMatrixInt( hom.getReducedMatrix() );
+        retval[i] = new MatrixInt( hom.getReducedMatrix() );
      }    
   }
 
@@ -237,129 +237,129 @@ std::vector<NHomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
 
  for (unsigned long A=0; A<retval.size(); A++) // automorphism A
   {
-   NMatrixInt mat( HP->getRankCC(), HP->getRankCC() );
+   MatrixInt mat( HP->getRankCC(), HP->getRankCC() );
    for (unsigned long j=0; j<stdCount; j++)
     { // mat entry (?, j) std cells
       // find the j-th cell, get its embedding in a top-simplex.
       unsigned long domFac, domSim; // facet and simplex index
       unsigned long ranSim; // range simplex index 
-      NPerm4 mPerm4, domPerm4; NPerm5 mPerm5, domPerm5;
+      Perm<4> mPerm4, domPerm4; Perm<5> mPerm5, domPerm5;
       domFac = cDat->nicIndex( gloc.dim, j );
       if (tri3) switch ( gloc.dim )
       {
        case 0: 
-         domSim = cDat->nicIxLookup( tri3->getVertex( domFac )->
-                  getEmbedding(0).getTetrahedron() );
-         domPerm4 = tri3->getVertex( domFac )->getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri3->vertex( domFac )->
+                  embedding(0).tetrahedron() );
+         domPerm4 = tri3->vertex( domFac )->embedding(0).vertices();
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm4 = NPerm4::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
          i = cDat->nicIxLookup( tri3->getSimplex( ranSim )->
-                getVertex( mPerm4[ domPerm4[0] ] ) );
+                vertex( mPerm4[ domPerm4[0] ] ) );
          SIG = 1; 
         break;
        case 1: {
-         domSim = cDat->nicIxLookup( tri3->getEdge( domFac )->
-                    getEmbedding(0).getTetrahedron() );
-         domPerm4 = tri3->getEdge( domFac )->getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri3->edge( domFac )->
+                    embedding(0).tetrahedron() );
+         domPerm4 = tri3->edge( domFac )->embedding(0).vertices();
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm4 = NPerm4::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-         unsigned long eNum( NEdge::edgeNumber[mPerm4[domPerm4[0]]]
+         unsigned long eNum( Face<3,1>::edgeNumber[mPerm4[domPerm4[0]]]
                                               [mPerm4[domPerm4[1]]] );
-         NPerm4 ranPerm4( tri3->getSimplex( ranSim )->getEdgeMapping( eNum ) );
-         i = cDat->nicIxLookup( tri3->getSimplex( ranSim )->getEdge(eNum) );
+         Perm<4> ranPerm4( tri3->getSimplex( ranSim )->edgeMapping( eNum ) );
+         i = cDat->nicIxLookup( tri3->getSimplex( ranSim )->edge(eNum) );
          SIG = ( ( ranPerm4[0] == mPerm4[domPerm4[0]] ) ? 1 : -1 );
        } break;
        case 2: {
-         domSim = cDat->nicIxLookup( tri3->getTriangle( domFac )->
-                    getEmbedding(0).getTetrahedron() );
-         domPerm4 = tri3->getTriangle( domFac )->getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri3->triangle( domFac )->
+                    embedding(0).tetrahedron() );
+         domPerm4 = tri3->triangle( domFac )->embedding(0).vertices();
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm4 = NPerm4::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
          unsigned long tNum( mPerm4[domPerm4[3]] );
-         NPerm4 ranPerm4( tri3->getSimplex( ranSim )->
-                          getTriangleMapping( tNum ) );
-         NPerm3 relPerm( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
+         Perm<4> ranPerm4( tri3->getSimplex( ranSim )->
+                          triangleMapping( tNum ) );
+         Perm<3> relPerm( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
                          ranPerm4.preImageOf( mPerm4[domPerm4[1]] ), 
                          ranPerm4.preImageOf( mPerm4[domPerm4[2]] ) );
-         i = cDat->nicIxLookup( tri3->getSimplex( ranSim )->getTriangle(tNum) );
+         i = cDat->nicIxLookup( tri3->getSimplex( ranSim )->triangle(tNum) );
          SIG = relPerm.sign();
        } break;
        case 3: {// domFac == domSim no?
          domSim = cDat->nicIxLookup( tri3->getSimplex( domFac ) ); 
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm4 = NPerm4::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
          i = cDat->nicIxLookup( tri3->getSimplex( ranSim ) );
          SIG = mPerm4.sign();
        } break;
       } else switch (gloc.dim) // 4-dimensional case
       {
        case 0: 
-         domSim = cDat->nicIxLookup( tri4->getVertex( domFac )->
-                  getEmbedding(0).getPentachoron() );
-         domPerm5 = tri4->getVertex( domFac )->getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri4->vertex( domFac )->
+                  embedding(0).pentachoron() );
+         domPerm5 = tri4->vertex( domFac )->embedding(0).vertices();
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->getVertex( 
+         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->vertex( 
                                 mPerm5[ domPerm5[0] ] ) );
          SIG = 1; 
         break;
        case 1: {
-         domSim = cDat->nicIxLookup( tri4->getEdge( domFac )->
-                    getEmbedding(0).getPentachoron() );
-         domPerm5 = tri4->getEdge( domFac )->getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri4->edge( domFac )->
+                    embedding(0).pentachoron() );
+         domPerm5 = tri4->edge( domFac )->embedding(0).vertices();
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
          unsigned long eNum( Dim4Edge::edgeNumber[mPerm5[domPerm5[0]]]
                                                  [mPerm5[domPerm5[1]]] );
-         NPerm5 ranPerm5( tri4->getSimplex( ranSim )->getEdgeMapping( eNum ) );
-         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->getEdge(eNum) );
+         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
+         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->edge(eNum) );
          SIG = ( ( ranPerm5[0] == mPerm5[domPerm5[0]] ) ? 1 : -1 );
        } break;
        case 2: { 
-         domSim = cDat->nicIxLookup( tri4->getTriangle( domFac )->
-                                     getEmbedding(0).getPentachoron() );
-         domPerm5 = tri4->getTriangle( domFac )->getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri4->triangle( domFac )->
+                                     embedding(0).pentachoron() );
+         domPerm5 = tri4->triangle( domFac )->embedding(0).vertices();
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
          unsigned long tNum( Dim4Triangle::triangleNumber[
             mPerm5[domPerm5[0]]][mPerm5[domPerm5[1]]][mPerm5[domPerm5[2]]] );
-         NPerm5 ranPerm5( tri4->getSimplex( ranSim )->
-                          getTriangleMapping( tNum ) );
-         NPerm3 relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
+         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+                          triangleMapping( tNum ) );
+         Perm<3> relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[1]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[2]] ) );
-         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->getTriangle(tNum) );
+         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->triangle(tNum) );
          SIG = relPerm.sign();
        } break;
        case 3: { 
-         domSim = cDat->nicIxLookup( tri4->getTetrahedron( domFac )->
-                        getEmbedding(0).getPentachoron() );
-         domPerm5 = tri4->getTetrahedron( domFac )->
-                        getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri4->tetrahedron( domFac )->
+                        embedding(0).pentachoron() );
+         domPerm5 = tri4->tetrahedron( domFac )->
+                        embedding(0).vertices();
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
          unsigned long tNum( mPerm5[domPerm5[4]] );
-         NPerm5 ranPerm5( tri4->getSimplex( ranSim )->
-                          getTetrahedronMapping( tNum ) );
-         NPerm4 relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
+         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+                          tetrahedronMapping( tNum ) );
+         Perm<4> relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[1]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[2]] ),
                          ranPerm5.preImageOf( mPerm5[domPerm5[3]] ) );
          i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->
-                    getTetrahedron(tNum) );
+                    tetrahedron(tNum) );
          SIG = relPerm.sign();
        } break;
        case 4: { 
          domSim = cDat->nicIxLookup( tri4->getSimplex( domFac ) );
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
          i = cDat->nicIxLookup( tri4->getSimplex( ranSim ) );
          SIG = mPerm5.sign();
@@ -374,48 +374,48 @@ std::vector<NHomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
 
       unsigned long domFac, domFacV, domSim; // facet and simplex index
       unsigned long ranSim; // range simplex index 
-      NPerm4 mPerm4, domPerm4; NPerm5 mPerm5, domPerm5;
+      Perm<4> mPerm4, domPerm4; Perm<5> mPerm5, domPerm5;
       domFac = cDat->icIndex( gloc.dim, j ).first;
       domFacV = cDat->icIndex( gloc.dim, j ).second;
 
       if (tri3) switch ( gloc.dim )
       {
        case 0: { 
-        domSim = cDat->nicIxLookup( tri3->getEdge( domFac )->
-                 getEmbedding(0).getTetrahedron() );
-        domPerm4 = tri3->getEdge( domFac )->getEmbedding(0).getVertices();
+        domSim = cDat->nicIxLookup( tri3->edge( domFac )->
+                 embedding(0).tetrahedron() );
+        domPerm4 = tri3->edge( domFac )->embedding(0).vertices();
         ranSim = fullMap[A].germ[ domSim ].pen;
-        mPerm4 = NPerm4::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
+        mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-        unsigned long eNum( NEdge::edgeNumber[ mPerm4[domPerm4[domFacV]] ]
+        unsigned long eNum( Face<3,1>::edgeNumber[ mPerm4[domPerm4[domFacV]] ]
                                       [ mPerm4[domPerm4[(domFacV+1) % 2]] ] );
 
-        NPerm4 ranPerm4( tri3->getSimplex( ranSim )->getEdgeMapping( eNum ) );
-        i = cDat->icIxLookup( tri3->getSimplex( ranSim )->getEdge( eNum ), 
+        Perm<4> ranPerm4( tri3->getSimplex( ranSim )->edgeMapping( eNum ) );
+        i = cDat->icIxLookup( tri3->getSimplex( ranSim )->edge( eNum ), 
              ranPerm4.preImageOf( mPerm4[domPerm4[domFacV]] ) );
         SIG = ( (ranPerm4[0] == mPerm4[domPerm4[0]]) ? 1 : -1 );
      } break;
        case 1: {
-        domSim = cDat->nicIxLookup( tri3->getTriangle( domFac )->
-                 getEmbedding(0).getTetrahedron() );
-        domPerm4 = tri3->getTriangle( domFac )->getEmbedding(0).getVertices();
+        domSim = cDat->nicIxLookup( tri3->triangle( domFac )->
+                 embedding(0).tetrahedron() );
+        domPerm4 = tri3->triangle( domFac )->embedding(0).vertices();
         ranSim = fullMap[A].germ[ domSim ].pen;
-        mPerm4 = NPerm4::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
+        mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
         unsigned long tNum( mPerm4[domPerm4[3]] );
-        NPerm4 ranPerm4( tri3->getSimplex( ranSim )->
-                         getTriangleMapping( tNum ) );
-        NPerm3 tPara( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
+        Perm<4> ranPerm4( tri3->getSimplex( ranSim )->
+                         triangleMapping( tNum ) );
+        Perm<3> tPara( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
                       ranPerm4.preImageOf( mPerm4[domPerm4[1]] ),
                       ranPerm4.preImageOf( mPerm4[domPerm4[2]] ) );
-        i = cDat->icIxLookup( tri3->getSimplex( ranSim )->getTriangle( tNum ), 
+        i = cDat->icIxLookup( tri3->getSimplex( ranSim )->triangle( tNum ), 
                    tPara[ domFacV ]);
         SIG = tPara.sign();
      } break;
        case 2: {
-        domSim = cDat->nicIxLookup( tri3->getTetrahedron( domFac ) );
+        domSim = cDat->nicIxLookup( tri3->tetrahedron( domFac ) );
         ranSim = fullMap[A].germ[ domSim ].pen;
-        mPerm4 = NPerm4::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
+        mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
         i = cDat->icIxLookup( tri3->getSimplex( ranSim ), mPerm4[domFacV] );
         SIG = mPerm4.sign();
@@ -423,62 +423,62 @@ std::vector<NHomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
       } else switch ( gloc.dim ) // 4-dimensions
       {
        case 0: {
-        domSim = cDat->nicIxLookup( tri4->getEdge( domFac )->
-                 getEmbedding(0).getPentachoron() );
-        domPerm5 = tri4->getEdge( domFac )->getEmbedding(0).getVertices();
+        domSim = cDat->nicIxLookup( tri4->edge( domFac )->
+                 embedding(0).pentachoron() );
+        domPerm5 = tri4->edge( domFac )->embedding(0).vertices();
         ranSim = fullMap[A].germ[ domSim ].pen;
-        mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+        mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
         unsigned long eNum( Dim4Edge::edgeNumber[ mPerm5[domPerm5[domFacV]] ]
                                         [ mPerm5[domPerm5[(domFacV+1) % 2]] ] );
 
-        NPerm5 ranPerm5( tri4->getSimplex( ranSim )->getEdgeMapping( eNum ) );
-        i = cDat->icIxLookup( tri4->getSimplex( ranSim )->getEdge( eNum ), 
+        Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
+        i = cDat->icIxLookup( tri4->getSimplex( ranSim )->edge( eNum ), 
              ranPerm5.preImageOf( mPerm5[domPerm5[domFacV]] ) );
         SIG = ( (ranPerm5[0] == mPerm5[domPerm5[0]]) ? 1 : -1 );
      } break;
        case 1: {
-        domSim = cDat->nicIxLookup( tri4->getTriangle( domFac )->
-                       getEmbedding(0).getPentachoron() );
-        domPerm5 = tri4->getTriangle( domFac )->getEmbedding(0).getVertices();
+        domSim = cDat->nicIxLookup( tri4->triangle( domFac )->
+                       embedding(0).pentachoron() );
+        domPerm5 = tri4->triangle( domFac )->embedding(0).vertices();
         ranSim = fullMap[A].germ[ domSim ].pen;
-        mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+        mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
         unsigned long tNum( Dim4Triangle::triangleNumber
            [mPerm5[domPerm5[domFacV]]][mPerm5[domPerm5[(domFacV + 1) % 3]]]
            [mPerm5[domPerm5[(domFacV + 2) % 3]]] );
-        NPerm5 ranPerm5( tri4->getSimplex( ranSim )->
-                         getTriangleMapping( tNum ) );
-        NPerm3 tPara( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
+        Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+                         triangleMapping( tNum ) );
+        Perm<3> tPara( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                       ranPerm5.preImageOf( mPerm5[domPerm5[1]] ),
                       ranPerm5.preImageOf( mPerm5[domPerm5[2]] ) );
-        i = cDat->icIxLookup( tri4->getSimplex( ranSim )->getTriangle( tNum ), 
+        i = cDat->icIxLookup( tri4->getSimplex( ranSim )->triangle( tNum ), 
                    tPara[ domFacV ]);
         SIG = tPara.sign();
      } break;
        case 2: {
-        domSim = cDat->nicIxLookup( tri4->getTetrahedron( domFac )->
-                                    getEmbedding(0).getPentachoron() );
-        domPerm5 = tri4->getTetrahedron( domFac )->
-                         getEmbedding(0).getVertices();
+        domSim = cDat->nicIxLookup( tri4->tetrahedron( domFac )->
+                                    embedding(0).pentachoron() );
+        domPerm5 = tri4->tetrahedron( domFac )->
+                         embedding(0).vertices();
         ranSim = fullMap[A].germ[ domSim ].pen;
-        mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+        mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
         unsigned long tNum( mPerm5[domPerm5[4]] );
-        NPerm5 ranPerm5( tri4->getSimplex( ranSim )->
-                         getTetrahedronMapping( tNum ) );
-        NPerm4 tPara( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ),
+        Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+                         tetrahedronMapping( tNum ) );
+        Perm<4> tPara( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ),
                       ranPerm5.preImageOf( mPerm5[domPerm5[1]] ),
                       ranPerm5.preImageOf( mPerm5[domPerm5[2]] ),
                       ranPerm5.preImageOf( mPerm5[domPerm5[3]] ) );
         i = cDat->icIxLookup( tri4->getSimplex( ranSim )->
-            getTetrahedron( tNum ), tPara[ domFacV ] );
+            tetrahedron( tNum ), tPara[ domFacV ] );
         SIG = tPara.sign();
      } break;
        case 3: {
-        domSim = cDat->nicIxLookup( tri4->getPentachoron( domFac ) );
+        domSim = cDat->nicIxLookup( tri4->pentachoron( domFac ) );
         ranSim = fullMap[A].germ[ domSim ].pen;
-        mPerm5 = NPerm5::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
+        mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
         i = cDat->icIxLookup( tri4->getSimplex( ranSim ), mPerm5[domFacV] );
         SIG = mPerm5.sign();
@@ -516,7 +516,7 @@ bool centroid::operator<(const centroid &rhs) const
  }
  
 
-std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3, 
+std::set< linearFacet > linearFacet::bdryFacets(const Triangulation<3> *tri3, 
                                             const Dim4Triangulation* tri4) const
 {
  std::set< linearFacet > retval;
@@ -553,42 +553,42 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
        if (VU.size() != 1) 
         { std::cout<<"linearFacet::bdryFacets ERROR 3."<<std::endl; exit(1); }
        #endif
-        const NEdge* edg( tri3->getEdge( cDat->nicIndex( sdim, sindx ) ) );
+        const Face<3,1>* edg( tri3->edge( cDat->nicIndex( sdim, sindx ) ) );
         unsigned long I( *VU.begin() );
-        if ( !edg->getVertex(I)->isIdeal() ) 
+        if ( !edg->vertex(I)->isIdeal() ) 
          { retval.insert( linearFacet( 0, 0, 
-                          cDat->nicIxLookup( edg->getVertex(I) ) ) ); }
+                          cDat->nicIxLookup( edg->vertex(I) ) ) ); }
        } else 
        { // tri4
         #ifdef DEBUG
         if (VU.size() != 1) 
          { std::cout<<"linearFacet::bdryFacets ERROR 4."<<std::endl; exit(1); }
         #endif
-        const Dim4Edge* edg( tri4->getEdge( cDat->nicIndex( sdim, sindx ) ) );
+        const Dim4Edge* edg( tri4->edge( cDat->nicIndex( sdim, sindx ) ) );
         unsigned long I( *VU.begin() );
-        if ( !edg->getVertex(I)->isIdeal() ) 
+        if ( !edg->vertex(I)->isIdeal() ) 
          { retval.insert( linearFacet( 0, 0, 
-            cDat->nicIxLookup( edg->getVertex(I) ) ) ); }
+            cDat->nicIxLookup( edg->vertex(I) ) ) ); }
        }
       } break;
      case 2: // sdim==2, can be standard tri, or edge bisecting tri
       if (tri3) {
-       const NTriangle* tri( tri3->getTriangle(
+       const Face<3,2>* tri( tri3->triangle(
                              cDat->nicIndex( sdim, sindx ) ) ); 
        if (vCentres.size()==2) 
         { // edge bisecting a tri.
         if (VuU.size() == 1) { // need edg with {0,1} label
          linearFacet temp( 0, 1, 
-            cDat->nicIxLookup( tri->getEdge( *VuU.begin() ) ) );
+            cDat->nicIxLookup( tri->edge( *VuU.begin() ) ) );
          std::set< unsigned long > T01; T01.insert(0); T01.insert(1);  
          temp.vCentres.insert( centroid( T01 ) );
          retval.insert( temp );
          }
         else { // VuU.size()==2, VU.size()==1, two cases, ideal or not. 
-         if (!tri->getVertex( *VU.begin() )->isIdeal())
+         if (!tri->vertex( *VU.begin() )->isIdeal())
           { 
            linearFacet temp( 0, 0, cDat->nicIxLookup( 
-                             tri->getVertex( *VU.begin() ) ) );
+                             tri->vertex( *VU.begin() ) ) );
            retval.insert(temp);
           }
          }
@@ -597,7 +597,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
         { // standard triangle.  Standard edge boundaries.
           //  VuU.size()==1, the opp vtx.
          linearFacet temp( 1, 1, cDat->nicIxLookup( 
-                                 tri->getEdge( *VuU.begin() ) ) );
+                                 tri->edge( *VuU.begin() ) ) );
          std::set< unsigned long > T0; T0.insert(0); 
          temp.vCentres.insert( centroid( T0 ) ); 
          T0.clear(); T0.insert(1); temp.vCentres.insert( centroid( T0 ) );
@@ -605,22 +605,22 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
         }
        }
       else { // sdim == 2, dim4
-       const Dim4Triangle* tri( tri4->getTriangle( 
+       const Dim4Triangle* tri( tri4->triangle( 
                                 cDat->nicIndex( sdim, sindx ) ) ); 
        if (vCentres.size()==2) { // edge bisecting a tri {0}, {1,2}
         if (VuU.size() == 1) { // need edg with {0,1} label
          linearFacet temp( 0, 1, cDat->nicIxLookup( 
-                                 tri->getEdge( *VuU.begin() ) ) );
+                                 tri->edge( *VuU.begin() ) ) );
          std::set< unsigned long > T01; T01.insert(0); T01.insert(1); 
          centroid Temp( T01 ); temp.vCentres.insert(Temp);
          retval.insert( temp );
         }
        else 
         { // VuU.size()==2, VU.size()==1, two cases, ideal or not. 
-         if (!tri->getVertex( *VU.begin() )->isIdeal())
+         if (!tri->vertex( *VU.begin() )->isIdeal())
           {
            linearFacet temp( 0, 0, 
-                cDat->nicIxLookup( tri->getVertex( *VU.begin() ) ) );
+                cDat->nicIxLookup( tri->vertex( *VU.begin() ) ) );
            retval.insert(temp);
           }
         }
@@ -629,7 +629,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
        { // standard triangle.  Standard edge boundaries. 
          //  VuU.size()==1, the opp vtx.
         linearFacet temp( 1, 1, cDat->nicIxLookup( 
-            tri->getEdge( *VuU.begin() ) ) );
+            tri->edge( *VuU.begin() ) ) );
         std::set< unsigned long > T0; T0.insert(0); centroid Temp(T0); 
         temp.vCentres.insert(Temp); 
         T0.clear(); T0.insert(1); centroid Temp1(T0); 
@@ -640,12 +640,12 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
     break; 
      case 3: // in tetrahedron
       if (tri3) { // tri bisecting tet first, {0}, {1}, {2,3}, cyc.size()==3
-       const NTetrahedron* tet(tri3->getTetrahedron( 
+       const Simplex<3>* tet(tri3->tetrahedron( 
                                 cDat->nicIndex( sdim, sindx ) ) );
        if (vCentres.size()==4) // whole tetrahedron
         {
          linearFacet temp( 2, 2, cDat->nicIxLookup( 
-                                 tet->getTriangle( *VuU.begin() ) ) );
+                                 tet->triangle( *VuU.begin() ) ) );
          std::set< unsigned long > T0; T0.insert(0); 
          temp.vCentres.insert( centroid(T0) ); 
          T0.clear(); T0.insert(1); temp.vCentres.insert( centroid(T0) );
@@ -664,8 +664,8 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
              if (j->points.size()==1) smallV = j->points; else bigV = j->points;
             }
            linearFacet temp( 1, 2, cDat->nicIxLookup( 
-                tet->getTriangle( *VuU.begin() ) ) );
-           NPerm4 iTri( tet->getTriangleMapping( *VuU.begin() ) );
+                tet->triangle( *VuU.begin() ) ) );
+           Perm<4> iTri( tet->triangleMapping( *VuU.begin() ) );
            std::set< unsigned long > T0; 
            T0.insert( iTri.preImageOf( *smallV.begin() ) ); 
            temp.vCentres.insert( centroid(T0) );
@@ -682,10 +682,10 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
              if (j==i) continue;
              smallV.insert( *j->points.begin() );
             }
-           unsigned long eNum( NEdge::edgeNumber[*smallV.begin()]
+           unsigned long eNum( Face<3,1>::edgeNumber[*smallV.begin()]
                                                 [*smallV.rbegin()] ); 
            linearFacet temp( 1, 1, cDat->nicIxLookup( 
-                tet->getEdge( eNum ) ) ); // look up index...
+                tet->edge( eNum ) ) ); // look up index...
            std::set< unsigned long > T0; T0.insert(0); 
            temp.vCentres.insert( centroid(T0) );
            T0.clear(); T0.insert(1); temp.vCentres.insert( centroid(T0) );
@@ -695,8 +695,8 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
         { 
           if (VU.size() == VuU.size()) // 2 and 2
            { 
-            unsigned long eNum( NEdge::edgeNumber[*VU.begin()][*VU.rbegin()] );
-            linearFacet temp( 0, 1, cDat->nicIxLookup( tet->getEdge( eNum ) ) );
+            unsigned long eNum( Face<3,1>::edgeNumber[*VU.begin()][*VU.rbegin()] );
+            linearFacet temp( 0, 1, cDat->nicIxLookup( tet->edge( eNum ) ) );
             std::set< unsigned long > T0; T0.insert(0); T0.insert(1); 
             temp.vCentres.insert( centroid(T0) );
             retval.insert(temp);
@@ -705,9 +705,9 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
            {
             if (VU.size() == 1) 
              { 
-              if (!tet->getVertex(*VU.begin())->isIdeal()) { // plain vertex
+              if (!tet->vertex(*VU.begin())->isIdeal()) { // plain vertex
                linearFacet temp( 0, 0, cDat->nicIxLookup( 
-                                       tet->getVertex( *VU.begin() ) ) );
+                                       tet->vertex( *VU.begin() ) ) );
                retval.insert(temp);
                } 
              } else
@@ -720,7 +720,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
               }
              #endif
              linearFacet temp( 0, 2, cDat->nicIxLookup( 
-                tet->getTriangle( *VuU.begin() ) ) );
+                tet->triangle( *VuU.begin() ) ) );
              std::set< unsigned long > T0; 
              T0.insert(0); T0.insert(1); T0.insert(2);
              temp.vCentres.insert( centroid(T0) );
@@ -731,12 +731,12 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
       }
      else 
       { // dim4, copy dim3 case above 
-       const Dim4Tetrahedron* tet( tri4->getTetrahedron( 
+       const Dim4Tetrahedron* tet( tri4->tetrahedron( 
                                    cDat->nicIndex( sdim, sindx ) ) );
        if (vCentres.size()==4) // whole tetrahedron
         {
          linearFacet temp( 2, 2, cDat->nicIxLookup( 
-                                 tet->getTriangle( *VuU.begin() ) ) );
+                                 tet->triangle( *VuU.begin() ) ) );
          std::set< unsigned long > T0; T0.insert(0); 
          temp.vCentres.insert( centroid(T0) ); 
          T0.clear(); T0.insert(1); temp.vCentres.insert( centroid(T0) );
@@ -755,8 +755,8 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
              if (j->points.size()==1) smallV = j->points; else bigV = j->points;
             }
            linearFacet temp( 1, 2, cDat->nicIxLookup( 
-                                   tet->getTriangle( *VuU.begin() ) ) );
-           NPerm5 iTri( tet->getTriangleMapping( *VuU.begin() ) );
+                                   tet->triangle( *VuU.begin() ) ) );
+           Perm<5> iTri( tet->triangleMapping( *VuU.begin() ) );
            std::set< unsigned long > T0; 
            T0.insert( iTri.preImageOf( *smallV.begin() ) ); 
            temp.vCentres.insert( centroid(T0) );
@@ -773,10 +773,10 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
              if (j==i) continue;
              smallV.insert( *j->points.begin() );
             }
-           unsigned long eNum( NEdge::edgeNumber[*smallV.begin()]
+           unsigned long eNum( Face<3,1>::edgeNumber[*smallV.begin()]
                                                 [*smallV.rbegin()] ); 
            linearFacet temp( 1, 1, cDat->nicIxLookup( 
-                                   tet->getEdge( eNum ) ) ); // look up index...
+                                   tet->edge( eNum ) ) ); // look up index...
            std::set< unsigned long > T0; T0.insert(0);  
            temp.vCentres.insert( centroid(T0) );
            T0.clear(); T0.insert(1); temp.vCentres.insert( centroid(T0) );
@@ -786,8 +786,8 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
         { 
           if (VU.size() == VuU.size()) // 2 and 2
            { 
-            unsigned long eNum( NEdge::edgeNumber[*VU.begin()][*VU.rbegin()] );
-            linearFacet temp( 0, 1, cDat->nicIxLookup( tet->getEdge( eNum ) ) );
+            unsigned long eNum( Face<3,1>::edgeNumber[*VU.begin()][*VU.rbegin()] );
+            linearFacet temp( 0, 1, cDat->nicIxLookup( tet->edge( eNum ) ) );
             std::set< unsigned long > T0; T0.insert(0); T0.insert(1); 
             temp.vCentres.insert( centroid(T0) );
             retval.insert(temp);
@@ -796,9 +796,9 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
            {
             if (VU.size() == 1) 
              { 
-              if (!tet->getVertex(*VU.begin())->isIdeal()) { // plain vertex
+              if (!tet->vertex(*VU.begin())->isIdeal()) { // plain vertex
                linearFacet temp( 0, 0, cDat->nicIxLookup( 
-                    tet->getVertex( *VU.begin() ) ) );
+                    tet->vertex( *VU.begin() ) ) );
                retval.insert(temp);
                } 
              } else
@@ -809,7 +809,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
                 exit(1); }
              #endif
              linearFacet temp( 0, 2, cDat->nicIxLookup( 
-                                     tet->getTriangle( *VuU.begin() ) ) );
+                                     tet->triangle( *VuU.begin() ) ) );
              std::set< unsigned long > T0; 
              T0.insert(0); T0.insert(1); T0.insert(2);
              temp.vCentres.insert( centroid(T0) );
@@ -821,12 +821,12 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
     break;
      case 4: 
       { // only a 4-dimensional case
-        const Dim4Pentachoron* pen( tri4->getPentachoron( 
+        const Simplex<4>* pen( tri4->pentachoron( 
                                     cDat->nicIndex( sdim, sindx ) ) );
         if (vCentres.size() == 5) // whole pentachoron
          {
             linearFacet temp( 3, 3, cDat->nicIxLookup( 
-                                    pen->getTetrahedron( *VuU.begin() ) ) );
+                                    pen->tetrahedron( *VuU.begin() ) ) );
             std::set< unsigned long > T0; T0.insert(0); 
             temp.vCentres.insert( centroid(T0) );
             T0.clear(); T0.insert(1); temp.vCentres.insert( centroid(T0) );
@@ -845,7 +845,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
             unsigned long tNum( 
                 Dim4Triangle::triangleNumber[TN[0]][TN[1]][TN[2]] );
             linearFacet temp( 2, 2, 
-                cDat->nicIxLookup( pen->getTriangle( tNum ) ) ); 
+                cDat->nicIxLookup( pen->triangle( tNum ) ) ); 
             std::set< unsigned long > T0; T0.insert(0); 
             temp.vCentres.insert( centroid(T0) );
             T0.clear(); T0.insert(1); temp.vCentres.insert( centroid(T0) );
@@ -859,9 +859,9 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
              { std::cout<<"linearFacets::bdryFacets ERROR 6."<<std::endl; 
                exit(1); }
             #endif
-            NPerm5 tEmb( pen->getTetrahedronMapping( *VuU.begin() ) );
+            Perm<5> tEmb( pen->tetrahedronMapping( *VuU.begin() ) );
             linearFacet temp( 2, 3, cDat->nicIxLookup( 
-                pen->getTetrahedron( *VuU.begin() ) ) );
+                pen->tetrahedron( *VuU.begin() ) ) );
             std::set< unsigned long > Pair, Sing1, Sing2;
             for (std::set< centroid >::const_iterator j=vCentres.begin(); 
                  j!=vCentres.end(); j++)
@@ -892,9 +892,9 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
           if (max == 3) // tri barycentre and two vertices
            {
             if (VuU.size()==1) { // tri barycentre and vertex
-              NPerm5 tEmb( pen->getTetrahedronMapping( *VuU.begin() ) );
+              Perm<5> tEmb( pen->tetrahedronMapping( *VuU.begin() ) );
               linearFacet temp( 1, 3, cDat->nicIxLookup( 
-                                pen->getTetrahedron( *VuU.begin() ) ) );
+                                pen->tetrahedron( *VuU.begin() ) ) );
               std::set< unsigned long > Trip; 
               for (std::set< centroid >::const_iterator j=vCentres.begin(); 
                    j!=vCentres.end(); j++)
@@ -920,7 +920,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
                unsigned long eNum( Dim4Edge::edgeNumber[*VU.begin()]
                 [*VU.rbegin()] );
                linearFacet temp( 1, 1, 
-                 cDat->nicIxLookup( pen->getEdge( eNum ) ) );
+                 cDat->nicIxLookup( pen->edge( eNum ) ) );
                std::set< unsigned long > T0; T0.insert(0); 
                temp.vCentres.insert( centroid(T0) );
                T0.clear(); T0.insert(1); temp.vCentres.insert( centroid(T0) );
@@ -931,8 +931,8 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
             if (VuU.size()==1) 
              { // edge between two edge barycentres
                linearFacet temp( 1, 3, cDat->nicIxLookup( 
-                    pen->getTetrahedron( *VuU.begin() ) ) );
-               NPerm5 tInc( pen->getTetrahedronMapping( *VuU.begin() ) );
+                    pen->tetrahedron( *VuU.begin() ) ) );
+               Perm<5> tInc( pen->tetrahedronMapping( *VuU.begin() ) );
                std::set< unsigned long > Pair; 
                for (std::set< centroid >::const_iterator j=vCentres.begin(); 
                     j!=vCentres.end(); j++)
@@ -951,9 +951,9 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
                      j!=VU.end(); j++) T.push_back( *j );
                 unsigned long tNum( Dim4Triangle::triangleNumber
                                     [T[0]][T[1]][T[2]] );
-                NPerm5 tInc( pen->getTriangleMapping( tNum ) );
+                Perm<5> tInc( pen->triangleMapping( tNum ) );
                 linearFacet temp( 1, 2, cDat->nicIxLookup( 
-                                  pen->getTriangle( tNum ) ) );
+                                  pen->triangle( tNum ) ) );
                 std::set< unsigned long > Pair, Vtx;
                 for (std::set< centroid >::const_iterator j=vCentres.begin(); 
                      j!=vCentres.end(); j++)
@@ -986,17 +986,17 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
             if (VuU.size()==1) // tet
              {
                linearFacet temp( 0, 3, cDat->nicIxLookup( 
-                                 pen->getTetrahedron( *VuU.begin() ) ) );
+                                 pen->tetrahedron( *VuU.begin() ) ) );
                std::set< unsigned long > T0; T0.insert(0); 
                T0.insert(1); T0.insert(2); T0.insert(3);
                temp.vCentres.insert( centroid( T0 ) ); 
                retval.insert(temp);
              } else // vtx
              { 
-               if (!pen->getVertex(*VU.begin())->isIdeal())
+               if (!pen->vertex(*VU.begin())->isIdeal())
                 {
                  linearFacet temp( 0, 0, cDat->nicIxLookup( 
-                    pen->getVertex( *VU.begin()) ) );
+                    pen->vertex( *VU.begin()) ) );
                  retval.insert(temp);
                }
              }
@@ -1010,7 +1010,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
                unsigned long tNum( Dim4Triangle::triangleNumber
                 [V[0]][V[1]][V[2]] );           
                linearFacet temp( 0, 2, cDat->nicIxLookup( 
-                 pen->getTriangle( tNum ) ) );
+                 pen->triangle( tNum ) ) );
                std::set< unsigned long > T0; 
                T0.insert(0); T0.insert(1); T0.insert(2);
                temp.vCentres.insert( centroid(T0) );
@@ -1020,7 +1020,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const NTriangulation *tri3,
                unsigned long eNum( Dim4Edge::edgeNumber
                     [*VU.begin()][*VU.rbegin()] );
                linearFacet temp( 0, 1, cDat->nicIxLookup( 
-                pen->getEdge( eNum ) ) );
+                pen->edge( eNum ) ) );
                std::set< unsigned long > T0; T0.insert(0); T0.insert(1);
                temp.vCentres.insert( centroid(T0) );
                retval.insert(temp);
@@ -1135,7 +1135,7 @@ bool linearFacet::isValid() const
  return true;
 }
 
-bool linearFacet::isIdeal(const NTriangulation *tri3, 
+bool linearFacet::isIdeal(const Triangulation<3> *tri3, 
                           const Dim4Triangulation* tri4) const
 {
  CellularData* cDat;
@@ -1148,31 +1148,31 @@ bool linearFacet::isIdeal(const NTriangulation *tri3,
    for (std::set< centroid >::const_iterator i=vCentres.begin(); 
         i!=vCentres.end(); i++)
     if (i->points.size()==1) if ( (tri3 ? 
-     tri3->getEdge( sindx )->getVertex( *i->points.begin() )->isIdeal() :
-     tri4->getEdge( sindx )->getVertex( *i->points.begin() )->isIdeal() ) )
+     tri3->edge( sindx )->vertex( *i->points.begin() )->isIdeal() :
+     tri4->edge( sindx )->vertex( *i->points.begin() )->isIdeal() ) )
       retval=true;
    break;
   case 2: 
    for (std::set< centroid >::const_iterator i=vCentres.begin(); 
         i!=vCentres.end(); i++)
    if (i->points.size()==1) if ( (tri3 ? 
-    tri3->getTriangle( sindx )->getVertex( *i->points.begin() )->isIdeal() :
-    tri4->getTriangle( sindx )->getVertex( *i->points.begin() )->isIdeal() ) )
+    tri3->triangle( sindx )->vertex( *i->points.begin() )->isIdeal() :
+    tri4->triangle( sindx )->vertex( *i->points.begin() )->isIdeal() ) )
      retval=true;
    break;
   case 3: 
    for (std::set< centroid >::const_iterator i=vCentres.begin(); 
         i!=vCentres.end(); i++)
    if (i->points.size()==1) if ( (tri3 ? 
-   tri3->getTetrahedron( sindx )->getVertex( *i->points.begin() )->isIdeal() :
-   tri4->getTetrahedron( sindx )->getVertex( *i->points.begin() )->isIdeal() ) )
+   tri3->tetrahedron( sindx )->vertex( *i->points.begin() )->isIdeal() :
+   tri4->tetrahedron( sindx )->vertex( *i->points.begin() )->isIdeal() ) )
     retval=true;
    break;
   case 4: 
    for (std::set< centroid >::const_iterator i=vCentres.begin(); 
         i!=vCentres.end(); i++)
-   if (i->points.size()==1) if ( tri4->getPentachoron( sindx )->
-        getVertex( *i->points.begin() )->isIdeal() ) 
+   if (i->points.size()==1) if ( tri4->pentachoron( sindx )->
+        vertex( *i->points.begin() )->isIdeal() ) 
     retval=true;
    break;
  } // end switch sdim statement
@@ -1219,17 +1219,17 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
      // check if simplex of dimension d indexed by nicIx[d][i] is fixed.
      for (unsigned long domFac=0; domFac<stdCount; domFac++) if (tri3)
       {
-       NPerm4 mPerm4, domPerm4;
+       Perm<4> mPerm4, domPerm4;
        switch (d) {
        case 0: 
-         domSim = cDat->nicIxLookup( tri3->getVertex( 
-            cDat->nicIndex( d, domFac ) )->getEmbedding(0).getTetrahedron() );
-         domPerm4 = tri3->getVertex( cDat->nicIndex( d, domFac ) )->
-            getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri3->vertex( 
+            cDat->nicIndex( d, domFac ) )->embedding(0).tetrahedron() );
+         domPerm4 = tri3->vertex( cDat->nicIndex( d, domFac ) )->
+            embedding(0).vertices();
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-         mPerm4 = NPerm4::S4[ fullMap[M].germ[ domSim ].perm ]; // permutation
+         mPerm4 = Perm<4>::S4[ fullMap[M].germ[ domSim ].perm ]; // permutation
          if ( domFac == cDat->nicIxLookup( tri3->getSimplex( ranSim )->
-            getVertex( mPerm4[ domPerm4[0] ] ) ) )
+            vertex( mPerm4[ domPerm4[0] ] ) ) )
           retval[M]->insert( linearFacet(d, d, domFac) ); 
          #ifdef DEBUG
          else if (M==0) { 
@@ -1240,18 +1240,18 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
          #endif
         break;
        case 1: {
-         domSim = cDat->nicIxLookup( tri3->getEdge( 
-             cDat->nicIndex( d, domFac ) )->getEmbedding(0).getTetrahedron() );
-         domPerm4 = tri3->getEdge( cDat->nicIndex( d, domFac ) )->
-                    getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri3->edge( 
+             cDat->nicIndex( d, domFac ) )->embedding(0).tetrahedron() );
+         domPerm4 = tri3->edge( cDat->nicIndex( d, domFac ) )->
+                    embedding(0).vertices();
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-         mPerm4 = NPerm4::S4[ fullMap[M].germ[ domSim ].perm ]; // permutation
+         mPerm4 = Perm<4>::S4[ fullMap[M].germ[ domSim ].perm ]; // permutation
 
-         unsigned long eNum( NEdge::edgeNumber
+         unsigned long eNum( Face<3,1>::edgeNumber
             [mPerm4[domPerm4[0]]][mPerm4[domPerm4[1]]] );
-         NPerm4 ranPerm4( tri3->getSimplex( ranSim )->getEdgeMapping( eNum ) );
+         Perm<4> ranPerm4( tri3->getSimplex( ranSim )->edgeMapping( eNum ) );
          if ( domFac == cDat->nicIxLookup( 
-              tri3->getSimplex( ranSim )->getEdge(eNum) ) )
+              tri3->getSimplex( ranSim )->edge(eNum) ) )
            {
             if (ranPerm4[0] == mPerm4[domPerm4[0]])
              {
@@ -1278,22 +1278,22 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
           #endif
        } break;
        case 2: {
-         domSim = cDat->nicIxLookup( tri3->getTriangle( 
-              cDat->nicIndex( d, domFac ) )->getEmbedding(0).getTetrahedron() );
-         domPerm4 = tri3->getTriangle( cDat->nicIndex( d, domFac ) )->
-                    getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri3->triangle( 
+              cDat->nicIndex( d, domFac ) )->embedding(0).tetrahedron() );
+         domPerm4 = tri3->triangle( cDat->nicIndex( d, domFac ) )->
+                    embedding(0).vertices();
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-         mPerm4 = NPerm4::S4[ fullMap[M].germ[domSim].perm ]; // permutation
+         mPerm4 = Perm<4>::S4[ fullMap[M].germ[domSim].perm ]; // permutation
 
          unsigned long tNum( mPerm4[domPerm4[3]] );
-         NPerm4 ranPerm4( tri3->getSimplex( ranSim )->
-                          getTriangleMapping( tNum ) );
-         NPerm3 relPerm( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
+         Perm<4> ranPerm4( tri3->getSimplex( ranSim )->
+                          triangleMapping( tNum ) );
+         Perm<3> relPerm( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
                          ranPerm4.preImageOf( mPerm4[domPerm4[1]] ), 
                          ranPerm4.preImageOf( mPerm4[domPerm4[2]] ) );
 
          if ( domFac == cDat->nicIxLookup( tri3->getSimplex( ranSim )->
-                        getTriangle(tNum) ) ) 
+                        triangle(tNum) ) ) 
             {
              if ( (relPerm[0]==0) && (relPerm[1]==1) ) // ID
               { 
@@ -1336,7 +1336,7 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
        case 3: {
          domSim = cDat->nicIxLookup( tri3->getSimplex( 
                    cDat->nicIndex( d, domFac ) ) ); // domFac == domSim no?
-         mPerm4 = NPerm4::S4[ fullMap[M].germ[ domSim ].perm ]; // permutation
+         mPerm4 = Perm<4>::S4[ fullMap[M].germ[ domSim ].perm ]; // permutation
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
          if ( domFac == cDat->nicIxLookup( tri3->getSimplex( ranSim ) ) )
             { // cases: [4] ID, [0] 4-cycle, [0] two 2-cycles, 
@@ -1405,17 +1405,17 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
 
      } // end nicIx[d][domFac] loop on domFac, dimension 3
     else { // dim 4 
-       NPerm5 mPerm5, domPerm5;
+       Perm<5> mPerm5, domPerm5;
        switch (d) {
        case 0: 
-        domSim = cDat->nicIxLookup( tri4->getVertex( 
-          cDat->nicIndex( d, domFac ) )->getEmbedding(0).getPentachoron() );
-        domPerm5 = tri4->getVertex( cDat->nicIndex( d, domFac ) )->
-                   getEmbedding(0).getVertices();
+        domSim = cDat->nicIxLookup( tri4->vertex( 
+          cDat->nicIndex( d, domFac ) )->embedding(0).pentachoron() );
+        domPerm5 = tri4->vertex( cDat->nicIndex( d, domFac ) )->
+                   embedding(0).vertices();
         ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-        mPerm5 = NPerm5::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
+        mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
         if ( domFac == cDat->nicIxLookup( tri4->getSimplex( ranSim )->
-             getVertex( mPerm5[ domPerm5[0] ] ) ) )
+             vertex( mPerm5[ domPerm5[0] ] ) ) )
          retval[M]->insert( linearFacet(d, d, domFac) ); 
         #ifdef DEBUG
         else if (M==0) 
@@ -1425,9 +1425,9 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
            cDat->nicIndex( d, domFac )<<" domSim == "<<domSim<<" ranSim == "<<
            ranSim<<" target vtx lookup in nicIx == "<<
            cDat->nicIxLookup( tri4->getSimplex( ranSim )->
-           getVertex( mPerm5[ domPerm5[0] ] ) )<<std::endl;
+           vertex( mPerm5[ domPerm5[0] ] ) )<<std::endl;
           std::cout<<"tri4 vertexIndex == "<<tri4->vertexIndex( tri4->
-           getSimplex( ranSim )->getVertex( mPerm5[ domPerm5[0] ] ) )<<"\n";
+           getSimplex( ranSim )->vertex( mPerm5[ domPerm5[0] ] ) )<<"\n";
           std::cout<<cDat->stdCellCount(0)<<" 0-cells total. "<<std::endl;
           for (unsigned long Q=0; Q<cDat->stdCellCount(0); Q++) 
            std::cout<<cDat->nicIndex( 0, Q )<<" ";
@@ -1438,18 +1438,18 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
         #endif
         break;
        case 1: {
-         domSim = cDat->nicIxLookup( tri4->getEdge( 
-              cDat->nicIndex( d, domFac ) )->getEmbedding(0).getPentachoron() );
-         domPerm5 = tri4->getEdge( cDat->nicIndex( d, domFac ) )->
-              getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri4->edge( 
+              cDat->nicIndex( d, domFac ) )->embedding(0).pentachoron() );
+         domPerm5 = tri4->edge( cDat->nicIndex( d, domFac ) )->
+              embedding(0).vertices();
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
 
          unsigned long eNum( Dim4Edge::edgeNumber
             [mPerm5[domPerm5[0]]][mPerm5[domPerm5[1]]] );
-         NPerm5 ranPerm5( tri4->getSimplex( ranSim )->getEdgeMapping( eNum ) );
+         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
          if ( domFac == cDat->nicIxLookup( 
-                    tri4->getSimplex( ranSim )->getEdge(eNum) ) )
+                    tri4->getSimplex( ranSim )->edge(eNum) ) )
            {
             if (ranPerm5[0] == mPerm5[domPerm5[0]])
              {
@@ -1476,24 +1476,24 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
          #endif
        } break;
        case 2: {
-         domSim = cDat->nicIxLookup( tri4->getTriangle( 
-            cDat->nicIndex( d, domFac ) )->getEmbedding(0).getPentachoron() );
-         domPerm5 = tri4->getTriangle( cDat->nicIndex( d, domFac ) )->
-            getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri4->triangle( 
+            cDat->nicIndex( d, domFac ) )->embedding(0).pentachoron() );
+         domPerm5 = tri4->triangle( cDat->nicIndex( d, domFac ) )->
+            embedding(0).vertices();
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
 
          unsigned long tNum( Dim4Triangle::triangleNumber[mPerm5[domPerm5[0]]]
                                  [mPerm5[domPerm5[1]]][mPerm5[domPerm5[2]]] );
 
-         NPerm5 ranPerm5( 
-            tri4->getSimplex( ranSim )->getTriangleMapping( tNum ) );
-         NPerm3 relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
+         Perm<5> ranPerm5( 
+            tri4->getSimplex( ranSim )->triangleMapping( tNum ) );
+         Perm<3> relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[1]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[2]] ) );
 
          if ( domFac == cDat->nicIxLookup( 
-                tri4->getSimplex( ranSim )->getTriangle(tNum) ) ) 
+                tri4->getSimplex( ranSim )->triangle(tNum) ) ) 
             {
              if ( (relPerm[0]==0) && (relPerm[1]==1) ) // ID
               { 
@@ -1535,21 +1535,21 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
          #endif
        } break;
        case 3: {
-         domSim = cDat->nicIxLookup( tri4->getTetrahedron(  
-            cDat->nicIndex( d, domFac ) )->getEmbedding(0).getPentachoron() );
-         domPerm5 = tri4->getTetrahedron( cDat->nicIndex( d, domFac ) )->
-            getEmbedding(0).getVertices();
+         domSim = cDat->nicIxLookup( tri4->tetrahedron(  
+            cDat->nicIndex( d, domFac ) )->embedding(0).pentachoron() );
+         domPerm5 = tri4->tetrahedron( cDat->nicIndex( d, domFac ) )->
+            embedding(0).vertices();
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
          unsigned long tNum( mPerm5[domPerm5[4]] );
-         NPerm5 ranPerm5( tri4->getSimplex( ranSim )->
-            getTetrahedronMapping( tNum ) );
-         NPerm4 relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
+         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+            tetrahedronMapping( tNum ) );
+         Perm<4> relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[1]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[2]] ),
                          ranPerm5.preImageOf( mPerm5[domPerm5[3]] ) );
-         if ( domFac == cDat->nicIxLookup( tri4->getPentachoron( ranSim )->
-                            getTetrahedron( tNum ) ) )
+         if ( domFac == cDat->nicIxLookup( tri4->pentachoron( ranSim )->
+                            tetrahedron( tNum ) ) )
           { 
            std::set< unsigned long > fixedPts;
            for (unsigned long k=0; k<4; k++) 
@@ -1628,7 +1628,7 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
          domSim = cDat->nicIxLookup( 
                   tri4->getSimplex( cDat->nicIndex( d, domFac ) ) ); 
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-         mPerm5 = NPerm5::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
+         mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
          if ( domFac == cDat->nicIxLookup( tri4->getSimplex( ranSim ) ) )
             { // cases: [0] 5-cycle, [0] 3-cycle and 2-cycle, 
               //        [1] 4-cycle, [1] two 2-cycles, [2] 3-cycle, 
@@ -1739,19 +1739,19 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
 
 void NSimplicialAutGrp::writeTextLong(std::ostream& out) const
 {
- std::vector<NMatrixInt*> h1A( homologyH1action() );
+ std::vector<MatrixInt*> h1A( homologyH1action() );
  bool orFlag( (tri3 ? tri3->isOrientable() : tri4->isOrientable() ) );
  for (unsigned long i=0; i<fullMap.size(); i++)
   {
    if (i != 0) out<<"\n";
    out<<"Aut "<<i;
    if (orFlag) { std::string sig("+");
-    if (tri3) { if ( (NPerm4::S4[fullMap[i].germ[0].perm].sign() * 
+    if (tri3) { if ( (Perm<4>::S4[fullMap[i].germ[0].perm].sign() * 
                  tri3->getSimplex(0)->orientation() * 
                  tri3->getSimplex(fullMap[i].germ[0].pen)->orientation() ) < 0 
                    ) sig = "-"; }
     else {
-    if ( (NPerm5::S5[fullMap[i].germ[0].perm].sign() * 
+    if ( (Perm<5>::S5[fullMap[i].germ[0].perm].sign() * 
                  tri4->getSimplex(0)->orientation() *
                  tri4->getSimplex(fullMap[i].germ[0].pen)->orientation() ) < 0 
        ) sig = "-"; }
@@ -1764,12 +1764,12 @@ void NSimplicialAutGrp::writeTextLong(std::ostream& out) const
    for (unsigned long j=0; j<fullMap[i].germ.size(); j++)
     { if (j!=0) out<<", "; else out<<" ";
       if (tri3) out<<j<<" -> "<<fullMap[i].germ[j].pen<<" "<< 
-                     NPerm4::S4[fullMap[i].germ[j].perm]; 
+                     Perm<4>::S4[fullMap[i].germ[j].perm]; 
       else      out<<j<<" -> "<<fullMap[i].germ[j].pen<<" "<< 
-                     NPerm5::S5[fullMap[i].germ[j].perm]; 
+                     Perm<5>::S5[fullMap[i].germ[j].perm]; 
     }
   }
- NGroupPresentation G( groupPresentation() );
+ GroupPresentation G( groupPresentation() );
  G.intelligentSimplify();
  out<<"\nOrder: "<<groupOrder()<<" Presentation: "<<G.compact();
 }
@@ -1781,22 +1781,22 @@ unsigned long NSimplicialAutGrp::groupOrder() const
 
 void NSimplicialAutGrp::writeTextShort(std::ostream& out) const
 {
- NGroupPresentation G( groupPresentation() );
+ GroupPresentation G( groupPresentation() );
  G.intelligentSimplify();
  out<<"Order: "<<groupOrder()<<" Presentation: "<<G.compact();
 }
 
 
 // presentation of the full group of simplicial automorphisms.
-NGroupPresentation NSimplicialAutGrp::groupPresentation() const
+GroupPresentation NSimplicialAutGrp::groupPresentation() const
 {
- NGroupPresentation retval;
+ GroupPresentation retval;
  retval.addGenerator( fullMap.size() );
  for (unsigned long i=0; i<fullMap.size(); i++)
   for (unsigned long j=0; j<fullMap.size(); j++)
    {
     // multiply fullMap[i] * fullMap[j] = prod...
-    NGroupExpression* relij( new NGroupExpression );
+    GroupExpression* relij( new GroupExpression );
     relij->addTermLast( i, 1 );
     relij->addTermLast( j, 1 );
     // determine product.  First determine how tets/pens are permuted. 
@@ -1806,10 +1806,10 @@ NGroupPresentation NSimplicialAutGrp::groupPresentation() const
      { // fullMap[j] sends pen k to fullMap[j].germ[k].pen via perm perm
        composite.germ[k].pen = fullMap[i].germ[ fullMap[j].germ[k].pen ].pen;
        composite.germ[k].perm = (tri3 ? 
-        (NPerm4::S4[fullMap[i].germ[ fullMap[j].germ[k].pen ].perm] *
-        NPerm4::S4[fullMap[j].germ[k].perm]).S4Index() :
-        (NPerm5::S5[fullMap[i].germ[ fullMap[j].germ[k].pen ].perm] *
-        NPerm5::S5[fullMap[j].germ[k].perm]).S5Index() );
+        (Perm<4>::S4[fullMap[i].germ[ fullMap[j].germ[k].pen ].perm] *
+        Perm<4>::S4[fullMap[j].germ[k].perm]).S4Index() :
+        (Perm<5>::S5[fullMap[i].germ[ fullMap[j].germ[k].pen ].perm] *
+        Perm<5>::S5[fullMap[j].germ[k].perm]).S5Index() );
      }
     // fullMap has been made binary searchable so we now just look up
     //  composite in fullMap. No we'll use lower_bound

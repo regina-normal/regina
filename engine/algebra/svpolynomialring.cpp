@@ -88,9 +88,9 @@ Integer gcd(const std::vector< Integer > &input,
                   std::vector< Integer > &outputN )
 {
  if (input.size()==1) { outputG[0]=Integer::one; return input[0]; }
- NMatrixInt X(1, input.size() );
+ MatrixInt X(1, input.size() );
  for (unsigned long i=0; i<X.columns(); i++) X.entry(0,i) = input[i];
- NMatrixInt R(input.size(), input.size());
+ MatrixInt R(input.size(), input.size());
  metricalSmithNormalForm( X, &R, NULL, NULL, NULL );
  for (unsigned long i=0; i<R.rows(); i++) outputG[i] = R.entry(i,0);
  // find the "smallest" between column 1 and the last column of R. 

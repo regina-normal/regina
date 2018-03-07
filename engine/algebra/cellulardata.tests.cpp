@@ -64,8 +64,8 @@ for (homology_coordinate_system i=first_coord; i != last_implemented_coord; ++i)
                         (i == DUAL_BDRY_coord)) ? aDim - 1 : aDim );
   for (unsigned long j=1; j<maxDim; j++)
   {
-   const NMatrixInt* A = integerChainComplex( ChainComplexLocator( j, i) );
-   const NMatrixInt* B = integerChainComplex( ChainComplexLocator( j+1, i) );
+   const MatrixInt* A = integerChainComplex( ChainComplexLocator( j, i) );
+   const MatrixInt* B = integerChainComplex( ChainComplexLocator( j+1, i) );
    std::auto_ptr< NMatrixRing<NLargeInteger> > prod = (*A)*(*B);
    if (!prod->isZero()) return false;
   }
@@ -76,7 +76,7 @@ return true;
 bool CellularData::chainMapsVerified() const
 { 
 unsigned long aDim( (tri4!=NULL) ? 4 : 3 );
-std::vector< const NMatrixInt* > mCC(5), sCC(5), dCC(5), srCC(5), sbCC(5);
+std::vector< const MatrixInt* > mCC(5), sCC(5), dCC(5), srCC(5), sbCC(5);
 for (unsigned long i=0; i<aDim; i++)
  {
   mCC[i] = integerChainComplex( ChainComplexLocator(i, MIX_coord) );

@@ -59,36 +59,36 @@ void setupIndices(const Dim4Triangulation* tri,
  unsigned long numMixBdryCells[4],     unsigned long numDualBdryCells[4])
 {
  // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[4] interior vertices. 
- for (Dim4Triangulation::VertexIterator vit = tri->getVertices().begin();
-      vit != tri->getVertices().end(); vit++) if ( !(*vit)->isIdeal() ) {
+ for (Dim4Triangulation::VertexIterator vit = tri->vertices().begin();
+      vit != tri->vertices().end(); vit++) if ( !(*vit)->isIdeal() ) {
   nicIx[0].push_back( tri->vertexIndex(*vit) );
   if ((*vit)->isBoundary()) bcIx[0].push_back( tri->vertexIndex(*vit) ); else
    { dcIx[4].push_back( tri->vertexIndex(*vit) );
     rIx[0].push_back( tri->vertexIndex(*vit) ); }
   } 
   // nicIx[1] all,  icIx[0] ideal ends, dcIx[3] nonboundary, bcIx[1] boundary
-  for (Dim4Triangulation::EdgeIterator eit = tri->getEdges().begin();
-       eit != tri->getEdges().end(); eit++) 
+  for (Dim4Triangulation::EdgeIterator eit = tri->edges().begin();
+       eit != tri->edges().end(); eit++) 
   {
    nicIx[1].push_back( tri->edgeIndex(*eit) );
    if ((*eit)->isBoundary()) bcIx[1].push_back( tri->edgeIndex(*eit) );
    else 
    { dcIx[3].push_back( tri->edgeIndex(*eit) );
      rIx[1].push_back( tri->edgeIndex(*eit) );
-     for (unsigned i=0;i<2;i++) if ((*eit)->getVertex(i)->isIdeal()) 
+     for (unsigned i=0;i<2;i++) if ((*eit)->vertex(i)->isIdeal()) 
      icIx[0].push_back(2*tri->edgeIndex(*eit)+i); 
    }
   }
   // nicIx[2] all, icIx[1] ideal ends, dcIx[2] nonboundary, bcIx[2] boundary
-  for (Dim4Triangulation::TriangleIterator fit = tri->getTriangles().begin();
-       fit != tri->getTriangles().end(); fit++) 
+  for (Dim4Triangulation::TriangleIterator fit = tri->triangles().begin();
+       fit != tri->triangles().end(); fit++) 
   {
    nicIx[2].push_back( tri->triangleIndex(*fit) );
    if ((*fit)->isBoundary()) { bcIx[2].push_back( tri->triangleIndex(*fit) ); }
    else
    { dcIx[2].push_back( tri->triangleIndex(*fit) );
      rIx[2].push_back( tri->triangleIndex(*fit) );
-     for (unsigned i=0;i<3;i++) if ((*fit)->getVertex(i)->isIdeal()) 
+     for (unsigned i=0;i<3;i++) if ((*fit)->vertex(i)->isIdeal()) 
      icIx[1].push_back(3*tri->triangleIndex(*fit)+i); }
    }
    for (Dim4Triangulation::TetrahedronIterator 
@@ -100,7 +100,7 @@ void setupIndices(const Dim4Triangulation* tri,
 	 else
      { dcIx[1].push_back( tri->tetrahedronIndex(*tit) );
        rIx[3].push_back( tri->tetrahedronIndex(*tit) );
-       for (unsigned i=0;i<4;i++) if ((*tit)->getVertex(i)->isIdeal()) 
+       for (unsigned i=0;i<4;i++) if ((*tit)->vertex(i)->isIdeal()) 
         icIx[2].push_back(4*tri->tetrahedronIndex(*tit)+i); 
      }
    }
@@ -111,7 +111,7 @@ void setupIndices(const Dim4Triangulation* tri,
     nicIx[4].push_back( tri->pentachoronIndex(*pit) );
     dcIx[0].push_back( tri->pentachoronIndex(*pit) );
     rIx[4].push_back( tri->pentachoronIndex(*pit) );
-    for (unsigned i=0;i<5;i++) if ((*pit)->getVertex(i)->isIdeal()) 
+    for (unsigned i=0;i<5;i++) if ((*pit)->vertex(i)->isIdeal()) 
      icIx[3].push_back(5*tri->pentachoronIndex(*pit)+i);
    }
 
@@ -175,7 +175,7 @@ void setupIndices(const Dim4Triangulation* tri,
 
 
 // only used in the CellularData constructor
-void setupIndices(const NTriangulation* tri,   
+void setupIndices(const Triangulation<3>* tri,   
  std::vector< std::vector<unsigned long> > &nicIx,  
  std::vector< std::vector<unsigned long> > &icIx, 
  std::vector< std::vector<unsigned long> > &dcIx,   
@@ -189,8 +189,8 @@ void setupIndices(const NTriangulation* tri,
  unsigned long numMixBdryCells[4],     unsigned long numDualBdryCells[4])
 {
  // nicIx[0] interior or boundary, bcIx[0] boundary, dcIx[3] interior vertices. 
- for (NTriangulation::VertexIterator vit = tri->getVertices().begin();
-      vit != tri->getVertices().end(); vit++) if ( !(*vit)->isIdeal() ) 
+ for (Triangulation<3>::VertexIterator vit = tri->vertices().begin();
+      vit != tri->vertices().end(); vit++) if ( !(*vit)->isIdeal() ) 
   {
    nicIx[0].push_back( tri->vertexIndex(*vit) );
    if ((*vit)->isBoundary()) bcIx[0].push_back( tri->vertexIndex(*vit) ); else
@@ -198,39 +198,39 @@ void setupIndices(const NTriangulation* tri,
       rIx[0].push_back( tri->vertexIndex(*vit) ); }
   } 
  // nicIx[1] all,  icIx[0] ideal ends, dcIx[2] nonboundary, bcIx[1] boundary
- for (NTriangulation::EdgeIterator eit = tri->getEdges().begin();
-      eit != tri->getEdges().end(); eit++) 
+ for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
+      eit != tri->edges().end(); eit++) 
   {
    nicIx[1].push_back( tri->edgeIndex(*eit) );
    if ((*eit)->isBoundary()) bcIx[1].push_back( tri->edgeIndex(*eit) );
    else 
    { dcIx[2].push_back( tri->edgeIndex(*eit) );
      rIx[1].push_back( tri->edgeIndex(*eit) );
-     for (unsigned i=0;i<2;i++) if ((*eit)->getVertex(i)->isIdeal()) 
+     for (unsigned i=0;i<2;i++) if ((*eit)->vertex(i)->isIdeal()) 
      icIx[0].push_back(2*tri->edgeIndex(*eit)+i); 
    }
   }
  // nicIx[2] all, icIx[1] ideal ends, dcIx[1] nonboundary, bcIx[2] boundary
- for (NTriangulation::FaceIterator fit = tri->getFaces().begin();
-      fit != tri->getFaces().end(); fit++) 
+ for (Triangulation<3>::FaceIterator fit = tri->faces().begin();
+      fit != tri->faces().end(); fit++) 
  {
   nicIx[2].push_back( tri->faceIndex(*fit) );
   if ((*fit)->isBoundary()) bcIx[2].push_back( tri->faceIndex(*fit) );
   else
   { dcIx[1].push_back( tri->faceIndex(*fit) );
              rIx[2].push_back( tri->faceIndex(*fit) );
-            for (unsigned i=0;i<3;i++) if ((*fit)->getVertex(i)->isIdeal()) 
+            for (unsigned i=0;i<3;i++) if ((*fit)->vertex(i)->isIdeal()) 
              icIx[1].push_back(3*tri->faceIndex(*fit)+i); 
   }
  }
  // nicIx[3], icIx[2] ideal ends, dcIx[0] all
- for (NTriangulation::TetrahedronIterator tit = tri->getTetrahedra().begin();
+ for (Triangulation<3>::TetrahedronIterator tit = tri->getTetrahedra().begin();
       tit != tri->getTetrahedra().end(); tit++) 
  {
   nicIx[3].push_back( tri->tetrahedronIndex(*tit) );
   dcIx[0].push_back( tri->tetrahedronIndex(*tit) );
   rIx[3].push_back( tri->tetrahedronIndex(*tit) );
-  for (unsigned i=0;i<4;i++) if ((*tit)->getVertex(i)->isIdeal()) 
+  for (unsigned i=0;i<4;i++) if ((*tit)->vertex(i)->isIdeal()) 
   icIx[2].push_back(4*tri->tetrahedronIndex(*tit)+i); 
  }
 
@@ -291,7 +291,7 @@ void setupIndices(const NTriangulation* tri,
 
 
 // required forward declaration
-void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4, 
+void fillChainMaps( Triangulation<3>* tri3, Dim4Triangulation* tri4, 
  unsigned long numStandardCells[5],    unsigned long numDualCells[5],     
  unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4],
  unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
@@ -303,9 +303,9 @@ void fillChainMaps( NTriangulation* tri3, Dim4Triangulation* tri4,
  std::vector< std::vector<unsigned long> > &dcIx,  
  std::vector< std::vector<unsigned long> > &bcIx, 
  std::vector< std::vector<unsigned long> > &rIx, 
- std::vector< NMatrixInt* > &sbiCM, std::vector< NMatrixInt* > &smCM, 
- std::vector< NMatrixInt* > &dmCM,  std::vector< NMatrixInt* > &strCM, 
- std::vector< NMatrixInt* > &schCM );
+ std::vector< MatrixInt* > &sbiCM, std::vector< MatrixInt* > &smCM, 
+ std::vector< MatrixInt* > &dmCM,  std::vector< MatrixInt* > &strCM, 
+ std::vector< MatrixInt* > &schCM );
 
 
 // constructor for 4-manifold triangulations
@@ -341,8 +341,8 @@ CellularData::CellularData(const Dim4Triangulation& input): ShareableObject(),
 }
 
 // constructor for 3-manifold triangulations
-CellularData::CellularData(const NTriangulation& input): ShareableObject(),
- tri4(0), tri3(new NTriangulation(input)), nicIx(4), icIx(3), dcIx(4), bcIx(3), 
+CellularData::CellularData(const Triangulation<3>& input): ShareableObject(),
+ tri4(0), tri3(new Triangulation<3>(input)), nicIx(4), icIx(3), dcIx(4), bcIx(3), 
  rIx(4), sbiCM(3), strCM(4), schCM(3),   dbiCM(3), dtrCM(4), dchCM(3),   
  mbiCM(3), mtrCM(4), mchCM(3), smCM(4), dmCM(4), smbCM(3), dmbCM(3), 
  srmCM(4), drmCM(4) // chain maps
