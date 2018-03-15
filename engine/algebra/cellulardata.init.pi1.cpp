@@ -271,52 +271,54 @@ void CellularData::buildExtraNormalData()
  } // end tri4 
  else
  { // tri3 construct normalsDim3BdryEdges
+  normalsDim3BdryVertices.resize( bcIx[0].size() );
   normalsDim3BdryEdges.resize( bcIx[1].size() );
-  // std::vector< dim3BoundaryEdgeInclusion >   normalsDim3BdryEdges;
-  //
-  // struct dim3BoundaryEdgeInclusion
-  //  { Face<3,2> *firstfac, *secondfac;
-  //    unsigned long firstedgnum, secondedgnum; };
-  //
-  // construct normalsDim3BdryEdges
-  // 
   // The strategy here is to get every incident tetrahedron using the 
   // edg->embedding call, and since Regina has them cyclically ordered 
   // with a normal orientation already, take the first and last and the 
-  // appropriate face of each.  Ok DONE. 
+  // appropriate face of each.  
   
-  // TODO experiment ?MIGHT WORK?
   const std::vector<BoundaryComponent<3>*> 
     bComps(tri3->boundaryComponents());
-  for (Triangulation<3>::BoundaryComponentIterator 
-       bcit=tri3->boundaryComponents().begin(); 
-       bcit!=tri3->boundaryComponents().end(); bcit++) 
-  if ( !(*bcit)->isIdeal() )
+  for (auto& bcit : tri3->boundaryComponents())  //iterate boundary components
+   if ( !bcit->isIdeal() )
   {
-   const Triangulation<2>* bTriComp( (*bcit)->build() );
-   // TODO: test iterate through vertices of bTriComp
-   for (auto& vit : bTriComp->vertices())
+   const Triangulation<2>* bTriComp( bcit->build() );
+
+   for (auto& vit : bTriComp->vertices()) // iterate vertices on boundary
     {
-      unsigned long I = bcIxLookup( (*bcit)->vertex( vit->index() ) );
+      unsigned long I = bcIxLookup( bcit->vertex( vit->index() ) );
       // find vit's embeddings
 
       // vertex embeddings in bdry triangulation
       dim3BoundaryVertexInclusion dim3bvrtInc;
-      // auto is cleaner!
-      //for (FaceList<2,0>::Iterator vit=bTriComp->vertices().begin(); 
-      //    vit!=bTriComp->vertices().end(); vit++)
       for (auto& emb : *vit)
         {
-         dim3bvrtInc.face.push_back( (*bcit)->triangle( 
-          emb.tetrahedron()->index() ) );
+         dim3bvrtInc.face.push_back( bcit->triangle( 
+          emb.triangle()->index() ) );
          dim3bvrtInc.vrtnum.push_back( emb.vertex() );
          dim3bvrtInc.vrtinc.push_back( emb.vertices() );
         }       
       normalsDim3BdryVertices[I] = dim3bvrtInc; 
     }
-  
-  // edges second TODO
-  
+    
+    // iterate through bTriComp edges
+    for (auto& eit : bTriComp->edges()) // iterate edges on boundary
+     {    
+      unsigned long I = bcIxLookup( bcit->edge( eit->index() ) );
+      // find eit's embeddings
+ 
+      dim3BoundaryEdgeInclusion dim3bedgInc;
+      // find corresponding tri3 data
+      dim3bedgInc.firstfac = bcit->triangle(
+                eit->embedding(0).triangle()->index() );
+      dim3bedgInc.secondfac = bcit->triangle(
+                eit->embedding(1).triangle()->index() );
+      dim3bedgInc.firstedgnum = eit->embedding(0).face();
+      dim3bedgInc.secondedgnum = eit->embedding(1).face();
+      // TODO: possibly we need the commented-out firstperm and secondperm?
+      normalsDim3BdryEdges[I] = dim3bedgInc; 
+     }      
  } // end tri3
  
  // figure out number of standard vs. ideal boundary components, also compute 

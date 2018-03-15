@@ -928,7 +928,8 @@ private:
    struct dim3BoundaryEdgeInclusion
     { Face<3,2> *firstfac, *secondfac;
       unsigned long firstedgnum, secondedgnum; 
-      Perm<3> firstperm, secondperm; };
+      //Perm<3> firstperm, secondperm; // TODO check if needed? possibly not.
+    };
 
    struct dim3BoundaryVertexInclusion
     { std::vector< Face<3,2>* > face;
