@@ -96,7 +96,7 @@ void fillDualToMixedHomCM( const Triangulation<4>* tri,
 
  // various useful pointers, index holders.
  const Face<4,0>* vrt(NULL);  const Face<4,1>* edg(NULL);  
-   const Dim4Triangle* fac(NULL); const Face<4,3>* tet(NULL); 
+   const Face<4,2>* fac(NULL); const Face<4,3>* tet(NULL); 
    const Simplex<4>* pen(NULL);
  unsigned long J;
 
@@ -276,7 +276,7 @@ void fillDifferentialHomCM( const Triangulation<4>* tri,
    schCM[d] = new MatrixInt( numStandardBdryCells[d], numRelativeCells[d+1] );
  unsigned long I;
  // various useful pointers, index holders.
- const Face<4,1>* edg(NULL);  const Dim4Triangle* fac(NULL); 
+ const Face<4,1>* edg(NULL);  const Face<4,2>* fac(NULL); 
  const Face<4,3>* tet(NULL); const Simplex<4>* pen(NULL);
  // boundary relative 1-cells
  unsigned long D=1;
@@ -510,7 +510,7 @@ else
 	}   
   else if (domdim == 2) for (unsigned long i=0; i<CM.rows(); i++)
 	{	 
-	 const Dim4Triangle* fac( tri4->triangle( dcIx[domdim][i] ) );
+	 const Face<4,2>* fac( tri4->triangle( dcIx[domdim][i] ) );
          const Simplex<4>* pen( fac->embedding(0).pentachoron() );
          Perm<5> emb( fac->embedding(0).vertices() );
  	 CM.entry( i, i ) = emb.sign()*pen->orientation();  

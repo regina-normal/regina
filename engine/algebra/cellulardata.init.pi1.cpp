@@ -35,6 +35,7 @@
 #include "maths/perm.h"
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
+#include "triangulation/dim2.h"
 
 #include <map>
 #include <list>
@@ -215,23 +216,16 @@ void CellularData::buildExtraNormalData()
      {
       unsigned long I = bcIxLookup( (*bcit)->vertex( (*vit)->index() ) );
       // find vit's embeddings
-      // TODO: switch to Ben's iterators here.
 
-      const std::vector< FaceEmbedding<3,0> > tri3vrtEmb( (*vit)->embeddings() ); 
       // vertex embeddings in bdry triangulation
- 
       dim4BoundaryVertexInclusion dim4bvrtInc;
-      dim4bvrtInc.tet.resize(tri3vrtEmb.size()); 
-      dim4bvrtInc.vrtnum.resize(tri3vrtEmb.size());
-      dim4bvrtInc.vrtinc.resize(tri3vrtEmb.size());
-      // find corresponding tri4 data
-      for (unsigned long i=0; i<tri3vrtEmb.size(); i++)
-       {
-         dim4bvrtInc.tet[i] = (*bcit)->tetrahedron( 
-            bTriComp->tetrahedronIndex( tri3vrtEmb[i].tetrahedron() ) );
-         dim4bvrtInc.vrtnum[i] = tri3vrtEmb[i].vertex();
-         dim4bvrtInc.vrtinc[i] = tri3vrtEmb[i].vertices();
-       }
+      for (auto& emb : *(*vit))
+        {
+         dim4bvrtInc.tet.push_back( (*bcit)->tetrahedron( 
+          emb.tetrahedron()->index() ) );
+         dim4bvrtInc.vrtnum.push_back( emb.vertex() );
+         dim4bvrtInc.vrtinc.push_back( emb.vertices() );
+        }       
       normalsDim4BdryVertices[I] = dim4bvrtInc; 
      }    
 
@@ -239,42 +233,34 @@ void CellularData::buildExtraNormalData()
     for (Triangulation<3>::EdgeIterator eit=bTriComp->edges().begin(); 
          eit!=bTriComp->edges().end(); eit++)
      {
-      unsigned long I = bcIxLookup(  
-        (*bcit)->edge( bTriComp->edgeIndex(*eit) ) );
-      // find vit's embeddings
-      const std::deque<Face<3,1>Embedding> tri3edgEmb( (*eit)->embeddings() ); 
-      // vertex embeddings in bdry triangulation
+      unsigned long I = bcIxLookup( (*bcit)->edge( (*eit)->index() ) );
+      // find eit's embeddings
  
       dim4BoundaryEdgeInclusion dim4bedgInc;
-      dim4bedgInc.tet.resize(tri3edgEmb.size()); 
-      dim4bedgInc.edgenum.resize(tri3edgEmb.size());
-      dim4bedgInc.edginc.resize(tri3edgEmb.size());
       // find corresponding tri4 data
-      for (unsigned long i=0; i<tri3edgEmb.size(); i++)
-       {
-        dim4bedgInc.tet[i] = (*bcit)->tetrahedron( 
-         bTriComp->tetrahedronIndex( tri3edgEmb[i].tetrahedron() ) );
-        dim4bedgInc.edgenum[i] = tri3edgEmb[i].edge();
-        dim4bedgInc.edginc[i] = tri3edgEmb[i].vertices();
-       }
+      for (auto& emb : *(*eit))
+        {
+         dim4bedgInc.tet.push_back( (*bcit)->tetrahedron( 
+          emb.tetrahedron()->index() ) );
+         dim4bedgInc.edgenum.push_back( emb.edge() );
+         dim4bedgInc.edginc.push_back( emb.vertices() );
+        }
+
       normalsDim4BdryEdges[I] = dim4bedgInc; 
-      // is this array resized properly? need to ensure that...
      }    
 
     // iterate through bTriComp faces
-    for (Triangulation<3>::FaceIterator fit=bTriComp->faces().begin(); 
-         fit!=bTriComp->faces().end(); fit++)
+    for (Triangulation<3>::TriangleIterator fit=bTriComp->triangles().begin(); 
+         fit!=bTriComp->triangles().end(); fit++)
      {
       unsigned long I = bcIxLookup( (*bcit)->triangle( 
-        bTriComp->faceIndex(*fit) ) );
-   
+        (*fit)->index() ) );
+
       dim4BoundaryFaceInclusion dim4bfacInc;
-      dim4bfacInc.firsttet = 
-        (*bcit)->tetrahedron( bTriComp->tetrahedronIndex( 
-                (*fit)->embedding(0).tetrahedron() ) );
-      dim4bfacInc.secondtet = 
-        (*bcit)->tetrahedron( bTriComp->tetrahedronIndex( 
-                (*fit)->embedding(1).tetrahedron() ) );
+      dim4bfacInc.firsttet = (*bcit)->tetrahedron(
+                (*fit)->embedding(0).tetrahedron()->index() );
+      dim4bfacInc.secondtet = (*bcit)->tetrahedron(
+                (*fit)->embedding(1).tetrahedron()->index() );
       dim4bfacInc.firstfacnum = (*fit)->embedding(0).face();
       dim4bfacInc.secondfacnum = (*fit)->embedding(1).face();
 
@@ -298,127 +284,41 @@ void CellularData::buildExtraNormalData()
   // edg->embedding call, and since Regina has them cyclically ordered 
   // with a normal orientation already, take the first and last and the 
   // appropriate face of each.  Ok DONE. 
-  for (unsigned long i=0; i<bcIx[1].size(); i++)
-   {
-    const Face<3,1>* edg( tri3->edge( bcIx[1][i] ) );    
+  
+  // TODO experiment ?MIGHT WORK?
+  const std::vector<BoundaryComponent<3>*> 
+    bComps(tri3->boundaryComponents());
+  for (Triangulation<3>::BoundaryComponentIterator 
+       bcit=tri3->boundaryComponents().begin(); 
+       bcit!=tri3->boundaryComponents().end(); bcit++) 
+  if ( !(*bcit)->isIdeal() )
+  {
+   const Triangulation<2>* bTriComp( (*bcit)->build() );
+   // TODO: test iterate through vertices of bTriComp
+   for (auto& vit : bTriComp->vertices())
+    {
+      unsigned long I = bcIxLookup( (*bcit)->vertex( vit->index() ) );
+      // find vit's embeddings
 
-    const Face<3,1>Embedding emb1( edg->embeddings().front() );
-    Perm<4> edgPerm( emb1.vertices() );        
-    const Simplex<3>* tet1( emb1.tetrahedron() );  
-    Face<3,2>* fac1 ( tet1->face( edgPerm[3] ) ); 
-    Perm<4> facPerm( fac1->embedding(0).vertices() );
-    normalsDim3BdryEdges[i].firstfac = fac1;
-    normalsDim3BdryEdges[i].firstedgnum = facPerm.preImageOf( edgPerm[2] );
-    normalsDim3BdryEdges[i].firstperm = 
-        Perm<3>( facPerm.preImageOf( edgPerm[0] ), 
-        facPerm.preImageOf( edgPerm[1] ), facPerm.preImageOf( edgPerm[2] ) );
-
-    const Face<3,1>Embedding emb2( edg->embeddings().back() );
-    edgPerm = emb2.vertices();                 
-    const Simplex<3>* tet2( emb2.tetrahedron() );  
-    Face<3,2>* fac2 ( tet2->face( edgPerm[2] ) );  
-    facPerm = fac2->embedding(0).vertices();
-    normalsDim3BdryEdges[i].secondfac = fac2;
-    normalsDim3BdryEdges[i].secondedgnum = facPerm.preImageOf( edgPerm[3] );
-    normalsDim3BdryEdges[i].secondperm = 
-        Perm<3>( facPerm.preImageOf( edgPerm[0] ), 
-        facPerm.preImageOf( edgPerm[1] ), facPerm.preImageOf( edgPerm[3] ) );
-   }
-  // struct dim3BoundaryVertexInclusion
-  //  { std::vector< Face<3,2>* > face;
-  //    std::vector< unsigned long > vrtnum; 
-  //    std::vector< Perm<3> > vrtinc; };
-  //
-  //  std::vector< dim3BoundaryVertexInclusion > normalsDim3BdryVertices; 
-  //
-  // construct normalsDim3BdryVertices
-  // 
-  // The strategy is to walk around the faces in cyclic order, so for each one 
-  // we hit the corresponding edge, and have to call its edge embeddings, going 
-  // to the opposite end of the edge embeddings... ah.. okay. that's how 
-  // we'll do it.  So we just have to get one incident edge to start the 
-  // process off with. And we can piggyback off the normalsDim3BdryEdges 
-  // computation! Good.  
-  normalsDim3BdryVertices.resize( bcIx[0].size() );
-  for (unsigned long i=0; i<bcIx[0].size(); i++)
-   {
-    const Face<3,0>* vrt( tri3->vertex(bcIx[0][i]) );
-    const std::vector< Face<3,0>Embedding > vrtEmbs(vrt->embeddings());
-    // walk through vrtEmbs until we find the first boundary face.
-    // for each embedding, look at the three faces that contain this 
-    // vertex, and check if one of them is on the boundary. If it is, stop. 
-    bool foundBdryFac=false;   
-    unsigned long j, k;
-    for (j=0; j<vrtEmbs.size(); j++) 
-     {
-      for (k=1; k<4; k++)
-       {
-        if ( vrtEmbs[j].tetrahedron()->face(
-            (vrtEmbs[j].vertex()+k) % 4)->isBoundary() ) foundBdryFac=true;
-        if (foundBdryFac) break;
-       }
-      if (foundBdryFac) break;
-     } // this must return with foundBdryFac true
-    if (!foundBdryFac) 
-        std::cout<<"Skeletal error in CellularData::buildExtraNormalData.\n";
-    if ( !vrtEmbs[j].tetrahedron()->face(
-        (vrtEmbs[j].vertex()+k) % 4)->isBoundary() ) 
-      std::cout<<"Weird error in CellularData::buildExtraNormalData.\n"; 
-    // okay now it's time to start building normalsDim3BdryVertices.  So we 
-    // take the face, and choose some orientation of it. 
-    normalsDim3BdryVertices[i].face.push_back( 
-       vrtEmbs[j].tetrahedron()->face((vrtEmbs[j].vertex()+k) % 4) );
-    normalsDim3BdryVertices[i].vrtnum.push_back( 
-       normalsDim3BdryVertices[i].face[0] -> 
-           embedding(0).vertices().preImageOf( vrtEmbs[j].vertex() ) );
-    // 0 to vertex index in face, 1 and 2 to other vertices, any choice...
-    normalsDim3BdryVertices[i].vrtinc.push_back( 
-        Perm<3>( normalsDim3BdryVertices[i].vrtnum[0], 
-              (normalsDim3BdryVertices[i].vrtnum[0]+1) % 3, 
-              (normalsDim3BdryVertices[i].vrtnum[0]+2) % 3) );
-    // find the next face in sequence, if not the 0-th face, append it to list.  
-    bool toNextFace=true;
-    while (toNextFace)
-     {
-      Face<3,2> *prevFace, *nextFace;
-      unsigned long prevVN, nextVN;
-      Perm<3> prevPerm, nextPerm;
-      prevFace = normalsDim3BdryVertices[i].face.back(); 
-      prevVN = normalsDim3BdryVertices[i].vrtnum.back(); 
-      prevPerm = normalsDim3BdryVertices[i].vrtinc.back();
-      Face<3,1> *foldE = prevFace->edge( prevPerm[1] ); 
-      unsigned long foldEei( bcIxLookup( foldE ) );
-      Perm<3> fts( normalsDim3BdryEdges[foldEei].secondperm*(
-                  normalsDim3BdryEdges[foldEei].firstperm.inverse()) );
-      if ( (normalsDim3BdryEdges[foldEei].firstfac == prevFace) && 
-           (normalsDim3BdryEdges[foldEei].firstedgnum == prevPerm[1] ) )
-       { // this is the problem, I'm not using the correct nextVN
-        nextFace = normalsDim3BdryEdges[foldEei].secondfac;
-        nextVN = fts[prevPerm[0]];
-        nextPerm = Perm<3>( fts[prevPerm[0]], fts[prevPerm[2]], 
-                           fts[prevPerm[1]] );
-       }
-      else
-       {
-        nextFace = normalsDim3BdryEdges[foldEei].firstfac;
-        nextVN = fts.inverse()[prevPerm[0]]; 
-        nextPerm = Perm<3>( fts.inverse()[prevPerm[0]], 
-                fts.inverse()[prevPerm[2]], fts.inverse()[prevPerm[1]] );
-       }
-
-     // now check to see if nextFace is the 0-th face or not...
-     // currently this isn't working! 
-     if ( (nextFace == normalsDim3BdryVertices[i].face[0]) && 
-          (nextVN == normalsDim3BdryVertices[i].vrtnum[0]) ) toNextFace=false;
-     else // record
-      {
-       normalsDim3BdryVertices[i].face.push_back(nextFace);
-       normalsDim3BdryVertices[i].vrtnum.push_back(nextVN);
-       normalsDim3BdryVertices[i].vrtinc.push_back(nextPerm);
-      }
+      // vertex embeddings in bdry triangulation
+      dim3BoundaryVertexInclusion dim3bvrtInc;
+      // auto is cleaner!
+      //for (FaceList<2,0>::Iterator vit=bTriComp->vertices().begin(); 
+      //    vit!=bTriComp->vertices().end(); vit++)
+      for (auto& emb : *vit)
+        {
+         dim3bvrtInc.face.push_back( (*bcit)->triangle( 
+          emb.tetrahedron()->index() ) );
+         dim3bvrtInc.vrtnum.push_back( emb.vertex() );
+         dim3bvrtInc.vrtinc.push_back( emb.vertices() );
+        }       
+      normalsDim3BdryVertices[I] = dim3bvrtInc; 
     }
-   }
+  
+  // edges second TODO
+  
  } // end tri3
+ 
  // figure out number of standard vs. ideal boundary components, also compute 
  // a vector which describes the map (boundary faces) --> (boundary components 
  // they belong to)

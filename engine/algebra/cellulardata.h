@@ -912,18 +912,18 @@ private:
     // 1-cells in maximal tree
 
    struct dim4BoundaryFaceInclusion
-    { Face<4,3> *firsttet, *secondtet;
-      unsigned long firstfacnum, secondfacnum; };
+    { Face<4,3> *firsttet, *secondtet; // tet in ambient 4-manifold
+      unsigned long firstfacnum, secondfacnum; }; // triangle index in each tet
 
    struct dim4BoundaryEdgeInclusion
-    { std::vector< Face<4,3>* > tet;
-      std::vector< unsigned long > edgenum; 
-      std::vector< Perm<4> > edginc; };
+    { std::vector< Face<4,3>* > tet; // tet in ambient 4-manifold
+      std::vector< unsigned long > edgenum; // edge number in the tet.
+      std::vector< Perm<4> > edginc; }; // edge inclusion in tet.
 
    struct dim4BoundaryVertexInclusion
-    { std::vector< Face<4,3>* > tet;
-      std::vector< unsigned long > vrtnum; 
-      std::vector< Perm<4> > vrtinc; };
+    { std::vector< Face<4,3>* > tet; // tet in ambient pentachoron.
+      std::vector< unsigned long > vrtnum; // vertex number in the tet
+      std::vector< Perm<4> > vrtinc; }; // inclusion of the vertex in the tet
 
    struct dim3BoundaryEdgeInclusion
     { Face<3,2> *firstfac, *secondfac;
