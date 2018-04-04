@@ -2302,6 +2302,39 @@ c3RhcnR4cmVmCjEwNjEyMQolJUVPRgo=
   <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
 </packet> <!-- Note (Text) -->
 </packet> <!-- ℝP² × S¹ (3_Manifold Triangulation) -->
+<packet label="Right-Hand Trefoil"
+	type="Link" typeid="17"
+	parent="3-Manifolds and Knots">
+  <crossings size="3">
+  + + +
+  </crossings>
+  <connections>
+  _1 ^1
+  _2 ^2
+  _0 ^0
+  </connections>
+  <components size="1">
+  ^0
+  </components>
+</packet> <!-- Right_Hand Trefoil (Link) -->
+<packet label="Borromean rings"
+	type="Link" typeid="17"
+	parent="3-Manifolds and Knots">
+  <crossings size="6">
+  + - + - + -
+  </crossings>
+  <connections>
+  _1 ^2
+  _2 ^3
+  _3 ^4
+  _4 ^5
+  _5 ^0
+  _0 ^1
+  </connections>
+  <components size="3">
+  ^0 ^2 ^4
+  </components>
+</packet> <!-- Borromean rings (Link) -->
 <packet label="Whitehead Link Complement"
 	type="SnapPea Triangulation" typeid="16"
 	parent="3-Manifolds and Knots">
@@ -2440,39 +2473,6 @@ CS_unknown
   <spantaut value="T"/>
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
-<packet label="Right-Hand Trefoil"
-	type="Link" typeid="17"
-	parent="3-Manifolds and Knots">
-  <crossings size="3">
-  + + +
-  </crossings>
-  <connections>
-  _1 ^1
-  _2 ^2
-  _0 ^0
-  </connections>
-  <components size="1">
-  ^0
-  </components>
-</packet> <!-- Right_Hand Trefoil (Link) -->
-<packet label="Borromean rings"
-	type="Link" typeid="17"
-	parent="3-Manifolds and Knots">
-  <crossings size="6">
-  + - + - + -
-  </crossings>
-  <connections>
-  _1 ^2
-  _2 ^3
-  _3 ^4
-  _4 ^5
-  _5 ^0
-  _0 ^1
-  </connections>
-  <components size="3">
-  ^0 ^2 ^4
-  </components>
-</packet> <!-- Borromean rings (Link) -->
 </packet> <!-- 3_Manifolds and Knots (Container) -->
 <packet label="4-Manifolds"
 	type="Container" typeid="1"
