@@ -36,6 +36,11 @@ Version 5.2  [ 29 September, 2017 ]
               now allow Regina to return null in certain coordinate systems.
               Currently NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED are the only
               coordinate systems where this can happen.
+        Class NormalSurface:
+            - Explicitly added preconditions to isOrientable(),
+              isConnected() and isTwoSided() that the surface must be embedded.
+              These preconditions were always required by the code, but
+              were previously omitted from the API documentation.
         Class NSVectorQuadClosed:
             - New normal surface coordinate class to implement NS_QUAD_CLOSED.
         Class NSVectorQuadOctClosed:
