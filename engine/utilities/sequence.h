@@ -560,7 +560,7 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
 
 template <typename T>
 template <typename Iterator>
-inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>&
+inline typename LightweightSequence<T>::template SubsequenceCompareFirstPtr<Iterator>&
         LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
         operator = (
         const SubsequenceCompareFirstPtr<Iterator>& cloneMe) {
