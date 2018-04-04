@@ -2736,7 +2736,7 @@
 		05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonInterpreter.h; sourceTree = "<group>"; };
 		05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonInterpreter.mm; sourceTree = "<group>"; };
 		05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
-		05249EA31DBB8FC9001FE29E /* python27.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = python27.zip; path = ../../../../Library/Frameworks/ios/Python.framework/Versions/2.7/Resources/lib/python27.zip; sourceTree = "<group>"; };
+		05249EA31DBB8FC9001FE29E /* python27.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = python27.zip; path = ../../../../Library/Frameworks/ios/Python.framework/Resources/lib/python27.zip; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
 		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
