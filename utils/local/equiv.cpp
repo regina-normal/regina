@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Attempt to find triangulations related by few elementary moves        *
  *                                                                        *
- *  Copyright (c) 2005-2017, Ben Burton                                   *
+ *  Copyright (c) 2005-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
