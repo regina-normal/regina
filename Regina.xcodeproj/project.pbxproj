@@ -8558,6 +8558,7 @@
 						};
 					};
 					058FC8671FE188A0006D04B4 = {
+						DevelopmentTeam = 67JTSH67LZ;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -11616,6 +11617,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
@@ -11659,6 +11661,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
