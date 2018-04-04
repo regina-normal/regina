@@ -438,6 +438,20 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     triActionList.append(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
+    QAction* actReflect = new QAction(this);
+    actReflect->setText(tr("Re&flect"));
+    actReflect->setIcon(ReginaSupport::regIcon("reflect"));
+    actReflect->setToolTip(tr(
+        "Reverse the orientation of each tetrahedron"));
+    actReflect->setEnabled(readWrite);
+    actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
+        "so that the orientations of all tetrahedra are reversed.<p>"
+        "If this triangulation is oriented, then the overall effect will be "
+        "to convert this into an isomorphic triangulation with the "
+        "opposite orientation.</qt>"));
+    triActionList.append(actReflect);
+    connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
+
     QAction* actBarycentricSubdivide = new QAction(this);
     actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
     actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
@@ -834,6 +848,12 @@ void Tri3GluingsUI::orient() {
     }
 
     tri->orient();
+}
+
+void Tri3GluingsUI::reflect() {
+    endEdit();
+
+    tri->reflect();
 }
 
 void Tri3GluingsUI::barycentricSubdivide() {

@@ -378,6 +378,20 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     triActionList.append(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
+    QAction* actReflect = new QAction(this);
+    actReflect->setText(tr("Re&flect"));
+    actReflect->setIcon(ReginaSupport::regIcon("reflect"));
+    actReflect->setToolTip(tr(
+        "Reverse the orientation of each triangle"));
+    actReflect->setEnabled(readWrite);
+    actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each triangle "
+        "so that the orientations of all triangles are reversed.<p>"
+        "If this triangulation is oriented, then the overall effect will be "
+        "to convert this into an isomorphic triangulation with the "
+        "opposite orientation.</qt>"));
+    triActionList.append(actReflect);
+    connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
+
     QAction* actBarycentricSubdivide = new QAction(this);
     actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
     actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
@@ -566,6 +580,12 @@ void Tri2GluingsUI::orient() {
     }
 
     tri->orient();
+}
+
+void Tri2GluingsUI::reflect() {
+    endEdit();
+
+    tri->reflect();
 }
 
 void Tri2GluingsUI::barycentricSubdivide() {

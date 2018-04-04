@@ -321,6 +321,15 @@
     self.packet->barycentricSubdivision();
 }
 
+- (IBAction)reflect:(id)sender
+{
+    [self endEditing];
+    if (! [self checkEditable])
+    return;
+
+    self.packet->reflect();
+}
+
 - (IBAction)doubleCover:(id)sender
 {
     [self endEditing];
@@ -337,6 +346,7 @@
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"Extract components",
                                                                 @"Barycentric subdivision",
+                                                                @"Reflect",
                                                                 @"Double cover",
                                                                 nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
@@ -574,6 +584,8 @@ cleanUpGluing:
         case 1:
             [self barycentricSubdivision:nil]; break;
         case 2:
+            [self reflect:nil]; break;
+        case 3:
             [self doubleCover:nil]; break;
     }
 }

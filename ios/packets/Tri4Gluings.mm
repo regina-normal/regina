@@ -498,6 +498,15 @@
     self.packet->intelligentSimplify();
 }
 
+- (IBAction)reflect:(id)sender
+{
+    [self endEditing];
+    if (! [self checkEditable])
+    return;
+
+    self.packet->reflect();
+}
+
 - (IBAction)doubleCover:(id)sender
 {
     [self endEditing];
@@ -527,6 +536,7 @@
                                                                 @"Barycentric subdivision",
                                                                 @"Truncate ideal vertices",
                                                                 @"Make ideal",
+                                                                @"Reflect",
                                                                 @"Double cover",
                                                                 @"Elementary moves",
                                                                 nil];
@@ -783,8 +793,10 @@ cleanUpGluing:
         case 3:
             [self makeIdeal:nil]; break;
         case 4:
-            [self doubleCover:nil]; break;
+            [self reflect:nil]; break;
         case 5:
+            [self doubleCover:nil]; break;
+        case 6:
             [self elementaryMoves:nil]; break;
     }
 }
