@@ -1527,6 +1527,7 @@
 		058FC86E1FE188A0006D04B4 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		058FC8731FE188E0006D04B4 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058FC8651FE18826006D04B4 /* retriangulate.cpp */; };
 		058FC8761FE18943006D04B4 /* retriangulate in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 058FC8721FE188A0006D04B4 /* retriangulate */; };
+		0590E04C2074B4B700C11EF6 /* libqmacstyle.dylib in Copy Qt plugins (styles) */ = {isa = PBXBuildFile; fileRef = 0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
@@ -2402,6 +2403,17 @@
 				057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */,
 				057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0590E04B2074B48600C11EF6 /* Copy Qt plugins (styles) */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = styles;
+			dstSubfolderSpec = 13;
+			files = (
+				0590E04C2074B4B700C11EF6 /* libqmacstyle.dylib in Copy Qt plugins (styles) */,
+			);
+			name = "Copy Qt plugins (styles)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		05AB5ED81B942354007034C8 /* Copy Frameworks */ = {
@@ -4036,6 +4048,7 @@
 		058FADC519D50DA10001B5B5 /* Coordinates.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Coordinates.mm; sourceTree = "<group>"; };
 		058FC8651FE18826006D04B4 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
 		058FC8721FE188A0006D04B4 /* retriangulate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = retriangulate; sourceTree = BUILT_PRODUCTS_DIR; };
+		0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacstyle.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/styles/libqmacstyle.dylib; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101191813230A000A8D16 /* NewPacketMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketMenu.h; sourceTree = "<group>"; };
@@ -7529,6 +7542,7 @@
 				05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */,
 				05AB5EE01B94285B007034C8 /* libqminimal.dylib */,
 				05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */,
+				0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */,
 			);
 			name = Plugins;
 			sourceTree = "<group>";
@@ -8423,6 +8437,7 @@
 				05AB5EE51B942884007034C8 /* Copy Qt Plugins (imageformats) */,
 				05AB5EFE1B9428BD007034C8 /* Copy Qt Plugins (iconengines) */,
 				05AB5F011B9428E4007034C8 /* Copy Qt Plugins (generic) */,
+				0590E04B2074B48600C11EF6 /* Copy Qt plugins (styles) */,
 				050F5E691B9BD2AA00C1F681 /* Copy Python Module */,
 				050BEA351D9C8B3700B96DB8 /* Copy Python Scripts */,
 				050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */,
