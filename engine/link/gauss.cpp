@@ -36,6 +36,23 @@
 
 namespace regina {
 
+Link* Link::fromGauss(const std::string& s) {
+    std::istringstream in(s);
+    std::vector<int> terms;
+
+    int i;
+    while (true) {
+        in >> i;
+        if (! in) {
+            if (in.eof())
+                break;
+            return nullptr;
+        }
+        terms.push_back(i);
+    }
+    return fromGauss(terms.begin(), terms.end());
+}
+
 Link* Link::fromOrientedGauss(const std::string& s) {
     std::vector<std::string> terms;
     basicTokenise(std::back_inserter(terms), s);
@@ -89,6 +106,32 @@ bool Link::parseOrientedGaussTerm(const char* s,
     char* endPtr;
     crossing = static_cast<size_t>(strtol(s + 2, &endPtr, 10));
     return (*endPtr == 0 && crossing > 0 && crossing <= nCross);
+}
+
+std::string Link::gauss() const {
+    std::ostringstream out;
+    gauss(out);
+    return out.str();
+}
+
+void Link::gauss(std::ostream& out) const {
+    if (components_.size() != 1)
+        return;
+    if (crossings_.empty())
+        return;
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    do {
+        if (s != start)
+            out << ' ';
+
+        if (s.strand() == 0)
+            out << '-';
+        out << (s.crossing()->index() + 1);
+
+        ++s;
+    } while (s != start);
 }
 
 std::string Link::orientedGauss() const {

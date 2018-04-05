@@ -47,8 +47,10 @@ using regina::StrandRef;
 using regina::Link;
 
 namespace {
+    std::string (Link::*gauss_str)() const = &Link::gauss;
     std::string (Link::*orientedGauss_str)() const = &Link::orientedGauss;
     std::string (Link::*jenkins_str)() const = &Link::jenkins;
+    Link* (*fromGauss_str)(const std::string&) = &Link::fromGauss;
     Link* (*fromOrientedGauss_str)(const std::string&) =
         &Link::fromOrientedGauss;
     Link* (*fromJenkins_str)(const std::string&) = &Link::fromJenkins;
@@ -80,6 +82,25 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_knotSig, Link::knotSig, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
         Link::simplifyExhaustive, 0, 3);
+
+    Link* fromGauss_list(boost::python::list terms) {
+        long len = boost::python::len(terms);
+
+        int* s = new int[len];
+        for (long i = 0; i < len; ++i) {
+            extract<int> val(terms[i]);
+            if (! val.check()) {
+                // Throw an exception.
+                delete[] s;
+                val();
+            }
+            s[i] = val();
+        }
+
+        Link* ans = Link::fromGauss(s, s + len);
+        delete[] s;
+        return ans;
+    }
 
     Link* fromOrientedGauss_list(boost::python::list terms) {
         long len = boost::python::len(terms);
@@ -151,6 +172,10 @@ void addLink() {
         .def("countComponents", &Link::countComponents)
         .def("crossing", &Link::crossing, return_internal_reference<>())
         .def("component", &Link::component)
+        .def("fromGauss", fromGauss_list,
+            return_value_policy<to_held_type<>>())
+        .def("fromGauss", fromGauss_str,
+            return_value_policy<to_held_type<>>())
         .def("fromOrientedGauss", fromOrientedGauss_list,
             return_value_policy<to_held_type<>>())
         .def("fromOrientedGauss", fromOrientedGauss_str,
@@ -185,6 +210,7 @@ void addLink() {
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             return_internal_reference<>())
         .def("brief", &Link::brief)
+        .def("gauss", gauss_str)
         .def("orientedGauss", orientedGauss_str)
         .def("jenkins", jenkins_str)
         .def("knotSig", &Link::knotSig, OL_knotSig())
@@ -201,6 +227,7 @@ void addLink() {
              OL_simplifyToLocalMinimum())
         .def("simplifyExhaustive", &Link::simplifyExhaustive,
              OL_simplifyExhaustive())
+        .staticmethod("fromGauss")
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
         .staticmethod("fromKnotSig")

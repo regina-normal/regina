@@ -1987,6 +1987,60 @@ class REGINA_API Link : public Packet {
         std::string brief() const;
 
         /**
+         * Outputs a classical Gauss code for this knot.
+         *
+         * In general, the classical Gauss code does not carry enough
+         * information to uniquely reconstruct the knot.  For instance,
+         * both a knot and its reflection can be described by the same
+         * Gauss code; moreover, for composite knots, the Gauss code can
+         * describe inequivalent knots (even when allowing for reflections).
+         * If you need a code that specifies the knot uniquely, consider
+         * using the \e oriented Gauss code instead.
+         *
+         * Currently Regina only supports Gauss codes for knots,
+         * not multiple-component links.  If this link does not have
+         * precisely one component then the empty string will be returned.
+         *
+         * The string will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of returning a string, writes directly to an output stream.
+         *
+         * @return a classical Gauss code for this knot, or the empty
+         * string if this is a link with zero or multiple components.
+         */
+        std::string gauss() const;
+
+        /**
+         * Writes a classical Gauss code for this knot to the given output
+         * stream.
+         *
+         * In general, the classical Gauss code does not carry enough
+         * information to uniquely reconstruct the knot.  For instance,
+         * both a knot and its reflection can be described by the same
+         * Gauss code; moreover, for composite knots, the Gauss code can
+         * describe inequivalent knots (even when allowing for reflections).
+         * If you need a code that specifies the knot uniquely, consider
+         * using the \e oriented Gauss code instead.
+         *
+         * Currently Regina only supports Gauss codes for knots,
+         * not multiple-component links.  If this link does not have
+         * precisely one component then nothing will be output at all.
+         *
+         * The output will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of using an output stream, simply returns a string.
+         *
+         * \ifacespython This routine is not available in Python.  Instead,
+         * Python users can use the variant gauss(), which takes no
+         * arguments and returns the output as a string.
+         *
+         * @param out the output stream to which to write.
+         */
+        void gauss(std::ostream& out) const;
+
+        /**
          * Outputs an oriented Gauss code for this knot.
          *
          * The oriented Gauss code, based on a format used by Andreeva et al.,
@@ -1996,7 +2050,13 @@ class REGINA_API Link : public Packet {
          * documentation for fromOrientedGauss(const std::string&), which
          * imports links in this format.
          *
-         * Currently Regina only supports oriented Gauss codes for knots,
+         * The key advantage of using the oriented Gauss code (as opposed to
+         * the classical Gauss code) is that an oriented Gauss code always
+         * describes a unique knot, and moreover (for knots that are not
+         * equivalent to their reflections) it describes a unique reflection
+         * of that knot.
+         *
+         * Currently Regina only supports Gauss codes for knots,
          * not multiple-component links.  If this link does not have
          * precisely one component then the empty string will be returned.
          *
@@ -2021,7 +2081,13 @@ class REGINA_API Link : public Packet {
          * documentation for fromOrientedGauss(const std::string&), which
          * imports links in this format.
          *
-         * Currently Regina only supports oriented Gauss codes for knots,
+         * The key advantage of using the oriented Gauss code (as opposed to
+         * the classical Gauss code) is that an oriented Gauss code always
+         * describes a unique knot, and moreover (for knots that are not
+         * equivalent to their reflections) it describes a unique reflection
+         * of that knot.
+         *
+         * Currently Regina only supports Gauss codes for knots,
          * not multiple-component links.  If this link does not have
          * precisely one component then nothing will be output at all.
          *
@@ -2227,6 +2293,126 @@ class REGINA_API Link : public Packet {
         template <typename... Args>
         static Link* fromData(std::initializer_list<int> crossingSigns,
             std::initializer_list<Args>... components);
+
+        /**
+         * Creates a new knot from a classical Gauss code.
+         *
+         * Classical Gauss codes essentially describe the 4-valent graph
+         * of a knot but not the particular embedding in the plane.  As
+         * a result, there can be ambiguity in the orientation of the
+         * diagram, and (for composite knots) even the topology of the
+         * knot itself.  Furthermore, parsing a Gauss code is complex
+         * since it requires an embedding to be deduced using some variant
+         * of a planarity testing algorithm.  These issues are resolved
+         * using \e oriented Gauss codes, as used by the routines
+         * orientedGauss() and fromOrientedGauss().
+         *
+         * The Gauss code for an <i>n</i>-crossing knot is described by
+         * a sequence of 2<i>n</i> positive and negative integers,
+         * representing strands that pass over and under crossings
+         * respectively.  Regina's implementation of Gauss codes comes
+         * with the following restrictions:
+         *
+         * - It can only be used for knots (i.e., links with exactly one
+         *   component).
+         *
+         * - The crossings of the knot must be labelled 1, 2, ..., \a n
+         *   (i.e., they cannot have be arbitrary natural numbers).
+         *
+         * The format works as follows:
+         *
+         * - Label the crossings arbitrarily as 1, 2, ..., \a n.
+         *
+         * - Start at some point on the knot and follow it around.
+         *   Whenever you pass crossing \a k, write the integer
+         *   <tt><i>k</i></tt> if you pass over the crossing,
+         *   or <tt>-<i>k</i></tt> if you pass under the crossing.
+         *
+         * Be aware that, once the knot has been constructed, the crossings
+         * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
+         * (since every Link object numbers its crossings starting from 0).
+         *
+         * As an example, you can construct the trefoil using the code:
+         *
+           \verbatim
+           1 -2 3 -1 2 -3
+           \endverbatim
+         *
+         * There are two variants of this routine.  This variant takes a
+         * single string, where the integers have been combined together and
+         * separated by whitespace.  The other variant takes a sequence of
+         * integers, defined by a pair of iterators.
+         *
+         * In this variant (the string variant), the given string may
+         * contain additional leading or trailing whitespace.
+         *
+         * \warning In general, the classical Gauss code does not contain
+         * enough information to uniquely reconstruct a knot.  For prime knots,
+         * both a knot and its reflection can be described by the same Gauss
+         * code; for composite knots, the same Gauss code can describe
+         * knots that are topologically inequivalent, even when allowing for
+         * reflection.  If you need to reconstruct a knot uniquely, consider
+         * using the \e oriented Gauss code instead.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a knot diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * @author Adam Gowty
+         *
+         * @param str a classical Gauss code for a knot, as described above.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        static Link* fromGauss(const std::string& str);
+
+        /**
+         * Creates a new knot from a classical Gauss code.
+         *
+         * See fromGauss(const std::string&) for a detailed
+         * description of this format as it is used in Regina.
+         *
+         * There are two variants of this routine.  The other variant
+         * (fromGauss(const std::string&), which offers more
+         * detailed documentation) takes a single string, where the integers
+         * have been combined together and separated by whitespace.  This
+         * variant takes a sequence of integers, defined by a pair of iterators.
+         *
+         * \pre \a Iterator is a random access iterator type, and
+         * dereferencing such an iterator produces an integer.
+         *
+         * \warning In general, the classical Gauss code does not contain
+         * enough information to uniquely reconstruct a knot.  For prime knots,
+         * both a knot and its reflection can be described by the same Gauss
+         * code; for composite knots, the same Gauss code can describe
+         * knots that are topologically inequivalent, even when allowing for
+         * reflection.  If you need to reconstruct a knot uniquely, consider
+         * using the \e oriented Gauss code instead.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a knot diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \ifacespython Instead of a pair of begin and past-the-end
+         * iterators, this routine takes a Python list of tokens.
+         *
+         * @author Adam Gowty
+         *
+         * @param begin an iterator that points to the beginning of the
+         * sequence of integers for a classical Gauss code.
+         * @param end an iterator that points past the end of the
+         * sequence of integers for a classical Gauss code.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        template <typename Iterator>
+        static Link* fromGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new knot from an "oriented" variant of the Gauss code.
