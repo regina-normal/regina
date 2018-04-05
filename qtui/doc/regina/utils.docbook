@@ -561,6 +561,12 @@
     once and only once.
    </para>
    <para>
+    For 3-manifold triangulations, this utility will only attempt 2-3
+    and 2-3 Pachner moves, never 1-4 or 4-1 moves.
+    For 4-manifold triangulations, all types of Pachner moves are used
+    (1-5, 2-4, 3-3, 4-2, and 5-1).
+   </para>
+   <para>
     The program will output each triangulation that it finds of the same
     size <replaceable>n</replaceable> (including the original input
     triangulation).  If it ever finds a
