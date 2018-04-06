@@ -153,6 +153,7 @@ void addMarkedAbelianGroup() {
         .def("invariantFactor", &MarkedAbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &MarkedAbelianGroup::isTrivial)
+        .def("isZ", &MarkedAbelianGroup::isZ)
         .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)
         .def("equalTo", &MarkedAbelianGroup::equalTo)
         // TODO: ccRep, ccRep, cycleProjection, cycleProjection

@@ -24,6 +24,8 @@ Version 5.2  [ 29 September, 2017 ]
         Class Link, Crossing, StrandRef:
             - New classes to support knots and links, plus other additional
               classes and methods to interface with the Boost Graph Library.
+        Class MarkedAbelianGroup:
+            - New routine isZ().
         Class NormalHypersurfaces:
             - New routine sort() to sort hypersurfaces by arbitrary criteria.
             - The postconditions for enumerate() and makeMatchingEquations()
