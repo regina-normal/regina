@@ -136,17 +136,17 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
                     // filling:02,13 -> bc->edge(0)
                     // filling:01    -> bc->edge(1)
                     filling->join(3, t[0],
-                        Perm4(v[0][2], v[0][0], v[0][1], v[0][3]));
+                        Perm<4>(v[0][2], v[0][0], v[0][1], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][0], v[1][2], v[1][3], v[1][1]));
+                        Perm<4>(v[1][0], v[1][2], v[1][3], v[1][1]));
                 } else {
                     // filling:12,03 -> bc->edge(1)
                     // filling:02,13 -> bc->edge(2)
                     // filling:01    -> bc->edge(0)
                     filling->join(3, t[0],
-                        Perm4(v[0][1], v[0][2], v[0][0], v[0][3]));
+                        Perm<4>(v[0][1], v[0][2], v[0][0], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][2], v[1][1], v[1][3], v[1][0]));
+                        Perm<4>(v[1][2], v[1][1], v[1][3], v[1][0]));
                 }
             } else {
                 filling = insertLayeredSolidTorus(cuts2, cuts1);
@@ -155,17 +155,17 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
                     // filling:02,13 -> bc->edge(0)
                     // filling:01    -> bc->edge(2)
                     filling->join(3, t[0],
-                        Perm4(v[0][1], v[0][0], v[0][2], v[0][3]));
+                        Perm<4>(v[0][1], v[0][0], v[0][2], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][0], v[1][1], v[1][3], v[1][2]));
+                        Perm<4>(v[1][0], v[1][1], v[1][3], v[1][2]));
                 } else {
                     // filling:12,03 -> bc->edge(2)
                     // filling:02,13 -> bc->edge(1)
                     // filling:01    -> bc->edge(0)
                     filling->join(3, t[0],
-                        Perm4(v[0][2], v[0][1], v[0][0], v[0][3]));
+                        Perm<4>(v[0][2], v[0][1], v[0][0], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][1], v[1][2], v[1][3], v[1][0]));
+                        Perm<4>(v[1][1], v[1][2], v[1][3], v[1][0]));
                 }
             }
             break;
@@ -177,17 +177,17 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
                     // filling:02,13 -> bc->edge(1)
                     // filling:01    -> bc->edge(0)
                     filling->join(3, t[0],
-                        Perm4(v[0][2], v[0][1], v[0][0], v[0][3]));
+                        Perm<4>(v[0][2], v[0][1], v[0][0], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][1], v[1][2], v[1][3], v[1][0]));
+                        Perm<4>(v[1][1], v[1][2], v[1][3], v[1][0]));
                 } else {
                     // filling:12,03 -> bc->edge(0)
                     // filling:02,13 -> bc->edge(2)
                     // filling:01    -> bc->edge(1)
                     filling->join(3, t[0],
-                        Perm4(v[0][0], v[0][2], v[0][1], v[0][3]));
+                        Perm<4>(v[0][0], v[0][2], v[0][1], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][2], v[1][0], v[1][3], v[1][1]));
+                        Perm<4>(v[1][2], v[1][0], v[1][3], v[1][1]));
                 }
             } else {
                 filling = insertLayeredSolidTorus(cuts2, cuts0);
@@ -196,17 +196,17 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
                     // filling:02,13 -> bc->edge(1)
                     // filling:01    -> bc->edge(2)
                     filling->join(3, t[0],
-                        Perm4(v[0][0], v[0][1], v[0][2], v[0][3]));
+                        Perm<4>(v[0][0], v[0][1], v[0][2], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][1], v[1][0], v[1][3], v[1][2]));
+                        Perm<4>(v[1][1], v[1][0], v[1][3], v[1][2]));
                 } else {
                     // filling:12,03 -> bc->edge(2)
                     // filling:02,13 -> bc->edge(0)
                     // filling:01    -> bc->edge(1)
                     filling->join(3, t[0],
-                        Perm4(v[0][2], v[0][0], v[0][1], v[0][3]));
+                        Perm<4>(v[0][2], v[0][0], v[0][1], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][0], v[1][2], v[1][3], v[1][1]));
+                        Perm<4>(v[1][0], v[1][2], v[1][3], v[1][1]));
                 }
             }
             break;
@@ -218,17 +218,17 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
                     // filling:02,13 -> bc->edge(2)
                     // filling:01    -> bc->edge(0)
                     filling->join(3, t[0],
-                        Perm4(v[0][1], v[0][2], v[0][0], v[0][3]));
+                        Perm<4>(v[0][1], v[0][2], v[0][0], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][2], v[1][1], v[1][3], v[1][0]));
+                        Perm<4>(v[1][2], v[1][1], v[1][3], v[1][0]));
                 } else {
                     // filling:12,03 -> bc->edge(0)
                     // filling:02,13 -> bc->edge(1)
                     // filling:01    -> bc->edge(2)
                     filling->join(3, t[0],
-                        Perm4(v[0][0], v[0][1], v[0][2], v[0][3]));
+                        Perm<4>(v[0][0], v[0][1], v[0][2], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][1], v[1][0], v[1][3], v[1][2]));
+                        Perm<4>(v[1][1], v[1][0], v[1][3], v[1][2]));
                 }
             } else {
                 filling = insertLayeredSolidTorus(cuts1, cuts0);
@@ -237,17 +237,17 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
                     // filling:02,13 -> bc->edge(2)
                     // filling:01    -> bc->edge(1)
                     filling->join(3, t[0],
-                        Perm4(v[0][0], v[0][2], v[0][1], v[0][3]));
+                        Perm<4>(v[0][0], v[0][2], v[0][1], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][2], v[1][0], v[1][3], v[1][1]));
+                        Perm<4>(v[1][2], v[1][0], v[1][3], v[1][1]));
                 } else {
                     // filling:12,03 -> bc->edge(1)
                     // filling:02,13 -> bc->edge(0)
                     // filling:01    -> bc->edge(2)
                     filling->join(3, t[0],
-                        Perm4(v[0][1], v[0][0], v[0][2], v[0][3]));
+                        Perm<4>(v[0][1], v[0][0], v[0][2], v[0][3]));
                     filling->join(2, t[1],
-                        Perm4(v[1][0], v[1][1], v[1][3], v[1][2]));
+                        Perm<4>(v[1][0], v[1][1], v[1][3], v[1][2]));
                 }
             }
             break;
