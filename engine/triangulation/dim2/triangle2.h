@@ -117,6 +117,13 @@ class REGINA_API Face<2, 2> : public detail::SimplexBase<2> {
  */
 [[deprecated]] typedef Simplex<2> Dim2Triangle;
 
+// Specialisations to improve upon generic implementations from SimplexBase:
+
+template <>
+inline Edge<2>* detail::SimplexBase<2>::edge(int i, int j) const {
+    return (i == j ? nullptr : edge(3 - i - j));
+}
+
 /*@}*/
 
 // Inline functions for Simplex<2>

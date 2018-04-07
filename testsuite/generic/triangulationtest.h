@@ -1040,6 +1040,32 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
+        void edgeAccess() {
+            for (int i = 0; i <= dim; ++i)
+                for (int j = 0; j <= dim; ++j) {
+                    if (i == j)
+                        continue;
+                    // Build a permutation that maps (0,1) -> (i,j).
+                    Perm<dim+1> p;
+                    if (i == 0 && j == 0)
+                        p = Perm<dim+1>();
+                    else if (i == 0)
+                        p = Perm<dim+1>(1, j);
+                    else if (j == 0)
+                        p = Perm<dim+1>(1, i);
+                    else
+                        p = Perm<dim+1>(0, i) * Perm<dim+1>(1,j);
+                    if (ball.simplex(0)->edge(i, j) !=
+                            ball.simplex(0)->edge(
+                            regina::Edge<dim>::faceNumber(p))) {
+                        std::ostringstream msg;
+                        msg << "Simplex<dim>::edge(" << i << ", " << j
+                            << ") returns the wrong edge.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+        }
+
         template <int k>
         static void verifyPachnerDetail(Triangulation<dim>* tri,
                 bool standardSimplex) {

@@ -61,6 +61,9 @@ Version 5.2  [ 29 September, 2017 ]
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.
+        Class Simplex<dim>:
+            - New convenience routine edge(i,j) that returns the edge
+              between two given vertices.
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the

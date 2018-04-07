@@ -113,6 +113,13 @@ class REGINA_API Face<4, 4> : public detail::SimplexBase<4> {
  */
 [[deprecated]] typedef Simplex<4> Dim4Pentachoron;
 
+// Specialisations to improve upon generic implementations from SimplexBase:
+
+template <>
+inline Edge<4>* detail::SimplexBase<4>::edge(int i, int j) const {
+    return (i == j ? nullptr : edge(FaceNumbering<4, 1>::edgeNumber[i][j]));
+}
+
 /*@}*/
 
 // Inline functions for Pentachoron<4>

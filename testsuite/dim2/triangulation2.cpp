@@ -50,6 +50,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryEdges);
+    CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
     CPPUNIT_TEST(pachner<1>);
     CPPUNIT_TEST(pachner<2>);

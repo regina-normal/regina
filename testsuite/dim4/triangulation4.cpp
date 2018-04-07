@@ -68,6 +68,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
     CPPUNIT_TEST(pachner<1>);
     CPPUNIT_TEST(pachner<2>);

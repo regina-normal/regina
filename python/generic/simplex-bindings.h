@@ -72,7 +72,8 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("edge", &Simplex<dim>::edge,
+            c.def("edge", (regina::Edge<dim>* (Simplex<dim>::*)(int) const)(
+                    &Simplex<dim>::edge),
                 return_value_policy<reference_existing_object>());
             c.def("edgeMapping", &Simplex<dim>::edgeMapping);
             c.def(face_aliases<dim, 0>());
@@ -144,6 +145,9 @@ void addSimplex(const char* name) {
         .def("component", &Simplex<dim>::component,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Simplex<dim>, dim, int>)
+        .def("edge", (regina::Edge<dim>* (Simplex<dim>::*)(int, int) const)(
+                &Simplex<dim>::edge),
+            return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)
         .def(face_aliases<dim, dim - 1>())
         .def("orientation", &Simplex<dim>::orientation)

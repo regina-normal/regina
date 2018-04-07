@@ -422,6 +422,37 @@ class SimplexBase :
         template <int subdim>
         Face<dim, subdim>* face(int face) const;
 
+        // Since we are about to define edge(i,j), make sure the
+        // inherited edge(i) is not forgotten.
+        using alias::FaceOfSimplex<SimplexBase<dim>, dim>::edge;
+
+        /**
+         * Returns the edge of this simplex that connects the
+         * two given vertices of this simplex.
+         *
+         * This is a convenience routine to avoid more cumbersome calls to
+         * Edge<dim>::faceNumber().  In dimensions 3 and 4 (where the array
+         * Edge<dim>::edgeNumber is defined), this routine is identical to
+         * calling <tt>edge(Edge<dim>::edgeNumber[i][j])</tt>.
+         *
+         * @param i the vertex of this simplex that forms one endpoint
+         * of the edge; this must be between 0 and \a dim inclusive.
+         * @param j the vertex of this simplex that forms the other endpoint
+         * of the edge; this must be between 0 and \a dim inclusive, and
+         * must also be different from \a i.
+         * @return the edge of this simplex that connects vertices
+         * \a i and \a j of this simplex.
+         */
+        Face<dim, 1>* edge(int i, int j) const {
+            static_assert(! standardDim(dim),
+                "The default implementation of Simplex<dim>::edge(i,j) "
+                "should not be used for standard dimensions.");
+            if (i > j)
+                std::swap(i, j);
+            return (i == j ? nullptr : face<1>(
+                (i * dim) + j - 1 - i * (i + 1) / 2));
+        }
+
         /**
          * Examines the given <i>subdim</i>-face of this simplex, and
          * returns the mapping between the underlying <i>subdim</i>-face

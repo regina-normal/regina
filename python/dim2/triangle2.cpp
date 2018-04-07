@@ -67,7 +67,11 @@ void addTriangle2() {
         .def("face", &regina::python::face<Triangle<2>, 2, int>)
         .def("vertex", &Triangle<2>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("edge", &Triangle<2>::edge,
+        .def("edge", (regina::Edge<2>* (Triangle<2>::*)(int) const)(
+                &Triangle<2>::edge),
+            return_value_policy<reference_existing_object>())
+        .def("edge", (regina::Edge<2>* (Triangle<2>::*)(int, int) const)(
+                &Triangle<2>::edge),
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<Triangle<2>, 2>)
         .def("vertexMapping", &Triangle<2>::vertexMapping)

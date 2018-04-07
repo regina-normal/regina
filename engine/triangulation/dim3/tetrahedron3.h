@@ -117,6 +117,13 @@ class REGINA_API Face<3, 3> : public detail::SimplexBase<3> {
  */
 [[deprecated]] typedef Simplex<3> NTetrahedron;
 
+// Specialisations to improve upon generic implementations from SimplexBase:
+
+template <>
+inline Edge<3>* detail::SimplexBase<3>::edge(int i, int j) const {
+    return (i == j ? nullptr : edge(FaceNumbering<3, 1>::edgeNumber[i][j]));
+}
+
 /*@}*/
 
 // Inline functions for Simplex<3>

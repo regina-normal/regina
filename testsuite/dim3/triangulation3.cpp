@@ -76,6 +76,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryTriangles);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);

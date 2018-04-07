@@ -67,7 +67,11 @@ void addTetrahedron3() {
         .def("face", &regina::python::face<Tetrahedron<3>, 3, int>)
         .def("vertex", &Tetrahedron<3>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("edge", &Tetrahedron<3>::edge,
+        .def("edge", (regina::Edge<3>* (Tetrahedron<3>::*)(int) const)(
+                &Tetrahedron<3>::edge),
+            return_value_policy<reference_existing_object>())
+        .def("edge", (regina::Edge<3>* (Tetrahedron<3>::*)(int, int) const)(
+                &Tetrahedron<3>::edge),
             return_value_policy<reference_existing_object>())
         .def("triangle", &Tetrahedron<3>::triangle,
             return_value_policy<reference_existing_object>())
