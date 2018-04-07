@@ -2229,6 +2229,10 @@ class REGINA_API Triangulation<3> :
          * triangulation.  See the Layering class notes for further
          * details on what a layering entails.
          *
+         * The new tetrahedron will be returned, and the new boundary
+         * edge that it creates will be edge 5 (i.e., the edge joining
+         * vertices 2 and 3) of this tetrahedron.
+         *
          * \pre The given edge is a boundary edge of this triangulation,
          * and the two boundary triangles on either side of it are distinct.
          *
