@@ -2295,7 +2295,6 @@ class REGINA_API Triangulation<3> :
          * tetrahedra in the triangulation.
          *
          * \pre 0 \<= \a cuts0 \<= \a cuts1;
-         * \pre \a cuts1 is non-zero;
          * \pre gcd(\a cuts0, \a cuts1) = 1.
          *
          * @param cuts0 the smallest of the three desired intersection numbers.
