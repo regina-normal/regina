@@ -2262,6 +2262,12 @@ class REGINA_API Triangulation<3> :
          *
          * The triangulation will be simplified before returning.
          *
+         * There are two versions of fillTorus(); the other takes three
+         * explicit edges instead of a boundary component.  You should
+         * use the other version if you know how the filling curve cuts
+         * each boundary edge but you do not know how these edges are
+         * indexed in the boundary component.
+         *
          * @param cuts0 the number of times that the meridional curve of
          * the new solid torus should cut the edge <tt>bc->edge(0)</tt>.
          * @param cuts1 the number of times that the meridional curve of
@@ -2276,6 +2282,50 @@ class REGINA_API Triangulation<3> :
          */
         bool fillTorus(unsigned long cuts0, unsigned long cuts1,
             unsigned long cuts2, BoundaryComponent<3>* bc = nullptr);
+
+        /**
+         * Fills a two-triangle torus boundary component by attaching a
+         * solid torus along a given curve.
+         *
+         * The three edges of the boundary component should be passed as
+         * the arguments \a e0, \a e1 and \a e2.
+         * The boundary component will then be filled with a
+         * solid torus whose meridional curve cuts these three edges
+         * \a cuts0, \a cuts1 and \a cuts2 times respectively.
+         *
+         * For the filling to be performed successfully, the three given
+         * edges must belong to the same boundary component, and this boundary
+         * component must be a two-triangle torus.  Moreover, the integers
+         * \a cuts0, \a cuts1 and \a cuts2 must be coprime, and two of
+         * them must add to give the third.  If any of these conditions
+         * are not met, then this routine will do nothing and return \c false.
+         *
+         * The triangulation will be simplified before returning.
+         *
+         * There are two versions of fillTorus(); the other takes a boundary
+         * component, and sets \a e0, \a e1 and \a e2 to its three edges
+         * according to Regina's own edge numbering.
+         * This version of fillTorus() should be used when you know how the
+         * filling curve cuts each boundary edge but you do not know how these
+         * edges are indexed in the corresponding boundary component.
+         *
+         * @param e0 one of the three edges of the boundary component to fill.
+         * @param e1 the second of the three edges of the boundary component
+         * to fill.
+         * @param e2 the second of the three edges of the boundary component
+         * to fill.
+         * @param cuts0 the number of times that the meridional curve of
+         * the new solid torus should cut the edge \a e0.
+         * @param cuts1 the number of times that the meridional curve of
+         * the new solid torus should cut the edge \a e1.
+         * @param cuts2 the number of times that the meridional curve of
+         * the new solid torus should cut the edge \a e2.
+         * @return \c true if the boundary component was filled successfully,
+         * or \c false if one of the required conditions as described
+         * above is not satisfied.
+         */
+        bool fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
+            unsigned long cuts0, unsigned long cuts1, unsigned long cuts2);
 
         /**
          * Inserts a new layered solid torus into the triangulation.

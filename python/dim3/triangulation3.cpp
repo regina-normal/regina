@@ -74,6 +74,8 @@ namespace {
     bool (Triangulation<3>::*pachner_41)(regina::Vertex<3>*, bool, bool) =
         &Triangulation<3>::pachner;
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fillTorus_bc,
+        Triangulation<3>::fillTorus, 3, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
         Triangulation<3>::pachner, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFourMove,
@@ -371,7 +373,15 @@ void addTriangulation3() {
             .def("puncture", &Triangulation<3>::puncture, OL_puncture())
             .def("layerOn", &Triangulation<3>::layerOn,
                 return_value_policy<reference_existing_object>())
-            .def("fillTorus", &Triangulation<3>::fillTorus)
+            .def("fillTorus", (bool (Triangulation<3>::*)(
+                    unsigned long, unsigned long, unsigned long,
+                    regina::BoundaryComponent<3>*))(
+                    &Triangulation<3>::fillTorus),
+                OL_fillTorus_bc())
+            .def("fillTorus", (bool (Triangulation<3>::*)(
+                    regina::Edge<3>*, regina::Edge<3>*, regina::Edge<3>*,
+                    unsigned long, unsigned long, unsigned long))(
+                    &Triangulation<3>::fillTorus))
             .def("insertLayeredSolidTorus",
                 &Triangulation<3>::insertLayeredSolidTorus,
                 return_value_policy<reference_existing_object>())

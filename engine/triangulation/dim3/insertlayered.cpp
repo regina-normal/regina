@@ -257,6 +257,40 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
     return true;
 }
 
+bool Triangulation<3>::fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
+        unsigned long cuts0, unsigned long cuts1, unsigned long cuts2) {
+    if (e0 == e1 || e0 == e2 || e1 == e2)
+        return false;
+
+    BoundaryComponent<3>* bc = e0->boundaryComponent();
+    if ((! bc) || bc != e1->boundaryComponent() ||
+            bc != e2->boundaryComponent())
+        return false;
+
+    if (bc->countEdges() != 3)
+        return false;
+
+    // e0, e1 and e2 are now known to be the three distinct edges of bc.
+    if (e0 == bc->edge(0)) {
+        if (e1 == bc->edge(1))
+            return fillTorus(cuts0, cuts1, cuts2, bc);
+        else
+            return fillTorus(cuts0, cuts2, cuts1, bc);
+    } else if (e0 == bc->edge(1)) {
+        if (e1 == bc->edge(0))
+            return fillTorus(cuts1, cuts0, cuts2, bc);
+        else
+            return fillTorus(cuts2, cuts0, cuts1, bc);
+    } else if (e0 == bc->edge(2)) {
+        if (e1 == bc->edge(0))
+            return fillTorus(cuts1, cuts2, cuts0, bc);
+        else
+            return fillTorus(cuts2, cuts1, cuts0, bc);
+    }
+
+    return false;
+}
+
 Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
         unsigned long cuts0, unsigned long cuts1) {
     ChangeEventSpan span(this);
