@@ -371,6 +371,7 @@ void addTriangulation3() {
             .def("puncture", &Triangulation<3>::puncture, OL_puncture())
             .def("layerOn", &Triangulation<3>::layerOn,
                 return_value_policy<reference_existing_object>())
+            .def("fillTorus", &Triangulation<3>::fillTorus)
             .def("insertLayeredSolidTorus",
                 &Triangulation<3>::insertLayeredSolidTorus,
                 return_value_policy<reference_existing_object>())

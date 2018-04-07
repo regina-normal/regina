@@ -2238,6 +2238,46 @@ class REGINA_API Triangulation<3> :
         Tetrahedron<3>* layerOn(Edge<3>* edge);
 
         /**
+         * Fills a two-triangle torus boundary component by attaching a
+         * solid torus along a given curve.
+         *
+         * The boundary component to be filled should be passed as the
+         * argument \a bc; if the triangulation has exactly one
+         * boundary component then you may omit \a bc (i.e., pass \c null),
+         * and the (unique) boundary component will be inferred.
+         *
+         * If the boundary component cannot be inferred, and/or if the
+         * selected boundary component is not a two-triangle torus, then
+         * this routine will do nothing and return \c false.
+         *
+         * Otherwise the given boundary component will be filled with a
+         * solid torus whose meridional curve cuts the edges
+         * <tt>bc->edge(0)</tt>, <tt>bc->edge(1)</tt> and <tt>bc->edge(2)</tt>
+         * a total of \a cuts0, \a cuts1 and \a cuts2 times respectively.
+         *
+         * For the filling to be performed successfully, the integers
+         * \a cuts0, \a cuts1 and \a cuts2 must be coprime, and two of
+         * them must add to give the third.  Otherwise, as above, this
+         * routine will do nothing and return \c false.
+         *
+         * The triangulation will be simplified before returning.
+         *
+         * @param cuts0 the number of times that the meridional curve of
+         * the new solid torus should cut the edge <tt>bc->edge(0)</tt>.
+         * @param cuts1 the number of times that the meridional curve of
+         * the new solid torus should cut the edge <tt>bc->edge(1)</tt>.
+         * @param cuts2 the number of times that the meridional curve of
+         * the new solid torus should cut the edge <tt>bc->edge(2)</tt>.
+         * @param bc the boundary component to fill.  If the triangulation
+         * has precisely one boundary component then this may be \c null.
+         * @return \c true if the boundary component was filled successfully,
+         * or \c false if one of the required conditions as described
+         * above is not satisfied.
+         */
+        bool fillTorus(unsigned long cuts0, unsigned long cuts1,
+            unsigned long cuts2, BoundaryComponent<3>* bc = nullptr);
+
+        /**
          * Inserts a new layered solid torus into the triangulation.
          * The meridinal disc of the layered solid torus will intersect
          * the three edges of the boundary torus in \a cuts0, \a cuts1

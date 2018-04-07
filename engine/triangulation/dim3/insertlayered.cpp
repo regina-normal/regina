@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "maths/numbertheory.h"
 #include "manifold/lensspace.h"
 #include "manifold/sfs.h"
 #include "triangulation/dim3.h"
@@ -64,6 +65,196 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     newTet->join(2, tet2, roles2);
 
     return newTet;
+}
+
+bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
+        unsigned long cuts2, BoundaryComponent<3>* bc) {
+    // Check that the cuts arguments are valid.
+    int maxCuts;
+    if (cuts2 == cuts0 + cuts1)
+        maxCuts = 2;
+    else if (cuts1 == cuts0 + cuts2)
+        maxCuts = 1;
+    else if (cuts0 == cuts1 + cuts2)
+        maxCuts = 0;
+    else
+        return false;
+
+    if (regina::gcd(cuts0, cuts1) != 1)
+        return false;
+
+    // Deduce the boundary component if one was not given.
+    if (! bc) {
+        if (countBoundaryComponents() != 1)
+            return false;
+        bc = boundaryComponents_.front();
+    }
+
+    // Check that the boundary component is indeed a 2-triangle torus.
+    if (bc->countTriangles() != 2)
+        return false;
+    if (bc->eulerChar() != 0 || ! bc->isOrientable())
+        return false;
+
+    // Identify the two boundary triangles and their relationships to the
+    // three boundary edges.
+    //
+    // For each i = 0,1, we require that vertices (v[i][0], v[i][1], v[i][2])
+    // of triangle t[i] form a boundary triangle, with v[i][k] opposite edge k
+    // of the given boundary component.
+    Tetrahedron<3>* t[2];
+    Perm<4> v[2];
+
+    Edge<3>* e = bc->edge(0);
+    const EdgeEmbedding<3>& emb0 = e->front();
+    const EdgeEmbedding<3>& emb1 = e->back();
+
+    t[0] = emb0.simplex();
+    t[1] = emb1.simplex();
+    // emb0.vertices(): 0,1 -> bc->edge(0); 2 -> other bc vertex.
+    // emb1.vertices(): 0,1 -> bc->edge(0); 3 -> other bc vertex.
+    if (t[0]->edge(emb0.vertices()[0], emb0.vertices()[2]) == bc->edge(1)) {
+        // emb0.vertices(): 0,2 -> bc->edge(1), 1,2 -> bc->edge(2).
+        // emb1.vertices(): 1,3 -> bc->edge(1), 0,3 -> bc->edge(2).
+        v[0] = emb0.vertices() * Perm<4>(2, 1, 0, 3);
+        v[1] = emb1.vertices() * Perm<4>(3, 0, 1, 2);
+    } else {
+        // emb0.vertices(): 1,2 -> bc->edge(1), 0,2 -> bc->edge(2).
+        // emb1.vertices(): 0,3 -> bc->edge(1), 1,3 -> bc->edge(2).
+        v[0] = emb0.vertices() * Perm<4>(2, 0, 1, 3);
+        v[1] = emb1.vertices() * Perm<4>(3, 1, 0, 2);
+    }
+
+    // Build and attach the solid torus.
+    Tetrahedron<3>* filling;
+    switch (maxCuts) {
+        case 0:
+            if (cuts1 <= cuts2) {
+                filling = insertLayeredSolidTorus(cuts1, cuts2);
+                if (cuts0 <= 2) {
+                    // filling:12,03 -> bc->edge(2)
+                    // filling:02,13 -> bc->edge(0)
+                    // filling:01    -> bc->edge(1)
+                    filling->join(3, t[0],
+                        Perm4(v[0][2], v[0][0], v[0][1], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][0], v[1][2], v[1][3], v[1][1]));
+                } else {
+                    // filling:12,03 -> bc->edge(1)
+                    // filling:02,13 -> bc->edge(2)
+                    // filling:01    -> bc->edge(0)
+                    filling->join(3, t[0],
+                        Perm4(v[0][1], v[0][2], v[0][0], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][2], v[1][1], v[1][3], v[1][0]));
+                }
+            } else {
+                filling = insertLayeredSolidTorus(cuts2, cuts1);
+                if (cuts0 <= 2) {
+                    // filling:12,03 -> bc->edge(1)
+                    // filling:02,13 -> bc->edge(0)
+                    // filling:01    -> bc->edge(2)
+                    filling->join(3, t[0],
+                        Perm4(v[0][1], v[0][0], v[0][2], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][0], v[1][1], v[1][3], v[1][2]));
+                } else {
+                    // filling:12,03 -> bc->edge(2)
+                    // filling:02,13 -> bc->edge(1)
+                    // filling:01    -> bc->edge(0)
+                    filling->join(3, t[0],
+                        Perm4(v[0][2], v[0][1], v[0][0], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][1], v[1][2], v[1][3], v[1][0]));
+                }
+            }
+            break;
+        case 1:
+            if (cuts0 <= cuts2) {
+                filling = insertLayeredSolidTorus(cuts0, cuts2);
+                if (cuts1 <= 2) {
+                    // filling:12,03 -> bc->edge(2)
+                    // filling:02,13 -> bc->edge(1)
+                    // filling:01    -> bc->edge(0)
+                    filling->join(3, t[0],
+                        Perm4(v[0][2], v[0][1], v[0][0], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][1], v[1][2], v[1][3], v[1][0]));
+                } else {
+                    // filling:12,03 -> bc->edge(0)
+                    // filling:02,13 -> bc->edge(2)
+                    // filling:01    -> bc->edge(1)
+                    filling->join(3, t[0],
+                        Perm4(v[0][0], v[0][2], v[0][1], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][2], v[1][0], v[1][3], v[1][1]));
+                }
+            } else {
+                filling = insertLayeredSolidTorus(cuts2, cuts0);
+                if (cuts1 <= 2) {
+                    // filling:12,03 -> bc->edge(0)
+                    // filling:02,13 -> bc->edge(1)
+                    // filling:01    -> bc->edge(2)
+                    filling->join(3, t[0],
+                        Perm4(v[0][0], v[0][1], v[0][2], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][1], v[1][0], v[1][3], v[1][2]));
+                } else {
+                    // filling:12,03 -> bc->edge(2)
+                    // filling:02,13 -> bc->edge(0)
+                    // filling:01    -> bc->edge(1)
+                    filling->join(3, t[0],
+                        Perm4(v[0][2], v[0][0], v[0][1], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][0], v[1][2], v[1][3], v[1][1]));
+                }
+            }
+            break;
+        case 2:
+            if (cuts0 <= cuts1) {
+                filling = insertLayeredSolidTorus(cuts0, cuts1);
+                if (cuts2 <= 2) {
+                    // filling:12,03 -> bc->edge(1)
+                    // filling:02,13 -> bc->edge(2)
+                    // filling:01    -> bc->edge(0)
+                    filling->join(3, t[0],
+                        Perm4(v[0][1], v[0][2], v[0][0], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][2], v[1][1], v[1][3], v[1][0]));
+                } else {
+                    // filling:12,03 -> bc->edge(0)
+                    // filling:02,13 -> bc->edge(1)
+                    // filling:01    -> bc->edge(2)
+                    filling->join(3, t[0],
+                        Perm4(v[0][0], v[0][1], v[0][2], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][1], v[1][0], v[1][3], v[1][2]));
+                }
+            } else {
+                filling = insertLayeredSolidTorus(cuts1, cuts0);
+                if (cuts2 <= 2) {
+                    // filling:12,03 -> bc->edge(0)
+                    // filling:02,13 -> bc->edge(2)
+                    // filling:01    -> bc->edge(1)
+                    filling->join(3, t[0],
+                        Perm4(v[0][0], v[0][2], v[0][1], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][2], v[1][0], v[1][3], v[1][1]));
+                } else {
+                    // filling:12,03 -> bc->edge(1)
+                    // filling:02,13 -> bc->edge(0)
+                    // filling:01    -> bc->edge(2)
+                    filling->join(3, t[0],
+                        Perm4(v[0][1], v[0][0], v[0][2], v[0][3]));
+                    filling->join(2, t[1],
+                        Perm4(v[1][0], v[1][1], v[1][3], v[1][2]));
+                }
+            }
+            break;
+    }
+
+    intelligentSimplify();
+    return true;
 }
 
 Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
