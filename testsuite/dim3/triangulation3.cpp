@@ -113,6 +113,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(pachner<1>);
     CPPUNIT_TEST(pachner<2>);
     CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(fillTorus);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -3975,6 +3976,162 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(verifyPachner<k>, true);
             runCensusAllIdeal(verifyPachner<k>, true);
             verifyPachnerSimplicial<k>();
+        }
+
+        void verifyFillTorus(unsigned long p1, unsigned long q1,
+                unsigned long r1, unsigned long p2, unsigned long q2,
+                unsigned long r2, unsigned long lensP, unsigned long lensQ) {
+            // Fills LST(p1, q1, r1) with the curve (p2, q2, r2) and
+            // verifies that we obtain the lens space L(lensP, lensQ).
+            if (p1 > q1) {
+                std::swap(p1, q1);
+                std::swap(p2, q2);
+            }
+            if (p1 > r1) {
+                std::swap(p1, r1);
+                std::swap(p2, r2);
+            }
+            if (q1 > r1) {
+                std::swap(q1, r1);
+                std::swap(q2, r2);
+            }
+
+            Triangulation<3> t;
+            Tetrahedron<3>* bdry = t.insertLayeredSolidTorus(p1, q1);
+            regina::Edge<3> *e1, *e2, *e3;
+            if (r1 <= 2) {
+                e2 = bdry->edge(1, 2);
+                e3 = bdry->edge(0, 2);
+                e1 = bdry->edge(0, 1);
+            } else {
+                e1 = bdry->edge(1, 2);
+                e2 = bdry->edge(0, 2);
+                e3 = bdry->edge(0, 1);
+            }
+
+            t.fillTorus(e1, e2, e3, p2, q2, r2);
+            t.intelligentSimplify();
+
+            if (lensP <= 4) {
+                // If we have a closed orientable manifold with <= 2 tetrahedra
+                // and the right homology, then we have the right lens space.
+                if (t.size() > 2) {
+                    std::ostringstream msg;
+                    msg << "Filling (" << p1 << "," << q1 << "," << r1
+                        << ") <-> (" << p2 << "," << q2 << "," << r2
+                        << ") does not reduce to <= 2 tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (! (t.isValid() && t.isClosed() && t.isOrientable())) {
+                    std::ostringstream msg;
+                    msg << "Filling (" << p1 << "," << q1 << "," << r1
+                        << ") <-> (" << p2 << "," << q2 << "," << r2
+                        << ") does not give a valid closed orientable "
+                        "triangulation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                const AbelianGroup& h1 = t.homology();
+                if (! t.homology().isZn(lensP)) {
+                    std::ostringstream msg;
+                    msg << "Filling (" << p1 << "," << q1 << "," << r1
+                        << ") <-> (" << p2 << "," << q2 << "," << r2
+                        << ") does not give the right homology for L("
+                        << lensP << "," << lensQ << ").";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                Triangulation<3> compare;
+                compare.insertLayeredLensSpace(lensP, lensQ);
+                compare.intelligentSimplify();
+
+                if (! t.isIsomorphicTo(compare).get()) {
+                    std::ostringstream msg;
+                    msg << "Filling (" << p1 << "," << q1 << "," << r1
+                        << ") <-> (" << p2 << "," << q2 << "," << r2
+                        << ") does not reduce to the minimal "
+                        "triangulation of L(" << lensP << "," << lensQ << ").";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void fillTorus() {
+            // Examples from Jaco-Rubinstein "Layered-triangulations of
+            // 3-manifolds":
+
+            // LST(0,1,1) <-> LST(2,1,1) = L(2,1)
+            // LST(0,1,1) <-> LST(1,2,1) = L(1,0) = S^3
+            // LST(1,1,2) <-> LST(2,1,1) = L(3,1)
+            // LST(1,1,2) <-> LST(1,1,2) = L(0,1) = S^2 x S^1
+            // LST(1,3,4) <-> LST(2,1,1) = L(7,3)
+            // LST(1,3,4) <-> LST(1,2,1) = L(5,1)
+            // LST(1,3,4) <-> LST(1,1,2) = L(2,1)
+            // LST(2,3,5) <-> LST(2,1,1) = L(8,3)
+            // LST(2,3,5) <-> LST(1,2,1) = L(7,2)
+            // LST(2,3,5) <-> LST(1,1,2) = L(1,0) = S^3
+            // LST(9,7,2) <-> LST(5,3,8) = L(62,27)
+            verifyFillTorus(0,1,1, 2,1,1, 2,1);
+            verifyFillTorus(0,1,1, 1,2,1, 1,0);
+            verifyFillTorus(1,1,2, 2,1,1, 3,1);
+            verifyFillTorus(1,1,2, 1,1,2, 0,1);
+            verifyFillTorus(1,3,4, 2,1,1, 7,3);
+            verifyFillTorus(1,3,4, 1,2,1, 5,1);
+            verifyFillTorus(1,3,4, 1,1,2, 2,1);
+            verifyFillTorus(2,3,5, 2,1,1, 8,3);
+            verifyFillTorus(2,3,5, 1,2,1, 7,2);
+            verifyFillTorus(2,3,5, 1,1,2, 1,0);
+            verifyFillTorus(9,7,2, 5,3,8, 62,27);
+
+            // We should obtain L(13,8) = L(13,5) from LST gluings:
+            // (1,0,1) <-> (5,13,8)
+            // (1,2,1) <-> (5,3,8)
+            // (1,2,3) <-> (5,3,2)
+            verifyFillTorus(1,0,1, 5,13,8, 13,5);
+            verifyFillTorus(1,2,1, 5,3,8, 13,5);
+            verifyFillTorus(1,2,3, 5,3,2, 13,5);
+
+            // We should obtain L(25,11) = L(25,9) from LST gluings:
+            // (1,0,1) <-> (14,25,11)
+            // (1,2,1) <-> (14,3,11)
+            // (3,2,1) <-> (8,3,11)
+            // (3,2,5) <-> (8,3,5)
+            // (7,2,5) <-> (2,3,5)
+            // (7,2,9) <-> (2,3,1)
+            // (7,16,9) <-> (2,1,1)
+            // (25,16,9) <-> (0,1,1)
+            verifyFillTorus(1,0,1, 14,25,11, 25,9);
+            verifyFillTorus(1,2,1, 14,3,11, 25,9);
+            verifyFillTorus(3,2,1, 8,3,11, 25,9);
+            verifyFillTorus(3,2,5, 8,3,5, 25,9);
+            verifyFillTorus(7,2,5, 2,3,5, 25,9);
+            verifyFillTorus(7,2,9, 2,3,1, 25,9);
+            verifyFillTorus(7,16,9, 2,1,1, 25,9);
+            verifyFillTorus(25,16,9, 0,1,1, 25,9);
+
+            // We should obtain L(42,11) = L(42,19) from LST gluings:
+            // (31,11,42) <-> (1,1,0)
+            // (31,11,20) <-> (1,1,2)
+            // (9,11,20) <-> (3,1,2)
+            // (9,11,2) <-> (3,1,4)
+            // (9,7,2) <-> (3,7,4)
+            // (5,7,2) <-> (11,7,4)
+            // (5,3,2) <-> (11,15,4)
+            // (1,3,2) <-> (19,15,4)
+            // (1,1,2) <-> (19,23,4)
+            // (1,1,0) <-> (19,23,42)
+            verifyFillTorus(31,11,42, 1,1,0, 42,11);
+            verifyFillTorus(31,11,20, 1,1,2, 42,11);
+            verifyFillTorus(9,11,20, 3,1,2, 42,11);
+            verifyFillTorus(9,11,2, 3,1,4, 42,11);
+            verifyFillTorus(9,7,2, 3,7,4, 42,11);
+            verifyFillTorus(5,7,2, 11,7,4, 42,11);
+            verifyFillTorus(5,3,2, 11,15,4, 42,11);
+            verifyFillTorus(1,3,2, 19,15,4, 42,11);
+            verifyFillTorus(1,1,2, 19,23,4, 42,11);
+            verifyFillTorus(1,1,0, 19,23,42, 42,11);
+
+            // Examples based on knot complements:
+            // TODO.
         }
 };
 
