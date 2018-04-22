@@ -692,6 +692,117 @@ class REGINA_API Triangulation<3> :
          */
         const TuraevViroSet& allCalculatedTuraevViro() const;
 
+        /**
+         * Modifies a triangulated knot complement so that the algebraic
+         * longitude follows a single boundary edge, and returns this edge.
+         *
+         * Assuming that this triangulation represents the complement of
+         * a knot in the 3-sphere, this routine:
+         *
+         * - identifies the algebraic longitude of the knot complement;
+         *   that is, identifies the non-trivial simple closed curve on
+         *   the boundary whose homology in the 3-manifold is trivial;
+         *
+         * - layers additional tetrahedra on the boundary if necessary
+         *   so that this curve is represented by a single boundary edge;
+         *
+         * - returns that (possibly new) boundary edge.
+         *
+         * Whilst this routine returns less information than
+         * meridianLongitude(), it (1) runs much faster since it is based
+         * on fast algebraic calculations, and (2) guarantees to terminate.
+         * In contrast, meridianLongitude() must repeatedly try to test for
+         * 3-spheres, and (as a result of only using fast 3-sphere
+         * recognition heuristics) does not guarantee to terminate.
+         *
+         * At present this routine is fairly restrictive in what triangulations
+         * it can work with: it requires the triangulation to be one-vertex
+         * and have real (not ideal) boundary.
+         * These restrictions may be eased in future versions of Regina.
+         *
+         * If the algebraic longitude is already represented by a single
+         * boundary edge, then it is guaranteed that this routine will
+         * \e not modify the triangulation, and will simply return this
+         * boundary edge.
+         *
+         * \pre The underlying 3-manifold is known to be the complement
+         * of a knot in the 3-sphere.
+         * \pre This triangulation has precisely one vertex, and its
+         * (unique) boundary component is formed from two triangles.
+         *
+         * \warning This routine may modify the triangluation, as
+         * explained above, which will have the side-effect of
+         * invalidating any existing Vertex, Edge or Triangle references.
+         *
+         * \warning If you have an \e ideal triangulation of a knot
+         * complement, you \e must first run idealToFinite() and then simplify
+         * the resulting triangulation to have two boundary triangles.
+         *
+         * @return the boundary edge representing the algebraic
+         * longitude of the knot (after this triangulation has
+         * been modified if necessary), or \c null if an error (such as
+         * an integer overflow) occurred during the computation.
+         */
+        Edge<3>* longitude();
+
+        /**
+         * Modifies a triangulated knot complement so that the meridian and
+         * algebraic longitude each follow a single boundary edge, and returns
+         * these two edges.
+         *
+         * Assuming that this triangulation represents the complement of
+         * a knot in the 3-sphere, this routine:
+         *
+         * - identifies the meridian of the knot complement, and also the
+         *   algebraic longitude (i.e., the non-trivial simple closed curve on
+         *   the boundary whose homology in the 3-manifold is trivial);
+         *
+         * - layers additional tetrahedra on the boundary if necessary so that
+         *   each of these curves is represented by a single boundary edge;
+         *
+         * - returns these two (possibly new) boundary edges.
+         *
+         * This routine uses fast heuristics to locate the meridian; as a
+         * result, <b>it does not guarantee to terminate</b> (but if you find
+         * a case where it does not, please let the Regina developers know!).
+         * If it does return then it guarantees that the result is correct.
+         *
+         * Whilst this routine returns more information than longitude(),
+         * note that longitude() (1) runs much faster since it is based
+         * on fast algebraic calculations, and (2) guarantees to terminate.
+         *
+         * At present this routine is fairly restrictive in what triangulations
+         * it can work with: it requires the triangulation to be one-vertex
+         * and have real (not ideal) boundary.
+         * These restrictions may be eased in future versions of Regina.
+         *
+         * If the meridian and algebraic longitude are already both represented
+         * by single boundary edges, then it is guaranteed that this routine
+         * will \e not modify the triangulation, and will simply return
+         * these two boundary edges.
+         *
+         * \pre The underlying 3-manifold is known to be the complement
+         * of a knot in the 3-sphere.
+         * \pre This triangulation has precisely one vertex, and its
+         * (unique) boundary component is formed from two triangles.
+         *
+         * \warning This routine may modify the triangluation, as
+         * explained above, which will have the side-effect of
+         * invalidating any existing Vertex, Edge or Triangle references.
+         *
+         * \warning If you have an \e ideal triangulation of a knot
+         * complement, you \e must first run idealToFinite() and then simplify
+         * the resulting triangulation to have two boundary triangles.
+         *
+         * @return a pair (\a m, \a l), where \a m is the boundary edge
+         * representing the meridian and \a l is the boundary edge representing
+         * the algebraic longitude of the knot complement (after this
+         * triangulation has been modified if necessary).  If an error (such as
+         * an integer overflow) occurs during the computation, then this
+         * routine will return (\c null, \c null).
+         */
+        std::pair<Edge<3>*, Edge<3>*> meridianLongitude();
+
         /*@}*/
         /**
          * \name Normal Surfaces and Angle Structures

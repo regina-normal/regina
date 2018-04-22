@@ -193,6 +193,13 @@ namespace {
                 boost::python::manage_new_object::
                 apply<regina::Isomorphism<3>*>::type()(iso))));
     }
+
+    boost::python::tuple meridianLongitude_tuple(Triangulation<3>& t) {
+        std::pair<const regina::Edge<3>*, const regina::Edge<3>*> ans =
+            t.meridianLongitude();
+        return boost::python::make_tuple(boost::python::ptr(ans.first),
+            boost::python::ptr(ans.second));
+    }
 }
 
 void addTriangulation3() {
@@ -299,6 +306,9 @@ void addTriangulation3() {
             .def("turaevViro", &Triangulation<3>::turaevViro, OL_turaevViro())
             .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
                 OL_turaevViroApprox())
+            .def("longitude", &Triangulation<3>::longitude,
+                return_internal_reference<>())
+            .def("meridianLongitude", meridianLongitude_tuple)
             .def("isZeroEfficient", &Triangulation<3>::isZeroEfficient)
             .def("knowsZeroEfficient", &Triangulation<3>::knowsZeroEfficient)
             .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface)

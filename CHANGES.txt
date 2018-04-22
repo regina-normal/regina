@@ -94,6 +94,8 @@ Version 5.2  [ 29 September, 2017 ]
         Class Triangulation<3>:
             - New routine fillTorus() to fill 2-triangle torus boundary
               components.
+            - New routines longitude() and meridianLongitude() to deduce
+              boundary curves for knot complements.
             - New deprecated routine fourOneMove(), added for completeness.
               Use the new pachner() routines instead.
         Class Triangulation<2>:
