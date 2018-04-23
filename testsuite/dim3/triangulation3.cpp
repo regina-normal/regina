@@ -4052,61 +4052,101 @@ class Triangulation3Test : public TriangulationTest<3> {
                 std::swap(q2, r2);
             }
 
-            Triangulation<3> t;
-            Tetrahedron<3>* bdry = t.insertLayeredSolidTorus(p1, q1);
-            regina::Edge<3> *e1, *e2, *e3;
-            if (r1 <= 2) {
-                e2 = bdry->edge(1, 2);
-                e3 = bdry->edge(0, 2);
-                e1 = bdry->edge(0, 1);
-            } else {
-                e1 = bdry->edge(1, 2);
-                e2 = bdry->edge(0, 2);
-                e3 = bdry->edge(0, 1);
-            }
+            // Run the same test five times: once normally, and the
+            // others with a random isomorphism.  The purpose of the
+            // random isomorphisms is to mix up the order in which
+            // the boundary edges are indexed within the boundary component.
+            for (int i = 0; i < 5; ++i) {
+                Triangulation<3> t;
+                Tetrahedron<3>* bdry = t.insertLayeredSolidTorus(p1, q1);
+                regina::Edge<3> *e1, *e2, *e3;
 
-            t.fillTorus(e1, e2, e3, p2, q2, r2);
-            t.intelligentSimplify();
+                if (i == 0) {
+                    if (r1 <= 2) {
+                        e2 = bdry->edge(1, 2);
+                        e3 = bdry->edge(0, 2);
+                        e1 = bdry->edge(0, 1);
+                    } else {
+                        e1 = bdry->edge(1, 2);
+                        e2 = bdry->edge(0, 2);
+                        e3 = bdry->edge(0, 1);
+                    }
+                } else {
+                    // Apply a random isomorphism.
+                    unsigned idx = bdry->index();
 
-            if (lensP <= 4) {
-                // If we have a closed orientable manifold with <= 2 tetrahedra
-                // and the right homology, then we have the right lens space.
-                if (t.size() > 2) {
+                    Isomorphism<3>* iso = Isomorphism<3>::random(t.size());
+                    iso->applyInPlace(&t);
+
+                    Perm<4> p = iso->facetPerm(idx);
+                    if (r1 <= 2) {
+                        e2 = t.simplex(iso->simpImage(idx))->edge(p[1], p[2]);
+                        e3 = t.simplex(iso->simpImage(idx))->edge(p[0], p[2]);
+                        e1 = t.simplex(iso->simpImage(idx))->edge(p[0], p[1]);
+                    } else {
+                        e1 = t.simplex(iso->simpImage(idx))->edge(p[1], p[2]);
+                        e2 = t.simplex(iso->simpImage(idx))->edge(p[0], p[2]);
+                        e3 = t.simplex(iso->simpImage(idx))->edge(p[0], p[1]);
+                    }
+
+                    delete iso;
+                }
+
+                if (! (e1->isBoundary() && e2->isBoundary() &&
+                        e3->isBoundary())) {
                     std::ostringstream msg;
                     msg << "Filling (" << p1 << "," << q1 << "," << r1
                         << ") <-> (" << p2 << "," << q2 << "," << r2
-                        << ") does not reduce to <= 2 tetrahedra.";
+                        << ") gives boundary edges that are not "
+                        "marked as boundary.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (! (t.isValid() && t.isClosed() && t.isOrientable())) {
-                    std::ostringstream msg;
-                    msg << "Filling (" << p1 << "," << q1 << "," << r1
-                        << ") <-> (" << p2 << "," << q2 << "," << r2
-                        << ") does not give a valid closed orientable "
-                        "triangulation.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                const AbelianGroup& h1 = t.homology();
-                if (! t.homology().isZn(lensP)) {
-                    std::ostringstream msg;
-                    msg << "Filling (" << p1 << "," << q1 << "," << r1
-                        << ") <-> (" << p2 << "," << q2 << "," << r2
-                        << ") does not give the right homology for L("
-                        << lensP << "," << lensQ << ").";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            } else {
-                Triangulation<3> compare;
-                compare.insertLayeredLensSpace(lensP, lensQ);
-                compare.intelligentSimplify();
 
-                if (! t.isIsomorphicTo(compare).get()) {
-                    std::ostringstream msg;
-                    msg << "Filling (" << p1 << "," << q1 << "," << r1
-                        << ") <-> (" << p2 << "," << q2 << "," << r2
-                        << ") does not reduce to the minimal "
-                        "triangulation of L(" << lensP << "," << lensQ << ").";
-                    CPPUNIT_FAIL(msg.str());
+                t.fillTorus(e1, e2, e3, p2, q2, r2);
+                t.intelligentSimplify();
+
+                if (lensP <= 4) {
+                    // If we have a closed orientable manifold with
+                    // at most 2 tetrahedra and the right homology,
+                    // then we have the right lens space.
+                    if (t.size() > 2) {
+                        std::ostringstream msg;
+                        msg << "Filling (" << p1 << "," << q1 << "," << r1
+                            << ") <-> (" << p2 << "," << q2 << "," << r2
+                            << ") does not reduce to <= 2 tetrahedra.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (! (t.isValid() && t.isClosed() && t.isOrientable())) {
+                        std::ostringstream msg;
+                        msg << "Filling (" << p1 << "," << q1 << "," << r1
+                            << ") <-> (" << p2 << "," << q2 << "," << r2
+                            << ") does not give a valid closed orientable "
+                            "triangulation.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    const AbelianGroup& h1 = t.homology();
+                    if (! t.homology().isZn(lensP)) {
+                        std::ostringstream msg;
+                        msg << "Filling (" << p1 << "," << q1 << "," << r1
+                            << ") <-> (" << p2 << "," << q2 << "," << r2
+                            << ") does not give the right homology for L("
+                            << lensP << "," << lensQ << ").";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else {
+                    Triangulation<3> compare;
+                    compare.insertLayeredLensSpace(lensP, lensQ);
+                    compare.intelligentSimplify();
+
+                    if (! t.isIsomorphicTo(compare).get()) {
+                        std::ostringstream msg;
+                        msg << "Filling (" << p1 << "," << q1 << "," << r1
+                            << ") <-> (" << p2 << "," << q2 << "," << r2
+                            << ") does not reduce to the minimal "
+                            "triangulation of L(" << lensP << "," << lensQ
+                            << ").";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
             }
         }
