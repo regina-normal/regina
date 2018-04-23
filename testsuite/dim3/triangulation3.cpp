@@ -37,6 +37,7 @@
 #include <sstream>
 #include <vector>
 #include <cppunit/extensions/HelperMacros.h>
+#include "link/link.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "split/signature.h"
@@ -56,6 +57,7 @@ using regina::Component;
 using regina::Example;
 using regina::GroupPresentation;
 using regina::Isomorphism;
+using regina::Link;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
@@ -114,6 +116,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(pachner<2>);
     CPPUNIT_TEST(pachner<3>);
     CPPUNIT_TEST(fillTorus);
+    CPPUNIT_TEST(meridianLongitude);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -156,6 +159,10 @@ class Triangulation3Test : public TriangulationTest<3> {
         // Ideal orientable:
         Triangulation<3> figure8;
             /**< The figure eight knot complement. */
+        Triangulation<3> trefoil;
+            /**< The trefoil knot complement. */
+        Triangulation<3> knot18;
+            /**< An 18-crossing knot complement from the census. */
 
         // Closed non-orientable:
         Triangulation<3> rp2xs1;
@@ -294,12 +301,22 @@ class Triangulation3Test : public TriangulationTest<3> {
             copyAndDelete(weberSeifert, Example<3>::weberSeifert());
             weberSeifert.setLabel("Weber-Seifert");
 
-            copyAndDelete(figure8,
-                Example<3>::figureEight());
+            copyAndDelete(figure8, Example<3>::figureEight());
             figure8.setLabel("Figure 8 knot complement");
+
+            copyAndDelete(trefoil, Example<3>::trefoil());
+            trefoil.setLabel("Trefoil knot complement");
 
             copyAndDelete(rp2xs1, Example<3>::rp2xs1());
             rp2xs1.setLabel("RP^2 x S^1");
+
+            {
+                Link* k = Link::fromKnotSig(
+                    "sabcdeafghidejklmnopqgcbfqhinmjrpolkrlLvnvvNdM9aE");
+                copyAndDelete(knot18, k->complement());
+                knot18.setLabel("18-crossing knot complement");
+                delete k;
+            }
 
             copyAndDelete(gieseking, Example<3>::gieseking());
             gieseking.setLabel("Gieseking manifold");
@@ -440,6 +457,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             f(&weberSeifert);
             f(&lst3_4_7);
             f(&figure8);
+            f(&trefoil);
             f(&rp2xs1);
             f(&ballBundle);
             f(&twistedBallBundle);
@@ -520,6 +538,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyValid(ball_large_snapped);
             verifyValid(lst3_4_7);
             verifyValid(figure8);
+            verifyValid(trefoil);
+            verifyValid(knot18);
             verifyValid(rp2xs1);
             verifyValid(gieseking);
             verifyValid(invalidEdges, false);
@@ -563,6 +583,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyConnected(ball_large_snapped);
             verifyConnected(lst3_4_7);
             verifyConnected(figure8);
+            verifyConnected(trefoil);
+            verifyConnected(knot18);
             verifyConnected(rp2xs1);
             verifyConnected(gieseking);
             verifyConnected(invalidEdges);
@@ -606,6 +628,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyOrientable(ball_large_snapped);
             verifyOrientable(lst3_4_7);
             verifyOrientable(figure8);
+            verifyOrientable(trefoil);
+            verifyOrientable(knot18);
             verifyOrientable(rp2xs1, false);
             verifyOrientable(gieseking, false);
             verifyOrientable(invalidEdges, false);
@@ -674,6 +698,12 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
                 "is not standard.",
                 figure8.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The trefoil knot complement "
+                "is not standard.",
+                trefoil.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The 18-crossing knot complement "
+                "is not standard.",
+                knot18.isStandard());
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not standard.",
                 rp2xs1.isStandard());
             CPPUNIT_ASSERT_MESSAGE("The solid torus is not standard.",
@@ -732,6 +762,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyBoundaryCount(singleTet_bary, 1);
 
             verifyBoundaryCount(figure8, 0, 1);
+            verifyBoundaryCount(trefoil, 0, 1);
+            verifyBoundaryCount(knot18, 0, 1);
             verifyBoundaryCount(gieseking, 0, 1);
             verifyBoundaryCount(twoProjPlaneCusps, 0, 2);
             verifyBoundaryCount(cuspedGenusTwoTorus, 0, 1);
@@ -1313,6 +1345,10 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             verifyVertexCount(figure8, 1, "Figure eight knot complement");
             verifyVertexTorus(figure8, 0, "Figure eight knot complement");
+            verifyVertexCount(trefoil, 1, "Trefoil knot complement");
+            verifyVertexTorus(trefoil, 0, "Trefoil knot complement");
+            verifyVertexCount(knot18, 1, "18-crossing knot complement");
+            verifyVertexTorus(knot18, 0, "18-crossing knot complement");
 
             verifyVertexCount(rp2xs1, 1, "RP^2 x S^1");
             verifyVertexSphere(rp2xs1, 0, "RP^2 x S^1");
@@ -1576,6 +1612,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyEuler(lens100_1, 0, 0, "L(100,1)");
             verifyEuler(lst3_4_7, 0, 0, "LST(3,4,7)");
             verifyEuler(figure8, 0, 1, "Figure eight knot complement");
+            verifyEuler(trefoil, 0, 1, "Trefoil knot complement");
+            verifyEuler(knot18, 0, 1, "18-crossing knot complement");
             verifyEuler(rp2xs1, 0, 0, "RP^2 x S^1");
             verifyEuler(ballBundle, 0, 0, "Solid torus");
             verifyEuler(twistedBallBundle, 0, 0, "Solid Klein bottle");
@@ -1760,6 +1798,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "H1(LST(3,4,7))", 1);
             verifyGroup(figure8.homology(),
                 "H1(figure eight knot complement)", 1);
+            verifyGroup(trefoil.homology(),
+                "H1(trefoil knot complement)", 1);
+            verifyGroup(knot18.homology(),
+                "H1(18-crossing knot complement)", 1);
             verifyGroup(rp2xs1.homology(),
                 "H1(RP^2 x S^1)", 1, 2);
             verifyGroup(ballBundle.homology(),
@@ -1827,6 +1869,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Boundary H1(LST(3,4,7))", 2);
             verifyGroup(figure8.homologyBdry(),
                 "Boundary H1(figure eight knot complement)", 2);
+            verifyGroup(trefoil.homologyBdry(),
+                "Boundary H1(trefoil knot complement)", 2);
+            verifyGroup(knot18.homologyBdry(),
+                "Boundary H1(18-crossing knot complement)", 2);
             verifyGroup(rp2xs1.homologyBdry(),
                 "Boundary H1(RP^2 x S^1)", 0);
             verifyGroup(ballBundle.homologyBdry(),
@@ -1897,6 +1943,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFundGroupVsH1(&ball_large_snapped);
             verifyFundGroupVsH1(&lst3_4_7);
             verifyFundGroupVsH1(&figure8);
+            verifyFundGroupVsH1(&trefoil);
+            verifyFundGroupVsH1(&knot18);
             verifyFundGroupVsH1(&rp2xs1);
             verifyFundGroupVsH1(&ballBundle);
             verifyFundGroupVsH1(&twistedBallBundle);
@@ -1930,6 +1978,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFundGroup(lst3_4_7, "Z");
             verifyFundGroup(figure8,
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
+                // Note: \u21A6 is the unicode mapsto symbol.
+            verifyFundGroup(trefoil,
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(rp2xs1, "Z + Z_2");
             verifyFundGroup(ballBundle, "Z");
@@ -2059,6 +2110,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
                 "is not 0-efficient.",
                 figure8.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("The trefoil knot complement "
+                "is not 0-efficient.",
+                trefoil.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not 0-efficient.",
                 rp2xs1.isZeroEfficient());
                 // Contains a two-sided projective plane.
@@ -3663,6 +3717,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyNoDehydration(fig8_bary);
             verifyNoDehydration(lst3_4_7);
             verifyDehydration(figure8);
+            verifyDehydration(trefoil);
+            verifyNoDehydration(knot18);
             verifyDehydration(rp2xs1);
             verifyNoDehydration(ballBundle);
             verifyNoDehydration(twistedBallBundle);
@@ -4129,9 +4185,123 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFillTorus(1,3,2, 19,15,4, 42,11);
             verifyFillTorus(1,1,2, 19,23,4, 42,11);
             verifyFillTorus(1,1,0, 19,23,42, 42,11);
+        }
 
-            // Examples based on knot complements:
-            // TODO.
+        void verifyMeridianLongitude(const Triangulation<3>& orig) {
+            Triangulation<3> t(orig); // something we can modify
+
+            if (t.isIdeal()) {
+                t.idealToFinite();
+                t.intelligentSimplify();
+            }
+
+            if (t.countVertices() != 1) {
+                std::ostringstream msg;
+                msg << orig.label() << ": cannot build a "
+                    "one-vertex triangulation.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            auto curves = t.meridianLongitude();
+            regina::Edge<3>* m = curves.first;
+            regina::Edge<3>* l = curves.second;
+            regina::Edge<3>* other = nullptr;
+            for (auto e : t.boundaryComponent(0)->edges()) {
+                if (e != m && e != l) {
+                    other = e;
+                    break;
+                }
+            }
+
+            if ((! m) || (! l) || (! other)) {
+                std::ostringstream msg;
+                msg << orig.label() << ": boundary curves not identified.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! (m->isBoundary() && l->isBoundary() && other->isBoundary())) {
+                std::ostringstream msg;
+                msg << orig.label()
+                    << ": boundary curves not marked as boundary.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const auto& mEmb = m->front();
+            const auto& lEmb = l->front();
+            const auto& oEmb = other->front();
+
+            // If we fill along the curve p*meridian + q*longitude,
+            // we should be left with homology Z_p.
+            //
+            // In particular, the longitude is the only curve that we can
+            // fill along to obtain Z.
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
+                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    1, 0, 1);
+                if (! tmp.homology().isZ()) {
+                    std::ostringstream msg;
+                    msg << orig.label() << ": filling along longitude "
+                        "does not give Z homology.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
+                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    2, 3, 5);
+                if (! tmp.homology().isZn(3)) {
+                    std::ostringstream msg;
+                    msg << orig.label() << ": filling along "
+                        "(3 * meridian +/- 2 * longitude) "
+                        "does not give Z_3 homology.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
+                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    2, 3, 1);
+                if (! tmp.homology().isZn(3)) {
+                    std::ostringstream msg;
+                    msg << orig.label() << ": filling along "
+                        "(3 * meridian -/+ 2 * longitude) "
+                        "does not give Z_3 homology.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            // To test the meridian, we use the fact that filling along
+            // the meridian produces the 3-sphere.
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
+                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    0, 1, 1);
+                if (! tmp.isThreeSphere()) {
+                    std::ostringstream msg;
+                    msg << orig.label() << ": filling along meridian "
+                        "does not give the 3-sphere.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void meridianLongitude() {
+            verifyMeridianLongitude(lst3_4_7);
+            verifyMeridianLongitude(figure8);
+            verifyMeridianLongitude(trefoil);
+            verifyMeridianLongitude(knot18);
         }
 };
 
