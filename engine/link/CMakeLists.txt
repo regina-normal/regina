@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   complement
+  dowker
   examplelink
   flype
   gauss

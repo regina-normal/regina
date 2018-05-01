@@ -2163,6 +2163,57 @@ class REGINA_API Link : public Packet {
         void jenkins(std::ostream& out) const;
 
         /**
+         * Outputs this knot using Dowker notation.
+         *
+         * In general, Dowker notation does not carry enough
+         * information to uniquely reconstruct the knot; for details, see
+         * the documentation for gauss(), where the classical Gauss code
+         * suffers from a similar problem.  If you need a code that specifies
+         * the knot uniquely, consider using the oriented Gauss code instead
+         * as output by orientedGauss().
+         *
+         * Currently Regina only supports Dowker notation for knots,
+         * not multiple-component links.  If this link does not have
+         * precisely one component then the empty string will be returned.
+         *
+         * The string will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of returning a string, writes directly to an output stream.
+         *
+         * @return the Dowker notation for this knot diagram, or the empty
+         * string if this is a link with zero or multiple components.
+         */
+        std::string dowker() const;
+
+        /**
+         * Writes this knot to the given output stream using Dowker notation.
+         *
+         * In general, Dowker notation does not carry enough
+         * information to uniquely reconstruct the knot; for details, see
+         * the documentation for gauss(), where the classical Gauss code
+         * suffers from a similar problem.  If you need a code that specifies
+         * the knot uniquely, consider using the oriented Gauss code instead
+         * as output by orientedGauss().
+         *
+         * Currently Regina only supports Dowker notation for knots,
+         * not multiple-component links.  If this link does not have
+         * precisely one component then nothing will be output at all.
+         *
+         * The output will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of using an output stream, simply returns a string.
+         *
+         * \ifacespython This routine is not available in Python.  Instead,
+         * Python users can use the variant dowker(), which takes no
+         * arguments and returns the output as a string.
+         *
+         * @param out the output stream to which to write.
+         */
+        void dowker(std::ostream& out) const;
+
+        /**
          * Returns C++ code that can be used to reconstruct this link.
          *
          * This code will use the Link constructor that takes a series of

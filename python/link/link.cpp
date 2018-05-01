@@ -50,6 +50,7 @@ namespace {
     std::string (Link::*gauss_str)() const = &Link::gauss;
     std::string (Link::*orientedGauss_str)() const = &Link::orientedGauss;
     std::string (Link::*jenkins_str)() const = &Link::jenkins;
+    std::string (Link::*dowker_str)() const = &Link::dowker;
     Link* (*fromGauss_str)(const std::string&) = &Link::fromGauss;
     Link* (*fromOrientedGauss_str)(const std::string&) =
         &Link::fromOrientedGauss;
@@ -214,6 +215,7 @@ void addLink() {
         .def("gauss", gauss_str)
         .def("orientedGauss", orientedGauss_str)
         .def("jenkins", jenkins_str)
+        .def("dowker", dowker_str)
         .def("knotSig", &Link::knotSig, OL_knotSig())
         .def("dumpConstruction", &Link::dumpConstruction)
         .def("r1", r1a, OL_r1a())
