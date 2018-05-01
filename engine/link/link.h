@@ -1616,6 +1616,22 @@ class REGINA_API Link : public Packet {
         /*@{*/
 
         /**
+         * Returns whether this knot diagram is alternating.
+         *
+         * Note that this routine cannot tell whether the \e knot is
+         * alternating (i.e., whether there \e exists an alternating diagram).
+         * Instead, it simply returns whether this specific diagram is
+         * alternating or not.
+         *
+         * The empty diagram and any zero-crossing unknot components
+         * will be considered alternating.
+         *
+         * @return \c true if this is an alternating diagram, or \c false
+         * if this is a non-alternating diagram.
+         */
+        bool isAlternating() const;
+
+        /**
          * Returns the writhe of this link diagram.
          *
          * The \e writhe sums the signs of all crossings.  It is

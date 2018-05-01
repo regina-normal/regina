@@ -190,6 +190,7 @@ void addLink() {
         .def("reverse", &Link::reverse)
         .def("change", &Link::change)
         .def("resolve", &Link::resolve)
+        .def("isAlternating", &Link::isAlternating)
         .def("writhe", &Link::writhe)
         .def("complement", &Link::complement,
             OL_complement()[return_value_policy<to_held_type<>>()])

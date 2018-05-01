@@ -109,6 +109,28 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     return ans;
 }
 
+bool Link::isAlternating() const {
+    StrandRef s;
+    int prev;
+
+    for (StrandRef start : components_) {
+        // 0-crossing components are considered alternating.
+        if (! start)
+            continue;
+
+        // Follow each non-empty component around.
+        s = start;
+        do {
+            prev = s.strand();
+            ++s;
+            if (s.strand() == prev)
+                return false;
+        } while (s != start);
+    }
+
+    return true;
+}
+
 void Link::writeTextShort(std::ostream& out) const {
     if (components_.empty())
         out << "empty link";
