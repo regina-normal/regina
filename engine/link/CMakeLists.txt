@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   complement
-  dowker
+  dt
   examplelink
   flype
   gauss
@@ -30,6 +30,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     data-impl.h
+    dt-impl.h
     examplelink.h
     gauss-impl.h
     link.h

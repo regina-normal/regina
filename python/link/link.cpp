@@ -50,11 +50,12 @@ namespace {
     std::string (Link::*gauss_str)() const = &Link::gauss;
     std::string (Link::*orientedGauss_str)() const = &Link::orientedGauss;
     std::string (Link::*jenkins_str)() const = &Link::jenkins;
-    std::string (Link::*dowker_str)() const = &Link::dowker;
+    std::string (Link::*dt_str)() const = &Link::dt;
     Link* (*fromGauss_str)(const std::string&) = &Link::fromGauss;
     Link* (*fromOrientedGauss_str)(const std::string&) =
         &Link::fromOrientedGauss;
     Link* (*fromJenkins_str)(const std::string&) = &Link::fromJenkins;
+    Link* (*fromDT_str)(const std::string&) = &Link::fromDT;
 
     bool (Link::*r1a)(Crossing*, bool, bool) = &Link::r1;
     bool (Link::*r1b)(StrandRef, int, int, bool, bool) = &Link::r1;
@@ -122,6 +123,25 @@ namespace {
         return ans;
     }
 
+    Link* fromDT_list(boost::python::list terms) {
+        long len = boost::python::len(terms);
+
+        int* s = new int[len];
+        for (long i = 0; i < len; ++i) {
+            extract<int> val(terms[i]);
+            if (! val.check()) {
+                // Throw an exception.
+                delete[] s;
+                val();
+            }
+            s[i] = val();
+        }
+
+        Link* ans = Link::fromDT(s, s + len);
+        delete[] s;
+        return ans;
+    }
+
     void strand_inc_operator(StrandRef& s) {
        ++s;
     }
@@ -183,6 +203,10 @@ void addLink() {
             return_value_policy<to_held_type<>>())
         .def("fromJenkins", fromJenkins_str,
             return_value_policy<to_held_type<>>())
+        .def("fromDT", fromDT_list,
+            return_value_policy<to_held_type<>>())
+        .def("fromDT", fromDT_str,
+            return_value_policy<to_held_type<>>())
         .def("fromKnotSig", &Link::fromKnotSig,
             return_value_policy<to_held_type<>>())
         .def("swapContents", &Link::swapContents)
@@ -215,7 +239,7 @@ void addLink() {
         .def("gauss", gauss_str)
         .def("orientedGauss", orientedGauss_str)
         .def("jenkins", jenkins_str)
-        .def("dowker", dowker_str)
+        .def("dt", dt_str)
         .def("knotSig", &Link::knotSig, OL_knotSig())
         .def("dumpConstruction", &Link::dumpConstruction)
         .def("r1", r1a, OL_r1a())
@@ -233,6 +257,7 @@ void addLink() {
         .staticmethod("fromGauss")
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
+        .staticmethod("fromDT")
         .staticmethod("fromKnotSig")
     ;
 
