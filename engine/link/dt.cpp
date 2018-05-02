@@ -40,16 +40,18 @@
 
 namespace regina {
 
-std::string Link::dt() const {
+std::string Link::dt(bool alpha) const {
     std::ostringstream out;
-    dt(out);
+    dt(out, alpha);
     return out.str();
 }
 
-void Link::dt(std::ostream& out) const {
+void Link::dt(std::ostream& out, bool alpha) const {
     if (components_.size() != 1)
         return;
     if (crossings_.empty())
+        return;
+    if (alpha && size() > 26)
         return;
 
     // Dowker-Thistlethwaite notation requires us to start on the lower strand.
@@ -81,10 +83,17 @@ void Link::dt(std::ostream& out) const {
     } while (s != start);
     assert(step == 2 * n);
 
-    for (size_t i = 0; i < n; ++i) {
-        if (i > 0)
-            out << ' ';
-        out << evenStep[oddCrossing[i]];
+    if (alpha) {
+        for (size_t i = 0; i < n; ++i)
+            out << (evenStep[oddCrossing[i]] > 0 ?
+                (char('a' + evenStep[oddCrossing[i]] / 2 - 1)) :
+                (char('A' - evenStep[oddCrossing[i]] / 2 - 1)));
+    } else {
+        for (size_t i = 0; i < n; ++i) {
+            if (i > 0)
+                out << ' ';
+            out << evenStep[oddCrossing[i]];
+        }
     }
 
     delete[] evenStep;
@@ -92,19 +101,46 @@ void Link::dt(std::ostream& out) const {
 }
 
 Link* Link::fromDT(const std::string& s) {
-    std::istringstream in(s);
+    // Do we have an alphabetical or numerical string?
+    auto it = s.begin();
+    while (it != s.end() && ::isspace(*it))
+        ++it;
+    if (it == s.end()) {
+        // Empty string, so return the unknot.
+        return new Link(1);
+    }
+
     std::vector<int> terms;
 
-    int i;
-    while (true) {
-        in >> i;
-        if (! in) {
-            if (in.eof())
-                break;
-            return nullptr;
+    if ((*it >= 'a' && *it <= 'z') || (*it >= 'A' && *it <= 'Z')) {
+        // We have the alphabetical variant.
+        for ( ; it != s.end(); ++it) {
+            if (*it >= 'a' && *it <= 'z')
+                terms.push_back(2 * (*it - 'a' + 1));
+            else if (*it >= 'A' && *it <= 'Z')
+                terms.push_back(-2 * (*it - 'A' + 1));
+            else if (! ::isspace(*it)) {
+                // Invalid character.
+                return nullptr;
+            }
         }
-        terms.push_back(i);
-    }
+    } else if ((*it >= '0' && *it <= '9') || *it == '-') {
+        // We have the numerical variant.
+        std::istringstream in(s);
+
+        int i;
+        while (true) {
+            in >> i;
+            if (! in) {
+                if (in.eof())
+                    break;
+                return nullptr;
+            }
+            terms.push_back(i);
+        }
+    } else
+        return nullptr;
+
     return fromDT(terms.begin(), terms.end());
 }
 

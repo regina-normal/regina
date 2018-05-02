@@ -2163,10 +2163,24 @@ class REGINA_API Link : public Packet {
         void jenkins(std::ostream& out) const;
 
         /**
-         * Outputs this knot using numerical Dowker-Thistlethwaite notation.
-         * For an <i>n</i>-crossing knot, this is a sequence of \a n even
-         * signed integers as described (amongst other places) in Section 2.2
-         * of C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
+         * Outputs this knot using Dowker-Thistlethwaite notation.
+         *
+         * For an <i>n</i>-crossing knot, Regina supports two variants
+         * of this notation:
+         *
+         * - a \e numerical variant (the default), which is a sequence of
+         *   \a n even signed integers as described (amongst other places) in
+         *   Section 2.2 of C. C. Adams, "The knot book", W. H. Freeman & Co.,
+         *   1994;
+         *
+         * - an \e alphabetical variant, which transforms the numerical
+         *   notation into a sequence of letters by replacing positive
+         *   integers (2,4,6,...) with lower-case letters (\c a,\c b,\c c,...),
+         *   and replacing negative integers (-2,-4,-6,...) with upper-case
+         *   letters (\c A,\c B,\c C,...).  This alphabetical variant
+         *   can only be used for knots with 26 crossings or fewer; for
+         *   larger knots this routine will return the empty string if
+         *   the alphabetical variant is requested.
          *
          * In general, Dowker-Thistlethwaite notation does not carry enough
          * information to uniquely reconstruct the knot.  For instance,
@@ -2186,17 +2200,35 @@ class REGINA_API Link : public Packet {
          * \note There is another variant of this routine that, instead
          * of returning a string, writes directly to an output stream.
          *
-         * @return the Dowker-Thistlethwaite notation for this knot diagram, or
-         * the empty string if this is a link with zero or multiple components.
+         * @param alpha \c true to use alphabetical notation, or \c false
+         * (the default) to use numerical notation.
+         * @return the Dowker-Thistlethwaite notation for this knot diagram.
+         * This routine will return the empty string if this link has zero or
+         * multiple components, or if \a alpha is \c true and the knot
+         * has more than 26 crossings.
          */
-        std::string dt() const;
+        std::string dt(bool alpha = false) const;
 
         /**
          * Writes this knot to the given output stream using
          * Dowker-Thistlethwaite notation.
-         * For an <i>n</i>-crossing knot, this is a sequence of \a n even
-         * signed integers as described (amongst other places) in Section 2.2
-         * of C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
+         *
+         * For an <i>n</i>-crossing knot, Regina supports two variants
+         * of this notation:
+         *
+         * - a \e numerical variant (the default), which is a sequence of
+         *   \a n even signed integers as described (amongst other places) in
+         *   Section 2.2 of C. C. Adams, "The knot book", W. H. Freeman & Co.,
+         *   1994;
+         *
+         * - an \e alphabetical variant, which transforms the numerical
+         *   notation into a sequence of letters by replacing positive
+         *   integers (2,4,6,...) with lower-case letters (\c a,\c b,\c c,...),
+         *   and replacing negative integers (-2,-4,-6,...) with upper-case
+         *   letters (\c A,\c B,\c C,...).  This alphabetical variant
+         *   can only be used for knots with 26 crossings or fewer; for
+         *   larger knots this routine will output nothing at all if
+         *   the alphabetical variant is requested.
          *
          * In general, Dowker-Thistlethwaite notation does not carry enough
          * information to uniquely reconstruct the knot.  For instance,
@@ -2217,12 +2249,14 @@ class REGINA_API Link : public Packet {
          * of using an output stream, simply returns a string.
          *
          * \ifacespython This routine is not available in Python.  Instead,
-         * Python users can use the variant dt(), which takes no
-         * arguments and returns the output as a string.
+         * Python users can use the variant dt(), which takes just the optional
+         * \a alpha argument and returns the output as a string.
          *
          * @param out the output stream to which to write.
+         * @param alpha \c true to use alphabetical notation, or \c false
+         * (the default) to use numerical notation.
          */
-        void dt(std::ostream& out) const;
+        void dt(std::ostream& out, bool alpha = false) const;
 
         /**
          * Returns C++ code that can be used to reconstruct this link.
@@ -2733,11 +2767,24 @@ class REGINA_API Link : public Packet {
         static Link* fromJenkins(std::istream& in);
 
         /**
-         * Creates a new knot from an integer sequence using
+         * Creates a new knot from either alphabetical or numerical
          * Dowker-Thistlethwaite notation.
-         * For an <i>n</i>-crossing knot, this must be a sequence of \a n even
-         * signed integers as described (amongst other places) in Section 2.2
-         * of C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
+         *
+         * For an <i>n</i>-crossing knot, the input may be in one of two
+         * forms:
+         *
+         * - \e numerical Dowker-Thistlethwaite notation, which is a sequence
+         *   of \a n even signed integers as described (amongst other places)
+         *   in Section 2.2 of C. C. Adams, "The knot book",
+         *   W. H. Freeman & Co., 1994;
+         *
+         * - \e alphabetical Dowker-Thistlethwaite notation, which transforms
+         *   the numerical notation into a sequence of letters by replacing
+         *   positive integers (2,4,6,...) with lower-case letters
+         *   (\c a,\c b,\c c,...), and replacing negative integers
+         *   (-2,-4,-6,...) with upper-case letters (\c A,\c B,\c C,...).
+         *   This alphabetical variant can only be used to describe knots with
+         *   26 crossings or fewer.
          *
          * Dowker-Thistlethwaite notation essentially describes the 4-valent
          * graph of a knot but not the particular embedding in the plane.
@@ -2749,17 +2796,21 @@ class REGINA_API Link : public Packet {
          * resolved using oriented Gauss codes, as used by the routines
          * orientedGauss() and fromOrientedGauss().
          *
-         * As an example, you can construct the trefoil using the
-         * Dowker-Thistlethwaite notation:
+         * As an example, you can construct the trefoil using either of the
+         * following variants of Dowker-Thistlethwaite notation:
          *
            \verbatim
            4 6 2
+           bca
            \endverbatim
          *
          * There are two variants of this routine.  This variant takes a
-         * single string, where the integers have been combined together and
-         * separated by whitespace.  The other variant takes a sequence of
-         * integers, defined by a pair of iterators.
+         * single string, which is either the alphabetical notation (in which
+         * any whitespace within the string will be ignored), or the numerical
+         * notation where the integers have been combined together and
+         * separated by whitespace.  The other variant of this routine
+         * is only for the numerical variant, and it takes a sequence of
+         * integers defined by a pair of iterators.
          *
          * In this variant (the string variant), the given string may
          * contain additional leading or trailing whitespace.
@@ -2782,8 +2833,8 @@ class REGINA_API Link : public Packet {
          * @author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
-         * @param str the Dowker-Thistlethwaite notation for a knot, as
-         * described above.
+         * @param str either the alphabetical or numerical
+         * Dowker-Thistlethwaite notation for a knot, as described above.
          * @return a newly constructed link, or \c null if the input was
          * found to be invalid.
          */
@@ -2791,7 +2842,8 @@ class REGINA_API Link : public Packet {
 
         /**
          * Creates a new knot from an integer sequence using
-         * Dowker-Thistlethwaite notation.
+         * the numerical variant of Dowker-Thistlethwaite notation.
+         *
          * For an <i>n</i>-crossing knot, this must be a sequence of \a n even
          * signed integers as described (amongst other places) in Section 2.2
          * of C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
@@ -2799,7 +2851,12 @@ class REGINA_API Link : public Packet {
          * See fromDT(const std::string&) for a detailed
          * description of this format as it is used in Regina.
          *
-         * There are two variants of this routine.  The other variant
+         * Regina can also reconstruct a knot from \e alphabetical
+         * Dowker-Thistlethwaite notation, but for this you must use the other
+         * version of this routine that takes a single string argument.
+         *
+         * For numerical Dowker-Thistlethwaite notation, there are two variants
+         * of this routine that you can use.  The other variant
          * (fromDT(const std::string&), which offers more
          * detailed documentation) takes a single string, where the integers
          * have been combined together and separated by whitespace.  This

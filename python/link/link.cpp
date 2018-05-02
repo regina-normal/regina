@@ -50,7 +50,7 @@ namespace {
     std::string (Link::*gauss_str)() const = &Link::gauss;
     std::string (Link::*orientedGauss_str)() const = &Link::orientedGauss;
     std::string (Link::*jenkins_str)() const = &Link::jenkins;
-    std::string (Link::*dt_str)() const = &Link::dt;
+    std::string (Link::*dt_str)(bool) const = &Link::dt;
     Link* (*fromGauss_str)(const std::string&) = &Link::fromGauss;
     Link* (*fromOrientedGauss_str)(const std::string&) =
         &Link::fromOrientedGauss;
@@ -84,6 +84,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_knotSig, Link::knotSig, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
         Link::simplifyExhaustive, 0, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dt, Link::dt, 0, 1);
 
     Link* fromGauss_list(boost::python::list terms) {
         long len = boost::python::len(terms);
@@ -239,7 +240,7 @@ void addLink() {
         .def("gauss", gauss_str)
         .def("orientedGauss", orientedGauss_str)
         .def("jenkins", jenkins_str)
-        .def("dt", dt_str)
+        .def("dt", dt_str, OL_dt())
         .def("knotSig", &Link::knotSig, OL_knotSig())
         .def("dumpConstruction", &Link::dumpConstruction)
         .def("r1", r1a, OL_r1a())
