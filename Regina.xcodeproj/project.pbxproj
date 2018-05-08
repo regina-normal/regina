@@ -2100,6 +2100,11 @@
 		05F0A0641DBF0B7000117BFC /* triangulation3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0311DBF0B5E00117BFC /* triangulation3.cpp */; };
 		05F0A0651DBF0B7000117BFC /* turaevviro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */; };
 		05F0A0661DBF0B7000117BFC /* vertex3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0341DBF0B5E00117BFC /* vertex3.cpp */; };
+		05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F2033120A17C1E00FC74ED /* dt-impl.h */; };
+		05F2033420A17C1E00FC74ED /* dt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033220A17C1E00FC74ED /* dt.cpp */; };
+		05F2033520A17C2500FC74ED /* dt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033220A17C1E00FC74ED /* dt.cpp */; };
+		05F2033720A17C6000FC74ED /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
+		05F2033820A17C6000FC74ED /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
 		05F232791F9AB2B100101A9E /* LinkPolynomials.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F232751F9AB2A000101A9E /* LinkPolynomials.mm */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
@@ -4519,6 +4524,9 @@
 		05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = turaevviro.cpp; sourceTree = "<group>"; };
 		05F0A0341DBF0B5E00117BFC /* vertex3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertex3.cpp; sourceTree = "<group>"; };
 		05F0A0351DBF0B5E00117BFC /* vertex3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
+		05F2033120A17C1E00FC74ED /* dt-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dt-impl.h"; sourceTree = "<group>"; };
+		05F2033220A17C1E00FC74ED /* dt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dt.cpp; sourceTree = "<group>"; };
+		05F2033620A17C6000FC74ED /* knot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = knot.cpp; sourceTree = "<group>"; };
 		05F232751F9AB2A000101A9E /* LinkPolynomials.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkPolynomials.mm; sourceTree = "<group>"; };
 		05F232771F9AB2A900101A9E /* LinkPolynomials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkPolynomials.h; sourceTree = "<group>"; };
 		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
@@ -7174,6 +7182,8 @@
 				05721ED01F97153C00A83FFC /* CMakeLists.txt */,
 				05721EDC1F97153C00A83FFC /* complement.cpp */,
 				05721ECF1F97153C00A83FFC /* data-impl.h */,
+				05F2033120A17C1E00FC74ED /* dt-impl.h */,
+				05F2033220A17C1E00FC74ED /* dt.cpp */,
 				05721ED61F97153C00A83FFC /* examplelink.cpp */,
 				05721EE11F97153C00A83FFC /* examplelink.h */,
 				05AA71ED1FB17DFF00186E30 /* flype.cpp */,
@@ -7690,6 +7700,7 @@
 				05F0A0221DBF0B5E00117BFC /* homology.cpp */,
 				05F0A0241DBF0B5E00117BFC /* hydrate.cpp */,
 				05F0A0251DBF0B5E00117BFC /* insertlayered.cpp */,
+				05F2033620A17C6000FC74ED /* knot.cpp */,
 				05F0A0261DBF0B5E00117BFC /* reorder.cpp */,
 				05F0A0271DBF0B5E00117BFC /* retriangulate.cpp */,
 				05F0A0281DBF0B5E00117BFC /* simplify.cpp */,
@@ -8008,6 +8019,7 @@
 				052F9FEF180600FB00FAE4DF /* nblockedsfstriple.h in Headers */,
 				05CA99E618078466006161DC /* registryutils.h in Headers */,
 				0513753E1809B8D3002E525B /* coordregistry.h in Headers */,
+				05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */,
 				052FA072180600FB00FAE4DF /* ntetrahedron.h in Headers */,
 				050C64C71DA3302900C9420F /* nmaxadmissible-impl.h in Headers */,
 				0591E7E31C4F750200793A9C /* normalhypersurfaces.h in Headers */,
@@ -9476,6 +9488,7 @@
 				05A067591DFA68470047872E /* snappedtwosphere.cpp in Sources */,
 				052FA1D21806129B00FAE4DF /* components.cpp in Sources */,
 				0589FAC3181484860064CD57 /* Tri3Gluings.mm in Sources */,
+				05F2033820A17C6000FC74ED /* knot.cpp in Sources */,
 				05249F2B1DBC1711001FE29E /* matrixint.cpp in Sources */,
 				05FB46D71DD92D2900BB00E5 /* grouppresentation.cpp in Sources */,
 				052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */,
@@ -9710,6 +9723,7 @@
 				059BC68D1DC7F7A300AB4206 /* boundarycomponent6.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
+				05F2033520A17C2500FC74ED /* dt.cpp in Sources */,
 				05DC13871FEB942E00171D66 /* nsvectorquadoctclosed.cpp in Sources */,
 				05249F0F1DBC16F9001FE29E /* triangulation8.cpp in Sources */,
 				05C0645E1C56B1F7006E6483 /* Tri4ViewController.mm in Sources */,
@@ -10136,6 +10150,7 @@
 				05721EEC1F97153E00A83FFC /* reidemeister.cpp in Sources */,
 				0542087F1DF0D0B50018AB24 /* repository.cpp in Sources */,
 				052F9FE4180600FB00FAE4DF /* signature.cpp in Sources */,
+				05F2033420A17C1E00FC74ED /* dt.cpp in Sources */,
 				052F9F80180600FB00FAE4DF /* filling.c in Sources */,
 				052F9FD9180600FB00FAE4DF /* volume.c in Sources */,
 				052F9F56180600FB00FAE4DF /* packetlistener.cpp in Sources */,
@@ -10233,6 +10248,7 @@
 				0591E7E41C4F750200793A9C /* xmlhypersurfacereader.cpp in Sources */,
 				052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */,
 				055114C51DCC45FD00EC753C /* example2.cpp in Sources */,
+				05F2033720A17C6000FC74ED /* knot.cpp in Sources */,
 				05C1BEAD1DCA7CA9007C946B /* boundary5.cpp in Sources */,
 				05C1BEAF1DCA7CA9007C946B /* boundary7.cpp in Sources */,
 				05A73CA419B2EF5A0099C617 /* Moebius_transformations.c in Sources */,
