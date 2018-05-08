@@ -50,9 +50,9 @@
 @end
 
 /**
- * The controller for creating a new knot from an oriented Gauss code.
+ * The controller for creating a new knot from a text code.
  *
  * This represents an individual page within the larger NewLinkController.
  */
-@interface NewLinkGaussPage : UIViewController <PacketCreator>
+@interface NewLinkTextCodePage : UIViewController <PacketCreator>
 @end
