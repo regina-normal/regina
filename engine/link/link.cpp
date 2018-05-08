@@ -66,6 +66,23 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
         bracket_ = new Laurent<Integer>(*(cloneMe.bracket_.value()));
 }
 
+Link::Link(const std::string& description) {
+    Link* attempt;
+
+    if ((attempt = fromKnotSig(description))) {
+        swapContents(*attempt);
+        setLabel(description);
+    } else if ((attempt = fromOrientedGauss(description))) {
+        swapContents(*attempt);
+        setLabel(description);
+    } else if ((attempt = fromDT(description))) {
+        swapContents(*attempt);
+        setLabel(description);
+    }
+
+    delete attempt;
+}
+
 bool Link::connected(const Crossing* a, const Crossing* b) const {
     if (components_.size() <= 1)
         return true;

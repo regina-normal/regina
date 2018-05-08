@@ -703,6 +703,28 @@ class REGINA_API Link : public Packet {
          * have all properties marked as unknown.
          */
         Link(const Link& copy, bool cloneProps);
+        /**
+         * "Magic" constructor that tries to find some way to interpret
+         * the given string as a link.
+         *
+         * At present, Regina understands the following types of strings
+         * (and attempts to parse them in the following order):
+         *
+         * - knot signatures, as used by fromKnotSig();
+         * - oriented Gauss codes, as used by fromOrientedGauss();
+         * - numeric or alphabetical Dowker-Thistlethwaite strings, as
+         *   used by fromDT().
+         *
+         * This list may grow in future versions of Regina.
+         *
+         * Regina will also set the packet label accordingly.
+         *
+         * If Regina cannot interpret the given string, this will be
+         * left as the empty link.
+         *
+         * @param description a string that describes a knot or link.
+         */
+        Link(const std::string& description);
 
         /**
          * Destroys this link.

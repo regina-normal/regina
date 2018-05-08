@@ -189,6 +189,7 @@ void addLink() {
         .def(init<size_t>())
         .def(init<const Link&>())
         .def(init<const Link&, bool>())
+        .def(init<const std::string&>())
         .def("isEmpty", &Link::isEmpty)
         .def("size", &Link::size)
         .def("countComponents", &Link::countComponents)
