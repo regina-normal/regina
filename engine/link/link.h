@@ -2331,27 +2331,6 @@ class REGINA_API Link : public Packet {
         std::string knotSig(bool useReflection = true, bool useReversal = true)
             const;
 
-        /**
-         * Recovers a knot diagram from its signature.
-         * See knotSig() for more information on knot signatures.
-         *
-         * The knot that is returned will be newly created, and it is
-         * the responsibility of the caller of this routine to destroy it.
-         *
-         * Calling knotSig() followed by fromKnotSig() is not guaranteed to
-         * produce an \e identical knot diagram to the original, but it
-         * is guaranteed to produce one that is related by relabelling,
-         * rotation, and optionally (according to the arguments that
-         * were passed to knotSig()) reflection and/or reversal.
-         *
-         * @param sig the signature of the knot diagram to construct.
-         * Note that signatures are case-sensitive.
-         * @return a newly allocated knot if the reconstruction was
-         * successful, or \c null if the given string was not a valid
-         * knot signature.
-         */
-        static Link* fromKnotSig(const std::string& sig);
-
         /*@}*/
         /**
          * \name Building Links
@@ -2427,6 +2406,27 @@ class REGINA_API Link : public Packet {
         template <typename... Args>
         static Link* fromData(std::initializer_list<int> crossingSigns,
             std::initializer_list<Args>... components);
+
+        /**
+         * Recovers a knot diagram from its signature.
+         * See knotSig() for more information on knot signatures.
+         *
+         * The knot that is returned will be newly created, and it is
+         * the responsibility of the caller of this routine to destroy it.
+         *
+         * Calling knotSig() followed by fromKnotSig() is not guaranteed to
+         * produce an \e identical knot diagram to the original, but it
+         * is guaranteed to produce one that is related by relabelling,
+         * rotation, and optionally (according to the arguments that
+         * were passed to knotSig()) reflection and/or reversal.
+         *
+         * @param sig the signature of the knot diagram to construct.
+         * Note that signatures are case-sensitive.
+         * @return a newly allocated knot if the reconstruction was
+         * successful, or \c null if the given string was not a valid
+         * knot signature.
+         */
+        static Link* fromKnotSig(const std::string& sig);
 
         /**
          * Creates a new knot from a classical Gauss code.
