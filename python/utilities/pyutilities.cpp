@@ -35,6 +35,7 @@ void addLocale();
 void addBoolSet();
 void addOSUtils();
 void addStringUtils();
+void addRegisterIntFromPyIndex();
 
 void addUtilitiesClasses() {
     addIntUtils();
@@ -42,5 +43,6 @@ void addUtilitiesClasses() {
     addBoolSet();
     addOSUtils();
     addStringUtils();
+    addRegisterIntFromPyIndex();
 }
 

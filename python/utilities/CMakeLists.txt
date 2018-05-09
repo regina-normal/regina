@@ -7,6 +7,7 @@ SET ( FILES
   intutils
   osutils
   pyutilities
+  registerIntFromPyIndex
   stringutils
   )
 

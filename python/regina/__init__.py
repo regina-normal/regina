@@ -53,7 +53,11 @@ __all__ = (
     [ name for name in engine.__dict__.keys()
       if not name in names_to_avoid and not name.startswith('_') ] +
     [ 'reginaSetup' ])
-    
+
+# Make boost::python work with Sage Integer's.
+if _within_sage:
+    engine._registerIntFromPyIndex()
+
 # Adds some additional pure Python methods to some of Regina's classes.
 from . import purePyMethods
 del purePyMethods
