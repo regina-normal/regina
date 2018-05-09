@@ -68,8 +68,9 @@ void Link::dt(std::ostream& out, bool alpha) const {
     int* evenStep = new int[n];
 
     StrandRef s = start;
-    unsigned step = 1;
+    unsigned step = 0;
     do {
+        ++step;
         if (step % 2 == 1) {
             oddCrossing[step >> 1] = s.crossing()->index();
         } else {
@@ -77,9 +78,7 @@ void Link::dt(std::ostream& out, bool alpha) const {
             // to make sure that every crossing is seen here exactly once.
             evenStep[s.crossing()->index()] = (s.strand() == 1 ? step : -step);
         }
-
         ++s;
-        ++step;
     } while (s != start);
     assert(step == 2 * n);
 
