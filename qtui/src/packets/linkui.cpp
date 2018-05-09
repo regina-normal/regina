@@ -151,10 +151,15 @@ QString LinkHeaderUI::summaryInfo(regina::Link* link) {
         if (link->size() == 0) {
             return QObject::tr("Unknot with no crossings");
         } else if (link->size() == 1) {
-            return QObject::tr("Knot with 1 crossing (%1)").arg(signs);
-        } else {
-            return QObject::tr("Knot with %1 crossings (%2)").arg(link->size())
+            // Must be alternating.
+            return QObject::tr("Alternating knot with 1 crossing (%1)")
                 .arg(signs);
+        } else if (link->isAlternating()) {
+            return QObject::tr("Alternating knot with %1 crossings (%2)")
+                .arg(link->size()).arg(signs);
+        } else {
+            return QObject::tr("Non-alternating knot with %1 crossings (%2)")
+                .arg(link->size()).arg(signs);
         }
     } else {
         // Multiple component link:
@@ -162,10 +167,17 @@ QString LinkHeaderUI::summaryInfo(regina::Link* link) {
             return QObject::tr("Unlink with %1 components, no crossings")
                 .arg(link->countComponents());
         } else if (link->size() == 1) {
-            return QObject::tr("Link with %1 components, 1 crossing (%2)")
+            // Must be alternating.
+            return QObject::tr(
+                "Alternating link with %1 components, 1 crossing (%2)")
                 .arg(link->countComponents()).arg(signs);
+        } else if (link->isAlternating()) {
+            return QObject::tr(
+                "Alternating link with %1 components, %2 crossings (%3)")
+                .arg(link->countComponents()).arg(link->size()).arg(signs);
         } else {
-            return QObject::tr("Link with %1 components, %2 crossings (%3)")
+            return QObject::tr(
+                "Non-alternating link with %1 components, %2 crossings (%3)")
                 .arg(link->countComponents()).arg(link->size()).arg(signs);
         }
     }

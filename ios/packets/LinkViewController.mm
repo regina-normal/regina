@@ -134,13 +134,19 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
         if (self.packet->size() == 0) {
             header.attributedText = [[NSAttributedString alloc] initWithString:@"Unknot with no crossings"];
         } else if (self.packet->size() == 1) {
-            NSMutableAttributedString* s = [[NSMutableAttributedString alloc] initWithString:@"Knot with 1 crossing ("];
+            // Must be alternating.
+            NSMutableAttributedString* s = [[NSMutableAttributedString alloc] initWithString:@"Alternating knot with 1 crossing ("];
             [s appendAttributedString:signs];
             [s appendAttributedString:[[NSAttributedString alloc] initWithString:@")"]];
             header.attributedText = s;
         } else {
-            NSMutableAttributedString* s = [[NSMutableAttributedString alloc]
-                                            initWithString:[NSString stringWithFormat:@"Knot with %zu crossings (", self.packet->size()]];
+            NSMutableAttributedString* s;
+            if (self.packet->isAlternating())
+                s = [[NSMutableAttributedString alloc]
+                     initWithString:[NSString stringWithFormat:@"Alternating knot with %zu crossings (", self.packet->size()]];
+            else
+                s = [[NSMutableAttributedString alloc]
+                     initWithString:[NSString stringWithFormat:@"Non-alternating knot with %zu crossings (", self.packet->size()]];
             [s appendAttributedString:signs];
             [s appendAttributedString:[[NSAttributedString alloc] initWithString:@")"]];
             header.attributedText = s;
@@ -151,14 +157,20 @@ static UIColor* rightColour = [UIColor colorWithRed:0.0
             header.attributedText = [[NSAttributedString alloc]
                                      initWithString:[NSString stringWithFormat:@"Unlink with %zu components, no crossings", self.packet->countComponents()]];
         } else if (self.packet->size() == 1) {
+            // Must be alternating.
             NSMutableAttributedString* s = [[NSMutableAttributedString alloc]
-                                            initWithString:[NSString stringWithFormat:@"Link with %zu components, 1 crossing (", self.packet->countComponents()]];
+                                            initWithString:[NSString stringWithFormat:@"Alternating link with %zu components, 1 crossing (", self.packet->countComponents()]];
             [s appendAttributedString:signs];
             [s appendAttributedString:[[NSAttributedString alloc] initWithString:@")"]];
             header.attributedText = s;
         } else {
-            NSMutableAttributedString* s = [[NSMutableAttributedString alloc]
-                                            initWithString:[NSString stringWithFormat:@"Link with %zu components, %zu crossings (", self.packet->countComponents(), self.packet->size()]];
+            NSMutableAttributedString* s;
+            if (self.packet->isAlternating())
+                s = [[NSMutableAttributedString alloc]
+                     initWithString:[NSString stringWithFormat:@"Alternating link with %zu components, %zu crossings (", self.packet->countComponents(), self.packet->size()]];
+            else
+                s = [[NSMutableAttributedString alloc]
+                     initWithString:[NSString stringWithFormat:@"Non-alternating link with %zu components, %zu crossings (", self.packet->countComponents(), self.packet->size()]];
             [s appendAttributedString:signs];
             [s appendAttributedString:[[NSAttributedString alloc] initWithString:@")"]];
             header.attributedText = s;
