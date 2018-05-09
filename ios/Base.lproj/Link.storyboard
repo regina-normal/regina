@@ -999,9 +999,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2za-Sx-Q4h">
-                                <rect key="frame" x="244" y="61" width="217" height="29"/>
+                                <rect key="frame" x="135" y="61" width="435" height="29"/>
                                 <segments>
                                     <segment title="Oriented Gauss"/>
+                                    <segment title="D-T"/>
+                                    <segment title="Knot signature"/>
                                     <segment title="Jenkins"/>
                                 </segments>
                                 <connections>

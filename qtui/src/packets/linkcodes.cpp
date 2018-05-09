@@ -54,20 +54,33 @@ LinkCodesUI::LinkCodesUI(regina::Link* packet,
     QLabel* label = new QLabel(tr("Display code:"));
     QString msg = tr("Allows you to switch between different text-based "
         "codes for this link.<p>"
-        "The <i>Jenkins code</i> is the text representation used by "
-        "Bob Jenkins in his HOMFLY polynomial software.<p>"
         "The <i>oriented Gauss code</i> is an extension of the "
         "classical Gauss code, with additional characters to describe "
-        "the orientation of the other strand at each crossing.");
+        "the orientation of the other strand at each crossing.<p>"
+        "The <i>Dowker-Thistlethwaite notation</i> is a very short "
+        "representation for prime knots (but introduces ambiguities "
+        "for non-prime knots), and comes in both alphabetical and numerical "
+        "variants.<p>"
+        "The <i>knot signature</i> is native to Regina, and identifies "
+        "a knot projection on the sphere uniquely up to relabelling "
+        "and/or reflection.<p>"
+        "The <i>Jenkins format</i> is the text representation used by "
+        "Bob Jenkins in his HOMFLY polynomial software.");
     label->setWhatsThis(msg);
     sublayout->addWidget(label);
     type = new QComboBox();
     type->insertItem(0, tr("Oriented Gauss code"));
-    type->insertItem(1, tr("Jenkins format"));
+    type->insertItem(1, tr("Dowker-Thistlethwaite notation"));
+    type->insertItem(2, tr("Knot signature"));
+    type->insertItem(3, tr("Jenkins format"));
     type->setWhatsThis(msg);
     switch (ReginaPrefSet::global().linkCodeType) {
-        case ReginaPrefSet::Jenkins:
+        case ReginaPrefSet::DowkerThistlethwaite:
             type->setCurrentIndex(1); break;
+        case ReginaPrefSet::KnotSig:
+            type->setCurrentIndex(2); break;
+        case ReginaPrefSet::Jenkins:
+            type->setCurrentIndex(3); break;
         default:
             type->setCurrentIndex(0); break;
     }
@@ -78,7 +91,6 @@ LinkCodesUI::LinkCodesUI(regina::Link* packet,
     code = new QTextEdit();
     code->setReadOnly(true);
     code->setAcceptRichText(false);
-    code->setWordWrapMode(QTextOption::WordWrap);
     layout->addWidget(code, 1);
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
@@ -104,12 +116,50 @@ void LinkCodesUI::refresh() {
 
     QString ans;
     if (type->currentIndex() == 1) {
+        code->setWhatsThis("A description of this knot using "
+            "Dowker-Thistlethwaite notation.  This is a very short "
+            "format for prime knots, though it introduces ambiguities "
+            "for non-prime knots.  It comes in both alphabetical "
+            "and numerical variants, though the alphabetical variant "
+            "is only available for knots of 26 or fewer crossings.<p>"
+            "You can copy this text to the clipboard if you need to send it "
+            "to some other application.");
+        if (link->countComponents() != 1) {
+            code->setPlainText(tr("Dowker-Thistlethwaite notation is currently "
+                "only available for knots."));
+            return;
+        }
+        std::string alpha = link->dt(true);
+        std::string numer = link->dt(false);
+        if (alpha.empty())
+            ans = numer.c_str();
+        else
+            ans = (alpha + "\n\n" + numer + "\n").c_str();
+
+        code->setWordWrapMode(QTextOption::WordWrap);
+    } else if (type->currentIndex() == 2) {
+        code->setWhatsThis("The knot signature of this knot.  Signatures "
+            "are native to Regina, and identify a knot projection "
+            "on the sphere uniquely up to relabelling and/or reflection.<p>"
+            "You can copy this text to the clipboard if you need to send it "
+            "to some other application.");
+        if (link->countComponents() != 1) {
+            code->setPlainText(tr("Knot signatures are currently "
+                "only available for knots."));
+            return;
+        }
+        ans = link->knotSig().c_str();
+
+        code->setWordWrapMode(QTextOption::WrapAnywhere);
+    } else if (type->currentIndex() == 3) {
         code->setWhatsThis("A description of this link using the "
             "text format of Bob Jenkins.  This format is used "
             "in Jenkins' HOMFLY polynomial software.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
         ans = link->jenkins().c_str();
+
+        code->setWordWrapMode(QTextOption::WordWrap);
     } else {
         code->setWhatsThis("The oriented Gauss code of the link, "
             "based on a format of Andreeva et al.  "
@@ -124,6 +174,8 @@ void LinkCodesUI::refresh() {
             return;
         }
         ans = link->orientedGauss().c_str();
+
+        code->setWordWrapMode(QTextOption::WordWrap);
     }
 
     /* Don't use unicode because we want clipboard copy to fetch pure ASCII.
@@ -137,9 +189,21 @@ void LinkCodesUI::refresh() {
 }
 
 void LinkCodesUI::typeChanged(int) {
-    ReginaPrefSet::global().linkCodeType =
-        (type->currentIndex() == 1 ? ReginaPrefSet::Jenkins :
-        ReginaPrefSet::OrientedGauss);
+    switch (type->currentIndex()) {
+        case 1:
+            ReginaPrefSet::global().linkCodeType =
+                ReginaPrefSet::DowkerThistlethwaite;
+            break;
+        case 2:
+            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::KnotSig;
+            break;
+        case 3:
+            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::Jenkins;
+            break;
+        default:
+            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::OrientedGauss;
+            break;
+    }
 
     refresh();
 }
