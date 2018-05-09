@@ -59,64 +59,64 @@ namespace {
     }
 }
 
+namespace regina {
+namespace python {
+
 template<typename T>
-struct register_integer_from_index {
+struct register_int_from_py_index {
 
-static bool in_range(const long value) {
-    if (not std::numeric_limits<T>::is_signed) {
-        if (value < 0) {
+    static
+    bool _in_range(const long value) {
+        if (not std::numeric_limits<T>::is_signed) {
+            if (value < 0) {
+                return false;
+            }
+        } else {
+            if (value < std::numeric_limits<T>::min()) {
+                return false;
+            }
+        }
+        if (value > std::numeric_limits<T>::max()) {
             return false;
         }
-    } else {
-        if (value < std::numeric_limits<T>::min()) {
-            return false;
-        }
-    }
-    if (value > std::numeric_limits<T>::max()) {
-        return false;
+        
+        return true;
     }
 
-    return true;
-}
-
-    static boost::optional<T> _convert(PyObject * obj)
-    {
+    static
+    boost::optional<T> _convert_py_int(PyObject * obj) {
         if (PyInt_Check(obj)) {
             // No error checking
             const long value = PyInt_AS_LONG(obj);
-            if (in_range(value)) {
+            if (_in_range(value)) {
                 return value;
             }
         }
-      
+        
         if (PyLong_Check(obj)) {
             int overflow;
             const long value = PyLong_AsLongAndOverflow(obj, &overflow);
             if (overflow == 0) {
-                if (in_range(value)) {
+                if (_in_range(value)) {
                     return value;
                 }
             }
         }
-
+        
         return boost::none;
     }
     
-    static boost::optional<T> _convert_index(PyObject * source)
-    {
-        if (not source) {
+    static
+    boost::optional<T> _convert_py_index(PyObject * const obj) {
+        if (not obj) {
             return boost::none;
         }
-
-        if (PyIndex_Check(source)) {
-            std::cout << "PyIndex_Check worked" << std::endl;
-        }
-
-        PyObject * const attr = PyObject_GetAttrString(source, "__index__");
+        
+        PyObject * const attr = PyObject_GetAttrString(obj, "__index__");
         if (not PyCallable_Check(attr)) {
             return boost::none;
         }
-
+        
         PyObject * const args = PyTuple_New(0);
         if (not args) {
             return boost::none;
@@ -124,115 +124,58 @@ static bool in_range(const long value) {
         
         PyObject * const result = PyObject_CallObject(attr, args);
         Py_DECREF(args);
-
+        
         if (not result) {
             return boost::none;
         }
 
-        const boost::optional<T> value = _convert(result);
+        const boost::optional<T> value = _convert_py_int(result);
         
         Py_DECREF(result);
         
         return value;
     }
     
-static void * myConvertible(PyObject * source)
-{
-    if (_convert_index(source)) {
-        return source;
-    }
-
-    return nullptr;
-    
-    if (not source) {
-        nullptr;
-    }
-
-    if (PyIndex_Check(source)) {
-        std::cout << "PyIndex_Check worked" << std::endl;
-    }
-    
-    if (not PyObject_HasAttrString(source, "__index__")) {
+    static
+    void * convertible(PyObject * const obj) {
+        if (_convert_py_index(obj)) {
+            return obj;
+        }
+        
         return nullptr;
     }
-    
-    boost::python::object o(boost::python::borrowed(source));
 
-    boost::python::object a = o.attr("__index__")();
+    using converter_data =
+        boost::python::converter::rvalue_from_python_stage1_data;
     
-    if (PyInt_Check(a.ptr())) {
-        // No error checking
-        const long value = PyInt_AS_LONG(a.ptr());
-        if (in_range(value)) {
-            return source;
+    static
+    void construct(PyObject * const obj,
+                   converter_data * const data) {
+
+        using converter_storage =
+            boost::python::converter::rvalue_from_python_storage<unsigned long>;
+        
+        void * const storage = ((converter_storage *) data)->storage.bytes;
+
+        if (const boost::optional<T> value = _convert_py_index(obj)) {
+            new (storage) T(*value);
+        } else {
+            new (storage) T(0);
         }
-    }
-      
-    if (PyLong_Check(a.ptr())) {
-        int overflow;
-        const long value = PyLong_AsLongAndOverflow(a.ptr(), &overflow);
-        if (overflow != 0) {
-            return nullptr;
-        }
-        if (in_range(value)) {
-            return source;
-        }
+        
+        data->convertible = storage;
     }
 
-    return nullptr;
-       
-    /*
-  boost::python::extract<unsigned long> e(a);
-
-  if (not e.check()) {
-    return nullptr;
-  }
-
-  return source;
-    */
-}
-
-static void myConstruct(PyObject * source,
-		 boost::python::converter::rvalue_from_python_stage1_data * data)
-{
-  void * const storage =
-    ((boost::python::converter::rvalue_from_python_storage<unsigned long> *) data)->storage.bytes;
-
-  /*
-  
-  boost::python::object o(boost::python::borrowed(source));
-
-  boost::python::object a = o.attr("__index__")();
-  if (not a) {
-    return;
-  }
-
-  boost::python::extract<unsigned long> e(a);
-
-  if (not e.check()) {
-    return;
-  }
-  
-  */
-
-  if (const boost::optional<T> value = _convert_index(source)) {
-      new (storage) T(*value);
-  } else {
-      new (storage) T(0);
-  }
-  
-  data->convertible = storage;
-}
-
-register_integer_from_index() {
-    boost::python::converter::registry::push_back(
-        myConvertible,
-        myConstruct,
-        boost::python::type_id<T>());
-}
-
+    register_int_from_py_index() {
+        boost::python::converter::registry::push_back(
+            convertible,
+            construct,
+            boost::python::type_id<T>());
+    }
 };
 
+} } // namespace regina::python
+    
 static
 Integer
 _MyCtor(Integer & self, const boost::python::object &o)
@@ -359,7 +302,7 @@ void addInteger() {
     boost::python::implicitly_convertible<long, Integer>();
     boost::python::implicitly_convertible<std::string, Integer>();
 
-    register_integer_from_index<unsigned long>();
+    regina::python::register_int_from_py_index<unsigned long>();
     
     scope().attr("NInteger") = scope().attr("Integer");
 }
