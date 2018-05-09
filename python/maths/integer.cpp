@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <boost/optional.hpp>
 #include <boost/python.hpp>
 #include "maths/integer.h"
 #include "../helpers.h"
@@ -58,12 +59,226 @@ namespace {
     }
 }
 
+template<typename T>
+struct register_integer_from_index {
+
+static bool in_range(const long value) {
+    if (not std::numeric_limits<T>::is_signed) {
+        if (value < 0) {
+            return false;
+        }
+    } else {
+        if (value < std::numeric_limits<T>::min()) {
+            return false;
+        }
+    }
+    if (value > std::numeric_limits<T>::max()) {
+        return false;
+    }
+
+    return true;
+}
+
+    static boost::optional<T> _convert(PyObject * obj)
+    {
+        if (PyInt_Check(obj)) {
+            // No error checking
+            const long value = PyInt_AS_LONG(obj);
+            if (in_range(value)) {
+                return value;
+            }
+        }
+      
+        if (PyLong_Check(obj)) {
+            int overflow;
+            const long value = PyLong_AsLongAndOverflow(obj, &overflow);
+            if (overflow == 0) {
+                if (in_range(value)) {
+                    return value;
+                }
+            }
+        }
+
+        return boost::none;
+    }
+    
+    static boost::optional<T> _convert_index(PyObject * source)
+    {
+        if (not source) {
+            return boost::none;
+        }
+
+        if (PyIndex_Check(source)) {
+            std::cout << "PyIndex_Check worked" << std::endl;
+        }
+
+        PyObject * const attr = PyObject_GetAttrString(source, "__index__");
+        if (not PyCallable_Check(attr)) {
+            return boost::none;
+        }
+
+        PyObject * const args = PyTuple_New(0);
+        if (not args) {
+            return boost::none;
+        }
+        
+        PyObject * const result = PyObject_CallObject(attr, args);
+        Py_DECREF(args);
+
+        if (not result) {
+            return boost::none;
+        }
+
+        const boost::optional<T> value = _convert(result);
+        
+        Py_DECREF(result);
+        
+        return value;
+    }
+    
+static void * myConvertible(PyObject * source)
+{
+    if (_convert_index(source)) {
+        return source;
+    }
+
+    return nullptr;
+    
+    if (not source) {
+        nullptr;
+    }
+
+    if (PyIndex_Check(source)) {
+        std::cout << "PyIndex_Check worked" << std::endl;
+    }
+    
+    if (not PyObject_HasAttrString(source, "__index__")) {
+        return nullptr;
+    }
+    
+    boost::python::object o(boost::python::borrowed(source));
+
+    boost::python::object a = o.attr("__index__")();
+    
+    if (PyInt_Check(a.ptr())) {
+        // No error checking
+        const long value = PyInt_AS_LONG(a.ptr());
+        if (in_range(value)) {
+            return source;
+        }
+    }
+      
+    if (PyLong_Check(a.ptr())) {
+        int overflow;
+        const long value = PyLong_AsLongAndOverflow(a.ptr(), &overflow);
+        if (overflow != 0) {
+            return nullptr;
+        }
+        if (in_range(value)) {
+            return source;
+        }
+    }
+
+    return nullptr;
+       
+    /*
+  boost::python::extract<unsigned long> e(a);
+
+  if (not e.check()) {
+    return nullptr;
+  }
+
+  return source;
+    */
+}
+
+static void myConstruct(PyObject * source,
+		 boost::python::converter::rvalue_from_python_stage1_data * data)
+{
+  void * const storage =
+    ((boost::python::converter::rvalue_from_python_storage<unsigned long> *) data)->storage.bytes;
+
+  /*
+  
+  boost::python::object o(boost::python::borrowed(source));
+
+  boost::python::object a = o.attr("__index__")();
+  if (not a) {
+    return;
+  }
+
+  boost::python::extract<unsigned long> e(a);
+
+  if (not e.check()) {
+    return;
+  }
+  
+  */
+
+  if (const boost::optional<T> value = _convert_index(source)) {
+      new (storage) T(*value);
+  } else {
+      new (storage) T(0);
+  }
+  
+  data->convertible = storage;
+}
+
+register_integer_from_index() {
+    boost::python::converter::registry::push_back(
+        myConvertible,
+        myConstruct,
+        boost::python::type_id<T>());
+}
+
+};
+
+static
+Integer
+_MyCtor(Integer & self, const boost::python::object &o)
+{
+  std::cout << "My constructor" << std::endl;
+  
+  return Integer(100);
+}
+
+class MyCallPolicy : public boost::python::default_call_policies
+{
+public:
+  static bool precall(PyObject *p)
+  {
+    std::cout << "precall" << std::endl;
+    
+    boost::python::object o(boost::python::borrowed(p));
+
+    boost::python::object r = o[0];
+
+    if (not PyLong_Check(r.ptr())) {
+      std::cout << "Not a long" << std::endl;
+      return false;
+    }
+
+    int overflow;
+    
+    PyLong_AsLongAndOverflow(r.ptr(), &overflow);
+
+    if (overflow != 0) {
+      std::cout << "Overflow" << std::endl;
+    }
+
+    std::cout << "not overflow" << std::endl;
+    
+    return true;
+  }
+};
+
 void addInteger() {
     {
-        scope s = class_<Integer>("Integer")
+      scope s = class_<Integer>("Integer")
             .def(init<long>())
             .def(init<const Integer&>())
             .def(init<const regina::LargeInteger&>())
+	  //.def("__init__", &_MyCtor, MyCallPolicy())
             .def(init<double>())
             .def(init<const char*, optional<int> >())
             .def("isNative", &Integer::isNative)
@@ -144,6 +359,8 @@ void addInteger() {
     boost::python::implicitly_convertible<long, Integer>();
     boost::python::implicitly_convertible<std::string, Integer>();
 
+    register_integer_from_index<unsigned long>();
+    
     scope().attr("NInteger") = scope().attr("Integer");
 }
 
