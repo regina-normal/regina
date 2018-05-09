@@ -26,15 +26,32 @@
 # MA 02110-1301, USA.
 #
 
+try:
+    # SageRegina has some weirdness where "import engine" gives
+    # an error if not preceeded by "import sage.all"
+    # Needs some investigation, doing this as work-around for now.
+    import sage.all
+    _within_sage = True
+except:
+    _within_sage = False
+
 import sys, os
 from . import engine
 from .engine import *
 
-# Typing "from regina import *" is not supposed to import "open".
-# To achieve this, we skip it in __all__.
+# Typing "from regina import *" should not override certain
+# names. This always applies to the built-in "open".
+names_to_avoid = set(['open'])
+if _within_sage:
+    # The Sage preparser adds "Integer" and relies on the name
+    # being bound to a Sage integer. If we override it, Sage
+    # breaks in multiple ways.
+    names_to_avoid.update(['Integer'])
+
+# We skip names_to_avoid in __all__.
 __all__ = (
     [ name for name in engine.__dict__.keys()
-      if name != 'open' and not name.startswith('_') ] +
+      if not name in names_to_avoid and not name.startswith('_') ] +
     [ 'reginaSetup' ])
     
 # Adds some additional pure Python methods to some of Regina's classes.
