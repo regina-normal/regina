@@ -51,12 +51,8 @@ Link* Tangle::numClosure() {
     if (type_ == '-') {
         // We obtain two components.
         for (i = 0; i < 2; ++i) {
-            if (clone.end_[i][0]) {
-                clone.end_[i][1].crossing()->next_[clone.end_[i][1].strand()] =
-                    clone.end_[i][0];
-                clone.end_[i][0].crossing()->prev_[clone.end_[i][0].strand()] =
-                    clone.end_[i][1];
-            }
+            if (clone.end_[i][0])
+                Link::join(clone.end_[i][1], clone.end_[i][0]);
             ans->components_.push_back(clone.end_[i][0]);
         }
     } else if (type_ == 'x') {
@@ -67,12 +63,8 @@ Link* Tangle::numClosure() {
         // least one crossing.
         assert(clone.end_[0][0] && clone.end_[1][0]);
 
-        for (i = 0; i < 2; ++i) {
-            clone.end_[i][1].crossing()->next_[clone.end_[i][1].strand()] =
-                clone.end_[i ^ 1][0];
-            clone.end_[i][0].crossing()->prev_[clone.end_[i][0].strand()] =
-                clone.end_[i ^ 1][1];
-        }
+        for (i = 0; i < 2; ++i)
+            Link::join(clone.end_[i][1], clone.end_[i ^ 1][0]);
         ans->components_.push_back(clone.end_[0][0]);
     } else {
         // The vertical case.
@@ -80,26 +72,16 @@ Link* Tangle::numClosure() {
         // strings of the tangle are inconsistent.
         if (clone.end_[0][0] && clone.end_[1][0]) {
             clone.reverse(1);
-            for (i = 0; i < 2; ++i) {
-                clone.end_[i][i].crossing()->prev_[clone.end_[i][i].strand()] =
-                    clone.end_[i ^ 1][i];
-                clone.end_[i ^ 1][i].crossing()->next_[clone.end_[i ^ 1][i].
-                    strand()] = clone.end_[i][i];
-            }
+            for (i = 0; i < 2; ++i)
+                Link::join(clone.end_[i ^ 1][i], clone.end_[i][i]);
             ans->components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[0][0]) {
-            // Just connect the ends of the left-hand string.
-            clone.end_[0][1].crossing()->next_[clone.end_[0][1].strand()] =
-                clone.end_[0][0];
-            clone.end_[0][0].crossing()->prev_[clone.end_[0][0].strand()] =
-                clone.end_[0][1];
+            // Just connect the ends of the top string.
+            Link::join(clone.end_[0][1], clone.end_[0][0]);
             ans->components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[1][0]) {
-            // Just connect the ends of the right-hand string.
-            clone.end_[1][1].crossing()->next_[clone.end_[1][1].strand()] =
-                clone.end_[1][0];
-            clone.end_[1][0].crossing()->prev_[clone.end_[1][0].strand()] =
-                clone.end_[1][1];
+            // Just connect the ends of the bottom string.
+            Link::join(clone.end_[1][1], clone.end_[1][0]);
             ans->components_.push_back(clone.end_[1][0]);
         } else {
             ans->components_.push_back(StrandRef());
@@ -124,12 +106,8 @@ Link* Tangle::denClosure() {
     if (type_ == '|') {
         // We obtain two components.
         for (i = 0; i < 2; ++i) {
-            if (clone.end_[i][0]) {
-                clone.end_[i][1].crossing()->next_[clone.end_[i][1].strand()] =
-                    clone.end_[i][0];
-                clone.end_[i][0].crossing()->prev_[clone.end_[i][0].strand()] =
-                    clone.end_[i][1];
-            }
+            if (clone.end_[i][0])
+                Link::join(clone.end_[i][1], clone.end_[i][0]);
             ans->components_.push_back(clone.end_[i][0]);
         }
     } else if (type_ == 'x') {
@@ -141,12 +119,8 @@ Link* Tangle::denClosure() {
         assert(clone.end_[0][0] && clone.end_[1][0]);
 
         clone.reverse(1);
-        for (i = 0; i < 2; ++i) {
-            clone.end_[i][i].crossing()->prev_[clone.end_[i][i].strand()] =
-                clone.end_[i ^ 1][i];
-            clone.end_[i ^ 1][i].crossing()->next_[clone.end_[i ^ 1][i].
-                strand()] = clone.end_[i][i];
-        }
+        for (i = 0; i < 2; ++i)
+            Link::join(clone.end_[i ^ 1][i], clone.end_[i][i]);
         ans->components_.push_back(clone.end_[0][0]);
     } else {
         // The horizontal case.
@@ -154,26 +128,16 @@ Link* Tangle::denClosure() {
         // strings of the tangle are inconsistent.
         if (clone.end_[0][0] && clone.end_[1][0]) {
             clone.reverse(1);
-            for (i = 0; i < 2; ++i) {
-                clone.end_[i][i].crossing()->prev_[clone.end_[i][i].strand()] =
-                    clone.end_[i ^ 1][i];
-                clone.end_[i ^ 1][i].crossing()->next_[clone.end_[i ^ 1][i].
-                    strand()] = clone.end_[i][i];
-            }
+            for (i = 0; i < 2; ++i)
+                Link::join(clone.end_[i ^ 1][i], clone.end_[i][i]);
             ans->components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[0][0]) {
             // Just connect the ends of the left-hand string.
-            clone.end_[0][1].crossing()->next_[clone.end_[0][1].strand()] =
-                clone.end_[0][0];
-            clone.end_[0][0].crossing()->prev_[clone.end_[0][0].strand()] =
-                clone.end_[0][1];
+            Link::join(clone.end_[0][1], clone.end_[0][0]);
             ans->components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[1][0]) {
             // Just connect the ends of the right-hand string.
-            clone.end_[1][1].crossing()->next_[clone.end_[1][1].strand()] =
-                clone.end_[1][0];
-            clone.end_[1][0].crossing()->prev_[clone.end_[1][0].strand()] =
-                clone.end_[1][1];
+            Link::join(clone.end_[1][1], clone.end_[1][0]);
             ans->components_.push_back(clone.end_[1][0]);
         } else {
             ans->components_.push_back(StrandRef());

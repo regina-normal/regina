@@ -286,6 +286,10 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          *
          * The given tangle \a other will be left unchanged.
          *
+         * \pre It is not the case that both this and \e other are
+         * vertical tangles (which would cause the addition to create a
+         * closed link component).
+         *
          * @param other the tangle to add to this.
          */
         void add(const Tangle& other);

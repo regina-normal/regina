@@ -2943,6 +2943,18 @@ class REGINA_API Link : public Packet {
         void clearAllProperties();
 
         /**
+         * Indicates that strand \a s is followed immediately by strand \a t
+         * when traversing a link.  The relevant \a next_ and \a prev_ arrays
+         * of the two crossings will be adjusted accordingly.
+         *
+         * There is no sanity checking to ensure that these two
+         * crossings do not already have conflicting connections in place.
+         *
+         * \pre Neither \a s nor \a t is a null strand reference.
+         */
+        static void join(const StrandRef& s, const StrandRef& t);
+
+        /**
          * Internal to fromOrientedGauss().
          *
          * This routine parses a single token in an "oriented" Gauss code.
@@ -3572,6 +3584,11 @@ inline bool Link::rewrite(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return rewriteInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
+}
+
+inline void Link::join(const StrandRef& s, const StrandRef& t) {
+    s.crossing_->next_[s.strand_] = t;
+    t.crossing_->prev_[t.strand_] = s;
 }
 
 // Inline functions for CrossingIterator
