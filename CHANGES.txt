@@ -21,7 +21,7 @@ Version 5.2  [ 29 September, 2017 ]
         Class Isomorphism<dim>:
             - The random() function now takes an optional argument to enforce
               orientation-preserving isomorphisms only.
-        Class Link, Crossing, StrandRef:
+        Class Link, Crossing, StrandRef, Tangle:
             - New classes to support knots and links, plus other additional
               classes and methods to interface with the Boost Graph Library.
         Class MarkedAbelianGroup:

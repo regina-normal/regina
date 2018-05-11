@@ -62,6 +62,7 @@ namespace regina {
 
 class Crossing;
 class Link;
+class Tangle;
 template <typename T> class Laurent;
 template <typename T> class Laurent2;
 template <int> class Triangulation;
@@ -319,6 +320,7 @@ class REGINA_API StrandRef {
 
     friend class Link;
     friend class ModelLinkGraph;
+    friend class Tangle;
 };
 
 /**
@@ -524,6 +526,7 @@ class REGINA_API Crossing : public MarkedElement,
 
     friend class Link;
     friend class ModelLinkGraph;
+    friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkConnectionsReader;
 };
@@ -3096,6 +3099,7 @@ class REGINA_API Link : public Packet {
             const std::function<bool(Link&)>& action) const;
 
     friend class ModelLinkGraph;
+    friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
 };
@@ -3560,7 +3564,7 @@ inline void Link::clearAllProperties() {
 inline StrandRef Link::translate(const StrandRef& other) const {
     return (other.crossing() ?
         crossings_[other.crossing()->index()]->strand(other.strand()) :
-        StrandRef(0, other.strand()));
+        StrandRef(nullptr, other.strand()));
 }
 
 template <typename Action, typename... Args>

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "link/link.h"
+#include "link/tangle.h"
 #include "utilities/stringutils.h"
 #include <iterator>
 
@@ -165,6 +165,43 @@ void Link::orientedGauss(std::ostream& out) const {
 
         ++s;
     } while (s != start);
+}
+
+std::string Tangle::orientedGauss() const {
+    std::ostringstream out;
+    orientedGauss(out);
+    return out.str();
+}
+
+void Tangle::orientedGauss(std::ostream& out) const {
+    out << type_;
+
+    for (int i = 0; i < 2; ++i) {
+        for (StrandRef s = end_[i][0]; s; ++s) {
+            out << ' ';
+
+            if (s.strand() == 0)
+                out << '-';
+            else
+                out << '+';
+
+            if ((s.strand() == 0 && s.crossing()->sign() < 0) ||
+                    (s.strand() == 1 && s.crossing()->sign() > 0))
+                out << '<';
+            else
+                out << '>';
+            out << (s.crossing()->index() + 1);
+        }
+
+        if (i == 0)
+            out << " _";
+    }
+}
+
+Tangle* Tangle::fromOrientedGauss(const std::string& s) {
+    std::vector<std::string> terms;
+    basicTokenise(std::back_inserter(terms), s);
+    return fromOrientedGauss(terms.begin(), terms.end());
 }
 
 } // namespace regina

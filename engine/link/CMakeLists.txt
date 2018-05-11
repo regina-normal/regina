@@ -16,6 +16,7 @@ SET ( FILES
   rewrite
   sig
   simplify
+  tangle
   xmllinkreader
   )
 
@@ -33,8 +34,10 @@ if (${REGINA_INSTALL_DEV})
     dt-impl.h
     examplelink.h
     gauss-impl.h
+    gauss-tangle-impl.h
     link.h
     modellinkgraph.h
+    tangle.h
     xmllinkreader.h
     DESTINATION ${INCLUDEDIR}/link COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

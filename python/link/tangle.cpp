@@ -30,15 +30,61 @@
  *                                                                        *
  **************************************************************************/
 
-void addExampleLink();
-void addLink();
-void addModelLinkGraph();
-void addTangle();
+#include <boost/python.hpp>
+#include "link/tangle.h"
+#include "../helpers.h"
 
-void addLinkClasses() {
-    addExampleLink();
-    addLink();
-    addModelLinkGraph();
-    addTangle();
+using namespace boost::python;
+using regina::Tangle;
+
+namespace {
+    std::string (Tangle::*orientedGauss_str)() const = &Tangle::orientedGauss;
+    Tangle* (*fromOrientedGauss_str)(const std::string&) =
+        &Tangle::fromOrientedGauss;
+
+    Tangle* fromOrientedGauss_list(boost::python::list terms) {
+        long len = boost::python::len(terms);
+
+        std::string* s = new std::string[len];
+        for (long i = 0; i < len; ++i) {
+            extract<std::string> val(terms[i]);
+            if (! val.check()) {
+                // Throw an exception.
+                delete[] s;
+                val();
+            }
+            s[i] = val();
+        }
+
+        Tangle* ans = Tangle::fromOrientedGauss(s, s + len);
+        delete[] s;
+        return ans;
+    }
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twist, Tangle::twist, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turn, Tangle::turn, 0, 1);
 }
 
+void addTangle() {
+    class_<Tangle, std::auto_ptr<Tangle>, boost::noncopyable>(
+            "Tangle", init<int, int>())
+        .def(init<const Tangle&>())
+        .def("type", &Tangle::type)
+        .def("size", &Tangle::size)
+        .def("crossing", &Tangle::crossing, return_internal_reference<>())
+        .def("begin", &Tangle::begin)
+        .def("end", &Tangle::end)
+        .def("translate", &Tangle::translate)
+        .def("swapContents", &Tangle::swapContents)
+        .def("twist", &Tangle::twist, OL_twist())
+        .def("turn", &Tangle::turn, OL_turn())
+        .def("orientedGauss", orientedGauss_str)
+        .def("fromOrientedGauss", fromOrientedGauss_list,
+            return_value_policy<manage_new_object>())
+        .def("fromOrientedGauss", fromOrientedGauss_str,
+            return_value_policy<manage_new_object>())
+        .def(regina::python::add_output())
+        .def(regina::python::add_eq_operators())
+        .staticmethod("fromOrientedGauss")
+    ;
+}
