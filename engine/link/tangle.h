@@ -148,6 +148,28 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          */
         Tangle(int num, int den);
         /**
+         * Creates a tangle from two parallel copies of the given knot.
+         *
+         * Specifically, the tangle will consist of two parallel copies
+         * of the given knot diagram, which will be broken just before
+         * the starting strand as returned by <tt>knot.component(0)</tt>.
+         *
+         * The two resulting endpoints that appear just before the
+         * starting strand will form the top-left and top-right
+         * endpoints of this tangle, and the endpoints on the other side
+         * of the break (which will be just after the parallel copies of the
+         * final strand <tt>knot.component(0).prev()</tt>) will form the
+         * top-right and bottom-right endpoints of this tangle.
+         *
+         * The tangle will contain <tt>4 * knot.size()</tt> crossings in total.
+         *
+         * \pre The argument contains exactly one component (i.e., it
+         * is actually a knot, and not empty or a multiple-component link).
+         *
+         * @param knot the knot to break and duplicate to form this tangle.
+         */
+        Tangle(const Link& knot);
+        /**
          * Constructs a new copy of the given tangle.
          *
          * @param copy the tangle to copy.

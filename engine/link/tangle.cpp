@@ -120,6 +120,88 @@ Tangle::Tangle(int num, int den) {
     }
 }
 
+Tangle::Tangle(const Link& knot) : type_(TANGLE_HORIZONTAL) {
+    // Sanity checking:
+    if (knot.countComponents() != 1) {
+        std::cerr << "Tangle(const Link&): requires a one-component knot";
+        return;
+    }
+
+    // Crossing i of knot:
+    //
+    // +ve:    |                 -ve:    ^
+    //     --- | --->                --- | --->
+    //         v                         |
+    //
+    // Crossings (4i, ..., 4i+3) of this tangle:
+    //
+    //    4i |   | 4i+2           4i+1 ^   ^ 4i+3
+    //   --- | - | --->            --- | - | --->
+    //   --- | - | --->            --- | - | --->
+    //  4i+1 v   v 4i+3             4i |   | 4i+2
+
+    // Create the four crossings for each original, and join them
+    // together internally.
+    Crossing *c0, *c1, *c2, *c3;
+    for (Crossing* c : knot.crossings_) {
+        crossings_.push_back(c0 = new Crossing(c->sign()));
+        crossings_.push_back(c1 = new Crossing(c->sign()));
+        crossings_.push_back(c2 = new Crossing(c->sign()));
+        crossings_.push_back(c3 = new Crossing(c->sign()));
+
+        Link::join(c0->upper(), c1->upper());
+        Link::join(c2->upper(), c3->upper());
+        Link::join(c0->lower(), c2->lower());
+        Link::join(c1->lower(), c3->lower());
+    }
+
+    // Walk around the original knot, and keep track of the left-hand
+    // and right-hand crossings of the new tangle where we (i) enter the
+    // 4-crossing configuration, and (ii) leave this configuration.
+
+    StrandRef start = knot.component(0);
+    StrandRef s = start;
+    size_t idx;
+    StrandRef enterL, enterR, exitL, exitR;
+    do {
+        idx = s.crossing()->index();
+        if (s.crossing()->sign() > 0) {
+            if (s.strand() == 1) {
+                enterL = crossings_[4 * idx + 2]->upper();
+                enterR = crossings_[4 * idx]->upper();
+            } else {
+                enterL = crossings_[4 * idx]->lower();
+                enterR = crossings_[4 * idx + 1]->lower();
+            }
+        } else {
+            if (s.strand() == 1) {
+                enterL = crossings_[4 * idx]->upper();
+                enterR = crossings_[4 * idx + 2]->upper();
+            } else {
+                enterL = crossings_[4 * idx + 1]->lower();
+                enterR = crossings_[4 * idx]->lower();
+            }
+        }
+
+        // Connect the previous block of four to this.
+        if (exitL) {
+            Link::join(exitL, enterL);
+            Link::join(exitR, enterR);
+        } else {
+            end_[0][0] = enterL;
+            end_[1][0] = enterR;
+        }
+
+        exitL = enterL.next();
+        exitR = enterR.next();
+
+        ++s;
+    } while (s != start);
+
+    end_[0][1] = exitL;
+    end_[1][1] = exitR;
+}
+
 Tangle::Tangle(const Tangle& cloneMe) : type_(cloneMe.type_) {
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
