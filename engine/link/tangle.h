@@ -119,11 +119,11 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          *
          * @param num the numerator of the rational number that
          * describes this tangle.
-         * @param denom the denominator of the rational number that
+         * @param den the denominator of the rational number that
          * describes this tangle; this may be 0 (representing the
          * infinity tangle).
          */
-        Tangle(int num, int denom);
+        Tangle(int num, int den);
         /**
          * Constructs a new copy of the given tangle.
          *
@@ -267,6 +267,50 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          * clockwise, or -1 if the tangle should be rotated anticlockwise.
          */
         void turn(int direction = 1);
+
+        /*@}*/
+        /**
+         * \name Algebra on Tangles
+         */
+        /*@{*/
+
+        /**
+         * Adds the given tangle to the right-hand side of this tangle.
+         *
+         * In Conway's notation, if this tangle is \a t, then this
+         * routine converts this into (\a t + \a other).
+         *
+         * Specifically: this routine will attach the two right-hand
+         * endpoints of this tangle to the two left-hand endpoints of a
+         * copy of \a other.
+         *
+         * The given tangle \a other will be left unchanged.
+         *
+         * @param other the tangle to add to this.
+         */
+        void add(const Tangle& other);
+
+        /**
+         * Forms the numerator closure of this tangle.
+         *
+         * This is the link created by joining the two top endpoints of
+         * this tangle, and also joining the two bottom endpoints.
+         *
+         * @return a newly created link that is the numerator closure of
+         * this tangle.
+         */
+        Link* numClosure();
+
+        /**
+         * Forms the denominator closure of this tangle.
+         *
+         * This is the link created by joining the two left endpoints of
+         * this tangle, and also joining the two right endpoints.
+         *
+         * @return a newly created link that is the denominator closure of
+         * this tangle.
+         */
+        Link* denClosure();
 
         /*@}*/
         /**

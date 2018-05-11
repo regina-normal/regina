@@ -30,8 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
 #include "link/tangle.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 #include "../helpers.h"
 
 using namespace boost::python;
@@ -78,6 +81,11 @@ void addTangle() {
         .def("swapContents", &Tangle::swapContents)
         .def("twist", &Tangle::twist, OL_twist())
         .def("turn", &Tangle::turn, OL_turn())
+        .def("add", &Tangle::add)
+        .def("numClosure", &Tangle::numClosure,
+            return_value_policy<regina::python::to_held_type<>>())
+        .def("denClosure", &Tangle::denClosure,
+            return_value_policy<regina::python::to_held_type<>>())
         .def("orientedGauss", orientedGauss_str)
         .def("fromOrientedGauss", fromOrientedGauss_list,
             return_value_policy<manage_new_object>())
