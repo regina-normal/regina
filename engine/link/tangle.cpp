@@ -45,11 +45,29 @@ static const char OP_TURN = 'o';
 
 namespace regina {
 
+Tangle::Tangle(int twists) {
+    // Build the zero tangle.
+    //
+    // Recall that all members end_[i][j] are by default initialised to
+    // null strand references.
+    type_ = TANGLE_HORIZONTAL;
+
+    // Now perform the requested number of twists.
+    if (twists >= 0) {
+        for ( ; twists > 0; --twists)
+            twist(1);
+    } else {
+        for ( ; twists < 0; ++twists)
+            twist(-1);
+    }
+}
+
 Tangle::Tangle(int num, int den) {
+    // Recall that all members end_[i][j] are by default initialised to
+    // null strand references.
     if (den == 0) {
         // Build the infinity tangle.
         type_ = TANGLE_VERTICAL;
-        end_[0][0] = end_[0][1] = end_[1][0] = end_[1][1] = StrandRef();
         return;
     }
 
@@ -89,7 +107,6 @@ Tangle::Tangle(int num, int den) {
     // Now construct the zero tangle and perform the corresponding
     // twists and turns.
     type_ = TANGLE_HORIZONTAL;
-    end_[0][0] = end_[0][1] = end_[1][0] = end_[1][1] = StrandRef();
 
     char op;
     while (! ops.empty()) {

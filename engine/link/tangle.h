@@ -106,6 +106,23 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
         /*@{*/
 
         /**
+         * Constructs a tangle from the given number of twists.
+         *
+         * If \a twists is positive, then the new tangle will consist of
+         * \a twists positive twists, stacked from left to right.
+         * If \a twists is negative, then the new tangle will consist of
+         * -(\a twists) negative twists, likewise stacked from left to right.
+         * If \a twists is zero, then the new tangle will be a
+         * horizontal tangle with no crossings at all.
+         *
+         * In all cases, this is equivalent to calling the rational
+         * tangle constructor Tangle(\a twists, 1).
+         *
+         * @param num the number of twists to perform; this may be
+         * positive, negative or zero.
+         */
+        Tangle(int twists);
+        /**
          * Constructs a rational tangle with the given parameters.
          * Here we use the following convention (following the
          * description that Adams gives in <i>The Knot Book</i>):
