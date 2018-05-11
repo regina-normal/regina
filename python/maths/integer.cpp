@@ -139,6 +139,10 @@ void addInteger() {
         // read-only.
         s.attr("zero") = Integer::zero;
         s.attr("one") = Integer::one;
+
+        // Used in fixInteger.py.
+        s.attr("_smallest_long") = std::numeric_limits<long>::min();
+        s.attr("_largest_long") = std::numeric_limits<long>::max();
     }
 
     boost::python::implicitly_convertible<long, Integer>();

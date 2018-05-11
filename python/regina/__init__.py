@@ -41,6 +41,10 @@ __all__ = (
 from . import purePyMethods
 del purePyMethods
 
+# Fix some bugs with the Integer constructor
+from . import fixInteger
+del fixInteger
+
 def reginaSetup(quiet = False, readline = True, banner = False,
                 snappyPath = True, namespace = None, builtinOpen = True):
     """
