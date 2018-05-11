@@ -1,0 +1,23 @@
+for IntegerType in [Integer, LargeInteger]:
+
+    for i in range(0,30,2):
+        print Integer(10**i)
+        print Integer(-(10**i))
+
+    print Integer('3141592')
+    print Integer(1234567.89)
+
+try:
+    Integer(Triangulation3())
+except TypeError:
+    print "Got TypeError"
+
+l = LargeInteger()
+l.makeInfinite()
+try:
+    Integer(l)
+except ValueError:
+    print "Got ValueError"
+
+
+    
