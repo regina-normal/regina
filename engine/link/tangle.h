@@ -106,6 +106,12 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
         /*@{*/
 
         /**
+         * Constructs the zero tangle.
+         *
+         * This is the horizontal tangle with no crossings.
+         */
+        Tangle();
+        /**
          * Constructs a tangle from the given number of twists.
          *
          * If \a twists is positive, then the new tangle will consist of
@@ -543,14 +549,6 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
 
     private:
         /**
-         * Constructor that performs very little initialisation.
-         *
-         * The list of crossings will be empty, and all four endpoints will
-         * be marked as null references.  The type will remain uninitialised.
-         */
-        Tangle();
-
-        /**
          * Reverses the orientation of the given string.
          * This will make all necessary edits to all Crossing objects,
          * but will not touch the internal \a end_ array.
@@ -580,7 +578,8 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
 
 // Inline functions for Tangle
 
-inline Tangle::Tangle() {
+inline Tangle::Tangle() : type_('-') {
+    // By default, crossings_ is empty and each end_[i][j] is a null reference.
 }
 
 inline Tangle::~Tangle() {

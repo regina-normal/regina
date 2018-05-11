@@ -69,8 +69,8 @@ namespace {
 }
 
 void addTangle() {
-    class_<Tangle, std::auto_ptr<Tangle>, boost::noncopyable>(
-            "Tangle", init<int>())
+    class_<Tangle, std::auto_ptr<Tangle>, boost::noncopyable>("Tangle")
+        .def(init<int>())
         .def(init<int, int>())
         .def(init<const Tangle&>())
         .def("type", &Tangle::type)
