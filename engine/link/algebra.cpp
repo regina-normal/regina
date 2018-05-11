@@ -36,7 +36,197 @@
 namespace regina {
 
 void Tangle::add(const Tangle& other) {
-    // TODO
+    // Sanity testing:
+    if (type_ == '|' && other.type_ == '|') {
+        std::cerr << "add(): cannot add two vertical tangles" << std::endl;
+        return;
+    }
+
+    // Make a clone of other, which as a side-effect also clones the crossings.
+    Tangle clone(other);
+
+    if (type_ == '|') {
+        if (other.type_ == '=') {
+            // Type (|| =).
+            clone.reverse(0);
+
+            // Sections to join:
+            //   clone.end_[0][1] -> clone.end_[0][0]
+            //   end_[1][0] -> end_[1][1]
+            //   clone.end_[1][0] -> clone.end_[1][1]
+
+            if (! clone.end_[0][1])
+                clone.end_[0][1] = end_[1][0];
+            else if (! end_[1][1])
+                end_[1][1] = clone.end_[0][0];
+            else
+                Link::join(clone.end_[0][0], end_[1][0]);
+
+            // Sections to join:
+            //   clone.end_[0][1] -> end_[1][1]
+            //   clone.end_[1][0] -> clone.end_[1][1]
+
+            if (! clone.end_[0][1])
+                clone.end_[0][1] = clone.end_[1][0];
+            else if (! clone.end_[1][1])
+                clone.end_[1][1] = end_[1][1];
+            else
+                Link::join(end_[1][1], clone.end_[1][0]);
+
+            // Final rightmost string:
+            //   clone.end_[0][1] -> clone.end_[1][1]
+
+            end_[1][0] = clone.end_[0][1];
+            end_[1][1] = clone.end_[1][1];
+        } else {
+            // Type (|| x).
+            reverse(1);
+            clone.reverse(1);
+
+            // Sections to join:
+            //   clone.end_[1][1] -> clone.end_[1][0]
+            //   end_[1][1] -> end_[1][0]
+            //   clone.end_[0][0] -> clone.end_[0][1]
+
+            if (! clone.end_[1][1])
+                clone.end_[1][1] = end_[1][1];
+            else if (! end_[1][0])
+                end_[1][0] = clone.end_[1][0];
+            else
+                Link::join(clone.end_[1][0], end_[1][1]);
+
+            // Sections to join:
+            //   clone.end_[1][1] -> end_[1][0]
+            //   clone.end_[0][0] -> clone.end_[0][1]
+
+            if (! clone.end_[1][1])
+                clone.end_[1][1] = clone.end_[0][0];
+            else if (! clone.end_[0][1])
+                clone.end_[0][1] = end_[1][0];
+            else
+                Link::join(end_[1][0], clone.end_[0][0]);
+
+            // Final rightmost string:
+            //   clone.end_[1][1] -> clone.end_[0][1]
+
+            end_[1][0] = clone.end_[1][1];
+            end_[1][1] = clone.end_[0][1];
+        }
+    } else if (other.type_ == '|') {
+        // Either (= ||) or (x ||).
+        reverse(1);
+        if (type_ == 'x') {
+            // Type (x ||).
+            clone.reverse(0);
+
+            // Sections to join:
+            //   end_[0][0] -> end_[0][1]
+            //   clone.end_[0][1] -> clone.end_[0][0]
+            //   end_[1][1] -> end_[1][0]
+
+            if (! end_[0][0])
+                end_[0][0] = clone.end_[0][1];
+            else if (! clone.end_[0][0])
+                clone.end_[0][0] = end_[0][1];
+            else
+                Link::join(end_[0][1], clone.end_[0][1]);
+
+            // Sections to join:
+            //   end_[0][0] -> clone.end_[0][0]
+            //   end_[1][1] -> end_[1][0]
+
+            if (! end_[0][0])
+                end_[0][0] = end_[1][1];
+            else if (! end_[1][0])
+                end_[1][0] = clone.end_[0][0];
+            else
+                Link::join(clone.end_[0][0], end_[1][1]);
+
+            // Final leftmost string:
+            //   end_[0][0] -> end_[1][0]
+
+            // Nothing more to do.
+        } else {
+            // Type (= ||).
+
+            // Sections to join:
+            //   end_[0][0] -> end_[0][1]
+            //   clone.end_[0][0] -> clone.end_[0][1]
+            //   end_[1][1] -> end_[1][0]
+
+            if (! end_[0][0])
+                end_[0][0] = clone.end_[0][0];
+            else if (! clone.end_[0][1])
+                clone.end_[0][1] = end_[0][1];
+            else
+                Link::join(end_[0][1], clone.end_[0][0]);
+
+            // Sections to join:
+            //   end_[0][0] -> clone.end_[0][1]
+            //   end_[1][1] -> end_[1][0]
+
+            if (! end_[0][0])
+                end_[0][0] = end_[1][1];
+            else if (! end_[1][0])
+                end_[1][0] = clone.end_[0][1];
+            else
+                Link::join(clone.end_[0][1], end_[1][1]);
+
+            // Final leftmost string:
+            //   end_[0][0] -> end_[1][0]
+
+            // Nothing more to do.
+        }
+        type_ = '|';
+    } else {
+        // Either (= =), (= x), (x =) or (x x).
+        // In all four cases, we can keep the all string orientations the same.
+
+        // Do we join strings 0,1 of this to strings 0,1 of other, or do
+        // the strings switch?
+        int cross = (type_ == '-' ? 0 : 1);
+
+        // Sections to join:
+        //   end_[0][0] -> end_[0][1]
+        //   clone.end_[cross][0] -> clone.end_[cross][1]
+        // and:
+        //   end_[1][0] -> end_[1][1]
+        //   clone.end_[cross ^ 1][0] -> clone.end_[cross ^ 1][1]
+
+        if (! end_[0][0])
+            end_[0][0] = clone.end_[cross][0];
+        else if (! clone.end_[cross][1])
+            clone.end_[cross][1] = end_[0][1];
+        else
+            Link::join(end_[0][1], clone.end_[cross][0]);
+
+        if (! end_[1][0])
+            end_[1][0] = clone.end_[cross ^ 1][0];
+        else if (! clone.end_[cross ^ 1][1])
+            clone.end_[cross ^ 1][1] = end_[1][1];
+        else
+            Link::join(end_[1][1], clone.end_[cross ^ 1][0]);
+
+        // Final upper and lower strings:
+        //   end_[0][0] -> clone.end_[cross][1]
+        // and:
+        //   end_[1][0] -> clone.end_[cross ^ 1][1]
+
+        end_[0][1] = clone.end_[cross][1];
+        end_[1][1] = clone.end_[cross ^ 1][1];
+
+        if (other.type_ == 'x')
+            type_ = (type_ == '-' ? 'x' : '-');
+    }
+
+    // Transfer all crossings from clone to this.
+    // We are abusing the MarkedVector API slightly here (since an object
+    // must not belong to more than one MarkedVector at a time), but the
+    // implementation of MarkedVector does makes this correct, and we
+    // avoid having to make a temporary array of crossings instead. :/
+    for (Crossing* c : clone.crossings_)
+        crossings_.push_back(c);
+    clone.crossings_.clear();
 }
 
 Link* Tangle::numClosure() {
@@ -76,11 +266,11 @@ Link* Tangle::numClosure() {
                 Link::join(clone.end_[i ^ 1][i], clone.end_[i][i]);
             ans->components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[0][0]) {
-            // Just connect the ends of the top string.
+            // Just connect the ends of the left-hand string.
             Link::join(clone.end_[0][1], clone.end_[0][0]);
             ans->components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[1][0]) {
-            // Just connect the ends of the bottom string.
+            // Just connect the ends of the right-hand string.
             Link::join(clone.end_[1][1], clone.end_[1][0]);
             ans->components_.push_back(clone.end_[1][0]);
         } else {
@@ -132,11 +322,11 @@ Link* Tangle::denClosure() {
                 Link::join(clone.end_[i ^ 1][i], clone.end_[i][i]);
             ans->components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[0][0]) {
-            // Just connect the ends of the left-hand string.
+            // Just connect the ends of the top string.
             Link::join(clone.end_[0][1], clone.end_[0][0]);
             ans->components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[1][0]) {
-            // Just connect the ends of the right-hand string.
+            // Just connect the ends of the bottom string.
             Link::join(clone.end_[1][1], clone.end_[1][0]);
             ans->components_.push_back(clone.end_[1][0]);
         } else {
