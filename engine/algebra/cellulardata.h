@@ -465,7 +465,7 @@ public:
     *   you n-dimensional cells are incident to (n-1)-dimensional cells. 
     * @param useHcs - which CW complex does this come from?
     */
-   ChainComplexLocator(unsigned long newDim, homology_coordinate_system useHcs);
+    ChainComplexLocator(unsigned long newDim, homology_coordinate_system useHcs);
     /**
      *  Copy constructor.
      */
@@ -587,7 +587,7 @@ public:
 
  /**
   * Use this enum in the FormLocator constructor to further specify 
-  * which NBilinearForm you're interested in.     
+  * which BilinearForm you're interested in.     
   *
   * \todo cupproductForm
   */
@@ -786,14 +786,14 @@ private:
     // for homomorphisms of marked abelian group
     std::map< HomLocator, HomMarkedAbelianGroup* > homMarkedAbelianGroups;
     // for bilinear forms
-    std::map< FormLocator, NBilinearForm* > bilinearForms;
+    std::map< FormLocator, BilinearForm* > bilinearForms;
     // for group presentations
     std::map< GroupPresLocator, GroupPresentation* > groupPresentations;
     // for homomorphisms of group presentations
     std::map< HomGroupPresLocator, HomGroupPresentation* > homGroupPresentations;
     // for alexander module chain complexes
     std::map< ChainComplexLocator, MatrixRing< 
-        NSVPolynomialRing< Integer > >* > alexanderChainComplexes;
+        SVPolynomialRing< Integer > >* > alexanderChainComplexes;
 
     /** 
      * numStandardCells = number of cells in the standard CW decomposition in 
@@ -1248,7 +1248,7 @@ public:
      * coefficient of t^i is the rank of the i-th homology group of the 
      * manifold. 
      */
-    NSVPolynomialRing< Integer > poincarePolynomial() const;
+    SVPolynomialRing< Integer > poincarePolynomial() const;
 
     /**
      * If this is a 4-manifold, this routine returns the signature of the H_2 
@@ -1432,7 +1432,7 @@ public:
     const HomMarkedAbelianGroup* homGroup( const HomLocator &h_desc) const;
 
     /**
-     *  Computes an NBilinearForm or retrieves it from the precomputed pile. 
+     *  Computes an BilinearForm or retrieves it from the precomputed pile. 
      *
      *  At present there's plans for 5 bilinear form types that will be 
      *  requestable.  This procedure is not fully implemented yet and 
@@ -1461,7 +1461,7 @@ public:
      *     (not yet implemented)           various coordinate systems  TODO
      *     
      */
-    const NBilinearForm* bilinearForm( const FormLocator &f_desc ) const;
+    const BilinearForm* bilinearForm( const FormLocator &f_desc ) const;
 
     /**
      *  Describes presentations of various groups associated to the manifold.  
@@ -1505,20 +1505,20 @@ public:
      * manifold is not 1. Presently only the C_2 -> C_1 -> C_0 part of the 
      * complex is defined, in dual coordinates, for 4-manifolds.
      */
-    const MatrixRing< NSVPolynomialRing< Integer > >* 
+    const MatrixRing< SVPolynomialRing< Integer > >* 
           alexanderChainComplex( const ChainComplexLocator &a_desc ) const;
 
     /**
      *  Computes the presentation matrix for the 1-dimensional Alexander module. 
      *  Returns null if rank H1 != 1. 
      */
-    std::unique_ptr< MatrixRing< NSVPolynomialRing< Integer > > > 
+    std::unique_ptr< MatrixRing< SVPolynomialRing< Integer > > > 
             alexanderPresentationMatrix() const;
 
     /**
      *  Computes the H1 Alexander ideal. Tries to reduce it as much as possible.
      */
-    std::unique_ptr< std::list< NSVPolynomialRing< Integer > > > 
+    std::unique_ptr< std::list< SVPolynomialRing< Integer > > > 
         alexanderIdeal() const;
 
     /**
@@ -1605,9 +1605,9 @@ for (hmabi = g.homMarkedAbelianGroups.begin();
  homMarkedAbelianGroups.insert( std::pair< HomLocator, 
  HomMarkedAbelianGroup* >(hmabi->first, clonePtr(hmabi->second) ) );
  // bilinearForms
-std::map< FormLocator, NBilinearForm* >::const_iterator fi;
+std::map< FormLocator, BilinearForm* >::const_iterator fi;
 for (fi = g.bilinearForms.begin(); fi != g.bilinearForms.end(); fi++) 
- bilinearForms.insert( std::pair< FormLocator, NBilinearForm* >
+ bilinearForms.insert( std::pair< FormLocator, BilinearForm* >
    (fi->first, clonePtr(fi->second) ) );
  // groupPresentations
 std::map< GroupPresLocator, GroupPresentation* >::const_iterator pi;
@@ -1622,11 +1622,11 @@ for (hpi = g.homGroupPresentations.begin();
   HomGroupPresentation* >(hpi->first, clonePtr(hpi->second) ) );
  // alexanderChainComplexes
 std::map< ChainComplexLocator, MatrixRing< 
-          NSVPolynomialRing< Integer > >* >::const_iterator amci;
+          SVPolynomialRing< Integer > >* >::const_iterator amci;
 for (amci = g.alexanderChainComplexes.begin(); 
      amci != g.alexanderChainComplexes.end(); amci++)
  alexanderChainComplexes.insert( std::pair< ChainComplexLocator, 
-    MatrixRing< NSVPolynomialRing< Integer > >* >
+    MatrixRing< SVPolynomialRing< Integer > >* >
   (amci->first, clonePtr(amci->second) ) );
 
 // numStandardCells[5], numDualCells[5], numMixCells[5],numStandardBdryCells[4], 
@@ -1705,7 +1705,7 @@ inline CellularData::~CellularData() {
       hmabi != homMarkedAbelianGroups.end(); hmabi++)
     delete hmabi->second; 
  // bilinear forms
- std::map< FormLocator, NBilinearForm* >::iterator fi;
+ std::map< FormLocator, BilinearForm* >::iterator fi;
  for (fi = bilinearForms.begin(); fi != bilinearForms.end(); fi++)
     delete fi->second;
  // group presentations
@@ -1719,7 +1719,7 @@ inline CellularData::~CellularData() {
     delete hi->second; 
  // alexanderChainComplexes
  std::map< ChainComplexLocator, MatrixRing< 
-           NSVPolynomialRing< Integer > >* >::iterator amci;
+           SVPolynomialRing< Integer > >* >::iterator amci;
  for (amci = alexanderChainComplexes.begin(); 
       amci != alexanderChainComplexes.end(); amci++)
   delete amci->second;

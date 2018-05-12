@@ -33,10 +33,9 @@
 /* end stub */
 
 #include "maths/matrixops.h"
-#include "maths/nprimes.h"
+#include "maths/primes.h"
 #include "algebra/cellulardata.h"
-#include "maths/nperm3.h"
-#include "maths/nperm4.h"
+#include "maths/perm.h"
 
 #include <map>
 #include <list>
@@ -45,7 +44,7 @@
 namespace regina {
 
 // only used in the CellularData constructor
-void setupIndices(const Dim4Triangulation* tri,   
+void setupIndices(const Triangulation<4>* tri,   
  std::vector< std::vector<unsigned long> > &nicIx,  
  std::vector< std::vector<unsigned long> > &icIx, 
  std::vector< std::vector<unsigned long> > &dcIx,   
@@ -61,63 +60,61 @@ void setupIndices(const Dim4Triangulation* tri,
  // nicIx[0]  interior or boundary,  bcIx[0] boundary,  dcIx[4] interior vertices. 
  for (Dim4Triangulation::VertexIterator vit = tri->vertices().begin();
       vit != tri->vertices().end(); vit++) if ( !(*vit)->isIdeal() ) {
-  nicIx[0].push_back( tri->vertexIndex(*vit) );
-  if ((*vit)->isBoundary()) bcIx[0].push_back( tri->vertexIndex(*vit) ); else
-   { dcIx[4].push_back( tri->vertexIndex(*vit) );
-    rIx[0].push_back( tri->vertexIndex(*vit) ); }
+  nicIx[0].push_back( (*vit)->index() );
+  if ((*vit)->isBoundary()) bcIx[0].push_back( (*vit)->index() ); else
+   { dcIx[4].push_back( (*vit)->index() );
+    rIx[0].push_back( (*vit)->index() ); }
   } 
   // nicIx[1] all,  icIx[0] ideal ends, dcIx[3] nonboundary, bcIx[1] boundary
   for (Dim4Triangulation::EdgeIterator eit = tri->edges().begin();
        eit != tri->edges().end(); eit++) 
   {
-   nicIx[1].push_back( tri->edgeIndex(*eit) );
-   if ((*eit)->isBoundary()) bcIx[1].push_back( tri->edgeIndex(*eit) );
+   nicIx[1].push_back( (*eit)->index() );
+   if ((*eit)->isBoundary()) bcIx[1].push_back( (*eit)->index() );
    else 
-   { dcIx[3].push_back( tri->edgeIndex(*eit) );
-     rIx[1].push_back( tri->edgeIndex(*eit) );
+   { dcIx[3].push_back( (*eit)->index() );
+     rIx[1].push_back( (*eit)->index() );
      for (unsigned i=0;i<2;i++) if ((*eit)->vertex(i)->isIdeal()) 
-     icIx[0].push_back(2*tri->edgeIndex(*eit)+i); 
+     icIx[0].push_back(2*(*eit)->index()+i); 
    }
   }
   // nicIx[2] all, icIx[1] ideal ends, dcIx[2] nonboundary, bcIx[2] boundary
   for (Dim4Triangulation::TriangleIterator fit = tri->triangles().begin();
        fit != tri->triangles().end(); fit++) 
   {
-   nicIx[2].push_back( tri->triangleIndex(*fit) );
-   if ((*fit)->isBoundary()) { bcIx[2].push_back( tri->triangleIndex(*fit) ); }
+   nicIx[2].push_back( (*fit)->index() );
+   if ((*fit)->isBoundary()) { bcIx[2].push_back( (*fit)->index() ); }
    else
-   { dcIx[2].push_back( tri->triangleIndex(*fit) );
-     rIx[2].push_back( tri->triangleIndex(*fit) );
+   { dcIx[2].push_back( (*fit)->index() );
+     rIx[2].push_back( (*fit)->index() );
      for (unsigned i=0;i<3;i++) if ((*fit)->vertex(i)->isIdeal()) 
-     icIx[1].push_back(3*tri->triangleIndex(*fit)+i); }
+     icIx[1].push_back(3*(*fit)->index()+i); }
    }
-   for (Dim4Triangulation::TetrahedronIterator 
-        tit = tri->getTetrahedra().begin();
-        tit != tri->getTetrahedra().end(); tit++) 
+   for (Triangulation<4>::TetrahedronIterator tit = tri->tetrahedra().begin();
+        tit != tri->tetrahedra().end(); tit++) 
    {
-    nicIx[3].push_back( tri->tetrahedronIndex(*tit) );
-    if ((*tit)->isBoundary()) bcIx[3].push_back( tri->tetrahedronIndex(*tit) );
+    nicIx[3].push_back( (*tit)->index() );
+    if ((*tit)->isBoundary()) bcIx[3].push_back( (*tit)->index() );
 	 else
-     { dcIx[1].push_back( tri->tetrahedronIndex(*tit) );
-       rIx[3].push_back( tri->tetrahedronIndex(*tit) );
+     { dcIx[1].push_back( (*tit)->index() );
+       rIx[3].push_back( (*tit)->index() );
        for (unsigned i=0;i<4;i++) if ((*tit)->vertex(i)->isIdeal()) 
-        icIx[2].push_back(4*tri->tetrahedronIndex(*tit)+i); 
+        icIx[2].push_back(4*(*tit)->index()+i); 
      }
    }
-  for (Dim4Triangulation::PentachoronIterator 
-       pit = tri->getPentachora().begin();
-       pit != tri->getPentachora().end(); pit++) 
+  for (Triangulation<4>::PentachoronIterator pit = tri->pentachora().begin();
+       pit != tri->pentachora().end(); pit++) 
    {
-    nicIx[4].push_back( tri->pentachoronIndex(*pit) );
-    dcIx[0].push_back( tri->pentachoronIndex(*pit) );
-    rIx[4].push_back( tri->pentachoronIndex(*pit) );
+    nicIx[4].push_back( (*pit)->index() );
+    dcIx[0].push_back( (*pit)->index() );
+    rIx[4].push_back( (*pit)->index() );
     for (unsigned i=0;i<5;i++) if ((*pit)->vertex(i)->isIdeal()) 
-     icIx[3].push_back(5*tri->pentachoronIndex(*pit)+i);
+     icIx[3].push_back(5*(*pit)->index()+i);
    }
 
   // standard CW-decomposition (0..4)-cells / triangulation + ideal cells.
-  for (unsigned i=0; i<4; i++) numStandardCells[i] = 
-        nicIx[i].size() + icIx[i].size();
+  for (unsigned i=0; i<4; i++) 
+   numStandardCells[i] = nicIx[i].size() + icIx[i].size();
   numStandardCells[4] = nicIx[4].size();
   // dual (0..4)-cells : a dual k-cell for every n-k-cell in triangulation
   for (unsigned i=0; i<5; i++) numDualCells[i] = dcIx[i].size();
@@ -192,46 +189,46 @@ void setupIndices(const Triangulation<3>* tri,
  for (Triangulation<3>::VertexIterator vit = tri->vertices().begin();
       vit != tri->vertices().end(); vit++) if ( !(*vit)->isIdeal() ) 
   {
-   nicIx[0].push_back( tri->vertexIndex(*vit) );
-   if ((*vit)->isBoundary()) bcIx[0].push_back( tri->vertexIndex(*vit) ); else
-    { dcIx[3].push_back( tri->vertexIndex(*vit) );
-      rIx[0].push_back( tri->vertexIndex(*vit) ); }
+   nicIx[0].push_back( (*vit)->index() );
+   if ((*vit)->isBoundary()) bcIx[0].push_back( (*vit)->index() ); else
+    { dcIx[3].push_back( (*vit)->index() );
+      rIx[0].push_back( (*vit)->index() ); }
   } 
  // nicIx[1] all,  icIx[0] ideal ends, dcIx[2] nonboundary, bcIx[1] boundary
  for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
       eit != tri->edges().end(); eit++) 
   {
-   nicIx[1].push_back( tri->edgeIndex(*eit) );
-   if ((*eit)->isBoundary()) bcIx[1].push_back( tri->edgeIndex(*eit) );
+   nicIx[1].push_back( (*eit)->index() );
+   if ((*eit)->isBoundary()) bcIx[1].push_back( (*eit)->index() );
    else 
-   { dcIx[2].push_back( tri->edgeIndex(*eit) );
-     rIx[1].push_back( tri->edgeIndex(*eit) );
+   { dcIx[2].push_back( (*eit)->index() );
+     rIx[1].push_back( (*eit)->index() );
      for (unsigned i=0;i<2;i++) if ((*eit)->vertex(i)->isIdeal()) 
-     icIx[0].push_back(2*tri->edgeIndex(*eit)+i); 
+     icIx[0].push_back(2*(*eit)->index()+i); 
    }
   }
  // nicIx[2] all, icIx[1] ideal ends, dcIx[1] nonboundary, bcIx[2] boundary
- for (Triangulation<3>::FaceIterator fit = tri->faces().begin();
-      fit != tri->faces().end(); fit++) 
+ for (Triangulation<3>::TriangleIterator fit = tri->triangles().begin();
+      fit != tri->triangles().end(); fit++) 
  {
-  nicIx[2].push_back( tri->faceIndex(*fit) );
-  if ((*fit)->isBoundary()) bcIx[2].push_back( tri->faceIndex(*fit) );
+  nicIx[2].push_back( (*fit)->index() );
+  if ((*fit)->isBoundary()) bcIx[2].push_back( (*fit)->index() );
   else
-  { dcIx[1].push_back( tri->faceIndex(*fit) );
-             rIx[2].push_back( tri->faceIndex(*fit) );
-            for (unsigned i=0;i<3;i++) if ((*fit)->vertex(i)->isIdeal()) 
-             icIx[1].push_back(3*tri->faceIndex(*fit)+i); 
+  { dcIx[1].push_back( (*fit)->index() );
+    rIx[2].push_back( (*fit)->index() );
+    for (unsigned i=0;i<3;i++) if ((*fit)->vertex(i)->isIdeal()) 
+      icIx[1].push_back(3*(*fit)->index()+i); 
   }
  }
  // nicIx[3], icIx[2] ideal ends, dcIx[0] all
- for (Triangulation<3>::TetrahedronIterator tit = tri->getTetrahedra().begin();
-      tit != tri->getTetrahedra().end(); tit++) 
+ for (Triangulation<3>::TetrahedronIterator tit = tri->tetrahedra().begin();
+      tit != tri->tetrahedra().end(); tit++) 
  {
-  nicIx[3].push_back( tri->tetrahedronIndex(*tit) );
-  dcIx[0].push_back( tri->tetrahedronIndex(*tit) );
-  rIx[3].push_back( tri->tetrahedronIndex(*tit) );
+  nicIx[3].push_back( (*tit)->index() );
+  dcIx[0].push_back( (*tit)->index() );
+  rIx[3].push_back( (*tit)->index() );
   for (unsigned i=0;i<4;i++) if ((*tit)->vertex(i)->isIdeal()) 
-  icIx[2].push_back(4*tri->tetrahedronIndex(*tit)+i); 
+  icIx[2].push_back(4*(*tit)->index()+i); 
  }
 
  // standard (0..3)-cells:
@@ -291,7 +288,7 @@ void setupIndices(const Triangulation<3>* tri,
 
 
 // required forward declaration
-void fillChainMaps( Triangulation<3>* tri3, Dim4Triangulation* tri4, 
+void fillChainMaps( Triangulation<3>* tri3, Triangulation<4>* tri4, 
  unsigned long numStandardCells[5],    unsigned long numDualCells[5],     
  unsigned long numMixCells[5],         unsigned long numStandardBdryCells[4],
  unsigned long numNonIdealCells[5],    unsigned long numIdealCells[4], 
@@ -309,8 +306,8 @@ void fillChainMaps( Triangulation<3>* tri3, Dim4Triangulation* tri4,
 
 
 // constructor for 4-manifold triangulations
-CellularData::CellularData(const Dim4Triangulation& input): ShareableObject(),
-    tri4(new Dim4Triangulation(input)), tri3(0), 
+CellularData::CellularData(const Triangulation<4>& input): 
+    tri4(new Triangulation<4>(input)), tri3(0), 
 	nicIx(5), icIx(4), dcIx(5), bcIx(4), rIx(5), // indexing cells 
 	sbiCM(4), strCM(5), schCM(4),   dbiCM(4), dtrCM(5), dchCM(4),   mbiCM(4), 
     mtrCM(5), mchCM(4), smCM(5), dmCM(5), smbCM(4), dmbCM(4), srmCM(5), drmCM(5) 
@@ -341,7 +338,7 @@ CellularData::CellularData(const Dim4Triangulation& input): ShareableObject(),
 }
 
 // constructor for 3-manifold triangulations
-CellularData::CellularData(const Triangulation<3>& input): ShareableObject(),
+CellularData::CellularData(const Triangulation<3>& input): 
  tri4(0), tri3(new Triangulation<3>(input)), nicIx(4), icIx(3), dcIx(4), bcIx(3), 
  rIx(4), sbiCM(3), strCM(4), schCM(3),   dbiCM(3), dtrCM(4), dchCM(3),   
  mbiCM(3), mtrCM(4), mchCM(3), smCM(4), dmCM(4), smbCM(3), dmbCM(3), 

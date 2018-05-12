@@ -35,18 +35,20 @@
 #include "algebra/cellulardata.h"
 #include "algebra/cellulardata.simpaut.h"
 #include <algorithm>
+#include <iterator>
 
 namespace regina {
 
-NSimplicialAutGrp::NSimplicialAutGrp(const Triangulation<3> &input)
+SimplicialAutGrp::SimplicialAutGrp(const Triangulation<3> &input)
 {
  tri3 = &input; tri4 = NULL;
- std::list< NIsomorphism* > isoList;
- input.findAllIsomorphisms( input, isoList );
- for (std::list< NIsomorphism* >::iterator i=isoList.begin(); 
+ std::list< Isomorphism<3>* > isoList;
+ 
+ input.findAllIsomorphisms( input, back_inserter(isoList) );
+ for (std::list< Isomorphism<3>* >::iterator i=isoList.begin(); 
         i!=isoList.end(); i++)
   {
-   isoStruct tempI; tempI.germ.resize( input.getNumberOfSimplices() );
+   isoStruct tempI; tempI.germ.resize( input.countTetrahedra() );
    for (unsigned long j=0; j<tempI.germ.size(); j++)
     { tempI.germ[j].pen = (*i)->simpImage(j);  
       tempI.germ[j].perm = ((*i)->facetPerm(j).S4Index()); }
@@ -57,15 +59,15 @@ NSimplicialAutGrp::NSimplicialAutGrp(const Triangulation<3> &input)
   // this list so we need it sorted.
 }
 
-NSimplicialAutGrp::NSimplicialAutGrp(const Dim4Triangulation &input)
+SimplicialAutGrp::SimplicialAutGrp(const Triangulation<4> &input)
 {
  tri4 = &input; tri3 = NULL;
- std::list< Dim4Isomorphism* > isoList;
- input.findAllIsomorphisms( input, isoList );
- for (std::list< Dim4Isomorphism* >::iterator i=isoList.begin(); 
+ std::list< Isomorphism<4>* > isoList;
+ input.findAllIsomorphisms( input, back_inserter(isoList) );
+ for (std::list< Isomorphism<4>* >::iterator i=isoList.begin(); 
       i!=isoList.end(); i++)
   {
-   isoStruct tempI; tempI.germ.resize( input.getNumberOfSimplices() );
+   isoStruct tempI; tempI.germ.resize( input.countPentachora() );
    for (unsigned long j=0; j<tempI.germ.size(); j++)
     { tempI.germ[j].pen = (*i)->simpImage(j);  
       tempI.germ[j].perm = ((*i)->facetPerm(j).S5Index()); }
@@ -75,7 +77,7 @@ NSimplicialAutGrp::NSimplicialAutGrp(const Dim4Triangulation &input)
  sort( fullMap.begin(), fullMap.end() ); // make binary searchable
 }
 
-std::vector< int > NSimplicialAutGrp::orientationAction() const
+std::vector< int > SimplicialAutGrp::orientationAction() const
 {
  std::vector< int > retval( fullMap.size() );
  for (unsigned long i=0; i<retval.size(); i++)
@@ -91,7 +93,7 @@ std::vector< int > NSimplicialAutGrp::orientationAction() const
 }
 
 
-std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
+std::vector<MatrixInt*> SimplicialAutGrp::homologyH1action() const
 {
  std::vector<MatrixInt*> retval;
  CellularData* cDat;
@@ -100,20 +102,20 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
  const MarkedAbelianGroup* H1P( cDat->markedGroup( CellularData::GroupLocator( 
     1, CellularData::coVariant, CellularData::STD_coord, 0) ) );
 
- if ( (H1P->getRank()==1) && (H1P->getNumberOfInvariantFactors()==0) )
+ if ( (H1P->rank()==1) && (H1P->countInvariantFactors()==0) )
   {
     retval.resize( fullMap.size() );
     for (unsigned long i=0; i<retval.size(); i++) 
      {
         // now we fill out the matrix.
-        MatrixInt mat( H1P->getRankCC(), H1P->getRankCC() );
+        MatrixInt mat( H1P->rankCC(), H1P->rankCC() );
         // using STD_coord. these are indexed by nicIx followed by icIx.
         // so computing the H1 CC map is going to be relatively straightforward. 
         unsigned long cellCount( cDat->cellCount( 
             CellularData::ChainComplexLocator( 1, 
             CellularData::STD_coord ) ) );
-        unsigned long edgCount( (tri3 ? tri3->getNumberOfEdges() :
-            tri4->getNumberOfEdges() ) );
+        unsigned long edgCount( (tri3 ? tri3->countEdges() :
+            tri4->countEdges() ) );
         unsigned long idCells( cellCount - edgCount );
         for (unsigned long j=0; j<edgCount; j++)
          {
@@ -123,31 +125,27 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
 
           if (tri3) { // 3-dimensional case
            Perm<4> per3( tri3->edge(j)->embedding(0).vertices() );
-           unsigned long tetnum3( tri3->simplexIndex( 
-                        tri3->edge(j)->embedding(0).tetrahedron() ) );
+           unsigned long tetnum3( tri3->edge(j)->embedding(0).tetrahedron()->index() );
            unsigned long tPen( fullMap[i].germ[ tetnum3 ].pen ); // target pen
            Perm<4> mPerm( Perm<4>::S4[ fullMap[i].germ[ tetnum3 ].perm ] );
            // edge number in tet tPen. 
            unsigned long eNum( Face<3,1>::edgeNumber[ mPerm[per3[0]] ]
                                                 [ mPerm[per3[1]] ] );
-           Perm<4> eOr( tri3->getSimplex( tPen )->edgeMapping(eNum) );
+           Perm<4> eOr( tri3->tetrahedron( tPen )->edgeMapping(eNum) );
            // now we need to find this edge Pen::edgeMapping class.  
-           mat.entry( cDat->nicIxLookup( tri3->getSimplex(tPen)->edge(eNum)
-                  ), j ) 
+           mat.entry( cDat->nicIxLookup( tri3->tetrahedron(tPen)->edge(eNum) ), j ) 
                 = ( (eOr[0] == mPerm[per3[0]]) ? 1 : -1 );
            } else { // 4-dimensional case
            Perm<5> per4( tri4->edge(j)->embedding(0).vertices() );
-           unsigned long tetnum4( tri4->simplexIndex( 
-                        tri4->edge(j)->embedding(0).pentachoron() ) );
+           unsigned long tetnum4( tri4->edge(j)->embedding(0).pentachoron()->index() );
            unsigned long tPen( fullMap[i].germ[ tetnum4 ].pen ); // target pen
            Perm<5> mPerm( Perm<5>::S5[ fullMap[i].germ[ tetnum4 ].perm ] );
            // edge number in tet tPen. 
            unsigned long eNum( Face<4,1>::edgeNumber[ mPerm[per4[0]] ]
                                                    [ mPerm[per4[1]] ] );
-           Perm<5> eOr( tri4->getSimplex( tPen )->edgeMapping(eNum) );
+           Perm<5> eOr( tri4->pentachoron( tPen )->edgeMapping(eNum) );
            // now we need to find this edge, Pen::edgeMapping class.  
-           mat.entry( cDat->nicIxLookup( tri4->getSimplex(tPen)->edge(eNum)
-                  ), j ) 
+           mat.entry( cDat->nicIxLookup( tri4->pentachoron(tPen)->edge(eNum) ), j ) 
                 = ( (eOr[0] == mPerm[per4[0]]) ? 1 : -1 );
           }
 
@@ -161,34 +159,32 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
           if (tri3) { // 3-dim
             Perm<4> per3( tri3->triangle( 
                    cDat->icIndex(1,j).first )->embedding(0).vertices() );
-            unsigned long tetnum3( tri3->simplexIndex( 
-                tri3->triangle( cDat->icIndex(1,j).first )->
-                embedding(0).tetrahedron() ) );
+            unsigned long tetnum3( tri3->triangle( cDat->icIndex(1,j).first )->
+                embedding(0).tetrahedron()->index() );
             unsigned long tPen( fullMap[i].germ[ tetnum3 ].pen );
             Perm<4> mPerm( Perm<4>::S4[ fullMap[i].germ[ tetnum3 ].perm ] );
             unsigned long tNum( mPerm[ per3[ 3 ] ] );
-            Perm<4> tOr( tri3->getSimplex( tPen )->triangleMapping( tNum ) );
+            Perm<4> tOr( tri3->simplex( tPen )->triangleMapping( tNum ) );
             Perm<4> tOor( tOr.inverse()*mPerm*per3 ); // sign 
             SIG = tOor.sign();
 
-            INDX = cDat->icIxLookup(tri3->getSimplex( tPen )->triangle(tNum), 
+            INDX = cDat->icIxLookup(tri3->simplex( tPen )->triangle(tNum), 
                                     tOor[cDat->icIndex(1,j).second] );
             } else { // 4-dim
             Perm<5> per4( tri4->triangle( 
                 cDat->icIndex(1,j).first )->embedding(0).vertices() );
-            unsigned long tetnum4( tri4->simplexIndex( 
-                tri4->triangle( cDat->icIndex(1,j).first )->
-                embedding(0).pentachoron() ) );
+            unsigned long tetnum4( tri4->triangle( cDat->icIndex(1,j).first )->
+                embedding(0).pentachoron()->index() );
             unsigned long tPen( fullMap[i].germ[ tetnum4 ].pen );
             Perm<5> mPerm( Perm<5>::S5[ fullMap[i].germ[ tetnum4 ].perm ] );
             unsigned long tNum( Dim4Triangle::triangleNumber[ mPerm[ per4[0] ] ]
                                    [ mPerm[ per4[1] ] ][ mPerm[ per4[2] ] ] );
-            Perm<5> tOr( tri4->getSimplex( tPen )->triangleMapping( tNum ) );
+            Perm<5> tOr( tri4->simplex( tPen )->triangleMapping( tNum ) );
             Perm<5> tOor( tOr.inverse()*mPerm*per4 ); // we can recover the sign 
              //from this once we re-cast it to an Perm<3>. 
             Perm<3> tOOr( tOor[0], tOor[1], tOor[2] ); 
             SIG = tOOr.sign(); 
-            INDX = cDat->icIxLookup( tri4->getSimplex( tPen )->
+            INDX = cDat->icIxLookup( tri4->simplex( tPen )->
                 triangle(tNum), tOor[cDat->icIndex(1,j).second] );
           }
           mat.entry( edgCount + INDX, edgCount + j ) = SIG;
@@ -205,7 +201,7 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
             std::cout<<"ERROR! isIso."<<std::endl; exit(1); }
         #endif 
         // put matrix associated to hom into retval.
-        retval[i] = new MatrixInt( hom.getReducedMatrix() );
+        retval[i] = new MatrixInt( hom.reducedMatrix() );
      }    
   }
 
@@ -215,7 +211,7 @@ std::vector<MatrixInt*> NSimplicialAutGrp::homologyH1action() const
 
 // TODO: update to allow for cohomology
 // TODO: perhaps allow coordinate systems other than STD_coord?  why? 
-std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction( 
+std::vector<HomMarkedAbelianGroup*> SimplicialAutGrp::homologyAction( 
         const CellularData::GroupLocator &gloc ) const
 {
  std::vector< HomMarkedAbelianGroup* > retval;
@@ -237,7 +233,7 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
 
  for (unsigned long A=0; A<retval.size(); A++) // automorphism A
   {
-   MatrixInt mat( HP->getRankCC(), HP->getRankCC() );
+   MatrixInt mat( HP->rankCC(), HP->rankCC() );
    for (unsigned long j=0; j<stdCount; j++)
     { // mat entry (?, j) std cells
       // find the j-th cell, get its embedding in a top-simplex.
@@ -254,8 +250,7 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
          mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-         i = cDat->nicIxLookup( tri3->getSimplex( ranSim )->
-                vertex( mPerm4[ domPerm4[0] ] ) );
+         i = cDat->nicIxLookup( tri3->simplex( ranSim )->vertex( mPerm4[ domPerm4[0] ] ) );
          SIG = 1; 
         break;
        case 1: {
@@ -267,8 +262,8 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
 
          unsigned long eNum( Face<3,1>::edgeNumber[mPerm4[domPerm4[0]]]
                                               [mPerm4[domPerm4[1]]] );
-         Perm<4> ranPerm4( tri3->getSimplex( ranSim )->edgeMapping( eNum ) );
-         i = cDat->nicIxLookup( tri3->getSimplex( ranSim )->edge(eNum) );
+         Perm<4> ranPerm4( tri3->simplex( ranSim )->edgeMapping( eNum ) );
+         i = cDat->nicIxLookup( tri3->simplex( ranSim )->edge(eNum) );
          SIG = ( ( ranPerm4[0] == mPerm4[domPerm4[0]] ) ? 1 : -1 );
        } break;
        case 2: {
@@ -279,19 +274,19 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
          mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
          unsigned long tNum( mPerm4[domPerm4[3]] );
-         Perm<4> ranPerm4( tri3->getSimplex( ranSim )->
+         Perm<4> ranPerm4( tri3->simplex( ranSim )->
                           triangleMapping( tNum ) );
          Perm<3> relPerm( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
                          ranPerm4.preImageOf( mPerm4[domPerm4[1]] ), 
                          ranPerm4.preImageOf( mPerm4[domPerm4[2]] ) );
-         i = cDat->nicIxLookup( tri3->getSimplex( ranSim )->triangle(tNum) );
+         i = cDat->nicIxLookup( tri3->simplex( ranSim )->triangle(tNum) );
          SIG = relPerm.sign();
        } break;
        case 3: {// domFac == domSim no?
-         domSim = cDat->nicIxLookup( tri3->getSimplex( domFac ) ); 
+         domSim = cDat->nicIxLookup( tri3->simplex( domFac ) ); 
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
          mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
-         i = cDat->nicIxLookup( tri3->getSimplex( ranSim ) );
+         i = cDat->nicIxLookup( tri3->simplex( ranSim ) );
          SIG = mPerm4.sign();
        } break;
       } else switch (gloc.dim) // 4-dimensional case
@@ -303,7 +298,7 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
          mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->vertex( 
+         i = cDat->nicIxLookup( tri4->simplex( ranSim )->vertex( 
                                 mPerm5[ domPerm5[0] ] ) );
          SIG = 1; 
         break;
@@ -316,8 +311,8 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
 
          unsigned long eNum( Face<4,1>::edgeNumber[mPerm5[domPerm5[0]]]
                                                  [mPerm5[domPerm5[1]]] );
-         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
-         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->edge(eNum) );
+         Perm<5> ranPerm5( tri4->simplex( ranSim )->edgeMapping( eNum ) );
+         i = cDat->nicIxLookup( tri4->simplex( ranSim )->edge(eNum) );
          SIG = ( ( ranPerm5[0] == mPerm5[domPerm5[0]] ) ? 1 : -1 );
        } break;
        case 2: { 
@@ -329,12 +324,12 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
 
          unsigned long tNum( Dim4Triangle::triangleNumber[
             mPerm5[domPerm5[0]]][mPerm5[domPerm5[1]]][mPerm5[domPerm5[2]]] );
-         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+         Perm<5> ranPerm5( tri4->simplex( ranSim )->
                           triangleMapping( tNum ) );
          Perm<3> relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[1]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[2]] ) );
-         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->triangle(tNum) );
+         i = cDat->nicIxLookup( tri4->simplex( ranSim )->triangle(tNum) );
          SIG = relPerm.sign();
        } break;
        case 3: { 
@@ -346,22 +341,22 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
          mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
          unsigned long tNum( mPerm5[domPerm5[4]] );
-         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+         Perm<5> ranPerm5( tri4->simplex( ranSim )->
                           tetrahedronMapping( tNum ) );
          Perm<4> relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[1]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[2]] ),
                          ranPerm5.preImageOf( mPerm5[domPerm5[3]] ) );
-         i = cDat->nicIxLookup( tri4->getSimplex( ranSim )->
+         i = cDat->nicIxLookup( tri4->simplex( ranSim )->
                     tetrahedron(tNum) );
          SIG = relPerm.sign();
        } break;
        case 4: { 
-         domSim = cDat->nicIxLookup( tri4->getSimplex( domFac ) );
+         domSim = cDat->nicIxLookup( tri4->simplex( domFac ) );
          ranSim = fullMap[A].germ[ domSim ].pen; // target simplex
          mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-         i = cDat->nicIxLookup( tri4->getSimplex( ranSim ) );
+         i = cDat->nicIxLookup( tri4->simplex( ranSim ) );
          SIG = mPerm5.sign();
        } break;
       }
@@ -390,8 +385,8 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
         unsigned long eNum( Face<3,1>::edgeNumber[ mPerm4[domPerm4[domFacV]] ]
                                       [ mPerm4[domPerm4[(domFacV+1) % 2]] ] );
 
-        Perm<4> ranPerm4( tri3->getSimplex( ranSim )->edgeMapping( eNum ) );
-        i = cDat->icIxLookup( tri3->getSimplex( ranSim )->edge( eNum ), 
+        Perm<4> ranPerm4( tri3->simplex( ranSim )->edgeMapping( eNum ) );
+        i = cDat->icIxLookup( tri3->simplex( ranSim )->edge( eNum ), 
              ranPerm4.preImageOf( mPerm4[domPerm4[domFacV]] ) );
         SIG = ( (ranPerm4[0] == mPerm4[domPerm4[0]]) ? 1 : -1 );
      } break;
@@ -403,12 +398,12 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
         mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
         unsigned long tNum( mPerm4[domPerm4[3]] );
-        Perm<4> ranPerm4( tri3->getSimplex( ranSim )->
+        Perm<4> ranPerm4( tri3->simplex( ranSim )->
                          triangleMapping( tNum ) );
         Perm<3> tPara( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
                       ranPerm4.preImageOf( mPerm4[domPerm4[1]] ),
                       ranPerm4.preImageOf( mPerm4[domPerm4[2]] ) );
-        i = cDat->icIxLookup( tri3->getSimplex( ranSim )->triangle( tNum ), 
+        i = cDat->icIxLookup( tri3->simplex( ranSim )->triangle( tNum ), 
                    tPara[ domFacV ]);
         SIG = tPara.sign();
      } break;
@@ -417,7 +412,7 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
         ranSim = fullMap[A].germ[ domSim ].pen;
         mPerm4 = Perm<4>::S4[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-        i = cDat->icIxLookup( tri3->getSimplex( ranSim ), mPerm4[domFacV] );
+        i = cDat->icIxLookup( tri3->simplex( ranSim ), mPerm4[domFacV] );
         SIG = mPerm4.sign();
      } break;
       } else switch ( gloc.dim ) // 4-dimensions
@@ -432,8 +427,8 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
         unsigned long eNum( Face<4,1>::edgeNumber[ mPerm5[domPerm5[domFacV]] ]
                                         [ mPerm5[domPerm5[(domFacV+1) % 2]] ] );
 
-        Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
-        i = cDat->icIxLookup( tri4->getSimplex( ranSim )->edge( eNum ), 
+        Perm<5> ranPerm5( tri4->simplex( ranSim )->edgeMapping( eNum ) );
+        i = cDat->icIxLookup( tri4->simplex( ranSim )->edge( eNum ), 
              ranPerm5.preImageOf( mPerm5[domPerm5[domFacV]] ) );
         SIG = ( (ranPerm5[0] == mPerm5[domPerm5[0]]) ? 1 : -1 );
      } break;
@@ -447,12 +442,12 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
         unsigned long tNum( Dim4Triangle::triangleNumber
            [mPerm5[domPerm5[domFacV]]][mPerm5[domPerm5[(domFacV + 1) % 3]]]
            [mPerm5[domPerm5[(domFacV + 2) % 3]]] );
-        Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+        Perm<5> ranPerm5( tri4->simplex( ranSim )->
                          triangleMapping( tNum ) );
         Perm<3> tPara( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                       ranPerm5.preImageOf( mPerm5[domPerm5[1]] ),
                       ranPerm5.preImageOf( mPerm5[domPerm5[2]] ) );
-        i = cDat->icIxLookup( tri4->getSimplex( ranSim )->triangle( tNum ), 
+        i = cDat->icIxLookup( tri4->simplex( ranSim )->triangle( tNum ), 
                    tPara[ domFacV ]);
         SIG = tPara.sign();
      } break;
@@ -465,13 +460,13 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
         mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
         unsigned long tNum( mPerm5[domPerm5[4]] );
-        Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+        Perm<5> ranPerm5( tri4->simplex( ranSim )->
                          tetrahedronMapping( tNum ) );
         Perm<4> tPara( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ),
                       ranPerm5.preImageOf( mPerm5[domPerm5[1]] ),
                       ranPerm5.preImageOf( mPerm5[domPerm5[2]] ),
                       ranPerm5.preImageOf( mPerm5[domPerm5[3]] ) );
-        i = cDat->icIxLookup( tri4->getSimplex( ranSim )->
+        i = cDat->icIxLookup( tri4->simplex( ranSim )->
             tetrahedron( tNum ), tPara[ domFacV ] );
         SIG = tPara.sign();
      } break;
@@ -480,7 +475,7 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
         ranSim = fullMap[A].germ[ domSim ].pen;
         mPerm5 = Perm<5>::S5[ fullMap[A].germ[ domSim ].perm ]; // permutation
 
-        i = cDat->icIxLookup( tri4->getSimplex( ranSim ), mPerm5[domFacV] );
+        i = cDat->icIxLookup( tri4->simplex( ranSim ), mPerm5[domFacV] );
         SIG = mPerm5.sign();
      } break;
       }
@@ -492,7 +487,7 @@ std::vector<HomMarkedAbelianGroup*> NSimplicialAutGrp::homologyAction(
    if (!retval[A]->isCycleMap()) { 
      std::cout<<"NSimplicialAutGrp::homologyAction() ERROR! isCycleMap()."<<
      std::endl; exit(1); }
-   if (!retval[A]->isIso())      { 
+   if (!retval[A]->isIsomorphism())      { 
      std::cout<<"NSimplicialAutGrp::homologyAction() ERROR! isIso()."<<
      std::endl; exit(1); }
   }
@@ -517,7 +512,7 @@ bool centroid::operator<(const centroid &rhs) const
  
 
 std::set< linearFacet > linearFacet::bdryFacets(const Triangulation<3> *tri3, 
-                                            const Dim4Triangulation* tri4) const
+                                            const Triangulation<4>* tri4) const
 {
  std::set< linearFacet > retval;
  if ((!tri3) && (!tri4)) 
@@ -605,7 +600,7 @@ std::set< linearFacet > linearFacet::bdryFacets(const Triangulation<3> *tri3,
         }
        }
       else { // sdim == 2, dim4
-       const Dim4Triangle* tri( tri4->triangle( 
+       const Face<4,2>* tri( tri4->triangle( 
                                 cDat->nicIndex( sdim, sindx ) ) ); 
        if (vCentres.size()==2) { // edge bisecting a tri {0}, {1,2}
         if (VuU.size() == 1) { // need edg with {0,1} label
@@ -1136,7 +1131,7 @@ bool linearFacet::isValid() const
 }
 
 bool linearFacet::isIdeal(const Triangulation<3> *tri3, 
-                          const Dim4Triangulation* tri4) const
+                          const Triangulation<4>* tri4) const
 {
  CellularData* cDat;
  bool retval(false);
@@ -1200,7 +1195,7 @@ bool linearFacet::isIdeal(const Triangulation<3> *tri3,
  * Then we need an algorithm to work out the boundary/incidence relations. We
  * will call the data type linearFacet. 
  */
-std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
+std::vector< std::set< linearFacet >* > SimplicialAutGrp::fixedPoints() const
 {
  CellularData* cDat;
  if (tri3) cDat = new CellularData(*tri3);
@@ -1228,7 +1223,7 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
             embedding(0).vertices();
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
          mPerm4 = Perm<4>::S4[ fullMap[M].germ[ domSim ].perm ]; // permutation
-         if ( domFac == cDat->nicIxLookup( tri3->getSimplex( ranSim )->
+         if ( domFac == cDat->nicIxLookup( tri3->simplex( ranSim )->
             vertex( mPerm4[ domPerm4[0] ] ) ) )
           retval[M]->insert( linearFacet(d, d, domFac) ); 
          #ifdef DEBUG
@@ -1249,9 +1244,9 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
 
          unsigned long eNum( Face<3,1>::edgeNumber
             [mPerm4[domPerm4[0]]][mPerm4[domPerm4[1]]] );
-         Perm<4> ranPerm4( tri3->getSimplex( ranSim )->edgeMapping( eNum ) );
+         Perm<4> ranPerm4( tri3->simplex( ranSim )->edgeMapping( eNum ) );
          if ( domFac == cDat->nicIxLookup( 
-              tri3->getSimplex( ranSim )->edge(eNum) ) )
+              tri3->simplex( ranSim )->edge(eNum) ) )
            {
             if (ranPerm4[0] == mPerm4[domPerm4[0]])
              {
@@ -1286,13 +1281,13 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
          mPerm4 = Perm<4>::S4[ fullMap[M].germ[domSim].perm ]; // permutation
 
          unsigned long tNum( mPerm4[domPerm4[3]] );
-         Perm<4> ranPerm4( tri3->getSimplex( ranSim )->
+         Perm<4> ranPerm4( tri3->simplex( ranSim )->
                           triangleMapping( tNum ) );
          Perm<3> relPerm( ranPerm4.preImageOf( mPerm4[domPerm4[0]] ), 
                          ranPerm4.preImageOf( mPerm4[domPerm4[1]] ), 
                          ranPerm4.preImageOf( mPerm4[domPerm4[2]] ) );
 
-         if ( domFac == cDat->nicIxLookup( tri3->getSimplex( ranSim )->
+         if ( domFac == cDat->nicIxLookup( tri3->simplex( ranSim )->
                         triangle(tNum) ) ) 
             {
              if ( (relPerm[0]==0) && (relPerm[1]==1) ) // ID
@@ -1334,11 +1329,11 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
           #endif
        } break;
        case 3: {
-         domSim = cDat->nicIxLookup( tri3->getSimplex( 
+         domSim = cDat->nicIxLookup( tri3->simplex( 
                    cDat->nicIndex( d, domFac ) ) ); // domFac == domSim no?
          mPerm4 = Perm<4>::S4[ fullMap[M].germ[ domSim ].perm ]; // permutation
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
-         if ( domFac == cDat->nicIxLookup( tri3->getSimplex( ranSim ) ) )
+         if ( domFac == cDat->nicIxLookup( tri3->simplex( ranSim ) ) )
             { // cases: [4] ID, [0] 4-cycle, [0] two 2-cycles, 
               //        [1] 1 fp and 3-cycle, [2] 2 fp and 2-cycle. 
               std::set< unsigned long > fixedPts;
@@ -1414,7 +1409,7 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
                    embedding(0).vertices();
         ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
         mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
-        if ( domFac == cDat->nicIxLookup( tri4->getSimplex( ranSim )->
+        if ( domFac == cDat->nicIxLookup( tri4->simplex( ranSim )->
              vertex( mPerm5[ domPerm5[0] ] ) ) )
          retval[M]->insert( linearFacet(d, d, domFac) ); 
         #ifdef DEBUG
@@ -1424,10 +1419,10 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
           std::cout<<"domFac == "<<domFac<<" nicIndex == "<<
            cDat->nicIndex( d, domFac )<<" domSim == "<<domSim<<" ranSim == "<<
            ranSim<<" target vtx lookup in nicIx == "<<
-           cDat->nicIxLookup( tri4->getSimplex( ranSim )->
+           cDat->nicIxLookup( tri4->simplex( ranSim )->
            vertex( mPerm5[ domPerm5[0] ] ) )<<std::endl;
           std::cout<<"tri4 vertexIndex == "<<tri4->vertexIndex( tri4->
-           getSimplex( ranSim )->vertex( mPerm5[ domPerm5[0] ] ) )<<"\n";
+           simplex( ranSim )->vertex( mPerm5[ domPerm5[0] ] ) )<<"\n";
           std::cout<<cDat->stdCellCount(0)<<" 0-cells total. "<<std::endl;
           for (unsigned long Q=0; Q<cDat->stdCellCount(0); Q++) 
            std::cout<<cDat->nicIndex( 0, Q )<<" ";
@@ -1447,9 +1442,9 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
 
          unsigned long eNum( Face<4,1>::edgeNumber
             [mPerm5[domPerm5[0]]][mPerm5[domPerm5[1]]] );
-         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->edgeMapping( eNum ) );
+         Perm<5> ranPerm5( tri4->simplex( ranSim )->edgeMapping( eNum ) );
          if ( domFac == cDat->nicIxLookup( 
-                    tri4->getSimplex( ranSim )->edge(eNum) ) )
+                    tri4->simplex( ranSim )->edge(eNum) ) )
            {
             if (ranPerm5[0] == mPerm5[domPerm5[0]])
              {
@@ -1487,13 +1482,13 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
                                  [mPerm5[domPerm5[1]]][mPerm5[domPerm5[2]]] );
 
          Perm<5> ranPerm5( 
-            tri4->getSimplex( ranSim )->triangleMapping( tNum ) );
+            tri4->simplex( ranSim )->triangleMapping( tNum ) );
          Perm<3> relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[1]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[2]] ) );
 
          if ( domFac == cDat->nicIxLookup( 
-                tri4->getSimplex( ranSim )->triangle(tNum) ) ) 
+                tri4->simplex( ranSim )->triangle(tNum) ) ) 
             {
              if ( (relPerm[0]==0) && (relPerm[1]==1) ) // ID
               { 
@@ -1542,7 +1537,7 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
          mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
          unsigned long tNum( mPerm5[domPerm5[4]] );
-         Perm<5> ranPerm5( tri4->getSimplex( ranSim )->
+         Perm<5> ranPerm5( tri4->simplex( ranSim )->
             tetrahedronMapping( tNum ) );
          Perm<4> relPerm( ranPerm5.preImageOf( mPerm5[domPerm5[0]] ), 
                          ranPerm5.preImageOf( mPerm5[domPerm5[1]] ), 
@@ -1626,10 +1621,10 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
        } break;
        case 4: { 
          domSim = cDat->nicIxLookup( 
-                  tri4->getSimplex( cDat->nicIndex( d, domFac ) ) ); 
+                  tri4->simplex( cDat->nicIndex( d, domFac ) ) ); 
          ranSim = fullMap[M].germ[ domSim ].pen; // target simplex
          mPerm5 = Perm<5>::S5[ fullMap[M].germ[ domSim ].perm ]; // permutation
-         if ( domFac == cDat->nicIxLookup( tri4->getSimplex( ranSim ) ) )
+         if ( domFac == cDat->nicIxLookup( tri4->simplex( ranSim ) ) )
             { // cases: [0] 5-cycle, [0] 3-cycle and 2-cycle, 
               //        [1] 4-cycle, [1] two 2-cycles, [2] 3-cycle, 
               //        [3] 2-cycle, [5] ID
@@ -1737,7 +1732,7 @@ std::vector< std::set< linearFacet >* > NSimplicialAutGrp::fixedPoints() const
  return retval;
 }
 
-void NSimplicialAutGrp::writeTextLong(std::ostream& out) const
+void SimplicialAutGrp::writeTextLong(std::ostream& out) const
 {
  std::vector<MatrixInt*> h1A( homologyH1action() );
  bool orFlag( (tri3 ? tri3->isOrientable() : tri4->isOrientable() ) );
@@ -1747,13 +1742,13 @@ void NSimplicialAutGrp::writeTextLong(std::ostream& out) const
    out<<"Aut "<<i;
    if (orFlag) { std::string sig("+");
     if (tri3) { if ( (Perm<4>::S4[fullMap[i].germ[0].perm].sign() * 
-                 tri3->getSimplex(0)->orientation() * 
-                 tri3->getSimplex(fullMap[i].germ[0].pen)->orientation() ) < 0 
+                 tri3->simplex(0)->orientation() * 
+                 tri3->simplex(fullMap[i].germ[0].pen)->orientation() ) < 0 
                    ) sig = "-"; }
     else {
     if ( (Perm<5>::S5[fullMap[i].germ[0].perm].sign() * 
-                 tri4->getSimplex(0)->orientation() *
-                 tri4->getSimplex(fullMap[i].germ[0].pen)->orientation() ) < 0 
+                 tri4->simplex(0)->orientation() *
+                 tri4->simplex(fullMap[i].germ[0].pen)->orientation() ) < 0 
        ) sig = "-"; }
    out<<sig; }
    // now let's compute the action on H1...
@@ -1774,12 +1769,12 @@ void NSimplicialAutGrp::writeTextLong(std::ostream& out) const
  out<<"\nOrder: "<<groupOrder()<<" Presentation: "<<G.compact();
 }
 
-unsigned long NSimplicialAutGrp::groupOrder() const
+unsigned long SimplicialAutGrp::groupOrder() const
 {
  return fullMap.size();
 }
 
-void NSimplicialAutGrp::writeTextShort(std::ostream& out) const
+void SimplicialAutGrp::writeTextShort(std::ostream& out) const
 {
  GroupPresentation G( groupPresentation() );
  G.intelligentSimplify();
@@ -1788,7 +1783,7 @@ void NSimplicialAutGrp::writeTextShort(std::ostream& out) const
 
 
 // presentation of the full group of simplicial automorphisms.
-GroupPresentation NSimplicialAutGrp::groupPresentation() const
+GroupPresentation SimplicialAutGrp::groupPresentation() const
 {
  GroupPresentation retval;
  retval.addGenerator( fullMap.size() );
@@ -1841,16 +1836,11 @@ bool isoStruct::operator<(const isoStruct &rhs) const
  return false;
 }    
 
-
-
 // TODO: fix return type and get it to do something useful.
 void CellularData::simplicialAutomorphismGroup() const
  {
   
  }
-
-
-
 
 } // namespace regina
 

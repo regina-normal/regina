@@ -32,11 +32,11 @@
 
 /* end stub */
 
-#include "algebra/nbilinearform.h"
+#include "algebra/bilinearform.h"
 
 namespace regina {
 
-NBilinearForm::NBilinearForm(const MarkedAbelianGroup &ldomain, 
+BilinearForm::BilinearForm(const MarkedAbelianGroup &ldomain, 
                              const MarkedAbelianGroup &rdomain,
 			                 const MarkedAbelianGroup &range,   
                              const NSparseGridRing< Integer > &pairing) : 
@@ -51,7 +51,7 @@ lDomain(ldomain), rDomain(rdomain), Range(range)
   { std::vector< Integer > lv(ldomain.ccRep(i));
    for (unsigned long j=0; j<rdomain.minNumberOfGenerators(); j++)
     { std::vector< Integer > rv(rdomain.ccRep(j));
-      std::vector< Integer > evalcc( range.getRankCC(), 
+      std::vector< Integer > evalcc( range.rankCC(), 
                                            Integer::zero );
       // sum_{ii, jj, k} lv[ii] * rv[jj] * pairing[ii,jj,k] e_k
       // is reducedPairing[i,j,k], record if non-zero.  
@@ -70,7 +70,7 @@ lDomain(ldomain), rDomain(rdomain), Range(range)
  KKinvariantsComputed=false;
 }
 
-NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) : 
+BilinearForm::BilinearForm(const BilinearForm& cloneMe) : 
  reducedPairing(clonePtr(cloneMe.reducedPairing)), 
  unreducedPairing(clonePtr(cloneMe.unreducedPairing)),
  lDomain(cloneMe.lDomain),  rDomain(cloneMe.rDomain), 
@@ -82,25 +82,25 @@ NBilinearForm::NBilinearForm(const NBilinearForm& cloneMe) :
  torsionSigmaString(cloneMe.torsionSigmaString), 
  torsionLegendreString(cloneMe.torsionLegendreString) {}
 
-NBilinearForm::~NBilinearForm()
+BilinearForm::~BilinearForm()
 { if (reducedPairing) delete reducedPairing;
   if (unreducedPairing) delete unreducedPairing; }
 
 const std::map< NMultiIndex< unsigned long >, Integer* > & 
- NBilinearForm::unreducedMap() const
+ BilinearForm::unreducedMap() const
  { return unreducedPairing->getGrid(); }
 
 const std::map< NMultiIndex< unsigned long >, Integer* > & 
- NBilinearForm::reducedMap() const
+ BilinearForm::reducedMap() const
  { return reducedPairing->getGrid(); }
 
-std::vector<Integer> NBilinearForm::evalCC(
+std::vector<Integer> BilinearForm::evalCC(
     std::vector<Integer> &lcc, std::vector<Integer> &rcc) const
 {
- std::vector<Integer> retval(Range.getRankCC(), Integer::zero);
+ std::vector<Integer> retval(Range.rankCC(), Integer::zero);
  static const std::vector<Integer> nullVec(0);
- if ( (lcc.size() != lDomain.getRankCC()) || 
-      (rcc.size() != rDomain.getRankCC()) ) return nullVec;
+ if ( (lcc.size() != lDomain.rankCC()) || 
+      (rcc.size() != rDomain.rankCC()) ) return nullVec;
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
  for (J = unreducedPairing->getGrid().begin(); 
       J!=unreducedPairing->getGrid().end(); J++)
@@ -109,20 +109,20 @@ std::vector<Integer> NBilinearForm::evalCC(
  return retval;
 }
 
-unsigned long NBilinearForm::rank() const
+unsigned long BilinearForm::rank() const
 {
  if (!Range.isIsomorphicTo(MarkedAbelianGroup(1, Integer::zero))) 
     return 0;
- MatrixInt cM( lDomain.getRank(), rDomain.getRank() );
+ MatrixInt cM( lDomain.rank(), rDomain.rank() );
 
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
-   if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
-       (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
-   cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
-            i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
+   if ( (i->first.entry(0) >= lDomain.countInvariantFactors()) &&
+       (i->first.entry(1) >= rDomain.countInvariantFactors()) )
+   cM.entry( i->first.entry(0) - lDomain.countInvariantFactors() , 
+            i->first.entry(1) - rDomain.countInvariantFactors() ) = 
             (*i->second); 
   }
 
@@ -134,45 +134,45 @@ unsigned long NBilinearForm::rank() const
  return rk;
 }
 
-long int NBilinearForm::zFormSignature() const 
+long int BilinearForm::zFormSignature() const 
 {
  if (!isSymmetric()) return 0; 
  if (!Range.isIsomorphicTo(MarkedAbelianGroup(1, Integer::zero))) 
      return 0;
  // ldomain == rdomain, form symmetric, range == Z.
  // so reducedpairing is nxnx1 -- think of it as a matrix M, computed Det(tI-M)
- MatrixRing< NSVPolynomialRing< Integer > > cM( lDomain.getRank(), 
-                                                       rDomain.getRank() );
+ MatrixRing< SVPolynomialRing< Integer > > cM( lDomain.rank(), 
+                                                       rDomain.rank() );
  // iterate through reducedPairing, insert into cM
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
-  if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
-       (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
-  cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
-            i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
-            NSVPolynomialRing< Integer >(-(*i->second), 0); }
+  if ( (i->first.entry(0) >= lDomain.countInvariantFactors()) &&
+       (i->first.entry(1) >= rDomain.countInvariantFactors()) )
+  cM.entry( i->first.entry(0) - lDomain.countInvariantFactors() , 
+            i->first.entry(1) - rDomain.countInvariantFactors() ) = 
+            SVPolynomialRing< Integer >(-(*i->second), 0); }
  for (unsigned long j=0; j<cM.rows(); j++) cM.entry(j,j) += 
-        NSVPolynomialRing< Integer >::pvar;
+        SVPolynomialRing< Integer >::pvar;
  // grab an adjoint, get its defining matrix, compute char poly, use Descartes
  // to get number of pos - neg roots. 
- NSVPolynomialRing< Integer > charPoly(cM.det());
+ SVPolynomialRing< Integer > charPoly(cM.det());
  return charPoly.descartesNo();
 }
 
-std::pair< bool, int > NBilinearForm::zFormType() const
+std::pair< bool, int > BilinearForm::zFormType() const
 {
- MatrixInt cM( lDomain.getRank(), rDomain.getRank() );
+ MatrixInt cM( lDomain.rank(), rDomain.rank() );
 
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
-   if ( (i->first.entry(0) >= lDomain.getNumberOfInvariantFactors()) &&
-       (i->first.entry(1) >= rDomain.getNumberOfInvariantFactors()) )
-   cM.entry( i->first.entry(0) - lDomain.getNumberOfInvariantFactors() , 
-            i->first.entry(1) - rDomain.getNumberOfInvariantFactors() ) = 
+   if ( (i->first.entry(0) >= lDomain.countInvariantFactors()) &&
+       (i->first.entry(1) >= rDomain.countInvariantFactors()) )
+   cM.entry( i->first.entry(0) - lDomain.countInvariantFactors() , 
+            i->first.entry(1) - rDomain.countInvariantFactors() ) = 
             (*i->second); 
   }
  // even/odd can be settled by the values mu(e_i,e_i) for the standard basis
@@ -183,13 +183,13 @@ std::pair< bool, int > NBilinearForm::zFormType() const
  // definiteness? 
  long int zFSig( zFormSignature() );
  int zFdef(0);
- if (zFSig == lDomain.getRank()) zFdef = 1;
- else if (-zFSig == lDomain.getRank()) zFdef = -1;
+ if (zFSig == lDomain.rank()) zFdef = 1;
+ else if (-zFSig == lDomain.rank()) zFdef = -1;
 
  return std::pair< bool, int >(evOdd, zFdef); 
 }
 
-const std::string& NBilinearForm::kkTorRank() const
+const std::string& BilinearForm::kkTorRank() const
 {
  if (!KKinvariantsComputed)
   {
@@ -214,7 +214,7 @@ const std::string& NBilinearForm::kkTorRank() const
  return torsionRankString;
 }
 
-const std::string& NBilinearForm::kkTorSigma() const 
+const std::string& BilinearForm::kkTorSigma() const 
 {
  if (!KKinvariantsComputed)
   {
@@ -239,7 +239,7 @@ const std::string& NBilinearForm::kkTorSigma() const
  return torsionSigmaString;
 }
 
-const std::string& NBilinearForm::kkTorLegendre() const 
+const std::string& BilinearForm::kkTorLegendre() const 
 {
  if (!KKinvariantsComputed)
   {
@@ -264,7 +264,7 @@ const std::string& NBilinearForm::kkTorLegendre() const
  return torsionLegendreString;
 }
 
-bool NBilinearForm::kkIsSplit() const
+bool BilinearForm::kkIsSplit() const
 {
  if (!KKinvariantsComputed)
   {
@@ -289,7 +289,7 @@ bool NBilinearForm::kkIsSplit() const
  return torsionLinkingFormIsSplit;
 }
 
-bool NBilinearForm::kkIsHyperbolic() const
+bool BilinearForm::kkIsHyperbolic() const
 {
  if (!KKinvariantsComputed)
   {
@@ -314,7 +314,7 @@ bool NBilinearForm::kkIsHyperbolic() const
  return torsionLinkingFormIsHyperbolic;
 }
 
-bool NBilinearForm::kkTwoTor() const
+bool BilinearForm::kkTwoTor() const
 {
  if (!KKinvariantsComputed)
   {
@@ -340,7 +340,7 @@ bool NBilinearForm::kkTwoTor() const
 }
 
 
-MarkedAbelianGroup NBilinearForm::image() const
+MarkedAbelianGroup BilinearForm::image() const
 { 
  // lets compute the image based off of the reducedpairing. 
  MarkedAbelianGroup dom(lDomain.minNumberOfGenerators()*
@@ -353,16 +353,16 @@ MarkedAbelianGroup NBilinearForm::image() const
      rDomain.minNumberOfGenerators() + J->first.entry(1) ) = (*J->second);
  MatrixInt zeroM(1, Range.minNumberOfGenerators() );
  MatrixInt redN( Range.minNumberOfGenerators(), 
-                  Range.getNumberOfInvariantFactors() );
- for (unsigned long i=0; i<Range.getNumberOfInvariantFactors(); i++)
-  redN.entry(i,i) = Range.getInvariantFactor(i);
+                  Range.countInvariantFactors() );
+ for (unsigned long i=0; i<Range.countInvariantFactors(); i++)
+  redN.entry(i,i) = Range.invariantFactor(i);
  MarkedAbelianGroup modRange( zeroM, redN );
  HomMarkedAbelianGroup hom( dom, modRange, mat );
- return hom.getImage();
+ return hom.image();
 }
 
 
-bool NBilinearForm::isSymmetric() const
+bool BilinearForm::isSymmetric() const
 {
  if (!lDomain.equalTo(rDomain)) return 0;
  // now we check symmetry.... we'll use the reduced matrix for this...
@@ -383,7 +383,7 @@ bool NBilinearForm::isSymmetric() const
 
 
 
-bool NBilinearForm::isAntiSymmetric() const
+bool BilinearForm::isAntiSymmetric() const
 {
 if (!lDomain.equalTo(rDomain)) return 0;
 // now we check symmetry.... we'll use the reduced matrix for this...
@@ -396,8 +396,8 @@ for (J = reducedPairing->getGrid().begin();
   x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
   const Integer* t( reducedPairing->getEntry(x));
   if (!t) return false;
-  if ( x[2] < lDomain.getNumberOfInvariantFactors() ) 
-   { if ( ((*J->second) + (*t)) % lDomain.getInvariantFactor(x[2]) != 
+  if ( x[2] < lDomain.countInvariantFactors() ) 
+   { if ( ((*J->second) + (*t)) % lDomain.invariantFactor(x[2]) != 
      Integer::zero ) return false; }
   else if ( (*J->second) + (*t) != Integer::zero ) return false;
   }
@@ -408,12 +408,12 @@ return true;
 /* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
  * p' = p( f x I ), p'^k_ij = sum_l f^l_i p^k_lj
  */
-NBilinearForm NBilinearForm::lCompose(const HomMarkedAbelianGroup &f) const
+BilinearForm BilinearForm::lCompose(const HomMarkedAbelianGroup &f) const
 {
  // check to see if this is a valid operation
  #ifdef DEBUG
- if (!lDomain.equalTo(f.getRange()))
-  { std::cerr<<"Error: Illegal composition in NBilinearForm::lCompose()"<<
+ if (!lDomain.equalTo(f.range()))
+  { std::cerr<<"Error: Illegal composition in BilinearForm::lCompose()"<<
     std::endl; exit(1); }
  #endif
  // compute the new unreducedPairing
@@ -423,55 +423,55 @@ NBilinearForm NBilinearForm::lCompose(const HomMarkedAbelianGroup &f) const
  // 3rd index Range SNF coord
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
 
- for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
+ for (unsigned long i=0; i<f.domain().rankCC(); i++)
   for (J = unreducedPairing->getGrid().begin(); 
        J!=unreducedPairing->getGrid().end(); J++)
    { 
    NMultiIndex< unsigned long > x(3);
    x[0]=i; x[1]=J->first.entry(1); x[2]=J->first.entry(2);
-   newPairing.incEntry( x, f.getDefiningMatrix().entry( 
+   newPairing.incEntry( x, f.definingMatrix().entry( 
                         J->first.entry(0), i ) * (*J->second) );
    }
 
- return NBilinearForm( f.getDomain(), rDomain, Range, newPairing );
+ return BilinearForm( f.domain(), rDomain, Range, newPairing );
 }
 
 
 /* p(ei,ej)=sum_k p^k_ij, f(ei)=sum_j f^j_i e_j
  * p' = p( I x f ), p'^k_ij = sum_l f^l_j p^k_il
  */
-NBilinearForm NBilinearForm::rCompose(const HomMarkedAbelianGroup &f) const
+BilinearForm BilinearForm::rCompose(const HomMarkedAbelianGroup &f) const
 {
  // check to see if this is a valid operation
  #ifdef DEBUG
- if (!rDomain.equalTo(f.getRange()))
-  { std::cerr<<"Error: Illegal composition in NBilinearForm::rCompose()"<<
+ if (!rDomain.equalTo(f.range()))
+  { std::cerr<<"Error: Illegal composition in BilinearForm::rCompose()"<<
                std::endl; exit(1); }
  #endif
  // we need to compute the new unreducedPairing
  NSparseGridRing< Integer > newPairing(3);
  std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
 
- for (unsigned long i=0; i<f.getDomain().getRankCC(); i++)
+ for (unsigned long i=0; i<f.domain().rankCC(); i++)
   for (J = unreducedPairing->getGrid().begin(); 
        J!=unreducedPairing->getGrid().end(); J++)
   { 
   NMultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(0); x[1] = i; x[2]=J->first.entry(2);
-  newPairing.incEntry( x, f.getDefiningMatrix().entry( 
+  newPairing.incEntry( x, f.definingMatrix().entry( 
                        J->first.entry(1), i ) * (*J->second) );
   }
 
-return NBilinearForm( lDomain, f.getDomain(), Range, newPairing );
+return BilinearForm( lDomain, f.domain(), Range, newPairing );
 }
 
 
 
-NBilinearForm NBilinearForm::postCompose(const HomMarkedAbelianGroup &f) const
+BilinearForm BilinearForm::postCompose(const HomMarkedAbelianGroup &f) const
 {
  #ifdef DEBUG
- if (!Range.equalTo(f.getDomain()))
-  { std::cerr<<"Error: Illegal composition in NBilinearForm::postCompose()"<<
+ if (!Range.equalTo(f.domain()))
+  { std::cerr<<"Error: Illegal composition in BilinearForm::postCompose()"<<
                std::endl; exit(1); }
  #endif
 
@@ -481,20 +481,20 @@ NBilinearForm NBilinearForm::postCompose(const HomMarkedAbelianGroup &f) const
 
  for (J = unreducedPairing->getGrid().begin(); 
       J!=unreducedPairing->getGrid().end(); J++)
-  for (unsigned long i=0; i<f.getRange().getRankCC(); i++)
+  for (unsigned long i=0; i<f.range().rankCC(); i++)
   { 
   NMultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(0); x[1] = J->first.entry(1); x[2]=i;
-  newPairing.incEntry( x, f.getDefiningMatrix().entry( i, 
+  newPairing.incEntry( x, f.definingMatrix().entry( i, 
                        J->first.entry(2) ) * (*J->second)  );
   }
 
- return NBilinearForm( lDomain, rDomain, f.getRange(), newPairing );
+ return BilinearForm( lDomain, rDomain, f.range(), newPairing );
 }
 
 
 // A x B --> C   turned into   A --> Hom(B,C)
-HomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
+HomMarkedAbelianGroup BilinearForm::leftAdjoint() const
 { 
  MatrixInt M( 1, 
                rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
@@ -504,17 +504,17 @@ HomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
   for (unsigned long j=0; j<Range.minNumberOfGenerators(); j++)
   { 
    unsigned long k(i*Range.minNumberOfGenerators() + j);
-   if ( i < rDomain.getNumberOfInvariantFactors() )
+   if ( i < rDomain.countInvariantFactors() )
     { 
-      if ( j < Range.getNumberOfInvariantFactors() ) 
-       N.entry( k, k ) = rDomain.getInvariantFactor( i ).gcd( 
-                         Range.getInvariantFactor( j ) );
+      if ( j < Range.countInvariantFactors() ) 
+       N.entry( k, k ) = rDomain.invariantFactor( i ).gcd( 
+                         Range.invariantFactor( j ) );
       else N.entry( k, k ) = Integer::one;
     } 
     else
     { 
-     if ( j < Range.getNumberOfInvariantFactors() ) 
-        N.entry( k, k ) = Range.getInvariantFactor( j );
+     if ( j < Range.countInvariantFactors() ) 
+        N.entry( k, k ) = Range.invariantFactor( j );
      else N.entry( k, k ) = Integer::zero;
     } 
   }
@@ -528,11 +528,11 @@ HomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
  for (I=reducedPairing->getGrid().begin(); 
       I!=reducedPairing->getGrid().end(); I++)
   {
-   if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) && 
-        ( I->first.entry(1) < rDomain.getNumberOfInvariantFactors() ) )
+   if ( ( I->first.entry(2) < Range.countInvariantFactors() ) && 
+        ( I->first.entry(1) < rDomain.countInvariantFactors() ) )
     {
-     Integer P( rDomain.getInvariantFactor(I->first.entry(1)) );
-     Integer Q( Range.getInvariantFactor(I->first.entry(2)) );
+     Integer P( rDomain.invariantFactor(I->first.entry(1)) );
+     Integer Q( Range.invariantFactor(I->first.entry(2)) );
      Integer divBy( Q.divExact( P.gcd(Q) ) ); 
      adjmat.entry( I->first.entry(1)*Range.minNumberOfGenerators() + 
      I->first.entry(2), I->first.entry(0) ) = I->second->divExact( divBy ); 
@@ -549,8 +549,8 @@ HomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
  MatrixInt lN( lDomain.minNumberOfGenerators(), 
                 lDomain.minNumberOfGenerators() );
 
- for (unsigned long i=0; i<lDomain.getNumberOfInvariantFactors(); i++)
-   lN.entry(i,i) = lDomain.getInvariantFactor(i);
+ for (unsigned long i=0; i<lDomain.countInvariantFactors(); i++)
+   lN.entry(i,i) = lDomain.invariantFactor(i);
 
  MarkedAbelianGroup simpleLdomain( lM, lN );
 
@@ -559,7 +559,7 @@ HomMarkedAbelianGroup NBilinearForm::leftAdjoint() const
 
 
 // A x B --> C   turned into   B --> Hom(A,C)
-HomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
+HomMarkedAbelianGroup BilinearForm::rightAdjoint() const
 {
  MatrixInt M(1, 
               lDomain.minNumberOfGenerators()*Range.minNumberOfGenerators() );
@@ -570,17 +570,17 @@ HomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
   for (unsigned long j=0; j<Range.minNumberOfGenerators(); j++)
    {
     unsigned long k(i*Range.minNumberOfGenerators() + j);
-    if ( i < lDomain.getNumberOfInvariantFactors() )
+    if ( i < lDomain.countInvariantFactors() )
      { 
-      if ( j < Range.getNumberOfInvariantFactors() ) 
-       N.entry( k, k ) = lDomain.getInvariantFactor( i ).gcd( 
-                         Range.getInvariantFactor( j ) );
+      if ( j < Range.countInvariantFactors() ) 
+       N.entry( k, k ) = lDomain.invariantFactor( i ).gcd( 
+                         Range.invariantFactor( j ) );
       else N.entry( k, k ) = Integer::one; 
      } 
     else
      { 
-      if ( j < Range.getNumberOfInvariantFactors() ) 
-       N.entry( k, k ) = Range.getInvariantFactor( j );
+      if ( j < Range.countInvariantFactors() ) 
+       N.entry( k, k ) = Range.invariantFactor( j );
       else N.entry( k, k ) = Integer::zero; 
      } 
    }
@@ -593,11 +593,11 @@ HomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
  for (I=reducedPairing->getGrid().begin(); 
       I!=reducedPairing->getGrid().end(); I++)
   {
-   if ( ( I->first.entry(2) < Range.getNumberOfInvariantFactors() ) &&
-        ( I->first.entry(0) < lDomain.getNumberOfInvariantFactors() ) )
+   if ( ( I->first.entry(2) < Range.countInvariantFactors() ) &&
+        ( I->first.entry(0) < lDomain.countInvariantFactors() ) )
    {
-    Integer P( lDomain.getInvariantFactor( I->first.entry(0) ) );
-    Integer Q( Range.getInvariantFactor( I->first.entry(2) ) );
+    Integer P( lDomain.invariantFactor( I->first.entry(0) ) );
+    Integer Q( Range.invariantFactor( I->first.entry(2) ) );
     Integer divBy( Q.divExact( P.gcd(Q) ) );
     adjmat.entry( I->first.entry(0)*Range.minNumberOfGenerators() + 
      I->first.entry(2), I->first.entry(1) ) = I->second->divExact( divBy );
@@ -612,15 +612,15 @@ HomMarkedAbelianGroup NBilinearForm::rightAdjoint() const
  MatrixInt rN( rDomain.minNumberOfGenerators(), 
                 rDomain.minNumberOfGenerators() );
 
- for (unsigned long i=0; i<rDomain.getNumberOfInvariantFactors(); i++)
-  rN.entry(i,i) = rDomain.getInvariantFactor(i);
+ for (unsigned long i=0; i<rDomain.countInvariantFactors(); i++)
+  rN.entry(i,i) = rDomain.invariantFactor(i);
 
  MarkedAbelianGroup simpleRdomain( rM, rN );
 
  return HomMarkedAbelianGroup( simpleRdomain, HOM, adjmat );
 }
 
-void NBilinearForm::writeTextShort(std::ostream& out) const
+void BilinearForm::writeTextShort(std::ostream& out) const
 {
  out<<"Bilinear form: [";
  lDomain.writeTextShort(out); out<<" x ";
@@ -628,7 +628,7 @@ void NBilinearForm::writeTextShort(std::ostream& out) const
  Range.writeTextShort(out);   out<<"]";
 }
 
-void NBilinearForm::writeTextLong(std::ostream& out) const
+void BilinearForm::writeTextLong(std::ostream& out) const
 {
  writeTextShort(out);
  out<<"\nrp: "; reducedPairing->writeTextShort(out); out<<" / ";
@@ -650,7 +650,7 @@ void NBilinearForm::writeTextLong(std::ostream& out) const
  *  linkingFormPD is the p-primary orthogonal splitting of the torsion linking
  *                form. 
  */
-void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
+void computeTorsionLinkingFormInvariants(const BilinearForm &intP, 
 	std::vector< std::pair< Integer, 
                  std::vector< unsigned long > > > &ppVec, 
     std::vector< std::pair< Integer, 
@@ -661,7 +661,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 {
     Integer tN,tD,tR;
     // number of torsion generators:
-    unsigned long niv(intP.ldomain().getNumberOfInvariantFactors());
+    unsigned long niv(intP.ldomain().countInvariantFactors());
     // for holding prime decompositions.:
     std::vector<std::pair<Integer, unsigned long> > tFac;
     Integer tI;
@@ -683,7 +683,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     unsigned long i, j, k, l;
 
     for (i=0; i<niv; i++) {
-        tI = intP.ldomain().getInvariantFactor(i);
+        tI = intP.ldomain().invariantFactor(i);
         tFac = NPrimes::primePowerDecomp(tI); 
         for (j=0; j<tFac.size(); j++) {
             pPrList.push_back(tFac[j]);
@@ -692,7 +692,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
             fac2 = tI; fac2.divByExact(fac1); 
             fac2.gcdWithCoeffs( fac1, fac1i, fac2i ); 
             PPList.push_back( fac1 ); 
-            tV = intP.ldomain().getTorsionRep(i);
+            tV = intP.ldomain().torsionRep(i);
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
             pvList.push_back(tV);
         }
@@ -777,8 +777,8 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
     ppList.resize(indexingSize); // one entry for every prime divisor of |H1|
     linkingFormPD.resize(indexingSize);
     // find the denominator of all our Rationals in our linking form matrices
-    Integer DenOm( (intP.range().getNumberOfInvariantFactors()==0) ? 1 : 
-        intP.range().getInvariantFactor(0) ); // only one invariant factor in 
+    Integer DenOm( (intP.range().countInvariantFactors()==0) ? 1 : 
+        intP.range().invariantFactor(0) ); // only one invariant factor in 
                               // the range unless the torsion group is trivial
     for (i=0, it1 = indexing.begin(); it1 != indexing.end(); i++, it1++) 
     { 
@@ -922,8 +922,8 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
 
                     // reduce mod 1, then turn into a long double and
                     // evaluate cos, sin
-                    tN = tSum.getNumerator();
-                    tD = tSum.getDenominator();
+                    tN = tSum.numerator();
+                    tD = tSum.denominator();
                     tN.divisionAlg(tD,tR);
                     tSum = Rational(twoPow) * pi * Rational( tR, tD );
                     tLD = tSum.doubleApprox();
@@ -1019,7 +1019,7 @@ void computeTorsionLinkingFormInvariants(const NBilinearForm &intP,
             for (k=0; k<ppVec[i].second[j]; k++)
                 for (l=0; l<ppVec[i].second[j]; l++)
                     tempM.entry(k,l) = (Rational(tI)*linkingFormPD[i]->
-                        entry(k+curri,l+curri)).getNumerator();
+                        entry(k+curri,l+curri)).numerator();
             tempa.push_back( tempM.det().legendre(ppVec[i].first) );
             // legendre symbol, compute and append to tempa
             // compute determinant.
@@ -1127,8 +1127,8 @@ void readTeaLeavesTLF(
             tI = Integer("2");
             tI.raiseToPower(ppList[0].second[i]-1);
             tRat = Rational(tI) * linkingFormPD[0]->entry(i,i);
-            tN = tRat.getNumerator();
-            tD = tRat.getDenominator();
+            tN = tRat.numerator();
+            tD = tRat.denominator();
             tN.divisionAlg(tD,tR);
             if (tR != 0) (*torsionLinkingFormKKTTC) = false; 
         }

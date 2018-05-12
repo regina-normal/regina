@@ -33,7 +33,7 @@
 /* end stub */
 
 #include "maths/matrixops.h"
-#include "maths/nprimes.h"
+#include "maths/primes.h"
 #include "algebra/cellulardata.h"
 
 #include <map>
@@ -78,7 +78,7 @@ bool written=false;
 	 hmabi->second->writeTextShort(out);
 	 written = true;
         }
- std::map< FormLocator, NBilinearForm* >::const_iterator fmit;
+ std::map< FormLocator, BilinearForm* >::const_iterator fmit;
  for (fmit = bilinearForms.begin(); fmit != bilinearForms.end(); fmit++)
  	{
 	 if (written) out<<" ";
@@ -93,7 +93,7 @@ bool written=false;
 	 if (written) out<<" ";
 	 git->first.writeTextShort(out);
 	 out<<" is ";
-         out<<git->second->toString();
+         out<<git->second->str();
 //	 git->second->writeTextShort(out);
 	 written = true;
 	}
@@ -104,7 +104,7 @@ bool written=false;
 	 if (written) out<<" ";
 	 hit->first.writeTextShort(out);
 	 out<<" is ";
-         out<<hit->second->toString();
+         out<<hit->second->str();
 //	 hit->second->writeTextShort(out);
 	 written = true;
 	}
@@ -121,10 +121,10 @@ if (tri3) {
  out<<" named \""; tri3->writeTextShort(out); 
  out<<"\" is"; // use writeTextLong?
  if (tri3->isOrientable()) out<<" orientable"; else out<<" non-orientable"; 
- if (tri3->isIdeal() && tri3->hasBoundaryFaces()) 
+ if (tri3->isIdeal() && tri3->hasBoundaryFacets()) 
     out<<" has ideal and standard boundary";
  else if (tri3->isIdeal()) out<<" has ideal boundary";
- else if (tri3->hasBoundaryFaces()) out<<" has standard boundary";
+ else if (tri3->hasBoundaryFacets()) out<<" has standard boundary";
  else out<<" no boundary";
 }
 else 
@@ -162,7 +162,7 @@ else
    out<<" is "; hmabi->second->writeTextShort(out);
    out<<", ";
   }
- std::map< FormLocator, NBilinearForm* >::const_iterator fmit;
+ std::map< FormLocator, BilinearForm* >::const_iterator fmit;
  for (fmit = bilinearForms.begin(); fmit != bilinearForms.end(); fmit++)
   {
    out<<" ";

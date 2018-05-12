@@ -33,8 +33,8 @@
 /* end stub */
 
 #include "maths/matrixops.h"
-#include "maths/nprimes.h"
-#include "algebra/ncellulardata.h"
+#include "maths/primes.h"
+#include "algebra/cellulardata.h"
 
 #include <map>
 #include <list>
@@ -66,7 +66,7 @@ for (homology_coordinate_system i=first_coord; i != last_implemented_coord; ++i)
   {
    const MatrixInt* A = integerChainComplex( ChainComplexLocator( j, i) );
    const MatrixInt* B = integerChainComplex( ChainComplexLocator( j+1, i) );
-   std::auto_ptr< MatrixRing<NLargeInteger> > prod = (*A)*(*B);
+   std::unique_ptr< MatrixRing<Integer> > prod = (*A)*(*B);
    if (!prod->isZero()) return false;
   }
  }
@@ -92,8 +92,8 @@ for (unsigned long i=1; i<smCM.size(); i++)
  {
   if ( (mCC[i]->columns() != smCM[i]->rows()) || 
        (smCM[i-1]->columns() != sCC[i]->rows()) ) return false;
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*smCM[i]);
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod2 = (*smCM[i-1])*(*sCC[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod1 = (*mCC[i])*(*smCM[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod2 = (*smCM[i-1])*(*sCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify mCC[i]*dmCM[i] == dmCM[i-1]*dCC[i]
@@ -102,8 +102,8 @@ for (unsigned long i=1; i<dmCM.size(); i++)
  {
   if ( (mCC[i]->columns() != dmCM[i]->rows()) || 
        (dmCM[i-1]->columns() != dCC[i]->rows()) ) return false;
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod1 = (*mCC[i])*(*dmCM[i]);
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod2 = (*dmCM[i-1])*(*dCC[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod1 = (*mCC[i])*(*dmCM[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod2 = (*dmCM[i-1])*(*dCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify srCC[i]*strCM[i] == strCM[i-1]*sCC[i]
@@ -112,8 +112,8 @@ for (unsigned long i=1; i<strCM.size(); i++)
  { // srCC 
   if ( (srCC[i]->columns() != strCM[i]->rows()) || 
        (strCM[i-1]->columns() != sCC[i]->rows()) ) return false;
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod1 = (*srCC[i])*(*strCM[i]);
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod2 = (*strCM[i-1])*(*sCC[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod1 = (*srCC[i])*(*strCM[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod2 = (*strCM[i-1])*(*sCC[i]);
   if ( (*prod1) != (*prod2) ) return false;
  }
 // verify sCC[i]*sbiCM[i] == sbiCM[i-1]*sbCC[i]
@@ -122,8 +122,8 @@ for (unsigned long i=1; i<sbiCM.size(); i++)
  {
   if ( (sCC[i]->columns() != sbiCM[i]->rows()) || 
        (sbiCM[i-1]->columns() != sbCC[i]->rows()) ) return false;
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod1 = (*sCC[i])*(*sbiCM[i]);
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod2 = (*sbiCM[i-1])*(*sbCC[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod1 = (*sCC[i])*(*sbiCM[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod2 = (*sbiCM[i-1])*(*sbCC[i]);
   if ( (*prod1) != (*prod2) ) return false; 
  }
 // verify sbCC[i]*schCM[i] == (-1)*schCM[i-1]*srCC[i+1]
@@ -132,8 +132,8 @@ for (unsigned long i=1; i<schCM.size(); i++)
  { 
   if ( (sbCC[i]->columns() != schCM[i]->rows()) || 
        (schCM[i-1]->columns() != srCC[i+1]->rows()) ) return false;
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod1= (*sbCC[i])*(*schCM[i]);
-  std::auto_ptr< MatrixRing<NLargeInteger> > prod2= (*schCM[i-1])*(*srCC[i+1]);
+  std::unique_ptr< MatrixRing<Integer> > prod1= (*sbCC[i])*(*schCM[i]);
+  std::unique_ptr< MatrixRing<Integer> > prod2= (*schCM[i-1])*(*srCC[i+1]);
   for (unsigned long j=0; j<prod1->rows(); j++) 
    for (unsigned long k=0; k<prod1->columns(); k++)
 	if (prod1->entry(j,k) + prod2->entry(j,k) != 0) return false; 
@@ -181,7 +181,7 @@ for (unsigned long i=0; i<aDim; i++)
   const HomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const HomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap)->isZero()) flag=1;
-  if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) 
+  if (!(secondMap.kernel().isIsomorphicTo( firstMap.image() ) ) ) 
     flag = 2; 
   if ( (i==0) && (var==coVariant) ) if (!secondMap.isEpic()) flag = 3;  
     // rightmost term in LES, covariant case
@@ -204,7 +204,7 @@ for (unsigned long i=1; i<=aDim; i++)
   const HomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const HomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap)->isZero()) flag=5;
-  if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag=6;
+  if (!(secondMap.kernel().isIsomorphicTo( firstMap.image() ) ) ) flag=6;
  } 
 
 // exact at H_i(M, \partial M):H_i M-->H_i(M, \partial M)-->H_{i-1} \partial M    
@@ -222,7 +222,7 @@ for (unsigned long i=1; i<=aDim; i++)
   const HomMarkedAbelianGroup secondMap(*homGroup(secondMapLoc));
   const HomMarkedAbelianGroup firstMap(*homGroup(firstMapLoc));
   if (!(secondMap*firstMap)->isZero()) flag=7;
-  if (!(secondMap.getKernel().isIsomorphicTo( firstMap.getImage() ) ) ) flag=8;
+  if (!(secondMap.kernel().isIsomorphicTo( firstMap.image() ) ) ) flag=8;
   if ( (i == aDim) && (var == coVariant) ) if (!firstMap.isMonic()) flag=9; 
      // leftmost term in LES, coVariant case
   if ( (i == aDim) && (var == contraVariant) ) if (!secondMap.isEpic()) flag=10; 
@@ -277,22 +277,22 @@ for (unsigned long i=1; i<=(aDim/2); i++)
   GroupLocator LDom( i, coVariant, DUAL_coord, coeff );
   GroupLocator RDom( aDim-i, coVariant, STD_REL_BDRY_coord, coeff );
   FormLocator intFloc( intersectionForm, LDom, RDom );
-  const NBilinearForm intF( *bilinearForm( intFloc ) );   
+  const BilinearForm intF( *bilinearForm( intFloc ) );   
   HomMarkedAbelianGroup lHom(intF.leftAdjoint());
   if (!lHom.isEpic()) retval=false;
-  MarkedAbelianGroup ker(lHom.getKernel()); 
+  MarkedAbelianGroup ker(lHom.kernel()); 
   // todo: add test to check kernel is the torsion subgroup
   //       in non-orientable case ker is trivial.
   if (coeff == 2) { if (!ker.isTrivial()) retval=false; }
   else 
    {
-    if (ker.getRank()!= 0) { retval=false; }
-    if (ker.getNumberOfInvariantFactors() == 
-      intF.ldomain().getNumberOfInvariantFactors())
+    if (ker.rank()!= 0) { retval=false; }
+    if (ker.countInvariantFactors() == 
+      intF.ldomain().countInvariantFactors())
      {
-      for (unsigned long j=0; j<ker.getNumberOfInvariantFactors(); j++)
+      for (unsigned long j=0; j<ker.countInvariantFactors(); j++)
       {
-       if (ker.getInvariantFactor(j) !=intF.ldomain().getInvariantFactor(j))
+       if (ker.invariantFactor(j) !=intF.ldomain().invariantFactor(j))
 	    { retval = false; }
       }
      }

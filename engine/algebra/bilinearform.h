@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file algebra/nbilinearform.h
+/*! \file algebra/bilinearform.h
  *  \brief Deals with bilinear forms -- homomorphisms out of a tensor product
  *   of abelian groups, to an abelian group. 
  */
@@ -71,7 +71,7 @@ namespace regina {
  *
  * @author Ryan Budney
  */
-class REGINA_API NBilinearForm {
+class REGINA_API BilinearForm {
     private:
 	/**
 	 * Stores the pairing in SNF coordinates for all 3 groups. 
@@ -108,7 +108,7 @@ class REGINA_API NBilinearForm {
          * chain complex for rdomain, and k the rank of the chain complex 
          * for range. 
          */
-        NBilinearForm(const MarkedAbelianGroup &ldomain, 
+        BilinearForm(const MarkedAbelianGroup &ldomain, 
               const MarkedAbelianGroup &rdomain, 
 		      const MarkedAbelianGroup &range,   
               const NSparseGridRing< Integer > &pairing);
@@ -118,12 +118,12 @@ class REGINA_API NBilinearForm {
          *
          * @param cloneMe the form to clone.
          */
-        NBilinearForm(const NBilinearForm& cloneMe);
+        BilinearForm(const BilinearForm& cloneMe);
 
     	/**
 	     * Destructor
 	     */
-        ~NBilinearForm();
+        ~BilinearForm();
 
         /**
          * Evaluates the bilinear form on an element of ldomain and rdomain 
@@ -287,18 +287,18 @@ class REGINA_API NBilinearForm {
 	 *  Given a bilinear form A x B --> C and a map A' --> A, there
      *  is a natural composite A' x B --> C
 	 */
-	NBilinearForm lCompose(const HomMarkedAbelianGroup &f) const; 
+	BilinearForm lCompose(const HomMarkedAbelianGroup &f) const; 
 	/**
 	 *  Given a bilinear form A x B --> C and a map B' --> B, there
      *  is a natural composite A x B' --> C
 	 */
-	NBilinearForm rCompose(const HomMarkedAbelianGroup &f) const; 
+	BilinearForm rCompose(const HomMarkedAbelianGroup &f) const; 
 
 	/**
 	 *  Given a bilinear form A x B --> C and a map C --> C', there
      *  is a natural composite A x B --> C'
 	 */
-	NBilinearForm postCompose(const HomMarkedAbelianGroup &f) const; 
+	BilinearForm postCompose(const HomMarkedAbelianGroup &f) const; 
 
 	/**
 	 * Given a map A x B --> C, there are two adjoints, 
@@ -342,7 +342,7 @@ class REGINA_API NBilinearForm {
 
 
 /**
- *  This procedure takes as input the NBilinearForm intP which is required to 
+ *  This procedure takes as input the BilinearForm intP which is required to 
  * be a torsion linking form on an abelian group.  Specifically, it's assumed 
  * the map A x A --> Q/Z is symmetric, and the range is a trivially 
  * presented Z/nZ. 
@@ -381,7 +381,7 @@ class REGINA_API NBilinearForm {
  *   torsion linking form to the subgroups of A divisible by all the prime 
  *   factors of the order of A. 
  */
-REGINA_API void computeTorsionLinkingFormInvariants(const NBilinearForm &intP, 
+REGINA_API void computeTorsionLinkingFormInvariants(const BilinearForm &intP, 
 std::vector< std::pair< Integer, std::vector< unsigned long > > > &ppVec, 
 std::vector< std::pair< Integer, std::vector< unsigned long > > > &ppList,
 std::vector<unsigned long> &ttVec, 
@@ -410,14 +410,14 @@ REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< Integer,
 /*@}*/
 
 inline REGINA_API const NSparseGridRing< Integer >* 
- NBilinearForm::reducedSparseGrid() const
+ BilinearForm::reducedSparseGrid() const
 { return reducedPairing; }
 
-inline REGINA_API const MarkedAbelianGroup& NBilinearForm::ldomain() const
+inline REGINA_API const MarkedAbelianGroup& BilinearForm::ldomain() const
 { return lDomain; }
-inline REGINA_API const MarkedAbelianGroup& NBilinearForm::rdomain() const
+inline REGINA_API const MarkedAbelianGroup& BilinearForm::rdomain() const
 { return rDomain; }
-inline REGINA_API const MarkedAbelianGroup& NBilinearForm::range() const
+inline REGINA_API const MarkedAbelianGroup& BilinearForm::range() const
 { return Range; }
 
 

@@ -57,7 +57,6 @@
 
 namespace regina {
 
-
 // counts number of elements in thelist less than obj
 unsigned long num_less_than(const std::set<unsigned long> &thelist, 
     const unsigned long &obj)
@@ -796,9 +795,16 @@ void CellularData::buildFundGrpPres() const
       }
      else // boundary face -- cell half on std boundary, half in interior
       {
-      // TODO: how should we redo this?
-       unsigned long tetind;
-       const Dim4TriangleEmbedding facemb = (*fac)->embedding(0);
+      // TODO: this is a dimension 4 case.  We are requesting a 
+      //  triangle's embeddings. We're  building the relators in the
+      //  pi1 presentation.  So we want to look at the link of this triangle,
+      //  and find the corresponding 1-cells to generate the pi1 presentation.
+      //  GOAL is to build "relator"
+      //  tools we have: iterating through the fac's embeddings.
+      //   FaceEmbedding<ambient dim, dim-codim> 
+       unsigned long tetind; // TODO: used?
+       const FaceEmbedding<4, 2> facemb = (*fac)->embedding(0);
+       // Dim4TriangleEmbedding depreciated, replace with FaceEmbedding<4, 2> 
        currPen = facemb.pentachoron();
        currPenFace = facemb.vertices()[4]; 
        tet = currPen->tetrahedron(currPenFace); // boundary tet we start with
@@ -819,22 +825,31 @@ void CellularData::buildFundGrpPres() const
         }
    
        // main loop
-       for (std::deque<Dim4TriangleEmbedding>::const_iterator 
-            embit=(*fac)->embeddings().begin();
-            embit != (*fac)->embeddings().end(); embit++)
+       // TODO: fix iteration. use ben's auto& emb construction
+       for (auto& embit: *(*fac))
         { // now we have to determine whether or not the embedding 
           //  coincides with the normal or of the tet.
-         currPen = (*embit).pentachoron();
-         currPenFace = (*embit).vertices()[4]; 
+         currPen = embit.pentachoron();
+         currPenFace = embit.vertices()[4]; 
          tet = currPen->tetrahedron(currPenFace);  
          // and is the tet in the maximal tree?    
          if (!inMaximalTree(tet)) 
-          {
+          { // we need to decide on the sign of the edge
           // get index. 
-          tetind = delta1 + tri4->tetrahedronIndex( tet ) -
-             num_less_than( maxTreeStd, tri4->tetrahedronIndex( tet ) );
+          tetind = delta1 + tet->index() - num_less_than( maxTreeStd, tet->index() );
           int sign;
-          if (embit == (*fac)->embeddings().begin() )
+          // equality check between embit and the first embedding of fac. . .
+          // fac is iterator to triangle pointers.
+          // embit is a FaceEmbedding<4, 2>.
+          // (*fac)->embedding(0) is 
+          // (*fac)->front() is a faceembedding. . .
+          // TODO: uncertain if we can check equality using pointers here. Let's
+          //  use the idea in the else clause.
+
+          // boundary facets have outward orientation, so the first one should
+          // get a -1 sign.
+          if ( ((*fac)->front().pentachoron() == currPen ) && 
+               ((*fac)->front().vertices()[4] == currPenFace) ) // TODO update
            { sign = -1; }
           else
            {
@@ -847,14 +862,13 @@ void CellularData::buildFundGrpPres() const
         } 
 
        // end pad
-       currPenFace= (*fac)->embeddings().back().vertices()[3];
+       currPenFace= (*fac)->back().vertices()[3];
        tet = currPen->tetrahedron(currPenFace);
        if (!tet->isBoundary()) 
         std::cout<<"ERROR (unexpected tetrahedron) "<<std::endl;
        if (!inMaximalTree(tet))
         {
-         tetind = delta1 + tri4->tetrahedronIndex( tet ) - 
-            num_less_than( maxTreeStd, tri4->tetrahedronIndex( tet ) );
+         tetind = delta1 + tet->index() - num_less_than( maxTreeStd, tet->index() );
          relator.addTermFirst( tetind, 1 ); 
          // all 1-cells dual to boundary tets assumed oriented outwards
         }
@@ -925,7 +939,7 @@ void CellularData::buildFundGrpPres() const
      const Face<4,2>* fac ( tri4->triangle( icIx[1][i]/3 ) );
      unsigned long idEdg ( icIx[1][i] % 3 );  // ideal edge number of fac
      // lets acquire all the Dim4Pentachora incident to fac. 
-     for (unsigned long j=0; j<fac->countEmbeddings(); j++)
+     for (unsigned long j=0; j<fac->degree(); j++)
       {
        const Simplex<4>* pen ( fac->embedding(j).pentachoron() );
        Perm<5> facemb( fac->embedding(j).vertices() );
@@ -1014,9 +1028,10 @@ void CellularData::buildFundGrpPres() const
      GroupExpression* relate ( new GroupExpression(relator) );
      pres.addRelation(relate);
     }
-
   } // end tri4
+
  else
+ 
   { // tri3 
    Face<3,2>* currFac (NULL); Simplex<3>* currTet (NULL); 
    Face<3,2>* fac (NULL); unsigned long currTetFace;
@@ -1028,23 +1043,23 @@ void CellularData::buildFundGrpPres() const
         edg!=tri3->edges().end(); edg++)
     {
      GroupExpression relator; 
+     
      if ( !(*edg)->isBoundary() ) // non-boundary -- interior edge
-      { 
-       std::deque<Face<3,1>Embedding>::const_iterator embit;
-       for (embit = (*edg)->embeddings().begin();
-                    embit != (*edg)->embeddings().end(); embit++)
+      {
+       // TODO: building relators in the 3-dimensional case. Follow 4-d example.
+       
+       for (auto& embit: *(*edg))
         { // now we have to determine whether or not the embedding coincides 
           // with the normal or of the tet.
-         currTet = (*embit).tetrahedron();
-         currTetFace = (*embit).vertices()[3]; 
+         currTet = embit.tetrahedron();
+         currTetFace = embit.vertices()[3]; 
          fac = currTet->triangle(currTetFace);  
          // and is the tet in the maximal tree?    
          if (!inMaximalTree(fac)) 
           {
           // get index. 
           // this index appears to be wrong! 
-          unsigned long facind = delta1 + tri3->faceIndex( fac ) - 
-                num_less_than( maxTreeStd, tri3->faceIndex( fac ) );
+          unsigned long facind = delta1 + fac->index() - num_less_than( maxTreeStd, fac->index() );
           if ( (fac -> embedding(1).tetrahedron() == currTet) && 
                (fac -> embedding(1).triangle() == currTetFace) )
            relator.addTermFirst( facind, 1 ); 
@@ -1054,11 +1069,11 @@ void CellularData::buildFundGrpPres() const
         } 
        GroupExpression* relate ( new GroupExpression(relator) );
        pres.addRelation(relate);
-      }
+      } // end non-boundary edge loop
      else // boundary edge -- cell half on std boundary, half in interior
       {
        unsigned long facind;
-       const Face<3,1>Embedding edgemb = (*edg)->embedding(0);
+       const FaceEmbedding<3,1> edgemb = (*edg)->embedding(0);
        currTet = edgemb.tetrahedron();
        currTetFace = edgemb.vertices()[3]; 
        fac = currTet->triangle(currTetFace); // boundary tet we start with
@@ -1078,21 +1093,21 @@ void CellularData::buildFundGrpPres() const
         }
    
        // interior part of cell boundary
-       for (std::deque<Face<3,1>Embedding>::const_iterator 
-            embit=(*edg)->embeddings().begin();
-            embit != (*edg)->embeddings().end(); embit++)
+       for (auto& embit : *(*edg) )
         { // now we have to determine whether or not the embedding coincides 
           // with the normal or of the tet.
-         currTet = (*embit).tetrahedron();
-         currTetFace = (*embit).vertices()[3]; 
+         currTet = embit.tetrahedron();
+         currTetFace = embit.vertices()[3]; 
          fac = currTet->triangle(currTetFace);  
          // and is the tet in the maximal tree?    
          if (!inMaximalTree(fac)) 
           { // get index. 
-          facind = delta1 + tri3->faceIndex( fac ) - 
-                   num_less_than( maxTreeStd, tri3->faceIndex( fac ) );
+          facind = delta1 + fac->index() - num_less_than( maxTreeStd, fac->index() );
           int sign;
-          if (embit == (*edg)->embeddings().begin() ) { sign = -1; }
+          // TODO this line was edited significantly. CHECK
+          if ( ((*edg)->front().tetrahedron() == currTet ) && 
+               ((*edg)->front().vertices()[3] == currTetFace) )         
+           { sign = -1; }
           else
            {
             if ( (fac -> embedding(0).tetrahedron() == currTet) && 
@@ -1113,9 +1128,8 @@ void CellularData::buildFundGrpPres() const
        if (!fac->isBoundary()) std::cout<<"CellularData::buildFundGrpPres()"
             " ERROR unexpected face (2)."<<std::endl;
        if (!inMaximalTree(fac))
-        
-         facind = delta1 + fac->index()  -
-                  num_less_than( maxTreeStd, fac->index() );
+        {
+         facind = delta1 + fac->index()  - num_less_than( maxTreeStd, fac->index() );
          relator.addTermFirst( facind, 1 ); 
          // all 1-cells dual to boundary tets assumed oriented outwards
         }
@@ -1124,6 +1138,7 @@ void CellularData::buildFundGrpPres() const
        GroupExpression* relate( new GroupExpression(relator) );
        pres.addRelation(relate);
       }// end boundary edge loop
+      
     }// that finishes interior cells dual to edges. 
 
    // now for boundary dual 2-cells -- pure boundary relator.

@@ -349,12 +349,12 @@ const HomMarkedAbelianGroup* CellularData::homGroup(
  return NULL;
 }
 
-NSVPolynomialRing< Integer > CellularData::poincarePolynomial() const
+SVPolynomialRing< Integer > CellularData::poincarePolynomial() const
 {
- NSVPolynomialRing< Integer > retval;
+ SVPolynomialRing< Integer > retval;
  unsigned long aDim( tri3 ? 3 : 4 );
  for (unsigned long i=0; i<=aDim; i++) retval += 
-  NSVPolynomialRing< Integer >( Integer( unmarkedGroup( 
+  SVPolynomialRing< Integer >( Integer( unmarkedGroup( 
                  GroupLocator(i, coVariant, DUAL_coord, 0))->rank() ), i );
 return retval;
 }
@@ -386,13 +386,13 @@ return retval;
  *
  *  4) all -- implement via Poincare duality once (2) complete
  */
-const NBilinearForm* CellularData::bilinearForm( 
+const BilinearForm* CellularData::bilinearForm( 
                         const FormLocator &f_desc ) const
 {
  unsigned long aDim( tri3 ? 3 : 4 );
- NBilinearForm* bfptr(NULL);
+ BilinearForm* bfptr(NULL);
 
- std::map< FormLocator, NBilinearForm* >::const_iterator p;
+ std::map< FormLocator, BilinearForm* >::const_iterator p;
  p = bilinearForms.find(f_desc);
  if (p != bilinearForms.end()) return (p->second);
  // there's no form matching f_desc in bilinearForms, so we make one.
@@ -415,10 +415,10 @@ const NBilinearForm* CellularData::bilinearForm(
     { x[0] = i; x[1] = i; x[2] = 0;
       intM.setEntry( x, 1 ); } 
 
-   bfptr = new NBilinearForm( *lDom, *rDom, rAng, intM );
-   std::map< FormLocator, NBilinearForm* > *mbfptr = 
-      const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-   mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+   bfptr = new BilinearForm( *lDom, *rDom, rAng, intM );
+   std::map< FormLocator, BilinearForm* > *mbfptr = 
+      const_cast< std::map< FormLocator, BilinearForm* > *> (&bilinearForms);
+   mbfptr->insert( std::pair<FormLocator, BilinearForm*>(f_desc, bfptr) );
    return bfptr; 
   } // end case 1
 
@@ -502,10 +502,10 @@ const NBilinearForm* CellularData::bilinearForm(
          intM.setEntry( x, facinc.sign()*tet->orientation() ); 
         }
 
-     bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
-     std::map< FormLocator, NBilinearForm* > *mbfptr = 
-      const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-     mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+     bfptr = new BilinearForm( *lDom, *rDom, *rAng, intM );
+     std::map< FormLocator, BilinearForm* > *mbfptr = 
+      const_cast< std::map< FormLocator, BilinearForm* > *> (&bilinearForms);
+     mbfptr->insert( std::pair<FormLocator, BilinearForm*>(f_desc, bfptr) );
      return bfptr; 
     } // end aDim == 3
    
@@ -655,10 +655,10 @@ const NBilinearForm* CellularData::bilinearForm(
          intM.setEntry( x, dualor.sign()*pen->orientation()*inoutor );
      } } }
 
-     bfptr = new NBilinearForm( *lDom, *rDom, *rAng, intM );
-     std::map< FormLocator, NBilinearForm* > *mbfptr = 
-      const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-     mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+     bfptr = new BilinearForm( *lDom, *rDom, *rAng, intM );
+     std::map< FormLocator, BilinearForm* > *mbfptr = 
+      const_cast< std::map< FormLocator, BilinearForm* > *> (&bilinearForms);
+     mbfptr->insert( std::pair<FormLocator, BilinearForm*>(f_desc, bfptr) );
      return bfptr; 
     } // end aDim == 4
   } // end DUAL x STD_REL_BDRY intersectionform loop
@@ -688,10 +688,10 @@ const NBilinearForm* CellularData::bilinearForm(
    std::unique_ptr<HomMarkedAbelianGroup> f( 
      (*sc_sb) * *(*(sc_mc->inverseHom()) * (*dc_mc)) );
    FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
-   bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(*f) );
-   std::map< FormLocator, NBilinearForm* > *mbfptr = 
-    const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-   mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+   bfptr = new BilinearForm( bilinearForm(prim)->rCompose(*f) );
+   std::map< FormLocator, BilinearForm* > *mbfptr = 
+    const_cast< std::map< FormLocator, BilinearForm* > *> (&bilinearForms);
+   mbfptr->insert( std::pair<FormLocator, BilinearForm*>(f_desc, bfptr) );
    return bfptr; 
   }
  if ( ( f_desc.ft == intersectionForm ) && 
@@ -714,10 +714,10 @@ const NBilinearForm* CellularData::bilinearForm(
    const HomMarkedAbelianGroup* dc_mc(homGroup( HomLocator( dc, mc ) ) );
    std::unique_ptr<HomMarkedAbelianGroup> f( (*dc_mc->inverseHom()) * (*sc_mc) );
    FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord;
-   bfptr = new NBilinearForm( bilinearForm(prim)->lCompose(*f) );
-   std::map< FormLocator, NBilinearForm* > *mbfptr = 
-    const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-   mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+   bfptr = new BilinearForm( bilinearForm(prim)->lCompose(*f) );
+   std::map< FormLocator, BilinearForm* > *mbfptr = 
+    const_cast< std::map< FormLocator, BilinearForm* > *> (&bilinearForms);
+   mbfptr->insert( std::pair<FormLocator, BilinearForm*>(f_desc, bfptr) );
    return bfptr; 
   }
 
@@ -849,10 +849,10 @@ const NBilinearForm* CellularData::bilinearForm(
        NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
        if (sum != Integer::zero) intM.setEntry( x, sum );	  }
     } 
-    bfptr = new NBilinearForm( *ldomain, *rdomain, range, intM );
-    std::map< FormLocator, NBilinearForm* > *fptr = 
-      const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-    fptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+    bfptr = new BilinearForm( *ldomain, *rdomain, range, intM );
+    std::map< FormLocator, BilinearForm* > *fptr = 
+      const_cast< std::map< FormLocator, BilinearForm* > *> (&bilinearForms);
+    fptr->insert( std::pair<FormLocator, BilinearForm*>(f_desc, bfptr) );
     return bfptr; 
   }
 
@@ -906,10 +906,10 @@ const NBilinearForm* CellularData::bilinearForm(
     // dual -> std_rel_bdry
     FormLocator prim(f_desc); prim.rdomain.hcs = STD_REL_BDRY_coord;
 
-    bfptr = new NBilinearForm( bilinearForm(prim)->rCompose(*f) ); 
-    std::map< FormLocator, NBilinearForm* > *mbfptr =             
-     const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-    mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+    bfptr = new BilinearForm( bilinearForm(prim)->rCompose(*f) ); 
+    std::map< FormLocator, BilinearForm* > *mbfptr =             
+     const_cast< std::map< FormLocator, BilinearForm* > *> (&bilinearForms);
+    mbfptr->insert( std::pair<FormLocator, BilinearForm*>(f_desc, bfptr) );
      return bfptr; 
   }
  if ( ( f_desc.ft == torsionlinkingForm ) && 
@@ -941,12 +941,12 @@ const NBilinearForm* CellularData::bilinearForm(
         (*dc_mc->inverseHom())*(*sc_mc) ); // STD -> DUAL
       FormLocator prim(f_desc); prim.ldomain.hcs = DUAL_coord; 
     prim.rdomain.hcs = STD_REL_BDRY_coord;
-    bfptr = new NBilinearForm( 
+    bfptr = new BilinearForm( 
         (bilinearForm(prim)->lCompose(*fl)).rCompose(*sc_sb) ); 
 
-    std::map< FormLocator, NBilinearForm* > *mbfptr = 
-     const_cast< std::map< FormLocator, NBilinearForm* > *> (&bilinearForms);
-    mbfptr->insert( std::pair<FormLocator, NBilinearForm*>(f_desc, bfptr) );
+    std::map< FormLocator, BilinearForm* > *mbfptr = 
+     const_cast< std::map< FormLocator, BilinearForm* > *> (&bilinearForms);
+    mbfptr->insert( std::pair<FormLocator, BilinearForm*>(f_desc, bfptr) );
     return bfptr; 
   }
 
@@ -1066,7 +1066,7 @@ long int CellularData::signature() const
 {
  if (tri3) return 0; 
  if (!tri4->isOrientable()) return 0;
- const NBilinearForm* b = bilinearForm( 
+ const BilinearForm* b = bilinearForm( 
   FormLocator( intersectionForm, GroupLocator(2, coVariant, DUAL_coord, 0), 
                                  GroupLocator(2, coVariant, DUAL_coord, 0) ) );
  return b->zFormSignature();
@@ -1154,12 +1154,12 @@ unsigned long num_less_than(const std::set<unsigned long> &thelist,
 // At present this algorithm collapses the maximal tree in the 1-skeleton 
 // of the dual CW-decomposition.  Assumes triangulation is connected. 
 // So the 1->0 chain map is just a [t^a-1, ..., t^p-1] type of matrix.  
-const MatrixRing< NSVPolynomialRing< Integer > >* 
+const MatrixRing< SVPolynomialRing< Integer > >* 
  CellularData::alexanderChainComplex( 
      const ChainComplexLocator &a_desc ) const
 { 
  std::map< ChainComplexLocator, MatrixRing< 
-            NSVPolynomialRing< Integer > >* >::const_iterator p;
+            SVPolynomialRing< Integer > >* >::const_iterator p;
  ChainComplexLocator range_desc(a_desc); range_desc.dim--;
  // reasons for giving up.
  p = alexanderChainComplexes.find(a_desc);
@@ -1191,7 +1191,7 @@ const MatrixRing< NSVPolynomialRing< Integer > >*
   // structure. this is an ad-hoc solution since we don't have good 
   // algorithms implemented to compute homology of chain complexes over a 
   // single-variable Laurent polynomial ring implemented.
-  MatrixRing<NSVPolynomialRing< Integer > >* buildMat( NULL ); 
+  MatrixRing<SVPolynomialRing< Integer > >* buildMat( NULL ); 
   unsigned long ranDim; unsigned long domDim; 
    // lower rank of domain by one for every element of the maximal tree
   if (a_desc.dim==1) { ranDim = 1;  
@@ -1199,7 +1199,7 @@ const MatrixRing< NSVPolynomialRing< Integer > >*
    // lower rank of range by one for every element of the maximal tree
   if (a_desc.dim==2) { ranDim = cellCount(range_desc) - maxTreedcIx.size(); 
                        domDim = cellCount(a_desc); }
-  buildMat = new MatrixRing<NSVPolynomialRing< Integer > >
+  buildMat = new MatrixRing<SVPolynomialRing< Integer > >
         ( ranDim, domDim );
 
   // build entries
@@ -1235,17 +1235,17 @@ const MatrixRing< NSVPolynomialRing< Integer > >*
     if (a_desc.dim==2) { cR=ci->second->cellNo - 
         num_less_than(maxTreedcIx, ci->second->cellNo);
                          cC = ci->first.entry(0); }
-    buildMat->entry( cR,  cC ) += NSVPolynomialRing< Integer >( 
+    buildMat->entry( cR,  cC ) += SVPolynomialRing< Integer >( 
         Integer(ci->second->sig), levelOfCell ); 
     }
    // insert
   std::map< ChainComplexLocator, 
-            MatrixRing<NSVPolynomialRing< Integer > >* > *Mptr = 
+            MatrixRing<SVPolynomialRing< Integer > >* > *Mptr = 
   const_cast< std::map< ChainComplexLocator, 
-              MatrixRing<NSVPolynomialRing< Integer > >* > *>
+              MatrixRing<SVPolynomialRing< Integer > >* > *>
     (&alexanderChainComplexes);
   Mptr->insert( std::pair< ChainComplexLocator, 
-              MatrixRing<NSVPolynomialRing< Integer > >* > 
+              MatrixRing<SVPolynomialRing< Integer > >* > 
     ( a_desc, buildMat ) );
   return buildMat; 
 }
@@ -1261,18 +1261,18 @@ void signedLongDivAlg( signed long n, signed long m,
 
 } // end anonymous namespace
 
-std::unique_ptr< MatrixRing< NSVPolynomialRing< Integer > > > 
+std::unique_ptr< MatrixRing< SVPolynomialRing< Integer > > > 
   CellularData::alexanderPresentationMatrix() const
 {
- const MatrixRing<NSVPolynomialRing< Integer > >* 
+ const MatrixRing<SVPolynomialRing< Integer > >* 
   M( alexanderChainComplex( ChainComplexLocator(1, CellularData::DUAL_coord)));
- const MatrixRing<NSVPolynomialRing< Integer > >* 
+ const MatrixRing<SVPolynomialRing< Integer > >* 
   N( alexanderChainComplex( ChainComplexLocator(2, CellularData::DUAL_coord)));
- MatrixRing<NSVPolynomialRing< Integer > > workM(*M);  
- MatrixRing<NSVPolynomialRing< Integer > > 
+ MatrixRing<SVPolynomialRing< Integer > > workM(*M);  
+ MatrixRing<SVPolynomialRing< Integer > > 
     rowOpMat(M->columns(), M->columns());
- MatrixRing<NSVPolynomialRing< Integer > > workN(*N);  
- MatrixRing<NSVPolynomialRing< Integer > > 
+ MatrixRing<SVPolynomialRing< Integer > > workN(*N);  
+ MatrixRing<SVPolynomialRing< Integer > > 
     rowOpInvMat(M->columns(), M->columns());
 
  rowOpMat.makeIdentity(); rowOpInvMat.makeIdentity();
@@ -1303,11 +1303,11 @@ std::unique_ptr< MatrixRing< NSVPolynomialRing< Integer > > >
    signed long d, r; 
    signedLongDivAlg( workM.entry(0,pivotCol).degree(), 
                      workM.entry(0,i).degree(), d, r);
-   // t^m-1 = NSVPolynomialRing< Integer >(n,m,d)*(t^n-1) + t^r-1  
-   NSVPolynomialRing< Integer > Fac( NSVPolynomialRing< Integer >
+   // t^m-1 = SVPolynomialRing< Integer >(n,m,d)*(t^n-1) + t^r-1  
+   SVPolynomialRing< Integer > Fac( SVPolynomialRing< Integer >
          ( workM.entry(0,pivotCol).degree(), workM.entry(0,i).degree(), d) );
-   workM.entry(0,i) = NSVPolynomialRing< Integer >( 
-         Integer::one, r ) - NSVPolynomialRing< Integer >::one;
+   workM.entry(0,i) = SVPolynomialRing< Integer >( 
+         Integer::one, r ) - SVPolynomialRing< Integer >::one;
    // now do corresponding row op on workN, ie subtract NSVP(n,m,d) of 
    // the pivot row from the ith row
    workN.addRow( i, pivotCol, Fac );
@@ -1317,8 +1317,8 @@ std::unique_ptr< MatrixRing< NSVPolynomialRing< Integer > > >
  if (nonZeroFlag) goto find_small_degree;
  // okay, all entries except pivotCol are killed, so pivotCol in workM 
  // must be t^{\pm}-1. 
- std::unique_ptr< MatrixRing< NSVPolynomialRing< Integer > > > retval( 
-   new MatrixRing< NSVPolynomialRing< Integer > >
+ std::unique_ptr< MatrixRing< SVPolynomialRing< Integer > > > retval( 
+   new MatrixRing< SVPolynomialRing< Integer > >
     (N->rows()-1,N->columns()) );
  for (unsigned long i=0; i<retval->rows(); i++) 
   for (unsigned long j=0; j<retval->columns(); j++)
@@ -1328,17 +1328,17 @@ std::unique_ptr< MatrixRing< NSVPolynomialRing< Integer > > >
 }
 
 // compute the Alexander ideal of the Alexander module. 
-std::unique_ptr< std::list< NSVPolynomialRing< Integer > > > 
+std::unique_ptr< std::list< SVPolynomialRing< Integer > > > 
     CellularData::alexanderIdeal() const
 {
- std::unique_ptr< MatrixRing< NSVPolynomialRing< Integer > > > 
+ std::unique_ptr< MatrixRing< SVPolynomialRing< Integer > > > 
     aPM(alexanderPresentationMatrix());
- std::list< NSVPolynomialRing< Integer > > alexIdeal;
+ std::list< SVPolynomialRing< Integer > > alexIdeal;
  // degenerate matrices first.
  if (aPM->rows()==0) 
-    alexIdeal.push_back( NSVPolynomialRing< Integer >::one );
+    alexIdeal.push_back( SVPolynomialRing< Integer >::one );
  else if (aPM->columns()==0) 
-    alexIdeal.push_back( NSVPolynomialRing< Integer >::zero );
+    alexIdeal.push_back( SVPolynomialRing< Integer >::zero );
  else
   {
   // in general aPM might be wider than it is tall
@@ -1349,7 +1349,7 @@ std::unique_ptr< std::list< NSVPolynomialRing< Integer > > >
   NPartition skipCols( aPM->columns(), colToErase );
   while ( !skipCols.atEnd() )
    {
-    MatrixRing< NSVPolynomialRing< Integer > > 
+    MatrixRing< SVPolynomialRing< Integer > > 
         sqSubMat( aPM->rows(), aPM->rows() );
     unsigned long delta=0;
     for (unsigned long j=0; j<sqSubMat.columns(); j++)
@@ -1359,7 +1359,7 @@ std::unique_ptr< std::list< NSVPolynomialRing< Integer > > >
         sqSubMat.entry(i,j) = aPM->entry( i, j+delta );
      }
 
-    NSVPolynomialRing< Integer > TEMP(sqSubMat.det());
+    SVPolynomialRing< Integer > TEMP(sqSubMat.det());
     if (!TEMP.isZero()) alexIdeal.push_back( TEMP );
     ++skipCols; // next!
    }
@@ -1368,25 +1368,25 @@ std::unique_ptr< std::list< NSVPolynomialRing< Integer > > >
  reduceIdeal(alexIdeal);
 
  // clean up the polynomials a little, if possible. 
- std::list< NSVPolynomialRing< Integer > >::iterator it;
+ std::list< SVPolynomialRing< Integer > >::iterator it;
  for (it = alexIdeal.begin(); it!=alexIdeal.end(); it++)
    { prettifyPolynomial(*it); }
 
- return std::unique_ptr< std::list< NSVPolynomialRing< Integer > > >
-        (new std::list< NSVPolynomialRing< Integer > >(alexIdeal));
+ return std::unique_ptr< std::list< SVPolynomialRing< Integer > > >
+        (new std::list< SVPolynomialRing< Integer > >(alexIdeal));
 }
 
 namespace {
 
 std::string embeddabilityString(const Triangulation<3>* tri, 
-    const CellularData* cdat, const NBilinearForm* tlf); // forward ref
+    const CellularData* cdat, const BilinearForm* tlf); // forward ref
 
 }
 
 std::string CellularData::stringInfo( const StringRequest &s_desc ) const
 { //TODO - this routine isn't complete yet. 
  std::string retval("Invalid request");
- const NBilinearForm* torForm(NULL);
+ const BilinearForm* torForm(NULL);
  if ( ( (s_desc == TORFORM_powerdecomp) || 
         (s_desc == TORFORM_sigmastring) || 
         (s_desc == TORFORM_legendresymbol) || 
@@ -1421,7 +1421,7 @@ namespace {
 // into S^4, it assumes cdat is derived from tri, and tlf is the torsion 
 // linking form for cdat.
 std::string embeddabilityString(const Triangulation<3>* tri, 
-    const CellularData* cdat,  const NBilinearForm* tlf) {
+    const CellularData* cdat,  const BilinearForm* tlf) {
     // Only do this if we haven't done it already.
     std::string retval;
     unsigned long totbcomp( cdat->components(CellularData::standard_boundary) + 
@@ -1553,7 +1553,7 @@ std::string embeddabilityString(const Triangulation<3>* tri,
        Triangulation<3> orTri(*tri);
        orTri.makeDoubleCover();
        CellularData covHomol( orTri );
-       const NBilinearForm* covForm( covHomol.bilinearForm( 
+       const BilinearForm* covForm( covHomol.bilinearForm( 
          CellularData::FormLocator(
          CellularData::torsionlinkingForm, 
          CellularData::GroupLocator( 1, CellularData::coVariant, 

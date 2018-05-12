@@ -32,21 +32,21 @@
 
 /* end stub */
 
-/*! \file algebra/ncellulardata.simpaut.h
+/*! \file algebra/cellulardata.simpaut.h
  *  \brief Contains the basic classes describing simplicial automorphisms
  *  of triangulations.
  */
-
-#ifndef __NSIMPLICIALAUTGRP_H
+ 
+#ifndef __SIMPLICIALAUTGRP_H
 #ifndef __DOXYGEN
-#define __NSIMPLICIALAUTGRP_H
+#define __SIMPLICIALAUTGRP_H
 #endif
 
 #include <string>
 #include "regina-core.h"
-#include "maths/nperm5.h"
-#include "maths/nmatrixint.h"
-#include "algebra/ncellulardata.h"
+#include "maths/perm.h"
+#include "maths/matrix.h"
+#include "algebra/cellulardata.h"
 
 namespace regina {
 
@@ -72,30 +72,30 @@ struct linearFacet; // forward ref
 
 
 /**
- *  Class stores the group of simplicial automorphisms of a triangulation. 
+ * Class stores the group of simplicial automorphisms of a triangulation. 
  * It computes the full group (as a permutation group of the simplices) on
  * initialization.  After initialization one can then make various requests
  * of the group.  See class internals for details.  
  *
  * @pre - assumes triangulation is valid. It also assumes you will keep 
- *  the triangulation allocated as long as this NSimplicialAutGrp object 
+ *  the triangulation allocated as long as this SimplicialAutGrp object 
  *  is allocated, i.e. it does not take ownership of the triangulation
  *  but it references it.
  */
-class REGINA_API NSimplicialAutGrp : public ShareableObject {
+class REGINA_API SimplicialAutGrp {
   const Triangulation<3> *tri3;
-  const Dim4Triangulation *tri4;
+  const Triangulation<4> *tri4;
   std::vector< isoStruct > fullMap;
 
  public:
  /**
   * Class enumerates all simplicial automorphisms on initialization.
   */
- NSimplicialAutGrp(const Triangulation<3> &input);
+ SimplicialAutGrp(const Triangulation<3> &input);
  /**
   * Class enumerates all simplicial automorphisms on initialization.
   */
- NSimplicialAutGrp(const Dim4Triangulation &input);
+ SimplicialAutGrp(const Triangulation<4> &input);
 
  /**
   *  Gives the action of the group on the (co)homology of appropriate dimension
@@ -150,7 +150,7 @@ std::vector< std::set< linearFacet >* > fixedPoints() const;
   * TODO: eventually store as an HomGroupPresentation. Domain will be a
   * free group on all symmetries, target will be the reduced presentation. 
   */
- NGroupPresentation groupPresentation() const;
+ GroupPresentation groupPresentation() const;
 
  void writeTextShort(std::ostream& out) const;
  void writeTextLong(std::ostream& out) const;
@@ -216,7 +216,7 @@ struct linearFacet {
     for debugging purposes. */
  bool isValid() const;
  /** Returns true if the facet runs through any ideal vertices. */
- bool isIdeal(const Triangulation<3> *tri3, const Dim4Triangulation* tri4) const;
+ bool isIdeal(const Triangulation<3> *tri3, const Triangulation<4>* tri4) const;
 
  /** ouput operator */
  friend std::ostream& operator << (std::ostream& out, const linearFacet& p);
@@ -234,7 +234,7 @@ struct linearFacet {
      One of the triangulations must be a non-null pointer, the other must be 
      null. */
  std::set< linearFacet > bdryFacets(const Triangulation<3> *tri3, 
-    const Dim4Triangulation* tri4) const;
+    const Triangulation<4>* tri4) const;
 };
 
 inline linearFacet::linearFacet( const linearFacet &cloneMe ) :
