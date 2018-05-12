@@ -144,8 +144,6 @@ void Tangle::add(const Tangle& other) {
 
             // Final leftmost string:
             //   end_[0][0] -> end_[1][0]
-
-            // Nothing more to do.
         } else {
             // Type (= ||).
 
@@ -174,9 +172,12 @@ void Tangle::add(const Tangle& other) {
 
             // Final leftmost string:
             //   end_[0][0] -> end_[1][0]
-
-            // Nothing more to do.
         }
+
+        end_[0][1] = end_[1][0];
+        end_[1][0] = clone.end_[1][0];
+        end_[1][1] = clone.end_[1][1];
+
         type_ = '|';
     } else {
         // Either (= =), (= x), (x =) or (x x).
