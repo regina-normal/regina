@@ -371,8 +371,13 @@ void Tangle::writeTextLong(std::ostream& out) const {
         else
             for ( ; s; ++s)
                 out << ' ' << s;
-        out << std::endl;
+        out << '\n';
     }
+
+    out << "\nCrossings:";
+    for (Crossing* c : crossings_)
+        out << ' ' << (c->sign() > 0 ? '+' : '-') << c->index();
+    out << std::endl;
 }
 
 void Tangle::reverse(int string) {
