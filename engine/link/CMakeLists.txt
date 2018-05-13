@@ -13,6 +13,7 @@ SET ( FILES
   jones
   link
   modellinkgraph
+  pass
   reidemeister
   rewrite
   sig

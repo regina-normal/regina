@@ -1406,6 +1406,33 @@ class REGINA_API Link : public Packet {
             bool perform = true);
 
         /**
+         * Tests whether this knot has a pass move that will reduce the
+         * number of crossings.
+         *
+         * Currently this routine is only available for knots, not
+         * multiple-component links.
+         *
+         * A \e pass move involves taking a section of the knot that
+         * involves only over-crossings (or only under-crossings), and
+         * then lifting that section above (or beneath respectively) the
+         * diagram and placing it back again in a different location.
+         * In particular, this routine searches for a different location
+         * that will involve fewer crossings than the original location.
+         *
+         * This routine does not actually \e perform the pass move; it
+         * simply determines whether one exists.
+         *
+         * The running time is cubic in the number of crossings.
+         *
+         * \pre This link is actually a knot (i.e., it contains exactly
+         * one component).
+         *
+         * @return \c true if and only if there is a pass move that
+         * reduces the number of crossings.
+         */
+        bool hasReducingPass() const;
+
+        /**
          * Attempts to simplify the link diagram using fast and greedy
          * heuristics.  Specifically, this routine tries combinations of
          * Reidemeister moves with the aim of reducing the number of

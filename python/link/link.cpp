@@ -252,6 +252,7 @@ void addLink() {
         .def("r2", r2c, OL_r2c())
         .def("r3", r3a, OL_r3a())
         .def("r3", r3b, OL_r3b())
+        .def("hasReducingPass", &Link::hasReducingPass)
         .def("intelligentSimplify", &Link::intelligentSimplify)
         .def("simplifyToLocalMinimum", &Link::simplifyToLocalMinimum,
              OL_simplifyToLocalMinimum())
