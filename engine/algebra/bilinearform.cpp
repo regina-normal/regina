@@ -39,13 +39,13 @@ namespace regina {
 BilinearForm::BilinearForm(const MarkedAbelianGroup &ldomain, 
                              const MarkedAbelianGroup &rdomain,
 			                 const MarkedAbelianGroup &range,   
-                             const NSparseGridRing< Integer > &pairing) : 
+                             const SparseGridRing< Integer > &pairing) : 
 reducedPairing(NULL), unreducedPairing(NULL), 
 lDomain(ldomain), rDomain(rdomain), Range(range)
 {
- unreducedPairing = new NSparseGridRing< Integer > (pairing);
+ unreducedPairing = new SparseGridRing< Integer > (pairing);
  // now we construct the reducedPairing
- reducedPairing = new NSparseGridRing< Integer > (3);
+ reducedPairing = new SparseGridRing< Integer > (3);
 
  for (unsigned long i=0; i<ldomain.minNumberOfGenerators(); i++)
   { std::vector< Integer > lv(ldomain.ccRep(i));
@@ -55,14 +55,14 @@ lDomain(ldomain), rDomain(rdomain), Range(range)
                                            Integer::zero );
       // sum_{ii, jj, k} lv[ii] * rv[jj] * pairing[ii,jj,k] e_k
       // is reducedPairing[i,j,k], record if non-zero.  
-      std::map< NMultiIndex< unsigned long >, 
+      std::map< MultiIndex< unsigned long >, 
                 Integer* >::const_iterator I;
       for (I=pairing.getGrid().begin(); I!=pairing.getGrid().end(); I++)
 	  evalcc[ I->first.entry(2) ] += lv[ I->first.entry(0) ] * 
        rv[ I->first.entry(1) ] * (*(I->second));
       std::vector< Integer > evalsnf( range.snfRep( evalcc ) );
 
-      NMultiIndex< unsigned long > J(3); J[0] = i; J[1]=j;
+      MultiIndex< unsigned long > J(3); J[0] = i; J[1]=j;
       for (J[2]=0; J[2]<evalsnf.size(); J[2]++) 
             reducedPairing->setEntry( J, evalsnf[J[2]] );
     }
@@ -86,11 +86,11 @@ BilinearForm::~BilinearForm()
 { if (reducedPairing) delete reducedPairing;
   if (unreducedPairing) delete unreducedPairing; }
 
-const std::map< NMultiIndex< unsigned long >, Integer* > & 
+const std::map< MultiIndex< unsigned long >, Integer* > & 
  BilinearForm::unreducedMap() const
  { return unreducedPairing->getGrid(); }
 
-const std::map< NMultiIndex< unsigned long >, Integer* > & 
+const std::map< MultiIndex< unsigned long >, Integer* > & 
  BilinearForm::reducedMap() const
  { return reducedPairing->getGrid(); }
 
@@ -101,7 +101,7 @@ std::vector<Integer> BilinearForm::evalCC(
  static const std::vector<Integer> nullVec(0);
  if ( (lcc.size() != lDomain.rankCC()) || 
       (rcc.size() != rDomain.rankCC()) ) return nullVec;
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator J;
  for (J = unreducedPairing->getGrid().begin(); 
       J!=unreducedPairing->getGrid().end(); J++)
    retval[ J->first.entry(2) ] += lcc[J->first.entry(0)]*
@@ -115,7 +115,7 @@ unsigned long BilinearForm::rank() const
     return 0;
  MatrixInt cM( lDomain.rank(), rDomain.rank() );
 
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
@@ -144,7 +144,7 @@ long int BilinearForm::zFormSignature() const
  MatrixRing< SVPolynomialRing< Integer > > cM( lDomain.rank(), 
                                                        rDomain.rank() );
  // iterate through reducedPairing, insert into cM
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
@@ -165,7 +165,7 @@ std::pair< bool, int > BilinearForm::zFormType() const
 {
  MatrixInt cM( lDomain.rank(), rDomain.rank() );
 
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator i;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator i;
  for (i = reducedPairing->getGrid().begin(); 
       i!=reducedPairing->getGrid().end(); i++)
   { 
@@ -346,7 +346,7 @@ MarkedAbelianGroup BilinearForm::image() const
  MarkedAbelianGroup dom(lDomain.minNumberOfGenerators()*
                          rDomain.minNumberOfGenerators(), Integer::zero );
  MatrixInt mat( Range.minNumberOfGenerators(), dom.minNumberOfGenerators() );
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator J;
  for (J = reducedPairing->getGrid().begin(); 
       J!=reducedPairing->getGrid().end(); J++)
    mat.entry( J->first.entry(2), J->first.entry(0)*
@@ -366,12 +366,12 @@ bool BilinearForm::isSymmetric() const
 {
  if (!lDomain.equalTo(rDomain)) return 0;
  // now we check symmetry.... we'll use the reduced matrix for this...
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator J;
 
  for (J = reducedPairing->getGrid().begin(); 
       J!=reducedPairing->getGrid().end(); J++)
   { 
-  NMultiIndex< unsigned long > x(3);
+  MultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
   const Integer* t( reducedPairing->getEntry(x));
   if (!t) return false;
@@ -387,12 +387,12 @@ bool BilinearForm::isAntiSymmetric() const
 {
 if (!lDomain.equalTo(rDomain)) return 0;
 // now we check symmetry.... we'll use the reduced matrix for this...
-std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
+std::map< MultiIndex< unsigned long >, Integer* >::const_iterator J;
 
 for (J = reducedPairing->getGrid().begin(); 
      J!=reducedPairing->getGrid().end(); J++)
   { 
-  NMultiIndex< unsigned long > x(3);
+  MultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(1); x[1]=J->first.entry(0); x[2]=J->first.entry(2);
   const Integer* t( reducedPairing->getEntry(x));
   if (!t) return false;
@@ -417,17 +417,17 @@ BilinearForm BilinearForm::lCompose(const HomMarkedAbelianGroup &f) const
     std::endl; exit(1); }
  #endif
  // compute the new unreducedPairing
- NSparseGridRing< Integer > newPairing(3);
+ SparseGridRing< Integer > newPairing(3);
  // 0th index is lDomain SNF coord, 
  // 1st index rDomain SNF coord, 
  // 3rd index Range SNF coord
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator J;
 
  for (unsigned long i=0; i<f.domain().rankCC(); i++)
   for (J = unreducedPairing->getGrid().begin(); 
        J!=unreducedPairing->getGrid().end(); J++)
    { 
-   NMultiIndex< unsigned long > x(3);
+   MultiIndex< unsigned long > x(3);
    x[0]=i; x[1]=J->first.entry(1); x[2]=J->first.entry(2);
    newPairing.incEntry( x, f.definingMatrix().entry( 
                         J->first.entry(0), i ) * (*J->second) );
@@ -449,14 +449,14 @@ BilinearForm BilinearForm::rCompose(const HomMarkedAbelianGroup &f) const
                std::endl; exit(1); }
  #endif
  // we need to compute the new unreducedPairing
- NSparseGridRing< Integer > newPairing(3);
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
+ SparseGridRing< Integer > newPairing(3);
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator J;
 
  for (unsigned long i=0; i<f.domain().rankCC(); i++)
   for (J = unreducedPairing->getGrid().begin(); 
        J!=unreducedPairing->getGrid().end(); J++)
   { 
-  NMultiIndex< unsigned long > x(3);
+  MultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(0); x[1] = i; x[2]=J->first.entry(2);
   newPairing.incEntry( x, f.definingMatrix().entry( 
                        J->first.entry(1), i ) * (*J->second) );
@@ -475,15 +475,15 @@ BilinearForm BilinearForm::postCompose(const HomMarkedAbelianGroup &f) const
                std::endl; exit(1); }
  #endif
 
- NSparseGridRing< Integer > newPairing(3);
+ SparseGridRing< Integer > newPairing(3);
 
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator J;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator J;
 
  for (J = unreducedPairing->getGrid().begin(); 
       J!=unreducedPairing->getGrid().end(); J++)
   for (unsigned long i=0; i<f.range().rankCC(); i++)
   { 
-  NMultiIndex< unsigned long > x(3);
+  MultiIndex< unsigned long > x(3);
   x[0]=J->first.entry(0); x[1] = J->first.entry(1); x[2]=i;
   newPairing.incEntry( x, f.definingMatrix().entry( i, 
                        J->first.entry(2) ) * (*J->second)  );
@@ -524,7 +524,7 @@ HomMarkedAbelianGroup BilinearForm::leftAdjoint() const
  MatrixInt adjmat( 
     rDomain.minNumberOfGenerators()*Range.minNumberOfGenerators(),
     lDomain.minNumberOfGenerators() );
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator I;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator I;
  for (I=reducedPairing->getGrid().begin(); 
       I!=reducedPairing->getGrid().end(); I++)
   {
@@ -589,7 +589,7 @@ HomMarkedAbelianGroup BilinearForm::rightAdjoint() const
  // step 2: find matrix B --> Hom(A,C)
  MatrixInt adjmat( lDomain.minNumberOfGenerators()*
              Range.minNumberOfGenerators(), rDomain.minNumberOfGenerators() );
- std::map< NMultiIndex< unsigned long >, Integer* >::const_iterator I;
+ std::map< MultiIndex< unsigned long >, Integer* >::const_iterator I;
  for (I=reducedPairing->getGrid().begin(); 
       I!=reducedPairing->getGrid().end(); I++)
   {

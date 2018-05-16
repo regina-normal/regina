@@ -76,11 +76,11 @@ class REGINA_API BilinearForm {
 	/**
 	 * Stores the pairing in SNF coordinates for all 3 groups. 
 	 */
-	NSparseGridRing< Integer > *reducedPairing; 
+	SparseGridRing< Integer > *reducedPairing; 
 	/**
 	 * The defining pairing.
 	 */
-    NSparseGridRing< Integer > *unreducedPairing;
+    SparseGridRing< Integer > *unreducedPairing;
 
 	/**
 	 * record of ldomain, rdomain and range
@@ -111,7 +111,7 @@ class REGINA_API BilinearForm {
         BilinearForm(const MarkedAbelianGroup &ldomain, 
               const MarkedAbelianGroup &rdomain, 
 		      const MarkedAbelianGroup &range,   
-              const NSparseGridRing< Integer > &pairing);
+              const SparseGridRing< Integer > &pairing);
 
         /**
          * Creates a clone of the given bilinear form.
@@ -139,23 +139,23 @@ class REGINA_API BilinearForm {
     	/**
 	     * Access to the unreducedPairing map.
     	 */
-        const std::map< NMultiIndex< unsigned long >, Integer* > & 
+        const std::map< MultiIndex< unsigned long >, Integer* > & 
             unreducedMap() const;
 
         /**
          * Access to the reducedPairing map.  So if you wanted to iterate 
          * through the values of the bilinear form evaluated on the generators 
          * of the homology of ldomain and rdomain, you'd construct an iterator 
-         * to a std::map< NMultiIndex< unsigned long >, Integer* > type 
+         * to a std::map< MultiIndex< unsigned long >, Integer* > type 
          * and iterate through reducedMap(). 
          */
-        const std::map< NMultiIndex< unsigned long >, Integer* > & 
+        const std::map< MultiIndex< unsigned long >, Integer* > & 
             reducedMap() const;
 
         /**
-         * reducedPairing access as an NSparseGridRing
+         * reducedPairing access as an SparseGridRing
         */
-        const NSparseGridRing< Integer >* reducedSparseGrid() const;
+        const SparseGridRing< Integer >* reducedSparseGrid() const;
  
         /**
          *  Given a bilinear form whose range is the integers, we can ask 
@@ -409,7 +409,7 @@ REGINA_API void readTeaLeavesTLF(const std::vector< std::pair< Integer,
 
 /*@}*/
 
-inline REGINA_API const NSparseGridRing< Integer >* 
+inline REGINA_API const SparseGridRing< Integer >* 
  BilinearForm::reducedSparseGrid() const
 { return reducedPairing; }
 

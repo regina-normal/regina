@@ -32,14 +32,14 @@
 
 /* end stub */
 
-/*! \file maths/nsparsegrid.h
+/*! \file maths/sparsegrid.h
  *  \brief An object for storing a sparse n_1xn_2x...xn_k-array of data
  *         from a templated class T.  
  */
 
-#ifndef __NSPARSEGRID_H
+#ifndef __SPARSEGRID_H
 #ifndef __DOXYGEN
-#define __NSPARSEGRID_H
+#define __SPARSEGRID_H
 #endif
 
 #include <algorithm>
@@ -68,30 +68,30 @@ namespace regina {
  *
  */
 template <class T>
-class NMultiIndex {
+class MultiIndex {
  protected:
   std::vector< T > data;
  public: 
  /**
   *  Construct a k-tuple, initialized to be zero.
   */
-  NMultiIndex(unsigned long dim); // k == dim of multi-index
+  MultiIndex(unsigned long dim); // k == dim of multi-index
  /**
   *  Construct a 2-tuple, initialized to be (i1, i2)
   */
-  NMultiIndex(const T& i1, const T& i2); // build a pair i1, i2
+  MultiIndex(const T& i1, const T& i2); // build a pair i1, i2
  /**
   *  Construct a 3-tuple, initialized to be (i1, i2, i3)
   */
-  NMultiIndex(const T& i1, const T& i2, const T& i3); // build a triple i1, i2, i3
+  MultiIndex(const T& i1, const T& i2, const T& i3); // build a triple i1, i2, i3
  /**
   *  Copy constructor.
   */
-  NMultiIndex(const NMultiIndex &cloneMe);
+  MultiIndex(const MultiIndex &cloneMe);
  /**
   *  destructor.
   */
-  ~NMultiIndex();
+  ~MultiIndex();
  /**
   *  Return a reference to the i-th element from the k-tuple.
   */
@@ -107,19 +107,19 @@ class NMultiIndex {
  /**
   *  Equality operator.
   */
-  bool operator==(const NMultiIndex &q) const;
+  bool operator==(const MultiIndex &q) const;
  /**
   *  Inequality operator.
   */
-  bool operator!=(const NMultiIndex &q) const;
+  bool operator!=(const MultiIndex &q) const;
  /**
   *  Assignment operator.
   */
-  NMultiIndex& operator=(const NMultiIndex &q);
+  MultiIndex& operator=(const MultiIndex &q);
  /**
   *  Lexicographic ordering on k-tuples.
   */
-  bool operator<(const NMultiIndex &q) const;
+  bool operator<(const MultiIndex &q) const;
  /**
   *  Output the k-tuple in format: 5,4,21,3,7
   */
@@ -128,47 +128,47 @@ class NMultiIndex {
 
 /**
  * Indexing the terms of a multi-variable polynomial. 
- * only differs from NMultiIndex in the way operator<
+ * only differs from MultiIndex in the way operator<
  * is implemented. Given two k-tuples [a1,...,ak] and
  * [b1,...,bk] the a k-tuple is less than the b k-tuple
  * if and only if either |a1|+...+|ak| < |b1|+...+|bk|
  * or they're equal and [a1,...,ak] is lexicographically
- * less than [b1,...,bk]. See NMultiIndex class documentation
+ * less than [b1,...,bk]. See MultiIndex class documentation
  * for most class details.
  *
  * class T must possess an operator+, operator+=
  */
 template <class T>
-class NPolynomialIndex : public NMultiIndex<T> {
+class PolynomialIndex : public MultiIndex<T> {
  public:
  /** 
   * Constructor
   */
-  NPolynomialIndex(unsigned long dim); // k == dim of multi-index
+  PolynomialIndex(unsigned long dim); // k == dim of multi-index
  /**
   *  Construct a 2-tuple, initialized to be (i1, i2)
   */
-  NPolynomialIndex(const T& i1, const T& i2); // build a pair i1, i2
+  PolynomialIndex(const T& i1, const T& i2); // build a pair i1, i2
  /**
   *  Construct a 3-tuple, initialized to be (i1, i2, i3)
   */
-  NPolynomialIndex(const T& i1, const T& i2, const T& i3); // build a triple i1, i2, i3
+  PolynomialIndex(const T& i1, const T& i2, const T& i3); // build a triple i1, i2, i3
   /**
    *  Copy constructor.
    */
-  NPolynomialIndex(const NPolynomialIndex &cloneMe);
+  PolynomialIndex(const PolynomialIndex &cloneMe);
   /**
    * Return the negation the indices.
    */
-  NPolynomialIndex<T> operator-() const;
+  PolynomialIndex<T> operator-() const;
   /**
    * Add two multi-indices. Addition of vectors.
    */
-  NPolynomialIndex<T> operator+(const NPolynomialIndex &R) const;
+  PolynomialIndex<T> operator+(const PolynomialIndex &R) const;
   /**
    *  |i1|+|i2|+...+|ik| lexico order.
    */
-  bool operator<(const NPolynomialIndex &q) const;
+  bool operator<(const PolynomialIndex &q) const;
 };
 
 /**
@@ -184,7 +184,7 @@ class NPolynomialIndex : public NMultiIndex<T> {
  * @author Ryan Budney
  */
 template <class T>
-class NSparseGrid {
+class SparseGrid {
     protected:
 	/**
 	 * Dimension of the grid -- this is the dimension of the multi-index. 
@@ -194,13 +194,13 @@ class NSparseGrid {
 	/**
 	 * Internal storage of the grid. 
 	 */
-	std::map< NMultiIndex< unsigned long >, T* > grid;
+	std::map< MultiIndex< unsigned long >, T* > grid;
 
     public:
         /**
 	 * Creates a grid with dimension dim -- ie it is indexed by dim unsigned longs.
          */
-        NSparseGrid(unsigned long dim);
+        SparseGrid(unsigned long dim);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -208,35 +208,35 @@ class NSparseGrid {
          *
          * @param cloneMe the form to clone.
          */
-        NSparseGrid(const NSparseGrid & cloneMe);
+        SparseGrid(const SparseGrid & cloneMe);
 
 	/**
 	 * Destructor
 	 */
-	virtual ~NSparseGrid();
+	virtual ~SparseGrid();
 
    /**
     * Assignment of bilinear forms.
     */
-    NSparseGrid& operator = (const NSparseGrid & cloneMe);
+    SparseGrid& operator = (const SparseGrid & cloneMe);
 
-	/**
-	 * Access to the grid map. 
-	 */
-	const std::map< NMultiIndex< unsigned long >, T* > & getGrid() const;
+    /**
+     * Access to the grid map. 
+     */
+    const std::map< MultiIndex< unsigned long >, T* > & getGrid() const;
 
     /**
      * sets the entry corresponding to index I to a pointer
      * to a T type equal to val. If already allocated it
      * copies val to the currently allocated T in the grid. 
      */
-	void setEntry( const NMultiIndex< unsigned long > & I, const T & val );
+    void setEntry( const MultiIndex< unsigned long > & I, const T & val );
 
     /**
      *  Gives the entry corresponding to index I, the null
      * pointer if it is not allocated.
      */
-    const T* getEntry( const NMultiIndex< unsigned long > & I ) const;
+    const T* getEntry( const MultiIndex< unsigned long > & I ) const;
 
     /**
      * Lists all elements in the grid.
@@ -248,7 +248,7 @@ class NSparseGrid {
  * An object for storing an arbitrary n_1xn_2x...xn_k array of data from 
  * a templated class T sparsely.  
  *
- * Beyond the requirements of NSparseGrid, the class T is required to be
+ * Beyond the requirements of SparseGrid, the class T is required to be
  *  of "ring type," meaning: 
  *
  *  1) T::zero exists. 
@@ -257,63 +257,63 @@ class NSparseGrid {
  * @author Ryan Budney
  */
 template <class T>
-class NSparseGridRing : public NSparseGrid<T> {
+class SparseGridRing : public SparseGrid<T> {
    public:
 
-   NSparseGridRing(unsigned long dim);
+   SparseGridRing(unsigned long dim);
 
-   NSparseGridRing(const NSparseGridRing & cloneMe);
+   SparseGridRing(const SparseGridRing & cloneMe);
 
-        /**
-         * Overloaded for a val == T::zero safety check.
-         */
-   void setEntry( const NMultiIndex< unsigned long > &I, const T &val );
+   /**
+    * Overloaded for a val == T::zero safety check.
+    */
+   void setEntry( const MultiIndex< unsigned long > &I, const T &val );
 
    /**
     * Increment an entry.  This will allocate the entry if it
     * is not already allocated, and deallocate if after incrementation
     * it becomes zero. 
     */
-	void incEntry( const NMultiIndex< unsigned long > & I, const T & val );
+   void incEntry( const MultiIndex< unsigned long > & I, const T & val );
 };
 
 /*@}*/
 
-// Inline functions for NMultiIndex
+// Inline functions for MultiIndex
 
 template< class T >
-inline NMultiIndex<T>::NMultiIndex(unsigned long dim)
+inline MultiIndex<T>::MultiIndex(unsigned long dim)
 { data.resize(dim, 0); }
 
 template< class T >
-inline NMultiIndex<T>::NMultiIndex(const T& i1, const T& i2)
+inline MultiIndex<T>::MultiIndex(const T& i1, const T& i2)
 { data.resize(2, 0); data[0]=i1; data[1]=i2; }
 
 template< class T >
-inline NMultiIndex<T>::NMultiIndex(const T& i1, const T& i2, const T& i3)
+inline MultiIndex<T>::MultiIndex(const T& i1, const T& i2, const T& i3)
 { data.resize(3, 0); data[0]=i1; data[1]=i2; data[2]=i3; }
 
 template< class T >
-inline NMultiIndex<T>::NMultiIndex(const NMultiIndex<T> &cloneMe)
+inline MultiIndex<T>::MultiIndex(const MultiIndex<T> &cloneMe)
 { data = cloneMe.data; }
 
 template< class T >
-inline NMultiIndex<T>::~NMultiIndex() {}
+inline MultiIndex<T>::~MultiIndex() {}
 
 template< class T >
-inline T& NMultiIndex<T>::operator[](const unsigned long &index)
+inline T& MultiIndex<T>::operator[](const unsigned long &index)
 { return data[index]; }
 
 template< class T >
-inline const T& NMultiIndex<T>::entry(const unsigned long &index) const
+inline const T& MultiIndex<T>::entry(const unsigned long &index) const
 { return data[index]; }
 
 template< class T >
-inline unsigned long NMultiIndex<T>::dim() const
+inline unsigned long MultiIndex<T>::dim() const
 { return data.size(); }
 
 template< class T >
-inline bool NMultiIndex<T>::operator==(const NMultiIndex<T> &q) const
+inline bool MultiIndex<T>::operator==(const MultiIndex<T> &q) const
 { 
  if (data.size() != q.data.size() ) return false;
  for (unsigned long i=0; i<data.size(); i++) if (data[i] != q.data[i]) return false;
@@ -321,7 +321,7 @@ inline bool NMultiIndex<T>::operator==(const NMultiIndex<T> &q) const
 }
 
 template< class T >
-inline bool NMultiIndex<T>::operator!=(const NMultiIndex<T> &q) const
+inline bool MultiIndex<T>::operator!=(const MultiIndex<T> &q) const
 { 
  if (data.size() != q.data.size()) return true;
  for (unsigned long i=0; i<data.size(); i++) if (data[i] != q.data[i]) return true;
@@ -329,14 +329,14 @@ inline bool NMultiIndex<T>::operator!=(const NMultiIndex<T> &q) const
 }
 
 template< class T >
-inline NMultiIndex<T>& NMultiIndex<T>::operator=(const NMultiIndex<T> &q)
+inline MultiIndex<T>& MultiIndex<T>::operator=(const MultiIndex<T> &q)
 { 
  data=q.data; 
  return (*this); 
 }
 
 template< class T >
-inline bool NMultiIndex<T>::operator<(const NMultiIndex<T> &q) const
+inline bool MultiIndex<T>::operator<(const MultiIndex<T> &q) const
 { 
  for (unsigned long i=0; i<data.size(); i++) 
   {
@@ -347,7 +347,7 @@ inline bool NMultiIndex<T>::operator<(const NMultiIndex<T> &q) const
 }
 
 template< class T >
-inline void NMultiIndex<T>::writeTextShort(std::ostream& out) const
+inline void MultiIndex<T>::writeTextShort(std::ostream& out) const
 {
 for (unsigned long i=0; i<data.size(); i++)
  {
@@ -356,40 +356,40 @@ for (unsigned long i=0; i<data.size(); i++)
  }
 }
 
-// NPolynomialIndex
+// PolynomialIndex
 
 template< class T >
-inline NPolynomialIndex<T>::NPolynomialIndex(unsigned long dim) : NMultiIndex<T>(dim) {}
+inline PolynomialIndex<T>::PolynomialIndex(unsigned long dim) : MultiIndex<T>(dim) {}
 
 template< class T >
-inline NPolynomialIndex<T>::NPolynomialIndex(const T& i1, const T& i2) : NMultiIndex<T>(i1,i2) {}
+inline PolynomialIndex<T>::PolynomialIndex(const T& i1, const T& i2) : MultiIndex<T>(i1,i2) {}
 
 template< class T >
-inline NPolynomialIndex<T>::NPolynomialIndex(const T& i1, const T& i2, const T& i3) : NMultiIndex<T>(i1,i2.i3) {}
+inline PolynomialIndex<T>::PolynomialIndex(const T& i1, const T& i2, const T& i3) : MultiIndex<T>(i1,i2.i3) {}
 
 template< class T >
-inline NPolynomialIndex<T>::NPolynomialIndex(const NPolynomialIndex<T> &cloneMe) : NMultiIndex<T>(cloneMe) {}
+inline PolynomialIndex<T>::PolynomialIndex(const PolynomialIndex<T> &cloneMe) : MultiIndex<T>(cloneMe) {}
 
 template< class T >
-inline NPolynomialIndex<T> NPolynomialIndex<T>::operator-() const
+inline PolynomialIndex<T> PolynomialIndex<T>::operator-() const
 {
- NPolynomialIndex<T> retval(this->data.size());
+ PolynomialIndex<T> retval(this->data.size());
  for (unsigned long i=0; i<retval.data.size(); i++)
   retval.data[i] = -this->data[i];
  return retval;
 }
 
 template< class T >
-inline NPolynomialIndex<T> NPolynomialIndex<T>::operator+(const NPolynomialIndex &R) const
+inline PolynomialIndex<T> PolynomialIndex<T>::operator+(const PolynomialIndex &R) const
 {
- NPolynomialIndex<T> retval(this->data.size());
+ PolynomialIndex<T> retval(this->data.size());
  for (unsigned long i=0; i<retval.data.size(); i++)
   retval.data[i] = this->data[i] + R.data[i];
  return retval;
 }
 
 template< class T >
-inline bool NPolynomialIndex<T>::operator<(const NPolynomialIndex<T> &q) const
+inline bool PolynomialIndex<T>::operator<(const PolynomialIndex<T> &q) const
 { 
  T sum1(0); T sum2(0); 
  for (unsigned long i=0; i<this->data.size(); i++)
@@ -403,54 +403,54 @@ inline bool NPolynomialIndex<T>::operator<(const NPolynomialIndex<T> &q) const
  return false;
 }
 
-// Inline functions for NSparseGrid
+// Inline functions for SparseGrid
 
 template <class T>
-inline NSparseGrid<T>::NSparseGrid(unsigned long dim)
+inline SparseGrid<T>::SparseGrid(unsigned long dim)
 { gridim = dim; }
 
 template <class T>
-inline NSparseGrid<T>::NSparseGrid(const NSparseGrid & cloneMe)
+inline SparseGrid<T>::SparseGrid(const SparseGrid & cloneMe)
 {
- typename std::map< NMultiIndex< unsigned long >, T* >::const_iterator i;
+ typename std::map< MultiIndex< unsigned long >, T* >::const_iterator i;
  for (i = cloneMe.grid.begin(); i != cloneMe.grid.end(); i++)
-  grid.insert( std::pair< NMultiIndex< unsigned long >, T* >( i->first, clonePtr(i->second) ) );
+  grid.insert( std::pair< MultiIndex< unsigned long >, T* >( i->first, clonePtr(i->second) ) );
  gridim = cloneMe.gridim;
 }
 
 template <class T>
-inline NSparseGrid<T>::~NSparseGrid()
+inline SparseGrid<T>::~SparseGrid()
 {
- typename std::map< NMultiIndex< unsigned long >, T* >::iterator i;
+ typename std::map< MultiIndex< unsigned long >, T* >::iterator i;
  for (i = grid.begin(); i != grid.end(); i++)
   delete(i->second);
  grid.clear();
 }
 
 template <class T>
-inline NSparseGrid<T>& NSparseGrid<T>::operator = (const NSparseGrid& cloneMe)
+inline SparseGrid<T>& SparseGrid<T>::operator = (const SparseGrid& cloneMe)
 {
  // delete old grid
- typename std::map< NMultiIndex< unsigned long >, T* >::iterator i;
+ typename std::map< MultiIndex< unsigned long >, T* >::iterator i;
  for (i = grid.begin(); i != grid.end(); i++)
    delete(i->second); 
  grid.clear();  
  // copy cloneMe
  for (i = cloneMe.grid.begin(); i != cloneMe.grid.end(); i++)
-  grid.insert( std::pair< NMultiIndex< unsigned long >, T* >( i->first, clonePtr(i->second) ) );
+  grid.insert( std::pair< MultiIndex< unsigned long >, T* >( i->first, clonePtr(i->second) ) );
  gridim = cloneMe.gridim;
  return (*this);
 }
 
 template <class T>
-const std::map< NMultiIndex< unsigned long >, T* > & NSparseGrid<T>::getGrid() const
+const std::map< MultiIndex< unsigned long >, T* > & SparseGrid<T>::getGrid() const
 { return grid; }
 
 template <class T>
-inline void NSparseGrid<T>::setEntry( const NMultiIndex< unsigned long > &I, const T &val )
+inline void SparseGrid<T>::setEntry( const MultiIndex< unsigned long > &I, const T &val )
 {
  // determine if multi-index I is in grid, if so replace by val
- typename std::map< NMultiIndex< unsigned long >, T* >::iterator p;
+ typename std::map< MultiIndex< unsigned long >, T* >::iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) {(*(p->second)) = val;}
  // if not, insert
@@ -458,18 +458,18 @@ inline void NSparseGrid<T>::setEntry( const NMultiIndex< unsigned long > &I, con
 }
 
 template <class T>
-inline const T* NSparseGrid<T>::getEntry( const NMultiIndex< unsigned long > &I ) const
+inline const T* SparseGrid<T>::getEntry( const MultiIndex< unsigned long > &I ) const
 {
- typename std::map< NMultiIndex< unsigned long >, T* >::const_iterator p;
+ typename std::map< MultiIndex< unsigned long >, T* >::const_iterator p;
  p = grid.find( I );
  if ( p != grid.end() ) return (p->second);
  else return NULL;
 }
 
 template <class T>
-inline void NSparseGrid<T>::writeTextShort(std::ostream& out) const
+inline void SparseGrid<T>::writeTextShort(std::ostream& out) const
 {
- typename std::map< NMultiIndex< unsigned long >, T* >::const_iterator i;
+ typename std::map< MultiIndex< unsigned long >, T* >::const_iterator i;
  for (i = grid.begin(); i != grid.end(); i++)
   {
    if (i!=grid.begin()) out<<", ";
@@ -480,12 +480,12 @@ inline void NSparseGrid<T>::writeTextShort(std::ostream& out) const
   }
 }
 
-// NSparseGridRing
+// SparseGridRing
 template <class T> 
-inline void NSparseGridRing<T>::incEntry( const NMultiIndex< unsigned long > & I, const T & val )
+inline void SparseGridRing<T>::incEntry( const MultiIndex< unsigned long > & I, const T & val )
 {
  if (val == 0) return;
- typename std::map< NMultiIndex< unsigned long >, T* >::iterator p;
+ typename std::map< MultiIndex< unsigned long >, T* >::iterator p;
  p = this->grid.find( I );
  if ( p != this->grid.end() ) 
   { (*(p->second)) += val;
@@ -495,20 +495,20 @@ inline void NSparseGridRing<T>::incEntry( const NMultiIndex< unsigned long > & I
 }
 
 template <class T>
-inline NSparseGridRing<T>::NSparseGridRing(unsigned long dim) : NSparseGrid<T>(dim)
+inline SparseGridRing<T>::SparseGridRing(unsigned long dim) : SparseGrid<T>(dim)
 {}
 
 template <class T>
-inline NSparseGridRing<T>::NSparseGridRing(const NSparseGridRing & cloneMe) : 
- NSparseGrid<T>(cloneMe)
+inline SparseGridRing<T>::SparseGridRing(const SparseGridRing & cloneMe) : 
+ SparseGrid<T>(cloneMe)
 {}
 
 template <class T>
-inline void NSparseGridRing<T>::setEntry( const NMultiIndex< unsigned long > &I, const T &val )
+inline void SparseGridRing<T>::setEntry( const MultiIndex< unsigned long > &I, const T &val )
 {
  // determine if multi-index I is in grid, if so replace by val
  if (val == T::zero) return;
- typename std::map< NMultiIndex< unsigned long >, T* >::iterator p;
+ typename std::map< MultiIndex< unsigned long >, T* >::iterator p;
  p = this->grid.find( I );
  if ( p != this->grid.end() ) {(*(p->second)) = val;}
  // if not, insert

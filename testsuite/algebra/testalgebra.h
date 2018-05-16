@@ -44,3 +44,12 @@
 
 void addGroupPresentation(CppUnit::TextUi::TestRunner& runner);
 
+void addBilinearForm(CppUnit::TextUi::TestRunner& runner);
+void addBinaryA5(CppUnit::TextUi::TestRunner& runner);
+void addBinaryS4(CppUnit::TextUi::TestRunner& runner);
+void addCellularData(CppUnit::TextUi::TestRunner& runner);
+void addMarkedAbelianGroup(CppUnit::TextUi::TestRunner& runner);
+void addMVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
+void addSVPolynomialRing(CppUnit::TextUi::TestRunner& runner);
+void addFibring(CppUnit::TextUi::TestRunner& runner);
+

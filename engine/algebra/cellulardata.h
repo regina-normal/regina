@@ -59,10 +59,6 @@
 
 namespace regina {
 
-// TODO these lines not needed anymore?
-//class Triangulation<3>;
-//class Triangulation<4>;
-
 /**
  * \weakgroup algebra
  * @{
@@ -856,7 +852,7 @@ private:
     // this will be a 2x2 grid 1st coordinate the cell index and 
     //  2nd coordinate the indices of the incident faces.
   public:
-    typedef NSparseGrid< coverFacetData > ccMapType; 
+    typedef SparseGrid< coverFacetData > ccMapType; 
     // there is a ccMapType for chain complexes (9 coordinate systems, 
     //  all dimensions)
     typedef std::map< ChainComplexLocator, ccMapType* > ccCollectionType;

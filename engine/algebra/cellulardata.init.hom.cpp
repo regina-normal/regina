@@ -58,14 +58,14 @@ void CellularData::fillStandardToMixedHomCM()
         {
          smCM[d]->entry( (d+1)*j + i, j ) = 1; 
          // TODO fill wordle
-         CM->setEntry( NMultiIndex< unsigned long >( j, i ),
+         CM->setEntry( MultiIndex< unsigned long >( j, i ),
                        coverFacetData( (d+1)*j + i, 1, wordle ) );
         }
      else 
         {
         smCM[d]->entry( delta[d] + j, j ) = 1;
         // TODO fill wordle
-        CM->setEntry( NMultiIndex< unsigned long >( j, 0 ),
+        CM->setEntry( MultiIndex< unsigned long >( j, 0 ),
                       coverFacetData( delta[d] + j, 1, wordle ) );
         }
     } // j for loop

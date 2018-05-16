@@ -5,6 +5,8 @@ SET ( FILES
   abeliangroup
   grouppresentation
   homgrouppresentation
+  binaryA5
+  binaryS4
   markedabeliangroup
   xmlalgebrareader
   cellulardata          
@@ -19,6 +21,8 @@ SET ( FILES
   cellulardata.tests
   bilinearform
   svpolynomialring
+  mvpolynomialring
+  fibring
   )
 
 # Prepend folder name
@@ -35,6 +39,8 @@ if (${REGINA_INSTALL_DEV})
     ngrouppresentation.h
     homgrouppresentation.h
     nhomgrouppresentation.h
+    binaryA5.h
+    binaryS4.h
     markedabeliangroup.h
     nmarkedabeliangroup.h
     xmlalgebrareader.h
@@ -42,5 +48,7 @@ if (${REGINA_INSTALL_DEV})
     cellulardata.simpaut.h
     bilinearform.h
     svpolynomialring.h
+    mvpolynomialring.h
+    fibring.h
     DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -408,8 +408,8 @@ const BilinearForm* CellularData::bilinearForm(
    const MarkedAbelianGroup* rDom( markedGroup(f_desc.rdomain) );
    MarkedAbelianGroup rAng( 1, f_desc.rdomain.cof );
 
-   NSparseGridRing< Integer > intM(3); 
-   NMultiIndex< unsigned long > x(3); 
+   SparseGridRing< Integer > intM(3); 
+   MultiIndex< unsigned long > x(3); 
 
    for (unsigned long i=0; i<lDom->rankCC(); i++)
     { x[0] = i; x[1] = i; x[2] = 0;
@@ -440,7 +440,7 @@ const BilinearForm* CellularData::bilinearForm(
    const MarkedAbelianGroup* rAng( markedGroup( 
          GroupLocator( (f_desc.ldomain.dim + f_desc.rdomain.dim) - aDim,
 					coVariant, MIX_coord, f_desc.ldomain.cof ) ) );
-   NSparseGridRing< Integer > intM(3); 
+   SparseGridRing< Integer > intM(3); 
    
    if (aDim == 3) // aDim==3  
     {
@@ -460,7 +460,7 @@ const BilinearForm* CellularData::bilinearForm(
           // of these edges to product normal orientations
           unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), 
            edg->index() ) - dcIx[2].begin() );
-	     NMultiIndex< unsigned long > x(3); x[0] = J; 
+	     MultiIndex< unsigned long > x(3); x[0] = J; 
          x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j;
 	     // fac->edgeMapping(j)[0] and [1] are the vertices of the edge 
          // in the face, so we apply facinc to that, 
@@ -483,7 +483,7 @@ const BilinearForm* CellularData::bilinearForm(
          const Simplex<3>* tet( edg->embedding(0).tetrahedron() );
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), 
           rIx[1][i] ) - dcIx[2].begin() );
-         NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; 
+         MultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; 
          x[2] = numNonIdealCells[0] + i;
          Perm<4> edginc( edg->embedding(0).vertices() );
          intM.setEntry( x, edginc.sign()*tet->orientation() ); 
@@ -496,7 +496,7 @@ const BilinearForm* CellularData::bilinearForm(
          const Simplex<3>* tet( fac->embedding(0).tetrahedron() );
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), 
           rIx[2][i] ) - dcIx[1].begin() );
-         NMultiIndex< unsigned long > x(3); x[0] = J; 
+         MultiIndex< unsigned long > x(3); x[0] = J; 
          x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          Perm<4> facinc( fac->embedding(0).vertices() );
          intM.setEntry( x, facinc.sign()*tet->orientation() ); 
@@ -519,7 +519,7 @@ const BilinearForm* CellularData::bilinearForm(
          Perm<5> facinc( fac->embedding(0).vertices() );
          unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), 
           rIx[2][i] ) - dcIx[2].begin() );
-         NMultiIndex< unsigned long > x(3); x[0] = J; 
+         MultiIndex< unsigned long > x(3); x[0] = J; 
          x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + i;
          intM.setEntry( x, facinc.sign() * pen->orientation() );
         }
@@ -532,7 +532,7 @@ const BilinearForm* CellularData::bilinearForm(
          Perm<5> tetinc( tet->embedding(0).vertices() );
          unsigned long J( lower_bound( dcIx[1].begin(), dcIx[1].end(), 
           rIx[3][i] ) - dcIx[1].begin() );
-         NMultiIndex< unsigned long > x(3); x[0] = J; 
+         MultiIndex< unsigned long > x(3); x[0] = J; 
          x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + 
           numNonIdealCells[2] + i;
          intM.setEntry( x, tetinc.sign() * pen->orientation() );
@@ -546,7 +546,7 @@ const BilinearForm* CellularData::bilinearForm(
          Perm<5> edginc( edg->embedding(0).vertices() );
          unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), 
           rIx[1][i] ) - dcIx[3].begin() );
-         NMultiIndex< unsigned long > x(3); x[0] = J; 
+         MultiIndex< unsigned long > x(3); x[0] = J; 
          x[1] = i; x[2] = numNonIdealCells[0] + numNonIdealCells[1] + 
           numNonIdealCells[2] + i;
          intM.setEntry( x, edginc.sign() * pen->orientation() );
@@ -568,7 +568,7 @@ const BilinearForm* CellularData::bilinearForm(
           // orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[2].begin(), dcIx[2].end(), 
                               fac->index() ) - dcIx[2].begin() );
-	     NMultiIndex< unsigned long > x(3); 
+	     MultiIndex< unsigned long > x(3); 
          x[0] = J; x[1] = i; 
          x[2] = 2*numNonIdealCells[1] + 3*numNonIdealCells[2] + 4*rIx[3][i] + j;
 	     Perm<5> facinc( pen->triangleMapping( 
@@ -601,7 +601,7 @@ const BilinearForm* CellularData::bilinearForm(
           // orientation of intersection to product normal orientations
              unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), 
                               edg->index() ) - dcIx[3].begin() );
-	     NMultiIndex< unsigned long > x(3); 
+	     MultiIndex< unsigned long > x(3); 
          x[0] = J; x[1] = i; x[2] = 2*numNonIdealCells[1] + 3*rIx[2][i] + j; 
 	     Perm<5> edginc( pen->edgeMapping( 
            Face<4,1>::edgeNumber[facinc[(j+1)%3]][facinc[(j+2)%3]] ) ); 
@@ -634,7 +634,7 @@ const BilinearForm* CellularData::bilinearForm(
           // orientation of intersection to product normal orientations
          unsigned long J( lower_bound( dcIx[3].begin(), dcIx[3].end(), 
                           edg->index() ) - dcIx[3].begin() );
-	     NMultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; 
+	     MultiIndex< unsigned long > x(3); x[0] = J; x[1] = i; 
          x[2] = 3*numNonIdealCells[2] + 6*i + j;
 	     Perm<5> edgintet( tet->edgeMapping( j ) ); 
          // [0,1] --> verts in tet, 4->4. 
@@ -751,7 +751,7 @@ const BilinearForm* CellularData::bilinearForm(
         rd->invariantFactor( rd->countInvariantFactors()-1 ) );
    MarkedAbelianGroup range( 1, N ); 
    // Z_N with triv pres 0 --> Z --N--> Z --> Z_N --> 0
-   NSparseGridRing< Integer > intM(3); 
+   SparseGridRing< Integer > intM(3); 
 
    // TLF step 2: dimension-specific constructions
    if (aDim == 3)
@@ -782,7 +782,7 @@ const BilinearForm* CellularData::bilinearForm(
        // rescale sum, check if relevant, append to intM if so...
        sum *= (N / rd->invariantFactor(j));
        sum %= N; if (sum < Integer::zero) sum += N;
-       NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
+       MultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
        if (sum != Integer::zero) intM.setEntry( x, sum );
 	   } 
      }
@@ -815,7 +815,7 @@ const BilinearForm* CellularData::bilinearForm(
            // rescale sum, check if relevant, append to intM if so...
            sum *= (N / rd->invariantFactor(j));
            sum %= N; if (sum < Integer::zero) sum += N;
-           NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
+           MultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
            if (sum != Integer::zero) intM.setEntry( x, sum );
 	  }
      } 
@@ -846,7 +846,7 @@ const BilinearForm* CellularData::bilinearForm(
        // rescale sum, check if relevant, append to intM if so...
        sum *= (N / rd->invariantFactor(j));
        sum %= N; if (sum < Integer::zero) sum += N;
-       NMultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
+       MultiIndex< unsigned long > x(3); x[0] = i; x[1] = j; x[2] = 0; 
        if (sum != Integer::zero) intM.setEntry( x, sum );	  }
     } 
     bfptr = new BilinearForm( *ldomain, *rdomain, range, intM );
@@ -1086,13 +1086,13 @@ const MatrixInt* CellularData::integerChainComplex(
    ccCollectionType::const_iterator q;
    q = genCC.find(c_desc); 
    if (q == genCC.end()) return NULL; // invalid request
-   // q->second is our NSparseGrid< coverFacetData > ccMapType; 
+   // q->second is our SparseGrid< coverFacetData > ccMapType; 
    CellularData::ccMapType thisCC( *q->second ); 
    // build matrix. 
    MatrixInt* buildMat( NULL ); 
    buildMat = new MatrixInt( cellCount(range_desc), cellCount(c_desc) );
    // build entries
-   std::map< NMultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
+   std::map< MultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
    for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
      buildMat->entry( ci->second->cellNo,  ci->first.entry(0) ) += 
          ci->second->sig;
@@ -1120,14 +1120,14 @@ const MatrixInt* CellularData::integerChainMap(
    cmCollectionType::const_iterator q;
    q = genCM.find(m_desc); 
     if (q == genCM.end()) return NULL; // invalid request
-   // q->second is our NSparseGrid< coverFacetData > ccMapType; 
+   // q->second is our SparseGrid< coverFacetData > ccMapType; 
    CellularData::ccMapType thisCM( *q->second ); 
    // build matrix. 
    MatrixInt* buildMat( NULL ); 
    buildMat = new MatrixInt( cellCount(m_desc.range), 
                               cellCount(m_desc.domain) );
    // build entries
-   std::map< NMultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
+   std::map< MultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
    for (ci = thisCM.getGrid().begin(); ci!=thisCM.getGrid().end(); ci++)
      buildMat->entry( ci->second->cellNo,  ci->first.entry(0) ) += 
       ci->second->sig;
@@ -1203,7 +1203,7 @@ const MatrixRing< SVPolynomialRing< Integer > >*
         ( ranDim, domDim );
 
   // build entries
-  std::map< NMultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
+  std::map< MultiIndex< unsigned long >, coverFacetData* >::const_iterator ci;
 
   for (ci = thisCC.getGrid().begin(); ci!=thisCC.getGrid().end(); ci++)
     {

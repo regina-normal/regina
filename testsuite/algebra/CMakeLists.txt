@@ -3,6 +3,14 @@
 # Files to compile
 SET ( FILES
   grouppresentation
+  bilinearform
+  binarya5
+  binarys4
+  cellulardata
+  markedabeliangroup
+  mvpolynomialring
+  svpolynomialring
+  fibring
   )
 
 # Prepend folder name
