@@ -213,7 +213,7 @@ bool NMapToS1::verifyPrimitiveH1( const std::vector<Rational> &cocy ) const
  *
  * input:
  *  cocy is the H^1-cocycle
- *  diag_vec is ??
+ *  diag_vec is ?
  */
 bool NMapToS1::verifySimpleS1Bundle( const std::vector<Rational> &cocy,
                                  std::vector< unsigned long > **diag_vec) const
