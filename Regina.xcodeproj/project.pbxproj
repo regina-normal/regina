@@ -1527,6 +1527,7 @@
 		058FC86E1FE188A0006D04B4 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		058FC8731FE188E0006D04B4 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058FC8651FE18826006D04B4 /* retriangulate.cpp */; };
 		058FC8761FE18943006D04B4 /* retriangulate in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 058FC8721FE188A0006D04B4 /* retriangulate */; };
+		0590E04C2074B4B700C11EF6 /* libqmacstyle.dylib in Copy Qt plugins (styles) */ = {isa = PBXBuildFile; fileRef = 0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
@@ -2099,6 +2100,11 @@
 		05F0A0641DBF0B7000117BFC /* triangulation3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0311DBF0B5E00117BFC /* triangulation3.cpp */; };
 		05F0A0651DBF0B7000117BFC /* turaevviro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */; };
 		05F0A0661DBF0B7000117BFC /* vertex3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0341DBF0B5E00117BFC /* vertex3.cpp */; };
+		05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F2033120A17C1E00FC74ED /* dt-impl.h */; };
+		05F2033420A17C1E00FC74ED /* dt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033220A17C1E00FC74ED /* dt.cpp */; };
+		05F2033520A17C2500FC74ED /* dt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033220A17C1E00FC74ED /* dt.cpp */; };
+		05F2033720A17C6000FC74ED /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
+		05F2033820A17C6000FC74ED /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
 		05F232791F9AB2B100101A9E /* LinkPolynomials.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F232751F9AB2A000101A9E /* LinkPolynomials.mm */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
@@ -2188,7 +2194,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
-			script = "~/Qt5.9.2/5.9.2/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
+			script = "~/Qt5.10.1/5.10.1/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
 		};
 		054BC4C219B4A708005E01A0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2402,6 +2408,17 @@
 				057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */,
 				057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0590E04B2074B48600C11EF6 /* Copy Qt plugins (styles) */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = styles;
+			dstSubfolderSpec = 13;
+			files = (
+				0590E04C2074B4B700C11EF6 /* libqmacstyle.dylib in Copy Qt plugins (styles) */,
+			);
+			name = "Copy Qt plugins (styles)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		05AB5ED81B942354007034C8 /* Copy Frameworks */ = {
@@ -2736,7 +2753,7 @@
 		05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonInterpreter.h; sourceTree = "<group>"; };
 		05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonInterpreter.mm; sourceTree = "<group>"; };
 		05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
-		05249EA31DBB8FC9001FE29E /* python27.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = python27.zip; path = ../../../../Library/Frameworks/ios/Python.framework/Versions/2.7/Resources/lib/python27.zip; sourceTree = "<group>"; };
+		05249EA31DBB8FC9001FE29E /* python27.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = python27.zip; path = ../../../../Library/Frameworks/ios/Python.framework/Resources/lib/python27.zip; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
 		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
@@ -3854,6 +3871,7 @@
 		0575A7D91DCE8B700027CE31 /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
 		0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomologicaldata.h; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		057720D82074CBCC007E9EA0 /* stats.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = stats.pl; sourceTree = "<group>"; };
 		0577E6DD1F97087900CBDF15 /* generic.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = generic.out; sourceTree = "<group>"; };
 		0577E6DE1F97087900CBDF15 /* safeheldtype_basic.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = safeheldtype_basic.out; sourceTree = "<group>"; };
 		0577E6DF1F97087A00CBDF15 /* embeddings.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = embeddings.out; sourceTree = "<group>"; };
@@ -4036,6 +4054,7 @@
 		058FADC519D50DA10001B5B5 /* Coordinates.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Coordinates.mm; sourceTree = "<group>"; };
 		058FC8651FE18826006D04B4 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
 		058FC8721FE188A0006D04B4 /* retriangulate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = retriangulate; sourceTree = BUILT_PRODUCTS_DIR; };
+		0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacstyle.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/styles/libqmacstyle.dylib; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101191813230A000A8D16 /* NewPacketMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketMenu.h; sourceTree = "<group>"; };
@@ -4505,6 +4524,9 @@
 		05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = turaevviro.cpp; sourceTree = "<group>"; };
 		05F0A0341DBF0B5E00117BFC /* vertex3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertex3.cpp; sourceTree = "<group>"; };
 		05F0A0351DBF0B5E00117BFC /* vertex3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
+		05F2033120A17C1E00FC74ED /* dt-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dt-impl.h"; sourceTree = "<group>"; };
+		05F2033220A17C1E00FC74ED /* dt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dt.cpp; sourceTree = "<group>"; };
+		05F2033620A17C6000FC74ED /* knot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = knot.cpp; sourceTree = "<group>"; };
 		05F232751F9AB2A000101A9E /* LinkPolynomials.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkPolynomials.mm; sourceTree = "<group>"; };
 		05F232771F9AB2A900101A9E /* LinkPolynomials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkPolynomials.h; sourceTree = "<group>"; };
 		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
@@ -7073,6 +7095,7 @@
 				05685F6E1F970E6500085B44 /* README.txt */,
 				05685F6C1F970E6400085B44 /* RELEASE.txt */,
 				05685F6A1F970E6400085B44 /* replacetabs */,
+				057720D82074CBCC007E9EA0 /* stats.pl */,
 			);
 			path = admin;
 			sourceTree = "<group>";
@@ -7159,6 +7182,8 @@
 				05721ED01F97153C00A83FFC /* CMakeLists.txt */,
 				05721EDC1F97153C00A83FFC /* complement.cpp */,
 				05721ECF1F97153C00A83FFC /* data-impl.h */,
+				05F2033120A17C1E00FC74ED /* dt-impl.h */,
+				05F2033220A17C1E00FC74ED /* dt.cpp */,
 				05721ED61F97153C00A83FFC /* examplelink.cpp */,
 				05721EE11F97153C00A83FFC /* examplelink.h */,
 				05AA71ED1FB17DFF00186E30 /* flype.cpp */,
@@ -7529,6 +7554,7 @@
 				05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */,
 				05AB5EE01B94285B007034C8 /* libqminimal.dylib */,
 				05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */,
+				0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */,
 			);
 			name = Plugins;
 			sourceTree = "<group>";
@@ -7674,6 +7700,7 @@
 				05F0A0221DBF0B5E00117BFC /* homology.cpp */,
 				05F0A0241DBF0B5E00117BFC /* hydrate.cpp */,
 				05F0A0251DBF0B5E00117BFC /* insertlayered.cpp */,
+				05F2033620A17C6000FC74ED /* knot.cpp */,
 				05F0A0261DBF0B5E00117BFC /* reorder.cpp */,
 				05F0A0271DBF0B5E00117BFC /* retriangulate.cpp */,
 				05F0A0281DBF0B5E00117BFC /* simplify.cpp */,
@@ -7992,6 +8019,7 @@
 				052F9FEF180600FB00FAE4DF /* nblockedsfstriple.h in Headers */,
 				05CA99E618078466006161DC /* registryutils.h in Headers */,
 				0513753E1809B8D3002E525B /* coordregistry.h in Headers */,
+				05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */,
 				052FA072180600FB00FAE4DF /* ntetrahedron.h in Headers */,
 				050C64C71DA3302900C9420F /* nmaxadmissible-impl.h in Headers */,
 				0591E7E31C4F750200793A9C /* normalhypersurfaces.h in Headers */,
@@ -8423,6 +8451,7 @@
 				05AB5EE51B942884007034C8 /* Copy Qt Plugins (imageformats) */,
 				05AB5EFE1B9428BD007034C8 /* Copy Qt Plugins (iconengines) */,
 				05AB5F011B9428E4007034C8 /* Copy Qt Plugins (generic) */,
+				0590E04B2074B48600C11EF6 /* Copy Qt plugins (styles) */,
 				050F5E691B9BD2AA00C1F681 /* Copy Python Module */,
 				050BEA351D9C8B3700B96DB8 /* Copy Python Scripts */,
 				050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */,
@@ -8558,6 +8587,7 @@
 						};
 					};
 					058FC8671FE188A0006D04B4 = {
+						DevelopmentTeam = 67JTSH67LZ;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -8677,7 +8707,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign FDA4865E0F0A4DE4B8060E4F2D5F52B326558A21 --preserve-metadata=identifier,entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8705,7 +8735,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in retriangulate sigcensus tricensus; do\n/usr/bin/codesign --force --sign FDA4865E0F0A4DE4B8060E4F2D5F52B326558A21 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in retriangulate sigcensus tricensus; do\n/usr/bin/codesign --force --sign 'Mac Developer:' --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9458,6 +9488,7 @@
 				05A067591DFA68470047872E /* snappedtwosphere.cpp in Sources */,
 				052FA1D21806129B00FAE4DF /* components.cpp in Sources */,
 				0589FAC3181484860064CD57 /* Tri3Gluings.mm in Sources */,
+				05F2033820A17C6000FC74ED /* knot.cpp in Sources */,
 				05249F2B1DBC1711001FE29E /* matrixint.cpp in Sources */,
 				05FB46D71DD92D2900BB00E5 /* grouppresentation.cpp in Sources */,
 				052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */,
@@ -9692,6 +9723,7 @@
 				059BC68D1DC7F7A300AB4206 /* boundarycomponent6.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
+				05F2033520A17C2500FC74ED /* dt.cpp in Sources */,
 				05DC13871FEB942E00171D66 /* nsvectorquadoctclosed.cpp in Sources */,
 				05249F0F1DBC16F9001FE29E /* triangulation8.cpp in Sources */,
 				05C0645E1C56B1F7006E6483 /* Tri4ViewController.mm in Sources */,
@@ -10118,6 +10150,7 @@
 				05721EEC1F97153E00A83FFC /* reidemeister.cpp in Sources */,
 				0542087F1DF0D0B50018AB24 /* repository.cpp in Sources */,
 				052F9FE4180600FB00FAE4DF /* signature.cpp in Sources */,
+				05F2033420A17C1E00FC74ED /* dt.cpp in Sources */,
 				052F9F80180600FB00FAE4DF /* filling.c in Sources */,
 				052F9FD9180600FB00FAE4DF /* volume.c in Sources */,
 				052F9F56180600FB00FAE4DF /* packetlistener.cpp in Sources */,
@@ -10215,6 +10248,7 @@
 				0591E7E41C4F750200793A9C /* xmlhypersurfacereader.cpp in Sources */,
 				052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */,
 				055114C51DCC45FD00EC753C /* example2.cpp in Sources */,
+				05F2033720A17C6000FC74ED /* knot.cpp in Sources */,
 				05C1BEAD1DCA7CA9007C946B /* boundary5.cpp in Sources */,
 				05C1BEAF1DCA7CA9007C946B /* boundary7.cpp in Sources */,
 				05A73CA419B2EF5A0099C617 /* Moebius_transformations.c in Sources */,
@@ -11616,6 +11650,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
@@ -11659,6 +11694,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",

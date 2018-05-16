@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,11 +47,15 @@ using regina::StrandRef;
 using regina::Link;
 
 namespace {
+    std::string (Link::*gauss_str)() const = &Link::gauss;
     std::string (Link::*orientedGauss_str)() const = &Link::orientedGauss;
     std::string (Link::*jenkins_str)() const = &Link::jenkins;
+    std::string (Link::*dt_str)(bool) const = &Link::dt;
+    Link* (*fromGauss_str)(const std::string&) = &Link::fromGauss;
     Link* (*fromOrientedGauss_str)(const std::string&) =
         &Link::fromOrientedGauss;
     Link* (*fromJenkins_str)(const std::string&) = &Link::fromJenkins;
+    Link* (*fromDT_str)(const std::string&) = &Link::fromDT;
 
     bool (Link::*r1a)(Crossing*, bool, bool) = &Link::r1;
     bool (Link::*r1b)(StrandRef, int, int, bool, bool) = &Link::r1;
@@ -80,6 +84,26 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_knotSig, Link::knotSig, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
         Link::simplifyExhaustive, 0, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dt, Link::dt, 0, 1);
+
+    Link* fromGauss_list(boost::python::list terms) {
+        long len = boost::python::len(terms);
+
+        int* s = new int[len];
+        for (long i = 0; i < len; ++i) {
+            extract<int> val(terms[i]);
+            if (! val.check()) {
+                // Throw an exception.
+                delete[] s;
+                val();
+            }
+            s[i] = val();
+        }
+
+        Link* ans = Link::fromGauss(s, s + len);
+        delete[] s;
+        return ans;
+    }
 
     Link* fromOrientedGauss_list(boost::python::list terms) {
         long len = boost::python::len(terms);
@@ -96,6 +120,25 @@ namespace {
         }
 
         Link* ans = Link::fromOrientedGauss(s, s + len);
+        delete[] s;
+        return ans;
+    }
+
+    Link* fromDT_list(boost::python::list terms) {
+        long len = boost::python::len(terms);
+
+        int* s = new int[len];
+        for (long i = 0; i < len; ++i) {
+            extract<int> val(terms[i]);
+            if (! val.check()) {
+                // Throw an exception.
+                delete[] s;
+                val();
+            }
+            s[i] = val();
+        }
+
+        Link* ans = Link::fromDT(s, s + len);
         delete[] s;
         return ans;
     }
@@ -146,16 +189,26 @@ void addLink() {
         .def(init<size_t>())
         .def(init<const Link&>())
         .def(init<const Link&, bool>())
+        .def(init<const std::string&>())
         .def("isEmpty", &Link::isEmpty)
         .def("size", &Link::size)
         .def("countComponents", &Link::countComponents)
         .def("crossing", &Link::crossing, return_internal_reference<>())
         .def("component", &Link::component)
+        .def("translate", &Link::translate)
+        .def("fromGauss", fromGauss_list,
+            return_value_policy<to_held_type<>>())
+        .def("fromGauss", fromGauss_str,
+            return_value_policy<to_held_type<>>())
         .def("fromOrientedGauss", fromOrientedGauss_list,
             return_value_policy<to_held_type<>>())
         .def("fromOrientedGauss", fromOrientedGauss_str,
             return_value_policy<to_held_type<>>())
         .def("fromJenkins", fromJenkins_str,
+            return_value_policy<to_held_type<>>())
+        .def("fromDT", fromDT_list,
+            return_value_policy<to_held_type<>>())
+        .def("fromDT", fromDT_str,
             return_value_policy<to_held_type<>>())
         .def("fromKnotSig", &Link::fromKnotSig,
             return_value_policy<to_held_type<>>())
@@ -165,6 +218,7 @@ void addLink() {
         .def("reverse", &Link::reverse)
         .def("change", &Link::change)
         .def("resolve", &Link::resolve)
+        .def("isAlternating", &Link::isAlternating)
         .def("writhe", &Link::writhe)
         .def("complement", &Link::complement,
             OL_complement()[return_value_policy<to_held_type<>>()])
@@ -185,8 +239,10 @@ void addLink() {
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             return_internal_reference<>())
         .def("brief", &Link::brief)
+        .def("gauss", gauss_str)
         .def("orientedGauss", orientedGauss_str)
         .def("jenkins", jenkins_str)
+        .def("dt", dt_str, OL_dt())
         .def("knotSig", &Link::knotSig, OL_knotSig())
         .def("dumpConstruction", &Link::dumpConstruction)
         .def("r1", r1a, OL_r1a())
@@ -201,8 +257,10 @@ void addLink() {
              OL_simplifyToLocalMinimum())
         .def("simplifyExhaustive", &Link::simplifyExhaustive,
              OL_simplifyExhaustive())
+        .staticmethod("fromGauss")
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
+        .staticmethod("fromDT")
         .staticmethod("fromKnotSig")
     ;
 

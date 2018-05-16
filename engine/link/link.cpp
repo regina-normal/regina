@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -66,6 +66,23 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
         bracket_ = new Laurent<Integer>(*(cloneMe.bracket_.value()));
 }
 
+Link::Link(const std::string& description) {
+    Link* attempt;
+
+    if ((attempt = fromKnotSig(description))) {
+        swapContents(*attempt);
+        setLabel(description);
+    } else if ((attempt = fromOrientedGauss(description))) {
+        swapContents(*attempt);
+        setLabel(description);
+    } else if ((attempt = fromDT(description))) {
+        swapContents(*attempt);
+        setLabel(description);
+    }
+
+    delete attempt;
+}
+
 bool Link::connected(const Crossing* a, const Crossing* b) const {
     if (components_.size() <= 1)
         return true;
@@ -107,6 +124,28 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     delete[] stack;
     delete[] visited;
     return ans;
+}
+
+bool Link::isAlternating() const {
+    StrandRef s;
+    int prev;
+
+    for (StrandRef start : components_) {
+        // 0-crossing components are considered alternating.
+        if (! start)
+            continue;
+
+        // Follow each non-empty component around.
+        s = start;
+        do {
+            prev = s.strand();
+            ++s;
+            if (s.strand() == prev)
+                return false;
+        } while (s != start);
+    }
+
+    return true;
 }
 
 void Link::writeTextShort(std::ostream& out) const {

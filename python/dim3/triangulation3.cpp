@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -74,6 +74,8 @@ namespace {
     bool (Triangulation<3>::*pachner_41)(regina::Vertex<3>*, bool, bool) =
         &Triangulation<3>::pachner;
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fillTorus_bc,
+        Triangulation<3>::fillTorus, 3, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
         Triangulation<3>::pachner, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFourMove,
@@ -191,6 +193,13 @@ namespace {
                 boost::python::manage_new_object::
                 apply<regina::Isomorphism<3>*>::type()(iso))));
     }
+
+    boost::python::tuple meridianLongitude_tuple(Triangulation<3>& t) {
+        std::pair<const regina::Edge<3>*, const regina::Edge<3>*> ans =
+            t.meridianLongitude();
+        return boost::python::make_tuple(boost::python::ptr(ans.first),
+            boost::python::ptr(ans.second));
+    }
 }
 
 void addTriangulation3() {
@@ -297,6 +306,9 @@ void addTriangulation3() {
             .def("turaevViro", &Triangulation<3>::turaevViro, OL_turaevViro())
             .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
                 OL_turaevViroApprox())
+            .def("longitude", &Triangulation<3>::longitude,
+                return_internal_reference<>())
+            .def("meridianLongitude", meridianLongitude_tuple)
             .def("isZeroEfficient", &Triangulation<3>::isZeroEfficient)
             .def("knowsZeroEfficient", &Triangulation<3>::knowsZeroEfficient)
             .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface)
@@ -371,6 +383,15 @@ void addTriangulation3() {
             .def("puncture", &Triangulation<3>::puncture, OL_puncture())
             .def("layerOn", &Triangulation<3>::layerOn,
                 return_value_policy<reference_existing_object>())
+            .def("fillTorus", (bool (Triangulation<3>::*)(
+                    unsigned long, unsigned long, unsigned long,
+                    regina::BoundaryComponent<3>*))(
+                    &Triangulation<3>::fillTorus),
+                OL_fillTorus_bc())
+            .def("fillTorus", (bool (Triangulation<3>::*)(
+                    regina::Edge<3>*, regina::Edge<3>*, regina::Edge<3>*,
+                    unsigned long, unsigned long, unsigned long))(
+                    &Triangulation<3>::fillTorus))
             .def("insertLayeredSolidTorus",
                 &Triangulation<3>::insertLayeredSolidTorus,
                 return_value_policy<reference_existing_object>())

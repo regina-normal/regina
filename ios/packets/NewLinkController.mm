@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,7 +47,7 @@
 - (void)viewDidLoad
 {
     self.pages = static_cast<NewPacketPageViewController*>(self.childViewControllers.lastObject);
-    [self.pages fillWithPages:@[@"newLinkExample", @"newLinkGauss"]
+    [self.pages fillWithPages:@[@"newLinkExample", @"newLinkTextCode"]
                  pageSelector:self.types
                    defaultKey:@"NewLinkPage"];
 }
@@ -166,13 +166,13 @@ typedef regina::Link* (*LinkCreator)();
 
 @end
 
-#pragma mark - Gauss page
+#pragma mark - Text code page
 
-@interface NewLinkGaussPage ()
-@property (weak, nonatomic) IBOutlet UITextField *gauss;
+@interface NewLinkTextCodePage ()
+@property (weak, nonatomic) IBOutlet UITextField *code;
 @end
 
-@implementation NewLinkGaussPage
+@implementation NewLinkTextCodePage
 
 - (IBAction)editingEnded:(id)sender {
     NewLinkController* c = static_cast<NewLinkController*>(self.parentViewController.parentViewController);
@@ -181,11 +181,11 @@ typedef regina::Link* (*LinkCreator)();
 
 - (regina::Packet *)create
 {
-    std::string code = [self.gauss.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].UTF8String;
+    std::string code = [self.code.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].UTF8String;
     if (code.empty()) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Empty Oriented Gauss Code"
-                              message:@"Please type an oriented Gauss code into the box provided."
+                              initWithTitle:@"Empty Text Code"
+                              message:@"Please type a text code into the box provided."
                               delegate:nil
                               cancelButtonTitle:@"Close"
                               otherButtonTitles:nil];
@@ -193,15 +193,16 @@ typedef regina::Link* (*LinkCreator)();
         return 0;
     }
 
-    regina::Link* l = regina::Link::fromOrientedGauss(code);
-    if (! l) {
+    regina::Link* l = new regina::Link(code);
+    if (l->isEmpty()) {
         UIAlertView* alert = [[UIAlertView alloc]
-                              initWithTitle:@"Invalid Oriented Gauss Code"
+                              initWithTitle:@"Invalid Text Code"
                               message:nil
                               delegate:nil
                               cancelButtonTitle:@"Close"
                               otherButtonTitles:nil];
         [alert show];
+        delete l;
         return 0;
     }
 

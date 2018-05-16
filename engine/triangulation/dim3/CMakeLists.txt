@@ -6,6 +6,7 @@ SET ( FILES
   homology
   hydrate
   insertlayered
+  knot
   reorder
   retriangulate
   simplify

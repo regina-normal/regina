@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -79,6 +79,33 @@
             break;
 
         case 1:
+            if (self.packet->countComponents() != 1) {
+                self.code.text = @"Dowker-Thistlethwaite notation is currently only available for knots.";
+                return;
+            }
+
+            {
+                // Restrict scope of local variables.
+                std::string alpha = self.packet->dt(true);
+                std::string numer = self.packet->dt(false);
+                if (alpha.empty())
+                    ans = @(numer.c_str());
+                else
+                    ans = [NSString stringWithFormat:
+                           @"%s\n\n%s\n", alpha.c_str(), numer.c_str()];
+            }
+            break;
+
+        case 2:
+            if (self.packet->countComponents() != 1) {
+                self.code.text = @"Knot signatures are currently only available for knots.";
+                return;
+            }
+
+            ans = @(self.packet->knotSig().c_str());
+            break;
+
+        case 3:
             ans = @(self.packet->jenkins().c_str());
             break;
     }
@@ -133,6 +160,25 @@
                 [[UIPasteboard generalPasteboard] setString:@(self.packet->orientedGauss().c_str())];
             return;
         case 1:
+            if (self.packet->countComponents() == 1) {
+                NSString* ans = nil;
+
+                std::string alpha = self.packet->dt(true);
+                std::string numer = self.packet->dt(false);
+                if (alpha.empty())
+                    ans = @(numer.c_str());
+                else
+                    ans = [NSString stringWithFormat:
+                           @"%s\n\n%s\n", alpha.c_str(), numer.c_str()];
+
+                [[UIPasteboard generalPasteboard] setString:ans];
+            }
+            return;
+        case 2:
+            if (self.packet->countComponents() == 1)
+                [[UIPasteboard generalPasteboard] setString:@(self.packet->knotSig().c_str())];
+            return;
+        case 3:
             [[UIPasteboard generalPasteboard] setString:@(self.packet->jenkins().c_str())];
             return;
     }

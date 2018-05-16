@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,9 +50,9 @@
 @end
 
 /**
- * The controller for creating a new knot from an oriented Gauss code.
+ * The controller for creating a new knot from a text code.
  *
  * This represents an individual page within the larger NewLinkController.
  */
-@interface NewLinkGaussPage : UIViewController <PacketCreator>
+@interface NewLinkTextCodePage : UIViewController <PacketCreator>
 @end

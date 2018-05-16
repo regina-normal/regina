@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,6 +62,7 @@ namespace regina {
 
 class Crossing;
 class Link;
+class Tangle;
 template <typename T> class Laurent;
 template <typename T> class Laurent2;
 template <int> class Triangulation;
@@ -319,6 +320,7 @@ class REGINA_API StrandRef {
 
     friend class Link;
     friend class ModelLinkGraph;
+    friend class Tangle;
 };
 
 /**
@@ -524,6 +526,7 @@ class REGINA_API Crossing : public MarkedElement,
 
     friend class Link;
     friend class ModelLinkGraph;
+    friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkConnectionsReader;
 };
@@ -703,6 +706,28 @@ class REGINA_API Link : public Packet {
          * have all properties marked as unknown.
          */
         Link(const Link& copy, bool cloneProps);
+        /**
+         * "Magic" constructor that tries to find some way to interpret
+         * the given string as a link.
+         *
+         * At present, Regina understands the following types of strings
+         * (and attempts to parse them in the following order):
+         *
+         * - knot signatures, as used by fromKnotSig();
+         * - oriented Gauss codes, as used by fromOrientedGauss();
+         * - numeric or alphabetical Dowker-Thistlethwaite strings, as
+         *   used by fromDT().
+         *
+         * This list may grow in future versions of Regina.
+         *
+         * Regina will also set the packet label accordingly.
+         *
+         * If Regina cannot interpret the given string, this will be
+         * left as the empty link.
+         *
+         * @param description a string that describes a knot or link.
+         */
+        Link(const std::string& description);
 
         /**
          * Destroys this link.
@@ -1616,6 +1641,22 @@ class REGINA_API Link : public Packet {
         /*@{*/
 
         /**
+         * Returns whether this knot diagram is alternating.
+         *
+         * Note that this routine cannot tell whether the \e knot is
+         * alternating (i.e., whether there \e exists an alternating diagram).
+         * Instead, it simply returns whether this specific diagram is
+         * alternating or not.
+         *
+         * The empty diagram and any zero-crossing unknot components
+         * will be considered alternating.
+         *
+         * @return \c true if this is an alternating diagram, or \c false
+         * if this is a non-alternating diagram.
+         */
+        bool isAlternating() const;
+
+        /**
          * Returns the writhe of this link diagram.
          *
          * The \e writhe sums the signs of all crossings.  It is
@@ -1987,6 +2028,60 @@ class REGINA_API Link : public Packet {
         std::string brief() const;
 
         /**
+         * Outputs a classical Gauss code for this knot.
+         *
+         * In general, the classical Gauss code does not carry enough
+         * information to uniquely reconstruct the knot.  For instance,
+         * both a knot and its reflection can be described by the same
+         * Gauss code; moreover, for composite knots, the Gauss code can
+         * describe inequivalent knots (even when allowing for reflections).
+         * If you need a code that specifies the knot uniquely, consider
+         * using the \e oriented Gauss code instead.
+         *
+         * Currently Regina only supports Gauss codes for knots,
+         * not multiple-component links.  If this link does not have
+         * precisely one component then the empty string will be returned.
+         *
+         * The string will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of returning a string, writes directly to an output stream.
+         *
+         * @return a classical Gauss code for this knot, or the empty
+         * string if this is a link with zero or multiple components.
+         */
+        std::string gauss() const;
+
+        /**
+         * Writes a classical Gauss code for this knot to the given output
+         * stream.
+         *
+         * In general, the classical Gauss code does not carry enough
+         * information to uniquely reconstruct the knot.  For instance,
+         * both a knot and its reflection can be described by the same
+         * Gauss code; moreover, for composite knots, the Gauss code can
+         * describe inequivalent knots (even when allowing for reflections).
+         * If you need a code that specifies the knot uniquely, consider
+         * using the \e oriented Gauss code instead.
+         *
+         * Currently Regina only supports Gauss codes for knots,
+         * not multiple-component links.  If this link does not have
+         * precisely one component then nothing will be output at all.
+         *
+         * The output will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of using an output stream, simply returns a string.
+         *
+         * \ifacespython This routine is not available in Python.  Instead,
+         * Python users can use the variant gauss(), which takes no
+         * arguments and returns the output as a string.
+         *
+         * @param out the output stream to which to write.
+         */
+        void gauss(std::ostream& out) const;
+
+        /**
          * Outputs an oriented Gauss code for this knot.
          *
          * The oriented Gauss code, based on a format used by Andreeva et al.,
@@ -1996,7 +2091,13 @@ class REGINA_API Link : public Packet {
          * documentation for fromOrientedGauss(const std::string&), which
          * imports links in this format.
          *
-         * Currently Regina only supports oriented Gauss codes for knots,
+         * The key advantage of using the oriented Gauss code (as opposed to
+         * the classical Gauss code) is that an oriented Gauss code always
+         * describes a unique knot, and moreover (for knots that are not
+         * equivalent to their reflections) it describes a unique reflection
+         * of that knot.
+         *
+         * Currently Regina only supports Gauss codes for knots,
          * not multiple-component links.  If this link does not have
          * precisely one component then the empty string will be returned.
          *
@@ -2021,7 +2122,13 @@ class REGINA_API Link : public Packet {
          * documentation for fromOrientedGauss(const std::string&), which
          * imports links in this format.
          *
-         * Currently Regina only supports oriented Gauss codes for knots,
+         * The key advantage of using the oriented Gauss code (as opposed to
+         * the classical Gauss code) is that an oriented Gauss code always
+         * describes a unique knot, and moreover (for knots that are not
+         * equivalent to their reflections) it describes a unique reflection
+         * of that knot.
+         *
+         * Currently Regina only supports Gauss codes for knots,
          * not multiple-component links.  If this link does not have
          * precisely one component then nothing will be output at all.
          *
@@ -2081,6 +2188,102 @@ class REGINA_API Link : public Packet {
         void jenkins(std::ostream& out) const;
 
         /**
+         * Outputs this knot using Dowker-Thistlethwaite notation.
+         *
+         * For an <i>n</i>-crossing knot, Regina supports two variants
+         * of this notation:
+         *
+         * - a \e numerical variant (the default), which is a sequence of
+         *   \a n even signed integers as described (amongst other places) in
+         *   Section 2.2 of C. C. Adams, "The knot book", W. H. Freeman & Co.,
+         *   1994;
+         *
+         * - an \e alphabetical variant, which transforms the numerical
+         *   notation into a sequence of letters by replacing positive
+         *   integers (2,4,6,...) with lower-case letters (\c a,\c b,\c c,...),
+         *   and replacing negative integers (-2,-4,-6,...) with upper-case
+         *   letters (\c A,\c B,\c C,...).  This alphabetical variant
+         *   can only be used for knots with 26 crossings or fewer; for
+         *   larger knots this routine will return the empty string if
+         *   the alphabetical variant is requested.
+         *
+         * In general, Dowker-Thistlethwaite notation does not carry enough
+         * information to uniquely reconstruct the knot.  For instance,
+         * both a knot and its reflection can be described by the same
+         * sequence of integers; moreover, for composite knots, the same
+         * Dowker-Thistlethwaite notation can describe inequivalent knots
+         * (even when allowing for reflections).  If you need notation that
+         * specifies the knot uniquely, consider using the oriented Gauss code
+         * instead, as output by orientedGauss().
+         *
+         * Currently Regina only supports Dowker-Thistlethwaite notation for
+         * knots, not multiple-component links.  If this link does not have
+         * precisely one component then the empty string will be returned.
+         *
+         * The string will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of returning a string, writes directly to an output stream.
+         *
+         * @param alpha \c true to use alphabetical notation, or \c false
+         * (the default) to use numerical notation.
+         * @return the Dowker-Thistlethwaite notation for this knot diagram.
+         * This routine will return the empty string if this link has zero or
+         * multiple components, or if \a alpha is \c true and the knot
+         * has more than 26 crossings.
+         */
+        std::string dt(bool alpha = false) const;
+
+        /**
+         * Writes this knot to the given output stream using
+         * Dowker-Thistlethwaite notation.
+         *
+         * For an <i>n</i>-crossing knot, Regina supports two variants
+         * of this notation:
+         *
+         * - a \e numerical variant (the default), which is a sequence of
+         *   \a n even signed integers as described (amongst other places) in
+         *   Section 2.2 of C. C. Adams, "The knot book", W. H. Freeman & Co.,
+         *   1994;
+         *
+         * - an \e alphabetical variant, which transforms the numerical
+         *   notation into a sequence of letters by replacing positive
+         *   integers (2,4,6,...) with lower-case letters (\c a,\c b,\c c,...),
+         *   and replacing negative integers (-2,-4,-6,...) with upper-case
+         *   letters (\c A,\c B,\c C,...).  This alphabetical variant
+         *   can only be used for knots with 26 crossings or fewer; for
+         *   larger knots this routine will output nothing at all if
+         *   the alphabetical variant is requested.
+         *
+         * In general, Dowker-Thistlethwaite notation does not carry enough
+         * information to uniquely reconstruct the knot.  For instance,
+         * both a knot and its reflection can be described by the same
+         * sequence of integers; moreover, for composite knots, the same
+         * Dowker-Thistlethwaite notation can describe inequivalent knots
+         * (even when allowing for reflections).  If you need notation that
+         * specifies the knot uniquely, consider using the oriented Gauss code
+         * instead, as output by orientedGauss().
+         *
+         * Currently Regina only supports Dowker-Thistlethwaite notation for
+         * knots, not multiple-component links.  If this link does not have
+         * precisely one component then nothing will be output at all.
+         *
+         * The output will not contain any newlines.
+         *
+         * \note There is another variant of this routine that, instead
+         * of using an output stream, simply returns a string.
+         *
+         * \ifacespython This routine is not available in Python.  Instead,
+         * Python users can use the variant dt(), which takes just the optional
+         * \a alpha argument and returns the output as a string.
+         *
+         * @param out the output stream to which to write.
+         * @param alpha \c true to use alphabetical notation, or \c false
+         * (the default) to use numerical notation.
+         */
+        void dt(std::ostream& out, bool alpha = false) const;
+
+        /**
          * Returns C++ code that can be used to reconstruct this link.
          *
          * This code will use the Link constructor that takes a series of
@@ -2130,27 +2333,6 @@ class REGINA_API Link : public Packet {
          */
         std::string knotSig(bool useReflection = true, bool useReversal = true)
             const;
-
-        /**
-         * Recovers a knot diagram from its signature.
-         * See knotSig() for more information on knot signatures.
-         *
-         * The knot that is returned will be newly created, and it is
-         * the responsibility of the caller of this routine to destroy it.
-         *
-         * Calling knotSig() followed by fromKnotSig() is not guaranteed to
-         * produce an \e identical knot diagram to the original, but it
-         * is guaranteed to produce one that is related by relabelling,
-         * rotation, and optionally (according to the arguments that
-         * were passed to knotSig()) reflection and/or reversal.
-         *
-         * @param sig the signature of the knot diagram to construct.
-         * Note that signatures are case-sensitive.
-         * @return a newly allocated knot if the reconstruction was
-         * successful, or \c null if the given string was not a valid
-         * knot signature.
-         */
-        static Link* fromKnotSig(const std::string& sig);
 
         /*@}*/
         /**
@@ -2227,6 +2409,147 @@ class REGINA_API Link : public Packet {
         template <typename... Args>
         static Link* fromData(std::initializer_list<int> crossingSigns,
             std::initializer_list<Args>... components);
+
+        /**
+         * Recovers a knot diagram from its signature.
+         * See knotSig() for more information on knot signatures.
+         *
+         * The knot that is returned will be newly created, and it is
+         * the responsibility of the caller of this routine to destroy it.
+         *
+         * Calling knotSig() followed by fromKnotSig() is not guaranteed to
+         * produce an \e identical knot diagram to the original, but it
+         * is guaranteed to produce one that is related by relabelling,
+         * rotation, and optionally (according to the arguments that
+         * were passed to knotSig()) reflection and/or reversal.
+         *
+         * @param sig the signature of the knot diagram to construct.
+         * Note that signatures are case-sensitive.
+         * @return a newly allocated knot if the reconstruction was
+         * successful, or \c null if the given string was not a valid
+         * knot signature.
+         */
+        static Link* fromKnotSig(const std::string& sig);
+
+        /**
+         * Creates a new knot from a classical Gauss code.
+         *
+         * Classical Gauss codes essentially describe the 4-valent graph
+         * of a knot but not the particular embedding in the plane.  As
+         * a result, there can be ambiguity in the orientation of the
+         * diagram, and (for composite knots) even the topology of the
+         * knot itself.  Furthermore, parsing a Gauss code is complex
+         * since it requires an embedding to be deduced using some variant
+         * of a planarity testing algorithm.  These issues are resolved
+         * using \e oriented Gauss codes, as used by the routines
+         * orientedGauss() and fromOrientedGauss().
+         *
+         * The Gauss code for an <i>n</i>-crossing knot is described by
+         * a sequence of 2<i>n</i> positive and negative integers,
+         * representing strands that pass over and under crossings
+         * respectively.  Regina's implementation of Gauss codes comes
+         * with the following restrictions:
+         *
+         * - It can only be used for knots (i.e., links with exactly one
+         *   component).
+         *
+         * - The crossings of the knot must be labelled 1, 2, ..., \a n
+         *   (i.e., they cannot have be arbitrary natural numbers).
+         *
+         * The format works as follows:
+         *
+         * - Label the crossings arbitrarily as 1, 2, ..., \a n.
+         *
+         * - Start at some point on the knot and follow it around.
+         *   Whenever you pass crossing \a k, write the integer
+         *   <tt><i>k</i></tt> if you pass over the crossing,
+         *   or <tt>-<i>k</i></tt> if you pass under the crossing.
+         *
+         * Be aware that, once the knot has been constructed, the crossings
+         * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
+         * (since every Link object numbers its crossings starting from 0).
+         *
+         * As an example, you can construct the trefoil using the code:
+         *
+           \verbatim
+           1 -2 3 -1 2 -3
+           \endverbatim
+         *
+         * There are two variants of this routine.  This variant takes a
+         * single string, where the integers have been combined together and
+         * separated by whitespace.  The other variant takes a sequence of
+         * integers, defined by a pair of iterators.
+         *
+         * In this variant (the string variant), the given string may
+         * contain additional leading or trailing whitespace.
+         *
+         * \warning In general, the classical Gauss code does not contain
+         * enough information to uniquely reconstruct a knot.  For prime knots,
+         * both a knot and its reflection can be described by the same Gauss
+         * code; for composite knots, the same Gauss code can describe
+         * knots that are topologically inequivalent, even when allowing for
+         * reflection.  If you need to reconstruct a knot uniquely, consider
+         * using the \e oriented Gauss code instead.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a knot diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * @author Adam Gowty
+         *
+         * @param str a classical Gauss code for a knot, as described above.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        static Link* fromGauss(const std::string& str);
+
+        /**
+         * Creates a new knot from a classical Gauss code.
+         *
+         * See fromGauss(const std::string&) for a detailed
+         * description of this format as it is used in Regina.
+         *
+         * There are two variants of this routine.  The other variant
+         * (fromGauss(const std::string&), which offers more
+         * detailed documentation) takes a single string, where the integers
+         * have been combined together and separated by whitespace.  This
+         * variant takes a sequence of integers, defined by a pair of iterators.
+         *
+         * \pre \a Iterator is a random access iterator type, and
+         * dereferencing such an iterator produces an integer.
+         *
+         * \warning In general, the classical Gauss code does not contain
+         * enough information to uniquely reconstruct a knot.  For prime knots,
+         * both a knot and its reflection can be described by the same Gauss
+         * code; for composite knots, the same Gauss code can describe
+         * knots that are topologically inequivalent, even when allowing for
+         * reflection.  If you need to reconstruct a knot uniquely, consider
+         * using the \e oriented Gauss code instead.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a knot diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \ifacespython Instead of a pair of begin and past-the-end
+         * iterators, this routine takes a Python list of tokens.
+         *
+         * @author Adam Gowty
+         *
+         * @param begin an iterator that points to the beginning of the
+         * sequence of integers for a classical Gauss code.
+         * @param end an iterator that points past the end of the
+         * sequence of integers for a classical Gauss code.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        template <typename Iterator>
+        static Link* fromGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new knot from an "oriented" variant of the Gauss code.
@@ -2468,6 +2791,138 @@ class REGINA_API Link : public Packet {
          */
         static Link* fromJenkins(std::istream& in);
 
+        /**
+         * Creates a new knot from either alphabetical or numerical
+         * Dowker-Thistlethwaite notation.
+         *
+         * For an <i>n</i>-crossing knot, the input may be in one of two
+         * forms:
+         *
+         * - \e numerical Dowker-Thistlethwaite notation, which is a sequence
+         *   of \a n even signed integers as described (amongst other places)
+         *   in Section 2.2 of C. C. Adams, "The knot book",
+         *   W. H. Freeman & Co., 1994;
+         *
+         * - \e alphabetical Dowker-Thistlethwaite notation, which transforms
+         *   the numerical notation into a sequence of letters by replacing
+         *   positive integers (2,4,6,...) with lower-case letters
+         *   (\c a,\c b,\c c,...), and replacing negative integers
+         *   (-2,-4,-6,...) with upper-case letters (\c A,\c B,\c C,...).
+         *   This alphabetical variant can only be used to describe knots with
+         *   26 crossings or fewer.
+         *
+         * Dowker-Thistlethwaite notation essentially describes the 4-valent
+         * graph of a knot but not the particular embedding in the plane.
+         * As a result, there can be ambiguity in the orientation of the
+         * diagram, and (for composite knots) even the topology of the knot
+         * itself.  Furthermore, parsing Dowker-Thistlethwaite notation is
+         * complex since it requires an embedding to be deduced using some
+         * variant of a planarity testing algorithm.  These issues are
+         * resolved using oriented Gauss codes, as used by the routines
+         * orientedGauss() and fromOrientedGauss().
+         *
+         * As an example, you can construct the trefoil using either of the
+         * following variants of Dowker-Thistlethwaite notation:
+         *
+           \verbatim
+           4 6 2
+           bca
+           \endverbatim
+         *
+         * There are two variants of this routine.  This variant takes a
+         * single string, which is either the alphabetical notation (in which
+         * any whitespace within the string will be ignored), or the numerical
+         * notation where the integers have been combined together and
+         * separated by whitespace.  The other variant of this routine
+         * is only for the numerical variant, and it takes a sequence of
+         * integers defined by a pair of iterators.
+         *
+         * In this variant (the string variant), the given string may
+         * contain additional leading or trailing whitespace.
+         *
+         * \warning In general, Dowker-Thistlethwaite notation does not contain
+         * enough information to uniquely reconstruct a knot.  For prime knots,
+         * both a knot and its reflection can be described by the same notation;
+         * for composite knots, the same notation can describe knots that are
+         * topologically inequivalent, even when allowing for reflection.
+         * If you need to reconstruct a knot uniquely, consider
+         * using the oriented Gauss code instead.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a knot diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * @author Much of the code for this routine is based on the
+         * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
+         *
+         * @param str either the alphabetical or numerical
+         * Dowker-Thistlethwaite notation for a knot, as described above.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        static Link* fromDT(const std::string& str);
+
+        /**
+         * Creates a new knot from an integer sequence using
+         * the numerical variant of Dowker-Thistlethwaite notation.
+         *
+         * For an <i>n</i>-crossing knot, this must be a sequence of \a n even
+         * signed integers as described (amongst other places) in Section 2.2
+         * of C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
+         *
+         * See fromDT(const std::string&) for a detailed
+         * description of this format as it is used in Regina.
+         *
+         * Regina can also reconstruct a knot from \e alphabetical
+         * Dowker-Thistlethwaite notation, but for this you must use the other
+         * version of this routine that takes a single string argument.
+         *
+         * For numerical Dowker-Thistlethwaite notation, there are two variants
+         * of this routine that you can use.  The other variant
+         * (fromDT(const std::string&), which offers more
+         * detailed documentation) takes a single string, where the integers
+         * have been combined together and separated by whitespace.  This
+         * variant takes a sequence of integers, defined by a pair of iterators.
+         *
+         * \pre \a Iterator is a random access iterator type, and
+         * dereferencing such an iterator produces an integer.
+         *
+         * \warning In general, Dowker-Thistlethwaite notation does not contain
+         * enough information to uniquely reconstruct a knot.  For prime knots,
+         * both a knot and its reflection can be described by the same notation;
+         * for composite knots, the same notation can describe knots that are
+         * topologically inequivalent, even when allowing for reflection.
+         * If you need to reconstruct a knot uniquely, consider
+         * using the oriented Gauss code instead.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a knot diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \ifacespython Instead of a pair of begin and past-the-end
+         * iterators, this routine takes a Python list of tokens.
+         *
+         * @author Much of the code for this routine is based on the
+         * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
+         *
+         * @param begin an iterator that points to the beginning of the
+         * sequence of integers for the Dowker-Thistlethwaite notation
+         * for a knot.
+         * @param end an iterator that points past the end of the
+         * sequence of integers for the Dowker-Thistlethwaite notation
+         * for a knot.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        template <typename Iterator>
+        static Link* fromDT(Iterator begin, Iterator end);
+
         /*@}*/
 
         static XMLPacketReader* xmlReader(Packet* parent,
@@ -2486,6 +2941,18 @@ class REGINA_API Link : public Packet {
          * a packet change event.
          */
         void clearAllProperties();
+
+        /**
+         * Indicates that strand \a s is followed immediately by strand \a t
+         * when traversing a link.  The relevant \a next_ and \a prev_ arrays
+         * of the two crossings will be adjusted accordingly.
+         *
+         * There is no sanity checking to ensure that these two
+         * crossings do not already have conflicting connections in place.
+         *
+         * \pre Neither \a s nor \a t is a null strand reference.
+         */
+        static void join(const StrandRef& s, const StrandRef& t);
 
         /**
          * Internal to fromOrientedGauss().
@@ -2527,6 +2994,23 @@ class REGINA_API Link : public Packet {
          */
         static bool parseOrientedGaussTerm(const char* s,
             size_t nCross, size_t& crossing, int& strand, int& sign);
+
+        /**
+         * Internal to fromDT().
+         *
+         * This routine attempts to deduce the orientation of each crossing
+         * in order to make a planar embedding of the 4-valent graph
+         * described by the Dowker-Thistlethwaite notation.
+         *
+         * See the source code for further documentation.
+         *
+         * @return \c true if and only if a planar embedding was found.
+         *
+         * @author This routine is based on the Dowker-Thistlethwaite
+         * implementation from the SnapPea/SnapPy kernel.
+         */
+        static bool realizeDT(int* anInvolution, bool* aRealization,
+            int aNumCrossings);
 
         /**
          * Internal to fromData().
@@ -2627,6 +3111,7 @@ class REGINA_API Link : public Packet {
             const std::function<bool(Link&)>& action) const;
 
     friend class ModelLinkGraph;
+    friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
 };
@@ -3091,7 +3576,7 @@ inline void Link::clearAllProperties() {
 inline StrandRef Link::translate(const StrandRef& other) const {
     return (other.crossing() ?
         crossings_[other.crossing()->index()]->strand(other.strand()) :
-        StrandRef(0, other.strand()));
+        StrandRef(nullptr, other.strand()));
 }
 
 template <typename Action, typename... Args>
@@ -3099,6 +3584,11 @@ inline bool Link::rewrite(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return rewriteInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
+}
+
+inline void Link::join(const StrandRef& s, const StrandRef& t) {
+    s.crossing_->next_[s.strand_] = t;
+    t.crossing_->prev_[t.strand_] = s;
 }
 
 // Inline functions for CrossingIterator
@@ -3194,6 +3684,7 @@ namespace std {
 } // namespace std
 
 #include "link/data-impl.h"
+#include "link/dt-impl.h"
 #include "link/gauss-impl.h"
 
 #endif

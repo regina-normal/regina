@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -112,6 +112,13 @@ class REGINA_API Face<4, 4> : public detail::SimplexBase<4> {
  * the new alias Simplex<4> (or, if you prefer, the full class name Face<4, 4>).
  */
 [[deprecated]] typedef Simplex<4> Dim4Pentachoron;
+
+// Specialisations to improve upon generic implementations from SimplexBase:
+
+template <>
+inline Edge<4>* detail::SimplexBase<4>::edge(int i, int j) const {
+    return (i == j ? nullptr : edge(FaceNumbering<4, 1>::edgeNumber[i][j]));
+}
 
 /*@}*/
 

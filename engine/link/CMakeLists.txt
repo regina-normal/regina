@@ -2,7 +2,9 @@
 
 # Files to compile
 SET ( FILES
+  algebra
   complement
+  dt
   examplelink
   flype
   gauss
@@ -15,6 +17,7 @@ SET ( FILES
   rewrite
   sig
   simplify
+  tangle
   xmllinkreader
   )
 
@@ -29,10 +32,13 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     data-impl.h
+    dt-impl.h
     examplelink.h
     gauss-impl.h
+    gauss-tangle-impl.h
     link.h
     modellinkgraph.h
+    tangle.h
     xmllinkreader.h
     DESTINATION ${INCLUDEDIR}/link COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

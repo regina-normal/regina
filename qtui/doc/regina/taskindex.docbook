@@ -589,8 +589,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-simplify-exhaustive">exhaustive
-   simplification of triangulations</link></primaryie>
+  <primaryie>exhaustive simplification of triangulations</primaryie>
+  <secondaryie><link linkend="man-retriangulate">from the command-line</link></secondaryie>
+  <secondaryie><link linkend="tri-simplify-exhaustive">in the &gui;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1095,8 +1096,9 @@
  </indexdiv><indexdiv id='taskindex-P'><title>&mdash; P &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="tri-simplify-exhaustive">Pachner graph,
-   searching</link></primaryie>
+  <primaryie>Pachner graph, searching</primaryie>
+  <secondaryie><link linkend="man-retriangulate">from the command-line</link></secondaryie>
+  <secondaryie><link linkend="tri-simplify-exhaustive">in the &gui;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1254,6 +1256,11 @@
 
  <indexentry>
   <primaryie><link linkend="services">reporting bugs</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="man-retriangulate">retriangulating
+   manifolds</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-S'><title>&mdash; S &mdash;</title>

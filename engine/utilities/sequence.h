@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -560,7 +560,7 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
 
 template <typename T>
 template <typename Iterator>
-inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>&
+inline typename LightweightSequence<T>::template SubsequenceCompareFirstPtr<Iterator>&
         LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
         operator = (
         const SubsequenceCompareFirstPtr<Iterator>& cloneMe) {

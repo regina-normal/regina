@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -485,6 +485,15 @@
     self.packet->intelligentSimplify();
 }
 
+- (IBAction)reflect:(id)sender
+{
+    [self endEditing];
+    if (! [self checkEditable])
+        return;
+
+    self.packet->reflect();
+}
+
 - (IBAction)doubleCover:(id)sender
 {
     [self endEditing];
@@ -535,6 +544,7 @@
                                                                 @"Barycentric subdivision",
                                                                 @"Truncate ideal vertices",
                                                                 @"Make ideal",
+                                                                @"Reflect",
                                                                 @"Double cover",
                                                                 @"Puncture",
                                                                 @"Elementary moves",
@@ -790,10 +800,12 @@ cleanUpGluing:
         case 3:
             [self makeIdeal:nil]; break;
         case 4:
-            [self doubleCover:nil]; break;
+            [self reflect:nil]; break;
         case 5:
-            [self puncture:nil]; break;
+            [self doubleCover:nil]; break;
         case 6:
+            [self puncture:nil]; break;
+        case 7:
             [self elementaryMoves:nil]; break;
     }
 }

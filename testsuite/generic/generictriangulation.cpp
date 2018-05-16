@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -205,6 +205,7 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
     CPPUNIT_TEST(pachner<1>);
     CPPUNIT_TEST(pachner<2>);
@@ -233,6 +234,7 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
     CPPUNIT_TEST(pachner<1>);
     CPPUNIT_TEST(pachner<2>);
@@ -266,6 +268,7 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
     /**
      * Pachner moves are also taking a long time to test thoroughly
      * in higher dimensions.  Since we already have non-standard even

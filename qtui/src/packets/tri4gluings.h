@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -201,6 +201,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         void simplify();
         void simplifyExhaustive(int height);
         void orient();
+        void reflect();
         void barycentricSubdivide();
         void idealToFinite();
         void finiteToIdeal();

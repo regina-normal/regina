@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -86,7 +86,8 @@ class ReginaPrefSet : public QObject {
 
         // The preferences themselves:
 
-        enum LinkCodeType { OrientedGauss, Jenkins };
+        enum LinkCodeType { OrientedGauss, DowkerThistlethwaite, KnotSig,
+                Jenkins };
             /**< Possible export codes that can be displayed for links. */
         enum LinkCrossingsStyle { PictorialCrossings, TextCrossings };
             /**< Possible styles for displaying crossings for links. */
