@@ -390,6 +390,38 @@ void Tangle::reverse(int string) {
     }
 }
 
+void Tangle::rerouteTo(const StrandRef& oldDest, const StrandRef& newDest) {
+    StrandRef src = oldDest.prev();
+
+    if (! src.crossing()) {
+        // This is the first crossing in one of the strings.
+        if (end_[0][0] == oldDest)
+            end_[0][0] = newDest;
+        else if (end_[1][0] == oldDest)
+            end_[1][0] = newDest;
+        else
+            std::cerr << "rerouteTo(): inconsistent end/prev/next arrays";
+    } else {
+        src.crossing()->next_[src.strand()] = newDest;
+    }
+}
+
+void Tangle::rerouteFrom(const StrandRef& oldSrc, const StrandRef& newSrc) {
+    StrandRef dest = oldSrc.next();
+
+    if (! dest.crossing()) {
+        // This is the last crossing in one of the strings.
+        if (end_[0][1] == oldSrc)
+            end_[0][1] = newSrc;
+        else if (end_[1][1] == oldSrc)
+            end_[1][1] = newSrc;
+        else
+            std::cerr << "rerouteFrom(): inconsistent end/prev/next arrays";
+    } else {
+        dest.crossing()->prev_[dest.strand()] = newSrc;
+    }
+}
+
 char Tangle::extractChar(const char* s) {
     if (*s && ! *(s + 1))
         return *s;

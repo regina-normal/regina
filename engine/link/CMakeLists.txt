@@ -15,6 +15,7 @@ SET ( FILES
   modellinkgraph
   pass
   reidemeister
+  reidemeister-tangle
   rewrite
   sig
   simplify

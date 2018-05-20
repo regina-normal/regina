@@ -313,6 +313,109 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          */
         void turn(int direction = 1);
 
+        /**
+         * Tests for and/or performs a type I Reidemeister move to remove a
+         * crossing.
+         *
+         * Unlike links, which implement the full suite of Reidemeister
+         * moves, tangles (at present) only offer the simplifying versions
+         * of Reidemeister moves I and II.
+         *
+         * The behaviour of this routine is identical to the r1()
+         * routine in the Link class; see Link::r1() for further details.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this tangle.
+         *
+         * @param crossing identifies the crossing to be removed.
+         * @param check \c true if we are to check whether the move can
+         * be performed at the given location.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the move can be performed.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r1(Crossing* crossing, bool check = true, bool perform = true);
+        /**
+         * Tests for and/or performs a type II Reidemeister move to remove
+         * two crossings.
+         *
+         * Unlike links, which implement the full suite of Reidemeister
+         * moves, tangles (at present) only offer the simplifying versions
+         * of Reidemeister moves I and II.
+         *
+         * The behaviour of this routine is identical to the r2()
+         * routine in the Link class; see Link::r2() for further details.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this tangle.
+         *
+         * @param arc identifies one of the arcs of the bigon about
+         * which the move will be performed.
+         * @param check \c true if we are to check whether the move is legal.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the requested move is legal.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r2(StrandRef arc, bool check = true, bool perform = true);
+        /**
+         * Tests for and/or performs a type II Reidemeister move to remove
+         * two crossings.
+         *
+         * Unlike links, which implement the full suite of Reidemeister
+         * moves, tangles (at present) only offer the simplifying versions
+         * of Reidemeister moves I and II.
+         *
+         * The behaviour of this routine is identical to the r2()
+         * routine in the Link class; see Link::r2() for further details.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this tangle.
+         *
+         * @param crossing identifies the crossing at the beginning of
+         * the "upper" arc that features in this move.
+         * @param check \c true if we are to check whether the move is legal.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the requested move is legal.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r2(Crossing* crossing, bool check = true, bool perform = true);
+
+        /**
+         * Uses type I and II Reidemeister moves to reduce the tangle
+         * monotonically to some local minimum number of crossings.
+         * Type III Reidemeister moves (which do not reduce the number of
+         * crossings) are not used in this routine.
+         *
+         * Unlike links, tangle do not (at present) offer stronger
+         * simplification routines (such as the much better
+         * Link::intelligentSimplify() and Link::simplifyExhaustive()).
+         *
+         * \warning The implementation of this routine (and therefore
+         * its results) may change between different releases of Regina.
+         *
+         * @param perform \c true if we are to perform the
+         * simplifications, or \c false if we are only to investigate
+         * whether simplifications are possible (defaults to \c true).
+         * @return if \a perform is \c true, this routine returns
+         * \c true if and only if the link was changed to
+         * reduce the number of crossings; if \a perform is \c false,
+         * this routine returns \c true if and only if it determines
+         * that it is capable of performing such a change.
+         */
+        bool simplifyToLocalMinimum(bool perform = true);
+
         /*@}*/
         /**
          * \name Algebra on Tangles
@@ -578,6 +681,36 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
         void reverse(int string);
 
         /**
+         * Indicates that the strand immediately before \a oldDest should
+         * now be followed by \a newDest.  This does the correct thing
+         * even if \a oldDest is at the beginning of a string, and/or if
+         * \a newDest is a null reference.  The relevant \a next_ array
+         * (or \a end_[i][0] if necessary) will be adjusted accordingly.
+         *
+         * Note that that the \a prev_ array at \a newDest (or \a end_[i][1]
+         * if \a newDest is null) will not be touched.  That is, this routine
+         * may result in inconsistent connections.
+         *
+         * \pre The argument \a oldDest is not a null strand reference.
+         */
+        void rerouteTo(const StrandRef& oldDest, const StrandRef& newDest);
+
+        /**
+         * Indicates that the strand immediately after \a oldSrc should
+         * now be preceded by \a newSrc.  This does the correct thing
+         * even if \a oldSrc is at the end of a string, and/or if
+         * \a newSrc is a null reference.  The relevant \a prev_ array
+         * (or \a end_[i][1] if necessary) will be adjusted accordingly.
+         *
+         * Note that that the \a next_ array at \a newSrc (or \a end_[i][0]
+         * if \a newSrc is null) will not be touched.  That is, this routine
+         * may result in inconsistent connections.
+         *
+         * \pre The argument \a oldSrc is not a null strand reference.
+         */
+        void rerouteFrom(const StrandRef& oldSrc, const StrandRef& newSrc);
+
+        /**
          * Internal to fromOrientedGauss().
          *
          * This routine examines a single token in an oriented Gauss code.
@@ -633,6 +766,10 @@ inline StrandRef Tangle::translate(const StrandRef& other) const {
     return (other.crossing() ?
         crossings_[other.crossing()->index()]->strand(other.strand()) :
         StrandRef(nullptr, other.strand()));
+}
+
+inline bool Tangle::r2(Crossing* crossing, bool check, bool perform) {
+    return r2(StrandRef(crossing, 1), check, perform);
 }
 
 } // namespace regina

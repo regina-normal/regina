@@ -38,9 +38,15 @@
 #include "../helpers.h"
 
 using namespace boost::python;
+using regina::Crossing;
+using regina::StrandRef;
 using regina::Tangle;
 
 namespace {
+    bool (Tangle::*r1a)(Crossing*, bool, bool) = &Tangle::r1;
+    bool (Tangle::*r2a)(Crossing*, bool, bool) = &Tangle::r2;
+    bool (Tangle::*r2b)(StrandRef, bool, bool) = &Tangle::r2;
+
     std::string (Tangle::*orientedGauss_str)() const = &Tangle::orientedGauss;
     Tangle* (*fromOrientedGauss_str)(const std::string&) =
         &Tangle::fromOrientedGauss;
@@ -66,6 +72,12 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twist, Tangle::twist, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turn, Tangle::turn, 0, 1);
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r1a, Tangle::r1, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2a, Tangle::r2, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2b, Tangle::r2, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
+        Tangle::simplifyToLocalMinimum, 0, 1);
 }
 
 void addTangle() {
@@ -88,6 +100,11 @@ void addTangle() {
             return_value_policy<regina::python::to_held_type<>>())
         .def("denClosure", &Tangle::denClosure,
             return_value_policy<regina::python::to_held_type<>>())
+        .def("r1", r1a, OL_r1a())
+        .def("r2", r2a, OL_r2a())
+        .def("r2", r2b, OL_r2b())
+        .def("simplifyToLocalMinimum", &Tangle::simplifyToLocalMinimum,
+             OL_simplifyToLocalMinimum())
         .def("orientedGauss", orientedGauss_str)
         .def("fromOrientedGauss", fromOrientedGauss_list,
             return_value_policy<manage_new_object>())

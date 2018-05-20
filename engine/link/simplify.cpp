@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "link/link.h"
+#include "link/tangle.h"
 
 // Affects the number of random type III moves attempted during simplification.
 #define COEFF_TYPE_3 20
@@ -144,6 +144,35 @@ bool Link::simplifyToLocalMinimum(bool perform) {
             }
         }
     } // End scope for change event span.
+
+    return changed;
+}
+
+bool Tangle::simplifyToLocalMinimum(bool perform) {
+    bool changed = false;   // Has anything changed ever (for return value)?
+    bool changedNow = true; // Did we just change something (for loop control)?
+
+    while (changedNow) {
+        changedNow = false;
+
+        // Look for type I or II Reidemeister moves.
+        for (Crossing* c : crossings_) {
+            if (r1(c, true, perform)) {
+                changedNow = changed = true;
+                break;
+            }
+            if (r2(c, true, perform)) {
+                changedNow = changed = true;
+                break;
+            }
+        }
+        if (changedNow) {
+            if (perform)
+                continue;
+            else
+                return true;
+        }
+    }
 
     return changed;
 }
