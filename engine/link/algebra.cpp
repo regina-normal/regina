@@ -46,7 +46,7 @@ void Tangle::add(const Tangle& other) {
     Tangle clone(other);
 
     if (type_ == '|') {
-        if (other.type_ == '=') {
+        if (other.type_ == '-') {
             // Type (|| =).
             clone.reverse(0);
 
