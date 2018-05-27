@@ -445,6 +445,14 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
         void add(const Tangle& other);
 
         /**
+         * Reflects this tangle through the diagonal axis running from
+         * the top-left to bottom-right corners of the diagram.
+         *
+         * In Conway's notation, this negates the tangle.
+         */
+        void negate();
+
+        /**
          * Forms the numerator closure of this tangle.
          *
          * This is the link created by joining the two top endpoints of
@@ -453,7 +461,7 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          * @return a newly created link that is the numerator closure of
          * this tangle.
          */
-        Link* numClosure();
+        Link* numClosure() const;
 
         /**
          * Forms the denominator closure of this tangle.
@@ -464,7 +472,7 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          * @return a newly created link that is the denominator closure of
          * this tangle.
          */
-        Link* denClosure();
+        Link* denClosure() const;
 
         /*@}*/
         /**

@@ -230,7 +230,22 @@ void Tangle::add(const Tangle& other) {
     clone.crossings_.clear();
 }
 
-Link* Tangle::numClosure() {
+void Tangle::negate() {
+    if (type_ == '-') {
+        type_ = '|';
+    } else if (type_ == '|') {
+        type_ = '-';
+    } else {
+        // type 'x'
+        reverse(1);
+        std::swap(end_[1][0], end_[1][1]);
+    }
+
+    for (Crossing* c : crossings_)
+        c->sign_ = - c->sign_;
+}
+
+Link* Tangle::numClosure() const {
     Link* ans = new Link();
 
     // Make a clone of this tangle, which as a side-effect also clones
@@ -285,7 +300,7 @@ Link* Tangle::numClosure() {
     return ans;
 }
 
-Link* Tangle::denClosure() {
+Link* Tangle::denClosure() const {
     Link* ans = new Link();
 
     // Make a clone of this tangle, which as a side-effect also clones

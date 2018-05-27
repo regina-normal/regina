@@ -96,6 +96,7 @@ void addTangle() {
         .def("twist", &Tangle::twist, OL_twist())
         .def("turn", &Tangle::turn, OL_turn())
         .def("add", &Tangle::add)
+        .def("negate", &Tangle::negate)
         .def("numClosure", &Tangle::numClosure,
             return_value_policy<regina::python::to_held_type<>>())
         .def("denClosure", &Tangle::denClosure,
