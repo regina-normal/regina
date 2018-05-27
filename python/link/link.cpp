@@ -217,6 +217,7 @@ void addLink() {
         .def("rotate", &Link::rotate)
         .def("reverse", &Link::reverse)
         .def("change", &Link::change)
+        .def("changeAll", &Link::changeAll)
         .def("resolve", &Link::resolve)
         .def("isAlternating", &Link::isAlternating)
         .def("writhe", &Link::writhe)

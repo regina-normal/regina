@@ -287,6 +287,26 @@ void Link::change(Crossing* c) {
     clearAllProperties();
 }
 
+void Link::changeAll() {
+    ChangeEventSpan span(this);
+
+    for (StrandRef& s : components_)
+        s.strand_ ^= 1;
+
+    int i;
+    for (Crossing* c : crossings_) {
+        std::swap(c->next_[0], c->next_[1]);
+        std::swap(c->prev_[0], c->prev_[1]);
+        for (i = 0; i < 2; ++i) {
+            c->next_[i].strand_ ^= 1;
+            c->prev_[i].strand_ ^= 1;
+        }
+        c->sign_ = - c->sign_;
+    }
+
+    clearAllProperties();
+}
+
 void Link::resolve(Crossing* c) {
     ChangeEventSpan span(this);
 
