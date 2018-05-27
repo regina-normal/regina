@@ -95,6 +95,7 @@ void addTangle() {
         .def("swapContents", &Tangle::swapContents)
         .def("twist", &Tangle::twist, OL_twist())
         .def("turn", &Tangle::turn, OL_turn())
+        .def("changeAll", &Tangle::changeAll)
         .def("add", &Tangle::add)
         .def("negate", &Tangle::negate)
         .def("numClosure", &Tangle::numClosure,

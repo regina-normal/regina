@@ -342,6 +342,24 @@ void Tangle::turn(int direction) {
     }
 }
 
+void Tangle::changeAll() {
+    int i, j;
+
+    for (Crossing* c : crossings_) {
+        std::swap(c->next_[0], c->next_[1]);
+        std::swap(c->prev_[0], c->prev_[1]);
+        for (i = 0; i < 2; ++i) {
+            c->next_[i].strand_ ^= 1;
+            c->prev_[i].strand_ ^= 1;
+        }
+        c->sign_ = - c->sign_;
+    }
+
+    for (i = 0; i < 2; ++i)
+        for (j = 0; j < 2; ++j)
+            end_[i][j].strand_ ^= 1;
+}
+
 void Tangle::writeTextShort(std::ostream& out) const {
     out << crossings_.size() << "-crossing ";
     switch (type_) {

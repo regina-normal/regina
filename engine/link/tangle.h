@@ -314,6 +314,15 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
         void turn(int direction = 1);
 
         /**
+         * Switches the upper and lower strands of every crossing in the 
+         * tangle.
+         *
+         * This operation corresponds to reflecting the tangle through
+         * the plane on which the diagram is drawn.
+         */
+        void changeAll();
+
+        /**
          * Tests for and/or performs a type I Reidemeister move to remove a
          * crossing.
          *

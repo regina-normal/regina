@@ -880,6 +880,15 @@ class REGINA_API Link : public Packet {
         void change(Crossing* c);
 
         /**
+         * Switches the upper and lower strands of every crossing in the
+         * diagram.
+         *
+         * This operation corresponds to reflecting the link diagram
+         * through the plane on which it is drawn.
+         */
+        void changeAll();
+
+        /**
          * Resolves the given crossing.  The two incoming strands will
          * switch connections with the two outgoing strands, with the
          * result that the given crossing is removed entirely.
