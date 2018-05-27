@@ -88,12 +88,14 @@ Tangle::Tangle(int num, int den) {
         } else if (num >= den) {
             ops.push(OP_POS_TWIST);
             num -= den;
+        /*
         } else if (num < 0 && (num + den) < -num) {
             ops.push(OP_NEG_TWIST);
             num += den;
         } else if (num > 0 && -(num - den) < num) {
             ops.push(OP_POS_TWIST);
             num -= den;
+        */
         } else {
             ops.push(OP_TURN);
             std::swap(num, den);
