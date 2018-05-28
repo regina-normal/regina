@@ -245,6 +245,251 @@ void Tangle::negate() {
         c->sign_ = - c->sign_;
 }
 
+void Tangle::endForCorner(int corner, int& string, int& end) {
+    switch (corner) {
+        case 1:
+            string = 0; end = 0; break;
+        case 2:
+            switch (type_) {
+                case '|': string = 1; end = 0; break;
+                case '-': string = 0; end = 1; break;
+                case 'x': string = 1; end = 1; break;
+            }
+            break;
+        case 3:
+            switch (type_) {
+                case '|': string = 0; end = 1; break;
+                case '-':
+                case 'x': string = 1; end = 0; break;
+            }
+            break;
+        case 4:
+            switch (type_) {
+                case '|':
+                case '-': string = 1; end = 1; break;
+                case 'x': string = 0; end = 1; break;
+            }
+            break;
+    }
+}
+
+int Tangle::cornerForEnd(int string, int end) {
+    if (string == 0) {
+        if (end == 0) {
+            return 1;
+        } else {
+            switch (type_) {
+                case '|': return 3;
+                case '-': return 2;
+                case 'x': return 4;
+            }
+        }
+    } else {
+        if (end == 0) {
+            switch (type_) {
+                case '|': return 2;
+                case '-':
+                case 'x': return 3;
+            }
+        } else {
+            switch (type_) {
+                case '|':
+                case '-': return 4;
+                case 'x': return 2;
+            }
+        }
+    }
+    // Should never reach here.
+    return 0;
+}
+
+void Tangle::box(const Tangle& topLeft, const Tangle& topRight,
+        const Tangle& bottomLeft, const Tangle& bottomRight) {
+    // Sanity testing:
+    if (type_ == '|' && topLeft.type_ == '-' && bottomLeft.type_ == '-') {
+        std::cerr << "box(): cannot create closed 3-cycle" << std::endl;
+        return;
+    }
+    if (type_ == '|' && topRight.type_ == '-' && bottomRight.type_ == '-') {
+        std::cerr << "box(): cannot create closed 3-cycle" << std::endl;
+        return;
+    }
+    if (type_ == '-' && topLeft.type_ == '|' && topRight.type_ == '|') {
+        std::cerr << "box(): cannot create closed 3-cycle" << std::endl;
+        return;
+    }
+    if (type_ == '-' && bottomLeft.type_ == '|' && bottomRight.type_ == '|') {
+        std::cerr << "box(): cannot create closed 3-cycle" << std::endl;
+        return;
+    }
+    if (topLeft.type_ == '-' && topRight.type_ == '-' &&
+            bottomLeft.type_ == '-' && bottomRight.type_ == '-') {
+        std::cerr << "box(): cannot create closed 6-cycle" << std::endl;
+        return;
+    }
+    if (topLeft.type_ == '|' && topRight.type_ == '|' &&
+            bottomLeft.type_ == '|' && bottomRight.type_ == '|') {
+        std::cerr << "box(): cannot create closed 6-cycle" << std::endl;
+        return;
+    }
+    if (topLeft.type_ == '-' && topRight.type_ == '-' && type_ == '-' &&
+            bottomLeft.type_ == 'x' && bottomRight.type_ == 'x') {
+        std::cerr << "box(): cannot create closed 5-cycle" << std::endl;
+        return;
+    }
+    if (bottomLeft.type_ == '-' && bottomRight.type_ == '-' && type_ == '-' &&
+            topLeft.type_ == 'x' && topRight.type_ == 'x') {
+        std::cerr << "box(): cannot create closed 5-cycle" << std::endl;
+        return;
+    }
+    if (topLeft.type_ == '|' && bottomLeft.type_ == '|' && type_ == '|' &&
+            topRight.type_ == 'x' && bottomRight.type_ == 'x') {
+        std::cerr << "box(): cannot create closed 5-cycle" << std::endl;
+        return;
+    }
+    if (topRight.type_ == '|' && bottomRight.type_ == '|' && type_ == '|' &&
+            topLeft.type_ == 'x' && bottomLeft.type_ == 'x') {
+        std::cerr << "box(): cannot create closed 5-cycle" << std::endl;
+        return;
+    }
+    if (topLeft.type_ == 'x' && topRight.type_ == 'x' &&
+            bottomLeft.type_ == 'x' && bottomRight.type_ == 'x') {
+        std::cerr << "box(): cannot create closed 4-cycle" << std::endl;
+        return;
+    }
+    if (type_ == 'x' && topLeft.type_ == 'x' &&
+            topRight.type_ == '|' && bottomLeft.type_ == '-') {
+        std::cerr << "box(): cannot create closed 4-cycle" << std::endl;
+        return;
+    }
+    if (type_ == 'x' && topRight.type_ == 'x' &&
+            topLeft.type_ == '|' && bottomRight.type_ == '-') {
+        std::cerr << "box(): cannot create closed 4-cycle" << std::endl;
+        return;
+    }
+    if (type_ == 'x' && bottomLeft.type_ == 'x' &&
+            bottomRight.type_ == '|' && topLeft.type_ == '-') {
+        std::cerr << "box(): cannot create closed 4-cycle" << std::endl;
+        return;
+    }
+    if (type_ == 'x' && bottomRight.type_ == 'x' &&
+            bottomLeft.type_ == '|' && topRight.type_ == '-') {
+        std::cerr << "box(): cannot create closed 4-cycle" << std::endl;
+        return;
+    }
+
+    // Clone the arguments, which as a side-effect also clones their crossings.
+    Tangle* arg[5];
+    arg[0] = this;
+    arg[1] = new Tangle(topLeft);
+    arg[2] = new Tangle(topRight);
+    arg[3] = new Tangle(bottomLeft);
+    arg[4] = new Tangle(bottomRight);
+
+    int i, j;
+    for (i = 0; i < 5; ++i)
+        for (j = 0; j < 2; ++j)
+            if (! arg[i]->end_[j][0]) {
+                std::cerr << "box(): cannot use strings without crossings"
+                    << std::endl;
+                for (i = 1; i < 5; ++i)
+                    delete arg[i];
+                return;
+            }
+
+    char finalType;
+    StrandRef finalStart[2];
+    StrandRef finalEnd[2];
+
+    int which, corner, adj, adjCorner;
+    int subString, subEnd, adjString, adjEnd;
+    for (int string = 0; string < 2; ++string) {
+        // Keep track of which corner we are at in which sub-tangle:
+        // - which is the index into arg[];
+        // - corner is: 1 2
+        //              3 4
+        // - subString and subEnd indicate which end of which string
+        //   this corner represents.
+
+        // Trace the ith string of the final tangle.
+        if (string == 0) {
+            which = corner = 1;
+        } else {
+            if (finalType == '|')
+                which = corner = 2;
+            else
+                which = corner = 3;
+        }
+
+        // Find the start point of this string.
+        arg[which]->endForCorner(corner, subString, subEnd);
+        finalStart[string] = arg[which]->end_[subString][subEnd];
+
+        // Follow this string to its other end in the current sub-tangle.
+        if (subEnd == 1)
+            arg[which]->reverse(subString);
+        subEnd ^= 1;
+        corner = arg[which]->cornerForEnd(subString, subEnd);
+
+        while (corner != which) {
+            // We need to connect this to an adjacent sub-tangle.
+            if (which == 0) {
+                adj = corner;
+                adjCorner = 5 - corner;
+            } else if (which + corner == 5) {
+                adj = 0;
+                adjCorner = which;
+            } else {
+                adj = corner;
+                adjCorner = which;
+            }
+
+            arg[adj]->endForCorner(adjCorner, adjString, adjEnd);
+
+            if (adjEnd == 1)
+                arg[adj]->reverse(adjString);
+
+            // Make the join.
+            Link::join(arg[which]->end_[subString][subEnd],
+                arg[adj]->end_[adjString][adjEnd]);
+
+            // Move into the next sub-tangle and follow its string to
+            // the other end.
+            which = adj;
+            subString = adjString;
+            subEnd = adjEnd ^ 1;
+            corner = arg[which]->cornerForEnd(subString, subEnd);
+        }
+
+        // We have now exited the overall tangle.
+        if (string == 0) {
+            // Determine the final tangle type.
+            if (which == 2)
+                finalType = '-';
+            else if (which == 3)
+                finalType = '|';
+            else
+                finalType = 'x';
+        }
+        finalEnd[string] = arg[which]->end_[subString][subEnd];
+    }
+
+    // Transfer all crossings from all clones to this.
+    // As in add(), we are abusing the MarkedVector API slightly here.
+    for (i = 1; i < 5; ++i) {
+        for (Crossing* c : arg[i]->crossings_)
+            crossings_.push_back(c);
+        arg[i]->crossings_.clear();
+        delete arg[i];
+    }
+
+    type_ = finalType;
+    for (i = 0; i < 2; ++i) {
+        end_[i][0] = finalStart[i];
+        end_[i][1] = finalEnd[i];
+    }
+}
+
 Link* Tangle::numClosure() const {
     Link* ans = new Link();
 

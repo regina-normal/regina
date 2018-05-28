@@ -441,7 +441,8 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          * endpoints of this tangle to the two left-hand endpoints of a
          * copy of \a other.
          *
-         * The given tangle \a other will be left unchanged.
+         * This tangle will be changed directly.  The tangle \a other
+         * (passed as the argumet) will be left unchanged.
          *
          * It is allowed to pass this tangle as \a other.
          *
@@ -460,6 +461,49 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          * In Conway's notation, this negates the tangle.
          */
         void negate();
+
+        /**
+         * Encloses this tangle with the four given tangles in a box
+         * configuration.
+         *
+         * The five tangles will be connected as shown, with this tangle
+         * in the centre:
+           \verbatim
+            \     /
+             O---O
+            / \ / \
+            |  O  |
+            \ / \ /
+             O---O
+            /     \
+           \endverbatim
+         *
+         * The top-left corner of the argument \a topLeft will become
+         * the top-left corner of the resulting tangle, and so on for
+         * the other three corners.
+         *
+         * This tangle will be changed directly.  The other four other tangles
+         * (passed as arguments) will be left unchanged.
+         *
+         * You may use the same tangle for multiple arguments, and you
+         * may even use this tangle for one or more arguments.
+         *
+         * \pre Every string in all five tangles (the four arguments and
+         * this) has at least one crossing.
+         * \pre None of the five tangles (the four arguments and this)
+         * have types that would result in a closed link component after
+         * this operation is performed.
+         *
+         * @param topLeft the tangle to connect to the top-left corner of this.
+         * @param topRight the tangle to connect to the top-right corner of
+         * this.
+         * @param bottomLeft the tangle to connect to the bottom-left corner
+         * of this.
+         * @param bottomRight the tangle to connect to the bottom-right corner
+         * of this.
+         */
+        void box(const Tangle& topLeft, const Tangle& topRight,
+            const Tangle& bottomLeft, const Tangle& bottomRight);
 
         /**
          * Forms the numerator closure of this tangle.
@@ -726,6 +770,20 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          * \pre The argument \a oldSrc is not a null strand reference.
          */
         void rerouteFrom(const StrandRef& oldSrc, const StrandRef& newSrc);
+
+        /**
+         * Internal to box().
+         *
+         * Coverts a corner of this tangle into a (string, end) pair.
+         */
+        void endForCorner(int corner, int& string, int& end);
+
+        /**
+         * Internal to box().
+         *
+         * Coverts a (string, end) pair into a corner of this tangle.
+         */
+        int cornerForEnd(int string, int end);
 
         /**
          * Internal to fromOrientedGauss().
