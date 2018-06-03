@@ -66,7 +66,8 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
     std::copy(begin, end, S);
 
     int pos1, pos2;
-    for (int i=1; i <= n; ++i) {
+    int i, j;
+    for (i=1; i <= n; ++i) {
         // Find the two instances of crossing i,
         // and reverse the subsequence between them.
         //
@@ -113,7 +114,91 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
         std::reverse(S+pos1+1, S+pos2);
     }
 
-    // At this point, we know that the input sequence contained each of
+    // Find the first and second position of each crossing number in the
+    // permuted array S[].
+    int* indx0 = new int[n];
+    int* indx1 = new int[n];
+    std::fill(indx0, indx0 + n, -1);
+    std::fill(indx1, indx1 + n, -1);
+
+    for (pos1 = 0; pos1 < 2*n; ++pos1) {
+        i = S[pos1] - 1;
+        if (indx0[i] < 0)
+            indx0[i] = pos1;
+        else if (indx1[i] < 0)
+            indx1[i] = pos1;
+        else {
+            std::cerr << "fromGauss(): crossing occurs more than twice"
+                << std::endl;
+            delete[] indx1;
+            delete[] indx0;
+            delete[] S;
+            return nullptr;
+        }
+    }
+
+    // Identify interleaved pairs of crossings.
+    bool* graph = new bool[n*n];
+    std::fill(graph, graph + n*n, false);
+
+    for (i = 1; i < n + 1; i++){
+        for (j = 1; j < n + 1; j++){
+            if ( ((indx0[i-1] < indx0[j-1]) && (indx1[i-1] > indx0[j-1]) && (indx1[i-1] < indx1[j-1])) ||
+                 ((indx0[i-1] < indx1[j-1]) && (indx0[i-1] > indx0[j-1]) && (indx1[i-1] > indx1[j-1])) ) {
+                graph[n * (i-1) + (j-1)] = true;
+            }
+        }
+    }
+
+    delete[] indx1;
+    delete[] indx0;
+
+    // Pull apart the nodes of the graph into opposite sides of a
+    // bipartite graph.
+    int* side = new int[n];
+    int* stack = new int[n];
+    int top = 0;
+    int pop = 0;
+    std::fill(side, side + n, 0);
+    std::fill(stack, stack + n, 0);
+
+    for (i = 0; i < n; i++){
+        if (side[i] == 0){
+            // Make an arbitrary decision for this node, and propagate
+            // it through its connected component.
+            side[i] = 1;
+            top = 0;
+            stack[top] = i;
+
+            while (top >= 0) {
+                pop = stack[top];
+                top--;
+
+                for (j = 0; j < n; j++){
+                    if (graph[n * pop + j]) {
+                        if (side[j] == 0) {
+                            side[j] = - side[pop];
+                            top++;
+                            stack[top] = j;
+                        } else if (side[j] != - side[pop]) {
+                            std::cerr << "fromGauss(): non-bipartite graph"
+                                << std::endl;
+                            delete[] stack;
+                            delete[] side;
+                            delete[] graph;
+                            delete[] S;
+                            return nullptr;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    delete[] stack;
+    delete[] graph;
+
+    // From the work above, we know that the input sequence contained each of
     // the integers +/-1, +/-2, ..., +/-n exactly once each.
 
     // The sequence J encodes which elements of S[..] are first vs second
@@ -125,7 +210,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
     bool* seen = new bool[n];
     std::fill(seen, seen + n, false);
 
-    for (int i=0; i < 2*n; ++i) {
+    for (i=0; i < 2*n; ++i) {
         J[i] = seen[S[i]-1];
         seen[S[i]-1] = true;
     }
@@ -137,7 +222,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
 
     Q0[0]=S[0];
     Q1[0]=false;
-    for (int i=1; i < 2*n; ++i) {
+    for (i=1; i < 2*n; ++i) {
         // Find the *other* occurrence of the crossing used at Q[i-1].
         for (int j=0; j < 2*n; ++j) {
             if (Q0[i-1] == S[j] && Q1[i-1] == ! J[j]) {
@@ -154,6 +239,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
         // Q0 should match the original input sequence.
         if (Q0[i] != *(begin + i) && -Q0[i] != *(begin + i)) {
             std::cerr << "fromGauss(): Q0 != abs(input sequence)" << std::endl;
+            delete[] side;
             delete[] J;
             delete[] Q0;
             delete[] Q1;
@@ -171,7 +257,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
     // (left-to-right vs right-to-left).
     int* crossHand = new int[2*n];
 
-    for (int i = 1; i <= n; ++i) {
+    for (i = 1; i <= n; ++i) {
         int index1 = -1;
         int index2 = -1;
         int temp1, temp2;
@@ -191,32 +277,38 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
             std::cerr << "fromGauss(): crossing " << i
                 << " does not appear with alternate parities in Q0"
                 << std::endl;
+            delete[] side;
             delete[] Q0;
             delete[] Q1;
             delete[] crossHand;
             return nullptr;
         }
-        crossHand[index1] = temp1 * temp2;
+        crossHand[index1] = temp1 * temp2 * side[i-1];
         crossHand[index2] = - crossHand[index1];
     }
 
+    delete[] side;
     delete[] Q0;
     delete[] Q1;
 
+    // TODO: From here, turn this into a real live link.
     // Output
 
-    for (int i=0; i < 2*n; i++){
+    for (i=0; i < 2*n; i++){
         if (*(begin + i) < 0) {
             std::cerr<<"-";
-        }
+        } else
+            std::cerr << '+';
         if (crossHand[i] == 1) {
             std::cerr<<"<";
         } else {
             std::cerr<<">";
         }
-        std::cerr << *(begin + i) << ' ';
+        std::cerr << ::abs(*(begin + i)) << ' ';
     }
     std::cerr << std::endl;
+
+    delete[] crossHand;
     return nullptr;
 
 /*
