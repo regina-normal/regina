@@ -206,6 +206,7 @@ static
 void _registerIntFromPyIndex()
 {
     regina::python::register_int_from_py_index<size_t>();
+    regina::python::register_int_from_py_index<int>();
 }
 
 void addRegisterIntFromPyIndex() {
