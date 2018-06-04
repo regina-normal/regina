@@ -159,7 +159,7 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cvs-6R-t1H">
                                 <rect key="frame" x="20" y="138.5" width="500" height="289.5"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <mutableString key="text">Here you can enter:  – a knot signature; – an oriented Gauss code;  – numerical or alphabetical Dowker-Thistlethwaite notation.  Examples for the trefoil are:  dabcabcv- +&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3 4 6 2 bca  At present, these codes can only represent knots in Regina, not multiple-component links. To learn more, see the online Regina Handbook.</mutableString>
+                                <mutableString key="text">Here you can enter:  – a knot signature; – an oriented or classical Gauss code;  – numerical or alphabetical Dowker-Thistlethwaite notation.  Examples for the trefoil are:  dabcabcv- +&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3 1 -2 3 -1 2 -3 4 6 2 bca  At present, these codes can only represent knots in Regina, not multiple-component links. To learn more, see the online Regina Handbook.</mutableString>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -999,9 +999,9 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2za-Sx-Q4h">
-                                <rect key="frame" x="135" y="61" width="435" height="29"/>
+                                <rect key="frame" x="145" y="61" width="415" height="29"/>
                                 <segments>
-                                    <segment title="Oriented Gauss"/>
+                                    <segment title="Gauss"/>
                                     <segment title="D-T"/>
                                     <segment title="Knot signature"/>
                                     <segment title="Jenkins"/>

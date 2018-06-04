@@ -54,8 +54,10 @@ LinkCodesUI::LinkCodesUI(regina::Link* packet,
     QLabel* label = new QLabel(tr("Display code:"));
     QString msg = tr("Allows you to switch between different text-based "
         "codes for this link.<p>"
-        "The <i>oriented Gauss code</i> is an extension of the "
-        "classical Gauss code, with additional characters to describe "
+        "The <i>Gauss codes</i> include the <i>classical Gauss code</i>, "
+        "which is widely used but ambiguous for non-prime knots, and the "
+        "<i>oriented Gauss code</i> which describes a knot diagram exactly "
+        "using additional symbols that describe "
         "the orientation of the other strand at each crossing.<p>"
         "The <i>Dowker-Thistlethwaite notation</i> is a very short "
         "representation for prime knots (but introduces ambiguities "
@@ -69,7 +71,7 @@ LinkCodesUI::LinkCodesUI(regina::Link* packet,
     label->setWhatsThis(msg);
     sublayout->addWidget(label);
     type = new QComboBox();
-    type->insertItem(0, tr("Oriented Gauss code"));
+    type->insertItem(0, tr("Gauss codes"));
     type->insertItem(1, tr("Dowker-Thistlethwaite notation"));
     type->insertItem(2, tr("Knot signature"));
     type->insertItem(3, tr("Jenkins format"));
@@ -161,19 +163,22 @@ void LinkCodesUI::refresh() {
 
         code->setWordWrapMode(QTextOption::WordWrap);
     } else {
-        code->setWhatsThis("The oriented Gauss code of the link, "
-            "based on a format of Andreeva et al.  "
-            "This is an extension of the classical Gauss code, with "
-            "additional characters to describe the orientation of the "
+        code->setWhatsThis(
+            "The classical and oriented Gauss codes of the link.  "
+            "The classical Gauss code is widely used but ambiguous for "
+            "non-prime knots, whereas the oriented Gauss code (based on "
+            "a format of Andreeva et al.) describes a knot diagram exactly "
+            "using additional symbols that describe the orientation of the "
             "other strand passing by at each crossing.<p>"
             "You can copy this text to the clipboard if you need to send it "
             "to some other application.");
         if (link->countComponents() != 1) {
-            code->setPlainText(tr("Oriented Gauss codes are currently "
+            code->setPlainText(tr("Gauss codes are currently "
                 "only available for knots."));
             return;
         }
-        ans = link->orientedGauss().c_str();
+        ans = (std::string("Classical:\n") + link->gauss() +
+            "\n\nOriented:\n" + link->orientedGauss() + "\n").c_str();
 
         code->setWordWrapMode(QTextOption::WordWrap);
     }
@@ -201,7 +206,7 @@ void LinkCodesUI::typeChanged(int) {
             ReginaPrefSet::global().linkCodeType = ReginaPrefSet::Jenkins;
             break;
         default:
-            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::OrientedGauss;
+            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::Gauss;
             break;
     }
 

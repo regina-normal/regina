@@ -116,8 +116,8 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     QBoxLayout* subSubLayout = new QHBoxLayout();
     subSubLayout->setContentsMargins(0, 0, 0, 0);
     expln = QObject::trUtf8("<qt>A knot signature, "
-        "oriented Gauss code, or Dowker-Thistlethwaite notation "
-        "representing a knot.<p>"
+        "oriented Gauss code, classical Gauss code, "
+        "or Dowker-Thistlethwaite notation representing a knot.<p>"
         "At present, these codes can only be used for knots, not "
         "multiple-component links.<p>"
         "See the Regina Handbook for more information on each of these "
@@ -149,7 +149,7 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     subSubLayout->addWidget(code, 1);
     label = new QLabel("<qt>Here you can enter:<p>"
         "<ul><li>a knot signature;</li>"
-        "<li>an oriented Gauss code;</li>"
+        "<li>an oriented or classical Gauss code;</li>"
         "<li>numerical or alphabetical Dowker-Thistlethwaite "
         "notation.</li></ul><p>"
         "At present, these codes can only represent knots in Regina, "
@@ -157,6 +157,7 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
         "Examples for the trefoil include:<p>"
         "<ul><li><tt>dabcabcv-</tt></li>"
         "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
+        "<li><tt>1 -2 3 -1 2 -3</tt></li>"
         "<li><tt>4 6 2</tt></li>"
         "<li><tt>bca</tt></li></qt>");
     label->setWordWrap(true);
@@ -228,11 +229,12 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given text code."),
             QObject::tr("<qt>Here you can enter a knot signature, "
-                "an oriented Gauss code, or numerical or "
+                "an oriented or classical Gauss code, or numerical or "
                 "alphabetical Dowker-Thistlethwaite notation.<p>"
                 "Examples for the trefoil include:<p>"
                 "<ul><li><tt>dabcabcv-</tt></li>"
                 "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
+                "<li><tt>1 -2 3 -1 2 -3</tt></li>"
                 "<li><tt>4 6 2</tt></li>"
                 "<li><tt>bca</tt></li></ul><p>"
                 "For more information on what each type of code means, "
