@@ -69,6 +69,9 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(r123Perform);
     CPPUNIT_TEST(resolve);
     CPPUNIT_TEST(knotSig);
+    CPPUNIT_TEST(dt);
+    CPPUNIT_TEST(gauss);
+    CPPUNIT_TEST(orientedGauss);
     CPPUNIT_TEST(rewrite);
 
     CPPUNIT_TEST_SUITE_END();
@@ -82,7 +85,7 @@ class LinkTest : public CppUnit::TestFixture {
         /**
          * Knots:
          */
-        Link *unknot0, *unknot1, *unknot3, *unknotGordian;
+        Link *unknot0, *unknot1, *unknot3, *unknotMonster, *unknotGordian;
         Link *trefoilLeft, *trefoilRight, *figureEight;
 
         /**
@@ -107,6 +110,8 @@ class LinkTest : public CppUnit::TestFixture {
 
             unknot3 = Link::fromData({ 1, 1, -1 }, { 1, -2, -3, -1, 2, 3 });
             unknot3->setLabel("Unknot (3 crossings)");
+
+            unknotMonster = ExampleLink::monster();
 
             unknotGordian = ExampleLink::gordian();
 
@@ -157,6 +162,7 @@ class LinkTest : public CppUnit::TestFixture {
             delete unknot0;
             delete unknot1;
             delete unknot3;
+            delete unknotMonster;
             delete unknotGordian;
             delete trefoilLeft;
             delete trefoilRight;
@@ -204,6 +210,7 @@ class LinkTest : public CppUnit::TestFixture {
             testComponents(unknot0, 1);
             testComponents(unknot1, 1);
             testComponents(unknot3, 1);
+            testComponents(unknotMonster, 1);
             testComponents(unknotGordian, 1);
             testComponents(trefoilLeft, 1);
             testComponents(trefoilRight, 1);
@@ -237,6 +244,7 @@ class LinkTest : public CppUnit::TestFixture {
             testJones(unknot0, "1");
             testJones(unknot1, "1");
             testJones(unknot3, "1");
+            testJones(unknotMonster, "1");
             // The Gordian unknot is too large to compute V(link).
             testJones(trefoilLeft, "x^-2 + x^-6 - x^-8");
             testJones(trefoilRight, "-x^8 + x^6 + x^2");
@@ -288,6 +296,8 @@ class LinkTest : public CppUnit::TestFixture {
             testHomflyLM(unknot1, "1");
             testHomflyAZ(unknot3, "1");
             testHomflyLM(unknot3, "1");
+            testHomflyAZ(unknotMonster, "1");
+            testHomflyLM(unknotMonster, "1");
             // The Gordian unknot is surely too large for this.
 
             testHomflyLM(unlink2_0, "-x y^-1 - x^-1 y^-1");
@@ -531,6 +541,7 @@ class LinkTest : public CppUnit::TestFixture {
             testComplementBasic(unknot0);
             testComplementBasic(unknot1);
             testComplementBasic(unknot3);
+            testComplementBasic(unknotMonster);
             testComplementBasic(unknotGordian);
             testComplementBasic(trefoilLeft);
             testComplementBasic(trefoilRight);
@@ -550,6 +561,7 @@ class LinkTest : public CppUnit::TestFixture {
             testComplementUnknot(unknot0);
             testComplementUnknot(unknot1);
             testComplementUnknot(unknot3);
+            testComplementUnknot(unknotMonster);
             // Too large! - testComplementUnknot(unknotGordian);
 
             // For some knots and links, it is reasonable to assume that
@@ -1775,6 +1787,7 @@ class LinkTest : public CppUnit::TestFixture {
             verifyKnotSig(unknot0);
             verifyKnotSig(unknot1);
             verifyKnotSig(unknot3);
+            verifyKnotSig(unknotMonster);
             verifyKnotSig(unknotGordian);
             verifyKnotSig(trefoilLeft);
             verifyKnotSig(trefoilRight);
@@ -1794,6 +1807,169 @@ class LinkTest : public CppUnit::TestFixture {
             verifyKnotSig(l, false, true,  "gaabcdefbcfedPQaa");
             verifyKnotSig(l, false, false, "gaabcdefdcbefPQaa");
             delete l;
+        }
+
+        void verifyDT(const Link* l, bool alpha) {
+            std::string code = l->dt(alpha);
+
+            Link* recon = Link::fromDT(code);
+            if (! recon) {
+                std::ostringstream msg;
+                msg << l->label() << ": cannot reconstruct from code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->size() != l->size()) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different size.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->countComponents() != l->countComponents()) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different number of components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // For prime knots, the only possible ambiguity is reflection.
+            if (recon->knotSig(false) != l->knotSig(false))
+                recon->reflect();
+
+            if (recon->knotSig(false) != l->knotSig(false)) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different knot signature.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (l->size() <= 12) {
+                if (recon->homfly() != l->homfly()) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": reconstruction has "
+                        "different HOMFLY-PT polynomial.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            delete recon;
+        }
+
+        void verifyDT(const Link* l) {
+            if (l->size() <= 26)
+                verifyDT(l, true);
+            verifyDT(l, false);
+        }
+
+        void dt() {
+            verifyDT(unknot0);
+            verifyDT(unknot1);
+            verifyDT(unknot3);
+            verifyDT(unknotMonster);
+            verifyDT(unknotGordian);
+            verifyDT(trefoilLeft);
+            verifyDT(trefoilRight);
+            verifyDT(figureEight);
+        }
+
+        void verifyGauss(const Link* l) {
+            std::string code = l->gauss();
+
+            Link* recon = Link::fromGauss(code);
+            if (! recon) {
+                std::ostringstream msg;
+                msg << l->label() << ": cannot reconstruct from code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->size() != l->size()) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different size.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->countComponents() != l->countComponents()) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different number of components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // For prime knots, the only possible ambiguity is reflection.
+            if (recon->knotSig(false) != l->knotSig(false))
+                recon->reflect();
+
+            if (recon->knotSig(false) != l->knotSig(false)) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different knot signature.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (l->size() <= 12) {
+                if (recon->homfly() != l->homfly()) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": reconstruction has "
+                        "different HOMFLY-PT polynomial.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            delete recon;
+        }
+
+        void gauss() {
+            verifyGauss(unknot0);
+            verifyGauss(unknot1);
+            verifyGauss(unknot3);
+            verifyGauss(unknotMonster);
+            verifyGauss(unknotGordian);
+            verifyGauss(trefoilLeft);
+            verifyGauss(trefoilRight);
+            verifyGauss(figureEight);
+        }
+
+        void verifyOrientedGauss(const Link* l) {
+            std::string code = l->orientedGauss();
+
+            Link* recon = Link::fromOrientedGauss(code);
+            if (! recon) {
+                std::ostringstream msg;
+                msg << l->label() << ": cannot reconstruct from code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->size() != l->size()) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different size.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->countComponents() != l->countComponents()) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different number of components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->orientedGauss() != code) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (l->size() <= 12) {
+                if (recon->homfly() != l->homfly()) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": reconstruction has "
+                        "different HOMFLY-PT polynomial.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            delete recon;
+        }
+
+        void orientedGauss() {
+            verifyOrientedGauss(unknot0);
+            verifyOrientedGauss(unknot1);
+            verifyOrientedGauss(unknot3);
+            verifyOrientedGauss(unknotMonster);
+            verifyOrientedGauss(unknotGordian);
+            verifyOrientedGauss(trefoilLeft);
+            verifyOrientedGauss(trefoilRight);
+            verifyOrientedGauss(figureEight);
         }
 
         void verifyRewrite(const Link* l, int height) {
