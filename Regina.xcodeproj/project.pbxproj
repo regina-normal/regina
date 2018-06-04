@@ -1345,6 +1345,18 @@
 		05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D931DCB0E9A00C870C6 /* facetpairing3.h */; };
 		05669D971DCB0EA200C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
 		0566DC901F9893E60068ACAD /* Surfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0566DC921F9893E60068ACAD /* Surfaces.storyboard */; };
+		0568742520C5D86B001C435B /* tangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 0568741F20C5D868001C435B /* tangle.h */; };
+		0568742620C5D86B001C435B /* algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742020C5D868001C435B /* algebra.cpp */; };
+		0568742720C5D86B001C435B /* algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742020C5D868001C435B /* algebra.cpp */; };
+		0568742820C5D86B001C435B /* gauss-tangle-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0568742120C5D869001C435B /* gauss-tangle-impl.h */; };
+		0568742920C5D86B001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742220C5D86A001C435B /* tangle.cpp */; };
+		0568742A20C5D86B001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742220C5D86A001C435B /* tangle.cpp */; };
+		0568742B20C5D86B001C435B /* reidemeister-tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742320C5D86A001C435B /* reidemeister-tangle.cpp */; };
+		0568742C20C5D86B001C435B /* reidemeister-tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742320C5D86A001C435B /* reidemeister-tangle.cpp */; };
+		0568742D20C5D86B001C435B /* pass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742420C5D86B001C435B /* pass.cpp */; };
+		0568742E20C5D86B001C435B /* pass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742420C5D86B001C435B /* pass.cpp */; };
+		0568743020C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
+		0568743120C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
 		056AA9941C41C10100FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
 		056AA9951C41C11C00FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
@@ -3819,6 +3831,13 @@
 		05685FED1F97116B00085B44 /* fix-bundle-paths */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "fix-bundle-paths"; sourceTree = "<group>"; };
 		05685FEF1F9713D900085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685FF01F9713D900085B44 /* testutils.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testutils.sh; sourceTree = "<group>"; };
+		0568741F20C5D868001C435B /* tangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tangle.h; sourceTree = "<group>"; };
+		0568742020C5D868001C435B /* algebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = algebra.cpp; sourceTree = "<group>"; };
+		0568742120C5D869001C435B /* gauss-tangle-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gauss-tangle-impl.h"; sourceTree = "<group>"; };
+		0568742220C5D86A001C435B /* tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tangle.cpp; sourceTree = "<group>"; };
+		0568742320C5D86A001C435B /* reidemeister-tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "reidemeister-tangle.cpp"; sourceTree = "<group>"; };
+		0568742420C5D86B001C435B /* pass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pass.cpp; sourceTree = "<group>"; };
+		0568742F20C5D8D3001C435B /* tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tangle.cpp; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		056AA9931C41C10100FA81D3 /* boost-python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python.framework"; path = "../../Library/Frameworks/osx/boost-python.framework"; sourceTree = "<group>"; };
 		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
@@ -7180,6 +7199,7 @@
 			isa = PBXGroup;
 			children = (
 				05721ED01F97153C00A83FFC /* CMakeLists.txt */,
+				0568742020C5D868001C435B /* algebra.cpp */,
 				05721EDC1F97153C00A83FFC /* complement.cpp */,
 				05721ECF1F97153C00A83FFC /* data-impl.h */,
 				05F2033120A17C1E00FC74ED /* dt-impl.h */,
@@ -7189,6 +7209,7 @@
 				05AA71ED1FB17DFF00186E30 /* flype.cpp */,
 				05721ED21F97153C00A83FFC /* gauss.cpp */,
 				05721EDD1F97153C00A83FFC /* gauss-impl.h */,
+				0568742120C5D869001C435B /* gauss-tangle-impl.h */,
 				05721ED91F97153C00A83FFC /* graph.h */,
 				05721EDA1F97153C00A83FFC /* homfly.cpp */,
 				05721ECE1F97153C00A83FFC /* jenkins.cpp */,
@@ -7197,10 +7218,14 @@
 				05721EDF1F97153C00A83FFC /* link.h */,
 				05870CB11FAD250900835F9E /* modellinkgraph.cpp */,
 				05870CB01FAD250900835F9E /* modellinkgraph.h */,
+				0568742420C5D86B001C435B /* pass.cpp */,
 				05721EDB1F97153C00A83FFC /* reidemeister.cpp */,
+				0568742320C5D86A001C435B /* reidemeister-tangle.cpp */,
 				0588C2A11FD8D1340093C2C9 /* rewrite.cpp */,
 				0588C2A21FD8D1340093C2C9 /* sig.cpp */,
 				05721ED71F97153C00A83FFC /* simplify.cpp */,
+				0568742220C5D86A001C435B /* tangle.cpp */,
+				0568741F20C5D868001C435B /* tangle.h */,
 				05721EDE1F97153C00A83FFC /* xmllinkreader.cpp */,
 				05721ED11F97153C00A83FFC /* xmllinkreader.h */,
 			);
@@ -7215,6 +7240,7 @@
 				05721F0D1F97162600A83FFC /* link.cpp */,
 				05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */,
 				05721F0C1F97162600A83FFC /* pylink.cpp */,
+				0568742F20C5D8D3001C435B /* tangle.cpp */,
 			);
 			path = link;
 			sourceTree = "<group>";
@@ -7987,6 +8013,7 @@
 				052F9EA5180600FB00FAE4DF /* gluingperms.h in Headers */,
 				05431EFC1C40F1F6009BC072 /* component.h in Headers */,
 				05431F841C40F3C9009BC072 /* sublattice_representation.h in Headers */,
+				0568742820C5D86B001C435B /* gauss-tangle-impl.h in Headers */,
 				0591E7A41C4F74C400793A9C /* dim4edge.h in Headers */,
 				052FA066180600FB00FAE4DF /* facepair.h in Headers */,
 				055114CE1DCC476A00EC753C /* pachner.h in Headers */,
@@ -8019,6 +8046,7 @@
 				052F9FEF180600FB00FAE4DF /* nblockedsfstriple.h in Headers */,
 				05CA99E618078466006161DC /* registryutils.h in Headers */,
 				0513753E1809B8D3002E525B /* coordregistry.h in Headers */,
+				0568742520C5D86B001C435B /* tangle.h in Headers */,
 				05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */,
 				052FA072180600FB00FAE4DF /* ntetrahedron.h in Headers */,
 				050C64C71DA3302900C9420F /* nmaxadmissible-impl.h in Headers */,
@@ -8876,6 +8904,7 @@
 				054209051DF0DA450018AB24 /* simplesurfacebundle.cpp in Sources */,
 				054C6A6E1DCC1FF3005373F0 /* example13.cpp in Sources */,
 				057EE45A1C6009F300C4D155 /* component9.cpp in Sources */,
+				0568743020C5D8D3001C435B /* tangle.cpp in Sources */,
 				050F5E5B1B9BAB9C00C1F681 /* isosig.cpp in Sources */,
 				057EE4DF1C600A3600C4D155 /* facetpairing4.cpp in Sources */,
 				050F5E011B9BAB9C00C1F681 /* numbertheory.cpp in Sources */,
@@ -9239,6 +9268,7 @@
 				05D1C17219C7F95100CF92F2 /* EditableTableViewController.mm in Sources */,
 				05249EB61DBC16C4001FE29E /* edge2.cpp in Sources */,
 				058FADAB19D38BFC0001B5B5 /* SnapPeaViewController.mm in Sources */,
+				0568743120C5D8D3001C435B /* tangle.cpp in Sources */,
 				059BC6941DC7F7A300AB4206 /* boundarycomponent13.cpp in Sources */,
 				052FA1E01806129B00FAE4DF /* nsvectororientedquad.cpp in Sources */,
 				052FA1E21806129B00FAE4DF /* nsvectorquadoct.cpp in Sources */,
@@ -9256,6 +9286,7 @@
 				052FA1B01806129B00FAE4DF /* snappeatriangulation.cpp in Sources */,
 				05F0A0551DBF0B7000117BFC /* decompose.cpp in Sources */,
 				05AA71EF1FB17E0600186E30 /* flype.cpp in Sources */,
+				0568742E20C5D86B001C435B /* pass.cpp in Sources */,
 				05249E9E1DBB50B7001FE29E /* PythonInterpreter.mm in Sources */,
 				05A067441DFA68470047872E /* blockedsfsloop.cpp in Sources */,
 				05C1BEBC1DCA7CB3007C946B /* boundary6.cpp in Sources */,
@@ -9365,6 +9396,7 @@
 				05431F8F1C40F40E009BC072 /* HilbertSeries.cpp in Sources */,
 				05F0A0591DBF0B7000117BFC /* hydrate.cpp in Sources */,
 				05431F9A1C40F528009BC072 /* perm2.cpp in Sources */,
+				0568742C20C5D86B001C435B /* reidemeister-tangle.cpp in Sources */,
 				05C0645F1C56B1F7006E6483 /* Tri4Gluings.mm in Sources */,
 				054C6A7B1DCC1FF4005373F0 /* example15.cpp in Sources */,
 				05D1173519EE018A003BEC55 /* incompressible.cpp in Sources */,
@@ -9561,6 +9593,7 @@
 				052FA220180612DD00FAE4DF /* Dehn_coefficients.c in Sources */,
 				05A0674F1DFA68470047872E /* pillowtwosphere.cpp in Sources */,
 				05721EF31F97156600A83FFC /* jenkins.cpp in Sources */,
+				0568742720C5D86B001C435B /* algebra.cpp in Sources */,
 				05C0646E1C56C9E0006E6483 /* Tri4Algebra.mm in Sources */,
 				05249F6D1DBC1741001FE29E /* pytreewidth.cpp in Sources */,
 				05A067621DFA69230047872E /* standardtriangulation.cpp in Sources */,
@@ -9627,6 +9660,7 @@
 				05249EE31DBC16E4001FE29E /* face13.cpp in Sources */,
 				0542088D1DF0D0CF0018AB24 /* definition.cpp in Sources */,
 				05C064551C55C811006E6483 /* HyperSummary.mm in Sources */,
+				0568742A20C5D86B001C435B /* tangle.cpp in Sources */,
 				05A73C8B19B2EF130099C617 /* fundgroup.cpp in Sources */,
 				0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */,
 				05C1BEE81DCA89E3007C946B /* triangulation8.cpp in Sources */,
@@ -10050,6 +10084,7 @@
 				05A0672E1DFA68190047872E /* satblocktypes.cpp in Sources */,
 				0591E7DE1C4F750200793A9C /* hsvectorstandard.cpp in Sources */,
 				05721EF11F97153E00A83FFC /* link.cpp in Sources */,
+				0568742D20C5D86B001C435B /* pass.cpp in Sources */,
 				05A73C8E19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */,
 				05721EE71F97153E00A83FFC /* examplelink.cpp in Sources */,
 				052FA028180600FB00FAE4DF /* links.cpp in Sources */,
@@ -10155,6 +10190,7 @@
 				052F9FD9180600FB00FAE4DF /* volume.c in Sources */,
 				052F9F56180600FB00FAE4DF /* packetlistener.cpp in Sources */,
 				0588C2A31FD8D1350093C2C9 /* rewrite.cpp in Sources */,
+				0568742B20C5D86B001C435B /* reidemeister-tangle.cpp in Sources */,
 				05A067081DFA68190047872E /* augtrisolidtorus.cpp in Sources */,
 				054208791DF0D0B50018AB24 /* format.cpp in Sources */,
 				050C647B1DA1056700C9420F /* xmlanglestructreader.cpp in Sources */,
@@ -10185,6 +10221,7 @@
 				05431F8B1C40F40D009BC072 /* libnormaliz-templated.cpp in Sources */,
 				05A0673C1DFA68190047872E /* trisolidtorus.cpp in Sources */,
 				052F9F79180600FB00FAE4DF /* cusp_cross_sections.c in Sources */,
+				0568742920C5D86B001C435B /* tangle.cpp in Sources */,
 				05F0A0491DBF0B5E00117BFC /* surfaces.cpp in Sources */,
 				0591E7E21C4F750200793A9C /* normalhypersurfaces.cpp in Sources */,
 				052F9F73180600FB00FAE4DF /* choose_generators.c in Sources */,
@@ -10241,6 +10278,7 @@
 				05C1BED91DCA89DA007C946B /* triangulation7.cpp in Sources */,
 				0541AF611B8BE40B002E166B /* treedecomposition.cpp in Sources */,
 				052F9FA2180600FB00FAE4DF /* tidy_peripheral_curves.c in Sources */,
+				0568742620C5D86B001C435B /* algebra.cpp in Sources */,
 				052F9F44180600FB00FAE4DF /* perm4.cpp in Sources */,
 				052F9F74180600FB00FAE4DF /* close_cusps.c in Sources */,
 				050C64691DA1019B00C9420F /* anglestructure.cpp in Sources */,
