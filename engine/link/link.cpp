@@ -75,6 +75,9 @@ Link::Link(const std::string& description) {
     } else if ((attempt = fromOrientedGauss(description))) {
         swapContents(*attempt);
         setLabel(description);
+    } else if ((attempt = fromGauss(description))) {
+        swapContents(*attempt);
+        setLabel(description);
     } else if ((attempt = fromDT(description))) {
         swapContents(*attempt);
         setLabel(description);

@@ -715,6 +715,7 @@ class REGINA_API Link : public Packet {
          *
          * - knot signatures, as used by fromKnotSig();
          * - oriented Gauss codes, as used by fromOrientedGauss();
+         * - classical Gauss codes, as used by fromGauss();
          * - numeric or alphabetical Dowker-Thistlethwaite strings, as
          *   used by fromDT().
          *
