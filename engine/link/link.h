@@ -1671,6 +1671,31 @@ class REGINA_API Link : public Packet {
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
+        /**
+         * Forms the composition of this with the given link.
+         * This link will be altered directly.
+         *
+         * Specifically, the first component of the given link will be
+         * grafted into the first component of this link, in a way that
+         * preserves orientations and crossing signs.  If the given link
+         * has any additional components, then they will be copied into
+         * this link directly with no modification.
+         *
+         * This routine may be expanded in future versions of Regina to
+         * allow more flexibility (in particular, to allow you to choose
+         * which components of the two links to graft together, and/or
+         * at which strands to graft them).
+         *
+         * If either link is empty (i.e., contains no components at all),
+         * then the result will simply be a clone of the other link
+         * (with no composition operation performed).
+         *
+         * It is allowed to pass this link as \a other.
+         *
+         * @param other the link with which this should be composed.
+         */
+        void composeWith(const Link& other);
+
         /*@}*/
         /**
          * \name Invariants and Related Properties

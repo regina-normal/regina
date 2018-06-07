@@ -461,6 +461,57 @@ std::string Link::brief() const {
     return out.str();
 }
 
+void Link::composeWith(const Link& other) {
+    if (other.isEmpty())
+        return;
+
+    ChangeEventSpan span(this);
+
+    // From here we can assume other is non-empty.
+    // Clone its crossings, and transfer them directly into this link.
+    // This abuses the MarkedVector API slightly (since an object must
+    // not belong to more than one MarkedVector at a time), but the
+    // implementation of MarkedVector does make it correct.
+    Link clone(other);
+    for (Crossing* c : clone.crossings_)
+        crossings_.push_back(c);
+    clone.crossings_.clear();
+
+    if (isEmpty()) {
+        // This link simply acquires all of clone's components.
+        clone.components_.swap(components_);
+
+        clearAllProperties();
+        return;
+    }
+
+    // From here we assume that *both* links are non-empty.
+    // We copy all compoments of clone except for the first.
+    auto it = clone.components_.begin();
+    for (++it; it != clone.components_.end(); ++it)
+        components_.push_back(*it);
+
+    // All that is left is to graft the first components of the two links.
+    StrandRef graft = clone.components_.front();
+    StrandRef src = components_.front();
+
+    if (! graft) {
+        // We are grafting in a 0-crossing unknot component: nothing to do.
+    } else if (! src) {
+        // We are grafting the other component into a 0-crossing unknot
+        // component of *this* link.  Just replace the component entirely.
+        *components_.begin() = graft;
+    } else {
+        // We are grafting two non-trivial components together.
+        StrandRef graftEnd = graft.prev();
+        join(src.prev(), graft); // changes graft.prev()
+        join(graftEnd, src);
+    }
+
+    // All done!
+    clearAllProperties();
+}
+
 std::string Link::dumpConstruction() const {
     std::ostringstream out;
 

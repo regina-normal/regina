@@ -219,6 +219,7 @@ void addLink() {
         .def("change", &Link::change)
         .def("changeAll", &Link::changeAll)
         .def("resolve", &Link::resolve)
+        .def("composeWith", &Link::composeWith)
         .def("isAlternating", &Link::isAlternating)
         .def("writhe", &Link::writhe)
         .def("complement", &Link::complement,
