@@ -2593,13 +2593,21 @@ class REGINA_API Triangulation<3> :
          * the result will be oriented also, and the connected sum will
          * respect these orientations.
          *
+         * If one or both triangulations contains multiple connected components,
+         * this routine will connect the components containing tetrahedron 0
+         * of each triangulation, and will copy any additional
+         * components across with no modification.
+         *
+         * If either triangulation is empty, then the result will simply be a
+         * clone of the other triangulation.
+         *
          * This and/or the given triangulation may be bounded or ideal, or
          * even invalid; in all cases the connected sum will be formed
          * correctly.  Note, however, that the result might possibly
          * contain internal vertices (even if the original triangulations
          * do not).
          *
-         * \pre This triangulation is connected and non-empty.
+         * It is allowed to pass this triangulation as \a other.
          *
          * @param other the triangulation to sum with this.
          */

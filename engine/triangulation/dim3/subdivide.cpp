@@ -269,9 +269,15 @@ void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
 }
 
 void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
-    // Precondition check.
-    if (simplices_.empty() || ! isConnected())
+    if (other.simplices_.empty())
         return;
+    if (simplices_.empty()) {
+        insertTriangulation(other);
+        return;
+    }
+
+    // From here we can assume that each triangulation contains at least
+    // one tetrahedron.
 
     ChangeEventSpan span(this);
 

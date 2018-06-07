@@ -947,13 +947,6 @@ void Tri3GluingsUI::drillEdge() {
 void Tri3GluingsUI::connectedSumWith() {
     endEdit();
 
-    if (tri->isEmpty() || ! tri->isConnected()) {
-        ReginaSupport::info(ui,
-            tr("I can only make connected sums with "
-                "non-empty, connected triangulations."));
-        return;
-    }
-
     regina::Triangulation<3>* other = static_cast<regina::Triangulation<3>*>(
         PacketDialog::choose(ui,
             tri->root(),

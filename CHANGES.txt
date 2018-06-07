@@ -83,6 +83,7 @@ Version 5.2  [ 29 September, 2017 ]
               and simply call these new routines.
             - For oriented triangulations, all Pachner moves now preserve the
               orientation.
+            - Relaxed the preconditions for connectedSumWith().
             - Now preserves computed properties of the underlying manifold
               when the manifold is retriangulated.
         Class Triangulation<4>:
