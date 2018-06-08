@@ -97,6 +97,11 @@ class LinkTest : public CppUnit::TestFixture {
         Link *trefoil_unknot0, *trefoil_unknot1, *trefoil_unknot_overlap;
         Link *adams6_28; // Figure 6.28 from Adams
 
+        /**
+         * Composite knots:
+         */
+        Link *rht_rht, *rht_lht;
+
     public:
         void setUp() {
             empty = new Link();
@@ -155,6 +160,14 @@ class LinkTest : public CppUnit::TestFixture {
             adams6_28 = Link::fromData({ +1, +1, -1, -1, +1, +1 },
                 { -2, 1, -5, 6 }, { 2, -3, 4, -6, 5, -4, 3, -1 });
             adams6_28->setLabel("Adams, Figure 6.28");
+
+            rht_rht = ExampleLink::trefoilRight();
+            rht_rht->composeWith(*trefoilRight);
+            rht_rht->setLabel("RH Trefoil # RH Trefoil");
+
+            rht_lht = ExampleLink::trefoilRight();
+            rht_lht->composeWith(*trefoilLeft);
+            rht_lht->setLabel("RH Trefoil # LH Trefoil");
         }
 
         void tearDown() {
@@ -178,6 +191,8 @@ class LinkTest : public CppUnit::TestFixture {
             delete trefoil_unknot1;
             delete trefoil_unknot_overlap;
             delete adams6_28;
+            delete rht_rht;
+            delete rht_lht;
         }
 
         void sanity(Link* l) {
@@ -225,6 +240,8 @@ class LinkTest : public CppUnit::TestFixture {
             testComponents(trefoil_unknot0, 2);
             testComponents(trefoil_unknot1, 2);
             testComponents(trefoil_unknot_overlap, 2);
+            testComponents(rht_rht, 1);
+            testComponents(rht_lht, 1);
         }
 
         void testJones(Link* l, const char* expected) {
@@ -260,6 +277,8 @@ class LinkTest : public CppUnit::TestFixture {
             testJones(trefoil_unknot0, "x^9 - x^5 - x^3 - x");
             testJones(trefoil_unknot1, "x^9 - x^5 - x^3 - x");
             testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x");
+            testJones(rht_rht, "x^16 - 2 x^14 + x^12 - 2 x^10 + 2 x^8 + x^4");
+            testJones(rht_lht, "-x^6 + x^4 - x^2 + 3 - x^-2 + x^-4 - x^-6");
         }
 
         void testHomflyAZ(Link* l, const char* expected) {
@@ -325,6 +344,11 @@ class LinkTest : public CppUnit::TestFixture {
             // relation agrees with the polynomial below.
             testHomflyLM(adams6_28,
                 "x y - x^-1 y^3 + x^-1 y + 2 x^-3 y - x^-3 y^-1 - x^-5 y^-1");
+
+            testHomflyLM(rht_rht,
+                "x^-4 y^4 - 4 x^-4 y^2 + 4 x^-4 - 2 x^-6 y^2 + 4 x^-6 + x^-8");
+            testHomflyLM(rht_lht,
+                "-x^2 y^2 + 2 x^2 + y^4 - 4 y^2 + 5 - x^-2 y^2 + 2 x^-2");
 
             // TODO: whitehead, borromean
 
@@ -556,6 +580,8 @@ class LinkTest : public CppUnit::TestFixture {
             testComplementBasic(trefoil_unknot0);
             testComplementBasic(trefoil_unknot1);
             testComplementBasic(trefoil_unknot_overlap);
+            testComplementBasic(rht_rht);
+            testComplementBasic(rht_lht);
 
             testComplementS3(empty);
             testComplementUnknot(unknot0);
@@ -1792,6 +1818,8 @@ class LinkTest : public CppUnit::TestFixture {
             verifyKnotSig(trefoilLeft);
             verifyKnotSig(trefoilRight);
             verifyKnotSig(figureEight);
+            verifyKnotSig(rht_rht);
+            verifyKnotSig(rht_lht);
 
             verifyKnotSig(trefoilRight, true, true, "dabcabcv-");
             verifyKnotSig(trefoilRight, false, true, "dabcabcv-");
@@ -1867,6 +1895,10 @@ class LinkTest : public CppUnit::TestFixture {
             verifyDT(trefoilLeft);
             verifyDT(trefoilRight);
             verifyDT(figureEight);
+            // Luckily works despite ambiguity with composite knots:
+            verifyDT(rht_lht);
+            // Broken by ambiguity with composite knots:
+            // verifyDT(rht_rht);
         }
 
         void verifyGauss(const Link* l) {
@@ -1921,6 +1953,10 @@ class LinkTest : public CppUnit::TestFixture {
             verifyGauss(trefoilLeft);
             verifyGauss(trefoilRight);
             verifyGauss(figureEight);
+            // Luckily works despite ambiguity with composite knots:
+            verifyGauss(rht_rht);
+            // Broken by ambiguity with composite knots:
+            // verifyGauss(rht_lht);
         }
 
         void verifyOrientedGauss(const Link* l) {
@@ -1970,6 +2006,8 @@ class LinkTest : public CppUnit::TestFixture {
             verifyOrientedGauss(trefoilLeft);
             verifyOrientedGauss(trefoilRight);
             verifyOrientedGauss(figureEight);
+            verifyOrientedGauss(rht_rht);
+            verifyOrientedGauss(rht_lht);
         }
 
         void verifyRewrite(const Link* l, int height) {
