@@ -37,6 +37,69 @@ namespace regina {
 
 const char* Link::jonesVar = "\u221At"; // \u221A = square root
 
+size_t Link::resolutionLoops(unsigned long mask) const {
+    size_t n = crossings_.size();
+
+    size_t pos;
+    int dirInit, dir;
+    StrandRef s;
+
+    // found[0..n-1] : seen exiting the crossing on the upper strand
+    // found[n..2n-1] : seen entering the crossing on the upper strand
+    bool* found = new bool[2 * n];
+    std::fill(found, found + 2 * n, false);
+
+    size_t loops = 0;
+    for (pos = 0; pos < n; ++pos)
+        for (dirInit = 0; dirInit < 2; ++dirInit) {
+            // dirInit: 1 = with arrows, 0 = against arrows.
+            // This refers to the direction along the strand as you
+            // approach the crossing (before you jump to the other strand).
+            if (! found[pos + (dirInit ? n : 0)]) {
+                //std::cerr << "LOOP\n";
+                ++loops;
+
+                s = crossings_[pos]->upper();
+                dir = dirInit;
+
+                do {
+                    //std::cerr << "At: " << s <<
+                    //    (dir == 1 ? " ->" : " <-") << std::endl;
+
+                    if (    ((mask & (1 << s.crossing()->index())) &&
+                                s.crossing()->sign() < 0) ||
+                            ((mask & (1 << s.crossing()->index())) == 0 &&
+                                s.crossing()->sign() > 0)) {
+                        // Turn in a way that is consistent with the arrows.
+                        if (dir == 1) {
+                            found[s.crossing()->index() +
+                                (s.strand() ? n : 0)] = true;
+                            s = s.crossing()->next(s.strand() ^ 1);
+                        } else {
+                            found[s.crossing()->index() +
+                                (s.strand() ? 0 : n)] = true;
+                            s = s.crossing()->prev(s.strand() ^ 1);
+                        }
+                    } else {
+                        // Turn in a way that is inconsistent with the arrows.
+                        if (dir == 1) {
+                            found[s.crossing()->index() + n] = true;
+                            s = s.crossing()->prev(s.strand() ^ 1);
+                        } else {
+                            found[s.crossing()->index()] = true;
+                            s = s.crossing()->next(s.strand() ^ 1);
+                        }
+                        dir ^= 1;
+                    }
+                } while (! (dir == dirInit &&
+                    s.crossing()->index() == pos && s.strand() == 1));
+            }
+        }
+
+    delete[] found;
+    return loops;
+}
+
 Laurent<Integer>* Link::bracketNaive() const {
     /**
      * \ /         \ /            \_/
@@ -69,72 +132,20 @@ Laurent<Integer>* Link::bracketNaive() const {
 
     size_t maxLoops = 0;
 
-    unsigned long mask;
     size_t loops;
     size_t pos;
-    int end;
-    StrandRef s;
-    int dirInit, dir;
     long shift;
-    bool* found = new bool[2 * n];
-    for (mask = 0; mask != (1 << n); ++mask) {
-        loops = initLoops;
-
-        // found[0..n-1] : seen exiting the crossing on the upper strand
-        // found[n..2n-1] : seen entering the crossing on the upper strand
-        std::fill(found, found + 2 * n, false);
-
+    for (unsigned long mask = 0; mask != (1 << n); ++mask) {
         //std::cerr << "Mask: " << mask << std::endl;
-        for (pos = 0; pos < n; ++pos)
-            for (dirInit = 0; dirInit < 2; ++dirInit) {
-                // dirInit: 1 = with arrows, 0 = against arrows.
-                // This refers to the direction along the strand as you
-                // approach the crossing (before you jump to the other strand).
-                if (! found[pos + (dirInit ? n : 0)]) {
-                    //std::cerr << "LOOP\n";
-                    ++loops;
 
-                    s = crossings_[pos]->upper();
-                    dir = dirInit;
-
-                    do {
-                        //std::cerr << "At: " << s <<
-                        //    (dir == 1 ? " ->" : " <-") << std::endl;
-
-                        if (    ((mask & (1 << s.crossing()->index())) &&
-                                    s.crossing()->sign() > 0) ||
-                                ((mask & (1 << s.crossing()->index())) == 0 &&
-                                    s.crossing()->sign() < 0)) {
-                            if (dir == 1) {
-                                found[s.crossing()->index() +
-                                    (s.strand() ? n : 0)] = true;
-                                s = s.crossing()->next(s.strand() ^ 1);
-                            } else {
-                                found[s.crossing()->index() +
-                                    (s.strand() ? 0 : n)] = true;
-                                s = s.crossing()->prev(s.strand() ^ 1);
-                            }
-                        } else {
-                            if (dir == 1) {
-                                found[s.crossing()->index() + n] = true;
-                                s = s.crossing()->prev(s.strand() ^ 1);
-                            } else {
-                                found[s.crossing()->index()] = true;
-                                s = s.crossing()->next(s.strand() ^ 1);
-                            }
-                            dir ^= 1;
-                        }
-                    } while (! (dir == dirInit &&
-                        s.crossing()->index() == pos && s.strand() == 1));
-                }
-            }
+        loops = initLoops + resolutionLoops(mask);
 
         shift = 0;
         for (pos = 0; pos < n; ++pos)
             if (mask & (1 << pos))
-                ++shift;
-            else
                 --shift;
+            else
+                ++shift;
 
         if (loops > maxLoops)
             maxLoops = loops;
@@ -145,7 +156,6 @@ Laurent<Integer>* Link::bracketNaive() const {
         else
             count[loops].set(shift, count[loops][shift] + 1);
     }
-    delete[] found;
 
     Laurent<Integer>* ans = new Laurent<Integer>;
 

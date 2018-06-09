@@ -1850,7 +1850,9 @@ class REGINA_API Link : public Packet {
          * \warning The current implementation is naive, with a running
          * time of O(<i>n</i> 2^<i>n</i>) where \a n is the number of
          * crossings.  This will eventually be replaced with a more
-         * efficient implementation.
+         * efficient implementation.  Currently homfly() is much faster,
+         * and if you are simply trying to distinguish links then you
+         * should call homfly() instead.
          *
          * @return alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
@@ -3114,6 +3116,28 @@ class REGINA_API Link : public Packet {
          * for this terminating call simply means \a strandsRemaining == 0.
          */
         bool addComponents(size_t strandsRemaining);
+
+        /**
+         * Internal to bracketNaive().
+         *
+         * Returns the number of loops in the link produced by resolving
+         * each crossing according to the given bitmask:
+         *
+         * - If the <i>i</i>th bit in \a mask is 0, this indicates that
+         *   crossing \a i should be resolved by turning \e left when
+         *   entering along the upper strand.
+         *
+         * - If the <i>i</i>th bit in \a mask is 1, this indicates that
+         *   crossing \a i should be resolved by turning \e right when
+         *   entering along the upper strand.
+         *
+         * \pre The number of crossings is at most the number of bits in
+         * an unsigned long.
+         *
+         * @return the resulting number of loops after all crossings are
+         * resolved.
+         */
+        size_t resolutionLoops(unsigned long mask) const;
 
         /**
          * Compute the Kauffman bracket polynomial using a naive
