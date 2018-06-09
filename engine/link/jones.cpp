@@ -32,6 +32,7 @@
 
 #include "link/link.h"
 #include "maths/laurent.h"
+#include "utilities/bitmanip.h"
 
 namespace regina {
 
@@ -44,8 +45,8 @@ size_t Link::resolutionLoops(unsigned long mask) const {
     int dirInit, dir;
     StrandRef s;
 
-    // found[0..n-1] : seen exiting the crossing on the upper strand
-    // found[n..2n-1] : seen entering the crossing on the upper strand
+    // found[0..n-1] : seen the half of the upper strand that exits the crossing
+    // found[n..2n-1] : seen the half of the upper strand that enters the crossing
     bool* found = new bool[2 * n];
     std::fill(found, found + 2 * n, false);
 
@@ -132,25 +133,22 @@ Laurent<Integer>* Link::bracketNaive() const {
 
     size_t maxLoops = 0;
 
+    static_assert(BitManipulator<unsigned long>::specialised,
+        "BitManipulator is not specialised for the mask type.");
+
     size_t loops;
-    size_t pos;
     long shift;
     for (unsigned long mask = 0; mask != (1 << n); ++mask) {
         //std::cerr << "Mask: " << mask << std::endl;
 
         loops = initLoops + resolutionLoops(mask);
-
-        shift = 0;
-        for (pos = 0; pos < n; ++pos)
-            if (mask & (1 << pos))
-                --shift;
-            else
-                ++shift;
-
         if (loops > maxLoops)
             maxLoops = loops;
 
         --loops;
+
+        // Set shift = #(0 bits) - #(1 bits) in mask.
+        shift = n - 2 * BitManipulator<unsigned long>::bits(mask);
         if (shift > count[loops].maxExp() || shift < count[loops].minExp())
             count[loops].set(shift, 1);
         else
