@@ -1801,9 +1801,6 @@ class REGINA_API Link : public Packet {
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
-         *
          * Bear in mind that each time the link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
@@ -1824,7 +1821,7 @@ class REGINA_API Link : public Packet {
          *
          * @return alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * @return the bracket polynomial, as a newly-created object.
+         * @return the bracket polynomial.
          */
         const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT) const;
         /**
@@ -1857,8 +1854,15 @@ class REGINA_API Link : public Packet {
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
+         * Regina follows the conventions described in C. C. Adams,
+         * "The knot book", W. H. Freeman & Co., 1994.  If you wish to
+         * convert to the conventions used by Khovanov as described in
+         * Dror Bar-Natan, "On Khovanov's categorifiction of the Jones
+         * polynomial", Algebraic & Geometric Topology 2 (2002), 337-370, you
+         * can simply take the polynomial returned by this routine and replace
+         * the variable <i>x</i> (which represents the square root of \a t)
+         * with the expression -</i>q</i>.
+         *
          * To pretty-print this polynomial for human consumption, you can
          * call <tt>Laurent::str(Link::jonesVar)</tt>.
          *
@@ -1887,7 +1891,7 @@ class REGINA_API Link : public Packet {
          * Currently there is only one implementation (and so this argument
          * will be ignored), but this is expected to change in future
          * versions of Regina..
-         * @return the Jones polynomial, as a newly-created object.
+         * @return the Jones polynomial.
          */
         const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT) const;
         /**
@@ -1922,8 +1926,6 @@ class REGINA_API Link : public Packet {
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
          *
@@ -1946,7 +1948,7 @@ class REGINA_API Link : public Packet {
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @return the HOMFLY polynomial, as a newly-created object.
+         * @return the HOMFLY polynomial.
          */
         const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT) const;
         /**
@@ -1968,8 +1970,6 @@ class REGINA_API Link : public Packet {
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
          *
@@ -1992,7 +1992,7 @@ class REGINA_API Link : public Packet {
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @return the HOMFLY polynomial, as a newly-created object.
+         * @return the HOMFLY polynomial.
          */
         const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT) const;
         /**
@@ -2002,8 +2002,6 @@ class REGINA_API Link : public Packet {
          * This routine is simply an alias for homflyAZ().  See the
          * documentation for homflyAZ() for further details.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
          *
@@ -2019,7 +2017,7 @@ class REGINA_API Link : public Packet {
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @return the HOMFLY polynomial, as a newly-created object.
+         * @return the HOMFLY polynomial.
          */
         const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT) const;
         /**
