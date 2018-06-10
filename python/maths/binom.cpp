@@ -30,12 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "face-bindings.h"
+#include <boost/python.hpp>
+#include "maths/binom.h"
 
-void addFace() {
-    // Nothing here for now.
+using namespace boost::python;
 
-    // The bindings for dim >= 5 are in separate files, one per dimension.
-    // This is to help avoid excessive memory consumption by the compiler.
+void addBinom() {
+    def("binomSmall", regina::binomSmall);
+    def("binomMedium", regina::binomMedium);
 }
 

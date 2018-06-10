@@ -42,6 +42,7 @@
 
 #include <algorithm>
 #include "regina-core.h"
+#include "maths/binom.h"
 #include "maths/perm.h"
 
 namespace regina {
@@ -51,18 +52,6 @@ namespace detail {
  * \weakgroup detail
  * @{
  */
-
-/**
- * A lookup table that stores (\a n choose \a k) for all \a n &le; \a 16.
- *
- * For all values 0 &le; \a k &le; \a n &le; 16, the value
- * \a binomSmall_[\a n][\a k] is the binomial coefficient (\a n choose \a k).
- *
- * This array is used in the implementation of the function binomSmall().
- * End users should call binomSmall() instead of referring to this array
- * directly.
- */
-REGINA_API extern const int* const binomSmall_[17];
 
 /**
  * Placeholder class that outlines the functions provided by
