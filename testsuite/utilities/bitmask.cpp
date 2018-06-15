@@ -35,7 +35,10 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "testsuite/utilities/testutilities.h"
+#include "maths/binom.h"
 #include "utilities/bitmask.h"
+#include "utilities/bitmanip.h"
+#include "utilities/intutils.h"
 
 class BitmaskTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(BitmaskTest);
@@ -46,6 +49,7 @@ class BitmaskTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(bits);
     CPPUNIT_TEST(truncate);
     CPPUNIT_TEST(lexOrder);
+    CPPUNIT_TEST(nextPermutation);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -305,6 +309,104 @@ class BitmaskTest : public CppUnit::TestFixture {
             testLexOrder<regina::Bitmask2<unsigned long, unsigned char> >
                 ("ulong,uchar", 8 + 8 * sizeof(unsigned long));
             testLexOrder<regina::Bitmask>("pieces", 128);
+        }
+
+        template <typename T, int k>
+        void verifyNextPermutationFor(const char* typeDesc) {
+            size_t count = 0;
+            for (T i = (T(1) << k) - 1; i != 0;
+                    i = regina::BitManipulator<T>::nextPermutation(i)) {
+                if (regina::BitManipulator<T>::bits(i) != k) {
+                    std::ostringstream out;
+                    out << "Next permutation for " << typeDesc << ", " << k
+                        << " sets the wrong number of bits.";
+                    // Note: we cannot just print i, since there is no
+                    // ostream operator for uint64_t.
+                    CPPUNIT_FAIL(out.str());
+                }
+                if (k == 1) {
+                    if (regina::BitManipulator<T>::firstBit(i) != count) {
+                        std::ostringstream out;
+                        out << "Next permutation for " << typeDesc << ", " << k
+                            << " gives the wrong value for firstBit().";
+                        CPPUNIT_FAIL(out.str());
+                    }
+                    if (regina::BitManipulator<T>::lastBit(i) != count) {
+                        std::ostringstream out;
+                        out << "Next permutation for " << typeDesc << ", " << k
+                            << " gives the wrong value for lastBit().";
+                        CPPUNIT_FAIL(out.str());
+                    }
+                } else {
+                    unsigned last = regina::BitManipulator<T>::lastBit(i);
+                    if (last < k - 1) {
+                        std::ostringstream out;
+                        out << "Next permutation for " << typeDesc << ", " << k
+                            << " has lastBit() too small.";
+                        CPPUNIT_FAIL(out.str());
+                    } else if (last == k - 1) {
+                        if (count != 0) {
+                            std::ostringstream out;
+                            out << "Next permutation for " << typeDesc << ", "
+                                << k << " gives the minimum possible lastBit() "
+                                "more than once.";
+                            CPPUNIT_FAIL(out.str());
+                        }
+                    } else {
+                        if (count < regina::binomMedium(last, k) ||
+                                count >= regina::binomMedium(last + 1, k)) {
+                            std::ostringstream out;
+                            out << "Next permutation for " << typeDesc << ", "
+                                << k << " gives the wrong value for lastBit().";
+                            CPPUNIT_FAIL(out.str());
+                        }
+                    }
+                }
+                ++count;
+            }
+
+            // Yes, binonMedium is only supposed to work for n <= 29.
+            // But in reality, it works for all sufficiently small
+            // values of (n choose k).  So we are fine to use it here.
+            if (count != regina::binomMedium(sizeof(T) * 8, k)) {
+                std::ostringstream out;
+                out << "Next permutation for " << typeDesc << ", " << k
+                    << " iterates " << count << " times, not "
+                    << regina::binomMedium(sizeof(T) * 8, k) << ".";
+                CPPUNIT_FAIL(out.str());
+            }
+        }
+
+        template <typename T>
+        void verifyNextPermutation(const char* typeDesc) {
+            if (regina::BitManipulator<T>::nextPermutation(0) != 0) {
+                std::ostringstream out;
+                out << "Next permutation for " << typeDesc
+                    << " does not map 0 to 0.";
+                CPPUNIT_FAIL(out.str());
+            }
+            if (regina::BitManipulator<T>::nextPermutation(-1) != 0) {
+                std::ostringstream out;
+                out << "Next permutation for " << typeDesc
+                    << " does not map 11...1 to 0.";
+                CPPUNIT_FAIL(out.str());
+            }
+            verifyNextPermutationFor<T, 1>(typeDesc);
+            verifyNextPermutationFor<T, 2>(typeDesc);
+            verifyNextPermutationFor<T, 3>(typeDesc);
+            verifyNextPermutationFor<T, sizeof(T) * 8 - 2>(typeDesc);
+            verifyNextPermutationFor<T, sizeof(T) * 8 - 1>(typeDesc);
+        }
+
+        void nextPermutation() {
+            verifyNextPermutation<unsigned char>("uchar");
+            verifyNextPermutation<unsigned int>("uint");
+            verifyNextPermutation<unsigned long>("ulong");
+            verifyNextPermutation<regina::IntOfSize<1>::utype>("uint8");
+            verifyNextPermutation<regina::IntOfSize<8>::utype>("uint64");
+#ifdef INT128_AVAILABLE
+            verifyNextPermutation<regina::IntOfSize<16>::utype>("uint128");
+#endif
         }
 };
 

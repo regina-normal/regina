@@ -15,6 +15,13 @@ Version 5.2  [ 29 September, 2017 ]
           that partially compliant compilers (such as gcc4.9) should be fine.
         - Now builds under gcc7.
     ENGINE:
+        Class BitManipulator, GenericBitManipulator:
+            - BitManipulator has a new routine nextPermutation() to
+              iterate through bitmasks with a fixed number of true bits.
+            - BitManipulator no longer takes a size template parameter;
+              instead size is always taken to be sizeof(T).
+            - The internal structure of BitManipulator has changed; in
+              particular, the old GenericBitManipulator no longer exists.
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.
