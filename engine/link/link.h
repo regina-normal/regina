@@ -1807,8 +1807,8 @@ class REGINA_API Link : public Packet {
          * Instead, bracket() should be called again; this will be
          * instantaneous if the bracket polynomial has already been calculated.
          *
-         * \warning If there are too many crossings for the algorithm to
-         * handle, then this routine will return \c null.  Currently this
+         * \warning If there are too many crossings for the algorithm to handle,
+         * then this routine will return the zero polynomial.  Currently this
          * happens when the link contains at least 2^<i>b</i> crossings,
          * where \a b is the number of bits in a long integer (typically 64
          * on a modern machine).  The intention is for this constraint to be
@@ -1872,8 +1872,8 @@ class REGINA_API Link : public Packet {
          * Instead, jones() should be called again; this will be
          * instantaneous if the Jones polynomial has already been calculated.
          *
-         * \warning If there are too many crossings for the algorithm to
-         * handle, then this routine will return \c null.  Currently this
+         * \warning If there are too many crossings for the algorithm to handle,
+         * then this routine will return the zero polynomial.  Currently this
          * happens when the link contains at least 2^<i>b</i> crossings,
          * where \a b is the number of bits in a long integer (typically 64
          * on a modern machine).  The intention is for this constraint to be
@@ -2063,6 +2063,16 @@ class REGINA_API Link : public Packet {
          * returned from this routine should not be kept for later use.
          * Instead, khovanov() should be called again; this will be
          * instantaneous if the Khovanov polynomial has already been calculated.
+         *
+         * \warning The current implementation of this routine has
+         * exponential time \e and space complexity.
+         *
+         * \warning If there are too many crossings for the algorithm to
+         * handle, then this routine will return the zero polynomial.
+         * Currently this happens when the link contains more than 29 crossings
+         * (the maximum \a n that can be passed to binomMedium()).
+         * The intention is for this constraint to be removed when Regina
+         * switches to a more sophisticated algorithm.
          *
          * @return a description of the Khovanov homology over the rationals.
          */
@@ -3686,6 +3696,9 @@ inline bool Link::knowsJones() const {
 inline bool Link::knowsHomfly() const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
     return homflyAZ_.known();
+}
+inline bool Link::knowsKhovanov() const {
+    return khovanovQ_.known();
 }
 
 inline bool Link::r2(Crossing* crossing, bool check, bool perform) {

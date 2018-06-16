@@ -203,8 +203,8 @@ const Laurent<Integer>& Link::jones(Algorithm alg) const {
 
     // (-A^3)^(-w) * bracket, then multiply all exponents by -1/4.
     Laurent<Integer>* ans = new Laurent<Integer>(bracket(alg));
-    if (ans == 0)
-        return *(jones_ = ans);
+    if (! ans)
+        return *(jones_ = new Laurent<Integer>());
 
     long w = writhe();
     ans->shift(-3 * w);
