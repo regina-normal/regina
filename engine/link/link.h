@@ -3213,13 +3213,36 @@ class REGINA_API Link : public Packet {
          *   crossing \a i should be resolved by turning \e right when
          *   entering along the upper strand.
          *
+         * If the array \a loopIDs is non-null, then it will be filled
+         * with an identifier for each loop.  Each identifier will be
+         * the minimum of the following values that are computed as you
+         * follow the loop: when passing through crossing \a i, if we
+         * encounter the half of the upper strand that \e exits the crossing
+         * then we take the value \a i, and if we encounter the half of
+         * the upper strand that \e enters the crossing then we take the
+         * value (\a i + \a n).  These identifiers will be returned in the
+         * array \a loopIDs in sorted order.
+         *
+         * If the array \a loopLengths is non-null, then it will be
+         * filled with the number of strands in each loop (so these
+         * should sum to twice the number of crossings).  These loop
+         * lengths will be placed in the array in the same order as the
+         * loop IDs as described above.
+         *
          * \pre The number of crossings is at most the number of bits in
          * an unsigned long.
+         *
+         * \pre If either or both the arrays \a loopIDs and \a loopLengths
+         * are not null, then they are arrays whose size is at least the
+         * return value (i.e., the number of loops).  This typically means
+         * that the caller must put an upper bound on the number of loops
+         * in advance, before calling this routine.
          *
          * @return the resulting number of loops after all crossings are
          * resolved.
          */
-        size_t resolutionLoops(unsigned long mask) const;
+        size_t resolutionLoops(unsigned long mask, size_t* loopIDs = 0,
+            size_t* loopLengths = 0) const;
 
         /**
          * Compute the Kauffman bracket polynomial using a naive

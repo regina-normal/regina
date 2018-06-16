@@ -38,7 +38,8 @@ namespace regina {
 
 const char* Link::jonesVar = "\u221At"; // \u221A = square root
 
-size_t Link::resolutionLoops(unsigned long mask) const {
+size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
+        size_t* loopLengths) const {
     size_t n = crossings_.size();
 
     size_t pos;
@@ -51,17 +52,23 @@ size_t Link::resolutionLoops(unsigned long mask) const {
     std::fill(found, found + 2 * n, false);
 
     size_t loops = 0;
-    for (pos = 0; pos < n; ++pos)
-        for (dirInit = 0; dirInit < 2; ++dirInit) {
+    size_t len;
+
+    // The following two loops iterate through indices of found[] in
+    // increasing order.
+    for (dirInit = 0; dirInit < 2; ++dirInit) {
+        for (pos = 0; pos < n; ++pos) {
             // dirInit: 1 = with arrows, 0 = against arrows.
             // This refers to the direction along the strand as you
             // approach the crossing (before you jump to the other strand).
             if (! found[pos + (dirInit ? n : 0)]) {
                 //std::cerr << "LOOP\n";
-                ++loops;
+                if (loopIDs)
+                    loopIDs[loops] = pos + (dirInit ? n : 0);
 
                 s = crossings_[pos]->upper();
                 dir = dirInit;
+                len = 0;
 
                 do {
                     //std::cerr << "At: " << s <<
@@ -92,10 +99,17 @@ size_t Link::resolutionLoops(unsigned long mask) const {
                         }
                         dir ^= 1;
                     }
+
+                    ++len;
                 } while (! (dir == dirInit &&
                     s.crossing()->index() == pos && s.strand() == 1));
+
+                if (loopLengths)
+                    loopLengths[loops] = len;
+                ++loops;
             }
         }
+    }
 
     delete[] found;
     return loops;
