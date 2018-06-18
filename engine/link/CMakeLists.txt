@@ -11,6 +11,7 @@ SET ( FILES
   homfly
   jenkins
   jones
+  khovanov
   link
   modellinkgraph
   pass

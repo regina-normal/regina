@@ -235,9 +235,11 @@ void addLink() {
             OL_homflyAZ()[return_internal_reference<>()])
         .def("homflyLM", &Link::homflyLM,
             OL_homflyLM()[return_internal_reference<>()])
+        .def("khovanov", &Link::khovanov, return_internal_reference<>())
         .def("knowsBracket", &Link::knowsBracket)
         .def("knowsJones", &Link::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly)
+        .def("knowsKhovanov", &Link::knowsKhovanov)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             return_internal_reference<>())
         .def("brief", &Link::brief)

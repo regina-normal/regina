@@ -2067,12 +2067,12 @@ class REGINA_API Link : public Packet {
          * \warning The current implementation of this routine has
          * exponential time \e and space complexity.
          *
-         * \warning If there are too many crossings for the algorithm to
-         * handle, then this routine will return the zero polynomial.
-         * Currently this happens when the link contains more than 29 crossings
-         * (the maximum \a n that can be passed to binomMedium()).
-         * The intention is for this constraint to be removed when Regina
-         * switches to a more sophisticated algorithm.
+         * \warning If there are too many crossings and/or components for the
+         * algorithm to handle, then this routine will return the zero
+         * polynomial.  Currently this happens when the total number of
+         * crossings plus components exceeds 29 (the maximum \a n that can be
+         * passed to binomMedium()).  The intention is for this constraint to
+         * be removed when Regina switches to a more sophisticated algorithm.
          *
          * @return a description of the Khovanov homology over the rationals.
          */
