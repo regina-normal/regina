@@ -58,6 +58,17 @@ __all__ = (
 if _within_sage:
     engine._registerIntFromPyIndex()
 
+try:
+    # In sageRegina, the census files are supplied differently,
+    # set the location here.
+    from .pyCensus import __path__ as _pyCensusPath
+    GlobalDirs.setDirs(
+        GlobalDirs.home(),
+        GlobalDirs.pythonModule(),
+        _pyCensusPath)
+except:
+    pass
+
 # Adds some additional pure Python methods to some of Regina's classes.
 from . import purePyMethods
 del purePyMethods
