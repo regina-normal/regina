@@ -65,8 +65,8 @@ try:
     GlobalDirs.setDirs(
         GlobalDirs.home(),
         GlobalDirs.pythonModule(),
-        _pyCensusPath)
-except:
+        _pyCensusPath[0])
+except ImportError:
     pass
 
 # Adds some additional pure Python methods to some of Regina's classes.
