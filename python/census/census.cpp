@@ -54,6 +54,7 @@ void addCensus() {
             return_value_policy<copy_const_reference>())
         .def("desc", &CensusDB::desc,
             return_value_policy<copy_const_reference>())
+        .def("lookup", &CensusDB::lookup)
         .def(regina::python::add_eq_operators())
     ;
 
