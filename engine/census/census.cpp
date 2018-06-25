@@ -83,6 +83,7 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
     if (! tcbdbopen(db, filename_.c_str(), BDBOREADER)) {
         std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
             << filename_ << std::endl;
+        std::cerr << "       -> " << tcbdberrmsg(tcbdbecode(db)) << std::endl;
         tcbdbdel(db);
         return false;
     }
