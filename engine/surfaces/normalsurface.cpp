@@ -36,6 +36,7 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
+#include "triangulation/dim2.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -522,81 +523,137 @@ LargeInteger NormalSurfaceVector::orientedQuads(
     return LargeInteger::zero;
 };
 
-// NNormalSurface::triangulate() is a recent addtion by Ryan. Not extensively
+namespace { // unnamed namespace for struct useful in triangulate() routine
+
+//  * const char vertexSplitString[3][6] = { "01/23", "02/13", "03/12" };
+struct normal_facet_data {
+    unsigned long tetNum; // tetrahedron index this belongs to.
+    bool TRI; // true if a triangle, false if part of a quad
+    unsigned long TYPE; 
+      // For a triangle this is the tet vertex. 
+      // For a quad, divide it by 2 to get an integer i. 
+      //  i indicates the quad separates edge [0,i+1] from
+      //  the complementary edge in the tetrahedron
+      //  The quad is cut in half how??
+      //  Parity selects the triangle cut how??
+    unsigned long NUM; // which layer of this type are we.  We measure from ??
+
+    normal_facet_data(const normal_facet_data &other); // copy constructor
+    normal_facet_data(const unsigned long &TN, const bool &TI,
+                      const unsigned long &TY, const unsigned long &NU);
+    bool operator<(const normal_facet_data &other) const; // comparison
+    normal_facet_data operator=(const normal_facet_data &other); // assignment
+ };
+
+normal_facet_data::normal_facet_data(const unsigned long &TN, const bool &TI,
+                             const unsigned long &TY, const unsigned long &NU)
+{ tetNum = TN; TRI=TI; TYPE=TY; NUM=NU; }
+
+// copy constructor
+normal_facet_data::normal_facet_data(const normal_facet_data &other) 
+{
+ tetNum = other.tetNum; TRI = other.TRI;
+ TYPE = other.TYPE;     NUM = other.NUM;
+}
+
+// comparison for sorting
+bool normal_facet_data::operator<(const normal_facet_data &other) const
+{
+ if (tetNum < other.tetNum) return true; if (tetNum > other.tetNum) return false;
+ if (TRI && (!other.TRI)) return true;   if ((!TRI) && other.TRI) return false;
+ if (TYPE < other.TYPE) return true;     if (TYPE > other.TYPE) return false;
+ if (NUM < other.NUM) return true;       if (NUM > other.NUM) return false;
+ return false;
+}
+
+// asst operator
+normal_facet_data normal_facet_data::operator=(const normal_facet_data &other)
+{
+ tetNum = other.tetNum; TRI=other.TRI; TYPE=other.TYPE; NUM=other.NUM;
+ return (*this);
+}
+
+} // end unnamed namespace
+
+
+// NormalSurface::triangulate() is a recent addtion by Ryan. Not extensively
 //  tested, yet. 
 Triangulation<2>* NormalSurface::triangulate() const
 {
-  Dim2Triangulation* retval( new Dim2Triangulation );
-  std::map< Dim2Triangle*, normal_facet_data > triMap;
-  std::map< normal_facet_data, Dim2Triangle* > triMapR; // reverse lookup
+  Triangulation<2>* retval = new Triangulation<2>;
+  std::map< Simplex<2>*, normal_facet_data > triMap;
+  std::map< normal_facet_data, Simplex<2>* > triMapR; // reverse lookup
 
   // step 1: use getTriangleCoord and getQuadCoord to generate the triangles
-  //  allocate the new Dim2Triangle* and set up triMap.  Set up a reverse
+  //  allocate the new Simplex<2>* and set up triMap.  Set up a reverse
   //  lookup table so that we can quickly go from normal_facet_data to
-  //  Dim2Triangle*. 
-  for (unsigned long i=0; i<triangulation->getNumberOfTetrahedra(); i++)
+  //  Simplex<2>*. 
+  for (unsigned long i=0; i<triangulation_->countTetrahedra(); i++)
    {
     // iterate through vertices, then create normal triangles
     for (unsigned long j=0; j<4; j++)
-     for (unsigned long k=0; k<getTriangleCoord( i, j ).longValue(); k++)
+     for (unsigned long k=0; k<triangles( i, j ).longValue(); k++)
       {
-        Dim2Triangle* newTri( retval->newTriangle() );
-        triMap.insert( std::pair< Dim2Triangle*, normal_facet_data >
+        Simplex<2>* newTri( retval->newTriangle() );
+        triMap.insert( std::pair< Simplex<2>*, normal_facet_data >
          (newTri, normal_facet_data( i, true, j, k ) ) );
-        triMapR.insert( std::pair< normal_facet_data, Dim2Triangle* >
+        triMapR.insert( std::pair< normal_facet_data, Simplex<2>* >
          (normal_facet_data( i, true, j, k ), newTri ) );
       }
     // now iterate through the quads. 
     for (unsigned long j=0; j<3; j++)
-     for (unsigned long k=0; k<getQuadCoord( i, j ).longValue(); k++)
+     for (unsigned long k=0; k<quads( i, j ).longValue(); k++)
       { // we divide the quad into two parts. 
-        Dim2Triangle* newTri( retval->newTriangle() );
-        triMap.insert( std::pair< Dim2Triangle*, normal_facet_data >
+        Simplex<2>* newTri( retval->newTriangle() );
+        triMap.insert( std::pair< Simplex<2>*, normal_facet_data >
          ( newTri, normal_facet_data( i, false, 2*j, k ) ) );
-        triMapR.insert( std::pair< normal_facet_data, Dim2Triangle* >
+        triMapR.insert( std::pair< normal_facet_data, Simplex<2>* >
          (normal_facet_data( i, false, 2*j, k ), newTri ) );
-        // "01/23", "02/13", "03/12" these are vertexSplitDefn[i][01/23]
-        // we cut along vSD[i][0,2]--vSD[i][1,3] edge
-        Dim2Triangle* newTri2 = retval->newTriangle();
-        triMap.insert( std::pair< Dim2Triangle*, normal_facet_data >
+        // triangle 0 above will have vertices from the mid-pt of edge
+        //  embeddings [0,2],   [1,2],   [1,3]
+        // triangle 1 below will have vertices from the mid-pt of edge
+        //  embeddings [1,3],   [0,3],   [0,2]
+        Simplex<2>* newTri2 = retval->newTriangle();
+        triMap.insert( std::pair< Simplex<2>*, normal_facet_data >
          ( newTri2, normal_facet_data( i, false, 2*j+1, k ) ) );
-        triMapR.insert( std::pair< normal_facet_data, Dim2Triangle* >
+        triMapR.insert( std::pair< normal_facet_data, Simplex<2>* >
          (normal_facet_data( i, false, 2*j+1, k ), newTri2 ) );
         // and glue to make the subdivided quad. 
-        newTri->joinTo( 1, newTri2, NPerm3(2, 1, 0) );
+        newTri->join( 1, newTri2, NPerm3(2, 1, 0) );
       }
    }
 
   // step 2: run through triMap and perform gluings.  
   //         let's see if we can do it triangle by triangle. 
-  for (unsigned long i=0; i<triangulation->getNumberOfTriangles(); i++)
+  for (unsigned long i=0; i<triangulation_->countTriangles(); i++)
    {
-    const NTriangle* aTri( triangulation->getTriangle(i) );
+    const Face<3,2>* aTri( triangulation_->triangle(i) );
     if (aTri->isBoundary()) continue;
-    const NTetrahedron* tet0( aTri->getEmbedding(0).getTetrahedron() );
-    const NTetrahedron* tet1( aTri->getEmbedding(1).getTetrahedron() );
-    NPerm4 tetinc0( aTri->getEmbedding(0).getVertices() );
-    NPerm4 tetinc1( aTri->getEmbedding(1).getVertices() );
+    const Simplex<3>* tet0( aTri->embedding(0).tetrahedron() );
+    const Simplex<3>* tet1( aTri->embedding(1).tetrahedron() );
+    Perm<4> tetinc0( aTri->embedding(0).vertices() );
+    Perm<4> tetinc1( aTri->embedding(1).vertices() );
 
     for (unsigned long j=0; j<3; j++)
      {
-      unsigned long tricount0( getTriangleCoord(
-        triangulation->tetrahedronIndex( tet0 ), tetinc0[j] ).longValue() );
-      unsigned long tricount1( getTriangleCoord(
-        triangulation->tetrahedronIndex( tet1 ), tetinc1[j] ).longValue() );
+      unsigned long tricount0( triangles( tet0->index(), tetinc0[j] ).longValue() );
+      unsigned long tricount1( triangles( tet1->index(), tetinc1[j] ).longValue() );
       // qtype0 and 1 are the quad types, if we happen to be dealing with quads.
-      unsigned long qtype0 = vertexSplit[tetinc0[j]][tetinc0[3]];
-      unsigned long qtype1 = vertexSplit[tetinc1[j]][tetinc1[3]];
-      unsigned long quadcount0( getQuadCoord(
-        triangulation->tetrahedronIndex( tet0 ), qtype0 ).longValue() );
-      unsigned long quadcount1( getQuadCoord(
-        triangulation->tetrahedronIndex( tet1 ), qtype1 ).longValue() );
+      unsigned long qtype0 = quadSeparating[tetinc0[j]][tetinc0[3]];
+      unsigned long qtype1 = quadSeparating[tetinc1[j]][tetinc1[3]];
+      unsigned long quadcount0( quads( tet0->index(), qtype0 ).longValue() );
+      unsigned long quadcount1( quads( tet1->index(), qtype1 ).longValue() );
       // sdt0 determines which facet of the two triangles that we've partitioned
       //  the quad into, we would be gluing to. 
-      unsigned long sdt0 = ( (tetinc0[3]==vertexSplitDefn[qtype0][1]) ||
-             (tetinc0[3]==vertexSplitDefn[qtype0][2]) ) ? 0 : 1;
-      unsigned long sdt1 = ( (tetinc1[3]==vertexSplitDefn[qtype1][1]) ||
-             (tetinc1[3]==vertexSplitDefn[qtype1][2]) ) ? 0 : 1;
+
+// NOTE: usage of NEdge::ordering here is new
+//  I used to have quadDefn. Might need to walk this change back?
+//  TODO: get the edge number for edge 
+
+      unsigned long sdt0 = ( (tetinc0[3]==quadDefn[qtype0][1]) ||
+             (tetinc0[3]==quadDefn[qtype0][2]) ) ? 0 : 1;
+      unsigned long sdt1 = ( (tetinc1[3]==quadDefn[qtype1][1]) ||
+             (tetinc1[3]==quadDefn[qtype1][2]) ) ? 0 : 1;
       // a `matching equations' check. put in an ifdef DEBUG compiler flag.
       #ifdef DEBUG
       if (tricount0+quadcount0 != tricount1+quadcount1)
@@ -606,12 +663,10 @@ Triangulation<2>* NormalSurface::triangulate() const
 
       for (unsigned long k=0; k<tricount0+quadcount0; k++)
        {
-        normal_facet_data tri0( triangulation->tetrahedronIndex(tet0),
-         (k<tricount0) ? true : false,
+        normal_facet_data tri0( tet0->index(), (k<tricount0) ? true : false,
          (k<tricount0) ? tetinc0[j] : 2*qtype0 + sdt0,
          (k<tricount0) ? k : k-tricount0 );
-        normal_facet_data tri1( triangulation->tetrahedronIndex(tet1),
-         (k<tricount1) ? true : false,
+        normal_facet_data tri1( tet1->index(), (k<tricount1) ? true : false,
          (k<tricount1) ? tetinc1[j] : 2*qtype1 + sdt1,
          (k<tricount1) ? k : k-tricount1 );
         // facet0 and facet1 represent the far vertex of the glued triangles, in
@@ -619,12 +674,12 @@ Triangulation<2>* NormalSurface::triangulate() const
         //  case.
         unsigned long facet0( (k<tricount0) ? // triangle case
             ( (tetinc0[j] < tetinc0[3]) ? tetinc0[3]-1 : tetinc0[3] ) :
-            (vertexSplitDefn[qtype0][0]==tetinc0[3] ||
-             vertexSplitDefn[qtype0][1]==tetinc0[3]) ? 0 : 2 ); // quad case 
+            (quadDefn[qtype0][0]==tetinc0[3] ||
+             quadDefn[qtype0][1]==tetinc0[3]) ? 0 : 2 ); // quad case 
         unsigned long facet1( (k<tricount1) ? // triangle case
             ( (tetinc1[j] < tetinc1[3]) ? tetinc1[3]-1 : tetinc1[3] ) :
-            (vertexSplitDefn[qtype1][0]==tetinc1[3] ||
-             vertexSplitDefn[qtype1][1]==tetinc1[3]) ? 0 : 2 ); // quad case
+            (quadDefn[qtype1][0]==tetinc1[3] ||
+             quadDefn[qtype1][1]==tetinc1[3]) ? 0 : 2 ); // quad case
 
         unsigned long triEndpt0, triEndpt0S;
         if (k<tricount0)
@@ -636,9 +691,9 @@ Triangulation<2>* NormalSurface::triangulate() const
           if (triEndpt0 > tetinc0[j]) triEndpt0--; // triangle coord
          }
         else
-         { // quad case. Quads are parametrized by vertexSplitDefn. we need to
+         { // quad case. Quads are parametrized by quadDefn. we need to
            // move in the positive orientation of the triangle from facet0. 
-           // this can be determined by how vertexSplitDefn[qtype0] relates to 
+           // this can be determined by how quadDefn[qtype0] relates to 
            // tetinc0[3] and tetinc0[j]. facet0 is the opp index. 
            // (facet0+1) % 3 is the next in the triangle's coordinates.  We 
            // need the projection of this point to the one opposite tetinc0[j] 
@@ -655,14 +710,14 @@ Triangulation<2>* NormalSurface::triangulate() const
            triEndpt0 = (facet0 + 1) % 3;
 // TODO: rewrite using vertexSplitPartner
            triEndpt0S = (sdt0==0) ? // sdt0==0 
-                ( (facet0==0) ? ( (tetinc0[j] == vertexSplitDefn[qtype0][3]) ?
-                    vertexSplitDefn[qtype0][0] : vertexSplitDefn[qtype0][3] ) :
-                                ( (tetinc0[j] == vertexSplitDefn[qtype0][3]) ?
-                    vertexSplitDefn[qtype0][1] : vertexSplitDefn[qtype0][3] ) ):
-                ( (facet0==0) ? ( (tetinc0[j] == vertexSplitDefn[qtype0][1]) ?
-                    vertexSplitDefn[qtype0][2] : vertexSplitDefn[qtype0][1]) :
-                                ( (tetinc0[j] == vertexSplitDefn[qtype0][2]) ?
-                    vertexSplitDefn[qtype0][0] : vertexSplitDefn[qtype0][2]) );
+                ( (facet0==0) ? ( (tetinc0[j] == quadDefn[qtype0][3]) ?
+                    quadDefn[qtype0][0] : quadDefn[qtype0][3] ) :
+                                ( (tetinc0[j] == quadDefn[qtype0][3]) ?
+                    quadDefn[qtype0][1] : quadDefn[qtype0][3] ) ):
+                ( (facet0==0) ? ( (tetinc0[j] == quadDefn[qtype0][1]) ?
+                    quadDefn[qtype0][2] : quadDefn[qtype0][1]) :
+                                ( (tetinc0[j] == quadDefn[qtype0][2]) ?
+                    quadDefn[qtype0][0] : quadDefn[qtype0][2]) );
          } // end the triEndpt0(S) branch
         unsigned long triEndpt1, triEndpt1S;
         if (k<tricount1)
@@ -674,19 +729,19 @@ Triangulation<2>* NormalSurface::triangulate() const
           if (triEndpt1 > tetinc1[j]) triEndpt1--; // triangle coord
          }
         else
-         { // quad case. Quads are parametrized by vertexSplitDefn. 
+         { // quad case. Quads are parametrized by quadDefn. 
            triEndpt1 = (facet1 + 1) % 3;
 
 // TODO: rewrite using vertexSplitPartner
            triEndpt1S = (sdt1==0) ? // sdt1==0 
-                ( (facet1==0) ? ( (tetinc1[j] == vertexSplitDefn[qtype1][3]) ?
-                    vertexSplitDefn[qtype1][0] : vertexSplitDefn[qtype1][3] ) :
-                                ( (tetinc1[j] == vertexSplitDefn[qtype1][3]) ?
-                    vertexSplitDefn[qtype1][1] : vertexSplitDefn[qtype1][3] ) ):
-                ( (facet1==0) ? ( (tetinc1[j] == vertexSplitDefn[qtype1][1]) ?
-                    vertexSplitDefn[qtype1][2] : vertexSplitDefn[qtype1][1]) :
-                                ( (tetinc1[j] == vertexSplitDefn[qtype1][2]) ?
-                    vertexSplitDefn[qtype1][0] : vertexSplitDefn[qtype1][2]) );
+                ( (facet1==0) ? ( (tetinc1[j] == quadDefn[qtype1][3]) ?
+                    quadDefn[qtype1][0] : quadDefn[qtype1][3] ) :
+                                ( (tetinc1[j] == quadDefn[qtype1][3]) ?
+                    quadDefn[qtype1][1] : quadDefn[qtype1][3] ) ):
+                ( (facet1==0) ? ( (tetinc1[j] == quadDefn[qtype1][1]) ?
+                    quadDefn[qtype1][2] : quadDefn[qtype1][1]) :
+                                ( (tetinc1[j] == quadDefn[qtype1][2]) ?
+                    quadDefn[qtype1][0] : quadDefn[qtype1][2]) );
          }
 
         std::map<unsigned long, unsigned long> permGen;// used to define 
@@ -726,7 +781,7 @@ Triangulation<2>* NormalSurface::triangulate() const
            exit(1); }
         #endif
 
-        NPerm3 glueMap( permGen[0], permGen[1], permGen[2] );
+        Perm<3> glueMap( permGen[0], permGen[1], permGen[2] );
         #ifdef DEBUG
         if (triMapR.find(tri0)==triMapR.end()) {
           std::cout<<"NNormalSurface::triangulate() Error! triMapR[tri0] "<<
@@ -735,7 +790,7 @@ Triangulation<2>* NormalSurface::triangulate() const
           std::cout<<"NNormalSurface::triangulate() Error! triMapR[tri1] "<<
           "undefined!"<<std::endl; exit(1); }
         #endif
-        triMapR[tri0]->joinTo( facet0, triMapR[tri1], glueMap );
+        triMapR[tri0]->join( facet0, triMapR[tri1], glueMap );
        } // layers loop k.
      } // vertices of triangle loop j
    } // triangle loop i

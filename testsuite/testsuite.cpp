@@ -130,6 +130,12 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // Algebra:
     sets.insert(std::make_pair("grouppresentation", &addGroupPresentation));
+    sets.insert(std::make_pair("bilinearform", &addBilinearForm));
+    sets.insert(std::make_pair("binaryA5", &addBinaryA5));
+    sets.insert(std::make_pair("binaryS4", &addBinaryS4));
+    sets.insert(std::make_pair("cellulardata", &addCellularData));
+    sets.insert(std::make_pair("svpolynomialring", &addSVPolynomialRing));
+    sets.insert(std::make_pair("fibring", &addFibring));
 
     // 2-manifold triangulations:
     sets.insert(std::make_pair("triangulation2", &addTriangulation2));

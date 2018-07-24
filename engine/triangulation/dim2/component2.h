@@ -136,6 +136,14 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          */
         bool isClosed() const;
 
+        /**
+         * Returns the Euler Characteristic of the
+         * component, i.e. the strict alternating sum
+         * of the number of facets in each dimension. Ideal vertices
+         * are counted. 
+         */ 
+        long eulerChar() const;
+
     private:
         /**
          * Default constructor.
@@ -198,6 +206,15 @@ inline Vertex<2>* Component<2>::face<0>(size_t index) const {
 inline bool Component<2>::isClosed() const {
     return (boundaryComponents().empty());
 }
+
+inline long Component<2>::eulerChar() const {
+
+    // Cast away the unsignedness of std::vector::size().
+    return static_cast<long>(countFaces<0>())
+        - static_cast<long>(countFaces<1>())
+        + static_cast<long>(size());
+}
+
 
 } // namespace regina
 

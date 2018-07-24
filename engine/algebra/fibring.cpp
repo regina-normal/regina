@@ -110,7 +110,7 @@ NMapToS1::~NMapToS1()
  * This routine verifies whether or not a 1-dimensional cochain with 
  * rational coefficients is a cohomologous to a primitive cochain with
  * integer coefficients, i.e. a class suitable for the fiberability
- * test. It assumes you are using STD_coord from NCellularData, i.e. 
+ * test. It assumes you are using STD_coord from CellularData, i.e. 
  * a vector whose entries correspond to the indexing of the edges of
  * the underlying triangulation.
  */
@@ -448,8 +448,9 @@ bool NMapToS1::verifySimpleS1Bundle( const std::vector<Rational> &cocy,
         // run through components, and push_back genus, bdry comps...
         for (unsigned long j=0; j<levelSet->countComponents(); j++)
          {
-          (*diag_vec)->push_back( 
-           ( 2 - (levelSet->component(j)->eulerCharTri() +
+          (*diag_vec)->push_back( // TODO: originally eulerCharTri below
+            // currently using rybu's hacky eulerChar from component2.h
+           ( 2 - (levelSet->component(j)->eulerChar() +
            levelSet->component(j)->countBoundaryComponents() ) ) / 2 );
           (*diag_vec)->push_back(
             levelSet->component(j)->countBoundaryComponents() );
@@ -511,8 +512,8 @@ namespace { // unnamed namespace for class intended to be private
 
 void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy, 
         Dim1Triangulation** TRI1, 
-        Dim2Triangulation** TRI2, 
-        NTriangulation** TRI3 )
+        Triangulation<2>** TRI2, 
+        Triangulation<3>** TRI3 )
 {
  // step 1: let's compute the image in Q/Z of all the vertex values.  This will
  //  allow us to compute the fiber at any mid-point between these values. 
@@ -546,14 +547,13 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
     { // i->first is the edge, and i->second is the end corresponding 
       //  to vertex vrtIdx. 
       unsigned long endpt( i->second ? 0 : 1 );
-      if (vtxVal.find( tri2->vertexIndex( i->first->vertex( endpt ) ) )
-           == vtxVal.end() )
+      if (vtxVal.find( i->first->vertex( endpt )->index() ) == vtxVal.end() )
        { // unexplored!
-         expVrts.insert( tri2->vertexIndex( i->first->vertex( endpt ) ) );
-         vtxVal[ tri2->vertexIndex( i->first->vertex( endpt ) ) ] = 
-          vtxVal[ tri2->vertexIndex( i->first->vertex( i->second ) ) ] +
-          ( endpt ? cocy[ tri2->edgeIndex( i->first ) ] :
-                   -cocy[ tri2->edgeIndex( i->first ) ] ); 
+         expVrts.insert( i->first->vertex( endpt )->index() );
+         vtxVal[ i->first->vertex( endpt )->index() ] = 
+          vtxVal[ i->first->vertex( i->second )->index() ] +
+          ( endpt ? cocy[ i->first->index() ] :
+                   -cocy[ i->first->index() ] ); 
        }
     } else 
    if (tri3) for (std::list< std::pair< Face<3,1>*, unsigned long > >::iterator 
@@ -561,14 +561,14 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
     { // i->first is the edge, and i->second is the end corresponding 
       // to vertex vrtIdx. 
       unsigned long endpt( i->second ? 0 : 1 );
-      if (vtxVal.find( tri3->vertexIndex( i->first->vertex( endpt ) ) )
+      if (vtxVal.find( i->first->vertex( endpt )->index() )
           == vtxVal.end() )
        { // unexplored!
-         expVrts.insert( tri3->vertexIndex( i->first->vertex( endpt ) ) );
-         vtxVal[ tri3->vertexIndex( i->first->vertex( endpt ) ) ] = 
-          vtxVal[ tri3->vertexIndex( i->first->vertex( i->second ) ) ] +
-          ( endpt ? cocy[ tri3->edgeIndex( i->first ) ] :
-                   -cocy[ tri3->edgeIndex( i->first ) ] ); 
+         expVrts.insert( i->first->vertex( endpt )->index() );
+         vtxVal[ i->first->vertex( endpt )->index() ] = 
+          vtxVal[ i->first->vertex( i->second )->index() ] +
+          ( endpt ? cocy[ i->first->index() ] :
+                   -cocy[ i->first->index() ] ); 
        }
     } else // dim4 below 
     for (std::list< std::pair< Face<4,1>*, unsigned long > >::iterator 
@@ -576,14 +576,14 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
     { // i->first is the edge, and i->second is the end corresponding to 
       //  vertex vrtIdx. 
       unsigned long endpt( i->second ? 0 : 1 );
-      if (vtxVal.find( tri4->vertexIndex( i->first->vertex( endpt ) ) )
+      if (vtxVal.find( i->first->vertex( endpt )->index() )
           == vtxVal.end() )
        { // unexplored!
-         expVrts.insert( tri4->vertexIndex( i->first->vertex( endpt ) ) );
-         vtxVal[ tri4->vertexIndex( i->first->vertex( endpt ) ) ] = 
-          vtxVal[ tri4->vertexIndex( i->first->vertex( i->second ) ) ] +
-          ( endpt ? cocy[ tri4->edgeIndex( i->first ) ] :
-                   -cocy[ tri4->edgeIndex( i->first ) ] ); 
+         expVrts.insert( i->first->vertex( endpt )->index() );
+         vtxVal[ i->first->vertex( endpt )->index() ] = 
+          vtxVal[ i->first->vertex( i->second )->index() ] +
+          ( endpt ? cocy[ i->first->index() ] :
+                   -cocy[ i->first->index() ] ); 
        }
     } 
   } // end vtxVal definition
@@ -630,8 +630,8 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
  // the vtx with all up arrows, and take the smallest up arrow, then the
  // smallest up arrow from that, etc.  This can be done recursively. 
  std::vector< std::vector< Rational > > simpInt( 
-   tri2 ? tri2->countSimplices() : tri3 ? tri3->countSimplices() :
-          tri4->countSimplices() ); // vtx0 through vtxn for each simplex.
+   tri2 ? tri2->size() : tri3 ? tri3->size() :
+          tri4->size() ); // vtx0 through vtxn for each simplex.
  std::vector< std::vector< unsigned long > > simpIntVrt( simpInt.size() );
  // this lists the vertices of the simplices, in their relative ordering under
  // the lift to R.  
@@ -645,13 +645,11 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
     {// decide of in this is the minimum, if so, break. 
      if (tri2) 
       { // 3 possibilities for min, vtx 0 1 or 2.
-       if ( ( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->
-                        edge( (minVTX + 1) % 3 ) ) ]
-            * Rational( (tri2->getSimplex(i)->
+       if ( ( cocy[ tri2->simplex(i)->edge( (minVTX + 1) % 3 )->index() ]
+            * Rational( (tri2->simplex(i)->
                 edgeMapping( (minVTX + 1) % 3)[0]==minVTX) ? 1 : -1, 1) > 0 )
-         && ( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->
-                        edge( (minVTX + 2) % 3 ) ) ]
-            * Rational( (tri2->getSimplex(i)->edgeMapping( 
+         && ( cocy[ tri2->simplex(i)->edge( (minVTX + 2) % 3 )->index() ]
+            * Rational( (tri2->simplex(i)->edgeMapping( 
                 (minVTX + 2) % 3)[0]==minVTX) ? 1 : -1, 1) > 0 ) )
          break;
       }
@@ -662,16 +660,14 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
        {
         if (j==minVTX) continue;
         // get the edge between minVTX and j, get its edgeMapping, and eval cocy
-        unsigned long eNum( tri3 ? edgeNumber[minVTX][j] : 
+        unsigned long eNum( tri3 ? Face<3,1>::edgeNumber[minVTX][j] : 
                                    Face<4,1>::edgeNumber[minVTX][j] );
-        if (tri3) if ( cocy[ tri3->edgeIndex( tri3->getSimplex(i)->
-                        edge( eNum ) ) ]
-           * Rational( (tri3->getSimplex(i)->edgeMapping( eNum )[0]==
+        if (tri3) if ( cocy[tri3->simplex(i)->edge( eNum )->index() ]
+           * Rational( (tri3->simplex(i)->edgeMapping( eNum )[0]==
                         minVTX ) ? 1 : -1 ) > 0 )
           updircount++;
-        if (tri4) if ( cocy[ tri4->edgeIndex( tri4->getSimplex(i)->
-                edge( eNum ) ) ]
-           * Rational( (tri4->getSimplex(i)->edgeMapping( eNum )[0]==
+        if (tri4) if ( cocy[tri4->simplex(i)->edge( eNum )->index() ]
+           * Rational( (tri4->simplex(i)->edgeMapping( eNum )[0]==
                 minVTX ) ? 1 : -1 ) > 0 )
            updircount++;
        }
@@ -686,9 +682,9 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
    //  map< Rational, unsigned long > which goes from the lifted values of 
    //   the vertices to the vertex index in the simplex. 
    unsigned long minVtxIdx( 
-        tri2 ? tri2->vertexIndex( tri2->getSimplex(i)->vertex(minVTX) ) :
-        tri3 ? tri3->vertexIndex( tri3->getSimplex(i)->vertex(minVTX) ) :
-               tri4->vertexIndex( tri4->getSimplex(i)->vertex(minVTX) ) ); 
+        tri2 ? tri2->simplex(i)->vertex(minVTX)->index() :
+        tri3 ? tri3->simplex(i)->vertex(minVTX)->index()  :
+               tri4->simplex(i)->vertex(minVTX)->index() ); 
    std::map< Rational, unsigned long > liftSimpVtxVal;
    // we initialize at liftSimpVtxVal -- the lifts of vtxVal to the simplex 
    // that allows for continuous extension of the lift over the entire simplex. 
@@ -697,9 +693,8 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
     {
      // put in the 2 vals for the edges from minVTX to minVTX+1 % 3 
      //  and minVTX+2 % 3
-     Rational V1( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->
-                       edge( (minVTX+2) % 3 ) ) ] );
-     if ( (tri2->getSimplex(i)->edgeMapping( (minVTX+2) % 3 )[0]==minVTX) ? 
+     Rational V1( cocy[tri2->simplex(i)->edge( (minVTX+2) % 3 )->index() ] );
+     if ( (tri2->simplex(i)->edgeMapping( (minVTX+2) % 3 )[0]==minVTX) ? 
           (V1 > 0) : (V1 < 0) )
       liftSimpVtxVal[ vtxVal[ minVtxIdx ] + V1.abs() ] = (minVTX+1) % 3;
      #ifdef DEBUG
@@ -707,9 +702,8 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
                        std::endl; exit(1); }
      #endif
 
-     Rational V2( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->
-                        edge( (minVTX+1) % 3 ) ) ] );
-     if ( (tri2->getSimplex(i)->edgeMapping( (minVTX+1) % 3 )[0]==minVTX) ?
+     Rational V2( cocy[tri2->simplex(i)->edge( (minVTX+1) % 3 )->index() ] );
+     if ( (tri2->simplex(i)->edgeMapping( (minVTX+1) % 3 )[0]==minVTX) ?
           (V2 > 0) : (V2 < 0) )
       liftSimpVtxVal[ vtxVal[ minVtxIdx ] + V2.abs() ] = (minVTX+2) % 3;
      #ifdef DEBUG
@@ -720,18 +714,18 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
    else for (unsigned long j=0; j<(tri3 ? 4 : 5); j++)
     {
      if (minVTX==j) continue;
-     unsigned long eNum( tri3 ? edgeNumber[ minVTX ][ j ] : 
+     unsigned long eNum( tri3 ? Face<3,1>::edgeNumber[ minVTX ][ j ] : 
                       Face<4,1>::edgeNumber[ minVTX ][ j ] );
      Rational V1( cocy[ tri3 ? 
-        tri3->edgeIndex( tri3->getSimplex(i)->edge(eNum) ) :
-        tri4->edgeIndex( tri4->getSimplex(i)->edge(eNum) ) ] );
-     if (tri3) { if ( (tri3->getSimplex(i)->edgeMapping( eNum )[0]==minVTX) ?
+        tri3->simplex(i)->edge(eNum)->index() :
+        tri4->simplex(i)->edge(eNum)->index() ] );
+     if (tri3) { if ( (tri3->simplex(i)->edgeMapping( eNum )[0]==minVTX) ?
                   (V1 > 0) : (V1 < 0) )
       liftSimpVtxVal[ vtxVal[ minVtxIdx ] + V1.abs() ] = j;
       else { std::cout<<"NMapToS1::triangulateFibre() lift error 3."<<
                         std::endl; exit(1); } 
       }
-     else { if ( (tri4->getSimplex(i)->edgeMapping( eNum )[0]==minVTX) ?
+     else { if ( (tri4->simplex(i)->edgeMapping( eNum )[0]==minVTX) ?
                   (V1 > 0) : (V1 < 0) )
       liftSimpVtxVal[ vtxVal[ minVtxIdx ] + V1.abs() ] = j;
       else { std::cout<<"NMapToS1::triangulateFibre() lift error 4."<<
@@ -781,7 +775,7 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
    Rational Diff[DIM+1];
    for (unsigned long j=0; j<(DIM+1); j++)
     Diff[j] = simpInt[i][j] - LVL;
-   NInteger REM;
+   Integer REM;
    normCount[i].resize(DIM);
    for (unsigned long j=0; j<DIM; j++)
     normCount[i][j] = ( 
@@ -810,7 +804,7 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
     // let's create the edges
     std::map< Dim1Edge*, EDGEID > edIdx; // keeps track of edges. 
     std::map< EDGEID, Dim1Edge* > edIdxR;
-    for (unsigned long i=0; i<tri2->countSimplices(); i++)
+    for (unsigned long i=0; i<tri2->size(); i++)
      for (unsigned long j=0; j<2; j++)
       for (unsigned long k=0; k<normCount[i][j]; k++)
        {
@@ -835,16 +829,14 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
       const Face<2,1>* edg( tri2->edge(i) );
       if (edg->isBoundary()) continue;
       // now look at the two inclusions and assemble the gluing. 
-      unsigned long tri0idx( tri2->triangleIndex( 
-                edg->embedding(0).triangle() ) );
+      unsigned long tri0idx( edg->embedding(0).triangle()->index() );
       unsigned long vtx0( edg->embedding(0).edge() );
       unsigned long opp0idx( (vtx0==simpIntPerm[tri0idx][1]) ? vtx0 :
                              (vtx0==simpIntPerm[tri0idx][0]) ? 
                             simpIntPerm[tri0idx][2] : simpIntPerm[tri0idx][0] );
       Perm<3> e0inc( edg->embedding(0).vertices() );
 
-      unsigned long tri1idx( tri2->triangleIndex( 
-                edg->embedding(1).triangle() ) );
+      unsigned long tri1idx( edg->embedding(1).triangle()->index() );
       unsigned long vtx1( edg->embedding(1).edge() );
       unsigned long opp1idx( (vtx1==simpIntPerm[tri1idx][1]) ? vtx1 :
                              (vtx1==simpIntPerm[tri1idx][0]) ? 
@@ -897,7 +889,7 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
    return;
   }
  else if (tri3)
-  { // dim3, use NNormalSurface
+  { // dim3, use NormalSurface
     // [min, vtx1] [vtx1,vtx2] [vtx2,max]
     //  tri         quad         tri 
     #ifdef DEBUG
@@ -905,22 +897,22 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
                                  " null pointer (3D)."<<std::endl;
                       exit(1); }
     #endif
-    NNormalSurfaceVector* 
-       NSV( NNormalSurfaceVectorStandard::makeZeroVector( tri3 ) );
+    NormalSurfaceVector* 
+       NSV( NSVectorStandard::makeZeroVector( tri3 ) );
     // 7*tetindex + vtx for triangle types
     // 7*tetindex + 4 + vertexSplit[][] for quad types.
-    for (unsigned long i=0; i<tri3->countSimplices(); i++)
+    for (unsigned long i=0; i<tri3->size(); i++)
      {
       NSV->setElement( 7*i + simpIntVrt[i][0], normCount[i][0] );
       NSV->setElement( 7*i + 4 + vertexSplit[simpIntVrt[i][0]]
                 [simpIntVrt[i][1]], normCount[i][1] );
       NSV->setElement( 7*i + simpIntVrt[i][3], normCount[i][2] );
      }
-    NNormalSurface NSurf( tri3, NSV );
+    NormalSurface NSurf( tri3, NSV );
     (*TRI2) = NSurf.triangulate();
   }
  else
-  { // dim4, use NNormalHyperSurface
+  { // dim4, use NormalHyperSurface
     // [min, vtx1] [vtx1, vtx2] [vtx2,vtx3] [vtx3,max]
     //  tri          prism         prism      tri
     #ifdef DEBUG
@@ -929,10 +921,10 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
                       exit(1); }
     #endif
 
-    NNormalHypersurfaceVector* 
-       NSV( NNormalHypersurfaceVectorStandard::makeZeroVector( tri4 ) );
+    NormalHypersurfaceVector* 
+       NSV( HSVectorStandard::makeZeroVector( tri4 ) );
 
-    for (unsigned long i=0; i<tri4->countSimplices(); i++)
+    for (unsigned long i=0; i<tri4->size(); i++)
      { // 15*pent index + vertexnum for tets
        // 15*pent index + 5 + prismtype via Face<4,1>::edgeNumber[5][5].
        NSV->setElement( 15*i + simpIntVrt[i][0], normCount[i][0] );
@@ -943,7 +935,7 @@ void NMapToS1::triangulateFibre( const std::vector<Rational> &cocy,
        NSV->setElement( 15*i + simpIntVrt[i][4], normCount[i][3] );
      } 
 
-    NNormalHypersurface NSurf( tri4, NSV );
+    NormalHypersurface NSurf( tri4, NSV );
     (*TRI3) = NSurf.triangulate();
     return;
   }
@@ -977,20 +969,20 @@ bool NMapToS1::findS1Bundle(findS1BundleAbortReason &FSBAR,
                               tri4->countTriangles() );
 std::cout<<"vrts: "<<numVrt<<" edges: "<<numEdg<<" tris: "<<numTri<<"\n";
 
- NCellularData* cDat;
- if      (tri3) cDat = new NCellularData( *tri3 );
- else if (tri4) cDat = new NCellularData( *tri4 );
+ CellularData* cDat;
+ if      (tri3) cDat = new CellularData( *tri3 );
+ else if (tri4) cDat = new CellularData( *tri4 );
  else 
   { // TODO: eventually add a 2-manifold algorithm.
    FSBAR = FSBAR_invalidinput;
    return false;
   } // long-term it would be best to add a 2-manifolds constructor to
-    // NCellularData, and make ncellulardata class even more light-weight, 
+    // CellularData, and make CellularData class even more light-weight, 
     // so that it only builds partial chain complexes. 
 
  const MarkedAbelianGroup* H1( 
-    cDat->markedGroup( NCellularData::GroupLocator(1, 
-     NCellularData::contraVariant, NCellularData::STD_coord, 0) ) );
+    cDat->markedGroup( CellularData::GroupLocator(1, 
+     CellularData::contraVariant, CellularData::STD_coord, 0) ) );
 
  // presently quit if H1 rank isn't just 1. Eventually we might want to
  //  consider a more elaborate search. 
@@ -1059,8 +1051,8 @@ std::cout<<"\n";
   }
  // we should perhaps consider this preamble to be something to go into a
  // conditionTriangulation routine. 
-std::cout<<"After divideEdges, triangulation has "<<(tri3 ? tri3->countSimplices() : 
-        tri4->countSimplices())<<" simplices and ";
+std::cout<<"After divideEdges, triangulation has "<<(tri3 ? tri3->size() : 
+        tri4->size())<<" simplices and ";
 // okay this is a problem.  A 2-knot exterior with 6 pens after idealtofinite and intelligentsimplify
 // has 72 pens, but then it has only 1 vertex with 11 bad edges.  After divideOnEdges we have
 // 2688 simplices...  Ouch.  
@@ -1085,11 +1077,11 @@ std::cout<<(tri3 ? tri3->countTriangles() : tri4->countTriangles())<<" triangles
   {
    didSomething = false;
    if (cDat) { delete cDat; cDat = NULL; }
-   if      (hFlag && tri3) cDat = new NCellularData( *tri3 );
-   else if (hFlag && tri4) cDat = new NCellularData( *tri4 );
+   if      (hFlag && tri3) cDat = new CellularData( *tri3 );
+   else if (hFlag && tri4) cDat = new CellularData( *tri4 );
    if (hFlag) {
-   H1 = cDat->markedGroup( NCellularData::GroupLocator(1, 
-        NCellularData::contraVariant, NCellularData::STD_coord, 0) );
+   H1 = cDat->markedGroup( CellularData::GroupLocator(1, 
+        CellularData::contraVariant, CellularData::STD_coord, 0) );
    ccGen = H1->freeRep(0);
 
    for (unsigned long i=0;i<ccGen.size();i++) {
@@ -1177,13 +1169,13 @@ std::cout<<"\n";
  // TODO: try ccGen for cocy, if no zero entries in cocycle. 
 
  // Step (c) find the generators of the image of the C^0 --> C^1 map, the transpose
- //    of the boundary map C_1 --> C_0. We can use H1->getN() for this. 
+ //    of the boundary map C_1 --> C_0. We can use H1->N() for this. 
  //    Technically this is the same as the dim?inc data, but more usable. 
 
  // Step (d) Use feedback from the vertex level-set links to modify the
  //   potential fibering cocycle. 
 
- MatrixInt C0C1Map( H1->getN() );
+ MatrixInt C0C1Map( H1->N() );
  delete cDat; // we don't need this anymore
 
  if (numVrt==1) 

@@ -35,26 +35,18 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "algebra/nfibring.h"
+#include "algebra/fibring.h"
 
-#include "dim2/dim2triangulation.h"
-#include "dim2/dim2exampletriangulation.h"
-#include "triangulation/ntriangulation.h"
-#include "dim4/dim4triangulation.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
-#include "maths/nrational.h"
+#include "triangulation/example2.h"
+#include "maths/rational.h"
+
 #include "testsuite/algebra/testalgebra.h"
 
-using regina::NMapToS1;
-using regina::Dim2Triangulation;
-using regina::Dim2ExampleTriangulation;
-using regina::NTriangulation;
-using regina::NTetrahedron;
-using regina::NPerm4;
-using regina::NPerm5;
-using regina::Dim4Triangulation;
-using regina::Dim4Pentachoron;
-using regina::NRational;
+using namespace regina;
 
 class NFibringTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NFibringTest);
@@ -66,124 +58,124 @@ class NFibringTest : public CppUnit::TestFixture {
 
     // keeps track of triangulations and associated maps to S1.
     // these are allocated in setUp, and deallocated in tearDown.
-    std::map< Dim2Triangulation*, NMapToS1* > fib2map;
-    std::map< NTriangulation*, NMapToS1* > fib3map;
-    std::map< Dim4Triangulation*, NMapToS1* > fib4map;
+    std::map< Triangulation<2>*, NMapToS1* > fib2map;
+    std::map< Triangulation<3>*, NMapToS1* > fib3map;
+    std::map< Triangulation<4>*, NMapToS1* > fib4map;
 
     // standard cocycles so that the fibnmap maps are actual fibre bundles.
-    std::map< Dim2Triangulation*, std::vector<NRational> > cocy2;
-    std::map< NTriangulation*,    std::vector<NRational> > cocy3;
-    std::map< Dim4Triangulation*, std::vector<NRational> > cocy4;
+    std::map< Triangulation<2>*, std::vector<Rational> > cocy2;
+    std::map< Triangulation<3>*,    std::vector<Rational> > cocy3;
+    std::map< Triangulation<4>*, std::vector<Rational> > cocy4;
 
     // triangulation names to aid in diagnotics.
-    std::map< Dim2Triangulation*, std::string > name2;
-    std::map< NTriangulation*, std::string > name3;
-    std::map< Dim4Triangulation*, std::string > name4;
+    std::map< Triangulation<2>*, std::string > name2;
+    std::map< Triangulation<3>*, std::string > name3;
+    std::map< Triangulation<4>*, std::string > name4;
 
     public:
         void setUp() { // initialize triangulations, maps and cocycles
              // annulus
-         Dim2Triangulation* temp2ptr( Dim2ExampleTriangulation::annulus() );
-         fib2map.insert( std::pair< Dim2Triangulation*, NMapToS1* >
+         Triangulation<2>* temp2ptr( Dim2ExampleTriangulation::annulus() );
+         fib2map.insert( std::pair< Triangulation<2>*, NMapToS1* >
           ( temp2ptr, new NMapToS1( temp2ptr ) ) );
-         std::vector< NRational > tempV(4);
-         tempV[0] = NRational(1,10); tempV[1] = NRational(1,1);
-         tempV[2] = NRational(9,10); tempV[3] = NRational(-1,1);
-         cocy2.insert( std::pair< Dim2Triangulation*, std::vector< NRational > >
+         std::vector< Rational > tempV(4);
+         tempV[0] = Rational(1,10); tempV[1] = Rational(1,1);
+         tempV[2] = Rational(9,10); tempV[3] = Rational(-1,1);
+         cocy2.insert( std::pair< Triangulation<2>*, std::vector< Rational > >
           ( temp2ptr, tempV ) );
-         name2.insert( std::pair< Dim2Triangulation*, std::string >
+         name2.insert( std::pair< Triangulation<2>*, std::string >
           ( temp2ptr, "Annulus" ) );
 
              // moebius band
          temp2ptr = Dim2ExampleTriangulation::mobius();
-         fib2map.insert( std::pair< Dim2Triangulation*, NMapToS1* >
+         fib2map.insert( std::pair< Triangulation<2>*, NMapToS1* >
           ( temp2ptr, new NMapToS1( temp2ptr ) ) );
          tempV.resize(2);
-         tempV[0] = NRational(1,1); tempV[1] = NRational(2,1);
-         cocy2.insert( std::pair< Dim2Triangulation*, std::vector< NRational > >
+         tempV[0] = Rational(1,1); tempV[1] = Rational(2,1);
+         cocy2.insert( std::pair< Triangulation<2>*, std::vector< Rational > >
           ( temp2ptr, tempV ) );
-         name2.insert( std::pair< Dim2Triangulation*, std::string >
+         name2.insert( std::pair< Triangulation<2>*, std::string >
           ( temp2ptr, "Moebius band" ) );
 
              // S1 x D2 - solid torus
-         NTriangulation* temp3ptr( new NTriangulation() );
-         NTetrahedron* tet0( temp3ptr->newTetrahedron() );
-         tet0->joinTo( 3, tet0, NPerm4(1,3,0,2) ); 
-         fib3map.insert( std::pair< NTriangulation*, NMapToS1* >
+         Triangulation<3>* temp3ptr( new Triangulation<3>() );
+         Simplex<3>* tet0( temp3ptr->newTetrahedron() );
+         tet0->join( 3, tet0, NPerm4(1,3,0,2) ); 
+         fib3map.insert( std::pair< Triangulation<3>*, NMapToS1* >
           ( temp3ptr, new NMapToS1( temp3ptr ) ) );
          tempV.resize(3);
-         tempV[0] = NRational(1,1); tempV[1] = NRational(2,1);
-         tempV[2] = NRational(3,1);
-         cocy3.insert( std::pair< NTriangulation*, std::vector< NRational > >
+         tempV[0] = Rational(1,1); tempV[1] = Rational(2,1);
+         tempV[2] = Rational(3,1);
+         cocy3.insert( std::pair< Triangulation<3>*, std::vector< Rational > >
           ( temp3ptr, tempV ) );
-         name3.insert( std::pair< NTriangulation*, std::string >
+         name3.insert( std::pair< Triangulation<3>*, std::string >
           ( temp3ptr, "S1 x D2" ) );
 
             // S1 x S2
-         temp3ptr = new NTriangulation();
+         temp3ptr = new Triangulation<3>();
          tet0 = temp3ptr->newTetrahedron();
-         NTetrahedron* tet1( temp3ptr->newTetrahedron() );
-         tet0->joinTo( 1, tet0, NPerm4(3,0,1,2) ); 
-         tet0->joinTo( 2, tet1, NPerm4(2,3,0,1) );
-         tet0->joinTo( 3, tet1, NPerm4(2,3,0,1) ); 
-         tet1->joinTo( 3, tet1, NPerm4(3,0,1,2) );
+         Simplex<3>* tet1( temp3ptr->newTetrahedron() );
+         tet0->join( 1, tet0, NPerm4(3,0,1,2) ); 
+         tet0->join( 2, tet1, NPerm4(2,3,0,1) );
+         tet0->join( 3, tet1, NPerm4(2,3,0,1) ); 
+         tet1->join( 3, tet1, NPerm4(3,0,1,2) );
          tempV.resize(3);
-         tempV[0] = NRational(3,1); tempV[1] = NRational(2,1);
-         tempV[2] = NRational(1,1); 
-         cocy3.insert( std::pair< NTriangulation*, std::vector< NRational > >
+         tempV[0] = Rational(3,1); tempV[1] = Rational(2,1);
+         tempV[2] = Rational(1,1); 
+         cocy3.insert( std::pair< Triangulation<3>*, std::vector< Rational > >
           ( temp3ptr, tempV ) );
-         name3.insert( std::pair< NTriangulation*, std::string >
+         name3.insert( std::pair< Triangulation<3>*, std::string >
           ( temp3ptr, "S1 x S2" ) );
 
             // S1 x~ D3
-         Dim4Triangulation* temp4ptr( new Dim4Triangulation() );
-         Dim4Pentachoron* pen0( temp4ptr->newPentachoron() );
-         pen0->joinTo( 1, pen0, NPerm5( 4,0,1,2,3 ) ); 
-         fib4map.insert( std::pair< Dim4Triangulation*, NMapToS1* >
+         Triangulation<4>* temp4ptr( new Triangulation<4>() );
+         Simplex<4>* pen0( temp4ptr->newPentachoron() );
+         pen0->join( 1, pen0, NPerm5( 4,0,1,2,3 ) ); 
+         fib4map.insert( std::pair< Triangulation<4>*, NMapToS1* >
            ( temp4ptr, new NMapToS1( temp4ptr ) ) );
          tempV.resize(4);
-         tempV[0] = NRational(4,1); tempV[1] = NRational(3,1);
-         tempV[2] = NRational(2,1); tempV[3] = NRational(1,1);
-         cocy4.insert( std::pair< Dim4Triangulation*, std::vector< NRational > >
+         tempV[0] = Rational(4,1); tempV[1] = Rational(3,1);
+         tempV[2] = Rational(2,1); tempV[3] = Rational(1,1);
+         cocy4.insert( std::pair< Triangulation<4>*, std::vector< Rational > >
           ( temp4ptr, tempV ) );
-         name4.insert( std::pair< Dim4Triangulation*, std::string >
+         name4.insert( std::pair< Triangulation<4>*, std::string >
           ( temp4ptr, "S1 x~ D3" ) );
 
             // S1 x S3
-         temp4ptr = new Dim4Triangulation();
+         temp4ptr = new Triangulation<4>();
          pen0 = temp4ptr->newPentachoron();
-         Dim4Pentachoron* pen1( temp4ptr->newPentachoron() );
-         pen0->joinTo( 4, pen1, NPerm5( 3,0,1,2,4 ) );  
-         pen0->joinTo( 3, pen1, NPerm5( 1,2,4,3,0 ) ); // (04)
-         pen0->joinTo( 2, pen1, NPerm5( 0,1,2,4,3 ) );  
-         pen0->joinTo( 1, pen1, NPerm5( 0,1,2,4,3 ) ); // (43)
-         pen0->joinTo( 0, pen1, NPerm5( 0,1,2,4,3 ) ); 
+         Simplex<4>* pen1( temp4ptr->newPentachoron() );
+         pen0->join( 4, pen1, NPerm5( 3,0,1,2,4 ) );  
+         pen0->join( 3, pen1, NPerm5( 1,2,4,3,0 ) ); // (04)
+         pen0->join( 2, pen1, NPerm5( 0,1,2,4,3 ) );  
+         pen0->join( 1, pen1, NPerm5( 0,1,2,4,3 ) ); // (43)
+         pen0->join( 0, pen1, NPerm5( 0,1,2,4,3 ) ); 
          tempV.resize(4);
-         tempV[0] = NRational(1,1); tempV[1] = NRational(2,1);
-         tempV[2] = NRational(3,1); tempV[3] = NRational(-4,1);
-         cocy4.insert( std::pair< Dim4Triangulation*, std::vector< NRational > >
+         tempV[0] = Rational(1,1); tempV[1] = Rational(2,1);
+         tempV[2] = Rational(3,1); tempV[3] = Rational(-4,1);
+         cocy4.insert( std::pair< Triangulation<4>*, std::vector< Rational > >
           ( temp4ptr, tempV ) );
-         name4.insert( std::pair< Dim4Triangulation*, std::string >
+         name4.insert( std::pair< Triangulation<4>*, std::string >
           ( temp4ptr, "S1 x S3" ) );
         }
 
         void tearDown() { // delete triangulations
-         for (std::map< Dim2Triangulation*, NMapToS1* >::iterator i=fib2map.begin();    
+         for (std::map< Triangulation<2>*, NMapToS1* >::iterator i=fib2map.begin();    
               i!=fib2map.end(); i++)
           { delete i->first; delete i->second; }
 
-         for (std::map< NTriangulation*, NMapToS1* >::iterator i=fib3map.begin();    
+         for (std::map< Triangulation<3>*, NMapToS1* >::iterator i=fib3map.begin();    
               i!=fib3map.end(); i++)
           { delete i->first; delete i->second; }
 
-         for (std::map< Dim4Triangulation*, NMapToS1* >::iterator i=fib4map.begin();    
+         for (std::map< Triangulation<4>*, NMapToS1* >::iterator i=fib4map.begin();    
               i!=fib4map.end(); i++)
           { delete i->first; delete i->second; }
         }
     
         void checkPrimitive() { // tests of verifyPrimitiveH1
           std::stringstream dump;
-          for (std::map< Dim2Triangulation*, NMapToS1* >::iterator i=fib2map.begin();
+          for (std::map< Triangulation<2>*, NMapToS1* >::iterator i=fib2map.begin();
                i!=fib2map.end(); i++)
            if (!i->second->verifyPrimitiveH1( cocy2[i->first] ) ) {
             dump << "NMapToS1::verifyPrimitiveH1() error 2 on " <<
@@ -191,7 +183,7 @@ class NFibringTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL( dump.str() );
             }
 
-          for (std::map< NTriangulation*, NMapToS1* >::iterator i=fib3map.begin();
+          for (std::map< Triangulation<3>*, NMapToS1* >::iterator i=fib3map.begin();
                i!=fib3map.end(); i++)
            if (!i->second->verifyPrimitiveH1( cocy3[i->first] ) ) {
             dump << "NMapToS1::verifyPrimitiveH1() error 3 on " <<
@@ -199,7 +191,7 @@ class NFibringTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL( dump.str() );
             }
 
-          for (std::map< Dim4Triangulation*, NMapToS1* >::iterator i=fib4map.begin();
+          for (std::map< Triangulation<4>*, NMapToS1* >::iterator i=fib4map.begin();
                i!=fib4map.end(); i++)
            if (!i->second->verifyPrimitiveH1( cocy4[i->first] ) ) {
             dump << "NMapToS1::verifyPrimitiveH1() error 4 on " <<
@@ -210,7 +202,7 @@ class NFibringTest : public CppUnit::TestFixture {
 
         void checkBundle() { // tests of verifySimpleS1Bundle
           std::stringstream dump;
-          for (std::map< Dim2Triangulation*, NMapToS1* >::iterator i=fib2map.begin();
+          for (std::map< Triangulation<2>*, NMapToS1* >::iterator i=fib2map.begin();
                i!=fib2map.end(); i++)
            if (!i->second->verifySimpleS1Bundle( cocy2[i->first] ) ) {
             dump << "NMapToS1::verifySimpleS1Bundle() error 2 on " <<
@@ -218,7 +210,7 @@ class NFibringTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL( dump.str() );
             }
 
-          for (std::map< NTriangulation*, NMapToS1* >::iterator i=fib3map.begin();
+          for (std::map< Triangulation<3>*, NMapToS1* >::iterator i=fib3map.begin();
                i!=fib3map.end(); i++)
            if (!i->second->verifySimpleS1Bundle( cocy3[i->first] ) ) {
             dump << "NMapToS1::verifySimpleS1Bundle() error 3 on " <<
@@ -226,7 +218,7 @@ class NFibringTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL(dump.str());
             }
 
-          for (std::map< Dim4Triangulation*, NMapToS1* >::iterator i=fib4map.begin();
+          for (std::map< Triangulation<4>*, NMapToS1* >::iterator i=fib4map.begin();
                i!=fib4map.end(); i++)
            if (!i->second->verifySimpleS1Bundle( cocy4[i->first] ) ) {
             dump << "NMapToS1::verifySimpleS1Bundle() error 4 on " <<
@@ -242,7 +234,7 @@ class NFibringTest : public CppUnit::TestFixture {
         //  for the algorithms that search for bundle structures.
 };
 
-void addNFibring(CppUnit::TextUi::TestRunner& runner) {
+void addFibring(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(NFibringTest::suite());
 }
 
