@@ -186,7 +186,7 @@
 		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		05249E961DBAE7E9001FE29E /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E951DBAE7E8001FE29E /* Python.framework */; };
-		05249E981DBAEB82001FE29E /* boost-python-static.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E971DBAEB80001FE29E /* boost-python-static.framework */; };
+		05249E981DBAEB82001FE29E /* boost-python27-static.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E971DBAEB80001FE29E /* boost-python27-static.framework */; };
 		05249E9E1DBB50B7001FE29E /* PythonInterpreter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */; };
 		05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */; };
 		05249EA41DBB8FE4001FE29E /* python27.zip in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05249EA31DBB8FC9001FE29E /* python27.zip */; };
@@ -1185,7 +1185,7 @@
 		055115021DCDF63000EC753C /* triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FB1DCDF63000EC753C /* triangulation.h */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
-		055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		055722D31D9BC9D3005789B4 /* boost-python27.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python27.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
 		055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
@@ -1358,8 +1358,8 @@
 		0568743020C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0568743120C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
-		056AA9941C41C10100FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
-		056AA9951C41C11C00FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
+		056AA9941C41C10100FA81D3 /* boost-python27.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python27.framework */; };
+		056AA9951C41C11C00FA81D3 /* boost-python27.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python27.framework */; };
 		056AA9981C41DA4800FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
 		056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9991C41DA6900FA81D3 /* cppunit.framework */; };
 		056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
@@ -2439,7 +2439,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */,
+				055722D31D9BC9D3005789B4 /* boost-python27.framework in Copy Frameworks */,
 				05AB5F081B9429BB007034C8 /* QtDBus.framework in Copy Frameworks */,
 				05AB5F091B9429BB007034C8 /* QtNetwork.framework in Copy Frameworks */,
 				05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in Copy Frameworks */,
@@ -2761,7 +2761,7 @@
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		05249E951DBAE7E8001FE29E /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = ../../Library/Frameworks/ios/Python.framework; sourceTree = "<group>"; };
-		05249E971DBAEB80001FE29E /* boost-python-static.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python-static.framework"; path = "../../Library/Frameworks/ios/boost-python-static.framework"; sourceTree = "<group>"; };
+		05249E971DBAEB80001FE29E /* boost-python27-static.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python27-static.framework"; path = "../../Library/Frameworks/ios/boost-python27-static.framework"; sourceTree = "<group>"; };
 		05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonInterpreter.h; sourceTree = "<group>"; };
 		05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonInterpreter.mm; sourceTree = "<group>"; };
 		05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
@@ -3839,7 +3839,7 @@
 		0568742420C5D86B001C435B /* pass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pass.cpp; sourceTree = "<group>"; };
 		0568742F20C5D8D3001C435B /* tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tangle.cpp; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
-		056AA9931C41C10100FA81D3 /* boost-python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python.framework"; path = "../../Library/Frameworks/osx/boost-python.framework"; sourceTree = "<group>"; };
+		056AA9931C41C10100FA81D3 /* boost-python27.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python27.framework"; path = "../../Library/Frameworks/osx/boost-python27.framework"; sourceTree = "<group>"; };
 		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
 		056AA9991C41DA6900FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/osx/cppunit.framework; sourceTree = "<group>"; };
 		056AA99C1C41DAC100FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/ios/cppunit.framework; sourceTree = "<group>"; };
@@ -4600,7 +4600,7 @@
 				050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */,
 				056AA9A61C41DE9100FA81D3 /* libgmp.framework in Frameworks */,
 				056AA9A71C41DE9100FA81D3 /* libgmpxx.framework in Frameworks */,
-				056AA9951C41C11C00FA81D3 /* boost-python.framework in Frameworks */,
+				056AA9951C41C11C00FA81D3 /* boost-python27.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4635,7 +4635,7 @@
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
 				05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */,
 				05249E961DBAE7E9001FE29E /* Python.framework in Frameworks */,
-				05249E981DBAEB82001FE29E /* boost-python-static.framework in Frameworks */,
+				05249E981DBAEB82001FE29E /* boost-python27-static.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4740,7 +4740,7 @@
 				0591E8591C4F832B00793A9C /* libxml2.dylib in Frameworks */,
 				05CAFB551C4D8FCF0001C253 /* graphviz.framework in Frameworks */,
 				050F5E871B9BD7EF00C1F681 /* libpython2.7.dylib in Frameworks */,
-				056AA9941C41C10100FA81D3 /* boost-python.framework in Frameworks */,
+				056AA9941C41C10100FA81D3 /* boost-python27.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7650,7 +7650,7 @@
 			isa = PBXGroup;
 			children = (
 				05DC051E1C41B87200C76D71 /* boost.framework */,
-				05249E971DBAEB80001FE29E /* boost-python-static.framework */,
+				05249E971DBAEB80001FE29E /* boost-python27-static.framework */,
 				056AA99C1C41DAC100FA81D3 /* cppunit.framework */,
 				056AA9A01C41DDF400FA81D3 /* graphviz.framework */,
 				054208E81DF0D6860018AB24 /* jansson.framework */,
@@ -7675,7 +7675,7 @@
 			isa = PBXGroup;
 			children = (
 				05DC051C1C41B85100C76D71 /* boost.framework */,
-				056AA9931C41C10100FA81D3 /* boost-python.framework */,
+				056AA9931C41C10100FA81D3 /* boost-python27.framework */,
 				056AA9991C41DA6900FA81D3 /* cppunit.framework */,
 				05CAFB541C4D8FCE0001C253 /* graphviz.framework */,
 				054208E61DF0D6590018AB24 /* jansson.framework */,
@@ -8749,7 +8749,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "module=${BUILT_PRODUCTS_DIR}/engine.so\n\ninstall_name_tool -change @rpath/boost-python.framework/Versions/A/boost-python @loader_path/../../../Frameworks/boost-python.framework/Versions/A/boost-python ${module}\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib ${module}\n";
+			shellScript = "module=${BUILT_PRODUCTS_DIR}/engine.so\n\ninstall_name_tool -change @rpath/boost-python27.framework/Versions/A/boost-python27 @loader_path/../../../Frameworks/boost-python27.framework/Versions/A/boost-python27 ${module}\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib ${module}\n";
 		};
 		052DB59E1D9E587C00EDEA68 /* Sign Utilities */ = {
 			isa = PBXShellScriptBuildPhase;
