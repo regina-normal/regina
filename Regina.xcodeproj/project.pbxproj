@@ -1886,6 +1886,9 @@
 		05B27D521E96681D00E2B7C4 /* nsvectorquadclosed.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B27D501E96681D00E2B7C4 /* nsvectorquadclosed.h */; };
 		05B27D531E96681D00E2B7C4 /* nsvectorquadclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */; };
 		05B27D541E96682200E2B7C4 /* nsvectorquadclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */; };
+		05B44D1521914FA300B1D343 /* binom.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B44D1321914FA200B1D343 /* binom.h */; };
+		05B44D1621914FA300B1D343 /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B44D1421914FA300B1D343 /* binom.cpp */; };
+		05B44D1721914FAA00B1D343 /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B44D1421914FA300B1D343 /* binom.cpp */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708319C92A5000E2E558 /* ScriptViewController.mm */; };
 		05B7708719CA4FF100E2E558 /* FilterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708619CA4FF100E2E558 /* FilterViewController.mm */; };
@@ -4372,6 +4375,8 @@
 		05B1EF151C542991008E7B49 /* boundary4chooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundary4chooser.h; sourceTree = "<group>"; };
 		05B27D501E96681D00E2B7C4 /* nsvectorquadclosed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorquadclosed.h; sourceTree = "<group>"; };
 		05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorquadclosed.cpp; sourceTree = "<group>"; };
+		05B44D1321914FA200B1D343 /* binom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = binom.h; sourceTree = "<group>"; };
+		05B44D1421914FA300B1D343 /* binom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = binom.cpp; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B7708219C92A5000E2E558 /* ScriptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptViewController.h; sourceTree = "<group>"; };
 		05B7708319C92A5000E2E558 /* ScriptViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScriptViewController.mm; sourceTree = "<group>"; };
@@ -5737,6 +5742,8 @@
 				053CAB261DA7108F00A92F98 /* spec */,
 				052F9CDE180600FA00FAE4DF /* approx.cpp */,
 				052F9CDF180600FA00FAE4DF /* approx.h */,
+				05B44D1421914FA300B1D343 /* binom.cpp */,
+				05B44D1321914FA200B1D343 /* binom.h */,
 				052F9CE0180600FA00FAE4DF /* CMakeLists.txt */,
 				0541AF481B8BE2F5002E166B /* cyclotomic.cpp */,
 				0541AF491B8BE2F5002E166B /* cyclotomic.h */,
@@ -8060,6 +8067,7 @@
 				052F9F5A180600FB00FAE4DF /* pdf.h in Headers */,
 				052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */,
 				053CAB431DAB408C00A92F98 /* nsstandard.h in Headers */,
+				05B44D1521914FA300B1D343 /* binom.h in Headers */,
 				052F9F8B180600FB00FAE4DF /* isometry.h in Headers */,
 				052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */,
 				05F09FD31DBF01B600117BFC /* boundarycomponent2.h in Headers */,
@@ -9400,6 +9408,7 @@
 				05C0645F1C56B1F7006E6483 /* Tri4Gluings.mm in Sources */,
 				054C6A7B1DCC1FF4005373F0 /* example15.cpp in Sources */,
 				05D1173519EE018A003BEC55 /* incompressible.cpp in Sources */,
+				05B44D1721914FAA00B1D343 /* binom.cpp in Sources */,
 				05D1172D19EE0172003BEC55 /* connectedsumdecomp.cpp in Sources */,
 				05249EDC1DBC16E4001FE29E /* face6.cpp in Sources */,
 				05F0A0111DBF079600117BFC /* simplify.cpp in Sources */,
@@ -10176,6 +10185,7 @@
 				05C1BEB01DCA7CA9007C946B /* boundary8.cpp in Sources */,
 				05F0A0441DBF0B5E00117BFC /* simplify.cpp in Sources */,
 				05A73CA019B2EF5A0099C617 /* matrix_conversion.c in Sources */,
+				05B44D1621914FA300B1D343 /* binom.cpp in Sources */,
 				05F0A0481DBF0B5E00117BFC /* subdivide.cpp in Sources */,
 				052F9F89180600FB00FAE4DF /* interface.c in Sources */,
 				052F9F6E180600FB00FAE4DF /* canonize_part_1.c in Sources */,
