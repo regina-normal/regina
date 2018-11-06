@@ -6,6 +6,32 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		05DADAFE2192535F00DC80E1 /* Handbook */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 05DADAFF2192535F00DC80E1 /* Build configuration list for PBXAggregateTarget "Handbook" */;
+			buildPhases = (
+				05DADB022192543B00DC80E1 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Handbook;
+			productName = Handbook;
+		};
+		05DADB04219256ED00DC80E1 /* Databases */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 05DADB05219256ED00DC80E1 /* Build configuration list for PBXAggregateTarget "Databases" */;
+			buildPhases = (
+				05DADB082192573400DC80E1 /* ShellScript */,
+			);
+			dependencies = (
+				05DADB0A219257F600DC80E1 /* PBXTargetDependency */,
+			);
+			name = Databases;
+			productName = Databases;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		050313C11812DB06007F0CBE /* TextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C01812DB06007F0CBE /* TextViewController.mm */; };
 		050313C41812DB1E007F0CBE /* DefaultPacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */; };
@@ -2306,6 +2332,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 05B14EA219B423A0002138C0;
 			remoteInfo = Census;
+		};
+		05DADB09219257F600DC80E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05B14EA219B423A0002138C0;
+			remoteInfo = "Census Tools";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -8626,6 +8659,16 @@
 						DevelopmentTeam = 67JTSH67LZ;
 						ProvisioningStyle = Automatic;
 					};
+					05DADAFE2192535F00DC80E1 = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = 67JTSH67LZ;
+						ProvisioningStyle = Automatic;
+					};
+					05DADB04219256ED00DC80E1 = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = 67JTSH67LZ;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 0575E6541805F36D009E3FC4 /* Build configuration list for PBXProject "Regina" */;
@@ -8644,6 +8687,8 @@
 				0575E6581805F36D009E3FC4 /* Engine */,
 				050F5CDC1B9BAAAA00C1F681 /* Python */,
 				052FA0C01806072900FAE4DF /* Test Suite */,
+				05DADB04219256ED00DC80E1 /* Databases */,
+				05DADAFE2192535F00DC80E1 /* Handbook */,
 				0564A1DE1811D6F8002CC2AE /* Qt */,
 				052FA1271806102F00FAE4DF /* iOS */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
@@ -8786,6 +8831,56 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# These will break codesign.\nrm -f ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/python/regina/*.pyc";
+		};
+		05DADB022192543B00DC80E1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/qtui/doc/regina/index.docbook",
+				"$(SRCROOT)/qtui/doc/regina-xml/index.docbook",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/docs-regina/index.html",
+				"$(DERIVED_FILE_DIR)/docs-regina-xml/index.html",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "custom=\"${SRCROOT}\"/qtui/doc/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/qtui/doc/$i\n  output=\"${DERIVED_FILE_DIR}\"/docs-$i\n  /sw/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\ndone\n";
+		};
+		05DADB082192573400DC80E1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/engine/data/census/closed-hyp-census-full.zsig",
+				"$(SRCROOT)/engine/data/census/closed-nor-census-11.zsig",
+				"$(SRCROOT)/engine/data/census/closed-or-census-11.zsig",
+				"$(SRCROOT)/engine/data/census/cusped-hyp-nor-census-9.zsig",
+				"$(SRCROOT)/engine/data/census/cusped-hyp-or-census-9.zsig",
+				"$(SRCROOT)/engine/data/census/hyp-knot-link-census.zsig",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/closed-hyp-census-full.tdb",
+				"$(DERIVED_FILE_DIR)/closed-nor-census-11.tdb",
+				"$(DERIVED_FILE_DIR)/closed-or-census-11.tdb",
+				"$(DERIVED_FILE_DIR)/cusped-hyp-nor-census-9.tdb",
+				"$(DERIVED_FILE_DIR)/cusped-hyp-or-census-9.tdb",
+				"$(DERIVED_FILE_DIR)/hyp-knot-link-census.tdb",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${DERIVED_FILE_DIR}\"\n\nmkdir -p \"$output\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.zsig \"$output\"/$i.tdb\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -10419,6 +10514,11 @@
 			target = 05B14EA219B423A0002138C0 /* Census Tools */;
 			targetProxy = 05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */;
 		};
+		05DADB0A219257F600DC80E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05B14EA219B423A0002138C0 /* Census Tools */;
+			targetProxy = 05DADB09219257F600DC80E1 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -11836,6 +11936,42 @@
 			};
 			name = Release;
 		};
+		05DADB002192535F00DC80E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		05DADB012192535F00DC80E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		05DADB06219256ED00DC80E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		05DADB07219256ED00DC80E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -11979,6 +12115,24 @@
 			buildConfigurations = (
 				05B14EA919B423A0002138C0 /* Debug */,
 				05B14EAA19B423A0002138C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05DADAFF2192535F00DC80E1 /* Build configuration list for PBXAggregateTarget "Handbook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05DADB002192535F00DC80E1 /* Debug */,
+				05DADB012192535F00DC80E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05DADB05219256ED00DC80E1 /* Build configuration list for PBXAggregateTarget "Databases" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05DADB06219256ED00DC80E1 /* Debug */,
+				05DADB07219256ED00DC80E1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
