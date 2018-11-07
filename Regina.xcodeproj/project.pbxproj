@@ -1124,18 +1124,6 @@
 		054739E11D9B176200C7B56F /* clickablelabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 054739DD1D9AAE5D00C7B56F /* clickablelabel.h */; };
 		054739E31D9B188000C7B56F /* libqmacjp2.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 054739E21D9B187F00C7B56F /* libqmacjp2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0547FCB51C4F60A200BF1AD9 /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */; };
-		054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
-		054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
-		054BC4C519B4A726005E01A0 /* closed-or-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
-		054BC4C619B4A726005E01A0 /* cusped-hyp-nor-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */; };
-		054BC4C719B4A726005E01A0 /* cusped-hyp-or-census-9.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */; };
-		054BC4C819B4A726005E01A0 /* hyp-knot-link-census.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */; };
-		054BC4C919B4A73D005E01A0 /* closed-hyp-census-full.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
-		054BC4CA19B4A73D005E01A0 /* closed-nor-census-11.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
-		054BC4CB19B4A73D005E01A0 /* closed-or-census-11.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
-		054BC4CC19B4A73D005E01A0 /* cusped-hyp-nor-census-9.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */; };
-		054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */; };
-		054BC4CE19B4A73D005E01A0 /* hyp-knot-link-census.zsig in Resources */ = {isa = PBXBuildFile; fileRef = 055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
 		054C6A681DCC1FF3005373F0 /* example7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A511DCC1FE7005373F0 /* example7.cpp */; };
@@ -2193,17 +2181,6 @@
 			);
 			script = "~/Qt5.11.2/5.11.2/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}\n";
 		};
-		054BC4C219B4A708005E01A0 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.zsig";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.tdb",
-			);
-			script = "\"${SYMROOT}/${CONFIGURATION}/mkcensusdb\" \"${INPUT_FILE_PATH}\" \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.tdb\"";
-		};
 		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -2224,13 +2201,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 050F5CDC1B9BAAAA00C1F681;
 			remoteInfo = Python;
-		};
-		054BC4CF19B4A743005E01A0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 05B14EA219B423A0002138C0;
-			remoteInfo = "Census Tools";
 		};
 		05617AF61D9DC0E000B1E33B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2275,6 +2245,13 @@
 			remoteInfo = Handbook;
 		};
 		05DADB1121926ABF00DC80E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05DADB04219256ED00DC80E1;
+			remoteInfo = Databases;
+		};
+		05DADB13219272C800DC80E1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
 			proxyType = 1;
@@ -8301,16 +8278,16 @@
 				052FA1241806102F00FAE4DF /* Sources */,
 				052FA1251806102F00FAE4DF /* Frameworks */,
 				052FA1261806102F00FAE4DF /* Resources */,
+				05DADB1521927AEE00DC80E1 /* Copy Databases */,
 				057118CF19B30BAF009FEDC5 /* CopyFiles */,
 				05F9560919B5296D00377BEC /* CopyFiles */,
 				05249EA11DBB8F16001FE29E /* CopyFiles */,
 				054209181DF17EB70018AB24 /* CopyFiles */,
 			);
 			buildRules = (
-				054BC4C219B4A708005E01A0 /* PBXBuildRule */,
 			);
 			dependencies = (
-				054BC4D019B4A743005E01A0 /* PBXTargetDependency */,
+				05DADB14219272C800DC80E1 /* PBXTargetDependency */,
 			);
 			name = iOS;
 			productName = Regina;
@@ -8657,15 +8634,9 @@
 				0503DCD519B7D8AA0085F3CC /* regina-doc-320.png in Resources */,
 				05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */,
 				05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */,
-				054BC4C919B4A73D005E01A0 /* closed-hyp-census-full.zsig in Resources */,
-				054BC4CA19B4A73D005E01A0 /* closed-nor-census-11.zsig in Resources */,
-				054BC4CB19B4A73D005E01A0 /* closed-or-census-11.zsig in Resources */,
 				059474E61F98151700F04273 /* SnapPea.storyboard in Resources */,
 				051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */,
-				054BC4CC19B4A73D005E01A0 /* cusped-hyp-nor-census-9.zsig in Resources */,
-				054BC4CD19B4A73D005E01A0 /* cusped-hyp-or-census-9.zsig in Resources */,
 				0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */,
-				054BC4CE19B4A73D005E01A0 /* hyp-knot-link-census.zsig in Resources */,
 				0566DC901F9893E60068ACAD /* Surfaces.storyboard in Resources */,
 				058E398B1DCBC0D500D463A4 /* Launch.storyboard in Resources */,
 				052FA1451806103000FAE4DF /* Images.xcassets in Resources */,
@@ -8777,12 +8748,12 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/docs-regina/index.html",
-				"$(DERIVED_FILE_DIR)/docs-regina-xml/index.html",
+				"$(BUILD_DIR)/docs-regina/index.html",
+				"$(BUILD_DIR)/docs-regina-xml/index.html",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "custom=\"${SRCROOT}\"/qtui/doc/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/qtui/doc/$i\n  output=\"${DERIVED_FILE_DIR}\"/docs-$i\n  /sw/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\ndone\n";
+			shellScript = "custom=\"${SRCROOT}\"/qtui/doc/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/qtui/doc/$i\n  output=\"${BUILD_DIR}\"/docs-$i\n  /sw/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\ndone\n";
 		};
 		05DADB082192573400DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8802,16 +8773,16 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/closed-hyp-census-full.tdb",
-				"$(DERIVED_FILE_DIR)/closed-nor-census-11.tdb",
-				"$(DERIVED_FILE_DIR)/closed-or-census-11.tdb",
-				"$(DERIVED_FILE_DIR)/cusped-hyp-nor-census-9.tdb",
-				"$(DERIVED_FILE_DIR)/cusped-hyp-or-census-9.tdb",
-				"$(DERIVED_FILE_DIR)/hyp-knot-link-census.tdb",
+				"$(BUILD_DIR)/closed-hyp-census-full.tdb",
+				"$(BUILD_DIR)/closed-nor-census-11.tdb",
+				"$(BUILD_DIR)/closed-or-census-11.tdb",
+				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
+				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
+				"$(BUILD_DIR)/hyp-knot-link-census.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${DERIVED_FILE_DIR}\"\n\nmkdir -p \"$output\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.zsig \"$output\"/$i.tdb\ndone\n";
+			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.zsig \"$output\"/$i.tdb\ndone\n";
 		};
 		05DADB1021926A2300DC80E1 /* Copy Databases and Handbook */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8821,15 +8792,61 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(BUILD_DIR)/docs-regina/index.html",
+				"$(BUILD_DIR)/docs-regina-xml/index.html",
+				"$(BUILD_DIR)/closed-hyp-census-full.tdb",
+				"$(BUILD_DIR)/closed-nor-census-11.tdb",
+				"$(BUILD_DIR)/closed-or-census-11.tdb",
+				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
+				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
+				"$(BUILD_DIR)/hyp-knot-link-census.tdb",
 			);
 			name = "Copy Databases and Handbook";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/docs-regina/index.html",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/docs-regina-xml/index.html",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-hyp-census-full.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-nor-census-11.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-or-census-11.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-nor-census-9.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-or-census-9.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/hyp-knot-link-census.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport > /tmp/foo\n";
+			shellScript = "set -e\n\nfor i in regina regina-xml; do\n  cp -pr \"${BUILD_DIR}\"/docs-$i \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n";
+		};
+		05DADB1521927AEE00DC80E1 /* Copy Databases */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILD_DIR)/closed-hyp-census-full.tdb",
+				"$(BUILD_DIR)/closed-nor-census-11.tdb",
+				"$(BUILD_DIR)/closed-or-census-11.tdb",
+				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
+				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
+				"$(BUILD_DIR)/hyp-knot-link-census.tdb",
+			);
+			name = "Copy Databases";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-hyp-census-full.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-nor-census-11.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-or-census-11.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-nor-census-9.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-or-census-9.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/hyp-knot-link-census.tdb",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -9142,8 +9159,6 @@
 			files = (
 				0542090C1DF0DA450018AB24 /* lensspace.cpp in Sources */,
 				05249F6E1DBC1747001FE29E /* boundarycomponent3.cpp in Sources */,
-				054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */,
-				054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */,
 				05C0644F1C55A5C1006E6483 /* HyperCompat.mm in Sources */,
 				05A067521DFA68470047872E /* satannulus.cpp in Sources */,
 				05249F2E1DBC1711001FE29E /* perm.cpp in Sources */,
@@ -9152,15 +9167,11 @@
 				05249EFC1DBC16F1001FE29E /* isomorphism12.cpp in Sources */,
 				05431F8D1C40F40E009BC072 /* bottom.cpp in Sources */,
 				05249F651DBC1737001FE29E /* normalflags.cpp in Sources */,
-				054BC4C519B4A726005E01A0 /* closed-or-census-11.zsig in Sources */,
 				05249EC51DBC16CA001FE29E /* triangulation4.cpp in Sources */,
 				05249F161DBC16FA001FE29E /* triangulation15.cpp in Sources */,
-				054BC4C619B4A726005E01A0 /* cusped-hyp-nor-census-9.zsig in Sources */,
-				054BC4C719B4A726005E01A0 /* cusped-hyp-or-census-9.zsig in Sources */,
 				05A067431DFA68470047872E /* blockedsfs.cpp in Sources */,
 				05D1173C19EE0197003BEC55 /* perm4.cpp in Sources */,
 				05249EE41DBC16E4001FE29E /* face14.cpp in Sources */,
-				054BC4C819B4A726005E01A0 /* hyp-knot-link-census.zsig in Sources */,
 				055FF38819C044FB0057462A /* NewTri2Controller.mm in Sources */,
 				05937AD219CECF4300160F9A /* MDSpreadViewCell.m in Sources */,
 				05C1BEBA1DCA7CB3007C946B /* boundary4.cpp in Sources */,
@@ -10419,11 +10430,6 @@
 			target = 050F5CDC1B9BAAAA00C1F681 /* Python */;
 			targetProxy = 050F5E6E1B9BD3A000C1F681 /* PBXContainerItemProxy */;
 		};
-		054BC4D019B4A743005E01A0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 05B14EA219B423A0002138C0 /* Census Tools */;
-			targetProxy = 054BC4CF19B4A743005E01A0 /* PBXContainerItemProxy */;
-		};
 		05617AF71D9DC0E000B1E33B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */;
@@ -10458,6 +10464,11 @@
 			isa = PBXTargetDependency;
 			target = 05DADB04219256ED00DC80E1 /* Databases */;
 			targetProxy = 05DADB1121926ABF00DC80E1 /* PBXContainerItemProxy */;
+		};
+		05DADB14219272C800DC80E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05DADB04219256ED00DC80E1 /* Databases */;
+			targetProxy = 05DADB13219272C800DC80E1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
