@@ -8845,16 +8845,16 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-hyp-census-full.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-nor-census-11.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-or-census-11.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-nor-census-9.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-or-census-9.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/hyp-knot-link-census.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/closed-hyp-census-full.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/closed-nor-census-11.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/closed-or-census-11.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/cusped-hyp-nor-census-9.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/cusped-hyp-or-census-9.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/hyp-knot-link-census.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n";
+			shellScript = "set -e\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
